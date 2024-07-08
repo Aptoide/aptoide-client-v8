@@ -773,7 +773,7 @@ internal class InstallManagerTest {
     m And "current version app uninstall started"
     val currentTask = installManager.getApp(currentPackage).uninstall()
     m And "wait until all runnable tasks finish"
-    scope.advanceTimeBy(3.hours)
+    scope.advanceTimeBy(4.hours)
     m And "network changes to a new state"
     mocks.networkConnection.update(newNetworkState)
     m And "wait until all now runnable tasks finish"

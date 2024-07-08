@@ -3,7 +3,7 @@ package cm.aptoide.pt.install_manager
 import cm.aptoide.pt.install_manager.dto.Constraints
 import cm.aptoide.pt.test.gherkin.coScenario
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.advanceUntilIdle
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -18,7 +18,6 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
-import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
 /**
@@ -49,8 +48,8 @@ internal class AppTest {
     val newITask = app.install(installInfo, constraints)
     m And "get running install task from the app immediately"
     val currentITaskNow = app.task
-    m And "get running install task from the app 4 seconds later"
-    scope.advanceTimeBy(4.seconds)
+    m And "get running install task from the app after some progress happened"
+    currentITaskNow?.stateAndProgress?.first { it.first != Task.State.PENDING }
     val currentITaskLater = app.task
     m And "wait until install task is finished"
     scope.advanceUntilIdle()
@@ -60,8 +59,8 @@ internal class AppTest {
     val newUTask = app.uninstall(constraints)
     m And "get running uninstall task from the app immediately"
     val currentUTaskNow = app.task
-    m And "get running uninstall task from the app 4 seconds later"
-    scope.advanceTimeBy(4.seconds)
+    m And "get running uninstall task from the app after some progress happened"
+    currentITaskNow?.stateAndProgress?.first { it.first != Task.State.PENDING }
     val currentUTaskLater = app.task
     m And "wait until uninstall task is finished"
     scope.advanceUntilIdle()
@@ -107,14 +106,14 @@ internal class AppTest {
     val packageInfo = app.packageInfo
     m And "get package info for the app during installation with given constraints"
     app.install(installInfo, constraints)
-    scope.advanceTimeBy(4.seconds)
+      .stateAndProgress.first { it.first != Task.State.PENDING }
     val installingPackageInfo = app.packageInfo
     m And "get the info for the app after installation"
     scope.advanceUntilIdle()
     val installedPackageInfo = app.packageInfo
     m And "get package info for the app during uninstallation with given constraints"
     app.uninstall(constraints)
-    scope.advanceTimeBy(4.seconds)
+      .stateAndProgress.first { it.first != Task.State.PENDING }
     val uninstallingPackageInfo = app.packageInfo
     m And "get the info for the app after uninstallation"
     scope.advanceUntilIdle()
@@ -145,22 +144,22 @@ internal class AppTest {
     mocks.packageInfoRepository.update(notInstalledPackage, installedInfo(notInstalledPackage, 0))
     m And "get new package info from the app immediately"
     val newInfoNow = app.packageInfo
-    scope.advanceTimeBy(4.seconds)
     m And "get new package info from the app later"
+    scope.advanceTimeBy(4.seconds)
     val newInfoLater = app.packageInfo
     m And "package info is removed by the system"
     mocks.packageInfoRepository.update(notInstalledPackage, null)
     m And "get null package info from the app immediately"
     val nullInfoNow = app.packageInfo
-    scope.advanceTimeBy(4.seconds)
     m And "get null package info from the app later"
+    scope.advanceTimeBy(4.seconds)
     val nullInfoLater = app.packageInfo
     m And "newer package info is added by the system"
     mocks.packageInfoRepository.update(notInstalledPackage, installedInfo(notInstalledPackage))
     m And "get newer package info from the app immediately"
     val newerInfoNow = app.packageInfo
-    scope.advanceTimeBy(4.seconds)
     m And "get newer package info from the app later"
+    scope.advanceTimeBy(4.seconds)
     val newerInfoLater = app.packageInfo
     m And "package info is removed by the system again"
     mocks.packageInfoRepository.update(notInstalledPackage, null)
@@ -416,8 +415,6 @@ internal class AppTest {
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
-    m And "package downloader mock will wait for cancellation after 25%"
-    mocks.packageDownloader.progressFlow = cancellingFlow
     m And "app provided for a given package name"
     val app = installManager.getApp(packageName)
 
@@ -449,8 +446,6 @@ internal class AppTest {
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
-    m And "package downloader mock will wait for cancellation after 25%"
-    mocks.packageDownloader.progressFlow = cancellingFlow
     m And "app provided for a given package name"
     val app = installManager.getApp(packageName)
 
@@ -459,7 +454,7 @@ internal class AppTest {
     m And "get app install call result with given constraints"
     val task = app.install(installInfo, constraints)
     m And "wait until task will be ready to cancel"
-    delay(45.minutes)
+    task.stateAndProgress.first { it.first == Task.State.DOWNLOADING }
     m And "call the task cancel"
     task.cancel()
     m And "wait until the task finishes"
@@ -484,8 +479,6 @@ internal class AppTest {
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
-    m And "package installer mock will wait for cancellation after 25%"
-    mocks.packageInstaller.progressFlow = cancellingFlow
     m And "app provided for a given package name"
     val app = installManager.getApp(packageName)
 
@@ -494,7 +487,7 @@ internal class AppTest {
     m And "get app install call result with given constraints"
     val task = app.install(installInfo, constraints)
     m And "wait until task will be ready to cancel"
-    delay(45.minutes)
+    task.stateAndProgress.first { it.first == Task.State.INSTALLING }
     m And "call the task cancel"
     task.cancel()
     m And "wait until the task finishes"
@@ -641,8 +634,6 @@ internal class AppTest {
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
-    m And "package installer mock will wait for cancellation after 25%"
-    mocks.packageInstaller.progressFlow = cancellingFlow
     m And "app provided for a given package name"
     val app = installManager.getApp(packageName)
 
@@ -651,7 +642,7 @@ internal class AppTest {
     m And "get app uninstall call result with given constraints"
     val task = app.uninstall(constraints)
     m And "wait until task will be ready to cancel"
-    delay(45.minutes)
+    task.stateAndProgress.first { it.first == Task.State.UNINSTALLING }
     m And "call the task cancel"
     task.cancel()
     m And "wait until the task finishes"
