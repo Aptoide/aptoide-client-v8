@@ -10,6 +10,8 @@ import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.domain.AppMetaUseCase
 import cm.aptoide.pt.feature_mmp.apkfy.domain.ApkfyManager
+import cm.aptoide.pt.feature_mmp.apkfy.domain.ApkfyModel
+import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -22,7 +24,13 @@ import javax.inject.Inject
 class ApkfyViewModel @Inject constructor(
   private val apkfyManager: ApkfyManager,
   private val appMetaUseCase: AppMetaUseCase,
+  private val biAnalytics: BIAnalytics,
 ) : ViewModel() {
+
+  companion object {
+    private const val UTM_PROPERTY_NO_APKFY = "NO_APKFY"
+    private const val UTM_PROPERTY_APKFY_WITHOUT_UTMS = "APKFY_BUT_NO_UTM"
+  }
 
   private val viewModelState = MutableStateFlow<App?>(value = null)
 
@@ -37,6 +45,8 @@ class ApkfyViewModel @Inject constructor(
     viewModelScope.launch {
       try {
         apkfyManager.getApkfy()?.run {
+          setApkfyUTMProperties(this)
+
           packageName?.let {
             var app = appMetaUseCase.getMetaInfo(it)
 
@@ -57,6 +67,37 @@ class ApkfyViewModel @Inject constructor(
         }
       } catch (e: Throwable) {
         e.printStackTrace()
+      }
+    }
+  }
+
+  fun setApkfyUTMProperties(apkfyModel: ApkfyModel) {
+    apkfyModel.run {
+      if (hasUTMs()) {
+        biAnalytics.setUTMProperties(
+          utmSource = utmSource,
+          utmMedium = utmMedium,
+          utmCampaign = utmCampaign,
+          utmTerm = utmTerm,
+          utmContent = utmContent
+        )
+      } else if (packageName == null && oemId == null) {
+        //Safe to assume there are no utms, so no need to check
+        biAnalytics.setUTMProperties(
+          utmSource = UTM_PROPERTY_NO_APKFY,
+          utmMedium = UTM_PROPERTY_NO_APKFY,
+          utmCampaign = UTM_PROPERTY_NO_APKFY,
+          utmTerm = UTM_PROPERTY_NO_APKFY,
+          utmContent = UTM_PROPERTY_NO_APKFY
+        )
+      } else {
+        biAnalytics.setUTMProperties(
+          utmSource = UTM_PROPERTY_APKFY_WITHOUT_UTMS,
+          utmMedium = UTM_PROPERTY_APKFY_WITHOUT_UTMS,
+          utmCampaign = UTM_PROPERTY_APKFY_WITHOUT_UTMS,
+          utmTerm = UTM_PROPERTY_APKFY_WITHOUT_UTMS,
+          utmContent = UTM_PROPERTY_APKFY_WITHOUT_UTMS
+        )
       }
     }
   }

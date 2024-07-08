@@ -79,6 +79,20 @@ class BIAnalytics(private val analyticsSender: AnalyticsSender) {
     }
   }
 
+  fun setUTMProperties(
+    utmSource: String?,
+    utmMedium: String?,
+    utmCampaign: String?,
+    utmTerm: String?,
+    utmContent: String?,
+  ) = analyticsSender.setUserProperties(
+    "utm_source" to utmSource,
+    "utm_medium" to utmMedium,
+    "utm_campaign" to utmCampaign,
+    "utm_term" to utmTerm,
+    "utm_content" to utmContent
+  )
+
   fun sendFirstLaunchEvent() = analyticsSender.logEvent(
     name = "aptoide_first_launch",
     params = null

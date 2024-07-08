@@ -24,7 +24,7 @@ class AnalyticsInstallPackageInfoMapper(private val mapper: InstallPackageInfoMa
       val temporaryPayload: TemporaryPayload? = payload?.fromString()
       copy(
         payload = AnalyticsPayload(
-          isApkfy = false, // TODO: Add when ready
+          isApkfy = context.isApkfy,
           isAab = temporaryPayload?.isAab ?: app.isAab(),
           aabTypes = getSplitTypesAnalyticsString(
             installationFiles = installationFiles
