@@ -977,7 +977,7 @@ internal class InstallManagerTest {
 
   @ParameterizedTest(name = "{0}")
   @MethodSource("speedCombinationsProvider")
-  fun `Return missing free space on apps tasks scheduling`(
+  fun `Return missing free space on apps tasks scheduling excluding uninstalls and cancelled tasks`(
     comment: String,
     taskInfoSpeed: Speed,
     downloaderSpeed: Speed,
@@ -986,20 +986,32 @@ internal class InstallManagerTest {
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
-    m And "free space checker mock will report there will be 1536 of free space missing"
-    mocks.deviceStorageMock.availableFreeSpace = 1536
+    m And "free space checker mock will report there will be 536 of free space missing"
+    mocks.deviceStorageMock.availableFreeSpace = 536
     m And "results collector initialised"
     val results = mutableListOf<Long>()
 
     m When "collect missing space"
     results.add(installManager.getMissingFreeSpaceFor(installInfo))
     m And "not installed app install scheduled"
-    installManager.getApp(notInstalledPackage).install(installInfo)
+    val installTask = installManager.getApp(notInstalledPackage).install(
+      installPackageInfo = installInfo,
+      constraints = Constraints(
+        checkForFreeSpace = true,
+        networkType = Constraints.NetworkType.ANY
+      )
+    )
     m And "collect missing space after install task enqueued"
     scope.advanceTimeBy(2.seconds)
     results.add(installManager.getMissingFreeSpaceFor(installInfo))
     m And "outdated app update scheduled"
-    installManager.getApp(outdatedPackage).install(installInfo)
+    val updateTask = installManager.getApp(outdatedPackage).install(
+      installPackageInfo = installInfo,
+      constraints = Constraints(
+        checkForFreeSpace = false,
+        networkType = Constraints.NetworkType.UNMETERED
+      )
+    )
     m And "collect missing space after update task enqueued"
     scope.advanceTimeBy(2.seconds)
     results.add(installManager.getMissingFreeSpaceFor(installInfo))
@@ -1008,9 +1020,24 @@ internal class InstallManagerTest {
     m And "collect missing space after uninstall task enqueued"
     scope.advanceTimeBy(2.seconds)
     results.add(installManager.getMissingFreeSpaceFor(installInfo))
+    m And "outdated app update cancelled"
+    updateTask.cancel()
+    m And "collect missing space after update task cancelled"
+    scope.advanceTimeBy(2.seconds)
+    results.add(installManager.getMissingFreeSpaceFor(installInfo))
+    m And "outdated app uninstall scheduled"
+    installManager.getApp(outdatedPackage).uninstall()
+    m And "collect missing space after outdated app uninstall task enqueued"
+    scope.advanceTimeBy(2.seconds)
+    results.add(installManager.getMissingFreeSpaceFor(installInfo))
+    m And "not installed app install cancelled"
+    installTask.cancel()
+    m And "collect missing space after install task cancelled"
+    scope.advanceUntilIdle()
+    results.add(installManager.getMissingFreeSpaceFor(installInfo))
 
     m Then "the created task is of install type"
-    assertEquals(listOf(-1286L, -1036, -786, -536), results.toList())
+    assertEquals(listOf(-286L, -36, 214, 214, -36, -36, -286), results.toList())
   }
 
   companion object {
