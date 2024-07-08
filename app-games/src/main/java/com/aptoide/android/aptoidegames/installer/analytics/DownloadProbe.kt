@@ -40,6 +40,7 @@ class DownloadProbe(
             packageName = packageName,
             analyticsPayload = analyticsPayload,
             errorMessage = it.message,
+            errorType = it::class.simpleName
           )
         }
       }

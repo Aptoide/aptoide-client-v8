@@ -22,6 +22,7 @@ import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_PACKAG
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_SEARCH_TERM
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_SEARCH_TERM_POSITION
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_SEARCH_TERM_SOURCE
+import com.aptoide.android.aptoidegames.analytics.dto.AnalyticsPayload
 import com.aptoide.android.aptoidegames.analytics.dto.SearchMeta
 import com.aptoide.android.aptoidegames.launch.AppLaunchPreferencesManager
 import com.indicative.client.android.Indicative
@@ -146,6 +147,23 @@ fun SearchMeta?.toBIParameters(
       P_INSERTED_KEYWORD to insertedKeyword,
       P_SEARCH_TERM_SOURCE to searchTermSource,
       P_SEARCH_TERM_POSITION to searchTermPosition,
+    )
+  } ?: emptyMap()
+
+fun AnalyticsPayload?.toAppBIParameters(
+  packageName: String,
+  vararg pairs: Pair<String, Any?>,
+): Map<String, Any> =
+  this?.run {
+    mapOfNonNull(
+      *pairs,
+      P_PACKAGE_NAME to packageName,
+      P_APP_AAB to isAab,
+      P_APP_AAB_INSTALL_TIME to aabTypes,
+      P_APP_APPC to isAppCoins,
+      P_APP_VERSION_CODE to versionCode,
+      P_APP_OBB to hasObb,
+      P_APP_IN_CATAPPULT to isInCatappult.asNullableParameter(),
     )
   } ?: emptyMap()
 
