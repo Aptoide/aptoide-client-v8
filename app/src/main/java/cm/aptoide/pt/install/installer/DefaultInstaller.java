@@ -103,11 +103,11 @@ public class DefaultInstaller implements Installer {
   @Override public synchronized void dispatchInstallations() {
     // Responsible for moving files and starting the installation process
     dispatchInstallationsSubscription.add(installCandidateSubject.flatMap(
-        candidate -> moveInstallationFiles(candidate.getInstallation()).andThen(
-            Observable.just(candidate)))
+            candidate -> moveInstallationFiles(candidate.getInstallation()).andThen(
+                Observable.just(candidate)))
         .flatMap(candidate -> Observable.just(isInstalled(candidate.getInstallation()
-            .getPackageName(), candidate.getInstallation()
-            .getVersionCode()))
+                .getPackageName(), candidate.getInstallation()
+                .getVersionCode()))
             .onErrorReturn(throwable -> false)
             .first()
             .flatMap(isInstalled -> {
@@ -137,7 +137,7 @@ public class DefaultInstaller implements Installer {
         installCandidateSubject.map(InstallationCandidate::getInstallation)
             .flatMap(
                 installation -> aptoideInstalledAppsRepository.get(installation.getPackageName(),
-                    installation.getVersionCode())
+                        installation.getVersionCode())
                     .filter(installed -> installed.getStatus() == RoomInstalled.STATUS_COMPLETED)
                     .map(__ -> installation))
             .doOnNext(this::removeInstallationFiles)
@@ -163,6 +163,7 @@ public class DefaultInstaller implements Installer {
               new InstallationCandidate(installation, forceDefaultInstall,
                   shouldSetPackageInstaller));
         })
+        .doOnError(Throwable::printStackTrace)
         .first()
         .toSingle()
         .toCompletable();
@@ -188,9 +189,9 @@ public class DefaultInstaller implements Installer {
     intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
     intentFilter.addDataScheme("package");
     return Observable.<Void>fromCallable(() -> {
-      startUninstallIntent(context, packageName, uri);
-      return null;
-    }).flatMap(uninstallStarted -> waitPackageIntent(context, intentFilter, packageName))
+          startUninstallIntent(context, packageName, uri);
+          return null;
+        }).flatMap(uninstallStarted -> waitPackageIntent(context, intentFilter, packageName))
         .toCompletable();
   }
 
@@ -232,15 +233,19 @@ public class DefaultInstaller implements Installer {
   private Observable<Installation> startInstallation(Context context, Installation installation,
       boolean shouldSetPackageInstaller) {
     return systemInstall(context, installation).onErrorResumeNext(
-        throwable -> rootInstall(installation))
+            throwable -> rootInstall(installation))
         .onErrorResumeNext(
             throwable -> defaultInstall(context, installation, shouldSetPackageInstaller))
-        .doOnError(throwable -> sendErrorEvent(installation.getPackageName(),
-            installation.getVersionCode(), new InstallationException(
-                "Installation with root failed for "
-                    + installation.getPackageName()
-                    + ". Error message: "
-                    + throwable.getMessage())))
+        .doOnError(throwable -> {
+              throwable.printStackTrace();
+              sendErrorEvent(installation.getPackageName(),
+                  installation.getVersionCode(), new InstallationException(
+                      "Installation with root failed for "
+                          + installation.getPackageName()
+                          + ". Error message: "
+                          + throwable.getMessage()));
+            }
+        )
         .flatMap(installation1 -> installation1.save()
             .andThen(Observable.just(installation1)));
   }
@@ -282,26 +287,22 @@ public class DefaultInstaller implements Installer {
   }
 
   private Completable moveInstallationFiles(Installation installation) {
-    boolean filesMoved = false;
-    String destinationPath = OBB_FOLDER + installation.getPackageName() + "/";
-
-    fileUtils.deleteDir(new File(destinationPath));
-
-    for (RoomFileToDownload file : installation.getFiles()) {
-
-      if (file.getFileType() == RoomFileToDownload.OBB
-          && FileUtils.fileExists(file.getFilePath())
-          && !file.getPath()
-          .equals(destinationPath)) {
-        fileUtils.copyFile(file.getPath(), destinationPath, file.getFileName());
-        file.setPath(destinationPath);
-        filesMoved = true;
-      }
-    }
-    if (filesMoved) {
-      return installation.saveFileChanges();
-    }
-    return Completable.complete();
+    return Completable.fromAction(() -> {
+          boolean filesMoved = false;
+          String destinationPath = OBB_FOLDER + installation.getPackageName() + "/";
+          fileUtils.deleteDir(new File(destinationPath));
+          for (RoomFileToDownload file : installation.getFiles()) {
+            if (file.getFileType() == RoomFileToDownload.OBB
+                && FileUtils.fileExists(file.getFilePath())
+                && !file.getPath()
+                .equals(destinationPath)) {
+              fileUtils.copyFile(file.getPath(), destinationPath, file.getFileName());
+              file.setPath(destinationPath);
+              filesMoved = true;
+            }
+          }
+        }
+    ).andThen(installation.saveFileChanges()).onErrorComplete();
   }
 
   private void removeInstallationFiles(Installation installation) {
@@ -320,7 +321,7 @@ public class DefaultInstaller implements Installer {
         return defaultInstall(context, installation, true);
       }
       return Observable.create(new SystemInstallOnSubscribe(context, packageManager,
-          Uri.fromFile(installation.getFile())))
+              Uri.fromFile(installation.getFile())))
           .subscribeOn(Schedulers.computation())
           .map(success -> installation)
           .startWith(updateInstallation(installation, RoomInstalled.TYPE_SYSTEM,
@@ -353,19 +354,19 @@ public class DefaultInstaller implements Installer {
     intentFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
     intentFilter.addDataScheme("package");
     return Observable.merge(
-        handleInstallationResult(intentFilter, installation, shouldSetPackageInstaller),
-        Observable.<Void>fromCallable(() -> {
-          AppInstall appInstall = map(installation);
-          if (shouldSetPackageInstaller) {
-            appInstaller.install(appInstall);
-          } else {
-            updateInstallation(installation,
-                shouldSetPackageInstaller ? RoomInstalled.TYPE_PACKAGE_INSTALLER
-                    : RoomInstalled.TYPE_DEFAULT, RoomInstalled.STATUS_INSTALLING);
-            startInstallIntent(context, installation.getFile());
-          }
-          return null;
-        }))
+            handleInstallationResult(intentFilter, installation, shouldSetPackageInstaller),
+            Observable.<Void>fromCallable(() -> {
+              AppInstall appInstall = map(installation);
+              if (shouldSetPackageInstaller) {
+                appInstaller.install(appInstall);
+              } else {
+                updateInstallation(installation,
+                    shouldSetPackageInstaller ? RoomInstalled.TYPE_PACKAGE_INSTALLER
+                        : RoomInstalled.TYPE_DEFAULT, RoomInstalled.STATUS_INSTALLING);
+                startInstallIntent(context, installation.getFile());
+              }
+              return null;
+            }))
         .subscribeOn(Schedulers.computation())
         .map(success -> installation);
   }
@@ -373,43 +374,43 @@ public class DefaultInstaller implements Installer {
   private Observable<Installation> handleInstallationResult(IntentFilter intentFilter,
       Installation installation, boolean shouldSetPackageInstaller) {
     return Observable.merge(
-        waitPackageIntent(context, intentFilter, installation.getPackageName()).timeout(
-            installingStateTimeout, TimeUnit.MILLISECONDS, Observable.fromCallable(() -> {
-              if (installation.getStatus() == RoomInstalled.STATUS_INSTALLING) {
-                updateInstallation(installation,
-                    shouldSetPackageInstaller ? RoomInstalled.TYPE_PACKAGE_INSTALLER
-                        : RoomInstalled.TYPE_DEFAULT, RoomInstalled.STATUS_UNINSTALLED);
-              }
-              return null;
-            })), appInstallerStatusReceiver.getInstallerInstallStatus()
-            .doOnNext(installStatus -> {
-              if (InstallStatus.Status.CANCELED.equals(installStatus.getStatus())) {
-                installerAnalytics.logInstallCancelEvent(installation.getPackageName(),
-                    installation.getVersionCode());
-              }
-            })
-            .filter(installStatus -> installation.getPackageName()
-                .equalsIgnoreCase(installStatus.getPackageName()))
-            .distinctUntilChanged()
-            .doOnNext(installStatus -> {
-              Logger.getInstance()
-                  .d("Installer", "status: " + installStatus.getStatus()
-                      .name() + " " + installation.getPackageName());
-              updateInstallation(installation,
-                  shouldSetPackageInstaller ? RoomInstalled.TYPE_PACKAGE_INSTALLER
-                      : RoomInstalled.TYPE_DEFAULT, map(installStatus));
-              if (installStatus.getStatus()
-                  .equals(InstallStatus.Status.FAIL) && isDeviceMIUI()) {
-                installerAnalytics.sendMiuiInstallResultEvent(InstallStatus.Status.FAIL);
-                startInstallIntent(context, installation.getFile());
-                updateInstallation(installation,
-                    shouldSetPackageInstaller ? RoomInstalled.TYPE_PACKAGE_INSTALLER
-                        : RoomInstalled.TYPE_DEFAULT, RoomInstalled.STATUS_INSTALLING);
-              } else if (installStatus.getStatus()
-                  .equals(InstallStatus.Status.SUCCESS) && isDeviceMIUI()) {
-                installerAnalytics.sendMiuiInstallResultEvent(InstallStatus.Status.SUCCESS);
-              }
-            }))
+            waitPackageIntent(context, intentFilter, installation.getPackageName()).timeout(
+                installingStateTimeout, TimeUnit.MILLISECONDS, Observable.fromCallable(() -> {
+                  if (installation.getStatus() == RoomInstalled.STATUS_INSTALLING) {
+                    updateInstallation(installation,
+                        shouldSetPackageInstaller ? RoomInstalled.TYPE_PACKAGE_INSTALLER
+                            : RoomInstalled.TYPE_DEFAULT, RoomInstalled.STATUS_UNINSTALLED);
+                  }
+                  return null;
+                })), appInstallerStatusReceiver.getInstallerInstallStatus()
+                .doOnNext(installStatus -> {
+                  if (InstallStatus.Status.CANCELED.equals(installStatus.getStatus())) {
+                    installerAnalytics.logInstallCancelEvent(installation.getPackageName(),
+                        installation.getVersionCode());
+                  }
+                })
+                .filter(installStatus -> installation.getPackageName()
+                    .equalsIgnoreCase(installStatus.getPackageName()))
+                .distinctUntilChanged()
+                .doOnNext(installStatus -> {
+                  Logger.getInstance()
+                      .d("Installer", "status: " + installStatus.getStatus()
+                          .name() + " " + installation.getPackageName());
+                  updateInstallation(installation,
+                      shouldSetPackageInstaller ? RoomInstalled.TYPE_PACKAGE_INSTALLER
+                          : RoomInstalled.TYPE_DEFAULT, map(installStatus));
+                  if (installStatus.getStatus()
+                      .equals(InstallStatus.Status.FAIL) && isDeviceMIUI()) {
+                    installerAnalytics.sendMiuiInstallResultEvent(InstallStatus.Status.FAIL);
+                    startInstallIntent(context, installation.getFile());
+                    updateInstallation(installation,
+                        shouldSetPackageInstaller ? RoomInstalled.TYPE_PACKAGE_INSTALLER
+                            : RoomInstalled.TYPE_DEFAULT, RoomInstalled.STATUS_INSTALLING);
+                  } else if (installStatus.getStatus()
+                      .equals(InstallStatus.Status.SUCCESS) && isDeviceMIUI()) {
+                    installerAnalytics.sendMiuiInstallResultEvent(InstallStatus.Status.SUCCESS);
+                  }
+                }))
         .map(__ -> installation);
   }
 

@@ -12,7 +12,6 @@ import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.os.Build;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
@@ -464,14 +463,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return BuildConfig.APPLICATION_ID;
   }
 
-  @Singleton @Provides @Named("apkPath") String provideApkPath(
-      @Named("cachePath") String cachePath) {
-    return cachePath + "apks/";
+  @Singleton @Provides @Named("apkPath") String provideApkPath() {
+    return application.getApplicationContext().getCacheDir().getAbsolutePath();
   }
 
-  @Singleton @Provides @Named("obbPath") String provideObbPath(
-      @Named("cachePath") String cachePath) {
-    return cachePath + "obb/";
+  @Singleton @Provides @Named("obbPath") String provideObbPath() {
+    return application.getApplicationContext().getCacheDir().getAbsolutePath() + "obb/";
   }
 
   @Singleton @Provides AptoideDownloadManager provideAptoideDownloadManager(
@@ -1885,8 +1882,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides @Named("cachePath") String provideCachePath() {
-    return Environment.getExternalStorageDirectory()
-        .getAbsolutePath() + "/.aptoide/";
+    return application.getApplicationContext().getCacheDir().getAbsolutePath() + "/";
   }
 
   @Singleton @Provides @Named("imageCachePath") String provideImageCachePatch(

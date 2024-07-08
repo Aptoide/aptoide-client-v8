@@ -81,13 +81,17 @@ public final class AppInstaller {
         }
       }
 
+      int installPendingIntentFlag = 0;
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        installPendingIntentFlag = PendingIntent.FLAG_MUTABLE;
+      }
+
       installResultCallback.onInstallationResult(
           new InstallStatus(InstallStatus.Status.WAITING_INSTALL_FEEDBACK, "Installing...",
               appInstall.getPackageName()));
 
       session.commit(PendingIntent.getBroadcast(context, SESSION_INSTALL_REQUEST_CODE,
-              new Intent(INSTALL_SESSION_API_COMPLETE_ACTION),
-               PendingIntent.FLAG_IMMUTABLE)
+              new Intent(INSTALL_SESSION_API_COMPLETE_ACTION), installPendingIntentFlag)
           .getIntentSender());
     } catch (IOException e) {
       throw new RuntimeException("Couldn't install package", e);
