@@ -2,7 +2,6 @@ package com.aptoide.android.aptoidegames.installer.analytics
 
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.workers.PackageDownloader
-import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
@@ -10,7 +9,7 @@ import java.util.concurrent.CancellationException
 
 class DownloadProbe(
   private val packageDownloader: PackageDownloader,
-  private val genericAnalytics: GenericAnalytics,
+  private val analytics: InstallAnalytics,
 ) : PackageDownloader {
 
   override fun download(
@@ -20,27 +19,27 @@ class DownloadProbe(
     val analyticsPayload = installPackageInfo.payload.toAnalyticsPayload()
     return packageDownloader.download(packageName, installPackageInfo)
       .onStart {
-        genericAnalytics.sendDownloadStartedEvent(
+        analytics.sendDownloadStartedEvent(
           packageName = packageName,
           analyticsPayload = analyticsPayload
         )
       }
       .onCompletion {
         when (it) {
-          is CancellationException -> genericAnalytics.sendDownloadCancelEvent(
+          is CancellationException -> analytics.sendDownloadCancelEvent(
             packageName = packageName,
             analyticsPayload = analyticsPayload
           )
 
-          null -> genericAnalytics.sendDownloadCompletedEvent(
+          null -> analytics.sendDownloadCompletedEvent(
             packageName = packageName,
             analyticsPayload = analyticsPayload
           )
 
-          else -> genericAnalytics.sendDownloadErrorEvent(
+          else -> analytics.sendDownloadErrorEvent(
             packageName = packageName,
             analyticsPayload = analyticsPayload,
-            errorMessage = it.message
+            errorMessage = it.message,
           )
         }
       }
@@ -52,7 +51,7 @@ class DownloadProbe(
     //if it was not cancelled by the Package Downloader, it means that it is on queue,
     // so the analytics won't be called after completion on the download method.
     // We need to call it here
-    if (!cancelled) genericAnalytics.sendDownloadCancelEvent(
+    if (!cancelled) analytics.sendDownloadCancelEvent(
       packageName = packageName,
       analyticsPayload = null
     )
