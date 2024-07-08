@@ -5,9 +5,9 @@ import cm.aptoide.pt.install_manager.dto.Constraints.NetworkType
 import cm.aptoide.pt.install_manager.environment.NetworkConnection
 import cm.aptoide.pt.test.gherkin.coScenario
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.advanceUntilIdle
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
@@ -15,7 +15,6 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
-import kotlin.time.Duration.Companion.seconds
 
 /**
  * AS a Developer,
@@ -36,10 +35,10 @@ internal class TasksTest {
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
     m And "outdated version app update started with given constraints"
-    installManager.getApp(outdatedPackage).install(installInfo, constraints)
+    val task = installManager.getApp(outdatedPackage).install(installInfo, constraints)
 
     m When "wait for some progress to happen"
-    scope.advanceTimeBy(5.seconds)
+    task.stateAndProgress.first { it.first == Task.State.DOWNLOADING }
 
     m Then "a new install task info saved to the repo"
     mocks.taskInfoRepository.get(outdatedPackage)!!.run {
@@ -59,10 +58,10 @@ internal class TasksTest {
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
     m And "outdated version app uninstallation started with given constraints"
-    installManager.getApp(outdatedPackage).uninstall(constraints)
+    val task = installManager.getApp(outdatedPackage).uninstall(constraints)
 
     m When "wait for some progress to happen"
-    scope.advanceTimeBy(5.seconds)
+    task.stateAndProgress.first { it.first != Task.State.PENDING }
 
     m Then "a new uninstall task info saved to the repo"
     mocks.taskInfoRepository.get(outdatedPackage)!!.run {
@@ -185,8 +184,6 @@ internal class TasksTest {
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
-    m And "package downloader mock will wait for cancellation after 25%"
-    mocks.packageDownloader.progressFlow = cancellingFlow
     m And "free space checker mock reports there is 1536 of free space missing"
     mocks.freeSpaceChecker.missingSpace = 1536
     m And "outdated version app update started with given constraints"
@@ -229,7 +226,7 @@ internal class TasksTest {
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
-    m And "package downloader mock will fail after 25%"
+    m And "package downloader mock will fail after some progress"
     mocks.packageDownloader.progressFlow = failingFlow
     m And "outdated version app update started with given constraints"
     val task = installManager.getApp(outdatedPackage).install(installInfo, constraints)
@@ -245,7 +242,7 @@ internal class TasksTest {
     m And "remember final task state"
     val finalState = task.state
 
-    m Then "first collected data ends with failed state after 25% of download"
+    m Then "first collected data ends with failed state after some progress of download"
     assertEquals(
       listOf(
         Task.State.PENDING to -1,
@@ -274,7 +271,7 @@ internal class TasksTest {
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
-    m And "package installer mock will fail after 25%"
+    m And "package installer mock will fail after some progress"
     mocks.packageInstaller.progressFlow = failingFlow
     m And "outdated version app update started with given constraints"
     val task = installManager.getApp(outdatedPackage).install(installInfo, constraints)
@@ -310,7 +307,7 @@ internal class TasksTest {
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
-    m And "package installer mock will fail after 25%"
+    m And "package installer mock will fail after some progress"
     mocks.packageInstaller.progressFlow = failingFlow
     m And "outdated version app uninstall started with given constraints"
     val task = installManager.getApp(outdatedPackage).uninstall(constraints)
@@ -346,7 +343,7 @@ internal class TasksTest {
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
-    m And "package downloader mock will abort after 25%"
+    m And "package downloader mock will abort after some progress"
     mocks.packageDownloader.progressFlow = abortingFlow
     m And "outdated version app update started with given constraints"
     val task = installManager.getApp(outdatedPackage).install(installInfo, constraints)
@@ -382,7 +379,7 @@ internal class TasksTest {
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
-    m And "package installer mock will abort after 25%"
+    m And "package installer mock will abort after some progress"
     mocks.packageInstaller.progressFlow = abortingFlow
     m And "outdated version app update started with given constraints"
     val task = installManager.getApp(outdatedPackage).install(installInfo, constraints)
@@ -418,7 +415,7 @@ internal class TasksTest {
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
-    m And "package installer mock will abort after 25%"
+    m And "package installer mock will abort after some progress"
     mocks.packageInstaller.progressFlow = abortingFlow
     m And "outdated version app uninstall started with given constraints"
     val task = installManager.getApp(outdatedPackage).uninstall(constraints)
@@ -447,15 +444,13 @@ internal class TasksTest {
 
   @ParameterizedTest(name = "{0}")
   @MethodSource("constraintsProvider")
-  fun `Install task cancelled on download if cancelled immediately`(
+  fun `Install task cancelled at once if cancelled immediately`(
     comment: String,
     constraints: Constraints,
   ) = coScenario { scope ->
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
-    m And "package downloader mock will wait for cancellation after 25%"
-    mocks.packageDownloader.progressFlow = cancellingFlow
     m And "outdated version app update started with given constraints"
     val task = installManager.getApp(outdatedPackage).install(installInfo, constraints)
 
@@ -475,8 +470,14 @@ internal class TasksTest {
     m And "remember final task state"
     val finalState = task.state
 
-    m Then "first collected data ends with cancelled state after on download"
-    assertEquals(canceledDownload, result)
+    m Then "first collected data ends with cancelled state before download"
+    assertEquals(
+      listOf(
+        Task.State.PENDING to -1,
+        Task.State.CANCELED to -1
+      ),
+      result
+    )
     m And "second collected data contains only cancelled state"
     assertEquals(listOf(Task.State.CANCELED to -1), result2)
     m And "there is no task info in the repo for the outdated app package name"
@@ -495,8 +496,6 @@ internal class TasksTest {
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
-    m And "package downloader mock will wait for cancellation after 25%"
-    mocks.packageDownloader.progressFlow = cancellingFlow
     m And "outdated version app update started with given constraints"
     val task = installManager.getApp(outdatedPackage).install(installInfo, constraints)
 
@@ -508,7 +507,7 @@ internal class TasksTest {
       result = task.stateAndProgress.toList()
     }
     m And "wait until download starts"
-    scope.advanceUntilIdle()
+    task.stateAndProgress.first { it.first == Task.State.DOWNLOADING }
     m And "call the task cancel"
     task.cancel()
     m And "wait until the task finishes"
@@ -538,8 +537,6 @@ internal class TasksTest {
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
-    m And "package installer mock will wait for cancellation after 25%"
-    mocks.packageInstaller.progressFlow = cancellingFlow
     m And "outdated version app update started with given constraints"
     val task = installManager.getApp(outdatedPackage).install(installInfo, constraints)
 
@@ -551,7 +548,7 @@ internal class TasksTest {
       result = task.stateAndProgress.toList()
     }
     m And "wait until installation starts"
-    scope.advanceUntilIdle()
+    task.stateAndProgress.first { it.first == Task.State.INSTALLING }
     m And "call the task cancel"
     task.cancel()
     m And "wait until the task finishes"
@@ -581,8 +578,6 @@ internal class TasksTest {
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
-    m And "package installer mock will wait for cancellation after 25%"
-    mocks.packageInstaller.progressFlow = cancellingFlow
     m And "outdated version app uninstall started with given constraints"
     val task = installManager.getApp(outdatedPackage).uninstall(constraints)
 
@@ -594,7 +589,7 @@ internal class TasksTest {
       result = task.stateAndProgress.toList()
     }
     m And "wait until uninstallation starts"
-    scope.advanceUntilIdle()
+    task.stateAndProgress.first { it.first == Task.State.UNINSTALLING }
     m And "call the task cancel"
     task.cancel()
     m And "wait until the task finishes"
