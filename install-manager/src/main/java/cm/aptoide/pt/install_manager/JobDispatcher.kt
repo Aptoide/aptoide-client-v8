@@ -25,6 +25,8 @@ internal class JobDispatcher(
 
   internal fun getScheduledIPF(): List<InstallPackageInfo> = pendingTasks
     .run { runningTask.value?.let { this + it } ?: this }
+    .filterNot { it.type == Task.Type.UNINSTALL }
+    .filterNot(Task::isFinished)
     .map(Task::installPackageInfo)
 
   init {
