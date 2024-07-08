@@ -31,6 +31,7 @@ import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.feature_oos.OutOfSpaceDialog
 import com.aptoide.android.aptoidegames.installer.analytics.AnalyticsInstallPackageInfoMapper
+import com.aptoide.android.aptoidegames.installer.analytics.rememberInstallAnalytics
 import com.aptoide.android.aptoidegames.installer.analytics.rememberScheduledInstalls
 import com.aptoide.android.aptoidegames.installer.installConstraints
 import com.aptoide.android.aptoidegames.installer.notifications.rememberInstallerNotifications
@@ -57,7 +58,7 @@ fun installViewStates(
 ): InstallViewState {
   val context = LocalContext.current
   val analyticsContext = AnalyticsContext.current
-  val genericAnalytics = rememberGenericAnalytics()
+  val installAnalytics = rememberInstallAnalytics()
   val downloadUiState = rememberDownloadState(app = app)
   val installerNotifications = rememberInstallerNotifications()
   val (saveAppDetails) = rememberSaveAppDetails()
@@ -79,7 +80,7 @@ fun installViewStates(
         null -> null
         is DownloadUiState.Install -> DownloadUiState.Install(
           resolver = resolver.onResolvedNotNull {
-            genericAnalytics.sendInstallClick(
+            installAnalytics.sendInstallClickEvent(
               app = app,
               networkType = context.getNetworkType(),
               analyticsContext = analyticsContext,
@@ -99,7 +100,7 @@ fun installViewStates(
         is DownloadUiState.Outdated -> DownloadUiState.Outdated(
           open = downloadUiState.open,
           resolver = resolver.onResolvedNotNull {
-            genericAnalytics.sendUpdateClick(
+            installAnalytics.sendUpdateClickEvent(
               app = app,
               networkType = context.getNetworkType(),
               analyticsContext = analyticsContext,
@@ -116,7 +117,7 @@ fun installViewStates(
           },
           uninstall = {
             AnalyticsInstallPackageInfoMapper.currentAnalyticsUIContext = analyticsContext
-            genericAnalytics.sendUninstallClick(app.packageName, app.appSize)
+            installAnalytics.sendUninstallClick(app.packageName, app.appSize)
             downloadUiState.uninstall()
           }
         )
@@ -126,7 +127,7 @@ fun installViewStates(
           action = downloadUiState.action?.let {
             when (downloadUiState.blocker) {
               UNMETERED -> { ->
-                genericAnalytics.sendResumeDownloadClick(
+                installAnalytics.sendResumeDownloadClick(
                   packageName = app.packageName,
                   downloadOnlyOverWifiSetting = downloadOnlyOverWifi,
                   appSize = app.appSize
@@ -136,7 +137,7 @@ fun installViewStates(
 
               else -> { ->
                 canceled = true
-                genericAnalytics.sendDownloadCancel(app.packageName, analyticsContext)
+                installAnalytics.sendDownloadCancel(app.packageName, analyticsContext)
                 it()
               }
             }
@@ -148,7 +149,7 @@ fun installViewStates(
           downloadProgress = downloadUiState.downloadProgress,
           cancel = {
             canceled = true
-            genericAnalytics.sendDownloadCancel(app.packageName, analyticsContext)
+            installAnalytics.sendDownloadCancel(app.packageName, analyticsContext)
             downloadUiState.cancel()
           }
         )
@@ -156,7 +157,7 @@ fun installViewStates(
         is DownloadUiState.ReadyToInstall -> DownloadUiState.ReadyToInstall(
           cancel = {
             canceled = true
-            genericAnalytics.sendDownloadCancel(app.packageName, analyticsContext)
+            installAnalytics.sendDownloadCancel(app.packageName, analyticsContext)
             downloadUiState.cancel()
           }
         )
@@ -167,7 +168,7 @@ fun installViewStates(
 
         is DownloadUiState.Installed -> DownloadUiState.Installed(
           open = {
-            genericAnalytics.sendOpenClick(
+            installAnalytics.sendOpenClick(
               packageName = app.packageName,
               hasAPPCBilling = app.isAppCoins,
               analyticsContext = analyticsContext,
@@ -175,14 +176,14 @@ fun installViewStates(
             downloadUiState.open()
           },
           uninstall = {
-            genericAnalytics.sendUninstallClick(app.packageName, app.appSize)
+            installAnalytics.sendUninstallClick(app.packageName, app.appSize)
             downloadUiState.uninstall()
           }
         )
 
         is DownloadUiState.Error -> DownloadUiState.Error(
           resolver = resolver.onResolvedNotNull {
-            genericAnalytics.sendRetryClick(
+            installAnalytics.sendRetryClick(
               app = app,
               networkType = context.getNetworkType(),
               analyticsContext = analyticsContext,

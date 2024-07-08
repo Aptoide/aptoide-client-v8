@@ -2,7 +2,6 @@ package com.aptoide.android.aptoidegames.installer.analytics
 
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.workers.PackageInstaller
-import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
@@ -10,7 +9,7 @@ import kotlin.coroutines.cancellation.CancellationException
 
 class InstallProbe(
   private val packageInstaller: PackageInstaller,
-  private val analytics: GenericAnalytics,
+  private val analytics: InstallAnalytics,
 ) : PackageInstaller {
 
   override fun install(
@@ -42,7 +41,7 @@ class InstallProbe(
           else -> analytics.sendInstallErrorEvent(
             packageName = packageName,
             analyticsPayload = analyticsPayload,
-            errorMessage = it.message
+            errorMessage = it.message,
           )
         }
       }
