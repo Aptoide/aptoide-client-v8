@@ -29,6 +29,7 @@ private const val PREV_SCREEN_PARAM = "previousScreen"
 private const val BUNDLE_META_PARAM = "bundleMeta"
 private const val SEARCH_META_PARAM = "searchMeta"
 private const val ITEM_POSITION_PARAM = "itemPosition"
+private const val IS_APKFY_PARAM = "isApkfy"
 
 fun ScreenData.Companion.withAnalytics(
   route: String,
@@ -42,7 +43,8 @@ fun ScreenData.Companion.withAnalytics(
       .withPrevScreen("{$PREV_SCREEN_PARAM}")
       .withBundleMeta("{$BUNDLE_META_PARAM}")
       .withSearchMeta("{$SEARCH_META_PARAM}")
-      .withItemPosition("{$ITEM_POSITION_PARAM}"),
+      .withItemPosition("{$ITEM_POSITION_PARAM}")
+      .withApkfy("{$IS_APKFY_PARAM}"),
     arguments = arguments + listOf(
       navArgument(PREV_SCREEN_PARAM) {
         type = NavType.StringType
@@ -59,6 +61,10 @@ fun ScreenData.Companion.withAnalytics(
       navArgument(ITEM_POSITION_PARAM) {
         type = NavType.StringType
         nullable = true
+      },
+      navArgument(IS_APKFY_PARAM) {
+        type = NavType.BoolType
+        defaultValue = false
       }
     ),
     deepLinks = deepLinks.map {
@@ -69,13 +75,19 @@ fun ScreenData.Companion.withAnalytics(
       val bundleMeta = args?.getString(BUNDLE_META_PARAM)?.let(BundleMeta::fromString)
       val searchMeta = args?.getString(SEARCH_META_PARAM)?.let(SearchMeta::fromString)
       val itemPosition = args?.getString(ITEM_POSITION_PARAM)?.toIntOrNull()
+      val isApkfy = args?.getBoolean(IS_APKFY_PARAM, false) ?: false
+
+      //So that UI drawn outside of this screen is aware of the current screen
+      AnalyticsContext.current.currentScreen = screenAnalyticsName
+
       CompositionLocalProvider(
         LocalAnalyticsContext provides AnalyticsUIContext(
           currentScreen = screenAnalyticsName,
           previousScreen = previousScreen,
           bundleMeta = bundleMeta,
           searchMeta = searchMeta,
-          itemPosition = itemPosition
+          itemPosition = itemPosition,
+          isApkfy = isApkfy,
         )
       ) {
         content(
@@ -85,6 +97,7 @@ fun ScreenData.Companion.withAnalytics(
               .withBundleMeta(bundleMeta)
               .withSearchMeta(searchMeta)
               .withItemPosition(itemPosition)
+              .withApkfy(isApkfy)
               .also(navigate)
           },
           goBack
@@ -107,7 +120,8 @@ fun OverrideAnalyticsBundleMeta(
       previousScreen = current.previousScreen,
       bundleMeta = bundleMeta,
       searchMeta = current.searchMeta,
-      itemPosition = current.itemPosition
+      itemPosition = current.itemPosition,
+      isApkfy = false
     )
   ) {
     content {
@@ -131,11 +145,34 @@ fun InitialAnalyticsMeta(
       previousScreen = null,
       bundleMeta = null,
       searchMeta = null,
-      itemPosition = null
+      itemPosition = null,
+      isApkfy = false
     )
   ) {
     content {
       navigate(it.withPrevScreen(screenAnalyticsName))
+    }
+  }
+}
+
+@Composable
+fun OverrideAnalyticsAPKFY(
+  navigate: (String) -> Unit,
+  content: @Composable ((String) -> Unit) -> Unit,
+) {
+  val current = LocalAnalyticsContext.current
+  CompositionLocalProvider(
+    LocalAnalyticsContext provides AnalyticsUIContext(
+      currentScreen = current.currentScreen,
+      previousScreen = current.previousScreen,
+      bundleMeta = null,
+      searchMeta = null,
+      itemPosition = null,
+      isApkfy = true
+    )
+  ) {
+    content {
+      navigate(it.withApkfy(true).withPrevScreen(current.currentScreen))
     }
   }
 }
@@ -145,6 +182,8 @@ fun String.withBundleMeta(bundleMeta: BundleMeta?) = withBundleMeta(bundleMeta?.
 fun String.withSearchMeta(searchMeta: SearchMeta?) = withSearchMeta(searchMeta?.toString())
 
 fun String.withItemPosition(itemPosition: Int?) = withItemPosition(itemPosition?.toString())
+
+fun String.withApkfy(isApkfy: Boolean?) = withApkfy(isApkfy?.toString())
 
 fun String.withPrevScreen(previousScreen: String) =
   withParameter(PREV_SCREEN_PARAM, previousScreen)
@@ -157,6 +196,9 @@ private fun String.withSearchMeta(searchMeta: String?) =
 
 fun String.withItemPosition(itemPosition: String?) =
   withParameter(ITEM_POSITION_PARAM, itemPosition)
+
+fun String.withApkfy(isApkfy: String?) =
+  withParameter(IS_APKFY_PARAM, isApkfy)
 
 private fun String.withParameter(
   name: String,

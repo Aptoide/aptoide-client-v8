@@ -11,6 +11,7 @@ import cm.aptoide.pt.feature_apps.data.App
 import com.aptoide.android.aptoidegames.BottomSheetContent
 import com.aptoide.android.aptoidegames.BottomSheetHeader
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.analytics.presentation.OverrideAnalyticsAPKFY
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.feature_apps.presentation.AppItem
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
@@ -22,24 +23,26 @@ class ApkfyBottomSheetContent(private val app: App) : BottomSheetContent {
     dismiss: () -> Unit,
     navigate: (String) -> Unit,
   ) {
-    Column(
-      modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 50.dp)
-    ) {
-      BottomSheetHeader()
-      Text(
-        modifier = Modifier.padding(top = 11.dp, bottom = 22.dp),
-        text = stringResource(id = R.string.apkfy_install_title),
-        color = Palette.White,
-        style = AGTypography.Title
-      )
-      AppItem(
-        app = app,
-        onClick = {
-          navigate(buildAppViewRoute(app.packageName))
-          dismiss()
-        }
+    OverrideAnalyticsAPKFY(navigate) { navigateTo ->
+      Column(
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 50.dp)
       ) {
-        InstallViewShort(app)
+        BottomSheetHeader()
+        Text(
+          modifier = Modifier.padding(top = 11.dp, bottom = 22.dp),
+          text = stringResource(id = R.string.apkfy_install_title),
+          color = Palette.White,
+          style = AGTypography.Title
+        )
+        AppItem(
+          app = app,
+          onClick = {
+            navigateTo(buildAppViewRoute(app.packageName))
+            dismiss()
+          }
+        ) {
+          InstallViewShort(app)
+        }
       }
     }
   }

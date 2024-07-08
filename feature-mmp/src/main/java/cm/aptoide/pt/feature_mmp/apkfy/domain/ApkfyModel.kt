@@ -10,4 +10,8 @@ data class ApkfyModel(
   val utmCampaign: String?,
   val utmTerm: String?,
   val utmContent: String?,
-)
+) {
+  fun hasUTMs() = this.run {
+    utmSource != null || utmMedium != null || utmCampaign != null || utmTerm != null || utmContent != null
+  }
+}

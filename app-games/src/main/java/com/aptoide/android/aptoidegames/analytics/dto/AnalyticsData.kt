@@ -12,6 +12,7 @@ data class AnalyticsUIContext(
   val bundleMeta: BundleMeta?,
   val searchMeta: SearchMeta?,
   val itemPosition: Int?,
+  val isApkfy: Boolean,
 ) {
   companion object {
     val Empty = AnalyticsUIContext(
@@ -19,7 +20,8 @@ data class AnalyticsUIContext(
       previousScreen = null,
       bundleMeta = null,
       searchMeta = null,
-      itemPosition = null
+      itemPosition = null,
+      isApkfy = false
     )
   }
 }
