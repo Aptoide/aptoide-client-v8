@@ -1,7 +1,6 @@
 package cm.aptoide.pt.analytics;
 
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import cm.aptoide.analytics.AnalyticsLogger;
 import cm.aptoide.analytics.AnalyticsManager;
@@ -15,12 +14,9 @@ import com.google.android.gms.safetynet.SafetyNetApi;
 import com.google.android.gms.safetynet.SafetyNetClient;
 import com.indicative.client.android.Indicative;
 import io.rakam.api.Rakam;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.zip.ZipFile;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -190,7 +186,6 @@ public class FirstLaunchAnalytics {
         .doOnNext(
             __ -> setupFirstLaunchSuperProperty(SecurePreferences.isFirstRun(sharedPreferences)))
         .doOnNext(__ -> sendPlayProtectEvent())
-        .doOnNext(__ -> setupDimensions(application))
         .filter(__ -> SecurePreferences.isFirstRun(sharedPreferences))
         .doOnNext(
             __ -> sendFirstLaunchEvent(utmSource, utmMedium, utmCampaign, utmContent, entryPoint))
@@ -205,6 +200,7 @@ public class FirstLaunchAnalytics {
 
     Map<String, Object> indicativeProperties = new HashMap<>();
     indicativeProperties.put("first_session", isFirstLaunch);
+    indicativeProperties.put(APTOIDE_PACKAGE, packageName);
     Indicative.addProperties(indicativeProperties);
   }
 
@@ -219,60 +215,6 @@ public class FirstLaunchAnalytics {
       e.printStackTrace();
     }
     return superProperties;
-  }
-
-  private void setupDimensions(android.app.Application application) {
-    if (!checkForUTMFileInMetaINF(application)) {
-      setUTMDimensionsToUnknown();
-      sendFirstLaunchSourceUserProperties(UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN,
-          application.getPackageName());
-    } else {
-      setUserProperties(utmSource, utmMedium, utmCampaign, utmContent, entryPoint);
-      sendFirstLaunchSourceUserProperties(utmContent, utmSource, utmCampaign, utmMedium, entryPoint,
-          application.getPackageName());
-    }
-  }
-
-  private boolean checkForUTMFileInMetaINF(android.app.Application application) {
-    ZipFile myZipFile = null;
-    try {
-      final String sourceDir = application.getApplicationContext()
-          .getPackageManager()
-          .getPackageInfo(application.getApplicationContext()
-              .getPackageName(), 0).applicationInfo.sourceDir;
-      myZipFile = new ZipFile(sourceDir);
-      final InputStream utmInputStream =
-          myZipFile.getInputStream(myZipFile.getEntry("META-INF/utm"));
-
-      UTMTrackingFileParser utmTrackingFileParser = new UTMTrackingFileParser(utmInputStream);
-      myZipFile.close();
-
-      utmSource = utmTrackingFileParser.valueExtracter("utm_source");
-      utmMedium = utmTrackingFileParser.valueExtracter("utm_medium");
-      utmCampaign = utmTrackingFileParser.valueExtracter("utm_campaign");
-      utmContent = utmTrackingFileParser.valueExtracter("utm_content");
-      entryPoint = utmTrackingFileParser.valueExtracter("entry_point");
-
-      utmInputStream.close();
-    } catch (IOException e) {
-      logger.logDebug(TAG, "problem parsing utm/no utm file");
-      return false;
-    } catch (PackageManager.NameNotFoundException e) {
-      logger.logDebug(TAG, "No package name utm file.");
-      return false;
-    } catch (NullPointerException e) {
-      if (myZipFile != null) {
-        try {
-          myZipFile.close();
-        } catch (IOException e1) {
-          e1.printStackTrace();
-          return false;
-        }
-        return false;
-      }
-      logger.logDebug(TAG, "No utm file.");
-    }
-    return true;
   }
 
   public void setGmsPresent() {
@@ -290,85 +232,14 @@ public class FirstLaunchAnalytics {
     FlurryAgent.UserProperties.add(key, value);
   }
 
-  private void setUserPropertiesWithBundle(Bundle data) {
-    AppEventsLogger.updateUserProperties(data,
-        response -> logger.logDebug("Facebook Analytics: ", response.toString()));
-  }
-
-  private void setUserProperties(String utmSource, String utmMedium, String utmCampaign,
-      String utmContent, String entryPoint) {
-    setUserPropertiesWithBundle(
-        createUserPropertiesBundle(utmSource, utmMedium, utmCampaign, utmContent, entryPoint));
-    FlurryAgent.UserProperties.add(UTM_SOURCE, utmSource);
-    FlurryAgent.UserProperties.add(UTM_MEDIUM, utmMedium);
-    FlurryAgent.UserProperties.add(UTM_CAMPAIGN, utmCampaign);
-    FlurryAgent.UserProperties.add(UTM_CONTENT, utmContent);
-    FlurryAgent.UserProperties.add(ENTRY_POINT, entryPoint);
-  }
-
-  private Bundle createUserPropertiesBundle(String utmSource, String utmMedium, String utmCampaign,
-      String utmContent, String entryPoint) {
-    Bundle data = new Bundle();
-    data.putString(UTM_SOURCE, utmSource);
-    data.putString(UTM_MEDIUM, utmMedium);
-    data.putString(UTM_CAMPAIGN, utmCampaign);
-    data.putString(UTM_CONTENT, utmContent);
-    data.putString(ENTRY_POINT, entryPoint);
-    return data;
-  }
-
-  private void setUTMDimensionsToUnknown() {
-    Bundle data = new Bundle();
-    data.putString(UTM_SOURCE, UNKNOWN);
-    data.putString(UTM_MEDIUM, UNKNOWN);
-    data.putString(UTM_CAMPAIGN, UNKNOWN);
-    data.putString(UTM_CONTENT, UNKNOWN);
-    data.putString(ENTRY_POINT, UNKNOWN);
-    setUserPropertiesWithBundle(data);
-    FlurryAgent.UserProperties.add(UTM_SOURCE, UNKNOWN);
-    FlurryAgent.UserProperties.add(UTM_MEDIUM, UNKNOWN);
-    FlurryAgent.UserProperties.add(UTM_CAMPAIGN, UNKNOWN);
-    FlurryAgent.UserProperties.add(UTM_CONTENT, UNKNOWN);
-    FlurryAgent.UserProperties.add(ENTRY_POINT, UNKNOWN);
-  }
-
-  private void sendFirstLaunchSourceUserProperties(String utmContent, String utmSource,
-      String utmCampaign, String utmMedium, String entryPoint, String packageName) {
-    Rakam.getInstance()
-        .setSuperProperties(
-            addFirstLaunchSourceUserProperties(utmContent, utmSource, utmCampaign, utmMedium,
-                entryPoint, packageName, Rakam.getInstance()
-                    .getSuperProperties()));
-
+  public void sendIndicativeFirstLaunchSourceUserProperties(String utmContent, String utmSource,
+      String utmCampaign, String utmMedium) {
     Map<String, Object> indicativeProperties = new HashMap<>();
     indicativeProperties.put(GMS_RAKAM, gmsStatusValueProvider.getGmsValue());
     indicativeProperties.put(UTM_CONTENT_RAKAM, utmContent);
     indicativeProperties.put(UTM_SOURCE_RAKAM, utmSource);
     indicativeProperties.put(UTM_CAMPAIGN_RAKAM, utmCampaign);
     indicativeProperties.put(UTM_MEDIUM_RAKAM, utmMedium);
-    indicativeProperties.put(ENTRY_POINT_RAKAM, entryPoint);
-    indicativeProperties.put(APTOIDE_PACKAGE, packageName);
     Indicative.addProperties(indicativeProperties);
-  }
-
-  @NotNull
-  private JSONObject addFirstLaunchSourceUserProperties(String utmContent, String utmSource,
-      String utmCampaign, String utmMedium, String entryPoint, String packageName,
-      JSONObject superProperties) {
-    if (superProperties == null) {
-      superProperties = new JSONObject();
-    }
-    try {
-      superProperties.put(GMS_RAKAM, gmsStatusValueProvider.getGmsValue());
-      superProperties.put(UTM_CONTENT_RAKAM, utmContent);
-      superProperties.put(UTM_SOURCE_RAKAM, utmSource);
-      superProperties.put(UTM_CAMPAIGN_RAKAM, utmCampaign);
-      superProperties.put(UTM_MEDIUM_RAKAM, utmMedium);
-      superProperties.put(ENTRY_POINT_RAKAM, entryPoint);
-      superProperties.put(APTOIDE_PACKAGE, packageName);
-    } catch (JSONException e) {
-      e.printStackTrace();
-    }
-    return superProperties;
   }
 }

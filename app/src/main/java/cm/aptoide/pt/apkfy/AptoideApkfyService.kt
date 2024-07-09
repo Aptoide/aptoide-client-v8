@@ -20,7 +20,7 @@ class AptoideApkfyService(private val serviceApi: ServiceApi) : ApkfyService {
   }
 
   private fun mapErrorResponse(): ApkfyModel {
-    return ApkfyModel("", null, "", "")
+    return ApkfyModel("", null, "", "", "", "", "", "", "")
   }
 
   interface ServiceApi {

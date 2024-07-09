@@ -855,6 +855,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return okHttpClientBuilder.build();
   }
 
+  @Singleton @Provides @Named("aptoide-mmp-okhttp") OkHttpClient provideAptoideMMpOkHttpClient(
+      @Named("aptoide-mmp-okhttp-builder") OkHttpClient.Builder okHttpClientBuilder,
+      @Named("user-agent") Interceptor userAgentInterceptor) {
+    okHttpClientBuilder.addInterceptor(userAgentInterceptor);
+    return okHttpClientBuilder.build();
+  }
+
   @Singleton @Provides @Named("long-timeout") OkHttpClient provideLongTimeoutOkHttpClient(
       @Named("user-agent") Interceptor userAgentInterceptor,
       @Named("default") SharedPreferences sharedPreferences,
@@ -898,6 +905,25 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     final OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
     okHttpClientBuilder.readTimeout(45, TimeUnit.SECONDS);
     okHttpClientBuilder.writeTimeout(45, TimeUnit.SECONDS);
+    final Cache cache = new Cache(application.getCacheDir(), 10 * 1024 * 1024);
+    okHttpClientBuilder.cache(cache); // 10 MiB
+    okHttpClientBuilder.addInterceptor(new POSTCacheInterceptor(httpClientCache));
+
+    if (ToolboxManager.isToolboxEnableRetrofitLogs(sharedPreferences)) {
+      okHttpClientBuilder.addInterceptor(retrofitLogInterceptor);
+    }
+
+    return okHttpClientBuilder;
+  }
+
+
+
+  @Singleton @Provides @Named("aptoide-mmp-okhttp-builder") OkHttpClient.Builder providesAptoideMMPOkHttpBuilder(
+      L2Cache httpClientCache, @Named("default") SharedPreferences sharedPreferences,
+      @Named("retrofit-log") Interceptor retrofitLogInterceptor) {
+    final OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
+    okHttpClientBuilder.readTimeout(6, TimeUnit.SECONDS);
+    okHttpClientBuilder.writeTimeout(6, TimeUnit.SECONDS);
     final Cache cache = new Cache(application.getCacheDir(), 10 * 1024 * 1024);
     okHttpClientBuilder.cache(cache); // 10 MiB
     okHttpClientBuilder.addInterceptor(new POSTCacheInterceptor(httpClientCache));
@@ -2255,7 +2281,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides @Named("retrofit-aptoide-mmp") Retrofit providesAptoideMmpRetrofit(
-      @Named("aptoide-mmp-base-host") String baseHost, @Named("default") OkHttpClient httpClient,
+      @Named("aptoide-mmp-base-host") String baseHost, @Named("aptoide-mmp-okhttp") OkHttpClient httpClient,
       Converter.Factory converterFactory, @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
     return new Retrofit.Builder().baseUrl(baseHost)
         .client(httpClient)
