@@ -101,7 +101,7 @@ fun AppViewScreen(
   packageName: String = "",
   navigateBack: () -> Unit = {},
   navigate: (String) -> Unit = {},
-){
+) {
   val appViewModel = appViewModel(packageName = packageName, adListId = "")
   val uiState by appViewModel.uiState.collectAsState()
 
@@ -133,6 +133,7 @@ fun AppViewScreen(
     tabsList = tabsList
   )
 }
+
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainAppViewView(
@@ -251,7 +252,7 @@ fun ViewPagerContent(
   selectedTab: AppViewTab,
   onSelectReportApp: (App) -> Unit,
   onAppClick: (String) -> Unit,
-  onRelatedContentClick: (String) -> Unit
+  onRelatedContentClick: (String) -> Unit,
 ) {
   when (selectedTab) {
     AppViewTab.DETAILS -> DetailsView(

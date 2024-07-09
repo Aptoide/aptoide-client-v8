@@ -30,7 +30,10 @@ class InjectionsProvider @Inject constructor(
 ) : ViewModel()
 
 @Composable
-fun appViewModel(packageName: String, adListId: String?): AppViewModel {
+fun appViewModel(
+  packageName: String,
+  adListId: String?,
+): AppViewModel {
   val injectionsProvider = hiltViewModel<InjectionsProvider>()
   return viewModel(
     viewModelStoreOwner = LocalContext.current as ViewModelStoreOwner,
@@ -72,7 +75,7 @@ fun appVersions(packageName: String): Pair<AppsListUiState, KFunction0<Unit>> {
 @Composable
 fun rememberAppsByTag(
   tag: String,
-  salt: String? = null
+  salt: String? = null,
 ): Pair<AppsListUiState, () -> Unit> = runPreviewable(
   preview = {
     AppsListUiState.Idle(List((0..50).random()) { randomApp }) to {}
@@ -99,7 +102,7 @@ fun rememberAppsByTag(
 @Composable
 fun eSkillsApps(
   tag: String,
-  salt: String? = null
+  salt: String? = null,
 ): Pair<AppsListUiState, KFunction0<Unit>> {
   val injectionsProvider = hiltViewModel<InjectionsProvider>()
   val vm: AppsListViewModel = viewModel(
@@ -122,7 +125,7 @@ fun eSkillsApps(
 @Composable
 fun categoryApps(
   categoryName: String,
-  salt: String? = null
+  salt: String? = null,
 ): Pair<AppsListUiState, KFunction0<Unit>> {
   val injectionsProvider = hiltViewModel<InjectionsProvider>()
   val vm: AppsListViewModel = viewModel(
