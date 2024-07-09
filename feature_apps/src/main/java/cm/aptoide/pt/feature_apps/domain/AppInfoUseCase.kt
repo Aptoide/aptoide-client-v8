@@ -6,6 +6,7 @@ import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
 
 @ViewModelScoped
+@Suppress("unused")
 class AppInfoUseCase @Inject constructor(private val appsRepository: AppsRepository) {
 
   suspend fun getAppInfo(packageName: String): App =
