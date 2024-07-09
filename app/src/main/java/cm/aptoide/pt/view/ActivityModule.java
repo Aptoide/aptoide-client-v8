@@ -32,6 +32,7 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MoPubAdsManager;
+import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.apkfy.ApkFyParser;
 import cm.aptoide.pt.apkfy.ApkfyManager;
 import cm.aptoide.pt.app.AppNavigator;
@@ -140,8 +141,8 @@ import static android.content.Context.WINDOW_SERVICE;
 
   @ActivityScope @Provides ApkFyParser provideApkFy(
       @Named("secureShared") SharedPreferences securePreferences,
-      ApkfyManager apkfyManager) {
-    return new ApkFyParser(activity, intent, securePreferences, apkfyManager);
+      ApkfyManager apkfyManager, FirstLaunchAnalytics firstLaunchAnalytics) {
+    return new ApkFyParser(activity, intent, securePreferences, apkfyManager, firstLaunchAnalytics);
   }
 
   @ActivityScope @Provides AutoUpdateService providesAutoUpdateService(Service service,

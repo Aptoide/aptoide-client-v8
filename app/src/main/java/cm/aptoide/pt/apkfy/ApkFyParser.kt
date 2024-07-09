@@ -3,8 +3,10 @@ package cm.aptoide.pt.apkfy
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.util.Log
 import cm.aptoide.pt.DeepLinkIntentReceiver.DeepLinksKeys
 import cm.aptoide.pt.DeepLinkIntentReceiver.DeepLinksTargets
+import cm.aptoide.pt.analytics.FirstLaunchAnalytics
 import cm.aptoide.pt.preferences.secure.SecurePreferences
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,7 +19,8 @@ class ApkFyParser(
   private val context: Context,
   private val intent: Intent,
   private val securePreferences: SharedPreferences,
-  private val apkfyManager: ApkfyManager
+  private val apkfyManager: ApkfyManager,
+  private val firstLaunchAnalytics: FirstLaunchAnalytics
 ) {
   fun run() {
     CoroutineScope(Dispatchers.Main).launch {
@@ -26,6 +29,12 @@ class ApkFyParser(
         try {
           val apkfyModel = apkfyManager.getApkfy()
           updateApkfy(apkfyModel)
+          firstLaunchAnalytics.sendIndicativeFirstLaunchSourceUserProperties(
+            apkfyModel.utmContent,
+            apkfyModel.utmSource,
+            apkfyModel.utmCampaign,
+            apkfyModel.utmMedium,
+          )
         } catch (throwable: Throwable) {
           throwable.printStackTrace()
         }
