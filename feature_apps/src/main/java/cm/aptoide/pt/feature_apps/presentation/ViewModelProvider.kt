@@ -30,26 +30,32 @@ class InjectionsProvider @Inject constructor(
 ) : ViewModel()
 
 @Composable
-fun appViewModel(
+fun rememberApp(
   packageName: String,
   adListId: String?,
-): AppViewModel {
-  val injectionsProvider = hiltViewModel<InjectionsProvider>()
-  return viewModel(
-    viewModelStoreOwner = LocalContext.current as ViewModelStoreOwner,
-    key = "appView/$packageName",
-    factory = object : ViewModelProvider.Factory {
-      override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        @Suppress("UNCHECKED_CAST")
-        return AppViewModel(
-          appMetaUseCase = injectionsProvider.appMetaUseCase,
-          packageName = packageName,
-          adListId = adListId
-        ) as T
+): Pair<AppUiState, () -> Unit> = runPreviewable(
+  preview = { AppUiStateProvider().values.toSet().random() to {} },
+  real = {
+    val injectionsProvider = hiltViewModel<InjectionsProvider>()
+    val vm: AppViewModel = viewModel(
+      viewModelStoreOwner = LocalContext.current as ViewModelStoreOwner,
+      key = "appView/$packageName",
+      factory = object : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+          @Suppress("UNCHECKED_CAST")
+          return AppViewModel(
+            appMetaUseCase = injectionsProvider.appMetaUseCase,
+            packageName = packageName,
+            adListId = adListId
+          ) as T
+        }
       }
-    }
-  )
-}
+    )
+
+    val uiState by vm.uiState.collectAsState()
+    uiState to vm::reload
+  }
+)
 
 @Composable
 fun appVersions(packageName: String): Pair<AppsListUiState, KFunction0<Unit>> {

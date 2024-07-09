@@ -57,7 +57,7 @@ import cm.aptoide.pt.extensions.toFormattedString
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
-import cm.aptoide.pt.feature_apps.presentation.appViewModel
+import cm.aptoide.pt.feature_apps.presentation.rememberApp
 import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
 import cm.aptoide.pt.feature_editorial.presentation.relatedEditorialsCardViewModel
 import com.aptoide.android.aptoidegames.AppIconImage
@@ -118,10 +118,9 @@ fun AppViewScreen(
   navigate: (String) -> Unit,
   navigateBack: () -> Unit,
 ) {
-  val appViewModel = appViewModel(packageName = packageName, adListId = "")
+  val (uiState, reload) = rememberApp(packageName = packageName, adListId = "")
   val analyticsContext = AnalyticsContext.current
   val genericAnalytics = rememberGenericAnalytics()
-  val uiState by appViewModel.uiState.collectAsState()
 
   val editorialsCardViewModel = relatedEditorialsCardViewModel(packageName = packageName)
   val relatedEditorialsUiState by editorialsCardViewModel.uiState.collectAsState()
@@ -137,10 +136,8 @@ fun AppViewScreen(
 
   MainAppViewView(
     uiState = uiState,
-    reload = appViewModel::reload,
-    noNetworkReload = {
-      appViewModel.reload()
-    },
+    reload = reload,
+    noNetworkReload = reload,
     navigate = navigate,
     navigateBack = {
       genericAnalytics.sendBackButtonClick(analyticsContext)
