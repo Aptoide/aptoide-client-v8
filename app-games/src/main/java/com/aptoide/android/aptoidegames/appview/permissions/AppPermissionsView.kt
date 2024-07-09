@@ -13,8 +13,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
@@ -24,7 +22,7 @@ import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.AppUiStateProvider
-import cm.aptoide.pt.feature_apps.presentation.appViewModel
+import cm.aptoide.pt.feature_apps.presentation.rememberApp
 import com.aptoide.android.aptoidegames.AppIconImage
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
@@ -53,8 +51,7 @@ fun AppInfoPermissionsView(
   navigateBack: () -> Unit,
   packageName: String,
 ) {
-  val appViewModel = appViewModel(packageName = packageName, adListId = "")
-  val uiState by appViewModel.uiState.collectAsState()
+  val (uiState, _) = rememberApp(packageName = packageName, adListId = "")
 
   (uiState as? AppUiState.Idle)?.app?.run {
     AppInfoPermissionsViewContent(

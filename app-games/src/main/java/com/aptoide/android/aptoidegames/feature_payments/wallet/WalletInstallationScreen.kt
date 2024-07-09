@@ -15,7 +15,6 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,7 +33,7 @@ import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.AppUiStateProvider
-import cm.aptoide.pt.feature_apps.presentation.appViewModel
+import cm.aptoide.pt.feature_apps.presentation.rememberApp
 import cm.aptoide.pt.feature_home.domain.BundleSource
 import com.appcoins.payments.arch.PurchaseRequest
 import com.appcoins.payments.arch.emptyPurchaseRequest
@@ -52,8 +51,8 @@ import com.aptoide.android.aptoidegames.feature_payments.LoadingView
 import com.aptoide.android.aptoidegames.feature_payments.PortraitPaymentErrorView
 import com.aptoide.android.aptoidegames.feature_payments.PortraitPaymentsNoConnectionView
 import com.aptoide.android.aptoidegames.feature_payments.PurchaseInfoRow
-import com.aptoide.android.aptoidegames.installer.UserActionDialog
 import com.aptoide.android.aptoidegames.feature_payments.analytics.PaymentContext
+import com.aptoide.android.aptoidegames.installer.UserActionDialog
 import com.aptoide.android.aptoidegames.installer.analytics.AnalyticsInstallPackageInfoMapper
 import com.aptoide.android.aptoidegames.installer.forceInstallConstraints
 import com.aptoide.android.aptoidegames.installer.notifications.rememberInstallerNotifications
@@ -126,8 +125,7 @@ private fun PaymentsWalletInstallationBottomSheetView(
 ) {
   val genericAnalytics = rememberGenericAnalytics()
   val walletPaymentMethod = rememberWalletPaymentMethod(purchaseRequest)
-  val walletViewModel = appViewModel(packageName = "com.appcoins.wallet", adListId = "")
-  val uiState by walletViewModel.uiState.collectAsState()
+  val (uiState, _) = rememberApp(packageName = "com.appcoins.wallet", adListId = "")
 
   PaymentsWalletInstallationView(
     purchaseRequest = purchaseRequest,
