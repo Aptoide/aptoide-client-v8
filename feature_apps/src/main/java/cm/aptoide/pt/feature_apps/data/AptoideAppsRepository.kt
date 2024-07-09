@@ -32,7 +32,10 @@ internal class AptoideAppsRepository @Inject constructor(
   private val scope: CoroutineScope,
 ) : AppsRepository {
 
-  override suspend fun getAppsList(url: String, bypassCache: Boolean): List<App> =
+  override suspend fun getAppsList(
+    url: String,
+    bypassCache: Boolean,
+  ): List<App> =
     withContext(scope.coroutineContext) {
       if (url.isEmpty()) {
         throw IllegalStateException()
@@ -78,7 +81,10 @@ internal class AptoideAppsRepository @Inject constructor(
         ?: throw IllegalStateException()
     }
 
-  override suspend fun getApp(packageName: String, bypassCache: Boolean): App =
+  override suspend fun getApp(
+    packageName: String,
+    bypassCache: Boolean,
+  ): App =
     withContext(scope.coroutineContext) {
       appsRemoteDataSource.getApp(
         path = packageName,
@@ -93,7 +99,10 @@ internal class AptoideAppsRepository @Inject constructor(
         )
     }
 
-  override suspend fun getMeta(packageName: String, bypassCache: Boolean): App =
+  override suspend fun getMeta(
+    packageName: String,
+    bypassCache: Boolean,
+  ): App =
     withContext(scope.coroutineContext) {
 
       appsRemoteDataSource.getMeta(
@@ -108,7 +117,10 @@ internal class AptoideAppsRepository @Inject constructor(
         )
     }
 
-  override suspend fun getRecommended(path: String, bypassCache: Boolean): List<App> =
+  override suspend fun getRecommended(
+    path: String,
+    bypassCache: Boolean,
+  ): List<App> =
     withContext(scope.coroutineContext) {
       val randomAdListId = UUID.randomUUID().toString()
       appsRemoteDataSource.getRecommendedAppsList(
