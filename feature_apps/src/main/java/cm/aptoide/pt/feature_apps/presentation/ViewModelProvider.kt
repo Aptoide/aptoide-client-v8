@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.feature_apps.data.randomApp
-import cm.aptoide.pt.feature_apps.domain.AppInfoUseCase
+import cm.aptoide.pt.feature_apps.domain.AppMetaUseCase
 import cm.aptoide.pt.feature_apps.domain.AppVersionsUseCase
 import cm.aptoide.pt.feature_apps.domain.AppsByTagUseCase
 import cm.aptoide.pt.feature_apps.domain.CategoryAppsUseCase
@@ -22,7 +22,7 @@ import kotlin.reflect.KFunction0
 
 @HiltViewModel
 class InjectionsProvider @Inject constructor(
-  val appInfoUseCase: AppInfoUseCase,
+  val appMetaUseCase: AppMetaUseCase,
   val appVersionsUseCase: AppVersionsUseCase,
   val appsByTagUseCase: AppsByTagUseCase,
   val eSkillsAppsUseCase: ESkillsAppsUseCase,
@@ -42,7 +42,7 @@ fun appViewModel(
       override fun <T : ViewModel> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
         return AppViewModel(
-          appInfoUseCase = injectionsProvider.appInfoUseCase,
+          appMetaUseCase = injectionsProvider.appMetaUseCase,
           packageName = packageName,
           adListId = adListId
         ) as T
