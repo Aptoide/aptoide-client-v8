@@ -4,16 +4,6 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import cm.aptoide.pt.aptoide_network.data.network.GetAcceptLanguage
-import com.aptoide.android.aptoidegames.BuildConfig
-import com.aptoide.android.aptoidegames.feature_flags.AptoideFeatureFlagsRepository
-import com.aptoide.android.aptoidegames.home.repository.ThemePreferencesManager
-import com.aptoide.android.aptoidegames.network.AptoideGetHeaders
-import com.aptoide.android.aptoidegames.network.AptoideQLogicInterceptor
-import com.aptoide.android.aptoidegames.search.repository.AppGamesAutoCompleteSuggestionsRepository
-import com.aptoide.android.aptoidegames.search.repository.AppGamesAutoCompleteSuggestionsRepository.AutoCompleteSearchRetrofitService
-import com.aptoide.android.aptoidegames.search.repository.AppGamesSearchStoreManager
-import com.aptoide.android.aptoidegames.themeDataStore
-import com.aptoide.android.aptoidegames.userFeatureFlagsDataStore
 import cm.aptoide.pt.aptoide_network.data.network.GetUserAgent
 import cm.aptoide.pt.aptoide_network.data.network.QLogicInterceptor
 import cm.aptoide.pt.aptoide_network.di.BaseOkHttp
@@ -27,8 +17,24 @@ import cm.aptoide.pt.feature_editorial.di.DefaultEditorialUrl
 import cm.aptoide.pt.feature_flags.data.FeatureFlagsRepository
 import cm.aptoide.pt.feature_flags.di.FeatureFlagsDataStore
 import cm.aptoide.pt.feature_home.di.WidgetsUrl
+import cm.aptoide.pt.feature_oos.di.UninstallPackagesFilter
 import cm.aptoide.pt.feature_search.data.AutoCompleteSuggestionsRepository
 import cm.aptoide.pt.feature_search.domain.repository.SearchStoreManager
+import com.aptoide.android.aptoidegames.BuildConfig
+import com.aptoide.android.aptoidegames.appLaunchDataStore
+import com.aptoide.android.aptoidegames.dataStore
+import com.aptoide.android.aptoidegames.feature_flags.AptoideFeatureFlagsRepository
+import com.aptoide.android.aptoidegames.home.repository.ThemePreferencesManager
+import com.aptoide.android.aptoidegames.launch.AppLaunchPreferencesManager
+import com.aptoide.android.aptoidegames.network.AptoideGetHeaders
+import com.aptoide.android.aptoidegames.network.AptoideQLogicInterceptor
+import com.aptoide.android.aptoidegames.networkPreferencesDataStore
+import com.aptoide.android.aptoidegames.notifications.NotificationsPermissionManager
+import com.aptoide.android.aptoidegames.search.repository.AppGamesAutoCompleteSuggestionsRepository
+import com.aptoide.android.aptoidegames.search.repository.AppGamesAutoCompleteSuggestionsRepository.AutoCompleteSearchRetrofitService
+import com.aptoide.android.aptoidegames.search.repository.AppGamesSearchStoreManager
+import com.aptoide.android.aptoidegames.themeDataStore
+import com.aptoide.android.aptoidegames.userFeatureFlagsDataStore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -37,15 +43,9 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.*
+import java.util.Locale
 import javax.inject.Qualifier
 import javax.inject.Singleton
-import com.aptoide.android.aptoidegames.appLaunchDataStore
-import com.aptoide.android.aptoidegames.launch.AppLaunchPreferencesManager
-import com.aptoide.android.aptoidegames.networkPreferencesDataStore
-import com.aptoide.android.aptoidegames.notifications.NotificationsPermissionManager
-import com.aptoide.android.aptoidegames.dataStore
-import cm.aptoide.pt.feature_oos.di.UninstallPackagesFilter
 
 @Module
 @InstallIn(SingletonComponent::class)
