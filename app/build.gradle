@@ -186,11 +186,11 @@ android {
     }
 
     variant.mergedFlavor.manifestPlaceholders =
-        [toolboxProviderAuthority        : "${toolboxProviderAuthority}",
-         suggestionProviderAuthority     : "${searchSuggestionProviderAuthority}",
-         storeSuggestionProviderAuthority: "${storeSuggestionProviderAuthority}",
-         adMobApiKey                     : "${project.AD_MOB_APPLICATION_ID}",
-         dataPlaceholder                 : generateData()]
+        [toolboxProviderAuthority: "${toolboxProviderAuthority}",
+            suggestionProviderAuthority: "${searchSuggestionProviderAuthority}",
+            storeSuggestionProviderAuthority: "${storeSuggestionProviderAuthority}",
+            adMobApiKey: "${project.AD_MOB_APPLICATION_ID}",
+            dataPlaceholder: generateData()]
 
     variant.resValue "string", "authenticator_account_type", applicationId
     variant.resValue "string", "search_suggestion_provider_authority",
@@ -253,7 +253,7 @@ android {
     }
 
     //flurry
-    def type = variant.name
+    def type = variant.buildType.name
 
     if (flavors[1].name.contains('prod') && type == 'release') {
       if (flavors[0].name.contains('cobrand')) {
@@ -267,17 +267,17 @@ android {
 
     variant.buildConfigField "String", "RAKAM_API_KEY",
         "\"" + project.RAKAM_API_KEY_TEST + "\""
-    if (flavors[1].name.contains('prod') && type == 'release') {
-      variant.buildConfigField "String", "INDICATIVE_KEY",
-          "\"" + project.INDICATIVE_KEY_PROD + "\""
+
+    if (variant.productFlavors[1].name == 'prod' && variant.buildType.name == 'release') {
       variant.buildConfigField "String", "APTOIDE_WEB_SERVICES_MMP_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_MMP_HOST_PRODUCTION + "\""
-    } else {
       variant.buildConfigField "String", "INDICATIVE_KEY",
-          "\"" + project.INDICATIVE_KEY_DEV + "\""
-
+          "\"" + project.INDICATIVE_KEY_PROD + "\""
+    } else {
       variant.buildConfigField "String", "APTOIDE_WEB_SERVICES_MMP_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_MMP_HOST_DEVELOPMENT + "\""
+      variant.buildConfigField "String", "INDICATIVE_KEY",
+          "\"" + project.INDICATIVE_KEY_DEV + "\""
     }
 
     //Sentry
@@ -323,7 +323,8 @@ android {
           return
         }
 
-        File manifest = new File(multiApkManifestOutputDirectory.get().asFile, "AndroidManifest.xml")
+        File manifest = new File(multiApkManifestOutputDirectory.get().asFile,
+            "AndroidManifest.xml")
 
         def manifestContent = manifest.getText()
 
@@ -537,7 +538,7 @@ static def generateData() {
 
 static def getAptoideSubdomainsList() {
   def subdomainList = ["en", "pt", "br", "fr", "es", "mx", "de", "it", "ru", "sa", "id", "in", "bd", "mr", "pa",
-                       "my", "th", "vn", "tr", "cn", "ro", "mm", "pl", "rs", "hu", "gr", "bg", "nl", "ir", "jp", "kr", "ua"]
+      "my", "th", "vn", "tr", "cn", "ro", "mm", "pl", "rs", "hu", "gr", "bg", "nl", "ir", "jp", "kr", "ua"]
   return new ArrayList<>(subdomainList)
 }
 
