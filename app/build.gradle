@@ -57,7 +57,7 @@ android {
       storePassword = project.STORE_PASSWORD_VANILLA
       keyAlias = project.KEY_ALIAS_VANILLA
       keyPassword = project.KEY_PASSWORD_VANILLA
-      v2SigningEnabled = false
+      v2SigningEnabled = true
     }
   }
 
