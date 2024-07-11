@@ -651,7 +651,9 @@
   <string name="appc_info_view_title_5_variable">Dobićete do %s%% bonusa za svaku kupovinu koju obavite u aplikaciji sa simbolom %s. Iskoristite tu prednost da postanete vrhunski gejmer!</string>
   <string name="appc_info_view_title_5_variable_no_data">Dobićete bonus za svaku kupovinu koju obavite u aplikaciji sa simbolom %s. Iskoristite tu prednost da postanete vrhunski gejmer!</string>
   <string name="appc_info_view_eskills_title">Zaradite novac uz pomoć e-Skills!</string>
+  <string name="appc_info_view_eskills_without_withdrawal_title">Get Rewarded with e-Skills!</string>
   <string name="appc_info_view_eskills_body">Uz pomoć e-Skills igara zaradićete nagradu kada pobedite druge igrače. Samo preuzmite igru u kojoj smatrate da ste najbolji, doprinesite početku borbe i pokažite svoje veštine da biste dokazali da zaslužujete nagradu u pravom novcu. Spremni za izazov? Pronađite sve dostupne igre %s.</string>
+  <string name="appc_info_view_eskills_without_withdrawal_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in AppCoins Credits. Ready for the challenge? Find all the available games %s.</string>
   <string name="appc_info_view_eskills_body_button">ovde</string>
   <string name="appc_info_view_devs_title">Vi ste programer?</string>
   <string name="appc_info_view_devs_body">Pogledajte nov način za distribuciju aplikacija.</string>
@@ -754,10 +756,12 @@
   <string name="faq_settings_body">Pronađite sve odgovore koji su vam potrebni!</string>
   <!--New e-Skills-->
   <string name="eskills_v2_home_card_title">Prave novčane nagrade!</string>
+  <string name="eskills_v2_home_card_without_withdrawal_title">Get Rewarded!</string>
   <string name="eskills_v2_home_card_body">U e-Skills igrama možete dobiti nagrade kada pobedite druge igrače. Pokažite svoje veštine sada!</string>
   <string name="eskills_v2_earnmore_header">Zaradite više</string>
   <string name="eskills_v2_page_header">e-Skills igre</string>
   <string name="eskills_v2_page_body_">Da li vaše veštine igranja zavređuju prave novčane nagrade?</string>
+  <string name="eskills_v2_page_without_withdrawal_body_">Are your gaming skills worth a reward?</string>
   <string name="eskills_v2_card_1_title">%1$s%2$s</string>
   <string name="eskills_v2_card_1_body">Prosečni dnevni dobici po igraču.</string>
   <string name="eskills_v2_card_2_title">%1$s%2$s</string>
@@ -767,13 +771,17 @@
   <string name="eskills_v2_card_4_title">24h</string>
   <string name="eskills_v2_card_4_body">Nudimo podršku 24/7.</string>
   <string name="eskills_v2_card_5_title">Prave novčane nagrade</string>
+  <string name="eskills_v2_card_5_without_withdrawal_title">Get Rewarded!</string>
   <string name="eskills_v2_card_5_body">Igrajte svoje omiljene igre i počnite da zarađujete pravi novac sada!</string>
+  <string name="eskills_v2_card_5_without_withdrawal_body">Play your favorite games and get rewarded now!</string>
   <string name="eskills_v2_card_6_title">Fer konkurencija</string>
   <string name="eskills_v2_card_6_body">Igrajte sa igračima koji su na istom nivou kao i vi da bi turnir bio fer.</string>
   <string name="eskills_v2_card_7_title">Postanite prvak sveta</string>
   <string name="eskills_v2_card_7_body">Osvojite dodatne nagrade kada dostignete vrh naše dnevne i nedeljne rang liste.</string>
   <string name="eskills_v2_card_8_title">Preuzimanje na jedan dodir</string>
+  <string name="eskills_v2_card_8_without_withdrawal_title">Use Your Reward</string>
   <string name="eskills_v2_card_8_body">Možete jednostavno preuzeti svoje dobitke u obliku pravog novca uz AppCoins Wallet.</string>
+  <string name="eskills_v2_card_8_without_withdrawal_body">You can use your reward to make purchases in your favorite games.</string>
   <string name="eskills_v2_card_9_title">Počnite sada</string>
   <string name="eskills_v2_card_9_body">Isprobajte svoje veštine i postanite šampion da biste dobili nagrade!</string>
   <string name="eskills_v2_how_it_works_title">Kako funkcioniše?</string>
@@ -782,9 +790,11 @@
   <string name="eskills_v2_how_2">Vežbajte ili preuzmite kartu da biste počeli da se takmičite</string>
   <string name="eskills_v2_how_3">Pobedite druge igrače</string>
   <string name="eskills_v2_how_4">Preuzmite svoje dobitke!</string>
+  <string name="eskills_v2_how_without_withdrawal_4">Use your reward to make purchases!</string>
   <string name="eskills_v2_faqs_title">Često postavljana pitanja</string>
   <string name="eskills_v2_faqs_1_title">Šta su e-Skills igre?</string>
   <string name="eskills_v2_faqs_1_body_1">U e-Skills igrama izazivate ostale igrače i igrate jedni protiv drugih i dobitnik osvaja nagradu! Ova nagrada se dodeljuje u obliku AppCoins Credits i možete je preuzeti na svom PayPal nalogu tako što ćete otići u Podešavanja i dodirnuti opciju e-Skills preuzimanje.</string>
+  <string name="eskills_v2_faqs_1_body_without_withdrawal_1">In e-Skills games, you will challenge other players to play against each other and the winner will receive a prize! This prize is granted in AppCoins Credits and can be used to make purchases in your favorite games.</string>
   <string name="eskills_v2_faqs_2_title">Šta je AppCoins Wallet?</string>
   <string name="eskills_v2_faqs_2_body_1">AppCoins Wallet je Android aplikacija koja se može iskoristiti za kupovinu digitalnih stavki u igrama i aplikacijama.</string>
   <string name="eskills_v2_faqs_2_body_2">Dobićete nagradu svaki put kada obavite kupovinu u AppCoins aplikacijama i igrama! Potrebno je samo da instalirate AppCoins Wallet na svom uređaju i obavite kupovinu kao i obično u AppCoins verziji svoje omiljene igre.</string>
