@@ -652,7 +652,9 @@
   <string name="appc_info_view_title_5_variable">Ви отримаєте до %s %% бонусу за кожну покупку, зроблену у програмі з символом %s. Скористайтеся перевагами і станьте найкращим гравцем!</string>
   <string name="appc_info_view_title_5_variable_no_data">Ви отримуватимете бонус за кожну покупку в додатку з символом %s. Скористайтеся перевагами і станьте найкращим гравцем!</string>
   <string name="appc_info_view_eskills_title">Заробляйте гроші з e-Skills!</string>
+  <string name="appc_info_view_eskills_without_withdrawal_title">Get Rewarded with e-Skills!</string>
   <string name="appc_info_view_eskills_body">В іграх e-Skills ви отримаєте приз за перемогу над іншими гравцями. Просто завантажте гру, в якій, на вашу думку, ви найкращий, зробіть свій внесок, щоб розпочати битву, і продемонструйте свої навички, щоб довести, що ви заслуговуєте на приз у вигляді реальних грошей. Готові до виклику? Знайдіть усі доступні ігри %s.</string>
+  <string name="appc_info_view_eskills_without_withdrawal_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in AppCoins Credits. Ready for the challenge? Find all the available games %s.</string>
   <string name="appc_info_view_eskills_body_button">тут</string>
   <string name="appc_info_view_devs_title">Ви розробник?</string>
   <string name="appc_info_view_devs_body">Перевірте новий спосіб розповсюдження додатків.</string>
@@ -755,10 +757,12 @@
   <string name="faq_settings_body">Знайдіть всі відповіді, які вам потрібні!</string>
   <!--New e-Skills-->
   <string name="eskills_v2_home_card_title">Реальні грошові призи!</string>
+  <string name="eskills_v2_home_card_without_withdrawal_title">Get Rewarded!</string>
   <string name="eskills_v2_home_card_body">В іграх e-Skills ви отримуєте винагороду за перемогу над іншими гравцями. Покажіть свої навички зараз!</string>
   <string name="eskills_v2_earnmore_header">Заробляйте більше</string>
   <string name="eskills_v2_page_header">e-Skills ігри</string>
   <string name="eskills_v2_page_body_">Чи варті ваші ігрові навички реального грошового призу?</string>
+  <string name="eskills_v2_page_without_withdrawal_body_">Are your gaming skills worth a reward?</string>
   <string name="eskills_v2_card_1_title">%2$s%1$s</string>
   <string name="eskills_v2_card_1_body">Середній щоденний виграш користувача.</string>
   <string name="eskills_v2_card_2_title">%2$s%1$s</string>
@@ -768,13 +772,17 @@
   <string name="eskills_v2_card_4_title">24 год</string>
   <string name="eskills_v2_card_4_body">Надаємо підтримку 24/7.</string>
   <string name="eskills_v2_card_5_title">Реальні грошові призові</string>
+  <string name="eskills_v2_card_5_without_withdrawal_title">Get Rewarded!</string>
   <string name="eskills_v2_card_5_body">Грайте в улюблені ігри та заробляйте реальні гроші вже зараз!</string>
+  <string name="eskills_v2_card_5_without_withdrawal_body">Play your favorite games and get rewarded now!</string>
   <string name="eskills_v2_card_6_title">Чесна конкуренція</string>
   <string name="eskills_v2_card_6_body">Ви отримуєте суперників вашого рівня майстерності, що гарантує чесну гру.</string>
   <string name="eskills_v2_card_7_title">Станьте світовим переможцем</string>
   <string name="eskills_v2_card_7_body">Отримуйте додаткові нагороди за потрапляння на вершину щоденних та щотижневих лідербордів.</string>
   <string name="eskills_v2_card_8_title">Виведення коштів в один дотик</string>
+  <string name="eskills_v2_card_8_without_withdrawal_title">Use Your Reward</string>
   <string name="eskills_v2_card_8_body">Ви можете легко вивести свій виграш у реальні гроші за допомогою AppCoins Wallet.</string>
+  <string name="eskills_v2_card_8_without_withdrawal_body">You can use your reward to make purchases in your favorite games.</string>
   <string name="eskills_v2_card_9_title">Почніть зараз</string>
   <string name="eskills_v2_card_9_body">Випробуйте свої вміння та станьте чемпіоном, щоб отримати винагороду!</string>
   <string name="eskills_v2_how_it_works_title">Як це працює?</string>
@@ -783,9 +791,11 @@
   <string name="eskills_v2_how_2">Практикуйтеся або отримайте квиток, щоб почати змагатися</string>
   <string name="eskills_v2_how_3">Перемагайте інших гравців</string>
   <string name="eskills_v2_how_4">Виводьте свій виграш!</string>
+  <string name="eskills_v2_how_without_withdrawal_4">Use your reward to make purchases!</string>
   <string name="eskills_v2_faqs_title">Часті питання</string>
   <string name="eskills_v2_faqs_1_title">Що таке ігри e-Skills?</string>
   <string name="eskills_v2_faqs_1_body_1">В іграх e-Skills ви будете змагатися з іншими гравцями, а переможець отримає приз! Цей приз надається в AppCoins Credits і може бути виведений на ваш рахунок PayPal, перейшовши в Налаштування і натиснувши на Виведення коштів e-Skills.</string>
+  <string name="eskills_v2_faqs_1_body_without_withdrawal_1">In e-Skills games, you will challenge other players to play against each other and the winner will receive a prize! This prize is granted in AppCoins Credits and can be used to make purchases in your favorite games.</string>
   <string name="eskills_v2_faqs_2_title">Що таке AppCoins Wallet?</string>
   <string name="eskills_v2_faqs_2_body_1">AppCoins Wallet — це додаток для Android, який можна використовувати для придбання цифрових предметів в іграх та додатках.</string>
   <string name="eskills_v2_faqs_2_body_2">Ви будете отримувати винагороду за кожну покупку в додатках та іграх AppCoins! Просто встановіть AppCoins Wallet на свій пристрій і робіть покупки як зазвичай в AppCoins-версії ваших улюблених ігор.</string>
