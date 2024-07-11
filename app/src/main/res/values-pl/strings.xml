@@ -658,7 +658,9 @@
   <string name="appc_info_view_title_5_variable">Otrzymasz bonus nawet do %s%% za każdy zakup, jakiego dokonasz w aplikacji z symbolem %s. Skorzystaj dzisiaj!</string>
   <string name="appc_info_view_title_5_variable_no_data">Otrzymasz bonus za każdy zakup, jakiego dokonasz w aplikacji z symbolem %s. Skorzystaj dzisiaj!</string>
   <string name="appc_info_view_eskills_title">Zarabiaj z e-Sills!</string>
+  <string name="appc_info_view_eskills_without_withdrawal_title">Get Rewarded with e-Skills!</string>
   <string name="appc_info_view_eskills_body">W grach e-Skills zarobisz pokonując innych graczy. Po prostu pobierz grę, w której jesteś najlepszy, dorzuć się, by rozpocząć rozgrywkę i pokaż co potrafisz – i że zasługujesz na nagrodę pieniężną. Gotów podjąć wyzwanie? Sprawdź gry %s.</string>
+  <string name="appc_info_view_eskills_without_withdrawal_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in AppCoins Credits. Ready for the challenge? Find all the available games %s.</string>
   <string name="appc_info_view_eskills_body_button">tutaj</string>
   <string name="appc_info_view_devs_title">Jesteś deweloperem?</string>
   <string name="appc_info_view_devs_body">Zobacz nowy sposób na dystrybucję aplikacji.</string>
@@ -761,10 +763,12 @@
   <string name="faq_settings_body">Znajdź wszystkie odpowiedzi!</string>
   <!--New e-Skills-->
   <string name="eskills_v2_home_card_title">Wygraj gotówkę!</string>
+  <string name="eskills_v2_home_card_without_withdrawal_title">Get Rewarded!</string>
   <string name="eskills_v2_home_card_body">W grach e-Skills wygrywasz nagrody za pokonanie innych graczy. Pokaż co potrafisz!</string>
   <string name="eskills_v2_earnmore_header">Zarabiaj więcej</string>
   <string name="eskills_v2_page_header">Gry e-Skills</string>
   <string name="eskills_v2_page_body_">Czy grasz tak dobrze, żeby na tym zarabiać?</string>
+  <string name="eskills_v2_page_without_withdrawal_body_">Are your gaming skills worth a reward?</string>
   <string name="eskills_v2_card_1_title">%2$s%1$s</string>
   <string name="eskills_v2_card_1_body">Przeciętne wygrane na dzień.</string>
   <string name="eskills_v2_card_2_title">%2$s%1$s</string>
@@ -774,13 +778,17 @@
   <string name="eskills_v2_card_4_title">24h</string>
   <string name="eskills_v2_card_4_body">Dajemy wsparcie 24/7.</string>
   <string name="eskills_v2_card_5_title">Wygraj gotówkę</string>
+  <string name="eskills_v2_card_5_without_withdrawal_title">Get Rewarded!</string>
   <string name="eskills_v2_card_5_body">Graj w ulubione gry i zarabiaj prawdziwe pieniądze!</string>
+  <string name="eskills_v2_card_5_without_withdrawal_body">Play your favorite games and get rewarded now!</string>
   <string name="eskills_v2_card_6_title">Uczciwa rywalizacja</string>
   <string name="eskills_v2_card_6_body">Trafiaj na graczy na podobnym poziomie umiejętności.</string>
   <string name="eskills_v2_card_7_title">Bądź najlepszy</string>
   <string name="eskills_v2_card_7_body">Zdobądź dodatkowe nagrody za prowadzenie na leaderboardach.</string>
   <string name="eskills_v2_card_8_title">Prosta wypłata</string>
+  <string name="eskills_v2_card_8_without_withdrawal_title">Use Your Reward</string>
   <string name="eskills_v2_card_8_body">Wypłata wygranych jako pieniędzy do AppCoins Wallet jest banalnie prosta.</string>
+  <string name="eskills_v2_card_8_without_withdrawal_body">You can use your reward to make purchases in your favorite games.</string>
   <string name="eskills_v2_card_9_title">Zaczynamy</string>
   <string name="eskills_v2_card_9_body">Sprawdź swoje umiejętności i wygraj, by otrzymać nagrodę!</string>
   <string name="eskills_v2_how_it_works_title">Jak to działa?</string>
@@ -789,9 +797,11 @@
   <string name="eskills_v2_how_2">Ćwicz lub zdobądź bilet, by rozpocząć rywalizację</string>
   <string name="eskills_v2_how_3">Pokonaj innych graczy</string>
   <string name="eskills_v2_how_4">Wypłać wygraną!</string>
+  <string name="eskills_v2_how_without_withdrawal_4">Use your reward to make purchases!</string>
   <string name="eskills_v2_faqs_title">FAQ</string>
   <string name="eskills_v2_faqs_1_title">Czym są gry e-Skills?</string>
   <string name="eskills_v2_faqs_1_body_1">W grach e-Skills rzucisz wyzwanie innym graczom, aby grali przeciwko sobie, a zwycięzca otrzyma nagrodę! Ta nagroda jest przyznawana w AppCoins Credits i i można ją wypłacić na konto PayPal – przechodząc do Ustawień i wybierając Wypłata e-Skills.</string>
+  <string name="eskills_v2_faqs_1_body_without_withdrawal_1">In e-Skills games, you will challenge other players to play against each other and the winner will receive a prize! This prize is granted in AppCoins Credits and can be used to make purchases in your favorite games.</string>
   <string name="eskills_v2_faqs_2_title">Co to jest AppCoins Wallet?</string>
   <string name="eskills_v2_faqs_2_body_1">AppCoins Wallet to aplikacja dla Androida do kupowania produktów cyfrowych w grach i aplikacjach.</string>
   <string name="eskills_v2_faqs_2_body_2">Otrzymasz nagrodę za każdym razem, gdy dokonasz zakupu w aplikacjach i grach AppCoins! Wystarczy zainstalować portfel AppCoins na swoim urządzeniu i dokonać zakupu tak jak zwykle w ulubionych grach w wersji AppCoins.</string>
