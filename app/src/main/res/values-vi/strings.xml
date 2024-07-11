@@ -650,7 +650,9 @@ chứa bất kỳ mối đe dọa nào!</string>
   <string name="appc_info_view_title_5_variable">Bạn sẽ nhận được đến %s%% tiền thưởng cho mỗi giao dịch mua trong ứng dụng có biểu tượng %s. Hãy tận dụng điều này và trở thành game thủ tuyệt đỉnh!</string>
   <string name="appc_info_view_title_5_variable_no_data">Bạn sẽ nhận được phần thưởng trên mỗi lần mua hàng được thực hiện trong ứng dụng có ký hiệu %s. Hãy tận dụng điều này và trở thành game thủ sành điệu!</string>
   <string name="appc_info_view_eskills_title">Kiếm tiền với e-Skills!</string>
+  <string name="appc_info_view_eskills_without_withdrawal_title">Get Rewarded with e-Skills!</string>
   <string name="appc_info_view_eskills_body">Với trò chơi e-Skills, bạn sẽ nhận được phần thưởng khi đánh bại những người chơi khác. Chỉ cần tải xuống trò chơi mà bạn cho rằng mình giỏi nhất, bắt đầu trận chiến và thể hiện kỹ năng của mình để chứng minh rằng bạn xứng đáng với phần thưởng bằng tiền thật. Bạn đã sẵn sàng cho thử thách chưa? Tìm tất cả các trò chơi khả dụng %s.</string>
+  <string name="appc_info_view_eskills_without_withdrawal_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in AppCoins Credits. Ready for the challenge? Find all the available games %s.</string>
   <string name="appc_info_view_eskills_body_button">tại đây</string>
   <string name="appc_info_view_devs_title">Bạn có phải là lập trình viên không?</string>
   <string name="appc_info_view_devs_body">Kiểm tra cách thức mới để cung cấp các ứng dụng.</string>
@@ -753,10 +755,12 @@ chứa bất kỳ mối đe dọa nào!</string>
   <string name="faq_settings_body">Find all the answers you need!</string>
   <!--New e-Skills-->
   <string name="eskills_v2_home_card_title">Real Money Prizes!</string>
+  <string name="eskills_v2_home_card_without_withdrawal_title">Get Rewarded!</string>
   <string name="eskills_v2_home_card_body">In e-Skills games you get rewarded when beating other players. Show off your skills now!</string>
   <string name="eskills_v2_earnmore_header">Earn More</string>
   <string name="eskills_v2_page_header">Trò chơi e-Skills</string>
   <string name="eskills_v2_page_body_">Are your gaming skills worth a real-money prize?</string>
+  <string name="eskills_v2_page_without_withdrawal_body_">Are your gaming skills worth a reward?</string>
   <string name="eskills_v2_card_1_title">%1$s%2$s</string>
   <string name="eskills_v2_card_1_body">Average daily winnings per user.</string>
   <string name="eskills_v2_card_2_title">%1$s%2$s</string>
@@ -766,13 +770,17 @@ chứa bất kỳ mối đe dọa nào!</string>
   <string name="eskills_v2_card_4_title">24h</string>
   <string name="eskills_v2_card_4_body">We offer 24/7 support.</string>
   <string name="eskills_v2_card_5_title">Real Money Prizes</string>
+  <string name="eskills_v2_card_5_without_withdrawal_title">Get Rewarded!</string>
   <string name="eskills_v2_card_5_body">Play your favorite games and start earning real money now!</string>
+  <string name="eskills_v2_card_5_without_withdrawal_body">Play your favorite games and get rewarded now!</string>
   <string name="eskills_v2_card_6_title">Fair Competition</string>
   <string name="eskills_v2_card_6_body">Get matched with players of your skills level to ensure fair tournaments.</string>
   <string name="eskills_v2_card_7_title">Become the World Winner</string>
   <string name="eskills_v2_card_7_body">Get extra rewards for reaching the top of our daily and weekly leaderboards.</string>
   <string name="eskills_v2_card_8_title">One Tap Withdrawal</string>
+  <string name="eskills_v2_card_8_without_withdrawal_title">Use Your Reward</string>
   <string name="eskills_v2_card_8_body">You can easily withdraw your winnings into real money with the AppCoins Wallet.</string>
+  <string name="eskills_v2_card_8_without_withdrawal_body">You can use your reward to make purchases in your favorite games.</string>
   <string name="eskills_v2_card_9_title">Start Now</string>
   <string name="eskills_v2_card_9_body">Test your skills and become a champion to get rewarded!</string>
   <string name="eskills_v2_how_it_works_title">Nó hoạt động như thế nào?</string>
@@ -781,9 +789,11 @@ chứa bất kỳ mối đe dọa nào!</string>
   <string name="eskills_v2_how_2">Practice or get a ticket to start competing</string>
   <string name="eskills_v2_how_3">Beat other players</string>
   <string name="eskills_v2_how_4">Withdraw your winnings!</string>
+  <string name="eskills_v2_how_without_withdrawal_4">Use your reward to make purchases!</string>
   <string name="eskills_v2_faqs_title">FAQS</string>
   <string name="eskills_v2_faqs_1_title">Trò chơi e-Skills là gì?</string>
   <string name="eskills_v2_faqs_1_body_1">Trong các trò chơi e-Skills, bạn sẽ thách thức những người chơi khác thi đấu và người chiến thắng sẽ nhận được giải thưởng! Giải thưởng này được trao dưới dạng AppCoins Credits và có thể được rút về tài khoản PayPal của bạn bằng cách đi tới Cài đặt và nhấn vào Rút tiền e-Skills.</string>
+  <string name="eskills_v2_faqs_1_body_without_withdrawal_1">In e-Skills games, you will challenge other players to play against each other and the winner will receive a prize! This prize is granted in AppCoins Credits and can be used to make purchases in your favorite games.</string>
   <string name="eskills_v2_faqs_2_title">Ví AppCoins là gì?</string>
   <string name="eskills_v2_faqs_2_body_1">Ví AppCoins là một ứng dụng Android có thể được sử dụng để mua các vật phẩm kỹ thuật số trong trò chơi và ứng dụng.</string>
   <string name="eskills_v2_faqs_2_body_2">You\'ll receive a reward every time you make a purchase in AppCoins apps and games! You just need to install the AppCoins Wallet on your device and make your purchase as usual in the AppCoins version of your favorite games.</string>
