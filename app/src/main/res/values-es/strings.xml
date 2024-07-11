@@ -650,7 +650,9 @@ http://aptoi.de/tv</string>
   <string name="appc_info_view_title_5_variable">Recibirás un bonus de hasta el %s%% en cada compra que hagas en apps con el símbolo %s. ¡Aprovecha la oportunidad y conviértete en el mejor gamer!</string>
   <string name="appc_info_view_title_5_variable_no_data">Conseguirás un bonus en cada compra que hagas en apps con el símbolo %s. ¡Aprovecha y conviértete en el gamer definitivo!</string>
   <string name="appc_info_view_eskills_title">Gana Dinero con e-Skills!</string>
+  <string name="appc_info_view_eskills_without_withdrawal_title">Get Rewarded with e-Skills!</string>
   <string name="appc_info_view_eskills_body">Con los juegos de e-Skills ganarás un premio al vencer a otros jugadores. Tan solo descarga el juego en el que crees que eres el mejor, aporta la contribución para participar y muestra tus habilidades para ganar dinero real. ¿Preparado para el reto? Encuentra los juegos disponibles %s.</string>
+  <string name="appc_info_view_eskills_without_withdrawal_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in AppCoins Credits. Ready for the challenge? Find all the available games %s.</string>
   <string name="appc_info_view_eskills_body_button">aquí</string>
   <string name="appc_info_view_devs_title">¿Eres creador de apps?</string>
   <string name="appc_info_view_devs_body">Descubre la nueva forma de distribuir apps.</string>
@@ -753,10 +755,12 @@ http://aptoi.de/tv</string>
   <string name="faq_settings_body">¡Encuentra todas las respuestas que necesitas!</string>
   <!--New e-Skills-->
   <string name="eskills_v2_home_card_title">¡Premios en dinero real!</string>
+  <string name="eskills_v2_home_card_without_withdrawal_title">Get Rewarded!</string>
   <string name="eskills_v2_home_card_body">En los juegos e-Skills, recibirás una recompensa al derrotar o otros jugadores. ¡Muestra tus habilidades!</string>
   <string name="eskills_v2_earnmore_header">Gana Más</string>
   <string name="eskills_v2_page_header">Juegos e-skills</string>
   <string name="eskills_v2_page_body_">¿Tus habilidades de gaming valen un premio en dinero real?</string>
+  <string name="eskills_v2_page_without_withdrawal_body_">Are your gaming skills worth a reward?</string>
   <string name="eskills_v2_card_1_title">%2$s%1$s</string>
   <string name="eskills_v2_card_1_body">Media de premios diarios por usuario.</string>
   <string name="eskills_v2_card_2_title">%2$s%1$s</string>
@@ -766,13 +770,17 @@ http://aptoi.de/tv</string>
   <string name="eskills_v2_card_4_title">24h</string>
   <string name="eskills_v2_card_4_body">Ofrecemos soporte 24/7.</string>
   <string name="eskills_v2_card_5_title">Premios en dinero real</string>
+  <string name="eskills_v2_card_5_without_withdrawal_title">Get Rewarded!</string>
   <string name="eskills_v2_card_5_body">¡Disfruta de tus juegos favoritos y empieza a ganar dinero ahora!</string>
+  <string name="eskills_v2_card_5_without_withdrawal_body">Play your favorite games and get rewarded now!</string>
   <string name="eskills_v2_card_6_title">Competición justa</string>
   <string name="eskills_v2_card_6_body">Enfréntate a jugadores de tu mismo nivel en torneos justos.</string>
   <string name="eskills_v2_card_7_title">Conviértete en el ganador mundial</string>
   <string name="eskills_v2_card_7_body">Obtén recompensas extra al alcanzar la cima de las clasificaciones semanales y diarias.</string>
   <string name="eskills_v2_card_8_title">Retira con un toque</string>
+  <string name="eskills_v2_card_8_without_withdrawal_title">Use Your Reward</string>
   <string name="eskills_v2_card_8_body">Puedes retirar tus ganancias en dinero real con la AppCoins Wallet.</string>
+  <string name="eskills_v2_card_8_without_withdrawal_body">You can use your reward to make purchases in your favorite games.</string>
   <string name="eskills_v2_card_9_title">Comenzar</string>
   <string name="eskills_v2_card_9_body">¡Prueba tus habilidades y conviértete en campeón para recibir recompensas!</string>
   <string name="eskills_v2_how_it_works_title">¿Cómo funciona?</string>
@@ -781,9 +789,11 @@ http://aptoi.de/tv</string>
   <string name="eskills_v2_how_2">Practica o compra un ticket para competir</string>
   <string name="eskills_v2_how_3">Derrota a otros jugadores</string>
   <string name="eskills_v2_how_4">¡Retira tus ganancias!</string>
+  <string name="eskills_v2_how_without_withdrawal_4">Use your reward to make purchases!</string>
   <string name="eskills_v2_faqs_title">FAQs</string>
   <string name="eskills_v2_faqs_1_title">¿Qué son los juegos e-Skills?</string>
   <string name="eskills_v2_faqs_1_body_1">En los juegos e-Skills puedes enfrentarte a otros jugadores y el ganador recibirá un premio. Este premio se concede en forma de AppCoins Credits y puede ser retirado a tu cuenta de PayPal. Para ello, ve a los Ajustes de la AppCoins Wallet y toca en Retirada e-Skills.</string>
+  <string name="eskills_v2_faqs_1_body_without_withdrawal_1">In e-Skills games, you will challenge other players to play against each other and the winner will receive a prize! This prize is granted in AppCoins Credits and can be used to make purchases in your favorite games.</string>
   <string name="eskills_v2_faqs_2_title">¿Qué es la AppCoins Wallet?</string>
   <string name="eskills_v2_faqs_2_body_1">La AppCoins Wallet es una app Android que puedes usar para hacer compras en juegos y apps.</string>
   <string name="eskills_v2_faqs_2_body_2">Recibirás una recompensa por cada compra que hagas en juegos y apps compatibles con AppCoins. Solo tienes que instalar la AppCoins Wallet en tu dispositivo y hacer la compra de la forma habitual en la versión AppCoins de tu juego favorito.</string>
