@@ -650,7 +650,9 @@
   <string name="appc_info_view_title_5_variable">Akár %s%% bónusz jár minden %s szimbólummal ellátott appon belüli vásárlásért. Használd ki és légy te a legjobb játékos!</string>
   <string name="appc_info_view_title_5_variable_no_data">Bónusz jár minden %s szimbólummal ellátott appon belüli vásárlásért. Használd ki és légy te a legjobb játékos!</string>
   <string name="appc_info_view_eskills_title">Keress pénzt az e-Skills segítségével!</string>
+  <string name="appc_info_view_eskills_without_withdrawal_title">Get Rewarded with e-Skills!</string>
   <string name="appc_info_view_eskills_body">Az e-Skill játékokban pénz a jutalmad, ha megvered a többi játékost. Csak töltsd le a játékot, amiben a legjobb vagy, tedd fel a hozzájárulásod a csata indításához és mutasd meg, hogy te vagy a legjobb a valódi pénznyeremények megszerzéséhez. Készen állsz a kihívásra? Az elérhető játékokat %s találod.</string>
+  <string name="appc_info_view_eskills_without_withdrawal_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in AppCoins Credits. Ready for the challenge? Find all the available games %s.</string>
   <string name="appc_info_view_eskills_body_button">itt</string>
   <string name="appc_info_view_devs_title">Fejlesztő vagy?</string>
   <string name="appc_info_view_devs_body">Fedezd fel az alkalmazásforgalmazás új módját!</string>
@@ -753,10 +755,12 @@
   <string name="faq_settings_body">Találd meg az összes szükséges választ!</string>
   <!--New e-Skills-->
   <string name="eskills_v2_home_card_title">Valódi pénznyeremények!</string>
+  <string name="eskills_v2_home_card_without_withdrawal_title">Get Rewarded!</string>
   <string name="eskills_v2_home_card_body">Az e-Skills játékokban jutalmat kapsz, ha megvered a többi játékost. Mutasd meg, mit tudsz!</string>
   <string name="eskills_v2_earnmore_header">Szerezz többet</string>
   <string name="eskills_v2_page_header">e-Skills játékok</string>
   <string name="eskills_v2_page_body_">Elég ügyes vagy ahhoz, hogy valódi pénzt kapj érte?</string>
+  <string name="eskills_v2_page_without_withdrawal_body_">Are your gaming skills worth a reward?</string>
   <string name="eskills_v2_card_1_title">%2$s%1$s</string>
   <string name="eskills_v2_card_1_body">Egy felhasználó átlagos napi nyereménye.</string>
   <string name="eskills_v2_card_2_title">%2$s%1$s</string>
@@ -766,13 +770,17 @@
   <string name="eskills_v2_card_4_title">24 óra</string>
   <string name="eskills_v2_card_4_body">24 órás támogatást nyújtunk.</string>
   <string name="eskills_v2_card_5_title">Valódi pénznyeremények</string>
+  <string name="eskills_v2_card_5_without_withdrawal_title">Get Rewarded!</string>
   <string name="eskills_v2_card_5_body">Játszd a kedvenc játékot és szerezz vele valódi pénzt!</string>
+  <string name="eskills_v2_card_5_without_withdrawal_body">Play your favorite games and get rewarded now!</string>
   <string name="eskills_v2_card_6_title">Tisztességes verseny</string>
   <string name="eskills_v2_card_6_body">A tisztességes bajnokságok érdekében hasonló képességű játékosokat hívhatsz ki.</string>
   <string name="eskills_v2_card_7_title">Légy te a világelső</string>
   <string name="eskills_v2_card_7_body">Extra jutalom jár, ha te vagy az első a nap vagy a hét véget értével.</string>
   <string name="eskills_v2_card_8_title">Egy pöccintéses lehívás</string>
+  <string name="eskills_v2_card_8_without_withdrawal_title">Use Your Reward</string>
   <string name="eskills_v2_card_8_body">A nyereményedet az AppCoins Wallet segítségével könnyen valódi pénzzé alakíthatod.</string>
+  <string name="eskills_v2_card_8_without_withdrawal_body">You can use your reward to make purchases in your favorite games.</string>
   <string name="eskills_v2_card_9_title">Vágj bele most</string>
   <string name="eskills_v2_card_9_body">Próbáld ki a képességeid és légy bajnok, hogy jutalmat nyerj!</string>
   <string name="eskills_v2_how_it_works_title">Hogyan működik?</string>
@@ -781,9 +789,11 @@
   <string name="eskills_v2_how_2">Gyakorolj vagy szerezz egy jegyet a játékhoz</string>
   <string name="eskills_v2_how_3">Verd meg a többi játékost</string>
   <string name="eskills_v2_how_4">Hívd le a nyereményed!</string>
+  <string name="eskills_v2_how_without_withdrawal_4">Use your reward to make purchases!</string>
   <string name="eskills_v2_faqs_title">GYIK</string>
   <string name="eskills_v2_faqs_1_title">Mik azok az e-Skills játékok?</string>
   <string name="eskills_v2_faqs_1_body_1">Az e-Skills játékokban más játékosokat hívsz ki egy játékra, a nyertes pedig jutalmat kap! A jutalom AppCoins kreditek formájában érkezik, amit a PayPal fiókodba utalhatsz át, ha a Beállításokban az e-Skills lehívásra pöccintesz.</string>
+  <string name="eskills_v2_faqs_1_body_without_withdrawal_1">In e-Skills games, you will challenge other players to play against each other and the winner will receive a prize! This prize is granted in AppCoins Credits and can be used to make purchases in your favorite games.</string>
   <string name="eskills_v2_faqs_2_title">Mi az az AppCoins Wallet?</string>
   <string name="eskills_v2_faqs_2_body_1">Az AppCoins Wallet egy Android app, amit a játékokban és appokban digitális elemek megvásárlására használhatsz.</string>
   <string name="eskills_v2_faqs_2_body_2">Ha AppCoins appokban és játékokban hajtasz végre vásárlást, akkor azért mindig jutalom jár! Csak telepítsd az AppCoins Walletet az eszközödre, majd vásárolj ahogy azt mindig teszed a kedvenc játékod AppCoins verziójában.</string>
