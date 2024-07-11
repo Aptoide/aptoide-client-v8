@@ -650,7 +650,9 @@ http://aptoi.de/tv</string>
   <string name="appc_info_view_title_5_variable">%s အမွတ္အသားပါေသာ အက္ပ္တစ္ခုတြင္ သင္ျပဳလုပ္ေသာ ၀ယ္ယူမႈတိုင္းအတြက္ %s%% အထိ ေဘာနပ္စ္ကို သင္ရရွိပါမည္။ ခံစားခြင့္ကိုရယူကာ အစြမ္းအထက္ဆံုး ဂိမ္းကစားသူ ျဖစ္ေအာင္လုပ္လိုက္ပါ။</string>
   <string name="appc_info_view_title_5_variable_no_data">%s အမွတ္အသားပါေသာ အက္ပ္တစ္ခုတြင္ သင္ျပဳလုပ္ေသာ ဝယ္ယူမႈတိုင္းအတြက္ ေဘာနပ္စ္ရရွိပါမည္။ အားသာခ်က္ကို ရယူကာ အေကာင္းဆုံး ဂိမ္းကစားသူ ျဖစ္လာလိုက္ပါ။</string>
   <string name="appc_info_view_eskills_title">e-Skills ျဖင့္ ေငြရယူလိုက္ပါ။</string>
+  <string name="appc_info_view_eskills_without_withdrawal_title">Get Rewarded with e-Skills!</string>
   <string name="appc_info_view_eskills_body">e-Skills ဂိမ္းမ်ားတြင္ အျခားကစားသူမ်ားကို အႏိုင္ရပါက သင္ဆုရရွိပါမည္။ ကိုယ္အပိုင္ႏိုင္ဆုံးလို႔ထင္တဲ့ ဂိမ္းကိုေဒါင္းလုဒ္သာဆြဲလိုက္ၿပီး သင္က တကယ့္ေငြသားဆုနဲ႔ ထိုက္တန္ေၾကာင္း သက္ေသျပရန္အတြက္ တိုက္ပြဲတြင္ စတင္ပါဝင္ကာ သင့္အရည္အခ်င္းမ်ားကို ျပသလိုက္ပါ။ စိန္ေခၚမႈအတြက္ အသင့္ပဲလား။ ရႏိုင္ေသာ ဂိမ္းမ်ားအားလုံးကို %s တြင္ ရွာေဖြလိုက္ပါ။</string>
+  <string name="appc_info_view_eskills_without_withdrawal_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in AppCoins Credits. Ready for the challenge? Find all the available games %s.</string>
   <string name="appc_info_view_eskills_body_button">ဤေနရာတြင္</string>
   <string name="appc_info_view_devs_title">သင္က ထုတ္လုပ္သူတစ္ေယာက္လား။</string>
   <string name="appc_info_view_devs_body">အက္ပ္မ်ားကိုျဖန္႔ခ်ိရန္ နည္းလမ္းသစ္ကို ၾကည့္လိုက္ပါ။</string>
@@ -753,10 +755,12 @@ http://aptoi.de/tv</string>
   <string name="faq_settings_body">သင္လိုအပ္ေသာ အေျဖအားလုံးကို ရွာေဖြလိုက္ပါ။</string>
   <!--New e-Skills-->
   <string name="eskills_v2_home_card_title">ေငြသားအစစ္ဆုမ်ား။</string>
+  <string name="eskills_v2_home_card_without_withdrawal_title">Get Rewarded!</string>
   <string name="eskills_v2_home_card_body">E-Skills ဂိမ္းမ်ားတြင္ အျခားကစားသူမ်ားကို အႏိုင္ရပါက သင္ဆုရရွိပါသည္။ အခုပဲ အရည္အခ်င္းမ်ားကို ျပသလိုက္ပါ။</string>
   <string name="eskills_v2_earnmore_header">ပိုမိုရယူလိုက္ပါ</string>
   <string name="eskills_v2_page_header">e-Skills ဂိမ္းမ်ား</string>
   <string name="eskills_v2_page_body_">သင့္ဂိမ္းအရည္အခ်င္းမ်ားက ေငြသားအစစ္ ဆုရထိုက္ပါသလား။</string>
+  <string name="eskills_v2_page_without_withdrawal_body_">Are your gaming skills worth a reward?</string>
   <string name="eskills_v2_card_1_title">%1$s%2$s</string>
   <string name="eskills_v2_card_1_body">အသုံးျပဳသူတစ္ဦးလွ်င္ ေန႔စဥ္ပ်မ္းမွ် အႏိုင္ရေငြမ်ား</string>
   <string name="eskills_v2_card_2_title">%1$s%2$s</string>
@@ -766,13 +770,17 @@ http://aptoi.de/tv</string>
   <string name="eskills_v2_card_4_title">၂၄ နာရီ</string>
   <string name="eskills_v2_card_4_body">၂၄/၇ ကူညီပံ့ပိုးမႈ ေပးပါသည္။</string>
   <string name="eskills_v2_card_5_title">ေငြသားအစစ္ဆုမ်ား</string>
+  <string name="eskills_v2_card_5_without_withdrawal_title">Get Rewarded!</string>
   <string name="eskills_v2_card_5_body">သင့္စိတ္ႀကိဳက္ဂိမ္းမ်ားကို ကစားကာ ယခုပင္ ေငြသားအစစ္ျဖင့္ ဆုစတင္ရယူလိုက္ပါ။</string>
+  <string name="eskills_v2_card_5_without_withdrawal_body">Play your favorite games and get rewarded now!</string>
   <string name="eskills_v2_card_6_title">မွ်တေသာ ယွဥ္ၿပိဳင္ပြဲ</string>
   <string name="eskills_v2_card_6_body">မွ်တေသာ ၿပိဳင္ပြဲမ်ားျဖစ္ေစရန္ သင့္အရည္အခ်င္းအဆင့္ႏွင့္ညီေသာ ကစားသူမ်ားႏွင့္ တြဲဖက္ေပးျခင္းကို ရယူလိုက္ပါ။</string>
   <string name="eskills_v2_card_7_title">ကမာၻ႔နံပါတ္တစ္ ျဖစ္လာလိုက္ပါ</string>
   <string name="eskills_v2_card_7_body">ကြၽႏ္ုပ္တို႔၏ ေန႔စဥ္ႏွင့္အပတ္စဥ္ ထိပ္တန္းစာရင္းမ်ားတြင္ ထိပ္ဆုံးသို႔ ေရာက္ရွိျခင္းျဖင့္ အပိုဆုမ်ားကို ရယူလိုက္ပါ။</string>
   <string name="eskills_v2_card_8_title">တစ္ခ်က္ႏွိပ္႐ုံျဖင့္ ေငြထုတ္ယူႏိုင္ျခင္း</string>
+  <string name="eskills_v2_card_8_without_withdrawal_title">Use Your Reward</string>
   <string name="eskills_v2_card_8_body">AppCoins Wallet ျဖင့္ သင့္အႏိုင္ရေငြမ်ားကို ေငြသားအစစ္အျဖစ္ အလြယ္တကူ ေငြထုတ္ယူႏိုင္ပါသည္။</string>
+  <string name="eskills_v2_card_8_without_withdrawal_body">You can use your reward to make purchases in your favorite games.</string>
   <string name="eskills_v2_card_9_title">ယခုပင္ စတင္လိုက္ပါ</string>
   <string name="eskills_v2_card_9_body">သင့္အရည္အခ်င္းမ်ားကို စမ္းသပ္ၿပီး ဆုရရွိရန္ ခ်န္ပီယံတစ္ေယာက္ ျဖစ္ေအာင္လုပ္လိုက္ပါ။</string>
   <string name="eskills_v2_how_it_works_title">ဘယ္လို လုပ္ေဆာင္ပါသလဲ။</string>
@@ -781,9 +789,11 @@ http://aptoi.de/tv</string>
   <string name="eskills_v2_how_2">အစမ္းေလ့က်င့္ပါ သို႔မဟုတ္ စတင္ယွဥ္ၿပိဳင္ရန္ လက္မွတ္တစ္ခု ရယူလိုက္ပါ</string>
   <string name="eskills_v2_how_3">အျခားကစားသူမ်ားကို အႏိုင္ယူလိုက္ပါ</string>
   <string name="eskills_v2_how_4">သင့္အႏိုင္ရေငြမ်ားကို ထုတ္ယူလိုက္ပါ။</string>
+  <string name="eskills_v2_how_without_withdrawal_4">Use your reward to make purchases!</string>
   <string name="eskills_v2_faqs_title">ေမးခြန္းမ်ား</string>
   <string name="eskills_v2_faqs_1_title">e-Skills ဂိမ္းေတြဆိုတာ ဘာလဲ။</string>
   <string name="eskills_v2_faqs_1_body_1">E-Skills ဂိမ္းမ်ားတြင္ တစ္ဦးႏွင့္တစ္ဦး ယွဥ္ၿပိဳင္ကစားႏိုင္ရန္ အျခားကစားသူမ်ားကို စိန္ေခၚရမည္ျဖစ္ၿပီး အႏိုင္ရသူက ဆုရရွိမည္ ျဖစ္ပါသည္။ ဤဆုကို AppCoins Credits ျဖင့္ေပးမည္ျဖစ္ၿပီး ဆက္တင္သို႔သြားကာ e-Skills ေငြထုတ္ယူျခင္းကို ႏွိပ္ျခင္းျဖင့္ သင့္ PayPal အေကာင့္သို႔ ေငြထုတ္ယူႏိုင္ပါသည္။</string>
+  <string name="eskills_v2_faqs_1_body_without_withdrawal_1">In e-Skills games, you will challenge other players to play against each other and the winner will receive a prize! This prize is granted in AppCoins Credits and can be used to make purchases in your favorite games.</string>
   <string name="eskills_v2_faqs_2_title">AppCoins Wallet ဆိုတာဘာလဲ။</string>
   <string name="eskills_v2_faqs_2_body_1">AppCoins Wallet သည္ ဂိမ္းမ်ားႏွင့္အက္ပ္မ်ားတြင္ ဒီဂ်စ္တယ္ပစၥည္းမ်ားကို ဝယ္ယူရန္ အသုံးျပဳႏိုင္သည့္ Android အက္ပ္တစ္ခု ျဖစ္ပါသည္။</string>
   <string name="eskills_v2_faqs_2_body_2">AppCoins အက္ပ္မ်ားႏွင့္ဂိမ္းမ်ားတြင္ ဝယ္ယူမႈတစ္ခု ျပဳလုပ္တိုင္း ဆုတစ္ခုကို သင္ရရွိပါမည္။ သင့္ကိရိယာတြင္ AppCoins Wallet ကိုထည့္သြင္းထားကာ သင့္စိတ္ႀကိဳက္ဂိမ္းမ်ား၏ AppCoins ဗားရွင္းတြင္ ပုံမွန္အတိုင္း ဝယ္ယူလိုက္႐ုံသာ ျဖစ္ပါသည္။</string>
