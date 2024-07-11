@@ -14,9 +14,7 @@ public class DownloadApkPathsProvider {
     this.oemidProvider = oemidProvider;
   }
 
-  public ApkPaths getDownloadPaths(int downloadAction, String path, String altPath) {
-    return getDownloadPaths(downloadAction, path, altPath, null);
-  }
+
 
   public ApkPaths getDownloadPaths(int downloadAction, String path, String altPath, String oemId) {
     String oemid = getOemidQueryString(oemId);

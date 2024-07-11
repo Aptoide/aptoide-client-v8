@@ -145,7 +145,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.download.AppValidationAnalytics;
 import cm.aptoide.pt.download.AppValidator;
 import cm.aptoide.pt.download.DownloadAnalytics;
-import cm.aptoide.pt.download.DownloadApkPathsProvider;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.DownloadInstallationProvider;
 import cm.aptoide.pt.download.DownloadMirrorEventInterceptor;
@@ -594,11 +593,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new OemidProvider();
   }
 
-  @Singleton @Provides DownloadApkPathsProvider downloadApkPathsProvider(
-      OemidProvider oemidProvider) {
-    return new DownloadApkPathsProvider(oemidProvider);
-  }
-
   @Singleton @Provides AppValidationAnalytics providesAppValidationAnalytics(
       AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
     return new AppValidationAnalytics(analyticsManager, navigationTracker);
@@ -610,10 +604,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides DownloadFactory provideDownloadFactory(
-      @Named("marketName") String marketName, DownloadApkPathsProvider downloadApkPathsProvider,
+      @Named("marketName") String marketName,
       @Named("cachePath") String cachePath, AppValidator appValidator,
       SplitTypeSubFileTypeMapper splitTypeSubFileTypeMapper) {
-    return new DownloadFactory(marketName, downloadApkPathsProvider, cachePath, appValidator,
+    return new DownloadFactory(marketName, cachePath, appValidator,
         splitTypeSubFileTypeMapper);
   }
 
@@ -916,9 +910,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return okHttpClientBuilder;
   }
 
-
-
-  @Singleton @Provides @Named("aptoide-mmp-okhttp-builder") OkHttpClient.Builder providesAptoideMMPOkHttpBuilder(
+  @Singleton @Provides @Named("aptoide-mmp-okhttp-builder")
+  OkHttpClient.Builder providesAptoideMMPOkHttpBuilder(
       L2Cache httpClientCache, @Named("default") SharedPreferences sharedPreferences,
       @Named("retrofit-log") Interceptor retrofitLogInterceptor) {
     final OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
@@ -2281,7 +2274,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides @Named("retrofit-aptoide-mmp") Retrofit providesAptoideMmpRetrofit(
-      @Named("aptoide-mmp-base-host") String baseHost, @Named("aptoide-mmp-okhttp") OkHttpClient httpClient,
+      @Named("aptoide-mmp-base-host") String baseHost,
+      @Named("aptoide-mmp-okhttp") OkHttpClient httpClient,
       Converter.Factory converterFactory, @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
     return new Retrofit.Builder().baseUrl(baseHost)
         .client(httpClient)

@@ -22,17 +22,15 @@ import java.util.List;
 public class DownloadFactory {
 
   private final String marketName;
-  private final DownloadApkPathsProvider downloadApkPathsProvider;
   private final String cachePath;
   private final AppValidator appValidator;
   private final SplitTypeSubFileTypeMapper splitTypeSubFileTypeMapper;
 
-  public DownloadFactory(String marketName, DownloadApkPathsProvider downloadApkPathsProvider,
+  public DownloadFactory(String marketName,
       String cachePath, AppValidator appValidator,
       SplitTypeSubFileTypeMapper splitTypeSubFileTypeMapper) {
     this.marketName = marketName;
     this.cachePath = cachePath;
-    this.downloadApkPathsProvider = downloadApkPathsProvider;
     this.appValidator = appValidator;
     this.splitTypeSubFileTypeMapper = splitTypeSubFileTypeMapper;
   }
@@ -138,10 +136,6 @@ public class DownloadFactory {
             update.getRequiredSplits());
 
     if (validationResult == AppValidator.AppValidationResult.VALID_APP) {
-      ApkPaths downloadPaths = downloadApkPathsProvider.getDownloadPaths(
-          isAppcUpgrade ? RoomDownload.ACTION_DOWNGRADE : RoomDownload.ACTION_UPDATE,
-          update.getApkPath(), update.getAlternativeApkPath());
-
       RoomDownload download = new RoomDownload();
       download.setMd5(update.getMd5());
       download.setIcon(update.getIcon());
@@ -155,8 +149,8 @@ public class DownloadFactory {
       download.setTrustedBadge(update.getTrustedBadge());
       download.setStoreName(update.getStoreName());
       download.setFilesToDownload(
-          createFileList(update.getMd5(), update.getPackageName(), downloadPaths.getPath(),
-              downloadPaths.getAltPath(), update.getMd5(), update.getMainObbPath(),
+          createFileList(update.getMd5(), update.getPackageName(), update.getApkPath(),
+              update.getAlternativeApkPath(), update.getMd5(), update.getMainObbPath(),
               update.getMainObbMd5(), update.getPatchObbPath(), update.getPatchObbMd5(),
               update.getUpdateVersionCode(), update.getUpdateVersionName(), update.getMainObbName(),
               update.getPatchObbName(), map(update.getRoomSplits()), dynamicSplits));
@@ -179,8 +173,6 @@ public class DownloadFactory {
 
   public RoomDownload create(String md5, int versionCode, String packageName, String uri,
       boolean hasAppc) {
-    ApkPaths downloadPaths =
-        downloadApkPathsProvider.getDownloadPaths(RoomDownload.ACTION_UPDATE, uri, uri);
     String versionName =
         "Auto-Update"; //This is needed since we're using the version name to compare installs
     RoomDownload download = new RoomDownload();
@@ -193,9 +185,8 @@ public class DownloadFactory {
     download.setAction(RoomDownload.ACTION_UPDATE);
     download.setHasAppc(hasAppc);
     download.setSize(0);
-    download.setFilesToDownload(createFileList(md5, packageName, downloadPaths.getPath(), md5, null,
-        downloadPaths.getAltPath(), versionCode, versionName, null,
-        null)); // no splits, no oemid : auto-update
+    download.setFilesToDownload(createFileList(md5, packageName, uri, md5, null,
+        uri, versionCode, versionName, null, null)); // no splits, no oemid : auto-update
     return download;
   }
 
@@ -218,10 +209,6 @@ public class DownloadFactory {
             requiredSplits);
 
     if (validationResult == AppValidator.AppValidationResult.VALID_APP) {
-
-      ApkPaths downloadPaths =
-          downloadApkPathsProvider.getDownloadPaths(downloadAction, appPath, appPathAlt, oemId);
-
       long completeAppSize = calculateAppSize(appBaseSize, dynamicSplits);
 
       RoomDownload download = new RoomDownload();
@@ -238,8 +225,8 @@ public class DownloadFactory {
       download.setStoreName(storeName);
       download.setAttributionId(oemId);
       download.setFilesToDownload(
-          createFileList(md5, packageName, downloadPaths.getPath(), md5, obb,
-              downloadPaths.getAltPath(), versionCode, versionName, splits, dynamicSplits));
+          createFileList(md5, packageName, appPath, md5, obb, appPathAlt, versionCode, versionName,
+              splits, dynamicSplits));
 
       return download;
     } else {

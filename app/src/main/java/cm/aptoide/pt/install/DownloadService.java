@@ -126,7 +126,7 @@ public class DownloadService extends BaseService implements DownloadsNotificatio
     }
     intent.setAction(ACTION_STOP_INSTALL);
     return PendingIntent.getService(this, PAUSE_DOWNLOAD_REQUEST_CODE, intent,
-        PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent.FLAG_MUTABLE);
   }
 
   private PendingIntent getOpenDownloadManagerPendingIntent(int requestCode) {
