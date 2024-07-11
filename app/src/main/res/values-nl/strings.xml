@@ -650,7 +650,9 @@
   <string name="appc_info_view_title_5_variable">Je krijgt tot %s%% bonus voor elke aankoop die je in een app met het symbool %s doet. Profiteer ervan en word de ultieme gamer!</string>
   <string name="appc_info_view_title_5_variable_no_data">Je krijgt een bonus bij elke aankoop die je in een app met het symbool %s doet. Profiteer ervan en word de ultieme gamer!</string>
   <string name="appc_info_view_eskills_title">Verdien geld met e-Skills!</string>
+  <string name="appc_info_view_eskills_without_withdrawal_title">Get Rewarded with e-Skills!</string>
   <string name="appc_info_view_eskills_body">In games met e-Skills verdien je een prijs als je andere spelers verslaat. Download de game waar je het beste in bent, doe je bijdrage om de strijd aan te gaan en toon je vaardigheden om te bewijzen dat je de prijs in echt geld verdient. Ben je klaar voor de uitdaging? Je kunt alle beschikbare games %s vinden.</string>
+  <string name="appc_info_view_eskills_without_withdrawal_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in AppCoins Credits. Ready for the challenge? Find all the available games %s.</string>
   <string name="appc_info_view_eskills_body_button">hier</string>
   <string name="appc_info_view_devs_title">Ben je een ontwikkelaar?</string>
   <string name="appc_info_view_devs_body">Bekijk de nieuwe manier om apps beschikbaar te maken.</string>
@@ -753,10 +755,12 @@
   <string name="faq_settings_body">Vind alle antwoorden die je zoekt!</string>
   <!--New e-Skills-->
   <string name="eskills_v2_home_card_title">Echte geldprijzen!</string>
+  <string name="eskills_v2_home_card_without_withdrawal_title">Get Rewarded!</string>
   <string name="eskills_v2_home_card_body">In e-Skills games krijg je een beloning als je andere spelers verslaat. Toon nu je vaardigheden!</string>
   <string name="eskills_v2_earnmore_header">Verdien meer</string>
   <string name="eskills_v2_page_header">Games met e-Skills</string>
   <string name="eskills_v2_page_body_">Kun je met jouw vaardigheden in games echte geldprijzen winnen?</string>
+  <string name="eskills_v2_page_without_withdrawal_body_">Are your gaming skills worth a reward?</string>
   <string name="eskills_v2_card_1_title">%1$s %2$s</string>
   <string name="eskills_v2_card_1_body">Gemiddelde dagelijkse verdiensten per gebruiker.</string>
   <string name="eskills_v2_card_2_title">%1$s %2$s</string>
@@ -766,13 +770,17 @@
   <string name="eskills_v2_card_4_title">24 uur</string>
   <string name="eskills_v2_card_4_body">Wij bieden 24/7 ondersteuning.</string>
   <string name="eskills_v2_card_5_title">Echte geldprijzen</string>
+  <string name="eskills_v2_card_5_without_withdrawal_title">Get Rewarded!</string>
   <string name="eskills_v2_card_5_body">Speel je favoriete games en begin nu met het verdienen van echt geld!</string>
+  <string name="eskills_v2_card_5_without_withdrawal_body">Play your favorite games and get rewarded now!</string>
   <string name="eskills_v2_card_6_title">Eerlijke competitie</string>
   <string name="eskills_v2_card_6_body">Je wordt gekoppeld aan spelers van jouw niveau voor eerlijke toernooien.</string>
   <string name="eskills_v2_card_7_title">Verover de 1e plek</string>
   <string name="eskills_v2_card_7_body">Ontvang extra beloningen als je de top van onze dagelijkse en wekelijkse klassementen bereikt.</string>
   <string name="eskills_v2_card_8_title">Opnemen met één tik</string>
+  <string name="eskills_v2_card_8_without_withdrawal_title">Use Your Reward</string>
   <string name="eskills_v2_card_8_body">Met de AppCoins Wallet kun je je verdiensten eenvoudig in echt geld opnemen.</string>
+  <string name="eskills_v2_card_8_without_withdrawal_body">You can use your reward to make purchases in your favorite games.</string>
   <string name="eskills_v2_card_9_title">Begin nu</string>
   <string name="eskills_v2_card_9_body">Test je vaardigheden en word een kampioen om een beloning te krijgen!</string>
   <string name="eskills_v2_how_it_works_title">Hoe werkt het?</string>
@@ -781,9 +789,11 @@
   <string name="eskills_v2_how_2">Oefen of koop een ticket om aan een wedstrijd te beginnen</string>
   <string name="eskills_v2_how_3">Versla andere spelers</string>
   <string name="eskills_v2_how_4">Neem je verdiensten op!</string>
+  <string name="eskills_v2_how_without_withdrawal_4">Use your reward to make purchases!</string>
   <string name="eskills_v2_faqs_title">FAQ\'s</string>
   <string name="eskills_v2_faqs_1_title">Wat zijn e-Skills games?</string>
   <string name="eskills_v2_faqs_1_body_1">In e-Skills games daag je andere spelers uit om het tegen elkaar op te nemen. De winnaar krijgt een prijs die in AppCoins Credits wordt toegekend! Je kunt deze prijs via je PayPal-account opnemen door naar Instellingen te gaan en op e-Skills opnemen te tikken.</string>
+  <string name="eskills_v2_faqs_1_body_without_withdrawal_1">In e-Skills games, you will challenge other players to play against each other and the winner will receive a prize! This prize is granted in AppCoins Credits and can be used to make purchases in your favorite games.</string>
   <string name="eskills_v2_faqs_2_title">Wat is de AppCoins Wallet?</string>
   <string name="eskills_v2_faqs_2_body_1">De AppCoins Wallet is een Android-app waarmee je digitale items in games en apps kunt kopen.</string>
   <string name="eskills_v2_faqs_2_body_2">Je krijgt een beloning voor elke aankoop die je doet in apps en games die AppCoins ondersteunen! Je hoeft de AppCoins Wallet alleen maar op je apparaat te installeren en je aankoop op de normale manier in de AppCoins-versie van je favoriete games te voltooien.</string>
