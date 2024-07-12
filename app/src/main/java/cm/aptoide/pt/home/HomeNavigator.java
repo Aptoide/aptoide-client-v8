@@ -133,20 +133,6 @@ public class HomeNavigator {
         AppViewFragment.OpenType.OPEN_ONLY, tag);
   }
 
-  public void navigateToEskillsBundle(long groupId) {
-    Event event = new Event();
-    event.setAction(null);
-    event.setData(null);
-    event.setType(null);
-    event.setName(Event.Name.eSkills);
-    Fragment fragment =
-        StoreTabGridRecyclerFragment.newInstance(event, HomeEvent.Type.ESKILLS_APP, "e-Skills",
-            "default", "eskills", StoreContext.home, true);
-    fragment.getArguments()
-        .putLong(StoreTabGridRecyclerFragment.BundleCons.GROUP_ID, groupId);
-    fragmentNavigator.navigateTo(fragment, true);
-  }
-
   public void navigateToEskillsEarnMore(HomeEvent click) {
     fragmentNavigator.navigateTo(EskillsInfoFragment.newInstance(click.getBundle()
         .getTitle(), ((AppBundle) click.getBundle()).getActionTag(), click.getBundle()

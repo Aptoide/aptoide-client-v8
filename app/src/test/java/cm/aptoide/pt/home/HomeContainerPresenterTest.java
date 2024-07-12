@@ -28,7 +28,6 @@ public class HomeContainerPresenterTest {
   @Mock private HomeAnalytics homeAnalytics;
   @Mock private HomeContainerNavigator homeContainerNavigator;
   @Mock private ChipManager chipManager;
-  @Mock private EskillsPreferencesManager eskillsPreferencesManager;
 
   private HomeContainerPresenter presenter;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
@@ -38,8 +37,7 @@ public class HomeContainerPresenterTest {
     lifecycleEvent = PublishSubject.create();
 
     presenter = new HomeContainerPresenter(view, Schedulers.immediate(), aptoideAccountManager,
-        homeContainerNavigator, homeNavigator, homeAnalytics, home, chipManager,
-        eskillsPreferencesManager);
+        homeContainerNavigator, homeNavigator, homeAnalytics, home, chipManager);
     when(view.getLifecycleEvent()).thenReturn(lifecycleEvent);
     when(view.toolbarUserClick()).thenReturn(Observable.just(null));
     when(aptoideAccountManager.accountStatus()).thenReturn(Observable.just(account));
