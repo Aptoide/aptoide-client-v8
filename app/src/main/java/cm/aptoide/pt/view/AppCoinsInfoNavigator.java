@@ -49,12 +49,15 @@ public class AppCoinsInfoNavigator {
 
   public void navigateToESkills() {
     Event event = new Event();
-    event.setAction(null);
+    event.setAction(
+        "https://ws75.aptoide.com/api/7/listApps/"
+            + "store_name=apps/group_id=14169744/sort=sort%3Apromotion%3Aupdated"
+    );
     event.setData(null);
     event.setType(null);
     event.setName(Event.Name.eSkills);
     fragmentNavigator.navigateTo(
-        StoreTabGridRecyclerFragment.newInstance(event, HomeEvent.Type.ESKILLS_APP, "e-Skills",
+        StoreTabGridRecyclerFragment.newInstance(event, HomeEvent.Type.ESKILLS_MORE, "e-Skills",
             "default", "eskills", StoreContext.home, true), true);
   }
 }

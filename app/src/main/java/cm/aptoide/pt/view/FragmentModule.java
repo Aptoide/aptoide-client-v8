@@ -113,7 +113,6 @@ import cm.aptoide.pt.feature.NewFeatureDialogPresenter;
 import cm.aptoide.pt.feature.NoBehaviourNewFeatureListener;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.ChipManager;
-import cm.aptoide.pt.home.EskillsPreferencesManager;
 import cm.aptoide.pt.home.Home;
 import cm.aptoide.pt.home.HomeAnalytics;
 import cm.aptoide.pt.home.HomeContainerNavigator;
@@ -661,11 +660,11 @@ import static cm.aptoide.pt.AptoideApplication.APPCOINS_WALLET_PACKAGE_NAME;
 
   @FragmentScope @Provides HomeContainerPresenter providesHomeContainerPresenter(
       AptoideAccountManager accountManager, HomeContainerNavigator homeContainerNavigator,
-      HomeNavigator homeNavigator, HomeAnalytics homeAnalytics, Home home, ChipManager chipManager,
-      EskillsPreferencesManager eskillsPreferencesManager) {
+      HomeNavigator homeNavigator, HomeAnalytics homeAnalytics, Home home, ChipManager chipManager
+  ) {
     return new HomeContainerPresenter((HomeContainerView) fragment, AndroidSchedulers.mainThread(),
-        accountManager, homeContainerNavigator, homeNavigator, homeAnalytics, home, chipManager,
-        eskillsPreferencesManager);
+        accountManager, homeContainerNavigator, homeNavigator, homeAnalytics, home, chipManager
+        );
   }
 
   @FragmentScope @Provides AppMapper providesAppMapper() {
