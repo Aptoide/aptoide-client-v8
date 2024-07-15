@@ -59,6 +59,7 @@ fun AppViewYoutubePlayer(
   videoId: String,
   shouldPause: Boolean = false,
   contentDesc: String = "",
+  onErrorContent: @Composable () -> Unit,
 ) = runPreviewable(
   preview = {
     Box(
@@ -130,11 +131,11 @@ fun AppViewYoutubePlayer(
 
       onDispose {
         lifecycleOwner.lifecycle.removeObserver(observer)
-        youtubePlayerView.release()
+        youtubePlayerView?.release()
       }
     }
 
-    youtubePlayerView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
+    youtubePlayerView?.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
       override fun onReady(youTubePlayer: YouTubePlayer) {
         youtubePlayer = youTubePlayer
       }
@@ -168,15 +169,19 @@ fun AppViewYoutubePlayer(
       }
     })
 
-    AppViewYoutubePlayerContent(
-      modifier = modifier,
-      youtubePlayerView = youtubePlayerView,
-      youtubePlayer = youtubePlayer,
-      showFullscreen = showFullscreen,
-      toggleFullscreen = { showFullscreen = !showFullscreen },
-      shouldMute = shouldMute,
-      contentDescription = contentDesc
-    )
+    if (youtubePlayerView != null) {
+      AppViewYoutubePlayerContent(
+        modifier = modifier,
+        youtubePlayerView = youtubePlayerView,
+        youtubePlayer = youtubePlayer,
+        showFullscreen = showFullscreen,
+        toggleFullscreen = { showFullscreen = !showFullscreen },
+        shouldMute = shouldMute,
+        contentDescription = contentDesc
+      )
+    } else {
+      onErrorContent()
+    }
   }
 )
 
@@ -282,7 +287,7 @@ fun buildYoutubePlayerView(
   youtubePlayerTracker: YouTubePlayerTracker,
   startMuted: Boolean,
   autoplay: Boolean,
-): YouTubePlayerView {
+): YouTubePlayerView? = try {
   val youtubePlayerView = YouTubePlayerView(context)
   lifecycle.addObserver(youtubePlayerView)
   youtubePlayerView.enableAutomaticInitialization = false
@@ -310,8 +315,10 @@ fun buildYoutubePlayerView(
     }.build()
 
   youtubePlayerView.initialize(youtubeListener, iFramePlayerOptions)
-
-  return youtubePlayerView
+  youtubePlayerView
+} catch (e: Throwable) {
+  e.printStackTrace()
+  null
 }
 
 fun View?.removeSelf() {
