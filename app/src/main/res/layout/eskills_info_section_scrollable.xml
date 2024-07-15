@@ -33,6 +33,7 @@
       <include
           android:id="@+id/eskills_info_card_4"
           layout="@layout/eskills_info_card4"
+          android:visibility="gone"
           />
 
       <include
