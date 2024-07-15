@@ -208,6 +208,20 @@ fun AppViewContent(
   Box(
     modifier = Modifier.verticalScroll(scrollState)
   ) {
+    val featureGraphicContent: @Composable () -> Unit = {
+      AptoideFeatureGraphicImage(
+        modifier = Modifier
+          .clearAndSetSemantics { contentDescription = appImageString }
+          .graphicsLayer {
+            translationY = scrollState.value * 0.8f
+          }
+          .height(FEATURE_GRAPHIC_HEIGHT.dp)
+          .fillMaxWidth(),
+        data = app.featureGraphic,
+        contentDescription = null
+      )
+    }
+
     if (showYoutubeVideo) {
       val videoId = app.videos[0].split("embed/").getOrElse(1) { "" }
       val videoHeightPx = with(localDensity) { VIDEO_HEIGHT.dp.toPx() }
@@ -227,20 +241,11 @@ fun AppViewContent(
           .fillMaxWidth(),
         videoId = videoId,
         shouldPause = shouldVideoPause,
-        contentDesc = contentDesc
+        contentDesc = contentDesc,
+        onErrorContent = featureGraphicContent
       )
     } else {
-      AptoideFeatureGraphicImage(
-        modifier = Modifier
-          .clearAndSetSemantics { contentDescription = appImageString }
-          .graphicsLayer {
-            translationY = scrollState.value * 0.8f
-          }
-          .height(FEATURE_GRAPHIC_HEIGHT.dp)
-          .fillMaxWidth(),
-        data = app.featureGraphic,
-        contentDescription = null
-      )
+      featureGraphicContent()
     }
     Image(
       imageVector = getLeftArrow(Palette.Primary, Palette.Black),
