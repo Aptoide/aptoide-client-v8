@@ -1,9 +1,9 @@
 package cm.aptoide.pt.home.more.eskills
 
 import android.graphics.Color
+import android.graphics.text.LineBreaker
 import android.os.Build
 import android.os.Bundle
-import android.text.Layout.JUSTIFICATION_MODE_INTER_WORD
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
@@ -110,13 +110,13 @@ class EskillsInfoFragment : ListAppsFragment<Application, ListAppsMoreViewHolder
     val card4 = statsView.findViewById<View>(R.id.value_proposition_card_4)
 
     setupStatsCard(
-      card1, R.string.eskills_v2_card_1_title, "30", "$", R.string.eskills_v2_card_1_body
+      card1, R.string.eskills_v2_card_1_title, "$", "30", R.string.eskills_v2_card_1_body
     )
     setupStatsCard(
-      card2, R.string.eskills_v2_card_2_title, "6.5", "$", R.string.eskills_v2_card_2_body
+      card2, R.string.eskills_v2_card_2_title, "$", "6.5", R.string.eskills_v2_card_2_body
     )
     setupStatsCard(
-      card3, R.string.eskills_v2_card_3_title, "20", "$", R.string.eskills_v2_card_3_body
+      card3, R.string.eskills_v2_card_3_title, "$", "20", R.string.eskills_v2_card_3_body
     )
     setupStatsCard(
       card4, R.string.eskills_v2_card_4_title, "24", "h", R.string.eskills_v2_card_4_body
@@ -170,8 +170,8 @@ class EskillsInfoFragment : ListAppsFragment<Application, ListAppsMoreViewHolder
   private fun setupFAQItem(faq: View, question: Int, answer: Int) {
     faq.findViewById<TextView>(R.id.eskills_faq_question).setText(question)
     val answerView = faq.findViewById<TextView>(R.id.eskills_faq_answer)
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-      answerView.justificationMode = JUSTIFICATION_MODE_INTER_WORD
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+      answerView.justificationMode = LineBreaker.JUSTIFICATION_MODE_INTER_WORD
     }
     val arrow = faq.findViewById<ImageView>(R.id.eskills_faq_arrow)
     answerView.setText(answer)

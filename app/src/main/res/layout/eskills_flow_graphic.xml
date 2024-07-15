@@ -117,7 +117,7 @@
       android:layout_width="144dp"
       android:layout_height="40dp"
       android:layout_marginTop="8dp"
-      android:text="@string/eskills_v2_how_4"
+      android:text="@string/eskills_v2_how_without_withdrawal_4"
       app:layout_constraintLeft_toLeftOf="@id/eskills_info_graphics_text2"
       app:layout_constraintTop_toBottomOf="@id/eskills_info_graphics2"
       />

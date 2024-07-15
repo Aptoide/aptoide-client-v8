@@ -36,7 +36,7 @@
         android:layout_marginStart="112dp"
         android:layout_marginTop="24dp"
         android:textStyle="bold"
-        android:text="@string/eskills_v2_home_card_title"
+        android:text="@string/eskills_v2_home_card_without_withdrawal_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/bundle_more"
         app:layout_constraintTop_toTopOf="parent"

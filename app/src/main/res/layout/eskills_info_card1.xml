@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:textSize="18sp"
-            android:text="@string/eskills_v2_card_5_title"
+            android:text="@string/eskills_v2_card_5_without_withdrawal_title"
             android:textStyle="bold"
             android:textColor="@color/eskills_light_purple"
             app:layout_constraintTop_toTopOf="parent"
@@ -33,7 +33,7 @@
             android:maxLines="3"
             app:layout_constraintTop_toBottomOf="@id/card_title"
             app:layout_constraintBottom_toTopOf="@id/guideline"
-            android:text="@string/eskills_v2_card_5_body"
+            android:text="@string/eskills_v2_card_5_without_withdrawal_body"
             android:textColor="@color/black"
             />
 
