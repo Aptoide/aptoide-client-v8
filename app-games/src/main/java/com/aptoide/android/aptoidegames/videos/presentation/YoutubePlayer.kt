@@ -82,18 +82,17 @@ fun AppViewYoutubePlayer(
     var userPaused by remember { mutableStateOf(false) }
 
     val meteredConnection = isActiveNetworkMetered()
-
     val autoplayAllowed = !meteredConnection
     val shouldAutoplay by remember { derivedStateOf { !userPaused && autoplayAllowed } }
 
     val youtubePlayerView = remember {
       buildYoutubePlayerView(
-        context,
-        lifecycleOwner.lifecycle,
-        videoId,
-        youtubePlayerTracker,
-        shouldMute,
-        autoplayAllowed
+        context = context,
+        lifecycle = lifecycleOwner.lifecycle,
+        videoId = videoId,
+        youtubePlayerTracker = youtubePlayerTracker,
+        startMuted = shouldMute,
+        autoplay = autoplayAllowed
       )
     }
 
@@ -169,91 +168,112 @@ fun AppViewYoutubePlayer(
       }
     })
 
-    if (!showFullscreen) {
-      Box {
+    AppViewYoutubePlayerContent(
+      modifier = modifier,
+      youtubePlayerView = youtubePlayerView,
+      youtubePlayer = youtubePlayer,
+      showFullscreen = showFullscreen,
+      toggleFullscreen = { showFullscreen = !showFullscreen },
+      shouldMute = shouldMute,
+      contentDescription = contentDesc
+    )
+  }
+)
+
+@Composable
+private fun AppViewYoutubePlayerContent(
+  modifier: Modifier,
+  youtubePlayerView: YouTubePlayerView,
+  youtubePlayer: YouTubePlayer?,
+  showFullscreen: Boolean,
+  toggleFullscreen: () -> Unit,
+  shouldMute: Boolean,
+  contentDescription: String,
+) {
+  if (!showFullscreen) {
+    Box {
+      AndroidView(
+        modifier = modifier,
+        factory = {
+          youtubePlayerView.removeSelf()
+          youtubePlayerView.toggleAccessibility(false)
+          youtubePlayerView
+        },
+        update = {
+          youtubePlayerView.getYouTubePlayerWhenReady(object : YouTubePlayerCallback {
+            override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
+              youTubePlayer.hideVideoTitle()
+              youTubePlayer.hidePlayerControls()
+            }
+          })
+        }
+      )
+      Box(
+        modifier = modifier.clickable {
+          toggleFullscreen()
+        }
+      )
+      IconButton(
+        modifier = Modifier
+          .padding(top = 4.dp, end = 16.dp)
+          .clip(CircleShape)
+          .size(32.dp)
+          .background(Palette.GreyLight.copy(alpha = 0.4f))
+          .align(Alignment.TopEnd),
+        onClick = {
+          if (shouldMute) youtubePlayer?.unMute() else youtubePlayer?.mute()
+        }
+      ) {
+        Icon(
+          imageVector = if (shouldMute) getMuted(Palette.White) else getUnmuted(Palette.White),
+          contentDescription = if (shouldMute) "Muted" else "Unmuted",
+          tint = Color.Unspecified
+        )
+      }
+    }
+  } else {
+    Dialog(
+      onDismissRequest = {
+        toggleFullscreen()
+      },
+      properties = DialogProperties(
+        usePlatformDefaultWidth = false
+      )
+    ) {
+      Box(
+        modifier = Modifier
+          .fillMaxSize()
+          .background(Palette.Black)
+      ) {
         AndroidView(
-          modifier = modifier,
+          modifier = Modifier.fillMaxSize(),
           factory = {
-            youtubePlayerView.removeSelf()
-            youtubePlayerView.toggleAccessibility(false)
+            youtubePlayerView.contentDescription = contentDescription
+            youtubePlayerView.toggleAccessibility(true)
             youtubePlayerView
           },
           update = {
             youtubePlayerView.getYouTubePlayerWhenReady(object : YouTubePlayerCallback {
               override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
-                youTubePlayer.hideVideoTitle()
-                youTubePlayer.hidePlayerControls()
+                youTubePlayer.showPlayerControls()
+                youTubePlayer.showVideoTitle()
               }
             })
           }
         )
-        Box(
-          modifier = modifier.clickable {
-            showFullscreen = true
-          }
-        )
-        IconButton(
+        Image(
+          imageVector = getLeftArrow(Palette.Primary, Palette.Black),
+          contentDescription = stringResource(id = R.string.button_back_title),
+          contentScale = ContentScale.Crop,
           modifier = Modifier
-            .padding(top = 4.dp, end = 16.dp)
-            .clip(CircleShape)
+            .clickable { toggleFullscreen() }
+            .padding(horizontal = 16.dp, vertical = 12.dp)
             .size(32.dp)
-            .background(Palette.GreyLight.copy(alpha = 0.4f))
-            .align(Alignment.TopEnd),
-          onClick = {
-            if (shouldMute) youtubePlayer?.unMute() else youtubePlayer?.mute()
-          }
-        ) {
-          Icon(
-            imageVector = if (shouldMute) getMuted(Palette.White) else getUnmuted(Palette.White),
-            contentDescription = if (shouldMute) "Muted" else "Unmuted",
-            tint = Color.Unspecified
-          )
-        }
-      }
-    } else {
-      Dialog(
-        onDismissRequest = {
-          showFullscreen = false
-        },
-        properties = DialogProperties(
-          usePlatformDefaultWidth = false
         )
-      ) {
-        Box(
-          modifier = Modifier
-            .fillMaxSize()
-            .background(Palette.Black)
-        ) {
-          AndroidView(
-            modifier = Modifier.fillMaxSize(),
-            factory = {
-              youtubePlayerView.contentDescription = contentDesc
-              youtubePlayerView.toggleAccessibility(true)
-              youtubePlayerView
-            },
-            update = {
-              youtubePlayerView.getYouTubePlayerWhenReady(object : YouTubePlayerCallback {
-                override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
-                  youTubePlayer.showPlayerControls()
-                  youTubePlayer.showVideoTitle()
-                }
-              })
-            }
-          )
-          Image(
-            imageVector = getLeftArrow(Palette.Primary, Palette.Black),
-            contentDescription = stringResource(id = R.string.button_back_title),
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-              .clickable { showFullscreen = false }
-              .padding(horizontal = 16.dp, vertical = 12.dp)
-              .size(32.dp)
-          )
-        }
       }
     }
   }
-)
+}
 
 fun buildYoutubePlayerView(
   context: Context,
@@ -285,7 +305,7 @@ fun buildYoutubePlayerView(
       ivLoadPolicy(3)
       ccLoadPolicy(1)
       modestBranding(0)
-      langPref(context.resources?.configuration?.locale?.language ?: "en")
+      langPref(context.resources?.configuration?.locales?.get(0)?.language ?: "en")
       if (startMuted) mute(1)
     }.build()
 
