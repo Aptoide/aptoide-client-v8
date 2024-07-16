@@ -12,6 +12,7 @@ object ModuleDependency {
   const val PAYMENTS_MANAGER_COMPOSE = ":payments:manager-compose"
   const val PAYMENTS_METHODS_ADYEN_COMPOSE = ":payments:methods:adyen-compose"
   const val PAYMENTS_METHODS_PAYPAL_COMPOSE = ":payments:methods:paypal-compose"
+  const val PAYMENTS_PRODUCTS = ":payments:products"
   const val FEATURE_SEARCH = ":feature_search"
   const val FEATURE_UPDATES = ":feature_updates"
   const val APTOIDE_NETWORK = ":aptoide-network"

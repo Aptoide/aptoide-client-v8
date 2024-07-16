@@ -42,9 +42,11 @@ import cm.aptoide.pt.extensions.ScreenData
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardView
 import com.appcoins.payments.arch.ConnectionFailedException
+import com.appcoins.payments.arch.PaymentsResult
 import com.appcoins.payments.manager.presentation.rememberPaymentMethod
 import com.appcoins.payments.methods.adyen.presentation.AdyenCreditCardUiState
 import com.appcoins.payments.methods.adyen.presentation.rememberAdyenCreditCardUIState
+import com.appcoins.payments.uri_handler.PaymentsCancelledResult
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.SupportActivity
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
@@ -94,7 +96,7 @@ fun buildCreditCardRoute(
   "$CREDIT_CARD_ROUTE?$CREDIT_CARD_PAYMENT_ID_ARG=${paymentMethodId}&$IS_PRE_SELECTED=${isPreSelected}"
 
 fun creditCardPaymentScreen(
-  onFinish: (Boolean) -> Unit,
+  onFinish: (PaymentsResult) -> Unit,
 ) = ScreenData.withAnalytics(
   route = CREDIT_CARD_FULL_ROUTE,
   screenAnalyticsName = "CreditCard",
@@ -110,14 +112,14 @@ fun creditCardPaymentScreen(
 
   BackHandler(
     enabled = isPreSelected,
-    onBack = { onFinish(false) }
+    onBack = { onFinish(PaymentsCancelledResult) }
   )
 }
 
 @Composable
 private fun BuildAdyenCreditCardScreen(
   paymentMethodId: String,
-  onFinish: (Boolean) -> Unit,
+  onFinish: (PaymentsResult) -> Unit,
   popBackStack: () -> Unit,
 ) {
   val context = LocalContext.current as ComponentActivity
@@ -138,7 +140,7 @@ private fun BuildAdyenCreditCardScreen(
   LaunchedEffect(key1 = uiState, key2 = activityResultRegistry) {
     when (uiState) {
       is AdyenCreditCardUiState.Error -> {
-        when (uiState.error) {
+        when (uiState.result) {
           is ConnectionFailedException -> genericAnalytics.sendPaymentConclusionEvent(
             paymentMethod = paymentMethod,
             status = "error",
@@ -148,7 +150,7 @@ private fun BuildAdyenCreditCardScreen(
           else -> genericAnalytics.sendPaymentConclusionEvent(
             paymentMethod = paymentMethod,
             status = "error",
-            errorCode = uiState.error.message,
+            errorCode = uiState.result.message,
           )
         }
       }
@@ -167,7 +169,7 @@ private fun BuildAdyenCreditCardScreen(
 
       is AdyenCreditCardUiState.Success -> {
         delay(3000)
-        if (!finished) onFinish(true)
+        if (!finished) onFinish(uiState.result)
         finished = true
       }
 
@@ -179,12 +181,12 @@ private fun BuildAdyenCreditCardScreen(
   AppGamesPaymentBottomSheet(
     onClick = {
       if (uiState is AdyenCreditCardUiState.Success) {
-        onFinish(true)
+        onFinish(uiState.result)
         finished = true
       }
     },
     onOutsideClick = {
-      onFinish(uiState is AdyenCreditCardUiState.Success)
+      onFinish((uiState as? AdyenCreditCardUiState.Success)?.result ?: PaymentsCancelledResult)
       genericAnalytics.sendPaymentDismissedEvent(
         paymentMethod = paymentMethod,
         context = uiState.paymentContext,
@@ -199,7 +201,7 @@ private fun BuildAdyenCreditCardScreen(
 
       is AdyenCreditCardUiState.Loading -> LoadingView()
       is AdyenCreditCardUiState.Error -> AdyenCreditCardErrorScreen(
-        error = uiState.error,
+        error = uiState.result,
         onRetryClick = {
           genericAnalytics.sendPaymentTryAgainEvent(paymentMethod = paymentMethod)
           popBackStack()

@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import cm.aptoide.pt.extensions.staticComposable
 import com.appcoins.payments.arch.PaymentMethod
+import com.appcoins.payments.arch.PaymentsResult
 import com.appcoins.payments.arch.PurchaseRequest
 import com.appcoins.payments.methods.adyen.CreditCardPaymentMethod
 import com.appcoins.payments.methods.paypal.PaypalPaymentMethod
@@ -26,8 +27,8 @@ import com.aptoide.android.aptoidegames.theme.AptoideTheme
 
 class AGPaymentScreenContentProvider : PaymentScreenContentProvider {
 
-  override val setContent: (ComponentActivity, PurchaseRequest?, onClosePayments: (Boolean) -> Unit) -> Unit =
-    { context: ComponentActivity, purchaseRequest: PurchaseRequest?, onFinish: (Boolean) -> Unit ->
+  override val setContent: (ComponentActivity, PurchaseRequest?, onClosePayments: (PaymentsResult) -> Unit) -> Unit =
+    { context: ComponentActivity, purchaseRequest: PurchaseRequest?, onFinish: (PaymentsResult) -> Unit ->
       context.setContent {
         val navController = rememberNavController()
 
@@ -50,7 +51,7 @@ class AGPaymentScreenContentProvider : PaymentScreenContentProvider {
 fun NavigationGraph(
   navController: NavHostController,
   purchaseRequest: PurchaseRequest,
-  onFinish: (Boolean) -> Unit,
+  onFinish: (PaymentsResult) -> Unit,
 ) {
   NavHost(
     navController = navController,

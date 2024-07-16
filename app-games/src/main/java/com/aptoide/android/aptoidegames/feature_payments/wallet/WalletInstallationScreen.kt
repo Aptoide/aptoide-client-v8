@@ -35,8 +35,10 @@ import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.AppUiStateProvider
 import cm.aptoide.pt.feature_apps.presentation.rememberApp
 import cm.aptoide.pt.feature_home.domain.BundleSource
+import com.appcoins.payments.arch.PaymentsResult
 import com.appcoins.payments.arch.PurchaseRequest
 import com.appcoins.payments.arch.emptyPurchaseRequest
+import com.appcoins.payments.uri_handler.PaymentsCancelledResult
 import com.aptoide.android.aptoidegames.analytics.dto.BundleMeta
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
@@ -74,7 +76,7 @@ fun getPaymentsWalletInstallationRoute() = paymentsWalletInstallationRoute.withB
 
 fun paymentsWalletInstallationScreen(
   purchaseRequest: PurchaseRequest,
-  onFinish: (Boolean) -> Unit,
+  onFinish: (PaymentsResult) -> Unit,
 ) = ScreenData.withAnalytics(
   route = paymentsWalletInstallationRoute,
   screenAnalyticsName = "PaymentsWalletInstallation"
@@ -119,7 +121,7 @@ fun PaymentsWalletInstallationBottomSheetViewLandscapePreview(
 @Composable
 private fun PaymentsWalletInstallationBottomSheetView(
   purchaseRequest: PurchaseRequest,
-  onFinish: (Boolean) -> Unit,
+  onFinish: (PaymentsResult) -> Unit,
   navigateBack: () -> Unit,
   navigate: (String) -> Unit,
 ) {
@@ -139,7 +141,7 @@ private fun PaymentsWalletInstallationBottomSheetView(
           context = PaymentContext.SECOND_STEP,
         )
       }
-      onFinish(false)
+      onFinish(PaymentsCancelledResult)
     }
   )
 }

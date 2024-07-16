@@ -39,10 +39,13 @@ import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.PreviewLandscapeDark
 import cm.aptoide.pt.extensions.ScreenData
 import com.appcoins.payments.arch.ConnectionFailedException
+import com.appcoins.payments.arch.PaymentsResult
+import com.appcoins.payments.arch.PaymentsSuccessResult
 import com.appcoins.payments.arch.UnknownErrorException
 import com.appcoins.payments.manager.presentation.rememberPaymentMethod
 import com.appcoins.payments.methods.paypal.presentation.PaypalUIState
 import com.appcoins.payments.methods.paypal.presentation.rememberPaypalUIState
+import com.appcoins.payments.uri_handler.PaymentsCancelledResult
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.SupportActivity
@@ -93,7 +96,7 @@ fun buildPaypalRoute(
 ) =
   "$PAYPAL_ROUTE?$PAYPAL_PAYMENT_ID_ARG=${paymentMethodId}&$IS_PRE_SELECTED=${isPreSelected}"
 
-fun paypalPaymentScreen(onFinish: (Boolean) -> Unit) = ScreenData.withAnalytics(
+fun paypalPaymentScreen(onFinish: (PaymentsResult) -> Unit) = ScreenData.withAnalytics(
   route = PAYPAL_FULL_ROUTE,
   screenAnalyticsName = "PayPal",
   arguments = paypalPaymentArguments
@@ -109,7 +112,7 @@ fun paypalPaymentScreen(onFinish: (Boolean) -> Unit) = ScreenData.withAnalytics(
   BackHandler(
     enabled = isPreSelected,
     onBack = {
-      onFinish(false)
+      onFinish(PaymentsCancelledResult)
     }
   )
 }
@@ -117,7 +120,7 @@ fun paypalPaymentScreen(onFinish: (Boolean) -> Unit) = ScreenData.withAnalytics(
 @Composable
 private fun BuildPaypalScreen(
   paymentMethodId: String,
-  onFinish: (Boolean) -> Unit,
+  onFinish: (PaymentsResult) -> Unit,
   popBackStack: () -> Unit,
 ) {
   val localContext = LocalContext.current
@@ -145,7 +148,7 @@ private fun BuildPaypalScreen(
           status = "success",
         )
         delay(3000)
-        if (!finished) onFinish(true)
+        if (!finished) onFinish(uiState.result)
         finished = true
       }
 
@@ -176,7 +179,7 @@ private fun BuildPaypalScreen(
     },
     onClick = {
       if (uiState is PaypalUIState.Success) {
-        onFinish(true)
+        onFinish(uiState.result)
         finished = true
       }
     },
@@ -185,7 +188,7 @@ private fun BuildPaypalScreen(
         paymentMethod = paymentMethod,
         context = uiState.paymentContext,
       )
-      onFinish(uiState is PaypalUIState.Success)
+      onFinish((uiState as? PaypalUIState.Success)?.result ?: PaymentsCancelledResult)
       finished = true
     },
     onRetryClick = {
@@ -221,7 +224,7 @@ private fun PaypalScreen(
         textMessage = R.string.purchase_making_purchase_title
       )
 
-      is PaypalUIState.Error -> when (viewModelState.error) {
+      is PaypalUIState.Error -> when (viewModelState.result) {
         is ConnectionFailedException -> PayPalNoConnectionScreen(onRetryClick)
         else -> PaypalErrorScreen(onRetryClick, onContactUs)
       }
@@ -501,7 +504,7 @@ private class PaypalUIStateProvider : PreviewParameterProvider<PaypalUIState> {
       onRemoveBillingAgreementClick = {},
     ),
     PaypalUIState.MakingPurchase,
-    PaypalUIState.Success,
+    PaypalUIState.Success(PaymentsSuccessResult()),
     PaypalUIState.Loading,
     PaypalUIState.Error(ConnectionFailedException()),
     PaypalUIState.Error(UnknownErrorException()),
