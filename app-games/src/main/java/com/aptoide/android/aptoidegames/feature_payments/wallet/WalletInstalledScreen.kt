@@ -1,6 +1,5 @@
 package com.aptoide.android.aptoidegames.feature_payments.wallet
 
-import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -28,7 +27,10 @@ import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.PreviewLandscapeDark
 import cm.aptoide.pt.extensions.ScreenData
+import com.appcoins.payments.arch.PaymentsResult
 import com.appcoins.payments.arch.PurchaseRequest
+import com.appcoins.payments.uri_handler.PaymentsActivityResult
+import com.appcoins.payments.uri_handler.PaymentsCancelledResult
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.drawables.icons.getWalletInstalled
@@ -42,7 +44,7 @@ const val paymentsWalletInstalledRoute = "paymentsWalletInstalled"
 
 fun paymentsWalletInstalledScreen(
   purchaseRequest: PurchaseRequest,
-  onFinish: (Boolean) -> Unit,
+  onFinish: (PaymentsResult) -> Unit,
 ) = ScreenData.withAnalytics(
   route = paymentsWalletInstalledRoute,
   screenAnalyticsName = "WalletInstallSuccess"
@@ -74,14 +76,14 @@ fun PaymentsWalletInstalledViewLandscapePreview() {
 @Composable
 fun PaymentsWalletInstalledView(
   purchaseRequest: PurchaseRequest,
-  onFinish: (Boolean) -> Unit,
+  onFinish: (PaymentsResult) -> Unit,
 ) {
   val genericAnalytics = rememberGenericAnalytics()
   val walletPaymentMethod = rememberWalletPaymentMethod(purchaseRequest)
   val launcher = rememberLauncherForActivityResult(
     contract = StartActivityForResult()
   ) {
-    onFinish(it.resultCode == Activity.RESULT_OK)
+    onFinish(PaymentsActivityResult(it.resultCode, it.data))
   }
 
   val onRedirect: () -> Unit = {
@@ -92,7 +94,7 @@ fun PaymentsWalletInstalledView(
       try {
         launcher.launch(intent)
       } catch (e: Exception) {
-        onFinish(false)
+        onFinish(PaymentsCancelledResult)
       }
     }
   }
@@ -113,7 +115,7 @@ fun PaymentsWalletInstalledView(
           context = PaymentContext.CONCLUSION,
         )
       }
-      onFinish(false)
+      onFinish(PaymentsCancelledResult)
     },
     onClick = {
       launched = true

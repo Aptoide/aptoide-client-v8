@@ -38,12 +38,14 @@ import cm.aptoide.pt.extensions.PreviewLandscapeDark
 import cm.aptoide.pt.extensions.ScreenData
 import com.appcoins.payments.arch.ConnectionFailedException
 import com.appcoins.payments.arch.PaymentMethod
+import com.appcoins.payments.arch.PaymentsResult
 import com.appcoins.payments.arch.PurchaseRequest
 import com.appcoins.payments.arch.UnknownErrorException
 import com.appcoins.payments.arch.emptyPaymentMethod
 import com.appcoins.payments.arch.emptyPurchaseRequest
 import com.appcoins.payments.manager.presentation.PaymentMethodsUiState
 import com.appcoins.payments.manager.presentation.rememberPaymentMethods
+import com.appcoins.payments.uri_handler.PaymentsCancelledResult
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.AptoideOutlinedText
 import com.aptoide.android.aptoidegames.SupportActivity
@@ -65,7 +67,7 @@ import com.aptoide.android.aptoidegames.theme.Palette
 const val paymentsRoute = "payments"
 
 fun paymentsScreen(
-  onFinish: (Boolean) -> Unit,
+  onFinish: (PaymentsResult) -> Unit,
   purchaseRequest: PurchaseRequest,
 ) = ScreenData.withAnalytics(
   route = paymentsRoute,
@@ -81,7 +83,7 @@ fun paymentsScreen(
 @Composable
 private fun MainPaymentsView(
   navigate: (String) -> Unit,
-  onFinish: (Boolean) -> Unit,
+  onFinish: (PaymentsResult) -> Unit,
   purchaseRequest: PurchaseRequest,
 ) {
   val context = LocalContext.current
@@ -115,7 +117,7 @@ private fun MainPaymentsView(
         packageName = purchaseRequest.domain,
         productInfoData = productInfo,
       )
-      onFinish(false)
+      onFinish(PaymentsCancelledResult)
     },
     onPaymentMethodClick = { paymentMethod ->
       genericAnalytics.sendPaymentMethodsEvent(paymentMethod = paymentMethod)

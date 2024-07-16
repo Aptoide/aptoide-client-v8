@@ -16,15 +16,17 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewLandscapeDark
+import com.appcoins.payments.arch.BadInputException
+import com.appcoins.payments.arch.PaymentsResult
 import com.aptoide.android.aptoidegames.SupportActivity
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
-fun PaymentsErrorView(onFinish: (Boolean) -> Unit) {
+fun PaymentsErrorView(onFinish: (PaymentsResult) -> Unit) {
   val context = LocalContext.current
   val onContactUsClick = { SupportActivity.openForSupport(context) }
-  val onOutsideClick = { onFinish(false) }
+  val onOutsideClick = { onFinish(BadInputException()) }
 
   val configuration = LocalConfiguration.current
   AppGamesPaymentBottomSheet(
