@@ -467,7 +467,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides @Named("obbPath") String provideObbPath() {
-    return application.getApplicationContext().getCacheDir().getAbsolutePath() + "obb/";
+    return application.getApplicationContext().getCacheDir().getAbsolutePath();
   }
 
   @Singleton @Provides AptoideDownloadManager provideAptoideDownloadManager(

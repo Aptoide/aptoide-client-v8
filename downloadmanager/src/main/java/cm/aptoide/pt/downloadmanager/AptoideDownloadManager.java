@@ -213,34 +213,7 @@ public class AptoideDownloadManager implements DownloadManager {
   }
 
   public Completable moveCompletedDownloadFiles(RoomDownload download) {
-    return Completable.fromAction(() -> {
-          for (final RoomFileToDownload roomFileToDownload : download.getFilesToDownload()) {
-            if (roomFileToDownload.getFileType() == RoomFileToDownload.OBB) {
-              String newFilePath = pathProvider.getFilePathFromFileType(roomFileToDownload);
-              if (!FileUtils.fileExists(pathProvider.getFilePathFromFileType(roomFileToDownload)
-                  + roomFileToDownload.getFileName())) {
-                Logger.getInstance()
-                    .d(TAG, "trying to move file : "
-                        + roomFileToDownload.getFileName()
-                        + " "
-                        + roomFileToDownload.getPackageName());
-                fileUtils.copyFile(roomFileToDownload.getPath(), newFilePath,
-                    roomFileToDownload.getFileName());
-                roomFileToDownload.setPath(newFilePath);
-              } else {
-                roomFileToDownload.setPath(newFilePath);
-                Logger.getInstance()
-                    .d(TAG, "tried moving file: "
-                        + roomFileToDownload.getFileName()
-                        + " "
-                        + roomFileToDownload.getPackageName()
-                        + " but it was already moved. The path that we were trying to move to was "
-                        + roomFileToDownload.getFilePath());
-              }
-            }
-          }
-          download.setOverallDownloadStatus(RoomDownload.COMPLETED);
-        })
+    return Completable.fromAction(() -> download.setOverallDownloadStatus(RoomDownload.COMPLETED))
         .andThen(downloadsRepository.save(download));
   }
 
