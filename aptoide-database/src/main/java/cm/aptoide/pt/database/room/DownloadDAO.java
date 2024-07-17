@@ -43,10 +43,6 @@ import static androidx.room.OnConflictStrategy.REPLACE;
       String md5);
 
   @Query("SELECT * from download where overallDownloadStatus="
-      + RoomDownload.WAITING_TO_MOVE_FILES
-      + " ORDER BY timeStamp ASC") Observable<List<RoomDownload>> getUnmovedFilesDownloads();
-
-  @Query("SELECT * from download where overallDownloadStatus="
       + RoomDownload.ERROR
       + " and downloadError="
       + RoomDownload.NOT_ENOUGH_SPACE_ERROR

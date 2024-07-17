@@ -21,7 +21,7 @@ public class DownloadStatusMapper {
         downloadState = RoomDownload.VERIFYING_FILE_INTEGRITY;
         break;
       case COMPLETED:
-        downloadState = RoomDownload.WAITING_TO_MOVE_FILES;
+        downloadState = RoomDownload.COMPLETED;
         break;
       case PENDING:
         downloadState = RoomDownload.PENDING;

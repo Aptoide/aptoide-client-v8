@@ -101,10 +101,8 @@ public class DefaultInstaller implements Installer {
   }
 
   @Override public synchronized void dispatchInstallations() {
-    // Responsible for moving files and starting the installation process
-    dispatchInstallationsSubscription.add(installCandidateSubject.flatMap(
-            candidate -> moveInstallationFiles(candidate.getInstallation()).andThen(
-                Observable.just(candidate)))
+    // Responsible starting the installation process
+    dispatchInstallationsSubscription.add(installCandidateSubject
         .flatMap(candidate -> Observable.just(isInstalled(candidate.getInstallation()
                 .getPackageName(), candidate.getInstallation()
                 .getVersionCode()))
@@ -131,6 +129,17 @@ public class DefaultInstaller implements Installer {
         .retry()
         .subscribe(__ -> {
         }, Throwable::printStackTrace));
+
+    //Responsible for moving the obbs when an app is being installed
+    dispatchInstallationsSubscription.add(
+        installCandidateSubject.map(InstallationCandidate::getInstallation)
+            .flatMap(
+                installation -> aptoideInstalledAppsRepository.get(installation.getPackageName(),
+                        installation.getVersionCode())
+                    .filter(installed -> installed.getStatus() == RoomInstalled.STATUS_COMPLETED)
+                    .flatMapCompletable(installation1 -> moveInstallationFiles(installation)))
+            .subscribe(__ -> {
+            }, Throwable::printStackTrace));
 
     // Responsible for removing installation files when an app is installed
     dispatchInstallationsSubscription.add(

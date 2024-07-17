@@ -93,15 +93,15 @@ public class InstallManager {
 
   private void dispatchInstallationCandidates() {
     dispatchInstallationsSubscription.add(installCandidateSubject.flatMap(
-        candidate -> aptoideDownloadManager.getDownloadAsObservable(candidate.getMd5())
-            .onErrorReturn(null)
-            .filter(download -> download != null)
-            .takeFirst(download -> download.getOverallDownloadStatus() == RoomDownload.COMPLETED)
-            .flatMapCompletable(
-                download -> stopForegroundAndInstall(download.getMd5(), download.getAction(),
-                    candidate.getForceDefaultInstall(),
-                    candidate.getShouldSetPackageInstaller()).andThen(
-                    sendBackgroundInstallFinishedBroadcast(download))))
+            candidate -> aptoideDownloadManager.getDownloadAsObservable(candidate.getMd5())
+                .onErrorReturn(null)
+                .filter(download -> download != null)
+                .takeFirst(download -> download.getOverallDownloadStatus() == RoomDownload.COMPLETED)
+                .flatMapCompletable(
+                    download -> stopForegroundAndInstall(download.getMd5(), download.getAction(),
+                        candidate.getForceDefaultInstall(),
+                        candidate.getShouldSetPackageInstaller()).andThen(
+                        sendBackgroundInstallFinishedBroadcast(download))))
         .doOnError(Throwable::printStackTrace)
         .retry()
         .subscribe(__ -> {
@@ -137,7 +137,7 @@ public class InstallManager {
 
   public Completable cancelInstall(String md5, String packageName, int versionCode) {
     return pauseInstall(md5).andThen(
-        aptoideInstalledAppsRepository.remove(packageName, versionCode))
+            aptoideInstalledAppsRepository.remove(packageName, versionCode))
         .andThen(aptoideDownloadManager.removeDownload(md5))
         .doOnError(throwable -> throwable.printStackTrace());
   }
@@ -155,8 +155,8 @@ public class InstallManager {
 
   public Observable<List<Install>> getInstallations() {
     return Observable.combineLatest(aptoideDownloadManager.getDownloadsList(),
-        aptoideInstalledAppsRepository.getAllInstalled(),
-        aptoideInstalledAppsRepository.getAllInstalling(), this::createInstallList)
+            aptoideInstalledAppsRepository.getAllInstalled(),
+            aptoideInstalledAppsRepository.getAllInstalling(), this::createInstallList)
         .distinctUntilChanged();
   }
 
@@ -287,9 +287,9 @@ public class InstallManager {
 
   public Observable<Install> getInstall(String md5, String packageName, int versioncode) {
     return Observable.combineLatest(aptoideDownloadManager.getDownloadsByMd5(md5),
-        installer.getState(packageName, versioncode), getInstallationType(packageName, versioncode),
-        (download, installationState, installationType) -> createInstall(download,
-            installationState, md5, packageName, versioncode, installationType))
+            installer.getState(packageName, versioncode), getInstallationType(packageName, versioncode),
+            (download, installationState, installationType) -> createInstall(download,
+                installationState, md5, packageName, versioncode, installationType))
         .doOnNext(install -> Logger.getInstance()
             .d(TAG, install.toString()));
   }
@@ -420,7 +420,6 @@ public class InstallManager {
       switch (download.getOverallDownloadStatus()) {
         case RoomDownload.IN_QUEUE:
         case RoomDownload.VERIFYING_FILE_INTEGRITY:
-        case RoomDownload.WAITING_TO_MOVE_FILES:
           isIndeterminate = true;
           break;
         case RoomDownload.BLOCK_COMPLETE:
@@ -477,7 +476,6 @@ public class InstallManager {
         case RoomDownload.BLOCK_COMPLETE:
         case RoomDownload.PROGRESS:
         case RoomDownload.PENDING:
-        case RoomDownload.WAITING_TO_MOVE_FILES:
         case RoomDownload.VERIFYING_FILE_INTEGRITY:
           status = Install.InstallationStatus.DOWNLOADING;
           break;
@@ -682,7 +680,7 @@ public class InstallManager {
     return getTimedOutInstallations().first()
         .flatMap(installs -> Observable.from(installs)
             .flatMap(install -> aptoideInstalledAppsRepository.get(install.getPackageName(),
-                install.getVersionCode())
+                    install.getVersionCode())
                 .first()
                 .flatMapCompletable(installed -> {
                   installed.setStatus(RoomInstalled.STATUS_UNINSTALLED);
