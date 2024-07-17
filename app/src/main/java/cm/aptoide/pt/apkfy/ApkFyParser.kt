@@ -3,7 +3,6 @@ package cm.aptoide.pt.apkfy
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.util.Log
 import cm.aptoide.pt.DeepLinkIntentReceiver.DeepLinksKeys
 import cm.aptoide.pt.DeepLinkIntentReceiver.DeepLinksTargets
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics
@@ -45,10 +44,16 @@ class ApkFyParser(
   private fun updateApkfy(apkfyModel: ApkfyModel) {
     if (apkfyModel.appId != null) {
       intent.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true)
-      intent.putExtra(
-        DeepLinksKeys.APP_ID_KEY,
-        apkfyModel.appId
-      )
+      intent.putExtra(DeepLinksKeys.APP_ID_KEY, apkfyModel.appId)
+      if (!apkfyModel.oemId.isNullOrEmpty()) {
+        intent.putExtra(DeepLinksKeys.OEM_ID_KEY, apkfyModel.oemId)
+      }
+      intent.putExtra(DeepLinksKeys.APK_FY, true)
+      SecurePreferences.setApkFyRun(securePreferences)
+      context.startActivity(intent)
+    } else if (apkfyModel.packageName != null) {
+      intent.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true)
+      intent.putExtra(DeepLinksKeys.PACKAGE_NAME_KEY, apkfyModel.packageName)
       if (!apkfyModel.oemId.isNullOrEmpty()) {
         intent.putExtra(DeepLinksKeys.OEM_ID_KEY, apkfyModel.oemId)
       }
