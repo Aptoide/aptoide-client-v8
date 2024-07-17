@@ -42,24 +42,26 @@ class ApkFyParser(
   }
 
   private fun updateApkfy(apkfyModel: ApkfyModel) {
-    if (apkfyModel.appId != null) {
-      intent.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true)
-      intent.putExtra(DeepLinksKeys.APP_ID_KEY, apkfyModel.appId)
-      if (!apkfyModel.oemId.isNullOrEmpty()) {
-        intent.putExtra(DeepLinksKeys.OEM_ID_KEY, apkfyModel.oemId)
+    if (apkfyModel.packageName != null && !apkfyModel.packageName.contains("cm.aptoide.pt")) {
+      if (apkfyModel.appId != null) {
+        intent.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true)
+        intent.putExtra(DeepLinksKeys.APP_ID_KEY, apkfyModel.appId)
+        if (!apkfyModel.oemId.isNullOrEmpty()) {
+          intent.putExtra(DeepLinksKeys.OEM_ID_KEY, apkfyModel.oemId)
+        }
+        intent.putExtra(DeepLinksKeys.APK_FY, true)
+        SecurePreferences.setApkFyRun(securePreferences)
+        context.startActivity(intent)
+      } else if (apkfyModel.packageName != null) {
+        intent.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true)
+        intent.putExtra(DeepLinksKeys.PACKAGE_NAME_KEY, apkfyModel.packageName)
+        if (!apkfyModel.oemId.isNullOrEmpty()) {
+          intent.putExtra(DeepLinksKeys.OEM_ID_KEY, apkfyModel.oemId)
+        }
+        intent.putExtra(DeepLinksKeys.APK_FY, true)
+        SecurePreferences.setApkFyRun(securePreferences)
+        context.startActivity(intent)
       }
-      intent.putExtra(DeepLinksKeys.APK_FY, true)
-      SecurePreferences.setApkFyRun(securePreferences)
-      context.startActivity(intent)
-    } else if (apkfyModel.packageName != null) {
-      intent.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true)
-      intent.putExtra(DeepLinksKeys.PACKAGE_NAME_KEY, apkfyModel.packageName)
-      if (!apkfyModel.oemId.isNullOrEmpty()) {
-        intent.putExtra(DeepLinksKeys.OEM_ID_KEY, apkfyModel.oemId)
-      }
-      intent.putExtra(DeepLinksKeys.APK_FY, true)
-      SecurePreferences.setApkFyRun(securePreferences)
-      context.startActivity(intent)
     }
   }
 }
