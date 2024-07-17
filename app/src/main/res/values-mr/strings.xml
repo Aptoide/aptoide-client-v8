@@ -27,6 +27,7 @@
   <string name="all_title_ad">जाहिरात</string>
   <string name="not_now_button">आत्ता नको</string>
   <string name="learn_more_button">अधिक जाणून घ्या</string>
+  <string name="learn_more_title_case_button">अधिक जाणुन घ्या</string>
   <string name="continue_button">चालू ठेवा</string>
   <!-- Permission pop-ups messages -->
   <string name="uninstall_button">अनइन्स्टॉल</string>
@@ -67,7 +68,7 @@
   <string name="appview_good_app_guaranteed">चांगल्या अॅपची खात्री!</string>
   <string name="appview_good_app_description">ही अॅप्लीकेशन वायरस, मालवेयर आणि इतर खोडसाळ हल्ल्यांसाठी असणाऱ्या सुरक्षा चाचण्या पास करून आहे आहेत आणि यात कुठलाही धोका नाही आहे!</string>
   <string name="appview_rating_card_text">रेटिंग</string>
-  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
+  <string name="appview_rating_empty_body">अजुनतरी काहीही रिव्ह्यूज वा रेटिंग्ज नाहीत. आपणच प्रथम व्हा!</string>
   <string name="appview_button_read_all">सर्व वाचा <![CDATA[>]]>;</string>
   <string name="appview_header_trusted_text">विश्वासार्ह</string>
   <string name="see_more">अजून वाचा</string>
@@ -103,6 +104,7 @@
   <string name="menu_select_none">एकही निवडू नका</string>
   <string name="clear">क्लियर करा</string>
   <string name="more_options_button">जास्त पर्याय</string>
+  <string name="powered_by">द्वारा समर्थित</string>
   <!-- Excluded Updates Fragment -->
   <string name="loading">लोडिंग&#8230;</string>
   <string name="excluded_updates">वगळलेले अपडेट</string>
@@ -649,7 +651,9 @@ http://aptoi.de/tv</string>
   <string name="appc_info_view_title_5_variable">आपण %s हे चिन्ह असलेल्या अॅपमध्ये केलेल्या प्रत्येक खरेदीसाठी आपल्याला %s%%पर्यंत बोनस मिळेल. ह्याचा फायदा आताच उठवा आणि अल्टिमेट गेमर व्हा!</string>
   <string name="appc_info_view_title_5_variable_no_data">आपण %s हे चिन्ह असलेल्या अॅपमध्ये केलेल्या प्रत्येक खरेदीसाठी आपल्याला बोनस मिळेल. ह्याचा फायदा आताच उठवा आणि अल्टिमेट गेमर व्हा!</string>
   <string name="appc_info_view_eskills_title">e-Skills सह पैसे कमवा!</string>
+  <string name="appc_info_view_eskills_without_withdrawal_title">Get Rewarded with e-Skills!</string>
   <string name="appc_info_view_eskills_body">e-Skills सह खेळताना, इतर खेळाडूंना हरविल्यास आपणांस बक्षिसे मिळतील. आपला सर्वोत्कृष्ट खेळ डाऊनलोड करा, लढाई सुरु करण्यासाठी सहभाग द्या आणि खर्‍या पैशांचे बक्षिस मिळविण्यासाठी आपले कौशल्य सिद्ध करा. तरमग आव्हानासाठी तयार? सर्व उपलब्ध खेळ पहा %s.</string>
+  <string name="appc_info_view_eskills_without_withdrawal_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in AppCoins Credits. Ready for the challenge? Find all the available games %s.</string>
   <string name="appc_info_view_eskills_body_button">इथे</string>
   <string name="appc_info_view_devs_title">आपण विकसक आहात का?</string>
   <string name="appc_info_view_devs_body">अॅप वितरणाचे नवे मार्ग तपासा.</string>
@@ -728,7 +732,7 @@ http://aptoi.de/tv</string>
   <string name="promotional_notify_button">मला सूचना द्या</string>
   <string name="promotional_new_notification_title">आपण ज्यासाठी थांबलायत ते अॅप!</string>
   <string name="promotional_new_notification_body">%s आता Aptoide मध्ये उपलब्ध.</string>
-  <string name="promotional_new_active">You\'ll be notified when available.</string>
+  <string name="promotional_new_active">जेव्हा उपलब्ध असेल तेव्हा आपल्याला सूचना मिळेल.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">आणत आहोत e-Skills</string>
   <string name="eskills_onboarding_body">इतर खेळाडुंना आव्हान द्या, मात द्या आणि पैसे कमवा!</string>
@@ -746,8 +750,58 @@ http://aptoi.de/tv</string>
   <string name="voucher_body">आपल्या आवडत्या खेळातील खरेदी करताना ई-व्हाऊचर्स सह आपल्याला सर्वोत्कृष्ट डील्स मिळु शकतील. हिरे, शस्त्र&#8230; काहीही, सर्व खरेदीवर आहे बोनस!</string>
   <string name="voucher_games_title">ई-व्हाऊचर्स उपलब्ध आहेत</string>
   <string name="voucher_wallet_needed_body">ही खरेदी करण्यासाठी आपल्याला अॅपकॉइन्स वॉलेटची आवश्यकता आहे.</string>
-  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">नॉन-फंजीबल टोकन्स</string>
   <!--FAQs-->
-  <string name="faq_settings_title">FAQs</string>
-  <string name="faq_settings_body">Find all the answers you need!</string>
+  <string name="faq_settings_title">नेहमी विचारले जाणारे प्रश्र्न</string>
+  <string name="faq_settings_body">हवी असलेली सर्व उत्तरे मिळवा!</string>
+  <!--New e-Skills-->
+  <string name="eskills_v2_home_card_title">खर्‍या पैशातील बक्षिसे!</string>
+  <string name="eskills_v2_home_card_without_withdrawal_title">Get Rewarded!</string>
+  <string name="eskills_v2_home_card_body">ई-स्किल्स खेळात जेव्हा आपण इतर खेळाडुंना हरविता तेव्हा आपणांस बक्षिसे मिळतात. आत्ताच आपले कौशल्य दाखवा!</string>
+  <string name="eskills_v2_earnmore_header">अधिक कमवा</string>
+  <string name="eskills_v2_page_header">e-Skills खेळ</string>
+  <string name="eskills_v2_page_body_">आपले खेळ कौशल्य खर्‍या पैशांचे बक्षिस मिळण्याइतके आहे का?</string>
+  <string name="eskills_v2_page_without_withdrawal_body_">Are your gaming skills worth a reward?</string>
+  <string name="eskills_v2_card_1_title">%1$s%2$s</string>
+  <string name="eskills_v2_card_1_body">प्रत्येक वापरकत्यामागे दररोजची सरासरी जीत.</string>
+  <string name="eskills_v2_card_2_title">%1$s%2$s</string>
+  <string name="eskills_v2_card_2_body">प्रत्येक मॅचमागची जीत</string>
+  <string name="eskills_v2_card_3_title">%1$s%2$s</string>
+  <string name="eskills_v2_card_3_body">वीकली लीडरबोर्डावरील टॉप १ साठी बक्षिस</string>
+  <string name="eskills_v2_card_4_title">२४ तास</string>
+  <string name="eskills_v2_card_4_body">आम्ही २४/७ ग्राहक सेवा देतो.</string>
+  <string name="eskills_v2_card_5_title">खर्‍या पैशातील बक्षिसे</string>
+  <string name="eskills_v2_card_5_without_withdrawal_title">Get Rewarded!</string>
+  <string name="eskills_v2_card_5_body">आपले आवडते खेळ खेळा आणि खरे पैसे कमवायला सुरवात करा, आत्ता!</string>
+  <string name="eskills_v2_card_5_without_withdrawal_body">Play your favorite games and get rewarded now!</string>
+  <string name="eskills_v2_card_6_title">उचित स्पर्धा</string>
+  <string name="eskills_v2_card_6_body">स्पर्धा उचित होण्यासाठी आपल्या कौशल्याबरोबरीच्या खेळाडुंशी मॅच केले जाल.</string>
+  <string name="eskills_v2_card_7_title">जगज्जेत्ते व्हा</string>
+  <string name="eskills_v2_card_7_body">आमच्या दैनिक आणि साप्ताहिक लीडरबोर्डवर टॉप केल्यास अतिरिक्त बक्षिसे मिळवा.</string>
+  <string name="eskills_v2_card_8_title">एकाच टॅपने पैसा काढा</string>
+  <string name="eskills_v2_card_8_without_withdrawal_title">Use Your Reward</string>
+  <string name="eskills_v2_card_8_body">अॅपकॉईन्स वॉलेटसह आपण जिंकलेली रक्कम खर्‍या पैशातुन सहज काढु शकता.</string>
+  <string name="eskills_v2_card_8_without_withdrawal_body">You can use your reward to make purchases in your favorite games.</string>
+  <string name="eskills_v2_card_9_title">आत्ताच सुरु करा</string>
+  <string name="eskills_v2_card_9_body">बक्षिसे मिळविण्यासाठी आपले कौशल्य टेस्ट करा आणि चँपियन व्हा!</string>
+  <string name="eskills_v2_how_it_works_title">हे कस काम करत?</string>
+  <string name="eskills_v2_how_1">ई-स्किल्स खेळ इंस्टॉल करा</string>
+  <string name="eskills_v2_wallet_disclaimer">खेळ अॅपकॉईन्स सह येतात</string>
+  <string name="eskills_v2_how_2">सवय करा किंवा स्पर्धा सुरु करण्यासाठी तिकिट मिळवा</string>
+  <string name="eskills_v2_how_3">इतर खेऴाडुंना हरवा</string>
+  <string name="eskills_v2_how_4">जिंकलेले पैसे काढा!</string>
+  <string name="eskills_v2_how_without_withdrawal_4">Use your reward to make purchases!</string>
+  <string name="eskills_v2_faqs_title">वारंवार विचारले जाणारे प्रश्र्न</string>
+  <string name="eskills_v2_faqs_1_title">ई-स्किल खेळ काय असतात?</string>
+  <string name="eskills_v2_faqs_1_body_1">ई-स्किल्स खेळात, आपण इतर खेळाडुंना आपल्याविरुद्ध खेळण्यासाठी आव्हान द्याल आणि जेत्यास बक्षिस मिळेल! हे बक्षिस अॅपकॉईन्स क्रेडीटसच्या रुपात मिळते आणि सेटिंग्जमध्ये जाऊन ई-स्किल्स विथ्ड्रॉवल्सवर टॅप करुन आपल्या पेपाल खात्यात पैसे काढले जाऊ शकतात.</string>
+  <string name="eskills_v2_faqs_1_body_without_withdrawal_1">In e-Skills games, you will challenge other players to play against each other and the winner will receive a prize! This prize is granted in AppCoins Credits and can be used to make purchases in your favorite games.</string>
+  <string name="eskills_v2_faqs_2_title">अॅपकॉईन्स वॉलेट काय आहे?</string>
+  <string name="eskills_v2_faqs_2_body_1">अॅपकॉईन्स वॉलेट एक अँड्रॉइड अॅप आहे ज्याचा वापर खेळातील तसेच अॅपमधील डिजीटल वस्तू खरेदीसाठी केला जातो.</string>
+  <string name="eskills_v2_faqs_2_body_2">अॅपकॉईन्स अॅप्स आणि खेळात आपण खरेदी कराल तेव्हा प्रत्येक वेळी आपणांस बक्षिस मिळेल! आपणांस फक्त आपल्या डिव्हाईसवर अॅपकॉईन्स वॉलेट इंस्टॉल करायचेय आणि आपल्या आवडत्या खेळात नेहमीप्रमाणे खरेदी करायचीय.</string>
+  <string name="eskills_v2_faqs_3_title">अॅपकॉईन्स वॉलेटमधुन पैसे कसे काढायचे?</string>
+  <string name="eskills_v2_faqs_3_body_1">ई-स्किल्स खेळात बक्षिस म्हणुन जिंकलेले अॅपकॉईन्स क्रेडीटस आपण काढु शकता. ह्यासाठी, पुढील चरण करा:\n१. होम स्क्रीनच्या उजव्या वरच्या कोपर्‍यातील सेटिंग्जमध्ये जा.\n२. ई-स्किल्स विथ्ड्रॉवल वर टॅप करा.\n३. आपल्या पेपाल खात्याचा ईमेल पत्ता घाला आणि किती पैसे काढायचेत ती रक्कम घाला.\n४. विथ्ड्रॉ वर टॅप करा, आणि झाल!\nकाढता येण्याजोगी किमान रक्कम $२० आहे आणि हा व्यवहार पूर्ण होण्यास किमान ४ अठवडे लागतात.</string>
+  <string name="eskills_v2_wallet_install_disclaimer_body">%s नंतर हे सपोर्ट अॅप इंस्टॉल होईल.</string>
+  <string name="eskills_v2_wallet_already_installed_disclaimer_body">आपल्याकडे आधीपासुनच <b>अॅपकॉईन्स वॉलेट इंस्टॉल्ड आहे!</b></string>
+  <string name="eskills_v2_wallet_installed_disclaimer_body">अॅपकॉईन्स वॉलेट इंस्टॉल सफल!‍</string>
+  <string name="eskills_v2_wallet_disclaimer_2_body">आपणांस अॅपकॉईन्स वॉलेट इंस्टॉल करावे लागेल.</string>
 </resources>

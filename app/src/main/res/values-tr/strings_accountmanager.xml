@@ -19,7 +19,7 @@
   <string name="accept_terms_loggedin_readPP">GİZLİLİK POLİTİKASINI OKUYUN</string>
   <string name="accept_terms_loggedin_message">Kabul et düğmesine basarak Aptoide\'in %1$s ve %2$s\'nı kabul edersiniz</string>
   <string name="accept_terms_loggedin_button_accept">KABUL ET</string>
-  <string name="accept_terms_loggedin_button_close">CLOSE APTOIDE</string>
+  <string name="accept_terms_loggedin_button_close">APTOIDE\'I KAPAT</string>
   <string name="user_upload_photo_failed">Şu anda bir profil yaratmak mümkün değil.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">İşleniyor, biraz zaman alabilir…</string>

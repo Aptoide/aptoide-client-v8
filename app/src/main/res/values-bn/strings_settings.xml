@@ -7,7 +7,6 @@
   <string name="setting_appfiltersum">আপনি শুধুমাত্র এই যন্ত্রের সাথে সামঞ্জশ্যপূর্ণ অ্যাপসমূহই দেখবেন</string>
   <string name="setting_mobile">ডাউনলোড করুন শুধুমাত্র ওয়াইফাই থেকে</string>
   <string name="settings_beta_filter_setting_title">বেটা সংস্করণ</string>
-  <string name="settings_beta_filter_summary">You\'ll also see beta apps.</string>
   <string name="setting_updates">হালনাগাদ</string>
   <string name="settings_include_system_apps_title">সিস্টেম অ্যাপস</string>
   <string name="settings_include_system_apps_summary">আপনি সিস্টেম অ্যাপসমূহের আপডেট সমূহ দেখতে পারবেন</string>
@@ -35,14 +34,11 @@
   <string name="settings_support">সহায়তা</string>
   <string name="settings_send_feedback">প্রতিক্রিয়া প্রেরণ করুন</string>
   <string name="settings_about_us">আমাদের সম্পর্কে</string>
-  <string name="settings_terms_conditions">Terms and Conditions</string>
   <string name="settings_privacy_policy">গোপনীয়তার নীতি</string>
   <string name="setting_hwspecstitle">হার্ডওয়্যারের বিবরণী</string>
   <string name="setting_hwspecssum">আপনার ফোনের হার্ডওয়্যার সংক্রান্ত তথ্য </string>
   <string name="settings_delete_account">একাউন্ট বিলোপ করুন</string>
   <!--Dialog: general rules to download-->
-  <string name="general_downloads_dialog_only_wifi_message">You chose to download over Wi-Fi only. Do you want to install this app using your data allowance?</string>
-  <string name="general_downloads_dialog_only_wifi_install_button">Install (%s)</string>
   <!--Adult content dialogs-->
   <string name="asksetadultpinmessage">সেটিংস
 আপনি কি প্রাপ্তবয়স্ক বিষয়বস্তু আনলক করার জন্য একটি পিন সেট করতে চান?</string>
@@ -54,12 +50,10 @@
   <string name="setting_sdk_version">এসডিকে সংস্করণ</string>
   <string name="setting_screen_size">স্ক্রিন আকার</string>
   <string name="setting_esgl_version">ইএসজিএল সংস্করণ</string>
-  <string name="setting_density">Density</string>
   <string name="screenCode">স্ক্রিন কোড</string>
   <string name="cpuAbi">সিপিইউ</string>
   <!--Clear storage: dialog-->
   <string name="freed_space">%s মুক্তকৃত</string>
-  <string name="storage_dialog_title">Clear %1$s storage</string>
   <string name="clear_cache_dialog_message">আপনি কি সবগুলো আইকন, ছবি, ডাউনলোডকৃত apk, obb, ওয়েবসেবার উপাত্ত অপসারণ করার বিষয়ে নিশ্চিত, …</string>
   <!--About dialog-->
   <string name="about_site">ওয়েবসাইট:</string>

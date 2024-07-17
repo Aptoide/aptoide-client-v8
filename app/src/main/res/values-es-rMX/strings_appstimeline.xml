@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- Timeline Fragment -->
+  <string name="customtabs_open_native_app">Open in app</string>
+  <string name="social_timeline_you_will_share">Do you want to recommend this app to your followers?</string>
+  <string name="social_timeline_share_bar_following">Follow more stores and connect with your friends.</string>
+  <string name="social_timeline_share_bar_followers">Improve your store to have more followers.</string>
+  <string name="social_timeline_followers_fragment_title">%d follower(s)</string>
+  <string name="social_timeline_following_fragment_title">Following %d person(s)</string>
+  <string name="social_timeline_users_private">%d are private</string>
+  <!-- Followers and following -->
+  <string name="timeline_stats_followers">Followers</string>
+  <string name="private_followers_message">%d followers are private</string>
+  <string name="private_following_message">you are following %d private users/stores</string>
+  <string name="google">Google</string>
+  <string name="done">Done</string>
+  <plurals name="timeline_short_comment">
+    <item quantity="one">1 comment</item>
+    <item quantity="other">%d  comments</item>
+  </plurals>
+  <!-- social recommend flow -->
+  <string name="appview_button_skip">Skip</string>
+  <string name="appview_button_continue">Continue</string>
+  <string name="appview_button_share">Recommend</string>
+  <string name="appview_button_close">Close</string>
+  <string name="appview_button_dont_show_again">Don\'t show\nagain</string>
+</resources>

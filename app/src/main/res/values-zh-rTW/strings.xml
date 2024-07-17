@@ -26,6 +26,7 @@
   <string name="all_title_ad">廣告</string>
   <string name="not_now_button">NOT NOW</string>
   <string name="learn_more_button">瞭解更多</string>
+  <string name="learn_more_title_case_button">瞭解更多</string>
   <string name="continue_button">CONTINUE</string>
   <!-- Permission pop-ups messages -->
   <string name="uninstall_button">卸载</string>
@@ -43,7 +44,7 @@
   <string name="bottomnavigation_button_editorial">Editorial</string>
   <string name="bottomnavigation_button_news">新聞</string>
   <string name="bottomnavigation_button_trending">流行</string>
-  <string name="bottomnavigation_button_discover">Discover</string>
+  <string name="bottomnavigation_button_discover">發現</string>
   <string name="bottomnavigation_button_manager">Manager</string>
   <string name="bottomnavigation_button_updates">更新</string>
   <!-- AppView -->
@@ -89,7 +90,7 @@
   <string name="appview_message_donations_card">Do you like this app? Donate to show some love and support for the developer!</string>
   <string name="appview_message_donations_nowallet">It seems you don\'t have a wallet. Want to install it now?</string>
   <string name="appview_message_donations_empty">No donations yet. Be the first to claim the top spot on the leaderboard!</string>
-  <string name="appview_title_donations_dialogue">Donation</string>
+  <string name="appview_title_donations_dialogue">捐贈</string>
   <string name="appview_field_donations_dialogue">Nickname</string>
   <string name="appview_message_donations_completed">Thanks for donating and enjoy the app!</string>
   <!-- AppView developer area-->
@@ -103,6 +104,7 @@
   <string name="menu_select_none">全部不選</string>
   <string name="clear">清除</string>
   <string name="more_options_button">MORE OPTIONS</string>
+  <string name="powered_by">Powered by</string>
   <!-- Excluded Updates Fragment -->
   <string name="loading">Loading&#8230;</string>
   <string name="excluded_updates">被排除的更新</string>
@@ -435,7 +437,7 @@
   <string name="shortcut_button_my_store">我的商店</string>
   <string name="shortcut_button_pick_app">Surprise me</string>
   <string name="all_button_ok">确认</string>
-  <string name="all_button_got_it">GOT IT</string>
+  <string name="all_button_got_it">了解</string>
   <string name="all_button_know_more">KNOW MORE</string>
   <!--URL -->
   <string name="my_stores_login_message">Log in now and start sharing your apps!</string>
@@ -444,8 +446,8 @@
   <string name="appc_title_ads">Get Rewarded with AppCoins</string>
   <string name="appc_title_featured">Featured AppCoins Apps</string>
   <string name="appc_home_bundle_iab">Use Your AppCoins</string>
-  <string name="appc_home_bundle_poa">Earn AppCoins Credits</string>
-  <string name="appc_title_about_appcoins">About AppCoins</string>
+  <string name="appc_home_bundle_poa">賺取AppCoins點數</string>
+  <string name="appc_title_about_appcoins">關於AppCoins</string>
   <string name="appc_message_appview_appcoins_reward">Try this app for 2 minutes and get\n%s</string>
   <string name="appc_message_appview_appcoins_reward_with_value">Try this app for 2 minutes and get\n%1$s %2$s</string>
   <string name="appc_message_appview_appcoins_iab">In-app purchases with AppCoins</string>
@@ -495,7 +497,7 @@
   <string name="promotion_update_popup_update_button">Update now</string>
   <string name="promotion_over_title">You missed it!</string>
   <string name="promotion_over_message">This promotion just slipped away, but we\'ll do another one soon!</string>
-  <string name="FIATpromotion_over_title_2">Earn AppCoins Credits</string>
+  <string name="FIATpromotion_over_title_2">賺取AppCoins點數</string>
   <!--Promotion with FIAT-->
   <string name="FIATpromotion_over_body_2">In the meanwhile, you can earn AppCoins Credits by installing and spending 2 minutes in any of these apps.</string>
   <string name="FIATpromotion_message_1">Install the following apps and get up to %s in AppCoins Credits to spend in your favorite games!</string>
@@ -566,7 +568,7 @@
   <string name="wallet_promotion_message">Install the AppCoins Wallet and get %s APPC Credits to spend in your favorite games.</string>
   <string name="wallet_promotion_claim_message">You\'ve got %s APPC Credits to claim. Use them to buy items in your favorite apps.</string>
   <string name="wallet_promotion_install_button">Install Wallet</string>
-  <string name="wallet_promotion_no_button">No, thanks</string>
+  <string name="wallet_promotion_no_button">不用，謝謝</string>
   <string name="wallet_promotion_button_install_disabled">Install to get %s APPC Credits</string>
   <!--AppCoins Remove Ads Wallet Promotion -->
   <string name="wallet_promotion_button_claim">Claim your %s APPC Credits</string>
@@ -586,7 +588,7 @@
   <string name="promo_update2appc_claim_notification_title">Get %s APPC Credits Now!</string>
   <!--Promo Center-->
   <string name="promo_update2appc_claim_notification_body">Don\'t forget to claim your reward!</string>
-  <string name="promo_center_title">Promotions</string>
+  <string name="promo_center_title">促銷</string>
   <string name="promo_center_wizard_1_title">Earn %s AppCoins Credits</string>
   <string name="promo_center_wizard_1_body">You need the AppCoins Wallet to get your rewards. Install it now!</string>
   <string name="promo_center_wizard_2_body">Use AppCoins Credits to buy items in your favorite games&#8230; and get a bonus every time!</string>
@@ -606,22 +608,22 @@
   <string name="promo_center_pending_claim_button">CLAIM</string>
   <!--Purchase Flow - Wallet Installation-->
   <string name="promo_center_pending_empty_body">No AppCoins Credits to claim yet! Check the tab Offers to see the available promotions.</string>
-  <string name="wallet_install_request_message_body">To buy this item you first need to get the %s.</string>
+  <string name="wallet_install_request_message_body">要購買此商品，您需要安裝%s。</string>
   <string name="wallet_install_appcoins_wallet">AppCoins Wallet</string>
-  <string name="wallet_install_request_close_button">CLOSE</string>
-  <string name="wallet_install_request_install_button">INSTALL WALLET</string>
+  <string name="wallet_install_request_close_button">關閉</string>
+  <string name="wallet_install_request_install_button">安裝AppCoins錢包</string>
   <string name="wallet_install_complete_title">Installation Complete</string>
   <string name="appc_not_supported_body">It seems this device doesn\'t support AppCoins. Try with a different one!</string>
   <string name="wallet_install_request_already_installed_title">AppCoins Wallet Install</string>
   <string name="wallet_install_request_already_installed_body">Enjoy the bonus on every in-app purchase!</string>
   <string name="wallet_verification_message_update_wallet_to_claim">Update the AppCoins Wallet to receive this reward!</string>
   <string name="wallet_verification_title_update_wallet">Update Wallet</string>
-  <string name="wallet_verification_button_cancel_update">No, thanks</string>
+  <string name="wallet_verification_button_cancel_update">不用，謝謝</string>
   <string name="wallet_verification_button_update">Update now</string>
   <!--POA exposure-->
   <string name="wallet_verification_button_update_wallet">Update Wallet</string>
   <string name="poa_app_card_short">EARN %s</string>
-  <string name="poa_home_card_title">Earn AppCoins Credits</string>
+  <string name="poa_home_card_title">賺取AppCoins點數</string>
   <string name="poa_home_card_body">Install these apps and spend 2 minutes in them to earn AppCoins Credits.</string>
   <string name="poa_app_view_card_body_1">Try this app for 2 minutes and get</string>
   <string name="poa_app_view_card_body_2">%1$s AppCoins Credits (%2$s)</string>
@@ -630,10 +632,10 @@
   <string name="poa_time_left_hours">HOURS</string>
   <string name="poa_time_left_minutes">MINUTES</string>
   <string name="poa_time_left_seconds">SECONDS</string>
-  <string name="poa_earn_view_title">Earn AppCoins Credits</string>
+  <string name="poa_earn_view_title">賺取AppCoins點數</string>
   <string name="poa_earn_view_wallet_message">Install the AppCoins Wallet to receive your rewards.</string>
   <!--APPC Info View-->
-  <string name="poa_bundle_title">Earn AppCoins Credits</string>
+  <string name="poa_bundle_title">賺取AppCoins點數</string>
   <string name="appc_info_card_title">Introducing the AppCoins Universe!</string>
   <string name="appc_info_card_body">Earn AppCoins Credits for free to buy items in your favorite apps.</string>
   <string name="appc_info_view_title_1">Everything You Need to Know About AppCoins</string>
@@ -648,13 +650,15 @@
   <string name="appc_info_view_title_5_variable">You\'ll get up to %s%% Bonus for every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
   <string name="appc_info_view_title_5_variable_no_data">You\'ll get a bonus in every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
   <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
+  <string name="appc_info_view_eskills_without_withdrawal_title">Get Rewarded with e-Skills!</string>
   <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
+  <string name="appc_info_view_eskills_without_withdrawal_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in AppCoins Credits. Ready for the challenge? Find all the available games %s.</string>
   <string name="appc_info_view_eskills_body_button">here</string>
   <string name="appc_info_view_devs_title">Are you a developer?</string>
   <string name="appc_info_view_devs_body">Check the new way to distribute apps.</string>
   <!--Updates Notification-->
   <string name="appc_info_view_devs_button">Know More</string>
-  <string name="updates_notification_title">Don\'t get left behind!</string>
+  <string name="updates_notification_title">不要落伍喔！</string>
   <string name="updates_notification_dismiss_button">DISMISS</string>
   <string name="updates_notification_update_button">更新</string>
   <string name="auto_update_popup_title">Update Ready to Install!</string>
@@ -684,7 +688,7 @@
   <string name="login_check_email_body">We\'ve sent a magic link to %s to log in.</string>
   <string name="login_check_email_button">Open email app</string>
   <string name="login_email_subject_line">Log in to Aptoide!</string>
-  <string name="login_email_header">Almost there!</string>
+  <string name="login_email_header">就差一點點！</string>
   <string name="login_email_body_1">Please tap this button to log in to Aptoide:</string>
   <string name="login_email_magic_link_button">Log in to Aptoide</string>
   <string name="login_email_alternative_link">Or copy and paste this link to your browser:</string>
@@ -747,6 +751,56 @@
   <string name="voucher_wallet_needed_body">You need the AppCoins Wallet to make this purchase.</string>
   <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
   <!--FAQs-->
-  <string name="faq_settings_title">FAQs</string>
+  <string name="faq_settings_title">常見問題集</string>
   <string name="faq_settings_body">Find all the answers you need!</string>
+  <!--New e-Skills-->
+  <string name="eskills_v2_home_card_title">Real Money Prizes!</string>
+  <string name="eskills_v2_home_card_without_withdrawal_title">Get Rewarded!</string>
+  <string name="eskills_v2_home_card_body">In e-Skills games you get rewarded when beating other players. Show off your skills now!</string>
+  <string name="eskills_v2_earnmore_header">Earn More</string>
+  <string name="eskills_v2_page_header">e-Skills Games</string>
+  <string name="eskills_v2_page_body_">Are your gaming skills worth a real-money prize?</string>
+  <string name="eskills_v2_page_without_withdrawal_body_">Are your gaming skills worth a reward?</string>
+  <string name="eskills_v2_card_1_title">%1$s%2$s</string>
+  <string name="eskills_v2_card_1_body">Average daily winnings per user.</string>
+  <string name="eskills_v2_card_2_title">%1$s%2$s</string>
+  <string name="eskills_v2_card_2_body">Winnings per match</string>
+  <string name="eskills_v2_card_3_title">%1$s%2$s</string>
+  <string name="eskills_v2_card_3_body">Prize for the Top 1 weekly leaderboard</string>
+  <string name="eskills_v2_card_4_title">24h</string>
+  <string name="eskills_v2_card_4_body">We offer 24/7 support.</string>
+  <string name="eskills_v2_card_5_title">Real Money Prizes</string>
+  <string name="eskills_v2_card_5_without_withdrawal_title">Get Rewarded!</string>
+  <string name="eskills_v2_card_5_body">Play your favorite games and start earning real money now!</string>
+  <string name="eskills_v2_card_5_without_withdrawal_body">Play your favorite games and get rewarded now!</string>
+  <string name="eskills_v2_card_6_title">Fair Competition</string>
+  <string name="eskills_v2_card_6_body">Get matched with players of your skills level to ensure fair tournaments.</string>
+  <string name="eskills_v2_card_7_title">Become the World Winner</string>
+  <string name="eskills_v2_card_7_body">Get extra rewards for reaching the top of our daily and weekly leaderboards.</string>
+  <string name="eskills_v2_card_8_title">One Tap Withdrawal</string>
+  <string name="eskills_v2_card_8_without_withdrawal_title">Use Your Reward</string>
+  <string name="eskills_v2_card_8_body">You can easily withdraw your winnings into real money with the AppCoins Wallet.</string>
+  <string name="eskills_v2_card_8_without_withdrawal_body">You can use your reward to make purchases in your favorite games.</string>
+  <string name="eskills_v2_card_9_title">Start Now</string>
+  <string name="eskills_v2_card_9_body">Test your skills and become a champion to get rewarded!</string>
+  <string name="eskills_v2_how_it_works_title">How Does It Work?</string>
+  <string name="eskills_v2_how_1">Install an e-Skills game</string>
+  <string name="eskills_v2_wallet_disclaimer">The game comes with the AppCoins Wallet</string>
+  <string name="eskills_v2_how_2">Practice or get a ticket to start competing</string>
+  <string name="eskills_v2_how_3">Beat other players</string>
+  <string name="eskills_v2_how_4">Withdraw your winnings!</string>
+  <string name="eskills_v2_how_without_withdrawal_4">Use your reward to make purchases!</string>
+  <string name="eskills_v2_faqs_title">FAQS</string>
+  <string name="eskills_v2_faqs_1_title">What are e-Skills games?</string>
+  <string name="eskills_v2_faqs_1_body_1">In e-Skills games, you will challenge other players to play against each other and the winner will receive a prize! This prize is granted in AppCoins Credits and can be withdrawn to your PayPal account by going to Settings and tapping on e-Skills Withdrawal.</string>
+  <string name="eskills_v2_faqs_1_body_without_withdrawal_1">In e-Skills games, you will challenge other players to play against each other and the winner will receive a prize! This prize is granted in AppCoins Credits and can be used to make purchases in your favorite games.</string>
+  <string name="eskills_v2_faqs_2_title">What is the AppCoins Wallet?</string>
+  <string name="eskills_v2_faqs_2_body_1">The AppCoins Wallet is an Android app that can be used to purchase digital items in games and apps.</string>
+  <string name="eskills_v2_faqs_2_body_2">You\'ll receive a reward every time you make a purchase in AppCoins apps and games! You just need to install the AppCoins Wallet on your device and make your purchase as usual in the AppCoins version of your favorite games.</string>
+  <string name="eskills_v2_faqs_3_title">How do I withdraw money from the AppCoins Wallet?</string>
+  <string name="eskills_v2_faqs_3_body_1">You can withdraw the AppCoins Credits you’ve earned as a prize in e-Skills games. To do this, please follow these steps:\n1. Go to Settings in the top right corner of the Home screen.\n2. Tap on e-Skills Withdrawal.\n3. Insert the e-mail address of your PayPal account and the amount you want to withdraw.\n4. Tap on Withdraw, and it\'s done!\nThe minimum amount that you can withdraw is $20 and it takes a minimum of 4 weeks to be completed.</string>
+  <string name="eskills_v2_wallet_install_disclaimer_body">This support app will be installed after %s.</string>
+  <string name="eskills_v2_wallet_already_installed_disclaimer_body">You already have the <b>AppCoins Wallet installed!</b></string>
+  <string name="eskills_v2_wallet_installed_disclaimer_body">The AppCoins Wallet was successfully installed!</string>
+  <string name="eskills_v2_wallet_disclaimer_2_body">You\'ll need to install the AppCoins Wallet.</string>
 </resources>

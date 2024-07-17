@@ -27,6 +27,7 @@
   <string name="all_title_ad">Reklam</string>
   <string name="not_now_button">ŞİMDİ DEĞİL</string>
   <string name="learn_more_button">DAHA FAZLA BİLGİ EDİNİN</string>
+  <string name="learn_more_title_case_button">Daha fazla bilgi edinin</string>
   <string name="continue_button">DEVAM ET</string>
   <!-- Permission pop-ups messages -->
   <string name="uninstall_button">Kaldır</string>
@@ -67,7 +68,7 @@
   <string name="appview_good_app_guaranteed">İyi Uygulama Garantili!</string>
   <string name="appview_good_app_description">Bu uygulamalar virüs, malware ve diğer kötü niyetli saldırılara karşı güvenlik testinden geçti ve herhangi bir tehdit içermez!</string>
   <string name="appview_rating_card_text">Derecelendirme</string>
-  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
+  <string name="appview_rating_empty_body">Henüz yorum veya değerlendirme yok. İlk sen ol!</string>
   <string name="appview_button_read_all">tümünü oku <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Güvenilir</string>
   <string name="see_more">Daha fazla göster</string>
@@ -103,6 +104,7 @@
   <string name="menu_select_none">Hiçbirini Seçme</string>
   <string name="clear">Temizle</string>
   <string name="more_options_button">DAHA FAZLA SEÇENEK</string>
+  <string name="powered_by">Powered by</string>
   <!-- Excluded Updates Fragment -->
   <string name="loading">Yükleniyor&#8230;</string>
   <string name="excluded_updates">Dışlanan güncellemeler</string>
@@ -649,7 +651,9 @@
   <string name="appc_info_view_title_5_variable">%s sembollü uygulamalarda yaptığınız satın alma işlemleri için %%%s oranına varan Bonus kazanırsınız. Fırsattan yararlanın ve en iyi oyuncu siz olun!</string>
   <string name="appc_info_view_title_5_variable_no_data">%s sembollü uygulamalarda yaptığınız her satın alma işlemi için bonus kazanırsınız. Fırsattan yararlanın ve en iyi oyuncu siz olun!</string>
   <string name="appc_info_view_eskills_title">e-Skills\'le Para Kazanın!</string>
+  <string name="appc_info_view_eskills_without_withdrawal_title">Get Rewarded with e-Skills!</string>
   <string name="appc_info_view_eskills_body">e-Skills oyunlarıyla, diğer oyuncuları yendiğinde bir ödül kazanırsınız. Başarılı olduğunu düşündüğünüz oyunu indirmeniz, karşılaşmayı başlatmak için katkınızı yapmanız ve gerçek para ödülünü hak ettiğinizi kanıtlamak için becerilerinizi göstermeniz yeterli. Meydan okumaya hazır mısınız? Mevcut tüm oyunları %s bulabilirsiniz.</string>
+  <string name="appc_info_view_eskills_without_withdrawal_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in AppCoins Credits. Ready for the challenge? Find all the available games %s.</string>
   <string name="appc_info_view_eskills_body_button">buradan</string>
   <string name="appc_info_view_devs_title">Geliştirici misiniz?</string>
   <string name="appc_info_view_devs_body">Uygulamaları dağıtmanın yeni yolunu keşfedin.</string>
@@ -728,7 +732,7 @@
   <string name="promotional_notify_button">Bana haber ver</string>
   <string name="promotional_new_notification_title">Beklediğiniz uygulama!</string>
   <string name="promotional_new_notification_body">%s artık Aptoide\'de.</string>
-  <string name="promotional_new_active">You\'ll be notified when available.</string>
+  <string name="promotional_new_active">Mevcut olduğunda bilgilendirileceksiniz.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Karşınızda e-Skills</string>
   <string name="eskills_onboarding_body">Diğer oyunculara meydan okuyun, onları yenin ve para kazanın!</string>
@@ -746,8 +750,58 @@
   <string name="voucher_body">e-Kuponlar ile, favori oyunlarınızdaki satın alma işlemleri için en iyi fırsatları elde edebilirsiniz. Elmaslar, silahlar&#8230; Fark etmez, tüm satın alma işlemlerinde bonus bulunur!</string>
   <string name="voucher_games_title">Kullanılabilir e-Kuponlar</string>
   <string name="voucher_wallet_needed_body">Bu satın alma işlemi için AppCoins Wallet\'a ihtiyacınız var.</string>
-  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Geri Ödemesiz Tokenlar</string>
   <!--FAQs-->
-  <string name="faq_settings_title">FAQs</string>
-  <string name="faq_settings_body">Find all the answers you need!</string>
+  <string name="faq_settings_title">SSS</string>
+  <string name="faq_settings_body">İhtiyacın olan tüm yanıtları bul!</string>
+  <!--New e-Skills-->
+  <string name="eskills_v2_home_card_title">Gerçek Para Ödülleri!</string>
+  <string name="eskills_v2_home_card_without_withdrawal_title">Get Rewarded!</string>
+  <string name="eskills_v2_home_card_body">e-Skills oyunlarında diğer oyuncuları yendiğinde ödül kazanırsın. Yeteneklerini hemen göster!</string>
+  <string name="eskills_v2_earnmore_header">Daha Fazla Kazan</string>
+  <string name="eskills_v2_page_header">e-Skills Oyunları</string>
+  <string name="eskills_v2_page_body_">Oyun becerilerin gerçek para ödülüne değer düzeyde mi?</string>
+  <string name="eskills_v2_page_without_withdrawal_body_">Are your gaming skills worth a reward?</string>
+  <string name="eskills_v2_card_1_title">%2$s%1$s</string>
+  <string name="eskills_v2_card_1_body">Kullanıcı başına ortalama günlük kazanç.</string>
+  <string name="eskills_v2_card_2_title">%2$s%1$s</string>
+  <string name="eskills_v2_card_2_body">Maç başına kazanç</string>
+  <string name="eskills_v2_card_3_title">%2$s%1$s</string>
+  <string name="eskills_v2_card_3_body">Sıralamada haftanın 1.si ödülü</string>
+  <string name="eskills_v2_card_4_title">24 sa</string>
+  <string name="eskills_v2_card_4_body">7/24 destek sunuyoruz.</string>
+  <string name="eskills_v2_card_5_title">Gerçek Para Ödülleri</string>
+  <string name="eskills_v2_card_5_without_withdrawal_title">Get Rewarded!</string>
+  <string name="eskills_v2_card_5_body">En sevdiğin oyunları oyna ve gerçek para kazanmaya başla!</string>
+  <string name="eskills_v2_card_5_without_withdrawal_body">Play your favorite games and get rewarded now!</string>
+  <string name="eskills_v2_card_6_title">Adil Rekabet</string>
+  <string name="eskills_v2_card_6_body">Adil turnuvalar için beceri seviyendeki oyuncularla eşleş.</string>
+  <string name="eskills_v2_card_7_title">Dünya Şampiyonu Ol</string>
+  <string name="eskills_v2_card_7_body">Günlük ve haftalık skor tablolarımızda zirveye ulaşarak ilave ödüller kazan.</string>
+  <string name="eskills_v2_card_8_title">Tek Tıkla Para Çekme</string>
+  <string name="eskills_v2_card_8_without_withdrawal_title">Use Your Reward</string>
+  <string name="eskills_v2_card_8_body">AppCoins Wallet ile kazandıklarını gerçek para cinsinden kolaylıkla çekebilirsin.</string>
+  <string name="eskills_v2_card_8_without_withdrawal_body">You can use your reward to make purchases in your favorite games.</string>
+  <string name="eskills_v2_card_9_title">Şimdi Başla</string>
+  <string name="eskills_v2_card_9_body">Yeteneklerini test et ve ödül kazanmak için şampiyon ol!</string>
+  <string name="eskills_v2_how_it_works_title">Nasıl İşliyor?</string>
+  <string name="eskills_v2_how_1">Bir e-Skills oyunu indir</string>
+  <string name="eskills_v2_wallet_disclaimer">Oyun AppCoins Wallet ile birlikte gelir</string>
+  <string name="eskills_v2_how_2">Pratik yap veya yarışmaya başlamak için bilet al</string>
+  <string name="eskills_v2_how_3">Diğer oyuncuları yen</string>
+  <string name="eskills_v2_how_4">Kazandıklarını çek!</string>
+  <string name="eskills_v2_how_without_withdrawal_4">Use your reward to make purchases!</string>
+  <string name="eskills_v2_faqs_title">SSS</string>
+  <string name="eskills_v2_faqs_1_title">e-Skills oyunları nedir?</string>
+  <string name="eskills_v2_faqs_1_body_1">E-Skills oyunlarında, birbirinize karşı oynamak için diğer oyunculara meydan okursun ve kazanan ödülün sahibi olur! Bu ödül AppCoins Kredisi cinsinden verilir ve Ayarlar\'a gidip e-Skills Para Çekme seçeneğine tıklayarak PayPal hesabından çekilebilir.</string>
+  <string name="eskills_v2_faqs_1_body_without_withdrawal_1">In e-Skills games, you will challenge other players to play against each other and the winner will receive a prize! This prize is granted in AppCoins Credits and can be used to make purchases in your favorite games.</string>
+  <string name="eskills_v2_faqs_2_title">AppCoins Wallet nedir?</string>
+  <string name="eskills_v2_faqs_2_body_1">AppCoins Wallet, oyunlarda ve uygulamalarda dijital öğeler satın almak için kullanılabilen bir Android uygulamasıdır.</string>
+  <string name="eskills_v2_faqs_2_body_2">AppCoins uygulamalarında ve oyunlarında yaptığın her satın alma işleminde bir ödül kazanırsın! Tek yapman gereken şey AppCoins Wallet\'ı cihazına yüklemen ve satın alma işlemlerini her zamanki gibi en sevdiğin oyunlarının AppCoins sürümünde yapman.</string>
+  <string name="eskills_v2_faqs_3_title">AppCoins Wallet\'tan nasıl para çekerim?</string>
+  <string name="eskills_v2_faqs_3_body_1">E-Skills oyunlarında ödül olarak kazandığın AppCoins Kredilerini çekebilirsin. Bunun için lütfen şu adımları izle:\n1. Ana ekranın sağ üst köşesindeki Ayarlar\'a git.\n2. e-Skills Para Çekme seçeneğine tıkla.\n3. PayPal hesabının e-posta adresini ve çekmek istediğin tutarı gir.\n4. Para Çek\'e tıkla, hepsi bu kadar!\nÇekebileceğin minimum tutar 20$\'dır ve tamamlanması en az 4 hafta sürer.</string>
+  <string name="eskills_v2_wallet_install_disclaimer_body">Bu destek uygulaması %s sonrasında yüklenecek.</string>
+  <string name="eskills_v2_wallet_already_installed_disclaimer_body"><b>AppCoins Wallet zaten yüklü!</b></string>
+  <string name="eskills_v2_wallet_installed_disclaimer_body">AppCoins Wallet başarıyla yüklendi!</string>
+  <string name="eskills_v2_wallet_disclaimer_2_body">AppCoins Wallet\'ı indirmen gerekiyor.</string>
 </resources>

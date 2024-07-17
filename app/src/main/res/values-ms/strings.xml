@@ -26,6 +26,7 @@
   <string name="all_title_ad">Iklan</string>
   <string name="not_now_button">NANTI</string>
   <string name="learn_more_button">KETAHUI LEBIH LANJUT</string>
+  <string name="learn_more_title_case_button">Ketahui lebih lanjut</string>
   <string name="continue_button">TERUSKAN</string>
   <!-- Permission pop-ups messages -->
   <string name="uninstall_button">Nyahpasang</string>
@@ -67,7 +68,7 @@
   <string name="appview_good_app_description">Aplikasi ini melepasi ujian keselamatan untuk virus, perisian perosak dan serangan berbahaya lain dan tidak
  mengandungi sebarang ancaman!</string>
   <string name="appview_rating_card_text">Rating</string>
-  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
+  <string name="appview_rating_empty_body">Belum ada ulasan atau rating. Jadi yang pertama!</string>
   <string name="appview_button_read_all">baca semua <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Dipercayai</string>
   <string name="see_more">Lihat Lanjut</string>
@@ -103,6 +104,7 @@
   <string name="menu_select_none">Tiada yang Dipilih</string>
   <string name="clear">Kosongkan</string>
   <string name="more_options_button">PILIHAN LAIN</string>
+  <string name="powered_by">Dikuasakan oleh</string>
   <!-- Excluded Updates Fragment -->
   <string name="loading">Memuatkan&#8230;</string>
   <string name="excluded_updates">Kemas Kini Terasing</string>
@@ -649,7 +651,9 @@
   <string name="appc_info_view_title_5_variable">Anda akan peroleh Bonus sehingga %s%% bagi setiap pembelian yang anda buat dalam aplikasi dengan simbol %s. Jangan lepaskan peluang ini untuk jadi pemain terhebat!</string>
   <string name="appc_info_view_title_5_variable_no_data">Anda akan terima bonus bagi setiap pembelian yang anda buat dalam aplikasi bersimbol %s. Manfaatkannya dan jadi pemain yang terhebat!</string>
   <string name="appc_info_view_eskills_title">Jana Pendapatan dengan e-Skills!</string>
+  <string name="appc_info_view_eskills_without_withdrawal_title">Get Rewarded with e-Skills!</string>
   <string name="appc_info_view_eskills_body">Dengan permainan e-Skills, anda akan terima hadiah apabila mengalahkan pemain lain. Hanya muat turun permainan yang anda hebat main, dan sumbangkan bakat anda untuk buktikan yang anda layak menerima hadiah wang tunai. Sudah sedia? Temui semua permainan tersedia di %s.</string>
+  <string name="appc_info_view_eskills_without_withdrawal_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in AppCoins Credits. Ready for the challenge? Find all the available games %s.</string>
   <string name="appc_info_view_eskills_body_button">di sini</string>
   <string name="appc_info_view_devs_title">Anda seorang pemaju?</string>
   <string name="appc_info_view_devs_body">Ketahui cara terbaru untuk mengedarkan aplikasi.</string>
@@ -728,7 +732,7 @@
   <string name="promotional_notify_button">Maklumkan saya</string>
   <string name="promotional_new_notification_title">Aplikasi yang anda nantikan!</string>
   <string name="promotional_new_notification_body">%s kini tersedia di Aptoide.</string>
-  <string name="promotional_new_active">You\'ll be notified when available.</string>
+  <string name="promotional_new_active">Anda akan dimaklumkan apabila tersedia.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Memperkenalkan e-Skills</string>
   <string name="eskills_onboarding_body">Cabar pemain lain, kalahkan mereka dan menang wang!</string>
@@ -746,8 +750,58 @@
   <string name="voucher_body">Dengan e-Baucar, anda boleh nikmati tawaran terbaik apabila membuat pembelian dalam permainan kegemaran anda. Permata, senjata&#8230; tak kisahlah, semuanya ada bonus!</string>
   <string name="voucher_games_title">e-Baucar Tersedia</string>
   <string name="voucher_wallet_needed_body">Anda perlu Dompet AppCoins untuk buat pembelian ini.</string>
-  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Token Tidak Sepiawai</string>
   <!--FAQs-->
-  <string name="faq_settings_title">FAQs</string>
-  <string name="faq_settings_body">Find all the answers you need!</string>
+  <string name="faq_settings_title">FAQ</string>
+  <string name="faq_settings_body">Cari semua jawapan yang anda mahu!</string>
+  <!--New e-Skills-->
+  <string name="eskills_v2_home_card_title">Hadiah Wang Tunai!</string>
+  <string name="eskills_v2_home_card_without_withdrawal_title">Get Rewarded!</string>
+  <string name="eskills_v2_home_card_body">Dalam permainan e-Skills, anda dapat ganjaran bila tewaskan pemain lain. Pamer kehebatan anda sekarang!</string>
+  <string name="eskills_v2_earnmore_header">Tambah Lagi</string>
+  <string name="eskills_v2_page_header">Permainan e-Skills</string>
+  <string name="eskills_v2_page_body_">Adakah skil permainan anda sehebat ganjaran wang?</string>
+  <string name="eskills_v2_page_without_withdrawal_body_">Are your gaming skills worth a reward?</string>
+  <string name="eskills_v2_card_1_title">%1$s%2$s</string>
+  <string name="eskills_v2_card_1_body">Purata kemenangan harian pengguna.</string>
+  <string name="eskills_v2_card_2_title">%1$s%2$s</string>
+  <string name="eskills_v2_card_2_body">Kemenangan setiap permainan</string>
+  <string name="eskills_v2_card_3_title">%1$s%2$s</string>
+  <string name="eskills_v2_card_3_body">Hadiah untuk Peneraju Markah No.1 Teratas</string>
+  <string name="eskills_v2_card_4_title">24j</string>
+  <string name="eskills_v2_card_4_body">Kami ada sokongan 24/7.</string>
+  <string name="eskills_v2_card_5_title">Hadiah Wang Tunai</string>
+  <string name="eskills_v2_card_5_without_withdrawal_title">Get Rewarded!</string>
+  <string name="eskills_v2_card_5_body">Main permainan kegemaran anda dan peroleh wang tunai sekarang!</string>
+  <string name="eskills_v2_card_5_without_withdrawal_body">Play your favorite games and get rewarded now!</string>
+  <string name="eskills_v2_card_6_title">Pertandingan Adil</string>
+  <string name="eskills_v2_card_6_body">Anda dipadankan dengan pemain yang sama kemahiran untuk pastikan pertandingan adil.</string>
+  <string name="eskills_v2_card_7_title">Jadi Juara Dunia</string>
+  <string name="eskills_v2_card_7_body">Dapatkan ganjaran ekstra apabila anda mendahului carta pemenang harian dan mingguan.</string>
+  <string name="eskills_v2_card_8_title">Pengeluaran dgn Satu Ketik</string>
+  <string name="eskills_v2_card_8_without_withdrawal_title">Use Your Reward</string>
+  <string name="eskills_v2_card_8_body">Anda boleh keluarkan ganjaran anda dalam bentuk wang tunai dengan mudah guna Dompet AppCoins.</string>
+  <string name="eskills_v2_card_8_without_withdrawal_body">You can use your reward to make purchases in your favorite games.</string>
+  <string name="eskills_v2_card_9_title">Mula Sekarang</string>
+  <string name="eskills_v2_card_9_body">Uji kemahiran anda dan jadi juara untuk dapat ganjaran!</string>
+  <string name="eskills_v2_how_it_works_title">Macam Mana Ia Berfungsi?</string>
+  <string name="eskills_v2_how_1">Pasang permainan e-Skills</string>
+  <string name="eskills_v2_wallet_disclaimer">Permainan ini dilengkapi Dompet AppCoins</string>
+  <string name="eskills_v2_how_2">Berlatih atau dapatkan tiket untuk berlawan</string>
+  <string name="eskills_v2_how_3">Tewaskan pemain lain</string>
+  <string name="eskills_v2_how_4">Keluarkan ganjaran anda!</string>
+  <string name="eskills_v2_how_without_withdrawal_4">Use your reward to make purchases!</string>
+  <string name="eskills_v2_faqs_title">FAQ</string>
+  <string name="eskills_v2_faqs_1_title">Apa itu permainan e-Skills?</string>
+  <string name="eskills_v2_faqs_1_body_1">Dalam permainan e-Skills, anda cabar pemain lain untuk berlawan dan pemenangnya akan dapat hadiah! Hadiah ini diberikan dalam bentuk Kredit AppCons dan boleh dikeluarkan ke akaun PayPal anda. Hanya pergi ke Tetapan dan ketik pada Pengeluaran e-Skills.</string>
+  <string name="eskills_v2_faqs_1_body_without_withdrawal_1">In e-Skills games, you will challenge other players to play against each other and the winner will receive a prize! This prize is granted in AppCoins Credits and can be used to make purchases in your favorite games.</string>
+  <string name="eskills_v2_faqs_2_title">Apa itu Dompet AppCoins?</string>
+  <string name="eskills_v2_faqs_2_body_1">Dompet AppCoins ialah aplikasi Android yang boleh digunakan untuk beli item digital dalam aplikasi dan permainan.</string>
+  <string name="eskills_v2_faqs_2_body_2">Anda dapat ganjaran setiap kali anda membeli dalam aplikasi dan permainan AppCoins! Hanya pasang Dompet AppCoins pada peranti anda dan buat pembelian seperti biasa dalam permainan kegemaran anda versi AppCoins.</string>
+  <string name="eskills_v2_faqs_3_title">Macam mana nak keluarkan wang daripada Dompet Appcoins?</string>
+  <string name="eskills_v2_faqs_3_body_1">Anda boleh keluarkan Kredit AppCoins yang anda peroleh sebagai hadiah dalam permainan e-Skills. Sila ikuti langkah ini:\n1. Pergi ke Tetapan pada sudut kanan atas skrin Utama.\n2. Ketik pada Pengeluaran e-Skills.\n3. Masukkan alamat e-mel akaun PayPal anda dan amaun yg ingin dikeluarkan.\n4. Ketik pada Keluar, siap!\nAmaun minimum pengeluaran ialah $20 dan pengeluaran ambil masa minimum 4 minggu untuk diselesaikan.</string>
+  <string name="eskills_v2_wallet_install_disclaimer_body">Aplikasi sokongan akan dipasang selepas %s.</string>
+  <string name="eskills_v2_wallet_already_installed_disclaimer_body">Anda sudah pasang <b>Dompet AppCoins!</b></string>
+  <string name="eskills_v2_wallet_installed_disclaimer_body">Dompet AppCoins berjaya dipasang!</string>
+  <string name="eskills_v2_wallet_disclaimer_2_body">Anda perlu pasang Dompet AppCoins.</string>
 </resources>

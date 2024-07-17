@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <!--errors-->
-  <string name="error_occured">Oops, something went wrong. Please try again!</string>
+  <string name="error_occured">糟糕，出現了一個錯誤。請再試一次！</string>
   <string name="ws_error_invalid_grant">用户名和密码组合无效</string>
   <string name="edit_store_social_link_invalid_url_text">Invalid Url</string>
   <string name="edit_store_page_doesnt_exist_error_short">This page doesn\'t exist</string>

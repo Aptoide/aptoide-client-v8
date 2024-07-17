@@ -28,6 +28,7 @@
   <string name="all_title_ad">Reklama</string>
   <string name="not_now_button">NE SADA</string>
   <string name="learn_more_button">SAZNAJTE VIŠE</string>
+  <string name="learn_more_title_case_button">Saznajte više</string>
   <string name="continue_button">NASTAVI</string>
   <!-- Permission pop-ups messages -->
   <string name="uninstall_button">Деинсталирај</string>
@@ -68,7 +69,7 @@
   <string name="appview_good_app_guaranteed">Garantovano dobra aplikacija!</string>
   <string name="appview_good_app_description">Ova aplikacija je prošla bezbednosni test za viruse, zlonamerne programe i druge zlonamerne napade i ne sadrži nikakve pretnje!</string>
   <string name="appview_rating_card_text">Ocena</string>
-  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
+  <string name="appview_rating_empty_body">Nema novih komentara ili ocena. Budite prvi!</string>
   <string name="appview_button_read_all">pročitaj sve <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Pouzdano</string>
   <string name="see_more">Prikaži više</string>
@@ -81,7 +82,7 @@
   <string name="appview_message_apkfy_1">100%% bezbedna ažuriranja aplikacije %1$s</string>
   <string name="appview_message_apkfy_2">pristup neograničenim aplikacijama</string>
   <string name="apkfy_install_message">Želite li da instalirate ovu aplikaciju?</string>
-  <string name="appview_download_percentage_body">%1$s of %2$s</string>
+  <string name="appview_download_percentage_body">%1$s od %2$s</string>
   <!-- AppView Donations-->
   <string name="appview_download_error_missing_splits">Ups, došlo je do problema prilikom preuzimanja ove aplikacije. Uskoro ćemo ga rešiti!</string>
   <string name="appview_title_donations_leaderboard">Najveće donacije</string>
@@ -104,6 +105,7 @@
   <string name="menu_select_none">Nemoj da izabereš nijedno</string>
   <string name="clear">Obriši</string>
   <string name="more_options_button">VIŠE OPCIJA</string>
+  <string name="powered_by">Pokreće</string>
   <!-- Excluded Updates Fragment -->
   <string name="loading">Učitavanje&#8230;</string>
   <string name="excluded_updates">Izuzeta ažuriranja</string>
@@ -477,9 +479,9 @@
   <string name="appc_verification_cancelled_by_user_message">Morate da potvrdite svoj novčanik da biste dobijali nagrade. To traje samo nekoliko sekundi!</string>
   <string name="editorial_card_views_short">Broj pregleda: %s</string>
   <string name="editorial_reactions_login_short">Prijavite se kako biste nastavili da označavate da vam se sviđaju članci!</string>
-  <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
+  <string name="editorial_topsoftops_appcoins_body">Sa bonusima u svim kupovinama!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">Follow us</string>
+  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">Zapratite nas</string>
   <string name="holidayspromotion_message_1">Instalirajte sledeće aplikacije i dobijte do %s AppCoins Credits koje možete da potrošite u omiljenim igrama!</string>
   <string name="holidayspromotion_message_2">Najpre preuzmite AppCoins Wallet da biste dobili AppCoins Credits.</string>
   <string name="holidayspromotion_message_3">Zatim instalirajte bilo koju od ovih igara da biste dobili nagrade!</string>
@@ -639,7 +641,7 @@
   <string name="appc_info_card_body">Zaradite besplatne AppCoins Credits da biste kupili artikle u omiljenim aplikacijama.</string>
   <string name="appc_info_view_title_1">Sve što treba da znate o AppCoins</string>
   <string name="appc_info_view_body_1_variable">AppCoins i AppCoins Credits su valute za transakcije u aplikacijama. A najbolje je što ćete zaraditi do <b>%s%% bonusa u svim kupovinama!</b></string>
-  <string name="appc_info_view_body_1_variable_no_data">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">AppCoins i AppCoins Credits su valute za transakcije u aplikacijama. Najbolje od svega? Zaradićete <b>bonus prilikom svake kupovine!</b></string>
   <string name="appc_info_view_title_2">Da počnemo od početka</string>
   <string name="appc_info_view_body_2">Treba da instalirate AppCoins Wallet da biste dobijali nagrade i obrađivali transakcije. Kada ga budete instalirali, radiće sve to umesto vas!</string>
   <!-- The ones about PoA are not to be used -->
@@ -647,10 +649,12 @@
   <string name="appc_info_view_body_3">Dobićete nagradu ako instalirate aplikacije sa simbolom %s i provedete u njima 2 minuta. Možete da ih pronađete u kompletu „Zaradite AppCoins Credits“ na Aptoide početnoj stranici!</string>
   <string name="appc_info_view_title_4">Bonus za svaku kupovinu!</string>
   <string name="appc_info_view_title_5_variable">Dobićete do %s%% bonusa za svaku kupovinu koju obavite u aplikaciji sa simbolom %s. Iskoristite tu prednost da postanete vrhunski gejmer!</string>
-  <string name="appc_info_view_title_5_variable_no_data">You\'ll get a bonus in every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
-  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
-  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
-  <string name="appc_info_view_eskills_body_button">here</string>
+  <string name="appc_info_view_title_5_variable_no_data">Dobićete bonus za svaku kupovinu koju obavite u aplikaciji sa simbolom %s. Iskoristite tu prednost da postanete vrhunski gejmer!</string>
+  <string name="appc_info_view_eskills_title">Zaradite novac uz pomoć e-Skills!</string>
+  <string name="appc_info_view_eskills_without_withdrawal_title">Get Rewarded with e-Skills!</string>
+  <string name="appc_info_view_eskills_body">Uz pomoć e-Skills igara zaradićete nagradu kada pobedite druge igrače. Samo preuzmite igru u kojoj smatrate da ste najbolji, doprinesite početku borbe i pokažite svoje veštine da biste dokazali da zaslužujete nagradu u pravom novcu. Spremni za izazov? Pronađite sve dostupne igre %s.</string>
+  <string name="appc_info_view_eskills_without_withdrawal_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in AppCoins Credits. Ready for the challenge? Find all the available games %s.</string>
+  <string name="appc_info_view_eskills_body_button">ovde</string>
   <string name="appc_info_view_devs_title">Vi ste programer?</string>
   <string name="appc_info_view_devs_body">Pogledajte nov način za distribuciju aplikacija.</string>
   <!--Updates Notification-->
@@ -698,10 +702,10 @@
   <string name="login_completed_body">Da li ste spremni za najbolje aplikacije?</string>
   <!--Notification-->
   <string name="notification_updates_available">Neke aplikacije su spremne za ažuriranje!</string>
-  <string name="notification_install_ready_plural_title">Some apps are ready to be installed!</string>
-  <string name="notification_install_ready_plural_body">Tap here to install them.</string>
-  <string name="notification_install_ready_singular_title">An app is ready to be installed!</string>
-  <string name="notification_install_ready_singular_body">Tap here to install %s.</string>
+  <string name="notification_install_ready_plural_title">Neke aplikacije su spremne za instaliranje!</string>
+  <string name="notification_install_ready_plural_body">Dodirnite ovde da biste ih instalirali.</string>
+  <string name="notification_install_ready_singular_title">Aplikacija je spremna za instaliranje!</string>
+  <string name="notification_install_ready_singular_body">Dodirnite ovde da biste instalirali %s.</string>
   <!--Empty States-->
   <string name="search_no_results_title">Nema rezultata za vašu pretragu.</string>
   <string name="search_no_results_body">Pokušajte sa drugim rečima ili isprobajte filtere!</string>
@@ -714,40 +718,90 @@
   <string name="search_filters_followed_stores">Prodavnice koje pratite</string>
   <string name="search_filters_clear">Obriši</string>
   <!-- App bundles/MIUI -->
-  <string name="settings_force_native_installer_title">Use native installer</string>
-  <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
+  <string name="settings_force_native_installer_title">Koristite matični program za instaliranje</string>
+  <string name="settings_force_native_installer_summary">Samo ako koristite MIUI (od kompanije Xiaomi) i imate problema sa instalacijom aplikacija. Može se desiti da više nećete videti neke verzije aplikacija.</string>
   <!-- Out of space -->
-  <string name="out_space_title">You\'ve run out of space!</string>
-  <string name="out_of_space_body">You need %s to continue with the installation.</string>
+  <string name="out_space_title">Nemate više prostora!</string>
+  <string name="out_of_space_body">Potrebno vam je %s da biste nastavili sa instalacijom.</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Now With AppCoins Payment System</string>
-  <string name="promotional_new_version">New Version</string>
-  <string name="promotional_on_going_event">Ongoing event</string>
-  <string name="promotional_new_in_aptoide">Now available in Aptoide</string>
-  <string name="promotional_soon_in_aptoide">Soon available in Aptoide</string>
-  <string name="promotional_notify_button">Notify me</string>
-  <string name="promotional_new_notification_title">The app you were waiting for!</string>
-  <string name="promotional_new_notification_body">%s is now available in Aptoide.</string>
-  <string name="promotional_new_active">You\'ll be notified when available.</string>
+  <string name="promotional_now_with_appcoins">Sada uz AppCoins sistem plaćanja</string>
+  <string name="promotional_new_version">Nova verzija</string>
+  <string name="promotional_on_going_event">Tekući događaj</string>
+  <string name="promotional_new_in_aptoide">Sada dostupno na Aptoide</string>
+  <string name="promotional_soon_in_aptoide">Uskoro dostupno na Aptoide</string>
+  <string name="promotional_notify_button">Obavesti me</string>
+  <string name="promotional_new_notification_title">Aplikacija koju ste čekali!</string>
+  <string name="promotional_new_notification_body">Aplikacija %s je sada dostupna na Aptoide.</string>
+  <string name="promotional_new_active">Bićete obavešteni kada postane dostupna.</string>
   <!--e-Skills-->
-  <string name="eskills_onboarding_title">Introducing e-Skills</string>
-  <string name="eskills_onboarding_body">Challenge other players, beat them and earn money!</string>
-  <string name="eskills_home_title">Earn Money</string>
-  <string name="eskills_home_subtitle">Beat other players with e-Skills</string>
+  <string name="eskills_onboarding_title">Predstavljamo e-Skills</string>
+  <string name="eskills_onboarding_body">Izazovite druge igrače, pobedite ih i zaradite novac!</string>
+  <string name="eskills_home_title">Zaradite novac</string>
+  <string name="eskills_home_subtitle">Pobedite druge igrače uz pomoć e-Skills</string>
   <string name="eskills_header">e-Skills</string>
-  <string name="eskills_title">Prove your skills and</string>
-  <string name="eskills_title_2">earn a prize!</string>
-  <string name="eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Ready to prove who\'s the best one?</string>
-  <string name="eskills_games_title">e-Skills Games</string>
+  <string name="eskills_title">Pokažite svoje veštine i</string>
+  <string name="eskills_title_2">osvojite nagradu!</string>
+  <string name="eskills_body">Uz e-Skills igre osvojićete nagradu kada pobedite druge igrače. Jeste li spremni da dokažete ko je bolji?</string>
+  <string name="eskills_games_title">e-Skills igre</string>
   <!--e-Vouchers-->
-  <string name="voucher_home_title">e-Vouchers</string>
-  <string name="voucher_home_subtitle">Find the best deals for apps and games!</string>
-  <string name="voucher_title">The best deals for apps and games!</string>
-  <string name="voucher_body">With e-Vouchers, you can get the best deals when making purchases in your favorite games. Diamonds, weapons&#8230; it doesn\'t matter, all purchases have a bonus!</string>
-  <string name="voucher_games_title">e-Vouchers Available</string>
-  <string name="voucher_wallet_needed_body">You need the AppCoins Wallet to make this purchase.</string>
-  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
+  <string name="voucher_home_title">e-Vaučeri</string>
+  <string name="voucher_home_subtitle">Pronađite najbolje ponude za aplikacije i igre!</string>
+  <string name="voucher_title">Najbolje ponude za aplikacije i igre!</string>
+  <string name="voucher_body">Uz e-Vaučere možete pronaći najbolje ponude kada obavljate kupovine u omiljenim igrama. Dijamanti, oružje&#8230; nije važno, sve kupovine imaju bonus!</string>
+  <string name="voucher_games_title">Dostupni e-Vaučeri</string>
+  <string name="voucher_wallet_needed_body">Potreban vam je AppCoins Wallet da bste obavili ovu kupovinu.</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Nezamenljivi tokeni</string>
   <!--FAQs-->
-  <string name="faq_settings_title">FAQs</string>
-  <string name="faq_settings_body">Find all the answers you need!</string>
+  <string name="faq_settings_title">Često postavljana pitanja</string>
+  <string name="faq_settings_body">Pronađite sve odgovore koji su vam potrebni!</string>
+  <!--New e-Skills-->
+  <string name="eskills_v2_home_card_title">Prave novčane nagrade!</string>
+  <string name="eskills_v2_home_card_without_withdrawal_title">Get Rewarded!</string>
+  <string name="eskills_v2_home_card_body">U e-Skills igrama možete dobiti nagrade kada pobedite druge igrače. Pokažite svoje veštine sada!</string>
+  <string name="eskills_v2_earnmore_header">Zaradite više</string>
+  <string name="eskills_v2_page_header">e-Skills igre</string>
+  <string name="eskills_v2_page_body_">Da li vaše veštine igranja zavređuju prave novčane nagrade?</string>
+  <string name="eskills_v2_page_without_withdrawal_body_">Are your gaming skills worth a reward?</string>
+  <string name="eskills_v2_card_1_title">%1$s%2$s</string>
+  <string name="eskills_v2_card_1_body">Prosečni dnevni dobici po igraču.</string>
+  <string name="eskills_v2_card_2_title">%1$s%2$s</string>
+  <string name="eskills_v2_card_2_body">Dobici po partiji</string>
+  <string name="eskills_v2_card_3_title">%1$s%2$s</string>
+  <string name="eskills_v2_card_3_body">Nagrada za 1. mesto na nedeljnoj rang listi</string>
+  <string name="eskills_v2_card_4_title">24h</string>
+  <string name="eskills_v2_card_4_body">Nudimo podršku 24/7.</string>
+  <string name="eskills_v2_card_5_title">Prave novčane nagrade</string>
+  <string name="eskills_v2_card_5_without_withdrawal_title">Get Rewarded!</string>
+  <string name="eskills_v2_card_5_body">Igrajte svoje omiljene igre i počnite da zarađujete pravi novac sada!</string>
+  <string name="eskills_v2_card_5_without_withdrawal_body">Play your favorite games and get rewarded now!</string>
+  <string name="eskills_v2_card_6_title">Fer konkurencija</string>
+  <string name="eskills_v2_card_6_body">Igrajte sa igračima koji su na istom nivou kao i vi da bi turnir bio fer.</string>
+  <string name="eskills_v2_card_7_title">Postanite prvak sveta</string>
+  <string name="eskills_v2_card_7_body">Osvojite dodatne nagrade kada dostignete vrh naše dnevne i nedeljne rang liste.</string>
+  <string name="eskills_v2_card_8_title">Preuzimanje na jedan dodir</string>
+  <string name="eskills_v2_card_8_without_withdrawal_title">Use Your Reward</string>
+  <string name="eskills_v2_card_8_body">Možete jednostavno preuzeti svoje dobitke u obliku pravog novca uz AppCoins Wallet.</string>
+  <string name="eskills_v2_card_8_without_withdrawal_body">You can use your reward to make purchases in your favorite games.</string>
+  <string name="eskills_v2_card_9_title">Počnite sada</string>
+  <string name="eskills_v2_card_9_body">Isprobajte svoje veštine i postanite šampion da biste dobili nagrade!</string>
+  <string name="eskills_v2_how_it_works_title">Kako funkcioniše?</string>
+  <string name="eskills_v2_how_1">Instalirajte e-Skills igru</string>
+  <string name="eskills_v2_wallet_disclaimer">Igra sadrži AppCoins Wallet</string>
+  <string name="eskills_v2_how_2">Vežbajte ili preuzmite kartu da biste počeli da se takmičite</string>
+  <string name="eskills_v2_how_3">Pobedite druge igrače</string>
+  <string name="eskills_v2_how_4">Preuzmite svoje dobitke!</string>
+  <string name="eskills_v2_how_without_withdrawal_4">Use your reward to make purchases!</string>
+  <string name="eskills_v2_faqs_title">Često postavljana pitanja</string>
+  <string name="eskills_v2_faqs_1_title">Šta su e-Skills igre?</string>
+  <string name="eskills_v2_faqs_1_body_1">U e-Skills igrama izazivate ostale igrače i igrate jedni protiv drugih i dobitnik osvaja nagradu! Ova nagrada se dodeljuje u obliku AppCoins Credits i možete je preuzeti na svom PayPal nalogu tako što ćete otići u Podešavanja i dodirnuti opciju e-Skills preuzimanje.</string>
+  <string name="eskills_v2_faqs_1_body_without_withdrawal_1">In e-Skills games, you will challenge other players to play against each other and the winner will receive a prize! This prize is granted in AppCoins Credits and can be used to make purchases in your favorite games.</string>
+  <string name="eskills_v2_faqs_2_title">Šta je AppCoins Wallet?</string>
+  <string name="eskills_v2_faqs_2_body_1">AppCoins Wallet je Android aplikacija koja se može iskoristiti za kupovinu digitalnih stavki u igrama i aplikacijama.</string>
+  <string name="eskills_v2_faqs_2_body_2">Dobićete nagradu svaki put kada obavite kupovinu u AppCoins aplikacijama i igrama! Potrebno je samo da instalirate AppCoins Wallet na svom uređaju i obavite kupovinu kao i obično u AppCoins verziji svoje omiljene igre.</string>
+  <string name="eskills_v2_faqs_3_title">Kako da preuzmem novac iz AppCoins Wallet?</string>
+  <string name="eskills_v2_faqs_3_body_1">Možete preuzeti AppCoins Credits koji ste zaradili kao nagradu u e-Skills igrama. Da biste ovo uradili pratite sledeće korake:\n. Idite u Podešavanja u gornjem desno uglu Početnog ekrana.\n2. Dodirnite opciju e-Skills preuzimanje.\n3. Unesite adresu e-pošte vašeg PayPal naloga i iznos koji želite da preuzmete.\n4. Dodirnite opciju Preuzmi i to je to!\nMinimalni iznos koji možete preuzeti je 20$ i potrebno je najmanje 4 nedelje da se dovrši.</string>
+  <string name="eskills_v2_wallet_install_disclaimer_body">Ova aplikacija podrške biće instalirana nakon %s.</string>
+  <string name="eskills_v2_wallet_already_installed_disclaimer_body">Već ste <b>instalirali AppCoins Wallet!</b></string>
+  <string name="eskills_v2_wallet_installed_disclaimer_body">Aplikacija AppCoins Wallet je uspešno instalirana!</string>
+  <string name="eskills_v2_wallet_disclaimer_2_body">Potrebno je da instalirate aplikaciju AppCoins Wallet.</string>
 </resources>

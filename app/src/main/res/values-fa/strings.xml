@@ -27,6 +27,7 @@
   <string name="all_title_ad">تبلیغ</string>
   <string name="not_now_button">هنوز نه</string>
   <string name="learn_more_button">اطلاعات بیشتر</string>
+  <string name="learn_more_title_case_button">معرفة المزيد</string>
   <string name="continue_button">ادامه</string>
   <!-- Permission pop-ups messages -->
   <string name="uninstall_button">حذف</string>
@@ -68,7 +69,7 @@
   <string name="appview_good_app_description">این برنامه تست‌های امنیتی را گذرانده است و هیچ 
 ویروس و بدافزاری ندارد!</string>
   <string name="appview_rating_card_text">رتبه بندی</string>
-  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
+  <string name="appview_rating_empty_body">هنوز هیچ دیدگاه یا رتبه بندی ثبت نشده است. اولین باشید!</string>
   <string name="appview_button_read_all">مطالعه همه <![CDATA[>]]>;</string>
   <string name="appview_header_trusted_text">مورد اعتماد</string>
   <string name="see_more">ادامه‌ی مطلب</string>
@@ -104,6 +105,7 @@
   <string name="menu_select_none">لغو انتخاب</string>
   <string name="clear">پاک کردن</string>
   <string name="more_options_button">گزینه‌های بیشتر</string>
+  <string name="powered_by">توسط:</string>
   <!-- Excluded Updates Fragment -->
   <string name="loading">در حال بارگذاری&#8230;</string>
   <string name="excluded_updates">به‌روزرسانی‌های کنار گذاشته شده</string>
@@ -650,7 +652,9 @@
   <string name="appc_info_view_title_5_variable">شما تا %s%% پاداش برای همه خریدها در اپلیکیشن با علامت %s بدست خواهید آورد. از آن استفاده کنید و یک گیمر خفن شوید!</string>
   <string name="appc_info_view_title_5_variable_no_data">شما پاداشی برای هر خرید در اپلیکیشن با علامت %s بدست خواهید آورد. از آن استفاده کنید و یک گیمر خفن شوید!</string>
   <string name="appc_info_view_eskills_title">با e-Skills درآمد داشته باشید!</string>
+  <string name="appc_info_view_eskills_without_withdrawal_title">Get Rewarded with e-Skills!</string>
   <string name="appc_info_view_eskills_body">در بازی‌های e-Skills، با غلبه بر بازیکنان دیگر یک جایزه برنده می‌شوید. بازی مورد علاقه خود را دانلود کنید، نبرد را شروع کنید و توانایی خود را نمایش دهید و ثابت کنید که لیاقت بردن پول واقعی را دارید. آماده چالش هستید؟ همه بازی‌های موجود را %s پیدا کنید.</string>
+  <string name="appc_info_view_eskills_without_withdrawal_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in AppCoins Credits. Ready for the challenge? Find all the available games %s.</string>
   <string name="appc_info_view_eskills_body_button">اینجا</string>
   <string name="appc_info_view_devs_title">آیا یک برنامه‌نویس هستید؟</string>
   <string name="appc_info_view_devs_body">روش جدید انتشار اپلیکیشن را بررسی کنید.</string>
@@ -729,7 +733,7 @@
   <string name="promotional_notify_button">به من اطلاع بده</string>
   <string name="promotional_new_notification_title">اپلیکیشن مورد انتظار شما!</string>
   <string name="promotional_new_notification_body">%s هم اکنون در Aptoide موجود است.</string>
-  <string name="promotional_new_active">You\'ll be notified when available.</string>
+  <string name="promotional_new_active">هر زمان موجود باشد شما را مطلع می کنید.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">معرفی e-Skills</string>
   <string name="eskills_onboarding_body">سایر بازیکنان را به چالش بکشید، آن‌ها را شکست دهید و درآمد کسب کنید!</string>
@@ -749,6 +753,56 @@
   <string name="voucher_wallet_needed_body">برای خرید، نیاز به AppCoins Wallet دارید.</string>
   <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
   <!--FAQs-->
-  <string name="faq_settings_title">FAQs</string>
-  <string name="faq_settings_body">Find all the answers you need!</string>
+  <string name="faq_settings_title">سوالات متداول</string>
+  <string name="faq_settings_body">همه پاسخ‌های خود را دریافت کنید!</string>
+  <!--New e-Skills-->
+  <string name="eskills_v2_home_card_title">جایزه پول واقعی!</string>
+  <string name="eskills_v2_home_card_without_withdrawal_title">Get Rewarded!</string>
+  <string name="eskills_v2_home_card_body">در بازی‌های e-Skills با شکست رقیب خود جایزه می‌گیرید. قابلیت‌های خود را نمایش دهید!</string>
+  <string name="eskills_v2_earnmore_header">کسب درآمد بیشتر</string>
+  <string name="eskills_v2_page_header">بازی‌های e-Skills</string>
+  <string name="eskills_v2_page_body_">آیا توانایی گیمینگ شما ارزش پول واقعی دارد؟</string>
+  <string name="eskills_v2_page_without_withdrawal_body_">Are your gaming skills worth a reward?</string>
+  <string name="eskills_v2_card_1_title">%1$s%2$s</string>
+  <string name="eskills_v2_card_1_body">میانگین برد روزانه هر کاربر</string>
+  <string name="eskills_v2_card_2_title">%1$s%2$s</string>
+  <string name="eskills_v2_card_2_body">برد در هر مسابقه</string>
+  <string name="eskills_v2_card_3_title">%1$s%2$s</string>
+  <string name="eskills_v2_card_3_body">جایزه برای نفر اول لیست لیدرها</string>
+  <string name="eskills_v2_card_4_title">۲۴ ساعت</string>
+  <string name="eskills_v2_card_4_body">ما پشتیبانی ۲۴/۷ ارائه می‌دهیم.</string>
+  <string name="eskills_v2_card_5_title">جایزه پول واقعی</string>
+  <string name="eskills_v2_card_5_without_withdrawal_title">Get Rewarded!</string>
+  <string name="eskills_v2_card_5_body">بازی مورد علاقه خود را بازی کنید و پول واقعی کسب کنید!</string>
+  <string name="eskills_v2_card_5_without_withdrawal_body">Play your favorite games and get rewarded now!</string>
+  <string name="eskills_v2_card_6_title">مسابقه عادلانه</string>
+  <string name="eskills_v2_card_6_body">با بازیکنان در رده توانایی خود در مسابقاتی عادلانه رقابت کنید.</string>
+  <string name="eskills_v2_card_7_title">برنده جهانی شوید</string>
+  <string name="eskills_v2_card_7_body">جایزه بیشتری برای قرار گرفتن در بالای لیست روزانه و هفتگی لیدرها بدست آورید.</string>
+  <string name="eskills_v2_card_8_title">برداشت با یک کلیک</string>
+  <string name="eskills_v2_card_8_without_withdrawal_title">Use Your Reward</string>
+  <string name="eskills_v2_card_8_body">براحتی می‌توانید برد خود را بصورت پول واقعی با AppCoins Wallet برداشت کنید.</string>
+  <string name="eskills_v2_card_8_without_withdrawal_body">You can use your reward to make purchases in your favorite games.</string>
+  <string name="eskills_v2_card_9_title">شروع کنید</string>
+  <string name="eskills_v2_card_9_body">توانایی خود را تست کنید و تبدیل به یک قهرمان شوید که جایزه می‌گیرد!</string>
+  <string name="eskills_v2_how_it_works_title">چگونه کار می‌کند؟</string>
+  <string name="eskills_v2_how_1">یک بازی e-Skills را نصب کنید</string>
+  <string name="eskills_v2_wallet_disclaimer">این بازی با یک AppCoins Wallet می‌آید</string>
+  <string name="eskills_v2_how_2">تمرین کنید یا یک بلیت برای شروع مسابقه بگیرید</string>
+  <string name="eskills_v2_how_3">سایر بازیکنان را شکست دهید</string>
+  <string name="eskills_v2_how_4">برد خود را برداشت کنید!</string>
+  <string name="eskills_v2_how_without_withdrawal_4">Use your reward to make purchases!</string>
+  <string name="eskills_v2_faqs_title">سوالات متداول</string>
+  <string name="eskills_v2_faqs_1_title">بازی‌های e-Skills چیست؟</string>
+  <string name="eskills_v2_faqs_1_body_1">در بازی‌های e-Skills سایر بازیکنان را به بازی در مقابل یکدیگر تشویق می‌کنید و برنده جایزه ای دریافت می کند. این جایزه در AppCoins Credits تضمین می‌شود و می‌تواند به حساب پی پال شما برداشت شود. کافی است به تنظیمات برید و روی برداشت e-Skills کلیک کنید.</string>
+  <string name="eskills_v2_faqs_1_body_without_withdrawal_1">In e-Skills games, you will challenge other players to play against each other and the winner will receive a prize! This prize is granted in AppCoins Credits and can be used to make purchases in your favorite games.</string>
+  <string name="eskills_v2_faqs_2_title">AppCoins Wallet چیست؟</string>
+  <string name="eskills_v2_faqs_2_body_1">AppCoins Wallet یک اپلیکیشن اندروید است که برای خرید دیجیتالی در بازی‌ها و اپلیکیشن‌ها استفاده می‌شود.</string>
+  <string name="eskills_v2_faqs_2_body_2">با هر خرید در اپلیکیشن‌ها و بازی‌های AppCoins پاداشی دریافت می‌کنید! کافی است AppCoins Wallet را روی دستگاه خود نصب کنید و خرید خود را مطابق معمول در نسخه AppCoins بازی محبوب خود انجام دهید.</string>
+  <string name="eskills_v2_faqs_3_title">چگونه از AppCoins Wallet پول برداشت کنم؟</string>
+  <string name="eskills_v2_faqs_3_body_1">شما می‌توانید AppCoins Credits خود را که در بازی‌های e-Skills بدست آورده‌اید برداشت کنید. لطفا مراحل زیر را انجام دهید:\n1. به تنظیمات در گوشه راست بالای صفحه اصلی برید.\n2. روی برداشت e-Skills بزنید\n3. آدرس ایمیل حساب پی‌پال خود و مبلغ برداشتی را وارد کنید.\n4. روی برداشت بزنید و تمام شد!\n حداقل مقدار قابل برداشت 20 دلار است و حداقل 4 هفته طول خواهد کشید.</string>
+  <string name="eskills_v2_wallet_install_disclaimer_body">این اپلیکیشن پشتیبانی نصب خواهد شد پس از %s.</string>
+  <string name="eskills_v2_wallet_already_installed_disclaimer_body">شما پیشاپیش <b>AppCoins Wallet را نصب کرده‌اید!</b></string>
+  <string name="eskills_v2_wallet_installed_disclaimer_body">AppCoins Wallet با موفقیت نصب شد!</string>
+  <string name="eskills_v2_wallet_disclaimer_2_body">شما نیاز به نصب AppCoins Wallet دارید.</string>
 </resources>
