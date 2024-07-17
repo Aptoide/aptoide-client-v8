@@ -2,7 +2,6 @@ package cm.aptoide.pt.app;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.EskillsAppViewFragment;
@@ -44,6 +43,19 @@ public class AppNavigator {
     navigateWithPackageAndStoreNames(packageName, null, openType);
   }
 
+  public void navigateWithPackageName(String packageName, AppViewFragment.OpenType openType,
+      String oemid) {
+    Bundle bundle = new Bundle();
+    bundle.putString(AppViewFragment.BundleKeys.PACKAGE_NAME.name(), packageName);
+    bundle.putSerializable(AppViewFragment.BundleKeys.SHOULD_INSTALL.name(), openType);
+    if (openType == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP && oemid != null) {
+      bundle.putString(AppViewFragment.BundleKeys.OEM_ID.name(), oemid);
+    }
+    AppViewFragment fragment = new AppViewFragment();
+    fragment.setArguments(bundle);
+    fragmentNavigator.navigateTo(fragment, true);
+  }
+
   public void navigateWithPackageAndStoreNames(String packageName, String storeName,
       AppViewFragment.OpenType openType) {
     Bundle bundle = new Bundle();
@@ -76,8 +88,7 @@ public class AppNavigator {
     AppViewFragment fragment;
     if (isEskills) {
       fragment = new EskillsAppViewFragment();
-    }
-    else {
+    } else {
       fragment = new AppViewFragment();
     }
     fragment.setArguments(bundle);

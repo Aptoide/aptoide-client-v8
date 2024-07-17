@@ -136,10 +136,19 @@ public class DeepLinkManager {
             intent.getBooleanExtra(DeepLinkIntentReceiver.DeepLinksKeys.APK_FY, false),
             intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.OEM_ID_KEY));
       } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.PACKAGE_NAME_KEY)) {
-        appViewDeepLink(
-            intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.PACKAGE_NAME_KEY),
-            intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.STORENAME_KEY),
-            intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.OPEN_TYPE));
+        boolean isApkfy =
+            intent.getBooleanExtra(DeepLinkIntentReceiver.DeepLinksKeys.APK_FY, false);
+        if (isApkfy) {
+          appViewDeepLink(
+              intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.PACKAGE_NAME_KEY), true,
+              isApkfy, intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.OEM_ID_KEY)
+          );
+        } else {
+          appViewDeepLink(
+              intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.PACKAGE_NAME_KEY),
+              intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.STORENAME_KEY),
+              intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.OPEN_TYPE));
+        }
       } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.UNAME)) {
         appViewDeepLinkUname(intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.UNAME));
       }
@@ -200,7 +209,7 @@ public class DeepLinkManager {
     }
     List<ScreenTagHistory> screenHistory = navigationTracker.getHistoryList();
     if (screenHistory != null && screenHistory.size() > 0 && screenHistory.get(
-        screenHistory.size() - 1)
+            screenHistory.size() - 1)
         .getFragment()
         .equals("Notification")) {
       navigationTracker.registerScreen(ScreenTagHistory.Builder.build("Notification"));
@@ -289,6 +298,18 @@ public class DeepLinkManager {
     }
 
     appNavigator.navigateWithAppId(appId, packageName, openType, "", oemId, false);
+  }
+
+  private void appViewDeepLink(String packageName, boolean showPopup, boolean isApkfy,
+      String oemId) {
+    AppViewFragment.OpenType openType;
+    if (isApkfy) {
+      openType = AppViewFragment.OpenType.APK_FY_INSTALL_POPUP;
+    } else {
+      openType = showPopup ? AppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP
+          : AppViewFragment.OpenType.OPEN_ONLY;
+    }
+    appNavigator.navigateWithPackageName(packageName, openType, oemId);
   }
 
   private void appViewDeepLink(String packageName, String storeName, String openType) {
