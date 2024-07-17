@@ -50,10 +50,6 @@ public class DownloadsRepository {
     return downloadPersistence.getAll();
   }
 
-  public Observable<List<RoomDownload>> getWaitingToMoveFilesDownloads() {
-    return downloadPersistence.getUnmovedFilesDownloads();
-  }
-
   public Observable<List<RoomDownload>> getDownloadListByMd5(String md5) {
     return downloadPersistence.getAsList(md5);
   }

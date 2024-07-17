@@ -20,44 +20,32 @@ public class AptoideDownloadManager implements DownloadManager {
 
   private static final String TAG = "AptoideDownloadManager";
   private final DownloadAppMapper downloadAppMapper;
-  private final String cachePath;
   private DownloadsRepository downloadsRepository;
   private HashMap<String, AppDownloader> appDownloaderMap;
   private DownloadStatusMapper downloadStatusMapper;
   private AppDownloaderProvider appDownloaderProvider;
   private Subscription dispatchDownloadsSubscription;
-  private Subscription moveFilesSubscription;
   private DownloadAnalytics downloadAnalytics;
-  private FileUtils fileUtils;
-  private PathProvider pathProvider;
 
   public AptoideDownloadManager(DownloadsRepository downloadsRepository,
-      DownloadStatusMapper downloadStatusMapper, String cachePath,
+      DownloadStatusMapper downloadStatusMapper,
       DownloadAppMapper downloadAppMapper, AppDownloaderProvider appDownloaderProvider,
-      DownloadAnalytics downloadAnalytics, FileUtils fileUtils, PathProvider pathProvider) {
+      DownloadAnalytics downloadAnalytics) {
     this.downloadsRepository = downloadsRepository;
     this.downloadStatusMapper = downloadStatusMapper;
-    this.cachePath = cachePath;
     this.downloadAppMapper = downloadAppMapper;
     this.appDownloaderProvider = appDownloaderProvider;
     this.downloadAnalytics = downloadAnalytics;
-    this.fileUtils = fileUtils;
-    this.pathProvider = pathProvider;
     this.appDownloaderMap = new HashMap<>();
   }
 
   public synchronized void start() {
     dispatchDownloads();
-
-    moveFilesFromCompletedDownloads();
   }
 
   @Override public void stop() {
     if (!dispatchDownloadsSubscription.isUnsubscribed()) {
       dispatchDownloadsSubscription.unsubscribe();
-    }
-    if (!moveFilesSubscription.isUnsubscribed()) {
-      moveFilesSubscription.unsubscribe();
     }
   }
 
@@ -196,27 +184,6 @@ public class AptoideDownloadManager implements DownloadManager {
         }, Throwable::printStackTrace);
   }
 
-  private void moveFilesFromCompletedDownloads() {
-    moveFilesSubscription = downloadsRepository.getWaitingToMoveFilesDownloads()
-        .filter(downloads -> !downloads.isEmpty())
-        .flatMapIterable(download -> download)
-        .flatMapCompletable(
-            download -> moveCompletedDownloadFiles(download).onErrorResumeNext(throwable -> {
-              throwable.printStackTrace();
-              download.setDownloadError(RoomDownload.GENERIC_ERROR);
-              download.setOverallDownloadStatus(RoomDownload.ERROR);
-              return downloadsRepository.save(download);
-            }))
-        .retry()
-        .subscribe(__ -> {
-        }, Throwable::printStackTrace);
-  }
-
-  public Completable moveCompletedDownloadFiles(RoomDownload download) {
-    return Completable.fromAction(() -> download.setOverallDownloadStatus(RoomDownload.COMPLETED))
-        .andThen(downloadsRepository.save(download));
-  }
-
   private void removeDownloadFiles(RoomDownload download) {
     for (final RoomFileToDownload fileToDownload : download.getFilesToDownload()) {
       FileUtils.removeFile(fileToDownload.getFilePath());
@@ -266,12 +233,12 @@ public class AptoideDownloadManager implements DownloadManager {
           }
         })
         .filter(
-            download -> download.getOverallDownloadStatus() == RoomDownload.WAITING_TO_MOVE_FILES)
+            download -> download.getOverallDownloadStatus() == RoomDownload.COMPLETED)
         .doOnNext(download -> downloadAnalytics.onDownloadComplete(download.getMd5(),
             download.getPackageName(), download.getVersionCode()))
         .doOnNext(download -> removeAppDownloader(download.getMd5()))
         .takeUntil(
-            download -> download.getOverallDownloadStatus() == RoomDownload.WAITING_TO_MOVE_FILES);
+            download -> download.getOverallDownloadStatus() == RoomDownload.COMPLETED);
   }
 
   private void removeAppDownloader(String md5) {

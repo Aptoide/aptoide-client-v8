@@ -24,8 +24,6 @@ public interface DownloadPersistence {
 
   Observable<List<RoomDownload>> getAsList(String md5);
 
-  Observable<List<RoomDownload>> getUnmovedFilesDownloads();
-
   Completable delete(String packageName, int versionCode);
 
   Observable<List<RoomDownload>> getOutOfSpaceDownloads();

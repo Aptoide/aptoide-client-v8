@@ -58,7 +58,6 @@ public class DownloadsNotificationsPresenter implements Presenter {
           Logger.getInstance()
               .d(TAG, "Received the state " + installationStatus);
           if (installationStatus != Install.InstallationStatus.DOWNLOADING
-              && download.getOverallDownloadStatus() != RoomDownload.WAITING_TO_MOVE_FILES
               && download.getOverallDownloadStatus() != RoomDownload.VERIFYING_FILE_INTEGRITY) {
             return hasNextDownload().flatMap(
                 hasNext -> saveReadyToInstallNotification(download.getOverallDownloadStatus(),

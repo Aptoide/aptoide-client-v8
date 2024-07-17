@@ -37,7 +37,6 @@ import java.util.List;
   @Ignore public static final int RETRY = 11;
   @Ignore public static final int NOT_DOWNLOADED = 12;
   @Ignore public static final int IN_QUEUE = 13;
-  @Ignore public static final int WAITING_TO_MOVE_FILES = 14;
   @Ignore public static final int VERIFYING_FILE_INTEGRITY = 15;
 
   //errors
@@ -286,7 +285,7 @@ import java.util.List;
 
   @IntDef({
       INVALID_STATUS, COMPLETED, BLOCK_COMPLETE, CONNECTED, PENDING, PROGRESS, PAUSED, WARN,
-      STARTED, ERROR, FILE_MISSING, RETRY, NOT_DOWNLOADED, IN_QUEUE, WAITING_TO_MOVE_FILES,
+      STARTED, ERROR, FILE_MISSING, RETRY, NOT_DOWNLOADED, IN_QUEUE,
       VERIFYING_FILE_INTEGRITY
   })
 

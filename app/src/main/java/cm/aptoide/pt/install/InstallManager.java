@@ -420,7 +420,6 @@ public class InstallManager {
       switch (download.getOverallDownloadStatus()) {
         case RoomDownload.IN_QUEUE:
         case RoomDownload.VERIFYING_FILE_INTEGRITY:
-        case RoomDownload.WAITING_TO_MOVE_FILES:
           isIndeterminate = true;
           break;
         case RoomDownload.BLOCK_COMPLETE:
@@ -477,7 +476,6 @@ public class InstallManager {
         case RoomDownload.BLOCK_COMPLETE:
         case RoomDownload.PROGRESS:
         case RoomDownload.PENDING:
-        case RoomDownload.WAITING_TO_MOVE_FILES:
         case RoomDownload.VERIFYING_FILE_INTEGRITY:
           status = Install.InstallationStatus.DOWNLOADING;
           break;

@@ -39,7 +39,7 @@ public class RoomDownloadPersistence implements DownloadPersistence {
 
   public Observable<RoomDownload> getAsObservable(String md5) {
     return RxJavaInterop.toV1Observable(downloadDAO.getAsObservable(md5),
-        BackpressureStrategy.BUFFER)
+            BackpressureStrategy.BUFFER)
         .onErrorReturn(throwable -> null)
         .subscribeOn(Schedulers.io());
   }
@@ -56,14 +56,14 @@ public class RoomDownloadPersistence implements DownloadPersistence {
 
   public Observable<List<RoomDownload>> getRunningDownloads() {
     return RxJavaInterop.toV1Observable(downloadDAO.getRunningDownloads(),
-        BackpressureStrategy.BUFFER)
+            BackpressureStrategy.BUFFER)
         .onErrorReturn(throwable -> new ArrayList<>())
         .subscribeOn(Schedulers.io());
   }
 
   public Observable<List<RoomDownload>> getInQueueSortedDownloads() {
     return RxJavaInterop.toV1Observable(downloadDAO.getInQueueSortedDownloads(),
-        BackpressureStrategy.BUFFER)
+            BackpressureStrategy.BUFFER)
         .onErrorReturn(throwable -> new ArrayList<>())
         .subscribeOn(Schedulers.io());
   }
@@ -75,20 +75,13 @@ public class RoomDownloadPersistence implements DownloadPersistence {
         .subscribeOn(Schedulers.io());
   }
 
-  public Observable<List<RoomDownload>> getUnmovedFilesDownloads() {
-    return RxJavaInterop.toV1Observable(downloadDAO.getUnmovedFilesDownloads(),
-        BackpressureStrategy.BUFFER)
-        .onErrorReturn(throwable -> new ArrayList<>())
-        .subscribeOn(Schedulers.io());
-  }
-
   @Override public Completable delete(String packageName, int versionCode) {
     return Completable.fromAction(() -> downloadDAO.remove(packageName, versionCode));
   }
 
   @Override public Observable<List<RoomDownload>> getOutOfSpaceDownloads() {
     return RxJavaInterop.toV1Observable(downloadDAO.getOutOfSpaceDownloads(),
-        BackpressureStrategy.BUFFER)
+            BackpressureStrategy.BUFFER)
         .onErrorReturn(throwable -> new ArrayList<>())
         .subscribeOn(Schedulers.io());
   }
