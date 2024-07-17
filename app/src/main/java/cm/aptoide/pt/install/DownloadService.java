@@ -19,10 +19,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
+import cm.aptoide.pt.AppInBackgroundTracker;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BaseService;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
-import cm.aptoide.pt.AppInBackgroundTracker;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
@@ -126,7 +126,7 @@ public class DownloadService extends BaseService implements DownloadsNotificatio
     }
     intent.setAction(ACTION_STOP_INSTALL);
     return PendingIntent.getService(this, PAUSE_DOWNLOAD_REQUEST_CODE, intent,
-        PendingIntent.FLAG_MUTABLE);
+        PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
   }
 
   private PendingIntent getOpenDownloadManagerPendingIntent(int requestCode) {
@@ -145,7 +145,7 @@ public class DownloadService extends BaseService implements DownloadsNotificatio
     NotificationCompat.Builder builder = null;
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
       builder = new NotificationCompat.Builder(this, CHANNEL_ID);
-    }else{
+    } else {
       builder = new NotificationCompat.Builder(this);
     }
 
@@ -162,6 +162,7 @@ public class DownloadService extends BaseService implements DownloadsNotificatio
         .addAction(openDownloadManager);
     return builder.build();
   }
+
   @RequiresApi(Build.VERSION_CODES.O)
   private NotificationChannel getChannel() {
     String name = "Download notifications";
@@ -173,10 +174,11 @@ public class DownloadService extends BaseService implements DownloadsNotificatio
   }
 
   @RequiresApi(Build.VERSION_CODES.O)
-  private void createNotificationChannel(){
+  private void createNotificationChannel() {
     NotificationChannel channel = new NotificationChannel("download_notification_channel",
-            "Download notifications", NotificationManager.IMPORTANCE_NONE);
-    NotificationManager service = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        "Download notifications", NotificationManager.IMPORTANCE_NONE);
+    NotificationManager service =
+        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     service.createNotificationChannel(channel);
   }
 
@@ -218,7 +220,7 @@ public class DownloadService extends BaseService implements DownloadsNotificatio
     intent.putExtras(bundle);
 
     return PendingIntent.getActivity(this, OPEN_APPVIEW_REQUEST_CODE, intent,
-        PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
   }
 
   @NonNull private Intent createDeeplinkingIntent() {
