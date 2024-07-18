@@ -42,7 +42,7 @@ class ApkFyParser(
   }
 
   private fun updateApkfy(apkfyModel: ApkfyModel) {
-    if (apkfyModel.packageName != null && !apkfyModel.packageName.contains("cm.aptoide.pt")) {
+    if (!apkfyModel.packageName.isNullOrEmpty() && !apkfyModel.packageName.contains("cm.aptoide.pt")) {
       if (apkfyModel.appId != null) {
         intent.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true)
         intent.putExtra(DeepLinksKeys.APP_ID_KEY, apkfyModel.appId)
@@ -52,7 +52,7 @@ class ApkFyParser(
         intent.putExtra(DeepLinksKeys.APK_FY, true)
         SecurePreferences.setApkFyRun(securePreferences)
         context.startActivity(intent)
-      } else if (apkfyModel.packageName != null) {
+      } else if (!apkfyModel.packageName.isNullOrEmpty()) {
         intent.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true)
         intent.putExtra(DeepLinksKeys.PACKAGE_NAME_KEY, apkfyModel.packageName)
         if (!apkfyModel.oemId.isNullOrEmpty()) {
