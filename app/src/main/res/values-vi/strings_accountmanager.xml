@@ -18,7 +18,7 @@
   <string name="accept_terms_loggedin_readPP">ĐỌC CHÍNH SÁCH RIÊNG TƯ</string>
   <string name="accept_terms_loggedin_message">Bằng việc nhấn chấp nhận, bạn đồng ý với %1$s và %2$s của Aptoide</string>
   <string name="accept_terms_loggedin_button_accept">CHẤP NHẬN</string>
-  <string name="accept_terms_loggedin_button_close">CLOSE APTOIDE</string>
+  <string name="accept_terms_loggedin_button_close">ĐÓNG APTOIDE</string>
   <string name="user_upload_photo_failed">Hiện tại không thể tạo hồ sơ.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">Đang xử lý, có thể mất một lúc…</string>
