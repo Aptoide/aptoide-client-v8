@@ -756,12 +756,12 @@
   <string name="faq_settings_body">找到全部您所需的答案！</string>
   <!--New e-Skills-->
   <string name="eskills_v2_home_card_title">真钱奖励！</string>
-  <string name="eskills_v2_home_card_without_withdrawal_title">Get Rewarded!</string>
+  <string name="eskills_v2_home_card_without_withdrawal_title">获得奖励！</string>
   <string name="eskills_v2_home_card_body">在 e-Skills 游戏中，当您击败其他玩家时，将获得奖励。即刻展示您的能耐吧！</string>
   <string name="eskills_v2_earnmore_header">赢得更多</string>
   <string name="eskills_v2_page_header">e-Skills游戏</string>
   <string name="eskills_v2_page_body_">你的游戏水平能助您赢得真钱奖励吗？</string>
-  <string name="eskills_v2_page_without_withdrawal_body_">Are your gaming skills worth a reward?</string>
+  <string name="eskills_v2_page_without_withdrawal_body_">您的游戏水平能助您赢得奖励吗？</string>
   <string name="eskills_v2_card_1_title">%1$s%2$s</string>
   <string name="eskills_v2_card_1_body">每位用户的平均每日奖金数额。</string>
   <string name="eskills_v2_card_2_title">%1$s%2$s</string>
@@ -771,15 +771,15 @@
   <string name="eskills_v2_card_4_title">24小时</string>
   <string name="eskills_v2_card_4_body">我们提供全天候(24/7)支持服务。</string>
   <string name="eskills_v2_card_5_title">真钱奖励</string>
-  <string name="eskills_v2_card_5_without_withdrawal_title">Get Rewarded!</string>
+  <string name="eskills_v2_card_5_without_withdrawal_title">获得奖励！</string>
   <string name="eskills_v2_card_5_body">畅玩您最喜爱的游戏，即刻开始赚取真钱奖励！</string>
-  <string name="eskills_v2_card_5_without_withdrawal_body">Play your favorite games and get rewarded now!</string>
+  <string name="eskills_v2_card_5_without_withdrawal_body">玩您最喜爱的游戏，即刻获得奖励！</string>
   <string name="eskills_v2_card_6_title">公平对战</string>
   <string name="eskills_v2_card_6_body">与您游戏水平相近的玩家进行对战，确保游戏的公平性。</string>
   <string name="eskills_v2_card_7_title">成为全球冠军</string>
   <string name="eskills_v2_card_7_body">登顶每日和每周排行榜，即可获得额外奖励。</string>
   <string name="eskills_v2_card_8_title">一键提款</string>
-  <string name="eskills_v2_card_8_without_withdrawal_title">Use Your Reward</string>
+  <string name="eskills_v2_card_8_without_withdrawal_title">使用您的奖励</string>
   <string name="eskills_v2_card_8_body">您可便捷地提取奖金（通过 AppCoins 钱包使用的真钱）。</string>
   <string name="eskills_v2_card_8_without_withdrawal_body">You can use your reward to make purchases in your favorite games.</string>
   <string name="eskills_v2_card_9_title">立即开始</string>
