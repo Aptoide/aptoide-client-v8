@@ -781,7 +781,7 @@
   <string name="eskills_v2_card_8_title">一键提款</string>
   <string name="eskills_v2_card_8_without_withdrawal_title">使用您的奖励</string>
   <string name="eskills_v2_card_8_body">您可便捷地提取奖金（通过 AppCoins 钱包使用的真钱）。</string>
-  <string name="eskills_v2_card_8_without_withdrawal_body">You can use your reward to make purchases in your favorite games.</string>
+  <string name="eskills_v2_card_8_without_withdrawal_body">您可以用获得的奖励在您最爱的游戏中购买所需物品。</string>
   <string name="eskills_v2_card_9_title">立即开始</string>
   <string name="eskills_v2_card_9_body">测试您的游戏水平，成为顶级玩家，以获取丰厚奖励！</string>
   <string name="eskills_v2_how_it_works_title">运作流程：</string>
@@ -790,7 +790,7 @@
   <string name="eskills_v2_how_2">勤加练习或获取门票以开启对战</string>
   <string name="eskills_v2_how_3">战胜其他玩家</string>
   <string name="eskills_v2_how_4">提取您赢得的奖金！</string>
-  <string name="eskills_v2_how_without_withdrawal_4">Use your reward to make purchases!</string>
+  <string name="eskills_v2_how_without_withdrawal_4">使用您的奖励去购物！</string>
   <string name="eskills_v2_faqs_title">常见问题(FAQ)</string>
   <string name="eskills_v2_faqs_1_title">什么是e-Skills游戏？</string>
   <string name="eskills_v2_faqs_1_body_1">在 e-Skills 游戏中，您将挑战其他玩家（进行对战），获胜者将获得丰厚奖励！该奖励会以 AppCoins Credits（积金）的形式发放。您可以通过进入“设置”并点击“e-Skills提款”来将相应金额提取到您的 PayPal 账户。</string>
