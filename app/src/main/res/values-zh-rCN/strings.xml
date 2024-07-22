@@ -653,7 +653,7 @@
   <string name="appc_info_view_eskills_title">使用e-Skills赚钱！</string>
   <string name="appc_info_view_eskills_without_withdrawal_title">使用 e-Skill 获得奖励！</string>
   <string name="appc_info_view_eskills_body">赏玩e-Skills游戏，您就可以在击败其他玩家时赢得奖励。只需下载您认为自己最擅长的游戏，然后做出贡献来开始战斗并展示您的技能，证明您值得获得真钱奖励。准备好迎接挑战了吗？%s查找所有可用的游戏。</string>
-  <string name="appc_info_view_eskills_without_withdrawal_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in AppCoins Credits. Ready for the challenge? Find all the available games %s.</string>
+  <string name="appc_info_view_eskills_without_withdrawal_body">赏玩e-Skills游戏，您就可以在击败其他玩家时赢得奖励。只需下载您认为自己最擅长的游戏，然后即可贡献自己的一份力，开始战斗并展示您的技能，证明您值得获得 AppCoins 积金 。准备好迎接挑战了吗？%s查找所有可玩的游戏。</string>
   <string name="appc_info_view_eskills_body_button">在此</string>
   <string name="appc_info_view_devs_title">您是开发者吗？</string>
   <string name="appc_info_view_devs_body">查看推广应用的新方法。</string>
@@ -794,7 +794,7 @@
   <string name="eskills_v2_faqs_title">常见问题(FAQ)</string>
   <string name="eskills_v2_faqs_1_title">什么是e-Skills游戏？</string>
   <string name="eskills_v2_faqs_1_body_1">在 e-Skills 游戏中，您将挑战其他玩家（进行对战），获胜者将获得丰厚奖励！该奖励会以 AppCoins Credits（积金）的形式发放。您可以通过进入“设置”并点击“e-Skills提款”来将相应金额提取到您的 PayPal 账户。</string>
-  <string name="eskills_v2_faqs_1_body_without_withdrawal_1">In e-Skills games, you will challenge other players to play against each other and the winner will receive a prize! This prize is granted in AppCoins Credits and can be used to make purchases in your favorite games.</string>
+  <string name="eskills_v2_faqs_1_body_without_withdrawal_1">在 e-Skills 游戏中，您将挑战其他玩家（进行对战），获胜者将获得丰厚奖励！该奖励会以 AppCoins Credits（积金）的形式发放。您可以用它在您最喜爱的游戏中购买所需物品。</string>
   <string name="eskills_v2_faqs_2_title">什么是 AppCoins 钱包？</string>
   <string name="eskills_v2_faqs_2_body_1">AppCoins 钱包是一款安卓应用 (App)，可用于购买游戏和应用内的虚拟物品。</string>
   <string name="eskills_v2_faqs_2_body_2">当您每次在 AppCoins 应用和游戏内进行消费后，您都会获得奖励！您只需在自己的设备上安装 AppCoins 钱包，然后像往常一样在您喜爱的（兼容 AppCoins 的版本）游戏内完成购买即可。</string>
