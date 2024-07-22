@@ -650,9 +650,9 @@
   <string name="appc_info_view_title_5_variable">Akár %s%% bónusz jár minden %s szimbólummal ellátott appon belüli vásárlásért. Használd ki és légy te a legjobb játékos!</string>
   <string name="appc_info_view_title_5_variable_no_data">Bónusz jár minden %s szimbólummal ellátott appon belüli vásárlásért. Használd ki és légy te a legjobb játékos!</string>
   <string name="appc_info_view_eskills_title">Keress pénzt az e-Skills segítségével!</string>
-  <string name="appc_info_view_eskills_without_withdrawal_title">Get Rewarded with e-Skills!</string>
+  <string name="appc_info_view_eskills_without_withdrawal_title">Szerezz jutalmat az e-Skills segítségével!</string>
   <string name="appc_info_view_eskills_body">Az e-Skill játékokban pénz a jutalmad, ha megvered a többi játékost. Csak töltsd le a játékot, amiben a legjobb vagy, tedd fel a hozzájárulásod a csata indításához és mutasd meg, hogy te vagy a legjobb a valódi pénznyeremények megszerzéséhez. Készen állsz a kihívásra? Az elérhető játékokat %s találod.</string>
-  <string name="appc_info_view_eskills_without_withdrawal_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in AppCoins Credits. Ready for the challenge? Find all the available games %s.</string>
+  <string name="appc_info_view_eskills_without_withdrawal_body">Az e-Skill játékokban jutalmat kapsz, ha megvered a többi játékost. Csak töltsd le a játékot, amiben a legjobb vagy, tedd fel a hozzájárulásod a csata indításához és mutasd meg, hogy kiérdemelted az AppCoins krediteket. Készen állsz a kihívásra? Az elérhető játékokat %s találod.</string>
   <string name="appc_info_view_eskills_body_button">itt</string>
   <string name="appc_info_view_devs_title">Fejlesztő vagy?</string>
   <string name="appc_info_view_devs_body">Fedezd fel az alkalmazásforgalmazás új módját!</string>
@@ -755,7 +755,7 @@
   <string name="faq_settings_body">Találd meg az összes szükséges választ!</string>
   <!--New e-Skills-->
   <string name="eskills_v2_home_card_title">Valódi pénznyeremények!</string>
-  <string name="eskills_v2_home_card_without_withdrawal_title">Get Rewarded!</string>
+  <string name="eskills_v2_home_card_without_withdrawal_title">Szerezz jutalmat!</string>
   <string name="eskills_v2_home_card_body">Az e-Skills játékokban jutalmat kapsz, ha megvered a többi játékost. Mutasd meg, mit tudsz!</string>
   <string name="eskills_v2_earnmore_header">Szerezz többet</string>
   <string name="eskills_v2_page_header">e-Skills játékok</string>
