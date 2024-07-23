@@ -101,8 +101,11 @@ public class DefaultInstaller implements Installer {
   }
 
   @Override public synchronized void dispatchInstallations() {
-    // Responsible starting the installation process
+    // Responsible starting the installation process and move the files
     dispatchInstallationsSubscription.add(installCandidateSubject
+        .flatMap(
+            candidate -> moveInstallationFiles(candidate.getInstallation()).andThen(
+                Observable.just(candidate)))
         .flatMap(candidate -> Observable.just(isInstalled(candidate.getInstallation()
                 .getPackageName(), candidate.getInstallation()
                 .getVersionCode()))
@@ -129,17 +132,6 @@ public class DefaultInstaller implements Installer {
         .retry()
         .subscribe(__ -> {
         }, Throwable::printStackTrace));
-
-    //Responsible for moving the obbs when an app is being installed
-    dispatchInstallationsSubscription.add(
-        installCandidateSubject.map(InstallationCandidate::getInstallation)
-            .flatMap(
-                installation -> aptoideInstalledAppsRepository.get(installation.getPackageName(),
-                        installation.getVersionCode())
-                    .filter(installed -> installed.getStatus() == RoomInstalled.STATUS_COMPLETED)
-                    .flatMapCompletable(installation1 -> moveInstallationFiles(installation)))
-            .subscribe(__ -> {
-            }, Throwable::printStackTrace));
 
     // Responsible for removing installation files when an app is installed
     dispatchInstallationsSubscription.add(
@@ -297,21 +289,24 @@ public class DefaultInstaller implements Installer {
 
   private Completable moveInstallationFiles(Installation installation) {
     return Completable.fromAction(() -> {
-          boolean filesMoved = false;
-          String destinationPath = OBB_FOLDER + installation.getPackageName() + "/";
-          fileUtils.deleteDir(new File(destinationPath));
-          for (RoomFileToDownload file : installation.getFiles()) {
-            if (file.getFileType() == RoomFileToDownload.OBB
-                && FileUtils.fileExists(file.getFilePath())
-                && !file.getPath()
-                .equals(destinationPath)) {
-              fileUtils.copyFile(file.getPath(), destinationPath, file.getFileName());
-              file.setPath(destinationPath);
-              filesMoved = true;
+              boolean filesMoved = false;
+              String destinationPath = OBB_FOLDER + installation.getPackageName() + "/";
+              fileUtils.deleteDir(new File(destinationPath));
+              for (RoomFileToDownload file : installation.getFiles()) {
+                if (file.getFileType() == RoomFileToDownload.OBB
+                    && FileUtils.fileExists(file.getFilePath())
+                    && !file.getPath()
+                    .equals(destinationPath)) {
+                  fileUtils.copyFile(file.getPath(), destinationPath, file.getFileName());
+                  file.setPath(destinationPath);
+                  filesMoved = true;
+                }
+              }
             }
-          }
-        }
-    ).andThen(installation.saveFileChanges()).onErrorComplete();
+        )
+        .andThen(installation.saveFileChanges())
+        .doOnError(throwable -> throwable.printStackTrace())
+        .onErrorComplete();
   }
 
   private void removeInstallationFiles(Installation installation) {
