@@ -650,9 +650,9 @@
   <string name="appc_info_view_title_5_variable">Θα λαμβάνετε έως %s%% Bonus για κάθε αγορά που πραγματοποιείτε εντός των εφαρμογών με το σύμβολο %s. Εκμεταλλευτείτε το και γίνετε ο απόλυτος παίκτης!</string>
   <string name="appc_info_view_title_5_variable_no_data">Θα λαμβάνετε ένα bonus σε κάθε αγορά που πραγματοποιείτε εντός των εφαρμογών με το σύμβολο %s. Εκμεταλλευτείτε το και γίνετε ο απόλυτος παίκτης!</string>
   <string name="appc_info_view_eskills_title">Κερδίστε Χρήματα με τα e-Skills!</string>
-  <string name="appc_info_view_eskills_without_withdrawal_title">Get Rewarded with e-Skills!</string>
+  <string name="appc_info_view_eskills_without_withdrawal_title">Ανταμειφθείτε με e-Skills!</string>
   <string name="appc_info_view_eskills_body">Με τα παιχνίδια e-Skills, θα κερδίζετε ένα βραβείο όταν νικάτε άλλους παίχτες. Απλά κατεβάστε το παιχνίδι που νομίζετε ότι είστε καλύτερος/η, κάντε τη συνεισφορά σας για να ξεκινήσετε τη μάχη και επιδείξτε τις ικανότητές σας για να αποδείξετε ότι αξίζετε το βραβείο σε αληθινά χρήματα. Είστε έτοιμος/η για την πρόκληση; Βρείτε όλα τα διαθέσιμα παιχνίδια %s.</string>
-  <string name="appc_info_view_eskills_without_withdrawal_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in AppCoins Credits. Ready for the challenge? Find all the available games %s.</string>
+  <string name="appc_info_view_eskills_without_withdrawal_body">Με τα παιχνίδια e-Skills, θα κερδίζετε ένα βραβείο όταν νικάτε άλλους παίχτες. Απλά κατεβάστε το παιχνίδι που νομίζετε ότι είστε καλύτερος/η, κάντε τη συνεισφορά σας για να ξεκινήσετε τη μάχη και επιδείξτε τις ικανότητές σας για να αποδείξετε ότι αξίζετε το βραβείο σε AppCoins Credits. Είστε έτοιμος/η για την πρόκληση; Βρείτε όλα τα διαθέσιμα παιχνίδια %s.</string>
   <string name="appc_info_view_eskills_body_button">εδώ</string>
   <string name="appc_info_view_devs_title">Είστε προγραμματιστής;</string>
   <string name="appc_info_view_devs_body">Δείτε τον νέο τρόπο διανομής εφαρμογών.</string>
@@ -755,7 +755,7 @@
   <string name="faq_settings_body">Βρείτε όλες τις απαντήσεις που χρειάζεστε!</string>
   <!--New e-Skills-->
   <string name="eskills_v2_home_card_title">Βραβεία με πραγματικά χρήματα!</string>
-  <string name="eskills_v2_home_card_without_withdrawal_title">Get Rewarded!</string>
+  <string name="eskills_v2_home_card_without_withdrawal_title">Ανταμειφθείτε!</string>
   <string name="eskills_v2_home_card_body">Στα παιχνίδια e-Skills ανταμείβεστε όταν νικάτε άλλους παίκτες. Δείξτε τις ικανότητές σας τώρα!</string>
   <string name="eskills_v2_earnmore_header">Κερδίστε περισσότερα</string>
   <string name="eskills_v2_page_header">Παιχνίδια e-Skills</string>
