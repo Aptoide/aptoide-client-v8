@@ -155,7 +155,7 @@
   <string name="iap_card_expiry" comment="expiry_date">ਆਖਰੀ ਤਾਰੀਖ</string>
   <string name="iap_card_cvc" comment="cvc_cvv">ਸੀਵੀਸੀ/ਸੀਵੀਵੀ</string>
   <string name="iab_change_card_button" comment="change_card">Change card</string>
-  <string name="done_title" comment="done">Done!</string>
+  <string name="done_title" comment="done">ਹੋ ਗਿਆ!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">Making Purchase...</string>
   <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">ਕੀ ਤੁਹਾਨੂੰ ਯਕੀਨ ਹੈ ਕਿ ਤੁਹਾਡੇ ਕਾਰਡ ਦਾ ਵੇਰਵਾ ਸਹੀ ਹੈ? ਮੁੜ ਕੋਸ਼ਿਸ ਕਰੋ ਜੀ!</string>
   <string name="log_out_button" comment="log_out">Log Out</string>
@@ -183,6 +183,6 @@
   <string name="purchase_error_invalid_credit_card_body">Please make sure all digits are correct.</string>
   <string name="purchase_error_card_security_validation_title">There was an error on the 2nd level validation of this transaction.</string>
   <string name="purchase_error_in_progress_title">Your request was already processed or is in progress.</string>
-  <string name="purchase_card_error_CVV_title">Wrong CVV/CVC</string>
+  <string name="purchase_card_error_CVV_title">ਗਲਤ ਸੀਵੀਵੀ/ਸੀਵੀਸੀ</string>
   <string name="purchase_error_expired_card_title">It seems your card is expired.</string>
 </resources>
