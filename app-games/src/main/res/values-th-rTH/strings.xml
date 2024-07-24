@@ -129,7 +129,7 @@
   <string name="appview_info_website_title" comment="website">เว็ปไซต์</string>
   <string name="appview_info_email_title" comment="email">อีเมล</string>
   <string name="appview_info_permissions_title" comment="permissions">สิทธิ์</string>
-  <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% of %2$s</string>
+  <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%%จาก%2$s</string>
   <string name="error_short_title" comment="oops_an_error_occurred">Oops, an error occurred</string>
   <string name="purchase_done_existing_bonus_body">You now have %s in bonus. Download the AppCoins Wallet to use them in your next purchase.</string>
   <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">You\'ll get a bonus in all games identified with %s.</string>
@@ -140,10 +140,10 @@
   <string name="powered_by_title" comment="powered_by">Powered by</string>
   <string name="contact_support_title" comment="contact_support">ติดต่อฝ่ายสนับสนุน</string>
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Please give us all the details:\n\u2022 When did the problem start\n\u2022 On which game are you making a purchase\n\nOnce you tap on Send, your mail app will open. Feel free to attach a screenshot or video about the issue!</string>
-  <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Do you want to install this game?</string>
+  <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">คุณต้องการติดตั้งเกมส์นี้ไหม</string>
   <string name="app_size_mb_title" comment="s_mb">%s MB</string>
   <string name="uninstalled_title" comment="uninstalled">ถอดการติดตั้งแล้ว</string>
-  <string name="error_no_internet_body" comment="please_check_your_internet_connection">Please check your Internet connection.</string>
+  <string name="error_no_internet_body" comment="please_check_your_internet_connection">โปรดตรวจสอบการเชื่อมต่ออินเตอร์เน็ต</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">ชำระด้วย AppCoins Wallet</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">It\'ll be installed automatically and you\'ll get a bonus in all purchases!</string>
   <string name="buy_button" comment="buy">ซื้อ</string>
@@ -153,7 +153,7 @@
   <string name="iap_card_expiry" comment="expiry_date">วันหมดอายุ</string>
   <string name="iap_card_cvc" comment="cvc_cvv">CVC/CVV</string>
   <string name="iab_change_card_button" comment="change_card">เปลี่ยนบัตร</string>
-  <string name="done_title" comment="done">Done!</string>
+  <string name="done_title" comment="done">สำเร็จ!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">Making Purchase...</string>
   <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">คุณแน่ใจหรือว่ารายละเอียดบัตรของคุณถูกต้อง? กรุณาลองอีกครั้ง!</string>
   <string name="log_out_button" comment="log_out">ออกจากระบบ</string>
