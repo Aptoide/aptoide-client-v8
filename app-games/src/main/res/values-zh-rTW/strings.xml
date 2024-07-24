@@ -8,7 +8,7 @@
   <!-- Common -->
   <string name="send_button">傳送</string>
   <string name="try_again">Please try again.</string>
-  <string name="please_wait">Please wait.</string>
+  <string name="please_wait">請等待.</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">設定</string>
   <string name="overflow_menu_terms_conditions">Terms &amp; Conditions</string>
@@ -153,7 +153,7 @@
   <string name="iap_card_expiry" comment="expiry_date">到期日</string>
   <string name="iap_card_cvc" comment="cvc_cvv">CVC/CVV</string>
   <string name="iab_change_card_button" comment="change_card">Change card</string>
-  <string name="done_title" comment="done">Done!</string>
+  <string name="done_title" comment="done">完成！</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">Making Purchase...</string>
   <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">您的卡片資訊可能有誤，請再試一次！</string>
   <string name="log_out_button" comment="log_out">登出</string>
@@ -181,6 +181,6 @@
   <string name="purchase_error_invalid_credit_card_body">Please make sure all digits are correct.</string>
   <string name="purchase_error_card_security_validation_title">There was an error on the 2nd level validation of this transaction.</string>
   <string name="purchase_error_in_progress_title">Your request was already processed or is in progress.</string>
-  <string name="purchase_card_error_CVV_title">Wrong CVV/CVC</string>
+  <string name="purchase_card_error_CVV_title">錯誤的CVV/CVC</string>
   <string name="purchase_error_expired_card_title">It seems your card is expired.</string>
 </resources>
