@@ -5,7 +5,9 @@
 
 package cm.aptoide.pt.view;
 
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -19,6 +21,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.notification.NotificationInfo;
 import cm.aptoide.pt.presenter.MainView;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.themes.ThemeAnalytics;
@@ -33,6 +36,12 @@ import com.jakewharton.rxrelay.PublishRelay;
 import javax.inject.Inject;
 import rx.Observable;
 import rx.subjects.PublishSubject;
+
+import static cm.aptoide.pt.notification.SystemNotificationShower.NOTIFICATION_DISMISSED_ACTION;
+import static cm.aptoide.pt.notification.SystemNotificationShower.NOTIFICATION_NOTIFICATION_ID;
+import static cm.aptoide.pt.notification.SystemNotificationShower.NOTIFICATION_PRESSED_ACTION;
+import static cm.aptoide.pt.notification.SystemNotificationShower.NOTIFICATION_TARGET_URL;
+import static cm.aptoide.pt.notification.SystemNotificationShower.NOTIFICATION_TRACK_URL;
 
 public class MainActivity extends BottomNavigationActivity
     implements MainView, DeepLinkManager.DeepLinkView {
@@ -51,6 +60,7 @@ public class MainActivity extends BottomNavigationActivity
   private ProgressDialog autoUpdateDialog;
   private ProgressDialog progressDialog;
   private PublishSubject<String> authenticationSubject;
+  private PublishRelay<NotificationInfo> notificationPublishRelay;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -60,10 +70,25 @@ public class MainActivity extends BottomNavigationActivity
     snackBarLayout = findViewById(R.id.snackbar_layout);
     installErrorsDismissEvent = PublishRelay.create();
     authenticationSubject = PublishSubject.create();
+    notificationPublishRelay =
+        ((AptoideApplication) getApplicationContext()).getNotificationsPublishRelay();
     themeAnalytics.setDarkThemeUserProperty(themeManager.getDarkThemeMode());
     progressDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
         themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId);
     setupUpdatesNotification();
+
+    Intent intent = getIntent();
+    if (isNotificationDeeplink(intent)) {
+      Bundle intentExtras = intent.getExtras();
+      NotificationInfo notificationInfo = new NotificationInfo(intent.getAction(),
+          intentExtras.getInt(NOTIFICATION_NOTIFICATION_ID),
+          intentExtras.getString(NOTIFICATION_TRACK_URL),
+          intentExtras.getString(NOTIFICATION_TARGET_URL));
+      NotificationManager manager =
+          (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+      manager.cancel(intent.getIntExtra(NOTIFICATION_NOTIFICATION_ID, -1));
+      notificationPublishRelay.call(notificationInfo);
+    }
 
     attachPresenter(presenter);
   }
@@ -89,9 +114,25 @@ public class MainActivity extends BottomNavigationActivity
     if (isAuthenticationDeepLink(intent)) {
       String token = intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.AUTH_TOKEN);
       authenticationSubject.onNext(token);
+    } else if (isNotificationDeeplink(intent)) {
+      Bundle intentExtras = intent.getExtras();
+      NotificationInfo notificationInfo = new NotificationInfo(intent.getAction(),
+          intentExtras.getInt(NOTIFICATION_NOTIFICATION_ID),
+          intentExtras.getString(NOTIFICATION_TRACK_URL),
+          intentExtras.getString(NOTIFICATION_TARGET_URL));
+      NotificationManager manager =
+          (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+      manager.cancel(intent.getIntExtra(NOTIFICATION_NOTIFICATION_ID, -1));
+      notificationPublishRelay.call(notificationInfo);
     } else {
       deepLinkManager.showDeepLink(intent);
     }
+  }
+
+  private Boolean isNotificationDeeplink(Intent intent) {
+    return intent.getAction() != null && (intent.getAction()
+        .equals(NOTIFICATION_PRESSED_ACTION)
+        || intent.getAction().equals(NOTIFICATION_DISMISSED_ACTION));
   }
 
   private Boolean isAuthenticationDeepLink(Intent intent) {

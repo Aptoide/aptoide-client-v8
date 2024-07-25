@@ -25,6 +25,7 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.themes.NewFeatureManager;
 import cm.aptoide.pt.themes.ThemeAnalytics;
+import cm.aptoide.pt.view.MainActivity;
 import com.bumptech.glide.Glide;
 import java.util.Arrays;
 import rx.Completable;
@@ -42,6 +43,11 @@ public class SystemNotificationShower implements Presenter {
   public static final String LOCAL_NOTIFICATION_CHANNEL_ID = "LocalNotification";
   public static final String ANDROID_NOTIFICATION_CHANNEL_ID = "AndroidNotification";
   public static final String NEW_FEATURE_NOTIFICATION_CHANNEL_ID = "NewFeatureNotification";
+  public static final String NOTIFICATION_PRESSED_ACTION = "NOTIFICATION_PRESSED_ACTION";
+  public static final String NOTIFICATION_TRACK_URL = "PUSH_NOTIFICATION_TRACK_URL";
+  public static final String NOTIFICATION_TARGET_URL = "PUSH_NOTIFICATION_TARGET_URL";
+  public static final String NOTIFICATION_DISMISSED_ACTION = "PUSH_NOTIFICATION_DISMISSED";
+  public static final String NOTIFICATION_NOTIFICATION_ID = "PUSH_NOTIFICATION_NOTIFICATION_ID";
   private final NavigationTracker navigationTracker;
   private Context context;
   private NotificationManager notificationManager;
@@ -153,20 +159,21 @@ public class SystemNotificationShower implements Presenter {
   private Single<PendingIntent> getPressIntentAction(String trackUrl, String url,
       int notificationId, Context context) {
     return Single.fromCallable(() -> {
-          Intent resultIntent = new Intent(context, NotificationReceiver.class);
-          resultIntent.setAction(NotificationReceiver.NOTIFICATION_PRESSED_ACTION);
+          Intent resultIntent = new Intent(context, MainActivity.class);
+          resultIntent.setAction(NOTIFICATION_PRESSED_ACTION);
+          resultIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP & Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-          resultIntent.putExtra(NotificationReceiver.NOTIFICATION_NOTIFICATION_ID, notificationId);
+          resultIntent.putExtra(NOTIFICATION_NOTIFICATION_ID, notificationId);
 
           if (!TextUtils.isEmpty(trackUrl)) {
-            resultIntent.putExtra(NotificationReceiver.NOTIFICATION_TRACK_URL, trackUrl);
+            resultIntent.putExtra(NOTIFICATION_TRACK_URL, trackUrl);
           }
           if (!TextUtils.isEmpty(url)) {
-            resultIntent.putExtra(NotificationReceiver.NOTIFICATION_TARGET_URL, url);
+            resultIntent.putExtra(NOTIFICATION_TARGET_URL, url);
           }
 
-          return PendingIntent.getBroadcast(context, notificationId, resultIntent,
-              PendingIntent.FLAG_IMMUTABLE);
+          return PendingIntent.getActivity(context, notificationId, resultIntent,
+              PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
         })
         .subscribeOn(Schedulers.computation());
   }
@@ -268,12 +275,12 @@ public class SystemNotificationShower implements Presenter {
   }
 
   public PendingIntent getOnDismissAction(int notificationId) {
-    Intent resultIntent = new Intent(context, NotificationReceiver.class);
-    resultIntent.setAction(NotificationReceiver.NOTIFICATION_DISMISSED_ACTION);
-    resultIntent.putExtra(NotificationReceiver.NOTIFICATION_NOTIFICATION_ID, notificationId);
+    Intent resultIntent = new Intent(context, MainActivity.class);
+    resultIntent.setAction(NOTIFICATION_DISMISSED_ACTION);
+    resultIntent.putExtra(NOTIFICATION_NOTIFICATION_ID, notificationId);
 
-    return PendingIntent.getBroadcast(context, notificationId, resultIntent,
-        PendingIntent.FLAG_IMMUTABLE);
+    return PendingIntent.getActivity(context, notificationId, resultIntent,
+        PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
   }
 
   public void showNotification(Context context,

@@ -207,15 +207,6 @@
 
     <service android:name=".notification.PullingContentService" />
 
-    <receiver android:name=".notification.NotificationReceiver"
-        android:exported="false">
-      <intent-filter>
-        <action android:name="android.intent.action.BOOT_COMPLETED" />
-        <action android:name="android.intent.action.QUICKBOOT_POWERON" />
-      </intent-filter>
-    </receiver>
-
-
     <receiver android:name=".link.CustomTabNativeReceiver" />
 
     <receiver android:name=".install.CheckRootOnBoot"

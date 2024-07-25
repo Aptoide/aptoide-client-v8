@@ -16,6 +16,7 @@ import cm.aptoide.pt.DeepLinkIntentReceiver
 import cm.aptoide.pt.R
 import cm.aptoide.pt.install.InstallManager
 import cm.aptoide.pt.networking.image.ImageLoader
+import cm.aptoide.pt.view.MainActivity
 import rx.Single
 
 class ReadyToInstallNotificationManager(
@@ -143,13 +144,13 @@ class ReadyToInstallNotificationManager(
       notificationIdsMapper.getNotificationId(AptoideNotification.APPS_READY_TO_INSTALL)
     val resultIntent = Intent(
       context,
-      NotificationReceiver::class.java
+      MainActivity::class.java
     )
-    resultIntent.action = NotificationReceiver.NOTIFICATION_DISMISSED_ACTION
-    resultIntent.putExtra(NotificationReceiver.NOTIFICATION_NOTIFICATION_ID, notificationId)
-    return PendingIntent.getBroadcast(
+    resultIntent.action = SystemNotificationShower.NOTIFICATION_DISMISSED_ACTION
+    resultIntent.putExtra(SystemNotificationShower.NOTIFICATION_NOTIFICATION_ID, notificationId)
+    return PendingIntent.getActivity(
       context, notificationId, resultIntent,
-      PendingIntent.FLAG_IMMUTABLE
+      PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
     )
   }
 }

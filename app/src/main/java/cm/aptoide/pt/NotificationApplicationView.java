@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.notification.NotificationIdsMapper;
 import cm.aptoide.pt.notification.NotificationInfo;
-import cm.aptoide.pt.notification.NotificationReceiver;
 import cm.aptoide.pt.notification.SystemNotificationShower;
 import cm.aptoide.pt.presenter.NotificationView;
 import cm.aptoide.pt.presenter.Presenter;
@@ -16,6 +15,9 @@ import com.trello.rxlifecycle.RxLifecycle;
 import rx.Observable;
 import rx.subjects.BehaviorSubject;
 import rx.subscriptions.CompositeSubscription;
+
+import static cm.aptoide.pt.notification.SystemNotificationShower.NOTIFICATION_DISMISSED_ACTION;
+import static cm.aptoide.pt.notification.SystemNotificationShower.NOTIFICATION_PRESSED_ACTION;
 
 /**
  * Created by pedroribeiro on 20/11/17.
@@ -47,12 +49,12 @@ public class NotificationApplicationView extends AptoideApplication implements N
 
   @Override public Observable<NotificationInfo> getNotificationClick() {
     return getNotificationsPublishRelay().filter(notificationInfo -> notificationInfo.getAction()
-        .equals(NotificationReceiver.NOTIFICATION_PRESSED_ACTION));
+        .equals(NOTIFICATION_PRESSED_ACTION));
   }
 
   @Override public Observable<NotificationInfo> getNotificationDismissed() {
     return getNotificationsPublishRelay().filter(notificationInfo -> notificationInfo.getAction()
-        .equals(NotificationReceiver.NOTIFICATION_DISMISSED_ACTION));
+        .equals(NOTIFICATION_DISMISSED_ACTION));
   }
 
   @Override public Observable<NotificationInfo> getActionBootCompleted() {
