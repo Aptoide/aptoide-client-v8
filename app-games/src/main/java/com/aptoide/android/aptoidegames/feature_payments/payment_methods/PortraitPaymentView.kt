@@ -30,7 +30,6 @@ private fun PortraitPaymentViewPreview(
       purchaseRequest = emptyPurchaseRequest,
       paymentState = state,
       onPaymentMethodClick = {},
-      onNetworkError = {},
       onContactUsClick = {},
     )
   }
@@ -41,18 +40,17 @@ fun PortraitPaymentView(
   purchaseRequest: PurchaseRequest,
   paymentState: PaymentMethodsUiState,
   onPaymentMethodClick: (PaymentMethod<*>) -> Unit,
-  onNetworkError: (() -> Unit)?,
   onContactUsClick: () -> Unit,
 ) {
   val hasPreselectedPaymentMethod = rememberHasPreselectedPaymentMethod()
   when (paymentState) {
     is PaymentMethodsUiState.Error -> when (paymentState.error) {
       is IOException -> PortraitPaymentsNoConnectionView(
-        onRetryClick = onNetworkError
+        onRetryClick = paymentState.reload
       )
 
       else -> PortraitPaymentErrorView(
-        onRetryClick = onNetworkError,
+        onRetryClick = paymentState.reload,
         onContactUsClick = onContactUsClick
       )
     }

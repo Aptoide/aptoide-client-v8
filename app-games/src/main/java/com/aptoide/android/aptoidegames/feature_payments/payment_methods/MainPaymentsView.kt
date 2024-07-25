@@ -85,7 +85,7 @@ private fun MainPaymentsView(
 ) {
   val context = LocalContext.current
   val onContactUsClick = { SupportActivity.openForSupport(context) }
-  val (paymentState, reload) = rememberPaymentMethods(purchaseRequest = purchaseRequest)
+  val paymentState = rememberPaymentMethods(purchaseRequest = purchaseRequest)
 
   PreselectedPaymentMethodEffect(paymentState, navigate)
 
@@ -120,7 +120,6 @@ private fun MainPaymentsView(
       genericAnalytics.sendPaymentMethodsEvent(paymentMethod = paymentMethod)
       navigate(paymentMethod.getRoute())
     },
-    onNetworkError = reload,
     onContactUsClick = onContactUsClick
   )
 }
@@ -131,7 +130,6 @@ private fun ShowPaymentsList(
   paymentState: PaymentMethodsUiState,
   onOutsideClick: () -> Unit,
   onPaymentMethodClick: (PaymentMethod<*>) -> Unit,
-  onNetworkError: (() -> Unit)?,
   onContactUsClick: () -> Unit,
 ) {
   val configuration = LocalConfiguration.current
@@ -144,7 +142,6 @@ private fun ShowPaymentsList(
           purchaseRequest = purchaseRequest,
           paymentState = paymentState,
           onPaymentMethodClick = onPaymentMethodClick,
-          onNetworkError = onNetworkError,
           onContactUsClick = onContactUsClick,
         )
       }
@@ -154,7 +151,6 @@ private fun ShowPaymentsList(
           purchaseRequest = purchaseRequest,
           paymentState = paymentState,
           onPaymentMethodClick = onPaymentMethodClick,
-          onNetworkError = onNetworkError,
           onContactUsClick = onContactUsClick,
         )
       }
@@ -378,7 +374,6 @@ private fun ShowPaymentsListNoConnectionPreviewPortrait(
       paymentState = state,
       onOutsideClick = {},
       onPaymentMethodClick = {},
-      onNetworkError = {},
       onContactUsClick = {},
     )
   }
@@ -395,7 +390,6 @@ private fun ShowPaymentsListNoConnectionPreviewLandscape(
       paymentState = state,
       onOutsideClick = {},
       onPaymentMethodClick = {},
-      onNetworkError = {},
       onContactUsClick = {},
     )
   }
