@@ -23,7 +23,7 @@ import com.appcoins.payments.methods.adyen.repository.InvalidCountryCodeExceptio
 import com.appcoins.payments.methods.adyen.repository.IssuerSuspectedFraudException
 import com.appcoins.payments.methods.adyen.repository.IssuerUnavailableException
 import com.appcoins.payments.methods.adyen.repository.MissingBillingAddressException
-import com.appcoins.payments.methods.adyen.repository.Not3dAuthenticatedException
+import com.appcoins.payments.methods.adyen.repository.Not3DSAuthenticatedException
 import com.appcoins.payments.methods.adyen.repository.NotAllowedException
 import com.appcoins.payments.methods.adyen.repository.NotEnoughBalanceException
 import com.appcoins.payments.methods.adyen.repository.NotSupportedException
@@ -70,7 +70,7 @@ fun getAdyenErrorMessage(e: Throwable) = when (e) {
   is InvalidCardNumberException -> R.string.purchase_card_error_invalid_details_title
   is IssuerUnavailableException -> R.string.purchase_card_error_general_title
   is NotSupportedException -> R.string.purchase_card_error_not_supported_title
-  is Not3dAuthenticatedException -> R.string.purchase_error_3d_title
+  is Not3DSAuthenticatedException -> R.string.purchase_error_3d_title
   is NotEnoughBalanceException -> R.string.purchase_card_error_no_funds
   is IncorrectOnlinePinException -> R.string.purchase_error_wrong_pin_title
   is PinTriesExceededException -> R.string.purchase_error_wrong_pin_title
@@ -117,7 +117,7 @@ fun getAdyenErrorDescription(e: Throwable) = when (e) {
   is InvalidCardNumberException -> R.string.purchase_error_check_it_body
   is IssuerUnavailableException -> R.string.purchase_error_try_other_card_body
   is NotSupportedException -> R.string.purchase_error_try_other_card_body
-  is Not3dAuthenticatedException -> R.string.try_again
+  is Not3DSAuthenticatedException -> R.string.try_again
   is NotEnoughBalanceException -> R.string.purchase_error_try_other_payment_method_body
   is IncorrectOnlinePinException -> R.string.try_again
   is PinTriesExceededException -> R.string.try_again

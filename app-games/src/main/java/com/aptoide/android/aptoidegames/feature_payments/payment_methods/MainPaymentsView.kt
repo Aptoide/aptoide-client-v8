@@ -41,7 +41,7 @@ import com.appcoins.payments.arch.PurchaseRequest
 import com.appcoins.payments.arch.emptyPaymentMethod
 import com.appcoins.payments.arch.emptyPurchaseRequest
 import com.appcoins.payments.manager.presentation.PaymentMethodsUiState
-import com.appcoins.payments.manager.presentation.paymentMethodsViewModel
+import com.appcoins.payments.manager.presentation.rememberPaymentMethods
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.AptoideOutlinedText
 import com.aptoide.android.aptoidegames.SupportActivity
@@ -84,7 +84,7 @@ private fun MainPaymentsView(
 ) {
   val context = LocalContext.current
   val onContactUsClick = { SupportActivity.openForSupport(context) }
-  val (paymentState, reload) = paymentMethodsViewModel(purchaseRequest = purchaseRequest)
+  val (paymentState, reload) = rememberPaymentMethods(purchaseRequest = purchaseRequest)
 
   PreselectedPaymentMethodEffect(paymentState, navigate)
 
