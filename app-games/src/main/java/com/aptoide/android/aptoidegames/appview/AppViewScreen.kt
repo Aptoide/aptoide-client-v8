@@ -45,6 +45,8 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.extensions.PreviewDark
@@ -58,6 +60,7 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.rememberAppBySource
+import cm.aptoide.pt.feature_apps.presentation.toPackageNameParam
 import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
 import cm.aptoide.pt.feature_editorial.presentation.relatedEditorialsCardViewModel
 import cm.aptoide.pt.feature_editorial.presentation.rememberRelatedEditorials
@@ -93,24 +96,44 @@ private val tabsList = listOf(
   AppViewTab.INFO
 )
 
-const val appViewRoute = "app/{source}"
+private const val SOURCE = "source"
+private const val USE_STORE_NAME = "useStoreName"
+
+const val appViewRoute = "app/{$SOURCE}?" +
+  "$USE_STORE_NAME={$USE_STORE_NAME}"
+
+private val appViewArguments = listOf(
+  navArgument(USE_STORE_NAME) {
+    type = NavType.BoolType
+    defaultValue = true
+  },
+)
 
 fun appViewScreen() = ScreenData.withAnalytics(
   route = appViewRoute,
   screenAnalyticsName = "AppView",
+  arguments = appViewArguments,
   deepLinks = listOf(navDeepLink { uriPattern = BuildConfig.DEEP_LINK_SCHEMA + appViewRoute })
 ) { arguments, navigate, navigateBack ->
-  val source = arguments?.getString("source")!!
+  val source = arguments?.getString(SOURCE)!!
+  val useStoreName = arguments.getBoolean(USE_STORE_NAME, true)
   AppViewScreen(
     source = source,
+    useStoreName = useStoreName,
     navigate = navigate,
     navigateBack = navigateBack
   )
 }
 
-fun buildAppViewRoute(packageName: String): String = "app/package_name=$packageName"
+fun buildAppViewRoute(packageName: String): String =
+  buildAppViewRouteBySource(packageName.toPackageNameParam())
 
-fun buildAppViewRouteBySource(source: String): String = "app/$source"
+fun buildAppViewRouteBySource(
+  source: String,
+  useStoreName: Boolean = true,
+): String = appViewRoute
+  .replace("{$SOURCE}", source)
+  .replace("{$USE_STORE_NAME}", useStoreName.toString())
 
 fun buildAppViewDeepLinkUri(source: String) =
   BuildConfig.DEEP_LINK_SCHEMA + buildAppViewRouteBySource(source)
@@ -118,10 +141,14 @@ fun buildAppViewDeepLinkUri(source: String) =
 @Composable
 fun AppViewScreen(
   source: String,
+  useStoreName: Boolean,
   navigate: (String) -> Unit,
   navigateBack: () -> Unit,
 ) {
-  val (uiState, reload) = rememberAppBySource(source = source)
+  val (uiState, reload) = rememberAppBySource(
+    source = source,
+    useStoreName = useStoreName,
+  )
   val analyticsContext = AnalyticsContext.current
   val genericAnalytics = rememberGenericAnalytics()
 

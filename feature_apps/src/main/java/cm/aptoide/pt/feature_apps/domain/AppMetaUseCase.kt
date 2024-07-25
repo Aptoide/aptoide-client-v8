@@ -15,9 +15,12 @@ class AppMetaUseCase @Inject constructor(private val appsRepository: AppsReposit
       useStoreName = packageName != "com.appcoins.wallet"
     )
 
-  suspend fun getMetaInfoBySource(source: String): App =
+  suspend fun getMetaInfoBySource(
+    source: String,
+    useStoreName: Boolean = true,
+  ): App =
     appsRepository.getMetaBySource(
       source = source,
-      useStoreName = !source.contains("com.appcoins.wallet".toPackageNameParam())
+      useStoreName = useStoreName && !source.contains("com.appcoins.wallet".toPackageNameParam())
     )
 }
