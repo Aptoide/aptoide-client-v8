@@ -124,7 +124,7 @@ private fun BuildAdyenCreditCardScreen(
   val activityResultRegistry =
     LocalActivityResultRegistryOwner.current!!.activityResultRegistry
   val lifecycleOwner = LocalLifecycleOwner.current
-  val (uiState, buy) = rememberAdyenCreditCardUIState(paymentMethodId)
+  val uiState = rememberAdyenCreditCardUIState()
   val preSelectedPaymentMethodViewModel = hiltViewModel<PreSelectedPaymentMethodViewModel>()
   var onBuyClick by remember { mutableStateOf<(() -> Unit)?>(null) }
 
@@ -158,7 +158,7 @@ private fun BuildAdyenCreditCardScreen(
           onBuyClick = if (cardState.isReady && cardState.isInputValid) {
             {
               genericAnalytics.sendPaymentBuyEvent(paymentMethod)
-              buy(cardState)
+              uiState.buy(cardState)
             }
           } else {
             null

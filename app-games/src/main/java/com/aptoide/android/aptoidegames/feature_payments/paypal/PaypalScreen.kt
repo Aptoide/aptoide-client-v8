@@ -38,7 +38,6 @@ import androidx.navigation.navArgument
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.PreviewLandscapeDark
 import cm.aptoide.pt.extensions.ScreenData
-import com.appcoins.payments.arch.emptyPurchaseRequest
 import com.appcoins.payments.manager.presentation.rememberPaymentMethod
 import com.appcoins.payments.methods.paypal.presentation.PaypalUIState
 import com.appcoins.payments.methods.paypal.presentation.rememberPaypalUIState
@@ -122,7 +121,7 @@ private fun BuildPaypalScreen(
 ) {
   val localContext = LocalContext.current
   val activityResultRegistry = LocalActivityResultRegistryOwner.current!!.activityResultRegistry
-  val uiState = rememberPaypalUIState(paymentMethodId)
+  val uiState = rememberPaypalUIState()
   var finished by remember { mutableStateOf(false) }
 
   val paymentMethod = rememberPaymentMethod(paymentMethodId)
@@ -151,6 +150,11 @@ private fun BuildPaypalScreen(
 
       PaypalUIState.Canceled -> popBackStack()
       is PaypalUIState.GetBillingAgreement -> uiState.resolveWith(activityResultRegistry)
+      is PaypalUIState.BillingAgreementUnavailable -> {
+        genericAnalytics.sendPaymentBuyEvent(paymentMethod)
+        uiState.onBuyClick()
+      }
+
       PaypalUIState.PaypalAgreementRemoved -> {
         genericAnalytics.sendPaymentBackEvent(paymentMethod = paymentMethod)
         popBackStack()
@@ -224,9 +228,10 @@ private fun PaypalScreen(
       is PaypalUIState.Success -> SuccessView()
       PaypalUIState.Canceled -> LoadingView()
       is PaypalUIState.GetBillingAgreement -> LoadingView()
+      is PaypalUIState.BillingAgreementUnavailable -> LoadingView()
 
       is PaypalUIState.BillingAgreementAvailable -> BillingAgreementScreen(
-        buyingPackage = viewModelState.purchaseRequest.domain,
+        buyingPackage = viewModelState.packageName,
         onBuyClick = {
           viewModelState.onBuyClick()
           onBuyClicked()
@@ -488,7 +493,7 @@ private fun PaypalScreenLandscapePreview(
 private class PaypalUIStateProvider : PreviewParameterProvider<PaypalUIState> {
   override val values: Sequence<PaypalUIState> = sequenceOf(
     PaypalUIState.BillingAgreementAvailable(
-      purchaseRequest = emptyPurchaseRequest,
+      packageName = "packageName",
       paymentMethodName = "Payment Method Name",
       paymentMethodIconUrl = "",
       onBuyClick = {},

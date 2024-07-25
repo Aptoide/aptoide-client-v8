@@ -32,7 +32,6 @@ private fun LandscapePaymentViewPreview(
       purchaseRequest = emptyPurchaseRequest,
       paymentState = state,
       onPaymentMethodClick = {},
-      onNetworkError = {},
       onContactUsClick = {},
     )
   }
@@ -43,18 +42,17 @@ fun LandscapePaymentView(
   purchaseRequest: PurchaseRequest,
   paymentState: PaymentMethodsUiState,
   onPaymentMethodClick: (PaymentMethod<*>) -> Unit,
-  onNetworkError: (() -> Unit)?,
   onContactUsClick: () -> Unit,
 ) {
   val hasPreselectedPaymentMethod = rememberHasPreselectedPaymentMethod()
   when (paymentState) {
     is PaymentMethodsUiState.Error -> when (paymentState.error) {
       is IOException -> LandscapePaymentsNoConnectionView(
-        onRetryClick = onNetworkError
+        onRetryClick = paymentState.reload
       )
 
       else -> LandscapePaymentErrorView(
-        onRetryClick = onNetworkError,
+        onRetryClick = paymentState.reload,
         onContactUsClick = onContactUsClick
       )
     }
