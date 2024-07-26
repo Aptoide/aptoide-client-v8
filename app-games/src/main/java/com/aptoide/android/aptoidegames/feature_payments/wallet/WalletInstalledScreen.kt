@@ -92,7 +92,7 @@ fun PaymentsWalletInstalledView(
       try {
         launcher.launch(intent)
       } catch (e: Exception) {
-        onFinish(false) // TODO: Show error view with close button
+        onFinish(false)
       }
     }
   }
