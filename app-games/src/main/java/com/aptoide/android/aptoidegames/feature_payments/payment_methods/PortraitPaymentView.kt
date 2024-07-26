@@ -18,6 +18,7 @@ import com.aptoide.android.aptoidegames.feature_payments.PortraitPaymentErrorVie
 import com.aptoide.android.aptoidegames.feature_payments.PortraitPaymentsNoConnectionView
 import com.aptoide.android.aptoidegames.feature_payments.PurchaseInfoRow
 import com.aptoide.android.aptoidegames.feature_payments.presentation.rememberHasPreselectedPaymentMethod
+import java.io.IOException
 
 @PreviewDark
 @Composable
@@ -45,14 +46,16 @@ fun PortraitPaymentView(
 ) {
   val hasPreselectedPaymentMethod = rememberHasPreselectedPaymentMethod()
   when (paymentState) {
-    PaymentMethodsUiState.Error -> PortraitPaymentErrorView(
-      onRetryClick = onNetworkError,
-      onContactUsClick = onContactUsClick
-    )
+    is PaymentMethodsUiState.Error -> when (paymentState.error) {
+      is IOException -> PortraitPaymentsNoConnectionView(
+        onRetryClick = onNetworkError
+      )
 
-    PaymentMethodsUiState.NoConnection -> PortraitPaymentsNoConnectionView(
-      onRetryClick = onNetworkError
-    )
+      else -> PortraitPaymentErrorView(
+        onRetryClick = onNetworkError,
+        onContactUsClick = onContactUsClick
+      )
+    }
 
     is PaymentMethodsUiState.Loading -> if (hasPreselectedPaymentMethod) {
       LoadingView()

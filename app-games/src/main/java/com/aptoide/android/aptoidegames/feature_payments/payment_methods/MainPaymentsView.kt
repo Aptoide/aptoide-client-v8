@@ -59,6 +59,7 @@ import com.aptoide.android.aptoidegames.feature_payments.wallet.rememberWalletPa
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
+import java.io.IOException
 
 const val paymentsRoute = "payments"
 
@@ -404,7 +405,7 @@ class PaymentMethodsUiStateProvider : PreviewParameterProvider<PaymentMethodsUiS
   override val values: Sequence<PaymentMethodsUiState> = sequenceOf(
     PaymentMethodsUiState.Idle(listOf(emptyPaymentMethod, emptyPaymentMethod)),
     PaymentMethodsUiState.Loading,
-    PaymentMethodsUiState.Error,
-    PaymentMethodsUiState.NoConnection,
+    PaymentMethodsUiState.Error(Exception()),
+    PaymentMethodsUiState.Error(IOException()),
   )
 }
