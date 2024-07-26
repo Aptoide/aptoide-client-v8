@@ -67,6 +67,7 @@ import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 import kotlinx.coroutines.delay
+import java.io.IOException
 
 private const val PAYPAL_PAYMENT_ID_ARG = "paymentMethodId"
 private const val IS_PRE_SELECTED = "isPreSelected"
@@ -131,7 +132,7 @@ private fun BuildPaypalScreen(
 
   LaunchedEffect(key1 = uiState, key2 = activityResultRegistry) {
     when (uiState) {
-      PaypalUIState.Error -> {
+      is PaypalUIState.Error -> {
         genericAnalytics.sendPaymentConclusionEvent(
           paymentMethod = paymentMethod,
           status = "error",
@@ -215,8 +216,11 @@ private fun PaypalScreen(
         textMessage = R.string.purchase_making_purchase_title
       )
 
-      PaypalUIState.NoConnection -> PayPalNoConnectionScreen(onRetryClick)
-      PaypalUIState.Error -> PaypalErrorScreen(onRetryClick, onContactUs)
+      is PaypalUIState.Error -> when (viewModelState.error) {
+        is IOException -> PayPalNoConnectionScreen(onRetryClick)
+        else -> PaypalErrorScreen(onRetryClick, onContactUs)
+      }
+
       is PaypalUIState.Success -> SuccessView()
       PaypalUIState.Canceled -> LoadingView()
       is PaypalUIState.GetBillingAgreement -> LoadingView()
@@ -493,7 +497,7 @@ private class PaypalUIStateProvider : PreviewParameterProvider<PaypalUIState> {
     PaypalUIState.MakingPurchase,
     PaypalUIState.Success,
     PaypalUIState.Loading,
-    PaypalUIState.NoConnection,
-    PaypalUIState.Error,
+    PaypalUIState.Error(IOException()),
+    PaypalUIState.Error(Exception()),
   )
 }

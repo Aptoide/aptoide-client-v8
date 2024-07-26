@@ -20,6 +20,7 @@ import com.aptoide.android.aptoidegames.feature_payments.LandscapePaymentsNoConn
 import com.aptoide.android.aptoidegames.feature_payments.PurchaseInfoRow
 import com.aptoide.android.aptoidegames.feature_payments.presentation.rememberHasPreselectedPaymentMethod
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
+import java.io.IOException
 
 @PreviewLandscapeDark
 @Composable
@@ -47,14 +48,16 @@ fun LandscapePaymentView(
 ) {
   val hasPreselectedPaymentMethod = rememberHasPreselectedPaymentMethod()
   when (paymentState) {
-    PaymentMethodsUiState.Error -> LandscapePaymentErrorView(
-      onRetryClick = onNetworkError,
-      onContactUsClick = onContactUsClick
-    )
+    is PaymentMethodsUiState.Error -> when (paymentState.error) {
+      is IOException -> LandscapePaymentsNoConnectionView(
+        onRetryClick = onNetworkError
+      )
 
-    PaymentMethodsUiState.NoConnection -> LandscapePaymentsNoConnectionView(
-      onRetryClick = onNetworkError
-    )
+      else -> LandscapePaymentErrorView(
+        onRetryClick = onNetworkError,
+        onContactUsClick = onContactUsClick
+      )
+    }
 
     is PaymentMethodsUiState.Loading -> if (hasPreselectedPaymentMethod) {
       LoadingView()

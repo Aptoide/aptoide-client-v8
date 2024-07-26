@@ -18,6 +18,6 @@ val AdyenCreditCardUiState.paymentContext: String?
 val PaypalUIState.paymentContext: String?
   get() = when (this) {
     is PaypalUIState.Success -> PaymentContext.CONCLUSION
-    PaypalUIState.Error -> null
+    is PaypalUIState.Error -> null
     else -> PaymentContext.SECOND_STEP
   }
