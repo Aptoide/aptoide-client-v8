@@ -4,11 +4,12 @@ import com.appcoins.payments.methods.adyen.AcquirerErrorException
 import com.appcoins.payments.methods.adyen.AlreadyProcessedException
 import com.appcoins.payments.methods.adyen.BlockedCardException
 import com.appcoins.payments.methods.adyen.CancelledDueToFraudException
-import com.appcoins.payments.methods.adyen.CardSecurityException
+import com.appcoins.payments.methods.adyen.CardSecurityValidationException
 import com.appcoins.payments.methods.adyen.ConflictException
 import com.appcoins.payments.methods.adyen.CurrencyNotSupportedException
 import com.appcoins.payments.methods.adyen.CvcDeclinedException
 import com.appcoins.payments.methods.adyen.CvcLengthException
+import com.appcoins.payments.methods.adyen.CvcRequiredException
 import com.appcoins.payments.methods.adyen.DeclinedException
 import com.appcoins.payments.methods.adyen.DeclinedNonGenericException
 import com.appcoins.payments.methods.adyen.ExpiredCardException
@@ -22,7 +23,6 @@ import com.appcoins.payments.methods.adyen.InvalidCardNumberException
 import com.appcoins.payments.methods.adyen.InvalidCountryCodeException
 import com.appcoins.payments.methods.adyen.IssuerSuspectedFraudException
 import com.appcoins.payments.methods.adyen.IssuerUnavailableException
-import com.appcoins.payments.methods.adyen.MissingBillingAddressException
 import com.appcoins.payments.methods.adyen.Not3DSAuthenticatedException
 import com.appcoins.payments.methods.adyen.NotAllowedException
 import com.appcoins.payments.methods.adyen.NotEnoughBalanceException
@@ -42,7 +42,6 @@ import com.aptoide.android.aptoidegames.R
 fun getAdyenErrorMessage(e: Throwable) = when (e) {
   /*Generic errors*/
   is FraudException,
-  is MissingBillingAddressException,
   is ConflictException,
   is NotAllowedException,
   is ForbiddenException,
@@ -50,8 +49,9 @@ fun getAdyenErrorMessage(e: Throwable) = when (e) {
 
   /*Adyen errors*/
   is InvalidCardException -> R.string.purchase_error_invalid_credit_card_title
+  is CvcRequiredException -> R.string.purchase_card_error_CVV_title
   is CvcLengthException -> R.string.purchase_card_error_CVV_title
-  is CardSecurityException -> R.string.purchase_error_card_security_validation_title
+  is CardSecurityValidationException -> R.string.purchase_error_card_security_validation_title
   is CurrencyNotSupportedException -> R.string.purchase_card_error_general_title
   is InvalidCountryCodeException -> null //R.string.error_message_generic_title
   is OutdatedCardException -> R.string.payments_error_old_card_title
@@ -89,7 +89,6 @@ fun getAdyenErrorMessage(e: Throwable) = when (e) {
 fun getAdyenErrorDescription(e: Throwable) = when (e) {
   /*Generic errors*/
   is FraudException,
-  is MissingBillingAddressException,
   is ConflictException,
   is NotAllowedException,
   is ForbiddenException,
@@ -97,8 +96,9 @@ fun getAdyenErrorDescription(e: Throwable) = when (e) {
 
   /*Adyen errors*/
   is InvalidCardException -> R.string.purchase_error_check_it_body
+  is CvcRequiredException -> R.string.purchase_error_check_it_body
   is CvcLengthException -> R.string.purchase_error_check_it_body
-  is CardSecurityException -> R.string.try_again
+  is CardSecurityValidationException -> R.string.try_again
   is CurrencyNotSupportedException -> R.string.purchase_error_try_other_card_body
   is InvalidCountryCodeException -> null //R.string.try_again_or_contact_us_body
   is OutdatedCardException -> R.string.payments_error_old_card_body
