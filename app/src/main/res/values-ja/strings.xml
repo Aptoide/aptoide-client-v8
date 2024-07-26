@@ -651,9 +651,9 @@
   <string name="appc_info_view_title_5_variable">%s シンボルの付いたアプリで購入するたびに、最大%s%%のボーナスを獲得できます。この機会に究極のゲーマーを目指しましょう！</string>
   <string name="appc_info_view_title_5_variable_no_data"> %s. シンボルの付いたアプリで購入するたびに、ボーナスを獲得できます。この機会に究極のゲーマーを目指しましょう！</string>
   <string name="appc_info_view_eskills_title">e-Skillsでお金を稼ごう!</string>
-  <string name="appc_info_view_eskills_without_withdrawal_title">Get Rewarded with e-Skills!</string>
+  <string name="appc_info_view_eskills_without_withdrawal_title">e-Skillsで報酬をゲット!</string>
   <string name="appc_info_view_eskills_body">e-Skillsのゲームでは、他のプレイヤーに勝つと賞金を獲得できます。あなたが一番得意だと思うゲームをダウンロードし、バトルを開始するための貢献をし、実際のお金で賞金に値することを証明するためにあなたのスキルを示すだけです。挑戦の準備はできましたか？利用可能なすべてのゲームを見つけてみましょう%s。</string>
-  <string name="appc_info_view_eskills_without_withdrawal_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in AppCoins Credits. Ready for the challenge? Find all the available games %s.</string>
+  <string name="appc_info_view_eskills_without_withdrawal_body">e-Skillsのゲームでは、他のプレイヤーに勝つと賞金を獲得できます。あなたが一番得意だと思うゲームをダウンロードし、バトルを開始するための貢献をし、実際のお金で賞金に値することを証明するためにあなたのスキルを示すだけです。挑戦の準備はできましたか？利用可能なすべてのゲームを見つけてみましょう%s。</string>
   <string name="appc_info_view_eskills_body_button">こちら</string>
   <string name="appc_info_view_devs_title">開発者の方ですか？</string>
   <string name="appc_info_view_devs_body">アプリの新しい配信方法をチェック。</string>
@@ -756,12 +756,12 @@
   <string name="faq_settings_body">必要な答えはすべて見つかる！</string>
   <!--New e-Skills-->
   <string name="eskills_v2_home_card_title">リアルマネー賞金！</string>
-  <string name="eskills_v2_home_card_without_withdrawal_title">Get Rewarded!</string>
+  <string name="eskills_v2_home_card_without_withdrawal_title">報酬を得よう！</string>
   <string name="eskills_v2_home_card_body">e-Skillsゲームでは、他のプレイヤーに勝つと報酬がもらえます。今すぐあなたのスキルを披露しましょう！</string>
   <string name="eskills_v2_earnmore_header">もっと稼ぐ</string>
   <string name="eskills_v2_page_header">e-Skills ゲーム</string>
   <string name="eskills_v2_page_body_">あなたのゲームスキルはリアルマネーの賞金に値する？</string>
-  <string name="eskills_v2_page_without_withdrawal_body_">Are your gaming skills worth a reward?</string>
+  <string name="eskills_v2_page_without_withdrawal_body_">あなたのゲームスキルはリアルマネーの賞金に値する？</string>
   <string name="eskills_v2_card_1_title">%1$s%2$s</string>
   <string name="eskills_v2_card_1_body">ユーザー1人あたりの1日の平均獲得賞金</string>
   <string name="eskills_v2_card_2_title">%1$s%2$s</string>
@@ -771,17 +771,17 @@
   <string name="eskills_v2_card_4_title">24h</string>
   <string name="eskills_v2_card_4_body">24時間365日のサポートを提供</string>
   <string name="eskills_v2_card_5_title">リアルマネー賞金</string>
-  <string name="eskills_v2_card_5_without_withdrawal_title">Get Rewarded!</string>
+  <string name="eskills_v2_card_5_without_withdrawal_title">報酬を得よう！</string>
   <string name="eskills_v2_card_5_body">お気に入りのゲームをプレイして、今すぐリアルマネーを獲得しましょう！</string>
-  <string name="eskills_v2_card_5_without_withdrawal_body">Play your favorite games and get rewarded now!</string>
+  <string name="eskills_v2_card_5_without_withdrawal_body">お気に入りのゲームで遊んで、今すぐ報酬をゲット！</string>
   <string name="eskills_v2_card_6_title">公正な競争</string>
   <string name="eskills_v2_card_6_body">公平なトーナメントを実現するために、あなたのスキルレベルに合ったプレーヤーとマッチングしましょう。</string>
   <string name="eskills_v2_card_7_title">世界チャンピオンになろう</string>
   <string name="eskills_v2_card_7_body">デイリーおよびウィークリーリーダーボードで上位に入賞すると、追加報酬を獲得できます。</string>
   <string name="eskills_v2_card_8_title">ワンタップ出金</string>
-  <string name="eskills_v2_card_8_without_withdrawal_title">Use Your Reward</string>
+  <string name="eskills_v2_card_8_without_withdrawal_title">報酬を使う</string>
   <string name="eskills_v2_card_8_body">AppCoins Walletで簡単に賞金をリアルマネーに引き出すことができます。</string>
-  <string name="eskills_v2_card_8_without_withdrawal_body">You can use your reward to make purchases in your favorite games.</string>
+  <string name="eskills_v2_card_8_without_withdrawal_body">リワードは、お気に入りのゲームでのお買い物にご利用いただけます。</string>
   <string name="eskills_v2_card_9_title">今すぐスタート</string>
   <string name="eskills_v2_card_9_body">腕試しをしてチャンピオンになり、報酬をゲットしよう！</string>
   <string name="eskills_v2_how_it_works_title">どのような仕組み？</string>
@@ -790,11 +790,11 @@
   <string name="eskills_v2_how_2">練習を積むか、チケットを手に入れて競技を始めるか</string>
   <string name="eskills_v2_how_3">他のプレーヤーに勝ちましょう</string>
   <string name="eskills_v2_how_4">賞金を出金！</string>
-  <string name="eskills_v2_how_without_withdrawal_4">Use your reward to make purchases!</string>
+  <string name="eskills_v2_how_without_withdrawal_4">リワードを使って買い物をする！</string>
   <string name="eskills_v2_faqs_title">FAQS</string>
   <string name="eskills_v2_faqs_1_title">e-Skills ゲームとは？</string>
   <string name="eskills_v2_faqs_1_body_1">e-Skillsゲームでは、他のプレイヤーとの対戦に挑戦し、勝者には賞金が与えられます！この賞金はAppCoins Creditsで付与され、設定からe-Skills WithdrawalをタップしてPayPalアカウントに引き出すことができます。</string>
-  <string name="eskills_v2_faqs_1_body_without_withdrawal_1">In e-Skills games, you will challenge other players to play against each other and the winner will receive a prize! This prize is granted in AppCoins Credits and can be used to make purchases in your favorite games.</string>
+  <string name="eskills_v2_faqs_1_body_without_withdrawal_1">e-Skillsゲームでは、他のプレイヤーとの対戦に挑戦し、勝者には賞品を贈呈します！この賞品はAppCoinsクレジットで付与され、お好きなゲームでのお買い物にご利用いただけます。</string>
   <string name="eskills_v2_faqs_2_title">AppCoinsウォレットとは何ですか？</string>
   <string name="eskills_v2_faqs_2_body_1">AppCoinsウォレットは、ゲームやアプリでデジタルアイテムを購入するために使用できるAndroidアプリです。</string>
   <string name="eskills_v2_faqs_2_body_2">AppCoinsのアプリやゲームでお買い物をするたびに特典がもらえます！AppCoinsウォレットをお使いのデバイスにインストールし、AppCoins版ゲームで通常通りお買い物をするだけです。</string>
@@ -803,5 +803,5 @@
   <string name="eskills_v2_wallet_install_disclaimer_body">このサポートアプリは %s の後にインストールされます。</string>
   <string name="eskills_v2_wallet_already_installed_disclaimer_body">すでに<b>AppCoins Walletがインストールされています！</b></string>
   <string name="eskills_v2_wallet_installed_disclaimer_body">AppCoins Walletは正常にインストールされました！</string>
-  <string name="eskills_v2_wallet_disclaimer_2_body">You\'ll need to install the AppCoins Wallet.</string>
+  <string name="eskills_v2_wallet_disclaimer_2_body">AppCoinsウォレットをインストールする必要があります。</string>
 </resources>
