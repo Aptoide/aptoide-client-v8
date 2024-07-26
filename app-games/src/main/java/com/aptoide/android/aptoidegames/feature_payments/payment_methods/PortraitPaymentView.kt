@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
+import com.appcoins.payments.arch.ConnectionFailedException
 import com.appcoins.payments.arch.PaymentMethod
 import com.appcoins.payments.arch.PurchaseRequest
 import com.appcoins.payments.arch.emptyPurchaseRequest
@@ -18,7 +19,6 @@ import com.aptoide.android.aptoidegames.feature_payments.PortraitPaymentErrorVie
 import com.aptoide.android.aptoidegames.feature_payments.PortraitPaymentsNoConnectionView
 import com.aptoide.android.aptoidegames.feature_payments.PurchaseInfoRow
 import com.aptoide.android.aptoidegames.feature_payments.presentation.rememberHasPreselectedPaymentMethod
-import java.io.IOException
 
 @PreviewDark
 @Composable
@@ -45,7 +45,7 @@ fun PortraitPaymentView(
   val hasPreselectedPaymentMethod = rememberHasPreselectedPaymentMethod()
   when (paymentState) {
     is PaymentMethodsUiState.Error -> when (paymentState.error) {
-      is IOException -> PortraitPaymentsNoConnectionView(
+      is ConnectionFailedException -> PortraitPaymentsNoConnectionView(
         onRetryClick = paymentState.reload
       )
 

@@ -41,10 +41,10 @@ import cm.aptoide.pt.extensions.PreviewLight
 import cm.aptoide.pt.extensions.ScreenData
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardView
+import com.appcoins.payments.arch.ConnectionFailedException
 import com.appcoins.payments.manager.presentation.rememberPaymentMethod
 import com.appcoins.payments.methods.adyen.presentation.AdyenCreditCardUiState
 import com.appcoins.payments.methods.adyen.presentation.rememberAdyenCreditCardUIState
-import com.appcoins.payments.methods.adyen.repository.NoNetworkException
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.SupportActivity
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
@@ -139,7 +139,7 @@ private fun BuildAdyenCreditCardScreen(
     when (uiState) {
       is AdyenCreditCardUiState.Error -> {
         when (uiState.error) {
-          is NoNetworkException -> genericAnalytics.sendPaymentConclusionEvent(
+          is ConnectionFailedException -> genericAnalytics.sendPaymentConclusionEvent(
             paymentMethod = paymentMethod,
             status = "error",
             errorCode = "No network",
@@ -256,7 +256,7 @@ private fun AdyenCreditCardErrorScreen(
 ) {
   val configuration = LocalConfiguration.current
 
-  if (error is NoNetworkException) {
+  if (error is ConnectionFailedException) {
     when (configuration.orientation) {
       Configuration.ORIENTATION_LANDSCAPE -> LandscapePaymentsNoConnectionView(
         onRetryClick = onRetryClick

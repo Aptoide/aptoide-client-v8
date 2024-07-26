@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewLandscapeDark
+import com.appcoins.payments.arch.ConnectionFailedException
 import com.appcoins.payments.arch.PaymentMethod
 import com.appcoins.payments.arch.PurchaseRequest
 import com.appcoins.payments.arch.emptyPurchaseRequest
@@ -20,7 +21,6 @@ import com.aptoide.android.aptoidegames.feature_payments.LandscapePaymentsNoConn
 import com.aptoide.android.aptoidegames.feature_payments.PurchaseInfoRow
 import com.aptoide.android.aptoidegames.feature_payments.presentation.rememberHasPreselectedPaymentMethod
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import java.io.IOException
 
 @PreviewLandscapeDark
 @Composable
@@ -47,7 +47,7 @@ fun LandscapePaymentView(
   val hasPreselectedPaymentMethod = rememberHasPreselectedPaymentMethod()
   when (paymentState) {
     is PaymentMethodsUiState.Error -> when (paymentState.error) {
-      is IOException -> LandscapePaymentsNoConnectionView(
+      is ConnectionFailedException -> LandscapePaymentsNoConnectionView(
         onRetryClick = paymentState.reload
       )
 

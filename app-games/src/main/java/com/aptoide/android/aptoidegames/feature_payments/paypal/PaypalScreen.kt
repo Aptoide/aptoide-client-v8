@@ -38,6 +38,8 @@ import androidx.navigation.navArgument
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.PreviewLandscapeDark
 import cm.aptoide.pt.extensions.ScreenData
+import com.appcoins.payments.arch.ConnectionFailedException
+import com.appcoins.payments.arch.UnknownErrorException
 import com.appcoins.payments.manager.presentation.rememberPaymentMethod
 import com.appcoins.payments.methods.paypal.presentation.PaypalUIState
 import com.appcoins.payments.methods.paypal.presentation.rememberPaypalUIState
@@ -66,7 +68,6 @@ import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 import kotlinx.coroutines.delay
-import java.io.IOException
 
 private const val PAYPAL_PAYMENT_ID_ARG = "paymentMethodId"
 private const val IS_PRE_SELECTED = "isPreSelected"
@@ -221,7 +222,7 @@ private fun PaypalScreen(
       )
 
       is PaypalUIState.Error -> when (viewModelState.error) {
-        is IOException -> PayPalNoConnectionScreen(onRetryClick)
+        is ConnectionFailedException -> PayPalNoConnectionScreen(onRetryClick)
         else -> PaypalErrorScreen(onRetryClick, onContactUs)
       }
 
@@ -502,7 +503,7 @@ private class PaypalUIStateProvider : PreviewParameterProvider<PaypalUIState> {
     PaypalUIState.MakingPurchase,
     PaypalUIState.Success,
     PaypalUIState.Loading,
-    PaypalUIState.Error(IOException()),
-    PaypalUIState.Error(Exception()),
+    PaypalUIState.Error(ConnectionFailedException()),
+    PaypalUIState.Error(UnknownErrorException()),
   )
 }
