@@ -19,7 +19,7 @@
   <string name="accept_terms_loggedin_readPP">プライバシーポリシーを読む</string>
   <string name="accept_terms_loggedin_message">承諾を押すと、Aptoideの%1$sおよび%2$sに同意したこととなります</string>
   <string name="accept_terms_loggedin_button_accept">承諾</string>
-  <string name="accept_terms_loggedin_button_close">CLOSE APTOIDE</string>
+  <string name="accept_terms_loggedin_button_close">APTOIDEを閉じる</string>
   <string name="user_upload_photo_failed">その時点で、プロフィールを作成することができませんでした。</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">処理中、しばらくお待ちください...</string>
