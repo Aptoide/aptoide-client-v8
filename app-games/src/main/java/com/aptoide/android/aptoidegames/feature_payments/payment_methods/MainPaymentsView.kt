@@ -36,8 +36,10 @@ import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.PreviewLandscapeDark
 import cm.aptoide.pt.extensions.ScreenData
+import com.appcoins.payments.arch.ConnectionFailedException
 import com.appcoins.payments.arch.PaymentMethod
 import com.appcoins.payments.arch.PurchaseRequest
+import com.appcoins.payments.arch.UnknownErrorException
 import com.appcoins.payments.arch.emptyPaymentMethod
 import com.appcoins.payments.arch.emptyPurchaseRequest
 import com.appcoins.payments.manager.presentation.PaymentMethodsUiState
@@ -59,7 +61,6 @@ import com.aptoide.android.aptoidegames.feature_payments.wallet.rememberWalletPa
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
-import java.io.IOException
 
 const val paymentsRoute = "payments"
 
@@ -399,7 +400,7 @@ class PaymentMethodsUiStateProvider : PreviewParameterProvider<PaymentMethodsUiS
   override val values: Sequence<PaymentMethodsUiState> = sequenceOf(
     PaymentMethodsUiState.Idle(listOf(emptyPaymentMethod, emptyPaymentMethod)),
     PaymentMethodsUiState.Loading,
-    PaymentMethodsUiState.Error(Exception()),
-    PaymentMethodsUiState.Error(IOException()),
+    PaymentMethodsUiState.Error(UnknownErrorException()),
+    PaymentMethodsUiState.Error(ConnectionFailedException()),
   )
 }
