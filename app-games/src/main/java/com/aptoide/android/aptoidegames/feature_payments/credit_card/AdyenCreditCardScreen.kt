@@ -138,14 +138,14 @@ private fun BuildAdyenCreditCardScreen(
   LaunchedEffect(key1 = uiState, key2 = activityResultRegistry) {
     when (uiState) {
       is AdyenCreditCardUiState.Error -> {
-        if (uiState.error is NoNetworkException) {
-          genericAnalytics.sendPaymentConclusionEvent(
+        when (uiState.error) {
+          is NoNetworkException -> genericAnalytics.sendPaymentConclusionEvent(
             paymentMethod = paymentMethod,
             status = "error",
             errorCode = "No network",
           )
-        } else {
-          genericAnalytics.sendPaymentConclusionEvent(
+
+          else -> genericAnalytics.sendPaymentConclusionEvent(
             paymentMethod = paymentMethod,
             status = "error",
             errorCode = uiState.error.message,
