@@ -24,8 +24,10 @@ import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.PreviewLandscapeDark
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.design_system.PrimaryButton
 import com.aptoide.android.aptoidegames.drawables.icons.getPaymentsGenericError
 import com.aptoide.android.aptoidegames.drawables.icons.getPaymentsNoNetworkError
+import com.aptoide.android.aptoidegames.drawables.icons.getPaymentsWarningIcon
 import com.aptoide.android.aptoidegames.home.RetryButton
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -173,6 +175,88 @@ fun PortraitPaymentsNoConnectionView(onRetryClick: (() -> Unit)?) {
 }
 
 @Composable
+fun PortraitPaymentsItemOwnedView(
+  onGoBackToGameCLick: (() -> Unit),
+  onContactUsClick: () -> Unit,
+) {
+  Column(
+    modifier = Modifier
+      .defaultMinSize(minHeight = 376.dp)
+      .verticalScroll(rememberScrollState()),
+    horizontalAlignment = Alignment.CenterHorizontally,
+  ) {
+    Spacer(modifier = Modifier.weight(1f))
+    ErrorViewContent(
+      modifier = Modifier.padding(horizontal = 40.dp, vertical = 20.dp),
+      icon = getPaymentsWarningIcon(Palette.Black, Palette.Primary),
+      message = stringResource(R.string.iap_already_processing_title),
+      description = stringResource(R.string.iap_already_processing_body),
+    )
+    Spacer(modifier = Modifier.weight(1f))
+    PrimaryButton(
+      onClick = onGoBackToGameCLick,
+      modifier = Modifier
+        .padding(horizontal = 16.dp)
+        .fillMaxWidth(),
+      title = stringResource(id = R.string.go_back_to_game_button),
+    )
+    Text(
+      modifier = Modifier
+        .minimumInteractiveComponentSize()
+        .padding(horizontal = 16.dp)
+        .fillMaxWidth()
+        .clickable(onClick = onContactUsClick),
+      text = stringResource(R.string.contact_support_title),
+      textAlign = TextAlign.Center,
+      color = Palette.Black,
+      style = AGTypography.InputsL,
+      textDecoration = TextDecoration.Underline,
+    )
+  }
+}
+
+@Composable
+fun LandscapePaymentsItemOwnedView(
+  onGoBackToGameCLick: (() -> Unit),
+  onContactUsClick: () -> Unit,
+) {
+  Column(
+    modifier = Modifier
+      .fillMaxHeight()
+      .verticalScroll(rememberScrollState()),
+    horizontalAlignment = Alignment.CenterHorizontally,
+  ) {
+    Spacer(modifier = Modifier.weight(1f))
+    ErrorViewContent(
+      modifier = Modifier.padding(horizontal = 40.dp, vertical = 20.dp),
+      icon = getPaymentsWarningIcon(Palette.Black, Palette.Primary),
+      message = stringResource(R.string.iap_already_processing_title),
+      description = stringResource(R.string.iap_already_processing_body),
+    )
+    Spacer(modifier = Modifier.weight(1f))
+    PrimaryButton(
+      onClick = onGoBackToGameCLick,
+      modifier = Modifier
+        .padding(horizontal = 24.dp)
+        .fillMaxWidth(),
+      title = stringResource(id = R.string.go_back_to_game_button),
+    )
+    Text(
+      modifier = Modifier
+        .minimumInteractiveComponentSize()
+        .padding(horizontal = 24.dp)
+        .fillMaxWidth()
+        .clickable(onClick = onContactUsClick),
+      text = stringResource(R.string.contact_support_title),
+      textAlign = TextAlign.Center,
+      color = Palette.Black,
+      style = AGTypography.InputsL,
+      textDecoration = TextDecoration.Underline,
+    )
+  }
+}
+
+@Composable
 private fun ErrorViewContent(
   icon: ImageVector,
   message: String,
@@ -238,5 +322,21 @@ fun PortraitPaymentsNoConnectionViewPreview() {
 fun LandscapePaymentsNoConnectionViewPreview() {
   AppGamesPaymentBottomSheet {
     LandscapePaymentsNoConnectionView(onRetryClick = {})
+  }
+}
+
+@PreviewDark
+@Composable
+fun PortraitPaymentItemOwnedViewPreview() {
+  AppGamesPaymentBottomSheet {
+    PortraitPaymentsItemOwnedView(onGoBackToGameCLick = {}, onContactUsClick = {})
+  }
+}
+
+@PreviewLandscapeDark
+@Composable
+fun LandscapePaymentItemOwnedViewPreview() {
+  AppGamesPaymentBottomSheet {
+    LandscapePaymentsItemOwnedView(onGoBackToGameCLick = {}, onContactUsClick = {})
   }
 }

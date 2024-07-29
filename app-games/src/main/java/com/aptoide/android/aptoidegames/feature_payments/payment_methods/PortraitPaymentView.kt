@@ -12,10 +12,12 @@ import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
 import com.appcoins.payments.arch.ConnectionFailedException
 import com.appcoins.payments.arch.PaymentMethod
+import com.appcoins.payments.arch.PaymentsItemOwnedResult
 import com.appcoins.payments.arch.PurchaseRequest
 import com.appcoins.payments.arch.emptyPurchaseRequest
 import com.appcoins.payments.manager.presentation.PaymentMethodsUiState
 import com.aptoide.android.aptoidegames.feature_payments.PortraitPaymentErrorView
+import com.aptoide.android.aptoidegames.feature_payments.PortraitPaymentsItemOwnedView
 import com.aptoide.android.aptoidegames.feature_payments.PortraitPaymentsNoConnectionView
 import com.aptoide.android.aptoidegames.feature_payments.PurchaseInfoRow
 import com.aptoide.android.aptoidegames.feature_payments.presentation.rememberHasPreselectedPaymentMethod
@@ -29,6 +31,7 @@ private fun PortraitPaymentViewPreview(
     PortraitPaymentView(
       purchaseRequest = emptyPurchaseRequest,
       paymentState = state,
+      onGoBackToGameCLick = {},
       onPaymentMethodClick = {},
       onContactUsClick = {},
     )
@@ -39,6 +42,7 @@ private fun PortraitPaymentViewPreview(
 fun PortraitPaymentView(
   purchaseRequest: PurchaseRequest,
   paymentState: PaymentMethodsUiState,
+  onGoBackToGameCLick: () -> Unit,
   onPaymentMethodClick: (PaymentMethod<*>) -> Unit,
   onContactUsClick: () -> Unit,
 ) {
@@ -47,6 +51,11 @@ fun PortraitPaymentView(
     is PaymentMethodsUiState.Error -> when (paymentState.result) {
       is ConnectionFailedException -> PortraitPaymentsNoConnectionView(
         onRetryClick = paymentState.reload
+      )
+
+      is PaymentsItemOwnedResult -> PortraitPaymentsItemOwnedView(
+        onGoBackToGameCLick = onGoBackToGameCLick,
+        onContactUsClick = onContactUsClick
       )
 
       else -> PortraitPaymentErrorView(

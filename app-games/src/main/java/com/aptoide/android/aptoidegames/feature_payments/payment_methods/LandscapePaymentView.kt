@@ -13,10 +13,12 @@ import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewLandscapeDark
 import com.appcoins.payments.arch.ConnectionFailedException
 import com.appcoins.payments.arch.PaymentMethod
+import com.appcoins.payments.arch.PaymentsItemOwnedResult
 import com.appcoins.payments.arch.PurchaseRequest
 import com.appcoins.payments.arch.emptyPurchaseRequest
 import com.appcoins.payments.manager.presentation.PaymentMethodsUiState
 import com.aptoide.android.aptoidegames.feature_payments.LandscapePaymentErrorView
+import com.aptoide.android.aptoidegames.feature_payments.LandscapePaymentsItemOwnedView
 import com.aptoide.android.aptoidegames.feature_payments.LandscapePaymentsNoConnectionView
 import com.aptoide.android.aptoidegames.feature_payments.PurchaseInfoRow
 import com.aptoide.android.aptoidegames.feature_payments.presentation.rememberHasPreselectedPaymentMethod
@@ -31,6 +33,7 @@ private fun LandscapePaymentViewPreview(
     LandscapePaymentView(
       purchaseRequest = emptyPurchaseRequest,
       paymentState = state,
+      onGoBackToGameCLick = {},
       onPaymentMethodClick = {},
       onContactUsClick = {},
     )
@@ -41,6 +44,7 @@ private fun LandscapePaymentViewPreview(
 fun LandscapePaymentView(
   purchaseRequest: PurchaseRequest,
   paymentState: PaymentMethodsUiState,
+  onGoBackToGameCLick: () -> Unit,
   onPaymentMethodClick: (PaymentMethod<*>) -> Unit,
   onContactUsClick: () -> Unit,
 ) {
@@ -49,6 +53,11 @@ fun LandscapePaymentView(
     is PaymentMethodsUiState.Error -> when (paymentState.result) {
       is ConnectionFailedException -> LandscapePaymentsNoConnectionView(
         onRetryClick = paymentState.reload
+      )
+
+      is PaymentsItemOwnedResult -> LandscapePaymentsItemOwnedView(
+        onGoBackToGameCLick = onGoBackToGameCLick,
+        onContactUsClick = onContactUsClick
       )
 
       else -> LandscapePaymentErrorView(
