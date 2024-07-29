@@ -38,10 +38,12 @@ import cm.aptoide.pt.extensions.PreviewLandscapeDark
 import cm.aptoide.pt.extensions.ScreenData
 import com.appcoins.payments.arch.ConnectionFailedException
 import com.appcoins.payments.arch.PaymentMethod
+import com.appcoins.payments.arch.PaymentsItemOwnedResult
 import com.appcoins.payments.arch.PaymentsResult
 import com.appcoins.payments.arch.PurchaseRequest
 import com.appcoins.payments.arch.UnknownErrorException
 import com.appcoins.payments.arch.emptyPaymentMethod
+import com.appcoins.payments.arch.emptyPurchaseInfoData
 import com.appcoins.payments.arch.emptyPurchaseRequest
 import com.appcoins.payments.manager.presentation.PaymentMethodsUiState
 import com.appcoins.payments.manager.presentation.rememberPaymentMethods
@@ -113,11 +115,15 @@ private fun MainPaymentsView(
     purchaseRequest = purchaseRequest,
     paymentState = paymentState,
     onOutsideClick = {
-      genericAnalytics.sendPaymentMethodsDismissedEvent(
-        packageName = purchaseRequest.domain,
-        productInfoData = productInfo,
-      )
-      onFinish(PaymentsCancelledResult)
+      if (paymentState is PaymentMethodsUiState.Error && paymentState.result is PaymentsItemOwnedResult) {
+        onFinish(paymentState.result)
+      } else {
+        genericAnalytics.sendPaymentMethodsDismissedEvent(
+          packageName = purchaseRequest.domain,
+          productInfoData = productInfo,
+        )
+        onFinish(PaymentsCancelledResult)
+      }
     },
     onPaymentMethodClick = { paymentMethod ->
       genericAnalytics.sendPaymentMethodsEvent(paymentMethod = paymentMethod)
@@ -144,6 +150,7 @@ private fun ShowPaymentsList(
         LandscapePaymentView(
           purchaseRequest = purchaseRequest,
           paymentState = paymentState,
+          onGoBackToGameCLick = onOutsideClick,
           onPaymentMethodClick = onPaymentMethodClick,
           onContactUsClick = onContactUsClick,
         )
@@ -153,6 +160,7 @@ private fun ShowPaymentsList(
         PortraitPaymentView(
           purchaseRequest = purchaseRequest,
           paymentState = paymentState,
+          onGoBackToGameCLick = onOutsideClick,
           onPaymentMethodClick = onPaymentMethodClick,
           onContactUsClick = onContactUsClick,
         )
@@ -404,5 +412,6 @@ class PaymentMethodsUiStateProvider : PreviewParameterProvider<PaymentMethodsUiS
     PaymentMethodsUiState.Loading,
     PaymentMethodsUiState.Error(UnknownErrorException()),
     PaymentMethodsUiState.Error(ConnectionFailedException()),
+    PaymentMethodsUiState.Error(PaymentsItemOwnedResult(emptyPurchaseInfoData)),
   )
 }
