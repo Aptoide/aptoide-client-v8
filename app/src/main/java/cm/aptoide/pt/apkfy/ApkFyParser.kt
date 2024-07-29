@@ -28,12 +28,7 @@ class ApkFyParser(
         try {
           val apkfyModel = apkfyManager.getApkfy()
           updateApkfy(apkfyModel)
-          firstLaunchAnalytics.sendIndicativeFirstLaunchSourceUserProperties(
-            apkfyModel.utmContent,
-            apkfyModel.utmSource,
-            apkfyModel.utmCampaign,
-            apkfyModel.utmMedium,
-          )
+          setApkfyUtmProperties(apkfyModel)
         } catch (throwable: Throwable) {
           throwable.printStackTrace()
         }
@@ -41,21 +36,65 @@ class ApkFyParser(
     }
   }
 
+  private fun setApkfyUtmProperties(apkfyModel: ApkfyModel) {
+    if (apkfyModel.hasUTMs()) {
+      if (!apkfyModel.packageName.isNullOrBlank() || apkfyModel.appId != null) {
+        firstLaunchAnalytics.sendIndicativeFirstLaunchSourceUserProperties(
+          apkfyModel.utmContent,
+          apkfyModel.utmSource,
+          apkfyModel.utmCampaign,
+          apkfyModel.utmMedium,
+          apkfyModel.utmTerm,
+          apkfyModel.packageName
+        )
+      } else {
+        firstLaunchAnalytics.sendIndicativeFirstLaunchSourceUserProperties(
+          apkfyModel.utmContent,
+          apkfyModel.utmSource,
+          apkfyModel.utmCampaign,
+          apkfyModel.utmMedium,
+          apkfyModel.utmTerm,
+          APKFY_PACKAGE_NO_APP
+        )
+      }
+    } else {
+      if (!apkfyModel.packageName.isNullOrBlank() || apkfyModel.appId != null) {
+        firstLaunchAnalytics.sendIndicativeFirstLaunchSourceUserProperties(
+          apkfyModel.utmContent,
+          apkfyModel.utmSource,
+          apkfyModel.utmCampaign,
+          apkfyModel.utmMedium,
+          apkfyModel.utmTerm,
+          APKFY_PACKAGE_APKFY_NO_UTM
+        )
+      } else {
+        firstLaunchAnalytics.sendIndicativeFirstLaunchSourceUserProperties(
+          APKFY_PACKAGE_NO_APKY,
+          APKFY_PACKAGE_NO_APKY,
+          APKFY_PACKAGE_NO_APKY,
+          APKFY_PACKAGE_NO_APKY,
+          apkfyModel.utmTerm,
+          APKFY_PACKAGE_NO_APKY
+        )
+      }
+    }
+  }
+
   private fun updateApkfy(apkfyModel: ApkfyModel) {
-    if (!apkfyModel.packageName.isNullOrEmpty() && !apkfyModel.packageName.contains("cm.aptoide.pt")) {
+    if (!apkfyModel.packageName.isNullOrBlank() && !apkfyModel.packageName.contains("cm.aptoide.pt")) {
       if (apkfyModel.appId != null) {
         intent.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true)
         intent.putExtra(DeepLinksKeys.APP_ID_KEY, apkfyModel.appId)
-        if (!apkfyModel.oemId.isNullOrEmpty()) {
+        if (!apkfyModel.oemId.isNullOrBlank()) {
           intent.putExtra(DeepLinksKeys.OEM_ID_KEY, apkfyModel.oemId)
         }
         intent.putExtra(DeepLinksKeys.APK_FY, true)
         SecurePreferences.setApkFyRun(securePreferences)
         context.startActivity(intent)
-      } else if (!apkfyModel.packageName.isNullOrEmpty()) {
+      } else if (!apkfyModel.packageName.isNullOrBlank()) {
         intent.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true)
         intent.putExtra(DeepLinksKeys.PACKAGE_NAME_KEY, apkfyModel.packageName)
-        if (!apkfyModel.oemId.isNullOrEmpty()) {
+        if (!apkfyModel.oemId.isNullOrBlank()) {
           intent.putExtra(DeepLinksKeys.OEM_ID_KEY, apkfyModel.oemId)
         }
         intent.putExtra(DeepLinksKeys.APK_FY, true)
@@ -63,5 +102,11 @@ class ApkFyParser(
         context.startActivity(intent)
       }
     }
+  }
+
+  companion object {
+    const val APKFY_PACKAGE_NO_APP = "APKFY_BUT_NO_APP"
+    const val APKFY_PACKAGE_APKFY_NO_UTM = "APKFY_BUT_NO_UTM"
+    const val APKFY_PACKAGE_NO_APKY = "NO_APKFY"
   }
 }

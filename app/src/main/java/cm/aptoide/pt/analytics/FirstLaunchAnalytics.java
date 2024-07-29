@@ -41,6 +41,8 @@ public class FirstLaunchAnalytics {
   private static final String UTM_MEDIUM = "UTM Medium";
   private static final String UTM_CONTENT = "UTM Content";
   private static final String UTM_CAMPAIGN = "UTM Campaign";
+
+  private static final String UTM_TERM = "UTM Term";
   private static final String ENTRY_POINT = "Entry Point";
   private static final String CATEGORY = "category";
   private static final String IS_ACTIVE = "is_active";
@@ -50,6 +52,7 @@ public class FirstLaunchAnalytics {
   private final static String UTM_SOURCE_RAKAM = "utm_source";
   private final static String UTM_CAMPAIGN_RAKAM = "utm_campaign";
   private final static String UTM_MEDIUM_RAKAM = "utm_medium";
+  private static final String UTM_PACKAGE_NAME = "utm_package_name";
   private final static String ENTRY_POINT_RAKAM = "entry_point";
   private static final String APTOIDE_PACKAGE = "aptoide_package";
   private final AnalyticsManager analyticsManager;
@@ -233,13 +236,15 @@ public class FirstLaunchAnalytics {
   }
 
   public void sendIndicativeFirstLaunchSourceUserProperties(String utmContent, String utmSource,
-      String utmCampaign, String utmMedium) {
+      String utmCampaign, String utmMedium, String term, String packageName) {
     Map<String, Object> indicativeProperties = new HashMap<>();
     indicativeProperties.put(GMS_RAKAM, gmsStatusValueProvider.getGmsValue());
     indicativeProperties.put(UTM_CONTENT_RAKAM, utmContent);
     indicativeProperties.put(UTM_SOURCE_RAKAM, utmSource);
     indicativeProperties.put(UTM_CAMPAIGN_RAKAM, utmCampaign);
     indicativeProperties.put(UTM_MEDIUM_RAKAM, utmMedium);
+    indicativeProperties.put(UTM_TERM, term);
+    indicativeProperties.put(UTM_PACKAGE_NAME, packageName);
     Indicative.addProperties(indicativeProperties);
   }
 }
