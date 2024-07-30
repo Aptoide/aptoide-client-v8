@@ -1,149 +1,152 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">App Games</string>
+  <string name="app_name">Aptoide Games</string>
   <!-- Bottom Bar -->
   <string name="games">Oyunlar</string>
   <string name="categories">Kategoriler</string>
   <string name="search">Arama</string>
   <!-- Common -->
   <string name="send_button">Gönder</string>
+  <string name="try_again">Lütfen tekrar dene.</string>
+  <string name="please_wait">Lütfen bekle.</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Ayarlar</string>
-  <string name="overflow_menu_terms_conditions">Terms &amp; Conditions</string>
+  <string name="overflow_menu_terms_conditions">Şartlar &amp; Koşullar</string>
   <string name="overflow_menu_privacy_policy">Gizlilik Politikası</string>
-  <string name="settings_about_hardware_title">Hardware specs</string>
+  <string name="settings_about_hardware_title">Donanım özellikleri</string>
   <string name="settings_about_title">Hakkımızda</string>
-  <string name="settings_about_version">Version %1$s (%2$s)</string>
-  <string name="settings_copied_to_clipboard_message">Copied to clipboard</string>
+  <string name="settings_about_version">Sürüm %1$s (%2$s)</string>
+  <string name="settings_copied_to_clipboard_message">Panoya kopyalandı</string>
   <string name="settings_general_title">Genel</string>
   <string name="settings_theme_option_dark">Karanlık</string>
   <string name="settings_theme_option_light">Işık</string>
-  <string name="settings_theme_option_system">System default</string>
+  <string name="settings_theme_option_system">Sistem varsayılanı</string>
   <string name="settings_theme_options_title">Tema</string>
   <string name="settings_title">Ayarlar</string>
   <string name="settings_support">Destek</string>
   <string name="settings_feedback_button">Geri Bildirim Gönder</string>
   <string name="settings_feedback_title">Geri Bildirim Gönder</string>
   <string name="settings_legal_title">Yasal</string>
-  <string name="settings_send_feedback_body">Let us know what you think about Aptoide Games!\n\u2022 Any new feature you would like to see?\n\u2022 How do you think we can improve?</string>
+  <string name="settings_send_feedback_body">Aptoide Games hakkında ne düşündüğünüzü bize bildirin!\n\u2022 Görmek istediğiniz yeni bir özellik var mı?\n\u2022 Nasıl geliştirebiliriz?</string>
   <string name="settings_payment_support_description_title">Açıklama</string>
-  <string name="settings_contact_form_character_limit_title">(50 Characters Min.)</string>
-  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Description (50 characters min.)</string>
+  <string name="settings_contact_form_character_limit_title">(En Az 50 Karakter)</string>
+  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Açıklama (En az 50 karakter)</string>
   <!-- MyGames -->
-  <string name="my_games_empty">We couldn\'t find any games installed on your device!</string>
-  <string name="my_games_progress_message">Organizing your games</string>
-  <string name="empty_category_body">There\'re no apps in this category... Yet!</string>
+  <string name="my_games_empty">Cihazında yüklü herhangi bir oyun bulamadık!</string>
+  <string name="my_games_progress_message">Oyunlarını düzenlemek</string>
+  <string name="empty_category_body">Bu kategoride hiç uygulama yok... Henüz yok!</string>
   <!-- Notifications -->
-  <string name="notifications_context_title">Get notified!</string>
+  <string name="notifications_context_title">Haberdar ol!</string>
   <string name="notification_installing_title">Yükleniyor</string>
-  <string name="notification_waiting_body">Waiting for download</string>
+  <string name="notification_waiting_body">İndirme bekleniyor</string>
   <string name="notification_1_installed_title">Yüklü</string>
-  <string name="notification_downloading_body">Downloading %1$s%% of %2$s</string>
-  <string name="notification_waiting_for_wifi_title">Waiting for Wi-Fi</string>
-  <string name="notifications_context_body">We\'ll let you know about the latest trends in the gaming world!</string>
+  <string name="notification_downloading_body">İndiriliyor %1$s[%1$s] / %2$s</string>
+  <string name="notification_waiting_for_wifi_title">Wi-Fi bekleniyor</string>
+  <string name="notifications_context_body">Oyun dünyasındaki en son tredler hakkında seni bilgilendireceğiz!</string>
   <!-- Talkback -->
-  <string name="home_overflow_talkback">Options</string>
-  <string name="app_view_image_description_body">Image of %1$s</string>
-  <string name="app_view_screenshot_number">Screenshot %1$s</string>
-  <string name="app_view_icon_description_body">Icon of %1$s</string>
-  <string name="search_remove_from_recent_talkback">remove from recent searches</string>
-  <string name="search_clear_talkback">clear search</string>
+  <string name="home_overflow_talkback">Seçenekler</string>
+  <string name="app_view_image_description_body">%1$s Resmi</string>
+  <string name="app_view_screenshot_number">Ekran Görüntüsü %1$s</string>
+  <string name="app_view_icon_description_body">%1$s Simgesi</string>
+  <string name="search_remove_from_recent_talkback">son aramalardan kaldır</string>
+  <string name="search_clear_talkback">aramayı sil</string>
   <string name="search_item_talkback">arama</string>
   <!-- Download over Wi-Fi -->
-  <string name="wifi_settings_title">Download only over Wi-Fi</string>
-  <string name="wifi_disclaimer_on_body">You\'re currently using your mobile data. Do you want to download %s when Wi-Fi is available?</string>
-  <string name="wifi_disclamer_off_body">This is a big file (%s). Do you want to download it when Wi-Fi is available?</string>
+  <string name="wifi_settings_title">Yalnızca Wi-Fi üzerinden indir</string>
+  <string name="wifi_disclaimer_on_body">Şu anda mobil veriyi kullanıyorsun. Wi-Fi kullanılabilir olduğunda %s indirmek ister misin?</string>
+  <string name="wifi_disclamer_off_body">Bu büyük bir dosya (%s). Wi-Fi kullanılabilir olduğunda indirmek ister misin?</string>
   <string name="wifi_disclaimer_title">Emin misin?</string>
   <!-- Fixed bundles -->
-  <string name="editorial_more_articles_title">More articles</string>
-  <string name="fixed_bundle_just_arrived_title">Just Arrived</string>
-  <string name="fixed_bundle_my_games_title">My Games</string>
+  <string name="editorial_more_articles_title">Daha fazla makale</string>
+  <string name="fixed_bundle_just_arrived_title">Yeni Geldi</string>
+  <string name="fixed_bundle_my_games_title">Oyunlarım</string>
   <string name="fixed_bundle_editors_choice_title">Editörün Seçimi</string>
   <string name="fixed_bundle_editorial_title">Yazılar</string>
   <string name="fixed_bundle_trending_title">Popüler</string>
-  <string name="fixed_bundle_publisher_title">Have Fun with %s</string>
+  <string name="fixed_bundle_publisher_title">%s ile İyi Eğlenceler</string>
   <string name="retry_button" comment="button_retry_title">Yeniden dene</string>
   <string name="generic_error_message">Bir şeyler ters gitti. Yeniden dene.</string>
   <string name="generic_network_error_message">Hay aksi, bir şeyler ters gitti. Lütfen internet bağlantını kontrol et.</string>
-  <string name="install_waiting_installation_message">Waiting for install</string>
+  <string name="install_waiting_installation_message">Kurulum bekleniyor</string>
   <string name="install_installing_message">Yükleniyor</string>
-  <string name="install_error_short_message">Oops, an error occurred.</string>
+  <string name="install_error_short_message">Hay aksi, bir hata oluştu.</string>
   <string name="error_message_no_internet_title">Hay aksi, bir şeyler ters gitti</string>
-  <string name="error_message_no_internet_body">Please check your Internet connection.</string>
+  <string name="error_message_no_internet_body">Lütfen Internet bağlantını kontrol et.</string>
   <string name="error_message_generic_title">Bir şeyler ters gitti</string>
   <string name="error_message_generic_body">Tekrar dene.</string>
-  <string name="app_info_send_email_subject">Feedback</string>
+  <string name="app_info_send_email_subject">Geri bildirim</string>
   <string name="button_copy_title">Kopyala</string>
   <string name="button_back_title">Geri</string>
   <string name="button_see_all_title">Tümünü Gör</string>
-  <string name="editorials_view_no_content_message">Oops, there\'s no content here yet!</string>
+  <string name="editorials_view_no_content_message">Hay aksi, burada henüz içerik yok!</string>
   <string name="button_update_title">Güncelleme</string>
   <string name="button_open_app_title">Aç</string>
-  <string name="install_waiting_download_message">Waiting for download</string>
-  <string name="downloading_percentage_body">%1$s%% of %2$s</string>
+  <string name="install_waiting_download_message">İndirme bekleniyor</string>
+  <string name="downloading_percentage_body">%1$s[%1$s] / %2$s</string>
   <string name="install_downloading_message">İndiriliyor</string>
   <!-- Common -->
-  <string name="download_now_button">Download Now</string>
+  <string name="download_now_button">Şimdi İndirin</string>
   <string name="uninstall_button">Kaldır</string>
-  <string name="go_back_button">Go Back</string>
-  <string name="uninstalling">Uninstalling</string>
+  <string name="go_back_button">Geri git</string>
+  <string name="go_back_to_game_button">Go Back to Game</string>
+  <string name="uninstalling">Kaldırılıyor</string>
   <string name="resume_button">Devam et</string>
-  <string name="waiting_for_connection">Waiting for connection</string>
-  <string name="wait_for_wifi_button">Wait for Wi-Fi</string>
+  <string name="waiting_for_connection">Bağlantı bekleniyor</string>
+  <string name="wait_for_wifi_button">Wi-Fi için bekle</string>
   <string name="continue_button">Devam et</string>
   <!-- Out of Space -->
-  <string name="out_of_space_title">Out of Space</string>
+  <string name="out_of_space_title">Yer Yok</string>
   <string name="out_of_space_body">Yüklemeye devam etmek için %s gerekli.</string>
-  <string name="out_of_space_enough_body">You have enough free space now!</string>
+  <string name="out_of_space_enough_body">Artık yeterli boş alan var!</string>
   <!-- Talkback -->
-  <string name="appview_status_outdated_talkback">Outdated</string>
-  <string name="appview_status_not_installed_talkback">Not installed</string>
+  <string name="appview_status_outdated_talkback">Güncel değil</string>
+  <string name="appview_status_not_installed_talkback">Yüklenmedi</string>
   <string name="appview_status_installed_talkback">Yüklü</string>
   <string name="appview_status_failed_talkback">Başarısız oldu</string>
   <string name="appview_action_cancel_talkback">İptal et</string>
-  <string name="appview_installer_talkback">%1$s installer.</string>
-  <string name="appview_action_double_tap_talkback">Double tap to %1$s</string>
+  <string name="appview_installer_talkback">%1$s yükleyici.</string>
+  <string name="appview_action_double_tap_talkback">%1$s için çift dokun.</string>
   <!-- Search -->
-  <string name="search_suggested_title">Suggested Searches</string>
-  <string name="search_recent_title">Recent Searches</string>
-  <string name="search_popular_title">Popular Searches</string>
-  <string name="search_bar_label">Search for games...</string>
-  <string name="search_empty_body">Oops, there are no results for \"%s\".\nTry with different words!</string>
+  <string name="search_suggested_title">Önerilen Aramalar</string>
+  <string name="search_recent_title">Son Aramalar</string>
+  <string name="search_popular_title">Popüler Aramalar</string>
+  <string name="search_bar_label">Oyunları ara...</string>
+  <string name="search_empty_body">Hay aksi, \"%s\" için sonuç yok.\nBaşka kelimelerle dene!</string>
   <!-- Install -->
   <string name="button_install_title">Kur</string>
   <!-- Common -->
-  <string name="notice_at_collection_and_privacy_policy">Notice at Collection &amp; Privacy Policy</string>
-  <string name="terms_and_conditions">Terms</string>
-  <string name="continue_to_accept_tandc_and_pp_disclaimer">By continuing you accept the %1$s and %2$s.</string>
+  <string name="notice_at_collection_and_privacy_policy">Toplama Uyarısı &amp; Gizlilik Politikası</string>
+  <string name="terms_and_conditions">Şartlar</string>
+  <string name="continue_to_accept_tandc_and_pp_disclaimer">Devam ederek %1$s ve %2$s kabul etmiş olursun.</string>
   <string name="appview_details_tab_title" comment="details">Detaylar</string>
-  <string name="appview_related_tab_title" comment="related">Related</string>
+  <string name="appview_related_tab_title" comment="related">İlgili</string>
   <string name="appview_info_tab_title" comment="info">Bilgi</string>
-  <string name="bottom_navigation_discovery" comment="discovery">Discovery</string>
-  <string name="appview_info_version_name_title" comment="version_name">Version name</string>
+  <string name="bottom_navigation_discovery" comment="discovery">Keşif</string>
+  <string name="appview_info_version_name_title" comment="version_name">Sürüm ismi</string>
   <string name="appview_info_package_name_title" comment="package_name">Paket adı</string>
-  <string name="appview_info_release_title" comment="release">Release</string>
-  <string name="appview_info_update_title" comment="updated_on">Updated on</string>
-  <string name="appview_info_download_size_title" comment="download_size">Download size</string>
+  <string name="appview_info_release_title" comment="release">Yayınlanma</string>
+  <string name="appview_info_update_title" comment="updated_on">Güncellenme tarihi</string>
+  <string name="appview_info_download_size_title" comment="download_size">İndirme boyutu</string>
   <string name="appview_info_website_title" comment="website">İnternet sitesi</string>
   <string name="appview_info_email_title" comment="email">E-posta</string>
   <string name="appview_info_permissions_title" comment="permissions">İzinler</string>
-  <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% of %2$s</string>
-  <string name="error_short_title" comment="oops_an_error_occurred">Oops, an error occurred</string>
-  <string name="purchase_done_existing_bonus_body">You now have %s in bonus. Download the AppCoins Wallet to use them in your next purchase.</string>
-  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">You\’ll get a bonus in all games identified with %s.</string>
-  <string name="bonus_banner_title" comment="up_to_s_bonus">Up to %s%% Bonus</string>
+  <string name="download_percentage_body" comment="1_s_of_2_s">%1$s[%1$s] / %2$s</string>
+  <string name="error_short_title" comment="oops_an_error_occurred">Hay aksi, bir hata oluştu</string>
+  <string name="purchase_done_existing_bonus_body">Artık %s bonusun var. Bir sonraki satın alma işleminde kullanmak için AppCoins Wallet\'ı indir.</string>
+  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">%s olan tüm oyunlarda bonus kazanacaksın.</string>
+  <string name="bonus_banner_title" comment="up_to_s_bonus">%s%%\'e varan Bonus</string>
   <string name="settings_payments_title" comment="contact_support_team">Destek Ekibiyle iletişime geçin</string>
-  <string name="settings_contact_support_body" comment="billing_terms_of_use">Billing Terms of Use</string>
-  <string name="settings_billing_terms_body" comment="payments">Payments</string>
+  <string name="settings_contact_support_body" comment="billing_terms_of_use">Faturalandırma Kullanım Koşulları</string>
+  <string name="settings_billing_terms_body" comment="payments">Ödemeler</string>
   <string name="powered_by_title" comment="powered_by">Powered by</string>
   <string name="contact_support_title" comment="contact_support">Destekle İletişime Geçin</string>
-  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Please give us all the details:\n\u2022 When did the problem start\n\u2022 On which game are you making a purchase\n\nOnce you tap on Send, your mail app will open. Feel free to attach a screenshot or video about the issue!</string>
-  <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Do you want to install this game?</string>
+  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Lütfen bize tüm ayrıntıları ver:\n\u2022 Sorun ne zaman başladı\n\u2022 Hangi oyunda satın alma işlemi yapıyorsun\n\nGönder butonuna dokunduğunda, posta uygulaman açılacak. Sorunla ilgili bir ekran görüntüsü veya video ekleyebilirsin!</string>
+  <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Bu oyunu yüklemek istiyor musun?</string>
   <string name="app_size_mb_title" comment="s_mb">%s MB</string>
   <string name="uninstalled_title" comment="uninstalled">Kaldırılmış</string>
-  <string name="error_no_internet_body" comment="please_check_your_internet_connection">Please check your Internet connection.</string>
+  <string name="error_no_internet_body" comment="please_check_your_internet_connection">Lütfen internet bağlantını kontrol et.</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Appcoins Wallet ile öde</string>
-  <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">It\'ll be installed automatically and you\'ll get a bonus in all purchases!</string>
+  <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Otomatik olarak yüklenecek ve tüm satın alma işlemlerinde bonus kazanacaksın!</string>
   <string name="buy_button" comment="buy">Satın Al</string>
   <string name="iap_other_payment_methods_button" comment="other_payment_methods">Diğer ödeme yöntemleri</string>
   <string name="iap_remember_card_button" comment="remember_card">Kartı hatırla</string>
@@ -151,13 +154,36 @@
   <string name="iap_card_expiry" comment="expiry_date">Son kullanma tarihi</string>
   <string name="iap_card_cvc" comment="cvc_cvv">CVC/CVV</string>
   <string name="iab_change_card_button" comment="change_card">Kartı değiştir</string>
-  <string name="ui_flow_mvp__game__making" comment="done">Done!</string>
-  <string name="purchase_making_purchase_title" comment="making_purchase">Making Purchase...</string>
+  <string name="done_title" comment="done">Bitti!</string>
+  <string name="purchase_making_purchase_title" comment="making_purchase">Ödeme Yapılıyor...</string>
   <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">Kart bilgilerinizin doğru olduğundan emin misiniz? Lütfen tekrar deneyin!</string>
   <string name="log_out_button" comment="log_out">Çıkış</string>
-  <string name="get_a_bonus_in_all_purchases_title">You\'ll get a bonus in all purchases!</string>
-  <string name="iap_appc_body">You\'ll get a bonus in all purchases!</string>
-  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">You can now complete your purchase.</string>
-  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">The AppCoins Wallet is now installed!</string>
-  <string name="storage_access_permission_request_message">Allow access to your phone’s storage so we can download and install this app.</string>
+  <string name="get_a_bonus_in_all_purchases_title">Tüm satın alma işlemlerinde bonus kazanacaksın!</string>
+  <string name="iap_appc_body">Tüm satın alma işlemlerinde bonus kazanacaksın!</string>
+  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Artık alışverişini tamamlayabilirsin.</string>
+  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">AppCoins Wallet yüklendi!</string>
+  <string name="storage_access_permission_request_message">Bu uygulamayı indirebilmemiz ve kurabilmemiz için telefonunun depolama alanına erişime izin ver.</string>
+  <!-- Payment Errors-->
+  <string name="payments_error_not_enough_balance_body">Yeterli bakiyen yok</string>
+  <string name="payments_error_old_card_title">Görünüşe göre bu kartı uzun zaman önce ekledin!</string>
+  <string name="payments_error_old_card_body">Kart bilgilerini tekrar gir veya farklı bir kart kullan.</string>
+  <string name="purchase_error_payment_rejected">İşlem reddedildi.</string>
+  <string name="purchase_error_try_other_card_body">Lütfen farklı bir kart veya ödeme yöntemi ile dene.</string>
+  <string name="purchase_card_error_general_title">Kartınla ilgili bir sorun oluştu.</string>
+  <string name="purchase_error_try_other_payment_method_body">Lütfen farklı bir ödeme yöntemiyle dene.</string>
+  <string name="purchase_card_error_no_funds">Görünüşe göre yeterli paran yok veya kartında bir limit var.</string>
+  <string name="purchase_card_error_invalid_details_title">Geçersiz kart numarası.</string>
+  <string name="purchase_error_check_it_body">Lütfen kontrol edip tekrar deneç</string>
+  <string name="purchase_card_error_not_supported_title">Kartın henüz desteklenmiyor.</string>
+  <string name="purchase_error_wrong_pin_title">Pin kodu ile ilgili bir sorun oluştu.</string>
+  <string name="purchase_error_3d_title">3D kimlik doğrulamasında bir sorun oluştu.</string>
+  <string name="purchase_card_rejected_title">İşlem bankan tarafından reddedildi.</string>
+  <string name="purchase_error_invalid_credit_card_title">Geçersiz banka kartı numarası.</string>
+  <string name="purchase_error_invalid_credit_card_body">Lütfen tüm rakamların doğru olduğundan emin ol.</string>
+  <string name="purchase_error_card_security_validation_title">Bu işlemin 2. seviye doğrulamasında bir hata oluştu.</string>
+  <string name="purchase_error_in_progress_title">Talebiniz zaten işlenmiş veya işleniyor.</string>
+  <string name="purchase_card_error_CVV_title">Yanlış CVV/CVC</string>
+  <string name="purchase_error_expired_card_title">Kartın süresi dolmuş gibi görünüyor.</string>
+  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
+  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
 </resources>
