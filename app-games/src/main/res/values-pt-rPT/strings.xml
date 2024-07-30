@@ -88,6 +88,7 @@
   <string name="download_now_button">Faz Download Agora</string>
   <string name="uninstall_button">Desinstalar</string>
   <string name="go_back_button">Voltar Atrás</string>
+  <string name="go_back_to_game_button">Go Back to Game</string>
   <string name="uninstalling">A desinstalar</string>
   <string name="resume_button">Continuar</string>
   <string name="waiting_for_connection">A aguardar ligação</string>
@@ -183,4 +184,6 @@
   <string name="purchase_error_in_progress_title">O teu pedido já foi processado ou está em curso.</string>
   <string name="purchase_card_error_CVV_title">CVV/CVC errado</string>
   <string name="purchase_error_expired_card_title">Parece que o teu cartão expirou.</string>
+  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
+  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
 </resources>
