@@ -88,6 +88,7 @@
   <string name="download_now_button">立即下载</string>
   <string name="uninstall_button">卸载</string>
   <string name="go_back_button">返回</string>
+  <string name="go_back_to_game_button">Go Back to Game</string>
   <string name="uninstalling">卸载中</string>
   <string name="resume_button">继续</string>
   <string name="waiting_for_connection">等待网络连接中</string>
@@ -183,4 +184,6 @@
   <string name="purchase_error_in_progress_title">您的请求已被处理或正在处理中。</string>
   <string name="purchase_card_error_CVV_title">CVV/CVC错误</string>
   <string name="purchase_error_expired_card_title">您的卡似乎已过期。</string>
+  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
+  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
 </resources>
