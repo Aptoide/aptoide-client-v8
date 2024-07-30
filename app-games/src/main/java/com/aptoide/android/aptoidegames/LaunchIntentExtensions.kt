@@ -2,6 +2,7 @@ package com.aptoide.android.aptoidegames
 
 import android.content.Intent
 import android.net.Uri
+import com.aptoide.android.aptoidegames.analytics.presentation.withPrevScreen
 
 // Deep link
 private const val DEEPLINK_KEY = "ag.link"
@@ -19,4 +20,5 @@ fun Intent.putNotificationSource(): Intent = putExtra(LAUNCH_SOURCE, "notificati
 val Intent?.agDeepLink
   get() = this?.extras
     ?.getString(DEEPLINK_KEY)
+    ?.withPrevScreen("notification")
     ?.let(Uri::parse)
