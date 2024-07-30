@@ -88,6 +88,7 @@
   <string name="download_now_button">Preuzmite sada</string>
   <string name="uninstall_button">Деинсталирај</string>
   <string name="go_back_button">Vratite se nazad</string>
+  <string name="go_back_to_game_button">Go Back to Game</string>
   <string name="uninstalling">Deinstaliranje</string>
   <string name="resume_button">Nastavi</string>
   <string name="waiting_for_connection">Čeka se veza</string>
@@ -183,4 +184,6 @@
   <string name="purchase_error_in_progress_title">Vaš zahtev je već obrađen ili je u toku.</string>
   <string name="purchase_card_error_CVV_title">Pogrešan CVV/CVC</string>
   <string name="purchase_error_expired_card_title">Izgleda da je vaša kartica istekla.</string>
+  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
+  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
 </resources>
