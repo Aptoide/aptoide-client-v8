@@ -1,149 +1,153 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">App Games</string>
+  <string name="app_name">Aptoide Games</string>
   <!-- Bottom Bar -->
   <string name="games">ゲーム</string>
   <string name="categories">カテゴリー</string>
   <string name="search">検索</string>
   <!-- Common -->
   <string name="send_button">送信</string>
+  <string name="try_again">再試行してください。</string>
+  <string name="please_wait">しばらくお待ちください</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">設定</string>
-  <string name="overflow_menu_terms_conditions">Terms &amp; Conditions</string>
+  <string name="overflow_menu_terms_conditions">利用条件</string>
   <string name="overflow_menu_privacy_policy">プライバシー ポリシー</string>
-  <string name="settings_about_hardware_title">Hardware specs</string>
+  <string name="settings_about_hardware_title">ハードウェア要件</string>
   <string name="settings_about_title">About Us</string>
-  <string name="settings_about_version">Version %1$s (%2$s)</string>
-  <string name="settings_copied_to_clipboard_message">Copied to clipboard</string>
+  <string name="settings_about_version">バージョン %1$s (%2$s)</string>
+  <string name="settings_copied_to_clipboard_message">クリップボードにコピー</string>
   <string name="settings_general_title">全般</string>
   <string name="settings_theme_option_dark">ダーク</string>
   <string name="settings_theme_option_light">ライト</string>
-  <string name="settings_theme_option_system">System default</string>
+  <string name="settings_theme_option_system">システムのデフォルト</string>
   <string name="settings_theme_options_title">テーマ</string>
   <string name="settings_title">設定</string>
   <string name="settings_support">サポート</string>
   <string name="settings_feedback_button">フィードバックを送る</string>
   <string name="settings_feedback_title">フィードバックを送る</string>
   <string name="settings_legal_title">規約</string>
-  <string name="settings_send_feedback_body">Let us know what you think about Aptoide Games!\n\u2022 Any new feature you would like to see?\n\u2022 How do you think we can improve?</string>
+  <string name="settings_send_feedback_body">Aptoide Gamesについてのご意見をお聞かせください！\n\u2022 追加してほしい新機能はありますか？\n\u2022どのように改善できると思いますか？</string>
   <string name="settings_payment_support_description_title">内容</string>
-  <string name="settings_contact_form_character_limit_title">(50 Characters Min.)</string>
-  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Description (50 characters min.)</string>
+  <string name="settings_contact_form_character_limit_title">(50文字以上)</string>
+  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">説明（50文字以上）</string>
   <!-- MyGames -->
-  <string name="my_games_empty">We couldn\'t find any games installed on your device!</string>
-  <string name="my_games_progress_message">Organizing your games</string>
-  <string name="empty_category_body">There\'re no apps in this category... Yet!</string>
+  <string name="my_games_empty">お使いのデバイスにインストールされているゲームが見つかりませんでした</string>
+  <string name="my_games_progress_message">ゲームを整理</string>
+  <string name="empty_category_body">このカテゴリのアプリはありません...</string>
   <!-- Notifications -->
-  <string name="notifications_context_title">Get notified!</string>
+  <string name="notifications_context_title">通知を受け取る</string>
   <string name="notification_installing_title">インストール中</string>
-  <string name="notification_waiting_body">Waiting for download</string>
+  <string name="notification_waiting_body">ダウンロード待ち</string>
   <string name="notification_1_installed_title">インストール済</string>
-  <string name="notification_downloading_body">Downloading %1$s%% of %2$s</string>
-  <string name="notification_waiting_for_wifi_title">Waiting for Wi-Fi</string>
-  <string name="notifications_context_body">We\'ll let you know about the latest trends in the gaming world!</string>
+  <string name="notification_downloading_body">%2$sの%1$s%%をダウンロードしています。</string>
+  <string name="notification_waiting_for_wifi_title">Wi-Fi待ち</string>
+  <string name="notifications_context_body">ゲーム界の最新トレンドをお伝えします！</string>
   <!-- Talkback -->
-  <string name="home_overflow_talkback">Options</string>
-  <string name="app_view_image_description_body">Image of %1$s</string>
-  <string name="app_view_screenshot_number">Screenshot %1$s</string>
-  <string name="app_view_icon_description_body">Icon of %1$s</string>
-  <string name="search_remove_from_recent_talkback">remove from recent searches</string>
-  <string name="search_clear_talkback">clear search</string>
+  <string name="home_overflow_talkback">オプション</string>
+  <string name="app_view_image_description_body">%1$sの画像</string>
+  <string name="app_view_screenshot_number">スクリーンショット %1$s</string>
+  <string name="app_view_icon_description_body">%1$sのアイコン</string>
+  <string name="search_remove_from_recent_talkback">最近の検索から削除</string>
+  <string name="search_clear_talkback">検索をクリア</string>
   <string name="search_item_talkback">検索する</string>
   <!-- Download over Wi-Fi -->
-  <string name="wifi_settings_title">Download only over Wi-Fi</string>
-  <string name="wifi_disclaimer_on_body">You\'re currently using your mobile data. Do you want to download %s when Wi-Fi is available?</string>
-  <string name="wifi_disclamer_off_body">This is a big file (%s). Do you want to download it when Wi-Fi is available?</string>
+  <string name="wifi_settings_title">Wi-Fi経由でのみダウンロード</string>
+  <string name="wifi_disclaimer_on_body">現在モバイルデータを使用しています。Wi-Fiが利用できるときに%sをダウンロードしますか？</string>
+  <string name="wifi_disclamer_off_body">これは大きなファイルです（%s）。Wi-Fiが利用できるときにダウンロードしますか？</string>
   <string name="wifi_disclaimer_title">本当に良いですか？</string>
   <!-- Fixed bundles -->
-  <string name="editorial_more_articles_title">More articles</string>
-  <string name="fixed_bundle_just_arrived_title">Just Arrived</string>
-  <string name="fixed_bundle_my_games_title">My Games</string>
+  <string name="editorial_more_articles_title">他の記事</string>
+  <string name="fixed_bundle_just_arrived_title">新着</string>
+  <string name="fixed_bundle_my_games_title">マイゲーム</string>
   <string name="fixed_bundle_editors_choice_title">編集者のおすすめ</string>
   <string name="fixed_bundle_editorial_title">エディトリアル</string>
   <string name="fixed_bundle_trending_title">トレンド</string>
-  <string name="fixed_bundle_publisher_title">Have Fun with %s</string>
+  <string name="fixed_bundle_publisher_title">%sを楽しもう</string>
   <string name="retry_button" comment="button_retry_title">再試行</string>
   <string name="generic_error_message">何か問題が発生しました。もう一度やり直してください。</string>
   <string name="generic_network_error_message">問題が発生したようです。インターネットの接続状況をご確認ください。</string>
-  <string name="install_waiting_installation_message">Waiting for install</string>
+  <string name="install_waiting_installation_message">インストール待ち</string>
   <string name="install_installing_message">インストール中</string>
-  <string name="install_error_short_message">Oops, an error occurred.</string>
-  <string name="error_message_no_internet_title">Oops, something went wrong</string>
-  <string name="error_message_no_internet_body">Please check your Internet connection.</string>
+  <string name="install_error_short_message">エラーが発生しました。</string>
+  <string name="error_message_no_internet_title">問題が発生しました。</string>
+  <string name="error_message_no_internet_body">インターネット接続を確認してください。</string>
   <string name="error_message_generic_title">エラーが起こりました</string>
   <string name="error_message_generic_body">もう一度やり直してください.</string>
-  <string name="app_info_send_email_subject">Feedback</string>
+  <string name="app_info_send_email_subject">ご意見・ご要望</string>
   <string name="button_copy_title">コピー</string>
   <string name="button_back_title">戻る</string>
   <string name="button_see_all_title">すべて表示</string>
-  <string name="editorials_view_no_content_message">Oops, there\'s no content here yet!</string>
+  <string name="editorials_view_no_content_message">ここにはまだコンテンツがありません。</string>
   <string name="button_update_title">更新する</string>
   <string name="button_open_app_title">開く</string>
-  <string name="install_waiting_download_message">Waiting for download</string>
-  <string name="downloading_percentage_body">%1$s%% of %2$s</string>
+  <string name="install_waiting_download_message">ダウンロード待ち</string>
+  <string name="downloading_percentage_body">%2$sの%1$s%%</string>
   <string name="install_downloading_message">ダウンロード中</string>
   <!-- Common -->
-  <string name="download_now_button">Download Now</string>
+  <string name="download_now_button">今すぐダウンロード</string>
   <string name="uninstall_button">アンインストール</string>
-  <string name="go_back_button">Go Back</string>
-  <string name="uninstalling">Uninstalling</string>
+  <string name="go_back_button">戻る</string>
+  <string name="go_back_to_game_button">Go Back to Game</string>
+  <string name="uninstalling">アンインストール中</string>
   <string name="resume_button">再開する</string>
-  <string name="waiting_for_connection">Waiting for connection</string>
-  <string name="wait_for_wifi_button">Wait for Wi-Fi</string>
+  <string name="waiting_for_connection">接続待ち</string>
+  <string name="wait_for_wifi_button">Wi-Fi接続待ち</string>
   <string name="continue_button">続ける</string>
   <!-- Out of Space -->
-  <string name="out_of_space_title">Out of Space</string>
+  <string name="out_of_space_title">空き容量不足</string>
   <string name="out_of_space_body">インストールを続行するには %s 必要です。</string>
-  <string name="out_of_space_enough_body">You have enough free space now!</string>
+  <string name="out_of_space_enough_body">十分な空き容量ができました</string>
   <!-- Talkback -->
-  <string name="appview_status_outdated_talkback">Outdated</string>
-  <string name="appview_status_not_installed_talkback">Not installed</string>
+  <string name="appview_status_outdated_talkback">期限切れ</string>
+  <string name="appview_status_not_installed_talkback">インストールされていません</string>
   <string name="appview_status_installed_talkback">インストール済</string>
   <string name="appview_status_failed_talkback">失敗</string>
   <string name="appview_action_cancel_talkback">キャンセル</string>
-  <string name="appview_installer_talkback">%1$s installer.</string>
-  <string name="appview_action_double_tap_talkback">Double tap to %1$s</string>
+  <string name="appview_installer_talkback">%1$s インストーラ</string>
+  <string name="appview_action_double_tap_talkback">ダブルタップして %1$s</string>
   <!-- Search -->
-  <string name="search_suggested_title">Suggested Searches</string>
-  <string name="search_recent_title">Recent Searches</string>
-  <string name="search_popular_title">Popular Searches</string>
-  <string name="search_bar_label">Search for games...</string>
-  <string name="search_empty_body">Oops, there are no results for \"%s\".\nTry with different words!</string>
+  <string name="search_suggested_title">おすすめ検索</string>
+  <string name="search_recent_title">最近の検索</string>
+  <string name="search_popular_title">人気の検索</string>
+  <string name="search_bar_label">ゲームを検索...</string>
+  <string name="search_empty_body">\"%s\"に一致する結果はありません。\n別の単語で試してください。</string>
   <!-- Install -->
   <string name="button_install_title">インストール</string>
   <!-- Common -->
-  <string name="notice_at_collection_and_privacy_policy">Notice at Collection &amp; Privacy Policy</string>
-  <string name="terms_and_conditions">Terms</string>
-  <string name="continue_to_accept_tandc_and_pp_disclaimer">By continuing you accept the %1$s and %2$s.</string>
+  <string name="notice_at_collection_and_privacy_policy">個人情報保護方針</string>
+  <string name="terms_and_conditions">利用規約</string>
+  <string name="continue_to_accept_tandc_and_pp_disclaimer">続行することで、%1$sと%2$sに同意したことになります。</string>
   <string name="appview_details_tab_title" comment="details">詳細</string>
-  <string name="appview_related_tab_title" comment="related">Related</string>
+  <string name="appview_related_tab_title" comment="related">関連</string>
   <string name="appview_info_tab_title" comment="info">情報</string>
-  <string name="bottom_navigation_discovery" comment="discovery">Discovery</string>
-  <string name="appview_info_version_name_title" comment="version_name">Version name</string>
+  <string name="bottom_navigation_discovery" comment="discovery">ディスカバリー</string>
+  <string name="appview_info_version_name_title" comment="version_name">バージョン名</string>
   <string name="appview_info_package_name_title" comment="package_name">パッケージ名</string>
-  <string name="appview_info_release_title" comment="release">Release</string>
-  <string name="appview_info_update_title" comment="updated_on">Updated on</string>
-  <string name="appview_info_download_size_title" comment="download_size">Download size</string>
+  <string name="appview_info_release_title" comment="release">リリース</string>
+  <string name="appview_info_update_title" comment="updated_on">更新日</string>
+  <string name="appview_info_download_size_title" comment="download_size">ダウンロードサイズ</string>
   <string name="appview_info_website_title" comment="website">ウェブサイト</string>
   <string name="appview_info_email_title" comment="email">Eメール</string>
   <string name="appview_info_permissions_title" comment="permissions">許可</string>
-  <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% of %2$s</string>
-  <string name="error_short_title" comment="oops_an_error_occurred">Oops, an error occurred</string>
-  <string name="purchase_done_existing_bonus_body">You now have %s in bonus. Download the AppCoins Wallet to use them in your next purchase.</string>
-  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">You\’ll get a bonus in all games identified with %s.</string>
-  <string name="bonus_banner_title" comment="up_to_s_bonus">Up to %s%% Bonus</string>
+  <string name="download_percentage_body" comment="1_s_of_2_s">%2$sの%1$s%%</string>
+  <string name="error_short_title" comment="oops_an_error_occurred">エラーが発生しました。</string>
+  <string name="purchase_done_existing_bonus_body">ボーナスが%s貯まりました。AppCoins Walletをダウンロードして、次回のお買い物にご利用ください。</string>
+  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">You\'ll get a bonus in all games identified with %s.</string>
+  <string name="bonus_banner_title" comment="up_to_s_bonus">最大%s%%のボーナス</string>
   <string name="settings_payments_title" comment="contact_support_team">サポートチームへのお問い合わせ</string>
-  <string name="settings_contact_support_body" comment="billing_terms_of_use">Billing Terms of Use</string>
-  <string name="settings_billing_terms_body" comment="payments">Payments</string>
+  <string name="settings_contact_support_body" comment="billing_terms_of_use">課金利用規約</string>
+  <string name="settings_billing_terms_body" comment="payments">支払い</string>
   <string name="powered_by_title" comment="powered_by">Powered by</string>
   <string name="contact_support_title" comment="contact_support">サポートに問い合わせ</string>
-  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Please give us all the details:\n\u2022 When did the problem start\n\u2022 On which game are you making a purchase\n\nOnce you tap on Send, your mail app will open. Feel free to attach a screenshot or video about the issue!</string>
-  <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Do you want to install this game?</string>
+  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">詳細を教えてください：\n\u2022問題はいつ発生しましたか？\n\u2022どのゲームで購入されましたか？\n\n
+送信をタップすると、メールアプリが開きます。問題のスクリーンショットや動画を添付してください。</string>
+  <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">このゲームをインストールしますか？</string>
   <string name="app_size_mb_title" comment="s_mb">%s MB</string>
   <string name="uninstalled_title" comment="uninstalled">アンインストールされました</string>
-  <string name="error_no_internet_body" comment="please_check_your_internet_connection">Please check your Internet connection.</string>
+  <string name="error_no_internet_body" comment="please_check_your_internet_connection">インターネット接続を確認してください。</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">AppCoins Walletで支払い</string>
-  <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">It\'ll be installed automatically and you\'ll get a bonus in all purchases!</string>
+  <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">自動的にインストールされ、すべての購入にボーナスがつきます</string>
   <string name="buy_button" comment="buy">購入</string>
   <string name="iap_other_payment_methods_button" comment="other_payment_methods">他の支払い方法</string>
   <string name="iap_remember_card_button" comment="remember_card">カードの保存</string>
@@ -151,13 +155,36 @@
   <string name="iap_card_expiry" comment="expiry_date">有効期限</string>
   <string name="iap_card_cvc" comment="cvc_cvv">CVC/CVV</string>
   <string name="iab_change_card_button" comment="change_card">カードの変更</string>
-  <string name="ui_flow_mvp__game__making" comment="done">Done!</string>
-  <string name="purchase_making_purchase_title" comment="making_purchase">Making Purchase...</string>
+  <string name="done_title" comment="done">完了!</string>
+  <string name="purchase_making_purchase_title" comment="making_purchase">購入中...</string>
   <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">カード情報に間違いはありませんか？もう一度お試しください</string>
   <string name="log_out_button" comment="log_out">ログアウト</string>
-  <string name="get_a_bonus_in_all_purchases_title">You\'ll get a bonus in all purchases!</string>
-  <string name="iap_appc_body">You\'ll get a bonus in all purchases!</string>
-  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">You can now complete your purchase.</string>
-  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">The AppCoins Wallet is now installed!</string>
-  <string name="storage_access_permission_request_message">Allow access to your phone’s storage so we can download and install this app.</string>
+  <string name="get_a_bonus_in_all_purchases_title">すべて購入での追加ボーナスをゲット。</string>
+  <string name="iap_appc_body">すべて購入での追加ボーナスをゲット。</string>
+  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">これで購入を完了できます。</string>
+  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">AppCoins Walletがインストールされました！</string>
+  <string name="storage_access_permission_request_message">このアプリをダウンロードしてインストールできるように、ストレージへのアクセスを許可してください。</string>
+  <!-- Payment Errors-->
+  <string name="payments_error_not_enough_balance_body">残高が不足しています</string>
+  <string name="payments_error_old_card_title">このカードを登録したのはかなり以前のようです</string>
+  <string name="payments_error_old_card_body">カード情報をもう一度入力するか、別のカードを使用してください。</string>
+  <string name="purchase_error_payment_rejected">トランザクションは拒否されました。</string>
+  <string name="purchase_error_try_other_card_body">別のカードまたは支払い方法でお試しください。</string>
+  <string name="purchase_card_error_general_title">カードに問題があったようです。</string>
+  <string name="purchase_error_try_other_payment_method_body">別のお支払い方法でお試しください。</string>
+  <string name="purchase_card_error_no_funds">資金が足りないか、カードに限度額があるようです。</string>
+  <string name="purchase_card_error_invalid_details_title">無効なカード番号です。</string>
+  <string name="purchase_error_check_it_body">ご確認の上、再度お試しください。</string>
+  <string name="purchase_card_error_not_supported_title">お使いのカードはまだサポートされていません。</string>
+  <string name="purchase_error_wrong_pin_title">ピン番号に問題がありました。</string>
+  <string name="purchase_error_3d_title">3D認証に問題がありました。</string>
+  <string name="purchase_card_rejected_title">取引は銀行によって拒否されました。</string>
+  <string name="purchase_error_invalid_credit_card_title">無効な銀行カード番号です。</string>
+  <string name="purchase_error_invalid_credit_card_body">すべての桁が正しいことを確認してください。</string>
+  <string name="purchase_error_card_security_validation_title">このトランザクションの第2レベルの検証でエラーが発生しました。</string>
+  <string name="purchase_error_in_progress_title">リクエストはすでに処理されたか、または処理中です。</string>
+  <string name="purchase_card_error_CVV_title">不正なCVV/CVC</string>
+  <string name="purchase_error_expired_card_title">カードの有効期限が切れているようです。</string>
+  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
+  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
 </resources>

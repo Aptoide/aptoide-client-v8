@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">App Games</string>
+  <string name="app_name">Aptoide Games</string>
   <!-- Bottom Bar -->
   <string name="games">ਗੇਮਾਂ</string>
   <string name="categories">ਵਰਗ</string>
@@ -8,6 +8,8 @@
 ਇੱਕ ਖੋਜੀ ਜਾ ਸੱਕਣ ਵਾਲੀ ਆਈਟਮ ਦੇ ਤੌਰ ਤੇ ਵਰਤਣ ਲਈ ਲੇਬਲ</string>
   <!-- Common -->
   <string name="send_button">ਭੇਜੋ</string>
+  <string name="try_again">Please try again.</string>
+  <string name="please_wait">Please wait.</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">ਸੈਟਿੰਗ</string>
   <string name="overflow_menu_terms_conditions">Terms &amp; Conditions</string>
@@ -88,6 +90,7 @@
   <string name="download_now_button">Download Now</string>
   <string name="uninstall_button">ਅਨਇੰਸਟਾਲ</string>
   <string name="go_back_button">Go Back</string>
+  <string name="go_back_to_game_button">Go Back to Game</string>
   <string name="uninstalling">Uninstalling</string>
   <string name="resume_button">ਜਾਰੀ ਰੱਖੋ</string>
   <string name="waiting_for_connection">Waiting for connection</string>
@@ -132,7 +135,7 @@
   <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% of %2$s</string>
   <string name="error_short_title" comment="oops_an_error_occurred">Oops, an error occurred</string>
   <string name="purchase_done_existing_bonus_body">You now have %s in bonus. Download the AppCoins Wallet to use them in your next purchase.</string>
-  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">You\’ll get a bonus in all games identified with %s.</string>
+  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">You\'ll get a bonus in all games identified with %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Up to %s%% Bonus</string>
   <string name="settings_payments_title" comment="contact_support_team">ਸਹਾਇਤਾ ਟੀਮ ਨਾਲ ਸੰਪਰਕ ਕਰੋ</string>
   <string name="settings_contact_support_body" comment="billing_terms_of_use">Billing Terms of Use</string>
@@ -153,7 +156,7 @@
   <string name="iap_card_expiry" comment="expiry_date">ਆਖਰੀ ਤਾਰੀਖ</string>
   <string name="iap_card_cvc" comment="cvc_cvv">ਸੀਵੀਸੀ/ਸੀਵੀਵੀ</string>
   <string name="iab_change_card_button" comment="change_card">Change card</string>
-  <string name="ui_flow_mvp__game__making" comment="done">Done!</string>
+  <string name="done_title" comment="done">ਹੋ ਗਿਆ!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">Making Purchase...</string>
   <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">ਕੀ ਤੁਹਾਨੂੰ ਯਕੀਨ ਹੈ ਕਿ ਤੁਹਾਡੇ ਕਾਰਡ ਦਾ ਵੇਰਵਾ ਸਹੀ ਹੈ? ਮੁੜ ਕੋਸ਼ਿਸ ਕਰੋ ਜੀ!</string>
   <string name="log_out_button" comment="log_out">Log Out</string>
@@ -162,4 +165,27 @@
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">You can now complete your purchase.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">The AppCoins Wallet is now installed!</string>
   <string name="storage_access_permission_request_message">Allow access to your phone’s storage so we can download and install this app.</string>
+  <!-- Payment Errors-->
+  <string name="payments_error_not_enough_balance_body">You don\'t have enough balance</string>
+  <string name="payments_error_old_card_title">It seems you registered this card long time ago!</string>
+  <string name="payments_error_old_card_body">Insert the card details again or use a different one.</string>
+  <string name="purchase_error_payment_rejected">The transaction has been rejected.</string>
+  <string name="purchase_error_try_other_card_body">Please try with a different card or payment method.</string>
+  <string name="purchase_card_error_general_title">There was a problem with your card.</string>
+  <string name="purchase_error_try_other_payment_method_body">Please try with a different payment method.</string>
+  <string name="purchase_card_error_no_funds">It seems you don\'t have enough funds or there\'s a limit on your card.</string>
+  <string name="purchase_card_error_invalid_details_title">Invalid card number.</string>
+  <string name="purchase_error_check_it_body">Please check it and try again.</string>
+  <string name="purchase_card_error_not_supported_title">Your card is not supported yet.</string>
+  <string name="purchase_error_wrong_pin_title">There was a problem with your pin.</string>
+  <string name="purchase_error_3d_title">There was a problem with your 3D authentication.</string>
+  <string name="purchase_card_rejected_title">The transaction has been rejected by your bank.</string>
+  <string name="purchase_error_invalid_credit_card_title">Invalid bank card number.</string>
+  <string name="purchase_error_invalid_credit_card_body">Please make sure all digits are correct.</string>
+  <string name="purchase_error_card_security_validation_title">There was an error on the 2nd level validation of this transaction.</string>
+  <string name="purchase_error_in_progress_title">Your request was already processed or is in progress.</string>
+  <string name="purchase_card_error_CVV_title">ਗਲਤ ਸੀਵੀਵੀ/ਸੀਵੀਸੀ</string>
+  <string name="purchase_error_expired_card_title">It seems your card is expired.</string>
+  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
+  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
 </resources>

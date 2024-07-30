@@ -1,149 +1,152 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">App Games</string>
+  <string name="app_name">Aptoide Games</string>
   <!-- Bottom Bar -->
   <string name="games">Game</string>
   <string name="categories">Kategori</string>
   <string name="search">Cari</string>
   <!-- Common -->
   <string name="send_button">Kirim</string>
+  <string name="try_again">Silakan coba lagi.</string>
+  <string name="please_wait">Harap tunggu.</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Pengaturan</string>
-  <string name="overflow_menu_terms_conditions">Terms &amp; Conditions</string>
+  <string name="overflow_menu_terms_conditions">Syarat &amp; Ketentuan</string>
   <string name="overflow_menu_privacy_policy">Kebijakan Privasi</string>
-  <string name="settings_about_hardware_title">Hardware specs</string>
+  <string name="settings_about_hardware_title">Spesifikasi perangkat keras</string>
   <string name="settings_about_title">Tentang Kami</string>
-  <string name="settings_about_version">Version %1$s (%2$s)</string>
-  <string name="settings_copied_to_clipboard_message">Copied to clipboard</string>
+  <string name="settings_about_version">Versi %1$s (%2$s)</string>
+  <string name="settings_copied_to_clipboard_message">Disalin ke clipboard</string>
   <string name="settings_general_title">Umum</string>
   <string name="settings_theme_option_dark">Gelap</string>
   <string name="settings_theme_option_light">Terang</string>
-  <string name="settings_theme_option_system">System default</string>
+  <string name="settings_theme_option_system">Standar sistem</string>
   <string name="settings_theme_options_title">Tema</string>
   <string name="settings_title">Pengaturan</string>
   <string name="settings_support">Dukungan</string>
   <string name="settings_feedback_button">Kirim tanggapan</string>
   <string name="settings_feedback_title">Kirim Umpan Balik</string>
   <string name="settings_legal_title">Legal</string>
-  <string name="settings_send_feedback_body">Let us know what you think about Aptoide Games!\n\u2022 Any new feature you would like to see?\n\u2022 How do you think we can improve?</string>
+  <string name="settings_send_feedback_body">Sampaikan pendapat Anda tentang Aptoide Games!\n\u2022 Adakah fitur baru yang ingin Anda lihat?\n\u2022 Menurut Anda, bagaimana kami bisa meningkatkannya?</string>
   <string name="settings_payment_support_description_title">Deskripsi</string>
-  <string name="settings_contact_form_character_limit_title">(50 Characters Min.)</string>
-  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Description (50 characters min.)</string>
+  <string name="settings_contact_form_character_limit_title">(Minimal 50 Karakter)</string>
+  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Deskripsi (minimal 50 karakter)</string>
   <!-- MyGames -->
-  <string name="my_games_empty">We couldn\'t find any games installed on your device!</string>
-  <string name="my_games_progress_message">Organizing your games</string>
-  <string name="empty_category_body">There\'re no apps in this category... Yet!</string>
+  <string name="my_games_empty">Kami tidak menemukan satu game pun yang terpasang di perangkat Anda!</string>
+  <string name="my_games_progress_message">Mengatur game-game Anda</string>
+  <string name="empty_category_body">Belum ada aplikasi dalam kategori ini... Sama sekali belum!</string>
   <!-- Notifications -->
-  <string name="notifications_context_title">Get notified!</string>
+  <string name="notifications_context_title">Dapatkan pemberitahuan!</string>
   <string name="notification_installing_title">Memasang</string>
-  <string name="notification_waiting_body">Waiting for download</string>
+  <string name="notification_waiting_body">Menunggu unduhan</string>
   <string name="notification_1_installed_title">Terpasang</string>
-  <string name="notification_downloading_body">Downloading %1$s%% of %2$s</string>
-  <string name="notification_waiting_for_wifi_title">Waiting for Wi-Fi</string>
-  <string name="notifications_context_body">We\'ll let you know about the latest trends in the gaming world!</string>
+  <string name="notification_downloading_body">Mengunduh %1$s%% dari %2$s</string>
+  <string name="notification_waiting_for_wifi_title">Menunggu Wi-Fi</string>
+  <string name="notifications_context_body">Kami akan memberi tahu Anda tentang tren terbaru di dunia game!</string>
   <!-- Talkback -->
-  <string name="home_overflow_talkback">Options</string>
-  <string name="app_view_image_description_body">Image of %1$s</string>
+  <string name="home_overflow_talkback">Opsi</string>
+  <string name="app_view_image_description_body">Gambar dari %1$s</string>
   <string name="app_view_screenshot_number">Screenshot %1$s</string>
-  <string name="app_view_icon_description_body">Icon of %1$s</string>
-  <string name="search_remove_from_recent_talkback">remove from recent searches</string>
-  <string name="search_clear_talkback">clear search</string>
+  <string name="app_view_icon_description_body">Ikon dari %1$s</string>
+  <string name="search_remove_from_recent_talkback">hapus dari penelusuran terakhir</string>
+  <string name="search_clear_talkback">bersihkan pencarian</string>
   <string name="search_item_talkback">cari</string>
   <!-- Download over Wi-Fi -->
-  <string name="wifi_settings_title">Download only over Wi-Fi</string>
-  <string name="wifi_disclaimer_on_body">You\'re currently using your mobile data. Do you want to download %s when Wi-Fi is available?</string>
-  <string name="wifi_disclamer_off_body">This is a big file (%s). Do you want to download it when Wi-Fi is available?</string>
+  <string name="wifi_settings_title">Unduh hanya melalui Wi-Fi</string>
+  <string name="wifi_disclaimer_on_body">Saat ini Anda sedang menggunakan data seluler Anda. Apakah Anda ingin mengunduh %s kalau Wi-Fi sudah tersedia?</string>
+  <string name="wifi_disclamer_off_body">Ini adalah file besar (%s). Apakah Anda ingin mengunduhnya kalau Wi-Fi sudah tersedia?</string>
   <string name="wifi_disclaimer_title">Apakah Anda yakin?</string>
   <!-- Fixed bundles -->
-  <string name="editorial_more_articles_title">More articles</string>
-  <string name="fixed_bundle_just_arrived_title">Just Arrived</string>
-  <string name="fixed_bundle_my_games_title">My Games</string>
+  <string name="editorial_more_articles_title">Artikel lainnya</string>
+  <string name="fixed_bundle_just_arrived_title">Baru Hadir</string>
+  <string name="fixed_bundle_my_games_title">Game Saya</string>
   <string name="fixed_bundle_editors_choice_title">Pilihan Editor</string>
   <string name="fixed_bundle_editorial_title">Editorial</string>
   <string name="fixed_bundle_trending_title">Sedang Tren</string>
-  <string name="fixed_bundle_publisher_title">Have Fun with %s</string>
+  <string name="fixed_bundle_publisher_title">Nikmatilah %s</string>
   <string name="retry_button" comment="button_retry_title">Coba lagi</string>
   <string name="generic_error_message">Terjadi kesalahan. Coba lagi.</string>
   <string name="generic_network_error_message">Ups, ada kesalahan. Silakan periksa koneksi internet Anda.</string>
-  <string name="install_waiting_installation_message">Waiting for install</string>
+  <string name="install_waiting_installation_message">Menunggu pemasangan</string>
   <string name="install_installing_message">Memasang</string>
-  <string name="install_error_short_message">Oops, an error occurred.</string>
+  <string name="install_error_short_message">Ups, terjadi kesalahan.</string>
   <string name="error_message_no_internet_title">Ups, ada kesalahan</string>
-  <string name="error_message_no_internet_body">Please check your Internet connection.</string>
+  <string name="error_message_no_internet_body">Silakan periksa koneksi Internet Anda.</string>
   <string name="error_message_generic_title">Ada kesalahan</string>
   <string name="error_message_generic_body">Coba lagi.</string>
-  <string name="app_info_send_email_subject">Feedback</string>
+  <string name="app_info_send_email_subject">Umpan Balik</string>
   <string name="button_copy_title">Salin</string>
   <string name="button_back_title">Kembali</string>
   <string name="button_see_all_title">Lihat semua</string>
-  <string name="editorials_view_no_content_message">Oops, there\'s no content here yet!</string>
+  <string name="editorials_view_no_content_message">Ups, belum ada konten di sini!</string>
   <string name="button_update_title">Perbarui</string>
   <string name="button_open_app_title">Buka</string>
-  <string name="install_waiting_download_message">Waiting for download</string>
-  <string name="downloading_percentage_body">%1$s%% of %2$s</string>
+  <string name="install_waiting_download_message">Menunggu unduhan</string>
+  <string name="downloading_percentage_body">%1$s%% dari %2$s</string>
   <string name="install_downloading_message">Mengunduh</string>
   <!-- Common -->
-  <string name="download_now_button">Download Now</string>
+  <string name="download_now_button">Unduh Sekarang</string>
   <string name="uninstall_button">Copot pemasangan</string>
-  <string name="go_back_button">Go Back</string>
-  <string name="uninstalling">Uninstalling</string>
+  <string name="go_back_button">Kembali</string>
+  <string name="go_back_to_game_button">Go Back to Game</string>
+  <string name="uninstalling">Mencopot pemasangan</string>
   <string name="resume_button">Lanjutkan</string>
-  <string name="waiting_for_connection">Waiting for connection</string>
-  <string name="wait_for_wifi_button">Wait for Wi-Fi</string>
+  <string name="waiting_for_connection">Menunggu koneksi</string>
+  <string name="wait_for_wifi_button">Tunggu Wi-Fi</string>
   <string name="continue_button">Lanjutkan</string>
   <!-- Out of Space -->
-  <string name="out_of_space_title">Out of Space</string>
+  <string name="out_of_space_title">Kehabisan Ruang Penyimpanan</string>
   <string name="out_of_space_body">Anda membutuhkan %s untuk melanjutkan instalasi.</string>
-  <string name="out_of_space_enough_body">You have enough free space now!</string>
+  <string name="out_of_space_enough_body">Sekarang Anda memiliki ruang penyimpanan yang cukup!</string>
   <!-- Talkback -->
-  <string name="appview_status_outdated_talkback">Outdated</string>
-  <string name="appview_status_not_installed_talkback">Not installed</string>
+  <string name="appview_status_outdated_talkback">Kedaluwarsa</string>
+  <string name="appview_status_not_installed_talkback">Tidak terpasang</string>
   <string name="appview_status_installed_talkback">Terpasang</string>
   <string name="appview_status_failed_talkback">Gagal</string>
   <string name="appview_action_cancel_talkback">Batalkan</string>
-  <string name="appview_installer_talkback">%1$s installer.</string>
-  <string name="appview_action_double_tap_talkback">Double tap to %1$s</string>
+  <string name="appview_installer_talkback">Pemasang %1$s.</string>
+  <string name="appview_action_double_tap_talkback">Ketuk dua kali untuk %1$s</string>
   <!-- Search -->
-  <string name="search_suggested_title">Suggested Searches</string>
-  <string name="search_recent_title">Recent Searches</string>
-  <string name="search_popular_title">Popular Searches</string>
-  <string name="search_bar_label">Search for games...</string>
-  <string name="search_empty_body">Oops, there are no results for \"%s\".\nTry with different words!</string>
+  <string name="search_suggested_title">Pencarian yang Disarankan</string>
+  <string name="search_recent_title">Pencarian Terakhir</string>
+  <string name="search_popular_title">Pencarian Populer</string>
+  <string name="search_bar_label">Cari game...</string>
+  <string name="search_empty_body">Ups, tidak ditemukan hasil untuk \"%s\".\nCoba dengan kata lain!</string>
   <!-- Install -->
   <string name="button_install_title">Unduh</string>
   <!-- Common -->
-  <string name="notice_at_collection_and_privacy_policy">Notice at Collection &amp; Privacy Policy</string>
-  <string name="terms_and_conditions">Terms</string>
-  <string name="continue_to_accept_tandc_and_pp_disclaimer">By continuing you accept the %1$s and %2$s.</string>
+  <string name="notice_at_collection_and_privacy_policy">Pemberitahuan di Koleksi &amp; Kebijakan Privasi</string>
+  <string name="terms_and_conditions">Ketentuan</string>
+  <string name="continue_to_accept_tandc_and_pp_disclaimer">Dengan melanjutkan, Anda menyetujui %1$s dan %2$s.</string>
   <string name="appview_details_tab_title" comment="details">Detail</string>
-  <string name="appview_related_tab_title" comment="related">Related</string>
+  <string name="appview_related_tab_title" comment="related">Terkait</string>
   <string name="appview_info_tab_title" comment="info">Info</string>
-  <string name="bottom_navigation_discovery" comment="discovery">Discovery</string>
-  <string name="appview_info_version_name_title" comment="version_name">Version name</string>
+  <string name="bottom_navigation_discovery" comment="discovery">Penemuan</string>
+  <string name="appview_info_version_name_title" comment="version_name">Nama versi</string>
   <string name="appview_info_package_name_title" comment="package_name">Nama paket</string>
-  <string name="appview_info_release_title" comment="release">Release</string>
-  <string name="appview_info_update_title" comment="updated_on">Updated on</string>
-  <string name="appview_info_download_size_title" comment="download_size">Download size</string>
+  <string name="appview_info_release_title" comment="release">Rilis</string>
+  <string name="appview_info_update_title" comment="updated_on">Diperbarui pada</string>
+  <string name="appview_info_download_size_title" comment="download_size">Ukuran unduhan</string>
   <string name="appview_info_website_title" comment="website">Situs Web</string>
   <string name="appview_info_email_title" comment="email">Email</string>
   <string name="appview_info_permissions_title" comment="permissions">Izin</string>
-  <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% of %2$s</string>
-  <string name="error_short_title" comment="oops_an_error_occurred">Oops, an error occurred</string>
-  <string name="purchase_done_existing_bonus_body">You now have %s in bonus. Download the AppCoins Wallet to use them in your next purchase.</string>
-  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">You\’ll get a bonus in all games identified with %s.</string>
-  <string name="bonus_banner_title" comment="up_to_s_bonus">Up to %s%% Bonus</string>
+  <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% dari %2$s</string>
+  <string name="error_short_title" comment="oops_an_error_occurred">Ups, terjadi kesalahan</string>
+  <string name="purchase_done_existing_bonus_body">Sekarang Anda memiliki bonus %s. Unduh Dompet AppCoins untuk menggunakannya di pembelian Anda berikutnya.</string>
+  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">You\'ll get a bonus in all games identified with %s.</string>
+  <string name="bonus_banner_title" comment="up_to_s_bonus">Bonus Hingga %s%%</string>
   <string name="settings_payments_title" comment="contact_support_team">Hubungi Tim Dukungan</string>
-  <string name="settings_contact_support_body" comment="billing_terms_of_use">Billing Terms of Use</string>
-  <string name="settings_billing_terms_body" comment="payments">Payments</string>
+  <string name="settings_contact_support_body" comment="billing_terms_of_use">Ketentuan Penggunaan Penagihan</string>
+  <string name="settings_billing_terms_body" comment="payments">Pembayaran</string>
   <string name="powered_by_title" comment="powered_by">Diberdayakan oleh</string>
   <string name="contact_support_title" comment="contact_support">Hubungi Dukungan</string>
-  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Please give us all the details:\n\u2022 When did the problem start\n\u2022 On which game are you making a purchase\n\nOnce you tap on Send, your mail app will open. Feel free to attach a screenshot or video about the issue!</string>
-  <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Do you want to install this game?</string>
+  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Harap sampaikan kepada kami semua detailnya:\n\u2022 Kapan masalahnya muncul\n\u2022 Di game mana Anda melakukan pembelian\n\nSetelah Anda mengetuk Kirim, aplikasi email Anda akan terbuka. Jangan ragu untuk melampirkan screenshot atau video terkait masalah ini!</string>
+  <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Apakah Anda ingin memasang game ini?</string>
   <string name="app_size_mb_title" comment="s_mb">%s MB</string>
   <string name="uninstalled_title" comment="uninstalled">Dicopot</string>
-  <string name="error_no_internet_body" comment="please_check_your_internet_connection">Please check your Internet connection.</string>
+  <string name="error_no_internet_body" comment="please_check_your_internet_connection">Silakan periksa koneksi Internet Anda.</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Bayar dengan AppCoin Wallet</string>
-  <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">It\'ll be installed automatically and you\'ll get a bonus in all purchases!</string>
+  <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Akan diinstal secara otomatis dan Anda akan mendapatkan bonus di semua pembelian!</string>
   <string name="buy_button" comment="buy">Beli</string>
   <string name="iap_other_payment_methods_button" comment="other_payment_methods">Metode pembayaran lain</string>
   <string name="iap_remember_card_button" comment="remember_card">Ingat kartu</string>
@@ -151,13 +154,36 @@
   <string name="iap_card_expiry" comment="expiry_date">Tanggal kedaluwarsa</string>
   <string name="iap_card_cvc" comment="cvc_cvv">CVC/CVV</string>
   <string name="iab_change_card_button" comment="change_card">Ganti kartu</string>
-  <string name="ui_flow_mvp__game__making" comment="done">Done!</string>
-  <string name="purchase_making_purchase_title" comment="making_purchase">Making Purchase...</string>
+  <string name="done_title" comment="done">Selesai!</string>
+  <string name="purchase_making_purchase_title" comment="making_purchase">Melakukan Pembelian...</string>
   <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">Apakah Anda yakin rincian kartu Anda sudah benar? Silakan coba lagi!</string>
   <string name="log_out_button" comment="log_out">Keluar</string>
-  <string name="get_a_bonus_in_all_purchases_title">You\'ll get a bonus in all purchases!</string>
-  <string name="iap_appc_body">You\'ll get a bonus in all purchases!</string>
-  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">You can now complete your purchase.</string>
-  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">The AppCoins Wallet is now installed!</string>
-  <string name="storage_access_permission_request_message">Allow access to your phone’s storage so we can download and install this app.</string>
+  <string name="get_a_bonus_in_all_purchases_title">Anda akan mendapatkan bonus di semua pembelian!</string>
+  <string name="iap_appc_body">Anda akan mendapatkan bonus di semua pembelian!</string>
+  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Sekarang Anda bisa menyelesaikan pembelian Anda.</string>
+  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">Dompet AppCoins sekarang diinstal!</string>
+  <string name="storage_access_permission_request_message">Harap izinkan akses pada penyimpanan ponsel Anda agar kami dapat mengunduh dan memasang aplikasi ini.</string>
+  <!-- Payment Errors-->
+  <string name="payments_error_not_enough_balance_body">Saldo Anda tidak cukup</string>
+  <string name="payments_error_old_card_title">Sepertinya Anda sudah lama mendaftarkan kartu ini!</string>
+  <string name="payments_error_old_card_body">Masukkan lagi detail kartu atau gunakan kartu lain.</string>
+  <string name="purchase_error_payment_rejected">Transaksi telah ditolak.</string>
+  <string name="purchase_error_try_other_card_body">Silakan coba dengan kartu atau metode pembayaran lain.</string>
+  <string name="purchase_card_error_general_title">Ada masalah dengan kartu Anda.</string>
+  <string name="purchase_error_try_other_payment_method_body">Silakan coba dengan metode pembayaran lain.</string>
+  <string name="purchase_card_error_no_funds">Sepertinya dana Anda tidak cukup atau ada batasan pada kartu Anda.</string>
+  <string name="purchase_card_error_invalid_details_title">Nomor kartu tidak valid.</string>
+  <string name="purchase_error_check_it_body">Silakan periksa dan coba lagi.</string>
+  <string name="purchase_card_error_not_supported_title">Kartu Anda belum didukung.</string>
+  <string name="purchase_error_wrong_pin_title">Ada masalah dengan pin Anda.</string>
+  <string name="purchase_error_3d_title">Ada masalah dengan autentikasi 3D Anda.</string>
+  <string name="purchase_card_rejected_title">Transaksi telah ditolak oleh bank Anda.</string>
+  <string name="purchase_error_invalid_credit_card_title">Nomor kartu bank tidak valid.</string>
+  <string name="purchase_error_invalid_credit_card_body">Harap pastikan semua digit sudah benar.</string>
+  <string name="purchase_error_card_security_validation_title">Terjadi kesalahan pada validasi tingkat ke-2 dari transaksi ini.</string>
+  <string name="purchase_error_in_progress_title">Permintaan Anda sudah diproses atau sedang dijalankan.</string>
+  <string name="purchase_card_error_CVV_title">CVV/CVC salah</string>
+  <string name="purchase_error_expired_card_title">Tampaknya kartu Anda sudah kedaluwarsa.</string>
+  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
+  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
 </resources>

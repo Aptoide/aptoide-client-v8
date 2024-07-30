@@ -1,149 +1,152 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">App Games</string>
+  <string name="app_name">Aptoide Games</string>
   <!-- Bottom Bar -->
   <string name="games">Trò chơi</string>
   <string name="categories">Danh mục</string>
   <string name="search">Tìm kiếm</string>
   <!-- Common -->
   <string name="send_button">Gửi</string>
+  <string name="try_again">Vui lòng thử lại.</string>
+  <string name="please_wait">Vui lòng chờ.</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Cài đặt</string>
-  <string name="overflow_menu_terms_conditions">Terms &amp; Conditions</string>
+  <string name="overflow_menu_terms_conditions">Điều khoản &amp; Điều kiện</string>
   <string name="overflow_menu_privacy_policy">Chính sách Quyền riêng tư</string>
-  <string name="settings_about_hardware_title">Hardware specs</string>
+  <string name="settings_about_hardware_title">Thông số phần cứng</string>
   <string name="settings_about_title">Giới thiệu</string>
-  <string name="settings_about_version">Version %1$s (%2$s)</string>
-  <string name="settings_copied_to_clipboard_message">Copied to clipboard</string>
+  <string name="settings_about_version">Phiên bản %1$s (%2$s)</string>
+  <string name="settings_copied_to_clipboard_message">Sao chép vào bộ nhớ đệm</string>
   <string name="settings_general_title">Tổng quát</string>
   <string name="settings_theme_option_dark">Tối</string>
   <string name="settings_theme_option_light">Đèn</string>
-  <string name="settings_theme_option_system">System default</string>
+  <string name="settings_theme_option_system">Mặc định hệ thống</string>
   <string name="settings_theme_options_title">Chủ đề</string>
   <string name="settings_title">Cài đặt</string>
   <string name="settings_support">Hỗ trợ</string>
   <string name="settings_feedback_button">Gửi phản hồi</string>
   <string name="settings_feedback_title">Gửi Phản hồi</string>
   <string name="settings_legal_title">Pháp lý</string>
-  <string name="settings_send_feedback_body">Let us know what you think about Aptoide Games!\n\u2022 Any new feature you would like to see?\n\u2022 How do you think we can improve?</string>
+  <string name="settings_send_feedback_body">Hãy cho chúng tôi biết suy nghĩ của bạn về Aptoide Games!\n\u2022 Bạn có muốn xem tính năng mới nào không?\n\u2022 Bạn nghĩ chúng tôi có thể cải thiện thêm gì nữa không?</string>
   <string name="settings_payment_support_description_title">Mô tả</string>
-  <string name="settings_contact_form_character_limit_title">(50 Characters Min.)</string>
-  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Description (50 characters min.)</string>
+  <string name="settings_contact_form_character_limit_title">(Tối thiểu 50 ký tự)</string>
+  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Mô tả (tối thiểu 50 ký tự)</string>
   <!-- MyGames -->
-  <string name="my_games_empty">We couldn\'t find any games installed on your device!</string>
-  <string name="my_games_progress_message">Organizing your games</string>
-  <string name="empty_category_body">There\'re no apps in this category... Yet!</string>
+  <string name="my_games_empty">Chúng tôi không thể tìm thấy trò chơi nào được cài đặt trên thiết bị của bạn!</string>
+  <string name="my_games_progress_message">Tổ chức trò chơi của bạn</string>
+  <string name="empty_category_body">Chưa có ứng dụng nào trong danh mục này!</string>
   <!-- Notifications -->
-  <string name="notifications_context_title">Get notified!</string>
+  <string name="notifications_context_title">Đã nhận thông báo!</string>
   <string name="notification_installing_title">Đang cài đặt</string>
-  <string name="notification_waiting_body">Waiting for download</string>
+  <string name="notification_waiting_body">Đang chờ tải xuống</string>
   <string name="notification_1_installed_title">Đã cài đặt</string>
-  <string name="notification_downloading_body">Downloading %1$s%% of %2$s</string>
-  <string name="notification_waiting_for_wifi_title">Waiting for Wi-Fi</string>
-  <string name="notifications_context_body">We\'ll let you know about the latest trends in the gaming world!</string>
+  <string name="notification_downloading_body">Đang tải xuống %1$s%% trên %2$s</string>
+  <string name="notification_waiting_for_wifi_title">Đang chờ Wi-Fi</string>
+  <string name="notifications_context_body">Chúng tôi sẽ cho bạn biết về những xu hướng mới nhất trong thế giới trò chơi!</string>
   <!-- Talkback -->
-  <string name="home_overflow_talkback">Options</string>
-  <string name="app_view_image_description_body">Image of %1$s</string>
-  <string name="app_view_screenshot_number">Screenshot %1$s</string>
-  <string name="app_view_icon_description_body">Icon of %1$s</string>
-  <string name="search_remove_from_recent_talkback">remove from recent searches</string>
-  <string name="search_clear_talkback">clear search</string>
+  <string name="home_overflow_talkback">Tùy chọn</string>
+  <string name="app_view_image_description_body">Hình ảnh của %1$s</string>
+  <string name="app_view_screenshot_number">Ảnh chụp màn hình %1$s</string>
+  <string name="app_view_icon_description_body">Biểu tượng của %1$s</string>
+  <string name="search_remove_from_recent_talkback">xóa khỏi tìm kiếm gần đây</string>
+  <string name="search_clear_talkback">xóa tìm kiếm</string>
   <string name="search_item_talkback">tìm kiếm</string>
   <!-- Download over Wi-Fi -->
-  <string name="wifi_settings_title">Download only over Wi-Fi</string>
-  <string name="wifi_disclaimer_on_body">You\'re currently using your mobile data. Do you want to download %s when Wi-Fi is available?</string>
-  <string name="wifi_disclamer_off_body">This is a big file (%s). Do you want to download it when Wi-Fi is available?</string>
+  <string name="wifi_settings_title">Chỉ tải xuống qua Wi-Fi</string>
+  <string name="wifi_disclaimer_on_body">Bạn hiện đang sử dụng dữ liệu di động. Bạn có muốn tải xuống %s khi có Wi-Fi không?</string>
+  <string name="wifi_disclamer_off_body">Đây là một tập tin lớn (%s). Bạn có muốn tải xuống khi có Wi-Fi không?</string>
   <string name="wifi_disclaimer_title">Bạn chắc chứ?</string>
   <!-- Fixed bundles -->
-  <string name="editorial_more_articles_title">More articles</string>
-  <string name="fixed_bundle_just_arrived_title">Just Arrived</string>
-  <string name="fixed_bundle_my_games_title">My Games</string>
+  <string name="editorial_more_articles_title">Bài viết khác</string>
+  <string name="fixed_bundle_just_arrived_title">Vừa đến</string>
+  <string name="fixed_bundle_my_games_title">Trò chơi của tôi</string>
   <string name="fixed_bundle_editors_choice_title">Lựa chọn từ Ban Biên Tập</string>
   <string name="fixed_bundle_editorial_title">Biên tập</string>
   <string name="fixed_bundle_trending_title">Thịnh hành</string>
-  <string name="fixed_bundle_publisher_title">Have Fun with %s</string>
+  <string name="fixed_bundle_publisher_title">Vui chơi với %s</string>
   <string name="retry_button" comment="button_retry_title">Thử lại</string>
   <string name="generic_error_message">Đã xảy ra lỗi. Vui lòng thử lại.</string>
   <string name="generic_network_error_message">Rất tiếc, đã xảy ra lỗi. Xin vui lòng kiểm tra lại kết nối Internet của bạn.</string>
-  <string name="install_waiting_installation_message">Waiting for install</string>
+  <string name="install_waiting_installation_message">Đang chờ cài đặt</string>
   <string name="install_installing_message">Đang cài đặt</string>
-  <string name="install_error_short_message">Oops, an error occurred.</string>
+  <string name="install_error_short_message">Rất tiếc, đã xảy ra lỗi.</string>
   <string name="error_message_no_internet_title">Rất tiếc, đã xảy ra lỗi</string>
-  <string name="error_message_no_internet_body">Please check your Internet connection.</string>
+  <string name="error_message_no_internet_body">Xin vui lòng kiểm tra kết nối Internet của bạn.</string>
   <string name="error_message_generic_title">Đã xảy ra lỗi</string>
   <string name="error_message_generic_body">Vui lòng thử lại.</string>
-  <string name="app_info_send_email_subject">Feedback</string>
+  <string name="app_info_send_email_subject">Nhận xét</string>
   <string name="button_copy_title">Sao chép</string>
   <string name="button_back_title">Quay lại</string>
   <string name="button_see_all_title">Xem tất cả</string>
-  <string name="editorials_view_no_content_message">Oops, there\'s no content here yet!</string>
+  <string name="editorials_view_no_content_message">Rất tiếc, chưa có nội dung nào ở đây!</string>
   <string name="button_update_title">Cập Nhật</string>
   <string name="button_open_app_title">Mở</string>
-  <string name="install_waiting_download_message">Waiting for download</string>
-  <string name="downloading_percentage_body">%1$s%% of %2$s</string>
+  <string name="install_waiting_download_message">Đang chờ tải xuống</string>
+  <string name="downloading_percentage_body">%1$s%% trên %2$s</string>
   <string name="install_downloading_message">Đang tải về</string>
   <!-- Common -->
-  <string name="download_now_button">Download Now</string>
+  <string name="download_now_button">Tải ngay</string>
   <string name="uninstall_button">Gỡ bỏ</string>
-  <string name="go_back_button">Go Back</string>
-  <string name="uninstalling">Uninstalling</string>
+  <string name="go_back_button">Quay lại</string>
+  <string name="go_back_to_game_button">Go Back to Game</string>
+  <string name="uninstalling">Gỡ cài đặt</string>
   <string name="resume_button">Tiếp tục</string>
-  <string name="waiting_for_connection">Waiting for connection</string>
-  <string name="wait_for_wifi_button">Wait for Wi-Fi</string>
+  <string name="waiting_for_connection">Đang chờ kết nối</string>
+  <string name="wait_for_wifi_button">Chờ Wi-Fi</string>
   <string name="continue_button">Tiếp tục</string>
   <!-- Out of Space -->
-  <string name="out_of_space_title">Out of Space</string>
+  <string name="out_of_space_title">Hết dung lượng</string>
   <string name="out_of_space_body">Bạn cần %s để tiếp tục cài đặt.</string>
-  <string name="out_of_space_enough_body">You have enough free space now!</string>
+  <string name="out_of_space_enough_body">Bạn hiện đã có đủ dung lượng trống!</string>
   <!-- Talkback -->
-  <string name="appview_status_outdated_talkback">Outdated</string>
-  <string name="appview_status_not_installed_talkback">Not installed</string>
+  <string name="appview_status_outdated_talkback">Lỗi thời</string>
+  <string name="appview_status_not_installed_talkback">Chưa cài đặt</string>
   <string name="appview_status_installed_talkback">Đã cài đặt</string>
   <string name="appview_status_failed_talkback">Bị thất bại</string>
   <string name="appview_action_cancel_talkback">Hủy bỏ</string>
-  <string name="appview_installer_talkback">%1$s installer.</string>
-  <string name="appview_action_double_tap_talkback">Double tap to %1$s</string>
+  <string name="appview_installer_talkback">Trình cài đặt %1$s.</string>
+  <string name="appview_action_double_tap_talkback">Nhấn đúp vào %1$s</string>
   <!-- Search -->
-  <string name="search_suggested_title">Suggested Searches</string>
-  <string name="search_recent_title">Recent Searches</string>
-  <string name="search_popular_title">Popular Searches</string>
-  <string name="search_bar_label">Search for games...</string>
-  <string name="search_empty_body">Oops, there are no results for \"%s\".\nTry with different words!</string>
+  <string name="search_suggested_title">Tìm kiếm được đề xuất</string>
+  <string name="search_recent_title">Tìm kiếm gần đây</string>
+  <string name="search_popular_title">Tìm kiếm phổ biến</string>
+  <string name="search_bar_label">Tìm kiếm trò chơi...</string>
+  <string name="search_empty_body">Rất tiếc, không có kết quả nào cho \"%s\".\nHãy thử bằng từ khóa khác!</string>
   <!-- Install -->
   <string name="button_install_title">Cài đặt</string>
   <!-- Common -->
-  <string name="notice_at_collection_and_privacy_policy">Notice at Collection &amp; Privacy Policy</string>
-  <string name="terms_and_conditions">Terms</string>
-  <string name="continue_to_accept_tandc_and_pp_disclaimer">By continuing you accept the %1$s and %2$s.</string>
+  <string name="notice_at_collection_and_privacy_policy">Thông báo tại Bộ sưu tập &amp; Chính sách bảo mật</string>
+  <string name="terms_and_conditions">Điều khoản</string>
+  <string name="continue_to_accept_tandc_and_pp_disclaimer">Bằng cách tiếp tục, bạn đã chấp nhận %1$s và %2$s.</string>
   <string name="appview_details_tab_title" comment="details">Chi tiết</string>
-  <string name="appview_related_tab_title" comment="related">Related</string>
+  <string name="appview_related_tab_title" comment="related">Liên quan</string>
   <string name="appview_info_tab_title" comment="info">thông tin</string>
-  <string name="bottom_navigation_discovery" comment="discovery">Discovery</string>
-  <string name="appview_info_version_name_title" comment="version_name">Version name</string>
+  <string name="bottom_navigation_discovery" comment="discovery">Khám phá</string>
+  <string name="appview_info_version_name_title" comment="version_name">Tên phiên bản</string>
   <string name="appview_info_package_name_title" comment="package_name">Tên gói</string>
-  <string name="appview_info_release_title" comment="release">Release</string>
-  <string name="appview_info_update_title" comment="updated_on">Updated on</string>
-  <string name="appview_info_download_size_title" comment="download_size">Download size</string>
+  <string name="appview_info_release_title" comment="release">Phát hành</string>
+  <string name="appview_info_update_title" comment="updated_on">Đã cập nhật vào</string>
+  <string name="appview_info_download_size_title" comment="download_size">Kích thước tải về</string>
   <string name="appview_info_website_title" comment="website">Trang web</string>
   <string name="appview_info_email_title" comment="email">Email</string>
   <string name="appview_info_permissions_title" comment="permissions">Cho phép</string>
-  <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% of %2$s</string>
-  <string name="error_short_title" comment="oops_an_error_occurred">Oops, an error occurred</string>
-  <string name="purchase_done_existing_bonus_body">You now have %s in bonus. Download the AppCoins Wallet to use them in your next purchase.</string>
-  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">You\’ll get a bonus in all games identified with %s.</string>
-  <string name="bonus_banner_title" comment="up_to_s_bonus">Up to %s%% Bonus</string>
+  <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% trên %2$s</string>
+  <string name="error_short_title" comment="oops_an_error_occurred">Rất tiếc, đã xảy ra lỗi</string>
+  <string name="purchase_done_existing_bonus_body">Bạn hiện có %s tiền thưởng. Tải xuống Ví AppCoins để sử dụng chúng trong lần mua hàng tiếp theo của mình.</string>
+  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">You\'ll get a bonus in all games identified with %s.</string>
+  <string name="bonus_banner_title" comment="up_to_s_bonus">Lên tới %s%% tiền thưởng</string>
   <string name="settings_payments_title" comment="contact_support_team">Liên hệ với Đội ngũ Hỗ trợ</string>
-  <string name="settings_contact_support_body" comment="billing_terms_of_use">Billing Terms of Use</string>
-  <string name="settings_billing_terms_body" comment="payments">Payments</string>
-  <string name="powered_by_title" comment="powered_by">Powered by</string>
+  <string name="settings_contact_support_body" comment="billing_terms_of_use">Điều khoản sử dụng thanh toán</string>
+  <string name="settings_billing_terms_body" comment="payments">Thanh toán</string>
+  <string name="powered_by_title" comment="powered_by">Được cung cấp bởi</string>
   <string name="contact_support_title" comment="contact_support">Liên hệ bộ phận hỗ trợ</string>
-  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Please give us all the details:\n\u2022 When did the problem start\n\u2022 On which game are you making a purchase\n\nOnce you tap on Send, your mail app will open. Feel free to attach a screenshot or video about the issue!</string>
-  <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Do you want to install this game?</string>
+  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Vui lòng cung cấp cho chúng tôi tất cả thông tin chi tiết:\n\u2022 Sự cố bắt đầu khi nào\n\u2022 Bạn đang mua hàng trên trò chơi nào\n\nNgay khi nhấn Gửi, ứng dụng thư của bạn sẽ mở ra. Vui lòng đính kèm ảnh chụp màn hình hoặc video về vấn đề này!</string>
+  <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Bạn có muốn cài đặt trò chơi này không?</string>
   <string name="app_size_mb_title" comment="s_mb">%s MB</string>
   <string name="uninstalled_title" comment="uninstalled">Gỡ cài đặt</string>
-  <string name="error_no_internet_body" comment="please_check_your_internet_connection">Please check your Internet connection.</string>
+  <string name="error_no_internet_body" comment="please_check_your_internet_connection">Vui lòng kiểm tra kết nối Internet của bạn.</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Thanh toán bằng Ví AppCoins</string>
-  <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">It\'ll be installed automatically and you\'ll get a bonus in all purchases!</string>
+  <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Nó sẽ được tự động cài đặt và bạn sẽ nhận được tiền thưởng khi mua hàng!</string>
   <string name="buy_button" comment="buy">Mua</string>
   <string name="iap_other_payment_methods_button" comment="other_payment_methods">Phương thức thanh toán khác</string>
   <string name="iap_remember_card_button" comment="remember_card">Nhớ thẻ</string>
@@ -151,13 +154,36 @@
   <string name="iap_card_expiry" comment="expiry_date">Ngày hết hạn</string>
   <string name="iap_card_cvc" comment="cvc_cvv">MÃ CVC/CVV</string>
   <string name="iab_change_card_button" comment="change_card">Thay đổi thẻ</string>
-  <string name="ui_flow_mvp__game__making" comment="done">Done!</string>
-  <string name="purchase_making_purchase_title" comment="making_purchase">Making Purchase...</string>
+  <string name="done_title" comment="done">Hoàn thành!</string>
+  <string name="purchase_making_purchase_title" comment="making_purchase">Thực hiện mua hàng...</string>
   <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">Bạn có chắc chi tiết thẻ của mình đúng? Vui lòng thử lại!</string>
   <string name="log_out_button" comment="log_out">Đăng xuất</string>
-  <string name="get_a_bonus_in_all_purchases_title">You\'ll get a bonus in all purchases!</string>
-  <string name="iap_appc_body">You\'ll get a bonus in all purchases!</string>
-  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">You can now complete your purchase.</string>
-  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">The AppCoins Wallet is now installed!</string>
-  <string name="storage_access_permission_request_message">Allow access to your phone’s storage so we can download and install this app.</string>
+  <string name="get_a_bonus_in_all_purchases_title">Bạn sẽ nhận được tiền thưởng trong tất cả các giao dịch mua!</string>
+  <string name="iap_appc_body">Bạn sẽ nhận được tiền thưởng trong tất cả các giao dịch mua!</string>
+  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Bây giờ bạn có thể hoàn tất việc mua hàng của mình.</string>
+  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">Ví AppCoins hiện đã được cài đặt!</string>
+  <string name="storage_access_permission_request_message">Cho phép truy cập vào bộ nhớ điện thoại của bạn để chúng tôi có thể tải xuống và cài đặt ứng dụng này.</string>
+  <!-- Payment Errors-->
+  <string name="payments_error_not_enough_balance_body">Bạn không có đủ số dư</string>
+  <string name="payments_error_old_card_title">Có vẻ như bạn đã đăng ký thẻ này từ lâu rồi!</string>
+  <string name="payments_error_old_card_body">Nhập lại chi tiết thẻ hoặc sử dụng một thẻ khác.</string>
+  <string name="purchase_error_payment_rejected">Giao dịch đã bị từ chối.</string>
+  <string name="purchase_error_try_other_card_body">Vui lòng thử bằng một thẻ hoặc phương thức thanh toán khác.</string>
+  <string name="purchase_card_error_general_title">Đã xảy ra lỗi với thẻ của bạn.</string>
+  <string name="purchase_error_try_other_payment_method_body">Vui lòng thử bằng một phương thức thanh toán khác.</string>
+  <string name="purchase_card_error_no_funds">Có vẻ như bạn không có đủ tiền hoặc thẻ của bạn bị giới hạn.</string>
+  <string name="purchase_card_error_invalid_details_title">Số thẻ không hợp lệ.</string>
+  <string name="purchase_error_check_it_body">Vui lòng kiểm tra và thử lại.</string>
+  <string name="purchase_card_error_not_supported_title">Thẻ của bạn chưa được hỗ trợ.</string>
+  <string name="purchase_error_wrong_pin_title">Đã xảy ra sự cố với mã pin của bạn.</string>
+  <string name="purchase_error_3d_title">Đã xảy ra sự cố với xác thực 3D của bạn.</string>
+  <string name="purchase_card_rejected_title">Giao dịch đã bị ngân hàng của bạn từ chối.</string>
+  <string name="purchase_error_invalid_credit_card_title">Số thẻ ngân hàng không hợp lệ.</string>
+  <string name="purchase_error_invalid_credit_card_body">Vui lòng đảm bảo tất cả các chữ số đều chính xác.</string>
+  <string name="purchase_error_card_security_validation_title">Đã xảy ra lỗi khi xác thực cấp độ 2 của giao dịch này.</string>
+  <string name="purchase_error_in_progress_title">Yêu cầu của bạn đã được xử lý hoặc đang được tiến hành.</string>
+  <string name="purchase_card_error_CVV_title">CVV/CVC sai</string>
+  <string name="purchase_error_expired_card_title">Có vẻ như thẻ của bạn đã hết hạn.</string>
+  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
+  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
 </resources>
