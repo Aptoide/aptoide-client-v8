@@ -88,6 +88,7 @@
   <string name="download_now_button">Nu downloaden</string>
   <string name="uninstall_button">Verwijderen</string>
   <string name="go_back_button">Terug</string>
+  <string name="go_back_to_game_button">Go Back to Game</string>
   <string name="uninstalling">Verwijderen</string>
   <string name="resume_button">Hervatten</string>
   <string name="waiting_for_connection">Wachten op verbinding</string>
@@ -183,4 +184,6 @@
   <string name="purchase_error_in_progress_title">Je verzoek is al verwerkt of is in behandeling.</string>
   <string name="purchase_card_error_CVV_title">Onjuiste CVV/CVC</string>
   <string name="purchase_error_expired_card_title">Het lijkt erop dat je kaart is verlopen.</string>
+  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
+  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
 </resources>
