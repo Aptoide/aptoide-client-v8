@@ -1,5 +1,6 @@
 package com.aptoide.android.aptoidegames.analytics.presentation
 
+import android.net.Uri
 import android.os.Bundle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -9,6 +10,7 @@ import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavDeepLink
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import cm.aptoide.pt.extensions.ScreenData
 import com.aptoide.android.aptoidegames.analytics.dto.AnalyticsUIContext
 import com.aptoide.android.aptoidegames.analytics.dto.BundleMeta
@@ -59,7 +61,9 @@ fun ScreenData.Companion.withAnalytics(
         nullable = true
       }
     ),
-    deepLinks = deepLinks,
+    deepLinks = deepLinks.map {
+      navDeepLink { uriPattern = it.uriPattern?.withPrevScreen("{$PREV_SCREEN_PARAM}") }
+    },
     content = { args, navigate, goBack ->
       val previousScreen = args?.getString(PREV_SCREEN_PARAM)
       val bundleMeta = args?.getString(BUNDLE_META_PARAM)?.let(BundleMeta::fromString)
@@ -142,7 +146,7 @@ fun String.withSearchMeta(searchMeta: SearchMeta?) = withSearchMeta(searchMeta?.
 
 fun String.withItemPosition(itemPosition: Int?) = withItemPosition(itemPosition?.toString())
 
-private fun String.withPrevScreen(previousScreen: String) =
+fun String.withPrevScreen(previousScreen: String) =
   withParameter(PREV_SCREEN_PARAM, previousScreen)
 
 private fun String.withBundleMeta(bundleMeta: String?) =
@@ -163,3 +167,9 @@ private fun String.withParameter(
   contains("?") -> "$this&$name=$value"
   else -> "$this?$name=$value"
 }
+
+fun Uri.withPrevScreen(previousScreen: String) =
+  this.takeIf { getQueryParameter(PREV_SCREEN_PARAM) == null }
+    ?.buildUpon()
+    ?.appendQueryParameter(PREV_SCREEN_PARAM, previousScreen)
+    ?.build() ?: this

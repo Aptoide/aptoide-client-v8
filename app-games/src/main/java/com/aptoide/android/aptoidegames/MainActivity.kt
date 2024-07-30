@@ -11,6 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import cm.aptoide.pt.install_manager.InstallManager
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.getNetworkType
+import com.aptoide.android.aptoidegames.analytics.presentation.withPrevScreen
 import com.aptoide.android.aptoidegames.home.MainView
 import com.aptoide.android.aptoidegames.installer.notifications.InstallerNotificationsBuilder
 import com.aptoide.android.aptoidegames.launch.AppLaunchPreferencesManager
@@ -55,6 +56,8 @@ class MainActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    checkDeeplinkContext(intent)
+
     sendAGStartAnalytics()
     setContent {
       val navController = rememberNavController()
@@ -108,7 +111,25 @@ class MainActivity : AppCompatActivity() {
 
   override fun onNewIntent(intent: Intent?) {
     super.onNewIntent(intent)
+    checkDeeplinkContext(intent)
     navController?.handleDeepLink(intent)
     handleNotificationIntent(intent)
+  }
+
+  private fun checkDeeplinkContext(intent: Intent?) {
+    val deeplinkScheme = BuildConfig.DEEP_LINK_SCHEMA
+      .substringBefore("://", "ag")
+
+    intent?.data?.let {
+      this.intent.data = when (it.scheme) {
+        deeplinkScheme -> it.withPrevScreen("deeplink")
+
+        "http",
+        "https",
+        -> it.withPrevScreen("app_link")
+
+        else -> it
+      }
+    }
   }
 }
