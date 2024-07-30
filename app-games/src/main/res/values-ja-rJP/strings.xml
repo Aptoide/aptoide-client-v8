@@ -88,6 +88,7 @@
   <string name="download_now_button">今すぐダウンロード</string>
   <string name="uninstall_button">アンインストール</string>
   <string name="go_back_button">戻る</string>
+  <string name="go_back_to_game_button">Go Back to Game</string>
   <string name="uninstalling">アンインストール中</string>
   <string name="resume_button">再開する</string>
   <string name="waiting_for_connection">接続待ち</string>
@@ -184,4 +185,6 @@
   <string name="purchase_error_in_progress_title">リクエストはすでに処理されたか、または処理中です。</string>
   <string name="purchase_card_error_CVV_title">不正なCVV/CVC</string>
   <string name="purchase_error_expired_card_title">カードの有効期限が切れているようです。</string>
+  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
+  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
 </resources>
