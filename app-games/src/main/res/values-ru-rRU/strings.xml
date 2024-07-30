@@ -88,6 +88,7 @@
   <string name="download_now_button">Загрузить сейчас</string>
   <string name="uninstall_button">Удалить</string>
   <string name="go_back_button">Назад</string>
+  <string name="go_back_to_game_button">Go Back to Game</string>
   <string name="uninstalling">Удаление</string>
   <string name="resume_button">Продолжить</string>
   <string name="waiting_for_connection">Ожидание подключения</string>
@@ -183,4 +184,6 @@
   <string name="purchase_error_in_progress_title">Ваш запрос уже обработан или ещё в процессе.</string>
   <string name="purchase_card_error_CVV_title">Неверный CVV/CVC</string>
   <string name="purchase_error_expired_card_title">Кажется, срок действия вашей карты истек.</string>
+  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
+  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
 </resources>
