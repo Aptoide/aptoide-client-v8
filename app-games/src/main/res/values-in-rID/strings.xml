@@ -88,6 +88,7 @@
   <string name="download_now_button">Unduh Sekarang</string>
   <string name="uninstall_button">Copot pemasangan</string>
   <string name="go_back_button">Kembali</string>
+  <string name="go_back_to_game_button">Go Back to Game</string>
   <string name="uninstalling">Mencopot pemasangan</string>
   <string name="resume_button">Lanjutkan</string>
   <string name="waiting_for_connection">Menunggu koneksi</string>
@@ -183,4 +184,6 @@
   <string name="purchase_error_in_progress_title">Permintaan Anda sudah diproses atau sedang dijalankan.</string>
   <string name="purchase_card_error_CVV_title">CVV/CVC salah</string>
   <string name="purchase_error_expired_card_title">Tampaknya kartu Anda sudah kedaluwarsa.</string>
+  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
+  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
 </resources>
