@@ -88,6 +88,7 @@
   <string name="download_now_button">تنزيل الآن</string>
   <string name="uninstall_button">إلغاء التثبيت</string>
   <string name="go_back_button">عودة</string>
+  <string name="go_back_to_game_button">Go Back to Game</string>
   <string name="uninstalling">إلغاء التثبيت</string>
   <string name="resume_button">استئناف</string>
   <string name="waiting_for_connection">بانتظار الاتصال</string>
@@ -183,4 +184,6 @@
   <string name="purchase_error_in_progress_title">لقد تم التعامل مع طلبك أو أنه جاري العمل عليه.</string>
   <string name="purchase_card_error_CVV_title">رقم CVV/CVC خطأ</string>
   <string name="purchase_error_expired_card_title">يبدو أن بطاقتك منتهية الصلاحية</string>
+  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
+  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
 </resources>
