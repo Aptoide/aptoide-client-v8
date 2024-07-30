@@ -88,6 +88,7 @@
   <string name="download_now_button">Κάντε λήψη τώρα</string>
   <string name="uninstall_button">Απεγκατάσταση</string>
   <string name="go_back_button">Πίσω</string>
+  <string name="go_back_to_game_button">Go Back to Game</string>
   <string name="uninstalling">Γίνετα απεγκατάσταση</string>
   <string name="resume_button">Συνέχιση</string>
   <string name="waiting_for_connection">Σε αναμονή σύνδεσης</string>
@@ -183,4 +184,6 @@
   <string name="purchase_error_in_progress_title">Το αίτημα σας δέχτηκε ήδη επεξεργασία ή βρίσκεται σε επεξεργασία.</string>
   <string name="purchase_card_error_CVV_title">Εσφαλμένο CVV/CVC</string>
   <string name="purchase_error_expired_card_title">Φαίνεται ότι η κάρτα σας έχει λήξει.</string>
+  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
+  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
 </resources>
