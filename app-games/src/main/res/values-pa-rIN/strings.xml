@@ -90,6 +90,7 @@
   <string name="download_now_button">Download Now</string>
   <string name="uninstall_button">ਅਨਇੰਸਟਾਲ</string>
   <string name="go_back_button">Go Back</string>
+  <string name="go_back_to_game_button">Go Back to Game</string>
   <string name="uninstalling">Uninstalling</string>
   <string name="resume_button">ਜਾਰੀ ਰੱਖੋ</string>
   <string name="waiting_for_connection">Waiting for connection</string>
@@ -185,4 +186,6 @@
   <string name="purchase_error_in_progress_title">Your request was already processed or is in progress.</string>
   <string name="purchase_card_error_CVV_title">ਗਲਤ ਸੀਵੀਵੀ/ਸੀਵੀਸੀ</string>
   <string name="purchase_error_expired_card_title">It seems your card is expired.</string>
+  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
+  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
 </resources>
