@@ -59,10 +59,10 @@ import cm.aptoide.pt.feature_home.presentation.bundlesList
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
+import com.aptoide.android.aptoidegames.analytics.presentation.InitialAnalyticsMeta
 import com.aptoide.android.aptoidegames.analytics.presentation.OverrideAnalyticsBundleMeta
 import com.aptoide.android.aptoidegames.analytics.presentation.SwipeListener
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
-import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withBundleMeta
 import com.aptoide.android.aptoidegames.categories.presentation.CategoriesBundle
 import com.aptoide.android.aptoidegames.drawables.icons.getForward
@@ -91,13 +91,17 @@ val translatedTitles = mapOf(
 
 const val gamesRoute = "gamesView"
 
-fun gamesScreen() = ScreenData.withAnalytics(
+fun gamesScreen() = ScreenData(
   route = gamesRoute,
-  screenAnalyticsName = "Home"
 ) { _, navigate, _ ->
-  BundlesScreen(
-    navigate = navigate,
-  )
+  InitialAnalyticsMeta(
+    screenAnalyticsName = "Home",
+    navigate = navigate
+  ) {
+    BundlesScreen(
+      navigate = it,
+    )
+  }
 }
 
 @OptIn(ExperimentalMaterialApi::class)
