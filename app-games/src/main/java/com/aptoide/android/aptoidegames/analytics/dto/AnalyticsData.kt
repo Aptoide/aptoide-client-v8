@@ -7,7 +7,7 @@ import java.nio.charset.StandardCharsets
 
 @Keep
 data class AnalyticsUIContext(
-  val currentScreen: String,
+  var currentScreen: String,
   val previousScreen: String?,
   val bundleMeta: BundleMeta?,
   val searchMeta: SearchMeta?,

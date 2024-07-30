@@ -112,6 +112,30 @@ fun OverrideAnalyticsBundleMeta(
   }
 }
 
+@Composable
+fun InitialAnalyticsMeta(
+  screenAnalyticsName: String,
+  navigate: (String) -> Unit,
+  content: @Composable ((String) -> Unit) -> Unit,
+) {
+  //So that UI drawn outside of this screen is aware of the current screen
+  AnalyticsContext.current.currentScreen = screenAnalyticsName
+
+  CompositionLocalProvider(
+    LocalAnalyticsContext provides AnalyticsUIContext(
+      currentScreen = screenAnalyticsName,
+      previousScreen = null,
+      bundleMeta = null,
+      searchMeta = null,
+      itemPosition = null
+    )
+  ) {
+    content {
+      navigate(it.withPrevScreen(screenAnalyticsName))
+    }
+  }
+}
+
 fun String.withBundleMeta(bundleMeta: BundleMeta?) = withBundleMeta(bundleMeta?.toString())
 
 fun String.withSearchMeta(searchMeta: SearchMeta?) = withSearchMeta(searchMeta?.toString())
