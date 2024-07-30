@@ -88,6 +88,7 @@
   <string name="download_now_button">Завантажити зараз</string>
   <string name="uninstall_button">Видалити</string>
   <string name="go_back_button">Повернутися</string>
+  <string name="go_back_to_game_button">Go Back to Game</string>
   <string name="uninstalling">Видалення</string>
   <string name="resume_button">Відновити</string>
   <string name="waiting_for_connection">Очікування з\'єднання</string>
@@ -183,4 +184,6 @@
   <string name="purchase_error_in_progress_title">Ваш запит вже оброблено або знаходиться в процесі обробки.</string>
   <string name="purchase_card_error_CVV_title">Невірний CVV/CVC</string>
   <string name="purchase_error_expired_card_title">Схоже, термін дії вашої картки закінчився.</string>
+  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
+  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
 </resources>
