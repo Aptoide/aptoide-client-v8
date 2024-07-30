@@ -88,6 +88,7 @@
   <string name="download_now_button">Letöltés most</string>
   <string name="uninstall_button">Eltávolítás</string>
   <string name="go_back_button">Vissza</string>
+  <string name="go_back_to_game_button">Go Back to Game</string>
   <string name="uninstalling">Eltávolítás</string>
   <string name="resume_button">Folytatás</string>
   <string name="waiting_for_connection">Várakozás a kapcsolatra</string>
@@ -183,4 +184,6 @@
   <string name="purchase_error_in_progress_title">A kérelmed már feldolgozták vagy jelenleg is folyamatban van.</string>
   <string name="purchase_card_error_CVV_title">Hibás CVV/CVC</string>
   <string name="purchase_error_expired_card_title">Úgy tűnik, lejárt a kártyád.</string>
+  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
+  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
 </resources>
