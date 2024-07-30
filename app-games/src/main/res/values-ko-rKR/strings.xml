@@ -88,6 +88,7 @@
   <string name="download_now_button">지금 다운로드</string>
   <string name="uninstall_button">삭제</string>
   <string name="go_back_button">뒤로 가기</string>
+  <string name="go_back_to_game_button">Go Back to Game</string>
   <string name="uninstalling">제거 중</string>
   <string name="resume_button">이력서</string>
   <string name="waiting_for_connection">연결 대기 중</string>
@@ -183,4 +184,6 @@
   <string name="purchase_error_in_progress_title">귀하의 요청이 이미 처리되었거나 진행 중입니다.</string>
   <string name="purchase_card_error_CVV_title">잘못된 CVV/CVC</string>
   <string name="purchase_error_expired_card_title">카드가 만료되는 것 같습니다.</string>
+  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
+  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
 </resources>
