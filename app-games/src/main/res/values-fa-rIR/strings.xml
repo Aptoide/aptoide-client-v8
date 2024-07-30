@@ -88,6 +88,7 @@
   <string name="download_now_button">همین حالا دانلود کنید</string>
   <string name="uninstall_button">حذف</string>
   <string name="go_back_button">بازگشت</string>
+  <string name="go_back_to_game_button">Go Back to Game</string>
   <string name="uninstalling">حذف نصب</string>
   <string name="resume_button">ادامه دادن</string>
   <string name="waiting_for_connection">در انتظار اتصال</string>
@@ -183,4 +184,6 @@
   <string name="purchase_error_in_progress_title">درخواست شده قبلا اجرا شده و یا در حال اجراست.</string>
   <string name="purchase_card_error_CVV_title">CVV/CVC اشتباه</string>
   <string name="purchase_error_expired_card_title">به نظر می‌رسد که کارت شما منقضی شده‌است.</string>
+  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
+  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
 </resources>
