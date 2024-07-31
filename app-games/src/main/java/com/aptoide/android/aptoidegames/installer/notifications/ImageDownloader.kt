@@ -3,7 +3,7 @@ package com.aptoide.android.aptoidegames.installer.notifications
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
-import coil.ImageLoader
+import coil.imageLoader
 import coil.request.CachePolicy.ENABLED
 import coil.request.ImageRequest
 import coil.request.SuccessResult
@@ -16,7 +16,7 @@ class ImageDownloader @Inject constructor(
   @ApplicationContext private val context: Context,
 ) {
   suspend fun downloadImageFrom(url: String?): Bitmap? {
-    val loader = ImageLoader(context)
+    val loader = context.imageLoader
     val request = ImageRequest.Builder(context)
       .memoryCachePolicy(ENABLED)
       .data(url)
