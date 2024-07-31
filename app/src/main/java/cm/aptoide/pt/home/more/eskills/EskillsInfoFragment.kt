@@ -38,7 +38,6 @@ import java.util.Locale
 import javax.inject.Inject
 import kotlin.math.abs
 
-
 class EskillsInfoFragment : ListAppsFragment<Application, ListAppsMoreViewHolder>(),
   EskillsInfoView, DarkBottomNavigationView {
 
@@ -56,7 +55,6 @@ class EskillsInfoFragment : ListAppsFragment<Application, ListAppsMoreViewHolder
   private lateinit var games: View
 
   private lateinit var appBarLayout: AppBarLayout
-
 
   companion object {
     @JvmStatic
@@ -79,7 +77,6 @@ class EskillsInfoFragment : ListAppsFragment<Application, ListAppsMoreViewHolder
     getFragmentComponent(savedInstanceState).inject(this)
   }
 
-
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     statsScrollView = view.findViewById(R.id.values_stats_scrollable)
@@ -101,7 +98,6 @@ class EskillsInfoFragment : ListAppsFragment<Application, ListAppsMoreViewHolder
     setupFAQs(view.findViewById(R.id.eskills_faqs))
     presenter.present()
   }
-
 
   private fun setupStatsView(statsView: View) {
     val card1 = statsView.findViewById<View>(R.id.value_proposition_card_1)
@@ -136,12 +132,12 @@ class EskillsInfoFragment : ListAppsFragment<Application, ListAppsMoreViewHolder
     if (!isLeftToRight) {
       eskillsImage.scaleX = -1f
       statsScrollView.viewTreeObserver.addOnScrollChangedListener {
-        val maxScroll = statsScrollView.getChildAt(0).width - (context as MainActivity).windowManager.defaultDisplay.width
+        val maxScroll =
+          statsScrollView.getChildAt(0).width - (context as MainActivity).windowManager.defaultDisplay.width
         val scrollX = statsScrollView.scrollX
         eskillsImage.translationX = (maxScroll - scrollX.toFloat()) / 5
       }
-    }
-    else {
+    } else {
       statsScrollView.viewTreeObserver.addOnScrollChangedListener {
         val scrollX = statsScrollView.scrollX
         eskillsImage.translationX = -scrollX.toFloat() / 5
@@ -160,11 +156,9 @@ class EskillsInfoFragment : ListAppsFragment<Application, ListAppsMoreViewHolder
   private fun setupFAQs(faqsView: View) {
     val faq1 = faqsView.findViewById<View>(R.id.eskills_faqs_item_1)
     val faq2 = faqsView.findViewById<View>(R.id.eskills_faqs_item_2)
-    val faq3 = faqsView.findViewById<View>(R.id.eskills_faqs_item_3)
 
-    setupFAQItem(faq1, R.string.eskills_v2_faqs_1_title, R.string.eskills_v2_faqs_1_body_1)
+    setupFAQItem(faq1, R.string.eskills_v2_faqs_1_title, R.string.eskills_v2_faqs_1_body_without_withdrawal_1)
     setupFAQItem(faq2, R.string.eskills_v2_faqs_2_title, R.string.eskills_v2_faqs_2_body_1)
-    setupFAQItem(faq3, R.string.eskills_v2_faqs_3_title, R.string.eskills_v2_faqs_3_body_1)
   }
 
   private fun setupFAQItem(faq: View, question: Int, answer: Int) {
