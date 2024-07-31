@@ -69,6 +69,28 @@ fun relatedEditorialsCardViewModel(packageName: String): RelatedEditorialsCardVi
 }
 
 @Composable
+fun rememberRelatedEditorials(packageName: String): List<ArticleMeta>? = runPreviewable(
+  preview = { List((0..20).random()) { randomArticleMeta } },
+  real = {
+    val injectionsProvider = hiltViewModel<InjectionsProvider>()
+    val vm: RelatedEditorialsCardViewModel = viewModel(
+      key = "relatedEditorials/$packageName",
+      factory = object : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+          @Suppress("UNCHECKED_CAST")
+          return RelatedEditorialsCardViewModel(
+            packageName = packageName,
+            relatedArticlesMetaUseCase = injectionsProvider.relatedArticlesMetaUseCase,
+          ) as T
+        }
+      }
+    )
+    val uiState by vm.uiState.collectAsState()
+    uiState
+  }
+)
+
+@Composable
 fun editorialViewModel(articleId: String): EditorialViewModel {
   val injectionsProvider = hiltViewModel<InjectionsProvider>()
   return viewModel(

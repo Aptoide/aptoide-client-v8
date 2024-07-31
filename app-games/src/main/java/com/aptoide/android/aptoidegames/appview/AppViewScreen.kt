@@ -60,6 +60,7 @@ import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.rememberApp
 import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
 import cm.aptoide.pt.feature_editorial.presentation.relatedEditorialsCardViewModel
+import cm.aptoide.pt.feature_editorial.presentation.rememberRelatedEditorials
 import com.aptoide.android.aptoidegames.AppIconImage
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
@@ -122,9 +123,8 @@ fun AppViewScreen(
   val analyticsContext = AnalyticsContext.current
   val genericAnalytics = rememberGenericAnalytics()
 
-  val editorialsCardViewModel = relatedEditorialsCardViewModel(packageName = packageName)
-  val relatedEditorialsUiState by editorialsCardViewModel.uiState.collectAsState()
-  val tabsList by remember {
+  val relatedEditorialsUiState = rememberRelatedEditorials(packageName = packageName)
+  val tabsList by remember(relatedEditorialsUiState) {
     derivedStateOf {
       if (relatedEditorialsUiState.isNullOrEmpty()) {
         tabsList.filter { it != AppViewTab.RELATED }
