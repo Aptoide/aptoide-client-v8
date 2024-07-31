@@ -99,15 +99,15 @@ internal class AptoideAppsRepository @Inject constructor(
         )
     }
 
-  override suspend fun getMeta(
-    packageName: String,
+  override suspend fun getMetaBySource(
+    source: String,
     bypassCache: Boolean,
   ): App =
     withContext(scope.coroutineContext) {
 
-      appsRemoteDataSource.getMeta(
-        path = packageName,
-        storeName = if (packageName != "com.appcoins.wallet") storeName else null,
+      appsRemoteDataSource.getMetaBySource(
+        path = source,
+        storeName = storeName,
         bypassCache = if (bypassCache) CacheConstants.NO_CACHE else null
       ).data
         .toDomainModel(
@@ -228,9 +228,9 @@ internal class AptoideAppsRepository @Inject constructor(
       @Header(CacheConstants.CACHE_CONTROL_HEADER) bypassCache: String?,
     ): GetAppResponse
 
-    @GET("app/getMeta/")
-    suspend fun getMeta(
-      @Query(value = "package_name", encoded = true) path: String,
+    @GET("app/getMeta/{source}")
+    suspend fun getMetaBySource(
+      @Path(value = "source", encoded = true) path: String,
       @Query("store_name") storeName: String? = null,
       @Query("aab") aab: Int = 1,
       @Header(CacheConstants.CACHE_CONTROL_HEADER) bypassCache: String?,
