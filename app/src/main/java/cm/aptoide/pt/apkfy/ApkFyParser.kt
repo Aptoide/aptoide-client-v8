@@ -73,7 +73,7 @@ class ApkFyParser(
           APKFY_PACKAGE_NO_APKFY,
           APKFY_PACKAGE_NO_APKFY,
           APKFY_PACKAGE_NO_APKFY,
-          apkfyModel.utmTerm,
+          APKFY_PACKAGE_NO_APKFY,
           APKFY_PACKAGE_NO_APKFY
         )
       }
