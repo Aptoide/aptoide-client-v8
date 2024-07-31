@@ -69,12 +69,12 @@ class ApkFyParser(
         )
       } else {
         firstLaunchAnalytics.sendIndicativeFirstLaunchSourceUserProperties(
-          APKFY_PACKAGE_NO_APKY,
-          APKFY_PACKAGE_NO_APKY,
-          APKFY_PACKAGE_NO_APKY,
-          APKFY_PACKAGE_NO_APKY,
+          APKFY_PACKAGE_NO_APKFY,
+          APKFY_PACKAGE_NO_APKFY,
+          APKFY_PACKAGE_NO_APKFY,
+          APKFY_PACKAGE_NO_APKFY,
           apkfyModel.utmTerm,
-          APKFY_PACKAGE_NO_APKY
+          APKFY_PACKAGE_NO_APKFY
         )
       }
     }
@@ -107,6 +107,6 @@ class ApkFyParser(
   companion object {
     const val APKFY_PACKAGE_NO_APP = "APKFY_BUT_NO_APP"
     const val APKFY_PACKAGE_APKFY_NO_UTM = "APKFY_BUT_NO_UTM"
-    const val APKFY_PACKAGE_NO_APKY = "NO_APKFY"
+    const val APKFY_PACKAGE_NO_APKFY = "NO_APKFY"
   }
 }
