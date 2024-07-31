@@ -7,6 +7,11 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import cm.aptoide.pt.feature_categories.analytics.AptoideAnalyticsInfoProvider
 import cm.aptoide.pt.install_manager.InstallManager
+import coil.ImageLoader
+import coil.ImageLoaderFactory
+import coil.disk.DiskCache
+import coil.memory.MemoryCache
+import coil.util.DebugLogger
 import com.appcoins.payments.di.Payments
 import com.appcoins.payments.di.adyenEnvironment
 import com.appcoins.payments.di.adyenKey
@@ -30,6 +35,8 @@ import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import okhttp3.Dispatcher
+import okhttp3.OkHttpClient
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -49,7 +56,7 @@ val Context.paymentsPreferencesDataStore: DataStore<Preferences> by preferencesD
 )
 
 @HiltAndroidApp
-class AptoideApplication : Application() {
+class AptoideApplication : Application(), ImageLoaderFactory {
 
   @Inject
   lateinit var installManager: InstallManager
@@ -138,6 +145,36 @@ class AptoideApplication : Application() {
       installerNotificationsManager.initialize()
       scheduledDownloadsListenerImpl.initialize()
     }
+  }
+
+  override fun newImageLoader(): ImageLoader {
+    return ImageLoader.Builder(this)
+      .dispatcher(Dispatchers.Default)
+      .allowHardware(true)
+      .memoryCache {
+        MemoryCache.Builder(this)
+          // Set the max size to 25% of the app's available memory.
+          .maxSizePercent(0.25)
+          .build()
+      }
+      .diskCache {
+        DiskCache.Builder()
+          .directory(filesDir.resolve("image_cache"))
+          .maxSizeBytes(512L * 1024 * 1024) // 512MB
+          .build()
+      }
+      .okHttpClient {
+        // Don't limit concurrent network requests by host.
+        val dispatcher = Dispatcher().apply { maxRequestsPerHost = maxRequests }
+
+        // Lazily create the OkHttpClient that is used for network operations.
+        OkHttpClient.Builder()
+          .dispatcher(dispatcher)
+          .build()
+      }
+      // Enable logging to the standard Android log if this is a debug build.
+      .apply { if (BuildConfig.DEBUG) logger(DebugLogger()) }
+      .build()
   }
 
   private fun initTimber() {
