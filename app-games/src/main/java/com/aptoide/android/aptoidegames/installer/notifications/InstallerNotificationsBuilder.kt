@@ -107,7 +107,7 @@ class InstallerNotificationsBuilder @Inject constructor(
         }
       )
 
-      showNotification(notificationId, notification)
+      notification?.let { showNotification(notificationId, notification) }
     }
   }
 
@@ -125,7 +125,7 @@ class InstallerNotificationsBuilder @Inject constructor(
       progress = -1,
     )
 
-    showNotification(notificationId, notification)
+    notification?.let { showNotification(notificationId, notification) }
   }
 
   private fun cancelNotification(notificationId: Int) {
@@ -159,7 +159,7 @@ class InstallerNotificationsBuilder @Inject constructor(
       hasAction = true
     )
 
-    showNotification(notificationId, notification)
+    notification?.let { showNotification(notificationId, notification) }
   }
 
   private suspend fun buildNotification(
@@ -169,7 +169,8 @@ class InstallerNotificationsBuilder @Inject constructor(
     progress: Int? = null,
     contentText: String,
     hasAction: Boolean = false,
-  ): Notification {
+  ): Notification? = if (context.isAllowed(Manifest.permission.POST_NOTIFICATIONS)) {
+
     val deepLink = buildAppViewDeepLinkUri(packageName.toPackageNameParam())
 
     val clickIntent = PendingIntent.getActivity(
@@ -189,7 +190,7 @@ class InstallerNotificationsBuilder @Inject constructor(
       (uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
     val colorToUse = if (isNightMode) Palette.Primary.toArgb() else Palette.Black.toArgb()
 
-    return NotificationCompat.Builder(context, INSTALLER_NOTIFICATION_CHANNEL_ID)
+    NotificationCompat.Builder(context, INSTALLER_NOTIFICATION_CHANNEL_ID)
       .setShowWhen(true)
       .setSmallIcon(notificationIcon)
       .setColor(colorToUse)
@@ -225,5 +226,7 @@ class InstallerNotificationsBuilder @Inject constructor(
           )
         }
       }.build()
+  } else {
+    null
   }
 }
