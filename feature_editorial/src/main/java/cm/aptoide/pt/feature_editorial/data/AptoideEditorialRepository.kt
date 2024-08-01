@@ -3,9 +3,17 @@ package cm.aptoide.pt.feature_editorial.data
 import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7DataListResponse
 import cm.aptoide.pt.feature_apps.data.toDomainModel
 import cm.aptoide.pt.feature_campaigns.CampaignRepository
-import cm.aptoide.pt.feature_campaigns.data.CampaignUrlNormalizer
-import cm.aptoide.pt.feature_editorial.data.model.*
-import cm.aptoide.pt.feature_editorial.domain.*
+import cm.aptoide.pt.feature_editorial.data.model.ContentAction
+import cm.aptoide.pt.feature_editorial.data.model.ContentJSON
+import cm.aptoide.pt.feature_editorial.data.model.Data
+import cm.aptoide.pt.feature_editorial.data.model.EditorialDetailJson
+import cm.aptoide.pt.feature_editorial.data.model.EditorialJson
+import cm.aptoide.pt.feature_editorial.domain.Action
+import cm.aptoide.pt.feature_editorial.domain.Article
+import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
+import cm.aptoide.pt.feature_editorial.domain.ArticleType
+import cm.aptoide.pt.feature_editorial.domain.Paragraph
+import cm.aptoide.pt.feature_editorial.domain.RELATED_ARTICLE_CACHE_ID_PREFIX
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -16,7 +24,6 @@ import javax.inject.Singleton
 @Singleton
 internal class AptoideEditorialRepository @Inject constructor(
   private val campaignRepository: CampaignRepository,
-  private val campaignUrlNormalizer: CampaignUrlNormalizer,
   private val editorialRemoteDataSource: Retrofit,
   private val storeName: String,
 ) : EditorialRepository {
@@ -28,7 +35,7 @@ internal class AptoideEditorialRepository @Inject constructor(
   override suspend fun getArticle(editorialUrl: String): Article =
     editorialUrl.split("card/")[1]
       .let { editorialRemoteDataSource.getArticleDetail(it) }
-      .data?.toDomainModel(campaignRepository, campaignUrlNormalizer)
+      .data?.toDomainModel(campaignRepository)
       ?: throw IllegalStateException()
 
   override suspend fun getArticlesMeta(
@@ -80,7 +87,6 @@ internal class AptoideEditorialRepository @Inject constructor(
 
 private fun Data.toDomainModel(
   campaignRepository: CampaignRepository,
-  campaignUrlNormalizer: CampaignUrlNormalizer,
 ): Article = Article(
   id = id,
   title = title,
@@ -90,13 +96,12 @@ private fun Data.toDomainModel(
   date = date,
   views = views,
   relatedTag = RELATED_ARTICLE_CACHE_ID_PREFIX + id,
-  content = map(content, campaignRepository, campaignUrlNormalizer)
+  content = map(content, campaignRepository)
 )
 
 fun map(
   content: List<ContentJSON>,
   campaignRepository: CampaignRepository,
-  campaignUrlNormalizer: CampaignUrlNormalizer,
 ): List<Paragraph> {
   val contentList = ArrayList<Paragraph>()
   val randomAdListId = UUID.randomUUID().toString()
@@ -115,7 +120,6 @@ fun map(
         },
         app = it.app?.toDomainModel(
           campaignRepository = campaignRepository,
-          campaignUrlNormalizer = campaignUrlNormalizer,
           adListId = randomAdListId
         )
       )
