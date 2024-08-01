@@ -42,7 +42,6 @@ import com.appcoins.payments.arch.ConnectionFailedException
 import com.appcoins.payments.arch.PaymentsResult
 import com.appcoins.payments.arch.PaymentsSuccessResult
 import com.appcoins.payments.arch.UnknownErrorException
-import com.appcoins.payments.manager.presentation.rememberPaymentMethod
 import com.appcoins.payments.methods.paypal.presentation.PaypalUIState
 import com.appcoins.payments.methods.paypal.presentation.rememberPaypalUIState
 import com.appcoins.payments.uri_handler.PaymentsCancelledResult
@@ -72,17 +71,11 @@ import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 import kotlinx.coroutines.delay
 
-private const val PAYPAL_PAYMENT_ID_ARG = "paymentMethodId"
 private const val IS_PRE_SELECTED = "isPreSelected"
 private const val PAYPAL_ROUTE = "payments/paypal"
-private const val PAYPAL_FULL_ROUTE =
-  "$PAYPAL_ROUTE?$PAYPAL_PAYMENT_ID_ARG={$PAYPAL_PAYMENT_ID_ARG}&$IS_PRE_SELECTED={$IS_PRE_SELECTED}"
+private const val PAYPAL_FULL_ROUTE = "$PAYPAL_ROUTE?$IS_PRE_SELECTED={$IS_PRE_SELECTED}"
 
 private val paypalPaymentArguments = listOf(
-  navArgument(PAYPAL_PAYMENT_ID_ARG) {
-    type = NavType.StringType
-    nullable = false
-  },
   navArgument(IS_PRE_SELECTED) {
     type = NavType.BoolType
     defaultValue = false
@@ -90,21 +83,16 @@ private val paypalPaymentArguments = listOf(
   }
 )
 
-fun buildPaypalRoute(
-  paymentMethodId: String,
-  isPreSelected: Boolean = false,
-) =
-  "$PAYPAL_ROUTE?$PAYPAL_PAYMENT_ID_ARG=${paymentMethodId}&$IS_PRE_SELECTED=${isPreSelected}"
+fun buildPaypalRoute(isPreSelected: Boolean = false) =
+  "$PAYPAL_ROUTE?$IS_PRE_SELECTED=${isPreSelected}"
 
 fun paypalPaymentScreen(onFinish: (PaymentsResult) -> Unit) = ScreenData.withAnalytics(
   route = PAYPAL_FULL_ROUTE,
   screenAnalyticsName = "PayPal",
   arguments = paypalPaymentArguments
 ) { args, _, popBackStack ->
-  val paymentMethodId = args?.getString(PAYPAL_PAYMENT_ID_ARG)!!
-  val isPreSelected = args.getBoolean(IS_PRE_SELECTED)
+  val isPreSelected = args?.getBoolean(IS_PRE_SELECTED) ?: false
   BuildPaypalScreen(
-    paymentMethodId = paymentMethodId,
     onFinish = onFinish,
     popBackStack = popBackStack,
   )
@@ -119,19 +107,17 @@ fun paypalPaymentScreen(onFinish: (PaymentsResult) -> Unit) = ScreenData.withAna
 
 @Composable
 private fun BuildPaypalScreen(
-  paymentMethodId: String,
   onFinish: (PaymentsResult) -> Unit,
   popBackStack: () -> Unit,
 ) {
   val localContext = LocalContext.current
   val activityResultRegistry = LocalActivityResultRegistryOwner.current!!.activityResultRegistry
-  val uiState = rememberPaypalUIState()
+  val (paymentMethod, uiState) = rememberPaypalUIState()
   var finished by remember { mutableStateOf(false) }
 
-  val paymentMethod = rememberPaymentMethod(paymentMethodId)
   val genericAnalytics = rememberGenericAnalytics()
 
-  PaypalPaymentStateEffect(paymentMethodId, uiState)
+  PaypalPaymentStateEffect(paymentMethod.id, uiState)
 
   LaunchedEffect(key1 = uiState, key2 = activityResultRegistry) {
     when (uiState) {

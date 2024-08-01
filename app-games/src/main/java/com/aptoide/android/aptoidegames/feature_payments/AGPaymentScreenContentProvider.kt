@@ -102,8 +102,8 @@ fun NavigationGraph(
 
 fun PaymentMethod<*>.getRoute(isPreSelected: Boolean = false) =
   when (this) {
-    is PaypalPaymentMethod -> buildPaypalRoute(this.id, isPreSelected)
-    is CreditCardPaymentMethod -> buildCreditCardRoute(this.id, isPreSelected)
+    is PaypalPaymentMethod -> buildPaypalRoute(isPreSelected)
+    is CreditCardPaymentMethod -> buildCreditCardRoute(isPreSelected)
     is WalletPaymentMethod -> getPaymentsWalletInstallationRoute()
     else -> ""
   }
