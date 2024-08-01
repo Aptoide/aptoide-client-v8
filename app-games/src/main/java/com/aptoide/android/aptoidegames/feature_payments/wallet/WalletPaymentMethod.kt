@@ -7,7 +7,6 @@ import androidx.compose.runtime.remember
 import com.appcoins.payments.arch.PaymentMethod
 import com.appcoins.payments.arch.ProductInfoData
 import com.appcoins.payments.arch.PurchaseRequest
-import com.appcoins.payments.arch.Transaction
 import com.appcoins.payments.arch.WalletData
 import com.aptoide.android.aptoidegames.feature_payments.currentProductInfo
 
@@ -23,7 +22,7 @@ class WalletPaymentMethod(
   override val wallet: WalletData
     get() = TODO("Not yet implemented")
 
-  override suspend fun createTransaction(paymentDetails: Unit): Transaction {
+  override suspend fun createTransaction(paymentDetails: Unit): String {
     TODO("Not yet implemented")
   }
 }
