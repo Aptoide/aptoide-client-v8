@@ -14,7 +14,6 @@ import java.io.IOException
 class AppViewModel(
   private val appMetaUseCase: AppMetaUseCase,
   private val source: String,
-  private val adListId: String?,
 ) : ViewModel() {
 
   private val viewModelState = MutableStateFlow<AppUiState>(AppUiState.Loading)
@@ -35,8 +34,6 @@ class AppViewModel(
       viewModelState.update { AppUiState.Loading }
       try {
         val app = appMetaUseCase.getMetaInfoBySource(source)
-        app.campaigns?.adListId = adListId
-        app.campaigns?.sendImpressionEvent()
         viewModelState.update { AppUiState.Idle(app) }
       } catch (e: Throwable) {
         Timber.w(e)

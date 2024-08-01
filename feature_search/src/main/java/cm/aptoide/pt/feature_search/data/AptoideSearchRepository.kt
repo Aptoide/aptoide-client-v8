@@ -2,7 +2,6 @@ package cm.aptoide.pt.feature_search.data
 
 import cm.aptoide.pt.feature_apps.data.toDomainModel
 import cm.aptoide.pt.feature_campaigns.CampaignRepository
-import cm.aptoide.pt.feature_campaigns.data.CampaignUrlNormalizer
 import cm.aptoide.pt.feature_search.data.database.SearchHistoryRepository
 import cm.aptoide.pt.feature_search.data.database.model.SearchHistoryEntity
 import cm.aptoide.pt.feature_search.data.network.RemoteSearchRepository
@@ -22,7 +21,6 @@ import javax.inject.Singleton
 @Singleton
 class AptoideSearchRepository @Inject constructor(
   private val campaignRepository: CampaignRepository,
-  private val campaignUrlNormalizer: CampaignUrlNormalizer,
   private val searchHistoryRepository: SearchHistoryRepository,
   private val remoteSearchRepository: RemoteSearchRepository,
   private val autoCompleteSuggestionsRepository: AutoCompleteSuggestionsRepository,
@@ -37,7 +35,6 @@ class AptoideSearchRepository @Inject constructor(
           emit(SearchAppResult.Success(it.map { appJSON ->
             appJSON.toDomainModel(
               campaignRepository = campaignRepository,
-              campaignUrlNormalizer = campaignUrlNormalizer,
               adListId = adListId
             )
           }))
@@ -79,7 +76,6 @@ class AptoideSearchRepository @Inject constructor(
               it.map { topSearchApp ->
                 topSearchApp.toDomainModel(
                   campaignRepository = campaignRepository,
-                  campaignUrlNormalizer = campaignUrlNormalizer,
                   adListId = randomAdListId
                 ).name
               })

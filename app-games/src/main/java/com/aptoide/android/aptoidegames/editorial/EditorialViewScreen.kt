@@ -20,7 +20,6 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -88,7 +87,6 @@ fun editorialScreen() = ScreenData.withAnalytics(
       navigateBack()
     },
     navigate = { navigate(it) },
-    onAppLoaded = { app -> viewModel.onAppLoaded(app) },
     onRetryNetwork = viewModel::reload,
     onRetryError = viewModel::reload
   )
@@ -101,7 +99,6 @@ private fun EditorialViewScreen(
   state: EditorialUiState,
   navigateBack: () -> Unit,
   navigate: (String) -> Unit,
-  onAppLoaded: (App) -> Unit,
   onRetryNetwork: () -> Unit,
   onRetryError: () -> Unit,
 
@@ -112,7 +109,6 @@ private fun EditorialViewScreen(
     is EditorialUiState.Error -> GenericErrorView(onRetryError)
     is EditorialUiState.Idle -> ArticleViewContent(
       article = state.article,
-      onAppLoaded = onAppLoaded,
       navigateBack = navigateBack,
       navigate = navigate,
     )
@@ -133,7 +129,6 @@ private fun LoadingView() {
 @Composable
 private fun ArticleViewContent(
   article: Article?,
-  onAppLoaded: (App) -> Unit,
   navigateBack: () -> Unit,
   navigate: (String) -> Unit,
 ) {
@@ -233,8 +228,6 @@ private fun ArticleViewContent(
           }
           content.app?.let {
             item {
-              LaunchedEffect(true) { onAppLoaded(it) }
-
               AppBannerView(
                 modifier = Modifier
                   .fillMaxWidth()
@@ -394,7 +387,6 @@ private fun EditorialViewScreenPreview(
       state = state,
       navigateBack = {},
       navigate = {},
-      onAppLoaded = {},
       onRetryNetwork = {},
       onRetryError = {}
     )

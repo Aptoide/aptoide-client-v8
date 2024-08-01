@@ -121,7 +121,7 @@ fun AppViewScreen(
   navigate: (String) -> Unit,
   navigateBack: () -> Unit,
 ) {
-  val (uiState, reload) = rememberAppBySource(source = source, adListId = "")
+  val (uiState, reload) = rememberAppBySource(source = source)
   val analyticsContext = AnalyticsContext.current
   val genericAnalytics = rememberGenericAnalytics()
 

@@ -127,7 +127,7 @@ private fun PaymentsWalletInstallationBottomSheetView(
 ) {
   val genericAnalytics = rememberGenericAnalytics()
   val walletPaymentMethod = rememberWalletPaymentMethod(purchaseRequest)
-  val (uiState, _) = rememberApp(packageName = "com.appcoins.wallet", adListId = "")
+  val (uiState, _) = rememberApp(packageName = "com.appcoins.wallet")
 
   PaymentsWalletInstallationView(
     purchaseRequest = purchaseRequest,

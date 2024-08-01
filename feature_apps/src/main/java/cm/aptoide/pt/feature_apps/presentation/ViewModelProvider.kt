@@ -32,7 +32,6 @@ class InjectionsProvider @Inject constructor(
 @Composable
 fun rememberApp(
   packageName: String,
-  adListId: String?,
 ): Pair<AppUiState, () -> Unit> = runPreviewable(
   preview = { AppUiStateProvider().values.toSet().random() to {} },
   real = {
@@ -46,7 +45,6 @@ fun rememberApp(
           return AppViewModel(
             appMetaUseCase = injectionsProvider.appMetaUseCase,
             source = packageName.toPackageNameParam(),
-            adListId = adListId
           ) as T
         }
       }
@@ -60,7 +58,6 @@ fun rememberApp(
 @Composable
 fun rememberAppBySource(
   source: String,
-  adListId: String?,
 ): Pair<AppUiState, () -> Unit> = runPreviewable(
   preview = { AppUiStateProvider().values.toSet().random() to {} },
   real = {
@@ -74,7 +71,6 @@ fun rememberAppBySource(
           return AppViewModel(
             appMetaUseCase = injectionsProvider.appMetaUseCase,
             source = source,
-            adListId = adListId
           ) as T
         }
       }

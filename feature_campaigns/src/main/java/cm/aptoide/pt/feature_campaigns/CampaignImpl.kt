@@ -1,55 +1,118 @@
 package cm.aptoide.pt.feature_campaigns
 
 import android.net.Uri
+import androidx.annotation.Keep
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 interface Campaign {
-  suspend fun sendInstallClickEvent()
-  suspend fun sendImpressionEvent()
-  suspend fun sendSuccessfulInstallEvent()
-  fun extractCampaignId(): String?
+  val adListId: String?
+  suspend fun sendImpressionEvent(
+    type: String,
+    toReplace: Map<String, String> = emptyMap(),
+    toAppend: Map<String, String> = emptyMap(),
+  )
+
+  suspend fun sendClickEvent(
+    type: String,
+    toReplace: Map<String, String> = emptyMap(),
+    toAppend: Map<String, String> = emptyMap(),
+  )
+
+  suspend fun sendDownloadEvent(
+    type: String,
+    toReplace: Map<String, String> = emptyMap(),
+    toAppend: Map<String, String> = emptyMap(),
+  )
+
+  fun extractParameter(
+    parameter: String,
+    type: String,
+  ): String?
 }
 
 data class CampaignImpl constructor(
-  private val impressions: List<String>,
-  val clicks: List<String>,
+  private val impressions: List<CampaignTuple>,
+  private val clicks: List<CampaignTuple>,
+  val downloads: List<CampaignTuple>,
   private val repository: CampaignRepository,
-  private val normalizeImpression: (String, String) -> String,
-  private val normalizeClick: (String, String, Boolean) -> String
 ) : Campaign {
-  var adListId: String? = null
+  override var adListId: String? = null
 
-  override suspend fun sendImpressionEvent() = withContext(Dispatchers.IO) {
-    val adListId = adListId ?: return@withContext
-    impressions.forEach { repository.knock(normalizeImpression(it, adListId)) }
+  override suspend fun sendImpressionEvent(
+    type: String,
+    toReplace: Map<String, String>,
+    toAppend: Map<String, String>,
+  ) = withContext(Dispatchers.IO) {
+    impressions.filter { it.name == type }
+      .forEach { repository.knock((it.url.injectToUrl(toReplace, toAppend))) }
   }
 
-  override suspend fun sendInstallClickEvent() = withContext(Dispatchers.IO) {
-    val adListId = adListId ?: return@withContext
-    clicks.forEach { repository.knock(normalizeClick(it, adListId, true)) }
+  override suspend fun sendClickEvent(
+    type: String,
+    toReplace: Map<String, String>,
+    toAppend: Map<String, String>,
+  ) = withContext(Dispatchers.IO) {
+    clicks.filter { it.name == type }
+      .forEach { repository.knock((it.url.injectToUrl(toReplace, toAppend))) }
   }
 
-  override suspend fun sendSuccessfulInstallEvent() = withContext(Dispatchers.IO) {
-    val adListId = adListId ?: return@withContext
-    clicks.forEach { repository.knock(normalizeClick(it, adListId, false)) }
+  override suspend fun sendDownloadEvent(
+    type: String,
+    toReplace: Map<String, String>,
+    toAppend: Map<String, String>,
+  ) = withContext(Dispatchers.IO) {
+    downloads.filter { it.name == type }
+      .forEach { repository.knock((it.url.injectToUrl(toReplace, toAppend))) }
   }
 
-  override fun extractCampaignId(): String? =
-    getCampaignId(impressions) ?: getCampaignId(clicks)
+  override fun extractParameter(
+    parameter: String,
+    type: String,
+  ): String? =
+    getParameter(impressions, parameter, type) ?: getParameter(clicks, parameter, type)
+    ?: getParameter(downloads, parameter, type)
 
-  private fun getCampaignId(urlList: List<String>): String? {
-    urlList.forEach {
-      val url = Uri.parse(it).buildUpon().build()
-      val campaignId = url.getQueryParameter("campaignId")
+  private fun getParameter(
+    campaignList: List<CampaignTuple>,
+    parameter: String,
+    type: String?,
+  ): String? {
+    campaignList.filter { it.name == type }.forEach {
+      val url = Uri.parse(it.url)
+      val param = url.getQueryParameter(parameter)
 
-      if (campaignId != null) return campaignId
+      if (param != null) return param
     }
 
     return null
+  }
+
+  private fun String.injectToUrl(
+    toReplace: Map<String, String>,
+    toAppend: Map<String, String>,
+  ): String {
+    var newUrl = this
+    toReplace.forEach {
+      newUrl = newUrl.replace(it.key, it.value)
+    }
+    val params = toAppend
+      .map { "${it.key}=${it.value}" }
+      .joinToString("&")
+      .takeIf { it.isNotEmpty() }
+      ?.let {
+        (if (newUrl.contains("?")) "?" else "&") + it
+      }
+    return newUrl + (params ?: "")
   }
 }
 
 interface CampaignRepository {
   suspend fun knock(url: String)
 }
+
+@Keep
+data class CampaignTuple(
+  val name: String,
+  val url: String,
+)

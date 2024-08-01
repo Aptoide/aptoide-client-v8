@@ -4,6 +4,7 @@ import cm.aptoide.pt.aptoide_network.data.network.CacheConstants
 import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7DataListResponse
 import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7ListResponse
 import cm.aptoide.pt.feature_apps.data.model.AppJSON
+import cm.aptoide.pt.feature_apps.data.model.CampaignUrl
 import cm.aptoide.pt.feature_apps.data.model.CampaignUrls
 import cm.aptoide.pt.feature_apps.data.model.DynamicSplitJSON
 import cm.aptoide.pt.feature_apps.data.model.GetAppResponse
@@ -14,7 +15,7 @@ import cm.aptoide.pt.feature_apps.domain.Store
 import cm.aptoide.pt.feature_apps.domain.Votes
 import cm.aptoide.pt.feature_campaigns.CampaignImpl
 import cm.aptoide.pt.feature_campaigns.CampaignRepository
-import cm.aptoide.pt.feature_campaigns.data.CampaignUrlNormalizer
+import cm.aptoide.pt.feature_campaigns.CampaignTuple
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.withContext
 import retrofit2.http.GET
@@ -28,7 +29,6 @@ internal class AptoideAppsRepository @Inject constructor(
   private val appsRemoteDataSource: Retrofit,
   private val storeName: String,
   private val campaignRepository: CampaignRepository,
-  private val campaignUrlNormalizer: CampaignUrlNormalizer,
   private val scope: CoroutineScope,
 ) : AppsRepository {
 
@@ -52,7 +52,6 @@ internal class AptoideAppsRepository @Inject constructor(
         ?.map {
           it.toDomainModel(
             campaignRepository = campaignRepository,
-            campaignUrlNormalizer = campaignUrlNormalizer,
             adListId = randomAdListId
           )
         }
@@ -74,7 +73,6 @@ internal class AptoideAppsRepository @Inject constructor(
         .datalist?.list?.map {
           it.toDomainModel(
             campaignRepository = campaignRepository,
-            campaignUrlNormalizer = campaignUrlNormalizer,
             adListId = randomAdListId
           )
         }
@@ -94,7 +92,6 @@ internal class AptoideAppsRepository @Inject constructor(
         .nodes.meta.data
         .toDomainModel(
           campaignRepository = campaignRepository,
-          campaignUrlNormalizer = campaignUrlNormalizer,
           adListId = UUID.randomUUID().toString()
         )
     }
@@ -113,7 +110,6 @@ internal class AptoideAppsRepository @Inject constructor(
       ).data
         .toDomainModel(
           campaignRepository = campaignRepository,
-          campaignUrlNormalizer = campaignUrlNormalizer,
           adListId = UUID.randomUUID().toString()
         )
     }
@@ -134,7 +130,6 @@ internal class AptoideAppsRepository @Inject constructor(
         ?.map {
           it.toDomainModel(
             campaignRepository = campaignRepository,
-            campaignUrlNormalizer = campaignUrlNormalizer,
             adListId = randomAdListId
           )
         }
@@ -154,7 +149,6 @@ internal class AptoideAppsRepository @Inject constructor(
         ?.map {
           it.toDomainModel(
             campaignRepository = campaignRepository,
-            campaignUrlNormalizer = campaignUrlNormalizer,
             adListId = randomAdListId
           )
         }
@@ -172,7 +166,6 @@ internal class AptoideAppsRepository @Inject constructor(
         ?.map { appJSON ->
           appJSON.toDomainModel(
             campaignRepository = campaignRepository,
-            campaignUrlNormalizer = campaignUrlNormalizer,
             adListId = randomAdListId
           )
         }
@@ -190,7 +183,6 @@ internal class AptoideAppsRepository @Inject constructor(
         ?.map { appJSON ->
           appJSON.toDomainModel(
             campaignRepository = campaignRepository,
-            campaignUrlNormalizer = campaignUrlNormalizer,
             adListId = randomAdListId
           )
         }
@@ -270,7 +262,6 @@ internal class AptoideAppsRepository @Inject constructor(
 
 fun AppJSON.toDomainModel(
   campaignRepository: CampaignRepository,
-  campaignUrlNormalizer: CampaignUrlNormalizer,
   adListId: String,
 ) = App(
   name = this.name!!,
@@ -324,26 +315,27 @@ fun AppJSON.toDomainModel(
   aab = mapAab(this),
   obb = mapObb(this),
   developerName = this.developer?.name,
-  campaigns = this.urls.mapCampaigns(campaignRepository, campaignUrlNormalizer)
+  campaigns = this.urls.mapCampaigns(campaignRepository)
     ?.apply { this.adListId = adListId }
 )
 
 fun CampaignUrls.mapCampaigns(
   campaignRepository: CampaignRepository?,
-  campaignUrlNormalizer: CampaignUrlNormalizer?,
 ): CampaignImpl? {
-  if (campaignRepository != null && campaignUrlNormalizer != null) {
-    val impressionsList = this.impression?.map { campaignUrl -> campaignUrl.url } ?: emptyList()
-    val clicksList = this.click?.map { campaignUrl -> campaignUrl.url } ?: emptyList()
+  if (campaignRepository != null) {
     return CampaignImpl(
-      impressions = impressionsList,
-      clicks = clicksList,
+      impressions = this.impression.toCampaignTupleList(),
+      clicks = this.click.toCampaignTupleList(),
+      downloads = this.download.toCampaignTupleList(),
       repository = campaignRepository,
-      normalizeImpression = campaignUrlNormalizer.normalizeImpression,
-      normalizeClick = campaignUrlNormalizer.normalizeClick,
     )
   }
   return null
+}
+
+private fun List<CampaignUrl>?.toCampaignTupleList(): List<CampaignTuple> {
+  return this?.map { campaignUrl -> CampaignTuple(campaignUrl.name, campaignUrl.url) }
+    ?: emptyList()
 }
 
 private fun mapObb(app: AppJSON): Obb? =

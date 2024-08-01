@@ -51,7 +51,7 @@ fun AppInfoPermissionsView(
   navigateBack: () -> Unit,
   packageName: String,
 ) {
-  val (uiState, _) = rememberApp(packageName = packageName, adListId = "")
+  val (uiState, _) = rememberApp(packageName = packageName)
 
   (uiState as? AppUiState.Idle)?.app?.run {
     AppInfoPermissionsViewContent(

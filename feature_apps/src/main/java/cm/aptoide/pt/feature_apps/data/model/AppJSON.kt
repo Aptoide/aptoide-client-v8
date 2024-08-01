@@ -29,7 +29,7 @@ data class AppJSON(
   var appcoins: AppCoins? = null,
   val aab: Aab? = null,
   val obb: Obb? = null,
-  val urls: CampaignUrls
+  val urls: CampaignUrls,
 )
 
 @Keep
@@ -37,14 +37,14 @@ data class Media(
   var keywords: List<String>,
   var description: String,
   var videos: List<VideoJSON>,
-  var screenshots: List<Screenshot>
+  var screenshots: List<Screenshot>,
 )
 
 @Keep
 data class VideoJSON(
   val type: VideoTypeJSON,
   val url: String,
-  val thumbnail: String
+  val thumbnail: String,
 )
 
 @Keep
@@ -59,18 +59,21 @@ data class Store(
   var name: String,
   var avatar: String,
   var appearance: Appearance,
-  var stats: Stats?
+  var stats: Stats?,
 )
 
 @Keep
 data class Stats(
   var apps: Long,
   var subscribers: Long,
-  var downloads: Long
+  var downloads: Long,
 )
 
 @Keep
-data class Appearance(var theme: String, var description: String)
+data class Appearance(
+  var theme: String,
+  var description: String,
+)
 
 @Keep
 data class Developer(
@@ -78,7 +81,7 @@ data class Developer(
   var name: String,
   var website: String,
   var email: String,
-  var privacy: String?
+  var privacy: String?,
 )
 
 @Keep
@@ -92,7 +95,7 @@ data class Age(
   var name: String,
   var title: String,
   var pegi: String,
-  var rating: Long
+  var rating: Long,
 )
 
 @Keep
@@ -111,14 +114,17 @@ data class Split(
 )
 
 @Keep
-data class Obb(val main: Main, val patch: Patch?)
+data class Obb(
+  val main: Main,
+  val patch: Patch?,
+)
 
 @Keep
 data class Main(
   val md5sum: String,
   val filesize: Long,
   val filename: String,
-  val path: String?
+  val path: String?,
 )
 
 @Keep
@@ -126,17 +132,18 @@ data class Patch(
   val md5sum: String,
   val filesize: Long,
   val filename: String,
-  val path: String?
+  val path: String?,
 )
 
 @Keep
 data class CampaignUrls(
   val impression: List<CampaignUrl>?,
-  val click: List<CampaignUrl>?
+  val click: List<CampaignUrl>?,
+  val download: List<CampaignUrl>?,
 )
 
 @Keep
 data class CampaignUrl(
   val name: String,
-  val url: String
+  val url: String,
 )

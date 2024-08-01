@@ -2,7 +2,6 @@ package cm.aptoide.pt.feature_editorial.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_editorial.domain.usecase.ArticleUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -45,12 +44,6 @@ class EditorialViewModel(
           }
         }
       }
-    }
-  }
-
-  fun onAppLoaded(app: App) {
-    viewModelScope.launch {
-      app.campaigns?.sendImpressionEvent()
     }
   }
 }
