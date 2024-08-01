@@ -43,7 +43,6 @@ import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardView
 import com.appcoins.payments.arch.ConnectionFailedException
 import com.appcoins.payments.arch.PaymentsResult
-import com.appcoins.payments.manager.presentation.rememberPaymentMethod
 import com.appcoins.payments.methods.adyen.presentation.AdyenCreditCardUiState
 import com.appcoins.payments.methods.adyen.presentation.rememberAdyenCreditCardUIState
 import com.appcoins.payments.uri_handler.PaymentsCancelledResult
@@ -71,17 +70,11 @@ import com.aptoide.android.aptoidegames.theme.Palette
 import kotlinx.coroutines.delay
 import kotlin.random.Random
 
-private const val CREDIT_CARD_PAYMENT_ID_ARG = "paymentMethodId"
 private const val IS_PRE_SELECTED = "isPreSelected"
 private const val CREDIT_CARD_ROUTE = "payments/creditCard"
-private const val CREDIT_CARD_FULL_ROUTE =
-  "$CREDIT_CARD_ROUTE?$CREDIT_CARD_PAYMENT_ID_ARG={$CREDIT_CARD_PAYMENT_ID_ARG}&$IS_PRE_SELECTED={$IS_PRE_SELECTED}"
+private const val CREDIT_CARD_FULL_ROUTE = "$CREDIT_CARD_ROUTE?$IS_PRE_SELECTED={$IS_PRE_SELECTED}"
 
 private val creditCardPaymentArguments = listOf(
-  navArgument(CREDIT_CARD_PAYMENT_ID_ARG) {
-    type = NavType.StringType
-    nullable = false
-  },
   navArgument(IS_PRE_SELECTED) {
     type = NavType.BoolType
     defaultValue = false
@@ -89,11 +82,8 @@ private val creditCardPaymentArguments = listOf(
   }
 )
 
-fun buildCreditCardRoute(
-  paymentMethodId: String,
-  isPreSelected: Boolean = false,
-) =
-  "$CREDIT_CARD_ROUTE?$CREDIT_CARD_PAYMENT_ID_ARG=${paymentMethodId}&$IS_PRE_SELECTED=${isPreSelected}"
+fun buildCreditCardRoute(isPreSelected: Boolean = false) =
+  "$CREDIT_CARD_ROUTE?$IS_PRE_SELECTED=${isPreSelected}"
 
 fun creditCardPaymentScreen(
   onFinish: (PaymentsResult) -> Unit,
@@ -102,10 +92,8 @@ fun creditCardPaymentScreen(
   screenAnalyticsName = "CreditCard",
   arguments = creditCardPaymentArguments
 ) { args, _, popBackStack ->
-  val paymentMethodId = args?.getString(CREDIT_CARD_PAYMENT_ID_ARG)!!
-  val isPreSelected = args.getBoolean(IS_PRE_SELECTED)
+  val isPreSelected = args?.getBoolean(IS_PRE_SELECTED)!!
   BuildAdyenCreditCardScreen(
-    paymentMethodId = paymentMethodId,
     onFinish = onFinish,
     popBackStack = popBackStack,
   )
@@ -118,7 +106,6 @@ fun creditCardPaymentScreen(
 
 @Composable
 private fun BuildAdyenCreditCardScreen(
-  paymentMethodId: String,
   onFinish: (PaymentsResult) -> Unit,
   popBackStack: () -> Unit,
 ) {
@@ -126,16 +113,15 @@ private fun BuildAdyenCreditCardScreen(
   val activityResultRegistry =
     LocalActivityResultRegistryOwner.current!!.activityResultRegistry
   val lifecycleOwner = LocalLifecycleOwner.current
-  val uiState = rememberAdyenCreditCardUIState()
+  val (paymentMethod, uiState) = rememberAdyenCreditCardUIState()
   val preSelectedPaymentMethodViewModel = hiltViewModel<PreSelectedPaymentMethodViewModel>()
   var onBuyClick by remember { mutableStateOf<(() -> Unit)?>(null) }
 
   var finished by remember { mutableStateOf(false) }
 
-  val paymentMethod = rememberPaymentMethod(paymentMethodId)
   val genericAnalytics = rememberGenericAnalytics()
 
-  AdyenCreditCardStateEffect(paymentMethodId, uiState)
+  AdyenCreditCardStateEffect(paymentMethod.id, uiState)
 
   LaunchedEffect(key1 = uiState, key2 = activityResultRegistry) {
     when (uiState) {
