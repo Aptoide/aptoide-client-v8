@@ -98,9 +98,20 @@ const val appViewRoute = "app/{source}"
 fun appViewScreen() = ScreenData.withAnalytics(
   route = appViewRoute,
   screenAnalyticsName = "AppView",
-  deepLinks = listOf(navDeepLink { uriPattern = BuildConfig.DEEP_LINK_SCHEMA + appViewRoute })
+  deepLinks = listOf(
+    navDeepLink { uriPattern = BuildConfig.DEEP_LINK_SCHEMA + appViewRoute },
+    navDeepLink { uriPattern = "https://{source}.{lang}.aptoide.com/{path}" },
+    navDeepLink { uriPattern = "https://{lang}.aptoide.com/{path}?{source}" }
+  )
 ) { arguments, navigate, navigateBack ->
-  val source = arguments?.getString("source")!!
+  val path = arguments?.getString("path") ?: ""
+
+  val source = when (path) {
+    "download" -> arguments?.getString("source")!!.split("&").first()
+    "app" -> "package_uname=${arguments?.getString("source")}"
+    else -> arguments?.getString("source")!!
+  }
+
   AppViewScreen(
     source = source,
     navigate = navigate,
