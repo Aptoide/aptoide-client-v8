@@ -150,3 +150,5 @@ fun categoryApps(
 
   return uiState to vm::reload
 }
+
+fun String.toPackageNameParam() = "package_name=$this"
