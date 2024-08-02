@@ -102,12 +102,13 @@ internal class AptoideAppsRepository @Inject constructor(
   override suspend fun getMeta(
     packageName: String,
     bypassCache: Boolean,
+    useStoreName: Boolean,
   ): App =
     withContext(scope.coroutineContext) {
 
       appsRemoteDataSource.getMeta(
         path = packageName,
-        storeName = if (packageName != "com.appcoins.wallet") storeName else null,
+        storeName = if (useStoreName) storeName else null,
         bypassCache = if (bypassCache) CacheConstants.NO_CACHE else null
       ).data
         .toDomainModel(

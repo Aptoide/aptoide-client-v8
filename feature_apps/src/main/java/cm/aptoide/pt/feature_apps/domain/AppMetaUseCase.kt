@@ -9,5 +9,8 @@ import javax.inject.Singleton
 class AppMetaUseCase @Inject constructor(private val appsRepository: AppsRepository) {
 
   suspend fun getMetaInfo(packageName: String): App =
-    appsRepository.getMeta(packageName = packageName)
+    appsRepository.getMeta(
+      packageName = packageName,
+      useStoreName = packageName != "com.appcoins.wallet"
+    )
 }
