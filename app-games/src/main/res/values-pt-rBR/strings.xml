@@ -147,6 +147,7 @@
   <string name="error_no_internet_body" comment="please_check_your_internet_connection">Verifique sua conexão com a Internet.</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Pagar com a AppCoins Wallet</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Ele será instalado automaticamente e você receberá um bônus em todas as compras!</string>
+
   <string name="buy_button" comment="buy">Comprar</string>
   <string name="iap_other_payment_methods_button" comment="other_payment_methods">Outros métodos de pagamento</string>
   <string name="iap_remember_card_button" comment="remember_card">Salvar cartão</string>
