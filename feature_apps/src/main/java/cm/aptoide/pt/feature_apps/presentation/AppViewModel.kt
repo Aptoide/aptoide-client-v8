@@ -13,7 +13,7 @@ import java.io.IOException
 
 class AppViewModel(
   private val appMetaUseCase: AppMetaUseCase,
-  private val packageName: String,
+  private val source: String,
   private val adListId: String?,
 ) : ViewModel() {
 
@@ -34,7 +34,7 @@ class AppViewModel(
     viewModelScope.launch {
       viewModelState.update { AppUiState.Loading }
       try {
-        val app = appMetaUseCase.getMetaInfo(packageName)
+        val app = appMetaUseCase.getMetaInfoBySource(source)
         app.campaigns?.adListId = adListId
         app.campaigns?.sendImpressionEvent()
         viewModelState.update { AppUiState.Idle(app) }

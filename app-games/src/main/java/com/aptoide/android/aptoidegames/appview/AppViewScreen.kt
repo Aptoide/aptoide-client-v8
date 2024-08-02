@@ -57,7 +57,7 @@ import cm.aptoide.pt.extensions.toFormattedString
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
-import cm.aptoide.pt.feature_apps.presentation.rememberApp
+import cm.aptoide.pt.feature_apps.presentation.rememberAppBySource
 import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
 import cm.aptoide.pt.feature_editorial.presentation.relatedEditorialsCardViewModel
 import cm.aptoide.pt.feature_editorial.presentation.rememberRelatedEditorials
@@ -93,37 +93,42 @@ private val tabsList = listOf(
   AppViewTab.INFO
 )
 
-const val appViewRoute = "app/{packageName}"
+const val appViewRoute = "app/{source}"
 
 fun appViewScreen() = ScreenData.withAnalytics(
   route = appViewRoute,
   screenAnalyticsName = "AppView",
   deepLinks = listOf(navDeepLink { uriPattern = BuildConfig.DEEP_LINK_SCHEMA + appViewRoute })
 ) { arguments, navigate, navigateBack ->
-  val packageName = arguments?.getString("packageName")!!
+  val source = arguments?.getString("source")!!
   AppViewScreen(
-    packageName = packageName,
+    source = source,
     navigate = navigate,
     navigateBack = navigateBack
   )
 }
 
-fun buildAppViewRoute(packageName: String): String = "app/$packageName"
+fun buildAppViewRoute(packageName: String): String = "app/package_name=$packageName"
 
-fun buildAppViewDeepLinkUri(packageName: String) =
-  BuildConfig.DEEP_LINK_SCHEMA + buildAppViewRoute(packageName)
+fun buildAppViewRouteBySource(source: String): String = "app/$source"
+
+fun buildAppViewDeepLinkUri(source: String) =
+  BuildConfig.DEEP_LINK_SCHEMA + buildAppViewRouteBySource(source)
 
 @Composable
 fun AppViewScreen(
-  packageName: String,
+  source: String,
   navigate: (String) -> Unit,
   navigateBack: () -> Unit,
 ) {
-  val (uiState, reload) = rememberApp(packageName = packageName, adListId = "")
+  val (uiState, reload) = rememberAppBySource(source = source, adListId = "")
   val analyticsContext = AnalyticsContext.current
   val genericAnalytics = rememberGenericAnalytics()
 
-  val relatedEditorialsUiState = rememberRelatedEditorials(packageName = packageName)
+  val relatedEditorialsUiState = (uiState as? AppUiState.Idle)?.app?.packageName?.let {
+    rememberRelatedEditorials(packageName = it)
+  }
+
   val tabsList by remember(relatedEditorialsUiState) {
     derivedStateOf {
       if (relatedEditorialsUiState.isNullOrEmpty()) {

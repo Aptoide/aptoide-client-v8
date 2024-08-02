@@ -45,7 +45,35 @@ fun rememberApp(
           @Suppress("UNCHECKED_CAST")
           return AppViewModel(
             appMetaUseCase = injectionsProvider.appMetaUseCase,
-            packageName = packageName,
+            source = packageName.toPackageNameParam(),
+            adListId = adListId
+          ) as T
+        }
+      }
+    )
+
+    val uiState by vm.uiState.collectAsState()
+    uiState to vm::reload
+  }
+)
+
+@Composable
+fun rememberAppBySource(
+  source: String,
+  adListId: String?,
+): Pair<AppUiState, () -> Unit> = runPreviewable(
+  preview = { AppUiStateProvider().values.toSet().random() to {} },
+  real = {
+    val injectionsProvider = hiltViewModel<InjectionsProvider>()
+    val vm: AppViewModel = viewModel(
+      viewModelStoreOwner = LocalContext.current as ViewModelStoreOwner,
+      key = "appView/$source",
+      factory = object : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+          @Suppress("UNCHECKED_CAST")
+          return AppViewModel(
+            appMetaUseCase = injectionsProvider.appMetaUseCase,
+            source = source,
             adListId = adListId
           ) as T
         }
