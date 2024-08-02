@@ -15,6 +15,7 @@ class WalletPaymentMethod(
   override val purchaseRequest: PurchaseRequest,
 ) : PaymentMethod<Unit> {
   override val id: String = "wallet"
+  override val gateway: String = "wallet"
   override val label: String = "Wallet"
   override val iconUrl: String =
     "https://cdn6.aptoide.com/imgs/d/7/f/d7fef78e286470c19e2f49bad6102d5b_icon.png?w=128"
