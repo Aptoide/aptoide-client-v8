@@ -5,8 +5,8 @@ package cm.aptoide.pt.install_manager.dto
  */
 data class InstallPackageInfo(
   val versionCode: Long,
-  val downloadSize: Long = Long.MIN_VALUE,
   val installationFiles: Set<InstallationFile> = emptySet(),
-  val payload: String? = null
-)
-
+  val payload: String? = null,
+) {
+  val filesSize = installationFiles.sumOf { it.fileSize }
+}

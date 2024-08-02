@@ -27,6 +27,7 @@ data class AppJSON(
   val media: Media? = null,
   var stats: cm.aptoide.pt.aptoide_network.data.network.model.Stats,
   var appcoins: AppCoins? = null,
+  val aab: Aab? = null,
   val obb: Obb? = null,
   val urls: CampaignUrls
 )
@@ -95,6 +96,21 @@ data class Age(
 )
 
 @Keep
+data class Aab(
+  @SerializedName(value = "required_split_types") val requiredSplitTypes: List<String>,
+  val splits: List<Split>,
+)
+
+@Keep
+data class Split(
+  val name: String,
+  val type: String,
+  val md5sum: String,
+  val path: String,
+  val filesize: Long,
+)
+
+@Keep
 data class Obb(val main: Main, val patch: Patch?)
 
 @Keep
@@ -102,7 +118,7 @@ data class Main(
   val md5sum: String,
   val filesize: Long,
   val filename: String,
-  val path: String
+  val path: String?
 )
 
 @Keep
@@ -110,7 +126,7 @@ data class Patch(
   val md5sum: String,
   val filesize: Long,
   val filename: String,
-  val path: String
+  val path: String?
 )
 
 @Keep

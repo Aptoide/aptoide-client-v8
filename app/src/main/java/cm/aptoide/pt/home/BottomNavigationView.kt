@@ -5,7 +5,14 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.Icon
+import androidx.compose.material.LocalElevationOverlay
+import androidx.compose.material.Scaffold
+import androidx.compose.material.SnackbarHost
+import androidx.compose.material.SnackbarHostState
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -16,26 +23,26 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import cm.aptoide.pt.AptoideToolbar
 import cm.aptoide.pt.BuildConfig
 import cm.aptoide.pt.analytics.presentation.ThemeListener
 import cm.aptoide.pt.appview.appViewScreen
 import cm.aptoide.pt.appview.reportAppScreen
-import cm.aptoide.pt.aptoide_ui.snackbar.AptoideSnackBar
-import cm.aptoide.pt.aptoide_ui.theme.AppTheme
-import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
-import cm.aptoide.pt.aptoide_ui.urlViewScreen
 import cm.aptoide.pt.editorial.editorialScreen
-import cm.aptoide.pt.installer.presentation.UserActionDialog
+import cm.aptoide.pt.installer.UserActionDialog
 import cm.aptoide.pt.profile.editProfileScreen
 import cm.aptoide.pt.profile.profileScreen
 import cm.aptoide.pt.search.presentation.searchScreen
 import cm.aptoide.pt.settings.presentation.themePreferences
 import cm.aptoide.pt.settings.sendFeedbackScreen
 import cm.aptoide.pt.settings.settingsScreen
+import cm.aptoide.pt.theme.AppTheme
+import cm.aptoide.pt.theme.AptoideSnackBar
+import cm.aptoide.pt.theme.AptoideTheme
 import cm.aptoide.pt.updates.updatesScreen
-import com.google.accompanist.navigation.animation.AnimatedNavHost
+import cm.aptoide.pt.urlViewScreen
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -130,7 +137,7 @@ private fun NavigationGraph(
   navController: NavHostController,
   showSnack: (String) -> Unit,
 ) {
-  AnimatedNavHost(
+  NavHost(
     navController = navController,
     startDestination = gamesRoute
   ) {

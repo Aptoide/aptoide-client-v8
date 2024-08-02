@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">Aptoide Games</string>
+  <!-- Bottom Bar -->
+  <string name="games">Games</string>
+  <string name="categories">Categorieën</string>
+  <string name="search">Zoeken</string>
+  <!-- Common -->
+  <string name="send_button">Sturen</string>
+  <string name="try_again">Probeer het opnieuw.</string>
+  <string name="please_wait">Even geduld.</string>
+  <!-- Settings -->
+  <string name="overflow_menu_settings">Instellingen</string>
+  <string name="overflow_menu_terms_conditions">Algemene voorwaarden</string>
+  <string name="overflow_menu_privacy_policy">Privacybeleid</string>
+  <string name="settings_about_hardware_title">Hardwarespecificaties</string>
+  <string name="settings_about_title">Over ons</string>
+  <string name="settings_about_version">Versie %1$s (%2$s)</string>
+  <string name="settings_copied_to_clipboard_message">Naar klembord gekopieerd</string>
+  <string name="settings_general_title">Algemeen</string>
+  <string name="settings_theme_option_dark">Donker</string>
+  <string name="settings_theme_option_light">Licht</string>
+  <string name="settings_theme_option_system">Systeemstandaard</string>
+  <string name="settings_theme_options_title">Thema</string>
+  <string name="settings_title">Instellingen</string>
+  <string name="settings_support">Ondersteuning</string>
+  <string name="settings_feedback_button">Feedback verzenden</string>
+  <string name="settings_feedback_title">Feedback verzenden</string>
+  <string name="settings_legal_title">Juridisch</string>
+  <string name="settings_send_feedback_body">Laat ons weten wat je van Aptoide Games vindt!\n\u2022 Mis je een functie die je graag zou gebruiken?\n\u2022 Wat kunnen we verbeteren?</string>
+  <string name="settings_payment_support_description_title">Beschrijving</string>
+  <string name="settings_contact_form_character_limit_title">(Minimaal 50 tekens)</string>
+  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Beschrijving (minimaal 50 tekens)</string>
+  <!-- MyGames -->
+  <string name="my_games_empty">We kunnen geen games vinden die op je apparaat zijn geïnstalleerd!</string>
+  <string name="my_games_progress_message">Je games organiseren</string>
+  <string name="empty_category_body">Er zijn geen apps in deze categorie... nog niet!</string>
+  <!-- Notifications -->
+  <string name="notifications_context_title">Ontvang een melding!</string>
+  <string name="notification_installing_title">Wordt geïnstalleerd</string>
+  <string name="notification_waiting_body">Wachten op download</string>
+  <string name="notification_1_installed_title">Geïnstalleerd</string>
+  <string name="notification_downloading_body">%1$s%% van %2$s aan het downloaden</string>
+  <string name="notification_waiting_for_wifi_title">Wachten op wifi</string>
+  <string name="notifications_context_body">We houden je op de hoogte van de nieuwste trends in de gamewereld!</string>
+  <!-- Talkback -->
+  <string name="home_overflow_talkback">Opties</string>
+  <string name="app_view_image_description_body">Afbeelding van %1$s</string>
+  <string name="app_view_screenshot_number">Screenshot %1$s</string>
+  <string name="app_view_icon_description_body">Pictogram van %1$s</string>
+  <string name="search_remove_from_recent_talkback">verwijderen uit recente zoekopdrachten</string>
+  <string name="search_clear_talkback">zoekopdracht wissen</string>
+  <string name="search_item_talkback">zoeken</string>
+  <!-- Download over Wi-Fi -->
+  <string name="wifi_settings_title">Alleen downloaden via wifi</string>
+  <string name="wifi_disclaimer_on_body">Je gebruikt momenteel je mobiele data. Wil je %s downloaden als er wifi beschikbaar is?</string>
+  <string name="wifi_disclamer_off_body">Dit is een groot bestand (%s). Wil je het downloaden als er wifi beschikbaar is?</string>
+  <string name="wifi_disclaimer_title">Weet je het zeker?</string>
+  <!-- Fixed bundles -->
+  <string name="editorial_more_articles_title">Meer artikelen</string>
+  <string name="fixed_bundle_just_arrived_title">Net binnen</string>
+  <string name="fixed_bundle_my_games_title">Mijn games</string>
+  <string name="fixed_bundle_editors_choice_title">Onze aanbevelingen</string>
+  <string name="fixed_bundle_editorial_title">Artikelen</string>
+  <string name="fixed_bundle_trending_title">Trending</string>
+  <string name="fixed_bundle_publisher_title">Veel plezier met %s</string>
+  <string name="retry_button" comment="button_retry_title">Opnieuw</string>
+  <string name="generic_error_message">Er is iets fout gegaan. Probeer het opnieuw.</string>
+  <string name="generic_network_error_message">Oeps, er is iets fout gegaan. Controleer je internetverbinding.</string>
+  <string name="install_waiting_installation_message">Wachten op installatie</string>
+  <string name="install_installing_message">Wordt geïnstalleerd</string>
+  <string name="install_error_short_message">Oeps, er is een fout opgetreden.</string>
+  <string name="error_message_no_internet_title">Oeps, er is iets fout gegaan</string>
+  <string name="error_message_no_internet_body">Controleer je internetverbinding.</string>
+  <string name="error_message_generic_title">Er is iets fout gegaan</string>
+  <string name="error_message_generic_body">Opnieuw proberen.</string>
+  <string name="app_info_send_email_subject">Feedback</string>
+  <string name="button_copy_title">Kopiëren</string>
+  <string name="button_back_title">Terug</string>
+  <string name="button_see_all_title">Alles tonen</string>
+  <string name="editorials_view_no_content_message">Oeps, er is hier nog geen content!</string>
+  <string name="button_update_title">Bijwerken</string>
+  <string name="button_open_app_title">Openen</string>
+  <string name="install_waiting_download_message">Wachten op download</string>
+  <string name="downloading_percentage_body">%1$s%% van %2$s</string>
+  <string name="install_downloading_message">Aan het downloaden</string>
+  <!-- Common -->
+  <string name="download_now_button">Nu downloaden</string>
+  <string name="uninstall_button">Verwijderen</string>
+  <string name="go_back_button">Terug</string>
+  <string name="go_back_to_game_button">Go Back to Game</string>
+  <string name="uninstalling">Verwijderen</string>
+  <string name="resume_button">Hervatten</string>
+  <string name="waiting_for_connection">Wachten op verbinding</string>
+  <string name="wait_for_wifi_button">Wachten op wifi</string>
+  <string name="continue_button">Doorgaan</string>
+  <!-- Out of Space -->
+  <string name="out_of_space_title">Geen opslagruimte</string>
+  <string name="out_of_space_body">Je hebt %s nodig om met de installatie door te gaan.</string>
+  <string name="out_of_space_enough_body">Je hebt nu genoeg opslagruimte!</string>
+  <!-- Talkback -->
+  <string name="appview_status_outdated_talkback">Verouderd</string>
+  <string name="appview_status_not_installed_talkback">Niet geïnstalleerd</string>
+  <string name="appview_status_installed_talkback">Geïnstalleerd</string>
+  <string name="appview_status_failed_talkback">Niet gelukt</string>
+  <string name="appview_action_cancel_talkback">Annuleren</string>
+  <string name="appview_installer_talkback">%1$s-installatieprogramma.</string>
+  <string name="appview_action_double_tap_talkback">Dubbeltik voor %1$s</string>
+  <!-- Search -->
+  <string name="search_suggested_title">Aanbevolen zoekopdrachten</string>
+  <string name="search_recent_title">Recente zoekopdrachten</string>
+  <string name="search_popular_title">Populaire zoekopdrachten</string>
+  <string name="search_bar_label">Zoeken naar games...</string>
+  <string name="search_empty_body">Oeps, er zijn geen resultaten voor \'%s\'.\nProbeer andere zoektermen!</string>
+  <!-- Install -->
+  <string name="button_install_title">Installeren</string>
+  <!-- Common -->
+  <string name="notice_at_collection_and_privacy_policy">Kennisgeving over gegevensverzameling &amp; privacybeleid</string>
+  <string name="terms_and_conditions">Voorwaarden</string>
+  <string name="continue_to_accept_tandc_and_pp_disclaimer">Als je doorgaat, accepteer je de %1$s en het %2$s.</string>
+  <string name="appview_details_tab_title" comment="details">Details</string>
+  <string name="appview_related_tab_title" comment="related">Gerelateerd</string>
+  <string name="appview_info_tab_title" comment="info">Info</string>
+  <string name="bottom_navigation_discovery" comment="discovery">Ontdekken</string>
+  <string name="appview_info_version_name_title" comment="version_name">Naam van de versie</string>
+  <string name="appview_info_package_name_title" comment="package_name">Naam van het pakket</string>
+  <string name="appview_info_release_title" comment="release">Versie</string>
+  <string name="appview_info_update_title" comment="updated_on">Bijgewerkt op</string>
+  <string name="appview_info_download_size_title" comment="download_size">Grootte van download</string>
+  <string name="appview_info_website_title" comment="website">Website</string>
+  <string name="appview_info_email_title" comment="email">E-mail</string>
+  <string name="appview_info_permissions_title" comment="permissions">Toestemmingen</string>
+  <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% van %2$s</string>
+  <string name="error_short_title" comment="oops_an_error_occurred">Oeps, er is een fout opgetreden</string>
+  <string name="purchase_done_existing_bonus_body">Je hebt nu %s aan bonus. Download de AppCoins Wallet om je bonus bij je volgende aankoop te gebruiken.</string>
+  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">Je krijgt een bonus in alle games met %s.</string>
+  <string name="bonus_banner_title" comment="up_to_s_bonus">Tot %s%% bonus</string>
+  <string name="settings_payments_title" comment="contact_support_team">Neem contact op met support</string>
+  <string name="settings_contact_support_body" comment="billing_terms_of_use">Factureringsvoorwaarden</string>
+  <string name="settings_billing_terms_body" comment="payments">Betalingen</string>
+  <string name="powered_by_title" comment="powered_by">Aangeboden door</string>
+  <string name="contact_support_title" comment="contact_support">Neem contact op met support</string>
+  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">We vragen je de volgende informatie te verstrekken:\n\u2022 Wanneer je het probleem voor de eerste keer hebt ervaren\n\u2022 In welke game je de aankoop hebt gedaan\n\nZodra je op Sturen tikt, wordt je e-mailapp geopend. Je kunt een screenshot of video over het probleem toevoegen!</string>
+  <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Wil je deze game installeren?</string>
+  <string name="app_size_mb_title" comment="s_mb">%s MB</string>
+  <string name="uninstalled_title" comment="uninstalled">Verwijderd</string>
+  <string name="error_no_internet_body" comment="please_check_your_internet_connection">Controleer je internetverbinding.</string>
+  <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Betaal met de AppCoins Wallet</string>
+  <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Het wordt automatisch geïnstalleerd en je krijgt een bonus bij alle aankopen!</string>
+  <string name="buy_button" comment="buy">Kopen</string>
+  <string name="iap_other_payment_methods_button" comment="other_payment_methods">Andere betaalmethoden</string>
+  <string name="iap_remember_card_button" comment="remember_card">Kaart onthouden</string>
+  <string name="iap_card_number" comment="card_number">Kaartnummer</string>
+  <string name="iap_card_expiry" comment="expiry_date">Vervaldatum</string>
+  <string name="iap_card_cvc" comment="cvc_cvv">CVC/CVV</string>
+  <string name="iab_change_card_button" comment="change_card">Kaart wijzigen</string>
+  <string name="done_title" comment="done">Gelukt!</string>
+  <string name="purchase_making_purchase_title" comment="making_purchase">Aankoop verwerken...</string>
+  <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">Weet je zeker dat je kaartgegevens juist zijn? Probeer het opnieuw!</string>
+  <string name="log_out_button" comment="log_out">Uitloggen</string>
+  <string name="get_a_bonus_in_all_purchases_title">Je krijgt een bonus bij alle aankopen!</string>
+  <string name="iap_appc_body">Je krijgt een bonus bij alle aankopen!</string>
+  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Je kunt je aankoop nu voltooien.</string>
+  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">De AppCoins Wallet is nu geïnstalleerd!</string>
+  <string name="storage_access_permission_request_message">Geef toegang tot de opslag van je telefoon zodat we deze app kunnen downloaden en installeren.</string>
+  <!-- Payment Errors-->
+  <string name="payments_error_not_enough_balance_body">Je hebt niet genoeg saldo</string>
+  <string name="payments_error_old_card_title">Het lijkt erop dat je deze kaart lang geleden hebt geregistreerd!</string>
+  <string name="payments_error_old_card_body">Voer de kaartgegevens opnieuw in of gebruik een andere kaart.</string>
+  <string name="purchase_error_payment_rejected">De transactie is afgewezen.</string>
+  <string name="purchase_error_try_other_card_body">Probeer het met een andere kaart of betaalmethode.</string>
+  <string name="purchase_card_error_general_title">Er is een probleem opgetreden met je kaart.</string>
+  <string name="purchase_error_try_other_payment_method_body">Probeer het met een andere betaalmethode.</string>
+  <string name="purchase_card_error_no_funds">Het lijkt erop dat je niet genoeg saldo hebt of dat je kaart een limiet heeft.</string>
+  <string name="purchase_card_error_invalid_details_title">Ongeldig kaartnummer.</string>
+  <string name="purchase_error_check_it_body">Controleer het kaartnummer en probeer het opnieuw.</string>
+  <string name="purchase_card_error_not_supported_title">Je kaart wordt nog niet ondersteund.</string>
+  <string name="purchase_error_wrong_pin_title">Er is een probleem opgetreden met je pincode.</string>
+  <string name="purchase_error_3d_title">Er is een probleem met je 3D-verificatie opgetreden.</string>
+  <string name="purchase_card_rejected_title">De transactie is afgewezen door je bank.</string>
+  <string name="purchase_error_invalid_credit_card_title">Ongeldig bankpasnummer.</string>
+  <string name="purchase_error_invalid_credit_card_body">Zorg ervoor dat alle cijfers correct zijn.</string>
+  <string name="purchase_error_card_security_validation_title">Bij deze transactie is een fout bij de verificatie op het 2e niveau opgetreden.</string>
+  <string name="purchase_error_in_progress_title">Je verzoek is al verwerkt of is in behandeling.</string>
+  <string name="purchase_card_error_CVV_title">Onjuiste CVV/CVC</string>
+  <string name="purchase_error_expired_card_title">Het lijkt erop dat je kaart is verlopen.</string>
+  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
+  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
+</resources>

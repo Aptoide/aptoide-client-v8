@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">Aptoide Games</string>
+  <!-- Bottom Bar -->
+  <string name="games">Ігри</string>
+  <string name="categories">Категорії</string>
+  <string name="search">Шукати</string>
+  <!-- Common -->
+  <string name="send_button">Надіслати кошти</string>
+  <string name="try_again">Будь ласка, спробуйте ще раз.</string>
+  <string name="please_wait">Будь ласка, зачекайте.</string>
+  <!-- Settings -->
+  <string name="overflow_menu_settings">Налаштування</string>
+  <string name="overflow_menu_terms_conditions">Умови та положення</string>
+  <string name="overflow_menu_privacy_policy">Політика конфіденційності</string>
+  <string name="settings_about_hardware_title">Технічні характеристики обладнання</string>
+  <string name="settings_about_title">Про нас</string>
+  <string name="settings_about_version">Версія %1$s (%2$s)</string>
+  <string name="settings_copied_to_clipboard_message">Скопійовано в буфер обміну</string>
+  <string name="settings_general_title">Загальні</string>
+  <string name="settings_theme_option_dark">Темний</string>
+  <string name="settings_theme_option_light">Світлий</string>
+  <string name="settings_theme_option_system">За замовчуванням системи</string>
+  <string name="settings_theme_options_title">Тема</string>
+  <string name="settings_title">Налаштування</string>
+  <string name="settings_support">Підтримка</string>
+  <string name="settings_feedback_button">Надіслати відгук</string>
+  <string name="settings_feedback_title">Надіслати відгук</string>
+  <string name="settings_legal_title">Правова інформація</string>
+  <string name="settings_send_feedback_body">Розкажіть нам, що ви думаєте про Aptoide Games!\n\u2022 Які нові функції ви хотіли б бачити?\n\u2022 Що, на вашу думку, ми можемо покращити?</string>
+  <string name="settings_payment_support_description_title">Опис</string>
+  <string name="settings_contact_form_character_limit_title">(50 символів мінімум)</string>
+  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Опис (50 символів мінімум)</string>
+  <!-- MyGames -->
+  <string name="my_games_empty">Ми не знайшли жодної гри на вашому пристрої!</string>
+  <string name="my_games_progress_message">Організація ваших ігор</string>
+  <string name="empty_category_body">У цій категорії немає додатків... Поки що!</string>
+  <!-- Notifications -->
+  <string name="notifications_context_title">Отримувати сповіщення!</string>
+  <string name="notification_installing_title">Встановлення</string>
+  <string name="notification_waiting_body">Очікує на завантаження</string>
+  <string name="notification_1_installed_title">Встановлено</string>
+  <string name="notification_downloading_body">Завантаження %1$s%% з %2$s</string>
+  <string name="notification_waiting_for_wifi_title">Очікування Wi-Fi</string>
+  <string name="notifications_context_body">Ми розкажемо вам про останні тренди в ігровому світі!</string>
+  <!-- Talkback -->
+  <string name="home_overflow_talkback">Опції</string>
+  <string name="app_view_image_description_body">Зображення %1$s</string>
+  <string name="app_view_screenshot_number">Скріншот %1$s</string>
+  <string name="app_view_icon_description_body">Іконка %1$s</string>
+  <string name="search_remove_from_recent_talkback">видалити з нещодавнього пошуку</string>
+  <string name="search_clear_talkback">очистити пошук</string>
+  <string name="search_item_talkback">шукати</string>
+  <!-- Download over Wi-Fi -->
+  <string name="wifi_settings_title">Завантаження тільки через Wi-Fi</string>
+  <string name="wifi_disclaimer_on_body">Ви використовуєте мобільний інтернет. Бажаєте завантажити %s, коли буде доступний Wi-Fi?</string>
+  <string name="wifi_disclamer_off_body">Це великий файл (%s). Бажаєте завантажити його, коли буде доступний Wi-Fi?</string>
+  <string name="wifi_disclaimer_title">Ви впевнені?</string>
+  <!-- Fixed bundles -->
+  <string name="editorial_more_articles_title">Більше статей</string>
+  <string name="fixed_bundle_just_arrived_title">Нові надходження</string>
+  <string name="fixed_bundle_my_games_title">Мої ігри</string>
+  <string name="fixed_bundle_editors_choice_title">Вибір редакції</string>
+  <string name="fixed_bundle_editorial_title">Від редакції</string>
+  <string name="fixed_bundle_trending_title">Популярні</string>
+  <string name="fixed_bundle_publisher_title">Насолоджуйтеся з %s</string>
+  <string name="retry_button" comment="button_retry_title">Повторити</string>
+  <string name="generic_error_message">Щось пішло не так. Спробуй ще раз.</string>
+  <string name="generic_network_error_message">Щось пішло не так. Перевірте підключення до Інтернету.</string>
+  <string name="install_waiting_installation_message">Очікує на встановлення</string>
+  <string name="install_installing_message">Встановлення</string>
+  <string name="install_error_short_message">Ой, сталася помилка.</string>
+  <string name="error_message_no_internet_title">Ой, щось пішло не так</string>
+  <string name="error_message_no_internet_body">Будь ласка, перевірте своє інтернет-з\'єднання.</string>
+  <string name="error_message_generic_title">Щось пішло не так</string>
+  <string name="error_message_generic_body">Спробувати ще раз.</string>
+  <string name="app_info_send_email_subject">Зворотний зв\'язок</string>
+  <string name="button_copy_title">Копіювати</string>
+  <string name="button_back_title">Назад</string>
+  <string name="button_see_all_title">Побачити всі</string>
+  <string name="editorials_view_no_content_message">Ой, тут ще нічого немає!</string>
+  <string name="button_update_title">Оновити</string>
+  <string name="button_open_app_title">Відкрити</string>
+  <string name="install_waiting_download_message">Очікує на завантаження</string>
+  <string name="downloading_percentage_body">%1$s%% з %2$s</string>
+  <string name="install_downloading_message">Завантаження</string>
+  <!-- Common -->
+  <string name="download_now_button">Завантажити зараз</string>
+  <string name="uninstall_button">Видалити</string>
+  <string name="go_back_button">Повернутися</string>
+  <string name="go_back_to_game_button">Go Back to Game</string>
+  <string name="uninstalling">Видалення</string>
+  <string name="resume_button">Відновити</string>
+  <string name="waiting_for_connection">Очікування з\'єднання</string>
+  <string name="wait_for_wifi_button">Зачекати Wi-Fi</string>
+  <string name="continue_button">Продовжити</string>
+  <!-- Out of Space -->
+  <string name="out_of_space_title">Немає вільного місця</string>
+  <string name="out_of_space_body">Вам потрібно %s, щоб продовжити встановлення.</string>
+  <string name="out_of_space_enough_body">Тепер у вас достатньо вільного місця!</string>
+  <!-- Talkback -->
+  <string name="appview_status_outdated_talkback">Застаріла</string>
+  <string name="appview_status_not_installed_talkback">Не встановлено</string>
+  <string name="appview_status_installed_talkback">Встановлено</string>
+  <string name="appview_status_failed_talkback">Не вдалося</string>
+  <string name="appview_action_cancel_talkback">Скасувати</string>
+  <string name="appview_installer_talkback">%1$s інсталятор.</string>
+  <string name="appview_action_double_tap_talkback">Двічі натисніть на %1$s</string>
+  <!-- Search -->
+  <string name="search_suggested_title">Рекомендовані запити</string>
+  <string name="search_recent_title">Нещодавні запити</string>
+  <string name="search_popular_title">Популярні запити</string>
+  <string name="search_bar_label">Пошук ігор...</string>
+  <string name="search_empty_body">На жаль, немає результатів для \"%s\".\nСпробуйте використати інші слова!</string>
+  <!-- Install -->
+  <string name="button_install_title">Встановити</string>
+  <!-- Common -->
+  <string name="notice_at_collection_and_privacy_policy">Інформація про збір даних та політику конфіденційності</string>
+  <string name="terms_and_conditions">Умови</string>
+  <string name="continue_to_accept_tandc_and_pp_disclaimer">Продовжуючи, ви приймаєте %1$s та %2$s.</string>
+  <string name="appview_details_tab_title" comment="details">Деталі</string>
+  <string name="appview_related_tab_title" comment="related">Пов\'язане</string>
+  <string name="appview_info_tab_title" comment="info">Інформація</string>
+  <string name="bottom_navigation_discovery" comment="discovery">Дослідження</string>
+  <string name="appview_info_version_name_title" comment="version_name">Назва версії</string>
+  <string name="appview_info_package_name_title" comment="package_name">Назва пакета</string>
+  <string name="appview_info_release_title" comment="release">Випуск</string>
+  <string name="appview_info_update_title" comment="updated_on">Оновлено</string>
+  <string name="appview_info_download_size_title" comment="download_size">Розмір файлу</string>
+  <string name="appview_info_website_title" comment="website">Сайт</string>
+  <string name="appview_info_email_title" comment="email">Електронна пошта</string>
+  <string name="appview_info_permissions_title" comment="permissions">Дозволи</string>
+  <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% з %2$s</string>
+  <string name="error_short_title" comment="oops_an_error_occurred">Ой, сталася помилка</string>
+  <string name="purchase_done_existing_bonus_body">Тепер ви маєте %s бонусів. Завантажте AppCoins Wallet, щоб використати їх під час наступної покупки.</string>
+  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">Ви отримуватимете бонус у всіх іграх, позначених %s.</string>
+  <string name="bonus_banner_title" comment="up_to_s_bonus">Бонус до %s%%</string>
+  <string name="settings_payments_title" comment="contact_support_team">Зв\'язатися зі службою підтримки</string>
+  <string name="settings_contact_support_body" comment="billing_terms_of_use">Умови використання платіжних послуг</string>
+  <string name="settings_billing_terms_body" comment="payments">Платежі</string>
+  <string name="powered_by_title" comment="powered_by">За підтримки</string>
+  <string name="contact_support_title" comment="contact_support">Зв\'язатися зі службою підтримки</string>
+  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Будь ласка, повідомте нам усі подробиці:\n\u2022 Коли виникла проблема\n\u2022 У якій грі ви здійснюєте покупку\n\nПісля натискання на кнопку \"Надіслати\" відкриється ваш поштовий додаток. Ви також можете прикріпити скріншот або відео з проблемою!</string>
+  <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Бажаєте встановити цю гру?</string>
+  <string name="app_size_mb_title" comment="s_mb">%s МБ</string>
+  <string name="uninstalled_title" comment="uninstalled">Видалено</string>
+  <string name="error_no_internet_body" comment="please_check_your_internet_connection">Будь ласка, перевірте своє інтернет-з\'єднання.</string>
+  <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Оплатити за допомогою Appcoins Wallet</string>
+  <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Встановлення відбудеться автоматично, а ви отримаєте бонус на всі покупки!</string>
+  <string name="buy_button" comment="buy">Купити</string>
+  <string name="iap_other_payment_methods_button" comment="other_payment_methods">Інші способи оплати</string>
+  <string name="iap_remember_card_button" comment="remember_card">Запам\'ятати картку</string>
+  <string name="iap_card_number" comment="card_number">Номер карти</string>
+  <string name="iap_card_expiry" comment="expiry_date">Дата закінчення терміну придатності</string>
+  <string name="iap_card_cvc" comment="cvc_cvv">CVC/CVV</string>
+  <string name="iab_change_card_button" comment="change_card">Змінити картку</string>
+  <string name="done_title" comment="done">Готово!</string>
+  <string name="purchase_making_purchase_title" comment="making_purchase">Здійснення покупки...</string>
+  <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">Ви впевнені, що дані вашої картки правильні? Будь ласка спробуйте ще раз!</string>
+  <string name="log_out_button" comment="log_out">Вийти</string>
+  <string name="get_a_bonus_in_all_purchases_title">Ви отримаєте бонус на всі покупки!</string>
+  <string name="iap_appc_body">Ви отримаєте бонус на всі покупки!</string>
+  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Тепер ви можете завершити покупку.</string>
+  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">AppCoins Wallet встановлено!</string>
+  <string name="storage_access_permission_request_message">Надайте доступ до пам\'яті вашого телефону, щоб ми могли завантажити та встановити цей додаток.</string>
+  <!-- Payment Errors-->
+  <string name="payments_error_not_enough_balance_body">На вашому балансі не достатньо коштів</string>
+  <string name="payments_error_old_card_title">Здається, ви зареєстрували цю картку вже давно!</string>
+  <string name="payments_error_old_card_body">Введіть дані картки ще раз або скористайтеся іншою.</string>
+  <string name="purchase_error_payment_rejected">Транзакцію було відхилено.</string>
+  <string name="purchase_error_try_other_card_body">Спробуйте скористатися іншою карткою або способом оплати.</string>
+  <string name="purchase_card_error_general_title">Виникла проблема з вашою карткою.</string>
+  <string name="purchase_error_try_other_payment_method_body">Спробуйте, будь ласка, інший спосіб оплати.</string>
+  <string name="purchase_card_error_no_funds">Здається, у вас недостатньо коштів або на картці встановлено ліміт.</string>
+  <string name="purchase_card_error_invalid_details_title">Неправильний номер картки.</string>
+  <string name="purchase_error_check_it_body">Будь ласка, перевірте і спробуйте ще раз.</string>
+  <string name="purchase_card_error_not_supported_title">Ваша картка ще не підтримується.</string>
+  <string name="purchase_error_wrong_pin_title">Виникла проблема з вашим пін-кодом.</string>
+  <string name="purchase_error_3d_title">Виникла проблема з вашою 3D-автентифікацією.</string>
+  <string name="purchase_card_rejected_title">Транзакція була відхилена вашим банком.</string>
+  <string name="purchase_error_invalid_credit_card_title">Невірний номер банківської картки.</string>
+  <string name="purchase_error_invalid_credit_card_body">Будь ласка, переконайтеся в правильності всіх цифр.</string>
+  <string name="purchase_error_card_security_validation_title">Виникла помилка на 2-му рівні перевірки цієї транзакції.</string>
+  <string name="purchase_error_in_progress_title">Ваш запит вже оброблено або знаходиться в процесі обробки.</string>
+  <string name="purchase_card_error_CVV_title">Невірний CVV/CVC</string>
+  <string name="purchase_error_expired_card_title">Схоже, термін дії вашої картки закінчився.</string>
+  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
+  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
+</resources>

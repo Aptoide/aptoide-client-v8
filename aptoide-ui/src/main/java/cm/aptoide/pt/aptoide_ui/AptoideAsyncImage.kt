@@ -1,15 +1,11 @@
 package cm.aptoide.pt.aptoide_ui
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.constraintlayout.widget.Placeholder
-import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.transform.Transformation
@@ -23,13 +19,14 @@ fun AptoideAsyncImage(
   colorFilter: ColorFilter? = null,
   placeholder: Painter? = null,
   error: Painter? = null,
+  contentScale: ContentScale = ContentScale.Crop
 ) {
   AsyncImage(
     model = buildModel(data, transformations),
     placeholder = placeholder,
     error = error,
     contentDescription = contentDescription,
-    contentScale = ContentScale.Crop,
+    contentScale = contentScale,
     colorFilter = colorFilter,
     modifier = modifier,
   )

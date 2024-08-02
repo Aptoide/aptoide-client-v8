@@ -1,6 +1,7 @@
 package cm.aptoide.pt.install_manager
 
 import android.content.pm.PackageInfo
+import cm.aptoide.pt.install_manager.dto.Constraints
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import kotlinx.coroutines.flow.Flow
 
@@ -10,35 +11,48 @@ import kotlinx.coroutines.flow.Flow
  * This class represents an actual app that can be installed/uninstalled/removed.
  *
  * @property packageName - an app package name.
- * @property packageInfo - a flow that contains app package. Contains null if not installed currently.
- * @property tasks - a flow that contains ongoing task if any or null.
+ * @property packageInfo - current app package info or null if not installed currently.
+ * @property packageInfoFlow - a flow that contains app package info or null if not installed currently.
+ * @property task - current ongoing task if any or null.
+ * @property taskFlow - a flow that contains ongoing task if any or null.
  */
 interface App {
   val packageName: String
-  val packageInfo: Flow<PackageInfo?>
-  val tasks: Flow<Task?>
+  val packageInfo: PackageInfo?
+  val packageInfoFlow: Flow<PackageInfo?>
+  val task: Task?
+  val taskFlow: Flow<Task?>
 
   /**
    * Creates an installation task.
    *
    * @param installPackageInfo - a package info to use for the installation
-   * @param forceDownload - if installation should be forced
+   * @param constraints - constraints to respect
    * @return the installation task to enqueue, watch or cancel
    * @throws IllegalStateException if another task is already running
    * @throws IllegalArgumentException if same or newer version is already known to be installed
+   * @throws OutOfSpaceException if there is not enough space to download and install
    */
-  suspend fun install(
+  fun install(
     installPackageInfo: InstallPackageInfo,
-    forceDownload: Boolean = true,
+    constraints: Constraints = Constraints(
+      checkForFreeSpace = true,
+      networkType = Constraints.NetworkType.ANY
+    ),
   ): Task
 
   /**
    * Creates an uninstallation task.
    *
+   * @param constraints - constraints to respect
    * @return the uninstallation task to enqueue, watch or cancel
    * @throws IllegalStateException if another task is already created
-   * @throws IllegalStateException if app is not known as installed. Means that this can uninstall
-   * only app was installed by this.
+   * @throws IllegalStateException if app is not installed
    */
-  suspend fun uninstall(): Task
+  fun uninstall(
+    constraints: Constraints = Constraints(
+      checkForFreeSpace = false,
+      networkType = Constraints.NetworkType.NOT_REQUIRED
+    ),
+  ): Task
 }

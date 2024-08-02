@@ -5,6 +5,7 @@ import cm.aptoide.pt.feature_apps.domain.Rating
 import cm.aptoide.pt.feature_apps.domain.Store
 import cm.aptoide.pt.feature_apps.domain.Votes
 import cm.aptoide.pt.feature_campaigns.CampaignImpl
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.random.Random
@@ -36,6 +37,7 @@ data class App(
   val privacyPolicy: String?,
   val permissions: List<String>?,
   val file: File,
+  val aab: Aab?,
   val obb: Obb?,
   val developerName: String?,
   val campaigns: CampaignImpl? = null,
@@ -47,11 +49,15 @@ data class File(
   val vercode: Int,
   val md5: String,
   val filesize: Long,
-  val path: String?,
-  val path_alt: String?,
+  val path: String,
+  val path_alt: String,
 ) {
   val fileName get() = _fileName ?: md5
 }
+
+data class Aab(val requiredSplitTypes: List<String>, val splits: List<Split>)
+
+data class Split(val type: String, val file: File)
 
 data class Obb(val main: File, val patch: File?)
 
@@ -101,6 +107,7 @@ val emptyApp = App(
     path = "",
     path_alt = ""
   ),
+  aab = null,
   obb = null,
   developerName = ""
 )
@@ -137,7 +144,7 @@ val randomApp
       isAppCoins = Random.nextBoolean(),
       screenshots = List(Random.nextInt(10)) { "random" },
       description = getRandomString(),
-      videos = List(Random.nextInt(3)) { "https://youtu.be/dQw4w9WgXcQ" },
+      videos = List(Random.nextInt(2)) { "https://youtu.be/dQw4w9WgXcQ" },
       store = Store(
         storeName = getRandomString(range = 2..3, capitalize = true),
         icon = "",
@@ -151,6 +158,9 @@ val randomApp
       updateDate = LocalDateTime.now()
         .minusDays(Random.nextLong(365))
         .format(DateTimeFormatter.ofPattern("uuuu-MM-dd hh:mm:ss")),
+      releaseUpdateDate = LocalDate.now()
+        .minusDays(Random.nextLong(365))
+        .format(DateTimeFormatter.ofPattern("uuuu-MM-dd")),
       website = "www.${getRandomString(range = 1..3, separator = ".")}.com",
       email = "${getRandomString(range = 1..5, separator = "")}@email.com",
       permissions = listOf(
@@ -204,8 +214,8 @@ val randomApp
         vercode = Random.nextInt(),
         md5 = "md5",
         filesize = Random.nextLong(1_000_000L..1_000_000_000L),
-        path = null,
-        path_alt = null
+        path = "",
+        path_alt = ""
       ),
       developerName = getRandomString(range = 2..5, capitalize = true)
     )

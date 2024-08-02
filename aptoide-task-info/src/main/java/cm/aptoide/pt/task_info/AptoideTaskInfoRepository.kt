@@ -1,5 +1,6 @@
 package cm.aptoide.pt.task_info
 
+import cm.aptoide.pt.install_manager.dto.Constraints
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallationFile
 import cm.aptoide.pt.install_manager.dto.TaskInfo
@@ -12,7 +13,7 @@ import javax.inject.Inject
 
 class AptoideTaskInfoRepository @Inject constructor(
   private val taskInfoDao: TaskInfoDao,
-  private val installationFileDao: InstallationFileDao
+  private val installationFileDao: InstallationFileDao,
 ) : TaskInfoRepository {
 
   override suspend fun getAll(): Set<TaskInfo> = taskInfoDao.getAll()
@@ -21,7 +22,6 @@ class AptoideTaskInfoRepository @Inject constructor(
         packageName = it.taskInfo.packageName,
         installPackageInfo = InstallPackageInfo(
           versionCode = it.taskInfo.versionCode,
-          downloadSize = it.taskInfo.downloadSize,
           installationFiles = it.installationFiles.map { file ->
             InstallationFile(
               name = file.name,
@@ -33,10 +33,11 @@ class AptoideTaskInfoRepository @Inject constructor(
               localPath = file.localPath,
             )
           }.toSet(),
-          payload = it.taskInfo.payload
+          payload = it.taskInfo.payload,
         ),
+        constraints = it.taskInfo.constraints.deserialize(),
         type = it.taskInfo.type,
-        timestamp = it.taskInfo.timestamp,
+        timestamp = it.taskInfo.timestamp
       )
     }
     .toSet()
@@ -47,7 +48,7 @@ class AptoideTaskInfoRepository @Inject constructor(
         packageName = taskInfo.packageName,
         versionCode = taskInfo.installPackageInfo.versionCode,
         versionName = "",
-        downloadSize = taskInfo.installPackageInfo.downloadSize,
+        constraints = taskInfo.constraints.serialize(),
         type = taskInfo.type,
         timestamp = taskInfo.timestamp,
         payload = taskInfo.installPackageInfo.payload,
@@ -73,4 +74,17 @@ class AptoideTaskInfoRepository @Inject constructor(
     taskInfoDao.remove(packageName)
     installationFileDao.remove(packageName)
   }
+}
+
+private fun Constraints.serialize(): String = "$checkForFreeSpace|$networkType"
+
+private fun String.deserialize(): Constraints = split("|").let {
+  Constraints(
+    checkForFreeSpace = it[0] != "false",
+    networkType = try {
+      Constraints.NetworkType.valueOf(it[1])
+    } catch (e: Exception) {
+      Constraints.NetworkType.NOT_REQUIRED
+    }
+  )
 }

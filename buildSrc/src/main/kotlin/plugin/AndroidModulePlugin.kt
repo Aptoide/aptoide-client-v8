@@ -3,7 +3,6 @@ package plugin
 import AndroidConfig
 import GradlePluginId
 import JavaLibrary
-import KeyHelper
 import LibraryDependency
 import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.api.dsl.LibraryExtension
@@ -25,7 +24,6 @@ class AndroidModulePlugin : Plugin<Project> {
         compileSdk = AndroidConfig.COMPILE_SDK
 
         defaultConfig {
-          buildToolsVersion = AndroidConfig.BUILD_TOOLS
           minSdk = AndroidConfig.MIN_SDK
           targetSdk = AndroidConfig.TARGET_SDK
         }

@@ -14,7 +14,7 @@ interface PackageInfoRepository {
    *
    * @returns all installed apps package info
    */
-  suspend fun getAll(): Set<PackageInfo>
+  fun getAll(): Set<PackageInfo>
 
   /**
    * Get package info.
@@ -22,13 +22,13 @@ interface PackageInfoRepository {
    * @param packageName - a package name
    * @returns info about the [packageName] if app is installed. Should return null in case of error.
    */
-  suspend fun get(packageName: String): PackageInfo?
+  fun get(packageName: String): PackageInfo?
 
   /**
    * Sets a listener for changes.
    *
    * @param onChange - a callback to signal about changes
    */
-  fun setOnChangeListener(onChange: suspend (String) -> Unit)
+  fun setOnChangeListener(onChange: (String) -> Unit)
 }
 

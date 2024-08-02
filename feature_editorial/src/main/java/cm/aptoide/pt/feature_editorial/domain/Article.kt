@@ -10,7 +10,9 @@ import java.time.format.DateTimeFormatter
 import kotlin.random.Random
 import kotlin.random.nextInt
 
+const val EDITORIAL_DEFAULT_TAG = "editorial"
 const val ARTICLE_CACHE_ID_PREFIX = "editorial-"
+const val RELATED_ARTICLE_CACHE_ID_PREFIX = "related-editorial-"
 
 data class Article(
   val id: String,
@@ -20,6 +22,7 @@ data class Article(
   val image: String,
   val date: String,
   val views: Long,
+  val relatedTag: String,
   val content: List<Paragraph>,
 )
 
@@ -41,12 +44,7 @@ data class ArticleMeta(
   val subtype: ArticleType,
   val date: String,
   val views: Long,
-) {
-
-  fun cacheUrls(save: (String, String) -> Unit) {
-    save(ARTICLE_CACHE_ID_PREFIX + id, url)
-  }
-}
+)
 
 enum class ArticleType {
   APP_OF_THE_WEEK,
@@ -59,6 +57,7 @@ enum class ArticleType {
 
 data class Action(val title: String, val url: String)
 
+@Suppress("unused")
 val randomArticle
   get() = Article(
     id = "${Random.nextInt(1..1000)}",
@@ -70,6 +69,7 @@ val randomArticle
       .minusDays(Random.nextLong(30))
       .format(DateTimeFormatter.ofPattern("uuuu-MM-dd hh:mm:ss")).toString(),
     views = Random.nextLong(50000L),
+    relatedTag = "",
     content = List(Random.nextInt(1..4)) {
       Paragraph(
         title = getRandomString(range = 1..2, capitalize = true),
@@ -92,6 +92,7 @@ val randomArticle
     }
   )
 
+@Suppress("unused")
 val randomArticleMeta
   get() = ArticleMeta(
     id = "${Random.nextInt(1..1000)}",

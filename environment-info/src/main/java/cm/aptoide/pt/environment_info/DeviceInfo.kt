@@ -80,7 +80,7 @@ class DeviceInfo @Inject constructor(
 
   fun getArchitecture() = deviceInfoRepository.architecture
 
-  fun getSupportedABIs() = Build.SUPPORTED_ABIS.joinToString()
+  fun getSupportedABIs() = Build.SUPPORTED_ABIS.joinToString(separator = ",")
 
   fun getScreenDimensions() =
     "${deviceInfoRepository.screenWidth}x${deviceInfoRepository.screenHeight}"

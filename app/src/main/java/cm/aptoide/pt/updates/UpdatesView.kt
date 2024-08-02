@@ -1,8 +1,17 @@
 package cm.aptoide.pt.updates
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,12 +30,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
 import cm.aptoide.pt.aptoide_ui.animations.staticComposable
-import cm.aptoide.pt.aptoide_ui.theme.AppTheme
-import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
-import cm.aptoide.pt.aptoide_ui.toolbar.AptoideActionBar
+import cm.aptoide.pt.feature_updates.domain.InstalledApp
 import cm.aptoide.pt.feature_updates.presentation.UpdatesUiState
 import cm.aptoide.pt.feature_updates.presentation.UpdatesViewModel
-import cm.aptoide.pt.installedapps.domain.model.InstalledApp
+import cm.aptoide.pt.theme.AppTheme
+import cm.aptoide.pt.theme.AptoideTheme
+import cm.aptoide.pt.toolbar.AptoideActionBar
 
 const val updatesRoute = "updates"
 
@@ -43,6 +52,7 @@ fun NavGraphBuilder.updatesScreen(
   )
 }
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun UpdatesScreen(
   uiState: UpdatesUiState,

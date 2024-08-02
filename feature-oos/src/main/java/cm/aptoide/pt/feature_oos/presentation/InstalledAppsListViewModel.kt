@@ -7,12 +7,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class InstalledAppsListViewModel @Inject constructor(
-  private val installedAppsUseCase: InstalledAppsUseCase,
-  private val filterPackages: List<String> = emptyList()
+  installedAppsUseCase: InstalledAppsUseCase,
+  filterPackages: List<String> = emptyList(),
 ) : ViewModel() {
 
   private val viewModelState = MutableStateFlow<InstalledAppsUiState>(InstalledAppsUiState.Loading)
@@ -25,9 +24,7 @@ class InstalledAppsListViewModel @Inject constructor(
     )
 
   init {
-    viewModelScope.launch {
-      val installedApps = installedAppsUseCase.getInstalledApps(filterPackages)
-      viewModelState.update { InstalledAppsUiState.Idle(installedApps) }
-    }
+    val installedApps = installedAppsUseCase.getInstalledApps(filterPackages)
+    viewModelState.update { InstalledAppsUiState.Idle(installedApps) }
   }
 }

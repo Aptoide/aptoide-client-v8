@@ -8,16 +8,13 @@ import android.content.pm.PackageInfo
 import cm.aptoide.pt.extensions.getInstalledPackages
 import cm.aptoide.pt.extensions.getPackageInfo
 import cm.aptoide.pt.extensions.ifNormalApp
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 internal class PackageInfoRepositoryImpl(
   context: Context,
-  private val scope: CoroutineScope,
 ) : BroadcastReceiver(),
   PackageInfoRepository {
 
-  private lateinit var listener: suspend (String) -> Unit
+  private lateinit var listener: (String) -> Unit
 
   private val pm = context.packageManager
 
@@ -34,22 +31,23 @@ internal class PackageInfoRepositoryImpl(
     )
   }
 
-  override fun onReceive(context: Context, intent: Intent) {
-    intent.data?.encodedSchemeSpecificPart?.let {
-      scope.launch {
-        listener.invoke(it)
-      }
-    }
+  override fun onReceive(
+    context: Context,
+    intent: Intent,
+  ) {
+    intent.data
+      ?.encodedSchemeSpecificPart
+      ?.let(listener::invoke)
   }
 
-  override suspend fun getAll(): Set<PackageInfo> = pm.getInstalledPackages()
+  override fun getAll(): Set<PackageInfo> = pm.getInstalledPackages()
     .filter(PackageInfo::ifNormalApp)
     .toSet()
 
-  override suspend fun get(packageName: String): PackageInfo? = pm.getPackageInfo(packageName)
+  override fun get(packageName: String): PackageInfo? = pm.getPackageInfo(packageName)
     ?.takeIf(PackageInfo::ifNormalApp)
 
-  override fun setOnChangeListener(onChange: suspend (String) -> Unit) {
+  override fun setOnChangeListener(onChange: (String) -> Unit) {
     listener = onChange
   }
 }

@@ -5,7 +5,9 @@ import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7DataListRe
 import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7ListResponse
 import cm.aptoide.pt.feature_apps.data.model.AppJSON
 import cm.aptoide.pt.feature_apps.data.model.CampaignUrls
+import cm.aptoide.pt.feature_apps.data.model.DynamicSplitJSON
 import cm.aptoide.pt.feature_apps.data.model.GetAppResponse
+import cm.aptoide.pt.feature_apps.data.model.GetMetaResponse
 import cm.aptoide.pt.feature_apps.data.model.VideoTypeJSON
 import cm.aptoide.pt.feature_apps.domain.Rating
 import cm.aptoide.pt.feature_apps.domain.Store
@@ -19,7 +21,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Path
 import retrofit2.http.Query
-import java.util.*
+import java.util.UUID
 import javax.inject.Inject
 
 internal class AptoideAppsRepository @Inject constructor(
@@ -30,7 +32,10 @@ internal class AptoideAppsRepository @Inject constructor(
   private val scope: CoroutineScope,
 ) : AppsRepository {
 
-  override suspend fun getAppsList(url: String, bypassCache: Boolean): List<App> =
+  override suspend fun getAppsList(
+    url: String,
+    bypassCache: Boolean,
+  ): List<App> =
     withContext(scope.coroutineContext) {
       if (url.isEmpty()) {
         throw IllegalStateException()
@@ -49,7 +54,6 @@ internal class AptoideAppsRepository @Inject constructor(
             campaignRepository = campaignRepository,
             campaignUrlNormalizer = campaignUrlNormalizer,
             adListId = randomAdListId
-
           )
         }
         ?: throw IllegalStateException()
@@ -77,9 +81,11 @@ internal class AptoideAppsRepository @Inject constructor(
         ?: throw IllegalStateException()
     }
 
-  override suspend fun getApp(packageName: String, bypassCache: Boolean): App =
+  override suspend fun getApp(
+    packageName: String,
+    bypassCache: Boolean,
+  ): App =
     withContext(scope.coroutineContext) {
-
       appsRemoteDataSource.getApp(
         path = packageName,
         storeName = if (packageName != "com.appcoins.wallet") storeName else null,
@@ -93,11 +99,33 @@ internal class AptoideAppsRepository @Inject constructor(
         )
     }
 
-  override suspend fun getRecommended(url: String, bypassCache: Boolean): List<App> =
+  override suspend fun getMetaBySource(
+    source: String,
+    bypassCache: Boolean,
+    useStoreName: Boolean,
+  ): App =
+    withContext(scope.coroutineContext) {
+
+      appsRemoteDataSource.getMetaBySource(
+        path = source,
+        storeName = if (useStoreName) storeName else null,
+        bypassCache = if (bypassCache) CacheConstants.NO_CACHE else null
+      ).data
+        .toDomainModel(
+          campaignRepository = campaignRepository,
+          campaignUrlNormalizer = campaignUrlNormalizer,
+          adListId = UUID.randomUUID().toString()
+        )
+    }
+
+  override suspend fun getRecommended(
+    path: String,
+    bypassCache: Boolean,
+  ): List<App> =
     withContext(scope.coroutineContext) {
       val randomAdListId = UUID.randomUUID().toString()
       appsRemoteDataSource.getRecommendedAppsList(
-        path = url,
+        path = path,
         storeName = storeName,
         bypassCache = if (bypassCache) CacheConstants.NO_CACHE else null
       )
@@ -169,6 +197,13 @@ internal class AptoideAppsRepository @Inject constructor(
         ?: throw IllegalStateException()
     }
 
+  override suspend fun getAppsDynamicSplits(md5: String): List<DynamicSplit> =
+    withContext(scope.coroutineContext) {
+      appsRemoteDataSource.getDynamicSplits(md5 = md5).list
+        ?.map(DynamicSplitJSON::toDomainModel)
+        ?: throw IllegalStateException()
+    }
+
   internal interface Retrofit {
     @GET("apps/get/{query}")
     suspend fun getAppsList(
@@ -194,6 +229,14 @@ internal class AptoideAppsRepository @Inject constructor(
       @Header(CacheConstants.CACHE_CONTROL_HEADER) bypassCache: String?,
     ): GetAppResponse
 
+    @GET("app/getMeta/{source}")
+    suspend fun getMetaBySource(
+      @Path(value = "source", encoded = true) path: String,
+      @Query("store_name") storeName: String? = null,
+      @Query("aab") aab: Int = 1,
+      @Header(CacheConstants.CACHE_CONTROL_HEADER) bypassCache: String?,
+    ): GetMetaResponse
+
     @GET("apps/getRecommended/{query}")
     suspend fun getRecommendedAppsList(
       @Path(value = "query", encoded = true) path: String,
@@ -215,6 +258,13 @@ internal class AptoideAppsRepository @Inject constructor(
       @Query("aab") aab: Int = 1,
       @Query("package_names") packageNames: String,
     ): BaseV7ListResponse<AppJSON>
+
+    //TODO: should this be in a separate module that specifically deals with aabs?
+    @GET("app/getDynamicSplits")
+    suspend fun getDynamicSplits(
+      @Query("apk_md5sum") md5: String,
+      @Query("aab") aab: Int = 1,
+    ): BaseV7ListResponse<DynamicSplitJSON>
   }
 }
 
@@ -267,9 +317,10 @@ fun AppJSON.toDomainModel(
     vercode = this.file.vercode,
     md5 = this.file.md5sum,
     filesize = this.file.filesize,
-    path = this.file.path,
-    path_alt = this.file.path_alt
+    path = this.file.path ?: "",
+    path_alt = this.file.path_alt ?: ""
   ),
+  aab = mapAab(this),
   obb = mapObb(this),
   developerName = this.developer?.name,
   campaigns = this.urls.mapCampaigns(campaignRepository, campaignUrlNormalizer)
@@ -302,7 +353,7 @@ private fun mapObb(app: AppJSON): Obb? =
       vercode = app.file.vercode,
       md5 = app.obb.main.md5sum,
       filesize = app.obb.main.filesize,
-      path = app.obb.main.path,
+      path = app.obb.main.path ?: "",
       path_alt = ""
     )
     if (app.obb.patch != null) {
@@ -314,7 +365,7 @@ private fun mapObb(app: AppJSON): Obb? =
           vercode = app.file.vercode,
           md5 = app.obb.patch.md5sum,
           filesize = app.obb.patch.filesize,
-          path = app.obb.patch.path,
+          path = app.obb.patch.path ?: "",
           path_alt = ""
         )
       )
@@ -324,3 +375,48 @@ private fun mapObb(app: AppJSON): Obb? =
   } else {
     null
   }
+
+private fun mapAab(app: AppJSON) = app.aab?.let {
+  Aab(
+    requiredSplitTypes = it.requiredSplitTypes,
+    splits = it.splits.map { split ->
+      Split(
+        type = split.type,
+        file = File(
+          _fileName = split.name,
+          vername = app.file.vername,
+          vercode = app.file.vercode,
+          md5 = split.md5sum,
+          filesize = split.filesize,
+          path = split.path,
+          path_alt = ""
+        )
+      )
+    }
+  )
+}
+
+fun DynamicSplitJSON.toDomainModel() = DynamicSplit(
+  type = type,
+  File(
+    _fileName = this.name,
+    vername = "",
+    vercode = 0,
+    md5 = this.md5sum,
+    filesize = this.filesize,
+    path = this.path,
+    path_alt = ""
+  ),
+  deliveryTypes = this.deliveryTypes,
+  splits = this.splits.map { split ->
+    File(
+      _fileName = split.name,
+      vername = "",
+      vercode = 0,
+      md5 = split.md5sum,
+      filesize = split.filesize,
+      path = split.path,
+      path_alt = ""
+    )
+  }
+)

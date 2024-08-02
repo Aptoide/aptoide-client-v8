@@ -3,6 +3,7 @@ package cm.aptoide.pt.home
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,31 +19,29 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import cm.aptoide.pt.appcoins.presentation.rememberBonus
+import cm.aptoide.pt.apps.AppGraphicView
+import cm.aptoide.pt.apps.AppsRowView
 import cm.aptoide.pt.appview.buildAppViewRoute
-import cm.aptoide.pt.aptoide_ui.theme.AppTheme
+import cm.aptoide.pt.bonus.BonusBanner
 import cm.aptoide.pt.editorial.EditorialViewCard
+import cm.aptoide.pt.extensions.format
 import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_apps.data.File
-import cm.aptoide.pt.feature_apps.domain.Rating
-import cm.aptoide.pt.feature_apps.domain.Store
-import cm.aptoide.pt.feature_apps.domain.Votes
-import cm.aptoide.pt.feature_apps.presentation.AppGraphicView
+import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
-import cm.aptoide.pt.feature_apps.presentation.AppsRowView
-import cm.aptoide.pt.feature_apps.presentation.tagApps
-import cm.aptoide.pt.feature_editorial.presentation.editorialsCardViewModel
+import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
+import cm.aptoide.pt.feature_editorial.presentation.rememberEditorialsCardState
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.Type
 import cm.aptoide.pt.feature_home.presentation.BundlesViewUiState
 import cm.aptoide.pt.feature_home.presentation.BundlesViewUiStateType.LOADING
+import cm.aptoide.pt.theme.AppTheme
 import cm.aptoide.pt.theme.greyMedium
 import java.util.Random
 
@@ -51,6 +50,9 @@ fun BundlesView(
   viewState: BundlesViewUiState,
   navigate: (String) -> Unit,
 ) {
+  val bonus = rememberBonus()
+  val bonusTitle = bonus?.let { "Up to ${it.format(1)}% Bonus in every purchase!" }
+
   Column(
     modifier = Modifier
       .fillMaxSize()
@@ -71,9 +73,9 @@ fun BundlesView(
             Type.APP_GRID -> AppsSimpleListView(
               title = it.title,
               tag = it.tag,
-              onAppClick = {
+              onAppClick = { packageName ->
                 navigate(
-                  buildAppViewRoute(it)
+                  buildAppViewRoute(packageName)
                 )
               }
             )
@@ -81,10 +83,9 @@ fun BundlesView(
             Type.FEATURE_GRAPHIC -> AppsGraphicListView(
               title = it.title,
               tag = it.tag,
-              bonusBanner = false,
-              onAppClick = {
+              onAppClick = { packageName ->
                 navigate(
-                  buildAppViewRoute(it)
+                  buildAppViewRoute(packageName)
                 )
               }
             )
@@ -92,27 +93,28 @@ fun BundlesView(
             Type.ESKILLS -> AppsSimpleListView(
               title = it.title,
               tag = it.tag,
-              onAppClick = {
+              onAppClick = { packageName ->
                 navigate(
-                  buildAppViewRoute(it)
+                  buildAppViewRoute(packageName)
                 )
               }
             )
 
             Type.FEATURED_APPC -> AppsGraphicListView(
-              title = it.title,
+              title = bonusTitle ?: it.title,
               tag = it.tag,
-              bonusBanner = true,
-              onAppClick = {
+              onAppClick = { packageName ->
                 navigate(
-                  buildAppViewRoute(it)
+                  buildAppViewRoute(packageName)
                 )
               }
-            )
+            ) {
+              BonusBanner(bonus)
+            }
 
             Type.EDITORIAL -> EditorialMetaView(
               title = it.title,
-              requestUrl = it.view,
+              tag = it.tag,
               navigate = navigate
             )
 
@@ -128,10 +130,10 @@ fun BundlesView(
 fun AppsGraphicListView(
   title: String,
   tag: String,
-  bonusBanner: Boolean,
   onAppClick: (String) -> Unit,
+  bonusBanner: (@Composable BoxScope.() -> Unit)? = null,
 ) {
-  val (uiState, _) = tagApps(tag)
+  val (uiState, _) = rememberAppsByTag(tag)
   if (uiState !is AppsListUiState.Empty) {
     Box(modifier = Modifier.padding(bottom = 24.dp)) {
 //            if (it.type == Type.ESKILLS) {
@@ -181,7 +183,7 @@ fun AppsSimpleListView(
   tag: String,
   onAppClick: (String) -> Unit,
 ) {
-  val (uiState, _) = tagApps(tag)
+  val (uiState, _) = rememberAppsByTag(tag)
   if (uiState !is AppsListUiState.Empty) {
     Box(modifier = Modifier.padding(bottom = 24.dp)) {
 //            if (it.type == Type.ESKILLS) {
@@ -202,6 +204,7 @@ fun AppsSimpleListView(
             appsList = uiState.apps,
             onAppClick = onAppClick
           )
+
           AppsListUiState.Empty,
           AppsListUiState.Error,
           AppsListUiState.NoConnection,
@@ -217,12 +220,10 @@ fun AppsSimpleListView(
 @Composable
 fun EditorialMetaView(
   title: String,
-  requestUrl: String?,
+  tag: String,
   navigate: (String) -> Unit,
-) = requestUrl?.let {
-  val editorialsCardViewModel = editorialsCardViewModel(requestUrl = it)
-  val uiState by editorialsCardViewModel.uiState.collectAsState()
-  val items = uiState
+) {
+  val (items, _) = rememberEditorialsCardState(tag = tag)
 
   if (items == null) {
     LoadingBundleView(height = 240.dp)
@@ -305,78 +306,17 @@ internal fun AppsScreenPreview() {
         createFakeBundle(),
         createFakeBundle(),
         createFakeBundle()
-      ), LOADING
+      ),
+      LOADING
     ),
-    { }
+    navigate = { }
   )
 }
 
 fun createFakeBundle(): Bundle {
   val appsList: MutableList<App> = ArrayList()
   for (i in 0..9) {
-    appsList.add(
-      App(
-        name = "app name $i app name 2",
-        packageName = "packagename",
-        md5 = "md5",
-        appSize = 123,
-        icon = "https://pool.img.aptoide.com/catappult/8c9974886cca4ae0169d260f441640ab_icon.jpg",
-        malware = "trusted",
-        rating = Rating(
-          avgRating = 2.3,
-          totalVotes = 12321,
-          votes = listOf(
-            Votes(1, 3),
-            Votes(2, 8),
-            Votes(3, 123),
-            Votes(4, 100),
-            Votes(5, 1994)
-          )
-        ),
-        pRating = Rating(
-          avgRating = 2.3,
-          totalVotes = 12321,
-          votes = listOf(
-            Votes(1, 3),
-            Votes(2, 8),
-            Votes(3, 123),
-            Votes(4, 100),
-            Votes(5, 1994)
-          )
-        ),
-        downloads = 11113,
-        versionName = "alfa",
-        versionCode = 123,
-        featureGraphic = "https://pool.img.aptoide.com/catappult/934323636c0247af73ecfcafd46aefc3_feature_graphic.jpg",
-        isAppCoins = true,
-        screenshots = listOf("", ""),
-        description = "app with the name 1 descpription",
-        videos = listOf("", ""),
-        store = Store(
-          storeName = "rmota",
-          icon = "rmota url",
-          apps = 123,
-          subscribers = 123123,
-          downloads = 1312132314
-        ),
-        releaseDate = "18 of may",
-        updateDate = "18 of may",
-        website = "www.aptoide.com",
-        email = "aptoide@aptoide.com",
-        privacyPolicy = "none",
-        permissions = listOf("Permission 1", "permission 2"),
-        file = File(
-          vername = "asdas",
-          vercode = 123,
-          md5 = "md5",
-          filesize = 123,
-          path = null,
-          path_alt = null
-        ),
-        obb = null,
-        developerName = null
-      )
-    )
+    appsList.add(randomApp)
   }
   val pick: Int = Random().nextInt(Type.values().size)
   return Bundle(

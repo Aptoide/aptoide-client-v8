@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -26,19 +24,21 @@ import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
 import cm.aptoide.pt.aptoide_ui.textformatter.DateUtils
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
-import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_apps.presentation.appVersions
+import cm.aptoide.pt.theme.AppTheme
 
 @Composable
-fun OtherVersionsView(packageName: String, listScope: LazyListScope?) {
+fun OtherVersionsView(packageName: String) {
   val (uiState, _) = appVersions(packageName = packageName)
-
-  listScope?.item { Box(modifier = Modifier.padding(top = 26.dp)) }
-  (uiState as? AppsListUiState.Idle)?.run {
-    listScope?.items(apps) { app ->
-      OtherVersionRow(app)
+  Column(
+    modifier = Modifier.padding(top = 24.dp)
+  ) {
+    (uiState as? AppsListUiState.Idle)?.run {
+      apps.forEach { app ->
+        OtherVersionRow(app)
+      }
     }
   }
 }

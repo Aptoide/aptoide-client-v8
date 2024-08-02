@@ -2,7 +2,7 @@ package cm.aptoide.pt.feature_apps.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cm.aptoide.pt.feature_apps.domain.AppInfoUseCase
+import cm.aptoide.pt.feature_apps.domain.AppMetaUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
@@ -11,9 +11,9 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.IOException
 
-class AppViewModel constructor(
-  private val appInfoUseCase: AppInfoUseCase,
-  private val packageName: String,
+class AppViewModel(
+  private val appMetaUseCase: AppMetaUseCase,
+  private val source: String,
   private val adListId: String?,
 ) : ViewModel() {
 
@@ -34,7 +34,7 @@ class AppViewModel constructor(
     viewModelScope.launch {
       viewModelState.update { AppUiState.Loading }
       try {
-        val app = appInfoUseCase.getAppInfo(packageName)
+        val app = appMetaUseCase.getMetaInfoBySource(source)
         app.campaigns?.adListId = adListId
         app.campaigns?.sendImpressionEvent()
         viewModelState.update { AppUiState.Idle(app) }

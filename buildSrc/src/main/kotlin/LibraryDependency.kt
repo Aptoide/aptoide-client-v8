@@ -1,3 +1,4 @@
+import LibraryVersion.INDICATIVE_VERSION
 import org.gradle.api.JavaVersion
 
 object LibraryVersionOldModules {
@@ -33,12 +34,12 @@ object LibraryVersionOldModules {
   const val MOSHI = "1.14.0"
 }
 
-private object LibraryVersion {
+object LibraryVersion {
   //main modules
   const val CORE_KTX = "1.10.1"
-  const val ACTIVITY_KTX = "1.7.2"
+  const val ACTIVITY_KTX = "1.8.2"
   const val APP_COMPAT = "1.6.1"
-  const val MATERIAL = "1.9.0"
+  const val MATERIAL = "1.11.0"
   const val CONSTRAINT_LAYOUT = "2.1.4"
   const val RETROFIT = "2.9.0"
   const val RETROFIT_GSON_CONVERTER = "2.9.0"
@@ -50,9 +51,10 @@ private object LibraryVersion {
   const val COIL = "2.4.0"
   const val ROOM = "2.5.1"
   const val ACTIVITY_COMPOSE = "1.7.1"
-  const val COMPOSE = "1.4.3"
+  const val COMPOSE = "1.5.4"
+  const val COMPOSE_LIFECYCLE = "2.7.0"
   const val VIEWMODEL_COMPOSE = "2.6.1"
-  const val NAVIGATION_COMPOSE = "2.5.3"
+  const val NAVIGATION_COMPOSE = "2.7.5"
   const val MATERIAL_ICONS_EXTENDED = "1.4.3"
   const val HILT = GradlePluginVersion.HILT
   const val HILT_COMPILER = "1.0.0"
@@ -65,14 +67,18 @@ private object LibraryVersion {
   const val DATASTORE = "1.0.0"
   const val GMS_PLAY_SERVICES_ADS = "18.0.1"
   const val PLAY_SERVICES_BASEMENT = "18.2.0"
-  const val ACCOMPANIST_PAGER = "0.30.1"
-  const val ACCOMPANIST_WEBVIEW = "0.30.1"
-  const val ACCOMPANIST_PERMISSIONS = "0.30.1"
-  const val ACCOMPANIST_NAVIGATION = "0.30.1"
+  const val ACCOMPANIST_WEBVIEW = "0.32.0"
+  const val ACCOMPANIST_PERMISSIONS = "0.32.0"
   const val LOTTIE_COMPOSE = "6.0.0"
   const val WORK_MANAGER = "2.8.1"
   const val HILT_WORK = "1.0.0"
-  const val GLANCE = "1.0.0-rc01"
+  const val GLANCE = "1.0.0"
+  const val APACHE_COMMONS_TEXT = "1.9"
+  const val ADYEN_VERSION = "4.13.3"
+  const val KOTLIN_SERIALIZATION = "1.6.1"
+  const val APPCOINS_SDK = "0.6.7.0"
+  const val KOTLIN_COMPILER_EXTENSION = "1.4.8"
+  const val INDICATIVE_VERSION = "1.0.1"
 }
 
 object JavaLibrary {
@@ -89,6 +95,7 @@ object LibraryDependency {
     "androidx.constraintlayout:constraintlayout:${LibraryVersion.CONSTRAINT_LAYOUT}"
   const val KOTLIN = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${CoreVersion.KOTLIN}"
   const val KOTLIN_REFLECT = "org.jetbrains.kotlin:kotlin-reflect:${CoreVersion.KOTLIN}"
+  const val KOTLIN_SERIALIZATION_JSON = "org.jetbrains.kotlinx:kotlinx-serialization-json:${LibraryVersion.KOTLIN_SERIALIZATION}"
   const val RETROFIT = "com.squareup.retrofit2:retrofit:${LibraryVersion.RETROFIT}"
   const val RETROFIT_GSON_CONVERTER =
     "com.squareup.retrofit2:converter-gson:${LibraryVersion.RETROFIT_GSON_CONVERTER}"
@@ -124,6 +131,7 @@ object LibraryDependency {
   const val ANIMATION_COMPOSE = "androidx.compose.animation:animation:${LibraryVersion.COMPOSE}"
   const val UI_TOOLING_COMPOSE = "androidx.compose.ui:ui-tooling:${LibraryVersion.COMPOSE}"
   const val UI_COMPOSE = "androidx.compose.ui:ui:${LibraryVersion.COMPOSE}"
+  const val COMPOSE_LIFECYCLE = "androidx.lifecycle:lifecycle-runtime-compose:${LibraryVersion.COMPOSE_LIFECYCLE}"
   const val UI_UTIL = "androidx.compose.ui:ui-util:${LibraryVersion.COMPOSE}"
   const val VIEWMODEL_COMPOSE =
     "androidx.lifecycle:lifecycle-viewmodel-compose:${LibraryVersion.VIEWMODEL_COMPOSE}"
@@ -148,14 +156,10 @@ object LibraryDependency {
     "com.google.android.gms:play-services-ads-identifier:${LibraryVersion.GMS_PLAY_SERVICES_ADS}"
   const val PLAY_SERVICES_BASEMENT =
     "com.google.android.gms:play-services-base:${LibraryVersion.PLAY_SERVICES_BASEMENT}"
-  const val ACCOMPANIST_PAGER =
-    "com.google.accompanist:accompanist-pager:${LibraryVersion.ACCOMPANIST_PAGER}"
   const val ACCOMPANIST_WEBVIEW =
     "com.google.accompanist:accompanist-webview:${LibraryVersion.ACCOMPANIST_WEBVIEW}"
   const val ACCOMPANIST_PERMISSIONS =
     "com.google.accompanist:accompanist-permissions:${LibraryVersion.ACCOMPANIST_PERMISSIONS}"
-  const val ACCOMPANIST_NAVIGATION =
-    "com.google.accompanist:accompanist-navigation-animation:${LibraryVersion.ACCOMPANIST_NAVIGATION}"
   const val LOTTIE_COMPOSE =
     "com.airbnb.android:lottie-compose:${LibraryVersion.LOTTIE_COMPOSE}"
   const val WORK_MANAGER =
@@ -166,4 +170,15 @@ object LibraryDependency {
     "androidx.glance:glance:${LibraryVersion.GLANCE}"
   const val GLANCE_APP_WIDGET =
     "androidx.glance:glance-appwidget:${LibraryVersion.GLANCE}"
+  const val APACHE_COMMONS_TEXT =
+    "org.apache.commons:commons-text:${LibraryVersion.APACHE_COMMONS_TEXT}"
+  const val ADYEN_CREDIT_CARD =
+    "com.adyen.checkout:card:${LibraryVersion.ADYEN_VERSION}"
+  const val ADYEN_3DS_2 =
+    "com.adyen.checkout:3ds2:${LibraryVersion.ADYEN_VERSION}"
+  const val ADYEN_REDIRECT =
+    "com.adyen.checkout:redirect:${LibraryVersion.ADYEN_VERSION}"
+  const val APPCOINS_SDK = "io.catappult:appcoins-contract-proxy:${LibraryVersion.APPCOINS_SDK}"
+  const val APPCOINS_SDK_COMMUNICATION = "io.catappult:communication:${LibraryVersion.APPCOINS_SDK}"
+  const val INDICATIVE_SDK = "com.indicative.client.android:Indicative-Android:${INDICATIVE_VERSION}"
 }

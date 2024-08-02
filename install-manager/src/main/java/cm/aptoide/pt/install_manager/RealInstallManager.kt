@@ -1,30 +1,36 @@
 package cm.aptoide.pt.install_manager
 
 import android.content.pm.PackageInfo
+import cm.aptoide.pt.install_manager.dto.Constraints
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
+import cm.aptoide.pt.install_manager.dto.SizeEstimator
+import cm.aptoide.pt.install_manager.dto.TaskInfo
+import cm.aptoide.pt.install_manager.environment.DeviceStorage
+import cm.aptoide.pt.install_manager.environment.NetworkConnection
+import cm.aptoide.pt.install_manager.repository.PackageInfoRepository
+import cm.aptoide.pt.install_manager.repository.TaskInfoRepository
 import cm.aptoide.pt.install_manager.workers.PackageDownloader
 import cm.aptoide.pt.install_manager.workers.PackageInstaller
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.withContext
-import java.lang.ref.WeakReference
+import kotlinx.coroutines.launch
 
-internal class RealInstallManager(builder: InstallManager.IBuilder) : InstallManager,
-  Task.Factory {
-  private val scope = builder.scope
-  private val packageInfoRepository = builder.packageInfoRepository
-  private val jobDispatcher = JobDispatcher(scope)
-  private val taskInfoRepository = builder.taskInfoRepository
-  private val packageDownloader: PackageDownloader = builder.packageDownloader
-  private val packageInstaller: PackageInstaller = builder.packageInstaller
+internal class RealInstallManager(
+  private val scope: CoroutineScope,
+  private val currentTime: () -> Long,
+  private val deviceStorage: DeviceStorage,
+  private val sizeEstimator: SizeEstimator,
+  networkConnection: NetworkConnection,
+  private val packageInfoRepository: PackageInfoRepository,
+  private val taskInfoRepository: TaskInfoRepository,
+  private val packageDownloader: PackageDownloader,
+  private val packageInstaller: PackageInstaller,
+) : InstallManager, Task.Factory {
+  private val jobDispatcher = JobDispatcher(scope, networkConnection)
 
-  private val context = builder.scope.coroutineContext
-  private val clock = builder.clock
-
-  private val cachedApps = HashMap<String, WeakReference<RealApp>>()
+  private val appsCache = AppsCache()
 
   private val systemUpdates = MutableSharedFlow<String>()
 
@@ -32,16 +38,17 @@ internal class RealInstallManager(builder: InstallManager.IBuilder) : InstallMan
 
   init {
     packageInfoRepository.setOnChangeListener {
-      cachedApps[it]?.get()?.update()
-      delay(1) // Suspend to let the app data update before informing the listeners
-      systemUpdates.emit(it)
+      appsCache[it]?.update()
+      scope.launch {
+        systemUpdates.emit(it)
+      }
     }
   }
 
-  override fun getApp(packageName: String): RealApp = getOrCreateApp(packageName)
+  override fun getApp(packageName: String): App = getOrCreateApp(packageName)
 
-  override suspend fun getInstalledApps(): Set<RealApp> = withContext(context) {
-    packageInfoRepository.getAll()
+  override val installedApps: Set<App>
+    get() = packageInfoRepository.getAll()
       .map {
         getOrCreateApp(
           packageName = it.packageName,
@@ -49,28 +56,34 @@ internal class RealInstallManager(builder: InstallManager.IBuilder) : InstallMan
         )
       }
       .toSet()
+
+  override val workingAppInstallers: Flow<App?> = jobDispatcher.runningTask.map { task ->
+    task?.let {
+      getOrCreateApp(packageName = it.packageName)
+    }
   }
 
-  override fun getWorkingAppInstallers(): Flow<RealApp?> =
-    jobDispatcher.runningJob.map { task -> task?.packageName?.let { getOrCreateApp(it) } }
+  override val scheduledApps: List<App>
+    get() = appsCache.busyApps.values
+      .filterNotNull()
+      .sortedBy { (it.task as RealTask?)?.taskInfo?.timestamp }
+      .filter { it.task?.state == Task.State.PENDING }
 
-  override fun getAppsChanges(): Flow<App> = systemUpdates
-    .map { getOrCreateApp(packageName = it) }
+  override val appsChanges: Flow<App> = systemUpdates.map(::getOrCreateApp)
+
+  override fun getMissingFreeSpaceFor(installPackageInfo: InstallPackageInfo): Long =
+    jobDispatcher.getScheduledIPF().sumOf(sizeEstimator::getTotalInstallationSize) +
+      sizeEstimator.getTotalInstallationSize(installPackageInfo) -
+      deviceStorage.availableFreeSpace
 
   override suspend fun restore() {
     if (restored) return
     restored = true
     taskInfoRepository.getAll()
-      .sortedBy { it.timestamp }
+      .sortedBy(TaskInfo::timestamp)
       .map {
-        getApp(it.packageName).apply {
-          if (tasks.first() == null) {
-            taskInfoRepository.removeAll(it.packageName)
-            when (it.type) {
-              Task.Type.INSTALL -> install(it.installPackageInfo)
-              Task.Type.UNINSTALL -> uninstall()
-            }
-          }
+        getOrCreateApp(packageName = it.packageName).apply {
+          tasks.value = it.toTask().enqueue(alreadySaved = true)
         }
       }
   }
@@ -78,34 +91,43 @@ internal class RealInstallManager(builder: InstallManager.IBuilder) : InstallMan
   private fun getOrCreateApp(
     packageName: String,
     packageInfo: PackageInfo? = null,
-  ) = cachedApps[packageName]?.get()
-    ?: RealApp(
-      packageName = packageName,
-      packageInfo = packageInfo,
-      taskFactory = this@RealInstallManager,
-      packageInfoRepository = packageInfoRepository,
-      scope = scope,
-    ).also {
-      cachedApps[packageName] = WeakReference(it)
-    }
+  ) = appsCache[packageName] ?: RealApp(
+    packageName = packageName,
+    packageInfo = packageInfo,
+    taskFactory = this@RealInstallManager,
+    getMissingSpace = { it - deviceStorage.availableFreeSpace },
+    sizeEstimator = sizeEstimator,
+    packageInfoRepository = packageInfoRepository
+  ).also {
+    appsCache[packageName] = it
+  }
 
-  override suspend fun createTask(
+  override fun enqueue(
     packageName: String,
     type: Task.Type,
-    forceDownload: Boolean,
     installPackageInfo: InstallPackageInfo,
-    onTerminate: suspend (success: Boolean) -> Unit,
-  ): Task = RealTask(
-    jobDispatcher = jobDispatcher,
+    constraints: Constraints,
+  ): Task = TaskInfo(
     packageName = packageName,
     installPackageInfo = installPackageInfo,
+    constraints = constraints,
     type = type,
+    timestamp = currentTime()
+  )
+    .toTask()
+    .enqueue()
+
+  private fun TaskInfo.toTask(): RealTask = RealTask(
+    scope = scope,
+    appsCache = appsCache,
+    taskInfo = this,
+    hasEnoughSpace = { it - deviceStorage.availableFreeSpace <= 0 },
+    sizeEstimator = sizeEstimator,
+    jobDispatcher = jobDispatcher,
     packageDownloader = packageDownloader,
     packageInstaller = packageInstaller,
-    taskInfoRepository = taskInfoRepository,
-    onTerminate = onTerminate,
-    clock = clock
-  ).apply {
-    enqueue(forceDownload = forceDownload)
+    taskInfoRepository = taskInfoRepository
+  ).also {
+    appsCache.setBusy(packageName, true)
   }
 }

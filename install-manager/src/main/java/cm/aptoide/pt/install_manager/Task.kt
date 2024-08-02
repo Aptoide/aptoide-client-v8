@@ -1,5 +1,6 @@
 package cm.aptoide.pt.install_manager
 
+import cm.aptoide.pt.install_manager.dto.Constraints
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import kotlinx.coroutines.flow.Flow
 
@@ -8,20 +9,12 @@ import kotlinx.coroutines.flow.Flow
  */
 
 interface Task {
-  val isFinished: Boolean
-
   /**
-   * The [Flow] of the task state and progress as it changes. Immediately emits the
-   * current ones for any new subscriber. Completes as soon as task is finished.
-   */
-  val stateAndProgress: Flow<Pair<State, Int>>
-
-  /**
-   * Cancel the task if possible.
+   * Package name.
    *
-   * Tasks that are already completed/failed/cancelled cannot be canceled, so nothing will happen.
+   * Used as an identifier of the task.
    */
-  suspend fun cancel()
+  val packageName: String
 
   /**
    * Task Type.
@@ -30,13 +23,57 @@ interface Task {
    */
   val type: Type
 
+  /**
+   * InstallPackageInfo used to create this task.
+   *
+   * Returns the [InstallPackageInfo] for this Task
+   */
+  val installPackageInfo: InstallPackageInfo
+
+  /**
+   * Task Constraints.
+   *
+   * Returns [Constraints] of this Task
+   */
+  val constraints: Constraints
+
+  /**
+   * Flag showing task is finished or not yet.
+   */
+  val isFinished: Boolean
+
+  /**
+   * Current [State] of the task.
+   */
+  val state: State
+
+  /**
+   * The [Flow] of the task state and progress as it changes. Immediately emits the
+   * current ones for any new subscriber. Completes as soon as task is finished.
+   */
+  val stateAndProgress: Flow<Pair<State, Int>>
+
+  /**
+   * Allows the task to perform downloads on metered networks. And schedules it's execution
+   * immediately if possible.
+   *
+   * Tasks that are already running cannot be altered, so nothing will happen.
+   */
+  fun allowDownloadOnMetered()
+
+  /**
+   * Cancel the task if possible.
+   *
+   * Tasks that are already completed/failed/cancelled cannot be canceled, so nothing will happen.
+   */
+  fun cancel()
+
   interface Factory {
-    suspend fun createTask(
+    fun enqueue(
       packageName: String,
       type: Type,
-      forceDownload: Boolean,
       installPackageInfo: InstallPackageInfo,
-      onTerminate: suspend (success: Boolean) -> Unit,
+      constraints: Constraints,
     ): Task
   }
 
@@ -72,5 +109,8 @@ interface Task {
 
     /* Work is failed */
     FAILED,
+
+    /* Work is failed due to lack of space */
+    OUT_OF_SPACE,
   }
 }

@@ -4,13 +4,31 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
@@ -45,8 +63,7 @@ import androidx.navigation.NavGraphBuilder
 import cm.aptoide.pt.appview.buildAppViewRoute
 import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
 import cm.aptoide.pt.aptoide_ui.animations.staticComposable
-import cm.aptoide.pt.aptoide_ui.theme.AppTheme
-import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
+import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.extensions.PreviewAll
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
@@ -54,7 +71,8 @@ import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType
 import cm.aptoide.pt.feature_search.presentation.SearchUiState
 import cm.aptoide.pt.feature_search.presentation.SearchViewModel
 import cm.aptoide.pt.feature_search.utils.isValidSearch
-import kotlin.math.round
+import cm.aptoide.pt.theme.AppTheme
+import cm.aptoide.pt.theme.AptoideTheme
 
 const val searchRoute = "search"
 
@@ -184,7 +202,7 @@ fun SearchResultItem(
         overflow = TextOverflow.Ellipsis
       )
       RatingSearchView(
-        rating = searchApp.rating.avgRating,
+        pRating = searchApp.pRating.avgRating,
         modifier = Modifier
       )
       Spacer(modifier = Modifier.weight(1f))
@@ -218,7 +236,7 @@ fun MalwareBadgeView() {
 
 @Composable
 fun RatingSearchView(
-  rating: Double,
+  pRating: Double,
   modifier: Modifier,
 ) {
   Row(
@@ -233,7 +251,7 @@ fun RatingSearchView(
       modifier = Modifier.size(12.dp)
     )
     Text(
-      text = (round(rating * 100) / 100).toString(),
+      text = if (pRating == 0.0) "--" else TextFormatter.formatDecimal(pRating),
       style = MaterialTheme.typography.caption,
     )
   }

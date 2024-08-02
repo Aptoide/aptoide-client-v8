@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageInstaller.PACKAGE_SOURCE_STORE
 import android.content.pm.PackageInstaller.Session
+import android.content.pm.PackageInstaller.SessionParams.USER_ACTION_NOT_REQUIRED
+import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import cm.aptoide.pt.extensions.checkMd5
@@ -24,7 +26,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onCompletion
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -36,6 +38,7 @@ class AptoideInstaller @Inject constructor(
   private val installEvents: InstallEvents,
   private val installPermissions: InstallPermissions,
 ) : PackageInstaller {
+  private val installInProgress = mutableSetOf<String>()
 
   init {
     // Clean up all old sessions on app start
@@ -44,7 +47,7 @@ class AptoideInstaller @Inject constructor(
     }
   }
 
-  override suspend fun install(
+  override fun install(
     packageName: String,
     installPackageInfo: InstallPackageInfo,
   ): Flow<Int> = flow {
@@ -56,6 +59,12 @@ class AptoideInstaller @Inject constructor(
         android.content.pm.PackageInstaller
           .SessionParams(android.content.pm.PackageInstaller.SessionParams.MODE_FULL_INSTALL)
           .apply {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+              setRequestUpdateOwnership(true)
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+              setRequireUserAction(USER_ACTION_NOT_REQUIRED)
+            }
             setAppPackageName(packageName)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
               setPackageSource(PACKAGE_SOURCE_STORE)
@@ -72,8 +81,10 @@ class AptoideInstaller @Inject constructor(
           val totalObbSize = obbFiles.totalLength
           val apkFraction = 49.0 * totalApkSize / (totalApkSize + totalObbSize)
           val obbFraction = 49.0 * totalObbSize / (totalApkSize + totalObbSize)
-          obbFiles.moveToObbStore(packageName) {
-            emit(checkFraction + (obbFraction * it / totalObbSize).toInt())
+          if (totalObbSize > 0) {
+            obbFiles.moveToObbStore(packageName) {
+              emit(checkFraction + (obbFraction * it / totalObbSize).toInt())
+            }
           }
           loadFiles(apkFiles) {
             emit(checkFraction + obbFraction.toInt() + (apkFraction * it / totalApkSize).toInt())
@@ -102,11 +113,19 @@ class AptoideInstaller @Inject constructor(
     }
   }
     .distinctUntilChanged()
+    .onCompletion { installInProgress.remove(packageName) }
+    .also { installInProgress += packageName }
 
-  override suspend fun uninstall(packageName: String): Flow<Int> =
-    throw NotImplementedError("An operation is not implemented: Not supported")
+  override fun uninstall(packageName: String): Flow<Int> = flow {
+    emit(0)
+    val intent = Intent(Intent.ACTION_DELETE)
+    intent.data = Uri.parse("package:$packageName")
+    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+    context.startActivity(intent)
+    emit(99)
+  }
 
-  override fun cancel(packageName: String) = true
+  override fun cancel(packageName: String) = installInProgress.contains(packageName)
 
   private suspend fun InstallPackageInfo.getCheckedFiles(
     progress: suspend (Double) -> Unit,
@@ -114,11 +133,17 @@ class AptoideInstaller @Inject constructor(
     val apks = mutableListOf<File>()
     val obbs = mutableListOf<File>()
     forEachIndexed { index, value ->
-      if (value.type in listOf(InstallationFile.Type.OBB_MAIN, InstallationFile.Type.OBB_PATCH)) {
-        obbs.add(value.toCheckedFile())
-      } else {
-        apks.add(value.toCheckedFile())
+      when(value.type) {
+        InstallationFile.Type.BASE,
+        InstallationFile.Type.PFD_INSTALL_TIME,
+        InstallationFile.Type.PAD_INSTALL_TIME -> apks.add(value.toCheckedFile())
+
+        InstallationFile.Type.OBB_MAIN,
+        InstallationFile.Type.OBB_PATCH -> obbs.add(value.toCheckedFile())
+
+        else -> {}
       }
+
       progress(index + 1.0 / size)
     }
     apks to obbs

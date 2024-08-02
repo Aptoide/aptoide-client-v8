@@ -11,6 +11,6 @@ fun NavGraphBuilder.bonusScreen(
 ) = staticComposable(
   bonusRoute
 ) {
-  val (viewState, _) = bundlesList()
+  val (viewState, _) = bundlesList(context = "home_appc")
   BundlesView(viewState, navigate)
 }

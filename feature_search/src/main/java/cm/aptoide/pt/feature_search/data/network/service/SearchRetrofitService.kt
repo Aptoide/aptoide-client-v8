@@ -20,9 +20,17 @@ class SearchRetrofitService @Inject constructor(
 
   override suspend fun searchApp(keyword: String): Response<BaseV7DataListResponse<AppJSON>> {
     return if (searchStoreManager.shouldAddStore()) {
-      searchAppRetrofitService.searchApp(keyword, 25, searchStoreManager.getStore())
+      searchAppRetrofitService.searchApp(
+        query = keyword,
+        limit = searchStoreManager.searchResultLimit(),
+        storeName = searchStoreManager.getStore()
+      )
     } else {
-      searchAppRetrofitService.searchApp(keyword, 25, null)
+      searchAppRetrofitService.searchApp(
+        query = keyword,
+        limit = searchStoreManager.searchResultLimit(),
+        storeName = null
+      )
     }
   }
 

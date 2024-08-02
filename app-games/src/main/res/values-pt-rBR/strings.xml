@@ -1,32 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="app_name">Aptoide Games</string>
   <!-- Bottom Bar -->
   <string name="games">Jogos</string>
   <string name="categories">Categorias</string>
   <string name="search">Pesquisar</string>
   <!-- Common -->
   <string name="send_button">Enviar</string>
-  <string name="try_again">Tente novamente.</string>
+  <string name="try_again">Por favor, tente novamente.</string>
   <string name="please_wait">Por favor, aguarde.</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Configurações</string>
   <string name="overflow_menu_terms_conditions">Termos e Condições</string>
   <string name="overflow_menu_privacy_policy">Política de Privacidade</string>
-  <string name="settings_about_hardware_title">Especificações do Hardware</string>
+  <string name="settings_about_hardware_title">Especificações de hardware</string>
   <string name="settings_about_title">Sobre Nós</string>
   <string name="settings_about_version">Versão %1$s (%2$s)</string>
   <string name="settings_copied_to_clipboard_message">Copiado para área de transferência</string>
   <string name="settings_general_title">Geral</string>
   <string name="settings_theme_option_dark">Escuro</string>
   <string name="settings_theme_option_light">Claro</string>
-  <string name="settings_theme_option_system">Definido pelo sistema</string>
+  <string name="settings_theme_option_system">Padrão do sistema</string>
   <string name="settings_theme_options_title">Tema</string>
   <string name="settings_title">Configurações</string>
   <string name="settings_support">Suporte</string>
   <string name="settings_feedback_button">Enviar feedback</string>
   <string name="settings_feedback_title">Enviar Avaliação</string>
   <string name="settings_legal_title">Informações Legais</string>
+  <string name="settings_send_feedback_body">Diga-nos o que achou do Aptoide Games!\n\u2022 Algum novo recurso que você gostaria de ver?\n\u2022 Como você acha que podemos melhorar?</string>
   <string name="settings_payment_support_description_title">Descrição</string>
+  <string name="settings_contact_form_character_limit_title">(Mín. 50 Caracteres)</string>
+  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Descrição (Mín. 50 caracteres)</string>
   <!-- MyGames -->
   <string name="my_games_empty">Não encontramos nenhum jogo instalado em seu dispositivo!</string>
   <string name="my_games_progress_message">Organizando seus jogos</string>
@@ -37,7 +41,7 @@
   <string name="notification_waiting_body">Aguardando baixar</string>
   <string name="notification_1_installed_title">Instalado</string>
   <string name="notification_downloading_body">Baixando %1$s%% de %2$s</string>
-  <string name="notification_waiting_for_wifi_title">Aguardando pelo Wi-Fi</string>
+  <string name="notification_waiting_for_wifi_title">Aguardando pela Wi-Fi</string>
   <string name="notifications_context_body">Atualizaremos você sobre as últimas tendências no mundo dos jogos!</string>
   <!-- Talkback -->
   <string name="home_overflow_talkback">Opções</string>
@@ -84,6 +88,7 @@
   <string name="download_now_button">Fazer o Download Agora</string>
   <string name="uninstall_button">Desinstalar</string>
   <string name="go_back_button">Voltar</string>
+  <string name="go_back_to_game_button">Go Back to Game</string>
   <string name="uninstalling">Desinstalado</string>
   <string name="resume_button">Resumir</string>
   <string name="waiting_for_connection">Aguardando conexão</string>
@@ -116,6 +121,8 @@
   <string name="appview_details_tab_title" comment="details">Detalhes</string>
   <string name="appview_related_tab_title" comment="related">Relacionado</string>
   <string name="appview_info_tab_title" comment="info">Informações</string>
+  <string name="bottom_navigation_discovery" comment="discovery">Descobrir</string>
+  <string name="appview_info_version_name_title" comment="version_name">Nome da versão</string>
   <string name="appview_info_package_name_title" comment="package_name">Nome do pacote</string>
   <string name="appview_info_release_title" comment="release">Data de lançamento</string>
   <string name="appview_info_update_title" comment="updated_on">Atualizado em</string>
@@ -125,16 +132,22 @@
   <string name="appview_info_permissions_title" comment="permissions">Permissões</string>
   <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% de %2$s</string>
   <string name="error_short_title" comment="oops_an_error_occurred">Ops, ocorreu um erro</string>
+  <string name="purchase_done_existing_bonus_body">Agora você tem %s em bônus. Baixe o AppCoins Wallet para usá-los em sua próxima compra.</string>
+  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">Você receberá um bônus em todos os jogos identificados com %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Até %s%% de bônus</string>
   <string name="settings_payments_title" comment="contact_support_team">Falar com a Equipe de Suporte</string>
+  <string name="settings_contact_support_body" comment="billing_terms_of_use">Termos de Uso de Cobrança</string>
   <string name="settings_billing_terms_body" comment="payments">Pagamentos</string>
   <string name="powered_by_title" comment="powered_by">Desenvolvido por</string>
   <string name="contact_support_title" comment="contact_support">Falar com a Equipe de Suporte</string>
-  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Por favor, forneça todos os detalhes:\n\u2022 Quando o problema começou\n\u2022 Em qual jogo você está fazendo uma compra\n\nAssim que você tocar em Enviar, seu aplicativo de e-mail será aberto. Sinta-se à vontade para anexar uma captura de tela ou vídeo sobre o problema!</string>
+  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Por favor, nos forneça todos os detalhes:\n\u2022 Quando o problema começou\n\u2022 Em qual jogo você está fazendo uma compra\n\nDepois de tocar em Enviar, seu aplicativo de e-mail será aberto. Sinta-se à vontade para anexar uma captura de tela ou vídeo sobre o problema!</string>
+  <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Deseja instalar este jogo?</string>
+  <string name="app_size_mb_title" comment="s_mb">%s MB</string>
   <string name="uninstalled_title" comment="uninstalled">Desinstalado</string>
   <string name="error_no_internet_body" comment="please_check_your_internet_connection">Verifique sua conexão com a Internet.</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Pagar com a AppCoins Wallet</string>
-  <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Será instalado automaticamente e você receberá um bônus em todas as compras!</string>
+  <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Ele será instalado automaticamente e você receberá um bônus em todas as compras!</string>
+
   <string name="buy_button" comment="buy">Comprar</string>
   <string name="iap_other_payment_methods_button" comment="other_payment_methods">Outros métodos de pagamento</string>
   <string name="iap_remember_card_button" comment="remember_card">Salvar cartão</string>
@@ -143,31 +156,35 @@
   <string name="iap_card_cvc" comment="cvc_cvv">CVV</string>
   <string name="iab_change_card_button" comment="change_card">Alterar cartão</string>
   <string name="done_title" comment="done">Pronto!</string>
+  <string name="purchase_making_purchase_title" comment="making_purchase">Compra em Andamento...</string>
   <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">Tem certeza que os dados do cartão estão corretos? Tente novamente!</string>
   <string name="log_out_button" comment="log_out">Sair</string>
   <string name="get_a_bonus_in_all_purchases_title">Você receberá um bônus em todas as compras!</string>
   <string name="iap_appc_body">Você receberá um bônus em todas as compras!</string>
-  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Agora você pode concluir sua compra.</string>
+  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Agora você pode concluir a sua compra.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">A AppCoins Wallet foi instalada com sucesso!</string>
+  <string name="storage_access_permission_request_message">Permita o acesso ao armazenamento do seu telefone para que possamos baixar e instalar este app.</string>
   <!-- Payment Errors-->
-  <string name="payments_error_not_enough_balance_body">Você não tem saldo suficiente</string>
-  <string name="payments_error_old_card_title">Parece que você registrou este cartão há bastante tempo!</string>
-  <string name="payments_error_old_card_body">Insira novamente os dados do cartão ou use um cartão diferente.</string>
-  <string name="purchase_error_payment_rejected">A transação foi rejeitada.</string>
-  <string name="purchase_error_try_other_card_body">Tente novamente com outro cartão ou método de pagamento diferente.</string>
+  <string name="payments_error_not_enough_balance_body">Você não tem saldo o suficiente</string>
+  <string name="payments_error_old_card_title">Parece que você registrou este cartão há muito tempo!</string>
+  <string name="payments_error_old_card_body">Insira novamente os dados do cartão ou use um diferente.</string>
+  <string name="purchase_error_payment_rejected">A transação foi negada.</string>
+  <string name="purchase_error_try_other_card_body">Por favor, tente um cartão ou método de pagamento diferente.</string>
   <string name="purchase_card_error_general_title">Houve um problema com o seu cartão.</string>
-  <string name="purchase_error_try_other_payment_method_body">Tente novamente com um método de pagamento diferente.</string>
-  <string name="purchase_card_error_no_funds">Parece que você não tem fundos o suficiente ou há um limite em seu cartão.</string>
+  <string name="purchase_error_try_other_payment_method_body">Por favor, tente um método de pagamento diferente.</string>
+  <string name="purchase_card_error_no_funds">Parece que não há fundos o suficiente ou um limite em seu cartão.</string>
   <string name="purchase_card_error_invalid_details_title">Número de cartão inválido.</string>
-  <string name="purchase_error_check_it_body">Por favor verifique e tente novamente.</string>
+  <string name="purchase_error_check_it_body">Verifique e tente novamente.</string>
   <string name="purchase_card_error_not_supported_title">Seu cartão ainda não é suportado.</string>
   <string name="purchase_error_wrong_pin_title">Houve um problema com a sua senha.</string>
   <string name="purchase_error_3d_title">Houve um problema com a sua autenticação 3D.</string>
-  <string name="purchase_card_rejected_title">A transação foi rejeitada pelo seu banco.</string>
-  <string name="purchase_error_invalid_credit_card_title">Número de cartão bancário inválido.</string>
+  <string name="purchase_card_rejected_title">A transação foi negada pelo seu banco.</string>
+  <string name="purchase_error_invalid_credit_card_title">Número de cartão de débito inválido.</string>
   <string name="purchase_error_invalid_credit_card_body">Verifique se todos os dígitos estão corretos.</string>
-  <string name="purchase_error_card_security_validation_title">Houve um erro na validaçaõ de segundo nível desta transação.</string>
+  <string name="purchase_error_card_security_validation_title">Ocorreu um erro na validação de segundo nível desta transação.</string>
   <string name="purchase_error_in_progress_title">Sua solicitação já foi processada ou está em andamento.</string>
   <string name="purchase_card_error_CVV_title">CVV/CVC incorreto</string>
   <string name="purchase_error_expired_card_title">Parece que o seu cartão expirou.</string>
+  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
+  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
 </resources>

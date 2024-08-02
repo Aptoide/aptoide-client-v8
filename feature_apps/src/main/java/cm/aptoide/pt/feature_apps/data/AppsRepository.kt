@@ -8,7 +8,13 @@ interface AppsRepository {
 
   suspend fun getApp(packageName: String, bypassCache: Boolean = false): App
 
-  suspend fun getRecommended(url: String, bypassCache: Boolean = false): List<App>
+  suspend fun getMetaBySource(
+    source: String,
+    bypassCache: Boolean = false,
+    useStoreName: Boolean = true
+  ): App
+
+  suspend fun getRecommended(path: String, bypassCache: Boolean = false): List<App>
 
   suspend fun getCategoryAppsList(categoryName: String): List<App>
 
@@ -16,4 +22,5 @@ interface AppsRepository {
 
   suspend fun getAppsList(packageNames: String): List<App>
 
+  suspend fun getAppsDynamicSplits(md5: String): List<DynamicSplit>
 }

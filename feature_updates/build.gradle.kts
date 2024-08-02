@@ -10,6 +10,6 @@ android {
 }
 
 dependencies {
-  implementation(project(ModuleDependency.APTOIDE_UI))
-  implementation(project(ModuleDependency.INSTALLED_APPS))
+  implementation(project(ModuleDependency.INSTALL_MANAGER))
+  implementation(project(ModuleDependency.EXTENSIONS))
 }

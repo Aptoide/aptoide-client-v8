@@ -1,7 +1,9 @@
 package cm.aptoide.pt.di
 
 import android.content.Context
+import android.content.pm.PackageManager
 import cm.aptoide.pt.install_manager.InstallManager
+import cm.aptoide.pt.install_manager.environment.NetworkConnection
 import cm.aptoide.pt.installer.AptoideDownloader
 import cm.aptoide.pt.installer.AptoideInstaller
 import cm.aptoide.pt.task_info.AptoideTaskInfoRepository
@@ -23,10 +25,17 @@ object InstallerModule {
     taskInfoRepository: AptoideTaskInfoRepository,
     downloader: AptoideDownloader,
     installer: AptoideInstaller,
-  ): InstallManager =
-    InstallManager.Builder(appContext).apply {
-      this.taskInfoRepository = taskInfoRepository
-      packageDownloader = downloader
-      packageInstaller = installer
-    }.build()
+    networkConnection: NetworkConnection,
+  ): InstallManager = InstallManager.with(
+    context = appContext,
+    taskInfoRepository = taskInfoRepository,
+    packageDownloader = downloader,
+    packageInstaller = installer,
+    networkConnection = networkConnection
+  )
+
+  @Singleton
+  @Provides
+  fun providePackageManager(@ApplicationContext context: Context): PackageManager =
+    context.packageManager
 }

@@ -1,6 +1,5 @@
 package cm.aptoide.pt.feature_apps.presentation
 
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -8,8 +7,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
-import cm.aptoide.pt.feature_apps.domain.AppInfoUseCase
+import cm.aptoide.pt.extensions.runPreviewable
+import cm.aptoide.pt.feature_apps.data.randomApp
+import cm.aptoide.pt.feature_apps.domain.AppMetaUseCase
 import cm.aptoide.pt.feature_apps.domain.AppVersionsUseCase
 import cm.aptoide.pt.feature_apps.domain.AppsByTagUseCase
 import cm.aptoide.pt.feature_apps.domain.CategoryAppsUseCase
@@ -20,7 +22,7 @@ import kotlin.reflect.KFunction0
 
 @HiltViewModel
 class InjectionsProvider @Inject constructor(
-  val appInfoUseCase: AppInfoUseCase,
+  val appMetaUseCase: AppMetaUseCase,
   val appVersionsUseCase: AppVersionsUseCase,
   val appsByTagUseCase: AppsByTagUseCase,
   val eSkillsAppsUseCase: ESkillsAppsUseCase,
@@ -28,29 +30,66 @@ class InjectionsProvider @Inject constructor(
 ) : ViewModel()
 
 @Composable
-fun appViewModel(packageName: String, adListId: String?): AppViewModel {
-  val injectionsProvider = hiltViewModel<InjectionsProvider>()
-  return viewModel(
-    viewModelStoreOwner = LocalContext.current as AppCompatActivity,
-    key = "appView/$packageName",
-    factory = object : ViewModelProvider.Factory {
-      override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        @Suppress("UNCHECKED_CAST")
-        return AppViewModel(
-          appInfoUseCase = injectionsProvider.appInfoUseCase,
-          packageName = packageName,
-          adListId = adListId
-        ) as T
+fun rememberApp(
+  packageName: String,
+  adListId: String?,
+): Pair<AppUiState, () -> Unit> = runPreviewable(
+  preview = { AppUiStateProvider().values.toSet().random() to {} },
+  real = {
+    val injectionsProvider = hiltViewModel<InjectionsProvider>()
+    val vm: AppViewModel = viewModel(
+      viewModelStoreOwner = LocalContext.current as ViewModelStoreOwner,
+      key = "appView/$packageName",
+      factory = object : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+          @Suppress("UNCHECKED_CAST")
+          return AppViewModel(
+            appMetaUseCase = injectionsProvider.appMetaUseCase,
+            source = packageName.toPackageNameParam(),
+            adListId = adListId
+          ) as T
+        }
       }
-    }
-  )
-}
+    )
+
+    val uiState by vm.uiState.collectAsState()
+    uiState to vm::reload
+  }
+)
+
+@Composable
+fun rememberAppBySource(
+  source: String,
+  adListId: String?,
+): Pair<AppUiState, () -> Unit> = runPreviewable(
+  preview = { AppUiStateProvider().values.toSet().random() to {} },
+  real = {
+    val injectionsProvider = hiltViewModel<InjectionsProvider>()
+    val vm: AppViewModel = viewModel(
+      viewModelStoreOwner = LocalContext.current as ViewModelStoreOwner,
+      key = "appView/$source",
+      factory = object : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+          @Suppress("UNCHECKED_CAST")
+          return AppViewModel(
+            appMetaUseCase = injectionsProvider.appMetaUseCase,
+            source = source,
+            adListId = adListId
+          ) as T
+        }
+      }
+    )
+
+    val uiState by vm.uiState.collectAsState()
+    uiState to vm::reload
+  }
+)
 
 @Composable
 fun appVersions(packageName: String): Pair<AppsListUiState, KFunction0<Unit>> {
   val injectionsProvider = hiltViewModel<InjectionsProvider>()
   val vm: AppsListViewModel = viewModel(
-    viewModelStoreOwner = LocalContext.current as AppCompatActivity,
+    viewModelStoreOwner = LocalContext.current as ViewModelStoreOwner,
     key = "appVersions/$packageName",
     factory = object : ViewModelProvider.Factory {
       override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -68,33 +107,36 @@ fun appVersions(packageName: String): Pair<AppsListUiState, KFunction0<Unit>> {
 }
 
 @Composable
-fun tagApps(
+fun rememberAppsByTag(
   tag: String,
-  salt: String? = null
-): Pair<AppsListUiState, KFunction0<Unit>> {
-  val injectionsProvider = hiltViewModel<InjectionsProvider>()
-  val vm: AppsListViewModel = viewModel(
-    key = "tagApps/$tag/$salt",
-    factory = object : ViewModelProvider.Factory {
-      override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        @Suppress("UNCHECKED_CAST")
-        return AppsListViewModel(
-          source = tag,
-          appsListUseCase = injectionsProvider.appsByTagUseCase,
-        ) as T
+  salt: String? = null,
+): Pair<AppsListUiState, () -> Unit> = runPreviewable(
+  preview = {
+    AppsListUiState.Idle(List((0..50).random()) { randomApp }) to {}
+  }, real = {
+    val injectionsProvider = hiltViewModel<InjectionsProvider>()
+    val vm: AppsListViewModel = viewModel(
+      key = "tagApps/$tag/$salt",
+      factory = object : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+          @Suppress("UNCHECKED_CAST")
+          return AppsListViewModel(
+            source = tag,
+            appsListUseCase = injectionsProvider.appsByTagUseCase,
+          ) as T
+        }
       }
-    }
-  )
-  val uiState by vm.uiState.collectAsState()
-
-  return uiState to vm::reload
-}
+    )
+    val uiState by vm.uiState.collectAsState()
+    uiState to vm::reload
+  }
+)
 
 @Suppress("unused")
 @Composable
 fun eSkillsApps(
   tag: String,
-  salt: String? = null
+  salt: String? = null,
 ): Pair<AppsListUiState, KFunction0<Unit>> {
   val injectionsProvider = hiltViewModel<InjectionsProvider>()
   val vm: AppsListViewModel = viewModel(
@@ -117,7 +159,7 @@ fun eSkillsApps(
 @Composable
 fun categoryApps(
   categoryName: String,
-  salt: String? = null
+  salt: String? = null,
 ): Pair<AppsListUiState, KFunction0<Unit>> {
   val injectionsProvider = hiltViewModel<InjectionsProvider>()
   val vm: AppsListViewModel = viewModel(
@@ -136,3 +178,5 @@ fun categoryApps(
 
   return uiState to vm::reload
 }
+
+fun String.toPackageNameParam() = "package_name=$this"

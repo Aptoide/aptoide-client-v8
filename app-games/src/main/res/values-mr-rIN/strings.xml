@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">Aptoide Games</string>
+  <!-- Bottom Bar -->
+  <string name="games">खेळ</string>
+  <string name="categories">श्रेणी</string>
+  <string name="search">शोध</string>
+  <!-- Common -->
+  <string name="send_button">पाठवा</string>
+  <string name="try_again">कृपया पुन्हा प्रयत्न करा.</string>
+  <string name="please_wait">कृपया प्रतीक्षा करा….</string>
+  <!-- Settings -->
+  <string name="overflow_menu_settings">सेटिंग</string>
+  <string name="overflow_menu_terms_conditions">अटी आणि शर्ती</string>
+  <string name="overflow_menu_privacy_policy">गोपनीयता धोरण</string>
+  <string name="settings_about_hardware_title">हार्डवेअर तपशील</string>
+  <string name="settings_about_title">आमच्याविषयी</string>
+  <string name="settings_about_version">आवृत्ती %1$s (%2$s)</string>
+  <string name="settings_copied_to_clipboard_message">क्लिपबोर्डावर कॉपी केले</string>
+  <string name="settings_general_title">सामान्य</string>
+  <string name="settings_theme_option_dark">गडद</string>
+  <string name="settings_theme_option_light">फिक्का</string>
+  <string name="settings_theme_option_system">सिस्टम डिफॉल्ट</string>
+  <string name="settings_theme_options_title">थीम</string>
+  <string name="settings_title">सेटिंग</string>
+  <string name="settings_support">मदत</string>
+  <string name="settings_feedback_button">प्रतिसाद पाठवा</string>
+  <string name="settings_feedback_title">प्रतिसाद पाठवा</string>
+  <string name="settings_legal_title">कायदेशीर</string>
+  <string name="settings_send_feedback_body">आपणांस Aptoide गेम्सबद्दल काय वाटते ते आम्हांस सांगा!\n\u2022 नविन काही वैशिष्ट्ये हवीत का?\n\u2022 आम्ही काय सुधारणा कराव्यात?</string>
+  <string name="settings_payment_support_description_title">विवरण</string>
+  <string name="settings_contact_form_character_limit_title">(किमान ५० अक्षरे)</string>
+  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">विवरण (किमान ५० अक्षरे)</string>
+  <!-- MyGames -->
+  <string name="my_games_empty">आपल्या डिव्हाईसवर आम्हांस कोणतेही इंस्टॉल केलेले खेळ सापडले नाहीत!</string>
+  <string name="my_games_progress_message">आपले खेळ ऑर्गनाईझ करत आहोत</string>
+  <string name="empty_category_body">ह्या श्रेणीत कोणतेही अॅप्स नाहीत... सध्यातरी!</string>
+  <!-- Notifications -->
+  <string name="notifications_context_title">सूचना मिळवा!</string>
+  <string name="notification_installing_title">इंस्टॉल करत आहे</string>
+  <string name="notification_waiting_body">डाऊनलोडसाठी थांबलो आहोत</string>
+  <string name="notification_1_installed_title">इन्स्टॉल केलेले</string>
+  <string name="notification_downloading_body">%2$s पैकी %1$s%% डाऊनलोड होत आहे</string>
+  <string name="notification_waiting_for_wifi_title">वायफायसाठी थांबलो आहोत</string>
+  <string name="notifications_context_body">खेळाच्या दुनियेतील नविनोत्तम कल आम्ही आपणांस कळवु!</string>
+  <!-- Talkback -->
+  <string name="home_overflow_talkback">पर्याय</string>
+  <string name="app_view_image_description_body">%1$s चे छायाचित्र</string>
+  <string name="app_view_screenshot_number">%1$s स्क्रीनशॉट</string>
+  <string name="app_view_icon_description_body">%1$s चा आयकॉन</string>
+  <string name="search_remove_from_recent_talkback">अलिकडील शोधातुन मिटवा</string>
+  <string name="search_clear_talkback">शोध मिटवा</string>
+  <string name="search_item_talkback">शोध</string>
+  <!-- Download over Wi-Fi -->
+  <string name="wifi_settings_title">फक्त वायफायवरच डाऊनलोड करा</string>
+  <string name="wifi_disclaimer_on_body">सध्या आपण मोबाईल डेटा वापरत आहात. जेव्हा वायफाय उपलब्ध असेल तेव्हा %s डाऊनलोड करायचेय का?</string>
+  <string name="wifi_disclamer_off_body">(%s) फाईल मोठी आहे. वायफाय उपलब्ध असताना ही डाऊनलोड करायचीय का?</string>
+  <string name="wifi_disclaimer_title">नक्की?</string>
+  <!-- Fixed bundles -->
+  <string name="editorial_more_articles_title">अधिक लेख</string>
+  <string name="fixed_bundle_just_arrived_title">आत्ताच आलेय</string>
+  <string name="fixed_bundle_my_games_title">माझे खेळ</string>
+  <string name="fixed_bundle_editors_choice_title">संपादकाची पसंती</string>
+  <string name="fixed_bundle_editorial_title">संपादकीय</string>
+  <string name="fixed_bundle_trending_title">ट्रेंडिंग</string>
+  <string name="fixed_bundle_publisher_title">%s ची मजा लुटा</string>
+  <string name="retry_button" comment="button_retry_title">पुन्हा प्रयत्न करा</string>
+  <string name="generic_error_message">काहीतरी चुकलय. पुन्हा प्रयत्न करा.</string>
+  <string name="generic_network_error_message">अरेरे, काहीतरी चूक झालीय. कृपया आपले इंटरनेट कनेक्शन तपासा.</string>
+  <string name="install_waiting_installation_message">इंस्टॉलसाठी थांबलोय</string>
+  <string name="install_installing_message">इंस्टॉल करत आहे</string>
+  <string name="install_error_short_message">अरेरे, त्रुटी आली.</string>
+  <string name="error_message_no_internet_title">अरेरे, काहीती चुकलेय</string>
+  <string name="error_message_no_internet_body">कृपया आपले इंटरनेट कनेक्शन तपासा.</string>
+  <string name="error_message_generic_title">काहीतरी चूक झाली</string>
+  <string name="error_message_generic_body">पुन्हा प्रयत्न करा</string>
+  <string name="app_info_send_email_subject">अभिप्राय</string>
+  <string name="button_copy_title">प्रत करा</string>
+  <string name="button_back_title">मागे जा</string>
+  <string name="button_see_all_title">सर्व पहा</string>
+  <string name="editorials_view_no_content_message">अरेरे, सामग्री अजुन पोचली नाही!</string>
+  <string name="button_update_title">अपडेट</string>
+  <string name="button_open_app_title">खुले</string>
+  <string name="install_waiting_download_message">डाऊनलोडसाठी थांबलोय</string>
+  <string name="downloading_percentage_body">%2$s पैकी %1$s%%</string>
+  <string name="install_downloading_message">डाउनलोड करत आहे</string>
+  <!-- Common -->
+  <string name="download_now_button">आत्ता डाऊनलोड करा</string>
+  <string name="uninstall_button">अनइन्स्टॉल</string>
+  <string name="go_back_button">पाठी जा</string>
+  <string name="go_back_to_game_button">Go Back to Game</string>
+  <string name="uninstalling">अनइंस्टॉलिंग</string>
+  <string name="resume_button">पुन्हा सुरु करा</string>
+  <string name="waiting_for_connection">कनेक्शनसाठी थांबलो आहे</string>
+  <string name="wait_for_wifi_button">वायफायसाठी थांबलो आहे</string>
+  <string name="continue_button">चालू ठेवा</string>
+  <!-- Out of Space -->
+  <string name="out_of_space_title">जागा संपली</string>
+  <string name="out_of_space_body">इंस्टलेशनसह %s हे चालू ठेवणे आपल्याला आवश्यक आहे.</string>
+  <string name="out_of_space_enough_body">आता आपल्याकडे पुरेशी जागा आहे!</string>
+  <!-- Talkback -->
+  <string name="appview_status_outdated_talkback">कालबाह्य</string>
+  <string name="appview_status_not_installed_talkback">इंस्टॉल केलेले नाही</string>
+  <string name="appview_status_installed_talkback">इन्स्टॉल केलेले</string>
+  <string name="appview_status_failed_talkback">होऊ शकले नाही</string>
+  <string name="appview_action_cancel_talkback">रद्द करा</string>
+  <string name="appview_installer_talkback">%1$s इंस्टॉलर.</string>
+  <string name="appview_action_double_tap_talkback">%1$s साठी दोनदा टॅप करा</string>
+  <!-- Search -->
+  <string name="search_suggested_title">सुचविलेले शोध</string>
+  <string name="search_recent_title">अलिकडील शोध</string>
+  <string name="search_popular_title">लोकप्रिय शोध</string>
+  <string name="search_bar_label">खेळ शोधा...</string>
+  <string name="search_empty_body">अरेरे, \"%s\" साठी काहीही सापडले नाही.\nवेगळे शब्द वापरुन पहा!</string>
+  <!-- Install -->
+  <string name="button_install_title">इन्स्टॉल करा</string>
+  <!-- Common -->
+  <string name="notice_at_collection_and_privacy_policy">कलेक्शन &amp; गोपनीयता धोरण पहा</string>
+  <string name="terms_and_conditions">अटी</string>
+  <string name="continue_to_accept_tandc_and_pp_disclaimer">चालू राखण्याने आपण %1$s आणि %2$s मान्य करीत आहात.</string>
+  <string name="appview_details_tab_title" comment="details">तपशील</string>
+  <string name="appview_related_tab_title" comment="related">संबंधित</string>
+  <string name="appview_info_tab_title" comment="info">माहिती</string>
+  <string name="bottom_navigation_discovery" comment="discovery">सापडलेले</string>
+  <string name="appview_info_version_name_title" comment="version_name">आवृत्तीचे नाव</string>
+  <string name="appview_info_package_name_title" comment="package_name">पॅकेजचे नाव</string>
+  <string name="appview_info_release_title" comment="release">रिलिज</string>
+  <string name="appview_info_update_title" comment="updated_on">एव्हा अद्यतनित केले</string>
+  <string name="appview_info_download_size_title" comment="download_size">डाऊनलोड साईझ</string>
+  <string name="appview_info_website_title" comment="website">वेबसाईट</string>
+  <string name="appview_info_email_title" comment="email">इमेल</string>
+  <string name="appview_info_permissions_title" comment="permissions">परवानग्या</string>
+  <string name="download_percentage_body" comment="1_s_of_2_s">%2$s पैकी %1$s%%</string>
+  <string name="error_short_title" comment="oops_an_error_occurred">अरेरे, त्रुटी आली</string>
+  <string name="purchase_done_existing_bonus_body">आपल्याकडे आता बोनसमध्ये %s आहेत. आपल्या पुढील खरेदीत ह्याचा वापर करण्यासाठी अॅपकॉईन्स वॉलेट डाऊनलोड करा.</string>
+  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">%s ची ओळख असणार्‍या सार्‍या खेळांमध्ये आपणांस बोनस मिळेल.</string>
+  <string name="bonus_banner_title" comment="up_to_s_bonus">%s%% पर्यंत बोनस</string>
+  <string name="settings_payments_title" comment="contact_support_team">समर्थन गटाशी संपर्क साधा</string>
+  <string name="settings_contact_support_body" comment="billing_terms_of_use">बिलिंग वापरण्याच्या अटी</string>
+  <string name="settings_billing_terms_body" comment="payments">पेमेंटस</string>
+  <string name="powered_by_title" comment="powered_by">द्वारा समर्थित</string>
+  <string name="contact_support_title" comment="contact_support">समर्थनाशी संपर्क साधा</string>
+  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">कृपया आम्हांस सर्व तपशील द्या:\n\u2022 समस्या केव्हा सुरु झाली\n\u2022 आपण कोणत्या खेळात खरेदी करत होतात\n\nएकदा का आपण \'सेंड\' वर टॅप केलेत कि आपली ईमेल उघडेल. नंतर समस्येचा व्हिडीयो वा स्क्रीनशॉट जोडुन पाठवु शकता!</string>
+  <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">आपणांस हा खेळ इंस्टॉल करायचा आहे का?</string>
+  <string name="app_size_mb_title" comment="s_mb">%s एमबी</string>
+  <string name="uninstalled_title" comment="uninstalled">अनइन्स्टॉल केले आहे</string>
+  <string name="error_no_internet_body" comment="please_check_your_internet_connection">कृपया आपले इंटरनेट कनेक्शन तपासा.</string>
+  <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">अॅपकॉईन्स वॉलेटमधुन पैसे द्या</string>
+  <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">हे आपोआप इंस्टॉल होऊन, आपणांस सर्व खरेदीवर बोनस मिळेल!</string>
+  <string name="buy_button" comment="buy">विकत घ्या</string>
+  <string name="iap_other_payment_methods_button" comment="other_payment_methods">इतर पेमेंट पद्धती</string>
+  <string name="iap_remember_card_button" comment="remember_card">कार्ड ध्यानात ठेवा</string>
+  <string name="iap_card_number" comment="card_number">कार्ड क्रमांक</string>
+  <string name="iap_card_expiry" comment="expiry_date">कालबाह्यता तारीख</string>
+  <string name="iap_card_cvc" comment="cvc_cvv">सीव्हीव्ही/सीव्हीव्ही</string>
+  <string name="iab_change_card_button" comment="change_card">कार्ड बदला</string>
+  <string name="done_title" comment="done">झाले!</string>
+  <string name="purchase_making_purchase_title" comment="making_purchase">खरेदी करणे...</string>
+  <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">आपल्या कार्डाचा तपशील बरोबर असण्याची खात्री आहे ना? कृपया पुन्हा प्रयत्न करा!</string>
+  <string name="log_out_button" comment="log_out">लॉग आउट</string>
+  <string name="get_a_bonus_in_all_purchases_title">आपणांस सर्व खरेदीवर बोनस मिळेल!</string>
+  <string name="iap_appc_body">आपणांस सर्व खरेदीवर बोनस मिळेल!</string>
+  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">आता आपण आपली खरेदी पूर्ण करु शकता.</string>
+  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">अॅपकॉईन्स वॉलेट आता इंस्टॉल झाले आहे!</string>
+  <string name="storage_access_permission_request_message">आपल्या फोन स्टोरेजमध्ये प्रवेश द्या म्हणजे आम्ही हे अॅप डाऊनलोड करुन इंस्टॉल करु शकु.</string>
+  <!-- Payment Errors-->
+  <string name="payments_error_not_enough_balance_body">आपल्याकडे पुरेशी शिल्लक नाहीये</string>
+  <string name="payments_error_old_card_title">असे दिसतेय कि आपण हे कार्ड फार पूर्वी नोंदणीकृत केलेय!</string>
+  <string name="payments_error_old_card_body">कार्डाचे तपशील पुन्हा भरा वा वेगळे वापरा.</string>
+  <string name="purchase_error_payment_rejected">हा व्यवहार नाकारला गेलाय.</string>
+  <string name="purchase_error_try_other_card_body">कृपया वेगळ्या कार्डासह वा पेमेंट पद्धतीसह प्रयत्न करा.</string>
+  <string name="purchase_card_error_general_title">आपल्या कार्डात समस्या आहे.</string>
+  <string name="purchase_error_try_other_payment_method_body">कृपया वेगळ्या पेमेंट पद्धतीसह प्रयत्न करा.</string>
+  <string name="purchase_card_error_no_funds">असे दिसतेय कि आपल्यापाशी पुरेसे पैसे नाहीत वा आपल्या कार्डावर सीमा आहे.</string>
+  <string name="purchase_card_error_invalid_details_title">कार्ड क्रमांक अवैध.</string>
+  <string name="purchase_error_check_it_body">कृपया तपासुन पुन्हा प्रयत्न करा.</string>
+  <string name="purchase_card_error_not_supported_title">आपले कार्ड अजुनपर्यंत तरी समर्थित नाही.</string>
+  <string name="purchase_error_wrong_pin_title">आपल्या पिनमध्ये समस्या होती.</string>
+  <string name="purchase_error_3d_title">आपल्या ३डी प्रमाणीकरणात समस्या होती.</string>
+  <string name="purchase_card_rejected_title">आपल्या बँकेने हा व्यवहार नाकारलाय.</string>
+  <string name="purchase_error_invalid_credit_card_title">बँकेचा कार्ड क्रमांक अवैध.</string>
+  <string name="purchase_error_invalid_credit_card_body">कृपया सर्व अंक अचूक असण्याची खात्री करा.</string>
+  <string name="purchase_error_card_security_validation_title">ह्या व्यवहाराच्या प्रमाणीकरण टप्पा २वर त्रुटी आलीय.</string>
+  <string name="purchase_error_in_progress_title">आपली विनंती आधीच प्रक्रियागत झालीय वा होत आहे.</string>
+  <string name="purchase_card_error_CVV_title">चुकीचा सीव्हीव्ही/सीव्हीसी</string>
+  <string name="purchase_error_expired_card_title">आपले कार्ड कालबाह्य झाल्याचे दिसतेय.</string>
+  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
+  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
+</resources>

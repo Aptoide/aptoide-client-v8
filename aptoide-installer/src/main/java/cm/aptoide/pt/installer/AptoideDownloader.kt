@@ -5,7 +5,13 @@ import cm.aptoide.pt.install_manager.workers.PackageDownloader
 import cm.aptoide.pt.installer.network.DownloaderRepository
 import cm.aptoide.pt.installer.platform.InstallPermissions
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapMerge
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 
 class AptoideDownloader @Inject constructor(
@@ -15,23 +21,23 @@ class AptoideDownloader @Inject constructor(
   private val downloadsInProgress = mutableSetOf<String>()
 
   @Suppress("OPT_IN_USAGE")
-  override suspend fun download(
+  override fun download(
     packageName: String,
-    forceDownload: Boolean,
     installPackageInfo: InstallPackageInfo,
   ): Flow<Int> = installPackageInfo.run {
-    installPermissions.checkIfCanWriteExternal()
-    installPermissions.checkIfCanInstall()
-    val totalSize = installationFiles.sumOf { it.fileSize }
     var totalProgress = 0.0
     installationFiles.asFlow()
+      .onStart {
+        installPermissions.checkIfCanWriteExternal()
+        installPermissions.checkIfCanInstall()
+      }
       .flatMapMerge(concurrency = 3) { item ->
         var progress = 0.0
         downloaderRepository.download(packageName, versionCode, item)
           .map {
             val diff = it - progress
             progress = it
-            diff * item.fileSize / totalSize
+            diff * item.fileSize / filesSize
           }
       }.map {
         if (!downloadsInProgress.contains(packageName)) throw CancellationException()

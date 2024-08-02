@@ -1,29 +1,47 @@
 package cm.aptoide.pt.install_manager
 
+import cm.aptoide.pt.install_manager.dto.Constraints
+import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
+import cm.aptoide.pt.install_manager.environment.NetworkConnection
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import java.util.*
 
-internal class JobDispatcher(private val scope: CoroutineScope) {
+internal class JobDispatcher(
+  private val scope: CoroutineScope,
+  private val networkConnection: NetworkConnection,
+) {
 
   /** Currently running task */
-  internal val runningJob = MutableStateFlow<RealTask?>(null)
+  internal val runningTask = MutableStateFlow<RealTask?>(null)
 
   private val enqueueMutex = Mutex()
   private val runMutex = Mutex()
 
-  /** Pending tasks jobs in the order they'll be run. */
-  private val pendingJobs = ArrayDeque<Pair<RealTask, (suspend () -> Unit)>>()
+  /** Pending tasks in the order they'll be run. */
+  private val pendingTasks = mutableListOf<RealTask>()
 
-  internal suspend fun enqueue(
-    task: RealTask,
-    job: suspend () -> Unit
-  ) {
+  internal fun getScheduledIPF(): List<InstallPackageInfo> = pendingTasks
+    .run { runningTask.value?.let { this + it } ?: this }
+    .filterNot { it.type == Task.Type.UNINSTALL }
+    .filterNot(Task::isFinished)
+    .map(Task::installPackageInfo)
+
+  init {
+    networkConnection.setOnChangeListener {
+      scope.launch {
+        if (it != NetworkConnection.State.GONE) {
+          promoteAndExecute()
+        }
+      }
+    }
+  }
+
+  internal suspend fun enqueue(task: RealTask) {
     enqueueMutex.withLock {
-      pendingJobs.add(task to job)
+      if (!pendingTasks.contains(task)) pendingTasks.add(task)
     }
     scope.launch {
       promoteAndExecute()
@@ -33,14 +51,32 @@ internal class JobDispatcher(private val scope: CoroutineScope) {
   private suspend fun promoteAndExecute() {
     runMutex.withLock {
       while (true) {
-        val job = enqueueMutex.withLock {
-          pendingJobs.pollFirst().also {
-            runningJob.emit(it?.first)
+        val task = enqueueMutex
+          .withLock {
+            var task: RealTask? = null
+            val iterator = pendingTasks.iterator()
+            while (iterator.hasNext()) {
+              task = iterator.next()
+              val type = task.constraints.networkType
+              val state = networkConnection.state
+              if (type == Constraints.NetworkType.NOT_REQUIRED ||
+                (type == Constraints.NetworkType.ANY && state != NetworkConnection.State.GONE) ||
+                (type == Constraints.NetworkType.UNMETERED && state == NetworkConnection.State.UNMETERED)
+              ) {
+                iterator.remove()
+                break
+              } else {
+                task = null
+              }
+            }
+            task
           }
-        } ?: break
-        job.second.invoke()
+          .also {
+            runningTask.value = it
+          }
+          ?: break
+        task.start()
       }
     }
   }
 }
-

@@ -8,16 +8,37 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.OutlinedButton
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,20 +54,19 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavGraphBuilder
+import cm.aptoide.pt.apps.AppsRowView
 import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
 import cm.aptoide.pt.aptoide_ui.R
 import cm.aptoide.pt.aptoide_ui.animations.animatedComposable
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
-import cm.aptoide.pt.aptoide_ui.theme.AppTheme
-import cm.aptoide.pt.aptoide_ui.toolbar.AppViewTopBar
-import cm.aptoide.pt.download_view.presentation.DownloadViewScreen
 import cm.aptoide.pt.editorial.buildEditorialRoute
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
-import cm.aptoide.pt.feature_apps.presentation.AppsRowView
-import cm.aptoide.pt.feature_apps.presentation.appViewModel
+import cm.aptoide.pt.feature_apps.presentation.rememberApp
 import cm.aptoide.pt.feature_appview.presentation.AppViewTab
-import cm.aptoide.pt.feature_appview.presentation.CustomScrollableTabRow
+import cm.aptoide.pt.feature_editorial.presentation.relatedEditorialsCardViewModel
+import cm.aptoide.pt.theme.AppTheme
+import cm.aptoide.pt.toolbar.AppViewTopBar
 
 private val tabsList = listOf(
   AppViewTab.DETAILS,
@@ -65,8 +85,37 @@ fun NavGraphBuilder.appViewScreen(
   appViewRoute
 ) { it ->
   val packageName = it.arguments?.getString("packageName")!!
-  val appViewModel = appViewModel(packageName = packageName, adListId = "")
-  val uiState by appViewModel.uiState.collectAsState()
+  AppViewScreen(
+    packageName = packageName,
+    navigateBack = navigateBack,
+    navigate = { navigate(it) },
+  )
+}
+
+fun buildAppViewRoute(
+  packageName: String,
+): String = "app/$packageName"
+
+@Composable
+fun AppViewScreen(
+  packageName: String = "",
+  navigateBack: () -> Unit = {},
+  navigate: (String) -> Unit = {},
+) {
+  val (uiState, _) = rememberApp(packageName = packageName, adListId = "")
+
+  val editorialsCardViewModel = relatedEditorialsCardViewModel(packageName = packageName)
+  val relatedEditorialsUiState by editorialsCardViewModel.uiState.collectAsState()
+
+  val tabsList by remember {
+    derivedStateOf {
+      if (relatedEditorialsUiState.isNullOrEmpty()) {
+        tabsList.filter { it != AppViewTab.RELATED }
+      } else {
+        tabsList
+      }
+    }
+  }
 
   MainAppViewView(
     uiState = uiState,
@@ -79,13 +128,10 @@ fun NavGraphBuilder.appViewScreen(
     onRelatedContentClick = {
       navigate(buildEditorialRoute(it))
     },
-    onNavigateBack = navigateBack
+    onNavigateBack = navigateBack,
+    tabsList = tabsList
   )
 }
-
-fun buildAppViewRoute(
-  packageName: String,
-): String = "app/$packageName"
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -95,6 +141,7 @@ fun MainAppViewView(
   onAppClick: (String) -> Unit,
   onRelatedContentClick: (String) -> Unit,
   onNavigateBack: () -> Unit,
+  tabsList: List<AppViewTab>,
 ) {
   Scaffold(
     modifier = Modifier
@@ -135,7 +182,6 @@ fun AppViewContent(
       .fillMaxSize()
       .padding(paddingValues), lazyListState
   ) {
-    val listScope = this
 
     item {
       Box {
@@ -172,8 +218,7 @@ fun AppViewContent(
         selectedTab = tabsList[selectedTab.value],
         onSelectReportApp = onSelectReportApp,
         onAppClick = onAppClick,
-        onRelatedContentClick = onRelatedContentClick,
-        listScope = listScope
+        onRelatedContentClick = onRelatedContentClick
       )
     }
   }
@@ -207,7 +252,6 @@ fun ViewPagerContent(
   onSelectReportApp: (App) -> Unit,
   onAppClick: (String) -> Unit,
   onRelatedContentClick: (String) -> Unit,
-  listScope: LazyListScope?,
 ) {
   when (selectedTab) {
     AppViewTab.DETAILS -> DetailsView(
@@ -219,13 +263,11 @@ fun ViewPagerContent(
     AppViewTab.REVIEWS -> ReviewsView(app)
     AppViewTab.RELATED -> RelatedContentView(
       packageName = app.packageName,
-      onRelatedContentClick = onRelatedContentClick,
-      listScope = listScope
+      onRelatedContentClick = onRelatedContentClick
     )
 
     AppViewTab.VERSIONS -> OtherVersionsView(
-      packageName = app.packageName,
-      listScope = listScope
+      packageName = app.packageName
     )
 
     AppViewTab.INFO -> InfoView(
@@ -642,7 +684,8 @@ fun AppStatsView(app: App) {
               .size(12.dp)
           )
           Text(
-            text = "" + TextFormatter.formatDecimal(app.rating.avgRating),
+            text = if (app.pRating.avgRating == 0.0) "--"
+            else TextFormatter.formatDecimal(app.pRating.avgRating),
             style = AppTheme.typography.medium_M
           )
         }

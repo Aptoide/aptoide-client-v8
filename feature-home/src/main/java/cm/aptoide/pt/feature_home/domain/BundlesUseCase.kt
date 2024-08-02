@@ -2,38 +2,29 @@ package cm.aptoide.pt.feature_home.domain
 
 import cm.aptoide.pt.aptoide_network.domain.UrlsCache
 import cm.aptoide.pt.feature_home.data.WidgetsRepository
-import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
 
-@ViewModelScoped
 class BundlesUseCase @Inject constructor(
   private val widgetsRepository: WidgetsRepository,
   private val urlsCache: UrlsCache,
 ) {
-
-  init {
-    urlsCache.set(
-      id = WIDGETS_TAG,
-      url = ""
-    )
-  }
 
   suspend fun getHomeBundles(context: String? = null): List<Bundle> =
     widgetsRepository.getStoreWidgets(
       context = context,
       bypassCache = urlsCache.isInvalid(WIDGETS_TAG)
     )
-      .onEach { it.cacheUrls(urlsCache::set) }
-      .map { widget ->
+      .also { urlsCache.putAll(it.tagsUrls) }
+      .map {
         Bundle(
-          title = widget.title,
-          bundleIcon = widget.icon,
-          background = widget.background,
-          actions = widget.action ?: emptyList(),
-          type = widget.getType(),
-          tag = widget.tag,
-          view = widget.view,
-          bundleSource = widget.getBundleSource()
+          title = it.title,
+          bundleIcon = it.icon,
+          background = it.background,
+          actions = it.action ?: emptyList(),
+          type = it.getType(),
+          tag = it.tag,
+          view = it.view,
+          bundleSource = it.getBundleSource()
         )
       }
 
@@ -65,12 +56,12 @@ class BundlesUseCase @Inject constructor(
         WidgetLayout.GRID -> Type.APP_GRID
         WidgetLayout.PUBLISHER_TAKEOVER -> Type.PUBLISHER_TAKEOVER
         WidgetLayout.CAROUSEL -> Type.CAROUSEL
+        WidgetLayout.BRICK,
+        WidgetLayout.GRAPHIC,
         WidgetLayout.CAROUSEL_LARGE -> Type.CAROUSEL_LARGE
         WidgetLayout.LIST -> Type.APP_GRID
         WidgetLayout.CURATION_1,
         WidgetLayout.UNDEFINED,
-        WidgetLayout.BRICK,
-        WidgetLayout.GRAPHIC,
         -> Type.FEATURE_GRAPHIC
       }
     }
@@ -88,3 +79,20 @@ class BundlesUseCase @Inject constructor(
     const val WIDGETS_TAG = "widgets"
   }
 }
+
+val List<Widget>.tagsUrls: Map<String, String>
+  get() = map { widget ->
+    (widget.action?.tagsUrls ?: emptyList()) +
+      widget.view?.let { widget.tag to it }
+  }.flatten()
+    .filterNotNull()
+    .toMap()
+
+val List<WidgetAction>.tagsUrls: List<Pair<String, String>>
+  get() = map {
+    if (it.tag.endsWith("-more")) {
+      it.tag to it.url + "/limit=50"
+    } else {
+      it.tag to it.url
+    }
+  }

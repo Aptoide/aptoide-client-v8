@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">Aptoide Games</string>
+  <!-- Bottom Bar -->
+  <string name="games">游戏</string>
+  <string name="categories">类别</string>
+  <string name="search">搜索</string>
+  <!-- Common -->
+  <string name="send_button">发送</string>
+  <string name="try_again">请重试。</string>
+  <string name="please_wait">请稍候。</string>
+  <!-- Settings -->
+  <string name="overflow_menu_settings">设置</string>
+  <string name="overflow_menu_terms_conditions">条款&amp;条件</string>
+  <string name="overflow_menu_privacy_policy">隐私政策</string>
+  <string name="settings_about_hardware_title">硬件规格</string>
+  <string name="settings_about_title">关于我们</string>
+  <string name="settings_about_version">版本 %1$s(%2$s)</string>
+  <string name="settings_copied_to_clipboard_message">已复制到剪贴板</string>
+  <string name="settings_general_title">通用</string>
+  <string name="settings_theme_option_dark">暗</string>
+  <string name="settings_theme_option_light">亮</string>
+  <string name="settings_theme_option_system">系统默认</string>
+  <string name="settings_theme_options_title">主题</string>
+  <string name="settings_title">设置</string>
+  <string name="settings_support">支持</string>
+  <string name="settings_feedback_button">发送反馈</string>
+  <string name="settings_feedback_title">发送反馈</string>
+  <string name="settings_legal_title">法律</string>
+  <string name="settings_send_feedback_body">请让我们知道您对 Aptoide Games 的看法！\n\u2022您想看到什么新功能吗？\n\u2022您认为我们可以如何改进？</string>
+  <string name="settings_payment_support_description_title">说明</string>
+  <string name="settings_contact_form_character_limit_title">（最少50个字符）</string>
+  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">描述（最少50个字符）</string>
+  <!-- MyGames -->
+  <string name="my_games_empty">我们在您的设备上找不到任何安装的游戏！</string>
+  <string name="my_games_progress_message">整理您的游戏</string>
+  <string name="empty_category_body">这个类别中还没有应用！</string>
+  <!-- Notifications -->
+  <string name="notifications_context_title">获得通知！</string>
+  <string name="notification_installing_title">正在安装</string>
+  <string name="notification_waiting_body">等待下载中</string>
+  <string name="notification_1_installed_title">已安装</string>
+  <string name="notification_downloading_body">下载中%1$s%%/%2$s</string>
+  <string name="notification_waiting_for_wifi_title">等待 Wi-Fi 中</string>
+  <string name="notifications_context_body">我们会让您知道游戏世界的最新趋势！</string>
+  <!-- Talkback -->
+  <string name="home_overflow_talkback">选项</string>
+  <string name="app_view_image_description_body">%1$s 的图片</string>
+  <string name="app_view_screenshot_number">截图 %1$s</string>
+  <string name="app_view_icon_description_body">%1$s 的图标</string>
+  <string name="search_remove_from_recent_talkback">从最近搜索中删除</string>
+  <string name="search_clear_talkback">清除搜索</string>
+  <string name="search_item_talkback">搜索</string>
+  <!-- Download over Wi-Fi -->
+  <string name="wifi_settings_title">仅通过 Wi-Fi 下载</string>
+  <string name="wifi_disclaimer_on_body">您正在使用您的移动数据流量。您想在Wi-Fi可用时下载%s吗？</string>
+  <string name="wifi_disclamer_off_body">这是一份大型文件 (%s)。您想在 Wi-Fi 可用时下载吗？</string>
+  <string name="wifi_disclaimer_title">您确定吗？</string>
+  <!-- Fixed bundles -->
+  <string name="editorial_more_articles_title">更多文章</string>
+  <string name="fixed_bundle_just_arrived_title">刚刚推出</string>
+  <string name="fixed_bundle_my_games_title">我的游戏</string>
+  <string name="fixed_bundle_editors_choice_title">编辑精选</string>
+  <string name="fixed_bundle_editorial_title">综评</string>
+  <string name="fixed_bundle_trending_title">热门</string>
+  <string name="fixed_bundle_publisher_title">畅玩 %s 游戏</string>
+  <string name="retry_button" comment="button_retry_title">重试</string>
+  <string name="generic_error_message">出错了。请重试。</string>
+  <string name="generic_network_error_message">糟糕，出错了。请检查您的网络连接。</string>
+  <string name="install_waiting_installation_message">等待安装中</string>
+  <string name="install_installing_message">正在安装</string>
+  <string name="install_error_short_message">哎呀，出错了。</string>
+  <string name="error_message_no_internet_title">哎呀，出现错误</string>
+  <string name="error_message_no_internet_body">请检查您的网络连接状态。</string>
+  <string name="error_message_generic_title">出现错误</string>
+  <string name="error_message_generic_body">重试.</string>
+  <string name="app_info_send_email_subject">反馈</string>
+  <string name="button_copy_title">复制</string>
+  <string name="button_back_title">返回</string>
+  <string name="button_see_all_title">查看所有</string>
+  <string name="editorials_view_no_content_message">哎呀，这里还没有内容！</string>
+  <string name="button_update_title">更新</string>
+  <string name="button_open_app_title">打开</string>
+  <string name="install_waiting_download_message">等待下载中</string>
+  <string name="downloading_percentage_body">%1$s%%/%2$s</string>
+  <string name="install_downloading_message">下载中</string>
+  <!-- Common -->
+  <string name="download_now_button">立即下载</string>
+  <string name="uninstall_button">卸载</string>
+  <string name="go_back_button">返回</string>
+  <string name="go_back_to_game_button">Go Back to Game</string>
+  <string name="uninstalling">卸载中</string>
+  <string name="resume_button">继续</string>
+  <string name="waiting_for_connection">等待网络连接中</string>
+  <string name="wait_for_wifi_button">等待 Wi-Fi 中</string>
+  <string name="continue_button">继续</string>
+  <!-- Out of Space -->
+  <string name="out_of_space_title">空间不足</string>
+  <string name="out_of_space_body">需要%s才能继续安装。</string>
+  <string name="out_of_space_enough_body">现在，您已有足够的存储空间！</string>
+  <!-- Talkback -->
+  <string name="appview_status_outdated_talkback">版本已过时</string>
+  <string name="appview_status_not_installed_talkback">未安装</string>
+  <string name="appview_status_installed_talkback">已安装</string>
+  <string name="appview_status_failed_talkback">失败</string>
+  <string name="appview_action_cancel_talkback">取消</string>
+  <string name="appview_installer_talkback">%1$s 安装程序</string>
+  <string name="appview_action_double_tap_talkback">双击%1$s</string>
+  <!-- Search -->
+  <string name="search_suggested_title">建议搜索</string>
+  <string name="search_recent_title">最近搜索记录</string>
+  <string name="search_popular_title">热门搜索</string>
+  <string name="search_bar_label">搜索游戏...</string>
+  <string name="search_empty_body">哎呀，没有“%s”的结果。\n请尝试使用其他不同的词搜索！</string>
+  <!-- Install -->
+  <string name="button_install_title">安装</string>
+  <!-- Common -->
+  <string name="notice_at_collection_and_privacy_policy">数据收集通知&amp;隐私政策</string>
+  <string name="terms_and_conditions">条款</string>
+  <string name="continue_to_accept_tandc_and_pp_disclaimer">若继续，则表明您同意%1$s与%2$s。</string>
+  <string name="appview_details_tab_title" comment="details">详情</string>
+  <string name="appview_related_tab_title" comment="related">相关信息</string>
+  <string name="appview_info_tab_title" comment="info">信息</string>
+  <string name="bottom_navigation_discovery" comment="discovery">探索</string>
+  <string name="appview_info_version_name_title" comment="version_name">版本名称</string>
+  <string name="appview_info_package_name_title" comment="package_name">程序包名称</string>
+  <string name="appview_info_release_title" comment="release">发布信息</string>
+  <string name="appview_info_update_title" comment="updated_on">更新时间</string>
+  <string name="appview_info_download_size_title" comment="download_size">下载大小</string>
+  <string name="appview_info_website_title" comment="website">网站</string>
+  <string name="appview_info_email_title" comment="email">电子邮件</string>
+  <string name="appview_info_permissions_title" comment="permissions">权限</string>
+  <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%%/%2$s</string>
+  <string name="error_short_title" comment="oops_an_error_occurred">哎呀，出错了</string>
+  <string name="purchase_done_existing_bonus_body">您现有%s的奖金。下载 AppCoins 钱包，并在您进行下一次购买时使用它们。</string>
+  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">您将在所有标有%s的游戏中获得奖金。</string>
+  <string name="bonus_banner_title" comment="up_to_s_bonus">高达 %s%% 的奖金</string>
+  <string name="settings_payments_title" comment="contact_support_team">联系支持团队</string>
+  <string name="settings_contact_support_body" comment="billing_terms_of_use">计费使用条款</string>
+  <string name="settings_billing_terms_body" comment="payments">付款</string>
+  <string name="powered_by_title" comment="powered_by">技术支持方：</string>
+  <string name="contact_support_title" comment="contact_support">联系支持人员</string>
+  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">请提供所有相关详情：\n\u2022问题何时开始出现？\n\u2022您是在哪个游戏中进行购买的？\n\n当您点击“发送”后，您的邮件应用 (app) 就会自动打开。当然，您可以按需附上一张截图或视频，以详细说明问题！</string>
+  <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">您想安装这款游戏吗？</string>
+  <string name="app_size_mb_title" comment="s_mb">%s MB</string>
+  <string name="uninstalled_title" comment="uninstalled">已卸载</string>
+  <string name="error_no_internet_body" comment="please_check_your_internet_connection">请检查您的网络连接状态。</string>
+  <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">使用AppCoins钱包支付</string>
+  <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">它将自动安装，并且您将在每次购买时均获得奖金！</string>
+  <string name="buy_button" comment="buy">购买</string>
+  <string name="iap_other_payment_methods_button" comment="other_payment_methods">其他支付方式</string>
+  <string name="iap_remember_card_button" comment="remember_card">记住卡信息</string>
+  <string name="iap_card_number" comment="card_number">卡号</string>
+  <string name="iap_card_expiry" comment="expiry_date">到期日期</string>
+  <string name="iap_card_cvc" comment="cvc_cvv">CVC/CVV</string>
+  <string name="iab_change_card_button" comment="change_card">更换卡</string>
+  <string name="done_title" comment="done">完成！</string>
+  <string name="purchase_making_purchase_title" comment="making_purchase">进行购买中……</string>
+  <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">确定信用卡详细信息正确无误吗？请重试！</string>
+  <string name="log_out_button" comment="log_out">注销</string>
+  <string name="get_a_bonus_in_all_purchases_title">您的所有购买都将赚取额外奖金！</string>
+  <string name="iap_appc_body">您的所有购买都将赚取额外奖金！</string>
+  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">您现在可以完成购买了。</string>
+  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">AppCoins 钱包现已成功安装！</string>
+  <string name="storage_access_permission_request_message">请允许访问您的手机存储空间，以便我们可以下载并安装此应用。</string>
+  <!-- Payment Errors-->
+  <string name="payments_error_not_enough_balance_body">您的余额不足</string>
+  <string name="payments_error_old_card_title">看起来您很久以前就注册过这张卡！</string>
+  <string name="payments_error_old_card_body">再次输入卡的详细信息或使用不同的卡。</string>
+  <string name="purchase_error_payment_rejected">交易已拒绝。</string>
+  <string name="purchase_error_try_other_card_body">请尝试使用其他卡或支付方式。</string>
+  <string name="purchase_card_error_general_title">您的卡出了点问题。</string>
+  <string name="purchase_error_try_other_payment_method_body">请尝试使用其他支付方式。</string>
+  <string name="purchase_card_error_no_funds">您的资金好像不够，或者您的卡上有额度限制。</string>
+  <string name="purchase_card_error_invalid_details_title">无效卡号。</string>
+  <string name="purchase_error_check_it_body">请检查后重试。</string>
+  <string name="purchase_card_error_not_supported_title">我们还未支持您的卡。</string>
+  <string name="purchase_error_wrong_pin_title">您输入的PIN有些问题。</string>
+  <string name="purchase_error_3d_title">您的3D身份验证有些问题。</string>
+  <string name="purchase_card_rejected_title">这笔交易已被您的银行拒绝。</string>
+  <string name="purchase_error_invalid_credit_card_title">无效的银行卡号。</string>
+  <string name="purchase_error_invalid_credit_card_body">请确保所有输入的数字都是正确的。</string>
+  <string name="purchase_error_card_security_validation_title">此交易的第二层验证存在错误。</string>
+  <string name="purchase_error_in_progress_title">您的请求已被处理或正在处理中。</string>
+  <string name="purchase_card_error_CVV_title">CVV/CVC错误</string>
+  <string name="purchase_error_expired_card_title">您的卡似乎已过期。</string>
+  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
+  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
+</resources>

@@ -1,6 +1,8 @@
 package cm.aptoide.pt.feature_flags.data
 
+import org.json.JSONObject
+
 interface FeatureFlagsRepository {
 
-  suspend fun getFeatureFlags(): Map<String, String>
+  suspend fun getFeatureFlags(): JSONObject
 }

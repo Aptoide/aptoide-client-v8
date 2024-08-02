@@ -1,7 +1,13 @@
 package cm.aptoide.pt.installer.di
 
 import android.content.Context
-import cm.aptoide.pt.installer.platform.*
+import cm.aptoide.pt.installer.platform.InstallEvents
+import cm.aptoide.pt.installer.platform.InstallEventsImpl
+import cm.aptoide.pt.installer.platform.InstallPermissions
+import cm.aptoide.pt.installer.platform.InstallPermissionsImpl
+import cm.aptoide.pt.installer.platform.UserActionHandler
+import cm.aptoide.pt.installer.platform.UserActionHandlerImpl
+import cm.aptoide.pt.installer.platform.UserActionLauncher
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

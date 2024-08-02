@@ -1,325 +1,1026 @@
 package cm.aptoide.pt.install_manager
 
-import android.content.pm.PackageInfo
-import cm.aptoide.pt.install_manager.dto.*
+import cm.aptoide.pt.install_manager.dto.Constraints
 import cm.aptoide.pt.test.gherkin.coScenario
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.advanceUntilIdle
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * AS a Developer,
  * I WANT to have an easy to use app installer
  * WITH interchangeable storages, download and install implementations,
- * FOR managing an app info and install/uninstall tasks
+ * FOR watching for app package info changes and managing install/uninstall tasks
  */
 @ExperimentalCoroutinesApi
 internal class AppTest {
 
   @ParameterizedTest(name = "{0}")
-  @MethodSource("variousPackageAppInfoProvider")
+  @MethodSource("installableWithConstraintsProvider")
   fun `Cache the tasks or nulls for the same app`(
     comment: String,
     packageName: String,
-    info: Map<String, PackageInfo>,
+    constraints: Constraints,
   ) = coScenario { scope ->
-    m Given "package info repository mock with the provided info"
-    val packageInfoRepository = PackageInfoRepositoryMock(info)
-    m And "install manager initialised with this mock"
-    val installManager = createBuilderWithMocks(scope).apply {
-      this.packageInfoRepository = packageInfoRepository
-    }.build()
-    m And "app for the provided package name got"
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "app provided for a given package name"
     val app = installManager.getApp(packageName)
 
-    m When "get task if nothing is running"
-    val task1 = app.tasks.first()
-    m And "create install task"
-    val task2 = app.install(installInfo)
-    m And "get the task for the app"
-    val task3 = app.tasks.first()
-    m And "get the task for the app again 4 seconds later"
-    scope.advanceTimeBy(4_000)
-    val task4 = app.tasks.first()
-    m And "make the app appear as installed"
-    packageInfoRepository.update(packageName, installedInfo(packageName))
-    m And "wait until task is finished"
+    m When "get null task from the app"
+    val nullITask = app.task
+    m And "get app install call result with given constraints"
+    val newITask = app.install(installInfo, constraints)
+    m And "get running install task from the app immediately"
+    val currentITaskNow = app.task
+    m And "get running install task from the app after some progress happened"
+    currentITaskNow?.stateAndProgress?.first { it.first != Task.State.PENDING }
+    val currentITaskLater = app.task
+    m And "wait until install task is finished"
     scope.advanceUntilIdle()
-    m And "get task if nothing is running again"
-    val task5 = app.tasks.first()
-    m And "create uninstall task"
-    val task6 = app.uninstall()
-    m And "get the task for the app again"
-    val task7 = app.tasks.first()
-    m And "get the task for the app again more 4 seconds later"
-    scope.advanceTimeBy(4_000)
-    val task8 = app.tasks.first()
-    m And "wait until task is finished again"
+    m And "get null task from the app after installation finished"
+    val nullUTask = app.task
+    m And "get app uninstall call result with given constraints"
+    val newUTask = app.uninstall(constraints)
+    m And "get running uninstall task from the app immediately"
+    val currentUTaskNow = app.task
+    m And "get running uninstall task from the app after some progress happened"
+    currentITaskNow?.stateAndProgress?.first { it.first != Task.State.PENDING }
+    val currentUTaskLater = app.task
+    m And "wait until uninstall task is finished"
     scope.advanceUntilIdle()
-    m And "get task if nothing is running ance again"
-    val task9 = app.tasks.first()
+    m And "get null task from the app after uninstallation finished"
+    val nullTask = app.task
 
-    m Then "First task is null"
-    assertNull(task1)
-    m And "Second, Third and Fourth tasks are the same"
-    assertSame(task2, task3)
-    assertSame(task3, task4)
-    m And "Fifth task is null"
-    assertNull(task5)
-    m And "Sixth task is not the same as Fourth"
-    assertNotSame(task4, task6)
-    m And "Sixth, Seventh and Eighth tasks are the same as the one before"
-    assertSame(task6, task7)
-    assertSame(task7, task8)
-    m And "Ninth task is null"
-    assertNull(task9)
+    m Then "Null tasks are actually null"
+    assertNull(nullITask)
+    assertNull(nullUTask)
+    assertNull(nullTask)
+    m And "Install and Uninstall tasks are not null"
+    assertNotNull(newITask)
+    assertNotNull(currentITaskNow)
+    assertNotNull(currentITaskLater)
+    assertNotNull(newUTask)
+    assertNotNull(currentUTaskNow)
+    assertNotNull(currentUTaskLater)
+    m And "Install tasks are the same"
+    assertSame(newITask, currentITaskNow)
+    assertSame(currentITaskNow, currentITaskLater)
+    m And "Uninstall tasks are the same"
+    assertSame(newUTask, currentUTaskNow)
+    assertSame(currentUTaskNow, currentUTaskLater)
+    m And "Install and Uninstall tasks are different"
+    assertNotEquals(currentITaskLater, newUTask)
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("constraintsProvider")
+  fun `Package info from the app isn't affected by installs & uninstalls`(
+    comment: String,
+    constraints: Constraints,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "app package installer mock will not affect package info repository mock"
+    mocks.packageInstaller.packageInfoRepositoryMock = null
+    m And "app provided for the outdated version package name"
+    val app = installManager.getApp(outdatedPackage)
+
+    m When "get package info if app is not installed yet"
+    val packageInfo = app.packageInfo
+    m And "get package info for the app during installation with given constraints"
+    app.install(installInfo, constraints)
+      .stateAndProgress.first { it.first != Task.State.PENDING }
+    val installingPackageInfo = app.packageInfo
+    m And "get the info for the app after installation"
+    scope.advanceUntilIdle()
+    val installedPackageInfo = app.packageInfo
+    m And "get package info for the app during uninstallation with given constraints"
+    app.uninstall(constraints)
+      .stateAndProgress.first { it.first != Task.State.PENDING }
+    val uninstallingPackageInfo = app.packageInfo
+    m And "get the info for the app after uninstallation"
+    scope.advanceUntilIdle()
+    val uninstalledPackageInfo = app.packageInfo
+
+    m Then "package info is not null"
+    assertNotNull(packageInfo)
+    m And "is the same for all app actions"
+    assertSame(packageInfo, installingPackageInfo)
+    assertSame(installingPackageInfo, installedPackageInfo)
+    assertSame(installedPackageInfo, uninstallingPackageInfo)
+    assertSame(uninstallingPackageInfo, uninstalledPackageInfo)
   }
 
   @Test
-  fun `Cache the latest package info for the same app`() = coScenario { scope ->
-    m Given "a package name"
-    val packageName = "package0"
-    m And "a repository mock"
-    val packageInfoRepository = PackageInfoRepositoryMock()
-    m And "install manager initialised with this mock"
-    val installManager = createBuilderWithMocks(scope).apply {
-      this.packageInfoRepository = packageInfoRepository
-    }.build()
-    m And "app for the provided package name got"
+  fun `Return the actual package info for the app`() = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "app provided for the not installed package name"
+    val app = installManager.getApp(notInstalledPackage)
+
+    m When "collect running tasks"
+    val result = app.packageInfoFlow.collectAsync(scope)
+    m And "get null package info"
+    val nullInfo = app.packageInfo
+    m And "new package info is added by the system"
+    mocks.packageInfoRepository.update(notInstalledPackage, installedInfo(notInstalledPackage, 0))
+    m And "get new package info from the app immediately"
+    val newInfoNow = app.packageInfo
+    m And "get new package info from the app later"
+    scope.advanceTimeBy(4.seconds)
+    val newInfoLater = app.packageInfo
+    m And "package info is removed by the system"
+    mocks.packageInfoRepository.update(notInstalledPackage, null)
+    m And "get null package info from the app immediately"
+    val nullInfoNow = app.packageInfo
+    m And "get null package info from the app later"
+    scope.advanceTimeBy(4.seconds)
+    val nullInfoLater = app.packageInfo
+    m And "newer package info is added by the system"
+    mocks.packageInfoRepository.update(notInstalledPackage, installedInfo(notInstalledPackage))
+    m And "get newer package info from the app immediately"
+    val newerInfoNow = app.packageInfo
+    m And "get newer package info from the app later"
+    scope.advanceTimeBy(4.seconds)
+    val newerInfoLater = app.packageInfo
+    m And "package info is removed by the system again"
+    mocks.packageInfoRepository.update(notInstalledPackage, null)
+    m And "get null package info again from the app immediately"
+    val nullAgainInfoNow = app.packageInfo
+    scope.advanceUntilIdle()
+    m And "get null package info again from the app later"
+    val nullAgainInfoLater = app.packageInfo
+
+    m Then "null package info's are actually null"
+    assertNull(nullInfo)
+    assertNull(nullInfoNow)
+    assertNull(nullInfoLater)
+    assertNull(nullAgainInfoNow)
+    assertNull(nullAgainInfoLater)
+    m And "new package info is not null and is the same always"
+    assertNotNull(newInfoNow)
+    assertSame(newInfoNow, newInfoLater)
+    m And "newer package info is not null and is the same always"
+    assertNotNull(newerInfoNow)
+    assertSame(newerInfoNow, newerInfoLater)
+    m And "new info is not the same as newer info"
+    assertNotEquals(newInfoNow, newerInfoNow)
+    m And "collected info is in right sequence"
+    assertEquals(
+      listOf(null, newInfoNow, null, newerInfoNow, null),
+      result
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("installableWithConstraintsProvider")
+  fun `Create an install Task if calling install`(
+    comment: String,
+    packageName: String,
+    constraints: Constraints,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "app provided for a given package name"
     val app = installManager.getApp(packageName)
 
-    m When "get info if nothing has happened yet"
-    val info1 = app.packageInfo.first()
-    m And "info updated in the system"
-    packageInfoRepository.update(packageName, installedInfo(packageName, 0))
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "get app install call result with given constraints"
+    val task = app.install(installInfo, constraints)
+    m And "wait until task finishes"
     scope.advanceUntilIdle()
-    m And "get new info for the app"
-    val info2 = app.packageInfo.first()
-    m And "get the info for the app again during installation"
-    app.install(installInfo)
-    scope.advanceTimeBy(4_000)
-    val info3 = app.packageInfo.first()
-    m And "get the info for the app after install"
-    scope.advanceUntilIdle()
-    val info4 = app.packageInfo.first()
-    m And "get info updated in the system again"
-    packageInfoRepository.update(packageName, null)
-    scope.advanceUntilIdle()
-    m And "get new info if for the app again"
-    val info5 = app.packageInfo.first()
-    m And "info updated in the system once again"
-    packageInfoRepository.update(packageName, installedInfo(packageName))
-    scope.advanceUntilIdle()
-    m And "get info before uninstall"
-    val info6 = app.packageInfo.first()
-    m And "get the info for the app again during uninstallation"
-    app.uninstall()
-    scope.advanceTimeBy(4_000)
-    val info7 = app.packageInfo.first()
-    m And "get the info for the app after uninstall"
-    scope.advanceUntilIdle()
-    val info8 = app.packageInfo.first()
-    m And "info updated in the system one more time"
-    packageInfoRepository.info.remove(packageName)
-    packageInfoRepository.update(packageName, null)
-    scope.advanceUntilIdle()
-    m And "get the last app info"
-    val info9 = app.packageInfo.first()
 
-    m Then "First info is the same as initial one"
-    assertNull(info1)
-    m And "Second info is not the same as First"
-    assertNotSame(info1, info2)
-    m And "Second, Third and Fourth info are the same"
-    assertSame(info2, info3)
-    assertSame(info3, info4)
-    m And "Fifth task is null"
-    assertNull(info5)
-    m And "Sixth info is not the same as Fourth"
-    assertNotSame(info4, info6)
-    m And "Sixth, Seventh and Eighth info are the same as the one before"
-    assertSame(info6, info7)
-    assertSame(info7, info8)
-    m And "Ninth info is null"
-    assertNull(info9)
+    m Then "the created task is of install type"
+    assertEquals(Task.Type.INSTALL, task.type)
+    m And "A running task appeared in the app"
+    assertEquals(
+      listOf(null, task, null),
+      result
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("installableWithFSCheckProvider")
+  fun `Create an install Task if calling install with enough free space`(
+    comment: String,
+    packageName: String,
+    constraints: Constraints,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "free space checker mock will report there will be -1536 of free space missing"
+    mocks.deviceStorageMock.availableFreeSpace = 10_000
+    m And "app provided for a given package name"
+    val app = installManager.getApp(packageName)
+
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "get app install call result with given constraints"
+    val task = app.install(installInfo, constraints)
+    m And "wait until task finishes"
+    scope.advanceUntilIdle()
+
+    m Then "the created task is of install type"
+    assertEquals(Task.Type.INSTALL, task.type)
+    m And "A running task appeared in the app"
+    assertEquals(
+      listOf(null, task, null),
+      result
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("installableWithoutFSCheckProvider")
+  fun `Create an install Task if called install omitting free space check`(
+    comment: String,
+    packageName: String,
+    constraints: Constraints,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "device storage mock has no free space available"
+    mocks.deviceStorageMock.availableFreeSpace = 0
+    m And "app provided for a given package name"
+    val app = installManager.getApp(packageName)
+
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "get app install call result with given constraints"
+    val task = app.install(installInfo, constraints)
+    m And "wait until task finishes"
+    scope.advanceUntilIdle()
+
+    m Then "the created task is of install type"
+    assertEquals(Task.Type.INSTALL, task.type)
+    m And "A running task appeared in the app"
+    assertEquals(
+      listOf(null, task, null),
+      result
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("installableWithConstraintsProvider")
+  fun `Create an install Task if calling install and download fails`(
+    comment: String,
+    packageName: String,
+    constraints: Constraints,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "package downloader mock will fail after 25%"
+    mocks.packageDownloader.progressFlow = failingFlow
+    m And "app provided for a given package name"
+    val app = installManager.getApp(packageName)
+
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "get app install call result with given constraints"
+    val task = app.install(installInfo, constraints)
+    m And "wait until task finishes"
+    scope.advanceUntilIdle()
+
+    m Then "the created task is of install type"
+    assertEquals(Task.Type.INSTALL, task.type)
+    m And "A running task appeared in the app"
+    assertEquals(
+      listOf(null, task, null),
+      result
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("installableWithConstraintsProvider")
+  fun `Create an install Task if calling install and download fails due to lack of space`(
+    comment: String,
+    packageName: String,
+    constraints: Constraints,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "package downloader mock will fail after 25%"
+    mocks.packageDownloader.progressFlow = outOfSpaceFlow
+    m And "app provided for a given package name"
+    val app = installManager.getApp(packageName)
+
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "get app install call result with given constraints"
+    val task = app.install(installInfo, constraints)
+    m And "wait until task finishes"
+    scope.advanceUntilIdle()
+
+    m Then "the created task is of install type"
+    assertEquals(Task.Type.INSTALL, task.type)
+    m And "A running task appeared in the app"
+    assertEquals(
+      listOf(null, task, null),
+      result
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("installableWithConstraintsProvider")
+  fun `Create an install Task if calling install and installation fails`(
+    comment: String,
+    packageName: String,
+    constraints: Constraints,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "package installer mock will fail after 25%"
+    mocks.packageInstaller.progressFlow = failingFlow
+    m And "app provided for a given package name"
+    val app = installManager.getApp(packageName)
+
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "get app install call result with given constraints"
+    val task = app.install(installInfo, constraints)
+    m And "wait until task finishes"
+    scope.advanceUntilIdle()
+
+    m Then "the created task is of install type"
+    assertEquals(Task.Type.INSTALL, task.type)
+    m And "A running task appeared in the app"
+    assertEquals(
+      listOf(null, task, null),
+      result
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("installableWithConstraintsProvider")
+  fun `Create an install Task if calling install and installation fails due to lack of space`(
+    comment: String,
+    packageName: String,
+    constraints: Constraints,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "package installer mock will fail after 25%"
+    mocks.packageInstaller.progressFlow = outOfSpaceFlow
+    m And "app provided for a given package name"
+    val app = installManager.getApp(packageName)
+
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "get app install call result with given constraints"
+    val task = app.install(installInfo, constraints)
+    m And "wait until task finishes"
+    scope.advanceUntilIdle()
+
+    m Then "the created task is of install type"
+    assertEquals(Task.Type.INSTALL, task.type)
+    m And "A running task appeared in the app"
+    assertEquals(
+      listOf(null, task, null),
+      result
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("installableWithConstraintsProvider")
+  fun `Create an install Task if calling install and download aborts`(
+    comment: String,
+    packageName: String,
+    constraints: Constraints,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "package downloader mock will abort after 25%"
+    mocks.packageDownloader.progressFlow = abortingFlow
+    m And "app provided for a given package name"
+    val app = installManager.getApp(packageName)
+
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "get app install call result with given constraints"
+    val task = app.install(installInfo, constraints)
+    m And "wait until task finishes"
+    scope.advanceUntilIdle()
+
+    m Then "the created task is of install type"
+    assertEquals(Task.Type.INSTALL, task.type)
+    m And "A running task appeared in the app"
+    assertEquals(
+      listOf(null, task, null),
+      result
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("installableWithConstraintsProvider")
+  fun `Create an install Task if calling install and installation aborts`(
+    comment: String,
+    packageName: String,
+    constraints: Constraints,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "package installer mock will abort after 25%"
+    mocks.packageInstaller.progressFlow = abortingFlow
+    m And "app provided for a given package name"
+    val app = installManager.getApp(packageName)
+
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "get app install call result with given constraints"
+    val task = app.install(installInfo, constraints)
+    m And "wait until task finishes"
+    scope.advanceUntilIdle()
+
+    m Then "the created task is of install type"
+    assertEquals(Task.Type.INSTALL, task.type)
+    m And "A running task appeared in the app"
+    assertEquals(
+      listOf(null, task, null),
+      result
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("installableWithConstraintsProvider")
+  fun `Create an install Task if calling install and download cancels immediately`(
+    comment: String,
+    packageName: String,
+    constraints: Constraints,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "app provided for a given package name"
+    val app = installManager.getApp(packageName)
+
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "get app install call result with given constraints"
+    val task = app.install(installInfo, constraints)
+    m And "call the task cancel"
+    task.cancel()
+    m And "wait until the task finishes"
+    scope.advanceUntilIdle()
+
+    m Then "the created task is of install type"
+    assertEquals(Task.Type.INSTALL, task.type)
+    m And "A running task appeared in the app"
+    assertEquals(
+      listOf(null, task, null),
+      result
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("installableWithConstraintsProvider")
+  fun `Create an install Task if calling install and download cancels`(
+    comment: String,
+    packageName: String,
+    constraints: Constraints,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "app provided for a given package name"
+    val app = installManager.getApp(packageName)
+
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "get app install call result with given constraints"
+    val task = app.install(installInfo, constraints)
+    m And "wait until task will be ready to cancel"
+    task.stateAndProgress.first { it.first == Task.State.DOWNLOADING }
+    m And "call the task cancel"
+    task.cancel()
+    m And "wait until the task finishes"
+    scope.advanceUntilIdle()
+
+    m Then "the created task is of install type"
+    assertEquals(Task.Type.INSTALL, task.type)
+    m And "A running task appeared in the app"
+    assertEquals(
+      listOf(null, task, null),
+      result
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("installableWithConstraintsProvider")
+  fun `Create an install Task if calling install and installation cancels`(
+    comment: String,
+    packageName: String,
+    constraints: Constraints,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "app provided for a given package name"
+    val app = installManager.getApp(packageName)
+
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "get app install call result with given constraints"
+    val task = app.install(installInfo, constraints)
+    m And "wait until task will be ready to cancel"
+    task.stateAndProgress.first { it.first == Task.State.INSTALLING }
+    m And "call the task cancel"
+    task.cancel()
+    m And "wait until the task finishes"
+    scope.advanceUntilIdle()
+
+    m Then "the created task is of install type"
+    assertEquals(Task.Type.INSTALL, task.type)
+    m And "A running task appeared in the app"
+    assertEquals(
+      listOf(null, task, null),
+      result
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("installableWithConstraintsProvider")
+  fun `Create an install Task if calling install with no free space afterwards`(
+    comment: String,
+    packageName: String,
+    constraints: Constraints,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "app provided for a given package name"
+    val app = installManager.getApp(packageName)
+
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "get app install call result with given constraints"
+    val task = app.install(installInfo, constraints)
+    m And "device storage mock has no free space available anymore"
+    mocks.deviceStorageMock.availableFreeSpace = 0
+    m And "wait until task finishes"
+    scope.advanceUntilIdle()
+
+    m Then "the created task is of install type"
+    assertEquals(Task.Type.INSTALL, task.type)
+    m And "A running task appeared in the app"
+    assertEquals(
+      listOf(null, task, null),
+      result
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("uninstallableWithConstraintsProvider")
+  fun `Create an uninstall Task if calling uninstall`(
+    comment: String,
+    packageName: String,
+    constraints: Constraints,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "app provided for a given package name"
+    val app = installManager.getApp(packageName)
+
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "get app uninstall call result with given constraints"
+    val task = app.uninstall(constraints)
+    m And "wait until task finishes"
+    scope.advanceUntilIdle()
+
+    m Then "the created task is of uninstall type"
+    assertEquals(Task.Type.UNINSTALL, task.type)
+    m And "A running task appeared in the app"
+    assertEquals(
+      listOf(null, task, null),
+      result
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("uninstallableWithConstraintsProvider")
+  fun `Create an uninstall Task if calling uninstall and uninstallation fails`(
+    comment: String,
+    packageName: String,
+    constraints: Constraints,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "package installer mock will fail after 25%"
+    mocks.packageInstaller.progressFlow = failingFlow
+    m And "app provided for a given package name"
+    val app = installManager.getApp(packageName)
+
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "get app uninstall call result with given constraints"
+    val task = app.uninstall(constraints)
+    m And "wait until task finishes"
+    scope.advanceUntilIdle()
+
+    m Then "the created task is of uninstall type"
+    assertEquals(Task.Type.UNINSTALL, task.type)
+    m And "A running task appeared in the app"
+    assertEquals(
+      listOf(null, task, null),
+      result
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("uninstallableWithConstraintsProvider")
+  fun `Create an uninstall Task if calling uninstall and uninstallation aborts`(
+    comment: String,
+    packageName: String,
+    constraints: Constraints,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "package installer mock will abort after 25%"
+    mocks.packageInstaller.progressFlow = abortingFlow
+    m And "app provided for a given package name"
+    val app = installManager.getApp(packageName)
+
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "get app uninstall call result with given constraints"
+    val task = app.uninstall(constraints)
+    m And "wait until task finishes"
+    scope.advanceUntilIdle()
+
+    m Then "the created task is of uninstall type"
+    assertEquals(Task.Type.UNINSTALL, task.type)
+    m And "A running task appeared in the app"
+    assertEquals(
+      listOf(null, task, null),
+      result
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("uninstallableWithConstraintsProvider")
+  fun `Create an uninstall Task if calling uninstall and uninstallation cancels`(
+    comment: String,
+    packageName: String,
+    constraints: Constraints,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "app provided for a given package name"
+    val app = installManager.getApp(packageName)
+
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "get app uninstall call result with given constraints"
+    val task = app.uninstall(constraints)
+    m And "wait until task will be ready to cancel"
+    task.stateAndProgress.first { it.first == Task.State.UNINSTALLING }
+    m And "call the task cancel"
+    task.cancel()
+    m And "wait until the task finishes"
+    scope.advanceUntilIdle()
+
+    m Then "the created task is of uninstall type"
+    assertEquals(Task.Type.UNINSTALL, task.type)
+    m And "A running task appeared in the app"
+    assertEquals(
+      listOf(null, task, null),
+      result
+    )
   }
 
   @Test
   fun `Error calling install for the same version installed`() = coScenario { scope ->
-    m Given "a package name"
-    val packageName = "package0"
-    m And "package info repository mock with the same version installed"
-    val packageInfoRepository =
-      PackageInfoRepositoryMock(mapOf(packageName to installedInfo(packageName, 2)))
-    m And "install manager initialised with this mock"
-    val installManager = createBuilderWithMocks(scope).apply {
-      this.packageInfoRepository = packageInfoRepository
-    }.build()
-    m And "app for the provided package name got or created"
-    val app = installManager.getApp(packageName)
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "app provided for the current version package name"
+    val app = installManager.getApp(currentPackage)
 
-    m When "installation task started"
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "calling app install"
     val installThrown = assertThrows<IllegalArgumentException> {
       app.install(installInfo)
     }
+    m And "wait until task finishes"
+    scope.advanceUntilIdle()
 
-    m Then "expected exception is thrown"
+    m Then "already installed exception is thrown"
     assertEquals("This version is already installed", installThrown.message)
+    m And "No running tasks appeared in the app"
+    assertEquals(
+      listOf(null),
+      result
+    )
   }
 
   @Test
   fun `Error calling install for the newer version installed`() = coScenario { scope ->
-    m Given "a package name"
-    val packageName = "package0"
-    m And "package info repository mock with the newer version installed"
-    val packageInfoRepository =
-      PackageInfoRepositoryMock(mapOf(packageName to installedInfo(packageName, 3)))
-    m And "install manager initialised with this mock"
-    val installManager = createBuilderWithMocks(scope).apply {
-      this.packageInfoRepository = packageInfoRepository
-    }.build()
-    m And "app for the provided package name got or created"
-    val app = installManager.getApp(packageName)
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "app provided for the newer version package name"
+    val app = installManager.getApp(newerPackage)
 
-    m When "installation task started"
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "calling app install"
     val installThrown = assertThrows<IllegalArgumentException> {
       app.install(installInfo)
     }
+    m And "wait until task finishes"
+    scope.advanceUntilIdle()
 
-    m Then "expected exception is thrown"
+    m Then "newer version installed exception is thrown"
     assertEquals("Newer version is installed", installThrown.message)
+    m And "No running tasks appeared in the app"
+    assertEquals(
+      listOf(null),
+      result
+    )
   }
 
   @Test
   fun `Error calling uninstall for not installed apps`() = coScenario { scope ->
-    m Given "a package name"
-    val packageName = "package0"
-    m And "install manager initialised"
-    val installManager = createBuilderWithMocks(scope).build()
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "app provided for the not installed package name"
+    val app = installManager.getApp(notInstalledPackage)
 
-    m When "create uninstall task for provided package name"
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "calling app uninstall"
     val uninstallThrown = assertThrows<IllegalStateException> {
-      installManager.getApp(packageName).uninstall()
+      app.uninstall()
     }
+    m And "wait until task finishes"
+    scope.advanceUntilIdle()
 
-    m Then "expected exception is thrown"
-    assertEquals("The $packageName is not installed", uninstallThrown.message)
+    m Then "not installed exception is thrown"
+    assertEquals("The $notInstalledPackage is not installed", uninstallThrown.message)
+    m And "No running tasks appeared in the app"
+    assertEquals(
+      listOf(null),
+      result
+    )
   }
 
   @ParameterizedTest(name = "{0}")
-  @MethodSource("variousPackageAppInfoProvider")
+  @MethodSource("installableWithConstraintsProvider")
   fun `Error calling install during installation`(
     comment: String,
     packageName: String,
-    info: Map<String, PackageInfo>,
+    constraints: Constraints,
   ) = coScenario { scope ->
-    m Given "package info repository mock with the provided info"
-    val packageInfoRepository = PackageInfoRepositoryMock(info)
-    m And "install manager initialised with this mock"
-    val installManager = createBuilderWithMocks(scope).apply {
-      this.packageInfoRepository = packageInfoRepository
-    }.build()
-    m And "app for the provided package name got or created"
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "app provided for a given package name"
     val app = installManager.getApp(packageName)
-    m And "installation task started"
-    app.install(installInfo)
+    m And "app install called with given constraints"
+    val oldTask = app.install(installInfo, constraints)
 
-    m When "create installation task again"
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "calling app install again with given constraints"
     val installThrown = assertThrows<IllegalStateException> {
-      app.install(installInfo)
+      app.install(installInfo, constraints)
     }
+    m And "wait until task finishes"
+    scope.advanceUntilIdle()
 
-    m Then "expected exception is thrown"
+    m Then "busy exception is thrown"
     assertEquals("Another task is already queued", installThrown.message)
-  }
-
-  @Test
-  fun `Error calling install during uninstallation`() = coScenario { scope ->
-    m Given "a package name"
-    val packageName = "package0"
-    m And "package info repository mock with the same version installed"
-    val packageInfoRepository =
-      PackageInfoRepositoryMock(mapOf(packageName to installedInfo(packageName)))
-    m And "install manager initialised with this mock"
-    val installManager = createBuilderWithMocks(scope).apply {
-      this.packageInfoRepository = packageInfoRepository
-    }.build()
-    m And "app for the provided package name got or created"
-    val app = installManager.getApp(packageName)
-    m And "uninstallation task started"
-    app.uninstall()
-
-    m When "create installation task"
-    val installThrown = assertThrows<IllegalStateException> {
-      app.install(installInfo)
-    }
-
-    m Then "expected exception is thrown"
-    assertEquals("Another task is already queued", installThrown.message)
+    m And "Only already running task appeared in the app"
+    assertEquals(
+      listOf(oldTask, null),
+      result
+    )
   }
 
   @ParameterizedTest(name = "{0}")
-  @MethodSource("variousPackageAppInfoProvider")
+  @MethodSource("uninstallableWithConstraintsProvider")
+  fun `Error calling install during uninstallation`(
+    comment: String,
+    packageName: String,
+    constraints: Constraints,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "app provided for a given package name"
+    val app = installManager.getApp(packageName)
+    m And "app uninstall called with given constraints"
+    val oldTask = app.uninstall(constraints)
+
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "calling app install with given constraints"
+    val installThrown = assertThrows<IllegalStateException> {
+      app.install(installInfo, constraints)
+    }
+    m And "wait until task finishes"
+    scope.advanceUntilIdle()
+
+    m Then "busy exception is thrown"
+    assertEquals("Another task is already queued", installThrown.message)
+    m And "Only already running task appeared in the app"
+    assertEquals(
+      listOf(oldTask, null),
+      result
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("installableWithConstraintsProvider")
   fun `Error calling uninstall during installation`(
     comment: String,
     packageName: String,
-    info: Map<String, PackageInfo>,
+    constraints: Constraints,
   ) = coScenario { scope ->
-    m Given "package info repository mock with the provided info"
-    val packageInfoRepository = PackageInfoRepositoryMock(info)
-    m And "install manager initialised with this mock"
-    val installManager = createBuilderWithMocks(scope).apply {
-      this.packageInfoRepository = packageInfoRepository
-    }.build()
-    m And "app for the provided package name got or created"
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "app provided for a given package name"
     val app = installManager.getApp(packageName)
-    m And "installation task started"
-    app.install(installInfo)
+    m And "app install called with given constraints"
+    val oldTask = app.install(installInfo, constraints)
 
-    m When "create uninstallation task"
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "calling app uninstall with given constraints"
     val uninstallThrown = assertThrows<IllegalStateException> {
-      app.uninstall()
+      app.uninstall(constraints)
     }
+    m And "wait until task finishes"
+    scope.advanceUntilIdle()
 
-    m Then "expected exception is thrown"
+    m Then "busy exception is thrown"
     assertEquals("Another task is already queued", uninstallThrown.message)
+    m And "Only already running task appeared in the app"
+    assertEquals(
+      listOf(oldTask, null),
+      result
+    )
   }
 
-  @Test
-  fun `Error calling uninstall during uninstallation`() = coScenario { scope ->
-    m Given "a package name"
-    val packageName = "package0"
-    m And "package info repository mock with the same version installed"
-    val packageInfoRepository =
-      PackageInfoRepositoryMock(mapOf(packageName to installedInfo(packageName)))
-    m And "install manager initialised with this mock"
-    val installManager = createBuilderWithMocks(scope).apply {
-      this.packageInfoRepository = packageInfoRepository
-    }.build()
-    m And "app for the provided package name got or created"
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("uninstallableWithConstraintsProvider")
+  fun `Error calling uninstall during uninstallation`(
+    comment: String,
+    packageName: String,
+    constraints: Constraints,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "app provided for a given package name"
     val app = installManager.getApp(packageName)
-    m And "uninstallation task started"
-    app.uninstall()
+    m And "app uninstall called with given constraints"
+    val oldTask = app.uninstall(constraints)
 
-    m When "create uninstallation task again"
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "calling app uninstall with given constraints"
     val uninstallThrown = assertThrows<IllegalStateException> {
-      app.uninstall()
+      app.uninstall(constraints)
     }
+    m And "wait until running task if any finishes"
+    scope.advanceUntilIdle()
 
-    m Then "expected exception is thrown"
+    m Then "busy exception is thrown"
     assertEquals("Another task is already queued", uninstallThrown.message)
+    m And "Only already running task appeared in the app"
+    assertEquals(
+      listOf(oldTask, null),
+      result
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("installableWithFSCheckProvider")
+  fun `Error calling install if not enough free space`(
+    comment: String,
+    packageName: String,
+    constraints: Constraints,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "device storage mock has not enough free space available"
+    mocks.deviceStorageMock.availableFreeSpace = 75
+    m And "app provided for a given package name"
+    val app = installManager.getApp(packageName)
+
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "calling app install with given constraints"
+    val installThrown = assertThrows<OutOfSpaceException> {
+      app.install(installInfo, constraints)
+    }
+    m And "wait until task finishes"
+    scope.advanceUntilIdle()
+
+    m Then "out of space exception is thrown"
+    assertEquals("Not enough free space to download and install", installThrown.message)
+    assertEquals(175, installThrown.missingSpace)
+    m And "No running tasks appeared in the app"
+    assertEquals(
+      listOf(null),
+      result
+    )
   }
 
   companion object {
+    private val installablePackages = listOf(
+      "Not installed package" to notInstalledPackage,
+      "Outdated package installed" to outdatedPackage,
+    )
+
+    private val uninstallablePackages = listOf(
+      "Outdated package installed" to outdatedPackage,
+      "Current package installed" to currentPackage,
+      "Newer package installed" to newerPackage,
+    )
+
     @JvmStatic
-    fun variousPackageAppInfoProvider(): Stream<Arguments> = savedPackageAppInfo()
+    fun constraintsProvider(): Stream<Arguments> = constraints
+      .map { Arguments.arguments(it.toString(), it) }
+      .stream()
+
+    @JvmStatic
+    fun installableWithFSCheckProvider(): Stream<Arguments> = installablePackages
+      .map { pn ->
+        constraints
+          .filter { it.checkForFreeSpace }
+          .map { con ->
+            Arguments.arguments("${pn.first}, $con", pn.second, con)
+          }
+      }
+      .flatten()
+      .stream()
+
+    @JvmStatic
+    fun installableWithoutFSCheckProvider(): Stream<Arguments> = installablePackages
+      .map { pn ->
+        constraints
+          .filterNot { it.checkForFreeSpace }
+          .map { con ->
+            Arguments.arguments("${pn.first}, $con", pn.second, con)
+          }
+      }
+      .flatten()
+      .stream()
+
+    @JvmStatic
+    fun installableWithConstraintsProvider(): Stream<Arguments> = installablePackages
+      .map { pn ->
+        constraints.map { con ->
+          Arguments.arguments("${pn.first}, $con", pn.second, con)
+        }
+      }
+      .flatten()
+      .stream()
+
+    @JvmStatic
+    fun uninstallableWithConstraintsProvider(): Stream<Arguments> = uninstallablePackages
+      .map { pn ->
+        constraints.map { con ->
+          Arguments.arguments("${pn.first}, $con", pn.second, con)
+        }
+      }
+      .flatten()
+      .stream()
   }
 }
