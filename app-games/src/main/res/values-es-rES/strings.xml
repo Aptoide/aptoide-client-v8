@@ -1,18 +1,175 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <!-- Bottom Bar -->
+  <string name="games">Juegos</string>
+  <string name="categories">Categorías</string>
+  <string name="search">Buscar</string>
   <!-- Common -->
+  <string name="send_button">Enviar</string>
+  <string name="try_again">Por favor, inténtalo de de nuevo.</string>
+  <string name="please_wait">Por favor, espera.</string>
   <!-- Settings -->
+  <string name="overflow_menu_settings">Configuración</string>
+  <string name="overflow_menu_terms_conditions">Términos y Condiciones</string>
+  <string name="overflow_menu_privacy_policy">Política de Privacidad</string>
+  <string name="settings_about_hardware_title">Especificaciones de hardware</string>
+  <string name="settings_about_title">Sobre nosotros</string>
+  <string name="settings_about_version">Versión %1$s (%2$s)</string>
+  <string name="settings_copied_to_clipboard_message">Copiado</string>
+  <string name="settings_general_title">General</string>
+  <string name="settings_theme_option_dark">Oscuro</string>
+  <string name="settings_theme_option_light">Claro</string>
+  <string name="settings_theme_option_system">Igual que el sistema</string>
+  <string name="settings_theme_options_title">Tema</string>
+  <string name="settings_title">Configuración</string>
+  <string name="settings_support">Ayuda</string>
+  <string name="settings_feedback_button">Enviar comentarios</string>
+  <string name="settings_feedback_title">Enviar comentarios</string>
+  <string name="settings_legal_title">Legal</string>
+  <string name="settings_payment_support_description_title">Descripción</string>
   <!-- MyGames -->
+  <string name="my_games_empty">No encontramos ningún juego instalado en este dispositivo.</string>
+  <string name="my_games_progress_message">Organizando tus juegos</string>
+  <string name="empty_category_body">No hay apps en esta categoría... ¡todavía!</string>
   <!-- Notifications -->
+  <string name="notifications_context_title">¡Recibe notificaciones!</string>
+  <string name="notification_installing_title">Instalando</string>
+  <string name="notification_waiting_body">Esperando descarga</string>
+  <string name="notification_1_installed_title">Instalada</string>
+  <string name="notification_downloading_body">Descargando %1$s%% de %2$s</string>
+  <string name="notification_waiting_for_wifi_title">Esperarando por wifi</string>
+  <string name="notifications_context_body">Te informaremos de todas las tendencias en el mundo del gaming.</string>
   <!-- Talkback -->
+  <string name="home_overflow_talkback">Opciones</string>
+  <string name="app_view_image_description_body">Imagen de %1$s</string>
+  <string name="app_view_screenshot_number">Captura de pantalla de %1$s</string>
+  <string name="app_view_icon_description_body">Icono de %1$s</string>
+  <string name="search_remove_from_recent_talkback">eliminar de las búsquedas recientes</string>
+  <string name="search_clear_talkback">eliminar la búsqueda</string>
+  <string name="search_item_talkback">buscar</string>
   <!-- Download over Wi-Fi -->
+  <string name="wifi_settings_title">Descargar solo por wifi</string>
+  <string name="wifi_disclaimer_on_body">Estás usando tus datos móviles. ¿Quieres descargar %s cuando haya wifi disponible?</string>
+  <string name="wifi_disclamer_off_body">Este archivo es grande (%s). ¿Quieres descargarlo cuando haya wifi disponible?</string>
+  <string name="wifi_disclaimer_title">¿Estás seguro?</string>
   <!-- Fixed bundles -->
+  <string name="editorial_more_articles_title">Más artículos</string>
+  <string name="fixed_bundle_just_arrived_title">Más Recientes</string>
+  <string name="fixed_bundle_my_games_title">Mis Juegos</string>
+  <string name="fixed_bundle_editors_choice_title">Selección del editor</string>
+  <string name="fixed_bundle_editorial_title">Editorial</string>
+  <string name="fixed_bundle_trending_title">Tendencias</string>
+  <string name="fixed_bundle_publisher_title">Diviértete con %s</string>
+  <string name="retry_button" comment="button_retry_title">Reintentar</string>
+  <string name="generic_error_message">Algo salió mal. Inténtalo de nuevo.</string>
+  <string name="generic_network_error_message">Ups... algo salió mal. Por favor, revisa tu conexión a internet.</string>
+  <string name="install_waiting_installation_message">Esperando para instalar</string>
+  <string name="install_installing_message">Instalando</string>
+  <string name="install_error_short_message">Ups, ocurrió un error.</string>
+  <string name="error_message_no_internet_title">Ups, algo salió mal</string>
+  <string name="error_message_no_internet_body">Por favor, comprueba tu conexión a internet.</string>
+  <string name="error_message_generic_title">Algo salió mal</string>
+  <string name="error_message_generic_body">Intentar de nuevo.</string>
+  <string name="app_info_send_email_subject">Danos tu opinión</string>
+  <string name="button_copy_title">Copiar</string>
+  <string name="button_back_title">Volver</string>
+  <string name="button_see_all_title">Ver todo</string>
+  <string name="editorials_view_no_content_message">Ups, ¡todavía no hay contenido aquí!</string>
+  <string name="button_update_title">Actualizar</string>
+  <string name="button_open_app_title">Abrir</string>
+  <string name="install_waiting_download_message">Esperando descarga</string>
+  <string name="downloading_percentage_body">%1$s%% de %2$s</string>
+  <string name="install_downloading_message">Descargando</string>
   <!-- Common -->
+  <string name="download_now_button">Descargar ahora</string>
+  <string name="uninstall_button">Desinstalar</string>
+  <string name="go_back_button">Volver</string>
+  <string name="uninstalling">Desinstalando</string>
+  <string name="resume_button">Reanudar</string>
+  <string name="waiting_for_connection">Esperando conexión</string>
+  <string name="wait_for_wifi_button">Esperar por wifi</string>
+  <string name="continue_button">Continuar</string>
   <!-- Out of Space -->
+  <string name="out_of_space_title">No queda espacio</string>
+  <string name="out_of_space_body">Necesitas %s para continuar con la instalación.</string>
+  <string name="out_of_space_enough_body">¡Ya tienes suficiente espacio!</string>
   <!-- Talkback -->
+  <string name="appview_status_outdated_talkback">Desactualizada</string>
+  <string name="appview_status_not_installed_talkback">No instalada</string>
+  <string name="appview_status_installed_talkback">Instalada</string>
+  <string name="appview_status_failed_talkback">Falló</string>
+  <string name="appview_action_cancel_talkback">Cancelar</string>
+  <string name="appview_installer_talkback">Insta&lt;lación de %1$s</string>
+  <string name="appview_action_double_tap_talkback">Toca dos veces para %1$s</string>
   <!-- Search -->
+  <string name="search_suggested_title">Búsquedas sugeridas</string>
+  <string name="search_recent_title">Búsquedas recientes</string>
+  <string name="search_popular_title">Búsquedas populares</string>
+  <string name="search_bar_label">Buscar juegos...</string>
+  <string name="search_empty_body">Ups, no hay resultados para \"%s\".\n¡Prueba con otras palabras!</string>
   <!-- Install -->
+  <string name="button_install_title">Instalar</string>
   <!-- Common -->
+  <string name="notice_at_collection_and_privacy_policy">Aviso de Recolección y la Política de Privacidad</string>
+  <string name="terms_and_conditions">Términos</string>
+  <string name="continue_to_accept_tandc_and_pp_disclaimer">Al continuar, aceptas los %1$s y la %2$s.</string>
+  <string name="appview_details_tab_title" comment="details">Detalles</string>
+  <string name="appview_related_tab_title" comment="related">Relacionado</string>
+  <string name="appview_info_tab_title" comment="info">Info</string>
+  <string name="appview_info_package_name_title" comment="package_name">Nombre del paquete</string>
+  <string name="appview_info_release_title" comment="release">Publicada</string>
+  <string name="appview_info_update_title" comment="updated_on">Actualizada el</string>
+  <string name="appview_info_download_size_title" comment="download_size">Tamaño de la descarga</string>
+  <string name="appview_info_website_title" comment="website">Página web</string>
+  <string name="appview_info_email_title" comment="email">E-mail</string>
+  <string name="appview_info_permissions_title" comment="permissions">Permisos</string>
+  <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% de %2$s</string>
+  <string name="error_short_title" comment="oops_an_error_occurred">Ups, ocurrió un error</string>
+  <string name="bonus_banner_title" comment="up_to_s_bonus">Hasta %s%% de Bonus</string>
+  <string name="settings_payments_title" comment="contact_support_team">Contacta con nosotros</string>
+  <string name="settings_billing_terms_body" comment="payments">Pagos</string>
+  <string name="powered_by_title" comment="powered_by">Ofrecido por</string>
+  <string name="contact_support_title" comment="contact_support">Contacta con nosotros</string>
+  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Por favor, danos todos los detalles:\n\u2022 Cuándo comenzó el problema\n\u2022 En qué juego estabas haciendo una compra\n\nUna vez toques en Enviar, se abrirá tu app de correo. Puedes adjuntar una captura de pantalla o un vídeo sobre el problema.</string>
+  <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">¿Quieres instalar este juego?</string>
+  <string name="uninstalled_title" comment="uninstalled">Desinstalado</string>
+  <string name="error_no_internet_body" comment="please_check_your_internet_connection">Por favor, comprueba tu conexión a internet.</string>
+  <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Pagar con la AppCoins Wallet</string>
+  <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">¡Se instalará automáticamente y recibirás un bonus en todas las compras!</string>
+  <string name="buy_button" comment="buy">Comprar</string>
+  <string name="iap_other_payment_methods_button" comment="other_payment_methods">Otros métodos de pago</string>
+  <string name="iap_remember_card_button" comment="remember_card">Recordar tarjeta</string>
+  <string name="iap_card_number" comment="card_number">Número de la tarjeta</string>
+  <string name="iap_card_expiry" comment="expiry_date">Fecha de caducidad</string>
+  <string name="iap_card_cvc" comment="cvc_cvv">CVC/CVV</string>
+  <string name="iab_change_card_button" comment="change_card">Cambiar tarjeta</string>
+  <string name="done_title" comment="done">¡Hecho!</string>
+  <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">¿Estás seguro de que los datos de tu tarjeta son correctos? Prueba de nuevo.</string>
+  <string name="log_out_button" comment="log_out">Cerrar sesión</string>
+  <string name="get_a_bonus_in_all_purchases_title">¡Recibirás un bonus en todas las compras!</string>
+  <string name="iap_appc_body">¡Recibirás un bonus en todas las compras!</string>
+  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Puedes continuar con tu compra.</string>
+  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">¡La AppCoins Wallet ahora está instalada!</string>
   <!-- Payment Errors-->
+  <string name="payments_error_not_enough_balance_body">No tienes suficiente saldo.</string>
+  <string name="payments_error_old_card_title">Parece que registraste esta tarjeta hace mucho tiempo.</string>
+  <string name="payments_error_old_card_body">Inserta los datos de la tarjeta de nuevo o usa una diferente.</string>
+  <string name="purchase_error_payment_rejected">La transacción ha sido rechazada.</string>
+  <string name="purchase_error_try_other_card_body">Por favor, prueba con otra tarjeta o método de pago.</string>
+  <string name="purchase_card_error_general_title">Hubo un problema con tu tarjeta.</string>
+  <string name="purchase_error_try_other_payment_method_body">Por favor, prueba con otro método de pago.</string>
+  <string name="purchase_card_error_no_funds">Parece que no tienes suficientes o fondos o que hay un límite en tu tarjeta.</string>
+  <string name="purchase_card_error_invalid_details_title">Número de tarjeta no válido.</string>
+  <string name="purchase_error_check_it_body">Por favor, compruébalo y prueba de nuevo.</string>
+  <string name="purchase_card_error_not_supported_title">Aún no aceptamos ese tipo de tarjeta.</string>
+  <string name="purchase_error_wrong_pin_title">Hubo un problema con tu pin.</string>
+  <string name="purchase_error_3d_title">Hubo un problema con la autenticación 3D.</string>
+  <string name="purchase_card_rejected_title">La transacción ha sido rechazada por tu banco.</string>
+  <string name="purchase_error_invalid_credit_card_title">Número de tarjeta no válido.</string>
+  <string name="purchase_error_invalid_credit_card_body">Asegúrate de que todos los dígitos son correctos.</string>
+  <string name="purchase_error_card_security_validation_title">Hubo un error en la validación de segundo nivel de esta transacción.</string>
+  <string name="purchase_error_in_progress_title">Tu pedido ya fue procesado o está en proceso.</string>
+  <string name="purchase_card_error_CVV_title">CVV/CVC erróneo</string>
+  <string name="purchase_error_expired_card_title">Parece que tu tarjeta ha caducado.</string>
+  <string name="iap_already_processing_title">Parece que esta compra ya está siendo procesada.</string>
 </resources>
