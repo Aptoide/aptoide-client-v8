@@ -1,6 +1,6 @@
 package com.aptoide.android.aptoidegames.analytics
 
-import com.appcoins.payments.arch.Logger
+import com.appcoins.payments.analytics.Logger
 import timber.log.Timber
 import javax.inject.Inject
 
