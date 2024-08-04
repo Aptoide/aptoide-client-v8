@@ -153,7 +153,7 @@ private fun BuildAdyenCreditCardScreen(
         }
       }
 
-      is AdyenCreditCardUiState.Input -> uiState.cardComponent(context)
+      is AdyenCreditCardUiState.Input -> uiState.getCardComponent(context)
         .observe(lifecycleOwner) { cardState ->
           onBuyClick = if (cardState.isReady && cardState.isInputValid) {
             {
@@ -218,7 +218,7 @@ private fun BuildAdyenCreditCardScreen(
         }
       ) {
         Column {
-          AdyenCreditCardView(cardComponent = uiState.cardComponent(context))
+          AdyenCreditCardView(cardComponent = uiState.getCardComponent(context))
           uiState.forgetCard?.let { forgetCard ->
             TextButton(
               onClick = {
