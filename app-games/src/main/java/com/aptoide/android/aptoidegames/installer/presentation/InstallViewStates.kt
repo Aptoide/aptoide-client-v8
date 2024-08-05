@@ -24,7 +24,9 @@ import cm.aptoide.pt.extensions.isActiveNetworkMetered
 import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.extensions.toMb
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_campaigns.toMMPLinkerCampaign
 import cm.aptoide.pt.install_manager.dto.Constraints
+import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.getNetworkType
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
@@ -85,6 +87,7 @@ fun installViewStates(
               networkType = context.getNetworkType(),
               analyticsContext = analyticsContext,
             )
+            app.campaigns?.toMMPLinkerCampaign()?.sendDownloadEvent(BuildConfig.OEMID)
             onInstallStarted()
             scheduledInstallListener.listenToWifiStart(app.packageName)
             saveAppDetails(app) {
@@ -105,6 +108,7 @@ fun installViewStates(
               networkType = context.getNetworkType(),
               analyticsContext = analyticsContext,
             )
+            app.campaigns?.toMMPLinkerCampaign()?.sendDownloadEvent(BuildConfig.OEMID)
             onInstallStarted()
             scheduledInstallListener.listenToWifiStart(app.packageName)
             saveAppDetails(app) {

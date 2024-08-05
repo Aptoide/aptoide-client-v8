@@ -57,6 +57,12 @@ android {
       value = "\"https://en.aptoide.com/company/legal?section=privacy\""
     )
 
+    buildConfigField(
+      type = "String",
+      name = "OEMID",
+      value = "\"${project.property("OEMID_APTOIDEGAMES")}\""
+    )
+
     testInstrumentationRunner = AndroidConfig.TEST_INSTRUMENTATION_RUNNER
 
     buildConfigFieldFromGradleProperty("ROOM_SCHEMA_VERSION")
