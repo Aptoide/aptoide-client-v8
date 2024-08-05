@@ -13,15 +13,13 @@ import coil.disk.DiskCache
 import coil.memory.MemoryCache
 import coil.util.DebugLogger
 import com.appcoins.payments.di.Payments
-import com.appcoins.payments.di.adyenEnvironment
 import com.appcoins.payments.di.adyenKey
 import com.appcoins.payments.di.adyenPaymentMethodFactory
-import com.appcoins.payments.di.createGuestWalletProvider
+import com.appcoins.payments.di.guestWalletUidPrefix
 import com.appcoins.payments.di.paymentMethodFactories
 import com.appcoins.payments.di.paymentScreenContentProvider
 import com.appcoins.payments.di.paypalPaymentMethodFactory
 import com.appcoins.payments.di.restClientInjectParams
-import com.appcoins.payments.di.walletProvider
 import com.appcoins.payments.uri_handler.PaymentScreenContentProvider
 import com.aptoide.android.aptoidegames.analytics.AGLogger
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
@@ -114,14 +112,13 @@ class AptoideApplication : Application(), ImageLoaderFactory {
       logger = agLogger,
     ).apply {
       restClientInjectParams = agGetUserAgent
-      walletProvider = createGuestWalletProvider("ag_")
+      guestWalletUidPrefix = "ag_"
       paymentMethodFactories = listOf(
         adyenPaymentMethodFactory,
         paypalPaymentMethodFactory
       )
       paymentScreenContentProvider = psContentProvider
       adyenKey = BuildConfig.ADYEN_KEY
-      adyenEnvironment = BuildConfig.ADYEN_ENVIRONMENT
     }
   }
 
