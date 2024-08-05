@@ -16,7 +16,10 @@ class AGLogger @Inject constructor() : Logger {
     }
   }
 
-  override fun logError(tag: String, throwable: Throwable) {
+  override fun logError(
+    tag: String,
+    throwable: Throwable,
+  ) {
     Timber.tag(tag).e(throwable)
   }
 }
