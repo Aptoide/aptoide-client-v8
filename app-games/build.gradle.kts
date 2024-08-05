@@ -108,11 +108,6 @@ android {
         value = "com.appcoins.payments.arch.Environment.DEV"
       )
       buildConfigField(
-        type = "com.adyen.checkout.core.api.Environment",
-        name = "ADYEN_ENVIRONMENT",
-        value = "com.adyen.checkout.core.api.Environment.TEST"
-      )
-      buildConfigField(
         type = "String",
         name = "ADYEN_KEY",
         value = adyenKey
@@ -136,11 +131,6 @@ android {
         type = "com.appcoins.payments.arch.Environment",
         name = "PAYMENTS_ENVIRONMENT",
         value = "com.appcoins.payments.arch.Environment.PROD"
-      )
-      buildConfigField(
-        type = "com.adyen.checkout.core.api.Environment",
-        name = "ADYEN_ENVIRONMENT",
-        value = "com.adyen.checkout.core.api.Environment.EUROPE"
       )
       buildConfigField(
         type = "String",
