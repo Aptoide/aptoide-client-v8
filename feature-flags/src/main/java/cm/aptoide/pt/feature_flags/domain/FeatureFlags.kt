@@ -35,6 +35,10 @@ class FeatureFlags @Inject constructor(
     featureFlags.optBoolean(key, default)
   }
 
+  suspend fun getFlagAsString(key: String, fallback: String): String = mutex.withLock {
+    featureFlags.optString(key, fallback)
+  }
+
   suspend fun getStrings(key: String): List<String> = mutex.withLock {
     featureFlags.optJSONArray(key)?.run {
       val result = mutableListOf<String>()
