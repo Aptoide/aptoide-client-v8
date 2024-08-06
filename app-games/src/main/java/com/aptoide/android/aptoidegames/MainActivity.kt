@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    checkDeeplinkContext(intent)
+    intent.addSourceContext()
 
     sendAGStartAnalytics()
     setContent {
@@ -116,25 +116,24 @@ class MainActivity : AppCompatActivity() {
 
   override fun onNewIntent(intent: Intent?) {
     super.onNewIntent(intent)
-    checkDeeplinkContext(intent)
+    intent?.addSourceContext()
     navController?.handleDeepLink(intent)
     handleNotificationIntent(intent)
   }
 
-  private fun checkDeeplinkContext(intent: Intent?) {
-    val deeplinkScheme = BuildConfig.DEEP_LINK_SCHEMA
-      .substringBefore("://", "ag")
+  private fun Intent.addSourceContext() {
+    val currentData = data ?: return
 
-    intent?.data?.let {
-      this.intent.data = when (it.scheme) {
-        deeplinkScheme -> it.withPrevScreen("deeplink")
+    val deeplinkScheme = BuildConfig.DEEP_LINK_SCHEMA.substringBefore("://")
 
-        "http",
-        "https",
-        -> it.withPrevScreen("app_link")
+    data = when (currentData.scheme) {
+      deeplinkScheme -> currentData.withPrevScreen("deeplink")
 
-        else -> it
-      }
+      "http",
+      "https",
+      -> currentData.withPrevScreen("app_link")
+
+      else -> currentData
     }
   }
 }
