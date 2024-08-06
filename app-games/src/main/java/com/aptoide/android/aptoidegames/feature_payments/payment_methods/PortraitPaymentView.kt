@@ -64,6 +64,7 @@ fun PortraitPaymentView(
       )
     }
 
+    is PaymentMethodsUiState.OngoingTransaction,
     is PaymentMethodsUiState.Loading -> if (hasPreselectedPaymentMethod) {
       LoadingView()
     } else {
