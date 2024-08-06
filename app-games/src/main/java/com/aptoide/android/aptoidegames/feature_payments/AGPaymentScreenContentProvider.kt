@@ -19,6 +19,7 @@ import com.aptoide.android.aptoidegames.feature_payments.payment_methods.payment
 import com.aptoide.android.aptoidegames.feature_payments.payment_methods.paymentsScreen
 import com.aptoide.android.aptoidegames.feature_payments.paypal.buildPaypalRoute
 import com.aptoide.android.aptoidegames.feature_payments.paypal.paypalPaymentScreen
+import com.aptoide.android.aptoidegames.feature_payments.transaction.ongoingTransactionScreen
 import com.aptoide.android.aptoidegames.feature_payments.wallet.WalletPaymentMethod
 import com.aptoide.android.aptoidegames.feature_payments.wallet.getPaymentsWalletInstallationRoute
 import com.aptoide.android.aptoidegames.feature_payments.wallet.paymentsWalletInstallationScreen
@@ -94,6 +95,15 @@ fun NavigationGraph(
       navigate = navController::navigate,
       goBack = navController::popBackStack,
       screenData = creditCardPaymentScreen(
+        onFinish = onFinish,
+      )
+    )
+
+    staticComposable(
+      navigate = navController::navigate,
+      goBack = navController::popBackStack,
+      screenData = ongoingTransactionScreen(
+        purchaseRequest = purchaseRequest,
         onFinish = onFinish,
       )
     )

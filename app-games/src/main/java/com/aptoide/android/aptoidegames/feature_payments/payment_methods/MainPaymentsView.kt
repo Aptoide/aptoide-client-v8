@@ -60,6 +60,7 @@ import com.aptoide.android.aptoidegames.feature_payments.AppGamesPaymentBottomSh
 import com.aptoide.android.aptoidegames.feature_payments.currentProductInfo
 import com.aptoide.android.aptoidegames.feature_payments.getRoute
 import com.aptoide.android.aptoidegames.feature_payments.presentation.PreselectedPaymentMethodEffect
+import com.aptoide.android.aptoidegames.feature_payments.transaction.buildOngoingTransactionRoute
 import com.aptoide.android.aptoidegames.feature_payments.wallet.WalletPaymentMethod
 import com.aptoide.android.aptoidegames.feature_payments.wallet.rememberWalletPaymentMethod
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -108,6 +109,9 @@ private fun MainPaymentsView(
         )
         hasPaymentStartBeenSent = true
       }
+    }
+    if (paymentState is PaymentMethodsUiState.OngoingTransaction) {
+      navigate(buildOngoingTransactionRoute(paymentState.uid))
     }
   }
 

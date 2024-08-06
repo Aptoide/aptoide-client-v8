@@ -66,6 +66,7 @@ fun LandscapePaymentView(
       )
     }
 
+    is PaymentMethodsUiState.OngoingTransaction,
     is PaymentMethodsUiState.Loading -> if (hasPreselectedPaymentMethod) {
       LoadingView()
     } else {

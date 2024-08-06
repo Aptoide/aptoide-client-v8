@@ -6,6 +6,7 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.install_manager.InstallManager
 import com.appcoins.payments.arch.PaymentMethod
 import com.appcoins.payments.arch.ProductInfoData
+import com.appcoins.payments.arch.Transaction
 import com.aptoide.android.aptoidegames.analytics.dto.AnalyticsPayload
 import com.aptoide.android.aptoidegames.analytics.dto.AnalyticsUIContext
 import com.aptoide.android.aptoidegames.analytics.dto.BundleMeta
@@ -439,6 +440,19 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
     params = paymentMethod.toParameters(P_CONTEXT to context)
   )
 
+  fun sendPaymentDismissedEvent(
+    transaction: Transaction?,
+    context: String?,
+  ) = analyticsSender.logEvent(
+    name = "iap_payment_dismissed",
+    params = transaction
+      ?.toParameters(P_CONTEXT to context)
+      ?: mapOf(
+        P_PAYMENT_METHOD to "unknown",
+        P_CONTEXT to context
+      )
+  )
+
   fun sendPaymentBackEvent(paymentMethod: PaymentMethod<*>) = analyticsSender.logEvent(
     name = "iap_payment_back",
     params = paymentMethod.toParameters()
@@ -465,6 +479,31 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
   ) = analyticsSender.logEvent(
     name = "iap_payment_conclusion",
     params = paymentMethod.toParameters(
+      P_STATUS to "error",
+      P_ERROR_CODE to errorCode
+    )
+  )
+
+  fun sendPaymentSuccessEvent(transaction: Transaction?) = analyticsSender.logEvent(
+    name = "iap_payment_conclusion",
+    params = transaction
+      ?.toParameters(P_STATUS to "success")
+      ?: mapOf(
+        P_PAYMENT_METHOD to "unknown",
+        P_STATUS to "success"
+      )
+  )
+
+  fun sendPaymentErrorEvent(
+    transaction: Transaction?,
+    errorCode: String? = null,
+  ) = analyticsSender.logEvent(
+    name = "iap_payment_conclusion",
+    params = transaction?.toParameters(
+      P_STATUS to "error",
+      P_ERROR_CODE to errorCode
+    ) ?: mapOf(
+      P_PAYMENT_METHOD to "unknown",
       P_STATUS to "error",
       P_ERROR_CODE to errorCode
     )
@@ -543,17 +582,31 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
   private fun ProductInfoData?.toParameters(vararg pairs: Pair<String, Any?>) = this?.run {
     mapOfNonNull(
       *pairs,
-      "sku_id" to sku,
-      "sku_name" to title,
-      "price" to priceValue,
-      "currency" to priceCurrency
+      P_SKU_ID to sku,
+      P_SKU_NAME to title,
+      P_PRICE to priceValue,
+      P_CURRENCY to priceCurrency
     )
   } ?: emptyMap()
+
+  private fun Transaction.toParameters(vararg pairs: Pair<String, Any?>) = mapOfNonNull(
+    *pairs,
+    P_PACKAGE_NAME to domain,
+    P_PAYMENT_METHOD to method,
+    P_SKU_ID to product,
+    P_SKU_NAME to product,
+    P_PRICE to price.value,
+    P_CURRENCY to price.currency
+  )
 
   companion object {
     private const val P_OPEN_TYPE = "open_type"
     private const val P_FIRST_LAUNCH = "first_launch"
     private const val P_PACKAGE_NAME = "package_name"
+    private const val P_SKU_ID = "sku_id"
+    private const val P_SKU_NAME = "sku_name"
+    private const val P_PRICE = "price"
+    private const val P_CURRENCY = "currency"
     private const val P_CONTEXT = "context"
     private const val P_ITEM_POSITION = "item_position"
     private const val P_SCROLL_COUNT = "scroll_count"
