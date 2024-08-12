@@ -7,6 +7,9 @@ import kotlinx.coroutines.withContext
 
 interface Campaign {
   val adListId: String?
+
+  val placementType: String?
+
   suspend fun sendImpressionEvent(
     type: String,
     toReplace: Map<String, String> = emptyMap(),
@@ -38,6 +41,8 @@ data class CampaignImpl constructor(
   private val repository: CampaignRepository,
 ) : Campaign {
   override var adListId: String? = null
+
+  override var placementType: String? = null
 
   override suspend fun sendImpressionEvent(
     type: String,
@@ -101,7 +106,7 @@ data class CampaignImpl constructor(
       .joinToString("&")
       .takeIf { it.isNotEmpty() }
       ?.let {
-        (if (newUrl.contains("?")) "?" else "&") + it
+        (if (newUrl.contains("?")) "&" else "?") + it
       }
     return newUrl + (params ?: "")
   }
