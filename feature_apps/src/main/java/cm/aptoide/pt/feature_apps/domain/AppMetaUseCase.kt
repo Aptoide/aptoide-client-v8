@@ -2,6 +2,7 @@ package cm.aptoide.pt.feature_apps.domain
 
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.AppsRepository
+import cm.aptoide.pt.feature_apps.presentation.toAppIdParam
 import cm.aptoide.pt.feature_apps.presentation.toPackageNameParam
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -13,6 +14,15 @@ class AppMetaUseCase @Inject constructor(private val appsRepository: AppsReposit
     appsRepository.getMetaBySource(
       source = packageName.toPackageNameParam(),
       useStoreName = packageName != "com.appcoins.wallet"
+    )
+
+  suspend fun getMetaInfoByAppId(
+    appId: Long,
+    useStoreName: Boolean = true,
+  ): App =
+    appsRepository.getMetaBySource(
+      source = appId.toAppIdParam(),
+      useStoreName = useStoreName
     )
 
   suspend fun getMetaInfoBySource(
