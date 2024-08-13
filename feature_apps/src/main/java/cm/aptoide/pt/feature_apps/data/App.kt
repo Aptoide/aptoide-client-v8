@@ -12,6 +12,7 @@ import kotlin.random.Random
 import kotlin.random.nextLong
 
 data class App(
+  val id: Long,
   val name: String,
   val packageName: String,
   val md5: String,
@@ -72,6 +73,7 @@ data class Obb(
 )
 
 val emptyApp = App(
+  id = 0,
   name = "",
   packageName = "",
   md5 = "",
@@ -126,6 +128,7 @@ val emptyApp = App(
 val randomApp
   get() =
     emptyApp.copy(
+      id = Random.nextLong(),
       name = getRandomString(range = 2..5, capitalize = true),
       packageName = getRandomString(range = 3..5, separator = "."),
       appSize = Random.nextLong(1_000_000L..1_000_000_000L),
