@@ -180,3 +180,5 @@ fun categoryApps(
 }
 
 fun String.toPackageNameParam() = "package_name=$this"
+
+fun Long.toAppIdParam() = "app_id=$this"
