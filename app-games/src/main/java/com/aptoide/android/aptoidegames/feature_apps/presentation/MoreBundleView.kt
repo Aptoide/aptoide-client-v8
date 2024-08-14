@@ -24,6 +24,8 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiStateProvider
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
+import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
+import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
@@ -74,6 +76,7 @@ fun MoreBundleView(
   MoreBundleViewContent(
     uiState = uiState,
     title = title,
+    bundleTag = bundleTag,
     reload = reload,
     noNetworkReload = {
       reload()
@@ -90,6 +93,7 @@ fun MoreBundleView(
 private fun MoreBundleViewContent(
   uiState: AppsListUiState,
   title: String,
+  bundleTag: String,
   reload: () -> Unit,
   noNetworkReload: () -> Unit,
   navigateBack: () -> Unit,
@@ -112,7 +116,13 @@ private fun MoreBundleViewContent(
       )
 
       is AppsListUiState.Idle -> AppsList(
-        appList = uiState.apps,
+        appList = uiState.apps.onEach {
+          it.campaigns?.run {
+            if (AptoideMMPCampaign.allowedBundleTags.keys.contains(bundleTag)) {
+              placementType = "see_all"
+            }
+          }
+        },
         navigate = navigate,
       )
     }
@@ -138,6 +148,7 @@ private fun AppsList(
       AppItem(
         app = app,
         onClick = {
+          app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(analyticsContext.bundleMeta?.tag)
           genericAnalytics.sendAppPromoClick(
             app = app,
             analyticsContext = analyticsContext.copy(itemPosition = index)
@@ -163,6 +174,7 @@ private fun MoreBundleViewPreview(
     MoreBundleViewContent(
       uiState = uiState,
       title = getRandomString(range = 1..5, capitalize = true),
+      bundleTag = "",
       reload = {},
       noNetworkReload = {},
       navigateBack = {},

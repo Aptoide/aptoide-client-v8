@@ -68,6 +68,7 @@ internal var hasSentImpression = false
 fun AptoideMMPController(
   appsListUiState: AppsListUiState,
   bundleTag: String,
+  placement: String,
 ) {
   when (appsListUiState) {
     is AppsListUiState.Idle ->
@@ -76,6 +77,9 @@ fun AptoideMMPController(
           it.campaigns?.toAptoideMMPCampaign()
             ?.sendImpressionEvent(bundleTag, BuildConfig.APPLICATION_ID)
           hasSentImpression = true
+        }
+        it.campaigns?.run {
+          placementType = placement
         }
       }
 
@@ -98,8 +102,12 @@ fun PublisherTakeOverBundle(
     }
   }
 
-  AptoideMMPController(appsListUiState = uiState, bundleTag = bundle.tag)
-  AptoideMMPController(appsListUiState = bottomUiState, bundleTag = bundle.tag)
+  AptoideMMPController(
+    appsListUiState = uiState, bundleTag = bundle.tag, placement = "app_1st_line"
+  )
+  AptoideMMPController(
+    appsListUiState = bottomUiState, bundleTag = bundle.tag, placement = "app_2nd_line"
+  )
 
   PublisherTakeOverContent(
     bundle = bundle,
@@ -164,6 +172,7 @@ fun PublisherTakeOverContent(
         )
         when (uiState) {
           is AppsListUiState.Idle -> PublisherTakeOverListView(
+            bundleTag = bundle.tag,
             appsList = uiState.apps,
             navigate = navigate,
           )
@@ -203,6 +212,7 @@ fun PublisherTakeOverContent(
 
 @Composable
 fun PublisherTakeOverListView(
+  bundleTag: String,
   appsList: List<App>,
   navigate: (String) -> Unit,
 ) {
@@ -233,6 +243,9 @@ fun PublisherTakeOverListView(
         modifier = Modifier
           .semantics(mergeDescendants = true) { }
           .clickable(onClick = {
+            app.campaigns
+              ?.toAptoideMMPCampaign()
+              ?.sendClickEvent(bundleTag)
             genericAnalytics.sendAppPromoClick(
               app = app,
               analyticsContext = analyticsContext.copy(itemPosition = page)
