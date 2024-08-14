@@ -32,6 +32,7 @@ import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_apps.presentation.previewAppsListIdleState
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
+import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.randomBundle
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
@@ -118,6 +119,7 @@ internal fun AppsRowView(
       AppGridView(
         app = item,
         onClick = {
+          item.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(analyticsContext.bundleMeta?.tag)
           genericAnalytics.sendAppPromoClick(
             app = item,
             analyticsContext = analyticsContext.copy(itemPosition = index)
