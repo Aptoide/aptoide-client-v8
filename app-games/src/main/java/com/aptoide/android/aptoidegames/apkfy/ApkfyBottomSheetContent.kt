@@ -12,7 +12,7 @@ import com.aptoide.android.aptoidegames.BottomSheetContent
 import com.aptoide.android.aptoidegames.BottomSheetHeader
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.OverrideAnalyticsAPKFY
-import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
+import com.aptoide.android.aptoidegames.appview.buildAppViewRouteByAppId
 import com.aptoide.android.aptoidegames.feature_apps.presentation.AppItem
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -37,7 +37,9 @@ class ApkfyBottomSheetContent(private val app: App) : BottomSheetContent {
         AppItem(
           app = app,
           onClick = {
-            navigateTo(buildAppViewRoute(app.packageName))
+            navigateTo(
+              buildAppViewRouteByAppId(appId = app.id, useStoreName = false)
+            )
             dismiss()
           }
         ) {

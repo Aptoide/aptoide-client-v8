@@ -60,6 +60,7 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.rememberAppBySource
+import cm.aptoide.pt.feature_apps.presentation.toAppIdParam
 import cm.aptoide.pt.feature_apps.presentation.toPackageNameParam
 import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
 import cm.aptoide.pt.feature_editorial.presentation.relatedEditorialsCardViewModel
@@ -127,6 +128,11 @@ fun appViewScreen() = ScreenData.withAnalytics(
 
 fun buildAppViewRoute(packageName: String): String =
   buildAppViewRouteBySource(packageName.toPackageNameParam())
+
+fun buildAppViewRouteByAppId(
+  appId: Long,
+  useStoreName: Boolean = true,
+): String = buildAppViewRouteBySource(appId.toAppIdParam(), useStoreName)
 
 fun buildAppViewRouteBySource(
   source: String,
