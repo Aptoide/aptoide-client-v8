@@ -131,6 +131,29 @@ fun OverrideAnalyticsBundleMeta(
 }
 
 @Composable
+fun OverrideAnalyticsSearchMeta(
+  searchMeta: SearchMeta?,
+  navigate: (String) -> Unit,
+  content: @Composable ((String) -> Unit) -> Unit,
+) {
+  val current = LocalAnalyticsContext.current
+  CompositionLocalProvider(
+    LocalAnalyticsContext provides AnalyticsUIContext(
+      currentScreen = current.currentScreen,
+      previousScreen = current.previousScreen,
+      bundleMeta = current.bundleMeta,
+      searchMeta = searchMeta,
+      itemPosition = current.itemPosition,
+      isApkfy = false
+    )
+  ) {
+    content {
+      navigate(it.withSearchMeta(searchMeta))
+    }
+  }
+}
+
+@Composable
 fun InitialAnalyticsMeta(
   screenAnalyticsName: String,
   navigate: (String) -> Unit,
