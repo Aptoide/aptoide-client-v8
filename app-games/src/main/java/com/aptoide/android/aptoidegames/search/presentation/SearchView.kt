@@ -61,9 +61,9 @@ import cm.aptoide.pt.feature_search.utils.fixQuery
 import cm.aptoide.pt.feature_search.utils.isValidSearch
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.dto.SearchMeta
+import com.aptoide.android.aptoidegames.analytics.presentation.OverrideAnalyticsSearchMeta
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
-import com.aptoide.android.aptoidegames.analytics.presentation.withSearchMeta
 import com.aptoide.android.aptoidegames.appview.LoadingView
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getAsterisk
@@ -105,60 +105,60 @@ fun searchScreen() = ScreenData.withAnalytics(
   val focusManager = LocalFocusManager.current
   val keyboardController = LocalSoftwareKeyboardController.current
 
-  SearchView(
-    uiState = uiState,
-    searchValue = searchValue,
-    onSelectSearchSuggestion = { suggestion, searchType, index ->
-      focusManager.clearFocus()
-      keyboardController?.hide()
-      searchMeta = SearchMeta(
-        insertedKeyword = searchValue,
-        searchKeyword = suggestion,
-        searchType = searchType.type
-      )
-        .also {
-          searchAnalytics.sendSearchEvent(
-            searchMeta = it,
-            searchTermPosition = index,
-          )
-        }
-      searchValue = suggestion
-      searchViewModel.onSelectSearchSuggestion(suggestion)
-    },
-    onRemoveSuggestion = { searchViewModel.onRemoveSearchSuggestion(it) },
-    onSearchValueChanged = {
-      searchValue = it
-      searchMeta = null
-      searchViewModel.onSearchInputValueChanged(it)
-    },
-    onSearchQueryClick = {
-      if (searchValue.isValidSearch()) {
-        searchValue = searchValue.trim()
-        searchMeta = SearchMeta(
-          insertedKeyword = searchValue,
-          searchKeyword = searchValue,
-          searchType = SearchType.MANUAL.type
-        )
-          .also(searchAnalytics::sendSearchEvent)
+  OverrideAnalyticsSearchMeta(searchMeta = searchMeta, navigate = navigate) { navigateTo ->
+    SearchView(
+      uiState = uiState,
+      searchValue = searchValue,
+      onSelectSearchSuggestion = { suggestion, searchType, index ->
         focusManager.clearFocus()
         keyboardController?.hide()
-        searchViewModel.searchApp(searchValue)
-      }
-    },
-    onItemClick = { index, app ->
-      searchAnalytics.sendSearchResultClickEvent(
-        app = app,
-        position = index,
-        searchMeta = searchMeta!!,
-      )
-      navigate(
-        buildAppViewRoute(app.packageName)
-          .withSearchMeta(searchMeta)
-          .withItemPosition(index)
-      )
-    },
-    onItemInstallStarted = {}
-  )
+        searchMeta = SearchMeta(
+          insertedKeyword = searchValue,
+          searchKeyword = suggestion,
+          searchType = searchType.type
+        )
+          .also {
+            searchAnalytics.sendSearchEvent(
+              searchMeta = it,
+              searchTermPosition = index,
+            )
+          }
+        searchValue = suggestion
+        searchViewModel.onSelectSearchSuggestion(suggestion)
+      },
+      onRemoveSuggestion = { searchViewModel.onRemoveSearchSuggestion(it) },
+      onSearchValueChanged = {
+        searchValue = it
+        searchMeta = null
+        searchViewModel.onSearchInputValueChanged(it)
+      },
+      onSearchQueryClick = {
+        if (searchValue.isValidSearch()) {
+          searchValue = searchValue.trim()
+          searchMeta = SearchMeta(
+            insertedKeyword = searchValue,
+            searchKeyword = searchValue,
+            searchType = SearchType.MANUAL.type
+          )
+            .also(searchAnalytics::sendSearchEvent)
+          focusManager.clearFocus()
+          keyboardController?.hide()
+          searchViewModel.searchApp(searchValue)
+        }
+      },
+      onItemClick = { index, app ->
+        searchAnalytics.sendSearchResultClickEvent(
+          app = app,
+          position = index,
+          searchMeta = searchMeta!!,
+        )
+        navigateTo(
+          buildAppViewRoute(app.packageName).withItemPosition(index)
+        )
+      },
+      onItemInstallStarted = {}
+    )
+  }
 }
 
 @Composable
