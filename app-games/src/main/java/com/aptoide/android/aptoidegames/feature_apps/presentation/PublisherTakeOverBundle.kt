@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,10 +35,13 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
+import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
+import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.randomBundle
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
+import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
@@ -58,6 +62,27 @@ import com.aptoide.android.aptoidegames.theme.Palette
 import kotlin.random.Random
 import kotlin.random.nextInt
 
+internal var hasSentImpression = false
+
+@Composable
+fun AptoideMMPController(
+  appsListUiState: AppsListUiState,
+  bundleTag: String,
+) {
+  when (appsListUiState) {
+    is AppsListUiState.Idle ->
+      appsListUiState.apps.onEach {
+        if (it.isAppCoins && !hasSentImpression) {
+          it.campaigns?.toAptoideMMPCampaign()
+            ?.sendImpressionEvent(bundleTag, BuildConfig.APPLICATION_ID)
+          hasSentImpression = true
+        }
+      }
+
+    else -> {}
+  }
+}
+
 @Composable
 fun PublisherTakeOverBundle(
   bundle: Bundle,
@@ -65,6 +90,16 @@ fun PublisherTakeOverBundle(
 ) {
   val (uiState, _) = rememberAppsByTag(bundle.tag, bundle.timestamp)
   val (bottomUiState, _) = rememberAppsByTag(bundle.bottomTag ?: "", bundle.timestamp)
+
+  LaunchedEffect(Unit) {
+    if (!AptoideMMPCampaign.allowedBundleTags.keys.contains(bundle.tag)) {
+      AptoideMMPCampaign.allowedBundleTags[bundle.tag] = "PTO" to ("pto-${bundle.tag}")
+      AptoideMMPCampaign.allowedBundleTags["${bundle.tag}-more"] = "PTO" to ("pto-${bundle.tag}")
+    }
+  }
+
+  AptoideMMPController(appsListUiState = uiState, bundleTag = bundle.tag)
+  AptoideMMPController(appsListUiState = bottomUiState, bundleTag = bundle.tag)
 
   PublisherTakeOverContent(
     bundle = bundle,
