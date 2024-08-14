@@ -1,5 +1,6 @@
 package com.aptoide.android.aptoidegames.apkfy
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -9,10 +10,13 @@ import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.domain.AppMetaUseCase
+import cm.aptoide.pt.feature_apps.presentation.toAppIdParam
+import cm.aptoide.pt.feature_apps.presentation.toPackageNameParam
 import cm.aptoide.pt.feature_mmp.apkfy.domain.ApkfyManager
 import cm.aptoide.pt.feature_mmp.apkfy.domain.ApkfyModel
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
@@ -22,6 +26,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ApkfyViewModel @Inject constructor(
+  @ApplicationContext private val context: Context,
   private val apkfyManager: ApkfyManager,
   private val appMetaUseCase: AppMetaUseCase,
   private val biAnalytics: BIAnalytics,
@@ -44,27 +49,32 @@ class ApkfyViewModel @Inject constructor(
   init {
     viewModelScope.launch {
       try {
-        apkfyManager.getApkfy()?.run {
-          setApkfyUTMProperties(this)
+        apkfyManager.getApkfy()
+          ?.also { setApkfyUTMProperties(it) }
+          ?.takeIf { it.packageName != context.packageName }
+          ?.run {
+            (appId?.toAppIdParam() ?: packageName?.toPackageNameParam())
+              ?.let { source ->
+                var app = appMetaUseCase.getMetaInfoBySource(
+                  source = source,
+                  useStoreName = false
+                )
 
-          packageName?.let {
-            var app = appMetaUseCase.getMetaInfo(it)
-
-            if (oemId != null) {
-              val oemIdQuery = "?oemid=${oemId}"
-              app = app.copy(
-                file = app.file.run {
-                  copy(
-                    path = path + oemIdQuery,
-                    path_alt = path_alt + oemIdQuery
+                if (oemId != null) {
+                  val oemIdQuery = "?oemid=${oemId}"
+                  app = app.copy(
+                    file = app.file.run {
+                      copy(
+                        path = path + oemIdQuery,
+                        path_alt = path_alt + oemIdQuery
+                      )
+                    }
                   )
                 }
-              )
-            }
 
-            viewModelState.update { app }
+                viewModelState.update { app }
+              }
           }
-        }
       } catch (e: Throwable) {
         e.printStackTrace()
       }
