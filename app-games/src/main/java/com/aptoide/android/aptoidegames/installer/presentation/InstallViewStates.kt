@@ -24,6 +24,7 @@ import cm.aptoide.pt.extensions.isActiveNetworkMetered
 import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.extensions.toMb
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import cm.aptoide.pt.feature_campaigns.toMMPLinkerCampaign
 import cm.aptoide.pt.install_manager.dto.Constraints
 import com.aptoide.android.aptoidegames.BuildConfig
@@ -87,6 +88,25 @@ fun installViewStates(
               networkType = context.getNetworkType(),
               analyticsContext = analyticsContext,
             )
+            if (analyticsContext.currentScreen != "AppView") {
+              app.campaigns?.toAptoideMMPCampaign()
+                ?.sendClickEvent(bundleTag = analyticsContext.bundleMeta?.tag, isCta = true)
+              app.campaigns?.toAptoideMMPCampaign()
+                ?.sendDownloadEvent(
+                  bundleTag = analyticsContext.bundleMeta?.tag,
+                  searchKeyword = analyticsContext.searchMeta?.searchKeyword,
+                  currentScreen = analyticsContext.currentScreen,
+                  isCta = true
+                )
+            } else {
+              app.campaigns?.placementType = "appview"
+              app.campaigns?.toAptoideMMPCampaign()
+                ?.sendDownloadEvent(
+                  bundleTag = analyticsContext.bundleMeta?.tag,
+                  searchKeyword = analyticsContext.searchMeta?.searchKeyword,
+                  currentScreen = analyticsContext.currentScreen
+                )
+            }
             app.campaigns?.toMMPLinkerCampaign()?.sendDownloadEvent(BuildConfig.OEMID)
             onInstallStarted()
             scheduledInstallListener.listenToWifiStart(app.packageName)
@@ -108,6 +128,25 @@ fun installViewStates(
               networkType = context.getNetworkType(),
               analyticsContext = analyticsContext,
             )
+            if (analyticsContext.currentScreen != "AppView") {
+              app.campaigns?.toAptoideMMPCampaign()
+                ?.sendClickEvent(bundleTag = analyticsContext.bundleMeta?.tag, isCta = true)
+              app.campaigns?.toAptoideMMPCampaign()
+                ?.sendDownloadEvent(
+                  bundleTag = analyticsContext.bundleMeta?.tag,
+                  searchKeyword = analyticsContext.searchMeta?.searchKeyword,
+                  currentScreen = analyticsContext.currentScreen,
+                  isCta = true
+                )
+            } else {
+              app.campaigns?.placementType = "appview"
+              app.campaigns?.toAptoideMMPCampaign()
+                ?.sendDownloadEvent(
+                  bundleTag = analyticsContext.bundleMeta?.tag,
+                  searchKeyword = analyticsContext.searchMeta?.searchKeyword,
+                  currentScreen = analyticsContext.currentScreen
+                )
+            }
             app.campaigns?.toMMPLinkerCampaign()?.sendDownloadEvent(BuildConfig.OEMID)
             onInstallStarted()
             scheduledInstallListener.listenToWifiStart(app.packageName)
