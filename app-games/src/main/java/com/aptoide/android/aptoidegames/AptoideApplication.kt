@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
 import cm.aptoide.pt.feature_categories.analytics.AptoideAnalyticsInfoProvider
 import cm.aptoide.pt.install_manager.InstallManager
 import coil.ImageLoader
@@ -98,6 +99,7 @@ class AptoideApplication : Application(), ImageLoaderFactory {
     initPayments()
     initIndicative()
     setUserProperties()
+    AptoideMMPCampaign.init(BuildConfig.OEMID, "AG")
   }
 
   private fun initIndicative() = biAnalytics.setup(
