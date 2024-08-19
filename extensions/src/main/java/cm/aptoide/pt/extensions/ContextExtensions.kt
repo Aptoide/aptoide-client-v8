@@ -28,7 +28,11 @@ fun Context.getAppIconDrawable(packageName: String): Drawable? =
   packageManager.getPackageInfo(packageName)?.applicationInfo?.loadIconDrawable(packageManager)
 
 fun Context.getAppName(packageName: String): String =
-  packageManager.getPackageInfo(packageName)?.applicationInfo?.loadLabel(packageManager).toString()
+  packageManager.getPackageInfo(packageName)
+    ?.applicationInfo
+    ?.loadLabel(packageManager)
+    ?.toString()
+    ?: ""
 
 fun Context.getAppSize(packageName: String): Long =
   packageManager.getPackageInfo(packageName)?.getAppSize() ?: 0
