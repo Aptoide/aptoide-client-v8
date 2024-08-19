@@ -95,7 +95,7 @@ private fun PurchaseInfoRowPortrait(
 ) {
   val localContext = LocalContext.current
   val appIcon = localContext.getAppIconDrawable(buyingPackage)
-  val appName = localContext.getAppName(buyingPackage)
+  val appName = localContext.getAppName(buyingPackage).takeIf(String::isNotBlank)
 
   Row(
     modifier = modifier
@@ -110,12 +110,15 @@ private fun PurchaseInfoRowPortrait(
       horizontalAlignment = Alignment.Start,
     ) {
       Row(modifier = Modifier.padding(bottom = 8.dp)) {
-        AppNameText(
-          modifier = Modifier
-            .fillMaxWidth()
-            .weight(1f),
-          appName = appName
-        )
+        appName?.let {
+          AppNameText(
+            modifier = Modifier
+              .fillMaxWidth()
+              .weight(1f),
+            appName = it
+          )
+        } ?: PurchaseSkeleton()
+
         price?.let {
           PriceText(
             modifier = Modifier.align(Alignment.Top),
@@ -139,7 +142,7 @@ private fun PurchaseInfoRowLandscape(
 ) {
   val localContext = LocalContext.current
   val appIcon = localContext.getAppIconDrawable(buyingPackage)
-  val appName = localContext.getAppName(buyingPackage)
+  val appName = localContext.getAppName(buyingPackage).takeIf(String::isNotBlank)
 
   Row(
     modifier = modifier
@@ -151,7 +154,10 @@ private fun PurchaseInfoRowLandscape(
       modifier = Modifier.padding(start = 16.dp),
       horizontalAlignment = Alignment.Start,
     ) {
-      AppNameText(appName = appName)
+      appName?.let {
+        AppNameText(appName = it)
+      } ?: PurchaseSkeleton()
+
       productName?.let {
         ProductNameText(productName = it)
       } ?: PurchaseSkeleton()
