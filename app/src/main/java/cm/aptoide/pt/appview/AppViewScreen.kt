@@ -102,7 +102,7 @@ fun AppViewScreen(
   navigateBack: () -> Unit = {},
   navigate: (String) -> Unit = {},
 ) {
-  val (uiState, _) = rememberApp(packageName = packageName, adListId = "")
+  val (uiState, _) = rememberApp(packageName = packageName)
 
   val editorialsCardViewModel = relatedEditorialsCardViewModel(packageName = packageName)
   val relatedEditorialsUiState by editorialsCardViewModel.uiState.collectAsState()

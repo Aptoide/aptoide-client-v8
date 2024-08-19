@@ -14,7 +14,6 @@ import cm.aptoide.pt.aptoide_network.di.StoreDomain
 import cm.aptoide.pt.aptoide_network.di.StoreName
 import cm.aptoide.pt.aptoide_network.di.VersionCode
 import cm.aptoide.pt.environment_info.DeviceInfo
-import cm.aptoide.pt.feature_campaigns.data.CampaignUrlNormalizer
 import cm.aptoide.pt.feature_editorial.di.DefaultEditorialUrl
 import cm.aptoide.pt.feature_flags.AptoideFeatureFlagsRepository
 import cm.aptoide.pt.feature_flags.data.FeatureFlagsRepository
@@ -44,7 +43,7 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.*
+import java.util.Locale
 import javax.inject.Singleton
 
 @Module
@@ -82,10 +81,6 @@ class RepositoryModule {
   @APIChainBDSDomain
   fun provideAPIChainBDSDomain(): String = BuildConfig.APTOIDE_WEB_SERVICES_APICHAIN_BDS_HOST
 
-  @Provides
-  @Singleton
-  fun providesCampaignUrlNormalizer(@ApplicationContext context: Context): CampaignUrlNormalizer =
-    CampaignUrlNormalizer(context)
 
   @Singleton
   @Provides
