@@ -1,4 +1,4 @@
-package com.aptoide.android.aptoidegames.analytics
+package com.aptoide.android.aptoidegames.feature_payments.analytics
 
 import com.appcoins.payments.analytics.Logger
 import timber.log.Timber

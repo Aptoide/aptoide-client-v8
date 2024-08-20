@@ -22,9 +22,9 @@ import com.appcoins.payments.di.paymentScreenContentProvider
 import com.appcoins.payments.di.paypalPaymentMethodFactory
 import com.appcoins.payments.di.restClientInjectParams
 import com.appcoins.payments.uri_handler.PaymentScreenContentProvider
-import com.aptoide.android.aptoidegames.analytics.AGLogger
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
+import com.aptoide.android.aptoidegames.feature_payments.analytics.AGLogger
 import com.aptoide.android.aptoidegames.home.repository.ThemePreferencesManager
 import com.aptoide.android.aptoidegames.installer.analytics.ScheduledDownloadsListenerImpl
 import com.aptoide.android.aptoidegames.installer.notifications.InstallerNotificationsManager
