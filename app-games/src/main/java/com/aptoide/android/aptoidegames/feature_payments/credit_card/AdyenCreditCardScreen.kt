@@ -9,6 +9,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -32,7 +33,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.view.isVisible
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
@@ -369,23 +369,42 @@ private fun AdyenCreditCardScreenPortrait(
 private fun AdyenCreditCardView(
   cardComponent: CardComponent,
   modifier: Modifier = Modifier,
+  delayMillis: Long = 100L,
 ) {
+  val context = LocalContext.current
   val lifecycleOwner = LocalLifecycleOwner.current
-  AndroidView(
-    factory = {
-      CardView(it).apply {
-        attach(cardComponent, lifecycleOwner)
-      }
-    },
-    update = {
-      it.findViewById<SwitchCompat>(com.adyen.checkout.card.R.id.switch_storePaymentMethod)?.run {
-        if (isVisible) {
-          isChecked = true
+  var isVisible by remember { mutableStateOf(false) }
+
+  LaunchedEffect(Unit) {
+    delay(delayMillis)
+    isVisible = true
+  }
+
+  val cardView = remember(
+    key1 = context,
+    key2 = cardComponent,
+    key3 = lifecycleOwner
+  ) {
+    CardView(context).apply {
+      attach(cardComponent, lifecycleOwner)
+    }
+  }
+
+  if (isVisible) {
+    AndroidView(
+      factory = { cardView },
+      update = {
+        it.findViewById<SwitchCompat>(com.adyen.checkout.card.R.id.switch_storePaymentMethod)?.run {
+          if (isVisible) {
+            isChecked = true
+          }
         }
-      }
-    },
-    modifier = modifier.fillMaxWidth(),
-  )
+      },
+      modifier = modifier.fillMaxWidth()
+    )
+  } else {
+    Spacer(modifier = Modifier.height(200.dp))
+  }
 }
 
 @PreviewLight
