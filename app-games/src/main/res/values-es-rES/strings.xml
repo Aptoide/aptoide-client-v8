@@ -187,8 +187,8 @@
   <string name="iap_already_processing_title">Parece que esta compra está siendo procesada.</string>
   <string name="iap_already_processing_body">Esta compra puede tardar un poco, espera hasta que se complete o ponte en contacto con nosotros.</string>
   <!-- Bonus Page -->
-  <string name="bonus_page_title_1">A Bonus on Every Purchase</string>
-  <string name="bonus_page_body_1">Look for the games identified with %1$s, install the AppCoins Wallet and get up to %2$s%% bonus in all purchases. You can then use this bonus to make your next purchases in your favorite games!</string>
-  <string name="bonus_page_title_2">Want More?</string>
-  <string name="bonus_page_body_2">You can get an extra %s%% bonus by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!</string>
+  <string name="bonus_page_title_1">Un Bonus con Cada Compra</string>
+  <string name="bonus_page_body_1">Busca los juegos identificados con el símbolo %1$s, instala la AppCoins Wallet y recibe un bonus de hasta el %2$s%% en todas las compras. ¡Podrás usar este bonus para hacer tus próximas compras en tus juegos favoritos!</string>
+  <string name="bonus_page_title_2">¿Quieres Más?</string>
+  <string name="bonus_page_body_2">Puedes recibir un bonus extra del %s%% usando el código promocional exclusivo de Aptoide Games para juegos específicos. ¡Estate atento y recibirás una notificación!</string>
 </resources>
