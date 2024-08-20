@@ -186,4 +186,9 @@
   <string name="purchase_error_expired_card_title">Кажется, срок действия вашей карты истек.</string>
   <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
   <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
+  <!-- Bonus Page -->
+  <string name="bonus_page_title_1">A Bonus on Every Purchase</string>
+  <string name="bonus_page_body_1">Look for the games identified with %1$s, install the AppCoins Wallet and get up to %2$s%% bonus in all purchases. You can then use this bonus to make your next purchases in your favorite games!</string>
+  <string name="bonus_page_title_2">Want More?</string>
+  <string name="bonus_page_body_2">You can get an extra %s%% bonus by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!</string>
 </resources>
