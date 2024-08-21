@@ -5,10 +5,6 @@
   <string name="games">Oyunlar</string>
   <string name="categories">Kategoriler</string>
   <string name="search">Arama</string>
-  <!-- Common -->
-  <string name="send_button">Gönder</string>
-  <string name="try_again">Lütfen tekrar dene.</string>
-  <string name="please_wait">Lütfen bekle.</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Ayarlar</string>
   <string name="overflow_menu_terms_conditions">Şartlar &amp; Koşullar</string>
@@ -79,12 +75,18 @@
   <string name="button_back_title">Geri</string>
   <string name="button_see_all_title">Tümünü Gör</string>
   <string name="editorials_view_no_content_message">Hay aksi, burada henüz içerik yok!</string>
+  <string name="error_no_content_body">Oops, we couldn\'t find related content yet!</string>
   <string name="button_update_title">Güncelleme</string>
   <string name="button_open_app_title">Aç</string>
   <string name="install_waiting_download_message">İndirme bekleniyor</string>
   <string name="downloading_percentage_body">%1$s[%1$s] / %2$s</string>
   <string name="install_downloading_message">İndiriliyor</string>
   <!-- Common -->
+  <string name="send_button">Gönder</string>
+  <string name="try_again">Lütfen tekrar dene.</string>
+  <string name="please_wait">Lütfen bekle.</string>
+  <string name="ok_button">Ok</string>
+  <string name="cancel_button">Cancel</string>
   <string name="download_now_button">Şimdi İndirin</string>
   <string name="uninstall_button">Kaldır</string>
   <string name="go_back_button">Geri git</string>
@@ -94,6 +96,7 @@
   <string name="waiting_for_connection">Bağlantı bekleniyor</string>
   <string name="wait_for_wifi_button">Wi-Fi için bekle</string>
   <string name="continue_button">Devam et</string>
+  <string name="error_install_permissions_body">For your security, your phone currently isn\'t allowed to install apps from this source. You can change this in Settings.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Yer Yok</string>
   <string name="out_of_space_body">Yüklemeye devam etmek için %s gerekli.</string>
