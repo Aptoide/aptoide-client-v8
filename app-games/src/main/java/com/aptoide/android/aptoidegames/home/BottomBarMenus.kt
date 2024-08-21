@@ -1,6 +1,7 @@
 package com.aptoide.android.aptoidegames.home
 
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.dto.BundleMeta
 import com.aptoide.android.aptoidegames.analytics.presentation.withBundleMeta
 import com.aptoide.android.aptoidegames.categories.presentation.buildAllCategoriesRoute
@@ -12,26 +13,26 @@ import com.aptoide.android.aptoidegames.theme.Palette
 
 sealed class BottomBarMenus(
   val route: String,
-  val title: String,
+  val titleId: Int,
   val icon: ImageVector,
 ) {
   object Games : BottomBarMenus(
     route = gamesRoute,
-    title = "Discovery", //TODO: hardcoded string
+    titleId = R.string.bottom_navigation_discovery,
     icon = getDiscovery(Palette.GreyLight)
   )
 
   object Search : BottomBarMenus(
     route = searchRoute
       .withBundleMeta(BundleMeta("search", "app")),
-    title = "Search", //TODO: hardcoded string
+    titleId = R.string.search,
     icon = getSearch(Palette.GreyLight)
   )
 
   object Categories : BottomBarMenus(
     route = buildAllCategoriesRoute()
       .withBundleMeta(BundleMeta("categories-more", "app")),
-    title = "Categories", //TODO: hardcoded string
+    titleId = R.string.categories,
     icon = getCategories(Palette.GreyLight)
   )
 }
