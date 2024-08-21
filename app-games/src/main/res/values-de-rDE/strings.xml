@@ -5,10 +5,6 @@
   <string name="games">Spiele</string>
   <string name="categories">Kategorien</string>
   <string name="search">Suche</string>
-  <!-- Common -->
-  <string name="send_button">Senden</string>
-  <string name="try_again">Bitte versuche es noch einmal.</string>
-  <string name="please_wait">Bitte warten.</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Einstellungen</string>
   <string name="overflow_menu_terms_conditions">Allgemeine Geschäftsbedingungen</string>
@@ -79,12 +75,18 @@
   <string name="button_back_title">Zurück</string>
   <string name="button_see_all_title">Alle anzeigen</string>
   <string name="editorials_view_no_content_message">Hoppla, hier gibt es noch keinen Inhalt!</string>
+  <string name="error_no_content_body">Oops, we couldn\'t find related content yet!</string>
   <string name="button_update_title">Aktualisieren</string>
   <string name="button_open_app_title">Öffnen</string>
   <string name="install_waiting_download_message">Warten auf den Download</string>
   <string name="downloading_percentage_body">%1$s%% von %2$s</string>
   <string name="install_downloading_message">Download läuft</string>
   <!-- Common -->
+  <string name="send_button">Senden</string>
+  <string name="try_again">Bitte versuche es noch einmal.</string>
+  <string name="please_wait">Bitte warten.</string>
+  <string name="ok_button">Ok</string>
+  <string name="cancel_button">Cancel</string>
   <string name="download_now_button">Jetzt herunterladen</string>
   <string name="uninstall_button">Deinstallieren</string>
   <string name="go_back_button">Zurück</string>
@@ -94,6 +96,7 @@
   <string name="waiting_for_connection">Warten auf Verbindung</string>
   <string name="wait_for_wifi_button">Warten auf WLAN</string>
   <string name="continue_button">Fortfahren</string>
+  <string name="error_install_permissions_body">For your security, your phone currently isn\'t allowed to install apps from this source. You can change this in Settings.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Kein Speicher mehr</string>
   <string name="out_of_space_body">Sie benötigen %s um die Installation abschliessen zu können.</string>
