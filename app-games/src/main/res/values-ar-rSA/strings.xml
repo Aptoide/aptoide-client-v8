@@ -5,10 +5,6 @@
   <string name="games">ألعاب</string>
   <string name="categories">الفئات</string>
   <string name="search">بحث</string>
-  <!-- Common -->
-  <string name="send_button">إرسال</string>
-  <string name="try_again">حاول مرة أخرى.</string>
-  <string name="please_wait">يرجى الانتظار.</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">الإعدادات</string>
   <string name="overflow_menu_terms_conditions">الشروط &amp; والأحكام</string>
@@ -79,12 +75,18 @@
   <string name="button_back_title">الرجوع</string>
   <string name="button_see_all_title">مشاهدة الكل</string>
   <string name="editorials_view_no_content_message">ييي، لا يوجد أي محتوى هنا حتى الآن!</string>
+  <string name="error_no_content_body">Oops, we couldn\'t find related content yet!</string>
   <string name="button_update_title">تحديث</string>
   <string name="button_open_app_title">فتح</string>
   <string name="install_waiting_download_message">بانتظار التنزيل</string>
   <string name="downloading_percentage_body">%1$s%% من %2$s</string>
   <string name="install_downloading_message">جاري التحميل</string>
   <!-- Common -->
+  <string name="send_button">إرسال</string>
+  <string name="try_again">حاول مرة أخرى.</string>
+  <string name="please_wait">يرجى الانتظار.</string>
+  <string name="ok_button">Ok</string>
+  <string name="cancel_button">Cancel</string>
   <string name="download_now_button">تنزيل الآن</string>
   <string name="uninstall_button">إلغاء التثبيت</string>
   <string name="go_back_button">عودة</string>
@@ -94,6 +96,7 @@
   <string name="waiting_for_connection">بانتظار الاتصال</string>
   <string name="wait_for_wifi_button">انتظر الوايفاي</string>
   <string name="continue_button">متابعة</string>
+  <string name="error_install_permissions_body">For your security, your phone currently isn\'t allowed to install apps from this source. You can change this in Settings.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">لا توجد مساحة</string>
   <string name="out_of_space_body">أنت بحاجة إلى %s لمتابعة التثبيت.</string>
