@@ -5,10 +5,6 @@
   <string name="games">Games</string>
   <string name="categories">Categorieën</string>
   <string name="search">Zoeken</string>
-  <!-- Common -->
-  <string name="send_button">Sturen</string>
-  <string name="try_again">Probeer het opnieuw.</string>
-  <string name="please_wait">Even geduld.</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Instellingen</string>
   <string name="overflow_menu_terms_conditions">Algemene voorwaarden</string>
@@ -79,12 +75,18 @@
   <string name="button_back_title">Terug</string>
   <string name="button_see_all_title">Alles tonen</string>
   <string name="editorials_view_no_content_message">Oeps, er is hier nog geen content!</string>
+  <string name="error_no_content_body">Oops, we couldn\'t find related content yet!</string>
   <string name="button_update_title">Bijwerken</string>
   <string name="button_open_app_title">Openen</string>
   <string name="install_waiting_download_message">Wachten op download</string>
   <string name="downloading_percentage_body">%1$s%% van %2$s</string>
   <string name="install_downloading_message">Aan het downloaden</string>
   <!-- Common -->
+  <string name="send_button">Sturen</string>
+  <string name="try_again">Probeer het opnieuw.</string>
+  <string name="please_wait">Even geduld.</string>
+  <string name="ok_button">Ok</string>
+  <string name="cancel_button">Cancel</string>
   <string name="download_now_button">Nu downloaden</string>
   <string name="uninstall_button">Verwijderen</string>
   <string name="go_back_button">Terug</string>
@@ -94,6 +96,7 @@
   <string name="waiting_for_connection">Wachten op verbinding</string>
   <string name="wait_for_wifi_button">Wachten op wifi</string>
   <string name="continue_button">Doorgaan</string>
+  <string name="error_install_permissions_body">For your security, your phone currently isn\'t allowed to install apps from this source. You can change this in Settings.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Geen opslagruimte</string>
   <string name="out_of_space_body">Je hebt %s nodig om met de installatie door te gaan.</string>
