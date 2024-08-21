@@ -5,10 +5,6 @@
   <string name="games">Games</string>
   <string name="categories">Categories</string>
   <string name="search">Search</string>
-  <!-- Common -->
-  <string name="send_button">Send</string>
-  <string name="try_again">Please try again.</string>
-  <string name="please_wait">Please wait.</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Settings</string>
   <string name="overflow_menu_terms_conditions">Terms &amp; Conditions</string>
@@ -79,12 +75,18 @@
   <string name="button_back_title">Back</string>
   <string name="button_see_all_title">See All</string>
   <string name="editorials_view_no_content_message">Oops, there\'s no content here yet!</string>
+  <string name="error_no_content_body">Oops, we couldn\'t find related content yet!</string>
   <string name="button_update_title">Update</string>
   <string name="button_open_app_title">Open</string>
   <string name="install_waiting_download_message">Waiting for download</string>
   <string name="downloading_percentage_body">%1$s%% of %2$s</string>
   <string name="install_downloading_message">Downloading</string>
   <!-- Common -->
+  <string name="send_button">Send</string>
+  <string name="try_again">Please try again.</string>
+  <string name="please_wait">Please wait.</string>
+  <string name="ok_button">Ok</string>
+  <string name="cancel_button">Cancel</string>
   <string name="download_now_button">Download Now</string>
   <string name="uninstall_button">Uninstall</string>
   <string name="go_back_button">Go Back</string>
@@ -94,6 +96,7 @@
   <string name="waiting_for_connection">Waiting for connection</string>
   <string name="wait_for_wifi_button">Wait for Wi-Fi</string>
   <string name="continue_button">Continue</string>
+  <string name="error_install_permissions_body">For your security, your phone currently isn\'t allowed to install apps from this source. You can change this in Settings.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Out of Space</string>
   <string name="out_of_space_body">You need %s to continue with the installation.</string>
