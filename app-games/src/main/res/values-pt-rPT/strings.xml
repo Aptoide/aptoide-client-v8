@@ -5,10 +5,6 @@
   <string name="games">Jogos</string>
   <string name="categories">Categorias</string>
   <string name="search">Pesquisar</string>
-  <!-- Common -->
-  <string name="send_button">Enviar</string>
-  <string name="try_again">Por favor, tenta novamente.</string>
-  <string name="please_wait">Por favor aguarda.</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Definições</string>
   <string name="overflow_menu_terms_conditions">Termos &amp; Condições</string>
@@ -79,12 +75,18 @@
   <string name="button_back_title">Voltar</string>
   <string name="button_see_all_title">Ver Tudo</string>
   <string name="editorials_view_no_content_message">Ups, ainda não há conteúdo aqui!</string>
+  <string name="error_no_content_body">Oops, we couldn\'t find related content yet!</string>
   <string name="button_update_title">Atualizar</string>
   <string name="button_open_app_title">Abrir</string>
   <string name="install_waiting_download_message">A aguardar pelo download</string>
   <string name="downloading_percentage_body">%1$s%% de %2$s</string>
   <string name="install_downloading_message">A transferir</string>
   <!-- Common -->
+  <string name="send_button">Enviar</string>
+  <string name="try_again">Por favor, tenta novamente.</string>
+  <string name="please_wait">Por favor aguarda.</string>
+  <string name="ok_button">Ok</string>
+  <string name="cancel_button">Cancel</string>
   <string name="download_now_button">Faz Download Agora</string>
   <string name="uninstall_button">Desinstalar</string>
   <string name="go_back_button">Voltar Atrás</string>
@@ -94,6 +96,7 @@
   <string name="waiting_for_connection">A aguardar ligação</string>
   <string name="wait_for_wifi_button">Espera por Wi-Fi</string>
   <string name="continue_button">Continuar</string>
+  <string name="error_install_permissions_body">For your security, your phone currently isn\'t allowed to install apps from this source. You can change this in Settings.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Sem Espaço</string>
   <string name="out_of_space_body">Precisas de %s para continuar com a instalação.</string>
