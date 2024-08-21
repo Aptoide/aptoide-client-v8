@@ -5,10 +5,6 @@
   <string name="games">Game</string>
   <string name="categories">Kategori</string>
   <string name="search">Cari</string>
-  <!-- Common -->
-  <string name="send_button">Kirim</string>
-  <string name="try_again">Silakan coba lagi.</string>
-  <string name="please_wait">Harap tunggu.</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Pengaturan</string>
   <string name="overflow_menu_terms_conditions">Syarat &amp; Ketentuan</string>
@@ -79,12 +75,18 @@
   <string name="button_back_title">Kembali</string>
   <string name="button_see_all_title">Lihat semua</string>
   <string name="editorials_view_no_content_message">Ups, belum ada konten di sini!</string>
+  <string name="error_no_content_body">Oops, we couldn\'t find related content yet!</string>
   <string name="button_update_title">Perbarui</string>
   <string name="button_open_app_title">Buka</string>
   <string name="install_waiting_download_message">Menunggu unduhan</string>
   <string name="downloading_percentage_body">%1$s%% dari %2$s</string>
   <string name="install_downloading_message">Mengunduh</string>
   <!-- Common -->
+  <string name="send_button">Kirim</string>
+  <string name="try_again">Silakan coba lagi.</string>
+  <string name="please_wait">Harap tunggu.</string>
+  <string name="ok_button">Ok</string>
+  <string name="cancel_button">Cancel</string>
   <string name="download_now_button">Unduh Sekarang</string>
   <string name="uninstall_button">Copot pemasangan</string>
   <string name="go_back_button">Kembali</string>
@@ -94,6 +96,7 @@
   <string name="waiting_for_connection">Menunggu koneksi</string>
   <string name="wait_for_wifi_button">Tunggu Wi-Fi</string>
   <string name="continue_button">Lanjutkan</string>
+  <string name="error_install_permissions_body">For your security, your phone currently isn\'t allowed to install apps from this source. You can change this in Settings.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Kehabisan Ruang Penyimpanan</string>
   <string name="out_of_space_body">Anda membutuhkan %s untuk melanjutkan instalasi.</string>
