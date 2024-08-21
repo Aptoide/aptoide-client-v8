@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
@@ -31,6 +32,7 @@ import com.appcoins.payments.arch.PaymentsResult
 import com.appcoins.payments.arch.PurchaseRequest
 import com.appcoins.payments.uri_handler.PaymentsActivityResult
 import com.appcoins.payments.uri_handler.PaymentsCancelledResult
+import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.drawables.icons.getWalletInstalled
@@ -162,14 +164,14 @@ fun WalletInstalledPortraitView() {
     )
     Text(
       modifier = Modifier.padding(top = 54.dp, start = 32.dp, end = 32.dp),
-      text = "The AppCoins Wallet is now installed!", //TODO hardcoded string
+      text = stringResource(id = R.string.iap_appc_wallet_install_success_body),
       style = AGTypography.Title,
       textAlign = TextAlign.Center,
       color = Palette.Black
     )
     Text(
       modifier = Modifier.padding(top = 12.dp, bottom = 88.dp, start = 32.dp, end = 32.dp),
-      text = "You'll return to the game to complete your purchase.", //TODO hardcoded string
+      text = stringResource(id = R.string.iap_appc_wallet_install_success_title),
       style = AGTypography.DescriptionGames,
       textAlign = TextAlign.Center,
       color = Palette.Black
@@ -199,14 +201,14 @@ fun WalletInstalledLandscapeView() {
     )
     Text(
       modifier = Modifier.padding(top = 16.dp, start = 10.dp, end = 10.dp),
-      text = "The AppCoins Wallet is now installed!", //TODO hardcoded string
+      text = stringResource(id = R.string.iap_appc_wallet_install_success_body),
       style = AGTypography.Title,
       textAlign = TextAlign.Center,
       color = Palette.Black
     )
     Text(
       modifier = Modifier.padding(top = 6.dp, start = 10.dp, end = 10.dp, bottom = 40.dp),
-      text = "You'll return to the game to complete your purchase.", //TODO hardcoded string
+      text = stringResource(id = R.string.iap_appc_wallet_install_success_title),
       style = AGTypography.DescriptionGames,
       textAlign = TextAlign.Center,
       color = Palette.Black

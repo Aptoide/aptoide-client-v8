@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import cm.aptoide.pt.extensions.PreviewDark
+import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.design_system.PrimaryButton
 import com.aptoide.android.aptoidegames.design_system.SecondaryUnderlinedTextButton
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
@@ -38,7 +40,7 @@ fun PaymentButtons(
     PrimaryButton(
       modifier = Modifier.fillMaxWidth(),
       onClick = onBuyClick,
-      title = "Buy", // TODO hardcoded string
+      title = stringResource(id = R.string.buy_button),
       enabled = onBuyClickEnabled
     )
     AppGamesOtherPaymentMethodsButton(
@@ -54,5 +56,5 @@ fun AppGamesOtherPaymentMethodsButton(
 ) = SecondaryUnderlinedTextButton(
   modifier = modifier,
   onClick = onOtherPaymentMethodsClick,
-  text = "Other payment methods" // TODO hardcoded string
+  text = stringResource(id = R.string.iap_other_payment_methods_button)
 )

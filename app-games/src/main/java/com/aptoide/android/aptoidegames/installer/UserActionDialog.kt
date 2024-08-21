@@ -129,16 +129,16 @@ fun UserActionDialog() {
     PermissionsContent(rationale = it.confirmation.getSourceString()) {
       if (it.confirmation == UserConfirmation.WRITE_EXTERNAL_RATIONALE) {
         DialogButton(
-          title = "Ok",
+          title = stringResource(id = R.string.ok_button),
           onClick = { viewModel.onResult(false) },
         )
       } else {
         DialogButton(
-          title = "Cancel",
+          title = stringResource(id = R.string.cancel_button),
           onClick = { viewModel.onResult(false) },
         )
         DialogButton(
-          title = "Settings",
+          title = stringResource(id = R.string.settings_title),
           onClick = { viewModel.onResult(true) },
         )
       }

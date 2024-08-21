@@ -333,7 +333,7 @@ fun AppViewContent(
             }
         )
         AptoideOutlinedText(
-          text = "Up to 20% Bonus", //TODO Hardcoded String,
+          text = stringResource(id = R.string.bonus_banner_title, "20"),
           style = AGTypography.InputsM,
           outlineWidth = 15f,
           outlineColor = Palette.Black,
@@ -437,51 +437,51 @@ fun AppInfoSection(
     modifier = Modifier.padding(top = 12.dp, bottom = 48.dp, start = 16.dp, end = 16.dp),
   ) {
     AppInfoRow(
-      infoCategory = "Version Name",
+      infoCategory = stringResource(R.string.appview_info_version_name_title),
       infoContent = app.versionName
     )
     AppInfoRow(
-      infoCategory = "Package Name",
+      infoCategory = stringResource(R.string.appview_info_package_name_title),
       infoContent = app.packageName
     )
     AppInfoRow(
-      infoCategory = "Release",
+      infoCategory = stringResource(R.string.appview_info_release_title),
       infoContent = app.releaseDate
         ?.parseDate()
         ?.toFormattedString(pattern = "d MMM yyyy") ?: ""
     )
     AppInfoRow(
-      infoCategory = "Updated on",
+      infoCategory = stringResource(R.string.appview_info_update_title),
       infoContent = app.updateDate
         ?.parseDate(pattern = "yyyy-MM-dd")
         ?.toFormattedString(pattern = "d MMM yyyy") ?: ""
     )
     AppInfoRow(
-      infoCategory = "Download size",
+      infoCategory = stringResource(R.string.appview_info_download_size_title),
       infoContent = TextFormatter.formatBytes(app.appSize)
     )
     app.website?.let {
       AppInfoRowWithAction(
-        infoCategory = "Website",
+        infoCategory = stringResource(R.string.appview_info_website_title),
         onClick = { context.openUrlInBrowser(it) }
       )
     }
     app.email?.let {
       val subject = stringResource(R.string.app_info_send_email_subject)
       AppInfoRowWithAction(
-        infoCategory = "Email",
+        infoCategory = stringResource(R.string.appview_info_email_title),
         onClick = { context.sendMail(it, subject) }
       )
     }
     app.privacyPolicy?.let {
       AppInfoRowWithAction(
-        infoCategory = "Privacy Policy",
+        infoCategory = stringResource(R.string.overflow_menu_privacy_policy),
         onClick = { context.openUrlInBrowser(it) }
       )
     }
     app.permissions?.let {
       AppInfoRowWithAction(
-        infoCategory = "Permissions",
+        infoCategory = stringResource(R.string.appview_info_permissions_title),
         onClick = {
           navigate(buildAppPermissionsRoute(app.packageName))
         }
@@ -581,7 +581,7 @@ private fun ShowRelatedContentView(
   } else if (state.isEmpty()) {
     SmallEmptyView(
       padding = PaddingValues(vertical = 64.dp, horizontal = 48.dp),
-      title = "Oops, we couldn\\'t find related content yet!"
+      title = stringResource(id = R.string.error_no_content_body)
     )
   } else {
     Column(
