@@ -15,6 +15,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
@@ -24,6 +25,7 @@ import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.AppUiStateProvider
 import cm.aptoide.pt.feature_apps.presentation.rememberApp
 import com.aptoide.android.aptoidegames.AppIconImage
+import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -72,7 +74,7 @@ fun AppInfoPermissionsViewContent(
   ) {
     AppGamesTopBar(
       navigateBack = navigateBack,
-      title = "Permissions"
+      title = stringResource(R.string.appview_info_permissions_title)
     )
 
     when (uiState) {

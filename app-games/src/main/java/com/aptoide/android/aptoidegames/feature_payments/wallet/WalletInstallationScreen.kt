@@ -22,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
@@ -39,6 +40,7 @@ import com.appcoins.payments.arch.PaymentsResult
 import com.appcoins.payments.arch.PurchaseRequest
 import com.appcoins.payments.arch.emptyPurchaseRequest
 import com.appcoins.payments.uri_handler.PaymentsCancelledResult
+import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.dto.BundleMeta
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
@@ -324,7 +326,7 @@ fun PayWithWalletInstallationCard(
       )
       Text(
         modifier = Modifier.padding(start = 8.dp),
-        text = "Pay with the AppCoins Wallet", //TODO hardcoded string
+        text = stringResource(id = R.string.iap_appc_title),
         style = AGTypography.InputsM,
         maxLines = 2,
         overflow = TextOverflow.Ellipsis,
@@ -332,7 +334,7 @@ fun PayWithWalletInstallationCard(
       )
     }
     Text(
-      text = "You'll get a bonus in all purchases!", //TODO hardcoded string
+      text = stringResource(id = R.string.iap_appc_body),
       maxLines = 2,
       overflow = TextOverflow.Ellipsis,
       style = AGTypography.Body,

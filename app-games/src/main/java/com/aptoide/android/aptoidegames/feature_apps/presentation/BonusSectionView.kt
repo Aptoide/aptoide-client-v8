@@ -70,7 +70,7 @@ fun BonusSectionView() {
     )
     Column(modifier = Modifier.padding(start = 16.dp, top = 44.dp)) {
       AptoideOutlinedText(
-        text = "Up to 20% Bonus", //TODO Hardcoded String,
+        text = stringResource(id = R.string.bonus_banner_title, "20"),
         style = AGTypography.Title,
         outlineWidth = 17f,
         outlineColor = Palette.Black,

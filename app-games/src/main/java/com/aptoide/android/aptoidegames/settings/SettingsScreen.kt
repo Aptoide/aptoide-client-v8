@@ -140,14 +140,14 @@ fun SettingsViewContent(
         }
       }
       SettingsSectionDivider()
-      SettingsSection(title = "Payments") {
+      SettingsSection(title = stringResource(id = R.string.settings_billing_terms_body)) {
         Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
           SettingsCaretItem(
-            title = "Contact Support Team",
+            title = stringResource(id = R.string.settings_payments_title),
             onClick = onContactSupportClick
           )
           SettingsCaretItem(
-            title = "Billing Terms of Use",
+            title = stringResource(id = R.string.settings_contact_support_body),
             onClick = onBillingTermsClick
           )
         }
@@ -225,7 +225,7 @@ fun SettingsViewContent(
             .fillMaxWidth()
         ) {
           Text(
-            text = "Powered by",
+            text = stringResource(id = R.string.powered_by_title),
             style = AGTypography.Body,
             color = Palette.GreyLight
           )
