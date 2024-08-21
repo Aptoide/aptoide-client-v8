@@ -5,10 +5,6 @@
   <string name="games">Játékok</string>
   <string name="categories">Kategóriák</string>
   <string name="search">Keresés</string>
-  <!-- Common -->
-  <string name="send_button">Küldés</string>
-  <string name="try_again">Próbáld újra.</string>
-  <string name="please_wait">Kis türelmet.</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Beállítások</string>
   <string name="overflow_menu_terms_conditions">Általános Szerződési Feltételek</string>
@@ -79,12 +75,18 @@
   <string name="button_back_title">Vissza</string>
   <string name="button_see_all_title">Mind megjelenítése</string>
   <string name="editorials_view_no_content_message">Hoppá, itt még nincs tartalom!</string>
+  <string name="error_no_content_body">Oops, we couldn\'t find related content yet!</string>
   <string name="button_update_title">Frissítés</string>
   <string name="button_open_app_title">Megnyitás</string>
   <string name="install_waiting_download_message">Várakozás a letöltésre</string>
   <string name="downloading_percentage_body">%2$s/%1$s%%</string>
   <string name="install_downloading_message">Letöltés folyamatban</string>
   <!-- Common -->
+  <string name="send_button">Küldés</string>
+  <string name="try_again">Próbáld újra.</string>
+  <string name="please_wait">Kis türelmet.</string>
+  <string name="ok_button">Ok</string>
+  <string name="cancel_button">Cancel</string>
   <string name="download_now_button">Letöltés most</string>
   <string name="uninstall_button">Eltávolítás</string>
   <string name="go_back_button">Vissza</string>
@@ -94,6 +96,7 @@
   <string name="waiting_for_connection">Várakozás a kapcsolatra</string>
   <string name="wait_for_wifi_button">Megvárom a wifit</string>
   <string name="continue_button">Folytatás</string>
+  <string name="error_install_permissions_body">For your security, your phone currently isn\'t allowed to install apps from this source. You can change this in Settings.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Nincs elég hely</string>
   <string name="out_of_space_body">A telepítés folytatásához %s tárhely szükséges.</string>
