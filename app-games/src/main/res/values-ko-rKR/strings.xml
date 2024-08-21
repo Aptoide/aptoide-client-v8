@@ -5,10 +5,6 @@
   <string name="games">게임</string>
   <string name="categories">카테고리</string>
   <string name="search">검색</string>
-  <!-- Common -->
-  <string name="send_button">전송</string>
-  <string name="try_again">다시 시도해 주세요.</string>
-  <string name="please_wait">잠시 기다려주세요.</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">설정</string>
   <string name="overflow_menu_terms_conditions">이용 약관</string>
@@ -79,12 +75,18 @@
   <string name="button_back_title">이전</string>
   <string name="button_see_all_title">모두 보기</string>
   <string name="editorials_view_no_content_message">아, 아직 콘텐츠가 없네요!</string>
+  <string name="error_no_content_body">Oops, we couldn\'t find related content yet!</string>
   <string name="button_update_title">업데이트</string>
   <string name="button_open_app_title">열기</string>
   <string name="install_waiting_download_message">다운로드 대기 중</string>
   <string name="downloading_percentage_body">%2$s의 %1$s%%</string>
   <string name="install_downloading_message">다운로드중</string>
   <!-- Common -->
+  <string name="send_button">전송</string>
+  <string name="try_again">다시 시도해 주세요.</string>
+  <string name="please_wait">잠시 기다려주세요.</string>
+  <string name="ok_button">Ok</string>
+  <string name="cancel_button">Cancel</string>
   <string name="download_now_button">지금 다운로드</string>
   <string name="uninstall_button">삭제</string>
   <string name="go_back_button">뒤로 가기</string>
@@ -94,6 +96,7 @@
   <string name="waiting_for_connection">연결 대기 중</string>
   <string name="wait_for_wifi_button">와이파이 대기</string>
   <string name="continue_button">계속</string>
+  <string name="error_install_permissions_body">For your security, your phone currently isn\'t allowed to install apps from this source. You can change this in Settings.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">공간 부족</string>
   <string name="out_of_space_body">설치를 계속하려면 %s이(가) 필요합니다.</string>
