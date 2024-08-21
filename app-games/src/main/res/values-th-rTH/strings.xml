@@ -5,10 +5,6 @@
   <string name="games">เกมส์</string>
   <string name="categories">หมวดหมู่</string>
   <string name="search">ค้นหา</string>
-  <!-- Common -->
-  <string name="send_button">ส่ง</string>
-  <string name="try_again">โปรดลองอีกครั้ง</string>
-  <string name="please_wait">โปรดรอ</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">การตั้งค่า</string>
   <string name="overflow_menu_terms_conditions">ข้อตกลง&amp;เงื่อนไข</string>
@@ -79,12 +75,18 @@
   <string name="button_back_title">ย้อนกลับ</string>
   <string name="button_see_all_title">ดูทั้งหมด</string>
   <string name="editorials_view_no_content_message">อ๊ะ ยังไม่มีเนื้อหาที่นี่!</string>
+  <string name="error_no_content_body">Oops, we couldn\'t find related content yet!</string>
   <string name="button_update_title">อัพเดต</string>
   <string name="button_open_app_title">เปิด</string>
   <string name="install_waiting_download_message">กำลังรอเพื่อดาวโหลด</string>
   <string name="downloading_percentage_body">%1$s%%จาก%2$s</string>
   <string name="install_downloading_message">กำลังดาวน์โหลด</string>
   <!-- Common -->
+  <string name="send_button">ส่ง</string>
+  <string name="try_again">โปรดลองอีกครั้ง</string>
+  <string name="please_wait">โปรดรอ</string>
+  <string name="ok_button">Ok</string>
+  <string name="cancel_button">Cancel</string>
   <string name="download_now_button">ดาวน์โหลดตอนนี้</string>
   <string name="uninstall_button">ถอนการติดตั้ง</string>
   <string name="go_back_button">ย้อนกลับ</string>
@@ -94,6 +96,7 @@
   <string name="waiting_for_connection">รอการเชื่อมต่อ</string>
   <string name="wait_for_wifi_button">รอ Wi-Fi</string>
   <string name="continue_button">ต่อ</string>
+  <string name="error_install_permissions_body">For your security, your phone currently isn\'t allowed to install apps from this source. You can change this in Settings.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">ไม่มีพื้นที่ว่าง</string>
   <string name="out_of_space_body">คุณต้องใช้ %s เพื่อดำเนินการติดตั้งต่อ</string>
