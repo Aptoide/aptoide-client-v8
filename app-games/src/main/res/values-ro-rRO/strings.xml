@@ -5,10 +5,6 @@
   <string name="games">Jocuri</string>
   <string name="categories">Categorii</string>
   <string name="search">Căutare</string>
-  <!-- Common -->
-  <string name="send_button">Trimite</string>
-  <string name="try_again">Încearcă din nou.</string>
-  <string name="please_wait">Te rugăm să aștepți.</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Setări</string>
   <string name="overflow_menu_terms_conditions">Termeni &amp; condiții</string>
@@ -79,12 +75,18 @@
   <string name="button_back_title">Înapoi</string>
   <string name="button_see_all_title">Vezi toate</string>
   <string name="editorials_view_no_content_message">Ups, nu există conținut aici!</string>
+  <string name="error_no_content_body">Oops, we couldn\'t find related content yet!</string>
   <string name="button_update_title">Actualizează</string>
   <string name="button_open_app_title">Deschide</string>
   <string name="install_waiting_download_message">Se așteaptă descărcarea</string>
   <string name="downloading_percentage_body">%1$s%% din %2$s</string>
   <string name="install_downloading_message">Descarcă</string>
   <!-- Common -->
+  <string name="send_button">Trimite</string>
+  <string name="try_again">Încearcă din nou.</string>
+  <string name="please_wait">Te rugăm să aștepți.</string>
+  <string name="ok_button">Ok</string>
+  <string name="cancel_button">Cancel</string>
   <string name="download_now_button">Descarcă acum</string>
   <string name="uninstall_button">Dezinstalare</string>
   <string name="go_back_button">Du-te înapoi</string>
@@ -94,6 +96,7 @@
   <string name="waiting_for_connection">Se așteaptă conexiunea</string>
   <string name="wait_for_wifi_button">Se așteaptă Wi-Fi</string>
   <string name="continue_button">Continuă</string>
+  <string name="error_install_permissions_body">For your security, your phone currently isn\'t allowed to install apps from this source. You can change this in Settings.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Spațiu epuizat</string>
   <string name="out_of_space_body">Ai nevoie de %s pentru a continua cu instalarea.</string>
