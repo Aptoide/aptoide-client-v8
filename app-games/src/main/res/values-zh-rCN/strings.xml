@@ -5,10 +5,6 @@
   <string name="games">游戏</string>
   <string name="categories">类别</string>
   <string name="search">搜索</string>
-  <!-- Common -->
-  <string name="send_button">发送</string>
-  <string name="try_again">请重试。</string>
-  <string name="please_wait">请稍候。</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">设置</string>
   <string name="overflow_menu_terms_conditions">条款&amp;条件</string>
@@ -79,12 +75,18 @@
   <string name="button_back_title">返回</string>
   <string name="button_see_all_title">查看所有</string>
   <string name="editorials_view_no_content_message">哎呀，这里还没有内容！</string>
+  <string name="error_no_content_body">Oops, we couldn\'t find related content yet!</string>
   <string name="button_update_title">更新</string>
   <string name="button_open_app_title">打开</string>
   <string name="install_waiting_download_message">等待下载中</string>
   <string name="downloading_percentage_body">%1$s%%/%2$s</string>
   <string name="install_downloading_message">下载中</string>
   <!-- Common -->
+  <string name="send_button">发送</string>
+  <string name="try_again">请重试。</string>
+  <string name="please_wait">请稍候。</string>
+  <string name="ok_button">Ok</string>
+  <string name="cancel_button">Cancel</string>
   <string name="download_now_button">立即下载</string>
   <string name="uninstall_button">卸载</string>
   <string name="go_back_button">返回</string>
@@ -94,6 +96,7 @@
   <string name="waiting_for_connection">等待网络连接中</string>
   <string name="wait_for_wifi_button">等待 Wi-Fi 中</string>
   <string name="continue_button">继续</string>
+  <string name="error_install_permissions_body">For your security, your phone currently isn\'t allowed to install apps from this source. You can change this in Settings.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">空间不足</string>
   <string name="out_of_space_body">需要%s才能继续安装。</string>
