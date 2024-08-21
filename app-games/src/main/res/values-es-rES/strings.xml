@@ -5,10 +5,6 @@
   <string name="games">Juegos</string>
   <string name="categories">Categorías</string>
   <string name="search">Buscar</string>
-  <!-- Common -->
-  <string name="send_button">Enviar</string>
-  <string name="try_again">¡Prueba de nuevo!</string>
-  <string name="please_wait">Por favor, espera.</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Configuración</string>
   <string name="overflow_menu_terms_conditions">Términos y Condiciones</string>
@@ -79,12 +75,18 @@
   <string name="button_back_title">Volver</string>
   <string name="button_see_all_title">Ver todo</string>
   <string name="editorials_view_no_content_message">Ups, ¡todavía no hay contenido aquí!</string>
+  <string name="error_no_content_body">Oops, we couldn\'t find related content yet!</string>
   <string name="button_update_title">Actualizar</string>
   <string name="button_open_app_title">Abrir</string>
   <string name="install_waiting_download_message">Esperando descarga</string>
   <string name="downloading_percentage_body">%1$s%% de %2$s</string>
   <string name="install_downloading_message">Descargando</string>
   <!-- Common -->
+  <string name="send_button">Enviar</string>
+  <string name="try_again">¡Prueba de nuevo!</string>
+  <string name="please_wait">Por favor, espera.</string>
+  <string name="ok_button">Ok</string>
+  <string name="cancel_button">Cancel</string>
   <string name="download_now_button">Descargar ahora</string>
   <string name="uninstall_button">Desinstalar</string>
   <string name="go_back_button">Volver</string>
@@ -94,6 +96,7 @@
   <string name="waiting_for_connection">Esperando conexión</string>
   <string name="wait_for_wifi_button">Esperar por wifi</string>
   <string name="continue_button">Continuar</string>
+  <string name="error_install_permissions_body">For your security, your phone currently isn\'t allowed to install apps from this source. You can change this in Settings.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">No queda espacio</string>
   <string name="out_of_space_body">Necesitas %s para continuar con la instalación.</string>
