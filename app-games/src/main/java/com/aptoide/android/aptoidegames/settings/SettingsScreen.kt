@@ -83,8 +83,8 @@ fun settingsScreen(showSnack: (String) -> Unit) = ScreenData(
         genericAnalytics.sendDownloadOverWifiDisabled()
       }
     },
-    onPrivacyPolicyClick = { UrlActivity.open(context, context.ppUrl) },
-    onTermsConditionsClick = { UrlActivity.open(context, context.tcUrl) },
+    onPrivacyPolicyClick = { UrlActivity.open(context, ppUrl) },
+    onTermsConditionsClick = { UrlActivity.open(context, tcUrl) },
     onContactSupportClick = {
       genericAnalytics.sendPaymentSupportClicked()
       SupportActivity.openForSupport(context)
@@ -93,7 +93,7 @@ fun settingsScreen(showSnack: (String) -> Unit) = ScreenData(
       genericAnalytics.sendSendFeedbackClicked()
       SupportActivity.openForFeedBack(context)
     },
-    onBillingTermsClick = { UrlActivity.open(context, context.btUrl) },
+    onBillingTermsClick = { UrlActivity.open(context, btUrl) },
     copyInfo = {
       clipboardManager.setText(deviceInfo)
       showSnack(copiedMessage)

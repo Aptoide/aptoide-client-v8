@@ -60,12 +60,12 @@ fun AppGamesToolBar(
   val onDropDownTermsConditionsClick = {
     showMenu = false
     genericAnalytics.sendMenuClick("terms & conditions")
-    UrlActivity.open(context, context.tcUrl)
+    UrlActivity.open(context, tcUrl)
   }
   val onDropDownPrivacyPolicyClick = {
     showMenu = false
     genericAnalytics.sendMenuClick("privacy policy")
-    UrlActivity.open(context, context.ppUrl)
+    UrlActivity.open(context, ppUrl)
   }
   val onDropDownDismissRequest = { showMenu = false }
 

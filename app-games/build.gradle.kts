@@ -44,17 +44,17 @@ android {
     buildConfigField(
       type = "String",
       name = "TC_URL",
-      value = "\"https://en.aptoide.com/company/legal\""
+      value = "\"https://aptoide.com/legal\""
     )
     buildConfigField(
       type = "String",
       name = "BT_URL",
-      value = "\"https://en.aptoide.com/company/legal?section=aptoidegamesbilling\""
+      value = "\"https://aptoide.com/legal?section=aptoidegamesbilling\""
     )
     buildConfigField(
       type = "String",
       name = "PP_URL",
-      value = "\"https://en.aptoide.com/company/legal?section=privacy\""
+      value = "\"https://aptoide.com/legal?section=privacy\""
     )
 
     buildConfigField(
