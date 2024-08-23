@@ -21,6 +21,10 @@ fun Context.hasNotificationsPermission(): Boolean =
   isAllowed(Manifest.permission.POST_NOTIFICATIONS)
 
 @SuppressLint("InlinedApi")
+fun Context.hasWriteExternalStoragePermission(): Boolean =
+  isAllowed(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+
+@SuppressLint("InlinedApi")
 fun Context.isAllowed(permission: String): Boolean =
   ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
 

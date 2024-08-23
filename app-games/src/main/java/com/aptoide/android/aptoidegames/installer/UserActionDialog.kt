@@ -43,10 +43,12 @@ import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.installer.platform.UserActionRequest.ConfirmationAction
 import cm.aptoide.pt.installer.platform.UserActionRequest.InstallationAction
 import cm.aptoide.pt.installer.platform.UserActionRequest.PermissionAction
+import cm.aptoide.pt.installer.platform.UserActionRequest.PermissionState
 import cm.aptoide.pt.installer.platform.UserConfirmation
 import cm.aptoide.pt.installer.presentation.UserActionViewModel
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.design_system.PrimarySmallButton
+import com.aptoide.android.aptoidegames.permissions.AppPermissionsViewModel
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -59,6 +61,9 @@ fun UserActionDialog() {
   val lifecycleOwner = LocalLifecycleOwner.current
   var isOnForeground by remember { mutableStateOf(false) }
   var installationActionLaunched by remember { mutableStateOf(false) }
+
+  val permissionsViewModel = hiltViewModel<AppPermissionsViewModel>()
+
 
   LaunchedEffect(state) {
     if (state is InstallationAction) installationActionLaunched = false
@@ -89,18 +94,7 @@ fun UserActionDialog() {
   val permissionLauncher = rememberLauncherForActivityResult(
     contract = ActivityResultContracts.RequestPermission(),
     onResult = { result ->
-      if (result) {
-        viewModel.onResult(true)
-      } else {
-        val deniedOrNull = (context as? Activity)?.let { activity ->
-          (state as? PermissionAction)?.run {
-            // Check if rationale can help
-            ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)
-              .takeIf { !it } // Turn [true] into [null] to conform with contract
-          }
-        }
-        viewModel.onResult(deniedOrNull)
-      }
+      viewModel.onResult(result)
     }
   )
 
@@ -119,6 +113,24 @@ fun UserActionDialog() {
           }
 
           is PermissionAction -> permissionLauncher.launch(it.permission)
+
+          is PermissionState -> {
+            val requestedPermission = permissionsViewModel.hasRequestedPermission(it.permission)
+
+            val shouldShowRationale = (context as? Activity)?.let { activity ->
+              ActivityCompat.shouldShowRequestPermissionRationale(activity, it.permission)
+            } ?: false
+
+            if (!requestedPermission && !shouldShowRationale) {
+              viewModel.onResult(true)
+            } else if (shouldShowRationale) {
+              viewModel.onResult(null)
+              permissionsViewModel.setPermissionRequested(it.permission)
+            } else {
+              viewModel.onResult(false)
+            }
+          }
+
           else -> Unit
         }
       }
@@ -130,7 +142,7 @@ fun UserActionDialog() {
       if (it.confirmation == UserConfirmation.WRITE_EXTERNAL_RATIONALE) {
         DialogButton(
           title = stringResource(id = R.string.ok_button),
-          onClick = { viewModel.onResult(false) },
+          onClick = { viewModel.onResult(true) },
         )
       } else {
         DialogButton(
@@ -192,7 +204,7 @@ private fun PermissionsContent(
 @Composable
 private fun DialogButton(
   title: String,
-  onClick: () -> Unit
+  onClick: () -> Unit,
 ) = PrimarySmallButton(
   onClick = onClick,
   title = title,

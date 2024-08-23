@@ -10,3 +10,6 @@ data class InstallPackageInfo(
 ) {
   val filesSize = installationFiles.sumOf { it.fileSize }
 }
+
+fun InstallPackageInfo.hasObb() =
+  installationFiles.find { it.type == InstallationFile.Type.OBB_MAIN } != null
