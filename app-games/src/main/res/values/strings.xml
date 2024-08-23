@@ -96,7 +96,7 @@
   <string name="waiting_for_connection">Waiting for connection</string>
   <string name="wait_for_wifi_button">Wait for Wi-Fi</string>
   <string name="continue_button">Continue</string>
-  <string name="error_install_permissions_body">For your security, your phone currently isn\'t allowed to install apps from this source. You can change this in Settings.</string>
+  <string name="error_install_permissions_body"><![CDATA[Please go to Settings and grant <1>Aptoide Games</1> permissions to install apps!]]></string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Out of Space</string>
   <string name="out_of_space_body">You need %s to continue with the installation.</string>
@@ -124,7 +124,7 @@
   <string name="appview_details_tab_title" comment="details">Details</string>
   <string name="appview_related_tab_title" comment="related">Related</string>
   <string name="appview_info_tab_title" comment="info">Info</string>
-  <string name="bottom_navigation_discovery" comment="discovery">Discovery</string>
+  <string name="bottom_navigation_discovery" comment="discovery">Discover</string>
   <string name="appview_info_version_name_title" comment="version_name">Version name</string>
   <string name="appview_info_package_name_title" comment="package_name">Package name</string>
   <string name="appview_info_release_title" comment="release">Release</string>
