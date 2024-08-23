@@ -28,6 +28,7 @@ import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAn
 import com.aptoide.android.aptoidegames.design_system.PrimaryButton
 import com.aptoide.android.aptoidegames.design_system.PrimaryTextButton
 import com.aptoide.android.aptoidegames.drawables.icons.getNotificationsPermissionIcon
+import com.aptoide.android.aptoidegames.permissions.notifications.NotificationsPermissionViewModel
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -96,7 +97,7 @@ fun DialogContentPreview() {
 @Composable
 fun DialogContent(
   onContinueClick: () -> Unit,
-  onCancelClick: () -> Unit
+  onCancelClick: () -> Unit,
 ) {
   Box(
     modifier = Modifier

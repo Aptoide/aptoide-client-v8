@@ -33,7 +33,7 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.seeAllMyGamesS
 import com.aptoide.android.aptoidegames.feature_apps.presentation.seeMoreScreen
 import com.aptoide.android.aptoidegames.installer.UserActionDialog
 import com.aptoide.android.aptoidegames.notifications.NotificationsPermissionRequester
-import com.aptoide.android.aptoidegames.notifications.NotificationsPermissionViewModel
+import com.aptoide.android.aptoidegames.permissions.notifications.NotificationsPermissionViewModel
 import com.aptoide.android.aptoidegames.search.presentation.searchScreen
 import com.aptoide.android.aptoidegames.settings.settingsScreen
 import com.aptoide.android.aptoidegames.theme.AptoideTheme

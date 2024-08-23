@@ -29,7 +29,7 @@ import com.aptoide.android.aptoidegames.launch.AppLaunchPreferencesManager
 import com.aptoide.android.aptoidegames.network.AptoideGetHeaders
 import com.aptoide.android.aptoidegames.network.AptoideQLogicInterceptor
 import com.aptoide.android.aptoidegames.networkPreferencesDataStore
-import com.aptoide.android.aptoidegames.notifications.NotificationsPermissionManager
+import com.aptoide.android.aptoidegames.permissions.AppPermissionsManager
 import com.aptoide.android.aptoidegames.search.repository.AppGamesAutoCompleteSuggestionsRepository
 import com.aptoide.android.aptoidegames.search.repository.AppGamesAutoCompleteSuggestionsRepository.AutoCompleteSearchRetrofitService
 import com.aptoide.android.aptoidegames.search.repository.AppGamesSearchStoreManager
@@ -95,11 +95,10 @@ class RepositoryModule {
   }
 
   @Provides
-  fun provideNotificationsPermissionManager(
-    @ApplicationContext context: Context,
+  fun provideAppPermissionsManager(
     @PermissionsDataStore dataStore: DataStore<Preferences>,
-  ): NotificationsPermissionManager {
-    return NotificationsPermissionManager(context, dataStore)
+  ): AppPermissionsManager {
+    return AppPermissionsManager(dataStore)
   }
 
   @Singleton
