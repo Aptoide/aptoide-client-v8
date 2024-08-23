@@ -13,6 +13,7 @@ import cm.aptoide.pt.extensions.checkMd5
 import cm.aptoide.pt.install_manager.AbortException
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallationFile
+import cm.aptoide.pt.install_manager.dto.hasObb
 import cm.aptoide.pt.install_manager.workers.PackageInstaller
 import cm.aptoide.pt.installer.di.DownloadsPath
 import cm.aptoide.pt.installer.platform.INSTALL_SESSION_API_COMPLETE_ACTION
@@ -52,7 +53,9 @@ class AptoideInstaller @Inject constructor(
     installPackageInfo: InstallPackageInfo,
   ): Flow<Int> = flow {
     emit(0)
-    installPermissions.checkIfCanWriteExternal()
+    if (installPackageInfo.hasObb()) {
+      installPermissions.checkIfCanWriteExternal()
+    }
     installPermissions.checkIfCanInstall()
     context.packageManager.packageInstaller.run {
       val sessionId = createSession(
@@ -133,13 +136,15 @@ class AptoideInstaller @Inject constructor(
     val apks = mutableListOf<File>()
     val obbs = mutableListOf<File>()
     forEachIndexed { index, value ->
-      when(value.type) {
+      when (value.type) {
         InstallationFile.Type.BASE,
         InstallationFile.Type.PFD_INSTALL_TIME,
-        InstallationFile.Type.PAD_INSTALL_TIME -> apks.add(value.toCheckedFile())
+        InstallationFile.Type.PAD_INSTALL_TIME,
+        -> apks.add(value.toCheckedFile())
 
         InstallationFile.Type.OBB_MAIN,
-        InstallationFile.Type.OBB_PATCH -> obbs.add(value.toCheckedFile())
+        InstallationFile.Type.OBB_PATCH,
+        -> obbs.add(value.toCheckedFile())
 
         else -> {}
       }

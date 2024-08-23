@@ -18,6 +18,7 @@ enum class UserConfirmation {
 sealed class UserActionRequest {
   data class InstallationAction(val intent: Intent) : UserActionRequest()
   data class ConfirmationAction(val confirmation: UserConfirmation) : UserActionRequest()
+  data class PermissionState(val permission: String) : UserActionRequest()
   data class PermissionAction(val permission: String) : UserActionRequest()
 }
 
@@ -30,10 +31,16 @@ interface UserActionLauncher {
 
   /**
    * True = granted
-   * Null = not granted, but can be asked with rationale
-   * False = denied for ever
+   * False = denied
    */
-  suspend fun requestPermissions(permission: String): Boolean?
+  suspend fun requestPermissions(permission: String): Boolean
+
+  /**
+   * True = permissions can be requested
+   * Null = permissions can be requested, but should show a rationale
+   * False = denied forever
+   */
+  suspend fun checkPermissionState(permission: String): Boolean?
 }
 
 /**
@@ -65,8 +72,11 @@ class UserActionHandlerImpl @Inject constructor() : UserActionLauncher, UserActi
   override suspend fun confirm(confirmation: UserConfirmation): Boolean =
     requestUserAction(UserActionRequest.ConfirmationAction(confirmation)) ?: false
 
-  override suspend fun requestPermissions(permission: String): Boolean? =
-    requestUserAction(UserActionRequest.PermissionAction(permission))
+  override suspend fun checkPermissionState(permission: String): Boolean? =
+    requestUserAction(UserActionRequest.PermissionState(permission))
+
+  override suspend fun requestPermissions(permission: String): Boolean =
+    requestUserAction(UserActionRequest.PermissionAction(permission)) ?: false
 
   private suspend fun requestUserAction(request: UserActionRequest): Boolean? = mutex.withLock {
     _requests.emit(request)

@@ -1,6 +1,7 @@
 package cm.aptoide.pt.installer
 
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
+import cm.aptoide.pt.install_manager.dto.hasObb
 import cm.aptoide.pt.install_manager.workers.PackageDownloader
 import cm.aptoide.pt.installer.network.DownloaderRepository
 import cm.aptoide.pt.installer.platform.InstallPermissions
@@ -28,7 +29,9 @@ class AptoideDownloader @Inject constructor(
     var totalProgress = 0.0
     installationFiles.asFlow()
       .onStart {
-        installPermissions.checkIfCanWriteExternal()
+        if(installPackageInfo.hasObb()) {
+          installPermissions.checkIfCanWriteExternal()
+        }
         installPermissions.checkIfCanInstall()
       }
       .flatMapMerge(concurrency = 3) { item ->

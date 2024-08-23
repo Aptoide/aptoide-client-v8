@@ -6,7 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
-import cm.aptoide.pt.extensions.isAllowed
+import cm.aptoide.pt.extensions.hasWriteExternalStoragePermission
 import cm.aptoide.pt.install_manager.AbortException
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -48,19 +48,31 @@ class InstallPermissionsImpl @Inject constructor(
   }
 
   override suspend fun checkIfCanWriteExternal() {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-      //Android is below 13
-      if (!context.isAllowed(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-        when (userActionLauncher.requestPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-          true -> Unit
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+      //Android is below 11
+      if (!context.hasWriteExternalStoragePermission()) {
+        when (userActionLauncher.checkPermissionState(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+          //Requested permission
+          true -> if (!userActionLauncher.requestPermissions(
+              Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+          ) {
+            throw AbortException("Not allowed")
+          }
+
+          //Need to show rationale
           null -> if (userActionLauncher.confirm(UserConfirmation.WRITE_EXTERNAL_RATIONALE)) {
-            if (userActionLauncher.requestPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE) != true) {
+            if (!userActionLauncher.requestPermissions(
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+              )
+            ) {
               throw AbortException("Not allowed")
             }
           } else {
             throw AbortException("Not allowed")
           }
 
+          //Need to open settings
           false -> if (userActionLauncher.confirm(UserConfirmation.WRITE_EXTERNAL)) {
             userActionLauncher.launchIntent(
               Intent(
@@ -68,7 +80,7 @@ class InstallPermissionsImpl @Inject constructor(
                 Uri.parse("package:${context.packageName}")
               )
             )
-            if (!context.isAllowed(Manifest.permission.WRITE_EXTERNAL_STORAGE)) throw AbortException(
+            if (!context.hasWriteExternalStoragePermission()) throw AbortException(
               "Not allowed"
             )
           } else {
