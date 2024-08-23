@@ -64,16 +64,9 @@ class NetworkConnectionImpl @Inject constructor(
 }
 
 val Context.networkState
-  get() = (getSystemService(
-    Context.CONNECTIVITY_SERVICE
-  ) as ConnectivityManager).run {
-    getNetworkCapabilities(activeNetwork)
-      ?.takeIf { it.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) }
-      ?.let {
-        if (it.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)) {
-          UNMETERED
-        } else {
-          METERED
-        }
-      } ?: GONE
-  }
+  get() = (getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
+    .run { getNetworkCapabilities(activeNetwork) }
+    ?.takeIf { it.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) }
+    ?.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)
+    ?.let { if (it) UNMETERED else METERED }
+    ?: GONE
