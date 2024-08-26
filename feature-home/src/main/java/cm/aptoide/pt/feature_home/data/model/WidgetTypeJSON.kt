@@ -6,6 +6,7 @@ import androidx.annotation.Keep
 @Suppress("unused")
 enum class WidgetTypeJSON {
   APPS_GROUP,
+  APPC_BANNER,
   ADS,
   APPCOINS_ADS,
   ESKILLS,

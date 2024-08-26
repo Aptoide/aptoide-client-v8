@@ -52,7 +52,8 @@ internal class AptoideWidgetsRepository @Inject constructor(
       action = extractWidgetListOfActions(),
       icon = this.data?.icon,
       graphic = this.data?.graphic,
-      background = this.data?.background
+      background = this.data?.background,
+      url = this.data?.url
     )
   }
 
