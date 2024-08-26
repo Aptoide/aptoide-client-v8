@@ -1,11 +1,11 @@
 object GradlePluginVersion {
-  const val ANDROID_GRADLE = "8.4.1"
+  const val ANDROID_GRADLE = "8.5.2"
   const val KOTLIN = CoreVersion.KOTLIN
-  const val HILT = "2.51.1"
-  const val GMS = "4.3.15"
-  const val CRASHLYTICS = "2.9.5"
+  const val HILT = "2.52"
+  const val GMS = "4.4.2"
+  const val CRASHLYTICS = "3.0.2"
   const val JUNIT5 = "1.9.3.0"
-  const val KSP = "1.8.22-1.0.11"
+  const val KSP = "2.0.20-1.0.24"
 }
 
 object GradlePluginId {
@@ -17,6 +17,7 @@ object GradlePluginId {
   const val ANDROID_LIBRARY = "com.android.library"
   const val KOTLIN_KAPT = "kotlin-kapt"
   const val KOTLIN_KSP = "com.google.devtools.ksp"
+  const val KOTLIN_COMPOSE_COMPILER = "org.jetbrains.kotlin.plugin.compose"
   const val KOTLIN_ANDROID = "org.jetbrains.kotlin.android"
   const val KOTLIN_SERIALIZATION = "org.jetbrains.kotlin.plugin.serialization"
   const val HILT_PLUGIN = "dagger.hilt.android.plugin"

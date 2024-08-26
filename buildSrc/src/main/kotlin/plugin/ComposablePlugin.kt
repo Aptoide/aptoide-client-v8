@@ -1,6 +1,6 @@
 package plugin
 
-import CoreVersion
+import GradlePluginId
 import LibraryDependency
 import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.api.dsl.LibraryExtension
@@ -14,6 +14,7 @@ class ComposablePlugin : Plugin<Project> {
     val extension = (project.extensions.getByName("android") as? BaseExtension)
       .let { it as? ApplicationExtension ?: it as? LibraryExtension }
       ?: throw GradleException("Unsupported BaseExtension type!")
+    project.plugins.apply(GradlePluginId.KOTLIN_COMPOSE_COMPILER)
 
     val isApp = extension is ApplicationExtension
 
@@ -22,10 +23,6 @@ class ComposablePlugin : Plugin<Project> {
         // Enables Jetpack Compose for this module
         compose = true
         buildConfig = true
-      }
-
-      composeOptions {
-        kotlinCompilerExtensionVersion = CoreVersion.KT_COMPILER_EXTENSION
       }
     }
 

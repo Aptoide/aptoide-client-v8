@@ -17,7 +17,11 @@ class GreyscaleTransformation : Transformation {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
     paint.colorFilter = COLOR_FILTER
 
-    val output = createBitmap(input.width, input.height, input.config)
+    val output = createBitmap(
+      width = input.width,
+      height = input.height,
+      config = input.config ?: Bitmap.Config.ARGB_8888
+    )
     output.applyCanvas {
       drawBitmap(input, 0f, 0f, paint)
     }
