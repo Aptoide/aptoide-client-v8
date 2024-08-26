@@ -12,10 +12,12 @@ data class Widget(
   val icon: String?,
   val graphic: String?,
   val background: String?,
+  val url: String?,
 )
 
 enum class WidgetType {
   APPS_GROUP,
+  APPC_BANNER,
   ESKILLS,
   ADS,
   ACTION_ITEM,

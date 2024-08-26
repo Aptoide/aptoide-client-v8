@@ -21,7 +21,8 @@ class WidgetsJSON {
     var message: String? = null,
     var graphic: String? = null,
     var background: String? = null,
-    var groupId: Long? = null //only for eskills widget
+    var groupId: Long? = null, //only for eskills widget
+    var url:String? = null
   )
 
   @Keep

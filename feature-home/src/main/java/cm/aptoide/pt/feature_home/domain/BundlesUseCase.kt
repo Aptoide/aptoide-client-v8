@@ -25,7 +25,8 @@ class BundlesUseCase @Inject constructor(
           type = it.getType(),
           tag = it.tag,
           view = it.view,
-          bundleSource = it.getBundleSource()
+          bundleSource = it.getBundleSource(),
+          url = it.url
         )
       }
 
@@ -67,7 +68,7 @@ class BundlesUseCase @Inject constructor(
         -> Type.FEATURE_GRAPHIC
       }
     }
-
+    WidgetType.APPC_BANNER -> Type.APPC_BANNER
     WidgetType.ESKILLS -> Type.ESKILLS
     WidgetType.MY_GAMES -> Type.MY_GAMES
     WidgetType.GAMES_MATCH -> Type.GAMES_MATCH

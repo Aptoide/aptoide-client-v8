@@ -15,6 +15,7 @@ data class Bundle(
   val view: String? = null,
   val bundleSource: BundleSource = BundleSource.MANUAL,
   val timestamp: String = System.currentTimeMillis().toString(),
+  val url: String? = null
 ) {
 
   val hasMoreAction: Boolean
@@ -32,6 +33,7 @@ enum class BundleSource {
 
 enum class Type {
   FEATURE_GRAPHIC,
+  APPC_BANNER,
   APP_GRID,
   ESKILLS,
   FEATURED_APPC,
