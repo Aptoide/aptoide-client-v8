@@ -15,8 +15,8 @@ class AppDetailsUseCase @Inject constructor(
 
     packageInfo?.let {
       AppDetails(
-        name = it.applicationInfo.loadLabel(packageManager).toString(),
-        icon = it.applicationInfo.loadIcon(packageManager),
+        name = it.applicationInfo?.loadLabel(packageManager).toString(),
+        icon = it.applicationInfo?.loadIcon(packageManager),
         iconUrl = appDetails?.iconUrl,
       )
     } ?: appDetails

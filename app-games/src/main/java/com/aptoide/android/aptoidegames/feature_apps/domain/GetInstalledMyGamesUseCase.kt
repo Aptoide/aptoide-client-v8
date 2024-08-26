@@ -30,7 +30,7 @@ class GetInstalledMyGamesUseCase @Inject constructor(
         filterGames(set.mapNotNull(App::packageInfo))
           .map {
             MyGamesApp(
-              name = it.applicationInfo.loadLabel(packageManager).toString(),
+              name = it.applicationInfo?.loadLabel(packageManager).toString(),
               packageName = it.packageName,
               versionName = it.versionName
             )
@@ -42,7 +42,7 @@ class GetInstalledMyGamesUseCase @Inject constructor(
     val gamesPackageInfoList = ArrayList<PackageInfo>()
     val undefinedPackageInfoMap = HashMap<String, PackageInfo>()
     appsList.forEach { packageInfo ->
-      when (packageInfo.applicationInfo.category) {
+      when (packageInfo.applicationInfo?.category) {
         ApplicationInfo.CATEGORY_GAME -> gamesPackageInfoList.add(packageInfo)
         else -> undefinedPackageInfoMap[packageInfo.packageName] = packageInfo
       }

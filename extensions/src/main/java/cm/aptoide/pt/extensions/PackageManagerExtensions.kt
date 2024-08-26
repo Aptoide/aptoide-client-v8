@@ -25,7 +25,6 @@ fun PackageManager.getInstalledPackages(): List<PackageInfo> =
   if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
     getInstalledPackages(newFlags)
   } else {
-    @Suppress("DEPRECATION")
     getInstalledPackages(oldFlags)
   }
 
@@ -33,7 +32,6 @@ fun PackageManager.getPackageInfo(packageName: String): PackageInfo? = try {
   if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
     getPackageInfo(packageName, newFlags)
   } else {
-    @Suppress("DEPRECATION")
     getPackageInfo(packageName, oldFlags)
   }
 } catch (e: Throwable) {
@@ -41,32 +39,26 @@ fun PackageManager.getPackageInfo(packageName: String): PackageInfo? = try {
 }
 
 fun PackageInfo.ifNormalApp(): Boolean {
-  val isNotSystem = (applicationInfo.flags and systemFlags) == 0
+  val isNotSystem = applicationInfo?.run { flags and systemFlags == 0 } ?: false
   val hasActivities = activities?.isNotEmpty() ?: false
   return isNotSystem and hasActivities
 }
 
 fun PackageInfo.getAppSize(): Long {
-  val apkFile = applicationInfo.getApkSize()
-  val splitsSize = applicationInfo.getSplitsSize()
+  val apkFile = applicationInfo?.getApkSize() ?: 0
+  val splitsSize = applicationInfo?.getSplitsSize() ?: 0
   val obbSize = File(Environment.getDataDirectory().path + "Android/Obb/" + packageName).length()
   return apkFile + splitsSize + obbSize
 }
 
-fun ApplicationInfo.getApkSize(): Long {
-  return File(this.publicSourceDir).length()
-}
+fun ApplicationInfo.getApkSize(): Long = publicSourceDir.let(::File).length()
 
-fun ApplicationInfo.getSplitsSize(): Long {
-  val splitsFolder = this.splitPublicSourceDirs
-  var splitsSize = 0L
-  if (splitsFolder?.isNotEmpty() == true) {
-    splitsFolder.iterator().forEach {
-      splitsSize += File(it).length()
-    }
-  }
-  return splitsSize
-}
+fun ApplicationInfo.getSplitsSize(): Long = splitPublicSourceDirs
+  ?.map(::File)
+  ?.map(File::length)
+  ?.plus(0) // to make list non empty
+  ?.reduce { acc, it -> acc + it }
+  ?: 0
 
 fun ApplicationInfo.loadIconDrawable(packageManager: PackageManager): Drawable =
   loadUnbadgedIcon(packageManager)
