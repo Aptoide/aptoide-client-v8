@@ -3,6 +3,8 @@ package cm.aptoide.pt.extensions
 import android.text.Spannable
 import android.text.Spanned
 import android.text.style.StrikethroughSpan
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.core.text.HtmlCompat
 import androidx.core.text.getSpans
 import java.text.SimpleDateFormat
@@ -47,6 +49,19 @@ fun String.getTextSpans(): Pair<Spanned, List<TextSpan>> {
     }
 
   return htmlText to textSpans
+}
+
+fun String.toAnnotatedString(spanStyle: SpanStyle) = this.getTextSpans().let {
+  buildAnnotatedString {
+    append(it.first)
+    it.second.forEach {
+      addStyle(
+        style = spanStyle,
+        start = it.start,
+        end = it.end
+      )
+    }
+  }
 }
 
 class TextSpan(
