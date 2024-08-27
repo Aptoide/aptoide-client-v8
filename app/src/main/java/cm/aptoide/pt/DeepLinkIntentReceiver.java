@@ -285,7 +285,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
         if (!TextUtils.isEmpty(uname)) {
           return parseAptoideInstallUri("uname=" + uname);
         } else {
-          String packageName = u.getQueryParameter("package");
+          String packageName = u.getQueryParameter("package_name");
           if (!TextUtils.isEmpty(packageName)) {
             return parseAptoideInstallUri("package=" + packageName);
           } else {
@@ -358,8 +358,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
       String slug = u.getPath()
           .split("/")[2];
       return startEditorialFromSlug(slug);
-    } else if (u.getPath() != null && u.getPath()
-        .contains("using-appcoins")) {
+    } else if (u.getPath() != null && u.getPath().contains("appcoins")) {
       return startAppcInfoView();
     } else {
       String[] appName = u.getHost()

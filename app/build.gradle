@@ -40,7 +40,6 @@ android {
     testProguardFile 'proguard-rules-test.pro'
     testInstrumentationRunner "cm.aptoide.pt.MultidexAndroidJunitRunner"
     // vectorDrawables.useSupportLibrary = true
-    manifestPlaceholders = [dataPlaceholder: generateData()]
   }
 
   lintOptions {
@@ -189,8 +188,7 @@ android {
         [toolboxProviderAuthority: "${toolboxProviderAuthority}",
             suggestionProviderAuthority: "${searchSuggestionProviderAuthority}",
             storeSuggestionProviderAuthority: "${storeSuggestionProviderAuthority}",
-            adMobApiKey: "${project.AD_MOB_APPLICATION_ID}",
-            dataPlaceholder: generateData()]
+            adMobApiKey: "${project.AD_MOB_APPLICATION_ID}"]
 
     variant.resValue "string", "authenticator_account_type", applicationId
     variant.resValue "string", "search_suggestion_provider_authority",
@@ -518,114 +516,4 @@ String getDate() {
   def date = new Date()
   def formattedDate = date.format('yyyyMMdd')
   return formattedDate
-}
-
-static def generateData() {
-  return data("app.aptoide.com") + data("market.android.com") +
-      dataWithPathPrefix("webservices.aptoide.com", "/apkinstall") +
-      data("play.google.com") +
-      aptoideSubdomainDataWithWildCardPrefix() +
-      aptoideSubdomainData("/store/..*") +
-      aptoideSubdomainData("/thank-you*") +
-      aptoideSubdomainData("/appcoins") +
-      data("community.aptoide.com", "/using-appcoins*") +
-      data("become-a-power-gamer.aptoide.com", "/using-appcoins*") +
-      aptoideSubdomainData("/download*") +
-      aptoideSubdomainData("/editorial/..*") +
-      aptoideSubdomainData("/app") +
-      aptoideSubdomainData()
-}
-
-static def getAptoideSubdomainsList() {
-  def subdomainList = ["en", "pt", "br", "fr", "es", "mx", "de", "it", "ru", "sa", "id", "in", "bd", "mr", "pa",
-      "my", "th", "vn", "tr", "cn", "ro", "mm", "pl", "rs", "hu", "gr", "bg", "nl", "ir", "jp", "kr", "ua"]
-  return new ArrayList<>(subdomainList)
-}
-
-static def aptoideSubdomainDataWithWildCardPrefix() {
-  def subdomainData = ""
-  List<String> subdomainList = getAptoideSubdomainsList()
-  for (subdomain in subdomainList) {
-    subdomainData = subdomainData + data("*." + subdomain + ".aptoide.com")
-  }
-  return subdomainData
-}
-
-static def aptoideSubdomainData() {
-  def subdomainData = ""
-  List<String> subdomainList = getAptoideSubdomainsList()
-  for (subdomain in subdomainList) {
-    subdomainData = subdomainData + data(subdomain + ".aptoide.com")
-  }
-  return subdomainData
-}
-
-static def aptoideSubdomainData(String pathPattern) {
-  def subdomainData = ""
-  List<String> subdomainList = getAptoideSubdomainsList()
-  for (subdomain in subdomainList) {
-    subdomainData = subdomainData + data(subdomain + ".aptoide.com", pathPattern)
-  }
-  return subdomainData
-}
-
-static def data(String host, String pathPattern) {
-  return generateIntentFilter(http(host, pathPattern) + https(host, pathPattern))
-}
-
-static def data(String host) {
-  return generateIntentFilter(http(host, "") + https(host, ""))
-}
-
-static def dataWithPathPrefix(String host, String pathPrefix) {
-  return generateIntentFilter(
-      createDataTagWithPathPrefix(host, "http", pathPrefix) + createDataTagWithPathPrefix(host,
-          "https", pathPrefix))
-}
-
-static def http(String host, String pathPattern) {
-  if (pathPattern != null && !pathPattern.isEmpty()) {
-    createDataTagWithPathPattern(host, "http", pathPattern)
-  } else {
-    createDataTagWithNoPathPattern(host, "http")
-  }
-}
-
-static def https(String host, String pathPattern) {
-  if (pathPattern != null && !pathPattern.isEmpty()) {
-    createDataTagWithPathPattern(host, "https", pathPattern)
-  } else {
-    createDataTagWithNoPathPattern(host, "https")
-  }
-}
-
-static def createDataTagWithNoPathPattern(String host, String scheme) {
-  return "\n" + "               <data\n" +
-      "                   android:host=\"$host\"\n" +
-      "                   android:scheme=\"$scheme\"/>\n"
-}
-
-static def createDataTagWithPathPattern(String host, String scheme, String pathPattern) {
-  return "\n" + "               <data\n" +
-      "                   android:host=\"$host\"\n" +
-      "                   android:pathPattern=\"$pathPattern\"\n" +
-      "                   android:scheme=\"$scheme\"/>\n"
-}
-
-static def createDataTagWithPathPrefix(String host, String scheme, String pathPrefix) {
-  return "\n" + "               <data\n" +
-      "                   android:host=\"$host\"\n" +
-      "                   android:pathPrefix=\"$pathPrefix\"\n" +
-      "                   android:scheme=\"$scheme\"/>\n"
-}
-
-static def generateIntentFilter(String data) {
-  return "\n            <intent-filter>\n" +
-      "                <action android:name=\"android.intent.action.VIEW\"/>\n" +
-      "\n" +
-      "                <category android:name=\"android.intent.category.DEFAULT\"/>\n" +
-      "                <category android:name=\"android.intent.category.BROWSABLE\"/>\n" +
-      "\n" +
-      data +
-      "            </intent-filter>\n"
 }

@@ -189,8 +189,79 @@
         <data android:scheme="market" />
       </intent-filter>
 
-      <!-- ${dataPlaceholder} -->
 
+<!--      <intent-filter-->
+<!--          android:autoVerify="true"-->
+<!--          android:priority="100">-->
+<!--        <action android:name="android.intent.action.VIEW" />-->
+
+<!--        <category android:name="android.intent.category.BROWSABLE" />-->
+<!--        <category android:name="android.intent.category.DEFAULT" />-->
+
+<!--        <data android:scheme="http" />-->
+<!--        <data android:scheme="https" />-->
+<!--        <data android:host="en.aptoide.com" />-->
+<!--        <data android:host="es.aptoide.com" />-->
+<!--        <data android:host="br.aptoide.com" />-->
+<!--        <data android:host="ar.aptoide.com" />-->
+<!--        <data android:host="fr.aptoide.com" />-->
+<!--        <data android:host="id.aptoide.com" />-->
+<!--        <data android:host="ru.aptoide.com" />-->
+<!--        <data android:host="it.aptoide.com" />-->
+<!--        <data android:host="ro.aptoide.com" />-->
+<!--        <data android:host="in.aptoide.com" />-->
+<!--        <data android:host="mr.aptoide.com" />-->
+<!--        <data android:host="pa.aptoide.com" />-->
+<!--        <data android:host="cn.aptoide.com" />-->
+<!--        <data android:host="mm.aptoide.com" />-->
+<!--        <data android:host="th.aptoide.com" />-->
+<!--        <data android:host="pt.aptoide.com" />-->
+<!--        <data android:host="my.aptoide.com" />-->
+<!--        <data android:host="vn.aptoide.com" />-->
+<!--        <data android:host="pl.aptoide.com" />-->
+<!--        <data android:host="tr.aptoide.com" />-->
+<!--        <data android:host="nl.aptoide.com" />-->
+<!--        <data android:host="de.aptoide.com" />-->
+<!--        <data android:host="hu.aptoide.com" />-->
+<!--        <data android:host="rs.aptoide.com" />-->
+<!--        <data android:host="gr.aptoide.com" />-->
+<!--        <data android:host="jp.aptoide.com" />-->
+<!--        <data android:host="ua.aptoide.com" />-->
+<!--        <data android:host="ir.aptoide.com" />-->
+<!--        <data android:host="kr.aptoide.com" />-->
+<!--        <data android:pathPattern="^/$"/>-->
+<!--      </intent-filter>-->
+
+
+      <intent-filter
+          android:autoVerify="true"
+          android:priority="100">
+        <action android:name="android.intent.action.VIEW" />
+
+        <category android:name="android.intent.category.BROWSABLE" />
+        <category android:name="android.intent.category.DEFAULT" />
+
+        <data android:scheme="http" />
+        <data android:scheme="https" />
+        <data android:host="*.aptoide.com" />
+        <data android:pathPrefix="/download" />
+        <data android:path="/appcoins" />
+        <data android:path="/app" />
+        <data android:pathPattern="/editorial/.*" />
+      </intent-filter>
+
+      <intent-filter
+          android:autoVerify="true"
+          android:priority="100">
+        <action android:name="android.intent.action.VIEW" />
+
+        <category android:name="android.intent.category.BROWSABLE" />
+        <category android:name="android.intent.category.DEFAULT" />
+
+        <data android:scheme="http" />
+        <data android:scheme="https" />
+        <data android:host="app.aptoide.com" />
+      </intent-filter>
 
     </activity>
 
