@@ -75,7 +75,7 @@
   <string name="button_back_title">이전</string>
   <string name="button_see_all_title">모두 보기</string>
   <string name="editorials_view_no_content_message">아, 아직 콘텐츠가 없네요!</string>
-  <string name="error_no_content_body">Oops, we couldn\'t find related content yet!</string>
+  <string name="error_no_content_body">죄송합니다, 관련된 콘텐츠를 아직 찾을 수 없습니다!</string>
   <string name="button_update_title">업데이트</string>
   <string name="button_open_app_title">열기</string>
   <string name="install_waiting_download_message">다운로드 대기 중</string>
@@ -85,18 +85,18 @@
   <string name="send_button">전송</string>
   <string name="try_again">다시 시도해 주세요.</string>
   <string name="please_wait">잠시 기다려주세요.</string>
-  <string name="ok_button">Ok</string>
-  <string name="cancel_button">Cancel</string>
+  <string name="ok_button">확인</string>
+  <string name="cancel_button">취소</string>
   <string name="download_now_button">지금 다운로드</string>
   <string name="uninstall_button">삭제</string>
   <string name="go_back_button">뒤로 가기</string>
-  <string name="go_back_to_game_button">Go Back to Game</string>
+  <string name="go_back_to_game_button">게임으로 돌아가기</string>
   <string name="uninstalling">제거 중</string>
   <string name="resume_button">이력서</string>
   <string name="waiting_for_connection">연결 대기 중</string>
   <string name="wait_for_wifi_button">와이파이 대기</string>
   <string name="continue_button">계속</string>
-  <string name="error_install_permissions_body">For your security, your phone currently isn\'t allowed to install apps from this source. You can change this in Settings.</string>
+  <string name="error_install_permissions_body"><![CDATA[Please go to Settings and grant <1>Aptoide Games</1> permissions to install apps!]]></string>
   <!-- Out of Space -->
   <string name="out_of_space_title">공간 부족</string>
   <string name="out_of_space_body">설치를 계속하려면 %s이(가) 필요합니다.</string>
@@ -136,7 +136,7 @@
   <string name="download_percentage_body" comment="1_s_of_2_s">%2$s의 %1$s%%</string>
   <string name="error_short_title" comment="oops_an_error_occurred">이런, 오류가 발생했습니다</string>
   <string name="purchase_done_existing_bonus_body">보너스가 %s 있습니다. AppCoins 지갑을 다운로드하여 다음 구매 시 사용하십시오.</string>
-  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">You\'ll get a bonus in all games identified with %s.</string>
+  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">%s로 표시된 모든 게임에서 보너스를 받을 수 있습니다.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">최대 %s%% 보너스</string>
   <string name="settings_payments_title" comment="contact_support_team">지원 팀으로 연락하기</string>
   <string name="settings_contact_support_body" comment="billing_terms_of_use">청구 이용약관</string>
@@ -187,11 +187,22 @@
   <string name="purchase_error_in_progress_title">귀하의 요청이 이미 처리되었거나 진행 중입니다.</string>
   <string name="purchase_card_error_CVV_title">잘못된 CVV/CVC</string>
   <string name="purchase_error_expired_card_title">카드가 만료되는 것 같습니다.</string>
-  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
-  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
+  <string name="iap_already_processing_title">이 구매는 이미 처리 중인 것 같습니다.</string>
+  <string name="iap_already_processing_body">이 구매는 시간이 조금 걸릴 수 있으니, 완료될 때까지 기다려 주시거나 고객 지원팀에 문의해 주세요.</string>
   <!-- Bonus Page -->
-  <string name="bonus_page_title_1">A Bonus on Every Purchase</string>
-  <string name="bonus_page_body_1">Look for the games identified with %1$s, install the AppCoins Wallet and get up to %2$s%% bonus in all purchases. You can then use this bonus to make your next purchases in your favorite games!</string>
-  <string name="bonus_page_title_2">Want More?</string>
-  <string name="bonus_page_body_2">You can get an extra %s%% bonus by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!</string>
+  <string name="bonus_page_title_1">모든 구매 시 보너스 제공</string>
+  <string name="bonus_page_body_1">%1$s로 표시된 게임을 찾아 AppCoins Wallet을 설치하고 모든 구매 시 최대 %2$s%% 보너스를 받으세요. 이 보너스를 사용하여 좋아하는 게임에서 다음 구매를 진행할 수 있습니다!</string>
+  <string name="bonus_page_title_2">더 원하는 것이 있으신가요?</string>
+  <string name="bonus_page_body_2">Aptoide Games 전용 프로모션 코드를 특정 게임에서 사용하면 추가로 %s%% 보너스를 받을 수 있습니다. 계속 지켜보시면 알림을 받으실 수 있습니다!</string>
+  <!-- Promo Code -->
+  <string name="promo_code_install_wallet_banner_title">Up to %s%% Bonus in Every Purchase</string>
+  <string name="promo_code_install_wallet_banner_body">Use the AppCoins Wallet to make your in-app purchases and get a reward.</string>
+  <string name="promo_code_extra_title">Want More? Get %s%% Extra Bonus!</string>
+  <string name="promo_code_use_button">Use code</string>
+  <string name="promo_code_notification_title">Redeem Your Promo Code</string>
+  <string name="promo_code_notification_body">Use your promo code to get extra bonuses in your favorite game.</string>
+  <string name="promo_code_share_title">You\'ve got a promo code!</string>
+  <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorte game.</string>
+  <string name="promo_code_share_without_wallet_title">%s%% Extra Bonus!</string>
+  <string name="promo_code_share_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
 </resources>
