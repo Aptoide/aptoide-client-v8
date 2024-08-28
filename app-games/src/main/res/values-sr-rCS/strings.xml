@@ -75,7 +75,7 @@
   <string name="button_back_title">Назад</string>
   <string name="button_see_all_title">Prikaži sve</string>
   <string name="editorials_view_no_content_message">Ups, ovde još uvek nema sadržaja!</string>
-  <string name="error_no_content_body">Oops, we couldn\'t find related content yet!</string>
+  <string name="error_no_content_body">Ups, nismo uspeli da pronađemo povezani sadržaj!</string>
   <string name="button_update_title">Ažuriraj</string>
   <string name="button_open_app_title">Otvori</string>
   <string name="install_waiting_download_message">Čeka se preuzimanje</string>
@@ -85,18 +85,18 @@
   <string name="send_button">Pošalji</string>
   <string name="try_again">Pokušajte ponovo.</string>
   <string name="please_wait">Sačekajte.</string>
-  <string name="ok_button">Ok</string>
-  <string name="cancel_button">Cancel</string>
+  <string name="ok_button">U redu</string>
+  <string name="cancel_button">Otkaži</string>
   <string name="download_now_button">Preuzmite sada</string>
   <string name="uninstall_button">Деинсталирај</string>
   <string name="go_back_button">Vratite se nazad</string>
-  <string name="go_back_to_game_button">Go Back to Game</string>
+  <string name="go_back_to_game_button">Vratite se u igru</string>
   <string name="uninstalling">Deinstaliranje</string>
   <string name="resume_button">Nastavi</string>
   <string name="waiting_for_connection">Čeka se veza</string>
   <string name="wait_for_wifi_button">Sačekajte Wi-Fi</string>
   <string name="continue_button">Nastavi</string>
-  <string name="error_install_permissions_body">For your security, your phone currently isn\'t allowed to install apps from this source. You can change this in Settings.</string>
+  <string name="error_install_permissions_body"><![CDATA[Idite u Podešavanja i dodelite dozvole za instaliranje aplikacija za <1>Aptoide Games</1>!]]></string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Nema više prostora</string>
   <string name="out_of_space_body">Potrebno vam je %s da biste nastavili sa instalacijom.</string>
@@ -135,8 +135,11 @@
   <string name="appview_info_permissions_title" comment="permissions">Дозволе</string>
   <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% od %2$s</string>
   <string name="error_short_title" comment="oops_an_error_occurred">Ups, došlo je do greške</string>
-  <string name="purchase_done_existing_bonus_body">Sada imate %s bonusa. Preuzmite AppCoins Wallet da biste ga iskoristili prilikom sledeće kupovine.</string>
-  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">Dobićete bonus u svim igrama koje su povezane sa %s.</string>
+  <string name="purchase_done_bonus_title">Osvojite %s bonusa!</string>
+  <string name="purchase_done_bonus_body">Preuzmite AppCoins Wallet da biste preuzeli ovaj bonus i iskoristite ga u sledećoj kupovini.</string>
+  <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet je instaliran!</string>
+  <string name="purchase_done_bonus_wallet_installed_body">Otvorite ga i pronađite svoj bonus.</string>
+  <string name="bonus_banner_body">Dobićete bonus u svim igrama koje su povezane sa %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Do %s%% bonusa</string>
   <string name="settings_payments_title" comment="contact_support_team">Obratite se timu korisničke podrške</string>
   <string name="settings_contact_support_body" comment="billing_terms_of_use">Uslovi korišćenja naplate</string>
@@ -157,7 +160,7 @@
   <string name="iap_card_expiry" comment="expiry_date">Datum isteka</string>
   <string name="iap_card_cvc" comment="cvc_cvv">CVC/CVV</string>
   <string name="iab_change_card_button" comment="change_card">Promenite karticu</string>
-  <string name="done_title" comment="done">Gotovo!</string>
+  <string name="done_title">Gotovo!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">Obavljanje kupovine...</string>
   <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">Da li ste sigurni da su podaci sa kartice tačni? Pokušajte ponovo!</string>
   <string name="log_out_button" comment="log_out">Odjavite se</string>
@@ -187,11 +190,23 @@
   <string name="purchase_error_in_progress_title">Vaš zahtev je već obrađen ili je u toku.</string>
   <string name="purchase_card_error_CVV_title">Pogrešan CVV/CVC</string>
   <string name="purchase_error_expired_card_title">Izgleda da je vaša kartica istekla.</string>
-  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
-  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
+  <string name="iap_already_processing_title">Izgleda da je ova kupovina već u obradi.</string>
+  <string name="iap_already_processing_body">Ova kupovina može potrajati, sačekajte dok se ne završi ili kontaktirajte naš Tim za podršku.</string>
   <!-- Bonus Page -->
-  <string name="bonus_page_title_1">A Bonus on Every Purchase</string>
-  <string name="bonus_page_body_1">Look for the games identified with %1$s, install the AppCoins Wallet and get up to %2$s%% bonus in all purchases. You can then use this bonus to make your next purchases in your favorite games!</string>
-  <string name="bonus_page_title_2">Want More?</string>
-  <string name="bonus_page_body_2">You can get an extra %s%% bonus by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!</string>
+  <string name="bonus_page_title_1">Bonus pri svakoj kupovini</string>
+  <string name="bonus_page_body_1">Potražite igre označene sa %1$s, instalirajte AppCoins Wallet i osvojite do %2$s%% bonusa pri svakoj kupovini. Zatim možete iskoristiti ovaj bonus da biste obavili svoje sledeće kupovine u omiljenim igrama!</string>
+  <string name="bonus_page_title_2">Želite više?</string>
+  <string name="bonus_page_body_2">Možete osvojiti dodatnih %s%% bonusa ako iskoristite Aptoide Games ekskluzivni promo kod u određenim igrama. Ostanite u toku i dobićete obaveštenje!</string>
+  <!-- Promo Code -->
+  <string name="promo_code_install_wallet_banner_title">Do %s[% bonusa za svaku kupovinu</string>
+  <string name="promo_code_install_wallet_banner_body">Iskoristite AppCoins Wallet da biste obavili svoju kupovinu u aplikaciji i osvojite nagradu.</string>
+  <string name="promo_code_extra_title">Želite više? Osvojite %s%% dodatnog bonusa!</string>
+  <string name="promo_code_use_button">Iskoristite kod</string>
+  <string name="promo_code_install_wallet_disclaimer">Prvo instalirajte AppCoins Wallet.</string>
+  <string name="promo_code_notification_title">Iskoristite svoj Promo kod</string>
+  <string name="promo_code_notification_body">Iskoristite svoj promo kod da biste dobili dodatne bonuse u svojoj omiljenoj igri.</string>
+  <string name="promo_code_notification_without_wallet_title">%s%% dodatnog bonusa!</string>
+  <string name="promo_code_notification_without_wallet_body">Preuzmite AppCoins Wallet i iskoristite svoj promo kod da biste dobili dodatne bonuse u svim kupovinama.</string>
+  <string name="promo_code_share_title">Imate promo kod!</string>
+  <string name="promo_code_share_body">Iskoristite ovaj promo kod da biste dobili dodatne bonuse u svojoj omiljenoj igri.</string>
 </resources>

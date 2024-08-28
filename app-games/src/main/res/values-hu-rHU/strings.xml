@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">Aptoide Games</string>
+  <string name="app_name">Aptoide Játékok</string>
   <!-- Bottom Bar -->
   <string name="games">Játékok</string>
   <string name="categories">Kategóriák</string>
@@ -75,7 +75,7 @@
   <string name="button_back_title">Vissza</string>
   <string name="button_see_all_title">Mind megjelenítése</string>
   <string name="editorials_view_no_content_message">Hoppá, itt még nincs tartalom!</string>
-  <string name="error_no_content_body">Oops, we couldn\'t find related content yet!</string>
+  <string name="error_no_content_body">Hoppá, még nem találtunk kapcsolódó tartalmat!</string>
   <string name="button_update_title">Frissítés</string>
   <string name="button_open_app_title">Megnyitás</string>
   <string name="install_waiting_download_message">Várakozás a letöltésre</string>
@@ -85,18 +85,18 @@
   <string name="send_button">Küldés</string>
   <string name="try_again">Próbáld újra.</string>
   <string name="please_wait">Kis türelmet.</string>
-  <string name="ok_button">Ok</string>
-  <string name="cancel_button">Cancel</string>
+  <string name="ok_button">Oké</string>
+  <string name="cancel_button">Mégse</string>
   <string name="download_now_button">Letöltés most</string>
   <string name="uninstall_button">Eltávolítás</string>
   <string name="go_back_button">Vissza</string>
-  <string name="go_back_to_game_button">Go Back to Game</string>
+  <string name="go_back_to_game_button">Vissza a kezdőlapra</string>
   <string name="uninstalling">Eltávolítás</string>
   <string name="resume_button">Folytatás</string>
   <string name="waiting_for_connection">Várakozás a kapcsolatra</string>
   <string name="wait_for_wifi_button">Megvárom a wifit</string>
   <string name="continue_button">Folytatás</string>
-  <string name="error_install_permissions_body">For your security, your phone currently isn\'t allowed to install apps from this source. You can change this in Settings.</string>
+  <string name="error_install_permissions_body"><![CDATA[Please go to Settings and grant <1>Aptoide Games</1> permissions to install apps!]]></string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Nincs elég hely</string>
   <string name="out_of_space_body">A telepítés folytatásához %s tárhely szükséges.</string>
@@ -135,8 +135,11 @@
   <string name="appview_info_permissions_title" comment="permissions">Engedélyek</string>
   <string name="download_percentage_body" comment="1_s_of_2_s">%2$s/%1$s%%</string>
   <string name="error_short_title" comment="oops_an_error_occurred">Hoppá, hiba történt</string>
-  <string name="purchase_done_existing_bonus_body">A bónuszod %s. Töltsd le az AppCoins Walletet, hogy felhasználhasd a következő vásárlásnál.</string>
-  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">You\'ll get a bonus in all games identified with %s.</string>
+  <string name="purchase_done_bonus_title">Get a %s bonus!</string>
+  <string name="purchase_done_bonus_body">Download the AppCoins Wallet to get this bonus and use it in your next purchase.</string>
+  <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet installed!</string>
+  <string name="purchase_done_bonus_wallet_installed_body">Open it to find your bonus.</string>
+  <string name="bonus_banner_body">Az összes %s jelölt játékban bónuszt kapsz.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Akár %s%% bónusz</string>
   <string name="settings_payments_title" comment="contact_support_team">Kapcsolatfelvétel az ügyfélszolgálattal</string>
   <string name="settings_contact_support_body" comment="billing_terms_of_use">Számlázási feltételek</string>
@@ -157,7 +160,7 @@
   <string name="iap_card_expiry" comment="expiry_date">Lejárati idő</string>
   <string name="iap_card_cvc" comment="cvc_cvv">CVC/CVV</string>
   <string name="iab_change_card_button" comment="change_card">Kártyacsere</string>
-  <string name="done_title" comment="done">Kész!</string>
+  <string name="done_title">Kész!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">Vásárlás...</string>
   <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">Minden adat helyesen van megadva? Próbáld újra!</string>
   <string name="log_out_button" comment="log_out">Kijelentkezés</string>
@@ -187,11 +190,23 @@
   <string name="purchase_error_in_progress_title">A kérelmed már feldolgozták vagy jelenleg is folyamatban van.</string>
   <string name="purchase_card_error_CVV_title">Hibás CVV/CVC</string>
   <string name="purchase_error_expired_card_title">Úgy tűnik, lejárt a kártyád.</string>
-  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
-  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
+  <string name="iap_already_processing_title">Úgy tűnik ezt a vásárlást már feldolgozták…</string>
+  <string name="iap_already_processing_body">Ez a vásárlás több időt vesz igénybe. Várj amíg befejeződik vagy lépj kapcsolatba az ügyfélszolgálattal.</string>
   <!-- Bonus Page -->
-  <string name="bonus_page_title_1">A Bonus on Every Purchase</string>
-  <string name="bonus_page_body_1">Look for the games identified with %1$s, install the AppCoins Wallet and get up to %2$s%% bonus in all purchases. You can then use this bonus to make your next purchases in your favorite games!</string>
-  <string name="bonus_page_title_2">Want More?</string>
-  <string name="bonus_page_body_2">You can get an extra %s%% bonus by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!</string>
+  <string name="bonus_page_title_1">Bónusz minden vásárlásért cserébe</string>
+  <string name="bonus_page_body_1">Keresd a %1$s jellel jelölt játékokat, telepítsd az AppCoins Walletet, és szerezz akár %2$s%% bónuszt minden vásárlás után. Ezt a bónuszt pedig felhasználhatod a legközelebbi vásárlás során a kedvenc játékodban!</string>
+  <string name="bonus_page_title_2">Többet szeretnél?</string>
+  <string name="bonus_page_body_2">Extra %s%% bónuszhoz juthatsz, ha az Aptoide Játékok exkluzív promókódját használod egyes játékokban! Maradj velünk, és nemsokára megosztjuk veled a részleteket!</string>
+  <!-- Promo Code -->
+  <string name="promo_code_install_wallet_banner_title">Up to %s%% Bonus in Every Purchase</string>
+  <string name="promo_code_install_wallet_banner_body">Use the AppCoins Wallet to make your in-app purchases and get a reward.</string>
+  <string name="promo_code_extra_title">Want More? Get %s%% Extra Bonus!</string>
+  <string name="promo_code_use_button">Use code</string>
+  <string name="promo_code_install_wallet_disclaimer">Install the AppCoins Wallet first.</string>
+  <string name="promo_code_notification_title">Redeem Your Promo Code</string>
+  <string name="promo_code_notification_body">Use your promo code to get extra bonuses in your favorite game.</string>
+  <string name="promo_code_notification_without_wallet_title">%s%% Extra Bonus!</string>
+  <string name="promo_code_notification_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
+  <string name="promo_code_share_title">You\'ve got a promo code!</string>
+  <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorite game.</string>
 </resources>
