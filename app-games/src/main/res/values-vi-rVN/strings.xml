@@ -75,7 +75,7 @@
   <string name="button_back_title">Quay lại</string>
   <string name="button_see_all_title">Xem tất cả</string>
   <string name="editorials_view_no_content_message">Rất tiếc, chưa có nội dung nào ở đây!</string>
-  <string name="error_no_content_body">Oops, we couldn\'t find related content yet!</string>
+  <string name="error_no_content_body">Rất tiếc, chúng tôi chưa tìm được nội dung liên quan!</string>
   <string name="button_update_title">Cập Nhật</string>
   <string name="button_open_app_title">Mở</string>
   <string name="install_waiting_download_message">Đang chờ tải xuống</string>
@@ -85,18 +85,18 @@
   <string name="send_button">Gửi</string>
   <string name="try_again">Vui lòng thử lại.</string>
   <string name="please_wait">Vui lòng chờ.</string>
-  <string name="ok_button">Ok</string>
-  <string name="cancel_button">Cancel</string>
+  <string name="ok_button">Đồng ý</string>
+  <string name="cancel_button">Hủy bỏ</string>
   <string name="download_now_button">Tải ngay</string>
   <string name="uninstall_button">Gỡ bỏ</string>
   <string name="go_back_button">Quay lại</string>
-  <string name="go_back_to_game_button">Go Back to Game</string>
+  <string name="go_back_to_game_button">Quay lại trò chơi</string>
   <string name="uninstalling">Gỡ cài đặt</string>
   <string name="resume_button">Tiếp tục</string>
   <string name="waiting_for_connection">Đang chờ kết nối</string>
   <string name="wait_for_wifi_button">Chờ Wi-Fi</string>
   <string name="continue_button">Tiếp tục</string>
-  <string name="error_install_permissions_body">For your security, your phone currently isn\'t allowed to install apps from this source. You can change this in Settings.</string>
+  <string name="error_install_permissions_body"><![CDATA[For your security, your phone currently isn't allowed to install apps from this source. You can change this in Settings.]]></string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Hết dung lượng</string>
   <string name="out_of_space_body">Bạn cần %s để tiếp tục cài đặt.</string>
@@ -136,7 +136,7 @@
   <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% trên %2$s</string>
   <string name="error_short_title" comment="oops_an_error_occurred">Rất tiếc, đã xảy ra lỗi</string>
   <string name="purchase_done_existing_bonus_body">Bạn hiện có %s tiền thưởng. Tải xuống Ví AppCoins để sử dụng chúng trong lần mua hàng tiếp theo của mình.</string>
-  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">You\'ll get a bonus in all games identified with %s.</string>
+  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">Bạn sẽ nhận được tiền thưởng trong tất cả các trò chơi được xác định bằng %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Lên tới %s%% tiền thưởng</string>
   <string name="settings_payments_title" comment="contact_support_team">Liên hệ với Đội ngũ Hỗ trợ</string>
   <string name="settings_contact_support_body" comment="billing_terms_of_use">Điều khoản sử dụng thanh toán</string>
@@ -187,11 +187,22 @@
   <string name="purchase_error_in_progress_title">Yêu cầu của bạn đã được xử lý hoặc đang được tiến hành.</string>
   <string name="purchase_card_error_CVV_title">CVV/CVC sai</string>
   <string name="purchase_error_expired_card_title">Có vẻ như thẻ của bạn đã hết hạn.</string>
-  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
-  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
+  <string name="iap_already_processing_title">Có vẻ như giao dịch mua này đang được xử lý.</string>
+  <string name="iap_already_processing_body">Quá trình mua hàng này có thể mất một chút thời gian, vì vậy, vui lòng đợi cho đến khi hoàn tất hoặc liên hệ với Đội hỗ trợ của chúng tôi.</string>
   <!-- Bonus Page -->
-  <string name="bonus_page_title_1">A Bonus on Every Purchase</string>
-  <string name="bonus_page_body_1">Look for the games identified with %1$s, install the AppCoins Wallet and get up to %2$s%% bonus in all purchases. You can then use this bonus to make your next purchases in your favorite games!</string>
-  <string name="bonus_page_title_2">Want More?</string>
-  <string name="bonus_page_body_2">You can get an extra %s%% bonus by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!</string>
+  <string name="bonus_page_title_1">Tiền thưởng cho mỗi lần mua hàng</string>
+  <string name="bonus_page_body_1">Tìm kiếm các trò chơi được xác định bằng %1$s, cài đặt Ví AppCoins và nhận tiền thưởng lên đến %2$s%% trong mọi giao dịch mua. Sau đó, bạn có thể sử dụng tiền thưởng này để thực hiện các giao dịch mua tiếp theo trong các trò chơi yêu thích của mình!</string>
+  <string name="bonus_page_title_2">Bạn vẫn muốn thêm?</string>
+  <string name="bonus_page_body_2">Bạn có thể nhận thêm %s%% tiền thưởng bằng cách sử dụng mã khuyến mãi độc quyền của Aptoide Games trong các trò chơi cụ thể. Hãy theo dõi và bạn sẽ nhận được thông báo!</string>
+  <!-- Promo Code -->
+  <string name="promo_code_install_wallet_banner_title">Up to %s%% Bonus in Every Purchase</string>
+  <string name="promo_code_install_wallet_banner_body">Use the AppCoins Wallet to make your in-app purchases and get a reward.</string>
+  <string name="promo_code_extra_title">Want More? Get %s%% Extra Bonus!</string>
+  <string name="promo_code_use_button">Use code</string>
+  <string name="promo_code_notification_title">Redeem Your Promo Code</string>
+  <string name="promo_code_notification_body">Use your promo code to get extra bonuses in your favorite game.</string>
+  <string name="promo_code_share_title">You\'ve got a promo code!</string>
+  <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorte game.</string>
+  <string name="promo_code_share_without_wallet_title">%s%% Extra Bonus!</string>
+  <string name="promo_code_share_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
 </resources>
