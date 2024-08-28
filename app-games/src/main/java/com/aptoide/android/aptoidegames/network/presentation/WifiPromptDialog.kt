@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -64,7 +65,7 @@ fun WifiPromptDialog(
     Box(
       modifier = Modifier
         .padding(horizontal = 16.dp)
-        .fillMaxWidth()
+        .width(328.dp)
         .wrapContentHeight()
         .background(Palette.GreyDark),
     ) {
