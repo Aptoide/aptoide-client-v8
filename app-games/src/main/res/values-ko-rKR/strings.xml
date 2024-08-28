@@ -137,7 +137,7 @@
   <string name="error_short_title" comment="oops_an_error_occurred">이런, 오류가 발생했습니다</string>
   <string name="purchase_done_bonus_title">Get a %s bonus!</string>
   <string name="purchase_done_bonus_body">Download the AppCoins Wallet to get this bonus and use it in your next purchase.</string>
-  <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet isntalled!</string>
+  <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet installed!</string>
   <string name="purchase_done_bonus_wallet_installed_body">Open it to find your bonus.</string>
   <string name="bonus_banner_body">%s로 표시된 모든 게임에서 보너스를 받을 수 있습니다.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">최대 %s%% 보너스</string>
