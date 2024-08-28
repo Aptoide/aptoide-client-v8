@@ -5,10 +5,6 @@
   <string name="games">Jogos</string>
   <string name="categories">Categorias</string>
   <string name="search">Pesquisar</string>
-  <!-- Common -->
-  <string name="send_button">Enviar</string>
-  <string name="try_again">Por favor, tente novamente.</string>
-  <string name="please_wait">Por favor, aguarde.</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Configurações</string>
   <string name="overflow_menu_terms_conditions">Termos e Condições</string>
@@ -79,12 +75,18 @@
   <string name="button_back_title">Voltar</string>
   <string name="button_see_all_title">Ver Tudo</string>
   <string name="editorials_view_no_content_message">Ops, ainda não há conteúdo aqui!</string>
+  <string name="error_no_content_body">Oops, we couldn\'t find related content yet!</string>
   <string name="button_update_title">Atualizar</string>
   <string name="button_open_app_title">Abrir</string>
   <string name="install_waiting_download_message">Aguardando baixar</string>
   <string name="downloading_percentage_body">%1$s%% de %2$s</string>
   <string name="install_downloading_message">Baixando</string>
   <!-- Common -->
+  <string name="send_button">Enviar</string>
+  <string name="try_again">Por favor, tente novamente.</string>
+  <string name="please_wait">Por favor, aguarde.</string>
+  <string name="ok_button">Ok</string>
+  <string name="cancel_button">Cancel</string>
   <string name="download_now_button">Fazer o Download Agora</string>
   <string name="uninstall_button">Desinstalar</string>
   <string name="go_back_button">Voltar</string>
@@ -94,6 +96,7 @@
   <string name="waiting_for_connection">Aguardando conexão</string>
   <string name="wait_for_wifi_button">Esperar pelo Wi-Fi</string>
   <string name="continue_button">Continuar</string>
+  <string name="error_install_permissions_body">For your security, your phone currently isn\'t allowed to install apps from this source. You can change this in Settings.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Sem Espaço Disponível</string>
   <string name="out_of_space_body">Você precisa de %s para continuar a instalação.</string>
@@ -187,4 +190,9 @@
   <string name="purchase_error_expired_card_title">Parece que o seu cartão expirou.</string>
   <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
   <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
+  <!-- Bonus Page -->
+  <string name="bonus_page_title_1">A Bonus on Every Purchase</string>
+  <string name="bonus_page_body_1">Look for the games identified with %1$s, install the AppCoins Wallet and get up to %2$s%% bonus in all purchases. You can then use this bonus to make your next purchases in your favorite games!</string>
+  <string name="bonus_page_title_2">Want More?</string>
+  <string name="bonus_page_body_2">You can get an extra %s%% bonus by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!</string>
 </resources>

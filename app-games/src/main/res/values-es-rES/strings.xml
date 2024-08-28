@@ -5,10 +5,6 @@
   <string name="games">Juegos</string>
   <string name="categories">Categorías</string>
   <string name="search">Buscar</string>
-  <!-- Common -->
-  <string name="send_button">Enviar</string>
-  <string name="try_again">¡Prueba de nuevo!</string>
-  <string name="please_wait">Por favor, espera.</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Configuración</string>
   <string name="overflow_menu_terms_conditions">Términos y Condiciones</string>
@@ -79,21 +75,28 @@
   <string name="button_back_title">Volver</string>
   <string name="button_see_all_title">Ver todo</string>
   <string name="editorials_view_no_content_message">Ups, ¡todavía no hay contenido aquí!</string>
+  <string name="error_no_content_body">Oops, we couldn\'t find related content yet!</string>
   <string name="button_update_title">Actualizar</string>
   <string name="button_open_app_title">Abrir</string>
   <string name="install_waiting_download_message">Esperando descarga</string>
   <string name="downloading_percentage_body">%1$s%% de %2$s</string>
   <string name="install_downloading_message">Descargando</string>
   <!-- Common -->
+  <string name="send_button">Enviar</string>
+  <string name="try_again">¡Prueba de nuevo!</string>
+  <string name="please_wait">Por favor, espera.</string>
+  <string name="ok_button">Ok</string>
+  <string name="cancel_button">Cancel</string>
   <string name="download_now_button">Descargar ahora</string>
   <string name="uninstall_button">Desinstalar</string>
   <string name="go_back_button">Volver</string>
-  <string name="go_back_to_game_button">Go Back to Game</string>
+  <string name="go_back_to_game_button">Volver al juego</string>
   <string name="uninstalling">Desinstalando</string>
   <string name="resume_button">Reanudar</string>
   <string name="waiting_for_connection">Esperando conexión</string>
   <string name="wait_for_wifi_button">Esperar por wifi</string>
   <string name="continue_button">Continuar</string>
+  <string name="error_install_permissions_body">For your security, your phone currently isn\'t allowed to install apps from this source. You can change this in Settings.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">No queda espacio</string>
   <string name="out_of_space_body">Necesitas %s para continuar con la instalación.</string>
@@ -184,6 +187,11 @@
   <string name="purchase_error_in_progress_title">Tu pedido ya ha sido realizado o está en progreso.</string>
   <string name="purchase_card_error_CVV_title">CVV/CVC no válido</string>
   <string name="purchase_error_expired_card_title">Parece que la tarjeta ha caducado.</string>
-  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
-  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
+  <string name="iap_already_processing_title">Parece que esta compra está siendo procesada.</string>
+  <string name="iap_already_processing_body">Esta compra puede tardar un poco, espera hasta que se complete o ponte en contacto con nosotros.</string>
+  <!-- Bonus Page -->
+  <string name="bonus_page_title_1">Un Bonus con Cada Compra</string>
+  <string name="bonus_page_body_1">Busca los juegos identificados con el símbolo %1$s, instala la AppCoins Wallet y recibe un bonus de hasta el %2$s%% en todas las compras. ¡Podrás usar este bonus para hacer tus próximas compras en tus juegos favoritos!</string>
+  <string name="bonus_page_title_2">¿Quieres Más?</string>
+  <string name="bonus_page_body_2">Puedes recibir un bonus extra del %s%% usando el código promocional exclusivo de Aptoide Games para juegos específicos. ¡Estate atento y recibirás una notificación!</string>
 </resources>

@@ -5,10 +5,6 @@
   <string name="games">खेळ</string>
   <string name="categories">श्रेणी</string>
   <string name="search">शोध</string>
-  <!-- Common -->
-  <string name="send_button">पाठवा</string>
-  <string name="try_again">कृपया पुन्हा प्रयत्न करा.</string>
-  <string name="please_wait">कृपया प्रतीक्षा करा….</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">सेटिंग</string>
   <string name="overflow_menu_terms_conditions">अटी आणि शर्ती</string>
@@ -79,12 +75,18 @@
   <string name="button_back_title">मागे जा</string>
   <string name="button_see_all_title">सर्व पहा</string>
   <string name="editorials_view_no_content_message">अरेरे, सामग्री अजुन पोचली नाही!</string>
+  <string name="error_no_content_body">Oops, we couldn\'t find related content yet!</string>
   <string name="button_update_title">अपडेट</string>
   <string name="button_open_app_title">खुले</string>
   <string name="install_waiting_download_message">डाऊनलोडसाठी थांबलोय</string>
   <string name="downloading_percentage_body">%2$s पैकी %1$s%%</string>
   <string name="install_downloading_message">डाउनलोड करत आहे</string>
   <!-- Common -->
+  <string name="send_button">पाठवा</string>
+  <string name="try_again">कृपया पुन्हा प्रयत्न करा.</string>
+  <string name="please_wait">कृपया प्रतीक्षा करा….</string>
+  <string name="ok_button">Ok</string>
+  <string name="cancel_button">Cancel</string>
   <string name="download_now_button">आत्ता डाऊनलोड करा</string>
   <string name="uninstall_button">अनइन्स्टॉल</string>
   <string name="go_back_button">पाठी जा</string>
@@ -94,6 +96,7 @@
   <string name="waiting_for_connection">कनेक्शनसाठी थांबलो आहे</string>
   <string name="wait_for_wifi_button">वायफायसाठी थांबलो आहे</string>
   <string name="continue_button">चालू ठेवा</string>
+  <string name="error_install_permissions_body">For your security, your phone currently isn\'t allowed to install apps from this source. You can change this in Settings.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">जागा संपली</string>
   <string name="out_of_space_body">इंस्टलेशनसह %s हे चालू ठेवणे आपल्याला आवश्यक आहे.</string>
@@ -186,4 +189,9 @@
   <string name="purchase_error_expired_card_title">आपले कार्ड कालबाह्य झाल्याचे दिसतेय.</string>
   <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
   <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
+  <!-- Bonus Page -->
+  <string name="bonus_page_title_1">A Bonus on Every Purchase</string>
+  <string name="bonus_page_body_1">Look for the games identified with %1$s, install the AppCoins Wallet and get up to %2$s%% bonus in all purchases. You can then use this bonus to make your next purchases in your favorite games!</string>
+  <string name="bonus_page_title_2">Want More?</string>
+  <string name="bonus_page_body_2">You can get an extra %s%% bonus by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!</string>
 </resources>
