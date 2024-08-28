@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">Aptoide Games</string>
+  <string name="app_name">เกมส์ Aptoide</string>
   <!-- Bottom Bar -->
   <string name="games">เกมส์</string>
   <string name="categories">หมวดหมู่</string>
@@ -75,7 +75,7 @@
   <string name="button_back_title">ย้อนกลับ</string>
   <string name="button_see_all_title">ดูทั้งหมด</string>
   <string name="editorials_view_no_content_message">อ๊ะ ยังไม่มีเนื้อหาที่นี่!</string>
-  <string name="error_no_content_body">Oops, we couldn\'t find related content yet!</string>
+  <string name="error_no_content_body">อุ๊ปส์ เราไม่พบเนื้อหาที่เกี่ยวข้อง!</string>
   <string name="button_update_title">อัพเดต</string>
   <string name="button_open_app_title">เปิด</string>
   <string name="install_waiting_download_message">กำลังรอเพื่อดาวโหลด</string>
@@ -85,18 +85,18 @@
   <string name="send_button">ส่ง</string>
   <string name="try_again">โปรดลองอีกครั้ง</string>
   <string name="please_wait">โปรดรอ</string>
-  <string name="ok_button">Ok</string>
-  <string name="cancel_button">Cancel</string>
+  <string name="ok_button">โอเค</string>
+  <string name="cancel_button">ยกเลิก</string>
   <string name="download_now_button">ดาวน์โหลดตอนนี้</string>
   <string name="uninstall_button">ถอนการติดตั้ง</string>
   <string name="go_back_button">ย้อนกลับ</string>
-  <string name="go_back_to_game_button">Go Back to Game</string>
+  <string name="go_back_to_game_button">กลับไปหน้าแรก</string>
   <string name="uninstalling">ถอนการติดตั้ง</string>
   <string name="resume_button">ดำเนินต่อ</string>
   <string name="waiting_for_connection">รอการเชื่อมต่อ</string>
   <string name="wait_for_wifi_button">รอ Wi-Fi</string>
   <string name="continue_button">ต่อ</string>
-  <string name="error_install_permissions_body">For your security, your phone currently isn\'t allowed to install apps from this source. You can change this in Settings.</string>
+  <string name="error_install_permissions_body"><![CDATA[For your security, your phone currently isn't allowed to install apps from this source. You can change this in Settings.]]></string>
   <!-- Out of Space -->
   <string name="out_of_space_title">ไม่มีพื้นที่ว่าง</string>
   <string name="out_of_space_body">คุณต้องใช้ %s เพื่อดำเนินการติดตั้งต่อ</string>
@@ -108,48 +108,48 @@
   <string name="appview_status_failed_talkback">ล้มเหลว</string>
   <string name="appview_action_cancel_talkback">ยกเลิก</string>
   <string name="appview_installer_talkback">ตัวติดตั้ง%1$s</string>
-  <string name="appview_action_double_tap_talkback">Double tap to %1$s</string>
+  <string name="appview_action_double_tap_talkback">แตะสองครั้งที่ %1$s</string>
   <!-- Search -->
-  <string name="search_suggested_title">Suggested Searches</string>
-  <string name="search_recent_title">Recent Searches</string>
-  <string name="search_popular_title">Popular Searches</string>
-  <string name="search_bar_label">Search for games...</string>
-  <string name="search_empty_body">Oops, there are no results for \"%s\".\nTry with different words!</string>
+  <string name="search_suggested_title">การค้นหาที่แนะนำ</string>
+  <string name="search_recent_title">การค้นหาเร็วๆนี้</string>
+  <string name="search_popular_title">การค้นยอดนิยม</string>
+  <string name="search_bar_label">ค้าหาเกมส์</string>
+  <string name="search_empty_body">อ๊ะ ไม่มีผลลัพธ์สำหรับ \"%s\"\n ลองใช้คำอื่น!</string>
   <!-- Install -->
   <string name="button_install_title">ติดตั้ง</string>
   <!-- Common -->
-  <string name="notice_at_collection_and_privacy_policy">Notice at Collection &amp; Privacy Policy</string>
-  <string name="terms_and_conditions">Terms</string>
-  <string name="continue_to_accept_tandc_and_pp_disclaimer">By continuing you accept the %1$s and %2$s.</string>
+  <string name="notice_at_collection_and_privacy_policy">ประกาศที่คอลเลกชัน &amp; นโยบายความเป็นส่วนตัว</string>
+  <string name="terms_and_conditions">เงื่อนไข</string>
+  <string name="continue_to_accept_tandc_and_pp_disclaimer">การดำเนินการต่อแสดงว่าคุณยอมรับ %1$s และ %2$s</string>
   <string name="appview_details_tab_title" comment="details">รายละเอียด</string>
-  <string name="appview_related_tab_title" comment="related">Related</string>
+  <string name="appview_related_tab_title" comment="related">เกี่ยวข้อง</string>
   <string name="appview_info_tab_title" comment="info">ข้อมูล</string>
   <string name="bottom_navigation_discovery" comment="discovery">Discovery</string>
-  <string name="appview_info_version_name_title" comment="version_name">Version name</string>
+  <string name="appview_info_version_name_title" comment="version_name">ชื่อเวอร์ชั่น</string>
   <string name="appview_info_package_name_title" comment="package_name">ชื่อแพคเกจ</string>
-  <string name="appview_info_release_title" comment="release">Release</string>
-  <string name="appview_info_update_title" comment="updated_on">Updated on</string>
-  <string name="appview_info_download_size_title" comment="download_size">Download size</string>
+  <string name="appview_info_release_title" comment="release">ปล่อย</string>
+  <string name="appview_info_update_title" comment="updated_on">อัพเดตวันที่</string>
+  <string name="appview_info_download_size_title" comment="download_size">ขนาดการดาวโหลด</string>
   <string name="appview_info_website_title" comment="website">เว็ปไซต์</string>
   <string name="appview_info_email_title" comment="email">อีเมล</string>
   <string name="appview_info_permissions_title" comment="permissions">สิทธิ์</string>
   <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%%จาก%2$s</string>
-  <string name="error_short_title" comment="oops_an_error_occurred">Oops, an error occurred</string>
-  <string name="purchase_done_existing_bonus_body">You now have %s in bonus. Download the AppCoins Wallet to use them in your next purchase.</string>
-  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">You\'ll get a bonus in all games identified with %s.</string>
-  <string name="bonus_banner_title" comment="up_to_s_bonus">Up to %s%% Bonus</string>
+  <string name="error_short_title" comment="oops_an_error_occurred">อุ๊ปส์ เกิดข้อผิดพลาด</string>
+  <string name="purchase_done_existing_bonus_body">ตอนนี้คุณมีโบนัส %s ดาวน์โหลด AppCoins Wallet เพื่อใช้ในการซื้อครั้งต่อไป</string>
+  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">คุณจะได้รับโบนัสในเกมส์ที่กำหนดทั้งหมดด้วย%s</string>
+  <string name="bonus_banner_title" comment="up_to_s_bonus">สูงสุด %s%% โบนัส</string>
   <string name="settings_payments_title" comment="contact_support_team">ติดต่อทีมสนับสนุน</string>
-  <string name="settings_contact_support_body" comment="billing_terms_of_use">Billing Terms of Use</string>
-  <string name="settings_billing_terms_body" comment="payments">Payments</string>
-  <string name="powered_by_title" comment="powered_by">Powered by</string>
+  <string name="settings_contact_support_body" comment="billing_terms_of_use">เงื่อนไขการเรียกเก็บ Aptoide</string>
+  <string name="settings_billing_terms_body" comment="payments">การชำระเงิน</string>
+  <string name="powered_by_title" comment="powered_by">สนับสนุนโดย</string>
   <string name="contact_support_title" comment="contact_support">ติดต่อฝ่ายสนับสนุน</string>
-  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Please give us all the details:\n\u2022 When did the problem start\n\u2022 On which game are you making a purchase\n\nOnce you tap on Send, your mail app will open. Feel free to attach a screenshot or video about the issue!</string>
+  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">โปรดให้รายละเอียดทั้งหมดแก่เรา:\n\u2022 ปัญหาเริ่มต้นเมื่อใด\n\u2022 คุณกำลังทำการซื้อเกมใด\n\nเมื่อคุณแตะส่ง แอปอีเมลของคุณจะเปิดขึ้น คุณสามารถแนบภาพหน้าจอหรือวิดีโอเกี่ยวกับปัญหานี้ได้เลย!</string>
   <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">คุณต้องการติดตั้งเกมส์นี้ไหม</string>
-  <string name="app_size_mb_title" comment="s_mb">%s MB</string>
+  <string name="app_size_mb_title" comment="s_mb">%sMB</string>
   <string name="uninstalled_title" comment="uninstalled">ถอดการติดตั้งแล้ว</string>
   <string name="error_no_internet_body" comment="please_check_your_internet_connection">โปรดตรวจสอบการเชื่อมต่ออินเตอร์เน็ต</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">ชำระด้วย AppCoins Wallet</string>
-  <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">It\'ll be installed automatically and you\'ll get a bonus in all purchases!</string>
+  <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">มันจะถูกติดตั้งโดยอัตโนมัติและคุณจะได้รับโบนัสในการซื้อทั้งหมด!</string>
   <string name="buy_button" comment="buy">ซื้อ</string>
   <string name="iap_other_payment_methods_button" comment="other_payment_methods">วิธีการชำระเงินเพิ่มเติม</string>
   <string name="iap_remember_card_button" comment="remember_card">จดจำบัตร</string>
@@ -158,40 +158,51 @@
   <string name="iap_card_cvc" comment="cvc_cvv">CVC/CVV</string>
   <string name="iab_change_card_button" comment="change_card">เปลี่ยนบัตร</string>
   <string name="done_title" comment="done">สำเร็จ!</string>
-  <string name="purchase_making_purchase_title" comment="making_purchase">Making Purchase...</string>
+  <string name="purchase_making_purchase_title" comment="making_purchase">กำลังทำการซื้อ...</string>
   <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">คุณแน่ใจหรือว่ารายละเอียดบัตรของคุณถูกต้อง? กรุณาลองอีกครั้ง!</string>
   <string name="log_out_button" comment="log_out">ออกจากระบบ</string>
-  <string name="get_a_bonus_in_all_purchases_title">You\'ll get a bonus in all purchases!</string>
-  <string name="iap_appc_body">You\'ll get a bonus in all purchases!</string>
-  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">You can now complete your purchase.</string>
-  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">The AppCoins Wallet is now installed!</string>
-  <string name="storage_access_permission_request_message">Allow access to your phone’s storage so we can download and install this app.</string>
+  <string name="get_a_bonus_in_all_purchases_title">คุณจะได้รับโบนัสจากการซื้อทั้งหมดของคุณ!</string>
+  <string name="iap_appc_body">คุณจะได้รับโบนัสจากการซื้อทั้งหมดของคุณ!</string>
+  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">คุณสามารถซื้อได้ในตอนนี้</string>
+  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed"></string>
+  <string name="storage_access_permission_request_message">โปรดอนุญาตให้เข้าในส่วนจัดเก็บของโทรศัพท์ พวกเราสามารถดาวน์โหลดและติดตั้งแอปนี้</string>
   <!-- Payment Errors-->
-  <string name="payments_error_not_enough_balance_body">You don\'t have enough balance</string>
-  <string name="payments_error_old_card_title">It seems you registered this card long time ago!</string>
-  <string name="payments_error_old_card_body">Insert the card details again or use a different one.</string>
-  <string name="purchase_error_payment_rejected">The transaction has been rejected.</string>
-  <string name="purchase_error_try_other_card_body">Please try with a different card or payment method.</string>
-  <string name="purchase_card_error_general_title">There was a problem with your card.</string>
-  <string name="purchase_error_try_other_payment_method_body">Please try with a different payment method.</string>
-  <string name="purchase_card_error_no_funds">It seems you don\'t have enough funds or there\'s a limit on your card.</string>
-  <string name="purchase_card_error_invalid_details_title">Invalid card number.</string>
-  <string name="purchase_error_check_it_body">Please check it and try again.</string>
-  <string name="purchase_card_error_not_supported_title">Your card is not supported yet.</string>
-  <string name="purchase_error_wrong_pin_title">There was a problem with your pin.</string>
-  <string name="purchase_error_3d_title">There was a problem with your 3D authentication.</string>
-  <string name="purchase_card_rejected_title">The transaction has been rejected by your bank.</string>
-  <string name="purchase_error_invalid_credit_card_title">Invalid bank card number.</string>
+  <string name="payments_error_not_enough_balance_body">คุณไม่มียอดคงเหลือเพียงพอ</string>
+  <string name="payments_error_old_card_title">ดูเหมือนว่าคุณลงทะเบียนบัตรนี้เมื่อนานมาแล้ว!</string>
+  <string name="payments_error_old_card_body">ใส่รายละเอียดบัตรอีกครั้งหรือใช้บัตรใบอื่น</string>
+  <string name="purchase_error_payment_rejected">ธุรกรรมของคุณถูกปฏิเสธ</string>
+  <string name="purchase_error_try_other_card_body">โปรดลองบัตรใบอื่นหรือวิธีการชำระอื่น</string>
+  <string name="purchase_card_error_general_title">บัตรของคุณมีปัญหา</string>
+  <string name="purchase_error_try_other_payment_method_body">โปรดลองการชำระเงินวิธีอื่น</string>
+  <string name="purchase_card_error_no_funds">ดูเหมือนว่าคุณมีเงินทุนไม่เพียงพอหรือมีวงเงินในบัตรของคุณ</string>
+  <string name="purchase_card_error_invalid_details_title">ไม่พบหมายเลขบัตรของคุณ</string>
+  <string name="purchase_error_check_it_body">โปรดตรวจสอบและลองอีกครั้ง</string>
+  <string name="purchase_card_error_not_supported_title">ยังไม่สนับสนุนบัตรของคุณ</string>
+  <string name="purchase_error_wrong_pin_title">รหัสของคุณมีปัญหา</string>
+  <string name="purchase_error_3d_title">รหัส 3D ของคุณมีปัญหา</string>
+  <string name="purchase_card_rejected_title">ธุรกรรมของคุณถูกปฏิเสธโดยธนาคาร</string>
+  <string name="purchase_error_invalid_credit_card_title">ไม่พบหมายเลขบัตรธนาคาร</string>
   <string name="purchase_error_invalid_credit_card_body">โปรดตรวจสอบให้แน่ใจว่าตัวเลขทั้งหมดถูกต้อง</string>
   <string name="purchase_error_card_security_validation_title">มีข้อผิดพลาดในการตรวจสอบความถูกต้องระดับที่ 2 ของธุรกรรมนี้</string>
   <string name="purchase_error_in_progress_title">คำขอของคุณได้รับการประมวลผลแล้วหรือกำลังดำเนินการอยู่</string>
   <string name="purchase_card_error_CVV_title">CVV/CVC ไม่ถูกต้อง</string>
   <string name="purchase_error_expired_card_title">ดูเหมือนว่าบัตรของคุณจะหมดอายุ</string>
-  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
-  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
+  <string name="iap_already_processing_title">ดูเหมือนว่าการซื้อนี้ดำเนินการแล้ว</string>
+  <string name="iap_already_processing_body">การซื้อนี้อาจใช้เวลาสักครู่ ดังนั้นโปรดรอจนกว่าจะเสร็จสิ้นหรือติดต่อทีมสนับสนุนของเรา</string>
   <!-- Bonus Page -->
-  <string name="bonus_page_title_1">A Bonus on Every Purchase</string>
-  <string name="bonus_page_body_1">Look for the games identified with %1$s, install the AppCoins Wallet and get up to %2$s%% bonus in all purchases. You can then use this bonus to make your next purchases in your favorite games!</string>
-  <string name="bonus_page_title_2">Want More?</string>
-  <string name="bonus_page_body_2">You can get an extra %s%% bonus by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!</string>
+  <string name="bonus_page_title_1">โบนัสในทุกการซื้อ</string>
+  <string name="bonus_page_body_1">ค้นหาเกมที่ระบุด้วย %1$s ติดตั้ง AppCoins Wallet และรับโบนัสสูงสุดถึง %2$s%% ในการซื้อทั้งหมด จากนั้นคุณสามารถใช้โบนัสนี้เพื่อซื้อสินค้าครั้งต่อไปในเกมที่คุณชื่นชอบได้!</string>
+  <string name="bonus_page_title_2">ต้องการเพิ่มเติม?</string>
+  <string name="bonus_page_body_2">คุณสามารถรับโบนัสพิเศษ %s%% ได้โดยใช้รหัสโปรโมชั่นพิเศษเฉพาะของเกมนี้ คอยติดตามและคุณจะได้รับการแจ้งเตือน!</string>
+  <!-- Promo Code -->
+  <string name="promo_code_install_wallet_banner_title">Up to %s%% Bonus in Every Purchase</string>
+  <string name="promo_code_install_wallet_banner_body">Use the AppCoins Wallet to make your in-app purchases and get a reward.</string>
+  <string name="promo_code_extra_title">Want More? Get %s%% Extra Bonus!</string>
+  <string name="promo_code_use_button">Use code</string>
+  <string name="promo_code_notification_title">Redeem Your Promo Code</string>
+  <string name="promo_code_notification_body">Use your promo code to get extra bonuses in your favorite game.</string>
+  <string name="promo_code_share_title">You\'ve got a promo code!</string>
+  <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorte game.</string>
+  <string name="promo_code_share_without_wallet_title">%s%% Extra Bonus!</string>
+  <string name="promo_code_share_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
 </resources>
