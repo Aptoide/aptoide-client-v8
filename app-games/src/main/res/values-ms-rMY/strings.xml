@@ -135,8 +135,11 @@
   <string name="appview_info_permissions_title" comment="permissions">Kebenaran</string>
   <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% daripada %2$s</string>
   <string name="error_short_title" comment="oops_an_error_occurred">Oops, ada ralat</string>
-  <string name="purchase_done_existing_bonus_body">Anda ada bonus %s. Muat turun Dompet AppCoins untuk guna dalam pembelian seterusnya.</string>
-  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">Anda akan terima bonus dalam semua permainan bertanda %s.</string>
+  <string name="purchase_done_bonus_title">Get a %s bonus!</string>
+  <string name="purchase_done_bonus_body">Download the AppCoins Wallet to get this bonus and use it in your next purchase.</string>
+  <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet isntalled!</string>
+  <string name="purchase_done_bonus_wallet_installed_body">Open it to find your bonus.</string>
+  <string name="bonus_banner_body">Anda akan terima bonus dalam semua permainan bertanda %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Bonus sehingga %s%%</string>
   <string name="settings_payments_title" comment="contact_support_team">Hubungi Pasukan Sokongan</string>
   <string name="settings_contact_support_body" comment="billing_terms_of_use">Terma Penggunaan Pembilan</string>
@@ -157,7 +160,7 @@
   <string name="iap_card_expiry" comment="expiry_date">Tarikh luput</string>
   <string name="iap_card_cvc" comment="cvc_cvv">CVC/CVV</string>
   <string name="iab_change_card_button" comment="change_card">Tukar kad</string>
-  <string name="done_title" comment="done">Selesai!</string>
+  <string name="done_title">Selesai!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">Membuat Pembelian...</string>
   <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">Anda pasti butiran kad anda betul? Sila cuba lagi!</string>
   <string name="log_out_button" comment="log_out">Log Keluar</string>
@@ -205,5 +208,5 @@
   <string name="promo_code_notification_without_wallet_title">%s%% Extra Bonus!</string>
   <string name="promo_code_notification_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
   <string name="promo_code_share_title">You\'ve got a promo code!</string>
-  <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorte game.</string>
+  <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorite game.</string>
 </resources>
