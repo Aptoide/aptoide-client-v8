@@ -75,7 +75,7 @@
   <string name="button_back_title">Înapoi</string>
   <string name="button_see_all_title">Vezi toate</string>
   <string name="editorials_view_no_content_message">Ups, nu există conținut aici!</string>
-  <string name="error_no_content_body">Oops, we couldn\'t find related content yet!</string>
+  <string name="error_no_content_body">Ups, nu am găsit conținut relevant!</string>
   <string name="button_update_title">Actualizează</string>
   <string name="button_open_app_title">Deschide</string>
   <string name="install_waiting_download_message">Se așteaptă descărcarea</string>
@@ -86,17 +86,17 @@
   <string name="try_again">Încearcă din nou.</string>
   <string name="please_wait">Te rugăm să aștepți.</string>
   <string name="ok_button">Ok</string>
-  <string name="cancel_button">Cancel</string>
+  <string name="cancel_button">Anulează</string>
   <string name="download_now_button">Descarcă acum</string>
   <string name="uninstall_button">Dezinstalare</string>
   <string name="go_back_button">Du-te înapoi</string>
-  <string name="go_back_to_game_button">Go Back to Game</string>
+  <string name="go_back_to_game_button">Înapoi la joc</string>
   <string name="uninstalling">Se dezinstalează</string>
   <string name="resume_button">Reluare</string>
   <string name="waiting_for_connection">Se așteaptă conexiunea</string>
   <string name="wait_for_wifi_button">Se așteaptă Wi-Fi</string>
   <string name="continue_button">Continuă</string>
-  <string name="error_install_permissions_body">For your security, your phone currently isn\'t allowed to install apps from this source. You can change this in Settings.</string>
+  <string name="error_install_permissions_body"><![CDATA[Accesează Setări și acordă permisiunile pentru <1>Aptoide Games</1> pentru a instala aplicații!]]></string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Spațiu epuizat</string>
   <string name="out_of_space_body">Ai nevoie de %s pentru a continua cu instalarea.</string>
@@ -135,8 +135,11 @@
   <string name="appview_info_permissions_title" comment="permissions">Permisiuni</string>
   <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% din %2$s</string>
   <string name="error_short_title" comment="oops_an_error_occurred">Ups, a apărut o eroare</string>
-  <string name="purchase_done_existing_bonus_body">Acum ai %s în bonus. Descarcă portofelul AppCoins pentru a le folosi la următoarea achiziție.</string>
-  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">Vei primi un bonus în toate jocurile marcate cu %s.</string>
+  <string name="purchase_done_bonus_title">Primești un bonus de %s!</string>
+  <string name="purchase_done_bonus_body">Descarcă AppCoins Wallet pentru a primi acest bonus și folosește-l la următoarea ta achiziție.</string>
+  <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet instalat!</string>
+  <string name="purchase_done_bonus_wallet_installed_body">Deschide pentru a găsi bonusul.</string>
+  <string name="bonus_banner_body">Vei primi un bonus în toate jocurile marcate cu %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Bonus de până la %s%%</string>
   <string name="settings_payments_title" comment="contact_support_team">Contactează echipa de asistență</string>
   <string name="settings_contact_support_body" comment="billing_terms_of_use">Termeni de utilizare pentru Facturare</string>
@@ -157,7 +160,7 @@
   <string name="iap_card_expiry" comment="expiry_date">Data expirării</string>
   <string name="iap_card_cvc" comment="cvc_cvv">CVC/CVV</string>
   <string name="iab_change_card_button" comment="change_card">Utilizează un alt card</string>
-  <string name="done_title" comment="done">Gata!</string>
+  <string name="done_title">Gata!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">Se efectuează achiziția...</string>
   <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">Ești sigur că detaliile cardului tău sunt corecte? Te rugăm să încerci din nou!</string>
   <string name="log_out_button" comment="log_out">Deconectare</string>
@@ -187,11 +190,23 @@
   <string name="purchase_error_in_progress_title">Cererea ta a fost deja procesată sau este în curs de procesare.</string>
   <string name="purchase_card_error_CVV_title">CVV/CVC greșit</string>
   <string name="purchase_error_expired_card_title">Se pare că acest card a expirat.</string>
-  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
-  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
+  <string name="iap_already_processing_title">Se pare că această achiziție este deja în curs de procesare.</string>
+  <string name="iap_already_processing_body">Această achiziție poate dura mai mult timp, așa că te rugăm să aștepți până la finalizare sau să contactezi echipa noastră de asistență.</string>
   <!-- Bonus Page -->
-  <string name="bonus_page_title_1">A Bonus on Every Purchase</string>
-  <string name="bonus_page_body_1">Look for the games identified with %1$s, install the AppCoins Wallet and get up to %2$s%% bonus in all purchases. You can then use this bonus to make your next purchases in your favorite games!</string>
-  <string name="bonus_page_title_2">Want More?</string>
-  <string name="bonus_page_body_2">You can get an extra %s%% bonus by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!</string>
+  <string name="bonus_page_title_1">Un Bonus la Fiecare Achiziție</string>
+  <string name="bonus_page_body_1">Caută jocurile identificate cu %1$s, instalează AppCoins Wallet și obține un bonus de până la %2$s%% la toate achizițiile. Poți folosi acest bonus pentru a face achiziții în jocurile tale preferate!</string>
+  <string name="bonus_page_title_2">Vrei mai mult?</string>
+  <string name="bonus_page_body_2">Poți obține un bonus suplimentar de %s%% utilizând un cod promoțional exclusiv Aptoide Games în anumite jocuri. Fii pe fază și vei fi anunțat!</string>
+  <!-- Promo Code -->
+  <string name="promo_code_install_wallet_banner_title">Bonus de până la %s%% la Fiecare Achiziție</string>
+  <string name="promo_code_install_wallet_banner_body">Folosește AppCoins Wallet pentru a face achizițiile în aplicație și vei obține o recompensă.</string>
+  <string name="promo_code_extra_title">Vrei mai mult? Obține un Bonus Extra de %s%%!</string>
+  <string name="promo_code_use_button">Folosește codul</string>
+  <string name="promo_code_install_wallet_disclaimer">Instalează mai întâi AppCoins Wallet.</string>
+  <string name="promo_code_notification_title">Revendică-ți Codul Promo</string>
+  <string name="promo_code_notification_body">Folosește codul tău promoțional pentru a obține bonusuri suplimentare în jocul tău preferat.</string>
+  <string name="promo_code_notification_without_wallet_title">Bonus Extra %s%%</string>
+  <string name="promo_code_notification_without_wallet_body">Instalează AppCoins Wallet și folosește codul promoțional pentru a obține bonusuri suplimentare la toate achizițiile.</string>
+  <string name="promo_code_share_title">Ai primit un cod promo!</string>
+  <string name="promo_code_share_body">Folosește acest cod promoțional pentru a obține bonusuri suplimentare în jocul tău preferat.</string>
 </resources>

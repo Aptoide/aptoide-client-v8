@@ -75,7 +75,7 @@
   <string name="button_back_title">Назад</string>
   <string name="button_see_all_title">Побачити всі</string>
   <string name="editorials_view_no_content_message">Ой, тут ще нічого немає!</string>
-  <string name="error_no_content_body">Oops, we couldn\'t find related content yet!</string>
+  <string name="error_no_content_body">Не вдалося знайти відповідний вміст!</string>
   <string name="button_update_title">Оновити</string>
   <string name="button_open_app_title">Відкрити</string>
   <string name="install_waiting_download_message">Очікує на завантаження</string>
@@ -85,18 +85,18 @@
   <string name="send_button">Надіслати кошти</string>
   <string name="try_again">Будь ласка, спробуйте ще раз.</string>
   <string name="please_wait">Будь ласка, зачекайте.</string>
-  <string name="ok_button">Ok</string>
-  <string name="cancel_button">Cancel</string>
+  <string name="ok_button">ОК</string>
+  <string name="cancel_button">Скасувати</string>
   <string name="download_now_button">Завантажити зараз</string>
   <string name="uninstall_button">Видалити</string>
   <string name="go_back_button">Повернутися</string>
-  <string name="go_back_to_game_button">Go Back to Game</string>
+  <string name="go_back_to_game_button">Повернутися до гри</string>
   <string name="uninstalling">Видалення</string>
   <string name="resume_button">Відновити</string>
   <string name="waiting_for_connection">Очікування з\'єднання</string>
   <string name="wait_for_wifi_button">Зачекати Wi-Fi</string>
   <string name="continue_button">Продовжити</string>
-  <string name="error_install_permissions_body">For your security, your phone currently isn\'t allowed to install apps from this source. You can change this in Settings.</string>
+  <string name="error_install_permissions_body"><![CDATA[Please go to Settings and grant <1>Aptoide Games</1> permissions to install apps!]]></string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Немає вільного місця</string>
   <string name="out_of_space_body">Вам потрібно %s, щоб продовжити встановлення.</string>
@@ -135,8 +135,11 @@
   <string name="appview_info_permissions_title" comment="permissions">Дозволи</string>
   <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% з %2$s</string>
   <string name="error_short_title" comment="oops_an_error_occurred">Ой, сталася помилка</string>
-  <string name="purchase_done_existing_bonus_body">Тепер ви маєте %s бонусів. Завантажте AppCoins Wallet, щоб використати їх під час наступної покупки.</string>
-  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">Ви отримуватимете бонус у всіх іграх, позначених %s.</string>
+  <string name="purchase_done_bonus_title">Get a %s bonus!</string>
+  <string name="purchase_done_bonus_body">Download the AppCoins Wallet to get this bonus and use it in your next purchase.</string>
+  <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet installed!</string>
+  <string name="purchase_done_bonus_wallet_installed_body">Open it to find your bonus.</string>
+  <string name="bonus_banner_body">Ви отримуватимете бонус у всіх іграх, позначених %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Бонус до %s%%</string>
   <string name="settings_payments_title" comment="contact_support_team">Зв\'язатися зі службою підтримки</string>
   <string name="settings_contact_support_body" comment="billing_terms_of_use">Умови використання платіжних послуг</string>
@@ -157,7 +160,7 @@
   <string name="iap_card_expiry" comment="expiry_date">Дата закінчення терміну придатності</string>
   <string name="iap_card_cvc" comment="cvc_cvv">CVC/CVV</string>
   <string name="iab_change_card_button" comment="change_card">Змінити картку</string>
-  <string name="done_title" comment="done">Готово!</string>
+  <string name="done_title">Готово!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">Здійснення покупки...</string>
   <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">Ви впевнені, що дані вашої картки правильні? Будь ласка спробуйте ще раз!</string>
   <string name="log_out_button" comment="log_out">Вийти</string>
@@ -187,11 +190,23 @@
   <string name="purchase_error_in_progress_title">Ваш запит вже оброблено або знаходиться в процесі обробки.</string>
   <string name="purchase_card_error_CVV_title">Невірний CVV/CVC</string>
   <string name="purchase_error_expired_card_title">Схоже, термін дії вашої картки закінчився.</string>
-  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
-  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
+  <string name="iap_already_processing_title">Здається, ця покупка вже в процесі оформлення.</string>
+  <string name="iap_already_processing_body">Процес покупки може зайняти деякий час, тож, зачекайте до завершення або зв\'яжіться з нашою службою підтримки.</string>
   <!-- Bonus Page -->
-  <string name="bonus_page_title_1">A Bonus on Every Purchase</string>
-  <string name="bonus_page_body_1">Look for the games identified with %1$s, install the AppCoins Wallet and get up to %2$s%% bonus in all purchases. You can then use this bonus to make your next purchases in your favorite games!</string>
-  <string name="bonus_page_title_2">Want More?</string>
-  <string name="bonus_page_body_2">You can get an extra %s%% bonus by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!</string>
+  <string name="bonus_page_title_1">Бонус за кожну покупку</string>
+  <string name="bonus_page_body_1">Шукайте ігри з позначкою %1$s, встановлюйте AppCoins Wallet та отримуйте бонус до %2$s%% за кожну покупку. Цей бонус можна використати для наступних покупок в улюблених іграх!</string>
+  <string name="bonus_page_title_2">Бажаєте ще?</string>
+  <string name="bonus_page_body_2">Використавши ексклюзивний промокод Aptoide Games у певних іграх можна отримати додатковий бонус %s%%. Залишайтеся з нами та ви будете сповіщені!</string>
+  <!-- Promo Code -->
+  <string name="promo_code_install_wallet_banner_title">Up to %s%% Bonus in Every Purchase</string>
+  <string name="promo_code_install_wallet_banner_body">Use the AppCoins Wallet to make your in-app purchases and get a reward.</string>
+  <string name="promo_code_extra_title">Want More? Get %s%% Extra Bonus!</string>
+  <string name="promo_code_use_button">Use code</string>
+  <string name="promo_code_install_wallet_disclaimer">Install the AppCoins Wallet first.</string>
+  <string name="promo_code_notification_title">Redeem Your Promo Code</string>
+  <string name="promo_code_notification_body">Use your promo code to get extra bonuses in your favorite game.</string>
+  <string name="promo_code_notification_without_wallet_title">%s%% Extra Bonus!</string>
+  <string name="promo_code_notification_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
+  <string name="promo_code_share_title">You\'ve got a promo code!</string>
+  <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorite game.</string>
 </resources>

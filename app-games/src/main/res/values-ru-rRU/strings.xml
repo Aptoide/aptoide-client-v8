@@ -96,7 +96,7 @@
   <string name="waiting_for_connection">Ожидание подключения</string>
   <string name="wait_for_wifi_button">Ожидание Wi-Fi</string>
   <string name="continue_button">Продолжить</string>
-  <string name="error_install_permissions_body">For your security, your phone currently isn\'t allowed to install apps from this source. You can change this in Settings.</string>
+  <string name="error_install_permissions_body"><![CDATA[Please go to Settings and grant <1>Aptoide Games</1> permissions to install apps!]]></string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Нет места</string>
   <string name="out_of_space_body">Вам необходимо %s чтобы продолжить установку.</string>
@@ -135,8 +135,11 @@
   <string name="appview_info_permissions_title" comment="permissions">Разрешения</string>
   <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% из %2$s</string>
   <string name="error_short_title" comment="oops_an_error_occurred">Ой, произошла ошибка</string>
-  <string name="purchase_done_existing_bonus_body">Теперь у вас есть бонуса в %s. Загрузите кошелек AppCoins, чтобы использовать его при следующей покупке.</string>
-  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">Вы получите бонус во всех играх, отмеченных %s.</string>
+  <string name="purchase_done_bonus_title">Get a %s bonus!</string>
+  <string name="purchase_done_bonus_body">Download the AppCoins Wallet to get this bonus and use it in your next purchase.</string>
+  <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet installed!</string>
+  <string name="purchase_done_bonus_wallet_installed_body">Open it to find your bonus.</string>
+  <string name="bonus_banner_body">Вы получите бонус во всех играх, отмеченных %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Бонус до %s%%</string>
   <string name="settings_payments_title" comment="contact_support_team">Связаться с поддержкой</string>
   <string name="settings_contact_support_body" comment="billing_terms_of_use">Условия использования платежных данных</string>
@@ -157,7 +160,7 @@
   <string name="iap_card_expiry" comment="expiry_date">Дата окончания действия</string>
   <string name="iap_card_cvc" comment="cvc_cvv">CVC/CVV</string>
   <string name="iab_change_card_button" comment="change_card">Сменить карту</string>
-  <string name="done_title" comment="done">Готово!</string>
+  <string name="done_title">Готово!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">Совершение покупки...</string>
   <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">Вы уверены, что детали карты введены правильно? Пожалуйста, попробуйте снова!</string>
   <string name="log_out_button" comment="log_out">Выйти</string>
@@ -194,4 +197,16 @@
   <string name="bonus_page_body_1">Look for the games identified with %1$s, install the AppCoins Wallet and get up to %2$s%% bonus in all purchases. You can then use this bonus to make your next purchases in your favorite games!</string>
   <string name="bonus_page_title_2">Want More?</string>
   <string name="bonus_page_body_2">You can get an extra %s%% bonus by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!</string>
+  <!-- Promo Code -->
+  <string name="promo_code_install_wallet_banner_title">Up to %s%% Bonus in Every Purchase</string>
+  <string name="promo_code_install_wallet_banner_body">Use the AppCoins Wallet to make your in-app purchases and get a reward.</string>
+  <string name="promo_code_extra_title">Want More? Get %s%% Extra Bonus!</string>
+  <string name="promo_code_use_button">Use code</string>
+  <string name="promo_code_install_wallet_disclaimer">Install the AppCoins Wallet first.</string>
+  <string name="promo_code_notification_title">Redeem Your Promo Code</string>
+  <string name="promo_code_notification_body">Use your promo code to get extra bonuses in your favorite game.</string>
+  <string name="promo_code_notification_without_wallet_title">%s%% Extra Bonus!</string>
+  <string name="promo_code_notification_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
+  <string name="promo_code_share_title">You\'ve got a promo code!</string>
+  <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorite game.</string>
 </resources>
