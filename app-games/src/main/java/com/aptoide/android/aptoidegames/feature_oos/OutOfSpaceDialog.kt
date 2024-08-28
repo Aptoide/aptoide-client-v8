@@ -56,7 +56,7 @@ fun OutOfSpaceDialog(
     Box(
       modifier = Modifier
         .padding(horizontal = 16.dp, vertical = 24.dp)
-        .fillMaxWidth()
+        .width(328.dp)
         .defaultMinSize(minHeight = 520.dp)
         .background(Palette.GreyDark),
       contentAlignment = Alignment.Center
