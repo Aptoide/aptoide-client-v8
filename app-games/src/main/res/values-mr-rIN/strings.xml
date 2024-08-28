@@ -135,8 +135,11 @@
   <string name="appview_info_permissions_title" comment="permissions">परवानग्या</string>
   <string name="download_percentage_body" comment="1_s_of_2_s">%2$s पैकी %1$s%%</string>
   <string name="error_short_title" comment="oops_an_error_occurred">अरेरे, त्रुटी आली</string>
-  <string name="purchase_done_existing_bonus_body">आपल्याकडे आता बोनसमध्ये %s आहेत. आपल्या पुढील खरेदीत ह्याचा वापर करण्यासाठी अॅपकॉईन्स वॉलेट डाऊनलोड करा.</string>
-  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">%s ची ओळख असणार्‍या सार्‍या खेळांमध्ये आपणांस बोनस मिळेल.</string>
+  <string name="purchase_done_bonus_title">Get a %s bonus!</string>
+  <string name="purchase_done_bonus_body">Download the AppCoins Wallet to get this bonus and use it in your next purchase.</string>
+  <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet isntalled!</string>
+  <string name="purchase_done_bonus_wallet_installed_body">Open it to find your bonus.</string>
+  <string name="bonus_banner_body">%s ची ओळख असणार्‍या सार्‍या खेळांमध्ये आपणांस बोनस मिळेल.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">%s%% पर्यंत बोनस</string>
   <string name="settings_payments_title" comment="contact_support_team">समर्थन गटाशी संपर्क साधा</string>
   <string name="settings_contact_support_body" comment="billing_terms_of_use">बिलिंग वापरण्याच्या अटी</string>
@@ -157,7 +160,7 @@
   <string name="iap_card_expiry" comment="expiry_date">कालबाह्यता तारीख</string>
   <string name="iap_card_cvc" comment="cvc_cvv">सीव्हीव्ही/सीव्हीव्ही</string>
   <string name="iab_change_card_button" comment="change_card">कार्ड बदला</string>
-  <string name="done_title" comment="done">झाले!</string>
+  <string name="done_title">झाले!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">खरेदी करणे...</string>
   <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">आपल्या कार्डाचा तपशील बरोबर असण्याची खात्री आहे ना? कृपया पुन्हा प्रयत्न करा!</string>
   <string name="log_out_button" comment="log_out">लॉग आउट</string>
@@ -205,5 +208,5 @@
   <string name="promo_code_notification_without_wallet_title">%s%% Extra Bonus!</string>
   <string name="promo_code_notification_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
   <string name="promo_code_share_title">You\'ve got a promo code!</string>
-  <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorte game.</string>
+  <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorite game.</string>
 </resources>
