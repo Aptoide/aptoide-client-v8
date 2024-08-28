@@ -137,7 +137,7 @@
   <string name="error_short_title" comment="oops_an_error_occurred">Rất tiếc, đã xảy ra lỗi</string>
   <string name="purchase_done_bonus_title">Get a %s bonus!</string>
   <string name="purchase_done_bonus_body">Download the AppCoins Wallet to get this bonus and use it in your next purchase.</string>
-  <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet isntalled!</string>
+  <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet installed!</string>
   <string name="purchase_done_bonus_wallet_installed_body">Open it to find your bonus.</string>
   <string name="bonus_banner_body">Bạn sẽ nhận được tiền thưởng trong tất cả các trò chơi được xác định bằng %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Lên tới %s%% tiền thưởng</string>
