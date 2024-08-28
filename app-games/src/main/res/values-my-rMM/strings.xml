@@ -96,7 +96,7 @@
   <string name="waiting_for_connection">Waiting for connection</string>
   <string name="wait_for_wifi_button">Wait for Wi-Fi</string>
   <string name="continue_button">ဆက္လုပ္မည္</string>
-  <string name="error_install_permissions_body"><![CDATA[For your security, your phone currently isn't allowed to install apps from this source. You can change this in Settings.]]></string>
+  <string name="error_install_permissions_body"><![CDATA[Please go to Settings and grant <1>Aptoide Games</1> permissions to install apps!]]></string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Out of Space</string>
   <string name="out_of_space_body">ထည့္သြင္းမႈကို ဆက္လုပ္ရန္အတြက္ %s ကို လိုအပ္ပါသည္။</string>
@@ -199,10 +199,11 @@
   <string name="promo_code_install_wallet_banner_body">Use the AppCoins Wallet to make your in-app purchases and get a reward.</string>
   <string name="promo_code_extra_title">Want More? Get %s%% Extra Bonus!</string>
   <string name="promo_code_use_button">Use code</string>
+  <string name="promo_code_install_wallet_disclaimer">Install the AppCoins Wallet first.</string>
   <string name="promo_code_notification_title">Redeem Your Promo Code</string>
   <string name="promo_code_notification_body">Use your promo code to get extra bonuses in your favorite game.</string>
+  <string name="promo_code_notification_without_wallet_title">%s%% Extra Bonus!</string>
+  <string name="promo_code_notification_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
   <string name="promo_code_share_title">You\'ve got a promo code!</string>
   <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorte game.</string>
-  <string name="promo_code_share_without_wallet_title">%s%% Extra Bonus!</string>
-  <string name="promo_code_share_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
 </resources>
