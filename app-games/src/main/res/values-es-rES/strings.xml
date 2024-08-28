@@ -56,7 +56,7 @@
   <string name="editorial_more_articles_title">Más artículos</string>
   <string name="fixed_bundle_just_arrived_title">Más Recientes</string>
   <string name="fixed_bundle_my_games_title">Mis Juegos</string>
-  <string name="fixed_bundle_editors_choice_title">Selección del editor</string>
+  <string name="fixed_bundle_editors_choice_title">Selección del Editor</string>
   <string name="fixed_bundle_editorial_title">Editorial</string>
   <string name="fixed_bundle_trending_title">Tendencias</string>
   <string name="fixed_bundle_publisher_title">Diviértete con %s</string>
@@ -96,7 +96,7 @@
   <string name="waiting_for_connection">Esperando conexión</string>
   <string name="wait_for_wifi_button">Esperar por wifi</string>
   <string name="continue_button">Continuar</string>
-  <string name="error_install_permissions_body"><![CDATA[For your security, your phone currently isn't allowed to install apps from this source. You can change this in Settings.]]></string>
+  <string name="error_install_permissions_body"><![CDATA[Please go to Settings and grant <1>Aptoide Games</1> permissions to install apps!]]></string>
   <!-- Out of Space -->
   <string name="out_of_space_title">No queda espacio</string>
   <string name="out_of_space_body">Necesitas %s para continuar con la instalación.</string>
@@ -107,7 +107,7 @@
   <string name="appview_status_installed_talkback">Instalada</string>
   <string name="appview_status_failed_talkback">Falló</string>
   <string name="appview_action_cancel_talkback">Cancelar</string>
-  <string name="appview_installer_talkback">Insta&lt;lación de %1$s</string>
+  <string name="appview_installer_talkback">Instalación de %1$s</string>
   <string name="appview_action_double_tap_talkback">Toca dos veces para %1$s</string>
   <!-- Search -->
   <string name="search_suggested_title">Búsquedas sugeridas</string>
@@ -199,10 +199,11 @@
   <string name="promo_code_install_wallet_banner_body">Use the AppCoins Wallet to make your in-app purchases and get a reward.</string>
   <string name="promo_code_extra_title">Want More? Get %s%% Extra Bonus!</string>
   <string name="promo_code_use_button">Use code</string>
+  <string name="promo_code_install_wallet_disclaimer">Install the AppCoins Wallet first.</string>
   <string name="promo_code_notification_title">Redeem Your Promo Code</string>
   <string name="promo_code_notification_body">Use your promo code to get extra bonuses in your favorite game.</string>
+  <string name="promo_code_notification_without_wallet_title">%s%% Extra Bonus!</string>
+  <string name="promo_code_notification_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
   <string name="promo_code_share_title">You\'ve got a promo code!</string>
   <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorte game.</string>
-  <string name="promo_code_share_without_wallet_title">%s%% Extra Bonus!</string>
-  <string name="promo_code_share_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
 </resources>
