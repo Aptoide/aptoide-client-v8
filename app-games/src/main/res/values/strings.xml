@@ -207,4 +207,5 @@
   <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorte game.</string>
   <string name="promo_code_share_without_wallet_title">%s%% Extra Bonus!</string>
   <string name="promo_code_share_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
+
 </resources>

@@ -5,10 +5,6 @@
   <string name="games">بازی‌ها</string>
   <string name="categories">دسته‌ها</string>
   <string name="search">جست‌وجو</string>
-  <!-- Common -->
-  <string name="send_button">ارسال</string>
-  <string name="try_again">لطفا مجددا امتحان کنید.</string>
-  <string name="please_wait">لطفا صبر کنید.</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">تنظیمات</string>
   <string name="overflow_menu_terms_conditions">شرایط &amp; ضوابط</string>
@@ -79,12 +75,18 @@
   <string name="button_back_title">بازگشت</string>
   <string name="button_see_all_title">مشاهده همه</string>
   <string name="editorials_view_no_content_message">با عرض پوزش، هیچ محتوایی در اینجا وجود ندارد!</string>
+  <string name="error_no_content_body">Oops, we couldn\'t find related content yet!</string>
   <string name="button_update_title">تحديث</string>
   <string name="button_open_app_title">بازکردن</string>
   <string name="install_waiting_download_message">در انتظار دانلود</string>
   <string name="downloading_percentage_body">%1$s%% از %2$s</string>
   <string name="install_downloading_message">در حال دانلود</string>
   <!-- Common -->
+  <string name="send_button">ارسال</string>
+  <string name="try_again">لطفا مجددا امتحان کنید.</string>
+  <string name="please_wait">لطفا صبر کنید.</string>
+  <string name="ok_button">Ok</string>
+  <string name="cancel_button">Cancel</string>
   <string name="download_now_button">همین حالا دانلود کنید</string>
   <string name="uninstall_button">حذف</string>
   <string name="go_back_button">بازگشت</string>
@@ -94,6 +96,7 @@
   <string name="waiting_for_connection">در انتظار اتصال</string>
   <string name="wait_for_wifi_button">در انتظار وایفای</string>
   <string name="continue_button">ادامه</string>
+  <string name="error_install_permissions_body">For your security, your phone currently isn\'t allowed to install apps from this source. You can change this in Settings.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">حافظه‌ پر است</string>
   <string name="out_of_space_body">برای ادامه نصب به %s نیاز دارید.</string>
@@ -186,4 +189,9 @@
   <string name="purchase_error_expired_card_title">به نظر می‌رسد که کارت شما منقضی شده‌است.</string>
   <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
   <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
+  <!-- Bonus Page -->
+  <string name="bonus_page_title_1">A Bonus on Every Purchase</string>
+  <string name="bonus_page_body_1">Look for the games identified with %1$s, install the AppCoins Wallet and get up to %2$s%% bonus in all purchases. You can then use this bonus to make your next purchases in your favorite games!</string>
+  <string name="bonus_page_title_2">Want More?</string>
+  <string name="bonus_page_body_2">You can get an extra %s%% bonus by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!</string>
 </resources>
