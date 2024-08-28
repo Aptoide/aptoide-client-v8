@@ -75,7 +75,7 @@
   <string name="button_back_title">返回</string>
   <string name="button_see_all_title">查看所有</string>
   <string name="editorials_view_no_content_message">哎呀，这里还没有内容！</string>
-  <string name="error_no_content_body">Oops, we couldn\'t find related content yet!</string>
+  <string name="error_no_content_body">哎呀，我们找不到相关的内容！</string>
   <string name="button_update_title">更新</string>
   <string name="button_open_app_title">打开</string>
   <string name="install_waiting_download_message">等待下载中</string>
@@ -85,18 +85,18 @@
   <string name="send_button">发送</string>
   <string name="try_again">请重试。</string>
   <string name="please_wait">请稍候。</string>
-  <string name="ok_button">Ok</string>
-  <string name="cancel_button">Cancel</string>
+  <string name="ok_button">确定</string>
+  <string name="cancel_button">取消</string>
   <string name="download_now_button">立即下载</string>
   <string name="uninstall_button">卸载</string>
   <string name="go_back_button">返回</string>
-  <string name="go_back_to_game_button">Go Back to Game</string>
+  <string name="go_back_to_game_button">返回游戏</string>
   <string name="uninstalling">卸载中</string>
   <string name="resume_button">继续</string>
   <string name="waiting_for_connection">等待网络连接中</string>
   <string name="wait_for_wifi_button">等待 Wi-Fi 中</string>
   <string name="continue_button">继续</string>
-  <string name="error_install_permissions_body">For your security, your phone currently isn\'t allowed to install apps from this source. You can change this in Settings.</string>
+  <string name="error_install_permissions_body"><![CDATA[For your security, your phone currently isn't allowed to install apps from this source. You can change this in Settings.]]></string>
   <!-- Out of Space -->
   <string name="out_of_space_title">空间不足</string>
   <string name="out_of_space_body">需要%s才能继续安装。</string>
@@ -187,11 +187,22 @@
   <string name="purchase_error_in_progress_title">您的请求已被处理或正在处理中。</string>
   <string name="purchase_card_error_CVV_title">CVV/CVC错误</string>
   <string name="purchase_error_expired_card_title">您的卡似乎已过期。</string>
-  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
-  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
+  <string name="iap_already_processing_title">此次购买似乎已经在处理中了。</string>
+  <string name="iap_already_processing_body">此购买可能需要一段时间，因此，请您耐心等待，直到购买完成或联系我们的支持团队。</string>
   <!-- Bonus Page -->
-  <string name="bonus_page_title_1">A Bonus on Every Purchase</string>
-  <string name="bonus_page_body_1">Look for the games identified with %1$s, install the AppCoins Wallet and get up to %2$s%% bonus in all purchases. You can then use this bonus to make your next purchases in your favorite games!</string>
-  <string name="bonus_page_title_2">Want More?</string>
-  <string name="bonus_page_body_2">You can get an extra %s%% bonus by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!</string>
+  <string name="bonus_page_title_1">每次购买均会获得奖金</string>
+  <string name="bonus_page_body_1">寻找标有 %1$s 的游戏，安装 AppCoins 钱包，以在每次购买时获得高达 %2$s%% 的奖金。然后，您可以在最喜爱的游戏中进行下一次购买时使用此奖金。</string>
+  <string name="bonus_page_title_2">想要获得更多？</string>
+  <string name="bonus_page_body_2">您可以通过在特定游戏中使用 Aptoide Games 的专属促销代码获得额外 %s%% 的奖金。</string>
+  <!-- Promo Code -->
+  <string name="promo_code_install_wallet_banner_title">Up to %s%% Bonus in Every Purchase</string>
+  <string name="promo_code_install_wallet_banner_body">Use the AppCoins Wallet to make your in-app purchases and get a reward.</string>
+  <string name="promo_code_extra_title">Want More? Get %s%% Extra Bonus!</string>
+  <string name="promo_code_use_button">Use code</string>
+  <string name="promo_code_notification_title">Redeem Your Promo Code</string>
+  <string name="promo_code_notification_body">Use your promo code to get extra bonuses in your favorite game.</string>
+  <string name="promo_code_share_title">You\'ve got a promo code!</string>
+  <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorte game.</string>
+  <string name="promo_code_share_without_wallet_title">%s%% Extra Bonus!</string>
+  <string name="promo_code_share_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
 </resources>
