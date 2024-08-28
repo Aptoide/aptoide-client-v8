@@ -198,8 +198,8 @@
   <string name="bonus_page_title_2">Vrei mai mult?</string>
   <string name="bonus_page_body_2">Poți obține un bonus suplimentar de %s%% utilizând un cod promoțional exclusiv Aptoide Games în anumite jocuri. Fii pe fază și vei fi anunțat!</string>
   <!-- Promo Code -->
-  <string name="promo_code_install_wallet_banner_title">Bonus de până la %s% la Fiecare Achiziție</string>
-  <string name="promo_code_install_wallet_banner_body">Folosește AppCoins Wallet pentru a face achizițiile în aplicație și pentru a obține o recompensă.</string>
+  <string name="promo_code_install_wallet_banner_title">Bonus de până la %s%% la Fiecare Achiziție</string>
+  <string name="promo_code_install_wallet_banner_body">Folosește AppCoins Wallet pentru a face achizițiile în aplicație și vei obține o recompensă.</string>
   <string name="promo_code_extra_title">Vrei mai mult? Obține un Bonus Extra de %s%%!</string>
   <string name="promo_code_use_button">Folosește codul</string>
   <string name="promo_code_install_wallet_disclaimer">Instalează mai întâi AppCoins Wallet.</string>
@@ -208,5 +208,5 @@
   <string name="promo_code_notification_without_wallet_title">Bonus Extra %s%%</string>
   <string name="promo_code_notification_without_wallet_body">Instalează AppCoins Wallet și folosește codul promoțional pentru a obține bonusuri suplimentare la toate achizițiile.</string>
   <string name="promo_code_share_title">Ai primit un cod promo!</string>
-  <string name="promo_code_share_body">Folosește acest codul promoțional pentru a obține bonusuri suplimentare în jocul tău preferat.</string>
+  <string name="promo_code_share_body">Folosește acest cod promoțional pentru a obține bonusuri suplimentare în jocul tău preferat.</string>
 </resources>
