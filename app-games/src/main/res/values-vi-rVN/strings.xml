@@ -135,8 +135,11 @@
   <string name="appview_info_permissions_title" comment="permissions">Cho phép</string>
   <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% trên %2$s</string>
   <string name="error_short_title" comment="oops_an_error_occurred">Rất tiếc, đã xảy ra lỗi</string>
-  <string name="purchase_done_existing_bonus_body">Bạn hiện có %s tiền thưởng. Tải xuống Ví AppCoins để sử dụng chúng trong lần mua hàng tiếp theo của mình.</string>
-  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">Bạn sẽ nhận được tiền thưởng trong tất cả các trò chơi được xác định bằng %s.</string>
+  <string name="purchase_done_bonus_title">Get a %s bonus!</string>
+  <string name="purchase_done_bonus_body">Download the AppCoins Wallet to get this bonus and use it in your next purchase.</string>
+  <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet isntalled!</string>
+  <string name="purchase_done_bonus_wallet_installed_body">Open it to find your bonus.</string>
+  <string name="bonus_banner_body">Bạn sẽ nhận được tiền thưởng trong tất cả các trò chơi được xác định bằng %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Lên tới %s%% tiền thưởng</string>
   <string name="settings_payments_title" comment="contact_support_team">Liên hệ với Đội ngũ Hỗ trợ</string>
   <string name="settings_contact_support_body" comment="billing_terms_of_use">Điều khoản sử dụng thanh toán</string>
@@ -157,7 +160,7 @@
   <string name="iap_card_expiry" comment="expiry_date">Ngày hết hạn</string>
   <string name="iap_card_cvc" comment="cvc_cvv">MÃ CVC/CVV</string>
   <string name="iab_change_card_button" comment="change_card">Thay đổi thẻ</string>
-  <string name="done_title" comment="done">Hoàn thành!</string>
+  <string name="done_title">Hoàn thành!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">Thực hiện mua hàng...</string>
   <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">Bạn có chắc chi tiết thẻ của mình đúng? Vui lòng thử lại!</string>
   <string name="log_out_button" comment="log_out">Đăng xuất</string>
@@ -205,5 +208,5 @@
   <string name="promo_code_notification_without_wallet_title">%s%% Extra Bonus!</string>
   <string name="promo_code_notification_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
   <string name="promo_code_share_title">You\'ve got a promo code!</string>
-  <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorte game.</string>
+  <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorite game.</string>
 </resources>
