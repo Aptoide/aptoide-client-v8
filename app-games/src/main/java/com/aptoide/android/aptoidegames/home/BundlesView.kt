@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.CircularProgressIndicator
@@ -73,6 +74,7 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.CarouselBundle
 import com.aptoide.android.aptoidegames.feature_apps.presentation.CarouselLargeBundle
 import com.aptoide.android.aptoidegames.feature_apps.presentation.MyGamesBundleView
 import com.aptoide.android.aptoidegames.feature_apps.presentation.PublisherTakeOverBundle
+import com.aptoide.android.aptoidegames.feature_apps.presentation.buildSeeMoreBonusRoute
 import com.aptoide.android.aptoidegames.feature_apps.presentation.buildSeeMoreRoute
 import com.aptoide.android.aptoidegames.feature_apps.presentation.perCarouselViewModel
 import com.aptoide.android.aptoidegames.home.analytics.meta
@@ -179,55 +181,51 @@ fun BundlesView(
         .fillMaxSize()
         .wrapContentSize(Alignment.TopCenter)
     ) {
-      items(viewState.bundles.size + 1) { index ->
-        when (index) {
-          1 -> BonusSectionView()
-          else -> {
-            val dataIndex = if (index > 1) index - 1 else index
-            val item = viewState.bundles.getOrNull(dataIndex)
-            if (item != null) {
-              OverrideAnalyticsBundleMeta(item.meta, navigate) { navigateTo ->
-                when (item.type) {
-                  Type.APP_GRID -> AppsGridBundle(
-                    bundle = item,
-                    navigate = navigateTo,
-                  )
+      items(viewState.bundles) { bundle ->
+        OverrideAnalyticsBundleMeta(bundle.meta, navigate) { navigateTo ->
+          when (bundle.type) {
+            Type.APP_GRID -> AppsGridBundle(
+              bundle = bundle,
+              navigate = navigateTo,
+            )
 
-                  Type.EDITORIAL -> EditorialBundle(
-                    bundle = item,
-                    navigate = navigateTo,
-                  )
+            Type.EDITORIAL -> EditorialBundle(
+              bundle = bundle,
+              navigate = navigateTo,
+            )
 
-                  Type.CAROUSEL -> CarouselBundle(
-                    bundle = item,
-                    navigate = navigateTo,
-                  )
+            Type.CAROUSEL -> CarouselBundle(
+              bundle = bundle,
+              navigate = navigateTo,
+            )
 
-                  Type.CAROUSEL_LARGE -> CarouselLargeBundle(
-                    bundle = item,
-                    navigate = navigateTo,
-                  )
+            Type.CAROUSEL_LARGE -> CarouselLargeBundle(
+              bundle = bundle,
+              navigate = navigateTo,
+            )
 
-                  Type.CATEGORIES -> CategoriesBundle(
-                    bundle = item,
-                    navigate = navigateTo
-                  )
+            Type.CATEGORIES -> CategoriesBundle(
+              bundle = bundle,
+              navigate = navigateTo
+            )
 
-                  Type.MY_GAMES -> MyGamesBundleView(
-                    title = item.title.translateOrKeep(LocalContext.current),
-                    icon = item.bundleIcon,
-                    navigate = navigateTo,
-                  )
+            Type.MY_GAMES -> MyGamesBundleView(
+              title = bundle.title.translateOrKeep(LocalContext.current),
+              icon = bundle.bundleIcon,
+              navigate = navigateTo,
+            )
 
-                  Type.PUBLISHER_TAKEOVER -> PublisherTakeOverBundle(
-                    bundle = item,
-                    navigate = navigateTo,
-                  )
+            Type.PUBLISHER_TAKEOVER -> PublisherTakeOverBundle(
+              bundle = bundle,
+              navigate = navigateTo,
+            )
 
-                  else -> Unit
-                }
-              }
-            }
+            Type.APPC_BANNER -> BonusSectionView(
+              bundle = bundle,
+              navigate = navigateTo,
+            )
+
+            else -> Unit
           }
         }
       }
@@ -447,6 +445,20 @@ fun getSeeMoreRouteNavigation(
     genericAnalytics.sendSeeAllClick(analyticsContext)
     navigate(
       buildSeeMoreRoute(title, "${bundle.tag}-more")
+        .withBundleMeta(bundle.meta.copy(tag = "${bundle.tag}-more"))
+    )
+  }
+}
+
+@Composable
+fun getSeeMoreBonusRouteNavigation(
+  bundle: Bundle,
+  navigate: (String) -> Unit,
+): () -> Unit {
+  val title = bundle.title.replace("%", ".")
+  return {
+    navigate(
+      buildSeeMoreBonusRoute(title, "${bundle.tag}-more")
         .withBundleMeta(bundle.meta.copy(tag = "${bundle.tag}-more"))
     )
   }

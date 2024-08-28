@@ -34,12 +34,13 @@ import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
 fun AppItem(
+  modifier: Modifier = Modifier,
   app: App,
   onClick: () -> Unit,
   installButton: @Composable RowScope.() -> Unit,
 ) {
   Row(
-    modifier = Modifier
+    modifier = modifier
       .clickable(onClick = onClick)
       .fillMaxWidth()
       .defaultMinSize(minHeight = 96.dp)
