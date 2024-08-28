@@ -75,7 +75,7 @@
   <string name="button_back_title">戻る</string>
   <string name="button_see_all_title">すべて表示</string>
   <string name="editorials_view_no_content_message">ここにはまだコンテンツがありません。</string>
-  <string name="error_no_content_body">Oops, we couldn\'t find related content yet!</string>
+  <string name="error_no_content_body">関連コンテンツはまだ見つかりません</string>
   <string name="button_update_title">更新する</string>
   <string name="button_open_app_title">開く</string>
   <string name="install_waiting_download_message">ダウンロード待ち</string>
@@ -85,18 +85,18 @@
   <string name="send_button">送信</string>
   <string name="try_again">再試行してください。</string>
   <string name="please_wait">しばらくお待ちください</string>
-  <string name="ok_button">Ok</string>
-  <string name="cancel_button">Cancel</string>
+  <string name="ok_button">OK</string>
+  <string name="cancel_button">キャンセル</string>
   <string name="download_now_button">今すぐダウンロード</string>
   <string name="uninstall_button">アンインストール</string>
   <string name="go_back_button">戻る</string>
-  <string name="go_back_to_game_button">Go Back to Game</string>
+  <string name="go_back_to_game_button">ゲームに戻る</string>
   <string name="uninstalling">アンインストール中</string>
   <string name="resume_button">再開する</string>
   <string name="waiting_for_connection">接続待ち</string>
   <string name="wait_for_wifi_button">Wi-Fi接続待ち</string>
   <string name="continue_button">続ける</string>
-  <string name="error_install_permissions_body">For your security, your phone currently isn\'t allowed to install apps from this source. You can change this in Settings.</string>
+  <string name="error_install_permissions_body"><![CDATA[Please go to Settings and grant <1>Aptoide Games</1> permissions to install apps!]]></string>
   <!-- Out of Space -->
   <string name="out_of_space_title">空き容量不足</string>
   <string name="out_of_space_body">インストールを続行するには %s 必要です。</string>
@@ -136,7 +136,7 @@
   <string name="download_percentage_body" comment="1_s_of_2_s">%2$sの%1$s%%</string>
   <string name="error_short_title" comment="oops_an_error_occurred">エラーが発生しました。</string>
   <string name="purchase_done_existing_bonus_body">ボーナスが%s貯まりました。AppCoins Walletをダウンロードして、次回のお買い物にご利用ください。</string>
-  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">You\'ll get a bonus in all games identified with %s.</string>
+  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">%sで表示されたすべてのゲームでボーナスを獲得できます。</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">最大%s%%のボーナス</string>
   <string name="settings_payments_title" comment="contact_support_team">サポートチームへのお問い合わせ</string>
   <string name="settings_contact_support_body" comment="billing_terms_of_use">課金利用規約</string>
@@ -188,11 +188,22 @@
   <string name="purchase_error_in_progress_title">リクエストはすでに処理されたか、または処理中です。</string>
   <string name="purchase_card_error_CVV_title">不正なCVV/CVC</string>
   <string name="purchase_error_expired_card_title">カードの有効期限が切れているようです。</string>
-  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
-  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
+  <string name="iap_already_processing_title">この購入はすでに処理されているようです。</string>
+  <string name="iap_already_processing_body">この購入にはしばらく時間がかかる場合がありますので、完了するまでお待ちいただくか、弊社サポートチームまでご連絡ください。</string>
   <!-- Bonus Page -->
-  <string name="bonus_page_title_1">A Bonus on Every Purchase</string>
-  <string name="bonus_page_body_1">Look for the games identified with %1$s, install the AppCoins Wallet and get up to %2$s%% bonus in all purchases. You can then use this bonus to make your next purchases in your favorite games!</string>
-  <string name="bonus_page_title_2">Want More?</string>
-  <string name="bonus_page_body_2">You can get an extra %s%% bonus by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!</string>
+  <string name="bonus_page_title_1">購入のたびにボーナス</string>
+  <string name="bonus_page_body_1">%1$sの付いたゲームを探し、AppCoins Walletをインストールすると、すべての購入で最大%2$s%%のボーナスがもらえます。このボーナスを利用して、お気に入りのゲームを次回購入することができます！</string>
+  <string name="bonus_page_title_2">さらに？</string>
+  <string name="bonus_page_body_2">特定のゲームでAptoide Games限定プロモコードを使用すると、さらに%s%%ボーナスを獲得できます。ご期待ください！</string>
+  <!-- Promo Code -->
+  <string name="promo_code_install_wallet_banner_title">Up to %s%% Bonus in Every Purchase</string>
+  <string name="promo_code_install_wallet_banner_body">Use the AppCoins Wallet to make your in-app purchases and get a reward.</string>
+  <string name="promo_code_extra_title">Want More? Get %s%% Extra Bonus!</string>
+  <string name="promo_code_use_button">Use code</string>
+  <string name="promo_code_notification_title">Redeem Your Promo Code</string>
+  <string name="promo_code_notification_body">Use your promo code to get extra bonuses in your favorite game.</string>
+  <string name="promo_code_share_title">You\'ve got a promo code!</string>
+  <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorte game.</string>
+  <string name="promo_code_share_without_wallet_title">%s%% Extra Bonus!</string>
+  <string name="promo_code_share_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
 </resources>
