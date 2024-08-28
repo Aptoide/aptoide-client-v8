@@ -70,7 +70,7 @@ android {
         val placeholders = variant.mergedFlavor.manifestPlaceholders
         if (placeholders.isNotEmpty()) {
           val buildType = "${variant.flavorName}${variant.buildType.name.capitalize()}"
-          val manifestDir = "app/build/intermediates/merged_manifests/$buildType"
+          val manifestDir = "app/build/intermediates/merged_manifests/$buildType/process${buildType.capitalize()}Manifest"
           val manifestFilePath = "$manifestDir/AndroidManifest.xml"
           val manifestFile = File(manifestFilePath)
 
