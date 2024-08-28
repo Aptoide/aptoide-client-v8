@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">Aptoide Games</string>
+  <string name="app_name">Aptoide खेळ</string>
   <!-- Bottom Bar -->
   <string name="games">खेळ</string>
   <string name="categories">श्रेणी</string>
@@ -75,7 +75,7 @@
   <string name="button_back_title">मागे जा</string>
   <string name="button_see_all_title">सर्व पहा</string>
   <string name="editorials_view_no_content_message">अरेरे, सामग्री अजुन पोचली नाही!</string>
-  <string name="error_no_content_body">Oops, we couldn\'t find related content yet!</string>
+  <string name="error_no_content_body">अरेरे, आम्ही अजुनही संबंधित सामग्री शोधु शकलो नाही!</string>
   <string name="button_update_title">अपडेट</string>
   <string name="button_open_app_title">खुले</string>
   <string name="install_waiting_download_message">डाऊनलोडसाठी थांबलोय</string>
@@ -85,18 +85,18 @@
   <string name="send_button">पाठवा</string>
   <string name="try_again">कृपया पुन्हा प्रयत्न करा.</string>
   <string name="please_wait">कृपया प्रतीक्षा करा….</string>
-  <string name="ok_button">Ok</string>
-  <string name="cancel_button">Cancel</string>
+  <string name="ok_button">ठीक आहे</string>
+  <string name="cancel_button">रद्द करा</string>
   <string name="download_now_button">आत्ता डाऊनलोड करा</string>
   <string name="uninstall_button">अनइन्स्टॉल</string>
   <string name="go_back_button">पाठी जा</string>
-  <string name="go_back_to_game_button">Go Back to Game</string>
+  <string name="go_back_to_game_button">मुख्य पृष्ठावर परत जा</string>
   <string name="uninstalling">अनइंस्टॉलिंग</string>
   <string name="resume_button">पुन्हा सुरु करा</string>
   <string name="waiting_for_connection">कनेक्शनसाठी थांबलो आहे</string>
   <string name="wait_for_wifi_button">वायफायसाठी थांबलो आहे</string>
   <string name="continue_button">चालू ठेवा</string>
-  <string name="error_install_permissions_body">For your security, your phone currently isn\'t allowed to install apps from this source. You can change this in Settings.</string>
+  <string name="error_install_permissions_body"><![CDATA[For your security, your phone currently isn't allowed to install apps from this source. You can change this in Settings.]]></string>
   <!-- Out of Space -->
   <string name="out_of_space_title">जागा संपली</string>
   <string name="out_of_space_body">इंस्टलेशनसह %s हे चालू ठेवणे आपल्याला आवश्यक आहे.</string>
@@ -187,11 +187,22 @@
   <string name="purchase_error_in_progress_title">आपली विनंती आधीच प्रक्रियागत झालीय वा होत आहे.</string>
   <string name="purchase_card_error_CVV_title">चुकीचा सीव्हीव्ही/सीव्हीसी</string>
   <string name="purchase_error_expired_card_title">आपले कार्ड कालबाह्य झाल्याचे दिसतेय.</string>
-  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
-  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
+  <string name="iap_already_processing_title">अस दिसतय कि ही खरेदी आधीच प्रक्रियागत झालेली आहे.</string>
+  <string name="iap_already_processing_body">ह्या खरेदीस थोडा वेळ लागेल, तर कृपया पूर्ण होईपर्यंत थांबा वा आमच्या समर्थन गटाशी संपर्क साधा.</string>
   <!-- Bonus Page -->
-  <string name="bonus_page_title_1">A Bonus on Every Purchase</string>
-  <string name="bonus_page_body_1">Look for the games identified with %1$s, install the AppCoins Wallet and get up to %2$s%% bonus in all purchases. You can then use this bonus to make your next purchases in your favorite games!</string>
-  <string name="bonus_page_title_2">Want More?</string>
-  <string name="bonus_page_body_2">You can get an extra %s%% bonus by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!</string>
+  <string name="bonus_page_title_1">प्रत्येक खरेदीवर बोनस</string>
+  <string name="bonus_page_body_1">%1$s ने चिन्हाकिंत खेळ शोधा, अॅप कॉईन्स वॉलेट इंस्टॉल करा आणि सर्व खरेदीवर %2$s%% पर्यंत बोनस मिळवा. नंतर मग आपण ह्या बोनसचा वापर करुन आपल्या आवडत्या खेळातील पुढील खरेदी करु शकता!</string>
+  <string name="bonus_page_title_2">अधिक हवय?</string>
+  <string name="bonus_page_body_2">Aptoide खेळ एक्सक्लुझिव्ह प्रोमो कोड, ठराविक खेळात वापरुन आपण अतिरिक्त %s%% बोनस मिळवु शकता. येत रहा आणि आपणांस सूचित केले जाईल!</string>
+  <!-- Promo Code -->
+  <string name="promo_code_install_wallet_banner_title">Up to %s%% Bonus in Every Purchase</string>
+  <string name="promo_code_install_wallet_banner_body">Use the AppCoins Wallet to make your in-app purchases and get a reward.</string>
+  <string name="promo_code_extra_title">Want More? Get %s%% Extra Bonus!</string>
+  <string name="promo_code_use_button">Use code</string>
+  <string name="promo_code_notification_title">Redeem Your Promo Code</string>
+  <string name="promo_code_notification_body">Use your promo code to get extra bonuses in your favorite game.</string>
+  <string name="promo_code_share_title">You\'ve got a promo code!</string>
+  <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorte game.</string>
+  <string name="promo_code_share_without_wallet_title">%s%% Extra Bonus!</string>
+  <string name="promo_code_share_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
 </resources>
