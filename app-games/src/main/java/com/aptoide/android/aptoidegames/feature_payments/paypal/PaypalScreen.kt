@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -309,7 +310,7 @@ private fun PaypalAccountScreen(
     ) {
       Text(
         modifier = Modifier.padding(end = 16.dp),
-        text = "Logout", // TODO fix this string
+        text = stringResource(id = R.string.log_out_button),
         style = AGTypography.InputsM,
         color = Palette.Error
       )
@@ -404,7 +405,7 @@ private fun BillingAgreementScreenLandscape(
     PrimaryButton(
       modifier = Modifier.fillMaxWidth(),
       onClick = onBuyClick,
-      title = "Buy", // TODO hardcoded string
+      title = stringResource(id = R.string.buy_button)
     )
   }
 }

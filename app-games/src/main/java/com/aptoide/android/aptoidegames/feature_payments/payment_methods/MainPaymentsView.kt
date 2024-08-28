@@ -29,6 +29,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -50,6 +51,7 @@ import com.appcoins.payments.manager.presentation.rememberPaymentMethods
 import com.appcoins.payments.uri_handler.PaymentsCancelledResult
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.AptoideOutlinedText
+import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.SupportActivity
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
@@ -271,14 +273,14 @@ private fun WalletPaymentMethod(
           .weight(1f)
       ) {
         Text(
-          text = "Pay with the AppCoins Wallet", // TODO hardcoded string
+          text = stringResource(id = R.string.iap_appc_title),
           maxLines = 1,
           style = AGTypography.InputsM,
           color = Palette.Black,
           overflow = TextOverflow.Ellipsis
         )
         Text(
-          text = "It'll be installed automatically and you'll get a bonus in all purchases!", // TODO hardcoded string
+          text = stringResource(id = R.string.iap_appc_2_body),
           maxLines = 2,
           style = AGTypography.Body,
           overflow = TextOverflow.Ellipsis,
@@ -311,7 +313,7 @@ private fun WalletPaymentMethod(
         contentDescription = null,
       )
       AptoideOutlinedText(
-        text = "Up to 20% Bonus", // TODO hardcoded string
+        text = stringResource(id = R.string.bonus_banner_title, "20"),
         style = AGTypography.InputsS,
         outlineWidth = 15f,
         outlineColor = Palette.Black,

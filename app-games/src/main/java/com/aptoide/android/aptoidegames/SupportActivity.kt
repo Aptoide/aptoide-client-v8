@@ -34,12 +34,12 @@ class SupportActivity : AppCompatActivity() {
         when (type) {
           TYPE_SUPPORT -> SupportView(
             type = type,
-            title = "Contact Support", //TODO
-            placeholderText = "Please give us all the details: \n- When did the problem started\n- On which game are you making a purchase\n\nOnce you tap on Send, your mail app will open.\nFeel free to attach a screenshot or video about the issue!", //TODO
+            title = stringResource(id = R.string.contact_support_title),
+            placeholderText = stringResource(id = R.string.contact_support_field_body),
             deviceInfo = deviceInfo,
             email = "aptoide.games@appcoins.io",
             context = localContext,
-            subject = "AG Contact Support", //TODO
+            subject = "AG Contact Support", //No need for translations so it's hardcoded
             navigateBack = ::finish
           )
 

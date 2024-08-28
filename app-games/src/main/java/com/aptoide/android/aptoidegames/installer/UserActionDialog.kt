@@ -31,6 +31,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -44,6 +45,7 @@ import cm.aptoide.pt.installer.platform.UserActionRequest.InstallationAction
 import cm.aptoide.pt.installer.platform.UserActionRequest.PermissionAction
 import cm.aptoide.pt.installer.platform.UserConfirmation
 import cm.aptoide.pt.installer.presentation.UserActionViewModel
+import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.design_system.PrimarySmallButton
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
@@ -124,19 +126,19 @@ fun UserActionDialog() {
   )
 
   (state as? ConfirmationAction)?.let {
-    PermissionsContent(rationale = it.confirmation.rationale) {
+    PermissionsContent(rationale = it.confirmation.getSourceString()) {
       if (it.confirmation == UserConfirmation.WRITE_EXTERNAL_RATIONALE) {
         DialogButton(
-          title = "Ok",
+          title = stringResource(id = R.string.ok_button),
           onClick = { viewModel.onResult(false) },
         )
       } else {
         DialogButton(
-          title = "Cancel",
+          title = stringResource(id = R.string.cancel_button),
           onClick = { viewModel.onResult(false) },
         )
         DialogButton(
-          title = "Settings",
+          title = stringResource(id = R.string.settings_title),
           onClick = { viewModel.onResult(true) },
         )
       }
@@ -144,13 +146,15 @@ fun UserActionDialog() {
   }
 }
 
-private val UserConfirmation.rationale
-  get() = when (this) {
-    UserConfirmation.INSTALL_SOURCE -> "By default system doesn't allow Aptoide to install apps. You need to mark Aptoide as the installation source first."
+@Composable
+fun UserConfirmation.getSourceString(): String = stringResource(
+  when (this) {
+    UserConfirmation.INSTALL_SOURCE -> R.string.error_install_permissions_body
     UserConfirmation.WRITE_EXTERNAL_RATIONALE,
     UserConfirmation.WRITE_EXTERNAL,
-    -> "In order to install the required game resources allow Aptoide to access external storage."
+    -> R.string.storage_access_permission_request_message
   }
+)
 
 @Composable
 private fun PermissionsContent(

@@ -24,9 +24,11 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.debugInspectorInfo
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
+import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -112,11 +114,13 @@ private fun Modifier.customTabIndicatorOffset(
 }
 
 @Composable
-fun AppViewTab.getTabName(): String = when (this) {
-  AppViewTab.DETAILS -> "Details"
-  AppViewTab.RELATED -> "Related"
-  AppViewTab.INFO -> "Info"
-}
+fun AppViewTab.getTabName(): String = stringResource(
+  when (this) {
+    AppViewTab.DETAILS -> R.string.appview_details_tab_title
+    AppViewTab.RELATED -> R.string.appview_related_tab_title
+    AppViewTab.INFO -> R.string.appview_info_tab_title
+  }
+)
 
 enum class AppViewTab {
   DETAILS,
