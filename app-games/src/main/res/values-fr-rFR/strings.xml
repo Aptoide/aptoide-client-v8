@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">Aptoide Games</string>
+  <string name="app_name">Jeux Aptoide</string>
   <!-- Bottom Bar -->
   <string name="games">Jeux</string>
   <string name="categories">Catégories</string>
@@ -75,7 +75,7 @@
   <string name="button_back_title">Retour</string>
   <string name="button_see_all_title">Voir tout</string>
   <string name="editorials_view_no_content_message">Oups, il n\'y a pas encore de contenu ici !</string>
-  <string name="error_no_content_body">Oops, we couldn\'t find related content yet!</string>
+  <string name="error_no_content_body">Oups, nous n\'avons pas encore trouvé de contenu connexe !</string>
   <string name="button_update_title">Mettre à jour</string>
   <string name="button_open_app_title">Ouvrir</string>
   <string name="install_waiting_download_message">En attente de téléchargement</string>
@@ -86,17 +86,17 @@
   <string name="try_again">Merci de réessayer.</string>
   <string name="please_wait">Veuillez patienter.</string>
   <string name="ok_button">Ok</string>
-  <string name="cancel_button">Cancel</string>
+  <string name="cancel_button">Annuler</string>
   <string name="download_now_button">Téléchargez maintenant</string>
   <string name="uninstall_button">Désinstaller</string>
   <string name="go_back_button">Retour Arrière</string>
-  <string name="go_back_to_game_button">Go Back to Game</string>
+  <string name="go_back_to_game_button">Retourner au jeu</string>
   <string name="uninstalling">Désinstallation</string>
   <string name="resume_button">Reprendre</string>
   <string name="waiting_for_connection">En attente de connexion</string>
   <string name="wait_for_wifi_button">En attente de Wi-Fi</string>
   <string name="continue_button">Continuer</string>
-  <string name="error_install_permissions_body">For your security, your phone currently isn\'t allowed to install apps from this source. You can change this in Settings.</string>
+  <string name="error_install_permissions_body"><![CDATA[For your security, your phone currently isn't allowed to install apps from this source. You can change this in Settings.]]></string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Espace insuffisant</string>
   <string name="out_of_space_body">Vous avez besoin de %s pour continuer l\'installation.</string>
@@ -136,7 +136,7 @@
   <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% de %2$s</string>
   <string name="error_short_title" comment="oops_an_error_occurred">Oups, une erreur est survenue</string>
   <string name="purchase_done_existing_bonus_body">Vous avez maintenant %s en bonus. Téléchargez AppCoins Wallet pour les utiliser lors de votre prochain achat.</string>
-  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">You\'ll get a bonus in all games identified with %s.</string>
+  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">Vous obtiendrez un bonus dans tous les jeux identifiés par %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Jusqu\'à %s%% de Bonus</string>
   <string name="settings_payments_title" comment="contact_support_team">Contacter le Support</string>
   <string name="settings_contact_support_body" comment="billing_terms_of_use">Conditions d\'utilisation de la facturation</string>
@@ -187,11 +187,22 @@
   <string name="purchase_error_in_progress_title">Votre demande a déjà été traitée ou est en cours de traitement.</string>
   <string name="purchase_card_error_CVV_title">Mauvais CVV/CVC</string>
   <string name="purchase_error_expired_card_title">Il semble que votre carte soit expirée.</string>
-  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
-  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
+  <string name="iap_already_processing_title">Il semble que cet achat soit déjà en cours de traitement.</string>
+  <string name="iap_already_processing_body">Cet achat peut prendre un certain temps, veuillez donc patienter jusqu\'à ce qu\'il soit terminé ou contactez notre équipe d\'assistance.</string>
   <!-- Bonus Page -->
-  <string name="bonus_page_title_1">A Bonus on Every Purchase</string>
-  <string name="bonus_page_body_1">Look for the games identified with %1$s, install the AppCoins Wallet and get up to %2$s%% bonus in all purchases. You can then use this bonus to make your next purchases in your favorite games!</string>
-  <string name="bonus_page_title_2">Want More?</string>
-  <string name="bonus_page_body_2">You can get an extra %s%% bonus by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!</string>
+  <string name="bonus_page_title_1">Un bonus pour chaque achat</string>
+  <string name="bonus_page_body_1">Recherchez les jeux identifiés par %1$s, installez le portefeuille AppCoins et obtenez jusqu\'à %2$s%% de bonus sur tous vos achats. Vous pouvez ensuite utiliser ce bonus pour effectuer vos prochains achats dans vos jeux préférés !</string>
+  <string name="bonus_page_title_2">Vous en voulez plus ?</string>
+  <string name="bonus_page_body_2">Vous pouvez obtenir un bonus supplémentaire de %s%% en utilisant un code promo exclusif d\'Aptoide Games dans des jeux spécifiques. Restez à l\'écoute et vous en serez informé !</string>
+  <!-- Promo Code -->
+  <string name="promo_code_install_wallet_banner_title">Up to %s%% Bonus in Every Purchase</string>
+  <string name="promo_code_install_wallet_banner_body">Use the AppCoins Wallet to make your in-app purchases and get a reward.</string>
+  <string name="promo_code_extra_title">Want More? Get %s%% Extra Bonus!</string>
+  <string name="promo_code_use_button">Use code</string>
+  <string name="promo_code_notification_title">Redeem Your Promo Code</string>
+  <string name="promo_code_notification_body">Use your promo code to get extra bonuses in your favorite game.</string>
+  <string name="promo_code_share_title">You\'ve got a promo code!</string>
+  <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorte game.</string>
+  <string name="promo_code_share_without_wallet_title">%s%% Extra Bonus!</string>
+  <string name="promo_code_share_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
 </resources>
