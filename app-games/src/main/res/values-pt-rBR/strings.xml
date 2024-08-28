@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">Aptoide Games</string>
   <!-- Bottom Bar -->
   <string name="games">Jogos</string>
   <string name="categories">Categorias</string>
@@ -57,7 +56,6 @@
   <string name="fixed_bundle_just_arrived_title">Novidades</string>
   <string name="fixed_bundle_my_games_title">Meus Jogos</string>
   <string name="fixed_bundle_editors_choice_title">Escolha dos Editores</string>
-  <string name="fixed_bundle_editorial_title">Editorial</string>
   <string name="fixed_bundle_trending_title">Em Alta</string>
   <string name="fixed_bundle_publisher_title">Divirta-se com %s</string>
   <string name="retry_button" comment="button_retry_title">Repetir</string>
@@ -70,12 +68,10 @@
   <string name="error_message_no_internet_body">Verifique sua conexão com a Internet.</string>
   <string name="error_message_generic_title">Algo deu errado</string>
   <string name="error_message_generic_body">Tentar novamente.</string>
-  <string name="app_info_send_email_subject">Feedback</string>
   <string name="button_copy_title">Copiar</string>
   <string name="button_back_title">Voltar</string>
   <string name="button_see_all_title">Ver Tudo</string>
   <string name="editorials_view_no_content_message">Ops, ainda não há conteúdo aqui!</string>
-  <string name="error_no_content_body">Oops, we couldn\'t find related content yet!</string>
   <string name="button_update_title">Atualizar</string>
   <string name="button_open_app_title">Abrir</string>
   <string name="install_waiting_download_message">Aguardando baixar</string>
@@ -85,18 +81,15 @@
   <string name="send_button">Enviar</string>
   <string name="try_again">Por favor, tente novamente.</string>
   <string name="please_wait">Por favor, aguarde.</string>
-  <string name="ok_button">Ok</string>
-  <string name="cancel_button">Cancel</string>
   <string name="download_now_button">Fazer o Download Agora</string>
   <string name="uninstall_button">Desinstalar</string>
   <string name="go_back_button">Voltar</string>
-  <string name="go_back_to_game_button">Go Back to Game</string>
   <string name="uninstalling">Desinstalado</string>
   <string name="resume_button">Resumir</string>
   <string name="waiting_for_connection">Aguardando conexão</string>
   <string name="wait_for_wifi_button">Esperar pelo Wi-Fi</string>
   <string name="continue_button">Continuar</string>
-  <string name="error_install_permissions_body">For your security, your phone currently isn\'t allowed to install apps from this source. You can change this in Settings.</string>
+  <string name="error_install_permissions_body"><![CDATA[For your security, your phone currently isn't allowed to install apps from this source. You can change this in Settings.]]></string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Sem Espaço Disponível</string>
   <string name="out_of_space_body">Você precisa de %s para continuar a instalação.</string>
@@ -135,8 +128,7 @@
   <string name="appview_info_permissions_title" comment="permissions">Permissões</string>
   <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% de %2$s</string>
   <string name="error_short_title" comment="oops_an_error_occurred">Ops, ocorreu um erro</string>
-  <string name="purchase_done_existing_bonus_body">Agora você tem %s em bônus. Baixe o AppCoins Wallet para usá-los em sua próxima compra.</string>
-  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">Você receberá um bônus em todos os jogos identificados com %s.</string>
+  <string name="bonus_banner_body">Você receberá um bônus em todos os jogos identificados com %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Até %s%% de bônus</string>
   <string name="settings_payments_title" comment="contact_support_team">Falar com a Equipe de Suporte</string>
   <string name="settings_contact_support_body" comment="billing_terms_of_use">Termos de Uso de Cobrança</string>
@@ -145,12 +137,10 @@
   <string name="contact_support_title" comment="contact_support">Falar com a Equipe de Suporte</string>
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Por favor, nos forneça todos os detalhes:\n\u2022 Quando o problema começou\n\u2022 Em qual jogo você está fazendo uma compra\n\nDepois de tocar em Enviar, seu aplicativo de e-mail será aberto. Sinta-se à vontade para anexar uma captura de tela ou vídeo sobre o problema!</string>
   <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Deseja instalar este jogo?</string>
-  <string name="app_size_mb_title" comment="s_mb">%s MB</string>
   <string name="uninstalled_title" comment="uninstalled">Desinstalado</string>
   <string name="error_no_internet_body" comment="please_check_your_internet_connection">Verifique sua conexão com a Internet.</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Pagar com a AppCoins Wallet</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Ele será instalado automaticamente e você receberá um bônus em todas as compras!</string>
-
   <string name="buy_button" comment="buy">Comprar</string>
   <string name="iap_other_payment_methods_button" comment="other_payment_methods">Outros métodos de pagamento</string>
   <string name="iap_remember_card_button" comment="remember_card">Salvar cartão</string>
@@ -158,7 +148,7 @@
   <string name="iap_card_expiry" comment="expiry_date">Validade</string>
   <string name="iap_card_cvc" comment="cvc_cvv">CVV</string>
   <string name="iab_change_card_button" comment="change_card">Alterar cartão</string>
-  <string name="done_title" comment="done">Pronto!</string>
+  <string name="done_title">Pronto!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">Compra em Andamento...</string>
   <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">Tem certeza que os dados do cartão estão corretos? Tente novamente!</string>
   <string name="log_out_button" comment="log_out">Sair</string>
@@ -188,11 +178,6 @@
   <string name="purchase_error_in_progress_title">Sua solicitação já foi processada ou está em andamento.</string>
   <string name="purchase_card_error_CVV_title">CVV/CVC incorreto</string>
   <string name="purchase_error_expired_card_title">Parece que o seu cartão expirou.</string>
-  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
-  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
   <!-- Bonus Page -->
-  <string name="bonus_page_title_1">A Bonus on Every Purchase</string>
-  <string name="bonus_page_body_1">Look for the games identified with %1$s, install the AppCoins Wallet and get up to %2$s%% bonus in all purchases. You can then use this bonus to make your next purchases in your favorite games!</string>
-  <string name="bonus_page_title_2">Want More?</string>
-  <string name="bonus_page_body_2">You can get an extra %s%% bonus by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!</string>
+  <!-- Promo Code -->
 </resources>
