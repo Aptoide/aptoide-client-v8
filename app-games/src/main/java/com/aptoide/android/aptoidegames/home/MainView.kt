@@ -30,6 +30,7 @@ import com.aptoide.android.aptoidegames.categories.presentation.categoryDetailSc
 import com.aptoide.android.aptoidegames.design_system.AptoideSnackBar
 import com.aptoide.android.aptoidegames.editorial.editorialScreen
 import com.aptoide.android.aptoidegames.feature_apps.presentation.seeAllMyGamesScreen
+import com.aptoide.android.aptoidegames.feature_apps.presentation.seeMoreBonusScreen
 import com.aptoide.android.aptoidegames.feature_apps.presentation.seeMoreScreen
 import com.aptoide.android.aptoidegames.installer.UserActionDialog
 import com.aptoide.android.aptoidegames.notifications.NotificationsPermissionRequester
@@ -155,6 +156,12 @@ private fun NavigationGraph(
       navigate = navController::navigateTo,
       goBack = navController::navigateUp,
       screenData = seeMoreScreen()
+    )
+
+    animatedComposable(
+      navigate = navController::navigateTo,
+      goBack = navController::navigateUp,
+      screenData = seeMoreBonusScreen()
     )
 
     animatedComposable(
