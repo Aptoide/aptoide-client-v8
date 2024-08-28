@@ -201,10 +201,11 @@
   <string name="promo_code_install_wallet_banner_body">Use the AppCoins Wallet to make your in-app purchases and get a reward.</string>
   <string name="promo_code_extra_title">Want More? Get %s%% Extra Bonus!</string>
   <string name="promo_code_use_button">Use code</string>
+  <string name="promo_code_install_wallet_disclaimer">Install the AppCoins Wallet first.</string>
   <string name="promo_code_notification_title">Redeem Your Promo Code</string>
   <string name="promo_code_notification_body">Use your promo code to get extra bonuses in your favorite game.</string>
+  <string name="promo_code_notification_without_wallet_title">%s%% Extra Bonus!</string>
+  <string name="promo_code_notification_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
   <string name="promo_code_share_title">You\'ve got a promo code!</string>
   <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorte game.</string>
-  <string name="promo_code_share_without_wallet_title">%s%% Extra Bonus!</string>
-  <string name="promo_code_share_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
 </resources>
