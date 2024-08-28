@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+  <string name="app_name">Aptoide Games</string>
   <!-- Bottom Bar -->
   <string name="games">Juegos</string>
   <string name="categories">Categorías</string>
@@ -75,7 +75,7 @@
   <string name="button_back_title">Volver</string>
   <string name="button_see_all_title">Ver todo</string>
   <string name="editorials_view_no_content_message">Ups, ¡todavía no hay contenido aquí!</string>
-  <string name="error_no_content_body">Oops, we couldn\'t find related content yet!</string>
+  <string name="error_no_content_body">Oops, ¡no pudimos encontrar lo que buscas!</string>
   <string name="button_update_title">Actualizar</string>
   <string name="button_open_app_title">Abrir</string>
   <string name="install_waiting_download_message">Esperando descarga</string>
@@ -86,7 +86,7 @@
   <string name="try_again">¡Prueba de nuevo!</string>
   <string name="please_wait">Por favor, espera.</string>
   <string name="ok_button">Ok</string>
-  <string name="cancel_button">Cancel</string>
+  <string name="cancel_button">Cancelar</string>
   <string name="download_now_button">Descargar ahora</string>
   <string name="uninstall_button">Desinstalar</string>
   <string name="go_back_button">Volver</string>
@@ -96,7 +96,7 @@
   <string name="waiting_for_connection">Esperando conexión</string>
   <string name="wait_for_wifi_button">Esperar por wifi</string>
   <string name="continue_button">Continuar</string>
-  <string name="error_install_permissions_body">For your security, your phone currently isn\'t allowed to install apps from this source. You can change this in Settings.</string>
+  <string name="error_install_permissions_body"><![CDATA[For your security, your phone currently isn't allowed to install apps from this source. You can change this in Settings.]]></string>
   <!-- Out of Space -->
   <string name="out_of_space_title">No queda espacio</string>
   <string name="out_of_space_body">Necesitas %s para continuar con la instalación.</string>
@@ -194,4 +194,15 @@
   <string name="bonus_page_body_1">Busca los juegos identificados con el símbolo %1$s, instala la AppCoins Wallet y recibe un bonus de hasta el %2$s%% en todas las compras. ¡Podrás usar este bonus para hacer tus próximas compras en tus juegos favoritos!</string>
   <string name="bonus_page_title_2">¿Quieres Más?</string>
   <string name="bonus_page_body_2">Puedes recibir un bonus extra del %s%% usando el código promocional exclusivo de Aptoide Games para juegos específicos. ¡Estate atento y recibirás una notificación!</string>
+  <!-- Promo Code -->
+  <string name="promo_code_install_wallet_banner_title">Up to %s%% Bonus in Every Purchase</string>
+  <string name="promo_code_install_wallet_banner_body">Use the AppCoins Wallet to make your in-app purchases and get a reward.</string>
+  <string name="promo_code_extra_title">Want More? Get %s%% Extra Bonus!</string>
+  <string name="promo_code_use_button">Use code</string>
+  <string name="promo_code_notification_title">Redeem Your Promo Code</string>
+  <string name="promo_code_notification_body">Use your promo code to get extra bonuses in your favorite game.</string>
+  <string name="promo_code_share_title">You\'ve got a promo code!</string>
+  <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorte game.</string>
+  <string name="promo_code_share_without_wallet_title">%s%% Extra Bonus!</string>
+  <string name="promo_code_share_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
 </resources>
