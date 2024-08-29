@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+  <style name="AptoideGames.Theme.OptOutEdgeToEdgeEnforcement" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <item name="android:windowOptOutEdgeToEdgeEnforcement" tools:targetApi="35">true</item>
+  </style>
+</resources>
