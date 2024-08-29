@@ -16,6 +16,7 @@ import coil.util.DebugLogger
 import com.appcoins.payments.di.Payments
 import com.appcoins.payments.di.adyenKey
 import com.appcoins.payments.di.adyenPaymentMethodFactory
+import com.appcoins.payments.di.channel
 import com.appcoins.payments.di.guestWalletUidPrefix
 import com.appcoins.payments.di.paymentMethodFactories
 import com.appcoins.payments.di.paymentScreenContentProvider
@@ -119,6 +120,7 @@ class AptoideApplication : Application(), ImageLoaderFactory {
         adyenPaymentMethodFactory,
         paypalPaymentMethodFactory
       )
+      channel = "APTOIDEGAMES"
       paymentScreenContentProvider = psContentProvider
       adyenKey = BuildConfig.ADYEN_KEY
     }
