@@ -75,7 +75,7 @@
   <string name="button_back_title">Πίσω</string>
   <string name="button_see_all_title">Προβολή Όλων</string>
   <string name="editorials_view_no_content_message">Ωχ, δεν υπάρχουν ακόμα περιεχόμενα εδώ!</string>
-  <string name="error_no_content_body">Oops, we couldn\'t find related content yet!</string>
+  <string name="error_no_content_body">Ωχ, δεν μπορέσαμε να βρούμε σχετικά περιεχόμενα ακόμα!</string>
   <string name="button_update_title">Ενημέρωση</string>
   <string name="button_open_app_title">Άνοιγμα</string>
   <string name="install_waiting_download_message">Σε αναμονή λήψης</string>
@@ -85,18 +85,18 @@
   <string name="send_button">Αποστολή</string>
   <string name="try_again">Παρακαλούμε δοκιμάστε ξανά.</string>
   <string name="please_wait">Παρακαλούμε περιμένετε.</string>
-  <string name="ok_button">Ok</string>
-  <string name="cancel_button">Cancel</string>
+  <string name="ok_button">Οκ</string>
+  <string name="cancel_button">Ακύρωση</string>
   <string name="download_now_button">Κάντε λήψη τώρα</string>
   <string name="uninstall_button">Απεγκατάσταση</string>
   <string name="go_back_button">Πίσω</string>
-  <string name="go_back_to_game_button">Go Back to Game</string>
+  <string name="go_back_to_game_button">Επιστροφή στο παιχνίδι</string>
   <string name="uninstalling">Γίνετα απεγκατάσταση</string>
   <string name="resume_button">Συνέχιση</string>
   <string name="waiting_for_connection">Σε αναμονή σύνδεσης</string>
   <string name="wait_for_wifi_button">Αναμονή για Wi-Fi</string>
   <string name="continue_button">Συνέχεια</string>
-  <string name="error_install_permissions_body"><![CDATA[Please go to Settings and grant <1>Aptoide Games</1> permissions to install apps!]]></string>
+  <string name="error_install_permissions_body"><![CDATA[Πηγαίνετε στις Ρυθμίσεις και παραχωρήστε στο <1>Aptoide Games</1> την άδεια για να εγκαθιστά εφαρμογές!]]></string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Δεν υπάρχει Χώρος</string>
   <string name="out_of_space_body">Χρειάζονται %s για να συνεχιστεί η εγκατάσταση.</string>
@@ -135,8 +135,8 @@
   <string name="appview_info_permissions_title" comment="permissions">Δικαιώματα</string>
   <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% από %2$s</string>
   <string name="error_short_title" comment="oops_an_error_occurred">Ωχ, παρουσιάστηκε σφάλμα</string>
-  <string name="purchase_done_bonus_title">Get a %s bonus!</string>
-  <string name="purchase_done_bonus_body">Download the AppCoins Wallet to get this bonus and use it in your next purchase.</string>
+  <string name="purchase_done_bonus_title">Λάβετε ένα μπόνους %s!</string>
+  <string name="purchase_done_bonus_body">Κατεβάστε το AppCoins Wallet για να αποκτήσετε αυτό το μπόνους και να το χρησιμοποιήσετε στην επόμενη αγορά σας.</string>
   <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet installed!</string>
   <string name="purchase_done_bonus_wallet_installed_body">Open it to find your bonus.</string>
   <string name="bonus_banner_body">Θα λάβετε ένα bonus σε όλα τα παιχνίδια με την επισήμανση %s.</string>
