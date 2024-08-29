@@ -75,7 +75,7 @@
   <string name="button_back_title">Πίσω</string>
   <string name="button_see_all_title">Προβολή Όλων</string>
   <string name="editorials_view_no_content_message">Ωχ, δεν υπάρχουν ακόμα περιεχόμενα εδώ!</string>
-  <string name="error_no_content_body">Ωχ, δεν μπορέσαμε να βρούμε σχετικά περιεχόμενα ακόμα!</string>
+  <string name="error_no_content_body">Ωχ, δεν μπορέσαμε να βρούμε ακόμα σχετικά περιεχόμενα!</string>
   <string name="button_update_title">Ενημέρωση</string>
   <string name="button_open_app_title">Άνοιγμα</string>
   <string name="install_waiting_download_message">Σε αναμονή λήψης</string>
@@ -96,7 +96,7 @@
   <string name="waiting_for_connection">Σε αναμονή σύνδεσης</string>
   <string name="wait_for_wifi_button">Αναμονή για Wi-Fi</string>
   <string name="continue_button">Συνέχεια</string>
-  <string name="error_install_permissions_body"><![CDATA[Πηγαίνετε στις Ρυθμίσεις και παραχωρήστε στο <1>Aptoide Games</1> την άδεια για να εγκαθιστά εφαρμογές!]]></string>
+  <string name="error_install_permissions_body"><![CDATA[Πηγαίνετε στις Ρυθμίσεις και παραχωρήστε στο <1>Aptoide Games</1> την άδεια να εγκαθιστά εφαρμογές!]]></string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Δεν υπάρχει Χώρος</string>
   <string name="out_of_space_body">Χρειάζονται %s για να συνεχιστεί η εγκατάσταση.</string>
@@ -137,8 +137,8 @@
   <string name="error_short_title" comment="oops_an_error_occurred">Ωχ, παρουσιάστηκε σφάλμα</string>
   <string name="purchase_done_bonus_title">Λάβετε ένα μπόνους %s!</string>
   <string name="purchase_done_bonus_body">Κατεβάστε το AppCoins Wallet για να αποκτήσετε αυτό το μπόνους και να το χρησιμοποιήσετε στην επόμενη αγορά σας.</string>
-  <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet installed!</string>
-  <string name="purchase_done_bonus_wallet_installed_body">Open it to find your bonus.</string>
+  <string name="purchase_done_bonus_wallet_installed_title">To AppCoins Wallet εγκαταστάθηκε!</string>
+  <string name="purchase_done_bonus_wallet_installed_body">Ανοίξτε το για να βρείτε το bonus σας.</string>
   <string name="bonus_banner_body">Θα λάβετε ένα bonus σε όλα τα παιχνίδια με την επισήμανση %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Έως %s%% bonuns</string>
   <string name="settings_payments_title" comment="contact_support_team">Επικοινωνήστε με την Ομάδα Υποστήριξης</string>
@@ -190,23 +190,23 @@
   <string name="purchase_error_in_progress_title">Το αίτημα σας δέχτηκε ήδη επεξεργασία ή βρίσκεται σε επεξεργασία.</string>
   <string name="purchase_card_error_CVV_title">Εσφαλμένο CVV/CVC</string>
   <string name="purchase_error_expired_card_title">Φαίνεται ότι η κάρτα σας έχει λήξει.</string>
-  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
-  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
+  <string name="iap_already_processing_title">Φαίνεται πως αυτή η αγορά βρίσκεται ήδη σε επεξεργασία.</string>
+  <string name="iap_already_processing_body">Αυτή η αγορά μπορεί να διαρκέσει λίγο, οπότε παρακαλούμε περιμένετε μέχρι να ολοκληρωθεί ή επικοινωνήστε με την Ομάδα Υποστήριξής μας.</string>
   <!-- Bonus Page -->
-  <string name="bonus_page_title_1">A Bonus on Every Purchase</string>
-  <string name="bonus_page_body_1">Look for the games identified with %1$s, install the AppCoins Wallet and get up to %2$s%% bonus in all purchases. You can then use this bonus to make your next purchases in your favorite games!</string>
-  <string name="bonus_page_title_2">Want More?</string>
-  <string name="bonus_page_body_2">You can get an extra %s%% bonus by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!</string>
+  <string name="bonus_page_title_1">Ένα Bonus σε Κάθε Αγορά</string>
+  <string name="bonus_page_body_1">Αναζητήστε τα παιχνίδια που έχουν επισημανθεί με %1$s, εγκαταστήστε το AppCoins Wallet και αποκτήστε έως και %2$s%% bonus σε όλες τις αγορές. Στη συνέχεια, μπορείτε να χρησιμοποιήσετε αυτό το bonus για τις επόμενες αγορές σας στα αγαπημένα σας παιχνίδια!</string>
+  <string name="bonus_page_title_2">Θέλετε κι Άλλα;</string>
+  <string name="bonus_page_body_2">Μπορείτε να αποκτήσετε ένα επιπλέον bonus %s%% χρησιμοποιώντας έναν αποκλειστικό κωδικό προσφοράς του Aptoide Games σε συγκεκριμένα παιχνίδια. Μείνετε συντονισμένοι και θα ειδοποιηθείτε!</string>
   <!-- Promo Code -->
-  <string name="promo_code_install_wallet_banner_title">Up to %s%% Bonus in Every Purchase</string>
-  <string name="promo_code_install_wallet_banner_body">Use the AppCoins Wallet to make your in-app purchases and get a reward.</string>
-  <string name="promo_code_extra_title">Want More? Get %s%% Extra Bonus!</string>
-  <string name="promo_code_use_button">Use code</string>
-  <string name="promo_code_install_wallet_disclaimer">Install the AppCoins Wallet first.</string>
-  <string name="promo_code_notification_title">Redeem Your Promo Code</string>
-  <string name="promo_code_notification_body">Use your promo code to get extra bonuses in your favorite game.</string>
-  <string name="promo_code_notification_without_wallet_title">%s%% Extra Bonus!</string>
-  <string name="promo_code_notification_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
-  <string name="promo_code_share_title">You\'ve got a promo code!</string>
-  <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorite game.</string>
+  <string name="promo_code_install_wallet_banner_title">Έως %s%% Bonus σε κάθε Αγορά</string>
+  <string name="promo_code_install_wallet_banner_body">Χρησιμοποιήστε το AppCoins Wallet για να κάνετε τις αγορές σας εντός της εφαρμογής και να λάβετε μια ανταμοιβή.</string>
+  <string name="promo_code_extra_title">Θέλετε κι Άλλα; Λάβετε Επιπλέον Bonus %s%%!</string>
+  <string name="promo_code_use_button">Χρήση κωδικού</string>
+  <string name="promo_code_install_wallet_disclaimer">Εγκαταστήστε πρώτα το AppCoins Wallet.</string>
+  <string name="promo_code_notification_title">Εξαργυρώστε τον Κωδικό Προσφοράς σας</string>
+  <string name="promo_code_notification_body">Χρησιμοποιήστε τον κωδικό προσφοράς σας για να αποκτήσετε επιπλέον bonus στο αγαπημένο σας παιχνίδι.</string>
+  <string name="promo_code_notification_without_wallet_title">Επιλέον Μπόνους %s%%!</string>
+  <string name="promo_code_notification_without_wallet_body">Αποκτήστε το AppCoins Wallet και χρησιμοποιήστε τον κωδικό προσφοράς σας για να λάβετε επιπλέον μπόνους σε όλες τις αγορές.</string>
+  <string name="promo_code_share_title">Έχετε έναν κωδικό προσφοράς!</string>
+  <string name="promo_code_share_body">Χρησιμοποιήστε αυτόν τον κωδικό προσφοράς για να αποκτήσετε επιπλέον bonus στο αγαπημένο σας παιχνίδι.</string>
 </resources>
