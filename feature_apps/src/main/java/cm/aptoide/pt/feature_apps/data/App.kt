@@ -23,6 +23,7 @@ data class App(
   val rating: Rating,
   val pRating: Rating,
   val downloads: Int,
+  val pDownloads: Int,
   val versionName: String,
   val versionCode: Int,
   val featureGraphic: String,
@@ -92,6 +93,7 @@ val emptyApp = App(
     votes = emptyList()
   ),
   downloads = 0,
+  pDownloads = 0,
   versionName = "",
   versionCode = 0,
   featureGraphic = "",
