@@ -69,7 +69,7 @@ fun seeMoreBonusScreen() = ScreenData.withAnalytics(
   screenAnalyticsName = "SeeAll",
   deepLinks = listOf(navDeepLink { uriPattern = BuildConfig.DEEP_LINK_SCHEMA + seeMoreRoute })
 ) { arguments, navigate, navigateBack ->
-  val bundleTitle = arguments?.getString("title")!!.replace(".", "%")
+  val bundleTitle = arguments?.getString("title")!!
   val bundleTag = arguments.getString("tag")!!
 
   MoreBonusBundleView(
