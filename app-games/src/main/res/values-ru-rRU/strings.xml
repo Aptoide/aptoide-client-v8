@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">Aptoide Games</string>
+  <string name="app_name">Игры Aptoide</string>
   <!-- Bottom Bar -->
   <string name="games">Игры</string>
   <string name="categories">Категории</string>
@@ -75,7 +75,7 @@
   <string name="button_back_title">Назад</string>
   <string name="button_see_all_title">Посмотреть все</string>
   <string name="editorials_view_no_content_message">Ой, здесь пока нет контента!</string>
-  <string name="error_no_content_body">Oops, we couldn\'t find related content yet!</string>
+  <string name="error_no_content_body">Ой, связанный контент пока не найден!</string>
   <string name="button_update_title">Обновить</string>
   <string name="button_open_app_title">Открыть</string>
   <string name="install_waiting_download_message">Ожидание загрузки</string>
@@ -85,18 +85,18 @@
   <string name="send_button">Отправить</string>
   <string name="try_again">Пожалуйста, попробуйте снова.</string>
   <string name="please_wait">Пожалуйста, подождите.</string>
-  <string name="ok_button">Ok</string>
-  <string name="cancel_button">Cancel</string>
+  <string name="ok_button">Ок</string>
+  <string name="cancel_button">Отменить</string>
   <string name="download_now_button">Загрузить сейчас</string>
   <string name="uninstall_button">Удалить</string>
   <string name="go_back_button">Назад</string>
-  <string name="go_back_to_game_button">Go Back to Game</string>
+  <string name="go_back_to_game_button">Вернуться в игру</string>
   <string name="uninstalling">Удаление</string>
   <string name="resume_button">Продолжить</string>
   <string name="waiting_for_connection">Ожидание подключения</string>
   <string name="wait_for_wifi_button">Ожидание Wi-Fi</string>
   <string name="continue_button">Продолжить</string>
-  <string name="error_install_permissions_body"><![CDATA[Please go to Settings and grant <1>Aptoide Games</1> permissions to install apps!]]></string>
+  <string name="error_install_permissions_body"><![CDATA[Пожалуйста, перейдите в «Настройки» и предоставьте <1>Aptoide Games</1> разрешения на установку приложений!]]></string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Нет места</string>
   <string name="out_of_space_body">Вам необходимо %s чтобы продолжить установку.</string>
@@ -135,10 +135,10 @@
   <string name="appview_info_permissions_title" comment="permissions">Разрешения</string>
   <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% из %2$s</string>
   <string name="error_short_title" comment="oops_an_error_occurred">Ой, произошла ошибка</string>
-  <string name="purchase_done_bonus_title">Get a %s bonus!</string>
-  <string name="purchase_done_bonus_body">Download the AppCoins Wallet to get this bonus and use it in your next purchase.</string>
-  <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet installed!</string>
-  <string name="purchase_done_bonus_wallet_installed_body">Open it to find your bonus.</string>
+  <string name="purchase_done_bonus_title">Получите бонус %s!</string>
+  <string name="purchase_done_bonus_body">Загрузите AppCoins Wallet, чтобы получить этот бонус и использовать его для следующей покупки.</string>
+  <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet установлен!</string>
+  <string name="purchase_done_bonus_wallet_installed_body">Откройте его, чтобы найти свой бонус.</string>
   <string name="bonus_banner_body">Вы получите бонус во всех играх, отмеченных %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Бонус до %s%%</string>
   <string name="settings_payments_title" comment="contact_support_team">Связаться с поддержкой</string>
@@ -190,23 +190,23 @@
   <string name="purchase_error_in_progress_title">Ваш запрос уже обработан или ещё в процессе.</string>
   <string name="purchase_card_error_CVV_title">Неверный CVV/CVC</string>
   <string name="purchase_error_expired_card_title">Кажется, срок действия вашей карты истек.</string>
-  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
-  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
+  <string name="iap_already_processing_title">Кажется, эта покупка уже обрабатывается.</string>
+  <string name="iap_already_processing_body">Покупка может занять некоторое время, так что, пожалуйста, подождите её завершения, или свяжитесь с командой поддержки.</string>
   <!-- Bonus Page -->
-  <string name="bonus_page_title_1">A Bonus on Every Purchase</string>
-  <string name="bonus_page_body_1">Look for the games identified with %1$s, install the AppCoins Wallet and get up to %2$s%% bonus in all purchases. You can then use this bonus to make your next purchases in your favorite games!</string>
-  <string name="bonus_page_title_2">Want More?</string>
-  <string name="bonus_page_body_2">You can get an extra %s%% bonus by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!</string>
+  <string name="bonus_page_title_1">Бонус за каждую покупку</string>
+  <string name="bonus_page_body_1">Найдите игры, обозначенные как %1$s, установите AppCoins Wallet и получите бонус до %2$s%% на все покупки. Затем вы можете использовать этот бонус для совершения следующих покупок в ваших любимых играх!</string>
+  <string name="bonus_page_title_2">Хотите больше?</string>
+  <string name="bonus_page_body_2">Вы можете получить дополнительный %s%% бонус, используя эксклюзивный промокод Aptoide Games в определенных играх. Оставайтесь с нами, и мы вам сообщим!</string>
   <!-- Promo Code -->
-  <string name="promo_code_install_wallet_banner_title">Up to %s%% Bonus in Every Purchase</string>
-  <string name="promo_code_install_wallet_banner_body">Use the AppCoins Wallet to make your in-app purchases and get a reward.</string>
-  <string name="promo_code_extra_title">Want More? Get %s%% Extra Bonus!</string>
-  <string name="promo_code_use_button">Use code</string>
-  <string name="promo_code_install_wallet_disclaimer">Install the AppCoins Wallet first.</string>
-  <string name="promo_code_notification_title">Redeem Your Promo Code</string>
-  <string name="promo_code_notification_body">Use your promo code to get extra bonuses in your favorite game.</string>
-  <string name="promo_code_notification_without_wallet_title">%s%% Extra Bonus!</string>
-  <string name="promo_code_notification_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
-  <string name="promo_code_share_title">You\'ve got a promo code!</string>
-  <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorite game.</string>
+  <string name="promo_code_install_wallet_banner_title">Бонус до %s%% с каждой покупки</string>
+  <string name="promo_code_install_wallet_banner_body">Используйте AppCoins Wallet, чтобы делать покупки в приложениях и получать награды.</string>
+  <string name="promo_code_extra_title">Хотите больше? Получите дополнительный бонус %s%%!</string>
+  <string name="promo_code_use_button">Использовать код</string>
+  <string name="promo_code_install_wallet_disclaimer">Сначала установите AppCoins Wallet.</string>
+  <string name="promo_code_notification_title">Погасите ваш промокод</string>
+  <string name="promo_code_notification_body">Используйте свой промокод, чтобы получить дополнительные бонусы в любимой игре.</string>
+  <string name="promo_code_notification_without_wallet_title">Дополнительный бонус %s%%!</string>
+  <string name="promo_code_notification_without_wallet_body">Установите AppCoins Wallet и используйте свой промокод, чтобы получать дополнительные бонусы при всех покупках.</string>
+  <string name="promo_code_share_title">Вы получили промокод!</string>
+  <string name="promo_code_share_body">Используйте этот промокод, чтобы получить дополнительные бонусы в любимой игре.</string>
 </resources>
