@@ -1,8 +1,7 @@
 package com.aptoide.android.aptoidegames.analytics.dto
 
+import android.net.Uri.encode
 import androidx.annotation.Keep
-import java.net.URLDecoder
-import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 @Keep
@@ -65,17 +64,16 @@ data class SearchMeta(
   val searchTerm get() = searchKeyword
   val searchTermSource get() = searchType
 
-  override fun toString(): String = listOf(
-    URLEncoder.encode(insertedKeyword, StandardCharsets.UTF_8.toString()),
-    URLEncoder.encode(searchKeyword, StandardCharsets.UTF_8.toString()),
-    searchType
-  ).joinToString("~")
+  override fun toString(): String = encode(
+    "$insertedKeyword~$searchKeyword~$searchType",
+    StandardCharsets.UTF_8.toString()
+  )
 
   companion object {
     fun fromString(source: String) = source.split("~").let {
       SearchMeta(
-        insertedKeyword = URLDecoder.decode(it[0], StandardCharsets.UTF_8.toString()),
-        searchKeyword = URLDecoder.decode(it[1], StandardCharsets.UTF_8.toString()),
+        insertedKeyword = it[0],
+        searchKeyword = it[1],
         searchType = it[2]
       )
     }
