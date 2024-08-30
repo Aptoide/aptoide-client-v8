@@ -150,11 +150,6 @@ android {
       )
     }
   }
-  buildTypes {
-    getByName("release") {
-      signingConfig = signingConfigs.getByName("debug")
-    }
-  }
 
   applicationVariants.all {
     val variant = this
