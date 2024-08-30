@@ -75,7 +75,7 @@
   <string name="button_back_title">Voltar</string>
   <string name="button_see_all_title">Ver Tudo</string>
   <string name="editorials_view_no_content_message">Ups, ainda não há conteúdo aqui!</string>
-  <string name="error_no_content_body">Oops, we couldn\'t find related content yet!</string>
+  <string name="error_no_content_body">Ups, ainda não conseguimos encontrar conteúdos relacionados!</string>
   <string name="button_update_title">Atualizar</string>
   <string name="button_open_app_title">Abrir</string>
   <string name="install_waiting_download_message">A aguardar pelo download</string>
@@ -86,17 +86,17 @@
   <string name="try_again">Por favor, tenta novamente.</string>
   <string name="please_wait">Por favor aguarda.</string>
   <string name="ok_button">Ok</string>
-  <string name="cancel_button">Cancel</string>
+  <string name="cancel_button">Cancelar</string>
   <string name="download_now_button">Faz Download Agora</string>
   <string name="uninstall_button">Desinstalar</string>
   <string name="go_back_button">Voltar Atrás</string>
-  <string name="go_back_to_game_button">Go Back to Game</string>
+  <string name="go_back_to_game_button">Voltar Para o Jogo</string>
   <string name="uninstalling">A desinstalar</string>
   <string name="resume_button">Continuar</string>
   <string name="waiting_for_connection">A aguardar ligação</string>
   <string name="wait_for_wifi_button">Espera por Wi-Fi</string>
   <string name="continue_button">Continuar</string>
-  <string name="error_install_permissions_body"><![CDATA[Please go to Settings and grant <1>Aptoide Games</1> permissions to install apps!]]></string>
+  <string name="error_install_permissions_body"><![CDATA[Vai a Definições e concede <1>Aptoide Games</1> permissões para instalar apps!]]></string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Sem Espaço</string>
   <string name="out_of_space_body">Precisas de %s para continuar com a instalação.</string>
@@ -135,7 +135,7 @@
   <string name="appview_info_permissions_title" comment="permissions">Permissões</string>
   <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% de %2$s</string>
   <string name="error_short_title" comment="oops_an_error_occurred">Ups, ocorreu um erro</string>
-  <string name="purchase_done_bonus_title">Get a %s bonus!</string>
+  <string name="purchase_done_bonus_title">Recebe um bónus de %s!</string>
   <string name="purchase_done_bonus_body">Download the AppCoins Wallet to get this bonus and use it in your next purchase.</string>
   <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet installed!</string>
   <string name="purchase_done_bonus_wallet_installed_body">Open it to find your bonus.</string>
