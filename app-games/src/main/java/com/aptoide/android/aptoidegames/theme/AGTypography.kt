@@ -61,6 +61,12 @@ object AGTypography {
     fontSize = 12.sp,
     lineHeight = 14.sp
   )
+  val InputsXS = TextStyle(
+    fontFamily = chakraPetchFontFamily,
+    fontWeight = FontWeight.Bold,
+    fontSize = 11.sp,
+    lineHeight = 14.sp
+  )
   val ArticleText = TextStyle(
     fontFamily = chakraPetchFontFamily,
     fontWeight = FontWeight.Normal,
