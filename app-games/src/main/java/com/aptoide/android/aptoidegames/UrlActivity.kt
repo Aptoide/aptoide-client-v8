@@ -15,9 +15,6 @@ import com.aptoide.android.aptoidegames.home.AppThemeViewModel
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.toolbar.SimpleAppGamesToolbar
 import dagger.hilt.android.AndroidEntryPoint
-import java.net.URLDecoder
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets.UTF_8
 
 @AndroidEntryPoint
 class UrlActivity : AppCompatActivity() {
@@ -35,7 +32,7 @@ class UrlActivity : AppCompatActivity() {
           topBar = { SimpleAppGamesToolbar() }
         ) {
           url?.let {
-            UrlView(url = URLDecoder.decode(it, UTF_8.toString()))
+            UrlView(url = it)
           }
         }
       }
@@ -45,7 +42,7 @@ class UrlActivity : AppCompatActivity() {
   companion object {
     fun open(context: Context, url: String) {
       val intent = Intent(context, UrlActivity::class.java)
-        .apply { putExtra("url", URLEncoder.encode(url, UTF_8.toString())) }
+        .apply { putExtra("url", url) }
       context.startActivity(intent)
     }
   }
