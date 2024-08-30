@@ -136,9 +136,9 @@
   <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% de %2$s</string>
   <string name="error_short_title" comment="oops_an_error_occurred">Ups, ocorreu um erro</string>
   <string name="purchase_done_bonus_title">Recebe um bónus de %s!</string>
-  <string name="purchase_done_bonus_body">Download the AppCoins Wallet to get this bonus and use it in your next purchase.</string>
-  <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet installed!</string>
-  <string name="purchase_done_bonus_wallet_installed_body">Open it to find your bonus.</string>
+  <string name="purchase_done_bonus_body">Faz download da AppCoins Wallet para receberes este bónus e utiliza-o na tua próxima compra.</string>
+  <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet instalada!</string>
+  <string name="purchase_done_bonus_wallet_installed_body">Abra-a para encontrares o teu bónus.</string>
   <string name="bonus_banner_body">Vais receber um bónus em todos os jogos identificados com %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Até %s%% de Bónus</string>
   <string name="settings_payments_title" comment="contact_support_team">Contacta a Equipa Apoio</string>
@@ -190,23 +190,23 @@
   <string name="purchase_error_in_progress_title">O teu pedido já foi processado ou está em curso.</string>
   <string name="purchase_card_error_CVV_title">CVV/CVC errado</string>
   <string name="purchase_error_expired_card_title">Parece que o teu cartão expirou.</string>
-  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
-  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
+  <string name="iap_already_processing_title">Parece que esta compra já está a ser processada.</string>
+  <string name="iap_already_processing_body">Esta compra pode demorar algum tempo, por isso, aguarda até estar concluída ou contacta a nossa equipa de apoio.</string>
   <!-- Bonus Page -->
-  <string name="bonus_page_title_1">A Bonus on Every Purchase</string>
-  <string name="bonus_page_body_1">Look for the games identified with %1$s, install the AppCoins Wallet and get up to %2$s%% bonus in all purchases. You can then use this bonus to make your next purchases in your favorite games!</string>
-  <string name="bonus_page_title_2">Want More?</string>
-  <string name="bonus_page_body_2">You can get an extra %s%% bonus by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!</string>
+  <string name="bonus_page_title_1">Um Bónus em Cada Compra</string>
+  <string name="bonus_page_body_1">Procura os jogos identificados com %1$s, instala a AppCoins Wallet e recebe até %2$s%% de bónus em todas as compras. Depois podes utilizar este bónus para fazeres as tuas próximas compras nos teus jogos favoritos!</string>
+  <string name="bonus_page_title_2">Queres Mais?</string>
+  <string name="bonus_page_body_2">Podes receber um bónus extra de %s%% utilizando um código promocional exclusivo da Aptoide Games em jogos específicos. Fica atento e serás notificado!</string>
   <!-- Promo Code -->
-  <string name="promo_code_install_wallet_banner_title">Up to %s%% Bonus in Every Purchase</string>
-  <string name="promo_code_install_wallet_banner_body">Use the AppCoins Wallet to make your in-app purchases and get a reward.</string>
-  <string name="promo_code_extra_title">Want More? Get %s%% Extra Bonus!</string>
-  <string name="promo_code_use_button">Use code</string>
-  <string name="promo_code_install_wallet_disclaimer">Install the AppCoins Wallet first.</string>
-  <string name="promo_code_notification_title">Redeem Your Promo Code</string>
-  <string name="promo_code_notification_body">Use your promo code to get extra bonuses in your favorite game.</string>
-  <string name="promo_code_notification_without_wallet_title">%s%% Extra Bonus!</string>
-  <string name="promo_code_notification_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
-  <string name="promo_code_share_title">You\'ve got a promo code!</string>
-  <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorite game.</string>
+  <string name="promo_code_install_wallet_banner_title">Até %s%% de Bónus em Cada Compra</string>
+  <string name="promo_code_install_wallet_banner_body">Utiliza a AppCoins Wallet para fazeres as tuas compras na app e receberes uma recompensa.</string>
+  <string name="promo_code_extra_title">Queres mais? Recebe %s%% de bónus extra!</string>
+  <string name="promo_code_use_button">Utilizar código</string>
+  <string name="promo_code_install_wallet_disclaimer">Instala primeiro a AppCoins Wallet.</string>
+  <string name="promo_code_notification_title">Redime o Teu Código Promocional</string>
+  <string name="promo_code_notification_body">Utiliza o teu código promocional para receberes bónus extra no teu jogo favorito.</string>
+  <string name="promo_code_notification_without_wallet_title">%s%% Bónus Extra!</string>
+  <string name="promo_code_notification_without_wallet_body">Adquire a AppCoins Wallet e utiliza o teu código promocional para receberes bónus extra em todas as compras.</string>
+  <string name="promo_code_share_title">Tens um código promocional!</string>
+  <string name="promo_code_share_body">Utiliza este código promocional para receberes bónus extra no teu jogo favorito.</string>
 </resources>
