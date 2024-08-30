@@ -75,7 +75,6 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.CarouselBundle
 import com.aptoide.android.aptoidegames.feature_apps.presentation.CarouselLargeBundle
 import com.aptoide.android.aptoidegames.feature_apps.presentation.MyGamesBundleView
 import com.aptoide.android.aptoidegames.feature_apps.presentation.PublisherTakeOverBundle
-import com.aptoide.android.aptoidegames.feature_apps.presentation.buildSeeMoreBonusRoute
 import com.aptoide.android.aptoidegames.feature_apps.presentation.buildSeeMoreRoute
 import com.aptoide.android.aptoidegames.feature_apps.presentation.perCarouselViewModel
 import com.aptoide.android.aptoidegames.home.analytics.meta
@@ -446,20 +445,6 @@ fun getSeeMoreRouteNavigation(
     genericAnalytics.sendSeeAllClick(analyticsContext)
     navigate(
       buildSeeMoreRoute(title, "${bundle.tag}-more")
-        .withBundleMeta(bundle.meta.copy(tag = "${bundle.tag}-more"))
-    )
-  }
-}
-
-@Composable
-fun getSeeMoreBonusRouteNavigation(
-  bundle: Bundle,
-  navigate: (String) -> Unit,
-): () -> Unit {
-  val title = encode(bundle.title)
-  return {
-    navigate(
-      buildSeeMoreBonusRoute(title, "${bundle.tag}-more")
         .withBundleMeta(bundle.meta.copy(tag = "${bundle.tag}-more"))
     )
   }

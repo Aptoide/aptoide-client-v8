@@ -1,5 +1,7 @@
 package com.aptoide.android.aptoidegames.feature_apps.presentation
 
+import android.content.Context
+import android.net.Uri.encode
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -31,10 +33,11 @@ import cm.aptoide.pt.feature_home.domain.randomBundle
 import com.aptoide.android.aptoidegames.AptoideOutlinedText
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.UrlActivity
+import com.aptoide.android.aptoidegames.analytics.presentation.withBundleMeta
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusIcon
 import com.aptoide.android.aptoidegames.drawables.icons.getForward
 import com.aptoide.android.aptoidegames.drawables.icons.getPromoSection
-import com.aptoide.android.aptoidegames.home.getSeeMoreBonusRouteNavigation
+import com.aptoide.android.aptoidegames.home.analytics.meta
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -46,7 +49,16 @@ fun BonusSectionView(
 ) {
   val context = LocalContext.current
   Box(
-    modifier = Modifier.padding(vertical = 24.dp)
+    modifier = Modifier
+      .padding(vertical = 24.dp)
+      .clickable(
+        enabled = true,
+        onClick = getBonusRouteNavigation(
+          context = context,
+          bundle = bundle,
+          navigate = navigate
+        )
+      )
   ) {
     val splitText = stringResource(id = R.string.bonus_banner_body).split("%s")
     val annotatedString = buildAnnotatedString {
@@ -93,29 +105,15 @@ fun BonusSectionView(
         annotatedString = annotatedString,
         inlineContent = inlineContent
       )
-      ForwardButton(
-        onClick = bundle.url
-          ?.takeIf { it.isNotBlank() }
-          ?.let {
-            { UrlActivity.open(context = context, it) }
-          } ?: getSeeMoreBonusRouteNavigation(bundle = bundle, navigate = navigate)
+      Image(
+        modifier = Modifier
+          .padding(top = 58.dp)
+          .minimumInteractiveComponentSize(),
+        imageVector = getForward(Palette.White),
+        contentDescription = null,
       )
     }
   }
-}
-
-@Composable
-private fun ForwardButton(
-  onClick: () -> Unit,
-) {
-  Image(
-    modifier = Modifier
-      .padding(top = 58.dp)
-      .clickable { onClick() }
-      .minimumInteractiveComponentSize(),
-    imageVector = getForward(Palette.White),
-    contentDescription = null,
-  )
 }
 
 @Composable
@@ -142,6 +140,21 @@ private fun BonusBannerText(
       modifier = Modifier.width(240.dp)
     )
   }
+}
+
+@Composable
+fun getBonusRouteNavigation(
+  context: Context,
+  bundle: Bundle,
+  navigate: (String) -> Unit,
+): () -> Unit = {
+  bundle.url
+    ?.takeUnless(String::isBlank)
+    ?.let { UrlActivity.open(context = context, url = it) }
+    ?: navigate(
+      buildSeeMoreBonusRoute(encode(bundle.title), "${bundle.tag}-more")
+        .withBundleMeta(bundle.meta.copy(tag = "${bundle.tag}-more"))
+    )
 }
 
 @PreviewDark
