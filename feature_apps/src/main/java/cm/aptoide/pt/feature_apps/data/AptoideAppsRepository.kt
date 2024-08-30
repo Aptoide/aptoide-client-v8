@@ -283,6 +283,7 @@ fun AppJSON.toDomainModel(
     votes = this.stats.prating.votes?.map { Votes(it.value, it.count) }
   ),
   downloads = this.stats.downloads,
+  pDownloads = this.stats.pdownloads,
   versionName = this.file.vername,
   versionCode = this.file.vercode,
   screenshots = this.media?.screenshots?.map { it.url },
