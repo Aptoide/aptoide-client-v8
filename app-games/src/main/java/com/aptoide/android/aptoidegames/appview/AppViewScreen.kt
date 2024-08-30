@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -58,6 +59,7 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_apps.domain.AppSource
 import cm.aptoide.pt.feature_apps.domain.AppSource.Companion.appendIfRequired
+import cm.aptoide.pt.feature_apps.domain.Rating
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.rememberApp
 import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
@@ -78,6 +80,7 @@ import com.aptoide.android.aptoidegames.appview.permissions.buildAppPermissionsR
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusIconLeft
 import com.aptoide.android.aptoidegames.drawables.icons.getForward
 import com.aptoide.android.aptoidegames.drawables.icons.getLeftArrow
+import com.aptoide.android.aptoidegames.drawables.icons.getRatingStar
 import com.aptoide.android.aptoidegames.editorial.EditorialsViewCard
 import com.aptoide.android.aptoidegames.editorial.buildEditorialRoute
 import com.aptoide.android.aptoidegames.feature_apps.presentation.SmallEmptyView
@@ -618,7 +621,41 @@ fun AppPresentationView(app: App) {
           overflow = TextOverflow.Ellipsis,
         )
       }
+      AppRating(rating = app.pRating)
     }
+  }
+}
+
+@Composable
+fun AppRating(
+  modifier: Modifier = Modifier,
+  rating: Rating,
+) {
+  Row(
+    modifier = modifier
+      .wrapContentHeight(
+        unbounded = true,
+        align = Alignment.Top
+      ),
+    verticalAlignment = Alignment.CenterVertically
+  ) {
+    Icon(
+      imageVector = getRatingStar(Palette.Black),
+      contentDescription = null,
+      modifier = Modifier
+        .padding(end = 2.dp)
+        .size(12.dp),
+    )
+    Text(
+      text = if (rating.avgRating == 0.0) {
+        "--"
+      } else {
+        TextFormatter.formatDecimal(rating.avgRating)
+      },
+      maxLines = 1,
+      style = AGTypography.InputsXS,
+      overflow = TextOverflow.Ellipsis,
+    )
   }
 }
 
