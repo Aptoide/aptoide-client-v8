@@ -1,6 +1,7 @@
 package com.aptoide.android.aptoidegames.home
 
 import android.content.Context
+import android.net.Uri.encode
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -440,7 +441,7 @@ fun getSeeMoreRouteNavigation(
   val genericAnalytics = rememberGenericAnalytics()
 
   val context = LocalContext.current
-  val title = bundle.title.translateOrKeep(context)
+  val title = encode(bundle.title.translateOrKeep(context))
   return {
     genericAnalytics.sendSeeAllClick(analyticsContext)
     navigate(
@@ -455,7 +456,7 @@ fun getSeeMoreBonusRouteNavigation(
   bundle: Bundle,
   navigate: (String) -> Unit,
 ): () -> Unit {
-  val title = bundle.title.replace("%", ".")
+  val title = encode(bundle.title)
   return {
     navigate(
       buildSeeMoreBonusRoute(title, "${bundle.tag}-more")
