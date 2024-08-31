@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">Aptoide Games</string>
+  <string name="app_name">ألعاب Aptoide</string>
   <!-- Bottom Bar -->
   <string name="games">ألعاب</string>
   <string name="categories">الفئات</string>
@@ -75,7 +75,7 @@
   <string name="button_back_title">الرجوع</string>
   <string name="button_see_all_title">مشاهدة الكل</string>
   <string name="editorials_view_no_content_message">ييي، لا يوجد أي محتوى هنا حتى الآن!</string>
-  <string name="error_no_content_body">Oops, we couldn\'t find related content yet!</string>
+  <string name="error_no_content_body">ييي، لم نجد المحتوى المطلوب بعد!</string>
   <string name="button_update_title">تحديث</string>
   <string name="button_open_app_title">فتح</string>
   <string name="install_waiting_download_message">بانتظار التنزيل</string>
@@ -85,18 +85,18 @@
   <string name="send_button">إرسال</string>
   <string name="try_again">حاول مرة أخرى.</string>
   <string name="please_wait">يرجى الانتظار.</string>
-  <string name="ok_button">Ok</string>
-  <string name="cancel_button">Cancel</string>
+  <string name="ok_button">تمام</string>
+  <string name="cancel_button">إلغاء</string>
   <string name="download_now_button">تنزيل الآن</string>
   <string name="uninstall_button">إلغاء التثبيت</string>
   <string name="go_back_button">عودة</string>
-  <string name="go_back_to_game_button">Go Back to Game</string>
+  <string name="go_back_to_game_button">عودة إلى اللعبة</string>
   <string name="uninstalling">إلغاء التثبيت</string>
   <string name="resume_button">استئناف</string>
   <string name="waiting_for_connection">بانتظار الاتصال</string>
   <string name="wait_for_wifi_button">انتظر الوايفاي</string>
   <string name="continue_button">متابعة</string>
-  <string name="error_install_permissions_body"><![CDATA[Please go to Settings and grant <1>Aptoide Games</1> permissions to install apps!]]></string>
+  <string name="error_install_permissions_body"><![CDATA[يرجى التوجه إلى الإعدادات ومنح <1>Aptoide Games</1> الإذن لتثبيت التطبيقات!]]></string>
   <!-- Out of Space -->
   <string name="out_of_space_title">لا توجد مساحة</string>
   <string name="out_of_space_body">أنت بحاجة إلى %s لمتابعة التثبيت.</string>
@@ -135,10 +135,10 @@
   <string name="appview_info_permissions_title" comment="permissions">الأذونات</string>
   <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% من %2$s</string>
   <string name="error_short_title" comment="oops_an_error_occurred">ييي، حدث خطأ</string>
-  <string name="purchase_done_bonus_title">Get a %s bonus!</string>
-  <string name="purchase_done_bonus_body">Download the AppCoins Wallet to get this bonus and use it in your next purchase.</string>
-  <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet installed!</string>
-  <string name="purchase_done_bonus_wallet_installed_body">Open it to find your bonus.</string>
+  <string name="purchase_done_bonus_title">احصل على مكافأة %s!</string>
+  <string name="purchase_done_bonus_body">نزل محفظة AppCoins Wallet لتحصل على المكافآت وتستخدمها في مشترياتك القادمة.</string>
+  <string name="purchase_done_bonus_wallet_installed_title">تم تثبيت AppCoins Wallet!</string>
+  <string name="purchase_done_bonus_wallet_installed_body">افتحها لتجد مكافآتك.</string>
   <string name="bonus_banner_body">ستحصل على مكافأة في كل الألعاب المعرّفة لدى %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">مكافأة حتى %s%%</string>
   <string name="settings_payments_title" comment="contact_support_team">تواصل مع فريق الدعم</string>
@@ -190,23 +190,23 @@
   <string name="purchase_error_in_progress_title">لقد تم التعامل مع طلبك أو أنه جاري العمل عليه.</string>
   <string name="purchase_card_error_CVV_title">رقم CVV/CVC خطأ</string>
   <string name="purchase_error_expired_card_title">يبدو أن بطاقتك منتهية الصلاحية</string>
-  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
-  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
+  <string name="iap_already_processing_title">يبدو أن عملية الشراء هذه قيد التنفيذ بالفعل.</string>
+  <string name="iap_already_processing_body">قد تحتاج عملية الشراء هذه بعض الوقت، لذلك يرجى الانتظار حتى تتم أو تواصل مع فريق الدعم لدينا.</string>
   <!-- Bonus Page -->
-  <string name="bonus_page_title_1">A Bonus on Every Purchase</string>
-  <string name="bonus_page_body_1">Look for the games identified with %1$s, install the AppCoins Wallet and get up to %2$s%% bonus in all purchases. You can then use this bonus to make your next purchases in your favorite games!</string>
-  <string name="bonus_page_title_2">Want More?</string>
-  <string name="bonus_page_body_2">You can get an extra %s%% bonus by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!</string>
+  <string name="bonus_page_title_1">مكافأة على كل عملية شراء</string>
+  <string name="bonus_page_body_1">ابحث عن الألعاب المعرّفة مع %1$s، ثبت محفظة AppCoins Wallet واحصل على %2$s%% مكافآت على كل مشترياتك. يمكنك استخدام تلك المكافآت لعملية الشراء التالية داخل ألعابك المفضلة.</string>
+  <string name="bonus_page_title_2">تريد المزيد؟</string>
+  <string name="bonus_page_body_2">يمكنك أن تحصل على %s%% إضافية باستخدام رمز Aptoide Games الترويجي الحصري في ألعاب معينة. تابع كل جديد وسنخبرك في الوقت المناسب!</string>
   <!-- Promo Code -->
-  <string name="promo_code_install_wallet_banner_title">Up to %s%% Bonus in Every Purchase</string>
-  <string name="promo_code_install_wallet_banner_body">Use the AppCoins Wallet to make your in-app purchases and get a reward.</string>
-  <string name="promo_code_extra_title">Want More? Get %s%% Extra Bonus!</string>
-  <string name="promo_code_use_button">Use code</string>
-  <string name="promo_code_install_wallet_disclaimer">Install the AppCoins Wallet first.</string>
-  <string name="promo_code_notification_title">Redeem Your Promo Code</string>
-  <string name="promo_code_notification_body">Use your promo code to get extra bonuses in your favorite game.</string>
-  <string name="promo_code_notification_without_wallet_title">%s%% Extra Bonus!</string>
-  <string name="promo_code_notification_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
-  <string name="promo_code_share_title">You\'ve got a promo code!</string>
-  <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorite game.</string>
+  <string name="promo_code_install_wallet_banner_title">مكافآت حتى %s%% على كل المشتريات</string>
+  <string name="promo_code_install_wallet_banner_body">استخدم AppCoins Wallet لإتمام عمليات الشراء داخل التطبيقات واحصل على الجوائز.</string>
+  <string name="promo_code_extra_title">تريد المزيد؟ احصل على %s%% مكافأة إضافية!</string>
+  <string name="promo_code_use_button">استخدم الرمز</string>
+  <string name="promo_code_install_wallet_disclaimer">ثبت محفظة AppCoins Wallet أولاً.</string>
+  <string name="promo_code_notification_title">استخدم الرمز الترويجي</string>
+  <string name="promo_code_notification_body">استخدم الرمز الترويجي للحصول على مكافآت إضافية في ألعابك المفضلة.</string>
+  <string name="promo_code_notification_without_wallet_title">مكافأة إضافية %s%%!</string>
+  <string name="promo_code_notification_without_wallet_body">احصل على AppCoins Wallet واستخدم رمزك الترويجي لتحصل على مكافآت إضافية على كل مشترياتك.</string>
+  <string name="promo_code_share_title">حصلت على رمز ترويجي!</string>
+  <string name="promo_code_share_body">استخدم هذا الرمز التويجي لتحصل على مكافآت إضافية في ألعابك المفضلة.</string>
 </resources>
