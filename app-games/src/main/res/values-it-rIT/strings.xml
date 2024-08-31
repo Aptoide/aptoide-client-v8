@@ -75,7 +75,7 @@
   <string name="button_back_title">Indietro</string>
   <string name="button_see_all_title">Vedi tutto</string>
   <string name="editorials_view_no_content_message">Non ci sono ancora contenuti al momento!</string>
-  <string name="error_no_content_body">Oops, we couldn\'t find related content yet!</string>
+  <string name="error_no_content_body">Ops, non abbiamo trovato contenuti correlati!</string>
   <string name="button_update_title">Aggiorna</string>
   <string name="button_open_app_title">Apri</string>
   <string name="install_waiting_download_message">In attesa del download</string>
@@ -86,17 +86,17 @@
   <string name="try_again">Ritenta.</string>
   <string name="please_wait">Attendere prego.</string>
   <string name="ok_button">Ok</string>
-  <string name="cancel_button">Cancel</string>
+  <string name="cancel_button">Annulla</string>
   <string name="download_now_button">Scaricalo adesso</string>
   <string name="uninstall_button">Disinstalla</string>
   <string name="go_back_button">Indietro</string>
-  <string name="go_back_to_game_button">Go Back to Game</string>
+  <string name="go_back_to_game_button">Torna al gioco</string>
   <string name="uninstalling">Disinstallazione in corso</string>
   <string name="resume_button">Riprendi</string>
   <string name="waiting_for_connection">In attesa di connessione</string>
   <string name="wait_for_wifi_button">In attesa di Wi-Fi</string>
   <string name="continue_button">Continua</string>
-  <string name="error_install_permissions_body"><![CDATA[Please go to Settings and grant <1>Aptoide Games</1> permissions to install apps!]]></string>
+  <string name="error_install_permissions_body"><![CDATA[Accedi alle Impostazioni e concedi l'autorizzazione ad <1>Aptoide Games</1> per installare le app!]]></string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Spazio esaurito</string>
   <string name="out_of_space_body">Spazio necessario per procedere con l\'installazione: %s.</string>
@@ -110,10 +110,10 @@
   <string name="appview_installer_talkback">Installatore %1$s.</string>
   <string name="appview_action_double_tap_talkback">Fai doppio tocco per %1$s</string>
   <!-- Search -->
-  <string name="search_suggested_title">Suggested Searches</string>
-  <string name="search_recent_title">Recent Searches</string>
-  <string name="search_popular_title">Popular Searches</string>
-  <string name="search_bar_label">Search for games...</string>
+  <string name="search_suggested_title">Ricerche suggerite</string>
+  <string name="search_recent_title">Ricerche recenti</string>
+  <string name="search_popular_title">Ricerche popolari</string>
+  <string name="search_bar_label">Cerca giochi...</string>
   <string name="search_empty_body">Oops, there are no results for \"%s\".\nTry with different words!</string>
   <!-- Install -->
   <string name="button_install_title">Installa</string>
