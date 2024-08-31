@@ -201,12 +201,12 @@
   <string name="promo_code_install_wallet_banner_title">FIno al %s%% di bonus su ogni acquisto</string>
   <string name="promo_code_install_wallet_banner_body">Usa l\'AppCoins Wallet per effettuare acquisti in-app e ricevere un premio.</string>
   <string name="promo_code_extra_title">Vuoi ancora più benefici? Ricevi un bonus extra del %s%%!</string>
-  <string name="promo_code_use_button">Use code</string>
-  <string name="promo_code_install_wallet_disclaimer">Install the AppCoins Wallet first.</string>
-  <string name="promo_code_notification_title">Redeem Your Promo Code</string>
-  <string name="promo_code_notification_body">Use your promo code to get extra bonuses in your favorite game.</string>
-  <string name="promo_code_notification_without_wallet_title">%s%% Extra Bonus!</string>
-  <string name="promo_code_notification_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
-  <string name="promo_code_share_title">You\'ve got a promo code!</string>
-  <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorite game.</string>
+  <string name="promo_code_use_button">Usa codice</string>
+  <string name="promo_code_install_wallet_disclaimer">Per prima cosa, installa l\'AppCoins Wallet.</string>
+  <string name="promo_code_notification_title">Riscatta il tuo codice promozionale</string>
+  <string name="promo_code_notification_body">Usa il tuo codice promozionale per ricevere bonus extra sul tuo gioco preferito.</string>
+  <string name="promo_code_notification_without_wallet_title">Bonus extra del %s%%!</string>
+  <string name="promo_code_notification_without_wallet_body">Scarica l\'AppCoins Wallet e usa il tuo codice promozionale per ricevere bonus extra su tutti gli acquisti.</string>
+  <string name="promo_code_share_title">Hai un codice promozionale!</string>
+  <string name="promo_code_share_body">Usa il tuo codice promozionale per ricevere bonus extra sul tuo gioco preferito.</string>
 </resources>
