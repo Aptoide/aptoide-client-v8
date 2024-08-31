@@ -205,8 +205,8 @@
   <string name="promo_code_install_wallet_disclaimer">먼저 AppCoins 지갑을 설치하세요.</string>
   <string name="promo_code_notification_title">프로모션 코드를 사용하세요.</string>
   <string name="promo_code_notification_body">프로모션 코드를 사용하여 좋아하는 게임에서 추가 보너스를 받으세요.</string>
-  <string name="promo_code_notification_without_wallet_title">%s%% Extra Bonus!</string>
-  <string name="promo_code_notification_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
-  <string name="promo_code_share_title">You\'ve got a promo code!</string>
-  <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorite game.</string>
+  <string name="promo_code_notification_without_wallet_title">%s%% 추가 보너스!</string>
+  <string name="promo_code_notification_without_wallet_body">AppCoins 지갑을 다운로드하고 프로모션 코드를 사용하여 모든 구매에서 추가 보너스를 받으세요.</string>
+  <string name="promo_code_share_title">프로모션 코드를 받으셨습니다!</string>
+  <string name="promo_code_share_body">이 프로모션 코드를 사용하여 좋아하는 게임에서 추가 보너스를 받으세요.</string>
 </resources>
