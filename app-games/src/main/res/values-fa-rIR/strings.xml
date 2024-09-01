@@ -75,7 +75,7 @@
   <string name="button_back_title">بازگشت</string>
   <string name="button_see_all_title">مشاهده همه</string>
   <string name="editorials_view_no_content_message">با عرض پوزش، هیچ محتوایی در اینجا وجود ندارد!</string>
-  <string name="error_no_content_body">Oops, we couldn\'t find related content yet!</string>
+  <string name="error_no_content_body">محتوای مرتبط هنوز پیدا نشده‌است</string>
   <string name="button_update_title">تحديث</string>
   <string name="button_open_app_title">بازکردن</string>
   <string name="install_waiting_download_message">در انتظار دانلود</string>
@@ -85,18 +85,18 @@
   <string name="send_button">ارسال</string>
   <string name="try_again">لطفا مجددا امتحان کنید.</string>
   <string name="please_wait">لطفا صبر کنید.</string>
-  <string name="ok_button">Ok</string>
-  <string name="cancel_button">Cancel</string>
+  <string name="ok_button">تایید</string>
+  <string name="cancel_button">لغو</string>
   <string name="download_now_button">همین حالا دانلود کنید</string>
   <string name="uninstall_button">حذف</string>
   <string name="go_back_button">بازگشت</string>
-  <string name="go_back_to_game_button">Go Back to Game</string>
+  <string name="go_back_to_game_button">بازگشت به صفحه اصلی</string>
   <string name="uninstalling">حذف نصب</string>
   <string name="resume_button">ادامه دادن</string>
   <string name="waiting_for_connection">در انتظار اتصال</string>
   <string name="wait_for_wifi_button">در انتظار وایفای</string>
   <string name="continue_button">ادامه</string>
-  <string name="error_install_permissions_body"><![CDATA[Please go to Settings and grant <1>Aptoide Games</1> permissions to install apps!]]></string>
+  <string name="error_install_permissions_body"><![CDATA[لطفا به تنظیمات بروید و به <1>Aptoide Games</1> اجازه نصب اپلیکیشن بدهید!]]></string>
   <!-- Out of Space -->
   <string name="out_of_space_title">حافظه‌ پر است</string>
   <string name="out_of_space_body">برای ادامه نصب به %s نیاز دارید.</string>
@@ -135,10 +135,10 @@
   <string name="appview_info_permissions_title" comment="permissions">الأذونات</string>
   <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% از %2$s</string>
   <string name="error_short_title" comment="oops_an_error_occurred">با عرض پوزش، خطایی رخ داده است</string>
-  <string name="purchase_done_bonus_title">Get a %s bonus!</string>
-  <string name="purchase_done_bonus_body">Download the AppCoins Wallet to get this bonus and use it in your next purchase.</string>
-  <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet installed!</string>
-  <string name="purchase_done_bonus_wallet_installed_body">Open it to find your bonus.</string>
+  <string name="purchase_done_bonus_title">یک بونوس %s بگیرید!</string>
+  <string name="purchase_done_bonus_body">برای دریافت این بونوس و استفاده در خرید بعدی AppCoins Wallet را دانلود کنید</string>
+  <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet نصب شد!</string>
+  <string name="purchase_done_bonus_wallet_installed_body">برای یافتن بونوس، آن را باز کنید.</string>
   <string name="bonus_banner_body">در همه بازی‌هایی که با %s شناخته می‌شوند یک پاداش می‌گیرید.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">تا %s%% پاداش</string>
   <string name="settings_payments_title" comment="contact_support_team">تماس با تیم پشتیبانی</string>
@@ -190,10 +190,10 @@
   <string name="purchase_error_in_progress_title">درخواست شده قبلا اجرا شده و یا در حال اجراست.</string>
   <string name="purchase_card_error_CVV_title">CVV/CVC اشتباه</string>
   <string name="purchase_error_expired_card_title">به نظر می‌رسد که کارت شما منقضی شده‌است.</string>
-  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
-  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
+  <string name="iap_already_processing_title">به نظر می‌رسد که این خرید قبلا پردازش شده‌است.</string>
+  <string name="iap_already_processing_body">ممکن است این خرید اندکی طول بکشد، لطفا تا تکمیل آن صبر کنید یا با تیم پشتیبانی تماس بگیرید.</string>
   <!-- Bonus Page -->
-  <string name="bonus_page_title_1">A Bonus on Every Purchase</string>
+  <string name="bonus_page_title_1">یک پاداش برای هر خرید</string>
   <string name="bonus_page_body_1">Look for the games identified with %1$s, install the AppCoins Wallet and get up to %2$s%% bonus in all purchases. You can then use this bonus to make your next purchases in your favorite games!</string>
   <string name="bonus_page_title_2">Want More?</string>
   <string name="bonus_page_body_2">You can get an extra %s%% bonus by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!</string>
