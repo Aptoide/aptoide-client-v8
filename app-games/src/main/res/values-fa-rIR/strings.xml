@@ -194,19 +194,19 @@
   <string name="iap_already_processing_body">ممکن است این خرید اندکی طول بکشد، لطفا تا تکمیل آن صبر کنید یا با تیم پشتیبانی تماس بگیرید.</string>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">یک پاداش برای هر خرید</string>
-  <string name="bonus_page_body_1">Look for the games identified with %1$s, install the AppCoins Wallet and get up to %2$s%% bonus in all purchases. You can then use this bonus to make your next purchases in your favorite games!</string>
-  <string name="bonus_page_title_2">Want More?</string>
-  <string name="bonus_page_body_2">You can get an extra %s%% bonus by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!</string>
+  <string name="bonus_page_body_1">به دنبال بازی‌هایی با مشخصه %1$s باشید، AppCoins Wallet را نصب کنید و تا %2$s%% بونوس در همه خریدهای دریافت کنید. از این بونوس می‌توانید در خرید در بازی‌های محبوب خود استفاده کنید.</string>
+  <string name="bonus_page_title_2">بیشتر می‌خواهید؟</string>
+  <string name="bonus_page_body_2">شما می‌توانید یک بونوس اضافی %s%% هم با استفاده از کد ویژه Aptoide Games در بازی‌های خاصی بدست آورید. در ارتباط باشید و باخبر خواهید شد!</string>
   <!-- Promo Code -->
-  <string name="promo_code_install_wallet_banner_title">Up to %s%% Bonus in Every Purchase</string>
-  <string name="promo_code_install_wallet_banner_body">Use the AppCoins Wallet to make your in-app purchases and get a reward.</string>
-  <string name="promo_code_extra_title">Want More? Get %s%% Extra Bonus!</string>
-  <string name="promo_code_use_button">Use code</string>
-  <string name="promo_code_install_wallet_disclaimer">Install the AppCoins Wallet first.</string>
-  <string name="promo_code_notification_title">Redeem Your Promo Code</string>
-  <string name="promo_code_notification_body">Use your promo code to get extra bonuses in your favorite game.</string>
-  <string name="promo_code_notification_without_wallet_title">%s%% Extra Bonus!</string>
-  <string name="promo_code_notification_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
-  <string name="promo_code_share_title">You\'ve got a promo code!</string>
-  <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorite game.</string>
+  <string name="promo_code_install_wallet_banner_title">تا %s%% بونوس در همه خریدها</string>
+  <string name="promo_code_install_wallet_banner_body">برای خریدهای داخل اپلیکیشنی خود از AppCoins Wallet استفاده کنید و پاداش بگیرید.</string>
+  <string name="promo_code_extra_title">بیشتر می‌خواهید؟ %s%% بونوس اضافی دریافت کنید!</string>
+  <string name="promo_code_use_button">استفاده از کد</string>
+  <string name="promo_code_install_wallet_disclaimer">ابتدا AppCoins Wallet را نصب کنید.</string>
+  <string name="promo_code_notification_title">کد تشویقی خود را استفاده کنید</string>
+  <string name="promo_code_notification_body">کد تشویقی خود را برای دریافت بونوس بیشتر در بازی محبوب خود استفاده کنید.</string>
+  <string name="promo_code_notification_without_wallet_title">%s%% بونوس بیشتر</string>
+  <string name="promo_code_notification_without_wallet_body">AppCoins Wallet را بگیرید و کد تشویقی خود را برای دریافت بونوس‌های بیشتر در همه خریدها استفاده کنید.</string>
+  <string name="promo_code_share_title">یک کد تشویقی دریافت کرده‌اید!</string>
+  <string name="promo_code_share_body">این کد تشویقی را برای دریافت بونوس بیشتر در بازی محبوب خود استفاده کنید.</string>
 </resources>
