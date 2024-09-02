@@ -12,7 +12,8 @@ import cm.aptoide.pt.extensions.goAsync
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.TimeoutCancellationException
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.withTimeout
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -37,20 +38,6 @@ class InstallEventsImpl @Inject constructor(
       this,
       IntentFilter(INSTALL_SESSION_API_COMPLETE_ACTION),
       ContextCompat.RECEIVER_NOT_EXPORTED
-    )
-    // Listen to some sessions changes
-    context.packageManager.packageInstaller.registerSessionCallback(
-      object : PackageInstaller.SessionCallback() {
-        override fun onCreated(sessionId: Int) {}
-        override fun onBadgingChanged(sessionId: Int) {}
-        override fun onActiveChanged(sessionId: Int, active: Boolean) {}
-        override fun onProgressChanged(sessionId: Int, progress: Float) {
-          // Needed for the case when user clicks the "Allow" button in the installation confirmation
-          // dialog. To remove the confirmation dialog reappearance.
-        }
-
-        override fun onFinished(sessionId: Int, success: Boolean) {}
-      }
     )
   }
 
