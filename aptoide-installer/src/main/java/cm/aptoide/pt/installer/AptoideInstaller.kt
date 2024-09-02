@@ -97,9 +97,13 @@ class AptoideInstaller @Inject constructor(
               .getBroadcast(
                 context,
                 SESSION_INSTALL_REQUEST_CODE,
-                Intent(INSTALL_SESSION_API_COMPLETE_ACTION),
+                Intent(INSTALL_SESSION_API_COMPLETE_ACTION).setPackage(context.packageName),
                 // This is essential to be like that for having extras in the intent
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) PendingIntent.FLAG_MUTABLE else 0
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                  PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                } else {
+                  PendingIntent.FLAG_UPDATE_CURRENT
+                }
               )
               .intentSender
           )
