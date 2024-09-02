@@ -20,6 +20,7 @@ import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
 import com.aptoide.android.aptoidegames.R.string
+import com.aptoide.android.aptoidegames.appview.AppRating
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -29,7 +30,7 @@ import kotlin.random.Random
 fun ProgressText(
   modifier: Modifier = Modifier,
   app: App,
-  showVersionName: Boolean = true,
+  showVersionName: Boolean = false,
 ) {
   val state = rememberDownloadState(app = app)
 
@@ -77,6 +78,8 @@ private fun ProgressTextContent(
         overflow = TextOverflow.Ellipsis,
         maxLines = 1
       )
+    } else {
+      AppRating(rating = app.pRating)
     }
 
     is Waiting,

@@ -39,6 +39,7 @@ import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.SwipeListener
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
+import com.aptoide.android.aptoidegames.appview.AppRating
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusIconRight
 import com.aptoide.android.aptoidegames.home.BundleHeader
@@ -174,6 +175,7 @@ private fun AppGridView(
         .defaultMinSize(minHeight = 36.dp),
       style = AGTypography.DescriptionGames
     )
+    AppRating(rating = app.pRating)
   }
 }
 
