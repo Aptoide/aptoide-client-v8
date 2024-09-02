@@ -65,6 +65,8 @@ import cm.aptoide.pt.feature_apps.presentation.toPackageNameParam
 import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
 import cm.aptoide.pt.feature_editorial.presentation.relatedEditorialsCardViewModel
 import cm.aptoide.pt.feature_editorial.presentation.rememberRelatedEditorials
+import com.aptoide.android.aptoidegames.APP_LINK_HOST
+import com.aptoide.android.aptoidegames.APP_LINK_SCHEMA
 import com.aptoide.android.aptoidegames.AppIconImage
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
@@ -96,11 +98,24 @@ private val tabsList = listOf(
   AppViewTab.RELATED,
   AppViewTab.INFO
 )
+private const val PACKAGE_UNAME = "package_uname"
+private const val PACKAGE_NAME = "package_name"
+
+private val queryParams = listOf(
+  "app_id",
+  "apk_id",
+  "app_md5sum",
+  "package_id",
+  PACKAGE_NAME,
+  PACKAGE_UNAME
+)
 
 private const val SOURCE = "source"
 private const val USE_STORE_NAME = "useStoreName"
+private const val PATH = "path"
+private const val APP_PATH = "app"
 
-const val appViewRoute = "app/{$SOURCE}?" +
+const val appViewRoute = "$APP_PATH/{$SOURCE}?" +
   "$USE_STORE_NAME={$USE_STORE_NAME}"
 
 private val appViewArguments = listOf(
@@ -109,15 +124,41 @@ private val appViewArguments = listOf(
     defaultValue = true
   },
 )
+private val query = queryParams.joinToString("&") { "$it={$it}" }
 
 fun appViewScreen() = ScreenData.withAnalytics(
   route = appViewRoute,
   screenAnalyticsName = "AppView",
+  deepLinks = listOf(
+    navDeepLink { uriPattern = BuildConfig.DEEP_LINK_SCHEMA + appViewRoute },
+    navDeepLink { uriPattern = "$APP_LINK_SCHEMA{$SOURCE}.$APP_LINK_HOST/{$PATH}" },
+    navDeepLink { uriPattern = "$APP_LINK_SCHEMA$APP_LINK_HOST/{$PATH}?$query" }
+  ),
   arguments = appViewArguments,
-  deepLinks = listOf(navDeepLink { uriPattern = BuildConfig.DEEP_LINK_SCHEMA + appViewRoute })
 ) { arguments, navigate, navigateBack ->
-  val source = arguments?.getString(SOURCE)!!
-  val useStoreName = arguments.getBoolean(USE_STORE_NAME, true)
+  val path = arguments?.getString(PATH)
+
+  val source = when (path) {
+    "download" -> {
+      queryParams.mapNotNull { key ->
+        arguments.getString(key)
+          ?.let { "$key=$it" }
+      }.joinToString("&")
+    }
+
+    "app" -> "$PACKAGE_UNAME=${arguments.getString(SOURCE)}"
+    else -> arguments?.getString(SOURCE)!!
+  }
+
+  val useStoreName = when (path) {
+    "app", "download" -> {
+      false
+    }
+
+    else -> {
+      arguments.getBoolean(USE_STORE_NAME, true)
+    }
+  }
   AppViewScreen(
     source = source,
     useStoreName = useStoreName,

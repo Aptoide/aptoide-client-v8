@@ -12,7 +12,7 @@ import timber.log.Timber
 import java.io.IOException
 
 class EditorialViewModel(
-  private val articleId: String,
+  private val source: String,
   private val articleUseCase: ArticleUseCase,
 ) :
   ViewModel() {
@@ -33,7 +33,7 @@ class EditorialViewModel(
     viewModelScope.launch {
       viewModelState.update { EditorialUiState.Loading }
       try {
-        val result = articleUseCase.getDetails(articleId)
+        val result = articleUseCase.getDetails(source)
         viewModelState.update { EditorialUiState.Idle(article = result) }
       } catch (t: Throwable) {
         Timber.w(t)

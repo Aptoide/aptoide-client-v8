@@ -2,10 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-  <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-  <uses-permission android:name="android.permission.INTERNET" />
-  <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
-
   <application
       android:name=".AptoideApplication"
       android:allowBackup="true"
@@ -37,7 +33,20 @@
 
         <data android:scheme="ag" />
       </intent-filter>
-      <!-- ${dataPlaceholder} -->
+
+      <intent-filter android:autoVerify="true">
+        <action android:name="android.intent.action.VIEW" />
+
+        <category android:name="android.intent.category.BROWSABLE" />
+        <category android:name="android.intent.category.DEFAULT" />
+
+        <data android:scheme="http" />
+        <data android:scheme="https" />
+        <data android:host="*.aptoide.com" />
+        <data android:path="/download" />
+        <data android:path="/app" />
+        <data android:pathPrefix="/editorial" />
+      </intent-filter>
     </activity>
 
     <activity
@@ -51,9 +60,16 @@
         android:name="com.aptoide.android.aptoidegames.SupportActivity"
         android:configChanges="orientation|keyboardHidden"
         android:exported="true"
-        android:windowSoftInputMode="adjustResize"
-        android:screenOrientation="portrait" />
+        android:screenOrientation="portrait"
+        android:windowSoftInputMode="adjustResize" />
 
+    <meta-data
+        android:name="com.google.firebase.messaging.default_notification_icon"
+        android:resource="@drawable/ic_notification_icon" />
+
+    <meta-data
+        android:name="com.google.firebase.messaging.default_notification_color"
+        android:resource="@color/ic_launcher_background" />
     <service
         android:name=".notifications.AptoideGamesNotificationsService"
         android:exported="false">
@@ -62,12 +78,9 @@
       </intent-filter>
     </service>
 
-    <meta-data
-        android:name="com.google.firebase.messaging.default_notification_icon"
-        android:resource="@drawable/ic_notification_icon" />
-    <meta-data
-        android:name="com.google.firebase.messaging.default_notification_color"
-        android:resource="@color/ic_launcher_background" />
-
   </application>
+  <uses-permission android:name="android.permission.INTERNET" />
+  <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
+
+  <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 </manifest>

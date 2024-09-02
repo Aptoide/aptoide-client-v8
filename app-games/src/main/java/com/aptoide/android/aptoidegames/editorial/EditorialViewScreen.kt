@@ -48,6 +48,8 @@ import cm.aptoide.pt.feature_editorial.presentation.editorialViewModel
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.BundleSource.MANUAL
 import cm.aptoide.pt.feature_home.domain.Type.EDITORIAL
+import com.aptoide.android.aptoidegames.APP_LINK_HOST
+import com.aptoide.android.aptoidegames.APP_LINK_SCHEMA
 import com.aptoide.android.aptoidegames.AppIconImage
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
@@ -66,16 +68,26 @@ import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 
-const val editorialRoute = "editorial/{articleId}"
+private const val ARTICLE_ID = "id"
+private const val PATH = "editorial"
+private const val SLUG = "slug"
+
+const val editorialRoute = "$PATH/{$ARTICLE_ID}"
 
 fun editorialScreen() = ScreenData.withAnalytics(
   route = editorialRoute,
   screenAnalyticsName = "Editorial",
-  deepLinks = listOf(navDeepLink { uriPattern = BuildConfig.DEEP_LINK_SCHEMA + editorialRoute })
+  deepLinks = listOf(
+    navDeepLink { uriPattern = BuildConfig.DEEP_LINK_SCHEMA + editorialRoute },
+    navDeepLink { uriPattern = "$APP_LINK_SCHEMA$APP_LINK_HOST/$PATH/{$SLUG}" }
+  )
 ) { arguments, navigate, navigateBack ->
-  val articleId = arguments?.getString("articleId")!!
+  val source = arguments?.getString(ARTICLE_ID)
+    ?.let { "$ARTICLE_ID=$it" }
+    ?: arguments?.getString(SLUG)!!
+      .let { "$SLUG=$it" }
 
-  val viewModel = editorialViewModel(articleId)
+  val viewModel = editorialViewModel(source)
   val analyticsContext = AnalyticsContext.current
   val genericAnalytics = rememberGenericAnalytics()
   val uiState by viewModel.uiState.collectAsState()
@@ -92,7 +104,7 @@ fun editorialScreen() = ScreenData.withAnalytics(
   )
 }
 
-fun buildEditorialRoute(articleId: String): String = "editorial/$articleId"
+fun buildEditorialRoute(articleId: String): String = "$PATH/$articleId"
 
 @Composable
 private fun EditorialViewScreen(

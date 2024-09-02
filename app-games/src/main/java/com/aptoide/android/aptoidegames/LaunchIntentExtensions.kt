@@ -7,6 +7,10 @@ import com.aptoide.android.aptoidegames.analytics.presentation.withPrevScreen
 // Deep link
 private const val DEEPLINK_KEY = "ag.link"
 
+//App link
+const val APP_LINK_SCHEMA = "https://"
+const val APP_LINK_HOST = "{LANG}.aptoide.com"
+
 fun Intent.putDeeplink(deepLink: String): Intent = putExtra(DEEPLINK_KEY, deepLink)
 
 // Launch source
