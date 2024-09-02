@@ -132,13 +132,11 @@ private fun RealMoreBonusBundleView(
       AppsListUiState.NoConnection -> NoConnectionView(onRetryClick = noNetworkReload)
       AppsListUiState.Error -> GenericErrorView(reload)
       AppsListUiState.Empty -> MoreBonusBundleViewContent(
-        title = title,
         appList = emptyList(),
         navigate = navigate
       )
 
       is AppsListUiState.Idle -> MoreBonusBundleViewContent(
-        title = title,
         appList = uiState.apps.onEach {
           it.campaigns?.run {
             if (AptoideMMPCampaign.allowedBundleTags.keys.contains(bundleTag)) {
@@ -154,7 +152,6 @@ private fun RealMoreBonusBundleView(
 
 @Composable
 fun MoreBonusBundleViewContent(
-  title: String,
   appList: List<App>,
   navigate: (String) -> Unit,
 ) {
@@ -169,7 +166,7 @@ fun MoreBonusBundleViewContent(
       .semantics { collectionInfo = CollectionInfo(appList.size, 1) }
       .wrapContentSize(Alignment.TopCenter)
   ) {
-    item { MoreBonusSectionView(title = title, onWalletClick = { navigateToApp(it, null) }) }
+    item { MoreBonusSectionView(onWalletClick = { navigateToApp(it, null) }) }
     itemsIndexed(appList) { index, app ->
       AppItem(
         modifier = Modifier.padding(horizontal = 16.dp),
@@ -185,7 +182,6 @@ fun MoreBonusBundleViewContent(
 
 @Composable
 fun MoreBonusSectionView(
-  title: String,
   onWalletClick: (app: App) -> Unit,
 ) {
   Box(
@@ -228,7 +224,7 @@ fun MoreBonusSectionView(
       contentScale = ContentScale.FillWidth,
     )
     AptoideOutlinedText(
-      text = title,
+      text = stringResource(id = R.string.bonus_banner_title, "20"), //TODO Hardcoded value (should come from backend in the future)
       style = AGTypography.InputsM,
       outlineWidth = 14f,
       outlineColor = Palette.Black,
