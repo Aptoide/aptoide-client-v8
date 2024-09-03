@@ -1,13 +1,13 @@
 package com.aptoide.android.aptoidegames.toolbar
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import com.aptoide.android.aptoidegames.drawables.icons.getAptoideGamesToolbarLogo
 import com.aptoide.android.aptoidegames.drawables.icons.getAptoideGamesToolbarLogoDev
-import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
-fun String.getToolBarLogo() =
+fun String.getToolBarLogo(color: Color) =
   when (this) {
-    "dev" -> getAptoideGamesToolbarLogoDev(Palette.Primary)
-    else -> getAptoideGamesToolbarLogo(Palette.Primary)
+    "dev" -> getAptoideGamesToolbarLogoDev(color)
+    else -> getAptoideGamesToolbarLogo(color)
   }

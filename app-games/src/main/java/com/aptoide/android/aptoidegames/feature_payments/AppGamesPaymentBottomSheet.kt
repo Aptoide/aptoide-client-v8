@@ -159,7 +159,7 @@ private fun PaymentLogo(modifier: Modifier = Modifier) {
     horizontalArrangement = Arrangement.Center
   ) {
     Image(
-      imageVector = BuildConfig.FLAVOR.getToolBarLogo(),
+      imageVector = BuildConfig.FLAVOR.getToolBarLogo(Palette.Black),
       contentDescription = null,
     )
   }
