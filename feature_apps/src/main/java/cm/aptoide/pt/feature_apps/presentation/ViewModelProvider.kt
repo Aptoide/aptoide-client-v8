@@ -30,34 +30,6 @@ class InjectionsProvider @Inject constructor(
 ) : ViewModel()
 
 @Composable
-fun rememberApp(
-  packageName: String,
-  useStoreName: Boolean = true,
-): Pair<AppUiState, () -> Unit> = runPreviewable(
-  preview = { AppUiStateProvider().values.toSet().random() to {} },
-  real = {
-    val injectionsProvider = hiltViewModel<InjectionsProvider>()
-    val vm: AppViewModel = viewModel(
-      viewModelStoreOwner = LocalContext.current as ViewModelStoreOwner,
-      key = "appView/$packageName",
-      factory = object : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-          @Suppress("UNCHECKED_CAST")
-          return AppViewModel(
-            appMetaUseCase = injectionsProvider.appMetaUseCase,
-            source = packageName.toPackageNameParam(),
-            useStoreName = useStoreName,
-          ) as T
-        }
-      }
-    )
-
-    val uiState by vm.uiState.collectAsState()
-    uiState to vm::reload
-  }
-)
-
-@Composable
 fun rememberAppBySource(
   source: String,
   useStoreName: Boolean = true,
