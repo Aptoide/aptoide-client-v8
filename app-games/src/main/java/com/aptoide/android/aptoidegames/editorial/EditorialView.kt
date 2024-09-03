@@ -77,9 +77,7 @@ private fun RealEditorialBundle(
   lazyListState: LazyListState,
   navigate: (String) -> Unit,
 ) {
-  Column(
-    modifier = modifier.padding(bottom = 16.dp)
-  ) {
+  Column {
     BundleHeader(
       title = bundle.title,
       icon = bundle.bundleIcon,

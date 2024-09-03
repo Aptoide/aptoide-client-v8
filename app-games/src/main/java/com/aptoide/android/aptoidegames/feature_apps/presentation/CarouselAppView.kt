@@ -69,9 +69,7 @@ private fun RealCarouselBundle(
   uiState: AppsListUiState,
   navigate: (String) -> Unit,
 ) {
-  Column(
-    modifier = Modifier.padding(bottom = 16.dp)
-  ) {
+  Column {
     BundleHeader(
       title = bundle.title,
       icon = bundle.bundleIcon,
