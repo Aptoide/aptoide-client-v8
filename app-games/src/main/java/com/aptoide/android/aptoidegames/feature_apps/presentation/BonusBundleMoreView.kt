@@ -226,7 +226,7 @@ fun MoreBonusSectionView(
     AptoideOutlinedText(
       text = stringResource(id = R.string.bonus_banner_title, "20"), //TODO Hardcoded value (should come from backend in the future)
       style = AGTypography.InputsM,
-      outlineWidth = 14f,
+      outlineWidth = 10f,
       outlineColor = Palette.Black,
       textColor = Palette.Primary,
       modifier = Modifier.padding(start = 56.dp, top = 14.dp)
