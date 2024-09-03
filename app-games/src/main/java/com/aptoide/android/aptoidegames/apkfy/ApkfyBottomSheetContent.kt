@@ -38,9 +38,7 @@ class ApkfyBottomSheetContent(private val app: App) : BottomSheetContent {
         AppItem(
           app = app,
           onClick = {
-            navigateTo(
-              buildAppViewRoute(source = app.id.toAppIdParam(), useStoreName = false)
-            )
+            navigateTo(buildAppViewRoute(app.id.toAppIdParam()))
             dismiss()
           }
         ) {

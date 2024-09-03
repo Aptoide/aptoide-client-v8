@@ -11,7 +11,6 @@ interface AppsRepository {
   suspend fun getAppMeta(
     source: String,
     bypassCache: Boolean = false,
-    useStoreName: Boolean = true
   ): App
 
   suspend fun getRecommended(path: String, bypassCache: Boolean = false): List<App>

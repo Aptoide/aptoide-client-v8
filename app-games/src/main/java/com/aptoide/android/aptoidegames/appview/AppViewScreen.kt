@@ -45,8 +45,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavType
-import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.extensions.PreviewDark
@@ -89,6 +87,7 @@ import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.videos.presentation.AppViewYoutubePlayer
+import java.util.Locale
 
 private val tabsList = listOf(
   AppViewTab.DETAILS,
@@ -97,40 +96,28 @@ private val tabsList = listOf(
 )
 
 private const val SOURCE = "source"
-private const val USE_STORE_NAME = "useStoreName"
 
-const val appViewRoute = "app/{$SOURCE}?" +
-  "$USE_STORE_NAME={$USE_STORE_NAME}"
-
-private val appViewArguments = listOf(
-  navArgument(USE_STORE_NAME) {
-    type = NavType.BoolType
-    defaultValue = true
-  },
-)
+const val appViewRoute = "app/{$SOURCE}?"
 
 fun appViewScreen() = ScreenData.withAnalytics(
   route = appViewRoute,
   screenAnalyticsName = "AppView",
-  arguments = appViewArguments,
   deepLinks = listOf(navDeepLink { uriPattern = BuildConfig.DEEP_LINK_SCHEMA + appViewRoute })
 ) { arguments, navigate, navigateBack ->
-  val source = arguments?.getString(SOURCE)!!
-  val useStoreName = arguments.getBoolean(USE_STORE_NAME, true)
+  var source = arguments?.getString(SOURCE)!!
+
+  if (!source.contains("app_id=") && !source.contains("com.appcoins.wallet")) {
+    source = "$source/store_name=${BuildConfig.MARKET_NAME.lowercase(Locale.ROOT)}"
+  }
+
   AppViewScreen(
     source = source,
-    useStoreName = useStoreName,
     navigate = navigate,
     navigateBack = navigateBack
   )
 }
 
-fun buildAppViewRoute(
-  source: String,
-  useStoreName: Boolean = true,
-): String = appViewRoute
-  .replace("{$SOURCE}", source)
-  .replace("{$USE_STORE_NAME}", useStoreName.toString())
+fun buildAppViewRoute(source: String): String = appViewRoute.replace("{$SOURCE}", source)
 
 fun buildAppViewDeepLinkUri(source: String) =
   BuildConfig.DEEP_LINK_SCHEMA + buildAppViewRoute(source)
@@ -138,14 +125,10 @@ fun buildAppViewDeepLinkUri(source: String) =
 @Composable
 fun AppViewScreen(
   source: String,
-  useStoreName: Boolean,
   navigate: (String) -> Unit,
   navigateBack: () -> Unit,
 ) {
-  val (uiState, reload) = rememberApp(
-    source = source,
-    useStoreName = useStoreName,
-  )
+  val (uiState, reload) = rememberApp(source = source)
   val analyticsContext = AnalyticsContext.current
   val genericAnalytics = rememberGenericAnalytics()
 
@@ -324,7 +307,10 @@ fun AppViewContent(
             }
         )
         AptoideOutlinedText(
-          text = stringResource(id = R.string.bonus_banner_title, "20"), //TODO Hardcoded value (should come from backend in the future)
+          text = stringResource(
+            id = R.string.bonus_banner_title,
+            "20"
+          ), //TODO Hardcoded value (should come from backend in the future)
           style = AGTypography.InputsM,
           outlineWidth = 10f,
           outlineColor = Palette.Black,
