@@ -33,6 +33,7 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_apps.presentation.previewAppsListIdleState
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
+import cm.aptoide.pt.feature_apps.presentation.toAppIdParam
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.randomBundle
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
@@ -139,7 +140,7 @@ private fun CarouselLargeListView(
             analyticsContext = analyticsContext.copy(itemPosition = index)
           )
           navigate(
-            buildAppViewRoute(item.packageName)
+            buildAppViewRoute(item.id.toAppIdParam())
               .withItemPosition(index)
           )
         },

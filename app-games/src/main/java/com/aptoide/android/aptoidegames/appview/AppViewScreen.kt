@@ -61,7 +61,6 @@ import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.rememberAppBySource
 import cm.aptoide.pt.feature_apps.presentation.toAppIdParam
-import cm.aptoide.pt.feature_apps.presentation.toPackageNameParam
 import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
 import cm.aptoide.pt.feature_editorial.presentation.relatedEditorialsCardViewModel
 import cm.aptoide.pt.feature_editorial.presentation.rememberRelatedEditorials
@@ -126,15 +125,7 @@ fun appViewScreen() = ScreenData.withAnalytics(
   )
 }
 
-fun buildAppViewRoute(packageName: String): String =
-  buildAppViewRouteBySource(packageName.toPackageNameParam())
-
-fun buildAppViewRouteByAppId(
-  appId: Long,
-  useStoreName: Boolean = true,
-): String = buildAppViewRouteBySource(appId.toAppIdParam(), useStoreName)
-
-fun buildAppViewRouteBySource(
+fun buildAppViewRoute(
   source: String,
   useStoreName: Boolean = true,
 ): String = appViewRoute
@@ -142,7 +133,7 @@ fun buildAppViewRouteBySource(
   .replace("{$USE_STORE_NAME}", useStoreName.toString())
 
 fun buildAppViewDeepLinkUri(source: String) =
-  BuildConfig.DEEP_LINK_SCHEMA + buildAppViewRouteBySource(source)
+  BuildConfig.DEEP_LINK_SCHEMA + buildAppViewRoute(source)
 
 @Composable
 fun AppViewScreen(

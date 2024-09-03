@@ -24,6 +24,7 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiStateProvider
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
+import cm.aptoide.pt.feature_apps.presentation.toAppIdParam
 import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
 import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import com.aptoide.android.aptoidegames.BuildConfig
@@ -154,7 +155,7 @@ private fun AppsList(
             analyticsContext = analyticsContext.copy(itemPosition = index)
           )
           navigate(
-            buildAppViewRoute(app.packageName)
+            buildAppViewRoute(app.id.toAppIdParam())
               .withItemPosition(index)
           )
         },
