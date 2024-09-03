@@ -12,6 +12,7 @@ import com.aptoide.android.aptoidegames.analytics.dto.AnalyticsUIContext
 import com.aptoide.android.aptoidegames.analytics.dto.BundleMeta
 import com.aptoide.android.aptoidegames.analytics.dto.SearchMeta
 import com.aptoide.android.aptoidegames.home.repository.ThemePreferencesManager
+import com.aptoide.android.aptoidegames.wallet.WALLET_PACKAGE_NAME
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
@@ -31,7 +32,7 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
       .onEach { analyticsSender.setUserProperties("theme" to it) }
       .launchIn(CoroutineScope(Dispatchers.IO))
     installManager
-      .getApp("com.appcoins.wallet")
+      .getApp(WALLET_PACKAGE_NAME)
       .packageInfoFlow
       .map { (it != null).toString() }
       .onEach { analyticsSender.setUserProperties("wallet_installed" to it) }

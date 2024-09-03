@@ -34,7 +34,6 @@ import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.AppUiStateProvider
-import cm.aptoide.pt.feature_apps.presentation.rememberApp
 import cm.aptoide.pt.feature_home.domain.BundleSource
 import com.appcoins.payments.arch.PaymentsResult
 import com.appcoins.payments.arch.PurchaseRequest
@@ -66,6 +65,7 @@ import com.aptoide.android.aptoidegames.installer.presentation.ProgressText
 import com.aptoide.android.aptoidegames.installer.presentation.rememberSaveAppDetails
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
+import com.aptoide.android.aptoidegames.wallet.rememberWalletApp
 
 private const val paymentsWalletInstallationRoute = "paymentsWalletInstallation"
 
@@ -129,7 +129,7 @@ private fun PaymentsWalletInstallationBottomSheetView(
 ) {
   val genericAnalytics = rememberGenericAnalytics()
   val walletPaymentMethod = rememberWalletPaymentMethod(purchaseRequest)
-  val (uiState, _) = rememberApp(packageName = "com.appcoins.wallet")
+  val (uiState, _) = rememberWalletApp()
 
   PaymentsWalletInstallationView(
     purchaseRequest = purchaseRequest,
