@@ -130,7 +130,7 @@ private fun AppGamesToolBar(
       ) {
         Spacer(modifier = Modifier.width(96.dp))
         Image(
-          imageVector = BuildConfig.FLAVOR.getToolBarLogo(),
+          imageVector = BuildConfig.FLAVOR.getToolBarLogo(Palette.Primary),
           contentDescription = null,
           modifier = Modifier
             .padding(vertical = 8.dp)
@@ -208,7 +208,7 @@ fun SimpleAppGamesToolbar() {
         .fillMaxWidth()
     ) {
       Image(
-        imageVector = BuildConfig.FLAVOR.getToolBarLogo(),
+        imageVector = BuildConfig.FLAVOR.getToolBarLogo(Palette.Primary),
         contentDescription = null,
         modifier = Modifier.weight(1f)
       )
