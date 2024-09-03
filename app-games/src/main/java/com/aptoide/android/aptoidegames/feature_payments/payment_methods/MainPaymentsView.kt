@@ -315,7 +315,7 @@ private fun WalletPaymentMethod(
       AptoideOutlinedText(
         text = stringResource(id = R.string.bonus_banner_title, "20"), //TODO Hardcoded value (should come from backend in the future)
         style = AGTypography.InputsS,
-        outlineWidth = 15f,
+        outlineWidth = 10f,
         outlineColor = Palette.Black,
         textColor = Palette.Primary,
         modifier = Modifier.padding(horizontal = 8.dp)
