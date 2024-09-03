@@ -30,10 +30,7 @@ class InjectionsProvider @Inject constructor(
 ) : ViewModel()
 
 @Composable
-fun rememberApp(
-  source: String,
-  useStoreName: Boolean = true,
-): Pair<AppUiState, () -> Unit> = runPreviewable(
+fun rememberApp(source: String): Pair<AppUiState, () -> Unit> = runPreviewable(
   preview = { AppUiStateProvider().values.toSet().random() to {} },
   real = {
     val injectionsProvider = hiltViewModel<InjectionsProvider>()
@@ -46,7 +43,6 @@ fun rememberApp(
           return AppViewModel(
             appMetaUseCase = injectionsProvider.appMetaUseCase,
             source = source,
-            useStoreName = useStoreName,
           ) as T
         }
       }

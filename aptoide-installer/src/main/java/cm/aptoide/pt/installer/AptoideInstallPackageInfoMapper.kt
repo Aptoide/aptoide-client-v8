@@ -21,7 +21,7 @@ class AptoideInstallPackageInfoMapper @Inject constructor(
   private val dynamicSplitsUseCase: DynamicSplitsUseCase,
 ) : InstallPackageInfoMapper {
   override suspend fun map(app: App): InstallPackageInfo {
-    val appMeta = appMetaUseCase.getMetaInfo(source = app.id.toAppIdParam(), useStoreName = false)
+    val appMeta = appMetaUseCase.getMetaInfo(source = app.id.toAppIdParam())
 
     return InstallPackageInfo(
       versionCode = app.versionCode.toLong(),

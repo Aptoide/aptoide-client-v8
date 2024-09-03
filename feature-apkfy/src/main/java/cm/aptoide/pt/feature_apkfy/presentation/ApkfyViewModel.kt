@@ -47,10 +47,7 @@ class ApkfyViewModel @Inject constructor(
           ?.run {
             (appId?.toAppIdParam() ?: packageName?.toPackageNameParam())
               ?.let { source ->
-                val app = appMetaUseCase.getMetaInfo(
-                  source = source,
-                  useStoreName = false
-                )
+                val app = appMetaUseCase.getMetaInfo(source = source)
                 viewModelState.update { app }
               }
           }

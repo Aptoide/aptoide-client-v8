@@ -99,13 +99,11 @@ internal class AptoideAppsRepository @Inject constructor(
   override suspend fun getAppMeta(
     source: String,
     bypassCache: Boolean,
-    useStoreName: Boolean,
   ): App =
     withContext(scope.coroutineContext) {
 
       appsRemoteDataSource.getAppMeta(
         path = source,
-        storeName = if (useStoreName) storeName else null,
         bypassCache = if (bypassCache) CacheConstants.NO_CACHE else null
       ).data
         .toDomainModel(
