@@ -50,7 +50,6 @@ fun BonusSectionView(
   val context = LocalContext.current
   Box(
     modifier = Modifier
-      .padding(vertical = 24.dp)
       .clickable(
         enabled = true,
         onClick = getBonusRouteNavigation(

@@ -13,8 +13,10 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -96,6 +98,7 @@ fun MyGamesBundleViewContent(
   val localContext = LocalContext.current
   when (uiState) {
     MyGamesBundleUiState.Empty -> MyGamesEmptyView {
+      Spacer(modifier = Modifier.height(16.dp))
       BundleHeader(
         title = title,
         icon = icon,
@@ -111,6 +114,7 @@ fun MyGamesBundleViewContent(
     }
 
     is MyGamesBundleUiState.AppsList -> MyGamesAppsListView {
+      Spacer(modifier = Modifier.height(16.dp))
       BundleHeader(
         title = title,
         icon = icon,

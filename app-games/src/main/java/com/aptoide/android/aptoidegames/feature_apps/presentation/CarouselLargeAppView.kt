@@ -84,9 +84,7 @@ private fun RealCarouselLargeBundle(
       )
     }
     Column(
-      modifier = Modifier
-        .fillMaxWidth()
-        .padding(bottom = 24.dp)
+      modifier = Modifier.fillMaxWidth()
     ) {
       BundleHeader(
         title = bundle.title,

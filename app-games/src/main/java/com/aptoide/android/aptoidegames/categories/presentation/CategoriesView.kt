@@ -57,7 +57,6 @@ fun CategoriesBundle(
     modifier = Modifier
       .fillMaxWidth()
       .wrapContentHeight()
-      .padding(bottom = 16.dp)
   ) {
     BundleHeader(
       title = bundle.title,
