@@ -11,6 +11,7 @@ data class ChatbotUIState(
     val conversation: List<ChatInteraction>,
     val state: ConversationIntent = ConversationIntent.START,
     val context: List<GameContext> = emptyList(),
+    val apps: List<GameContext> = emptyList(),
     val packageName: String? = null
     )
 

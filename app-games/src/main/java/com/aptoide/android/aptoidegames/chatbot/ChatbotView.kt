@@ -44,9 +44,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import cm.aptoide.pt.extensions.PreviewAll
 import cm.aptoide.pt.extensions.ScreenData
+import cm.aptoide.pt.feature_apps.presentation.toPackageNameParam
 import coil.compose.rememberAsyncImagePainter
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
+import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
+import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
+import com.aptoide.android.aptoidegames.appview.buildAppViewRouteBySource
 import com.aptoide.android.aptoidegames.chatbot.io_models.GameContext
 import com.aptoide.android.aptoidegames.home.GenericErrorView
 import com.aptoide.android.aptoidegames.home.NoConnectionView
@@ -67,6 +72,7 @@ fun chatbotScreen() = ScreenData.withAnalytics(
 
   ChatbotView(
     uiState = uiState,
+    navigateTo = navigate,
     onError = {}, // fix this
     onMessageSend = viewModel::reload
   )
@@ -75,6 +81,7 @@ fun chatbotScreen() = ScreenData.withAnalytics(
 @Composable
 fun ChatbotView(
   uiState: ChatbotUIState,
+  navigateTo: (String) -> Unit,
   onError: () -> Unit,
   onMessageSend: (String) -> Unit,
   ) {
@@ -86,18 +93,27 @@ fun ChatbotView(
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
     when (uiState.type) {
-      ChatbotUiStateType.LOADING -> ChatScreen(uiState = uiState, onMessageSend = {})
+      ChatbotUiStateType.LOADING -> ChatScreen(uiState = uiState, navigateTo = navigateTo, onMessageSend = {})
       ChatbotUiStateType.NO_CONNECTION -> NoConnectionView(onRetryClick = onError)
       ChatbotUiStateType.ERROR -> GenericErrorView(onError)
-      ChatbotUiStateType.IDLE -> ChatScreen(uiState = uiState, onMessageSend = onMessageSend) // will recompose when changes are made
+      ChatbotUiStateType.IDLE -> ChatScreen(uiState = uiState, navigateTo = navigateTo, onMessageSend = onMessageSend) // will recompose when changes are made
     }
   }
 }
 
 @Composable
-fun ChatScreen(uiState: ChatbotUIState, onMessageSend: (String) -> Unit) {
+fun ChatScreen(
+  uiState: ChatbotUIState,
+  navigateTo: (String) -> Unit,
+  onMessageSend: (String) -> Unit
+) {
   val listState = rememberLazyListState()
   val messages = uiState.messages
+
+  println("ASGDIUADFUOWEOFUWEOFOIWEHFOPWEIHFPOWHPFIIWOPEHFPWIEHF")
+  println(uiState.type)
+  println(messages)
+
   LaunchedEffect(key1 = messages.size) {
     listState.animateScrollToItem(index = messages.size - 1)
   }
@@ -108,13 +124,12 @@ fun ChatScreen(uiState: ChatbotUIState, onMessageSend: (String) -> Unit) {
   ) {
     MessageList(
       messages = messages,
+      apps = uiState.apps,
+      navigateTo = navigateTo,
       listState = listState,
       modifier = Modifier
         .weight(1f)
     )
-
-    if (uiState.packageName != null)
-      GameInstallationBlock(uiState.packageName, uiState.context)
 
     TextInputBar(
       onMessageSent = onMessageSend,
@@ -125,47 +140,7 @@ fun ChatScreen(uiState: ChatbotUIState, onMessageSend: (String) -> Unit) {
 }
 
 @Composable
-fun GameInstallationBlock(packageName: String, context: List<GameContext>) {
-  val gameContext = context.find { it.packageName == packageName }
-
-  gameContext?.let {
-    Box(
-      modifier = Modifier
-        .fillMaxWidth()
-        .padding(16.dp)
-        .background(
-          color = Color.Transparent,
-        )
-        .border(2.dp, Palette.Primary, shape = RoundedCornerShape(12.dp))
-        .padding(16.dp)
-    ) {
-      Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
-        modifier = Modifier.fillMaxWidth()
-      ) {
-        Image(
-          painter = rememberAsyncImagePainter(model = it.icon),
-          contentDescription = "${it.name} Icon",
-          modifier = Modifier
-            .size(64.dp),
-          contentScale = ContentScale.Fit
-        )
-        Text(
-          text = it.name,
-          style = AGTypography.BodyBold,
-          fontSize = 18.sp,
-          modifier = Modifier
-            .weight(1f)
-            .padding(8.dp)
-        )
-      }
-    }
-  }
-}
-
-@Composable
-fun MessageList(messages: List<ChatbotMessage>, listState: LazyListState, modifier: Modifier = Modifier) {
+fun MessageList(messages: List<ChatbotMessage>, apps: List<GameContext>, navigateTo: (String) -> Unit, listState: LazyListState, modifier: Modifier = Modifier) {
   LazyColumn(
     state = listState,
     verticalArrangement = Arrangement.Bottom,
@@ -174,7 +149,10 @@ fun MessageList(messages: List<ChatbotMessage>, listState: LazyListState, modifi
     contentPadding = PaddingValues(vertical = 8.dp)
   ) {
     items(messages.size) { index ->
-      MessageBubble(message = messages[index])
+      if (index == messages.size - 1)
+        MessageBubble(message = messages[index], apps = apps, navigateTo = navigateTo)
+      else
+        MessageBubble(message = messages[index])
     }
   }
 }
@@ -225,7 +203,7 @@ fun TextInputBar(
     ) {
       Icon(
         imageVector = Icons.Default.Send,
-        tint = Palette.GreyLight,
+        tint = Palette.White,
         contentDescription = "Send Message",
         )
     }
@@ -233,7 +211,7 @@ fun TextInputBar(
 }
 
 @Composable
-fun MessageBubble(message: ChatbotMessage) {
+fun MessageBubble(message: ChatbotMessage, apps: List<GameContext>? = null, navigateTo: (String) -> Unit = {}) {
   Column(
     modifier = Modifier
       .fillMaxWidth()
@@ -250,25 +228,78 @@ fun MessageBubble(message: ChatbotMessage) {
       Text(
         text = "Me", //TODO take this out
         style = AGTypography.BodyBold,
-        modifier = Modifier.padding(end = 8.dp, bottom = 1.dp).align(Alignment.End)
+        modifier = Modifier
+          .padding(end = 8.dp, bottom = 1.dp)
+          .align(Alignment.End)
       )
     }
-    Box(
+    Column(
       modifier = Modifier
         .padding(vertical = 4.dp, horizontal = 8.dp)
         .clip(shape = RoundedCornerShape(2.dp))
         .background(
-          color = if (message.isUserMessage()) Palette.Primary else Palette.GreyLight,
+          color = if (message.isUserMessage()) Palette.Primary else Color.Transparent,
         )
+        .border(2.dp, color = if (message.isUserMessage()) Color.Transparent else Palette.Primary)
     ) {
       Text(
         text = message.messageBody.replace("\"", ""),
         style = AGTypography.Body,
-        color = Palette.Black,
+        color = if(message.isUserMessage()) Palette.Black else Palette.White,
         fontSize = 16.sp,
         modifier = Modifier
           .padding(8.dp)
       )
+      apps?.forEach { app ->
+        GameInstallationBlock(appInfo = app, navigateTo = navigateTo)
+      }
+    }
+  }
+}
+
+@Composable
+fun GameInstallationBlock(appInfo: GameContext, navigateTo: (String) -> Unit) {
+  Box(
+    modifier = Modifier
+      .fillMaxWidth()
+      .padding(16.dp)
+      .background(
+        color = Palette.Secondary,
+        shape = RoundedCornerShape(12.dp)
+      )
+      .padding(16.dp)
+  ) {
+    Row(
+      verticalAlignment = Alignment.CenterVertically,
+      horizontalArrangement = Arrangement.SpaceBetween,
+      modifier = Modifier.fillMaxWidth()
+    ) {
+      Image(
+        painter = rememberAsyncImagePainter(model = appInfo.icon),
+        contentDescription = "${appInfo.name} Icon",
+        modifier = Modifier
+          .size(64.dp),
+        contentScale = ContentScale.Fit
+      )
+      Text(
+        text = appInfo.name,
+        style = AGTypography.BodyBold,
+        fontSize = 18.sp,
+        modifier = Modifier
+          .weight(1f)
+          .padding(8.dp)
+      )
+      Button(onClick = {
+        navigateTo(
+          buildAppViewRouteBySource(appInfo.packageName.toPackageNameParam(), false)
+        )
+      }) {
+        Text(
+          text = "Install",
+          style = AGTypography.BodyBold,
+          fontSize = 18.sp,
+        )
+      }
     }
   }
 }

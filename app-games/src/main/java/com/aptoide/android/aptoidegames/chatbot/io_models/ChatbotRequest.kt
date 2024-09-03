@@ -18,7 +18,8 @@ data class ChatbotResponse (
 
 data class ChatInteraction (
     val gpt: String,
-    val user: String?
+    val user: String?,
+    val apps: List<GameContext>
 )
 
 data class GameContext(

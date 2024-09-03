@@ -32,41 +32,41 @@ class ChatbotViewModel @Inject constructor(
 
     fun reload(userMessage: String) {
         viewModelScope.launch {
-            viewModelState.update { it.copy(type = ChatbotUiStateType.LOADING) }
-            try {
-                // Get the current conversation
-                val currentConversation = uiState.value.conversation
+            val currentConversation = uiState.value.conversation
 
-                // Update the last ChatInteraction with the user's message
-                val updatedConversation = if (currentConversation.isNotEmpty()) {
-                    val lastInteraction = currentConversation.last().copy(user = userMessage)
-                    currentConversation.dropLast(1) + lastInteraction
-                } else {
-                    currentConversation
-                }
-                println(updatedConversation)
-                val request = ChatbotRequest(
+            val updatedConversation = if (currentConversation.isNotEmpty()) {
+                val lastInteraction = currentConversation.last().copy(user = userMessage)
+                currentConversation.dropLast(1) + lastInteraction
+            } else {
+                currentConversation
+            }
+
+            viewModelState.update {
+                it.copy(
+                    type = ChatbotUiStateType.LOADING,
                     conversation = updatedConversation,
-                    context = uiState.value.context,
-                    state = uiState.value.state
+                    apps = emptyList()
                 )
-                val response = chatbotRepository.getMessages(request)
-                println(response)
-
-                val messages = response.conversation.toChatbotMessageList()
-                val newConvo = response.conversation
-                val newState = response.state
-                val newContext = response.context
-                val newPackageName = response.packageName
+            }
+            try {
+                val response =
+                    chatbotRepository.getMessages(
+                        ChatbotRequest(
+                            conversation = updatedConversation,
+                            context = uiState.value.context,
+                            state = uiState.value.state
+                        )
+                    )
 
                 viewModelState.update {
                     it.copy(
-                        messages = messages,
+                        messages = response.conversation.toChatbotMessageList(),
                         type = ChatbotUiStateType.IDLE,
-                        conversation = newConvo,
-                        state = ConversationIntent.fromValue(newState) ?: ConversationIntent.OTHER,
-                        context = newContext,
-                        packageName = newPackageName ?: null
+                        conversation = response.conversation,
+                        state = ConversationIntent.fromValue(response.state) ?: ConversationIntent.OTHER,
+                        context = response.context,
+                        apps = response.conversation.last().apps,
+                        packageName = response.packageName
                     )
                 }
             } catch (e: Throwable) {
@@ -85,14 +85,12 @@ class ChatbotViewModel @Inject constructor(
 }
 
 fun List<ChatInteraction>.toChatbotMessageList(): List<ChatbotMessage> {
-    val res = mutableListOf<ChatbotMessage>()
-    this.forEach { interaction ->
-        res.add(ChatbotMessage(MessageAuthor.GPT, interaction.gpt))
-        if (interaction.user != null) {
-            res.add(ChatbotMessage(MessageAuthor.USER, interaction.user))
-        }
+    return this.flatMap { interaction ->
+        listOfNotNull(
+            ChatbotMessage(MessageAuthor.GPT, interaction.gpt),
+            interaction.user?.let { ChatbotMessage(MessageAuthor.USER, it) }
+        )
     }
-    return res.toList()
 }
 
 private data class ChatbotViewModelState(
@@ -101,20 +99,24 @@ private data class ChatbotViewModelState(
     val conversation: List<ChatInteraction> = listOf(
         ChatInteraction(
             "Hello! I'm here to help you search or discover apps and games. Use me as needed.",
-            null
+            null,
+                emptyList()
         )
     ),
     val state: ConversationIntent = ConversationIntent.START,
     val context: List<GameContext> = emptyList(),
+    val apps: List<GameContext> = emptyList(),
     val packageName: String? = null
 ) {
     fun toUiState(): ChatbotUIState =
         ChatbotUIState(
+            // messages state must not be altered by code, only the conversation
             messages = conversation.toChatbotMessageList(),
             type = type,
             conversation = conversation,
             state = state,
             context = context,
+            apps = apps,
             packageName = packageName
         )
 }

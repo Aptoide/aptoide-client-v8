@@ -15,7 +15,7 @@ internal object NetworkModule {
     @Provides
     fun provideChatbotApiService(): ChatbotApiService {
         return Retrofit.Builder()
-            .baseUrl("https://e585-2001-8a0-6e3f-a700-1084-8000-abc6-cd34.ngrok-free.app/")
+            .baseUrl("https://af26-2001-8a0-6e3f-a700-1084-8000-abc6-cd34.ngrok-free.app/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(ChatbotApiService::class.java)
