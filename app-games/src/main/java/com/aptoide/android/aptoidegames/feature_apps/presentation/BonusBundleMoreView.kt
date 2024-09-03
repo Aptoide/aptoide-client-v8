@@ -40,6 +40,7 @@ import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiStateProvider
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
+import cm.aptoide.pt.feature_apps.presentation.toAppIdParam
 import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
 import com.aptoide.android.aptoidegames.AptoideOutlinedText
 import com.aptoide.android.aptoidegames.BuildConfig
@@ -157,7 +158,7 @@ fun MoreBonusBundleViewContent(
 ) {
   val navigateToApp = { app: App, index: Int? ->
     navigate(
-      buildAppViewRoute(app.packageName).withItemPosition(index)
+      buildAppViewRoute(app.id.toAppIdParam()).withItemPosition(index)
     )
   }
 
