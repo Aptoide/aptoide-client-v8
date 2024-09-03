@@ -1,4 +1,4 @@
-package com.aptoide.android.aptoidegames.chatbot
+package com.aptoide.android.aptoidegames.chatbot.data
 
 import com.aptoide.android.aptoidegames.chatbot.io_models.ChatbotRequest
 import com.aptoide.android.aptoidegames.chatbot.io_models.ChatbotResponse
@@ -6,8 +6,8 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface ChatbotApiService {
-    @POST("chat") // Replace with your actual endpoint
-    suspend fun getMessages(
-        @Body request: ChatbotRequest // The request body
+    @POST("chat")
+    suspend fun postMessages(
+        @Body request: ChatbotRequest
     ): ChatbotResponse
 }

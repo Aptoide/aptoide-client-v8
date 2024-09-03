@@ -1,4 +1,4 @@
-package com.aptoide.android.aptoidegames.chatbot
+package com.aptoide.android.aptoidegames.chatbot.domain
 
 data class ChatbotMessage(
     val author: MessageAuthor,

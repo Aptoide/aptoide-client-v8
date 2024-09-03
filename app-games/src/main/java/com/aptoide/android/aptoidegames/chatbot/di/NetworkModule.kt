@@ -1,7 +1,7 @@
 package com.aptoide.android.aptoidegames.chatbot.di
 
-import com.aptoide.android.aptoidegames.chatbot.ChatbotApiService
-import com.aptoide.android.aptoidegames.chatbot.ChatbotRepository
+import com.aptoide.android.aptoidegames.chatbot.data.ChatbotApiService
+import com.aptoide.android.aptoidegames.chatbot.data.ChatbotRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

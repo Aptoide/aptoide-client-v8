@@ -1,11 +1,15 @@
-package com.aptoide.android.aptoidegames.chatbot
+package com.aptoide.android.aptoidegames.chatbot.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aptoide.android.aptoidegames.chatbot.io_models.ChatInteraction
+import com.aptoide.android.aptoidegames.chatbot.data.ChatbotRepository
+import com.aptoide.android.aptoidegames.chatbot.domain.ChatInteraction
+import com.aptoide.android.aptoidegames.chatbot.domain.ChatbotMessage
+import com.aptoide.android.aptoidegames.chatbot.domain.ConversationIntent
+import com.aptoide.android.aptoidegames.chatbot.domain.GameContext
+import com.aptoide.android.aptoidegames.chatbot.domain.MessageAuthor
 import com.aptoide.android.aptoidegames.chatbot.io_models.ChatbotRequest
-import com.aptoide.android.aptoidegames.chatbot.io_models.ConversationIntent
-import com.aptoide.android.aptoidegames.chatbot.io_models.GameContext
+import com.aptoide.android.aptoidegames.chatbot.io_models.ChatbotResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -32,22 +36,10 @@ class ChatbotViewModel @Inject constructor(
 
     fun reload(userMessage: String) {
         viewModelScope.launch {
-            val currentConversation = uiState.value.conversation
+            val updatedConversation = updateConversation(userMessage)
 
-            val updatedConversation = if (currentConversation.isNotEmpty()) {
-                val lastInteraction = currentConversation.last().copy(user = userMessage)
-                currentConversation.dropLast(1) + lastInteraction
-            } else {
-                currentConversation
-            }
+            updateStateForLoading(updatedConversation)
 
-            viewModelState.update {
-                it.copy(
-                    type = ChatbotUiStateType.LOADING,
-                    conversation = updatedConversation,
-                    apps = emptyList()
-                )
-            }
             try {
                 val response =
                     chatbotRepository.getMessages(
@@ -57,29 +49,53 @@ class ChatbotViewModel @Inject constructor(
                             state = uiState.value.state
                         )
                     )
+                updateStateForSuccess(response)
 
-                viewModelState.update {
-                    it.copy(
-                        messages = response.conversation.toChatbotMessageList(),
-                        type = ChatbotUiStateType.IDLE,
-                        conversation = response.conversation,
-                        state = ConversationIntent.fromValue(response.state) ?: ConversationIntent.OTHER,
-                        context = response.context,
-                        apps = response.conversation.last().apps,
-                        packageName = response.packageName
-                    )
-                }
             } catch (e: Throwable) {
                 Timber.w(e)
                 viewModelState.update {
                     it.copy(
                         type = when (e) {
-                            is IOException -> ChatbotUiStateType.NO_CONNECTION
-                            else -> ChatbotUiStateType.ERROR
+                            is IOException -> ChatbotUIStateType.NO_CONNECTION
+                            else -> ChatbotUIStateType.ERROR
                         }
                     )
                 }
             }
+        }
+    }
+
+    private fun updateConversation(userMessage: String) =
+        uiState.value.conversation.run {
+        if (isNotEmpty()) {
+            val lastInteraction = last().copy(user = userMessage)
+            dropLast(1) + lastInteraction
+        } else {
+            this
+        }
+    }
+
+    private fun updateStateForLoading(updatedConversation: List<ChatInteraction>) {
+        viewModelState.update {
+            it.copy(
+                type = ChatbotUIStateType.LOADING,
+                conversation = updatedConversation,
+                apps = emptyList()
+            )
+        }
+    }
+
+    private fun updateStateForSuccess(response: ChatbotResponse) {
+        viewModelState.update {
+            it.copy(
+                messages = response.conversation.toChatbotMessageList(),
+                type = ChatbotUIStateType.IDLE,
+                conversation = response.conversation,
+                state = ConversationIntent.fromValue(response.state) ?: ConversationIntent.OTHER,
+                context = response.context,
+                apps = response.conversation.last().apps,
+                packageName = response.packageName
+            )
         }
     }
 }
@@ -95,7 +111,7 @@ fun List<ChatInteraction>.toChatbotMessageList(): List<ChatbotMessage> {
 
 private data class ChatbotViewModelState(
     val messages: List<ChatbotMessage> = emptyList(),
-    val type: ChatbotUiStateType = ChatbotUiStateType.IDLE,
+    val type: ChatbotUIStateType = ChatbotUIStateType.IDLE,
     val conversation: List<ChatInteraction> = listOf(
         ChatInteraction(
             "Hello! I'm here to help you search or discover apps and games. Use me as needed.",

@@ -5,7 +5,7 @@ import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.dto.BundleMeta
 import com.aptoide.android.aptoidegames.analytics.presentation.withBundleMeta
 import com.aptoide.android.aptoidegames.categories.presentation.buildAllCategoriesRoute
-import com.aptoide.android.aptoidegames.chatbot.chatbotRoute
+import com.aptoide.android.aptoidegames.chatbot.presentation.chatbotRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getCategories
 import com.aptoide.android.aptoidegames.drawables.icons.getDiscovery
 import com.aptoide.android.aptoidegames.drawables.icons.getSearch
