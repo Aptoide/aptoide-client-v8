@@ -40,6 +40,7 @@ import com.aptoide.android.aptoidegames.feature_payments.AppGamesPaymentBottomSh
 import com.aptoide.android.aptoidegames.feature_payments.analytics.PaymentContext
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
+import com.aptoide.android.aptoidegames.wallet.WALLET_PACKAGE_NAME
 import kotlinx.coroutines.delay
 
 const val paymentsWalletInstalledRoute = "paymentsWalletInstalled"
@@ -90,7 +91,7 @@ fun PaymentsWalletInstalledView(
 
   val onRedirect: () -> Unit = {
     purchaseRequest.uri?.let {
-      val intent = Intent(Intent.ACTION_VIEW).setPackage("com.appcoins.wallet")
+      val intent = Intent(Intent.ACTION_VIEW).setPackage(WALLET_PACKAGE_NAME)
       intent.data = it
 
       try {

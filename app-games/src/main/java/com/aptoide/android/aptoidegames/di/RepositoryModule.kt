@@ -35,6 +35,7 @@ import com.aptoide.android.aptoidegames.search.repository.AppGamesAutoCompleteSu
 import com.aptoide.android.aptoidegames.search.repository.AppGamesSearchStoreManager
 import com.aptoide.android.aptoidegames.themeDataStore
 import com.aptoide.android.aptoidegames.userFeatureFlagsDataStore
+import com.aptoide.android.aptoidegames.wallet.WALLET_PACKAGE_NAME
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -200,7 +201,7 @@ class RepositoryModule {
   @UninstallPackagesFilter
   fun providePackagesToFilter(): List<String> = listOf(
     BuildConfig.APPLICATION_ID,
-    "com.appcoins.wallet",
+    WALLET_PACKAGE_NAME,
     "cm.aptoide.pt"
   )
 }

@@ -39,7 +39,6 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiStateProvider
-import cm.aptoide.pt.feature_apps.presentation.rememberApp
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
 import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
 import com.aptoide.android.aptoidegames.AptoideOutlinedText
@@ -61,6 +60,7 @@ import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
+import com.aptoide.android.aptoidegames.wallet.rememberWalletApp
 
 const val seeMoreBonusRoute = "seeMoreBonus/{title}/{tag}"
 
@@ -326,7 +326,7 @@ private fun WalletAppItem(
   modifier: Modifier = Modifier,
   onWalletClick: (app: App) -> Unit,
 ) {
-  val (uiState, _) = rememberApp(packageName = "com.appcoins.wallet")
+  val (uiState, _) = rememberWalletApp()
   val walletApp = (uiState as? AppUiState.Idle)?.app
   walletApp?.let {
     AppItem(
