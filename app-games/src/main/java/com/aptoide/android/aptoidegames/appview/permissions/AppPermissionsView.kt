@@ -23,7 +23,7 @@ import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.AppUiStateProvider
-import cm.aptoide.pt.feature_apps.presentation.rememberApp
+import cm.aptoide.pt.feature_apps.presentation.rememberAppBySource
 import com.aptoide.android.aptoidegames.AppIconImage
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
@@ -32,28 +32,30 @@ import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 
-const val appPermissionsRoute = "appInfoPermissions/{packageName}"
+private const val SOURCE = "source"
+
+const val appPermissionsRoute = "appInfoPermissions/{$SOURCE}"
 
 fun appPermissionsScreen() = ScreenData.withAnalytics(
   route = appPermissionsRoute,
   screenAnalyticsName = "AppView"
 ) { arguments, _, navigateBack ->
-  val packageName = arguments?.getString("packageName")!!
+  val source = arguments?.getString(SOURCE)!!
 
   AppInfoPermissionsView(
     navigateBack = navigateBack,
-    packageName = packageName
+    source = source
   )
 }
 
-fun buildAppPermissionsRoute(packageName: String): String = "appInfoPermissions/$packageName"
+fun buildAppPermissionsRoute(source: String): String = "appInfoPermissions/$source"
 
 @Composable
 fun AppInfoPermissionsView(
   navigateBack: () -> Unit,
-  packageName: String,
+  source: String,
 ) {
-  val (uiState, _) = rememberApp(packageName = packageName)
+  val (uiState, _) = rememberAppBySource(source = source)
 
   (uiState as? AppUiState.Idle)?.app?.run {
     AppInfoPermissionsViewContent(
