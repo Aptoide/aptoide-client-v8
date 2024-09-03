@@ -17,6 +17,7 @@ import com.aptoide.android.aptoidegames.installer.analytics.InstallAnalytics
 import com.aptoide.android.aptoidegames.installer.analytics.InstallProbe
 import com.aptoide.android.aptoidegames.installer.database.AppDetailsDao
 import com.aptoide.android.aptoidegames.installer.database.InstallerDatabase
+import com.aptoide.android.aptoidegames.installer.database.InstallerDatabase.FirstMigration
 import com.aptoide.android.aptoidegames.installer.notifications.InstallerNotificationsManager
 import com.aptoide.android.aptoidegames.installer.notifications.RealInstallerNotificationsManager
 import dagger.Module
@@ -72,6 +73,7 @@ interface InstallerModule {
     @Provides
     fun provideInstalledAppsDatabase(@ApplicationContext appContext: Context): InstallerDatabase =
       Room.databaseBuilder(appContext, InstallerDatabase::class.java, "aptoide_games_installer.db")
+        .addMigrations(FirstMigration())
         .build()
 
     @Singleton
