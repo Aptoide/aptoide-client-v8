@@ -175,11 +175,14 @@ fun BundlesView(
     modifier = Modifier
       .fillMaxSize()
       .wrapContentSize(Alignment.TopCenter)
+      .padding(top = 16.dp)
   ) {
     LazyColumn(
       modifier = Modifier
         .fillMaxSize()
-        .wrapContentSize(Alignment.TopCenter)
+        .wrapContentSize(Alignment.TopCenter),
+      verticalArrangement = Arrangement.spacedBy(32.dp),
+      contentPadding = PaddingValues(bottom = 32.dp)
     ) {
       items(viewState.bundles) { bundle ->
         OverrideAnalyticsBundleMeta(bundle.meta, navigate) { navigateTo ->
@@ -274,7 +277,7 @@ fun BundleHeader(
         }
       }
       .fillMaxWidth()
-      .padding(all = 16.dp),
+      .padding(top = 0.dp, start = 16.dp, end = 16.dp, bottom = 16.dp),
     horizontalArrangement = Arrangement.SpaceBetween,
     verticalAlignment = Alignment.CenterVertically
   ) {
