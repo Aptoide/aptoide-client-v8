@@ -15,6 +15,7 @@ class AppDetailsUseCase @Inject constructor(
 
     packageInfo?.let {
       AppDetails(
+        appId = appDetails?.appId,
         name = it.applicationInfo?.loadLabel(packageManager).toString(),
         icon = it.applicationInfo?.loadIcon(packageManager),
         iconUrl = appDetails?.iconUrl,
@@ -27,6 +28,7 @@ class AppDetailsUseCase @Inject constructor(
     repository.save(
       packageName,
       AppDetails(
+        appId = id,
         name = current?.name ?: name,
         icon = current?.icon,
         iconUrl = current?.iconUrl ?: icon,
