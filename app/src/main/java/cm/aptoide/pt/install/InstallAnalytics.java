@@ -208,7 +208,6 @@ public class InstallAnalytics {
     if (!appCategory.isEmpty()) {
       result.put(APP_IS_GAME, appCategory.equals(GAMES_CATEGORY));
     }
-    result.put(MIUI_AAB_FIX, AptoideUtils.getMIUITimestamp());
 
     if (trustedBadge != null) result.put(TRUSTED_BADGE, trustedBadge.toLowerCase());
     if (!tag_.isEmpty()) result.put(TAG, tag_);
@@ -517,7 +516,6 @@ public class InstallAnalytics {
     result.put(APP_APPC, hasBilling);
     result.put(APP_AAB, hasSplits);
     result.put(IS_APKFY, isApkfy);
-    result.put(MIUI_AAB_FIX, AptoideUtils.getMIUITimestamp());
     result.put(APP_OBB, hasObb);
     result.put(APP_IN_CATAPPULT, isInCatappult);
     if (!appCategory.isEmpty()) {

@@ -6,7 +6,6 @@ import android.net.ConnectivityManager;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AppCoinsManager;
-import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
@@ -35,7 +34,6 @@ class GetStoreWidgetsRequestFactory {
   private final String filters;
   private final ConnectivityManager systemService;
   private final AdsApplicationVersionCodeProvider versionCodeProvider;
-  private final AppBundlesVisibilityManager appBundlesVisibilityManager;
   private final AppCoinsManager appCoinsManager;
 
   public GetStoreWidgetsRequestFactory(StoreCredentialsProvider storeCredentialsProvider,
@@ -44,7 +42,7 @@ class GetStoreWidgetsRequestFactory {
       SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager,
       String clientUniqueId, String partnerId, AptoideAccountManager accountManager, String filters,
       ConnectivityManager systemService, AdsApplicationVersionCodeProvider versionCodeProvider,
-      AppBundlesVisibilityManager appBundlesVisibilityManager, AppCoinsManager appCoinsManager) {
+      AppCoinsManager appCoinsManager) {
     this.storeCredentialsProvider = storeCredentialsProvider;
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
@@ -59,7 +57,6 @@ class GetStoreWidgetsRequestFactory {
     this.filters = filters;
     this.systemService = systemService;
     this.versionCodeProvider = versionCodeProvider;
-    this.appBundlesVisibilityManager = appBundlesVisibilityManager;
     this.appCoinsManager = appCoinsManager;
   }
 
@@ -72,7 +69,6 @@ class GetStoreWidgetsRequestFactory {
     return GetStoreWidgetsRequest.ofAction(url, storeCredentialsProvider.fromUrl(url),
         bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences,
         resources, windowManager, clientUniqueId, googlePlayServicesAvailable, partnerId,
-        adultContentEnabled, filters, systemService, versionCodeProvider,
-        appBundlesVisibilityManager, appCoinsManager);
+        adultContentEnabled, filters, systemService, versionCodeProvider, appCoinsManager);
   }
 }

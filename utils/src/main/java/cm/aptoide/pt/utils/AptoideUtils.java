@@ -89,48 +89,6 @@ import static android.net.ConnectivityManager.TYPE_WIFI;
  * Created by neuro on 26-05-2016.
  */
 public class AptoideUtils {
-
-  public static boolean isDeviceMIUI() {
-    return !TextUtils.isEmpty(getSystemProperty("ro.miui.ui.version.name"));
-  }
-
-  public static boolean isMIUIwithAABFix() {
-    String systemProperty = getSystemProperty("ro.miui.version.code_time");
-    boolean versionSupportsAAB = false;
-    if (systemProperty != null) {
-      try {
-        versionSupportsAAB = Long.parseLong(systemProperty)
-            > 1583942400; // this is currently a xiaomi device that we have working with app bundles.
-      } catch (NumberFormatException ignore) {
-      }
-    }
-    return !TextUtils.isEmpty(systemProperty) && versionSupportsAAB;
-  }
-
-  public static long getMIUITimestamp() {
-    String systemProperty = getSystemProperty("ro.miui.version.code_time");
-    if (systemProperty != null) {
-      try {
-        return Long.parseLong(systemProperty);
-      } catch (NumberFormatException ignore) {
-      }
-    }
-    return -1;
-  }
-
-
-  @SuppressLint("PrivateApi") private static String getSystemProperty(String key) {
-    try {
-      return (String) Class.forName("android.os.SystemProperties")
-          .getDeclaredMethod("get", String.class)
-          .invoke(null, key);
-    } catch (Exception e) {
-      Logger.getInstance()
-          .w("AptoideUtils", e.getMessage());
-      return null;
-    }
-  }
-
   public static class Core {
 
     private static final String TAG = "Core";

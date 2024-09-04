@@ -3,7 +3,6 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import android.content.SharedPreferences;
 import androidx.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.BuildConfig;
-import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.ListAppCoinsCampaigns;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -19,15 +18,11 @@ import rx.Observable;
 public class GetAppCoinsCampaignsRequest
     extends V7<ListAppCoinsCampaigns, GetAppCoinsCampaignsRequest.Body> {
 
-  private final AppBundlesVisibilityManager appBundlesVisibilityManager;
-
   public GetAppCoinsCampaignsRequest(Body body, OkHttpClient httpClient,
       Converter.Factory converterFactory, BodyInterceptor bodyInterceptor,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
-      AppBundlesVisibilityManager appBundlesVisibilityManager) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
         tokenInvalidator);
-    this.appBundlesVisibilityManager = appBundlesVisibilityManager;
   }
 
   @NonNull public static String getHost(SharedPreferences sharedPreferences) {
@@ -40,8 +35,7 @@ public class GetAppCoinsCampaignsRequest
 
   @Override protected Observable<ListAppCoinsCampaigns> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.getAppCoinsAds(body, bypassCache, body.getLimit(),
-        appBundlesVisibilityManager.shouldEnableAppBundles());
+    return interfaces.getAppCoinsAds(body, bypassCache, body.getLimit(), true);
   }
 
   public static class Body extends BaseBody implements Endless {

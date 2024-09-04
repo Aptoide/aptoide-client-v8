@@ -437,7 +437,6 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
     result.put(APP_AAB, isAppBundle);
     result.put(APP_OBB, hasObbs);
     result.put(IS_APKFY, isApkfy);
-    result.put(MIUI_AAB_FIX, AptoideUtils.getMIUITimestamp());
     result.put(APP_AAB_INSTALL_TIME, splitTypes);
     result.put(APP_IN_CATAPPULT, isInCatappult);
     if (!appCategory.isEmpty()) {

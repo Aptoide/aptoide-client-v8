@@ -17,7 +17,6 @@ public class InstallEvents implements InstallerAnalytics {
   public static final String ROOT_V2_COMPLETE = "Root_v2_Complete";
   public static final String ROOT_V2_START = "Root_v2_Start";
   public static final String IS_INSTALLATION_TYPE_EVENT_NAME = "INSTALLATION_TYPE";
-  public static final String MIUI_INSTALLATION_ABOVE_20_EVENT_NAME = "MIUI_Installation_Above_20";
   private static final String CONCAT = "CONCAT";
   private static final String IS_ROOT = "IS_ROOT";
   private static final String SETTING_ROOT = "SETTING_ROOT";
@@ -91,17 +90,5 @@ public class InstallEvents implements InstallerAnalytics {
 
   @Override public void logInstallCancelEvent(String packageName, int versionCode) {
     installAnalytics.logInstallCancelEvent(packageName, versionCode);
-  }
-
-  @Override public void sendMiuiInstallResultEvent(InstallStatus.Status status) {
-    Map<String, Object> parameters = new HashMap<>();
-    String key = "successful_installation_type";
-    if (status.equals(InstallStatus.Status.SUCCESS)) {
-      parameters.put(key, "split_install");
-    } else if (status.equals(InstallStatus.Status.FAIL)) {
-      parameters.put(key, "default_install");
-    }
-    analyticsManager.logEvent(parameters, MIUI_INSTALLATION_ABOVE_20_EVENT_NAME,
-        AnalyticsManager.Action.INSTALL, navigationTracker.getViewName(false));
   }
 }

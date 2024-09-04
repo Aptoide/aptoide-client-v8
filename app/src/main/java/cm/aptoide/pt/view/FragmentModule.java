@@ -76,7 +76,6 @@ import cm.aptoide.pt.blacklist.BlacklistManager;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
-import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -797,10 +796,9 @@ import static cm.aptoide.pt.AptoideApplication.APPCOINS_WALLET_PACKAGE_NAME;
       @Named("default") OkHttpClient okHttpClient, @Named("mature-pool-v7")
   BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
       TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences,
-      InstallManager installManager, AppBundlesVisibilityManager appBundlesVisibilityManager) {
+      InstallManager installManager) {
     return new RewardAppCoinsAppsRepository(okHttpClient, WebService.getDefaultConverter(),
-        baseBodyBodyInterceptor, tokenInvalidator, sharedPreferences, installManager,
-        appBundlesVisibilityManager);
+        baseBodyBodyInterceptor, tokenInvalidator, sharedPreferences, installManager);
   }
 
   @FragmentScope @Provides OutOfSpaceDialogPresenter providesOutOfSpaceDialogPresenter(

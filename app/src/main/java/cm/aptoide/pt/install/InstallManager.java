@@ -19,7 +19,6 @@ import cm.aptoide.pt.file.FileManager;
 import cm.aptoide.pt.install.installer.InstallCandidate;
 import cm.aptoide.pt.install.installer.InstallationState;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.managed.ManagedKeys;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.root.RootAvailabilityManager;
@@ -49,7 +48,6 @@ public class InstallManager {
   private final SharedPreferences sharedPreferences;
   private final SharedPreferences securePreferences;
   private final Context context;
-  private final PackageInstallerManager packageInstallerManager;
   private final DownloadsRepository downloadRepository;
   private final AptoideInstalledAppsRepository aptoideInstalledAppsRepository;
   private final RootAvailabilityManager rootAvailabilityManager;
@@ -67,7 +65,7 @@ public class InstallManager {
       SharedPreferences sharedPreferences, SharedPreferences securePreferences,
       DownloadsRepository downloadRepository,
       AptoideInstalledAppsRepository aptoideInstalledAppsRepository,
-      PackageInstallerManager packageInstallerManager, ForegroundManager foregroundManager,
+      ForegroundManager foregroundManager,
       AptoideInstallManager aptoideInstallManager, InstallAppSizeValidator installAppSizeValidator,
       FileManager fileManager) {
     this.aptoideDownloadManager = aptoideDownloadManager;
@@ -78,7 +76,6 @@ public class InstallManager {
     this.aptoideInstalledAppsRepository = aptoideInstalledAppsRepository;
     this.sharedPreferences = sharedPreferences;
     this.securePreferences = securePreferences;
-    this.packageInstallerManager = packageInstallerManager;
     this.foregroundManager = foregroundManager;
     this.aptoideInstallManager = aptoideInstallManager;
     this.installAppSizeValidator = installAppSizeValidator;
@@ -232,29 +229,23 @@ public class InstallManager {
   }
 
   public Completable install(RoomDownload download) {
-    boolean shouldForceDefaultInstall =
-        sharedPreferences.getBoolean(ManagedKeys.ENFORCE_NATIVE_INSTALLER_KEY, false);
-    return install(download, shouldForceDefaultInstall, false, true);
+    return install(download, false, true);
   }
 
   public Completable install(RoomDownload download, boolean shouldInstall) {
-    boolean shouldForceDefaultInstall =
-        sharedPreferences.getBoolean(ManagedKeys.ENFORCE_NATIVE_INSTALLER_KEY, false);
-    return install(download, shouldForceDefaultInstall, false, shouldInstall);
+    return install(download, false, shouldInstall);
   }
 
   private Completable defaultInstall(RoomDownload download) {
-    return install(download, true, false, true);
+    return install(download, true, true);
   }
 
   public Completable splitInstall(RoomDownload download) {
-    boolean shouldForceDefaultInstall =
-        sharedPreferences.getBoolean(ManagedKeys.ENFORCE_NATIVE_INSTALLER_KEY, false);
-    return install(download, shouldForceDefaultInstall, !shouldForceDefaultInstall, true);
+    return install(download, false, true);
   }
 
   private Completable install(RoomDownload download, boolean forceDefaultInstall,
-      boolean forceSplitInstall, boolean shouldInstall) {
+      boolean shouldInstall) {
     return aptoideDownloadManager.getDownloadAsSingle(download.getMd5())
         .doOnError(Throwable::printStackTrace)
         .toObservable()
@@ -273,12 +264,10 @@ public class InstallManager {
         })
         .flatMap(savedDownload -> {
           if (!installAppSizeValidator.hasEnoughSpaceToInstallApp(savedDownload)) {
-            return handleNotEnoughSpaceForDownload(savedDownload, forceDefaultInstall,
-                packageInstallerManager.shouldSetInstallerPackageName() || forceSplitInstall,
+            return handleNotEnoughSpaceForDownload(savedDownload, forceDefaultInstall, true,
                 shouldInstall);
           } else {
-            return startBackgroundInstallation(download.getMd5(), forceDefaultInstall,
-                packageInstallerManager.shouldSetInstallerPackageName() || forceSplitInstall,
+            return startBackgroundInstallation(download.getMd5(), forceDefaultInstall, true,
                 shouldInstall);
           }
         })

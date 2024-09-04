@@ -2,7 +2,6 @@ package cm.aptoide.pt.search
 
 import android.content.SharedPreferences
 import cm.aptoide.pt.aab.Split
-import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator
 import cm.aptoide.pt.dataprovider.model.v7.Malware
@@ -35,7 +34,6 @@ class SearchRepository(
   val converterFactory: Converter.Factory,
   val tokenInvalidator: TokenInvalidator,
   val sharedPreferences: SharedPreferences,
-  val appBundlesVisibilityManager: AppBundlesVisibilityManager,
   val oemidProvider: OemidProvider
 ) {
 
@@ -175,9 +173,7 @@ class SearchRepository(
       filters.onlyTrustedApps,
       filters.onlyBetaApps, filters.onlyAppcApps, matureEnabled,
       StoreUtils.getSubscribedStoresIds(storeRepository), authMap, bodyInterceptor, httpClient,
-      converterFactory, tokenInvalidator, sharedPreferences,
-      appBundlesVisibilityManager
-    )
+      converterFactory, tokenInvalidator, sharedPreferences)
 
     // For specific store search
     specificStore?.let { store ->
@@ -186,8 +182,7 @@ class SearchRepository(
         filters.onlyTrustedApps, filters.onlyBetaApps, filters.onlyAppcApps, matureEnabled,
         authMap, bodyInterceptor,
         httpClient,
-        converterFactory, tokenInvalidator, sharedPreferences,
-        appBundlesVisibilityManager
+        converterFactory, tokenInvalidator, sharedPreferences
       )
     }
     return request

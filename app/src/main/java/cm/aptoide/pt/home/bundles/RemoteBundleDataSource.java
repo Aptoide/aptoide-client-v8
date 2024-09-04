@@ -7,7 +7,6 @@ import android.view.WindowManager;
 import androidx.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AppCoinsManager;
-import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
@@ -63,7 +62,6 @@ public class RemoteBundleDataSource implements BundleDataSource {
   private final PackageRepository packageRepository;
   private final int latestPackagesCount;
   private final int randomPackagesCount;
-  private final AppBundlesVisibilityManager appBundlesVisibilityManager;
   private final AppCoinsManager appCoinsManager;
   private Map<String, Integer> total;
   private Map<String, Boolean> loading;
@@ -78,8 +76,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
       AptoideAccountManager accountManager, String filters, Resources resources,
       WindowManager windowManager, ConnectivityManager connectivityManager,
       AdsApplicationVersionCodeProvider versionCodeProvider, PackageRepository packageRepository,
-      int latestPackagesCount, int randomPackagesCount,
-      AppBundlesVisibilityManager appBundlesVisibilityManager, AppCoinsManager appCoinsManager) {
+      int latestPackagesCount, int randomPackagesCount, AppCoinsManager appCoinsManager) {
     this.limit = limit;
     this.total = initialTotal;
     this.bodyInterceptor = bodyInterceptor;
@@ -104,7 +101,6 @@ public class RemoteBundleDataSource implements BundleDataSource {
     this.randomPackagesCount = randomPackagesCount;
     loading = new HashMap<>();
     error = new HashMap<>();
-    this.appBundlesVisibilityManager = appBundlesVisibilityManager;
     this.appCoinsManager = appCoinsManager;
   }
 
@@ -120,8 +116,8 @@ public class RemoteBundleDataSource implements BundleDataSource {
             .toObservable()
             .flatMap(id -> getPackages().toObservable()
                 .flatMap(packageNames -> GetHomeBundlesRequest.of(limit, offset, okHttpClient,
-                    converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences,
-                    resources, windowManager)
+                        converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences,
+                        resources, windowManager)
                     .observe(invalidateHttpCache, false)
                     .flatMap(widgets -> Observable.merge(Observable.just(widgets),
                         loadAppsInBundles(adultContentEnabled, invalidateHttpCache, packageNames,
@@ -154,16 +150,16 @@ public class RemoteBundleDataSource implements BundleDataSource {
       boolean invalidateHttpCache, List<String> packageNames, GetStoreWidgets getStoreWidgets,
       boolean bypassCache, String id) {
     return Observable.from(getStoreWidgets.getDataList()
-        .getList())
+            .getList())
         .observeOn(Schedulers.io())
         .flatMap(
             wsWidget -> widgetsUtils.loadWidgetNode(wsWidget, storeCredentialsProvider.fromUrl(""),
-                invalidateHttpCache, id, isGooglePlayServicesAvailable, partnerId,
-                adultContentEnabled, bodyInterceptor, okHttpClient, converterFactory, filters,
-                tokenInvalidator, sharedPreferences, resources, windowManager, connectivityManager,
-                versionCodeProvider, bypassCache,
-                Type.ADS.getPerLineCount(resources, windowManager) * 3, packageNames,
-                appBundlesVisibilityManager, appCoinsManager)
+                    invalidateHttpCache, id, isGooglePlayServicesAvailable, partnerId,
+                    adultContentEnabled, bodyInterceptor, okHttpClient, converterFactory, filters,
+                    tokenInvalidator, sharedPreferences, resources, windowManager, connectivityManager,
+                    versionCodeProvider, bypassCache,
+                    Type.ADS.getPerLineCount(resources, windowManager) * 3, packageNames,
+                    appCoinsManager)
                 .map(__ -> wsWidget))
         .map(__ -> getStoreWidgets);
   }
@@ -185,12 +181,12 @@ public class RemoteBundleDataSource implements BundleDataSource {
         .toBlocking()
         .value(), isGooglePlayServicesAvailable, partnerId, adultContentEnabled, filters, resources,
         windowManager, connectivityManager, versionCodeProvider, new WSWidgetsUtils(),
-        appBundlesVisibilityManager, appCoinsManager);
+        appCoinsManager);
   }
 
   private Single<List<String>> getPackages() {
     return Observable.concat(packageRepository.getLatestInstalledPackages(latestPackagesCount),
-        packageRepository.getRandomInstalledPackages(randomPackagesCount))
+            packageRepository.getRandomInstalledPackages(randomPackagesCount))
         .toList()
         .toSingle();
   }

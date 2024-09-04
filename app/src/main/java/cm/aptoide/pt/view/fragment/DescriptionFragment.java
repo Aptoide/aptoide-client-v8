@@ -17,7 +17,6 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
-import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -43,7 +42,6 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
   private static final String DESCRIPTION = "description";
   private static final String APP_NAME = "APP_NAME";
   private static final String HAS_APPC = "HAS_APPC";
-  @Inject AppBundlesVisibilityManager appBundlesVisibilityManager;
   @Inject ThemeManager themeManager;
   @Inject StoreCredentialsProvider storeCredentialsProvider;
   private boolean hasAppId = false;
@@ -143,8 +141,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
           StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), packageName,
           baseBodyBodyInterceptor, httpClient, converterFactory,
           ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
-          ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-          appBundlesVisibilityManager)
+          ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())
           .execute(getApp -> {
             setupAppDescription(getApp);
             setupTitle(getApp);

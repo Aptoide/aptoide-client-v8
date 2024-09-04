@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import android.util.Pair;
 import androidx.annotation.NonNull;
 import cm.aptoide.pt.database.room.RoomUpdate;
-import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -40,7 +39,6 @@ public class UpdateRepository {
   private final Converter.Factory converterFactory;
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
-  private final AppBundlesVisibilityManager appBundlesVisibilityManager;
   private final UpdateMapper updateMapper;
   private final AptoideInstalledAppsRepository aptoideInstalledAppsRepository;
 
@@ -50,7 +48,7 @@ public class UpdateRepository {
       IdsRepository idsRepository, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
-      AppBundlesVisibilityManager appBundlesVisibilityManager, UpdateMapper updateMapper,
+      UpdateMapper updateMapper,
       AptoideInstalledAppsRepository aptoideInstalledAppsRepository) {
     this.updatePersistence = updatePersistence;
     this.storeRepository = storeRepository;
@@ -60,7 +58,6 @@ public class UpdateRepository {
     this.converterFactory = converterFactory;
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
-    this.appBundlesVisibilityManager = appBundlesVisibilityManager;
     this.updateMapper = updateMapper;
     this.aptoideInstalledAppsRepository = aptoideInstalledAppsRepository;
   }
@@ -97,8 +94,7 @@ public class UpdateRepository {
     return Single.zip(getInstalledApks(), idsRepository.getUniqueIdentifier(), Pair::new)
         .flatMapObservable(
             pair -> ListAppsUpdatesRequest.of(pair.first, storeIds, pair.second, bodyInterceptor,
-                httpClient, converterFactory, tokenInvalidator, sharedPreferences,
-                appBundlesVisibilityManager)
+                    httpClient, converterFactory, tokenInvalidator, sharedPreferences)
                 .observe(bypassCache, bypassServerCache))
         .subscribeOn(Schedulers.io())
         .map(result -> {

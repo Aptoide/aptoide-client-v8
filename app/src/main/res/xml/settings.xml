@@ -23,11 +23,6 @@
         app:key="appTheme"
         app:summary="@string/settings_dark_theme_system"
         app:title="@string/settings_dark_theme_title" />
-    <SwitchPreferenceCompat
-        app:defaultValue="false"
-        app:key="forceNativeInstaller"
-        app:summary="@string/settings_force_native_installer_summary"
-        app:title="@string/settings_force_native_installer_title" />
   </PreferenceCategory>
   <PreferenceCategory app:title="@string/updates">
     <SwitchPreferenceCompat
