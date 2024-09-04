@@ -35,7 +35,6 @@ import cm.aptoide.pt.packageinstaller.InstallStatus;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.root.RootShell;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.utils.FileUtils;
 import java.io.File;
@@ -403,17 +402,6 @@ public class DefaultInstaller implements Installer {
                   updateInstallation(installation,
                       shouldSetPackageInstaller ? RoomInstalled.TYPE_PACKAGE_INSTALLER
                           : RoomInstalled.TYPE_DEFAULT, map(installStatus));
-                  if (installStatus.getStatus()
-                      .equals(InstallStatus.Status.FAIL) && isDeviceMIUI()) {
-                    installerAnalytics.sendMiuiInstallResultEvent(InstallStatus.Status.FAIL);
-                    startInstallIntent(context, installation.getFile());
-                    updateInstallation(installation,
-                        shouldSetPackageInstaller ? RoomInstalled.TYPE_PACKAGE_INSTALLER
-                            : RoomInstalled.TYPE_DEFAULT, RoomInstalled.STATUS_INSTALLING);
-                  } else if (installStatus.getStatus()
-                      .equals(InstallStatus.Status.SUCCESS) && isDeviceMIUI()) {
-                    installerAnalytics.sendMiuiInstallResultEvent(InstallStatus.Status.SUCCESS);
-                  }
                 }))
         .map(__ -> installation);
   }
@@ -428,10 +416,6 @@ public class DefaultInstaller implements Installer {
       }
     }
     return installBuilder.build();
-  }
-
-  private boolean isDeviceMIUI() {
-    return AptoideUtils.isDeviceMIUI();
   }
 
   private int map(InstallStatus installStatus) {

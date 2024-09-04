@@ -1,7 +1,6 @@
 package cm.aptoide.pt.repository.request;
 
 import android.content.SharedPreferences;
-import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.AppCoinsCampaign;
 import cm.aptoide.pt.dataprovider.model.v7.DataList;
@@ -31,29 +30,25 @@ public class RewardAppCoinsAppsRepository {
   private TokenInvalidator tokenInvalidator;
   private SharedPreferences sharedPreferences;
   private InstallManager installManager;
-  private AppBundlesVisibilityManager appBundlesVisibilityManager;
 
   private int total = 0;
   private int next = 0;
 
   public RewardAppCoinsAppsRepository(OkHttpClient httpClient, Converter.Factory converterFactory,
       BodyInterceptor<BaseBody> bodyInterceptor, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences, InstallManager installManager,
-      AppBundlesVisibilityManager appBundlesVisibilityManager) {
+      SharedPreferences sharedPreferences, InstallManager installManager) {
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.bodyInterceptor = bodyInterceptor;
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
     this.installManager = installManager;
-    this.appBundlesVisibilityManager = appBundlesVisibilityManager;
   }
 
   public Observable<List<RewardApp>> getFreshAppCoinsRewardAppsFromHomeMore(String tag) {
     return new GetAppCoinsCampaignsRequest(
         new GetAppCoinsCampaignsRequest.Body(0, APPCOINS_REWARD_LIMIT), httpClient,
-        converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences,
-        appBundlesVisibilityManager).observe(true)
+        converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences).observe(true)
         .flatMap(response -> map(response.getDataList(), tag));
   }
 
@@ -63,8 +58,7 @@ public class RewardAppCoinsAppsRepository {
     }
     return new GetAppCoinsCampaignsRequest(
         new GetAppCoinsCampaignsRequest.Body(next, APPCOINS_REWARD_LIMIT), httpClient,
-        converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences,
-        appBundlesVisibilityManager).observe(false)
+        converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences).observe(false)
         .flatMap(response -> map(response.getDataList(), tag));
   }
 

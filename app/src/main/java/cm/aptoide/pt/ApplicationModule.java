@@ -130,8 +130,6 @@ import cm.aptoide.pt.database.RoomUpdatePersistence;
 import cm.aptoide.pt.database.room.AptoideDatabase;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.WebService;
-import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
-import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilitySettingsProvider;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.dataprovider.cache.L2Cache;
 import cm.aptoide.pt.dataprovider.cache.POSTCacheInterceptor;
@@ -193,7 +191,6 @@ import cm.aptoide.pt.install.InstallEvents;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.Installer;
 import cm.aptoide.pt.install.InstallerAnalytics;
-import cm.aptoide.pt.install.PackageInstallerManager;
 import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.install.RootInstallNotificationEventReceiver;
 import cm.aptoide.pt.install.RootInstallerProvider;
@@ -388,12 +385,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("secureShared") SharedPreferences secureSharedPreferences,
       DownloadsRepository downloadsRepository,
       AptoideInstalledAppsRepository aptoideInstalledAppsRepository,
-      PackageInstallerManager packageInstallerManager, ForegroundManager foregroundManager,
+      ForegroundManager foregroundManager,
       AptoideInstallManager aptoideInstallManager, InstallAppSizeValidator installAppSizeValidator,
       FileManager fileManager) {
     return new InstallManager(application, aptoideDownloadManager, defaultInstaller,
         rootAvailabilityManager, defaultSharedPreferences, secureSharedPreferences,
-        downloadsRepository, aptoideInstalledAppsRepository, packageInstallerManager,
+        downloadsRepository, aptoideInstalledAppsRepository,
         foregroundManager, aptoideInstallManager, installAppSizeValidator, fileManager);
   }
 
@@ -1220,10 +1217,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       Converter.Factory converterFactory, @Named("default") OkHttpClient httpClient,
       @Named("mature-pool-v7")
-      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptor,
-      AppBundlesVisibilityManager appBundlesVisibilityManager) {
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptor) {
     return new TrendingService(storeCredentialsProvider, bodyInterceptor, httpClient,
-        converterFactory, tokenInvalidator, sharedPreferences, appBundlesVisibilityManager);
+        converterFactory, tokenInvalidator, sharedPreferences);
   }
 
   @Singleton @Provides @Named("ws-prod-suggestions-base-url") String provideSearchBaseUrl(
@@ -1449,9 +1445,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
       Converter.Factory converterFactory, @Named("default") SharedPreferences sharedPreferences,
-      SplitsMapper splitsMapper, AppBundlesVisibilityManager appBundlesVisibilityManager) {
+      SplitsMapper splitsMapper) {
     return new PromotionsService(bodyInterceptorPoolV7, okHttpClient, tokenInvalidator,
-        converterFactory, sharedPreferences, splitsMapper, appBundlesVisibilityManager);
+        converterFactory, sharedPreferences, splitsMapper);
   }
 
   @Singleton @Provides CrashReport providesCrashReports() {
@@ -1611,24 +1607,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       StoreCredentialsProvider storeCredentialsProvider, @Named("mature-pool-v7")
   BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
-      @Named("default") SharedPreferences sharedPreferences, SplitsMapper splitsMapper,
-      AppBundlesVisibilityManager appBundlesVisibilityManager) {
+      @Named("default") SharedPreferences sharedPreferences, SplitsMapper splitsMapper) {
 
     return new AppService(storeCredentialsProvider, bodyInterceptorPoolV7, okHttpClient,
-        WebService.getDefaultConverter(), tokenInvalidator, sharedPreferences, splitsMapper,
-        appBundlesVisibilityManager);
-  }
-
-  @Singleton @Provides AppBundlesVisibilityManager providesAppBundlesVisibilityManager(
-      AppBundlesVisibilitySettingsProvider AppBundlesVisibilitySettingsProvider) {
-    return new AppBundlesVisibilityManager(AptoideUtils.isMIUIwithAABFix(),
-        AptoideUtils.isDeviceMIUI(), AppBundlesVisibilitySettingsProvider);
-  }
-
-  @Singleton @Provides
-  AppBundlesVisibilitySettingsProvider providesAppBundlesVisibilitySettingsProvider(
-      @Named("default") SharedPreferences sharedPreferences) {
-    return new AppBundlesVisibilitySettingsProvider(sharedPreferences);
+        WebService.getDefaultConverter(), tokenInvalidator, sharedPreferences, splitsMapper);
   }
 
   @Singleton @Provides AppCenterRepository providesAppCenterRepository(AppService appService) {
@@ -1652,10 +1634,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides AppCoinsService providesAppCoinsService(@Named("mature-pool-v7")
   BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
-      @Named("default") SharedPreferences sharedPreferences, Converter.Factory converterFactory,
-      AppBundlesVisibilityManager appBundlesVisibilityManager) {
+      @Named("default") SharedPreferences sharedPreferences, Converter.Factory converterFactory) {
     return new AppCoinsService(okHttpClient, tokenInvalidator, sharedPreferences,
-        bodyInterceptorPoolV7, converterFactory, appBundlesVisibilityManager);
+        bodyInterceptorPoolV7, converterFactory);
   }
 
   @Named("remote") @Singleton @Provides BundleDataSource providesRemoteBundleDataSource(
@@ -1667,8 +1648,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       PackageRepository packageRepository, IdsRepository idsRepository, QManager qManager,
       Resources resources, WindowManager windowManager, ConnectivityManager connectivityManager,
       AdsApplicationVersionCodeProvider adsApplicationVersionCodeProvider,
-      OemidProvider oemidProvider, AppBundlesVisibilityManager appBundlesVisibilityManager,
-      StoreCredentialsProvider storeCredentialsProvider, AppCoinsManager appCoinsManager) {
+      OemidProvider oemidProvider, StoreCredentialsProvider storeCredentialsProvider,
+      AppCoinsManager appCoinsManager) {
     return new RemoteBundleDataSource(5, new HashMap<>(), bodyInterceptorPoolV7, okHttpClient,
         converter, mapper, tokenInvalidator, sharedPreferences, new WSWidgetsUtils(),
         storeCredentialsProvider, idsRepository,
@@ -1676,7 +1657,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         oemidProvider.getOemid(), accountManager,
         qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)), resources,
         windowManager, connectivityManager, adsApplicationVersionCodeProvider, packageRepository,
-        10, 10, appBundlesVisibilityManager, appCoinsManager);
+        10, 10, appCoinsManager);
   }
 
   @Singleton @Provides StorePersistence providesStorePersistence(AptoideDatabase aptoideDatabase) {
@@ -1744,11 +1725,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences,
-      AppBundlesVisibilityManager appBundlesVisibilityManager, UpdateMapper updateMapper,
+      UpdateMapper updateMapper,
       AptoideInstalledAppsRepository aptoideInstalledAppsRepository) {
     return new UpdateRepository(updatePersistence, storeRepository, idsRepository,
         bodyInterceptorPoolV7, okHttpClient, converterFactory, tokenInvalidator, sharedPreferences,
-        appBundlesVisibilityManager, updateMapper, aptoideInstalledAppsRepository);
+        updateMapper, aptoideInstalledAppsRepository);
   }
 
   @Singleton @Provides UpdateMapper providesUpdateMapper() {
@@ -1964,7 +1945,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         PromotionsAnalytics.VALENTINE_MIGRATOR, AppViewAnalytics.ADS_BLOCK_BY_OFFER,
         AppViewAnalytics.APPC_SIMILAR_APP_INTERACT, AppViewAnalytics.BONUS_MIGRATION_APPVIEW,
         AppViewAnalytics.BONUS_GAME_WALLET_OFFER_19, DeepLinkAnalytics.APPCOINS_WALLET_DEEPLINK,
-        InstallEvents.MIUI_INSTALLATION_ABOVE_20_EVENT_NAME,
         AptoideApplicationAnalytics.IS_ANDROID_TV, ThemeAnalytics.DARK_THEME_INTERACT_EVENT,
         UserFeedbackAnalytics.USER_FEEDBACK_EVENT_NAME,
         InstallEvents.IS_INSTALLATION_TYPE_EVENT_NAME,
@@ -2008,7 +1988,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         PromotionsAnalytics.VALENTINE_MIGRATOR, AppViewAnalytics.ADS_BLOCK_BY_OFFER,
         AppViewAnalytics.APPC_SIMILAR_APP_INTERACT, AppViewAnalytics.BONUS_MIGRATION_APPVIEW,
         AppViewAnalytics.BONUS_GAME_WALLET_OFFER_19, DeepLinkAnalytics.APPCOINS_WALLET_DEEPLINK,
-        InstallEvents.MIUI_INSTALLATION_ABOVE_20_EVENT_NAME,
         AptoideApplicationAnalytics.IS_ANDROID_TV, ThemeAnalytics.DARK_THEME_INTERACT_EVENT,
         UserFeedbackAnalytics.USER_FEEDBACK_EVENT_NAME,
         InstallEvents.IS_INSTALLATION_TYPE_EVENT_NAME,
@@ -2085,11 +2064,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides AppInstallerStatusReceiver providesAppInstallerStatusReceiver() {
     return new AppInstallerStatusReceiver(PublishSubject.create());
-  }
-
-  @Singleton @Provides PackageInstallerManager providesPackageInstallerManager() {
-    return new PackageInstallerManager(AptoideUtils.isDeviceMIUI(),
-        AptoideUtils.isMIUIwithAABFix());
   }
 
   @Singleton @Provides NotificationProvider provideNotificationProvider(
@@ -2223,9 +2197,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
       @Named("default") SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
-      AppBundlesVisibilityManager appBundlesVisibilityManager, OemidProvider oemidProvider) {
+      OemidProvider oemidProvider) {
     return new SearchRepository(roomStoreRepository, baseBodyBodyInterceptor, okHttpClient,
-        converterFactory, tokenInvalidator, sharedPreferences, appBundlesVisibilityManager,
+        converterFactory, tokenInvalidator, sharedPreferences,
         oemidProvider);
   }
 

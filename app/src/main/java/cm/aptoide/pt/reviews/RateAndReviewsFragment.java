@@ -23,7 +23,6 @@ import cm.aptoide.pt.comments.view.RateAndReviewCommentDisplayable;
 import cm.aptoide.pt.comments.view.SimpleReviewCommentAdder;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
-import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.Comment;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
@@ -58,7 +57,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     implements ItemCommentAdderView<Review, CommentsAdapter> {
 
   private static final String TAG = RateAndReviewsFragment.class.getSimpleName();
-  @Inject AppBundlesVisibilityManager appBundlesVisibilityManager;
   @Inject AppNavigator appNavigator;
   @Inject @Named("marketName") String marketName;
   @Inject MarketResourceFormatter marketResourceFormatter;
@@ -207,9 +205,8 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
 
   private void fetchRating(boolean refresh) {
     GetAppRequest.of(packageName, baseBodyInterceptor, appId, httpClient, converterFactory,
-        tokenInvalidator,
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-        appBundlesVisibilityManager)
+            tokenInvalidator,
+            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())
         .observe(refresh, ManagerPreferences.getAndResetForceServerRefresh(preferences))
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())

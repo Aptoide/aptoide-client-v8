@@ -6,7 +6,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
 
 import android.content.SharedPreferences;
-import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.ListAppsUpdates;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -29,34 +28,30 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
 
   private static final int SPLIT_SIZE = 100;
   private final SharedPreferences sharedPreferences;
-  private final AppBundlesVisibilityManager appBundlesVisibilityManager;
 
   private ListAppsUpdatesRequest(Body body, String baseHost,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences,
-      AppBundlesVisibilityManager appBundlesVisibilityManager) {
+      SharedPreferences sharedPreferences) {
     super(body, baseHost, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
     this.sharedPreferences = sharedPreferences;
-    this.appBundlesVisibilityManager = appBundlesVisibilityManager;
   }
 
   public static ListAppsUpdatesRequest of(List<ApksData> installedApks,
       List<Long> subscribedStoresIds, String clientUniqueId,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences,
-      AppBundlesVisibilityManager appBundlesVisibilityManager) {
+      SharedPreferences sharedPreferences) {
     return new ListAppsUpdatesRequest(
         new Body(installedApks, subscribedStoresIds, clientUniqueId, sharedPreferences),
         getHost(sharedPreferences), bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-        sharedPreferences, appBundlesVisibilityManager);
+        sharedPreferences);
   }
 
   @Override protected Observable<ListAppsUpdates> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
     return Observable.just(body.getApksData()
-        .size())
+            .size())
         .flatMap(bodySize -> {
           if (bodySize > SPLIT_SIZE) {
             //
@@ -84,7 +79,7 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
                 // map bodies to request with bodies
                 //.map(body -> fetchDataUsingBodyWithRetry(interfaces, body, bypassCache, 3))
                 .map(body -> interfaces.listAppsUpdates(body, bypassCache,
-                    appBundlesVisibilityManager.shouldEnableAppBundles()))
+                    true))
                 // wait for all requests to be ready and return a list of requests
                 .toList()
                 // subscribe to all observables (list of observables<request>) at the same time using merge
@@ -106,8 +101,7 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
                   return resultListAppsUpdates;
                 });
           }
-          return interfaces.listAppsUpdates(body, bypassCache,
-              appBundlesVisibilityManager.shouldEnableAppBundles());
+          return interfaces.listAppsUpdates(body, bypassCache, true);
         });
   }
 

@@ -16,8 +16,6 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.view.displayable.OtherVersionDisplayable;
 import cm.aptoide.pt.dataprovider.WebService;
-import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
-import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilitySettingsProvider;
 import cm.aptoide.pt.dataprovider.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.ListAppVersions;
@@ -153,10 +151,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
             baseBodyInterceptor, httpClient, converterFactory,
             ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-            getContext().getResources(),
-            new AppBundlesVisibilityManager(AptoideUtils.isMIUIwithAABFix(),
-                AptoideUtils.isDeviceMIUI(), new AppBundlesVisibilitySettingsProvider(
-                ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences()))),
+            getContext().getResources()),
         otherVersionsSuccessRequestListener, err -> err.printStackTrace());
 
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);

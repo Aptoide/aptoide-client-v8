@@ -8,7 +8,6 @@ import android.view.WindowManager;
 import androidx.annotation.NonNull;
 import cm.aptoide.pt.AppCoinsManager;
 import cm.aptoide.pt.bonus.BonusAppcModel;
-import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
@@ -53,8 +52,7 @@ public class WSWidgetsUtils {
       SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager,
       ConnectivityManager connectivityManager,
       AdsApplicationVersionCodeProvider versionCodeProvider, boolean bypassServerCache, int limit,
-      List<String> packageNames, AppBundlesVisibilityManager appBundlesVisibilityManager,
-      AppCoinsManager appCoinsManager) {
+      List<String> packageNames, AppCoinsManager appCoinsManager) {
     if (wsWidget.getType() != null) {
 
       String url = null;
@@ -72,8 +70,7 @@ public class WSWidgetsUtils {
         case APPCOINS_FEATURED:
           return Observable.zip(
               loadListApps(url, storeCredentials, bodyInterceptor, httpClient, converterFactory,
-                  tokenInvalidator, sharedPreferences, resources, windowManager,
-                  appBundlesVisibilityManager, bypassCache, bypassServerCache),
+                  tokenInvalidator, sharedPreferences, resources, windowManager, bypassCache, bypassServerCache),
               loadAppcBonusModel(appCoinsManager),
               (listApps, bonusAppcModel) -> new BonusAppcBundle(listApps, bonusAppcModel))
               .observeOn(Schedulers.io())
@@ -83,8 +80,7 @@ public class WSWidgetsUtils {
         case APPS_TOP_GROUP:
         case APPS_GROUP:
           return loadListApps(url, storeCredentials, bodyInterceptor, httpClient, converterFactory,
-              tokenInvalidator, sharedPreferences, resources, windowManager,
-              appBundlesVisibilityManager, bypassCache, bypassServerCache).observeOn(
+              tokenInvalidator, sharedPreferences, resources, windowManager, bypassCache, bypassServerCache).observeOn(
               Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
@@ -119,15 +115,14 @@ public class WSWidgetsUtils {
               .map(listApps -> wsWidget);
         case APPCOINS_ADS:
           return new GetAppCoinsCampaignsRequest(new GetAppCoinsCampaignsRequest.Body(0, limit),
-              httpClient, converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences,
-              appBundlesVisibilityManager).observe(bypassCache, bypassServerCache)
+              httpClient, converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences).observe(bypassCache, bypassServerCache)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(listAppCoinsRewardApps -> wsWidget);
         case ESKILLS:
           return new GetEskillsAppsRequest(url, httpClient, converterFactory, bodyInterceptor,
-              tokenInvalidator, sharedPreferences, appBundlesVisibilityManager).observe(bypassCache,
+              tokenInvalidator, sharedPreferences).observe(bypassCache,
               bypassServerCache)
               .observeOn(Schedulers.io())
               .doOnNext(listApps -> wsWidget.setViewObject(listApps))
@@ -299,12 +294,10 @@ public class WSWidgetsUtils {
       BaseRequestWithStore.StoreCredentials storeCredentials,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager,
-      AppBundlesVisibilityManager appBundlesVisibilityManager, boolean bypassCache,
+      SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager, boolean bypassCache,
       boolean bypassServerCache) {
     return ListAppsRequest.ofAction(url, storeCredentials, bodyInterceptor, httpClient,
-        converterFactory, tokenInvalidator, sharedPreferences, resources, windowManager,
-        appBundlesVisibilityManager)
+        converterFactory, tokenInvalidator, sharedPreferences, resources, windowManager)
         .observe(bypassCache, bypassServerCache);
   }
 

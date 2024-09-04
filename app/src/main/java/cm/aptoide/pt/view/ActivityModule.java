@@ -46,7 +46,6 @@ import cm.aptoide.pt.bottomNavigation.BottomNavigationAnalytics;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -432,10 +431,10 @@ import static android.content.Context.WINDOW_SERVICE;
       @Named("default") OkHttpClient okHttpClient, @Named("mature-pool-v7")
   BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
       TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences,
-      Converter.Factory converterFactory, AppBundlesVisibilityManager appBundlesVisibilityManager) {
+      Converter.Factory converterFactory) {
     return new ListAppsMoreRepository(storeCredentialsProvider, baseBodyBodyInterceptor,
         okHttpClient, converterFactory, tokenInvalidator, sharedPreferences,
-        activity.getResources(), activity.getWindowManager(), appBundlesVisibilityManager);
+        activity.getResources(), activity.getWindowManager());
   }
 
   @ActivityScope @Provides ThemeManager providesThemeManager() {

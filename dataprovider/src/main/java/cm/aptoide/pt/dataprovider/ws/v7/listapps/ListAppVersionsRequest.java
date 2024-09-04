@@ -7,7 +7,6 @@ package cm.aptoide.pt.dataprovider.ws.v7.listapps;
 
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
@@ -29,35 +28,30 @@ import rx.Observable;
 public class ListAppVersionsRequest extends V7<ListAppVersions, ListAppVersionsRequest.Body> {
 
   private static final Integer MAX_LIMIT = 10;
-  private final AppBundlesVisibilityManager appBundlesVisibilityManager;
 
   private ListAppVersionsRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
-      AppBundlesVisibilityManager appBundlesVisibilityManager) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
         tokenInvalidator);
-    this.appBundlesVisibilityManager = appBundlesVisibilityManager;
   }
 
   public static ListAppVersionsRequest of(String packageName,
       HashMapNotNull<String, List<String>> storeCredentials,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences, Resources resources,
-      AppBundlesVisibilityManager appBundlesVisibilityManager) {
+      SharedPreferences sharedPreferences, Resources resources) {
     Body body =
         new Body(packageName, sharedPreferences, AptoideUtils.SystemU.getCountryCode(resources));
     body.setStoresAuthMap(storeCredentials);
     body.setLimit(MAX_LIMIT);
     return new ListAppVersionsRequest(body, bodyInterceptor, httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences, appBundlesVisibilityManager);
+        tokenInvalidator, sharedPreferences);
   }
 
   @Override protected Observable<ListAppVersions> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.listAppVersions(body, bypassCache,
-        appBundlesVisibilityManager.shouldEnableAppBundles());
+    return interfaces.listAppVersions(body, bypassCache, true);
   }
 
   public static class Body extends BaseBodyWithApp implements Endless {

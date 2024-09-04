@@ -7,7 +7,6 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.BuildConfig;
-import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.search.ListSearchApps;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
@@ -28,14 +27,10 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 
   private static final int LIMIT = 15;
 
-  private final AppBundlesVisibilityManager appBundlesVisibilityManager;
-
   private ListSearchAppsRequest(Body body, String baseHost,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      AppBundlesVisibilityManager appBundlesVisibilityManager) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
     super(body, baseHost, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
-    this.appBundlesVisibilityManager = appBundlesVisibilityManager;
   }
 
   public static String getHost(SharedPreferences sharedPreferences) {
@@ -51,8 +46,7 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
       HashMapNotNull<String, List<String>> subscribedStoresAuthMap,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences,
-      AppBundlesVisibilityManager appBundlesVisibilityManager) {
+      SharedPreferences sharedPreferences) {
 
     List<String> stores = null;
     if (storeName != null) {
@@ -63,7 +57,7 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
             appcOnly, sharedPreferences, isMature);
 
     return new ListSearchAppsRequest(body, getHost(sharedPreferences), bodyInterceptor, httpClient,
-        converterFactory, tokenInvalidator, appBundlesVisibilityManager);
+        converterFactory, tokenInvalidator);
   }
 
   public static ListSearchAppsRequest of(String query, int offset, boolean onlyFollowedStores,
@@ -71,8 +65,7 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
       List<Long> subscribedStoresIds, HashMapNotNull<String, List<String>> subscribedStoresAuthMap,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences,
-      AppBundlesVisibilityManager appBundlesVisibilityManager) {
+      SharedPreferences sharedPreferences) {
 
     final Body body;
     if (onlyFollowedStores) {
@@ -84,13 +77,13 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
           isMature);
     }
     return new ListSearchAppsRequest(body, getHost(sharedPreferences), bodyInterceptor, httpClient,
-        converterFactory, tokenInvalidator, appBundlesVisibilityManager);
+        converterFactory, tokenInvalidator);
   }
 
   @Override protected Observable<ListSearchApps> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
     return interfaces.listSearchApps(bypassCache ? "no-cache" : null,
-        getQueryStringMapper().map(body, appBundlesVisibilityManager.shouldEnableAppBundles()));
+        getQueryStringMapper().map(body));
   }
 
   public static class Body extends BaseBodyWithAlphaBetaKey implements Endless {

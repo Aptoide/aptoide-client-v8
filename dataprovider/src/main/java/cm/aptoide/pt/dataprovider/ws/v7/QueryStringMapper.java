@@ -41,10 +41,10 @@ public class QueryStringMapper {
     return queryMap;
   }
 
-  public Map<String, String> map(ListAppsRequest.Body body, boolean shouldEnableAab) {
+  public Map<String, String> map(ListAppsRequest.Body body) {
     Map<String, String> data = new HashMap<>();
     map(body, false, data);
-    put("aab", shouldEnableAab, data);
+    put("aab", true, data);
     put("not_apk_tags", body.getNotApkTags(), data);
     put("store_user", body.getStoreUser(), data);
     put("store_pass_sha1", body.getStorePassSha1(), data);
@@ -59,10 +59,10 @@ public class QueryStringMapper {
     return data;
   }
 
-  public Map<String, String> map(ListSearchAppsRequest.Body body, boolean shouldEnableAppBundles) {
+  public Map<String, String> map(ListSearchAppsRequest.Body body) {
     Map<String, String> data = new HashMap<>();
     map(body, true, data);
-    put("aab", shouldEnableAppBundles, data);
+    put("aab", true, data);
     put("limit", body.getLimit(), data);
     put("offset", body.getOffset(), data);
     put("query", body.getQuery(), data);
@@ -86,10 +86,10 @@ public class QueryStringMapper {
     return data;
   }
 
-  public Map<String, String> map(GetAppRequest.Body body, boolean shouldEnableAppBundles) {
+  public Map<String, String> map(GetAppRequest.Body body) {
     Map<String, String> data = new HashMap<>();
     map(body, false, data);
-    put("aab", shouldEnableAppBundles, data);
+    put("aab", true, data);
     put("app_id", body.getAppId(), data);
     put("nodes", getNodesAsString(body), data);
     put("package_name", body.getPackageName(), data);

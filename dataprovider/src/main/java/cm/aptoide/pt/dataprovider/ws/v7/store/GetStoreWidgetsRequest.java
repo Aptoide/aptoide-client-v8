@@ -10,7 +10,6 @@ import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.view.WindowManager;
 import cm.aptoide.pt.AppCoinsManager;
-import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.model.v7.Type;
@@ -48,7 +47,6 @@ public class GetStoreWidgetsRequest
   private final AdsApplicationVersionCodeProvider versionCodeProvider;
   private final SharedPreferences sharedPreferences;
   private final WSWidgetsUtils widgetsUtils;
-  private final AppBundlesVisibilityManager appBundlesVisibilityManager;
   private boolean bypassServerCache;
   private final AppCoinsManager appCoinsManager;
 
@@ -59,8 +57,7 @@ public class GetStoreWidgetsRequest
       boolean isGooglePlayServicesAvailable, String partnerId, boolean accountMature,
       String filters, Resources resources, WindowManager windowManager,
       ConnectivityManager connectivityManager,
-      AdsApplicationVersionCodeProvider versionCodeProvider, WSWidgetsUtils widgetsUtils,
-      AppBundlesVisibilityManager appBundlesVisibilityManager, AppCoinsManager appCoinsManager) {
+      AdsApplicationVersionCodeProvider versionCodeProvider, WSWidgetsUtils widgetsUtils, AppCoinsManager appCoinsManager) {
     super(body, httpClient, converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences);
     this.url = url;
     this.storeCredentials = storeCredentials;
@@ -75,7 +72,6 @@ public class GetStoreWidgetsRequest
     this.versionCodeProvider = versionCodeProvider;
     this.sharedPreferences = sharedPreferences;
     this.widgetsUtils = widgetsUtils;
-    this.appBundlesVisibilityManager = appBundlesVisibilityManager;
     this.appCoinsManager = appCoinsManager;
   }
 
@@ -85,8 +81,7 @@ public class GetStoreWidgetsRequest
       SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager,
       String clientUniqueId, boolean isGooglePlayServicesAvailable, String partnerId,
       boolean accountMature, String filters, ConnectivityManager connectivityManager,
-      AdsApplicationVersionCodeProvider versionCodeProvider,
-      AppBundlesVisibilityManager appBundlesVisibilityManager, AppCoinsManager appCoinsManager) {
+      AdsApplicationVersionCodeProvider versionCodeProvider, AppCoinsManager appCoinsManager) {
 
     final Body body =
         new Body(storeCredentials, WidgetsArgs.createDefault(resources, windowManager));
@@ -95,7 +90,7 @@ public class GetStoreWidgetsRequest
         .get(), body, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
         sharedPreferences, storeCredentials, clientUniqueId, isGooglePlayServicesAvailable,
         partnerId, accountMature, filters, resources, windowManager, connectivityManager,
-        versionCodeProvider, new WSWidgetsUtils(), appBundlesVisibilityManager, appCoinsManager);
+        versionCodeProvider, new WSWidgetsUtils(), appCoinsManager);
   }
 
   public String getUrl() {
@@ -125,8 +120,7 @@ public class GetStoreWidgetsRequest
             ((BodyInterceptor<BaseBody>) bodyInterceptor), getHttpClient(), converterFactory,
             filters, getTokenInvalidator(), sharedPreferences, resources, windowManager,
             connectivityManager, versionCodeProvider, bypassServerCache,
-            Type.ADS.getPerLineCount(resources, windowManager), Collections.emptyList(),
-            appBundlesVisibilityManager, appCoinsManager))
+            Type.ADS.getPerLineCount(resources, windowManager), Collections.emptyList(), appCoinsManager))
         .toList()
         .flatMapIterable(wsWidgets -> getStoreWidgets.getDataList()
             .getList())
