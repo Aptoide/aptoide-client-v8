@@ -86,7 +86,6 @@ public class SystemNotificationShower implements Presenter {
   }
 
   @Override public void present() {
-    setupChannels();
     setNotificationPressSubscribe();
     setNotificationDismissSubscribe();
     setNotificationBootCompletedSubscribe();
@@ -105,6 +104,7 @@ public class SystemNotificationShower implements Presenter {
   private void showNewNotification() {
     subscriptions.add(notificationCenter.getNewNotifications()
         .flatMapCompletable(aptoideNotification -> {
+          setupChannels();
           int notificationId =
               notificationIdsMapper.getNotificationId(aptoideNotification.getType());
           if (aptoideNotification.getType() != AptoideNotification.APPC_PROMOTION
