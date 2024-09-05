@@ -30,6 +30,7 @@ data class App(
   val isAppCoins: Boolean,
   val screenshots: List<String>?,
   val description: String?,
+  val news: String?,
   val videos: List<String> = emptyList(),
   val store: Store,
   val releaseDate: String?,
@@ -101,6 +102,7 @@ val emptyApp = App(
   bdsFlags = null,
   screenshots = emptyList(),
   description = "",
+  news = "",
   videos = emptyList(),
   store = Store(
     storeName = "",
@@ -161,6 +163,7 @@ val randomApp
       isAppCoins = Random.nextBoolean(),
       screenshots = List(Random.nextInt(10)) { "random" },
       description = getRandomString(),
+      news = getRandomString(),
       videos = List(Random.nextInt(2)) { "https://youtu.be/dQw4w9WgXcQ" },
       store = Store(
         storeName = getRandomString(range = 2..3, capitalize = true),

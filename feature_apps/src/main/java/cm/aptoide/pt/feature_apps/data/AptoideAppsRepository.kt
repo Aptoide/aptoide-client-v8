@@ -288,6 +288,7 @@ fun AppJSON.toDomainModel(
   versionCode = this.file.vercode,
   screenshots = this.media?.screenshots?.map { it.url },
   description = this.media?.description,
+  news = if (this.media?.news.isNullOrEmpty()) null else this.media?.news,
   videos = this.media?.videos?.filter { it.type == VideoTypeJSON.YOUTUBE }?.map { it.url }
     ?: emptyList(),
   store = Store(
