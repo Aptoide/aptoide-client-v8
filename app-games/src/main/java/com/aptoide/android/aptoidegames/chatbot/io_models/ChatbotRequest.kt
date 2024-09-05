@@ -7,5 +7,4 @@ import com.aptoide.android.aptoidegames.chatbot.domain.GameContext
 data class ChatbotRequest (
     val conversation: List<ChatInteraction>,
     val state: ConversationIntent?,
-    val context: List<GameContext>?,
 )

@@ -45,7 +45,6 @@ class ChatbotViewModel @Inject constructor(
                     chatbotRepository.getMessages(
                         ChatbotRequest(
                             conversation = updatedConversation,
-                            context = uiState.value.context,
                             state = uiState.value.state
                         )
                     )
@@ -92,7 +91,6 @@ class ChatbotViewModel @Inject constructor(
                 type = ChatbotUIStateType.IDLE,
                 conversation = response.conversation,
                 state = ConversationIntent.fromValue(response.state) ?: ConversationIntent.OTHER,
-                context = response.context,
                 apps = response.conversation.last().apps,
                 packageName = response.packageName
             )
