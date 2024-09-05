@@ -36,6 +36,7 @@ data class AppJSON(
 data class Media(
   var keywords: List<String>,
   var description: String,
+  var news: String,
   var videos: List<VideoJSON>,
   var screenshots: List<Screenshot>,
 )
