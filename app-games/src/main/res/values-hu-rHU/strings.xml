@@ -97,6 +97,8 @@
   <string name="wait_for_wifi_button">Megvárom a wifit</string>
   <string name="continue_button">Folytatás</string>
   <string name="error_install_permissions_body"><![CDATA[Please go to Settings and grant <1>Aptoide Games</1> permissions to install apps!]]></string>
+  <string name="latest_title">Latest</string>
+  <string name="whats_new_title">What\'s New</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Nincs elég hely</string>
   <string name="out_of_space_body">A telepítés folytatásához %s tárhely szükséges.</string>
