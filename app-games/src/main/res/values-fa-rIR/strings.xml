@@ -97,6 +97,8 @@
   <string name="wait_for_wifi_button">در انتظار وایفای</string>
   <string name="continue_button">ادامه</string>
   <string name="error_install_permissions_body"><![CDATA[لطفا به تنظیمات بروید و به <1>Aptoide Games</1> اجازه نصب اپلیکیشن بدهید!]]></string>
+  <string name="latest_title">Latest</string>
+  <string name="whats_new_title">What\'s New</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">حافظه‌ پر است</string>
   <string name="out_of_space_body">برای ادامه نصب به %s نیاز دارید.</string>
