@@ -97,6 +97,8 @@
   <string name="wait_for_wifi_button">와이파이 대기</string>
   <string name="continue_button">계속</string>
   <string name="error_install_permissions_body"><![CDATA[설정으로 이동하여 <1>Aptoide Games</1>에 앱 설치 권한을 부여하세요!]]></string>
+  <string name="latest_title">Latest</string>
+  <string name="whats_new_title">What\'s New</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">공간 부족</string>
   <string name="out_of_space_body">설치를 계속하려면 %s이(가) 필요합니다.</string>
