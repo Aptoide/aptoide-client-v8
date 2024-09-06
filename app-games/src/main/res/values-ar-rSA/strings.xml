@@ -97,6 +97,8 @@
   <string name="wait_for_wifi_button">انتظر الوايفاي</string>
   <string name="continue_button">متابعة</string>
   <string name="error_install_permissions_body"><![CDATA[يرجى التوجه إلى الإعدادات ومنح <1>Aptoide Games</1> الإذن لتثبيت التطبيقات!]]></string>
+  <string name="latest_title">Latest</string>
+  <string name="whats_new_title">What\'s New</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">لا توجد مساحة</string>
   <string name="out_of_space_body">أنت بحاجة إلى %s لمتابعة التثبيت.</string>
