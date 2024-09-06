@@ -97,6 +97,8 @@
   <string name="wait_for_wifi_button">Sačekajte Wi-Fi</string>
   <string name="continue_button">Nastavi</string>
   <string name="error_install_permissions_body"><![CDATA[Idite u Podešavanja i dodelite dozvole za instaliranje aplikacija za <1>Aptoide Games</1>!]]></string>
+  <string name="latest_title">Latest</string>
+  <string name="whats_new_title">What\'s New</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Nema više prostora</string>
   <string name="out_of_space_body">Potrebno vam je %s da biste nastavili sa instalacijom.</string>
