@@ -97,6 +97,8 @@
   <string name="wait_for_wifi_button">Tunggu Wi-Fi</string>
   <string name="continue_button">Lanjutkan</string>
   <string name="error_install_permissions_body"><![CDATA[Silakan buka Pengaturan dan berikan izin ke <1>Aptoide Games</1> untuk memasang aplikasi!]]></string>
+  <string name="latest_title">Latest</string>
+  <string name="whats_new_title">What\'s New</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Kehabisan Ruang Penyimpanan</string>
   <string name="out_of_space_body">Anda membutuhkan %s untuk melanjutkan instalasi.</string>
