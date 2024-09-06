@@ -97,6 +97,8 @@
   <string name="wait_for_wifi_button">Ожидание Wi-Fi</string>
   <string name="continue_button">Продолжить</string>
   <string name="error_install_permissions_body"><![CDATA[Пожалуйста, перейдите в «Настройки» и предоставьте <1>Aptoide Games</1> разрешения на установку приложений!]]></string>
+  <string name="latest_title">Latest</string>
+  <string name="whats_new_title">What\'s New</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Нет места</string>
   <string name="out_of_space_body">Вам необходимо %s чтобы продолжить установку.</string>
