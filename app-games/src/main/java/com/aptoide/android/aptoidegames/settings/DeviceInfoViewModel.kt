@@ -10,10 +10,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.aptoide.android.aptoidegames.BuildConfig
 import cm.aptoide.pt.aptoide_network.di.StoreName
 import cm.aptoide.pt.environment_info.DeviceInfo
 import cm.aptoide.pt.extensions.runPreviewable
+import com.appcoins.payments.arch.WalletProvider
+import com.appcoins.payments.di.Payments
+import com.appcoins.payments.di.walletProvider
+import com.aptoide.android.aptoidegames.BuildConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -30,6 +33,7 @@ class InjectionsProvider @Inject constructor(
 
 class DeviceInfoViewModel(
   private val deviceInfo: DeviceInfo,
+  private val walletProvider: WalletProvider,
   private val storeName: String,
 ) : ViewModel() {
 
@@ -44,9 +48,11 @@ class DeviceInfoViewModel(
 
   init {
     viewModelScope.launch {
+      val pid = runCatching { walletProvider.getWallet() }.getOrNull()?.address ?: "-"
       viewModelState.update {
         "${deviceInfo.getDeviceInfoSummary()}\n" +
           "AptoideGames: ${Integer.toHexString(storeName.hashCode())}\n" +
+          "PID: $pid\n" +
           "AptoideGames version: ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})\n"
       }
     }
@@ -64,6 +70,7 @@ fun rememberDeviceInfo(): String = runPreviewable(
           @Suppress("UNCHECKED_CAST")
           return DeviceInfoViewModel(
             deviceInfo = injectionsProvider.deviceInfo,
+            walletProvider = Payments.walletProvider,
             storeName = injectionsProvider.storeName
           ) as T
         }
