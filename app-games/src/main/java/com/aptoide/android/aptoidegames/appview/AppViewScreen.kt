@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -44,6 +45,7 @@ import androidx.compose.ui.semantics.collectionInfo
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.navDeepLink
@@ -79,6 +81,7 @@ import com.aptoide.android.aptoidegames.appview.AppViewHeaderConstants.FEATURE_G
 import com.aptoide.android.aptoidegames.appview.AppViewHeaderConstants.VIDEO_HEIGHT
 import com.aptoide.android.aptoidegames.appview.permissions.buildAppPermissionsRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusIconLeft
+import com.aptoide.android.aptoidegames.drawables.icons.getBookmarkStar
 import com.aptoide.android.aptoidegames.drawables.icons.getForward
 import com.aptoide.android.aptoidegames.drawables.icons.getLeftArrow
 import com.aptoide.android.aptoidegames.drawables.icons.getRatingStar
@@ -368,13 +371,113 @@ fun DetailsView(app: App) {
     modifier = Modifier.padding(top = 16.dp)
   ) {
     app.screenshots?.let { ScreenshotsList(it) }
+    app.news?.let {
+      WhatsNew(app = app)
+    }
+
     app.description?.let {
       Text(
         text = it,
-        modifier = Modifier.padding(top = 24.dp, bottom = 32.dp, start = 16.dp, end = 16.dp),
+        modifier = Modifier.padding(top = 16.dp, bottom = 32.dp, start = 16.dp, end = 16.dp),
         style = AGTypography.ArticleText,
         color = Palette.White
       )
+    }
+  }
+}
+
+@Composable
+fun LatestBox() {
+  Box(
+    modifier = Modifier
+      .height(24.dp)
+      .width(68.dp)
+      .background(Palette.GreyLight),
+  ) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+      Icon(
+        modifier = Modifier
+          .padding(start = 3.dp, end = 4.dp, top = 4.dp, bottom = 4.dp)
+          .size(16.dp),
+        imageVector = getBookmarkStar(Palette.Black),
+        contentDescription = "bookmark star",
+        tint = Color.Unspecified
+      )
+      Text(
+        modifier = Modifier
+          .padding(end = 8.dp),
+        text = stringResource(id = R.string.latest_title),
+        color = Palette.Black,
+        style = AGTypography.InputsS,
+        textAlign = TextAlign.Center,
+      )
+    }
+
+  }
+}
+
+@Composable
+fun WhatsNew(app: App) {
+  Box(
+    modifier = Modifier
+      .fillMaxWidth()
+      .padding(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 16.dp)
+      .background(Palette.GreyDark)
+  ) {
+    Column(
+      horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+      LatestBox()
+      Row(
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(start = 16.dp, end = 16.dp, top = 18.dp)
+      ) {
+        Text(
+          modifier = Modifier
+            .padding(end = 8.dp)
+            .alignByBaseline(),
+          text = app.versionName,
+          color = Palette.Primary,
+          style = AGTypography.InputsL,
+        )
+        Text(
+          modifier = Modifier
+            .alignByBaseline(),
+          text = TextFormatter.formatBytes(app.appSize),
+          color = Palette.GreyLight,
+          style = AGTypography.InputsM
+        )
+        Spacer(modifier = Modifier.weight(1f))
+        Text(
+          modifier = Modifier
+            .align(Alignment.CenterVertically),
+          text = app.updateDate?.split(" ")?.first() ?: "",
+          color = Palette.GreyLight,
+          style = AGTypography.SmallGames,
+        )
+      }
+      Column(
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(
+            start = 16.dp,
+            end = 16.dp,
+            top = 12.dp,
+            bottom = 16.dp,
+          )
+      ) {
+        Text(
+          text = stringResource(id = R.string.whats_new_title),
+          color = Palette.White,
+          style = AGTypography.InputsM,
+        )
+        Text(
+          text = app.news!!,
+          color = Palette.White,
+          style = AGTypography.SmallGames,
+        )
+      }
     }
   }
 }
@@ -701,6 +804,14 @@ fun AppViewScreenPreview() {
 fun DetailsViewPreview() {
   AptoideTheme {
     DetailsView(app = randomApp)
+  }
+}
+
+@PreviewDark
+@Composable
+fun WhatsNewViewPreview() {
+  AptoideTheme {
+    WhatsNew(app = randomApp)
   }
 }
 
