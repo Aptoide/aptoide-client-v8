@@ -202,13 +202,13 @@
   <!-- Promo Code -->
   <string name="promo_code_install_wallet_banner_title">Até %s%% de Bônus em Cada Compra</string>
   <string name="promo_code_install_wallet_banner_body">Use o AppCoins Wallet para fazer suas compras dentro do aplicativo e ganhe uma recompensa.</string>
-  <string name="promo_code_extra_title">Want More? Get %s%% Extra Bonus!</string>
-  <string name="promo_code_use_button">Use code</string>
-  <string name="promo_code_install_wallet_disclaimer">Install the AppCoins Wallet first.</string>
-  <string name="promo_code_notification_title">Redeem Your Promo Code</string>
-  <string name="promo_code_notification_body">Use your promo code to get extra bonuses in your favorite game.</string>
-  <string name="promo_code_notification_without_wallet_title">%s%% Extra Bonus!</string>
-  <string name="promo_code_notification_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
-  <string name="promo_code_share_title">You\'ve got a promo code!</string>
-  <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorite game.</string>
+  <string name="promo_code_extra_title">Quer Mais? Receba um Bônus Extra de %s%%!</string>
+  <string name="promo_code_use_button">Utilizar código</string>
+  <string name="promo_code_install_wallet_disclaimer">Primeiro, instale o AppCoins Wallet.</string>
+  <string name="promo_code_notification_title">Resgate seu Código</string>
+  <string name="promo_code_notification_body">Use seu código promocional para obter bônus extras no seu jogo favorito.</string>
+  <string name="promo_code_notification_without_wallet_title">Bônus Extra de %s%%!</string>
+  <string name="promo_code_notification_without_wallet_body">Baixe o AppCoins Wallet e use seu código promocional para receber bônus extras em todas as compras.</string>
+  <string name="promo_code_share_title">Você recebeu um código promocional!</string>
+  <string name="promo_code_share_body">Use este código promocional para obter bônus extras no seu jogo favorito.</string>
 </resources>
