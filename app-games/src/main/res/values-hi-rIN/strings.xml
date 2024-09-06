@@ -97,6 +97,8 @@
   <string name="wait_for_wifi_button">Wait for Wi-Fi</string>
   <string name="continue_button">जारी रखें</string>
   <string name="error_install_permissions_body"><![CDATA[Please go to Settings and grant <1>Aptoide Games</1> permissions to install apps!]]></string>
+  <string name="latest_title">Latest</string>
+  <string name="whats_new_title">What\'s New</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Out of Space</string>
   <string name="out_of_space_body">You need %s to continue with the installation.</string>
