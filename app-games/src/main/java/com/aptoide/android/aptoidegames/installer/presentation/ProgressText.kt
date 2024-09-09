@@ -20,7 +20,7 @@ import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
 import com.aptoide.android.aptoidegames.R.string
-import com.aptoide.android.aptoidegames.appview.AppRating
+import com.aptoide.android.aptoidegames.appview.AppRatingAndDownloads
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -79,7 +79,7 @@ private fun ProgressTextContent(
         maxLines = 1
       )
     } else {
-      AppRating(rating = app.pRating)
+      AppRatingAndDownloads(rating = app.pRating)
     }
 
     is Waiting,
