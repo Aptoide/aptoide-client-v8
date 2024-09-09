@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.PreviewLandscapeDark
+import cm.aptoide.pt.extensions.format
 import cm.aptoide.pt.extensions.getAppIconDrawable
 import cm.aptoide.pt.extensions.getAppName
 import cm.aptoide.pt.extensions.runPreviewable
@@ -71,7 +72,7 @@ fun PurchaseInfoRow(
         modifier = modifier,
         buyingPackage = buyingPackage,
         productName = productInfo?.title,
-        price = productInfo?.run { "$priceValue $priceCurrency" },
+        price = productInfo?.run { "${priceValue.format(2)} $priceCurrency" },
       )
     }
 
@@ -80,7 +81,7 @@ fun PurchaseInfoRow(
         modifier = modifier,
         buyingPackage = buyingPackage,
         productName = productInfo?.title,
-        price = productInfo?.run { "$priceValue $priceCurrency" },
+        price = productInfo?.run { "${priceValue.format(2)} $priceCurrency" },
       )
     }
   }
