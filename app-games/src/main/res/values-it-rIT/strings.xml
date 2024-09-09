@@ -96,7 +96,7 @@
   <string name="waiting_for_connection">In attesa di connessione</string>
   <string name="wait_for_wifi_button">In attesa di Wi-Fi</string>
   <string name="continue_button">Continua</string>
-  <string name="error_install_permissions_body"><![CDATA[Accedi alle Impostazioni e concedi l'autorizzazione ad <1>Aptoide Games</1> per installare le app!]]></string>
+  <string name="error_install_permissions_body"><![CDATA[Accedi alle Impostazioni e concedi l\'autorizzazione ad <1>Aptoide Games</1> per installare le app!]]></string>
   <string name="latest_title">Latest</string>
   <string name="whats_new_title">What\'s New</string>
   <!-- Out of Space -->
