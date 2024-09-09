@@ -141,7 +141,7 @@
   <string name="purchase_done_bonus_body">Download the AppCoins Wallet to get this bonus and use it in your next purchase.</string>
   <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet installed!</string>
   <string name="purchase_done_bonus_wallet_installed_body">Open it to find your bonus.</string>
-  <string name="bonus_banner_body">Recibirán un bonus en todos los juegos indentificados con %s.</string>
+  <string name="bonus_banner_body">Recibe un bonus en todos los juegos indentificados con %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Hasta %s%% de Bonus</string>
   <string name="settings_payments_title" comment="contact_support_team">Contacta con nosotros</string>
   <string name="settings_contact_support_body" comment="billing_terms_of_use">Condiciones de Compra de Aptoide</string>
