@@ -23,7 +23,7 @@
   <string name="settings_feedback_button">إرسال الملاحظات</string>
   <string name="settings_feedback_title">إرسال الملاحظات</string>
   <string name="settings_legal_title">قانوني</string>
-  <string name="settings_send_feedback_body">أخبرنا عن رأيك بتطبيق Apptoide Games!\n\u2022 هل هناك أي مزايا تحب أن تراها فيه؟\n\u2022 كيف يمكننا تطويره برأيك؟</string>
+  <string name="settings_send_feedback_body">أخبرنا عن رأيك بتطبيق Aptoide Games!\n\u2022 هل هناك أي مزايا تحب أن تراها فيه؟\n\u2022 كيف يمكننا تطويره برأيك؟</string>
   <string name="settings_payment_support_description_title">الوصف</string>
   <string name="settings_contact_form_character_limit_title">(٥٠ رمزًا على الأقل)</string>
   <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">الوصف (٥٠ رمزًا على الأقل.)</string>
