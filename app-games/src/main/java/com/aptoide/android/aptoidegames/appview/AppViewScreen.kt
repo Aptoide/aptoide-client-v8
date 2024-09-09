@@ -50,6 +50,7 @@ import androidx.navigation.navDeepLink
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.ScreenData
+import cm.aptoide.pt.extensions.formatDownloads
 import cm.aptoide.pt.extensions.isYoutubeURL
 import cm.aptoide.pt.extensions.openUrlInBrowser
 import cm.aptoide.pt.extensions.parseDate
@@ -621,15 +622,19 @@ fun AppPresentationView(app: App) {
           overflow = TextOverflow.Ellipsis,
         )
       }
-      AppRating(rating = app.pRating)
+      AppRatingAndDownloads(
+        rating = app.pRating,
+        downloads = app.pDownloads
+      )
     }
   }
 }
 
 @Composable
-fun AppRating(
+fun AppRatingAndDownloads(
   modifier: Modifier = Modifier,
   rating: Rating,
+  downloads: Int? = null
 ) {
   Row(
     modifier = modifier
@@ -647,6 +652,8 @@ fun AppRating(
         .size(12.dp),
     )
     Text(
+      modifier = modifier
+        .padding(end = 8.dp),
       text = if (rating.avgRating == 0.0) {
         "--"
       } else {
@@ -656,6 +663,14 @@ fun AppRating(
       style = AGTypography.InputsXS,
       overflow = TextOverflow.Ellipsis,
     )
+    downloads?.let {
+      Text(
+        text = "${it.formatDownloads()} downloads",
+        maxLines = 1,
+        style = AGTypography.InputsXS,
+        overflow = TextOverflow.Ellipsis,
+      )
+    }
   }
 }
 
