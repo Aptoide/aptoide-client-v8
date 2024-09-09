@@ -33,26 +33,28 @@ class AptoideInstallPackageInfoMapper @Inject constructor(
             patch?.let { add(it.toInstallationFile(InstallationFile.Type.OBB_PATCH)) }
           }
 
-          appMeta.aab?.run {
-            //Checks if all the required split types are present in the splits list.
-            //For example, if an ABI split is required, it checks if there is at least one ABI split present
-            requiredSplitTypes.forEach { type ->
-              if (splits.find { it.type == type } == null) {
-                throw IllegalStateException("AAB required split types not found")
+          appMeta.aab
+            ?.takeIf { it.requiredSplitTypes.isNotEmpty() && it.splits.isNotEmpty() }
+            ?.run {
+              //Checks if all the required split types are present in the splits list.
+              //For example, if an ABI split is required, it checks if there is at least one ABI split present
+              requiredSplitTypes.forEach { type ->
+                if (splits.find { it.type == type } == null) {
+                  throw IllegalStateException("AAB required split types not found")
+                }
+              }
+              splits.forEach {
+                add(it.file.toInstallationFile(InstallationFile.Type.BASE))
+              }
+
+              val dynamicSplits = dynamicSplitsUseCase.getDynamicSplits(app.md5)
+
+              dynamicSplits.forEach {
+                val type = mapDynamicSplitType(it.type, it.deliveryTypes)
+                add(it.file.toInstallationFile(type))
+                addAll(it.splits.map { it.toInstallationFile(type) })
               }
             }
-            splits.forEach {
-              add(it.file.toInstallationFile(InstallationFile.Type.BASE))
-            }
-
-            val dynamicSplits = dynamicSplitsUseCase.getDynamicSplits(app.md5)
-
-            dynamicSplits.forEach {
-              val type = mapDynamicSplitType(it.type, it.deliveryTypes)
-              add(it.file.toInstallationFile(type))
-              addAll(it.splits.map { it.toInstallationFile(type) })
-            }
-          }
         },
       payload = TemporaryPayload(
         isInCatappult = appMeta.isInCatappult(),
