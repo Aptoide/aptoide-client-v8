@@ -59,7 +59,7 @@ import cm.aptoide.pt.extensions.toFormattedString
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
-import cm.aptoide.pt.feature_apps.presentation.rememberAppBySource
+import cm.aptoide.pt.feature_apps.presentation.rememberApp
 import cm.aptoide.pt.feature_apps.presentation.toAppIdParam
 import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
 import cm.aptoide.pt.feature_editorial.presentation.relatedEditorialsCardViewModel
@@ -142,7 +142,7 @@ fun AppViewScreen(
   navigate: (String) -> Unit,
   navigateBack: () -> Unit,
 ) {
-  val (uiState, reload) = rememberAppBySource(
+  val (uiState, reload) = rememberApp(
     source = source,
     useStoreName = useStoreName,
   )

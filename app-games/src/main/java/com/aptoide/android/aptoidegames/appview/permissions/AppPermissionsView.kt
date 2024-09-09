@@ -23,7 +23,7 @@ import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.AppUiStateProvider
-import cm.aptoide.pt.feature_apps.presentation.rememberAppBySource
+import cm.aptoide.pt.feature_apps.presentation.rememberApp
 import com.aptoide.android.aptoidegames.AppIconImage
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
@@ -55,7 +55,7 @@ fun AppInfoPermissionsView(
   navigateBack: () -> Unit,
   source: String,
 ) {
-  val (uiState, _) = rememberAppBySource(source = source)
+  val (uiState, _) = rememberApp(source = source)
 
   (uiState as? AppUiState.Idle)?.app?.run {
     AppInfoPermissionsViewContent(
