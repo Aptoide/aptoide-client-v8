@@ -30,7 +30,7 @@ class InjectionsProvider @Inject constructor(
 ) : ViewModel()
 
 @Composable
-fun rememberAppBySource(
+fun rememberApp(
   source: String,
   useStoreName: Boolean = true,
 ): Pair<AppUiState, () -> Unit> = runPreviewable(

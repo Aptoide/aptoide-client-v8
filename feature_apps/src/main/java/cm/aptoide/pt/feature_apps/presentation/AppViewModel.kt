@@ -34,7 +34,7 @@ class AppViewModel(
     viewModelScope.launch {
       viewModelState.update { AppUiState.Loading }
       try {
-        val app = appMetaUseCase.getMetaInfoBySource(source = source, useStoreName = useStoreName)
+        val app = appMetaUseCase.getMetaInfo(source = source, useStoreName = useStoreName)
         viewModelState.update { AppUiState.Idle(app) }
       } catch (e: Throwable) {
         Timber.w(e)
