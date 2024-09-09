@@ -96,7 +96,7 @@
   <string name="waiting_for_connection">Bağlantı bekleniyor</string>
   <string name="wait_for_wifi_button">Wi-Fi için bekle</string>
   <string name="continue_button">Devam et</string>
-  <string name="error_install_permissions_body"><![CDATA[Lütfen Ayarlar'a git ve <1>Aptoide Games</1>'e uygulama yükleme izni ver!]]></string>
+  <string name="error_install_permissions_body"><![CDATA[Lütfen Ayarlar\'a git ve <1>Aptoide Games</1>\'e uygulama yükleme izni ver!]]></string>
   <string name="latest_title">Latest</string>
   <string name="whats_new_title">What\'s New</string>
   <!-- Out of Space -->
