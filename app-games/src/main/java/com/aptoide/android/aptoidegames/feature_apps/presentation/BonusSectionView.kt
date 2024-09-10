@@ -119,14 +119,16 @@ private fun BonusBannerText(
   annotatedString: AnnotatedString,
   inlineContent: Map<String, InlineTextContent>,
 ) {
-  Column(modifier = Modifier.padding(start = 16.dp, top = 44.dp)) {
+  Column(modifier = Modifier
+    .padding(start = 16.dp, top = 44.dp)
+    .width(240.dp)
+  ) {
     AptoideOutlinedText(
       text = stringResource(id = R.string.bonus_banner_title, "20"), //TODO Hardcoded value (should come from backend in the future)
       style = AGTypography.Title,
       outlineWidth = 17f,
       outlineColor = Palette.Black,
       textColor = Palette.Primary,
-      modifier = Modifier.width(162.dp)
     )
     Text(
       text = annotatedString,
@@ -134,7 +136,6 @@ private fun BonusBannerText(
       style = AGTypography.BodyBold,
       color = Palette.White,
       maxLines = 2,
-      modifier = Modifier.width(240.dp)
     )
   }
 }
