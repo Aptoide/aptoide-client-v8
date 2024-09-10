@@ -1,7 +1,7 @@
 package cm.aptoide.pt.feature_mmp.apkfy.di
 
 import cm.aptoide.pt.feature_mmp.MMPPreferencesRepository
-import cm.aptoide.pt.feature_mmp.apkfy.domain.ApkfyManager
+import cm.aptoide.pt.feature_mmp.apkfy.domain.ApkfyManagerImpl
 import cm.aptoide.pt.feature_mmp.apkfy.repository.ApkfyRepository
 import cm.aptoide.pt.feature_mmp.apkfy.repository.AptoideMMPRepository
 import cm.aptoide.pt.feature_mmp.di.RetrofitMMP
@@ -23,15 +23,4 @@ internal object RepositoryModule {
       mmpRemoteDataSource = retrofitMMP.create(AptoideMMPRepository.Retrofit::class.java)
     )
   }
-
-  @Provides
-  @Singleton
-  fun provideApkfyManager(
-    apkfyRepository: ApkfyRepository,
-    mmpPreferencesRepository: MMPPreferencesRepository,
-  ): ApkfyManager =
-    ApkfyManager(
-      apkfyRepository = apkfyRepository,
-      mmpPreferencesRepository = mmpPreferencesRepository
-    )
 }

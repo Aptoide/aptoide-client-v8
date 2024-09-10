@@ -10,12 +10,16 @@ import javax.inject.Inject
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "mmp")
 
-class ApkfyManager @Inject constructor(
+interface ApkfyManager {
+  suspend fun getApkfy(): ApkfyModel?
+}
+
+class ApkfyManagerImpl @Inject constructor(
   private val apkfyRepository: ApkfyRepository,
   private val mmpPreferencesRepository: MMPPreferencesRepository,
-) {
+) : ApkfyManager {
 
-  suspend fun getApkfy(): ApkfyModel? = if (mmpPreferencesRepository.shouldRunApkfy()) {
+  override suspend fun getApkfy(): ApkfyModel? = if (mmpPreferencesRepository.shouldRunApkfy()) {
     mmpPreferencesRepository.setApkfyRan()
     apkfyRepository.getApkfy()
   } else {
