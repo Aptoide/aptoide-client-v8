@@ -88,7 +88,8 @@ val translatedTitles = mapOf(
   "My Games" to R.string.fixed_bundle_my_games_title,
   "Editors' Choice" to R.string.fixed_bundle_editors_choice_title,
   "Editorial" to R.string.fixed_bundle_editorial_title,
-  "Trending" to R.string.fixed_bundle_trending_title
+  "Trending" to R.string.fixed_bundle_trending_title,
+  "Categories" to R.string.categories,
 )
 
 const val gamesRoute = "gamesView"
@@ -295,7 +296,7 @@ fun BundleHeader(
         )
       }
       Text(
-        text = title,
+        text = title.translateOrKeep(LocalContext.current),
         maxLines = 2,
         modifier = Modifier
           .clearAndSetSemantics { },
