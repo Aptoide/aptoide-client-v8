@@ -98,7 +98,7 @@ android {
       applicationIdSuffix = ".dev"
       versionName = "0.9.0"
 
-      manifestPlaceholders["payment_intent_filter_priority"] = "8"
+      manifestPlaceholders["payment_intent_filter_priority"] = "5"
       manifestPlaceholders["payment_intent_filter_host"] =
         project.property("PAYMENT_DEEPLINK_HOST_DEV").toString()
 
@@ -123,7 +123,7 @@ android {
       val adyenKey = project.property("ADYEN_PUBLIC_KEY").toString()
       dimension = "mode"
 
-      manifestPlaceholders["payment_intent_filter_priority"] = "7"
+      manifestPlaceholders["payment_intent_filter_priority"] = "4"
       manifestPlaceholders["payment_intent_filter_host"] =
         project.property("PAYMENT_DEEPLINK_HOST").toString()
 
