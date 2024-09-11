@@ -12,7 +12,7 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.domain.AppMetaUseCase
 import cm.aptoide.pt.feature_apps.presentation.toAppIdParam
 import cm.aptoide.pt.feature_apps.presentation.toPackageNameParam
-import cm.aptoide.pt.feature_mmp.apkfy.domain.ApkfyManager
+import cm.aptoide.pt.feature_apkfy.domain.ApkfyManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow

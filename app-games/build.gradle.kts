@@ -195,7 +195,7 @@ dependencies {
   implementation(project(ModuleDependency.FEATURE_SEARCH))
   implementation(project(ModuleDependency.YOUTUBE_VIDEO_PLAYER))
   implementation(project(ModuleDependency.INSTALL_INFO_MAPPER))
-  implementation(project(ModuleDependency.FEATURE_MMP))
+  implementation(project(ModuleDependency.FEATURE_APKFY))
 
   //payments
   implementation(project(ModuleDependency.PAYMENTS_SDK))

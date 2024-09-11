@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-  namespace = "cm.aptoide.pt.feature_mmp"
+  namespace = "cm.aptoide.pt.feature_apkfy"
 }
 
 dependencies {

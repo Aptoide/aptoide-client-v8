@@ -1,4 +1,4 @@
-package cm.aptoide.pt.feature_mmp.apkfy.repository
+package cm.aptoide.pt.feature_apkfy.repository
 
 import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
