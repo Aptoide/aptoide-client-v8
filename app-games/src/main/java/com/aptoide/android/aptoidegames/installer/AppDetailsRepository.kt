@@ -13,6 +13,7 @@ class AppDetailsRepository @Inject constructor(
       if (it.name != null) {
         AppDetails(
           appId = it.appId,
+          packageName = packageName,
           name = it.name,
           iconUrl = it.icon,
           icon = null,

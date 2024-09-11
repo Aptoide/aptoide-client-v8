@@ -124,7 +124,7 @@ internal fun AppsRowView(
             analyticsContext = analyticsContext.copy(itemPosition = index)
           )
           navigate(
-            buildAppViewRoute(item.id.toAppIdParam())
+            buildAppViewRoute(item.appId.toAppIdParam())
               .withItemPosition(index)
           )
         },

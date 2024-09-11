@@ -158,7 +158,7 @@ fun MoreBonusBundleViewContent(
 ) {
   val navigateToApp = { app: App, index: Int? ->
     navigate(
-      buildAppViewRoute(app.id.toAppIdParam()).withItemPosition(index)
+      buildAppViewRoute(app.appId.toAppIdParam()).withItemPosition(index)
     )
   }
 

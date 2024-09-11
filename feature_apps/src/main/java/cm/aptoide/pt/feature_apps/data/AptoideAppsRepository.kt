@@ -262,7 +262,7 @@ fun AppJSON.toDomainModel(
   campaignRepository: CampaignRepository,
   adListId: String,
 ) = App(
-  id = this.id!!,
+  appId = this.id!!,
   name = this.name!!,
   packageName = this.packageName!!,
   appSize = this.file.filesize + (this.obb?.main?.filesize ?: 0) + (this.obb?.patch?.filesize ?: 0),

@@ -116,7 +116,7 @@ private fun CarouselListView(
             analyticsContext = analyticsContext.copy(itemPosition = page)
           )
           navigate(
-            buildAppViewRoute(item.id.toAppIdParam())
+            buildAppViewRoute(item.appId.toAppIdParam())
               .withItemPosition(page)
           )
         }

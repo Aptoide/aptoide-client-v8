@@ -460,7 +460,7 @@ fun AppInfoSection(
       AppInfoRowWithAction(
         infoCategory = stringResource(R.string.appview_info_permissions_title),
         onClick = {
-          navigate(buildAppPermissionsRoute(app.id.toAppIdParam()))
+          navigate(buildAppPermissionsRoute(app.appId.toAppIdParam()))
         }
       )
     }
