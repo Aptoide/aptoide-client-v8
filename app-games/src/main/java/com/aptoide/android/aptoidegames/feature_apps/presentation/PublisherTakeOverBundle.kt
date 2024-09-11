@@ -250,7 +250,7 @@ fun PublisherTakeOverListView(
               analyticsContext = analyticsContext.copy(itemPosition = page)
             )
             navigate(
-              buildAppViewRoute(app.id.toAppIdParam())
+              buildAppViewRoute(app.appId.toAppIdParam())
                 .withItemPosition(page)
             )
           }

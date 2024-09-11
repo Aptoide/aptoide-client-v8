@@ -154,7 +154,7 @@ fun searchScreen() = ScreenData.withAnalytics(
           searchMeta = searchMeta!!,
         )
         navigateTo(
-          buildAppViewRoute(app.id.toAppIdParam()).withItemPosition(index)
+          buildAppViewRoute(app.appId.toAppIdParam()).withItemPosition(index)
         )
       },
       onItemInstallStarted = {}

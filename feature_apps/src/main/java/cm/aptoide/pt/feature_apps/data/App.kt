@@ -2,6 +2,7 @@ package cm.aptoide.pt.feature_apps.data
 
 import cm.aptoide.pt.extensions.getRandomString
 import cm.aptoide.pt.feature_apps.domain.Rating
+import cm.aptoide.pt.feature_apps.domain.AppSource
 import cm.aptoide.pt.feature_apps.domain.Store
 import cm.aptoide.pt.feature_apps.domain.Votes
 import cm.aptoide.pt.feature_campaigns.CampaignImpl
@@ -12,9 +13,9 @@ import kotlin.random.Random
 import kotlin.random.nextLong
 
 data class App(
-  val id: Long,
+  override val appId: Long,
   val name: String,
-  val packageName: String,
+  override val packageName: String,
   val md5: String,
   val appSize: Long,
   val icon: String,
@@ -43,7 +44,7 @@ data class App(
   val bdsFlags: List<String?>?,
   val developerName: String?,
   val campaigns: CampaignImpl? = null,
-)
+): AppSource
 
 data class File(
   private val _fileName: String? = null,
@@ -73,7 +74,7 @@ data class Obb(
 )
 
 val emptyApp = App(
-  id = 0,
+  appId = 0,
   name = "",
   packageName = "",
   md5 = "",
@@ -128,7 +129,7 @@ val emptyApp = App(
 val randomApp
   get() =
     emptyApp.copy(
-      id = Random.nextLong(),
+      appId = Random.nextLong(),
       name = getRandomString(range = 2..5, capitalize = true),
       packageName = getRandomString(range = 3..5, separator = "."),
       appSize = Random.nextLong(1_000_000L..1_000_000_000L),
