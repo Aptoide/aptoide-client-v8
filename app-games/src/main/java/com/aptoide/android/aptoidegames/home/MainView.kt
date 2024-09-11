@@ -21,7 +21,7 @@ import cm.aptoide.pt.extensions.animatedComposable
 import cm.aptoide.pt.extensions.staticComposable
 import com.aptoide.android.aptoidegames.AptoideGamesBottomSheet
 import com.aptoide.android.aptoidegames.apkfy.ApkfyBottomSheetContent
-import com.aptoide.android.aptoidegames.apkfy.rememberApkfyApp
+import cm.aptoide.pt.feature_apkfy.presentation.rememberApkfyApp
 import com.aptoide.android.aptoidegames.appview.appViewScreen
 import com.aptoide.android.aptoidegames.appview.permissions.appPermissionsScreen
 import com.aptoide.android.aptoidegames.bottom_bar.AppGamesBottomBar
