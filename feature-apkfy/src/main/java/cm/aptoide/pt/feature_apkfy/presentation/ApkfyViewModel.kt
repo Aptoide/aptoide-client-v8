@@ -11,8 +11,6 @@ import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.feature_apkfy.domain.ApkfyManager
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.domain.AppMetaUseCase
-import cm.aptoide.pt.feature_apps.presentation.toAppIdParam
-import cm.aptoide.pt.feature_apps.presentation.toPackageNameParam
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,12 +42,9 @@ class ApkfyViewModel @Inject constructor(
         apkfyManager.getApkfy()
           ?.takeIf { it.packageName != context.packageName }
           ?.takeIf { it.appId != null || it.packageName != null }
-          ?.run {
-            (appId?.toAppIdParam() ?: packageName?.toPackageNameParam())
-              ?.let { source ->
-                val app = appMetaUseCase.getMetaInfo(source = source)
-                viewModelState.update { app }
-              }
+          ?.let {
+            val app = appMetaUseCase.getMetaInfo(source = it.asSource())
+            viewModelState.update { app }
           }
       } catch (e: Throwable) {
         e.printStackTrace()

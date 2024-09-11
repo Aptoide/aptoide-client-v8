@@ -74,7 +74,7 @@ data class Obb(
 )
 
 val emptyApp = App(
-  appId = 0,
+  appId = -1,
   name = "",
   packageName = "",
   md5 = "",

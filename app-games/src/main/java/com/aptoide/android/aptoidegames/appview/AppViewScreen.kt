@@ -56,9 +56,10 @@ import cm.aptoide.pt.extensions.sendMail
 import cm.aptoide.pt.extensions.toFormattedString
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
+import cm.aptoide.pt.feature_apps.domain.AppSource
+import cm.aptoide.pt.feature_apps.domain.AppSource.Companion.appendIfRequired
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.rememberApp
-import cm.aptoide.pt.feature_apps.presentation.toAppIdParam
 import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
 import cm.aptoide.pt.feature_editorial.presentation.relatedEditorialsCardViewModel
 import cm.aptoide.pt.feature_editorial.presentation.rememberRelatedEditorials
@@ -87,7 +88,6 @@ import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.videos.presentation.AppViewYoutubePlayer
-import java.util.Locale
 
 private val tabsList = listOf(
   AppViewTab.DETAILS,
@@ -104,23 +104,20 @@ fun appViewScreen() = ScreenData.withAnalytics(
   screenAnalyticsName = "AppView",
   deepLinks = listOf(navDeepLink { uriPattern = BuildConfig.DEEP_LINK_SCHEMA + appViewRoute })
 ) { arguments, navigate, navigateBack ->
-  var source = arguments?.getString(SOURCE)!!
-
-  if (!source.contains("app_id=") && !source.contains("com.appcoins.wallet")) {
-    source = "$source/store_name=${BuildConfig.MARKET_NAME.lowercase(Locale.ROOT)}"
-  }
+  val source = arguments?.getString(SOURCE)!!
 
   AppViewScreen(
-    source = source,
+    source = source.appendIfRequired(BuildConfig.MARKET_NAME),
     navigate = navigate,
     navigateBack = navigateBack
   )
 }
 
-fun buildAppViewRoute(source: String): String = appViewRoute.replace("{$SOURCE}", source)
+fun buildAppViewRoute(appSource: AppSource): String =
+  appViewRoute.replace("{$SOURCE}", appSource.asSource())
 
-fun buildAppViewDeepLinkUri(source: String) =
-  BuildConfig.DEEP_LINK_SCHEMA + buildAppViewRoute(source)
+fun buildAppViewDeepLinkUri(appSource: AppSource) =
+  BuildConfig.DEEP_LINK_SCHEMA + buildAppViewRoute(appSource)
 
 @Composable
 fun AppViewScreen(
@@ -460,7 +457,7 @@ fun AppInfoSection(
       AppInfoRowWithAction(
         infoCategory = stringResource(R.string.appview_info_permissions_title),
         onClick = {
-          navigate(buildAppPermissionsRoute(app.appId.toAppIdParam()))
+          navigate(buildAppPermissionsRoute(app))
         }
       )
     }

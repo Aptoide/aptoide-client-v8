@@ -54,7 +54,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_apps.presentation.toAppIdParam
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType
 import cm.aptoide.pt.feature_search.presentation.SearchUiState
 import cm.aptoide.pt.feature_search.presentation.SearchViewModel
@@ -154,7 +153,7 @@ fun searchScreen() = ScreenData.withAnalytics(
           searchMeta = searchMeta!!,
         )
         navigateTo(
-          buildAppViewRoute(app.appId.toAppIdParam()).withItemPosition(index)
+          buildAppViewRoute(app).withItemPosition(index)
         )
       },
       onItemInstallStarted = {}

@@ -61,9 +61,9 @@ import cm.aptoide.pt.aptoide_ui.animations.animatedComposable
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.editorial.buildEditorialRoute
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.domain.AppSource
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.rememberApp
-import cm.aptoide.pt.feature_apps.presentation.toPackageNameParam
 import cm.aptoide.pt.feature_appview.presentation.AppViewTab
 import cm.aptoide.pt.feature_editorial.presentation.relatedEditorialsCardViewModel
 import cm.aptoide.pt.theme.AppTheme
@@ -103,7 +103,11 @@ fun AppViewScreen(
   navigateBack: () -> Unit = {},
   navigate: (String) -> Unit = {},
 ) {
-  val (uiState, _) = rememberApp(source = packageName.toPackageNameParam())
+  val (uiState, _) = rememberApp(
+    source = AppSource
+      .of(appId = null, packageName = packageName)
+      .asSource()
+  )
 
   val editorialsCardViewModel = relatedEditorialsCardViewModel(packageName = packageName)
   val relatedEditorialsUiState by editorialsCardViewModel.uiState.collectAsState()

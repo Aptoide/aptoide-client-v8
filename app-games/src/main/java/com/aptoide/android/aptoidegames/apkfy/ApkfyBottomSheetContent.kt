@@ -8,7 +8,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_apps.presentation.toAppIdParam
 import com.aptoide.android.aptoidegames.BottomSheetContent
 import com.aptoide.android.aptoidegames.BottomSheetHeader
 import com.aptoide.android.aptoidegames.R
@@ -38,7 +37,7 @@ class ApkfyBottomSheetContent(private val app: App) : BottomSheetContent {
         AppItem(
           app = app,
           onClick = {
-            navigateTo(buildAppViewRoute(app.appId.toAppIdParam()))
+            navigateTo(buildAppViewRoute(app))
             dismiss()
           }
         ) {
