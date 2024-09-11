@@ -40,7 +40,6 @@ import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiStateProvider
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
-import cm.aptoide.pt.feature_apps.presentation.toAppIdParam
 import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
 import com.aptoide.android.aptoidegames.AptoideOutlinedText
 import com.aptoide.android.aptoidegames.BuildConfig
@@ -158,7 +157,7 @@ fun MoreBonusBundleViewContent(
 ) {
   val navigateToApp = { app: App, index: Int? ->
     navigate(
-      buildAppViewRoute(app.appId.toAppIdParam()).withItemPosition(index)
+      buildAppViewRoute(app).withItemPosition(index)
     )
   }
 
@@ -225,7 +224,10 @@ fun MoreBonusSectionView(
       contentScale = ContentScale.FillWidth,
     )
     AptoideOutlinedText(
-      text = stringResource(id = R.string.bonus_banner_title, "20"), //TODO Hardcoded value (should come from backend in the future)
+      text = stringResource(
+        id = R.string.bonus_banner_title,
+        "20"
+      ), //TODO Hardcoded value (should come from backend in the future)
       style = AGTypography.InputsM,
       outlineWidth = 10f,
       outlineColor = Palette.Black,

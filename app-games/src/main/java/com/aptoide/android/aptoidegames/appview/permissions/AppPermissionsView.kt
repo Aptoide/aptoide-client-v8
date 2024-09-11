@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.ScreenData
+import cm.aptoide.pt.feature_apps.domain.AppSource
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.AppUiStateProvider
 import cm.aptoide.pt.feature_apps.presentation.rememberApp
@@ -48,7 +49,8 @@ fun appPermissionsScreen() = ScreenData.withAnalytics(
   )
 }
 
-fun buildAppPermissionsRoute(source: String): String = "appInfoPermissions/$source"
+fun buildAppPermissionsRoute(appSource: AppSource): String =
+  "appInfoPermissions/${appSource.asSource()}"
 
 @Composable
 fun AppInfoPermissionsView(

@@ -8,7 +8,6 @@ import cm.aptoide.pt.feature_apps.data.isAab
 import cm.aptoide.pt.feature_apps.data.isInCatappult
 import cm.aptoide.pt.feature_apps.domain.AppMetaUseCase
 import cm.aptoide.pt.feature_apps.domain.DynamicSplitsUseCase
-import cm.aptoide.pt.feature_apps.presentation.toAppIdParam
 import cm.aptoide.pt.install_info_mapper.domain.InstallPackageInfoMapper
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallationFile
@@ -21,7 +20,7 @@ class AptoideInstallPackageInfoMapper @Inject constructor(
   private val dynamicSplitsUseCase: DynamicSplitsUseCase,
 ) : InstallPackageInfoMapper {
   override suspend fun map(app: App): InstallPackageInfo {
-    val appMeta = appMetaUseCase.getMetaInfo(source = app.appId.toAppIdParam())
+    val appMeta = appMetaUseCase.getMetaInfo(source = app.asSource())
 
     return InstallPackageInfo(
       versionCode = app.versionCode.toLong(),

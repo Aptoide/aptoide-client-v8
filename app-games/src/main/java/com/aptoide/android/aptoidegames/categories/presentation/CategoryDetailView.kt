@@ -24,7 +24,6 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiStateProvider
 import cm.aptoide.pt.feature_apps.presentation.categoryApps
-import cm.aptoide.pt.feature_apps.presentation.toAppIdParam
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
@@ -80,7 +79,7 @@ fun CategoryDetailView(
 
   val navigateToApp = { app: App, index: Int ->
     navigate(
-      buildAppViewRoute(app.appId.toAppIdParam())
+      buildAppViewRoute(app)
         .withItemPosition(index)
         .withBundleMeta(analyticsContext.bundleMeta?.copy(tag = categoryName))
     )

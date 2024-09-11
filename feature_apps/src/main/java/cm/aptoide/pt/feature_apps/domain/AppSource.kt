@@ -1,5 +1,7 @@
 package cm.aptoide.pt.feature_apps.domain
 
+import java.util.Locale
+
 interface AppSource {
   val appId: Long?
   val packageName: String?
@@ -13,5 +15,10 @@ interface AppSource {
       override val appId = appId
       override val packageName = packageName
     }
+
+    fun String.appendIfRequired(storeName: String) =
+      if (contains("package_name=") && !contains("com.appcoins.wallet")) {
+        "$this/store_name=${storeName.lowercase(Locale.ROOT)}"
+      } else this
   }
 }
