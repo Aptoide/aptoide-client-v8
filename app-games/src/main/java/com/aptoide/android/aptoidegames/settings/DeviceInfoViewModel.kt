@@ -48,7 +48,7 @@ class DeviceInfoViewModel(
 
   init {
     viewModelScope.launch {
-      val pid = runCatching { walletProvider.getWallet() }.getOrNull()?.address ?: "-"
+      val pid = walletProvider.getWallet()?.address ?: "-"
       viewModelState.update {
         "${deviceInfo.getDeviceInfoSummary()}\n" +
           "AptoideGames: ${Integer.toHexString(storeName.hashCode())}\n" +
