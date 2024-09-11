@@ -1,4 +1,4 @@
-package com.aptoide.android.aptoidegames.apkfy
+package cm.aptoide.pt.feature_apkfy.presentation
 
 import android.content.Context
 import androidx.compose.runtime.Composable
@@ -8,11 +8,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.extensions.runPreviewable
+import cm.aptoide.pt.feature_apkfy.domain.ApkfyManager
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.domain.AppMetaUseCase
 import cm.aptoide.pt.feature_apps.presentation.toAppIdParam
 import cm.aptoide.pt.feature_apps.presentation.toPackageNameParam
-import cm.aptoide.pt.feature_apkfy.domain.ApkfyManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,6 +43,7 @@ class ApkfyViewModel @Inject constructor(
       try {
         apkfyManager.getApkfy()
           ?.takeIf { it.packageName != context.packageName }
+          ?.takeIf { it.appId != null || it.packageName != null }
           ?.run {
             (appId?.toAppIdParam() ?: packageName?.toPackageNameParam())
               ?.let { source ->
