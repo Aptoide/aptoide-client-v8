@@ -1,11 +1,13 @@
-package cm.aptoide.pt.feature_mmp.di
+package cm.aptoide.pt.feature_apkfy.di
 
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import cm.aptoide.pt.aptoide_network.di.BaseOkHttp
-import cm.aptoide.pt.feature_mmp.MMPPreferencesRepository
-import cm.aptoide.pt.feature_mmp.apkfy.domain.dataStore
+import cm.aptoide.pt.feature_apkfy.repository.ApkfyPreferencesRepository
+import cm.aptoide.pt.feature_apkfy.domain.dataStore
+import cm.aptoide.pt.feature_apkfy.repository.ApkfyRepository
+import cm.aptoide.pt.feature_apkfy.repository.AptoideApkfyRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -37,16 +39,24 @@ internal object RepositoryModule {
 
   @Singleton
   @Provides
-  @MMPDataStore
-  fun provideMMPDataStore(@ApplicationContext appContext: Context): DataStore<Preferences> {
+  @ApkfyDataStore
+  fun provideApkfyDataStore(@ApplicationContext appContext: Context): DataStore<Preferences> {
     return appContext.dataStore
   }
 
   @Provides
   @Singleton
-  fun provideMMPPreferencesRepository(
-    @MMPDataStore dataStore: DataStore<Preferences>,
-  ) = MMPPreferencesRepository(dataStore = dataStore)
+  fun provideApkfyPreferencesRepository(
+    @ApkfyDataStore dataStore: DataStore<Preferences>,
+  ) = ApkfyPreferencesRepository(dataStore = dataStore)
+
+  @Provides
+  @Singleton
+  fun provideApkfyRepository(@RetrofitMMP retrofitMMP: Retrofit): ApkfyRepository {
+    return AptoideApkfyRepository(
+      mmpRemoteDataSource = retrofitMMP.create(AptoideApkfyRepository.Retrofit::class.java)
+    )
+  }
 }
 
 @Qualifier
@@ -59,4 +69,4 @@ annotation class RetrofitMMP
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
-annotation class MMPDataStore
+annotation class ApkfyDataStore

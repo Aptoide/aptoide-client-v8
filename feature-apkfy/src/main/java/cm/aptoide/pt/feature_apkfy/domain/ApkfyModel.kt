@@ -1,4 +1,4 @@
-package cm.aptoide.pt.feature_mmp.apkfy.domain
+package cm.aptoide.pt.feature_apkfy.domain
 
 data class ApkfyModel(
   val packageName: String?,

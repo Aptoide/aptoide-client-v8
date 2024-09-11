@@ -1,7 +1,7 @@
 package com.aptoide.android.aptoidegames.apkfy.di
 
-import cm.aptoide.pt.feature_mmp.apkfy.domain.ApkfyManager
-import cm.aptoide.pt.feature_mmp.apkfy.domain.ApkfyManagerImpl
+import cm.aptoide.pt.feature_apkfy.domain.ApkfyManager
+import cm.aptoide.pt.feature_apkfy.domain.ApkfyManagerImpl
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.apkfy.analytics.ApkfyManagerProbe
 import dagger.Module

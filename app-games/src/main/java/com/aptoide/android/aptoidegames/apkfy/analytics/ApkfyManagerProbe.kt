@@ -1,7 +1,7 @@
 package com.aptoide.android.aptoidegames.apkfy.analytics
 
-import cm.aptoide.pt.feature_mmp.apkfy.domain.ApkfyManager
-import cm.aptoide.pt.feature_mmp.apkfy.domain.ApkfyModel
+import cm.aptoide.pt.feature_apkfy.domain.ApkfyManager
+import cm.aptoide.pt.feature_apkfy.domain.ApkfyModel
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 
 class ApkfyManagerProbe(

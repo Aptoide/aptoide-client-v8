@@ -46,5 +46,5 @@ include(
   ":install-info-mapper",
   ":network-listener",
   ":feature-appcoins",
-  ":feature-mmp"
+  ":feature-apkfy"
 )

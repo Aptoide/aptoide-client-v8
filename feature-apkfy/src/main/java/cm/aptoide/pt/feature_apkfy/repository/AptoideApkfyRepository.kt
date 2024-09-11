@@ -1,10 +1,10 @@
-package cm.aptoide.pt.feature_mmp.apkfy.repository
+package cm.aptoide.pt.feature_apkfy.repository
 
-import cm.aptoide.pt.feature_mmp.apkfy.domain.ApkfyModel
+import cm.aptoide.pt.feature_apkfy.domain.ApkfyModel
 import retrofit2.http.GET
 import javax.inject.Inject
 
-internal class AptoideMMPRepository @Inject constructor(
+internal class AptoideApkfyRepository @Inject constructor(
   private val mmpRemoteDataSource: Retrofit,
 ) : ApkfyRepository {
 
