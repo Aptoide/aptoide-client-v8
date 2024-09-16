@@ -62,7 +62,6 @@ class InstallerNotificationsBuilder @Inject constructor(
       ).apply {
         description = descriptionText
         setSound(null, null)
-        vibrationPattern = LongArray(0)
       }
 
       notificationManager.createNotificationChannel(channel)
