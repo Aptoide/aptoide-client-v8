@@ -3,6 +3,9 @@ package com.aptoide.android.aptoidegames.videos.presentation
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -79,6 +82,7 @@ fun AppViewYoutubePlayer(
     val videoSettingsViewModel = hiltViewModel<VideoSettingsViewModel>()
     val shouldMute by videoSettingsViewModel.uiState.collectAsState()
 
+    var showVideo by remember { mutableStateOf(false) }
     var showFullscreen by remember { mutableStateOf(false) }
     var userPaused by remember { mutableStateOf(false) }
 
@@ -152,34 +156,51 @@ fun AppViewYoutubePlayer(
         state: PlayerConstants.PlayerState,
       ) {
         when (state) {
+          PlayerConstants.PlayerState.VIDEO_CUED -> showVideo = true
+
           PlayerConstants.PlayerState.PAUSED -> {
             if (showFullscreen) {
               userPaused = true
+            } else {
+              youtubePlayer?.hidePlayerControls()
+              youtubePlayer?.hideVideoTitle()
             }
+            showVideo = true
           }
 
           PlayerConstants.PlayerState.PLAYING -> {
             if (showFullscreen) {
               userPaused = false
+            } else {
+              youtubePlayer?.hidePlayerControls()
+              youtubePlayer?.hideVideoTitle()
             }
+            showVideo = true
           }
 
           else -> {}
         }
       }
     })
-
-    if (youtubePlayerView != null) {
+    val show = youtubePlayerView != null && showVideo
+    AnimatedVisibility(
+      visible = show,
+      enter = fadeIn(),
+    ) {
       AppViewYoutubePlayerContent(
         modifier = modifier,
-        youtubePlayerView = youtubePlayerView,
+        youtubePlayerView = youtubePlayerView!!, //check on visible already
         youtubePlayer = youtubePlayer,
         showFullscreen = showFullscreen,
         toggleFullscreen = { showFullscreen = !showFullscreen },
         shouldMute = shouldMute,
         contentDescription = contentDesc
       )
-    } else {
+    }
+    AnimatedVisibility(
+      visible = !show,
+      exit = fadeOut()
+    ) {
       onErrorContent()
     }
   }
