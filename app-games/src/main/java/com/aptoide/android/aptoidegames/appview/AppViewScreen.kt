@@ -50,6 +50,7 @@ import androidx.navigation.navDeepLink
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.ScreenData
+import cm.aptoide.pt.extensions.extractVideoId
 import cm.aptoide.pt.extensions.formatDownloads
 import cm.aptoide.pt.extensions.isYoutubeURL
 import cm.aptoide.pt.extensions.openUrlInBrowser
@@ -231,7 +232,7 @@ fun AppViewContent(
     }
 
     if (showYoutubeVideo) {
-      val videoId = app.videos[0].split("embed/").getOrElse(1) { "" }
+      val videoId = app.videos[0].extractVideoId()
       val videoHeightPx = with(localDensity) { VIDEO_HEIGHT.dp.toPx() }
       val contentDesc = String.format("Video of %1s", app.name)
 
