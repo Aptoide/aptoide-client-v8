@@ -54,20 +54,22 @@ fun AppIconWProgress(
         }
       }
     }
-    LaunchedEffect(key1 = state) {
-      animation.snapTo(0f)
+    LaunchedEffect(key1 = state?.javaClass?.simpleName) {
       when (state) {
         is Waiting,
         is ReadyToInstall,
         is Installing,
         is Uninstalling,
-        -> animation.animateTo(
-          targetValue = 1f,
-          animationSpec = infiniteRepeatable(
-            animation = tween(1000, easing = LinearEasing),
-            repeatMode = Restart
+        -> {
+          animation.snapTo(0f)
+          animation.animateTo(
+            targetValue = 1f,
+            animationSpec = infiniteRepeatable(
+              animation = tween(1000, easing = LinearEasing),
+              repeatMode = Restart
+            )
           )
-        )
+        }
 
         else -> animation.stop()
       }
