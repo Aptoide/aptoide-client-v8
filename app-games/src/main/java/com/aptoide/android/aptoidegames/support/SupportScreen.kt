@@ -40,7 +40,7 @@ import cm.aptoide.pt.extensions.getRandomString
 import cm.aptoide.pt.extensions.sendMail
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
-import com.aptoide.android.aptoidegames.design_system.SecondaryButton
+import com.aptoide.android.aptoidegames.design_system.PrimaryButton
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -123,7 +123,7 @@ fun SupportView(
       } else {
         Spacer(modifier = Modifier.weight(16f))
       }
-      SecondaryButton(
+      PrimaryButton(
         onClick = {
           genericAnalytics.sendFeedbackSent(type)
           context.sendMail(
