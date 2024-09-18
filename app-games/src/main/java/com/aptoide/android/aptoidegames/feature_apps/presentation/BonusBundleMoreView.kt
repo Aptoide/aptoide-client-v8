@@ -28,7 +28,6 @@ import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -36,6 +35,7 @@ import androidx.navigation.navDeepLink
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.extensions.getRandomString
+import cm.aptoide.pt.extensions.toAnnotatedString
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
@@ -293,20 +293,8 @@ fun WantMoreSectionView(onWalletClick: (app: App) -> Unit) {
   Column(
     modifier = Modifier.padding(bottom = 40.dp)
   ) {
-    val splitText = stringResource(id = R.string.bonus_page_body_2, "10")
-
-    val bonusStartIndex = splitText.indexOf("10%")
-    val bonusEndIndex = bonusStartIndex + "10%".length + "bonus".length + 1
-
-    val annotatedString = buildAnnotatedString {
-      append(splitText.substring(0, bonusStartIndex))
-
-      withStyle(style = SpanStyle(color = Palette.Primary)) {
-        append(splitText.substring(bonusStartIndex, bonusEndIndex))
-      }
-
-      append(splitText.substring(bonusEndIndex))
-    }
+    val originalString = stringResource(id = R.string.bonus_page_body_2, "10")
+    val annotatedString = originalString.toAnnotatedString(SpanStyle(color = Palette.Primary))
 
     Image(
       imageVector = getWantMoreViewHeader(),
