@@ -198,7 +198,7 @@
   <string name="bonus_page_title_1">Bónusz minden vásárlásért cserébe</string>
   <string name="bonus_page_body_1">Keresd a %1$s jellel jelölt játékokat, telepítsd az AppCoins Walletet, és szerezz akár %2$s%% bónuszt minden vásárlás után. Ezt a bónuszt pedig felhasználhatod a legközelebbi vásárlás során a kedvenc játékodban!</string>
   <string name="bonus_page_title_2">Többet szeretnél?</string>
-  <string name="bonus_page_body_2">Extra %s%% bónuszhoz juthatsz, ha az Aptoide Játékok exkluzív promókódját használod egyes játékokban! Maradj velünk, és nemsokára megosztjuk veled a részleteket!</string>
+  <string name="bonus_page_body_2"><![CDATA[You can get an extra <1>%s%% bonus</1> by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!]]></string>
   <!-- Promo Code -->
   <string name="promo_code_install_wallet_banner_title">Up to %s%% Bonus in Every Purchase</string>
   <string name="promo_code_install_wallet_banner_body">Use the AppCoins Wallet to make your in-app purchases and get a reward.</string>

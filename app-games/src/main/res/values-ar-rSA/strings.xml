@@ -198,7 +198,7 @@
   <string name="bonus_page_title_1">مكافأة على كل عملية شراء</string>
   <string name="bonus_page_body_1">ابحث عن الألعاب المعرّفة مع %1$s، ثبت محفظة AppCoins Wallet واحصل على %2$s%% مكافآت على كل مشترياتك. يمكنك استخدام تلك المكافآت لعملية الشراء التالية داخل ألعابك المفضلة.</string>
   <string name="bonus_page_title_2">تريد المزيد؟</string>
-  <string name="bonus_page_body_2">يمكنك أن تحصل على %s%% إضافية باستخدام رمز Aptoide Games الترويجي الحصري في ألعاب معينة. تابع كل جديد وسنخبرك في الوقت المناسب!</string>
+  <string name="bonus_page_body_2"><![CDATA[You can get an extra <1>%s%% bonus</1> by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!]]></string>
   <!-- Promo Code -->
   <string name="promo_code_install_wallet_banner_title">مكافآت حتى %s%% على كل المشتريات</string>
   <string name="promo_code_install_wallet_banner_body">استخدم AppCoins Wallet لإتمام عمليات الشراء داخل التطبيقات واحصل على الجوائز.</string>

@@ -198,7 +198,7 @@
   <string name="bonus_page_title_1">یک پاداش برای هر خرید</string>
   <string name="bonus_page_body_1">به دنبال بازی‌هایی با مشخصه %1$s باشید، AppCoins Wallet را نصب کنید و تا %2$s%% بونوس در همه خریدهای دریافت کنید. از این بونوس می‌توانید در خرید در بازی‌های محبوب خود استفاده کنید.</string>
   <string name="bonus_page_title_2">بیشتر می‌خواهید؟</string>
-  <string name="bonus_page_body_2">شما می‌توانید یک بونوس اضافی %s%% هم با استفاده از کد ویژه Aptoide Games در بازی‌های خاصی بدست آورید. در ارتباط باشید و باخبر خواهید شد!</string>
+  <string name="bonus_page_body_2"><![CDATA[You can get an extra <1>%s%% bonus</1> by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!]]></string>
   <!-- Promo Code -->
   <string name="promo_code_install_wallet_banner_title">تا %s%% بونوس در همه خریدها</string>
   <string name="promo_code_install_wallet_banner_body">برای خریدهای داخل اپلیکیشنی خود از AppCoins Wallet استفاده کنید و پاداش بگیرید.</string>

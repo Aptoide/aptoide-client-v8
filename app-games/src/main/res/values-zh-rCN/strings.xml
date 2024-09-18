@@ -198,7 +198,7 @@
   <string name="bonus_page_title_1">每次购买均会获得奖金</string>
   <string name="bonus_page_body_1">寻找标有 %1$s 的游戏，安装 AppCoins 钱包，以在每次购买时获得高达 %2$s%% 的奖金。然后，您可以在最喜爱的游戏中进行下一次购买时使用此奖金。</string>
   <string name="bonus_page_title_2">想要获得更多？</string>
-  <string name="bonus_page_body_2">您可以通过在特定游戏中使用 Aptoide Games 的专属促销代码获得额外 %s%% 的奖金。</string>
+  <string name="bonus_page_body_2"><![CDATA[You can get an extra <1>%s%% bonus</1> by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!]]></string>
   <!-- Promo Code -->
   <string name="promo_code_install_wallet_banner_title">Up to %s%% Bonus in Every Purchase</string>
   <string name="promo_code_install_wallet_banner_body">Use the AppCoins Wallet to make your in-app purchases and get a reward.</string>
