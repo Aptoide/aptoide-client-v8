@@ -198,7 +198,7 @@
   <string name="bonus_page_title_1">Bonus pri svakoj kupovini</string>
   <string name="bonus_page_body_1">Potražite igre označene sa %1$s, instalirajte AppCoins Wallet i osvojite do %2$s%% bonusa pri svakoj kupovini. Zatim možete iskoristiti ovaj bonus da biste obavili svoje sledeće kupovine u omiljenim igrama!</string>
   <string name="bonus_page_title_2">Želite više?</string>
-  <string name="bonus_page_body_2">Možete osvojiti dodatnih %s%% bonusa ako iskoristite Aptoide Games ekskluzivni promo kod u određenim igrama. Ostanite u toku i dobićete obaveštenje!</string>
+  <string name="bonus_page_body_2"><![CDATA[You can get an extra <1>%s%% bonus</1> by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!]]></string>
   <!-- Promo Code -->
   <string name="promo_code_install_wallet_banner_title">Do %s[% bonusa za svaku kupovinu</string>
   <string name="promo_code_install_wallet_banner_body">Iskoristite AppCoins Wallet da biste obavili svoju kupovinu u aplikaciji i osvojite nagradu.</string>
