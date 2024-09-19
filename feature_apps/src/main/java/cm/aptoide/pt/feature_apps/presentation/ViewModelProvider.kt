@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.feature_apps.data.randomApp
+import cm.aptoide.pt.feature_apps.data.walletApp
 import cm.aptoide.pt.feature_apps.domain.AppMetaUseCase
 import cm.aptoide.pt.feature_apps.domain.AppVersionsUseCase
 import cm.aptoide.pt.feature_apps.domain.AppsByTagUseCase
@@ -146,3 +147,6 @@ fun categoryApps(
 
   return uiState to vm::reload
 }
+
+@Composable
+fun rememberWalletApp() = rememberApp(source = walletApp.asSource())

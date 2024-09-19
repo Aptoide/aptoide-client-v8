@@ -12,11 +12,12 @@ import cm.aptoide.pt.aptoide_network.di.StoreDomain
 import cm.aptoide.pt.aptoide_network.di.StoreName
 import cm.aptoide.pt.aptoide_network.di.VersionCode
 import cm.aptoide.pt.environment_info.DeviceInfo
+import cm.aptoide.pt.feature_apkfy.di.MMPDomain
+import cm.aptoide.pt.feature_apps.data.walletApp
 import cm.aptoide.pt.feature_editorial.di.DefaultEditorialUrl
 import cm.aptoide.pt.feature_flags.data.FeatureFlagsRepository
 import cm.aptoide.pt.feature_flags.di.FeatureFlagsDataStore
 import cm.aptoide.pt.feature_home.di.WidgetsUrl
-import cm.aptoide.pt.feature_apkfy.di.MMPDomain
 import cm.aptoide.pt.feature_oos.di.UninstallPackagesFilter
 import cm.aptoide.pt.feature_search.data.AutoCompleteSuggestionsRepository
 import cm.aptoide.pt.feature_search.domain.repository.SearchStoreManager
@@ -35,7 +36,6 @@ import com.aptoide.android.aptoidegames.search.repository.AppGamesAutoCompleteSu
 import com.aptoide.android.aptoidegames.search.repository.AppGamesSearchStoreManager
 import com.aptoide.android.aptoidegames.themeDataStore
 import com.aptoide.android.aptoidegames.userFeatureFlagsDataStore
-import com.aptoide.android.aptoidegames.wallet.WALLET_PACKAGE_NAME
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -201,7 +201,7 @@ class RepositoryModule {
   @UninstallPackagesFilter
   fun providePackagesToFilter(): List<String> = listOf(
     BuildConfig.APPLICATION_ID,
-    WALLET_PACKAGE_NAME,
+    walletApp.packageName,
     "cm.aptoide.pt"
   )
 }

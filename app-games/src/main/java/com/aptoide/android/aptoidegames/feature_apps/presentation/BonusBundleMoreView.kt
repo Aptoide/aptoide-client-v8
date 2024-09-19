@@ -40,6 +40,7 @@ import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiStateProvider
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
+import cm.aptoide.pt.feature_apps.presentation.rememberWalletApp
 import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
 import com.aptoide.android.aptoidegames.AptoideOutlinedText
 import com.aptoide.android.aptoidegames.BuildConfig
@@ -60,7 +61,6 @@ import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
-import com.aptoide.android.aptoidegames.wallet.rememberWalletApp
 
 const val seeMoreBonusRoute = "seeMoreBonus/{title}/{tag}"
 

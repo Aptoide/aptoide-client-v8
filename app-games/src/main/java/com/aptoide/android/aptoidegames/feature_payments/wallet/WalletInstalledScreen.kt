@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.PreviewLandscapeDark
 import cm.aptoide.pt.extensions.ScreenData
+import cm.aptoide.pt.feature_apps.data.walletApp
 import com.appcoins.payments.arch.PaymentsResult
 import com.appcoins.payments.arch.PurchaseRequest
 import com.appcoins.payments.uri_handler.PaymentsActivityResult
@@ -40,7 +41,6 @@ import com.aptoide.android.aptoidegames.feature_payments.AppGamesPaymentBottomSh
 import com.aptoide.android.aptoidegames.feature_payments.analytics.PaymentContext
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
-import com.aptoide.android.aptoidegames.wallet.WALLET_PACKAGE_NAME
 import kotlinx.coroutines.delay
 
 const val paymentsWalletInstalledRoute = "paymentsWalletInstalled"
@@ -91,7 +91,7 @@ fun PaymentsWalletInstalledView(
 
   val onRedirect: () -> Unit = {
     purchaseRequest.uri?.let {
-      val intent = Intent(Intent.ACTION_VIEW).setPackage(WALLET_PACKAGE_NAME)
+      val intent = Intent(Intent.ACTION_VIEW).setPackage(walletApp.packageName)
       intent.data = it
 
       try {
