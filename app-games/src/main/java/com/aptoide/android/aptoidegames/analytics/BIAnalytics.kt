@@ -8,6 +8,7 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.hasObb
 import cm.aptoide.pt.feature_apps.data.isAab
 import cm.aptoide.pt.feature_apps.data.isInCatappult
+import cm.aptoide.pt.feature_apps.data.walletApp
 import cm.aptoide.pt.feature_categories.analytics.AptoideAnalyticsInfoProvider
 import cm.aptoide.pt.install_manager.InstallManager
 import com.aptoide.android.aptoidegames.BuildConfig
@@ -25,7 +26,6 @@ import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_SEARCH
 import com.aptoide.android.aptoidegames.analytics.dto.AnalyticsPayload
 import com.aptoide.android.aptoidegames.analytics.dto.SearchMeta
 import com.aptoide.android.aptoidegames.launch.AppLaunchPreferencesManager
-import com.aptoide.android.aptoidegames.wallet.WALLET_PACKAGE_NAME
 import com.indicative.client.android.Indicative
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -71,7 +71,7 @@ class BIAnalytics(private val analyticsSender: AnalyticsSender) {
         .onEach { analyticsSender.setUserProperties("is_vanilla_installed" to it) }
         .launchIn(this)
       installManager
-        .getApp(WALLET_PACKAGE_NAME)
+        .getApp(walletApp.packageName)
         .packageInfoFlow
         .map { it != null }
         .onEach { analyticsSender.setUserProperties("is_wallet_app_installed" to it) }

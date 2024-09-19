@@ -34,6 +34,7 @@ import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.AppUiStateProvider
+import cm.aptoide.pt.feature_apps.presentation.rememberWalletApp
 import cm.aptoide.pt.feature_home.domain.BundleSource
 import com.appcoins.payments.arch.PaymentsResult
 import com.appcoins.payments.arch.PurchaseRequest
@@ -65,7 +66,6 @@ import com.aptoide.android.aptoidegames.installer.presentation.ProgressText
 import com.aptoide.android.aptoidegames.installer.presentation.rememberSaveAppDetails
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
-import com.aptoide.android.aptoidegames.wallet.rememberWalletApp
 
 private const val paymentsWalletInstallationRoute = "paymentsWalletInstallation"
 

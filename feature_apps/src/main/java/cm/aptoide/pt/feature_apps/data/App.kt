@@ -1,8 +1,8 @@
 package cm.aptoide.pt.feature_apps.data
 
 import cm.aptoide.pt.extensions.getRandomString
-import cm.aptoide.pt.feature_apps.domain.Rating
 import cm.aptoide.pt.feature_apps.domain.AppSource
+import cm.aptoide.pt.feature_apps.domain.Rating
 import cm.aptoide.pt.feature_apps.domain.Store
 import cm.aptoide.pt.feature_apps.domain.Votes
 import cm.aptoide.pt.feature_campaigns.CampaignImpl
@@ -46,7 +46,7 @@ data class App(
   val bdsFlags: List<String?>?,
   val developerName: String?,
   val campaigns: CampaignImpl? = null,
-): AppSource
+) : AppSource
 
 data class File(
   private val _fileName: String? = null,
@@ -128,6 +128,19 @@ val emptyApp = App(
   aab = null,
   obb = null,
   developerName = ""
+)
+
+val walletApp = emptyApp.copy(
+  packageName = "com.appcoins.wallet",
+  name = "AppCoins Wallet",
+  file = File(
+    vername = "",
+    vercode = 0,
+    md5 = "",
+    filesize = 33655476, //size of the current version of AppCoins Wallet - 2.11.0.0
+    path = "",
+    path_alt = ""
+  )
 )
 
 val randomApp
