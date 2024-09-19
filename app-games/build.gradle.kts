@@ -20,7 +20,15 @@ android {
     versionCode = Integer.parseInt(project.property("VERSION_CODE_APTOIDEGAMES").toString())
     versionName = "0.9.0"
 
-    buildConfigField("String", "MARKET_NAME", "\"aptoide-games\"")
+    System.getenv("STORE_NAME")
+      .also {
+        buildConfigField(
+          type = "String",
+          name = "MARKET_NAME",
+          value = "\"${it ?: "aptoide-games"}\""
+        )
+      }
+
     buildConfigField("String", "STORE_DOMAIN", "\"https://ws75.aptoide.com/api/7.20240701/\"")
     buildConfigField("String", "SEARCH_BUZZ_DOMAIN", "\"https://buzz.aptoide.com:10002\"")
     buildConfigField(
@@ -76,10 +84,18 @@ android {
 
   signingConfigs {
     create("signingConfigRelease") {
-      storeFile = project.file(project.properties[KeyHelper.KEY_STORE_FILE].toString())
-      storePassword = project.properties[KeyHelper.KEY_STORE_PASS].toString()
-      keyAlias = project.properties[KeyHelper.KEY_ALIAS].toString()
-      keyPassword = project.properties[KeyHelper.KEY_PASS].toString()
+      storeFile = project.file(
+        project.properties[
+          System.getenv("KEY_STORE_FILE") ?: KeyHelper.KEY_STORE_FILE
+        ].toString()
+      )
+      storePassword = project.properties[
+        System.getenv("KEY_STORE_PASS") ?: KeyHelper.KEY_STORE_PASS
+      ].toString()
+      keyAlias =
+        project.properties[System.getenv("KEY_ALIAS") ?: KeyHelper.KEY_ALIAS].toString()
+      keyPassword =
+        project.properties[System.getenv("KEY_PASS") ?: KeyHelper.KEY_PASS].toString()
     }
   }
 
