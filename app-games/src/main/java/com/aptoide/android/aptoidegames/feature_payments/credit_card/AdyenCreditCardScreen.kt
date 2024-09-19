@@ -320,11 +320,12 @@ private fun AdyenCreditCardScreenLandscape(
   Column(
     modifier = modifier
       .fillMaxSize()
-      .verticalScroll(rememberScrollState())
       .padding(horizontal = 16.dp)
       .padding(top = 16.dp, bottom = 8.dp)
   ) {
-    Row {
+    Row(modifier = Modifier
+      .verticalScroll(rememberScrollState())
+      .weight(1F)) {
       PurchaseInfoRow(
         modifier = Modifier.fillMaxWidth(0.4f),
         buyingPackage = packageName,
@@ -332,7 +333,8 @@ private fun AdyenCreditCardScreenLandscape(
       paymentView()
     }
     PaymentButtons(
-      modifier = Modifier.padding(top = 16.dp),
+      modifier = Modifier
+        .padding(top = 16.dp),
       onBuyClickEnabled = onBuyClickEnabled,
       onBuyClick = onBuyClick,
       onOtherPaymentMethodsClick = onOtherPaymentMethodsClick
