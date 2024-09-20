@@ -106,7 +106,8 @@ fun BonusSectionView(
       Image(
         modifier = Modifier
           .padding(top = 58.dp)
-          .minimumInteractiveComponentSize(),
+          .minimumInteractiveComponentSize()
+          .size(18.dp),
         imageVector = getForward(Palette.White),
         contentDescription = null,
       )

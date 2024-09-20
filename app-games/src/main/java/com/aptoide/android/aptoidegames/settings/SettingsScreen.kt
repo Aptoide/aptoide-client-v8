@@ -366,7 +366,7 @@ fun SettingsCaretItem(
       imageVector = getForward(Palette.Primary),
       contentDescription = null,
       modifier = Modifier
-        .size(24.dp)
+        .size(32.dp)
     )
   }
 }
