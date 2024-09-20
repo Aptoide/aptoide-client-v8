@@ -50,7 +50,7 @@ fun LandscapePaymentView(
 ) {
   val hasPreselectedPaymentMethod = rememberHasPreselectedPaymentMethod()
   when (paymentState) {
-    is PaymentMethodsUiState.Error -> when (paymentState.result) {
+    is PaymentMethodsUiState.Finished -> when (paymentState.result) {
       is ConnectionFailedException -> LandscapePaymentsNoConnectionView(
         onRetryClick = paymentState.reload
       )
@@ -76,7 +76,7 @@ fun LandscapePaymentView(
       )
     }
 
-    is PaymentMethodsUiState.Idle -> LandscapePaymentsView(
+    is PaymentMethodsUiState.Ready -> LandscapePaymentsView(
       purchaseRequest = purchaseRequest,
       paymentMethods = paymentState.paymentMethods,
       onPaymentMethodClick = onPaymentMethodClick,

@@ -53,7 +53,7 @@ fun PreselectedPaymentMethodEffect(
     val preselectedId by vm.uiState.collectAsState()
 
     LaunchedEffect(key1 = preselectedId, key2 = paymentMethodsState, key3 = navigated) {
-      if (paymentMethodsState is PaymentMethodsUiState.Idle && !navigated) {
+      if (paymentMethodsState is PaymentMethodsUiState.Ready && !navigated) {
         paymentMethodsState.paymentMethods.find { it.id == preselectedId }
           ?.getRoute(isPreSelected = true)
           ?.also {

@@ -104,7 +104,7 @@ private fun MainPaymentsView(
 
   LaunchedEffect(key1 = productInfo, key2 = paymentState, key3 = hasPaymentStartBeenSent) {
     productInfo?.let {
-      if (paymentState is PaymentMethodsUiState.Idle && !hasPaymentStartBeenSent) {
+      if (paymentState is PaymentMethodsUiState.Ready && !hasPaymentStartBeenSent) {
         genericAnalytics.sendPaymentStartEvent(
           packageName = purchaseRequest.domain,
           productInfoData = it,
@@ -121,7 +121,7 @@ private fun MainPaymentsView(
     purchaseRequest = purchaseRequest,
     paymentState = paymentState,
     onOutsideClick = {
-      if (paymentState is PaymentMethodsUiState.Error && paymentState.result is PaymentsItemOwnedResult) {
+      if (paymentState is PaymentMethodsUiState.Finished && paymentState.result is PaymentsItemOwnedResult) {
         onFinish(paymentState.result)
       } else {
         genericAnalytics.sendPaymentMethodsDismissedEvent(
@@ -414,10 +414,10 @@ private fun ShowPaymentsListNoConnectionPreviewLandscape(
 
 class PaymentMethodsUiStateProvider : PreviewParameterProvider<PaymentMethodsUiState> {
   override val values: Sequence<PaymentMethodsUiState> = sequenceOf(
-    PaymentMethodsUiState.Idle(listOf(emptyPaymentMethod, emptyPaymentMethod)),
+    PaymentMethodsUiState.Ready(listOf(emptyPaymentMethod, emptyPaymentMethod)),
     PaymentMethodsUiState.Loading,
-    PaymentMethodsUiState.Error(UnknownErrorException()),
-    PaymentMethodsUiState.Error(ConnectionFailedException()),
-    PaymentMethodsUiState.Error(PaymentsItemOwnedResult(emptyPurchaseInfoData)),
+    PaymentMethodsUiState.Finished(UnknownErrorException()),
+    PaymentMethodsUiState.Finished(ConnectionFailedException()),
+    PaymentMethodsUiState.Finished(PaymentsItemOwnedResult(emptyPurchaseInfoData)),
   )
 }

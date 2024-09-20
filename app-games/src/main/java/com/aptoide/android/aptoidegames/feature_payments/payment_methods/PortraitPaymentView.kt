@@ -48,7 +48,7 @@ fun PortraitPaymentView(
 ) {
   val hasPreselectedPaymentMethod = rememberHasPreselectedPaymentMethod()
   when (paymentState) {
-    is PaymentMethodsUiState.Error -> when (paymentState.result) {
+    is PaymentMethodsUiState.Finished -> when (paymentState.result) {
       is ConnectionFailedException -> PortraitPaymentsNoConnectionView(
         onRetryClick = paymentState.reload
       )
@@ -74,7 +74,7 @@ fun PortraitPaymentView(
       )
     }
 
-    is PaymentMethodsUiState.Idle -> PortraitPaymentsView(
+    is PaymentMethodsUiState.Ready -> PortraitPaymentsView(
       purchaseRequest = purchaseRequest,
       paymentMethods = paymentState.paymentMethods,
       onPaymentMethodClick = onPaymentMethodClick,
