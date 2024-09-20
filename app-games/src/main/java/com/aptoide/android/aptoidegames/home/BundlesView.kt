@@ -337,8 +337,8 @@ fun SeeMoreView(
     )
     Image(
       modifier = Modifier
-        .size(24.dp)
-        .requiredSize(24.dp),
+        .requiredSize(24.dp)
+        .padding(all = 3.dp),
       imageVector = getForward(iconColor ?: Palette.Primary),
       contentDescription = null,
     )

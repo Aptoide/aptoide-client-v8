@@ -106,7 +106,8 @@ fun BonusSectionView(
       Image(
         modifier = Modifier
           .padding(top = 58.dp)
-          .minimumInteractiveComponentSize(),
+          .minimumInteractiveComponentSize()
+          .size(18.dp),
         imageVector = getForward(Palette.White),
         contentDescription = null,
       )
@@ -127,8 +128,8 @@ private fun BonusBannerText(
     AptoideOutlinedText(
       text = stringResource(
         id = R.string.bonus_banner_title,
-        "20"
-      ), //TODO Hardcoded value (should come from backend in the future)
+        "20" //TODO Hardcoded value (should come from backend in the future)
+      ),
       style = AGTypography.Title,
       outlineWidth = 17f,
       outlineColor = Palette.Black,
