@@ -267,7 +267,7 @@ private fun BonusBannerText(
     Text(
       text = annotatedString,
       inlineContent = inlineContent,
-      style = AGTypography.BodyBold,
+      style = AGTypography.InputsM,
       color = Palette.White,
       maxLines = 4,
       modifier = Modifier.width(328.dp)

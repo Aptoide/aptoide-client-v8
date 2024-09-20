@@ -200,7 +200,7 @@ fun CategoryLargeItem(
       maxLines = 2,
       overflow = TextOverflow.Ellipsis,
       color = Palette.Black,
-      style = AGTypography.InputsM
+      style = AGTypography.InputsL
     )
   }
 }

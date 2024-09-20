@@ -167,7 +167,7 @@ fun SettingsViewContent(
           )
           Text(
             text = stringResource(R.string.settings_about_version, verName, verCode),
-            style = AGTypography.InputsS,
+            style = AGTypography.InputsM,
             modifier = Modifier
               .defaultMinSize(minHeight = 48.dp)
               .wrapContentHeight()
@@ -191,7 +191,7 @@ fun SettingsViewContent(
             Text(
               text = hardwareSpecsText,
               modifier = Modifier.weight(weight = 1f),
-              style = AGTypography.InputsS,
+              style = AGTypography.InputsM,
               color = Palette.GreyLight
             )
             PrimarySmallOutlinedButton(
@@ -311,7 +311,7 @@ fun SettingsSwitchItem(
     Text(
       text = title,
       modifier = Modifier.weight(weight = 1f),
-      style = AGTypography.InputsS,
+      style = AGTypography.InputsM,
       color = Palette.GreyLight
     )
     AptoideGamesSwitch(
@@ -339,7 +339,7 @@ fun SettingsCaretItem(
       Text(
         text = title,
         modifier = Modifier.weight(weight = 1f),
-        style = AGTypography.InputsS,
+        style = AGTypography.InputsM,
         color = Palette.GreyLight
       )
     } else {
@@ -352,7 +352,7 @@ fun SettingsCaretItem(
         Text(
           text = title,
           modifier = Modifier.padding(bottom = 11.dp),
-          style = AGTypography.InputsS,
+          style = AGTypography.InputsM,
           color = Palette.White
         )
         Text(
