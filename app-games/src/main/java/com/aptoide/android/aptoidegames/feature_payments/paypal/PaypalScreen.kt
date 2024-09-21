@@ -223,7 +223,7 @@ private fun PaypalScreen(
         },
         onOtherPaymentMethodsClick = onOtherPaymentMethodsClick,
         onRemoveBillingAgreementClick = {
-          viewModelState.onRemoveBillingAgreementClick()
+          viewModelState.cancelBillingAgreement()
           preSelectedPaymentMethodViewModel.setSelection(null)
         },
         paymentMethodName = viewModelState.paymentMethodName,
@@ -482,7 +482,7 @@ private class PaypalUIStateProvider : PreviewParameterProvider<PaypalUIState> {
       paymentMethodName = "Payment Method Name",
       paymentMethodIconUrl = "",
       onBuyClick = {},
-      onRemoveBillingAgreementClick = {},
+      cancelBillingAgreement = {},
     ),
     PaypalUIState.MakingPurchase,
     PaypalUIState.Success(PaymentsSuccessResult()),
