@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import com.appcoins.payments.arch.DataResult
 import com.appcoins.payments.arch.PaymentMethod
 import com.appcoins.payments.arch.ProductInfoData
 import com.appcoins.payments.arch.PurchaseRequest
@@ -23,7 +24,7 @@ class WalletPaymentMethod(
   override val wallet: WalletData
     get() = TODO("Not yet implemented")
 
-  override suspend fun createTransaction(paymentDetails: Unit): String {
+  override suspend fun createTransaction(userInput: Unit): DataResult<String> {
     TODO("Not yet implemented")
   }
 }
