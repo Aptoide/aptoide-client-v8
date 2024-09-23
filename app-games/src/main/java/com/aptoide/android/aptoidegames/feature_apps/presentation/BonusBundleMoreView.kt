@@ -1,13 +1,14 @@
 package com.aptoide.android.aptoidegames.feature_apps.presentation
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -50,9 +51,11 @@ import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAn
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
+import com.aptoide.android.aptoidegames.drawables.backgrounds.getMoreBonusViewFooter
+import com.aptoide.android.aptoidegames.drawables.backgrounds.getMoreBonusViewHeader
+import com.aptoide.android.aptoidegames.drawables.backgrounds.getWantMoreViewFooter
+import com.aptoide.android.aptoidegames.drawables.backgrounds.getWantMoreViewHeader
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusIcon
-import com.aptoide.android.aptoidegames.drawables.icons.getBonusOnEveryPurchase
-import com.aptoide.android.aptoidegames.drawables.icons.getWantMore
 import com.aptoide.android.aptoidegames.home.GenericErrorView
 import com.aptoide.android.aptoidegames.home.LoadingView
 import com.aptoide.android.aptoidegames.home.NoConnectionView
@@ -184,7 +187,7 @@ fun MoreBonusBundleViewContent(
 fun MoreBonusSectionView(
   onWalletClick: (app: App) -> Unit,
 ) {
-  Box(
+  Column(
     modifier = Modifier.padding(vertical = 24.dp)
   ) {
     val splitText = stringResource(id = R.string.bonus_page_body_1, "%s", 20).split("%s")
@@ -212,39 +215,50 @@ fun MoreBonusSectionView(
         }
       )
     )
-    Image(
-      imageVector = getBonusOnEveryPurchase(
-        iconColor = Palette.Primary,
+    Box {
+      Image(
+        imageVector = getMoreBonusViewHeader(),
+        contentDescription = null,
+        modifier = Modifier
+          .fillMaxWidth()
+          .offset(y = 1.dp),
+        contentScale = ContentScale.FillWidth,
+      )
+
+      AptoideOutlinedText(
+        text = stringResource(
+          id = R.string.bonus_banner_title,
+          "20" //TODO Hardcoded value (should come from backend in the future)
+        ),
+        style = AGTypography.InputsM,
+        outlineWidth = 10f,
         outlineColor = Palette.Black,
-        backgroundColor = Palette.Secondary,
-        themeColor = Palette.Black
-      ),
-      contentDescription = "Bonus Section",
-      modifier = Modifier.fillMaxWidth(),
-      contentScale = ContentScale.FillWidth,
-    )
-    AptoideOutlinedText(
-      text = stringResource(
-        id = R.string.bonus_banner_title,
-        "20"
-      ), //TODO Hardcoded value (should come from backend in the future)
-      style = AGTypography.InputsM,
-      outlineWidth = 10f,
-      outlineColor = Palette.Black,
-      textColor = Palette.Primary,
-      modifier = Modifier.padding(start = 56.dp, top = 14.dp)
-    )
+        textColor = Palette.Primary,
+        modifier = Modifier.padding(start = 56.dp, top = 14.dp)
+      )
+    }
+
     Column(
-      modifier = Modifier.padding(horizontal = 16.dp)
+      modifier = Modifier
+        .background(Palette.Secondary)
+        .padding(horizontal = 16.dp)
     ) {
       BonusBannerText(
-        modifier = Modifier.padding(top = 56.dp, bottom = 24.dp),
         title = stringResource(id = R.string.bonus_page_title_1),
         annotatedString = annotatedString,
         inlineContent = inlineContent
       )
       WalletAppItem(onWalletClick = onWalletClick)
     }
+
+    Image(
+      imageVector = getMoreBonusViewFooter(),
+      contentDescription = null,
+      modifier = Modifier
+        .fillMaxWidth()
+        .offset(y = (-1).dp),
+      contentScale = ContentScale.FillWidth,
+    )
   }
 }
 
@@ -262,15 +276,14 @@ private fun BonusBannerText(
       outlineWidth = 17f,
       outlineColor = Palette.Black,
       textColor = Palette.Primary,
-      modifier = Modifier.width(328.dp)
+      modifier = Modifier.fillMaxWidth()
     )
     Text(
       text = annotatedString,
       inlineContent = inlineContent,
       style = AGTypography.InputsM,
       color = Palette.White,
-      maxLines = 4,
-      modifier = Modifier.width(328.dp)
+      modifier = Modifier.fillMaxWidth()
     )
   }
 }
@@ -280,45 +293,49 @@ fun WantMoreSectionView(onWalletClick: (app: App) -> Unit) {
   Column(
     modifier = Modifier.padding(bottom = 40.dp)
   ) {
-    Box(
-      modifier = Modifier.padding(top = 24.dp, bottom = 8.dp)
-    ) {
-      val splitText = stringResource(id = R.string.bonus_page_body_2, "10")
+    val splitText = stringResource(id = R.string.bonus_page_body_2, "10")
 
-      val bonusStartIndex = splitText.indexOf("10%")
-      val bonusEndIndex = bonusStartIndex + "10%".length + "bonus".length + 1
+    val bonusStartIndex = splitText.indexOf("10%")
+    val bonusEndIndex = bonusStartIndex + "10%".length + "bonus".length + 1
 
-      val annotatedString = buildAnnotatedString {
-        append(splitText.substring(0, bonusStartIndex))
+    val annotatedString = buildAnnotatedString {
+      append(splitText.substring(0, bonusStartIndex))
 
-        withStyle(style = SpanStyle(color = Palette.Primary)) {
-          append(splitText.substring(bonusStartIndex, bonusEndIndex))
-        }
-
-        append(splitText.substring(bonusEndIndex))
+      withStyle(style = SpanStyle(color = Palette.Primary)) {
+        append(splitText.substring(bonusStartIndex, bonusEndIndex))
       }
 
-      Image(
-        imageVector = getWantMore(
-          iconColor = Palette.Primary,
-          outlineColor = Palette.Black,
-          backgroundColor = Palette.Secondary,
-          themeColor = Palette.Black
-        ),
-        contentDescription = "Bonus Section",
-        modifier = Modifier.fillMaxWidth(),
-        contentScale = ContentScale.FillWidth,
-      )
-
-      BonusBannerText(
-        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 32.dp),
-        title = stringResource(id = R.string.bonus_page_title_2),
-        annotatedString = annotatedString,
-      )
+      append(splitText.substring(bonusEndIndex))
     }
 
+    Image(
+      imageVector = getWantMoreViewHeader(),
+      contentDescription = null,
+      modifier = Modifier
+        .fillMaxWidth()
+        .offset(y = 1.dp),
+      contentScale = ContentScale.FillWidth,
+    )
+
+    BonusBannerText(
+      modifier = Modifier
+        .background(Palette.Secondary)
+        .padding(horizontal = 16.dp),
+      title = stringResource(id = R.string.bonus_page_title_2),
+      annotatedString = annotatedString,
+    )
+
+    Image(
+      imageVector = getWantMoreViewFooter(),
+      contentDescription = null,
+      modifier = Modifier.fillMaxWidth(),
+      contentScale = ContentScale.FillWidth,
+    )
+
     WalletAppItem(
-      modifier = Modifier.padding(horizontal = 16.dp),
+      modifier = Modifier
+        .padding(horizontal = 16.dp)
+        .offset(y = (-1).dp),
       onWalletClick = onWalletClick
     )
   }
