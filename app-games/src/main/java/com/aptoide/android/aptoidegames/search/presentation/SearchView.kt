@@ -70,11 +70,11 @@ import com.aptoide.android.aptoidegames.drawables.icons.getAsterisk
 import com.aptoide.android.aptoidegames.drawables.icons.getClose
 import com.aptoide.android.aptoidegames.drawables.icons.getGames
 import com.aptoide.android.aptoidegames.drawables.icons.getSearch
+import com.aptoide.android.aptoidegames.error_views.EmptyView
+import com.aptoide.android.aptoidegames.error_views.GenericErrorView
+import com.aptoide.android.aptoidegames.error_views.NoConnectionView
 import com.aptoide.android.aptoidegames.feature_apps.presentation.AppItem
 import com.aptoide.android.aptoidegames.feature_apps.presentation.LargeAppItem
-import com.aptoide.android.aptoidegames.home.EmptyView
-import com.aptoide.android.aptoidegames.home.GenericErrorView
-import com.aptoide.android.aptoidegames.home.NoConnectionView
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.search.SearchType
 import com.aptoide.android.aptoidegames.theme.AGTypography

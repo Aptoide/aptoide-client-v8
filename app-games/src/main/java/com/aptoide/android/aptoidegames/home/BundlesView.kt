@@ -69,6 +69,8 @@ import com.aptoide.android.aptoidegames.analytics.presentation.withBundleMeta
 import com.aptoide.android.aptoidegames.categories.presentation.CategoriesBundle
 import com.aptoide.android.aptoidegames.drawables.icons.getForward
 import com.aptoide.android.aptoidegames.editorial.EditorialBundle
+import com.aptoide.android.aptoidegames.error_views.GenericErrorView
+import com.aptoide.android.aptoidegames.error_views.NoConnectionView
 import com.aptoide.android.aptoidegames.feature_apps.presentation.AppsGridBundle
 import com.aptoide.android.aptoidegames.feature_apps.presentation.BonusSectionView
 import com.aptoide.android.aptoidegames.feature_apps.presentation.CarouselBundle

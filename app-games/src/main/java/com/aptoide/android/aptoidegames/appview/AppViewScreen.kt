@@ -89,11 +89,11 @@ import com.aptoide.android.aptoidegames.drawables.icons.getLeftArrow
 import com.aptoide.android.aptoidegames.drawables.icons.getRatingStar
 import com.aptoide.android.aptoidegames.editorial.EditorialsViewCard
 import com.aptoide.android.aptoidegames.editorial.buildEditorialRoute
+import com.aptoide.android.aptoidegames.error_views.GenericErrorView
+import com.aptoide.android.aptoidegames.error_views.NoConnectionView
 import com.aptoide.android.aptoidegames.feature_apps.presentation.SmallEmptyView
 import com.aptoide.android.aptoidegames.feature_apps.presentation.buildSeeMoreBonusRoute
 import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberBonusBundle
-import com.aptoide.android.aptoidegames.home.GenericErrorView
-import com.aptoide.android.aptoidegames.home.NoConnectionView
 import com.aptoide.android.aptoidegames.installer.presentation.InstallView
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
