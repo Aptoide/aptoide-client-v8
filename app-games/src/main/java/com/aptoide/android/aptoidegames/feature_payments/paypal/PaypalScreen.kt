@@ -39,6 +39,7 @@ import androidx.navigation.navArgument
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.PreviewLandscapeDark
 import cm.aptoide.pt.extensions.ScreenData
+import com.appcoins.payments.arch.CancelledByUserResult
 import com.appcoins.payments.arch.ConnectionFailedException
 import com.appcoins.payments.arch.PaymentsResult
 import com.appcoins.payments.arch.PaymentsSuccessResult
@@ -122,8 +123,9 @@ private fun BuildPaypalScreen(
 
   LaunchedEffect(key1 = uiState, key2 = activityResultRegistry) {
     when (uiState) {
-      is PaypalUIState.Error -> {
-        genericAnalytics.sendPaymentErrorEvent(paymentMethod = paymentMethod)
+      is PaypalUIState.Error -> when (uiState.result) {
+        is CancelledByUserResult -> popBackStack()
+        else -> genericAnalytics.sendPaymentErrorEvent(paymentMethod = paymentMethod)
       }
 
       is PaypalUIState.Success -> {
@@ -133,7 +135,6 @@ private fun BuildPaypalScreen(
         finished = true
       }
 
-      PaypalUIState.Canceled -> popBackStack()
       is PaypalUIState.GetBillingAgreement -> uiState.resolveWith(activityResultRegistry)
       is PaypalUIState.BillingAgreementUnavailable -> {
         genericAnalytics.sendPaymentBuyEvent(paymentMethod)
@@ -206,12 +207,12 @@ private fun PaypalScreen(
       )
 
       is PaypalUIState.Error -> when (viewModelState.result) {
+        is CancelledByUserResult -> LoadingView()
         is ConnectionFailedException -> PayPalNoConnectionScreen(onRetryClick)
         else -> PaypalErrorScreen(onRetryClick, onContactUs)
       }
 
       is PaypalUIState.Success -> SuccessView()
-      PaypalUIState.Canceled -> LoadingView()
       is PaypalUIState.GetBillingAgreement -> LoadingView()
       is PaypalUIState.BillingAgreementUnavailable -> LoadingView()
 
