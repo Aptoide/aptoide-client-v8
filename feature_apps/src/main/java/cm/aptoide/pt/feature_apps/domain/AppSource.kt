@@ -3,8 +3,8 @@ package cm.aptoide.pt.feature_apps.domain
 import java.util.Locale
 
 interface AppSource {
-  val appId: Long?
-  val packageName: String?
+  val appId: Long? get() = null
+  val packageName: String? get() = null
 
   fun asSource(): String = appId?.takeIf { it > 0 }?.let { "app_id=$it" }
     ?: packageName?.let { "package_name=$it" }
