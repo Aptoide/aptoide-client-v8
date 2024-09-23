@@ -181,6 +181,18 @@ fun AGSmallButtonPreview() {
           title = getRandomString(1..2, capitalize = true),
         )
       }
+      Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        TertiarySmallButton(
+          onClick = {},
+          enabled = false,
+          title = getRandomString(1..2, capitalize = true),
+        )
+        TertiarySmallButton(
+          onClick = {},
+          enabled = true,
+          title = getRandomString(1..2, capitalize = true),
+        )
+      }
       Spacer(modifier = Modifier.height(16.dp))
       Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         PrimarySmallButton(
@@ -218,6 +230,20 @@ fun AGSmallButtonPreview() {
           title = getRandomString(1..2, capitalize = true),
         )
         SecondarySmallOutlinedButton(
+          onClick = {},
+          modifier = Modifier.fillMaxWidth(),
+          enabled = true,
+          title = getRandomString(1..2, capitalize = true),
+        )
+      }
+      Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        TertiarySmallButton(
+          onClick = {},
+          modifier = Modifier.fillMaxWidth(0.5f),
+          enabled = false,
+          title = getRandomString(1..2, capitalize = true),
+        )
+        TertiarySmallButton(
           onClick = {},
           modifier = Modifier.fillMaxWidth(),
           enabled = true,
@@ -283,6 +309,21 @@ fun SecondaryButton(
   modifier = modifier.height(32.dp),
   enabled = enabled,
   color = Palette.Primary,
+  title = title,
+  textStyle = AGTypography.InputsS.copy(color = Palette.Black)
+)
+
+@Composable
+fun TertiarySmallButton(
+  onClick: () -> Unit,
+  modifier: Modifier = Modifier,
+  enabled: Boolean = true,
+  title: String?,
+) = AGButton(
+  onClick = onClick,
+  modifier = modifier.height(32.dp),
+  enabled = enabled,
+  color = Palette.Grey,
   title = title,
   textStyle = AGTypography.InputsS.copy(color = Palette.Black)
 )

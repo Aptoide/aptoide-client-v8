@@ -17,6 +17,8 @@ import com.aptoide.android.aptoidegames.home.MainView
 import com.aptoide.android.aptoidegames.installer.notifications.InstallerNotificationsBuilder
 import com.aptoide.android.aptoidegames.launch.AppLaunchPreferencesManager
 import com.aptoide.android.aptoidegames.network.repository.NetworkPreferencesRepository
+import com.aptoide.android.aptoidegames.promo_codes.PromoCodeApp
+import com.aptoide.android.aptoidegames.promo_codes.PromoCodeRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -42,6 +44,9 @@ class MainActivity : AppCompatActivity() {
 
   @Inject
   lateinit var networkPreferencesRepository: NetworkPreferencesRepository
+
+  @Inject
+  lateinit var promoCodeRepository: PromoCodeRepository
 
   private var navController: NavHostController? = null
 
@@ -93,6 +98,9 @@ class MainActivity : AppCompatActivity() {
   }
 
   private fun handleNotificationIntent(intent: Intent?) {
+    intent.takeIf { it.isAhab }?.agDeepLink.takeIf { it?.scheme == "promocode" }?.run {
+      promoCodeRepository.setPromoCodeApp(PromoCodeApp(host!!, path!!))
+    }
     CoroutineScope(Dispatchers.IO).launch {
       intent?.getStringExtra(InstallerNotificationsBuilder.ALLOW_METERED_DOWNLOAD_FOR_PACKAGE)
         ?.let(installManager::getApp)
@@ -109,7 +117,7 @@ class MainActivity : AppCompatActivity() {
         }
         ?.allowDownloadOnMetered()
     }
-    intent.agDeepLink?.let {
+    intent.agDeepLink?.takeIf { it.scheme == "ag" }?.let {
       navController?.navigate(it)
     }
   }

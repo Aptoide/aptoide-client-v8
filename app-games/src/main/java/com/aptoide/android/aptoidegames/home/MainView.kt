@@ -1,9 +1,11 @@
 package com.aptoide.android.aptoidegames.home
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Snackbar
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -14,20 +16,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.window.Popup
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import cm.aptoide.pt.extensions.animatedComposable
 import cm.aptoide.pt.extensions.staticComposable
+import cm.aptoide.pt.feature_apkfy.presentation.rememberApkfyApp
 import com.aptoide.android.aptoidegames.AptoideGamesBottomSheet
 import com.aptoide.android.aptoidegames.apkfy.ApkfyBottomSheetContent
-import cm.aptoide.pt.feature_apkfy.presentation.rememberApkfyApp
 import com.aptoide.android.aptoidegames.appview.appViewScreen
 import com.aptoide.android.aptoidegames.appview.permissions.appPermissionsScreen
 import com.aptoide.android.aptoidegames.bottom_bar.AppGamesBottomBar
 import com.aptoide.android.aptoidegames.categories.presentation.allCategoriesScreen
 import com.aptoide.android.aptoidegames.categories.presentation.categoryDetailScreen
-import com.aptoide.android.aptoidegames.design_system.AptoideSnackBar
 import com.aptoide.android.aptoidegames.editorial.editorialScreen
 import com.aptoide.android.aptoidegames.feature_apps.presentation.seeAllMyGamesScreen
 import com.aptoide.android.aptoidegames.feature_apps.presentation.seeMoreBonusScreen
@@ -35,6 +38,8 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.seeMoreScreen
 import com.aptoide.android.aptoidegames.installer.UserActionDialog
 import com.aptoide.android.aptoidegames.notifications.NotificationsPermissionRequester
 import com.aptoide.android.aptoidegames.permissions.notifications.NotificationsPermissionViewModel
+import com.aptoide.android.aptoidegames.promo_codes.PromoCodeBottomSheet
+import com.aptoide.android.aptoidegames.promo_codes.rememberPromoCodeApp
 import com.aptoide.android.aptoidegames.search.presentation.searchScreen
 import com.aptoide.android.aptoidegames.settings.settingsScreen
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
@@ -55,6 +60,7 @@ fun MainView(navController: NavHostController) {
 
   val apkfyApp = rememberApkfyApp()
   var apkfyShown by remember { mutableStateOf(false) }
+  val (promoCodeApp, clearPromoCode) = rememberPromoCodeApp()
 
   //Forced theme do be dark to always apply dark background, for now.
   AptoideTheme(darkTheme = true) {
@@ -63,10 +69,16 @@ fun MainView(navController: NavHostController) {
     ) { showBottomSheet ->
       Scaffold(
         snackbarHost = {
-          SnackbarHost(
-            hostState = snackBarHostState,
-            snackbar = { AptoideSnackBar(it) }
-          )
+          SnackbarHost(hostState = snackBarHostState) {
+            Popup {
+              Snackbar(
+                snackbarData = it,
+                modifier = Modifier
+                  .focusable(false)
+                  .clearAndSetSemantics {},
+              )
+            }
+          }
         },
         bottomBar = {
           AppGamesBottomBar(navController = navController)
@@ -92,9 +104,22 @@ fun MainView(navController: NavHostController) {
           )
         }
 
-        if(apkfyApp != null && !apkfyShown) {
+        if (apkfyApp != null && !apkfyShown) {
           showBottomSheet(ApkfyBottomSheetContent(apkfyApp))
           apkfyShown = true
+        }
+        if (promoCodeApp != null) {
+          showBottomSheet(
+            PromoCodeBottomSheet(
+              promoCodeApp = promoCodeApp,
+              showSnack = {
+                coroutineScope.launch {
+                  snackBarHostState.showSnackbar(message = it)
+                }
+              }
+            )
+          )
+          clearPromoCode()
         }
       }
     }
