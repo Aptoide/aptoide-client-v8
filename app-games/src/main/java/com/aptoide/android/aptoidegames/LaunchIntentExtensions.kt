@@ -7,7 +7,16 @@ import com.aptoide.android.aptoidegames.analytics.presentation.withPrevScreen
 // Deep link
 private const val DEEPLINK_KEY = "ag.link"
 
+val Intent?.hasDeepLink get() = this?.extras?.containsKey(DEEPLINK_KEY) ?: false
+
 fun Intent.putDeeplink(deepLink: String): Intent = putExtra(DEEPLINK_KEY, deepLink)
+
+// Ahab
+private const val AHAB_NOTIFICATION = "AHAB_NOTIFICATION"
+
+val Intent?.isAhab: Boolean get() = this?.getBooleanExtra(AHAB_NOTIFICATION, false) == true
+
+fun Intent.markAsAhab(): Intent = putExtra(AHAB_NOTIFICATION, hasDeepLink)
 
 // Launch source
 private const val LAUNCH_SOURCE = "launchSource"

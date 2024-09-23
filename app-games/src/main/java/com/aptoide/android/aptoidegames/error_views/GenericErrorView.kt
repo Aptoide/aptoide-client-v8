@@ -122,6 +122,18 @@ fun RetryButton(
   )
 }
 
+@Composable
+fun OkButton(
+  modifier: Modifier = Modifier,
+  onClick: () -> Unit,
+) {
+  PrimaryButton(
+    onClick = onClick,
+    modifier = modifier.fillMaxWidth(),
+    title = stringResource(id = R.string.ok_button),
+  )
+}
+
 @PreviewDark
 @Composable
 fun GenericErrorPreview() {

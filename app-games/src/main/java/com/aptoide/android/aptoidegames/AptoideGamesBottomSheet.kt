@@ -44,6 +44,7 @@ fun AptoideGamesBottomSheet(
 
   val sheetState = rememberModalBottomSheetState(
     initialValue = ModalBottomSheetValue.Hidden,
+    skipHalfExpanded = true,
   )
 
   val onCloseBottomSheetClick: () -> Unit = {
