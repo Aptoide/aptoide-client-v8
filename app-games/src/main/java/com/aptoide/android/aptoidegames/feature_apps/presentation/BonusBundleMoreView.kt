@@ -56,9 +56,11 @@ import com.aptoide.android.aptoidegames.drawables.backgrounds.getMoreBonusViewHe
 import com.aptoide.android.aptoidegames.drawables.backgrounds.getWantMoreViewFooter
 import com.aptoide.android.aptoidegames.drawables.backgrounds.getWantMoreViewHeader
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusIcon
-import com.aptoide.android.aptoidegames.home.GenericErrorView
+import com.aptoide.android.aptoidegames.drawables.icons.getBonusOnEveryPurchase
+import com.aptoide.android.aptoidegames.drawables.icons.getWantMore
+import com.aptoide.android.aptoidegames.error_views.GenericErrorView
+import com.aptoide.android.aptoidegames.error_views.NoConnectionView
 import com.aptoide.android.aptoidegames.home.LoadingView
-import com.aptoide.android.aptoidegames.home.NoConnectionView
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme

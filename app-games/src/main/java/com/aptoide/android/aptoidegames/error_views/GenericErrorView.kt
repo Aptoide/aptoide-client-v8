@@ -1,4 +1,4 @@
-package com.aptoide.android.aptoidegames.home
+package com.aptoide.android.aptoidegames.error_views
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box

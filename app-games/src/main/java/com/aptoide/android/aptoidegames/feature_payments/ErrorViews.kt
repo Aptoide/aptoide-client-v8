@@ -28,7 +28,7 @@ import com.aptoide.android.aptoidegames.design_system.PrimaryButton
 import com.aptoide.android.aptoidegames.drawables.icons.getPaymentsGenericError
 import com.aptoide.android.aptoidegames.drawables.icons.getPaymentsNoNetworkError
 import com.aptoide.android.aptoidegames.drawables.icons.getPaymentsWarningIcon
-import com.aptoide.android.aptoidegames.home.RetryButton
+import com.aptoide.android.aptoidegames.error_views.RetryButton
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 

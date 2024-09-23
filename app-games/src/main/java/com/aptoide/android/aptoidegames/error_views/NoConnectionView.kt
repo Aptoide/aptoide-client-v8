@@ -1,4 +1,4 @@
-package com.aptoide.android.aptoidegames.home
+package com.aptoide.android.aptoidegames.error_views
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
