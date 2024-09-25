@@ -12,6 +12,7 @@ class AptoideMMPCampaign(
   companion object {
     lateinit var oemid: String
     lateinit var utmSource: String
+    var guestUID: String? = null
     val allowedBundleTags: MutableMap<String, Pair<String, String>> = mutableMapOf()
     fun init(
       oemid: String,
@@ -30,7 +31,10 @@ class AptoideMMPCampaign(
       campaign.sendImpressionEvent(
         campaignType,
         buildReplaceMap(packageName),
-        buildBaseMap(allowedBundleTags[bundleTag]?.first, allowedBundleTags[bundleTag]?.second)
+        buildBaseMap(
+          utmMedium = allowedBundleTags[bundleTag]?.first,
+          utmCampaign = allowedBundleTags[bundleTag]?.second
+        )
       )
     }
   }
@@ -94,7 +98,7 @@ class AptoideMMPCampaign(
     utmCampaign?.let { campaign ->
       map["utm_campaign"] = campaign
     }
-
+    guestUID?.takeIf { it.isNotEmpty() }?.let { map["guest_uid"] = it }
     return map
   }
 
