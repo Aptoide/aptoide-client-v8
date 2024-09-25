@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.ScreenData
+import cm.aptoide.pt.feature_apps.domain.AppSource
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.AppUiStateProvider
 import cm.aptoide.pt.feature_apps.presentation.rememberApp
@@ -32,28 +33,31 @@ import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 
-const val appPermissionsRoute = "appInfoPermissions/{packageName}"
+private const val SOURCE = "source"
+
+const val appPermissionsRoute = "appInfoPermissions/{$SOURCE}"
 
 fun appPermissionsScreen() = ScreenData.withAnalytics(
   route = appPermissionsRoute,
   screenAnalyticsName = "AppView"
 ) { arguments, _, navigateBack ->
-  val packageName = arguments?.getString("packageName")!!
+  val source = arguments?.getString(SOURCE)!!
 
   AppInfoPermissionsView(
     navigateBack = navigateBack,
-    packageName = packageName
+    source = source
   )
 }
 
-fun buildAppPermissionsRoute(packageName: String): String = "appInfoPermissions/$packageName"
+fun buildAppPermissionsRoute(appSource: AppSource): String =
+  "appInfoPermissions/${appSource.asSource()}"
 
 @Composable
 fun AppInfoPermissionsView(
   navigateBack: () -> Unit,
-  packageName: String,
+  source: String,
 ) {
-  val (uiState, _) = rememberApp(packageName = packageName)
+  val (uiState, _) = rememberApp(source = source)
 
   (uiState as? AppUiState.Idle)?.app?.run {
     AppInfoPermissionsViewContent(

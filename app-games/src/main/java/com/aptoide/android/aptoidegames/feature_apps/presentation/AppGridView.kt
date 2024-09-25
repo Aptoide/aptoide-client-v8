@@ -39,6 +39,7 @@ import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.SwipeListener
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
+import com.aptoide.android.aptoidegames.appview.AppRatingAndDownloads
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusIconRight
 import com.aptoide.android.aptoidegames.home.BundleHeader
@@ -69,9 +70,7 @@ private fun RealAppsGridBundle(
   uiState: AppsListUiState,
   navigate: (String) -> Unit,
 ) {
-  Column(
-    modifier = Modifier.padding(bottom = 28.dp)
-  ) {
+  Column {
     BundleHeader(
       title = bundle.title,
       icon = bundle.bundleIcon,
@@ -125,7 +124,7 @@ internal fun AppsRowView(
             analyticsContext = analyticsContext.copy(itemPosition = index)
           )
           navigate(
-            buildAppViewRoute(item.packageName)
+            buildAppViewRoute(item)
               .withItemPosition(index)
           )
         },
@@ -176,6 +175,7 @@ private fun AppGridView(
         .defaultMinSize(minHeight = 36.dp),
       style = AGTypography.DescriptionGames
     )
+    AppRatingAndDownloads(rating = app.pRating)
   }
 }
 

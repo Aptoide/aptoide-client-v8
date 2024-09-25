@@ -16,7 +16,7 @@ fun AptoideOutlinedText(
   outlineWidth: Float,
   outlineColor: Color,
   textColor: Color,
-  modifier: Modifier,
+  modifier: Modifier = Modifier,
 ) {
   Box(
     modifier = modifier

@@ -14,7 +14,6 @@ import java.io.IOException
 class AppViewModel(
   private val appMetaUseCase: AppMetaUseCase,
   private val source: String,
-  private val useStoreName: Boolean = true,
 ) : ViewModel() {
 
   private val viewModelState = MutableStateFlow<AppUiState>(AppUiState.Loading)
@@ -34,7 +33,7 @@ class AppViewModel(
     viewModelScope.launch {
       viewModelState.update { AppUiState.Loading }
       try {
-        val app = appMetaUseCase.getMetaInfoBySource(source = source, useStoreName = useStoreName)
+        val app = appMetaUseCase.getMetaInfo(source = source)
         viewModelState.update { AppUiState.Idle(app) }
       } catch (e: Throwable) {
         Timber.w(e)

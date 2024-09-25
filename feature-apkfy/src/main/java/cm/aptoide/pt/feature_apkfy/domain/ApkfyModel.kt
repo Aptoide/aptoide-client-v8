@@ -1,8 +1,10 @@
-package cm.aptoide.pt.feature_mmp.apkfy.domain
+package cm.aptoide.pt.feature_apkfy.domain
+
+import cm.aptoide.pt.feature_apps.domain.AppSource
 
 data class ApkfyModel(
-  val packageName: String?,
-  val appId: Long?,
+  override val packageName: String?,
+  override val appId: Long?,
   val oemId: String?,
   val guestUid: String,
   val utmSource: String?,
@@ -10,7 +12,7 @@ data class ApkfyModel(
   val utmCampaign: String?,
   val utmTerm: String?,
   val utmContent: String?,
-) {
+) : AppSource {
   fun hasUTMs() = this.run {
     utmSource != null || utmMedium != null || utmCampaign != null || utmTerm != null || utmContent != null
   }

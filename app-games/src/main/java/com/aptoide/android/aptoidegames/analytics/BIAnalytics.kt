@@ -8,6 +8,7 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.hasObb
 import cm.aptoide.pt.feature_apps.data.isAab
 import cm.aptoide.pt.feature_apps.data.isInCatappult
+import cm.aptoide.pt.feature_apps.data.walletApp
 import cm.aptoide.pt.feature_categories.analytics.AptoideAnalyticsInfoProvider
 import cm.aptoide.pt.install_manager.InstallManager
 import com.aptoide.android.aptoidegames.BuildConfig
@@ -70,7 +71,7 @@ class BIAnalytics(private val analyticsSender: AnalyticsSender) {
         .onEach { analyticsSender.setUserProperties("is_vanilla_installed" to it) }
         .launchIn(this)
       installManager
-        .getApp("com.appcoins.wallet")
+        .getApp(walletApp.packageName)
         .packageInfoFlow
         .map { it != null }
         .onEach { analyticsSender.setUserProperties("is_wallet_app_installed" to it) }

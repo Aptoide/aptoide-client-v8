@@ -154,7 +154,7 @@ private fun AppsList(
             analyticsContext = analyticsContext.copy(itemPosition = index)
           )
           navigate(
-            buildAppViewRoute(app.packageName)
+            buildAppViewRoute(app)
               .withItemPosition(index)
           )
         },

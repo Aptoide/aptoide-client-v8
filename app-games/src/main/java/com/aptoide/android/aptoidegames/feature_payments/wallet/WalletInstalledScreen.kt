@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.PreviewLandscapeDark
 import cm.aptoide.pt.extensions.ScreenData
+import cm.aptoide.pt.feature_apps.data.walletApp
 import com.appcoins.payments.arch.PaymentsResult
 import com.appcoins.payments.arch.PurchaseRequest
 import com.appcoins.payments.uri_handler.PaymentsActivityResult
@@ -90,7 +91,7 @@ fun PaymentsWalletInstalledView(
 
   val onRedirect: () -> Unit = {
     purchaseRequest.uri?.let {
-      val intent = Intent(Intent.ACTION_VIEW).setPackage("com.appcoins.wallet")
+      val intent = Intent(Intent.ACTION_VIEW).setPackage(walletApp.packageName)
       intent.data = it
 
       try {

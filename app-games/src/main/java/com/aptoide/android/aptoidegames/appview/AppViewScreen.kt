@@ -14,12 +14,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -43,14 +45,15 @@ import androidx.compose.ui.semantics.collectionInfo
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavType
-import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.ScreenData
+import cm.aptoide.pt.extensions.extractVideoId
+import cm.aptoide.pt.extensions.formatDownloads
 import cm.aptoide.pt.extensions.isYoutubeURL
 import cm.aptoide.pt.extensions.openUrlInBrowser
 import cm.aptoide.pt.extensions.parseDate
@@ -58,10 +61,11 @@ import cm.aptoide.pt.extensions.sendMail
 import cm.aptoide.pt.extensions.toFormattedString
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
+import cm.aptoide.pt.feature_apps.domain.AppSource
+import cm.aptoide.pt.feature_apps.domain.AppSource.Companion.appendIfRequired
+import cm.aptoide.pt.feature_apps.domain.Rating
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
-import cm.aptoide.pt.feature_apps.presentation.rememberAppBySource
-import cm.aptoide.pt.feature_apps.presentation.toAppIdParam
-import cm.aptoide.pt.feature_apps.presentation.toPackageNameParam
+import cm.aptoide.pt.feature_apps.presentation.rememberApp
 import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
 import cm.aptoide.pt.feature_editorial.presentation.relatedEditorialsCardViewModel
 import cm.aptoide.pt.feature_editorial.presentation.rememberRelatedEditorials
@@ -78,8 +82,10 @@ import com.aptoide.android.aptoidegames.appview.AppViewHeaderConstants.FEATURE_G
 import com.aptoide.android.aptoidegames.appview.AppViewHeaderConstants.VIDEO_HEIGHT
 import com.aptoide.android.aptoidegames.appview.permissions.buildAppPermissionsRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusIconLeft
+import com.aptoide.android.aptoidegames.drawables.icons.getBookmarkStar
 import com.aptoide.android.aptoidegames.drawables.icons.getForward
 import com.aptoide.android.aptoidegames.drawables.icons.getLeftArrow
+import com.aptoide.android.aptoidegames.drawables.icons.getRatingStar
 import com.aptoide.android.aptoidegames.editorial.EditorialsViewCard
 import com.aptoide.android.aptoidegames.editorial.buildEditorialRoute
 import com.aptoide.android.aptoidegames.feature_apps.presentation.SmallEmptyView
@@ -98,63 +104,36 @@ private val tabsList = listOf(
 )
 
 private const val SOURCE = "source"
-private const val USE_STORE_NAME = "useStoreName"
 
-const val appViewRoute = "app/{$SOURCE}?" +
-  "$USE_STORE_NAME={$USE_STORE_NAME}"
-
-private val appViewArguments = listOf(
-  navArgument(USE_STORE_NAME) {
-    type = NavType.BoolType
-    defaultValue = true
-  },
-)
+const val appViewRoute = "app/{$SOURCE}?"
 
 fun appViewScreen() = ScreenData.withAnalytics(
   route = appViewRoute,
   screenAnalyticsName = "AppView",
-  arguments = appViewArguments,
   deepLinks = listOf(navDeepLink { uriPattern = BuildConfig.DEEP_LINK_SCHEMA + appViewRoute })
 ) { arguments, navigate, navigateBack ->
   val source = arguments?.getString(SOURCE)!!
-  val useStoreName = arguments.getBoolean(USE_STORE_NAME, true)
+
   AppViewScreen(
-    source = source,
-    useStoreName = useStoreName,
+    source = source.appendIfRequired(BuildConfig.MARKET_NAME),
     navigate = navigate,
     navigateBack = navigateBack
   )
 }
 
-fun buildAppViewRoute(packageName: String): String =
-  buildAppViewRouteBySource(packageName.toPackageNameParam())
+fun buildAppViewRoute(appSource: AppSource): String =
+  appViewRoute.replace("{$SOURCE}", appSource.asSource())
 
-fun buildAppViewRouteByAppId(
-  appId: Long,
-  useStoreName: Boolean = true,
-): String = buildAppViewRouteBySource(appId.toAppIdParam(), useStoreName)
-
-fun buildAppViewRouteBySource(
-  source: String,
-  useStoreName: Boolean = true,
-): String = appViewRoute
-  .replace("{$SOURCE}", source)
-  .replace("{$USE_STORE_NAME}", useStoreName.toString())
-
-fun buildAppViewDeepLinkUri(source: String) =
-  BuildConfig.DEEP_LINK_SCHEMA + buildAppViewRouteBySource(source)
+fun buildAppViewDeepLinkUri(appSource: AppSource) =
+  BuildConfig.DEEP_LINK_SCHEMA + buildAppViewRoute(appSource)
 
 @Composable
 fun AppViewScreen(
   source: String,
-  useStoreName: Boolean,
   navigate: (String) -> Unit,
   navigateBack: () -> Unit,
 ) {
-  val (uiState, reload) = rememberAppBySource(
-    source = source,
-    useStoreName = useStoreName,
-  )
+  val (uiState, reload) = rememberApp(source = source)
   val analyticsContext = AnalyticsContext.current
   val genericAnalytics = rememberGenericAnalytics()
 
@@ -256,7 +235,7 @@ fun AppViewContent(
     }
 
     if (showYoutubeVideo) {
-      val videoId = app.videos[0].split("embed/").getOrElse(1) { "" }
+      val videoId = app.videos[0].extractVideoId()
       val videoHeightPx = with(localDensity) { VIDEO_HEIGHT.dp.toPx() }
       val contentDesc = String.format("Video of %1s", app.name)
 
@@ -333,9 +312,12 @@ fun AppViewContent(
             }
         )
         AptoideOutlinedText(
-          text = stringResource(id = R.string.bonus_banner_title, "20"),
+          text = stringResource(
+            id = R.string.bonus_banner_title,
+            "20"
+          ), //TODO Hardcoded value (should come from backend in the future)
           style = AGTypography.InputsM,
-          outlineWidth = 15f,
+          outlineWidth = 10f,
           outlineColor = Palette.Black,
           textColor = Palette.Primary,
           modifier = Modifier
@@ -390,13 +372,113 @@ fun DetailsView(app: App) {
     modifier = Modifier.padding(top = 16.dp)
   ) {
     app.screenshots?.let { ScreenshotsList(it) }
+    app.news?.let {
+      WhatsNew(app = app)
+    }
+
     app.description?.let {
       Text(
         text = it,
-        modifier = Modifier.padding(top = 24.dp, bottom = 32.dp, start = 16.dp, end = 16.dp),
+        modifier = Modifier.padding(top = 16.dp, bottom = 32.dp, start = 16.dp, end = 16.dp),
         style = AGTypography.ArticleText,
         color = Palette.White
       )
+    }
+  }
+}
+
+@Composable
+fun LatestBox() {
+  Box(
+    modifier = Modifier
+      .height(24.dp)
+      .width(68.dp)
+      .background(Palette.GreyLight),
+  ) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+      Icon(
+        modifier = Modifier
+          .padding(start = 3.dp, end = 4.dp, top = 4.dp, bottom = 4.dp)
+          .size(16.dp),
+        imageVector = getBookmarkStar(Palette.Black),
+        contentDescription = "bookmark star",
+        tint = Color.Unspecified
+      )
+      Text(
+        modifier = Modifier
+          .padding(end = 8.dp),
+        text = stringResource(id = R.string.latest_title),
+        color = Palette.Black,
+        style = AGTypography.InputsS,
+        textAlign = TextAlign.Center,
+      )
+    }
+
+  }
+}
+
+@Composable
+fun WhatsNew(app: App) {
+  Box(
+    modifier = Modifier
+      .fillMaxWidth()
+      .padding(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 16.dp)
+      .background(Palette.GreyDark)
+  ) {
+    Column(
+      horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+      LatestBox()
+      Row(
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(start = 16.dp, end = 16.dp, top = 18.dp)
+      ) {
+        Text(
+          modifier = Modifier
+            .padding(end = 8.dp)
+            .alignByBaseline(),
+          text = app.versionName,
+          color = Palette.Primary,
+          style = AGTypography.InputsL,
+        )
+        Text(
+          modifier = Modifier
+            .alignByBaseline(),
+          text = TextFormatter.formatBytes(app.appSize),
+          color = Palette.GreyLight,
+          style = AGTypography.InputsM
+        )
+        Spacer(modifier = Modifier.weight(1f))
+        Text(
+          modifier = Modifier
+            .align(Alignment.CenterVertically),
+          text = app.updateDate?.split(" ")?.first() ?: "",
+          color = Palette.GreyLight,
+          style = AGTypography.SmallGames,
+        )
+      }
+      Column(
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(
+            start = 16.dp,
+            end = 16.dp,
+            top = 12.dp,
+            bottom = 16.dp,
+          )
+      ) {
+        Text(
+          text = stringResource(id = R.string.whats_new_title),
+          color = Palette.White,
+          style = AGTypography.InputsM,
+        )
+        Text(
+          text = app.news!!,
+          color = Palette.White,
+          style = AGTypography.SmallGames,
+        )
+      }
     }
   }
 }
@@ -483,7 +565,7 @@ fun AppInfoSection(
       AppInfoRowWithAction(
         infoCategory = stringResource(R.string.appview_info_permissions_title),
         onClick = {
-          navigate(buildAppPermissionsRoute(app.packageName))
+          navigate(buildAppPermissionsRoute(app))
         }
       )
     }
@@ -644,6 +726,54 @@ fun AppPresentationView(app: App) {
           overflow = TextOverflow.Ellipsis,
         )
       }
+      AppRatingAndDownloads(
+        rating = app.pRating,
+        downloads = app.pDownloads
+      )
+    }
+  }
+}
+
+@Composable
+fun AppRatingAndDownloads(
+  modifier: Modifier = Modifier,
+  rating: Rating,
+  downloads: Int? = null
+) {
+  Row(
+    modifier = modifier
+      .wrapContentHeight(
+        unbounded = true,
+        align = Alignment.Top
+      ),
+    verticalAlignment = Alignment.CenterVertically
+  ) {
+    Icon(
+      imageVector = getRatingStar(Palette.Black),
+      contentDescription = null,
+      modifier = Modifier
+        .padding(end = 2.dp)
+        .size(12.dp),
+    )
+    Text(
+      modifier = modifier
+        .padding(end = 8.dp),
+      text = if (rating.avgRating == 0.0) {
+        "--"
+      } else {
+        TextFormatter.formatDecimal(rating.avgRating)
+      },
+      maxLines = 1,
+      style = AGTypography.InputsXS,
+      overflow = TextOverflow.Ellipsis,
+    )
+    downloads?.let {
+      Text(
+        text = "${it.formatDownloads()} downloads",
+        maxLines = 1,
+        style = AGTypography.InputsXS,
+        overflow = TextOverflow.Ellipsis,
+      )
     }
   }
 }
@@ -675,6 +805,14 @@ fun AppViewScreenPreview() {
 fun DetailsViewPreview() {
   AptoideTheme {
     DetailsView(app = randomApp)
+  }
+}
+
+@PreviewDark
+@Composable
+fun WhatsNewViewPreview() {
+  AptoideTheme {
+    WhatsNew(app = randomApp)
   }
 }
 

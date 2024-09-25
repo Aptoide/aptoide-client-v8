@@ -84,9 +84,7 @@ private fun RealCarouselLargeBundle(
       )
     }
     Column(
-      modifier = Modifier
-        .fillMaxWidth()
-        .padding(bottom = 24.dp)
+      modifier = Modifier.fillMaxWidth()
     ) {
       BundleHeader(
         title = bundle.title,
@@ -141,7 +139,7 @@ private fun CarouselLargeListView(
             analyticsContext = analyticsContext.copy(itemPosition = index)
           )
           navigate(
-            buildAppViewRoute(item.packageName)
+            buildAppViewRoute(item)
               .withItemPosition(index)
           )
         },

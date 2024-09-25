@@ -8,10 +8,9 @@ interface AppsRepository {
 
   suspend fun getApp(packageName: String, bypassCache: Boolean = false): App
 
-  suspend fun getMetaBySource(
+  suspend fun getAppMeta(
     source: String,
     bypassCache: Boolean = false,
-    useStoreName: Boolean = true
   ): App
 
   suspend fun getRecommended(path: String, bypassCache: Boolean = false): List<App>

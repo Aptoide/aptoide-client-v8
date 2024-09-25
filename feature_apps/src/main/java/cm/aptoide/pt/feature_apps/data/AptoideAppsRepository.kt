@@ -96,16 +96,14 @@ internal class AptoideAppsRepository @Inject constructor(
         )
     }
 
-  override suspend fun getMetaBySource(
+  override suspend fun getAppMeta(
     source: String,
     bypassCache: Boolean,
-    useStoreName: Boolean,
   ): App =
     withContext(scope.coroutineContext) {
 
-      appsRemoteDataSource.getMetaBySource(
+      appsRemoteDataSource.getAppMeta(
         path = source,
-        storeName = if (useStoreName) storeName else null,
         bypassCache = if (bypassCache) CacheConstants.NO_CACHE else null
       ).data
         .toDomainModel(
@@ -222,7 +220,7 @@ internal class AptoideAppsRepository @Inject constructor(
     ): GetAppResponse
 
     @GET("app/getMeta/{source}")
-    suspend fun getMetaBySource(
+    suspend fun getAppMeta(
       @Path(value = "source", encoded = true) path: String,
       @Query("store_name") storeName: String? = null,
       @Query("aab") aab: Int = 1,
@@ -264,7 +262,7 @@ fun AppJSON.toDomainModel(
   campaignRepository: CampaignRepository,
   adListId: String,
 ) = App(
-  id = this.id!!,
+  appId = this.id!!,
   name = this.name!!,
   packageName = this.packageName!!,
   appSize = this.file.filesize + (this.obb?.main?.filesize ?: 0) + (this.obb?.patch?.filesize ?: 0),
@@ -285,10 +283,12 @@ fun AppJSON.toDomainModel(
     votes = this.stats.prating.votes?.map { Votes(it.value, it.count) }
   ),
   downloads = this.stats.downloads,
+  pDownloads = this.stats.pdownloads,
   versionName = this.file.vername,
   versionCode = this.file.vercode,
   screenshots = this.media?.screenshots?.map { it.url },
   description = this.media?.description,
+  news = if (this.media?.news.isNullOrEmpty()) null else this.media?.news,
   videos = this.media?.videos?.filter { it.type == VideoTypeJSON.YOUTUBE }?.map { it.url }
     ?: emptyList(),
   store = Store(

@@ -34,7 +34,7 @@ import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.AppUiStateProvider
-import cm.aptoide.pt.feature_apps.presentation.rememberApp
+import cm.aptoide.pt.feature_apps.presentation.rememberWalletApp
 import cm.aptoide.pt.feature_home.domain.BundleSource
 import com.appcoins.payments.arch.PaymentsResult
 import com.appcoins.payments.arch.PurchaseRequest
@@ -129,7 +129,7 @@ private fun PaymentsWalletInstallationBottomSheetView(
 ) {
   val genericAnalytics = rememberGenericAnalytics()
   val walletPaymentMethod = rememberWalletPaymentMethod(purchaseRequest)
-  val (uiState, _) = rememberApp(packageName = "com.appcoins.wallet")
+  val (uiState, _) = rememberWalletApp()
 
   PaymentsWalletInstallationView(
     purchaseRequest = purchaseRequest,

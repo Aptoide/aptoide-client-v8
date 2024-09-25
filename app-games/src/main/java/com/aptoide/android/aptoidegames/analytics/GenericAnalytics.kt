@@ -3,6 +3,7 @@ package com.aptoide.android.aptoidegames.analytics
 import android.content.Context
 import android.content.res.Configuration
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.data.walletApp
 import cm.aptoide.pt.install_manager.InstallManager
 import com.appcoins.payments.arch.PaymentMethod
 import com.appcoins.payments.arch.ProductInfoData
@@ -31,7 +32,7 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
       .onEach { analyticsSender.setUserProperties("theme" to it) }
       .launchIn(CoroutineScope(Dispatchers.IO))
     installManager
-      .getApp("com.appcoins.wallet")
+      .getApp(walletApp.packageName)
       .packageInfoFlow
       .map { (it != null).toString() }
       .onEach { analyticsSender.setUserProperties("wallet_installed" to it) }

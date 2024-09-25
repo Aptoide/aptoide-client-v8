@@ -39,8 +39,8 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiStateProvider
-import cm.aptoide.pt.feature_apps.presentation.rememberApp
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
+import cm.aptoide.pt.feature_apps.presentation.rememberWalletApp
 import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
 import com.aptoide.android.aptoidegames.AptoideOutlinedText
 import com.aptoide.android.aptoidegames.BuildConfig
@@ -132,13 +132,11 @@ private fun RealMoreBonusBundleView(
       AppsListUiState.NoConnection -> NoConnectionView(onRetryClick = noNetworkReload)
       AppsListUiState.Error -> GenericErrorView(reload)
       AppsListUiState.Empty -> MoreBonusBundleViewContent(
-        title = title,
         appList = emptyList(),
         navigate = navigate
       )
 
       is AppsListUiState.Idle -> MoreBonusBundleViewContent(
-        title = title,
         appList = uiState.apps.onEach {
           it.campaigns?.run {
             if (AptoideMMPCampaign.allowedBundleTags.keys.contains(bundleTag)) {
@@ -154,13 +152,12 @@ private fun RealMoreBonusBundleView(
 
 @Composable
 fun MoreBonusBundleViewContent(
-  title: String,
   appList: List<App>,
   navigate: (String) -> Unit,
 ) {
   val navigateToApp = { app: App, index: Int? ->
     navigate(
-      buildAppViewRoute(app.packageName).withItemPosition(index)
+      buildAppViewRoute(app).withItemPosition(index)
     )
   }
 
@@ -169,7 +166,7 @@ fun MoreBonusBundleViewContent(
       .semantics { collectionInfo = CollectionInfo(appList.size, 1) }
       .wrapContentSize(Alignment.TopCenter)
   ) {
-    item { MoreBonusSectionView(title = title, onWalletClick = { navigateToApp(it, null) }) }
+    item { MoreBonusSectionView(onWalletClick = { navigateToApp(it, null) }) }
     itemsIndexed(appList) { index, app ->
       AppItem(
         modifier = Modifier.padding(horizontal = 16.dp),
@@ -185,7 +182,6 @@ fun MoreBonusBundleViewContent(
 
 @Composable
 fun MoreBonusSectionView(
-  title: String,
   onWalletClick: (app: App) -> Unit,
 ) {
   Box(
@@ -228,9 +224,12 @@ fun MoreBonusSectionView(
       contentScale = ContentScale.FillWidth,
     )
     AptoideOutlinedText(
-      text = title,
+      text = stringResource(
+        id = R.string.bonus_banner_title,
+        "20"
+      ), //TODO Hardcoded value (should come from backend in the future)
       style = AGTypography.InputsM,
-      outlineWidth = 14f,
+      outlineWidth = 10f,
       outlineColor = Palette.Black,
       textColor = Palette.Primary,
       modifier = Modifier.padding(start = 56.dp, top = 14.dp)
@@ -330,7 +329,7 @@ private fun WalletAppItem(
   modifier: Modifier = Modifier,
   onWalletClick: (app: App) -> Unit,
 ) {
-  val (uiState, _) = rememberApp(packageName = "com.appcoins.wallet")
+  val (uiState, _) = rememberWalletApp()
   val walletApp = (uiState as? AppUiState.Idle)?.app
   walletApp?.let {
     AppItem(

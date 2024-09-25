@@ -6,10 +6,12 @@ plugins {
 }
 
 android {
-  namespace = "cm.aptoide.pt.feature_mmp"
+  namespace = "cm.aptoide.pt.feature_apkfy"
 }
 
 dependencies {
   implementation(project(ModuleDependency.APTOIDE_NETWORK))
+  implementation(project(ModuleDependency.EXTENSIONS))
+  implementation(project(ModuleDependency.FEATURE_APPS))
   implementation(LibraryDependency.DATASTORE)
 }

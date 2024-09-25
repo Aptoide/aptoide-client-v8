@@ -111,7 +111,11 @@ class AptoideInstaller @Inject constructor(
           when (val result = installEvents.events.filter { it.sessionId == sessionId }.first()) {
             is InstallResult.Fail -> throw Exception(result.message)
             is InstallResult.Abort -> throw AbortException(result.message)
-            is InstallResult.Success -> emit(100)
+            is InstallResult.Success -> {
+              emit(100)
+              apkFiles.deleteFromCache()
+              obbFiles.deleteFromCache()
+            }
           }
         }
           .onFailure { abandon() }
@@ -222,6 +226,8 @@ class AptoideInstaller @Inject constructor(
       processedSize += size
     }
   }
+
+  private fun Collection<File>.deleteFromCache() = forEach(File::delete)
 
   companion object {
     private const val SESSION_INSTALL_REQUEST_CODE = 18

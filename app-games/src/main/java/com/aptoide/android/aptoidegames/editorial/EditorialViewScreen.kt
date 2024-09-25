@@ -7,7 +7,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,8 +27,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
@@ -39,7 +36,6 @@ import cm.aptoide.pt.aptoide_ui.textformatter.DateUtils
 import cm.aptoide.pt.aptoide_ui.video.YoutubePlayer
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.ScreenData
-import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_editorial.data.model.Media
 import cm.aptoide.pt.feature_editorial.domain.Article
 import cm.aptoide.pt.feature_editorial.domain.randomArticle
@@ -48,7 +44,6 @@ import cm.aptoide.pt.feature_editorial.presentation.editorialViewModel
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.BundleSource.MANUAL
 import cm.aptoide.pt.feature_home.domain.Type.EDITORIAL
-import com.aptoide.android.aptoidegames.AppIconImage
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
 import com.aptoide.android.aptoidegames.BuildConfig
@@ -59,6 +54,7 @@ import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAn
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.design_system.SecondaryButton
 import com.aptoide.android.aptoidegames.drawables.icons.getLeftArrow
+import com.aptoide.android.aptoidegames.feature_apps.presentation.AppItem
 import com.aptoide.android.aptoidegames.home.GenericErrorView
 import com.aptoide.android.aptoidegames.home.NoConnectionView
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
@@ -228,14 +224,13 @@ private fun ArticleViewContent(
           }
           content.app?.let {
             item {
-              AppBannerView(
-                modifier = Modifier
-                  .fillMaxWidth()
-                  .background(color = Palette.Black)
-                  .padding(16.dp),
+              AppItem(
                 app = it,
-                type = caption.uppercase(),
-              )
+                onClick = { },
+                modifier = Modifier.padding(horizontal = 16.dp)
+              ) {
+                InstallViewShort(app = it)
+              }
             }
           }
           content.action?.let {
@@ -330,50 +325,6 @@ private fun ContentMedia(
         )
       }
     }
-  }
-}
-
-@Composable
-private fun AppBannerView(
-  modifier: Modifier = Modifier,
-  app: App,
-  type: String,
-) {
-  Row(
-    verticalAlignment = Alignment.CenterVertically,
-    modifier = modifier
-  ) {
-    AppIconImage(
-      modifier = Modifier.size(88.dp),
-      data = app.icon,
-      contentDescription = "App Icon",
-    )
-    Column(
-      modifier = Modifier
-        .fillMaxWidth()
-        .weight(1f)
-        .padding(horizontal = 16.dp)
-    ) {
-      Text(
-        modifier = Modifier.padding(bottom = 4.dp),
-        text = app.name,
-        maxLines = 2,
-        overflow = TextOverflow.Ellipsis,
-        style = AGTypography.DescriptionGames,
-        color = Palette.White,
-      )
-      Text(
-        modifier = Modifier.padding(top = 4.dp),
-        text = type,
-        style = AGTypography.InputsS,
-        color = Palette.GreyLight,
-        textAlign = TextAlign.Center,
-      )
-    }
-    InstallViewShort(
-      app = app,
-      cancelable = false
-    )
   }
 }
 

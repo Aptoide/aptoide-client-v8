@@ -88,7 +88,8 @@ val translatedTitles = mapOf(
   "My Games" to R.string.fixed_bundle_my_games_title,
   "Editors' Choice" to R.string.fixed_bundle_editors_choice_title,
   "Editorial" to R.string.fixed_bundle_editorial_title,
-  "Trending" to R.string.fixed_bundle_trending_title
+  "Trending" to R.string.fixed_bundle_trending_title,
+  "Categories" to R.string.categories,
 )
 
 const val gamesRoute = "gamesView"
@@ -175,11 +176,14 @@ fun BundlesView(
     modifier = Modifier
       .fillMaxSize()
       .wrapContentSize(Alignment.TopCenter)
+      .padding(top = 16.dp)
   ) {
     LazyColumn(
       modifier = Modifier
         .fillMaxSize()
-        .wrapContentSize(Alignment.TopCenter)
+        .wrapContentSize(Alignment.TopCenter),
+      verticalArrangement = Arrangement.spacedBy(32.dp),
+      contentPadding = PaddingValues(bottom = 32.dp)
     ) {
       items(viewState.bundles) { bundle ->
         OverrideAnalyticsBundleMeta(bundle.meta, navigate) { navigateTo ->
@@ -274,7 +278,7 @@ fun BundleHeader(
         }
       }
       .fillMaxWidth()
-      .padding(all = 16.dp),
+      .padding(top = 0.dp, start = 16.dp, end = 16.dp, bottom = 16.dp),
     horizontalArrangement = Arrangement.SpaceBetween,
     verticalAlignment = Alignment.CenterVertically
   ) {
@@ -292,7 +296,7 @@ fun BundleHeader(
         )
       }
       Text(
-        text = title,
+        text = title.translateOrKeep(LocalContext.current),
         maxLines = 2,
         modifier = Modifier
           .clearAndSetSemantics { },

@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.feature_apps.data.randomApp
+import cm.aptoide.pt.feature_apps.data.walletApp
 import cm.aptoide.pt.feature_apps.domain.AppMetaUseCase
 import cm.aptoide.pt.feature_apps.domain.AppVersionsUseCase
 import cm.aptoide.pt.feature_apps.domain.AppsByTagUseCase
@@ -30,38 +31,7 @@ class InjectionsProvider @Inject constructor(
 ) : ViewModel()
 
 @Composable
-fun rememberApp(
-  packageName: String,
-  useStoreName: Boolean = true,
-): Pair<AppUiState, () -> Unit> = runPreviewable(
-  preview = { AppUiStateProvider().values.toSet().random() to {} },
-  real = {
-    val injectionsProvider = hiltViewModel<InjectionsProvider>()
-    val vm: AppViewModel = viewModel(
-      viewModelStoreOwner = LocalContext.current as ViewModelStoreOwner,
-      key = "appView/$packageName",
-      factory = object : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-          @Suppress("UNCHECKED_CAST")
-          return AppViewModel(
-            appMetaUseCase = injectionsProvider.appMetaUseCase,
-            source = packageName.toPackageNameParam(),
-            useStoreName = useStoreName,
-          ) as T
-        }
-      }
-    )
-
-    val uiState by vm.uiState.collectAsState()
-    uiState to vm::reload
-  }
-)
-
-@Composable
-fun rememberAppBySource(
-  source: String,
-  useStoreName: Boolean = true,
-): Pair<AppUiState, () -> Unit> = runPreviewable(
+fun rememberApp(source: String): Pair<AppUiState, () -> Unit> = runPreviewable(
   preview = { AppUiStateProvider().values.toSet().random() to {} },
   real = {
     val injectionsProvider = hiltViewModel<InjectionsProvider>()
@@ -74,7 +44,6 @@ fun rememberAppBySource(
           return AppViewModel(
             appMetaUseCase = injectionsProvider.appMetaUseCase,
             source = source,
-            useStoreName = useStoreName,
           ) as T
         }
       }
@@ -179,6 +148,5 @@ fun categoryApps(
   return uiState to vm::reload
 }
 
-fun String.toPackageNameParam() = "package_name=$this"
-
-fun Long.toAppIdParam() = "app_id=$this"
+@Composable
+fun rememberWalletApp() = rememberApp(source = walletApp.asSource())

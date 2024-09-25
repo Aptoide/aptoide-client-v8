@@ -1,6 +1,7 @@
 package cm.aptoide.pt.feature_apps.data
 
 import cm.aptoide.pt.extensions.getRandomString
+import cm.aptoide.pt.feature_apps.domain.AppSource
 import cm.aptoide.pt.feature_apps.domain.Rating
 import cm.aptoide.pt.feature_apps.domain.Store
 import cm.aptoide.pt.feature_apps.domain.Votes
@@ -12,9 +13,9 @@ import kotlin.random.Random
 import kotlin.random.nextLong
 
 data class App(
-  val id: Long,
+  override val appId: Long,
   val name: String,
-  val packageName: String,
+  override val packageName: String,
   val md5: String,
   val appSize: Long,
   val icon: String,
@@ -22,12 +23,14 @@ data class App(
   val rating: Rating,
   val pRating: Rating,
   val downloads: Int,
+  val pDownloads: Int,
   val versionName: String,
   val versionCode: Int,
   val featureGraphic: String,
   val isAppCoins: Boolean,
   val screenshots: List<String>?,
   val description: String?,
+  val news: String?,
   val videos: List<String> = emptyList(),
   val store: Store,
   val releaseDate: String?,
@@ -43,7 +46,7 @@ data class App(
   val bdsFlags: List<String?>?,
   val developerName: String?,
   val campaigns: CampaignImpl? = null,
-)
+) : AppSource
 
 data class File(
   private val _fileName: String? = null,
@@ -73,7 +76,7 @@ data class Obb(
 )
 
 val emptyApp = App(
-  id = 0,
+  appId = -1,
   name = "",
   packageName = "",
   md5 = "",
@@ -91,6 +94,7 @@ val emptyApp = App(
     votes = emptyList()
   ),
   downloads = 0,
+  pDownloads = 0,
   versionName = "",
   versionCode = 0,
   featureGraphic = "",
@@ -98,6 +102,7 @@ val emptyApp = App(
   bdsFlags = null,
   screenshots = emptyList(),
   description = "",
+  news = "",
   videos = emptyList(),
   store = Store(
     storeName = "",
@@ -125,10 +130,23 @@ val emptyApp = App(
   developerName = ""
 )
 
+val walletApp = emptyApp.copy(
+  packageName = "com.appcoins.wallet",
+  name = "AppCoins Wallet",
+  file = File(
+    vername = "",
+    vercode = 0,
+    md5 = "",
+    filesize = 33655476, //size of the current version of AppCoins Wallet - 2.11.0.0
+    path = "",
+    path_alt = ""
+  )
+)
+
 val randomApp
   get() =
     emptyApp.copy(
-      id = Random.nextLong(),
+      appId = Random.nextLong(),
       name = getRandomString(range = 2..5, capitalize = true),
       packageName = getRandomString(range = 3..5, separator = "."),
       appSize = Random.nextLong(1_000_000L..1_000_000_000L),
@@ -158,6 +176,7 @@ val randomApp
       isAppCoins = Random.nextBoolean(),
       screenshots = List(Random.nextInt(10)) { "random" },
       description = getRandomString(),
+      news = getRandomString(),
       videos = List(Random.nextInt(2)) { "https://youtu.be/dQw4w9WgXcQ" },
       store = Store(
         storeName = getRandomString(range = 2..3, capitalize = true),

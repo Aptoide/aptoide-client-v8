@@ -14,7 +14,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.extensions.isAllowed
-import cm.aptoide.pt.feature_apps.presentation.toPackageNameParam
+import cm.aptoide.pt.feature_apps.domain.AppSource
 import cm.aptoide.pt.install_manager.Task.State
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.MainActivity
@@ -62,7 +62,6 @@ class InstallerNotificationsBuilder @Inject constructor(
       ).apply {
         description = descriptionText
         setSound(null, null)
-        vibrationPattern = LongArray(0)
       }
 
       notificationManager.createNotificationChannel(channel)
@@ -171,7 +170,9 @@ class InstallerNotificationsBuilder @Inject constructor(
     hasAction: Boolean = false,
   ): Notification? = if (context.isAllowed(Manifest.permission.POST_NOTIFICATIONS)) {
 
-    val deepLink = buildAppViewDeepLinkUri(packageName.toPackageNameParam())
+    val deepLink = buildAppViewDeepLinkUri(
+      appSource = appDetails ?: AppSource.of(appId = null, packageName = packageName)
+    )
 
     val clickIntent = PendingIntent.getActivity(
       context,
