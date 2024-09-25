@@ -21,11 +21,14 @@ import cm.aptoide.pt.feature_home.di.WidgetsUrl
 import cm.aptoide.pt.feature_oos.di.UninstallPackagesFilter
 import cm.aptoide.pt.feature_search.data.AutoCompleteSuggestionsRepository
 import cm.aptoide.pt.feature_search.domain.repository.SearchStoreManager
+import com.aptoide.android.aptoidegames.AptoideIdsRepository
 import com.aptoide.android.aptoidegames.BuildConfig
+import com.aptoide.android.aptoidegames.IdsRepository
 import com.aptoide.android.aptoidegames.appLaunchDataStore
 import com.aptoide.android.aptoidegames.dataStore
 import com.aptoide.android.aptoidegames.feature_flags.AptoideFeatureFlagsRepository
 import com.aptoide.android.aptoidegames.home.repository.ThemePreferencesManager
+import com.aptoide.android.aptoidegames.idsDataStore
 import com.aptoide.android.aptoidegames.launch.AppLaunchPreferencesManager
 import com.aptoide.android.aptoidegames.network.AptoideGetHeaders
 import com.aptoide.android.aptoidegames.network.AptoideQLogicInterceptor
@@ -204,6 +207,17 @@ class RepositoryModule {
     walletApp.packageName,
     "cm.aptoide.pt"
   )
+
+  @Singleton
+  @Provides
+  @IdsDataStore
+  fun provideIdsDataStore(@ApplicationContext appContext: Context): DataStore<Preferences> =
+    appContext.idsDataStore
+
+  @Singleton
+  @Provides
+  fun provideIdsManager(@IdsDataStore dataStore: DataStore<Preferences>): IdsRepository =
+    AptoideIdsRepository(dataStore)
 }
 
 @Qualifier
@@ -217,3 +231,7 @@ annotation class NetworkPreferencesDataStore
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class AppLaunchDataStore
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class IdsDataStore

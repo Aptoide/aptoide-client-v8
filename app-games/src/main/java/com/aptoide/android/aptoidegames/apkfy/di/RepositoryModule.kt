@@ -2,6 +2,7 @@ package com.aptoide.android.aptoidegames.apkfy.di
 
 import cm.aptoide.pt.feature_apkfy.domain.ApkfyManager
 import cm.aptoide.pt.feature_apkfy.domain.ApkfyManagerImpl
+import com.aptoide.android.aptoidegames.IdsRepository
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.apkfy.analytics.ApkfyManagerProbe
 import dagger.Module
@@ -19,9 +20,11 @@ internal object RepositoryModule {
   fun provideApkfyManager(
     apkfyManager: ApkfyManagerImpl,
     biAnalytics: BIAnalytics,
+    idsRepository: IdsRepository
   ): ApkfyManager =
     ApkfyManagerProbe(
       apkfyManager = apkfyManager,
-      biAnalytics = biAnalytics
+      biAnalytics = biAnalytics,
+      idsRepository = idsRepository
     )
 }
