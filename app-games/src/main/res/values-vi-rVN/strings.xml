@@ -198,7 +198,7 @@
   <string name="bonus_page_title_1">Tiền thưởng cho mỗi lần mua hàng</string>
   <string name="bonus_page_body_1">Tìm kiếm các trò chơi được xác định bằng %1$s, cài đặt Ví AppCoins và nhận tiền thưởng lên đến %2$s%% trong mọi giao dịch mua. Sau đó, bạn có thể sử dụng tiền thưởng này để thực hiện các giao dịch mua tiếp theo trong các trò chơi yêu thích của mình!</string>
   <string name="bonus_page_title_2">Bạn vẫn muốn thêm?</string>
-  <string name="bonus_page_body_2">Bạn có thể nhận thêm %s%% tiền thưởng bằng cách sử dụng mã khuyến mãi độc quyền của Aptoide Games trong các trò chơi cụ thể. Hãy theo dõi và bạn sẽ nhận được thông báo!</string>
+  <string name="bonus_page_body_2"><![CDATA[You can get an extra <1>%s%% bonus</1> by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!]]></string>
   <!-- Promo Code -->
   <string name="promo_code_install_wallet_banner_title">Up to %s%% Bonus in Every Purchase</string>
   <string name="promo_code_install_wallet_banner_body">Use the AppCoins Wallet to make your in-app purchases and get a reward.</string>

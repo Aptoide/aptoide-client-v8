@@ -96,9 +96,9 @@
   <string name="waiting_for_connection">接続待ち</string>
   <string name="wait_for_wifi_button">Wi-Fi接続待ち</string>
   <string name="continue_button">続ける</string>
-  <string name="error_install_permissions_body"><![CDATA[Please go to Settings and grant <1>Aptoide Games</1> permissions to install apps!]]></string>
-  <string name="latest_title">Latest</string>
-  <string name="whats_new_title">What\'s New</string>
+  <string name="error_install_permissions_body"><![CDATA[設定から<1>Aptoide Games</1>にアプリのインストール許可を与えてください。]]></string>
+  <string name="latest_title">最新</string>
+  <string name="whats_new_title">最新情報</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">空き容量不足</string>
   <string name="out_of_space_body">インストールを続行するには %s 必要です。</string>
@@ -137,10 +137,10 @@
   <string name="appview_info_permissions_title" comment="permissions">許可</string>
   <string name="download_percentage_body" comment="1_s_of_2_s">%2$sの%1$s%%</string>
   <string name="error_short_title" comment="oops_an_error_occurred">エラーが発生しました。</string>
-  <string name="purchase_done_bonus_title">Get a %s bonus!</string>
-  <string name="purchase_done_bonus_body">Download the AppCoins Wallet to get this bonus and use it in your next purchase.</string>
-  <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet installed!</string>
-  <string name="purchase_done_bonus_wallet_installed_body">Open it to find your bonus.</string>
+  <string name="purchase_done_bonus_title">%sのボーナスをゲット！</string>
+  <string name="purchase_done_bonus_body">AppCoinsウォレットをダウンロードしてこのボーナスを獲得し、次回のお買い物でご利用ください。</string>
+  <string name="purchase_done_bonus_wallet_installed_title">AppCoinsウォレットがインストールされました！</string>
+  <string name="purchase_done_bonus_wallet_installed_body">開いてボーナスをチェック。</string>
   <string name="bonus_banner_body">%sで表示されたすべてのゲームでボーナスを獲得できます。</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">最大%s%%のボーナス</string>
   <string name="settings_payments_title" comment="contact_support_team">サポートチームへのお問い合わせ</string>
@@ -199,17 +199,17 @@
   <string name="bonus_page_title_1">購入のたびにボーナス</string>
   <string name="bonus_page_body_1">%1$sの付いたゲームを探し、AppCoins Walletをインストールすると、すべての購入で最大%2$s%%のボーナスがもらえます。このボーナスを利用して、お気に入りのゲームを次回購入することができます！</string>
   <string name="bonus_page_title_2">さらに？</string>
-  <string name="bonus_page_body_2">特定のゲームでAptoide Games限定プロモコードを使用すると、さらに%s%%ボーナスを獲得できます。ご期待ください！</string>
+  <string name="bonus_page_body_2"><![CDATA[特定のゲームでAptoide Games限定プロモコードを使用すると、さらに<1>%s%%ボーナス</1>を獲得できます。ご期待ください！]]></string>
   <!-- Promo Code -->
-  <string name="promo_code_install_wallet_banner_title">Up to %s%% Bonus in Every Purchase</string>
-  <string name="promo_code_install_wallet_banner_body">Use the AppCoins Wallet to make your in-app purchases and get a reward.</string>
-  <string name="promo_code_extra_title">Want More? Get %s%% Extra Bonus!</string>
-  <string name="promo_code_use_button">Use code</string>
-  <string name="promo_code_install_wallet_disclaimer">Install the AppCoins Wallet first.</string>
-  <string name="promo_code_notification_title">Redeem Your Promo Code</string>
-  <string name="promo_code_notification_body">Use your promo code to get extra bonuses in your favorite game.</string>
-  <string name="promo_code_notification_without_wallet_title">%s%% Extra Bonus!</string>
-  <string name="promo_code_notification_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
-  <string name="promo_code_share_title">You\'ve got a promo code!</string>
-  <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorite game.</string>
+  <string name="promo_code_install_wallet_banner_title">購入毎に最大 %s%% のボーナスを獲得！</string>
+  <string name="promo_code_install_wallet_banner_body">AppCoinsウォレットを使ってアプリ内課金をして報酬をゲットしましょう。</string>
+  <string name="promo_code_extra_title">もっと欲しい？ %s%% 追加ボーナスをゲット！</string>
+  <string name="promo_code_use_button">コードを使用</string>
+  <string name="promo_code_install_wallet_disclaimer">まずAppCoinsウォレットをインストールしてください。</string>
+  <string name="promo_code_notification_title">プロモコードを使う</string>
+  <string name="promo_code_notification_body">プロモコードを使って、好きなゲームで追加ボーナスをゲット。</string>
+  <string name="promo_code_notification_without_wallet_title">%s%% 追加ボーナス！</string>
+  <string name="promo_code_notification_without_wallet_body">AppCoinsウォレットを入手し、プロモコードを使用すると、すべての購入で追加のボーナスを得ることができます。</string>
+  <string name="promo_code_share_title">プロモコードをゲットしました！</string>
+  <string name="promo_code_share_body">このプロモコードを使って、お気に入りのゲームで追加ボーナスをゲットしましょう。</string>
 </resources>

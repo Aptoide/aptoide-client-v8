@@ -198,7 +198,7 @@
   <string name="bonus_page_title_1">प्रत्येक खरेदीवर बोनस</string>
   <string name="bonus_page_body_1">%1$s ने चिन्हाकिंत खेळ शोधा, अॅप कॉईन्स वॉलेट इंस्टॉल करा आणि सर्व खरेदीवर %2$s%% पर्यंत बोनस मिळवा. नंतर मग आपण ह्या बोनसचा वापर करुन आपल्या आवडत्या खेळातील पुढील खरेदी करु शकता!</string>
   <string name="bonus_page_title_2">अधिक हवय?</string>
-  <string name="bonus_page_body_2">Aptoide खेळ एक्सक्लुझिव्ह प्रोमो कोड, ठराविक खेळात वापरुन आपण अतिरिक्त %s%% बोनस मिळवु शकता. येत रहा आणि आपणांस सूचित केले जाईल!</string>
+  <string name="bonus_page_body_2"><![CDATA[You can get an extra <1>%s%% bonus</1> by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!]]></string>
   <!-- Promo Code -->
   <string name="promo_code_install_wallet_banner_title">Up to %s%% Bonus in Every Purchase</string>
   <string name="promo_code_install_wallet_banner_body">Use the AppCoins Wallet to make your in-app purchases and get a reward.</string>

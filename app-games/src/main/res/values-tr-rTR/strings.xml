@@ -198,7 +198,7 @@
   <string name="bonus_page_title_1">Her Satın Alma İşleminde Bonus</string>
   <string name="bonus_page_body_1">%1$s ile tanımlanmış oyunları ara, AppCoins Wallet yükle ve tüm satın alma işlemlerinde %2$s%% bonus kazan. Bu bonusu daha sonra favori oyunlarındaki satın alma işlemleri için kullanabilirsin!</string>
   <string name="bonus_page_title_2">Daha Fazlasını İster Misin?</string>
-  <string name="bonus_page_body_2">Belirli oyunlarda Aptoide Games\'e özel bir promosyon kodu kullanarak ek %s%% bonus kazanabilirsin. Bizi takip etmeye devam et, seni bilgilendireceğiz!</string>
+  <string name="bonus_page_body_2"><![CDATA[You can get an extra <1>%s%% bonus</1> by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!]]></string>
   <!-- Promo Code -->
   <string name="promo_code_install_wallet_banner_title">Her Satın Alma İşleminde %s%%\'a varan Bonus</string>
   <string name="promo_code_install_wallet_banner_body">Uygulama içi satın alma işlemlerin için AppCoins Wallet\'ı kullan ve bir ödül kazan.</string>

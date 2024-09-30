@@ -198,7 +198,7 @@
   <string name="bonus_page_title_1">Ein Bonus für jeden Einkauf</string>
   <string name="bonus_page_body_1">Halte Ausschau nach den mit %1$s gekennzeichneten Spielen, installiere die AppCoins Wallet und erhalte einen Bonus von bis zu %2$s%% für alle Einkäufe. Diesen Bonus kannst du dann für deine nächsten Einkäufe in deinen Lieblingsspielen verwenden!</string>
   <string name="bonus_page_title_2">Willst du mehr?</string>
-  <string name="bonus_page_body_2">Du kannst einen zusätzlichen %s%% Bonus erhalten, indem du einen exklusiven Aptoide Games Promocode in bestimmten Spielen verwendest. Bleib dran und du wirst benachrichtigt!</string>
+  <string name="bonus_page_body_2"><![CDATA[You can get an extra <1>%s%% bonus</1> by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!]]></string>
   <!-- Promo Code -->
   <string name="promo_code_install_wallet_banner_title">Up to %s%% Bonus in Every Purchase</string>
   <string name="promo_code_install_wallet_banner_body">Use the AppCoins Wallet to make your in-app purchases and get a reward.</string>

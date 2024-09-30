@@ -198,7 +198,7 @@
   <string name="bonus_page_title_1">Bonus di Setiap Pembelian</string>
   <string name="bonus_page_body_1">Cari game yang diidentifikasi dengan %1$s, instal Dompet AppCoins dan dapatkan bonus hingga %2$s%% di semua pembelian. Selanjutnya Anda bisa menggunakan bonus ini untuk melakukan pembelian berikutnya di game favorit Anda!</string>
   <string name="bonus_page_title_2">Ingin Lebih?</string>
-  <string name="bonus_page_body_2">Anda bisa mendapatkan bonus tambahan %s%% dengan menggunakan kode promo eksklusif Aptoide Games di game tertentu. Tunggu info selanjutnya, nanti Anda akan diberi tahu!</string>
+  <string name="bonus_page_body_2"><![CDATA[You can get an extra <1>%s%% bonus</1> by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!]]></string>
   <!-- Promo Code -->
   <string name="promo_code_install_wallet_banner_title">Bonus Hingga %s%% di Setiap Pembelian</string>
   <string name="promo_code_install_wallet_banner_body">Gunakan Dompet AppCoins untuk melakukan pembelian dalam aplikasi dan mendapatkan hadiah.</string>
