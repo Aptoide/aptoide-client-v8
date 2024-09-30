@@ -109,7 +109,7 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
         : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
         + "://"
         + BuildConfig.APTOIDE_WEB_SERVICES_V7_HOST
-        + "/api/7/";
+        + "/api/7.20240701/";
   }
 
   @NonNull public static String getErrorMessage(BaseV7Response response) {

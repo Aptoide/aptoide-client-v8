@@ -38,7 +38,7 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
         : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
         + "://"
         + BuildConfig.APTOIDE_WEB_SERVICES_V7_CACHE_HOST
-        + "/api/7/";
+        + "/api/7.20240701/";
   }
 
   public static ListSearchAppsRequest of(String query, int offset, String storeName,

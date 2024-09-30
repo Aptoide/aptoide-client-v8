@@ -1304,7 +1304,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         : cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
         + "://"
         + cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_V7_HOST
-        + "/api/7/";
+        + "/api/7.20240701/";
   }
 
   @Singleton @Provides @Named("base-secondary-host") String providesBaseSecondaryHost(
@@ -1313,7 +1313,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         : cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
         + "://"
         + cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_READ_V7_HOST
-        + "/api/7/";
+        + "/api/7.20240701/";
   }
 
   @Singleton @Provides @Named("base-webservices-host") String providesBaseWebservicesHost(

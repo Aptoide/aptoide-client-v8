@@ -28,7 +28,7 @@ import static cm.aptoide.pt.bottomNavigation.BottomNavigationMapper.STORES_POSIT
 public class BottomNavigationNavigator {
 
   private final static String EVENT_ACTION =
-      "https://ws75.aptoide.com/api/7/getStoreWidgets/store_id=15/context=stores";
+      "https://ws75.aptoide.com/api/7.20240701/getStoreWidgets/store_id=15/context=stores";
   private final FragmentNavigator fragmentNavigator;
   private final BottomNavigationAnalytics bottomNavigationAnalytics;
   private final SearchAnalytics searchAnalytics;
