@@ -1,5 +1,6 @@
 package com.aptoide.android.aptoidegames.appview
 
+import android.net.Uri.encode
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -89,6 +90,8 @@ import com.aptoide.android.aptoidegames.drawables.icons.getRatingStar
 import com.aptoide.android.aptoidegames.editorial.EditorialsViewCard
 import com.aptoide.android.aptoidegames.editorial.buildEditorialRoute
 import com.aptoide.android.aptoidegames.feature_apps.presentation.SmallEmptyView
+import com.aptoide.android.aptoidegames.feature_apps.presentation.buildSeeMoreBonusRoute
+import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberBonusBundle
 import com.aptoide.android.aptoidegames.home.GenericErrorView
 import com.aptoide.android.aptoidegames.home.NoConnectionView
 import com.aptoide.android.aptoidegames.installer.presentation.InstallView
@@ -208,6 +211,8 @@ fun AppViewContent(
   navigate: (String) -> Unit,
   navigateBack: () -> Unit,
 ) {
+  val bonusBundle = rememberBonusBundle()
+
   var selectedTab by rememberSaveable { mutableIntStateOf(0) }
   val appImageString = stringResource(id = R.string.app_view_image_description_body, app.name)
 
@@ -297,6 +302,13 @@ fun AppViewContent(
         modifier = Modifier
           .padding(top = 160.dp)
           .align(Alignment.TopStart)
+          .clickable {
+              val bonusTitle = bonusBundle.first
+              val bonusTag = bonusBundle.second
+              val route = buildSeeMoreBonusRoute (encode(bonusTitle), "${bonusTag}-more")
+
+              navigate(route)
+          }
       ) {
         Image(
           imageVector = getBonusIconLeft(

@@ -212,6 +212,7 @@ dependencies {
   implementation(project(ModuleDependency.YOUTUBE_VIDEO_PLAYER))
   implementation(project(ModuleDependency.INSTALL_INFO_MAPPER))
   implementation(project(ModuleDependency.FEATURE_APKFY))
+  implementation(project(ModuleDependency.FEATURE_BONUS))
 
   //payments
   implementation(project(ModuleDependency.PAYMENTS_SDK))
