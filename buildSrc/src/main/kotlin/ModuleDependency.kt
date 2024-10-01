@@ -37,4 +37,5 @@ object ModuleDependency {
   const val NETWORK_LISTENER = ":network-listener"
   const val FEATURE_APPCOINS = ":feature-appcoins"
   const val FEATURE_APKFY = ":feature-apkfy"
+  const val FEATURE_BONUS = ":feature-bonus"
 }
