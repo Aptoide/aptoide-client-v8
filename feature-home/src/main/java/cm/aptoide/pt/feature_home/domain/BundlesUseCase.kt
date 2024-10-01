@@ -1,6 +1,7 @@
 package cm.aptoide.pt.feature_home.domain
 
 import cm.aptoide.pt.aptoide_network.domain.UrlsCache
+import cm.aptoide.pt.feature_bonus.data.BonusData
 import cm.aptoide.pt.feature_home.data.WidgetsRepository
 import javax.inject.Inject
 
@@ -16,6 +17,13 @@ class BundlesUseCase @Inject constructor(
         .also { urlsCache.putAll(mapOf(WIDGETS_TAG to "")) }
     )
       .also { urlsCache.putAll(it.tagsUrls) }
+      .also {
+        it.find { bundle ->
+          bundle.type == WidgetType.APPC_BANNER
+        }?.let { bonusBundle ->
+          BonusData.setBonusData(bonusBundle.title, bonusBundle.tag)
+        }?: urlsCache.putAll(mapOf(BonusData.currentData))
+      }
       .map {
         Bundle(
           title = it.title,
@@ -68,6 +76,7 @@ class BundlesUseCase @Inject constructor(
         -> Type.FEATURE_GRAPHIC
       }
     }
+
     WidgetType.APPC_BANNER -> Type.APPC_BANNER
     WidgetType.ESKILLS -> Type.ESKILLS
     WidgetType.MY_GAMES -> Type.MY_GAMES
