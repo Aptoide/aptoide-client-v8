@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.update
 
 object BonusData {
   private val _data =
-    MutableStateFlow("bonus-banner-more" to "listApps/store_id=3613731/group_id=15614123/order=rand")
+    MutableStateFlow("Bonus" to "bonus-banner")
 
   val data = _data.asStateFlow()
 

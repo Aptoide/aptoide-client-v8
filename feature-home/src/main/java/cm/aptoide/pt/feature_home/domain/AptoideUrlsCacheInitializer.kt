@@ -27,6 +27,8 @@ class AptoideUrlsCacheInitializer(
         }?.let { bonusBundle ->
           BonusData.setBonusData(bonusBundle.title, bonusBundle.tag)
           emptyMap()
-        } ?: mapOf(BonusData.currentData))
+        } ?: mapOf(
+          "bonus-banner-more" to "listApps/store_id=3613731/group_id=15614123/order=rand"
+        ))
     }
 }
