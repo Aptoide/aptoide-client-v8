@@ -1,6 +1,7 @@
 package cm.aptoide.pt.feature_home.domain
 
 import cm.aptoide.pt.aptoide_network.domain.UrlsCacheInitializer
+import cm.aptoide.pt.feature_bonus.data.BonusData
 import cm.aptoide.pt.feature_editorial.data.EditorialRepository
 import cm.aptoide.pt.feature_editorial.domain.usecase.tagsUrls
 import cm.aptoide.pt.feature_home.data.WidgetsRepository
@@ -20,6 +21,12 @@ class AptoideUrlsCacheInitializer(
             articlesRepository
               .getArticlesMeta(editorialWidgetUrl = url, subtype = null)
               .tagsUrls(url)
-          } ?: emptyMap())
+          } ?: emptyMap()) +
+        (list.find { bundle ->
+          bundle.type == WidgetType.APPC_BANNER
+        }?.let { bonusBundle ->
+          BonusData.setBonusData(bonusBundle.title, bonusBundle.tag)
+          emptyMap()
+        } ?: mapOf(BonusData.currentData))
     }
 }
