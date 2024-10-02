@@ -87,12 +87,14 @@ class BIAnalytics(private val analyticsSender: AnalyticsSender) {
     utmCampaign: String?,
     utmTerm: String?,
     utmContent: String?,
+    utmPackageName: String?,
   ) = analyticsSender.setUserProperties(
     "utm_source" to utmSource,
     "utm_medium" to utmMedium,
     "utm_campaign" to utmCampaign,
     "utm_term" to utmTerm,
-    "utm_content" to utmContent
+    "utm_content" to utmContent,
+    "utm_package_name" to utmPackageName,
   )
 
   fun sendFirstLaunchEvent() = analyticsSender.logEvent(
