@@ -45,10 +45,13 @@ import cm.aptoide.pt.installer.platform.UserActionRequest.PermissionAction
 import cm.aptoide.pt.installer.platform.UserActionRequest.PermissionState
 import cm.aptoide.pt.installer.platform.UserConfirmation
 import cm.aptoide.pt.installer.presentation.UserActionViewModel
+import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.design_system.PrimaryButton
 import com.aptoide.android.aptoidegames.design_system.PrimaryTextButton
 import com.aptoide.android.aptoidegames.drawables.icons.getAptoideGamesToolbarLogo
+import com.aptoide.android.aptoidegames.installer.analytics.rememberInstallAnalytics
+import com.aptoide.android.aptoidegames.installer.analytics.toAnalyticsPayload
 import com.aptoide.android.aptoidegames.permissions.AppPermissionsViewModel
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
@@ -99,6 +102,7 @@ fun UserActionDialog() {
     }
   )
 
+  val installAnalytics = rememberInstallAnalytics()
   LaunchedEffect(
     key1 = state,
     key2 = isOnForeground,
@@ -108,6 +112,14 @@ fun UserActionDialog() {
         when (val it = state) {
           is InstallationAction -> {
             if (!installationActionLaunched) {
+              //System action, we cannot access it any other way
+              if (it.intent.action == "android.content.pm.action.CONFIRM_INSTALL") {
+                val packageName = it.intent
+                  .getStringExtra("${BuildConfig.APPLICATION_ID}.pn") ?: "NaN"
+                val analyticsPayload = it.intent
+                  .getStringExtra("${BuildConfig.APPLICATION_ID}.ap").toAnalyticsPayload()
+                installAnalytics.sendInstallDialogImpressionEvent(packageName, analyticsPayload)
+              }
               intentLauncher.launch(it.intent)
               installationActionLaunched = true
             }

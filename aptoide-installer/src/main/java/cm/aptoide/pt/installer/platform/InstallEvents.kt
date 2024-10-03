@@ -51,15 +51,19 @@ class InstallEventsImpl @Inject constructor(
   ): Unit = goAsync(Dispatchers.IO) {
     intent.extras
       ?.takeIf { INSTALL_SESSION_API_COMPLETE_ACTION == intent.action }
-      ?.toEvent()
+      ?.toEvent(context)
       ?.also { _events.emit(it) }
   }
 
-  private suspend fun Bundle.toEvent(): InstallResult? {
+  private suspend fun Bundle.toEvent(context: Context): InstallResult? {
     val message = getString(PackageInstaller.EXTRA_STATUS_MESSAGE, "No message")
     val sessionId = getInt(PackageInstaller.EXTRA_SESSION_ID)
     return when (getInt(PackageInstaller.EXTRA_STATUS, -1)) {
-      PackageInstaller.STATUS_PENDING_USER_ACTION -> intent.toInstallResult(sessionId, message)
+      PackageInstaller.STATUS_PENDING_USER_ACTION -> intent
+        ?.putExtra("${context.packageName}.pn", getString("${context.packageName}.pn"))
+        ?.putExtra("${context.packageName}.ap", getString("${context.packageName}.ap"))
+        .toInstallResult(sessionId, message)
+
       PackageInstaller.STATUS_SUCCESS -> InstallResult.Success(sessionId)
       PackageInstaller.STATUS_FAILURE_ABORTED -> InstallResult.Abort(sessionId, message)
       PackageInstaller.STATUS_FAILURE,
