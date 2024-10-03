@@ -149,6 +149,26 @@ class InstallAnalytics(
     )
   }
 
+  fun sendInstallDialogImpressionEvent(
+    packageName: String,
+    analyticsPayload: AnalyticsPayload?
+  ) {
+    biAnalytics.logEvent(
+      "install_dialog_impression",
+      analyticsPayload.let {
+        it.toAppBIParameters(packageName) +
+          mapOfNonNull(
+            P_APKFY_APP_INSTALL to it?.isApkfy,
+            P_CONTEXT to it?.context,
+            P_PREVIOUS_CONTEXT to it?.previousContext,
+            P_STORE to it?.store,
+            P_TAG to it?.bundleMeta?.tag,
+            P_TRUSTED_BADGE to it?.trustedBadge
+          )
+      }
+    )
+  }
+
   fun sendInstallStartedEvent(
     packageName: String,
     analyticsPayload: AnalyticsPayload?,
