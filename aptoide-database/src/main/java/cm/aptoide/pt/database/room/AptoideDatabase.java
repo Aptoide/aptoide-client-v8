@@ -16,7 +16,8 @@ import static cm.aptoide.pt.database.room.AptoideDatabase.VERSION;
     RoomMigratedApp.class, RoomUpdate.class, RoomDownload.class, RoomStore.class,
     RoomAptoideInstallApp.class, RoomAppComingSoonRegistration.class
 }, version = VERSION) @TypeConverters({
-    SplitTypeConverter.class, StringTypeConverter.class, FileToDownloadTypeConverter.class
+    SplitTypeConverter.class, StringTypeConverter.class, FileToDownloadTypeConverter.class,
+    CampaignUrlTypeConverter.class
 }) public abstract class AptoideDatabase extends RoomDatabase {
 
   /**

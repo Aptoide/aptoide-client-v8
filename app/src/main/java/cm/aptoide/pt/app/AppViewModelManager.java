@@ -197,14 +197,14 @@ public class AppViewModelManager {
             app.getVersionName(), app.getPackageName(), app.getSize(), stats.getDownloads(),
             stats.getGlobalRating(), stats.getPackageDownloads(), stats.getRating(),
             app.getDeveloper(), app.getGraphic(), app.getIcon(), app.getMedia(), app.getModified(),
-            app.getAdded(), app.getObb(), app.getWebUrls(), app.isLatestTrustedVersion(),
+            app.getAdded(), app.getObb(), app.isLatestTrustedVersion(),
             app.getUniqueName(), appViewConfiguration.shouldInstall(),
             appViewConfiguration.getAppc(), appViewConfiguration.getMinimalAd(),
             appViewConfiguration.getEditorsChoice(), appViewConfiguration.getOriginTag(),
             isStoreFollowed, marketName, app.hasBilling(), app.hasAdvertising(), app.getBdsFlags(),
             appViewConfiguration.getCampaignUrl(), app.getSignature(), app.isMature(),
             app.getSplits(), app.getRequiredSplits(), appViewConfiguration.getOemId(), app.isBeta(),
-            appViewConfiguration.isEskillsAppView(), app.getAppCategory()));
+            appViewConfiguration.isEskillsAppView(), app.getAppCategory(), app.getCampaign()));
   }
 
   private Single<Boolean> isStoreFollowed(long storeId) {

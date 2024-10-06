@@ -2,6 +2,8 @@ package cm.aptoide.pt.editorial;
 
 import android.content.SharedPreferences;
 import cm.aptoide.pt.aab.SplitsMapper;
+import cm.aptoide.pt.app.mmpcampaigns.Campaign;
+import cm.aptoide.pt.app.mmpcampaigns.CampaignUrl;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.EditorialCard;
@@ -9,6 +11,7 @@ import cm.aptoide.pt.dataprovider.model.v7.EditorialCard.Data;
 import cm.aptoide.pt.dataprovider.model.v7.EditorialCard.Media;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.File;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.Urls;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -194,7 +197,7 @@ public class EditorialService {
           .hasBilling(), app.getFile()
           .getMalware()
           .getRank()
-          .toString(), app.getAppcoins().getFlags());
+          .toString(), app.getAppcoins().getFlags(), mapCampaign(app.getUrls()));
     }
     if (app != null) {
       Store store = app.getStore();
@@ -212,7 +215,7 @@ public class EditorialService {
           .hasBilling(), app.getFile()
           .getMalware()
           .getRank()
-          .toString(), app.getAppcoins().getFlags());
+          .toString(), app.getAppcoins().getFlags(), mapCampaign(app.getUrls()));
     }
     if (action != null) {
       return new EditorialContent(content.getTitle(), editorialMediaList, content.getMessage(),
@@ -240,10 +243,29 @@ public class EditorialService {
           bottomCardPlaceHolderContent.getSplits(),
           bottomCardPlaceHolderContent.getRequiredSplits(), bottomCardPlaceHolderContent.hasAppc(),
           bottomCardPlaceHolderContent.getRank(), bottomCardPlaceHolderContent.getStoreName(),
-          bottomCardPlaceHolderContent.getBdsFlags());
+          bottomCardPlaceHolderContent.getBdsFlags(), bottomCardPlaceHolderContent.getCampaign());
     }
     return new EditorialViewModel(editorialContentList, card.getTitle(), card.getCaption(),
         card.getBackground(), placeHolderPositions, placeHolderContent, false, cardId, groupId,
         captionColor);
+  }
+
+  private Campaign mapCampaign(Urls urls) {
+    if (urls != null) {
+      return new Campaign(mapCampaignUrlList(urls.getImpression()),
+          mapCampaignUrlList(urls.getClick()),
+          mapCampaignUrlList(urls.getDownload()));
+    } else {
+      return new Campaign(Collections.emptyList(), Collections.emptyList(),
+          Collections.emptyList());
+    }
+  }
+
+  private List<CampaignUrl> mapCampaignUrlList(List<Urls.Url> urlList) {
+    List<CampaignUrl> campaignUrlList = new ArrayList<>();
+    for (Urls.Url url : urlList) {
+      campaignUrlList.add(new CampaignUrl(url.getName(), url.getUrl()));
+    }
+    return campaignUrlList;
   }
 }

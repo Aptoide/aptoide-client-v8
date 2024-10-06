@@ -902,7 +902,7 @@ public class AppViewPresenter implements Presenter {
 
                     case R.id.menu_item_share:
                       view.defaultShare(appViewViewModel.getAppName(),
-                          appViewViewModel.getWebUrls());
+                          appViewViewModel.getUniqueName() + "en.aptoide.com/");
                       break;
 
                     case R.id.menu_remote_install:
@@ -1142,6 +1142,7 @@ public class AppViewPresenter implements Presenter {
                       .flatMapCompletable(appModel -> downloadApp(action, appModel,
                           appModel.getOpenType()
                               == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP)
+                          .andThen(appViewManager.convertCampaign())
                           .andThen(appModel.isEskills() ? downloadEskillsWallet()
                               : Completable.complete())
                           .observeOn(viewScheduler)
@@ -1180,22 +1181,24 @@ public class AppViewPresenter implements Presenter {
                       .flatMapCompletable(
                           appViewViewModel -> downgradeApp(action, appViewViewModel,
                               appViewViewModel.getOpenType()
-                                  == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP).doOnCompleted(
-                              () -> appViewAnalytics.clickOnInstallButton(
-                                  appViewViewModel.getPackageName(),
-                                  appViewViewModel.getDeveloper()
-                                      .getName(), action.toString(),
-                                  appViewViewModel.hasSplits(),
-                                  appViewViewModel.hasBilling(), false,
-                                  appViewViewModel.getMalware()
-                                      .getRank()
-                                      .name(), appViewViewModel.getOriginTag(),
-                                  appViewViewModel.getStore()
-                                      .getName(), appViewViewModel.getOpenType()
-                                      == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP,
-                                  appViewViewModel.getObb() != null,
-                                  appViewViewModel.getBdsFlags(),
-                                  appViewViewModel.getAppCategory())));
+                                  == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP)
+                              .andThen(appViewManager.convertCampaign())
+                              .doOnCompleted(
+                                  () -> appViewAnalytics.clickOnInstallButton(
+                                      appViewViewModel.getPackageName(),
+                                      appViewViewModel.getDeveloper()
+                                          .getName(), action.toString(),
+                                      appViewViewModel.hasSplits(),
+                                      appViewViewModel.hasBilling(), false,
+                                      appViewViewModel.getMalware()
+                                          .getRank()
+                                          .name(), appViewViewModel.getOriginTag(),
+                                      appViewViewModel.getStore()
+                                          .getName(), appViewViewModel.getOpenType()
+                                          == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP,
+                                      appViewViewModel.getObb() != null,
+                                      appViewViewModel.getBdsFlags(),
+                                      appViewViewModel.getAppCategory())));
                   break;
                 case MIGRATE:
                   completable = appViewManager.getAppModel()
@@ -1220,7 +1223,8 @@ public class AppViewPresenter implements Presenter {
                             appViewViewModel.getAppCategory());
                         return migrateApp(action, appViewViewModel,
                             appViewViewModel.getOpenType()
-                                == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP);
+                                == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP)
+                            .andThen(appViewManager.convertCampaign());
                       });
                   break;
                 default:

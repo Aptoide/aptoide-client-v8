@@ -7,6 +7,7 @@ import cm.aptoide.pt.actions.PermissionManager
 import cm.aptoide.pt.actions.PermissionService
 import cm.aptoide.pt.ads.MoPubAdsManager
 import cm.aptoide.pt.app.migration.AppcMigrationManager
+import cm.aptoide.pt.app.mmpcampaigns.CampaignManager
 import cm.aptoide.pt.crashreports.CrashReport
 import cm.aptoide.pt.database.room.RoomDownload
 import cm.aptoide.pt.download.DownloadAnalytics
@@ -52,7 +53,8 @@ open class DownloadViewActionPresenter(
   private val notificationAnalytics: NotificationAnalytics,
   private val crashReport: CrashReport,
   private val dynamicSplitsManager: DynamicSplitsManager,
-  private val splitAnalyticsMapper: SplitAnalyticsMapper
+  private val splitAnalyticsMapper: SplitAnalyticsMapper,
+  private val campaignManager: CampaignManager
 ) :
   ActionPresenter<DownloadClick>() {
 
@@ -117,10 +119,34 @@ open class DownloadViewActionPresenter(
       DownloadStatusModel.Action.UPDATE,
       DownloadStatusModel.Action.INSTALL -> {
         return downloadApp(downloadClick.download)
+          .andThen(
+            if (analyticsContext.equals(DownloadAnalytics.AppContext.SEARCH)) {
+              RxJavaInterop.toV1Completable(
+                campaignManager.convertCampaign(
+                  downloadClick.download.campaign,
+                  "Search"
+                )
+              )
+            } else {
+              Completable.complete()
+            }
+          )
       }
 
       DownloadStatusModel.Action.DOWNGRADE -> {
         return downgradeApp(downloadClick.download)
+          .andThen(
+            if (analyticsContext.equals(DownloadAnalytics.AppContext.SEARCH)) {
+              RxJavaInterop.toV1Completable(
+                campaignManager.convertCampaign(
+                  downloadClick.download.campaign,
+                  "Search"
+                )
+              )
+            } else {
+              Completable.complete()
+            }
+          )
       }
 
       DownloadStatusModel.Action.OPEN -> {

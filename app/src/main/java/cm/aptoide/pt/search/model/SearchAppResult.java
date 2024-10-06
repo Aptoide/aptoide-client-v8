@@ -1,6 +1,7 @@
 package cm.aptoide.pt.search.model;
 
 import cm.aptoide.pt.aab.Split;
+import cm.aptoide.pt.app.mmpcampaigns.Campaign;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.download.view.Download;
@@ -25,6 +26,7 @@ public class SearchAppResult implements SearchItem {
 
   private boolean isInCatappult;
   private String appCategory;
+  private Campaign campaign;
 
   public SearchAppResult() {
   }
@@ -35,7 +37,8 @@ public class SearchAppResult implements SearchItem {
       String pathAlt, Malware malware, long size, boolean hasOtherVersions, boolean billing,
       boolean advertising, String oemId, boolean isHighlightedResult, Obb obb,
       List<String> requiredSplits, List<Split> splits, DownloadStatusModel downloadModel,
-      List<AppScreenshot> screenshots, boolean isInCatappult, String appCategory) {
+      List<AppScreenshot> screenshots, boolean isInCatappult, String appCategory,
+      Campaign campaign) {
     this.rank = rank;
     this.storeTheme = storeTheme;
     this.modifiedDate = modifiedDate;
@@ -47,22 +50,24 @@ public class SearchAppResult implements SearchItem {
     this.screenshots = screenshots;
     this.isInCatappult = isInCatappult;
     this.appCategory = appCategory;
+    this.campaign = campaign;
 
     this.download =
         new Download(appId, appName, packageName, md5, versionName, versionCode, icon, path,
             pathAlt, size, obb, storeName, advertising, billing, malware, splits, requiredSplits,
-            oemId, downloadModel, appCategory);
+            oemId, downloadModel, appCategory, campaign);
   }
 
   public SearchAppResult(SearchAppResult app, DownloadStatusModel downloadModel,
-      List<AppScreenshot> screenshots, boolean isAppInCatappult, String appCategory) {
+      List<AppScreenshot> screenshots, boolean isAppInCatappult, String appCategory,
+      Campaign campaign) {
     this(app.getRank(), app.getIcon(), app.getStoreName(), app.getStoreId(), app.getStoreTheme(),
         app.getModifiedDate(), app.getAverageRating(), app.getTotalDownloads(), app.getAppName(),
         app.getPackageName(), app.getMd5(), app.getAppId(), app.getVersionCode(),
         app.getVersionName(), app.getPath(), app.getPathAlt(), app.getMalware(), app.getSize(),
         app.hasOtherVersions(), app.hasBilling(), app.hasAdvertising(), app.getOemId(),
         app.isHighlightedResult(), app.getObb(), app.getRequiredSplits(), app.getSplits(),
-        downloadModel, screenshots, isAppInCatappult, appCategory);
+        downloadModel, screenshots, isAppInCatappult, appCategory, campaign);
   }
 
   public int getRank() {
@@ -199,5 +204,9 @@ public class SearchAppResult implements SearchItem {
 
   public String getAppCategory() {
     return appCategory;
+  }
+
+  public Campaign getCampaign() {
+    return campaign;
   }
 }

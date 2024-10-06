@@ -1,6 +1,7 @@
 package cm.aptoide.pt.editorial;
 
 import cm.aptoide.pt.aab.Split;
+import cm.aptoide.pt.app.mmpcampaigns.Campaign;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import java.util.List;
 
@@ -38,13 +39,14 @@ public class EditorialContent {
   private List<String> bdsFlags;
   private boolean hasAppc;
   private String rank;
+  private Campaign campaign;
 
   public EditorialContent(String title, List<EditorialMedia> media, String message, String type,
       long id, String name, String icon, float avg, String packageName, long size, String graphic,
       Obb obb, long storeId, String storeName, String verName, int verCode, String path,
       String pathAlt, String md5sum, String actionTitle, String url, int position,
       List<Split> splits, List<String> requiredSplits, boolean hasAppc, String rank,
-      List<String> bdsFlags) {
+      List<String> bdsFlags, Campaign campaign) {
     this.title = title;
     this.media = media;
     this.message = message;
@@ -73,6 +75,7 @@ public class EditorialContent {
     this.isPlaceHolder = true;
     this.hasAppc = hasAppc;
     this.bdsFlags = bdsFlags;
+    this.campaign = campaign;
   }
 
   public EditorialContent(String title, List<EditorialMedia> media, String message, String type,
@@ -105,13 +108,14 @@ public class EditorialContent {
     hasAppc = false;
     rank = "";
     bdsFlags = null;
+    this.campaign = null;
   }
 
   public EditorialContent(String title, List<EditorialMedia> media, String message, String type,
       long id, String name, String icon, float avg, String packageName, long size, String graphic,
       Obb obb, long storeId, String storeName, String verName, int verCode, String path,
       String pathAlt, String md5sum, int position, List<Split> splits, List<String> requiredSplits,
-      boolean hasAppc, String rank, List<String> bdsFlags) {
+      boolean hasAppc, String rank, List<String> bdsFlags, Campaign campaign) {
     this.title = title;
     this.media = media;
     this.message = message;
@@ -140,6 +144,7 @@ public class EditorialContent {
     this.bdsFlags = bdsFlags;
     actionTitle = "";
     url = "";
+    this.campaign = campaign;
   }
 
   public EditorialContent(String title, List<EditorialMedia> media, String message, String type,
@@ -172,6 +177,7 @@ public class EditorialContent {
     this.bdsFlags = null;
     hasAppc = false;
     rank = "";
+    this.campaign = null;
   }
 
   public String getMessage() {
@@ -313,5 +319,9 @@ public class EditorialContent {
 
   public List<String> getBdsFlags() {
     return bdsFlags;
+  }
+
+  public Campaign getCampaign() {
+    return campaign;
   }
 }

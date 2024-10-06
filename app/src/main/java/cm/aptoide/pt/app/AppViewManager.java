@@ -8,6 +8,7 @@ import cm.aptoide.pt.aab.DynamicSplitsManager;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.app.appsflyer.AppsFlyerManager;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
+import cm.aptoide.pt.app.mmpcampaigns.CampaignManager;
 import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
@@ -73,6 +74,7 @@ public class AppViewManager {
   private PromotionViewModel cachedPromotionViewModel;
 
   private AppsFlyerManager appsFlyerManager;
+  private CampaignManager campaignManager;
 
   public AppViewManager(AppViewModelManager appViewModelManager, InstallManager installManager,
       DownloadFactory downloadFactory, AppCenter appCenter, ReviewsManager reviewsManager,
@@ -85,7 +87,7 @@ public class AppViewManager {
       LocalNotificationSyncManager localNotificationSyncManager,
       AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider,
       DynamicSplitsManager dynamicSplitsManager, SplitAnalyticsMapper splitAnalyticsMapper,
-      AppsFlyerManager appsFlyerManager) {
+      AppsFlyerManager appsFlyerManager, CampaignManager campaignManager) {
     this.appViewModelManager = appViewModelManager;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
@@ -113,6 +115,7 @@ public class AppViewManager {
     this.isFirstLoad = true;
     this.appcPromotionImpressionSent = false;
     this.migrationImpressionSent = false;
+    this.campaignManager = campaignManager;
   }
 
   public Observable<AppViewModel> observeAppViewModel() {
@@ -472,5 +475,13 @@ public class AppViewManager {
     } else {
       return Single.just(true);
     }
+  }
+
+  public Completable convertCampaign() {
+    return getAppModel().flatMapCompletable(
+        appModel -> RxJavaInterop.toV1Completable(
+            campaignManager.convertCampaign(appModel.getCampaign(), "Appview"))
+    );
+    //RxCompletableKt(campaignRepository.knock())
   }
 }

@@ -7,7 +7,12 @@ import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.aab.DynamicSplitsManager;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallManager;
+import cm.aptoide.pt.app.mmpcampaigns.Campaign;
+import cm.aptoide.pt.app.mmpcampaigns.CampaignManager;
+import cm.aptoide.pt.app.mmpcampaigns.CampaignUrl;
+import cm.aptoide.pt.database.room.RoomCampaignUrl;
 import cm.aptoide.pt.database.room.RoomDownload;
+import cm.aptoide.pt.database.room.RoomUpdate;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.Origin;
@@ -57,6 +62,7 @@ public class AppsManager {
   private final SharedPreferences secureSharedPreferences;
   private final DynamicSplitsManager dynamicSplitsManager;
   private final SplitAnalyticsMapper splitAnalyticsMapper;
+  private final CampaignManager campaignManager;
 
   public AppsManager(UpdatesManager updatesManager, InstallManager installManager,
       AppMapper appMapper, DownloadAnalytics downloadAnalytics, InstallAnalytics installAnalytics,
@@ -65,7 +71,7 @@ public class AppsManager {
       AptoideInstallManager aptoideInstallManager,
       UpdatesNotificationManager updatesNotificationManager,
       SharedPreferences secureSharedPreferences, DynamicSplitsManager dynamicSplitsManager,
-      SplitAnalyticsMapper splitAnalyticsMapper) {
+      SplitAnalyticsMapper splitAnalyticsMapper, CampaignManager campaignManager) {
     this.updatesManager = updatesManager;
     this.installManager = installManager;
     this.appMapper = appMapper;
@@ -81,6 +87,7 @@ public class AppsManager {
     this.secureSharedPreferences = secureSharedPreferences;
     this.dynamicSplitsManager = dynamicSplitsManager;
     this.splitAnalyticsMapper = splitAnalyticsMapper;
+    this.campaignManager = campaignManager;
   }
 
   public Observable<List<UpdateApp>> getUpdatesList() {
@@ -277,6 +284,9 @@ public class AppsManager {
   public Completable updateApp(App app) {
     String packageName = ((UpdateApp) app).getPackageName();
     return updatesManager.getUpdate(packageName)
+        .flatMap(update -> RxJavaInterop.toV1Completable(campaignManager.convertCampaign(
+                recreateCampaign(update), "Apps"))
+            .andThen(Single.just(update)))
         .flatMap(update -> RxJavaInterop.toV1Single(
                 dynamicSplitsManager.getAppSplitsByMd5(update.getMd5()))
             .flatMap(dynamicSplitsModel -> {
@@ -294,6 +304,15 @@ public class AppsManager {
             }))
         .flatMapCompletable(download -> installManager.install(download))
         .onErrorComplete();
+  }
+
+  private Campaign recreateCampaign(RoomUpdate update) {
+    List<CampaignUrl> downloadCampaignUrl = new ArrayList<>();
+    for (RoomCampaignUrl downloadCampaign : update.getDownloadCampaigns()) {
+      downloadCampaignUrl.add(
+          new CampaignUrl(downloadCampaign.getName(), downloadCampaign.getUrl()));
+    }
+    return new Campaign(Collections.emptyList(), Collections.emptyList(), downloadCampaignUrl);
   }
 
   public boolean showWarning() {

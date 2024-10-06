@@ -2,6 +2,7 @@ package cm.aptoide.pt.search;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.aptoideviews.filters.Filter;
+import cm.aptoide.pt.app.mmpcampaigns.Campaign;
 import cm.aptoide.pt.download.view.DownloadStatusManager;
 import cm.aptoide.pt.download.view.DownloadStatusModel;
 import cm.aptoide.pt.search.model.SearchAppResult;
@@ -71,7 +72,7 @@ import rx.Observable;
                 loadAppScreenShots(first.getAppId(), first.getStoreName(), first.getPackageName()),
                 (r, downloadModel, screenshots) -> mergeSearchResult(r, downloadModel,
                     screenshots, app.getDetailedApp().getBdsFlags().contains("STORE_BDS"),
-                    app.getDetailedApp().getAppCategory())));
+                    app.getDetailedApp().getAppCategory(), app.getDetailedApp().getCampaign())));
   }
 
   private Observable<List<AppScreenshot>> loadAppScreenShots(long appId, String storeName,
@@ -98,10 +99,10 @@ import rx.Observable;
   }
 
   private SearchResult mergeSearchResult(SearchResult r, DownloadStatusModel downloadStatusModel,
-      List<AppScreenshot> screenshots, boolean isInCatappult, String appCategory) {
+      List<AppScreenshot> screenshots, boolean isInCatappult, String appCategory, Campaign campaign) {
     ArrayList<SearchAppResult> list = new ArrayList<>(r.getSearchResultsList());
     list.set(0, new SearchAppResult(list.get(0), downloadStatusModel, screenshots, isInCatappult,
-        appCategory));
+        appCategory, campaign));
     return new SearchResult(r.getQuery(), r.getSpecificStore(), list, r.getFilters(),
         r.getCurrentOffset(), r.getNextOffset(), r.getTotal(), r.getLoading(), r.isFreshResult(),
         r.getError());

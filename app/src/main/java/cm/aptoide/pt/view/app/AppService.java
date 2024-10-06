@@ -3,6 +3,8 @@ package cm.aptoide.pt.view.app;
 import android.content.SharedPreferences;
 import androidx.annotation.NonNull;
 import cm.aptoide.pt.aab.SplitsMapper;
+import cm.aptoide.pt.app.mmpcampaigns.Campaign;
+import cm.aptoide.pt.app.mmpcampaigns.CampaignUrl;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
@@ -12,6 +14,8 @@ import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.File;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.ListAppVersions;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.Urls;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.Urls.Url;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
@@ -233,8 +237,8 @@ public class AppService {
               file.getMalware(), appFlags, file.getTags(), file.getUsedFeatures(),
               file.getUsedPermissions(), file.getFilesize(), app.getMd5(), file.getPath(),
               file.getPathAlt(), file.getVercode(), file.getVername(), appDeveloper, app.getStore(),
-              appMedia, appStats, app.getObb(), app.getUrls()
-              .getW(), isLatestTrustedVersion(listAppVersions, file), uniqueName, app.hasBilling(),
+              appMedia, appStats, app.getObb(), isLatestTrustedVersion(listAppVersions, file),
+              app.getUname(), app.hasBilling(),
               app.hasAdvertising(), app.getBdsFlags(), app.getAge()
               .getRating() == MATURE_APP_RATING, app.getFile()
               .getSignature()
@@ -242,11 +246,30 @@ public class AppService {
               .getSplits()) : Collections.emptyList(), app.hasSplits() ? app.getAab()
               .getRequiredSplits() : Collections.emptyList(),
               isBeta(file.getTags(), file.getVername()),
-              getCategory(getApp.getNodes()));
+              getCategory(getApp.getNodes()), mapCampaign(app.getUrls()));
       return Observable.just(new DetailedAppRequestResult(detailedApp));
     } else {
       return Observable.error(new IllegalStateException("Could not obtain request from server."));
     }
+  }
+
+  private Campaign mapCampaign(Urls urls) {
+    if (urls != null) {
+      return new Campaign(mapCampaignUrlList(urls.getImpression()),
+          mapCampaignUrlList(urls.getClick()),
+          mapCampaignUrlList(urls.getDownload()));
+    } else {
+      return new Campaign(Collections.emptyList(), Collections.emptyList(),
+          Collections.emptyList());
+    }
+  }
+
+  private List<CampaignUrl> mapCampaignUrlList(List<Url> urlList) {
+    List<CampaignUrl> campaignUrlList = new ArrayList<>();
+    for (Url url : urlList) {
+      campaignUrlList.add(new CampaignUrl(url.getName(), url.getUrl()));
+    }
+    return campaignUrlList;
   }
 
   private String getCategory(GetApp.Nodes appNodes) {

@@ -36,7 +36,7 @@ public class EditorialRequest extends V7<EditorialCard, BaseBody> {
         : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
         + "://"
         + BuildConfig.APTOIDE_WEB_SERVICES_V7_HOST
-        + "/api/7.20181019/";
+        + "/api/7.20240701/";
   }
 
   public static EditorialRequest ofWithCardId(String cardId,

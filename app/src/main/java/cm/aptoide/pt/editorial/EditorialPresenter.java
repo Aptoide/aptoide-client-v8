@@ -195,7 +195,9 @@ public class EditorialPresenter implements Presenter {
                 case UPDATE:
                   completable = editorialManager.loadEditorialViewModel()
                       .flatMapCompletable(
-                          viewModel -> downloadApp(editorialDownloadEvent).observeOn(viewScheduler)
+                          viewModel -> downloadApp(editorialDownloadEvent)
+                              .andThen(editorialManager.convertCampaign(editorialDownloadEvent))
+                              .observeOn(viewScheduler)
                               .doOnCompleted(() -> editorialAnalytics.clickOnInstallButton(
                                   editorialDownloadEvent.getPackageName(), action.toString(),
                                   viewModel.hasSplits(), viewModel.hasAppc(), false,
@@ -219,13 +221,17 @@ public class EditorialPresenter implements Presenter {
                   completable = editorialManager.loadEditorialViewModel()
                       .observeOn(viewScheduler)
                       .flatMapCompletable(
-                          appViewViewModel -> downgradeApp(editorialDownloadEvent).doOnCompleted(
-                              () -> editorialAnalytics.clickOnInstallButton(
-                                  editorialDownloadEvent.getPackageName(), action.toString(),
-                                  appViewViewModel.hasSplits(), appViewViewModel.hasAppc(), false,
-                                  appViewViewModel.getRank(), null, appViewViewModel.getStoreName(),
-                                  appViewViewModel.getBottomCardObb() != null,
-                                  editorialDownloadEvent.getBdsFlags())));
+                          appViewViewModel -> downgradeApp(editorialDownloadEvent)
+                              .andThen(editorialManager.convertCampaign(editorialDownloadEvent))
+                              .doOnCompleted(
+                                  () -> editorialAnalytics.clickOnInstallButton(
+                                      editorialDownloadEvent.getPackageName(), action.toString(),
+                                      appViewViewModel.hasSplits(), appViewViewModel.hasAppc(),
+                                      false,
+                                      appViewViewModel.getRank(), null,
+                                      appViewViewModel.getStoreName(),
+                                      appViewViewModel.getBottomCardObb() != null,
+                                      editorialDownloadEvent.getBdsFlags())));
                   break;
               }
               return completable;

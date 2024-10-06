@@ -1,6 +1,7 @@
 package cm.aptoide.pt.editorial;
 
 import cm.aptoide.pt.aab.Split;
+import cm.aptoide.pt.app.mmpcampaigns.Campaign;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import java.util.Collections;
 import java.util.List;
@@ -40,6 +41,7 @@ public class EditorialViewModel {
   private final boolean hasAppc;
   private final String rank;
   private final String storeName;
+  private final Campaign campaign;
 
   public EditorialViewModel(List<EditorialContent> editorialContentList, String title,
       String caption, String background, List<Integer> placeHolderPositions,
@@ -74,6 +76,7 @@ public class EditorialViewModel {
     hasAppc = false;
     rank = "";
     storeName = "";
+    this.campaign = null;
   }
 
   public EditorialViewModel(boolean loading) {
@@ -106,6 +109,7 @@ public class EditorialViewModel {
     hasAppc = false;
     rank = "";
     storeName = "";
+    this.campaign = null;
   }
 
   public EditorialViewModel(Error error) {
@@ -138,6 +142,7 @@ public class EditorialViewModel {
     hasAppc = false;
     rank = "";
     storeName = "";
+    this.campaign = null;
   }
 
   public EditorialViewModel(List<EditorialContent> editorialContentList, String title,
@@ -146,7 +151,7 @@ public class EditorialViewModel {
       String packageName, String md5sum, int versionCode, String versionName, String path,
       String pathAlt, Obb obb, boolean shouldHaveAnimation, String cardId, String groupId,
       long size, String captionColor, List<Split> splits, List<String> requiredSplits,
-      boolean hasAppc, String rank, String storeName, List<String> bdsFlags) {
+      boolean hasAppc, String rank, String storeName, List<String> bdsFlags, Campaign campaign) {
     contentList = editorialContentList;
     this.title = title;
     this.caption = caption;
@@ -174,6 +179,7 @@ public class EditorialViewModel {
     this.hasAppc = hasAppc;
     this.rank = rank;
     this.storeName = storeName;
+    this.campaign = campaign;
     error = null;
     loading = false;
   }
@@ -312,6 +318,10 @@ public class EditorialViewModel {
 
   public List<String> getBdsFlags() {
     return bdsFlags;
+  }
+
+  public Campaign getBottomCardCampaign() {
+    return campaign;
   }
 
   public enum Error {
