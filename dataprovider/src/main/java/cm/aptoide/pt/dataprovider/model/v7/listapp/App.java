@@ -33,6 +33,7 @@ public class App {
   private Obb obb;
   private AppCoinsInfo appcoins;
   private Aab aab;
+  private Urls urls;
 
   public App() {
   }
@@ -147,6 +148,14 @@ public class App {
 
   public void setObb(Obb obb) {
     this.obb = obb;
+  }
+
+  public Urls getUrls() {
+    return urls;
+  }
+
+  public void setUrls(Urls urls) {
+    this.urls = urls;
   }
 
   public int hashCode() {

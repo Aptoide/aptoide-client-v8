@@ -1,6 +1,7 @@
 package cm.aptoide.pt.view.app;
 
 import cm.aptoide.pt.aab.Split;
+import cm.aptoide.pt.app.mmpcampaigns.Campaign;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
@@ -35,7 +36,6 @@ public class DetailedApp {
   private final AppMedia media;
   private final AppStats stats;
   private final Obb obb;
-  private final String webUrls;
   private final boolean isLatestTrustedVersion;
   private final String uniqueName;
   private final List<Split> splits;
@@ -49,15 +49,17 @@ public class DetailedApp {
   private boolean isMature;
   private String signature;
   private String appCategory;
+  private Campaign campaign;
 
   public DetailedApp(long id, String name, String packageName, long size, String icon,
       String graphic, String added, String modified, boolean isGoodApp, Malware malware,
       AppFlags appFlags, List<String> tags, List<String> usedFeatures, List<String> usedPermissions,
       long fileSize, String md5, String path, String pathAlt, int versionCode, String versionName,
       AppDeveloper appDeveloper, Store store, AppMedia media, AppStats stats, Obb obb,
-      String webUrls, boolean isLatestTrustedVersion, String uniqueName, boolean hasBilling,
+      boolean isLatestTrustedVersion, String uniqueName, boolean hasBilling,
       boolean hasAdvertising, List<String> bdsFlags, boolean isMature, String signature,
-      List<Split> splits, List<String> requiredSplits, boolean isBeta, String appCategory) {
+      List<Split> splits, List<String> requiredSplits, boolean isBeta, String appCategory,
+      Campaign campaign) {
 
     this.id = id;
     this.name = name;
@@ -84,7 +86,6 @@ public class DetailedApp {
     this.media = media;
     this.stats = stats;
     this.obb = obb;
-    this.webUrls = webUrls;
     this.hasBilling = hasBilling;
     this.hasAdvertising = hasAdvertising;
     this.bdsFlags = bdsFlags;
@@ -96,6 +97,7 @@ public class DetailedApp {
     this.uniqueName = uniqueName;
     this.isBeta = isBeta;
     this.appCategory = appCategory;
+    this.campaign = campaign;
   }
 
   public long getId() {
@@ -154,9 +156,9 @@ public class DetailedApp {
     return obb;
   }
 
-  public String getWebUrls() {
+ /* public String getWebUrls() {
     return webUrls;
-  }
+  }*/
 
   public AppFlags getAppFlags() {
     return appFlags;
@@ -256,5 +258,9 @@ public class DetailedApp {
 
   public String getAppCategory() {
     return appCategory;
+  }
+
+  public Campaign getCampaign() {
+    return campaign;
   }
 }

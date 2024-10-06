@@ -40,12 +40,14 @@ import java.util.List;
   private List<String> requiredSplits;
   //appc
   private boolean hasAppc;
+  private List<RoomCampaignUrl> downloadCampaigns;
 
   public RoomUpdate(long appId, String label, String icon, String packageName, String md5,
       String apkPath, long size, String updateVersionName, String alternativeApkPath,
       int updateVersionCode, String trustedBadge, String mainObbName, String mainObbPath,
       String mainObbMd5, String patchObbName, String patchObbPath, String patchObbMd5,
-      boolean hasAppc, List<RoomSplit> roomSplits, List<String> requiredSplits, String storeName) {
+      boolean hasAppc, List<RoomSplit> roomSplits, List<String> requiredSplits, String storeName,
+      List<RoomCampaignUrl> downloadCampaigns) {
     this.appId = appId;
     this.label = label;
     this.icon = icon;
@@ -67,6 +69,7 @@ import java.util.List;
     this.roomSplits = roomSplits;
     this.requiredSplits = requiredSplits;
     this.storeName = storeName;
+    this.downloadCampaigns = downloadCampaigns;
   }
 
   public long getAppId() {
@@ -163,5 +166,9 @@ import java.util.List;
 
   public String getStoreName() {
     return storeName;
+  }
+
+  public List<RoomCampaignUrl> getDownloadCampaigns() {
+    return downloadCampaigns;
   }
 }

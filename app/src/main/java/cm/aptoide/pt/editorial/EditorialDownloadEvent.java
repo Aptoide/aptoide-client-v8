@@ -2,6 +2,7 @@ package cm.aptoide.pt.editorial;
 
 import cm.aptoide.pt.aab.Split;
 import cm.aptoide.pt.app.DownloadModel;
+import cm.aptoide.pt.app.mmpcampaigns.Campaign;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.editorial.EditorialEvent.Type;
 import java.util.List;
@@ -26,10 +27,11 @@ public class EditorialDownloadEvent {
   private final List<String> requiredSplits;
 
   private final List<String> bdsFlags;
+  private final Campaign campaign;
 
   public EditorialDownloadEvent(Type button, String appName, String packageName, String md5sum,
       String icon, String verName, int verCode, String path, String pathAlt, Obb obb, long size,
-      List<Split> splits, List<String> requiredSplits, List<String> bdsFlags) {
+      List<Split> splits, List<String> requiredSplits, List<String> bdsFlags, Campaign campaign) {
     this.button = button;
     this.appName = appName;
     this.packageName = packageName;
@@ -48,6 +50,7 @@ public class EditorialDownloadEvent {
     this.splits = splits;
     this.requiredSplits = requiredSplits;
     this.bdsFlags = bdsFlags;
+    this.campaign = campaign;
   }
 
   public EditorialDownloadEvent(EditorialViewModel editorialViewModel,
@@ -71,6 +74,7 @@ public class EditorialDownloadEvent {
     this.action = action;
     this.storeName = editorialViewModel.getStoreName();
     this.trustedBadge = editorialViewModel.getRank();
+    this.campaign = editorialViewModel.getBottomCardCampaign();
   }
 
   public EditorialDownloadEvent(Type button, String packageName, String md5, int verCode,
@@ -93,6 +97,7 @@ public class EditorialDownloadEvent {
     this.action = null;
     this.trustedBadge = "";
     this.storeName = "";
+    this.campaign = null;
   }
 
   public EditorialDownloadEvent(Type button, String packageName, String md5, int verCode,
@@ -115,12 +120,13 @@ public class EditorialDownloadEvent {
     this.trustedBadge = "";
     this.storeName = "";
     this.action = action;
+    this.campaign = null;
   }
 
   public EditorialDownloadEvent(Type button, String appName, String packageName, String md5sum,
       String icon, String verName, int verCode, String path, String pathAlt, Obb obb,
       DownloadModel.Action action, long size, List<Split> splits, List<String> requiredSplits,
-      String trustedBadge, String storeName, List<String> bdsFlags) {
+      String trustedBadge, String storeName, List<String> bdsFlags, Campaign campaign) {
     this.button = button;
     this.appName = appName;
     this.packageName = packageName;
@@ -139,6 +145,7 @@ public class EditorialDownloadEvent {
     this.splits = splits;
     this.requiredSplits = requiredSplits;
     this.bdsFlags = bdsFlags;
+    this.campaign = campaign;
   }
 
   public Type getClickType() {
@@ -211,5 +218,9 @@ public class EditorialDownloadEvent {
 
   public List<String> getBdsFlags() {
     return bdsFlags;
+  }
+
+  public Campaign getCampaign() {
+    return campaign;
   }
 }

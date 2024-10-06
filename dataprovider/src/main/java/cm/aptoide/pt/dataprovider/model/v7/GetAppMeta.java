@@ -7,6 +7,7 @@ package cm.aptoide.pt.dataprovider.model.v7;
 
 import cm.aptoide.pt.dataprovider.model.v7.listapp.AppCoinsInfo;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.File;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.Urls;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
@@ -62,6 +63,7 @@ public class GetAppMeta extends BaseV7Response {
 
     private long id;
     private String name;
+    private String uname;
     @JsonProperty("package") private String packageName;
     private long size;
     private String icon;
@@ -73,13 +75,21 @@ public class GetAppMeta extends BaseV7Response {
     private Store store;
     private GetAppMetaFile file;
     private Media media;
-    private Urls urls;
     private Stats stats;
     private Obb obb;
     private AppCoinsInfo appcoins;
     private Aab aab;
+    private Urls urls;
 
     public App() {
+    }
+
+    public String getUname() {
+      return uname;
+    }
+
+    public void setUname(String uname) {
+      this.uname = uname;
     }
 
     public Age getAge() {
@@ -190,13 +200,13 @@ public class GetAppMeta extends BaseV7Response {
       this.media = media;
     }
 
-    public Urls getUrls() {
+    /*public Urls getUrls() {
       return this.urls;
     }
 
     public void setUrls(Urls urls) {
       this.urls = urls;
-    }
+    }*/
 
     public Stats getStats() {
       return this.stats;
@@ -212,6 +222,14 @@ public class GetAppMeta extends BaseV7Response {
 
     public void setObb(Obb obb) {
       this.obb = obb;
+    }
+
+    public Urls getUrls() {
+      return urls;
+    }
+
+    public void setUrls(Urls urls) {
+      this.urls = urls;
     }
 
     public int hashCode() {
@@ -1265,7 +1283,7 @@ public class GetAppMeta extends BaseV7Response {
     }
   }
 
-  public static class Urls {
+  /*public static class Urls {
 
     private String w;
     private String m;
@@ -1320,7 +1338,7 @@ public class GetAppMeta extends BaseV7Response {
     public String toString() {
       return "GetAppMeta.Urls(w=" + this.getW() + ", m=" + this.getM() + ")";
     }
-  }
+  }*/
 
   public static class Stats {
 

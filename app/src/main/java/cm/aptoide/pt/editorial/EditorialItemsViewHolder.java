@@ -21,6 +21,7 @@ import cm.aptoide.aptoideviews.video.WebChromeClientWithoutPlayerPlaceholder;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.aab.Split;
 import cm.aptoide.pt.app.DownloadModel;
+import cm.aptoide.pt.app.mmpcampaigns.Campaign;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.home.SnapToStartHelper;
 import cm.aptoide.pt.networking.image.ImageLoader;
@@ -148,7 +149,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
           editorialItem.getVerCode(), editorialItem.getPath(), editorialItem.getPathAlt(),
           editorialItem.getObb(), editorialItem.getId(), editorialItem.getSize(),
           editorialItem.getSplits(), editorialItem.getRequiredSplits(), editorialItem.getRank(),
-          editorialItem.getStoreName(), editorialItem.getBdsFlags());
+          editorialItem.getStoreName(), editorialItem.getBdsFlags(), editorialItem.getCampaign());
       setPlaceHolderInfo(editorialItem.getAppName(), editorialItem.getIcon(),
           editorialItem.getRating());
       if (shouldHaveAnimation) {
@@ -354,7 +355,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
       case PAUSE:
         downloadProgressBar.setIndeterminate(false);
         downloadProgressBar.setProgress(progress);
-        downloadProgressValue.setText(String.valueOf(progress) + "%");
+        downloadProgressValue.setText(progress + "%");
         pauseDownload.setVisibility(View.GONE);
         cancelDownload.setVisibility(View.VISIBLE);
         resumeDownload.setVisibility(View.VISIBLE);
@@ -375,21 +376,23 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
   private void setPlaceHolderListeners(String appName, String packageName, String md5sum,
       String icon, String verName, int verCode, String path, String pathAlt, Obb obb, long id,
       long size, List<Split> splits, List<String> requiredSplits, String trustedBadge,
-      String storeName, List<String> bdsFlags) {
+      String storeName, List<String> bdsFlags, Campaign campaign) {
     cancelDownload.setOnClickListener(click -> downloadEventListener.onNext(
         new EditorialDownloadEvent(EditorialEvent.Type.CANCEL, appName, packageName, md5sum, icon,
-            verName, verCode, path, pathAlt, obb, size, splits, requiredSplits, bdsFlags)));
+            verName, verCode, path, pathAlt, obb, size, splits, requiredSplits, bdsFlags,
+            campaign)));
     resumeDownload.setOnClickListener(click -> downloadEventListener.onNext(
         new EditorialDownloadEvent(EditorialEvent.Type.RESUME, appName, packageName, md5sum, icon,
             verName, verCode, path, pathAlt, obb, action, size, splits, requiredSplits,
-            trustedBadge, storeName, bdsFlags)));
+            trustedBadge, storeName, bdsFlags, campaign)));
     pauseDownload.setOnClickListener(click -> downloadEventListener.onNext(
         new EditorialDownloadEvent(EditorialEvent.Type.PAUSE, appName, packageName, md5sum, icon,
-            verName, verCode, path, pathAlt, obb, size, splits, requiredSplits, bdsFlags)));
+            verName, verCode, path, pathAlt, obb, size, splits, requiredSplits, bdsFlags,
+            campaign)));
     appCardButton.setOnClickListener(click -> downloadEventListener.onNext(
         new EditorialDownloadEvent(EditorialEvent.Type.BUTTON, appName, packageName, md5sum, icon,
             verName, verCode, path, pathAlt, obb, action, size, splits, requiredSplits,
-            trustedBadge, storeName, bdsFlags)));
+            trustedBadge, storeName, bdsFlags, campaign)));
     appCardLayout.setOnClickListener(click -> uiEventListener.onNext(
         new EditorialEvent(EditorialEvent.Type.APPCARD, id, packageName)));
   }

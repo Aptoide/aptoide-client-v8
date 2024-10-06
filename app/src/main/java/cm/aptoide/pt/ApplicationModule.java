@@ -102,6 +102,9 @@ import cm.aptoide.pt.app.aptoideinstall.AptoideInstallRepository;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
 import cm.aptoide.pt.app.migration.AppcMigrationPersistence;
 import cm.aptoide.pt.app.migration.AppcMigrationRepository;
+import cm.aptoide.pt.app.mmpcampaigns.CampaignApiRepository;
+import cm.aptoide.pt.app.mmpcampaigns.CampaignManager;
+import cm.aptoide.pt.app.mmpcampaigns.CampaignRepository;
 import cm.aptoide.pt.appview.PreferencesPersister;
 import cm.aptoide.pt.autoupdate.Service;
 import cm.aptoide.pt.blacklist.BlacklistManager;
@@ -2257,5 +2260,15 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides @Named("aptoide-mmp-base-host") String provideAptoideMmpBaseHost() {
     return "https://" + BuildConfig.APTOIDE_WEB_SERVICES_MMP_HOST + "/api/v1/";
+  }
+
+  @Singleton @Provides CampaignManager provideCampaignManager(
+      CampaignRepository campaignRepository) {
+    return new CampaignManager(campaignRepository);
+  }
+
+  @Singleton @Provides CampaignRepository provideCampaignRepository(
+      @Named("default") OkHttpClient httpClient) {
+    return new CampaignApiRepository(httpClient);
   }
 }

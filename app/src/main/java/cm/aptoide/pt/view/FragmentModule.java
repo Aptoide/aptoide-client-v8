@@ -59,6 +59,7 @@ import cm.aptoide.pt.app.ReviewsManager;
 import cm.aptoide.pt.app.appsflyer.AppsFlyerManager;
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallManager;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
+import cm.aptoide.pt.app.mmpcampaigns.CampaignManager;
 import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
 import cm.aptoide.pt.app.view.AppCoinsInfoView;
 import cm.aptoide.pt.app.view.AppViewFragment;
@@ -357,12 +358,12 @@ import static cm.aptoide.pt.AptoideApplication.APPCOINS_WALLET_PACKAGE_NAME;
       DownloadFactory downloadFactory, DownloadAnalytics downloadAnalytics,
       InstallAnalytics installAnalytics, NotificationAnalytics notificationAnalytics,
       CrashReport crashReport, DynamicSplitsManager dynamicSplitsManager,
-      SplitAnalyticsMapper splitAnalyticsMapper) {
+      SplitAnalyticsMapper splitAnalyticsMapper, CampaignManager campaignManager) {
     return new DownloadViewActionPresenter(installManager, moPubAdsManager, permissionManager,
         appcMigrationManager, downloadDialogProvider, downloadNavigator,
         (PermissionService) fragment.getActivity(), Schedulers.io(), AndroidSchedulers.mainThread(),
         downloadFactory, downloadAnalytics, installAnalytics, notificationAnalytics, crashReport,
-        dynamicSplitsManager, splitAnalyticsMapper);
+        dynamicSplitsManager, splitAnalyticsMapper, campaignManager);
   }
 
   @FragmentScope @Provides DownloadDialogProvider providesDownloadDialogManager(
@@ -457,14 +458,14 @@ import static cm.aptoide.pt.AptoideApplication.APPCOINS_WALLET_PACKAGE_NAME;
       LocalNotificationSyncManager localNotificationSyncManager,
       AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider,
       DynamicSplitsManager dynamicSplitsManager, SplitAnalyticsMapper splitAnalyticsMapper,
-      AppsFlyerManager appsFlyerManager) {
+      AppsFlyerManager appsFlyerManager, CampaignManager campaignManager) {
     return new AppViewManager(appViewModelManager, installManager, downloadFactory, appCenter,
         reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
         moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
         installAnalytics, (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6),
         marketName, appCoinsManager, promotionsManager, appcMigrationManager,
         localNotificationSyncManager, appcPromotionNotificationStringProvider, dynamicSplitsManager,
-        splitAnalyticsMapper, appsFlyerManager);
+        splitAnalyticsMapper, appsFlyerManager, campaignManager);
   }
 
   @FragmentScope @Provides AppViewModelManager providesAppViewModelManager(
@@ -548,11 +549,11 @@ import static cm.aptoide.pt.AptoideApplication.APPCOINS_WALLET_PACKAGE_NAME;
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
       EditorialAnalytics editorialAnalytics, ReactionsManager reactionsManager,
       MoPubAdsManager moPubAdsManager, DynamicSplitsManager dynamicSplitsManager,
-      SplitAnalyticsMapper splitAnalyticsMapper) {
+      SplitAnalyticsMapper splitAnalyticsMapper, CampaignManager campaignManager) {
     return new EditorialManager(editorialRepository, getEditorialConfiguration(), installManager,
         downloadFactory, downloadStateParser, notificationAnalytics, installAnalytics,
         editorialAnalytics, reactionsManager, moPubAdsManager, dynamicSplitsManager,
-        splitAnalyticsMapper);
+        splitAnalyticsMapper, campaignManager);
   }
 
   private EditorialConfiguration getEditorialConfiguration() {
@@ -663,7 +664,7 @@ import static cm.aptoide.pt.AptoideApplication.APPCOINS_WALLET_PACKAGE_NAME;
   ) {
     return new HomeContainerPresenter((HomeContainerView) fragment, AndroidSchedulers.mainThread(),
         accountManager, homeContainerNavigator, homeNavigator, homeAnalytics, home, chipManager
-        );
+    );
   }
 
   @FragmentScope @Provides AppMapper providesAppMapper() {
@@ -677,12 +678,13 @@ import static cm.aptoide.pt.AptoideApplication.APPCOINS_WALLET_PACKAGE_NAME;
       AptoideInstallManager aptoideInstallManager,
       UpdatesNotificationManager updatesNotificationManager,
       @Named("secureShared") SharedPreferences secureSharedPreferences,
-      DynamicSplitsManager dynamicSplitsManager, SplitAnalyticsMapper splitAnalyticsMapper) {
+      DynamicSplitsManager dynamicSplitsManager, SplitAnalyticsMapper splitAnalyticsMapper,
+      CampaignManager campaignManager) {
     return new AppsManager(updatesManager, installManager, appMapper, downloadAnalytics,
         installAnalytics, updatesAnalytics, fragment.getContext()
         .getPackageManager(), fragment.getContext(), downloadFactory, moPubAdsManager,
         aptoideInstallManager, updatesNotificationManager, secureSharedPreferences,
-        dynamicSplitsManager, splitAnalyticsMapper);
+        dynamicSplitsManager, splitAnalyticsMapper, campaignManager);
   }
 
   @FragmentScope @Provides AppsPresenter providesAppsPresenter(AppsManager appsManager,

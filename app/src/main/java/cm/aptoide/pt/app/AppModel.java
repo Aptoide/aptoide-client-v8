@@ -1,6 +1,7 @@
 package cm.aptoide.pt.app;
 
 import cm.aptoide.pt.aab.Split;
+import cm.aptoide.pt.app.mmpcampaigns.Campaign;
 import cm.aptoide.pt.app.view.AppViewFragment.OpenType;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
@@ -13,6 +14,8 @@ import cm.aptoide.pt.view.app.AppRating;
 import cm.aptoide.pt.view.app.DetailedAppRequestResult;
 import java.util.List;
 
+import static java.util.Collections.emptyList;
+
 /**
  * Created by D01 on 07/05/18.
  */
@@ -24,7 +27,6 @@ public class AppModel {
   private final String modified;
   private final String appAdded;
   private final Obb obb;
-  private final String webUrls;
   private final boolean isLatestTrustedVersion;
   private final String uniqueName;
   private final OpenType openType;
@@ -73,6 +75,7 @@ public class AppModel {
   private final String oemId;
   private boolean isEskills;
   private String appCategory;
+  private Campaign campaign;
 
   public AppModel(long appId, String appName, Store store, String storeTheme, boolean isGoodApp,
       Malware malware, AppFlags appFlags, List<String> tags, List<String> usedFeatures,
@@ -80,12 +83,12 @@ public class AppModel {
       int versionCode, String versionName, String packageName, long size, int downloads,
       AppRating globalRating, int packageDownloads, AppRating rating, AppDeveloper appDeveloper,
       String graphic, String icon, AppMedia media, String modified, String appAdded, Obb obb,
-      String webUrls, boolean isLatestTrustedVersion, String uniqueName, OpenType openType,
+      boolean isLatestTrustedVersion, String uniqueName, OpenType openType,
       double appc, SearchAdResult minimalAd, String editorsChoice, String originTag,
       boolean isStoreFollowed, String marketName, boolean hasBilling, boolean hasAdvertising,
       List<String> bdsFlags, String campaignUrl, String signature, boolean isMature,
       List<Split> splits, List<String> requiredSplits, String oemId, boolean isBeta,
-      boolean isEskills, String appCategory) {
+      boolean isEskills, String appCategory, Campaign campaign) {
     this.appId = appId;
     this.appName = appName;
     this.store = store;
@@ -115,7 +118,6 @@ public class AppModel {
     this.modified = modified;
     this.appAdded = appAdded;
     this.obb = obb;
-    this.webUrls = webUrls;
     this.isLatestTrustedVersion = isLatestTrustedVersion;
     this.uniqueName = uniqueName;
     this.openType = openType;
@@ -139,6 +141,7 @@ public class AppModel {
     this.oemId = oemId;
     this.isBeta = isBeta;
     this.appCategory = appCategory;
+    this.campaign = campaign;
   }
 
   public AppModel(boolean loading) {
@@ -172,7 +175,6 @@ public class AppModel {
     this.modified = null;
     this.appAdded = null;
     this.obb = null;
-    this.webUrls = null;
     this.isLatestTrustedVersion = false;
     this.uniqueName = "";
     this.openType = null;
@@ -194,6 +196,7 @@ public class AppModel {
     this.oemId = null;
     this.isBeta = false;
     this.appCategory = "";
+    this.campaign = new Campaign(emptyList(), emptyList(), emptyList());
   }
 
   public AppModel(DetailedAppRequestResult.Error error) {
@@ -228,7 +231,6 @@ public class AppModel {
     this.modified = null;
     this.appAdded = null;
     this.obb = null;
-    this.webUrls = null;
     this.isLatestTrustedVersion = false;
     this.uniqueName = "";
     this.openType = null;
@@ -250,6 +252,7 @@ public class AppModel {
     this.oemId = null;
     this.isBeta = false;
     this.appCategory = "";
+    this.campaign = new Campaign(emptyList(), emptyList(), emptyList());
   }
 
   public boolean isMature() {
@@ -334,10 +337,6 @@ public class AppModel {
 
   public boolean hasError() {
     return (error != null);
-  }
-
-  public String getWebUrls() {
-    return webUrls;
   }
 
   public AppFlags getAppFlags() {
@@ -482,5 +481,9 @@ public class AppModel {
 
   public String getAppCategory() {
     return appCategory;
+  }
+
+  public Campaign getCampaign() {
+    return campaign;
   }
 }

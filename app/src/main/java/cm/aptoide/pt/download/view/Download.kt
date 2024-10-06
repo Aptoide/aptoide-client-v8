@@ -1,6 +1,7 @@
 package cm.aptoide.pt.download.view
 
 import cm.aptoide.pt.aab.Split
+import cm.aptoide.pt.app.mmpcampaigns.Campaign
 import cm.aptoide.pt.dataprovider.model.v7.Malware
 import cm.aptoide.pt.dataprovider.model.v7.Obb
 
@@ -12,5 +13,6 @@ data class Download(
   val malware: Malware, val splits: List<Split>,
   val requiredSplits: List<String>, val oemId: String,
   val downloadModel: DownloadStatusModel?,
-  val appCategory: String
+  val appCategory: String,
+  val campaign: Campaign
 )

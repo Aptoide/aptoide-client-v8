@@ -1,9 +1,11 @@
 package cm.aptoide.pt.updates
 
+import cm.aptoide.pt.database.room.RoomCampaignUrl
 import cm.aptoide.pt.database.room.RoomSplit
 import cm.aptoide.pt.database.room.RoomUpdate
 import cm.aptoide.pt.dataprovider.model.v7.Split
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App
+import cm.aptoide.pt.dataprovider.model.v7.listapp.Urls
 
 class UpdateMapper {
 
@@ -38,9 +40,10 @@ class UpdateMapper {
         patchObbMd5 = patchObb.md5sum
       }
     }
-    return RoomUpdate(app.id, app.name, app.icon, app.packageName,
-        app.file
-            .md5sum, app.file
+    return RoomUpdate(
+      app.id, app.name, app.icon, app.packageName,
+      app.file
+        .md5sum, app.file
         .path, app.size, app.file
         .vername, app.file
         .pathAlt, app.file
@@ -48,29 +51,48 @@ class UpdateMapper {
         .malware
         .rank
         .name, mainObbFileName, mainObbPath, mainObbMd5, patchObbFileName, patchObbPath,
-        patchObbMd5, app.hasAdvertising() || app.hasBilling(),
-        mapSplits(if (app.hasSplits()) app.aab
-            .splits else emptyList()), mapRequiredSplits(
+      patchObbMd5, app.hasAdvertising() || app.hasBilling(),
+      mapSplits(
         if (app.hasSplits()) app.aab
-            .requiredSplits else emptyList()), app.store
-        .name)
+          .splits else emptyList()
+      ), mapRequiredSplits(
+        if (app.hasSplits()) app.aab
+          .requiredSplits else emptyList()
+      ), app.store.name,
+      mapDownloadCampaign(app.urls)
+    )
+  }
+
+  private fun mapDownloadCampaign(urls: Urls?): List<RoomCampaignUrl> {
+    val downloadsList = arrayListOf<RoomCampaignUrl>()
+    if (urls != null && urls.download != null ) {
+      for (url in urls.download) {
+        downloadsList.add(RoomCampaignUrl(url.name, url.url))
+      }
+    }
+    return downloadsList;
   }
 
   private fun mapSplits(
-      splits: List<Split>?): List<RoomSplit>? {
+    splits: List<Split>?
+  ): List<RoomSplit>? {
     val splitsResult: MutableList<RoomSplit> = ArrayList()
     if (splits == null) return splitsResult
     for (split in splits) {
       splitsResult.add(
-          RoomSplit(split.md5sum, split.path,
-              split.type, split.name,
-              split.filesize))
+        RoomSplit(
+          split.md5sum, split.path,
+          split.type, split.name,
+          split.filesize
+        )
+      )
     }
     return splitsResult
   }
 
   private fun mapRequiredSplits(
-      requiredSplits: List<String>?): List<String>? {
+    requiredSplits: List<String>?
+  ): List<String>? {
     val requiredSplitsResult = ArrayList<String>()
     if (requiredSplits == null) return requiredSplitsResult
     for (required in requiredSplits) {
@@ -78,5 +100,4 @@ class UpdateMapper {
     }
     return requiredSplitsResult
   }
-
 }

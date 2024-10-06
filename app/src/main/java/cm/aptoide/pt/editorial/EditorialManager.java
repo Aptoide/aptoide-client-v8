@@ -4,6 +4,7 @@ import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.aab.DynamicSplitsManager;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.app.DownloadStateParser;
+import cm.aptoide.pt.app.mmpcampaigns.CampaignManager;
 import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
@@ -39,6 +40,7 @@ public class EditorialManager {
   private final DynamicSplitsManager dynamicSplitsManager;
   private final DownloadStateParser downloadStateParser;
   private final SplitAnalyticsMapper splitAnalyticsMapper;
+  private final CampaignManager campaignManager;
 
   public EditorialManager(EditorialRepository editorialRepository,
       EditorialConfiguration editorialConfiguration, InstallManager installManager,
@@ -46,8 +48,7 @@ public class EditorialManager {
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
       EditorialAnalytics editorialAnalytics, ReactionsManager reactionsManager,
       MoPubAdsManager moPubAdsManager, DynamicSplitsManager dynamicSplitsManager,
-      SplitAnalyticsMapper splitAnalyticsMapper) {
-
+      SplitAnalyticsMapper splitAnalyticsMapper, CampaignManager campaignManager) {
     this.editorialRepository = editorialRepository;
     this.editorialConfiguration = editorialConfiguration;
     this.installManager = installManager;
@@ -60,6 +61,7 @@ public class EditorialManager {
     this.moPubAdsManager = moPubAdsManager;
     this.dynamicSplitsManager = dynamicSplitsManager;
     this.splitAnalyticsMapper = splitAnalyticsMapper;
+    this.campaignManager = campaignManager;
   }
 
   public Single<EditorialViewModel> loadEditorialViewModel() {
@@ -150,5 +152,9 @@ public class EditorialManager {
 
   public Single<Boolean> isFirstReaction(String cardId, String groupId) {
     return reactionsManager.isFirstReaction(cardId, groupId);
+  }
+
+  public Completable convertCampaign(EditorialDownloadEvent editorialDownloadEvent) {
+    return RxJavaInterop.toV1Completable(campaignManager.convertCampaign(editorialDownloadEvent.getCampaign(), "Editorial"));
   }
 }
