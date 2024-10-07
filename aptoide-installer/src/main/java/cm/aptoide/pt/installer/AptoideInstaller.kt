@@ -8,14 +8,17 @@ import android.content.pm.PackageInstaller.Session
 import android.content.pm.PackageInstaller.SessionParams.USER_ACTION_NOT_REQUIRED
 import android.net.Uri
 import android.os.Build
-import android.os.Environment
 import cm.aptoide.pt.extensions.checkMd5
+import cm.aptoide.pt.extensions.hasPackageInstallsPermission
+import cm.aptoide.pt.extensions.hasWriteExternalStoragePermission
 import cm.aptoide.pt.install_manager.AbortException
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallationFile
 import cm.aptoide.pt.install_manager.dto.hasObb
 import cm.aptoide.pt.install_manager.workers.PackageInstaller
 import cm.aptoide.pt.installer.di.DownloadsPath
+import cm.aptoide.pt.installer.obb.ObbService
+import cm.aptoide.pt.installer.obb.installOBBs
 import cm.aptoide.pt.installer.platform.INSTALL_SESSION_API_COMPLETE_ACTION
 import cm.aptoide.pt.installer.platform.InstallEvents
 import cm.aptoide.pt.installer.platform.InstallPermissions
@@ -40,6 +43,7 @@ class AptoideInstaller @Inject constructor(
   private val installPermissions: InstallPermissions,
 ) : PackageInstaller {
   private val installInProgress = mutableSetOf<String>()
+  private val initialPermissionsAllowed = getPermissionsState()
 
   init {
     // Clean up all old sessions on app start
@@ -67,8 +71,23 @@ class AptoideInstaller @Inject constructor(
     val apkFraction = 49.0 * totalApkSize / (totalApkSize + totalObbSize)
     val obbFraction = 49.0 * totalObbSize / (totalApkSize + totalObbSize)
     if (totalObbSize > 0) {
-      obbFiles.moveToObbStore(packageName) {
-        emit(checkFraction + (obbFraction * it / totalObbSize).toInt())
+      if (initialPermissionsAllowed) {
+        obbFiles.installOBBs(packageName) {
+          emit(checkFraction + (obbFraction * it / totalObbSize).toInt())
+        }
+      } else {
+        ObbService.bindServiceAndWaitForResult(
+          context = context,
+          packageName = packageName,
+          obbFilePaths = obbFiles.map { it.absolutePath }
+        ).let { movedOBBFiles ->
+          if (movedOBBFiles) {
+            //TODO: improve installation progress when using OBBService
+            emit(checkFraction + (obbFraction / totalObbSize).toInt())
+          } else {
+            throw IllegalStateException("Error moving OBB files")
+          }
+        }
       }
     }
 
@@ -168,40 +187,6 @@ class AptoideInstaller @Inject constructor(
   private val Collection<File>.totalLength
     get() = map(File::length).reduceOrNull { acc, l -> acc + l } ?: 0
 
-  private suspend fun Collection<File>.moveToObbStore(
-    packageName: String,
-    progress: suspend (Long) -> Unit,
-  ) {
-    val outputPath = "$OBB_FOLDER$packageName/"
-    val prepared = File(outputPath).run {
-      deleteRecursively()
-      mkdirs()
-    }
-    if (!prepared) throw IllegalStateException("Can't create OBB folder: $outputPath")
-
-    var processedSize: Long = 0
-    forEach { file ->
-      val size = file.length()
-      val destinationFile = File(outputPath + file.name)
-      // Try to move first
-      file.renameTo(destinationFile)
-        .takeUnless { it }
-        ?.also {
-          file.inputStream().use { inputStream ->
-            destinationFile.createNewFile()
-            destinationFile.outputStream().use { outputStream ->
-              inputStream
-                .copyWithProgressTo(outputStream)
-                .collect {
-                  progress(processedSize + it)
-                }
-            }
-          }
-        }
-      processedSize += size
-    }
-  }
-
   private suspend fun Session.loadFiles(
     files: Collection<File>,
     progress: suspend (Long) -> Unit,
@@ -225,9 +210,13 @@ class AptoideInstaller @Inject constructor(
     }
   }
 
+  private fun getPermissionsState() = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+    context.hasPackageInstallsPermission() && context.hasWriteExternalStoragePermission()
+  } else {
+    context.hasPackageInstallsPermission()
+  }
+
   companion object {
     private const val SESSION_INSTALL_REQUEST_CODE = 18
-    private val OBB_FOLDER =
-      Environment.getExternalStorageDirectory().absolutePath + "/Android/obb/"
   }
 }

@@ -5,10 +5,16 @@
   <uses-permission android:name="android.permission.ENFORCE_UPDATE_OWNERSHIP" />
   <uses-permission android:name="android.permission.UPDATE_PACKAGES_WITHOUT_USER_ACTION" />
   <!--Permissions for the Android below 11 (R)-->
-  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
   <application
       android:allowBackup="true"
-      android:requestLegacyExternalStorage="true" />
+      android:requestLegacyExternalStorage="true">
+
+    <service
+        android:name="cm.aptoide.pt.installer.obb.ObbService"
+        android:process=":obbMoverProcess"
+        android:exported="false" />
+  </application>
 </manifest>
