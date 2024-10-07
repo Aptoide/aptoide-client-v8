@@ -171,6 +171,7 @@
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Sekarang Anda bisa menyelesaikan pembelian Anda.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">Dompet AppCoins sekarang diinstal!</string>
   <string name="storage_access_permission_request_message">Harap izinkan akses pada penyimpanan ponsel Anda agar kami dapat mengunduh dan memasang aplikasi ini.</string>
+  <string name="downloads_number_title">%s downloads</string>
   <!-- Payment Errors-->
   <string name="payments_error_not_enough_balance_body">Saldo Anda tidak cukup</string>
   <string name="payments_error_old_card_title">Sepertinya Anda sudah lama mendaftarkan kartu ini!</string>
