@@ -245,6 +245,9 @@ dependencies {
   implementation(LibraryDependency.ACCOMPANIST_WEBVIEW)
   implementation(LibraryDependency.ACCOMPANIST_PERMISSIONS)
 
+  //WorkManager
+  implementation(LibraryDependency.WORK_MANAGER)
+  implementation(LibraryDependency.HILT_WORK)
 }
 
 fun BaseFlavor.buildConfigFieldFromGradleProperty(gradlePropertyName: String) {
