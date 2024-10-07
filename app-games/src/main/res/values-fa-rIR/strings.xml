@@ -171,6 +171,7 @@
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">اکنون می‌توانید پرداخت خود را کامل کنید.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">AppCoins Wallet با موفقیت نصب شد!</string>
   <string name="storage_access_permission_request_message">برای دانلود و نصب این برنامه لازم است اجازه دسترسی به حافظه گوشی‌تان را بدهید.</string>
+  <string name="downloads_number_title">%s downloads</string>
   <!-- Payment Errors-->
   <string name="payments_error_not_enough_balance_body">بالانس شما کافی نیست</string>
   <string name="payments_error_old_card_title">به نظر می‌رسد که این کارت خیلی وقت قبل ثبت شده‌است!</string>
