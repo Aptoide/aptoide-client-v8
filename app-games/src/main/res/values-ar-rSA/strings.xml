@@ -171,6 +171,7 @@
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">يمكنك الآن إتمام عملية الشراء.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">تم تثبيت محفظة AppCoins Wallet!</string>
   <string name="storage_access_permission_request_message">اسمح بالدخول إلى ذاكرة الجوال لنتمكن من تنزيل وتثبيت هذا التطبيق.</string>
+  <string name="downloads_number_title">%s downloads</string>
   <!-- Payment Errors-->
   <string name="payments_error_not_enough_balance_body">ليس لديك رصيد كافٍ</string>
   <string name="payments_error_old_card_title">يبدو أنك قد سجلت هذه البطاقة منذ وقت طويل!</string>
