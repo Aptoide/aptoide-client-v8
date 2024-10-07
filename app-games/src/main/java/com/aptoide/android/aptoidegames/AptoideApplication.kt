@@ -5,6 +5,8 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.hilt.work.HiltWorkerFactory
+import androidx.work.Configuration.Provider
 import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
 import cm.aptoide.pt.feature_categories.analytics.AptoideAnalyticsInfoProvider
 import cm.aptoide.pt.install_manager.InstallManager
@@ -31,7 +33,12 @@ import com.aptoide.android.aptoidegames.installer.analytics.ScheduledDownloadsLi
 import com.aptoide.android.aptoidegames.installer.notifications.InstallerNotificationsManager
 import com.aptoide.android.aptoidegames.launch.AppLaunchPreferencesManager
 import com.aptoide.android.aptoidegames.network.AptoideGetHeaders
+import com.google.firebase.FirebaseApp
+import dagger.hilt.EntryPoint
+import dagger.hilt.EntryPoints
+import dagger.hilt.InstallIn
 import dagger.hilt.android.HiltAndroidApp
+import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -56,7 +63,13 @@ val Context.paymentsPreferencesDataStore: DataStore<Preferences> by preferencesD
 )
 
 @HiltAndroidApp
-class AptoideApplication : Application(), ImageLoaderFactory {
+class AptoideApplication : Application(), ImageLoaderFactory, Provider {
+
+  @EntryPoint
+  @InstallIn(SingletonComponent::class)
+  interface HiltWorkerFactoryEntryPoint {
+    fun workerFactory(): HiltWorkerFactory
+  }
 
   @Inject
   lateinit var installManager: InstallManager
@@ -92,6 +105,7 @@ class AptoideApplication : Application(), ImageLoaderFactory {
   lateinit var biAnalytics: BIAnalytics
 
   override fun onCreate() {
+    FirebaseApp.initializeApp(this)
     super.onCreate()
     initTimber()
     startInstallManager()
@@ -183,4 +197,11 @@ class AptoideApplication : Application(), ImageLoaderFactory {
       Timber.plant(Timber.DebugTree())
     }
   }
+
+  override fun getWorkManagerConfiguration(): androidx.work.Configuration =
+    androidx.work.Configuration.Builder()
+      .setWorkerFactory(
+        EntryPoints.get(this, HiltWorkerFactoryEntryPoint::class.java).workerFactory()
+      )
+      .build()
 }
