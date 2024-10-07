@@ -57,6 +57,21 @@ class AptoideInstaller @Inject constructor(
       installPermissions.checkIfCanWriteExternal()
     }
     installPermissions.checkIfCanInstall()
+
+    val checkFraction = 49
+    val (apkFiles, obbFiles) = installPackageInfo.getCheckedFiles {
+      emit((it * checkFraction).toInt())
+    }
+    val totalApkSize = apkFiles.totalLength
+    val totalObbSize = obbFiles.totalLength
+    val apkFraction = 49.0 * totalApkSize / (totalApkSize + totalObbSize)
+    val obbFraction = 49.0 * totalObbSize / (totalApkSize + totalObbSize)
+    if (totalObbSize > 0) {
+      obbFiles.moveToObbStore(packageName) {
+        emit(checkFraction + (obbFraction * it / totalObbSize).toInt())
+      }
+    }
+
     context.packageManager.packageInstaller.run {
       val sessionId = createSession(
         android.content.pm.PackageInstaller
@@ -76,19 +91,6 @@ class AptoideInstaller @Inject constructor(
       )
       openSession(sessionId).run {
         runCatching {
-          val checkFraction = 49
-          val (apkFiles, obbFiles) = installPackageInfo.getCheckedFiles {
-            emit((it * checkFraction).toInt())
-          }
-          val totalApkSize = apkFiles.totalLength
-          val totalObbSize = obbFiles.totalLength
-          val apkFraction = 49.0 * totalApkSize / (totalApkSize + totalObbSize)
-          val obbFraction = 49.0 * totalObbSize / (totalApkSize + totalObbSize)
-          if (totalObbSize > 0) {
-            obbFiles.moveToObbStore(packageName) {
-              emit(checkFraction + (obbFraction * it / totalObbSize).toInt())
-            }
-          }
           loadFiles(apkFiles) {
             emit(checkFraction + obbFraction.toInt() + (apkFraction * it / totalApkSize).toInt())
           }
