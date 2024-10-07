@@ -48,8 +48,8 @@ class InstallPermissionsImpl @Inject constructor(
   }
 
   override suspend fun checkIfCanWriteExternal() {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
-      //Android is below 11
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+      //Android is below 13
       if (!context.hasWriteExternalStoragePermission()) {
         when (userActionLauncher.checkPermissionState(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
           //Requested permission
