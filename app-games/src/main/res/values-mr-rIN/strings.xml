@@ -171,6 +171,7 @@
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">आता आपण आपली खरेदी पूर्ण करु शकता.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">अॅपकॉईन्स वॉलेट आता इंस्टॉल झाले आहे!</string>
   <string name="storage_access_permission_request_message">आपल्या फोन स्टोरेजमध्ये प्रवेश द्या म्हणजे आम्ही हे अॅप डाऊनलोड करुन इंस्टॉल करु शकु.</string>
+  <string name="downloads_number_title">%s downloads</string>
   <!-- Payment Errors-->
   <string name="payments_error_not_enough_balance_body">आपल्याकडे पुरेशी शिल्लक नाहीये</string>
   <string name="payments_error_old_card_title">असे दिसतेय कि आपण हे कार्ड फार पूर्वी नोंदणीकृत केलेय!</string>
