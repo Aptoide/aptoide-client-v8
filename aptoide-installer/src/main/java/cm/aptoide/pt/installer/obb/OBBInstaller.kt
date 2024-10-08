@@ -6,6 +6,9 @@ import java.io.File
 
 private val OBB_FOLDER = Environment.getExternalStorageDirectory().absolutePath + "/Android/obb/"
 
+internal fun removeObbFromStore(packageName: String): Boolean =
+  File("$OBB_FOLDER$packageName/").deleteRecursively()
+
 internal suspend fun Collection<File>.installOBBs(
   packageName: String,
   progress: suspend (Long) -> Unit,
