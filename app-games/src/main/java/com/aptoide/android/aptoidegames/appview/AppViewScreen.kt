@@ -780,7 +780,7 @@ fun AppRatingAndDownloads(
     )
     downloads?.let {
       Text(
-        text = "${it.formatDownloads()} downloads",
+        text = stringResource(R.string.downloads_number_title,it.formatDownloads()),
         maxLines = 1,
         style = AGTypography.InputsXS,
         overflow = TextOverflow.Ellipsis,
