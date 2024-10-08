@@ -32,6 +32,7 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onCompletion
+import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -49,7 +50,12 @@ class AptoideInstaller @Inject constructor(
   init {
     // Clean up all old sessions on app start
     context.packageManager.packageInstaller.mySessions.forEach {
-      context.packageManager.packageInstaller.abandonSession(it.sessionId)
+      try {
+        // Some times it leads to crashes that are hard to reproduce.
+        context.packageManager.packageInstaller.abandonSession(it.sessionId)
+      } catch (t: Throwable) {
+        Timber.e(t)
+      }
     }
   }
 
