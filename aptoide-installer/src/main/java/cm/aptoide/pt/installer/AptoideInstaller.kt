@@ -19,6 +19,7 @@ import cm.aptoide.pt.install_manager.workers.PackageInstaller
 import cm.aptoide.pt.installer.di.DownloadsPath
 import cm.aptoide.pt.installer.obb.ObbService
 import cm.aptoide.pt.installer.obb.installOBBs
+import cm.aptoide.pt.installer.obb.removeObbFromStore
 import cm.aptoide.pt.installer.platform.INSTALL_SESSION_API_COMPLETE_ACTION
 import cm.aptoide.pt.installer.platform.InstallEvents
 import cm.aptoide.pt.installer.platform.InstallPermissions
@@ -142,7 +143,10 @@ class AptoideInstaller @Inject constructor(
             }
           }
         }
-          .onFailure { abandon() }
+          .onFailure {
+            abandon()
+            if (totalObbSize > 0) removeObbFromStore(packageName)
+          }
           .getOrThrow()
       }
     }
