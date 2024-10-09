@@ -52,6 +52,7 @@ import com.aptoide.android.aptoidegames.design_system.PrimaryTextButton
 import com.aptoide.android.aptoidegames.drawables.icons.getAptoideGamesToolbarLogo
 import com.aptoide.android.aptoidegames.installer.analytics.rememberInstallAnalytics
 import com.aptoide.android.aptoidegames.installer.analytics.toAnalyticsPayload
+import com.aptoide.android.aptoidegames.installer.notifications.rememberInstallerNotifications
 import com.aptoide.android.aptoidegames.permissions.AppPermissionsViewModel
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
@@ -103,6 +104,7 @@ fun UserActionDialog() {
   )
 
   val installAnalytics = rememberInstallAnalytics()
+  val installerNotifications = rememberInstallerNotifications()
   LaunchedEffect(
     key1 = state,
     key2 = isOnForeground,
@@ -141,6 +143,21 @@ fun UserActionDialog() {
               permissionsViewModel.setPermissionRequested(it.permission)
             } else {
               viewModel.onResult(false)
+            }
+          }
+
+          else -> Unit
+        }
+      } else {
+        when (val it = state) {
+          is InstallationAction -> {
+            if (!installationActionLaunched) {
+              //System action, we cannot access it any other way
+              if (it.intent.action == "android.content.pm.action.CONFIRM_INSTALL") {
+                val packageName = it.intent
+                  .getStringExtra("${BuildConfig.APPLICATION_ID}.pn") ?: "NaN"
+                installerNotifications.onReadyToInstall(packageName)
+              }
             }
           }
 
