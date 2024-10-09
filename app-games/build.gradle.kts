@@ -18,7 +18,7 @@ android {
   defaultConfig {
     applicationId = "com.aptoide.android.aptoidegames"
     versionCode = Integer.parseInt(project.property("VERSION_CODE_APTOIDEGAMES").toString())
-    versionName = "0.9.0"
+    versionName = "0.9.1"
 
     System.getenv("STORE_NAME")
       .also {
