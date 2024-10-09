@@ -40,11 +40,14 @@ class InstallerNotificationsBuilder @Inject constructor(
   companion object {
     const val INSTALLER_NOTIFICATION_CHANNEL_ID = "installer_notification_channel"
     const val INSTALLER_NOTIFICATION_CHANNEL_NAME = "Installer Notification Channel"
+    const val READY_TO_INSTALL_NOTIFICATION_CHANNEL_ID = "ready_to_install_notification_channel"
+    const val READY_TO_INSTALL_NOTIFICATION_CHANNEL_NAME = "Ready To Install Notification Channel"
     const val ALLOW_METERED_DOWNLOAD_FOR_PACKAGE = "allowMeteredDownloadForPackage"
   }
 
   init {
     setupNotificationChannel(context)
+    setupReadyToInstallNotificationChannel(context)
   }
 
   private fun setupNotificationChannel(context: Context) {
@@ -64,6 +67,26 @@ class InstallerNotificationsBuilder @Inject constructor(
         setSound(null, null)
       }
 
+      notificationManager.createNotificationChannel(channel)
+    }
+  }
+
+  private fun setupReadyToInstallNotificationChannel(context: Context) {
+    val notificationManager =
+      context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+    if (notificationManager.getNotificationChannel(READY_TO_INSTALL_NOTIFICATION_CHANNEL_ID) == null) {
+      val name = READY_TO_INSTALL_NOTIFICATION_CHANNEL_NAME
+      val descriptionText = "Ready for installations notification channel"
+      val importance = NotificationManager.IMPORTANCE_HIGH
+      val channel = NotificationChannel(
+        READY_TO_INSTALL_NOTIFICATION_CHANNEL_ID,
+        name,
+        importance
+      ).apply {
+        description = descriptionText
+        setSound(null, null)
+      }
       notificationManager.createNotificationChannel(channel)
     }
   }
@@ -101,7 +124,7 @@ class InstallerNotificationsBuilder @Inject constructor(
               TextFormatter.formatBytes(size)
             )
 
-          State.INSTALLING -> context.getString(R.string.notification_installing_title)
+          State.INSTALLING -> context.getString(R.string.notification_preparing_title)
           else -> ""
         }
       )
@@ -122,6 +145,27 @@ class InstallerNotificationsBuilder @Inject constructor(
       appDetails = appDetails,
       contentText = context.getString(R.string.notification_waiting_body),
       progress = -1,
+    )
+
+    notification?.let { showNotification(notificationId, notification) }
+  }
+
+  suspend fun showReadyToInstallNotification(
+    packageName: String,
+    appDetails: AppDetails?
+  ) {
+    val notificationId = stringToIntConverter.getStringId(packageName)
+
+    cancelNotification(notificationId)
+
+    val notification = buildNotification(
+      requestCode = notificationId,
+      packageName = packageName,
+      appDetails = appDetails,
+      contentTitle = context.getString(R.string.notification_ready_install_title),
+      contentText = context.getString(R.string.notification_ready_install_body, appDetails?.name),
+      progress = null,
+      channel = READY_TO_INSTALL_NOTIFICATION_CHANNEL_ID
     )
 
     notification?.let { showNotification(notificationId, notification) }
@@ -166,8 +210,10 @@ class InstallerNotificationsBuilder @Inject constructor(
     packageName: String,
     appDetails: AppDetails?,
     progress: Int? = null,
+    contentTitle: String? = null,
     contentText: String,
     hasAction: Boolean = false,
+    channel: String = INSTALLER_NOTIFICATION_CHANNEL_ID
   ): Notification? = if (context.isAllowed(Manifest.permission.POST_NOTIFICATIONS)) {
 
     val deepLink = buildAppViewDeepLinkUri(
@@ -191,11 +237,11 @@ class InstallerNotificationsBuilder @Inject constructor(
       (uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
     val colorToUse = if (isNightMode) Palette.Primary.toArgb() else Palette.Black.toArgb()
 
-    NotificationCompat.Builder(context, INSTALLER_NOTIFICATION_CHANNEL_ID)
+    NotificationCompat.Builder(context, channel)
       .setShowWhen(true)
       .setSmallIcon(notificationIcon)
       .setColor(colorToUse)
-      .setContentTitle(appDetails?.name)
+      .setContentTitle(contentTitle ?: appDetails?.name)
       .setContentText(contentText)
       .setLargeIcon(imageDownloader.downloadImageFrom(appDetails?.iconUrl))
       .setPriority(NotificationCompat.PRIORITY_DEFAULT)

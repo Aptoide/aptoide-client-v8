@@ -44,6 +44,22 @@ class RealInstallerNotificationsManager @Inject constructor(
     }
   }
 
+  override fun onReadyToInstall(packageName: String) {
+    launch {
+      onReadyToInstall(installManager.getApp(packageName))
+    }
+  }
+
+  private suspend fun onReadyToInstall(app: App) {
+    app.task?.let {
+      val appDetails = appDetailsUseCase.getAppDetails(app)
+      installerNotificationsManager.showReadyToInstallNotification(
+        packageName = app.packageName,
+        appDetails = appDetails
+      )
+    }
+  }
+
   @OptIn(ExperimentalCoroutinesApi::class)
   private suspend fun onInstallationQueued(app: App) {
     app.task?.let {
