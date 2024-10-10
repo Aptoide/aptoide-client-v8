@@ -34,6 +34,9 @@
   <!-- Notifications -->
   <string name="notifications_context_title">Đã nhận thông báo!</string>
   <string name="notification_installing_title">Đang cài đặt</string>
+  <string name="notification_preparing_title">Preparing</string>
+  <string name="notification_ready_install_title">An app is ready to be installed!</string>
+  <string name="notification_ready_install_body">Tap here to install %s.</string>
   <string name="notification_waiting_body">Đang chờ tải xuống</string>
   <string name="notification_1_installed_title">Đã cài đặt</string>
   <string name="notification_downloading_body">Đang tải xuống %1$s%% trên %2$s</string>
