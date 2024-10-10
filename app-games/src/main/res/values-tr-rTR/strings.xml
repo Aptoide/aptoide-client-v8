@@ -34,6 +34,9 @@
   <!-- Notifications -->
   <string name="notifications_context_title">Haberdar ol!</string>
   <string name="notification_installing_title">Yükleniyor</string>
+  <string name="notification_preparing_title">Preparing</string>
+  <string name="notification_ready_install_title">An app is ready to be installed!</string>
+  <string name="notification_ready_install_body">Tap here to install %s.</string>
   <string name="notification_waiting_body">İndirme bekleniyor</string>
   <string name="notification_1_installed_title">Yüklü</string>
   <string name="notification_downloading_body">İndiriliyor %1$s[%1$s] / %2$s</string>
