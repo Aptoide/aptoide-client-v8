@@ -34,6 +34,9 @@
   <!-- Notifications -->
   <string name="notifications_context_title">Lass dich benachrichtigen!</string>
   <string name="notification_installing_title">Installation läuft</string>
+  <string name="notification_preparing_title">Preparing</string>
+  <string name="notification_ready_install_title">An app is ready to be installed!</string>
+  <string name="notification_ready_install_body">Tap here to install %s.</string>
   <string name="notification_waiting_body">Warten auf den Download</string>
   <string name="notification_1_installed_title">Installiert</string>
   <string name="notification_downloading_body">Download läuft %1$s%% von %2$s</string>
