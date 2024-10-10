@@ -39,14 +39,9 @@ import androidx.navigation.navArgument
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.PreviewLandscapeDark
 import cm.aptoide.pt.extensions.ScreenData
-import com.appcoins.payments.arch.CancelledByUserResult
-import com.appcoins.payments.arch.ConnectionFailedException
 import com.appcoins.payments.arch.PaymentsResult
-import com.appcoins.payments.arch.PaymentsSuccessResult
-import com.appcoins.payments.arch.UnknownErrorException
 import com.appcoins.payments.methods.paypal.presentation.PaypalUIState
 import com.appcoins.payments.methods.paypal.presentation.rememberPaypalUIState
-import com.appcoins.payments.uri_handler.PaymentsCancelledResult
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.SupportActivity
@@ -102,7 +97,7 @@ fun paypalPaymentScreen(onFinish: (PaymentsResult) -> Unit) = ScreenData.withAna
   BackHandler(
     enabled = isPreSelected,
     onBack = {
-      onFinish(PaymentsCancelledResult)
+      onFinish(PaymentsResult.UserCanceled())
     }
   )
 }
@@ -124,7 +119,7 @@ private fun BuildPaypalScreen(
   LaunchedEffect(key1 = uiState, key2 = activityResultRegistry) {
     when (uiState) {
       is PaypalUIState.Error -> when (uiState.result) {
-        is CancelledByUserResult -> popBackStack()
+        is PaymentsResult.UserCanceled -> popBackStack()
         else -> genericAnalytics.sendPaymentErrorEvent(paymentMethod = paymentMethod)
       }
 
@@ -170,7 +165,7 @@ private fun BuildPaypalScreen(
         paymentMethod = paymentMethod,
         context = uiState.paymentContext,
       )
-      onFinish((uiState as? PaypalUIState.Success)?.result ?: PaymentsCancelledResult)
+      onFinish((uiState as? PaypalUIState.Success)?.result ?: PaymentsResult.UserCanceled())
       finished = true
     },
     onRetryClick = {
@@ -207,8 +202,8 @@ private fun PaypalScreen(
       )
 
       is PaypalUIState.Error -> when (viewModelState.result) {
-        is CancelledByUserResult -> LoadingView()
-        is ConnectionFailedException -> PayPalNoConnectionScreen(onRetryClick)
+        is PaymentsResult.UserCanceled -> LoadingView()
+        is PaymentsResult.ConnectionFailed -> PayPalNoConnectionScreen(onRetryClick)
         else -> PaypalErrorScreen(onRetryClick, onContactUs)
       }
 
@@ -486,9 +481,9 @@ private class PaypalUIStateProvider : PreviewParameterProvider<PaypalUIState> {
       cancelBillingAgreement = {},
     ),
     PaypalUIState.MakingPurchase,
-    PaypalUIState.Success(PaymentsSuccessResult()),
+    PaypalUIState.Success(PaymentsResult.Success()),
     PaypalUIState.Loading,
-    PaypalUIState.Error(ConnectionFailedException()),
-    PaypalUIState.Error(UnknownErrorException()),
+    PaypalUIState.Error(PaymentsResult.ConnectionFailed()),
+    PaypalUIState.Error(PaymentsResult.Error()),
   )
 }

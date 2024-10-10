@@ -31,8 +31,7 @@ import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.feature_apps.data.walletApp
 import com.appcoins.payments.arch.PaymentsResult
 import com.appcoins.payments.arch.PurchaseRequest
-import com.appcoins.payments.uri_handler.PaymentsActivityResult
-import com.appcoins.payments.uri_handler.PaymentsCancelledResult
+import com.appcoins.payments.uri_handler.toPaymentResult
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
@@ -86,7 +85,7 @@ fun PaymentsWalletInstalledView(
   val launcher = rememberLauncherForActivityResult(
     contract = StartActivityForResult()
   ) {
-    onFinish(PaymentsActivityResult(it.resultCode, it.data))
+    onFinish(it.toPaymentResult())
   }
 
   val onRedirect: () -> Unit = {
@@ -97,7 +96,7 @@ fun PaymentsWalletInstalledView(
       try {
         launcher.launch(intent)
       } catch (e: Exception) {
-        onFinish(PaymentsCancelledResult)
+        onFinish(PaymentsResult.UserCanceled())
       }
     }
   }
@@ -118,7 +117,7 @@ fun PaymentsWalletInstalledView(
           context = PaymentContext.CONCLUSION,
         )
       }
-      onFinish(PaymentsCancelledResult)
+      onFinish(PaymentsResult.UserCanceled())
     },
     onClick = {
       launched = true

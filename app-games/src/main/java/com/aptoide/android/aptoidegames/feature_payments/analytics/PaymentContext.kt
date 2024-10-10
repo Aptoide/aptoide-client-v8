@@ -1,7 +1,6 @@
 package com.aptoide.android.aptoidegames.feature_payments.analytics
 
-import com.appcoins.payments.arch.PaymentsErrorResult
-import com.appcoins.payments.arch.PaymentsSuccessResult
+import com.appcoins.payments.arch.PaymentsResult
 import com.appcoins.payments.manager.presentation.TransactionUIState
 import com.appcoins.payments.methods.adyen.presentation.AdyenCreditCardUiState
 import com.appcoins.payments.methods.paypal.presentation.PaypalUIState
@@ -28,8 +27,8 @@ val PaypalUIState.paymentContext: String?
 val TransactionUIState.paymentContext: String?
   get() = when (this) {
     is TransactionUIState.Finished -> when (result) {
-      is PaymentsSuccessResult -> PaymentContext.CONCLUSION
-      is PaymentsErrorResult -> null
+      is PaymentsResult.Success -> PaymentContext.CONCLUSION
+      is PaymentsResult.Error -> null
       else -> PaymentContext.CONCLUSION
     }
 

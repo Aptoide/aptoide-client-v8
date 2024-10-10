@@ -37,18 +37,14 @@ import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.PreviewLandscapeDark
 import cm.aptoide.pt.extensions.ScreenData
-import com.appcoins.payments.arch.ConnectionFailedException
 import com.appcoins.payments.arch.PaymentMethod
-import com.appcoins.payments.arch.PaymentsItemOwnedResult
 import com.appcoins.payments.arch.PaymentsResult
 import com.appcoins.payments.arch.PurchaseRequest
-import com.appcoins.payments.arch.UnknownErrorException
 import com.appcoins.payments.arch.emptyPaymentMethod
 import com.appcoins.payments.arch.emptyPurchaseInfoData
 import com.appcoins.payments.arch.emptyPurchaseRequest
 import com.appcoins.payments.manager.presentation.PaymentMethodsUiState
 import com.appcoins.payments.manager.presentation.rememberPaymentMethods
-import com.appcoins.payments.uri_handler.PaymentsCancelledResult
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.AptoideOutlinedText
 import com.aptoide.android.aptoidegames.R
@@ -121,14 +117,14 @@ private fun MainPaymentsView(
     purchaseRequest = purchaseRequest,
     paymentState = paymentState,
     onOutsideClick = {
-      if (paymentState is PaymentMethodsUiState.Finished && paymentState.result is PaymentsItemOwnedResult) {
+      if (paymentState is PaymentMethodsUiState.Finished && paymentState.result is PaymentsResult.ItemAlreadyOwned) {
         onFinish(paymentState.result)
       } else {
         genericAnalytics.sendPaymentMethodsDismissedEvent(
           packageName = purchaseRequest.domain,
           productInfoData = productInfo,
         )
-        onFinish(PaymentsCancelledResult)
+        onFinish(PaymentsResult.UserCanceled())
       }
     },
     onPaymentMethodClick = { paymentMethod ->
@@ -416,8 +412,8 @@ class PaymentMethodsUiStateProvider : PreviewParameterProvider<PaymentMethodsUiS
   override val values: Sequence<PaymentMethodsUiState> = sequenceOf(
     PaymentMethodsUiState.Ready(listOf(emptyPaymentMethod, emptyPaymentMethod)),
     PaymentMethodsUiState.Loading,
-    PaymentMethodsUiState.Finished(UnknownErrorException()),
-    PaymentMethodsUiState.Finished(ConnectionFailedException()),
-    PaymentMethodsUiState.Finished(PaymentsItemOwnedResult(emptyPurchaseInfoData)),
+    PaymentMethodsUiState.Finished(PaymentsResult.Error()),
+    PaymentMethodsUiState.Finished(PaymentsResult.ConnectionFailed()),
+    PaymentMethodsUiState.Finished(PaymentsResult.ItemAlreadyOwned(emptyPurchaseInfoData)),
   )
 }

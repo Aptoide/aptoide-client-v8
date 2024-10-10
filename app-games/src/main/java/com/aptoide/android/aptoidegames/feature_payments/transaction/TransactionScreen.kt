@@ -18,15 +18,10 @@ import androidx.navigation.navArgument
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.PreviewLandscapeDark
 import cm.aptoide.pt.extensions.ScreenData
-import com.appcoins.payments.arch.ConnectionFailedException
-import com.appcoins.payments.arch.PaymentsErrorResult
 import com.appcoins.payments.arch.PaymentsResult
-import com.appcoins.payments.arch.PaymentsSuccessResult
 import com.appcoins.payments.arch.PurchaseRequest
-import com.appcoins.payments.arch.UnknownErrorException
 import com.appcoins.payments.manager.presentation.TransactionUIState
 import com.appcoins.payments.manager.presentation.rememberOngoingTransactionUIState
-import com.appcoins.payments.uri_handler.PaymentsCancelledResult
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.SupportActivity
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
@@ -73,7 +68,7 @@ fun ongoingTransactionScreen(
   )
 
   BackHandler {
-    onFinish(PaymentsCancelledResult)
+    onFinish(PaymentsResult.UserCanceled())
   }
 }
 
@@ -96,14 +91,14 @@ private fun BuildOngoingTransactionScreen(
     when (uiState) {
       is TransactionUIState.Finished -> {
         when (val result = uiState.result) {
-          is PaymentsErrorResult -> {
+          is PaymentsResult.Error -> {
             genericAnalytics.sendPaymentErrorEvent(
               transaction = transaction,
               errorCode = result.message
             )
           }
 
-          is PaymentsSuccessResult -> {
+          is PaymentsResult.Success -> {
             genericAnalytics.sendPaymentSuccessEvent(transaction = transaction)
             delay(3000)
             if (!finished) onFinish(result)
@@ -119,7 +114,7 @@ private fun BuildOngoingTransactionScreen(
   OngoingTransactionScreen(
     viewModelState = uiState,
     onClick = {
-      if (uiState is TransactionUIState.Finished && uiState.result is PaymentsSuccessResult) {
+      if (uiState is TransactionUIState.Finished && uiState.result is PaymentsResult.Success) {
         onFinish(uiState.result)
         finished = true
       }
@@ -131,8 +126,8 @@ private fun BuildOngoingTransactionScreen(
       )
       val result = (uiState as? TransactionUIState.Finished)
         ?.result
-        ?.takeIf { it is PaymentsSuccessResult }
-        ?: PaymentsCancelledResult
+        ?.takeIf { it is PaymentsResult.Success }
+        ?: PaymentsResult.UserCanceled()
       onFinish(result)
       finished = true
     },
@@ -161,8 +156,8 @@ private fun OngoingTransactionScreen(
       )
 
       is TransactionUIState.Finished -> when (viewModelState.result) {
-        is PaymentsSuccessResult -> SuccessView()
-        is ConnectionFailedException -> TransactionNoConnectionScreen(viewModelState.reload)
+        is PaymentsResult.Success -> SuccessView()
+        is PaymentsResult.ConnectionFailed -> TransactionNoConnectionScreen(viewModelState.reload)
         else -> TransactionErrorScreen(onContactUs)
       }
     }
@@ -227,8 +222,8 @@ private fun OngoingPaymentScreenLandscapePreview(
 private class TransactionUIStateProvider : PreviewParameterProvider<TransactionUIState> {
   override val values: Sequence<TransactionUIState> = sequenceOf(
     TransactionUIState.Processing,
-    TransactionUIState.Finished(PaymentsSuccessResult()),
-    TransactionUIState.Finished(ConnectionFailedException()),
-    TransactionUIState.Finished(UnknownErrorException()),
+    TransactionUIState.Finished(PaymentsResult.Success()),
+    TransactionUIState.Finished(PaymentsResult.ConnectionFailed()),
+    TransactionUIState.Finished(PaymentsResult.Error()),
   )
 }

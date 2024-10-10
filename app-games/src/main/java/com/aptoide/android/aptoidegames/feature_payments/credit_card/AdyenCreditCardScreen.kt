@@ -41,11 +41,9 @@ import cm.aptoide.pt.extensions.PreviewLight
 import cm.aptoide.pt.extensions.ScreenData
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardView
-import com.appcoins.payments.arch.ConnectionFailedException
 import com.appcoins.payments.arch.PaymentsResult
 import com.appcoins.payments.methods.adyen.presentation.AdyenCreditCardUiState
 import com.appcoins.payments.methods.adyen.presentation.rememberAdyenCreditCardUIState
-import com.appcoins.payments.uri_handler.PaymentsCancelledResult
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.SupportActivity
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
@@ -100,7 +98,7 @@ fun creditCardPaymentScreen(
 
   BackHandler(
     enabled = isPreSelected,
-    onBack = { onFinish(PaymentsCancelledResult) }
+    onBack = { onFinish(PaymentsResult.UserCanceled()) }
   )
 }
 
@@ -127,7 +125,7 @@ private fun BuildAdyenCreditCardScreen(
     when (uiState) {
       is AdyenCreditCardUiState.Error -> {
         when (uiState.result) {
-          is ConnectionFailedException -> genericAnalytics.sendPaymentErrorEvent(
+          is PaymentsResult.ConnectionFailed -> genericAnalytics.sendPaymentErrorEvent(
             paymentMethod = paymentMethod,
             errorCode = "No network",
           )
@@ -171,7 +169,9 @@ private fun BuildAdyenCreditCardScreen(
       }
     },
     onOutsideClick = {
-      onFinish((uiState as? AdyenCreditCardUiState.Success)?.result ?: PaymentsCancelledResult)
+      onFinish(
+        (uiState as? AdyenCreditCardUiState.Success)?.result ?: PaymentsResult.UserCanceled()
+      )
       genericAnalytics.sendPaymentDismissedEvent(
         paymentMethod = paymentMethod,
         context = uiState.paymentContext,
@@ -237,13 +237,13 @@ private fun BuildAdyenCreditCardScreen(
 
 @Composable
 private fun AdyenCreditCardErrorScreen(
-  error: Throwable,
+  error: PaymentsResult.Error,
   onRetryClick: () -> Unit,
   onContactUs: () -> Unit,
 ) {
   val configuration = LocalConfiguration.current
 
-  if (error is ConnectionFailedException) {
+  if (error is PaymentsResult.ConnectionFailed) {
     when (configuration.orientation) {
       Configuration.ORIENTATION_LANDSCAPE -> LandscapePaymentsNoConnectionView(
         onRetryClick = onRetryClick

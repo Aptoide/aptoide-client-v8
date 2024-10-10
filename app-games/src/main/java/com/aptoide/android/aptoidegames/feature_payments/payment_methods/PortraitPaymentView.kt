@@ -10,9 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
-import com.appcoins.payments.arch.ConnectionFailedException
 import com.appcoins.payments.arch.PaymentMethod
-import com.appcoins.payments.arch.PaymentsItemOwnedResult
+import com.appcoins.payments.arch.PaymentsResult
 import com.appcoins.payments.arch.PurchaseRequest
 import com.appcoins.payments.arch.emptyPurchaseRequest
 import com.appcoins.payments.manager.presentation.PaymentMethodsUiState
@@ -49,11 +48,11 @@ fun PortraitPaymentView(
   val hasPreselectedPaymentMethod = rememberHasPreselectedPaymentMethod()
   when (paymentState) {
     is PaymentMethodsUiState.Finished -> when (paymentState.result) {
-      is ConnectionFailedException -> PortraitPaymentsNoConnectionView(
+      is PaymentsResult.ConnectionFailed -> PortraitPaymentsNoConnectionView(
         onRetryClick = paymentState.reload
       )
 
-      is PaymentsItemOwnedResult -> PortraitPaymentsItemOwnedView(
+      is PaymentsResult.ItemAlreadyOwned -> PortraitPaymentsItemOwnedView(
         onGoBackToGameCLick = onGoBackToGameCLick,
         onContactUsClick = onContactUsClick
       )

@@ -11,9 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewLandscapeDark
-import com.appcoins.payments.arch.ConnectionFailedException
 import com.appcoins.payments.arch.PaymentMethod
-import com.appcoins.payments.arch.PaymentsItemOwnedResult
+import com.appcoins.payments.arch.PaymentsResult
 import com.appcoins.payments.arch.PurchaseRequest
 import com.appcoins.payments.arch.emptyPurchaseRequest
 import com.appcoins.payments.manager.presentation.PaymentMethodsUiState
@@ -51,11 +50,11 @@ fun LandscapePaymentView(
   val hasPreselectedPaymentMethod = rememberHasPreselectedPaymentMethod()
   when (paymentState) {
     is PaymentMethodsUiState.Finished -> when (paymentState.result) {
-      is ConnectionFailedException -> LandscapePaymentsNoConnectionView(
+      is PaymentsResult.ConnectionFailed -> LandscapePaymentsNoConnectionView(
         onRetryClick = paymentState.reload
       )
 
-      is PaymentsItemOwnedResult -> LandscapePaymentsItemOwnedView(
+      is PaymentsResult.ItemAlreadyOwned -> LandscapePaymentsItemOwnedView(
         onGoBackToGameCLick = onGoBackToGameCLick,
         onContactUsClick = onContactUsClick
       )

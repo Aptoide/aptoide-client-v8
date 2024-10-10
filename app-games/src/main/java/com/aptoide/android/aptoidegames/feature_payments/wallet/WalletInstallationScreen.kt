@@ -39,7 +39,6 @@ import cm.aptoide.pt.feature_home.domain.BundleSource
 import com.appcoins.payments.arch.PaymentsResult
 import com.appcoins.payments.arch.PurchaseRequest
 import com.appcoins.payments.arch.emptyPurchaseRequest
-import com.appcoins.payments.uri_handler.PaymentsCancelledResult
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.dto.BundleMeta
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
@@ -143,7 +142,7 @@ private fun PaymentsWalletInstallationBottomSheetView(
           context = PaymentContext.SECOND_STEP,
         )
       }
-      onFinish(PaymentsCancelledResult)
+      onFinish(PaymentsResult.UserCanceled())
     }
   )
 }
