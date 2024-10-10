@@ -34,6 +34,9 @@
   <!-- Notifications -->
   <string name="notifications_context_title">باخبر شوید!</string>
   <string name="notification_installing_title">در حال نصب</string>
+  <string name="notification_preparing_title">Preparing</string>
+  <string name="notification_ready_install_title">An app is ready to be installed!</string>
+  <string name="notification_ready_install_body">Tap here to install %s.</string>
   <string name="notification_waiting_body">در انتظار دانلود</string>
   <string name="notification_1_installed_title">نصب شده</string>
   <string name="notification_downloading_body">درحال دانلود %1$s%% از %2$s</string>
