@@ -34,6 +34,9 @@
   <!-- Notifications -->
   <string name="notifications_context_title">सूचना मिळवा!</string>
   <string name="notification_installing_title">इंस्टॉल करत आहे</string>
+  <string name="notification_preparing_title">Preparing</string>
+  <string name="notification_ready_install_title">An app is ready to be installed!</string>
+  <string name="notification_ready_install_body">Tap here to install %s.</string>
   <string name="notification_waiting_body">डाऊनलोडसाठी थांबलो आहोत</string>
   <string name="notification_1_installed_title">इन्स्टॉल केलेले</string>
   <string name="notification_downloading_body">%2$s पैकी %1$s%% डाऊनलोड होत आहे</string>
