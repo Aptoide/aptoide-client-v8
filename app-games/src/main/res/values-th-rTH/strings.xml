@@ -34,6 +34,9 @@
   <!-- Notifications -->
   <string name="notifications_context_title">รับการแจ้งเตือน!</string>
   <string name="notification_installing_title">กำลังติดตั้ง</string>
+  <string name="notification_preparing_title">Preparing</string>
+  <string name="notification_ready_install_title">An app is ready to be installed!</string>
+  <string name="notification_ready_install_body">Tap here to install %s.</string>
   <string name="notification_waiting_body">กำลังรอเพื่อดาวโหลด</string>
   <string name="notification_1_installed_title">ติดตั้ง</string>
   <string name="notification_downloading_body">กำหลังโหลด%1$s%% ของ %2$s</string>
