@@ -34,6 +34,9 @@
   <!-- Notifications -->
   <string name="notifications_context_title">Primește notificări!</string>
   <string name="notification_installing_title">Se instalează</string>
+  <string name="notification_preparing_title">Preparing</string>
+  <string name="notification_ready_install_title">An app is ready to be installed!</string>
+  <string name="notification_ready_install_body">Tap here to install %s.</string>
   <string name="notification_waiting_body">Se așteaptă descărcarea</string>
   <string name="notification_1_installed_title">Instalat</string>
   <string name="notification_downloading_body">Se descarcă %1$s%% din %2$s</string>
