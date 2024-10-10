@@ -34,6 +34,9 @@
   <!-- Notifications -->
   <string name="notifications_context_title">Dapatkan makluman!</string>
   <string name="notification_installing_title">Memasang</string>
+  <string name="notification_preparing_title">Preparing</string>
+  <string name="notification_ready_install_title">An app is ready to be installed!</string>
+  <string name="notification_ready_install_body">Tap here to install %s.</string>
   <string name="notification_waiting_body">Menunggu muat turun</string>
   <string name="notification_1_installed_title">Telah Dipasang</string>
   <string name="notification_downloading_body">Memuat turun %1$s%% daripada %2$s</string>
