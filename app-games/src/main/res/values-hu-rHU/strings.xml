@@ -34,6 +34,9 @@
   <!-- Notifications -->
   <string name="notifications_context_title">Kapj értesítéseket!</string>
   <string name="notification_installing_title">Telepítés folyamatban</string>
+  <string name="notification_preparing_title">Preparing</string>
+  <string name="notification_ready_install_title">An app is ready to be installed!</string>
+  <string name="notification_ready_install_body">Tap here to install %s.</string>
   <string name="notification_waiting_body">Letöltésre vár</string>
   <string name="notification_1_installed_title">Telepítve</string>
   <string name="notification_downloading_body">%2$s/%1$s%% letöltése</string>
