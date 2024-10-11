@@ -12,6 +12,11 @@ import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.retry
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.ResponseBody
+import okhttp3.ResponseBody.Companion.asResponseBody
+import okio.Buffer
+import retrofit2.HttpException
+import retrofit2.Response
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -55,28 +60,40 @@ class DownloaderRepository @Inject constructor(
         .build()
 
       okHttpClient.newCall(request).execute().use { response ->
-        if (!response.isSuccessful) throw IOException("Unexpected code $response")
-        response.body?.run {
-          byteStream().use { inputStream ->
-            destinationFile.createNewFile()
-            FileOutputStream(destinationFile, partialFileSize > 0).use { outputStream ->
-              val totalBytes = partialFileSize + contentLength()
-              inputStream.copyWithProgressTo(outputStream).collect { bytesCopied ->
-                emit(((partialFileSize + bytesCopied) * 0.98) / totalBytes)
-              }
+        val body = response
+          .takeIf { it.isSuccessful }
+          ?.body
+          ?: throw HttpException(
+            Response.error<Any>(
+              response.body?.toBuffered() ?: throw IOException("No body present"),
+              response
+            )
+          )
+        val totalBytes = partialFileSize + body.contentLength()
+        body.byteStream().use { inputStream ->
+          destinationFile.createNewFile()
+          FileOutputStream(destinationFile, partialFileSize > 0).use { outputStream ->
+            inputStream.copyWithProgressTo(outputStream).collect { bytesCopied ->
+              emit(((partialFileSize + bytesCopied) * 0.98) / totalBytes)
             }
           }
-          if (destinationFile.checkMd5(installationFile.md5)) {
-            emit(1.0)
-            return@flow
-          }
+        }
+        if (!destinationFile.checkMd5(installationFile.md5)) {
           destinationFile.delete()
           throw IOException("MD5 check failed")
-        } ?: throw IOException("No body present")
+        }
+        emit(1.0)
       }
     }
       .distinctUntilChanged()
       .retry(retries = RETRY_TIMES)
       .onCompletion { it?.printStackTrace() }
   }
+}
+
+// Copied from the Retrofit's package private Utils and turned into an extension function.
+@Throws(IOException::class) fun ResponseBody.toBuffered(): ResponseBody {
+  val buffer = Buffer()
+  source().readAll(buffer)
+  return buffer.asResponseBody(contentType(), contentLength())
 }
