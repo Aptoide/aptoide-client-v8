@@ -5,6 +5,7 @@ import cm.aptoide.pt.install_manager.workers.PackageDownloader
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
+import retrofit2.HttpException
 import java.util.concurrent.CancellationException
 
 class DownloadProbe(
@@ -40,7 +41,8 @@ class DownloadProbe(
             packageName = packageName,
             analyticsPayload = analyticsPayload,
             errorMessage = it.message,
-            errorType = it::class.simpleName
+            errorType = it::class.simpleName,
+            errorCode = (it as? HttpException)?.code()
           )
         }
       }

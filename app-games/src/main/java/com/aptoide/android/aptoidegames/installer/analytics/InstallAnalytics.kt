@@ -113,6 +113,7 @@ class InstallAnalytics(
     analyticsPayload: AnalyticsPayload?,
     errorMessage: String?,
     errorType: String?,
+    errorCode: Int?,
   ) {
     genericAnalytics.sendDownloadErrorEvent(
       packageName = packageName,
@@ -130,6 +131,7 @@ class InstallAnalytics(
             P_CONTEXT to it?.context,
             P_ERROR_MESSAGE to errorMessage,
             P_ERROR_TYPE to errorType,
+            P_ERROR_HTTP_CODE to errorCode,
             P_PREVIOUS_CONTEXT to it?.previousContext,
             P_STORE to it?.store,
             P_TAG to it?.bundleMeta?.tag,
@@ -313,5 +315,6 @@ class InstallAnalytics(
     private const val P_TRUSTED_BADGE = "trusted_badge"
     private const val P_ERROR_MESSAGE = "error_message"
     private const val P_ERROR_TYPE = "error_type"
+    private const val P_ERROR_HTTP_CODE = "error_http_code"
   }
 }
