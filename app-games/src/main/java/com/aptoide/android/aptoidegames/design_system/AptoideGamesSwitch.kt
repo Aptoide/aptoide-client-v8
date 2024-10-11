@@ -17,7 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FractionalThreshold
 import androidx.compose.material.rememberSwipeableState
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.material.swipeable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -123,7 +123,7 @@ fun AptoideGamesSwitch(
         .clip(RoundedCornerShape(50))
         .indication(
           interactionSource = interactionSource,
-          indication = rememberRipple(bounded = false, radius = 90.dp)
+          indication = ripple(bounded = false, radius = 90.dp)
         )
         .background(color)
     )

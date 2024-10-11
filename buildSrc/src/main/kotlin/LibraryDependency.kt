@@ -51,7 +51,7 @@ object LibraryVersion {
   const val COIL = "2.4.0"
   const val ROOM = "2.5.1"
   const val ACTIVITY_COMPOSE = "1.7.1"
-  const val COMPOSE = "1.5.4"
+  const val COMPOSE = "1.7.3"
   const val COMPOSE_LIFECYCLE = "2.7.0"
   const val VIEWMODEL_COMPOSE = "2.6.1"
   const val NAVIGATION_COMPOSE = "2.7.5"
