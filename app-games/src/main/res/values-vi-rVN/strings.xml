@@ -34,6 +34,9 @@
   <!-- Notifications -->
   <string name="notifications_context_title">Đã nhận thông báo!</string>
   <string name="notification_installing_title">Đang cài đặt</string>
+  <string name="notification_preparing_title">Preparing</string>
+  <string name="notification_ready_install_title">An app is ready to be installed!</string>
+  <string name="notification_ready_install_body">Tap here to install %s.</string>
   <string name="notification_waiting_body">Đang chờ tải xuống</string>
   <string name="notification_1_installed_title">Đã cài đặt</string>
   <string name="notification_downloading_body">Đang tải xuống %1$s%% trên %2$s</string>
@@ -171,6 +174,7 @@
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Bây giờ bạn có thể hoàn tất việc mua hàng của mình.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">Ví AppCoins hiện đã được cài đặt!</string>
   <string name="storage_access_permission_request_message">Cho phép truy cập vào bộ nhớ điện thoại của bạn để chúng tôi có thể tải xuống và cài đặt ứng dụng này.</string>
+  <string name="downloads_number_title">%s downloads</string>
   <!-- Payment Errors-->
   <string name="payments_error_not_enough_balance_body">Bạn không có đủ số dư</string>
   <string name="payments_error_old_card_title">Có vẻ như bạn đã đăng ký thẻ này từ lâu rồi!</string>

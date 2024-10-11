@@ -34,6 +34,9 @@
   <!-- Notifications -->
   <string name="notifications_context_title">Soyez notifiés !</string>
   <string name="notification_installing_title">Installation</string>
+  <string name="notification_preparing_title">Preparing</string>
+  <string name="notification_ready_install_title">An app is ready to be installed!</string>
+  <string name="notification_ready_install_body">Tap here to install %s.</string>
   <string name="notification_waiting_body">En attente de téléchargement</string>
   <string name="notification_1_installed_title">Installée</string>
   <string name="notification_downloading_body">Téléchargement %1$s%% de %2$s</string>
@@ -171,6 +174,7 @@
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Vous pouvez maintenant terminer votre achat.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">Le portefeuille AppCoins est installé !</string>
   <string name="storage_access_permission_request_message">Autorisez l\'accès au stockage de votre téléphone pour que nous puissions télécharger et installer cette application.</string>
+  <string name="downloads_number_title">%s downloads</string>
   <!-- Payment Errors-->
   <string name="payments_error_not_enough_balance_body">Vous n\'avez pas assez de solde</string>
   <string name="payments_error_old_card_title">Il semble que vous ayez enregistré cette carte il y a longtemps !</string>

@@ -34,6 +34,9 @@
   <!-- Notifications -->
   <string name="notifications_context_title">Dapatkan makluman!</string>
   <string name="notification_installing_title">Memasang</string>
+  <string name="notification_preparing_title">Preparing</string>
+  <string name="notification_ready_install_title">An app is ready to be installed!</string>
+  <string name="notification_ready_install_body">Tap here to install %s.</string>
   <string name="notification_waiting_body">Menunggu muat turun</string>
   <string name="notification_1_installed_title">Telah Dipasang</string>
   <string name="notification_downloading_body">Memuat turun %1$s%% daripada %2$s</string>
@@ -171,6 +174,7 @@
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Kini anda boleh lengkapkan pembelian anda.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">Dompet AppCoins kini terpasang!</string>
   <string name="storage_access_permission_request_message">Benarkan akses ke storan telefon supaya boleh muat turun dan pasang aplikasi ini.</string>
+  <string name="downloads_number_title">%s downloads</string>
   <!-- Payment Errors-->
   <string name="payments_error_not_enough_balance_body">Tidak cukup baki</string>
   <string name="payments_error_old_card_title">Nampaknya anda telah daftar kad ini lama dahulu!</string>

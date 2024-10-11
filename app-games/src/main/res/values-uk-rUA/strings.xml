@@ -34,6 +34,9 @@
   <!-- Notifications -->
   <string name="notifications_context_title">Отримувати сповіщення!</string>
   <string name="notification_installing_title">Встановлення</string>
+  <string name="notification_preparing_title">Preparing</string>
+  <string name="notification_ready_install_title">An app is ready to be installed!</string>
+  <string name="notification_ready_install_body">Tap here to install %s.</string>
   <string name="notification_waiting_body">Очікує на завантаження</string>
   <string name="notification_1_installed_title">Встановлено</string>
   <string name="notification_downloading_body">Завантаження %1$s%% з %2$s</string>
@@ -171,6 +174,7 @@
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Тепер ви можете завершити покупку.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">AppCoins Wallet встановлено!</string>
   <string name="storage_access_permission_request_message">Надайте доступ до пам\'яті вашого телефону, щоб ми могли завантажити та встановити цей додаток.</string>
+  <string name="downloads_number_title">%s downloads</string>
   <!-- Payment Errors-->
   <string name="payments_error_not_enough_balance_body">На вашому балансі не достатньо коштів</string>
   <string name="payments_error_old_card_title">Здається, ви зареєстрували цю картку вже давно!</string>

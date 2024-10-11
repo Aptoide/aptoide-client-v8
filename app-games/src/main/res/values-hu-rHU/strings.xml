@@ -34,6 +34,9 @@
   <!-- Notifications -->
   <string name="notifications_context_title">Kapj értesítéseket!</string>
   <string name="notification_installing_title">Telepítés folyamatban</string>
+  <string name="notification_preparing_title">Preparing</string>
+  <string name="notification_ready_install_title">An app is ready to be installed!</string>
+  <string name="notification_ready_install_body">Tap here to install %s.</string>
   <string name="notification_waiting_body">Letöltésre vár</string>
   <string name="notification_1_installed_title">Telepítve</string>
   <string name="notification_downloading_body">%2$s/%1$s%% letöltése</string>
@@ -171,6 +174,7 @@
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Most befejezheted a vásárlást.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">Az AppCoins Wallet telepítése sikeres!</string>
   <string name="storage_access_permission_request_message">Az alkalmazás letöltéséhez és telepítéséhez engedélyezd a hozzáférést a telefon tárhelyéhez.</string>
+  <string name="downloads_number_title">%s downloads</string>
   <!-- Payment Errors-->
   <string name="payments_error_not_enough_balance_body">Nincs elég pénzed</string>
   <string name="payments_error_old_card_title">Úgy tűnik, rég regisztráltad a kártyád!</string>
