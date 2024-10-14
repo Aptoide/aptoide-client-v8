@@ -165,7 +165,7 @@ private fun NavigationGraph(
       screenData = appViewScreen()
     )
 
-    animatedComposable(
+    staticComposable(
       navigate = navController::navigateTo,
       goBack = navController::navigateUp,
       screenData = searchScreen()
