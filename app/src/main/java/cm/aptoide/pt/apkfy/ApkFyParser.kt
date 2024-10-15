@@ -27,6 +27,7 @@ class ApkFyParser(
       if (shouldRunApkfy) {
         try {
           val apkfyModel = apkfyManager.getApkfy()
+          saveGuestUID(apkfyModel.guestUid)
           updateApkfy(apkfyModel)
           setApkfyUtmProperties(apkfyModel)
         } catch (throwable: Throwable) {
@@ -34,6 +35,10 @@ class ApkFyParser(
         }
       }
     }
+  }
+
+  private fun saveGuestUID(guestUid: String) {
+    securePreferences.edit().putString(MMP_GUEST_UID, guestUid).apply()
   }
 
   private fun setApkfyUtmProperties(apkfyModel: ApkfyModel) {
@@ -108,5 +113,6 @@ class ApkFyParser(
     const val APKFY_PACKAGE_NO_APP = "APKFY_BUT_NO_APP"
     const val APKFY_PACKAGE_APKFY_NO_UTM = "APKFY_BUT_NO_UTM"
     const val APKFY_PACKAGE_NO_APKFY = "NO_APKFY"
+    const val MMP_GUEST_UID = "MMP_GUEST_UID"
   }
 }

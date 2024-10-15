@@ -2266,8 +2266,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides CampaignManager provideCampaignManager(
-      CampaignRepository campaignRepository) {
-    return new CampaignManager(campaignRepository);
+      CampaignRepository campaignRepository,
+      @Named("secureShared") SharedPreferences securePreferences) {
+    return new CampaignManager(campaignRepository, securePreferences);
   }
 
   @Singleton @Provides CampaignRepository provideCampaignRepository(
