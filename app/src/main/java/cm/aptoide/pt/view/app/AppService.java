@@ -3,8 +3,7 @@ package cm.aptoide.pt.view.app;
 import android.content.SharedPreferences;
 import androidx.annotation.NonNull;
 import cm.aptoide.pt.aab.SplitsMapper;
-import cm.aptoide.pt.app.mmpcampaigns.Campaign;
-import cm.aptoide.pt.app.mmpcampaigns.CampaignUrl;
+import cm.aptoide.pt.app.mmpcampaigns.CampaignMapper;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
@@ -14,8 +13,6 @@ import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.File;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.ListAppVersions;
-import cm.aptoide.pt.dataprovider.model.v7.listapp.Urls;
-import cm.aptoide.pt.dataprovider.model.v7.listapp.Urls.Url;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
@@ -45,6 +42,7 @@ public class AppService {
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
   private final SplitsMapper splitsMapper;
+  private final CampaignMapper campaignMapper;
   private boolean loadingApps;
   private boolean loadingSimilarApps;
   private boolean loadingAppcSimilarApps;
@@ -52,7 +50,8 @@ public class AppService {
   public AppService(StoreCredentialsProvider storeCredentialsProvider,
       BodyInterceptor<BaseBody> bodyInterceptorV7, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences, SplitsMapper splitsMapper) {
+      SharedPreferences sharedPreferences, SplitsMapper splitsMapper,
+      CampaignMapper campaignMapper) {
     this.storeCredentialsProvider = storeCredentialsProvider;
     this.bodyInterceptorV7 = bodyInterceptorV7;
     this.httpClient = httpClient;
@@ -60,6 +59,7 @@ public class AppService {
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
     this.splitsMapper = splitsMapper;
+    this.campaignMapper = campaignMapper;
   }
 
   private Single<AppsList> loadApps(long storeId, boolean bypassCache, int offset, int limit) {
@@ -246,30 +246,11 @@ public class AppService {
               .getSplits()) : Collections.emptyList(), app.hasSplits() ? app.getAab()
               .getRequiredSplits() : Collections.emptyList(),
               isBeta(file.getTags(), file.getVername()),
-              getCategory(getApp.getNodes()), mapCampaign(app.getUrls()));
+              getCategory(getApp.getNodes()), campaignMapper.mapCampaign(app.getUrls()));
       return Observable.just(new DetailedAppRequestResult(detailedApp));
     } else {
       return Observable.error(new IllegalStateException("Could not obtain request from server."));
     }
-  }
-
-  private Campaign mapCampaign(Urls urls) {
-    if (urls != null) {
-      return new Campaign(mapCampaignUrlList(urls.getImpression()),
-          mapCampaignUrlList(urls.getClick()),
-          mapCampaignUrlList(urls.getDownload()));
-    } else {
-      return new Campaign(Collections.emptyList(), Collections.emptyList(),
-          Collections.emptyList());
-    }
-  }
-
-  private List<CampaignUrl> mapCampaignUrlList(List<Url> urlList) {
-    List<CampaignUrl> campaignUrlList = new ArrayList<>();
-    for (Url url : urlList) {
-      campaignUrlList.add(new CampaignUrl(url.getName(), url.getUrl()));
-    }
-    return campaignUrlList;
   }
 
   private String getCategory(GetApp.Nodes appNodes) {

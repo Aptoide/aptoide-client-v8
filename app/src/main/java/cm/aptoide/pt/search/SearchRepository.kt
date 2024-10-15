@@ -2,13 +2,10 @@ package cm.aptoide.pt.search
 
 import android.content.SharedPreferences
 import cm.aptoide.pt.aab.Split
-import cm.aptoide.pt.app.mmpcampaigns.Campaign
-import cm.aptoide.pt.app.mmpcampaigns.CampaignUrl
+import cm.aptoide.pt.app.mmpcampaigns.CampaignMapper
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator
 import cm.aptoide.pt.dataprovider.model.v7.Malware
-import cm.aptoide.pt.dataprovider.model.v7.listapp.Urls
-import cm.aptoide.pt.dataprovider.model.v7.listapp.Urls.Url
 import cm.aptoide.pt.dataprovider.model.v7.search.ListSearchApps
 import cm.aptoide.pt.dataprovider.model.v7.search.SearchApp
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor
@@ -38,7 +35,8 @@ class SearchRepository(
   val converterFactory: Converter.Factory,
   val tokenInvalidator: TokenInvalidator,
   val sharedPreferences: SharedPreferences,
-  val oemidProvider: OemidProvider
+  val oemidProvider: OemidProvider,
+  val campaignMapper: CampaignMapper
 ) {
 
   private var cachedSearchResults: SearchResult? = null
@@ -251,36 +249,38 @@ class SearchRepository(
     }
 
     return SearchAppResult(
-      app.file.malware.rank.ordinal, app.icon, app.store.name,
-      app.store
-        .id,
-      app.store.appearance.theme, app.modified.time, app.stats.rating.avg,
-      app.stats.pdownloads.toLong(), app.name, app.packageName,
-      app.file.md5sum, app.id, app.file.vercode, app.file.vername, app.file.path,
-      app.file.pathAlt, app.file.malware, app.size, app.hasVersions(), app.hasBilling(),
-      app.hasAdvertising(), oemid, isHighlighted, app.obb, requiredSplits,
-      mapSplits(splits), null, null, app.store.name.equals("catappult"), "", mapCampaign(app.urls)
+      app.file.malware.rank.ordinal,
+      app.icon,
+      app.store.name,
+      app.store.id,
+      app.store.appearance.theme,
+      app.modified.time,
+      app.stats.rating.avg,
+      app.stats.pdownloads.toLong(),
+      app.name,
+      app.packageName,
+      app.file.md5sum,
+      app.id,
+      app.file.vercode,
+      app.file.vername,
+      app.file.path,
+      app.file.pathAlt,
+      app.file.malware,
+      app.size,
+      app.hasVersions(),
+      app.hasBilling(),
+      app.hasAdvertising(),
+      oemid,
+      isHighlighted,
+      app.obb,
+      requiredSplits,
+      mapSplits(splits),
+      null,
+      null,
+      app.store.name.equals("catappult"),
+      "",
+      campaignMapper.mapCampaign(app.urls)
     )
-  }
-
-  private fun mapCampaign(urls: Urls?): Campaign {
-    return if (urls != null) {
-      Campaign(
-        impression = mapCampaignUrlList(urls.impression ?: emptyList()),
-        click = mapCampaignUrlList(urls.click ?: emptyList()),
-        download = mapCampaignUrlList(urls.download ?: emptyList())
-      )
-    } else {
-      Campaign(impression = emptyList(), click = emptyList(), download = emptyList())
-    }
-  }
-
-  private fun mapCampaignUrlList(urlList: List<Url>): List<CampaignUrl> {
-    val campaignUrlList: MutableList<CampaignUrl> = java.util.ArrayList()
-    for (url in urlList) {
-      campaignUrlList.add(CampaignUrl(url.name, url.url))
-    }
-    return campaignUrlList
   }
 
   private fun mapSplits(splits: List<cm.aptoide.pt.dataprovider.model.v7.Split>?): List<Split> {

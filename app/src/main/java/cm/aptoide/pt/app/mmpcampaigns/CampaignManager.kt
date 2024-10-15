@@ -8,8 +8,8 @@ class CampaignManager(private val campaignRepository: CampaignRepository) {
 
   fun convertCampaign(campaign: Campaign, medium: String): Completable {
     return rxCompletable {
-      campaign.download.filter { it.name == "aptoide-mmp" }
-        .forEach { campaignRepository.knock(it.url.injectCampaignAttributes(medium)) }
+      campaign.download?.filter { it.name == "aptoide-mmp" }
+        ?.forEach { campaignRepository.knock(it.url.injectCampaignAttributes(medium)) }
     }
   }
 }

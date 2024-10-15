@@ -104,6 +104,7 @@ import cm.aptoide.pt.app.migration.AppcMigrationPersistence;
 import cm.aptoide.pt.app.migration.AppcMigrationRepository;
 import cm.aptoide.pt.app.mmpcampaigns.CampaignApiRepository;
 import cm.aptoide.pt.app.mmpcampaigns.CampaignManager;
+import cm.aptoide.pt.app.mmpcampaigns.CampaignMapper;
 import cm.aptoide.pt.app.mmpcampaigns.CampaignRepository;
 import cm.aptoide.pt.appview.PreferencesPersister;
 import cm.aptoide.pt.autoupdate.Service;
@@ -1610,10 +1611,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       StoreCredentialsProvider storeCredentialsProvider, @Named("mature-pool-v7")
   BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
-      @Named("default") SharedPreferences sharedPreferences, SplitsMapper splitsMapper) {
+      @Named("default") SharedPreferences sharedPreferences, SplitsMapper splitsMapper,
+      CampaignMapper campaignMapper) {
 
     return new AppService(storeCredentialsProvider, bodyInterceptorPoolV7, okHttpClient,
-        WebService.getDefaultConverter(), tokenInvalidator, sharedPreferences, splitsMapper);
+        WebService.getDefaultConverter(), tokenInvalidator, sharedPreferences, splitsMapper,
+        campaignMapper);
   }
 
   @Singleton @Provides AppCenterRepository providesAppCenterRepository(AppService appService) {
@@ -1851,9 +1854,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences,
-      SplitsMapper splitsMapper) {
+      SplitsMapper splitsMapper, CampaignMapper campaignMapper) {
     return new EditorialService(bodyInterceptorPoolV7, okHttpClient, tokenInvalidator,
-        converterFactory, sharedPreferences, splitsMapper);
+        converterFactory, sharedPreferences, splitsMapper, campaignMapper);
   }
 
   @Singleton @Provides @Named("defaultStoreName") String provideStoreName() {
@@ -2200,10 +2203,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
       @Named("default") SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
-      OemidProvider oemidProvider) {
+      OemidProvider oemidProvider, CampaignMapper campaignMapper) {
     return new SearchRepository(roomStoreRepository, baseBodyBodyInterceptor, okHttpClient,
         converterFactory, tokenInvalidator, sharedPreferences,
-        oemidProvider);
+        oemidProvider, campaignMapper);
   }
 
   @Singleton @Provides FileManager providesFileManager(CacheHelper cacheHelper,
@@ -2270,5 +2273,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides CampaignRepository provideCampaignRepository(
       @Named("default") OkHttpClient httpClient) {
     return new CampaignApiRepository(httpClient);
+  }
+
+  @Singleton @Provides CampaignMapper provideCampaignMapper() {
+    return new CampaignMapper();
   }
 }
