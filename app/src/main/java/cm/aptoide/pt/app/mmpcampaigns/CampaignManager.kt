@@ -19,8 +19,8 @@ fun String.injectCampaignAttributes(medium: String): String {
   newUrl = newUrl.replace("{{OEMID}}", BuildConfig.OEMID)
 
   val appendMap = mutableMapOf<String, String>()
-  appendMap["source"] = "Vanilla"
-  appendMap["medium"] = medium
+  appendMap["utm_source"] = "Vanilla"
+  appendMap["utm_medium"] = medium
 
   val params = appendMap
     .map { "${it.key}=${it.value}" }
