@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import cm.aptoide.pt.extensions.hasPackageInstallsPermission
 import cm.aptoide.pt.extensions.hasWriteExternalStoragePermission
 import cm.aptoide.pt.install_manager.AbortException
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -32,7 +33,7 @@ class InstallPermissionsImpl @Inject constructor(
 ) : InstallPermissions {
 
   override suspend fun checkIfCanInstall() {
-    if (!areInstallationsAllowed()) {
+    if (!context.hasPackageInstallsPermission()) {
       if (userActionLauncher.confirm(UserConfirmation.INSTALL_SOURCE)) {
         userActionLauncher.launchIntent(
           Intent(
@@ -43,13 +44,13 @@ class InstallPermissionsImpl @Inject constructor(
       } else {
         throw AbortException("Not allowed")
       }
-      if (!areInstallationsAllowed()) throw AbortException("Not allowed")
+      if (!context.hasPackageInstallsPermission()) throw AbortException("Not allowed")
     }
   }
 
   override suspend fun checkIfCanWriteExternal() {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
-      //Android is below 11
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+      //Android is below 13
       if (!context.hasWriteExternalStoragePermission()) {
         when (userActionLauncher.checkPermissionState(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
           //Requested permission
@@ -90,7 +91,4 @@ class InstallPermissionsImpl @Inject constructor(
       }
     }
   }
-
-  private fun areInstallationsAllowed(): Boolean =
-    context.packageManager.canRequestPackageInstalls()
 }

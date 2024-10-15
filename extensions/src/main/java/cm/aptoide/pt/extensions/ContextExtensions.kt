@@ -24,6 +24,8 @@ fun Context.hasNotificationsPermission(): Boolean =
 fun Context.hasWriteExternalStoragePermission(): Boolean =
   isAllowed(Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
+fun Context.hasPackageInstallsPermission(): Boolean = packageManager.canRequestPackageInstalls()
+
 @SuppressLint("InlinedApi")
 fun Context.isAllowed(permission: String): Boolean =
   ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
