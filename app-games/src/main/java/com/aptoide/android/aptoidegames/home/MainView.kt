@@ -19,6 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.window.Popup
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import cm.aptoide.pt.extensions.animatedComposable
@@ -127,15 +129,21 @@ fun MainView(navController: NavHostController) {
   }
 }
 
-private const val debounceTime = 2000L
-private var lastNavigationTime = 0L
+private fun NavBackStackEntry.lifecycleIsResumed() =
+  this.lifecycle.currentState == Lifecycle.State.RESUMED
+
+private fun String.getRouteScreenName() = this.substringBefore("/")
+
 fun NavHostController.navigateTo(route: String) {
-  val currentTime = System.currentTimeMillis()
-  val destinationRoute = currentDestination?.route
-  if (destinationRoute != route && (currentTime - lastNavigationTime) >= debounceTime) {
-    lastNavigationTime = currentTime
-    navigate(route)
-  }
+  currentBackStackEntry?.let {
+    if (!it.lifecycleIsResumed()
+      && currentDestination?.route?.getRouteScreenName() == route.getRouteScreenName()
+    ) { //Avoids duplicate navigation events to the same screen
+      return
+    } else {
+      navigate(route)
+    }
+  } ?: navigate(route) //Still navigates as a safe measure in case the currentBackStackEntry is null
 }
 
 @Composable
