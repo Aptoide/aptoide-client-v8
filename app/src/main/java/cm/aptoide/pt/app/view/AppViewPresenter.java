@@ -902,7 +902,7 @@ public class AppViewPresenter implements Presenter {
 
                     case R.id.menu_item_share:
                       view.defaultShare(appViewViewModel.getAppName(),
-                          appViewViewModel.getUniqueName() + "en.aptoide.com/");
+                          appViewViewModel.getUniqueName() + ".en.aptoide.com/");
                       break;
 
                     case R.id.menu_remote_install:
