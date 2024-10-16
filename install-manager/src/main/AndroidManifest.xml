@@ -6,5 +6,5 @@
       android:name="android.permission.QUERY_ALL_PACKAGES"
       tools:ignore="QueryAllPackagesPermission" />
 
-  <application android:allowBackup="true" />
+  <application android:allowBackup="false" />
 </manifest>
