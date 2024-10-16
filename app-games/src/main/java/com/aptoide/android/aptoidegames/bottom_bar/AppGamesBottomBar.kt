@@ -3,10 +3,12 @@ package com.aptoide.android.aptoidegames.bottom_bar
 import android.annotation.SuppressLint
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
@@ -172,3 +174,10 @@ private fun AppGamesBottomNavigation(
 }
 
 private val BottomNavigationHeight = 74.dp
+
+@Composable
+fun ScreenWithBottomBar(content: @Composable () -> Unit) {
+  Box(modifier = Modifier.padding(bottom = BottomNavigationHeight)) {
+    content()
+  }
+}

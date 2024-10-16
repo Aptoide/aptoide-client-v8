@@ -46,6 +46,7 @@ import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
+import com.aptoide.android.aptoidegames.bottom_bar.ScreenWithBottomBar
 import com.aptoide.android.aptoidegames.categories.presentation.CategoriesGridConstants.GRID_COLUMNS
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.error_views.NoConnectionView
@@ -74,13 +75,16 @@ fun allCategoriesScreen() = ScreenData.withAnalytics(
   val viewModel = hiltViewModel<AllCategoriesViewModel>()
   val uiState by viewModel.uiState.collectAsState()
 
-  AllCategoriesView(
-    title = categoriesBundleTitle,
-    uiState = uiState,
-    onError = viewModel::reload,
-    navigateBack = navigateBack,
-    navigate = navigate,
-  )
+  ScreenWithBottomBar {
+    AllCategoriesView(
+      title = categoriesBundleTitle,
+      uiState = uiState,
+      onError = viewModel::reload,
+      navigateBack = navigateBack,
+      navigate = navigate,
+    )
+  }
+
 }
 
 fun buildAllCategoriesRoute(categoriesBundleTitle: String? = null) = when {
