@@ -56,8 +56,6 @@ import com.aptoide.android.aptoidegames.drawables.backgrounds.getMoreBonusViewHe
 import com.aptoide.android.aptoidegames.drawables.backgrounds.getWantMoreViewFooter
 import com.aptoide.android.aptoidegames.drawables.backgrounds.getWantMoreViewHeader
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusIcon
-import com.aptoide.android.aptoidegames.drawables.icons.getBonusOnEveryPurchase
-import com.aptoide.android.aptoidegames.drawables.icons.getWantMore
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.error_views.NoConnectionView
 import com.aptoide.android.aptoidegames.home.LoadingView
@@ -72,7 +70,7 @@ const val seeMoreBonusRoute = "seeMoreBonus/{title}/{tag}"
 fun seeMoreBonusScreen() = ScreenData.withAnalytics(
   route = seeMoreBonusRoute,
   screenAnalyticsName = "SeeAll",
-  deepLinks = listOf(navDeepLink { uriPattern = BuildConfig.DEEP_LINK_SCHEMA + seeMoreRoute })
+  deepLinks = listOf(navDeepLink { uriPattern = BuildConfig.DEEP_LINK_SCHEMA + seeMoreBonusRoute })
 ) { arguments, navigate, navigateBack ->
   val bundleTitle = arguments?.getString("title")!!
   val bundleTag = arguments.getString("tag")!!
