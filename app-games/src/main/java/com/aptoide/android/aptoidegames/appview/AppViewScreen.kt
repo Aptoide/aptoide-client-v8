@@ -461,13 +461,15 @@ fun WhatsNew(app: App) {
           style = AGTypography.InputsM
         )
         Spacer(modifier = Modifier.weight(1f))
-        Text(
-          modifier = Modifier
-            .align(Alignment.CenterVertically),
-          text = app.updateDate?.split(" ")?.first() ?: "",
-          color = Palette.GreyLight,
-          style = AGTypography.SmallGames,
-        )
+        app.updateDate?.let {
+          Text(
+            modifier = Modifier
+              .align(Alignment.CenterVertically),
+            text = it.parseDate()?.toFormattedString(pattern = "dd.MM.yyyy")?:"",
+            color = Palette.GreyLight,
+            style = AGTypography.SmallGames,
+          )
+        }
       }
       Column(
         modifier = Modifier
