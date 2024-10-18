@@ -27,6 +27,11 @@
   <string name="settings_payment_support_description_title">توضیح</string>
   <string name="settings_contact_form_character_limit_title">(حداقل ۵۰ حرف)</string>
   <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">توضیحات (حداقل ۵۰ حرف)</string>
+  <string name="settings_storage_title">Storage</string>
+  <string name="settings_storage_clear_cache_title">Clear cache</string>
+  <string name="settings_storage_cache_size_title">Set max. cache size (MB)</string>
+  <string name="settings_clear_cache_title">Clear Aptoide Games storage</string>
+  <string name="settings_clear_cache_body">Are you sure you want to delete all icons, images, apk downloaded, obb, webservice data...</string>
   <!-- MyGames -->
   <string name="my_games_empty">هیچ بازی نصب‌شده‌ای روی دستگاه شما یافت نکردیم!</string>
   <string name="my_games_progress_message">مرتب کردن بازی‌های شما</string>
