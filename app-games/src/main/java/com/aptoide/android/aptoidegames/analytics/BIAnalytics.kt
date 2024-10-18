@@ -44,6 +44,7 @@ class BIAnalytics(private val analyticsSender: AnalyticsSender) {
   ) {
     CoroutineScope(Dispatchers.Main).launch {
       val isFirstLaunch = appLaunchPreferencesManager.isFirstLaunch()
+      val locale = context.resources.configuration.locales[0]
 
       Indicative.launch(context, BuildConfig.INDICATIVE_KEY)
       Indicative.setUniqueID(analyticsInfoProvider.getAnalyticsId())
@@ -54,6 +55,7 @@ class BIAnalytics(private val analyticsSender: AnalyticsSender) {
         "android_brand" to Build.MANUFACTURER,
         "android_model" to Build.MODEL,
         "aptoide_package" to BuildConfig.APPLICATION_ID,
+        "android_language" to "${locale.language}-${locale.country}",
         "theme" to "dark",
         "logged_in" to "NA",
         "gms" to context.getGMSValue()
