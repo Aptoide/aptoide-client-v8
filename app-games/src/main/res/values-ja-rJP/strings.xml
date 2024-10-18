@@ -27,11 +27,11 @@
   <string name="settings_payment_support_description_title">内容</string>
   <string name="settings_contact_form_character_limit_title">(50文字以上)</string>
   <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">説明（50文字以上）</string>
-  <string name="settings_storage_title">Storage</string>
-  <string name="settings_storage_clear_cache_title">Clear cache</string>
-  <string name="settings_storage_cache_size_title">Set max. cache size (MB)</string>
-  <string name="settings_clear_cache_title">Clear Aptoide Games storage</string>
-  <string name="settings_clear_cache_body">Are you sure you want to delete all icons, images, apk downloaded, obb, webservice data...</string>
+  <string name="settings_storage_title">ストレージ</string>
+  <string name="settings_storage_clear_cache_title">キャッシュを消去</string>
+  <string name="settings_storage_cache_size_title">最大キャッシュサイズの設定 (MB)</string>
+  <string name="settings_clear_cache_title">Aptoideのストレージを消去</string>
+  <string name="settings_clear_cache_body">すべてのアイコン、画像、ダウンロードした apk、obb、webサービスのデータなどを削除してもよろしいですか…</string>
   <!-- MyGames -->
   <string name="my_games_empty">お使いのデバイスにインストールされているゲームが見つかりませんでした</string>
   <string name="my_games_progress_message">ゲームを整理</string>
@@ -39,9 +39,9 @@
   <!-- Notifications -->
   <string name="notifications_context_title">通知を受け取る</string>
   <string name="notification_installing_title">インストール中</string>
-  <string name="notification_preparing_title">Preparing</string>
-  <string name="notification_ready_install_title">An app is ready to be installed!</string>
-  <string name="notification_ready_install_body">Tap here to install %s.</string>
+  <string name="notification_preparing_title">準備中</string>
+  <string name="notification_ready_install_title">アプリのインストール準備ができました！</string>
+  <string name="notification_ready_install_body">ここをタップして%sをインストール。</string>
   <string name="notification_waiting_body">ダウンロード待ち</string>
   <string name="notification_1_installed_title">インストール済</string>
   <string name="notification_downloading_body">%2$sの%1$s%%をダウンロードしています。</string>
@@ -180,7 +180,7 @@
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">これで購入を完了できます。</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">AppCoins Walletがインストールされました！</string>
   <string name="storage_access_permission_request_message">このアプリをダウンロードしてインストールできるように、ストレージへのアクセスを許可してください。</string>
-  <string name="downloads_number_title">%s downloads</string>
+  <string name="downloads_number_title">%sダウンロード</string>
   <!-- Payment Errors-->
   <string name="payments_error_not_enough_balance_body">残高が不足しています</string>
   <string name="payments_error_old_card_title">このカードを登録したのはかなり以前のようです</string>
