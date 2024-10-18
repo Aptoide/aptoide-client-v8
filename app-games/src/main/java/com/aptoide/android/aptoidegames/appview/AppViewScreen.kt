@@ -21,7 +21,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -82,6 +81,7 @@ import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.appview.AppViewHeaderConstants.FEATURE_GRAPHIC_HEIGHT
 import com.aptoide.android.aptoidegames.appview.AppViewHeaderConstants.VIDEO_HEIGHT
 import com.aptoide.android.aptoidegames.appview.permissions.buildAppPermissionsRoute
+import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusIconLeft
 import com.aptoide.android.aptoidegames.drawables.icons.getBookmarkStar
 import com.aptoide.android.aptoidegames.drawables.icons.getForward
@@ -200,7 +200,7 @@ fun LoadingView() {
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.Center
   ) {
-    CircularProgressIndicator()
+    IndeterminateCircularLoading(color = Palette.Primary)
   }
 }
 
@@ -303,11 +303,11 @@ fun AppViewContent(
           .padding(top = 160.dp)
           .align(Alignment.TopStart)
           .clickable {
-              val bonusTitle = bonusBundle.first
-              val bonusTag = bonusBundle.second
-              val route = buildSeeMoreBonusRoute (encode(bonusTitle), "${bonusTag}-more")
+            val bonusTitle = bonusBundle.first
+            val bonusTag = bonusBundle.second
+            val route = buildSeeMoreBonusRoute(encode(bonusTitle), "${bonusTag}-more")
 
-              navigate(route)
+            navigate(route)
           }
       ) {
         Image(
@@ -669,7 +669,7 @@ private fun ShowRelatedContentView(
         .padding(vertical = 44.dp),
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
-      CircularProgressIndicator()
+      IndeterminateCircularLoading(color = Palette.Primary)
     }
   } else if (state.isEmpty()) {
     SmallEmptyView(
@@ -780,7 +780,7 @@ fun AppRatingAndDownloads(
     )
     downloads?.let {
       Text(
-        text = stringResource(R.string.downloads_number_title,it.formatDownloads()),
+        text = stringResource(R.string.downloads_number_title, it.formatDownloads()),
         maxLines = 1,
         style = AGTypography.InputsXS,
         overflow = TextOverflow.Ellipsis,

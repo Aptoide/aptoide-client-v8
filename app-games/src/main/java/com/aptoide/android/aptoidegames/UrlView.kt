@@ -4,15 +4,19 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
-import android.webkit.*
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.CircularProgressIndicator
+import android.webkit.WebResourceRequest
+import android.webkit.WebSettings
+import android.webkit.WebView
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
+import com.aptoide.android.aptoidegames.theme.Palette
 import com.google.accompanist.web.AccompanistWebViewClient
 import com.google.accompanist.web.WebView
 import com.google.accompanist.web.rememberWebViewState
@@ -45,7 +49,7 @@ fun UrlView(url: String) {
       client = AppWebViewClients(onLoaded)
     )
     if (loading.value) {
-      CircularProgressIndicator()
+      IndeterminateCircularLoading(color = Palette.Primary)
     }
   }
 }
