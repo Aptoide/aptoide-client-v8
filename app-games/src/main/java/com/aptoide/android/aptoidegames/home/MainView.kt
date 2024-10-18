@@ -3,7 +3,6 @@ package com.aptoide.android.aptoidegames.home
 import android.annotation.SuppressLint
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Snackbar
 import androidx.compose.material.SnackbarHost
@@ -88,14 +87,14 @@ fun MainView(navController: NavHostController) {
         topBar = {
           AppGamesToolBar(navigate = navController::navigateTo, goBackHome)
         }
-      ) { padding ->
+      ) {
         if (showNotificationsRationaleDialog) {
           NotificationsPermissionRequester(
             onDismiss = notificationsPermissionViewModel::dismissDialog
           )
         }
 
-        Box(modifier = Modifier.padding(padding)) {
+        Box {
           NavigationGraph(
             navController,
             showSnack = {
