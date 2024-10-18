@@ -6,12 +6,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -19,6 +16,7 @@ import cm.aptoide.pt.extensions.PreviewLandscapeDark
 import com.appcoins.payments.arch.BadInputException
 import com.appcoins.payments.arch.PaymentsResult
 import com.aptoide.android.aptoidegames.SupportActivity
+import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 
@@ -58,15 +56,9 @@ fun LoadingView() {
     modifier = Modifier
       .fillMaxWidth()
       .defaultMinSize(minHeight = 360.dp)
+      .padding(bottom = 16.dp)
   ) {
-    CircularProgressIndicator(
-      modifier = Modifier
-        .padding(bottom = 16.dp)
-        .size(64.dp, 64.dp),
-      backgroundColor = Color.Transparent,
-      color = Palette.Primary,
-      strokeWidth = 8.dp
-    )
+    IndeterminateCircularLoading(color = Palette.Primary, size = 64.dp)
   }
 }
 

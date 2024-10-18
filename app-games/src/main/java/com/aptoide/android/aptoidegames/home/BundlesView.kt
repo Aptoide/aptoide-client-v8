@@ -22,7 +22,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
@@ -67,6 +66,7 @@ import com.aptoide.android.aptoidegames.analytics.presentation.SwipeListener
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withBundleMeta
 import com.aptoide.android.aptoidegames.categories.presentation.CategoriesBundle
+import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
 import com.aptoide.android.aptoidegames.drawables.icons.getForward
 import com.aptoide.android.aptoidegames.editorial.EditorialBundle
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
@@ -253,7 +253,7 @@ fun LoadingBundleView(height: Dp) {
       .height(height),
     contentAlignment = Alignment.Center,
   ) {
-    CircularProgressIndicator()
+    IndeterminateCircularLoading(color = Palette.Primary)
   }
 }
 
@@ -433,7 +433,7 @@ fun LoadingView() {
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.Center
   ) {
-    CircularProgressIndicator()
+    IndeterminateCircularLoading(color = Palette.Primary)
   }
 }
 

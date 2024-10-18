@@ -27,7 +27,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -53,6 +52,7 @@ import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.SwipeListener
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
+import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
 import com.aptoide.android.aptoidegames.design_system.PrimarySmallButton
 import com.aptoide.android.aptoidegames.drawables.icons.getSingleGamepad
 import com.aptoide.android.aptoidegames.home.BundleHeader
@@ -261,8 +261,9 @@ fun MyGamesLoadingListView() {
       .wrapContentHeight(),
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
-    CircularProgressIndicator(modifier = Modifier.padding(bottom = 12.dp))
+    IndeterminateCircularLoading(color = Palette.Primary)
     Text(
+      modifier = Modifier.padding(top = 12.dp),
       text = stringResource(R.string.my_games_progress_message),
       style = AGTypography.SubHeadingM,
       color = Palette.White,

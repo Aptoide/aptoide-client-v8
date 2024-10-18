@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,7 +25,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -55,6 +53,7 @@ import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.SupportActivity
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
+import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
 import com.aptoide.android.aptoidegames.drawables.icons.getAppcoinsClearLogo
 import com.aptoide.android.aptoidegames.drawables.icons.getLeftArrow
 import com.aptoide.android.aptoidegames.drawables.icons.getTintedWalletGift
@@ -313,7 +312,10 @@ private fun WalletPaymentMethod(
         contentDescription = null,
       )
       AptoideOutlinedText(
-        text = stringResource(id = R.string.bonus_banner_title, "20"), //TODO Hardcoded value (should come from backend in the future)
+        text = stringResource(
+          id = R.string.bonus_banner_title,
+          "20" //TODO Hardcoded value (should come from backend in the future)
+        ),
         style = AGTypography.InputsS,
         outlineWidth = 10f,
         outlineColor = Palette.Black,
@@ -368,15 +370,9 @@ fun LoadingView() {
     modifier = Modifier
       .fillMaxWidth()
       .defaultMinSize(minHeight = 360.dp)
+      .padding(bottom = 16.dp)
   ) {
-    CircularProgressIndicator(
-      modifier = Modifier
-        .padding(bottom = 16.dp)
-        .size(64.dp, 64.dp),
-      backgroundColor = Color.Transparent,
-      color = Palette.Primary,
-      strokeWidth = 8.dp
-    )
+    IndeterminateCircularLoading(color = Palette.Primary, size = 64.dp)
   }
 }
 
