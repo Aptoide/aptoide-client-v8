@@ -7,16 +7,16 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.Handler
+import android.os.HandlerThread
 import android.os.IBinder
 import android.os.Looper
 import android.os.Message
 import android.os.Messenger
 import cm.aptoide.pt.installer.obb.ObbService.Companion.OBB_MOVE_FAIL
 import cm.aptoide.pt.installer.obb.ObbService.Companion.OBB_MOVE_SUCCESS
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.suspendCancellableCoroutine
+import timber.log.Timber
 import java.io.File
 import kotlin.coroutines.resume
 
@@ -26,11 +26,20 @@ internal interface OBBServiceCallback {
 }
 
 internal class ObbService : Service() {
-  override fun onBind(intent: Intent): IBinder {
-    return Messenger(OBBDataHandler()).binder
+  private val handlerThread = HandlerThread("OBBHandlerThread").apply {
+    start()
   }
 
-  private class OBBDataHandler : Handler(Looper.getMainLooper()) {
+  override fun onBind(intent: Intent): IBinder {
+    return Messenger(OBBDataHandler(handlerThread.looper)).binder
+  }
+
+  override fun onDestroy() {
+    super.onDestroy()
+    handlerThread.quit()
+  }
+
+  private class OBBDataHandler(looper: Looper) : Handler(looper) {
     override fun handleMessage(msg: Message) {
       val replyMessenger = msg.replyTo
 
@@ -43,30 +52,29 @@ internal class ObbService : Service() {
             if (!filePaths.isNullOrEmpty() && !packageName.isNullOrBlank()) {
               val files = filePaths.map(::File)
 
-              CoroutineScope(Dispatchers.IO).launch {
-                val obbResultMsg = try {
+              val obbResultMsg = runBlocking {
+                try {
                   files.installOBBs(packageName = packageName, progress = {})
                   Message.obtain(null, OBB_MOVE_SUCCESS)
                 } catch (e: Throwable) {
-                  e.printStackTrace()
+                  Timber.e(e)
                   Message.obtain(null, OBB_MOVE_FAIL)
                 }
-
-                replyMessenger.send(obbResultMsg)
               }
+
+              replyMessenger.send(obbResultMsg)
             } else {
-              throw IllegalStateException("Error moving OBB files: wrong input")
+              replyMessenger.send(Message.obtain(null, OBB_MOVE_FAIL))
             }
           }
 
           else -> {
             super.handleMessage(msg)
-            throw IllegalStateException("Error moving OBB files: wrong message type")
+            replyMessenger.send(Message.obtain(null, OBB_MOVE_FAIL))
           }
         }
       } catch (e: Throwable) {
-        e.printStackTrace()
-        replyMessenger.send(Message.obtain(null, OBB_MOVE_FAIL))
+        Timber.e(e)
       }
     }
   }
@@ -87,15 +95,28 @@ internal class ObbService : Service() {
     ): Boolean = suspendCancellableCoroutine { continuation ->
       val serviceIntent = Intent(context, ObbService::class.java)
 
-      //Callback to handle OBB service results
-      val obbServiceCallback = object : OBBServiceCallback {
-        override fun onSuccess() = continuation.resume(true)
-        override fun onError() = continuation.resume(false)
-      }
-
       val connection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
+          if (continuation.isCompleted) return
+
           val serviceMessenger = Messenger(service)
+
+          //Callback to handle OBB service results
+          val obbServiceCallback = object : OBBServiceCallback {
+            override fun onSuccess() {
+              if (continuation.isActive) {
+                continuation.resume(true)
+              }
+              unbind(context)
+            }
+
+            override fun onError() {
+              if (continuation.isActive) {
+                continuation.resume(false)
+              }
+              unbind(context)
+            }
+          }
 
           val obbDataMsg = Message.obtain(null, MSG_OBB_DATA)
           obbDataMsg.data = Bundle().apply {
@@ -108,11 +129,12 @@ internal class ObbService : Service() {
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
-          if (!continuation.isCompleted) {
+          if (continuation.isActive) {
             continuation.cancel(
               cause = IllegalStateException("Error moving OBB files: service disconnected")
             )
           }
+          unbind(context)
         }
       }
 
@@ -121,10 +143,16 @@ internal class ObbService : Service() {
 
       // Handle cancellation of coroutine
       continuation.invokeOnCancellation {
-        context.unbindService(connection)
+        connection.unbind(context)
       }
     }
   }
+}
+
+private fun ServiceConnection.unbind(context: Context) = try {
+  context.unbindService(this)
+} catch (e: Throwable) {
+  Timber.e(e)
 }
 
 private class OBBServiceResponseHandler(
