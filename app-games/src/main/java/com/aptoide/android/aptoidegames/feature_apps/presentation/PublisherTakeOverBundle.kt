@@ -20,7 +20,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
@@ -46,12 +45,9 @@ import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
-import com.aptoide.android.aptoidegames.drawables.banners.getChessPatternBanner
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusIconRight
 import com.aptoide.android.aptoidegames.home.HorizontalPagerView
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
-import com.aptoide.android.aptoidegames.home.SeeMoreView
-import com.aptoide.android.aptoidegames.home.getSeeMoreRouteNavigation
 import com.aptoide.android.aptoidegames.home.translateOrKeep
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
@@ -134,15 +130,15 @@ fun PublisherTakeOverContent(
       Column(
         modifier = Modifier
           .background(color = Palette.Black.copy(0.7f))
-          .padding(bottom = 28.dp)
+          .padding(bottom = 24.dp)
       ) {
         Row(
           modifier = Modifier
             .wrapContentHeight()
             .fillMaxWidth()
-            .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp),
-          verticalAlignment = Alignment.Top,
-          horizontalArrangement = Arrangement.SpaceBetween
+            .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 24.dp),
+          verticalAlignment = Alignment.CenterVertically,
+          horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
           AptoideAsyncImage(
             modifier = Modifier
@@ -151,23 +147,16 @@ fun PublisherTakeOverContent(
             data = bundle.bundleIcon,
             contentDescription = null,
           )
-          if (bundle.hasMoreAction) {
-            SeeMoreView(
-              onClick = getSeeMoreRouteNavigation(bundle = bundle, navigate = navigate),
-              modifier = Modifier.padding(top = 4.dp)
-            )
-          }
+          Text(
+            text = bundle.title.translateOrKeep(LocalContext.current),
+            modifier = Modifier.semantics { heading() },
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 2,
+            color = Palette.White,
+            style = AGTypography.Title
+          )
         }
-        Text(
-          text = bundle.title.translateOrKeep(LocalContext.current),
-          modifier = Modifier
-            .semantics { heading() }
-            .padding(start = 16.dp, end = 16.dp, bottom = 24.dp),
-          overflow = TextOverflow.Ellipsis,
-          maxLines = 2,
-          color = Palette.White,
-          style = AGTypography.Title
-        )
+
         when (uiState) {
           is AppsListUiState.Idle -> PublisherTakeOverListView(
             bundleTag = bundle.tag,
@@ -199,12 +188,6 @@ fun PublisherTakeOverContent(
         }
       }
     }
-    Image(
-      imageVector = getChessPatternBanner(Palette.Primary),
-      contentDescription = null,
-      modifier = Modifier.fillMaxWidth(),
-      contentScale = ContentScale.FillWidth
-    )
   }
 }
 
