@@ -27,6 +27,11 @@
   <string name="settings_payment_support_description_title">설명</string>
   <string name="settings_contact_form_character_limit_title">(최소 50자)</string>
   <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">설명 (최소 50자 )</string>
+  <string name="settings_storage_title">Storage</string>
+  <string name="settings_storage_clear_cache_title">Clear cache</string>
+  <string name="settings_storage_cache_size_title">Set max. cache size (MB)</string>
+  <string name="settings_clear_cache_title">Clear Aptoide Games storage</string>
+  <string name="settings_clear_cache_body">Are you sure you want to delete all icons, images, apk downloaded, obb, webservice data...</string>
   <!-- MyGames -->
   <string name="my_games_empty">장치에 설치된 게임을 찾을 수 없습니다!</string>
   <string name="my_games_progress_message">게임 구성하기</string>
