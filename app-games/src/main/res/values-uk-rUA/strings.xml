@@ -27,11 +27,11 @@
   <string name="settings_payment_support_description_title">Опис</string>
   <string name="settings_contact_form_character_limit_title">(50 символів мінімум)</string>
   <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Опис (50 символів мінімум)</string>
-  <string name="settings_storage_title">Storage</string>
-  <string name="settings_storage_clear_cache_title">Clear cache</string>
-  <string name="settings_storage_cache_size_title">Set max. cache size (MB)</string>
-  <string name="settings_clear_cache_title">Clear Aptoide Games storage</string>
-  <string name="settings_clear_cache_body">Are you sure you want to delete all icons, images, apk downloaded, obb, webservice data...</string>
+  <string name="settings_storage_title">Сховище</string>
+  <string name="settings_storage_clear_cache_title">Очистити кеш</string>
+  <string name="settings_storage_cache_size_title">Встановити макс. розмір кешу (МБ)</string>
+  <string name="settings_clear_cache_title">Очистити сховище Aptoide Games</string>
+  <string name="settings_clear_cache_body">Ви впевнені, що хочете видалити всі значки, зображення, завантажені apk, obb, дані вебсервісів...</string>
   <!-- MyGames -->
   <string name="my_games_empty">Ми не знайшли жодної гри на вашому пристрої!</string>
   <string name="my_games_progress_message">Організація ваших ігор</string>
@@ -39,9 +39,9 @@
   <!-- Notifications -->
   <string name="notifications_context_title">Отримувати сповіщення!</string>
   <string name="notification_installing_title">Встановлення</string>
-  <string name="notification_preparing_title">Preparing</string>
-  <string name="notification_ready_install_title">An app is ready to be installed!</string>
-  <string name="notification_ready_install_body">Tap here to install %s.</string>
+  <string name="notification_preparing_title">Підготовка</string>
+  <string name="notification_ready_install_title">Додаток готовий до встановлення!</string>
+  <string name="notification_ready_install_body">Натисніть тут, щоб встановити %s.</string>
   <string name="notification_waiting_body">Очікує на завантаження</string>
   <string name="notification_1_installed_title">Встановлено</string>
   <string name="notification_downloading_body">Завантаження %1$s%% з %2$s</string>
@@ -104,9 +104,9 @@
   <string name="waiting_for_connection">Очікування з\'єднання</string>
   <string name="wait_for_wifi_button">Зачекати Wi-Fi</string>
   <string name="continue_button">Продовжити</string>
-  <string name="error_install_permissions_body"><![CDATA[Please go to Settings and grant <1>Aptoide Games</1> permissions to install apps!]]></string>
-  <string name="latest_title">Latest</string>
-  <string name="whats_new_title">What\'s New</string>
+  <string name="error_install_permissions_body"><![CDATA[Перейдіть до Налаштувань і надайте <1>Aptoide Games</1> дозвіл на встановлення додатків!]]></string>
+  <string name="latest_title">Останні</string>
+  <string name="whats_new_title">Що нового</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Немає вільного місця</string>
   <string name="out_of_space_body">Вам потрібно %s, щоб продовжити встановлення.</string>
@@ -145,9 +145,9 @@
   <string name="appview_info_permissions_title" comment="permissions">Дозволи</string>
   <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% з %2$s</string>
   <string name="error_short_title" comment="oops_an_error_occurred">Ой, сталася помилка</string>
-  <string name="purchase_done_bonus_title">Get a %s bonus!</string>
-  <string name="purchase_done_bonus_body">Download the AppCoins Wallet to get this bonus and use it in your next purchase.</string>
-  <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet installed!</string>
+  <string name="purchase_done_bonus_title">Отримайте бонус %s!</string>
+  <string name="purchase_done_bonus_body">Завантажте AppCoins Wallet, щоб отримати цей бонус і використайте його при наступній покупці.</string>
+  <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet встановлено!</string>
   <string name="purchase_done_bonus_wallet_installed_body">Open it to find your bonus.</string>
   <string name="bonus_banner_body">Ви отримуватимете бонус у всіх іграх, позначених %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Бонус до %s%%</string>
