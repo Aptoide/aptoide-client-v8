@@ -137,7 +137,7 @@ fun App?.toBIParameters(
       P_APP_OBB to hasObb(),
       P_APP_IN_CATAPPULT to isInCatappult().asNullableParameter(),
     )
-  } ?: emptyMap()
+  } ?: mapOfNonNull(*pairs)
 
 fun SearchMeta?.toBIParameters(
   searchTermPosition: Int?,
@@ -151,7 +151,7 @@ fun SearchMeta?.toBIParameters(
       P_SEARCH_TERM_SOURCE to searchTermSource,
       P_SEARCH_TERM_POSITION to searchTermPosition,
     )
-  } ?: emptyMap()
+  } ?: mapOfNonNull(*pairs)
 
 fun AnalyticsPayload?.toAppBIParameters(
   packageName: String,
@@ -168,6 +168,6 @@ fun AnalyticsPayload?.toAppBIParameters(
       P_APP_OBB to hasObb,
       P_APP_IN_CATAPPULT to isInCatappult.asNullableParameter(),
     )
-  } ?: emptyMap()
+  } ?: mapOfNonNull(*pairs)
 
 fun Any?.asNullableParameter() = this?.toString() ?: "no_info"
