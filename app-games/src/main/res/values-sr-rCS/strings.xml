@@ -105,8 +105,8 @@
   <string name="wait_for_wifi_button">Sačekajte Wi-Fi</string>
   <string name="continue_button">Nastavi</string>
   <string name="error_install_permissions_body"><![CDATA[Idite u Podešavanja i dodelite dozvole za instaliranje aplikacija za <1>Aptoide Games</1>!]]></string>
-  <string name="latest_title">Latest</string>
-  <string name="whats_new_title">What\'s New</string>
+  <string name="latest_title">Najnovije</string>
+  <string name="whats_new_title">Šta je novo</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Nema više prostora</string>
   <string name="out_of_space_body">Potrebno vam je %s da biste nastavili sa instalacijom.</string>
@@ -179,7 +179,7 @@
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Sada možete dovršiti svoju kupovinu.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">Aplikacija AppCoins Wallet je instalirana!</string>
   <string name="storage_access_permission_request_message">Dozvolite pristup memoriji telefona kako bismo preuzeli i instalirali ovu aplikaciju.</string>
-  <string name="downloads_number_title">%s downloads</string>
+  <string name="downloads_number_title">%s preuzimanja</string>
   <!-- Payment Errors-->
   <string name="payments_error_not_enough_balance_body">Vaše stanje je nedovoljno</string>
   <string name="payments_error_old_card_title">Izgleda da ste davno registrovali ovu karticu!</string>
@@ -207,7 +207,7 @@
   <string name="bonus_page_title_1">Bonus pri svakoj kupovini</string>
   <string name="bonus_page_body_1">Potražite igre označene sa %1$s, instalirajte AppCoins Wallet i osvojite do %2$s%% bonusa pri svakoj kupovini. Zatim možete iskoristiti ovaj bonus da biste obavili svoje sledeće kupovine u omiljenim igrama!</string>
   <string name="bonus_page_title_2">Želite više?</string>
-  <string name="bonus_page_body_2"><![CDATA[You can get an extra <1>%s%% bonus</1> by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!]]></string>
+  <string name="bonus_page_body_2"><![CDATA[Možete osvojiti dodatnih <1>%s%% bonusa</1> ako iskoristite Aptoide Games ekskluzivni promo kod u određenim igrama. Ostanite u toku i dobićete obaveštenje!]]></string>
   <!-- Promo Code -->
   <string name="promo_code_install_wallet_banner_title">Do %s[% bonusa za svaku kupovinu</string>
   <string name="promo_code_install_wallet_banner_body">Iskoristite AppCoins Wallet da biste obavili svoju kupovinu u aplikaciji i osvojite nagradu.</string>
