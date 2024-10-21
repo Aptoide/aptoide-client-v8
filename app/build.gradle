@@ -346,6 +346,10 @@ android {
   sourceSets { release { java.srcDirs = ['src/release/java', 'src/release/java/'] } }
 }
 
+sentry{
+  autoUpload = false
+}
+
 kapt {
   correctErrorTypes = true
 }

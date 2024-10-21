@@ -53,6 +53,8 @@
       android:theme="@style/AppBaseTheme.NoTitle.Transparent"
       tools:replace="theme, allowBackup">
 
+    <meta-data android:name="io.sentry.auto-init" android:value="false" />
+
     <activity
         android:name=".view.MainActivity"
         android:launchMode="singleTask"
