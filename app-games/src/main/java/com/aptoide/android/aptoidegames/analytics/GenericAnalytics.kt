@@ -545,7 +545,7 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
           P_CONTEXT to currentScreen,
           P_ITEM_POSITION to itemPosition
         )
-    } ?: emptyMap()
+    } ?: mapOfNonNull(*pairs)
 
   private fun AnalyticsPayload?.toParameters(vararg pairs: Pair<String, Any?>): Map<String, Any> =
     this?.run {
@@ -555,15 +555,16 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
         P_APPC_BILLING to isAppCoins,
         P_ITEM_POSITION to itemPosition
       )
-    } ?: emptyMap()
+    } ?: mapOfNonNull(*pairs)
 
-  private fun BundleMeta?.toParameters(vararg pairs: Pair<String, Any?>) = this?.run {
-    mapOfNonNull(
-      *pairs,
-      "section_id" to tag,
-      "section_type" to bundleSource
-    )
-  } ?: emptyMap()
+  private fun BundleMeta?.toParameters(vararg pairs: Pair<String, Any?>) =
+    this?.run {
+      mapOfNonNull(
+        *pairs,
+        "section_id" to tag,
+        "section_type" to bundleSource
+      )
+    } ?: mapOfNonNull(*pairs)
 
   private fun SearchMeta?.toParameters() = this?.run {
     mapOf(
@@ -588,7 +589,7 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
       P_PRICE to priceValue,
       P_CURRENCY to priceCurrency
     )
-  } ?: emptyMap()
+  } ?: mapOfNonNull(*pairs)
 
   private fun Transaction.toParameters(vararg pairs: Pair<String, Any?>) = mapOfNonNull(
     *pairs,
