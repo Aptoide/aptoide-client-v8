@@ -66,6 +66,7 @@ import com.aptoide.android.aptoidegames.analytics.presentation.OverrideAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.SwipeListener
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withBundleMeta
+import com.aptoide.android.aptoidegames.bottom_bar.ScreenWithBottomBar
 import com.aptoide.android.aptoidegames.categories.presentation.CategoriesBundle
 import com.aptoide.android.aptoidegames.drawables.icons.getForward
 import com.aptoide.android.aptoidegames.editorial.EditorialBundle
@@ -103,9 +104,9 @@ fun gamesScreen() = ScreenData(
     screenAnalyticsName = "Home",
     navigate = navigate
   ) {
-    BundlesScreen(
-      navigate = it,
-    )
+    ScreenWithBottomBar{
+      BundlesScreen(navigate = it)
+    }
   }
 }
 
