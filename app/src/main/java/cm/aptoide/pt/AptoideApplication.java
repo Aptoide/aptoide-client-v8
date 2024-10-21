@@ -101,7 +101,6 @@ import com.jakewharton.rxrelay.PublishRelay;
 import io.rakam.api.Rakam;
 import io.rakam.api.RakamClient;
 import io.sentry.Sentry;
-import io.sentry.android.AndroidSentryClientFactory;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Calendar;
@@ -380,7 +379,12 @@ public abstract class AptoideApplication extends Application {
       return Completable.complete();
     }
     return Completable.fromAction(
-        () -> Sentry.init(BuildConfig.SENTRY_DSN_KEY, new AndroidSentryClientFactory(this)));
+        () -> Sentry.init(options -> {
+          options.setDsn(BuildConfig.SENTRY_DSN_KEY);
+          options.setRelease(BuildConfig.VERSION_NAME);
+          options.setEnableAutoSessionTracking(true);
+          options.setSessionTrackingIntervalMillis(300000);
+        }));
   }
 
   private void initializeRakam() {
