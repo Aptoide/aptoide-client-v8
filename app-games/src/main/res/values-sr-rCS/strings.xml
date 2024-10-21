@@ -27,11 +27,11 @@
   <string name="settings_payment_support_description_title">Opis</string>
   <string name="settings_contact_form_character_limit_title">(50 znakova najmanje)</string>
   <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Opis (50 znakova najmanje)</string>
-  <string name="settings_storage_title">Prostor</string>
+  <string name="settings_storage_title">Skladište</string>
   <string name="settings_storage_clear_cache_title">Obriši keš</string>
   <string name="settings_storage_cache_size_title">Podesi najveću veličinu keša (MB)</string>
-  <string name="settings_clear_cache_title">Clear Aptoide Games storage</string>
-  <string name="settings_clear_cache_body">Are you sure you want to delete all icons, images, apk downloaded, obb, webservice data...</string>
+  <string name="settings_clear_cache_title">Obriši Aptoide Games skladište</string>
+  <string name="settings_clear_cache_body">Da li ste sigurni da želite da izbrišete sve ikonice, slike, preuzete apk datoteke, obb datoteke, podatke veb-usluga…</string>
   <!-- MyGames -->
   <string name="my_games_empty">Nismo uspeli da pronađemo nijednu instaliranu igru na vašem uređaju!</string>
   <string name="my_games_progress_message">Organizujemo vaše igre</string>
@@ -39,9 +39,9 @@
   <!-- Notifications -->
   <string name="notifications_context_title">Budite obavešteni!</string>
   <string name="notification_installing_title">Instaliranje</string>
-  <string name="notification_preparing_title">Preparing</string>
-  <string name="notification_ready_install_title">An app is ready to be installed!</string>
-  <string name="notification_ready_install_body">Tap here to install %s.</string>
+  <string name="notification_preparing_title">Priprema</string>
+  <string name="notification_ready_install_title">Aplikacija je spremna za instaliranje!</string>
+  <string name="notification_ready_install_body">Dodirnite ovde da biste instalirali %s.</string>
   <string name="notification_waiting_body">Čeka se preuzimanje</string>
   <string name="notification_1_installed_title">Инсталирано</string>
   <string name="notification_downloading_body">Preuzimanje %1$s%% of %2$s</string>
