@@ -35,7 +35,7 @@ public class HomeContainerNavigator {
         childFragmentNavigator.getFragment()
             .getString(R.string.home_chip_games));
     args.putString(StoreTabGridRecyclerFragment.BundleCons.ACTION,
-        "https://ws75.aptoide.com/api/7/getStoreWidgets/store_id=15/context=games/widget=apps_list%3A0%262%3Adownloads7d");
+        "https://ws75.aptoide.com/api/7.20240701/getStoreWidgets/store_id=15/context=games/widget=apps_list%3A0%262%3Adownloads7d");
     args.putBoolean(StoreTabGridRecyclerFragment.BundleCons.TOOLBAR, false);
     fragment.setArguments(args);
 
@@ -54,7 +54,7 @@ public class HomeContainerNavigator {
         childFragmentNavigator.getFragment()
             .getString(R.string.home_chip_apps));
     args.putString(StoreTabGridRecyclerFragment.BundleCons.ACTION,
-        "https://ws75.aptoide.com/api/7/getStoreWidgets/store_id=15/context=apps/widget=apps_list%3A0%261%3Apdownloads7d");
+        "https://ws75.aptoide.com/api/7.20240701/getStoreWidgets/store_id=15/context=apps/widget=apps_list%3A0%261%3Apdownloads7d");
     args.putBoolean(StoreTabGridRecyclerFragment.BundleCons.TOOLBAR, false);
     fragment.setArguments(args);
 
