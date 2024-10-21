@@ -27,6 +27,11 @@
   <string name="settings_payment_support_description_title">विवरण</string>
   <string name="settings_contact_form_character_limit_title">(किमान ५० अक्षरे)</string>
   <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">विवरण (किमान ५० अक्षरे)</string>
+  <string name="settings_storage_title">Storage</string>
+  <string name="settings_storage_clear_cache_title">Clear cache</string>
+  <string name="settings_storage_cache_size_title">Set max. cache size (MB)</string>
+  <string name="settings_clear_cache_title">Clear Aptoide Games storage</string>
+  <string name="settings_clear_cache_body">Are you sure you want to delete all icons, images, apk downloaded, obb, webservice data...</string>
   <!-- MyGames -->
   <string name="my_games_empty">आपल्या डिव्हाईसवर आम्हांस कोणतेही इंस्टॉल केलेले खेळ सापडले नाहीत!</string>
   <string name="my_games_progress_message">आपले खेळ ऑर्गनाईझ करत आहोत</string>
