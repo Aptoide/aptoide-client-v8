@@ -31,7 +31,7 @@
   <string name="settings_storage_clear_cache_title">Vider le cache</string>
   <string name="settings_storage_cache_size_title">Définir la taille max. du cache (MB)</string>
   <string name="settings_clear_cache_title">Effacer le stockage d\'Aptoide Games</string>
-  <string name="settings_clear_cache_body">Are you sure you want to delete all icons, images, apk downloaded, obb, webservice data...</string>
+  <string name="settings_clear_cache_body">Êtes-vous sûr de vouloir supprimer toutes les icônes, images, apk téléchargées, obb, données de service web... ?</string>
   <!-- MyGames -->
   <string name="my_games_empty">Nous n\'avons trouvé aucun jeu installé sur votre appareil !</string>
   <string name="my_games_progress_message">Organisation de vos jeux</string>
@@ -39,7 +39,7 @@
   <!-- Notifications -->
   <string name="notifications_context_title">Soyez notifiés !</string>
   <string name="notification_installing_title">Installation</string>
-  <string name="notification_preparing_title">Preparing</string>
+  <string name="notification_preparing_title">Préparation</string>
   <string name="notification_ready_install_title">Une application est prête à être installée !</string>
   <string name="notification_ready_install_body">Cliquez ici pour installer %s.</string>
   <string name="notification_waiting_body">En attente de téléchargement</string>
@@ -104,14 +104,14 @@
   <string name="waiting_for_connection">En attente de connexion</string>
   <string name="wait_for_wifi_button">En attente de Wi-Fi</string>
   <string name="continue_button">Continuer</string>
-  <string name="error_install_permissions_body"><![CDATA[Please go to Settings and grant <1>Aptoide Games</1> permissions to install apps!]]></string>
+  <string name="error_install_permissions_body"><![CDATA[Allez dans Paramètres et accordez à <1>Aptoide Games</1> la permission d'installer des applications !]]></string>
   <string name="latest_title">Les plus récents</string>
-  <string name="whats_new_title">What\'s New</string>
-  <string name="screenshot_appview_1">A bonus in your in-app purchases.</string>
-  <string name="screenshot_appview_2">Find top new games curated for you.</string>
-  <string name="screenshot_appview_3">A new way to discover your favorite game.</string>
-  <string name="screenshot_appview_4">A seamless interface with the best content.</string>
-  <string name="screenshot_appview_5">Hand-picked games only for you.</string>
+  <string name="whats_new_title">Quoi de neuf </string>
+  <string name="screenshot_appview_1">Un bonus dans vos achats in-app.</string>
+  <string name="screenshot_appview_2">Découvrez les meilleurs nouveaux jeux conçus pour vous.</string>
+  <string name="screenshot_appview_3">Une nouvelle façon de découvrir votre jeu préféré.</string>
+  <string name="screenshot_appview_4">Une interface transparente avec le meilleur des contenus.</string>
+  <string name="screenshot_appview_5">Des jeux triés sur le volet, rien que pour vous.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Espace insuffisant</string>
   <string name="out_of_space_body">Vous avez besoin de %s pour continuer l\'installation.</string>
@@ -150,10 +150,10 @@
   <string name="appview_info_permissions_title" comment="permissions">Autorisations</string>
   <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% de %2$s</string>
   <string name="error_short_title" comment="oops_an_error_occurred">Oups, une erreur est survenue</string>
-  <string name="purchase_done_bonus_title">Get a %s bonus!</string>
-  <string name="purchase_done_bonus_body">Download the AppCoins Wallet to get this bonus and use it in your next purchase.</string>
-  <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet installed!</string>
-  <string name="purchase_done_bonus_wallet_installed_body">Open it to find your bonus.</string>
+  <string name="purchase_done_bonus_title">Obtenez un bonus de %s !</string>
+  <string name="purchase_done_bonus_body">Téléchargez le Portefeuille AppCoins pour obtenir ce bonus et l\'utiliser lors de votre prochain achat.</string>
+  <string name="purchase_done_bonus_wallet_installed_title">Portefeuille AppCoins installé !</string>
+  <string name="purchase_done_bonus_wallet_installed_body">Ouvrez pour découvrir votre bonus.</string>
   <string name="bonus_banner_body">Vous obtiendrez un bonus dans tous les jeux identifiés par %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Jusqu\'à %s%% de Bonus</string>
   <string name="settings_payments_title" comment="contact_support_team">Contacter le Support</string>
@@ -212,17 +212,17 @@
   <string name="bonus_page_title_1">Un bonus pour chaque achat</string>
   <string name="bonus_page_body_1">Recherchez les jeux identifiés par %1$s, installez le portefeuille AppCoins et obtenez jusqu\'à %2$s%% de bonus sur tous vos achats. Vous pouvez ensuite utiliser ce bonus pour effectuer vos prochains achats dans vos jeux préférés !</string>
   <string name="bonus_page_title_2">Vous en voulez plus ?</string>
-  <string name="bonus_page_body_2"><![CDATA[You can get an extra <1>%s%% bonus</1> by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!]]></string>
+  <string name="bonus_page_body_2"><![CDATA[Vous pouvez obtenir un bonus supplémentaire de <1>%s%%</1> en utilisant un code promo exclusif d'Aptoide Games dans des jeux spécifiques. Restez à l'écoute et vous serez informés !]]></string>
   <!-- Promo Code -->
-  <string name="promo_code_install_wallet_banner_title">Up to %s%% Bonus in Every Purchase</string>
-  <string name="promo_code_install_wallet_banner_body">Use the AppCoins Wallet to make your in-app purchases and get a reward.</string>
-  <string name="promo_code_extra_title">Want More? Get %s%% Extra Bonus!</string>
-  <string name="promo_code_use_button">Use code</string>
-  <string name="promo_code_install_wallet_disclaimer">Install the AppCoins Wallet first.</string>
-  <string name="promo_code_notification_title">Redeem Your Promo Code</string>
-  <string name="promo_code_notification_body">Use your promo code to get extra bonuses in your favorite game.</string>
-  <string name="promo_code_notification_without_wallet_title">%s%% Extra Bonus!</string>
-  <string name="promo_code_notification_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
-  <string name="promo_code_share_title">You\'ve got a promo code!</string>
-  <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorite game.</string>
+  <string name="promo_code_install_wallet_banner_title">Jusqu\'à %s%% de bonus pour chaque achat</string>
+  <string name="promo_code_install_wallet_banner_body">Utilisez le Portefeuille AppCoins pour effectuer vos achats in-app et obtenir une récompense.</string>
+  <string name="promo_code_extra_title">Vous en voulez plus ? Recevez %s%% de bonus supplémentaires !</string>
+  <string name="promo_code_use_button">Utiliser le code</string>
+  <string name="promo_code_install_wallet_disclaimer">Installez d\'abord le portefeuille AppCoins.</string>
+  <string name="promo_code_notification_title">Utilisez votre code promotionnel</string>
+  <string name="promo_code_notification_body">Utilisez votre code promo pour obtenir des bonus supplémentaires dans votre jeu préféré.</string>
+  <string name="promo_code_notification_without_wallet_title">%s%% de Bonus supplémentaire !</string>
+  <string name="promo_code_notification_without_wallet_body">Obtenez le Portefeuille AppCoins et utilisez votre code promo pour obtenir des bonus supplémentaires lors de tous vos achats.</string>
+  <string name="promo_code_share_title">Vous avez un code promo !</string>
+  <string name="promo_code_share_body">Utilisez ce code promo pour obtenir des bonus supplémentaires dans votre jeu préféré.</string>
 </resources>
