@@ -27,7 +27,7 @@ class InstallAnalytics(
       analyticsContext = analyticsContext,
     )
 
-    sendClickEvent(
+    sendBIClickEvent(
       app = app,
       analyticsContext = analyticsContext,
       action = "install"
@@ -45,30 +45,10 @@ class InstallAnalytics(
       analyticsContext = analyticsContext,
     )
 
-    sendClickEvent(
+    sendBIClickEvent(
       app = app,
       analyticsContext = analyticsContext,
       action = "update"
-    )
-  }
-
-  private fun sendClickEvent(
-    app: App,
-    analyticsContext: AnalyticsUIContext,
-    action: String,
-  ) {
-    biAnalytics.logEvent(
-      name = "click_on_install_button",
-      app.toBIParameters(aabTypes = null) +
-        mapOfNonNull(
-          P_ACTION to action,
-          P_APKFY_APP_INSTALL to analyticsContext.isApkfy,
-          P_CONTEXT to analyticsContext.currentScreen,
-          P_PREVIOUS_CONTEXT to analyticsContext.previousScreen,
-          P_STORE to storeName,
-          P_TAG to analyticsContext.bundleMeta?.tag,
-          P_TRUSTED_BADGE to app.malware.asNullableParameter()
-        )
     )
   }
 
@@ -91,20 +71,10 @@ class InstallAnalytics(
       analyticsPayload = analyticsPayload
     )
 
-    biAnalytics.logEvent(
-      name = "download",
-      analyticsPayload.let {
-        it.toAppBIParameters(packageName) +
-          mapOfNonNull(
-            P_STATUS to "success",
-            P_APKFY_APP_INSTALL to it?.isApkfy,
-            P_CONTEXT to it?.context,
-            P_PREVIOUS_CONTEXT to it?.previousContext,
-            P_STORE to it?.store,
-            P_TAG to it?.bundleMeta?.tag,
-            P_TRUSTED_BADGE to it?.trustedBadge
-          )
-      }
+    logBIDownloadEvent(
+      packageName = packageName,
+      status = "success",
+      analyticsPayload = analyticsPayload
     )
   }
 
@@ -121,23 +91,13 @@ class InstallAnalytics(
       errorMessage = errorMessage
     )
 
-    biAnalytics.logEvent(
-      name = "download",
-      analyticsPayload.let {
-        it.toAppBIParameters(packageName) +
-          mapOfNonNull(
-            P_STATUS to "fail",
-            P_APKFY_APP_INSTALL to it?.isApkfy,
-            P_CONTEXT to it?.context,
-            P_ERROR_MESSAGE to errorMessage,
-            P_ERROR_TYPE to errorType,
-            P_ERROR_HTTP_CODE to errorCode,
-            P_PREVIOUS_CONTEXT to it?.previousContext,
-            P_STORE to it?.store,
-            P_TAG to it?.bundleMeta?.tag,
-            P_TRUSTED_BADGE to it?.trustedBadge
-          )
-      }
+    logBIDownloadEvent(
+      packageName = packageName,
+      status = "fail",
+      analyticsPayload = analyticsPayload,
+      P_ERROR_MESSAGE to errorMessage,
+      P_ERROR_TYPE to errorType,
+      P_ERROR_HTTP_CODE to errorCode,
     )
   }
 
@@ -200,20 +160,10 @@ class InstallAnalytics(
       analyticsPayload = analyticsPayload
     )
 
-    biAnalytics.logEvent(
-      name = "install",
-      analyticsPayload.let {
-        it.toAppBIParameters(packageName) +
-          mapOfNonNull(
-            P_STATUS to "success",
-            P_APKFY_APP_INSTALL to it?.isApkfy,
-            P_CONTEXT to it?.context,
-            P_PREVIOUS_CONTEXT to it?.previousContext,
-            P_STORE to it?.store,
-            P_TAG to it?.bundleMeta?.tag,
-            P_TRUSTED_BADGE to it?.trustedBadge
-          )
-      }
+    logBIInstallEvent(
+      packageName = packageName,
+      status = "success",
+      analyticsPayload = analyticsPayload
     )
   }
 
@@ -229,22 +179,12 @@ class InstallAnalytics(
       errorMessage = errorMessage
     )
 
-    biAnalytics.logEvent(
-      name = "install",
-      analyticsPayload.let {
-        it.toAppBIParameters(packageName) +
-          mapOfNonNull(
-            P_STATUS to "fail",
-            P_APKFY_APP_INSTALL to it?.isApkfy,
-            P_CONTEXT to it?.context,
-            P_ERROR_MESSAGE to errorMessage,
-            P_ERROR_TYPE to errorType,
-            P_PREVIOUS_CONTEXT to it?.previousContext,
-            P_STORE to it?.store,
-            P_TAG to it?.bundleMeta?.tag,
-            P_TRUSTED_BADGE to it?.trustedBadge
-          )
-      }
+    logBIInstallEvent(
+      packageName = packageName,
+      status = "fail",
+      analyticsPayload = analyticsPayload,
+      P_ERROR_MESSAGE to errorMessage,
+      P_ERROR_TYPE to errorType,
     )
   }
 
@@ -303,6 +243,70 @@ class InstallAnalytics(
       analyticsContext = analyticsContext
     )
   }
+
+  /**Reused functions**/
+
+  private fun sendBIClickEvent(
+    app: App,
+    analyticsContext: AnalyticsUIContext,
+    action: String,
+  ) = biAnalytics.logEvent(
+    name = "click_on_install_button",
+    app.toBIParameters(aabTypes = null) +
+      mapOfNonNull(
+        P_ACTION to action,
+        P_APKFY_APP_INSTALL to analyticsContext.isApkfy,
+        P_CONTEXT to analyticsContext.currentScreen,
+        P_PREVIOUS_CONTEXT to analyticsContext.previousScreen,
+        P_STORE to storeName,
+        P_TAG to analyticsContext.bundleMeta?.tag,
+        P_TRUSTED_BADGE to app.malware.asNullableParameter()
+      )
+  )
+
+  private fun logBIDownloadEvent(
+    packageName: String,
+    status: String,
+    analyticsPayload: AnalyticsPayload?,
+    vararg pairs: Pair<String, Any?>
+  ) = biAnalytics.logEvent(
+    name = "download",
+    analyticsPayload.let {
+      it.toAppBIParameters(packageName) +
+        mapOfNonNull(
+          P_STATUS to status,
+          P_APKFY_APP_INSTALL to it?.isApkfy,
+          P_CONTEXT to it?.context,
+          P_PREVIOUS_CONTEXT to it?.previousContext,
+          P_STORE to it?.store,
+          P_TAG to it?.bundleMeta?.tag,
+          P_TRUSTED_BADGE to it?.trustedBadge,
+          *pairs
+        )
+    }
+  )
+
+  private fun logBIInstallEvent(
+    packageName: String,
+    status: String,
+    analyticsPayload: AnalyticsPayload?,
+    vararg pairs: Pair<String, Any?>
+  ) = biAnalytics.logEvent(
+    name = "install",
+    analyticsPayload.let {
+      it.toAppBIParameters(packageName) +
+        mapOfNonNull(
+          P_STATUS to status,
+          P_APKFY_APP_INSTALL to it?.isApkfy,
+          P_CONTEXT to it?.context,
+          P_PREVIOUS_CONTEXT to it?.previousContext,
+          P_STORE to it?.store,
+          P_TAG to it?.bundleMeta?.tag,
+          P_TRUSTED_BADGE to it?.trustedBadge,
+          *pairs
+        )
+    }
+  )
 
   companion object {
     private const val P_ACTION = "action"
