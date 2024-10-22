@@ -27,9 +27,9 @@
   <string name="settings_payment_support_description_title">รายละเอียด</string>
   <string name="settings_contact_form_character_limit_title">(อย่างน้อย 50 อักขระ)</string>
   <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">คำบรรยาย(อย่างน้อย 50 อักขระ)</string>
-  <string name="settings_storage_title">Storage</string>
-  <string name="settings_storage_clear_cache_title">Clear cache</string>
-  <string name="settings_storage_cache_size_title">Set max. cache size (MB)</string>
+  <string name="settings_storage_title">ล้างหน่วยความจำ</string>
+  <string name="settings_storage_clear_cache_title">ล้างแคช</string>
+  <string name="settings_storage_cache_size_title">ตั้งขนาดแคชสูงสุด (MB)</string>
   <string name="settings_clear_cache_title">Clear Aptoide Games storage</string>
   <string name="settings_clear_cache_body">Are you sure you want to delete all icons, images, apk downloaded, obb, webservice data...</string>
   <!-- MyGames -->
@@ -40,8 +40,8 @@
   <string name="notifications_context_title">รับการแจ้งเตือน!</string>
   <string name="notification_installing_title">กำลังติดตั้ง</string>
   <string name="notification_preparing_title">Preparing</string>
-  <string name="notification_ready_install_title">An app is ready to be installed!</string>
-  <string name="notification_ready_install_body">Tap here to install %s.</string>
+  <string name="notification_ready_install_title">บางแอปพร้อมสำหรับจะติดตั้งแล้ว!</string>
+  <string name="notification_ready_install_body">แตะที่นี่เพื่อติดตั้ง%s</string>
   <string name="notification_waiting_body">กำลังรอเพื่อดาวโหลด</string>
   <string name="notification_1_installed_title">ติดตั้ง</string>
   <string name="notification_downloading_body">กำหลังโหลด%1$s%% ของ %2$s</string>
@@ -105,7 +105,7 @@
   <string name="wait_for_wifi_button">รอ Wi-Fi</string>
   <string name="continue_button">ต่อ</string>
   <string name="error_install_permissions_body"><![CDATA[Please go to Settings and grant <1>Aptoide Games</1> permissions to install apps!]]></string>
-  <string name="latest_title">Latest</string>
+  <string name="latest_title">ล่าสุด</string>
   <string name="whats_new_title">What\'s New</string>
   <string name="screenshot_appview_1">A bonus in your in-app purchases.</string>
   <string name="screenshot_appview_2">Find top new games curated for you.</string>
@@ -184,7 +184,7 @@
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">คุณสามารถซื้อได้ในตอนนี้</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed"></string>
   <string name="storage_access_permission_request_message">โปรดอนุญาตให้เข้าในส่วนจัดเก็บของโทรศัพท์ พวกเราสามารถดาวน์โหลดและติดตั้งแอปนี้</string>
-  <string name="downloads_number_title">%s downloads</string>
+  <string name="downloads_number_title">%s ดาวน์โหลด</string>
   <!-- Payment Errors-->
   <string name="payments_error_not_enough_balance_body">คุณไม่มียอดคงเหลือเพียงพอ</string>
   <string name="payments_error_old_card_title">ดูเหมือนว่าคุณลงทะเบียนบัตรนี้เมื่อนานมาแล้ว!</string>
