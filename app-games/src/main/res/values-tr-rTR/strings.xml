@@ -29,7 +29,7 @@
   <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Açıklama (En az 50 karakter)</string>
   <string name="settings_storage_title">Depolama</string>
   <string name="settings_storage_clear_cache_title">Önbelleği temizle</string>
-  <string name="settings_storage_cache_size_title">Set max. cache size (MB)</string>
+  <string name="settings_storage_cache_size_title">Maksimum önbellek boyutunu (MB) ayarla</string>
   <string name="settings_clear_cache_title">Clear Aptoide Games storage</string>
   <string name="settings_clear_cache_body">Tüm simgeleri, resimleri, indirilen apk, obb, webservice vb. verilerini silmek istediğine emin misin?</string>
   <!-- MyGames -->
