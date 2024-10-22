@@ -30,8 +30,8 @@
   <string name="settings_storage_title">Memoria</string>
   <string name="settings_storage_clear_cache_title">Svuota la cache</string>
   <string name="settings_storage_cache_size_title">Imposta dimensione cache max (MB)</string>
-  <string name="settings_clear_cache_title">Clear Aptoide Games storage</string>
-  <string name="settings_clear_cache_body">Are you sure you want to delete all icons, images, apk downloaded, obb, webservice data...</string>
+  <string name="settings_clear_cache_title">Libera spazio su Aptoide Games</string>
+  <string name="settings_clear_cache_body">Sei sicuro di voler eliminare tutte le icone, immagini, apk scaricati, obb, dati webservice...</string>
   <!-- MyGames -->
   <string name="my_games_empty">Non abbiamo trovato giochi installati sul tuo dispositivo!</string>
   <string name="my_games_progress_message">Organizzazione giochi in corso</string>
@@ -39,7 +39,7 @@
   <!-- Notifications -->
   <string name="notifications_context_title">Ricevi le notifiche!</string>
   <string name="notification_installing_title">Installazione in corso</string>
-  <string name="notification_preparing_title">Preparing</string>
+  <string name="notification_preparing_title">Preparazione</string>
   <string name="notification_ready_install_title">Un\'app è pronta per l\'installazione!</string>
   <string name="notification_ready_install_body">Premi qui per installare %s.</string>
   <string name="notification_waiting_body">In attesa del download</string>
@@ -106,12 +106,12 @@
   <string name="continue_button">Continua</string>
   <string name="error_install_permissions_body"><![CDATA[Accedi alle Impostazioni e concedi l\'autorizzazione ad <1>Aptoide Games</1> per installare le app!]]></string>
   <string name="latest_title">Ultimi</string>
-  <string name="whats_new_title">What\'s New</string>
-  <string name="screenshot_appview_1">A bonus in your in-app purchases.</string>
-  <string name="screenshot_appview_2">Find top new games curated for you.</string>
-  <string name="screenshot_appview_3">A new way to discover your favorite game.</string>
-  <string name="screenshot_appview_4">A seamless interface with the best content.</string>
-  <string name="screenshot_appview_5">Hand-picked games only for you.</string>
+  <string name="whats_new_title">Ultime novità</string>
+  <string name="screenshot_appview_1">Un bonus su tutti gli acquisti in-app.</string>
+  <string name="screenshot_appview_2">Trova nuovi fantastici giochi creati per te.</string>
+  <string name="screenshot_appview_3">Un nuovo modo per scoprire il tuo gioco preferito.</string>
+  <string name="screenshot_appview_4">Un\'interfaccia fluida con i migliori contenuti.</string>
+  <string name="screenshot_appview_5">Giochi scelti ad hoc per te.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Spazio esaurito</string>
   <string name="out_of_space_body">Spazio necessario per procedere con l\'installazione: %s.</string>
@@ -212,7 +212,7 @@
   <string name="bonus_page_title_1">Un bonus a ogni acquisto</string>
   <string name="bonus_page_body_1">Cerca i giochi con identificazione %1$s, installa l\'AppCoins Wallet e ricevi fino al %2$s%% di bonus su tutti gli acquisti. Potrai poi utilizzare questo bonus per effettuare acquisti sui tuoi giochi preferiti!</string>
   <string name="bonus_page_title_2">Vuoi ancora più benefici?</string>
-  <string name="bonus_page_body_2"><![CDATA[You can get an extra <1>%s%% bonus</1> by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!]]></string>
+  <string name="bonus_page_body_2"><![CDATA[Puoi ottenere un bonus extra del <1>%s%%</1> usando un esclusivo codice promozionale di Aptoide Games su giochi selezionati. Resta sintonizzato, ti contatteremo noi!]]></string>
   <!-- Promo Code -->
   <string name="promo_code_install_wallet_banner_title">FIno al %s%% di bonus su ogni acquisto</string>
   <string name="promo_code_install_wallet_banner_body">Usa l\'AppCoins Wallet per effettuare acquisti in-app e ricevere un premio.</string>
