@@ -30,7 +30,7 @@
   <string name="settings_storage_title">Depolama</string>
   <string name="settings_storage_clear_cache_title">Önbelleği temizle</string>
   <string name="settings_storage_cache_size_title">Maksimum önbellek boyutunu (MB) ayarla</string>
-  <string name="settings_clear_cache_title">Clear Aptoide Games storage</string>
+  <string name="settings_clear_cache_title">Aptoide Games depolama alanını temizle</string>
   <string name="settings_clear_cache_body">Tüm simgeleri, resimleri, indirilen apk, obb, webservice vb. verilerini silmek istediğine emin misin?</string>
   <!-- MyGames -->
   <string name="my_games_empty">Cihazında yüklü herhangi bir oyun bulamadık!</string>
@@ -107,11 +107,11 @@
   <string name="error_install_permissions_body"><![CDATA[Lütfen Ayarlar\'a git ve <1>Aptoide Games</1>\'e uygulama yükleme izni ver!]]></string>
   <string name="latest_title">En Yeni</string>
   <string name="whats_new_title">Yenilikler</string>
-  <string name="screenshot_appview_1">A bonus in your in-app purchases.</string>
-  <string name="screenshot_appview_2">Find top new games curated for you.</string>
-  <string name="screenshot_appview_3">A new way to discover your favorite game.</string>
-  <string name="screenshot_appview_4">A seamless interface with the best content.</string>
-  <string name="screenshot_appview_5">Hand-picked games only for you.</string>
+  <string name="screenshot_appview_1">Uygulama içi alışverişlerinde bonus.</string>
+  <string name="screenshot_appview_2">Senin için seçilmiş en iyi oyunları bul.</string>
+  <string name="screenshot_appview_3">En sevdiğin oyunu keşfetmenin yeni yöntemi.</string>
+  <string name="screenshot_appview_4">En iyi içerikleri barındıran kusursuz bir arayüz.</string>
+  <string name="screenshot_appview_5">Senin için özenle seçilmiş oyunlar.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Yer Yok</string>
   <string name="out_of_space_body">Yüklemeye devam etmek için %s gerekli.</string>
@@ -212,7 +212,7 @@
   <string name="bonus_page_title_1">Her Satın Alma İşleminde Bonus</string>
   <string name="bonus_page_body_1">%1$s ile tanımlanmış oyunları ara, AppCoins Wallet yükle ve tüm satın alma işlemlerinde %2$s%% bonus kazan. Bu bonusu daha sonra favori oyunlarındaki satın alma işlemleri için kullanabilirsin!</string>
   <string name="bonus_page_title_2">Daha Fazlasını İster Misin?</string>
-  <string name="bonus_page_body_2"><![CDATA[You can get an extra <1>%s%% bonus</1> by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!]]></string>
+  <string name="bonus_page_body_2"><![CDATA[Belirli oyunlarda Aptoide Games'e özel bir promosyon kodu kullanarak <1>%s%% bonus</1> kazanabilirsin. Bizi takip etmeye devam et, seni bilgilendireceğiz!]]></string>
   <!-- Promo Code -->
   <string name="promo_code_install_wallet_banner_title">Her Satın Alma İşleminde %s%%\'a varan Bonus</string>
   <string name="promo_code_install_wallet_banner_body">Uygulama içi satın alma işlemlerin için AppCoins Wallet\'ı kullan ve bir ödül kazan.</string>
