@@ -107,11 +107,11 @@
   <string name="error_install_permissions_body"><![CDATA[Nyisd meg a Beállításokat és engedélyezd, hogy az <1>Aptoide Games</1> appokat telepíthessen.]]></string>
   <string name="latest_title">Legújabb</string>
   <string name="whats_new_title">Újdonságok</string>
-  <string name="screenshot_appview_1">A bonus in your in-app purchases.</string>
-  <string name="screenshot_appview_2">Find top new games curated for you.</string>
-  <string name="screenshot_appview_3">A new way to discover your favorite game.</string>
-  <string name="screenshot_appview_4">A seamless interface with the best content.</string>
-  <string name="screenshot_appview_5">Hand-picked games only for you.</string>
+  <string name="screenshot_appview_1">Bónusz az appon belüli vásárlás után.</string>
+  <string name="screenshot_appview_2">Keresd meg a legjobb új hozzád illő játékokat.</string>
+  <string name="screenshot_appview_3">A kedvenc játékod felfedezésének új módja.</string>
+  <string name="screenshot_appview_4">Tökéletes felület a legjobb tartalommal.</string>
+  <string name="screenshot_appview_5">Gondosan összeválogatott játékok csak neked.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Nincs elég hely</string>
   <string name="out_of_space_body">A telepítés folytatásához %s tárhely szükséges.</string>
