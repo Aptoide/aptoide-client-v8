@@ -27,9 +27,9 @@
   <string name="settings_payment_support_description_title">Mô tả</string>
   <string name="settings_contact_form_character_limit_title">(Tối thiểu 50 ký tự)</string>
   <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Mô tả (tối thiểu 50 ký tự)</string>
-  <string name="settings_storage_title">Storage</string>
-  <string name="settings_storage_clear_cache_title">Clear cache</string>
-  <string name="settings_storage_cache_size_title">Set max. cache size (MB)</string>
+  <string name="settings_storage_title">Dọn Bộ Nhớ</string>
+  <string name="settings_storage_clear_cache_title">Xóa bộ nhớ</string>
+  <string name="settings_storage_cache_size_title">Đặt tối đa kích thước bộ nhớ cache (MB)</string>
   <string name="settings_clear_cache_title">Clear Aptoide Games storage</string>
   <string name="settings_clear_cache_body">Are you sure you want to delete all icons, images, apk downloaded, obb, webservice data...</string>
   <!-- MyGames -->
@@ -40,8 +40,8 @@
   <string name="notifications_context_title">Đã nhận thông báo!</string>
   <string name="notification_installing_title">Đang cài đặt</string>
   <string name="notification_preparing_title">Preparing</string>
-  <string name="notification_ready_install_title">An app is ready to be installed!</string>
-  <string name="notification_ready_install_body">Tap here to install %s.</string>
+  <string name="notification_ready_install_title">Ứng dụng đã sẵn sàng để được cài đặt!</string>
+  <string name="notification_ready_install_body">Nhấn vào đây để cài đặt %s.</string>
   <string name="notification_waiting_body">Đang chờ tải xuống</string>
   <string name="notification_1_installed_title">Đã cài đặt</string>
   <string name="notification_downloading_body">Đang tải xuống %1$s%% trên %2$s</string>
@@ -105,7 +105,7 @@
   <string name="wait_for_wifi_button">Chờ Wi-Fi</string>
   <string name="continue_button">Tiếp tục</string>
   <string name="error_install_permissions_body"><![CDATA[Please go to Settings and grant <1>Aptoide Games</1> permissions to install apps!]]></string>
-  <string name="latest_title">Latest</string>
+  <string name="latest_title">Mới nhất</string>
   <string name="whats_new_title">What\'s New</string>
   <string name="screenshot_appview_1">A bonus in your in-app purchases.</string>
   <string name="screenshot_appview_2">Find top new games curated for you.</string>
@@ -184,7 +184,7 @@
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Bây giờ bạn có thể hoàn tất việc mua hàng của mình.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">Ví AppCoins hiện đã được cài đặt!</string>
   <string name="storage_access_permission_request_message">Cho phép truy cập vào bộ nhớ điện thoại của bạn để chúng tôi có thể tải xuống và cài đặt ứng dụng này.</string>
-  <string name="downloads_number_title">%s downloads</string>
+  <string name="downloads_number_title">Tải về %s</string>
   <!-- Payment Errors-->
   <string name="payments_error_not_enough_balance_body">Bạn không có đủ số dư</string>
   <string name="payments_error_old_card_title">Có vẻ như bạn đã đăng ký thẻ này từ lâu rồi!</string>
