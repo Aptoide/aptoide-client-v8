@@ -30,8 +30,8 @@
   <string name="settings_storage_title">ล้างหน่วยความจำ</string>
   <string name="settings_storage_clear_cache_title">ล้างแคช</string>
   <string name="settings_storage_cache_size_title">ตั้งขนาดแคชสูงสุด (MB)</string>
-  <string name="settings_clear_cache_title">Clear Aptoide Games storage</string>
-  <string name="settings_clear_cache_body">Are you sure you want to delete all icons, images, apk downloaded, obb, webservice data...</string>
+  <string name="settings_clear_cache_title">เคลียร์คลังเกมส์ใน Aptoide</string>
+  <string name="settings_clear_cache_body">คุณแน่ใจว่าคุณต้องการลบไอคอน รูปภาพ apk ดาวน์โหลด obb เว็ปเซอร์วิส ดาต้า ทั้งหมด…</string>
   <!-- MyGames -->
   <string name="my_games_empty">เราไม่พบเกมส์ใดๆ ที่ติดตั้งบนอุปกรณ์ของคุณ!</string>
   <string name="my_games_progress_message">การจัดระเบียบเกมส์ของคุณ</string>
@@ -39,7 +39,7 @@
   <!-- Notifications -->
   <string name="notifications_context_title">รับการแจ้งเตือน!</string>
   <string name="notification_installing_title">กำลังติดตั้ง</string>
-  <string name="notification_preparing_title">Preparing</string>
+  <string name="notification_preparing_title">กำลังเตรียม</string>
   <string name="notification_ready_install_title">บางแอปพร้อมสำหรับจะติดตั้งแล้ว!</string>
   <string name="notification_ready_install_body">แตะที่นี่เพื่อติดตั้ง%s</string>
   <string name="notification_waiting_body">กำลังรอเพื่อดาวโหลด</string>
@@ -104,14 +104,14 @@
   <string name="waiting_for_connection">รอการเชื่อมต่อ</string>
   <string name="wait_for_wifi_button">รอ Wi-Fi</string>
   <string name="continue_button">ต่อ</string>
-  <string name="error_install_permissions_body"><![CDATA[Please go to Settings and grant <1>Aptoide Games</1> permissions to install apps!]]></string>
+  <string name="error_install_permissions_body"><![CDATA[โปรดไปที่การตั้งค่าและให้สิทธิ์ <1>Aptoide Games</1> เพื่อติดตั้งแอป!]]></string>
   <string name="latest_title">ล่าสุด</string>
-  <string name="whats_new_title">What\'s New</string>
-  <string name="screenshot_appview_1">A bonus in your in-app purchases.</string>
-  <string name="screenshot_appview_2">Find top new games curated for you.</string>
-  <string name="screenshot_appview_3">A new way to discover your favorite game.</string>
-  <string name="screenshot_appview_4">A seamless interface with the best content.</string>
-  <string name="screenshot_appview_5">Hand-picked games only for you.</string>
+  <string name="whats_new_title">สิ่งใหม่</string>
+  <string name="screenshot_appview_1">โบนัสในการซื้อในแอปของคุณ</string>
+  <string name="screenshot_appview_2">หาเกมส์ใหม่ยอดนิยมสำหรับคุณ</string>
+  <string name="screenshot_appview_3">วิธีใหม่ในการค้นพบเกมส์ที่คุณชอบ</string>
+  <string name="screenshot_appview_4">อินเทอร์เฟซที่ราบรื่นพร้อมเนื้อหาที่ดีที่สุด</string>
+  <string name="screenshot_appview_5">เกมส์ที่คัดสรรมาเพื่อคุณเท่านั้น</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">ไม่มีพื้นที่ว่าง</string>
   <string name="out_of_space_body">คุณต้องใช้ %s เพื่อดำเนินการติดตั้งต่อ</string>
@@ -150,10 +150,10 @@
   <string name="appview_info_permissions_title" comment="permissions">สิทธิ์</string>
   <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%%จาก%2$s</string>
   <string name="error_short_title" comment="oops_an_error_occurred">อุ๊ปส์ เกิดข้อผิดพลาด</string>
-  <string name="purchase_done_bonus_title">Get a %s bonus!</string>
-  <string name="purchase_done_bonus_body">Download the AppCoins Wallet to get this bonus and use it in your next purchase.</string>
-  <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet installed!</string>
-  <string name="purchase_done_bonus_wallet_installed_body">Open it to find your bonus.</string>
+  <string name="purchase_done_bonus_title">รับโบนัส %s!</string>
+  <string name="purchase_done_bonus_body">ดาวน์โหลด AppCoins Wallet เพื่อรับโบนัสนี้และใช้ในการซื้อครั้งต่อไป</string>
+  <string name="purchase_done_bonus_wallet_installed_title">ติดตั้ง AppCoins Wallet</string>
+  <string name="purchase_done_bonus_wallet_installed_body">เปิดเพื่อค้นหาโบนัสของคุณ</string>
   <string name="bonus_banner_body">คุณจะได้รับโบนัสในเกมส์ที่กำหนดทั้งหมดด้วย%s</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">สูงสุด %s%% โบนัส</string>
   <string name="settings_payments_title" comment="contact_support_team">ติดต่อทีมสนับสนุน</string>
@@ -212,17 +212,17 @@
   <string name="bonus_page_title_1">โบนัสในทุกการซื้อ</string>
   <string name="bonus_page_body_1">ค้นหาเกมที่ระบุด้วย %1$s ติดตั้ง AppCoins Wallet และรับโบนัสสูงสุดถึง %2$s%% ในการซื้อทั้งหมด จากนั้นคุณสามารถใช้โบนัสนี้เพื่อซื้อสินค้าครั้งต่อไปในเกมที่คุณชื่นชอบได้!</string>
   <string name="bonus_page_title_2">ต้องการเพิ่มเติม?</string>
-  <string name="bonus_page_body_2"><![CDATA[You can get an extra <1>%s%% bonus</1> by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!]]></string>
+  <string name="bonus_page_body_2"><![CDATA[คุณสามารถรับโบนัสพิเศษ <1>%s%% </1> ได้โดยใช้รหัสโปรโมชั่นพิเศษเฉพาะในเกมส์นี้ของ Aptoide Games คอยติดตามและรับการแจ้งเตือน!]]></string>
   <!-- Promo Code -->
-  <string name="promo_code_install_wallet_banner_title">Up to %s%% Bonus in Every Purchase</string>
-  <string name="promo_code_install_wallet_banner_body">Use the AppCoins Wallet to make your in-app purchases and get a reward.</string>
-  <string name="promo_code_extra_title">Want More? Get %s%% Extra Bonus!</string>
-  <string name="promo_code_use_button">Use code</string>
-  <string name="promo_code_install_wallet_disclaimer">Install the AppCoins Wallet first.</string>
-  <string name="promo_code_notification_title">Redeem Your Promo Code</string>
-  <string name="promo_code_notification_body">Use your promo code to get extra bonuses in your favorite game.</string>
-  <string name="promo_code_notification_without_wallet_title">%s%% Extra Bonus!</string>
-  <string name="promo_code_notification_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
-  <string name="promo_code_share_title">You\'ve got a promo code!</string>
-  <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorite game.</string>
+  <string name="promo_code_install_wallet_banner_title">โบนัสสูงถึง %s%% ในทุกการซื้อ</string>
+  <string name="promo_code_install_wallet_banner_body">ใช้ AppCoins Wallet เพื่อซื้อสินค้าในแอปและรับรางวัล</string>
+  <string name="promo_code_extra_title">ต้องการมากกว่านี้ไหม? รับโบนัสพิเศษ %s%% !</string>
+  <string name="promo_code_use_button">ใช้โค้ด</string>
+  <string name="promo_code_install_wallet_disclaimer">ติดตั้ง AppCoins Wallet ก่อน</string>
+  <string name="promo_code_notification_title">แลกรับโค้ดของคุณ</string>
+  <string name="promo_code_notification_body">ใช้รหัสโปรโมชั่นของคุณเพื่อรับโบนัสพิเศษในเกมส์ที่คุณชื่นชอบ</string>
+  <string name="promo_code_notification_without_wallet_title">%s%%โบนัสพิเศษ!</string>
+  <string name="promo_code_notification_without_wallet_body">รับ AppCoins Wallet และใช้รหัสโปรโมชั่นของคุณเพื่อรับโบนัสพิเศษสำหรับการซื้อทั้งหมด</string>
+  <string name="promo_code_share_title">คุณได้รับโค้ดส่วนลด!</string>
+  <string name="promo_code_share_body">ใช้รหัสโปรโมชั่นนี้เพื่อรับโบนัสพิเศษในเกมส์ที่คุณชื่นชอบ</string>
 </resources>
