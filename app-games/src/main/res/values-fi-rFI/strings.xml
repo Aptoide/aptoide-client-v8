@@ -27,9 +27,9 @@
   <string name="settings_payment_support_description_title">Kuvaus</string>
   <string name="settings_contact_form_character_limit_title">(50 Characters Min.)</string>
   <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Description (50 characters min.)</string>
-  <string name="settings_storage_title">Storage</string>
-  <string name="settings_storage_clear_cache_title">Clear cache</string>
-  <string name="settings_storage_cache_size_title">Set max. cache size (MB)</string>
+  <string name="settings_storage_title">Tyhjennä muisti</string>
+  <string name="settings_storage_clear_cache_title">Tyhjennä välimuisti</string>
+  <string name="settings_storage_cache_size_title">Aseta välimuistin maksimikoko (Mb)</string>
   <string name="settings_clear_cache_title">Clear Aptoide Games storage</string>
   <string name="settings_clear_cache_body">Are you sure you want to delete all icons, images, apk downloaded, obb, webservice data...</string>
   <!-- MyGames -->
@@ -40,8 +40,8 @@
   <string name="notifications_context_title">Get notified!</string>
   <string name="notification_installing_title">Asennetaan</string>
   <string name="notification_preparing_title">Preparing</string>
-  <string name="notification_ready_install_title">An app is ready to be installed!</string>
-  <string name="notification_ready_install_body">Tap here to install %s.</string>
+  <string name="notification_ready_install_title">Sovellus on valmiina asennettavaksi!</string>
+  <string name="notification_ready_install_body">Napauta tästä asentaaksesi %s.</string>
   <string name="notification_waiting_body">Waiting for download</string>
   <string name="notification_1_installed_title">Asennettu</string>
   <string name="notification_downloading_body">Downloading %1$s%% of %2$s</string>
@@ -94,7 +94,7 @@
   <string name="try_again">Please try again.</string>
   <string name="please_wait">Odota.</string>
   <string name="ok_button">Ok</string>
-  <string name="cancel_button">Cancel</string>
+  <string name="cancel_button">Peruuta</string>
   <string name="download_now_button">Download Now</string>
   <string name="uninstall_button">Poista asennus</string>
   <string name="go_back_button">Go Back</string>
@@ -184,7 +184,7 @@
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">You can now complete your purchase.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">The AppCoins Wallet is now installed!</string>
   <string name="storage_access_permission_request_message">Allow access to your phone’s storage so we can download and install this app.</string>
-  <string name="downloads_number_title">%s downloads</string>
+  <string name="downloads_number_title">%s latausta</string>
   <!-- Payment Errors-->
   <string name="payments_error_not_enough_balance_body">You don\'t have enough balance</string>
   <string name="payments_error_old_card_title">It seems you registered this card long time ago!</string>
@@ -209,7 +209,7 @@
   <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
   <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
   <!-- Bonus Page -->
-  <string name="bonus_page_title_1">A Bonus on Every Purchase</string>
+  <string name="bonus_page_title_1">Bonusta jokaisesta ostoksesta</string>
   <string name="bonus_page_body_1">Look for the games identified with %1$s, install the AppCoins Wallet and get up to %2$s%% bonus in all purchases. You can then use this bonus to make your next purchases in your favorite games!</string>
   <string name="bonus_page_title_2">Want More?</string>
   <string name="bonus_page_body_2"><![CDATA[You can get an extra <1>%s%% bonus</1> by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!]]></string>
