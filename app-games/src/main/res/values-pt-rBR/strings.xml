@@ -27,11 +27,11 @@
   <string name="settings_payment_support_description_title">Descrição</string>
   <string name="settings_contact_form_character_limit_title">(Mín. 50 Caracteres)</string>
   <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Descrição (Mín. 50 caracteres)</string>
-  <string name="settings_storage_title">Storage</string>
-  <string name="settings_storage_clear_cache_title">Clear cache</string>
-  <string name="settings_storage_cache_size_title">Set max. cache size (MB)</string>
-  <string name="settings_clear_cache_title">Clear Aptoide Games storage</string>
-  <string name="settings_clear_cache_body">Are you sure you want to delete all icons, images, apk downloaded, obb, webservice data...</string>
+  <string name="settings_storage_title">Armazenamento</string>
+  <string name="settings_storage_clear_cache_title">Limpar cache</string>
+  <string name="settings_storage_cache_size_title">Máximo de cache (MB)</string>
+  <string name="settings_clear_cache_title">Limpar armazenamento do Aptoide Games</string>
+  <string name="settings_clear_cache_body">Tem certeza de que deseja excluir todos os ícones, imagens, apk baixado, obb, dados do webservice…</string>
   <!-- MyGames -->
   <string name="my_games_empty">Não encontramos nenhum jogo instalado em seu dispositivo!</string>
   <string name="my_games_progress_message">Organizando seus jogos</string>
@@ -39,9 +39,9 @@
   <!-- Notifications -->
   <string name="notifications_context_title">Receba notificações!</string>
   <string name="notification_installing_title">Instalando</string>
-  <string name="notification_preparing_title">Preparing</string>
-  <string name="notification_ready_install_title">An app is ready to be installed!</string>
-  <string name="notification_ready_install_body">Tap here to install %s.</string>
+  <string name="notification_preparing_title">Preparando</string>
+  <string name="notification_ready_install_title">Um app está pronto para ser instalado!</string>
+  <string name="notification_ready_install_body">Toque aqui para instalar %s.</string>
   <string name="notification_waiting_body">Aguardando baixar</string>
   <string name="notification_1_installed_title">Instalado</string>
   <string name="notification_downloading_body">Baixando %1$s%% de %2$s</string>
@@ -207,7 +207,7 @@
   <string name="bonus_page_title_1">Um Bônus em Cada Compra</string>
   <string name="bonus_page_body_1">Encontre os jogos identificados com %1$s, instale o AppCoins Wallet e ganhe até %2$s%% de bônus em todas as compras. Você poderá usar esse bônus em suas próximas compras nos seus jogos favoritos!</string>
   <string name="bonus_page_title_2">Quer Mais?</string>
-  <string name="bonus_page_body_2"><![CDATA[You can get an extra <1>%s%% bonus</1> by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!]]></string>
+  <string name="bonus_page_body_2"><![CDATA[Você pode ganhar um bônus extra de <1>%s%%</1> usando um código promocional exclusivo do Aptoide Games em jogos específicos. Fique atento para as notificações!]]></string>
   <!-- Promo Code -->
   <string name="promo_code_install_wallet_banner_title">Até %s%% de Bônus em Cada Compra</string>
   <string name="promo_code_install_wallet_banner_body">Use o AppCoins Wallet para fazer suas compras dentro do aplicativo e ganhe uma recompensa.</string>
