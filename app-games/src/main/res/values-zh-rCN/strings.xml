@@ -30,7 +30,7 @@
   <string name="settings_storage_title">存储空间</string>
   <string name="settings_storage_clear_cache_title">清除缓存</string>
   <string name="settings_storage_cache_size_title">设置最大缓存大小 (MB)</string>
-  <string name="settings_clear_cache_title">Clear Aptoide Games storage</string>
+  <string name="settings_clear_cache_title">清除 Aptoide 游戏存储空间</string>
   <string name="settings_clear_cache_body">Are you sure you want to delete all icons, images, apk downloaded, obb, webservice data...</string>
   <!-- MyGames -->
   <string name="my_games_empty">我们在您的设备上找不到任何安装的游戏！</string>
