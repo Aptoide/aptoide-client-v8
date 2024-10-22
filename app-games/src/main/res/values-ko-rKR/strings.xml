@@ -41,7 +41,7 @@
   <string name="notification_installing_title">설치중</string>
   <string name="notification_preparing_title">준비 중</string>
   <string name="notification_ready_install_title">앱을 설치할 준비가 되었습니다!</string>
-  <string name="notification_ready_install_body">%s을(를) 설치하려면 여기를 누르세요.</string>
+  <string name="notification_ready_install_body">여기를 탭하여 %s 앱을 설치하세요.</string>
   <string name="notification_waiting_body">다운로드 대기 중</string>
   <string name="notification_1_installed_title">설치됨</string>
   <string name="notification_downloading_body">%2$s의 %1$s%% 다운로드 중</string>
@@ -212,7 +212,7 @@
   <string name="bonus_page_title_1">모든 구매 시 보너스 제공</string>
   <string name="bonus_page_body_1">%1$s로 표시된 게임을 찾아 AppCoins Wallet을 설치하고 모든 구매 시 최대 %2$s%% 보너스를 받으세요. 이 보너스를 사용하여 좋아하는 게임에서 다음 구매를 진행할 수 있습니다!</string>
   <string name="bonus_page_title_2">더 원하는 것이 있으신가요?</string>
-  <string name="bonus_page_body_2"><![CDATA[특정 게임에서 Aptoide Games 전용 프로모션 코드를 사용하면 <1>%s%% 추가 보너스</1>를 받을 수 있습니다. 계속 주시하면 알림을 받아보실 수 있습니다!]]></string>
+  <string name="bonus_page_body_2"><![CDATA[특정 게임에서 Aptoide Games 전용 프로모션 코드를 사용하면 <1>%s%% 추가 보너스</1>를 받을 수 있습니다. 계속 지켜보시면 알림을 받아보실 수 있습니다!]]></string>
   <!-- Promo Code -->
   <string name="promo_code_install_wallet_banner_title">모든 구매 시 최대 %s%% 보너스 제공</string>
   <string name="promo_code_install_wallet_banner_body">AppCoins 지갑을 사용하여 앱내 구매를 하고 보상을 받으세요.</string>
