@@ -109,6 +109,12 @@ class InstallAnalytics(
       packageName = packageName,
       analyticsPayload = analyticsPayload
     )
+
+    logBIDownloadEvent(
+      packageName = packageName,
+      status = "cancel",
+      analyticsPayload = analyticsPayload
+    )
   }
 
   fun sendInstallDialogImpressionEvent(
