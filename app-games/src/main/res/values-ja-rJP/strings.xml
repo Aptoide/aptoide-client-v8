@@ -107,6 +107,11 @@
   <string name="error_install_permissions_body"><![CDATA[設定から<1>Aptoide Games</1>にアプリのインストール許可を与えてください。]]></string>
   <string name="latest_title">最新</string>
   <string name="whats_new_title">最新情報</string>
+  <string name="screenshot_appview_1">A bonus in your in-app purchases.</string>
+  <string name="screenshot_appview_2">Find top new games curated for you.</string>
+  <string name="screenshot_appview_3">A new way to discover your favorite game.</string>
+  <string name="screenshot_appview_4">A seamless interface with the best content.</string>
+  <string name="screenshot_appview_5">Hand-picked games only for you.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">空き容量不足</string>
   <string name="out_of_space_body">インストールを続行するには %s 必要です。</string>
