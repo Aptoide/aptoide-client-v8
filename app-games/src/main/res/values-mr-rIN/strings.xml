@@ -107,6 +107,11 @@
   <string name="error_install_permissions_body"><![CDATA[अॅप्स इंस्टॉल करण्यासाठी कृपया सेटिंग्जमधुन <1>Aptoide खेळांना</1> परवानगी द्या!]]></string>
   <string name="latest_title">नविनोत्तम</string>
   <string name="whats_new_title">नव काय आहे</string>
+  <string name="screenshot_appview_1">A bonus in your in-app purchases.</string>
+  <string name="screenshot_appview_2">Find top new games curated for you.</string>
+  <string name="screenshot_appview_3">A new way to discover your favorite game.</string>
+  <string name="screenshot_appview_4">A seamless interface with the best content.</string>
+  <string name="screenshot_appview_5">Hand-picked games only for you.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">जागा संपली</string>
   <string name="out_of_space_body">इंस्टलेशनसह %s हे चालू ठेवणे आपल्याला आवश्यक आहे.</string>
@@ -216,8 +221,8 @@
   <string name="promo_code_install_wallet_disclaimer">प्रथम अॅपकॉईन्स वॉलेट इंस्टॉल करा.</string>
   <string name="promo_code_notification_title">आपला प्रोमो कोड रिडीम करा</string>
   <string name="promo_code_notification_body">आपल्या आवडत्या खेळात प्रोमो कोड वापरुन अतिरिक्त बोनस मिळवा.</string>
-  <string name="promo_code_notification_without_wallet_title">%s%% Extra Bonus!</string>
-  <string name="promo_code_notification_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
-  <string name="promo_code_share_title">You\'ve got a promo code!</string>
-  <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorite game.</string>
+  <string name="promo_code_notification_without_wallet_title">%s%% अतिरिक्त बोनस!</string>
+  <string name="promo_code_notification_without_wallet_body">सर्व खरेदीवर अतिरिक्त बोनस मिळविण्यासाठी अॅपकॉईन्स वॉलेट मिळवुन आपला प्रोमो कोड वापरा.</string>
+  <string name="promo_code_share_title">आपणांस प्रोमो कोड मिळालाय</string>
+  <string name="promo_code_share_body">हा प्रोमो कोड आपल्या आवडत्या खेळात वापरुन अतिरिक्त बोनस मिळवा.</string>
 </resources>
