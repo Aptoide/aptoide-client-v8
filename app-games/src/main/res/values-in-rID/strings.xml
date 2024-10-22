@@ -27,9 +27,9 @@
   <string name="settings_payment_support_description_title">Deskripsi</string>
   <string name="settings_contact_form_character_limit_title">(Minimal 50 Karakter)</string>
   <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Deskripsi (minimal 50 karakter)</string>
-  <string name="settings_storage_title">Storage</string>
-  <string name="settings_storage_clear_cache_title">Clear cache</string>
-  <string name="settings_storage_cache_size_title">Set max. cache size (MB)</string>
+  <string name="settings_storage_title">Penyimpanan</string>
+  <string name="settings_storage_clear_cache_title">Bersihkan cache</string>
+  <string name="settings_storage_cache_size_title">Tentukan ukuran cache maksimal (MB)</string>
   <string name="settings_clear_cache_title">Clear Aptoide Games storage</string>
   <string name="settings_clear_cache_body">Are you sure you want to delete all icons, images, apk downloaded, obb, webservice data...</string>
   <!-- MyGames -->
@@ -40,8 +40,8 @@
   <string name="notifications_context_title">Dapatkan pemberitahuan!</string>
   <string name="notification_installing_title">Memasang</string>
   <string name="notification_preparing_title">Preparing</string>
-  <string name="notification_ready_install_title">An app is ready to be installed!</string>
-  <string name="notification_ready_install_body">Tap here to install %s.</string>
+  <string name="notification_ready_install_title">Ad satu aplikasi yang siap diinstal!</string>
+  <string name="notification_ready_install_body">Ketuk di sini untuk menginstal %s.</string>
   <string name="notification_waiting_body">Menunggu unduhan</string>
   <string name="notification_1_installed_title">Terpasang</string>
   <string name="notification_downloading_body">Mengunduh %1$s%% dari %2$s</string>
@@ -105,7 +105,7 @@
   <string name="wait_for_wifi_button">Tunggu Wi-Fi</string>
   <string name="continue_button">Lanjutkan</string>
   <string name="error_install_permissions_body"><![CDATA[Silakan buka Pengaturan dan berikan izin ke <1>Aptoide Games</1> untuk memasang aplikasi!]]></string>
-  <string name="latest_title">Latest</string>
+  <string name="latest_title">Terbaru</string>
   <string name="whats_new_title">What\'s New</string>
   <string name="screenshot_appview_1">A bonus in your in-app purchases.</string>
   <string name="screenshot_appview_2">Find top new games curated for you.</string>
@@ -184,7 +184,7 @@
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Sekarang Anda bisa menyelesaikan pembelian Anda.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">Dompet AppCoins sekarang diinstal!</string>
   <string name="storage_access_permission_request_message">Harap izinkan akses pada penyimpanan ponsel Anda agar kami dapat mengunduh dan memasang aplikasi ini.</string>
-  <string name="downloads_number_title">%s downloads</string>
+  <string name="downloads_number_title">%s unduhan</string>
   <!-- Payment Errors-->
   <string name="payments_error_not_enough_balance_body">Saldo Anda tidak cukup</string>
   <string name="payments_error_old_card_title">Sepertinya Anda sudah lama mendaftarkan kartu ini!</string>
