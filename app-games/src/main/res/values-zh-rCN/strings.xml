@@ -31,7 +31,7 @@
   <string name="settings_storage_clear_cache_title">清除缓存</string>
   <string name="settings_storage_cache_size_title">设置最大缓存大小 (MB)</string>
   <string name="settings_clear_cache_title">清除 Aptoide 游戏存储空间</string>
-  <string name="settings_clear_cache_body">Are you sure you want to delete all icons, images, apk downloaded, obb, webservice data...</string>
+  <string name="settings_clear_cache_body">您是否确定要删除所有图标、图像、已下载 apk、obb文件、Web服务数据……</string>
   <!-- MyGames -->
   <string name="my_games_empty">我们在您的设备上找不到任何安装的游戏！</string>
   <string name="my_games_progress_message">整理您的游戏</string>
@@ -39,7 +39,7 @@
   <!-- Notifications -->
   <string name="notifications_context_title">获得通知！</string>
   <string name="notification_installing_title">正在安装</string>
-  <string name="notification_preparing_title">Preparing</string>
+  <string name="notification_preparing_title">准备中</string>
   <string name="notification_ready_install_title">一款应用已可安装！</string>
   <string name="notification_ready_install_body">点击此处安装%s。</string>
   <string name="notification_waiting_body">等待下载中</string>
@@ -104,14 +104,14 @@
   <string name="waiting_for_connection">等待网络连接中</string>
   <string name="wait_for_wifi_button">等待 Wi-Fi 中</string>
   <string name="continue_button">继续</string>
-  <string name="error_install_permissions_body"><![CDATA[Please go to Settings and grant <1>Aptoide Games</1> permissions to install apps!]]></string>
+  <string name="error_install_permissions_body"><![CDATA[请前往“设置”并授予<1>Aptoide Games</1>安装应用 (App) 的权限！]]></string>
   <string name="latest_title">最新</string>
-  <string name="whats_new_title">What\'s New</string>
-  <string name="screenshot_appview_1">A bonus in your in-app purchases.</string>
-  <string name="screenshot_appview_2">Find top new games curated for you.</string>
-  <string name="screenshot_appview_3">A new way to discover your favorite game.</string>
-  <string name="screenshot_appview_4">A seamless interface with the best content.</string>
-  <string name="screenshot_appview_5">Hand-picked games only for you.</string>
+  <string name="whats_new_title">新功能</string>
+  <string name="screenshot_appview_1">完成应用内购买后将会获得奖金。</string>
+  <string name="screenshot_appview_2">找到最适合您的新游戏。</string>
+  <string name="screenshot_appview_3">探索您最喜爱游戏的全新方式。</string>
+  <string name="screenshot_appview_4">丝滑流畅的界面，为您呈现最优质的内容。</string>
+  <string name="screenshot_appview_5">专为您精心挑选的优质游戏。</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">空间不足</string>
   <string name="out_of_space_body">需要%s才能继续安装。</string>
@@ -150,10 +150,10 @@
   <string name="appview_info_permissions_title" comment="permissions">权限</string>
   <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%%/%2$s</string>
   <string name="error_short_title" comment="oops_an_error_occurred">哎呀，出错了</string>
-  <string name="purchase_done_bonus_title">Get a %s bonus!</string>
-  <string name="purchase_done_bonus_body">Download the AppCoins Wallet to get this bonus and use it in your next purchase.</string>
-  <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet installed!</string>
-  <string name="purchase_done_bonus_wallet_installed_body">Open it to find your bonus.</string>
+  <string name="purchase_done_bonus_title">获得 %s 奖金！</string>
+  <string name="purchase_done_bonus_body">下载 AppCoins 钱包以获取此奖金，并在下次购买时使用。</string>
+  <string name="purchase_done_bonus_wallet_installed_title">AppCoins 钱包已安装！</string>
+  <string name="purchase_done_bonus_wallet_installed_body">打开它以领取您的奖金。</string>
   <string name="bonus_banner_body">您将在所有标有%s的游戏中获得奖金。</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">高达 %s%% 的奖金</string>
   <string name="settings_payments_title" comment="contact_support_team">联系支持团队</string>
@@ -212,9 +212,9 @@
   <string name="bonus_page_title_1">每次购买均会获得奖金</string>
   <string name="bonus_page_body_1">寻找标有 %1$s 的游戏，安装 AppCoins 钱包，以在每次购买时获得高达 %2$s%% 的奖金。然后，您可以在最喜爱的游戏中进行下一次购买时使用此奖金。</string>
   <string name="bonus_page_title_2">想要获得更多？</string>
-  <string name="bonus_page_body_2"><![CDATA[You can get an extra <1>%s%% bonus</1> by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!]]></string>
+  <string name="bonus_page_body_2"><![CDATA[您可以通过在特定游戏中使用 Aptoide Games 的专属促销代码获得额外 <1>%s%% 的奖金</1>。请持续关注，您将很快收到最新资讯！]]></string>
   <!-- Promo Code -->
-  <string name="promo_code_install_wallet_banner_title">Up to %s%% Bonus in Every Purchase</string>
+  <string name="promo_code_install_wallet_banner_title">每次购买均可获得高达 %s%% 的奖金</string>
   <string name="promo_code_install_wallet_banner_body">Use the AppCoins Wallet to make your in-app purchases and get a reward.</string>
   <string name="promo_code_extra_title">Want More? Get %s%% Extra Bonus!</string>
   <string name="promo_code_use_button">Use code</string>
