@@ -107,11 +107,11 @@
   <string name="error_install_permissions_body"><![CDATA[설정으로 이동하여 <1>Aptoide Games</1>에 앱 설치 권한을 부여하세요!]]></string>
   <string name="latest_title">최신</string>
   <string name="whats_new_title">새로운 사항</string>
-  <string name="screenshot_appview_1">A bonus in your in-app purchases.</string>
-  <string name="screenshot_appview_2">Find top new games curated for you.</string>
-  <string name="screenshot_appview_3">A new way to discover your favorite game.</string>
-  <string name="screenshot_appview_4">A seamless interface with the best content.</string>
-  <string name="screenshot_appview_5">Hand-picked games only for you.</string>
+  <string name="screenshot_appview_1">인앱 구매 시 추가 보너스 제공</string>
+  <string name="screenshot_appview_2">당신을 위해 선별된 최고의 신작 게임을 찾아보세요.</string>
+  <string name="screenshot_appview_3">좋아하는 게임을 발견하는 새로운 방법.</string>
+  <string name="screenshot_appview_4">최고의 콘텐츠로 원활한 인터페이스를 제공합니다.</string>
+  <string name="screenshot_appview_5">당신을 위해 엄선된 게임.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">공간 부족</string>
   <string name="out_of_space_body">설치를 계속하려면 %s이(가) 필요합니다.</string>
