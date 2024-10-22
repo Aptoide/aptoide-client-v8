@@ -52,6 +52,36 @@ class InstallAnalytics(
     )
   }
 
+  fun sendRetryClick(
+    app: App,
+    networkType: String,
+    analyticsContext: AnalyticsUIContext,
+  ) {
+    genericAnalytics.sendRetryClick(
+      app = app,
+      networkType = networkType,
+      analyticsContext = analyticsContext
+    )
+
+    sendBIClickEvent(
+      app = app,
+      analyticsContext = analyticsContext,
+      action = "retry"
+    )
+  }
+
+  fun sendOpenClick(
+    packageName: String,
+    hasAPPCBilling: Boolean? = null,
+    analyticsContext: AnalyticsUIContext,
+  ) {
+    genericAnalytics.sendOpenClick(
+      packageName = packageName,
+      hasAPPCBilling = hasAPPCBilling,
+      analyticsContext = analyticsContext
+    )
+  }
+
   fun sendDownloadStartedEvent(
     packageName: String,
     analyticsPayload: AnalyticsPayload?,
@@ -222,30 +252,6 @@ class InstallAnalytics(
   ) {
     genericAnalytics.sendDownloadCancel(
       packageName = packageName,
-      analyticsContext = analyticsContext
-    )
-  }
-
-  fun sendOpenClick(
-    packageName: String,
-    hasAPPCBilling: Boolean? = null,
-    analyticsContext: AnalyticsUIContext,
-  ) {
-    genericAnalytics.sendOpenClick(
-      packageName = packageName,
-      hasAPPCBilling = hasAPPCBilling,
-      analyticsContext = analyticsContext
-    )
-  }
-
-  fun sendRetryClick(
-    app: App,
-    networkType: String,
-    analyticsContext: AnalyticsUIContext,
-  ) {
-    genericAnalytics.sendRetryClick(
-      app = app,
-      networkType = networkType,
       analyticsContext = analyticsContext
     )
   }
