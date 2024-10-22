@@ -178,6 +178,10 @@ fun AppViewYoutubePlayer(
             showVideo = true
           }
 
+          PlayerConstants.PlayerState.ENDED -> {
+            youtubePlayer?.cueVideo(videoId, 0f)
+          }
+
           else -> {}
         }
       }
