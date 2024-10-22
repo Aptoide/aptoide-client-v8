@@ -107,11 +107,11 @@
   <string name="error_install_permissions_body"><![CDATA[Перейдіть до Налаштувань і надайте <1>Aptoide Games</1> дозвіл на встановлення додатків!]]></string>
   <string name="latest_title">Останні</string>
   <string name="whats_new_title">Що нового</string>
-  <string name="screenshot_appview_1">A bonus in your in-app purchases.</string>
-  <string name="screenshot_appview_2">Find top new games curated for you.</string>
-  <string name="screenshot_appview_3">A new way to discover your favorite game.</string>
-  <string name="screenshot_appview_4">A seamless interface with the best content.</string>
-  <string name="screenshot_appview_5">Hand-picked games only for you.</string>
+  <string name="screenshot_appview_1">Бонус у ваших покупках в додатку.</string>
+  <string name="screenshot_appview_2">Знайдіть найкращі нові ігри, підібрані спеціально для вас.</string>
+  <string name="screenshot_appview_3">Новий спосіб знайти свою улюблену гру.</string>
+  <string name="screenshot_appview_4">Зручний інтерфейс з найкращим контентом.</string>
+  <string name="screenshot_appview_5">Відібрані ігри спеціально для вас.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Немає вільного місця</string>
   <string name="out_of_space_body">Вам потрібно %s, щоб продовжити встановлення.</string>
