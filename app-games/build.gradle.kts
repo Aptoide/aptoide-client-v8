@@ -18,7 +18,7 @@ android {
   defaultConfig {
     applicationId = "com.aptoide.android.aptoidegames"
     versionCode = Integer.parseInt(project.property("VERSION_CODE_APTOIDEGAMES").toString())
-    versionName = "0.9.1"
+    versionName = (System.getenv("VERSION_NAME") ?: "").ifBlank { "internal.${getDate()}" }
 
     System.getenv("STORE_NAME")
       .also {
@@ -112,7 +112,6 @@ android {
       val adyenKey = project.property("ADYEN_PUBLIC_KEY_DEV").toString()
       dimension = "mode"
       applicationIdSuffix = ".dev"
-      versionNameSuffix = "." + getDate()
 
       manifestPlaceholders["payment_intent_filter_priority"] = "8"
       manifestPlaceholders["payment_intent_filter_host"] =
