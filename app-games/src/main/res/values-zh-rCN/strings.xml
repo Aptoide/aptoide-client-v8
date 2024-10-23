@@ -215,14 +215,14 @@
   <string name="bonus_page_body_2"><![CDATA[您可以通过在特定游戏中使用 Aptoide Games 的专属促销代码获得额外 <1>%s%% 的奖金</1>。请持续关注，您将很快收到最新资讯！]]></string>
   <!-- Promo Code -->
   <string name="promo_code_install_wallet_banner_title">每次购买均可获得高达 %s%% 的奖金</string>
-  <string name="promo_code_install_wallet_banner_body">Use the AppCoins Wallet to make your in-app purchases and get a reward.</string>
-  <string name="promo_code_extra_title">Want More? Get %s%% Extra Bonus!</string>
-  <string name="promo_code_use_button">Use code</string>
-  <string name="promo_code_install_wallet_disclaimer">Install the AppCoins Wallet first.</string>
-  <string name="promo_code_notification_title">Redeem Your Promo Code</string>
-  <string name="promo_code_notification_body">Use your promo code to get extra bonuses in your favorite game.</string>
-  <string name="promo_code_notification_without_wallet_title">%s%% Extra Bonus!</string>
-  <string name="promo_code_notification_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
-  <string name="promo_code_share_title">You\'ve got a promo code!</string>
-  <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorite game.</string>
+  <string name="promo_code_install_wallet_banner_body">使用 AppCoins 钱包进行应用内购买，并享受丰厚奖励。</string>
+  <string name="promo_code_extra_title">想要更多？获取 %s%% 的额外奖金！</string>
+  <string name="promo_code_use_button">使用促销代码</string>
+  <string name="promo_code_install_wallet_disclaimer">请先安装 AppCoins 钱包。</string>
+  <string name="promo_code_notification_title">兑换促销代码</string>
+  <string name="promo_code_notification_body">使用您的促销代码，在您最喜爱的游戏中获取额外奖金。</string>
+  <string name="promo_code_notification_without_wallet_title">%s%% 的额外奖金！</string>
+  <string name="promo_code_notification_without_wallet_body">下载 AppCoins 钱包，并使用您的促销代码在每次购买时获取额外奖励。</string>
+  <string name="promo_code_share_title">您获得了一个促销代码！</string>
+  <string name="promo_code_share_body">使用此促销代码，在您最喜爱的游戏中获取额外奖金。</string>
 </resources>
