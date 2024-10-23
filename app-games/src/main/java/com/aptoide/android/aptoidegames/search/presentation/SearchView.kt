@@ -66,6 +66,7 @@ import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.appview.LoadingView
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
+import com.aptoide.android.aptoidegames.bottom_bar.ScreenWithBottomBar
 import com.aptoide.android.aptoidegames.drawables.icons.getAsterisk
 import com.aptoide.android.aptoidegames.drawables.icons.getClose
 import com.aptoide.android.aptoidegames.drawables.icons.getGames
@@ -77,6 +78,7 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.AppItem
 import com.aptoide.android.aptoidegames.feature_apps.presentation.LargeAppItem
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.search.SearchType
+import com.aptoide.android.aptoidegames.search.SearchType.MANUAL
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 
@@ -106,58 +108,60 @@ fun searchScreen() = ScreenData.withAnalytics(
   val keyboardController = LocalSoftwareKeyboardController.current
 
   OverrideAnalyticsSearchMeta(searchMeta = searchMeta, navigate = navigate) { navigateTo ->
-    SearchView(
-      uiState = uiState,
-      searchValue = searchValue,
-      onSelectSearchSuggestion = { suggestion, searchType, index ->
-        focusManager.clearFocus()
-        keyboardController?.hide()
-        searchMeta = SearchMeta(
-          insertedKeyword = searchValue,
-          searchKeyword = suggestion,
-          searchType = searchType.type
-        )
-          .also {
-            searchAnalytics.sendSearchEvent(
-              searchMeta = it,
-              searchTermPosition = index,
-            )
-          }
-        searchValue = suggestion
-        searchViewModel.onSelectSearchSuggestion(suggestion)
-      },
-      onRemoveSuggestion = { searchViewModel.onRemoveSearchSuggestion(it) },
-      onSearchValueChanged = {
-        searchValue = it
-        searchMeta = null
-        searchViewModel.onSearchInputValueChanged(it)
-      },
-      onSearchQueryClick = {
-        if (searchValue.isValidSearch()) {
-          searchValue = searchValue.trim()
-          searchMeta = SearchMeta(
-            insertedKeyword = searchValue,
-            searchKeyword = searchValue,
-            searchType = SearchType.MANUAL.type
-          )
-            .also(searchAnalytics::sendSearchEvent)
+    ScreenWithBottomBar {
+      SearchView(
+        uiState = uiState,
+        searchValue = searchValue,
+        onSelectSearchSuggestion = { suggestion, searchType, index ->
           focusManager.clearFocus()
           keyboardController?.hide()
-          searchViewModel.searchApp(searchValue)
-        }
-      },
-      onItemClick = { index, app ->
-        searchAnalytics.sendSearchResultClickEvent(
-          app = app,
-          position = index,
-          searchMeta = searchMeta!!,
-        )
-        navigateTo(
-          buildAppViewRoute(app).withItemPosition(index)
-        )
-      },
-      onItemInstallStarted = {}
-    )
+          searchMeta = SearchMeta(
+            insertedKeyword = searchValue,
+            searchKeyword = suggestion,
+            searchType = searchType.type
+          )
+            .also {
+              searchAnalytics.sendSearchEvent(
+                searchMeta = it,
+                searchTermPosition = index,
+              )
+            }
+          searchValue = suggestion
+          searchViewModel.onSelectSearchSuggestion(suggestion)
+        },
+        onRemoveSuggestion = { searchViewModel.onRemoveSearchSuggestion(it) },
+        onSearchValueChanged = {
+          searchValue = it
+          searchMeta = null
+          searchViewModel.onSearchInputValueChanged(it)
+        },
+        onSearchQueryClick = {
+          if (searchValue.isValidSearch()) {
+            searchValue = searchValue.trim()
+            searchMeta = SearchMeta(
+              insertedKeyword = searchValue,
+              searchKeyword = searchValue,
+              searchType = MANUAL.type
+            )
+              .also(searchAnalytics::sendSearchEvent)
+            focusManager.clearFocus()
+            keyboardController?.hide()
+            searchViewModel.searchApp(searchValue)
+          }
+        },
+        onItemClick = { index, app ->
+          searchAnalytics.sendSearchResultClickEvent(
+            app = app,
+            position = index,
+            searchMeta = searchMeta!!,
+          )
+          navigateTo(
+            buildAppViewRoute(app).withItemPosition(index)
+          )
+        },
+        onItemInstallStarted = {}
+      )
+    }
   }
 }
 
