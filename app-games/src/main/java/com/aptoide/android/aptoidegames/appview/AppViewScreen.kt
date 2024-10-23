@@ -87,7 +87,7 @@ import com.aptoide.android.aptoidegames.drawables.icons.getBookmarkStar
 import com.aptoide.android.aptoidegames.drawables.icons.getForward
 import com.aptoide.android.aptoidegames.drawables.icons.getLeftArrow
 import com.aptoide.android.aptoidegames.drawables.icons.getRatingStar
-import com.aptoide.android.aptoidegames.editorial.EditorialsViewCard
+import com.aptoide.android.aptoidegames.editorial.EditorialsViewCardLarge
 import com.aptoide.android.aptoidegames.editorial.buildEditorialRoute
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.error_views.NoConnectionView
@@ -326,8 +326,8 @@ fun AppViewContent(
         AptoideOutlinedText(
           text = stringResource(
             id = R.string.bonus_banner_title,
-            "20"
-          ), //TODO Hardcoded value (should come from backend in the future)
+            "20" //TODO Hardcoded value (should come from backend in the future)
+          ),
           style = AGTypography.InputsM,
           outlineWidth = 10f,
           outlineColor = Palette.Black,
@@ -682,7 +682,7 @@ private fun ShowRelatedContentView(
       verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
       state.forEach { articleMeta ->
-        EditorialsViewCard(
+        EditorialsViewCardLarge(
           articleMeta = articleMeta,
           onClick = {
             navigate(

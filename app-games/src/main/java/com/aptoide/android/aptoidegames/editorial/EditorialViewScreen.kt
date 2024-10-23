@@ -7,10 +7,10 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -43,6 +43,8 @@ import cm.aptoide.pt.feature_editorial.presentation.editorialViewModel
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.BundleSource.MANUAL
 import cm.aptoide.pt.feature_home.domain.Type.EDITORIAL
+import cm.aptoide.pt.feature_home.domain.WidgetAction
+import cm.aptoide.pt.feature_home.domain.WidgetActionType.BUTTON
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
 import com.aptoide.android.aptoidegames.BuildConfig
@@ -141,18 +143,19 @@ private fun ArticleViewContent(
           translationY = scrolledY * 0.2f
           previousOffset = lazyListState.firstVisibleItemScrollOffset
         }
-        .height(208.dp)
+        .aspectRatio(360 / 200f)
         .fillMaxWidth(),
       data = article?.image,
       contentDescription = "Background Image"
     )
     LazyColumn(
-      state = lazyListState
+      state = lazyListState,
+      contentPadding = PaddingValues(bottom = 32.dp)
     ) {
       item {
         Box(
           modifier = Modifier
-            .height(height = 208.dp)
+            .aspectRatio(360 / 200f)
             .padding(horizontal = 16.dp)
         ) {
           TopAppBar(
@@ -215,7 +218,7 @@ private fun ArticleViewContent(
               ContentMedia(
                 modifier = Modifier
                   .fillMaxWidth()
-                  .aspectRatio(ratio = 1.81f)
+                  .aspectRatio(328 / 192f)
                   .background(color = Palette.Black)
                   .padding(vertical = 8.dp, horizontal = 16.dp),
                 media = it
@@ -259,12 +262,10 @@ private fun ArticleViewContent(
         }
         item {
           EditorialBundle(
-            modifier = Modifier
-              .fillMaxWidth()
-              .background(color = Palette.Black),
+            modifier = Modifier.padding(top = 24.dp),
             bundle = Bundle(
               title = stringResource(R.string.editorial_more_articles_title),
-              actions = emptyList(),
+              actions = listOf(WidgetAction(type = BUTTON, tag = "editorial-more", url = "null")),
               type = EDITORIAL,
               tag = article.relatedTag,
               view = "",
