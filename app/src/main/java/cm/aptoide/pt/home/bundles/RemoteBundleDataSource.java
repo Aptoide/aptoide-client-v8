@@ -262,7 +262,12 @@ public class RemoteBundleDataSource implements BundleDataSource {
     if (isLoading(key)) {
       return Single.just(new HomeBundlesModel(true));
     }
-    String newUrl = url.replace(V7.getHost(sharedPreferences), "");
+    String newUrl = "";
+    if (V7.isUrlBaseCache(url)) {
+      newUrl = url.replace(V7.getCacheHost(sharedPreferences), "");
+    } else {
+      newUrl = url.replace(V7.getHost(sharedPreferences), "");
+    }
     return getMoreBundlesRequest(newUrl, offset, limit).observe(invalidateHttpCache, false)
         .doOnSubscribe(() -> {
           loading.put(key, true);

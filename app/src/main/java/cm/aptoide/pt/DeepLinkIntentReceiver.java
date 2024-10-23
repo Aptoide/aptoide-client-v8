@@ -323,7 +323,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
         try {
           Uri uri = Uri.parse(
               "aptoide://cm.aptoide.pt/deeplink?name=listApps&layout=GRID&type=API&title=bundle&action="
-                  + URLEncoder.encode("https://ws75.aptoide.com/api/7/listApps/store_name="
+                  + URLEncoder.encode("https://ws75-cache.aptoide.com/api/7/listApps/store_name="
                   + storeName
                   + "/group_name="
                   + bundleId

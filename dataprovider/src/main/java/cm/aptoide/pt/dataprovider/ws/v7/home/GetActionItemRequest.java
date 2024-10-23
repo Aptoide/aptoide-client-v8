@@ -26,7 +26,7 @@ public class GetActionItemRequest extends V7<ActionItemResponse, GetActionItemRe
     return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
         : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
         + "://"
-        + BuildConfig.APTOIDE_WEB_SERVICES_V7_HOST
+        + BuildConfig.APTOIDE_WEB_SERVICES_V7_CACHE_HOST
         + "/api/7.20181019/";
   }
 
@@ -39,7 +39,7 @@ public class GetActionItemRequest extends V7<ActionItemResponse, GetActionItemRe
 
   @Override protected Observable<ActionItemResponse> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.getActionItem(url, body, bypassCache);
+    return interfaces.getActionItem(url, getQueryStringMapper().map(body), bypassCache);
   }
 
   public static class Body extends BaseBody {

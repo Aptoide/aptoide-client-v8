@@ -24,8 +24,8 @@ public class GetHomeBundlesRequest extends V7<GetStoreWidgets, GetHomeBundlesReq
   private GetHomeBundlesRequest(Body body, OkHttpClient httpClient,
       Converter.Factory converterFactory, BodyInterceptor bodyInterceptor,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
-    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
-        tokenInvalidator);
+    super(body, getCacheHost(sharedPreferences), httpClient, converterFactory,
+        bodyInterceptor, tokenInvalidator);
   }
 
   public static GetHomeBundlesRequest of(int limit, int offset, OkHttpClient httpClient,
@@ -45,7 +45,7 @@ public class GetHomeBundlesRequest extends V7<GetStoreWidgets, GetHomeBundlesReq
   @Override protected Observable<GetStoreWidgets> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
     return Observable.just(null)
-        .flatMap(__ -> interfaces.getHomeBundles(body, bypassCache));
+        .flatMap(__ -> interfaces.getHomeBundles(bypassCache, getQueryStringMapper().map(body)));
   }
 
   public static class Body extends BaseBody implements Endless {

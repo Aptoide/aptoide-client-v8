@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.store.view;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -76,6 +77,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     fragment.setArguments(args);
     return fragment;
   }
+
   @NonNull
   protected static Bundle buildBundle(Event event, HomeEvent.Type homeEventType, String title,
       String storeTheme, String tag, StoreContext storeContext, boolean shouldShowToolbar) {
@@ -121,7 +123,6 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
 
     super.onCreate(savedInstanceState);
     setHasOptionsMenu(true);
-
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
@@ -158,9 +159,9 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
     if (create || refresh || !hasDisplayables()) {
-      String url = action != null ? action.replace(V7.getHost(
-          ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences()),
-          "") : null;
+      String url = action != null ? replaceActionUrl(action,
+          ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())
+          : null;
 
       if (!StoreTabFragmentChooser.validateAcceptedName(name)) {
         throw new RuntimeException(
@@ -183,6 +184,16 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
             });
       }
     }
+  }
+
+  private String replaceActionUrl(String urlToReplace, SharedPreferences sharedPreferences) {
+    String url = "";
+    if (V7.isUrlBaseCache(urlToReplace)) {
+      url = urlToReplace.replace(V7.getCacheHost(sharedPreferences), "");
+    } else {
+      url = urlToReplace.replace(V7.getHost(sharedPreferences), "");
+    }
+    return url;
   }
 
   @Nullable
@@ -210,10 +221,9 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
 
   @Override public void setupToolbarDetails(Toolbar toolbar) {
     toolbar.setTitle(Translator.translate(title, getContext().getApplicationContext(), marketName));
-    if(!isESkills) {
+    if (!isESkills) {
       toolbar.setLogo(R.drawable.logo_toolbar);
     }
-
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -253,6 +263,5 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     public static final String GROUP_ID = "group_id";
     public static String STORE_CONTEXT = "Store_context";
     public static final String IS_ESKILLS = "is_eskills";
-
   }
 }

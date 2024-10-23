@@ -47,7 +47,7 @@ public class AppCoinsInfoNavigator {
   public void navigateToESkills() {
     fragmentNavigator.navigateTo(EskillsInfoFragment.newInstance("Earn More",
         "skills",
-        "https://ws75.aptoide.com/api/7/listApps/"
+        "https://ws75-cache.aptoide.com/api/7/listApps/"
             + "store_name=apps/group_id=14169744/sort=sort%3Apromotion%3Aupdated",
         "eSkills"), true);
   }

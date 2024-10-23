@@ -31,7 +31,13 @@ class EskillsInfoPresenter(
   ListAppsPresenter<Application>(view, viewScheduler, crashReporter) {
 
   private val url by lazy(LazyThreadSafetyMode.NONE) {
-    listAppsConfiguration.action?.replace(V7.getHost(sharedPreferences), "")
+    listAppsConfiguration.action?.let {
+      if (V7.isUrlBaseCache(listAppsConfiguration.action)) {
+        listAppsConfiguration.action.replace(V7.getCacheHost(sharedPreferences), "")
+      } else {
+        listAppsConfiguration.action.replace(V7.getHost(sharedPreferences), "")
+      }
+    }
   }
 
   override fun present() {
@@ -48,10 +54,9 @@ class EskillsInfoPresenter(
       .flatMap { walletAppProvider.getWalletApp() }
       .observeOn(viewScheduler)
       .doOnNext { walletApp ->
-        if(walletApp.isInstalled) {
+        if (walletApp.isInstalled) {
           view.hideWalletDisclaimer()
-        }
-        else {
+        } else {
           view.showWalletDisclaimer()
         }
       }
@@ -71,7 +76,6 @@ class EskillsInfoPresenter(
       .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
       .subscribe({}, { crashReporter.log(it) })
   }
-
 
   private fun handleWalletDisclaimerClick() {
     view.lifecycleEvent
@@ -102,7 +106,6 @@ class EskillsInfoPresenter(
       .subscribe({}, { crashReporter.log(it) })
   }
 
-
   override fun getApps(refresh: Boolean): Observable<List<Application>> {
     return listAppsMoreManager.loadFreshApps(
       url,
@@ -130,5 +133,4 @@ class EskillsInfoPresenter(
 
   override fun handleHeaderClick() {}
   override fun handleBundleHeaderClick() {}
-
 }

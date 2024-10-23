@@ -14,17 +14,26 @@ import cm.aptoide.pt.view.app.Application
 import rx.Observable
 import rx.Scheduler
 
-open class ListAppsMorePresenter(view: ListAppsView<Application>,
-                                 viewScheduler: Scheduler,
-                                 crashReporter: CrashReport,
-                                 private val appNavigator: AppNavigator,
-                                 private val sharedPreferences: SharedPreferences,
-                                 private val listAppsConfiguration: ListAppsConfiguration,
-                                 private val listAppsMoreManager: ListAppsMoreManager) :
-    ListAppsPresenter<Application>(view, viewScheduler, crashReporter) {
+open class ListAppsMorePresenter(
+  view: ListAppsView<Application>,
+  viewScheduler: Scheduler,
+  crashReporter: CrashReport,
+  private val appNavigator: AppNavigator,
+  private val sharedPreferences: SharedPreferences,
+  private val listAppsConfiguration: ListAppsConfiguration,
+  private val listAppsMoreManager: ListAppsMoreManager
+) :
+  ListAppsPresenter<Application>(view, viewScheduler, crashReporter) {
 
   private val url by lazy(LazyThreadSafetyMode.NONE) {
-    listAppsConfiguration.action?.replace(V7.getHost(sharedPreferences), "")
+    listAppsConfiguration.action?.let {
+      if (V7.isUrlBaseCache(listAppsConfiguration.action)) {
+        listAppsConfiguration.action.replace(V7.getCacheHost(sharedPreferences), "")
+      } else {
+        listAppsConfiguration.action.replace(V7.getHost(sharedPreferences), "")
+      }
+    }
+
   }
 
   override fun getApps(refresh: Boolean): Observable<List<Application>> {
@@ -41,12 +50,16 @@ open class ListAppsMorePresenter(view: ListAppsView<Application>,
 
   override fun handleAppClick(appClickEvent: ListAppsClickEvent<Application>) {
     if (appClickEvent.application is AptoideNativeAd) {
-      appNavigator.navigateWithAd(SearchAdResult(appClickEvent.application),
-          listAppsConfiguration.tag)
+      appNavigator.navigateWithAd(
+        SearchAdResult(appClickEvent.application),
+        listAppsConfiguration.tag
+      )
     } else {
-      appNavigator.navigateWithAppId(appClickEvent.application.appId,
-          appClickEvent.application.packageName, AppViewFragment.OpenType.OPEN_ONLY,
-          listAppsConfiguration.tag)
+      appNavigator.navigateWithAppId(
+        appClickEvent.application.appId,
+        appClickEvent.application.packageName, AppViewFragment.OpenType.OPEN_ONLY,
+        listAppsConfiguration.tag
+      )
     }
   }
 
