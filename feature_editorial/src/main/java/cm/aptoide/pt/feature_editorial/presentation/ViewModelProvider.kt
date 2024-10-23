@@ -24,6 +24,34 @@ class InjectionsProvider @Inject constructor(
 ) : ViewModel()
 
 @Composable
+fun rememberEditorialListState(
+  tag: String,
+  subtype: String? = null,
+  salt: String? = null
+): Pair<ArticleListUiState, () -> Unit> = runPreviewable(
+  preview = {
+    ArticleListUiState.Idle(List((0..50).random()) { randomArticleMeta }) to {}
+  },
+  real = {
+    val injectionsProvider = hiltViewModel<InjectionsProvider>()
+    val vm: EditorialsListViewModel = viewModel(
+      key = tag + subtype + salt,
+      factory = object : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+          @Suppress("UNCHECKED_CAST")
+          return EditorialsListViewModel(
+            tag = tag,
+            subtype = subtype,
+            articlesMetaUseCase = injectionsProvider.articlesMetaUseCase,
+          ) as T
+        }
+      }
+    )
+    val uiState by vm.uiState.collectAsState()
+    uiState to vm::reload
+  })
+
+@Composable
 fun rememberEditorialsCardState(
   tag: String,
   subtype: String? = null,

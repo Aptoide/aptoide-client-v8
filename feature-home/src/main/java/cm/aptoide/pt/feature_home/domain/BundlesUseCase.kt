@@ -22,7 +22,7 @@ class BundlesUseCase @Inject constructor(
           bundle.type == WidgetType.APPC_BANNER
         }?.let { bonusBundle ->
           BonusData.setBonusData(bonusBundle.title, bonusBundle.tag)
-        }?: urlsCache.putAll(mapOf(BonusData.currentData))
+        } ?: urlsCache.putAll(mapOf(BonusData.currentData))
       }
       .map {
         Bundle(
@@ -81,7 +81,9 @@ class BundlesUseCase @Inject constructor(
     WidgetType.ESKILLS -> Type.ESKILLS
     WidgetType.MY_GAMES -> Type.MY_GAMES
     WidgetType.GAMES_MATCH -> Type.GAMES_MATCH
-    WidgetType.ACTION_ITEM -> Type.EDITORIAL
+    WidgetType.ACTION_ITEM,
+    WidgetType.EDITORIAL -> Type.EDITORIAL
+
     WidgetType.STORE_GROUPS -> Type.CATEGORIES
     WidgetType.HTML_GAMES -> Type.HTML_GAMES
     else -> Type.UNKNOWN_BUNDLE
