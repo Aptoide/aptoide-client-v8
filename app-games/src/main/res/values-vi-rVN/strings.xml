@@ -107,8 +107,8 @@
   <string name="error_install_permissions_body"><![CDATA[Vui lòng vào Cài đặt và cấp quyền cho <1>Aptoide Games</1> để cài đặt ứng dụng!]]></string>
   <string name="latest_title">Mới nhất</string>
   <string name="whats_new_title">Có gì mới</string>
-  <string name="screenshot_appview_1">Phần thưởng khi mua hàng trong ứng dụng.</string>
-  <string name="screenshot_appview_2">Tìm những trò chơi mới hàng đầu được tuyển chọn dành cho bạn.</string>
+  <string name="screenshot_appview_1">Tiền thưởng khi mua hàng trong ứng dụng.</string>
+  <string name="screenshot_appview_2">Tìm những trò chơi mới hàng đầu được tuyển chọn dành riêng cho bạn.</string>
   <string name="screenshot_appview_3">Một cách mới để khám phá trò chơi yêu thích của bạn.</string>
   <string name="screenshot_appview_4">Một giao diện liền mạch với nội dung tốt nhất.</string>
   <string name="screenshot_appview_5">Trò chơi được chọn lọc dành riêng cho bạn.</string>
@@ -212,17 +212,17 @@
   <string name="bonus_page_title_1">Tiền thưởng cho mỗi lần mua hàng</string>
   <string name="bonus_page_body_1">Tìm kiếm các trò chơi được xác định bằng %1$s, cài đặt Ví AppCoins và nhận tiền thưởng lên đến %2$s%% trong mọi giao dịch mua. Sau đó, bạn có thể sử dụng tiền thưởng này để thực hiện các giao dịch mua tiếp theo trong các trò chơi yêu thích của mình!</string>
   <string name="bonus_page_title_2">Bạn vẫn muốn thêm?</string>
-  <string name="bonus_page_body_2"><![CDATA[You can get an extra <1>%s%% bonus</1> by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!]]></string>
+  <string name="bonus_page_body_2"><![CDATA[Bạn có thể nhận thêm <1>%s%% tiền thưởng</1> bằng cách sử dụng mã khuyến mãi độc quyền của Aptoide Games trong các trò chơi cụ thể. Hãy theo dõi và bạn sẽ nhận được thông báo!]]></string>
   <!-- Promo Code -->
-  <string name="promo_code_install_wallet_banner_title">Up to %s%% Bonus in Every Purchase</string>
-  <string name="promo_code_install_wallet_banner_body">Use the AppCoins Wallet to make your in-app purchases and get a reward.</string>
-  <string name="promo_code_extra_title">Want More? Get %s%% Extra Bonus!</string>
-  <string name="promo_code_use_button">Use code</string>
-  <string name="promo_code_install_wallet_disclaimer">Install the AppCoins Wallet first.</string>
-  <string name="promo_code_notification_title">Redeem Your Promo Code</string>
-  <string name="promo_code_notification_body">Use your promo code to get extra bonuses in your favorite game.</string>
-  <string name="promo_code_notification_without_wallet_title">%s%% Extra Bonus!</string>
-  <string name="promo_code_notification_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
-  <string name="promo_code_share_title">You\'ve got a promo code!</string>
-  <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorite game.</string>
+  <string name="promo_code_install_wallet_banner_title">Lên đến %s%% tiền thưởng trong mỗi lần mua hàng</string>
+  <string name="promo_code_install_wallet_banner_body">Sử dụng Ví AppCoins để thực hiện giao dịch mua trong ứng dụng và nhận phần thưởng.</string>
+  <string name="promo_code_extra_title">Muốn nhiều hơn? Nhận thêm %s%% tiền thưởng!</string>
+  <string name="promo_code_use_button">Sử dụng mã</string>
+  <string name="promo_code_install_wallet_disclaimer">Trước tiên hãy cài đặt Ví AppCoins.</string>
+  <string name="promo_code_notification_title">Đổi mã khuyến mãi của bạn</string>
+  <string name="promo_code_notification_body">Sử dụng mã khuyến mãi để nhận thêm tiền thưởng trong trò chơi yêu thích của bạn.</string>
+  <string name="promo_code_notification_without_wallet_title">Thêm %s%% tiền thưởng!</string>
+  <string name="promo_code_notification_without_wallet_body">Tải Ví AppCoins và sử dụng mã khuyến mãi của bạn để nhận thêm tiền thưởng cho mọi giao dịch mua.</string>
+  <string name="promo_code_share_title">Bạn đã có một mã khuyến mãi!</string>
+  <string name="promo_code_share_body">Sử dụng mã khuyến mãi này để nhận thêm tiền thưởng trong trò chơi yêu thích của bạn.</string>
 </resources>
