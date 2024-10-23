@@ -30,8 +30,8 @@
   <string name="settings_storage_title">Bersihkan Ingatan</string>
   <string name="settings_storage_clear_cache_title">Bersihkan cache</string>
   <string name="settings_storage_cache_size_title">Tetapkan saiz maks. cache (MB)</string>
-  <string name="settings_clear_cache_title">Clear Aptoide Games storage</string>
-  <string name="settings_clear_cache_body">Are you sure you want to delete all icons, images, apk downloaded, obb, webservice data...</string>
+  <string name="settings_clear_cache_title">Bersihkan storan Aptoide Games</string>
+  <string name="settings_clear_cache_body">Anda pasti mahu padam semua ikon, imej, muat turun apk, obb, data webservice...</string>
   <!-- MyGames -->
   <string name="my_games_empty">Tiada permainan yang dipasang pada peranti anda!</string>
   <string name="my_games_progress_message">Menyusun permainan anda</string>
@@ -39,7 +39,7 @@
   <!-- Notifications -->
   <string name="notifications_context_title">Dapatkan makluman!</string>
   <string name="notification_installing_title">Memasang</string>
-  <string name="notification_preparing_title">Preparing</string>
+  <string name="notification_preparing_title">Menyediakan</string>
   <string name="notification_ready_install_title">Satu aplikasi sudah sedia untuk dipasang!</string>
   <string name="notification_ready_install_body">Ketik sini untuk pasang %s.</string>
   <string name="notification_waiting_body">Menunggu muat turun</string>
@@ -106,12 +106,12 @@
   <string name="continue_button">Teruskan</string>
   <string name="error_install_permissions_body"><![CDATA[Sila pergi ke Tetapan dan izinkan <1>Permainan Aptoide</1> untuk pasang aplikasi!]]></string>
   <string name="latest_title">Terkini</string>
-  <string name="whats_new_title">What\'s New</string>
-  <string name="screenshot_appview_1">A bonus in your in-app purchases.</string>
-  <string name="screenshot_appview_2">Find top new games curated for you.</string>
-  <string name="screenshot_appview_3">A new way to discover your favorite game.</string>
-  <string name="screenshot_appview_4">A seamless interface with the best content.</string>
-  <string name="screenshot_appview_5">Hand-picked games only for you.</string>
+  <string name="whats_new_title">Terbaru</string>
+  <string name="screenshot_appview_1">Bonus bagi semua pembelian dalam aplikasi.</string>
+  <string name="screenshot_appview_2">Temui permainan terpilih untuk anda.</string>
+  <string name="screenshot_appview_3">Cara baru untuk temui permainan kegemaran.</string>
+  <string name="screenshot_appview_4">Antara muka yang lancar dengan kandungan terbaik.</string>
+  <string name="screenshot_appview_5">Permainan yang dipilih khas untuk anda.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Tiada Ruang</string>
   <string name="out_of_space_body">Anda perlu %s untuk teruskan pemasangan.</string>
@@ -212,7 +212,7 @@
   <string name="bonus_page_title_1">Bonus bagi Setiap Pembelian</string>
   <string name="bonus_page_body_1">Cari permainan yg bertanda %1$s, pasang Dompet AppCoins dan dapatkan bonus sehingga %2$s dalam semua pembelian. Anda boleh guna bonus ini untuk buat pembelian seterusnya dalam permainan kegemaran anda!</string>
   <string name="bonus_page_title_2">Nak Lagi?</string>
-  <string name="bonus_page_body_2"><![CDATA[You can get an extra <1>%s%% bonus</1> by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!]]></string>
+  <string name="bonus_page_body_2"><![CDATA[Anda boleh dapat bonus <1>%s%% ekstra</1> dengan gunakan kod promo istimewa Permainan Aptoide dlm permainan terpilih. Terus ikuti perkembangan kami!]]></string>
   <!-- Promo Code -->
   <string name="promo_code_install_wallet_banner_title">Bonus sehingga %s%% dalam Setiap Pembelian</string>
   <string name="promo_code_install_wallet_banner_body">Gunakan Dompet AppCoins untuk buat pembelian dalam aplikasi dan dapatkan ganjaran.</string>
