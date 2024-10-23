@@ -34,6 +34,7 @@ import com.aptoide.android.aptoidegames.bottom_bar.AppGamesBottomBar
 import com.aptoide.android.aptoidegames.categories.presentation.allCategoriesScreen
 import com.aptoide.android.aptoidegames.categories.presentation.categoryDetailScreen
 import com.aptoide.android.aptoidegames.editorial.editorialScreen
+import com.aptoide.android.aptoidegames.editorial.seeMoreEditorialScreen
 import com.aptoide.android.aptoidegames.feature_apps.presentation.seeAllMyGamesScreen
 import com.aptoide.android.aptoidegames.feature_apps.presentation.seeMoreBonusScreen
 import com.aptoide.android.aptoidegames.feature_apps.presentation.seeMoreScreen
@@ -207,6 +208,12 @@ private fun NavigationGraph(
       navigate = navController::navigateTo,
       goBack = navController::navigateUp,
       screenData = allCategoriesScreen()
+    )
+
+    animatedComposable(
+      navigate = navController::navigateTo,
+      goBack = navController::navigateUp,
+      screenData = seeMoreEditorialScreen()
     )
 
     animatedComposable(

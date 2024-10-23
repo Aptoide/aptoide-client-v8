@@ -6,6 +6,7 @@ import cm.aptoide.pt.feature_editorial.di.DefaultEditorialUrl
 import cm.aptoide.pt.feature_editorial.domain.ARTICLE_CACHE_ID_PREFIX
 import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
 import cm.aptoide.pt.feature_editorial.domain.EDITORIAL_DEFAULT_TAG
+import cm.aptoide.pt.feature_editorial.domain.EDITORIAL_MORE_TAG
 import cm.aptoide.pt.feature_editorial.domain.RELATED_ARTICLE_CACHE_ID_PREFIX
 import dagger.hilt.android.scopes.ViewModelScoped
 import timber.log.Timber
@@ -24,7 +25,13 @@ class ArticlesMetaUseCase @Inject constructor(
     try {
       val url = urlsCache.get(id = tag).takeIf { !it.isNullOrEmpty() } ?: defaultEditorialUrl
       editorialRepository.getArticlesMeta(url, subtype)
-        .also { urlsCache.putAll(it.tagsUrls(url) + (EDITORIAL_DEFAULT_TAG to url)) }
+        .also {
+          when (tag) {
+            EDITORIAL_DEFAULT_TAG -> urlsCache.putAll(it.tagsUrls(url))
+            EDITORIAL_MORE_TAG -> urlsCache.putAll(it.tagsUrls(urlsCache.get(EDITORIAL_DEFAULT_TAG)))
+            else -> urlsCache.putAll(it.tagsUrls(urlsCache.get(EDITORIAL_DEFAULT_TAG)))
+          }
+        }
     } catch (t: Throwable) {
       Timber.w(t)
       emptyList()

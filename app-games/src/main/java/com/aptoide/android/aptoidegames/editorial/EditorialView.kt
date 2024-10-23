@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -23,20 +21,23 @@ import androidx.compose.ui.semantics.CollectionInfo
 import androidx.compose.ui.semantics.collectionInfo
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
-import cm.aptoide.pt.feature_editorial.domain.randomArticleMeta
-import cm.aptoide.pt.feature_editorial.presentation.rememberEditorialsCardState
+import cm.aptoide.pt.feature_editorial.presentation.ArticleListUiState
+import cm.aptoide.pt.feature_editorial.presentation.ArticleListUiStateProvider
+import cm.aptoide.pt.feature_editorial.presentation.rememberEditorialListState
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.randomBundle
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
 import com.aptoide.android.aptoidegames.analytics.presentation.SwipeListener
+import com.aptoide.android.aptoidegames.analytics.presentation.withBundleMeta
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.feature_apps.presentation.SmallEmptyView
 import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
-import com.aptoide.android.aptoidegames.home.getSeeMoreRouteNavigation
+import com.aptoide.android.aptoidegames.home.analytics.meta
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -50,69 +51,105 @@ fun EditorialBundle(
   subtype: String? = null,
   navigate: (String) -> Unit,
 ) {
-  val (uiState, _) = rememberEditorialsCardState(
+  val (uiState, reload) = rememberEditorialListState(
     tag = bundle.tag,
     subtype = subtype,
     salt = bundle.timestamp
   )
-  val items = uiState?.filter { it.id != filterId }
-  val lazyListState = rememberLazyListState()
-
-  RealEditorialBundle(
-    modifier = modifier,
+  EditorialBundleContent(
+    uiState = uiState,
     bundle = bundle,
-    items = items,
+    modifier = modifier,
     listenForPosition = listenForPosition,
-    lazyListState = lazyListState,
-    navigate = navigate,
+    filterId = filterId,
+    subtype = subtype,
+    navigate = navigate
   )
+}
+
+@Composable
+private fun EditorialBundleContent(
+  uiState: ArticleListUiState,
+  bundle: Bundle,
+  modifier: Modifier = Modifier,
+  listenForPosition: Boolean = true,
+  filterId: String? = null,
+  subtype: String? = null,
+  navigate: (String) -> Unit,
+) {
+  when (uiState) {
+    ArticleListUiState.Empty,
+    ArticleListUiState.Error,
+    ArticleListUiState.NoConnection -> SmallEmptyView(modifier = Modifier.height(240.dp))
+
+    ArticleListUiState.Loading -> LoadingBundleView(height = 240.dp)
+
+    is ArticleListUiState.Idle -> {
+      val items = uiState.articles.filter { it.id != filterId }
+      val lazyListState = rememberLazyListState()
+      RealEditorialBundle(
+        modifier = modifier,
+        bundle = bundle,
+        items = items,
+        listenForPosition = listenForPosition,
+        lazyListState = lazyListState,
+        navigate = navigate,
+        subtype = subtype,
+      )
+    }
+  }
 }
 
 @Composable
 private fun RealEditorialBundle(
   modifier: Modifier = Modifier,
   bundle: Bundle,
-  items: List<ArticleMeta>?,
+  items: List<ArticleMeta>,
   listenForPosition: Boolean,
   lazyListState: LazyListState,
   navigate: (String) -> Unit,
+  subtype: String?
 ) {
-  Column {
+  Column(modifier = modifier) {
     BundleHeader(
       title = bundle.title,
       icon = bundle.bundleIcon,
       hasMoreAction = bundle.hasMoreAction,
-      onClick = getSeeMoreRouteNavigation(bundle = bundle, navigate = navigate),
-    )
-    if (items == null) {
-      LoadingBundleView(height = 240.dp)
-    } else if (items.isEmpty()) {
-      SmallEmptyView(modifier = Modifier.height(240.dp))
-    } else {
-      SwipeListener(interactionSource = lazyListState.interactionSource)
-      LazyRow(
-        modifier = Modifier
-          .fillMaxWidth()
-          .semantics {
-            collectionInfo = CollectionInfo(1, items.size)
-          }
-          .defaultMinSize(minHeight = 240.dp),
-        state = lazyListState,
-        contentPadding = PaddingValues(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-      ) {
-        itemsIndexed(items) { index, editorialMeta ->
-          EditorialsViewCard(
-            modifier = Modifier.width(280.dp),
-            articleMeta = editorialMeta,
-            onClick = {
-              navigate(
-                buildEditorialRoute(editorialMeta.id)
-                  .withItemPosition(if (listenForPosition) index else null)
-              )
-            },
+      onClick = {
+        navigate(
+          buildSeeMoreEditorialsRoute(
+            title = bundle.title,
+            bundleTag = bundle.actions.first().tag,
+            subtype = subtype
           )
-        }
+            .withBundleMeta(
+              bundle.meta.copy(tag = bundle.actions.first().tag)
+            )
+        )
+      },
+    )
+    SwipeListener(interactionSource = lazyListState.interactionSource)
+    LazyRow(
+      modifier = Modifier
+        .fillMaxWidth()
+        .semantics {
+          collectionInfo = CollectionInfo(1, items.size)
+        },
+      state = lazyListState,
+      contentPadding = PaddingValues(horizontal = 16.dp),
+      horizontalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+      itemsIndexed(items) { index, editorialMeta ->
+        EditorialsViewCard(
+          modifier = Modifier.width(280.dp),
+          articleMeta = editorialMeta,
+          onClick = {
+            navigate(
+              buildEditorialRoute(editorialMeta.id)
+                .withItemPosition(if (listenForPosition) index else null)
+            )
+          },
+        )
       }
     }
   }
@@ -133,14 +170,14 @@ fun EditorialsViewCard(
   ) {
     AptoideFeatureGraphicImage(
       modifier = Modifier
-        .fillMaxWidth()
-        .aspectRatio(ratio = 280f / 136),
+        .width(280.dp)
+        .height(136.dp),
       data = articleMeta.image,
       contentDescription = null
     )
     Text(
       text = articleMeta.caption,
-      style = AGTypography.Body,
+      style = AGTypography.BodyBold,
       color = Palette.Primary,
       maxLines = 1,
       overflow = TextOverflow.Ellipsis,
@@ -170,14 +207,14 @@ fun EditorialsViewCard(
 
 @PreviewDark
 @Composable
-private fun EditorialsViewCardPreview() {
+private fun EditorialsBundlePreview(
+  @PreviewParameter(ArticleListUiStateProvider::class) uiState: ArticleListUiState
+) {
   AptoideTheme {
-    RealEditorialBundle(
+    EditorialBundleContent(
+      uiState = uiState,
       bundle = randomBundle,
-      items = listOf(randomArticleMeta, randomArticleMeta),
-      listenForPosition = false,
-      lazyListState = LazyListState(),
-      navigate = {}
+      navigate = { }
     )
   }
 }

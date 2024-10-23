@@ -11,6 +11,7 @@ import kotlin.random.Random
 import kotlin.random.nextInt
 
 const val EDITORIAL_DEFAULT_TAG = "editorial"
+const val EDITORIAL_MORE_TAG = "editorial-more"
 const val ARTICLE_CACHE_ID_PREFIX = "editorial-"
 const val RELATED_ARTICLE_CACHE_ID_PREFIX = "related-editorial-"
 

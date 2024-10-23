@@ -21,6 +21,7 @@ enum class WidgetType {
   ESKILLS,
   ADS,
   ACTION_ITEM,
+  EDITORIAL,
   APPCOINS_ADS,
   DISPLAYS,
   MY_GAMES,
