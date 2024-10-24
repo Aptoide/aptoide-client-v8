@@ -27,6 +27,11 @@
   <string name="settings_payment_support_description_title">विवरण</string>
   <string name="settings_contact_form_character_limit_title">(किमान ५० अक्षरे)</string>
   <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">विवरण (किमान ५० अक्षरे)</string>
+  <string name="settings_storage_title">साठवण</string>
+  <string name="settings_storage_clear_cache_title">कॅश साफ करा</string>
+  <string name="settings_storage_cache_size_title">कॅशचे कमाल माप (एमबी) ठरवा</string>
+  <string name="settings_clear_cache_title">Aptoide खेळांची साठवण साफ करा</string>
+  <string name="settings_clear_cache_body">सगळी आयकॉन्स, चित्र, एपीके डाऊनलोडस्, ओबीबी, वेबसेवेचा डेटा नक्की मिटवायचाय...</string>
   <!-- MyGames -->
   <string name="my_games_empty">आपल्या डिव्हाईसवर आम्हांस कोणतेही इंस्टॉल केलेले खेळ सापडले नाहीत!</string>
   <string name="my_games_progress_message">आपले खेळ ऑर्गनाईझ करत आहोत</string>
@@ -34,9 +39,9 @@
   <!-- Notifications -->
   <string name="notifications_context_title">सूचना मिळवा!</string>
   <string name="notification_installing_title">इंस्टॉल करत आहे</string>
-  <string name="notification_preparing_title">Preparing</string>
-  <string name="notification_ready_install_title">An app is ready to be installed!</string>
-  <string name="notification_ready_install_body">Tap here to install %s.</string>
+  <string name="notification_preparing_title">तयार करताहोत</string>
+  <string name="notification_ready_install_title">अॅप इंस्टॉल करण्यास तयार आहे!</string>
+  <string name="notification_ready_install_body">इंस्टॉल करण्यासाठी इथे टॅप करा %s.</string>
   <string name="notification_waiting_body">डाऊनलोडसाठी थांबलो आहोत</string>
   <string name="notification_1_installed_title">इन्स्टॉल केलेले</string>
   <string name="notification_downloading_body">%2$s पैकी %1$s%% डाऊनलोड होत आहे</string>
@@ -99,9 +104,14 @@
   <string name="waiting_for_connection">कनेक्शनसाठी थांबलो आहे</string>
   <string name="wait_for_wifi_button">वायफायसाठी थांबलो आहे</string>
   <string name="continue_button">चालू ठेवा</string>
-  <string name="error_install_permissions_body"><![CDATA[Please go to Settings and grant <1>Aptoide Games</1> permissions to install apps!]]></string>
-  <string name="latest_title">Latest</string>
-  <string name="whats_new_title">What\'s New</string>
+  <string name="error_install_permissions_body"><![CDATA[अॅप्स इंस्टॉल करण्यासाठी कृपया सेटिंग्जमधुन <1>Aptoide खेळांना</1> परवानगी द्या!]]></string>
+  <string name="latest_title">नविनोत्तम</string>
+  <string name="whats_new_title">नव काय आहे</string>
+  <string name="screenshot_appview_1">A bonus in your in-app purchases.</string>
+  <string name="screenshot_appview_2">Find top new games curated for you.</string>
+  <string name="screenshot_appview_3">A new way to discover your favorite game.</string>
+  <string name="screenshot_appview_4">A seamless interface with the best content.</string>
+  <string name="screenshot_appview_5">Hand-picked games only for you.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">जागा संपली</string>
   <string name="out_of_space_body">इंस्टलेशनसह %s हे चालू ठेवणे आपल्याला आवश्यक आहे.</string>
@@ -140,10 +150,10 @@
   <string name="appview_info_permissions_title" comment="permissions">परवानग्या</string>
   <string name="download_percentage_body" comment="1_s_of_2_s">%2$s पैकी %1$s%%</string>
   <string name="error_short_title" comment="oops_an_error_occurred">अरेरे, त्रुटी आली</string>
-  <string name="purchase_done_bonus_title">Get a %s bonus!</string>
-  <string name="purchase_done_bonus_body">Download the AppCoins Wallet to get this bonus and use it in your next purchase.</string>
-  <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet installed!</string>
-  <string name="purchase_done_bonus_wallet_installed_body">Open it to find your bonus.</string>
+  <string name="purchase_done_bonus_title">%s बोनस मिळवा!</string>
+  <string name="purchase_done_bonus_body">हा बोनस मिळवुन आपल्या पुढील खरेदीत वापरण्यासाठी अॅपकॉईन्स वॉलेट डाऊनलोड करा.</string>
+  <string name="purchase_done_bonus_wallet_installed_title">अॅपकॉइन्स वॉलेट इंस्टॉल केले!</string>
+  <string name="purchase_done_bonus_wallet_installed_body">बोनस पहाण्यासाठी हे उघडा</string>
   <string name="bonus_banner_body">%s ची ओळख असणार्‍या सार्‍या खेळांमध्ये आपणांस बोनस मिळेल.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">%s%% पर्यंत बोनस</string>
   <string name="settings_payments_title" comment="contact_support_team">समर्थन गटाशी संपर्क साधा</string>
@@ -174,7 +184,7 @@
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">आता आपण आपली खरेदी पूर्ण करु शकता.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">अॅपकॉईन्स वॉलेट आता इंस्टॉल झाले आहे!</string>
   <string name="storage_access_permission_request_message">आपल्या फोन स्टोरेजमध्ये प्रवेश द्या म्हणजे आम्ही हे अॅप डाऊनलोड करुन इंस्टॉल करु शकु.</string>
-  <string name="downloads_number_title">%s downloads</string>
+  <string name="downloads_number_title">%s डाऊनलोडस्</string>
   <!-- Payment Errors-->
   <string name="payments_error_not_enough_balance_body">आपल्याकडे पुरेशी शिल्लक नाहीये</string>
   <string name="payments_error_old_card_title">असे दिसतेय कि आपण हे कार्ड फार पूर्वी नोंदणीकृत केलेय!</string>
@@ -202,17 +212,17 @@
   <string name="bonus_page_title_1">प्रत्येक खरेदीवर बोनस</string>
   <string name="bonus_page_body_1">%1$s ने चिन्हाकिंत खेळ शोधा, अॅप कॉईन्स वॉलेट इंस्टॉल करा आणि सर्व खरेदीवर %2$s%% पर्यंत बोनस मिळवा. नंतर मग आपण ह्या बोनसचा वापर करुन आपल्या आवडत्या खेळातील पुढील खरेदी करु शकता!</string>
   <string name="bonus_page_title_2">अधिक हवय?</string>
-  <string name="bonus_page_body_2"><![CDATA[You can get an extra <1>%s%% bonus</1> by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!]]></string>
+  <string name="bonus_page_body_2"><![CDATA[Aptoide खेळांचे एक्स्क्लुझिव्ह प्रोमो कोड ठराविक खेळात वापरुन आपणांस अतिरिक्त <1>%s%% बोनस</1> मिळू शकतो. येत रहा आणि आपणांस\सूचना पाठविली जाईल!]]></string>
   <!-- Promo Code -->
-  <string name="promo_code_install_wallet_banner_title">Up to %s%% Bonus in Every Purchase</string>
-  <string name="promo_code_install_wallet_banner_body">Use the AppCoins Wallet to make your in-app purchases and get a reward.</string>
-  <string name="promo_code_extra_title">Want More? Get %s%% Extra Bonus!</string>
-  <string name="promo_code_use_button">Use code</string>
-  <string name="promo_code_install_wallet_disclaimer">Install the AppCoins Wallet first.</string>
-  <string name="promo_code_notification_title">Redeem Your Promo Code</string>
-  <string name="promo_code_notification_body">Use your promo code to get extra bonuses in your favorite game.</string>
-  <string name="promo_code_notification_without_wallet_title">%s%% Extra Bonus!</string>
-  <string name="promo_code_notification_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
-  <string name="promo_code_share_title">You\'ve got a promo code!</string>
-  <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorite game.</string>
+  <string name="promo_code_install_wallet_banner_title">प्रत्येक खरेदीवर %s%% पर्यंत बोनस</string>
+  <string name="promo_code_install_wallet_banner_body">अॅपकॉईन्स वॉलेट वापरुन अॅपमधील खरेदी करा आणि बक्षिस मिळवा.</string>
+  <string name="promo_code_extra_title">अधिक हवेय? %s%% अतिरिक्त बोनस मिळवा!</string>
+  <string name="promo_code_use_button">कोड वापरा</string>
+  <string name="promo_code_install_wallet_disclaimer">प्रथम अॅपकॉईन्स वॉलेट इंस्टॉल करा.</string>
+  <string name="promo_code_notification_title">आपला प्रोमो कोड रिडीम करा</string>
+  <string name="promo_code_notification_body">आपल्या आवडत्या खेळात प्रोमो कोड वापरुन अतिरिक्त बोनस मिळवा.</string>
+  <string name="promo_code_notification_without_wallet_title">%s%% अतिरिक्त बोनस!</string>
+  <string name="promo_code_notification_without_wallet_body">सर्व खरेदीवर अतिरिक्त बोनस मिळविण्यासाठी अॅपकॉईन्स वॉलेट मिळवुन आपला प्रोमो कोड वापरा.</string>
+  <string name="promo_code_share_title">आपणांस प्रोमो कोड मिळालाय</string>
+  <string name="promo_code_share_body">हा प्रोमो कोड आपल्या आवडत्या खेळात वापरुन अतिरिक्त बोनस मिळवा.</string>
 </resources>

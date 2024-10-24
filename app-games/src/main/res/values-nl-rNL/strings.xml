@@ -27,6 +27,11 @@
   <string name="settings_payment_support_description_title">Beschrijving</string>
   <string name="settings_contact_form_character_limit_title">(Minimaal 50 tekens)</string>
   <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Beschrijving (minimaal 50 tekens)</string>
+  <string name="settings_storage_title">Opslag</string>
+  <string name="settings_storage_clear_cache_title">Wis cache</string>
+  <string name="settings_storage_cache_size_title">Stel maximale cachegrootte (MB) in</string>
+  <string name="settings_clear_cache_title">Clear Aptoide Games storage</string>
+  <string name="settings_clear_cache_body">Are you sure you want to delete all icons, images, apk downloaded, obb, webservice data...</string>
   <!-- MyGames -->
   <string name="my_games_empty">We kunnen geen games vinden die op je apparaat zijn geïnstalleerd!</string>
   <string name="my_games_progress_message">Je games organiseren</string>
@@ -35,8 +40,8 @@
   <string name="notifications_context_title">Ontvang een melding!</string>
   <string name="notification_installing_title">Wordt geïnstalleerd</string>
   <string name="notification_preparing_title">Preparing</string>
-  <string name="notification_ready_install_title">An app is ready to be installed!</string>
-  <string name="notification_ready_install_body">Tap here to install %s.</string>
+  <string name="notification_ready_install_title">Een app is klaar om geïnstalleerd te worden!</string>
+  <string name="notification_ready_install_body">Tik hier om %s te installeren.</string>
   <string name="notification_waiting_body">Wachten op download</string>
   <string name="notification_1_installed_title">Geïnstalleerd</string>
   <string name="notification_downloading_body">%1$s%% van %2$s aan het downloaden</string>
@@ -100,8 +105,13 @@
   <string name="wait_for_wifi_button">Wachten op wifi</string>
   <string name="continue_button">Doorgaan</string>
   <string name="error_install_permissions_body"><![CDATA[Please go to Settings and grant <1>Aptoide Games</1> permissions to install apps!]]></string>
-  <string name="latest_title">Latest</string>
+  <string name="latest_title">Nieuwste</string>
   <string name="whats_new_title">What\'s New</string>
+  <string name="screenshot_appview_1">A bonus in your in-app purchases.</string>
+  <string name="screenshot_appview_2">Find top new games curated for you.</string>
+  <string name="screenshot_appview_3">A new way to discover your favorite game.</string>
+  <string name="screenshot_appview_4">A seamless interface with the best content.</string>
+  <string name="screenshot_appview_5">Hand-picked games only for you.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Geen opslagruimte</string>
   <string name="out_of_space_body">Je hebt %s nodig om met de installatie door te gaan.</string>
