@@ -325,10 +325,6 @@ open class DownloadViewActionPresenter(
         storeName.equals("catappult"),
         appCategory
       )
-      downloadAnalytics.downloadStartEvent(
-        download, campaignId, abTestGroup,
-        analyticsContext, AnalyticsManager.Action.INSTALL, true, isInApkfyContext
-      )
     } else {
       downloadAnalytics.installClicked(
         download.md5,
@@ -346,10 +342,6 @@ open class DownloadViewActionPresenter(
         splitAnalyticsMapper.getSplitTypesAsString(download.splits),
         storeName.equals("catappult"),
         appCategory
-      )
-      downloadAnalytics.downloadStartEvent(
-        download, campaignId, abTestGroup,
-        analyticsContext, AnalyticsManager.Action.INSTALL, false, isInApkfyContext
       )
     }
   }

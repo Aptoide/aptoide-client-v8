@@ -231,8 +231,6 @@ public class AppsManager {
   }
 
   private void setupDownloadEvents(RoomDownload download, String installType) {
-    downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
-        DownloadAnalytics.AppContext.APPS_FRAGMENT, false);
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
         download.getVersionCode(), AnalyticsManager.Action.INSTALL, false,
         download.hasAppc(), download.hasSplits(), download.getTrustedBadge(), null,
@@ -250,8 +248,6 @@ public class AppsManager {
   private void setupUpdateEvents(RoomDownload download, Origin origin,
       String trustedBadge,
       String tag, String storeName, String installType) {
-    downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
-        DownloadAnalytics.AppContext.APPS_FRAGMENT, false, origin);
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
         download.getVersionCode(), AnalyticsManager.Action.INSTALL, false,
         download.hasAppc(), download.hasSplits(), trustedBadge, tag, storeName, installType,

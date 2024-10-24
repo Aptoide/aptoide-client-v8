@@ -47,8 +47,6 @@ public class PromotionsAnalytics {
   public void setupDownloadEvents(RoomDownload download, int campaignId, String abTestGroup,
       AnalyticsManager.Action action,
       Origin origin, boolean isAppBundle) {
-    downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
-        DownloadAnalytics.AppContext.PROMOTIONS, action, false, origin, false);
     downloadAnalytics.downloadCompleteEvent(download.getMd5(), download.getPackageName(), "",
         action, isAppBundle);
   }

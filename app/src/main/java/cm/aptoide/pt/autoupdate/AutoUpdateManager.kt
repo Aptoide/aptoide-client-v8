@@ -32,10 +32,6 @@ open class AutoUpdateManager(private val downloadFactory: DownloadFactory,
       Observable.just(downloadFactory.create(it.md5, it.versionCode, it.packageName, it.uri, false))
           .flatMapCompletable { download ->
             installManager.install(download, shouldInstall)
-                .doOnSubscribe {
-                  downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
-                      DownloadAnalytics.AppContext.AUTO_UPDATE, false)
-                }
           }
           .toCompletable()
           .andThen(getInstall())

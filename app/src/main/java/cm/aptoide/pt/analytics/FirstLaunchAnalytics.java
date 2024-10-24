@@ -31,7 +31,6 @@ public class FirstLaunchAnalytics {
 
   public static final String FIRST_LAUNCH = "Aptoide_First_Launch";
   public static final String PLAY_PROTECT_EVENT = "Google_Play_Protect";
-  public static final String FIRST_LAUNCH_BI = "FIRST_LAUNCH";
   public static final String FIRST_LAUNCH_RAKAM = "aptoide_first_launch";
   private static final String GMS = "GMS";
   private static final String GMS_RAKAM = "gms";
@@ -81,9 +80,6 @@ public class FirstLaunchAnalytics {
     analyticsManager.logEvent(
         createFacebookFirstLaunchDataMap(utmSource, utmMedium, utmCampaign, utmContent, entryPoint),
         FIRST_LAUNCH, AnalyticsManager.Action.OPEN, CONTEXT);
-    analyticsManager.logEvent(
-        createFacebookFirstLaunchDataMap(utmSource, utmMedium, utmCampaign, utmContent, entryPoint),
-        FIRST_LAUNCH_BI, AnalyticsManager.Action.OPEN, CONTEXT);
     analyticsManager.logEvent(new HashMap<>(), FIRST_LAUNCH_RAKAM, AnalyticsManager.Action.OPEN,
         CONTEXT);
   }

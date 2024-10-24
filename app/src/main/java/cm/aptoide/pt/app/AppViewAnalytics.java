@@ -26,7 +26,6 @@ public class AppViewAnalytics {
   public static final String EDITORS_CHOICE_CLICKS = "Editors_Choice_Clicks";
   public static final String HOME_PAGE_EDITORS_CHOICE_FLURRY = "Home_Page_Editors_Choice";
   public static final String APP_VIEW_OPEN_FROM = "App_Viewed_Open_From";
-  public static final String OPEN_APP_VIEW = "OPEN_APP_VIEW";
   public static final String APP_VIEW_INTERACT = "App_View_Interact";
   public static final String CLICK_INSTALL = "Clicked on install button";
   public static final String SIMILAR_APP_INTERACT = "Similar_App_Interact";
@@ -103,32 +102,6 @@ public class AppViewAnalytics {
     analyticsManager.logEvent(createAppViewedFromMap(navigationTracker.getPreviousScreen(),
         navigationTracker.getCurrentScreen(), packageName, appPublisher, badge, hasBilling,
         hasAdvertising), APP_VIEW_OPEN_FROM, AnalyticsManager.Action.CLICK, getViewName(false));
-    analyticsManager.logEvent(createAppViewDataMap(navigationTracker.getPreviousScreen(),
-            navigationTracker.getCurrentScreen(), packageName, hasBilling, hasAdvertising),
-        OPEN_APP_VIEW, AnalyticsManager.Action.CLICK, getViewName(false));
-  }
-
-  private Map<String, Object> createAppViewDataMap(ScreenTagHistory previousScreen,
-      ScreenTagHistory currentScreen, String packageName, boolean hasBilling,
-      boolean hasAdvertising) {
-    Map<String, String> packageMap = new HashMap<>();
-    packageMap.put("package", packageName);
-    Map<String, Object> data = new HashMap<>();
-    data.put("app", packageMap);
-    if (previousScreen != null) {
-      data.put("previous_store", previousScreen.getStore());
-    } else {
-      data.put("previous_store", APP_SHORTCUT);
-    }
-    if (currentScreen != null) {
-      data.put("previous_tag", currentScreen.getTag());
-    } else {
-      data.put("previous_tag", APP_SHORTCUT);
-    }
-
-    data.put("appcoins_type", mapAppCoinsInfo(hasBilling, hasAdvertising));
-
-    return data;
   }
 
   private String mapAppCoinsInfo(boolean hasBilling, boolean hasAdvertising) {
@@ -289,15 +262,11 @@ public class AppViewAnalytics {
           download.getPackageName(), trustedValue, editorsChoice, InstallType.UPDATE_TO_APPC,
           action, download.hasAppc(), download.hasSplits(), storeName, isApkfy,
           download.hasObbs(), splitTypes, isInCatappult, appCategory);
-      downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
-          DownloadAnalytics.AppContext.APPVIEW, action, true, isApkfy);
     } else {
       downloadAnalytics.installClicked(download.getMd5(), download.getVersionCode(),
           download.getPackageName(), trustedValue, editorsChoice, mapDownloadAction(downloadAction),
           action, download.hasAppc(), download.hasSplits(), storeName, isApkfy,
           download.hasObbs(), splitTypes, isInCatappult, appCategory);
-      downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
-          DownloadAnalytics.AppContext.APPVIEW, action, false, isApkfy);
     }
   }
 

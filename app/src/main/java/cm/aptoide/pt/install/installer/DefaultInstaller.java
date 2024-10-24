@@ -236,16 +236,7 @@ public class DefaultInstaller implements Installer {
             throwable -> rootInstall(installation))
         .onErrorResumeNext(
             throwable -> defaultInstall(context, installation, shouldSetPackageInstaller))
-        .doOnError(throwable -> {
-              throwable.printStackTrace();
-              sendErrorEvent(installation.getPackageName(),
-                  installation.getVersionCode(), new InstallationException(
-                      "Installation with root failed for "
-                          + installation.getPackageName()
-                          + ". Error message: "
-                          + throwable.getMessage()));
-            }
-        )
+        .doOnError(Throwable::printStackTrace)
         .flatMap(installation1 -> installation1.save()
             .andThen(Observable.just(installation1)));
   }
@@ -432,10 +423,6 @@ public class DefaultInstaller implements Installer {
       default:
         return RoomInstalled.STATUS_UNINSTALLED;
     }
-  }
-
-  private void sendErrorEvent(String packageName, int versionCode, Exception e) {
-    installerAnalytics.logInstallErrorEvent(packageName, versionCode, e);
   }
 
   private void startInstallIntent(Context context, File file) {

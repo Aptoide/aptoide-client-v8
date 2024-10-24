@@ -52,9 +52,6 @@ public class EditorialAnalytics {
         download.getVersionCode(), action, false, download.hasAppc(),
         download.hasSplits(), trustedBadge, null, storeName, installType, download.hasObbs(),
         splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()), isInCatappult, "");
-
-    downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
-        DownloadAnalytics.AppContext.EDITORIAL, action, false, false);
   }
 
   public void sendDownloadPauseEvent(String packageName) {

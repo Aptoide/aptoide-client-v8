@@ -1,6 +1,5 @@
 package cm.aptoide.pt.notification;
 
-import androidx.annotation.NonNull;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.link.AptoideInstall;
@@ -16,7 +15,6 @@ public class NotificationAnalytics {
 
   public static final String NOTIFICATION_RECEIVED = "Aptoide_Push_Notification_Received";
   public static final String NOTIFICATION_PRESSED = "Aptoide_Push_Notification_Click";
-  public static final String NOTIFICATION_EVENT_NAME = "NOTIFICATION";
   public static final String NOTIFICATION_IMPRESSION = "Aptoide_Push_Notification_Impression";
   private static final String TYPE = "type";
   private static final String AB_TESTING_GROUP = "ab_testing_group";
@@ -63,28 +61,12 @@ public class NotificationAnalytics {
 
   public void sendPushNotficationImpressionEvent(@AptoideNotification.NotificationType int type,
       String abTestingGroup, int campaignId, String url) {
-    if (type == AptoideNotification.CAMPAIGN) {
-      analyticsManager.logEvent(createCampaignNotificationMap(abTestingGroup, campaignId),
-          NOTIFICATION_EVENT_NAME, AnalyticsManager.Action.IMPRESSION, getViewName(true));
-    }
     analyticsManager.logEvent(createPushNotificationEventMap(type, abTestingGroup, campaignId, url),
         NOTIFICATION_IMPRESSION, AnalyticsManager.Action.IMPRESSION, getViewName(true));
   }
 
-  @NonNull
-  private Map<String, Object> createCampaignNotificationMap(String abTestingGroup, int campaignId) {
-    Map<String, Object> map = new HashMap<>();
-    map.put(CAMPAIGN_ID, campaignId != 0 ? String.valueOf(campaignId) : null);
-    map.put(AB_TESTING_GROUP, abTestingGroup);
-    return map;
-  }
-
   public void sendPushNotificationPressedEvent(@AptoideNotification.NotificationType int type,
       String abTestingGroup, int campaignId, String url) {
-    if (type == AptoideNotification.CAMPAIGN) {
-      analyticsManager.logEvent(createCampaignNotificationMap(abTestingGroup, campaignId),
-          NOTIFICATION_EVENT_NAME, AnalyticsManager.Action.CLICK, getViewName(true));
-    }
     analyticsManager.logEvent(createPushNotificationEventMap(type, abTestingGroup, campaignId, url),
         NOTIFICATION_PRESSED, AnalyticsManager.Action.CLICK, getViewName(true));
   }

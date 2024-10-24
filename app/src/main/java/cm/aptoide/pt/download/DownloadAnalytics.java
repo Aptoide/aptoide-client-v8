@@ -8,15 +8,11 @@ import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.DeepLinkManager;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.DownloadAnalytics {
-  public static final String DOWNLOAD_EVENT_NAME = "DOWNLOAD";
   public static final String NOTIFICATION_DOWNLOAD_COMPLETE_EVENT_NAME =
       "Aptoide_Push_Notification_Download_Complete";
   public static final String DOWNLOAD_COMPLETE_EVENT = "Download Complete";
@@ -88,7 +84,6 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
   }
 
   @Override public void onDownloadComplete(String md5, String packageName, int versionCode) {
-    sendDownloadCompletedEvent(packageName, versionCode);
     sendDownloadEvent(md5 + EDITORS_CHOICE_DOWNLOAD_COMPLETE_EVENT_NAME);
     sendDownloadEvent(md5 + DOWNLOAD_COMPLETE_EVENT);
     sendDownloadEvent(md5 + NOTIFICATION_DOWNLOAD_COMPLETE_EVENT_NAME);
@@ -97,29 +92,10 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
 
   @Override
   public void onError(String packageName, int versionCode, String md5, Throwable throwable) {
-    String key = packageName + versionCode + DOWNLOAD_EVENT_NAME;
     handleRakamOnError(md5, throwable);
-    DownloadEvent downloadEvent = cache.get(key);
-    if (downloadEvent != null) {
-      Map<String, Object> data = downloadEvent.getData();
-      Map<String, Object> result = new HashMap<>();
-      Map<String, Object> error = new HashMap<>();
-
-      result.put(STATUS, FAIL);
-      error.put(TYPE, throwable.getClass()
-          .getSimpleName());
-      error.put(MESSAGE, throwable.getMessage());
-      result.put(ERROR, error);
-      data.put(RESULT, result);
-      analyticsManager.logEvent(data, downloadEvent.getEventName(), downloadEvent.getAction(),
-          downloadEvent.getContext());
-      cache.remove(key);
-    }
   }
 
   @Override public void startProgress(RoomDownload download) {
-    updateDownloadEventWithHasProgress(
-        download.getPackageName() + download.getVersionCode() + DOWNLOAD_EVENT_NAME);
     updateDownloadEventWithHasProgress(download.getMd5() + DOWNLOAD_COMPLETE_EVENT);
     updateDownloadEventWithHasProgress(
         download.getMd5() + EDITORS_CHOICE_DOWNLOAD_COMPLETE_EVENT_NAME);
@@ -190,20 +166,6 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
         downloadEvent.getContext());
   }
 
-  private void sendDownloadCompletedEvent(String packageName, int versionCode) {
-    String key = packageName + versionCode + DOWNLOAD_EVENT_NAME;
-    DownloadEvent downloadEvent = cache.get(key);
-    if (downloadEvent.isHadProgress()) {
-      Map<String, Object> data = downloadEvent.getData();
-      Map<String, Object> result = new HashMap<>();
-      result.put(STATUS, SUCCESS);
-      data.put(RESULT, result);
-      analyticsManager.logEvent(data, downloadEvent.getEventName(), downloadEvent.getAction(),
-          downloadEvent.getContext());
-      cache.remove(key);
-    }
-  }
-
   private void sendDownloadEvent(String downloadCacheKey) {
     DownloadEvent downloadEvent = cache.get(downloadCacheKey);
     if (downloadEvent != null && downloadEvent.isHadProgress()) {
@@ -211,63 +173,6 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
           downloadEvent.getAction(), downloadEvent.getContext());
       cache.remove(downloadCacheKey);
     }
-  }
-
-  public void downloadStartEvent(RoomDownload download, AnalyticsManager.Action action,
-      AppContext context, Boolean isMigration) {
-    downloadStartEvent(download, 0, null, context, action, isMigration,
-        getOrigin(download.getAction()), false);
-  }
-
-  public void downloadStartEvent(RoomDownload download, AnalyticsManager.Action action,
-      AppContext context, Boolean isMigration, Origin origin) {
-    downloadStartEvent(download, 0, null, context, action, isMigration, origin, false);
-  }
-
-  public void downloadStartEvent(RoomDownload download, int campaignId, String abTestGroup,
-      AppContext context, AnalyticsManager.Action action, boolean isMigration, boolean isApkfy) {
-    downloadStartEvent(download, campaignId, abTestGroup, context, action, isMigration,
-        getOrigin(download.getAction()), isApkfy);
-  }
-
-  public void downloadStartEvent(RoomDownload download, int campaignId, String abTestGroup,
-      AppContext context, AnalyticsManager.Action action, boolean isMigration, Origin origin,
-      boolean isApkfy) {
-    Map<String, Object> event = new HashMap<>();
-    ScreenTagHistory screenTagHistory = navigationTracker.getPreviousScreen();
-    event.put(APP, createAppData(download));
-    event.put(NETWORK, AptoideUtils.SystemU.getConnectionType(connectivityManager)
-        .toUpperCase());
-    event.put(IS_APKFY, isApkfy);
-    if (isMigration) {
-      event.put(ORIGIN, UPDATE_TO_APPC);
-    } else {
-      event.put(ORIGIN, origin);
-    }
-    event.put(PREVIOUS_CONTEXT, screenTagHistory.getFragment());
-    event.put(TAG, navigationTracker.getCurrentScreen()
-        .getTag());
-
-    event.put(STORE, navigationTracker.getPreviousScreen()
-        .getStore());
-    event.put(TELECO, AptoideUtils.SystemU.getCarrierName(telephonyManager));
-    event.put(MIGRATOR, isMigration);
-
-    if (campaignId > 0) {
-      event.put(CAMPAIGN_ID, campaignId);
-      event.put(AB_TEST_GROUP, abTestGroup);
-    }
-
-    cache.put(download.getPackageName() + download.getVersionCode() + DOWNLOAD_EVENT_NAME,
-        new DownloadEvent(DOWNLOAD_EVENT_NAME, event, context, action));
-  }
-
-  @NonNull private Map<String, Object> createAppData(RoomDownload download) {
-    Map<String, Object> app = new HashMap<>();
-    app.put(PACKAGE, download.getPackageName());
-    app.put(APPC, download.hasAppc());
-    app.put(APP_BUNDLE, download.hasSplits());
-    return app;
   }
 
   public Origin getOrigin(int downloadAction) {
@@ -286,39 +191,6 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
         origin = Origin.INSTALL;
     }
     return origin;
-  }
-
-  public void updateDownloadEvent(String versionCode, String packageName, int fileType,
-      String mirror, String url) {
-    Map<String, Object> event = cache.get(packageName + versionCode + DOWNLOAD_EVENT_NAME)
-        .getData();
-    if (event != null) {
-      if (fileType == 0) {
-        Map<String, Object> app = (Map<String, Object>) event.get("app");
-        app.put(MIRROR, mirror);
-        app.put(URL, url);
-      } else {
-        List<Map<String, Object>> obb = (List<Map<String, Object>>) event.get("obb");
-        if (obb == null) {
-          obb = new ArrayList<>();
-        }
-        obb.add(createObbData(fileType, url, mirror));
-        event.put(OBB, obb);
-      }
-    }
-  }
-
-  private Map<String, Object> createObbData(int fileType, String url, String mirror) {
-    Map<String, Object> obb = new HashMap<>();
-    if (fileType == 1) {
-      obb.put(MIRROR, mirror);
-      obb.put(TYPE, MAIN);
-    } else if (fileType == 2) {
-      obb.put(MIRROR, mirror);
-      obb.put(TYPE, PATCH);
-    }
-    obb.put(URL, url);
-    return obb;
   }
 
   private void updateDownloadEventWithHasProgress(String key) {
@@ -562,15 +434,6 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
     private final AnalyticsManager.Action action;
     private final String context;
     private boolean hadProgress;
-
-    private DownloadEvent(String eventName, Map<String, Object> data, AppContext context,
-        AnalyticsManager.Action action) {
-      this.data = data;
-      this.eventName = eventName;
-      this.action = action;
-      this.context = context.name();
-      hadProgress = false;
-    }
 
     public DownloadEvent(String eventName, HashMap<String, Object> data, String context,
         AnalyticsManager.Action action) {

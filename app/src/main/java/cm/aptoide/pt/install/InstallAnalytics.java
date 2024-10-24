@@ -28,7 +28,6 @@ public class InstallAnalytics {
       "Aptoide_Push_Notification_Application_Install";
   public static final String APPLICATION_INSTALL = "Application Install";
   public static final String EDITORS_APPLICATION_INSTALL = "Editors_Choice_Application_Install";
-  public static final String INSTALL_EVENT_NAME = "INSTALL";
   public static final String CLICK_ON_INSTALL = "click_on_install_button";
   public static final String RAKAM_INSTALL_EVENT = "install";
   private static final String UPDATE_TO_APPC = "UPDATE TO APPC";
@@ -115,27 +114,12 @@ public class InstallAnalytics {
 
   private void sendInstallEvents(String packageName, int installingVersion, boolean isPhoneRoot,
       boolean aptoideSettings) {
-    InstallEvent installEvent =
-        cache.get(getKey(packageName, installingVersion, INSTALL_EVENT_NAME));
-    if (installEvent != null) {
-      sendInstallEvent(installEvent, isPhoneRoot, aptoideSettings, packageName, installingVersion);
-    }
     InstallEvent applicationInstallEvent =
         cache.get(getKey(packageName, installingVersion, APPLICATION_INSTALL));
     if (applicationInstallEvent != null) {
       sendApplicationInstallEvent(applicationInstallEvent, isPhoneRoot, aptoideSettings,
           packageName, installingVersion);
     }
-  }
-
-  private void sendInstallEvent(InstallEvent installEvent, boolean isPhoneRoot,
-      boolean aptoideSettings, String packageName, int installingVersion) {
-    Map<String, Object> data = installEvent.getData();
-    data.put(ROOT, createRoot(isPhoneRoot, aptoideSettings));
-    data.put(RESULT, createResult());
-    analyticsManager.logEvent(data, INSTALL_EVENT_NAME, installEvent.getAction(),
-        installEvent.getContext());
-    cache.remove(getKey(packageName, installingVersion, INSTALL_EVENT_NAME));
   }
 
   private void sendApplicationInstallEvent(InstallEvent installEvent, boolean isPhoneRoot,
@@ -145,12 +129,6 @@ public class InstallAnalytics {
     analyticsManager.logEvent(data, APPLICATION_INSTALL, installEvent.getAction(),
         installEvent.getContext());
     cache.remove(getKey(packageName, installingVersion, APPLICATION_INSTALL));
-  }
-
-  private Map<String, Object> createResult() {
-    Map<String, Object> result = new HashMap<>();
-    result.put(STATUS, SUCCESS);
-    return result;
   }
 
   private String getKey(String packageName, int installingVersion, String eventName) {
@@ -176,8 +154,6 @@ public class InstallAnalytics {
         splitTypes, isInCatappult, versionCode, appCategory);
     createApplicationInstallEvent(action, context, origin, packageName, versionCode, -1, null,
         Collections.emptyList(), isMigration, hasAppc, isAppBundle, false);
-    createInstallEvent(action, context, origin, packageName, versionCode, -1, null, isMigration,
-        hasAppc, isAppBundle, false);
   }
 
   private void createRakamInstallEvent(int installingVersion, String packageName, String action,
@@ -278,8 +254,6 @@ public class InstallAnalytics {
 
     createApplicationInstallEvent(action, context, origin, packageName, versionCode, campaignId,
         abTestingGroup, Collections.emptyList(), isMigration, hasAppc, isAppBundle, isApkfy);
-    createInstallEvent(action, context, origin, packageName, versionCode, campaignId,
-        abTestingGroup, isMigration, hasAppc, isAppBundle, isApkfy);
   }
 
   public void uninstallStarted(String packageName, AnalyticsManager.Action action,
@@ -291,46 +265,6 @@ public class InstallAnalytics {
     cache.put(
         getKey(packageName, MIGRATION_UNINSTALL_KEY, AppViewAnalytics.BONUS_MIGRATION_APPVIEW),
         new InstallEvent(data, AppViewAnalytics.BONUS_MIGRATION_APPVIEW, context.name(), action));
-  }
-
-  private void createInstallEvent(AnalyticsManager.Action action,
-      DownloadAnalytics.AppContext context, Origin origin, String packageName,
-      int installingVersion, int campaignId, String abTestingGroup, boolean isMigration,
-      boolean hasAppc, boolean isAppBundle, boolean isApkfy) {
-    Map<String, Object> data =
-        getInstallEventsBaseBundle(packageName, campaignId, abTestingGroup, hasAppc, isMigration,
-            isAppBundle);
-    if (isMigration) {
-      data.put(ORIGIN, UPDATE_TO_APPC);
-    } else {
-      data.put(ORIGIN, origin);
-    }
-    data.put(IS_APKFY, isApkfy);
-    cache.put(getKey(packageName, installingVersion, INSTALL_EVENT_NAME),
-        new InstallEvent(data, INSTALL_EVENT_NAME, context.name(), action));
-  }
-
-  @NonNull
-  private Map<String, Object> getInstallEventsBaseBundle(String packageName, int campaignId,
-      String abTestingGroup, boolean hasAppc, boolean isMigration, boolean isAppBundle) {
-    ScreenTagHistory previousScreenTagHistory = navigationTracker.getPreviousScreen();
-    ScreenTagHistory currentScreenTagHistory = navigationTracker.getCurrentScreen();
-    Map<String, Object> data = new HashMap<>();
-    data.put(APP, createApp(packageName, hasAppc, isMigration, isAppBundle));
-    data.put(NETWORK, AptoideUtils.SystemU.getConnectionType(connectivityManager)
-        .toUpperCase());
-    data.put(PREVIOUS_CONTEXT, previousScreenTagHistory.getFragment());
-    data.put(TAG, currentScreenTagHistory.getTag());
-    if (campaignId >= 0) {
-      data.put(CAMPAIGN_ID, campaignId);
-    }
-    if (abTestingGroup != null) {
-      data.put(AB_TEST_GROUP, abTestingGroup);
-    }
-    data.put(STORE, navigationTracker.getCurrentScreen()
-        .getStore());
-    data.put(TELECO, AptoideUtils.SystemU.getCarrierName(telephonyManager));
-    return data;
   }
 
   @NonNull private Map<String, Object> getApplicationInstallEventsBaseBundle(String packageName,
@@ -365,24 +299,9 @@ public class InstallAnalytics {
     return root;
   }
 
-  private Map<String, Object> createApp(String packageName, boolean hasAppc, boolean isMigration,
-      boolean isAppBundle) {
-    Map<String, Object> app = new HashMap<>();
-    app.put(PACKAGE, packageName);
-    app.put(APPC, hasAppc);
-    app.put(MIGRATOR, isMigration);
-    app.put(APP_BUNDLE, isAppBundle);
-    return app;
-  }
-
   public void updateInstallEvents(int versionCode, String packageName, int fileType, String url) {
-    InstallEvent installEvent = cache.get(getKey(packageName, versionCode, INSTALL_EVENT_NAME));
     InstallEvent applicationInstallEvent =
         cache.get(getKey(packageName, versionCode, APPLICATION_INSTALL));
-    if (installEvent != null) {
-      updateApp(versionCode, packageName, fileType, url, installEvent, INSTALL_EVENT_NAME);
-      updateObb(versionCode, packageName, fileType, url, installEvent, INSTALL_EVENT_NAME);
-    }
     if (applicationInstallEvent != null) {
       applicationInstallUpdateApp(versionCode, packageName, fileType, url, applicationInstallEvent,
           APPLICATION_INSTALL);
@@ -418,19 +337,6 @@ public class InstallAnalytics {
     return obb;
   }
 
-  private void updateApp(int versionCode, String packageName, int fileType, String url,
-      InstallEvent installEvent, String installEventName) {
-    if (fileType == 0) {
-      Map<String, Object> data = installEvent.getData();
-      Map<String, Object> app = (Map<String, Object>) data.get(APP);
-      app.put(URL, url);
-      data.put(APP, app);
-      cache.put(getKey(packageName, versionCode, installEventName),
-          new InstallEvent(data, installEventName, installEvent.getContext(),
-              installEvent.getAction()));
-    }
-  }
-
   private void applicationInstallUpdateApp(int versionCode, String packageName, int fileType,
       String url, InstallEvent installEvent, String installEventName) {
     if (fileType == 0) {
@@ -442,38 +348,8 @@ public class InstallAnalytics {
     }
   }
 
-  public void logInstallErrorEvent(String packageName, int versionCode, Exception exception,
-      boolean isPhoneRoot, boolean aptoideSettings) {
-    InstallEvent installEvent = cache.get(getKey(packageName, versionCode, INSTALL_EVENT_NAME));
-    if (installEvent != null) {
-      Map<String, Object> data = installEvent.getData();
-      data.put(ROOT, createRoot(isPhoneRoot, aptoideSettings));
-      data.put(RESULT, createFailResult(exception));
-      analyticsManager.logEvent(data, INSTALL_EVENT_NAME, installEvent.getAction(),
-          installEvent.getContext());
-      cache.remove(getKey(packageName, versionCode, INSTALL_EVENT_NAME));
-    }
-  }
-
-  private Map<String, Object> createFailResult(Exception exception) {
-    Map<String, Object> result = new HashMap<>();
-    result.put(STATUS, FAIL);
-    result.put(TYPE, exception.getClass()
-        .getSimpleName());
-    result.put(MESSAGE, exception.getMessage());
-    return result;
-  }
-
   public void logInstallCancelEvent(String packageName, int versionCode) {
     sendRakamInstallCanceledEvent(packageName, versionCode);
-    InstallEvent installEvent = cache.get(getKey(packageName, versionCode, INSTALL_EVENT_NAME));
-    if (installEvent != null) {
-      Map<String, Object> data = installEvent.getData();
-      data.put(RESULT, createCancelResult());
-      analyticsManager.logEvent(data, INSTALL_EVENT_NAME, installEvent.getAction(),
-          installEvent.getContext());
-      cache.remove(getKey(packageName, versionCode, INSTALL_EVENT_NAME));
-    }
   }
 
   private void sendRakamInstallCanceledEvent(String packageName, int versionCode) {
@@ -525,12 +401,6 @@ public class InstallAnalytics {
 
     if (origin != null) result.put(TAG, origin);
     result.put(STORE, store);
-    return result;
-  }
-
-  private Map<String, Object> createCancelResult() {
-    Map<String, Object> result = new HashMap<>();
-    result.put(STATUS, CANCEL);
     return result;
   }
 

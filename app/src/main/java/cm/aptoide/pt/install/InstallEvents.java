@@ -81,13 +81,6 @@ public class InstallEvents implements InstallerAnalytics {
         INSTALLFABRICCONTEXT);
   }
 
-  @Override public void logInstallErrorEvent(String packageName, int versionCode, Exception e) {
-    installAnalytics.logInstallErrorEvent(packageName, versionCode, e,
-        rootAvailabilityManager.isRootAvailable()
-            .toBlocking()
-            .value(), ManagerPreferences.allowRootInstallation(sharedPreferences));
-  }
-
   @Override public void logInstallCancelEvent(String packageName, int versionCode) {
     installAnalytics.logInstallCancelEvent(packageName, versionCode);
   }

@@ -1,11 +1,9 @@
 package cm.aptoide.pt.account;
 
-import androidx.annotation.NonNull;
 import cm.aptoide.accountmanager.AccountException;
 import cm.aptoide.accountmanager.AccountValidationException;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
-import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
@@ -16,7 +14,6 @@ import java.util.Map;
  * Created by trinkes on 22/05/2017.
  */
 public class AccountAnalytics {
-  public static final String APTOIDE_EVENT_NAME = "LOGIN";
   public static final String STORE_ACTION = "Click";
   public static final String STORE = "store";
   public static final String PERMISSIONS_DENIED = "Permissions Denied";
@@ -158,7 +155,6 @@ public class AccountAnalytics {
   }
 
   private void setupLoginEvents(LoginMethod aptoide) {
-    aptoideSuccessLoginEvent = createAptoideLoginEvent();
     facebookAndFlurrySuccessLoginEvent =
         createFacebookAndFlurryEvent(LOGIN_EVENT_NAME, aptoide, SignUpLoginStatus.SUCCESS, SUCCESS,
             null, null);
@@ -187,19 +183,6 @@ public class AccountAnalytics {
             statusDescription);
     analyticsManager.logEvent(event.getMap(), event.getEventName(), event.getAction(),
         event.getContext());
-  }
-
-  @NonNull private AccountEvent createAptoideLoginEvent() {
-    Map<String, Object> map = new HashMap<>();
-    map.put(PREVIOUS_CONTEXT, navigationTracker.getPreviousViewName());
-    ScreenTagHistory previousScreen = navigationTracker.getPreviousScreen();
-    if (previousScreen != null) {
-      map.put(STORE, previousScreen.getStore());
-    }
-    map.put(PREVIOUS_CONTEXT, navigationTracker.getPreviousViewName());
-    AccountEvent aptoideEvent =
-        new AccountEvent(map, APTOIDE_EVENT_NAME, AnalyticsManager.Action.CLICK, getViewName(true));
-    return aptoideEvent;
   }
 
   private void sendFacebookLoginErrorEvent(Throwable throwable) {

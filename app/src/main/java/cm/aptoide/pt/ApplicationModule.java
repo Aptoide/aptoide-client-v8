@@ -28,19 +28,14 @@ import cm.aptoide.analytics.AnalyticsLogger;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.EventLogger;
 import cm.aptoide.analytics.SessionLogger;
-import cm.aptoide.analytics.implementation.AptoideBiAnalytics;
-import cm.aptoide.analytics.implementation.AptoideBiEventService;
 import cm.aptoide.analytics.implementation.EventsPersistence;
 import cm.aptoide.analytics.implementation.PageViewsAnalytics;
-import cm.aptoide.analytics.implementation.loggers.AptoideBiEventLogger;
 import cm.aptoide.analytics.implementation.loggers.FacebookEventLogger;
 import cm.aptoide.analytics.implementation.loggers.FlurryEventLogger;
 import cm.aptoide.analytics.implementation.loggers.HttpKnockEventLogger;
 import cm.aptoide.analytics.implementation.loggers.IndicativeEventLogger;
 import cm.aptoide.analytics.implementation.loggers.RakamEventLogger;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
-import cm.aptoide.analytics.implementation.network.RetrofitAptoideBiService;
-import cm.aptoide.analytics.implementation.persistence.SharedPreferencesSessionPersistence;
 import cm.aptoide.analytics.implementation.utils.AnalyticsEventParametersNormalizer;
 import cm.aptoide.analytics.implementation.utils.MapToJsonMapper;
 import cm.aptoide.pt.aab.DynamicSplitsManager;
@@ -80,7 +75,6 @@ import cm.aptoide.pt.ads.WalletAdsOfferCardManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.analytics.TrackerFilter;
-import cm.aptoide.pt.analytics.analytics.AnalyticsBodyInterceptorV7;
 import cm.aptoide.pt.apkfy.ApkfyManager;
 import cm.aptoide.pt.apkfy.ApkfyService;
 import cm.aptoide.pt.apkfy.AptoideApkfyService;
@@ -299,9 +293,7 @@ import com.liulishuo.filedownloader.services.DownloadMgrInitialParams;
 import dagger.Module;
 import dagger.Provides;
 import java.io.File;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -309,9 +301,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -327,7 +317,6 @@ import rx.Completable;
 import rx.Single;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
-import rx.subscriptions.CompositeSubscription;
 
 import static android.content.Context.UI_MODE_SERVICE;
 import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
@@ -1038,16 +1027,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         aptoidePackage, qManager, Cdn.WEB, sharedPreferences, resources, BuildConfig.VERSION_CODE);
   }
 
-  @Singleton @Provides @Named("analytics-interceptor")
-  AnalyticsBodyInterceptorV7 provideAnalyticsBodyInterceptorV7(
-      AuthenticationPersistence authenticationPersistence, IdsRepository idsRepository,
-      @Named("default") SharedPreferences sharedPreferences, Resources resources, QManager qManager,
-      @Named("aptoidePackage") String aptoidePackage, AptoideMd5Manager aptoideMd5Manager) {
-    return new AnalyticsBodyInterceptorV7(idsRepository, authenticationPersistence,
-        aptoideMd5Manager, aptoidePackage, resources, BuildConfig.VERSION_CODE, qManager,
-        sharedPreferences);
-  }
-
   @Singleton @Provides QManager provideQManager(Resources resources, WindowManager windowManager) {
     return new QManager(resources,
         ((ActivityManager) application.getSystemService(Context.ACTIVITY_SERVICE)), windowManager,
@@ -1428,11 +1407,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return retrofit.create(SearchSuggestionRemoteRepository.class);
   }
 
-  @Singleton @Provides RetrofitAptoideBiService.ServiceV7 providesAptoideBiService(
-      @Named("retrofit-v7") Retrofit retrofit) {
-    return retrofit.create(RetrofitAptoideBiService.ServiceV7.class);
-  }
-
   @Singleton @Provides Service providesAutoUpdateService(@Named("retrofit-v7") Retrofit retrofit) {
     return retrofit.create(Service.class);
   }
@@ -1465,14 +1439,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return CrashReport.getInstance();
   }
 
-  @Singleton @Provides AptoideBiEventService providesRetrofitAptoideBiService(
-      RetrofitAptoideBiService.ServiceV7 serviceV7,
-      @Named("analytics-interceptor") AnalyticsBodyInterceptorV7 bodyInterceptor) {
-    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
-    dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-    return new RetrofitAptoideBiService(dateFormat, serviceV7, bodyInterceptor);
-  }
-
   @Singleton @Provides FirstLaunchAnalytics providesFirstLaunchAnalytics(
       AnalyticsManager analyticsManager, AnalyticsLogger logger, SafetyNetClient safetyNetClient,
       GmsStatusValueProvider gmsStatusValueProvider) {
@@ -1490,16 +1456,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides MapToJsonMapper providesMapToJsonMapper() {
     return new MapToJsonMapper();
-  }
-
-  @Singleton @Provides @Named("aptoideLogger") EventLogger providesAptoideEventLogger(
-      @Named("aptoide") AptoideBiEventLogger aptoideBiEventLogger) {
-    return aptoideBiEventLogger;
-  }
-
-  @Singleton @Provides @Named("aptoideSession") SessionLogger providesAptoideSessionLogger(
-      @Named("aptoide") AptoideBiEventLogger aptoideBiEventLogger) {
-    return aptoideBiEventLogger;
   }
 
   @Singleton @Provides @Named("facebook") EventLogger providesFacebookEventLogger(
@@ -1532,52 +1488,29 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return eventLogger;
   }
 
-  @Singleton @Provides @Named("aptoide") AptoideBiEventLogger providesAptoideBILogger(
-      EventsPersistence persistence, AptoideBiEventService service,
-      @Named("default") SharedPreferences preferences, AnalyticsLogger debugLogger) {
-    return new AptoideBiEventLogger(
-        new AptoideBiAnalytics(persistence, new SharedPreferencesSessionPersistence(preferences),
-            service, new CompositeSubscription(), Schedulers.computation(),
-            BuildConfig.ANALYTICS_EVENTS_INITIAL_DELAY_IN_MILLIS,
-            BuildConfig.ANALYTICS_EVENTS_TIME_INTERVAL_IN_MILLIS, CrashReport.getInstance(),
-            debugLogger), BuildConfig.ANALYTICS_SESSION_INTERVAL_IN_MILLIS);
-  }
-
   @Singleton @Provides HttpKnockEventLogger providesknockEventLogger(
       @Named("default") OkHttpClient client) {
     return new HttpKnockEventLogger(client);
   }
 
-  @Singleton @Provides @Named("aptoideEvents") Collection<String> provideAptoideEvents() {
-    return Arrays.asList(FirstLaunchAnalytics.FIRST_LAUNCH_BI,
-        FirstLaunchAnalytics.PLAY_PROTECT_EVENT, AppViewAnalytics.OPEN_APP_VIEW,
-        NotificationAnalytics.NOTIFICATION_EVENT_NAME, AccountAnalytics.APTOIDE_EVENT_NAME,
-        DownloadAnalytics.DOWNLOAD_EVENT_NAME, InstallAnalytics.INSTALL_EVENT_NAME,
-        PromotionsAnalytics.VALENTINE_MIGRATOR);
-  }
-
   @Singleton @Provides AnalyticsManager providesAnalyticsManager(
-      @Named("aptoideLogger") EventLogger aptoideBiEventLogger,
       @Named("facebook") EventLogger facebookEventLogger,
       @Named("flurryLogger") EventLogger flurryEventLogger, HttpKnockEventLogger knockEventLogger,
-      @Named("aptoideEvents") Collection<String> aptoideEvents,
       @Named("facebookEvents") Collection<String> facebookEvents,
       @Named("flurryEvents") Collection<String> flurryEvents,
       @Named("flurrySession") SessionLogger flurrySessionLogger,
-      @Named("aptoideSession") SessionLogger aptoideSessionLogger,
       @Named("normalizer") AnalyticsEventParametersNormalizer analyticsNormalizer,
       @Named("rakamEventLogger") EventLogger rakamEventLogger,
       @Named("rakamEvents") Collection<String> rakamEvents,
       @Named("indicativeEventLogger") EventLogger indicativeEventLogger,
       @Named("indicativeEvents") Collection<String> indicativeEvents, AnalyticsLogger logger) {
 
-    return new AnalyticsManager.Builder().addLogger(aptoideBiEventLogger, aptoideEvents)
+    return new AnalyticsManager.Builder()
         .addLogger(facebookEventLogger, facebookEvents)
         .addLogger(flurryEventLogger, flurryEvents)
         .addLogger(rakamEventLogger, rakamEvents)
         .addLogger(indicativeEventLogger, indicativeEvents)
         .addSessionLogger(flurrySessionLogger)
-        .addSessionLogger(aptoideSessionLogger)
         .setKnockLogger(knockEventLogger)
         .setAnalyticsNormalizer(analyticsNormalizer)
         .setDebugLogger(logger)

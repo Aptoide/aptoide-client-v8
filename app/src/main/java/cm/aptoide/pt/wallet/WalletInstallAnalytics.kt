@@ -36,10 +36,6 @@ class WalletInstallAnalytics(
     action: AnalyticsManager.Action,
     hasObbs: Boolean
   ) {
-    downloadAnalytics.downloadStartEvent(
-      download, campaignId, abTestGroup,
-      DownloadAnalytics.AppContext.WALLET_INSTALL_ACTIVITY, action, false, false
-    )
     if (downloadAction == DownloadModel.Action.INSTALL) {
       downloadAnalytics.installClicked(
         download.md5, download.packageName,

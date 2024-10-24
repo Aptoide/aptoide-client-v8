@@ -38,10 +38,8 @@ public class DownloadMirrorEventInterceptor implements Interceptor {
     if (response != null) {
       Headers allHeaders = response.headers();
       if (allHeaders != null) {
-        String mirror = allHeaders.get("X-Mirror");
         String url = request.url()
             .toString();
-        downloadAnalytics.updateDownloadEvent(versionCode, packageName, fileType, mirror, url);
         installAnalytics.updateInstallEvents(Integer.valueOf(versionCode), packageName, fileType,
             url);
       }
