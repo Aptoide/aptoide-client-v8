@@ -424,7 +424,7 @@ public class DeepLinkManager {
       try {
         queryAction = URLDecoder.decode(queryAction, "UTF-8");
         event.setAction(
-            queryAction != null ? queryAction.replace(V7.getHost(sharedPreferences), "") : null);
+            queryAction != null ? replaceActionUrl(queryAction, sharedPreferences) : null);
         event.setType(Event.Type.valueOf(queryType));
         event.setName(Event.Name.valueOf(queryName));
         GetStoreWidgets.WSWidget.Data data = new GetStoreWidgets.WSWidget.Data();
@@ -439,6 +439,16 @@ public class DeepLinkManager {
         e.printStackTrace();
       }
     }
+  }
+
+  private String replaceActionUrl(String urlToReplace, SharedPreferences sharedPreferences) {
+    String url = "";
+    if (V7.isUrlBaseCache(urlToReplace)) {
+      url = urlToReplace.replace(V7.getCacheHost(sharedPreferences), "");
+    } else {
+      url = urlToReplace.replace(V7.getHost(sharedPreferences), "");
+    }
+    return url;
   }
 
   private void myStoreDeepLink() {

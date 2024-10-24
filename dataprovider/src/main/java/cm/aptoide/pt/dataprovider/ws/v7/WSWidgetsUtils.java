@@ -58,8 +58,13 @@ public class WSWidgetsUtils {
       String url = null;
       // Can be null in legacy ws :/
       if (wsWidget.getView() != null) {
-        url = wsWidget.getView()
-            .replace(V7.getHost(sharedPreferences), "");
+        if (V7.isUrlBaseCache(wsWidget.getView())) {
+          url = wsWidget.getView()
+              .replace(V7.getCacheHost(sharedPreferences), "");
+        } else {
+          url = wsWidget.getView()
+              .replace(V7.getHost(sharedPreferences), "");
+        }
       }
       // Ideally this should be replaced by the WS...
       if (wsWidget.getTag()

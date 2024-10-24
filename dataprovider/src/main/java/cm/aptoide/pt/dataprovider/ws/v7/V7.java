@@ -37,8 +37,6 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.RefreshBody;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.home.ActionItemResponse;
-import cm.aptoide.pt.dataprovider.ws.v7.home.GetActionItemRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.home.GetHomeBundlesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.promotions.ClaimPromotionRequest;
@@ -112,6 +110,18 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
         + "/api/7.20240701/";
   }
 
+  public static String getCacheHost(SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + BuildConfig.APTOIDE_WEB_SERVICES_V7_CACHE_HOST
+        + "/api/7.20240701/";
+  }
+
+  public static boolean isUrlBaseCache(String url) {
+    return url != null && url.contains(BuildConfig.APTOIDE_WEB_SERVICES_V7_CACHE_HOST);
+  }
+
   @NonNull public static String getErrorMessage(BaseV7Response response) {
     final StringBuilder builder = new StringBuilder();
     if (response != null && response.getErrors() != null) {
@@ -174,7 +184,7 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
             } else {
               try {
                 v7Response = retrofit.<BaseV7Response>responseBodyConverter(BaseV7Response.class,
-                    new Annotation[0])
+                        new Annotation[0])
                     .convert(((Response) response).errorBody());
               } catch (IOException e) {
                 return Observable.error(e);
@@ -199,37 +209,37 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
           }
         })
         .retryWhen(errObservable -> errObservable.zipWith(Observable.range(1, MAX_RETRY_COUNT),
-            (throwable, i) -> {
-              // Return anything will resubscribe to source observable. Throw an exception will call onError in child subscription.
-              // Retry three times if request is queued by server.
-              if ((throwable instanceof ToRetryThrowable) && i < MAX_RETRY_COUNT) {
-                return null;
-              } else {
-                if (isNoNetworkException(throwable)) {
-                  throw new NoNetworkConnectionException(throwable);
-                } else {
+                (throwable, i) -> {
+                  // Return anything will resubscribe to source observable. Throw an exception will call onError in child subscription.
+                  // Retry three times if request is queued by server.
+                  if ((throwable instanceof ToRetryThrowable) && i < MAX_RETRY_COUNT) {
+                    return null;
+                  } else {
+                    if (isNoNetworkException(throwable)) {
+                      throw new NoNetworkConnectionException(throwable);
+                    } else {
 
-                  if (throwable instanceof AptoideWsV7Exception) {
-                    throw (AptoideWsV7Exception) throwable;
-                  }
+                      if (throwable instanceof AptoideWsV7Exception) {
+                        throw (AptoideWsV7Exception) throwable;
+                      }
 
-                  if (throwable instanceof HttpException) {
-                    try {
-                      AptoideWsV7Exception exception = new AptoideWsV7Exception(throwable);
-                      exception.setBaseResponse(
-                          (BaseV7Response) converterFactory.responseBodyConverter(
-                              BaseV7Response.class, null, null)
-                              .convert(((HttpException) throwable).response()
-                                  .errorBody()));
-                      throw exception;
-                    } catch (IOException exception) {
-                      throw new RuntimeException(exception);
+                      if (throwable instanceof HttpException) {
+                        try {
+                          AptoideWsV7Exception exception = new AptoideWsV7Exception(throwable);
+                          exception.setBaseResponse(
+                              (BaseV7Response) converterFactory.responseBodyConverter(
+                                      BaseV7Response.class, null, null)
+                                  .convert(((HttpException) throwable).response()
+                                      .errorBody()));
+                          throw exception;
+                        } catch (IOException exception) {
+                          throw new RuntimeException(exception);
+                        }
+                      }
+                      throw new RuntimeException(throwable);
                     }
                   }
-                  throw new RuntimeException(throwable);
-                }
-              }
-            })
+                })
             .delay(500, TimeUnit.MILLISECONDS));
   }
 
@@ -439,17 +449,18 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
     @POST("user/settings/set") Observable<BaseV7Response> setUserSettings(
         @Body SetUserSettings.Body body);
 
-    @POST("getStoreWidgets/") Observable<GetStoreWidgets> getHomeBundles(
-        @Body GetHomeBundlesRequest.Body body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+    @GET("getStoreWidgets/") Observable<GetStoreWidgets> getHomeBundles(
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache,
+        @QueryMap(encoded = true) Map<String, String> parameters);
 
     @POST("appcoins/catappult/campaigns/get/limit={limit}")
     Observable<ListAppCoinsCampaigns> getAppCoinsAds(@Body GetAppCoinsCampaignsRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Path(value = "limit") int limit,
         @Query("aab") boolean showAabs);
 
-    @POST("{url}") Observable<ActionItemResponse> getActionItem(
-        @Path(value = "url", encoded = true) String path, @Body GetActionItemRequest.Body body,
+    @GET("{url}") Observable<ActionItemResponse> getActionItem(
+        @Path(value = "url", encoded = true) String path,
+        @QueryMap(encoded = true) Map<String, String> parameters,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("appcoins/promotions/claim") Observable<BaseV7Response> claimPromotion(

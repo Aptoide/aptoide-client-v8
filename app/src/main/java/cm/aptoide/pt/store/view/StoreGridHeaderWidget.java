@@ -56,8 +56,7 @@ public class StoreGridHeaderWidget extends Widget<StoreGridHeaderDisplayable> {
 
             if (event.getName() == Event.Name.listComments) {
               String action = event.getAction();
-              String url =
-                  action != null ? action.replace(V7.getHost(sharedPreferences), "") : null;
+              String url = action != null ? replaceActionUrl(action, sharedPreferences) : null;
               displayable.getStoreTabNavigator()
                   .navigateToCommentGridRecyclerView(CommentType.STORE, url, "View Comments",
                       storeContext);
@@ -68,5 +67,15 @@ public class StoreGridHeaderWidget extends Widget<StoreGridHeaderDisplayable> {
             }
           }));
     }
+  }
+
+  private String replaceActionUrl(String urlToReplace, SharedPreferences sharedPreferences) {
+    String url = "";
+    if (V7.isUrlBaseCache(urlToReplace)) {
+      url = urlToReplace.replace(V7.getCacheHost(sharedPreferences), "");
+    } else {
+      url = urlToReplace.replace(V7.getHost(sharedPreferences), "");
+    }
+    return url;
   }
 }

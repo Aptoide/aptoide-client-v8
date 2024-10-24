@@ -1,5 +1,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import cm.aptoide.pt.dataprovider.ws.v7.home.GetActionItemRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.home.GetHomeBundlesRequest;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -99,6 +101,30 @@ public class QueryStringMapper {
     return data;
   }
 
+  public Map<String, String> map(GetHomeBundlesRequest.Body body) {
+    Map<String, String> data = new HashMap<>();
+    map(body, true, data);
+    put("limit", body.getLimit(), data);
+    put("offset", body.getOffset(), data);
+    put("store_id", body.getStoreId(), data);
+    put("context", body.getContext(), data);
+    put("widgets_args", getWidgetArgsAsString(body), data);
+    return data;
+  }
+
+  private String getWidgetArgsAsString(GetHomeBundlesRequest.Body body) {
+    String nodes = null;
+    try {
+      ObjectMapper objectMapper = new ObjectMapper();
+      objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+      objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+      nodes = objectMapper.writeValueAsString(body.getWidgetsArgs());
+    } catch (JsonProcessingException e) {
+      e.printStackTrace();
+    }
+    return nodes;
+  }
+
   private void put(String key, Object value, Map<String, String> data) {
     if (value != null) {
       data.put(key, String.valueOf(value));
@@ -125,6 +151,12 @@ public class QueryStringMapper {
     put("limit", body.getLimit(), data);
     put("offset", body.getOffset(), data);
     put("section", body.getSection(), data);
+    return data;
+  }
+
+  public Map<String, String> map(GetActionItemRequest.Body body) {
+    Map<String, String> data = new HashMap<>();
+    map(body, true, data);
     return data;
   }
 }

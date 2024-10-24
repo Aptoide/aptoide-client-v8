@@ -26,7 +26,14 @@ open class ListAppsMorePresenter(
   ListAppsPresenter<Application>(view, viewScheduler, crashReporter) {
 
   private val url by lazy(LazyThreadSafetyMode.NONE) {
-    listAppsConfiguration.action?.replace(V7.getHost(sharedPreferences), "")
+    listAppsConfiguration.action?.let {
+      if (V7.isUrlBaseCache(listAppsConfiguration.action)) {
+        listAppsConfiguration.action.replace(V7.getCacheHost(sharedPreferences), "")
+      } else {
+        listAppsConfiguration.action.replace(V7.getHost(sharedPreferences), "")
+      }
+    }
+
   }
 
   override fun getApps(refresh: Boolean): Observable<List<Application>> {

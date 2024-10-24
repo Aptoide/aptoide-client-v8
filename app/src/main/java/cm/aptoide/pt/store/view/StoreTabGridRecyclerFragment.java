@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.store.view;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -156,9 +157,9 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
     if (create || refresh || !hasDisplayables()) {
-      String url = action != null ? action.replace(V7.getHost(
-              ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences()),
-          "") : null;
+      String url = action != null ? replaceActionUrl(action,
+              ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())
+          : null;
 
       if (!StoreTabFragmentChooser.validateAcceptedName(name)) {
         throw new RuntimeException(
@@ -181,6 +182,16 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
             });
       }
     }
+  }
+
+  private String replaceActionUrl(String urlToReplace, SharedPreferences sharedPreferences) {
+    String url = "";
+    if (V7.isUrlBaseCache(urlToReplace)) {
+      url = urlToReplace.replace(V7.getCacheHost(sharedPreferences), "");
+    } else {
+      url = urlToReplace.replace(V7.getHost(sharedPreferences), "");
+    }
+    return url;
   }
 
   @Nullable
