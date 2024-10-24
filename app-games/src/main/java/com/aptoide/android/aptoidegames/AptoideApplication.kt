@@ -114,7 +114,7 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
     initPayments()
     initIndicative()
     setUserProperties()
-    AptoideMMPCampaign.init(BuildConfig.OEMID, "AG")
+    AptoideMMPCampaign.init(BuildConfig.OEMID, BuildConfig.UTM_SOURCE)
   }
 
   private fun initIndicative() = biAnalytics.setup(
