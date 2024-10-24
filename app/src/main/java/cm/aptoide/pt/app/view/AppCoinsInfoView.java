@@ -34,8 +34,4 @@ public interface AppCoinsInfoView extends View {
   void setBonusAppc(int bonusPercentage);
 
   void setNoBonusAppcView();
-
-  Observable<Void> eSkillsClick();
-
-  void focusOnESkillsSection();
 }

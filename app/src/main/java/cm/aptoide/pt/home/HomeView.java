@@ -60,10 +60,6 @@ public interface HomeView extends BundleView {
 
   void showBundlesSkeleton(HomeBundlesModel homeBundles);
 
-  Observable<HomeEvent> eSkillsKnowMoreClick();
-
-  Observable<HomeEvent> eSkillsClick();
-
   Observable<HomeEvent> notifyMeClicked();
 
   Observable<HomeEvent> cancelNotifyMeClicked();

@@ -182,7 +182,6 @@ import cm.aptoide.pt.home.bundles.BundlesRepository;
 import cm.aptoide.pt.home.bundles.BundlesResponseMapper;
 import cm.aptoide.pt.home.bundles.RemoteBundleDataSource;
 import cm.aptoide.pt.home.bundles.ads.AdMapper;
-import cm.aptoide.pt.home.more.eskills.EskillsAnalytics;
 import cm.aptoide.pt.install.AppInstallerStatusReceiver;
 import cm.aptoide.pt.install.AptoideInstallPersistence;
 import cm.aptoide.pt.install.AptoideInstalledAppsRepository;
@@ -1596,8 +1595,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return Arrays.asList(InstallAnalytics.CLICK_ON_INSTALL, DownloadAnalytics.RAKAM_DOWNLOAD_EVENT,
         InstallAnalytics.RAKAM_INSTALL_EVENT, SearchAnalytics.SEARCH,
         SearchAnalytics.SEARCH_RESULT_CLICK, FirstLaunchAnalytics.FIRST_LAUNCH_RAKAM,
-        HomeAnalytics.VANILLA_PROMOTIONAL_CARDS, EskillsAnalytics.ESKILLS_PROMOTIONAL_CARD,
-        EskillsAnalytics.ESKILLS_PROMOTIONAL_PAGE, EskillsAnalytics.ESKILLS_APP_CLICK);
+        HomeAnalytics.VANILLA_PROMOTIONAL_CARDS);
   }
 
   @Singleton @Provides @Named("normalizer")

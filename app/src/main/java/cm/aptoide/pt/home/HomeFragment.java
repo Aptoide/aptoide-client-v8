@@ -232,10 +232,9 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
 
   @Override public Observable<AppHomeEvent> appClicked() {
     return uiEventsListener.filter(homeClick -> homeClick.getType()
-        .equals(HomeEvent.Type.APP) || homeClick.getType()
-        .equals(HomeEvent.Type.REWARD_APP) || homeClick.getType()
-        .equals(HomeEvent.Type.INSTALL_PROMOTIONAL) || homeClick.getType()
-        .equals(HomeEvent.Type.ESKILLS_APP))
+            .equals(HomeEvent.Type.APP) || homeClick.getType()
+            .equals(HomeEvent.Type.REWARD_APP) || homeClick.getType()
+            .equals(HomeEvent.Type.INSTALL_PROMOTIONAL))
         .cast(AppHomeEvent.class);
   }
 
@@ -277,14 +276,14 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
 
   @Override public Observable<HomeEvent> bundleScrolled() {
     return uiEventsListener.filter(click -> click.getType()
-        .equals(HomeEvent.Type.SCROLL_RIGHT))
+            .equals(HomeEvent.Type.SCROLL_RIGHT))
         .debounce(200, TimeUnit.MILLISECONDS);
   }
 
   @Override public Observable<HomeEvent> visibleBundles() {
     return Observable.merge(RxRecyclerView.scrollEvents(bundlesList),
-        firstBundleLoadListener.filter(isLoaded -> isLoaded)
-            .map(aBoolean -> 0))
+            firstBundleLoadListener.filter(isLoaded -> isLoaded)
+                .map(aBoolean -> 0))
         .map(recyclerViewScrollEvent -> layoutManager.findFirstVisibleItemPosition())
         .filter(position -> position != RecyclerView.NO_POSITION)
         .filter(position -> adapter.getBundle(position)
@@ -304,7 +303,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
 
   @Override public Observable<EditorialHomeEvent> editorialCardClicked() {
     return uiEventsListener.filter(homeClick -> homeClick.getType()
-        .equals(HomeEvent.Type.EDITORIAL))
+            .equals(HomeEvent.Type.EDITORIAL))
         .cast(EditorialHomeEvent.class);
   }
 
@@ -315,7 +314,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
 
   @Override public Observable<EditorialHomeEvent> reactionsButtonClicked() {
     return uiEventsListener.filter(homeEvent -> homeEvent.getType()
-        .equals(HomeEvent.Type.REACT_SINGLE_PRESS))
+            .equals(HomeEvent.Type.REACT_SINGLE_PRESS))
         .cast(EditorialHomeEvent.class);
   }
 
@@ -367,13 +366,13 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
 
   @Override public Observable<ReactionsHomeEvent> reactionClicked() {
     return uiEventsListener.filter(homeEvent -> homeEvent.getType()
-        .equals(HomeEvent.Type.REACTION))
+            .equals(HomeEvent.Type.REACTION))
         .cast(ReactionsHomeEvent.class);
   }
 
   @Override public Observable<EditorialHomeEvent> reactionButtonLongPress() {
     return uiEventsListener.filter(homeEvent -> homeEvent.getType()
-        .equals(HomeEvent.Type.REACT_LONG_PRESS))
+            .equals(HomeEvent.Type.REACT_LONG_PRESS))
         .cast(EditorialHomeEvent.class);
   }
 
@@ -426,16 +425,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
       listState = null;
     }
     hideLoading();
-  }
-
-  @Override public Observable<HomeEvent> eSkillsKnowMoreClick() {
-    return this.uiEventsListener.filter(homeEvent -> homeEvent.getType()
-        .equals(HomeEvent.Type.ESKILLS_MORE));
-  }
-
-  @Override public Observable<HomeEvent> eSkillsClick() {
-    return this.uiEventsListener.filter(homeEvent -> homeEvent.getType()
-        .equals(HomeEvent.Type.ESKILLS));
   }
 
   @Override public Observable<HomeEvent> notifyMeClicked() {

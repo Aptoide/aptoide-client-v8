@@ -19,17 +19,11 @@ public interface HomeContainerView extends View {
 
   void showPromotionsHomeDialog(HomePromotionsWrapper homePromotionsWrapper);
 
-  void showEskillsHomeDialog();
-
   void hidePromotionsIcon();
 
   Observable<String> promotionsHomeDialogClicked();
 
-  Observable<String> eskillsHomeDialogClicked();
-
   void dismissPromotionsDialog();
-
-  void dismissEskillsDialog();
 
   void showTermsAndConditionsDialog();
 

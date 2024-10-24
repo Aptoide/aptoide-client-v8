@@ -11,7 +11,6 @@ import cm.aptoide.pt.home.bundles.ads.WalletAdsOfferViewHolder;
 import cm.aptoide.pt.home.bundles.appcoins.EarnAppCoinsViewHolder;
 import cm.aptoide.pt.home.bundles.appcoins.FeaturedAppcViewHolder;
 import cm.aptoide.pt.home.bundles.apps.AppsBundleViewHolder;
-import cm.aptoide.pt.home.bundles.apps.EskillsAppsBundleViewHolder;
 import cm.aptoide.pt.home.bundles.base.ActionBundle;
 import cm.aptoide.pt.home.bundles.base.AppBundleViewHolder;
 import cm.aptoide.pt.home.bundles.base.AppComingSoonPromotionalBundle;
@@ -55,7 +54,6 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   private static final int NEWS = 14;
   private static final int NEW_APP_VERSION = 15;
   private static final int EVENT = 16;
-  private static final int ESKILLS = 17;
   private static final int APP_COMING_SOON = 18;
 
   private final ProgressBundle progressBundle;
@@ -137,10 +135,6 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
       case NEW_APP_VERSION:
         return new NewAppVersionViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.card_new_app_version, parent, false), uiEventsListener);
-      case ESKILLS:
-        return new EskillsAppsBundleViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.eskills_apps_bundle_item, parent, false), uiEventsListener,
-            oneDecimalFormatter);
       case APP_COMING_SOON:
         return new ComingSoonViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.card_coming_soon, parent, false), uiEventsListener);
@@ -186,8 +180,6 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
         return TOP;
       case LOAD_MORE_ERROR:
         return LOAD_MORE_ERROR;
-      case ESKILLS:
-        return ESKILLS;
       case APP_COMING_SOON:
         return APP_COMING_SOON;
       default:

@@ -5,7 +5,6 @@ import cm.aptoide.pt.ads.MinimalAd
 import cm.aptoide.pt.ads.data.AptoideNativeAd
 import cm.aptoide.pt.dataprovider.model.v7.ListApps
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App
-import cm.aptoide.pt.home.bundles.apps.EskillsApp
 import cm.aptoide.pt.view.app.Application
 import rx.Observable
 
@@ -23,13 +22,10 @@ class ListAppsMoreManager(
     type: String?,
     limit: Int? = null
   ): Observable<List<Application>> {
-    val url = if(limit != null) "$baseUrl/limit=$limit" else baseUrl
+    val url = if (limit != null) "$baseUrl/limit=$limit" else baseUrl
     return if (type.equals("getAds"))
       adsRepository.getAdsFromHomepageMore(refresh).map { response -> mapAdsResponse(response) }
-    else if (type.equals("eSkills")) {
-      listAppsMoreRepository.getEskillsApps(url!!, refresh)
-        .map { response -> mapEskillsResponse(response) }
-    } else
+    else
       listAppsMoreRepository.getApps(url, refresh).map { response -> mapResponse(response) }
   }
 
@@ -58,23 +54,6 @@ class ListAppsMoreManager(
     return result
   }
 
-  private fun mapEskillsResponse(listApps: ListApps): List<Application> {
-    val result = ArrayList<Application>()
-    total = listApps.dataList.total
-    next = listApps.dataList.next
-    for (app: App in listApps.dataList.list) {
-      result.add(
-        EskillsApp(
-          app.name, app.icon, app.stats.rating.avg, app.stats.downloads,
-          app.packageName,
-          app.id, "", app.appcoins != null && app.appcoins.hasBilling()
-        )
-      )
-    }
-    return result
-  }
-
-
   private fun mapAdsResponse(response: List<MinimalAd>): List<Application>? {
     val result = ArrayList<Application>()
     for (ad: MinimalAd in response) {
@@ -82,6 +61,4 @@ class ListAppsMoreManager(
     }
     return result
   }
-
-
 }

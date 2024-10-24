@@ -15,7 +15,6 @@ import cm.aptoide.pt.home.bundles.base.HomeBundle;
 import cm.aptoide.pt.home.bundles.base.HomeEvent;
 import cm.aptoide.pt.home.bundles.base.PromotionalBundle;
 import cm.aptoide.pt.home.bundles.editorial.EditorialHomeEvent;
-import cm.aptoide.pt.home.more.eskills.EskillsAnalytics;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
@@ -32,7 +31,6 @@ import rx.exceptions.OnErrorNotImplementedException;
 import static cm.aptoide.pt.home.bundles.base.HomeBundle.BundleType.APPCOINS_ADS;
 import static cm.aptoide.pt.home.bundles.base.HomeBundle.BundleType.EDITORIAL;
 import static cm.aptoide.pt.home.bundles.base.HomeBundle.BundleType.EDITORS;
-import static cm.aptoide.pt.home.bundles.base.HomeBundle.BundleType.ESKILLS;
 
 /**
  * Created by jdandrade on 07/03/2018.
@@ -47,12 +45,11 @@ public class HomePresenter implements Presenter {
   private final HomeNavigator homeNavigator;
   private final AdMapper adMapper;
   private final HomeAnalytics homeAnalytics;
-  private final EskillsAnalytics eskillsAnalytics;
   private final UserFeedbackAnalytics userFeedbackAnalytics;
 
   public HomePresenter(HomeView view, Home home, Scheduler viewScheduler, CrashReport crashReporter,
       HomeNavigator homeNavigator, AdMapper adMapper, HomeAnalytics homeAnalytics,
-      UserFeedbackAnalytics userFeedbackAnalytics, EskillsAnalytics eskillsAnalytics) {
+      UserFeedbackAnalytics userFeedbackAnalytics) {
     this.view = view;
     this.home = home;
     this.viewScheduler = viewScheduler;
@@ -61,7 +58,6 @@ public class HomePresenter implements Presenter {
     this.adMapper = adMapper;
     this.homeAnalytics = homeAnalytics;
     this.userFeedbackAnalytics = userFeedbackAnalytics;
-    this.eskillsAnalytics = eskillsAnalytics;
   }
 
   @Override public void present() {
@@ -104,10 +100,6 @@ public class HomePresenter implements Presenter {
     handlePromotionalImpression();
 
     handlePromotionalClick();
-
-    handleESkillsMoreClick();
-
-    handleESkillsClick();
 
     handleNotifyMeAppComingSoonClick();
 
@@ -335,46 +327,6 @@ public class HomePresenter implements Presenter {
         });
   }
 
-  @VisibleForTesting public void handleESkillsMoreClick() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.eSkillsKnowMoreClick())
-        .observeOn(viewScheduler)
-        .doOnNext(homeEvent -> {
-          homeAnalytics.sendTapOnMoreInteractEvent(homeEvent.getBundlePosition(), homeEvent.getBundle()
-              .getTag(), homeEvent.getBundle()
-              .getContent()
-              .size());
-          eskillsAnalytics.sendHomeBundleMoreClickEvent();
-          homeNavigator.navigateToEskillsEarnMore(homeEvent);
-        })
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(lifecycleEvent -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
-  }
-
-  @VisibleForTesting public void handleESkillsClick() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.eSkillsClick())
-        .observeOn(viewScheduler)
-        .doOnNext(homeEvent -> {
-          homeAnalytics.sendActionItemTapOnCardInteractEvent(homeEvent.getBundle()
-              .getTag(), homeEvent.getBundlePosition());
-          eskillsAnalytics.sendHomeBundleHeaderClickEvent();
-          homeNavigator.navigateToEskillsEarnMore(homeEvent);
-        })
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(lifecycleEvent -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
-  }
-
-
-
   @VisibleForTesting public void handleReactionButtonClick() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
@@ -392,7 +344,7 @@ public class HomePresenter implements Presenter {
         .flatMap(created -> view.reactionClicked())
         .doOnNext(__ -> userFeedbackAnalytics.sendReactionEvent())
         .flatMap(homeEvent -> home.setReaction(homeEvent.getCardId(), homeEvent.getGroupId(),
-            homeEvent.getReaction())
+                homeEvent.getReaction())
             .toObservable()
             .filter(ReactionsResponse::differentReaction)
             .observeOn(viewScheduler)
@@ -520,11 +472,6 @@ public class HomePresenter implements Presenter {
                     rewardApp.getPackageName(), rewardApp.getTag(), rewardApp.getDownloadUrl(),
                     (float) rewardApp.getReward()
                         .getAppc());
-              } else if (click.getBundle()
-                  .getType()
-                  .equals(ESKILLS)) {
-                homeNavigator.navigateToEskillsAppView(app.getAppId(), app.getPackageName(),
-                    app.getTag());
               } else {
                 homeNavigator.navigateToAppView(app.getAppId(), app.getPackageName(), app.getTag());
               }
@@ -711,7 +658,7 @@ public class HomePresenter implements Presenter {
             return Observable.just(Collections.emptyList());
           } else {
             return home.deleteReaction(editorialHomeEvent.getCardId(),
-                editorialHomeEvent.getGroupId())
+                    editorialHomeEvent.getGroupId())
                 .toObservable()
                 .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse, true))
                 .filter(ReactionsResponse::wasSuccess)
@@ -738,7 +685,7 @@ public class HomePresenter implements Presenter {
         })
         .map(event -> event.second)
         .flatMap(bundle -> home.setupAppComingSoonNotification(bundle.getActionItem()
-            .getPackageName())
+                .getPackageName())
             .andThen(Observable.just(bundle)))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(bundle -> view.updateAppComingSoonStatus(bundle, true))
@@ -764,7 +711,7 @@ public class HomePresenter implements Presenter {
         })
         .map(event -> event.second)
         .flatMap(bundle -> home.cancelAppComingSoonNotification(bundle.getActionItem()
-            .getPackageName())
+                .getPackageName())
             .andThen(Observable.just(bundle)))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(homeBundle -> view.updateAppComingSoonStatus(homeBundle, false))

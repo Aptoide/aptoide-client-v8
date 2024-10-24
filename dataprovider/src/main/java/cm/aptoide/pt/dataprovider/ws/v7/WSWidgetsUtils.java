@@ -69,10 +69,11 @@ public class WSWidgetsUtils {
       switch (wsWidget.getType()) {
         case APPCOINS_FEATURED:
           return Observable.zip(
-              loadListApps(url, storeCredentials, bodyInterceptor, httpClient, converterFactory,
-                  tokenInvalidator, sharedPreferences, resources, windowManager, bypassCache, bypassServerCache),
-              loadAppcBonusModel(appCoinsManager),
-              (listApps, bonusAppcModel) -> new BonusAppcBundle(listApps, bonusAppcModel))
+                  loadListApps(url, storeCredentials, bodyInterceptor, httpClient, converterFactory,
+                      tokenInvalidator, sharedPreferences, resources, windowManager, bypassCache,
+                      bypassServerCache),
+                  loadAppcBonusModel(appCoinsManager),
+                  (listApps, bonusAppcModel) -> new BonusAppcBundle(listApps, bonusAppcModel))
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
@@ -80,15 +81,16 @@ public class WSWidgetsUtils {
         case APPS_TOP_GROUP:
         case APPS_GROUP:
           return loadListApps(url, storeCredentials, bodyInterceptor, httpClient, converterFactory,
-              tokenInvalidator, sharedPreferences, resources, windowManager, bypassCache, bypassServerCache).observeOn(
-              Schedulers.io())
+              tokenInvalidator, sharedPreferences, resources, windowManager, bypassCache,
+              bypassServerCache).observeOn(
+                  Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(listApps -> wsWidget);
 
         case STORES_GROUP:
           return ListStoresRequest.ofAction(url, bodyInterceptor, httpClient, converterFactory,
-              tokenInvalidator, sharedPreferences)
+                  tokenInvalidator, sharedPreferences)
               .observe(bypassCache, bypassServerCache)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
@@ -97,7 +99,7 @@ public class WSWidgetsUtils {
 
         case DISPLAYS:
           return GetStoreDisplaysRequest.ofAction(url, storeCredentials, bodyInterceptor,
-              httpClient, converterFactory, tokenInvalidator, sharedPreferences)
+                  httpClient, converterFactory, tokenInvalidator, sharedPreferences)
               .observe(bypassCache, bypassServerCache)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
@@ -106,8 +108,8 @@ public class WSWidgetsUtils {
 
         case ADS:
           return GetAdsRequest.ofHomepage(clientUniqueId, googlePlayServicesAvailable, oemid,
-              mature, httpClient, converterFactory, q, sharedPreferences, resources,
-              connectivityManager, versionCodeProvider, limit)
+                  mature, httpClient, converterFactory, q, sharedPreferences, resources,
+                  connectivityManager, versionCodeProvider, limit)
               .observe(bypassCache)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
@@ -115,22 +117,15 @@ public class WSWidgetsUtils {
               .map(listApps -> wsWidget);
         case APPCOINS_ADS:
           return new GetAppCoinsCampaignsRequest(new GetAppCoinsCampaignsRequest.Body(0, limit),
-              httpClient, converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences).observe(bypassCache, bypassServerCache)
+              httpClient, converterFactory, bodyInterceptor, tokenInvalidator,
+              sharedPreferences).observe(bypassCache, bypassServerCache)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(listAppCoinsRewardApps -> wsWidget);
-        case ESKILLS:
-          return new GetEskillsAppsRequest(url, httpClient, converterFactory, bodyInterceptor,
-              tokenInvalidator, sharedPreferences).observe(bypassCache,
-              bypassServerCache)
-              .observeOn(Schedulers.io())
-              .doOnNext(listApps -> wsWidget.setViewObject(listApps))
-              .onErrorResumeNext(throwable -> Observable.empty())
-              .map(listApps -> wsWidget);
         case HOME_META:
           return GetHomeMetaRequest.ofAction(url, storeCredentials, bodyInterceptor, httpClient,
-              converterFactory, tokenInvalidator, sharedPreferences)
+                  converterFactory, tokenInvalidator, sharedPreferences)
               .observe(bypassCache, bypassServerCache)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
@@ -139,7 +134,7 @@ public class WSWidgetsUtils {
 
         case COMMENTS_GROUP:
           return ListCommentsRequest.ofStoreAction(url, bypassCache, storeCredentials,
-              bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
+                  bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
               .observe(bypassCache, bypassServerCache)
               .observeOn(Schedulers.io())
               .doOnNext(listComments -> wsWidget.setViewObject(
@@ -150,7 +145,7 @@ public class WSWidgetsUtils {
 
         case REVIEWS_GROUP:
           return ListFullReviewsRequest.ofAction(url, bypassCache, storeCredentials,
-              bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
+                  bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
               .observe(bypassCache, bypassServerCache)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
@@ -160,7 +155,7 @@ public class WSWidgetsUtils {
         case MY_STORES_SUBSCRIBED:
         case STORES_RECOMMENDED:
           return GetMyStoreListRequest.of(url, bodyInterceptor, httpClient, converterFactory,
-              tokenInvalidator, sharedPreferences, resources, windowManager)
+                  tokenInvalidator, sharedPreferences, resources, windowManager)
               .observe(bypassCache, bypassServerCache)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
@@ -176,51 +171,51 @@ public class WSWidgetsUtils {
               .map(listApps -> wsWidget);
         case MY_STORE_META:
           return Observable.zip(
-              GetTimelineStatsRequest.of(bodyInterceptor, null, httpClient, converterFactory,
-                  tokenInvalidator, sharedPreferences)
-                  .observe(bypassCache, bypassServerCache)
-                  .onErrorReturn(throwable -> createErrorTimelineStatus()),
-              GetMyStoreMetaRequest.of(bodyInterceptor, httpClient, converterFactory,
-                  tokenInvalidator, sharedPreferences)
-                  .observe(bypassCache, bypassServerCache)
-                  .observeOn(Schedulers.io())
-                  .map(getStoreMeta -> {
-                    GetHomeMeta.Data data = new GetHomeMeta.Data();
-                    data.setStore(getStoreMeta.getData());
-                    GetHomeMeta homeMeta = new GetHomeMeta();
-                    homeMeta.setData(data);
-                    return homeMeta;
-                  })
-                  .onErrorResumeNext(throwable -> {
-                    LinkedList<String> errorsList = new LinkedList<>();
-                    errorsList.add(USER_NOT_LOGGED_ERROR);
-                    errorsList.add(USER_DONT_HAVE_STORE_ERROR);
-                    if (shouldAddObjectView(errorsList, throwable)) {
-                      return Observable.just(null);
+                  GetTimelineStatsRequest.of(bodyInterceptor, null, httpClient, converterFactory,
+                          tokenInvalidator, sharedPreferences)
+                      .observe(bypassCache, bypassServerCache)
+                      .onErrorReturn(throwable -> createErrorTimelineStatus()),
+                  GetMyStoreMetaRequest.of(bodyInterceptor, httpClient, converterFactory,
+                          tokenInvalidator, sharedPreferences)
+                      .observe(bypassCache, bypassServerCache)
+                      .observeOn(Schedulers.io())
+                      .map(getStoreMeta -> {
+                        GetHomeMeta.Data data = new GetHomeMeta.Data();
+                        data.setStore(getStoreMeta.getData());
+                        GetHomeMeta homeMeta = new GetHomeMeta();
+                        homeMeta.setData(data);
+                        return homeMeta;
+                      })
+                      .onErrorResumeNext(throwable -> {
+                        LinkedList<String> errorsList = new LinkedList<>();
+                        errorsList.add(USER_NOT_LOGGED_ERROR);
+                        errorsList.add(USER_DONT_HAVE_STORE_ERROR);
+                        if (shouldAddObjectView(errorsList, throwable)) {
+                          return Observable.just(null);
+                        } else {
+                          return Observable.error(throwable);
+                        }
+                      }), (timelineStats, getHomeMeta) -> {
+                    if (timelineStats.getData() == null) { // this happens when server returns SYS-1
+                      TimelineStats defaultTimelineStats = createErrorTimelineStatus();
+                      return new MyStore(defaultTimelineStats, getHomeMeta);
                     } else {
-                      return Observable.error(throwable);
+                      return new MyStore(timelineStats, getHomeMeta);
                     }
-                  }), (timelineStats, getHomeMeta) -> {
-                if (timelineStats.getData() == null) { // this happens when server returns SYS-1
-                  TimelineStats defaultTimelineStats = createErrorTimelineStatus();
-                  return new MyStore(defaultTimelineStats, getHomeMeta);
-                } else {
-                  return new MyStore(timelineStats, getHomeMeta);
-                }
-              })
+                  })
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(myStore -> wsWidget);
         case STORE_META:
           return GetStoreMetaRequest.ofAction(url, bodyInterceptor, httpClient, converterFactory,
-              tokenInvalidator, sharedPreferences)
+                  tokenInvalidator, sharedPreferences)
               .observe(bypassCache, bypassServerCache)
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(myStore -> wsWidget);
         case NEW_APP_VERSION:
           return GetAppMetaRequest.ofAction(url, bodyInterceptor, httpClient, converterFactory,
-              tokenInvalidator, sharedPreferences)
+                  tokenInvalidator, sharedPreferences)
               .observe(bypassCache, bypassServerCache)
               .observeOn(Schedulers.io())
               .map(AppPromoItem::new)
@@ -229,11 +224,11 @@ public class WSWidgetsUtils {
               .map(getApp -> wsWidget);
         case NEW_APP:
           return Observable.zip(
-              GetAppMetaRequest.ofAction(url, bodyInterceptor, httpClient, converterFactory,
-                  tokenInvalidator, sharedPreferences)
-                  .observe(bypassCache, bypassServerCache), loadAppcBonusModel(appCoinsManager),
-              (actionItemResponse, bonusAppcModel) -> new NewAppCoinsAppPromoItem(
-                  actionItemResponse, bonusAppcModel))
+                  GetAppMetaRequest.ofAction(url, bodyInterceptor, httpClient, converterFactory,
+                          tokenInvalidator, sharedPreferences)
+                      .observe(bypassCache, bypassServerCache), loadAppcBonusModel(appCoinsManager),
+                  (actionItemResponse, bonusAppcModel) -> new NewAppCoinsAppPromoItem(
+                      actionItemResponse, bonusAppcModel))
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
@@ -247,11 +242,11 @@ public class WSWidgetsUtils {
               .getLayout()
               .equals(Layout.PROMO_GRAPHIC)) {
             return Observable.zip(
-                loadActionItem(url, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-                    sharedPreferences, bypassCache, bypassServerCache),
-                loadAppcBonusModel(appCoinsManager),
-                (actionItemResponse, bonusAppcModel) -> new EditorialActionItem(actionItemResponse,
-                    bonusAppcModel))
+                    loadActionItem(url, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+                        sharedPreferences, bypassCache, bypassServerCache),
+                    loadAppcBonusModel(appCoinsManager),
+                    (actionItemResponse, bonusAppcModel) -> new EditorialActionItem(actionItemResponse,
+                        bonusAppcModel))
                 .observeOn(Schedulers.io())
                 .doOnNext(obj -> wsWidget.setViewObject(obj))
                 .onErrorResumeNext(throwable -> Observable.empty())
@@ -260,7 +255,7 @@ public class WSWidgetsUtils {
           } else {
             return loadActionItem(url, bodyInterceptor, httpClient, converterFactory,
                 tokenInvalidator, sharedPreferences, bypassCache, bypassServerCache).observeOn(
-                Schedulers.io())
+                    Schedulers.io())
                 .doOnNext(obj -> wsWidget.setViewObject(obj))
                 .onErrorResumeNext(throwable -> Observable.empty())
                 .map(actionItemResponse -> wsWidget);
@@ -268,7 +263,7 @@ public class WSWidgetsUtils {
         case APP_COMING_SOON:
           return loadActionItem(url, bodyInterceptor, httpClient, converterFactory,
               tokenInvalidator, sharedPreferences, bypassCache, bypassServerCache).observeOn(
-              Schedulers.io())
+                  Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(actionItemResponse -> wsWidget);
@@ -294,10 +289,11 @@ public class WSWidgetsUtils {
       BaseRequestWithStore.StoreCredentials storeCredentials,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager, boolean bypassCache,
+      SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager,
+      boolean bypassCache,
       boolean bypassServerCache) {
     return ListAppsRequest.ofAction(url, storeCredentials, bodyInterceptor, httpClient,
-        converterFactory, tokenInvalidator, sharedPreferences, resources, windowManager)
+            converterFactory, tokenInvalidator, sharedPreferences, resources, windowManager)
         .observe(bypassCache, bypassServerCache);
   }
 
@@ -306,7 +302,7 @@ public class WSWidgetsUtils {
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences, boolean bypassCache, boolean bypassServerCache) {
     return GetActionItemRequest.ofAction(url, bodyInterceptor, httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences)
+            tokenInvalidator, sharedPreferences)
         .observe(bypassCache, bypassServerCache)
         .observeOn(Schedulers.io());
   }

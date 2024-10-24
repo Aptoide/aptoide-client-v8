@@ -108,10 +108,10 @@ public class AppViewManagerTest {
             new AppDeveloper("Felipao", "felipao@aptoide.com", "privacy", "website"), "graphic",
             "icon",
             new AppMedia("description", Collections.emptyList(), "news", Collections.emptyList(),
-                Collections.emptyList()), "modified", "app added", null, "weburls", true, "aptoide",
+                Collections.emptyList()), "modified", "app added", null, true, true, "aptoide",
             AppViewFragment.OpenType.OPEN_ONLY, 0, null, "editorsChoice", "origin", false,
             "marketName", false, false, bdsFlags, "", "", false, Collections.emptyList(),
-            Collections.emptyList(), "oemid", false, false);
+            Collections.emptyList(), "oemid",  false, false);
     AppViewModel exampleAppViewModel = new AppViewModel(appModel, null, null, null);
 
     appViewManager =

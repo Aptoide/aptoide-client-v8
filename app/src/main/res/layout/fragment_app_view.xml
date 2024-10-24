@@ -110,30 +110,6 @@
                 android:textAllCaps="true"
                 />
           </LinearLayout>
-          <LinearLayout
-              android:id="@+id/powered_by_layout"
-              android:layout_width="0dp"
-              android:layout_height="wrap_content"
-              android:layout_weight="1"
-              android:gravity="center"
-              android:orientation="vertical"
-              android:visibility="gone"
-              >
-            <TextView
-                android:id="@+id/powered_by_text"
-                style="@style/Aptoide.TextView.Medium.XXS"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Powered by"
-                />
-            <ImageView
-                android:id="@+id/powered_by_badge"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_gravity="center_horizontal"
-                android:src="@drawable/ic_eskills_black_bg"
-                />
-          </LinearLayout>
         </LinearLayout>
 
 
@@ -308,20 +284,6 @@
               />
 
         </LinearLayout>
-
-        <include
-            android:id="@+id/eskills_install_wallet_card"
-            layout="@layout/eskills_wallet_install_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="12dp"
-            android:visibility="gone"
-            />
 
         <include
             android:id="@+id/other_versions_top_separator"

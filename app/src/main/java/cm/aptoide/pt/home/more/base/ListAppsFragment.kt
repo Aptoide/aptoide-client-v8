@@ -62,10 +62,9 @@ import rx.subjects.PublishSubject
  * @param <V: ListAppsViewHolder<T>> The ViewHolder that represents the item, see [ListAppsViewHolder]
  */
 abstract class ListAppsFragment<T : Application, V : ListAppsViewHolder<T>> :
-    NavigationTrackFragment(), ListAppsView<T> {
+  NavigationTrackFragment(), ListAppsView<T> {
 
   protected lateinit var adapter: ListAppsAdapter<T, V>
-  private lateinit var headerClickListener: PublishSubject<Void>
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -73,8 +72,10 @@ abstract class ListAppsFragment<T : Application, V : ListAppsViewHolder<T>> :
     adapter = ListAppsAdapter(createViewHolder())
   }
 
-  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                            savedInstanceState: Bundle?): View? {
+  override fun onCreateView(
+    inflater: LayoutInflater, container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): View? {
     return inflater.inflate(R.layout.fragment_list_apps, container, false)
   }
 
@@ -82,26 +83,21 @@ abstract class ListAppsFragment<T : Application, V : ListAppsViewHolder<T>> :
     super.onViewCreated(view, savedInstanceState)
 
     apps_list.layoutManager = GridLayoutManager(view.context, 3)
-    apps_list.setAdaptiveLayout(getItemSizeWidth(), getItemSizeHeight(),
-        getAdapterStrategy())
+    apps_list.setAdaptiveLayout(
+      getItemSizeWidth(), getItemSizeHeight(),
+      getAdapterStrategy()
+    )
     apps_list.setIntendedItemSpacing(getItemSpacingDp())
     val padding = getPixels(getContainerPaddingDp())
     apps_list.setPadding(padding.left, padding.top, padding.right, padding.bottom)
     apps_list.adapter = adapter
-    setupHeaderListener()
     setupToolbar()
-  }
-
-  open fun setupHeaderListener() {
-    headerClickListener = PublishSubject.create()
-    bundle_header_group.setAllOnClickListener(View.OnClickListener { headerClickListener.onNext(null) })
   }
 
   override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
     super.onCreateOptionsMenu(menu, inflater)
     inflater.inflate(R.menu.menu_empty, menu)
   }
-
 
   /**
    * Specifies what the spacing between items is.
@@ -134,7 +130,6 @@ abstract class ListAppsFragment<T : Application, V : ListAppsViewHolder<T>> :
   @Dimension(unit = Dimension.DP)
   abstract fun getItemSizeHeight(): Int
 
-
   abstract fun getAdapterStrategy(): GridRecyclerView.AdaptStrategy
 
   /**
@@ -161,11 +156,6 @@ abstract class ListAppsFragment<T : Application, V : ListAppsViewHolder<T>> :
     toolbar.setLogo(R.drawable.logo_toolbar)
   }
 
-  override fun setupEskillsView() {
-    toolbar.logo = null
-    toolbar.setBackgroundColor(ResourcesCompat.getColor(resources, R.color.grey_900, null))
-    swipe_container?.setBackgroundColor(ResourcesCompat.getColor(resources, R.color.grey_dark, null))
-  }
   override fun showLoading() {
     apps_list.visibility = View.GONE
     error_view.visibility = View.GONE
@@ -183,11 +173,6 @@ abstract class ListAppsFragment<T : Application, V : ListAppsViewHolder<T>> :
     bundle_title_1.visibility = View.VISIBLE
     bundle_title_2.visibility = View.VISIBLE
     bundle_description.visibility = View.VISIBLE
-    eskills_title.visibility = View.VISIBLE
-  }
-
-  override fun headerClicks(): Observable<Void> {
-    return headerClickListener
   }
 
   override fun addApps(apps: List<T>) {
@@ -233,9 +218,9 @@ abstract class ListAppsFragment<T : Application, V : ListAppsViewHolder<T>> :
 
   override fun onBottomReached(): Observable<Void> {
     return RxRecyclerView.scrollEvents(apps_list)
-        .map { apps_list.isEndReached(2) }
-        .distinctUntilChanged()
-        .filter { isEnd -> isEnd }.map { null }
+      .map { apps_list.isEndReached(2) }
+      .distinctUntilChanged()
+      .filter { isEnd -> isEnd }.map { null }
   }
 
   private fun getPixels(dp: Int): Int {
@@ -245,11 +230,5 @@ abstract class ListAppsFragment<T : Application, V : ListAppsViewHolder<T>> :
   private fun getPixels(dp: Rect): Rect {
     return Rect(getPixels(dp.left), getPixels(dp.top), getPixels(dp.right), getPixels(dp.bottom))
   }
-
 }
 
-fun Group.setAllOnClickListener(listener: View.OnClickListener?) {
-  referencedIds.forEach { id ->
-    rootView.findViewById<View>(id).setOnClickListener(listener)
-  }
-}

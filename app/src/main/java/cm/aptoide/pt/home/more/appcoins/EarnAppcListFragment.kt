@@ -25,7 +25,6 @@ import rx.android.schedulers.AndroidSchedulers
 import rx.exceptions.OnErrorNotImplementedException
 import java.text.DecimalFormat
 import javax.inject.Inject
-
 class EarnAppcListFragment : ListAppsFragment<RewardApp, EarnAppcListViewHolder>(),
     EarnAppcListView {
 

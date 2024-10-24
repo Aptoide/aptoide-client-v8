@@ -25,7 +25,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.home.EditorialActionItem;
 import cm.aptoide.pt.home.AppComingSoonRegistrationManager;
 import cm.aptoide.pt.home.bundles.ads.AdBundle;
 import cm.aptoide.pt.home.bundles.ads.AdsTagWrapper;
-import cm.aptoide.pt.home.bundles.apps.EskillsApp;
 import cm.aptoide.pt.home.bundles.apps.RewardApp;
 import cm.aptoide.pt.home.bundles.base.ActionBundle;
 import cm.aptoide.pt.home.bundles.base.ActionItem;
@@ -139,16 +138,6 @@ public class BundlesResponseMapper {
             appBundles.add(new AppBundle(title, applicationList, HomeBundle.BundleType.APPCOINS_ADS,
                 new Event().setName(Event.Name.getAppCoinsAds), widgetTag, widgetActionTag));
           }
-        } else if (type.equals(HomeBundle.BundleType.ESKILLS)) {
-          List<Application> applicationList = null;
-          if (viewObject != null) {
-            applicationList = map(((ListApps) viewObject).getDataList()
-                .getList(), type, widgetTag);
-          }
-          if (applicationList == null || !applicationList.isEmpty()) {
-            appBundles.add(new AppBundle(title, applicationList, HomeBundle.BundleType.ESKILLS,
-                event.setName(Event.Name.eSkills), widgetTag, widgetActionTag));
-          }
         } else if (type.equals(HomeBundle.BundleType.ADS)) {
           List<GetAdsResponse.Ad> adsList = null;
           if (viewObject != null) {
@@ -246,15 +235,15 @@ public class BundlesResponseMapper {
 
   private Install getInstall(AppPromoItem promoItem, ApplicationGraphic app) {
     return installManager.getInstall(promoItem.getGetApp()
-        .getNodes()
-        .getMeta()
-        .getData()
-        .getMd5(), app.getPackageName(), promoItem.getGetApp()
-        .getNodes()
-        .getMeta()
-        .getData()
-        .getFile()
-        .getVercode())
+            .getNodes()
+            .getMeta()
+            .getData()
+            .getMd5(), app.getPackageName(), promoItem.getGetApp()
+            .getNodes()
+            .getMeta()
+            .getData()
+            .getFile()
+            .getVercode())
         .toBlocking()
         .first();
   }
@@ -329,9 +318,6 @@ public class BundlesResponseMapper {
     if (type == null) {
       return HomeBundle.BundleType.UNKNOWN;
     }
-    if (data != null && data.isEskills()) {
-      type = Type.ESKILLS;
-    }
     switch (type) {
       case APPS_GROUP:
         if (data == null) {
@@ -345,8 +331,6 @@ public class BundlesResponseMapper {
         }
       case APPCOINS_ADS:
         return HomeBundle.BundleType.APPCOINS_ADS;
-      case ESKILLS:
-        return HomeBundle.BundleType.ESKILLS;
       case APPCOINS_FEATURED:
         return HomeBundle.BundleType.FEATURED_BONUS_APPC;
       case ADS:
@@ -377,13 +361,6 @@ public class BundlesResponseMapper {
                   .getAvg(), app.getStats()
               .getPdownloads(), app.getPackageName(), app.getId(), app.getGraphic(), tag,
               appc != null && appc.hasBilling(), appc != null && appc.hasAdvertising()));
-        } else if (type.equals(HomeBundle.BundleType.ESKILLS)) {
-          AppCoinsInfo appc = app.getAppcoins();
-          applications.add(new EskillsApp(app.getName(), app.getIcon(), app.getStats()
-              .getRating()
-              .getAvg(), app.getStats()
-              .getPdownloads(), app.getPackageName(), app.getId(), tag,
-              appc != null && appc.hasBilling(), app.getGraphic()));
         } else {
           AppCoinsInfo appc = app.getAppcoins();
           applications.add(new Application(app.getName(), app.getIcon(), app.getStats()

@@ -251,19 +251,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   private BonusAppcView bonusAppcView;
 
-  //eSkills
-  private View eSkillsInstallWalletView;
-  private TextView eSkillsWalletBodyText;
-  private ProgressBar eSkillsWalletProgressBar;
-  private TextView eSkillsWalletProgressValue;
-  private ImageView eSkillsPauseWalletDownload;
-  private ImageView eSkillsCancelWalletDownload;
-  private ImageView eSkillsResumeWalletDownload;
-  private TextView eSkillsWalletInstallStateText;
-  private View eSkillsWalletDownloadControlsLayout;
-  private View eSkillsWalletDownloadLayout;
-  private View poweredByLayout;
-
   //wallet promotions
   private View promotionView;
   private View walletPromotionDownloadLayout;
@@ -284,7 +271,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private ImageView resumeWalletDownload;
   private View walletDownloadControlsLayout;
   private PublishSubject<PromotionEvent> promotionAppClick;
-  private PublishSubject<EskillsPromotionEvent> promotionEskillsClick;
   private DecimalFormat poaFiatDecimalFormat;
   private CountDownTimer poaCountdownTimer;
   private boolean bumpedUp;
@@ -304,9 +290,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     cancelClickSubject = PublishSubject.create();
     pauseClickSubject = PublishSubject.create();
     promotionAppClick = PublishSubject.create();
-    promotionEskillsClick = PublishSubject.create();
     poaFiatDecimalFormat = new DecimalFormat("0.00");
-    isEskills = requireArguments().getBoolean(BundleKeys.ESKILLS.name(), false);
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
     qManager = application.getQManager();
@@ -451,27 +435,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     walletDownloadControlsLayout = view.findViewById(R.id.wallet_install_controls_layout);
     walletPromotionInstallDisableLayout = view.findViewById(R.id.wallet_install_disabled_layout);
     walletPromotionInstallDisableButton = view.findViewById(R.id.wallet_install_disabled_button);
-
-    // eSkills
-    eSkillsInstallWalletView = view.findViewById(R.id.eskills_install_wallet_card);
-    eSkillsWalletBodyText = eSkillsInstallWalletView.findViewById(R.id.eskills_wallet_body);
-    eSkillsWalletInstallStateText =
-        eSkillsInstallWalletView.findViewById(R.id.eskills_wallet_download_state);
-    eSkillsWalletProgressBar =
-        eSkillsInstallWalletView.findViewById(R.id.eskills_wallet_download_progress_bar);
-    eSkillsWalletProgressValue =
-        eSkillsInstallWalletView.findViewById(R.id.eskills_wallet_download_progress_number);
-    eSkillsPauseWalletDownload =
-        eSkillsInstallWalletView.findViewById(R.id.eskills_wallet_download_pause_download);
-    eSkillsCancelWalletDownload =
-        eSkillsInstallWalletView.findViewById(R.id.eskills_wallet_download_cancel_button);
-    eSkillsResumeWalletDownload =
-        eSkillsInstallWalletView.findViewById(R.id.eskills_wallet_download_resume_download);
-    eSkillsWalletDownloadControlsLayout =
-        eSkillsInstallWalletView.findViewById(R.id.eskills_wallet_install_controls_layout);
-    eSkillsWalletDownloadLayout =
-        eSkillsInstallWalletView.findViewById(R.id.eskills_wallet_download_layout);
-    poweredByLayout = view.findViewById(R.id.powered_by_layout);
 
     screenshotsAdapter =
         new ScreenshotsAdapter(new ArrayList<>(), new ArrayList<>(), screenShotClick);
@@ -626,18 +589,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       poaCountdownTimer.cancel();
       poaCountdownTimer = null;
     }
-
-    eSkillsInstallWalletView = null;
-    eSkillsWalletBodyText = null;
-    eSkillsWalletProgressBar = null;
-    eSkillsWalletProgressValue = null;
-    eSkillsPauseWalletDownload = null;
-    eSkillsResumeWalletDownload = null;
-    eSkillsWalletInstallStateText = null;
-    eSkillsWalletDownloadControlsLayout = null;
-    eSkillsWalletDownloadLayout = null;
-    poweredByLayout = null;
-    eSkillsCancelWalletDownload = null;
   }
 
   @Override public void showLoading() {
@@ -724,7 +675,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       screenshots.setVisibility(View.GONE);
     }
 
-    if (model.hasBilling() && !model.isEskills()) {
+    if (model.hasBilling()) {
       iabInfo.setVisibility(View.VISIBLE);
     }
     setTrustedBadge(model.getMalware());
@@ -953,7 +904,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Override public void showTrustedDialog(AppModel app) {
     DialogBadgeV7.newInstance(marketName, app.getMalware(), app.getAppName(), app.getMalware()
-        .getRank())
+            .getRank())
         .show(getFragmentManager(), BADGE_DIALOG_TAG);
   }
 
@@ -1032,12 +983,12 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Override public void showShareOnTvDialog(long appId) {
     if (AptoideUtils.SystemU.getConnectionType(
-        (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE))
+            (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE))
         .equals("mobile")) {
       GenericDialogs.createGenericOkMessage(getContext(),
-          getContext().getString(R.string.remote_install_menu_title),
-          getContext().getString(R.string.install_on_tv_mobile_error),
-          themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
+              getContext().getString(R.string.remote_install_menu_title),
+              getContext().getString(R.string.install_on_tv_mobile_error),
+              themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
           .subscribe(__ -> {
           }, err -> CrashReport.getInstance()
               .log(err));
@@ -1092,8 +1043,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Override public Observable<Void> showOpenAndInstallDialog(String title, String appName) {
     return GenericDialogs.createGenericOkCancelMessage(getContext(), title,
-        getContext().getString(R.string.installapp_alrt, appName),
-        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
+            getContext().getString(R.string.installapp_alrt, appName),
+            themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
         .filter(response -> response.equals(YES))
         .map(__ -> null);
   }
@@ -1102,7 +1053,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   public Observable<Void> showOpenAndInstallApkFyDialog(String title, String appName, double appc,
       float rating, String icon, int downloads) {
     return createCustomDialogForApkfy(appName, appc, rating, icon, downloads).filter(
-        response -> response.equals(YES))
+            response -> response.equals(YES))
         .map(__ -> null);
   }
 
@@ -1167,46 +1118,9 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     promotionView.setVisibility(View.VISIBLE);
   }
 
-  @Override public void setupEskillsAppView() {
-    downloadProgressBar.setProgressDrawable(
-        ContextCompat.getDrawable(getContext(), R.drawable.eskills_progress_bar));
-    trustedLayout.setVisibility(View.GONE);
-    poweredByLayout.setVisibility(View.VISIBLE);
-    collapsingToolbarLayout.findViewById(R.id.collapsing_eskills_background)
-        .setVisibility(View.VISIBLE);
-    install.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.eskills_light_purple_gradient));
-    eSkillsInstallWalletView.setVisibility(View.VISIBLE);
-    iabInfo.setVisibility(View.GONE);
-    bonusAppcView.setVisibility(View.GONE);
-  }
-
-  @Override public void showEskillsWalletView(String appName, WalletApp walletApp) {
-    if (walletApp.isInstalled()) {
-      eSkillsWalletDownloadLayout.setVisibility(View.GONE);
-      if (eSkillsWalletBodyText.getText().toString()
-          .equals(getString(R.string.eskills_v2_wallet_install_disclaimer_body, appName))) {
-        eSkillsWalletBodyText.setText(R.string.eskills_v2_wallet_installed_disclaimer_body);          // wallet was installed successfully
-      }
-      else {
-        eSkillsWalletBodyText.setText(R.string.eskills_v2_wallet_already_installed_disclaimer_body);  // wallet was already installed
-      }
-    } else {
-      eSkillsWalletBodyText.setText(
-          getString(R.string.eskills_v2_wallet_install_disclaimer_body, appName));                    // wallet is not installed
-      DownloadModel walletDownloadModel = walletApp.getDownloadModel();
-      if (walletDownloadModel.isDownloadingOrInstalling()) {                                          // wallet is downloading or installing
-        eSkillsWalletDownloadLayout.setVisibility(View.VISIBLE);
-        setEskillsWalletDownloadState(walletApp, walletDownloadModel.getProgress(),
-            walletDownloadModel.getDownloadState());
-      } else {
-        eSkillsWalletDownloadLayout.setVisibility(View.GONE);
-      }
-    }
-  }
-
   @Override public Observable<Promotion> dismissWalletPromotionClick() {
     return promotionAppClick.filter(
-        promotionAppClick -> promotionAppClick.getClickType() == PromotionEvent.ClickType.DISMISS)
+            promotionAppClick -> promotionAppClick.getClickType() == PromotionEvent.ClickType.DISMISS)
         .map(promotionAppClick -> promotionAppClick.getPromotion());
   }
 
@@ -1216,53 +1130,35 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Override public Observable<Pair<Promotion, WalletApp>> installWalletButtonClick() {
     return promotionAppClick.filter(
-        promotionAppClick -> promotionAppClick.getClickType() == PromotionEvent.ClickType.UPDATE
-            || promotionAppClick.getClickType() == PromotionEvent.ClickType.INSTALL_APP
-            || promotionAppClick.getClickType() == PromotionEvent.ClickType.DOWNLOAD
-            || promotionAppClick.getClickType() == PromotionEvent.ClickType.DOWNGRADE)
+            promotionAppClick -> promotionAppClick.getClickType() == PromotionEvent.ClickType.UPDATE
+                || promotionAppClick.getClickType() == PromotionEvent.ClickType.INSTALL_APP
+                || promotionAppClick.getClickType() == PromotionEvent.ClickType.DOWNLOAD
+                || promotionAppClick.getClickType() == PromotionEvent.ClickType.DOWNGRADE)
         .map(promotionAppClick -> Pair.create(promotionAppClick.getPromotion(),
             promotionAppClick.getWallet()));
   }
 
   @Override public Observable<WalletApp> pausePromotionDownload() {
     return promotionAppClick.filter(promotionAppClick -> promotionAppClick.getClickType()
-        == PromotionEvent.ClickType.PAUSE_DOWNLOAD)
-        .map(promotionAppClick -> promotionAppClick.getWallet());
-  }
-
-  @Override public Observable<WalletApp> pauseEskillsPromotionDownload() {
-    return promotionEskillsClick.filter(promotionAppClick -> promotionAppClick.getClickType()
-            == EskillsPromotionEvent.ClickType.PAUSE_DOWNLOAD)
-        .map(promotionAppClick -> promotionAppClick.getWallet());
-  }
-
-  @Override public Observable<WalletApp> resumeEskillsPromotionDownload() {
-    return promotionEskillsClick.filter(promotionAppClick -> promotionAppClick.getClickType()
-            == EskillsPromotionEvent.ClickType.RESUME_DOWNLOAD)
-        .map(promotionAppClick -> promotionAppClick.getWallet());
-  }
-
-  @Override public Observable<WalletApp> cancelEskillsPromotionDownload() {
-    return promotionEskillsClick.filter(promotionAppClick -> promotionAppClick.getClickType()
-            == EskillsPromotionEvent.ClickType.CANCEL_DOWNLOAD)
+            == PromotionEvent.ClickType.PAUSE_DOWNLOAD)
         .map(promotionAppClick -> promotionAppClick.getWallet());
   }
 
   @Override public Observable<WalletApp> cancelPromotionDownload() {
     return promotionAppClick.filter(promotionAppClick -> promotionAppClick.getClickType()
-        == PromotionEvent.ClickType.CANCEL_DOWNLOAD)
+            == PromotionEvent.ClickType.CANCEL_DOWNLOAD)
         .map(promotionAppClick -> promotionAppClick.getWallet());
   }
 
   @Override public Observable<WalletApp> resumePromotionDownload() {
     return promotionAppClick.filter(promotionAppClick -> promotionAppClick.getClickType()
-        == PromotionEvent.ClickType.RESUME_DOWNLOAD)
+            == PromotionEvent.ClickType.RESUME_DOWNLOAD)
         .map(promotionAppClick -> promotionAppClick.getWallet());
   }
 
   @Override public Observable<Promotion> claimAppClick() {
     return promotionAppClick.filter(
-        promotionAppClick -> promotionAppClick.getClickType() == PromotionEvent.ClickType.CLAIM)
+            promotionAppClick -> promotionAppClick.getClickType() == PromotionEvent.ClickType.CLAIM)
         .map(promotionAppClick -> promotionAppClick.getPromotion());
   }
 
@@ -1674,8 +1570,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Override public Observable<Boolean> showRootInstallWarningPopup() {
     return GenericDialogs.createGenericYesNoCancelMessage(this.getContext(), null,
-        getResources().getString(R.string.root_access_dialog),
-        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
+            getResources().getString(R.string.root_access_dialog),
+            themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
         .map(response -> (response.equals(YES)));
   }
 
@@ -1717,9 +1613,9 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Override public Observable<Boolean> showDowngradeMessage() {
     return GenericDialogs.createGenericContinueCancelMessage(getContext(), null,
-        getContext().getResources()
-            .getString(R.string.downgrade_warning_dialog),
-        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
+            getContext().getResources()
+                .getString(R.string.downgrade_warning_dialog),
+            themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
         .map(eResponse -> eResponse.equals(YES));
   }
 
@@ -1895,67 +1791,9 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     }
   }
 
-  private void setEskillsWalletDownloadState(WalletApp walletApp,int progress, DownloadModel.DownloadState downloadState) {
-    switch (downloadState) {
-      case ACTIVE:
-        eSkillsWalletProgressBar.setIndeterminate(false);
-        eSkillsWalletProgressBar.setProgress(progress);
-        eSkillsWalletProgressValue.setText(progress + "%");
-        eSkillsWalletProgressValue.setVisibility(View.VISIBLE);
-        eSkillsPauseWalletDownload.setOnClickListener(__ -> promotionEskillsClick.onNext(
-            new EskillsPromotionEvent( walletApp, EskillsPromotionEvent.ClickType.PAUSE_DOWNLOAD)));
-        eSkillsPauseWalletDownload.setVisibility(View.VISIBLE);
-        eSkillsResumeWalletDownload.setVisibility(View.GONE);
-        eSkillsCancelWalletDownload.setVisibility(View.GONE);
-        eSkillsWalletDownloadControlsLayout.setVisibility(View.VISIBLE);
-        eSkillsWalletInstallStateText.setText(getString(R.string.appview_short_downloading));
-        break;
-      case INDETERMINATE:
-        eSkillsWalletProgressBar.setIndeterminate(true);
-        eSkillsPauseWalletDownload.setVisibility(View.VISIBLE);
-        eSkillsWalletProgressValue.setVisibility(View.GONE);
-        eSkillsResumeWalletDownload.setVisibility(View.GONE);
-        eSkillsWalletDownloadControlsLayout.setVisibility(View.VISIBLE);
-        eSkillsWalletInstallStateText.setText(getString(R.string.appview_short_downloading));
-        break;
-      case PAUSE:
-        eSkillsWalletProgressBar.setIndeterminate(false);
-        eSkillsWalletProgressBar.setProgress(progress);
-        eSkillsWalletProgressValue.setText(progress + "%");
-        eSkillsWalletDownloadControlsLayout.setVisibility(View.VISIBLE);
-        eSkillsWalletProgressValue.setVisibility(View.VISIBLE);
-        eSkillsPauseWalletDownload.setVisibility(View.GONE);
-        eSkillsResumeWalletDownload.setVisibility(View.VISIBLE);
-        eSkillsCancelWalletDownload.setVisibility(View.VISIBLE);
-        eSkillsResumeWalletDownload.setOnClickListener(__ -> promotionEskillsClick.onNext(
-            new EskillsPromotionEvent( walletApp, EskillsPromotionEvent.ClickType.RESUME_DOWNLOAD)));
-        eSkillsCancelWalletDownload.setVisibility(View.VISIBLE);
-        eSkillsCancelWalletDownload.setOnClickListener(__ -> promotionEskillsClick.onNext(
-            new EskillsPromotionEvent( walletApp, EskillsPromotionEvent.ClickType.CANCEL_DOWNLOAD)));
-        eSkillsWalletInstallStateText.setText(getString(R.string.appview_short_downloading));
-        break;
-      case COMPLETE:
-        eSkillsWalletProgressBar.setIndeterminate(true);
-        eSkillsWalletDownloadLayout.setVisibility(View.GONE);
-        eSkillsPauseWalletDownload.setVisibility(View.VISIBLE);
-        eSkillsWalletProgressValue.setVisibility(View.GONE);
-        eSkillsResumeWalletDownload.setVisibility(View.GONE);
-        eSkillsWalletDownloadControlsLayout.setVisibility(View.VISIBLE);
-        eSkillsWalletInstallStateText.setText(getString(R.string.appview_short_downloading));
-        break;
-      case INSTALLING:
-        eSkillsWalletProgressBar.setIndeterminate(true);
-        eSkillsPauseWalletDownload.setVisibility(View.GONE);
-        eSkillsWalletProgressValue.setVisibility(View.GONE);
-        eSkillsResumeWalletDownload.setVisibility(View.GONE);
-        eSkillsWalletDownloadControlsLayout.setVisibility(View.GONE);
-        eSkillsWalletInstallStateText.setText(getString(R.string.appview_short_installing));
-        break;
-    }
-  }
   private void showErrorDialog(String title, String message) {
     errorMessageSubscription = GenericDialogs.createGenericOkMessage(getContext(), title, message,
-        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
+            themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
         .subscribeOn(AndroidSchedulers.mainThread())
         .subscribe(eResponse -> {
         }, error -> new OnErrorNotImplementedException(error));
@@ -1996,12 +1834,11 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   public LayoutInflater onGetLayoutInflater(Bundle savedInstanceState) {
     LayoutInflater inflater = super.onGetLayoutInflater(savedInstanceState);
     if (isEskills) {
-      inflater = inflater.cloneInContext(new ContextThemeWrapper(getContext(), R.style.AppBaseThemeDark));
+      inflater =
+          inflater.cloneInContext(new ContextThemeWrapper(getContext(), R.style.AppBaseThemeDark));
     }
     return inflater;
   }
-
-
 
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
@@ -2054,7 +1891,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   public enum BundleKeys {
-    APP_ID, STORE_NAME, STORE_THEME, MINIMAL_AD, PACKAGE_NAME, SHOULD_INSTALL, MD5, UNAME, DOWNLOAD_CONVERSION_URL, APPC, EDITORS_CHOICE_POSITION, ORIGIN_TAG, OEM_ID, ESKILLS
+    APP_ID, STORE_NAME, STORE_THEME, MINIMAL_AD, PACKAGE_NAME, SHOULD_INSTALL, MD5, UNAME, DOWNLOAD_CONVERSION_URL, APPC, EDITORS_CHOICE_POSITION, ORIGIN_TAG, OEM_ID
   }
 
   public enum OpenType {
