@@ -55,6 +55,7 @@ class BIAnalytics(private val analyticsSender: AnalyticsSender) {
         "android_brand" to Build.MANUFACTURER,
         "android_model" to Build.MODEL,
         "aptoide_package" to BuildConfig.APPLICATION_ID,
+        "aptoide_store" to BuildConfig.MARKET_NAME,
         "android_language" to "${locale.language}-${locale.country}",
         "theme" to "dark",
         "logged_in" to "NA",
