@@ -51,9 +51,9 @@ class DeviceInfoViewModel(
       val pid = runCatching { walletProvider.getWallet() }.getOrNull()?.address ?: "-"
       viewModelState.update {
         "${deviceInfo.getDeviceInfoSummary()}\n" +
-          "AptoideGames: ${Integer.toHexString(storeName.hashCode())}\n" +
+          "AG: $storeName\n" +
           "PID: $pid\n" +
-          "AptoideGames version: ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})\n"
+          "AG version: ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})\n"
       }
     }
   }
