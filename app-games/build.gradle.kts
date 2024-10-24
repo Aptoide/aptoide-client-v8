@@ -132,6 +132,11 @@ android {
         name = "INDICATIVE_KEY",
         value = "\"${project.property("INDICATIVE_KEY_DEV")}\""
       )
+      buildConfigField(
+        type = "String",
+        name = "UTM_SOURCE",
+        value = "\"AG_dev\""
+      )
     }
 
     create("prod") {
@@ -162,6 +167,11 @@ android {
         type = "String",
         name = "APTOIDE_WEB_SERVICES_MMP_HOST",
         value = "\"https://aptoide-mmp.aptoide.com/api/v1/\""
+      )
+      buildConfigField(
+        type = "String",
+        name = "UTM_SOURCE",
+        value = "\"AG\""
       )
     }
   }
