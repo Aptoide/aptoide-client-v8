@@ -1,27 +1,29 @@
 package cm.aptoide.pt.networking;
 
-import android.os.Build;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.preferences.AptoideMd5Manager;
 import java.io.IOException;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class UserAgentInterceptor implements Interceptor {
+public class UserAgentInterceptorDownloads implements Interceptor {
 
   private final IdsRepository idsRepository;
+  private final String oemid;
   private final DisplayMetrics displayMetrics;
-  private final AptoideMd5Manager aptoideMd5Manager;
+  private final String terminalInfo;
+  private final String versionName;
 
-  public UserAgentInterceptor(IdsRepository idsRepository, DisplayMetrics displayMetrics,
-      AptoideMd5Manager aptoideMd5Manager) {
+  public UserAgentInterceptorDownloads(IdsRepository idsRepository, String oemid,
+      DisplayMetrics displayMetrics, String terminalInfo, String versionName) {
     this.idsRepository = idsRepository;
+    this.oemid = oemid;
     this.displayMetrics = displayMetrics;
-    this.aptoideMd5Manager = aptoideMd5Manager;
+    this.terminalInfo = terminalInfo;
+    this.versionName = versionName;
   }
 
   @Override public Response intercept(Chain chain) throws IOException {
@@ -55,20 +57,23 @@ public class UserAgentInterceptor implements Interceptor {
   }
 
   private String getDefaultUserAgent() {
+
     String screen = displayMetrics.widthPixels + "x" + displayMetrics.heightPixels;
+
+    final StringBuilder sb =
+        new StringBuilder(versionName + ";" + terminalInfo + ";" + screen + ";id:");
+
     String uniqueIdentifier = idsRepository.getUniqueIdentifier()
         .toBlocking()
         .value();
-
-    return "Aptoide/" + BuildConfig.VERSION_NAME
-        + "(Linux; Android " + Build.VERSION.RELEASE + "; "
-        + Build.VERSION.SDK_INT + "; " + Build.MODEL + " "
-        + "Build/" + Build.PRODUCT + "; "
-        + System.getProperty("os.arch") + "; "
-        + BuildConfig.APPLICATION_ID + "; "
-        + BuildConfig.VERSION_CODE + "; "
-        + aptoideMd5Manager.getAptoideMd5() + "; "
-        + screen + ";"
-        + uniqueIdentifier + ")";
+    if (uniqueIdentifier != null) {
+      sb.append(uniqueIdentifier);
+    }
+    sb.append(";");
+    sb.append(";");
+    if (!TextUtils.isEmpty(oemid)) {
+      sb.append(oemid);
+    }
+    return sb.toString();
   }
 }

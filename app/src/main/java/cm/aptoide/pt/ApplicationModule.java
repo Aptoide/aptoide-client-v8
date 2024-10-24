@@ -16,7 +16,6 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.format.DateUtils;
-import android.util.DisplayMetrics;
 import android.view.WindowManager;
 import androidx.core.app.NotificationCompat;
 import androidx.room.Room;
@@ -215,6 +214,7 @@ import cm.aptoide.pt.networking.NoAuthenticationBodyInterceptorV3;
 import cm.aptoide.pt.networking.NoOpTokenInvalidator;
 import cm.aptoide.pt.networking.RefreshTokenInvalidator;
 import cm.aptoide.pt.networking.UserAgentInterceptor;
+import cm.aptoide.pt.networking.UserAgentInterceptorDownloads;
 import cm.aptoide.pt.networking.UserAgentInterceptorV8;
 import cm.aptoide.pt.notification.AptoideWorkerFactory;
 import cm.aptoide.pt.notification.ComingSoonNotificationManager;
@@ -491,7 +491,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Provides @Singleton FileDownloaderProvider providesFileDownloaderProvider(
-      @Named("cachePath") String cachePath, @Named("user-agent") Interceptor userAgentInterceptor,
+      @Named("cachePath") String cachePath,
+      @Named("user-agent-downloads") Interceptor userAgentInterceptor,
       AuthenticationPersistence authenticationPersistence, DownloadAnalytics downloadAnalytics,
       InstallAnalytics installAnalytics, Md5Comparator md5Comparator) {
 
@@ -638,9 +639,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides @Named("user-agent") Interceptor provideUserAgentInterceptor(
-      AndroidAccountProvider androidAccountProvider, IdsRepository idsRepository,
-      @Named("partnerID") String partnerId) {
-    return new UserAgentInterceptor(idsRepository, partnerId, new DisplayMetrics(),
+      IdsRepository idsRepository, AptoideMd5Manager aptoideMd5Manager) {
+    return new UserAgentInterceptor(idsRepository, application.getResources().getDisplayMetrics(),
+        aptoideMd5Manager);
+  }
+
+  @Singleton @Provides @Named("user-agent-downloads")
+  Interceptor provideUserAgentInterceptorDownloads(
+      IdsRepository idsRepository, @Named("partnerID") String partnerId) {
+    return new UserAgentInterceptorDownloads(idsRepository, partnerId,
+        application.getResources().getDisplayMetrics(),
         AptoideUtils.SystemU.TERMINAL_INFO, AptoideUtils.Core.getDefaultVername(application));
   }
 
@@ -649,7 +657,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       AuthenticationPersistence authenticationPersistence, AptoideMd5Manager aptoideMd5Manager) {
     return new UserAgentInterceptorV8(idsRepository, AptoideUtils.SystemU.getRelease(),
         Build.VERSION.SDK_INT, AptoideUtils.SystemU.getModel(), AptoideUtils.SystemU.getProduct(),
-        System.getProperty("os.arch"), new DisplayMetrics(),
+        System.getProperty("os.arch"), application.getResources().getDisplayMetrics(),
         AptoideUtils.Core.getDefaultVername(application)
             .replace("aptoide-", ""), aptoidePackage, aptoideMd5Manager, BuildConfig.VERSION_CODE,
         authenticationPersistence);
