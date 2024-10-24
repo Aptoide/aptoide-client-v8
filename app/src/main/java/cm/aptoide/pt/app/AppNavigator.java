@@ -2,9 +2,7 @@ package cm.aptoide.pt.app;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
-import cm.aptoide.pt.app.view.EskillsAppViewFragment;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import org.parceler.Parcels;
@@ -71,11 +69,11 @@ public class AppNavigator {
 
   public void navigateWithAppId(long appId, String packageName, AppViewFragment.OpenType openType,
       String tag) {
-    navigateWithAppId(appId, packageName, openType, tag, null, false);
+    navigateWithAppId(appId, packageName, openType, tag, null);
   }
 
   public void navigateWithAppId(long appId, String packageName, AppViewFragment.OpenType openType,
-      String tag, String oemId, boolean isEskills) {
+      String tag, String oemId) {
     Bundle bundle = new Bundle();
     bundle.putString(AppViewFragment.BundleKeys.ORIGIN_TAG.name(), tag);
     bundle.putLong(AppViewFragment.BundleKeys.APP_ID.name(), appId);
@@ -84,13 +82,8 @@ public class AppNavigator {
     if (openType == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP && oemId != null) {
       bundle.putString(AppViewFragment.BundleKeys.OEM_ID.name(), oemId);
     }
-    bundle.putBoolean(AppViewFragment.BundleKeys.ESKILLS.name(), isEskills);
     AppViewFragment fragment;
-    if (isEskills) {
-      fragment = new EskillsAppViewFragment();
-    } else {
-      fragment = new AppViewFragment();
-    }
+    fragment = new AppViewFragment();
     fragment.setArguments(bundle);
     fragmentNavigator.navigateTo(fragment, true);
   }
@@ -187,14 +180,5 @@ public class AppNavigator {
     AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
     fragmentNavigator.navigateTo(fragment, true);
-  }
-
-  public void navigateWithAppIdFromEskills(long appId, String packageName,
-      AppViewFragment.OpenType openType, String tag) {
-    navigateWithAppId(appId, packageName, openType, tag, null, true);
-  }
-
-  public void navigateToESkillsSectionOfAppCoinsInfoView() {
-    fragmentNavigator.navigateTo(AppCoinsInfoFragment.newInstance(true), true);
   }
 }

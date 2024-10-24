@@ -60,7 +60,6 @@ import cm.aptoide.pt.app.appsflyer.AppsFlyerManager;
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallManager;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
 import cm.aptoide.pt.app.mmpcampaigns.CampaignManager;
-import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
 import cm.aptoide.pt.app.view.AppCoinsInfoView;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.AppViewFragment.BundleKeys;
@@ -140,11 +139,6 @@ import cm.aptoide.pt.home.more.apps.ListAppsMoreFragment;
 import cm.aptoide.pt.home.more.apps.ListAppsMoreManager;
 import cm.aptoide.pt.home.more.apps.ListAppsMorePresenter;
 import cm.aptoide.pt.home.more.apps.ListAppsMoreRepository;
-import cm.aptoide.pt.home.more.eskills.EskillsAnalytics;
-import cm.aptoide.pt.home.more.eskills.EskillsInfoFragment;
-import cm.aptoide.pt.home.more.eskills.EskillsInfoPresenter;
-import cm.aptoide.pt.home.more.eskills.ListAppsEskillsFragment;
-import cm.aptoide.pt.home.more.eskills.ListAppsEskillsPresenter;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallAppSizeValidator;
 import cm.aptoide.pt.install.InstallManager;
@@ -379,11 +373,9 @@ import static cm.aptoide.pt.AptoideApplication.APPCOINS_WALLET_PACKAGE_NAME;
 
   @FragmentScope @Provides HomePresenter providesHomePresenter(Home home,
       HomeNavigator homeNavigator, AdMapper adMapper, AptoideAccountManager aptoideAccountManager,
-      HomeAnalytics homeAnalytics, UserFeedbackAnalytics userFeedbackAnalytics,
-      EskillsAnalytics eskillsAnalytics) {
+      HomeAnalytics homeAnalytics, UserFeedbackAnalytics userFeedbackAnalytics) {
     return new HomePresenter((HomeView) fragment, home, AndroidSchedulers.mainThread(),
-        CrashReport.getInstance(), homeNavigator, adMapper, homeAnalytics, userFeedbackAnalytics,
-        eskillsAnalytics);
+        CrashReport.getInstance(), homeNavigator, adMapper, homeAnalytics, userFeedbackAnalytics);
   }
 
   @FragmentScope @Provides HomeNavigator providesHomeNavigator(
@@ -503,8 +495,7 @@ import static cm.aptoide.pt.AptoideApplication.APPCOINS_WALLET_PACKAGE_NAME;
         arguments.getString(BundleKeys.EDITORS_CHOICE_POSITION.name(), ""),
         arguments.getString(BundleKeys.ORIGIN_TAG.name(), ""),
         arguments.getString(BundleKeys.DOWNLOAD_CONVERSION_URL.name(), ""),
-        arguments.getString(BundleKeys.OEM_ID.name(), null),
-        arguments.getBoolean(BundleKeys.ESKILLS.name(), false));
+        arguments.getString(BundleKeys.OEM_ID.name(), null));
   }
 
   @FragmentScope @Provides MoreBundlePresenter providesGetStoreWidgetsPresenter(
@@ -539,8 +530,7 @@ import static cm.aptoide.pt.AptoideApplication.APPCOINS_WALLET_PACKAGE_NAME;
       AppCoinsManager appCoinsManager) {
     return new AppCoinsInfoPresenter((AppCoinsInfoView) fragment, appCoinsInfoNavigator,
         installManager, crashReport, APPCOINS_WALLET_PACKAGE_NAME,
-        AndroidSchedulers.mainThread(), socialMediaAnalytics, appCoinsManager,
-        arguments.getBoolean(AppCoinsInfoFragment.NAVIGATE_TO_ESKILLS, false));
+        AndroidSchedulers.mainThread(), socialMediaAnalytics, appCoinsManager);
   }
 
   @FragmentScope @Provides EditorialManager providesEditorialManager(
@@ -749,32 +739,6 @@ import static cm.aptoide.pt.AptoideApplication.APPCOINS_WALLET_PACKAGE_NAME;
     return new ListAppsMorePresenter((ListAppsMoreFragment) fragment,
         AndroidSchedulers.mainThread(), crashReport, appNavigator, sharedPreferences,
         listAppsConfiguration, listAppsMoreManager);
-  }
-
-  @FragmentScope @Provides ListAppsEskillsPresenter providesListAppsEskillsPresenter(
-      CrashReport crashReport, AppNavigator appNavigator,
-      @Named("default") SharedPreferences sharedPreferences,
-      ListAppsConfiguration listAppsConfiguration, ListAppsMoreManager listAppsMoreManager,
-      EskillsAnalytics eskillsAnalytics) {
-    return new ListAppsEskillsPresenter((ListAppsEskillsFragment) fragment,
-        AndroidSchedulers.mainThread(), crashReport, appNavigator, sharedPreferences,
-        listAppsConfiguration, listAppsMoreManager, eskillsAnalytics);
-  }
-
-  @FragmentScope @Provides EskillsInfoPresenter providesEskillsInfoPresenter(
-      CrashReport crashReport, AppNavigator appNavigator, EskillsInfoNavigator eSkillsInfoNavigator,
-      EskillsAnalytics eskillsAnalytics, @Named("default") SharedPreferences sharedPreferences,
-      ListAppsConfiguration listAppsConfiguration, ListAppsMoreManager listAppsMoreManager,
-      WalletAppProvider walletAppProvider) {
-    return new EskillsInfoPresenter((EskillsInfoFragment) fragment, AndroidSchedulers.mainThread(),
-        crashReport, appNavigator, eSkillsInfoNavigator, eskillsAnalytics, sharedPreferences,
-        listAppsConfiguration, listAppsMoreManager, walletAppProvider);
-  }
-
-  @FragmentScope @Provides EskillsAnalytics providesEskillsAnalytics(
-      AnalyticsManager analyticsManager,
-      NavigationTracker navigationTracker) {
-    return new EskillsAnalytics(analyticsManager, navigationTracker);
   }
 
   @FragmentScope @Provides ListAppsMoreManager providesListAppsMoreManager(

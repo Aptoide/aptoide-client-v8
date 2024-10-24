@@ -211,8 +211,4 @@ class EarnAppcListPresenter(
       earnAppcListConfiguration.tag, app.downloadUrl, app.reward?.appc?.toFloat() ?: -1f
     )
   }
-
-  override fun handleHeaderClick() {
-    TODO("Not yet implemented")
-  }
 }

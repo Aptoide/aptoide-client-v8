@@ -75,7 +75,7 @@ public class AppViewNavigator {
   }
 
   public void navigateToAppCoinsInfo() {
-    fragmentNavigator.navigateTo(AppCoinsInfoFragment.newInstance(true), true);
+    fragmentNavigator.navigateTo(AppCoinsInfoFragment.newInstance(), true);
   }
 
   public void navigateToCatappultWebsite() {
@@ -93,9 +93,5 @@ public class AppViewNavigator {
         .map(result -> new OutOfSpaceNavigatorWrapper(result.getResultCode() == Activity.RESULT_OK,
             result.getData() != null ? result.getData()
                 .getPackage() : ""));
-  }
-
-  public void navigateToESkillsSectionOnAppCoinsInfoView() {
-    appNavigator.navigateToESkillsSectionOfAppCoinsInfoView();
   }
 }

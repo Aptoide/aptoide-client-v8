@@ -13,7 +13,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.editorial.EditorialFragment;
 import cm.aptoide.pt.home.bundles.base.AppBundle;
 import cm.aptoide.pt.home.bundles.base.HomeEvent;
-import cm.aptoide.pt.home.more.eskills.EskillsInfoFragment;
 import cm.aptoide.pt.link.CustomTabsHelper;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
@@ -92,7 +91,7 @@ public class HomeNavigator {
   }
 
   public void navigateToAppCoinsInformationView() {
-    fragmentNavigator.navigateTo(AppCoinsInfoFragment.newInstance(false), true);
+    fragmentNavigator.navigateTo(AppCoinsInfoFragment.newInstance(), true);
   }
 
   public void navigateToEditorial(String cardId) {
@@ -124,18 +123,5 @@ public class HomeNavigator {
 
   public void navigateToLogIn() {
     accountNavigator.navigateToAccountView(AccountAnalytics.AccountOrigins.EDITORIAL);
-  }
-
-  public void navigateToEskillsAppView(long appId, String packageName, String tag) {
-    appNavigator.navigateWithAppIdFromEskills(appId, packageName,
-        AppViewFragment.OpenType.OPEN_ONLY, tag);
-  }
-
-  public void navigateToEskillsEarnMore(HomeEvent click) {
-    fragmentNavigator.navigateTo(EskillsInfoFragment.newInstance(click.getBundle()
-        .getTitle(), ((AppBundle) click.getBundle()).getActionTag(), click.getBundle()
-        .getEvent()
-        .getAction(), click.getBundle()
-        .getEvent().getName().name()), true);
   }
 }

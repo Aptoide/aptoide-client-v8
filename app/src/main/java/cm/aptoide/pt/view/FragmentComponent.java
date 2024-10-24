@@ -9,7 +9,6 @@ import cm.aptoide.pt.account.view.user.ProfileStepOneFragment;
 import cm.aptoide.pt.account.view.user.ProfileStepTwoFragment;
 import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
-import cm.aptoide.pt.home.more.eskills.EskillsInfoFragment;
 import cm.aptoide.pt.app.view.MoreBundleFragment;
 import cm.aptoide.pt.app.view.OtherVersionsFragment;
 import cm.aptoide.pt.autoupdate.AutoUpdateDialogFragment;
@@ -23,7 +22,6 @@ import cm.aptoide.pt.home.HomeFragment;
 import cm.aptoide.pt.home.apps.AppsFragment;
 import cm.aptoide.pt.home.more.appcoins.EarnAppcListFragment;
 import cm.aptoide.pt.home.more.apps.ListAppsMoreFragment;
-import cm.aptoide.pt.home.more.eskills.ListAppsEskillsFragment;
 import cm.aptoide.pt.notification.view.InboxFragment;
 import cm.aptoide.pt.promotions.ClaimPromotionDialogFragment;
 import cm.aptoide.pt.promotions.PromotionsFragment;
@@ -155,9 +153,4 @@ public interface FragmentComponent {
   void inject(CheckYourEmailFragment checkYourEmailFragment);
 
   void inject(@NotNull OutOfSpaceDialogFragment outOfSpaceDialogFragment);
-
-  void inject(EskillsInfoFragment eskillsInfoFragment);
-
-  void inject(ListAppsEskillsFragment listAppsEskillsFragment);
-
 }

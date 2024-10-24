@@ -243,7 +243,7 @@ public class DeepLinkManager {
   }
 
   private void appcInfoDeepLink() {
-    fragmentNavigator.navigateTo(AppCoinsInfoFragment.newInstance(false), true);
+    fragmentNavigator.navigateTo(AppCoinsInfoFragment.newInstance(), true);
   }
 
   private void appcAdsDeepLink() {
@@ -297,7 +297,7 @@ public class DeepLinkManager {
           : AppViewFragment.OpenType.OPEN_ONLY;
     }
 
-    appNavigator.navigateWithAppId(appId, packageName, openType, "", oemId, false);
+    appNavigator.navigateWithAppId(appId, packageName, openType, "", oemId);
   }
 
   private void appViewDeepLink(String packageName, boolean showPopup, boolean isApkfy,

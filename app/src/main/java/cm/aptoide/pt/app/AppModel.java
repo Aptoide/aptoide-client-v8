@@ -73,7 +73,6 @@ public class AppModel {
   private final String campaignUrl;
   private final String signature;
   private final String oemId;
-  private boolean isEskills;
   private String appCategory;
   private Campaign campaign;
 
@@ -88,7 +87,7 @@ public class AppModel {
       boolean isStoreFollowed, String marketName, boolean hasBilling, boolean hasAdvertising,
       List<String> bdsFlags, String campaignUrl, String signature, boolean isMature,
       List<Split> splits, List<String> requiredSplits, String oemId, boolean isBeta,
-      boolean isEskills, String appCategory, Campaign campaign) {
+      String appCategory, Campaign campaign) {
     this.appId = appId;
     this.appName = appName;
     this.store = store;
@@ -135,7 +134,6 @@ public class AppModel {
     this.isMature = isMature;
     this.splits = splits;
     this.requiredSplits = requiredSplits;
-    this.isEskills = isEskills;
     this.loading = false;
     this.error = null;
     this.oemId = oemId;
@@ -469,10 +467,6 @@ public class AppModel {
 
   public boolean isBeta() {
     return isBeta;
-  }
-
-  public boolean isEskills() {
-    return isEskills;
   }
 
   public List<String> getBdsFlags() {

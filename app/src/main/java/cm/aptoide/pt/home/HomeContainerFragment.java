@@ -39,7 +39,6 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
   private ImageView promotionsIcon;
   private TextView promotionsTicker;
   private PromotionsHomeDialog promotionsHomeDialog;
-  private EskillsHomeDialog eskillsHomeDialog;
   private LoggedInTermsAndConditionsDialog gdprDialog;
 
   private PublishSubject<ChipsEvents> chipCheckedEvent;
@@ -67,7 +66,6 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
     promotionsIcon = view.findViewById(R.id.promotions_icon);
     promotionsTicker = view.findViewById(R.id.promotions_ticker);
     promotionsHomeDialog = new PromotionsHomeDialog(getContext());
-    eskillsHomeDialog = new EskillsHomeDialog(getContext());
     gdprDialog = new LoggedInTermsAndConditionsDialog(getContext());
     if (bottomNavigationActivity != null) {
       bottomNavigationActivity.requestFocus(BOTTOM_NAVIGATION_ITEM);
@@ -147,10 +145,6 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
       promotionsHomeDialog.destroyDialog();
       promotionsHomeDialog = null;
     }
-    if (eskillsHomeDialog != null) {
-      eskillsHomeDialog.destroyDialog();
-      eskillsHomeDialog = null;
-    }
     if (gdprDialog != null) {
       gdprDialog.destroyDialog();
       gdprDialog = null;
@@ -203,9 +197,6 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
     promotionsHomeDialog.showDialog(homePromotionsWrapper);
   }
 
-  @Override public void showEskillsHomeDialog() {
-    eskillsHomeDialog.showDialog();
-  }
 
   @Override public void hidePromotionsIcon() {
     promotionsIcon.setVisibility(View.GONE);
@@ -216,17 +207,10 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
     return promotionsHomeDialog.dialogClicked();
   }
 
-  @Override public Observable<String> eskillsHomeDialogClicked() {
-    return eskillsHomeDialog.dialogClicked();
-  }
-
   @Override public void dismissPromotionsDialog() {
     promotionsHomeDialog.dismissDialog();
   }
 
-  @Override public void dismissEskillsDialog() {
-    eskillsHomeDialog.dismissDialog();
-  }
 
   @Override public void showTermsAndConditionsDialog() {
     gdprDialog.showDialog();

@@ -4,7 +4,6 @@ import android.os.Bundle;
 import cm.aptoide.aptoideviews.socialmedia.SocialMediaView;
 import cm.aptoide.pt.CatappultNavigator;
 import cm.aptoide.pt.app.view.AppViewFragment;
-import cm.aptoide.pt.home.more.eskills.EskillsInfoFragment;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.socialmedia.SocialMediaNavigator;
 
@@ -42,13 +41,5 @@ public class AppCoinsInfoNavigator {
 
   public void navigateToCatappultWebsite() {
     catappultNavigator.navigateToCatappultWebsite();
-  }
-
-  public void navigateToESkills() {
-    fragmentNavigator.navigateTo(EskillsInfoFragment.newInstance("Earn More",
-        "skills",
-        "https://ws75.aptoide.com/api/7/listApps/"
-            + "store_name=apps/group_id=14169744/sort=sort%3Apromotion%3Aupdated",
-        "eSkills"), true);
   }
 }
