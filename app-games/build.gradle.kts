@@ -186,7 +186,8 @@ android {
         } else {
           "_unsigned"
         }
-        val storeName = System.getenv("STORE_NAME")?.let { "_$it" } ?: ""
+        val storeName =
+          System.getenv("STORE_NAME")?.takeIf { it != "aptoide-games" }?.let { "_$it" } ?: ""
         val outputFileName =
           "AptoideGames_${variant.baseName}_${variant.versionName}_${variant.versionCode}$storeName$isSigned.apk"
         println("OutputFileName: $outputFileName")
