@@ -23,7 +23,8 @@ class ApkFyParser(
 ) {
   fun run() {
     CoroutineScope(Dispatchers.Main).launch {
-      val shouldRunApkfy = SecurePreferences.shouldRunApkFy(securePreferences)
+      val hasGuestUID = !securePreferences.getString(MMP_GUEST_UID, "").isNullOrEmpty()
+      val shouldRunApkfy = SecurePreferences.shouldRunApkFy(securePreferences) && !hasGuestUID
       if (shouldRunApkfy) {
         try {
           val apkfyModel = apkfyManager.getApkfy()
