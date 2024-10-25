@@ -6,6 +6,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.hilt.work.HiltWorkerFactory
+import androidx.work.Configuration
 import androidx.work.Configuration.Provider
 import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
 import cm.aptoide.pt.feature_categories.analytics.AptoideAnalyticsInfoProvider
@@ -62,7 +63,6 @@ val Context.paymentsPreferencesDataStore: DataStore<Preferences> by preferencesD
   name = "paymentsPreferences"
 )
 val Context.idsDataStore: DataStore<Preferences> by preferencesDataStore(name = "ids")
-
 
 @HiltAndroidApp
 class AptoideApplication : Application(), ImageLoaderFactory, Provider {
@@ -200,10 +200,9 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
     }
   }
 
-  override fun getWorkManagerConfiguration(): androidx.work.Configuration =
-    androidx.work.Configuration.Builder()
+  override val workManagerConfiguration: Configuration
+    get() = Configuration.Builder()
       .setWorkerFactory(
         EntryPoints.get(this, HiltWorkerFactoryEntryPoint::class.java).workerFactory()
-      )
-      .build()
+      ).build()
 }
