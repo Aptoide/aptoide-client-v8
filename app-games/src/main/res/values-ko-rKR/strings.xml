@@ -27,6 +27,11 @@
   <string name="settings_payment_support_description_title">설명</string>
   <string name="settings_contact_form_character_limit_title">(최소 50자)</string>
   <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">설명 (최소 50자 )</string>
+  <string name="settings_storage_title">저장 공간</string>
+  <string name="settings_storage_clear_cache_title">캐시 삭제</string>
+  <string name="settings_storage_cache_size_title">최대 캐시 크기(MB) 설정</string>
+  <string name="settings_clear_cache_title">Aptoide Games 저장 공간 삭제</string>
+  <string name="settings_clear_cache_body">모든 아이콘, 이미지, 다운로드한 apk, obb, 웹서비스 데이터 등을 삭제하시겠습니까...</string>
   <!-- MyGames -->
   <string name="my_games_empty">장치에 설치된 게임을 찾을 수 없습니다!</string>
   <string name="my_games_progress_message">게임 구성하기</string>
@@ -34,9 +39,9 @@
   <!-- Notifications -->
   <string name="notifications_context_title">알림을 받으세요!</string>
   <string name="notification_installing_title">설치중</string>
-  <string name="notification_preparing_title">Preparing</string>
-  <string name="notification_ready_install_title">An app is ready to be installed!</string>
-  <string name="notification_ready_install_body">Tap here to install %s.</string>
+  <string name="notification_preparing_title">준비 중</string>
+  <string name="notification_ready_install_title">앱을 설치할 준비가 되었습니다!</string>
+  <string name="notification_ready_install_body">여기를 탭하여 %s 앱을 설치하세요.</string>
   <string name="notification_waiting_body">다운로드 대기 중</string>
   <string name="notification_1_installed_title">설치됨</string>
   <string name="notification_downloading_body">%2$s의 %1$s%% 다운로드 중</string>
@@ -100,8 +105,13 @@
   <string name="wait_for_wifi_button">와이파이 대기</string>
   <string name="continue_button">계속</string>
   <string name="error_install_permissions_body"><![CDATA[설정으로 이동하여 <1>Aptoide Games</1>에 앱 설치 권한을 부여하세요!]]></string>
-  <string name="latest_title">Latest</string>
-  <string name="whats_new_title">What\'s New</string>
+  <string name="latest_title">최신</string>
+  <string name="whats_new_title">새로운 사항</string>
+  <string name="screenshot_appview_1">인앱 구매 시 추가 보너스 제공</string>
+  <string name="screenshot_appview_2">당신을 위해 선별된 최고의 신작 게임을 찾아보세요.</string>
+  <string name="screenshot_appview_3">좋아하는 게임을 발견하는 새로운 방법.</string>
+  <string name="screenshot_appview_4">최고의 콘텐츠로 원활한 인터페이스를 제공합니다.</string>
+  <string name="screenshot_appview_5">당신을 위해 엄선된 게임.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">공간 부족</string>
   <string name="out_of_space_body">설치를 계속하려면 %s이(가) 필요합니다.</string>
@@ -174,7 +184,7 @@
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">이제 구매를 완료할 수 있습니다.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">AppCoins 지갑이 설치되었습니다!</string>
   <string name="storage_access_permission_request_message">휴대폰 저장소에 대한 접근 권한을 주시면 이 앱을 다운로드하고 설치할 수 있습니다.</string>
-  <string name="downloads_number_title">%s downloads</string>
+  <string name="downloads_number_title">%s개의 다운로드</string>
   <!-- Payment Errors-->
   <string name="payments_error_not_enough_balance_body">잔액이 부족합니다</string>
   <string name="payments_error_old_card_title">오래전에 이 카드를 등록하신 것 같네요!</string>
@@ -202,7 +212,7 @@
   <string name="bonus_page_title_1">모든 구매 시 보너스 제공</string>
   <string name="bonus_page_body_1">%1$s로 표시된 게임을 찾아 AppCoins Wallet을 설치하고 모든 구매 시 최대 %2$s%% 보너스를 받으세요. 이 보너스를 사용하여 좋아하는 게임에서 다음 구매를 진행할 수 있습니다!</string>
   <string name="bonus_page_title_2">더 원하는 것이 있으신가요?</string>
-  <string name="bonus_page_body_2"><![CDATA[You can get an extra <1>%s%% bonus</1> by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!]]></string>
+  <string name="bonus_page_body_2"><![CDATA[특정 게임에서 Aptoide Games 전용 프로모션 코드를 사용하면 <1>%s%% 추가 보너스</1>를 받을 수 있습니다. 계속 지켜보시면 알림을 받아보실 수 있습니다!]]></string>
   <!-- Promo Code -->
   <string name="promo_code_install_wallet_banner_title">모든 구매 시 최대 %s%% 보너스 제공</string>
   <string name="promo_code_install_wallet_banner_body">AppCoins 지갑을 사용하여 앱내 구매를 하고 보상을 받으세요.</string>

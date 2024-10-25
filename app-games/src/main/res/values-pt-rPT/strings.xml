@@ -27,6 +27,11 @@
   <string name="settings_payment_support_description_title">Descrição</string>
   <string name="settings_contact_form_character_limit_title">(50 Caracteres Mín.)</string>
   <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Descrição (50 caracteres mín.)</string>
+  <string name="settings_storage_title">Armazenamento</string>
+  <string name="settings_storage_clear_cache_title">Limpar o cache</string>
+  <string name="settings_storage_cache_size_title">Definir o tamanho máx. do cache (MB)</string>
+  <string name="settings_clear_cache_title">Limpar armazenamento da Aptoide Games</string>
+  <string name="settings_clear_cache_body">Tens a certeza que queres apagar todos os ícones, imagens, apk descarregados, obb, dados de webservice...</string>
   <!-- MyGames -->
   <string name="my_games_empty">Não encontrámos nenhum jogo instalado no teu dispositivo!</string>
   <string name="my_games_progress_message">Organizar os teus jogos</string>
@@ -34,9 +39,9 @@
   <!-- Notifications -->
   <string name="notifications_context_title">Receber notificação!</string>
   <string name="notification_installing_title">A instalar</string>
-  <string name="notification_preparing_title">Preparing</string>
-  <string name="notification_ready_install_title">An app is ready to be installed!</string>
-  <string name="notification_ready_install_body">Tap here to install %s.</string>
+  <string name="notification_preparing_title">A preparar</string>
+  <string name="notification_ready_install_title">Uma app está pronta para ser instalada!</string>
+  <string name="notification_ready_install_body">Toca aqui para instalar %s.</string>
   <string name="notification_waiting_body">A aguardar pelo download</string>
   <string name="notification_1_installed_title">Instalado</string>
   <string name="notification_downloading_body">A fazer download de %1$s%% de %2$s</string>
@@ -100,8 +105,13 @@
   <string name="wait_for_wifi_button">Espera por Wi-Fi</string>
   <string name="continue_button">Continuar</string>
   <string name="error_install_permissions_body"><![CDATA[Vai a Definições e concede <1>Aptoide Games</1> permissões para instalar apps!]]></string>
-  <string name="latest_title">Latest</string>
-  <string name="whats_new_title">What\'s New</string>
+  <string name="latest_title">Mais recentes</string>
+  <string name="whats_new_title">Novidades</string>
+  <string name="screenshot_appview_1">Um bónus nas tuas compras na app.</string>
+  <string name="screenshot_appview_2">Encontra os melhores jogos novos selecionados para ti.</string>
+  <string name="screenshot_appview_3">Uma nova forma de descobrires o teu jogo favorito.</string>
+  <string name="screenshot_appview_4">Um interface perfeito com os melhores conteúdos.</string>
+  <string name="screenshot_appview_5">Jogos escolhidos a dedo só para ti.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Sem Espaço</string>
   <string name="out_of_space_body">Precisas de %s para continuar com a instalação.</string>
@@ -202,7 +212,7 @@
   <string name="bonus_page_title_1">Um Bónus em Cada Compra</string>
   <string name="bonus_page_body_1">Procura os jogos identificados com %1$s, instala a AppCoins Wallet e recebe até %2$s%% de bónus em todas as compras. Depois podes utilizar este bónus para fazeres as tuas próximas compras nos teus jogos favoritos!</string>
   <string name="bonus_page_title_2">Queres Mais?</string>
-  <string name="bonus_page_body_2"><![CDATA[You can get an extra <1>%s%% bonus</1> by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!]]></string>
+  <string name="bonus_page_body_2"><![CDATA[Podes receber <1>%s%% de bónus</1> extra utilizando um código promocional exclusivo dos Jogos Aptoide em jogos específicos. Fica atento e serás notificado!]]></string>
   <!-- Promo Code -->
   <string name="promo_code_install_wallet_banner_title">Até %s%% de Bónus em Cada Compra</string>
   <string name="promo_code_install_wallet_banner_body">Utiliza a AppCoins Wallet para fazeres as tuas compras na app e receberes uma recompensa.</string>
