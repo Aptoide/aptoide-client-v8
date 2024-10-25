@@ -57,7 +57,7 @@ object LibraryVersion {
   const val NAVIGATION_COMPOSE = "2.8.3"
   const val MATERIAL_ICONS_EXTENDED = "1.7.4"
   const val HILT = GradlePluginVersion.HILT
-  const val HILT_COMPILER = "1.0.0"
+  const val HILT_COMPILER = "1.2.0"
   const val HILT_NAV_COMPOSE = "1.2.0"
   const val RXJAVA = "1.3.8"
   const val RXJAVA_2 = "2.2.21"
