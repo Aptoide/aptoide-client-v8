@@ -18,14 +18,21 @@ class ApkfyManagerProbe(
     private const val GUEST_UID_KEY = "GUEST_UID"
   }
 
-  override suspend fun getApkfy() = apkfyManager.getApkfy()
-    ?.also(::setApkfyUTMProperties)
-    ?.also {
-      idsRepository.saveId(GUEST_UID_KEY, it.guestUid)
-    }.also {
-      // TODO: improve this logic
-      AptoideMMPCampaign.guestUID = it?.guestUid ?: idsRepository.getId(GUEST_UID_KEY)
+  override suspend fun getApkfy(): ApkfyModel? {
+    if (idsRepository.getId(GUEST_UID_KEY).isEmpty()) {
+      return apkfyManager.getApkfy()
+        ?.also(::setApkfyUTMProperties)
+        ?.also {
+          idsRepository.saveId(GUEST_UID_KEY, it.guestUid)
+        }.also {
+          // TODO: improve this logic
+          AptoideMMPCampaign.guestUID = it?.guestUid ?: idsRepository.getId(GUEST_UID_KEY)
+        }
+    } else {
+      AptoideMMPCampaign.guestUID = idsRepository.getId(GUEST_UID_KEY)
+      return null
     }
+  }
 
   private fun setApkfyUTMProperties(apkfyModel: ApkfyModel) {
     apkfyModel.run {

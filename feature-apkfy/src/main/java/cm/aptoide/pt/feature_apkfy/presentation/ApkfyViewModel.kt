@@ -42,6 +42,7 @@ class ApkfyViewModel @Inject constructor(
         apkfyManager.getApkfy()
           ?.takeIf { it.packageName != context.packageName }
           ?.takeIf { it.appId != null || it.packageName != null }
+          ?.takeIf { it.utmSource != "AG" && it.utmSource != "AG_dev" }
           ?.let {
             val app = appMetaUseCase.getMetaInfo(source = it.asSource())
             viewModelState.update { app }
