@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import cm.aptoide.pt.feature_apkfy.repository.ApkfyPreferencesRepository
 import cm.aptoide.pt.feature_apkfy.repository.ApkfyRepository
 import javax.inject.Inject
 
@@ -16,13 +15,7 @@ interface ApkfyManager {
 
 class ApkfyManagerImpl @Inject constructor(
   private val apkfyRepository: ApkfyRepository,
-  private val apkfyPreferencesRepository: ApkfyPreferencesRepository,
 ) : ApkfyManager {
 
-  override suspend fun getApkfy(): ApkfyModel? = if (apkfyPreferencesRepository.shouldRunApkfy()) {
-    apkfyPreferencesRepository.setApkfyRan()
-    apkfyRepository.getApkfy()
-  } else {
-    null
-  }
+  override suspend fun getApkfy(): ApkfyModel = apkfyRepository.getApkfy()
 }
