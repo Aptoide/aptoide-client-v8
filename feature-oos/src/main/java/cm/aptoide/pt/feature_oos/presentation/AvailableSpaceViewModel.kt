@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.install_info_mapper.domain.InstallPackageInfoMapper
 import cm.aptoide.pt.install_manager.InstallManager
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.launchIn
@@ -33,7 +34,10 @@ class AvailableSpaceViewModel(
     installManager.appsChanges
       .map {}
       .onStart { emit(Unit) }
-      .map { installManager.getMissingFreeSpaceFor(installPackageInfoMapper.map(app)) }
+      .map {
+        delay(1500)
+        installManager.getMissingFreeSpaceFor(installPackageInfoMapper.map(app))
+      }
       .onEach { requiredSpace -> viewModelState.update { requiredSpace } }
       .launchIn(viewModelScope)
   }
