@@ -47,7 +47,7 @@ object LibraryVersion {
   const val TIMBER = "5.0.1"
   const val LOTTIE = "6.0.0"
   const val FRAGMENT_KTX = "1.5.7"
-  const val LIFECYCLE = "2.6.1"
+  const val LIFECYCLE = "2.8.6"
   const val COIL = "2.7.0"
   const val ROOM = "2.5.1"
   const val ACTIVITY_COMPOSE = "1.9.3"
