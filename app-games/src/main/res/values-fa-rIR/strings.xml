@@ -30,7 +30,7 @@
   <string name="settings_storage_title">حافظه</string>
   <string name="settings_storage_clear_cache_title">پاک کردن حافظه موقت</string>
   <string name="settings_storage_cache_size_title">تنظیم حداکثر اندازه حافظه کش (مگابایت)</string>
-  <string name="settings_clear_cache_title">Clear Aptoide Games storage</string>
+  <string name="settings_clear_cache_title">پاک کردن حافظه بازی‌های Aptoide</string>
   <string name="settings_clear_cache_body">Are you sure you want to delete all icons, images, apk downloaded, obb, webservice data...</string>
   <!-- MyGames -->
   <string name="my_games_empty">هیچ بازی نصب‌شده‌ای روی دستگاه شما یافت نکردیم!</string>
