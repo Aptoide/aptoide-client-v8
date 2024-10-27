@@ -30,8 +30,8 @@
   <string name="settings_storage_title">حافظه</string>
   <string name="settings_storage_clear_cache_title">پاک کردن حافظه موقت</string>
   <string name="settings_storage_cache_size_title">تنظیم حداکثر اندازه حافظه کش (مگابایت)</string>
-  <string name="settings_clear_cache_title">پاک کردن حافظه بازی‌های Aptoide</string>
-  <string name="settings_clear_cache_body">Are you sure you want to delete all icons, images, apk downloaded, obb, webservice data...</string>
+  <string name="settings_clear_cache_title">پاک کردن حافظه Aptoide Games</string>
+  <string name="settings_clear_cache_body">آیا می‌خواهید همه آیکون‌ها، تصاویر، apk دانلودشده، obb، داده‌های سرویس وب و... را پاک کنید</string>
   <!-- MyGames -->
   <string name="my_games_empty">هیچ بازی نصب‌شده‌ای روی دستگاه شما یافت نکردیم!</string>
   <string name="my_games_progress_message">مرتب کردن بازی‌های شما</string>
@@ -39,7 +39,7 @@
   <!-- Notifications -->
   <string name="notifications_context_title">باخبر شوید!</string>
   <string name="notification_installing_title">در حال نصب</string>
-  <string name="notification_preparing_title">Preparing</string>
+  <string name="notification_preparing_title">درحال آماده‌سازی</string>
   <string name="notification_ready_install_title">یک اپلیکیشن آماده نصب است!</string>
   <string name="notification_ready_install_body">برای نصب %s، اینجا را کلیک کنید.</string>
   <string name="notification_waiting_body">در انتظار دانلود</string>
@@ -106,12 +106,12 @@
   <string name="continue_button">ادامه</string>
   <string name="error_install_permissions_body"><![CDATA[لطفا به تنظیمات بروید و به <1>Aptoide Games</1> اجازه نصب اپلیکیشن بدهید!]]></string>
   <string name="latest_title">آخرین</string>
-  <string name="whats_new_title">What\'s New</string>
-  <string name="screenshot_appview_1">A bonus in your in-app purchases.</string>
-  <string name="screenshot_appview_2">Find top new games curated for you.</string>
-  <string name="screenshot_appview_3">A new way to discover your favorite game.</string>
-  <string name="screenshot_appview_4">A seamless interface with the best content.</string>
-  <string name="screenshot_appview_5">Hand-picked games only for you.</string>
+  <string name="whats_new_title">تازه‌ها</string>
+  <string name="screenshot_appview_1">یک بونوس در خریدهای داخل اپلیکیشنی شما.</string>
+  <string name="screenshot_appview_2">بهترین بازی‌های طراحی شده برای خود را پیداکنید.</string>
+  <string name="screenshot_appview_3">روشی جدید برای کشف بازی‌های محبوب خود</string>
+  <string name="screenshot_appview_4">محیط ساده با بهترین محتوا</string>
+  <string name="screenshot_appview_5">بازی‌های انتخاب شده برای شما.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">حافظه‌ پر است</string>
   <string name="out_of_space_body">برای ادامه نصب به %s نیاز دارید.</string>
@@ -212,7 +212,7 @@
   <string name="bonus_page_title_1">یک پاداش برای هر خرید</string>
   <string name="bonus_page_body_1">به دنبال بازی‌هایی با مشخصه %1$s باشید، AppCoins Wallet را نصب کنید و تا %2$s%% بونوس در همه خریدهای دریافت کنید. از این بونوس می‌توانید در خرید در بازی‌های محبوب خود استفاده کنید.</string>
   <string name="bonus_page_title_2">بیشتر می‌خواهید؟</string>
-  <string name="bonus_page_body_2"><![CDATA[You can get an extra <1>%s%% bonus</1> by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!]]></string>
+  <string name="bonus_page_body_2"><![CDATA[شما می‌توانید یک <1>بونوس %s%%</1> اضافی با استفاده از کد ویژه Aptoide Games در بازی‌های خاصی بدست آورید. در ارتباط باشید و باخبر خواهید شد!]]></string>
   <!-- Promo Code -->
   <string name="promo_code_install_wallet_banner_title">تا %s%% بونوس در همه خریدها</string>
   <string name="promo_code_install_wallet_banner_body">برای خریدهای داخل اپلیکیشنی خود از AppCoins Wallet استفاده کنید و پاداش بگیرید.</string>
