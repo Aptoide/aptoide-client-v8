@@ -12,8 +12,8 @@ object TestLibraryVersionOldModules {
 object TestLibraryVersion {
   const val ROOM_TESTING = "2.4.0"
   const val JUNIT = "4.13.2"
-  const val JUNIT5 = "5.7.2"
-  const val TURBINE = "0.9.0"
+  const val JUNIT5 = "5.11.3"
+  const val TURBINE = "1.2.0"
   const val JUNIT_ANDROIDX = "1.1.3"
   const val ESPRESSO_CORE = "3.4.0"
 }
