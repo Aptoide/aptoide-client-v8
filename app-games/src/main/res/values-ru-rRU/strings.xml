@@ -30,8 +30,8 @@
   <string name="settings_storage_title">Хранилище</string>
   <string name="settings_storage_clear_cache_title">Очистить кэш</string>
   <string name="settings_storage_cache_size_title">Задать макс. размер кэша (МБ)</string>
-  <string name="settings_clear_cache_title">Clear Aptoide Games storage</string>
-  <string name="settings_clear_cache_body">Are you sure you want to delete all icons, images, apk downloaded, obb, webservice data...</string>
+  <string name="settings_clear_cache_title">Очистить хранилище Aptoide Games</string>
+  <string name="settings_clear_cache_body">Вы уверены, что хотите удалить все иконки, изображения, скаченные apk, obb, данные веб-сервисов…</string>
   <!-- MyGames -->
   <string name="my_games_empty">Нам не удалось найти игры, установленные на вашем устройстве!</string>
   <string name="my_games_progress_message">Организуйте ваши игры</string>
@@ -39,7 +39,7 @@
   <!-- Notifications -->
   <string name="notifications_context_title">Получайте уведомления!</string>
   <string name="notification_installing_title">Установка...</string>
-  <string name="notification_preparing_title">Preparing</string>
+  <string name="notification_preparing_title">Подготовка</string>
   <string name="notification_ready_install_title">Приложение готово к установке!</string>
   <string name="notification_ready_install_body">Нажмите сюда, чтобы установить %s.</string>
   <string name="notification_waiting_body">Ожидание загрузки</string>
@@ -106,12 +106,12 @@
   <string name="continue_button">Продолжить</string>
   <string name="error_install_permissions_body"><![CDATA[Пожалуйста, перейдите в «Настройки» и предоставьте <1>Aptoide Games</1> разрешения на установку приложений!]]></string>
   <string name="latest_title">Новинки</string>
-  <string name="whats_new_title">What\'s New</string>
-  <string name="screenshot_appview_1">A bonus in your in-app purchases.</string>
-  <string name="screenshot_appview_2">Find top new games curated for you.</string>
-  <string name="screenshot_appview_3">A new way to discover your favorite game.</string>
-  <string name="screenshot_appview_4">A seamless interface with the best content.</string>
-  <string name="screenshot_appview_5">Hand-picked games only for you.</string>
+  <string name="whats_new_title">Что нового</string>
+  <string name="screenshot_appview_1">Бонус на покупки в приложениях.</string>
+  <string name="screenshot_appview_2">Найдите лучшие новые игры, подобранные специально для вас.</string>
+  <string name="screenshot_appview_3">Новый способ открыть для себя любимую игру.</string>
+  <string name="screenshot_appview_4">Удобный интерфейс и лучший контент.</string>
+  <string name="screenshot_appview_5">Специально подобранные игры только для вас.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Нет места</string>
   <string name="out_of_space_body">Вам необходимо %s чтобы продолжить установку.</string>
@@ -212,7 +212,7 @@
   <string name="bonus_page_title_1">Бонус за каждую покупку</string>
   <string name="bonus_page_body_1">Найдите игры, обозначенные как %1$s, установите AppCoins Wallet и получите бонус до %2$s%% на все покупки. Затем вы можете использовать этот бонус для совершения следующих покупок в ваших любимых играх!</string>
   <string name="bonus_page_title_2">Хотите больше?</string>
-  <string name="bonus_page_body_2"><![CDATA[You can get an extra <1>%s%% bonus</1> by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!]]></string>
+  <string name="bonus_page_body_2"><![CDATA[Вы можете получить дополнительный <1>%s%% бонус</1>, используя эксклюзивный промокод Aptoide Games в определенных играх. Оставайтесь с нами, и мы вам сообщим!]]></string>
   <!-- Promo Code -->
   <string name="promo_code_install_wallet_banner_title">Бонус до %s%% с каждой покупки</string>
   <string name="promo_code_install_wallet_banner_body">Используйте AppCoins Wallet, чтобы делать покупки в приложениях и получать награды.</string>

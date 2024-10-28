@@ -30,8 +30,8 @@
   <string name="settings_storage_title">Αποθηκευτικός χώρος</string>
   <string name="settings_storage_clear_cache_title">Διαγραφή μνήμης cache</string>
   <string name="settings_storage_cache_size_title">Ορίστε μέγιστο μέγεθος cache (ΜΒ)</string>
-  <string name="settings_clear_cache_title">Clear Aptoide Games storage</string>
-  <string name="settings_clear_cache_body">Are you sure you want to delete all icons, images, apk downloaded, obb, webservice data...</string>
+  <string name="settings_clear_cache_title">Εκκαθάριση αποθηκευτικού χώρου Aptoide Games</string>
+  <string name="settings_clear_cache_body">Είστε σίγουροι ότι θέλετε να διαγράψετε όλα τα εικονίδια, εικόνες, ληφθέντα apk, obb, δεδομένα webservice…</string>
   <!-- MyGames -->
   <string name="my_games_empty">Δεν μπορέσαμε να βρούμε κανένα εγκατεστημένο παιχνίδι στη συσκευή σας!</string>
   <string name="my_games_progress_message">Οργανώνουμε τα παιχνίδια σας</string>
@@ -39,7 +39,7 @@
   <!-- Notifications -->
   <string name="notifications_context_title">Λάβετε ειδοποίηση!</string>
   <string name="notification_installing_title">Γίνεται εγκατάσταση</string>
-  <string name="notification_preparing_title">Preparing</string>
+  <string name="notification_preparing_title">Γίνεται προετοιμασία</string>
   <string name="notification_ready_install_title">Μία εφαρμογή είναι έτοιμη για εγκατάσταση!</string>
   <string name="notification_ready_install_body">Πατήστε εδώ για την εγκατάσταση του %s.</string>
   <string name="notification_waiting_body">Σε αναμονή λήψης</string>
@@ -106,12 +106,12 @@
   <string name="continue_button">Συνέχεια</string>
   <string name="error_install_permissions_body"><![CDATA[Πηγαίνετε στις Ρυθμίσεις και παραχωρήστε στο <1>Aptoide Games</1> την άδεια να εγκαθιστά εφαρμογές!]]></string>
   <string name="latest_title">Πρόσφατα</string>
-  <string name="whats_new_title">What\'s New</string>
-  <string name="screenshot_appview_1">A bonus in your in-app purchases.</string>
-  <string name="screenshot_appview_2">Find top new games curated for you.</string>
-  <string name="screenshot_appview_3">A new way to discover your favorite game.</string>
-  <string name="screenshot_appview_4">A seamless interface with the best content.</string>
-  <string name="screenshot_appview_5">Hand-picked games only for you.</string>
+  <string name="whats_new_title">Τι νέο υπάρχει</string>
+  <string name="screenshot_appview_1">Ένα bonus σε όλες τις αγορές σας εντός εφαρμογών.</string>
+  <string name="screenshot_appview_2">Βρείτε κορυφαία παιχνίδια που έχουν επιλεχθεί για εσάς.</string>
+  <string name="screenshot_appview_3">Ένας νέος τρόπος να ανακαλύψετε το αγαπημένο σας παιχνίδι.</string>
+  <string name="screenshot_appview_4">Μια απρόσκοπτη διεπαφή χρήστη με τα καλύτερα περιεχόμενα.</string>
+  <string name="screenshot_appview_5">Επιλεγμένα παιχνίδια μόνο για εσάς.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Δεν υπάρχει Χώρος</string>
   <string name="out_of_space_body">Χρειάζονται %s για να συνεχιστεί η εγκατάσταση.</string>
@@ -212,7 +212,7 @@
   <string name="bonus_page_title_1">Ένα Bonus σε Κάθε Αγορά</string>
   <string name="bonus_page_body_1">Αναζητήστε τα παιχνίδια που έχουν επισημανθεί με %1$s, εγκαταστήστε το AppCoins Wallet και αποκτήστε έως και %2$s%% bonus σε όλες τις αγορές. Στη συνέχεια, μπορείτε να χρησιμοποιήσετε αυτό το bonus για τις επόμενες αγορές σας στα αγαπημένα σας παιχνίδια!</string>
   <string name="bonus_page_title_2">Θέλετε κι Άλλα;</string>
-  <string name="bonus_page_body_2"><![CDATA[You can get an extra <1>%s%% bonus</1> by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!]]></string>
+  <string name="bonus_page_body_2"><![CDATA[Μπορείτε να αποκτήσετε ένα επιπλέον <1>%sbonus </1> χρησιμοποιώντας έναν αποκλειστικό κωδικό προσφοράς του Aptoide Games σε συγκεκριμένα παιχνίδια. Μείνετε συντονισμένοι και θα ειδοποιηθείτε!]]></string>
   <!-- Promo Code -->
   <string name="promo_code_install_wallet_banner_title">Έως %s%% Bonus σε κάθε Αγορά</string>
   <string name="promo_code_install_wallet_banner_body">Χρησιμοποιήστε το AppCoins Wallet για να κάνετε τις αγορές σας εντός της εφαρμογής και να λάβετε μια ανταμοιβή.</string>
