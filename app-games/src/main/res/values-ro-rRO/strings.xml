@@ -30,8 +30,8 @@
   <string name="settings_storage_title">Stocare</string>
   <string name="settings_storage_clear_cache_title">Golire cache</string>
   <string name="settings_storage_cache_size_title">Setează dimensiune max. cache (MB)</string>
-  <string name="settings_clear_cache_title">Clear Aptoide Games storage</string>
-  <string name="settings_clear_cache_body">Are you sure you want to delete all icons, images, apk downloaded, obb, webservice data...</string>
+  <string name="settings_clear_cache_title">Eliberează spațiu de stocare Aptoide Games</string>
+  <string name="settings_clear_cache_body">Ești sigur că vrei să ștergi toate pictogramele, imaginile, apk descărcate, obb, date webservice, …</string>
   <!-- MyGames -->
   <string name="my_games_empty">Nu am putut găsi jocuri instalate pe dispozitivul tău!</string>
   <string name="my_games_progress_message">Îți organizăm jocurile</string>
@@ -39,7 +39,7 @@
   <!-- Notifications -->
   <string name="notifications_context_title">Primește notificări!</string>
   <string name="notification_installing_title">Se instalează</string>
-  <string name="notification_preparing_title">Preparing</string>
+  <string name="notification_preparing_title">În pregătire</string>
   <string name="notification_ready_install_title">O aplicație este pregătită pentru instalare!</string>
   <string name="notification_ready_install_body">Apasă aici pentru a instala %s.</string>
   <string name="notification_waiting_body">Se așteaptă descărcarea</string>
@@ -106,12 +106,12 @@
   <string name="continue_button">Continuă</string>
   <string name="error_install_permissions_body"><![CDATA[Accesează Setări și acordă permisiunile pentru <1>Aptoide Games</1> pentru a instala aplicații!]]></string>
   <string name="latest_title">Noi</string>
-  <string name="whats_new_title">What\'s New</string>
-  <string name="screenshot_appview_1">A bonus in your in-app purchases.</string>
-  <string name="screenshot_appview_2">Find top new games curated for you.</string>
-  <string name="screenshot_appview_3">A new way to discover your favorite game.</string>
-  <string name="screenshot_appview_4">A seamless interface with the best content.</string>
-  <string name="screenshot_appview_5">Hand-picked games only for you.</string>
+  <string name="whats_new_title">Noutăți</string>
+  <string name="screenshot_appview_1">Un bonus la achizițiile tale în aplicație.</string>
+  <string name="screenshot_appview_2">Găsește jocuri noi de top selectate pentru tine.</string>
+  <string name="screenshot_appview_3">Un mod nou de a descoperi jocul tău preferat.</string>
+  <string name="screenshot_appview_4">O interfață ușor de utilizat cu cel mai bun conținut.</string>
+  <string name="screenshot_appview_5">Jocuri alese special pentru tine.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Spațiu epuizat</string>
   <string name="out_of_space_body">Ai nevoie de %s pentru a continua cu instalarea.</string>
@@ -212,7 +212,7 @@
   <string name="bonus_page_title_1">Un Bonus la Fiecare Achiziție</string>
   <string name="bonus_page_body_1">Caută jocurile identificate cu %1$s, instalează AppCoins Wallet și obține un bonus de până la %2$s%% la toate achizițiile. Poți folosi acest bonus pentru a face achiziții în jocurile tale preferate!</string>
   <string name="bonus_page_title_2">Vrei mai mult?</string>
-  <string name="bonus_page_body_2"><![CDATA[You can get an extra <1>%s%% bonus</1> by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!]]></string>
+  <string name="bonus_page_body_2"><![CDATA[Poți obține un <1>bonus suplimentar de %s%%</1> utilizând un cod promoțional exclusiv Aptoide Games în anumite jocuri. Fii pe fază și vei fi anunțat!]]></string>
   <!-- Promo Code -->
   <string name="promo_code_install_wallet_banner_title">Bonus de până la %s%% la Fiecare Achiziție</string>
   <string name="promo_code_install_wallet_banner_body">Folosește AppCoins Wallet pentru a face achizițiile în aplicație și vei obține o recompensă.</string>

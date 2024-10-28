@@ -104,7 +104,7 @@
   <string name="waiting_for_connection">En attente de connexion</string>
   <string name="wait_for_wifi_button">En attente de Wi-Fi</string>
   <string name="continue_button">Continuer</string>
-  <string name="error_install_permissions_body"><![CDATA[Allez dans Paramètres et accordez à <1>Aptoide Games</1> la permission d'installer des applications !]]></string>
+  <string name="error_install_permissions_body"><![CDATA[Allez dans Paramètres et accordez à <1>Aptoide Games</1> la permission d\'installer des applications !]]></string>
   <string name="latest_title">Les plus récents</string>
   <string name="whats_new_title">Quoi de neuf </string>
   <string name="screenshot_appview_1">Un bonus dans vos achats in-app.</string>
@@ -212,7 +212,7 @@
   <string name="bonus_page_title_1">Un bonus pour chaque achat</string>
   <string name="bonus_page_body_1">Recherchez les jeux identifiés par %1$s, installez le portefeuille AppCoins et obtenez jusqu\'à %2$s%% de bonus sur tous vos achats. Vous pouvez ensuite utiliser ce bonus pour effectuer vos prochains achats dans vos jeux préférés !</string>
   <string name="bonus_page_title_2">Vous en voulez plus ?</string>
-  <string name="bonus_page_body_2"><![CDATA[Vous pouvez obtenir un bonus supplémentaire de <1>%s%%</1> en utilisant un code promo exclusif d'Aptoide Games dans des jeux spécifiques. Restez à l'écoute et vous serez informés !]]></string>
+  <string name="bonus_page_body_2"><![CDATA[Vous pouvez obtenir un bonus supplémentaire de <1>%s%%</1> en utilisant un code promo exclusif d\'Aptoide Games dans des jeux spécifiques. Restez à l\'écoute et vous serez informés !]]></string>
   <!-- Promo Code -->
   <string name="promo_code_install_wallet_banner_title">Jusqu\'à %s%% de bonus pour chaque achat</string>
   <string name="promo_code_install_wallet_banner_body">Utilisez le Portefeuille AppCoins pour effectuer vos achats in-app et obtenir une récompense.</string>
