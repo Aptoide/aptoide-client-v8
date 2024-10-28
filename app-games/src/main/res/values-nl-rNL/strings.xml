@@ -30,8 +30,8 @@
   <string name="settings_storage_title">Opslag</string>
   <string name="settings_storage_clear_cache_title">Wis cache</string>
   <string name="settings_storage_cache_size_title">Stel maximale cachegrootte (MB) in</string>
-  <string name="settings_clear_cache_title">Clear Aptoide Games storage</string>
-  <string name="settings_clear_cache_body">Are you sure you want to delete all icons, images, apk downloaded, obb, webservice data...</string>
+  <string name="settings_clear_cache_title">Aptoide Games-opslag wissen</string>
+  <string name="settings_clear_cache_body">Weet je zeker dat je alle pictogrammen, afbeeldingen, webservicegegevens en gedownloade APK- en OBB-bestanden wilt verwijderen...</string>
   <!-- MyGames -->
   <string name="my_games_empty">We kunnen geen games vinden die op je apparaat zijn geïnstalleerd!</string>
   <string name="my_games_progress_message">Je games organiseren</string>
@@ -39,7 +39,7 @@
   <!-- Notifications -->
   <string name="notifications_context_title">Ontvang een melding!</string>
   <string name="notification_installing_title">Wordt geïnstalleerd</string>
-  <string name="notification_preparing_title">Preparing</string>
+  <string name="notification_preparing_title">Voorbereiden</string>
   <string name="notification_ready_install_title">Een app is klaar om geïnstalleerd te worden!</string>
   <string name="notification_ready_install_body">Tik hier om %s te installeren.</string>
   <string name="notification_waiting_body">Wachten op download</string>
@@ -104,14 +104,14 @@
   <string name="waiting_for_connection">Wachten op verbinding</string>
   <string name="wait_for_wifi_button">Wachten op wifi</string>
   <string name="continue_button">Doorgaan</string>
-  <string name="error_install_permissions_body"><![CDATA[Please go to Settings and grant <1>Aptoide Games</1> permissions to install apps!]]></string>
+  <string name="error_install_permissions_body"><![CDATA[Ga naar Instellingen en geef <1>Aptoide Games</1> toestemming om apps te installeren!]]></string>
   <string name="latest_title">Nieuwste</string>
-  <string name="whats_new_title">What\'s New</string>
-  <string name="screenshot_appview_1">A bonus in your in-app purchases.</string>
-  <string name="screenshot_appview_2">Find top new games curated for you.</string>
-  <string name="screenshot_appview_3">A new way to discover your favorite game.</string>
-  <string name="screenshot_appview_4">A seamless interface with the best content.</string>
-  <string name="screenshot_appview_5">Hand-picked games only for you.</string>
+  <string name="whats_new_title">Wat is er nieuw</string>
+  <string name="screenshot_appview_1">Een bonus bij je in-app aankopen.</string>
+  <string name="screenshot_appview_2">Vind de beste nieuwe games, speciaal voor jou geselecteerd.</string>
+  <string name="screenshot_appview_3">Een nieuwe manier om je favoriete game te ontdekken.</string>
+  <string name="screenshot_appview_4">Een overzichtelijke interface met de beste content.</string>
+  <string name="screenshot_appview_5">Speciaal voor jou geselecteerde games.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Geen opslagruimte</string>
   <string name="out_of_space_body">Je hebt %s nodig om met de installatie door te gaan.</string>
@@ -150,10 +150,10 @@
   <string name="appview_info_permissions_title" comment="permissions">Toestemmingen</string>
   <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% van %2$s</string>
   <string name="error_short_title" comment="oops_an_error_occurred">Oeps, er is een fout opgetreden</string>
-  <string name="purchase_done_bonus_title">Get a %s bonus!</string>
-  <string name="purchase_done_bonus_body">Download the AppCoins Wallet to get this bonus and use it in your next purchase.</string>
-  <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet installed!</string>
-  <string name="purchase_done_bonus_wallet_installed_body">Open it to find your bonus.</string>
+  <string name="purchase_done_bonus_title">Krijg een bonus van %s!</string>
+  <string name="purchase_done_bonus_body">Download de AppCoins Wallet om deze bonus te krijgen en bij je volgende aankoop te gebruiken.</string>
+  <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet is geïnstalleerd!</string>
+  <string name="purchase_done_bonus_wallet_installed_body">Open de wallet en ontdek je bonus.</string>
   <string name="bonus_banner_body">Je krijgt een bonus in alle games met %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Tot %s%% bonus</string>
   <string name="settings_payments_title" comment="contact_support_team">Neem contact op met support</string>
@@ -212,17 +212,17 @@
   <string name="bonus_page_title_1">Een bonus bij elke aankoop</string>
   <string name="bonus_page_body_1">Zoek naar games met %1$s, installeer de AppCoins Wallet en krijg tot %2$s%% bonus bij alle aankopen. Daarna kun je deze bonus voor je volgende aankopen in je favoriete games gebruiken!</string>
   <string name="bonus_page_title_2">Nog meer voordeel?</string>
-  <string name="bonus_page_body_2"><![CDATA[You can get an extra <1>%s%% bonus</1> by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!]]></string>
+  <string name="bonus_page_body_2"><![CDATA[Je kunt <1>%s%% extra bonus</1> krijgen door een exclusieve Aptoide Games-actiecode in specifieke games te gebruiken. We sturen je een melding om je op de hoogte te houden.]]></string>
   <!-- Promo Code -->
-  <string name="promo_code_install_wallet_banner_title">Up to %s%% Bonus in Every Purchase</string>
-  <string name="promo_code_install_wallet_banner_body">Use the AppCoins Wallet to make your in-app purchases and get a reward.</string>
-  <string name="promo_code_extra_title">Want More? Get %s%% Extra Bonus!</string>
-  <string name="promo_code_use_button">Use code</string>
-  <string name="promo_code_install_wallet_disclaimer">Install the AppCoins Wallet first.</string>
-  <string name="promo_code_notification_title">Redeem Your Promo Code</string>
-  <string name="promo_code_notification_body">Use your promo code to get extra bonuses in your favorite game.</string>
-  <string name="promo_code_notification_without_wallet_title">%s%% Extra Bonus!</string>
-  <string name="promo_code_notification_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
-  <string name="promo_code_share_title">You\'ve got a promo code!</string>
-  <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorite game.</string>
+  <string name="promo_code_install_wallet_banner_title">Tot %s%% bonus bij elke aankoop</string>
+  <string name="promo_code_install_wallet_banner_body">Gebruik de AppCoins Wallet om je in-app aankopen te doen en krijg een beloning.</string>
+  <string name="promo_code_extra_title">Meer voordeel? Krijg %s%% extra bonus!</string>
+  <string name="promo_code_use_button">Code gebruiken</string>
+  <string name="promo_code_install_wallet_disclaimer">Installeer eerst de AppCoins Wallet.</string>
+  <string name="promo_code_notification_title">Wissel je actiecode in</string>
+  <string name="promo_code_notification_body">Gebruik je actiecode om extra bonussen in je favoriete game te krijgen.</string>
+  <string name="promo_code_notification_without_wallet_title">%s%% extra bonus!</string>
+  <string name="promo_code_notification_without_wallet_body">Download de AppCoins Wallet en gebruik je actiecode om extra bonussen bij al je aankopen te krijgen.</string>
+  <string name="promo_code_share_title">Je hebt een actiecode!</string>
+  <string name="promo_code_share_body">Gebruik deze actiecode om extra bonussen in je favoriete game te krijgen.</string>
 </resources>
