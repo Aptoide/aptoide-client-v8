@@ -1,4 +1,5 @@
 import com.android.build.api.dsl.BaseFlavor
+import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -10,6 +11,8 @@ plugins {
   id(GradlePluginId.KOTLIN_KSP)
   id(GradlePluginId.GMS_PLUGIN_ID)
   id(GradlePluginId.CRASHLYTICS_ID)
+
+  id("com.github.ben-manes.versions") version "0.51.0"
 }
 
 android {
@@ -269,4 +272,25 @@ fun BaseFlavor.buildConfigFieldFromGradleProperty(gradlePropertyName: String) {
 fun getDate(): String {
   val sdf = SimpleDateFormat("yyyyMMdd")
   return sdf.format(Date())
+}
+
+fun String.isNonStable(): Boolean {
+  val stableKeyword = listOf("RELEASE", "FINAL", "GA").any { uppercase().contains(it) }
+  val regex = "^[0-9,.v-]+(-r)?$".toRegex()
+  val isStable = stableKeyword || regex.matches(this)
+  return isStable.not()
+}
+
+tasks.withType<DependencyUpdatesTask> {
+
+  // Example 1: reject all non stable versions
+  rejectVersionIf {
+    candidate.version.isNonStable()
+  }
+
+  // optional parameters
+  checkForGradleUpdate = true
+  outputFormatter = "html"
+  outputDir = "build/dependencyUpdates"
+  reportfileName = "dependency-version-updates-report"
 }
