@@ -309,6 +309,11 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
     params = emptyMap()
   )
 
+  fun sendBottomBarUpdatesClick() = analyticsSender.logEvent(
+    name = "bn_updates_clicked",
+    params = emptyMap()
+  )
+
   fun sendNotificationOptIn() = analyticsSender.logEvent(
     name = "notification_opt_in",
     params = emptyMap()

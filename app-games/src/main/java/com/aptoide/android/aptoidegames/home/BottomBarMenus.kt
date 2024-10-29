@@ -1,17 +1,31 @@
 package com.aptoide.android.aptoidegames.home
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.dto.BundleMeta
 import com.aptoide.android.aptoidegames.analytics.presentation.withBundleMeta
 import com.aptoide.android.aptoidegames.categories.presentation.buildAllCategoriesRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getCategories
 import com.aptoide.android.aptoidegames.drawables.icons.getDiscovery
+import com.aptoide.android.aptoidegames.drawables.icons.getDownloadIcon
 import com.aptoide.android.aptoidegames.drawables.icons.getSearch
 import com.aptoide.android.aptoidegames.search.presentation.searchRoute
 import com.aptoide.android.aptoidegames.theme.Palette
+import com.aptoide.android.aptoidegames.updates.updatesRoute
 
 sealed class BottomBarMenus(
   val route: String,
@@ -33,6 +47,11 @@ sealed class BottomBarMenus(
       .withBundleMeta(BundleMeta("categories-more", "app")),
     titleId = R.string.categories
   )
+
+  object Updates : BottomBarMenus(
+    route = updatesRoute.withBundleMeta(BundleMeta("updates", "app")),
+    titleId = R.string.bottom_navigation_updates
+  )
 }
 
 @Composable
@@ -40,6 +59,23 @@ fun BottomBarMenus.Icon() = when (this) {
   BottomBarMenus.Games -> getDiscovery(Palette.GreyLight).AsBottomBarIcon()
   BottomBarMenus.Search -> getSearch(Palette.GreyLight).AsBottomBarIcon()
   BottomBarMenus.Categories -> getCategories(Palette.GreyLight).AsBottomBarIcon()
+  BottomBarMenus.Updates -> {
+    //TODO: replace hardcoded value with actual state
+    var showUpdatesBubble by rememberSaveable { mutableStateOf(true) }
+
+    Box {
+      getDownloadIcon(Palette.GreyLight).AsBottomBarIcon()
+      if (showUpdatesBubble) {
+        Box(
+          modifier = Modifier
+            .padding(top = 3.dp)
+            .size(10.dp)
+            .background(Palette.Error, CircleShape)
+            .align(Alignment.TopEnd)
+        )
+      }
+    }
+  }
 }
 
 @Composable
