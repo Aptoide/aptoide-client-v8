@@ -16,6 +16,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.logging.HttpLoggingInterceptor.Level.BASIC
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit.SECONDS
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
@@ -53,6 +54,25 @@ object NetworkModule {
     httpLoggingInterceptor: HttpLoggingInterceptor,
   ): OkHttpClient =
     OkHttpClient.Builder()
+      .addInterceptor(userAgentInterceptor)
+      .addInterceptor(httpLoggingInterceptor)
+      .addInterceptor(versionCodeInterceptor)
+      .addInterceptor(languageInterceptor)
+      .build()
+
+  @DownloadsOKHttp
+  @Provides
+  @Singleton
+  fun provideDownloadsOkHttpClient(
+    userAgentInterceptor: UserAgentInterceptor,
+    versionCodeInterceptor: VersionCodeInterceptor,
+    languageInterceptor: AcceptLanguageInterceptor,
+    httpLoggingInterceptor: HttpLoggingInterceptor,
+  ): OkHttpClient =
+    OkHttpClient.Builder()
+      .connectTimeout(20, SECONDS)
+      .readTimeout(20, SECONDS)
+      .writeTimeout(20, SECONDS)
       .addInterceptor(userAgentInterceptor)
       .addInterceptor(httpLoggingInterceptor)
       .addInterceptor(versionCodeInterceptor)
@@ -113,7 +133,6 @@ object NetworkModule {
   @Singleton
   fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor =
     HttpLoggingInterceptor().apply { level = BASIC }
-
 }
 
 @Qualifier
@@ -159,6 +178,10 @@ annotation class BaseOkHttp
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class SimpleOkHttp
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class DownloadsOKHttp
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)

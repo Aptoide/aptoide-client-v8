@@ -1,6 +1,6 @@
 package cm.aptoide.pt.installer.network
 
-import cm.aptoide.pt.aptoide_network.di.SimpleOkHttp
+import cm.aptoide.pt.aptoide_network.di.DownloadsOKHttp
 import cm.aptoide.pt.extensions.checkMd5
 import cm.aptoide.pt.install_manager.dto.InstallationFile
 import cm.aptoide.pt.installer.di.DownloadsPath
@@ -24,7 +24,7 @@ import javax.inject.Inject
 
 class DownloaderRepository @Inject constructor(
   @DownloadsPath private val downloadsPath: File,
-  @SimpleOkHttp private val okHttpClient: OkHttpClient
+  @DownloadsOKHttp private val okHttpClient: OkHttpClient
 ) {
 
   companion object {
