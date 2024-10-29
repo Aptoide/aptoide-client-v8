@@ -9,6 +9,7 @@ import androidx.compose.material.Snackbar
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -106,23 +107,27 @@ fun MainView(navController: NavHostController) {
             }
           )
         }
-
-        if (apkfyApp != null && !apkfyShown) {
-          showBottomSheet(ApkfyBottomSheetContent(apkfyApp))
-          apkfyShown = true
+        LaunchedEffect(apkfyApp, apkfyShown) {
+          if (apkfyApp != null && !apkfyShown) {
+            showBottomSheet(ApkfyBottomSheetContent(apkfyApp))
+            apkfyShown = true
+          }
         }
-        if (promoCodeApp != null) {
-          showBottomSheet(
-            PromoCodeBottomSheet(
-              promoCodeApp = promoCodeApp,
-              showSnack = {
-                coroutineScope.launch {
-                  snackBarHostState.showSnackbar(message = it)
+
+        LaunchedEffect(promoCodeApp) {
+          if (promoCodeApp != null) {
+            showBottomSheet(
+              PromoCodeBottomSheet(
+                promoCodeApp = promoCodeApp,
+                showSnack = {
+                  coroutineScope.launch {
+                    snackBarHostState.showSnackbar(message = it)
+                  }
                 }
-              }
+              )
             )
-          )
-          clearPromoCode()
+            clearPromoCode()
+          }
         }
       }
     }

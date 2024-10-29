@@ -22,7 +22,11 @@ class BundlesUseCase @Inject constructor(
           bundle.type == WidgetType.APPC_BANNER
         }?.let { bonusBundle ->
           BonusData.setBonusData(bonusBundle.title, bonusBundle.tag)
-        } ?: urlsCache.putAll(mapOf(BonusData.currentData))
+        } ?: urlsCache.putAll(
+          mapOf(
+            "bonus-banner-more" to "listApps/store_id=3613731/group_id=15614123/order=rand"
+          )
+        )
       }
       .map {
         Bundle(
