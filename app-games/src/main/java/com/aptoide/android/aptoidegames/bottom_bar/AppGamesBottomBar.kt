@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
@@ -31,6 +30,7 @@ import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.runPreviewable
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.home.BottomBarMenus
+import com.aptoide.android.aptoidegames.home.Icon
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -94,12 +94,7 @@ fun RowScope.AddBottomNavigationItem(
     selected = isSelected,
     onClick = onItemClicked,
     alwaysShowLabel = true,
-    icon = {
-      Icon(
-        imageVector = item.icon,
-        contentDescription = null,
-      )
-    },
+    icon = { item.Icon() },
     label = {
       Text(
         text = stringResource(id = item.titleId),
