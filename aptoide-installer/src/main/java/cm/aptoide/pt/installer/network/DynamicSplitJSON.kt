@@ -1,6 +1,7 @@
-package cm.aptoide.pt.feature_apps.data.model
+package cm.aptoide.pt.installer.network
 
 import androidx.annotation.Keep
+import cm.aptoide.pt.feature_apps.data.model.Split
 import com.google.gson.annotations.SerializedName
 
 @Keep

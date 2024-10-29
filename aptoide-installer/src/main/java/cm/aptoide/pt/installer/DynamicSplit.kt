@@ -1,4 +1,6 @@
-package cm.aptoide.pt.feature_apps.data
+package cm.aptoide.pt.installer
+
+import cm.aptoide.pt.feature_apps.data.File
 
 data class DynamicSplit(
   val type: String,
