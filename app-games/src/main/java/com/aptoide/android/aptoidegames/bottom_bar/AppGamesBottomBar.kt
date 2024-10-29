@@ -67,6 +67,7 @@ fun AppGamesBottomBar(navController: NavController) {
               BottomBarMenus.Games -> genericAnalytics.sendBottomBarHomeClick()
               BottomBarMenus.Search -> genericAnalytics.sendBottomBarSearchClick()
               BottomBarMenus.Categories -> genericAnalytics.sendBottomBarCategoriesClick()
+              BottomBarMenus.Updates -> genericAnalytics.sendBottomBarUpdatesClick()
             }
             navController.navigate(item.route) {
               popUpTo(navController.graph.startDestinationId) {
@@ -136,6 +137,7 @@ val bottomNavigationItems = listOf(
   BottomBarMenus.Games,
   BottomBarMenus.Search,
   BottomBarMenus.Categories,
+  BottomBarMenus.Updates,
 )
 
 /**
