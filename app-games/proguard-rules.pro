@@ -43,3 +43,8 @@
 -keep interface com.google.firebase.installations.** {
   *;
 }
+
+#TODO https://github.com/google/dagger/issues/4323
+-keepclasseswithmembers,includedescriptorclasses class * {
+   @dagger.internal.KeepFieldType <fields>;
+}
