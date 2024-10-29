@@ -7,7 +7,6 @@ import cm.aptoide.pt.feature_apps.data.hasObb
 import cm.aptoide.pt.feature_apps.data.isAab
 import cm.aptoide.pt.feature_apps.data.isInCatappult
 import cm.aptoide.pt.feature_apps.domain.AppMetaUseCase
-import cm.aptoide.pt.feature_apps.domain.DynamicSplitsUseCase
 import cm.aptoide.pt.install_info_mapper.domain.InstallPackageInfoMapper
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallationFile

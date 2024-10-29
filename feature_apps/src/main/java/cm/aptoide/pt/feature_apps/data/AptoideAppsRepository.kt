@@ -6,7 +6,6 @@ import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7ListRespon
 import cm.aptoide.pt.feature_apps.data.model.AppJSON
 import cm.aptoide.pt.feature_apps.data.model.CampaignUrl
 import cm.aptoide.pt.feature_apps.data.model.CampaignUrls
-import cm.aptoide.pt.feature_apps.data.model.DynamicSplitJSON
 import cm.aptoide.pt.feature_apps.data.model.GetAppResponse
 import cm.aptoide.pt.feature_apps.data.model.GetMetaResponse
 import cm.aptoide.pt.feature_apps.data.model.VideoTypeJSON
@@ -187,13 +186,6 @@ internal class AptoideAppsRepository @Inject constructor(
         ?: throw IllegalStateException()
     }
 
-  override suspend fun getAppsDynamicSplits(md5: String): List<DynamicSplit> =
-    withContext(scope.coroutineContext) {
-      appsRemoteDataSource.getDynamicSplits(md5 = md5).list
-        ?.map(DynamicSplitJSON::toDomainModel)
-        ?: throw IllegalStateException()
-    }
-
   internal interface Retrofit {
     @GET("apps/get/{query}")
     suspend fun getAppsList(
@@ -248,13 +240,6 @@ internal class AptoideAppsRepository @Inject constructor(
       @Query("aab") aab: Int = 1,
       @Query("package_names") packageNames: String,
     ): BaseV7ListResponse<AppJSON>
-
-    //TODO: should this be in a separate module that specifically deals with aabs?
-    @GET("app/getDynamicSplits")
-    suspend fun getDynamicSplits(
-      @Query("apk_md5sum") md5: String,
-      @Query("aab") aab: Int = 1,
-    ): BaseV7ListResponse<DynamicSplitJSON>
   }
 }
 
@@ -388,26 +373,3 @@ private fun mapAab(app: AppJSON) = app.aab?.let {
     }
   )
 }
-
-fun DynamicSplitJSON.toDomainModel() = DynamicSplit(
-  type = type,
-  File(
-    vername = "",
-    vercode = 0,
-    md5 = this.md5sum,
-    filesize = this.filesize,
-    path = this.path,
-    path_alt = ""
-  ),
-  deliveryTypes = this.deliveryTypes,
-  splits = this.splits.map { split ->
-    File(
-      vername = "",
-      vercode = 0,
-      md5 = split.md5sum,
-      filesize = split.filesize,
-      path = split.path,
-      path_alt = ""
-    )
-  }
-)
