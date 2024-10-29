@@ -5,6 +5,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.selection.selectableGroup
@@ -89,6 +90,7 @@ fun RowScope.AddBottomNavigationItem(
   onItemClicked: () -> Unit,
 ) {
   BottomNavigationItem(
+    modifier = Modifier.fillMaxHeight(),
     selected = isSelected,
     onClick = onItemClicked,
     alwaysShowLabel = true,
