@@ -2,53 +2,59 @@ package cm.aptoide.pt.feature_updates.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cm.aptoide.pt.feature_updates.domain.InstalledApp
-import cm.aptoide.pt.feature_updates.domain.usecase.GetInstalledAppsUseCase
-import cm.aptoide.pt.feature_updates.domain.usecase.UninstallAppUseCase
+import cm.aptoide.pt.feature_apps.data.randomApp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
+import kotlin.random.Random
+import kotlin.random.nextInt
 
 @HiltViewModel
+//TODO Add real request/arguments
 class UpdatesViewModel @Inject constructor(
-  private val getInstalledAppsUseCase: GetInstalledAppsUseCase,
-  private val installedAppOpener: InstalledAppOpener,
-  private val uninstallAppUseCase: UninstallAppUseCase,
+
 ) :
   ViewModel() {
 
-  private val viewModelState = MutableStateFlow(
-    UpdatesViewModelState(emptyList())
-  )
+  private val viewModelState = MutableStateFlow<UpdatesUiState>(UpdatesUiState.Loading)
 
-  val uiState = viewModelState.map { it.toUiState() }
+  val uiState = viewModelState
     .stateIn(
       viewModelScope,
       SharingStarted.Eagerly,
-      viewModelState.value.toUiState()
+      viewModelState.value
     )
 
   init {
-    getInstalledAppsUseCase.getInstalledApps()
-      .onEach { installedAppsList ->
-        viewModelState.update { it.copy(installedAppsList = installedAppsList) }
-      }
-      .launchIn(viewModelScope)
+    reload()
   }
 
-  fun onOpenInstalledApp(packageName: String) =
-    installedAppOpener.openInstalledApp(packageName = packageName)
-
-  fun onUninstallApp(packageName: String) =
-    uninstallAppUseCase.uninstallApp(packageName = packageName)
+  fun reload() {
+    viewModelScope.launch {
+      viewModelState.update { UpdatesUiState.Loading }
+      try {
+        //TODO add real request
+        val result = List(Random.nextInt(0..5)) { randomApp }
+        viewModelState.update {
+          if (result.isEmpty()) {
+            UpdatesUiState.Empty
+          } else {
+            UpdatesUiState.Idle(updatesList = result)
+          }
+        }
+      } catch (t: Throwable) {
+        Timber.w(t)
+        //No Errors For now
+        viewModelState.update {
+          UpdatesUiState.Empty
+        }
+      }
+    }
+  }
 }
 
-private data class UpdatesViewModelState(val installedAppsList: List<InstalledApp>) {
-  fun toUiState(): UpdatesUiState = UpdatesUiState(installedAppsList)
-}
