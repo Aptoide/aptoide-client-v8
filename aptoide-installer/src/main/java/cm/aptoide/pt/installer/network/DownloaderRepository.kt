@@ -40,7 +40,16 @@ class DownloaderRepository @Inject constructor(
     versionCode: Long,
     installationFile: InstallationFile
   ): Flow<Double> {
-    val destinationFile = File(downloadsPath, installationFile.name)
+    val destinationDir = File(downloadsPath, packageName).apply {
+      if (!exists()) {
+        mkdirs().let {
+          if (!it) throw IllegalStateException("Can't create download folder: $downloadsPath/$packageName")
+        }
+      }
+    }
+
+    val destinationFile = File(destinationDir, installationFile.name)
+
     return flow {
       emit(0.0)
 

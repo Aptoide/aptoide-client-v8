@@ -69,8 +69,12 @@ class AptoideInstaller @Inject constructor(
     }
     installPermissions.checkIfCanInstall()
 
+    val filesDir = File(downloadsPath, packageName)
+
+    if (!filesDir.exists()) throw IllegalStateException("Necessary files do not exist for app $packageName")
+
     val checkFraction = 49
-    val (apkFiles, obbFiles) = installPackageInfo.getCheckedFiles {
+    val (apkFiles, obbFiles) = installPackageInfo.getCheckedFiles(filesDir) {
       emit((it * checkFraction).toInt())
     }
     val totalApkSize = apkFiles.totalLength
@@ -144,7 +148,7 @@ class AptoideInstaller @Inject constructor(
             is InstallResult.Abort -> throw AbortException(result.message)
             is InstallResult.Success -> {
               emit(100)
-              apkFiles.deleteFromCache()
+              filesDir.deleteRecursively()
               obbFiles.deleteFromCache()
             }
           }
@@ -173,6 +177,7 @@ class AptoideInstaller @Inject constructor(
   override fun cancel(packageName: String) = installInProgress.contains(packageName)
 
   private suspend fun InstallPackageInfo.getCheckedFiles(
+    downloadsDir: File,
     progress: suspend (Double) -> Unit,
   ): Pair<List<File>, List<File>> = installationFiles.run {
     val apks = mutableListOf<File>()
@@ -182,11 +187,11 @@ class AptoideInstaller @Inject constructor(
         InstallationFile.Type.BASE,
         InstallationFile.Type.PFD_INSTALL_TIME,
         InstallationFile.Type.PAD_INSTALL_TIME,
-        -> apks.add(value.toCheckedFile())
+          -> apks.add(value.toCheckedFile(downloadsDir))
 
         InstallationFile.Type.OBB_MAIN,
         InstallationFile.Type.OBB_PATCH,
-        -> obbs.add(value.toCheckedFile())
+          -> obbs.add(value.toCheckedFile(downloadsDir))
 
         else -> {}
       }
@@ -196,8 +201,8 @@ class AptoideInstaller @Inject constructor(
     apks to obbs
   }
 
-  private fun InstallationFile.toCheckedFile(): File =
-    File(downloadsPath, name)
+  private fun InstallationFile.toCheckedFile(parentDir: File): File =
+    File(parentDir, name)
       .takeIf { it.checkMd5(md5) }
       ?: throw IllegalStateException("MD5 check failed: File $name is corrupt")
 
