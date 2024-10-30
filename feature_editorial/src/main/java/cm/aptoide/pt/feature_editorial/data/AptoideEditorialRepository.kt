@@ -1,8 +1,7 @@
 package cm.aptoide.pt.feature_editorial.data
 
 import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7DataListResponse
-import cm.aptoide.pt.feature_apps.data.toDomainModel
-import cm.aptoide.pt.feature_campaigns.CampaignRepository
+import cm.aptoide.pt.feature_apps.data.AppMapper
 import cm.aptoide.pt.feature_editorial.data.model.ContentAction
 import cm.aptoide.pt.feature_editorial.data.model.ContentJSON
 import cm.aptoide.pt.feature_editorial.data.model.Data
@@ -23,7 +22,7 @@ import javax.inject.Singleton
 
 @Singleton
 internal class AptoideEditorialRepository @Inject constructor(
-  private val campaignRepository: CampaignRepository,
+  private val mapper: AppMapper,
   private val editorialRemoteDataSource: Retrofit,
   private val storeName: String,
 ) : EditorialRepository {
@@ -35,7 +34,7 @@ internal class AptoideEditorialRepository @Inject constructor(
   override suspend fun getArticle(editorialUrl: String): Article =
     editorialUrl.split("card/")[1]
       .let { editorialRemoteDataSource.getArticleDetail(it) }
-      .data?.toDomainModel(campaignRepository)
+      .data?.toDomainModel(mapper)
       ?: throw IllegalStateException()
 
   override suspend fun getArticlesMeta(
@@ -86,7 +85,7 @@ internal class AptoideEditorialRepository @Inject constructor(
 }
 
 private fun Data.toDomainModel(
-  campaignRepository: CampaignRepository,
+  mapper: AppMapper,
 ): Article = Article(
   id = id,
   title = title,
@@ -96,12 +95,12 @@ private fun Data.toDomainModel(
   date = date,
   views = views,
   relatedTag = RELATED_ARTICLE_CACHE_ID_PREFIX + id,
-  content = map(content, campaignRepository)
+  content = map(content, mapper)
 )
 
 fun map(
   content: List<ContentJSON>,
-  campaignRepository: CampaignRepository,
+  mapper: AppMapper,
 ): List<Paragraph> {
   val contentList = ArrayList<Paragraph>()
   val randomAdListId = UUID.randomUUID().toString()
@@ -118,10 +117,7 @@ fun map(
             image = media.image?.trim()?.replace(oldValue = " ", newValue = "")
           )
         },
-        app = it.app?.toDomainModel(
-          campaignRepository = campaignRepository,
-          adListId = randomAdListId
-        )
+        app = it.app?.let { mapper.map(it, randomAdListId) }
       )
     )
   }
