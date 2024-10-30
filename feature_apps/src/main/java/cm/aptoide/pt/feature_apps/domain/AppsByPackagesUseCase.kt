@@ -1,11 +1,11 @@
 package cm.aptoide.pt.feature_apps.domain
 
 import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_apps.data.AppsRepository
+import cm.aptoide.pt.feature_apps.data.AppsListRepository
 import javax.inject.Inject
 
 class AppsByPackagesUseCase @Inject constructor(
-  private val appsRepository: AppsRepository
+  private val appsListRepository: AppsListRepository
 ) : AppsListUseCase {
 
   /**
@@ -14,5 +14,5 @@ class AppsByPackagesUseCase @Inject constructor(
    *      com.unicostudio.blastfriends,com.android.nonexistent,air.com.playtika.slotomania
    */
   override suspend fun getAppsList(source: String): List<App> =
-    appsRepository.getAppsList(packageNames = source)
+    appsListRepository.getAppsList(packageNames = source)
 }
