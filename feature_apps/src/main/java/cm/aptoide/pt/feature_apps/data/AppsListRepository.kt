@@ -1,14 +1,10 @@
 package cm.aptoide.pt.feature_apps.data
 
-interface AppsRepository {
+interface AppsListRepository {
 
   suspend fun getAppsList(url: String, bypassCache: Boolean = false): List<App>
 
   suspend fun getAppsList(storeId: Long, groupId: Long, bypassCache: Boolean = false): List<App>
-
-  suspend fun getApp(packageName: String): App
-
-  suspend fun getAppMeta(source: String): App
 
   suspend fun getRecommended(path: String): List<App>
 
