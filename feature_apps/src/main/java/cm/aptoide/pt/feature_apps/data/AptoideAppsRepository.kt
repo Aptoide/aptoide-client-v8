@@ -34,59 +34,53 @@ internal class AptoideAppsRepository @Inject constructor(
   override suspend fun getAppsList(
     url: String,
     bypassCache: Boolean,
-  ): List<App> =
-    withContext(scope.coroutineContext) {
-      if (url.isEmpty()) {
-        throw IllegalStateException()
-      }
-      val query = url.split("listApps/")[1]
-      val randomAdListId = UUID.randomUUID().toString()
-      appsRemoteDataSource.getAppsList(
-        path = query,
-        storeName = storeName,
-        bypassCache = if (bypassCache) CacheConstants.NO_CACHE else null
-      )
-        .datalist
-        ?.list
-        ?.map {
-          it.toDomainModel(
-            campaignRepository = campaignRepository,
-            adListId = randomAdListId
-          )
-        }
-        ?: throw IllegalStateException()
+  ): List<App> = withContext(scope.coroutineContext) {
+    if (url.isEmpty()) {
+      throw IllegalStateException()
     }
+    val query = url.split("listApps/")[1]
+    val randomAdListId = UUID.randomUUID().toString()
+    appsRemoteDataSource.getAppsList(
+      path = query,
+      storeName = storeName,
+      bypassCache = if (bypassCache) CacheConstants.NO_CACHE else null
+    )
+      .datalist
+      ?.list
+      ?.map {
+        it.toDomainModel(
+          campaignRepository = campaignRepository,
+          adListId = randomAdListId
+        )
+      }
+      ?: throw IllegalStateException()
+  }
 
   override suspend fun getAppsList(
     storeId: Long,
     groupId: Long,
     bypassCache: Boolean,
-  ): List<App> =
-    withContext(scope.coroutineContext) {
-      val randomAdListId = UUID.randomUUID().toString()
-      appsRemoteDataSource.getAppsList(
-        storeId = storeId,
-        groupId = groupId,
-        bypassCache = if (bypassCache) CacheConstants.NO_CACHE else null
-      )
-        .datalist?.list?.map {
-          it.toDomainModel(
-            campaignRepository = campaignRepository,
-            adListId = randomAdListId
-          )
-        }
-        ?: throw IllegalStateException()
-    }
+  ): List<App> = withContext(scope.coroutineContext) {
+    val randomAdListId = UUID.randomUUID().toString()
+    appsRemoteDataSource.getAppsList(
+      storeId = storeId,
+      groupId = groupId,
+      bypassCache = if (bypassCache) CacheConstants.NO_CACHE else null
+    )
+      .datalist?.list?.map {
+        it.toDomainModel(
+          campaignRepository = campaignRepository,
+          adListId = randomAdListId
+        )
+      }
+      ?: throw IllegalStateException()
+  }
 
-  override suspend fun getApp(
-    packageName: String,
-    bypassCache: Boolean,
-  ): App =
+  override suspend fun getApp(packageName: String): App =
     withContext(scope.coroutineContext) {
       appsRemoteDataSource.getApp(
         path = packageName,
         storeName = if (packageName != "com.appcoins.wallet") storeName else null,
-        bypassCache = if (bypassCache) CacheConstants.NO_CACHE else null
       )
         .nodes.meta.data
         .toDomainModel(
@@ -95,32 +89,21 @@ internal class AptoideAppsRepository @Inject constructor(
         )
     }
 
-  override suspend fun getAppMeta(
-    source: String,
-    bypassCache: Boolean,
-  ): App =
+  override suspend fun getAppMeta(source: String): App =
     withContext(scope.coroutineContext) {
-
-      appsRemoteDataSource.getAppMeta(
-        path = source,
-        bypassCache = if (bypassCache) CacheConstants.NO_CACHE else null
-      ).data
+      appsRemoteDataSource.getAppMeta(path = source).data
         .toDomainModel(
           campaignRepository = campaignRepository,
           adListId = UUID.randomUUID().toString()
         )
     }
 
-  override suspend fun getRecommended(
-    path: String,
-    bypassCache: Boolean,
-  ): List<App> =
+  override suspend fun getRecommended(path: String): List<App> =
     withContext(scope.coroutineContext) {
       val randomAdListId = UUID.randomUUID().toString()
       appsRemoteDataSource.getRecommendedAppsList(
         path = path,
         storeName = storeName,
-        bypassCache = if (bypassCache) CacheConstants.NO_CACHE else null
       )
         .datalist
         ?.list
@@ -208,7 +191,6 @@ internal class AptoideAppsRepository @Inject constructor(
       @Query(value = "package_name", encoded = true) path: String,
       @Query("store_name") storeName: String? = null,
       @Query("aab") aab: Int = 1,
-      @Header(CacheConstants.CACHE_CONTROL_HEADER) bypassCache: String?,
     ): GetAppResponse
 
     @GET("app/getMeta/{source}")
@@ -216,7 +198,6 @@ internal class AptoideAppsRepository @Inject constructor(
       @Path(value = "source", encoded = true) path: String,
       @Query("store_name") storeName: String? = null,
       @Query("aab") aab: Int = 1,
-      @Header(CacheConstants.CACHE_CONTROL_HEADER) bypassCache: String?,
     ): GetMetaResponse
 
     @GET("apps/getRecommended/{query}")
@@ -224,7 +205,6 @@ internal class AptoideAppsRepository @Inject constructor(
       @Path(value = "query", encoded = true) path: String,
       @Query("store_name") storeName: String,
       @Query("aab") aab: Int = 1,
-      @Header(CacheConstants.CACHE_CONTROL_HEADER) bypassCache: String?,
     ): BaseV7DataListResponse<AppJSON>
 
     @GET("listAppVersions/")
