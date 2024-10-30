@@ -377,7 +377,6 @@ private fun mapAab(app: AppJSON) = app.aab?.let {
       Split(
         type = split.type,
         file = File(
-          _fileName = split.name,
           vername = app.file.vername,
           vercode = app.file.vercode,
           md5 = split.md5sum,
@@ -393,7 +392,6 @@ private fun mapAab(app: AppJSON) = app.aab?.let {
 fun DynamicSplitJSON.toDomainModel() = DynamicSplit(
   type = type,
   File(
-    _fileName = this.name,
     vername = "",
     vercode = 0,
     md5 = this.md5sum,
@@ -404,7 +402,6 @@ fun DynamicSplitJSON.toDomainModel() = DynamicSplit(
   deliveryTypes = this.deliveryTypes,
   splits = this.splits.map { split ->
     File(
-      _fileName = split.name,
       vername = "",
       vercode = 0,
       md5 = split.md5sum,
