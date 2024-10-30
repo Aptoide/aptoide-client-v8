@@ -451,6 +451,10 @@ internal class TaskInfoRepositoryMock : TaskInfoRepository {
   }
 
   fun get(pn: String): TaskInfo? = info.find { it.packageName == pn }
+
+  fun add(taskInfo: TaskInfo) = apply {
+    info.add(taskInfo)
+  }
 }
 
 // Crashes on duplicated calls for optimization reasons

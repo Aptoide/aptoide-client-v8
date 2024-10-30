@@ -77,15 +77,28 @@ internal class RealInstallManager(
       deviceStorage.availableFreeSpace
 
   override suspend fun restore() {
+    val tasksToRemove = mutableListOf<TaskInfo>()
     if (restored) return
     restored = true
     taskInfoRepository.getAll()
       .sortedBy(TaskInfo::timestamp)
-      .map {
-        getOrCreateApp(packageName = it.packageName).apply {
-          tasks.value = it.toTask().enqueue(alreadySaved = true)
+      .forEach { taskInfo ->
+        val app = getOrCreateApp(packageName = taskInfo.packageName)
+
+        if (taskInfo.type == Task.Type.INSTALL
+          && app.canInstall(taskInfo.installPackageInfo, taskInfo.constraints)
+            ?.takeUnless { it is OutOfSpaceException } != null
+        ) {
+          tasksToRemove.add(taskInfo)
+        } else {
+          app.apply {
+            tasks.value = taskInfo.toTask().enqueue(alreadySaved = true)
+          }
         }
       }
+    scope.launch {
+      taskInfoRepository.remove(*tasksToRemove.toTypedArray())
+    }
   }
 
   private fun getOrCreateApp(

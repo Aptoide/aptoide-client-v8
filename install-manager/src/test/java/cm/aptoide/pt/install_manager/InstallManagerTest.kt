@@ -14,7 +14,6 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
 import kotlin.time.Duration.Companion.hours
-import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 /**
@@ -319,6 +318,99 @@ internal class InstallManagerTest {
     val installManager = InstallManager.with(mocks)
     m And "network has a given state"
     mocks.networkConnection.currentState = initialNetworkState
+    m And "mocks operate with given speeds"
+    mocks.taskInfoRepository.setSpeed(taskInfoSpeed)
+    mocks.packageDownloader.setSpeed(downloaderSpeed)
+    mocks.packageInstaller.setSpeed(installerSpeed)
+
+    m When "restore saved tasks"
+    installManager.restore()
+    m And "get currently scheduled apps"
+    val scheduledInitially = installManager.scheduledApps
+    m And "get currently scheduled apps after first scheduled runnable task started"
+    scope.advanceTimeBy(10.seconds)
+    val scheduledAfterStart = installManager.scheduledApps
+    m And "wait until all runnable tasks finish"
+    scope.advanceTimeBy(3.hours)
+    m And "get currently scheduled apps after runnable tasks finished"
+    val scheduledAfterFinish = installManager.scheduledApps
+    m And "network changes to a new state"
+    mocks.networkConnection.update(newNetworkState)
+    m And "get currently scheduled apps after first scheduled now runnable task started"
+    scope.advanceTimeBy(10.seconds)
+    val scheduledAfterNetworkChang = installManager.scheduledApps
+    m And "get currently scheduled apps after now runnable tasks finished"
+    scope.advanceUntilIdle()
+    val scheduledAfterAllFinish = installManager.scheduledApps
+
+    m Then "all apps tasks were scheduled initially"
+    val restoredApps = savedTasksInfo.map(TaskInfo::packageName).map(installManager::getApp)
+    val restoredRunnableApps = getRunnableSavedTasksPackages(initialNetworkState)
+      .map(installManager::getApp)
+    val restoredRunnableAppsNewNetwork = getRunnableSavedTasksPackages(newNetworkState)
+      .map(installManager::getApp)
+      .minus(restoredRunnableApps.toSet())
+    assertEquals(
+      restoredApps,
+      scheduledInitially
+    )
+    m And "all apps tasks were scheduled except the first one after it was started"
+    assertEquals(
+      restoredApps - restoredRunnableApps.firstOrNull(),
+      scheduledAfterStart
+    )
+    m And "with a new network apps tasks that were not runnable were scheduled"
+    assertEquals(
+      restoredApps - restoredRunnableApps.toSet(),
+      scheduledAfterFinish
+    )
+    m And "with a new network apps tasks that were not runnable were scheduled except the first one after it was started"
+    assertEquals(
+      restoredApps - restoredRunnableApps.toSet() - restoredRunnableAppsNewNetwork.firstOrNull(),
+      scheduledAfterNetworkChang
+    )
+    m And "after all runnable tasks finished only apps tasks that can't run left scheduled"
+    assertEquals(
+      restoredApps - restoredRunnableApps.toSet() - restoredRunnableAppsNewNetwork.toSet(),
+      scheduledAfterAllFinish
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("speedsAndNetworkChangesProvider")
+  fun `Return scheduled tasks apps for restored tasks except already installed apps ordered by timestamp`(
+    comment: String,
+    initialNetworkState: NetworkConnection.State,
+    newNetworkState: NetworkConnection.State,
+    taskInfoSpeed: Speed,
+    downloaderSpeed: Speed,
+    installerSpeed: Speed,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "network has a given state"
+    mocks.networkConnection.currentState = initialNetworkState
+    m And "task info repository has tasks for already installed apps or higher version apps"
+    mocks.taskInfoRepository
+      .add(
+        TaskInfo(
+          packageName = currentPackage,
+          installPackageInfo = installInfo,
+          constraints = constraints.first(),
+          type = Task.Type.INSTALL,
+          timestamp = 300L
+        )
+      )
+      .add(
+        TaskInfo(
+          packageName = newerPackage,
+          installPackageInfo = installInfo,
+          constraints = constraints.first(),
+          type = Task.Type.INSTALL,
+          timestamp = 310L
+        )
+      )
     m And "mocks operate with given speeds"
     mocks.taskInfoRepository.setSpeed(taskInfoSpeed)
     mocks.packageDownloader.setSpeed(downloaderSpeed)
