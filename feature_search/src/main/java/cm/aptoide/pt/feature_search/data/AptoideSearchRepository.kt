@@ -1,7 +1,6 @@
 package cm.aptoide.pt.feature_search.data
 
-import cm.aptoide.pt.feature_apps.data.toDomainModel
-import cm.aptoide.pt.feature_campaigns.CampaignRepository
+import cm.aptoide.pt.feature_apps.data.AppMapper
 import cm.aptoide.pt.feature_search.data.database.SearchHistoryRepository
 import cm.aptoide.pt.feature_search.data.database.model.SearchHistoryEntity
 import cm.aptoide.pt.feature_search.data.network.RemoteSearchRepository
@@ -20,7 +19,7 @@ import javax.inject.Singleton
 
 @Singleton
 class AptoideSearchRepository @Inject constructor(
-  private val campaignRepository: CampaignRepository,
+  private val mapper: AppMapper,
   private val searchHistoryRepository: SearchHistoryRepository,
   private val remoteSearchRepository: RemoteSearchRepository,
   private val autoCompleteSuggestionsRepository: AutoCompleteSuggestionsRepository,
@@ -32,12 +31,7 @@ class AptoideSearchRepository @Inject constructor(
       if (searchResponse.isSuccessful) {
         searchResponse.body()?.datalist?.list?.let {
           val adListId = UUID.randomUUID().toString()
-          emit(SearchAppResult.Success(it.map { appJSON ->
-            appJSON.toDomainModel(
-              campaignRepository = campaignRepository,
-              adListId = adListId
-            )
-          }))
+          emit(SearchAppResult.Success(it.map { mapper.map(it, adListId) }))
         }
       } else {
         emit(SearchAppResult.Error(IllegalStateException()))
@@ -73,12 +67,7 @@ class AptoideSearchRepository @Inject constructor(
           val randomAdListId = UUID.randomUUID().toString()
           emit(
             PopularAppSearchResult.Success(
-              it.map { topSearchApp ->
-                topSearchApp.toDomainModel(
-                  campaignRepository = campaignRepository,
-                  adListId = randomAdListId
-                ).name
-              })
+              it.map { mapper.map(it, randomAdListId).name })
           )
         }
       } else {

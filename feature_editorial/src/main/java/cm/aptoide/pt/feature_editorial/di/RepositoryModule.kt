@@ -2,7 +2,7 @@ package cm.aptoide.pt.feature_editorial.di
 
 import cm.aptoide.pt.aptoide_network.di.RetrofitV7ActionItem
 import cm.aptoide.pt.aptoide_network.di.StoreName
-import cm.aptoide.pt.feature_campaigns.CampaignRepository
+import cm.aptoide.pt.feature_apps.data.AppMapper
 import cm.aptoide.pt.feature_editorial.data.AptoideEditorialRepository
 import cm.aptoide.pt.feature_editorial.data.EditorialRepository
 import dagger.Module
@@ -20,13 +20,13 @@ internal object RepositoryModule {
   @Provides
   @Singleton
   fun providesEditorialRepository(
-    campaignRepository: CampaignRepository,
+    mapper: AppMapper,
     @RetrofitV7ActionItem retrofit: Retrofit,
     @StoreName storeName: String,
   ): EditorialRepository = AptoideEditorialRepository(
-    campaignRepository,
-    retrofit.create(AptoideEditorialRepository.Retrofit::class.java),
-    storeName
+    mapper = mapper,
+    editorialRemoteDataSource = retrofit.create(AptoideEditorialRepository.Retrofit::class.java),
+    storeName = storeName
   )
 }
 
