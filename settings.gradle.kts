@@ -1,6 +1,5 @@
 include(
   ":app",
-  ":app-dt",
   ":app-games",
   ":aptoide-installer",
   ":aptoide-task-info",
