@@ -47,8 +47,9 @@ fun NavGraphBuilder.updatesScreen(
   val uiState by updatesViewModel.uiState.collectAsState()
 
   UpdatesScreen(uiState = uiState,
-    onInstalledAppClick = { updatesViewModel.onOpenInstalledApp(it) },
-    onInstalledAppLongClick = { updatesViewModel.onUninstallApp(it) }
+    //TODO OnClicks
+    onInstalledAppClick = { },
+    onInstalledAppLongClick = { }
   )
 }
 
@@ -66,7 +67,7 @@ fun UpdatesScreen(
       }
     ) {
       InstalledAppsList(
-        uiState.installedAppsList,
+        emptyList(), //TODO For now this is just an EmptyList, was uiState.installedAppsList
         onInstalledAppClick = { onInstalledAppClick(it) },
         onInstalledAppLongClick = { onInstalledAppLongClick(it) }
       )
