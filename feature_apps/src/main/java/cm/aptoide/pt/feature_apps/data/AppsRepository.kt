@@ -6,14 +6,11 @@ interface AppsRepository {
 
   suspend fun getAppsList(storeId: Long, groupId: Long, bypassCache: Boolean = false): List<App>
 
-  suspend fun getApp(packageName: String, bypassCache: Boolean = false): App
+  suspend fun getApp(packageName: String): App
 
-  suspend fun getAppMeta(
-    source: String,
-    bypassCache: Boolean = false,
-  ): App
+  suspend fun getAppMeta(source: String): App
 
-  suspend fun getRecommended(path: String, bypassCache: Boolean = false): List<App>
+  suspend fun getRecommended(path: String): List<App>
 
   suspend fun getCategoryAppsList(categoryName: String): List<App>
 
