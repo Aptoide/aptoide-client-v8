@@ -7,14 +7,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import cm.aptoide.pt.feature_updates.presentation.UpdatesUiState
+import cm.aptoide.pt.feature_updates.presentation.rememberUpdates
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.dto.BundleMeta
 import com.aptoide.android.aptoidegames.analytics.presentation.withBundleMeta
@@ -60,12 +58,11 @@ fun BottomBarMenus.Icon() = when (this) {
   BottomBarMenus.Search -> getSearch(Palette.GreyLight).AsBottomBarIcon()
   BottomBarMenus.Categories -> getCategories(Palette.GreyLight).AsBottomBarIcon()
   BottomBarMenus.Updates -> {
-    //TODO: replace hardcoded value with actual state
-    var showUpdatesBubble by rememberSaveable { mutableStateOf(true) }
+    val updatesUiState = rememberUpdates()
 
     Box {
       getDownloadIcon(Palette.GreyLight).AsBottomBarIcon()
-      if (showUpdatesBubble) {
+      if (updatesUiState is UpdatesUiState.Idle) {
         Box(
           modifier = Modifier
             .padding(top = 3.dp)
