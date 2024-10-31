@@ -19,5 +19,5 @@ fun Int.formatDownloads(): String {
     index++
   }
 
-  return String.format(Locale.ENGLISH, "%.1f%s+", value, suffixes[index])
+  return String.format(Locale.ENGLISH, "%d%s+", value.toInt(), suffixes[index])
 }
