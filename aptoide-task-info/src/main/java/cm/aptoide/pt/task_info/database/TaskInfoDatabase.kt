@@ -11,7 +11,7 @@ import cm.aptoide.pt.task_info.database.model.InstallationFileData
 import cm.aptoide.pt.task_info.database.model.TaskInfoData
 
 @Database(
-  version = 3,
+  version = 4,
   exportSchema = true,
   entities = [TaskInfoData::class, InstallationFileData::class],
   autoMigrations = [

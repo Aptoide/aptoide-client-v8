@@ -243,7 +243,6 @@ internal class InstallManagerTest {
     m When "not installed app install started"
     val notInstalledTask = installManager.getApp(notInstalledPackage).install(installInfo)
     m And "outdated version app update stated with unmetered network constraint"
-    scope.advanceTimeBy(1.milliseconds)
     val outdatedTask = installManager.getApp(outdatedPackage).install(
       installPackageInfo = installInfo,
       constraints = Constraints(
@@ -252,7 +251,6 @@ internal class InstallManagerTest {
       )
     )
     m And "current version app uninstall started"
-    scope.advanceTimeBy(1.milliseconds)
     val currentTask = installManager.getApp(currentPackage).uninstall()
     m And "get currently scheduled apps"
     val scheduledInitially = installManager.scheduledApps
@@ -408,7 +406,6 @@ internal class InstallManagerTest {
     m And "not installed app install started"
     val notInstalledTask = installManager.getApp(notInstalledPackage).install(installInfo)
     m And "outdated version app update stated with unmetered network constraint"
-    scope.advanceTimeBy(1.milliseconds)
     val outdatedTask = installManager.getApp(outdatedPackage).install(
       installPackageInfo = installInfo,
       constraints = Constraints(
@@ -417,7 +414,6 @@ internal class InstallManagerTest {
       )
     )
     m And "current version app uninstall started"
-    scope.advanceTimeBy(1.milliseconds)
     val currentTask = installManager.getApp(currentPackage).uninstall()
     m And "get currently scheduled apps after first scheduled runnable task started"
     scope.advanceTimeBy(10.seconds)
@@ -506,7 +502,6 @@ internal class InstallManagerTest {
     m And "not installed app install started"
     val notInstalledTask = installManager.getApp(notInstalledPackage).install(installInfo)
     m And "outdated version app update stated with unmetered network constraint"
-    scope.advanceTimeBy(1.milliseconds)
     val outdatedTask = installManager.getApp(outdatedPackage).install(
       installPackageInfo = installInfo,
       constraints = Constraints(
@@ -515,7 +510,6 @@ internal class InstallManagerTest {
       )
     )
     m And "current version app uninstall started"
-    scope.advanceTimeBy(1.milliseconds)
     val currentTask = installManager.getApp(currentPackage).uninstall()
     m And "get currently scheduled apps after first scheduled runnable task started"
     scope.advanceTimeBy(10.seconds)

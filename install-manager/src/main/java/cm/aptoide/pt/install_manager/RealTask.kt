@@ -86,19 +86,22 @@ internal class RealTask internal constructor(
           .collectErrorFor(Task.State.INSTALLING)
     } ?: Task.State.COMPLETED
     _stateAndProgress.emit(result to -1)
-    taskInfoRepository.removeAll(packageName)
+    taskInfoRepository.remove(taskInfo)
     appsCache.setBusy(packageName, false)
   }
 
   override fun allowDownloadOnMetered() {
     if (taskInfo.type == Task.Type.INSTALL && state == Task.State.PENDING) {
-      taskInfo = taskInfo.copy(
-        constraints = taskInfo.constraints.copy(
-          networkType = Constraints.NetworkType.ANY
-        )
-      )
       scope.launch {
-        taskInfoRepository.removeAll(packageName)
+        //Remove old task
+        taskInfoRepository.remove(taskInfo)
+
+        //Create new task
+        taskInfo = taskInfo.copy(
+          constraints = taskInfo.constraints.copy(
+            networkType = Constraints.NetworkType.ANY
+          )
+        )
         taskInfoRepository.saveJob(taskInfo)
         jobDispatcher.enqueue(this@RealTask)
       }
@@ -112,7 +115,7 @@ internal class RealTask internal constructor(
       val cancelled = packageDownloader.cancel(packageName) || packageInstaller.cancel(packageName)
       if (!cancelled) {
         _stateAndProgress.tryEmit(Task.State.CANCELED to -1)
-        taskInfoRepository.removeAll(packageName)
+        taskInfoRepository.remove(taskInfo)
         appsCache.setBusy(packageName, false)
       }
     }

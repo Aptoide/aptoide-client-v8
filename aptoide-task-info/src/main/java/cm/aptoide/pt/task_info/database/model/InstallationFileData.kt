@@ -7,7 +7,7 @@ import cm.aptoide.pt.install_manager.dto.InstallationFile
 @Entity(tableName = "InstallationFile")
 data class InstallationFileData(
   @PrimaryKey(autoGenerate = true) val id: Int? = null,
-  val packageName: String,
+  val taskTimestamp: Long,
   val name: String,
   val type: InstallationFile.Type,
   val md5: String,

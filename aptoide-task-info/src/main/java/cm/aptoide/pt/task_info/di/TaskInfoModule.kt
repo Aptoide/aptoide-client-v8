@@ -30,6 +30,8 @@ object TaskInfoModule {
   @Provides
   fun provideTaskInfoDatabase(@ApplicationContext appContext: Context): TaskInfoDatabase =
     Room.databaseBuilder(appContext, TaskInfoDatabase::class.java, "aptoide_task_info.db")
+      .fallbackToDestructiveMigration()
+      .fallbackToDestructiveMigrationOnDowngrade()
       .addMigrations(FirstMigration())
       .build()
 }

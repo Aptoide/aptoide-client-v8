@@ -14,6 +14,6 @@ interface TaskInfoDao {
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   suspend fun save(appInfoEntity: TaskInfoData)
 
-  @Query("DELETE FROM TaskInfo WHERE packageName = :packageName")
-  suspend fun remove(packageName: String)
+  @Query("DELETE FROM TaskInfo WHERE timestamp IN (:timestamp)")
+  suspend fun remove(vararg timestamp: Long)
 }

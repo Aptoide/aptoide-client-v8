@@ -9,6 +9,6 @@ interface InstallationFileDao {
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   suspend fun save(appInfoEntity: List<InstallationFileData>)
 
-  @Query("DELETE FROM InstallationFile WHERE packageName = :packageName")
-  suspend fun remove(packageName: String)
+  @Query("DELETE FROM InstallationFile WHERE taskTimestamp IN (:timestamp)")
+  suspend fun remove(vararg timestamp: Long)
 }
