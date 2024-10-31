@@ -57,7 +57,7 @@ class AptoideTaskInfoRepository @Inject constructor(
     installationFileDao.save(
       taskInfo.installPackageInfo.installationFiles.map {
         InstallationFileData(
-          packageName = taskInfo.packageName,
+          taskTimestamp = taskInfo.timestamp,
           name = it.name,
           type = it.type,
           md5 = it.md5,
@@ -70,9 +70,10 @@ class AptoideTaskInfoRepository @Inject constructor(
     )
   }
 
-  override suspend fun removeAll(packageName: String) {
-    taskInfoDao.remove(packageName)
-    installationFileDao.remove(packageName)
+  override suspend fun remove(vararg taskInfo: TaskInfo) {
+    val timestamps = taskInfo.map { it.timestamp }.toLongArray()
+    taskInfoDao.remove(*timestamps)
+    installationFileDao.remove(*timestamps)
   }
 }
 

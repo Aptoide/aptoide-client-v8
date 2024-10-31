@@ -6,11 +6,11 @@ import cm.aptoide.pt.install_manager.Task
 
 @Entity(tableName = "TaskInfo")
 data class TaskInfoData(
-  @PrimaryKey val packageName: String,
+  @PrimaryKey val timestamp: Long,
+  val packageName: String,
   val versionCode: Long,
   val versionName: String,
   val constraints: String,
   val type: Task.Type,
-  val timestamp: Long,
   val payload: String?,
 )

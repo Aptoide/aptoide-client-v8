@@ -26,10 +26,10 @@ interface TaskInfoRepository {
   suspend fun saveJob(taskInfo: TaskInfo)
 
   /**
-   * Removes all enqueued task jobs by package name.
+   * Removes enqueued task job.
    *
-   * @param packageName - a package name
+   * @param taskInfo - the task to remove
    */
-  suspend fun removeAll(packageName: String)
+  suspend fun remove(vararg taskInfo: TaskInfo)
 }
 

@@ -5,6 +5,6 @@ import androidx.room.Relation
 
 data class TaskInfoWithFiles(
   @Embedded val taskInfo: TaskInfoData,
-  @Relation(parentColumn = "packageName", entityColumn = "packageName")
+  @Relation(parentColumn = "timestamp", entityColumn = "taskTimestamp")
   val installationFiles: List<InstallationFileData>
 )

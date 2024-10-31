@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.currentTime
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.withTimeoutOrNull
@@ -48,7 +49,11 @@ internal data class Mocks(internal val scope: TestScope) {
 @ExperimentalCoroutinesApi
 internal fun InstallManager.Companion.with(mocks: Mocks): InstallManager = RealInstallManager(
   scope = mocks.scope,
-  currentTime = { mocks.scope.currentTime },
+  currentTime = {
+    mocks.scope.currentTime.also {
+      mocks.scope.advanceTimeBy(1.milliseconds)
+    }
+  },
   deviceStorage = mocks.deviceStorageMock,
   sizeEstimator = mocks.sizeEstimatorMock,
   packageInfoRepository = mocks.packageInfoRepository,
@@ -394,7 +399,7 @@ internal class TaskInfoRepositoryMock : TaskInfoRepository {
 
   private var allCalled = false
   private val saveCalledFor: MutableSet<TaskInfo> = mutableSetOf()
-  private val removeAllCalledFor: MutableSet<String> = mutableSetOf()
+  private val removeAllCalledFor: MutableSet<TaskInfo> = mutableSetOf()
   private val tryFail: suspend () -> Unit = {
     delay(delay)
     if (shouldFail) throw RuntimeException("Problem!")
@@ -419,23 +424,29 @@ internal class TaskInfoRepositoryMock : TaskInfoRepository {
   }
 
   override suspend fun saveJob(taskInfo: TaskInfo) {
-    if (!saveCalledFor.add(taskInfo)) {
-      throw java.lang.IllegalStateException("Duplicate call for ${taskInfo.packageName}")
+    taskInfo.run {
+      if (!saveCalledFor.add(taskInfo)) {
+        throw java.lang.IllegalStateException("Duplicate call for $packageName with timestamp $timestamp")
+      }
+      tryFail()
+      if (!info.add(taskInfo)) {
+        throw java.lang.IllegalStateException("$packageName with timestamp $timestamp already saved")
+      }
+      removeAllCalledFor.remove(taskInfo)
     }
-    tryFail()
-    if (!info.add(taskInfo)) {
-      throw java.lang.IllegalStateException("${taskInfo.packageName} already saved")
-    }
-    removeAllCalledFor.remove(taskInfo.packageName)
   }
 
-  override suspend fun removeAll(packageName: String) {
-    if (!removeAllCalledFor.add(packageName)) {
-      throw java.lang.IllegalStateException("Duplicate call for $packageName")
+  override suspend fun remove(vararg taskInfo: TaskInfo) {
+    taskInfo.forEach {
+      if (!removeAllCalledFor.add(it)) {
+        throw java.lang.IllegalStateException("Duplicate call for ${it.packageName} at timestamp ${it.timestamp}")
+      }
     }
     tryFail()
-    if (!info.removeAll { it.packageName == packageName }) {
-      throw java.lang.IllegalStateException("$packageName already removed")
+    taskInfo.forEach {
+      if (!info.remove(it)) {
+        throw java.lang.IllegalStateException("${it.packageName} with timestamp ${it.timestamp} already removed")
+      }
     }
   }
 
