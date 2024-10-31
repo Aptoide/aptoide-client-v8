@@ -11,6 +11,7 @@ import cm.aptoide.pt.feature_apps.data.AppsListMapper
 import cm.aptoide.pt.feature_apps.data.model.AppJSON
 import cm.aptoide.pt.feature_updates.data.UpdatesRepository
 import cm.aptoide.pt.feature_updates.di.PrioritizedPackagesFilter
+import cm.aptoide.pt.feature_updates.presentation.UpdatesNotificationProvider
 import cm.aptoide.pt.install_manager.InstallManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -31,6 +32,7 @@ class Updates @Inject constructor(
   private val appsListMapper: AppsListMapper,
   @PrioritizedPackagesFilter private val prioritizedPackages: List<String>,
   private val installManager: InstallManager,
+  private val updatesNotificationBuilder: UpdatesNotificationProvider
 ) {
 
   val mutex: Mutex = Mutex()
@@ -69,6 +71,9 @@ class Updates @Inject constructor(
       }
     val updates = updatesRepository.loadUpdates(apksData)
     updatesRepository.replaceWith(*updates.toTypedArray())
+    if (updates.isNotEmpty()) {
+      updatesNotificationBuilder.showUpdatesNotification(updates.size)
+    }
   }
 
   suspend fun getAppsUpdates(): Flow<List<App>> {

@@ -59,6 +59,9 @@ fun updatesScreen() = ScreenData.withAnalytics(
   )
 }
 
+fun buildUpdatesDeepLinkUri() =
+  BuildConfig.DEEP_LINK_SCHEMA + updatesRoute
+
 @Composable
 fun UpdatesScreen(
   updatesUiState: UpdatesUiState,
