@@ -24,6 +24,21 @@ interface App {
   val taskFlow: Flow<Task?>
 
   /**
+   * Checks if can install.
+   *
+   * @param installPackageInfo - a package info to use for the installation
+   * @param constraints - constraints to respect
+   * @return null if can
+   * @return [IllegalStateException] if another task is already running
+   * @return [IllegalArgumentException] if same or newer version is already known to be installed
+   * @return [OutOfSpaceException] if there is not enough space to download and install
+   */
+  fun canInstall(
+    installPackageInfo: InstallPackageInfo,
+    constraints: Constraints
+  ): Throwable?
+
+  /**
    * Creates an installation task.
    *
    * @param installPackageInfo - a package info to use for the installation
