@@ -52,20 +52,32 @@ internal class RealApp(
     _packageInfo.value = packageInfoRepository.get(packageName)
   }
 
+  override fun canInstall(
+    installPackageInfo: InstallPackageInfo,
+    constraints: Constraints
+  ): Throwable? {
+    if (task != null) return IllegalStateException("Another task is already queued")
+    val vcDiff = (versionCode ?: 0) - installPackageInfo.versionCode
+    if (vcDiff == 0L) return IllegalArgumentException("This version is already installed")
+    if (vcDiff > 0L) return IllegalArgumentException("Newer version is installed")
+    val missingSpace = getMissingSpace(sizeEstimator.getTotalInstallationSize(installPackageInfo))
+    if (constraints.checkForFreeSpace && missingSpace > 0) {
+      return OutOfSpaceException(
+        missingSpace = missingSpace,
+        message = "Not enough free space to download and install"
+      )
+    }
+
+    return null
+  }
+
   override fun install(
     installPackageInfo: InstallPackageInfo,
     constraints: Constraints,
   ): Task {
-    if (task != null) throw IllegalStateException("Another task is already queued")
-    val vcDiff = (versionCode ?: 0) - installPackageInfo.versionCode
-    if (vcDiff == 0L) throw IllegalArgumentException("This version is already installed")
-    if (vcDiff > 0L) throw IllegalArgumentException("Newer version is installed")
-    val missingSpace = getMissingSpace(sizeEstimator.getTotalInstallationSize(installPackageInfo))
-    if (constraints.checkForFreeSpace && missingSpace > 0)
-      throw OutOfSpaceException(
-        missingSpace = missingSpace,
-        message = "Not enough free space to download and install"
-      )
+    canInstall(installPackageInfo, constraints)?.let {
+      throw it
+    }
     return taskFactory.enqueue(
       packageName = packageName,
       type = Task.Type.INSTALL,
