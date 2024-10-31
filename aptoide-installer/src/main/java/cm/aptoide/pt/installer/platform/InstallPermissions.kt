@@ -13,6 +13,9 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
+const val REQUEST_INSTALL_PACKAGES_NOT_ALLOWED = "REQUEST_INSTALL_PACKAGES permission not allowed"
+const val WRITE_EXTERNAL_STORAGE_NOT_ALLOWED = "WRITE_EXTERNAL_STORAGE permission not allowed"
+
 interface InstallPermissions {
   /**
    * Asks for installation permissions. Throws [AbortException] if user denies.
@@ -42,9 +45,11 @@ class InstallPermissionsImpl @Inject constructor(
           )
         )
       } else {
-        throw AbortException("Not allowed")
+        throw AbortException(REQUEST_INSTALL_PACKAGES_NOT_ALLOWED)
       }
-      if (!context.hasPackageInstallsPermission()) throw AbortException("Not allowed")
+      if (!context.hasPackageInstallsPermission()) throw AbortException(
+        REQUEST_INSTALL_PACKAGES_NOT_ALLOWED
+      )
     }
   }
 
@@ -58,7 +63,7 @@ class InstallPermissionsImpl @Inject constructor(
               Manifest.permission.WRITE_EXTERNAL_STORAGE
             )
           ) {
-            throw AbortException("Not allowed")
+            throw AbortException(WRITE_EXTERNAL_STORAGE_NOT_ALLOWED)
           }
 
           //Need to show rationale
@@ -67,10 +72,10 @@ class InstallPermissionsImpl @Inject constructor(
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
               )
             ) {
-              throw AbortException("Not allowed")
+              throw AbortException(WRITE_EXTERNAL_STORAGE_NOT_ALLOWED)
             }
           } else {
-            throw AbortException("Not allowed")
+            throw AbortException(WRITE_EXTERNAL_STORAGE_NOT_ALLOWED)
           }
 
           //Need to open settings
@@ -82,10 +87,10 @@ class InstallPermissionsImpl @Inject constructor(
               )
             )
             if (!context.hasWriteExternalStoragePermission()) throw AbortException(
-              "Not allowed"
+              WRITE_EXTERNAL_STORAGE_NOT_ALLOWED
             )
           } else {
-            throw AbortException("Not allowed")
+            throw AbortException(WRITE_EXTERNAL_STORAGE_NOT_ALLOWED)
           }
         }
       }
