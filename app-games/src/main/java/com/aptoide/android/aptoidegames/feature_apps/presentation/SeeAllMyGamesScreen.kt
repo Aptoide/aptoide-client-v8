@@ -18,7 +18,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -33,7 +32,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.ScreenData
-import cm.aptoide.pt.extensions.getAppIconDrawable
 import cm.aptoide.pt.feature_apps.data.randomMyGamesApp
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
@@ -104,12 +102,8 @@ fun SeeAllMyGamesViewContent(
           items = uiState.installedAppsList,
           key = { it.packageName }
         ) {
-          val icon = remember(
-            key1 = it.packageName,
-            key2 = localContext
-          ) {
-            localContext.getAppIconDrawable(it.packageName)
-          }
+          val icon = rememberAppIconDrawable(it.packageName, localContext)
+
           AppItem(
             name = it.name,
             icon = icon,

@@ -22,13 +22,13 @@ import cm.aptoide.pt.download_view.presentation.DownloadUiState.Installed
 import cm.aptoide.pt.download_view.presentation.DownloadUiState.Outdated
 import cm.aptoide.pt.download_view.presentation.DownloadUiState.Uninstalling
 import cm.aptoide.pt.download_view.presentation.DownloadUiState.Waiting
-import cm.aptoide.pt.extensions.getAppIconDrawable
 import cm.aptoide.pt.extensions.getAppName
 import cm.aptoide.pt.extensions.getAppSize
 import cm.aptoide.pt.feature_apps.data.emptyApp
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.design_system.SecondarySmallOutlinedButton
+import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberAppIconDrawable
 import com.aptoide.android.aptoidegames.installer.presentation.installViewStates
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -41,7 +41,7 @@ fun OutOfSpaceAppItem(packageName: String) {
     appSize = context.getAppSize(packageName),
     name = context.getAppName(packageName),
   )
-  val appIcon = context.getAppIconDrawable(packageName)
+  val appIcon = rememberAppIconDrawable(packageName, context)
   val (state) = installViewStates(
     app = app,
   )

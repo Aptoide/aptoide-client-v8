@@ -1,8 +1,6 @@
 package com.aptoide.android.aptoidegames.feature_apps.presentation
 
-import android.content.Context
 import android.graphics.drawable.Drawable
-import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -28,7 +26,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -42,8 +39,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
-import cm.aptoide.pt.extensions.getAppIconDrawable
-import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.feature_apps.data.MyGamesApp
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
@@ -137,27 +132,6 @@ fun MyGamesBundleViewContent(
     }
   }
 }
-
-@Composable
-fun rememberAppIconDrawable(
-  packageName: String,
-  context: Context,
-): Drawable? =
-  runPreviewable(preview = {
-    remember(
-      key1 = packageName,
-      key2 = context
-    ) {
-      getDrawable(context, R.mipmap.ic_launcher)
-    }
-  }, real = {
-    remember(
-      key1 = packageName,
-      key2 = context
-    ) {
-      context.getAppIconDrawable(packageName)
-    }
-  })
 
 @Composable
 fun MyGamesAppsListView(content: @Composable ColumnScope.() -> Unit) {
