@@ -142,7 +142,7 @@ fun CategoryGridView(
       modifier = Modifier
         .padding(bottom = 8.dp)
         .size(88.dp)
-        .background(color = Palette.Primary)
+        .background(color = Palette.Primary.copy(alpha = 0.1f))
     ) {
       AptoideAsyncImage(
         modifier = Modifier
@@ -151,7 +151,7 @@ fun CategoryGridView(
         data = icon ?: R.drawable.category_default_icon,
         placeholder = false,
         contentDescription = null,
-        colorFilter = ColorFilter.tint(Palette.Black)
+        colorFilter = ColorFilter.tint(Palette.Primary)
       )
     }
     Text(
