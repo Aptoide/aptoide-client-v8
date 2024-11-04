@@ -26,13 +26,11 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.CollectionInfo
@@ -121,7 +119,7 @@ fun MyGamesBundleViewContent(
         hasMoreAction = true,
         onClick = onSeeMoreClick,
         titleColor = Palette.White,
-        iconColor = Palette.White,
+        iconColor = Palette.Primary,
       )
       MyGamesListView(size = uiState.installedAppsList.size) {
         itemsIndexed(
@@ -184,7 +182,7 @@ fun MyGamesWrapper(content: @Composable BoxScope.() -> Unit) {
       .padding(start = 16.dp)
       .fillMaxWidth()
       .defaultMinSize(minHeight = 208.dp)
-      .background(Palette.Secondary),
+      .background(Palette.GreyDark),
     contentAlignment = Alignment.Center
   ) {
     content()
@@ -216,8 +214,7 @@ fun MyGameView(
     AptoideAsyncImage(
       modifier = Modifier
         .padding(bottom = 8.dp)
-        .size(88.dp)
-        .clip(RoundedCornerShape(16.dp)),
+        .size(88.dp),
       data = icon,
       contentDescription = null,
     )
@@ -242,7 +239,7 @@ fun MyGamesListView(
   LazyRow(
     modifier = Modifier
       .semantics { collectionInfo = CollectionInfo(1, size) }
-      .padding(bottom = 20.dp)
+      .padding(bottom = 36.dp)
       .fillMaxWidth()
       .wrapContentHeight(),
     state = lazyListState,
