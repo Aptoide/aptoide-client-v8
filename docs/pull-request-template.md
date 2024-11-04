@@ -15,11 +15,11 @@
 
 **How should this be manually tested?**
 
-  Flow on how to test this or QA Tickets related to this use-case: [APP-XXXX](https://aptoide.atlassian.net/browse/APP-XXXX)
+  Flow on how to test this or QA Tickets related to this use-case: [AND-XXXX](https://aptoide.atlassian.net/browse/AND-XXXX)
 
 **What are the relevant tickets?**
 
-  Tickets related to this pull-request: [APP-XXXX](https://aptoide.atlassian.net/browse/APP-XXXX)
+  Tickets related to this pull-request: [AND-XXXX](https://aptoide.atlassian.net/browse/AND-XXXX)
 
 **Questions:**
 
