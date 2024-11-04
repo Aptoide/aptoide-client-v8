@@ -91,7 +91,7 @@ class PromoCodeBottomSheet(
 @Composable
 fun PromoCodeBottomSheetContent(
   appName: String,
-  appIcon: Drawable,
+  appIcon: Drawable?,
   walletAppUiState: AppUiState,
   dismiss: () -> Unit,
   navigate: (String) -> Unit,
