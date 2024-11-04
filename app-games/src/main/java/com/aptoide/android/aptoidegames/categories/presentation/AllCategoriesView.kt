@@ -179,7 +179,7 @@ fun CategoryLargeItem(
       .semantics(mergeDescendants = true) { }
       .clickable(onClick = onClick)
       .aspectRatio(160f / 184f)
-      .background(color = Palette.Primary)
+      .background(color = Palette.Primary.copy(alpha = 0.1f))
   ) {
     Spacer(modifier = Modifier.weight(1f))
     AptoideAsyncImage(
@@ -188,7 +188,7 @@ fun CategoryLargeItem(
       data = icon ?: R.drawable.category_default_icon,
       placeholder = false,
       contentDescription = null,
-      colorFilter = ColorFilter.tint(Palette.Black)
+      colorFilter = ColorFilter.tint(Palette.Primary)
     )
     Text(
       modifier = Modifier
@@ -199,7 +199,7 @@ fun CategoryLargeItem(
       textAlign = TextAlign.Center,
       maxLines = 2,
       overflow = TextOverflow.Ellipsis,
-      color = Palette.Black,
+      color = Palette.Primary,
       style = AGTypography.InputsL
     )
   }
@@ -207,7 +207,7 @@ fun CategoryLargeItem(
 
 @PreviewDark
 @Composable
-fun LandscapePaymentView() {
+fun PreviewAllCategoriesView() {
   val uiStateFake =
     AllCategoriesUiState(List(Random.nextInt(until = 20)) {
       randomCategory
