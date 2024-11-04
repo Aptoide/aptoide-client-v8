@@ -22,13 +22,13 @@ import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.PreviewLandscapeDark
 import cm.aptoide.pt.extensions.format
-import cm.aptoide.pt.extensions.getAppIconDrawable
 import cm.aptoide.pt.extensions.getAppName
 import cm.aptoide.pt.extensions.runPreviewable
 import com.appcoins.payments.arch.ProductInfoData
 import com.appcoins.payments.arch.emptyProductInfoData
 import com.appcoins.payments.manager.presentation.rememberProductInfo
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
+import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberAppIconDrawable
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -95,7 +95,7 @@ private fun PurchaseInfoRowPortrait(
   modifier: Modifier = Modifier,
 ) {
   val localContext = LocalContext.current
-  val appIcon = localContext.getAppIconDrawable(buyingPackage)
+  val appIcon = rememberAppIconDrawable(buyingPackage, localContext)
   val appName = localContext.getAppName(buyingPackage).takeIf(String::isNotBlank)
 
   Row(
@@ -142,7 +142,7 @@ private fun PurchaseInfoRowLandscape(
   modifier: Modifier = Modifier,
 ) {
   val localContext = LocalContext.current
-  val appIcon = localContext.getAppIconDrawable(buyingPackage)
+  val appIcon = rememberAppIconDrawable(buyingPackage, localContext)
   val appName = localContext.getAppName(buyingPackage).takeIf(String::isNotBlank)
 
   Row(
