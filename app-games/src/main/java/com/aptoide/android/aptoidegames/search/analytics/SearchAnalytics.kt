@@ -42,6 +42,15 @@ class SearchAnalytics(
     )
   }
 
+  fun sendEmptySearchResultClickEvent(
+    searchMeta: SearchMeta,
+  ) {
+    biAnalytics.logEvent(
+      name = "Search_Result_Click",
+      params = mapOf(P_POSITION to "empty") + searchMeta.toBIParameters(null)
+    )
+  }
+
   companion object {
     private const val P_POSITION = "position"
   }

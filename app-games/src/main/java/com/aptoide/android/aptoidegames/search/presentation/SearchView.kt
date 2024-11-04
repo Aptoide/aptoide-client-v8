@@ -156,7 +156,10 @@ fun searchScreen() = ScreenData.withAnalytics(
           buildAppViewRoute(app).withItemPosition(index)
         )
       },
-      onItemInstallStarted = {}
+      onItemInstallStarted = {},
+      onEmptyView = {
+        searchMeta?.let { searchAnalytics.sendEmptySearchResultClickEvent(it) }
+      }
     )
   }
 }
@@ -171,6 +174,7 @@ fun SearchView(
   onSearchQueryClick: () -> Unit,
   onItemClick: (Int, App) -> Unit,
   onItemInstallStarted: (App) -> Unit,
+  onEmptyView: () -> Unit,
 ) {
   Column {
     SearchAppBar(
@@ -203,6 +207,7 @@ fun SearchView(
 
       is SearchUiState.Results -> {
         if (uiState.searchResults.isEmpty()) {
+          onEmptyView()
           EmptyView(text = stringResource(R.string.search_empty_body, searchValue))
         } else {
           SearchResultsView(
