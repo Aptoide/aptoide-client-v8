@@ -142,20 +142,20 @@ fun MyGamesBundleViewContent(
 fun rememberAppIconDrawable(
   packageName: String,
   context: Context,
-): Drawable =
+): Drawable? =
   runPreviewable(preview = {
     remember(
       key1 = packageName,
       key2 = context
     ) {
-      getDrawable(context, R.mipmap.ic_launcher)!!
+      getDrawable(context, R.mipmap.ic_launcher)
     }
   }, real = {
     remember(
       key1 = packageName,
       key2 = context
     ) {
-      context.getAppIconDrawable(packageName)!!
+      context.getAppIconDrawable(packageName)
     }
   })
 
@@ -200,7 +200,7 @@ fun MyGamesEmptyView(content: @Composable ColumnScope.() -> Unit) {
 
 @Composable
 fun MyGameView(
-  icon: Drawable,
+  icon: Drawable?,
   name: String,
   onClick: () -> Unit = {},
 ) {

@@ -60,7 +60,7 @@ fun ApplicationInfo.getSplitsSize(): Long = splitPublicSourceDirs
   ?.reduce { acc, it -> acc + it }
   ?: 0
 
-fun ApplicationInfo.loadIconDrawable(packageManager: PackageManager): Drawable =
+fun ApplicationInfo.loadIconDrawable(packageManager: PackageManager): Drawable? = runCatching {
   loadUnbadgedIcon(packageManager)
     .let { drawable ->
       if (drawable is AdaptiveIconDrawable) {
@@ -72,3 +72,4 @@ fun ApplicationInfo.loadIconDrawable(packageManager: PackageManager): Drawable =
         drawable
       }
     }
+}.getOrNull()
