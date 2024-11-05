@@ -219,6 +219,7 @@ dependencies {
   implementation(project(ModuleDependency.APTOIDE_TASK_INFO))
   implementation(project(ModuleDependency.NETWORK_LISTENER))
   implementation(project(ModuleDependency.FEATURE_SEARCH))
+  implementation(project(ModuleDependency.FEATURE_UPDATES))
   implementation(project(ModuleDependency.YOUTUBE_VIDEO_PLAYER))
   implementation(project(ModuleDependency.INSTALL_INFO_MAPPER))
   implementation(project(ModuleDependency.FEATURE_APKFY))

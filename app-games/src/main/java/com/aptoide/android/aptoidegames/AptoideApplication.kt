@@ -10,6 +10,7 @@ import androidx.work.Configuration
 import androidx.work.Configuration.Provider
 import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
 import cm.aptoide.pt.feature_categories.analytics.AptoideAnalyticsInfoProvider
+import cm.aptoide.pt.feature_updates.data.UpdatesWorker
 import cm.aptoide.pt.install_manager.InstallManager
 import coil.ImageLoader
 import coil.ImageLoaderFactory
@@ -115,6 +116,7 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
     initIndicative()
     setUserProperties()
     AptoideMMPCampaign.init(BuildConfig.OEMID, BuildConfig.UTM_SOURCE)
+    UpdatesWorker.enqueue(this)
   }
 
   private fun initIndicative() = biAnalytics.setup(
