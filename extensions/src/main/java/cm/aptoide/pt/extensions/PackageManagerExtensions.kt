@@ -11,6 +11,7 @@ import android.os.Build
 import android.os.Environment
 import androidx.annotation.RequiresApi
 import java.io.File
+import java.security.MessageDigest
 
 private const val systemFlags =
   ApplicationInfo.FLAG_SYSTEM or ApplicationInfo.FLAG_UPDATED_SYSTEM_APP
@@ -34,14 +35,21 @@ fun PackageManager.getPackageInfo(packageName: String): PackageInfo? = try {
   } else {
     getPackageInfo(packageName, oldFlags)
   }
-} catch (e: Throwable) {
+} catch (_: Throwable) {
   null
 }
 
 fun PackageInfo.ifNormalApp(): Boolean {
-  val isNotSystem = applicationInfo?.run { flags and systemFlags == 0 } ?: false
-  val hasActivities = activities?.isNotEmpty() ?: false
+  val isNotSystem = applicationInfo?.run { flags and systemFlags == 0 } == true
+  val hasActivities = activities?.isNotEmpty() == true
   return isNotSystem and hasActivities
+}
+
+fun PackageInfo.ifNormalAppOrGame(): Boolean {
+  val isNotSystem = applicationInfo?.run { flags and systemFlags == 0 } == true
+  val hasActivities = activities?.isNotEmpty() == true
+  val isGame = applicationInfo?.category == ApplicationInfo.CATEGORY_GAME
+  return (isNotSystem or isGame) and hasActivities
 }
 
 fun PackageInfo.getAppSize(): Long {
@@ -73,3 +81,26 @@ fun ApplicationInfo.loadIconDrawable(packageManager: PackageManager): Drawable? 
       }
     }
 }.getOrNull()
+
+fun PackageManager.getSignature(packageName: String): String = runCatching {
+  val signature = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+    getPackageInfo(
+      packageName,
+      PackageManager.GET_SIGNING_CERTIFICATES
+    ).signingInfo!!.run { signingCertificateHistory.last() ?: apkContentsSigners.first() }
+  } else {
+    @Suppress("DEPRECATION")
+    getPackageInfo(
+      packageName,
+      PackageManager.GET_SIGNATURES
+    ).signatures!!.first()
+  }.toByteArray()
+  MessageDigest.getInstance("SHA1").run {
+    update(signature)
+    digest()
+      .map { it.toInt() and 0xff }
+      .map(Integer::toHexString)
+      .map { if (it.length == 1) "0$it" else it }
+      .joinToString(":")
+  }
+}.getOrElse { "" }
