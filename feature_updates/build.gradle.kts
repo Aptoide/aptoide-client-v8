@@ -20,4 +20,8 @@ dependencies {
   implementation(LibraryDependency.ROOM)
   ksp(LibraryDependency.ROOM_COMPILER)
   implementation(LibraryDependency.ROOM_KTX)
+
+  //WorkManager
+  implementation(LibraryDependency.WORK_MANAGER)
+  implementation(LibraryDependency.HILT_WORK)
 }
