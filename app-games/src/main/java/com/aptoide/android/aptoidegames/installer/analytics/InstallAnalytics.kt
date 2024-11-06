@@ -197,6 +197,26 @@ class InstallAnalytics(
     )
   }
 
+  fun sendInstallAbortEvent(
+    packageName: String,
+    analyticsPayload: AnalyticsPayload?,
+    errorMessage: String?,
+  ) {
+    genericAnalytics.sendInstallErrorEvent(
+      packageName = packageName,
+      analyticsPayload = analyticsPayload,
+      errorMessage = errorMessage
+    )
+
+    logBIInstallEvent(
+      packageName = packageName,
+      status = "abort",
+      analyticsPayload = analyticsPayload,
+      P_ERROR_MESSAGE to errorMessage,
+      P_ERROR_TYPE to "permission",
+    )
+  }
+
   fun sendInstallCancelEvent(
     packageName: String,
     analyticsPayload: AnalyticsPayload?,

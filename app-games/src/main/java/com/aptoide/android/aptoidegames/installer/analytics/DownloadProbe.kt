@@ -3,7 +3,6 @@ package com.aptoide.android.aptoidegames.installer.analytics
 import cm.aptoide.pt.install_manager.AbortException
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.workers.PackageDownloader
-import cm.aptoide.pt.installer.platform.REQUEST_INSTALL_PACKAGES_NOT_ALLOWED
 import cm.aptoide.pt.installer.platform.WRITE_EXTERNAL_STORAGE_NOT_ALLOWED
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onCompletion
@@ -37,7 +36,6 @@ class DownloadProbe(
 
           is AbortException -> {
             when (it.message) {
-              REQUEST_INSTALL_PACKAGES_NOT_ALLOWED,
               WRITE_EXTERNAL_STORAGE_NOT_ALLOWED -> analytics.sendDownloadAbortEvent(
                 packageName = packageName,
                 analyticsPayload = analyticsPayload,
