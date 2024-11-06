@@ -5,6 +5,7 @@
   <string name="games">Játékok</string>
   <string name="categories">Kategóriák</string>
   <string name="search">Keresés</string>
+  <string name="bottom_navigation_updates">Updates</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Beállítások</string>
   <string name="overflow_menu_terms_conditions">Általános Szerződési Feltételek</string>
