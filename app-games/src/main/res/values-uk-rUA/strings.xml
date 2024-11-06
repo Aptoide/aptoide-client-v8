@@ -112,6 +112,7 @@
   <string name="screenshot_appview_3">Новий спосіб знайти свою улюблену гру.</string>
   <string name="screenshot_appview_4">Зручний інтерфейс з найкращим контентом.</string>
   <string name="screenshot_appview_5">Відібрані ігри спеціально для вас.</string>
+  <string name="not_now_button">Not now</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Немає вільного місця</string>
   <string name="out_of_space_body">Вам потрібно %s, щоб продовжити встановлення.</string>
@@ -156,6 +157,7 @@
   <string name="purchase_done_bonus_wallet_installed_body">Відкрийте його, щоб знайти свій бонус.</string>
   <string name="bonus_banner_body">Ви отримуватимете бонус у всіх іграх, позначених %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Бонус до %s%%</string>
+  <string name="settings_auto_update_button">Auto-update games</string>
   <string name="settings_payments_title" comment="contact_support_team">Зв\'язатися зі службою підтримки</string>
   <string name="settings_contact_support_body" comment="billing_terms_of_use">Умови використання платіжних послуг</string>
   <string name="settings_billing_terms_body" comment="payments">Платежі</string>
@@ -225,4 +227,19 @@
   <string name="promo_code_notification_without_wallet_body">Отримайте AppCoins Wallet і використовуйте промокод для додаткових бонусів на всі покупки.</string>
   <string name="promo_code_share_title">Ви отримали промокод!</string>
   <string name="promo_code_share_body">Скористайтеся цим промокодом, щоб отримати додаткові бонуси в улюбленій грі.</string>
+  <!-- Update -->
+  <string name="update_up_to_date_title">Congrats!</string>
+  <string name="update_up_to_date_body">You\'re up to date!</string>
+  <string name="update_auto_update_title">Enjoy the best gaming experience and keep your games updated.</string>
+  <string name="update_auto_update_slider">Keep games updated automatically</string>
+  <string name="update_update_all_button">Update all</string>
+  <string name="update_aptoide_games_title">New Version Available!</string>
+  <string name="update_aptoide_games_body">Update Aptoide Games to the latest version to keep enjoying the best gaming discovery experience.</string>
+  <string name="update_aptoide_games_update_close_body">Aptoide Games will close to update. Just open it again!</string>
+  <plurals name="update_games_can_be_updated_body">
+    <item quantity="one">%s game can be updated</item>
+    <item quantity="few">%s games can be updated</item>
+    <item quantity="many">%s games can be updated</item>
+    <item quantity="other">%s games can be updated</item>
+  </plurals>
 </resources>
