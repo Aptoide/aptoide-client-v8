@@ -21,6 +21,7 @@ import cm.aptoide.pt.feature_home.di.WidgetsUrl
 import cm.aptoide.pt.feature_oos.di.UninstallPackagesFilter
 import cm.aptoide.pt.feature_search.data.AutoCompleteSuggestionsRepository
 import cm.aptoide.pt.feature_search.domain.repository.SearchStoreManager
+import cm.aptoide.pt.feature_updates.di.PrioritizedPackagesFilter
 import com.aptoide.android.aptoidegames.AptoideIdsRepository
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.IdsRepository
@@ -206,6 +207,13 @@ class RepositoryModule {
     BuildConfig.APPLICATION_ID,
     walletApp.packageName,
     "cm.aptoide.pt"
+  )
+
+  @Singleton
+  @Provides
+  @PrioritizedPackagesFilter
+  fun providePrioritizedPackagesToFilter(): List<String> = listOf(
+    BuildConfig.APPLICATION_ID,
   )
 
   @Singleton
