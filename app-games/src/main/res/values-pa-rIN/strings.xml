@@ -6,6 +6,7 @@
   <string name="categories">ਵਰਗ</string>
   <string name="search">ਗਲੋਬਲ ਖੋਜ
 ਇੱਕ ਖੋਜੀ ਜਾ ਸੱਕਣ ਵਾਲੀ ਆਈਟਮ ਦੇ ਤੌਰ ਤੇ ਵਰਤਣ ਲਈ ਲੇਬਲ</string>
+  <string name="bottom_navigation_updates">Updates</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">ਸੈਟਿੰਗ</string>
   <string name="overflow_menu_terms_conditions">Terms &amp; Conditions</string>
