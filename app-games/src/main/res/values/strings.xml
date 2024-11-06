@@ -239,6 +239,14 @@
   <string name="update_aptoide_games_title">New Version Available!</string>
   <string name="update_aptoide_games_body">Update Aptoide Games to the latest version to keep enjoying the best gaming discovery experience.</string>
   <string name="update_aptoide_games_update_close_body">Aptoide Games will close to update. Just open it again!</string>
+  <plurals name="update_games_can_be_updated_body">
+    <item quantity="zero">%s games can be updated</item>
+    <item quantity="one">%s game can be updated</item>
+    <item quantity="two">%s games can be updated</item>
+    <item quantity="few">%s games can be updated</item>
+    <item quantity="many">%s games can be updated</item>
+    <item quantity="other">%s games can be updated</item>
+  </plurals>
 
 
 </resources>
