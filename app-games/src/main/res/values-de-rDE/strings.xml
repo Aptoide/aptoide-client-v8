@@ -5,6 +5,7 @@
   <string name="games">Spiele</string>
   <string name="categories">Kategorien</string>
   <string name="search">Suche</string>
+  <string name="bottom_navigation_updates">Updates</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Einstellungen</string>
   <string name="overflow_menu_terms_conditions">Allgemeine Geschäftsbedingungen</string>
@@ -112,6 +113,7 @@
   <string name="screenshot_appview_3">Eine neue Art, dein Lieblingsspiel zu entdecken.</string>
   <string name="screenshot_appview_4">Eine nahtlose Schnittstelle mit den besten Inhalten.</string>
   <string name="screenshot_appview_5">Handverlesene Spiele, nur für dich.</string>
+  <string name="not_now_button">Not now</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Kein Speicher mehr</string>
   <string name="out_of_space_body">Sie benötigen %s um die Installation abschliessen zu können.</string>
@@ -156,6 +158,7 @@
   <string name="purchase_done_bonus_wallet_installed_body">Öffne sie, um deinen Bonus zu erhalten.</string>
   <string name="bonus_banner_body">Du bekommst einen Bonus in allen Spielen, die mit %s gekennzeichnet sind.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Bis zu %s%% Bonus</string>
+  <string name="settings_auto_update_button">Auto-update games</string>
   <string name="settings_payments_title" comment="contact_support_team">Support-Team kontaktieren</string>
   <string name="settings_contact_support_body" comment="billing_terms_of_use">Nutzungsbedingungen für die Verrechnung</string>
   <string name="settings_billing_terms_body" comment="payments">Bezahlungen</string>
@@ -225,4 +228,22 @@
   <string name="promo_code_notification_without_wallet_body">Hol dir die AppCoins Wallet und nutze deinen Promocode, um bei allen Einkäufen zusätzliche Boni zu erhalten.</string>
   <string name="promo_code_share_title">Du hast einen Promocode erhalten!</string>
   <string name="promo_code_share_body">Verwende diesen Promocode, um zusätzliche Boni in deinem Lieblingsspiel zu erhalten.</string>
+  <!-- Update -->
+  <string name="update_up_to_date_title">Congrats!</string>
+  <string name="update_up_to_date_body">You\'re up to date!</string>
+  <string name="update_auto_update_title">Enjoy the best gaming experience and keep your games updated.</string>
+  <string name="update_auto_update_slider">Keep games updated automatically</string>
+  <string name="update_update_all_button">Update all</string>
+  <string name="update_aptoide_games_title">New Version Available!</string>
+  <string name="update_aptoide_games_body">Update Aptoide Games to the latest version to keep enjoying the best gaming discovery experience.</string>
+  <string name="update_aptoide_games_update_close_body">Aptoide Games will close to update. Just open it again!</string>
+  <plurals name="update_games_can_be_updated_body">
+    <item quantity="one">%s game can be updated</item>
+    <item quantity="other">%s games can be updated</item>
+  </plurals>
+  <plurals name="update_notification_title">
+    <item quantity="one">You\'ve got %s update available</item>
+    <item quantity="other">You\'ve got %s updates available</item>
+  </plurals>
+  <string name="update_notification_body">Tap here to install.</string>
 </resources>
