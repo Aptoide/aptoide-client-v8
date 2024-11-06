@@ -5,6 +5,7 @@
   <string name="games">Игры</string>
   <string name="categories">Категории</string>
   <string name="search">Поиск</string>
+  <string name="bottom_navigation_updates">Updates</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Настройки</string>
   <string name="overflow_menu_terms_conditions">Условия и ограничения</string>
