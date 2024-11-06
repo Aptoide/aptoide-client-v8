@@ -5,6 +5,7 @@
   <string name="games">ゲーム</string>
   <string name="categories">カテゴリー</string>
   <string name="search">検索</string>
+  <string name="bottom_navigation_updates">Updates</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">設定</string>
   <string name="overflow_menu_terms_conditions">利用条件</string>
