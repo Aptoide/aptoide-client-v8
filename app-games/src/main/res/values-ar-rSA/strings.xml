@@ -244,4 +244,13 @@
     <item quantity="many">%s games can be updated</item>
     <item quantity="other">%s games can be updated</item>
   </plurals>
+  <plurals name="update_notification_title">
+    <item quantity="zero">You\'ve got %s updates available</item>
+    <item quantity="one">You\'ve got %s update available</item>
+    <item quantity="two">You\'ve got %s updates available</item>
+    <item quantity="few">You\'ve got %s updates available</item>
+    <item quantity="many">You\'ve got %s updates available</item>
+    <item quantity="other">You\'ve got %s updates available</item>
+  </plurals>
+  <string name="update_notification_body">Tap here to install.</string>
 </resources>
