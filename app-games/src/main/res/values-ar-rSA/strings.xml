@@ -5,6 +5,7 @@
   <string name="games">ألعاب</string>
   <string name="categories">الفئات</string>
   <string name="search">بحث</string>
+  <string name="bottom_navigation_updates">Updates</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">الإعدادات</string>
   <string name="overflow_menu_terms_conditions">الشروط &amp; والأحكام</string>
