@@ -88,6 +88,7 @@ private fun AppJSON.toDomainModel(
     downloads = this.store.stats?.downloads
   ),
   releaseDate = this.added,
+  modifiedDate = this.modified!!,
   updateDate = this.updated,
   releaseUpdateDate = this.release?.updated,
   website = this.developer?.website,
