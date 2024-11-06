@@ -5,6 +5,7 @@
   <string name="games">Jeux</string>
   <string name="categories">Catégories</string>
   <string name="search">Recherche</string>
+  <string name="bottom_navigation_updates">Updates</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Paramètres</string>
   <string name="overflow_menu_terms_conditions">Termes &amp;et Conditions</string>
