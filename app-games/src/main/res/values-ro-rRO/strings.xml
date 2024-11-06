@@ -5,6 +5,7 @@
   <string name="games">Jocuri</string>
   <string name="categories">Categorii</string>
   <string name="search">Căutare</string>
+  <string name="bottom_navigation_updates">Updates</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Setări</string>
   <string name="overflow_menu_terms_conditions">Termeni &amp; condiții</string>
