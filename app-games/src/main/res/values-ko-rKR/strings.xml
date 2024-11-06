@@ -5,6 +5,7 @@
   <string name="games">게임</string>
   <string name="categories">카테고리</string>
   <string name="search">검색</string>
+  <string name="bottom_navigation_updates">Updates</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">설정</string>
   <string name="overflow_menu_terms_conditions">이용 약관</string>
