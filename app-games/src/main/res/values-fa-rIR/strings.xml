@@ -5,6 +5,7 @@
   <string name="games">بازی‌ها</string>
   <string name="categories">دسته‌ها</string>
   <string name="search">جست‌وجو</string>
+  <string name="bottom_navigation_updates">Updates</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">تنظیمات</string>
   <string name="overflow_menu_terms_conditions">شرایط &amp; ضوابط</string>
