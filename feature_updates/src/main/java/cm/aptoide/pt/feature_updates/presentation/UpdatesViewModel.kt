@@ -6,6 +6,7 @@ import cm.aptoide.pt.feature_updates.domain.Updates
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -34,23 +35,23 @@ class UpdatesViewModel @Inject constructor(
   fun reload() {
     viewModelScope.launch {
       viewModelState.update { UpdatesUiState.Loading }
-      try {
-        val result = updates.getAppsUpdates()
-        viewModelState.update {
-          if (result.isEmpty()) {
+      updates.getAppsUpdates()
+        .catch {
+          Timber.w(it)
+          //No Errors For now
+          viewModelState.update {
             UpdatesUiState.Empty
-          } else {
-            UpdatesUiState.Idle(updatesList = result)
           }
         }
-      } catch (t: Throwable) {
-        Timber.w(t)
-        //No Errors For now
-        viewModelState.update {
-          UpdatesUiState.Empty
+        .collect { result ->
+          viewModelState.update {
+            if (result.isEmpty()) {
+              UpdatesUiState.Empty
+            } else {
+              UpdatesUiState.Idle(updatesList = result.toList())
+            }
+          }
         }
-      }
     }
   }
 }
-
