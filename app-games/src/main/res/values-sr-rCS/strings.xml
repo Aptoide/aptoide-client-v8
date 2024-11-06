@@ -230,7 +230,7 @@
   <string name="promo_code_share_body">Iskoristite ovaj promo kod da biste dobili dodatne bonuse u svojoj omiljenoj igri.</string>
   <!-- Update -->
   <string name="update_up_to_date_title">Congrats!</string>
-  <string name="update_up_to_date_body">You\'re up to date!</string>
+  <string name="update_up_to_date_body">You\'re up to date.</string>
   <string name="update_auto_update_title">Enjoy the best gaming experience and keep your games updated.</string>
   <string name="update_auto_update_slider">Keep games updated automatically</string>
   <string name="update_update_all_button">Update all</string>
