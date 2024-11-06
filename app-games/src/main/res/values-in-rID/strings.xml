@@ -5,6 +5,7 @@
   <string name="games">Game</string>
   <string name="categories">Kategori</string>
   <string name="search">Cari</string>
+  <string name="bottom_navigation_updates">Updates</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Pengaturan</string>
   <string name="overflow_menu_terms_conditions">Syarat &amp; Ketentuan</string>
