@@ -7,5 +7,5 @@ data class InstalledApp(
   val packageName: String,
   val versionName: String,
   val versionCode: Int,
-  val appIcon: Drawable,
+  val appIcon: Drawable?,
 )
