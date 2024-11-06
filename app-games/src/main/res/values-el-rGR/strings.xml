@@ -5,6 +5,7 @@
   <string name="games">Παιχνίδια</string>
   <string name="categories">Κατηγορίες</string>
   <string name="search">Αναζήτηση</string>
+  <string name="bottom_navigation_updates">Updates</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Ρυθμίσεις</string>
   <string name="overflow_menu_terms_conditions">Όροι και Προϋποθέσεις</string>
