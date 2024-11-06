@@ -2,7 +2,7 @@ package cm.aptoide.pt.feature_updates.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cm.aptoide.pt.feature_apps.data.randomApp
+import cm.aptoide.pt.feature_updates.domain.Updates
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -11,13 +11,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
-import kotlin.random.Random
-import kotlin.random.nextInt
 
 @HiltViewModel
-//TODO Add real request/arguments
 class UpdatesViewModel @Inject constructor(
-
+  private val updates: Updates
 ) :
   ViewModel() {
 
@@ -38,8 +35,7 @@ class UpdatesViewModel @Inject constructor(
     viewModelScope.launch {
       viewModelState.update { UpdatesUiState.Loading }
       try {
-        //TODO add real request
-        val result = List(Random.nextInt(0..5)) { randomApp }
+        val result = updates.getAppsUpdates()
         viewModelState.update {
           if (result.isEmpty()) {
             UpdatesUiState.Empty
