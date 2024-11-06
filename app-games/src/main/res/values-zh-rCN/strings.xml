@@ -5,6 +5,7 @@
   <string name="games">游戏</string>
   <string name="categories">类别</string>
   <string name="search">搜索</string>
+  <string name="bottom_navigation_updates">Updates</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">设置</string>
   <string name="overflow_menu_terms_conditions">条款&amp;条件</string>
