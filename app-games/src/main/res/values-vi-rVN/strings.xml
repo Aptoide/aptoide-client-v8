@@ -5,6 +5,7 @@
   <string name="games">Trò chơi</string>
   <string name="categories">Danh mục</string>
   <string name="search">Tìm kiếm</string>
+  <string name="bottom_navigation_updates">Updates</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Cài đặt</string>
   <string name="overflow_menu_terms_conditions">Điều khoản &amp; Điều kiện</string>
