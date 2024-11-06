@@ -34,6 +34,7 @@ data class App(
   val videos: List<String> = emptyList(),
   val store: Store,
   val releaseDate: String?,
+  val modifiedDate: String,
   val releaseUpdateDate: String? = null,
   val updateDate: String?,
   val website: String?,
@@ -112,6 +113,7 @@ val emptyApp = App(
     downloads = null
   ),
   releaseDate = "",
+  modifiedDate = "",
   updateDate = "",
   website = "",
   email = "",
