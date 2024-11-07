@@ -61,7 +61,7 @@ public class UserAgentInterceptor implements Interceptor {
         .value();
 
     return "Aptoide/" + BuildConfig.VERSION_NAME
-        + "(Linux; Android " + Build.VERSION.RELEASE + "; "
+        + " (Linux; Android " + Build.VERSION.RELEASE + "; "
         + Build.VERSION.SDK_INT + "; " + Build.MODEL + " "
         + "Build/" + Build.PRODUCT + "; "
         + System.getProperty("os.arch") + "; "
