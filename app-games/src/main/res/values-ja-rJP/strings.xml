@@ -231,7 +231,7 @@
   <string name="promo_code_share_body">このプロモコードを使って、お気に入りのゲームで追加ボーナスをゲットしましょう。</string>
   <!-- Update -->
   <string name="update_up_to_date_title">Congrats!</string>
-  <string name="update_up_to_date_body">You\'re up to date!</string>
+  <string name="update_up_to_date_body">You\'re up to date.</string>
   <string name="update_auto_update_title">Enjoy the best gaming experience and keep your games updated.</string>
   <string name="update_auto_update_slider">Keep games updated automatically</string>
   <string name="update_update_all_button">Update all</string>
@@ -245,4 +245,5 @@
     <item quantity="other">You\'ve got %s updates available</item>
   </plurals>
   <string name="update_notification_body">Tap here to install.</string>
+  <string name="update_aptoide_games_update_notification">There\'s a new version of Aptoide Games</string>
 </resources>
