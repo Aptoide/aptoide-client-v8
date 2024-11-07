@@ -1297,6 +1297,15 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         + "/api/7.20240701/";
   }
 
+  @Singleton @Provides @Named("base-host-cache") String providesBaseHostCache(
+      @Named("default") SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_V7_CACHE_HOST
+        + "/api/7.20240701/";
+  }
+
   @Singleton @Provides @Named("base-secondary-host") String providesBaseSecondaryHost(
       @Named("default") SharedPreferences sharedPreferences) {
     return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
@@ -1317,6 +1326,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides @Named("retrofit-v7") Retrofit providesV7Retrofit(
       @Named("base-host") String baseHost, @Named("default") OkHttpClient httpClient,
+      Converter.Factory converterFactory, @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
+    return new Retrofit.Builder().baseUrl(baseHost)
+        .client(httpClient)
+        .addCallAdapterFactory(rxCallAdapterFactory)
+        .addConverterFactory(converterFactory)
+        .build();
+  }
+
+  @Singleton @Provides @Named("retrofit-v7-cache") Retrofit providesV7CacheRetrofit(
+      @Named("base-host-cache") String baseHost, @Named("default") OkHttpClient httpClient,
       Converter.Factory converterFactory, @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
     return new Retrofit.Builder().baseUrl(baseHost)
         .client(httpClient)
@@ -1407,7 +1426,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return retrofit.create(SearchSuggestionRemoteRepository.class);
   }
 
-  @Singleton @Provides Service providesAutoUpdateService(@Named("retrofit-v7") Retrofit retrofit) {
+  @Singleton @Provides Service providesAutoUpdateService(
+      @Named("retrofit-v7-cache") Retrofit retrofit) {
     return retrofit.create(Service.class);
   }
 
@@ -2172,7 +2192,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides DynamicSplitsRemoteService.DynamicSplitsApi providesDynamicSplitsApi(
-      @Named("retrofit-v7") Retrofit retrofit) {
+      @Named("retrofit-v7-cache") Retrofit retrofit) {
     return retrofit.create(DynamicSplitsRemoteService.DynamicSplitsApi.class);
   }
 

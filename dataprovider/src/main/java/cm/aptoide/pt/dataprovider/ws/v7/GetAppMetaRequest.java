@@ -28,7 +28,7 @@ public class GetAppMetaRequest extends V7<GetApp, BaseBody> {
     if (url.contains("getApp")) {
       url = url.split("getApp/")[1];
     }
-    return new GetAppMetaRequest(getHost(sharedPreferences), new BaseBody(), url, bodyInterceptor,
+    return new GetAppMetaRequest(getCacheHost(sharedPreferences), new BaseBody(), url, bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator);
   }
 
