@@ -8,12 +8,16 @@ import cm.aptoide.pt.extensions.getSignature
 import cm.aptoide.pt.extensions.ifNormalAppOrGame
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.AppsListMapper
+import cm.aptoide.pt.feature_apps.data.model.AppJSON
 import cm.aptoide.pt.feature_updates.data.UpdatesRepository
 import cm.aptoide.pt.feature_updates.di.PrioritizedPackagesFilter
 import cm.aptoide.pt.install_manager.InstallManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.withIndex
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.time.LocalDate
@@ -31,6 +35,29 @@ class Updates @Inject constructor(
 
   val mutex: Mutex = Mutex()
 
+  private var currentUpdates = listOf<AppJSON>()
+
+  init {
+    // TODO: clean this for testability
+    CoroutineScope(Dispatchers.IO).launch {
+      installManager.appsChanges
+        .collect { appInstaller ->
+          mutex.withLock {
+            val packageInfo = appInstaller.packageInfo
+            if (packageInfo == null) {
+              currentUpdates.find { it.packageName == appInstaller.packageName }
+            } else {
+              currentUpdates.find {
+                it.packageName == appInstaller.packageName
+                  && it.file.vercode <= PackageInfoCompat.getLongVersionCode(packageInfo)
+              }
+            }
+              ?.also { updatesRepository.remove(it) }
+          }
+        }
+    }
+  }
+
   suspend fun check() = mutex.withLock {
     val apksData = getInstalledApps()
       .map {
@@ -45,39 +72,33 @@ class Updates @Inject constructor(
   }
 
   suspend fun getAppsUpdates(): Flow<List<App>> {
-    val data = mutex.withLock {
-      updatesRepository.getUpdates()
-        .let(appsListMapper::map)
-        .sortedBy {
-          if (it.packageName in prioritizedPackages) {
-            LocalDate.now().plusDays(1).toString()
-          } else {
-            it.modifiedDate
+    val installedApps = getInstalledApps()
+      .map { it.packageName to PackageInfoCompat.getLongVersionCode(it) }
+    return updatesRepository.getUpdates()
+      .withIndex()
+      .map {
+        if (it.index == 0) {
+          val toRemove = it.value.filterNot { update ->
+            installedApps.any { it.first == update.packageName && it.second < update.file.vercode }
           }
-        }
-        .reversed()
-    }
-    val currentList = getInstalledApps()
-    val filteredList = data.mapNotNull { app ->
-      currentList.firstOrNull { it.packageName == app.packageName }
-        ?.let { PackageInfoCompat.getLongVersionCode(it) }
-        ?.takeIf { it < app.versionCode }
-        ?.let { app }
-    }.toMutableList()
-    return installManager.appsChanges
-      .map { appInstaller ->
-        val packageInfo = appInstaller.packageInfo
-        if (packageInfo == null) {
-          filteredList.removeIf { it.packageName == appInstaller.packageName }
+          updatesRepository.remove(*toRemove.toTypedArray())
+          it.value - toRemove
         } else {
-          filteredList.removeIf {
-            it.packageName == packageInfo.packageName
-              && it.versionCode <= PackageInfoCompat.getLongVersionCode(packageInfo)
-          }
+          it.value
         }
-        filteredList
       }
-      .onStart { emit(filteredList) }
+      .map {
+        mutex.withLock { currentUpdates = it }
+        it.let(appsListMapper::map)
+          .sortedBy {
+            if (it.packageName in prioritizedPackages) {
+              LocalDate.now().plusDays(1).toString()
+            } else {
+              it.modifiedDate
+            }
+          }
+          .reversed()
+      }
   }
 
   private fun getInstalledApps(): List<PackageInfo> =
