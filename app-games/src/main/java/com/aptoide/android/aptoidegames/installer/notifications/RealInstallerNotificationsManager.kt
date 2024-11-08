@@ -1,12 +1,19 @@
 package com.aptoide.android.aptoidegames.installer.notifications
 
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.ProcessLifecycleOwner
 import cm.aptoide.pt.install_manager.App
 import cm.aptoide.pt.install_manager.InstallManager
 import cm.aptoide.pt.install_manager.Task.State
 import cm.aptoide.pt.install_manager.dto.Constraints.NetworkType.UNMETERED
 import cm.aptoide.pt.install_manager.environment.NetworkConnection.State.GONE
 import cm.aptoide.pt.install_manager.environment.NetworkConnection.State.METERED
+import cm.aptoide.pt.installer.platform.UserActionHandler
+import cm.aptoide.pt.installer.platform.UserActionRequest
 import cm.aptoide.pt.network_listener.NetworkConnectionImpl
+import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.installer.AppDetailsUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -28,14 +35,42 @@ class RealInstallerNotificationsManager @Inject constructor(
   private val installerNotificationsManager: InstallerNotificationsBuilder,
   private val appDetailsUseCase: AppDetailsUseCase,
   private val networkConnection: NetworkConnectionImpl,
-) : InstallerNotificationsManager, CoroutineScope {
+  private val userActionHandler: UserActionHandler
+) : InstallerNotificationsManager, CoroutineScope, LifecycleObserver {
 
   override val coroutineContext: CoroutineContext
     get() = Dispatchers.IO + Job()
 
+  var isOnForeground = false
+
+  init {
+    val lifecycle = ProcessLifecycleOwner.get().lifecycle
+
+    val observer = LifecycleEventObserver { _, event ->
+      if (event == Lifecycle.Event.ON_RESUME) {
+        isOnForeground = true
+      } else if (event == Lifecycle.Event.ON_PAUSE) {
+        isOnForeground = false
+      }
+    }
+
+    lifecycle.addObserver(observer)
+  }
+
   override suspend fun initialize() {
     installManager.workingAppInstallers.firstOrNull()?.let { onInstallationQueued(it) }
     installManager.scheduledApps.forEach { onInstallationQueued(it) }
+
+    userActionHandler.requests.collect {
+      if (isOnForeground == false
+        && it is UserActionRequest.InstallationAction
+        && it.intent.action == "android.content.pm.action.CONFIRM_INSTALL"
+      ) {
+        val packageName = it.intent
+          .getStringExtra("${BuildConfig.APPLICATION_ID}.pn") ?: "NaN"
+        onReadyToInstall(packageName)
+      }
+    }
   }
 
   override fun onInstallationQueued(packageName: String) {

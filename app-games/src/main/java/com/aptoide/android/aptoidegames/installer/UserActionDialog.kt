@@ -26,7 +26,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -36,6 +35,7 @@ import androidx.core.app.ActivityCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.getRandomString
 import cm.aptoide.pt.extensions.toAnnotatedString
@@ -52,7 +52,6 @@ import com.aptoide.android.aptoidegames.design_system.PrimaryTextButton
 import com.aptoide.android.aptoidegames.drawables.icons.getAptoideGamesToolbarLogo
 import com.aptoide.android.aptoidegames.installer.analytics.rememberInstallAnalytics
 import com.aptoide.android.aptoidegames.installer.analytics.toAnalyticsPayload
-import com.aptoide.android.aptoidegames.installer.notifications.rememberInstallerNotifications
 import com.aptoide.android.aptoidegames.permissions.AppPermissionsViewModel
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
@@ -104,7 +103,6 @@ fun UserActionDialog() {
   )
 
   val installAnalytics = rememberInstallAnalytics()
-  val installerNotifications = rememberInstallerNotifications()
   LaunchedEffect(
     key1 = state,
     key2 = isOnForeground,
@@ -148,21 +146,6 @@ fun UserActionDialog() {
 
           else -> Unit
         }
-      } else {
-        when (val it = state) {
-          is InstallationAction -> {
-            if (!installationActionLaunched) {
-              //System action, we cannot access it any other way
-              if (it.intent.action == "android.content.pm.action.CONFIRM_INSTALL") {
-                val packageName = it.intent
-                  .getStringExtra("${BuildConfig.APPLICATION_ID}.pn") ?: "NaN"
-                installerNotifications.onReadyToInstall(packageName)
-              }
-            }
-          }
-
-          else -> Unit
-        }
       }
     }
   )
@@ -188,7 +171,7 @@ fun UserConfirmation.getSourceString(): String = stringResource(
     UserConfirmation.INSTALL_SOURCE -> R.string.error_install_permissions_body
     UserConfirmation.WRITE_EXTERNAL_RATIONALE,
     UserConfirmation.WRITE_EXTERNAL,
-    -> R.string.storage_access_permission_request_message
+      -> R.string.storage_access_permission_request_message
   }
 )
 
@@ -198,7 +181,7 @@ fun UserConfirmation.getPositiveButtonTitle(): String = stringResource(
     UserConfirmation.INSTALL_SOURCE -> R.string.settings_title
     UserConfirmation.WRITE_EXTERNAL_RATIONALE,
     UserConfirmation.WRITE_EXTERNAL,
-    -> R.string.ok_button
+      -> R.string.ok_button
   }
 )
 
@@ -208,7 +191,7 @@ fun UserConfirmation.getNegativeButtonTitle(): String = stringResource(
     UserConfirmation.INSTALL_SOURCE,
     UserConfirmation.WRITE_EXTERNAL_RATIONALE,
     UserConfirmation.WRITE_EXTERNAL,
-    -> R.string.cancel_button
+      -> R.string.cancel_button
   }
 )
 
