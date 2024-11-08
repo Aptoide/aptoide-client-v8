@@ -53,6 +53,7 @@ import com.aptoide.android.aptoidegames.UrlActivity
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
+import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
 import com.aptoide.android.aptoidegames.design_system.SecondaryButton
 import com.aptoide.android.aptoidegames.drawables.icons.getLeftArrow
@@ -229,7 +230,7 @@ private fun ArticleViewContent(
             item {
               AppItem(
                 app = it,
-                onClick = { },
+                onClick = { navigate(buildAppViewRoute(it)) },
                 modifier = Modifier.padding(horizontal = 16.dp)
               ) {
                 InstallViewShort(app = it)
