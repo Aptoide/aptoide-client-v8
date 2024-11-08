@@ -3,6 +3,7 @@ plugins {
   id(GradlePluginId.ANDROID_MODULE)
   id(GradlePluginId.HILT)
   id(GradlePluginId.COMPOSABLE)
+  id(GradlePluginId.KOTLIN_KSP)
 }
 
 android {
@@ -22,4 +23,8 @@ dependencies {
   //lifecycle
   implementation(LibraryDependency.LIFECYCLE_COMMON)
   implementation(LibraryDependency.LIFECYCLE_PROCESS)
+
+  //WorkManager
+  implementation(LibraryDependency.WORK_MANAGER)
+  implementation(LibraryDependency.HILT_WORK)
 }
