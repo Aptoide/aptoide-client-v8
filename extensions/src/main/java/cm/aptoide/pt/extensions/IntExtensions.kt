@@ -10,7 +10,7 @@ import java.util.Locale
 fun Int.spAsDp(): Dp = with(LocalDensity.current) { sp.toDp() }
 
 fun Int.formatDownloads(): String {
-  val suffixes = listOf("", "K", "M", "B", "T")
+  val suffixes = listOf("", "K+", "M+", "B+", "T+")
   var value = this.toDouble()
   var index = 0
 
@@ -19,5 +19,5 @@ fun Int.formatDownloads(): String {
     index++
   }
 
-  return String.format(Locale.ENGLISH, "%d%s+", value.toInt(), suffixes[index])
+  return String.format(Locale.ENGLISH, "%d%s", value.toInt(), suffixes[index])
 }
