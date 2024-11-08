@@ -9,6 +9,7 @@ import cm.aptoide.pt.feature_updates.domain.ApkData
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -28,22 +29,21 @@ class UpdatesRepository @Inject constructor(
       apksData.chunked(100)
         .map {
           async {
-            updatesApi.getAppsUpdates(
-              storeName = storeName,
-              request = UpdatesRequest(
-                apksData = it
+            runCatching {
+              updatesApi.getAppsUpdates(
+                storeName = storeName,
+                request = UpdatesRequest(
+                  apksData = it
+                )
               )
-            )
+            }
+              .getOrNull()
+              ?.list
+              ?: emptyList() //Ignore errors from each chunk so we still have others
           }
         }
-        .map {
-          runCatching { it.await() }.getOrNull() // Ignore network errors
-            ?.list
-            ?: emptyList()
-        }
-        .ifEmpty { null }
-        ?.reduce { acc, item -> acc + item }
-        ?: emptyList()
+        .awaitAll()
+        .flatten()
     }
 
   suspend fun getUpdates(): Flow<List<AppJSON>> = withContext(scope.coroutineContext) {
