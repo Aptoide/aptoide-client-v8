@@ -276,7 +276,9 @@ private fun BonusBannerText(
       outlineWidth = 17f,
       outlineColor = Palette.Black,
       textColor = Palette.Primary,
-      modifier = Modifier.fillMaxWidth()
+      modifier = Modifier
+        .padding(bottom = 8.dp)
+        .fillMaxWidth()
     )
     Text(
       text = annotatedString,
