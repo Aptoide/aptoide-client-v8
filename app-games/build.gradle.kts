@@ -260,6 +260,8 @@ dependencies {
   //WorkManager
   implementation(LibraryDependency.WORK_MANAGER)
   implementation(LibraryDependency.HILT_WORK)
+
+  implementation(LibraryDependency.LIFECYCLE_PROCESS)
 }
 
 fun BaseFlavor.buildConfigFieldFromGradleProperty(gradlePropertyName: String) {
