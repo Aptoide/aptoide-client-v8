@@ -67,6 +67,7 @@ class Updates @Inject constructor(
           versionCode = PackageInfoCompat.getLongVersionCode(it)
         )
       }
+      .filter { it.signature.isNotEmpty() }
     val updates = updatesRepository.loadUpdates(apksData)
     updatesRepository.replaceWith(*updates.toTypedArray())
   }
