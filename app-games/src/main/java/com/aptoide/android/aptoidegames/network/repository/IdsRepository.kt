@@ -6,6 +6,7 @@ import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import dagger.hilt.android.qualifiers.ApplicationContext
+import timber.log.Timber
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -17,27 +18,23 @@ class IdsRepository @Inject constructor(
 
   val aptoideClientUuid by lazy { getUniqueIdentifier() }
 
-  private fun getUniqueIdentifier(): String {
-    val id = getGoogleAdvertisingId()
-    return if (!id.isNullOrEmpty())
-      id else UUID.randomUUID().toString()
-  }
+  private fun getUniqueIdentifier(): String =
+    getGoogleAdvertisingId()?.takeIf { it.isNotEmpty() } ?: UUID.randomUUID().toString()
 
   private fun getGoogleAdvertisingId(): String? =
     when {
-      !isGooglePlayServicesAvailable() -> ""
+      !isGooglePlayServicesAvailable() -> null
       Looper.getMainLooper().thread === Thread.currentThread() ->
         throw IllegalStateException("You cannot run this method from the main thread")
 
       else -> try {
         AdvertisingIdClient.getAdvertisingIdInfo(context).id
       } catch (e: Exception) {
-        throw IllegalStateException(e)
+        Timber.e(e)
+        null
       }
     }
 
-  private fun isGooglePlayServicesAvailable(): Boolean {
-    return GoogleApiAvailability.getInstance()
-      .isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS
-  }
+  private fun isGooglePlayServicesAvailable() = GoogleApiAvailability.getInstance()
+    .isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS
 }
