@@ -10,13 +10,13 @@ android {
 
 dependencies {
 
-  api(TestLibraryDependency.JUNIT)
+  api(libs.junit)
 
   // New TDD dependencies
-  api(TestLibraryDependency.JUNIT_JUPITER_API)
-  testRuntimeOnly(TestLibraryDependency.JUNIT_JUPITER_ENGINE)
-  api(TestLibraryDependency.JUNIT_JUPITER_PARAMS)
-  api(TestLibraryDependency.JUNIT_JUPITER_VANTAGE)
-  api(TestLibraryDependency.COROUTINES_TEST)
-  api(TestLibraryDependency.TURBINE)
+  api(libs.junit.jupiter.api)
+  testRuntimeOnly(libs.junit.jupiter.engine)
+  api(libs.junit.jupiter.params)
+  api(libs.junit.jupiter.vantage)
+  api(libs.coroutines.test)
+  api(libs.turbine)
 }

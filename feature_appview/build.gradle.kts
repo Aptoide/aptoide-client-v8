@@ -17,5 +17,5 @@ dependencies {
   implementation(project(ModuleDependency.FEATURE_REACTIONS))
   implementation(project(ModuleDependency.FEATURE_CAMPAIGNS))
 
-  implementation(LibraryDependency.CUSTOM_CHROME_TAB)
+  implementation(libs.custom.chrome.tab)
 }

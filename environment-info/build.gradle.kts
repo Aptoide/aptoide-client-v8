@@ -12,5 +12,5 @@ android {
 dependencies {
 
   //store
-  implementation(LibraryDependency.DATASTORE)
+  implementation(libs.datastore)
 }

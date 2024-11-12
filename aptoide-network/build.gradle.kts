@@ -11,8 +11,8 @@ android {
 dependencies {
   implementation(project(ModuleDependency.EXTENSIONS))
 
-  api(LibraryDependency.RETROFIT)
-  api(LibraryDependency.OK_HTTP)
-  api(LibraryDependency.RETROFIT_GSON_CONVERTER)
-  api(LibraryDependency.LOGGING_INTERCEPTOR)
+  api(libs.retrofit)
+  api(libs.okhttp)
+  api(libs.retrofit.gson.converter)
+  api(libs.logging.interceptor)
 }

@@ -13,5 +13,5 @@ dependencies {
   implementation(project(ModuleDependency.APTOIDE_NETWORK))
   implementation(project(ModuleDependency.EXTENSIONS))
   implementation(project(ModuleDependency.FEATURE_APPS))
-  implementation(LibraryDependency.DATASTORE)
+  implementation(libs.datastore)
 }

@@ -13,5 +13,5 @@ dependencies {
   implementation(project(ModuleDependency.FEATURE_SETTINGS))
 
   //store
-  implementation(LibraryDependency.DATASTORE)
+  implementation(libs.datastore)
 }

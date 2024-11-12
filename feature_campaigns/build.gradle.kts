@@ -12,5 +12,5 @@ android {
 dependencies {
   implementation(project(ModuleDependency.APTOIDE_NETWORK))
 
-  implementation(LibraryDependency.GMS_PLAY_SERVICES_ADS)
+  implementation(libs.gms.play.services.ads)
 }

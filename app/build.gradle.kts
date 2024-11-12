@@ -98,20 +98,20 @@ dependencies {
   implementation(project(ModuleDependency.FEATURE_APPCOINS))
   implementation(project(ModuleDependency.INSTALL_INFO_MAPPER))
 
-  implementation(LibraryDependency.CUSTOM_CHROME_TAB)
+  implementation(libs.custom.chrome.tab)
 
   //firebase
-  implementation(LibraryDependency.FIREBASE_ANALYTICS)
-  implementation(platform(LibraryDependency.FIREBASE_BOM))
+  implementation(libs.firebase.analytics)
+  implementation(platform(libs.firebase.bom))
 
   //store
-  implementation(LibraryDependency.DATASTORE)
+  implementation(libs.datastore)
 
   // google play service
-  implementation(LibraryDependency.PLAY_SERVICES_BASEMENT)
+  implementation(libs.play.services.basement)
 
   //Accompanist
-  implementation(LibraryDependency.ACCOMPANIST_WEBVIEW)
+  implementation(libs.accompanist.webview)
 }
 
 

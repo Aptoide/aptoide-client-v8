@@ -254,37 +254,37 @@ dependencies {
   implementation(project(ModuleDependency.PAYMENTS_METHODS_PAYPAL_COMPOSE))
 
   //room
-  implementation(LibraryDependency.ROOM)
-  ksp(LibraryDependency.ROOM_COMPILER)
-  implementation(LibraryDependency.ROOM_KTX)
+  implementation(libs.room)
+  ksp(libs.room.compiler)
+  implementation(libs.room.ktx)
 
   //Firebase
-  implementation(platform(LibraryDependency.FIREBASE_BOM))
-  implementation(LibraryDependency.FIREBASE_ANALYTICS)
-  implementation(LibraryDependency.FIREBASE_CRASHLYTICS)
-  implementation(LibraryDependency.FIREBASE_MESSAGING)
+  implementation(platform(libs.firebase.bom))
+  implementation(libs.firebase.analytics)
+  implementation(libs.firebase.crashlytics)
+  implementation(libs.firebase.messaging)
 
   //Indicative
-  implementation(LibraryDependency.INDICATIVE_SDK)
+  implementation(libs.indicative.sdk)
 
   //Store
-  implementation(LibraryDependency.DATASTORE)
+  implementation(libs.datastore)
 
-  implementation(LibraryDependency.PLAY_SERVICES_BASEMENT)
-  implementation(LibraryDependency.GMS_PLAY_SERVICES_ADS)
+  implementation(libs.play.services.basement)
+  implementation(libs.gms.play.services.ads)
 
   //Accompanist
-  implementation(LibraryDependency.ACCOMPANIST_WEBVIEW)
-  implementation(LibraryDependency.ACCOMPANIST_PERMISSIONS)
+  implementation(libs.accompanist.webview)
+  implementation(libs.accompanist.permissions)
 
-  //WorkManager
-  implementation(LibraryDependency.WORK_MANAGER)
-  implementation(LibraryDependency.HILT_WORK)
+  //Workmanager
+  implementation(libs.work.manager)
+  implementation(libs.hilt.work)
 
-  implementation(LibraryDependency.LIFECYCLE_PROCESS)
+  implementation(libs.lifecycle.process)
 
   //Pinch to zoom
-  implementation(LibraryDependency.ZOOMABLE)
+  implementation(libs.zoomable)
 }
 
 fun BaseFlavor.buildConfigFieldFromGradleProperty(gradlePropertyName: String) {

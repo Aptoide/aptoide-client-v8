@@ -19,7 +19,7 @@ dependencies {
   implementation(project(ModuleDependency.INSTALL_MANAGER))
 
   //room
-  implementation(LibraryDependency.ROOM)
-  ksp(LibraryDependency.ROOM_COMPILER)
-  implementation(LibraryDependency.ROOM_KTX)
+  implementation(libs.room)
+  ksp(libs.room.compiler)
+  implementation(libs.room.ktx)
 }

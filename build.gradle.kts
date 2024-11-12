@@ -1,34 +1,36 @@
-val compileSdkVersion by extra { AndroidConfig.COMPILE_SDK }
-val minSdkVersion by extra { AndroidConfig.MIN_SDK }
+import org.gradle.kotlin.dsl.get
+
+val compileSdkVersion by extra { libs.versions.compileSdk.get() }
+val minSdkVersion by extra { libs.versions.minSdk.get() }
 
 // Billing SDK
 val supportedSdkVersion by extra { "3" }
 
 // Kotlin
-val coreKtxVersion by rootProject.extra { LibraryVersion.CORE_KTX }
-val kotlinxCoroutinesAndroidVersion by rootProject.extra { CoreVersion.COROUTINES }
+val coreKtxVersion by rootProject.extra { libs.versions.coreKtx.get() }
+val kotlinxCoroutinesAndroidVersion by rootProject.extra { libs.versions.coroutines.get() }
 
 // KSP
-val kspVersion by extra { GradlePluginVersion.KSP }
+val kspVersion by extra { libs.versions.kspPlugin.get() }
 
 // Hilt
-val hiltAndroidVersion by rootProject.extra { LibraryVersion.HILT }
-val daggerHiltCompilerVersion by rootProject.extra { LibraryVersion.HILT }
+val hiltAndroidVersion by rootProject.extra { libs.versions.hilt.get() }
+val daggerHiltCompilerVersion by rootProject.extra { libs.versions.hilt.get() }
 
 // Apache
-val apacheCommonsTextVersion by rootProject.extra { LibraryVersion.APACHE_COMMONS_TEXT }
+val apacheCommonsTextVersion by rootProject.extra { libs.versions.apacheCommonsText.get() }
 
 // Android Material
-val androidxActivityVersion by rootProject.extra { LibraryVersion.ACTIVITY_KTX }
+val androidxActivityVersion by rootProject.extra { libs.versions.activityKtx.get() }
 
 // Adyen
-val adyenVersion by rootProject.extra { LibraryVersion.ADYEN_VERSION }
+val adyenVersion by rootProject.extra { libs.versions.adyenVersion.get() }
 
 // Compose
-val navigationComposeVersion by rootProject.extra { LibraryVersion.NAVIGATION_COMPOSE }
-val hiltNavigationComposeVersion by rootProject.extra { LibraryVersion.HILT_NAV_COMPOSE }
-val composeMaterialVersion by rootProject.extra { LibraryVersion.COMPOSE }
-val lifecycleViewModelComposeVersion by rootProject.extra { LibraryVersion.VIEWMODEL_COMPOSE }
+val navigationComposeVersion by rootProject.extra { libs.versions.navigationCompose.get() }
+val hiltNavigationComposeVersion by rootProject.extra { libs.versions.hiltNavCompose.get() }
+val composeMaterialVersion by rootProject.extra { libs.versions.compose.get() }
+val lifecycleViewModelComposeVersion by rootProject.extra { libs.versions.viewmodelCompose.get() }
 
 buildscript {
 
@@ -37,14 +39,14 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath("com.android.tools.build:gradle:${GradlePluginVersion.ANDROID_GRADLE}")
-    classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${GradlePluginVersion.KOTLIN}")
-    classpath("com.google.dagger:hilt-android-gradle-plugin:${GradlePluginVersion.HILT}")
-    classpath("de.mannodermaus.gradle.plugins:android-junit5:${GradlePluginVersion.JUNIT5}")
-    classpath("com.google.gms:google-services:${GradlePluginVersion.GMS}")
-    classpath("com.google.firebase:firebase-crashlytics-gradle:${GradlePluginVersion.CRASHLYTICS}")
-    classpath("com.google.devtools.ksp:symbol-processing-gradle-plugin:${GradlePluginVersion.KSP}")
-    classpath("org.jetbrains.kotlin:compose-compiler-gradle-plugin:${GradlePluginVersion.KOTLIN}")
+    classpath(libs.android.gradle.plugin)
+    classpath(libs.kotlin.gradle.plugin)
+    classpath(libs.hilt.android.gradle.plugin)
+    classpath(libs.android.junit5.plugin)
+    classpath(libs.google.services.plugin)
+    classpath(libs.firebase.crashlytics.gradle)
+    classpath(libs.ksp.plugin)
+    classpath(libs.compose.gradle.plugin)
   }
 }
 
