@@ -13,5 +13,5 @@ dependencies {
   implementation(project(ModuleDependency.ENVIRONMENT_INFO))
 
   //store
-  implementation(LibraryDependency.DATASTORE)
+  implementation(libs.datastore)
 }

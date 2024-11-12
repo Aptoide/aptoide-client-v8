@@ -18,14 +18,14 @@ dependencies {
   implementation(project(ModuleDependency.INSTALL_INFO_MAPPER))
 
   //room
-  implementation(LibraryDependency.ROOM)
-  ksp(LibraryDependency.ROOM_COMPILER)
-  implementation(LibraryDependency.ROOM_KTX)
+  implementation(libs.room)
+  ksp(libs.room.compiler)
+  implementation(libs.room.ktx)
 
   //Store
   implementation(LibraryDependency.DATASTORE)
 
   //WorkManager
-  implementation(LibraryDependency.WORK_MANAGER)
-  implementation(LibraryDependency.HILT_WORK)
+  implementation(libs.work.manager)
+  implementation(libs.hilt.work)
 }

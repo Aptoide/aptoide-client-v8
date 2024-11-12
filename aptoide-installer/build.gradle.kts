@@ -17,14 +17,14 @@ dependencies {
   implementation(project(ModuleDependency.INSTALL_INFO_MAPPER))
   implementation(project(ModuleDependency.FEATURE_APPS))
 
-  implementation(LibraryDependency.ACTIVITY_KTX)
-  implementation(LibraryDependency.APP_COMPAT)
+  implementation(libs.activity.ktx)
+  implementation(libs.app.compat)
 
   //lifecycle
-  implementation(LibraryDependency.LIFECYCLE_COMMON)
-  implementation(LibraryDependency.LIFECYCLE_PROCESS)
+  implementation(libs.lifecycle.common)
+  implementation(libs.lifecycle.process)
 
   //WorkManager
-  implementation(LibraryDependency.WORK_MANAGER)
-  implementation(LibraryDependency.HILT_WORK)
+  implementation(libs.work.manager)
+  implementation(libs.hilt.work)
 }

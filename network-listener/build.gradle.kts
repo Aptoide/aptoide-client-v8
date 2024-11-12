@@ -12,5 +12,5 @@ dependencies {
   implementation(project(ModuleDependency.INSTALL_MANAGER))
 
   //WorkManager
-  implementation(LibraryDependency.WORK_MANAGER)
+  implementation(libs.work.manager)
 }

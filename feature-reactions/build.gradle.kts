@@ -13,5 +13,5 @@ dependencies {
   implementation(project(ModuleDependency.APTOIDE_NETWORK))
 
   //animations
-  implementation(LibraryDependency.LOTTIE)
+  implementation(libs.lottie)
 }
