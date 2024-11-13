@@ -69,6 +69,12 @@ class RepositoryModule {
 
   @Singleton
   @Provides
+  @DefaultTrendingUrl
+  fun provideDefaultTrendingUrl(): String =
+    "${BuildConfig.STORE_DOMAIN}listApps/sort=trending60d/limit=9"
+
+  @Singleton
+  @Provides
   @StoreName
   fun provideStoreName(): String = BuildConfig.MARKET_NAME.lowercase(Locale.ROOT)
 
@@ -243,3 +249,7 @@ annotation class AppLaunchDataStore
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class IdsDataStore
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class DefaultTrendingUrl
