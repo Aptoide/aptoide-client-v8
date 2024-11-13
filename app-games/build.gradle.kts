@@ -3,13 +3,13 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 plugins {
-  id(GradlePluginId.ANDROID_APPLICATION)
+  alias(libs.plugins.android.application)
   id(GradlePluginId.ANDROID_MODULE)
   id(GradlePluginId.COMPOSABLE)
   id(GradlePluginId.HILT)
-  id(GradlePluginId.KOTLIN_KSP)
-  id(GradlePluginId.GMS_PLUGIN_ID)
-  id(GradlePluginId.CRASHLYTICS_ID)
+  alias(libs.plugins.ksp)
+  alias(libs.plugins.gms)
+  alias(libs.plugins.crashlytics)
 }
 
 android {

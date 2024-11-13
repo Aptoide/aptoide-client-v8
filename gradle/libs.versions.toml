@@ -166,4 +166,9 @@ ksp-plugin = { module = "com.google.devtools.ksp:symbol-processing-gradle-plugin
 compose-gradle-plugin = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin" }
 
 [plugins]
-
+android-application = { id = "com.android.application" }
+android-library = { id = "com.android.library" }
+ksp = { id = "com.google.devtools.ksp" }
+gms = { id = "com.google.gms.google-services" }
+crashlytics = { id = "com.google.firebase.crashlytics" }
+junit5 = { id = "de.mannodermaus.android-junit5" }

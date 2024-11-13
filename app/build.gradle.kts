@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 plugins {
-  id(GradlePluginId.ANDROID_APPLICATION)
+  alias(libs.plugins.android.application)
   id(GradlePluginId.ANDROID_MODULE)
   id(GradlePluginId.COMPOSABLE)
   id(GradlePluginId.HILT)

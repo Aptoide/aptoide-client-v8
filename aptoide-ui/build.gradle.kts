@@ -1,5 +1,5 @@
 plugins {
-  id(GradlePluginId.ANDROID_LIBRARY)
+  alias(libs.plugins.android.library)
   id(GradlePluginId.ANDROID_MODULE)
   id(GradlePluginId.COMPOSABLE)
   id(GradlePluginId.HILT)
