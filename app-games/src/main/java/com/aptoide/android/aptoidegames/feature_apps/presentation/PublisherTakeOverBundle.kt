@@ -140,20 +140,23 @@ fun PublisherTakeOverContent(
           verticalAlignment = Alignment.CenterVertically,
           horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-          AptoideAsyncImage(
-            modifier = Modifier
-              .size(64.dp)
-              .background(color = Color.Transparent),
-            data = bundle.bundleIcon,
-            contentDescription = null,
-          )
+          val textStyle = bundle.bundleIcon?.let { AGTypography.InputsL } ?: AGTypography.Title
+          bundle.bundleIcon?.let {
+            AptoideAsyncImage(
+              modifier = Modifier
+                .size(40.dp)
+                .background(color = Color.Transparent),
+              data = it,
+              contentDescription = null,
+            )
+          }
           Text(
             text = bundle.title.translateOrKeep(LocalContext.current),
             modifier = Modifier.semantics { heading() },
             overflow = TextOverflow.Ellipsis,
             maxLines = 2,
             color = Palette.White,
-            style = AGTypography.Title
+            style = textStyle
           )
         }
 
@@ -167,7 +170,7 @@ fun PublisherTakeOverContent(
           AppsListUiState.Empty,
           AppsListUiState.Error,
           AppsListUiState.NoConnection,
-          -> { /*nothing to show*/
+            -> { /*nothing to show*/
           }
 
           AppsListUiState.Loading -> LoadingBundleView(height = 184.dp)
@@ -181,7 +184,7 @@ fun PublisherTakeOverContent(
           AppsListUiState.Empty,
           AppsListUiState.Error,
           AppsListUiState.NoConnection,
-          -> { /*nothing to show*/
+            -> { /*nothing to show*/
           }
 
           AppsListUiState.Loading -> LoadingBundleView(height = 184.dp)
