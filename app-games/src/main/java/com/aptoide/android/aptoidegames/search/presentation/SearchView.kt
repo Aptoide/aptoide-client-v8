@@ -3,6 +3,7 @@ package com.aptoide.android.aptoidegames.search.presentation
 import android.view.KeyEvent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
@@ -49,6 +50,7 @@ import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -69,12 +71,14 @@ import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getAsterisk
 import com.aptoide.android.aptoidegames.drawables.icons.getClose
 import com.aptoide.android.aptoidegames.drawables.icons.getGames
+import com.aptoide.android.aptoidegames.drawables.icons.getGenericError
 import com.aptoide.android.aptoidegames.drawables.icons.getSearch
-import com.aptoide.android.aptoidegames.error_views.EmptyView
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.error_views.NoConnectionView
 import com.aptoide.android.aptoidegames.feature_apps.presentation.AppItem
+import com.aptoide.android.aptoidegames.feature_apps.presentation.AppsGridBundle
 import com.aptoide.android.aptoidegames.feature_apps.presentation.LargeAppItem
+import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberTrendingBundle
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.search.SearchType
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -159,7 +163,8 @@ fun searchScreen() = ScreenData.withAnalytics(
       onItemInstallStarted = {},
       onEmptyView = {
         searchMeta?.let { searchAnalytics.sendEmptySearchResultClickEvent(it) }
-      }
+      },
+      navigate = navigateTo,
     )
   }
 }
@@ -175,6 +180,7 @@ fun SearchView(
   onItemClick: (Int, App) -> Unit,
   onItemInstallStarted: (App) -> Unit,
   onEmptyView: () -> Unit,
+  navigate: (String) -> Unit,
 ) {
   Column {
     SearchAppBar(
@@ -208,7 +214,7 @@ fun SearchView(
       is SearchUiState.Results -> {
         if (uiState.searchResults.isEmpty()) {
           onEmptyView()
-          EmptyView(text = stringResource(R.string.search_empty_body, searchValue))
+          EmptySearchView(searchValue, navigate)
         } else {
           SearchResultsView(
             searchResults = uiState.searchResults,
@@ -555,6 +561,43 @@ fun AutoCompleteSearchSuggestionItem(
       style = AGTypography.DescriptionGames,
       color = Palette.GreyLight,
     )
+  }
+}
+
+@Composable
+fun EmptySearchView(
+  searchValue: String,
+  navigate: (String) -> Unit,
+) {
+  val trendingBundle = rememberTrendingBundle()
+  Column(
+    modifier = Modifier.fillMaxSize(),
+    verticalArrangement = Arrangement.SpaceBetween
+  ) {
+    Column(
+      modifier = Modifier
+        .fillMaxWidth()
+        .weight(1f),
+      verticalArrangement = Arrangement.Center
+    ) {
+      Image(
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(all = 16.dp),
+        imageVector = getGenericError(Palette.Primary, Palette.GreyLight, Palette.White),
+        contentDescription = null,
+      )
+      Text(
+        modifier = Modifier.padding(start = 40.dp, end = 40.dp, bottom = 32.dp),
+        text = stringResource(R.string.search_empty_body, searchValue),
+        style = AGTypography.Title,
+        color = Palette.White,
+        maxLines = 4,
+        overflow = TextOverflow.Ellipsis,
+        textAlign = TextAlign.Center,
+      )
+    }
+    trendingBundle?.let { AppsGridBundle(trendingBundle, navigate) }
   }
 }
 
