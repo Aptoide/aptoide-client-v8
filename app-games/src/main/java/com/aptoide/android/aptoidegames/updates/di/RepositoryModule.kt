@@ -2,7 +2,7 @@ package com.aptoide.android.aptoidegames.updates.di
 
 import android.content.Context
 import cm.aptoide.pt.feature_updates.presentation.UpdatesNotificationProvider
-import com.aptoide.android.aptoidegames.updates.UpdatesNotificationBuilder
+import com.aptoide.android.aptoidegames.updates.presentation.UpdatesNotificationBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

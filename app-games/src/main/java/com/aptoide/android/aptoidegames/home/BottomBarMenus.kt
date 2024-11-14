@@ -23,7 +23,7 @@ import com.aptoide.android.aptoidegames.drawables.icons.getDownloadIcon
 import com.aptoide.android.aptoidegames.drawables.icons.getSearch
 import com.aptoide.android.aptoidegames.search.presentation.searchRoute
 import com.aptoide.android.aptoidegames.theme.Palette
-import com.aptoide.android.aptoidegames.updates.updatesRoute
+import com.aptoide.android.aptoidegames.updates.presentation.updatesRoute
 
 sealed class BottomBarMenus(
   val route: String,
