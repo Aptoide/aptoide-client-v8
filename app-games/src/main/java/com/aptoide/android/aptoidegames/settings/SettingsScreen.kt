@@ -56,7 +56,7 @@ import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
-import com.aptoide.android.aptoidegames.updates.UpdatesPreferencesViewModel
+import com.aptoide.android.aptoidegames.updates.presentation.UpdatesPreferencesViewModel
 
 const val settingsRoute = "settings"
 
