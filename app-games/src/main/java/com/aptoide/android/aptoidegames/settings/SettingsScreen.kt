@@ -56,6 +56,7 @@ import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
+import com.aptoide.android.aptoidegames.updates.UpdatesPreferencesViewModel
 
 const val settingsRoute = "settings"
 
@@ -66,6 +67,8 @@ fun settingsScreen(showSnack: (String) -> Unit) = ScreenData(
   val genericAnalytics = rememberGenericAnalytics()
   val networkPreferencesViewModel = hiltViewModel<NetworkPreferencesViewModel>()
   val downloadOnlyOverWifi by networkPreferencesViewModel.downloadOnlyOverWifi.collectAsState()
+  val updatesPreferencesViewModel = hiltViewModel<UpdatesPreferencesViewModel>()
+  val autoUpdateGames by updatesPreferencesViewModel.shouldAutoUpdateGames.collectAsState()
   val deviceInfo = rememberDeviceInfo()
   val clipboardManager: ClipboardManager = LocalClipboardManager.current
   val copiedMessage = stringResource(R.string.settings_copied_to_clipboard_message)
@@ -73,6 +76,7 @@ fun settingsScreen(showSnack: (String) -> Unit) = ScreenData(
   SettingsViewContent(
     title = stringResource(R.string.settings_title),
     downloadOnlyOverWifi = downloadOnlyOverWifi,
+    autoUpdateGames = autoUpdateGames,
     verName = BuildConfig.VERSION_NAME,
     verCode = BuildConfig.VERSION_CODE,
     toggleDownloadOnlyOverWifi = { isChecked ->
@@ -82,6 +86,9 @@ fun settingsScreen(showSnack: (String) -> Unit) = ScreenData(
       } else {
         genericAnalytics.sendDownloadOverWifiDisabled()
       }
+    },
+    toggleAutoUpdateGames = { isChecked ->
+      updatesPreferencesViewModel.setAutoUpdateGames(isChecked)
     },
     onPrivacyPolicyClick = { UrlActivity.open(context, ppUrl) },
     onTermsConditionsClick = { UrlActivity.open(context, tcUrl) },
@@ -106,9 +113,11 @@ fun settingsScreen(showSnack: (String) -> Unit) = ScreenData(
 fun SettingsViewContent(
   title: String = "Settings",
   downloadOnlyOverWifi: Boolean = true,
+  autoUpdateGames: Boolean = true,
   verName: String = "1.2.3",
   verCode: Int = 123,
   toggleDownloadOnlyOverWifi: (Boolean) -> Unit = {},
+  toggleAutoUpdateGames: (Boolean) -> Unit = {},
   sendFeedback: () -> Unit = {},
   copyInfo: () -> Unit = {},
   onContactSupportClick: () -> Unit = {},
@@ -136,6 +145,11 @@ fun SettingsViewContent(
             title = stringResource(R.string.wifi_settings_title),
             enabled = downloadOnlyOverWifi,
             onToggle = toggleDownloadOnlyOverWifi
+          )
+          SettingsSwitchItem(
+            title = stringResource(R.string.settings_auto_update_button),
+            enabled = autoUpdateGames,
+            onToggle = toggleAutoUpdateGames
           )
         }
       }

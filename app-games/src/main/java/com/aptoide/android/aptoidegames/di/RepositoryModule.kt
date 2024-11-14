@@ -39,6 +39,7 @@ import com.aptoide.android.aptoidegames.search.repository.AppGamesAutoCompleteSu
 import com.aptoide.android.aptoidegames.search.repository.AppGamesAutoCompleteSuggestionsRepository.AutoCompleteSearchRetrofitService
 import com.aptoide.android.aptoidegames.search.repository.AppGamesSearchStoreManager
 import com.aptoide.android.aptoidegames.themeDataStore
+import com.aptoide.android.aptoidegames.updatesPreferencesDataStore
 import com.aptoide.android.aptoidegames.userFeatureFlagsDataStore
 import dagger.Module
 import dagger.Provides
@@ -119,6 +120,15 @@ class RepositoryModule {
     @ApplicationContext appContext: Context,
   ): DataStore<Preferences> {
     return appContext.networkPreferencesDataStore
+  }
+
+  @Singleton
+  @Provides
+  @UpdatesPreferencesDataStore
+  fun provideUpdatesPreferencesDataStore(
+    @ApplicationContext appContext: Context,
+  ): DataStore<Preferences> {
+    return appContext.updatesPreferencesDataStore
   }
 
   @Singleton
@@ -241,6 +251,10 @@ annotation class PermissionsDataStore
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class NetworkPreferencesDataStore
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class UpdatesPreferencesDataStore
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
