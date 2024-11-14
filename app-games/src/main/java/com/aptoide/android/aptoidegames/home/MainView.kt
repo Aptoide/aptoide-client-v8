@@ -48,7 +48,7 @@ import com.aptoide.android.aptoidegames.search.presentation.searchScreen
 import com.aptoide.android.aptoidegames.settings.settingsScreen
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.toolbar.AppGamesToolBar
-import com.aptoide.android.aptoidegames.updates.updatesScreen
+import com.aptoide.android.aptoidegames.updates.presentation.updatesScreen
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")

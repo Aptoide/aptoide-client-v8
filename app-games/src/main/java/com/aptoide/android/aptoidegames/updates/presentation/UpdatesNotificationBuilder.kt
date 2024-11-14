@@ -1,4 +1,4 @@
-package com.aptoide.android.aptoidegames.updates
+package com.aptoide.android.aptoidegames.updates.presentation
 
 import android.Manifest
 import android.annotation.SuppressLint
