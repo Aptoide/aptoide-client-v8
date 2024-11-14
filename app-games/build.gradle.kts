@@ -282,6 +282,9 @@ dependencies {
   implementation(LibraryDependency.HILT_WORK)
 
   implementation(LibraryDependency.LIFECYCLE_PROCESS)
+
+  //Pinch to zoom
+  implementation(LibraryDependency.ZOOMABLE)
 }
 
 fun BaseFlavor.buildConfigFieldFromGradleProperty(gradlePropertyName: String) {
