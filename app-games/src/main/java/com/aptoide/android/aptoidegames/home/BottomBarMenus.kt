@@ -16,7 +16,9 @@ import cm.aptoide.pt.feature_updates.presentation.rememberUpdates
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.dto.BundleMeta
 import com.aptoide.android.aptoidegames.analytics.presentation.withBundleMeta
+import com.aptoide.android.aptoidegames.categories.presentation.PreviewAllCategoriesView
 import com.aptoide.android.aptoidegames.categories.presentation.buildAllCategoriesRoute
+import com.aptoide.android.aptoidegames.chatbot.presentation.genieRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getCategories
 import com.aptoide.android.aptoidegames.drawables.icons.getDiscovery
 import com.aptoide.android.aptoidegames.drawables.icons.getDownloadIcon
@@ -50,6 +52,11 @@ sealed class BottomBarMenus(
     route = updatesRoute.withBundleMeta(BundleMeta("updates", "app")),
     titleId = R.string.bottom_navigation_updates
   )
+
+  object GameGenie : BottomBarMenus(
+    route = genieRoute,
+    titleId = R.string.bottom_navigation_updates
+  )
 }
 
 @Composable
@@ -73,6 +80,7 @@ fun BottomBarMenus.Icon() = when (this) {
       }
     }
   }
+  BottomBarMenus.GameGenie -> getDiscovery(Palette.GreyLight).AsBottomBarIcon()
 }
 
 @Composable
