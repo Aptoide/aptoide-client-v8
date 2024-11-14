@@ -1,4 +1,4 @@
-package com.aptoide.android.aptoidegames.chatbot.presentation.composables
+package com.aptoide.android.aptoidegames.gamegenie.presentation.composables
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -17,15 +17,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cm.aptoide.pt.feature_apps.data.App
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
-import com.aptoide.android.aptoidegames.chatbot.domain.ChatbotMessage
-import com.aptoide.android.aptoidegames.chatbot.domain.isUserMessage
+import com.aptoide.android.aptoidegames.gamegenie.domain.GameGenieMessage
+import com.aptoide.android.aptoidegames.gamegenie.domain.isUserMessage
 import com.aptoide.android.aptoidegames.feature_apps.presentation.AppItem
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
-fun MessageBubble(message: ChatbotMessage, apps: List<App>? = null, navigateTo: (String) -> Unit = {}) {
+fun MessageBubble(message: GameGenieMessage, apps: List<App>? = null, navigateTo: (String) -> Unit = {}) {
     Column(
         modifier = Modifier
             .fillMaxWidth()

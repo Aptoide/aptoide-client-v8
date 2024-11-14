@@ -1,6 +1,6 @@
-package com.aptoide.android.aptoidegames.chatbot.domain
+package com.aptoide.android.aptoidegames.gamegenie.domain
 
-data class ChatbotMessage(
+data class GameGenieMessage(
     val author: MessageAuthor,
     val messageBody: String
 )
@@ -10,7 +10,7 @@ enum class MessageAuthor {
     USER
 }
 
-fun ChatbotMessage.isUserMessage() = this.author == MessageAuthor.USER
+fun GameGenieMessage.isUserMessage() = this.author == MessageAuthor.USER
 
 fun String.toMessageAuthor(): MessageAuthor {
     return if(this == "gpt") MessageAuthor.GPT

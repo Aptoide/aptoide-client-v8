@@ -1,20 +1,17 @@
-package com.aptoide.android.aptoidegames.chatbot.presentation
+package com.aptoide.android.aptoidegames.gamegenie.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_apps.domain.AppInfoUseCase
-import com.aptoide.android.aptoidegames.chatbot.data.ChatbotRepository
-import com.aptoide.android.aptoidegames.chatbot.data.GetAppApiRepository
-import com.aptoide.android.aptoidegames.chatbot.data.GetAppApiRepositoryImpl
-import com.aptoide.android.aptoidegames.chatbot.data.toDomainModelQuickChatbotFix
-import com.aptoide.android.aptoidegames.chatbot.domain.ChatInteraction
-import com.aptoide.android.aptoidegames.chatbot.domain.ChatbotMessage
-import com.aptoide.android.aptoidegames.chatbot.domain.ConversationIntent
-import com.aptoide.android.aptoidegames.chatbot.domain.GameContext
-import com.aptoide.android.aptoidegames.chatbot.domain.MessageAuthor
-import com.aptoide.android.aptoidegames.chatbot.io_models.ChatbotRequest
-import com.aptoide.android.aptoidegames.chatbot.io_models.ChatbotResponse
+import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieRepository
+import com.aptoide.android.aptoidegames.gamegenie.data.GetAppApiRepository
+import com.aptoide.android.aptoidegames.gamegenie.domain.ChatInteraction
+import com.aptoide.android.aptoidegames.gamegenie.domain.GameGenieMessage
+import com.aptoide.android.aptoidegames.gamegenie.domain.ConversationIntent
+import com.aptoide.android.aptoidegames.gamegenie.domain.GameContext
+import com.aptoide.android.aptoidegames.gamegenie.domain.MessageAuthor
+import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieRequest
+import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -28,7 +25,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChatbotViewModel @Inject constructor(
-    private val chatbotRepository: ChatbotRepository,
+    private val gameGenieRepository: GameGenieRepository,
     private val appInfoUseCase: GetAppApiRepository,
 ) : ViewModel() {
     private val viewModelState = MutableStateFlow(ChatbotViewModelState())
@@ -48,8 +45,8 @@ class ChatbotViewModel @Inject constructor(
 
             try {
                 val response =
-                    chatbotRepository.getMessages(
-                        ChatbotRequest(
+                    gameGenieRepository.getMessages(
+                        GameGenieRequest(
                             conversation = updatedConversation,
                             state = uiState.value.state
                         )
@@ -73,8 +70,8 @@ class ChatbotViewModel @Inject constructor(
                 viewModelState.update {
                     it.copy(
                         type = when (e) {
-                            is IOException -> ChatbotUIStateType.NO_CONNECTION
-                            else -> ChatbotUIStateType.ERROR
+                            is IOException -> GameGenieUIStateType.NO_CONNECTION
+                            else -> GameGenieUIStateType.ERROR
                         }
                     )
                 }
@@ -95,18 +92,18 @@ class ChatbotViewModel @Inject constructor(
     private fun updateStateForLoading(updatedConversation: List<ChatInteraction>) {
         viewModelState.update {
             it.copy(
-                type = ChatbotUIStateType.LOADING,
+                type = GameGenieUIStateType.LOADING,
                 conversation = updatedConversation,
                 apps = emptyList()
             )
         }
     }
 
-    private fun updateStateForSuccess(response: ChatbotResponse, apps: List<App>) {
+    private fun updateStateForSuccess(response: GameGenieResponse, apps: List<App>) {
         viewModelState.update {
             it.copy(
                 messages = response.conversation.toChatbotMessageList(),
-                type = ChatbotUIStateType.IDLE,
+                type = GameGenieUIStateType.IDLE,
                 conversation = response.conversation,
                 state = ConversationIntent.fromValue(response.state) ?: ConversationIntent.OTHER,
                 apps = apps,
@@ -116,18 +113,18 @@ class ChatbotViewModel @Inject constructor(
     }
 }
 
-fun List<ChatInteraction>.toChatbotMessageList(): List<ChatbotMessage> {
+fun List<ChatInteraction>.toChatbotMessageList(): List<GameGenieMessage> {
     return this.flatMap { interaction ->
         listOfNotNull(
-            ChatbotMessage(MessageAuthor.GPT, interaction.gpt),
-            interaction.user?.let { ChatbotMessage(MessageAuthor.USER, it) }
+            GameGenieMessage(MessageAuthor.GPT, interaction.gpt),
+            interaction.user?.let { GameGenieMessage(MessageAuthor.USER, it) }
         )
     }
 }
 
 private data class ChatbotViewModelState(
-    val messages: List<ChatbotMessage> = emptyList(),
-    val type: ChatbotUIStateType = ChatbotUIStateType.IDLE,
+    val messages: List<GameGenieMessage> = emptyList(),
+    val type: GameGenieUIStateType = GameGenieUIStateType.IDLE,
     val conversation: List<ChatInteraction> = listOf(
         ChatInteraction(
             "こんにちは！アプリやゲームの検索や発見をお手伝いします。必要に応じてご利用ください。",
@@ -140,8 +137,8 @@ private data class ChatbotViewModelState(
     val apps: List<App> = emptyList(),
     val packageName: String? = null
 ) {
-    fun toUiState(): ChatbotUIState =
-        ChatbotUIState(
+    fun toUiState(): GameGenieUIState =
+        GameGenieUIState(
             // messages state must not be altered by code, only the conversation
             messages = conversation.toChatbotMessageList(),
             type = type,
