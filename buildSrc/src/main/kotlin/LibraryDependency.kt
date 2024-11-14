@@ -79,6 +79,7 @@ object LibraryVersion {
   const val APPCOINS_SDK = "0.6.7.0"
   const val KOTLIN_COMPILER_EXTENSION = "1.4.8"
   const val INDICATIVE_VERSION = "1.1.0"
+  const val ZOOMABLE_VERSION = "1.6.2"
 }
 
 object JavaLibrary {
@@ -181,4 +182,5 @@ object LibraryDependency {
   const val APPCOINS_SDK = "io.catappult:appcoins-contract-proxy:${LibraryVersion.APPCOINS_SDK}"
   const val APPCOINS_SDK_COMMUNICATION = "io.catappult:communication:${LibraryVersion.APPCOINS_SDK}"
   const val INDICATIVE_SDK = "com.indicative.client.android:Indicative-Android:${INDICATIVE_VERSION}"
+  const val ZOOMABLE = "net.engawapg.lib:zoomable:${LibraryVersion.ZOOMABLE_VERSION}"
 }
