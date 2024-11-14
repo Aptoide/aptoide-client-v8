@@ -28,6 +28,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.runPreviewable
+import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.home.BottomBarMenus
 import com.aptoide.android.aptoidegames.home.Icon
@@ -58,6 +59,7 @@ fun AppGamesBottomBar(navController: NavController) {
   if (selection >= 0) {
     AppGamesBottomNavigation(backgroundColor = Color.Transparent) {
       bottomNavigationItems.forEachIndexed { index, item ->
+        if (item == BottomBarMenus.GameGenie && !BuildConfig.SHOW_GAME_GENIE) return@AppGamesBottomNavigation
         val isSelected = selection == index
         AddBottomNavigationItem(
           item = item,
@@ -68,6 +70,7 @@ fun AppGamesBottomBar(navController: NavController) {
               BottomBarMenus.Search -> genericAnalytics.sendBottomBarSearchClick()
               BottomBarMenus.Categories -> genericAnalytics.sendBottomBarCategoriesClick()
               BottomBarMenus.Updates -> genericAnalytics.sendBottomBarUpdatesClick()
+              BottomBarMenus.GameGenie -> {}
             }
             navController.navigate(item.route) {
               popUpTo(navController.graph.startDestinationId) {
@@ -138,6 +141,7 @@ val bottomNavigationItems = listOf(
   BottomBarMenus.Search,
   BottomBarMenus.Categories,
   BottomBarMenus.Updates,
+  BottomBarMenus.GameGenie
 )
 
 /**
