@@ -56,7 +56,7 @@ import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
-import com.aptoide.android.aptoidegames.updates.presentation.UpdatesPreferencesViewModel
+import com.aptoide.android.aptoidegames.updates.di.rememberAutoUpdate
 
 const val settingsRoute = "settings"
 
@@ -67,8 +67,7 @@ fun settingsScreen(showSnack: (String) -> Unit) = ScreenData(
   val genericAnalytics = rememberGenericAnalytics()
   val networkPreferencesViewModel = hiltViewModel<NetworkPreferencesViewModel>()
   val downloadOnlyOverWifi by networkPreferencesViewModel.downloadOnlyOverWifi.collectAsState()
-  val updatesPreferencesViewModel = hiltViewModel<UpdatesPreferencesViewModel>()
-  val autoUpdateGames by updatesPreferencesViewModel.shouldAutoUpdateGames.collectAsState()
+  val (autoUpdateGames, toggleAutoUpdateGames) = rememberAutoUpdate()
   val deviceInfo = rememberDeviceInfo()
   val clipboardManager: ClipboardManager = LocalClipboardManager.current
   val copiedMessage = stringResource(R.string.settings_copied_to_clipboard_message)
@@ -88,7 +87,7 @@ fun settingsScreen(showSnack: (String) -> Unit) = ScreenData(
       }
     },
     toggleAutoUpdateGames = { isChecked ->
-      updatesPreferencesViewModel.setAutoUpdateGames(isChecked)
+      toggleAutoUpdateGames(isChecked)
     },
     onPrivacyPolicyClick = { UrlActivity.open(context, ppUrl) },
     onTermsConditionsClick = { UrlActivity.open(context, tcUrl) },
