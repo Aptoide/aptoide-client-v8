@@ -11,9 +11,12 @@ class CachingInstallPackageInfoMapper(
   private val cache: MutableMap<String, InstallPackageInfo> = mutableMapOf()
   private val mutex = Mutex()
 
-  override suspend fun map(app: App): InstallPackageInfo =
+  override suspend fun map(app: App, shouldCallGetMeta: Boolean): InstallPackageInfo =
     mutex.withLock {
-      cache["${app.packageName}${app.versionCode}"] ?: installPackageInfoMapper.map(app).also {
+      cache["${app.packageName}${app.versionCode}"] ?: installPackageInfoMapper.map(
+        app,
+        shouldCallGetMeta
+      ).also {
         cache["${app.packageName}${app.versionCode}"] = it
       }
     }
