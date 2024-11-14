@@ -15,6 +15,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import cm.aptoide.pt.extensions.isAllowed
+import cm.aptoide.pt.feature_apps.data.model.AppJSON
 import cm.aptoide.pt.feature_updates.presentation.UpdatesNotificationProvider
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.MainActivity
@@ -63,16 +64,22 @@ class UpdatesNotificationBuilder @Inject constructor(
   }
 
   override suspend fun showUpdatesNotification(
-    numberOfUpdates: Int
+    updates: List<AppJSON>
   ) {
+    val title =
+      if (updates.size == 1 && updates.first().packageName == BuildConfig.APPLICATION_ID) {
+        context.resources.getString(R.string.update_aptoide_games_update_notification)
+      } else {
+        context.resources.getQuantityString(
+          R.plurals.update_notification_title,
+          updates.size, updates.size
+        )
+      }
     val notificationId = "Updates".hashCode()
     val notification = buildNotification(
       requestCode = notificationId,
       contentText = context.getString(R.string.update_notification_body),
-      contentTitle = context.resources.getQuantityString(
-        R.plurals.update_notification_title,
-        numberOfUpdates, numberOfUpdates
-      )
+      contentTitle = title
     )
 
     notification?.let { showNotification(notificationId, notification) }

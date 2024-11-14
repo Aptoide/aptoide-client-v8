@@ -73,7 +73,7 @@ class Updates @Inject constructor(
     val updates = updatesRepository.loadUpdates(apksData)
     updatesRepository.replaceWith(*updates.toTypedArray())
     if (updates.isNotEmpty()) {
-      updatesNotificationBuilder.showUpdatesNotification(updates.size)
+      updatesNotificationBuilder.showUpdatesNotification(updates)
     }
   }
 

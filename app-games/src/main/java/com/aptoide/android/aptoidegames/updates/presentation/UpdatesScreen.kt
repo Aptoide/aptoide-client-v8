@@ -118,7 +118,7 @@ private fun AppsList(
     modifier = Modifier.fillMaxWidth(),
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
-    UpdateBox(updates = appList.size)
+    UpdateBox(updates = appList)
     LazyColumn(
       modifier = Modifier
         .semantics { collectionInfo = CollectionInfo(appList.size, 1) }
@@ -142,7 +142,17 @@ private fun AppsList(
 }
 
 @Composable
-fun UpdateBox(updates:Int) {
+fun UpdateBox(updates: List<App>) {
+  val text =
+    if (updates.size == 1 && updates.first().packageName == BuildConfig.APPLICATION_ID) {
+      stringResource(R.string.update_aptoide_games_update_notification)
+    } else {
+      pluralStringResource(
+        R.plurals.update_games_can_be_updated_body,
+        updates.size,
+        updates.size
+      )
+    }
   Box(
     modifier = Modifier
       .fillMaxWidth()
@@ -163,11 +173,8 @@ fun UpdateBox(updates:Int) {
         modifier = Modifier
           .fillMaxWidth()
           .padding(start = 8.dp),
-        text = pluralStringResource(
-          R.plurals.update_games_can_be_updated_body,
-          updates,
-          updates
-        ), color = Palette.White,
+        text = text,
+        color = Palette.White,
         style = AGTypography.BodyBold,
       )
     }
@@ -177,7 +184,7 @@ fun UpdateBox(updates:Int) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewUpdateBox() {
-  UpdateBox(5)
+  UpdateBox(List((0..5).random()) { randomApp })
 }
 
 @Preview(showBackground = false)
