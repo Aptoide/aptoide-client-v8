@@ -1,8 +1,8 @@
-package com.aptoide.android.aptoidegames.chatbot.di
+package com.aptoide.android.aptoidegames.gamegenie.di
 
 import cm.aptoide.pt.aptoide_network.di.RetrofitV7
-import com.aptoide.android.aptoidegames.chatbot.data.GetAppApiRepository
-import com.aptoide.android.aptoidegames.chatbot.data.GetAppApiRepositoryImpl
+import com.aptoide.android.aptoidegames.gamegenie.data.GetAppApiRepository
+import com.aptoide.android.aptoidegames.gamegenie.data.GetAppApiRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

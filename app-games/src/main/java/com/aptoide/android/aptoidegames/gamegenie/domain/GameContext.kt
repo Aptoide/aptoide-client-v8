@@ -1,4 +1,4 @@
-package com.aptoide.android.aptoidegames.chatbot.domain
+package com.aptoide.android.aptoidegames.gamegenie.domain
 
 import com.google.gson.annotations.SerializedName
 

@@ -1,4 +1,4 @@
-package com.aptoide.android.aptoidegames.chatbot.presentation.composables
+package com.aptoide.android.aptoidegames.gamegenie.presentation.composables
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

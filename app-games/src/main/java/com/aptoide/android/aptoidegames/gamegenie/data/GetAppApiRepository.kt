@@ -1,4 +1,4 @@
-package com.aptoide.android.aptoidegames.chatbot.data
+package com.aptoide.android.aptoidegames.gamegenie.data
 
 import cm.aptoide.pt.feature_apps.data.App
 

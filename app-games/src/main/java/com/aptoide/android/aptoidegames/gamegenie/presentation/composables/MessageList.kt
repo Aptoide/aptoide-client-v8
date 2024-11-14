@@ -1,4 +1,4 @@
-package com.aptoide.android.aptoidegames.chatbot.presentation.composables
+package com.aptoide.android.aptoidegames.gamegenie.presentation.composables
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -9,11 +9,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.feature_apps.data.App
-import com.aptoide.android.aptoidegames.chatbot.domain.ChatbotMessage
-import com.aptoide.android.aptoidegames.chatbot.domain.GameContext
+import com.aptoide.android.aptoidegames.gamegenie.domain.GameGenieMessage
 
 @Composable
-fun MessageList(messages: List<ChatbotMessage>, apps: List<App>, navigateTo: (String) -> Unit, listState: LazyListState, modifier: Modifier = Modifier) {
+fun MessageList(messages: List<GameGenieMessage>, apps: List<App>, navigateTo: (String) -> Unit, listState: LazyListState, modifier: Modifier = Modifier) {
     LazyColumn(
         state = listState,
         verticalArrangement = Arrangement.Bottom,

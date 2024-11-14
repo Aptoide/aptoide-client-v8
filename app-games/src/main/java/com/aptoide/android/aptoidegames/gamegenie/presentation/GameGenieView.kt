@@ -1,4 +1,4 @@
-package com.aptoide.android.aptoidegames.chatbot.presentation
+package com.aptoide.android.aptoidegames.gamegenie.presentation
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,8 +17,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cm.aptoide.pt.extensions.ScreenData
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
-import com.aptoide.android.aptoidegames.chatbot.presentation.composables.MessageList
-import com.aptoide.android.aptoidegames.chatbot.presentation.composables.TextInputBar
+import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.MessageList
+import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.TextInputBar
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.error_views.NoConnectionView
 
@@ -43,7 +43,7 @@ fun chatbotScreen() = ScreenData.withAnalytics(
 
 @Composable
 fun ChatbotView(
-    uiState: ChatbotUIState,
+    uiState: GameGenieUIState,
     navigateTo: (String) -> Unit,
     onError: () -> Unit,
     onMessageSend: (String) -> Unit,
@@ -56,17 +56,17 @@ fun ChatbotView(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         when (uiState.type) {
-            ChatbotUIStateType.LOADING -> ChatScreen(uiState = uiState, navigateTo = navigateTo, onMessageSend = {})
-            ChatbotUIStateType.NO_CONNECTION -> NoConnectionView(onRetryClick = onError)
-            ChatbotUIStateType.ERROR -> GenericErrorView(onError)
-            ChatbotUIStateType.IDLE -> ChatScreen(uiState = uiState, navigateTo = navigateTo, onMessageSend = onMessageSend)
+            GameGenieUIStateType.LOADING -> ChatScreen(uiState = uiState, navigateTo = navigateTo, onMessageSend = {})
+            GameGenieUIStateType.NO_CONNECTION -> NoConnectionView(onRetryClick = onError)
+            GameGenieUIStateType.ERROR -> GenericErrorView(onError)
+            GameGenieUIStateType.IDLE -> ChatScreen(uiState = uiState, navigateTo = navigateTo, onMessageSend = onMessageSend)
         }
     }
 }
 
 @Composable
 fun ChatScreen(
-    uiState: ChatbotUIState,
+    uiState: GameGenieUIState,
     navigateTo: (String) -> Unit,
     onMessageSend: (String) -> Unit
 ) {
