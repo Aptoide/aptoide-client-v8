@@ -30,6 +30,7 @@ import cm.aptoide.pt.feature_apkfy.presentation.rememberApkfyApp
 import com.aptoide.android.aptoidegames.AptoideGamesBottomSheet
 import com.aptoide.android.aptoidegames.apkfy.ApkfyBottomSheetContent
 import com.aptoide.android.aptoidegames.appview.appViewScreen
+import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.appview.permissions.appPermissionsScreen
 import com.aptoide.android.aptoidegames.bottom_bar.AppGamesBottomBar
 import com.aptoide.android.aptoidegames.categories.presentation.allCategoriesScreen
@@ -44,6 +45,8 @@ import com.aptoide.android.aptoidegames.notifications.NotificationsPermissionReq
 import com.aptoide.android.aptoidegames.permissions.notifications.NotificationsPermissionViewModel
 import com.aptoide.android.aptoidegames.promo_codes.PromoCodeBottomSheet
 import com.aptoide.android.aptoidegames.promo_codes.rememberPromoCodeApp
+import com.aptoide.android.aptoidegames.promotions.presentation.PromotionDialog
+import com.aptoide.android.aptoidegames.promotions.presentation.PromotionsViewModel
 import com.aptoide.android.aptoidegames.search.presentation.searchScreen
 import com.aptoide.android.aptoidegames.settings.settingsScreen
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
@@ -62,6 +65,9 @@ fun MainView(navController: NavHostController) {
   val coroutineScope = rememberCoroutineScope()
   val goBackHome: () -> Unit =
     { navController.popBackStack(navController.graph.startDestinationId, false) }
+
+  val promotionsViewModel = hiltViewModel<PromotionsViewModel>()
+  val promotionData by promotionsViewModel.uiState.collectAsState()
 
   val apkfyApp = rememberApkfyApp()
   var apkfyShown by remember { mutableStateOf(false) }
@@ -97,6 +103,19 @@ fun MainView(navController: NavHostController) {
             onDismiss = notificationsPermissionViewModel::dismissDialog
           )
         }
+        promotionData?.let {
+          PromotionDialog(
+            onPositiveClick = {
+              promotionsViewModel.dismissPromotion()
+              navController.navigateTo(buildAppViewRoute(it.second))
+            },
+            onNegativeClick = { promotionsViewModel.dismissPromotion() },
+            app = it.second,
+            title = it.first.title,
+            description = it.first.content,
+          )
+        }
+
 
         Box(modifier = Modifier.padding(padding)) {
           NavigationGraph(
