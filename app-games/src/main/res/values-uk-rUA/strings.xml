@@ -5,7 +5,7 @@
   <string name="games">Ігри</string>
   <string name="categories">Категорії</string>
   <string name="search">Шукати</string>
-  <string name="bottom_navigation_updates">Updates</string>
+  <string name="bottom_navigation_updates">Оновлення</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Налаштування</string>
   <string name="overflow_menu_terms_conditions">Умови та положення</string>
@@ -113,7 +113,7 @@
   <string name="screenshot_appview_3">Новий спосіб знайти свою улюблену гру.</string>
   <string name="screenshot_appview_4">Зручний інтерфейс з найкращим контентом.</string>
   <string name="screenshot_appview_5">Відібрані ігри спеціально для вас.</string>
-  <string name="not_now_button">Not now</string>
+  <string name="not_now_button">Не зараз</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Немає вільного місця</string>
   <string name="out_of_space_body">Вам потрібно %s, щоб продовжити встановлення.</string>
@@ -229,11 +229,11 @@
   <string name="promo_code_share_title">Ви отримали промокод!</string>
   <string name="promo_code_share_body">Скористайтеся цим промокодом, щоб отримати додаткові бонуси в улюбленій грі.</string>
   <!-- Update -->
-  <string name="update_up_to_date_title">Congrats!</string>
-  <string name="update_up_to_date_body">You\'re up to date.</string>
+  <string name="update_up_to_date_title">Вітаємо!</string>
+  <string name="update_up_to_date_body">У вас остання версія.</string>
   <string name="update_auto_update_title">Enjoy the best gaming experience and keep your games updated.</string>
   <string name="update_auto_update_slider">Keep games updated automatically</string>
-  <string name="update_update_all_button">Update all</string>
+  <string name="update_update_all_button">Оновити все</string>
   <string name="update_aptoide_games_title">New Version Available!</string>
   <string name="update_aptoide_games_body">Update Aptoide Games to the latest version to keep enjoying the best gaming discovery experience.</string>
   <string name="update_aptoide_games_update_close_body">Aptoide Games will close to update. Just open it again!</string>
