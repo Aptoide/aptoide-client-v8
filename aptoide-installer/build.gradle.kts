@@ -1,9 +1,9 @@
 plugins {
   alias(libs.plugins.android.library)
-  id(GradlePluginId.ANDROID_MODULE)
-  id(GradlePluginId.HILT)
-  id(GradlePluginId.COMPOSABLE)
-  id(GradlePluginId.KOTLIN_KSP)
+  alias(libs.plugins.android.module)
+  alias(libs.plugins.hilt)
+  alias(libs.plugins.composable)
+  alias(libs.plugins.ksp)
 }
 
 android {

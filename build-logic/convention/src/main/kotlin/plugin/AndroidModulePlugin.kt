@@ -1,13 +1,11 @@
 package plugin
 
-import AndroidConfig
-import GradlePluginId
-import JavaLibrary
-import LibraryDependency
 import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.api.dsl.LibraryExtension
 import com.android.build.gradle.BaseExtension
+import extensions.libs
 import org.gradle.api.GradleException
+import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -21,11 +19,11 @@ class AndroidModulePlugin : Plugin<Project> {
     val extension = project.extensions.getByName("android") as? BaseExtension
     when (extension) {
       is ApplicationExtension -> extension.apply {
-        compileSdk = AndroidConfig.COMPILE_SDK
+        compileSdk = project.libs.findVersion("compileSdk").get().toString().toInt()
 
         defaultConfig {
-          minSdk = AndroidConfig.MIN_SDK
-          targetSdk = AndroidConfig.TARGET_SDK
+          minSdk = project.libs.findVersion("minSdk").get().toString().toInt()
+          targetSdk = project.libs.findVersion("targetSdk").get().toString().toInt()
         }
 
         signingConfigs {
@@ -41,7 +39,10 @@ class AndroidModulePlugin : Plugin<Project> {
           release {
             isMinifyEnabled = true
             isShrinkResources = true
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+              getDefaultProguardFile("proguard-android-optimize.txt"),
+              "proguard-rules.pro"
+            )
           }
 
           debug {
@@ -52,8 +53,8 @@ class AndroidModulePlugin : Plugin<Project> {
         }
 
         compileOptions {
-          sourceCompatibility = JavaLibrary.SOURCE_COMPATIBILITY_JAVA_VERSION
-          targetCompatibility = JavaLibrary.TARGET_COMPATIBILITY_JAVA_VERSION
+          sourceCompatibility = JavaVersion.VERSION_17
+          targetCompatibility = JavaVersion.VERSION_17
         }
 
         lint {
@@ -65,23 +66,26 @@ class AndroidModulePlugin : Plugin<Project> {
       }
 
       is LibraryExtension -> extension.apply {
-        compileSdk = AndroidConfig.COMPILE_SDK
+        compileSdk = project.libs.findVersion("compileSdk").get().toString().toInt()
 
         defaultConfig {
-          minSdk = AndroidConfig.MIN_SDK
+          minSdk = project.libs.findVersion("minSdk").get().toString().toInt()
 
           consumerProguardFiles("consumer-rules.pro")
         }
 
         buildTypes {
           release {
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+              getDefaultProguardFile("proguard-android-optimize.txt"),
+              "proguard-rules.pro"
+            )
           }
         }
 
         compileOptions {
-          sourceCompatibility = JavaLibrary.SOURCE_COMPATIBILITY_JAVA_VERSION
-          targetCompatibility = JavaLibrary.TARGET_COMPATIBILITY_JAVA_VERSION
+          sourceCompatibility = JavaVersion.VERSION_17
+          targetCompatibility = JavaVersion.VERSION_17
         }
 
         lint {
@@ -92,20 +96,21 @@ class AndroidModulePlugin : Plugin<Project> {
       else -> throw GradleException("Unsupported BaseExtension type!")
     }
 
-    project.plugins.apply {
-      apply(GradlePluginId.KOTLIN_ANDROID)
-    }
-    project.dependencies.apply {
-      // kotlin
-      add("implementation", LibraryDependency.CORE_KTX)
-      add("implementation", LibraryDependency.KOTLIN)
+    with(project) {
+      plugins.apply(libs.findPlugin("kotlin-android").get().get().pluginId)
 
-      // coroutines
-      add("implementation", LibraryDependency.COROUTINES)
-      add("implementation", LibraryDependency.COROUTINES_CORE)
+      dependencies.apply {
+        // kotlin
+        add("implementation", libs.findLibrary("core-ktx").get())
+        add("implementation", libs.findLibrary("kotlin").get())
 
-      //logger
-      add("implementation", LibraryDependency.TIMBER)
+        // coroutines
+        add("implementation", libs.findLibrary("coroutines").get())
+        add("implementation", libs.findLibrary("coroutines-core").get())
+
+        //logger
+        add("implementation", libs.findLibrary("timber").get())
+      }
     }
   }
 }
