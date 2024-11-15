@@ -5,7 +5,7 @@
   <string name="games">Jocuri</string>
   <string name="categories">Categorii</string>
   <string name="search">Căutare</string>
-  <string name="bottom_navigation_updates">Updates</string>
+  <string name="bottom_navigation_updates">Actualizări</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Setări</string>
   <string name="overflow_menu_terms_conditions">Termeni &amp; condiții</string>
@@ -113,7 +113,7 @@
   <string name="screenshot_appview_3">Un mod nou de a descoperi jocul tău preferat.</string>
   <string name="screenshot_appview_4">O interfață ușor de utilizat cu cel mai bun conținut.</string>
   <string name="screenshot_appview_5">Jocuri alese special pentru tine.</string>
-  <string name="not_now_button">Not now</string>
+  <string name="not_now_button">Nu acum</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Spațiu epuizat</string>
   <string name="out_of_space_body">Ai nevoie de %s pentru a continua cu instalarea.</string>
@@ -158,7 +158,7 @@
   <string name="purchase_done_bonus_wallet_installed_body">Deschide pentru a găsi bonusul.</string>
   <string name="bonus_banner_body">Vei primi un bonus în toate jocurile marcate cu %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Bonus de până la %s%%</string>
-  <string name="settings_auto_update_button">Auto-update games</string>
+  <string name="settings_auto_update_button">Actualizare automată jocuri</string>
   <string name="settings_payments_title" comment="contact_support_team">Contactează echipa de asistență</string>
   <string name="settings_contact_support_body" comment="billing_terms_of_use">Termeni de utilizare pentru Facturare</string>
   <string name="settings_billing_terms_body" comment="payments">Plăți</string>
@@ -229,24 +229,24 @@
   <string name="promo_code_share_title">Ai primit un cod promo!</string>
   <string name="promo_code_share_body">Folosește acest cod promoțional pentru a obține bonusuri suplimentare în jocul tău preferat.</string>
   <!-- Update -->
-  <string name="update_up_to_date_title">Congrats!</string>
-  <string name="update_up_to_date_body">You\'re up to date.</string>
-  <string name="update_auto_update_title">Enjoy the best gaming experience and keep your games updated.</string>
-  <string name="update_auto_update_slider">Keep games updated automatically</string>
-  <string name="update_update_all_button">Update all</string>
-  <string name="update_aptoide_games_title">New Version Available!</string>
-  <string name="update_aptoide_games_body">Update Aptoide Games to the latest version to keep enjoying the best gaming discovery experience.</string>
-  <string name="update_aptoide_games_update_close_body">Aptoide Games will close to update. Just open it again!</string>
+  <string name="update_up_to_date_title">Felicitări!</string>
+  <string name="update_up_to_date_body">Ești la zi.</string>
+  <string name="update_auto_update_title">Bucură-te de cea mai bună experiență de joc și fii la zi cu actualizările jocurilor tale.</string>
+  <string name="update_auto_update_slider">Actualizează-ți automat jocurile</string>
+  <string name="update_update_all_button">Actualizează toate</string>
+  <string name="update_aptoide_games_title">Versiune nouă disponibilă!</string>
+  <string name="update_aptoide_games_body">Actualizează Aptoide Games la cea mai recentă versiune pentru a te bucura în continuare de cea mai bună experiență de joc.</string>
+  <string name="update_aptoide_games_update_close_body">Aptoide Games se va închide pentru actualizare. Trebuie doar să-l deschizi din nou.</string>
   <plurals name="update_games_can_be_updated_body">
-    <item quantity="one">%s game can be updated</item>
-    <item quantity="few">%s games can be updated</item>
-    <item quantity="other">%s games can be updated</item>
+    <item quantity="one">%s joc poate fi actualizat</item>
+    <item quantity="few">%s jocuri pot fi actualizate</item>
+    <item quantity="other">%s jocuri pot fi actualizate</item>
   </plurals>
   <plurals name="update_notification_title">
-    <item quantity="one">You\'ve got %s update available</item>
-    <item quantity="few">You\'ve got %s updates available</item>
-    <item quantity="other">You\'ve got %s updates available</item>
+    <item quantity="one">Ai %s actualizare disponibilă.</item>
+    <item quantity="few">Ai %s actualizări disponibile.</item>
+    <item quantity="other">Ai %s actualizări disponibile.</item>
   </plurals>
-  <string name="update_notification_body">Tap here to install.</string>
-  <string name="update_aptoide_games_update_notification">There\'s a new version of Aptoide Games</string>
+  <string name="update_notification_body">Apasă aici pentru a instala.</string>
+  <string name="update_aptoide_games_update_notification">Avem o versiune nouă pentru Aptoide Games</string>
 </resources>

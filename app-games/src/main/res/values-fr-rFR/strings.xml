@@ -5,7 +5,7 @@
   <string name="games">Jeux</string>
   <string name="categories">Catégories</string>
   <string name="search">Recherche</string>
-  <string name="bottom_navigation_updates">Updates</string>
+  <string name="bottom_navigation_updates">Mises à jour</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Paramètres</string>
   <string name="overflow_menu_terms_conditions">Termes &amp;et Conditions</string>
@@ -113,7 +113,7 @@
   <string name="screenshot_appview_3">Une nouvelle façon de découvrir votre jeu préféré.</string>
   <string name="screenshot_appview_4">Une interface transparente avec le meilleur des contenus.</string>
   <string name="screenshot_appview_5">Des jeux triés sur le volet, rien que pour vous.</string>
-  <string name="not_now_button">Not now</string>
+  <string name="not_now_button">Pas maintenant</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Espace insuffisant</string>
   <string name="out_of_space_body">Vous avez besoin de %s pour continuer l\'installation.</string>
@@ -158,7 +158,7 @@
   <string name="purchase_done_bonus_wallet_installed_body">Ouvrez pour découvrir votre bonus.</string>
   <string name="bonus_banner_body">Vous obtiendrez un bonus dans tous les jeux identifiés par %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Jusqu\'à %s%% de Bonus</string>
-  <string name="settings_auto_update_button">Auto-update games</string>
+  <string name="settings_auto_update_button">Mise à jour automatique des jeux</string>
   <string name="settings_payments_title" comment="contact_support_team">Contacter le Support</string>
   <string name="settings_contact_support_body" comment="billing_terms_of_use">Conditions d\'utilisation de la facturation</string>
   <string name="settings_billing_terms_body" comment="payments">Paiements</string>
@@ -229,22 +229,22 @@
   <string name="promo_code_share_title">Vous avez un code promo !</string>
   <string name="promo_code_share_body">Utilisez ce code promo pour obtenir des bonus supplémentaires dans votre jeu préféré.</string>
   <!-- Update -->
-  <string name="update_up_to_date_title">Congrats!</string>
-  <string name="update_up_to_date_body">You\'re up to date.</string>
-  <string name="update_auto_update_title">Enjoy the best gaming experience and keep your games updated.</string>
-  <string name="update_auto_update_slider">Keep games updated automatically</string>
-  <string name="update_update_all_button">Update all</string>
-  <string name="update_aptoide_games_title">New Version Available!</string>
-  <string name="update_aptoide_games_body">Update Aptoide Games to the latest version to keep enjoying the best gaming discovery experience.</string>
-  <string name="update_aptoide_games_update_close_body">Aptoide Games will close to update. Just open it again!</string>
+  <string name="update_up_to_date_title">Félicitations !</string>
+  <string name="update_up_to_date_body">Vous êtes à jour !</string>
+  <string name="update_auto_update_title">Profitez de la meilleure expérience de jeu et assurez-vous que vos jeux sont toujours à jour.</string>
+  <string name="update_auto_update_slider">Mettez vos jeux à jour automatiquement.</string>
+  <string name="update_update_all_button">Tout mettre à jour</string>
+  <string name="update_aptoide_games_title">Nouvelle version disponible !</string>
+  <string name="update_aptoide_games_body">Mettez à jour Aptoide vers la dernière version pour continuer à profiter de la meilleure expérience de jeu.</string>
+  <string name="update_aptoide_games_update_close_body">Aptoide Games va se fermer pour une mise à jour. Il vous suffit de l\'ouvrir à nouveau !</string>
   <plurals name="update_games_can_be_updated_body">
-    <item quantity="one">%s game can be updated</item>
-    <item quantity="other">%s games can be updated</item>
+    <item quantity="one">%s jeu peut être mis à jour</item>
+    <item quantity="other">%s jeux peuvent être mis à jour</item>
   </plurals>
   <plurals name="update_notification_title">
-    <item quantity="one">You\'ve got %s update available</item>
-    <item quantity="other">You\'ve got %s updates available</item>
+    <item quantity="one">Vous avez %s mise à jour disponible</item>
+    <item quantity="other">Vous avez %s mises à jour disponibles</item>
   </plurals>
-  <string name="update_notification_body">Tap here to install.</string>
-  <string name="update_aptoide_games_update_notification">There\'s a new version of Aptoide Games</string>
+  <string name="update_notification_body">Cliquez ici pour installer.</string>
+  <string name="update_aptoide_games_update_notification">Une nouvelle version d\'Aptoide Games est disponible.</string>
 </resources>
