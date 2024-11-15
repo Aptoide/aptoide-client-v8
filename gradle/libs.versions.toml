@@ -172,3 +172,13 @@ ksp = { id = "com.google.devtools.ksp" }
 gms = { id = "com.google.gms.google-services" }
 crashlytics = { id = "com.google.firebase.crashlytics" }
 junit5 = { id = "de.mannodermaus.android-junit5" }
+
+kotlin-android = { id = "org.jetbrains.kotlin.android" }
+kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose" }
+kotlin-kapt = { id = "kotlin-kapt" }
+hilt-android-plugin = { id = "dagger.hilt.android.plugin" }
+
+android-module = { id = "android-module" }
+composable = { id = "composable" }
+hilt = { id = "hilt" }
+tests = { id = "tests" }

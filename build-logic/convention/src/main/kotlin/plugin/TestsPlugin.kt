@@ -1,11 +1,9 @@
 package plugin
 
-import GradlePluginId
-import ModuleDependency
-import TestLibraryDependency
 import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.api.dsl.LibraryExtension
 import com.android.build.gradle.BaseExtension
+import extensions.libs
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -15,10 +13,12 @@ class TestsPlugin : Plugin<Project> {
     (project.extensions.getByName("android") as? BaseExtension)
       .let { it as? ApplicationExtension ?: it as? LibraryExtension }
       ?: throw GradleException("Unsupported BaseExtension type!")
-    project.plugins.apply(GradlePluginId.JUNIT5_PLUGIN)
-    project.dependencies.apply {
-      add("testRuntimeOnly", TestLibraryDependency.JUNIT_JUPITER_ENGINE)
-      add("testImplementation", project.project(ModuleDependency.TEST))
+    with(project) {
+      plugins.apply(libs.findPlugin("junit5").get().get().pluginId)
+      dependencies.apply {
+        add("testRuntimeOnly", libs.findLibrary("junit-jupiter-engine").get())
+        add("testImplementation", project.project(":test"))
+      }
     }
   }
 }

@@ -5,9 +5,9 @@ import java.util.Date
 
 plugins {
   alias(libs.plugins.android.application)
-  id(GradlePluginId.ANDROID_MODULE)
-  id(GradlePluginId.COMPOSABLE)
-  id(GradlePluginId.HILT)
+  alias(libs.plugins.android.module)
+  alias(libs.plugins.composable)
+  alias(libs.plugins.hilt)
 }
 
 android {

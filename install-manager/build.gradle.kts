@@ -1,7 +1,7 @@
 plugins {
   alias(libs.plugins.android.library)
-  id(GradlePluginId.ANDROID_MODULE)
-  id(GradlePluginId.TESTS)
+  alias(libs.plugins.android.module)
+  alias(libs.plugins.tests)
 }
 
 android {

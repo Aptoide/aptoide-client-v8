@@ -17,24 +17,3 @@ dependencies {
   // Required by HILT. To override older version pushed by gradle plugin
   implementation("com.squareup:javapoet:1.13.0")
 }
-
-gradlePlugin {
-  plugins {
-    register("android-module") {
-      id = "android-module"
-      implementationClass = "plugin.AndroidModulePlugin"
-    }
-    register("composable") {
-      id = "composable"
-      implementationClass = "plugin.ComposablePlugin"
-    }
-    register("hilt") {
-      id = "hilt"
-      implementationClass = "plugin.HiltPlugin"
-    }
-    register("tests") {
-      id = "tests"
-      implementationClass = "plugin.TestsPlugin"
-    }
-  }
-}
