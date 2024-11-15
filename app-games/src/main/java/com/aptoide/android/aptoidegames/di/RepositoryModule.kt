@@ -25,6 +25,7 @@ import cm.aptoide.pt.feature_updates.di.PrioritizedPackagesFilter
 import com.aptoide.android.aptoidegames.AptoideIdsRepository
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.IdsRepository
+import com.aptoide.android.aptoidegames.ahab.di.AhabDomain
 import com.aptoide.android.aptoidegames.appLaunchDataStore
 import com.aptoide.android.aptoidegames.dataStore
 import com.aptoide.android.aptoidegames.feature_flags.AptoideFeatureFlagsRepository
@@ -83,6 +84,11 @@ class RepositoryModule {
   @Provides
   @StoreDomain
   fun provideEnvironmentDomain(): String = BuildConfig.STORE_DOMAIN
+
+  @Singleton
+  @Provides
+  @AhabDomain
+  fun provideAhabDomain(): String = BuildConfig.AHAB_DOMAIN
 
   @Singleton
   @Provides

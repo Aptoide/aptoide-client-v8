@@ -137,6 +137,11 @@ android {
         name = "UTM_SOURCE",
         value = "\"AG_dev\""
       )
+      buildConfigField(
+        type = "String",
+        name = "AHAB_DOMAIN",
+        value = "\"https://api.dev.aptoide.com/ahab/8.20240801/\""
+      )
     }
 
     create("prod") {
@@ -172,6 +177,11 @@ android {
         type = "String",
         name = "UTM_SOURCE",
         value = "\"AG\""
+      )
+      buildConfigField(
+        type = "String",
+        name = "AHAB_DOMAIN",
+        value = "\"https://api.aptoide.com/ahab/8.20240801/\""
       )
     }
   }
