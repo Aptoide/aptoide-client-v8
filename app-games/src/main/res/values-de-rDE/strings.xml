@@ -243,8 +243,8 @@
   </plurals>
   <plurals name="update_notification_title">
     <item quantity="one">Du hast %s Update verfügbar</item>
-    <item quantity="other">You\'ve got %s updates available</item>
+    <item quantity="other">Du hast %s Updates verfügbar</item>
   </plurals>
-  <string name="update_notification_body">Tap here to install.</string>
-  <string name="update_aptoide_games_update_notification">There\'s a new version of Aptoide Games</string>
+  <string name="update_notification_body">Tippe hier für die Installation.</string>
+  <string name="update_aptoide_games_update_notification">Es gibt eine neue Version von Aptoide Games</string>
 </resources>
