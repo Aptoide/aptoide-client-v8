@@ -1,3 +1,21 @@
+pluginManagement {
+  includeBuild("build-logic")
+  repositories {
+    google()
+    mavenCentral()
+    gradlePluginPortal()
+  }
+}
+
+dependencyResolutionManagement {
+  //TODO: Replace with FAIL_ON_PROJECT_REPOS and remove repository declarations outside this file
+  repositoriesMode = RepositoriesMode.PREFER_SETTINGS
+  repositories {
+    google()
+    mavenCentral()
+  }
+}
+
 include(
   ":app",
   ":app-games",
