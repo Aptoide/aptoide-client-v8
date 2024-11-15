@@ -22,6 +22,7 @@ import cm.aptoide.pt.feature_home.di.WidgetsUrl
 import cm.aptoide.pt.feature_oos.di.UninstallPackagesFilter
 import cm.aptoide.pt.feature_search.data.AutoCompleteSuggestionsRepository
 import cm.aptoide.pt.feature_search.domain.repository.SearchStoreManager
+import cm.aptoide.pt.feature_updates.di.PrioritizedPackagesFilter
 import cm.aptoide.pt.network.AptoideGetHeaders
 import cm.aptoide.pt.network.AptoideQLogicInterceptor
 import cm.aptoide.pt.network.repository.IdsRepository
@@ -185,4 +186,11 @@ class RepositoryModule {
   @UninstallPackagesFilter
   fun providePackagesToFilter(): List<String> =
     listOf(BuildConfig.APPLICATION_ID, "com.appcoins.wallet")
+
+  @Singleton
+  @Provides
+  @PrioritizedPackagesFilter
+  fun providePrioritizedPackagesToFilter(): List<String> = listOf(
+    BuildConfig.APPLICATION_ID,
+  )
 }
