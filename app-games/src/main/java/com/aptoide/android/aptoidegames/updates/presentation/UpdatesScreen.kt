@@ -12,13 +12,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.selection.toggleable
+import androidx.compose.material.Divider
 import androidx.compose.material.Text
+import androidx.compose.material.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.CollectionInfo
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.collectionInfo
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
@@ -36,6 +43,7 @@ import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
+import com.aptoide.android.aptoidegames.design_system.AptoideGamesSwitch
 import com.aptoide.android.aptoidegames.drawables.icons.getBolt
 import com.aptoide.android.aptoidegames.drawables.icons.getNoUpdates
 import com.aptoide.android.aptoidegames.feature_apps.presentation.AppItem
@@ -43,6 +51,7 @@ import com.aptoide.android.aptoidegames.home.LoadingView
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
+import com.aptoide.android.aptoidegames.updates.di.rememberAutoUpdate
 
 const val updatesRoute = "updates"
 
@@ -76,35 +85,93 @@ fun UpdatesScreen(
 
 @Composable
 fun NoUpdatesScreen() {
+  val (autoUpdateGames, toggleAutoUpdate) = rememberAutoUpdate()
+  val showAutoUpdateToggle = remember { mutableStateOf(false) }
+  LaunchedEffect(key1 = autoUpdateGames) {
+    if (!autoUpdateGames) showAutoUpdateToggle.value = true
+  }
+
   Column(
     modifier = Modifier.fillMaxSize(),
     verticalArrangement = Arrangement.Center,
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
-    Image(
-      modifier = Modifier
-        .padding(bottom = 88.dp, start = 16.dp, end = 16.dp)
-        .fillMaxWidth(),
-      imageVector = getNoUpdates(Palette.Primary, Palette.White, Palette.GreyLight),
-      contentDescription = null,
+    if (showAutoUpdateToggle.value) {
+      NoUpdatesTopSection(40)
+      NoUpdatesViewWithAutoUpdateOff(autoUpdateGames, toggleAutoUpdate)
+    } else {
+      NoUpdatesTopSection(88)
+    }
+  }
+}
+
+@Composable
+private fun NoUpdatesTopSection(imageBottomPadding: Int) {
+  Image(
+    modifier = Modifier
+      .padding(bottom = imageBottomPadding.dp, start = 16.dp, end = 16.dp)
+      .fillMaxWidth(),
+    imageVector = getNoUpdates(Palette.Primary, Palette.White, Palette.GreyLight),
+    contentDescription = null,
+  )
+  Text(
+    modifier = Modifier.padding(horizontal = 40.dp),
+    text = stringResource(R.string.update_up_to_date_title),
+    style = AGTypography.Title,
+    color = Palette.White,
+    maxLines = 2,
+    overflow = TextOverflow.Ellipsis,
+    textAlign = TextAlign.Center,
+  )
+  Text(
+    modifier = Modifier.padding(horizontal = 40.dp),
+    text = stringResource(R.string.update_up_to_date_body),
+    style = AGTypography.Title,
+    color = Palette.White,
+    maxLines = 2,
+    overflow = TextOverflow.Ellipsis,
+    textAlign = TextAlign.Center,
+  )
+}
+
+@Composable
+private fun NoUpdatesViewWithAutoUpdateOff(
+  autoUpdateGames: Boolean,
+  toggleAutoUpdate: (Boolean) -> Unit
+) {
+  Divider(
+    modifier = Modifier.padding(top = 48.dp, start = 16.dp, end = 16.dp, bottom = 24.dp),
+    color = Palette.GreyDark
+  )
+  Text(
+    modifier = Modifier.padding(horizontal = 24.dp),
+    text = stringResource(R.string.update_auto_update_title),
+    style = AGTypography.InputsM,
+    color = Palette.White,
+    maxLines = 2,
+    overflow = TextOverflow.Ellipsis
+  )
+  Row(
+    verticalAlignment = Alignment.CenterVertically,
+    modifier = Modifier
+      .toggleable(
+        value = autoUpdateGames,
+        role = Role.Switch,
+        onValueChange = toggleAutoUpdate
+      )
+      .fillMaxWidth()
+      .padding(start = 24.dp, end = 24.dp, top = 8.dp)
+      .minimumInteractiveComponentSize()
+  ) {
+    AptoideGamesSwitch(
+      checked = autoUpdateGames,
+      onCheckedChanged = toggleAutoUpdate
     )
     Text(
-      modifier = Modifier.padding(horizontal = 40.dp),
-      text = stringResource(R.string.update_up_to_date_title),
-      style = AGTypography.Title,
-      color = Palette.White,
-      maxLines = 2,
-      overflow = TextOverflow.Ellipsis,
-      textAlign = TextAlign.Center,
-    )
-    Text(
-      modifier = Modifier.padding(horizontal = 40.dp),
-      text = stringResource(R.string.update_up_to_date_body),
-      style = AGTypography.Title,
-      color = Palette.White,
-      maxLines = 2,
-      overflow = TextOverflow.Ellipsis,
-      textAlign = TextAlign.Center,
+      text = stringResource(R.string.update_auto_update_slider),
+      modifier = Modifier.padding(start = 8.dp),
+      style = AGTypography.BodyBold,
+      color = Palette.GreyLight
     )
   }
 }
