@@ -232,21 +232,21 @@
   <string name="update_up_to_date_title">Čestitamo!</string>
   <string name="update_up_to_date_body">Koristite najnoviju verziju.</string>
   <string name="update_auto_update_title">Uživajte u najboljem iskustvu igranja i neka vaše igre budu ažurirane.</string>
-  <string name="update_auto_update_slider">Keep games updated automatically</string>
-  <string name="update_update_all_button">Update all</string>
-  <string name="update_aptoide_games_title">New Version Available!</string>
-  <string name="update_aptoide_games_body">Update Aptoide Games to the latest version to keep enjoying the best gaming discovery experience.</string>
-  <string name="update_aptoide_games_update_close_body">Aptoide Games will close to update. Just open it again!</string>
+  <string name="update_auto_update_slider">Neka se vaše igre ažuriraju automatski</string>
+  <string name="update_update_all_button">Ažuriraj sve</string>
+  <string name="update_aptoide_games_title">Dostupna je nova verzija!</string>
+  <string name="update_aptoide_games_body">Ažurirajte Aptoide Games na najnoviju verziju kako biste nastavili da uživate u najboljem iskustvu igranja.</string>
+  <string name="update_aptoide_games_update_close_body">Aptoide Games će se zatvoriti zbog ažuriranja. Samo je otvorite ponovo!</string>
   <plurals name="update_games_can_be_updated_body">
-    <item quantity="one">%s game can be updated</item>
-    <item quantity="few">%s games can be updated</item>
-    <item quantity="other">%s games can be updated</item>
+    <item quantity="one">%s igra ne može biti ažurirana</item>
+    <item quantity="few">%s igre ne mogu biti ažurirane</item>
+    <item quantity="other">%s igara ne može biti ažurirano</item>
   </plurals>
   <plurals name="update_notification_title">
-    <item quantity="one">You\'ve got %s update available</item>
-    <item quantity="few">You\'ve got %s updates available</item>
-    <item quantity="other">You\'ve got %s updates available</item>
+    <item quantity="one">Imate %s dostupno ažuriranje</item>
+    <item quantity="few">Imate %s dostupna ažuriranja</item>
+    <item quantity="other">Imate %s dostupnih ažuriranja</item>
   </plurals>
-  <string name="update_notification_body">Tap here to install.</string>
-  <string name="update_aptoide_games_update_notification">There\'s a new version of Aptoide Games</string>
+  <string name="update_notification_body">Dodirnite ovde da biste instalirali.</string>
+  <string name="update_aptoide_games_update_notification">Postoji nova verzija aplikacije Aptoide Games</string>
 </resources>
