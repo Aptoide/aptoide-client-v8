@@ -235,13 +235,13 @@
   <string name="update_auto_update_slider">Perbarui game secara otomatis</string>
   <string name="update_update_all_button">Perbarui semua</string>
   <string name="update_aptoide_games_title">Tersedia Versi Baru!</string>
-  <string name="update_aptoide_games_body">Perbarui Aptoide Games ke versi terbaru untuk terus menikmati pengalaman menemukan game terbaik.</string>
+  <string name="update_aptoide_games_body">Perbarui Aptoide Games ke versi terbaru untuk terus menikmati pengalaman terbaik dalam menemukan game.</string>
   <string name="update_aptoide_games_update_close_body">Aptoide Games akan ditutup untuk diperbarui. Tinggal buka lagi!</string>
   <plurals name="update_games_can_be_updated_body">
-    <item quantity="other">%s games can be updated</item>
+    <item quantity="other">%s game bisa diperbarui</item>
   </plurals>
   <plurals name="update_notification_title">
-    <item quantity="other">You\'ve got %s updates available</item>
+    <item quantity="other">Tersedia %s pembaruan untuk Anda</item>
   </plurals>
   <string name="update_notification_body">Ketuk di sini untuk menginstal.</string>
   <string name="update_aptoide_games_update_notification">Tersedia versi baru dari Aptoide Games</string>
