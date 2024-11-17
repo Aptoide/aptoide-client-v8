@@ -238,9 +238,9 @@
   <string name="update_aptoide_games_body">Оновіть Aptoide Games до останньої версії, щоб і надалі насолоджуватися найкращими ігровими можливостями.</string>
   <string name="update_aptoide_games_update_close_body">Aptoide Games закриється для оновлення. Просто відкрийте її знову!</string>
   <plurals name="update_games_can_be_updated_body">
-    <item quantity="one">%s game can be updated</item>
-    <item quantity="few">%s games can be updated</item>
-    <item quantity="many">%s games can be updated</item>
+    <item quantity="one">%s гра може бути оновлена</item>
+    <item quantity="few">%s гри можуть бути оновлені</item>
+    <item quantity="many">%s ігор можуть бути оновлені</item>
     <item quantity="other">%s ігор можуть бути оновлені</item>
   </plurals>
   <plurals name="update_notification_title">
