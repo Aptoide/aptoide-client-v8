@@ -5,7 +5,7 @@
   <string name="games">เกมส์</string>
   <string name="categories">หมวดหมู่</string>
   <string name="search">ค้นหา</string>
-  <string name="bottom_navigation_updates">Updates</string>
+  <string name="bottom_navigation_updates">อัพเดต</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">การตั้งค่า</string>
   <string name="overflow_menu_terms_conditions">ข้อตกลง&amp;เงื่อนไข</string>
@@ -113,7 +113,7 @@
   <string name="screenshot_appview_3">วิธีใหม่ในการค้นพบเกมส์ที่คุณชอบ</string>
   <string name="screenshot_appview_4">อินเทอร์เฟซที่ราบรื่นพร้อมเนื้อหาที่ดีที่สุด</string>
   <string name="screenshot_appview_5">เกมส์ที่คัดสรรมาเพื่อคุณเท่านั้น</string>
-  <string name="not_now_button">Not now</string>
+  <string name="not_now_button">ไม่ใช่ตอนนี้</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">ไม่มีพื้นที่ว่าง</string>
   <string name="out_of_space_body">คุณต้องใช้ %s เพื่อดำเนินการติดตั้งต่อ</string>
@@ -158,7 +158,7 @@
   <string name="purchase_done_bonus_wallet_installed_body">เปิดเพื่อค้นหาโบนัสของคุณ</string>
   <string name="bonus_banner_body">คุณจะได้รับโบนัสในเกมส์ที่กำหนดทั้งหมดด้วย%s</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">สูงสุด %s%% โบนัส</string>
-  <string name="settings_auto_update_button">Auto-update games</string>
+  <string name="settings_auto_update_button">อัปเดตเกมอัตโนมัติ</string>
   <string name="settings_payments_title" comment="contact_support_team">ติดต่อทีมสนับสนุน</string>
   <string name="settings_contact_support_body" comment="billing_terms_of_use">เงื่อนไขการเรียกเก็บ Aptoide</string>
   <string name="settings_billing_terms_body" comment="payments">การชำระเงิน</string>
@@ -229,20 +229,20 @@
   <string name="promo_code_share_title">คุณได้รับโค้ดส่วนลด!</string>
   <string name="promo_code_share_body">ใช้รหัสโปรโมชั่นนี้เพื่อรับโบนัสพิเศษในเกมส์ที่คุณชื่นชอบ</string>
   <!-- Update -->
-  <string name="update_up_to_date_title">Congrats!</string>
-  <string name="update_up_to_date_body">You\'re up to date.</string>
-  <string name="update_auto_update_title">Enjoy the best gaming experience and keep your games updated.</string>
-  <string name="update_auto_update_slider">Keep games updated automatically</string>
-  <string name="update_update_all_button">Update all</string>
-  <string name="update_aptoide_games_title">New Version Available!</string>
-  <string name="update_aptoide_games_body">Update Aptoide Games to the latest version to keep enjoying the best gaming discovery experience.</string>
-  <string name="update_aptoide_games_update_close_body">Aptoide Games will close to update. Just open it again!</string>
+  <string name="update_up_to_date_title">ยินดีด้วย!</string>
+  <string name="update_up_to_date_body">คุณอัพเดตแล้ว</string>
+  <string name="update_auto_update_title">เพลิดเพลินไปกับประสบการณ์การเล่นเกมที่ดีที่สุดและอัปเดตเกมของคุณอยู่เสมอ</string>
+  <string name="update_auto_update_slider">อัปเดตเกมโดยอัตโนมัติ</string>
+  <string name="update_update_all_button">อัปเดตทั้งหมด</string>
+  <string name="update_aptoide_games_title">เวอร์ชั่นใหม่มาแล้ว!</string>
+  <string name="update_aptoide_games_body">อัปเดตเกม Aptoide เป็นเวอร์ชันล่าสุดเพื่อเพลิดเพลินกับประสบการณ์การค้นพบเกมที่ดีที่สุดต่อไป</string>
+  <string name="update_aptoide_games_update_close_body">เกมส์ Aptoide จะปิดปรับปรุง แค่เปิดอีกครั้ง!</string>
   <plurals name="update_games_can_be_updated_body">
-    <item quantity="other">%s games can be updated</item>
+    <item quantity="other">%s เกมสามารถอัปเดตได้</item>
   </plurals>
   <plurals name="update_notification_title">
-    <item quantity="other">You\'ve got %s updates available</item>
+    <item quantity="other">คุณมีการอัปเดต %s ที่พร้อมใช้งาน</item>
   </plurals>
-  <string name="update_notification_body">Tap here to install.</string>
-  <string name="update_aptoide_games_update_notification">There\'s a new version of Aptoide Games</string>
+  <string name="update_notification_body">แตะที่นี่เพื่อติดตั้ง</string>
+  <string name="update_aptoide_games_update_notification">มีเกมส์ Aptoide เวอร์ชันใหม่แล้ว</string>
 </resources>
