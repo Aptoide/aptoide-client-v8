@@ -235,16 +235,16 @@
   <string name="update_auto_update_slider">Oyunları otomatik olarak güncelle</string>
   <string name="update_update_all_button">Tümünü güncelle</string>
   <string name="update_aptoide_games_title">Yeni Sürüm Mevcut!</string>
-  <string name="update_aptoide_games_body">Update Aptoide Games to the latest version to keep enjoying the best gaming discovery experience.</string>
-  <string name="update_aptoide_games_update_close_body">Aptoide Games will close to update. Just open it again!</string>
+  <string name="update_aptoide_games_body">En iyi oyun keşfetme deneyiminin tadını çıkarmaya devam etmek için Aptoide Games\'i son sürüme güncelle.</string>
+  <string name="update_aptoide_games_update_close_body">Aptoide Games güncellenmek üzere kapanacak. Tek yapman gereken yeniden açmak!</string>
   <plurals name="update_games_can_be_updated_body">
-    <item quantity="one">%s game can be updated</item>
-    <item quantity="other">%s games can be updated</item>
+    <item quantity="one">%s oyun güncellenebilir</item>
+    <item quantity="other">%s oyun güncellenebilir</item>
   </plurals>
   <plurals name="update_notification_title">
-    <item quantity="one">You\'ve got %s update available</item>
-    <item quantity="other">You\'ve got %s updates available</item>
+    <item quantity="one">%s güncellemen mevcut</item>
+    <item quantity="other">%s güncellemen mevcut</item>
   </plurals>
-  <string name="update_notification_body">Tap here to install.</string>
-  <string name="update_aptoide_games_update_notification">There\'s a new version of Aptoide Games</string>
+  <string name="update_notification_body">Yüklemek için buraya dokun.</string>
+  <string name="update_aptoide_games_update_notification">Aptoide Games\'in yeni bir sürümü mevcut</string>
 </resources>
