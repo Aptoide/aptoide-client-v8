@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.extensions.hasNotificationsPermission
 import cm.aptoide.pt.feature_apps.data.App
 import com.aptoide.android.aptoidegames.launch.AppLaunchPreferencesManager
+import com.aptoide.android.aptoidegames.promotions.data.database.SkippedPromotionsRepository
 import com.aptoide.android.aptoidegames.promotions.domain.CompatiblePromotionsUseCase
 import com.aptoide.android.aptoidegames.promotions.domain.Promotion
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,6 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PromotionsViewModel @Inject constructor(
   private val compatiblePromotionsUseCase: CompatiblePromotionsUseCase,
+  private val skippedPromotionsRepository: SkippedPromotionsRepository,
   private val appLaunchPreferencesManager: AppLaunchPreferencesManager,
   @ApplicationContext private val context: Context,
 ) : ViewModel() {
@@ -47,6 +49,11 @@ class PromotionsViewModel @Inject constructor(
   }
 
   fun dismissPromotion() {
+    viewModelScope.launch {
+      viewModelState.value?.first?.let {
+        skippedPromotionsRepository.skipPromotion(it.packageName)
+      }
+    }
     viewModelState.update { null }
   }
 }
