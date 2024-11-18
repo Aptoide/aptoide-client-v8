@@ -5,7 +5,7 @@
   <string name="games">Játékok</string>
   <string name="categories">Kategóriák</string>
   <string name="search">Keresés</string>
-  <string name="bottom_navigation_updates">Updates</string>
+  <string name="bottom_navigation_updates">Frissítések</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Beállítások</string>
   <string name="overflow_menu_terms_conditions">Általános Szerződési Feltételek</string>
@@ -113,7 +113,7 @@
   <string name="screenshot_appview_3">A kedvenc játékod felfedezésének új módja.</string>
   <string name="screenshot_appview_4">Tökéletes felület a legjobb tartalommal.</string>
   <string name="screenshot_appview_5">Gondosan összeválogatott játékok csak neked.</string>
-  <string name="not_now_button">Not now</string>
+  <string name="not_now_button">Nem most</string>
   <string name="later_button">Later</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Nincs elég hely</string>
@@ -230,12 +230,12 @@
   <string name="promo_code_share_title">Van egy promókódod!</string>
   <string name="promo_code_share_body">Ezzel a promókóddal extra bónuszokat szerezhetsz a kedvenc játékodban.</string>
   <!-- Update -->
-  <string name="update_up_to_date_title">Congrats!</string>
-  <string name="update_up_to_date_body">You\'re up to date.</string>
+  <string name="update_up_to_date_title">Gratulálunk!</string>
+  <string name="update_up_to_date_body">Nincs új frissítés.</string>
   <string name="update_auto_update_title">Enjoy the best gaming experience and keep your games updated.</string>
   <string name="update_auto_update_slider">Keep games updated automatically</string>
-  <string name="update_update_all_button">Update all</string>
-  <string name="update_aptoide_games_title">New Version Available!</string>
+  <string name="update_update_all_button">Minden frissítése</string>
+  <string name="update_aptoide_games_title">Új verzió érhető el!</string>
   <string name="update_aptoide_games_body">Update Aptoide Games to the latest version to keep enjoying the best gaming discovery experience.</string>
   <string name="update_aptoide_games_update_close_body">Aptoide Games will close to update. Just open it again!</string>
   <plurals name="update_games_can_be_updated_body">
