@@ -3,10 +3,12 @@ package com.aptoide.android.aptoidegames.promotions.domain
 import cm.aptoide.pt.feature_apps.data.AppsListRepository
 import cm.aptoide.pt.install_manager.InstallManager
 import com.aptoide.android.aptoidegames.promotions.data.PromotionsRepository
+import com.aptoide.android.aptoidegames.promotions.data.database.SkippedPromotionsRepository
 import javax.inject.Inject
 
 class CompatiblePromotionsUseCase @Inject constructor(
   private val promotionsRepository: PromotionsRepository,
+  private val skippedPromotionsRepository: SkippedPromotionsRepository,
   private val appsRepository: AppsListRepository,
   private val installManager: InstallManager,
 ) {
@@ -22,6 +24,10 @@ class CompatiblePromotionsUseCase @Inject constructor(
    * Gets the promotions of apps that the user has installed and that have an outdated version
    */
   private suspend fun getCompatiblePromotions() = promotionsRepository.getAllPromotions()
+    .run { //used to filter out all previously skipped promotions
+      val skippedPromotions = skippedPromotionsRepository.getSkippedPromotions()
+      filter { !skippedPromotions.contains(it.packageName) }
+    }
     .run {
       val promotionApps = appsRepository.getAppsList(
         packageNames = this.joinToString(separator = ",") { it.packageName }
