@@ -114,6 +114,7 @@
   <string name="screenshot_appview_4">Un\'interfaccia fluida con i migliori contenuti.</string>
   <string name="screenshot_appview_5">Giochi scelti ad hoc per te.</string>
   <string name="not_now_button">Not now</string>
+  <string name="later_button">Later</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Spazio esaurito</string>
   <string name="out_of_space_body">Spazio necessario per procedere con l\'installazione: %s.</string>
