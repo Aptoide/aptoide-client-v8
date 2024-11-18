@@ -1,24 +1,28 @@
 package com.aptoide.android.aptoidegames.promotions.analytics
 
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
-import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
-import com.aptoide.android.aptoidegames.analytics.dto.AnalyticsUIContext
 
 class PromotionsAnalytics(
-  private val analyticsUIContext: AnalyticsUIContext,
-  private val biAnalytics: BIAnalytics,
-  private val genericAnalytics: GenericAnalytics,
+  private val biAnalytics: BIAnalytics
 ) {
-  fun sendVanillaPromotionalCardsEvent(
+
+  fun sendAhabV2DialogImpression(packageName: String) =
+    sendBIAhabV2DialogEvent("impression", packageName)
+
+  fun sendAhabV2DialogUpdate(packageName: String) =
+    sendBIAhabV2DialogEvent("update", packageName)
+
+  fun sendAhabV2DialogLater(packageName: String) =
+    sendBIAhabV2DialogEvent("later", packageName)
+
+  private fun sendBIAhabV2DialogEvent(
     action: String,
-    type: String,
     packageName: String,
   ) {
     biAnalytics.logEvent(
-      name = "vanilla_promotional_cards",
+      name = "ag_ahab_v2_dialog",
       mapOf(
         P_ACTION to action,
-        P_TYPE to type,
         P_PACKAGE_NAME to packageName
       )
     )
@@ -27,6 +31,5 @@ class PromotionsAnalytics(
   companion object {
     private const val P_ACTION = "action"
     private const val P_PACKAGE_NAME = "package_name"
-    private const val P_TYPE = "type"
   }
 }

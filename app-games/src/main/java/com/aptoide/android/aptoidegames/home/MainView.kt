@@ -27,7 +27,10 @@ import androidx.navigation.compose.NavHost
 import cm.aptoide.pt.extensions.animatedComposable
 import cm.aptoide.pt.extensions.staticComposable
 import cm.aptoide.pt.feature_apkfy.presentation.rememberApkfyApp
+import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
+import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import com.aptoide.android.aptoidegames.AptoideGamesBottomSheet
+import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.apkfy.ApkfyBottomSheetContent
 import com.aptoide.android.aptoidegames.appview.appViewScreen
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
@@ -45,6 +48,7 @@ import com.aptoide.android.aptoidegames.notifications.NotificationsPermissionReq
 import com.aptoide.android.aptoidegames.permissions.notifications.NotificationsPermissionViewModel
 import com.aptoide.android.aptoidegames.promo_codes.PromoCodeBottomSheet
 import com.aptoide.android.aptoidegames.promo_codes.rememberPromoCodeApp
+import com.aptoide.android.aptoidegames.promotions.analytics.rememberPromotionsAnalytics
 import com.aptoide.android.aptoidegames.promotions.presentation.PromotionDialog
 import com.aptoide.android.aptoidegames.promotions.presentation.PromotionsViewModel
 import com.aptoide.android.aptoidegames.search.presentation.searchScreen
@@ -68,6 +72,7 @@ fun MainView(navController: NavHostController) {
 
   val promotionsViewModel = hiltViewModel<PromotionsViewModel>()
   val promotionData by promotionsViewModel.uiState.collectAsState()
+  val promotionsAnalytics = rememberPromotionsAnalytics()
 
   val apkfyApp = rememberApkfyApp()
   var apkfyShown by remember { mutableStateOf(false) }
@@ -104,12 +109,20 @@ fun MainView(navController: NavHostController) {
           )
         }
         promotionData?.let {
+          AnalyticsContext.current.currentScreen = "home_dialog"
+          AptoideMMPCampaign.allowedBundleTags["home_dialog"] = "Ahab_v2" to it.first.uid
+          it.second.campaigns?.toAptoideMMPCampaign()?.sendImpressionEvent("home_dialog")
+          promotionsAnalytics.sendAhabV2DialogImpression(it.second.packageName)
           PromotionDialog(
             onPositiveClick = {
               promotionsViewModel.dismissPromotion()
+              promotionsAnalytics.sendAhabV2DialogUpdate(it.second.packageName)
               navController.navigateTo(buildAppViewRoute(it.second))
             },
-            onNegativeClick = { promotionsViewModel.dismissPromotion() },
+            onNegativeClick = {
+              promotionsViewModel.dismissPromotion()
+              promotionsAnalytics.sendAhabV2DialogLater(it.second.packageName)
+            },
             app = it.second,
             title = it.first.title,
             description = it.first.content,
