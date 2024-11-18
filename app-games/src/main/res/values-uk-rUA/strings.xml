@@ -114,6 +114,7 @@
   <string name="screenshot_appview_4">Зручний інтерфейс з найкращим контентом.</string>
   <string name="screenshot_appview_5">Відібрані ігри спеціально для вас.</string>
   <string name="not_now_button">Не зараз</string>
+  <string name="later_button">Later</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Немає вільного місця</string>
   <string name="out_of_space_body">Вам потрібно %s, щоб продовжити встановлення.</string>

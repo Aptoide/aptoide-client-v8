@@ -114,6 +114,7 @@
   <string name="screenshot_appview_4">O interfață ușor de utilizat cu cel mai bun conținut.</string>
   <string name="screenshot_appview_5">Jocuri alese special pentru tine.</string>
   <string name="not_now_button">Nu acum</string>
+  <string name="later_button">Later</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Spațiu epuizat</string>
   <string name="out_of_space_body">Ai nevoie de %s pentru a continua cu instalarea.</string>

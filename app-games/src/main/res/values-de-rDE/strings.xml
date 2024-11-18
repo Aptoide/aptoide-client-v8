@@ -114,6 +114,7 @@
   <string name="screenshot_appview_4">Eine nahtlose Schnittstelle mit den besten Inhalten.</string>
   <string name="screenshot_appview_5">Handverlesene Spiele, nur für dich.</string>
   <string name="not_now_button">Nicht jetzt</string>
+  <string name="later_button">Later</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Kein Speicher mehr</string>
   <string name="out_of_space_body">Sie benötigen %s um die Installation abschliessen zu können.</string>

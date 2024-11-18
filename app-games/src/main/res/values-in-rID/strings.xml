@@ -114,6 +114,7 @@
   <string name="screenshot_appview_4">Antarmuka yang mulus dengan konten terbaik.</string>
   <string name="screenshot_appview_5">Game pilihan khusus untuk Anda.</string>
   <string name="not_now_button">Jangan sekarang</string>
+  <string name="later_button">Later</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Kehabisan Ruang Penyimpanan</string>
   <string name="out_of_space_body">Anda membutuhkan %s untuk melanjutkan instalasi.</string>

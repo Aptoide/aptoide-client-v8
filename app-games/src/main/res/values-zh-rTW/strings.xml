@@ -5,7 +5,7 @@
   <string name="games">遊戲</string>
   <string name="categories">Categories</string>
   <string name="search">搜尋</string>
-  <string name="bottom_navigation_updates">Updates</string>
+  <string name="bottom_navigation_updates">更新</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">設定</string>
   <string name="overflow_menu_terms_conditions">Terms &amp; Conditions</string>
@@ -113,7 +113,8 @@
   <string name="screenshot_appview_3">A new way to discover your favorite game.</string>
   <string name="screenshot_appview_4">A seamless interface with the best content.</string>
   <string name="screenshot_appview_5">Hand-picked games only for you.</string>
-  <string name="not_now_button">Not now</string>
+  <string name="not_now_button">不是現在</string>
+  <string name="later_button">Later</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Out of Space</string>
   <string name="out_of_space_body">You need %s to continue with the installation.</string>
@@ -233,7 +234,7 @@
   <string name="update_up_to_date_body">You\'re up to date.</string>
   <string name="update_auto_update_title">Enjoy the best gaming experience and keep your games updated.</string>
   <string name="update_auto_update_slider">Keep games updated automatically</string>
-  <string name="update_update_all_button">Update all</string>
+  <string name="update_update_all_button">全部更新</string>
   <string name="update_aptoide_games_title">New Version Available!</string>
   <string name="update_aptoide_games_body">Update Aptoide Games to the latest version to keep enjoying the best gaming discovery experience.</string>
   <string name="update_aptoide_games_update_close_body">Aptoide Games will close to update. Just open it again!</string>
