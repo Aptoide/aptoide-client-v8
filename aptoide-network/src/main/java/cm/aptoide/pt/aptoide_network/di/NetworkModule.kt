@@ -2,6 +2,7 @@ package cm.aptoide.pt.aptoide_network.di
 
 import android.content.Context
 import cm.aptoide.pt.aptoide_network.data.network.AcceptLanguageInterceptor
+import cm.aptoide.pt.aptoide_network.data.network.PostCacheInterceptor
 import cm.aptoide.pt.aptoide_network.data.network.QLogicInterceptor
 import cm.aptoide.pt.aptoide_network.data.network.UserAgentInterceptor
 import cm.aptoide.pt.aptoide_network.data.network.VersionCodeInterceptor
@@ -34,6 +35,7 @@ object NetworkModule {
     versionCodeInterceptor: VersionCodeInterceptor,
     languageInterceptor: AcceptLanguageInterceptor,
     httpLoggingInterceptor: HttpLoggingInterceptor,
+    postCacheInterceptor: PostCacheInterceptor
   ): OkHttpClient =
     OkHttpClient.Builder()
       .cache(Cache(context.cacheDir, 10 * 1024 * 1024))
@@ -42,6 +44,7 @@ object NetworkModule {
       .addInterceptor(versionCodeInterceptor)
       .addInterceptor(languageInterceptor)
       .addInterceptor(httpLoggingInterceptor)
+      .addInterceptor(postCacheInterceptor)
       .build()
 
   @SimpleOkHttp
@@ -52,12 +55,14 @@ object NetworkModule {
     versionCodeInterceptor: VersionCodeInterceptor,
     languageInterceptor: AcceptLanguageInterceptor,
     httpLoggingInterceptor: HttpLoggingInterceptor,
+    postCacheInterceptor: PostCacheInterceptor
   ): OkHttpClient =
     OkHttpClient.Builder()
       .addInterceptor(userAgentInterceptor)
       .addInterceptor(httpLoggingInterceptor)
       .addInterceptor(versionCodeInterceptor)
       .addInterceptor(languageInterceptor)
+      .addInterceptor(postCacheInterceptor)
       .build()
 
   @DownloadsOKHttp
