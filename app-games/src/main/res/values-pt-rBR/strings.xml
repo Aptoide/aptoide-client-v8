@@ -114,7 +114,7 @@
   <string name="screenshot_appview_4">Uma interface intuitiva com o melhor conteúdo.</string>
   <string name="screenshot_appview_5">Jogos cuidadosamente selecionados para você.</string>
   <string name="not_now_button">Agora não</string>
-  <string name="later_button">Later</string>
+  <string name="later_button">Depois</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Sem Espaço Disponível</string>
   <string name="out_of_space_body">Você precisa de %s para continuar a instalação.</string>
