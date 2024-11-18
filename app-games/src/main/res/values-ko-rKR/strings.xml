@@ -114,6 +114,7 @@
   <string name="screenshot_appview_4">최고의 콘텐츠로 원활한 인터페이스를 제공합니다.</string>
   <string name="screenshot_appview_5">당신을 위해 엄선된 게임.</string>
   <string name="not_now_button">나중에요</string>
+  <string name="later_button">Later</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">공간 부족</string>
   <string name="out_of_space_body">설치를 계속하려면 %s이(가) 필요합니다.</string>
