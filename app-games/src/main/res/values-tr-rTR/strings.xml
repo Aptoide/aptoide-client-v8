@@ -114,6 +114,7 @@
   <string name="screenshot_appview_4">En iyi içerikleri barındıran kusursuz bir arayüz.</string>
   <string name="screenshot_appview_5">Senin için özenle seçilmiş oyunlar.</string>
   <string name="not_now_button">Şimdi değil</string>
+  <string name="later_button">Later</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Yer Yok</string>
   <string name="out_of_space_body">Yüklemeye devam etmek için %s gerekli.</string>
