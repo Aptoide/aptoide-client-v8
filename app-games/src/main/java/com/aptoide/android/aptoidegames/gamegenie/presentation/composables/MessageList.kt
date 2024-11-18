@@ -12,7 +12,7 @@ import cm.aptoide.pt.feature_apps.data.App
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameGenieMessage
 
 @Composable
-fun MessageList(messages: List<GameGenieMessage>, apps: List<App>, navigateTo: (String) -> Unit, listState: LazyListState, modifier: Modifier = Modifier) {
+fun MessageList(messages: List<GameGenieMessage>, apps: List<String>, navigateTo: (String) -> Unit, listState: LazyListState, modifier: Modifier = Modifier) {
     LazyColumn(
         state = listState,
         verticalArrangement = Arrangement.Bottom,

@@ -1,6 +1,10 @@
 package com.aptoide.android.aptoidegames.gamegenie.io_models
 
+import com.google.gson.annotations.SerializedName
+
 data class TokenResponse (
-    val access_token: String,
-    val token_type: String,
+    @SerializedName("access_token")
+    val accessToken: String,
+    @SerializedName("token_type")
+    val tokenType: String,
 )

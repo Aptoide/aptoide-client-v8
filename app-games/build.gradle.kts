@@ -45,6 +45,12 @@ android {
 
     buildConfigField(
       type = "String",
+      name = "GAME_GENIE_API",
+      value = "\"https://genie-chatbot.aptoide.com/\""
+    )
+
+    buildConfigField(
+      type = "String",
       name = "DEEP_LINK_SCHEMA",
       value = "\"ag://\""
     )
@@ -137,7 +143,6 @@ android {
         name = "SHOW_GAME_GENIE",
         value = project.findProperty("SHOW_GAME_GENIE_DEV")?.toString() ?: "false"
       )
-
       buildConfigField(
         type = "String",
         name = "UTM_SOURCE",
@@ -173,7 +178,6 @@ android {
         name = "SHOW_GAME_GENIE",
         value = project.findProperty("SHOW_GAME_GENIE_PROD")?.toString() ?: "false"
       )
-
       buildConfigField(
         type = "String",
         name = "APTOIDE_WEB_SERVICES_MMP_HOST",

@@ -21,6 +21,7 @@ import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.Messa
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.TextInputBar
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.error_views.NoConnectionView
+import com.aptoide.android.aptoidegames.gamegenie.domain.toChatbotMessageList
 
 const val genieRoute = "chatbot"
 
@@ -36,8 +37,8 @@ fun gameGenieScreen() = ScreenData.withAnalytics(
     ChatbotView(
         uiState = uiState,
         navigateTo = navigate,
-        onError = {}, // fix this
-        onMessageSend = viewModel::reload
+        onError = viewModel::reload,
+        onMessageSend = viewModel::sendMessage
     )
 }
 

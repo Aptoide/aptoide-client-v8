@@ -7,4 +7,4 @@ data class Token(
     val tokenType: String
 )
 
-fun TokenResponse.toToken() = Token(this.access_token, this.token_type)
+fun TokenResponse.toToken() = Token(this.accessToken, this.tokenType)

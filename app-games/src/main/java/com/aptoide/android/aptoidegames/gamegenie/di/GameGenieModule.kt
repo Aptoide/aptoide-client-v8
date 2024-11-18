@@ -1,6 +1,7 @@
 package com.aptoide.android.aptoidegames.gamegenie.di
 
 import cm.aptoide.pt.aptoide_network.di.BaseOkHttp
+import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieApiService
 import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieRepository
 import dagger.Module
@@ -18,7 +19,7 @@ internal object GameGenieModule {
     fun provideChatbotApiService(@BaseOkHttp okHttpClient: OkHttpClient): GameGenieApiService {
         return Retrofit.Builder()
             .client(okHttpClient)
-            .baseUrl("https://genie-chatbot.aptoide.com/")
+            .baseUrl(BuildConfig.GAME_GENIE_API)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(GameGenieApiService::class.java)

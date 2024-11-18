@@ -15,8 +15,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.presentation.AppUiState
+import cm.aptoide.pt.feature_apps.presentation.rememberApp
+import com.aptoide.android.aptoidegames.appview.LoadingView
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
+import com.aptoide.android.aptoidegames.error_views.GenericErrorView
+import com.aptoide.android.aptoidegames.error_views.NoConnectionView
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameGenieMessage
 import com.aptoide.android.aptoidegames.gamegenie.domain.isUserMessage
 import com.aptoide.android.aptoidegames.feature_apps.presentation.AppItem
@@ -25,7 +29,7 @@ import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
-fun MessageBubble(message: GameGenieMessage, apps: List<App>? = null, navigateTo: (String) -> Unit = {}) {
+fun MessageBubble(message: GameGenieMessage, apps: List<String>? = null, navigateTo: (String) -> Unit = {}) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -64,15 +68,25 @@ fun MessageBubble(message: GameGenieMessage, apps: List<App>? = null, navigateTo
             )
 
             apps?.forEach { app ->
-                AppItem(
-                    app = app,
-                    onClick = {
-                        navigateTo(
-                            buildAppViewRoute(app)
-                        )
-                    },
-                ) {
-                    InstallViewShort(app)
+                val rememberedApp = rememberApp("package_name=$app")
+                val fn = rememberedApp.second
+                when (val state = rememberedApp.first) {
+                    AppUiState.Error -> GenericErrorView(fn)//runs the reload function
+                    is AppUiState.Idle -> {
+                        val fullApp = state.app
+                        AppItem(
+                            app = fullApp,
+                            onClick = {
+                                navigateTo(
+                                    buildAppViewRoute(fullApp)
+                                )
+                            },
+                        ) {
+                            InstallViewShort(fullApp)
+                        }
+                    }
+                    AppUiState.Loading -> LoadingView()
+                    AppUiState.NoConnection -> NoConnectionView(fn)
                 }
             }
         }

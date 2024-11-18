@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.feature_apps.data.App
 import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieRepository
-import com.aptoide.android.aptoidegames.gamegenie.data.GetAppApiRepository
 import com.aptoide.android.aptoidegames.gamegenie.domain.ChatInteraction
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameGenieMessage
 import com.aptoide.android.aptoidegames.gamegenie.domain.MessageAuthor
@@ -27,7 +26,6 @@ import javax.inject.Inject
 @HiltViewModel
 class ChatbotViewModel @Inject constructor(
     private val gameGenieRepository: GameGenieRepository,
-    private val appInfoUseCase: GetAppApiRepository,
 ) : ViewModel() {
     private val viewModelState = MutableStateFlow(ChatbotViewModelState())
 
@@ -48,62 +46,70 @@ class ChatbotViewModel @Inject constructor(
             }
         }
     }
+    fun reload() {
+        handleMessageProcessing(
+            updateConversation = { uiState.value.conversation },
+            onSuccess = { response, apps -> updateStateForSuccess(response, apps) }
+        )
+    }
 
-    fun reload(userMessage: String) {
+    fun sendMessage(userMessage: String) {
+        handleMessageProcessing(
+            updateConversation = { updateConversation(userMessage) },
+            onSuccess = { response, apps -> updateStateForSuccess(response, apps) }
+        )
+    }
+
+    private fun handleMessageProcessing(
+        updateConversation: () -> List<ChatInteraction>,
+        onSuccess: (GameGenieResponse, List<String>) -> Unit
+    ) {
         viewModelScope.launch {
-            val updatedConversation = updateConversation(userMessage)
-            updateStateForLoading(updatedConversation)
+            val conversation = updateConversation()
+            updateStateForLoading(conversation)
 
             try {
-                var token = uiState.value.token
-                if (token == null) {
-                    token = gameGenieRepository.getToken().toToken()
-                    viewModelState.update {
-                        it.copy(
-                            token = token
-                        )
-                    }
-                }
-
-                val response = makeRequestWithToken(suspend {
+                val token = getTokenIfNeeded()
+                val response = makeRequestWithToken {
                     gameGenieRepository.getMessages(
                         token,
                         GameGenieRequest(
                             id = uiState.value.id,
-                            conversation = updatedConversation
+                            conversation = conversation
                         )
                     )
-                })
-                val apps = response.conversation.last().apps.mapNotNull { app ->
-                    app.packageName.let {
-                        try {
-                            appInfoUseCase.getApp(it)
-                        } catch (e: Exception) {
-                            Timber.w(e, "Failed to fetch app info for package: $it")
-                            null // ignore error, continue with valid apps
-                        }
-                    }
                 }
-                updateStateForSuccess(response, apps)
+                val apps = response.conversation.last().apps.map { app -> app.packageName }
+                onSuccess(response, apps)
             } catch (e: Throwable) {
-                Timber.w(e)
-                viewModelState.update {
-                    it.copy(
-                        type = when (e) {
-                            is IOException -> GameGenieUIStateType.NO_CONNECTION
-                            else -> GameGenieUIStateType.ERROR
-                        }
-                    )
-                }
+                handleError(e)
             }
         }
     }
 
+    private suspend fun getTokenIfNeeded(): Token {
+        return uiState.value.token ?: gameGenieRepository.getToken().toToken().also { newToken ->
+            viewModelState.update { it.copy(token = newToken) }
+        }
+    }
+
+    private fun handleError(e: Throwable) {
+        Timber.w(e)
+        viewModelState.update {
+            it.copy(
+                type = when (e) {
+                    is IOException -> GameGenieUIStateType.NO_CONNECTION
+                    else -> GameGenieUIStateType.ERROR
+                }
+            )
+        }
+    }
+
     private suspend fun makeRequestWithToken(
-        fn: suspend () -> GameGenieResponse
+        requestFunction: suspend () -> GameGenieResponse
     ): GameGenieResponse {
         return try {
-            fn()
+            requestFunction()
         } catch (e: HttpException) {
             if (e.code() == 401) {
                 Timber.i("Token expired, requesting a new token")
@@ -114,14 +120,14 @@ class ChatbotViewModel @Inject constructor(
                     )
                 }
                 // Retry the request with the new token
-                return fn()
+                return requestFunction()
             } else {
                 throw e
             }
         }
     }
 
-    private fun updateConversation(userMessage: String) =
+    private fun updateConversation(userMessage: String): List<ChatInteraction> =
         uiState.value.conversation.run {
             if (isNotEmpty()) {
                 val lastInteraction = last().copy(user = userMessage)
@@ -141,7 +147,7 @@ class ChatbotViewModel @Inject constructor(
         }
     }
 
-    private fun updateStateForSuccess(response: GameGenieResponse, apps: List<App>) {
+    private fun updateStateForSuccess(response: GameGenieResponse, apps: List<String>) {
         viewModelState.update {
             it.copy(
                 type = GameGenieUIStateType.IDLE,
@@ -149,15 +155,6 @@ class ChatbotViewModel @Inject constructor(
                 apps = apps,
             )
         }
-    }
-}
-
-fun List<ChatInteraction>.toChatbotMessageList(): List<GameGenieMessage> {
-    return this.flatMap { interaction ->
-        listOfNotNull(
-            GameGenieMessage(MessageAuthor.GPT, interaction.gpt),
-            interaction.user?.let { GameGenieMessage(MessageAuthor.USER, it) }
-        )
     }
 }
 
@@ -170,7 +167,7 @@ private data class ChatbotViewModelState(
             emptyList()
         )
     ),
-    val apps: List<App> = emptyList(),
+    val apps: List<String> = emptyList(), //store package names
     val id: String = "",
     val token: Token? = null
 ) {

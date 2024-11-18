@@ -5,3 +5,12 @@ data class ChatInteraction (
     val user: String?,
     val apps: List<GameContext>
 )
+
+fun List<ChatInteraction>.toChatbotMessageList(): List<GameGenieMessage> {
+    return this.flatMap { interaction ->
+        listOfNotNull(
+            GameGenieMessage(MessageAuthor.GPT, interaction.gpt),
+            interaction.user?.let { GameGenieMessage(MessageAuthor.USER, it) }
+        )
+    }
+}

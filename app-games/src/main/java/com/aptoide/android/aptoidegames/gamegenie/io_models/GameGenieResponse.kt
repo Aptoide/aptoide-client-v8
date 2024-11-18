@@ -4,6 +4,6 @@ import com.aptoide.android.aptoidegames.gamegenie.domain.ChatInteraction
 import com.google.gson.annotations.SerializedName
 
 data class GameGenieResponse (
-    val id: String?,
+    val id: String,
     val conversation: List<ChatInteraction>,
 )

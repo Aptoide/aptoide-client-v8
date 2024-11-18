@@ -14,5 +14,5 @@ fun GameGenieMessage.isUserMessage() = this.author == MessageAuthor.USER
 
 fun String.toMessageAuthor(): MessageAuthor {
     return if(this == "gpt") MessageAuthor.GPT
-    else MessageAuthor.USER // not really into this
+    else MessageAuthor.USER
 }
