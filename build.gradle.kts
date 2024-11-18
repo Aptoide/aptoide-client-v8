@@ -33,21 +33,22 @@ val composeMaterialVersion by rootProject.extra { libs.versions.compose.get() }
 val lifecycleViewModelComposeVersion by rootProject.extra { libs.versions.viewmodelCompose.get() }
 
 buildscript {
-
   repositories {
     google()
     mavenCentral()
   }
-  dependencies {
-    classpath(libs.android.gradle.plugin)
-    classpath(libs.kotlin.gradle.plugin)
-    classpath(libs.hilt.android.gradle.plugin)
-    classpath(libs.android.junit5.plugin)
-    classpath(libs.google.services.plugin)
-    classpath(libs.firebase.crashlytics.gradle)
-    classpath(libs.ksp.plugin)
-    classpath(libs.compose.gradle.plugin)
-  }
+}
+
+plugins {
+  alias(libs.plugins.android.application) apply false
+  alias(libs.plugins.android.library) apply false
+  alias(libs.plugins.ksp) apply false
+  alias(libs.plugins.gms) apply false
+  alias(libs.plugins.crashlytics) apply false
+  alias(libs.plugins.junit5) apply false
+  alias(libs.plugins.kotlin.android) apply false
+  alias(libs.plugins.kotlin.compose.compiler) apply false
+  alias(libs.plugins.hilt.android.plugin) apply false
 }
 
 tasks.register("clean", Delete::class) {

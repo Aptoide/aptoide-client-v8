@@ -64,6 +64,8 @@ espressoCore = "3.4.0"
 mockitoCore = "2.27.0"
 
 #plugins
+applicationGradlePlugin = "8.7.2"
+kotlinAndroidGradlePlugin = "2.0.21"
 androidGradlePlugin = "8.5.2"
 hiltAndroidGradlePlugin = "2.52"
 googleServicesPlugin = "4.4.2"
@@ -155,7 +157,7 @@ junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params", vers
 junit-jupiter-vantage = { module = "org.junit.vintage:junit-vintage-engine", version.ref = "junit5" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 
-#root
+#root / build-logic
 android-gradle-plugin = { module = "com.android.tools.build:gradle", version.ref = "androidGradlePlugin" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 hilt-android-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hiltAndroidGradlePlugin" }
@@ -166,16 +168,16 @@ ksp-plugin = { module = "com.google.devtools.ksp:symbol-processing-gradle-plugin
 compose-gradle-plugin = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin" }
 
 [plugins]
-android-application = { id = "com.android.application" }
-android-library = { id = "com.android.library" }
-ksp = { id = "com.google.devtools.ksp" }
-gms = { id = "com.google.gms.google-services" }
-crashlytics = { id = "com.google.firebase.crashlytics" }
-junit5 = { id = "de.mannodermaus.android-junit5" }
+android-application = { id = "com.android.application", version.ref = "applicationGradlePlugin" }
+android-library = { id = "com.android.library", version.ref = "applicationGradlePlugin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "kspPlugin" }
+gms = { id = "com.google.gms.google-services", version.ref = "googleServicesPlugin" }
+crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlyticsGradle" }
+junit5 = { id = "de.mannodermaus.android-junit5", version.ref = "androidJunit5Plugin" }
 
-kotlin-android = { id = "org.jetbrains.kotlin.android" }
-kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose" }
-hilt-android-plugin = { id = "dagger.hilt.android.plugin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlinAndroidGradlePlugin" }
+kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+hilt-android-plugin = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroidGradlePlugin" }
 
 android-module = { id = "android-module" }
 composable = { id = "composable" }
