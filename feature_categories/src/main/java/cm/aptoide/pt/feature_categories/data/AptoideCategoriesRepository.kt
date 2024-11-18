@@ -9,7 +9,6 @@ import cm.aptoide.pt.feature_categories.data.model.CategoryJson
 import cm.aptoide.pt.feature_categories.data.model.Names
 import cm.aptoide.pt.feature_categories.domain.AppCategory
 import cm.aptoide.pt.feature_categories.domain.Category
-import kotlinx.coroutines.flow.*
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -18,7 +17,8 @@ import retrofit2.http.Query
 import javax.inject.Inject
 
 internal class AptoideCategoriesRepository @Inject constructor(
-  private val categoriesRemoteDataSource: Retrofit,
+  private val categoriesRemoteDataSourceGet: RetrofitGet,
+  private val categoriesRemoteDataSourcePost: RetrofitPost,
   private val storeName: String,
   private val analyticsInfoProvider: AptoideAnalyticsInfoProvider,
   private val messagingInfoProvider: AptoideFirebaseInfoProvider,
@@ -29,7 +29,7 @@ internal class AptoideCategoriesRepository @Inject constructor(
       throw IllegalStateException()
     }
     val query = url.split("store/groups/get/")[1]
-    return categoriesRemoteDataSource.getCategoriesList(query, storeName)
+    return categoriesRemoteDataSourceGet.getCategoriesList(query, storeName)
       .datalist?.list?.map {
         it.toDomainModel()
       }
@@ -41,7 +41,7 @@ internal class AptoideCategoriesRepository @Inject constructor(
       throw IllegalStateException()
     }
     val query = url.split("store/groups/get/")[1]
-    return categoriesRemoteDataSource.getGlobalCategoriesList(query)
+    return categoriesRemoteDataSourceGet.getGlobalCategoriesList(query)
       .datalist?.list?.map {
         it.toDomainModel()
       }
@@ -58,7 +58,7 @@ internal class AptoideCategoriesRepository @Inject constructor(
     for (chunkedList in chunkedLists) {
       try {
         val result =
-          categoriesRemoteDataSource.getAppsCategories(
+          categoriesRemoteDataSourcePost.getAppsCategories(
             names = Names(chunkedList),
             storeName = storeName,
             analyticsId = analyticsId,
@@ -75,7 +75,7 @@ internal class AptoideCategoriesRepository @Inject constructor(
     return appsList
   }
 
-  internal interface Retrofit {
+  internal interface RetrofitGet {
     @GET("store/groups/get/{query}")
     suspend fun getCategoriesList(
       @Path(value = "query", encoded = true) path: String,
@@ -88,7 +88,9 @@ internal class AptoideCategoriesRepository @Inject constructor(
       @Path(value = "query", encoded = true) path: String,
       @Query("aab") aab: Int = 1,
     ): BaseV7DataListResponse<CategoryJson>
+  }
 
+  internal interface RetrofitPost {
     @POST("hub/apps/get/")
     suspend fun getAppsCategories(
       @Query("user_uid") analyticsId: String?,
