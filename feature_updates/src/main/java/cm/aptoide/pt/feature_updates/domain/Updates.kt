@@ -1,5 +1,6 @@
 package cm.aptoide.pt.feature_updates.domain
 
+import android.content.Context
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import androidx.core.content.pm.PackageInfoCompat
@@ -10,9 +11,11 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.AppsListMapper
 import cm.aptoide.pt.feature_apps.data.model.AppJSON
 import cm.aptoide.pt.feature_updates.data.UpdatesRepository
+import cm.aptoide.pt.feature_updates.data.UpdatesWorker
 import cm.aptoide.pt.feature_updates.di.PrioritizedPackagesFilter
 import cm.aptoide.pt.feature_updates.presentation.UpdatesNotificationProvider
 import cm.aptoide.pt.install_manager.InstallManager
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -32,7 +35,8 @@ class Updates @Inject constructor(
   private val appsListMapper: AppsListMapper,
   @PrioritizedPackagesFilter private val prioritizedPackages: List<String>,
   private val installManager: InstallManager,
-  private val updatesNotificationBuilder: UpdatesNotificationProvider
+  private val updatesNotificationBuilder: UpdatesNotificationProvider,
+  @ApplicationContext private val applicationContext: Context,
 ) {
 
   val mutex: Mutex = Mutex()
@@ -40,6 +44,7 @@ class Updates @Inject constructor(
   private var currentUpdates = listOf<AppJSON>()
 
   init {
+    UpdatesWorker.enqueue(applicationContext)
     // TODO: clean this for testability
     CoroutineScope(Dispatchers.IO).launch {
       installManager.appsChanges

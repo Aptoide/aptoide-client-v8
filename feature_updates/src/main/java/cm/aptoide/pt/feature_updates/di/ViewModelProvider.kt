@@ -1,4 +1,4 @@
-package com.aptoide.android.aptoidegames.updates.di
+package cm.aptoide.pt.feature_updates.di
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -8,8 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cm.aptoide.pt.extensions.runPreviewable
-import com.aptoide.android.aptoidegames.updates.presentation.UpdatesPreferencesViewModel
-import com.aptoide.android.aptoidegames.updates.repository.UpdatesPreferencesRepository
+import cm.aptoide.pt.feature_updates.presentation.UpdatesPreferencesViewModel
+import cm.aptoide.pt.feature_updates.repository.UpdatesPreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
