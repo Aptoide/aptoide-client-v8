@@ -15,6 +15,7 @@ dependencies {
   implementation(project(ModuleDependency.FEATURE_APPS))
   implementation(project(ModuleDependency.INSTALL_MANAGER))
   implementation(project(ModuleDependency.EXTENSIONS))
+  implementation(project(ModuleDependency.INSTALL_INFO_MAPPER))
 
   //room
   implementation(LibraryDependency.ROOM)
