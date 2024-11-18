@@ -17,6 +17,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -24,6 +25,8 @@ import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
+import com.aptoide.android.aptoidegames.BuildConfig
+import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusIconRight
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
@@ -81,6 +84,60 @@ fun AppItem(
         color = Palette.White
       )
       ProgressText(app = app)
+    }
+    installButton()
+  }
+}
+
+@Composable
+fun AppItemUpdates(
+  modifier: Modifier = Modifier,
+  app: App,
+  onClick: () -> Unit,
+  installButton: @Composable RowScope.() -> Unit,
+) {
+  Row(
+    modifier = modifier
+      .clickable(onClick = onClick)
+      .fillMaxWidth()
+      .defaultMinSize(minHeight = 96.dp)
+      .padding(top = 16.dp, bottom = 16.dp),
+    verticalAlignment = Alignment.CenterVertically,
+  ) {
+    Box(
+      contentAlignment = Alignment.TopEnd
+    ) {
+      AppIconWProgress(
+        app = app,
+        contentDescription = null,
+        modifier = Modifier.size(64.dp),
+      )
+    }
+    Column(
+      modifier = Modifier
+        .padding(start = 16.dp, end = 16.dp)
+        .weight(1f),
+      verticalArrangement = Arrangement.SpaceEvenly
+    ) {
+      Text(
+        modifier = Modifier,
+        text = app.name,
+        style = AGTypography.DescriptionGames,
+        overflow = TextOverflow.Ellipsis,
+        maxLines = 2,
+        color = Palette.White
+      )
+      if(app.packageName == BuildConfig.APPLICATION_ID){
+        Text(
+          modifier = Modifier.padding(bottom = 8.dp),
+          text = stringResource(R.string.update_aptoide_games_title),
+          style = AGTypography.Body,
+          overflow = TextOverflow.Ellipsis,
+          maxLines = 1,
+          color = Palette.White
+        )
+      }
+      ProgressText(app = app, showVersionName = true)
     }
     installButton()
   }

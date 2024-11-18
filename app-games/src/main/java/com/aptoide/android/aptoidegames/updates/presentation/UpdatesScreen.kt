@@ -46,7 +46,7 @@ import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.design_system.AptoideGamesSwitch
 import com.aptoide.android.aptoidegames.drawables.icons.getBolt
 import com.aptoide.android.aptoidegames.drawables.icons.getNoUpdates
-import com.aptoide.android.aptoidegames.feature_apps.presentation.AppItem
+import com.aptoide.android.aptoidegames.feature_apps.presentation.AppItemUpdates
 import com.aptoide.android.aptoidegames.home.LoadingView
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -193,7 +193,7 @@ private fun AppsList(
         .wrapContentSize(Alignment.TopCenter)
     ) {
       itemsIndexed(appList) { index, app ->
-        AppItem(
+        AppItemUpdates(
           app = app,
           onClick = {
             navigate(
