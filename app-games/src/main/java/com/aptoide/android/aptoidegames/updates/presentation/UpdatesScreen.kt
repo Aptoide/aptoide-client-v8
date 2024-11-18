@@ -36,6 +36,7 @@ import androidx.navigation.navDeepLink
 import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
+import cm.aptoide.pt.feature_updates.di.rememberAutoUpdate
 import cm.aptoide.pt.feature_updates.presentation.UpdatesUiState
 import cm.aptoide.pt.feature_updates.presentation.rememberUpdates
 import com.aptoide.android.aptoidegames.BuildConfig
@@ -51,7 +52,6 @@ import com.aptoide.android.aptoidegames.home.LoadingView
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
-import com.aptoide.android.aptoidegames.updates.di.rememberAutoUpdate
 
 const val updatesRoute = "updates"
 

@@ -1,8 +1,8 @@
-package com.aptoide.android.aptoidegames.updates.presentation
+package cm.aptoide.pt.feature_updates.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aptoide.android.aptoidegames.updates.repository.UpdatesPreferencesRepository
+import cm.aptoide.pt.feature_updates.repository.UpdatesPreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

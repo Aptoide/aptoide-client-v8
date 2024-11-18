@@ -1,6 +1,9 @@
 package cm.aptoide.pt.feature_updates.di
 
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
 import cm.aptoide.pt.aptoide_network.di.RetrofitV7
 import cm.aptoide.pt.aptoide_network.di.StoreName
@@ -19,9 +22,9 @@ import retrofit2.Retrofit
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class PrioritizedPackagesFilter
+val Context.updatesPreferencesDataStore: DataStore<Preferences> by preferencesDataStore(
+  name = "updatesPreferences"
+)
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -49,4 +52,21 @@ internal object RepositoryModule {
   fun provideUpdatesDatabase(@ApplicationContext appContext: Context): UpdatesDatabase = Room
     .databaseBuilder(appContext, UpdatesDatabase::class.java, "aptoide_updates.db")
     .build()
+
+  @Singleton
+  @Provides
+  @UpdatesPreferencesDataStore
+  fun provideUpdatesPreferencesDataStore(
+    @ApplicationContext appContext: Context,
+  ): DataStore<Preferences> {
+    return appContext.updatesPreferencesDataStore
+  }
 }
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class PrioritizedPackagesFilter
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class UpdatesPreferencesDataStore

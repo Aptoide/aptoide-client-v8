@@ -10,7 +10,7 @@ import androidx.work.Configuration
 import androidx.work.Configuration.Provider
 import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
 import cm.aptoide.pt.feature_categories.analytics.AptoideAnalyticsInfoProvider
-import cm.aptoide.pt.feature_updates.data.UpdatesWorker
+import cm.aptoide.pt.feature_updates.domain.Updates
 import cm.aptoide.pt.install_manager.InstallManager
 import coil.ImageLoader
 import coil.ImageLoaderFactory
@@ -64,9 +64,6 @@ val Context.paymentsPreferencesDataStore: DataStore<Preferences> by preferencesD
   name = "paymentsPreferences"
 )
 val Context.idsDataStore: DataStore<Preferences> by preferencesDataStore(name = "ids")
-val Context.updatesPreferencesDataStore: DataStore<Preferences> by preferencesDataStore(
-  name = "updatesPreferences"
-)
 
 @HiltAndroidApp
 class AptoideApplication : Application(), ImageLoaderFactory, Provider {
@@ -110,6 +107,9 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
   @Inject
   lateinit var biAnalytics: BIAnalytics
 
+  @Inject
+  lateinit var updates: Updates
+
   override fun onCreate() {
     FirebaseApp.initializeApp(this)
     super.onCreate()
@@ -119,7 +119,6 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
     initIndicative()
     setUserProperties()
     AptoideMMPCampaign.init(BuildConfig.OEMID, BuildConfig.UTM_SOURCE)
-    UpdatesWorker.enqueue(this)
   }
 
   private fun initIndicative() = biAnalytics.setup(
