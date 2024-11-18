@@ -114,6 +114,7 @@
   <string name="screenshot_appview_4">Một giao diện liền mạch với nội dung tốt nhất.</string>
   <string name="screenshot_appview_5">Trò chơi được chọn lọc dành riêng cho bạn.</string>
   <string name="not_now_button">Không phải lúc này</string>
+  <string name="later_button">Later</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Hết dung lượng</string>
   <string name="out_of_space_body">Bạn cần %s để tiếp tục cài đặt.</string>
