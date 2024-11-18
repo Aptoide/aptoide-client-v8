@@ -1,11 +1,13 @@
 package com.aptoide.android.aptoidegames.gamegenie.di
 
+import cm.aptoide.pt.aptoide_network.di.BaseOkHttp
 import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieApiService
 import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -13,9 +15,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 @InstallIn(SingletonComponent::class)
 internal object GameGenieModule {
     @Provides
-    fun provideChatbotApiService(): GameGenieApiService {
+    fun provideChatbotApiService(@BaseOkHttp okHttpClient: OkHttpClient): GameGenieApiService {
         return Retrofit.Builder()
-            .baseUrl("https://42d7-2001-8a0-6e3f-a700-bd65-c63f-b9e9-c637.ngrok-free.app/")
+            .client(okHttpClient)
+            .baseUrl("https://genie-chatbot.aptoide.com/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(GameGenieApiService::class.java)

@@ -43,6 +43,7 @@ import com.aptoide.android.aptoidegames.editorial.seeMoreEditorialScreen
 import com.aptoide.android.aptoidegames.feature_apps.presentation.seeAllMyGamesScreen
 import com.aptoide.android.aptoidegames.feature_apps.presentation.seeMoreBonusScreen
 import com.aptoide.android.aptoidegames.feature_apps.presentation.seeMoreScreen
+import com.aptoide.android.aptoidegames.gamegenie.presentation.gameGenieScreen
 import com.aptoide.android.aptoidegames.installer.UserActionDialog
 import com.aptoide.android.aptoidegames.notifications.NotificationsPermissionRequester
 import com.aptoide.android.aptoidegames.permissions.notifications.NotificationsPermissionViewModel
@@ -270,6 +271,12 @@ private fun NavigationGraph(
       navigate = navController::navigateTo,
       goBack = navController::navigateUp,
       screenData = updatesScreen()
+    )
+
+    animatedComposable(
+      navigate = navController::navigateTo,
+      goBack = navController::navigateUp,
+      screenData = gameGenieScreen()
     )
   }
 }
