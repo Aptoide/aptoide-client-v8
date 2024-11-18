@@ -24,7 +24,7 @@ import com.aptoide.android.aptoidegames.error_views.NoConnectionView
 
 const val genieRoute = "chatbot"
 
-fun chatbotScreen() = ScreenData.withAnalytics(
+fun gameGenieScreen() = ScreenData.withAnalytics(
     route = genieRoute,
     screenAnalyticsName = "Chat",
     arguments = emptyList()
@@ -71,7 +71,7 @@ fun ChatScreen(
     onMessageSend: (String) -> Unit
 ) {
     val listState = rememberLazyListState()
-    val messages = uiState.messages
+    val messages = uiState.conversation.toChatbotMessageList()
 
     LaunchedEffect(key1 = messages.size) {
         listState.animateScrollToItem(index = messages.size - 1)

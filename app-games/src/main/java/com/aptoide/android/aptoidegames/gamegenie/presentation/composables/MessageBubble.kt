@@ -34,13 +34,13 @@ fun MessageBubble(message: GameGenieMessage, apps: List<App>? = null, navigateTo
     ) {
         if (!message.isUserMessage()) {
             Text(
-                text = "アシスタント", //TODO take this out
+                text = "Assistant", //TODO take this out
                 style = AGTypography.BodyBold,
                 modifier = Modifier.padding(start = 8.dp, bottom = 1.dp)
             )
         } else {
             Text(
-                text = "私", //TODO take this out
+                text = "Me", //TODO take this out
                 style = AGTypography.BodyBold,
                 modifier = Modifier
                     .padding(end = 8.dp, bottom = 1.dp)
