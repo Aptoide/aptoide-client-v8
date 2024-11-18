@@ -114,6 +114,7 @@
   <string name="screenshot_appview_4">最高のコンテンツを備えたシームレスなインターフェース。</string>
   <string name="screenshot_appview_5">あなたのためだけに厳選されたゲーム。</string>
   <string name="not_now_button">今はしない</string>
+  <string name="later_button">Later</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">空き容量不足</string>
   <string name="out_of_space_body">インストールを続行するには %s 必要です。</string>
