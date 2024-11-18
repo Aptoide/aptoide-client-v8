@@ -5,7 +5,7 @@
   <string name="games">खेळ</string>
   <string name="categories">श्रेणी</string>
   <string name="search">शोध</string>
-  <string name="bottom_navigation_updates">Updates</string>
+  <string name="bottom_navigation_updates">अपडेट</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">सेटिंग</string>
   <string name="overflow_menu_terms_conditions">अटी आणि शर्ती</string>
@@ -108,12 +108,13 @@
   <string name="error_install_permissions_body"><![CDATA[अॅप्स इंस्टॉल करण्यासाठी कृपया सेटिंग्जमधुन <1>Aptoide खेळांना</1> परवानगी द्या!]]></string>
   <string name="latest_title">नविनोत्तम</string>
   <string name="whats_new_title">नव काय आहे</string>
-  <string name="screenshot_appview_1">A bonus in your in-app purchases.</string>
-  <string name="screenshot_appview_2">Find top new games curated for you.</string>
-  <string name="screenshot_appview_3">A new way to discover your favorite game.</string>
-  <string name="screenshot_appview_4">A seamless interface with the best content.</string>
-  <string name="screenshot_appview_5">Hand-picked games only for you.</string>
-  <string name="not_now_button">Not now</string>
+  <string name="screenshot_appview_1">आपल्या अॅपमधील खरेदीवर बोनस.</string>
+  <string name="screenshot_appview_2">फक्त आपल्यासाठी क्युरेट केलेले नवे उच्चीचे खेळ शोधा.</string>
+  <string name="screenshot_appview_3">आपला आवडता खेल शोधण्याचा नवा मार्ग.</string>
+  <string name="screenshot_appview_4">उत्कृष्ट कंटेंटसह सीमलेस इंटरफेज.</string>
+  <string name="screenshot_appview_5">फक्त आपल्यासाठी खास निवडलेले खेळ.</string>
+  <string name="not_now_button">आता नाही</string>
+  <string name="later_button">Later</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">जागा संपली</string>
   <string name="out_of_space_body">इंस्टलेशनसह %s हे चालू ठेवणे आपल्याला आवश्यक आहे.</string>
@@ -229,12 +230,12 @@
   <string name="promo_code_share_title">आपणांस प्रोमो कोड मिळालाय</string>
   <string name="promo_code_share_body">हा प्रोमो कोड आपल्या आवडत्या खेळात वापरुन अतिरिक्त बोनस मिळवा.</string>
   <!-- Update -->
-  <string name="update_up_to_date_title">Congrats!</string>
-  <string name="update_up_to_date_body">You\'re up to date.</string>
+  <string name="update_up_to_date_title">अभिनंदन!</string>
+  <string name="update_up_to_date_body">आपण अद्यतनित आहात.</string>
   <string name="update_auto_update_title">Enjoy the best gaming experience and keep your games updated.</string>
   <string name="update_auto_update_slider">Keep games updated automatically</string>
-  <string name="update_update_all_button">Update all</string>
-  <string name="update_aptoide_games_title">New Version Available!</string>
+  <string name="update_update_all_button">सर्व अपडेट करा</string>
+  <string name="update_aptoide_games_title">नविन आवृत्ती उपलब्ध आहे!</string>
   <string name="update_aptoide_games_body">Update Aptoide Games to the latest version to keep enjoying the best gaming discovery experience.</string>
   <string name="update_aptoide_games_update_close_body">Aptoide Games will close to update. Just open it again!</string>
   <plurals name="update_games_can_be_updated_body">

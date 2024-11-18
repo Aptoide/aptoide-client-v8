@@ -5,7 +5,7 @@
   <string name="games">Permainan</string>
   <string name="categories">Kategori</string>
   <string name="search">Cari</string>
-  <string name="bottom_navigation_updates">Updates</string>
+  <string name="bottom_navigation_updates">Kemaskini</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Tetapan</string>
   <string name="overflow_menu_terms_conditions">Terma &amp; Syarat</string>
@@ -113,7 +113,8 @@
   <string name="screenshot_appview_3">Cara baru untuk temui permainan kegemaran.</string>
   <string name="screenshot_appview_4">Antara muka yang lancar dengan kandungan terbaik.</string>
   <string name="screenshot_appview_5">Permainan yang dipilih khas untuk anda.</string>
-  <string name="not_now_button">Not now</string>
+  <string name="not_now_button">Bukan sekarang</string>
+  <string name="later_button">Later</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Tiada Ruang</string>
   <string name="out_of_space_body">Anda perlu %s untuk teruskan pemasangan.</string>
@@ -229,12 +230,12 @@
   <string name="promo_code_share_title">Anda ada kod promo!</string>
   <string name="promo_code_share_body">Guna kod promo ini untuk dapatkan bonus ekstra dalam permainan kegemaran anda.</string>
   <!-- Update -->
-  <string name="update_up_to_date_title">Congrats!</string>
-  <string name="update_up_to_date_body">You\'re up to date.</string>
+  <string name="update_up_to_date_title">Tahniah!</string>
+  <string name="update_up_to_date_body">Anda terpaling kini.</string>
   <string name="update_auto_update_title">Enjoy the best gaming experience and keep your games updated.</string>
   <string name="update_auto_update_slider">Keep games updated automatically</string>
-  <string name="update_update_all_button">Update all</string>
-  <string name="update_aptoide_games_title">New Version Available!</string>
+  <string name="update_update_all_button">Kemaskini semua</string>
+  <string name="update_aptoide_games_title">Versi Baharu Tersedia!</string>
   <string name="update_aptoide_games_body">Update Aptoide Games to the latest version to keep enjoying the best gaming discovery experience.</string>
   <string name="update_aptoide_games_update_close_body">Aptoide Games will close to update. Just open it again!</string>
   <plurals name="update_games_can_be_updated_body">
@@ -243,6 +244,6 @@
   <plurals name="update_notification_title">
     <item quantity="other">You\'ve got %s updates available</item>
   </plurals>
-  <string name="update_notification_body">Tap here to install.</string>
+  <string name="update_notification_body">Ketik sini untuk pasang.</string>
   <string name="update_aptoide_games_update_notification">There\'s a new version of Aptoide Games</string>
 </resources>

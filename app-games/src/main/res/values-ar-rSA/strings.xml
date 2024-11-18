@@ -114,6 +114,7 @@
   <string name="screenshot_appview_4">واجهة سهلة الاستخدام مع أفضل محتوى.</string>
   <string name="screenshot_appview_5">ألعاب انتقيناها بعناية من أجلك فقط.</string>
   <string name="not_now_button">Not now</string>
+  <string name="later_button">Later</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">لا توجد مساحة</string>
   <string name="out_of_space_body">أنت بحاجة إلى %s لمتابعة التثبيت.</string>

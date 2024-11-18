@@ -114,6 +114,7 @@
   <string name="screenshot_appview_4">Μια απρόσκοπτη διεπαφή χρήστη με τα καλύτερα περιεχόμενα.</string>
   <string name="screenshot_appview_5">Επιλεγμένα παιχνίδια μόνο για εσάς.</string>
   <string name="not_now_button">Όχι τώρα</string>
+  <string name="later_button">Later</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Δεν υπάρχει Χώρος</string>
   <string name="out_of_space_body">Χρειάζονται %s για να συνεχιστεί η εγκατάσταση.</string>

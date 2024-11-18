@@ -5,7 +5,7 @@
   <string name="games">بازی‌ها</string>
   <string name="categories">دسته‌ها</string>
   <string name="search">جست‌وجو</string>
-  <string name="bottom_navigation_updates">Updates</string>
+  <string name="bottom_navigation_updates">به روز رسانی ها</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">تنظیمات</string>
   <string name="overflow_menu_terms_conditions">شرایط &amp; ضوابط</string>
@@ -113,7 +113,8 @@
   <string name="screenshot_appview_3">روشی جدید برای کشف بازی‌های محبوب خود</string>
   <string name="screenshot_appview_4">محیط ساده با بهترین محتوا</string>
   <string name="screenshot_appview_5">بازی‌های انتخاب شده برای شما.</string>
-  <string name="not_now_button">Not now</string>
+  <string name="not_now_button">فعلا نه</string>
+  <string name="later_button">Later</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">حافظه‌ پر است</string>
   <string name="out_of_space_body">برای ادامه نصب به %s نیاز دارید.</string>
@@ -229,12 +230,12 @@
   <string name="promo_code_share_title">یک کد تشویقی دریافت کرده‌اید!</string>
   <string name="promo_code_share_body">این کد تشویقی را برای دریافت بونوس بیشتر در بازی محبوب خود استفاده کنید.</string>
   <!-- Update -->
-  <string name="update_up_to_date_title">Congrats!</string>
-  <string name="update_up_to_date_body">You\'re up to date.</string>
+  <string name="update_up_to_date_title">تبریک!</string>
+  <string name="update_up_to_date_body">بروز هستید.</string>
   <string name="update_auto_update_title">Enjoy the best gaming experience and keep your games updated.</string>
   <string name="update_auto_update_slider">Keep games updated automatically</string>
-  <string name="update_update_all_button">Update all</string>
-  <string name="update_aptoide_games_title">New Version Available!</string>
+  <string name="update_update_all_button">همه برنامه‌ها را روز‌آمد کن</string>
+  <string name="update_aptoide_games_title">نسخه جدید موجود است!</string>
   <string name="update_aptoide_games_body">Update Aptoide Games to the latest version to keep enjoying the best gaming discovery experience.</string>
   <string name="update_aptoide_games_update_close_body">Aptoide Games will close to update. Just open it again!</string>
   <plurals name="update_games_can_be_updated_body">
