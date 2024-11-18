@@ -1,5 +1,6 @@
 package cm.aptoide.pt.feature_categories.di
 
+import cm.aptoide.pt.aptoide_network.di.RetrofitCategoriesApps
 import cm.aptoide.pt.aptoide_network.di.RetrofitV7
 import cm.aptoide.pt.aptoide_network.di.StoreName
 import cm.aptoide.pt.feature_categories.analytics.AptoideAnalyticsInfoProvider
@@ -21,12 +22,14 @@ internal object RepositoryModule {
   @Singleton
   fun providesCategoriesRepository(
     @RetrofitV7 retrofitV7: Retrofit,
+    @RetrofitCategoriesApps retrofitCategoriesApps: Retrofit,
     @StoreName storeName: String,
     analyticsInfoProvider: AptoideAnalyticsInfoProvider,
     messagingInfoProvider: AptoideFirebaseInfoProvider
   ): CategoriesRepository {
     return AptoideCategoriesRepository(
-      categoriesRemoteDataSource = retrofitV7.create(AptoideCategoriesRepository.Retrofit::class.java),
+      categoriesRemoteDataSourceGet = retrofitV7.create(AptoideCategoriesRepository.RetrofitGet::class.java),
+      categoriesRemoteDataSourcePost = retrofitCategoriesApps.create(AptoideCategoriesRepository.RetrofitPost::class.java),
       storeName = storeName,
       analyticsInfoProvider = analyticsInfoProvider,
       messagingInfoProvider = messagingInfoProvider

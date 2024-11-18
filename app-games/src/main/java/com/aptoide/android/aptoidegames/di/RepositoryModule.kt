@@ -9,6 +9,7 @@ import cm.aptoide.pt.aptoide_network.data.network.QLogicInterceptor
 import cm.aptoide.pt.aptoide_network.di.BaseOkHttp
 import cm.aptoide.pt.aptoide_network.di.RetrofitBuzz
 import cm.aptoide.pt.aptoide_network.di.StoreDomain
+import cm.aptoide.pt.aptoide_network.di.StoreEnvironmentDomain
 import cm.aptoide.pt.aptoide_network.di.StoreName
 import cm.aptoide.pt.aptoide_network.di.VersionCode
 import cm.aptoide.pt.environment_info.DeviceInfo
@@ -83,6 +84,11 @@ class RepositoryModule {
   @Provides
   @StoreDomain
   fun provideEnvironmentDomain(): String = BuildConfig.STORE_DOMAIN
+
+  @Singleton
+  @Provides
+  @StoreEnvironmentDomain
+  fun provideStoreEnvironmentDomain(): String = BuildConfig.STORE_ENV_DOMAIN
 
   @Singleton
   @Provides

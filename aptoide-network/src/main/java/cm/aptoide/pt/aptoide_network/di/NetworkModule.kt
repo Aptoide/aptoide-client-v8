@@ -129,6 +129,20 @@ object NetworkModule {
       .build()
   }
 
+  @RetrofitCategoriesApps
+  @Provides
+  @Singleton
+  fun provideRetrofitCategoriesApps(
+    @BaseOkHttp okHttpClient: OkHttpClient,
+    @StoreEnvironmentDomain domain: String,
+  ): Retrofit {
+    return Retrofit.Builder()
+      .client(okHttpClient)
+      .baseUrl(domain)
+      .addConverterFactory(GsonConverterFactory.create())
+      .build()
+  }
+
   @Provides
   @Singleton
   fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor =
@@ -153,6 +167,10 @@ annotation class RetrofitV8Echo
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
+annotation class RetrofitCategoriesApps
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
 annotation class RetrofitV7ActionItem
 
 @Qualifier
@@ -162,6 +180,10 @@ annotation class StoreName
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class StoreDomain
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class StoreEnvironmentDomain
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
