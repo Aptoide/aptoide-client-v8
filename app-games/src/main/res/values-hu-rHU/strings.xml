@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">Aptoide Játékok</string>
+  <string name="app_name">Aptoide Games</string>
   <!-- Bottom Bar -->
   <string name="games">Játékok</string>
   <string name="categories">Kategóriák</string>
   <string name="search">Keresés</string>
-  <string name="bottom_navigation_updates">Updates</string>
+  <string name="bottom_navigation_updates">Frissítések</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Beállítások</string>
   <string name="overflow_menu_terms_conditions">Általános Szerződési Feltételek</string>
@@ -113,8 +113,8 @@
   <string name="screenshot_appview_3">A kedvenc játékod felfedezésének új módja.</string>
   <string name="screenshot_appview_4">Tökéletes felület a legjobb tartalommal.</string>
   <string name="screenshot_appview_5">Gondosan összeválogatott játékok csak neked.</string>
-  <string name="not_now_button">Not now</string>
-  <string name="later_button">Later</string>
+  <string name="not_now_button">Nem most</string>
+  <string name="later_button">Később</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Nincs elég hely</string>
   <string name="out_of_space_body">A telepítés folytatásához %s tárhely szükséges.</string>
@@ -159,7 +159,7 @@
   <string name="purchase_done_bonus_wallet_installed_body">Nyisd meg a bónusz megtekintéséhez.</string>
   <string name="bonus_banner_body">Az összes %s jelölt játékban bónuszt kapsz.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Akár %s%% bónusz</string>
-  <string name="settings_auto_update_button">Auto-update games</string>
+  <string name="settings_auto_update_button">Játékok autom. frissítése</string>
   <string name="settings_payments_title" comment="contact_support_team">Kapcsolatfelvétel az ügyfélszolgálattal</string>
   <string name="settings_contact_support_body" comment="billing_terms_of_use">Számlázási feltételek</string>
   <string name="settings_billing_terms_body" comment="payments">Fizetés</string>
@@ -230,22 +230,22 @@
   <string name="promo_code_share_title">Van egy promókódod!</string>
   <string name="promo_code_share_body">Ezzel a promókóddal extra bónuszokat szerezhetsz a kedvenc játékodban.</string>
   <!-- Update -->
-  <string name="update_up_to_date_title">Congrats!</string>
-  <string name="update_up_to_date_body">You\'re up to date.</string>
-  <string name="update_auto_update_title">Enjoy the best gaming experience and keep your games updated.</string>
-  <string name="update_auto_update_slider">Keep games updated automatically</string>
-  <string name="update_update_all_button">Update all</string>
-  <string name="update_aptoide_games_title">New Version Available!</string>
-  <string name="update_aptoide_games_body">Update Aptoide Games to the latest version to keep enjoying the best gaming discovery experience.</string>
-  <string name="update_aptoide_games_update_close_body">Aptoide Games will close to update. Just open it again!</string>
+  <string name="update_up_to_date_title">Gratulálunk!</string>
+  <string name="update_up_to_date_body">Nincs új frissítés.</string>
+  <string name="update_auto_update_title">Élvezd a legjobb gaming élményt és maradj naprakész.</string>
+  <string name="update_auto_update_slider">Frissítsd a játékokat automatikusan</string>
+  <string name="update_update_all_button">Minden frissítése</string>
+  <string name="update_aptoide_games_title">Új verzió érhető el!</string>
+  <string name="update_aptoide_games_body">Töltsd le az *Aptoide Games* legújabb verzióját, hogy továbbra is a legjobb gaming felfedező élményben lehessen részed</string>
+  <string name="update_aptoide_games_update_close_body">Az Aptoide Games bezár a frissítés miatt. Nyisd meg újra!</string>
   <plurals name="update_games_can_be_updated_body">
     <item quantity="one">%s game can be updated</item>
-    <item quantity="other">%s games can be updated</item>
+    <item quantity="other">%s játék frissíthető</item>
   </plurals>
   <plurals name="update_notification_title">
-    <item quantity="one">You\'ve got %s update available</item>
-    <item quantity="other">You\'ve got %s updates available</item>
+    <item quantity="one">%s frissítés érhető el</item>
+    <item quantity="other">%s frissítés érhető el</item>
   </plurals>
-  <string name="update_notification_body">Tap here to install.</string>
-  <string name="update_aptoide_games_update_notification">There\'s a new version of Aptoide Games</string>
+  <string name="update_notification_body">Pöccints a telepítéshez.</string>
+  <string name="update_aptoide_games_update_notification">Elérhető az Aptoide Games új verziója</string>
 </resources>
