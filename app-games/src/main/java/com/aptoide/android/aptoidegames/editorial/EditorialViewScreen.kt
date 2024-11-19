@@ -45,7 +45,7 @@ import cm.aptoide.pt.feature_home.domain.BundleSource.MANUAL
 import cm.aptoide.pt.feature_home.domain.Type.EDITORIAL
 import cm.aptoide.pt.feature_home.domain.WidgetAction
 import cm.aptoide.pt.feature_home.domain.WidgetActionType.BUTTON
-import com.aptoide.android.aptoidegames.AptoideAsyncImage
+import com.aptoide.android.aptoidegames.AptoideAsyncImageWithFullscreen
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
@@ -309,10 +309,12 @@ private fun ContentMedia(
   if (mediaImage != null || mediaUrl != null) {
     Column(modifier = modifier) {
       mediaImage?.let {
-        AptoideAsyncImage(
-          modifier = Modifier.fillMaxSize(),
-          data = media.image,
+        AptoideAsyncImageWithFullscreen(
+          modifier = Modifier
+            .fillMaxSize(),
+          data = it,
           contentDescription = "Background Image",
+          images = listOf(it)
         )
       }
       mediaUrl?.let {
