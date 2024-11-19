@@ -8,7 +8,9 @@ import kotlinx.coroutines.withContext
 interface Campaign {
   val adListId: String?
 
+  //TODO Refactor This Later - Not very good architecturally
   val placementType: String?
+  var deepLinkUtms: Map<String, String>
 
   suspend fun sendImpressionEvent(
     type: String,
@@ -43,6 +45,7 @@ data class CampaignImpl constructor(
   override var adListId: String? = null
 
   override var placementType: String? = null
+  override var deepLinkUtms: Map<String, String> = mutableMapOf()
 
   override suspend fun sendImpressionEvent(
     type: String,

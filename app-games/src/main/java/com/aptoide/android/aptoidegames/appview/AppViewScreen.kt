@@ -50,6 +50,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import cm.aptoide.pt.aptoide_network.data.network.model.Screenshot
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
@@ -80,6 +82,7 @@ import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
 import com.aptoide.android.aptoidegames.AptoideOutlinedText
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.analytics.mapOfNonNull
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
@@ -116,27 +119,62 @@ private const val PATH = "path"
 private const val APP_PATH = "app"
 
 private const val SOURCE = "source"
+private const val UTM_CAMPAIGN = "utm_campaign"
+private const val UTM_MEDIUM = "utm_medium"
+private const val UTM_SOURCE = "utm_source"
+private const val UTM_CONTENT = "utm_content"
+
+private val allAppViewArguments = listOf(
+  navArgument(UTM_CAMPAIGN) {
+    type = NavType.StringType
+    nullable = true
+  },
+  navArgument(UTM_MEDIUM) {
+    type = NavType.StringType
+    nullable = true
+  },
+  navArgument(UTM_SOURCE) {
+    type = NavType.StringType
+    nullable = true
+  },
+  navArgument(UTM_CONTENT) {
+    type = NavType.StringType
+    nullable = true
+  },
+)
 
 const val appViewRoute = "${APP_PATH}/{$SOURCE}?"
 
 fun appViewScreen() = ScreenData.withAnalytics(
   route = appViewRoute,
   screenAnalyticsName = "AppView",
+  arguments = allAppViewArguments,
   deepLinks = listOf(
     navDeepLink { uriPattern = BuildConfig.DEEP_LINK_SCHEMA + appViewRoute },
-    navDeepLink { uriPattern = "$APP_LINK_SCHEMA{$SOURCE}.$APP_LINK_HOST/{$PATH}" },
+    navDeepLink {
+      uriPattern =
+        "$APP_LINK_SCHEMA{$SOURCE}.$APP_LINK_HOST/{$PATH}?$UTM_MEDIUM={$UTM_MEDIUM}&$UTM_CONTENT={$UTM_CONTENT}&$UTM_SOURCE={$UTM_SOURCE}&$UTM_CAMPAIGN={$UTM_CAMPAIGN}"
+    },
   ),
 ) { arguments, navigate, navigateBack ->
   val path = arguments?.getString(PATH)
-
   val source = when (path) {
     "app" -> "$PACKAGE_UNAME=${arguments.getString(SOURCE)}"
     else -> arguments?.getString(SOURCE)!!
   }
+
+  val utmsMap = mapOfNonNull(
+    UTM_CAMPAIGN to arguments.getString(UTM_CAMPAIGN),
+    UTM_MEDIUM to arguments.getString(UTM_MEDIUM),
+    UTM_CONTENT to arguments.getString(UTM_CONTENT),
+    UTM_SOURCE to arguments.getString(UTM_SOURCE),
+  )
+
   AppViewScreen(
     source = source.appendIfRequired(BuildConfig.MARKET_NAME),
     navigate = navigate,
-    navigateBack = navigateBack
+    navigateBack = navigateBack,
+    utmsMap = utmsMap,
   )
 }
 
@@ -151,6 +189,7 @@ fun AppViewScreen(
   source: String,
   navigate: (String) -> Unit,
   navigateBack: () -> Unit,
+  utmsMap: Map<String, String>,
 ) {
   val (uiState, reload) = rememberApp(source = source)
   val analyticsContext = AnalyticsContext.current
@@ -179,7 +218,8 @@ fun AppViewScreen(
       genericAnalytics.sendBackButtonClick(analyticsContext)
       navigateBack()
     },
-    tabsList = tabsList
+    tabsList = tabsList,
+    utmsMap = utmsMap
   )
 }
 
@@ -191,6 +231,7 @@ fun MainAppViewView(
   navigate: (String) -> Unit,
   navigateBack: () -> Unit,
   tabsList: List<AppViewTab>,
+  utmsMap: Map<String, String>,
 ) {
   when (uiState) {
     is AppUiState.Idle ->
@@ -199,6 +240,7 @@ fun MainAppViewView(
         tabsList = tabsList,
         navigate = navigate,
         navigateBack = navigateBack,
+        utmsMap = utmsMap
       )
 
     is AppUiState.NoConnection -> NoConnectionView(onRetryClick = noNetworkReload)
@@ -226,6 +268,7 @@ fun AppViewContent(
   tabsList: List<AppViewTab>,
   navigate: (String) -> Unit,
   navigateBack: () -> Unit,
+  utmsMap: Map<String, String>,
 ) {
   val bonusBundle = rememberBonusBundle()
 
@@ -294,6 +337,8 @@ fun AppViewContent(
         .padding(top = if (showYoutubeVideo) VIDEO_HEIGHT.dp else FEATURE_GRAPHIC_HEIGHT.dp)
         .background(Palette.Black)
     ) {
+      app.campaigns?.deepLinkUtms = utmsMap
+
       AppPresentationView(app)
 
       InstallView(
@@ -884,6 +929,7 @@ fun AppViewScreenPreview() {
       ),
       navigateBack = {},
       navigate = {},
+      utmsMap = emptyMap()
     )
   }
 }
