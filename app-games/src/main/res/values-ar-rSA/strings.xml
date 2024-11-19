@@ -5,7 +5,7 @@
   <string name="games">ألعاب</string>
   <string name="categories">الفئات</string>
   <string name="search">بحث</string>
-  <string name="bottom_navigation_updates">Updates</string>
+  <string name="bottom_navigation_updates">التحديثات</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">الإعدادات</string>
   <string name="overflow_menu_terms_conditions">الشروط &amp; والأحكام</string>
@@ -113,7 +113,7 @@
   <string name="screenshot_appview_3">طريقة جديدة لكتشاف ألعابك المفضلة.</string>
   <string name="screenshot_appview_4">واجهة سهلة الاستخدام مع أفضل محتوى.</string>
   <string name="screenshot_appview_5">ألعاب انتقيناها بعناية من أجلك فقط.</string>
-  <string name="not_now_button">Not now</string>
+  <string name="not_now_button">ليس الآن</string>
   <string name="later_button">Later</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">لا توجد مساحة</string>
@@ -230,12 +230,12 @@
   <string name="promo_code_share_title">حصلت على رمز ترويجي!</string>
   <string name="promo_code_share_body">استخدم هذا الرمز التويجي لتحصل على مكافآت إضافية في ألعابك المفضلة.</string>
   <!-- Update -->
-  <string name="update_up_to_date_title">Congrats!</string>
-  <string name="update_up_to_date_body">You\'re up to date.</string>
+  <string name="update_up_to_date_title">مبروك!</string>
+  <string name="update_up_to_date_body">لديك آخر تحديث.</string>
   <string name="update_auto_update_title">Enjoy the best gaming experience and keep your games updated.</string>
   <string name="update_auto_update_slider">Keep games updated automatically</string>
-  <string name="update_update_all_button">Update all</string>
-  <string name="update_aptoide_games_title">New Version Available!</string>
+  <string name="update_update_all_button">تحديث الكل</string>
+  <string name="update_aptoide_games_title">يتوفر إصدار جديد!</string>
   <string name="update_aptoide_games_body">Update Aptoide Games to the latest version to keep enjoying the best gaming discovery experience.</string>
   <string name="update_aptoide_games_update_close_body">Aptoide Games will close to update. Just open it again!</string>
   <plurals name="update_games_can_be_updated_body">
@@ -254,6 +254,6 @@
     <item quantity="many">You\'ve got %s updates available</item>
     <item quantity="other">You\'ve got %s updates available</item>
   </plurals>
-  <string name="update_notification_body">Tap here to install.</string>
+  <string name="update_notification_body">اضغط هنا لتثبيت.</string>
   <string name="update_aptoide_games_update_notification">There\'s a new version of Aptoide Games</string>
 </resources>
