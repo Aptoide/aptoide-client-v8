@@ -61,6 +61,8 @@ class AptoideMMPCampaign(
     bundleTag: String?,
     searchKeyword: String? = null,
     currentScreen: String?,
+    utmCampaign: String? = null,
+    utmSourceExterior: String? = null,
     isCta: Boolean = false,
   ) {
     val utmMedium = bundleTag?.let {
@@ -72,8 +74,9 @@ class AptoideMMPCampaign(
         buildReplaceMap(),
         buildAppendMap(
           utmMedium = utmMedium,
-          utmCampaign = allowedBundleTags[bundleTag]?.second,
+          utmCampaign = utmCampaign ?: allowedBundleTags[bundleTag]?.second,
           searchKeyword = searchKeyword,
+          utmSourceExterior = utmSourceExterior,
           isCta = isCta
         )
       )
@@ -91,9 +94,14 @@ class AptoideMMPCampaign(
   private fun buildBaseMap(
     utmMedium: String?,
     utmCampaign: String?,
+    utmSourceExterior: String? = null,
   ): Map<String, String> {
     val map = mutableMapOf<String, String>()
-    utmSource.let { map["utm_source"] = it }
+    if (utmSourceExterior != null) {
+      utmSourceExterior.let { map["utm_source"] = "$it+$utmSource" }
+    } else {
+      utmSource.let { map["utm_source"] = it }
+    }
     utmMedium?.let { map["utm_medium"] = it }
     utmCampaign?.let { campaign ->
       map["utm_campaign"] = campaign
@@ -105,10 +113,11 @@ class AptoideMMPCampaign(
   private fun buildAppendMap(
     utmMedium: String?,
     utmCampaign: String?,
+    utmSourceExterior: String? = null,
     searchKeyword: String? = null,
     isCta: Boolean,
   ): Map<String, String> {
-    val map = buildBaseMap(utmMedium, utmCampaign).toMutableMap()
+    val map = buildBaseMap(utmMedium, utmCampaign, utmSourceExterior).toMutableMap()
     utmCampaign?.let { _ ->
       if (isCta) {
         map["utm_content"] = "cta"

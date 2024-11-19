@@ -98,8 +98,22 @@ fun installViewStates(
                   currentScreen = analyticsContext.currentScreen,
                   isCta = true
                 )
+            } else if (!app.campaigns?.deepLinkUtms?.get("utm_source").isNullOrEmpty()) {
+              app.campaigns?.placementType =
+                app.campaigns?.deepLinkUtms?.get("utm_content") ?: "appview"
+
+              app.campaigns?.toAptoideMMPCampaign()
+                ?.sendDownloadEvent(
+                  bundleTag = null,
+                  searchKeyword = null,
+                  utmCampaign = app.campaigns?.deepLinkUtms?.get("utm_campaign"),
+                  currentScreen = app.campaigns?.deepLinkUtms?.get("utm_medium")
+                    ?: analyticsContext.currentScreen,
+                  utmSourceExterior = app.campaigns?.deepLinkUtms?.get("utm_source")
+                )
             } else {
               app.campaigns?.placementType = "appview"
+
               app.campaigns?.toAptoideMMPCampaign()
                 ?.sendDownloadEvent(
                   bundleTag = analyticsContext.bundleMeta?.tag,
@@ -138,8 +152,22 @@ fun installViewStates(
                   currentScreen = analyticsContext.currentScreen,
                   isCta = true
                 )
+            } else if (!app.campaigns?.deepLinkUtms?.get("utm_source").isNullOrEmpty()) {
+              app.campaigns?.placementType =
+                app.campaigns?.deepLinkUtms?.get("utm_content") ?: "appview"
+
+              app.campaigns?.toAptoideMMPCampaign()
+                ?.sendDownloadEvent(
+                  bundleTag = null,
+                  searchKeyword = null,
+                  utmCampaign = app.campaigns?.deepLinkUtms?.get("utm_campaign"),
+                  currentScreen = app.campaigns?.deepLinkUtms?.get("utm_medium")
+                    ?: analyticsContext.currentScreen,
+                  utmSourceExterior = app.campaigns?.deepLinkUtms?.get("utm_source")
+                )
             } else {
               app.campaigns?.placementType = "appview"
+
               app.campaigns?.toAptoideMMPCampaign()
                 ?.sendDownloadEvent(
                   bundleTag = analyticsContext.bundleMeta?.tag,
@@ -207,7 +235,7 @@ fun installViewStates(
 
         is DownloadUiState.Installing,
         DownloadUiState.Uninstalling,
-        -> downloadUiState
+          -> downloadUiState
 
         is DownloadUiState.Installed -> DownloadUiState.Installed(
           open = {
@@ -265,7 +293,7 @@ fun DownloadUiState?.toInstallViewState(app: App): InstallViewState {
     DownloadUiState.Uninstalling -> stringResource(R.string.uninstalling)
     is DownloadUiState.Installed -> stringResource(R.string.appview_status_installed_talkback)
     is DownloadUiState.Error,
-    -> stringResource(R.string.appview_status_failed_talkback)
+      -> stringResource(R.string.appview_status_failed_talkback)
   }
 
   val actionDescription: String? = when (this) {
@@ -276,11 +304,11 @@ fun DownloadUiState?.toInstallViewState(app: App): InstallViewState {
 
     is DownloadUiState.Downloading,
     is DownloadUiState.ReadyToInstall,
-    -> stringResource(R.string.appview_action_cancel_talkback)
+      -> stringResource(R.string.appview_action_cancel_talkback)
 
     is DownloadUiState.Installing,
     DownloadUiState.Uninstalling,
-    -> null
+      -> null
 
     is DownloadUiState.Installed -> stringResource(R.string.button_open_app_title)
     is DownloadUiState.Error -> stringResource(R.string.retry_button)
