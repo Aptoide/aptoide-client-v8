@@ -1,16 +1,39 @@
 package com.aptoide.android.aptoidegames
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.transform.Transformation
+import com.aptoide.android.aptoidegames.drawables.icons.getLeftArrow
 import com.aptoide.android.aptoidegames.theme.Palette
+import net.engawapg.lib.zoomable.rememberZoomState
+import net.engawapg.lib.zoomable.zoomable
 
 @Composable
 fun AptoideFeatureGraphicImage(
@@ -71,6 +94,96 @@ fun AptoideAsyncImage(
     colorFilter = colorFilter,
     modifier = modifier,
   )
+}
+
+@Composable
+fun AptoideAsyncImageWithFullscreen(
+  modifier: Modifier = Modifier,
+  data: Any?,
+  placeholder: Boolean = true,
+  contentDescription: String?,
+  transformations: Transformation? = null,
+  colorFilter: ColorFilter? = null,
+  images: List<Any?> = listOf(data),
+  selectedIndex: Int = 1,
+) {
+  var expanded by remember { mutableStateOf(false) }
+  AptoideAsyncImage(
+    modifier = modifier.clickable{expanded = true},
+    data = data,
+    placeholder = placeholder,
+    transformations = transformations,
+    colorFilter = colorFilter,
+    contentDescription = contentDescription,
+  )
+
+  if (expanded) {
+    FullscreenImageViewer(
+      images = images,
+      initialPage = selectedIndex,
+      contentDescription = contentDescription,
+      onDismiss = {
+        expanded = false
+      }
+    )
+  }
+}
+
+@Composable
+fun FullscreenImageViewer(
+  images: List<Any?>,
+  initialPage: Int,
+  contentDescription: String?,
+  onDismiss: () -> Unit
+) {
+  Dialog(
+    onDismissRequest = onDismiss,
+    properties = DialogProperties(usePlatformDefaultWidth = false),
+  ) {
+    Box(
+      modifier = Modifier
+        .background(Palette.Black)
+        .fillMaxSize()
+        .clipToBounds()
+    ) {
+      val pagerState = rememberPagerState(
+        initialPage = initialPage,
+        pageCount = { images.size }
+      )
+      val zoomState = rememberZoomState(
+        maxScale = 5f
+      )
+
+      LaunchedEffect(pagerState.currentPage) {
+        zoomState.reset()
+      }
+
+      HorizontalPager(
+        state = pagerState,
+        modifier = Modifier.fillMaxSize()
+      ) { page ->
+          AptoideAsyncImage(
+            modifier = Modifier
+              .fillMaxSize()
+              .aspectRatio(16 / 9f)
+              .zoomable(zoomState),
+            data = images[page],
+            contentDescription = contentDescription
+          )
+      }
+
+      Image(
+        imageVector = getLeftArrow(Palette.Primary, Palette.Black),
+        contentDescription = stringResource(id = R.string.button_back_title),
+        contentScale = ContentScale.Crop,
+        modifier = Modifier
+          .align(Alignment.TopStart)
+          .clickable(onClick = onDismiss)
+          .padding(horizontal = 16.dp, vertical = 12.dp)
+          .size(32.dp)
+      )
+    }
+  }
 }
 
 @Composable

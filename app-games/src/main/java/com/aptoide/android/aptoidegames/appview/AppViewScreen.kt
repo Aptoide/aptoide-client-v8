@@ -70,7 +70,7 @@ import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
 import cm.aptoide.pt.feature_editorial.presentation.relatedEditorialsCardViewModel
 import cm.aptoide.pt.feature_editorial.presentation.rememberRelatedEditorials
 import com.aptoide.android.aptoidegames.AppIconImage
-import com.aptoide.android.aptoidegames.AptoideAsyncImage
+import com.aptoide.android.aptoidegames.AptoideAsyncImageWithFullscreen
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
 import com.aptoide.android.aptoidegames.AptoideOutlinedText
 import com.aptoide.android.aptoidegames.BuildConfig
@@ -509,7 +509,7 @@ fun ScreenshotsList(screenshots: List<String>) {
   ) {
     itemsIndexed(screenshots) { index, screenshot ->
       val stringResource = stringResource(id = R.string.app_view_screenshot_number, index + 1)
-      AptoideAsyncImage(
+      AptoideAsyncImageWithFullscreen(
         modifier = Modifier
           .clearAndSetSemantics {
             contentDescription = stringResource
@@ -517,6 +517,8 @@ fun ScreenshotsList(screenshots: List<String>) {
           .size(268.dp, 152.dp),
         data = screenshot,
         contentDescription = null,
+        selectedIndex = index,
+        images = screenshots
       )
     }
   }
