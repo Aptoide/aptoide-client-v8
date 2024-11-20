@@ -10,10 +10,10 @@ android {
 }
 
 dependencies {
-  implementation(project(ModuleDependency.APTOIDE_NETWORK))
-  implementation(project(ModuleDependency.FEATURE_APPS))
-  implementation(project(ModuleDependency.FEATURE_EDITORIAL))
-  implementation(project(ModuleDependency.FEATURE_REACTIONS))
-  implementation(project(ModuleDependency.EXTENSIONS))
-  implementation(project(ModuleDependency.FEATURE_BONUS))
+  implementation(projects.aptoideNetwork)
+  implementation(projects.featureApps)
+  implementation(projects.featureEditorial)
+  implementation(projects.featureReactions)
+  implementation(projects.extension)
+  implementation(projects.featureBonus)
 }

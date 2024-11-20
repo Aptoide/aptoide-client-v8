@@ -11,11 +11,11 @@ android {
 }
 
 dependencies {
-  implementation(project(ModuleDependency.APTOIDE_NETWORK))
-  implementation(project(ModuleDependency.FEATURE_APPS))
-  implementation(project(ModuleDependency.INSTALL_MANAGER))
-  implementation(project(ModuleDependency.EXTENSIONS))
-  implementation(project(ModuleDependency.INSTALL_INFO_MAPPER))
+  implementation(projects.aptoideNetwork)
+  implementation(projects.featureApps)
+  implementation(projects.installManager)
+  implementation(projects.extension)
+  implementation(projects.installInfoMapper)
 
   //room
   implementation(libs.room)
@@ -23,7 +23,7 @@ dependencies {
   implementation(libs.room.ktx)
 
   //Store
-  implementation(LibraryDependency.DATASTORE)
+  implementation(libs.datastore)
 
   //WorkManager
   implementation(libs.work.manager)

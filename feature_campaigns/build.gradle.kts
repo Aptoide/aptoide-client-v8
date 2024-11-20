@@ -10,7 +10,7 @@ android {
 }
 
 dependencies {
-  implementation(project(ModuleDependency.APTOIDE_NETWORK))
+  implementation(projects.aptoideNetwork)
 
   implementation(libs.gms.play.services.ads)
 }

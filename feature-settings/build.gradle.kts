@@ -10,7 +10,7 @@ android {
 }
 
 dependencies {
-  implementation(project(ModuleDependency.ENVIRONMENT_INFO))
+  implementation(projects.environmentInfo)
 
   //store
   implementation(libs.datastore)

@@ -16,7 +16,7 @@ android {
 }
 
 dependencies {
-  implementation(project(ModuleDependency.INSTALL_MANAGER))
+  implementation(projects.installManager)
 
   //room
   implementation(libs.room)

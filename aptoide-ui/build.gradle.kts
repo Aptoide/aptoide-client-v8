@@ -11,5 +11,5 @@ android {
 
 dependencies {
   //Accompanist
-  implementation(project(ModuleDependency.EXTENSIONS))
+  implementation(projects.extension)
 }
