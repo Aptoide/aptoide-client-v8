@@ -117,6 +117,8 @@
   <string name="screenshot_appview_5">Hand-picked games only for you.</string>
   <string name="not_now_button">ਹਾਲੇ ਨਹੀਂ</string>
   <string name="later_button">Later</string>
+  <string name="trusted_game_badge">Trusted Game</string>
+  <string name="official_game_badge">Official Game</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Out of Space</string>
   <string name="out_of_space_body">ਇੰਸਟਾਲੇਸ਼ਨ ਨੂੰ ਜਾਰੀ ਰੱਖਣ ਲਈ ਤੁਹਾਨੂੰ %s ਦੀ ਲੋੜ ਹੈ|</string>
