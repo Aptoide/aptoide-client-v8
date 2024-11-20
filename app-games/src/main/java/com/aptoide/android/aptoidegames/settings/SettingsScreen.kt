@@ -153,19 +153,6 @@ fun SettingsViewContent(
         }
       }
       SettingsSectionDivider()
-      SettingsSection(title = stringResource(id = R.string.settings_billing_terms_body)) {
-        Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-          SettingsCaretItem(
-            title = stringResource(id = R.string.settings_payments_title),
-            onClick = onContactSupportClick
-          )
-          SettingsCaretItem(
-            title = stringResource(id = R.string.settings_contact_support_body),
-            onClick = onBillingTermsClick
-          )
-        }
-      }
-      SettingsSectionDivider()
       SettingsSection(
         title = stringResource(R.string.settings_support)
       ) {
@@ -212,6 +199,19 @@ fun SettingsViewContent(
               title = copyText
             )
           }
+        }
+      }
+      SettingsSectionDivider()
+      SettingsSection(title = stringResource(id = R.string.settings_billing_terms_body)) {
+        Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+          SettingsCaretItem(
+            title = stringResource(id = R.string.settings_payments_title),
+            onClick = onContactSupportClick
+          )
+          SettingsCaretItem(
+            title = stringResource(id = R.string.settings_contact_support_body),
+            onClick = onBillingTermsClick
+          )
         }
       }
       SettingsSectionDivider()
