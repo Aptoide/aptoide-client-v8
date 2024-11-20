@@ -33,7 +33,7 @@ object ModuleDependency {
   const val FEATURE_OOS = ":feature-oos"
   const val INSTALL_INFO_MAPPER = ":install-info-mapper"
   const val ENVIRONMENT_INFO = ":environment-info"
-  const val EXTENSIONS = ":extensions"
+  const val EXTENSIONS = ":extension"
   const val NETWORK_LISTENER = ":network-listener"
   const val FEATURE_APPCOINS = ":feature-appcoins"
   const val FEATURE_APKFY = ":feature-apkfy"
