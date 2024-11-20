@@ -71,8 +71,6 @@ android {
       value = "\"${project.property("OEMID_APTOIDEGAMES")}\""
     )
 
-    testInstrumentationRunner = AndroidConfig.TEST_INSTRUMENTATION_RUNNER
-
     buildConfigFieldFromGradleProperty("ROOM_SCHEMA_VERSION")
     buildConfigFieldFromGradleProperty("ROOM_DATABASE_NAME")
 
