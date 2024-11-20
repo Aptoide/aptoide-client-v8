@@ -26,7 +26,7 @@ private const val TRENDING_TAG = "apps-group-trending"
 private const val TRENDING_MORE_TAG = "apps-group-trending-more"
 
 @HiltViewModel
-private class BundlesInjectionsProvider @Inject constructor(
+class BundlesInjectionsProvider @Inject constructor(
   val urlsCache: UrlsCache,
   @DefaultTrendingUrl val defaultTrendingUrl: String,
 ) : ViewModel()
