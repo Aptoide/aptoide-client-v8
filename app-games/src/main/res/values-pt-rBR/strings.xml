@@ -115,6 +115,8 @@
   <string name="screenshot_appview_5">Jogos cuidadosamente selecionados para você.</string>
   <string name="not_now_button">Agora não</string>
   <string name="later_button">Depois</string>
+  <string name="trusted_game_badge">Jogo Verificado</string>
+  <string name="official_game_badge">Jogo Oficial</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Sem Espaço Disponível</string>
   <string name="out_of_space_body">Você precisa de %s para continuar a instalação.</string>
@@ -159,7 +161,7 @@
   <string name="purchase_done_bonus_wallet_installed_body">Abra-o para descobrir seu bônus.</string>
   <string name="bonus_banner_body">Você receberá um bônus em todos os jogos identificados com %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Até %s%% de bônus</string>
-  <string name="settings_auto_update_button">Auto-update games</string>
+  <string name="settings_auto_update_button">Atualizar jogos automaticamente</string>
   <string name="settings_payments_title" comment="contact_support_team">Falar com a Equipe de Suporte</string>
   <string name="settings_contact_support_body" comment="billing_terms_of_use">Termos de Uso de Cobrança</string>
   <string name="settings_billing_terms_body" comment="payments">Pagamentos</string>
@@ -232,20 +234,20 @@
   <!-- Update -->
   <string name="update_up_to_date_title">Parabéns!</string>
   <string name="update_up_to_date_body">Você está atualizado.</string>
-  <string name="update_auto_update_title">Enjoy the best gaming experience and keep your games updated.</string>
-  <string name="update_auto_update_slider">Keep games updated automatically</string>
+  <string name="update_auto_update_title">Aproveite a melhor experiência de jogo e mantenha seus jogos atualizados.</string>
+  <string name="update_auto_update_slider">Manter os jogos atualizados automaticamente</string>
   <string name="update_update_all_button">Atualizar tudo</string>
   <string name="update_aptoide_games_title">Nova Versão Disponível!</string>
-  <string name="update_aptoide_games_body">Update Aptoide Games to the latest version to keep enjoying the best gaming discovery experience.</string>
-  <string name="update_aptoide_games_update_close_body">Aptoide Games will close to update. Just open it again!</string>
+  <string name="update_aptoide_games_body">Atualize o Aptoide Games em sua versão mais recente para continuar aproveitando a melhor experiência de descoberta de jogos.</string>
+  <string name="update_aptoide_games_update_close_body">O Aptoide Games será fechado para atualização. Basta abri-lo novamente!</string>
   <plurals name="update_games_can_be_updated_body">
-    <item quantity="one">%s game can be updated</item>
-    <item quantity="other">%s games can be updated</item>
+    <item quantity="one">%s pode ser atualizado</item>
+    <item quantity="other">%s jogos podem ser atualizados</item>
   </plurals>
   <plurals name="update_notification_title">
-    <item quantity="one">You\'ve got %s update available</item>
-    <item quantity="other">You\'ve got %s updates available</item>
+    <item quantity="one">Você tem %s atualização disponível</item>
+    <item quantity="other">Você tem %s atualizações disponíveis</item>
   </plurals>
   <string name="update_notification_body">Toque aqui para instalar.</string>
-  <string name="update_aptoide_games_update_notification">There\'s a new version of Aptoide Games</string>
+  <string name="update_aptoide_games_update_notification">Há uma nova versão do Aptoide Games</string>
 </resources>

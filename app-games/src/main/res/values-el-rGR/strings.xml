@@ -115,6 +115,8 @@
   <string name="screenshot_appview_5">Επιλεγμένα παιχνίδια μόνο για εσάς.</string>
   <string name="not_now_button">Όχι τώρα</string>
   <string name="later_button">Later</string>
+  <string name="trusted_game_badge">Trusted Game</string>
+  <string name="official_game_badge">Official Game</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Δεν υπάρχει Χώρος</string>
   <string name="out_of_space_body">Χρειάζονται %s για να συνεχιστεί η εγκατάσταση.</string>

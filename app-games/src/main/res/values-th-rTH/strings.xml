@@ -114,7 +114,9 @@
   <string name="screenshot_appview_4">อินเทอร์เฟซที่ราบรื่นพร้อมเนื้อหาที่ดีที่สุด</string>
   <string name="screenshot_appview_5">เกมส์ที่คัดสรรมาเพื่อคุณเท่านั้น</string>
   <string name="not_now_button">ไม่ใช่ตอนนี้</string>
-  <string name="later_button">Later</string>
+  <string name="later_button">ภายหลัง</string>
+  <string name="trusted_game_badge">เกมส์ที่น่าเชื่อถือ</string>
+  <string name="official_game_badge">เกมส์อย่างเป็นทางการ</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">ไม่มีพื้นที่ว่าง</string>
   <string name="out_of_space_body">คุณต้องใช้ %s เพื่อดำเนินการติดตั้งต่อ</string>

@@ -115,6 +115,8 @@
   <string name="screenshot_appview_5">Pažljivo odabrane igre samo za vas.</string>
   <string name="not_now_button">Ne sada</string>
   <string name="later_button">Kasnije</string>
+  <string name="trusted_game_badge">Trusted Game</string>
+  <string name="official_game_badge">Official Game</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Nema više prostora</string>
   <string name="out_of_space_body">Potrebno vam je %s da biste nastavili sa instalacijom.</string>
