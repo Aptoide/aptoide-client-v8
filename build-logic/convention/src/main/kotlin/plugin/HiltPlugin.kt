@@ -15,14 +15,14 @@ class HiltPlugin : Plugin<Project> {
       ?: throw GradleException("Unsupported BaseExtension type!")
     with(project) {
       plugins.apply {
-        apply(libs.findPlugin("kotlin-kapt").get().get().pluginId)
+        apply(libs.findPlugin("ksp").get().get().pluginId)
         apply(libs.findPlugin("hilt-android-plugin").get().get().pluginId)
       }
 
       dependencies.apply {
         add("implementation", libs.findLibrary("hilt").get())
-        add("kapt", libs.findLibrary("hilt-dagger-compiler").get())
-        add("kapt", libs.findLibrary("hilt-compiler").get())
+        add("ksp", libs.findLibrary("hilt-dagger-compiler").get())
+        add("ksp", libs.findLibrary("hilt-compiler").get())
       }
     }
   }
