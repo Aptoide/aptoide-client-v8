@@ -10,7 +10,7 @@ android {
 }
 
 dependencies {
-  implementation(project(ModuleDependency.APTOIDE_NETWORK))
+  implementation(projects.aptoideNetwork)
 
   //animations
   implementation(libs.lottie)

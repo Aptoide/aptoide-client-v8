@@ -10,11 +10,11 @@ android {
 }
 
 dependencies {
-  implementation(project(ModuleDependency.FEATURE_FLAGS))
-  implementation(project(ModuleDependency.FEATURE_APPS))
-  api(project(ModuleDependency.INSTALL_MANAGER))
-  implementation(project(ModuleDependency.FEATURE_CAMPAIGNS))
-  implementation(project(ModuleDependency.EXTENSIONS))
-  implementation(project(ModuleDependency.NETWORK_LISTENER))
-  implementation(project(ModuleDependency.INSTALL_INFO_MAPPER))
+  implementation(projects.featureFlags)
+  implementation(projects.featureApps)
+  api(projects.installManager)
+  implementation(projects.featureCampaigns)
+  implementation(projects.extension)
+  implementation(projects.networkListener)
+  implementation(projects.installInfoMapper)
 }

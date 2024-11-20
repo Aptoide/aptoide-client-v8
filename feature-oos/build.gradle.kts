@@ -10,8 +10,8 @@ android {
 }
 
 dependencies {
-  implementation(project(ModuleDependency.FEATURE_APPS))
-  implementation(project(ModuleDependency.INSTALL_MANAGER))
-  implementation(project(ModuleDependency.EXTENSIONS))
-  implementation(project(ModuleDependency.INSTALL_INFO_MAPPER))
+  implementation(projects.featureApps)
+  implementation(projects.installManager)
+  implementation(projects.extension)
+  implementation(projects.installInfoMapper)
 }

@@ -9,5 +9,5 @@ android {
 }
 
 dependencies {
-  implementation(project(ModuleDependency.EXTENSIONS))
+  implementation(projects.extension)
 }

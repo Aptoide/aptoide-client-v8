@@ -10,7 +10,7 @@ android {
 }
 
 dependencies {
-  implementation(project(ModuleDependency.APTOIDE_NETWORK))
-  implementation(project(ModuleDependency.EXTENSIONS))
-  api(project(ModuleDependency.FEATURE_CAMPAIGNS))
+  implementation(projects.aptoideNetwork)
+  implementation(projects.extension)
+  api(projects.featureCampaigns)
 }

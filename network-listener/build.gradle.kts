@@ -9,7 +9,7 @@ android {
 }
 
 dependencies {
-  implementation(project(ModuleDependency.INSTALL_MANAGER))
+  implementation(projects.installManager)
 
   //WorkManager
   implementation(libs.work.manager)

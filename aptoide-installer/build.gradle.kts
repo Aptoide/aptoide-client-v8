@@ -11,11 +11,11 @@ android {
 }
 
 dependencies {
-  implementation(project(ModuleDependency.INSTALL_MANAGER))
-  implementation(project(ModuleDependency.APTOIDE_NETWORK))
-  implementation(project(ModuleDependency.EXTENSIONS))
-  implementation(project(ModuleDependency.INSTALL_INFO_MAPPER))
-  implementation(project(ModuleDependency.FEATURE_APPS))
+  implementation(projects.installManager)
+  implementation(projects.aptoideNetwork)
+  implementation(projects.extension)
+  implementation(projects.installInfoMapper)
+  implementation(projects.featureApps)
 
   implementation(libs.activity.ktx)
   implementation(libs.app.compat)

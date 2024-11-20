@@ -10,8 +10,8 @@ android {
 }
 
 dependencies {
-  implementation(project(ModuleDependency.APTOIDE_NETWORK))
-  implementation(project(ModuleDependency.EXTENSIONS))
-  implementation(project(ModuleDependency.FEATURE_APPS))
+  implementation(projects.aptoideNetwork)
+  implementation(projects.extension)
+  implementation(projects.featureApps)
   implementation(libs.datastore)
 }

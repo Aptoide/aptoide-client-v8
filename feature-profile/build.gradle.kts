@@ -10,7 +10,7 @@ android {
 }
 
 dependencies {
-  implementation(project(ModuleDependency.FEATURE_SETTINGS))
+  implementation(projects.featureSettings)
 
   //store
   implementation(libs.datastore)

@@ -9,6 +9,6 @@ android {
 }
 
 dependencies {
-  implementation(project(ModuleDependency.FEATURE_APPS))
-  implementation(project(ModuleDependency.INSTALL_MANAGER))
+  implementation(projects.featureApps)
+  implementation(projects.installManager)
 }

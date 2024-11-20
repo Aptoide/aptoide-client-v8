@@ -9,7 +9,7 @@ android {
 }
 
 dependencies {
-  implementation(project(ModuleDependency.EXTENSIONS))
+  implementation(projects.extension)
 
   api(libs.retrofit)
   api(libs.okhttp)
