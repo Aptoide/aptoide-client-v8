@@ -58,7 +58,7 @@ include(
   ":feature-profile",
   ":feature-settings",
   ":environment-info",
-  ":extensions",
+  ":extension",
   ":feature-oos",
   ":install-info-mapper",
   ":network-listener",
