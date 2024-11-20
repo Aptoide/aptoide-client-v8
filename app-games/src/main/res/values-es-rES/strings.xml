@@ -115,6 +115,8 @@
   <string name="screenshot_appview_5">Juegos seleccionados solo para ti.</string>
   <string name="not_now_button">Ahora no</string>
   <string name="later_button">Más tarde</string>
+  <string name="trusted_game_badge">Trusted Game</string>
+  <string name="official_game_badge">Official Game</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">No queda espacio</string>
   <string name="out_of_space_body">Necesitas %s para continuar con la instalación.</string>
