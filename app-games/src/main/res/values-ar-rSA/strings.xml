@@ -114,7 +114,9 @@
   <string name="screenshot_appview_4">واجهة سهلة الاستخدام مع أفضل محتوى.</string>
   <string name="screenshot_appview_5">ألعاب انتقيناها بعناية من أجلك فقط.</string>
   <string name="not_now_button">ليس الآن</string>
-  <string name="later_button">Later</string>
+  <string name="later_button">لاحقًا</string>
+  <string name="trusted_game_badge">Trusted Game</string>
+  <string name="official_game_badge">Official Game</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">لا توجد مساحة</string>
   <string name="out_of_space_body">أنت بحاجة إلى %s لمتابعة التثبيت.</string>
@@ -159,7 +161,7 @@
   <string name="purchase_done_bonus_wallet_installed_body">افتحها لتجد مكافآتك.</string>
   <string name="bonus_banner_body">ستحصل على مكافأة في كل الألعاب المعرّفة لدى %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">مكافأة حتى %s%%</string>
-  <string name="settings_auto_update_button">Auto-update games</string>
+  <string name="settings_auto_update_button">تحديث ألعاب تلقائي</string>
   <string name="settings_payments_title" comment="contact_support_team">تواصل مع فريق الدعم</string>
   <string name="settings_contact_support_body" comment="billing_terms_of_use">شروط استخدام الفوترة</string>
   <string name="settings_billing_terms_body" comment="payments">المدفوعات</string>
@@ -232,8 +234,8 @@
   <!-- Update -->
   <string name="update_up_to_date_title">مبروك!</string>
   <string name="update_up_to_date_body">لديك آخر تحديث.</string>
-  <string name="update_auto_update_title">Enjoy the best gaming experience and keep your games updated.</string>
-  <string name="update_auto_update_slider">Keep games updated automatically</string>
+  <string name="update_auto_update_title">استمتع بأفضل تجرِبة لعب وأبقِ ألعابك محدّثة.</string>
+  <string name="update_auto_update_slider">اجعل ألعابك تتحدّث تلقائيًا</string>
   <string name="update_update_all_button">تحديث الكل</string>
   <string name="update_aptoide_games_title">يتوفر إصدار جديد!</string>
   <string name="update_aptoide_games_body">Update Aptoide Games to the latest version to keep enjoying the best gaming discovery experience.</string>
