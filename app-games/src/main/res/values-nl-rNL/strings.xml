@@ -115,6 +115,8 @@
   <string name="screenshot_appview_5">Speciaal voor jou geselecteerde games.</string>
   <string name="not_now_button">Niet nu</string>
   <string name="later_button">Later</string>
+  <string name="trusted_game_badge">Trusted Game</string>
+  <string name="official_game_badge">Official Game</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Geen opslagruimte</string>
   <string name="out_of_space_body">Je hebt %s nodig om met de installatie door te gaan.</string>
