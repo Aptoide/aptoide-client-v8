@@ -14,9 +14,9 @@ android {
   namespace = "cm.aptoide.pt"
 
   defaultConfig {
-    applicationId = AndroidConfig.ID
-    versionCode = AndroidConfig.VERSION_CODE
-    versionName = AndroidConfig.VERSION_NAME
+    applicationId = "cm.aptoide.pt.v10"
+    versionCode = 10000
+    versionName = "10.0.0.0-alpha01"
 
     buildConfigField("String", "MARKET_NAME", "\"apps\"")
     buildConfigField("String", "STORE_DOMAIN", "\"https://ws75.aptoide.com/api/7.20221201/\"")
@@ -26,8 +26,6 @@ android {
       name = "APTOIDE_WEB_SERVICES_APICHAIN_BDS_HOST",
       value = "\"https://apichain.blockchainds.com/\""
     )
-
-    testInstrumentationRunner = AndroidConfig.TEST_INSTRUMENTATION_RUNNER
 
     buildConfigFieldFromGradleProperty("ROOM_SCHEMA_VERSION")
     buildConfigFieldFromGradleProperty("ROOM_DATABASE_NAME")
@@ -48,8 +46,7 @@ android {
     create("dev") {
       dimension = "mode"
       applicationIdSuffix = ".dev"
-      versionName = AndroidConfig.VERSION_NAME + "." + getDate()
-      versionCode = AndroidConfig.VERSION_CODE
+      versionNameSuffix = ".${getDate()}"
     }
 
     create("prod") {
