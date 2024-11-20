@@ -115,6 +115,8 @@
   <string name="screenshot_appview_5">专为您精心挑选的优质游戏。</string>
   <string name="not_now_button">稍后再说</string>
   <string name="later_button">Later</string>
+  <string name="trusted_game_badge">Trusted Game</string>
+  <string name="official_game_badge">Official Game</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">空间不足</string>
   <string name="out_of_space_body">需要%s才能继续安装。</string>
