@@ -14,9 +14,9 @@ class ArticleUseCase @Inject constructor(
   private val urlsCache: UrlsCache,
   @StoreName private val storeName: String,
 ) {
-  suspend fun getDetails(articleId: String): Article {
-    val editorialUrl = urlsCache.get(id = ARTICLE_CACHE_ID_PREFIX + articleId)
-      ?: "card/get/id=$articleId/store_name=$storeName"
+  suspend fun getDetails(source: String): Article {
+    val editorialUrl = urlsCache.get(id = ARTICLE_CACHE_ID_PREFIX + source)
+      ?: "card/get/$source/store_name=$storeName"
     return editorialRepository.getArticle(editorialUrl)
   }
 }
