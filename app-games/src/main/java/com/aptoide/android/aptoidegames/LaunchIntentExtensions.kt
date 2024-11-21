@@ -9,6 +9,10 @@ private const val DEEPLINK_KEY = "dti.link"
 
 val Intent?.hasDeepLink get() = this?.extras?.containsKey(DEEPLINK_KEY) ?: false
 
+//App link
+const val APP_LINK_SCHEMA = "https://"
+const val APP_LINK_HOST = "{LANG}.aptoide.com"
+
 fun Intent.putDeeplink(deepLink: String): Intent = putExtra(DEEPLINK_KEY, deepLink)
 
 // Ahab
