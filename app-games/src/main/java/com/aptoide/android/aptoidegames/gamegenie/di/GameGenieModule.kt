@@ -15,18 +15,18 @@ import retrofit2.converter.gson.GsonConverterFactory
 @Module
 @InstallIn(SingletonComponent::class)
 internal object GameGenieModule {
-    @Provides
-    fun provideChatbotApiService(@BaseOkHttp okHttpClient: OkHttpClient): GameGenieApiService {
-        return Retrofit.Builder()
-            .client(okHttpClient)
-            .baseUrl(BuildConfig.GAME_GENIE_API)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(GameGenieApiService::class.java)
-    }
+  @Provides
+  fun provideChatbotApiService(@BaseOkHttp okHttpClient: OkHttpClient): GameGenieApiService {
+    return Retrofit.Builder()
+      .client(okHttpClient)
+      .baseUrl(BuildConfig.GAME_GENIE_API)
+      .addConverterFactory(GsonConverterFactory.create())
+      .build()
+      .create(GameGenieApiService::class.java)
+  }
 
-    @Provides
-    fun provideChatbotRepository(apiService: GameGenieApiService): GameGenieRepository {
-        return GameGenieRepository(apiService)
-    }
+  @Provides
+  fun provideChatbotRepository(apiService: GameGenieApiService): GameGenieRepository {
+    return GameGenieRepository(apiService)
+  }
 }
