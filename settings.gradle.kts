@@ -7,6 +7,7 @@ pluginManagement {
   }
 }
 
+@Suppress("UnstableApiUsage")
 dependencyResolutionManagement {
   //TODO: Replace with FAIL_ON_PROJECT_REPOS and remove repository declarations outside this file
   repositoriesMode = RepositoriesMode.PREFER_SETTINGS
@@ -15,6 +16,8 @@ dependencyResolutionManagement {
     mavenCentral()
   }
 }
+
+rootProject.name = "aptoide-client"
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(
