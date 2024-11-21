@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -81,6 +80,7 @@ fun AptoideAsyncImage(
   contentDescription: String?,
   transformations: Transformation? = null,
   colorFilter: ColorFilter? = null,
+  contentScale: ContentScale = ContentScale.Crop,
 ) {
 
   val placeholderColor = Palette.Grey
@@ -90,7 +90,7 @@ fun AptoideAsyncImage(
     placeholder = if (placeholder) remember { ColorPainter(placeholderColor) } else null,
     error = remember { ColorPainter(placeholderColor) },
     contentDescription = contentDescription,
-    contentScale = ContentScale.Crop,
+    contentScale = contentScale,
     colorFilter = colorFilter,
     modifier = modifier,
   )
@@ -106,15 +106,17 @@ fun AptoideAsyncImageWithFullscreen(
   colorFilter: ColorFilter? = null,
   images: List<Any?> = listOf(data),
   selectedIndex: Int = 1,
+  contentScale: ContentScale = ContentScale.Crop,
 ) {
   var expanded by remember { mutableStateOf(false) }
   AptoideAsyncImage(
-    modifier = modifier.clickable{expanded = true},
+    modifier = modifier.clickable { expanded = true },
     data = data,
     placeholder = placeholder,
     transformations = transformations,
     colorFilter = colorFilter,
     contentDescription = contentDescription,
+    contentScale = contentScale
   )
 
   if (expanded) {
@@ -162,14 +164,14 @@ fun FullscreenImageViewer(
         state = pagerState,
         modifier = Modifier.fillMaxSize()
       ) { page ->
-          AptoideAsyncImage(
-            modifier = Modifier
-              .fillMaxSize()
-              .aspectRatio(16 / 9f)
-              .zoomable(zoomState),
-            data = images[page],
-            contentDescription = contentDescription
-          )
+        AptoideAsyncImage(
+          modifier = Modifier
+            .fillMaxSize()
+            .zoomable(zoomState),
+          data = images[page],
+          contentDescription = contentDescription,
+          contentScale = ContentScale.Fit
+        )
       }
 
       Image(

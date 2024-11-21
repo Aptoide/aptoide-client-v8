@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -36,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
@@ -499,6 +501,9 @@ fun WhatsNew(app: App) {
 
 @Composable
 fun ScreenshotsList(screenshots: List<Screenshot>) {
+  val density = LocalDensity.current.density
+  val densityDpi = LocalConfiguration.current.densityDpi
+
   LazyRow(
     modifier = Modifier
       .fillMaxWidth()
@@ -515,13 +520,67 @@ fun ScreenshotsList(screenshots: List<Screenshot>) {
           .clearAndSetSemantics {
             contentDescription = stringResource
           }
-          .size(268.dp, 152.dp),
-        data = screenshot.url,
+          .height(152.dp)
+          .aspectRatio(screenshot.width.toFloat() / screenshot.height.toFloat()),
+        data = screenshot.url.toImageUrlByDensity(
+          density = density,
+          densityDpi = densityDpi,
+          isPortrait = screenshot.height > screenshot.width
+        ),
         contentDescription = null,
         selectedIndex = index,
         images = screenshots.map { it.url },
+        contentScale = ContentScale.Fit,
       )
     }
+  }
+}
+
+fun String.toImageUrlByDensity(density: Float, densityDpi: Int, isPortrait: Boolean): String {
+  if (this.contains("_screen")) {
+    val densityMultiplier = getDensityMultiplier(density)
+    val dpi = getDensityDpi(densityDpi)
+    val defaultSize = if (isPortrait) 96 else 256
+    val splitUrl = this.split("_screen")
+    return splitUrl[0] + "_screen_" + (defaultSize * densityMultiplier.toInt()).toString() + "x" + dpi + splitUrl[1]
+  } else {
+    return this
+  }
+}
+
+private fun getDensityMultiplier(density: Float): Float {
+  return if (density <= 0.75f) {
+    0.75f
+  } else if (density <= 1f) {
+    1f
+  } else if (density <= 1.333f) {
+    1.3312500f
+  } else if (density <= 1.5f) {
+    1.5f
+  } else if (density <= 2f) {
+    2f
+  } else if (density <= 3f) {
+    3f
+  } else {
+    4f
+  }
+}
+
+private fun getDensityDpi(densityDpi: Int): Int {
+  return if (densityDpi <= 120) {
+    120
+  } else if (densityDpi <= 160) {
+    160
+  } else if (densityDpi <= 213) {
+    213
+  } else if (densityDpi <= 240) {
+    240
+  } else if (densityDpi <= 320) {
+    320
+  } else if (densityDpi <= 480) {
+    480
+  } else {
+    640
   }
 }
 
