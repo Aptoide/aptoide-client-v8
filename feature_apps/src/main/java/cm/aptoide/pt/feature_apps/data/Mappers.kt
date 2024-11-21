@@ -75,7 +75,7 @@ private fun AppJSON.toDomainModel(
   pDownloads = this.stats.pdownloads,
   versionName = this.file.vername,
   versionCode = this.file.vercode,
-  screenshots = this.media?.screenshots?.map { it.url },
+  screenshots = this.media?.screenshots,
   description = this.media?.description,
   news = if (this.media?.news.isNullOrEmpty()) null else this.media.news,
   videos = this.media?.videos?.filter { it.type == VideoTypeJSON.YOUTUBE }?.map { it.url }

@@ -55,6 +55,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavGraphBuilder
 import cm.aptoide.pt.apps.AppsRowView
+import cm.aptoide.pt.aptoide_network.data.network.model.Screenshot
 import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
 import cm.aptoide.pt.aptoide_ui.R
 import cm.aptoide.pt.aptoide_ui.animations.animatedComposable
@@ -597,14 +598,14 @@ fun ReportAppCard(
 }
 
 @Composable
-fun ScreenshotsList(screenshots: List<String>) {
+fun ScreenshotsList(screenshots: List<Screenshot>) {
   LazyRow(
     modifier = Modifier.fillMaxWidth(),
     horizontalArrangement = Arrangement.spacedBy(8.dp)
   ) {
     items(screenshots) { screenshot ->
       AptoideAsyncImage(
-        data = screenshot,
+        data = screenshot.url,
         contentDescription = "Screenshot",
         placeholder = ColorPainter(AppTheme.colors.placeholderColor),
         modifier = Modifier

@@ -49,6 +49,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.navDeepLink
+import cm.aptoide.pt.aptoide_network.data.network.model.Screenshot
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.ScreenData
@@ -465,7 +466,7 @@ fun WhatsNew(app: App) {
           Text(
             modifier = Modifier
               .align(Alignment.CenterVertically),
-            text = it.parseDate()?.toFormattedString(pattern = "dd.MM.yyyy")?:"",
+            text = it.parseDate()?.toFormattedString(pattern = "dd.MM.yyyy") ?: "",
             color = Palette.GreyLight,
             style = AGTypography.SmallGames,
           )
@@ -497,7 +498,7 @@ fun WhatsNew(app: App) {
 }
 
 @Composable
-fun ScreenshotsList(screenshots: List<String>) {
+fun ScreenshotsList(screenshots: List<Screenshot>) {
   LazyRow(
     modifier = Modifier
       .fillMaxWidth()
@@ -515,10 +516,10 @@ fun ScreenshotsList(screenshots: List<String>) {
             contentDescription = stringResource
           }
           .size(268.dp, 152.dp),
-        data = screenshot,
+        data = screenshot.url,
         contentDescription = null,
         selectedIndex = index,
-        images = screenshots
+        images = screenshots.map { it.url },
       )
     }
   }
