@@ -72,6 +72,8 @@ import cm.aptoide.pt.feature_apps.presentation.rememberApp
 import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
 import cm.aptoide.pt.feature_editorial.presentation.relatedEditorialsCardViewModel
 import cm.aptoide.pt.feature_editorial.presentation.rememberRelatedEditorials
+import com.aptoide.android.aptoidegames.APP_LINK_HOST
+import com.aptoide.android.aptoidegames.APP_LINK_SCHEMA
 import com.aptoide.android.aptoidegames.AppIconImage
 import com.aptoide.android.aptoidegames.AptoideAsyncImageWithFullscreen
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
@@ -108,18 +110,29 @@ private val tabsList = listOf(
   AppViewTab.RELATED,
   AppViewTab.INFO
 )
+private const val PACKAGE_UNAME = "package_uname"
+
+private const val PATH = "path"
+private const val APP_PATH = "app"
 
 private const val SOURCE = "source"
 
-const val appViewRoute = "app/{$SOURCE}?"
+const val appViewRoute = "${APP_PATH}/{$SOURCE}?"
 
 fun appViewScreen() = ScreenData.withAnalytics(
   route = appViewRoute,
   screenAnalyticsName = "AppView",
-  deepLinks = listOf(navDeepLink { uriPattern = BuildConfig.DEEP_LINK_SCHEMA + appViewRoute })
+  deepLinks = listOf(
+    navDeepLink { uriPattern = BuildConfig.DEEP_LINK_SCHEMA + appViewRoute },
+    navDeepLink { uriPattern = "$APP_LINK_SCHEMA{$SOURCE}.$APP_LINK_HOST/{$PATH}" },
+  ),
 ) { arguments, navigate, navigateBack ->
-  val source = arguments?.getString(SOURCE)!!
+  val path = arguments?.getString(PATH)
 
+  val source = when (path) {
+    "app" -> "$PACKAGE_UNAME=${arguments.getString(SOURCE)}"
+    else -> arguments?.getString(SOURCE)!!
+  }
   AppViewScreen(
     source = source.appendIfRequired(BuildConfig.MARKET_NAME),
     navigate = navigate,
