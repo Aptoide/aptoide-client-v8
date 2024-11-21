@@ -16,6 +16,8 @@ dependencyResolutionManagement {
   }
 }
 
+rootProject.name = "aptoide-client"
+
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(
   ":app",
