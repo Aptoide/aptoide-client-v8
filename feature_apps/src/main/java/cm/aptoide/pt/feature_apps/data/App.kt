@@ -1,5 +1,6 @@
 package cm.aptoide.pt.feature_apps.data
 
+import cm.aptoide.pt.aptoide_network.data.network.model.Screenshot
 import cm.aptoide.pt.extensions.getRandomString
 import cm.aptoide.pt.feature_apps.domain.AppSource
 import cm.aptoide.pt.feature_apps.domain.Rating
@@ -28,7 +29,7 @@ data class App(
   val versionCode: Int,
   val featureGraphic: String,
   val isAppCoins: Boolean,
-  val screenshots: List<String>?,
+  val screenshots: List<Screenshot>?,
   val description: String?,
   val news: String?,
   val videos: List<String> = emptyList(),
@@ -176,7 +177,7 @@ val randomApp
       versionName = "${Random.nextInt(3)}.${Random.nextInt(20)}.${Random.nextInt(100)}",
       versionCode = Random.nextInt(),
       isAppCoins = Random.nextBoolean(),
-      screenshots = List(Random.nextInt(10)) { "random" },
+      screenshots = List(Random.nextInt(10)) { Screenshot("random", 700, 700) },
       description = getRandomString(),
       news = getRandomString(),
       videos = List(Random.nextInt(2)) { "https://youtu.be/dQw4w9WgXcQ" },
