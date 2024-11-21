@@ -115,8 +115,8 @@
   <string name="screenshot_appview_5">ألعاب انتقيناها بعناية من أجلك فقط.</string>
   <string name="not_now_button">ليس الآن</string>
   <string name="later_button">لاحقًا</string>
-  <string name="trusted_game_badge">Trusted Game</string>
-  <string name="official_game_badge">Official Game</string>
+  <string name="trusted_game_badge">الألعاب الموثوقة</string>
+  <string name="official_game_badge">الألعاب الرسمية</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">لا توجد مساحة</string>
   <string name="out_of_space_body">أنت بحاجة إلى %s لمتابعة التثبيت.</string>
@@ -238,24 +238,24 @@
   <string name="update_auto_update_slider">اجعل ألعابك تتحدّث تلقائيًا</string>
   <string name="update_update_all_button">تحديث الكل</string>
   <string name="update_aptoide_games_title">يتوفر إصدار جديد!</string>
-  <string name="update_aptoide_games_body">Update Aptoide Games to the latest version to keep enjoying the best gaming discovery experience.</string>
-  <string name="update_aptoide_games_update_close_body">Aptoide Games will close to update. Just open it again!</string>
+  <string name="update_aptoide_games_body">حدّث Aptoide Games إلى أحدث إصدار لتستمتع بأفضل تجربة في اكتشاف الألعاب.</string>
+  <string name="update_aptoide_games_update_close_body">سيقفل Aptoide Games للتحديث. ما عليك سوى فتحه مجددًا!</string>
   <plurals name="update_games_can_be_updated_body">
-    <item quantity="zero">%s games can be updated</item>
-    <item quantity="one">%s game can be updated</item>
-    <item quantity="two">%s games can be updated</item>
-    <item quantity="few">%s games can be updated</item>
-    <item quantity="many">%s games can be updated</item>
-    <item quantity="other">%s games can be updated</item>
+    <item quantity="zero">%s لعبة يمكن تحديثها</item>
+    <item quantity="one">%s لعبة يمكن تحديثها</item>
+    <item quantity="two">%s لعبتان يمكن تحديثهما</item>
+    <item quantity="few">%s ألعاب يمكن تحديثها</item>
+    <item quantity="many">%s لعبة يمكن تحديثها</item>
+    <item quantity="other">%s لعبة يمكن تحديثها</item>
   </plurals>
   <plurals name="update_notification_title">
-    <item quantity="zero">You\'ve got %s updates available</item>
-    <item quantity="one">You\'ve got %s update available</item>
-    <item quantity="two">You\'ve got %s updates available</item>
-    <item quantity="few">You\'ve got %s updates available</item>
-    <item quantity="many">You\'ve got %s updates available</item>
-    <item quantity="other">You\'ve got %s updates available</item>
+    <item quantity="zero">لديك %s تحديث متوفر</item>
+    <item quantity="one">لديك %s تحديث متوفر</item>
+    <item quantity="two">لديك %s تحديثان متوفران</item>
+    <item quantity="few">لديك %s تحديثات متوفرة</item>
+    <item quantity="many">لديك %s تحديثًا متوفرًا</item>
+    <item quantity="other">لديك %s تحديثًا متوفرًا</item>
   </plurals>
   <string name="update_notification_body">اضغط هنا لتثبيت.</string>
-  <string name="update_aptoide_games_update_notification">There\'s a new version of Aptoide Games</string>
+  <string name="update_aptoide_games_update_notification">تتوفر نسخة جديدة من Aptoide Games</string>
 </resources>
