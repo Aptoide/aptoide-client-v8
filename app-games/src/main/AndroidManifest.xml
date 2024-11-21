@@ -48,6 +48,7 @@
         <data android:scheme="https" />
         <data android:host="*.aptoide.com" />
         <data android:path="/app" />
+        <data android:pathPattern="/editorial/.*" />
       </intent-filter>
     </activity>
 

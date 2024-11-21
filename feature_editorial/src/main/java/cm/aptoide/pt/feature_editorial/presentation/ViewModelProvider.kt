@@ -119,15 +119,15 @@ fun rememberRelatedEditorials(packageName: String): List<ArticleMeta>? = runPrev
 )
 
 @Composable
-fun editorialViewModel(articleId: String): EditorialViewModel {
+fun editorialViewModel(source: String): EditorialViewModel {
   val injectionsProvider = hiltViewModel<InjectionsProvider>()
   return viewModel(
-    key = articleId,
+    key = source,
     factory = object : ViewModelProvider.Factory {
       override fun <T : ViewModel> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
         return EditorialViewModel(
-          articleId = articleId,
+          source = source,
           articleUseCase = injectionsProvider.articleUseCase,
         ) as T
       }
