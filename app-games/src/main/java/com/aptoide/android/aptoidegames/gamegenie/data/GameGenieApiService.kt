@@ -8,12 +8,12 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface GameGenieApiService {
-    @POST("chat")
-    suspend fun postMessages(
-        @Header("Authorization") bearerToken: String,
-        @Body request: GameGenieRequest,
-    ): GameGenieResponse
+  @POST("chat")
+  suspend fun postMessages(
+    @Header("Authorization") bearerToken: String,
+    @Body request: GameGenieRequest,
+  ): GameGenieResponse
 
-    @POST("token")
-    suspend fun getToken(): TokenResponse
+  @POST("token")
+  suspend fun getToken(): TokenResponse
 }

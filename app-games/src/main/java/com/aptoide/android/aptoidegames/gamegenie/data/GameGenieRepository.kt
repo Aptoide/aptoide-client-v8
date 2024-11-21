@@ -7,13 +7,16 @@ import com.aptoide.android.aptoidegames.gamegenie.io_models.TokenResponse
 import javax.inject.Inject
 
 class GameGenieRepository @Inject constructor(
-    private val apiService: GameGenieApiService
+    private val apiService: GameGenieApiService,
 ) {
-    suspend fun getMessages(token: Token, request: GameGenieRequest): GameGenieResponse {
-        return apiService.postMessages("Bearer ${token.token}", request)
-    }
+  suspend fun getMessages(
+      token: Token,
+      request: GameGenieRequest,
+  ): GameGenieResponse {
+    return apiService.postMessages("Bearer ${token.token}", request)
+  }
 
-    suspend fun getToken(): TokenResponse {
-        return apiService.getToken()
-    }
+  suspend fun getToken(): TokenResponse {
+    return apiService.getToken()
+  }
 }
