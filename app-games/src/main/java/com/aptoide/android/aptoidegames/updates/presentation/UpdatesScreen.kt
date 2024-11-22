@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -190,8 +191,9 @@ private fun AppsList(
       modifier = Modifier
         .semantics { collectionInfo = CollectionInfo(appList.size, 1) }
         .padding(start = 16.dp, end = 16.dp)
-        .wrapContentSize(Alignment.TopCenter)
-    ) {
+        .wrapContentSize(Alignment.TopCenter),
+      contentPadding = PaddingValues(bottom = 72.dp)
+      ) {
       itemsIndexed(appList) { index, app ->
         AppItemUpdates(
           app = app,

@@ -185,7 +185,7 @@ fun BundlesView(
         .fillMaxSize()
         .wrapContentSize(Alignment.TopCenter),
       verticalArrangement = Arrangement.spacedBy(32.dp),
-      contentPadding = PaddingValues(bottom = 32.dp)
+      contentPadding = PaddingValues(bottom = 72.dp)
     ) {
       items(viewState.bundles) { bundle ->
         OverrideAnalyticsBundleMeta(bundle.meta, navigate) { navigateTo ->
