@@ -25,6 +25,7 @@ import cm.aptoide.pt.download_view.presentation.DownloadUiState.Waiting
 import cm.aptoide.pt.extensions.getAppName
 import cm.aptoide.pt.extensions.getAppSize
 import cm.aptoide.pt.feature_apps.data.emptyApp
+import cm.aptoide.pt.feature_apps.data.emptyFile
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.design_system.SecondarySmallOutlinedButton
@@ -38,7 +39,7 @@ fun OutOfSpaceAppItem(packageName: String) {
   val context = LocalContext.current
   val app = emptyApp.copy(
     packageName = packageName,
-    appSize = context.getAppSize(packageName),
+    file = emptyFile.copy(size = context.getAppSize(packageName)),
     name = context.getAppName(packageName),
   )
   val appIcon = rememberAppIconDrawable(packageName, context)
