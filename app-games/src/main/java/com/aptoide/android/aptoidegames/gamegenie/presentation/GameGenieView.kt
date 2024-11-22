@@ -51,14 +51,15 @@ fun ChatbotView(
 ) {
   Column(
     modifier = Modifier
-        .fillMaxSize()
-        .wrapContentSize(Alignment.TopCenter)
-        .imePadding(),
+      .fillMaxSize()
+      .wrapContentSize(Alignment.TopCenter)
+      .imePadding(),
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
     when (uiState.type) {
       GameGenieUIStateType.LOADING -> ChatScreen(
-        uiState = uiState, navigateTo = navigateTo, onMessageSend = {})
+        uiState = uiState, navigateTo = navigateTo, onMessageSend = {}, isLoading = true
+      )
 
       GameGenieUIStateType.NO_CONNECTION -> NoConnectionView(onRetryClick = onError)
       GameGenieUIStateType.ERROR -> GenericErrorView(onError)
@@ -71,9 +72,10 @@ fun ChatbotView(
 
 @Composable
 fun ChatScreen(
-    uiState: GameGenieUIState,
-    navigateTo: (String) -> Unit,
-    onMessageSend: (String) -> Unit,
+  uiState: GameGenieUIState,
+  navigateTo: (String) -> Unit,
+  onMessageSend: (String) -> Unit,
+  isLoading: Boolean = false,
 ) {
   val listState = rememberLazyListState()
   val messages = uiState.conversation.toChatbotMessageList()
@@ -94,6 +96,9 @@ fun ChatScreen(
       modifier = Modifier
         .weight(1f)
     )
+    if (isLoading) {
+      TypingAnimation()
+    }
 
     TextInputBar(
       onMessageSent = onMessageSend,
