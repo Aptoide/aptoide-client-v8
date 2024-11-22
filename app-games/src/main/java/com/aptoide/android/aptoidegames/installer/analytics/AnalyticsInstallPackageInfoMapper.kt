@@ -16,11 +16,11 @@ import com.google.gson.Gson
 class AnalyticsInstallPackageInfoMapper(private val mapper: InstallPackageInfoMapper) :
   InstallPackageInfoMapper {
 
-  override suspend fun map(app: App, shouldCallGetMeta: Boolean): InstallPackageInfo {
+  override suspend fun map(app: App): InstallPackageInfo {
     // Immediately snapshot the current analytics context to avoid it's override while mapping
     val context = currentAnalyticsUIContext
     // Map overriding the payload
-    return mapper.map(app, shouldCallGetMeta).run {
+    return mapper.map(app).run {
       val temporaryPayload: TemporaryPayload? = payload?.fromString()
       copy(
         payload = AnalyticsPayload(

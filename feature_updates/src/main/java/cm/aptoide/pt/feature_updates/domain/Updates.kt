@@ -139,9 +139,10 @@ class Updates @Inject constructor(
           false
         } || it.packageName == applicationContext.packageName
       }
+      .map { it.copy(hasMeta = true) }
       .forEach {
         installManager.getApp(it.packageName).install(
-          installPackageInfo = installPackageInfoMapper.map(it, false),
+          installPackageInfo = installPackageInfoMapper.map(it),
           constraints = Constraints(
             checkForFreeSpace = false,
             networkType = UNMETERED

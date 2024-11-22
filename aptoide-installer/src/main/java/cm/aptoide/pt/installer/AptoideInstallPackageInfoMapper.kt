@@ -18,12 +18,11 @@ class AptoideInstallPackageInfoMapper @Inject constructor(
   private val appMetaUseCase: AppMetaUseCase,
   private val dynamicSplitsUseCase: DynamicSplitsUseCase,
 ) : InstallPackageInfoMapper {
-  override suspend fun map(app: App, shouldCallGetMeta: Boolean): InstallPackageInfo {
-    var appMeta = app
-    if (shouldCallGetMeta) appMeta = appMetaUseCase.getMetaInfo(source = app.asSource())
+  override suspend fun map(app: App): InstallPackageInfo {
+    val appMeta = app.takeIf(App::hasMeta) ?: appMetaUseCase.getMetaInfo(source = app.asSource())
 
     return InstallPackageInfo(
-      versionCode = app.versionCode.toLong(),
+      versionCode = appMeta.versionCode.toLong(),
       installationFiles = mutableSetOf<InstallationFile>()
         .apply {
           add(appMeta.file.toInstallationFile(InstallationFile.Type.BASE))
@@ -47,7 +46,7 @@ class AptoideInstallPackageInfoMapper @Inject constructor(
                 add(it.file.toInstallationFile(InstallationFile.Type.BASE))
               }
 
-              val dynamicSplits = dynamicSplitsUseCase.getDynamicSplits(app.md5)
+              val dynamicSplits = dynamicSplitsUseCase.getDynamicSplits(appMeta.md5)
 
               dynamicSplits.forEach {
                 val type = mapDynamicSplitType(it.type, it.deliveryTypes)
