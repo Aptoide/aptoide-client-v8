@@ -1,9 +1,7 @@
-package cm.aptoide.pt.installer.network
+package cm.aptoide.pt.feature_apps.data
 
 import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7ListResponse
-import cm.aptoide.pt.feature_apps.data.File
-import cm.aptoide.pt.feature_apps.data.toDomainModel
-import cm.aptoide.pt.installer.DynamicSplit
+import cm.aptoide.pt.feature_apps.data.model.DynamicSplitJSON
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.withContext
 import retrofit2.http.GET
@@ -15,10 +13,9 @@ internal class SplitsRepositoryImpl @Inject constructor(
   private val scope: CoroutineScope,
 ) : SplitsRepository {
 
-  override suspend fun getAppsDynamicSplits(md5: String): List<DynamicSplit> =
+  override suspend fun getAppsDynamicSplits(md5: String): List<DynamicSplitJSON> =
     withContext(scope.coroutineContext) {
       appsRemoteDataSource.getDynamicSplits(md5 = md5).list
-        ?.map(DynamicSplitJSON::toDomainModel)
         ?: throw IllegalStateException()
     }
 
@@ -30,15 +27,3 @@ internal class SplitsRepositoryImpl @Inject constructor(
     ): BaseV7ListResponse<DynamicSplitJSON>
   }
 }
-
-fun DynamicSplitJSON.toDomainModel() = DynamicSplit(
-  type = type,
-  File(
-    md5 = this.md5sum,
-    size = this.filesize,
-    path = this.path,
-    path_alt = ""
-  ),
-  deliveryTypes = this.deliveryTypes,
-  splits = this.splits.map { it.toDomainModel().file }
-)

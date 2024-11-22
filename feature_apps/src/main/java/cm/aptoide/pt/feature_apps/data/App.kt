@@ -66,10 +66,27 @@ data class File(
 
 data class Aab(
   val requiredSplitTypes: List<String>,
-  val splits: List<Split>,
+  val baseSplits: List<Split>,
+  val dynamicSplits: List<DynamicSplit> = emptyList(),
 ) {
   val size: Long by lazy {
-    splits.fold(0L) { acc, it -> acc + it.size }
+    baseSplits.fold(0L) { acc, it -> acc + it.size } +
+      dynamicSplits.fold(0L) { acc, it -> acc + it.size }
+  }
+}
+
+data class DynamicSplit(
+  val type: Type,
+  val deliveryType: String,
+  val file: File,
+  val splits: List<Split>,
+) {
+
+  val size: Long by lazy { file.size + splits.fold(0L) { acc, it -> acc + it.size } }
+
+  enum class Type {
+    ASSET,
+    FEATURE
   }
 }
 
@@ -271,6 +288,6 @@ fun App.isInCatappult(): Boolean? {
   return bdsFlags?.contains("STORE_BDS")
 }
 
-fun App.isAab(): Boolean = aab != null && aab.splits.isNotEmpty()
+fun App.isAab(): Boolean = aab != null && aab.baseSplits.isNotEmpty()
 
-fun App.hasObb(): Boolean = (aab == null || aab.splits.isEmpty()) && obb != null
+fun App.hasObb(): Boolean = (aab == null || aab.baseSplits.isEmpty()) && obb != null
