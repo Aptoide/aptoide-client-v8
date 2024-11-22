@@ -21,6 +21,7 @@ import com.aptoide.android.aptoidegames.gamegenie.presentation.genieRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getCategories
 import com.aptoide.android.aptoidegames.drawables.icons.getDiscovery
 import com.aptoide.android.aptoidegames.drawables.icons.getDownloadIcon
+import com.aptoide.android.aptoidegames.drawables.icons.getGameGenieIcon
 import com.aptoide.android.aptoidegames.drawables.icons.getSearch
 import com.aptoide.android.aptoidegames.search.presentation.searchRoute
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -79,7 +80,7 @@ fun BottomBarMenus.Icon() = when (this) {
       }
     }
   }
-  BottomBarMenus.GameGenie -> getDiscovery(Palette.GreyLight).AsBottomBarIcon()
+  BottomBarMenus.GameGenie -> getGameGenieIcon(Palette.GreyLight).AsBottomBarIcon()
 }
 
 @Composable
