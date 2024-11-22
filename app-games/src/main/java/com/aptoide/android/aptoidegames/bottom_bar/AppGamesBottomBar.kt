@@ -21,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -102,6 +103,8 @@ fun RowScope.AddBottomNavigationItem(
     label = {
       Text(
         text = stringResource(id = item.titleId),
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
         style = if (isSelected) {
           AGTypography.BodyBold
         } else {
