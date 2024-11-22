@@ -159,7 +159,7 @@ fun CategoryList(
       .semantics { collectionInfo = CollectionInfo(size, GRID_COLUMNS) }
       .wrapContentSize(Alignment.TopCenter),
     columns = GridCells.Fixed(2),
-    contentPadding = PaddingValues(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 28.dp),
+    contentPadding = PaddingValues(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 72.dp),
     horizontalArrangement = Arrangement.spacedBy(8.dp),
     verticalArrangement = Arrangement.spacedBy(8.dp),
   ) {

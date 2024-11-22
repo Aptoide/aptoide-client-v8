@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
@@ -609,7 +610,8 @@ fun EmptySearchView(
 ) {
   LazyColumn(
     modifier = Modifier.padding(start = 16.dp, end = 16.dp),
-  ) {
+    contentPadding = PaddingValues(bottom = 72.dp),
+    ) {
     itemsIndexed(
       items = searchResults,
     ) { index, app ->
