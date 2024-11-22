@@ -10,6 +10,8 @@ import cm.aptoide.pt.feature_apps.data.AptoideAppMapper
 import cm.aptoide.pt.feature_apps.data.AptoideAppRepository
 import cm.aptoide.pt.feature_apps.data.AptoideAppsListMapper
 import cm.aptoide.pt.feature_apps.data.AptoideAppsListRepository
+import cm.aptoide.pt.feature_apps.data.SplitsRepository
+import cm.aptoide.pt.feature_apps.data.SplitsRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -54,6 +56,15 @@ internal object RepositoryModule {
     appsRemoteDataSource = retrofitV7.create(AptoideAppsListRepository.Retrofit::class.java),
     storeName = storeName,
     mapper = appsListMapper,
+    scope = CoroutineScope(Dispatchers.IO)
+  )
+
+  @Provides
+  @Singleton
+  fun providesSplitsRepository(
+    @RetrofitV7 retrofitV7: Retrofit,
+  ): SplitsRepository = SplitsRepositoryImpl(
+    appsRemoteDataSource = retrofitV7.create(SplitsRepositoryImpl.Retrofit::class.java),
     scope = CoroutineScope(Dispatchers.IO)
   )
 }

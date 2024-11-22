@@ -4,6 +4,7 @@ import cm.aptoide.pt.feature_apps.data.model.AabJSON
 import cm.aptoide.pt.feature_apps.data.model.AppJSON
 import cm.aptoide.pt.feature_apps.data.model.CampaignUrl
 import cm.aptoide.pt.feature_apps.data.model.CampaignUrls
+import cm.aptoide.pt.feature_apps.data.model.DynamicSplitJSON
 import cm.aptoide.pt.feature_apps.data.model.ObbJSON
 import cm.aptoide.pt.feature_apps.data.model.SplitJSON
 import cm.aptoide.pt.feature_apps.data.model.VideoTypeJSON
@@ -156,9 +157,21 @@ private fun ObbJSON?.toDomainModel(): Obb? = this?.run {
 private fun AabJSON?.toDomainModel() = this?.run {
   Aab(
     requiredSplitTypes = requiredSplitTypes,
-    splits = splits.map(SplitJSON::toDomainModel)
+    baseSplits = splits.map(SplitJSON::toDomainModel)
   )
 }
+
+fun DynamicSplitJSON.toDomainModel(): DynamicSplit = DynamicSplit(
+  type = DynamicSplit.Type.valueOf(type),
+  deliveryType = deliveryTypes.toSet().run { find { it == "INSTALL_TIME" } ?: first() },
+  file = File(
+    md5 = this.md5sum,
+    size = this.filesize,
+    path = this.path,
+    path_alt = ""
+  ),
+  splits = this.splits.map { it.toDomainModel() }
+)
 
 fun SplitJSON.toDomainModel() = Split(
   type = type,

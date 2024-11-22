@@ -2,7 +2,9 @@ package cm.aptoide.pt.installer
 
 import android.os.Environment
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.data.DynamicSplit
 import cm.aptoide.pt.feature_apps.data.File
+import cm.aptoide.pt.feature_apps.data.Split
 import cm.aptoide.pt.feature_apps.data.hasObb
 import cm.aptoide.pt.feature_apps.data.isAab
 import cm.aptoide.pt.feature_apps.data.isInCatappult
@@ -16,7 +18,6 @@ import javax.inject.Singleton
 @Singleton
 class AptoideInstallPackageInfoMapper @Inject constructor(
   private val appMetaUseCase: AppMetaUseCase,
-  private val dynamicSplitsUseCase: DynamicSplitsUseCase,
 ) : InstallPackageInfoMapper {
   override suspend fun map(app: App): InstallPackageInfo {
     val appMeta = app.takeIf(App::hasMeta) ?: appMetaUseCase.getMetaInfo(source = app.asSource())
@@ -33,25 +34,21 @@ class AptoideInstallPackageInfoMapper @Inject constructor(
           }
 
           appMeta.aab
-            ?.takeIf { it.requiredSplitTypes.isNotEmpty() && it.splits.isNotEmpty() }
+            ?.takeIf { it.requiredSplitTypes.isNotEmpty() || it.baseSplits.isNotEmpty() }
             ?.run {
               //Checks if all the required split types are present in the splits list.
               //For example, if an ABI split is required, it checks if there is at least one ABI split present
-              requiredSplitTypes.forEach { type ->
-                if (splits.find { it.type == type } == null) {
-                  throw IllegalStateException("AAB required split types not found")
-                }
-              }
-              splits.forEach {
+              (requiredSplitTypes - baseSplits.map(Split::type))
+                .takeIf { it.isNotEmpty() }
+                ?.also { throw IllegalStateException("AAB required $it splits not found") }
+              baseSplits.forEach {
                 add(it.file.toInstallationFile(InstallationFile.Type.BASE))
               }
 
-              val dynamicSplits = dynamicSplitsUseCase.getDynamicSplits(appMeta.md5)
-
               dynamicSplits.forEach {
-                val type = mapDynamicSplitType(it.type, it.deliveryTypes)
+                val type = it.installationFileType
                 add(it.file.toInstallationFile(type))
-                addAll(it.splits.map { it.toInstallationFile(type) })
+                addAll(it.splits.map { it.file.toInstallationFile(type) })
               }
             }
         },
@@ -75,25 +72,14 @@ private fun File.toInstallationFile(type: InstallationFile.Type) = InstallationF
   localPath = Environment.getExternalStorageDirectory().absolutePath + "/.aptoide/"
 )
 
-private fun mapDynamicSplitType(
-  splitType: String,
-  deliveryTypes: List<String>,
-) = deliveryTypes.toMutableSet()
-  .let {
-    if (it.remove("INSTALL_TIME")) {
-      "INSTALL_TIME"
-    } else {
-      it.first()
-    }
-  }
-  .let {
-    when (splitType) {
-      "FEATURE" -> "PFD_$it"
-      "ASSET" -> "PAD_$it"
+private val DynamicSplit.installationFileType
+  get() =
+    when (type) {
+      DynamicSplit.Type.ASSET -> "PAD_$deliveryType"
+      DynamicSplit.Type.FEATURE -> "PFD_$deliveryType"
       else -> throw IllegalArgumentException("Unknown split type")
     }
-  }
-  .let(InstallationFile.Type::valueOf)
+      .let(InstallationFile.Type::valueOf)
 
 private fun InstallPackageInfo.filter() = this.installationFiles.let {
   val containsSplits = this.installationFiles.find {
