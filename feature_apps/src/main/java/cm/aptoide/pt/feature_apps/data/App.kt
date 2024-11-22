@@ -47,6 +47,7 @@ data class App(
   val bdsFlags: List<String?>?,
   val developerName: String?,
   val campaigns: CampaignImpl? = null,
+  val hasMeta: Boolean = false,
 ) : AppSource {
   val appSize: Long by lazy {
     file.size + (obb?.size ?: 0) + (aab?.size ?: 0)
