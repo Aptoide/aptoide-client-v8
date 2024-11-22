@@ -57,7 +57,6 @@ private fun AppJSON.toDomainModel(
   appId = this.id!!,
   name = this.name!!,
   packageName = this.packageName!!,
-  appSize = this.file.filesize + (this.obb?.main?.filesize ?: 0) + (this.obb?.patch?.filesize ?: 0),
   md5 = this.file.md5sum,
   icon = this.icon!!,
   featureGraphic = this.graphic.toString(),
@@ -100,7 +99,7 @@ private fun AppJSON.toDomainModel(
   permissions = this.file.used_permissions,
   file = File(
     md5 = this.file.md5sum,
-    filesize = this.file.filesize,
+    size = this.file.filesize,
     path = this.file.path ?: "",
     path_alt = this.file.path_alt ?: ""
   ),
@@ -134,7 +133,7 @@ private fun ObbJSON?.toDomainModel(): Obb? = this?.run {
   val main = File(
     _fileName = main.filename,
     md5 = main.md5sum,
-    filesize = main.filesize,
+    size = main.filesize,
     path = main.path ?: "",
     path_alt = ""
   )
@@ -144,7 +143,7 @@ private fun ObbJSON?.toDomainModel(): Obb? = this?.run {
       patch = File(
         _fileName = patch.filename,
         md5 = patch.md5sum,
-        filesize = patch.filesize,
+        size = patch.filesize,
         path = patch.path ?: "",
         path_alt = ""
       )
@@ -165,7 +164,7 @@ fun SplitJSON.toDomainModel() = Split(
   type = type,
   file = File(
     md5 = md5sum,
-    filesize = filesize,
+    size = filesize,
     path = path,
     path_alt = ""
   )

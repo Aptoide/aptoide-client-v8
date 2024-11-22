@@ -35,7 +35,7 @@ fun DynamicSplitJSON.toDomainModel() = DynamicSplit(
   type = type,
   File(
     md5 = this.md5sum,
-    filesize = this.filesize,
+    size = this.filesize,
     path = this.path,
     path_alt = ""
   ),

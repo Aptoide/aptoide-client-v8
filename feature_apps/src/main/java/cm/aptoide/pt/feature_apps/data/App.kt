@@ -18,7 +18,6 @@ data class App(
   val name: String,
   override val packageName: String,
   val md5: String,
-  val appSize: Long,
   val icon: String,
   val malware: String?,
   val rating: Rating,
@@ -48,12 +47,16 @@ data class App(
   val bdsFlags: List<String?>?,
   val developerName: String?,
   val campaigns: CampaignImpl? = null,
-) : AppSource
+) : AppSource {
+  val appSize: Long by lazy {
+    file.size + (obb?.size ?: 0) + (aab?.size ?: 0)
+  }
+}
 
 data class File(
   private val _fileName: String? = null,
   val md5: String,
-  val filesize: Long,
+  val size: Long,
   val path: String,
   val path_alt: String,
 ) {
@@ -63,24 +66,33 @@ data class File(
 data class Aab(
   val requiredSplitTypes: List<String>,
   val splits: List<Split>,
-)
+) {
+  val size: Long by lazy {
+    splits.fold(0L) { acc, it -> acc + it.size }
+  }
+}
 
 data class Split(
   val type: String,
   val file: File,
-)
+) {
+  val size get() = file.size
+}
 
 data class Obb(
   val main: File,
   val patch: File?,
-)
+) {
+  val size: Long by lazy {
+    main.size + (patch?.size ?: 0)
+  }
+}
 
 val emptyApp = App(
   appId = -1,
   name = "",
   packageName = "",
   md5 = "",
-  appSize = 0,
   icon = "",
   malware = "",
   rating = Rating(
@@ -120,7 +132,7 @@ val emptyApp = App(
   permissions = emptyList(),
   file = File(
     md5 = "",
-    filesize = 0,
+    size = 0,
     path = "",
     path_alt = ""
   ),
@@ -129,12 +141,19 @@ val emptyApp = App(
   developerName = ""
 )
 
+val emptyFile = File(
+  md5 = "",
+  size = 0,
+  path = "",
+  path_alt = ""
+)
+
 val walletApp = emptyApp.copy(
   packageName = "com.appcoins.wallet",
   name = "AppCoins Wallet",
   file = File(
     md5 = "",
-    filesize = 33655476, //size of the current version of AppCoins Wallet - 2.11.0.0
+    size = 33655476, //size of the current version of AppCoins Wallet - 2.11.0.0
     path = "",
     path_alt = ""
   )
@@ -146,7 +165,6 @@ val randomApp
       appId = Random.nextLong(),
       name = getRandomString(range = 2..5, capitalize = true),
       packageName = getRandomString(range = 3..5, separator = "."),
-      appSize = Random.nextLong(1_000_000L..1_000_000_000L),
       malware = if (Random.nextBoolean()) "trusted" else "fraud",
       rating = List(5) { i -> Votes(i, Random.nextInt(2000)) }.let {
         val totalVotes = it.map(Votes::count).sum().toLong()
@@ -241,7 +259,7 @@ val randomApp
       ).shuffled().take(Random.nextInt(40) + 3),
       file = File(
         md5 = "md5",
-        filesize = Random.nextLong(1_000_000L..1_000_000_000L),
+        size = Random.nextLong(1_000_000L..1_000_000_000L),
         path = "",
         path_alt = ""
       ),
