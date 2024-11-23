@@ -2,6 +2,7 @@ package cm.aptoide.pt.installer.network
 
 import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7ListResponse
 import cm.aptoide.pt.feature_apps.data.File
+import cm.aptoide.pt.feature_apps.data.toDomainModel
 import cm.aptoide.pt.installer.DynamicSplit
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.withContext
@@ -33,22 +34,11 @@ internal class SplitsRepositoryImpl @Inject constructor(
 fun DynamicSplitJSON.toDomainModel() = DynamicSplit(
   type = type,
   File(
-    vername = "",
-    vercode = 0,
     md5 = this.md5sum,
     filesize = this.filesize,
     path = this.path,
     path_alt = ""
   ),
   deliveryTypes = this.deliveryTypes,
-  splits = this.splits.map { split ->
-    File(
-      vername = "",
-      vercode = 0,
-      md5 = split.md5sum,
-      filesize = split.filesize,
-      path = split.path,
-      path_alt = ""
-    )
-  }
+  splits = this.splits.map { it.toDomainModel().file }
 )

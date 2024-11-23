@@ -1,8 +1,11 @@
 package cm.aptoide.pt.feature_apps.data
 
+import cm.aptoide.pt.feature_apps.data.model.AabJSON
 import cm.aptoide.pt.feature_apps.data.model.AppJSON
 import cm.aptoide.pt.feature_apps.data.model.CampaignUrl
 import cm.aptoide.pt.feature_apps.data.model.CampaignUrls
+import cm.aptoide.pt.feature_apps.data.model.ObbJSON
+import cm.aptoide.pt.feature_apps.data.model.SplitJSON
 import cm.aptoide.pt.feature_apps.data.model.VideoTypeJSON
 import cm.aptoide.pt.feature_apps.domain.Rating
 import cm.aptoide.pt.feature_apps.domain.Store
@@ -96,15 +99,13 @@ private fun AppJSON.toDomainModel(
   privacyPolicy = this.developer?.privacy,
   permissions = this.file.used_permissions,
   file = File(
-    vername = this.file.vername,
-    vercode = this.file.vercode,
     md5 = this.file.md5sum,
     filesize = this.file.filesize,
     path = this.file.path ?: "",
     path_alt = this.file.path_alt ?: ""
   ),
-  aab = mapAab(this),
-  obb = mapObb(this),
+  aab = aab.toDomainModel(),
+  obb = obb.toDomainModel(),
   developerName = this.developer?.name,
   campaigns = this.urls.mapCampaigns(campaignRepository)
     ?.apply { this.adListId = adListId }
@@ -129,52 +130,43 @@ private fun List<CampaignUrl>?.toCampaignTupleList(): List<CampaignTuple> {
     ?: emptyList()
 }
 
-private fun mapObb(app: AppJSON): Obb? =
-  if (app.obb != null) {
-    val main = File(
-      _fileName = app.obb.main.filename,
-      vername = app.file.vername,
-      vercode = app.file.vercode,
-      md5 = app.obb.main.md5sum,
-      filesize = app.obb.main.filesize,
-      path = app.obb.main.path ?: "",
-      path_alt = ""
+private fun ObbJSON?.toDomainModel(): Obb? = this?.run {
+  val main = File(
+    _fileName = main.filename,
+    md5 = main.md5sum,
+    filesize = main.filesize,
+    path = main.path ?: "",
+    path_alt = ""
+  )
+  if (patch != null) {
+    Obb(
+      main = main,
+      patch = File(
+        _fileName = patch.filename,
+        md5 = patch.md5sum,
+        filesize = patch.filesize,
+        path = patch.path ?: "",
+        path_alt = ""
+      )
     )
-    if (app.obb.patch != null) {
-      Obb(
-        main = main,
-        patch = File(
-          _fileName = app.obb.patch.filename,
-          vername = app.file.vername,
-          vercode = app.file.vercode,
-          md5 = app.obb.patch.md5sum,
-          filesize = app.obb.patch.filesize,
-          path = app.obb.patch.path ?: "",
-          path_alt = ""
-        )
-      )
-    } else {
-      Obb(main = main, patch = null)
-    }
   } else {
-    null
+    Obb(main = main, patch = null)
   }
+}
 
-private fun mapAab(app: AppJSON) = app.aab?.let {
+private fun AabJSON?.toDomainModel() = this?.run {
   Aab(
-    requiredSplitTypes = it.requiredSplitTypes,
-    splits = it.splits.map { split ->
-      Split(
-        type = split.type,
-        file = File(
-          vername = app.file.vername,
-          vercode = app.file.vercode,
-          md5 = split.md5sum,
-          filesize = split.filesize,
-          path = split.path,
-          path_alt = ""
-        )
-      )
-    }
+    requiredSplitTypes = requiredSplitTypes,
+    splits = splits.map(SplitJSON::toDomainModel)
   )
 }
+
+fun SplitJSON.toDomainModel() = Split(
+  type = type,
+  file = File(
+    md5 = md5sum,
+    filesize = filesize,
+    path = path,
+    path_alt = ""
+  )
+)

@@ -52,8 +52,6 @@ data class App(
 
 data class File(
   private val _fileName: String? = null,
-  val vername: String,
-  val vercode: Int,
   val md5: String,
   val filesize: Long,
   val path: String,
@@ -121,8 +119,6 @@ val emptyApp = App(
   privacyPolicy = "",
   permissions = emptyList(),
   file = File(
-    vername = "",
-    vercode = 0,
     md5 = "",
     filesize = 0,
     path = "",
@@ -137,8 +133,6 @@ val walletApp = emptyApp.copy(
   packageName = "com.appcoins.wallet",
   name = "AppCoins Wallet",
   file = File(
-    vername = "",
-    vercode = 0,
     md5 = "",
     filesize = 33655476, //size of the current version of AppCoins Wallet - 2.11.0.0
     path = "",
@@ -246,8 +240,6 @@ val randomApp
         "org.onepf.openiab.permission.BILLING"
       ).shuffled().take(Random.nextInt(40) + 3),
       file = File(
-        vername = "${Random.nextInt(3)}.${Random.nextInt(20)}.${Random.nextInt(100)}",
-        vercode = Random.nextInt(),
         md5 = "md5",
         filesize = Random.nextLong(1_000_000L..1_000_000_000L),
         path = "",
