@@ -27,8 +27,8 @@ data class AppJSON(
   val media: Media? = null,
   var stats: cm.aptoide.pt.aptoide_network.data.network.model.Stats,
   var appcoins: AppCoins? = null,
-  val aab: Aab? = null,
-  val obb: Obb? = null,
+  val aab: AabJSON? = null,
+  val obb: ObbJSON? = null,
   val urls: CampaignUrls,
 )
 
@@ -100,13 +100,13 @@ data class Age(
 )
 
 @Keep
-data class Aab(
+data class AabJSON(
   @SerializedName(value = "required_split_types") val requiredSplitTypes: List<String>,
-  val splits: List<Split>,
+  val splits: List<SplitJSON>,
 )
 
 @Keep
-data class Split(
+data class SplitJSON(
   val name: String,
   val type: String,
   val md5sum: String,
@@ -115,7 +115,7 @@ data class Split(
 )
 
 @Keep
-data class Obb(
+data class ObbJSON(
   val main: Main,
   val patch: Patch?,
 )
