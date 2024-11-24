@@ -67,6 +67,10 @@ public class RetryFileDownloadManager implements RetryFileDownloader {
     fileDownloader.stopFailedDownload();
   }
 
+  @Override public String getDownloadUrl() {
+    return mainDownloadPath;
+  }
+
   private Observable<FileDownloadCallback> handleFileDownloadProgress(
       FileDownloader fileDownloader) {
     return fileDownloader.observeFileDownloadProgress()

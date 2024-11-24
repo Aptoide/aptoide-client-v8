@@ -60,6 +60,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
   private static final String APP_OBB = "app_obb";
   private static final String ERROR_TYPE = "error_type";
   private static final String ERROR_MESSAGE = "error_message";
+  private static final String ERROR_URL = "error_url";
   private static final String IS_APKFY = "apkfy_app_install";
   private static final String MIUI_AAB_FIX = "miui_aab_fix";
   private static final String APP_VERSION_CODE = "app_version_code";
@@ -91,8 +92,8 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
   }
 
   @Override
-  public void onError(String packageName, int versionCode, String md5, Throwable throwable) {
-    handleRakamOnError(md5, throwable);
+  public void onError(String packageName, int versionCode, String md5, Throwable throwable, String downloadErrorUrl) {
+    handleRakamOnError(md5, throwable, downloadErrorUrl);
   }
 
   @Override public void startProgress(RoomDownload download) {
@@ -113,7 +114,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
     }
   }
 
-  private void handleRakamOnError(String md5, Throwable throwable) {
+  private void handleRakamOnError(String md5, Throwable throwable, String downloadErrorUrl) {
     DownloadEvent downloadEvent = cache.get(md5 + RAKAM_DOWNLOAD_EVENT);
     if (downloadEvent != null) {
       Map<String, Object> data = downloadEvent.getData();
@@ -121,6 +122,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
       data.put(ERROR_TYPE, throwable.getClass()
           .getSimpleName());
       data.put(ERROR_MESSAGE, throwable.getMessage());
+      data.put(ERROR_URL, downloadErrorUrl);
       analyticsManager.logEvent(data, downloadEvent.getEventName(), downloadEvent.getAction(),
           downloadEvent.getContext());
       cache.remove(md5 + RAKAM_DOWNLOAD_EVENT);

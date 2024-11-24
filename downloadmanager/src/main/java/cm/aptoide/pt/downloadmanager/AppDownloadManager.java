@@ -62,9 +62,9 @@ public class AppDownloadManager implements AppDownloader {
 
   @Override public Observable<AppDownloadStatus> observeDownloadProgress() {
     return observeFileDownload().flatMap(fileDownloadCallback -> {
-      setAppDownloadStatus(fileDownloadCallback);
-      return Observable.just(appDownloadStatus);
-    })
+          setAppDownloadStatus(fileDownloadCallback);
+          return Observable.just(appDownloadStatus);
+        })
         .doOnError(throwable -> throwable.printStackTrace())
         .map(__ -> appDownloadStatus);
   }
@@ -81,11 +81,11 @@ public class AppDownloadManager implements AppDownloader {
   private Observable<FileDownloadCallback> startFileDownload(DownloadAppFile downloadAppFile,
       String attributionId) {
     return Observable.just(
-        fileDownloaderProvider.createRetryFileDownloader(downloadAppFile.getDownloadMd5(),
-            downloadAppFile.getMainDownloadPath(), downloadAppFile.getFileType(),
-            downloadAppFile.getPackageName(), downloadAppFile.getVersionCode(),
-            downloadAppFile.getFileName(), PublishSubject.create(),
-            downloadAppFile.getAlternativeDownloadPath(), attributionId))
+            fileDownloaderProvider.createRetryFileDownloader(downloadAppFile.getDownloadMd5(),
+                downloadAppFile.getMainDownloadPath(), downloadAppFile.getFileType(),
+                downloadAppFile.getPackageName(), downloadAppFile.getVersionCode(),
+                downloadAppFile.getFileName(), PublishSubject.create(),
+                downloadAppFile.getAlternativeDownloadPath(), attributionId))
         .doOnNext(
             fileDownloader -> fileDownloaderPersistence.put(downloadAppFile.getMainDownloadPath(),
                 fileDownloader))
@@ -120,7 +120,8 @@ public class AppDownloadManager implements AppDownloader {
                 handleErrorFileDownload();
                 if (fileDownloadCallback.hasError()) {
                   downloadAnalytics.onError(app.getPackageName(), app.getVersionCode(),
-                      app.getMd5(), fileDownloadCallback.getError());
+                      app.getMd5(), fileDownloadCallback.getError(),
+                      fileDownloader.getDownloadUrl());
                 }
                 break;
             }

@@ -84,7 +84,6 @@ public class FileDownloadTask extends FileDownloadLargeFileListener {
 
   @Override protected void error(BaseDownloadTask baseDownloadTask, Throwable error) {
     FileDownloadTaskStatus fileDownloadTaskStatus;
-
     if (error != null) {
       error.printStackTrace();
       if (error instanceof FileDownloadHttpException
