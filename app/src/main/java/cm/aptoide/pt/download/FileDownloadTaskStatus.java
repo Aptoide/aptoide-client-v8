@@ -1,6 +1,7 @@
 package cm.aptoide.pt.download;
 
 import cm.aptoide.pt.downloadmanager.AppDownloadStatus.AppDownloadState;
+import cm.aptoide.pt.downloadmanager.DownloadError;
 import cm.aptoide.pt.downloadmanager.FileDownloadCallback;
 import cm.aptoide.pt.downloadmanager.FileDownloadProgressResult;
 
@@ -13,7 +14,7 @@ public class FileDownloadTaskStatus implements FileDownloadCallback {
   private AppDownloadState appDownloadState;
   private FileDownloadProgressResult downloadProgress;
   private String md5;
-  private Throwable error;
+  private DownloadError error;
 
   public FileDownloadTaskStatus(AppDownloadState appDownloadState,
       FileDownloadProgressResult downloadProgress, String md5) {
@@ -23,7 +24,8 @@ public class FileDownloadTaskStatus implements FileDownloadCallback {
     this.error = null;
   }
 
-  public FileDownloadTaskStatus(AppDownloadState appDownloadState, String md5, Throwable error) {
+  public FileDownloadTaskStatus(AppDownloadState appDownloadState, String md5,
+      DownloadError error) {
     this.appDownloadState = appDownloadState;
     this.md5 = md5;
     this.error = error;
@@ -46,7 +48,7 @@ public class FileDownloadTaskStatus implements FileDownloadCallback {
     return error != null;
   }
 
-  @Override public Throwable getError() {
+  @Override public DownloadError getError() {
     return error;
   }
 

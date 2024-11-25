@@ -16,6 +16,4 @@ public interface RetryFileDownloader {
   void stop();
 
   void stopFailedDownload();
-
-  String getDownloadUrl();
 }

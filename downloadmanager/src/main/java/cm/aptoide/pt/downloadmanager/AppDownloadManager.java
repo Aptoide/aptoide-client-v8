@@ -120,8 +120,9 @@ public class AppDownloadManager implements AppDownloader {
                 handleErrorFileDownload();
                 if (fileDownloadCallback.hasError()) {
                   downloadAnalytics.onError(app.getPackageName(), app.getVersionCode(),
-                      app.getMd5(), fileDownloadCallback.getError(),
-                      fileDownloader.getDownloadUrl());
+                      app.getMd5(), fileDownloadCallback.getError().getErrorException(),
+                      fileDownloadCallback.getError().getUrlError(),
+                      fileDownloadCallback.getError().getHttpError());
                 }
                 break;
             }

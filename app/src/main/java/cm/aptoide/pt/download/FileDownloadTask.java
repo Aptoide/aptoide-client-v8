@@ -1,6 +1,7 @@
 package cm.aptoide.pt.download;
 
 import cm.aptoide.pt.downloadmanager.AppDownloadStatus;
+import cm.aptoide.pt.downloadmanager.DownloadError;
 import cm.aptoide.pt.downloadmanager.FileDownloadCallback;
 import cm.aptoide.pt.downloadmanager.FileDownloadProgressResult;
 import cm.aptoide.pt.logger.Logger;
@@ -76,7 +77,8 @@ public class FileDownloadTask extends FileDownloadLargeFileListener {
             .d(TAG, " Download error in md5");
         fileDownloadTaskStatus =
             new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR_MD5_DOES_NOT_MATCH,
-                md5, new Md5DownloadComparisonException("md5 does not match"));
+                md5, new DownloadError(new Md5DownloadComparisonException("md5 does not match"),
+                "not_http", baseDownloadTask.getUrl()));
       }
       downloadStatus.onNext(fileDownloadTaskStatus);
     }).start();
@@ -86,32 +88,42 @@ public class FileDownloadTask extends FileDownloadLargeFileListener {
     FileDownloadTaskStatus fileDownloadTaskStatus;
     if (error != null) {
       error.printStackTrace();
-      if (error instanceof FileDownloadHttpException
-          && ((FileDownloadHttpException) error).getCode() == FILE_NOT_FOUND_HTTP_ERROR) {
-        Logger.getInstance()
-            .d(TAG, "File not found error on app: " + md5);
-        fileDownloadTaskStatus =
-            new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR_FILE_NOT_FOUND, md5,
-                error);
+      if (error instanceof FileDownloadHttpException) {
+        int httpError = ((FileDownloadHttpException) error).getCode();
+        if (httpError == FILE_NOT_FOUND_HTTP_ERROR) {
+          Logger.getInstance()
+              .d(TAG, "File not found error on app: " + md5);
+          fileDownloadTaskStatus =
+              new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR_FILE_NOT_FOUND,
+                  md5,
+                  new DownloadError(error, String.valueOf(httpError), baseDownloadTask.getUrl()));
+        } else {
+          Logger.getInstance()
+              .d(TAG, "Http error + " + httpError + " on app: " + md5);
+          fileDownloadTaskStatus =
+              new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR, md5,
+                  new DownloadError(error, String.valueOf(httpError), baseDownloadTask.getUrl()));
+        }
       } else if (error instanceof FileDownloadOutOfSpaceException) {
         Logger.getInstance()
             .d(TAG, "Out of space error for the app: " + md5);
-
         fileDownloadTaskStatus =
             new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR_NOT_ENOUGH_SPACE,
-                md5, error);
+                md5, new DownloadError(error, "not_http", baseDownloadTask.getUrl()));
       } else {
         Logger.getInstance()
             .d(TAG, "Generic error on app: " + md5);
         fileDownloadTaskStatus =
-            new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR, md5, error);
+            new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR, md5,
+                new DownloadError(error, "not_http", baseDownloadTask.getUrl()));
       }
     } else {
       Logger.getInstance()
           .d(TAG, "Unknown error on app: " + md5);
       fileDownloadTaskStatus =
           new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR, md5,
-              new GeneralDownloadErrorException("Empty download error"));
+              new DownloadError(new GeneralDownloadErrorException("Empty download error"),
+                  "not_http", baseDownloadTask.getUrl()));
     }
     downloadStatus.onNext(fileDownloadTaskStatus);
   }

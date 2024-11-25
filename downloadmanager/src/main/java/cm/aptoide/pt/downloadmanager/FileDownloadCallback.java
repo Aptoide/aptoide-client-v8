@@ -13,5 +13,5 @@ public interface FileDownloadCallback {
 
   boolean hasError();
 
-  Throwable getError();
+  DownloadError getError();
 }

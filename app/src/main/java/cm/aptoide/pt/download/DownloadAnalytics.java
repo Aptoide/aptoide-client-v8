@@ -9,6 +9,9 @@ import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.view.DeepLinkManager;
+import io.sentry.Sentry;
+import io.sentry.SentryEvent;
+import io.sentry.protocol.Message;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -61,6 +64,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
   private static final String ERROR_TYPE = "error_type";
   private static final String ERROR_MESSAGE = "error_message";
   private static final String ERROR_URL = "error_url";
+  private static final String ERROR_HTTP_CODE = "error_http";
   private static final String IS_APKFY = "apkfy_app_install";
   private static final String MIUI_AAB_FIX = "miui_aab_fix";
   private static final String APP_VERSION_CODE = "app_version_code";
@@ -92,8 +96,9 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
   }
 
   @Override
-  public void onError(String packageName, int versionCode, String md5, Throwable throwable, String downloadErrorUrl) {
-    handleRakamOnError(md5, throwable, downloadErrorUrl);
+  public void onError(String packageName, int versionCode, String md5, Throwable throwable,
+      String downloadErrorUrl, String downloadHttpError) {
+    handleRakamOnError(md5, throwable, downloadErrorUrl, downloadHttpError);
   }
 
   @Override public void startProgress(RoomDownload download) {
@@ -114,7 +119,8 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
     }
   }
 
-  private void handleRakamOnError(String md5, Throwable throwable, String downloadErrorUrl) {
+  private void handleRakamOnError(String md5, Throwable throwable, String downloadErrorUrl,
+      String downloadHttpError) {
     DownloadEvent downloadEvent = cache.get(md5 + RAKAM_DOWNLOAD_EVENT);
     if (downloadEvent != null) {
       Map<String, Object> data = downloadEvent.getData();
@@ -123,10 +129,26 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
           .getSimpleName());
       data.put(ERROR_MESSAGE, throwable.getMessage());
       data.put(ERROR_URL, downloadErrorUrl);
+      data.put(ERROR_HTTP_CODE, downloadHttpError);
       analyticsManager.logEvent(data, downloadEvent.getEventName(), downloadEvent.getAction(),
           downloadEvent.getContext());
       cache.remove(md5 + RAKAM_DOWNLOAD_EVENT);
+      sendSentryError(throwable, downloadErrorUrl, downloadHttpError);
     }
+  }
+
+  private void sendSentryError(Throwable throwable, String downloadErrorUrl,
+      String downloadHttpError) {
+    SentryEvent sentryEvent = new SentryEvent();
+    Message message = new Message();
+    message.setMessage("download_fail");
+    sentryEvent.setMessage(message);
+    sentryEvent.setExtra(ERROR_TYPE, throwable.getClass()
+        .getSimpleName());
+    sentryEvent.setExtra(ERROR_MESSAGE, throwable.getMessage());
+    sentryEvent.setExtra(ERROR_URL, downloadErrorUrl);
+    sentryEvent.setExtra(ERROR_HTTP_CODE, downloadHttpError);
+    Sentry.captureEvent(sentryEvent);
   }
 
   public void sendNotEnoughSpaceError(String md5) {
