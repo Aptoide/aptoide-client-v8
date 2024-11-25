@@ -137,6 +137,7 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
     installManager = installManager,
     analyticsInfoProvider = analyticsInfoProvider,
     appLaunchPreferencesManager = appLaunchPreferencesManager,
+    featureFlags = featureFlags,
   )
 
   private fun initPayments() {
