@@ -98,9 +98,9 @@ hilt-dagger-compiler = { module = "com.google.dagger:hilt-compiler", version.ref
 hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltCompiler" }
 custom-chrome-tab = { module = "androidx.browser:browser", version.ref = "customChromeTab" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase" }
-firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx" }
-firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics-ktx" }
-firebase-messaging = { module = "com.google.firebase:firebase-messaging-ktx" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
+firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
 datastore = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 gms-play-services-ads = { module = "com.google.android.gms:play-services-ads-identifier", version.ref = "gmsPlayServicesAds" }
 play-services-basement = { module = "com.google.android.gms:play-services-base", version.ref = "playServicesBasement" }
