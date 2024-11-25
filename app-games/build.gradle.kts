@@ -273,9 +273,7 @@ dependencies {
 
   //Firebase
   implementation(platform(libs.firebase.bom))
-  implementation(libs.firebase.analytics)
-  implementation(libs.firebase.crashlytics)
-  implementation(libs.firebase.messaging)
+  implementation(libs.bundles.firebase)
 
   //Indicative
   implementation(libs.indicative.sdk)

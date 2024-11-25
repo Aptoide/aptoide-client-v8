@@ -146,3 +146,6 @@ android-module = { id = "android-module" }
 composable = { id = "composable" }
 hilt = { id = "hilt" }
 tests = { id = "tests" }
+
+[bundles]
+firebase = ["firebase-analytics", "firebase-crashlytics", "firebase-messaging"]
