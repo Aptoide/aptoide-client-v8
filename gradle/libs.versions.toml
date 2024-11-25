@@ -101,6 +101,7 @@ firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "fir
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
+firebase-config = { module = "com.google.firebase:firebase-config" }
 datastore = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 gms-play-services-ads = { module = "com.google.android.gms:play-services-ads-identifier", version.ref = "gmsPlayServicesAds" }
 play-services-basement = { module = "com.google.android.gms:play-services-base", version.ref = "playServicesBasement" }
@@ -148,4 +149,4 @@ hilt = { id = "hilt" }
 tests = { id = "tests" }
 
 [bundles]
-firebase = ["firebase-analytics", "firebase-crashlytics", "firebase-messaging"]
+firebase = ["firebase-analytics", "firebase-crashlytics", "firebase-messaging", "firebase-config"]
