@@ -10,6 +10,7 @@ import cm.aptoide.pt.feature_apps.data.isAab
 import cm.aptoide.pt.feature_apps.data.isInCatappult
 import cm.aptoide.pt.feature_apps.data.walletApp
 import cm.aptoide.pt.feature_categories.analytics.AptoideAnalyticsInfoProvider
+import cm.aptoide.pt.feature_flags.domain.FeatureFlags
 import cm.aptoide.pt.install_manager.InstallManager
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_APP_AAB
@@ -41,6 +42,7 @@ class BIAnalytics(private val analyticsSender: AnalyticsSender) {
     installManager: InstallManager,
     analyticsInfoProvider: AptoideAnalyticsInfoProvider,
     appLaunchPreferencesManager: AppLaunchPreferencesManager,
+    featureFlags: FeatureFlags,
   ) {
     CoroutineScope(Dispatchers.Main).launch {
       val isFirstLaunch = appLaunchPreferencesManager.isFirstLaunch()
@@ -81,7 +83,15 @@ class BIAnalytics(private val analyticsSender: AnalyticsSender) {
         .launchIn(this)
 
       analyticsSender.setUserProperties("first_session" to isFirstLaunch)
+      setFeatureFlagsProperties(featureFlags)
     }
+  }
+
+  suspend fun setFeatureFlagsProperties(featureFlags: FeatureFlags) {
+    val apkfyBadge = featureFlags.getFlag("apkfy_badge", false)
+    val group = if (!apkfyBadge) "group_a" else "group_b"
+
+    analyticsSender.setUserProperties("ab_test_apkfy_dec_11" to group)
   }
 
   fun setUTMProperties(
