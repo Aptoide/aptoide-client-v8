@@ -39,7 +39,7 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_updates.di.rememberAutoUpdate
 import cm.aptoide.pt.feature_updates.presentation.UpdatesUiState
-import cm.aptoide.pt.feature_updates.presentation.rememberUpdates
+import cm.aptoide.pt.feature_updates.presentation.rememberCurrentUpdates
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
@@ -61,7 +61,7 @@ fun updatesScreen() = ScreenData.withAnalytics(
   screenAnalyticsName = "Updates",
   deepLinks = listOf(navDeepLink { uriPattern = BuildConfig.DEEP_LINK_SCHEMA + updatesRoute })
 ) { _, navigate, _ ->
-  val updatesUiState = rememberUpdates()
+  val updatesUiState = rememberCurrentUpdates()
 
   UpdatesScreen(
     updatesUiState = updatesUiState,
@@ -193,7 +193,7 @@ private fun AppsList(
         .padding(start = 16.dp, end = 16.dp)
         .wrapContentSize(Alignment.TopCenter),
       contentPadding = PaddingValues(bottom = 72.dp)
-      ) {
+    ) {
       itemsIndexed(appList) { index, app ->
         AppItemUpdates(
           app = app,
