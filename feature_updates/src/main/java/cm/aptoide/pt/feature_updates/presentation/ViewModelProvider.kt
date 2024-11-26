@@ -3,6 +3,7 @@ package cm.aptoide.pt.feature_updates.presentation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
@@ -33,6 +34,30 @@ fun rememberUpdates():
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
           @Suppress("UNCHECKED_CAST")
           return UpdatesViewModel(injectionsProvider.updates) as T
+        }
+      }
+    )
+    val uiState by vm.uiState.collectAsState()
+    uiState
+  })
+
+@Composable
+fun rememberCurrentUpdates():
+  UpdatesUiState = runPreviewable(
+  preview = {
+    UpdatesUiStateProvider().values.toSet().random()
+  },
+  real = {
+    val key = rememberSaveable { System.currentTimeMillis().toString() }
+
+    val injectionsProvider = hiltViewModel<InjectionsProvider>()
+    val vm: UpdatesListViewModel = viewModel(
+      key = key,
+      viewModelStoreOwner = LocalContext.current as ViewModelStoreOwner,
+      factory = object : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+          @Suppress("UNCHECKED_CAST")
+          return UpdatesListViewModel(injectionsProvider.updates) as T
         }
       }
     )
