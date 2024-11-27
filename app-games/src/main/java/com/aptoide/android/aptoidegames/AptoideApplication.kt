@@ -10,6 +10,7 @@ import androidx.work.Configuration
 import androidx.work.Configuration.Provider
 import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
 import cm.aptoide.pt.feature_categories.analytics.AptoideAnalyticsInfoProvider
+import cm.aptoide.pt.feature_flags.domain.FeatureFlags
 import cm.aptoide.pt.feature_updates.domain.Updates
 import cm.aptoide.pt.install_manager.InstallManager
 import coil.ImageLoader
@@ -75,6 +76,9 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
   }
 
   @Inject
+  lateinit var featureFlags: FeatureFlags
+
+  @Inject
   lateinit var installManager: InstallManager
 
   @Inject
@@ -114,11 +118,18 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
     FirebaseApp.initializeApp(this)
     super.onCreate()
     initTimber()
+    initFeatureFlags()
     startInstallManager()
     initPayments()
     initIndicative()
     setUserProperties()
     AptoideMMPCampaign.init(BuildConfig.OEMID, BuildConfig.UTM_SOURCE)
+  }
+
+  private fun initFeatureFlags() {
+    CoroutineScope(Dispatchers.IO).launch {
+      featureFlags.initialize()
+    }
   }
 
   private fun initIndicative() = biAnalytics.setup(
