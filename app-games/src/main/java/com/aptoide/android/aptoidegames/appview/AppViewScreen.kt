@@ -272,7 +272,7 @@ fun AppViewContent(
 ) {
   val bonusBundle = rememberBonusBundle()
 
-  var selectedTab by rememberSaveable { mutableIntStateOf(0) }
+  var selectedTab by rememberSaveable(key = tabsList.size.toString()) { mutableIntStateOf(0) }
   val appImageString = stringResource(id = R.string.app_view_image_description_body, app.name)
 
   val scrollState = rememberScrollState()
