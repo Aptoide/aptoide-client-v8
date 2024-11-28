@@ -248,4 +248,11 @@
   </plurals>
   <string name="update_notification_body">여기를 탭하여 설치하세요.</string>
   <string name="update_aptoide_games_update_notification">Aptoide Games의 새로운 버전이 있습니다.</string>
+  <!-- GenAi -->
+  <string name="genai_bottom_navigation__genai_button">GenAI</string>
+  <string name="genai_bottom_navigation__genai_button">GameGenie</string>
+  <string name="genai_assistant_title">Assistant</string>
+  <string name="genai_me_title">Me</string>
+  <string name="genai_introduction_body">Hi! I\'m your AI assistant on everything related to apps and games discovery. What are you looking for?</string>
+  <string name="genai_input_message_field">Type a message&#8230;</string>
 </resources>
