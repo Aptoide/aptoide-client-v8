@@ -4,6 +4,7 @@ import android.content.Context
 import cm.aptoide.pt.aptoide_network.data.network.AcceptLanguageInterceptor
 import cm.aptoide.pt.aptoide_network.data.network.PostCacheInterceptor
 import cm.aptoide.pt.aptoide_network.data.network.QLogicInterceptor
+import cm.aptoide.pt.aptoide_network.data.network.QueryLangInterceptor
 import cm.aptoide.pt.aptoide_network.data.network.UserAgentInterceptor
 import cm.aptoide.pt.aptoide_network.data.network.VersionCodeInterceptor
 import dagger.Module
@@ -32,6 +33,7 @@ object NetworkModule {
     @ApplicationContext context: Context,
     userAgentInterceptor: UserAgentInterceptor,
     qLogicInterceptor: QLogicInterceptor,
+    queryLangInterceptor: QueryLangInterceptor,
     versionCodeInterceptor: VersionCodeInterceptor,
     languageInterceptor: AcceptLanguageInterceptor,
     httpLoggingInterceptor: HttpLoggingInterceptor,
@@ -40,6 +42,7 @@ object NetworkModule {
     OkHttpClient.Builder()
       .cache(Cache(context.cacheDir, 10 * 1024 * 1024))
       .addInterceptor(userAgentInterceptor)
+      .addInterceptor(queryLangInterceptor)
       .addInterceptor(qLogicInterceptor)
       .addInterceptor(versionCodeInterceptor)
       .addInterceptor(languageInterceptor)

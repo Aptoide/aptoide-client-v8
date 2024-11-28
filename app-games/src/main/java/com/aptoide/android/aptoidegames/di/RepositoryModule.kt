@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import cm.aptoide.pt.aptoide_network.data.network.GetAcceptLanguage
 import cm.aptoide.pt.aptoide_network.data.network.GetUserAgent
 import cm.aptoide.pt.aptoide_network.data.network.QLogicInterceptor
+import cm.aptoide.pt.aptoide_network.data.network.QueryLangInterceptor
 import cm.aptoide.pt.aptoide_network.di.BaseOkHttp
 import cm.aptoide.pt.aptoide_network.di.RetrofitBuzz
 import cm.aptoide.pt.aptoide_network.di.StoreDomain
@@ -35,6 +36,7 @@ import com.aptoide.android.aptoidegames.idsDataStore
 import com.aptoide.android.aptoidegames.launch.AppLaunchPreferencesManager
 import com.aptoide.android.aptoidegames.network.AptoideGetHeaders
 import com.aptoide.android.aptoidegames.network.AptoideQLogicInterceptor
+import com.aptoide.android.aptoidegames.network.AptoideQueryLangInterceptor
 import com.aptoide.android.aptoidegames.networkPreferencesDataStore
 import com.aptoide.android.aptoidegames.permissions.AppPermissionsManager
 import com.aptoide.android.aptoidegames.search.repository.AppGamesAutoCompleteSuggestionsRepository
@@ -200,6 +202,16 @@ class RepositoryModule {
   ): QLogicInterceptor {
     return AptoideQLogicInterceptor(
       deviceInfo = deviceInfo,
+    )
+  }
+
+  @Provides
+  @Singleton
+  fun providesQueryLangInterceptor(
+    @ApplicationContext appContext: Context
+  ): QueryLangInterceptor {
+    return AptoideQueryLangInterceptor(
+      context = appContext
     )
   }
 
