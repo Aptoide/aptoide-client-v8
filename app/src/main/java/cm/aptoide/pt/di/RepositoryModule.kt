@@ -8,6 +8,7 @@ import cm.aptoide.pt.appcoins.di.APIChainBDSDomain
 import cm.aptoide.pt.aptoide_network.data.network.GetAcceptLanguage
 import cm.aptoide.pt.aptoide_network.data.network.GetUserAgent
 import cm.aptoide.pt.aptoide_network.data.network.QLogicInterceptor
+import cm.aptoide.pt.aptoide_network.data.network.QueryLangInterceptor
 import cm.aptoide.pt.aptoide_network.di.BaseOkHttp
 import cm.aptoide.pt.aptoide_network.di.RetrofitBuzz
 import cm.aptoide.pt.aptoide_network.di.StoreDomain
@@ -25,6 +26,7 @@ import cm.aptoide.pt.feature_search.domain.repository.SearchStoreManager
 import cm.aptoide.pt.feature_updates.di.PrioritizedPackagesFilter
 import cm.aptoide.pt.network.AptoideGetHeaders
 import cm.aptoide.pt.network.AptoideQLogicInterceptor
+import cm.aptoide.pt.network.AptoideQueryLangInterceptor
 import cm.aptoide.pt.network.repository.IdsRepository
 import cm.aptoide.pt.profile.data.UserProfileRepository
 import cm.aptoide.pt.profile.di.UserProfileDataStore
@@ -82,7 +84,6 @@ class RepositoryModule {
   @APIChainBDSDomain
   fun provideAPIChainBDSDomain(): String = BuildConfig.APTOIDE_WEB_SERVICES_APICHAIN_BDS_HOST
 
-
   @Singleton
   @Provides
   fun providesIdsRepository(
@@ -112,6 +113,16 @@ class RepositoryModule {
     return AptoideQLogicInterceptor(
       userPreferencesRepository = userPreferencesRepository,
       deviceInfo = deviceInfo,
+    )
+  }
+
+  @Provides
+  @Singleton
+  fun providesQueryLangInterceptor(
+    @ApplicationContext appContext: Context
+  ): QueryLangInterceptor {
+    return AptoideQueryLangInterceptor(
+      context = appContext
     )
   }
 
