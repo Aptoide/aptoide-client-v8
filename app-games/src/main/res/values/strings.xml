@@ -214,13 +214,11 @@
   <string name="purchase_error_expired_card_title">It seems your card is expired.</string>
   <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
   <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
-
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">A Bonus on Every Purchase</string>
   <string name="bonus_page_body_1">Look for the games identified with %1$s, install the AppCoins Wallet and get up to %2$s%% bonus in all purchases. You can then use this bonus to make your next purchases in your favorite games!</string>
   <string name="bonus_page_title_2">Want More?</string>
   <string name="bonus_page_body_2"><![CDATA[You can get an extra <1>%s%% bonus</1> by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!]]></string>
-
   <!-- Promo Code -->
   <string name="promo_code_install_wallet_banner_title">Up to %s%% Bonus in Every Purchase</string>
   <string name="promo_code_install_wallet_banner_body">Use the AppCoins Wallet to make your in-app purchases and get a reward.</string>
@@ -233,7 +231,6 @@
   <string name="promo_code_notification_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
   <string name="promo_code_share_title">You\'ve got a promo code!</string>
   <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorite game.</string>
-
   <!-- Update -->
   <string name="update_up_to_date_title">Congrats!</string>
   <string name="update_up_to_date_body">You\'re up to date.</string>
@@ -261,7 +258,6 @@
   </plurals>
   <string name="update_notification_body">Tap here to install.</string>
   <string name="update_aptoide_games_update_notification">There\'s a new version of Aptoide Games</string>
-
   <!-- GenAi -->
   <string name="genai_bottom_navigation_genai_button">GenAI</string>
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
@@ -269,6 +265,4 @@
   <string name="genai_me_title">Me</string>
   <string name="genai_introduction_body">Hi! I\'m your AI assistant on everything related to apps and games discovery. What are you looking for?</string>
   <string name="genai_input_message_field">Type a message&#8230;</string>
-
-
 </resources>
