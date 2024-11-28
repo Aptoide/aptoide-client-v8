@@ -250,4 +250,11 @@
   </plurals>
   <string name="update_notification_body">Toca aquí para instalar.</string>
   <string name="update_aptoide_games_update_notification">There\'s a new version of Aptoide Games</string>
+  <!-- GenAi -->
+  <string name="genai_bottom_navigation_genai_button">GenAI</string>
+  <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
+  <string name="genai_assistant_title">Assistant</string>
+  <string name="genai_me_title">Me</string>
+  <string name="genai_introduction_body">Hi! I\'m your AI assistant on everything related to apps and games discovery. What are you looking for?</string>
+  <string name="genai_input_message_field">Type a message&#8230;</string>
 </resources>
