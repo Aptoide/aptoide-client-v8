@@ -78,30 +78,30 @@ public class DownloadFactory {
         RoomFileToDownload.APK, packageName, versionCode, versionName, cachePath,
         RoomFileToDownload.SUBTYPE_APK));
 
-    if (mainObbPath != null) {
-      downloads.add(
-          RoomFileToDownload.createFileToDownload(mainObbPath, null, mainObbMd5, mainObbName,
-              RoomFileToDownload.OBB, packageName, versionCode, versionName, cachePath,
-              RoomFileToDownload.MAIN));
-    }
-
-    if (patchObbPath != null) {
-      downloads.add(
-          RoomFileToDownload.createFileToDownload(patchObbPath, null, patchObbMd5, patchObbName,
-              RoomFileToDownload.OBB, packageName, versionCode, versionName, cachePath,
-              RoomFileToDownload.PATCH));
-    }
-
-    if (splits != null) {
+    if (splits != null && !splits.isEmpty()) {
       for (Split split : splits) {
         downloads.add(
             RoomFileToDownload.createFileToDownload(split.getPath(), null, split.getMd5sum(),
                 split.getMd5sum() + "." + split.getName(), RoomFileToDownload.SPLIT, packageName,
                 versionCode, versionName, cachePath, RoomFileToDownload.BASE));
       }
+    } else {
+      if (mainObbPath != null) {
+        downloads.add(
+            RoomFileToDownload.createFileToDownload(mainObbPath, null, mainObbMd5, mainObbName,
+                RoomFileToDownload.OBB, packageName, versionCode, versionName, cachePath,
+                RoomFileToDownload.MAIN));
+      }
+
+      if (patchObbPath != null) {
+        downloads.add(
+            RoomFileToDownload.createFileToDownload(patchObbPath, null, patchObbMd5, patchObbName,
+                RoomFileToDownload.OBB, packageName, versionCode, versionName, cachePath,
+                RoomFileToDownload.PATCH));
+      }
     }
 
-    if (dynamicSplitList != null) {
+    if (dynamicSplitList != null && !dynamicSplitList.isEmpty()) {
       for (DynamicSplit dynamicSplit : dynamicSplitList) {
 
         if (dynamicSplit.getDeliveryTypes()
