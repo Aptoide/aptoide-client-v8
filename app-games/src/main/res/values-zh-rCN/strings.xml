@@ -249,8 +249,8 @@
   <string name="update_notification_body">点击此处安装。</string>
   <string name="update_aptoide_games_update_notification">Aptoide Games 已发布新版本。</string>
   <!-- GenAi -->
-  <string name="genai_bottom_navigation__genai_button">GenAI</string>
-  <string name="genai_bottom_navigation__genai_button">GameGenie</string>
+  <string name="genai_bottom_navigation_genai_button">GenAI</string>
+  <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
   <string name="genai_assistant_title">Assistant</string>
   <string name="genai_me_title">Me</string>
   <string name="genai_introduction_body">Hi! I\'m your AI assistant on everything related to apps and games discovery. What are you looking for?</string>
