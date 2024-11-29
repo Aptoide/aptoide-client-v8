@@ -117,6 +117,7 @@
   <string name="later_button">Nanti</string>
   <string name="trusted_game_badge">Permainan Dipercayai</string>
   <string name="official_game_badge">Permainan Rasmi</string>
+  <string name="see_more_button">See more</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Tiada Ruang</string>
   <string name="out_of_space_body">Anda perlu %s untuk teruskan pemasangan.</string>
@@ -169,6 +170,8 @@
   <string name="contact_support_title" comment="contact_support">Hubungi Sokongan</string>
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Sila berikan kami segala butiran:\n\u2022 Bila masalah mula\n\u2022 Pada permainan mana anda buat pembelian\n\nSetelah anda ketik Hantar, aplikasi e-mel anda akan terbuka. Sila lampirkan tangkap layar atau video berkenaan isu!</string>
   <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Anda mahu pasang permainan?</string>
+  <string name="apkfy_install_body">Get your favorite game and much more in Aptoide Games!</string>
+  <string name="apkfy_install_bullet_points">\u2022 Top games with an amazing curation.\n\u2022 No need to log in!&gt;No need to log in!\n\u2022 Special promotions and rewards in your favorite games.</string>
   <string name="app_size_mb_title" comment="s_mb">%s MB</string>
   <string name="uninstalled_title" comment="uninstalled">Telah Nyahpasang</string>
   <string name="error_no_internet_body" comment="please_check_your_internet_connection">Sila semak capaian internet anda.</string>
