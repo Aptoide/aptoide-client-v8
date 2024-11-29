@@ -6,6 +6,7 @@ class InstalledAppOpener(private val context: Context) {
 
   fun openInstalledApp(packageName: String) {
     val intentForPackage = context.packageManager.getLaunchIntentForPackage(packageName)
-    context.startActivity(intentForPackage)
+    if (intentForPackage != null)
+      context.startActivity(intentForPackage)
   }
 }
