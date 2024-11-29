@@ -22,15 +22,14 @@ import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.error_views.NoConnectionView
 import com.aptoide.android.aptoidegames.feature_apps.presentation.AppItem
-import com.aptoide.android.aptoidegames.gamegenie.domain.GameGenieMessage
-import com.aptoide.android.aptoidegames.gamegenie.domain.isUserMessage
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
 fun MessageBubble(
-  message: GameGenieMessage,
+  message: String,
+  isUserMessage: Boolean,
   apps: List<String>? = null,
   navigateTo: (String) -> Unit = {},
 ) {
@@ -38,9 +37,9 @@ fun MessageBubble(
     modifier = Modifier
       .fillMaxWidth()
       .padding(vertical = 4.dp)
-      .wrapContentWidth(if (message.isUserMessage()) Alignment.End else Alignment.Start)
+      .wrapContentWidth(if (isUserMessage) Alignment.End else Alignment.Start)
   ) {
-    if (!message.isUserMessage()) {
+    if (!isUserMessage) {
       Text(
         text = "Assistant", //TODO take this out
         style = AGTypography.BodyBold,
@@ -59,15 +58,15 @@ fun MessageBubble(
       modifier = Modifier
         .clip(shape = RoundedCornerShape(2.dp))
         .background(
-          color = if (message.isUserMessage()) Palette.Primary else Color.Transparent,
+          color = if (isUserMessage) Palette.Primary else Color.Transparent,
         )
-        .border(2.dp, color = if (message.isUserMessage()) Color.Transparent else Palette.Primary)
+        .border(2.dp, color = if (isUserMessage) Color.Transparent else Palette.Primary)
         .padding(12.dp)
     ) {
       Text(
-        text = message.messageBody.replace("\"", ""),
+        text = message.replace("\"", ""),
         style = AGTypography.Body,
-        color = if (message.isUserMessage()) Palette.Black else Palette.White,
+        color = if (isUserMessage) Palette.Black else Palette.White,
         fontSize = 16.sp,
       )
 

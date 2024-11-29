@@ -78,10 +78,9 @@ fun ChatScreen(
   isLoading: Boolean = false,
 ) {
   val listState = rememberLazyListState()
-  val messages = uiState.conversation.toChatbotMessageList()
 
-  LaunchedEffect(key1 = messages.size) {
-    listState.animateScrollToItem(index = messages.size - 1)
+  LaunchedEffect(key1 = uiState.conversation) {
+    listState.animateScrollToItem(index = uiState.conversation.lastIndex)
   }
 
   Column(
@@ -89,8 +88,7 @@ fun ChatScreen(
       .padding(vertical = 4.dp)
   ) {
     MessageList(
-      messages = messages,
-      apps = uiState.apps,
+      messages = uiState.conversation,
       navigateTo = navigateTo,
       listState = listState,
       modifier = Modifier
