@@ -4,9 +4,9 @@ import androidx.annotation.Keep
 
 @Keep
 data class ChatInteraction(
-    val gpt: String,
-    val user: String?,
-    val apps: List<GameContext>,
+  val gpt: String,
+  val user: String?,
+  val apps: List<GameContext>,
 )
 
 fun List<ChatInteraction>.toChatbotMessageList(): List<GameGenieMessage> {
