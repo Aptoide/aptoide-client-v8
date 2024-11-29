@@ -117,6 +117,7 @@
   <string name="later_button">Depois</string>
   <string name="trusted_game_badge">Jogo Verificado</string>
   <string name="official_game_badge">Jogo Oficial</string>
+  <string name="see_more_button">See more</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Sem Espaço Disponível</string>
   <string name="out_of_space_body">Você precisa de %s para continuar a instalação.</string>
@@ -169,6 +170,8 @@
   <string name="contact_support_title" comment="contact_support">Falar com a Equipe de Suporte</string>
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Por favor, nos forneça todos os detalhes:\n\u2022 Quando o problema começou\n\u2022 Em qual jogo você está fazendo uma compra\n\nDepois de tocar em Enviar, seu aplicativo de e-mail será aberto. Sinta-se à vontade para anexar uma captura de tela ou vídeo sobre o problema!</string>
   <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Deseja instalar este jogo?</string>
+  <string name="apkfy_install_body">Get your favorite game and much more in Aptoide Games!</string>
+  <string name="apkfy_install_bullet_points">\u2022 Top games with an amazing curation.\n\u2022 No need to log in!&gt;No need to log in!\n\u2022 Special promotions and rewards in your favorite games.</string>
   <string name="app_size_mb_title" comment="s_mb">%s MB</string>
   <string name="uninstalled_title" comment="uninstalled">Desinstalado</string>
   <string name="error_no_internet_body" comment="please_check_your_internet_connection">Verifique sua conexão com a Internet.</string>
