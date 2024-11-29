@@ -543,6 +543,23 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
     params = mapOf("feedback_type" to feedbackType)
   )
 
+  fun sendApkfyShown() = analyticsSender.logEvent("apkfy_shown", params = emptyMap())
+
+  fun sendApkfyInstallClicked(
+    app: App,
+    networkType: String,
+    analyticsContext: AnalyticsUIContext,
+  ) {
+    analyticsSender.logEvent(
+      name = "install_clicked_apkfy",
+      params = analyticsContext.toParameters(
+        P_PACKAGE_NAME to app.packageName,
+        P_APPC_BILLING to app.isAppCoins,
+        P_SERVICE to networkType
+      )
+    )
+  }
+
   /**
    * Helper functions for better readability
    */

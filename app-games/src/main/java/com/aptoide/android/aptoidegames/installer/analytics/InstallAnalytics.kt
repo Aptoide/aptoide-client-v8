@@ -32,6 +32,14 @@ class InstallAnalytics(
       analyticsContext = analyticsContext,
       action = "install"
     )
+
+    if(analyticsContext.isApkfy) {
+      genericAnalytics.sendApkfyInstallClicked(
+        app = app,
+        networkType = networkType,
+        analyticsContext = analyticsContext,
+      )
+    }
   }
 
   fun sendUpdateClickEvent(

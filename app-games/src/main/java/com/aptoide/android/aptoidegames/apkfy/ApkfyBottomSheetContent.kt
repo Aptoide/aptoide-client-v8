@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -23,6 +24,7 @@ import com.aptoide.android.aptoidegames.BottomSheetContent
 import com.aptoide.android.aptoidegames.BottomSheetHeader
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.OverrideAnalyticsAPKFY
+import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.apkfy.presentation.rememberBadgeVisibility
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getTrustedIcon
@@ -38,6 +40,12 @@ class ApkfyBottomSheetContent(private val app: App) : BottomSheetContent {
     dismiss: () -> Unit,
     navigate: (String) -> Unit,
   ) {
+    val analytics = rememberGenericAnalytics()
+
+    LaunchedEffect(Unit) {
+      analytics.sendApkfyShown()
+    }
+
     OverrideAnalyticsAPKFY(navigate) { navigateTo ->
       Column(
         horizontalAlignment = Alignment.CenterHorizontally,
