@@ -171,8 +171,8 @@
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">詳細を教えてください：\n\u2022問題はいつ発生しましたか？\n\u2022どのゲームで購入されましたか？\n\n
 送信をタップすると、メールアプリが開きます。問題のスクリーンショットや動画を添付してください。</string>
   <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">このゲームをインストールしますか？</string>
-  <string name="apkfy_install_body">Get your favorite game and much more in Aptoide Games!</string>
-  <string name="apkfy_install_bullet_points">\u2022 Top games with an amazing curation.\n\u2022 No need to log in!&gt;No need to log in!\n\u2022 Special promotions and rewards in your favorite games.</string>
+  <string name="apkfy_install_body">Aptoide Gamesでお気に入りのゲームやその他のものを手に入れよう！</string>
+  <string name="apkfy_install_bullet_points">\u2022素晴らしいキュレーションのトップゲーム。\n\u2022ログイン不要！&gt; ログイン不要！\n\u2022お好きなゲームで特別なプロモーションと報酬を。</string>
   <string name="app_size_mb_title" comment="s_mb">%s MB</string>
   <string name="uninstalled_title" comment="uninstalled">アンインストールされました</string>
   <string name="error_no_internet_body" comment="please_check_your_internet_connection">インターネット接続を確認してください。</string>
@@ -255,8 +255,8 @@
   <!-- GenAi -->
   <string name="genai_bottom_navigation_genai_button">GenAI</string>
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
-  <string name="genai_assistant_title">Assistant</string>
-  <string name="genai_me_title">Me</string>
-  <string name="genai_introduction_body">Hi! I\'m your AI assistant on everything related to apps and games discovery. What are you looking for?</string>
+  <string name="genai_assistant_title">アシスタント</string>
+  <string name="genai_me_title">自分</string>
+  <string name="genai_introduction_body">こんにちは！私はあなたのAIアシスタントです。何をお探しですか？</string>
   <string name="genai_input_message_field">Type a message&#8230;</string>
 </resources>
