@@ -55,7 +55,7 @@ sealed class BottomBarMenus(
 
   object GameGenie : BottomBarMenus(
     route = genieRoute,
-    titleId = R.string.bottom_navigation_updates
+    titleId = R.string.genai_bottom_navigation_gamegenie_button
   )
 }
 

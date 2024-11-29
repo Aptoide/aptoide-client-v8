@@ -171,7 +171,7 @@ private data class ChatbotViewModelState(
   val type: GameGenieUIStateType = GameGenieUIStateType.IDLE,
   val conversation: List<ChatInteraction> = listOf(
     ChatInteraction(
-      "Hello! I'm here to help you search and discover apps and games. Please use me as needed.",
+      "",
       null,
       emptyList()
     )

@@ -19,7 +19,6 @@ import cm.aptoide.pt.extensions.ScreenData
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.error_views.NoConnectionView
-import com.aptoide.android.aptoidegames.gamegenie.domain.toChatbotMessageList
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.MessageList
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.TextInputBar
 
