@@ -117,6 +117,7 @@
   <string name="later_button">Later</string>
   <string name="trusted_game_badge">Trusted Game</string>
   <string name="official_game_badge">Official Game</string>
+  <string name="see_more_button">See more</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Out of Space</string>
   <string name="out_of_space_body">You need %s to continue with the installation.</string>
@@ -169,6 +170,8 @@
   <string name="contact_support_title" comment="contact_support">Contact Support</string>
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Please give us all the details:\n\u2022 When did the problem start\n\u2022 On which game are you making a purchase\n\nOnce you tap on Send, your mail app will open. Feel free to attach a screenshot or video about the issue!</string>
   <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Do you want to install this game?</string>
+  <string name="apkfy_install_body">Get your favorite game and much more in Aptoide Games!</string>
+  <string name="apkfy_install_bullet_points">\u2022 Top games with an amazing curation.\n\u2022 No need to log in!>No need to log in!\n\u2022 Special promotions and rewards in your favorite games.</string>
   <string name="app_size_mb_title" comment="s_mb">%s MB</string>
   <string name="uninstalled_title" comment="uninstalled">Uninstalled</string>
   <string name="error_no_internet_body" comment="please_check_your_internet_connection">Please check your Internet connection.</string>
@@ -214,11 +217,13 @@
   <string name="purchase_error_expired_card_title">It seems your card is expired.</string>
   <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
   <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
+
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">A Bonus on Every Purchase</string>
   <string name="bonus_page_body_1">Look for the games identified with %1$s, install the AppCoins Wallet and get up to %2$s%% bonus in all purchases. You can then use this bonus to make your next purchases in your favorite games!</string>
   <string name="bonus_page_title_2">Want More?</string>
   <string name="bonus_page_body_2"><![CDATA[You can get an extra <1>%s%% bonus</1> by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!]]></string>
+
   <!-- Promo Code -->
   <string name="promo_code_install_wallet_banner_title">Up to %s%% Bonus in Every Purchase</string>
   <string name="promo_code_install_wallet_banner_body">Use the AppCoins Wallet to make your in-app purchases and get a reward.</string>
@@ -231,6 +236,7 @@
   <string name="promo_code_notification_without_wallet_body">Get the AppCoins Wallet and use your promo code to get extra bonuses in all purchases.</string>
   <string name="promo_code_share_title">You\'ve got a promo code!</string>
   <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorite game.</string>
+
   <!-- Update -->
   <string name="update_up_to_date_title">Congrats!</string>
   <string name="update_up_to_date_body">You\'re up to date.</string>
@@ -258,6 +264,7 @@
   </plurals>
   <string name="update_notification_body">Tap here to install.</string>
   <string name="update_aptoide_games_update_notification">There\'s a new version of Aptoide Games</string>
+
   <!-- GenAi -->
   <string name="genai_bottom_navigation_genai_button">GenAI</string>
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
@@ -265,4 +272,6 @@
   <string name="genai_me_title">Me</string>
   <string name="genai_introduction_body">Hi! I\'m your AI assistant on everything related to apps and games discovery. What are you looking for?</string>
   <string name="genai_input_message_field">Type a message&#8230;</string>
+
+
 </resources>
