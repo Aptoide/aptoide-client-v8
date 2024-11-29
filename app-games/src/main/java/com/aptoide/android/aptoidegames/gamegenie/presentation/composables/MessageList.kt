@@ -26,10 +26,17 @@ fun MessageList(
     contentPadding = PaddingValues(vertical = 8.dp)
   ) {
     itemsIndexed(messages) { idx, message ->
-      MessageBubble(
-        message = message.gpt, isUserMessage = false,
-        apps = message.apps.map { app -> app.packageName }, navigateTo = navigateTo
-      )
+      if (idx == 0) {
+        MessageBubble(
+          message = null, isUserMessage = false,
+          apps = message.apps.map { app -> app.packageName }, navigateTo = navigateTo
+        )
+      } else {
+        MessageBubble(
+          message = message.gpt, isUserMessage = false,
+          apps = message.apps.map { app -> app.packageName }, navigateTo = navigateTo
+        )
+      }
 
       message.user?.let { userMessage ->
         MessageBubble(

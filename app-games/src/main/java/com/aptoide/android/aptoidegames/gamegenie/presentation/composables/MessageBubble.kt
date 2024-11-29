@@ -13,10 +13,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.rememberApp
+import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.appview.LoadingView
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
@@ -28,7 +30,7 @@ import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
 fun MessageBubble(
-  message: String,
+  message: String?,
   isUserMessage: Boolean,
   apps: List<String>? = null,
   navigateTo: (String) -> Unit = {},
@@ -41,13 +43,13 @@ fun MessageBubble(
   ) {
     if (!isUserMessage) {
       Text(
-        text = "Assistant", //TODO take this out
+        text = stringResource(R.string.genai_assistant_title),
         style = AGTypography.BodyBold,
         modifier = Modifier.padding(start = 8.dp, bottom = 1.dp)
       )
     } else {
       Text(
-        text = "Me", //TODO take this out
+        text = stringResource(R.string.genai_me_title),
         style = AGTypography.BodyBold,
         modifier = Modifier
           .padding(end = 8.dp, bottom = 1.dp)
@@ -63,12 +65,21 @@ fun MessageBubble(
         .border(2.dp, color = if (isUserMessage) Color.Transparent else Palette.Primary)
         .padding(12.dp)
     ) {
-      Text(
-        text = message.replace("\"", ""),
-        style = AGTypography.Body,
-        color = if (isUserMessage) Palette.Black else Palette.White,
-        fontSize = 16.sp,
-      )
+      if (message != null) {
+        Text(
+          text = message.replace("\"", ""),
+          style = AGTypography.Body,
+          color = if (isUserMessage) Palette.Black else Palette.White,
+          fontSize = 16.sp,
+        )
+      } else {
+        Text(
+          text = stringResource(R.string.genai_introduction_body),
+          style = AGTypography.Body,
+          color = if (isUserMessage) Palette.Black else Palette.White,
+          fontSize = 16.sp,
+        )
+      }
 
       apps?.forEach { app ->
         val rememberedApp = rememberApp("package_name=$app")

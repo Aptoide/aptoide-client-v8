@@ -19,10 +19,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 
@@ -52,7 +54,7 @@ fun TextInputBar(
         .background(Palette.Secondary),
       placeholder = {
         Text(
-          text = "Type a message...",
+          text = stringResource(R.string.genai_input_message_field),
           textAlign = TextAlign.Start,
           overflow = TextOverflow.Visible,
           style = AGTypography.InputsL,
