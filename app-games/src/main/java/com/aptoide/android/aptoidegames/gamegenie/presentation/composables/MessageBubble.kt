@@ -21,7 +21,6 @@ import cm.aptoide.pt.feature_apps.presentation.rememberApp
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.appview.LoadingView
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
-import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.error_views.NoConnectionView
 import com.aptoide.android.aptoidegames.feature_apps.presentation.AppItem
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
@@ -85,7 +84,7 @@ fun MessageBubble(
         val rememberedApp = rememberApp("package_name=$app")
         val fn = rememberedApp.second
         when (val state = rememberedApp.first) {
-          AppUiState.Error -> GenericErrorView(fn)//runs the reload function
+          AppUiState.Error -> {} //runs the reload function
           is AppUiState.Idle -> {
             val fullApp = state.app
             AppItem(
