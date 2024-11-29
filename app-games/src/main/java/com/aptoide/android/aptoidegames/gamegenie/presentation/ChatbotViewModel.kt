@@ -35,11 +35,16 @@ class ChatbotViewModel @Inject constructor(
 
   init {
     viewModelScope.launch {
-      val token = gameGenieRepository.getToken()
-      viewModelState.update {
-        it.copy(
-          token = token.toToken()
-        )
+      try {
+        val token = gameGenieRepository.getToken()
+        viewModelState.update {
+          it.copy(
+            token = token.toToken()
+          )
+        }
+      } catch (e: Exception) {
+        e.printStackTrace()
+        handleError(e)
       }
     }
   }
@@ -59,8 +64,8 @@ class ChatbotViewModel @Inject constructor(
   }
 
   private fun handleMessageProcessing(
-      updateConversation: () -> List<ChatInteraction>,
-      onSuccess: (GameGenieResponse, List<String>) -> Unit,
+    updateConversation: () -> List<ChatInteraction>,
+    onSuccess: (GameGenieResponse, List<String>) -> Unit,
   ) {
     viewModelScope.launch {
       val conversation = updateConversation()
@@ -79,7 +84,7 @@ class ChatbotViewModel @Inject constructor(
         }
         val apps = response.conversation.last().apps.map { app -> app.packageName }
         onSuccess(response, apps)
-      } catch (e: Throwable) {
+      } catch (e: Exception) {
         handleError(e)
       }
     }
@@ -104,7 +109,7 @@ class ChatbotViewModel @Inject constructor(
   }
 
   private suspend fun makeRequestWithToken(
-      requestFunction: suspend () -> GameGenieResponse,
+    requestFunction: suspend () -> GameGenieResponse,
   ): GameGenieResponse {
     return try {
       requestFunction()
@@ -122,6 +127,9 @@ class ChatbotViewModel @Inject constructor(
       } else {
         throw e
       }
+    } catch (e: Exception) {
+      Timber.e(e, "Request failed with unexpected error")
+      throw e
     }
   }
 
@@ -146,8 +154,8 @@ class ChatbotViewModel @Inject constructor(
   }
 
   private fun updateStateForSuccess(
-      response: GameGenieResponse,
-      apps: List<String>,
+    response: GameGenieResponse,
+    apps: List<String>,
   ) {
     viewModelState.update {
       it.copy(
@@ -160,17 +168,17 @@ class ChatbotViewModel @Inject constructor(
 }
 
 private data class ChatbotViewModelState(
-    val type: GameGenieUIStateType = GameGenieUIStateType.IDLE,
-    val conversation: List<ChatInteraction> = listOf(
-        ChatInteraction(
-            "Hello! I'm here to help you search and discover apps and games. Please use me as needed.",
-            null,
-            emptyList()
-        )
-    ),
-    val apps: List<String> = emptyList(), //store package names
-    val id: String = "",
-    val token: Token? = null,
+  val type: GameGenieUIStateType = GameGenieUIStateType.IDLE,
+  val conversation: List<ChatInteraction> = listOf(
+    ChatInteraction(
+      "Hello! I'm here to help you search and discover apps and games. Please use me as needed.",
+      null,
+      emptyList()
+    )
+  ),
+  val apps: List<String> = emptyList(), //store package names
+  val id: String = "",
+  val token: Token? = null,
 ) {
   fun toUiState(): GameGenieUIState =
     GameGenieUIState(
