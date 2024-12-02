@@ -19,7 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -27,12 +26,12 @@ import com.aptoide.android.aptoidegames.theme.Palette
 @Composable
 fun TypingAnimation(
   dotColor: Color = Palette.Primary,
-  backgroundColor: Color = Palette.Primary.copy(alpha = 0.1f),
-  dotSize: Float = 12f,
+  backgroundColor: Color = Color.Transparent,
+  dotSize: Float = 6f,
   durationMillis: Int = 400,
-  padding: Float = 10f,
+  padding: Float = 5f,
   borderRadius: RoundedCornerShape = RoundedCornerShape(2.dp),
-  dotSpacing: Float = 6f,
+  dotSpacing: Float = 3f,
 ) {
   val numberDots = 3
   val transition = rememberInfiniteTransition(label = "")
@@ -56,12 +55,12 @@ fun TypingAnimation(
   Surface(
     color = backgroundColor,
     shape = borderRadius,
-    modifier = Modifier.padding(padding.dp)
+    modifier = Modifier.padding(horizontal = padding.dp)
   ) {
     Row(
       horizontalArrangement = Arrangement.Center,
       verticalAlignment = Alignment.CenterVertically,
-      modifier = Modifier.padding(padding.dp)
+      modifier = Modifier.padding(start = padding.dp, bottom = 4.dp)
     ) {
       dotStates.forEachIndexed { index, animatedValue ->
         if (index > 0) {
@@ -71,7 +70,6 @@ fun TypingAnimation(
         Box(
           modifier = Modifier
             .size(dotSize.dp)
-            .clip(RoundedCornerShape(2.dp))
         ) {
           // Inactive dot
           Surface(

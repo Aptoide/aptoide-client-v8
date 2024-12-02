@@ -1,6 +1,8 @@
 package com.aptoide.android.aptoidegames.gamegenie.presentation
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
@@ -13,12 +15,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cm.aptoide.pt.extensions.ScreenData
+import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.error_views.NoConnectionView
+import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.ChatParticipantName
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.MessageList
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.TextInputBar
 
@@ -48,7 +53,7 @@ fun ChatbotView(
   navigateTo: (String) -> Unit,
   onError: () -> Unit,
   onMessageSend: (String) -> Unit,
-  onAllAppsFail: () -> Unit
+  onAllAppsFail: () -> Unit,
 ) {
   Column(
     modifier = Modifier
@@ -67,7 +72,7 @@ fun ChatbotView(
       GameGenieUIStateType.ERROR -> GenericErrorView(onError)
       GameGenieUIStateType.IDLE -> ChatScreen(
         uiState = uiState, navigateTo = navigateTo, onMessageSend = onMessageSend,
-        onAllAppsFail =  onAllAppsFail
+        onAllAppsFail = onAllAppsFail
       )
     }
   }
@@ -89,7 +94,7 @@ fun ChatScreen(
 
   Column(
     modifier = Modifier
-      .padding(vertical = 4.dp)
+      .padding(vertical = 4.dp, horizontal = 18.dp)
   ) {
     MessageList(
       messages = uiState.conversation,
@@ -100,7 +105,16 @@ fun ChatScreen(
       onAllAppsFail = onAllAppsFail
     )
     if (isLoading) {
-      TypingAnimation()
+      Row(
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(bottom = 8.dp)
+      ) {
+        ChatParticipantName(
+          stringResource(R.string.genai_bottom_navigation_gamegenie_button)
+        )
+        TypingAnimation()
+      }
     }
 
     TextInputBar(
