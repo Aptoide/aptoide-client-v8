@@ -117,6 +117,7 @@
   <string name="later_button">لاحقًا</string>
   <string name="trusted_game_badge">الألعاب الموثوقة</string>
   <string name="official_game_badge">الألعاب الرسمية</string>
+  <string name="see_more_button">See more</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">لا توجد مساحة</string>
   <string name="out_of_space_body">أنت بحاجة إلى %s لمتابعة التثبيت.</string>
@@ -169,6 +170,8 @@
   <string name="contact_support_title" comment="contact_support">تواصل مع فريق الدعم</string>
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">نرجو أن تمنحنا التفاصيل:\n\u2022 متى بدأت المشكلة\n\u2022 على أي لُعبة كنت تجري عملية الشراء\n\nحالما تضغط على إرسال، سيفتح تطبيق البريد الإلكتروني الذي لديك. نرجو أن ترفق لقطة الشاشة أو فيديو حول المشكلة.</string>
   <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">هل تريد تثبيت هذه اللعبة؟</string>
+  <string name="apkfy_install_body">Get your favorite game and much more in Aptoide Games!</string>
+  <string name="apkfy_install_bullet_points">\u2022 Top games with an amazing curation.\n\u2022 No need to log in!&gt;No need to log in!\n\u2022 Special promotions and rewards in your favorite games.</string>
   <string name="app_size_mb_title" comment="s_mb">%s MB</string>
   <string name="uninstalled_title" comment="uninstalled">غير مثبتة</string>
   <string name="error_no_internet_body" comment="please_check_your_internet_connection">نرجو أن تتفقد اتصالك بالإنترنت.</string>
