@@ -95,6 +95,7 @@ class InstallAnalytics(
   fun sendDownloadCompletedEvent(
     packageName: String,
     analyticsPayload: AnalyticsPayload?,
+    appSizeSegment: Int,
   ) {
     genericAnalytics.sendDownloadCompletedEvent(
       packageName = packageName,
@@ -104,13 +105,15 @@ class InstallAnalytics(
     logBIDownloadEvent(
       packageName = packageName,
       status = "success",
-      analyticsPayload = analyticsPayload
+      analyticsPayload = analyticsPayload,
+      appSizeSegment = appSizeSegment,
     )
   }
 
   fun sendDownloadErrorEvent(
     packageName: String,
     analyticsPayload: AnalyticsPayload?,
+    appSizeSegment: Int,
     errorMessage: String?,
     errorType: String?,
     errorCode: Int?,
@@ -125,6 +128,7 @@ class InstallAnalytics(
       packageName = packageName,
       status = "fail",
       analyticsPayload = analyticsPayload,
+      appSizeSegment = appSizeSegment,
       P_ERROR_MESSAGE to errorMessage,
       P_ERROR_TYPE to errorType,
       P_ERROR_HTTP_CODE to errorCode,
@@ -134,6 +138,7 @@ class InstallAnalytics(
   fun sendDownloadAbortEvent(
     packageName: String,
     analyticsPayload: AnalyticsPayload?,
+    appSizeSegment: Int,
     errorMessage: String?,
   ) {
     genericAnalytics.sendDownloadErrorEvent(
@@ -146,6 +151,7 @@ class InstallAnalytics(
       packageName = packageName,
       status = "abort",
       analyticsPayload = analyticsPayload,
+      appSizeSegment = appSizeSegment,
       P_ERROR_MESSAGE to errorMessage,
       P_ERROR_TYPE to "permission",
     )
@@ -154,6 +160,7 @@ class InstallAnalytics(
   fun sendDownloadCancelEvent(
     packageName: String,
     analyticsPayload: AnalyticsPayload?,
+    appSizeSegment: Int,
   ) {
     genericAnalytics.sendDownloadCancelEvent(
       packageName = packageName,
@@ -163,7 +170,8 @@ class InstallAnalytics(
     logBIDownloadEvent(
       packageName = packageName,
       status = "cancel",
-      analyticsPayload = analyticsPayload
+      analyticsPayload = analyticsPayload,
+      appSizeSegment = appSizeSegment,
     )
   }
 
@@ -300,6 +308,7 @@ class InstallAnalytics(
     packageName: String,
     status: String,
     analyticsPayload: AnalyticsPayload?,
+    appSizeSegment: Int,
     vararg pairs: Pair<String, Any?>
   ) = biAnalytics.logEvent(
     name = "download",
@@ -307,6 +316,7 @@ class InstallAnalytics(
       it.toAppBIParameters(packageName) +
         mapOfNonNull(
           P_STATUS to status,
+          P_APP_SIZE_MB to appSizeSegment,
           P_APKFY_APP_INSTALL to it?.isApkfy,
           P_CONTEXT to it?.context,
           P_PREVIOUS_CONTEXT to it?.previousContext,
@@ -347,6 +357,7 @@ class InstallAnalytics(
     private const val P_PREVIOUS_CONTEXT = "previous_context"
     private const val P_STORE = "store"
     private const val P_STATUS = "status"
+    private const val P_APP_SIZE_MB = "app_size_mb"
     private const val P_TAG = "tag"
     private const val P_TRUSTED_BADGE = "trusted_badge"
     private const val P_ERROR_MESSAGE = "error_message"
