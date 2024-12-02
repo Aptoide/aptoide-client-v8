@@ -25,7 +25,7 @@ class InjectionsProvider @Inject constructor(
 ) : ViewModel()
 
 data class ApkfyFeatureFlags(
-  val apkfyBadge: Boolean? = null
+  val apkfyVariant: String? = null
 )
 
 @Composable
@@ -41,10 +41,12 @@ fun rememberApkfyState(): ApkfyUiState? = runPreviewable(
       derivedStateOf {
         apkfyApp?.let { app ->
           apkfyFeatureFlags?.let { flags ->
-            when (flags.apkfyBadge) {
-              false -> ApkfyUiState.VariantA(app)
-              true -> ApkfyUiState.VariantB(app)
-              null -> ApkfyUiState.Default(app)
+            when (flags.apkfyVariant) {
+              "v1" -> ApkfyUiState.VariantA(app)
+              "v2" -> ApkfyUiState.VariantB(app)
+              "v4" -> ApkfyUiState.VariantC(app)
+              "v5" -> ApkfyUiState.VariantD(app)
+              else -> ApkfyUiState.Default(app)
             }
           }
         }
@@ -53,9 +55,9 @@ fun rememberApkfyState(): ApkfyUiState? = runPreviewable(
 
     LaunchedEffect(Unit) {
       coroutineScope.launch {
-        apkfyFeatureFlags = withTimeoutOrNull(1000) {
+        apkfyFeatureFlags = withTimeoutOrNull(2000) {
           ApkfyFeatureFlags(
-            apkfyBadge = vm.featureFlags.getFlag("apkfy_badge")
+            apkfyVariant = vm.featureFlags.getFlagAsString("apkfy_variant"),
           )
         } ?: ApkfyFeatureFlags()
       }
