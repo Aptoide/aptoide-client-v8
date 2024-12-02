@@ -171,7 +171,7 @@
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Por favor, dá-nos todos os detalhes:\n\u2022 Quando é que o problema começou\n\u2022 Em que jogo estás a fazer uma compra\n\nDepois de tocares em Enviar, a tua app de e-mail será aberta. Estás à vontade para anexar um screenshot ou um vídeo sobre o problema!</string>
   <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Queres instalar este jogo?</string>
   <string name="apkfy_install_body">Get your favorite game and much more in Aptoide Games!</string>
-  <string name="apkfy_install_bullet_points">\u2022 Top games with an amazing curation.\n\u2022 No need to log in!&gt;No need to log in!\n\u2022 Special promotions and rewards in your favorite games.</string>
+  <string name="apkfy_install_bullet_points">\u2022 Top games with an amazing curation.\n\u2022 No need to log in!\n\u2022 Special promotions and rewards in your favorite games.</string>
   <string name="app_size_mb_title" comment="s_mb">%s MB</string>
   <string name="uninstalled_title" comment="uninstalled">Desinstalada</string>
   <string name="error_no_internet_body" comment="please_check_your_internet_connection">Por favor, verifica a tua ligação à Internet.</string>
