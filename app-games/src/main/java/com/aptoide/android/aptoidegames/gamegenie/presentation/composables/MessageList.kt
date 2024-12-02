@@ -17,6 +17,7 @@ fun MessageList(
   navigateTo: (String) -> Unit,
   listState: LazyListState,
   modifier: Modifier = Modifier,
+  onAllAppsFail: () -> Unit,
 ) {
   LazyColumn(
     state = listState,
@@ -29,12 +30,16 @@ fun MessageList(
       if (idx == 0) {
         MessageBubble(
           message = null, isUserMessage = false,
-          apps = message.apps.map { app -> app.packageName }, navigateTo = navigateTo
+          apps = message.apps.map { app -> app.packageName },
+          navigateTo = navigateTo,
+          onAllAppsFail = onAllAppsFail
         )
       } else {
         MessageBubble(
           message = message.gpt, isUserMessage = false,
-          apps = message.apps.map { app -> app.packageName }, navigateTo = navigateTo
+          apps = message.apps.map { app -> app.packageName },
+          navigateTo = navigateTo,
+          onAllAppsFail = onAllAppsFail
         )
       }
 
@@ -43,7 +48,8 @@ fun MessageList(
           message = userMessage,
           isUserMessage = true,
           apps = emptyList(), // No apps for user messages
-          navigateTo = navigateTo
+          navigateTo = navigateTo,
+          onAllAppsFail = onAllAppsFail
         )
       }
     }

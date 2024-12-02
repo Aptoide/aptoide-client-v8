@@ -33,6 +33,7 @@ fun MessageBubble(
   isUserMessage: Boolean,
   apps: List<String>? = null,
   navigateTo: (String) -> Unit = {},
+  onAllAppsFail: () -> Unit,
 ) {
   Column(
     modifier = Modifier
@@ -80,11 +81,12 @@ fun MessageBubble(
         )
       }
 
-      apps?.forEach { app ->
+      val processedApps = apps?.map { app ->
         val rememberedApp = rememberApp("package_name=$app")
         val fn = rememberedApp.second
-        when (val state = rememberedApp.first) {
-          AppUiState.Error -> {} //runs the reload function
+        val state = rememberedApp.first
+        when (state) {
+          AppUiState.Error -> {}
           is AppUiState.Idle -> {
             val fullApp = state.app
             AppItem(
@@ -101,6 +103,14 @@ fun MessageBubble(
 
           AppUiState.Loading -> LoadingView()
           AppUiState.NoConnection -> NoConnectionView(fn)
+        }
+        state
+      }
+
+      processedApps?.let {
+        if (processedApps.isNotEmpty() && processedApps.all { state -> state == AppUiState.Error || state == AppUiState.NoConnection }) {
+          // not sure if I should be changing the outer state, but since its controlled via interface it should be ok
+          onAllAppsFail()
         }
       }
     }

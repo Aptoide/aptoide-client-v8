@@ -37,7 +37,8 @@ fun gameGenieScreen() = ScreenData.withAnalytics(
     uiState = uiState,
     navigateTo = navigate,
     onError = viewModel::reload,
-    onMessageSend = viewModel::sendMessage
+    onMessageSend = viewModel::sendMessage,
+    onAllAppsFail = viewModel::setGeneralError
   )
 }
 
@@ -47,6 +48,7 @@ fun ChatbotView(
   navigateTo: (String) -> Unit,
   onError: () -> Unit,
   onMessageSend: (String) -> Unit,
+  onAllAppsFail: () -> Unit
 ) {
   Column(
     modifier = Modifier
@@ -57,13 +59,15 @@ fun ChatbotView(
   ) {
     when (uiState.type) {
       GameGenieUIStateType.LOADING -> ChatScreen(
-        uiState = uiState, navigateTo = navigateTo, onMessageSend = {}, isLoading = true
+        uiState = uiState, navigateTo = navigateTo, onMessageSend = {}, isLoading = true,
+        onAllAppsFail = onAllAppsFail
       )
 
       GameGenieUIStateType.NO_CONNECTION -> NoConnectionView(onRetryClick = onError)
       GameGenieUIStateType.ERROR -> GenericErrorView(onError)
       GameGenieUIStateType.IDLE -> ChatScreen(
-        uiState = uiState, navigateTo = navigateTo, onMessageSend = onMessageSend
+        uiState = uiState, navigateTo = navigateTo, onMessageSend = onMessageSend,
+        onAllAppsFail =  onAllAppsFail
       )
     }
   }
@@ -75,6 +79,7 @@ fun ChatScreen(
   navigateTo: (String) -> Unit,
   onMessageSend: (String) -> Unit,
   isLoading: Boolean = false,
+  onAllAppsFail: () -> Unit,
 ) {
   val listState = rememberLazyListState()
 
@@ -91,7 +96,8 @@ fun ChatScreen(
       navigateTo = navigateTo,
       listState = listState,
       modifier = Modifier
-        .weight(1f)
+        .weight(1f),
+      onAllAppsFail = onAllAppsFail
     )
     if (isLoading) {
       TypingAnimation()
