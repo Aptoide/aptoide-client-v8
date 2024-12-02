@@ -23,7 +23,7 @@ fun MessageList(
     state = listState,
     verticalArrangement = Arrangement.Bottom,
     modifier = modifier
-      .padding(8.dp),
+      .padding(vertical = 8.dp),
     contentPadding = PaddingValues(vertical = 8.dp)
   ) {
     itemsIndexed(messages) { idx, message ->

@@ -1,7 +1,9 @@
 package com.aptoide.android.aptoidegames.home
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -10,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.feature_updates.presentation.UpdatesUiState
 import cm.aptoide.pt.feature_updates.presentation.rememberUpdates
@@ -17,12 +20,12 @@ import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.dto.BundleMeta
 import com.aptoide.android.aptoidegames.analytics.presentation.withBundleMeta
 import com.aptoide.android.aptoidegames.categories.presentation.buildAllCategoriesRoute
-import com.aptoide.android.aptoidegames.gamegenie.presentation.genieRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getCategories
 import com.aptoide.android.aptoidegames.drawables.icons.getDiscovery
 import com.aptoide.android.aptoidegames.drawables.icons.getDownloadIcon
-import com.aptoide.android.aptoidegames.drawables.icons.getGameGenieIcon
+import com.aptoide.android.aptoidegames.drawables.icons.getGameGenie
 import com.aptoide.android.aptoidegames.drawables.icons.getSearch
+import com.aptoide.android.aptoidegames.gamegenie.presentation.genieRoute
 import com.aptoide.android.aptoidegames.search.presentation.searchRoute
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.updates.presentation.updatesRoute
@@ -80,7 +83,25 @@ fun BottomBarMenus.Icon() = when (this) {
       }
     }
   }
-  BottomBarMenus.GameGenie -> getGameGenieIcon(Palette.GreyLight).AsBottomBarIcon()
+
+  BottomBarMenus.GameGenie -> {
+    Box {
+      getGameGenie(Palette.Primary).AsBottomBarIcon()
+      Box(
+        modifier = Modifier
+          .align(Alignment.TopEnd)
+          .offset(x = 12.dp)
+      ) {
+        Image(
+          painter = painterResource(id = R.drawable.beta_logo),
+          contentDescription = "",
+          modifier = Modifier
+            .size(height = 10.dp, width = 19.dp)
+        )
+      }
+    }
+  }
+
 }
 
 @Composable
