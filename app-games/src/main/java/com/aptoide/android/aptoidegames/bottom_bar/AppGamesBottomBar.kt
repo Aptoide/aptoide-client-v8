@@ -29,8 +29,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.runPreviewable
-import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
+import com.aptoide.android.aptoidegames.gamegenie.presentation.rememberGameGenieVisibility
 import com.aptoide.android.aptoidegames.home.BottomBarMenus
 import com.aptoide.android.aptoidegames.home.Icon
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -56,11 +56,13 @@ fun AppGamesBottomBarPreview() {
 @Composable
 fun AppGamesBottomBar(navController: NavController) {
   val genericAnalytics = rememberGenericAnalytics()
-  val selection = selectionIndex(items = bottomNavigationItems, navController = navController)
+  val shouldShowGameGenie = rememberGameGenieVisibility()
+  val filteredBottomNavigationItems = bottomNavigationItems.filter(shouldShowGameGenie)
+  val selection =
+    selectionIndex(items = filteredBottomNavigationItems, navController = navController)
   if (selection >= 0) {
     AppGamesBottomNavigation(backgroundColor = Color.Transparent) {
-      bottomNavigationItems.forEachIndexed { index, item ->
-        if (item == BottomBarMenus.GameGenie && !BuildConfig.SHOW_GAME_GENIE) return@AppGamesBottomNavigation
+      filteredBottomNavigationItems.forEachIndexed { index, item ->
         val isSelected = selection == index
         AddBottomNavigationItem(
           item = item,
@@ -87,6 +89,15 @@ fun AppGamesBottomBar(navController: NavController) {
     }
   }
 }
+
+fun List<BottomBarMenus>.filter(shouldShowGameGenie: Boolean) =
+  filter {
+    if (shouldShowGameGenie) {
+      it != BottomBarMenus.Categories
+    } else {
+      it != BottomBarMenus.GameGenie
+    }
+  }
 
 @Composable
 fun RowScope.AddBottomNavigationItem(
@@ -143,8 +154,8 @@ val bottomNavigationItems = listOf(
   BottomBarMenus.Games,
   BottomBarMenus.Search,
   BottomBarMenus.Categories,
+  BottomBarMenus.GameGenie,
   BottomBarMenus.Updates,
-  BottomBarMenus.GameGenie
 )
 
 /**
