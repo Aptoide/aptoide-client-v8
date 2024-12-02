@@ -77,8 +77,24 @@ class Updates @Inject constructor(
     }
   }
 
-  suspend fun check() = mutex.withLock {
-    val apksData = getInstalledApps()
+  suspend fun checkNonUpdatableApps() {
+    getInstalledApps()
+      .filter { !isAppUpdatable(it.packageName) }
+      .let { getUpdates(it) }
+
+    getAppsUpdates().first().let {
+      if (it.isNotEmpty()) {
+        updatesNotificationBuilder.showUpdatesNotification(it)
+      }
+    }
+  }
+
+  suspend fun checkUpdatableApps(): List<AppJSON> = getInstalledApps()
+    .filter { isAppUpdatable(it.packageName) }
+    .let { getUpdates(it) }
+
+  private suspend fun getUpdates(apps: List<PackageInfo>): List<AppJSON> = mutex.withLock {
+    val apksData = apps
       .map {
         ApkData(
           signature = packageManager.getSignature(it.packageName).uppercase(),
@@ -88,10 +104,8 @@ class Updates @Inject constructor(
       }
       .filter { it.signature.isNotEmpty() }
     val updates = updatesRepository.loadUpdates(apksData)
-    updatesRepository.replaceWith(*updates.toTypedArray())
-    if (updates.isNotEmpty()) {
-      updatesNotificationBuilder.showUpdatesNotification(updates)
-    }
+    updatesRepository.saveOrReplace(*updates.toTypedArray())
+    updates
   }
 
   suspend fun getAppsUpdates(): Flow<List<App>> {
@@ -113,14 +127,13 @@ class Updates @Inject constructor(
       .map {
         mutex.withLock { currentUpdates = it }
         it.let(appsListMapper::map)
-          .sortedBy {
+          .sortedByDescending {
             if (it.packageName in prioritizedPackages) {
               LocalDate.now().plusDays(1).toString()
             } else {
               it.modifiedDate
             }
           }
-          .reversed()
       }
   }
 
@@ -128,16 +141,14 @@ class Updates @Inject constructor(
     packageManager.getInstalledPackages().filter { it.ifNormalAppOrGame() }
 
   suspend fun autoUpdate() {
-    getAppsUpdates()
-      .first()
-      .filter {
-        if (VERSION.SDK_INT >= VERSION_CODES.UPSIDE_DOWN_CAKE) {
-          packageManager.getInstallSourceInfo(it.packageName).updateOwnerPackageName == applicationContext.packageName
-        } else if (VERSION.SDK_INT >= VERSION_CODES.R) {
-          packageManager.getInstallSourceInfo(it.packageName).installingPackageName == applicationContext.packageName
+    checkUpdatableApps()
+      .let(appsListMapper::map)
+      .sortedBy {
+        if (it.packageName == applicationContext.packageName) {
+          LocalDate.now().plusDays(1).toString()
         } else {
-          false
-        } || it.packageName == applicationContext.packageName
+          it.modifiedDate
+        }
       }
       .forEach {
         installManager.getApp(it.packageName).install(
@@ -149,4 +160,13 @@ class Updates @Inject constructor(
         )
       }
   }
+
+  private fun isAppUpdatable(packageName: String) =
+    if (VERSION.SDK_INT >= VERSION_CODES.UPSIDE_DOWN_CAKE) {
+      packageManager.getInstallSourceInfo(packageName).updateOwnerPackageName == applicationContext.packageName
+    } else if (VERSION.SDK_INT >= VERSION_CODES.R) {
+      packageManager.getInstallSourceInfo(packageName).installingPackageName == applicationContext.packageName
+    } else {
+      false
+    }
 }

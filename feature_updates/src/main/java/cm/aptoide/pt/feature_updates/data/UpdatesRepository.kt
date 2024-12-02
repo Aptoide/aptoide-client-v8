@@ -61,8 +61,7 @@ class UpdatesRepository @Inject constructor(
     )
   }
 
-  suspend fun replaceWith(vararg apps: AppJSON) = withContext(scope.coroutineContext) {
-    appUpdateDao.clear()
+  suspend fun saveOrReplace(vararg apps: AppJSON) = withContext(scope.coroutineContext) {
     appUpdateDao.save(apps.map { it.toAppUpdateData() })
   }
 
