@@ -117,6 +117,7 @@
   <string name="later_button">Later</string>
   <string name="trusted_game_badge">Trusted Game</string>
   <string name="official_game_badge">Official Game</string>
+  <string name="see_more_button">See more</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Hết dung lượng</string>
   <string name="out_of_space_body">Bạn cần %s để tiếp tục cài đặt.</string>
@@ -169,6 +170,8 @@
   <string name="contact_support_title" comment="contact_support">Liên hệ bộ phận hỗ trợ</string>
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Vui lòng cung cấp cho chúng tôi tất cả thông tin chi tiết:\n\u2022 Sự cố bắt đầu khi nào\n\u2022 Bạn đang mua hàng trên trò chơi nào\n\nNgay khi nhấn Gửi, ứng dụng thư của bạn sẽ mở ra. Vui lòng đính kèm ảnh chụp màn hình hoặc video về vấn đề này!</string>
   <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Bạn có muốn cài đặt trò chơi này không?</string>
+  <string name="apkfy_install_body">Get your favorite game and much more in Aptoide Games!</string>
+  <string name="apkfy_install_bullet_points">\u2022 Top games with an amazing curation.\n\u2022 No need to log in!&gt;No need to log in!\n\u2022 Special promotions and rewards in your favorite games.</string>
   <string name="app_size_mb_title" comment="s_mb">%s MB</string>
   <string name="uninstalled_title" comment="uninstalled">Gỡ cài đặt</string>
   <string name="error_no_internet_body" comment="please_check_your_internet_connection">Vui lòng kiểm tra kết nối Internet của bạn.</string>

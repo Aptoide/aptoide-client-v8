@@ -117,6 +117,7 @@
   <string name="later_button">Later</string>
   <string name="trusted_game_badge">Trusted Game</string>
   <string name="official_game_badge">Official Game</string>
+  <string name="see_more_button">See more</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Kein Speicher mehr</string>
   <string name="out_of_space_body">Sie benötigen %s um die Installation abschliessen zu können.</string>
@@ -169,6 +170,8 @@
   <string name="contact_support_title" comment="contact_support">Kontaktiere den Support</string>
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Bitte nenne uns alle Details:\n\u2022 Wann hat das Problem begonnen\n\u2022 Bei welchem Spiel hast du einen Kauf getätigt?\n\nFüge gerne einen Screenshot oder ein Video über das Problem hinzu!</string>
   <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Möchtest du dieses Spiel installieren?</string>
+  <string name="apkfy_install_body">Get your favorite game and much more in Aptoide Games!</string>
+  <string name="apkfy_install_bullet_points">\u2022 Top games with an amazing curation.\n\u2022 No need to log in!&gt;No need to log in!\n\u2022 Special promotions and rewards in your favorite games.</string>
   <string name="app_size_mb_title" comment="s_mb">%s MB</string>
   <string name="uninstalled_title" comment="uninstalled">Deinstalliert</string>
   <string name="error_no_internet_body" comment="please_check_your_internet_connection">Bitte überprüfe deine Internetverbindung.</string>

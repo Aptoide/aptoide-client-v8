@@ -117,6 +117,7 @@
   <string name="later_button">ภายหลัง</string>
   <string name="trusted_game_badge">เกมส์ที่น่าเชื่อถือ</string>
   <string name="official_game_badge">เกมส์อย่างเป็นทางการ</string>
+  <string name="see_more_button">See more</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">ไม่มีพื้นที่ว่าง</string>
   <string name="out_of_space_body">คุณต้องใช้ %s เพื่อดำเนินการติดตั้งต่อ</string>
@@ -169,6 +170,8 @@
   <string name="contact_support_title" comment="contact_support">ติดต่อฝ่ายสนับสนุน</string>
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">โปรดให้รายละเอียดทั้งหมดแก่เรา:\n\u2022 ปัญหาเริ่มต้นเมื่อใด\n\u2022 คุณกำลังทำการซื้อเกมใด\n\nเมื่อคุณแตะส่ง แอปอีเมลของคุณจะเปิดขึ้น คุณสามารถแนบภาพหน้าจอหรือวิดีโอเกี่ยวกับปัญหานี้ได้เลย!</string>
   <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">คุณต้องการติดตั้งเกมส์นี้ไหม</string>
+  <string name="apkfy_install_body">Get your favorite game and much more in Aptoide Games!</string>
+  <string name="apkfy_install_bullet_points">\u2022 Top games with an amazing curation.\n\u2022 No need to log in!&gt;No need to log in!\n\u2022 Special promotions and rewards in your favorite games.</string>
   <string name="app_size_mb_title" comment="s_mb">%sMB</string>
   <string name="uninstalled_title" comment="uninstalled">ถอดการติดตั้งแล้ว</string>
   <string name="error_no_internet_body" comment="please_check_your_internet_connection">โปรดตรวจสอบการเชื่อมต่ออินเตอร์เน็ต</string>
