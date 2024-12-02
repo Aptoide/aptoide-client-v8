@@ -63,6 +63,15 @@ class ChatbotViewModel @Inject constructor(
     )
   }
 
+  fun setGeneralError() {
+    Timber.w("Updated state for general error, all apps failed to load")
+    viewModelState.update {
+      it.copy(
+        type = GameGenieUIStateType.ERROR
+      )
+    }
+  }
+
   private fun handleMessageProcessing(
     updateConversation: () -> List<ChatInteraction>,
     onSuccess: (GameGenieResponse, List<String>) -> Unit,
