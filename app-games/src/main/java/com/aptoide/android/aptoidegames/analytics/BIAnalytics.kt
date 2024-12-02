@@ -87,11 +87,18 @@ class BIAnalytics(private val analyticsSender: AnalyticsSender) {
     }
   }
 
-  suspend fun setFeatureFlagsProperties(featureFlags: FeatureFlags) {
-    val apkfyBadge = featureFlags.getFlag("apkfy_badge", false)
-    val group = if (!apkfyBadge) "group_a" else "group_b"
+  private suspend fun setFeatureFlagsProperties(featureFlags: FeatureFlags) {
+    val apkfyVariant = featureFlags.getFlagAsString("apkfy_variant")
+    val testGroup =
+      when (apkfyVariant) {
+        "v1" -> "group_a"
+        "v2" -> "group_b"
+        "v4" -> "group_c"
+        "v5" -> "group_d"
+        else -> "NA"
+      }
 
-    analyticsSender.setUserProperties("ab_test_apkfy_dec_11" to group)
+    analyticsSender.setUserProperties("ab_test_apkfy_dec_11" to testGroup)
   }
 
   fun setUTMProperties(
