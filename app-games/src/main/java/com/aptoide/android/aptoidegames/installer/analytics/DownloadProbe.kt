@@ -15,11 +15,13 @@ class DownloadProbe(
   private val packageDownloader: PackageDownloader,
   private val analytics: InstallAnalytics,
 ) : PackageDownloader {
+  private var cachedSizes = mutableMapOf<String, Long>()
 
   override fun download(
     packageName: String,
     installPackageInfo: InstallPackageInfo,
   ): Flow<Int> {
+    cachedSizes[packageName] = installPackageInfo.filesSize
     val analyticsPayload = installPackageInfo.payload.toAnalyticsPayload()
     return packageDownloader.download(packageName, installPackageInfo)
       .onStart {
@@ -32,7 +34,8 @@ class DownloadProbe(
         when (it) {
           is CancellationException -> analytics.sendDownloadCancelEvent(
             packageName = packageName,
-            analyticsPayload = analyticsPayload
+            analyticsPayload = analyticsPayload,
+            appSizeSegment = calcAppSizeSegment(bytes = installPackageInfo.filesSize)
           )
 
           is AbortException -> {
@@ -41,12 +44,14 @@ class DownloadProbe(
               WRITE_EXTERNAL_STORAGE_NOT_ALLOWED -> analytics.sendDownloadAbortEvent(
                 packageName = packageName,
                 analyticsPayload = analyticsPayload,
-                errorMessage = it.message
+                errorMessage = it.message,
+                appSizeSegment = calcAppSizeSegment(bytes = installPackageInfo.filesSize)
               )
 
               else -> analytics.sendDownloadErrorEvent(
                 packageName = packageName,
                 analyticsPayload = analyticsPayload,
+                appSizeSegment = calcAppSizeSegment(bytes = installPackageInfo.filesSize),
                 errorMessage = it.message,
                 errorType = it::class.simpleName,
                 errorCode = null
@@ -56,12 +61,14 @@ class DownloadProbe(
 
           null -> analytics.sendDownloadCompletedEvent(
             packageName = packageName,
-            analyticsPayload = analyticsPayload
+            analyticsPayload = analyticsPayload,
+            appSizeSegment = calcAppSizeSegment(bytes = installPackageInfo.filesSize)
           )
 
           else -> analytics.sendDownloadErrorEvent(
             packageName = packageName,
             analyticsPayload = analyticsPayload,
+            appSizeSegment = calcAppSizeSegment(bytes = installPackageInfo.filesSize),
             errorMessage = it.message,
             errorType = it::class.simpleName,
             errorCode = (it as? HttpException)?.code()
@@ -78,9 +85,16 @@ class DownloadProbe(
     // We need to call it here
     if (!cancelled) analytics.sendDownloadCancelEvent(
       packageName = packageName,
-      analyticsPayload = null
+      analyticsPayload = null,
+      appSizeSegment = calcAppSizeSegment(
+        bytes = cachedSizes[packageName] ?: -100000000L //fallback so we get 0
+      )
     )
 
     return cancelled
   }
+}
+
+fun calcAppSizeSegment(bytes: Long): Int {
+  return (bytes.toInt() / 1000 / 1000 / 100 + 1) * 100
 }
