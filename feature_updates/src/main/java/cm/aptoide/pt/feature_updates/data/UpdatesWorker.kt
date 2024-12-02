@@ -22,7 +22,7 @@ class UpdatesWorker @AssistedInject constructor(
 ) : CoroutineWorker(appContext, workerParams) {
 
   override suspend fun doWork(): Result {
-    updates.check()
+    updates.checkNonUpdatableApps()
     return Result.success()
   }
 

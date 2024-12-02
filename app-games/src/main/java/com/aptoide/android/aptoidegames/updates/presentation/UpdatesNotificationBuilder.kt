@@ -15,7 +15,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import cm.aptoide.pt.extensions.isAllowed
-import cm.aptoide.pt.feature_apps.data.model.AppJSON
+import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_updates.presentation.UpdatesNotificationProvider
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.MainActivity
@@ -64,7 +64,7 @@ class UpdatesNotificationBuilder @Inject constructor(
   }
 
   override suspend fun showUpdatesNotification(
-    updates: List<AppJSON>
+    updates: List<App>
   ) {
     val title =
       if (updates.size == 1 && updates.first().packageName == BuildConfig.APPLICATION_ID) {
