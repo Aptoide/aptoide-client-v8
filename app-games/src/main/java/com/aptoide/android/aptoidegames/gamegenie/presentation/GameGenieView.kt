@@ -31,7 +31,7 @@ const val genieRoute = "chatbot"
 
 fun gameGenieScreen() = ScreenData.withAnalytics(
   route = genieRoute,
-  screenAnalyticsName = "Chat",
+  screenAnalyticsName = "gamegenie",
   arguments = emptyList()
 ) { _, navigate, _ ->
 

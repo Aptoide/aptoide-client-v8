@@ -304,6 +304,11 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
     params = emptyMap()
   )
 
+  fun sendBottomBarGameGenieClick() = analyticsSender.logEvent(
+    name = "bn_gamegenie_clicked",
+    params = emptyMap()
+  )
+
   fun sendBottomBarCategoriesClick() = analyticsSender.logEvent(
     name = "bn_categories_clicked",
     params = emptyMap()

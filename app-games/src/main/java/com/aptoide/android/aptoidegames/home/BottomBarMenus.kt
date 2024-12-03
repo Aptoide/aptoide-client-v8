@@ -57,7 +57,7 @@ sealed class BottomBarMenus(
   )
 
   object GameGenie : BottomBarMenus(
-    route = genieRoute,
+    route = genieRoute.withBundleMeta(BundleMeta("gamegenie", "app")),
     titleId = R.string.genai_bottom_navigation_gamegenie_button
   )
 }
