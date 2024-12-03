@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
-import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.isInCatappult
 import cm.aptoide.pt.feature_apps.data.randomApp
 import com.aptoide.android.aptoidegames.BottomSheetContent
@@ -25,7 +24,7 @@ import com.aptoide.android.aptoidegames.BottomSheetHeader
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.OverrideAnalyticsAPKFY
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
-import com.aptoide.android.aptoidegames.apkfy.presentation.rememberBadgeVisibility
+import com.aptoide.android.aptoidegames.apkfy.presentation.ApkfyUiState
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getTrustedIcon
 import com.aptoide.android.aptoidegames.drawables.icons.getVerifiedIcon
@@ -35,15 +34,20 @@ import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 
-class ApkfyBottomSheetContent(private val app: App) : BottomSheetContent {
+class ApkfyBottomSheetContent(private val apkfyState: ApkfyUiState) : BottomSheetContent {
   @Composable override fun Draw(
     dismiss: () -> Unit,
     navigate: (String) -> Unit,
   ) {
     val analytics = rememberGenericAnalytics()
+    val app = apkfyState.app
 
     LaunchedEffect(Unit) {
-      analytics.sendApkfyShown()
+      if(apkfyState is ApkfyUiState.Default) {
+        analytics.sendApkfyTimeout()
+      } else {
+        analytics.sendApkfyShown()
+      }
     }
 
     OverrideAnalyticsAPKFY(navigate) { navigateTo ->
@@ -70,17 +74,17 @@ class ApkfyBottomSheetContent(private val app: App) : BottomSheetContent {
           InstallViewShort(app)
         }
         Spacer(modifier = Modifier.height(24.dp))
-        Badge(app)
+        Badge(apkfyState)
       }
     }
   }
 }
 
 @Composable
-fun Badge(app: App) {
-  val state = rememberBadgeVisibility()
+fun Badge(apkfyState: ApkfyUiState) {
+  val state = apkfyState is ApkfyUiState.VariantB
   when {
-    state && (app.isInCatappult() == true) -> Row(
+    state && (apkfyState.app.isInCatappult() == true) -> Row(
       verticalAlignment = Alignment.CenterVertically,
       modifier = Modifier
         .background(color = Palette.Official)
@@ -99,7 +103,7 @@ fun Badge(app: App) {
       )
     }
 
-    state && (app.malware?.lowercase() == "trusted") -> Row(
+    state && (apkfyState.app.malware?.lowercase() == "trusted") -> Row(
       verticalAlignment = Alignment.CenterVertically,
       modifier = Modifier
         .background(color = Palette.Trusted)
@@ -128,7 +132,7 @@ fun ApkfyBottomSheetPreview() {
   AptoideTheme {
     Column {
       Spacer(Modifier.weight(1f))
-      ApkfyBottomSheetContent(app = randomApp).Draw({}, { })
+      ApkfyBottomSheetContent(apkfyState = ApkfyUiState.Default(randomApp)).Draw({}, { })
     }
   }
 }
