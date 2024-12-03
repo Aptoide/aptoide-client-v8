@@ -73,7 +73,7 @@ fun AppGamesBottomBar(navController: NavController) {
               BottomBarMenus.Search -> genericAnalytics.sendBottomBarSearchClick()
               BottomBarMenus.Categories -> genericAnalytics.sendBottomBarCategoriesClick()
               BottomBarMenus.Updates -> genericAnalytics.sendBottomBarUpdatesClick()
-              BottomBarMenus.GameGenie -> {}
+              BottomBarMenus.GameGenie -> genericAnalytics.sendBottomBarGameGenieClick()
             }
             navController.navigate(item.route) {
               popUpTo(navController.graph.startDestinationId) {
