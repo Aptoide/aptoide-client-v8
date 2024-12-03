@@ -550,6 +550,8 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
 
   fun sendApkfyShown() = analyticsSender.logEvent("apkfy_shown", params = emptyMap())
 
+  fun sendApkfyTimeout() = analyticsSender.logEvent("apkfy_timeout", params = emptyMap())
+
   fun sendApkfyInstallClicked(
     app: App,
     networkType: String,

@@ -26,12 +26,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import cm.aptoide.pt.extensions.animatedComposable
 import cm.aptoide.pt.extensions.staticComposable
-import cm.aptoide.pt.feature_apkfy.presentation.rememberApkfyApp
 import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
 import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import com.aptoide.android.aptoidegames.AptoideGamesBottomSheet
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.apkfy.ApkfyBottomSheetContent
+import com.aptoide.android.aptoidegames.apkfy.presentation.rememberApkfyState
 import com.aptoide.android.aptoidegames.appview.appViewScreen
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.appview.permissions.appPermissionsScreen
@@ -75,7 +75,7 @@ fun MainView(navController: NavHostController) {
   val promotionData by promotionsViewModel.uiState.collectAsState()
   val promotionsAnalytics = rememberPromotionsAnalytics()
 
-  val apkfyApp = rememberApkfyApp()
+  val apkfyState = rememberApkfyState()
   var apkfyShown by remember { mutableStateOf(false) }
   val (promoCodeApp, clearPromoCode) = rememberPromoCodeApp()
 
@@ -141,9 +141,9 @@ fun MainView(navController: NavHostController) {
             }
           )
         }
-        LaunchedEffect(apkfyApp, apkfyShown) {
-          if (apkfyApp != null && !apkfyShown) {
-            showBottomSheet(ApkfyBottomSheetContent(apkfyApp))
+        LaunchedEffect(apkfyState, apkfyShown) {
+          if (apkfyState != null && !apkfyShown) {
+            showBottomSheet(ApkfyBottomSheetContent(apkfyState))
             apkfyShown = true
           }
         }
