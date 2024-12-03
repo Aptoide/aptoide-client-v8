@@ -543,6 +543,11 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
     params = mapOf("feedback_type" to feedbackType)
   )
 
+  fun sendFeatureFlagsFetch(duration: Long) = analyticsSender.logEvent(
+    name = "feature_flags_fetch",
+    params = mapOf("duration" to duration)
+  )
+
   fun sendApkfyShown() = analyticsSender.logEvent("apkfy_shown", params = emptyMap())
 
   fun sendApkfyInstallClicked(
