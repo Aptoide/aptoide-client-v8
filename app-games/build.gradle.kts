@@ -137,11 +137,6 @@ android {
         value = "\"${project.property("INDICATIVE_KEY_DEV")}\""
       )
       buildConfigField(
-        type = "boolean",
-        name = "SHOW_GAME_GENIE",
-        value = project.findProperty("SHOW_GAME_GENIE_DEV")?.toString() ?: "false"
-      )
-      buildConfigField(
         type = "String",
         name = "UTM_SOURCE",
         value = "\"AG_dev\""
@@ -180,11 +175,6 @@ android {
         type = "String",
         name = "INDICATIVE_KEY",
         value = "\"${project.property("INDICATIVE_KEY_PROD")}\""
-      )
-      buildConfigField(
-        type = "boolean",
-        name = "SHOW_GAME_GENIE",
-        value = project.findProperty("SHOW_GAME_GENIE_PROD")?.toString() ?: "false"
       )
       buildConfigField(
         type = "String",
