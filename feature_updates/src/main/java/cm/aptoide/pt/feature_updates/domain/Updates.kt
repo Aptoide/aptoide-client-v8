@@ -1,10 +1,8 @@
 package cm.aptoide.pt.feature_updates.domain
 
 import android.content.Context
-import android.content.pm.InstallSourceInfo
 import android.content.pm.PackageInfo
-import android.os.Build.VERSION
-import android.os.Build.VERSION_CODES
+import cm.aptoide.pt.extensions.canBeInstalledSilentlyBy
 import cm.aptoide.pt.extensions.compatVersionCode
 import cm.aptoide.pt.extensions.getSignature
 import cm.aptoide.pt.feature_apps.data.App
@@ -100,7 +98,7 @@ class Updates @Inject constructor(
 
   suspend fun checkNonUpdatableApps() {
     installManager.installedApps
-      .filter { !isAppUpdatable(it.installSourceInfo) }
+      .filter { !it.installSourceInfo.canBeInstalledSilentlyBy(myPackageName) }
       .mapNotNull { it.packageInfo }
       .also { getUpdates(it) }
 
@@ -129,7 +127,7 @@ class Updates @Inject constructor(
 
   suspend fun autoUpdate() {
     val installers = installManager.installedApps
-      .filter { isAppUpdatable(it.installSourceInfo) }
+      .filter { it.installSourceInfo.canBeInstalledSilentlyBy(myPackageName) }
     val updates = installers
       .mapNotNull { it.packageInfo }
       .let { getUpdates(it) }
@@ -155,13 +153,4 @@ class Updates @Inject constructor(
         }
     }
   }
-
-  private fun isAppUpdatable(installSourceInfo: InstallSourceInfo?) =
-    if (VERSION.SDK_INT >= VERSION_CODES.UPSIDE_DOWN_CAKE) {
-      installSourceInfo?.updateOwnerPackageName == myPackageName
-    } else if (VERSION.SDK_INT >= VERSION_CODES.R) {
-      installSourceInfo?.installingPackageName == myPackageName
-    } else {
-      false
-    }
 }
