@@ -123,6 +123,7 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
     initPayments()
     initIndicative()
     setUserProperties()
+    updates.initialize(this)
     AptoideMMPCampaign.init(BuildConfig.OEMID, BuildConfig.UTM_SOURCE)
   }
 
