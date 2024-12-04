@@ -119,7 +119,7 @@ class Updates @Inject constructor(
     val apksData = apps
       .map {
         ApkData(
-          signature = packageManager.getSignature(it.packageName).uppercase(),
+          signature = it.getSignature()?.uppercase() ?: "",
           packageName = it.packageName,
           versionCode = PackageInfoCompat.getLongVersionCode(it)
         )
