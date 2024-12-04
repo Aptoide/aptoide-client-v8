@@ -5,7 +5,7 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
-import androidx.core.content.pm.PackageInfoCompat
+import cm.aptoide.pt.extensions.compatVersionCode
 import cm.aptoide.pt.extensions.getInstalledPackages
 import cm.aptoide.pt.extensions.getSignature
 import cm.aptoide.pt.extensions.ifNormalAppOrGame
@@ -67,7 +67,7 @@ class Updates @Inject constructor(
             } else {
               currentUpdates.find {
                 it.packageName == appInstaller.packageName
-                  && it.file.vercode <= PackageInfoCompat.getLongVersionCode(packageInfo)
+                  && it.file.vercode <= packageInfo.compatVersionCode
               }
             }
               ?.also { updatesRepository.remove(it) }
@@ -75,7 +75,7 @@ class Updates @Inject constructor(
         }
       mutex.withLock {
         val installedApps = getInstalledApps()
-          .map { it.packageName to PackageInfoCompat.getLongVersionCode(it) }
+          .map { it.packageName to it.compatVersionCode }
         val values = updatesRepository.getUpdates().first()
         val toRemove = values.filterNot { update ->
           installedApps.any { it.first == update.packageName && it.second < update.file.vercode }
@@ -121,7 +121,7 @@ class Updates @Inject constructor(
         ApkData(
           signature = it.getSignature()?.uppercase() ?: "",
           packageName = it.packageName,
-          versionCode = PackageInfoCompat.getLongVersionCode(it)
+          versionCode = it.compatVersionCode
         )
       }
       .filter { it.signature.isNotEmpty() }
