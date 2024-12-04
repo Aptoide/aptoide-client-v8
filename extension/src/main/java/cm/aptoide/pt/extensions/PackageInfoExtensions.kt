@@ -4,11 +4,14 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.os.Build
 import android.os.Environment
+import androidx.core.content.pm.PackageInfoCompat
 import java.io.File
 import java.security.MessageDigest
 
 private const val systemFlags =
   ApplicationInfo.FLAG_SYSTEM or ApplicationInfo.FLAG_UPDATED_SYSTEM_APP
+
+val PackageInfo.compatVersionCode: Long get() = PackageInfoCompat.getLongVersionCode(this)
 
 fun PackageInfo.ifNormalApp(): Boolean {
   val isNotSystem = applicationInfo?.run { flags and systemFlags == 0 } == true
