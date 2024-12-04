@@ -1,5 +1,6 @@
 package cm.aptoide.pt.install_manager.repository
 
+import android.content.pm.InstallSourceInfo
 import android.content.pm.PackageInfo
 
 /**
@@ -7,14 +8,14 @@ import android.content.pm.PackageInfo
  *
  * This interface provides the system info about the package.
  */
-interface PackageInfoRepository {
+interface AppInfoRepository {
 
   /**
    * Get all installed package names.
    *
    * @returns all installed apps package info
    */
-  fun getAll(): Set<PackageInfo>
+  fun getAllPackageInfos(): Set<PackageInfo>
 
   /**
    * Get package info.
@@ -22,7 +23,15 @@ interface PackageInfoRepository {
    * @param packageName - a package name
    * @returns info about the [packageName] if app is installed. Should return null in case of error.
    */
-  fun get(packageName: String): PackageInfo?
+  fun getPackageInfo(packageName: String): PackageInfo?
+
+  /**
+   * Get install source info.
+   *
+   * @param packageName - a package name
+   * @returns info about the install source of [packageName] if app is installed. Should return null in case of error.
+   */
+  fun getInstallSourceInfo(packageName: String): InstallSourceInfo?
 
   /**
    * Sets a listener for changes.

@@ -97,7 +97,7 @@ internal class AppTest {
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
     m And "app package installer mock will not affect package info repository mock"
-    mocks.packageInstaller.packageInfoRepositoryMock = null
+    mocks.packageInstaller.appInfoRepositoryMock = null
     m And "app provided for the outdated version package name"
     val app = installManager.getApp(outdatedPackage)
 
@@ -139,29 +139,45 @@ internal class AppTest {
     val result = app.packageInfoFlow.collectAsync(scope)
     m And "get null package info"
     val nullInfo = app.packageInfo
-    m And "new package info is added by the system"
-    mocks.packageInfoRepository.update(notInstalledPackage, installedInfo(notInstalledPackage, 0))
+    m And "new app info is added by the system"
+    mocks.appInfoRepository.update(
+      pn = notInstalledPackage,
+      pi = installedInfo(notInstalledPackage, 0),
+      isi = installSourceInfo(0)
+    )
     m And "get new package info from the app immediately"
     val newInfoNow = app.packageInfo
     m And "get new package info from the app later"
     scope.advanceTimeBy(4.seconds)
     val newInfoLater = app.packageInfo
-    m And "package info is removed by the system"
-    mocks.packageInfoRepository.update(notInstalledPackage, null)
+    m And "app info is removed by the system"
+    mocks.appInfoRepository.update(
+      pn = notInstalledPackage,
+      pi = null,
+      isi = null
+    )
     m And "get null package info from the app immediately"
     val nullInfoNow = app.packageInfo
     m And "get null package info from the app later"
     scope.advanceTimeBy(4.seconds)
     val nullInfoLater = app.packageInfo
-    m And "newer package info is added by the system"
-    mocks.packageInfoRepository.update(notInstalledPackage, installedInfo(notInstalledPackage))
+    m And "newer app info is added by the system"
+    mocks.appInfoRepository.update(
+      pn = notInstalledPackage,
+      pi = installedInfo(notInstalledPackage),
+      isi = installSourceInfo()
+    )
     m And "get newer package info from the app immediately"
     val newerInfoNow = app.packageInfo
     m And "get newer package info from the app later"
     scope.advanceTimeBy(4.seconds)
     val newerInfoLater = app.packageInfo
-    m And "package info is removed by the system again"
-    mocks.packageInfoRepository.update(notInstalledPackage, null)
+    m And "app info is removed by the system again"
+    mocks.appInfoRepository.update(
+      pn = notInstalledPackage,
+      pi = null,
+      isi = null
+    )
     m And "get null package info again from the app immediately"
     val nullAgainInfoNow = app.packageInfo
     scope.advanceUntilIdle()
