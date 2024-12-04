@@ -55,7 +55,7 @@ fun rememberApkfyState(): ApkfyUiState? = runPreviewable(
 
     LaunchedEffect(Unit) {
       coroutineScope.launch {
-        apkfyFeatureFlags = withTimeoutOrNull(2000) {
+        apkfyFeatureFlags = withTimeoutOrNull(5000) {
           ApkfyFeatureFlags(
             apkfyVariant = vm.featureFlags.getFlagAsString("apkfy_variant"),
           )
