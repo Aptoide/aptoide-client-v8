@@ -20,7 +20,6 @@ import cm.aptoide.pt.install_info_mapper.domain.InstallPackageInfoMapper
 import cm.aptoide.pt.install_manager.InstallManager
 import cm.aptoide.pt.install_manager.dto.Constraints
 import cm.aptoide.pt.install_manager.dto.Constraints.NetworkType.UNMETERED
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -42,19 +41,21 @@ class Updates @Inject constructor(
   private val updatesNotificationBuilder: UpdatesNotificationProvider,
   private val installPackageInfoMapper: InstallPackageInfoMapper,
   private val updatesPreferencesRepository: UpdatesPreferencesRepository,
-  @ApplicationContext private val applicationContext: Context,
 ) {
 
   val mutex: Mutex = Mutex()
 
   private var currentUpdates = listOf<AppJSON>()
 
-  init {
-    UpdatesWorker.enqueue(applicationContext)
+  private lateinit var myPackageName: String
+
+  fun initialize(context: Context) {
+    myPackageName = context.packageName
+    UpdatesWorker.enqueue(context)
     // TODO: clean this for testability
     CoroutineScope(Dispatchers.IO).launch {
       if (updatesPreferencesRepository.shouldAutoUpdateGames().first())
-        AutoUpdateWorker.enqueue(applicationContext)
+        AutoUpdateWorker.enqueue(context)
       installManager.appsChanges
         .collect { appInstaller ->
           mutex.withLock {
@@ -134,7 +135,7 @@ class Updates @Inject constructor(
       .let { getUpdates(it) }
       .let(appsListMapper::map)
       .sortedBy {
-        if (it.packageName == applicationContext.packageName) {
+        if (it.packageName == myPackageName) {
           LocalDate.now().plusDays(1).toString()
         } else {
           it.modifiedDate
@@ -157,9 +158,9 @@ class Updates @Inject constructor(
 
   private fun isAppUpdatable(installSourceInfo: InstallSourceInfo?) =
     if (VERSION.SDK_INT >= VERSION_CODES.UPSIDE_DOWN_CAKE) {
-      installSourceInfo?.updateOwnerPackageName == applicationContext.packageName
+      installSourceInfo?.updateOwnerPackageName == myPackageName
     } else if (VERSION.SDK_INT >= VERSION_CODES.R) {
-      installSourceInfo?.installingPackageName == applicationContext.packageName
+      installSourceInfo?.installingPackageName == myPackageName
     } else {
       false
     }
