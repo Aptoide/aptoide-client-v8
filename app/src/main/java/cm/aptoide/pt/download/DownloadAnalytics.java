@@ -64,7 +64,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
   private static final String ERROR_TYPE = "error_type";
   private static final String ERROR_MESSAGE = "error_message";
   private static final String ERROR_URL = "error_url";
-  private static final String ERROR_HTTP_CODE = "error_http";
+  private static final String ERROR_HTTP_CODE = "error_http_code";
   private static final String IS_APKFY = "apkfy_app_install";
   private static final String MIUI_AAB_FIX = "miui_aab_fix";
   private static final String APP_VERSION_CODE = "app_version_code";
