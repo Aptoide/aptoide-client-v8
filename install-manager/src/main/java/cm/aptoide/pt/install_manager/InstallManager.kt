@@ -7,8 +7,8 @@ import cm.aptoide.pt.install_manager.dto.SizeEstimatorImpl
 import cm.aptoide.pt.install_manager.environment.DeviceStorage
 import cm.aptoide.pt.install_manager.environment.DeviceStorageImpl
 import cm.aptoide.pt.install_manager.environment.NetworkConnection
-import cm.aptoide.pt.install_manager.repository.PackageInfoRepository
-import cm.aptoide.pt.install_manager.repository.PackageInfoRepositoryImpl
+import cm.aptoide.pt.install_manager.repository.AppInfoRepository
+import cm.aptoide.pt.install_manager.repository.AppInfoRepositoryImpl
 import cm.aptoide.pt.install_manager.repository.TaskInfoRepository
 import cm.aptoide.pt.install_manager.workers.PackageDownloader
 import cm.aptoide.pt.install_manager.workers.PackageInstaller
@@ -84,11 +84,11 @@ interface InstallManager {
     /**
      * Instantiate an InstallManager implementation with the provided configuration
      *
-     * @param context - application [Context] used for [PackageInfoRepository]
+     * @param context - application [Context] used for [AppInfoRepository]
      * @param scope - a coroutine scope used to run all [InstallManager] logic
      * @param currentTime - a function to get current time (this abstraction is needed for testing)
      * @param deviceStorage - a [DeviceStorage] to check the available device free space
-     * @param packageInfoRepository - a [PackageInfoRepository] to get info about installed apps
+     * @param appInfoRepository - a [AppInfoRepository] to get info about installed apps
      * @param taskInfoRepository - a [TaskInfoRepository] to store running tasks information
      * @param packageDownloader - a [PackageDownloader] to perform installation files download
      * @param packageInstaller - a [PackageInstaller] to perform installation of downloaded files
@@ -101,7 +101,7 @@ interface InstallManager {
       currentTime: () -> Long = { System.currentTimeMillis() },
       deviceStorage: DeviceStorage = DeviceStorageImpl(),
       sizeEstimator: SizeEstimator = SizeEstimatorImpl(),
-      packageInfoRepository: PackageInfoRepository = PackageInfoRepositoryImpl(context),
+      appInfoRepository: AppInfoRepository = AppInfoRepositoryImpl(context),
       taskInfoRepository: TaskInfoRepository,
       packageDownloader: PackageDownloader,
       packageInstaller: PackageInstaller,
@@ -111,7 +111,7 @@ interface InstallManager {
       currentTime = currentTime,
       deviceStorage = deviceStorage,
       sizeEstimator = sizeEstimator,
-      packageInfoRepository = packageInfoRepository,
+      appInfoRepository = appInfoRepository,
       taskInfoRepository = taskInfoRepository,
       packageDownloader = packageDownloader,
       packageInstaller = packageInstaller,

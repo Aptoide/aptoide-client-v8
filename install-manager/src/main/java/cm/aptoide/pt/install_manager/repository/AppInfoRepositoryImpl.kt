@@ -4,15 +4,14 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.InstallSourceInfo
 import android.content.pm.PackageInfo
+import android.os.Build
 import cm.aptoide.pt.extensions.getInstalledPackages
 import cm.aptoide.pt.extensions.getPackageInfo
 import cm.aptoide.pt.extensions.ifNormalApp
 
-internal class PackageInfoRepositoryImpl(
-  context: Context,
-) : BroadcastReceiver(),
-  PackageInfoRepository {
+internal class AppInfoRepositoryImpl(context: Context) : BroadcastReceiver(), AppInfoRepository {
 
   private lateinit var listener: (String) -> Unit
 
@@ -40,12 +39,20 @@ internal class PackageInfoRepositoryImpl(
       ?.let(listener::invoke)
   }
 
-  override fun getAll(): Set<PackageInfo> = pm.getInstalledPackages()
+  override fun getAllPackageInfos(): Set<PackageInfo> = pm.getInstalledPackages()
     .filter(PackageInfo::ifNormalApp)
     .toSet()
 
-  override fun get(packageName: String): PackageInfo? = pm.getPackageInfo(packageName)
+  override fun getPackageInfo(packageName: String): PackageInfo? = pm.getPackageInfo(packageName)
     ?.takeIf(PackageInfo::ifNormalApp)
+
+  override fun getInstallSourceInfo(packageName: String): InstallSourceInfo? = runCatching {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+      pm.getInstallSourceInfo(packageName)
+    } else {
+      null
+    }
+  }.getOrNull()
 
   override fun setOnChangeListener(onChange: (String) -> Unit) {
     listener = onChange
