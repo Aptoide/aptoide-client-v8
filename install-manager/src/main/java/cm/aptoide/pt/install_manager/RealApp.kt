@@ -2,7 +2,7 @@ package cm.aptoide.pt.install_manager
 
 import android.content.pm.InstallSourceInfo
 import android.content.pm.PackageInfo
-import androidx.core.content.pm.PackageInfoCompat
+import cm.aptoide.pt.extensions.compatVersionCode
 import cm.aptoide.pt.install_manager.dto.Constraints
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.SizeEstimator
@@ -29,7 +29,7 @@ internal class RealApp(
   private val _packageInfo =
     MutableStateFlow(packageInfo ?: appInfoRepository.getPackageInfo(packageName))
 
-  private val versionCode get() = _packageInfo.value?.let(PackageInfoCompat::getLongVersionCode)
+  private val versionCode get() = _packageInfo.value?.compatVersionCode
 
   internal val tasks = MutableStateFlow<Task?>(null)
 
