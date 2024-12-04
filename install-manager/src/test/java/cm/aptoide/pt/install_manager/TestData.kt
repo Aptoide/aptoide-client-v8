@@ -1,6 +1,8 @@
 package cm.aptoide.pt.install_manager
 
+import android.content.pm.InstallSourceInfo
 import android.content.pm.PackageInfo
+import android.content.pm.createInstallSource
 import cm.aptoide.pt.install_manager.dto.Constraints
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallationFile
@@ -8,7 +10,7 @@ import cm.aptoide.pt.install_manager.dto.SizeEstimator
 import cm.aptoide.pt.install_manager.dto.TaskInfo
 import cm.aptoide.pt.install_manager.environment.DeviceStorage
 import cm.aptoide.pt.install_manager.environment.NetworkConnection
-import cm.aptoide.pt.install_manager.repository.PackageInfoRepository
+import cm.aptoide.pt.install_manager.repository.AppInfoRepository
 import cm.aptoide.pt.install_manager.repository.TaskInfoRepository
 import cm.aptoide.pt.install_manager.workers.PackageDownloader
 import cm.aptoide.pt.install_manager.workers.PackageInstaller
@@ -34,12 +36,12 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
 internal data class Mocks(internal val scope: TestScope) {
-  internal val packageInfoRepository = PackageInfoRepositoryMock()
+  internal val appInfoRepository = AppInfoRepositoryMock()
   internal val taskInfoRepository = TaskInfoRepositoryMock()
   internal val packageDownloader = PackageDownloaderMock(scope)
   internal val packageInstaller = PackageInstallerMock(
     scope = scope,
-    packageInfoRepositoryMock = packageInfoRepository,
+    appInfoRepositoryMock = appInfoRepository,
   )
   internal val deviceStorageMock = DeviceStorageMock()
   internal val sizeEstimatorMock = SizeEstimatorMock()
@@ -56,7 +58,7 @@ internal fun InstallManager.Companion.with(mocks: Mocks): InstallManager = RealI
   },
   deviceStorage = mocks.deviceStorageMock,
   sizeEstimator = mocks.sizeEstimatorMock,
-  packageInfoRepository = mocks.packageInfoRepository,
+  appInfoRepository = mocks.appInfoRepository,
   taskInfoRepository = mocks.taskInfoRepository,
   packageDownloader = mocks.packageDownloader,
   packageInstaller = mocks.packageInstaller,
@@ -112,6 +114,8 @@ internal fun installedInfo(
   versionName = "1.0.$vc"
   versionCode = vc.toInt()
 }
+
+internal fun installSourceInfo(vc: Long = 1) = createInstallSource(vc)
 
 internal val installInfo = InstallPackageInfo(
   versionCode = 2,
@@ -175,6 +179,14 @@ internal val installedPackages = savedTasksInfo.mapNotNull {
     null
   } else {
     it.packageName to installedInfo(it.packageName)
+  }
+}
+
+internal val installedSources = savedTasksInfo.mapIndexedNotNull { index, it ->
+  if (it.type == Task.Type.INSTALL) {
+    null
+  } else {
+    it.packageName to installSourceInfo(vc = index.toLong())
   }
 }
 
@@ -357,10 +369,10 @@ internal val canceledUninstall = pendingSequence +
 /* Mocks */
 
 // Crashes on duplicated calls for optimization reasons
-internal class PackageInfoRepositoryMock : PackageInfoRepository {
+internal class AppInfoRepositoryMock : AppInfoRepository {
   private var allCalled = false
   private var listenerSet = false
-  internal val info: MutableMap<String, PackageInfo?> = mutableMapOf(
+  internal val packageInfo: MutableMap<String, PackageInfo?> = mutableMapOf(
     outdatedPackage to installedInfo(outdatedPackage),
     currentPackage to installedInfo(currentPackage, vc = 2),
     newerPackage to installedInfo(newerPackage, vc = 3),
@@ -368,15 +380,26 @@ internal class PackageInfoRepositoryMock : PackageInfoRepository {
     .apply { putAll(installedPackages) }
     .toMutableMap()
 
+  internal val installSourceInfo: MutableMap<String, InstallSourceInfo?> = mutableMapOf(
+    outdatedPackage to installSourceInfo(),
+    currentPackage to installSourceInfo(vc = 2),
+    newerPackage to installSourceInfo(vc = 3),
+  )
+    .apply { putAll(installedSources) }
+    .toMutableMap()
+
   private var listener: (String) -> Unit = {}
 
-  override fun getAll(): Set<PackageInfo> {
+  override fun getAllPackageInfos(): Set<PackageInfo> {
     if (allCalled) throw java.lang.IllegalStateException("Duplicate call")
     allCalled = true
-    return info.values.filterNotNull().toSet()
+    return packageInfo.values.filterNotNull().toSet()
   }
 
-  override fun get(packageName: String): PackageInfo? = info[packageName]
+  override fun getPackageInfo(packageName: String): PackageInfo? = packageInfo[packageName]
+
+  override fun getInstallSourceInfo(packageName: String): InstallSourceInfo? =
+    installSourceInfo[packageName]
 
   override fun setOnChangeListener(onChange: (String) -> Unit) {
     if (listenerSet) throw java.lang.IllegalStateException("Duplicate call")
@@ -387,8 +410,10 @@ internal class PackageInfoRepositoryMock : PackageInfoRepository {
   internal fun update(
     pn: String,
     pi: PackageInfo?,
+    isi: InstallSourceInfo?
   ) {
-    info[pn] = pi
+    packageInfo[pn] = pi
+    installSourceInfo[pn] = isi
     listener(pn)
   }
 }
@@ -502,7 +527,7 @@ internal class PackageDownloaderMock(
 // Crashes on duplicated calls for optimization reasons
 internal class PackageInstallerMock(
   private val scope: CoroutineScope,
-  internal var packageInfoRepositoryMock: PackageInfoRepositoryMock?,
+  internal var appInfoRepositoryMock: AppInfoRepositoryMock?,
 ) : PackageInstaller {
   private val installCalled: MutableSet<String> = mutableSetOf()
   private val uninstallCalled: MutableSet<String> = mutableSetOf()
@@ -528,9 +553,10 @@ internal class PackageInstallerMock(
     return flow {
       try {
         iterateProgressFlow(progressFlow, delay) { cancelCalled.remove(packageName) }
-        packageInfoRepositoryMock?.update(
+        appInfoRepositoryMock?.update(
           packageName,
-          installedInfo(packageName, vc = installPackageInfo.versionCode)
+          installedInfo(packageName, vc = installPackageInfo.versionCode),
+          installSourceInfo(vc = installPackageInfo.versionCode)
         )
       } finally {
         installCalled.remove(packageName)
@@ -544,7 +570,7 @@ internal class PackageInstallerMock(
     return flow {
       try {
         iterateProgressFlow(progressFlow, delay) { cancelCalled.remove(packageName) }
-        packageInfoRepositoryMock?.update(packageName, null)
+        appInfoRepositoryMock?.update(packageName, null, null)
       } finally {
         uninstallCalled.remove(packageName)
       }

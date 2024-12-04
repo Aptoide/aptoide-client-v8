@@ -40,10 +40,15 @@ internal class InstallManagerTest {
 
     m Then "the app has the same package name"
     assertEquals(packageName, app.packageName)
-    m And "the same package info as in package info repository"
+    m And "the same package info as in app info repository"
     assertEquals(
-      mocks.packageInfoRepository.info[packageName],
+      mocks.appInfoRepository.packageInfo[packageName],
       app.packageInfo
+    )
+    m And "the same install source info as in app info repository"
+    assertEquals(
+      mocks.appInfoRepository.installSourceInfo[packageName],
+      app.installSourceInfo
     )
     m And "has no running task"
     assertNull(app.task)
@@ -166,10 +171,15 @@ internal class InstallManagerTest {
 
     m Then "there are 9 installed apps"
     assertEquals(9, apps.size)
-    m And "and their package names are the same as in package info repository"
+    m And "and their package names are the same as in app info repository"
     assertEquals(
-      mocks.packageInfoRepository.info.values.toList(),
+      mocks.appInfoRepository.packageInfo.values.toList(),
       apps.map { it.packageInfo }
+    )
+    m And "and their install source info are the same as in app info repository"
+    assertEquals(
+      mocks.appInfoRepository.installSourceInfo.values.toList(),
+      apps.map { it.installSourceInfo }
     )
   }
 
@@ -1017,18 +1027,42 @@ internal class InstallManagerTest {
     m And "current version installed app got"
     val current = installManager.getApp(currentPackage)
 
-    m When "current version app package info added to the repository mock"
-    mocks.packageInfoRepository.update(currentPackage, installedInfo(currentPackage))
-    m And "outdated version app package info removed from the repository mock"
-    mocks.packageInfoRepository.update(outdatedPackage, null)
-    m And "not installed app package info added to the repository mock"
-    mocks.packageInfoRepository.update(notInstalledPackage, installedInfo(notInstalledPackage))
-    m And "newer version app package info removed from the repository mock"
-    mocks.packageInfoRepository.update(newerPackage, null)
-    m And "outdated version app package info added to the repository mock"
-    mocks.packageInfoRepository.update(outdatedPackage, installedInfo(outdatedPackage, 2))
-    m And "newer version app package info added to the repository mock"
-    mocks.packageInfoRepository.update(newerPackage, installedInfo(newerPackage))
+    m When "current version app info added to the repository mock"
+    mocks.appInfoRepository.update(
+      pn = currentPackage,
+      pi = installedInfo(currentPackage),
+      isi = installSourceInfo()
+    )
+    m And "outdated version app info removed from the repository mock"
+    mocks.appInfoRepository.update(
+      pn = outdatedPackage,
+      pi = null,
+      isi = null
+    )
+    m And "not installed app info added to the repository mock"
+    mocks.appInfoRepository.update(
+      pn = notInstalledPackage,
+      pi = installedInfo(notInstalledPackage),
+      isi = installSourceInfo()
+    )
+    m And "newer version app info removed from the repository mock"
+    mocks.appInfoRepository.update(
+      pn = newerPackage,
+      pi = null,
+      isi = null
+    )
+    m And "outdated version app info added to the repository mock"
+    mocks.appInfoRepository.update(
+      pn = outdatedPackage,
+      pi = installedInfo(outdatedPackage, 2),
+      isi = installSourceInfo(2)
+    )
+    m And "newer version app info added to the repository mock"
+    mocks.appInfoRepository.update(
+      pn = newerPackage,
+      pi = installedInfo(newerPackage),
+      isi = installSourceInfo()
+    )
     m And "wait until all coroutines finish"
     scope.advanceUntilIdle()
 
@@ -1128,7 +1162,7 @@ internal class InstallManagerTest {
 
   companion object {
 
-    private val speeds = Speed.values().toList().run {
+    private val speeds = Speed.entries.toList().run {
       val combinationsCount = size * size * size
       List(combinationsCount) {
         val taskInfoSpeed = get((it / (size * size)) % size)
@@ -1138,9 +1172,9 @@ internal class InstallManagerTest {
       }
     }
 
-    private val networkChanges = NetworkConnection.State.values()
+    private val networkChanges = NetworkConnection.State.entries
       .map { firstState ->
-        NetworkConnection.State.values().map { secondState ->
+        NetworkConnection.State.entries.map { secondState ->
           firstState to secondState
         }
       }

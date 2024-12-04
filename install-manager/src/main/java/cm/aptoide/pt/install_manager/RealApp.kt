@@ -1,11 +1,12 @@
 package cm.aptoide.pt.install_manager
 
+import android.content.pm.InstallSourceInfo
 import android.content.pm.PackageInfo
 import androidx.core.content.pm.PackageInfoCompat
 import cm.aptoide.pt.install_manager.dto.Constraints
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.SizeEstimator
-import cm.aptoide.pt.install_manager.repository.PackageInfoRepository
+import cm.aptoide.pt.install_manager.repository.AppInfoRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,13 +19,15 @@ import kotlinx.coroutines.flow.onCompletion
 internal class RealApp(
   override val packageName: String,
   packageInfo: PackageInfo?,
+  installSourceInfo: InstallSourceInfo?,
   private val taskFactory: Task.Factory,
   private val getMissingSpace: (Long) -> Long,
   private val sizeEstimator: SizeEstimator,
-  private val packageInfoRepository: PackageInfoRepository,
+  private val appInfoRepository: AppInfoRepository,
 ) : App {
 
-  private val _packageInfo = MutableStateFlow(packageInfo ?: packageInfoRepository.get(packageName))
+  private val _packageInfo =
+    MutableStateFlow(packageInfo ?: appInfoRepository.getPackageInfo(packageName))
 
   private val versionCode get() = _packageInfo.value?.let(PackageInfoCompat::getLongVersionCode)
 
@@ -32,6 +35,9 @@ internal class RealApp(
 
   override val packageInfo: PackageInfo?
     get() = _packageInfo.value
+
+  override var installSourceInfo: InstallSourceInfo? =
+    installSourceInfo ?: appInfoRepository.getInstallSourceInfo(packageName)
 
   override val packageInfoFlow: Flow<PackageInfo?> = _packageInfo
 
@@ -49,7 +55,8 @@ internal class RealApp(
   }
 
   internal fun update() {
-    _packageInfo.value = packageInfoRepository.get(packageName)
+    _packageInfo.value = appInfoRepository.getPackageInfo(packageName)
+    installSourceInfo = appInfoRepository.getInstallSourceInfo(packageName)
   }
 
   override fun canInstall(
