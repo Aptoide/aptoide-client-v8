@@ -9,6 +9,7 @@ import com.aptoide.android.aptoidegames.analytics.mapOfNonNull
 import com.aptoide.android.aptoidegames.analytics.toBIParameters
 import com.aptoide.android.aptoidegames.analytics.toBiParameters
 import com.aptoide.android.aptoidegames.analytics.toGenericParameters
+import com.aptoide.android.aptoidegames.installer.analytics.InstallAnalytics.Companion.P_UPDATE_TYPE
 
 class InstallAnalytics(
   private val genericAnalytics: GenericAnalytics,
@@ -441,6 +442,7 @@ class InstallAnalytics(
     internal const val P_WIFI_SETTING = "wifi_setting"
     internal const val P_PROMPT_TYPE = "prompt_type"
     internal const val P_SERVICE = "service"
+    internal const val P_UPDATE_TYPE = "update_type"
   }
 }
 
@@ -453,6 +455,7 @@ private fun AnalyticsPayload?.toAppGenericParameters(
       *pairs,
       GenericAnalytics.P_PACKAGE_NAME to packageName,
       GenericAnalytics.P_APPC_BILLING to isAppCoins,
+      P_UPDATE_TYPE to userClicks.toTapsValue()
     )
   } ?: mapOfNonNull(*pairs)
 
@@ -470,5 +473,8 @@ private fun AnalyticsPayload?.toAppBIParameters(
       BIAnalytics.P_APP_VERSION_CODE to versionCode,
       BIAnalytics.P_APP_OBB to hasObb,
       BIAnalytics.P_APP_IN_CATAPPULT to isInCatappult.asNullableParameter(),
+      P_UPDATE_TYPE to userClicks.toTapsValue()
     )
   } ?: mapOfNonNull(*pairs)
+
+private fun Int.toTapsValue(): String = if (this == 1) "1-tap" else "$this-taps"
