@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
@@ -50,6 +51,7 @@ import com.aptoide.android.aptoidegames.drawables.icons.getBolt
 import com.aptoide.android.aptoidegames.drawables.icons.getNoUpdates
 import com.aptoide.android.aptoidegames.feature_apps.presentation.AppItemUpdates
 import com.aptoide.android.aptoidegames.home.LoadingView
+import com.aptoide.android.aptoidegames.home.rememberBottomBarMenuScrollState
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -188,6 +190,10 @@ private fun AppsList(
   ) {
     UpdateBox(updates = appList)
     LazyColumn(
+      state = rememberBottomBarMenuScrollState(
+        state = rememberLazyListState(),
+        route = updatesRoute
+      ),
       modifier = Modifier
         .semantics { collectionInfo = CollectionInfo(appList.size, 1) }
         .padding(start = 16.dp, end = 16.dp)

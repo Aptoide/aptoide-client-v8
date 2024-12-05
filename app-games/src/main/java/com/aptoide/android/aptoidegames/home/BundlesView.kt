@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.ExperimentalMaterialApi
@@ -135,7 +136,7 @@ fun BundlesScreen(
       when (viewState.type) {
         BundlesViewUiStateType.LOADING,
         BundlesViewUiStateType.RELOADING,
-        -> LoadingView()
+          -> LoadingView()
 
         BundlesViewUiStateType.NO_CONNECTION -> NoConnectionView(
           onRetryClick = {
@@ -158,7 +159,7 @@ fun BundlesScreen(
       BundlesViewUiStateType.IDLE,
       BundlesViewUiStateType.LOADING,
       BundlesViewUiStateType.RELOADING,
-      -> PullRefreshIndicator(
+        -> PullRefreshIndicator(
         refreshing = isRefreshing,
         state = pullRefreshState,
         modifier = Modifier.align(Alignment.TopCenter)
@@ -181,6 +182,7 @@ fun BundlesView(
       .padding(top = 16.dp)
   ) {
     LazyColumn(
+      state = rememberBottomBarMenuScrollState(state = rememberLazyListState(), route = gamesRoute),
       modifier = Modifier
         .fillMaxSize()
         .wrapContentSize(Alignment.TopCenter),
