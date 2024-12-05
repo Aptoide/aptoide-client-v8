@@ -11,9 +11,10 @@ import androidx.navigation.compose.rememberNavController
 import cm.aptoide.pt.install_manager.InstallManager
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
-import com.aptoide.android.aptoidegames.analytics.getNetworkType
 import com.aptoide.android.aptoidegames.analytics.presentation.withPrevScreen
 import com.aptoide.android.aptoidegames.home.MainView
+import com.aptoide.android.aptoidegames.installer.analytics.InstallAnalytics
+import com.aptoide.android.aptoidegames.installer.analytics.getNetworkType
 import com.aptoide.android.aptoidegames.installer.notifications.InstallerNotificationsBuilder
 import com.aptoide.android.aptoidegames.launch.AppLaunchPreferencesManager
 import com.aptoide.android.aptoidegames.network.repository.NetworkPreferencesRepository
@@ -32,6 +33,9 @@ class MainActivity : AppCompatActivity() {
 
   @Inject
   lateinit var genericAnalytics: GenericAnalytics
+
+  @Inject
+  lateinit var installAnalytics: InstallAnalytics
 
   @Inject
   lateinit var biAnalytics: BIAnalytics
@@ -106,13 +110,13 @@ class MainActivity : AppCompatActivity() {
         ?.let(installManager::getApp)
         ?.task
         ?.also {
-          genericAnalytics.sendDownloadNowClicked(
+          installAnalytics.sendDownloadNowClicked(
+            packageName = it.packageName,
+            appSize = it.installPackageInfo.filesSize,
+            promptType = "notification",
             downloadOnlyOverWifi = networkPreferencesRepository
               .shouldDownloadOnlyOverWifi()
-              .first(),
-            promptType = "notification",
-            packageName = it.packageName,
-            appSize = it.installPackageInfo.filesSize
+              .first()
           )
         }
         ?.allowDownloadOnMetered()
@@ -139,7 +143,7 @@ class MainActivity : AppCompatActivity() {
 
       "http",
       "https",
-      -> currentData.withPrevScreen("app_link")
+        -> currentData.withPrevScreen("app_link")
 
       else -> currentData
     }

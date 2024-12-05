@@ -1,4 +1,4 @@
-package com.aptoide.android.aptoidegames.analytics
+package com.aptoide.android.aptoidegames.installer.analytics
 
 import android.content.Context
 import cm.aptoide.pt.install_manager.environment.NetworkConnection.State
