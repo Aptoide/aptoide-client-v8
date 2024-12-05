@@ -124,5 +124,11 @@ class InstallerModule {
     genericAnalytics: GenericAnalytics,
     biAnalytics: BIAnalytics,
     @StoreName storeName: String,
-  ): InstallAnalytics = InstallAnalytics(genericAnalytics, biAnalytics, storeName)
+    silentInstallChecker: SilentInstallChecker,
+  ): InstallAnalytics = InstallAnalytics(
+    genericAnalytics = genericAnalytics,
+    biAnalytics = biAnalytics,
+    storeName = storeName,
+    silentInstallChecker = silentInstallChecker
+  )
 }
