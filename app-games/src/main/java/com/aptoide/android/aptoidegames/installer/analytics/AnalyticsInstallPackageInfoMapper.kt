@@ -44,7 +44,7 @@ class AnalyticsInstallPackageInfoMapper(
           itemPosition = context.itemPosition,
           trustedBadge = temporaryPayload?.trustedBadge,
           userClicks = isForUI.toInt() +
-            silentInstallChecker.canInstallSilently(app.packageName).toInt()
+            silentInstallChecker.canInstallSilently(app.packageName).not().toInt()
         ).let<AnalyticsPayload, String?>(Gson()::toJson)
       )
     }

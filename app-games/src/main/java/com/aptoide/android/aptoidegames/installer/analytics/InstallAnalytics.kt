@@ -1,5 +1,6 @@
 package com.aptoide.android.aptoidegames.installer.analytics
 
+import cm.aptoide.pt.extensions.toInt
 import cm.aptoide.pt.feature_apps.data.App
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
@@ -15,6 +16,7 @@ class InstallAnalytics(
   private val genericAnalytics: GenericAnalytics,
   private val biAnalytics: BIAnalytics,
   private val storeName: String,
+  private val silentInstallChecker: SilentInstallChecker,
 ) {
 
   fun sendInstallClickEvent(
@@ -26,6 +28,7 @@ class InstallAnalytics(
       name = "install_clicked",
       params = analyticsContext.toGenericParameters(
         *app.toGenericParameters(),
+        P_UPDATE_TYPE to getUserClicks(app.packageName),
         P_SERVICE to networkType
       )
     )
@@ -41,6 +44,7 @@ class InstallAnalytics(
         name = "install_clicked_apkfy",
         params = analyticsContext.toGenericParameters(
           *app.toGenericParameters(),
+          P_UPDATE_TYPE to getUserClicks(app.packageName),
           P_SERVICE to networkType
         )
       )
@@ -56,6 +60,7 @@ class InstallAnalytics(
       name = "update_clicked",
       params = analyticsContext.toGenericParameters(
         *app.toGenericParameters(),
+        P_UPDATE_TYPE to getUserClicks(app.packageName),
         P_SERVICE to networkType
       )
     )
@@ -76,6 +81,7 @@ class InstallAnalytics(
       name = "retry_app_clicked",
       params = analyticsContext.toGenericParameters(
         *app.toGenericParameters(),
+        P_UPDATE_TYPE to getUserClicks(app.packageName),
         P_SERVICE to networkType
       )
     )
@@ -95,7 +101,8 @@ class InstallAnalytics(
       name = "open_clicked",
       params = analyticsContext.toGenericParameters(
         GenericAnalytics.P_PACKAGE_NAME to packageName,
-        GenericAnalytics.P_APPC_BILLING to hasAPPCBilling
+        GenericAnalytics.P_APPC_BILLING to hasAPPCBilling,
+        P_UPDATE_TYPE to getUserClicks(packageName)
       )
     )
   }
@@ -297,7 +304,8 @@ class InstallAnalytics(
     genericAnalytics.logEvent(
       name = "oos_uninstall_clicked",
       params = mapOf(
-        *app.toGenericParameters()
+        *app.toGenericParameters(),
+        P_UPDATE_TYPE to getUserClicks(app.packageName)
       )
     )
   }
@@ -310,6 +318,7 @@ class InstallAnalytics(
       name = "resume_download_clicked",
       params = mapOf(
         *app.toGenericParameters(),
+        P_UPDATE_TYPE to getUserClicks(app.packageName),
         P_WIFI_SETTING to downloadOnlyOverWifiSetting
       )
     )
@@ -333,7 +342,8 @@ class InstallAnalytics(
     genericAnalytics.logEvent(
       name = "download_canceled",
       params = analyticsContext.toGenericParameters(
-        *app.toGenericParameters()
+        *app.toGenericParameters(),
+        P_UPDATE_TYPE to getUserClicks(app.packageName)
       )
     )
   }
@@ -357,6 +367,7 @@ class InstallAnalytics(
     params = mapOf(
       GenericAnalytics.P_PACKAGE_NAME to app.packageName,
       GenericAnalytics.P_APP_SIZE to app.appSize,
+      P_UPDATE_TYPE to getUserClicks(app.packageName),
       P_WIFI_SETTING to downloadOnlyOverWifi
     )
   )
@@ -371,6 +382,7 @@ class InstallAnalytics(
     params = mapOf(
       GenericAnalytics.P_PACKAGE_NAME to packageName,
       GenericAnalytics.P_APP_SIZE to appSize,
+      P_UPDATE_TYPE to getUserClicks(packageName),
       P_WIFI_SETTING to downloadOnlyOverWifi,
       P_PROMPT_TYPE to promptType
     )
@@ -388,7 +400,8 @@ class InstallAnalytics(
       analyticsContext.toBiParameters(
         P_ACTION to action,
         P_STORE to storeName,
-        P_TRUSTED_BADGE to app.malware.asNullableParameter()
+        P_TRUSTED_BADGE to app.malware.asNullableParameter(),
+        P_UPDATE_TYPE to getUserClicks(app.packageName)
       )
   )
 
@@ -429,6 +442,13 @@ class InstallAnalytics(
         )
     }
   )
+
+  private fun getUserClicks(packageName: String): String = silentInstallChecker
+    .canInstallSilently(packageName)
+    .not()
+    .toInt()
+    .plus(1)
+    .toTapsValue()
 
   companion object {
     private const val P_ACTION = "action"

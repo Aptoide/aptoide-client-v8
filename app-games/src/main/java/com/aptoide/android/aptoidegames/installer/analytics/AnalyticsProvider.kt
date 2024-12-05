@@ -21,7 +21,8 @@ fun rememberInstallAnalytics(): InstallAnalytics = runPreviewable(
     InstallAnalytics(
       GenericAnalytics(object : AnalyticsSender {}),
       BIAnalytics(object : AnalyticsSender {}),
-      ""
+      "",
+      object : SilentInstallChecker {}
     )
   },
   real = {
