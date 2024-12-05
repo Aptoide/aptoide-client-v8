@@ -9,7 +9,7 @@ import android.content.pm.PackageInfo
 import android.os.Build
 import cm.aptoide.pt.extensions.getInstalledPackages
 import cm.aptoide.pt.extensions.getPackageInfo
-import cm.aptoide.pt.extensions.ifNormalApp
+import cm.aptoide.pt.extensions.ifNormalAppOrGame
 
 internal class AppInfoRepositoryImpl(context: Context) : BroadcastReceiver(), AppInfoRepository {
 
@@ -40,11 +40,11 @@ internal class AppInfoRepositoryImpl(context: Context) : BroadcastReceiver(), Ap
   }
 
   override fun getAllPackageInfos(): Set<PackageInfo> = pm.getInstalledPackages()
-    .filter(PackageInfo::ifNormalApp)
+    .filter(PackageInfo::ifNormalAppOrGame)
     .toSet()
 
   override fun getPackageInfo(packageName: String): PackageInfo? = pm.getPackageInfo(packageName)
-    ?.takeIf(PackageInfo::ifNormalApp)
+    ?.takeIf(PackageInfo::ifNormalAppOrGame)
 
   override fun getInstallSourceInfo(packageName: String): InstallSourceInfo? = runCatching {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
