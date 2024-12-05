@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
@@ -80,6 +81,7 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.AppItem
 import com.aptoide.android.aptoidegames.feature_apps.presentation.AppsGridBundle
 import com.aptoide.android.aptoidegames.feature_apps.presentation.LargeAppItem
 import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberTrendingBundle
+import com.aptoide.android.aptoidegames.home.rememberBottomBarMenuScrollState
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.search.SearchType
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -609,9 +611,10 @@ fun EmptySearchView(
   onItemInstallStarted: (App) -> Unit,
 ) {
   LazyColumn(
+    state = rememberBottomBarMenuScrollState(state = rememberLazyListState(), route = searchRoute),
     modifier = Modifier.padding(start = 16.dp, end = 16.dp),
     contentPadding = PaddingValues(bottom = 72.dp),
-    ) {
+  ) {
     itemsIndexed(
       items = searchResults,
     ) { index, app ->

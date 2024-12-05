@@ -18,6 +18,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -50,6 +51,7 @@ import com.aptoide.android.aptoidegames.categories.presentation.CategoriesGridCo
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.error_views.NoConnectionView
 import com.aptoide.android.aptoidegames.home.LoadingView
+import com.aptoide.android.aptoidegames.home.rememberBottomBarMenuScrollState
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -155,6 +157,10 @@ fun CategoryList(
   content: LazyGridScope.() -> Unit,
 ) {
   LazyVerticalGrid(
+    state = rememberBottomBarMenuScrollState(
+      state = rememberLazyGridState(),
+      route = allCategoriesRoute
+    ),
     modifier = Modifier
       .semantics { collectionInfo = CollectionInfo(size, GRID_COLUMNS) }
       .wrapContentSize(Alignment.TopCenter),

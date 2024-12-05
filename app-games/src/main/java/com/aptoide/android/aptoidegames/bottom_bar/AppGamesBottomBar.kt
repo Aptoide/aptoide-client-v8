@@ -31,6 +31,7 @@ import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.runPreviewable
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.gamegenie.presentation.rememberGameGenieVisibility
+import com.aptoide.android.aptoidegames.home.BottomBarMenuHandler
 import com.aptoide.android.aptoidegames.home.BottomBarMenus
 import com.aptoide.android.aptoidegames.home.Icon
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -64,6 +65,8 @@ fun AppGamesBottomBar(navController: NavController) {
     AppGamesBottomNavigation(backgroundColor = Color.Transparent) {
       filteredBottomNavigationItems.forEachIndexed { index, item ->
         val isSelected = selection == index
+        if (isSelected)
+          BottomBarMenuHandler.menuSelected(item)
         AddBottomNavigationItem(
           item = item,
           isSelected = isSelected,
@@ -75,14 +78,17 @@ fun AppGamesBottomBar(navController: NavController) {
               BottomBarMenus.Updates -> genericAnalytics.sendBottomBarUpdatesClick()
               BottomBarMenus.GameGenie -> genericAnalytics.sendBottomBarGameGenieClick()
             }
-            navController.navigate(item.route) {
-              popUpTo(navController.graph.startDestinationId) {
-                inclusive =
-                  BottomBarMenus.Games.route == item.route
-                    && BottomBarMenus.Games.route == navController.currentDestination?.route
+            if (!isSelected) {
+              navController.navigate(item.route) {
+                popUpTo(navController.graph.startDestinationId) {
+                  inclusive =
+                    BottomBarMenus.Games.route == item.route
+                      && BottomBarMenus.Games.route == navController.currentDestination?.route
+                }
+                launchSingleTop = true
               }
-              launchSingleTop = true
             }
+            BottomBarMenuHandler.menuSelected(item)
           }
         )
       }
