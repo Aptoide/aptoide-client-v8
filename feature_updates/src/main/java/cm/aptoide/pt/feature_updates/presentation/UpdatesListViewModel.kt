@@ -32,7 +32,7 @@ class UpdatesListViewModel(
   fun reload() {
     viewModelScope.launch {
       viewModelState.update { UpdatesUiState.Loading }
-      val updates = updates.getAppsUpdates()
+      val updates = updates.appsUpdates
         .catch {
           Timber.w(it)
           //No Errors For now

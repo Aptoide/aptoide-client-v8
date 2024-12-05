@@ -46,12 +46,10 @@ class UpdatesRepository @Inject constructor(
         .flatten()
     }
 
-  suspend fun getUpdates(): Flow<List<AppJSON>> = withContext(scope.coroutineContext) {
-    appUpdateDao.getAll()
-      .map { updatesList ->
-        updatesList.map { gson.fromJson(it.data, AppJSON::class.java) }
-      }
-  }
+  fun getUpdates(): Flow<List<AppJSON>> = appUpdateDao.getAll()
+    .map { updatesList ->
+      updatesList.map { gson.fromJson(it.data, AppJSON::class.java) }
+    }
 
   suspend fun remove(vararg apps: AppJSON) = withContext(scope.coroutineContext) {
     appUpdateDao.remove(
