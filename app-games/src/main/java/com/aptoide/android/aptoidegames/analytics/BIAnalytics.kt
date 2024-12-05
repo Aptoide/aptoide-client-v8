@@ -13,18 +13,22 @@ import cm.aptoide.pt.feature_categories.analytics.AptoideAnalyticsInfoProvider
 import cm.aptoide.pt.feature_flags.domain.FeatureFlags
 import cm.aptoide.pt.install_manager.InstallManager
 import com.aptoide.android.aptoidegames.BuildConfig
+import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_APKFY_APP_INSTALL
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_APP_AAB
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_APP_AAB_INSTALL_TIME
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_APP_APPC
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_APP_IN_CATAPPULT
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_APP_OBB
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_APP_VERSION_CODE
+import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_CONTEXT
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_INSERTED_KEYWORD
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_PACKAGE_NAME
+import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_PREVIOUS_CONTEXT
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_SEARCH_TERM
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_SEARCH_TERM_POSITION
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_SEARCH_TERM_SOURCE
-import com.aptoide.android.aptoidegames.analytics.dto.AnalyticsPayload
+import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_TAG
+import com.aptoide.android.aptoidegames.analytics.dto.AnalyticsUIContext
 import com.aptoide.android.aptoidegames.analytics.dto.SearchMeta
 import com.aptoide.android.aptoidegames.launch.AppLaunchPreferencesManager
 import com.indicative.client.android.Indicative
@@ -139,8 +143,23 @@ class BIAnalytics(private val analyticsSender: AnalyticsSender) {
     internal const val P_SEARCH_TERM_POSITION = "search_term_position"
     internal const val P_SEARCH_TERM_SOURCE = "search_term_source"
     internal const val P_INSERTED_KEYWORD = "inserted_keyword"
+    internal const val P_APKFY_APP_INSTALL = "apkfy_app_install"
+    internal const val P_CONTEXT = "context"
+    internal const val P_PREVIOUS_CONTEXT = "previous_context"
+    internal const val P_TAG = "tag"
   }
 }
+
+fun AnalyticsUIContext?.toBiParameters(vararg pairs: Pair<String, Any?>): Map<String, Any> =
+  this?.run {
+    mapOfNonNull(
+      *pairs,
+      P_APKFY_APP_INSTALL to isApkfy,
+      P_CONTEXT to currentScreen,
+      P_PREVIOUS_CONTEXT to previousScreen,
+      P_TAG to bundleMeta?.tag,
+    )
+  } ?: mapOfNonNull(*pairs)
 
 fun App?.toBIParameters(
   aabTypes: String?,
@@ -170,23 +189,6 @@ fun SearchMeta?.toBIParameters(
       P_INSERTED_KEYWORD to insertedKeyword,
       P_SEARCH_TERM_SOURCE to searchTermSource,
       P_SEARCH_TERM_POSITION to searchTermPosition,
-    )
-  } ?: mapOfNonNull(*pairs)
-
-fun AnalyticsPayload?.toAppBIParameters(
-  packageName: String,
-  vararg pairs: Pair<String, Any?>,
-): Map<String, Any> =
-  this?.run {
-    mapOfNonNull(
-      *pairs,
-      P_PACKAGE_NAME to packageName,
-      P_APP_AAB to isAab,
-      P_APP_AAB_INSTALL_TIME to aabTypes,
-      P_APP_APPC to isAppCoins,
-      P_APP_VERSION_CODE to versionCode,
-      P_APP_OBB to hasObb,
-      P_APP_IN_CATAPPULT to isInCatappult.asNullableParameter(),
     )
   } ?: mapOfNonNull(*pairs)
 
