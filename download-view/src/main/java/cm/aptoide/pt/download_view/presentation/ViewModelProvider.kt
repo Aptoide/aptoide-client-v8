@@ -7,6 +7,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import cm.aptoide.pt.download_view.di.UIInstallPackageInfoMapper
 import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.install_info_mapper.domain.InstallPackageInfoMapper
@@ -24,7 +25,7 @@ class InjectionsProvider @Inject constructor(
   val provider: InstallAppUseCaseProvider,
   val networkConnectionImpl: NetworkConnectionImpl,
   val installedAppOpener: InstalledAppOpener,
-  val installPackageInfoMapper: InstallPackageInfoMapper,
+  @UIInstallPackageInfoMapper val installPackageInfoMapper: InstallPackageInfoMapper,
 ) : ViewModel()
 
 @Composable
