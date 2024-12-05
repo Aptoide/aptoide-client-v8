@@ -8,9 +8,9 @@ interface SilentInstallChecker {
   fun canInstallSilently(packageName: String): Boolean = false
 }
 
-class SilentInstallCheckerImpl(
-  private val installManager: InstallManager
-) : SilentInstallChecker {
+class SilentInstallCheckerImpl() : SilentInstallChecker {
+  lateinit var installManager: InstallManager
+
   override fun canInstallSilently(packageName: String): Boolean = installManager
     .getApp(packageName)
     .installSourceInfo

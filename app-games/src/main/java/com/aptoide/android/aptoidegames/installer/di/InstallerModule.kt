@@ -52,6 +52,7 @@ class InstallerModule {
     installer: AptoideInstaller,
     installAnalytics: InstallAnalytics,
     networkConnection: NetworkConnection,
+    silentInstallChecker: SilentInstallChecker,
   ): InstallManager = OBBInstallManager(
     context = appContext,
     installManager = InstallManager.with(
@@ -67,7 +68,10 @@ class InstallerModule {
       ),
       networkConnection = networkConnection
     )
-  )
+  ).also {
+    // TODO: Resolve this architecturally
+    (silentInstallChecker as? SilentInstallCheckerImpl)?.installManager = it
+  }
 
   @Singleton
   @Provides
@@ -87,9 +91,7 @@ class InstallerModule {
 
   @Singleton
   @Provides
-  fun provideSilentInstallChecker(
-    installManager: InstallManager,
-  ): SilentInstallChecker = SilentInstallCheckerImpl(installManager = installManager)
+  fun provideSilentInstallChecker(): SilentInstallChecker = SilentInstallCheckerImpl()
 
   @Singleton
   @Provides
