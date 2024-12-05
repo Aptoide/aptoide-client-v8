@@ -13,12 +13,6 @@ private const val systemFlags =
 
 val PackageInfo.compatVersionCode: Long get() = PackageInfoCompat.getLongVersionCode(this)
 
-fun PackageInfo.ifNormalApp(): Boolean {
-  val isNotSystem = applicationInfo?.run { flags and systemFlags == 0 } == true
-  val hasActivities = activities?.isNotEmpty() == true
-  return isNotSystem and hasActivities
-}
-
 fun PackageInfo.ifNormalAppOrGame(): Boolean {
   val isNotSystem = applicationInfo?.run { flags and systemFlags == 0 } == true
   val hasActivities = activities?.isNotEmpty() == true
