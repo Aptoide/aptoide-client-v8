@@ -11,7 +11,6 @@ import cm.aptoide.pt.install_manager.Task.State.PENDING
 import cm.aptoide.pt.install_manager.dto.Constraints.NetworkType
 import cm.aptoide.pt.install_manager.environment.NetworkConnection
 import cm.aptoide.pt.network_listener.NetworkConnectionImpl
-import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -51,7 +50,7 @@ interface ScheduledDownloadsListener {
 }
 
 class ScheduledDownloadsListenerImpl @Inject constructor(
-  private val analytics: GenericAnalytics,
+  private val analytics: InstallAnalytics,
   private val installManager: InstallManager,
   private val networkConnection: NetworkConnectionImpl,
 ) : ScheduledDownloadsListener, CoroutineScope {

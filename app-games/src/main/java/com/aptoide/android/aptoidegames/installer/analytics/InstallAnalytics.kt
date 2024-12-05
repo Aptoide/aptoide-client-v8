@@ -4,11 +4,11 @@ import cm.aptoide.pt.feature_apps.data.App
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.asNullableParameter
-import com.aptoide.android.aptoidegames.analytics.dto.AnalyticsPayload
 import com.aptoide.android.aptoidegames.analytics.dto.AnalyticsUIContext
 import com.aptoide.android.aptoidegames.analytics.mapOfNonNull
-import com.aptoide.android.aptoidegames.analytics.toAppBIParameters
 import com.aptoide.android.aptoidegames.analytics.toBIParameters
+import com.aptoide.android.aptoidegames.analytics.toBiParameters
+import com.aptoide.android.aptoidegames.analytics.toGenericParameters
 
 class InstallAnalytics(
   private val genericAnalytics: GenericAnalytics,
@@ -21,10 +21,12 @@ class InstallAnalytics(
     analyticsContext: AnalyticsUIContext,
     networkType: String,
   ) {
-    genericAnalytics.sendInstallClick(
-      app = app,
-      networkType = networkType,
-      analyticsContext = analyticsContext,
+    genericAnalytics.logEvent(
+      name = "install_clicked",
+      params = analyticsContext.toGenericParameters(
+        *app.toGenericParameters(),
+        P_SERVICE to networkType
+      )
     )
 
     sendBIClickEvent(
@@ -33,11 +35,13 @@ class InstallAnalytics(
       action = "install"
     )
 
-    if(analyticsContext.isApkfy) {
-      genericAnalytics.sendApkfyInstallClicked(
-        app = app,
-        networkType = networkType,
-        analyticsContext = analyticsContext,
+    if (analyticsContext.isApkfy) {
+      genericAnalytics.logEvent(
+        name = "install_clicked_apkfy",
+        params = analyticsContext.toGenericParameters(
+          *app.toGenericParameters(),
+          P_SERVICE to networkType
+        )
       )
     }
   }
@@ -47,10 +51,12 @@ class InstallAnalytics(
     analyticsContext: AnalyticsUIContext,
     networkType: String,
   ) {
-    genericAnalytics.sendUpdateClick(
-      app = app,
-      networkType = networkType,
-      analyticsContext = analyticsContext,
+    genericAnalytics.logEvent(
+      name = "update_clicked",
+      params = analyticsContext.toGenericParameters(
+        *app.toGenericParameters(),
+        P_SERVICE to networkType
+      )
     )
 
     sendBIClickEvent(
@@ -65,12 +71,13 @@ class InstallAnalytics(
     networkType: String,
     analyticsContext: AnalyticsUIContext,
   ) {
-    genericAnalytics.sendRetryClick(
-      app = app,
-      networkType = networkType,
-      analyticsContext = analyticsContext
+    genericAnalytics.logEvent(
+      name = "retry_app_clicked",
+      params = analyticsContext.toGenericParameters(
+        *app.toGenericParameters(),
+        P_SERVICE to networkType
+      )
     )
-
     sendBIClickEvent(
       app = app,
       analyticsContext = analyticsContext,
@@ -80,13 +87,15 @@ class InstallAnalytics(
 
   fun sendOpenClick(
     packageName: String,
-    hasAPPCBilling: Boolean? = null,
+    hasAPPCBilling: Boolean?,
     analyticsContext: AnalyticsUIContext,
   ) {
-    genericAnalytics.sendOpenClick(
-      packageName = packageName,
-      hasAPPCBilling = hasAPPCBilling,
-      analyticsContext = analyticsContext
+    genericAnalytics.logEvent(
+      name = "open_clicked",
+      params = analyticsContext.toGenericParameters(
+        GenericAnalytics.P_PACKAGE_NAME to packageName,
+        GenericAnalytics.P_APPC_BILLING to hasAPPCBilling
+      )
     )
   }
 
@@ -94,9 +103,12 @@ class InstallAnalytics(
     packageName: String,
     analyticsPayload: AnalyticsPayload?,
   ) {
-    genericAnalytics.sendDownloadStartedEvent(
-      packageName = packageName,
-      analyticsPayload = analyticsPayload
+    genericAnalytics.logEvent(
+      name = "app_download",
+      params = analyticsPayload.toAppGenericParameters(
+        packageName = packageName,
+        P_STATUS to "started"
+      )
     )
   }
 
@@ -105,9 +117,12 @@ class InstallAnalytics(
     analyticsPayload: AnalyticsPayload?,
     appSizeSegment: Int,
   ) {
-    genericAnalytics.sendDownloadCompletedEvent(
-      packageName = packageName,
-      analyticsPayload = analyticsPayload
+    genericAnalytics.logEvent(
+      name = "app_download",
+      params = analyticsPayload.toAppGenericParameters(
+        packageName = packageName,
+        P_STATUS to "success"
+      )
     )
 
     logBIDownloadEvent(
@@ -126,10 +141,13 @@ class InstallAnalytics(
     errorType: String?,
     errorCode: Int?,
   ) {
-    genericAnalytics.sendDownloadErrorEvent(
-      packageName = packageName,
-      analyticsPayload = analyticsPayload,
-      errorMessage = errorMessage
+    genericAnalytics.logEvent(
+      name = "app_download",
+      params = analyticsPayload.toAppGenericParameters(
+        packageName = packageName,
+        P_STATUS to "fail",
+        P_ERROR_MESSAGE to (errorMessage ?: "failure")
+      )
     )
 
     logBIDownloadEvent(
@@ -149,10 +167,13 @@ class InstallAnalytics(
     appSizeSegment: Int,
     errorMessage: String?,
   ) {
-    genericAnalytics.sendDownloadErrorEvent(
-      packageName = packageName,
-      analyticsPayload = analyticsPayload,
-      errorMessage = errorMessage
+    genericAnalytics.logEvent(
+      name = "app_download",
+      params = analyticsPayload.toAppGenericParameters(
+        packageName = packageName,
+        P_STATUS to "fail",
+        P_ERROR_MESSAGE to (errorMessage ?: "failure")
+      )
     )
 
     logBIDownloadEvent(
@@ -170,9 +191,12 @@ class InstallAnalytics(
     analyticsPayload: AnalyticsPayload?,
     appSizeSegment: Int,
   ) {
-    genericAnalytics.sendDownloadCancelEvent(
-      packageName = packageName,
-      analyticsPayload = analyticsPayload
+    genericAnalytics.logEvent(
+      name = "app_download",
+      params = analyticsPayload.toAppGenericParameters(
+        packageName = packageName,
+        P_STATUS to "cancel"
+      )
     )
 
     logBIDownloadEvent(
@@ -192,11 +216,7 @@ class InstallAnalytics(
       analyticsPayload.let {
         it.toAppBIParameters(packageName) +
           mapOfNonNull(
-            P_APKFY_APP_INSTALL to it?.isApkfy,
-            P_CONTEXT to it?.context,
-            P_PREVIOUS_CONTEXT to it?.previousContext,
             P_STORE to it?.store,
-            P_TAG to it?.bundleMeta?.tag,
             P_TRUSTED_BADGE to it?.trustedBadge
           )
       }
@@ -207,9 +227,12 @@ class InstallAnalytics(
     packageName: String,
     analyticsPayload: AnalyticsPayload?,
   ) {
-    genericAnalytics.sendInstallStartedEvent(
-      packageName = packageName,
-      analyticsPayload = analyticsPayload
+    genericAnalytics.logEvent(
+      name = "app_installed",
+      params = analyticsPayload.toAppGenericParameters(
+        packageName = packageName,
+        P_STATUS to "started"
+      )
     )
   }
 
@@ -217,9 +240,12 @@ class InstallAnalytics(
     packageName: String,
     analyticsPayload: AnalyticsPayload?,
   ) {
-    genericAnalytics.sendInstallCancelEvent(
-      packageName = packageName,
-      analyticsPayload = analyticsPayload
+    genericAnalytics.logEvent(
+      name = "app_installed",
+      params = analyticsPayload.toAppGenericParameters(
+        packageName = packageName,
+        P_STATUS to "cancel"
+      )
     )
   }
 
@@ -227,9 +253,12 @@ class InstallAnalytics(
     packageName: String,
     analyticsPayload: AnalyticsPayload?,
   ) {
-    genericAnalytics.sendInstallCompletedEvent(
-      packageName = packageName,
-      analyticsPayload = analyticsPayload
+    genericAnalytics.logEvent(
+      name = "app_installed",
+      params = analyticsPayload.toAppGenericParameters(
+        packageName = packageName,
+        P_STATUS to "success"
+      )
     )
 
     logBIInstallEvent(
@@ -245,10 +274,13 @@ class InstallAnalytics(
     errorMessage: String?,
     errorType: String?,
   ) {
-    genericAnalytics.sendInstallErrorEvent(
-      packageName = packageName,
-      analyticsPayload = analyticsPayload,
-      errorMessage = errorMessage
+    genericAnalytics.logEvent(
+      name = "app_installed",
+      params = analyticsPayload.toAppGenericParameters(
+        packageName = packageName,
+        P_STATUS to "fail",
+        P_ERROR_MESSAGE to (errorMessage ?: "failure")
+      )
     )
 
     logBIInstallEvent(
@@ -260,37 +292,88 @@ class InstallAnalytics(
     )
   }
 
-  fun sendUninstallClick(
-    packageName: String,
-    appSize: Long,
-  ) {
-    genericAnalytics.sendUninstallClick(
-      packageName = packageName,
-      appSize = appSize
+  fun sendUninstallClick(app: App) {
+    genericAnalytics.logEvent(
+      name = "oos_uninstall_clicked",
+      params = mapOf(
+        *app.toGenericParameters()
+      )
     )
   }
 
   fun sendResumeDownloadClick(
-    packageName: String,
+    app: App,
     downloadOnlyOverWifiSetting: Boolean,
-    appSize: Long,
   ) {
-    genericAnalytics.sendResumeDownloadClick(
-      packageName = packageName,
-      downloadOnlyOverWifiSetting = downloadOnlyOverWifiSetting,
-      appSize = appSize
+    genericAnalytics.logEvent(
+      name = "resume_download_clicked",
+      params = mapOf(
+        *app.toGenericParameters(),
+        P_WIFI_SETTING to downloadOnlyOverWifiSetting
+      )
     )
   }
 
-  fun sendDownloadCancel(
+  fun sendDownloadRestartedEvent(
     packageName: String,
+    analyticsPayload: AnalyticsPayload?,
+  ) = genericAnalytics.logEvent(
+    name = "app_download",
+    params = analyticsPayload.toAppGenericParameters(
+      packageName = packageName,
+      P_STATUS to "restart"
+    )
+  )
+
+  fun sendDownloadCancel(
+    app: App,
     analyticsContext: AnalyticsUIContext,
   ) {
-    genericAnalytics.sendDownloadCancel(
-      packageName = packageName,
-      analyticsContext = analyticsContext
+    genericAnalytics.logEvent(
+      name = "download_canceled",
+      params = analyticsContext.toGenericParameters(
+        *app.toGenericParameters()
+      )
     )
   }
+
+  fun sendWifiPromptShown(
+    app: App,
+    downloadOnlyOverWifiSetting: Boolean,
+  ) = genericAnalytics.logEvent(
+    name = "wifi_prompt_shown",
+    params = mapOf(
+      *app.toGenericParameters(),
+      P_WIFI_SETTING to downloadOnlyOverWifiSetting,
+    )
+  )
+
+  fun sendWaitForWifiClicked(
+    app: App,
+    downloadOnlyOverWifi: Boolean,
+  ) = genericAnalytics.logEvent(
+    name = "wait_for_wifi_clicked",
+    params = mapOf(
+      GenericAnalytics.P_PACKAGE_NAME to app.packageName,
+      GenericAnalytics.P_APP_SIZE to app.appSize,
+      P_WIFI_SETTING to downloadOnlyOverWifi
+    )
+  )
+
+  fun sendDownloadNowClicked(
+    packageName: String,
+    appSize: Long,
+    promptType: String,
+    downloadOnlyOverWifi: Boolean,
+  ) = genericAnalytics.logEvent(
+    name = "download_now_clicked",
+    params = mapOf(
+      GenericAnalytics.P_PACKAGE_NAME to packageName,
+      GenericAnalytics.P_APP_SIZE to appSize,
+      P_WIFI_SETTING to downloadOnlyOverWifi,
+      P_PROMPT_TYPE to promptType
+    )
+  )
 
   /**Reused functions**/
 
@@ -301,13 +384,9 @@ class InstallAnalytics(
   ) = biAnalytics.logEvent(
     name = "click_on_install_button",
     app.toBIParameters(aabTypes = null) +
-      mapOfNonNull(
+      analyticsContext.toBiParameters(
         P_ACTION to action,
-        P_APKFY_APP_INSTALL to analyticsContext.isApkfy,
-        P_CONTEXT to analyticsContext.currentScreen,
-        P_PREVIOUS_CONTEXT to analyticsContext.previousScreen,
         P_STORE to storeName,
-        P_TAG to analyticsContext.bundleMeta?.tag,
         P_TRUSTED_BADGE to app.malware.asNullableParameter()
       )
   )
@@ -322,14 +401,10 @@ class InstallAnalytics(
     name = "download",
     analyticsPayload.let {
       it.toAppBIParameters(packageName) +
-        mapOfNonNull(
+        it?.toAnalyticsUiContext().toBiParameters(
           P_STATUS to status,
           P_APP_SIZE_MB to appSizeSegment,
-          P_APKFY_APP_INSTALL to it?.isApkfy,
-          P_CONTEXT to it?.context,
-          P_PREVIOUS_CONTEXT to it?.previousContext,
           P_STORE to it?.store,
-          P_TAG to it?.bundleMeta?.tag,
           P_TRUSTED_BADGE to it?.trustedBadge,
           *pairs
         )
@@ -345,13 +420,9 @@ class InstallAnalytics(
     name = "install",
     analyticsPayload.let {
       it.toAppBIParameters(packageName) +
-        mapOfNonNull(
+        it?.toAnalyticsUiContext().toBiParameters(
           P_STATUS to status,
-          P_APKFY_APP_INSTALL to it?.isApkfy,
-          P_CONTEXT to it?.context,
-          P_PREVIOUS_CONTEXT to it?.previousContext,
           P_STORE to it?.store,
-          P_TAG to it?.bundleMeta?.tag,
           P_TRUSTED_BADGE to it?.trustedBadge,
           *pairs
         )
@@ -360,16 +431,44 @@ class InstallAnalytics(
 
   companion object {
     private const val P_ACTION = "action"
-    private const val P_APKFY_APP_INSTALL = "apkfy_app_install"
-    private const val P_CONTEXT = "context"
-    private const val P_PREVIOUS_CONTEXT = "previous_context"
     private const val P_STORE = "store"
     private const val P_STATUS = "status"
     private const val P_APP_SIZE_MB = "app_size_mb"
-    private const val P_TAG = "tag"
     private const val P_TRUSTED_BADGE = "trusted_badge"
     private const val P_ERROR_MESSAGE = "error_message"
     private const val P_ERROR_TYPE = "error_type"
     private const val P_ERROR_HTTP_CODE = "error_http_code"
+    internal const val P_WIFI_SETTING = "wifi_setting"
+    internal const val P_PROMPT_TYPE = "prompt_type"
+    internal const val P_SERVICE = "service"
   }
 }
+
+private fun AnalyticsPayload?.toAppGenericParameters(
+  packageName: String,
+  vararg pairs: Pair<String, Any?>
+): Map<String, Any> =
+  this?.run {
+    toAnalyticsUiContext().toGenericParameters(
+      *pairs,
+      GenericAnalytics.P_PACKAGE_NAME to packageName,
+      GenericAnalytics.P_APPC_BILLING to isAppCoins,
+    )
+  } ?: mapOfNonNull(*pairs)
+
+private fun AnalyticsPayload?.toAppBIParameters(
+  packageName: String,
+  vararg pairs: Pair<String, Any?>,
+): Map<String, Any> =
+  this?.run {
+    mapOfNonNull(
+      *pairs,
+      BIAnalytics.P_PACKAGE_NAME to packageName,
+      BIAnalytics.P_APP_AAB to isAab,
+      BIAnalytics.P_APP_AAB_INSTALL_TIME to aabTypes,
+      BIAnalytics.P_APP_APPC to isAppCoins,
+      BIAnalytics.P_APP_VERSION_CODE to versionCode,
+      BIAnalytics.P_APP_OBB to hasObb,
+      BIAnalytics.P_APP_IN_CATAPPULT to isInCatappult.asNullableParameter(),
+    )
+  } ?: mapOfNonNull(*pairs)

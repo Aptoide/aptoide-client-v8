@@ -49,6 +49,7 @@ import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoadi
 import com.aptoide.android.aptoidegames.design_system.PrimarySmallButton
 import com.aptoide.android.aptoidegames.drawables.icons.getSingleGamepad
 import com.aptoide.android.aptoidegames.home.BundleHeader
+import com.aptoide.android.aptoidegames.installer.analytics.rememberInstallAnalytics
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -61,6 +62,7 @@ fun MyGamesBundleView(
 ) {
   val analyticsContext = AnalyticsContext.current
   val genericAnalytics = rememberGenericAnalytics()
+  val installAnalytics = rememberInstallAnalytics()
   val (uiState, retry, openApp) = rememberMyGamesBundleUIState()
 
   MyGamesBundleViewContent(
@@ -72,7 +74,7 @@ fun MyGamesBundleView(
       navigate(buildSeeAllMyGamesRoute(title))
     },
     onAppClick = { packageName ->
-      genericAnalytics.sendOpenClick(packageName, null, analyticsContext)
+      installAnalytics.sendOpenClick(packageName, null, analyticsContext)
       openApp(packageName)
     },
     onRetryClick = retry,

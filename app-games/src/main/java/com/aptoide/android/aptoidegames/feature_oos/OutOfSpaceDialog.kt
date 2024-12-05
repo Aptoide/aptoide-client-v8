@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,9 +35,9 @@ import cm.aptoide.pt.feature_oos.presentation.InstalledAppsUiState
 import cm.aptoide.pt.feature_oos.presentation.rememberAvailableSpaceState
 import cm.aptoide.pt.feature_oos.presentation.rememberInstalledAppsListState
 import com.aptoide.android.aptoidegames.R
-import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.design_system.PrimaryButton
 import com.aptoide.android.aptoidegames.design_system.SecondaryButton
+import com.aptoide.android.aptoidegames.feature_oos.analytics.rememberOosAnalytics
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 
@@ -46,6 +47,11 @@ fun OutOfSpaceDialog(
   onDismiss: () -> Unit,
 ) {
   val requiredSpace = rememberAvailableSpaceState(app = app)
+  val analytics = rememberOosAnalytics()
+
+  LaunchedEffect(Unit) {
+    analytics.sendNotEnoughSpaceDialogShow(app)
+  }
 
   Dialog(
     onDismissRequest = onDismiss,
@@ -73,9 +79,8 @@ fun OutOfSpaceDialog(
         Message(requiredSpace)
         OutOfSpaceAppsList(app.packageName)
       }
-      val genericAnalytics = rememberGenericAnalytics()
       val dismiss = {
-        genericAnalytics.sendOOsGoBackButtonClick()
+        analytics.sendOOsGoBackButtonClick()
         onDismiss()
       }
       val buttonModifier = Modifier

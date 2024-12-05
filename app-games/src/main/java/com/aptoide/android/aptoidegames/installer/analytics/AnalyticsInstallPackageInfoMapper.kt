@@ -9,7 +9,6 @@ import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallationFile
 import cm.aptoide.pt.installer.TemporaryPayload
 import cm.aptoide.pt.installer.TemporaryPayload.Companion.fromString
-import com.aptoide.android.aptoidegames.analytics.dto.AnalyticsPayload
 import com.aptoide.android.aptoidegames.analytics.dto.AnalyticsUIContext
 import com.google.gson.Gson
 
