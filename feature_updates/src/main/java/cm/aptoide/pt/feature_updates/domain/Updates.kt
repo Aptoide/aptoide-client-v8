@@ -28,7 +28,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.withIndex
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -74,15 +73,38 @@ class Updates @Inject constructor(
               ?.also { updatesRepository.remove(it) }
           }
         }
+      mutex.withLock {
+        val installedApps = getInstalledApps()
+          .map { it.packageName to PackageInfoCompat.getLongVersionCode(it) }
+        val values = updatesRepository.getUpdates().first()
+        val toRemove = values.filterNot { update ->
+          installedApps.any { it.first == update.packageName && it.second < update.file.vercode }
+        }
+        currentUpdates = values - toRemove
+        updatesRepository.remove(*toRemove.toTypedArray())
+      }
     }
   }
+
+  val appsUpdates: Flow<List<App>> = updatesRepository.getUpdates()
+    .map {
+      mutex.withLock { currentUpdates = it }
+      it.let(appsListMapper::map)
+        .sortedByDescending {
+          if (it.packageName in prioritizedPackages) {
+            LocalDate.now().plusDays(1).toString()
+          } else {
+            it.modifiedDate
+          }
+        }
+    }
 
   suspend fun checkNonUpdatableApps() {
     getInstalledApps()
       .filter { !isAppUpdatable(it.packageName) }
       .let { getUpdates(it) }
 
-    getAppsUpdates().first().let {
+    appsUpdates.first().let {
       if (it.isNotEmpty()) {
         updatesNotificationBuilder.showUpdatesNotification(it)
       }
@@ -106,35 +128,6 @@ class Updates @Inject constructor(
     val updates = updatesRepository.loadUpdates(apksData)
     updatesRepository.saveOrReplace(*updates.toTypedArray())
     updates
-  }
-
-  suspend fun getAppsUpdates(): Flow<List<App>> {
-    val installedApps = getInstalledApps()
-      .map { it.packageName to PackageInfoCompat.getLongVersionCode(it) }
-    return updatesRepository.getUpdates()
-      .withIndex()
-      .map {
-        if (it.index == 0) {
-          val toRemove = it.value.filterNot { update ->
-            installedApps.any { it.first == update.packageName && it.second < update.file.vercode }
-          }
-          updatesRepository.remove(*toRemove.toTypedArray())
-          it.value - toRemove
-        } else {
-          it.value
-        }
-      }
-      .map {
-        mutex.withLock { currentUpdates = it }
-        it.let(appsListMapper::map)
-          .sortedByDescending {
-            if (it.packageName in prioritizedPackages) {
-              LocalDate.now().plusDays(1).toString()
-            } else {
-              it.modifiedDate
-            }
-          }
-      }
   }
 
   private fun getInstalledApps(): List<PackageInfo> =

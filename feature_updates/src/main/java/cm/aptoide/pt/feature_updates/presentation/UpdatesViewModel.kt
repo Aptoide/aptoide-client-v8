@@ -35,7 +35,7 @@ class UpdatesViewModel @Inject constructor(
   fun reload() {
     viewModelScope.launch {
       viewModelState.update { UpdatesUiState.Loading }
-      updates.getAppsUpdates()
+      updates.appsUpdates
         .catch {
           Timber.w(it)
           //No Errors For now
@@ -48,7 +48,7 @@ class UpdatesViewModel @Inject constructor(
             if (result.isEmpty()) {
               UpdatesUiState.Empty
             } else {
-              UpdatesUiState.Idle(updatesList = result.toList())
+              UpdatesUiState.Idle(updatesList = result)
             }
           }
         }
