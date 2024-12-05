@@ -21,6 +21,7 @@ data class AnalyticsPayload(
   val searchMeta: SearchMeta?,
   val itemPosition: Int?,
   val trustedBadge: String?,
+  val userClicks: Int,
 )
 
 fun AnalyticsPayload.toAnalyticsUiContext(): AnalyticsUIContext = AnalyticsUIContext(

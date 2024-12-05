@@ -1,5 +1,6 @@
 package com.aptoide.android.aptoidegames.installer.analytics
 
+import cm.aptoide.pt.extensions.toInt
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.hasObb
 import cm.aptoide.pt.feature_apps.data.isAab
@@ -12,8 +13,11 @@ import cm.aptoide.pt.installer.TemporaryPayload.Companion.fromString
 import com.aptoide.android.aptoidegames.analytics.dto.AnalyticsUIContext
 import com.google.gson.Gson
 
-class AnalyticsInstallPackageInfoMapper(private val mapper: InstallPackageInfoMapper) :
-  InstallPackageInfoMapper {
+class AnalyticsInstallPackageInfoMapper(
+  private val mapper: InstallPackageInfoMapper,
+  private val silentInstallChecker: SilentInstallChecker,
+  private val isForUI: Boolean,
+) : InstallPackageInfoMapper {
 
   override suspend fun map(app: App): InstallPackageInfo {
     // Immediately snapshot the current analytics context to avoid it's override while mapping
@@ -39,6 +43,8 @@ class AnalyticsInstallPackageInfoMapper(private val mapper: InstallPackageInfoMa
           searchMeta = context.searchMeta,
           itemPosition = context.itemPosition,
           trustedBadge = temporaryPayload?.trustedBadge,
+          userClicks = isForUI.toInt() +
+            silentInstallChecker.canInstallSilently(app.packageName).toInt()
         ).let<AnalyticsPayload, String?>(Gson()::toJson)
       )
     }

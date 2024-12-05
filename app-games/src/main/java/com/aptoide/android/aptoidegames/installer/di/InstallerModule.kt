@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import androidx.room.Room
 import cm.aptoide.pt.aptoide_network.di.StoreName
+import cm.aptoide.pt.download_view.di.UIInstallPackageInfoMapper
 import cm.aptoide.pt.install_info_mapper.domain.CachingInstallPackageInfoMapper
 import cm.aptoide.pt.install_info_mapper.domain.InstallPackageInfoMapper
 import cm.aptoide.pt.install_manager.InstallManager
@@ -19,6 +20,8 @@ import com.aptoide.android.aptoidegames.installer.analytics.AnalyticsInstallPack
 import com.aptoide.android.aptoidegames.installer.analytics.DownloadProbe
 import com.aptoide.android.aptoidegames.installer.analytics.InstallAnalytics
 import com.aptoide.android.aptoidegames.installer.analytics.InstallProbe
+import com.aptoide.android.aptoidegames.installer.analytics.SilentInstallChecker
+import com.aptoide.android.aptoidegames.installer.analytics.SilentInstallCheckerImpl
 import com.aptoide.android.aptoidegames.installer.database.AppDetailsDao
 import com.aptoide.android.aptoidegames.installer.database.InstallerDatabase
 import com.aptoide.android.aptoidegames.installer.database.InstallerDatabase.FirstMigration
@@ -84,14 +87,36 @@ class InstallerModule {
 
   @Singleton
   @Provides
+  fun provideSilentInstallChecker(
+    installManager: InstallManager,
+  ): SilentInstallChecker = SilentInstallCheckerImpl(installManager = installManager)
+
+  @Singleton
+  @Provides
   fun providePayloadMapper(
     installPackageInfoMapper: AptoideInstallPackageInfoMapper,
-  ): InstallPackageInfoMapper =
-    AnalyticsInstallPackageInfoMapper(
-      CachingInstallPackageInfoMapper(
-        installPackageInfoMapper
-      )
-    )
+    silentInstallChecker: SilentInstallChecker,
+  ): InstallPackageInfoMapper = AnalyticsInstallPackageInfoMapper(
+    mapper = CachingInstallPackageInfoMapper(
+      installPackageInfoMapper = installPackageInfoMapper
+    ),
+    silentInstallChecker = silentInstallChecker,
+    isForUI = false
+  )
+
+  @Singleton
+  @Provides
+  @UIInstallPackageInfoMapper
+  fun provideUIPayloadMapper(
+    installPackageInfoMapper: AptoideInstallPackageInfoMapper,
+    silentInstallChecker: SilentInstallChecker,
+  ): InstallPackageInfoMapper = AnalyticsInstallPackageInfoMapper(
+    mapper = CachingInstallPackageInfoMapper(
+      installPackageInfoMapper = installPackageInfoMapper
+    ),
+    silentInstallChecker = silentInstallChecker,
+    isForUI = true
+  )
 
   @Singleton
   @Provides
