@@ -11,11 +11,13 @@ class InstallProbe(
   private val packageInstaller: PackageInstaller,
   private val analytics: InstallAnalytics,
 ) : PackageInstaller {
+  private var cachedSizes = mutableMapOf<String, Long>()
 
   override fun install(
     packageName: String,
     installPackageInfo: InstallPackageInfo,
   ): Flow<Int> {
+    cachedSizes[packageName] = installPackageInfo.filesSize
     val analyticsPayload = installPackageInfo.payload.toAnalyticsPayload()
     return packageInstaller.install(packageName, installPackageInfo)
       .onStart {
@@ -28,19 +30,22 @@ class InstallProbe(
         when (it) {
           is CancellationException -> analytics.sendInstallCancelEvent(
             packageName = packageName,
-            analyticsPayload = analyticsPayload
+            analyticsPayload = analyticsPayload,
+            appSizeSegment = calcAppSizeSegment(bytes = installPackageInfo.filesSize)
           )
 
           null -> {
             analytics.sendInstallCompletedEvent(
               packageName = packageName,
-              analyticsPayload = analyticsPayload
+              analyticsPayload = analyticsPayload,
+              appSizeSegment = calcAppSizeSegment(bytes = installPackageInfo.filesSize)
             )
           }
 
           else -> analytics.sendInstallErrorEvent(
             packageName = packageName,
             analyticsPayload = analyticsPayload,
+            appSizeSegment = calcAppSizeSegment(bytes = installPackageInfo.filesSize),
             errorMessage = it.message,
             errorType = it::class.simpleName
           )
