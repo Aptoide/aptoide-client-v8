@@ -29,11 +29,10 @@ import cm.aptoide.pt.feature_campaigns.toMMPLinkerCampaign
 import cm.aptoide.pt.install_manager.dto.Constraints
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
-import com.aptoide.android.aptoidegames.analytics.getNetworkType
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
-import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.feature_oos.OutOfSpaceDialog
 import com.aptoide.android.aptoidegames.installer.analytics.AnalyticsInstallPackageInfoMapper
+import com.aptoide.android.aptoidegames.installer.analytics.getNetworkType
 import com.aptoide.android.aptoidegames.installer.analytics.rememberInstallAnalytics
 import com.aptoide.android.aptoidegames.installer.analytics.rememberScheduledInstalls
 import com.aptoide.android.aptoidegames.installer.installConstraints
@@ -188,7 +187,7 @@ fun installViewStates(
           },
           uninstall = {
             AnalyticsInstallPackageInfoMapper.currentAnalyticsUIContext = analyticsContext
-            installAnalytics.sendUninstallClick(app.packageName, app.appSize)
+            installAnalytics.sendUninstallClick(app)
             downloadUiState.uninstall()
           }
         )
@@ -199,16 +198,15 @@ fun installViewStates(
             when (downloadUiState.blocker) {
               UNMETERED -> { ->
                 installAnalytics.sendResumeDownloadClick(
-                  packageName = app.packageName,
-                  downloadOnlyOverWifiSetting = downloadOnlyOverWifi,
-                  appSize = app.appSize
+                  app = app,
+                  downloadOnlyOverWifiSetting = downloadOnlyOverWifi
                 )
                 it()
               }
 
               else -> { ->
                 canceled = true
-                installAnalytics.sendDownloadCancel(app.packageName, analyticsContext)
+                installAnalytics.sendDownloadCancel(app, analyticsContext)
                 it()
               }
             }
@@ -220,7 +218,7 @@ fun installViewStates(
           downloadProgress = downloadUiState.downloadProgress,
           cancel = {
             canceled = true
-            installAnalytics.sendDownloadCancel(app.packageName, analyticsContext)
+            installAnalytics.sendDownloadCancel(app, analyticsContext)
             downloadUiState.cancel()
           }
         )
@@ -228,7 +226,7 @@ fun installViewStates(
         is DownloadUiState.ReadyToInstall -> DownloadUiState.ReadyToInstall(
           cancel = {
             canceled = true
-            installAnalytics.sendDownloadCancel(app.packageName, analyticsContext)
+            installAnalytics.sendDownloadCancel(app, analyticsContext)
             downloadUiState.cancel()
           }
         )
@@ -247,7 +245,7 @@ fun installViewStates(
             downloadUiState.open()
           },
           uninstall = {
-            installAnalytics.sendUninstallClick(app.packageName, app.appSize)
+            installAnalytics.sendUninstallClick(app)
             downloadUiState.uninstall()
           }
         )
@@ -343,7 +341,7 @@ private fun installWithChecksResolver(app: App): ConstraintsResolver = runPrevie
 @Composable
 private fun installWithRealChecks(app: App): ConstraintsResolver {
   val context = LocalContext.current
-  val genericAnalytics = rememberGenericAnalytics()
+  val installAnalytics = rememberInstallAnalytics()
 
   val networkPreferencesViewModel = hiltViewModel<NetworkPreferencesViewModel>()
   val downloadOnlyOverWifi by networkPreferencesViewModel.downloadOnlyOverWifi.collectAsState()
@@ -357,7 +355,7 @@ private fun installWithRealChecks(app: App): ConstraintsResolver {
 
   val (showWifiPromptDialog) = hidable<(constraints: Constraints) -> Unit> { hide, installWith ->
     LaunchedEffect(Unit) {
-      genericAnalytics.sendWifiPromptShown(
+      installAnalytics.sendWifiPromptShown(
         app = app,
         downloadOnlyOverWifiSetting = downloadOnlyOverWifi
       )
@@ -371,7 +369,7 @@ private fun installWithRealChecks(app: App): ConstraintsResolver {
       size = app.appSize,
       onWaitForWifi = {
         hide()
-        genericAnalytics.sendWaitForWifiClicked(
+        installAnalytics.sendWaitForWifiClicked(
           app = app,
           downloadOnlyOverWifi = downloadOnlyOverWifi
         )
@@ -379,11 +377,11 @@ private fun installWithRealChecks(app: App): ConstraintsResolver {
       },
       onDownloadNow = {
         hide()
-        genericAnalytics.sendDownloadNowClicked(
-          downloadOnlyOverWifi = downloadOnlyOverWifi,
-          promptType = "overlay",
+        installAnalytics.sendDownloadNowClicked(
           packageName = app.packageName,
-          appSize = app.appSize
+          appSize = app.appSize,
+          promptType = "overlay",
+          downloadOnlyOverWifi = downloadOnlyOverWifi
         )
         installWith(installConstraints)
       },
@@ -393,7 +391,6 @@ private fun installWithRealChecks(app: App): ConstraintsResolver {
 
   return { missingSpace, resolve ->
     if (missingSpace > 0) {
-      genericAnalytics.sendNotEnoughSpaceDialogShow(app.packageName, app.appSize)
       showOutOfSpace(Unit)
     } else {
       if (

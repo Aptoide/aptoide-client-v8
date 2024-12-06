@@ -8,7 +8,16 @@ import cm.aptoide.pt.install_manager.InstallManager
 import com.appcoins.payments.arch.PaymentMethod
 import com.appcoins.payments.arch.ProductInfoData
 import com.appcoins.payments.arch.Transaction
-import com.aptoide.android.aptoidegames.analytics.dto.AnalyticsPayload
+import com.aptoide.android.aptoidegames.analytics.GenericAnalytics.Companion.P_APPC_BILLING
+import com.aptoide.android.aptoidegames.analytics.GenericAnalytics.Companion.P_APP_SIZE
+import com.aptoide.android.aptoidegames.analytics.GenericAnalytics.Companion.P_CONTEXT
+import com.aptoide.android.aptoidegames.analytics.GenericAnalytics.Companion.P_CURRENCY
+import com.aptoide.android.aptoidegames.analytics.GenericAnalytics.Companion.P_ITEM_POSITION
+import com.aptoide.android.aptoidegames.analytics.GenericAnalytics.Companion.P_PACKAGE_NAME
+import com.aptoide.android.aptoidegames.analytics.GenericAnalytics.Companion.P_PAYMENT_METHOD
+import com.aptoide.android.aptoidegames.analytics.GenericAnalytics.Companion.P_PRICE
+import com.aptoide.android.aptoidegames.analytics.GenericAnalytics.Companion.P_SKU_ID
+import com.aptoide.android.aptoidegames.analytics.GenericAnalytics.Companion.P_SKU_NAME
 import com.aptoide.android.aptoidegames.analytics.dto.AnalyticsUIContext
 import com.aptoide.android.aptoidegames.analytics.dto.BundleMeta
 import com.aptoide.android.aptoidegames.analytics.dto.SearchMeta
@@ -43,6 +52,11 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
     get() =
       resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
 
+  fun logEvent(
+    name: String,
+    params: Map<String, Any>?,
+  ) = analyticsSender.logEvent(name, params)
+
   /**
    * Actual events sending in the same order as in the Google document
    */
@@ -52,183 +66,12 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
     analyticsContext: AnalyticsUIContext,
   ) = analyticsSender.logEvent(
     name = "appcoins_install_initiated",
-    params = analyticsContext.toParameters(P_PACKAGE_NAME to packageName)
-  )
-
-  fun sendInstallClick(
-    app: App,
-    networkType: String,
-    analyticsContext: AnalyticsUIContext,
-  ) {
-    analyticsSender.logEvent(
-      name = "install_clicked",
-      params = analyticsContext.toParameters(
-        P_PACKAGE_NAME to app.packageName,
-        P_APPC_BILLING to app.isAppCoins,
-        P_SERVICE to networkType
-      )
-    )
-  }
-
-  fun sendOpenClick(
-    packageName: String,
-    hasAPPCBilling: Boolean? = null,
-    analyticsContext: AnalyticsUIContext,
-  ) = analyticsSender.logEvent(
-    name = "open_clicked",
-    params = analyticsContext.toParameters(
-      P_PACKAGE_NAME to packageName,
-      P_APPC_BILLING to hasAPPCBilling
-    )
-  )
-
-  fun sendRetryClick(
-    app: App,
-    networkType: String,
-    analyticsContext: AnalyticsUIContext,
-  ) = analyticsSender.logEvent(
-    name = "retry_app_clicked",
-    params = analyticsContext.toParameters(
-      P_PACKAGE_NAME to app.packageName,
-      P_APPC_BILLING to app.isAppCoins,
-      P_SERVICE to networkType
-    )
+    params = analyticsContext.toGenericParameters(P_PACKAGE_NAME to packageName)
   )
 
   fun sendNoNetworkRetry() = analyticsSender.logEvent(
     name = "retry_no_connection_clicked",
     params = emptyMap()
-  )
-
-  fun sendUpdateClick(
-    app: App,
-    networkType: String,
-    analyticsContext: AnalyticsUIContext,
-  ) = analyticsSender.logEvent(
-    name = "update_clicked",
-    params = analyticsContext.toParameters(
-      P_PACKAGE_NAME to app.packageName,
-      P_APPC_BILLING to app.isAppCoins,
-      P_SERVICE to networkType
-    )
-  )
-
-  fun sendResumeDownloadClick(
-    packageName: String,
-    downloadOnlyOverWifiSetting: Boolean,
-    appSize: Long,
-  ) {
-    analyticsSender.logEvent(
-      name = "resume_download_clicked",
-      params = mapOf(
-        P_PACKAGE_NAME to packageName,
-        P_WIFI_SETTING to downloadOnlyOverWifiSetting,
-        P_APP_SIZE to appSize
-      )
-    )
-  }
-
-  fun sendDownloadStartedEvent(
-    packageName: String,
-    analyticsPayload: AnalyticsPayload?,
-  ) = analyticsSender.logEvent(
-    name = "app_download",
-    params = analyticsPayload.toParameters(
-      P_PACKAGE_NAME to packageName,
-      P_STATUS to "started"
-    )
-  )
-
-  fun sendDownloadRestartedEvent(
-    packageName: String,
-    analyticsPayload: AnalyticsPayload?,
-  ) = analyticsSender.logEvent(
-    name = "app_download",
-    params = analyticsPayload.toParameters(
-      P_PACKAGE_NAME to packageName,
-      P_STATUS to "restart"
-    )
-  )
-
-  fun sendDownloadCompletedEvent(
-    packageName: String,
-    analyticsPayload: AnalyticsPayload?,
-  ) = analyticsSender.logEvent(
-    name = "app_download",
-    params = analyticsPayload.toParameters(
-      P_PACKAGE_NAME to packageName,
-      P_STATUS to "success"
-    )
-  )
-
-  fun sendInstallStartedEvent(
-    packageName: String,
-    analyticsPayload: AnalyticsPayload?,
-  ) = analyticsSender.logEvent(
-    name = "app_installed",
-    params = analyticsPayload.toParameters(
-      P_PACKAGE_NAME to packageName,
-      P_STATUS to "started"
-    )
-  )
-
-  fun sendInstallCompletedEvent(
-    packageName: String,
-    analyticsPayload: AnalyticsPayload?,
-  ) = analyticsSender.logEvent(
-    name = "app_installed",
-    params = analyticsPayload.toParameters(
-      P_PACKAGE_NAME to packageName,
-      P_STATUS to "success"
-    )
-  )
-
-  fun sendDownloadCancelEvent(
-    packageName: String,
-    analyticsPayload: AnalyticsPayload?,
-  ) = analyticsSender.logEvent(
-    name = "app_download",
-    params = analyticsPayload.toParameters(
-      P_PACKAGE_NAME to packageName,
-      P_STATUS to "cancel"
-    )
-  )
-
-  fun sendInstallCancelEvent(
-    packageName: String,
-    analyticsPayload: AnalyticsPayload?,
-  ) = analyticsSender.logEvent(
-    name = "app_installed",
-    params = analyticsPayload.toParameters(
-      P_PACKAGE_NAME to packageName,
-      P_STATUS to "cancel"
-    )
-  )
-
-  fun sendDownloadErrorEvent(
-    packageName: String,
-    analyticsPayload: AnalyticsPayload?,
-    errorMessage: String?,
-  ) = analyticsSender.logEvent(
-    name = "app_download",
-    params = analyticsPayload.toParameters(
-      P_PACKAGE_NAME to packageName,
-      P_STATUS to "fail",
-      P_ERROR_MESSAGE to (errorMessage ?: "failure")
-    )
-  )
-
-  fun sendInstallErrorEvent(
-    packageName: String,
-    analyticsPayload: AnalyticsPayload?,
-    errorMessage: String?,
-  ) = analyticsSender.logEvent(
-    name = "app_installed",
-    params = analyticsPayload.toParameters(
-      P_PACKAGE_NAME to packageName,
-      P_STATUS to "fail",
-      P_ERROR_MESSAGE to (errorMessage ?: "failure")
-    )
   )
 
   fun sendOpenAppEvent(
@@ -254,20 +97,19 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
     analyticsContext: AnalyticsUIContext,
   ) = analyticsSender.logEvent(
     name = "app_promo_clicked",
-    params = analyticsContext.toParameters(
-      P_PACKAGE_NAME to app.packageName,
-      P_APPC_BILLING to app.isAppCoins
+    params = analyticsContext.toGenericParameters(
+      *app.toGenericParameters()
     )
   )
 
   fun sendSeeAllClick(analyticsContext: AnalyticsUIContext) = analyticsSender.logEvent(
     name = "see_all_clicked",
-    params = analyticsContext.bundleMeta.toParameters()
+    params = analyticsContext.bundleMeta.toGenericParameters()
   )
 
   fun sendBackButtonClick(analyticsContext: AnalyticsUIContext) = analyticsSender.logEvent(
     name = "back_button_clicked",
-    params = analyticsContext.toParameters()
+    params = analyticsContext.toGenericParameters()
   )
 
   fun sendCarouselSwipe(
@@ -275,7 +117,7 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
     analyticsContext: AnalyticsUIContext,
   ) = analyticsSender.logEvent(
     name = "carousel_swipe",
-    params = analyticsContext.bundleMeta.toParameters(P_SCROLL_COUNT to count)
+    params = analyticsContext.bundleMeta.toGenericParameters(P_SCROLL_COUNT to count)
   )
 
   fun sendMenuClick(link: String) = analyticsSender.logEvent(
@@ -334,44 +176,9 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
     params = emptyMap()
   )
 
-  fun sendDownloadCancel(
-    packageName: String,
-    analyticsContext: AnalyticsUIContext,
-  ) = analyticsSender.logEvent(
-    name = "download_canceled",
-    params = analyticsContext.toParameters(P_PACKAGE_NAME to packageName)
-  )
-
   fun sendSearchMadeEvent(searchMeta: SearchMeta) = analyticsSender.logEvent(
     name = "search_made",
-    params = searchMeta.toParameters()
-  )
-
-  fun sendNotEnoughSpaceDialogShow(
-    packageName: String,
-    appSize: Long,
-  ) = analyticsSender.logEvent(
-    name = "oos_not_enough_space",
-    params = mapOf(
-      P_PACKAGE_NAME to packageName,
-      P_APP_SIZE to appSize
-    )
-  )
-
-  fun sendUninstallClick(
-    packageName: String,
-    appSize: Long,
-  ) = analyticsSender.logEvent(
-    name = "oos_uninstall_clicked",
-    params = mapOf(
-      P_PACKAGE_NAME to packageName,
-      P_APP_SIZE to appSize
-    )
-  )
-
-  fun sendOOsGoBackButtonClick() = analyticsSender.logEvent(
-    name = "oos_go_back_clicked",
-    params = emptyMap()
+    params = searchMeta.toGenericParameters()
   )
 
   fun sendDownloadOverWifiDisabled() = analyticsSender.logEvent(
@@ -384,51 +191,12 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
     params = emptyMap()
   )
 
-  fun sendWifiPromptShown(
-    app: App,
-    downloadOnlyOverWifiSetting: Boolean,
-  ) = analyticsSender.logEvent(
-    name = "wifi_prompt_shown",
-    params = mapOf(
-      P_WIFI_SETTING to downloadOnlyOverWifiSetting,
-      P_PACKAGE_NAME to app.packageName,
-      P_APP_SIZE to app.appSize
-    )
-  )
-
-  fun sendWaitForWifiClicked(
-    app: App,
-    downloadOnlyOverWifi: Boolean,
-  ) = analyticsSender.logEvent(
-    name = "wait_for_wifi_clicked",
-    params = mapOf(
-      P_WIFI_SETTING to downloadOnlyOverWifi,
-      P_PACKAGE_NAME to app.packageName,
-      P_APP_SIZE to app.appSize
-    )
-  )
-
-  fun sendDownloadNowClicked(
-    downloadOnlyOverWifi: Boolean,
-    promptType: String,
-    packageName: String,
-    appSize: Long,
-  ) = analyticsSender.logEvent(
-    name = "download_now_clicked",
-    params = mapOf(
-      P_WIFI_SETTING to downloadOnlyOverWifi,
-      P_PROMPT_TYPE to promptType,
-      P_PACKAGE_NAME to packageName,
-      P_APP_SIZE to appSize
-    )
-  )
-
   fun sendPaymentStartEvent(
     packageName: String,
     productInfoData: ProductInfoData?,
   ) = analyticsSender.logEvent(
     name = "iap_payment_start",
-    params = productInfoData.toParameters(P_PACKAGE_NAME to packageName)
+    params = productInfoData.toGenericParameters(P_PACKAGE_NAME to packageName)
   )
 
   fun sendPaymentMethodsDismissedEvent(
@@ -436,7 +204,7 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
     productInfoData: ProductInfoData?,
   ) = analyticsSender.logEvent(
     name = "iap_payment_dismissed",
-    params = productInfoData.toParameters(
+    params = productInfoData.toGenericParameters(
       P_PACKAGE_NAME to packageName,
       P_PAYMENT_METHOD to "list",
       P_CONTEXT to "start"
@@ -448,7 +216,7 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
     context: String?,
   ) = analyticsSender.logEvent(
     name = "iap_payment_dismissed",
-    params = paymentMethod.toParameters(P_CONTEXT to context)
+    params = paymentMethod.toGenericParameters(P_CONTEXT to context)
   )
 
   fun sendPaymentDismissedEvent(
@@ -457,7 +225,7 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
   ) = analyticsSender.logEvent(
     name = "iap_payment_dismissed",
     params = transaction
-      ?.toParameters(P_CONTEXT to context)
+      ?.toGenericParameters(P_CONTEXT to context)
       ?: mapOf(
         P_PAYMENT_METHOD to "unknown",
         P_CONTEXT to context
@@ -466,22 +234,22 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
 
   fun sendPaymentBackEvent(paymentMethod: PaymentMethod<*>) = analyticsSender.logEvent(
     name = "iap_payment_back",
-    params = paymentMethod.toParameters()
+    params = paymentMethod.toGenericParameters()
   )
 
   fun sendPaymentBuyEvent(paymentMethod: PaymentMethod<*>) = analyticsSender.logEvent(
     name = "iap_payment_buy",
-    params = paymentMethod.toParameters()
+    params = paymentMethod.toGenericParameters()
   )
 
   fun sendPaymentTryAgainEvent(paymentMethod: PaymentMethod<*>) = analyticsSender.logEvent(
     name = "iap_payment_try_again",
-    params = paymentMethod.toParameters()
+    params = paymentMethod.toGenericParameters()
   )
 
   fun sendPaymentSuccessEvent(paymentMethod: PaymentMethod<*>) = analyticsSender.logEvent(
     name = "iap_payment_conclusion",
-    params = paymentMethod.toParameters(P_STATUS to "success")
+    params = paymentMethod.toGenericParameters(P_STATUS to "success")
   )
 
   fun sendPaymentErrorEvent(
@@ -489,7 +257,7 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
     errorCode: String? = null,
   ) = analyticsSender.logEvent(
     name = "iap_payment_conclusion",
-    params = paymentMethod.toParameters(
+    params = paymentMethod.toGenericParameters(
       P_STATUS to "error",
       P_ERROR_CODE to errorCode
     )
@@ -498,7 +266,7 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
   fun sendPaymentSuccessEvent(transaction: Transaction?) = analyticsSender.logEvent(
     name = "iap_payment_conclusion",
     params = transaction
-      ?.toParameters(P_STATUS to "success")
+      ?.toGenericParameters(P_STATUS to "success")
       ?: mapOf(
         P_PAYMENT_METHOD to "unknown",
         P_STATUS to "success"
@@ -510,7 +278,7 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
     errorCode: String? = null,
   ) = analyticsSender.logEvent(
     name = "iap_payment_conclusion",
-    params = transaction?.toParameters(
+    params = transaction?.toGenericParameters(
       P_STATUS to "error",
       P_ERROR_CODE to errorCode
     ) ?: mapOf(
@@ -522,7 +290,7 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
 
   fun sendPaymentMethodsEvent(paymentMethod: PaymentMethod<*>) = analyticsSender.logEvent(
     name = "iap_payment_methods",
-    params = paymentMethod.productInfo.toParameters(
+    params = paymentMethod.productInfo.toGenericParameters(
       P_PACKAGE_NAME to paymentMethod.purchaseRequest.domain,
       P_PAYMENT_METHOD to paymentMethod.id
     )
@@ -552,112 +320,90 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
 
   fun sendApkfyTimeout() = analyticsSender.logEvent("apkfy_timeout", params = emptyMap())
 
-  fun sendApkfyInstallClicked(
-    app: App,
-    networkType: String,
-    analyticsContext: AnalyticsUIContext,
-  ) {
-    analyticsSender.logEvent(
-      name = "install_clicked_apkfy",
-      params = analyticsContext.toParameters(
-        P_PACKAGE_NAME to app.packageName,
-        P_APPC_BILLING to app.isAppCoins,
-        P_SERVICE to networkType
-      )
-    )
+  companion object {
+    internal const val P_OPEN_TYPE = "open_type"
+    internal const val P_FIRST_LAUNCH = "first_launch"
+    internal const val P_PACKAGE_NAME = "package_name"
+    internal const val P_APP_SIZE = "app_size"
+    internal const val P_SKU_ID = "sku_id"
+    internal const val P_SKU_NAME = "sku_name"
+    internal const val P_PRICE = "price"
+    internal const val P_CURRENCY = "currency"
+    internal const val P_CONTEXT = "context"
+    internal const val P_ITEM_POSITION = "item_position"
+    internal const val P_SCROLL_COUNT = "scroll_count"
+    internal const val P_CATEGORY = "category"
+    internal const val P_APPC_BILLING = "appc_billing"
+    internal const val P_SERVICE = "service"
+    internal const val P_STATUS = "status"
+    internal const val P_PAYMENT_METHOD = "payment_method"
+    internal const val P_ERROR_CODE = "error_code"
   }
+}
 
-  /**
-   * Helper functions for better readability
-   */
+/**
+ * Helper functions for better readability
+ */
 
-  private fun AnalyticsUIContext?.toParameters(vararg pairs: Pair<String, Any?>): Map<String, Any> =
-    this?.run {
-      searchMeta.toParameters() +
-        bundleMeta.toParameters(
-          *pairs,
-          P_CONTEXT to currentScreen,
-          P_ITEM_POSITION to itemPosition
-        )
-    } ?: mapOfNonNull(*pairs)
-
-  private fun AnalyticsPayload?.toParameters(vararg pairs: Pair<String, Any?>): Map<String, Any> =
-    this?.run {
-      bundleMeta.toParameters(
+fun AnalyticsUIContext?.toGenericParameters(vararg pairs: Pair<String, Any?>): Map<String, Any> =
+  this?.run {
+    searchMeta.toGenericParameters() +
+      bundleMeta.toGenericParameters(
         *pairs,
-        P_CONTEXT to context,
-        P_APPC_BILLING to isAppCoins,
+        P_CONTEXT to currentScreen,
         P_ITEM_POSITION to itemPosition
       )
-    } ?: mapOfNonNull(*pairs)
+  } ?: mapOfNonNull(*pairs)
 
-  private fun BundleMeta?.toParameters(vararg pairs: Pair<String, Any?>) =
-    this?.run {
-      mapOfNonNull(
-        *pairs,
-        "section_id" to tag,
-        "section_type" to bundleSource
-      )
-    } ?: mapOfNonNull(*pairs)
-
-  private fun SearchMeta?.toParameters() = this?.run {
-    mapOf(
-      "inserted_keyword" to insertedKeyword,
-      "search_keyword" to searchKeyword,
-      "search_type" to searchType
-    )
-  } ?: emptyMap()
-
-  private fun PaymentMethod<*>.toParameters(vararg pairs: Pair<String, Any?>) =
-    productInfo.toParameters(
-      *pairs,
-      P_PACKAGE_NAME to purchaseRequest.domain,
-      P_PAYMENT_METHOD to id
-    )
-
-  private fun ProductInfoData?.toParameters(vararg pairs: Pair<String, Any?>) = this?.run {
+fun BundleMeta?.toGenericParameters(vararg pairs: Pair<String, Any?>) =
+  this?.run {
     mapOfNonNull(
       *pairs,
-      P_SKU_ID to sku,
-      P_SKU_NAME to title,
-      P_PRICE to priceValue,
-      P_CURRENCY to priceCurrency
+      "section_id" to tag,
+      "section_type" to bundleSource
     )
   } ?: mapOfNonNull(*pairs)
 
-  private fun Transaction.toParameters(vararg pairs: Pair<String, Any?>) = mapOfNonNull(
+fun SearchMeta?.toGenericParameters() = this?.run {
+  mapOf(
+    "inserted_keyword" to insertedKeyword,
+    "search_keyword" to searchKeyword,
+    "search_type" to searchType
+  )
+} ?: emptyMap()
+
+fun App.toGenericParameters(): Array<Pair<String, Any>> = arrayOf(
+  P_PACKAGE_NAME to packageName,
+  P_APPC_BILLING to isAppCoins,
+  P_APP_SIZE to appSize
+)
+
+fun PaymentMethod<*>.toGenericParameters(vararg pairs: Pair<String, Any?>) =
+  productInfo.toGenericParameters(
     *pairs,
-    P_PACKAGE_NAME to domain,
-    P_PAYMENT_METHOD to method,
-    P_SKU_ID to product,
-    P_SKU_NAME to product,
-    P_PRICE to price.value,
-    P_CURRENCY to price.currency
+    P_PACKAGE_NAME to purchaseRequest.domain,
+    P_PAYMENT_METHOD to id
   )
 
-  companion object {
-    private const val P_OPEN_TYPE = "open_type"
-    private const val P_FIRST_LAUNCH = "first_launch"
-    private const val P_PACKAGE_NAME = "package_name"
-    private const val P_SKU_ID = "sku_id"
-    private const val P_SKU_NAME = "sku_name"
-    private const val P_PRICE = "price"
-    private const val P_CURRENCY = "currency"
-    private const val P_CONTEXT = "context"
-    private const val P_ITEM_POSITION = "item_position"
-    private const val P_SCROLL_COUNT = "scroll_count"
-    private const val P_CATEGORY = "category"
-    private const val P_APPC_BILLING = "appc_billing"
-    private const val P_APP_SIZE = "app_size"
-    private const val P_WIFI_SETTING = "wifi_setting"
-    private const val P_PROMPT_TYPE = "prompt_type"
-    private const val P_SERVICE = "service"
-    private const val P_STATUS = "status"
-    private const val P_ERROR_MESSAGE = "error_message"
-    private const val P_PAYMENT_METHOD = "payment_method"
-    private const val P_ERROR_CODE = "error_code"
-  }
-}
+fun ProductInfoData?.toGenericParameters(vararg pairs: Pair<String, Any?>) = this?.run {
+  mapOfNonNull(
+    *pairs,
+    P_SKU_ID to sku,
+    P_SKU_NAME to title,
+    P_PRICE to priceValue,
+    P_CURRENCY to priceCurrency
+  )
+} ?: mapOfNonNull(*pairs)
+
+fun Transaction.toGenericParameters(vararg pairs: Pair<String, Any?>) = mapOfNonNull(
+  *pairs,
+  P_PACKAGE_NAME to domain,
+  P_PAYMENT_METHOD to method,
+  P_SKU_ID to product,
+  P_SKU_NAME to product,
+  P_PRICE to price.value,
+  P_CURRENCY to price.currency
+)
 
 fun <K, V : Any> mapOfNonNull(vararg pairs: Pair<K, V?>) = mapOf(*pairs)
   .filterValues { it != null }

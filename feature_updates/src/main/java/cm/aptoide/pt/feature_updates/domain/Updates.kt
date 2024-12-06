@@ -2,13 +2,9 @@ package cm.aptoide.pt.feature_updates.domain
 
 import android.content.Context
 import android.content.pm.PackageInfo
-import android.content.pm.PackageManager
-import android.os.Build.VERSION
-import android.os.Build.VERSION_CODES
-import androidx.core.content.pm.PackageInfoCompat
-import cm.aptoide.pt.extensions.getInstalledPackages
+import cm.aptoide.pt.extensions.canBeInstalledSilentlyBy
+import cm.aptoide.pt.extensions.compatVersionCode
 import cm.aptoide.pt.extensions.getSignature
-import cm.aptoide.pt.extensions.ifNormalAppOrGame
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.AppsListMapper
 import cm.aptoide.pt.feature_apps.data.model.AppJSON
@@ -22,7 +18,6 @@ import cm.aptoide.pt.install_info_mapper.domain.InstallPackageInfoMapper
 import cm.aptoide.pt.install_manager.InstallManager
 import cm.aptoide.pt.install_manager.dto.Constraints
 import cm.aptoide.pt.install_manager.dto.Constraints.NetworkType.UNMETERED
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -37,7 +32,6 @@ import javax.inject.Singleton
 
 @Singleton
 class Updates @Inject constructor(
-  private val packageManager: PackageManager,
   private val updatesRepository: UpdatesRepository,
   private val appsListMapper: AppsListMapper,
   @PrioritizedPackagesFilter private val prioritizedPackages: List<String>,
@@ -45,19 +39,21 @@ class Updates @Inject constructor(
   private val updatesNotificationBuilder: UpdatesNotificationProvider,
   private val installPackageInfoMapper: InstallPackageInfoMapper,
   private val updatesPreferencesRepository: UpdatesPreferencesRepository,
-  @ApplicationContext private val applicationContext: Context,
 ) {
 
   val mutex: Mutex = Mutex()
 
   private var currentUpdates = listOf<AppJSON>()
 
-  init {
-    UpdatesWorker.enqueue(applicationContext)
+  private lateinit var myPackageName: String
+
+  fun initialize(context: Context) {
+    myPackageName = context.packageName
+    UpdatesWorker.enqueue(context)
     // TODO: clean this for testability
     CoroutineScope(Dispatchers.IO).launch {
       if (updatesPreferencesRepository.shouldAutoUpdateGames().first())
-        AutoUpdateWorker.enqueue(applicationContext)
+        AutoUpdateWorker.enqueue(context)
       installManager.appsChanges
         .collect { appInstaller ->
           mutex.withLock {
@@ -67,15 +63,16 @@ class Updates @Inject constructor(
             } else {
               currentUpdates.find {
                 it.packageName == appInstaller.packageName
-                  && it.file.vercode <= PackageInfoCompat.getLongVersionCode(packageInfo)
+                  && it.file.vercode <= packageInfo.compatVersionCode
               }
             }
               ?.also { updatesRepository.remove(it) }
           }
         }
       mutex.withLock {
-        val installedApps = getInstalledApps()
-          .map { it.packageName to PackageInfoCompat.getLongVersionCode(it) }
+        val installedApps = installManager.installedApps
+          .mapNotNull { it.packageInfo }
+          .map { it.packageName to it.compatVersionCode }
         val values = updatesRepository.getUpdates().first()
         val toRemove = values.filterNot { update ->
           installedApps.any { it.first == update.packageName && it.second < update.file.vercode }
@@ -100,9 +97,10 @@ class Updates @Inject constructor(
     }
 
   suspend fun checkNonUpdatableApps() {
-    getInstalledApps()
-      .filter { !isAppUpdatable(it.packageName) }
-      .let { getUpdates(it) }
+    installManager.installedApps
+      .filter { !it.installSourceInfo.canBeInstalledSilentlyBy(myPackageName) }
+      .mapNotNull { it.packageInfo }
+      .also { getUpdates(it) }
 
     appsUpdates.first().let {
       if (it.isNotEmpty()) {
@@ -111,55 +109,48 @@ class Updates @Inject constructor(
     }
   }
 
-  suspend fun checkUpdatableApps(): List<AppJSON> = getInstalledApps()
-    .filter { isAppUpdatable(it.packageName) }
-    .let { getUpdates(it) }
-
-  private suspend fun getUpdates(apps: List<PackageInfo>): List<AppJSON> = mutex.withLock {
-    val apksData = apps
-      .map {
-        ApkData(
-          signature = packageManager.getSignature(it.packageName).uppercase(),
-          packageName = it.packageName,
-          versionCode = PackageInfoCompat.getLongVersionCode(it)
-        )
-      }
-      .filter { it.signature.isNotEmpty() }
-    val updates = updatesRepository.loadUpdates(apksData)
-    updatesRepository.saveOrReplace(*updates.toTypedArray())
-    updates
-  }
-
-  private fun getInstalledApps(): List<PackageInfo> =
-    packageManager.getInstalledPackages().filter { it.ifNormalAppOrGame() }
+  private suspend fun getUpdates(apps: List<PackageInfo>): List<AppJSON> =
+    mutex.withLock {
+      val apksData = apps
+        .map {
+          ApkData(
+            signature = it.getSignature()?.uppercase() ?: "",
+            packageName = it.packageName,
+            versionCode = it.compatVersionCode
+          )
+        }
+        .filter { it.signature.isNotEmpty() }
+      val updates = updatesRepository.loadUpdates(apksData)
+      updatesRepository.saveOrReplace(*updates.toTypedArray())
+      updates
+    }
 
   suspend fun autoUpdate() {
-    checkUpdatableApps()
+    val installers = installManager.installedApps
+      .filter { it.installSourceInfo.canBeInstalledSilentlyBy(myPackageName) }
+    val updates = installers
+      .mapNotNull { it.packageInfo }
+      .let { getUpdates(it) }
       .let(appsListMapper::map)
       .sortedBy {
-        if (it.packageName == applicationContext.packageName) {
+        if (it.packageName == myPackageName) {
           LocalDate.now().plusDays(1).toString()
         } else {
           it.modifiedDate
         }
       }
-      .forEach {
-        installManager.getApp(it.packageName).install(
-          installPackageInfo = installPackageInfoMapper.map(it),
-          constraints = Constraints(
-            checkForFreeSpace = false,
-            networkType = UNMETERED
+    installers.forEach { appInstaller ->
+      updates
+        .firstOrNull { it.packageName == appInstaller.packageName }
+        ?.also {
+          appInstaller.install(
+            installPackageInfo = installPackageInfoMapper.map(it),
+            constraints = Constraints(
+              checkForFreeSpace = false,
+              networkType = UNMETERED
+            )
           )
-        )
-      }
-  }
-
-  private fun isAppUpdatable(packageName: String) =
-    if (VERSION.SDK_INT >= VERSION_CODES.UPSIDE_DOWN_CAKE) {
-      packageManager.getInstallSourceInfo(packageName).updateOwnerPackageName == applicationContext.packageName
-    } else if (VERSION.SDK_INT >= VERSION_CODES.R) {
-      packageManager.getInstallSourceInfo(packageName).installingPackageName == applicationContext.packageName
-    } else {
-      false
+        }
     }
+  }
 }

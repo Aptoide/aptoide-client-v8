@@ -26,24 +26,6 @@ data class AnalyticsUIContext(
 }
 
 @Keep
-data class AnalyticsPayload(
-  val isApkfy: Boolean,
-  val isAab: Boolean,
-  val aabTypes: String,
-  val isAppCoins: Boolean,
-  val isInCatappult: Boolean?,
-  val hasObb: Boolean,
-  val versionCode: Int,
-  val context: String,
-  val previousContext: String?,
-  val store: String,
-  val bundleMeta: BundleMeta?,
-  val searchMeta: SearchMeta?,
-  val itemPosition: Int?,
-  val trustedBadge: String?,
-)
-
-@Keep
 data class BundleMeta(
   val tag: String,
   val bundleSource: String,

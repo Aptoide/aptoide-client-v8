@@ -56,12 +56,4 @@ class AnalyticsModule {
   @Provides
   fun providesGenericAnalytics(firebaseAnalyticsSender: FirebaseAnalyticsSender): GenericAnalytics =
     GenericAnalytics(firebaseAnalyticsSender)
-
-  @Singleton
-  @Provides
-  fun providesInstallAnalytics(
-    genericAnalytics: GenericAnalytics,
-    biAnalytics: BIAnalytics,
-    @StoreName storeName: String,
-  ): InstallAnalytics = InstallAnalytics(genericAnalytics, biAnalytics, storeName)
 }

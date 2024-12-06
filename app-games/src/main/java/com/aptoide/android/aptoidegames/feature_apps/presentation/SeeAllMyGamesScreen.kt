@@ -40,6 +40,7 @@ import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAn
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.design_system.PrimarySmallButton
 import com.aptoide.android.aptoidegames.home.LoadingView
+import com.aptoide.android.aptoidegames.installer.analytics.rememberInstallAnalytics
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -58,6 +59,7 @@ fun seeAllMyGamesScreen() = ScreenData.withAnalytics(
 
   val analyticsContext = AnalyticsContext.current
   val genericAnalytics = rememberGenericAnalytics()
+  val installAnalytics = rememberInstallAnalytics()
   val viewModel = hiltViewModel<SeeAllMyGamesViewModel>()
   val uiState by viewModel.uiState.collectAsState()
 
@@ -69,7 +71,7 @@ fun seeAllMyGamesScreen() = ScreenData.withAnalytics(
       navigateBack()
     },
     openApp = { packageName ->
-      genericAnalytics.sendOpenClick(packageName, null, analyticsContext)
+      installAnalytics.sendOpenClick(packageName, null, analyticsContext)
       viewModel.openApp(packageName)
     },
   )

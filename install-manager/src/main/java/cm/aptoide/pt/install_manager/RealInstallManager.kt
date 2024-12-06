@@ -1,5 +1,6 @@
 package cm.aptoide.pt.install_manager
 
+import android.content.pm.InstallSourceInfo
 import android.content.pm.PackageInfo
 import cm.aptoide.pt.install_manager.dto.Constraints
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
@@ -7,7 +8,7 @@ import cm.aptoide.pt.install_manager.dto.SizeEstimator
 import cm.aptoide.pt.install_manager.dto.TaskInfo
 import cm.aptoide.pt.install_manager.environment.DeviceStorage
 import cm.aptoide.pt.install_manager.environment.NetworkConnection
-import cm.aptoide.pt.install_manager.repository.PackageInfoRepository
+import cm.aptoide.pt.install_manager.repository.AppInfoRepository
 import cm.aptoide.pt.install_manager.repository.TaskInfoRepository
 import cm.aptoide.pt.install_manager.workers.PackageDownloader
 import cm.aptoide.pt.install_manager.workers.PackageInstaller
@@ -23,7 +24,7 @@ internal class RealInstallManager(
   private val deviceStorage: DeviceStorage,
   private val sizeEstimator: SizeEstimator,
   networkConnection: NetworkConnection,
-  private val packageInfoRepository: PackageInfoRepository,
+  private val appInfoRepository: AppInfoRepository,
   private val taskInfoRepository: TaskInfoRepository,
   private val packageDownloader: PackageDownloader,
   private val packageInstaller: PackageInstaller,
@@ -37,7 +38,7 @@ internal class RealInstallManager(
   private var restored = false
 
   init {
-    packageInfoRepository.setOnChangeListener {
+    appInfoRepository.setOnChangeListener {
       appsCache[it]?.update()
       scope.launch {
         systemUpdates.emit(it)
@@ -48,11 +49,12 @@ internal class RealInstallManager(
   override fun getApp(packageName: String): App = getOrCreateApp(packageName)
 
   override val installedApps: Set<App>
-    get() = packageInfoRepository.getAll()
+    get() = appInfoRepository.getAllPackageInfos()
       .map {
         getOrCreateApp(
           packageName = it.packageName,
-          packageInfo = it
+          packageInfo = it,
+          installSourceInfo = appInfoRepository.getInstallSourceInfo(it.packageName)
         )
       }
       .toSet()
@@ -104,13 +106,15 @@ internal class RealInstallManager(
   private fun getOrCreateApp(
     packageName: String,
     packageInfo: PackageInfo? = null,
+    installSourceInfo: InstallSourceInfo? = null
   ) = appsCache[packageName] ?: RealApp(
     packageName = packageName,
     packageInfo = packageInfo,
+    installSourceInfo = installSourceInfo,
     taskFactory = this@RealInstallManager,
     getMissingSpace = { it - deviceStorage.availableFreeSpace },
     sizeEstimator = sizeEstimator,
-    packageInfoRepository = packageInfoRepository
+    appInfoRepository = appInfoRepository
   ).also {
     appsCache[packageName] = it
   }

@@ -1,8 +1,8 @@
 package cm.aptoide.pt.download_view.presentation
 
-import androidx.core.content.pm.PackageInfoCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cm.aptoide.pt.extensions.compatVersionCode
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.install_info_mapper.domain.InstallPackageInfoMapper
 import cm.aptoide.pt.install_manager.InstallManager
@@ -52,7 +52,7 @@ class DownloadViewModel(
   init {
     val packageStates = appInstaller.packageInfoFlow.map { info ->
       info?.let {
-        if (PackageInfoCompat.getLongVersionCode(it) < app.versionCode) {
+        if (it.compatVersionCode < app.versionCode) {
           DownloadUiState.Outdated(
             open = ::open,
             updateWith = ::install,
@@ -73,7 +73,7 @@ class DownloadViewModel(
           task to when (state) {
             Task.State.ABORTED,
             Task.State.CANCELED,
-            -> null
+              -> null
 
             Task.State.PENDING -> DownloadUiState.Waiting(
               action = task::cancel
@@ -126,11 +126,11 @@ class DownloadViewModel(
             val (blocker, action) = when {
               networkState == NetworkConnection.State.METERED
                 && networkConstraint == Constraints.NetworkType.UNMETERED
-              -> ExecutionBlocker.UNMETERED to task::allowDownloadOnMetered
+                -> ExecutionBlocker.UNMETERED to task::allowDownloadOnMetered
 
               networkState == NetworkConnection.State.GONE
                 && networkConstraint != Constraints.NetworkType.NOT_REQUIRED
-              -> ExecutionBlocker.CONNECTION to task::cancel
+                -> ExecutionBlocker.CONNECTION to task::cancel
 
               else -> ExecutionBlocker.QUEUE to task::cancel
             }
@@ -160,7 +160,7 @@ class DownloadViewModel(
     viewModelScope.launch {
       try {
         installPackageInfoMapper.map(app)
-      } catch (e: Exception) {
+      } catch (_: Exception) {
         viewModelState.update {
           DownloadUiState.Error(retryWith = ::install)
         }
@@ -182,21 +182,21 @@ class DownloadViewModel(
         installPackageInfo = installPackageInfo,
         constraints = constraints,
       )
-    } catch (e: Exception) {
+    } catch (_: Exception) {
       viewModelState.update {
         DownloadUiState.Error(retryWith = ::install)
       }
     }
   }
 
-  @Suppress("UNUSED_PARAMETER")
+  @Suppress("UNUSED_PARAMETER", "unused")
   private fun uninstall(resolver: ConstraintsResolver) = uninstall()
 
   private fun uninstall() {
     viewModelState.update { DownloadUiState.Waiting(action = null) }
     try {
       appInstaller.uninstall()
-    } catch (e: Exception) {
+    } catch (_: Exception) {
       viewModelState.update {
         DownloadUiState.Error(retryWith = ::uninstall)
       }
