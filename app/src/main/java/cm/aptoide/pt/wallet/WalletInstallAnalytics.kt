@@ -38,10 +38,22 @@ class WalletInstallAnalytics(
   ) {
     if (downloadAction == DownloadModel.Action.INSTALL) {
       downloadAnalytics.installClicked(
-        download.md5, download.packageName,
-        download.versionCode, action, false, download.hasAppc(),
-        download.hasSplits(), download.trustedBadge, null, download.storeName, action.toString(),
-        hasObbs, splitAnalyticsMapper.getSplitTypesAsString(download.splits), true, ""
+        download.md5,
+        download.packageName,
+        download.versionCode,
+        action,
+        false,
+        download.hasAppc(),
+        download.hasSplits(),
+        download.trustedBadge,
+        null,
+        download.storeName,
+        action.toString(),
+        hasObbs,
+        splitAnalyticsMapper.getSplitTypesAsString(download.splits),
+        true,
+        "",
+        download.size
       )
     }
     if (DownloadModel.Action.MIGRATE == downloadAction) {
@@ -50,7 +62,7 @@ class WalletInstallAnalytics(
         action, download.hasSplits(), download.trustedBadge,
         null,
         download.storeName, hasObbs,
-        splitAnalyticsMapper.getSplitTypesAsString(download.splits), true, ""
+        splitAnalyticsMapper.getSplitTypesAsString(download.splits), true, "", download.size
       )
     }
   }
@@ -74,7 +86,7 @@ class WalletInstallAnalytics(
       download.trustedBadge,
       download.storeName,
       false, download.hasObbs(), splitAnalyticsMapper.getSplitTypesAsString(download.splits),
-      true, ""
+      true, "", download.size
     )
   }
 

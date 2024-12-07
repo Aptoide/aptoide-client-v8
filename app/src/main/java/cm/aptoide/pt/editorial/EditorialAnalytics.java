@@ -51,7 +51,8 @@ public class EditorialAnalytics {
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
         download.getVersionCode(), action, false, download.hasAppc(),
         download.hasSplits(), trustedBadge, null, storeName, installType, download.hasObbs(),
-        splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()), isInCatappult, "");
+        splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()), isInCatappult, "",
+        download.getSize());
   }
 
   public void sendDownloadPauseEvent(String packageName) {
@@ -64,7 +65,7 @@ public class EditorialAnalytics {
 
   public void clickOnInstallButton(String packageName, String type, boolean hasSplits,
       boolean hasBilling, boolean isMigration, String rank, String origin, String store,
-      boolean hasObb, List<String> bdsFlags) {
+      boolean hasObb, List<String> bdsFlags, long appSize) {
     String context = getViewName(true);
     String installEvent = CURATION_CARD_INSTALL;
     if (!fromHome) {
@@ -76,7 +77,7 @@ public class EditorialAnalytics {
     map.put(CONTEXT, context);
 
     installAnalytics.clickOnInstallEvent(packageName, type, hasSplits, hasBilling, isMigration,
-        rank, origin, store, false, hasObb, bdsFlags.contains("STORE_BDS"), "");
+        rank, origin, store, false, hasObb, bdsFlags.contains("STORE_BDS"), "", appSize);
     analyticsManager.logEvent(map, installEvent, AnalyticsManager.Action.CLICK, context);
 
     analyticsManager.logEvent(map, AppViewAnalytics.CLICK_INSTALL, AnalyticsManager.Action.CLICK,

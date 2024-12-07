@@ -253,7 +253,7 @@ open class DownloadViewActionPresenter(
               download.splits.isNotEmpty(),
               dynamicSplitsList
             ),
-            download.storeName == "catappult", download.appCategory
+            download.storeName == "catappult", download.appCategory, download.size
           )
         }
       }
@@ -305,7 +305,7 @@ open class DownloadViewActionPresenter(
       download.hasAppc(), download.hasSplits(), malwareRank,
       storeName, isInApkfyContext, download.hasObbs(),
       splitAnalyticsMapper.getSplitTypesAsString(download.splits),
-      storeName.equals("catappult"), appCategory
+      storeName.equals("catappult"), appCategory, download.size
     )
     if (DownloadStatusModel.Action.MIGRATE == downloadAction) {
       downloadAnalytics.migrationClicked(
@@ -323,7 +323,8 @@ open class DownloadViewActionPresenter(
         download.hasObbs(),
         splitAnalyticsMapper.getSplitTypesAsString(download.splits),
         storeName.equals("catappult"),
-        appCategory
+        appCategory,
+        download.size
       )
     } else {
       downloadAnalytics.installClicked(
@@ -341,7 +342,8 @@ open class DownloadViewActionPresenter(
         download.hasObbs(),
         splitAnalyticsMapper.getSplitTypesAsString(download.splits),
         storeName.equals("catappult"),
-        appCategory
+        appCategory,
+        download.size
       )
     }
   }

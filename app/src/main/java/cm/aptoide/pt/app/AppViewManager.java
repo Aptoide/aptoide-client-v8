@@ -254,7 +254,8 @@ public class AppViewManager {
                     .toString(), app.getStore()
                     .getName(), isApkfy, throwable, app.getObb() != null,
                 splitAnalyticsMapper.getSplitTypesAsString(app.hasSplits(),
-                    dynamicSplitsModel.getDynamicSplitsList()), app.getAppCategory());
+                    dynamicSplitsModel.getDynamicSplitsList()), app.getAppCategory(),
+                app.getSize());
           }
         });
   }
@@ -300,7 +301,7 @@ public class AppViewManager {
         download.hasAppc(), download.hasSplits(), malwareRank,
         storeName, isApkfy, download.hasObbs(),
         splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()), isInCatappult,
-        appCategory);
+        appCategory, download.getSize());
   }
 
   public void setupMigratorUninstallEvent(String packageName) {

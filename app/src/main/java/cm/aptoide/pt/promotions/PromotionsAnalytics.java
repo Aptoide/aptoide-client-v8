@@ -112,7 +112,7 @@ public class PromotionsAnalytics {
 
   public void sendPromotionsAppInteractInstallEvent(String packageName, float appcValue,
       DownloadModel.Action action, boolean hasSplits, boolean hasBilling, String rank,
-      String origin, String store, boolean hasObb, List<String> bdsFlags) {
+      String origin, String store, boolean hasObb, List<String> bdsFlags, long appSize) {
     String context = getViewName(true);
     String downloadAction = null;
 
@@ -130,7 +130,7 @@ public class PromotionsAnalytics {
     if (downloadAction != null) {
       installAnalytics.clickOnInstallEvent(packageName, downloadAction, hasSplits, hasBilling,
           downloadAction.equals(DownloadModel.Action.MIGRATE.toString()), rank, origin,
-          store, false, hasObb, bdsFlags.contains("STORE_BDS"), "");
+          store, false, hasObb, bdsFlags.contains("STORE_BDS"), "", appSize);
       analyticsManager.logEvent(createPromotionsInteractMap(downloadAction, packageName, appcValue),
           PROMOTIONS_INTERACT, AnalyticsManager.Action.CLICK, context);
       analyticsManager.logEvent(map, AppViewAnalytics.CLICK_INSTALL, AnalyticsManager.Action.CLICK,

@@ -164,7 +164,8 @@ public class PromotionsPresenter implements Presenter {
                 promotionViewApp.getDownloadModel()
                     .getAction(), promotionViewApp.hasSplits(), promotionViewApp.hasAppc(),
                 promotionViewApp.getRank(), null, promotionViewApp.getStoreName(),
-                promotionViewApp.getObb() != null, promotionViewApp.getBdsFlags()))
+                promotionViewApp.getObb() != null, promotionViewApp.getBdsFlags(),
+                promotionViewApp.getSize()))
             .flatMapCompletable(promotionViewApp -> downloadApp(promotionViewApp))
             .observeOn(viewScheduler)
             .doOnError(throwable -> throwable.printStackTrace())

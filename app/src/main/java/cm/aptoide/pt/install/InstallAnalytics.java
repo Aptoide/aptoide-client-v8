@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
+import cm.aptoide.pt.analytics.AppSizeAnalyticsStringMapper;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.download.DownloadAnalytics;
@@ -78,6 +79,7 @@ public class InstallAnalytics {
   private static final String APP_VERSION_CODE = "app_version_code";
   public static final String GAMES_CATEGORY = "games";
   private static final String APP_IS_GAME = "app_is_game";
+  private static final String APP_SIZE_MB = "app_size_mb";
 
   private final CrashReport crashReport;
   private final AnalyticsManager analyticsManager;
@@ -85,16 +87,19 @@ public class InstallAnalytics {
   private final Map<String, InstallEvent> cache;
   private final ConnectivityManager connectivityManager;
   private final TelephonyManager telephonyManager;
+  private final AppSizeAnalyticsStringMapper appSizeAnalyticsStringMapper;
 
   public InstallAnalytics(CrashReport crashReport, AnalyticsManager analyticsManager,
       NavigationTracker navigationTracker, Map<String, InstallEvent> cache,
-      ConnectivityManager connectivityManager, TelephonyManager telephonyManager) {
+      ConnectivityManager connectivityManager, TelephonyManager telephonyManager,
+      AppSizeAnalyticsStringMapper appSizeAnalyticsStringMapper) {
     this.crashReport = crashReport;
     this.analyticsManager = analyticsManager;
     this.navigationTracker = navigationTracker;
     this.cache = cache;
     this.connectivityManager = connectivityManager;
     this.telephonyManager = telephonyManager;
+    this.appSizeAnalyticsStringMapper = appSizeAnalyticsStringMapper;
   }
 
   public void installCompleted(String packageName, int installingVersion, boolean isRoot,
@@ -147,11 +152,11 @@ public class InstallAnalytics {
   public void installStarted(String packageName, int versionCode, AnalyticsManager.Action action,
       DownloadAnalytics.AppContext context, Origin origin, boolean isMigration, boolean hasAppc,
       boolean isAppBundle, String trustedBadge, String storeName, boolean hasObbs,
-      String splitTypes, boolean isInCatappult, String appCategory) {
+      String splitTypes, boolean isInCatappult, String appCategory, long appSize) {
 
     createRakamInstallEvent(versionCode, packageName, origin.toString(),
         isMigration, isAppBundle, hasAppc, trustedBadge, storeName, context, false, hasObbs,
-        splitTypes, isInCatappult, versionCode, appCategory);
+        splitTypes, isInCatappult, versionCode, appCategory, appSize);
     createApplicationInstallEvent(action, context, origin, packageName, versionCode, -1, null,
         Collections.emptyList(), isMigration, hasAppc, isAppBundle, false);
   }
@@ -160,7 +165,7 @@ public class InstallAnalytics {
       boolean isMigration, boolean isAppBundle, boolean hasAppc,
       String trustedBadge, String storeName, DownloadAnalytics.AppContext appContext,
       boolean isApkfy, boolean hasObbs, String splitTypes, boolean isInCatappult, int versionCode,
-      String appCategory) {
+      String appCategory, long appSize) {
     String previousContext = navigationTracker.getPreviousViewName();
     String context = navigationTracker.getCurrentViewName();
     String tag_ =
@@ -188,6 +193,7 @@ public class InstallAnalytics {
     if (trustedBadge != null) result.put(TRUSTED_BADGE, trustedBadge.toLowerCase());
     if (!tag_.isEmpty()) result.put(TAG, tag_);
     result.put(STORE, storeName);
+    result.put(APP_SIZE_MB, appSizeAnalyticsStringMapper.mapAppSizeToMBBucketValue(appSize));
 
     cache.put(getKey(packageName, installingVersion, RAKAM_INSTALL_EVENT),
         new InstallEvent(result, RAKAM_INSTALL_EVENT, appContext.name(),
@@ -244,11 +250,11 @@ public class InstallAnalytics {
       DownloadAnalytics.AppContext context, Origin origin, int campaignId, String abTestingGroup,
       boolean isMigration, boolean hasAppc, boolean isAppBundle, String trustedBadge,
       String storeName, boolean isApkfy, boolean hasObbs, String splitTypes,
-      boolean isInCatappult, String appCategory) {
+      boolean isInCatappult, String appCategory, long appSize) {
 
     createRakamInstallEvent(versionCode, packageName, origin.toString(),
         isMigration, isAppBundle, hasAppc, trustedBadge, storeName, context, isApkfy, hasObbs,
-        splitTypes, isInCatappult, versionCode, appCategory);
+        splitTypes, isInCatappult, versionCode, appCategory, appSize);
 
     if (isMigration) createMigrationInstallEvent(action, context, packageName, versionCode);
 
@@ -367,12 +373,13 @@ public class InstallAnalytics {
 
   public void clickOnInstallEvent(String packageName, String type, boolean hasSplits,
       boolean hasBilling, boolean isMigration, String rank, String origin,
-      String store, boolean isApkfy, boolean hasObb, boolean isInCatappult, String appCategory) {
+      String store, boolean isApkfy, boolean hasObb, boolean isInCatappult, String appCategory,
+      Long appSize) {
     String context = navigationTracker.getCurrentViewName();
 
     Map<String, Object> eventMap =
         createInstallClickEventMap(packageName, type, hasSplits, hasBilling, isMigration, rank,
-            origin, store, context, isApkfy, hasObb, isInCatappult, appCategory);
+            origin, store, context, isApkfy, hasObb, isInCatappult, appCategory, appSize);
 
     analyticsManager.logEvent(eventMap, CLICK_ON_INSTALL, AnalyticsManager.Action.CLICK, context);
   }
@@ -380,7 +387,7 @@ public class InstallAnalytics {
   private Map<String, Object> createInstallClickEventMap(String packageName, String type,
       boolean hasSplits, boolean hasBilling, boolean isMigration, String rank,
       String origin, String store, String context, boolean isApkfy, boolean hasObb,
-      boolean isInCatappult, String appCategory) {
+      boolean isInCatappult, String appCategory, Long appSize) {
     String previousContext = navigationTracker.getPreviousViewName();
 
     Map<String, Object> result = new HashMap<>();
@@ -401,6 +408,7 @@ public class InstallAnalytics {
 
     if (origin != null) result.put(TAG, origin);
     result.put(STORE, store);
+    result.put(APP_SIZE_MB, appSizeAnalyticsStringMapper.mapAppSizeToMBBucketValue(appSize));
     return result;
   }
 

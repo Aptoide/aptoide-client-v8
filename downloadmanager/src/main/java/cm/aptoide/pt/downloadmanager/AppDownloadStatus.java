@@ -35,6 +35,30 @@ public class AppDownloadStatus {
     }
   }
 
+  public boolean isAppDownloadOver() {
+    return appDownloadState == AppDownloadState.COMPLETED
+        || appDownloadState == AppDownloadState.ERROR
+        || appDownloadState == AppDownloadState.ERROR_FILE_NOT_FOUND
+        || appDownloadState == AppDownloadState.ERROR_NOT_ENOUGH_SPACE
+        || appDownloadState == AppDownloadState.ERROR_MD5_DOES_NOT_MATCH
+        || appDownloadState == AppDownloadState.WAITING_TO_MOVE_FILES
+        || appDownloadState == AppDownloadState.VERIFYING_FILE_INTEGRITY;
+  }
+
+  public int getAverageDownloadSpeed() {
+    int totalAverageSpeed = 0;
+    for (FileDownloadCallback fileDownloadCallback : fileDownloadCallbackList) {
+      if (fileDownloadCallback.getDownloadState() == AppDownloadState.COMPLETED) {
+        totalAverageSpeed += fileDownloadCallback.getDownloadSpeed();
+      }
+    }
+    if (totalAverageSpeed > 0) {
+      return totalAverageSpeed / fileDownloadCallbackList.size();
+    } else {
+      return 0;
+    }
+  }
+
   private long getOverallProgressAsBytes() {
     long overallProgress = 0;
     for (FileDownloadCallback fileDownloadCallback : fileDownloadCallbackList) {

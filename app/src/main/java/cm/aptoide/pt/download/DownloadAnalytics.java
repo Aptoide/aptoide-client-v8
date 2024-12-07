@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
+import cm.aptoide.pt.analytics.AppSizeAnalyticsStringMapper;
 import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.view.DeepLinkManager;
@@ -14,6 +15,8 @@ import io.sentry.SentryEvent;
 import io.sentry.protocol.Message;
 import java.util.HashMap;
 import java.util.Map;
+
+import static java.lang.Math.round;
 
 public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.DownloadAnalytics {
   public static final String NOTIFICATION_DOWNLOAD_COMPLETE_EVENT_NAME =
@@ -72,15 +75,20 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
   private static final String APP_IN_CATAPPULT = "app_in_catappult";
   public static final String GAMES_CATEGORY = "games";
   private static final String APP_IS_GAME = "app_is_game";
+  private static final String DOWNLOAD_SPEED_MBPS = "download_speed_mbps";
+  private static final String APP_SIZE_MB = "app_size_mb";
   private final Map<String, DownloadEvent> cache;
   private final ConnectivityManager connectivityManager;
   private final TelephonyManager telephonyManager;
   private final NavigationTracker navigationTracker;
   private final AnalyticsManager analyticsManager;
+  private final AppSizeAnalyticsStringMapper appSizeAnalyticsStringMapper;
 
   public DownloadAnalytics(ConnectivityManager connectivityManager,
       TelephonyManager telephonyManager, NavigationTracker navigationTracker,
-      AnalyticsManager analyticsManager) {
+      AnalyticsManager analyticsManager,
+      AppSizeAnalyticsStringMapper appSizeAnalyticsStringMapper) {
+    this.appSizeAnalyticsStringMapper = appSizeAnalyticsStringMapper;
     this.cache = new HashMap<>();
     this.connectivityManager = connectivityManager;
     this.telephonyManager = telephonyManager;
@@ -88,17 +96,18 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
     this.analyticsManager = analyticsManager;
   }
 
-  @Override public void onDownloadComplete(String md5, String packageName, int versionCode) {
+  @Override public void onDownloadComplete(String md5, String packageName, int versionCode,
+      int averageDownloadSpeed) {
     sendDownloadEvent(md5 + EDITORS_CHOICE_DOWNLOAD_COMPLETE_EVENT_NAME);
     sendDownloadEvent(md5 + DOWNLOAD_COMPLETE_EVENT);
     sendDownloadEvent(md5 + NOTIFICATION_DOWNLOAD_COMPLETE_EVENT_NAME);
-    sendRakamDownloadEvent(md5 + RAKAM_DOWNLOAD_EVENT);
+    sendRakamDownloadEvent(md5 + RAKAM_DOWNLOAD_EVENT, averageDownloadSpeed);
   }
 
   @Override
   public void onError(String packageName, int versionCode, String md5, Throwable throwable,
-      String downloadErrorUrl, String downloadHttpError) {
-    handleRakamOnError(md5, throwable, downloadErrorUrl, downloadHttpError);
+      String downloadErrorUrl, String downloadHttpError, int averageDownloadSpeed) {
+    handleRakamOnError(md5, throwable, downloadErrorUrl, downloadHttpError, averageDownloadSpeed);
   }
 
   @Override public void startProgress(RoomDownload download) {
@@ -108,11 +117,13 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
     updateDownloadEventWithHasProgress(download.getMd5() + RAKAM_DOWNLOAD_EVENT);
   }
 
-  private void sendRakamDownloadEvent(String downloadCacheKey) {
+  private void sendRakamDownloadEvent(String downloadCacheKey, int averageDownloadSpeed) {
+    double averageDownloadSpeedMbps = (double) averageDownloadSpeed / 1024;
     DownloadEvent downloadEvent = cache.get(downloadCacheKey);
     if (downloadEvent != null && downloadEvent.isHadProgress()) {
       Map<String, Object> data = downloadEvent.getData();
       data.put(STATUS, "success");
+      data.put(DOWNLOAD_SPEED_MBPS, round(averageDownloadSpeedMbps * 100.0) / 100.0);
       analyticsManager.logEvent(data, downloadEvent.getEventName(), downloadEvent.getAction(),
           downloadEvent.getContext());
       cache.remove(downloadCacheKey);
@@ -120,7 +131,8 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
   }
 
   private void handleRakamOnError(String md5, Throwable throwable, String downloadErrorUrl,
-      String downloadHttpError) {
+      String downloadHttpError, int averageDownloadSpeed) {
+    double averageDownloadSpeedMbps = (double) averageDownloadSpeed / 1024;
     DownloadEvent downloadEvent = cache.get(md5 + RAKAM_DOWNLOAD_EVENT);
     if (downloadEvent != null) {
       Map<String, Object> data = downloadEvent.getData();
@@ -130,6 +142,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
       data.put(ERROR_MESSAGE, throwable.getMessage());
       data.put(ERROR_URL, downloadErrorUrl);
       data.put(ERROR_HTTP_CODE, downloadHttpError);
+      data.put(DOWNLOAD_SPEED_MBPS, round(averageDownloadSpeedMbps * 100.0) / 100.0);
       analyticsManager.logEvent(data, downloadEvent.getEventName(), downloadEvent.getAction(),
           downloadEvent.getContext());
       cache.remove(md5 + RAKAM_DOWNLOAD_EVENT);
@@ -166,7 +179,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
       boolean isMigration, boolean isAppBundle, boolean hasAppc, String trustedBadge,
       String storeName, boolean isApkfy,
       Throwable throwable, boolean hasObb, String splitTypes, boolean isInCatappult,
-      String appCategory) {
+      String appCategory, long appSize) {
 
     String previousContext = navigationTracker.getPreviousViewName();
     String context = navigationTracker.getCurrentViewName();
@@ -176,7 +189,8 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
     HashMap<String, Object> result =
         createRakamDownloadEvent(packageName, versionCode, installType.toString(), isMigration,
             isAppBundle, hasAppc, trustedBadge, storeName,
-            isApkfy, previousContext, context, tag, hasObb, splitTypes, isInCatappult, appCategory);
+            isApkfy, previousContext, context, tag, hasObb, splitTypes, isInCatappult, appCategory,
+            appSize);
 
     result.put(STATUS, "fail");
     result.put(ERROR_TYPE, throwable.getClass()
@@ -230,40 +244,40 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
   public void installClicked(String md5, int versionCode, String packageName, String trustedValue,
       String editorsBrickPosition, InstallType installType, AnalyticsManager.Action action,
       boolean hasAppc, boolean isAppBundle, String storeName, boolean isApkfy, boolean hasObbs,
-      String splitTypes, boolean isInCatappult, String appCategory) {
+      String splitTypes, boolean isInCatappult, String appCategory, long appSize) {
     setUpInstallEvent(md5, versionCode, packageName, trustedValue, editorsBrickPosition,
         installType, action, false, hasAppc, isAppBundle, storeName, isApkfy,
-        hasObbs, splitTypes, isInCatappult, appCategory);
+        hasObbs, splitTypes, isInCatappult, appCategory, appSize);
   }
 
   public void migrationClicked(String md5, int versionCode, String packageName, String trustedValue,
       String editorsBrickPosition, InstallType installType, AnalyticsManager.Action action,
       boolean hasAppc, boolean isAppBundle, String storeName, boolean isApkfy, boolean hasObb,
-      String splitTypes, boolean isInCatappult, String appCategory) {
+      String splitTypes, boolean isInCatappult, String appCategory, long appSize) {
     setUpInstallEvent(md5, versionCode, packageName, trustedValue, editorsBrickPosition,
         installType, action, true, hasAppc, isAppBundle, storeName, isApkfy,
-        hasObb, splitTypes, isInCatappult, appCategory);
+        hasObb, splitTypes, isInCatappult, appCategory, appSize);
   }
 
   public void migrationClicked(String md5, String packageName, int versionCode,
       AnalyticsManager.Action action, boolean isAppBundle, String trustedBadge, String tag,
       String storeName, boolean hasObbs,
-      String splitTypes, boolean isInCatappult, String appCategory) {
+      String splitTypes, boolean isInCatappult, String appCategory, long appSize) {
     setUpInstallEvent(md5, packageName, versionCode, action, true, true,
         isAppBundle, trustedBadge, storeName, "update_to_appc", hasObbs, splitTypes,
-        isInCatappult, appCategory);
+        isInCatappult, appCategory, appSize);
   }
 
   private void setUpInstallEvent(String md5, int versionCode, String packageName,
       String trustedValue, String editorsBrickPosition, InstallType installType,
       AnalyticsManager.Action action,
       boolean isMigration, boolean hasAppc, boolean isAppBundle, String storeName, boolean isApkfy,
-      boolean hasObbs, String splitTypes, boolean isInCatappult, String appCategory) {
+      boolean hasObbs, String splitTypes, boolean isInCatappult, String appCategory, long appSize) {
     String currentContext = navigationTracker.getViewName(true);
 
     rakamDownloadCompleteEvent(md5, packageName, versionCode, installType.toString(), isMigration,
         isAppBundle, hasAppc, trustedValue, storeName, isApkfy,
-        hasObbs, splitTypes, isInCatappult, appCategory);
+        hasObbs, splitTypes, isInCatappult, appCategory, appSize);
     editorsChoiceDownloadCompletedEvent(currentContext, md5, packageName, editorsBrickPosition,
         installType, currentContext, action, hasAppc, isAppBundle, isApkfy);
     pushNotificationDownloadEvent(currentContext, md5, packageName, installType, action,
@@ -276,21 +290,21 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
   public void installClicked(String md5, String packageName, int versionCode,
       AnalyticsManager.Action action, boolean isMigration, boolean hasAppc, boolean isAppBundle,
       String trustedBadge, String tag, String storeName, String installType, boolean hasObb,
-      String splitTypes, boolean isInCatappult, String appCategory) {
+      String splitTypes, boolean isInCatappult, String appCategory, long appSize) {
     setUpInstallEvent(md5, packageName, versionCode, action, isMigration,
         hasAppc, isAppBundle, trustedBadge, storeName, installType, hasObb, splitTypes,
-        isInCatappult, appCategory);
+        isInCatappult, appCategory, appSize);
   }
 
   private void setUpInstallEvent(String md5, String packageName, int versionCode,
       AnalyticsManager.Action action, boolean isMigration, boolean hasAppc, boolean isAppBundle,
       String trustedBadge, String storeName, String installType, boolean hasObbs, String splitTypes,
-      boolean isInCatappult, String appCategory) {
+      boolean isInCatappult, String appCategory, long appSize) {
     String currentContext = navigationTracker.getViewName(true);
 
     rakamDownloadCompleteEvent(md5, packageName, versionCode, installType,
         isMigration, isAppBundle, hasAppc, trustedBadge, storeName, false, hasObbs, splitTypes,
-        isInCatappult, appCategory);
+        isInCatappult, appCategory, appSize);
     downloadCompleteEvent(navigationTracker.getPreviousScreen(),
         navigationTracker.getCurrentScreen(), md5, packageName, null, action, currentContext,
         isMigration, hasAppc, isAppBundle, false);
@@ -300,7 +314,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
       String action,
       boolean isMigration, boolean isAppBundle, boolean hasAppc, String trustedBadge,
       String storeName, boolean isApkfy, boolean hasObb, String splitTypes, boolean isInCatappult,
-      String appCategory) {
+      String appCategory, long appSize) {
     String previousContext = navigationTracker.getPreviousViewName();
     String context = navigationTracker.getCurrentViewName();
     String tag = navigationTracker.getCurrentScreen() != null ? navigationTracker.getCurrentScreen()
@@ -309,7 +323,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
     HashMap<String, Object> result =
         createRakamDownloadEvent(packageName, versionCode, action, isMigration,
             isAppBundle, hasAppc, trustedBadge, storeName, isApkfy, previousContext, context, tag,
-            hasObb, splitTypes, isInCatappult, appCategory);
+            hasObb, splitTypes, isInCatappult, appCategory, appSize);
 
     DownloadEvent downloadEvent =
         new DownloadEvent(RAKAM_DOWNLOAD_EVENT, result, context, AnalyticsManager.Action.CLICK);
@@ -320,7 +334,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
       String action,
       boolean isMigration, boolean isAppBundle, boolean hasAppc, String trustedBadge,
       String storeName, boolean isApkfy, String previousContext, String context, String tag,
-      boolean hasObbs, String splitTypes, boolean isInCatappult, String appCategory) {
+      boolean hasObbs, String splitTypes, boolean isInCatappult, String appCategory, long appSize) {
 
     HashMap<String, Object> result = new HashMap<>();
     result.put(CONTEXT, context);
@@ -343,6 +357,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
       result.put(TAG, tag);
     }
     result.put(STORE, storeName);
+    result.put(APP_SIZE_MB, appSizeAnalyticsStringMapper.mapAppSizeToMBBucketValue(appSize));
     return result;
   }
 

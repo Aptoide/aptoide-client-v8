@@ -169,7 +169,7 @@ public class PromotionsManager {
         download.hasAppc(), download.hasSplits(),
         download.getTrustedBadge(), download.getStoreName(), false, download.hasObbs(),
         splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()),
-        download.getStoreName().equals("catappult"), "");
+        download.getStoreName().equals("catappult"), "", download.getSize());
   }
 
   public Completable pauseDownload(String md5) {

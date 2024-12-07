@@ -109,7 +109,8 @@ public class EditorialManager {
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup, false,
         download.hasAppc(), download.hasSplits(),
         download.getTrustedBadge(), download.getStoreName(), false, download.hasObbs(),
-        splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()), isInCatappult, "");
+        splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()), isInCatappult, "",
+        download.getSize());
   }
 
   public Observable<EditorialDownloadModel> loadDownloadModel(String md5, String packageName,

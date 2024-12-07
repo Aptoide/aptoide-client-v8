@@ -203,7 +203,8 @@ public class EditorialPresenter implements Presenter {
                                   viewModel.hasSplits(), viewModel.hasAppc(), false,
                                   viewModel.getRank(), null, viewModel.getStoreName(),
                                   viewModel.getBottomCardObb() != null,
-                                  editorialDownloadEvent.getBdsFlags())));
+                                  editorialDownloadEvent.getBdsFlags(),
+                                  editorialDownloadEvent.getSize())));
                   break;
                 case OPEN:
                   completable = editorialManager.loadEditorialViewModel()
@@ -215,7 +216,8 @@ public class EditorialPresenter implements Presenter {
                               appViewViewModel.hasSplits(), appViewViewModel.hasAppc(), false,
                               appViewViewModel.getRank(), null, appViewViewModel.getStoreName(),
                               appViewViewModel.getBottomCardObb() != null,
-                              editorialDownloadEvent.getBdsFlags())));
+                              editorialDownloadEvent.getBdsFlags(),
+                              editorialDownloadEvent.getSize())));
                   break;
                 case DOWNGRADE:
                   completable = editorialManager.loadEditorialViewModel()
@@ -231,7 +233,8 @@ public class EditorialPresenter implements Presenter {
                                       appViewViewModel.getRank(), null,
                                       appViewViewModel.getStoreName(),
                                       appViewViewModel.getBottomCardObb() != null,
-                                      editorialDownloadEvent.getBdsFlags())));
+                                      editorialDownloadEvent.getBdsFlags(),
+                                      editorialDownloadEvent.getSize())));
                   break;
               }
               return completable;

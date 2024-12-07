@@ -236,13 +236,13 @@ public class AppsManager {
         download.hasAppc(), download.hasSplits(), download.getTrustedBadge(), null,
         download.getStoreName(), installType, download.hasObbs(),
         splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()),
-        download.getStoreName().equals("catappult"), "");
+        download.getStoreName().equals("catappult"), "", download.getSize());
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, DownloadAnalytics.AppContext.APPS_FRAGMENT,
         getOrigin(download.getAction()), false, download.hasAppc(), download.hasSplits(),
         download.getTrustedBadge(), download.getStoreName(),
         download.hasObbs(), splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()),
-        download.getStoreName().equals("catappult"), "");
+        download.getStoreName().equals("catappult"), "", download.getSize());
   }
 
   private void setupUpdateEvents(RoomDownload download, Origin origin,
@@ -252,13 +252,13 @@ public class AppsManager {
         download.getVersionCode(), AnalyticsManager.Action.INSTALL, false,
         download.hasAppc(), download.hasSplits(), trustedBadge, tag, storeName, installType,
         download.hasObbs(), splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()),
-        download.getStoreName().equals("catappult"), "");
+        download.getStoreName().equals("catappult"), "", download.getSize());
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, DownloadAnalytics.AppContext.APPS_FRAGMENT, origin, false,
         download.hasAppc(), download.hasSplits(),
         download.getTrustedBadge(), download.getStoreName(), download.hasObbs(),
         splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()),
-        download.getStoreName().equals("catappult"), "");
+        download.getStoreName().equals("catappult"), "", download.getSize());
   }
 
   private Origin getOrigin(int action) {
@@ -293,7 +293,7 @@ public class AppsManager {
                   update.hasAppc(), false, update.getTrustedBadge(), null, update.getStoreName(),
                   type,
                   update.getMainObbMd5() != null && !update.getMainObbMd5()
-                      .isEmpty());
+                      .isEmpty(), update.getSize());
               setupUpdateEvents(value, Origin.UPDATE, update.getTrustedBadge(), null,
                   update.getStoreName(), "update");
               return Single.just(value);
@@ -335,7 +335,7 @@ public class AppsManager {
                       update.hasSplits(), update.hasAppc(), false, update.getTrustedBadge(), null,
                       update.getStoreName(), "update_all",
                       update.getMainObbMd5() != null && !update.getMainObbMd5()
-                          .isEmpty());
+                          .isEmpty(), update.getSize());
                   setupUpdateEvents(download1, Origin.UPDATE_ALL, null,
                       update.getTrustedBadge(), update.getStoreName(), "update_all");
                 })))

@@ -73,6 +73,7 @@ import cm.aptoide.pt.ads.MoPubAnalytics;
 import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.ads.WalletAdsOfferCardManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
+import cm.aptoide.pt.analytics.AppSizeAnalyticsStringMapper;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.analytics.TrackerFilter;
 import cm.aptoide.pt.apkfy.ApkfyManager;
@@ -416,9 +417,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides DownloadAnalytics providesDownloadAnalytics(
       AnalyticsManager analyticsManager, NavigationTracker navigationTracker,
-      ConnectivityManager connectivityManager, TelephonyManager providesSystemService) {
+      ConnectivityManager connectivityManager, TelephonyManager providesSystemService,
+      AppSizeAnalyticsStringMapper appSizeAnalyticsStringMapper) {
     return new DownloadAnalytics(connectivityManager, providesSystemService, navigationTracker,
-        analyticsManager);
+        analyticsManager, appSizeAnalyticsStringMapper);
   }
 
   @Singleton @Provides UpdatesAnalytics providesUpdatesAnalytics(AnalyticsManager analyticsManager,
@@ -439,11 +441,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return (ConnectivityManager) application.getSystemService(Context.CONNECTIVITY_SERVICE);
   }
 
+  @Singleton @Provides AppSizeAnalyticsStringMapper provideAppSizeAnalyticsStringMapper() {
+    return new AppSizeAnalyticsStringMapper();
+  }
+
   @Singleton @Provides InstallAnalytics provideInstallAnalytics(AnalyticsManager analyticsManager,
       NavigationTracker navigationTracker, ConnectivityManager connectivityManager,
-      TelephonyManager telephonyManager) {
+      TelephonyManager telephonyManager,
+      AppSizeAnalyticsStringMapper appSizeAnalyticsStringMapper) {
     return new InstallAnalytics(CrashReport.getInstance(), analyticsManager, navigationTracker,
-        new HashMap<>(), connectivityManager, telephonyManager);
+        new HashMap<>(), connectivityManager, telephonyManager, appSizeAnalyticsStringMapper);
   }
 
   @Singleton @Provides @Named("aptoidePackage") String provideAptoidePackage() {

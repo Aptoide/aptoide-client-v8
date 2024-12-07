@@ -1,5 +1,6 @@
 package cm.aptoide.pt.downloadmanager;
 
+import android.util.Log;
 import androidx.annotation.VisibleForTesting;
 import cm.aptoide.pt.logger.Logger;
 import java.util.ArrayList;
@@ -122,7 +123,8 @@ public class AppDownloadManager implements AppDownloader {
                   downloadAnalytics.onError(app.getPackageName(), app.getVersionCode(),
                       app.getMd5(), fileDownloadCallback.getError().getErrorException(),
                       fileDownloadCallback.getError().getUrlError(),
-                      fileDownloadCallback.getError().getHttpError());
+                      fileDownloadCallback.getError().getHttpError(),
+                      appDownloadStatus.getAverageDownloadSpeed());
                 }
                 break;
             }

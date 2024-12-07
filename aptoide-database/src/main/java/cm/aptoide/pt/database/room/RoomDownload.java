@@ -51,7 +51,6 @@ import java.util.List;
   private String appName;
   private String Icon;
   private long timeStamp;
-  private int downloadSpeed;
   private String packageName;
   private int versionCode;
   private int action;
@@ -62,8 +61,17 @@ import java.util.List;
   private String trustedBadge;
   @RoomDownload.DownloadError private int downloadError;
   private String attributionId;
+  private int averageDownloadSpeed;
 
   public RoomDownload() {
+  }
+
+  public int getAverageDownloadSpeed() {
+    return averageDownloadSpeed;
+  }
+
+  public void setAverageDownloadSpeed(int averageDownloadSpeed) {
+    this.averageDownloadSpeed = averageDownloadSpeed;
   }
 
   public @RoomDownload.DownloadError int getDownloadError() {
@@ -122,14 +130,6 @@ import java.util.List;
     Icon = icon;
   }
 
-  public int getDownloadSpeed() {
-    return downloadSpeed;
-  }
-
-  public void setDownloadSpeed(int speed) {
-    this.downloadSpeed = speed;
-  }
-
   public int getVersionCode() {
     return versionCode;
   }
@@ -185,7 +185,7 @@ import java.util.List;
     result = 31 * result + (getAppName() != null ? getAppName().hashCode() : 0);
     result = 31 * result + (getIcon() != null ? getIcon().hashCode() : 0);
     result = 31 * result + (int) (getTimeStamp() ^ (getTimeStamp() >>> 32));
-    result = 31 * result + getDownloadSpeed();
+    result = 31 * result + getAverageDownloadSpeed();
     result = 31 * result + (getPackageName() != null ? getPackageName().hashCode() : 0);
     result = 31 * result + getVersionCode();
     result = 31 * result + getAction();
@@ -203,7 +203,7 @@ import java.util.List;
     if (getOverallDownloadStatus() != download.getOverallDownloadStatus()) return false;
     if (getOverallProgress() != download.getOverallProgress()) return false;
     if (getTimeStamp() != download.getTimeStamp()) return false;
-    if (getDownloadSpeed() != download.getDownloadSpeed()) return false;
+    if (getAverageDownloadSpeed() != download.getAverageDownloadSpeed()) return false;
     if (getVersionCode() != download.getVersionCode()) return false;
     if (getAction() != download.getAction()) return false;
     if (getDownloadError() != download.getDownloadError()) return false;

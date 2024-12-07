@@ -346,7 +346,7 @@ public class InstallManager {
 
   private int getSpeed(RoomDownload download) {
     if (download != null) {
-      return download.getDownloadSpeed();
+      return download.getAverageDownloadSpeed();
     } else {
       return 0;
     }

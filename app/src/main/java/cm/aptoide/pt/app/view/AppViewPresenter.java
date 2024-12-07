@@ -283,7 +283,7 @@ public class AppViewPresenter implements Presenter {
                 .getName(),
             appModel.getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP,
             appModel.getObb() != null, appModel.getBdsFlags(),
-            appViewModel.getAppModel().getAppCategory()))
+            appViewModel.getAppModel().getAppCategory(), appModel.getSize()))
         .flatMapCompletable(status -> downloadApp(action, appModel,
             appModel.getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP).doOnError(
                 throwable -> {
@@ -1091,7 +1091,7 @@ public class AppViewPresenter implements Presenter {
                                     .getName(), appModel.getOpenType()
                                     == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP,
                                 appModel.getObb() != null, appModel.getBdsFlags(),
-                                appModel.getAppCategory());
+                                appModel.getAppCategory(), appModel.getSize());
 
                             if (appViewManager.hasClaimablePromotion(
                                 Promotion.ClaimAction.INSTALL)) {
@@ -1128,7 +1128,8 @@ public class AppViewPresenter implements Presenter {
                                           == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP,
                                       appViewViewModel.getObb() != null,
                                       appViewViewModel.getBdsFlags(),
-                                      appViewViewModel.getAppCategory())));
+                                      appViewViewModel.getAppCategory(),
+                                      appViewViewModel.getSize())));
                   break;
                 case MIGRATE:
                   completable = appViewManager.getAppModel()
@@ -1150,7 +1151,7 @@ public class AppViewPresenter implements Presenter {
                                 .getName(), appViewViewModel.getOpenType()
                                 == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP,
                             appViewViewModel.getObb() != null, appViewViewModel.getBdsFlags(),
-                            appViewViewModel.getAppCategory());
+                            appViewViewModel.getAppCategory(), appViewViewModel.getSize());
                         return migrateApp(action, appViewViewModel,
                             appViewViewModel.getOpenType()
                                 == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP)

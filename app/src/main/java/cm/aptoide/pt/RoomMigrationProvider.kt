@@ -47,6 +47,10 @@ class RoomMigrationProvider {
     override fun migrate(database: SupportSQLiteDatabase) {
       database.execSQL("ALTER TABLE `update` ADD COLUMN downloadCampaigns TEXT")
     }
-  }
+  }, object : Migration(108, 109) {
+      override fun migrate(database: SupportSQLiteDatabase) {
+        database.execSQL("ALTER TABLE download RENAME COLUMN downloadSpeed TO averageDownloadSpeed")
+      }
+    }
   )
 }

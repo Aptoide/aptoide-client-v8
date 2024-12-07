@@ -228,7 +228,7 @@ public class AppViewAnalytics {
   public void clickOnInstallButton(String packageName, String developerName, String type,
       boolean hasSplits, boolean hasBilling, boolean isMigration, String rank,
       String origin, String store, boolean isApkfy, boolean hasObb, List<String> bdsFlags,
-      String appCategory) {
+      String appCategory, long appSize) {
     String context = getViewName(true);
     HashMap<String, Object> map = new HashMap<>();
     map.put(TYPE, type);
@@ -239,7 +239,7 @@ public class AppViewAnalytics {
     map.put(IS_APKFY, isApkfy);
 
     installAnalytics.clickOnInstallEvent(packageName, type, hasSplits, hasBilling, isMigration,
-        rank, origin, store, isApkfy, hasObb, bdsFlags.contains("STORE_BDS"), appCategory);
+        rank, origin, store, isApkfy, hasObb, bdsFlags.contains("STORE_BDS"), appCategory, appSize);
     analyticsManager.logEvent(map, CLICK_INSTALL, AnalyticsManager.Action.CLICK, context);
   }
 
@@ -261,12 +261,12 @@ public class AppViewAnalytics {
       downloadAnalytics.migrationClicked(download.getMd5(), download.getVersionCode(),
           download.getPackageName(), trustedValue, editorsChoice, InstallType.UPDATE_TO_APPC,
           action, download.hasAppc(), download.hasSplits(), storeName, isApkfy,
-          download.hasObbs(), splitTypes, isInCatappult, appCategory);
+          download.hasObbs(), splitTypes, isInCatappult, appCategory, download.getSize());
     } else {
       downloadAnalytics.installClicked(download.getMd5(), download.getVersionCode(),
           download.getPackageName(), trustedValue, editorsChoice, mapDownloadAction(downloadAction),
           action, download.hasAppc(), download.hasSplits(), storeName, isApkfy,
-          download.hasObbs(), splitTypes, isInCatappult, appCategory);
+          download.hasObbs(), splitTypes, isInCatappult, appCategory, download.getSize());
     }
   }
 
@@ -450,11 +450,11 @@ public class AppViewAnalytics {
   public void sendInvalidAppEventError(String packageName, int versionCode,
       DownloadModel.Action downloadAction, boolean isMigration,
       boolean isAppBundle, boolean hasAppc, String trustedBadge, String storeName, boolean isApkfy,
-      Throwable throwable, boolean hasObb, String splitTypes, String appCategory) {
+      Throwable throwable, boolean hasObb, String splitTypes, String appCategory, long appSize) {
     downloadAnalytics.sendAppNotValidError(packageName, versionCode,
         mapDownloadAction(downloadAction), isMigration, isAppBundle, hasAppc,
         trustedBadge, storeName, isApkfy, throwable, hasObb, splitTypes,
-        storeName.equals("catappult"), appCategory);
+        storeName.equals("catappult"), appCategory, appSize);
   }
 
   public void sendNotEnoughSpaceErrorEvent(String md5) {

@@ -14,4 +14,6 @@ public interface FileDownloadCallback {
   boolean hasError();
 
   DownloadError getError();
+
+  int getDownloadSpeed();
 }

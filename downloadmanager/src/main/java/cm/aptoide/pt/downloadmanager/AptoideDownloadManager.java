@@ -234,8 +234,10 @@ public class AptoideDownloadManager implements DownloadManager {
         })
         .filter(
             download -> download.getOverallDownloadStatus() == RoomDownload.COMPLETED)
-        .doOnNext(download -> downloadAnalytics.onDownloadComplete(download.getMd5(),
-            download.getPackageName(), download.getVersionCode()))
+        .doOnNext(download ->
+            downloadAnalytics.onDownloadComplete(download.getMd5(),
+                download.getPackageName(),
+                download.getVersionCode(), download.getAverageDownloadSpeed()))
         .doOnNext(download -> removeAppDownloader(download.getMd5()))
         .takeUntil(
             download -> download.getOverallDownloadStatus() == RoomDownload.COMPLETED);
@@ -268,6 +270,9 @@ public class AptoideDownloadManager implements DownloadManager {
     if (appDownloadStatus.getDownloadStatus()
         .equals(AppDownloadStatus.AppDownloadState.ERROR_MD5_DOES_NOT_MATCH)) {
       removeDownloadFiles(download);
+    }
+    if (appDownloadStatus.isAppDownloadOver()) {
+      download.setAverageDownloadSpeed(appDownloadStatus.getAverageDownloadSpeed());
     }
     return downloadsRepository.save(download);
   }

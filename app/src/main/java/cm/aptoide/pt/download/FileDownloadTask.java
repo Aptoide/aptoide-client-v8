@@ -41,19 +41,19 @@ public class FileDownloadTask extends FileDownloadLargeFileListener {
   @Override
   protected void pending(BaseDownloadTask baseDownloadTask, long soFarBytes, long totalBytes) {
     downloadStatus.onNext(new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.PENDING,
-        new FileDownloadProgressResult(soFarBytes, totalBytes), md5));
+        new FileDownloadProgressResult(soFarBytes, totalBytes), md5, baseDownloadTask.getSpeed()));
   }
 
   @Override
   protected void progress(BaseDownloadTask baseDownloadTask, long soFarBytes, long totalBytes) {
     downloadStatus.onNext(new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.PROGRESS,
-        new FileDownloadProgressResult(soFarBytes, totalBytes), md5));
+        new FileDownloadProgressResult(soFarBytes, totalBytes), md5, baseDownloadTask.getSpeed()));
   }
 
   @Override
   protected void paused(BaseDownloadTask baseDownloadTask, long soFarBytes, long totalBytes) {
     downloadStatus.onNext(new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.PAUSED,
-        new FileDownloadProgressResult(soFarBytes, totalBytes), md5));
+        new FileDownloadProgressResult(soFarBytes, totalBytes), md5, baseDownloadTask.getSpeed()));
   }
 
   @Override protected void completed(BaseDownloadTask baseDownloadTask) {
@@ -61,7 +61,7 @@ public class FileDownloadTask extends FileDownloadLargeFileListener {
       FileDownloadTaskStatus fileDownloadTaskStatus1 =
           new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.VERIFYING_FILE_INTEGRITY,
               new FileDownloadProgressResult(baseDownloadTask.getLargeFileTotalBytes(),
-                  baseDownloadTask.getLargeFileTotalBytes()), md5);
+                  baseDownloadTask.getLargeFileTotalBytes()), md5, baseDownloadTask.getSpeed());
       downloadStatus.onNext(fileDownloadTaskStatus1);
 
       FileDownloadTaskStatus fileDownloadTaskStatus;
@@ -69,7 +69,7 @@ public class FileDownloadTask extends FileDownloadLargeFileListener {
         fileDownloadTaskStatus =
             new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.COMPLETED,
                 new FileDownloadProgressResult(baseDownloadTask.getLargeFileTotalBytes(),
-                    baseDownloadTask.getLargeFileTotalBytes()), md5);
+                    baseDownloadTask.getLargeFileTotalBytes()), md5, baseDownloadTask.getSpeed());
         Logger.getInstance()
             .d(TAG, " Download completed");
       } else {
@@ -78,7 +78,7 @@ public class FileDownloadTask extends FileDownloadLargeFileListener {
         fileDownloadTaskStatus =
             new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR_MD5_DOES_NOT_MATCH,
                 md5, new DownloadError(new Md5DownloadComparisonException("md5 does not match"),
-                "not_http", baseDownloadTask.getUrl()));
+                "not_http", baseDownloadTask.getUrl()), baseDownloadTask.getSpeed());
       }
       downloadStatus.onNext(fileDownloadTaskStatus);
     }).start();
@@ -96,26 +96,30 @@ public class FileDownloadTask extends FileDownloadLargeFileListener {
           fileDownloadTaskStatus =
               new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR_FILE_NOT_FOUND,
                   md5,
-                  new DownloadError(error, String.valueOf(httpError), baseDownloadTask.getUrl()));
+                  new DownloadError(error, String.valueOf(httpError), baseDownloadTask.getUrl()),
+                  baseDownloadTask.getSpeed());
         } else {
           Logger.getInstance()
               .d(TAG, "Http error + " + httpError + " on app: " + md5);
           fileDownloadTaskStatus =
               new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR, md5,
-                  new DownloadError(error, String.valueOf(httpError), baseDownloadTask.getUrl()));
+                  new DownloadError(error, String.valueOf(httpError), baseDownloadTask.getUrl()),
+                  baseDownloadTask.getSpeed());
         }
       } else if (error instanceof FileDownloadOutOfSpaceException) {
         Logger.getInstance()
             .d(TAG, "Out of space error for the app: " + md5);
         fileDownloadTaskStatus =
             new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR_NOT_ENOUGH_SPACE,
-                md5, new DownloadError(error, "not_http", baseDownloadTask.getUrl()));
+                md5, new DownloadError(error, "not_http", baseDownloadTask.getUrl()),
+                baseDownloadTask.getSpeed());
       } else {
         Logger.getInstance()
             .d(TAG, "Generic error on app: " + md5);
         fileDownloadTaskStatus =
             new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR, md5,
-                new DownloadError(error, "not_http", baseDownloadTask.getUrl()));
+                new DownloadError(error, "not_http", baseDownloadTask.getUrl()),
+                baseDownloadTask.getSpeed());
       }
     } else {
       Logger.getInstance()
@@ -123,14 +127,16 @@ public class FileDownloadTask extends FileDownloadLargeFileListener {
       fileDownloadTaskStatus =
           new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR, md5,
               new DownloadError(new GeneralDownloadErrorException("Empty download error"),
-                  "not_http", baseDownloadTask.getUrl()));
+                  "not_http", baseDownloadTask.getUrl()),
+              baseDownloadTask.getSpeed());
     }
     downloadStatus.onNext(fileDownloadTaskStatus);
   }
 
   @Override protected void warn(BaseDownloadTask baseDownloadTask) {
     downloadStatus.onNext(
-        new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.WARN, md5, null));
+        new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.WARN, md5, null,
+            baseDownloadTask.getSpeed()));
   }
 
   private boolean isMd5Approved(String md5, String fileName, boolean shouldConfirmMd5) {

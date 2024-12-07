@@ -15,20 +15,23 @@ public class FileDownloadTaskStatus implements FileDownloadCallback {
   private FileDownloadProgressResult downloadProgress;
   private String md5;
   private DownloadError error;
+  private int averageDownloadSpeed;
 
   public FileDownloadTaskStatus(AppDownloadState appDownloadState,
-      FileDownloadProgressResult downloadProgress, String md5) {
+      FileDownloadProgressResult downloadProgress, String md5, int averageDownloadSpeed) {
     this.appDownloadState = appDownloadState;
     this.downloadProgress = downloadProgress;
     this.md5 = md5;
+    this.averageDownloadSpeed = averageDownloadSpeed;
     this.error = null;
   }
 
   public FileDownloadTaskStatus(AppDownloadState appDownloadState, String md5,
-      DownloadError error) {
+      DownloadError error, int averageDownloadSpeed) {
     this.appDownloadState = appDownloadState;
     this.md5 = md5;
     this.error = error;
+    this.averageDownloadSpeed = averageDownloadSpeed;
     this.downloadProgress = new FileDownloadProgressResult(0, 0);
   }
 
@@ -50,6 +53,10 @@ public class FileDownloadTaskStatus implements FileDownloadCallback {
 
   @Override public DownloadError getError() {
     return error;
+  }
+
+  @Override public int getDownloadSpeed() {
+    return averageDownloadSpeed;
   }
 
   @Override public boolean equals(Object o) {
