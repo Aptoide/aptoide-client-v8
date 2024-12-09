@@ -23,7 +23,8 @@ class InstallAnalytics(
     app: App,
     analyticsContext: AnalyticsUIContext,
     networkType: String,
-  ) {
+    appSizeSegment: Int,
+    ) {
     genericAnalytics.logEvent(
       name = "install_clicked",
       params = analyticsContext.toGenericParameters(
@@ -36,8 +37,9 @@ class InstallAnalytics(
     sendBIClickEvent(
       app = app,
       analyticsContext = analyticsContext,
-      action = "install"
-    )
+      action = "install",
+      appSizeSegment = appSizeSegment,
+      )
 
     if (analyticsContext.isApkfy) {
       genericAnalytics.logEvent(
@@ -55,7 +57,8 @@ class InstallAnalytics(
     app: App,
     analyticsContext: AnalyticsUIContext,
     networkType: String,
-  ) {
+    appSizeSegment: Int,
+    ) {
     genericAnalytics.logEvent(
       name = "update_clicked",
       params = analyticsContext.toGenericParameters(
@@ -68,15 +71,17 @@ class InstallAnalytics(
     sendBIClickEvent(
       app = app,
       analyticsContext = analyticsContext,
-      action = "update"
-    )
+      action = "update",
+      appSizeSegment = appSizeSegment,
+      )
   }
 
   fun sendRetryClick(
     app: App,
     networkType: String,
     analyticsContext: AnalyticsUIContext,
-  ) {
+    appSizeSegment: Int,
+    ) {
     genericAnalytics.logEvent(
       name = "retry_app_clicked",
       params = analyticsContext.toGenericParameters(
@@ -88,8 +93,9 @@ class InstallAnalytics(
     sendBIClickEvent(
       app = app,
       analyticsContext = analyticsContext,
-      action = "retry"
-    )
+      action = "retry",
+      appSizeSegment = appSizeSegment,
+      )
   }
 
   fun sendOpenClick(
@@ -247,6 +253,7 @@ class InstallAnalytics(
   fun sendInstallCancelEvent(
     packageName: String,
     analyticsPayload: AnalyticsPayload?,
+    appSizeSegment: Int,
   ) {
     genericAnalytics.logEvent(
       name = "app_installed",
@@ -255,11 +262,19 @@ class InstallAnalytics(
         P_STATUS to "cancel"
       )
     )
+
+    logBIInstallEvent(
+      packageName = packageName,
+      status = "cancel",
+      analyticsPayload = analyticsPayload,
+      appSizeSegment = appSizeSegment,
+    )
   }
 
   fun sendInstallCompletedEvent(
     packageName: String,
     analyticsPayload: AnalyticsPayload?,
+    appSizeSegment: Int,
   ) {
     genericAnalytics.logEvent(
       name = "app_installed",
@@ -272,8 +287,9 @@ class InstallAnalytics(
     logBIInstallEvent(
       packageName = packageName,
       status = "success",
-      analyticsPayload = analyticsPayload
-    )
+      analyticsPayload = analyticsPayload,
+      appSizeSegment = appSizeSegment,
+      )
   }
 
   fun sendInstallErrorEvent(
@@ -281,6 +297,7 @@ class InstallAnalytics(
     analyticsPayload: AnalyticsPayload?,
     errorMessage: String?,
     errorType: String?,
+    appSizeSegment: Int,
   ) {
     genericAnalytics.logEvent(
       name = "app_installed",
@@ -295,6 +312,7 @@ class InstallAnalytics(
       packageName = packageName,
       status = "fail",
       analyticsPayload = analyticsPayload,
+      appSizeSegment = appSizeSegment,
       P_ERROR_MESSAGE to errorMessage,
       P_ERROR_TYPE to errorType,
     )
@@ -394,11 +412,13 @@ class InstallAnalytics(
     app: App,
     analyticsContext: AnalyticsUIContext,
     action: String,
-  ) = biAnalytics.logEvent(
+    appSizeSegment: Int,
+    ) = biAnalytics.logEvent(
     name = "click_on_install_button",
     app.toBIParameters(aabTypes = null) +
       analyticsContext.toBiParameters(
         P_ACTION to action,
+        P_APP_SIZE_MB to appSizeSegment,
         P_STORE to storeName,
         P_TRUSTED_BADGE to app.malware.asNullableParameter(),
         P_UPDATE_TYPE to getUserClicks(app.packageName)
@@ -429,6 +449,7 @@ class InstallAnalytics(
     packageName: String,
     status: String,
     analyticsPayload: AnalyticsPayload?,
+    appSizeSegment: Int,
     vararg pairs: Pair<String, Any?>
   ) = biAnalytics.logEvent(
     name = "install",
@@ -436,6 +457,7 @@ class InstallAnalytics(
       it.toAppBIParameters(packageName) +
         it?.toAnalyticsUiContext().toBiParameters(
           P_STATUS to status,
+          P_APP_SIZE_MB to appSizeSegment,
           P_STORE to it?.store,
           P_TRUSTED_BADGE to it?.trustedBadge,
           *pairs
