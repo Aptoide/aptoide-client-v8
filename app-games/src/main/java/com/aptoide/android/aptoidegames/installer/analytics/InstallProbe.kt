@@ -2,10 +2,10 @@ package com.aptoide.android.aptoidegames.installer.analytics
 
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.workers.PackageInstaller
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
-import kotlin.coroutines.cancellation.CancellationException
 
 class InstallProbe(
   private val packageInstaller: PackageInstaller,
