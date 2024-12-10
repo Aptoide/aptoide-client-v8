@@ -9,41 +9,58 @@ import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
 
+interface FeatureFlags {
+
+  suspend fun initialize() {}
+
+  suspend fun getFlag(key: String): Boolean? = null
+
+  suspend fun getFlag(key: String, default: Boolean): Boolean = default
+
+  suspend fun getFlagAsString(key: String, fallback: String): String = fallback
+
+  suspend fun getFlagAsString(key: String): String? = null
+
+  suspend fun getStrings(key: String): List<String> = emptyList()
+
+  suspend fun <T> getObject(key: String, klass: Class<T>): T? = null
+}
+
 @Singleton
-class FeatureFlags @Inject constructor(
+class FeatureFlagsImpl @Inject constructor(
   private val settingsRepository: FeatureFlagsRepository,
   private val settingsLocalRepository: FeatureFlagsLocalRepository,
-) {
+): FeatureFlags {
 
   private var featureFlags = JSONObject()
   private val mutex = Mutex()
 
-  suspend fun initialize() = mutex.withLock {
+  override suspend fun initialize() = mutex.withLock {
     featureFlags = try {
       settingsRepository.getFeatureFlags()
         .apply { settingsLocalRepository.saveFeatureFlags(this) }
-    } catch (error: Throwable) {
+    } catch (_: Throwable) {
       settingsLocalRepository.getFeatureFlags()
     }
   }
 
-  suspend fun getFlag(key: String): Boolean? = mutex.withLock {
+  override suspend fun getFlag(key: String): Boolean? = mutex.withLock {
     runCatching { featureFlags.getBoolean(key) }.getOrNull()
   }
 
-  suspend fun getFlag(key: String, default: Boolean): Boolean = mutex.withLock {
+  override suspend fun getFlag(key: String, default: Boolean): Boolean = mutex.withLock {
     featureFlags.optBoolean(key, default)
   }
 
-  suspend fun getFlagAsString(key: String, fallback: String): String = mutex.withLock {
+  override suspend fun getFlagAsString(key: String, fallback: String): String = mutex.withLock {
     featureFlags.optString(key, fallback)
   }
 
-  suspend fun getFlagAsString(key: String): String? = mutex.withLock {
+  override suspend fun getFlagAsString(key: String): String? = mutex.withLock {
     runCatching { featureFlags.getString(key) }.getOrNull()
   }
 
-  suspend fun getStrings(key: String): List<String> = mutex.withLock {
+  override suspend fun getStrings(key: String): List<String> = mutex.withLock {
     featureFlags.optJSONArray(key)?.run {
       val result = mutableListOf<String>()
       val size = length()
@@ -54,7 +71,7 @@ class FeatureFlags @Inject constructor(
     } ?: emptyList()
   }
 
-  suspend fun <T> getObject(key: String, klass: Class<T>) = mutex.withLock {
+  override suspend fun <T> getObject(key: String, klass: Class<T>) = mutex.withLock {
     runCatching {
       val jsonStr = featureFlags.getJSONObject(key).toString()
       Gson().fromJson(jsonStr, klass)
