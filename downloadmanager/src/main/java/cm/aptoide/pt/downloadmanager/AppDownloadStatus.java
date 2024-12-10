@@ -37,6 +37,7 @@ public class AppDownloadStatus {
 
   public boolean isAppDownloadOver() {
     return appDownloadState == AppDownloadState.COMPLETED
+        || appDownloadState == AppDownloadState.PAUSED
         || appDownloadState == AppDownloadState.ERROR
         || appDownloadState == AppDownloadState.ERROR_FILE_NOT_FOUND
         || appDownloadState == AppDownloadState.ERROR_NOT_ENOUGH_SPACE
@@ -47,13 +48,16 @@ public class AppDownloadStatus {
 
   public int getAverageDownloadSpeed() {
     int totalAverageSpeed = 0;
+    int numberOfFilesStarted = 1;
     for (FileDownloadCallback fileDownloadCallback : fileDownloadCallbackList) {
-      if (fileDownloadCallback.getDownloadState() == AppDownloadState.COMPLETED) {
-        totalAverageSpeed += fileDownloadCallback.getDownloadSpeed();
+      totalAverageSpeed += fileDownloadCallback.getDownloadSpeed();
+      if (fileDownloadCallback.getDownloadState() != AppDownloadState.PENDING
+          && fileDownloadCallback.getDownloadState() != AppDownloadState.WARN) {
+        numberOfFilesStarted++;
       }
     }
     if (totalAverageSpeed > 0) {
-      return totalAverageSpeed / fileDownloadCallbackList.size();
+      return totalAverageSpeed / numberOfFilesStarted;
     } else {
       return 0;
     }
