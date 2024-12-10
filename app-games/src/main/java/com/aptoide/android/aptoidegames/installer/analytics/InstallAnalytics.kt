@@ -2,6 +2,7 @@ package com.aptoide.android.aptoidegames.installer.analytics
 
 import cm.aptoide.pt.extensions.toInt
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_flags.domain.FeatureFlags
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
@@ -13,13 +14,30 @@ import com.aptoide.android.aptoidegames.analytics.toBiParameters
 import com.aptoide.android.aptoidegames.analytics.toGenericParameters
 import com.aptoide.android.aptoidegames.installer.analytics.InstallAnalytics.Companion.P_APP_SIZE_MB
 import com.aptoide.android.aptoidegames.installer.analytics.InstallAnalytics.Companion.P_UPDATE_TYPE
+import com.aptoide.android.aptoidegames.installer.ff.isFetchDownloaderEnabled
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class InstallAnalytics(
+  private val featureFlags: FeatureFlags,
   private val genericAnalytics: GenericAnalytics,
   private val biAnalytics: BIAnalytics,
   private val storeName: String,
   private val silentInstallChecker: SilentInstallChecker,
 ) {
+
+  init {
+    CoroutineScope(Dispatchers.Main).launch {
+      featureFlags.isFetchDownloaderEnabled()?.let {
+        if (it) {
+          "ab_test_download_lib_dec_19" to "group_b"
+        } else {
+          "ab_test_download_lib_dec_19" to "group_a"
+        }
+      }
+    }
+  }
 
   fun sendInstallClickEvent(
     app: App,

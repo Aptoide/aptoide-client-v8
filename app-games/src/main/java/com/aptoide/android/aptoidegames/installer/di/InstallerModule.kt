@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import androidx.room.Room
 import cm.aptoide.pt.aptoide_network.di.StoreName
 import cm.aptoide.pt.download_view.di.UIInstallPackageInfoMapper
+import cm.aptoide.pt.feature_flags.domain.FeatureFlags
 import cm.aptoide.pt.install_info_mapper.domain.CachingInstallPackageInfoMapper
 import cm.aptoide.pt.install_info_mapper.domain.InstallPackageInfoMapper
 import cm.aptoide.pt.install_manager.InstallManager
@@ -123,11 +124,13 @@ class InstallerModule {
   @Singleton
   @Provides
   fun providesInstallAnalytics(
+    featureFlags: FeatureFlags,
     genericAnalytics: GenericAnalytics,
     biAnalytics: BIAnalytics,
     @StoreName storeName: String,
     silentInstallChecker: SilentInstallChecker,
   ): InstallAnalytics = InstallAnalytics(
+    featureFlags = featureFlags,
     genericAnalytics = genericAnalytics,
     biAnalytics = biAnalytics,
     storeName = storeName,

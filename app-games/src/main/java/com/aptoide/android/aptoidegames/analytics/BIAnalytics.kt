@@ -71,25 +71,28 @@ class BIAnalytics(private val analyticsSender: AnalyticsSender) {
         .getApp("com.dti.folderlauncher")
         .packageInfoFlow
         .map { it != null }
-        .onEach { analyticsSender.setUserProperties("is_gh_installed" to it) }
+        .onEach { setUserProperties("is_gh_installed" to it) }
         .launchIn(this)
       installManager
         .getApp("cm.aptoide.pt")
         .packageInfoFlow
         .map { it != null }
-        .onEach { analyticsSender.setUserProperties("is_vanilla_installed" to it) }
+        .onEach { setUserProperties("is_vanilla_installed" to it) }
         .launchIn(this)
       installManager
         .getApp(walletApp.packageName)
         .packageInfoFlow
         .map { it != null }
-        .onEach { analyticsSender.setUserProperties("is_wallet_app_installed" to it) }
+        .onEach { setUserProperties("is_wallet_app_installed" to it) }
         .launchIn(this)
 
-      analyticsSender.setUserProperties("first_session" to isFirstLaunch)
+      setUserProperties("first_session" to isFirstLaunch)
       setFeatureFlagsProperties(featureFlags)
     }
   }
+
+  fun setUserProperties(vararg props: Pair<String, Any?>) =
+    analyticsSender.setUserProperties(*props)
 
   private suspend fun setFeatureFlagsProperties(featureFlags: FeatureFlags) {
     val apkfyVariant = featureFlags.getFlagAsString("apkfy_variant")
