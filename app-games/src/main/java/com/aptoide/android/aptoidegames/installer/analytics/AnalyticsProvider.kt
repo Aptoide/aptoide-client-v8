@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import cm.aptoide.pt.extensions.runPreviewable
+import cm.aptoide.pt.feature_flags.domain.FeatureFlags
 import com.aptoide.android.aptoidegames.analytics.AnalyticsSender
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
@@ -19,6 +20,7 @@ class AnalyticsInjectionsProvider @Inject constructor(
 fun rememberInstallAnalytics(): InstallAnalytics = runPreviewable(
   preview = {
     InstallAnalytics(
+      object : FeatureFlags {},
       GenericAnalytics(object : AnalyticsSender {}),
       BIAnalytics(object : AnalyticsSender {}),
       "",
