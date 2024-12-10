@@ -28,19 +28,22 @@ class InstallProbe(
         when (it) {
           is CancellationException -> analytics.sendInstallCancelEvent(
             packageName = packageName,
-            analyticsPayload = analyticsPayload
+            analyticsPayload = analyticsPayload,
+            appSizeSegment = calcAppSizeSegment(bytes = installPackageInfo.filesSize)
           )
 
           null -> {
             analytics.sendInstallCompletedEvent(
               packageName = packageName,
-              analyticsPayload = analyticsPayload
+              analyticsPayload = analyticsPayload,
+              appSizeSegment = calcAppSizeSegment(bytes = installPackageInfo.filesSize)
             )
           }
 
           else -> analytics.sendInstallErrorEvent(
             packageName = packageName,
             analyticsPayload = analyticsPayload,
+            appSizeSegment = calcAppSizeSegment(bytes = installPackageInfo.filesSize),
             errorMessage = it.message,
             errorType = it::class.simpleName
           )
