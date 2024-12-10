@@ -135,7 +135,7 @@ public class InstallManager {
   public Completable cancelInstall(String md5, String packageName, int versionCode) {
     return pauseInstall(md5).andThen(
             aptoideInstalledAppsRepository.remove(packageName, versionCode))
-        .andThen(aptoideDownloadManager.removeDownload(md5))
+        .andThen(aptoideDownloadManager.cancelDownload(md5))
         .doOnError(throwable -> throwable.printStackTrace());
   }
 

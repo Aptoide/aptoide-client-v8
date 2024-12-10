@@ -137,13 +137,16 @@ public class AptoideDownloadManager implements DownloadManager {
         .toCompletable();
   }
 
-  @Override public Completable removeDownload(String md5) {
+  @Override public Completable cancelDownload(String md5) {
     return downloadsRepository.getDownloadAsObservable(md5)
         .first()
-        .flatMap(download -> getAppDownloader(download).flatMap(
-            appDownloader -> appDownloader.removeAppDownload()
-                .andThen(downloadsRepository.remove(md5))
-                .andThen(Observable.just(download))))
+        .flatMap(download -> getAppDownloader(download)
+            .flatMap(
+                appDownloader -> appDownloader.removeAppDownload()
+                    .andThen(downloadsRepository.remove(md5))
+                    .andThen(Observable.just(download))))
+        .doOnNext(download -> downloadAnalytics.onDownloadCancel(download.getMd5(),
+            download.getAverageDownloadSpeed()))
         .doOnNext(download -> removeDownloadFiles(download))
         .toCompletable();
   }

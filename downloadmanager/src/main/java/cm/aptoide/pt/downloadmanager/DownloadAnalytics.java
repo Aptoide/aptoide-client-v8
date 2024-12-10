@@ -11,4 +11,6 @@ public interface DownloadAnalytics {
       String downloadErrorUrl, String downloadHttpError, int averageDownloadSpeed);
 
   void startProgress(RoomDownload download);
+
+  void onDownloadCancel(String md5, int averageDownloadSpeed);
 }

@@ -34,7 +34,7 @@ public interface DownloadManager {
 
   Completable pauseDownload(String md5);
 
-  Completable removeDownload(String md5);
+  Completable cancelDownload(String md5);
 
   Completable invalidateDatabase();
 }

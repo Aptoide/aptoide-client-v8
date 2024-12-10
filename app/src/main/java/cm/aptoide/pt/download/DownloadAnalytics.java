@@ -117,6 +117,10 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
     updateDownloadEventWithHasProgress(download.getMd5() + RAKAM_DOWNLOAD_EVENT);
   }
 
+  @Override public void onDownloadCancel(String md5, int averageDownloadSpeed) {
+    handleRakamOnCancel(md5, averageDownloadSpeed);
+  }
+
   private void sendRakamDownloadEvent(String downloadCacheKey, int averageDownloadSpeed) {
     double averageDownloadSpeedMbps = (double) averageDownloadSpeed / 1024;
     DownloadEvent downloadEvent = cache.get(downloadCacheKey);
@@ -127,6 +131,19 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
       analyticsManager.logEvent(data, downloadEvent.getEventName(), downloadEvent.getAction(),
           downloadEvent.getContext());
       cache.remove(downloadCacheKey);
+    }
+  }
+
+  private void handleRakamOnCancel(String md5, int averageDownloadSpeed) {
+    double averageDownloadSpeedMbps = (double) averageDownloadSpeed / 1024;
+    DownloadEvent downloadEvent = cache.get(md5 + RAKAM_DOWNLOAD_EVENT);
+    if (downloadEvent != null) {
+      Map<String, Object> data = downloadEvent.getData();
+      data.put(STATUS, "cancel");
+      data.put(DOWNLOAD_SPEED_MBPS, round(averageDownloadSpeedMbps * 100.0) / 100.0);
+      analyticsManager.logEvent(data, downloadEvent.getEventName(), downloadEvent.getAction(),
+          downloadEvent.getContext());
+      cache.remove(md5 + RAKAM_DOWNLOAD_EVENT);
     }
   }
 
