@@ -118,6 +118,7 @@
   <string name="trusted_game_badge">Güvenli Oyun</string>
   <string name="official_game_badge">Resmi Oyun</string>
   <string name="see_more_button">See more</string>
+  <string name="generic_error_short_title">An error occurred.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Yer Yok</string>
   <string name="out_of_space_body">Yüklemeye devam etmek için %s gerekli.</string>
