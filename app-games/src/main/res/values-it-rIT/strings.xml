@@ -118,6 +118,7 @@
   <string name="trusted_game_badge">Gioco verificato</string>
   <string name="official_game_badge">Gioco ufficiale</string>
   <string name="see_more_button">See more</string>
+  <string name="generic_error_short_title">An error occurred.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Spazio esaurito</string>
   <string name="out_of_space_body">Spazio necessario per procedere con l\'installazione: %s.</string>
