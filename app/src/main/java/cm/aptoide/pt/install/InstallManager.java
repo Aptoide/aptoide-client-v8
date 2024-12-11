@@ -345,11 +345,7 @@ public class InstallManager {
   }
 
   private int getSpeed(RoomDownload download) {
-    if (download != null) {
-      return download.getAverageDownloadSpeed();
-    } else {
-      return 0;
-    }
+    return 0;
   }
 
   private boolean mapIndeterminateState(RoomDownload download,

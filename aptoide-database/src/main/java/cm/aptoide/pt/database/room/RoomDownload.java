@@ -61,17 +61,35 @@ import java.util.List;
   private String trustedBadge;
   @RoomDownload.DownloadError private int downloadError;
   private String attributionId;
-  private int averageDownloadSpeed;
+  private long averageApkDownloadSpeed;
+  private long averageObbDownloadSpeed;
+  private long averageSplitsDownloadSpeed;
 
   public RoomDownload() {
   }
 
-  public int getAverageDownloadSpeed() {
-    return averageDownloadSpeed;
+  public long getAverageApkDownloadSpeed() {
+    return averageApkDownloadSpeed;
   }
 
-  public void setAverageDownloadSpeed(int averageDownloadSpeed) {
-    this.averageDownloadSpeed = averageDownloadSpeed;
+  public void setAverageApkDownloadSpeed(long averageApkDownloadSpeed) {
+    this.averageApkDownloadSpeed = averageApkDownloadSpeed;
+  }
+
+  public long getAverageObbDownloadSpeed() {
+    return averageObbDownloadSpeed;
+  }
+
+  public void setAverageObbDownloadSpeed(long averageObbDownloadSpeed) {
+    this.averageObbDownloadSpeed = averageObbDownloadSpeed;
+  }
+
+  public long getAverageSplitsDownloadSpeed() {
+    return averageSplitsDownloadSpeed;
+  }
+
+  public void setAverageSplitsDownloadSpeed(long averageSplitsDownloadSpeed) {
+    this.averageSplitsDownloadSpeed = averageSplitsDownloadSpeed;
   }
 
   public @RoomDownload.DownloadError int getDownloadError() {
@@ -185,7 +203,9 @@ import java.util.List;
     result = 31 * result + (getAppName() != null ? getAppName().hashCode() : 0);
     result = 31 * result + (getIcon() != null ? getIcon().hashCode() : 0);
     result = 31 * result + (int) (getTimeStamp() ^ (getTimeStamp() >>> 32));
-    result = 31 * result + getAverageDownloadSpeed();
+    result = (int) (31 * result + getAverageApkDownloadSpeed());
+    result = (int) (31 * result + getAverageObbDownloadSpeed());
+    result = (int) (31 * result + getAverageSplitsDownloadSpeed());
     result = 31 * result + (getPackageName() != null ? getPackageName().hashCode() : 0);
     result = 31 * result + getVersionCode();
     result = 31 * result + getAction();
@@ -203,7 +223,9 @@ import java.util.List;
     if (getOverallDownloadStatus() != download.getOverallDownloadStatus()) return false;
     if (getOverallProgress() != download.getOverallProgress()) return false;
     if (getTimeStamp() != download.getTimeStamp()) return false;
-    if (getAverageDownloadSpeed() != download.getAverageDownloadSpeed()) return false;
+    if (getAverageApkDownloadSpeed() != download.getAverageApkDownloadSpeed()) return false;
+    if (getAverageObbDownloadSpeed() != download.getAverageObbDownloadSpeed()) return false;
+    if (getAverageSplitsDownloadSpeed() != download.getAverageSplitsDownloadSpeed()) return false;
     if (getVersionCode() != download.getVersionCode()) return false;
     if (getAction() != download.getAction()) return false;
     if (getDownloadError() != download.getDownloadError()) return false;

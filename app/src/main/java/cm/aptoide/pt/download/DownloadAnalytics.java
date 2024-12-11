@@ -15,8 +15,7 @@ import io.sentry.SentryEvent;
 import io.sentry.protocol.Message;
 import java.util.HashMap;
 import java.util.Map;
-
-import static java.lang.Math.round;
+import kotlin.Pair;
 
 public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.DownloadAnalytics {
   public static final String NOTIFICATION_DOWNLOAD_COMPLETE_EVENT_NAME =
@@ -75,7 +74,9 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
   private static final String APP_IN_CATAPPULT = "app_in_catappult";
   public static final String GAMES_CATEGORY = "games";
   private static final String APP_IS_GAME = "app_is_game";
-  private static final String DOWNLOAD_SPEED_MBPS = "download_speed_mbps";
+  private static final String APK_AVERAGE_DOWNLOAD_SPEED = "apk_avg_speed";
+  private static final String OBB_AVERAGE_DOWNLOAD_SPEED = "obb_avg_speed";
+  private static final String AAB_AVERAGE_DOWNLOAD_SPEED = "aab_avg_speed";
   private static final String APP_SIZE_MB = "app_size_mb";
   private final Map<String, DownloadEvent> cache;
   private final ConnectivityManager connectivityManager;
@@ -83,12 +84,15 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
   private final NavigationTracker navigationTracker;
   private final AnalyticsManager analyticsManager;
   private final AppSizeAnalyticsStringMapper appSizeAnalyticsStringMapper;
+  private final DownloadSpeedIntervalMapper downloadSpeedIntervalMapper;
 
   public DownloadAnalytics(ConnectivityManager connectivityManager,
       TelephonyManager telephonyManager, NavigationTracker navigationTracker,
       AnalyticsManager analyticsManager,
-      AppSizeAnalyticsStringMapper appSizeAnalyticsStringMapper) {
+      AppSizeAnalyticsStringMapper appSizeAnalyticsStringMapper,
+      DownloadSpeedIntervalMapper downloadSpeedIntervalMapper) {
     this.appSizeAnalyticsStringMapper = appSizeAnalyticsStringMapper;
+    this.downloadSpeedIntervalMapper = downloadSpeedIntervalMapper;
     this.cache = new HashMap<>();
     this.connectivityManager = connectivityManager;
     this.telephonyManager = telephonyManager;
@@ -97,17 +101,20 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
   }
 
   @Override public void onDownloadComplete(String md5, String packageName, int versionCode,
-      int averageDownloadSpeed) {
+      long averageApkDownloadSpeed, long averageObbDownloadSpeed, long averageSplitsDownloadSpeed) {
     sendDownloadEvent(md5 + EDITORS_CHOICE_DOWNLOAD_COMPLETE_EVENT_NAME);
     sendDownloadEvent(md5 + DOWNLOAD_COMPLETE_EVENT);
     sendDownloadEvent(md5 + NOTIFICATION_DOWNLOAD_COMPLETE_EVENT_NAME);
-    sendRakamDownloadEvent(md5 + RAKAM_DOWNLOAD_EVENT, averageDownloadSpeed);
+    sendRakamDownloadEvent(md5 + RAKAM_DOWNLOAD_EVENT, averageApkDownloadSpeed,
+        averageObbDownloadSpeed, averageSplitsDownloadSpeed);
   }
 
   @Override
   public void onError(String packageName, int versionCode, String md5, Throwable throwable,
-      String downloadErrorUrl, String downloadHttpError, int averageDownloadSpeed) {
-    handleRakamOnError(md5, throwable, downloadErrorUrl, downloadHttpError, averageDownloadSpeed);
+      String downloadErrorUrl, String downloadHttpError, long averageApkDownloadSpeed,
+      long averageObbDownloadSpeed, long averageSplitsDownloadSpeed) {
+    handleRakamOnError(md5, throwable, downloadErrorUrl, downloadHttpError, averageApkDownloadSpeed,
+        averageObbDownloadSpeed, averageSplitsDownloadSpeed);
   }
 
   @Override public void startProgress(RoomDownload download) {
@@ -117,30 +124,45 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
     updateDownloadEventWithHasProgress(download.getMd5() + RAKAM_DOWNLOAD_EVENT);
   }
 
-  @Override public void onDownloadCancel(String md5, int averageDownloadSpeed) {
-    handleRakamOnCancel(md5, averageDownloadSpeed);
+  @Override public void onDownloadCancel(String md5, long averageDownloadSpeed,
+      long averageObbDownloadSpeed, long averageSplitsDownloadSpeed) {
+    handleRakamOnCancel(md5, averageDownloadSpeed, averageObbDownloadSpeed,
+        averageSplitsDownloadSpeed);
   }
 
-  private void sendRakamDownloadEvent(String downloadCacheKey, int averageDownloadSpeed) {
-    double averageDownloadSpeedMbps = (double) averageDownloadSpeed / 1024;
+  private void sendRakamDownloadEvent(String downloadCacheKey, long averageApkDownloadSpeed,
+      long averageObbDownloadSpeed, long averageSplitsDownloadSpeed) {
     DownloadEvent downloadEvent = cache.get(downloadCacheKey);
     if (downloadEvent != null && downloadEvent.isHadProgress()) {
       Map<String, Object> data = downloadEvent.getData();
       data.put(STATUS, "success");
-      data.put(DOWNLOAD_SPEED_MBPS, round(averageDownloadSpeedMbps * 100.0) / 100.0);
+      data.put(APK_AVERAGE_DOWNLOAD_SPEED, getDownloadSpeedString(averageApkDownloadSpeed));
+      data.put(OBB_AVERAGE_DOWNLOAD_SPEED, getDownloadSpeedString(averageObbDownloadSpeed));
+      data.put(AAB_AVERAGE_DOWNLOAD_SPEED, getDownloadSpeedString(averageSplitsDownloadSpeed));
       analyticsManager.logEvent(data, downloadEvent.getEventName(), downloadEvent.getAction(),
           downloadEvent.getContext());
       cache.remove(downloadCacheKey);
     }
   }
 
-  private void handleRakamOnCancel(String md5, int averageDownloadSpeed) {
-    double averageDownloadSpeedMbps = (double) averageDownloadSpeed / 1024;
+  private String getDownloadSpeedString(long speed) {
+    if (speed < 0) {
+      return "n-a";
+    } else {
+      Pair<String, String> speedPair = downloadSpeedIntervalMapper.getDownloadSpeedInterval(speed);
+      return speedPair.getFirst() + " " + speedPair.getSecond();
+    }
+  }
+
+  private void handleRakamOnCancel(String md5, long averageApkDownloadSpeed,
+      long averageObbDownloadSpeed, long averageSplitsDownloadSpeed) {
     DownloadEvent downloadEvent = cache.get(md5 + RAKAM_DOWNLOAD_EVENT);
     if (downloadEvent != null) {
       Map<String, Object> data = downloadEvent.getData();
       data.put(STATUS, "cancel");
-      data.put(DOWNLOAD_SPEED_MBPS, round(averageDownloadSpeedMbps * 100.0) / 100.0);
+      data.put(APK_AVERAGE_DOWNLOAD_SPEED, getDownloadSpeedString(averageApkDownloadSpeed));
+      data.put(OBB_AVERAGE_DOWNLOAD_SPEED, getDownloadSpeedString(averageObbDownloadSpeed));
+      data.put(AAB_AVERAGE_DOWNLOAD_SPEED, getDownloadSpeedString(averageSplitsDownloadSpeed));
       analyticsManager.logEvent(data, downloadEvent.getEventName(), downloadEvent.getAction(),
           downloadEvent.getContext());
       cache.remove(md5 + RAKAM_DOWNLOAD_EVENT);
@@ -148,8 +170,8 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
   }
 
   private void handleRakamOnError(String md5, Throwable throwable, String downloadErrorUrl,
-      String downloadHttpError, int averageDownloadSpeed) {
-    double averageDownloadSpeedMbps = (double) averageDownloadSpeed / 1024;
+      String downloadHttpError, long averageApkDownloadSpeed, long averageObbDownloadSpeed,
+      long averageSplitsDownloadSpeed) {
     DownloadEvent downloadEvent = cache.get(md5 + RAKAM_DOWNLOAD_EVENT);
     if (downloadEvent != null) {
       Map<String, Object> data = downloadEvent.getData();
@@ -159,7 +181,9 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
       data.put(ERROR_MESSAGE, throwable.getMessage());
       data.put(ERROR_URL, downloadErrorUrl);
       data.put(ERROR_HTTP_CODE, downloadHttpError);
-      data.put(DOWNLOAD_SPEED_MBPS, round(averageDownloadSpeedMbps * 100.0) / 100.0);
+      data.put(APK_AVERAGE_DOWNLOAD_SPEED, getDownloadSpeedString(averageApkDownloadSpeed));
+      data.put(OBB_AVERAGE_DOWNLOAD_SPEED, getDownloadSpeedString(averageObbDownloadSpeed));
+      data.put(AAB_AVERAGE_DOWNLOAD_SPEED, getDownloadSpeedString(averageSplitsDownloadSpeed));
       analyticsManager.logEvent(data, downloadEvent.getEventName(), downloadEvent.getAction(),
           downloadEvent.getContext());
       cache.remove(md5 + RAKAM_DOWNLOAD_EVENT);

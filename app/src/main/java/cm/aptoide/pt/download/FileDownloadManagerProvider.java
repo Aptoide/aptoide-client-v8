@@ -28,7 +28,7 @@ public class FileDownloadManagerProvider implements FileDownloaderProvider {
       PublishSubject<FileDownloadCallback> downloadStatusCallback, String attributionId) {
     return new FileDownloadManager(fileDownloader,
         new FileDownloadTask(downloadStatusCallback, md5, md5Comparator, fileName, attributionId,
-            !packageName.equals("com.igg.android.lordsmobile")), downloadsPath, mainDownloadPath,
+            !packageName.equals("com.igg.android.lordsmobile"), fileType), downloadsPath, mainDownloadPath,
         fileType, packageName, versionCode, fileName);
   }
 }

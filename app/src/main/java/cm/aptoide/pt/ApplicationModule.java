@@ -144,6 +144,7 @@ import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.DownloadInstallationProvider;
 import cm.aptoide.pt.download.DownloadMirrorEventInterceptor;
+import cm.aptoide.pt.download.DownloadSpeedIntervalMapper;
 import cm.aptoide.pt.download.FileDownloadManagerProvider;
 import cm.aptoide.pt.download.Md5Comparator;
 import cm.aptoide.pt.download.OemidProvider;
@@ -418,9 +419,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides DownloadAnalytics providesDownloadAnalytics(
       AnalyticsManager analyticsManager, NavigationTracker navigationTracker,
       ConnectivityManager connectivityManager, TelephonyManager providesSystemService,
-      AppSizeAnalyticsStringMapper appSizeAnalyticsStringMapper) {
+      AppSizeAnalyticsStringMapper appSizeAnalyticsStringMapper,
+      DownloadSpeedIntervalMapper downloadSpeedIntervalMapper) {
     return new DownloadAnalytics(connectivityManager, providesSystemService, navigationTracker,
-        analyticsManager, appSizeAnalyticsStringMapper);
+        analyticsManager, appSizeAnalyticsStringMapper, downloadSpeedIntervalMapper);
+  }
+
+  @Singleton @Provides DownloadSpeedIntervalMapper provideDownloadSpeedIntervalMapper() {
+    return new DownloadSpeedIntervalMapper();
   }
 
   @Singleton @Provides UpdatesAnalytics providesUpdatesAnalytics(AnalyticsManager analyticsManager,

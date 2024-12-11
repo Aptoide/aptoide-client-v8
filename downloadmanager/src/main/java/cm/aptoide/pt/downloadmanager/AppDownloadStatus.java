@@ -46,17 +46,32 @@ public class AppDownloadStatus {
         || appDownloadState == AppDownloadState.VERIFYING_FILE_INTEGRITY;
   }
 
-  public int getAverageDownloadSpeed() {
+  public DownloadSpeed getAverageDownloadSpeed() {
+    long averageApkDownloadSpeed = getAverageDownloadSpeedByFileType(DownloadAppFile.FileType.APK);
+    long averageObbDownloadSpeed = getAverageDownloadSpeedByFileType(DownloadAppFile.FileType.OBB);
+    long averageSplitDownloadSpeed =
+        getAverageDownloadSpeedByFileType(DownloadAppFile.FileType.SPLIT);
+    return new DownloadSpeed(averageApkDownloadSpeed, averageObbDownloadSpeed,
+        averageSplitDownloadSpeed);
+  }
+
+  private long getAverageDownloadSpeedByFileType(DownloadAppFile.FileType fileType) {
     int totalAverageSpeed = 0;
+    int numberOfFilesByType = 0;
     int numberOfFilesStarted = 1;
     for (FileDownloadCallback fileDownloadCallback : fileDownloadCallbackList) {
-      totalAverageSpeed += fileDownloadCallback.getDownloadSpeed();
-      if (fileDownloadCallback.getDownloadState() != AppDownloadState.PENDING
-          && fileDownloadCallback.getDownloadState() != AppDownloadState.WARN) {
-        numberOfFilesStarted++;
+      if (fileDownloadCallback.getFileType() == fileType.getType()) {
+        numberOfFilesByType++;
+        totalAverageSpeed += fileDownloadCallback.getDownloadSpeed();
+        if (fileDownloadCallback.getDownloadState() != AppDownloadState.PENDING
+            && fileDownloadCallback.getDownloadState() != AppDownloadState.WARN) {
+          numberOfFilesStarted++;
+        }
       }
     }
-    if (totalAverageSpeed > 0) {
+    if (numberOfFilesByType <= 0) {
+      return -1;
+    } else if (totalAverageSpeed > 0) {
       return totalAverageSpeed / numberOfFilesStarted;
     } else {
       return 0;

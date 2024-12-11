@@ -146,7 +146,8 @@ public class AptoideDownloadManager implements DownloadManager {
                     .andThen(downloadsRepository.remove(md5))
                     .andThen(Observable.just(download))))
         .doOnNext(download -> downloadAnalytics.onDownloadCancel(download.getMd5(),
-            download.getAverageDownloadSpeed()))
+            download.getAverageApkDownloadSpeed(), download.getAverageObbDownloadSpeed(),
+            download.getAverageSplitsDownloadSpeed()))
         .doOnNext(download -> removeDownloadFiles(download))
         .toCompletable();
   }
@@ -240,7 +241,8 @@ public class AptoideDownloadManager implements DownloadManager {
         .doOnNext(download ->
             downloadAnalytics.onDownloadComplete(download.getMd5(),
                 download.getPackageName(),
-                download.getVersionCode(), download.getAverageDownloadSpeed()))
+                download.getVersionCode(), download.getAverageApkDownloadSpeed(),
+                download.getAverageObbDownloadSpeed(), download.getAverageSplitsDownloadSpeed()))
         .doOnNext(download -> removeAppDownloader(download.getMd5()))
         .takeUntil(
             download -> download.getOverallDownloadStatus() == RoomDownload.COMPLETED);
@@ -275,7 +277,13 @@ public class AptoideDownloadManager implements DownloadManager {
       removeDownloadFiles(download);
     }
     if (appDownloadStatus.isAppDownloadOver()) {
-      download.setAverageDownloadSpeed(appDownloadStatus.getAverageDownloadSpeed());
+      download.setAverageApkDownloadSpeed(
+          appDownloadStatus.getAverageDownloadSpeed().getAverageApkSpeed());
+      download.setAverageObbDownloadSpeed(
+          appDownloadStatus.getAverageDownloadSpeed().getAverageObbSpeed());
+      download.setAverageSplitsDownloadSpeed(
+          appDownloadStatus.getAverageDownloadSpeed().getAverageSplitSpeed());
+      //download.setAverageDownloadSpeed(appDownloadStatus.getAverageDownloadSpeed());
     }
     return downloadsRepository.save(download);
   }

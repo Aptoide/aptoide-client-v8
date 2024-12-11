@@ -49,7 +49,10 @@ class RoomMigrationProvider {
     }
   }, object : Migration(108, 109) {
       override fun migrate(database: SupportSQLiteDatabase) {
-        database.execSQL("ALTER TABLE download RENAME COLUMN downloadSpeed TO averageDownloadSpeed")
+        database.execSQL("ALTER TABLE download RENAME COLUMN downloadSpeed TO averageApkDownloadSpeed")
+        database.execSQL("ALTER TABLE download ADD COLUMN averageObbDownloadSpeed INTEGER DEFAULT 0 NOT NULL")
+        database.execSQL("ALTER TABLE download ADD COLUMN averageSplitsDownloadSpeed INTEGER DEFAULT 0 NOT NULL")
+
       }
     }
   )
