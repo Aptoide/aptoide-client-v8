@@ -49,7 +49,6 @@ import com.appcoins.payments.uri_handler.PaymentsCancelledResult
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.SupportActivity
-import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.design_system.PrimaryButton
 import com.aptoide.android.aptoidegames.drawables.icons.getCheck
@@ -65,6 +64,7 @@ import com.aptoide.android.aptoidegames.feature_payments.PortraitPaymentsNoConne
 import com.aptoide.android.aptoidegames.feature_payments.PurchaseInfoRow
 import com.aptoide.android.aptoidegames.feature_payments.SuccessView
 import com.aptoide.android.aptoidegames.feature_payments.analytics.paymentContext
+import com.aptoide.android.aptoidegames.feature_payments.analytics.rememberPaymentAnalytics
 import com.aptoide.android.aptoidegames.feature_payments.presentation.PaypalPaymentStateEffect
 import com.aptoide.android.aptoidegames.feature_payments.presentation.PreSelectedPaymentMethodViewModel
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -116,18 +116,18 @@ private fun BuildPaypalScreen(
   val (paymentMethod, uiState) = rememberPaypalUIState()
   var finished by remember { mutableStateOf(false) }
 
-  val genericAnalytics = rememberGenericAnalytics()
+  val paymentAnalytics = rememberPaymentAnalytics()
 
   PaypalPaymentStateEffect(paymentMethod.id, uiState)
 
   LaunchedEffect(key1 = uiState, key2 = activityResultRegistry) {
     when (uiState) {
       is PaypalUIState.Error -> {
-        genericAnalytics.sendPaymentErrorEvent(paymentMethod = paymentMethod)
+        paymentAnalytics.sendPaymentErrorEvent(paymentMethod = paymentMethod)
       }
 
       is PaypalUIState.Success -> {
-        genericAnalytics.sendPaymentSuccessEvent(paymentMethod = paymentMethod)
+        paymentAnalytics.sendPaymentSuccessEvent(paymentMethod = paymentMethod)
         delay(3000)
         if (!finished) onFinish(uiState.result)
         finished = true
@@ -136,12 +136,12 @@ private fun BuildPaypalScreen(
       PaypalUIState.Canceled -> popBackStack()
       is PaypalUIState.GetBillingAgreement -> uiState.resolveWith(activityResultRegistry)
       is PaypalUIState.BillingAgreementUnavailable -> {
-        genericAnalytics.sendPaymentBuyEvent(paymentMethod)
+        paymentAnalytics.sendPaymentBuyEvent(paymentMethod)
         uiState.onBuyClick()
       }
 
       PaypalUIState.PaypalAgreementRemoved -> {
-        genericAnalytics.sendPaymentBackEvent(paymentMethod = paymentMethod)
+        paymentAnalytics.sendPaymentBackEvent(paymentMethod = paymentMethod)
         popBackStack()
       }
 
@@ -152,10 +152,10 @@ private fun BuildPaypalScreen(
   PaypalScreen(
     viewModelState = uiState,
     onBuyClicked = {
-      genericAnalytics.sendPaymentBuyEvent(paymentMethod)
+      paymentAnalytics.sendPaymentBuyEvent(paymentMethod)
     },
     onOtherPaymentMethodsClick = {
-      genericAnalytics.sendPaymentBackEvent(paymentMethod = paymentMethod)
+      paymentAnalytics.sendPaymentBackEvent(paymentMethod = paymentMethod)
       popBackStack()
     },
     onClick = {
@@ -165,7 +165,7 @@ private fun BuildPaypalScreen(
       }
     },
     onOutsideClick = {
-      genericAnalytics.sendPaymentDismissedEvent(
+      paymentAnalytics.sendPaymentDismissedEvent(
         paymentMethod = paymentMethod,
         context = uiState.paymentContext,
       )
@@ -173,7 +173,7 @@ private fun BuildPaypalScreen(
       finished = true
     },
     onRetryClick = {
-      genericAnalytics.sendPaymentTryAgainEvent(paymentMethod = paymentMethod)
+      paymentAnalytics.sendPaymentTryAgainEvent(paymentMethod = paymentMethod)
       popBackStack()
     },
     onContactUs = {

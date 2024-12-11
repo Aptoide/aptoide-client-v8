@@ -2,7 +2,10 @@ package com.aptoide.android.aptoidegames.feature_payments.di
 
 import android.content.Context
 import com.appcoins.payments.uri_handler.PaymentScreenContentProvider
+import com.aptoide.android.aptoidegames.analytics.BIAnalytics
+import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 import com.aptoide.android.aptoidegames.feature_payments.AGPaymentScreenContentProvider
+import com.aptoide.android.aptoidegames.feature_payments.analytics.PaymentAnalytics
 import com.aptoide.android.aptoidegames.feature_payments.repository.PaymentsPreferencesRepository
 import com.aptoide.android.aptoidegames.feature_payments.repository.PreSelectedPaymentMethodRepository
 import com.aptoide.android.aptoidegames.paymentsPreferencesDataStore
@@ -34,6 +37,16 @@ interface PaymentsModule {
     @PaymentsPreferencesDataStore
     fun providePaymentsPreferencesDataStore(@ApplicationContext appContext: Context) =
       appContext.paymentsPreferencesDataStore
+
+    @Singleton
+    @Provides
+    fun providesPaymentAnalytics(
+      genericAnalytics: GenericAnalytics,
+      biAnalytics: BIAnalytics,
+    ): PaymentAnalytics = PaymentAnalytics(
+      genericAnalytics = genericAnalytics,
+      biAnalytics = biAnalytics
+    )
   }
 }
 

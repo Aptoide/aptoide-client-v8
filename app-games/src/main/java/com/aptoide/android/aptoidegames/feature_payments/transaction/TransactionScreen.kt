@@ -28,7 +28,6 @@ import com.appcoins.payments.manager.presentation.rememberOngoingTransactionUISt
 import com.appcoins.payments.uri_handler.PaymentsCancelledResult
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.SupportActivity
-import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.feature_payments.AppGamesPaymentBottomSheet
 import com.aptoide.android.aptoidegames.feature_payments.LandscapePaymentErrorView
@@ -38,6 +37,7 @@ import com.aptoide.android.aptoidegames.feature_payments.PortraitPaymentErrorVie
 import com.aptoide.android.aptoidegames.feature_payments.PortraitPaymentsNoConnectionView
 import com.aptoide.android.aptoidegames.feature_payments.SuccessView
 import com.aptoide.android.aptoidegames.feature_payments.analytics.paymentContext
+import com.aptoide.android.aptoidegames.feature_payments.analytics.rememberPaymentAnalytics
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import kotlinx.coroutines.delay
 
@@ -89,19 +89,19 @@ private fun BuildOngoingTransactionScreen(
   )
   var finished by remember { mutableStateOf(false) }
 
-  val genericAnalytics = rememberGenericAnalytics()
+  val paymentAnalytics = rememberPaymentAnalytics()
 
   LaunchedEffect(key1 = uiState) {
     when (uiState) {
       is TransactionUIState.Error -> {
-        genericAnalytics.sendPaymentErrorEvent(
+        paymentAnalytics.sendPaymentErrorEvent(
           transaction = transaction,
           errorCode = uiState.result.message
         )
       }
 
       is TransactionUIState.Success -> {
-        genericAnalytics.sendPaymentSuccessEvent(transaction = transaction)
+        paymentAnalytics.sendPaymentSuccessEvent(transaction = transaction)
         delay(3000)
         if (!finished) onFinish(uiState.result)
         finished = true
@@ -120,7 +120,7 @@ private fun BuildOngoingTransactionScreen(
       }
     },
     onOutsideClick = {
-      genericAnalytics.sendPaymentDismissedEvent(
+      paymentAnalytics.sendPaymentDismissedEvent(
         transaction = transaction,
         context = uiState.paymentContext,
       )
