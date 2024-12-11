@@ -118,6 +118,7 @@
   <string name="trusted_game_badge">Trusted Game</string>
   <string name="official_game_badge">Official Game</string>
   <string name="see_more_button">See more</string>
+  <string name="generic_error_short_title">An error occurred.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Nema više prostora</string>
   <string name="out_of_space_body">Potrebno vam je %s da biste nastavili sa instalacijom.</string>
@@ -260,6 +261,10 @@
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
   <string name="genai_assistant_title">Assistant</string>
   <string name="genai_me_title">Me</string>
-  <string name="genai_introduction_body">Hi! I\'m your AI assistant on everything related to apps and games discovery. What are you looking for?</string>
+  <string name="genai_introduction_body">Hi! I\'m your AI assistant on everything related to apps and games discovery. Try with something like:</string>
   <string name="genai_input_message_field">Type a message&#8230;</string>
+  <string name="genai_powered_by_ai_title">Powered by AI</string>
+  <string name="genai_example_1_body">I\'m looking for strategy games.</string>
+  <string name="genai_example_2_body">Please recommend me the best multiplayer games.</string>
+  <string name="genai_example_3_body">Do you know offline casual games?</string>
 </resources>
