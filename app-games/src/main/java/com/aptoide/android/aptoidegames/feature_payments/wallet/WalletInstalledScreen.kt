@@ -34,11 +34,11 @@ import com.appcoins.payments.arch.PurchaseRequest
 import com.appcoins.payments.uri_handler.PaymentsActivityResult
 import com.appcoins.payments.uri_handler.PaymentsCancelledResult
 import com.aptoide.android.aptoidegames.R
-import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.drawables.icons.getWalletInstalled
 import com.aptoide.android.aptoidegames.feature_payments.AppGamesPaymentBottomSheet
 import com.aptoide.android.aptoidegames.feature_payments.analytics.PaymentContext
+import com.aptoide.android.aptoidegames.feature_payments.analytics.rememberPaymentAnalytics
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import kotlinx.coroutines.delay
@@ -81,7 +81,7 @@ fun PaymentsWalletInstalledView(
   purchaseRequest: PurchaseRequest,
   onFinish: (PaymentsResult) -> Unit,
 ) {
-  val genericAnalytics = rememberGenericAnalytics()
+  val paymentAnalytics = rememberPaymentAnalytics()
   val walletPaymentMethod = rememberWalletPaymentMethod(purchaseRequest)
   val launcher = rememberLauncherForActivityResult(
     contract = StartActivityForResult()
@@ -113,7 +113,7 @@ fun PaymentsWalletInstalledView(
   WalletInstalledView(
     onOutsideClick = {
       walletPaymentMethod?.let {
-        genericAnalytics.sendPaymentDismissedEvent(
+        paymentAnalytics.sendPaymentDismissedEvent(
           paymentMethod = it,
           context = PaymentContext.CONCLUSION,
         )

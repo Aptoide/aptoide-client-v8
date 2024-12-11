@@ -56,6 +56,7 @@ import com.aptoide.android.aptoidegames.feature_payments.PortraitPaymentErrorVie
 import com.aptoide.android.aptoidegames.feature_payments.PortraitPaymentsNoConnectionView
 import com.aptoide.android.aptoidegames.feature_payments.PurchaseInfoRow
 import com.aptoide.android.aptoidegames.feature_payments.analytics.PaymentContext
+import com.aptoide.android.aptoidegames.feature_payments.analytics.rememberPaymentAnalytics
 import com.aptoide.android.aptoidegames.installer.UserActionDialog
 import com.aptoide.android.aptoidegames.installer.analytics.AnalyticsInstallPackageInfoMapper
 import com.aptoide.android.aptoidegames.installer.forceInstallConstraints
@@ -127,7 +128,7 @@ private fun PaymentsWalletInstallationBottomSheetView(
   navigateBack: () -> Unit,
   navigate: (String) -> Unit,
 ) {
-  val genericAnalytics = rememberGenericAnalytics()
+  val paymentAnalytics = rememberPaymentAnalytics()
   val walletPaymentMethod = rememberWalletPaymentMethod(purchaseRequest)
   val (uiState, _) = rememberWalletApp()
 
@@ -138,7 +139,7 @@ private fun PaymentsWalletInstallationBottomSheetView(
     navigate = navigate,
     onOutsideClick = {
       walletPaymentMethod?.let {
-        genericAnalytics.sendPaymentDismissedEvent(
+        paymentAnalytics.sendPaymentDismissedEvent(
           paymentMethod = it,
           context = PaymentContext.SECOND_STEP,
         )

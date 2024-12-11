@@ -5,19 +5,11 @@ import android.content.res.Configuration
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.walletApp
 import cm.aptoide.pt.install_manager.InstallManager
-import com.appcoins.payments.arch.PaymentMethod
-import com.appcoins.payments.arch.ProductInfoData
-import com.appcoins.payments.arch.Transaction
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics.Companion.P_APPC_BILLING
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics.Companion.P_APP_SIZE
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics.Companion.P_CONTEXT
-import com.aptoide.android.aptoidegames.analytics.GenericAnalytics.Companion.P_CURRENCY
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics.Companion.P_ITEM_POSITION
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics.Companion.P_PACKAGE_NAME
-import com.aptoide.android.aptoidegames.analytics.GenericAnalytics.Companion.P_PAYMENT_METHOD
-import com.aptoide.android.aptoidegames.analytics.GenericAnalytics.Companion.P_PRICE
-import com.aptoide.android.aptoidegames.analytics.GenericAnalytics.Companion.P_SKU_ID
-import com.aptoide.android.aptoidegames.analytics.GenericAnalytics.Companion.P_SKU_NAME
 import com.aptoide.android.aptoidegames.analytics.dto.AnalyticsUIContext
 import com.aptoide.android.aptoidegames.analytics.dto.BundleMeta
 import com.aptoide.android.aptoidegames.analytics.dto.SearchMeta
@@ -191,111 +183,6 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
     params = emptyMap()
   )
 
-  fun sendPaymentStartEvent(
-    packageName: String,
-    productInfoData: ProductInfoData?,
-  ) = analyticsSender.logEvent(
-    name = "iap_payment_start",
-    params = productInfoData.toGenericParameters(P_PACKAGE_NAME to packageName)
-  )
-
-  fun sendPaymentMethodsDismissedEvent(
-    packageName: String,
-    productInfoData: ProductInfoData?,
-  ) = analyticsSender.logEvent(
-    name = "iap_payment_dismissed",
-    params = productInfoData.toGenericParameters(
-      P_PACKAGE_NAME to packageName,
-      P_PAYMENT_METHOD to "list",
-      P_CONTEXT to "start"
-    )
-  )
-
-  fun sendPaymentDismissedEvent(
-    paymentMethod: PaymentMethod<*>,
-    context: String?,
-  ) = analyticsSender.logEvent(
-    name = "iap_payment_dismissed",
-    params = paymentMethod.toGenericParameters(P_CONTEXT to context)
-  )
-
-  fun sendPaymentDismissedEvent(
-    transaction: Transaction?,
-    context: String?,
-  ) = analyticsSender.logEvent(
-    name = "iap_payment_dismissed",
-    params = transaction
-      ?.toGenericParameters(P_CONTEXT to context)
-      ?: mapOf(
-        P_PAYMENT_METHOD to "unknown",
-        P_CONTEXT to context
-      )
-  )
-
-  fun sendPaymentBackEvent(paymentMethod: PaymentMethod<*>) = analyticsSender.logEvent(
-    name = "iap_payment_back",
-    params = paymentMethod.toGenericParameters()
-  )
-
-  fun sendPaymentBuyEvent(paymentMethod: PaymentMethod<*>) = analyticsSender.logEvent(
-    name = "iap_payment_buy",
-    params = paymentMethod.toGenericParameters()
-  )
-
-  fun sendPaymentTryAgainEvent(paymentMethod: PaymentMethod<*>) = analyticsSender.logEvent(
-    name = "iap_payment_try_again",
-    params = paymentMethod.toGenericParameters()
-  )
-
-  fun sendPaymentSuccessEvent(paymentMethod: PaymentMethod<*>) = analyticsSender.logEvent(
-    name = "iap_payment_conclusion",
-    params = paymentMethod.toGenericParameters(P_STATUS to "success")
-  )
-
-  fun sendPaymentErrorEvent(
-    paymentMethod: PaymentMethod<*>,
-    errorCode: String? = null,
-  ) = analyticsSender.logEvent(
-    name = "iap_payment_conclusion",
-    params = paymentMethod.toGenericParameters(
-      P_STATUS to "error",
-      P_ERROR_CODE to errorCode
-    )
-  )
-
-  fun sendPaymentSuccessEvent(transaction: Transaction?) = analyticsSender.logEvent(
-    name = "iap_payment_conclusion",
-    params = transaction
-      ?.toGenericParameters(P_STATUS to "success")
-      ?: mapOf(
-        P_PAYMENT_METHOD to "unknown",
-        P_STATUS to "success"
-      )
-  )
-
-  fun sendPaymentErrorEvent(
-    transaction: Transaction?,
-    errorCode: String? = null,
-  ) = analyticsSender.logEvent(
-    name = "iap_payment_conclusion",
-    params = transaction?.toGenericParameters(
-      P_STATUS to "error",
-      P_ERROR_CODE to errorCode
-    ) ?: mapOf(
-      P_PAYMENT_METHOD to "unknown",
-      P_STATUS to "error",
-      P_ERROR_CODE to errorCode
-    )
-  )
-
-  fun sendPaymentMethodsEvent(paymentMethod: PaymentMethod<*>) = analyticsSender.logEvent(
-    name = "iap_payment_methods",
-    params = paymentMethod.productInfo.toGenericParameters(
-      P_PACKAGE_NAME to paymentMethod.purchaseRequest.domain,
-      P_PAYMENT_METHOD to paymentMethod.id
-    )
-  )
-
   fun sendPaymentSupportClicked() = analyticsSender.logEvent(
     name = "payment_support_clicked",
     params = emptyMap()
@@ -325,19 +212,12 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
     internal const val P_FIRST_LAUNCH = "first_launch"
     internal const val P_PACKAGE_NAME = "package_name"
     internal const val P_APP_SIZE = "app_size"
-    internal const val P_SKU_ID = "sku_id"
-    internal const val P_SKU_NAME = "sku_name"
-    internal const val P_PRICE = "price"
-    internal const val P_CURRENCY = "currency"
     internal const val P_CONTEXT = "context"
     internal const val P_ITEM_POSITION = "item_position"
     internal const val P_SCROLL_COUNT = "scroll_count"
     internal const val P_CATEGORY = "category"
     internal const val P_APPC_BILLING = "appc_billing"
     internal const val P_SERVICE = "service"
-    internal const val P_STATUS = "status"
-    internal const val P_PAYMENT_METHOD = "payment_method"
-    internal const val P_ERROR_CODE = "error_code"
   }
 }
 
@@ -376,33 +256,6 @@ fun App.toGenericParameters(): Array<Pair<String, Any>> = arrayOf(
   P_PACKAGE_NAME to packageName,
   P_APPC_BILLING to isAppCoins,
   P_APP_SIZE to appSize
-)
-
-fun PaymentMethod<*>.toGenericParameters(vararg pairs: Pair<String, Any?>) =
-  productInfo.toGenericParameters(
-    *pairs,
-    P_PACKAGE_NAME to purchaseRequest.domain,
-    P_PAYMENT_METHOD to id
-  )
-
-fun ProductInfoData?.toGenericParameters(vararg pairs: Pair<String, Any?>) = this?.run {
-  mapOfNonNull(
-    *pairs,
-    P_SKU_ID to sku,
-    P_SKU_NAME to title,
-    P_PRICE to priceValue,
-    P_CURRENCY to priceCurrency
-  )
-} ?: mapOfNonNull(*pairs)
-
-fun Transaction.toGenericParameters(vararg pairs: Pair<String, Any?>) = mapOfNonNull(
-  *pairs,
-  P_PACKAGE_NAME to domain,
-  P_PAYMENT_METHOD to method,
-  P_SKU_ID to product,
-  P_SKU_NAME to product,
-  P_PRICE to price.value,
-  P_CURRENCY to price.currency
 )
 
 fun <K, V : Any> mapOfNonNull(vararg pairs: Pair<K, V?>) = mapOf(*pairs)
