@@ -118,6 +118,7 @@
   <string name="trusted_game_badge">信頼できるゲーム</string>
   <string name="official_game_badge">公式ゲーム</string>
   <string name="see_more_button">さらに見る</string>
+  <string name="generic_error_short_title">An error occurred.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">空き容量不足</string>
   <string name="out_of_space_body">インストールを続行するには %s 必要です。</string>
