@@ -118,6 +118,7 @@
   <string name="trusted_game_badge">เกมส์ที่น่าเชื่อถือ</string>
   <string name="official_game_badge">เกมส์อย่างเป็นทางการ</string>
   <string name="see_more_button">See more</string>
+  <string name="generic_error_short_title">An error occurred.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">ไม่มีพื้นที่ว่าง</string>
   <string name="out_of_space_body">คุณต้องใช้ %s เพื่อดำเนินการติดตั้งต่อ</string>
