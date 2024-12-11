@@ -362,7 +362,7 @@ public class InstallAnalytics {
     InstallEvent installEvent = cache.get(getKey(packageName, versionCode, RAKAM_INSTALL_EVENT));
     if (installEvent != null) {
       Map<String, Object> data = installEvent.getData();
-      data.put(STATUS, "fail");
+      data.put(STATUS, "cancel");
       data.put(ERROR_TYPE, "canceled");
       data.put(ERROR_MESSAGE, "The install was canceled");
       analyticsManager.logEvent(data, RAKAM_INSTALL_EVENT, installEvent.getAction(),
