@@ -118,6 +118,7 @@
   <string name="trusted_game_badge">الألعاب الموثوقة</string>
   <string name="official_game_badge">الألعاب الرسمية</string>
   <string name="see_more_button">See more</string>
+  <string name="generic_error_short_title">An error occurred.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">لا توجد مساحة</string>
   <string name="out_of_space_body">أنت بحاجة إلى %s لمتابعة التثبيت.</string>
