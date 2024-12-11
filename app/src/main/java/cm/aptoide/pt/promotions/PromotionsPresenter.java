@@ -111,7 +111,19 @@ public class PromotionsPresenter implements Presenter {
         .flatMap(create -> view.resumeDownload()
             .flatMap(promotionViewApp -> permissionManager.requestDownloadAccess(permissionService)
                 .flatMap(success -> permissionManager.requestExternalStoragePermission(
-                    permissionService))
+                        permissionService)
+                    .doOnError(throwable -> promotionsAnalytics.sendDownloadAbortEvent(
+                        promotionViewApp.getPackageName(),
+                        promotionViewApp.getVersionCode(),
+                        promotionViewApp.getDownloadModel().getAction(),
+                        promotionViewApp.getDownloadModel()
+                            .getAction()
+                            .equals(DownloadModel.Action.MIGRATE), promotionViewApp.hasSplits(),
+                        promotionViewApp.hasAppc(), promotionViewApp.getRank(),
+                        promotionViewApp.getStoreName(), false, promotionViewApp.getObb() != null,
+                        promotionViewApp.getBdsFlags().contains("STORE_BDS"), "",
+                        promotionViewApp.getSize()))
+                )
                 .flatMapCompletable(
                     __ -> promotionsManager.resumeDownload(promotionViewApp.getMd5(),
                         promotionViewApp.getPackageName(), promotionViewApp.getAppId()))
@@ -213,7 +225,19 @@ public class PromotionsPresenter implements Presenter {
         })
         .observeOn(viewScheduler)
         .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService))
-        .flatMap(success -> permissionManager.requestExternalStoragePermission(permissionService))
+        .flatMap(success -> permissionManager.requestExternalStoragePermission(permissionService)
+            .doOnError(throwable -> {
+              promotionsAnalytics.sendDownloadAbortEvent(promotionViewApp.getPackageName(),
+                  promotionViewApp.getVersionCode(),
+                  promotionViewApp.getDownloadModel().getAction(),
+                  promotionViewApp.getDownloadModel()
+                      .getAction()
+                      .equals(DownloadModel.Action.MIGRATE), promotionViewApp.hasSplits(),
+                  promotionViewApp.hasAppc(), promotionViewApp.getRank(),
+                  promotionViewApp.getStoreName(), false, promotionViewApp.getObb() != null,
+                  promotionViewApp.getBdsFlags().contains("STORE_BDS"), "",
+                  promotionViewApp.getSize());
+            }))
         .observeOn(Schedulers.io())
         .flatMapCompletable(__1 -> promotionsManager.downloadApp(promotionViewApp))
         .toCompletable();

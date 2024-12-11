@@ -15,6 +15,7 @@ import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.database.room.RoomUpdate;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
+import cm.aptoide.pt.download.InstallType;
 import cm.aptoide.pt.download.Origin;
 import cm.aptoide.pt.download.SplitAnalyticsMapper;
 import cm.aptoide.pt.home.apps.model.DownloadApp;
@@ -370,6 +371,17 @@ public class AppsManager {
         .distinctUntilChanged()
         .doOnNext(
             installList -> handleNotEnoughSpaceError(installList.get(installList.size() - 1)));
+  }
+
+  public Completable handleDownloadAbort(String packageName) {
+    return updatesManager.getUpdate(packageName)
+        .doOnSuccess(update -> downloadAnalytics.sendDownloadAbortEvent(packageName,
+            update.getUpdateVersionCode(),
+            InstallType.UPDATE, false, update.hasSplits(), update.hasAppc(),
+            update.getTrustedBadge(), update.getStoreName(), false,
+            update.getMainObbMd5() != null && !update.getMainObbMd5()
+                .isEmpty(), update.getStoreName().equals("catappult"), "", update.getSize()))
+        .toCompletable().onErrorComplete();
   }
 }
 

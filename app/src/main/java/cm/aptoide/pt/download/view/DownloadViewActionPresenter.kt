@@ -115,9 +115,9 @@ open class DownloadViewActionPresenter(
 
   private fun installApp(downloadClick: DownloadClick): Completable {
     when (downloadClick.download.downloadModel?.action) {
-      DownloadStatusModel.Action.MIGRATE,
-      DownloadStatusModel.Action.UPDATE,
-      DownloadStatusModel.Action.INSTALL -> {
+      Action.MIGRATE,
+      Action.UPDATE,
+      Action.INSTALL -> {
         return downloadApp(downloadClick.download)
           .andThen(
             if (analyticsContext.equals(DownloadAnalytics.AppContext.SEARCH)) {
@@ -133,7 +133,7 @@ open class DownloadViewActionPresenter(
           )
       }
 
-      DownloadStatusModel.Action.DOWNGRADE -> {
+      Action.DOWNGRADE -> {
         return downgradeApp(downloadClick.download)
           .andThen(
             if (analyticsContext.equals(DownloadAnalytics.AppContext.SEARCH)) {
@@ -149,7 +149,7 @@ open class DownloadViewActionPresenter(
           )
       }
 
-      DownloadStatusModel.Action.OPEN -> {
+      Action.OPEN -> {
         return downloadNavigator.openApp(downloadClick.download.packageName)
       }
 
@@ -186,7 +186,26 @@ open class DownloadViewActionPresenter(
           permissionService,
           download.size
         )
-          .flatMap { permissionManager.requestExternalStoragePermission(permissionService) }
+          .flatMap {
+            permissionManager.requestExternalStoragePermission(permissionService)
+              .doOnError {
+                downloadAnalytics.sendDownloadAbortEvent(
+                  download.packageName,
+                  download.versionCode,
+                  mapDownloadAction(download.downloadModel!!.action),
+                  download.downloadModel.action == Action.MIGRATE,
+                  download.splits.isNotEmpty(),
+                  download.hasBilling || download.hasAdvertising,
+                  download.malware.rank.name,
+                  download.storeName,
+                  isInApkfyContext,
+                  download.obb != null,
+                  download.storeName == "catappult",
+                  download.appCategory,
+                  download.size
+                )
+              }
+          }
           .flatMapSingle {
             RxJavaInterop.toV1Single(dynamicSplitsManager.getAppSplitsByMd5(download.md5))
           }
@@ -199,7 +218,7 @@ open class DownloadViewActionPresenter(
                   download.downloadModel!!.action, download.storeName,
                   download.malware.rank.name, download.appCategory
                 )
-                if (DownloadStatusModel.Action.MIGRATE == download.downloadModel.action) {
+                if (Action.MIGRATE == download.downloadModel.action) {
                   installAnalytics.uninstallStarted(
                     download.packageName,
                     AnalyticsManager.Action.INSTALL,
@@ -242,7 +261,7 @@ open class DownloadViewActionPresenter(
             download.packageName,
             download.versionCode,
             mapDownloadAction(download.downloadModel!!.action),
-            download.downloadModel.action == DownloadStatusModel.Action.MIGRATE,
+            download.downloadModel.action == Action.MIGRATE,
             download.splits.isNotEmpty(),
             download.hasAdvertising || download.hasBilling,
             download.malware
@@ -301,13 +320,13 @@ open class DownloadViewActionPresenter(
       download.packageName, download.versionCode,
       AnalyticsManager.Action.INSTALL, analyticsContext,
       getOrigin(download.action), campaignId, abTestGroup,
-      downloadAction == DownloadStatusModel.Action.MIGRATE,
+      downloadAction == Action.MIGRATE,
       download.hasAppc(), download.hasSplits(), malwareRank,
       storeName, isInApkfyContext, download.hasObbs(),
       splitAnalyticsMapper.getSplitTypesAsString(download.splits),
       storeName.equals("catappult"), appCategory, download.size
     )
-    if (DownloadStatusModel.Action.MIGRATE == downloadAction) {
+    if (Action.MIGRATE == downloadAction) {
       downloadAnalytics.migrationClicked(
         download.md5,
         download.versionCode,
@@ -348,12 +367,12 @@ open class DownloadViewActionPresenter(
     }
   }
 
-  private fun mapDownloadAction(downloadAction: DownloadStatusModel.Action): InstallType {
+  private fun mapDownloadAction(downloadAction: Action): InstallType {
     return when (downloadAction) {
-      DownloadStatusModel.Action.DOWNGRADE -> InstallType.DOWNGRADE
-      DownloadStatusModel.Action.INSTALL -> InstallType.INSTALL
-      DownloadStatusModel.Action.UPDATE -> InstallType.UPDATE
-      DownloadStatusModel.Action.MIGRATE, DownloadStatusModel.Action.OPEN -> throw IllegalStateException(
+      Action.DOWNGRADE -> InstallType.DOWNGRADE
+      Action.INSTALL -> InstallType.INSTALL
+      Action.UPDATE -> InstallType.UPDATE
+      Action.MIGRATE, Action.OPEN -> throw IllegalStateException(
         "Mapping an invalid download action " + downloadAction.name
       )
     }
@@ -368,13 +387,13 @@ open class DownloadViewActionPresenter(
     }
   }
 
-  fun parseDownloadAction(action: DownloadStatusModel.Action): Int {
+  fun parseDownloadAction(action: Action): Int {
     val downloadAction: Int
     downloadAction = when (action) {
-      DownloadStatusModel.Action.INSTALL -> RoomDownload.ACTION_INSTALL
-      DownloadStatusModel.Action.UPDATE -> RoomDownload.ACTION_UPDATE
-      DownloadStatusModel.Action.DOWNGRADE -> RoomDownload.ACTION_DOWNGRADE
-      DownloadStatusModel.Action.MIGRATE -> RoomDownload.ACTION_DOWNGRADE
+      Action.INSTALL -> RoomDownload.ACTION_INSTALL
+      Action.UPDATE -> RoomDownload.ACTION_UPDATE
+      Action.DOWNGRADE -> RoomDownload.ACTION_DOWNGRADE
+      Action.MIGRATE -> RoomDownload.ACTION_DOWNGRADE
       else -> throw IllegalArgumentException("Invalid action $action")
     }
     return downloadAction

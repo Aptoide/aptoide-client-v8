@@ -195,7 +195,7 @@ public class EditorialPresenter implements Presenter {
                 case UPDATE:
                   completable = editorialManager.loadEditorialViewModel()
                       .flatMapCompletable(
-                          viewModel -> downloadApp(editorialDownloadEvent)
+                          viewModel -> downloadApp(editorialDownloadEvent, viewModel)
                               .andThen(editorialManager.convertCampaign(editorialDownloadEvent))
                               .observeOn(viewScheduler)
                               .doOnCompleted(() -> editorialAnalytics.clickOnInstallButton(
@@ -223,7 +223,7 @@ public class EditorialPresenter implements Presenter {
                   completable = editorialManager.loadEditorialViewModel()
                       .observeOn(viewScheduler)
                       .flatMapCompletable(
-                          appViewViewModel -> downgradeApp(editorialDownloadEvent)
+                          appViewViewModel -> downgradeApp(editorialDownloadEvent, appViewViewModel)
                               .andThen(editorialManager.convertCampaign(editorialDownloadEvent))
                               .doOnCompleted(
                                   () -> editorialAnalytics.clickOnInstallButton(
@@ -272,7 +272,18 @@ public class EditorialPresenter implements Presenter {
         .flatMap(editorialViewModel -> view.resumeDownload(editorialViewModel)
             .flatMap(editorialEvent -> permissionManager.requestDownloadAccess(permissionService)
                 .flatMap(success -> permissionManager.requestExternalStoragePermission(
-                    permissionService))
+                        permissionService)
+                    .doOnError(throwable -> {
+                      editorialAnalytics.sendDownloadAbortEvent(editorialEvent.getPackageName(),
+                          editorialEvent.getVerCode(), editorialEvent.getAction(),
+                          editorialEvent.getAction().equals(DownloadModel.Action.MIGRATE),
+                          !editorialEvent.getSplits().isEmpty(), editorialViewModel.hasAppc(),
+                          editorialEvent.getTrustedBadge(), editorialEvent.getStoreName(),
+                          false, editorialEvent.getObb() != null,
+                          editorialEvent.getBdsFlags().contains("STORE_BDS"),
+                          "", editorialEvent.getSize());
+                    })
+                )
                 .flatMapCompletable(__ -> editorialManager.resumeDownload(editorialEvent.getMd5(),
                     editorialEvent.getPackageName(), editorialEvent.getAppId(),
                     editorialEvent.getAction()
@@ -300,7 +311,8 @@ public class EditorialPresenter implements Presenter {
         });
   }
 
-  private Completable downloadApp(EditorialDownloadEvent editorialDownloadEvent) {
+  private Completable downloadApp(EditorialDownloadEvent editorialDownloadEvent,
+      EditorialViewModel viewModel) {
     return Observable.defer(() -> {
           if (editorialManager.shouldShowRootInstallWarningPopup()) {
             return view.showRootInstallWarningPopup()
@@ -311,9 +323,22 @@ public class EditorialPresenter implements Presenter {
         })
         .observeOn(viewScheduler)
         .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService))
-        .flatMap(success -> permissionManager.requestExternalStoragePermission(permissionService))
+        .flatMap(success -> permissionManager.requestExternalStoragePermission(permissionService)
+            .doOnError(throwable -> {
+              throwable.printStackTrace();
+              editorialAnalytics.sendDownloadAbortEvent(editorialDownloadEvent.getPackageName(),
+                  editorialDownloadEvent.getVerCode(), editorialDownloadEvent.getAction(),
+                  editorialDownloadEvent.getAction().equals(DownloadModel.Action.MIGRATE),
+                  !editorialDownloadEvent.getSplits().isEmpty(), viewModel.hasAppc(),
+                  editorialDownloadEvent.getTrustedBadge(), editorialDownloadEvent.getStoreName(),
+                  false,
+                  editorialDownloadEvent.getObb() != null,
+                  editorialDownloadEvent.getBdsFlags().contains("STORE_BDS"),
+                  "", editorialDownloadEvent.getSize()
+              );
+            }))
         .observeOn(Schedulers.io())
-        .flatMapCompletable(viewModel -> editorialManager.downloadApp(editorialDownloadEvent))
+        .flatMapCompletable(__ -> editorialManager.downloadApp(editorialDownloadEvent))
         .toCompletable();
   }
 
@@ -495,10 +520,11 @@ public class EditorialPresenter implements Presenter {
     return firstVisiblePosition == lastVisiblePosition;
   }
 
-  private Completable downgradeApp(EditorialDownloadEvent downloadEvent) {
+  private Completable downgradeApp(EditorialDownloadEvent downloadEvent,
+      EditorialViewModel viewModel) {
     return view.showDowngradeMessage()
         .filter(downgrade -> downgrade)
-        .flatMapCompletable(__ -> downloadApp(downloadEvent))
+        .flatMapCompletable(__ -> downloadApp(downloadEvent, viewModel))
         .toCompletable();
   }
 

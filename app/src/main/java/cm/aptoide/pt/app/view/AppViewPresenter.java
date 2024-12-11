@@ -1024,9 +1024,27 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.resumeDownload()
-            .flatMap(
-                success -> permissionManager.requestExternalStoragePermission(permissionService))
-            .flatMapSingle(__1 -> appViewManager.getAppViewModel())
+            .flatMapSingle(action -> appViewManager.getAppViewModel()
+                .flatMap(
+                    model -> permissionManager.requestExternalStoragePermission(permissionService)
+                        .doOnError(throwable -> {
+                          AppModel app = model.getAppModel();
+                          appViewAnalytics.sendDownloadAbortEvent(
+                              app.getPackageName(), app.getVersionCode(), action,
+                              action != null && action.equals(DownloadModel.Action.MIGRATE),
+                              !app.getSplits()
+                                  .isEmpty(), app.hasAdvertising() || app.hasBilling(),
+                              app.getMalware()
+                                  .getRank()
+                                  .toString(), app.getStore()
+                                  .getName(), app
+                                  .getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP,
+                              app.getObb() != null, app.getBdsFlags().contains("STORE_BDS"),
+                              app.getAppCategory(), app.getSize()
+                          );
+                        }).toSingle()
+                        .map(__ -> model)))
+            //.flatMapSingle(__1 -> appViewManager.getAppViewModel())
             .flatMapCompletable(app -> appViewManager.resumeDownload(app.getAppModel()
                         .getMd5(), app.getAppModel()
                         .getAppId(), app.getDownloadModel()
@@ -1210,7 +1228,21 @@ public class AppViewPresenter implements Presenter {
         .flatMap(__ -> permissionManager.requestDownloadAccessWithWifiBypass(permissionService,
                 appModel.getSize())
             .flatMap(
-                success -> permissionManager.requestExternalStoragePermission(permissionService))
+                success -> permissionManager.requestExternalStoragePermission(permissionService)
+                    .doOnError(throwable -> {
+                      appViewAnalytics.sendDownloadAbortEvent(
+                          appModel.getPackageName(), appModel.getVersionCode(), action,
+                          action != null && action.equals(DownloadModel.Action.MIGRATE),
+                          !appModel.getSplits()
+                              .isEmpty(), appModel.hasAdvertising() || appModel.hasBilling(),
+                          appModel.getMalware()
+                              .getRank()
+                              .toString(), appModel.getStore()
+                              .getName(), appModel
+                              .getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP,
+                          appModel.getObb() != null, appModel.getBdsFlags().contains("STORE_BDS"),
+                          appModel.getAppCategory(), appModel.getSize());
+                    }))
             .observeOn(Schedulers.io())
             .flatMapCompletable(__1 -> appViewManager.downloadApp(action, appModel.getAppId(),
                 appModel.getMalware()

@@ -6,6 +6,7 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.apps.model.StateApp;
+import cm.aptoide.pt.home.apps.model.UpdateApp;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
@@ -162,6 +163,8 @@ public class AppsPresenter implements Presenter {
         .observeOn(viewScheduler)
         .flatMap(created -> view.startDownload()
             .flatMap(app -> permissionManager.requestExternalStoragePermission(permissionService)
+                .doOnError(
+                    throwable -> handleDownloadAbortEvent(((UpdateApp) app).getPackageName()))
                 .flatMap(success -> {
                   if (appsManager.showWarning()) {
                     return view.showRootWarning()
@@ -178,6 +181,12 @@ public class AppsPresenter implements Presenter {
         }, error -> {
           crashReport.log(error);
         });
+  }
+
+  private void handleDownloadAbortEvent(String packageName) {
+    appsManager.handleDownloadAbort(packageName)
+        .onErrorComplete()
+        .subscribe();
   }
 
   private void handleBottomNavigationEvents() {

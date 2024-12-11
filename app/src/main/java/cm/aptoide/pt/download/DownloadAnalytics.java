@@ -221,6 +221,30 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
         downloadEvent.getContext());
   }
 
+  public void sendDownloadAbortEvent(String packageName, int versionCode,
+      InstallType downloadAction, boolean isMigration, boolean isAppBundle, boolean hasAppc,
+      String trustedBadge,
+      String storeName, boolean isApkfy, boolean hasObb, boolean isInCatappult,
+      String appCategory, long appSize) {
+    String previousContext = navigationTracker.getPreviousViewName();
+    String context = navigationTracker.getCurrentViewName();
+    String tag = navigationTracker.getCurrentScreen() != null ? navigationTracker.getCurrentScreen()
+        .getTag() : "";
+
+    HashMap<String, Object> result =
+        createRakamDownloadEvent(packageName, versionCode, downloadAction.toString(), isMigration,
+            isAppBundle, hasAppc, trustedBadge, storeName,
+            isApkfy, previousContext, context, tag, hasObb, "", isInCatappult, appCategory,
+            appSize);
+
+    result.put(STATUS, "abort");
+    DownloadEvent downloadEvent =
+        new DownloadEvent(RAKAM_DOWNLOAD_EVENT, result, context, AnalyticsManager.Action.CLICK);
+
+    analyticsManager.logEvent(result, downloadEvent.getEventName(), downloadEvent.getAction(),
+        downloadEvent.getContext());
+  }
+
   private void sendDownloadEvent(String downloadCacheKey) {
     DownloadEvent downloadEvent = cache.get(downloadCacheKey);
     if (downloadEvent != null && downloadEvent.isHadProgress()) {

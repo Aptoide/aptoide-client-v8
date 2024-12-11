@@ -3,8 +3,10 @@ package cm.aptoide.pt.editorial;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.app.AppViewAnalytics;
+import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.download.DownloadAnalytics;
+import cm.aptoide.pt.download.InstallType;
 import cm.aptoide.pt.download.SplitAnalyticsMapper;
 import cm.aptoide.pt.install.InstallAnalytics;
 import java.util.HashMap;
@@ -114,5 +116,36 @@ public class EditorialAnalytics {
 
   public void sendNotEnoughSpaceErrorEvent(String md5) {
     downloadAnalytics.sendNotEnoughSpaceError(md5);
+  }
+
+  public void sendDownloadAbortEvent(String packageName, int versionCode,
+      DownloadModel.Action downloadAction,
+      boolean isMigration, boolean isAppBundle, boolean hasAppc, String trustedBadge,
+      String storeName, boolean isApkfy, boolean hasObb, boolean isInCatappult,
+      String appCategory, long appSize) {
+    downloadAnalytics.sendDownloadAbortEvent(packageName, versionCode,
+        mapDownloadAction(downloadAction), isMigration,
+        isAppBundle, hasAppc, trustedBadge, storeName, isApkfy, hasObb, isInCatappult,
+        appCategory, appSize);
+  }
+
+  private InstallType mapDownloadAction(DownloadModel.Action downloadAction) {
+    InstallType installType = InstallType.INSTALL;
+    switch (downloadAction) {
+      case DOWNGRADE:
+        installType = InstallType.DOWNGRADE;
+        break;
+      case INSTALL:
+        installType = InstallType.INSTALL;
+        break;
+      case UPDATE:
+        installType = InstallType.UPDATE;
+        break;
+      case MIGRATE:
+      case OPEN:
+        throw new IllegalStateException(
+            "Mapping an invalid download action " + downloadAction.name());
+    }
+    return installType;
   }
 }
