@@ -2,6 +2,7 @@ package com.aptoide.android.aptoidegames.installer.analytics
 
 import cm.aptoide.pt.install_manager.AbortException
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
+import cm.aptoide.pt.install_manager.dto.InstallationFile
 import cm.aptoide.pt.install_manager.workers.PackageDownloader
 import cm.aptoide.pt.installer.platform.REQUEST_INSTALL_PACKAGES_NOT_ALLOWED
 import cm.aptoide.pt.installer.platform.WRITE_EXTERNAL_STORAGE_NOT_ALLOWED
@@ -22,20 +23,18 @@ class DownloadProbe(
     installPackageInfo: InstallPackageInfo,
   ): Flow<Int> {
     cachedSizes[packageName] = installPackageInfo.filesSize
-    val analyticsPayload = installPackageInfo.payload.toAnalyticsPayload()
     return packageDownloader.download(packageName, installPackageInfo)
       .onStart {
         analytics.sendDownloadStartedEvent(
           packageName = packageName,
-          analyticsPayload = analyticsPayload
+          installPackageInfo = installPackageInfo
         )
       }
       .onCompletion {
         when (it) {
           is CancellationException -> analytics.sendDownloadCancelEvent(
             packageName = packageName,
-            analyticsPayload = analyticsPayload,
-            appSizeSegment = calcAppSizeSegment(bytes = installPackageInfo.filesSize)
+            installPackageInfo = installPackageInfo
           )
 
           is AbortException -> {
@@ -43,15 +42,13 @@ class DownloadProbe(
               REQUEST_INSTALL_PACKAGES_NOT_ALLOWED,
               WRITE_EXTERNAL_STORAGE_NOT_ALLOWED -> analytics.sendDownloadAbortEvent(
                 packageName = packageName,
-                analyticsPayload = analyticsPayload,
-                errorMessage = it.message,
-                appSizeSegment = calcAppSizeSegment(bytes = installPackageInfo.filesSize)
+                installPackageInfo = installPackageInfo,
+                errorMessage = it.message
               )
 
               else -> analytics.sendDownloadErrorEvent(
                 packageName = packageName,
-                analyticsPayload = analyticsPayload,
-                appSizeSegment = calcAppSizeSegment(bytes = installPackageInfo.filesSize),
+                installPackageInfo = installPackageInfo,
                 errorMessage = it.message,
                 errorType = it::class.simpleName,
                 errorCode = null
@@ -61,14 +58,12 @@ class DownloadProbe(
 
           null -> analytics.sendDownloadCompletedEvent(
             packageName = packageName,
-            analyticsPayload = analyticsPayload,
-            appSizeSegment = calcAppSizeSegment(bytes = installPackageInfo.filesSize)
+            installPackageInfo = installPackageInfo
           )
 
           else -> analytics.sendDownloadErrorEvent(
             packageName = packageName,
-            analyticsPayload = analyticsPayload,
-            appSizeSegment = calcAppSizeSegment(bytes = installPackageInfo.filesSize),
+            installPackageInfo = installPackageInfo,
             errorMessage = it.message,
             errorType = it::class.simpleName,
             errorCode = (it as? HttpException)?.code()
@@ -85,16 +80,22 @@ class DownloadProbe(
     // We need to call it here
     if (!cancelled) analytics.sendDownloadCancelEvent(
       packageName = packageName,
-      analyticsPayload = null,
-      appSizeSegment = calcAppSizeSegment(
-        bytes = cachedSizes[packageName] ?: -100000000L //fallback so we get 0
-      )
+      installPackageInfo = InstallPackageInfo(
+        versionCode = 0,
+        installationFiles = setOf(
+          InstallationFile(
+            name = "",
+            type = InstallationFile.Type.BASE,
+            md5 = "",
+            fileSize = cachedSizes[packageName] ?: 0,
+            url = "",
+            altUrl = "",
+            localPath = ""
+          )
+        )
+      ),
     )
 
     return cancelled
   }
-}
-
-fun calcAppSizeSegment(bytes: Long): Int {
-  return (bytes.toInt() / 1000 / 1000 / 100 + 1) * 100
 }

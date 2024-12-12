@@ -2,6 +2,7 @@ package com.aptoide.android.aptoidegames.installer.analytics
 
 import cm.aptoide.pt.extensions.toInt
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.asNullableParameter
@@ -10,6 +11,7 @@ import com.aptoide.android.aptoidegames.analytics.mapOfNonNull
 import com.aptoide.android.aptoidegames.analytics.toBIParameters
 import com.aptoide.android.aptoidegames.analytics.toBiParameters
 import com.aptoide.android.aptoidegames.analytics.toGenericParameters
+import com.aptoide.android.aptoidegames.installer.analytics.InstallAnalytics.Companion.P_APP_SIZE_MB
 import com.aptoide.android.aptoidegames.installer.analytics.InstallAnalytics.Companion.P_UPDATE_TYPE
 
 class InstallAnalytics(
@@ -109,11 +111,11 @@ class InstallAnalytics(
 
   fun sendDownloadStartedEvent(
     packageName: String,
-    analyticsPayload: AnalyticsPayload?,
+    installPackageInfo: InstallPackageInfo
   ) {
     genericAnalytics.logEvent(
       name = "app_download",
-      params = analyticsPayload.toAppGenericParameters(
+      params = installPackageInfo.toAppGenericParameters(
         packageName = packageName,
         P_STATUS to "started"
       )
@@ -122,12 +124,11 @@ class InstallAnalytics(
 
   fun sendDownloadCompletedEvent(
     packageName: String,
-    analyticsPayload: AnalyticsPayload?,
-    appSizeSegment: Int,
+    installPackageInfo: InstallPackageInfo
   ) {
     genericAnalytics.logEvent(
       name = "app_download",
-      params = analyticsPayload.toAppGenericParameters(
+      params = installPackageInfo.toAppGenericParameters(
         packageName = packageName,
         P_STATUS to "success"
       )
@@ -136,22 +137,20 @@ class InstallAnalytics(
     logBIDownloadEvent(
       packageName = packageName,
       status = "success",
-      analyticsPayload = analyticsPayload,
-      appSizeSegment = appSizeSegment,
+      installPackageInfo = installPackageInfo
     )
   }
 
   fun sendDownloadErrorEvent(
     packageName: String,
-    analyticsPayload: AnalyticsPayload?,
-    appSizeSegment: Int,
+    installPackageInfo: InstallPackageInfo,
     errorMessage: String?,
     errorType: String?,
     errorCode: Int?,
   ) {
     genericAnalytics.logEvent(
       name = "app_download",
-      params = analyticsPayload.toAppGenericParameters(
+      params = installPackageInfo.toAppGenericParameters(
         packageName = packageName,
         P_STATUS to "fail",
         P_ERROR_MESSAGE to (errorMessage ?: "failure")
@@ -161,8 +160,7 @@ class InstallAnalytics(
     logBIDownloadEvent(
       packageName = packageName,
       status = "fail",
-      analyticsPayload = analyticsPayload,
-      appSizeSegment = appSizeSegment,
+      installPackageInfo = installPackageInfo,
       P_ERROR_MESSAGE to errorMessage,
       P_ERROR_TYPE to errorType,
       P_ERROR_HTTP_CODE to errorCode,
@@ -171,13 +169,12 @@ class InstallAnalytics(
 
   fun sendDownloadAbortEvent(
     packageName: String,
-    analyticsPayload: AnalyticsPayload?,
-    appSizeSegment: Int,
+    installPackageInfo: InstallPackageInfo,
     errorMessage: String?,
   ) {
     genericAnalytics.logEvent(
       name = "app_download",
-      params = analyticsPayload.toAppGenericParameters(
+      params = installPackageInfo.toAppGenericParameters(
         packageName = packageName,
         P_STATUS to "fail",
         P_ERROR_MESSAGE to (errorMessage ?: "failure")
@@ -187,8 +184,7 @@ class InstallAnalytics(
     logBIDownloadEvent(
       packageName = packageName,
       status = "abort",
-      analyticsPayload = analyticsPayload,
-      appSizeSegment = appSizeSegment,
+      installPackageInfo = installPackageInfo,
       P_ERROR_MESSAGE to errorMessage,
       P_ERROR_TYPE to "permission",
     )
@@ -196,12 +192,11 @@ class InstallAnalytics(
 
   fun sendDownloadCancelEvent(
     packageName: String,
-    analyticsPayload: AnalyticsPayload?,
-    appSizeSegment: Int,
+    installPackageInfo: InstallPackageInfo
   ) {
     genericAnalytics.logEvent(
       name = "app_download",
-      params = analyticsPayload.toAppGenericParameters(
+      params = installPackageInfo.toAppGenericParameters(
         packageName = packageName,
         P_STATUS to "cancel"
       )
@@ -210,8 +205,7 @@ class InstallAnalytics(
     logBIDownloadEvent(
       packageName = packageName,
       status = "cancel",
-      analyticsPayload = analyticsPayload,
-      appSizeSegment = appSizeSegment,
+      installPackageInfo = installPackageInfo
     )
   }
 
@@ -233,11 +227,11 @@ class InstallAnalytics(
 
   fun sendInstallStartedEvent(
     packageName: String,
-    analyticsPayload: AnalyticsPayload?,
+    installPackageInfo: InstallPackageInfo
   ) {
     genericAnalytics.logEvent(
       name = "app_installed",
-      params = analyticsPayload.toAppGenericParameters(
+      params = installPackageInfo.toAppGenericParameters(
         packageName = packageName,
         P_STATUS to "started"
       )
@@ -246,11 +240,11 @@ class InstallAnalytics(
 
   fun sendInstallCancelEvent(
     packageName: String,
-    analyticsPayload: AnalyticsPayload?,
+    installPackageInfo: InstallPackageInfo
   ) {
     genericAnalytics.logEvent(
       name = "app_installed",
-      params = analyticsPayload.toAppGenericParameters(
+      params = installPackageInfo.toAppGenericParameters(
         packageName = packageName,
         P_STATUS to "cancel"
       )
@@ -259,11 +253,11 @@ class InstallAnalytics(
 
   fun sendInstallCompletedEvent(
     packageName: String,
-    analyticsPayload: AnalyticsPayload?,
+    installPackageInfo: InstallPackageInfo
   ) {
     genericAnalytics.logEvent(
       name = "app_installed",
-      params = analyticsPayload.toAppGenericParameters(
+      params = installPackageInfo.toAppGenericParameters(
         packageName = packageName,
         P_STATUS to "success"
       )
@@ -272,19 +266,19 @@ class InstallAnalytics(
     logBIInstallEvent(
       packageName = packageName,
       status = "success",
-      analyticsPayload = analyticsPayload
+      installPackageInfo = installPackageInfo
     )
   }
 
   fun sendInstallErrorEvent(
     packageName: String,
-    analyticsPayload: AnalyticsPayload?,
+    installPackageInfo: InstallPackageInfo,
     errorMessage: String?,
     errorType: String?,
   ) {
     genericAnalytics.logEvent(
       name = "app_installed",
-      params = analyticsPayload.toAppGenericParameters(
+      params = installPackageInfo.toAppGenericParameters(
         packageName = packageName,
         P_STATUS to "fail",
         P_ERROR_MESSAGE to (errorMessage ?: "failure")
@@ -294,7 +288,7 @@ class InstallAnalytics(
     logBIInstallEvent(
       packageName = packageName,
       status = "fail",
-      analyticsPayload = analyticsPayload,
+      installPackageInfo = installPackageInfo,
       P_ERROR_MESSAGE to errorMessage,
       P_ERROR_TYPE to errorType,
     )
@@ -326,10 +320,10 @@ class InstallAnalytics(
 
   fun sendDownloadRestartedEvent(
     packageName: String,
-    analyticsPayload: AnalyticsPayload?,
+    installPackageInfo: InstallPackageInfo,
   ) = genericAnalytics.logEvent(
     name = "app_download",
-    params = analyticsPayload.toAppGenericParameters(
+    params = installPackageInfo.toAppGenericParameters(
       packageName = packageName,
       P_STATUS to "restart"
     )
@@ -408,39 +402,42 @@ class InstallAnalytics(
   private fun logBIDownloadEvent(
     packageName: String,
     status: String,
-    analyticsPayload: AnalyticsPayload?,
-    appSizeSegment: Int,
+    installPackageInfo: InstallPackageInfo,
     vararg pairs: Pair<String, Any?>
   ) = biAnalytics.logEvent(
     name = "download",
-    analyticsPayload.let {
-      it.toAppBIParameters(packageName) +
-        it?.toAnalyticsUiContext().toBiParameters(
-          P_STATUS to status,
-          P_APP_SIZE_MB to appSizeSegment,
-          P_STORE to it?.store,
-          P_TRUSTED_BADGE to it?.trustedBadge,
-          *pairs
-        )
-    }
+    installPackageInfo.payload
+      .toAnalyticsPayload()
+      .let {
+        it.toAppBIParameters(packageName) +
+          it?.toAnalyticsUiContext().toBiParameters(
+            P_STATUS to status,
+            installPackageInfo.getAppSizeSegment(),
+            P_STORE to it?.store,
+            P_TRUSTED_BADGE to it?.trustedBadge,
+            *pairs
+          )
+      }
   )
 
   private fun logBIInstallEvent(
     packageName: String,
     status: String,
-    analyticsPayload: AnalyticsPayload?,
+    installPackageInfo: InstallPackageInfo,
     vararg pairs: Pair<String, Any?>
   ) = biAnalytics.logEvent(
     name = "install",
-    analyticsPayload.let {
-      it.toAppBIParameters(packageName) +
-        it?.toAnalyticsUiContext().toBiParameters(
-          P_STATUS to status,
-          P_STORE to it?.store,
-          P_TRUSTED_BADGE to it?.trustedBadge,
-          *pairs
-        )
-    }
+    installPackageInfo.payload
+      .toAnalyticsPayload()
+      .let {
+        it.toAppBIParameters(packageName) +
+          it?.toAnalyticsUiContext().toBiParameters(
+            P_STATUS to status,
+            P_STORE to it?.store,
+            P_TRUSTED_BADGE to it?.trustedBadge,
+            *pairs
+          )
+      }
   )
 
   private fun getUserClicks(packageName: String): String = silentInstallChecker
@@ -454,7 +451,6 @@ class InstallAnalytics(
     private const val P_ACTION = "action"
     private const val P_STORE = "store"
     private const val P_STATUS = "status"
-    private const val P_APP_SIZE_MB = "app_size_mb"
     private const val P_TRUSTED_BADGE = "trusted_badge"
     private const val P_ERROR_MESSAGE = "error_message"
     private const val P_ERROR_TYPE = "error_type"
@@ -463,20 +459,37 @@ class InstallAnalytics(
     internal const val P_PROMPT_TYPE = "prompt_type"
     internal const val P_SERVICE = "service"
     internal const val P_UPDATE_TYPE = "update_type"
+    internal const val P_APP_SIZE_MB = "app_size_mb"
   }
 }
+
+private fun InstallPackageInfo.toAppGenericParameters(
+  packageName: String,
+  vararg pairs: Pair<String, Any?>
+): Map<String, Any> = payload
+  .toAnalyticsPayload()
+  .toAppGenericParameters(packageName, getAppSizeSegment(), *pairs)
+
+private fun InstallPackageInfo.getAppSizeSegment(): Pair<String, Int> = P_APP_SIZE_MB.to(
+  filesSize.toInt()
+    .takeIf { it > 0 }
+    ?.div(100_000_000)
+    ?.times(100)
+    ?: 0
+)
 
 private fun AnalyticsPayload?.toAppGenericParameters(
   packageName: String,
   vararg pairs: Pair<String, Any?>
 ): Map<String, Any> =
   this?.run {
-    toAnalyticsUiContext().toGenericParameters(
-      *pairs,
-      GenericAnalytics.P_PACKAGE_NAME to packageName,
-      GenericAnalytics.P_APPC_BILLING to isAppCoins,
-      P_UPDATE_TYPE to userClicks.toTapsValue()
-    )
+    toAnalyticsUiContext()
+      .toGenericParameters(
+        *pairs,
+        GenericAnalytics.P_PACKAGE_NAME to packageName,
+        GenericAnalytics.P_APPC_BILLING to isAppCoins,
+        P_UPDATE_TYPE to userClicks.toTapsValue()
+      )
   } ?: mapOfNonNull(*pairs)
 
 private fun AnalyticsPayload?.toAppBIParameters(

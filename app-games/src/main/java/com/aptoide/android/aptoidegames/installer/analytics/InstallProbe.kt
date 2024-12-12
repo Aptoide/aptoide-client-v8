@@ -16,31 +16,30 @@ class InstallProbe(
     packageName: String,
     installPackageInfo: InstallPackageInfo,
   ): Flow<Int> {
-    val analyticsPayload = installPackageInfo.payload.toAnalyticsPayload()
     return packageInstaller.install(packageName, installPackageInfo)
       .onStart {
         analytics.sendInstallStartedEvent(
           packageName = packageName,
-          analyticsPayload = analyticsPayload
+          installPackageInfo = installPackageInfo
         )
       }
       .onCompletion {
         when (it) {
           is CancellationException -> analytics.sendInstallCancelEvent(
             packageName = packageName,
-            analyticsPayload = analyticsPayload
+            installPackageInfo = installPackageInfo
           )
 
           null -> {
             analytics.sendInstallCompletedEvent(
               packageName = packageName,
-              analyticsPayload = analyticsPayload
+              installPackageInfo = installPackageInfo
             )
           }
 
           else -> analytics.sendInstallErrorEvent(
             packageName = packageName,
-            analyticsPayload = analyticsPayload,
+            installPackageInfo = installPackageInfo,
             errorMessage = it.message,
             errorType = it::class.simpleName
           )
