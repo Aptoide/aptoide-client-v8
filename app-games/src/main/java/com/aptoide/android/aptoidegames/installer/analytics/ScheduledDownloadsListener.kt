@@ -73,7 +73,6 @@ class ScheduledDownloadsListenerImpl @Inject constructor(
         .takeIf { it.state == PENDING }
         ?.takeIf { it.constraints.networkType == NetworkType.UNMETERED }
         ?.let { task ->
-          val analyticsPayload = task.installPackageInfo.payload.toAnalyticsPayload()!!
           networkConnection.states
             .map { it != NetworkConnection.State.UNMETERED }
             .distinctUntilChanged()
@@ -85,7 +84,7 @@ class ScheduledDownloadsListenerImpl @Inject constructor(
                 ?.takeWhile { it }
                 ?.onCompletion {
                   if (it == null && task.constraints.networkType == NetworkType.UNMETERED) {
-                    analytics.sendDownloadRestartedEvent(app.packageName, analyticsPayload)
+                    analytics.sendDownloadRestartedEvent(app.packageName, task.installPackageInfo)
                   }
                 } ?: flow { emit(false) }
             }
