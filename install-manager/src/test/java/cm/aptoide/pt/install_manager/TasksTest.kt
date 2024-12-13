@@ -609,8 +609,8 @@ internal class TasksTest {
     scope.launch {
       result = task.stateAndProgress.toList()
     }
-    m And "wait until download starts"
-    task.stateAndProgress.first { it.first == Task.State.DOWNLOADING }
+    m And "wait until download passes 50%"
+    task.stateAndProgress.first { it.first == Task.State.DOWNLOADING && it.second >= 50 }
     m And "call the task cancel"
     task.cancel()
     m And "wait until the task finishes"
@@ -650,8 +650,8 @@ internal class TasksTest {
     scope.launch {
       result = task.stateAndProgress.toList()
     }
-    m And "wait until installation starts"
-    task.stateAndProgress.first { it.first == Task.State.INSTALLING }
+    m And "wait until installation passes 50%"
+    task.stateAndProgress.first { it.first == Task.State.INSTALLING && it.second >= 50 }
     m And "call the task cancel"
     task.cancel()
     m And "wait until the task finishes"
@@ -691,8 +691,8 @@ internal class TasksTest {
     scope.launch {
       result = task.stateAndProgress.toList()
     }
-    m And "wait until uninstallation starts"
-    task.stateAndProgress.first { it.first == Task.State.UNINSTALLING }
+    m And "wait until uninstallation passes 50%"
+    task.stateAndProgress.first { it.first == Task.State.UNINSTALLING && it.second >= 50 }
     m And "call the task cancel"
     task.cancel()
     m And "wait until the task finishes"
@@ -773,7 +773,7 @@ internal class TasksTest {
       .stream()
 
     @JvmStatic
-    fun networkStateAndConstraintsProvider(): Stream<Arguments> = NetworkConnection.State.values()
+    fun networkStateAndConstraintsProvider(): Stream<Arguments> = NetworkConnection.State.entries
       .map { state ->
         constraints.filter { it.networkType == NetworkType.UNMETERED }
           .map { constraints ->

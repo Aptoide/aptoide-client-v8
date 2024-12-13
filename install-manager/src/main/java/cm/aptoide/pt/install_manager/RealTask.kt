@@ -8,9 +8,15 @@ import cm.aptoide.pt.install_manager.repository.TaskInfoRepository
 import cm.aptoide.pt.install_manager.workers.PackageDownloader
 import cm.aptoide.pt.install_manager.workers.PackageInstaller
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flattenConcat
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.transformWhile
@@ -61,6 +67,8 @@ internal class RealTask internal constructor(
     )
   }
 
+  private var job: Job? = null
+
   internal fun enqueue(alreadySaved: Boolean = false): Task {
     scope.launch {
       if (!alreadySaved) taskInfoRepository.saveJob(taskInfo)
@@ -69,23 +77,47 @@ internal class RealTask internal constructor(
     return this
   }
 
+  @OptIn(ExperimentalCoroutinesApi::class)
   internal suspend fun start() {
     if (isFinished) return // Already finished.
-    val result = when (type) {
+    job = when (type) {
       Task.Type.UNINSTALL -> packageInstaller.uninstall(packageName)
         .onStart { _stateAndProgress.emit(Task.State.UNINSTALLING to -1) }
-        .collectErrorFor(Task.State.UNINSTALLING)
+        .onEach { _stateAndProgress.emit(state to it) }
 
-      else -> checkSizeToState(sizeEstimator.getDownloadSize(installPackageInfo))
-        ?: packageDownloader.download(packageName, installPackageInfo)
-          .onStart { _stateAndProgress.emit(Task.State.DOWNLOADING to -1) }
-          .collectErrorFor(Task.State.DOWNLOADING)
-        ?: _stateAndProgress.emit(Task.State.READY_TO_INSTALL to -1).let { null }
-        ?: checkSizeToState(sizeEstimator.getInstallSize(installPackageInfo))
-        ?: packageInstaller.install(packageName, installPackageInfo)
-          .collectErrorFor(Task.State.INSTALLING)
-    } ?: Task.State.COMPLETED
-    _stateAndProgress.emit(result to -1)
+      Task.Type.INSTALL -> {
+        listOf(
+          packageDownloader.download(packageName, installPackageInfo)
+            .onStart {
+              _stateAndProgress.emit(Task.State.DOWNLOADING to -1)
+              checkSizeToState(sizeEstimator.getDownloadSize(installPackageInfo))
+            }
+            .onEach { _stateAndProgress.emit(Task.State.DOWNLOADING to it) },
+          packageInstaller.install(packageName, installPackageInfo)
+            .onStart {
+              _stateAndProgress.emit(Task.State.READY_TO_INSTALL to -1)
+              checkSizeToState(sizeEstimator.getInstallSize(installPackageInfo))
+            }
+            .onEach { _stateAndProgress.emit(Task.State.INSTALLING to it) }
+        )
+          .asFlow()
+          .flattenConcat()
+      }
+    }
+      .onCompletion {
+        val result = when (it) {
+          null -> Task.State.COMPLETED
+          is AbortException -> Task.State.ABORTED
+          is CancellationException -> Task.State.CANCELED
+          is OutOfSpaceException -> Task.State.OUT_OF_SPACE
+          else -> Task.State.FAILED
+        }
+        _stateAndProgress.emit(result to -1)
+      }
+      .catch { /* Suppress failures */ }
+      .launchIn(scope)
+    job?.join()
+    job = null
     taskInfoRepository.remove(taskInfo)
     appsCache.setBusy(packageName, false)
   }
@@ -112,8 +144,7 @@ internal class RealTask internal constructor(
   override fun cancel() {
     scope.launch {
       if (isFinished) return@launch
-      val cancelled = packageDownloader.cancel(packageName) || packageInstaller.cancel(packageName)
-      if (!cancelled) {
+      job?.cancel() ?: run {
         _stateAndProgress.tryEmit(Task.State.CANCELED to -1)
         taskInfoRepository.remove(taskInfo)
         appsCache.setBusy(packageName, false)
@@ -121,20 +152,8 @@ internal class RealTask internal constructor(
     }
   }
 
-  private fun checkSizeToState(size: Long): Task.State? =
-    Task.State.OUT_OF_SPACE.takeIf { !hasEnoughSpace(size) }
-
-  private suspend fun Flow<Int>.collectErrorFor(state: Task.State): Task.State? = try {
-    onEach { _stateAndProgress.emit(state to it) }.collect()
-    null
-  } catch (e: AbortException) {
-    Task.State.ABORTED
-  } catch (e: CancellationException) {
-    Task.State.CANCELED
-  } catch (e: OutOfSpaceException) {
-    Task.State.OUT_OF_SPACE
-  } catch (t: Throwable) {
-    Task.State.FAILED
+  private fun checkSizeToState(size: Long) {
+    if (!hasEnoughSpace(size)) throw OutOfSpaceException(size, "")
   }
 }
 

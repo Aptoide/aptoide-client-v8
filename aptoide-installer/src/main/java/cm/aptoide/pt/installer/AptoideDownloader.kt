@@ -7,22 +7,21 @@ import cm.aptoide.pt.install_manager.workers.PackageDownloader
 import cm.aptoide.pt.installer.network.DownloaderRepository
 import cm.aptoide.pt.installer.platform.InstallPermissions
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
+import kotlin.coroutines.coroutineContext
 
 class AptoideDownloader @Inject constructor(
   @ApplicationContext private val context: Context,
   private val downloaderRepository: DownloaderRepository,
   private val installPermissions: InstallPermissions,
 ) : PackageDownloader {
-  private val downloadsInProgress = mutableSetOf<String>()
 
   @Suppress("OPT_IN_USAGE")
   override fun download(
@@ -46,16 +45,10 @@ class AptoideDownloader @Inject constructor(
             diff * item.fileSize / filesSize
           }
       }.map {
-        if (!downloadsInProgress.contains(packageName)) throw CancellationException()
+        coroutineContext.ensureActive()
         totalProgress += it
         (totalProgress * 100).toInt()
       }
   }.distinctUntilChanged()
-    .onCompletion { downloadsInProgress.remove(packageName) }
-    .also {
-      downloadsInProgress += packageName
-      InstallerWorker.enqueue(context)
-    }
-
-  override fun cancel(packageName: String) = downloadsInProgress.remove(packageName)
+    .also { InstallerWorker.enqueue(context) }
 }
