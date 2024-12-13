@@ -32,7 +32,7 @@ class DownloadProbe(
       }
       .onCompletion {
         when (it) {
-          is CancellationException -> analytics.sendDownloadCancelEvent(
+          is CancellationException -> analytics.sendDownloadCanceledEvent(
             packageName = packageName,
             installPackageInfo = installPackageInfo
           )
@@ -78,7 +78,7 @@ class DownloadProbe(
     //if it was not cancelled by the Package Downloader, it means that it is on queue,
     // so the analytics won't be called after completion on the download method.
     // We need to call it here
-    if (!cancelled) analytics.sendDownloadCancelEvent(
+    if (!cancelled) analytics.sendDownloadCanceledInQueueEvent(
       packageName = packageName,
       installPackageInfo = InstallPackageInfo(
         versionCode = 0,
