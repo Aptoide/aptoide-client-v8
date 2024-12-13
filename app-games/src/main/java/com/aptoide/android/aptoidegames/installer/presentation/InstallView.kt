@@ -19,6 +19,7 @@ import androidx.compose.material.Divider
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,9 +35,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.download_view.presentation.DownloadUiState
-import cm.aptoide.pt.download_view.presentation.ExecutionBlocker.CONNECTION
-import cm.aptoide.pt.download_view.presentation.ExecutionBlocker.QUEUE
 import cm.aptoide.pt.download_view.presentation.ExecutionBlocker.UNMETERED
+import cm.aptoide.pt.download_view.presentation.downloadUiStates
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
@@ -60,83 +60,16 @@ private fun InstallViewProcessingPreview() {
       thickness = 8.dp
     )
   }
+  val states = remember { downloadUiStates }
   AptoideTheme(darkTheme = isSystemInDarkTheme()) {
     Column(
       modifier = Modifier.verticalScroll(rememberScrollState()),
       verticalArrangement = Arrangement.Center,
     ) {
-      divider()
-      InstallViewContent(installViewState = null.toInstallViewState(randomApp))
-      divider()
-      InstallViewContent(
-        installViewState = DownloadUiState.Install(installWith = {}).toInstallViewState(randomApp)
-      )
-      divider()
-      InstallViewContent(
-        installViewState = DownloadUiState.Outdated({}, updateWith = {}, uninstall = {})
-          .toInstallViewState(randomApp)
-      )
-      divider()
-      InstallViewContent(
-        installViewState = DownloadUiState.Waiting(action = {}, blocker = QUEUE)
-          .toInstallViewState(randomApp)
-      )
-      divider()
-      InstallViewContent(
-        installViewState = DownloadUiState.Waiting(action = {}, blocker = CONNECTION)
-          .toInstallViewState(randomApp)
-      )
-      divider()
-      InstallViewContent(
-        installViewState = DownloadUiState.Waiting(action = {}, blocker = UNMETERED)
-          .toInstallViewState(randomApp)
-      )
-      divider()
-      InstallViewContent(
-        installViewState = DownloadUiState.Downloading(
-          size = 830282380,
-          downloadProgress = -1,
-          cancel = {}
-        ).toInstallViewState(randomApp)
-      )
-      divider()
-      InstallViewContent(
-        installViewState = DownloadUiState.Downloading(
-          size = 830282380,
-          downloadProgress = 33,
-          cancel = {}
-        ).toInstallViewState(randomApp)
-      )
-      divider()
-      InstallViewContent(
-        installViewState = DownloadUiState.ReadyToInstall(cancel = {}).toInstallViewState(randomApp)
-      )
-      divider()
-      InstallViewContent(
-        installViewState = DownloadUiState.Installing(
-          size = 830282302,
-          installProgress = -1
-        ).toInstallViewState(randomApp)
-      )
-      divider()
-      InstallViewContent(
-        installViewState = DownloadUiState.Installing(
-          size = 830282302,
-          installProgress = 66
-        ).toInstallViewState(randomApp)
-      )
-      divider()
-      InstallViewContent(
-        installViewState = DownloadUiState.Uninstalling.toInstallViewState(randomApp)
-      )
-      divider()
-      InstallViewContent(
-        installViewState = DownloadUiState.Installed({}, {}).toInstallViewState(randomApp)
-      )
-      divider()
-      InstallViewContent(
-        installViewState = DownloadUiState.Error(retryWith = {}).toInstallViewState(randomApp)
-      )
+      states.forEach {
+        divider()
+        InstallViewContent(installViewState = it.toInstallViewState(randomApp))
+      }
       divider()
     }
   }
@@ -253,7 +186,7 @@ private fun InstallViewContent(
       horizontalSpacing = horizontalSpacing,
     )
 
-    DownloadUiState.Uninstalling -> ProgressView(
+    is DownloadUiState.Uninstalling -> ProgressView(
       title = installViewState.stateDescription,
       verticalSpacing = verticalSpacing,
       horizontalSpacing = horizontalSpacing,

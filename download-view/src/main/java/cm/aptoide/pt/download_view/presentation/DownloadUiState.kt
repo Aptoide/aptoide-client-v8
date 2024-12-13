@@ -1,8 +1,9 @@
 package cm.aptoide.pt.download_view.presentation
 
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import cm.aptoide.pt.install_manager.dto.Constraints
 import cm.aptoide.pt.install_manager.dto.Constraints.NetworkType.ANY
+import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
+import cm.aptoide.pt.install_manager.dto.InstallationFile
 import kotlin.random.Random
 import kotlin.random.nextInt
 import kotlin.random.nextLong
@@ -26,22 +27,25 @@ sealed class DownloadUiState {
   }
 
   data class Waiting(
+    val installPackageInfo: InstallPackageInfo,
     val blocker: ExecutionBlocker = ExecutionBlocker.QUEUE,
     val action: (() -> Unit)?,
   ) : DownloadUiState()
 
   data class Downloading(
-    val size: Long = 0,
+    val installPackageInfo: InstallPackageInfo,
     val downloadProgress: Int = 0,
     val cancel: () -> Unit,
   ) : DownloadUiState()
 
   data class Installing(
-    val size: Long = 0,
+    val installPackageInfo: InstallPackageInfo,
     val installProgress: Int = 0,
   ) : DownloadUiState()
 
-  object Uninstalling : DownloadUiState()
+  data class Uninstalling(
+    val installPackageInfo: InstallPackageInfo,
+  ) : DownloadUiState()
 
   data class Installed(
     val open: () -> Unit,
@@ -67,6 +71,7 @@ sealed class DownloadUiState {
   }
 
   data class ReadyToInstall(
+    val installPackageInfo: InstallPackageInfo = InstallPackageInfo(0),
     val cancel: () -> Unit,
   ) : DownloadUiState()
 }
@@ -77,26 +82,77 @@ enum class ExecutionBlocker {
   UNMETERED,
 }
 
-class DownloadUiStateProvider : PreviewParameterProvider<DownloadUiState> {
-  override val values: Sequence<DownloadUiState> = sequenceOf(
-    DownloadUiState.Install(installWith = {}),
-    DownloadUiState.Waiting(action = null),
+val downloadUiStates: List<DownloadUiState>
+  get() = listOf(
+    DownloadUiState.Install(
+      installWith = {}
+    ),
+    DownloadUiState.Outdated(
+      open = {},
+      updateWith = {},
+      uninstall = {}
+    ),
+    DownloadUiState.Waiting(
+      installPackageInfo = randomInstallPackageInfo,
+      blocker = ExecutionBlocker.QUEUE,
+      action = null
+    ),
+    DownloadUiState.Waiting(
+      installPackageInfo = randomInstallPackageInfo,
+      blocker = ExecutionBlocker.CONNECTION,
+      action = null
+    ),
+    DownloadUiState.Waiting(
+      installPackageInfo = randomInstallPackageInfo,
+      blocker = ExecutionBlocker.UNMETERED,
+      action = null
+    ),
     DownloadUiState.Downloading(
-      size = Random.nextLong(5000000L..300000000L),
+      installPackageInfo = randomInstallPackageInfo,
+      downloadProgress = -1,
+      cancel = {}
+    ),
+    DownloadUiState.Downloading(
+      installPackageInfo = randomInstallPackageInfo,
       downloadProgress = Random.nextInt(0..100),
       cancel = {}
     ),
+    DownloadUiState.ReadyToInstall(
+      installPackageInfo = randomInstallPackageInfo,
+      cancel = {}
+    ),
     DownloadUiState.Installing(
-      size = Random.nextLong(5000000L..300000000L),
+      installPackageInfo = randomInstallPackageInfo,
+      installProgress = -1,
+    ),
+    DownloadUiState.Installing(
+      installPackageInfo = randomInstallPackageInfo,
       installProgress = Random.nextInt(0..100),
     ),
-    DownloadUiState.Uninstalling,
+    DownloadUiState.Uninstalling(
+      installPackageInfo = randomInstallPackageInfo
+    ),
     DownloadUiState.Installed(
       open = {},
       uninstall = {}
     ),
-    DownloadUiState.Outdated(open = {}, updateWith = {}, uninstall = {}),
-    DownloadUiState.Error(retryWith = {}),
-    DownloadUiState.ReadyToInstall(cancel = {})
+    DownloadUiState.Error(
+      retryWith = {}
+    )
   )
-}
+
+val randomInstallPackageInfo
+  get() = InstallPackageInfo(
+    versionCode = 0,
+    installationFiles = setOf(
+      InstallationFile(
+        name = "",
+        type = InstallationFile.Type.BASE,
+        md5 = "",
+        fileSize = Random.nextLong(5000000L..300000000L),
+        url = "",
+        altUrl = "",
+        localPath = ""
+      )
+    )
+  )

@@ -30,9 +30,7 @@ class InjectionsProvider @Inject constructor(
 
 @Composable
 fun rememberDownloadState(app: App): DownloadUiState? = runPreviewable(
-  preview = {
-    DownloadUiStateProvider().values.toList().random()
-  },
+  preview = { downloadUiStates.random() },
   real = {
     val injectionsProvider = hiltViewModel<InjectionsProvider>()
     val downloadViewViewModel: DownloadViewModel = viewModel(

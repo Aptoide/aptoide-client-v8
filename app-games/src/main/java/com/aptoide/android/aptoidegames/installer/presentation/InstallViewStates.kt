@@ -193,28 +193,29 @@ fun installViewStates(
         )
 
         is DownloadUiState.Waiting -> DownloadUiState.Waiting(
+          installPackageInfo = downloadUiState.installPackageInfo,
           blocker = downloadUiState.blocker,
-          action = downloadUiState.action?.let {
+          action = downloadUiState.action?.let { cancel ->
             when (downloadUiState.blocker) {
               UNMETERED -> { ->
                 installAnalytics.sendResumeDownloadClick(
                   app = app,
                   downloadOnlyOverWifiSetting = downloadOnlyOverWifi
                 )
-                it()
+                cancel()
               }
 
               else -> { ->
                 canceled = true
                 installAnalytics.sendDownloadCancel(app, analyticsContext)
-                it()
+                cancel()
               }
             }
           }
         )
 
         is DownloadUiState.Downloading -> DownloadUiState.Downloading(
-          size = downloadUiState.size,
+          installPackageInfo = downloadUiState.installPackageInfo,
           downloadProgress = downloadUiState.downloadProgress,
           cancel = {
             canceled = true
@@ -232,7 +233,7 @@ fun installViewStates(
         )
 
         is DownloadUiState.Installing,
-        DownloadUiState.Uninstalling,
+        is DownloadUiState.Uninstalling,
           -> downloadUiState
 
         is DownloadUiState.Installed -> DownloadUiState.Installed(
@@ -288,7 +289,7 @@ fun DownloadUiState?.toInstallViewState(app: App): InstallViewState {
     )
 
     is DownloadUiState.Installing -> stringResource(R.string.install_installing_message)
-    DownloadUiState.Uninstalling -> stringResource(R.string.uninstalling)
+    is DownloadUiState.Uninstalling -> stringResource(R.string.uninstalling)
     is DownloadUiState.Installed -> stringResource(R.string.appview_status_installed_talkback)
     is DownloadUiState.Error,
       -> stringResource(R.string.appview_status_failed_talkback)
@@ -305,7 +306,7 @@ fun DownloadUiState?.toInstallViewState(app: App): InstallViewState {
       -> stringResource(R.string.appview_action_cancel_talkback)
 
     is DownloadUiState.Installing,
-    DownloadUiState.Uninstalling,
+    is DownloadUiState.Uninstalling,
       -> null
 
     is DownloadUiState.Installed -> stringResource(R.string.button_open_app_title)
@@ -433,7 +434,7 @@ fun DownloadUiState.Downloading.getProgressString(
   stringResource(
     resourceId,
     downloadProgress.toString(),
-    TextFormatter.formatBytes(size)
+    TextFormatter.formatBytes(installPackageInfo.filesSize)
   )
 }
 

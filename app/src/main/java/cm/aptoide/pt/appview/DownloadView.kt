@@ -25,6 +25,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,6 +34,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter.Companion.formatBytes
 import cm.aptoide.pt.download_view.presentation.DownloadUiState
+import cm.aptoide.pt.download_view.presentation.downloadUiStates
 import cm.aptoide.pt.download_view.presentation.rememberDownloadState
 import cm.aptoide.pt.extensions.PreviewAll
 import cm.aptoide.pt.feature_apps.data.App
@@ -52,17 +54,7 @@ fun DownloadPreview() {
   }
   AptoideTheme(darkTheme = isSystemInDarkTheme()) {
     val app = randomApp.copy(isAppCoins = false)
-    val states = listOf(
-      DownloadUiState.Install(installWith = {}),
-      DownloadUiState.Outdated({}, updateWith = {}, uninstall = {}),
-      DownloadUiState.Waiting(action = null),
-      DownloadUiState.Downloading(33, cancel = {}),
-      DownloadUiState.ReadyToInstall(cancel = {}),
-      DownloadUiState.Installing(66),
-      DownloadUiState.Uninstalling,
-      DownloadUiState.Installed({}, {}),
-      DownloadUiState.Error(retryWith = {})
-    )
+    val states = remember { downloadUiStates }
     LazyColumn {
       states.forEach { uiState ->
         item {
@@ -97,18 +89,7 @@ fun DownloadAppcPreview() {
   }
   AptoideTheme(darkTheme = isSystemInDarkTheme()) {
     val app = randomApp.copy(isAppCoins = true)
-    val states = listOf(
-      null,
-      DownloadUiState.Install(installWith = {}),
-      DownloadUiState.Outdated(open = {}, updateWith = {}, uninstall = {}),
-      DownloadUiState.Waiting(action = null),
-      DownloadUiState.Downloading(size = 33, cancel = {}),
-      DownloadUiState.ReadyToInstall(cancel = {}),
-      DownloadUiState.Installing(size = 66),
-      DownloadUiState.Uninstalling,
-      DownloadUiState.Installed({}, {}),
-      DownloadUiState.Error(retryWith = {}),
-    )
+    val states = remember { downloadUiStates }
     LazyColumn {
       states.forEach { uiState ->
         item {
