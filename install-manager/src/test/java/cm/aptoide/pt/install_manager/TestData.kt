@@ -15,7 +15,6 @@ import cm.aptoide.pt.install_manager.repository.TaskInfoRepository
 import cm.aptoide.pt.install_manager.workers.PackageDownloader
 import cm.aptoide.pt.install_manager.workers.PackageInstaller
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -38,11 +37,8 @@ import kotlin.time.Duration.Companion.seconds
 internal data class Mocks(internal val scope: TestScope) {
   internal val appInfoRepository = AppInfoRepositoryMock()
   internal val taskInfoRepository = TaskInfoRepositoryMock()
-  internal val packageDownloader = PackageDownloaderMock(scope)
-  internal val packageInstaller = PackageInstallerMock(
-    scope = scope,
-    appInfoRepositoryMock = appInfoRepository,
-  )
+  internal val packageDownloader = PackageDownloaderMock()
+  internal val packageInstaller = PackageInstallerMock(appInfoRepository)
   internal val deviceStorageMock = DeviceStorageMock()
   internal val sizeEstimatorMock = SizeEstimatorMock()
   internal val networkConnection = NetworkConnectionMock()
@@ -236,7 +232,7 @@ internal fun getRunnableTasks(
 internal val successFlow = listOf(
   Result.success(0),
   Result.success(25),
-  Result.failure(CancellationException("Cancelled")),
+  // Result.failure(CancellationException("Cancelled")),
   Result.success(50),
   Result.success(75)
 )
@@ -262,15 +258,10 @@ internal val abortingFlow = listOf(
 private suspend fun FlowCollector<Int>.iterateProgressFlow(
   progressFlow: List<Result<Int>>,
   duration: Duration,
-  isCancelled: () -> Boolean,
 ) {
   progressFlow.forEach { progress ->
     delay(duration)
-    progress.getOrNull()
-      ?.let { emit(it) }
-      ?: progress.exceptionOrNull()
-        ?.takeIf { it !is CancellationException || isCancelled() }
-        ?.let { throw it }
+    emit(progress.getOrThrow())
   }
   delay(duration)
 }
@@ -352,19 +343,22 @@ internal val canceledDownload = pendingSequence +
   (Task.State.DOWNLOADING to -1) +
   successFlow
     .take(3)
-    .toFlowSequence(Task.State.DOWNLOADING)
+    .toFlowSequence(Task.State.DOWNLOADING) +
+  (Task.State.CANCELED to -1)
 
 internal val canceledInstall = pendingSequence +
   downloadSequence +
   successFlow
     .take(3)
-    .toFlowSequence(Task.State.INSTALLING)
+    .toFlowSequence(Task.State.INSTALLING) +
+  (Task.State.CANCELED to -1)
 
 internal val canceledUninstall = pendingSequence +
   (Task.State.UNINSTALLING to -1) +
   successFlow
     .take(3)
-    .toFlowSequence(Task.State.UNINSTALLING)
+    .toFlowSequence(Task.State.UNINSTALLING) +
+  (Task.State.CANCELED to -1)
 
 /* Mocks */
 
@@ -483,11 +477,8 @@ internal class TaskInfoRepositoryMock : TaskInfoRepository {
 }
 
 // Crashes on duplicated calls for optimization reasons
-internal class PackageDownloaderMock(
-  private val scope: CoroutineScope,
-) : PackageDownloader {
+internal class PackageDownloaderMock() : PackageDownloader {
   private val downloadCalled: MutableSet<String> = mutableSetOf()
-  private val cancelCalled: MutableSet<String> = mutableSetOf()
 
   private var delay = Random.nextLong(LongRange(12, 240)).seconds
   internal var progressFlow: List<Result<Int>> = successFlow
@@ -508,30 +499,20 @@ internal class PackageDownloaderMock(
       throw IllegalStateException("Duplicate call for $packageName")
     return flow {
       try {
-        iterateProgressFlow(progressFlow, delay) { cancelCalled.remove(packageName) }
+        iterateProgressFlow(progressFlow, delay)
       } finally {
         downloadCalled.remove(packageName)
       }
-    }
-  }
-
-  override fun cancel(packageName: String): Boolean {
-    if (cancelCalled.contains(packageName))
-      throw IllegalStateException("Duplicate call for $packageName")
-    return downloadCalled.contains(packageName).also {
-      if (it) scope.launch { cancelCalled.add(packageName) }
     }
   }
 }
 
 // Crashes on duplicated calls for optimization reasons
 internal class PackageInstallerMock(
-  private val scope: CoroutineScope,
   internal var appInfoRepositoryMock: AppInfoRepositoryMock?,
 ) : PackageInstaller {
   private val installCalled: MutableSet<String> = mutableSetOf()
   private val uninstallCalled: MutableSet<String> = mutableSetOf()
-  private val cancelCalled: MutableSet<String> = mutableSetOf()
 
   private var delay = Random.nextLong(LongRange(4, 24)).seconds
   internal var progressFlow: List<Result<Int>> = successFlow
@@ -552,7 +533,7 @@ internal class PackageInstallerMock(
       throw IllegalStateException("Duplicate call for $packageName")
     return flow {
       try {
-        iterateProgressFlow(progressFlow, delay) { cancelCalled.remove(packageName) }
+        iterateProgressFlow(progressFlow, delay)
         appInfoRepositoryMock?.update(
           packageName,
           installedInfo(packageName, vc = installPackageInfo.versionCode),
@@ -569,20 +550,12 @@ internal class PackageInstallerMock(
       throw IllegalStateException("Duplicate call for $packageName")
     return flow {
       try {
-        iterateProgressFlow(progressFlow, delay) { cancelCalled.remove(packageName) }
+        iterateProgressFlow(progressFlow, delay)
         appInfoRepositoryMock?.update(packageName, null, null)
       } finally {
         uninstallCalled.remove(packageName)
       }
     }
-  }
-
-  override fun cancel(packageName: String): Boolean {
-    if (cancelCalled.contains(packageName)) {
-      throw IllegalStateException("Duplicate call for $packageName")
-    }
-    return (installCalled.contains(packageName) || uninstallCalled.contains(packageName))
-      .also { if (it) scope.launch { cancelCalled.add(packageName) } }
   }
 }
 

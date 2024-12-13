@@ -18,9 +18,10 @@ interface PackageInstaller {
    * @param packageName - a package name
    * @param installPackageInfo - a package info
    * @returns Flow of progress values between 0 and 100.
-   * Flow throws anything except [CancellationException], signalling about installation failure
+   * Flow throws [CancellationException] if installation was canceled by user
    * Or [AbortException] if installation was aborted with the reason in message
    * Or [OutOfSpaceException] if there is not enough space to install
+   * Or anything else, signalling about download failure
    */
   fun install(
     packageName: String,
@@ -37,13 +38,4 @@ interface PackageInstaller {
    * Or [AbortException] if uninstallation was aborted with the reason in message
    */
   fun uninstall(packageName: String): Flow<Int>
-
-  /**
-   * Cancel package files installation/uninstallation if active.
-   * The [install]/[uninstall] Flow for the [packageName] must throw [CancellationException] on this call.
-   *
-   * @param packageName - a package name
-   * @returns true there was something to cancel and it was cancelled.
-   */
-  fun cancel(packageName: String): Boolean
 }

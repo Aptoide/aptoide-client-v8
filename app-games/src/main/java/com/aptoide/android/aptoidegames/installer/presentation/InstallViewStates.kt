@@ -208,6 +208,13 @@ fun installViewStates(
               else -> { ->
                 canceled = true
                 installAnalytics.sendDownloadCancel(app, analyticsContext)
+                // While task is the queue the Package Downloader will not be called and cancellation
+                // will not be caught by the  Package Downloader probe.
+                // So we need to call this event here
+                installAnalytics.sendDownloadCanceledInQueueEvent(
+                  packageName = app.packageName,
+                  installPackageInfo = downloadUiState.installPackageInfo
+                )
                 cancel()
               }
             }

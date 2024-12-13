@@ -48,6 +48,4 @@ class InstallProbe(
   }
 
   override fun uninstall(packageName: String): Flow<Int> = packageInstaller.uninstall(packageName)
-
-  override fun cancel(packageName: String): Boolean = packageInstaller.cancel(packageName)
 }
