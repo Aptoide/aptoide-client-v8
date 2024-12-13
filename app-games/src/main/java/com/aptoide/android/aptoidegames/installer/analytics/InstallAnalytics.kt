@@ -190,7 +190,7 @@ class InstallAnalytics(
     )
   }
 
-  fun sendDownloadCancelEvent(
+  fun sendDownloadCanceledEvent(
     packageName: String,
     installPackageInfo: InstallPackageInfo
   ) {
@@ -205,7 +205,20 @@ class InstallAnalytics(
     logBIDownloadEvent(
       packageName = packageName,
       status = "cancel",
-      installPackageInfo = installPackageInfo
+      installPackageInfo = installPackageInfo,
+      P_ERROR_TYPE to "downloading"
+    )
+  }
+
+  fun sendDownloadCanceledInQueueEvent(
+    packageName: String,
+    installPackageInfo: InstallPackageInfo
+  ) {
+    logBIDownloadEvent(
+      packageName = packageName,
+      status = "cancel",
+      installPackageInfo = installPackageInfo,
+      P_ERROR_TYPE to "queue"
     )
   }
 
