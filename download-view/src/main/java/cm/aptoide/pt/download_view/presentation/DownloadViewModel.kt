@@ -76,21 +76,25 @@ class DownloadViewModel(
               -> null
 
             Task.State.PENDING -> DownloadUiState.Waiting(
+              installPackageInfo = task.installPackageInfo,
               action = task::cancel
             )
 
             Task.State.DOWNLOADING -> DownloadUiState.Downloading(
-              size = task.installPackageInfo.filesSize,
+              installPackageInfo = task.installPackageInfo,
               cancel = task::cancel,
               downloadProgress = progress
             )
 
             Task.State.INSTALLING -> DownloadUiState.Installing(
-              size = task.installPackageInfo.filesSize,
+              installPackageInfo = task.installPackageInfo,
               installProgress = progress
             )
 
-            Task.State.UNINSTALLING -> DownloadUiState.Uninstalling
+            Task.State.UNINSTALLING -> DownloadUiState.Uninstalling(
+              installPackageInfo = task.installPackageInfo
+            )
+
             Task.State.COMPLETED -> DownloadUiState.Installed(
               open = ::open,
               uninstall = ::uninstall
@@ -105,6 +109,7 @@ class DownloadViewModel(
             )
 
             Task.State.READY_TO_INSTALL -> DownloadUiState.ReadyToInstall(
+              installPackageInfo = task.installPackageInfo,
               cancel = task::cancel
             )
           }
@@ -136,6 +141,7 @@ class DownloadViewModel(
             }
 
             DownloadUiState.Waiting(
+              installPackageInfo = task.installPackageInfo,
               blocker = blocker,
               action = action
             )
@@ -193,7 +199,6 @@ class DownloadViewModel(
   private fun uninstall(resolver: ConstraintsResolver) = uninstall()
 
   private fun uninstall() {
-    viewModelState.update { DownloadUiState.Waiting(action = null) }
     try {
       appInstaller.uninstall()
     } catch (_: Exception) {

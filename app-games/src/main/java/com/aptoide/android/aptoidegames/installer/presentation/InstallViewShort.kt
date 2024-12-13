@@ -5,12 +5,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.download_view.presentation.DownloadUiState
-import cm.aptoide.pt.download_view.presentation.ExecutionBlocker.CONNECTION
-import cm.aptoide.pt.download_view.presentation.ExecutionBlocker.QUEUE
 import cm.aptoide.pt.download_view.presentation.ExecutionBlocker.UNMETERED
+import cm.aptoide.pt.download_view.presentation.downloadUiStates
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
@@ -29,101 +29,13 @@ fun InstallViewShortPreview() {
       thickness = 8.dp
     )
   }
+  val states = remember { downloadUiStates }
   AptoideTheme(darkTheme = isSystemInDarkTheme()) {
     Column(verticalArrangement = Arrangement.Center) {
-      divider()
-      InstallViewShortContent(installViewState = null.toInstallViewState(randomApp))
-      divider()
-      InstallViewShortContent(
-        installViewState = DownloadUiState.Install(installWith = {}).toInstallViewState(randomApp)
-      )
-      divider()
-      InstallViewShortContent(
-        installViewState = DownloadUiState.Outdated({}, updateWith = {}, uninstall = {})
-          .toInstallViewState(randomApp)
-      )
-      divider()
-      InstallViewShortContent(
-        installViewState = DownloadUiState.Waiting(action = {}, blocker = QUEUE)
-          .toInstallViewState(randomApp)
-      )
-      divider()
-      InstallViewShortContent(
-        installViewState = DownloadUiState.Waiting(action = {}, blocker = QUEUE)
-          .toInstallViewState(randomApp),
-        cancelable = false
-      )
-      divider()
-      InstallViewShortContent(
-        installViewState = DownloadUiState.Waiting(action = {}, blocker = CONNECTION)
-          .toInstallViewState(randomApp)
-      )
-      divider()
-      InstallViewShortContent(
-        installViewState = DownloadUiState.Waiting(action = {}, blocker = UNMETERED)
-          .toInstallViewState(randomApp)
-      )
-      divider()
-      InstallViewShortContent(
-        installViewState = DownloadUiState.Downloading(
-          size = 830282380,
-          downloadProgress = -1,
-          cancel = {}
-        ).toInstallViewState(randomApp)
-      )
-      divider()
-      InstallViewShortContent(
-        installViewState = DownloadUiState.Downloading(
-          size = 830282380,
-          downloadProgress = 33,
-          cancel = {}
-        ).toInstallViewState(randomApp)
-      )
-      divider()
-      InstallViewShortContent(
-        installViewState = DownloadUiState.Downloading(
-          size = 830282380,
-          downloadProgress = -1,
-          cancel = {}
-        ).toInstallViewState(randomApp),
-        cancelable = false
-      )
-      divider()
-      InstallViewShortContent(
-        installViewState = DownloadUiState.ReadyToInstall(cancel = {}).toInstallViewState(randomApp)
-      )
-      divider()
-      InstallViewShortContent(
-        installViewState = DownloadUiState.ReadyToInstall(cancel = {})
-          .toInstallViewState(randomApp),
-        cancelable = false
-      )
-      divider()
-      InstallViewShortContent(
-        installViewState = DownloadUiState.Installing(
-          size = 830282302,
-          installProgress = -1
-        ).toInstallViewState(randomApp)
-      )
-      divider()
-      InstallViewShortContent(
-        installViewState = DownloadUiState.Installing(
-          size = 830282302,
-          installProgress = 66
-        ).toInstallViewState(randomApp)
-      )
-      divider()
-      InstallViewShortContent(
-        installViewState = DownloadUiState.Uninstalling.toInstallViewState(randomApp)
-      )
-      divider()
-      InstallViewShortContent(
-        installViewState = DownloadUiState.Installed({}, {}).toInstallViewState(randomApp)
-      )
-      divider()
-      InstallViewShortContent(
-        installViewState = DownloadUiState.Error(retryWith = {}).toInstallViewState(randomApp)
-      )
+      states.forEach {
+        divider()
+        InstallViewShortContent(installViewState = it.toInstallViewState(randomApp))
+      }
       divider()
     }
   }
@@ -201,7 +113,7 @@ private fun InstallViewShortContent(
 
     null,
     is DownloadUiState.Installing,
-    DownloadUiState.Uninstalling,
-    -> Unit
+    is DownloadUiState.Uninstalling,
+      -> Unit
   }
 }

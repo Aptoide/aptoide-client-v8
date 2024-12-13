@@ -15,6 +15,7 @@ import cm.aptoide.pt.download_view.presentation.DownloadUiState.Outdated
 import cm.aptoide.pt.download_view.presentation.DownloadUiState.ReadyToInstall
 import cm.aptoide.pt.download_view.presentation.DownloadUiState.Uninstalling
 import cm.aptoide.pt.download_view.presentation.DownloadUiState.Waiting
+import cm.aptoide.pt.download_view.presentation.randomInstallPackageInfo
 import cm.aptoide.pt.download_view.presentation.rememberDownloadState
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.App
@@ -59,7 +60,7 @@ private fun ProgressTextContent(
     is Downloading -> state.getProgressString()
     is ReadyToInstall -> stringResource(string.install_waiting_installation_message)
     is Installing -> stringResource(string.install_installing_message)
-    Uninstalling -> stringResource(string.uninstalling)
+    is Uninstalling -> stringResource(string.uninstalling)
 
     else -> ""
   }
@@ -86,7 +87,7 @@ private fun ProgressTextContent(
     is Downloading,
     is ReadyToInstall,
     is Installing,
-    Uninstalling,
+    is Uninstalling,
     -> Text(
       modifier = modifier,
       text = text,
@@ -129,7 +130,7 @@ fun ProgressTextContentInstallingPreview() {
   AptoideTheme {
     ProgressTextContent(
       app = randomApp,
-      state = Downloading(Random.nextLong(500000, 1000000), Random.nextInt(0, 100), {}),
+      state = Downloading(randomInstallPackageInfo, Random.nextInt(0, 100), {}),
       showVersionName = Random.nextBoolean()
     )
   }
