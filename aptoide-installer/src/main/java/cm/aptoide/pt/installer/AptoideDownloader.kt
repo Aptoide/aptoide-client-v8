@@ -36,7 +36,7 @@ class AptoideDownloader @Inject constructor(
         }
         installPermissions.checkIfCanInstall()
       }
-      .flatMapMerge(concurrency = 3) { item ->
+      .flatMapMerge(concurrency = 5) { item ->
         var progress = 0.0
         downloaderRepository.download(packageName, versionCode, item)
           .map {
