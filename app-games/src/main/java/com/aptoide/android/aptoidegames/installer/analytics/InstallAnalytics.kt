@@ -464,6 +464,7 @@ class InstallAnalytics(
         it.toAppBIParameters(packageName) +
           it?.toAnalyticsUiContext().toBiParameters(
             P_STATUS to status,
+            installPackageInfo.getAppSizeSegment(),
             P_STORE to it?.store,
             P_TRUSTED_BADGE to it?.trustedBadge,
             *pairs
