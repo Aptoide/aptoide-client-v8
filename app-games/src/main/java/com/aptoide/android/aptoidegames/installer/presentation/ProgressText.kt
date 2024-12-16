@@ -108,7 +108,9 @@ fun GenericErrorLabel(modifier: Modifier = Modifier) {
     modifier = modifier,
     text = stringResource(string.install_error_short_message),
     style = AGTypography.InputsS,
-    color = Palette.Error
+    color = Palette.Error,
+    overflow = TextOverflow.Ellipsis,
+    maxLines = 1
   )
 }
 

@@ -23,8 +23,6 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import cm.aptoide.pt.download_view.presentation.DownloadUiState
-import cm.aptoide.pt.download_view.presentation.rememberDownloadState
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
@@ -129,15 +127,6 @@ private fun CarouselAppView(
   app: App,
   onClick: () -> Unit,
 ) {
-  val downloadUiState = rememberDownloadState(app = app)
-
-  val appNameMaxLines = if (
-    !(downloadUiState is DownloadUiState.Install
-      || downloadUiState is DownloadUiState.Outdated
-      || downloadUiState is DownloadUiState.Installed)
-  ) {
-    1
-  } else 2
 
   Column(
     modifier = Modifier
@@ -191,7 +180,7 @@ private fun CarouselAppView(
             .clearAndSetSemantics {}
             .wrapContentHeight(unbounded = true),
           color = Palette.White,
-          maxLines = appNameMaxLines,
+          maxLines = 1,
           overflow = TextOverflow.Ellipsis,
           style = AGTypography.DescriptionGames
         )
