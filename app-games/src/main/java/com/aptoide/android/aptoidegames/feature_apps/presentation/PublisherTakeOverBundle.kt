@@ -27,8 +27,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import cm.aptoide.pt.download_view.presentation.DownloadUiState
-import cm.aptoide.pt.download_view.presentation.rememberDownloadState
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
@@ -207,15 +205,6 @@ fun PublisherTakeOverListView(
     appsList = appsList,
     modifier = Modifier.padding(bottom = 24.dp)
   ) { modifier, page, app ->
-    val downloadUiState = rememberDownloadState(app = app)
-
-    val appNameMaxLines = if (
-      !(downloadUiState is DownloadUiState.Install
-        || downloadUiState is DownloadUiState.Outdated
-        || downloadUiState is DownloadUiState.Installed)
-    ) {
-      1
-    } else 2
 
     Box(
       modifier
@@ -282,7 +271,7 @@ fun PublisherTakeOverListView(
             Text(
               text = app.name,
               modifier = Modifier.wrapContentHeight(unbounded = true),
-              maxLines = appNameMaxLines,
+              maxLines = 1,
               color = Palette.White,
               overflow = TextOverflow.Ellipsis,
               style = AGTypography.DescriptionGames

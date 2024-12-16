@@ -80,7 +80,7 @@ fun AppItem(
         text = app.name,
         style = AGTypography.DescriptionGames,
         overflow = TextOverflow.Ellipsis,
-        maxLines = 2,
+        maxLines = 1,
         color = Palette.White
       )
       ProgressText(app = app)
@@ -124,7 +124,7 @@ fun AppItemUpdates(
         text = app.name,
         style = AGTypography.DescriptionGames,
         overflow = TextOverflow.Ellipsis,
-        maxLines = 2,
+        maxLines = 1,
         color = Palette.White
       )
       if(app.packageName == BuildConfig.APPLICATION_ID){
