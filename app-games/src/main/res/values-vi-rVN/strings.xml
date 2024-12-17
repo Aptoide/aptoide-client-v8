@@ -171,6 +171,7 @@
   <string name="contact_support_title" comment="contact_support">Liên hệ bộ phận hỗ trợ</string>
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Vui lòng cung cấp cho chúng tôi tất cả thông tin chi tiết:\n\u2022 Sự cố bắt đầu khi nào\n\u2022 Bạn đang mua hàng trên trò chơi nào\n\nNgay khi nhấn Gửi, ứng dụng thư của bạn sẽ mở ra. Vui lòng đính kèm ảnh chụp màn hình hoặc video về vấn đề này!</string>
   <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Bạn có muốn cài đặt trò chơi này không?</string>
+  <string name="apkfy_whats_aptoide_games_title">What\'s Aptoide Games?</string>
   <string name="apkfy_install_body">Get your favorite game and much more in Aptoide Games!</string>
   <string name="apkfy_install_bullet_points">\u2022 Top games with an amazing curation.\n\u2022 No need to log in!\n\u2022 Special promotions and rewards in your favorite games.</string>
   <string name="app_size_mb_title" comment="s_mb">%s MB</string>
