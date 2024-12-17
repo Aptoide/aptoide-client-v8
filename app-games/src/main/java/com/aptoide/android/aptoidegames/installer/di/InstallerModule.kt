@@ -13,6 +13,7 @@ import cm.aptoide.pt.install_manager.environment.NetworkConnection
 import cm.aptoide.pt.installer.AptoideDownloader
 import cm.aptoide.pt.installer.AptoideInstallPackageInfoMapper
 import cm.aptoide.pt.installer.AptoideInstaller
+import cm.aptoide.pt.installer.fetch.FetchDownloader
 import cm.aptoide.pt.installer.obb.OBBInstallManager
 import cm.aptoide.pt.task_info.AptoideTaskInfoRepository
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
@@ -81,10 +82,11 @@ class InstallerModule {
   fun provideDownloaderSelector(
     featureFlags: FeatureFlags,
     aptoideDownloader: AptoideDownloader,
+    fetchDownloader: FetchDownloader,
   ): DownloaderSelector = DownloaderSelector(
     featureFlags = featureFlags,
     aptoidePackageDownloader = aptoideDownloader,
-    fetchPackageDownloader = aptoideDownloader
+    fetchPackageDownloader = fetchDownloader
   )
 
   @Singleton
