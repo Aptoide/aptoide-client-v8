@@ -171,6 +171,7 @@
   <string name="contact_support_title" comment="contact_support">Destekle İletişime Geçin</string>
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Lütfen bize tüm ayrıntıları ver:\n\u2022 Sorun ne zaman başladı\n\u2022 Hangi oyunda satın alma işlemi yapıyorsun\n\nGönder butonuna dokunduğunda, posta uygulaman açılacak. Sorunla ilgili bir ekran görüntüsü veya video ekleyebilirsin!</string>
   <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Bu oyunu yüklemek istiyor musun?</string>
+  <string name="apkfy_whats_aptoide_games_title">What\'s Aptoide Games?</string>
   <string name="apkfy_install_body">Get your favorite game and much more in Aptoide Games!</string>
   <string name="apkfy_install_bullet_points">\u2022 Top games with an amazing curation.\n\u2022 No need to log in!\n\u2022 Special promotions and rewards in your favorite games.</string>
   <string name="app_size_mb_title" comment="s_mb">%s MB</string>
