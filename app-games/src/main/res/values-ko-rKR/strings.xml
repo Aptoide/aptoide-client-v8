@@ -171,6 +171,7 @@
   <string name="contact_support_title" comment="contact_support">지원 팀으로 연락하기</string>
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">모든 세부 정보를 알려주세요:\n\u2022 언제부터 문제가 시작되었나요\n\u2022 어떤 게임에서 구매하시는지요\n\n 보내기를 누르면 메일 앱이 열립니다. 문제에 대한 스크린샷이나 비디오를 자유롭게 첨부하세요!</string>
   <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">이 게임을 설치하시겠습니까?</string>
+  <string name="apkfy_whats_aptoide_games_title">What\'s Aptoide Games?</string>
   <string name="apkfy_install_body">Get your favorite game and much more in Aptoide Games!</string>
   <string name="apkfy_install_bullet_points">\u2022 Top games with an amazing curation.\n\u2022 No need to log in!\n\u2022 Special promotions and rewards in your favorite games.</string>
   <string name="app_size_mb_title" comment="s_mb">%s MB</string>
