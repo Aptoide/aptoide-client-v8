@@ -68,7 +68,7 @@ internal class RealInstallManager(
     get() = appsCache.busyApps.values
       .filterNotNull()
       .sortedBy { (it.task as RealTask?)?.taskInfo?.timestamp }
-      .filter { it.task?.state == Task.State.PENDING }
+      .filter { it.task?.state is Task.State.Pending }
 
   override val appsChanges: Flow<App> = systemUpdates.map(::getOrCreateApp)
 

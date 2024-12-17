@@ -95,12 +95,11 @@ class InstallerNotificationsBuilder @Inject constructor(
     packageName: String,
     appDetails: AppDetails?,
     state: State,
-    progress: Int,
     size: Long,
   ) {
     val notificationId = stringToIntConverter.getStringId(packageName)
 
-    if (state == State.CANCELED || state == State.ABORTED || state == State.OUT_OF_SPACE || state == State.FAILED) {
+    if (state == State.Canceled || state == State.Aborted || state == State.OutOfSpace || state == State.Failed) {
       cancelNotification(notificationId)
     } else {
       val notification = buildNotification(
@@ -108,23 +107,23 @@ class InstallerNotificationsBuilder @Inject constructor(
         packageName = packageName,
         appDetails = appDetails,
         progress = when (state) {
-          State.DOWNLOADING -> max(progress, 0)
-          State.INSTALLING,
-          State.READY_TO_INSTALL,
-          State.PENDING,
+          is State.Downloading -> max(state.progress, 0)
+          is State.Installing,
+          State.ReadyToInstall,
+          is State.Pending,
           -> -1
 
           else -> null
         },
         contentText = when (state) {
-          State.COMPLETED -> context.getString(R.string.notification_1_installed_title)
-          State.DOWNLOADING ->
+          State.Completed -> context.getString(R.string.notification_1_installed_title)
+          is State.Downloading ->
             context.getString(
-              R.string.notification_downloading_body, max(progress, 0).toString(),
+              R.string.notification_downloading_body, max(state.progress, 0).toString(),
               TextFormatter.formatBytes(size)
             )
 
-          State.INSTALLING -> context.getString(R.string.notification_preparing_title)
+          is State.Installing -> context.getString(R.string.notification_preparing_title)
           else -> ""
         }
       )

@@ -48,10 +48,10 @@ interface Task {
   val state: State
 
   /**
-   * The [Flow] of the task state and progress as it changes. Immediately emits the
+   * The [Flow] of the task state as it changes. Immediately emits the
    * current ones for any new subscriber. Completes as soon as task is finished.
    */
-  val stateAndProgress: Flow<Pair<State, Int>>
+  val stateAndProgress: Flow<State>
 
   /**
    * Allows the task to perform downloads on metered networks. And schedules it's execution
@@ -82,35 +82,35 @@ interface Task {
     UNINSTALL
   }
 
-  enum class State {
+  sealed class State {
     /* Waiting to be started */
-    PENDING,
+    object Pending: State()
 
     /* Downloading the files */
-    DOWNLOADING,
+    data class Downloading(val progress: Int): State()
 
     /* Files are ready for installation */
-    READY_TO_INSTALL,
+    object ReadyToInstall: State()
 
     /* Installing the downloaded files */
-    INSTALLING,
+    data class Installing(val progress: Int): State()
 
     /* Uninstalling the app files */
-    UNINSTALLING,
+    data class Uninstalling(val progress: Int): State()
 
     /* Work is finished */
-    COMPLETED,
+    object Completed: State()
 
     /* Work is aborted */
-    ABORTED,
+    object Aborted: State()
 
     /* Work is canceled */
-    CANCELED,
+    object Canceled: State()
 
     /* Work is failed */
-    FAILED,
+    object Failed: State()
 
     /* Work is failed due to lack of space */
-    OUT_OF_SPACE,
+    object OutOfSpace: State()
   }
 }

@@ -98,10 +98,10 @@ class RealInstallerNotificationsManager @Inject constructor(
   @OptIn(ExperimentalCoroutinesApi::class)
   private suspend fun onInstallationQueued(app: App) {
     app.task?.let {
-      it.stateAndProgress.flatMapLatest { (state, progress) ->
+      it.stateAndProgress.flatMapLatest { state ->
         val appDetails = appDetailsUseCase.getAppDetails(app)
 
-        if (state == State.PENDING) {
+        if (state is State.Pending) {
           networkConnection.states.map { networkState ->
             val networkConstraint = it.constraints.networkType
             if (networkState == GONE || (networkState == METERED && networkConstraint == UNMETERED)) {
@@ -121,7 +121,6 @@ class RealInstallerNotificationsManager @Inject constructor(
             packageName = app.packageName,
             appDetails = appDetails,
             state = state,
-            progress = progress,
             size = it.installPackageInfo.filesSize,
           )
           flowOf(Unit)
