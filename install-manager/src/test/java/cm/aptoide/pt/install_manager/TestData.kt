@@ -264,99 +264,99 @@ private suspend fun FlowCollector<Int>.iterateProgressFlow(
   delay(duration)
 }
 
-private fun List<Result<Int>>.toFlowSequence(state: Task.State) = map { result ->
-  result.getOrNull()?.let { state to it }
+private fun List<Result<Int>>.toFlowSequence(state: (progress: Int) -> Task.State) = map { result ->
+  result.getOrNull()?.let { state(it) }
     ?: when (result.exceptionOrNull()) {
-      is OutOfSpaceException -> Task.State.OUT_OF_SPACE to -1
-      is CancellationException -> Task.State.CANCELED to -1
-      is AbortException -> Task.State.ABORTED to -1
-      else -> Task.State.FAILED to -1
+      is OutOfSpaceException -> Task.State.OutOfSpace
+      is CancellationException -> Task.State.Canceled
+      is AbortException -> Task.State.Aborted
+      else -> Task.State.Failed
     }
 }
 
-internal val pendingSequence = listOf(Task.State.PENDING to -1)
-internal val pendingNetworkSequence = listOf(Task.State.PENDING to -2)
-private val downloadSequence = listOf(Task.State.DOWNLOADING to -1) +
+internal val pendingSequence = listOf(Task.State.Pending)
+internal val pendingNetworkSequence = listOf(Task.State.Pending)
+private val downloadSequence = listOf(Task.State.Downloading(-1)) +
   successFlow
     .filter { it.isSuccess }
-    .toFlowSequence(Task.State.DOWNLOADING) +
-  (Task.State.READY_TO_INSTALL to -1)
+    .toFlowSequence(Task.State::Downloading) +
+  Task.State.ReadyToInstall
 
-internal val completeSequence = listOf(Task.State.COMPLETED to -1)
+internal val completeSequence = listOf(Task.State.Completed)
 
 internal val successfulInstallSequence = pendingSequence +
   downloadSequence +
   successFlow
     .filter { it.isSuccess }
-    .toFlowSequence(Task.State.INSTALLING) +
+    .toFlowSequence(Task.State::Installing) +
   completeSequence
 
 internal val successfulNetworkInstallSequence = pendingNetworkSequence +
   downloadSequence +
   successFlow
     .filter { it.isSuccess }
-    .toFlowSequence(Task.State.INSTALLING) +
+    .toFlowSequence(Task.State::Installing) +
   completeSequence
 
 internal val successfulUninstallSequence = pendingSequence +
-  (Task.State.UNINSTALLING to -1) +
+  Task.State.Uninstalling(-1) +
   successFlow
     .filter { it.isSuccess }
-    .toFlowSequence(Task.State.UNINSTALLING) +
+    .toFlowSequence(Task.State::Uninstalling) +
   completeSequence
 
 internal val outOfSpaceDownloadSequence = pendingSequence +
-  (Task.State.DOWNLOADING to -1) +
-  outOfSpaceFlow.toFlowSequence(Task.State.DOWNLOADING)
+  Task.State.Downloading(-1) +
+  outOfSpaceFlow.toFlowSequence(Task.State::Downloading)
 
 internal val outOfSpaceInstallSequence = pendingSequence +
   downloadSequence +
-  outOfSpaceFlow.toFlowSequence(Task.State.INSTALLING)
+  outOfSpaceFlow.toFlowSequence(Task.State::Installing)
 
 internal val failedDownloadSequence = pendingSequence +
-  (Task.State.DOWNLOADING to -1) +
-  failingFlow.toFlowSequence(Task.State.DOWNLOADING)
+  Task.State.Downloading(-1) +
+  failingFlow.toFlowSequence(Task.State::Downloading)
 
 internal val failedInstallSequence = pendingSequence +
   downloadSequence +
-  failingFlow.toFlowSequence(Task.State.INSTALLING)
+  failingFlow.toFlowSequence(Task.State::Installing)
 
 internal val failedUninstall = pendingSequence +
-  (Task.State.UNINSTALLING to -1) +
-  failingFlow.toFlowSequence(Task.State.UNINSTALLING)
+  Task.State.Uninstalling(-1) +
+  failingFlow.toFlowSequence(Task.State::Uninstalling)
 
 internal val abortedDownload = pendingSequence +
-  (Task.State.DOWNLOADING to -1) +
-  abortingFlow.toFlowSequence(Task.State.DOWNLOADING)
+  Task.State.Downloading(-1) +
+  abortingFlow.toFlowSequence(Task.State::Downloading)
 
 internal val abortedInstall = pendingSequence +
   downloadSequence +
-  abortingFlow.toFlowSequence(Task.State.INSTALLING)
+  abortingFlow.toFlowSequence(Task.State::Installing)
 
 internal val abortedUninstall = pendingSequence +
-  (Task.State.UNINSTALLING to -1) +
-  abortingFlow.toFlowSequence(Task.State.UNINSTALLING)
+  Task.State.Uninstalling(-1) +
+  abortingFlow.toFlowSequence(Task.State::Uninstalling)
 
 internal val canceledDownload = pendingSequence +
-  (Task.State.DOWNLOADING to -1) +
+  Task.State.Downloading(-1) +
   successFlow
     .take(3)
-    .toFlowSequence(Task.State.DOWNLOADING) +
-  (Task.State.CANCELED to -1)
+    .toFlowSequence(Task.State::Downloading) +
+  Task.State.Canceled
 
 internal val canceledInstall = pendingSequence +
   downloadSequence +
   successFlow
     .take(3)
-    .toFlowSequence(Task.State.INSTALLING) +
-  (Task.State.CANCELED to -1)
+    .toFlowSequence(Task.State::Installing) +
+  Task.State.Canceled
 
 internal val canceledUninstall = pendingSequence +
-  (Task.State.UNINSTALLING to -1) +
+  Task.State.Uninstalling(-1) +
   successFlow
     .take(3)
-    .toFlowSequence(Task.State.UNINSTALLING) +
-  (Task.State.CANCELED to -1)
+    .toFlowSequence(Task.State::Uninstalling) +
+  Task.State.Canceled
 
 /* Mocks */
 

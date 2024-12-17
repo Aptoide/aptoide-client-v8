@@ -69,46 +69,46 @@ class DownloadViewModel(
 
     val taskStates = appInstaller.taskFlow.flatMapConcat { task ->
       task?.stateAndProgress
-        ?.map { (state, progress) ->
+        ?.map { state ->
           task to when (state) {
-            Task.State.ABORTED,
-            Task.State.CANCELED,
+            Task.State.Aborted,
+            Task.State.Canceled,
               -> null
 
-            Task.State.PENDING -> DownloadUiState.Waiting(
+            is Task.State.Pending -> DownloadUiState.Waiting(
               installPackageInfo = task.installPackageInfo,
               action = task::cancel
             )
 
-            Task.State.DOWNLOADING -> DownloadUiState.Downloading(
+            is Task.State.Downloading -> DownloadUiState.Downloading(
               installPackageInfo = task.installPackageInfo,
               cancel = task::cancel,
-              downloadProgress = progress
+              downloadProgress = state.progress
             )
 
-            Task.State.INSTALLING -> DownloadUiState.Installing(
+            is Task.State.Installing -> DownloadUiState.Installing(
               installPackageInfo = task.installPackageInfo,
-              installProgress = progress
+              installProgress = state.progress
             )
 
-            Task.State.UNINSTALLING -> DownloadUiState.Uninstalling(
+            is Task.State.Uninstalling -> DownloadUiState.Uninstalling(
               installPackageInfo = task.installPackageInfo
             )
 
-            Task.State.COMPLETED -> DownloadUiState.Installed(
+            Task.State.Completed -> DownloadUiState.Installed(
               open = ::open,
               uninstall = ::uninstall
             )
 
-            Task.State.OUT_OF_SPACE,
-            Task.State.FAILED -> DownloadUiState.Error(
+            Task.State.OutOfSpace,
+            Task.State.Failed -> DownloadUiState.Error(
               retryWith = when (task.type) {
                 INSTALL -> ::install
                 UNINSTALL -> ::uninstall
               },
             )
 
-            Task.State.READY_TO_INSTALL -> DownloadUiState.ReadyToInstall(
+            Task.State.ReadyToInstall -> DownloadUiState.ReadyToInstall(
               installPackageInfo = task.installPackageInfo,
               cancel = task::cancel
             )
