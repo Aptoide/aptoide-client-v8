@@ -48,7 +48,7 @@ internal class AppTest {
     m And "get running install task from the app immediately"
     val currentITaskNow = app.task
     m And "get running install task from the app after some progress happened"
-    currentITaskNow?.stateAndProgress?.first { it.first != Task.State.PENDING }
+    currentITaskNow?.stateAndProgress?.first { it !is Task.State.Pending }
     val currentITaskLater = app.task
     m And "wait until install task is finished"
     scope.advanceUntilIdle()
@@ -59,7 +59,7 @@ internal class AppTest {
     m And "get running uninstall task from the app immediately"
     val currentUTaskNow = app.task
     m And "get running uninstall task from the app after some progress happened"
-    currentITaskNow?.stateAndProgress?.first { it.first != Task.State.PENDING }
+    currentITaskNow?.stateAndProgress?.first { it !is Task.State.Pending }
     val currentUTaskLater = app.task
     m And "wait until uninstall task is finished"
     scope.advanceUntilIdle()
@@ -105,14 +105,14 @@ internal class AppTest {
     val packageInfo = app.packageInfo
     m And "get package info for the app during installation with given constraints"
     app.install(installInfo, constraints)
-      .stateAndProgress.first { it.first != Task.State.PENDING }
+      .stateAndProgress.first { it !is Task.State.Pending }
     val installingPackageInfo = app.packageInfo
     m And "get the info for the app after installation"
     scope.advanceUntilIdle()
     val installedPackageInfo = app.packageInfo
     m And "get package info for the app during uninstallation with given constraints"
     app.uninstall(constraints)
-      .stateAndProgress.first { it.first != Task.State.PENDING }
+      .stateAndProgress.first { it !is Task.State.Pending }
     val uninstallingPackageInfo = app.packageInfo
     m And "get the info for the app after uninstallation"
     scope.advanceUntilIdle()
@@ -531,7 +531,7 @@ internal class AppTest {
     m And "get app install call result with given constraints"
     val task = app.install(installInfo, constraints)
     m And "wait until task will be ready to cancel"
-    task.stateAndProgress.first { it.first == Task.State.DOWNLOADING }
+    task.stateAndProgress.first { it is Task.State.Downloading }
     m And "call the task cancel"
     task.cancel()
     m And "wait until the task finishes"
@@ -564,7 +564,7 @@ internal class AppTest {
     m And "get app install call result with given constraints"
     val task = app.install(installInfo, constraints)
     m And "wait until task will be ready to cancel"
-    task.stateAndProgress.first { it.first == Task.State.INSTALLING }
+    task.stateAndProgress.first { it is Task.State.Installing }
     m And "call the task cancel"
     task.cancel()
     m And "wait until the task finishes"
@@ -719,7 +719,7 @@ internal class AppTest {
     m And "get app uninstall call result with given constraints"
     val task = app.uninstall(constraints)
     m And "wait until task will be ready to cancel"
-    task.stateAndProgress.first { it.first == Task.State.UNINSTALLING }
+    task.stateAndProgress.first { it is Task.State.Uninstalling }
     m And "call the task cancel"
     task.cancel()
     m And "wait until the task finishes"
