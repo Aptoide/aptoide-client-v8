@@ -1,6 +1,7 @@
 package cm.aptoide.pt.installer
 
 import android.content.Context
+import cm.aptoide.pt.install_manager.DownloadInfo
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.hasObb
 import cm.aptoide.pt.install_manager.workers.PackageDownloader
@@ -27,8 +28,10 @@ class AptoideDownloader @Inject constructor(
   override fun download(
     packageName: String,
     installPackageInfo: InstallPackageInfo,
-  ): Flow<Int> = installPackageInfo.run {
+  ): Flow<DownloadInfo> = installPackageInfo.run {
     var totalProgress = 0.0
+    var totalDownloadedBytes = 0L
+
     installationFiles.asFlow()
       .onStart {
         if (installPackageInfo.hasObb()) {
@@ -37,17 +40,27 @@ class AptoideDownloader @Inject constructor(
         installPermissions.checkIfCanInstall()
       }
       .flatMapMerge(concurrency = 5) { item ->
-        var progress = 0.0
+        var fileProgress = 0.0
+        var fileDownloadedBytes = 0L
         downloaderRepository.download(packageName, versionCode, item)
-          .map {
-            val diff = it - progress
-            progress = it
-            diff * item.fileSize / filesSize
+          .map { (progress, downloadedBytes) ->
+            val progressDiff = progress - fileProgress
+            fileProgress = progress
+
+            val bytesDiff = downloadedBytes - fileDownloadedBytes
+            fileDownloadedBytes = downloadedBytes
+
+            (progressDiff * item.fileSize / filesSize) to bytesDiff
           }
-      }.map {
+      }.map { (progress, downloadedBytes) ->
         coroutineContext.ensureActive()
-        totalProgress += it
-        (totalProgress * 100).toInt()
+        totalProgress += progress
+        totalDownloadedBytes += downloadedBytes
+
+        DownloadInfo(
+          progress = (totalProgress * 100).toInt(),
+          downloadedBytes = totalDownloadedBytes
+        )
       }
   }.distinctUntilChanged()
     .also { InstallerWorker.enqueue(context) }

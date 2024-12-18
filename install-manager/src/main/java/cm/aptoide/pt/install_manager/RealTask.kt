@@ -92,7 +92,7 @@ internal class RealTask internal constructor(
               _stateAndProgress.emit(Task.State.Downloading(-1))
               checkSizeToState(sizeEstimator.getDownloadSize(installPackageInfo))
             }
-            .onEach { _stateAndProgress.emit(Task.State.Downloading(it)) },
+            .onEach { _stateAndProgress.emit(Task.State.Downloading(it.progress)) },
           packageInstaller.install(packageName, installPackageInfo)
             .onStart {
               _stateAndProgress.emit(Task.State.ReadyToInstall)
