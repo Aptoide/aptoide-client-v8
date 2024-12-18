@@ -27,7 +27,9 @@ fun MessageList(
       .padding(vertical = 8.dp),
     contentPadding = PaddingValues(vertical = 8.dp)
   ) {
-    itemsIndexed(messages) { idx, message ->
+    item {
+      PoweredByAi()
+    }
     itemsIndexed(items = messages, key = { idx, message -> message.apps }) { idx, message ->
       if (idx == 0) {
         MessageBubble(
