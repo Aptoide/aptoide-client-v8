@@ -14,7 +14,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 const val REQUEST_INSTALL_PACKAGES_NOT_ALLOWED = "REQUEST_INSTALL_PACKAGES permission not allowed"
+const val REQUEST_INSTALL_PACKAGES_RATIONALE_REJECTED = "REQUEST_INSTALL_PACKAGES permission rationale rejected"
 const val WRITE_EXTERNAL_STORAGE_NOT_ALLOWED = "WRITE_EXTERNAL_STORAGE permission not allowed"
+const val WRITE_EXTERNAL_STORAGE_RATIONALE_REJECTED = "WRITE_EXTERNAL_STORAGE permission rationale rejected"
 
 interface InstallPermissions {
   /**
@@ -45,7 +47,7 @@ class InstallPermissionsImpl @Inject constructor(
           )
         )
       } else {
-        throw AbortException(REQUEST_INSTALL_PACKAGES_NOT_ALLOWED)
+        throw AbortException(REQUEST_INSTALL_PACKAGES_RATIONALE_REJECTED)
       }
       if (!context.hasPackageInstallsPermission()) throw AbortException(
         REQUEST_INSTALL_PACKAGES_NOT_ALLOWED
@@ -75,7 +77,7 @@ class InstallPermissionsImpl @Inject constructor(
               throw AbortException(WRITE_EXTERNAL_STORAGE_NOT_ALLOWED)
             }
           } else {
-            throw AbortException(WRITE_EXTERNAL_STORAGE_NOT_ALLOWED)
+            throw AbortException(WRITE_EXTERNAL_STORAGE_RATIONALE_REJECTED)
           }
 
           //Need to open settings
@@ -90,7 +92,7 @@ class InstallPermissionsImpl @Inject constructor(
               WRITE_EXTERNAL_STORAGE_NOT_ALLOWED
             )
           } else {
-            throw AbortException(WRITE_EXTERNAL_STORAGE_NOT_ALLOWED)
+            throw AbortException(WRITE_EXTERNAL_STORAGE_RATIONALE_REJECTED)
           }
         }
       }

@@ -17,6 +17,7 @@ import cm.aptoide.pt.installer.obb.OBBInstallManager
 import cm.aptoide.pt.task_info.AptoideTaskInfoRepository
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
+import com.aptoide.android.aptoidegames.apkfy.DownloadPermissionStateProbe
 import com.aptoide.android.aptoidegames.installer.DownloaderSelector
 import com.aptoide.android.aptoidegames.installer.analytics.AnalyticsInstallPackageInfoMapper
 import com.aptoide.android.aptoidegames.installer.analytics.DownloadProbe
@@ -49,9 +50,8 @@ class InstallerModule {
   @Provides
   fun provideInstallManager(
     @ApplicationContext appContext: Context,
-    featureFlags: FeatureFlags,
     taskInfoRepository: AptoideTaskInfoRepository,
-    aptoideDownloader: AptoideDownloader,
+    downloadPermissionStateProbe: DownloadPermissionStateProbe,
     installer: AptoideInstaller,
     installAnalytics: InstallAnalytics,
     networkConnection: NetworkConnection,
@@ -62,11 +62,7 @@ class InstallerModule {
       context = appContext,
       taskInfoRepository = taskInfoRepository,
       packageDownloader = DownloadProbe(
-        packageDownloader = DownloaderSelector(
-          featureFlags = featureFlags,
-          aptoidePackageDownloader = aptoideDownloader,
-          fetchPackageDownloader = aptoideDownloader
-        ),
+        packageDownloader = downloadPermissionStateProbe,
         analytics = installAnalytics,
       ),
       packageInstaller = InstallProbe(
@@ -79,6 +75,17 @@ class InstallerModule {
     // TODO: Resolve this architecturally
     (silentInstallChecker as? SilentInstallCheckerImpl)?.installManager = it
   }
+
+  @Singleton
+  @Provides
+  fun provideDownloaderSelector(
+    featureFlags: FeatureFlags,
+    aptoideDownloader: AptoideDownloader,
+  ): DownloaderSelector = DownloaderSelector(
+    featureFlags = featureFlags,
+    aptoidePackageDownloader = aptoideDownloader,
+    fetchPackageDownloader = aptoideDownloader
+  )
 
   @Singleton
   @Provides

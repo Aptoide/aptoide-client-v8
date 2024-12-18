@@ -1,19 +1,27 @@
 package com.aptoide.android.aptoidegames.apkfy.presentation
 
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.feature_apkfy.presentation.rememberApkfyApp
+import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_flags.domain.FeatureFlags
+import com.aptoide.android.aptoidegames.apkfy.DownloadPermissionState
+import com.aptoide.android.aptoidegames.apkfy.DownloadPermissionStateProbe
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
@@ -22,6 +30,7 @@ import javax.inject.Inject
 @HiltViewModel
 class InjectionsProvider @Inject constructor(
   val featureFlags: FeatureFlags,
+  val downloadPermissionStateProbe: DownloadPermissionStateProbe,
 ) : ViewModel()
 
 data class ApkfyFeatureFlags(
@@ -64,5 +73,29 @@ fun rememberApkfyState(): ApkfyUiState? = runPreviewable(
     }
 
     apkfyUiState
+  }
+)
+
+@Composable
+fun rememberDownloadPermissionState(app: App): DownloadPermissionState? = runPreviewable(
+  preview = { DownloadPermissionState.Allowed(app.packageName) },
+  real = {
+    val injectionsProvider = hiltViewModel<InjectionsProvider>()
+    val downloadPermissionStateViewModel: DownloadPermissionStateViewModel = viewModel(
+      key = "apkfy.${app.packageName}",
+      viewModelStoreOwner = LocalContext.current as AppCompatActivity,
+      factory = object : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+          @Suppress("UNCHECKED_CAST")
+          return DownloadPermissionStateViewModel(
+            app = app,
+            probe = injectionsProvider.downloadPermissionStateProbe,
+          ) as T
+        }
+      }
+    )
+    val state by downloadPermissionStateViewModel.uiState.collectAsState()
+
+    state
   }
 )
