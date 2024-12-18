@@ -1,6 +1,7 @@
 package com.aptoide.android.aptoidegames.installer.analytics
 
 import cm.aptoide.pt.install_manager.AbortException
+import cm.aptoide.pt.install_manager.DownloadInfo
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.workers.PackageDownloader
 import cm.aptoide.pt.installer.platform.REQUEST_INSTALL_PACKAGES_NOT_ALLOWED
@@ -21,7 +22,7 @@ class DownloadProbe(
   override fun download(
     packageName: String,
     installPackageInfo: InstallPackageInfo,
-  ): Flow<Int> {
+  ): Flow<DownloadInfo> {
     return packageDownloader.download(packageName, installPackageInfo)
       .onStart {
         analytics.sendDownloadStartedEvent(
