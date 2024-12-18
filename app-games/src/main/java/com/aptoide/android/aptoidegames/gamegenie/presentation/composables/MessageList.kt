@@ -4,10 +4,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.dp
 import com.aptoide.android.aptoidegames.gamegenie.domain.ChatInteraction
 
@@ -15,9 +15,10 @@ import com.aptoide.android.aptoidegames.gamegenie.domain.ChatInteraction
 fun MessageList(
   messages: List<ChatInteraction>,
   navigateTo: (String) -> Unit,
-  listState: LazyListState,
   modifier: Modifier = Modifier,
   onAllAppsFail: () -> Unit,
+  suggestions: List<String>,
+  onSuggestionClick: (String) -> Unit,
 ) {
   LazyColumn(
     state = listState,
@@ -27,19 +28,31 @@ fun MessageList(
     contentPadding = PaddingValues(vertical = 8.dp)
   ) {
     itemsIndexed(messages) { idx, message ->
+    itemsIndexed(items = messages, key = { idx, message -> message.apps }) { idx, message ->
       if (idx == 0) {
         MessageBubble(
           message = null, isUserMessage = false,
           apps = message.apps.map { app -> app.packageName },
           navigateTo = navigateTo,
           onAllAppsFail = onAllAppsFail
+          onAllAppsFail = onAllAppsFail,
+          modifier = Modifier.onGloballyPositioned { coordinates ->
+            lastItemHeight = coordinates.size.height
+          }
         )
+        suggestions.forEach { suggestion ->
+          SuggestionBox(suggestion, onSuggestionClick)
+        }
       } else {
         MessageBubble(
           message = message.gpt, isUserMessage = false,
           apps = message.apps.map { app -> app.packageName },
           navigateTo = navigateTo,
           onAllAppsFail = onAllAppsFail
+          onAllAppsFail = onAllAppsFail,
+          modifier = Modifier.onGloballyPositioned { coordinates ->
+            lastItemHeight = coordinates.size.height
+          }
         )
       }
 
@@ -49,7 +62,8 @@ fun MessageList(
           isUserMessage = true,
           apps = emptyList(), // No apps for user messages
           navigateTo = navigateTo,
-          onAllAppsFail = onAllAppsFail
+          onAllAppsFail = onAllAppsFail,
+          scrollCallback = scrollCallback
         )
       }
     }
