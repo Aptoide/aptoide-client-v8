@@ -8,9 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -86,11 +84,7 @@ fun ChatScreen(
   isLoading: Boolean = false,
   onAllAppsFail: () -> Unit,
 ) {
-  val listState = rememberLazyListState()
-
-  LaunchedEffect(key1 = uiState.conversation) {
-    listState.animateScrollToItem(index = uiState.conversation.lastIndex)
-  }
+  val suggestions = emptyList<String>()
 
   Column(
     modifier = Modifier
@@ -99,10 +93,11 @@ fun ChatScreen(
     MessageList(
       messages = uiState.conversation,
       navigateTo = navigateTo,
-      listState = listState,
       modifier = Modifier
         .weight(1f),
-      onAllAppsFail = onAllAppsFail
+      onAllAppsFail = onAllAppsFail,
+      suggestions = suggestions,
+      onSuggestionClick = onMessageSend
     )
     if (isLoading) {
       Row(
