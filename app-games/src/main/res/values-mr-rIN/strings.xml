@@ -118,6 +118,7 @@
   <string name="trusted_game_badge">Trusted Game</string>
   <string name="official_game_badge">Official Game</string>
   <string name="see_more_button">See more</string>
+  <string name="generic_error_short_title">An error occurred.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">जागा संपली</string>
   <string name="out_of_space_body">इंस्टलेशनसह %s हे चालू ठेवणे आपल्याला आवश्यक आहे.</string>
@@ -170,6 +171,7 @@
   <string name="contact_support_title" comment="contact_support">समर्थनाशी संपर्क साधा</string>
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">कृपया आम्हांस सर्व तपशील द्या:\n\u2022 समस्या केव्हा सुरु झाली\n\u2022 आपण कोणत्या खेळात खरेदी करत होतात\n\nएकदा का आपण \'सेंड\' वर टॅप केलेत कि आपली ईमेल उघडेल. नंतर समस्येचा व्हिडीयो वा स्क्रीनशॉट जोडुन पाठवु शकता!</string>
   <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">आपणांस हा खेळ इंस्टॉल करायचा आहे का?</string>
+  <string name="apkfy_whats_aptoide_games_title">What\'s Aptoide Games?</string>
   <string name="apkfy_install_body">Get your favorite game and much more in Aptoide Games!</string>
   <string name="apkfy_install_bullet_points">\u2022 Top games with an amazing curation.\n\u2022 No need to log in!\n\u2022 Special promotions and rewards in your favorite games.</string>
   <string name="app_size_mb_title" comment="s_mb">%s एमबी</string>
@@ -258,6 +260,10 @@
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
   <string name="genai_assistant_title">Assistant</string>
   <string name="genai_me_title">Me</string>
-  <string name="genai_introduction_body">Hi! I\'m your AI assistant on everything related to apps and games discovery. What are you looking for?</string>
+  <string name="genai_introduction_body">Hi! I\'m your AI assistant on everything related to apps and games discovery. Try with something like:</string>
   <string name="genai_input_message_field">Type a message&#8230;</string>
+  <string name="genai_powered_by_ai_title">Powered by AI</string>
+  <string name="genai_example_1_body">I\'m looking for strategy games.</string>
+  <string name="genai_example_2_body">Please recommend me the best multiplayer games.</string>
+  <string name="genai_example_3_body">Do you know offline casual games?</string>
 </resources>
