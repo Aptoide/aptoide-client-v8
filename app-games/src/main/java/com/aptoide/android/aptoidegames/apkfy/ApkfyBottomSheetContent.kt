@@ -134,7 +134,7 @@ fun ColumnScope.InfoTextD() {
       )
       Text(
         modifier = Modifier.padding(start = 8.dp),
-        text = stringResource(R.string.see_more_button),
+        text = stringResource(R.string.apkfy_whats_aptoide_games_title),
         style = AGTypography.InputsS,
         color = Palette.GreyLight
       )
