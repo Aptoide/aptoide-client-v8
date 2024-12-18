@@ -142,7 +142,8 @@ class InstallAnalytics(
 
   fun sendDownloadCompletedEvent(
     packageName: String,
-    installPackageInfo: InstallPackageInfo
+    installPackageInfo: InstallPackageInfo,
+    downloadedBytesPerSecond: Double,
   ) {
     genericAnalytics.logEvent(
       name = "app_download",
@@ -155,13 +156,15 @@ class InstallAnalytics(
     logBIDownloadEvent(
       packageName = packageName,
       status = "success",
-      installPackageInfo = installPackageInfo
+      installPackageInfo = installPackageInfo,
+      downloadedBytesPerSecond = downloadedBytesPerSecond
     )
   }
 
   fun sendDownloadErrorEvent(
     packageName: String,
     installPackageInfo: InstallPackageInfo,
+    downloadedBytesPerSecond: Double,
     errorMessage: String?,
     errorType: String?,
     errorCode: Int?,
@@ -179,6 +182,7 @@ class InstallAnalytics(
       packageName = packageName,
       status = "fail",
       installPackageInfo = installPackageInfo,
+      downloadedBytesPerSecond = downloadedBytesPerSecond,
       P_ERROR_MESSAGE to errorMessage,
       P_ERROR_TYPE to errorType,
       P_ERROR_HTTP_CODE to errorCode,
@@ -203,6 +207,7 @@ class InstallAnalytics(
       packageName = packageName,
       status = "abort",
       installPackageInfo = installPackageInfo,
+      downloadedBytesPerSecond = -1.0,
       P_ERROR_MESSAGE to errorMessage,
       P_ERROR_TYPE to "permission",
     )
@@ -210,7 +215,8 @@ class InstallAnalytics(
 
   fun sendDownloadCanceledEvent(
     packageName: String,
-    installPackageInfo: InstallPackageInfo
+    installPackageInfo: InstallPackageInfo,
+    downloadedBytesPerSecond: Double,
   ) {
     genericAnalytics.logEvent(
       name = "app_download",
@@ -224,6 +230,7 @@ class InstallAnalytics(
       packageName = packageName,
       status = "cancel",
       installPackageInfo = installPackageInfo,
+      downloadedBytesPerSecond = downloadedBytesPerSecond,
       P_ERROR_TYPE to "downloading"
     )
   }
@@ -236,6 +243,7 @@ class InstallAnalytics(
       packageName = packageName,
       status = "cancel",
       installPackageInfo = installPackageInfo,
+      downloadedBytesPerSecond = -1.0,
       P_ERROR_TYPE to "queue"
     )
   }
@@ -434,6 +442,7 @@ class InstallAnalytics(
     packageName: String,
     status: String,
     installPackageInfo: InstallPackageInfo,
+    downloadedBytesPerSecond: Double = -1.0,
     vararg pairs: Pair<String, Any?>
   ) = biAnalytics.logEvent(
     name = "download",
@@ -446,6 +455,7 @@ class InstallAnalytics(
             installPackageInfo.getAppSizeSegment(),
             P_STORE to it?.store,
             P_TRUSTED_BADGE to it?.trustedBadge,
+            P_DOWNLOAD_SPEED_MB to getDownloadSpeedInterval(downloadedBytesPerSecond),
             *pairs
           )
       }
@@ -492,6 +502,7 @@ class InstallAnalytics(
     internal const val P_SERVICE = "service"
     internal const val P_UPDATE_TYPE = "update_type"
     internal const val P_APP_SIZE_MB = "app_size_mb"
+    internal const val P_DOWNLOAD_SPEED_MB = "download_speed_mbps"
   }
 }
 
@@ -543,3 +554,39 @@ private fun AnalyticsPayload?.toAppBIParameters(
   } ?: mapOfNonNull(*pairs)
 
 private fun Int.toTapsValue(): String = if (this == 1) "1-tap" else "$this-taps"
+
+fun getDownloadSpeedInterval(bytesPerSecond: Double): String {
+  if(bytesPerSecond <= 0.0) return "n-a"
+
+  var speed = bytesPerSecond
+  var scale = "BPS"
+
+  if (speed >= 1024) {
+    speed /= 1024
+    scale = "KBPS"
+  }
+  if (speed >= 1024) {
+    speed /= 1024
+    scale = "MBPS"
+  }
+  if (speed >= 1024) {
+    speed /= 1024
+    scale = "GBPS"
+  }
+
+  val interval = when {
+    speed == 0.0 -> "0"
+    speed <= 2 -> "1-2"
+    speed <= 5 -> "3-5"
+    speed <= 10 -> "6-10"
+    speed <= 20 -> "11-20"
+    speed <= 50 -> "21-50"
+    speed <= 100 -> "51-100"
+    speed <= 200 -> "101-200"
+    speed <= 500 -> "201-500"
+    speed <= 1000 -> "501-1000"
+    else -> ">1000"
+  }
+
+  return "$interval $scale"
+}
