@@ -17,6 +17,7 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
+import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.isInCatappult
 import cm.aptoide.pt.feature_apps.data.randomApp
 import com.aptoide.android.aptoidegames.BottomSheetContent
@@ -34,6 +36,7 @@ import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.OverrideAnalyticsAPKFY
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.apkfy.presentation.ApkfyUiState
+import com.aptoide.android.aptoidegames.apkfy.presentation.rememberDownloadPermissionState
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getAGIcon
 import com.aptoide.android.aptoidegames.drawables.icons.getArrowDown
@@ -70,7 +73,7 @@ class ApkfyBottomSheetContent(private val apkfyState: ApkfyUiState) : BottomShee
       ) {
         BottomSheetHeader()
         if (apkfyState is ApkfyUiState.VariantC) {
-          InfoTextC()
+          InfoTextC(app)
         }
         Text(
           modifier = Modifier
@@ -100,9 +103,17 @@ class ApkfyBottomSheetContent(private val apkfyState: ApkfyUiState) : BottomShee
 }
 
 @Composable
-fun ColumnScope.InfoTextC() {
-  InfoText(true)
-  Divider(modifier = Modifier.padding(top = 24.dp, bottom = 13.dp))
+fun ColumnScope.InfoTextC(app: App) {
+  val state = rememberDownloadPermissionState(app)
+  val isTextVisible by remember(state) {
+    derivedStateOf {
+      state is DownloadPermissionState.Allowed || state is DownloadPermissionState.RationaleRejected
+    }
+  }
+  InfoText(isTextVisible)
+  AnimatedVisibility(visible = isTextVisible) {
+    Divider(modifier = Modifier.padding(top = 24.dp, bottom = 13.dp))
+  }
 }
 
 @Composable

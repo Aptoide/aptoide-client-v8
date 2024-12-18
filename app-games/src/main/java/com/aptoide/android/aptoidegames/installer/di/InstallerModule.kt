@@ -17,6 +17,7 @@ import cm.aptoide.pt.installer.obb.OBBInstallManager
 import cm.aptoide.pt.task_info.AptoideTaskInfoRepository
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
+import com.aptoide.android.aptoidegames.apkfy.DownloadPermissionStateProbe
 import com.aptoide.android.aptoidegames.installer.DownloaderSelector
 import com.aptoide.android.aptoidegames.installer.analytics.AnalyticsInstallPackageInfoMapper
 import com.aptoide.android.aptoidegames.installer.analytics.DownloadProbe
@@ -50,7 +51,7 @@ class InstallerModule {
   fun provideInstallManager(
     @ApplicationContext appContext: Context,
     taskInfoRepository: AptoideTaskInfoRepository,
-    downloaderSelector: DownloaderSelector,
+    downloadPermissionStateProbe: DownloadPermissionStateProbe,
     installer: AptoideInstaller,
     installAnalytics: InstallAnalytics,
     networkConnection: NetworkConnection,
@@ -61,7 +62,7 @@ class InstallerModule {
       context = appContext,
       taskInfoRepository = taskInfoRepository,
       packageDownloader = DownloadProbe(
-        packageDownloader = downloaderSelector,
+        packageDownloader = downloadPermissionStateProbe,
         analytics = installAnalytics,
       ),
       packageInstaller = InstallProbe(
