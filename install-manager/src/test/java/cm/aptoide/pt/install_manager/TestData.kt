@@ -253,6 +253,17 @@ internal val abortingFlow = listOf(
   Result.failure(AbortException("No go!"))
 )
 
+private suspend fun FlowCollector<DownloadInfo>.iterateDownloadInfoFlow(
+  progressFlow: List<Result<Int>>,
+  duration: Duration,
+) {
+  progressFlow.forEach { progress ->
+    delay(duration)
+    emit(DownloadInfo(progress = progress.getOrThrow(), downloadedBytes = 0L))
+  }
+  delay(duration)
+}
+
 private suspend fun FlowCollector<Int>.iterateProgressFlow(
   progressFlow: List<Result<Int>>,
   duration: Duration,
@@ -492,12 +503,12 @@ internal class PackageDownloaderMock() : PackageDownloader {
   override fun download(
     packageName: String,
     installPackageInfo: InstallPackageInfo,
-  ): Flow<Int> {
+  ): Flow<DownloadInfo> {
     if (!downloadCalled.add(packageName))
       throw IllegalStateException("Duplicate call for $packageName")
     return flow {
       try {
-        iterateProgressFlow(progressFlow, delay)
+        iterateDownloadInfoFlow(progressFlow, delay)
       } finally {
         downloadCalled.remove(packageName)
       }

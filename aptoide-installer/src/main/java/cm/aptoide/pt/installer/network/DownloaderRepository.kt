@@ -39,7 +39,7 @@ class DownloaderRepository @Inject constructor(
     packageName: String,
     versionCode: Long,
     installationFile: InstallationFile
-  ): Flow<Double> {
+  ): Flow<Pair<Double, Long>> {
     val destinationDir = File(downloadsPath, packageName).apply {
       if (!exists()) {
         mkdirs().let {
@@ -51,10 +51,10 @@ class DownloaderRepository @Inject constructor(
     val destinationFile = File(destinationDir, installationFile.name)
 
     return flow {
-      emit(0.0)
+      emit(0.0 to 0L)
 
       if (destinationFile.checkMd5(installationFile.md5)) {
-        emit(1.0)
+        emit(1.0 to 0L)
         return@flow
       }
 
@@ -79,11 +79,13 @@ class DownloaderRepository @Inject constructor(
             )
           )
         val totalBytes = partialFileSize + body.contentLength()
+        var downloadedBytes = 0L
         body.byteStream().use { inputStream ->
           destinationFile.createNewFile()
           FileOutputStream(destinationFile, partialFileSize > 0).use { outputStream ->
             inputStream.copyWithProgressTo(outputStream).collect { bytesCopied ->
-              emit(((partialFileSize + bytesCopied) * 0.98) / totalBytes)
+              downloadedBytes = bytesCopied
+              emit((((partialFileSize + bytesCopied) * 0.98) / totalBytes) to downloadedBytes)
             }
           }
         }
@@ -91,7 +93,7 @@ class DownloaderRepository @Inject constructor(
           destinationFile.delete()
           throw IOException("MD5 check failed")
         }
-        emit(1.0)
+        emit(1.0 to downloadedBytes)
       }
     }
       .distinctUntilChanged()

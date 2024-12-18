@@ -6,6 +6,7 @@ import androidx.core.net.toUri
 import cm.aptoide.pt.aptoide_network.di.DownloadsOKHttp
 import cm.aptoide.pt.extensions.checkMd5
 import cm.aptoide.pt.install_manager.AbortException
+import cm.aptoide.pt.install_manager.DownloadInfo
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallationFile
 import cm.aptoide.pt.install_manager.dto.hasObb
@@ -20,6 +21,7 @@ import com.tonyodev.fetch2.FetchConfiguration
 import com.tonyodev.fetch2.NetworkType
 import com.tonyodev.fetch2.Priority
 import com.tonyodev.fetch2.Request
+import com.tonyodev.fetch2core.DownloadBlock
 import com.tonyodev.fetch2core.Downloader
 import com.tonyodev.fetch2okhttp.OkHttpDownloader
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -89,7 +91,7 @@ class FetchDownloader @Inject constructor(
   override fun download(
     packageName: String,
     installPackageInfo: InstallPackageInfo,
-  ): Flow<Int> = installPackageInfo.run {
+  ): Flow<DownloadInfo> = installPackageInfo.run {
     flow<Unit> {
       if (installPackageInfo.hasObb()) {
         installPermissions.checkIfCanWriteExternal()
@@ -98,9 +100,12 @@ class FetchDownloader @Inject constructor(
       emit(Unit)
     }.flatMapLatest {
       downloadFiles(packageName, versionCode, installationFiles)
-    }.map {
+    }.map { (progress, downloadedBytes) ->
       coroutineContext.ensureActive()
-      (it * 100).toInt()
+      DownloadInfo(
+        progress = (progress * 100).toInt(),
+        downloadedBytes = downloadedBytes
+      )
     }
   }
     .also { InstallerWorker.enqueue(context) }
@@ -109,7 +114,7 @@ class FetchDownloader @Inject constructor(
     packageName: String,
     versionCode: Long,
     installationFiles: Set<InstallationFile>
-  ): Flow<Double> {
+  ): Flow<Pair<Double, Long>> {
     val totalSize = installationFiles.sumOf { it.fileSize }.toDouble()
 
     val destinationDir = File(downloadsPath, packageName).apply {
@@ -139,27 +144,41 @@ class FetchDownloader @Inject constructor(
         }
     }
 
+    val initialBytes = mutableMapOf<Int, Long>()
+    val downloadedBytes = mutableMapOf<Int, Long>()
     val totalDownloadedBytes = mutableMapOf<Int, Long>()
+
     var listener: FetchFileDownloadListener? = null
 
-    return callbackFlow<Double> {
-      trySend(0.0)
+    return callbackFlow {
+      trySend(0.0 to 0L)
 
       if (requests.isEmpty()) {
-        trySend(1.0)
+        trySend(1.0 to 0L)
         close()
       }
 
       listener = object : FetchFileDownloadListener {
         override fun onAdded(download: Download) {
+          initialBytes.put(download.id, 0L)
+          downloadedBytes.put(download.id, 0L)
           totalDownloadedBytes.put(download.id, 0L)
           super.onAdded(download)
+        }
+
+        override fun onStarted(
+          download: Download,
+          downloadBlocks: List<DownloadBlock>,
+          totalBlocks: Int
+        ) {
+          initialBytes.put(download.id, download.downloaded)
+          super.onStarted(download, downloadBlocks, totalBlocks)
         }
 
         override fun onCompleted(download: Download) {
           fetch.hasActiveDownloads(false) {
             if (!it) {
-              trySend(1.0)
+              trySend(1.0 to downloadedBytes.values.sum())
               close()
             }
           }
@@ -179,7 +198,10 @@ class FetchDownloader @Inject constructor(
           downloadedBytesPerSecond: Long
         ) {
           totalDownloadedBytes.replace(download.id, download.downloaded)
-          trySend(totalDownloadedBytes.values.sum() / totalSize)
+          initialBytes[download.id]?.let { initialBytes ->
+            downloadedBytes.replace(download.id, download.downloaded - initialBytes)
+          }
+          trySend((totalDownloadedBytes.values.sum() / totalSize) to downloadedBytes.values.sum())
         }
       }
 
