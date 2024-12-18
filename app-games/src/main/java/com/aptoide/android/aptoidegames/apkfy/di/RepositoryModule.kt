@@ -4,7 +4,9 @@ import cm.aptoide.pt.feature_apkfy.domain.ApkfyManager
 import cm.aptoide.pt.feature_apkfy.domain.ApkfyManagerImpl
 import com.aptoide.android.aptoidegames.IdsRepository
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
+import com.aptoide.android.aptoidegames.apkfy.DownloadPermissionStateProbe
 import com.aptoide.android.aptoidegames.apkfy.analytics.ApkfyManagerProbe
+import com.aptoide.android.aptoidegames.installer.DownloaderSelector
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,4 +29,12 @@ internal object RepositoryModule {
       biAnalytics = biAnalytics,
       idsRepository = idsRepository
     )
+
+  @Singleton
+  @Provides
+  fun provideDownloadPermissionStateProbe(
+    downloaderSelector: DownloaderSelector,
+  ): DownloadPermissionStateProbe = DownloadPermissionStateProbe(
+    packageDownloader = downloaderSelector,
+  )
 }
