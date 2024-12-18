@@ -31,9 +31,11 @@ fun MessageBubble(
   apps: List<String>? = null,
   navigateTo: (String) -> Unit = {},
   onAllAppsFail: () -> Unit,
+  scrollCallback: @Composable () -> Unit,
+  modifier: Modifier = Modifier,
 ) {
   Column(
-    modifier = Modifier
+    modifier = modifier
       .fillMaxWidth()
       .padding(top = 8.dp)
       .wrapContentWidth(if (isUserMessage) Alignment.End else Alignment.Start)
@@ -86,6 +88,7 @@ fun MessageBubble(
           AppUiState.Loading -> LoadingView()
           AppUiState.NoConnection -> NoConnectionView(fn)
         }
+        scrollCallback()
         state
       }
 
