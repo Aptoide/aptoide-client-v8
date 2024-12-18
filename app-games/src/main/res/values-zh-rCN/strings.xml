@@ -118,6 +118,7 @@
   <string name="trusted_game_badge">Trusted Game</string>
   <string name="official_game_badge">Official Game</string>
   <string name="see_more_button">See more</string>
+  <string name="generic_error_short_title">An error occurred.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">空间不足</string>
   <string name="out_of_space_body">需要%s才能继续安装。</string>
@@ -170,6 +171,7 @@
   <string name="contact_support_title" comment="contact_support">联系支持人员</string>
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">请提供所有相关详情：\n\u2022问题何时开始出现？\n\u2022您是在哪个游戏中进行购买的？\n\n当您点击“发送”后，您的邮件应用 (app) 就会自动打开。当然，您可以按需附上一张截图或视频，以详细说明问题！</string>
   <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">您想安装这款游戏吗？</string>
+  <string name="apkfy_whats_aptoide_games_title">What\'s Aptoide Games?</string>
   <string name="apkfy_install_body">Get your favorite game and much more in Aptoide Games!</string>
   <string name="apkfy_install_bullet_points">\u2022 Top games with an amazing curation.\n\u2022 No need to log in!\n\u2022 Special promotions and rewards in your favorite games.</string>
   <string name="app_size_mb_title" comment="s_mb">%s MB</string>
@@ -256,6 +258,10 @@
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
   <string name="genai_assistant_title">Assistant</string>
   <string name="genai_me_title">Me</string>
-  <string name="genai_introduction_body">Hi! I\'m your AI assistant on everything related to apps and games discovery. What are you looking for?</string>
+  <string name="genai_introduction_body">Hi! I\'m your AI assistant on everything related to apps and games discovery. Try with something like:</string>
   <string name="genai_input_message_field">Type a message&#8230;</string>
+  <string name="genai_powered_by_ai_title">Powered by AI</string>
+  <string name="genai_example_1_body">I\'m looking for strategy games.</string>
+  <string name="genai_example_2_body">Please recommend me the best multiplayer games.</string>
+  <string name="genai_example_3_body">Do you know offline casual games?</string>
 </resources>

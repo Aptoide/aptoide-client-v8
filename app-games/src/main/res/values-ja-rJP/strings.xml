@@ -118,6 +118,7 @@
   <string name="trusted_game_badge">信頼できるゲーム</string>
   <string name="official_game_badge">公式ゲーム</string>
   <string name="see_more_button">さらに見る</string>
+  <string name="generic_error_short_title">エラーが発生しました。</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">空き容量不足</string>
   <string name="out_of_space_body">インストールを続行するには %s 必要です。</string>
@@ -171,6 +172,7 @@
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">詳細を教えてください：\n\u2022問題はいつ発生しましたか？\n\u2022どのゲームで購入されましたか？\n\n
 送信をタップすると、メールアプリが開きます。問題のスクリーンショットや動画を添付してください。</string>
   <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">このゲームをインストールしますか？</string>
+  <string name="apkfy_whats_aptoide_games_title">What\'s Aptoide Games?</string>
   <string name="apkfy_install_body">Aptoide Gamesでお気に入りのゲームやその他のものを手に入れよう！</string>
   <string name="apkfy_install_bullet_points">\u2022 素晴らしいキュレーションのトップゲーム。\n\u2022 ログイン不要！\n\u2022 お好きなゲームで特別なプロモーションと報酬を。</string>
   <string name="app_size_mb_title" comment="s_mb">%s MB</string>
@@ -257,6 +259,10 @@
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
   <string name="genai_assistant_title">アシスタント</string>
   <string name="genai_me_title">自分</string>
-  <string name="genai_introduction_body">こんにちは！私はあなたのAIアシスタントです。何をお探しですか？</string>
+  <string name="genai_introduction_body">こんにちは！私はアプリやゲームをみつけるのをお手伝いすAIアシスタントです。以下のようにお試しください：</string>
   <string name="genai_input_message_field">メッセージを入力&#8230;</string>
+  <string name="genai_powered_by_ai_title">Powered by</string>
+  <string name="genai_example_1_body">ストラテジーゲームを探しています。</string>
+  <string name="genai_example_2_body">最高のマルチプレイヤーゲームを紹介してください。</string>
+  <string name="genai_example_3_body">オフラインのカジュアルなゲームを知っていますか？</string>
 </resources>
