@@ -49,9 +49,8 @@ class InstallerModule {
   @Provides
   fun provideInstallManager(
     @ApplicationContext appContext: Context,
-    featureFlags: FeatureFlags,
     taskInfoRepository: AptoideTaskInfoRepository,
-    aptoideDownloader: AptoideDownloader,
+    downloaderSelector: DownloaderSelector,
     installer: AptoideInstaller,
     installAnalytics: InstallAnalytics,
     networkConnection: NetworkConnection,
@@ -62,11 +61,7 @@ class InstallerModule {
       context = appContext,
       taskInfoRepository = taskInfoRepository,
       packageDownloader = DownloadProbe(
-        packageDownloader = DownloaderSelector(
-          featureFlags = featureFlags,
-          aptoidePackageDownloader = aptoideDownloader,
-          fetchPackageDownloader = aptoideDownloader
-        ),
+        packageDownloader = downloaderSelector,
         analytics = installAnalytics,
       ),
       packageInstaller = InstallProbe(
@@ -79,6 +74,17 @@ class InstallerModule {
     // TODO: Resolve this architecturally
     (silentInstallChecker as? SilentInstallCheckerImpl)?.installManager = it
   }
+
+  @Singleton
+  @Provides
+  fun provideDownloaderSelector(
+    featureFlags: FeatureFlags,
+    aptoideDownloader: AptoideDownloader,
+  ): DownloaderSelector = DownloaderSelector(
+    featureFlags = featureFlags,
+    aptoidePackageDownloader = aptoideDownloader,
+    fetchPackageDownloader = aptoideDownloader
+  )
 
   @Singleton
   @Provides
