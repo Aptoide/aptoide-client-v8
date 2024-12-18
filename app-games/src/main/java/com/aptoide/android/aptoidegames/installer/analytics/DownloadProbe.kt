@@ -9,6 +9,7 @@ import cm.aptoide.pt.installer.platform.WRITE_EXTERNAL_STORAGE_NOT_ALLOWED
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import retrofit2.HttpException
 
@@ -21,6 +22,8 @@ class DownloadProbe(
     packageName: String,
     installPackageInfo: InstallPackageInfo,
   ): Flow<DownloadInfo> {
+    val initialTimestamp = System.currentTimeMillis()
+    var totalDownloadedBytes = 0L
     return packageDownloader.download(packageName, installPackageInfo)
       .onStart {
         analytics.sendDownloadStartedEvent(
@@ -28,11 +31,16 @@ class DownloadProbe(
           installPackageInfo = installPackageInfo
         )
       }
+      .onEach { totalDownloadedBytes = it.downloadedBytes }
       .onCompletion {
+        val totalTime = (System.currentTimeMillis() - initialTimestamp) / 1000.0
+        val downloadSpeed = totalDownloadedBytes / totalTime
+
         when (it) {
           is CancellationException -> analytics.sendDownloadCanceledEvent(
             packageName = packageName,
-            installPackageInfo = installPackageInfo
+            installPackageInfo = installPackageInfo,
+            downloadedBytesPerSecond = downloadSpeed
           )
 
           is AbortException -> {
@@ -47,6 +55,7 @@ class DownloadProbe(
               else -> analytics.sendDownloadErrorEvent(
                 packageName = packageName,
                 installPackageInfo = installPackageInfo,
+                downloadedBytesPerSecond = downloadSpeed,
                 errorMessage = it.message,
                 errorType = it::class.simpleName,
                 errorCode = null
@@ -56,12 +65,14 @@ class DownloadProbe(
 
           null -> analytics.sendDownloadCompletedEvent(
             packageName = packageName,
-            installPackageInfo = installPackageInfo
+            installPackageInfo = installPackageInfo,
+            downloadedBytesPerSecond = downloadSpeed
           )
 
           else -> analytics.sendDownloadErrorEvent(
             packageName = packageName,
             installPackageInfo = installPackageInfo,
+            downloadedBytesPerSecond = downloadSpeed,
             errorMessage = it.message,
             errorType = it::class.simpleName,
             errorCode = (it as? HttpException)?.code()
