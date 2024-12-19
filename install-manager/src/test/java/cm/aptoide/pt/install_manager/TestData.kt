@@ -1,8 +1,6 @@
 package cm.aptoide.pt.install_manager
 
-import android.content.pm.InstallSourceInfo
 import android.content.pm.PackageInfo
-import android.content.pm.createInstallSource
 import cm.aptoide.pt.install_manager.dto.Constraints
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallationFile
@@ -111,7 +109,7 @@ internal fun installedInfo(
   versionCode = vc.toInt()
 }
 
-internal fun installSourceInfo(vc: Long = 1) = createInstallSource(vc)
+internal fun installSourceInfo(vc: Long = 1) = "update.owner.$vc"
 
 internal val installInfo = InstallPackageInfo(
   versionCode = 2,
@@ -374,7 +372,7 @@ internal class AppInfoRepositoryMock : AppInfoRepository {
     .apply { putAll(installedPackages) }
     .toMutableMap()
 
-  internal val installSourceInfo: MutableMap<String, InstallSourceInfo?> = mutableMapOf(
+  internal val installSourceInfo: MutableMap<String, String?> = mutableMapOf(
     outdatedPackage to installSourceInfo(),
     currentPackage to installSourceInfo(vc = 2),
     newerPackage to installSourceInfo(vc = 3),
@@ -392,7 +390,7 @@ internal class AppInfoRepositoryMock : AppInfoRepository {
 
   override fun getPackageInfo(packageName: String): PackageInfo? = packageInfo[packageName]
 
-  override fun getInstallSourceInfo(packageName: String): InstallSourceInfo? =
+  override fun getUpdateOwnerPackageName(packageName: String): String? =
     installSourceInfo[packageName]
 
   override fun setOnChangeListener(onChange: (String) -> Unit) {
@@ -404,7 +402,7 @@ internal class AppInfoRepositoryMock : AppInfoRepository {
   internal fun update(
     pn: String,
     pi: PackageInfo?,
-    isi: InstallSourceInfo?
+    isi: String?
   ) {
     packageInfo[pn] = pi
     installSourceInfo[pn] = isi

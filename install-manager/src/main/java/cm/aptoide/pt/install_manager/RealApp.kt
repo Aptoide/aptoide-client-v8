@@ -1,6 +1,5 @@
 package cm.aptoide.pt.install_manager
 
-import android.content.pm.InstallSourceInfo
 import android.content.pm.PackageInfo
 import cm.aptoide.pt.extensions.compatVersionCode
 import cm.aptoide.pt.install_manager.dto.Constraints
@@ -19,7 +18,7 @@ import kotlinx.coroutines.flow.onCompletion
 internal class RealApp(
   override val packageName: String,
   packageInfo: PackageInfo?,
-  installSourceInfo: InstallSourceInfo?,
+  updatesOwnerPackageName: String?,
   private val taskFactory: Task.Factory,
   private val getMissingSpace: (Long) -> Long,
   private val sizeEstimator: SizeEstimator,
@@ -36,8 +35,8 @@ internal class RealApp(
   override val packageInfo: PackageInfo?
     get() = _packageInfo.value
 
-  override var installSourceInfo: InstallSourceInfo? =
-    installSourceInfo ?: appInfoRepository.getInstallSourceInfo(packageName)
+  override var updatesOwnerPackageName: String? =
+    updatesOwnerPackageName ?: appInfoRepository.getUpdateOwnerPackageName(packageName)
 
   override val packageInfoFlow: Flow<PackageInfo?> = _packageInfo
 
@@ -56,7 +55,7 @@ internal class RealApp(
 
   internal fun update() {
     _packageInfo.value = appInfoRepository.getPackageInfo(packageName)
-    installSourceInfo = appInfoRepository.getInstallSourceInfo(packageName)
+    updatesOwnerPackageName = appInfoRepository.getUpdateOwnerPackageName(packageName)
   }
 
   override fun canInstall(

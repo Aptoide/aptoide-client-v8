@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.InstallSourceInfo
 import android.content.pm.PackageInfo
 import android.os.Build
 import cm.aptoide.pt.extensions.getInstalledPackages
@@ -46,9 +45,15 @@ internal class AppInfoRepositoryImpl(context: Context) : BroadcastReceiver(), Ap
   override fun getPackageInfo(packageName: String): PackageInfo? = pm.getPackageInfo(packageName)
     ?.takeIf(PackageInfo::ifNormalAppOrGame)
 
-  override fun getInstallSourceInfo(packageName: String): InstallSourceInfo? = runCatching {
+  override fun getUpdateOwnerPackageName(packageName: String): String? = runCatching {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-      pm.getInstallSourceInfo(packageName)
+      pm.getInstallSourceInfo(packageName).run {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+          updateOwnerPackageName ?: installingPackageName
+        } else {
+          installingPackageName
+        }
+      }
     } else {
       null
     }

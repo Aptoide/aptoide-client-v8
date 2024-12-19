@@ -1,6 +1,5 @@
 package cm.aptoide.pt.install_manager
 
-import android.content.pm.InstallSourceInfo
 import android.content.pm.PackageInfo
 import cm.aptoide.pt.install_manager.dto.Constraints
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
@@ -54,7 +53,7 @@ internal class RealInstallManager(
         getOrCreateApp(
           packageName = it.packageName,
           packageInfo = it,
-          installSourceInfo = appInfoRepository.getInstallSourceInfo(it.packageName)
+          updatesOwnerPackageName = appInfoRepository.getUpdateOwnerPackageName(it.packageName)
         )
       }
       .toSet()
@@ -106,11 +105,11 @@ internal class RealInstallManager(
   private fun getOrCreateApp(
     packageName: String,
     packageInfo: PackageInfo? = null,
-    installSourceInfo: InstallSourceInfo? = null
+    updatesOwnerPackageName: String? = null
   ) = appsCache[packageName] ?: RealApp(
     packageName = packageName,
     packageInfo = packageInfo,
-    installSourceInfo = installSourceInfo,
+    updatesOwnerPackageName = updatesOwnerPackageName,
     taskFactory = this@RealInstallManager,
     getMissingSpace = { it - deviceStorage.availableFreeSpace },
     sizeEstimator = sizeEstimator,

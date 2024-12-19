@@ -48,7 +48,7 @@ internal class InstallManagerTest {
     m And "the same install source info as in app info repository"
     assertEquals(
       mocks.appInfoRepository.installSourceInfo[packageName],
-      app.installSourceInfo
+      app.updatesOwnerPackageName
     )
     m And "has no running task"
     assertNull(app.task)
@@ -179,7 +179,7 @@ internal class InstallManagerTest {
     m And "and their install source info are the same as in app info repository"
     assertEquals(
       mocks.appInfoRepository.installSourceInfo.values.toList(),
-      apps.map { it.installSourceInfo }
+      apps.map { it.updatesOwnerPackageName }
     )
   }
 
