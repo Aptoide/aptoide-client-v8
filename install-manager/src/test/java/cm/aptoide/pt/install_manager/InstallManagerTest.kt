@@ -1106,6 +1106,10 @@ internal class InstallManagerTest {
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
+    m And "mocks operate with given speeds"
+    mocks.taskInfoRepository.setSpeed(taskInfoSpeed)
+    mocks.packageDownloader.setSpeed(downloaderSpeed)
+    mocks.packageInstaller.setSpeed(installerSpeed)
     m And "free space checker mock will report there will be 536 of free space missing"
     mocks.deviceStorageMock.availableFreeSpace = 536
     m And "results collector initialised"
@@ -1122,7 +1126,7 @@ internal class InstallManagerTest {
       )
     )
     m And "collect missing space after install task enqueued"
-    scope.advanceTimeBy(2.seconds)
+    scope.advanceTimeBy(2001)
     results.add(installManager.getMissingFreeSpaceFor(installInfo))
     m And "outdated app update scheduled"
     val updateTask = installManager.getApp(outdatedPackage).install(
@@ -1133,22 +1137,22 @@ internal class InstallManagerTest {
       )
     )
     m And "collect missing space after update task enqueued"
-    scope.advanceTimeBy(2.seconds)
+    scope.advanceTimeBy(2001)
     results.add(installManager.getMissingFreeSpaceFor(installInfo))
     m And "current app uninstall scheduled"
     installManager.getApp(currentPackage).uninstall()
     m And "collect missing space after uninstall task enqueued"
-    scope.advanceTimeBy(2.seconds)
+    scope.advanceTimeBy(2001)
     results.add(installManager.getMissingFreeSpaceFor(installInfo))
     m And "outdated app update cancelled"
     updateTask.cancel()
     m And "collect missing space after update task cancelled"
-    scope.advanceTimeBy(2.seconds)
+    scope.advanceTimeBy(2001)
     results.add(installManager.getMissingFreeSpaceFor(installInfo))
     m And "outdated app uninstall scheduled"
     installManager.getApp(outdatedPackage).uninstall()
     m And "collect missing space after outdated app uninstall task enqueued"
-    scope.advanceTimeBy(2.seconds)
+    scope.advanceTimeBy(2001)
     results.add(installManager.getMissingFreeSpaceFor(installInfo))
     m And "not installed app install cancelled"
     installTask.cancel()
