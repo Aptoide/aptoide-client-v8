@@ -1,6 +1,7 @@
 package cm.aptoide.pt.install_manager.workers
 
 import cm.aptoide.pt.install_manager.AbortException
+import cm.aptoide.pt.install_manager.DownloadInfo
 import cm.aptoide.pt.install_manager.OutOfSpaceException
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import kotlinx.coroutines.CancellationException
@@ -28,5 +29,5 @@ interface PackageDownloader {
   fun download(
     packageName: String,
     installPackageInfo: InstallPackageInfo,
-  ): Flow<Int>
+  ): Flow<DownloadInfo>
 }

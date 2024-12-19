@@ -7,7 +7,7 @@ import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.install_manager.App
 import cm.aptoide.pt.install_manager.InstallManager
 import cm.aptoide.pt.install_manager.Task.State
-import cm.aptoide.pt.install_manager.Task.State.PENDING
+import cm.aptoide.pt.install_manager.Task.State.Pending
 import cm.aptoide.pt.install_manager.dto.Constraints.NetworkType
 import cm.aptoide.pt.install_manager.environment.NetworkConnection
 import cm.aptoide.pt.network_listener.NetworkConnectionImpl
@@ -70,7 +70,7 @@ class ScheduledDownloadsListenerImpl @Inject constructor(
   override fun listenToWifiStart(app: App) {
     this.launch {
       app.taskFlow.filterNotNull().first()
-        .takeIf { it.state == PENDING }
+        .takeIf { it.state is Pending }
         ?.takeIf { it.constraints.networkType == NetworkType.UNMETERED }
         ?.let { task ->
           networkConnection.states
@@ -78,9 +78,9 @@ class ScheduledDownloadsListenerImpl @Inject constructor(
             .distinctUntilChanged()
             .filter { it }
             .flatMapLatest { _ ->
-              task.takeIf { it.state == PENDING }
+              task.takeIf { it.state is Pending }
                 ?.stateAndProgress
-                ?.map { (state) -> state != State.DOWNLOADING }
+                ?.map { state -> state !is State.Downloading }
                 ?.takeWhile { it }
                 ?.onCompletion {
                   if (it == null && task.constraints.networkType == NetworkType.UNMETERED) {
