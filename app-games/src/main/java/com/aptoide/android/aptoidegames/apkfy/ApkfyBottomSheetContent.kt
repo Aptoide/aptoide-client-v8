@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,6 +17,7 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
+import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.isInCatappult
 import cm.aptoide.pt.feature_apps.data.randomApp
 import com.aptoide.android.aptoidegames.BottomSheetContent
@@ -33,6 +36,7 @@ import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.OverrideAnalyticsAPKFY
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.apkfy.presentation.ApkfyUiState
+import com.aptoide.android.aptoidegames.apkfy.presentation.rememberDownloadPermissionState
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getAGIcon
 import com.aptoide.android.aptoidegames.drawables.icons.getArrowDown
@@ -69,8 +73,7 @@ class ApkfyBottomSheetContent(private val apkfyState: ApkfyUiState) : BottomShee
       ) {
         BottomSheetHeader()
         if (apkfyState is ApkfyUiState.VariantC) {
-          InfoText(false)
-          Divider(modifier = Modifier.padding(top = 24.dp, bottom = 13.dp))
+          InfoTextC(app)
         }
         Text(
           modifier = Modifier
@@ -90,8 +93,7 @@ class ApkfyBottomSheetContent(private val apkfyState: ApkfyUiState) : BottomShee
           InstallViewShort(app)
         }
         if (apkfyState is ApkfyUiState.VariantD) {
-          Divider(modifier = Modifier.padding(bottom = 8.dp))
-          InfoText(true)
+          InfoTextD()
         }
         Spacer(modifier = Modifier.height(24.dp))
         Badge(apkfyState)
@@ -101,42 +103,58 @@ class ApkfyBottomSheetContent(private val apkfyState: ApkfyUiState) : BottomShee
 }
 
 @Composable
-fun InfoText(
-  shouldHaveSeeMore: Boolean
-) {
-  var isTextVisible by remember { mutableStateOf(!shouldHaveSeeMore) }
-  if (shouldHaveSeeMore) {
-    Row(
-      modifier = Modifier
-        .fillMaxWidth()
-        .clickable { isTextVisible = !isTextVisible },
-      horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-      Row {
-        Image(
-          modifier = Modifier.size(16.dp),
-          imageVector = getInfo(Palette.GreyLight),
-          contentDescription = null
-        )
-        Text(
-          modifier = Modifier.padding(start = 8.dp),
-          text = stringResource(R.string.see_more_button),
-          style = AGTypography.InputsS,
-          color = Palette.GreyLight
-        )
-      }
-      Image(
-        modifier = Modifier.size(16.dp),
-        imageVector = if (isTextVisible) getArrowUp(Palette.GreyLight) else getArrowDown(color = Palette.GreyLight),
-        contentDescription = null,
-      )
+fun ColumnScope.InfoTextC(app: App) {
+  val state = rememberDownloadPermissionState(app)
+  val isTextVisible by remember(state) {
+    derivedStateOf {
+      state is DownloadPermissionState.Allowed || state is DownloadPermissionState.RationaleRejected
     }
   }
+  InfoText(isTextVisible)
   AnimatedVisibility(visible = isTextVisible) {
-    Column {
-      if (shouldHaveSeeMore) {
-        Spacer(modifier = Modifier.height(24.dp))
-      }
+    Divider(modifier = Modifier.padding(top = 24.dp, bottom = 13.dp))
+  }
+}
+
+@Composable
+fun ColumnScope.InfoTextD() {
+  var isTextVisible by remember { mutableStateOf(false) }
+  Divider(modifier = Modifier.padding(bottom = 8.dp))
+  Row(
+    modifier = Modifier
+      .fillMaxWidth()
+      .clickable { isTextVisible = !isTextVisible },
+    horizontalArrangement = Arrangement.SpaceBetween
+  ) {
+    Row {
+      Image(
+        modifier = Modifier.size(16.dp),
+        imageVector = getInfo(Palette.GreyLight),
+        contentDescription = null
+      )
+      Text(
+        modifier = Modifier.padding(start = 8.dp),
+        text = stringResource(R.string.see_more_button),
+        style = AGTypography.InputsS,
+        color = Palette.GreyLight
+      )
+    }
+    Image(
+      modifier = Modifier.size(16.dp),
+      imageVector = if (isTextVisible) getArrowUp(Palette.GreyLight) else getArrowDown(color = Palette.GreyLight),
+      contentDescription = null,
+    )
+  }
+  InfoText(isTextVisible, Modifier.padding(top = 24.dp))
+}
+
+@Composable
+fun InfoText(visible: Boolean, modifier: Modifier = Modifier) {
+  AnimatedVisibility(
+    visible = visible,
+    modifier = Modifier.fillMaxWidth()
+  ) {
+    Column(modifier = modifier) {
       Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
