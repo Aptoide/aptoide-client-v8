@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 
@@ -20,7 +22,7 @@ fun PoweredByAi() {
     horizontalArrangement = Arrangement.Center
   ) {
     Text(
-      text = "Powered by AI",
+      text = stringResource(R.string.genai_powered_by_ai_title),
       style = AGTypography.Body,
       color = Palette.GreyLight,
     )

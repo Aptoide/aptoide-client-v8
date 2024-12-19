@@ -84,7 +84,11 @@ fun ChatScreen(
   isLoading: Boolean = false,
   onAllAppsFail: () -> Unit,
 ) {
-  val suggestions = emptyList<String>()
+  val suggestions = listOf(
+    stringResource(R.string.genai_example_1_body),
+    stringResource(R.string.genai_example_2_body),
+    stringResource(R.string.genai_example_3_body)
+  )
 
   Column(
     modifier = Modifier
