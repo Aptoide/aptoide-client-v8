@@ -31,11 +31,13 @@ fun MessageBubble(
   apps: List<String>? = null,
   navigateTo: (String) -> Unit = {},
   onAllAppsFail: () -> Unit,
+  scrollCallback: @Composable () -> Unit,
+  modifier: Modifier = Modifier,
 ) {
   Column(
-    modifier = Modifier
+    modifier = modifier
       .fillMaxWidth()
-      .padding(vertical = 4.dp)
+      .padding(top = 8.dp)
       .wrapContentWidth(if (isUserMessage) Alignment.End else Alignment.Start)
   ) {
     if (!isUserMessage) {
@@ -57,19 +59,11 @@ fun MessageBubble(
         .fillMaxWidth()
         .padding(12.dp)
     ) {
-      if (message != null) {
-        Text(
-          text = message.replace("\"", ""),
-          style = AGTypography.Body,
-          color = if (isUserMessage) Palette.Black else Palette.White,
-        )
-      } else {
-        Text(
-          text = stringResource(R.string.genai_introduction_body),
-          style = AGTypography.Body,
-          color = if (isUserMessage) Palette.Black else Palette.White,
-        )
-      }
+      Text(
+        text = message?.replace("\"", "") ?: stringResource(R.string.genai_introduction_body),
+        style = AGTypography.Body,
+        color = if (isUserMessage) Palette.Black else Palette.White,
+      )
 
       val processedApps = apps?.map { app ->
         val rememberedApp = rememberApp("package_name=$app")
@@ -94,6 +88,7 @@ fun MessageBubble(
           AppUiState.Loading -> LoadingView()
           AppUiState.NoConnection -> NoConnectionView(fn)
         }
+        scrollCallback()
         state
       }
 
