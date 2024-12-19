@@ -38,7 +38,7 @@ internal class TasksTest {
     val task = installManager.getApp(outdatedPackage).install(installInfo, constraints)
 
     m When "wait for some progress to happen"
-    task.stateAndProgress.first { it.first == Task.State.DOWNLOADING }
+    task.stateAndProgress.first { it is Task.State.Downloading }
 
     m Then "a new install task info saved to the repo"
     mocks.taskInfoRepository.get(outdatedPackage)!!.run {
@@ -61,7 +61,7 @@ internal class TasksTest {
     val task = installManager.getApp(outdatedPackage).uninstall(constraints)
 
     m When "wait for some progress to happen"
-    task.stateAndProgress.first { it.first != Task.State.PENDING }
+    task.stateAndProgress.first { it !is Task.State.Pending }
 
     m Then "a new uninstall task info saved to the repo"
     mocks.taskInfoRepository.get(outdatedPackage)!!.run {
@@ -97,12 +97,12 @@ internal class TasksTest {
     m Then "first collected data has all the states till success"
     assertEquals(successfulInstallSequence, result)
     m And "second collected data contains only terminal state"
-    assertEquals(listOf(Task.State.COMPLETED to -1), result2)
+    assertEquals(listOf(Task.State.Completed), result2)
     m And "there is no task info in the repo for the outdated app package name"
     assertNull(mocks.taskInfoRepository.get(outdatedPackage))
     m And "remembered task states are as expected"
-    assertEquals(Task.State.PENDING, initialState)
-    assertEquals(Task.State.COMPLETED, finalState)
+    assertEquals(Task.State.Pending, initialState)
+    assertEquals(Task.State.Completed, finalState)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -131,12 +131,12 @@ internal class TasksTest {
     m Then "first collected data has all the states till success"
     assertEquals(successfulInstallSequence, result)
     m And "second collected data contains only terminal state"
-    assertEquals(listOf(Task.State.COMPLETED to -1), result2)
+    assertEquals(listOf(Task.State.Completed), result2)
     m And "there is no task info in the repo for the outdated app package name"
     assertNull(mocks.taskInfoRepository.get(outdatedPackage))
     m And "remembered task states are as expected"
-    assertEquals(Task.State.PENDING, initialState)
-    assertEquals(Task.State.COMPLETED, finalState)
+    assertEquals(Task.State.Pending, initialState)
+    assertEquals(Task.State.Completed, finalState)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -165,12 +165,12 @@ internal class TasksTest {
     m Then "first collected data has all the states till success"
     assertEquals(successfulUninstallSequence, result)
     m And "second collected data contains only terminal state"
-    assertEquals(listOf(Task.State.COMPLETED to -1), result2)
+    assertEquals(listOf(Task.State.Completed), result2)
     m And "there is no task info in the repo for the outdated app package name"
     assertNull(mocks.taskInfoRepository.get(outdatedPackage))
     m And "remembered task states are as expected"
-    assertEquals(Task.State.PENDING, initialState)
-    assertEquals(Task.State.COMPLETED, finalState)
+    assertEquals(Task.State.Pending, initialState)
+    assertEquals(Task.State.Completed, finalState)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -201,18 +201,18 @@ internal class TasksTest {
     m Then "first collected data ends with failed state before download starts"
     assertEquals(
       listOf(
-        Task.State.PENDING to -1,
-        Task.State.OUT_OF_SPACE to -1
+        Task.State.Pending,
+        Task.State.OutOfSpace
       ),
       result
     )
     m And "second collected data contains only failed state"
-    assertEquals(listOf(Task.State.OUT_OF_SPACE to -1), result2)
+    assertEquals(listOf(Task.State.OutOfSpace), result2)
     m And "there is no task info in the repo for the outdated app package name"
     assertNull(mocks.taskInfoRepository.get(outdatedPackage))
     m And "remembered task states are as expected"
-    assertEquals(Task.State.PENDING, initialState)
-    assertEquals(Task.State.OUT_OF_SPACE, finalState)
+    assertEquals(Task.State.Pending, initialState)
+    assertEquals(Task.State.OutOfSpace, finalState)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -243,18 +243,18 @@ internal class TasksTest {
     m Then "first collected data ends with failed state before download starts"
     assertEquals(
       listOf(
-        Task.State.PENDING to -1,
-        Task.State.OUT_OF_SPACE to -1
+        Task.State.Pending,
+        Task.State.OutOfSpace
       ),
       result
     )
     m And "second collected data contains only failed state"
-    assertEquals(listOf(Task.State.OUT_OF_SPACE to -1), result2)
+    assertEquals(listOf(Task.State.OutOfSpace), result2)
     m And "there is no task info in the repo for the outdated app package name"
     assertNull(mocks.taskInfoRepository.get(outdatedPackage))
     m And "remembered task states are as expected"
-    assertEquals(Task.State.PENDING, initialState)
-    assertEquals(Task.State.OUT_OF_SPACE, finalState)
+    assertEquals(Task.State.Pending, initialState)
+    assertEquals(Task.State.OutOfSpace, finalState)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -285,12 +285,12 @@ internal class TasksTest {
     m Then "first collected data ends with failed state after some progress of download"
     assertEquals(failedDownloadSequence, result)
     m And "second collected data contains only failed state"
-    assertEquals(listOf(Task.State.FAILED to -1), result2)
+    assertEquals(listOf(Task.State.Failed), result2)
     m And "there is no task info in the repo for the outdated app package name"
     assertNull(mocks.taskInfoRepository.get(outdatedPackage))
     m And "remembered task states are as expected"
-    assertEquals(Task.State.PENDING, initialState)
-    assertEquals(Task.State.FAILED, finalState)
+    assertEquals(Task.State.Pending, initialState)
+    assertEquals(Task.State.Failed, finalState)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -321,12 +321,12 @@ internal class TasksTest {
     m Then "first collected data ends with out of space state after some progress of download"
     assertEquals(outOfSpaceDownloadSequence, result)
     m And "second collected data contains only failed state"
-    assertEquals(listOf(Task.State.OUT_OF_SPACE to -1), result2)
+    assertEquals(listOf(Task.State.OutOfSpace), result2)
     m And "there is no task info in the repo for the outdated app package name"
     assertNull(mocks.taskInfoRepository.get(outdatedPackage))
     m And "remembered task states are as expected"
-    assertEquals(Task.State.PENDING, initialState)
-    assertEquals(Task.State.OUT_OF_SPACE, finalState)
+    assertEquals(Task.State.Pending, initialState)
+    assertEquals(Task.State.OutOfSpace, finalState)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -357,12 +357,12 @@ internal class TasksTest {
     m Then "first collected data ends with failed state on install"
     assertEquals(failedInstallSequence, result)
     m And "second collected data contains only failed state"
-    assertEquals(listOf(Task.State.FAILED to -1), result2)
+    assertEquals(listOf(Task.State.Failed), result2)
     m And "there is no task info in the repo for the outdated app package name"
     assertNull(mocks.taskInfoRepository.get(outdatedPackage))
     m And "remembered task states are as expected"
-    assertEquals(Task.State.PENDING, initialState)
-    assertEquals(Task.State.FAILED, finalState)
+    assertEquals(Task.State.Pending, initialState)
+    assertEquals(Task.State.Failed, finalState)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -393,12 +393,12 @@ internal class TasksTest {
     m Then "first collected data ends with out of space state on install"
     assertEquals(outOfSpaceInstallSequence, result)
     m And "second collected data contains only failed state"
-    assertEquals(listOf(Task.State.OUT_OF_SPACE to -1), result2)
+    assertEquals(listOf(Task.State.OutOfSpace), result2)
     m And "there is no task info in the repo for the outdated app package name"
     assertNull(mocks.taskInfoRepository.get(outdatedPackage))
     m And "remembered task states are as expected"
-    assertEquals(Task.State.PENDING, initialState)
-    assertEquals(Task.State.OUT_OF_SPACE, finalState)
+    assertEquals(Task.State.Pending, initialState)
+    assertEquals(Task.State.OutOfSpace, finalState)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -429,12 +429,12 @@ internal class TasksTest {
     m Then "first collected data ends with failed state on uninstall"
     assertEquals(failedUninstall, result)
     m And "second collected data contains only failed state"
-    assertEquals(listOf(Task.State.FAILED to -1), result2)
+    assertEquals(listOf(Task.State.Failed), result2)
     m And "there is no task info in the repo for the outdated app package name"
     assertNull(mocks.taskInfoRepository.get(outdatedPackage))
     m And "remembered task states are as expected"
-    assertEquals(Task.State.PENDING, initialState)
-    assertEquals(Task.State.FAILED, finalState)
+    assertEquals(Task.State.Pending, initialState)
+    assertEquals(Task.State.Failed, finalState)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -465,12 +465,12 @@ internal class TasksTest {
     m Then "first collected data ends with aborted state on download"
     assertEquals(abortedDownload, result)
     m And "second collected data contains only aborted state"
-    assertEquals(listOf(Task.State.ABORTED to -1), result2)
+    assertEquals(listOf(Task.State.Aborted), result2)
     m And "there is no task info in the repo for the outdated app package name"
     assertNull(mocks.taskInfoRepository.get(outdatedPackage))
     m And "remembered task states are as expected"
-    assertEquals(Task.State.PENDING, initialState)
-    assertEquals(Task.State.ABORTED, finalState)
+    assertEquals(Task.State.Pending, initialState)
+    assertEquals(Task.State.Aborted, finalState)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -501,12 +501,12 @@ internal class TasksTest {
     m Then "first collected data ends with aborted state on install"
     assertEquals(abortedInstall, result)
     m And "second collected data contains only aborted state"
-    assertEquals(listOf(Task.State.ABORTED to -1), result2)
+    assertEquals(listOf(Task.State.Aborted), result2)
     m And "there is no task info in the repo for the outdated app package name"
     assertNull(mocks.taskInfoRepository.get(outdatedPackage))
     m And "remembered task states are as expected"
-    assertEquals(Task.State.PENDING, initialState)
-    assertEquals(Task.State.ABORTED, finalState)
+    assertEquals(Task.State.Pending, initialState)
+    assertEquals(Task.State.Aborted, finalState)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -537,12 +537,12 @@ internal class TasksTest {
     m Then "first collected data ends with aborted state on uninstall"
     assertEquals(abortedUninstall, result)
     m And "second collected data contains only aborted state"
-    assertEquals(listOf(Task.State.ABORTED to -1), result2)
+    assertEquals(listOf(Task.State.Aborted), result2)
     m And "there is no task info in the repo for the outdated app package name"
     assertNull(mocks.taskInfoRepository.get(outdatedPackage))
     m And "remembered task states are as expected"
-    assertEquals(Task.State.PENDING, initialState)
-    assertEquals(Task.State.ABORTED, finalState)
+    assertEquals(Task.State.Pending, initialState)
+    assertEquals(Task.State.Aborted, finalState)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -560,7 +560,7 @@ internal class TasksTest {
     m When "remember current task state"
     val initialState = task.state
     m And "collect the task state and progress"
-    var result = emptyList<Pair<Task.State, Int>>()
+    var result = emptyList<Task.State>()
     scope.launch {
       result = task.stateAndProgress.toList()
     }
@@ -576,18 +576,18 @@ internal class TasksTest {
     m Then "first collected data ends with cancelled state before download"
     assertEquals(
       listOf(
-        Task.State.PENDING to -1,
-        Task.State.CANCELED to -1
+        Task.State.Pending,
+        Task.State.Canceled
       ),
       result
     )
     m And "second collected data contains only cancelled state"
-    assertEquals(listOf(Task.State.CANCELED to -1), result2)
+    assertEquals(listOf(Task.State.Canceled), result2)
     m And "there is no task info in the repo for the outdated app package name"
     assertNull(mocks.taskInfoRepository.get(outdatedPackage))
     m And "remembered task states are as expected"
-    assertEquals(Task.State.PENDING, initialState)
-    assertEquals(Task.State.CANCELED, finalState)
+    assertEquals(Task.State.Pending, initialState)
+    assertEquals(Task.State.Canceled, finalState)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -605,12 +605,12 @@ internal class TasksTest {
     m When "remember current task state"
     val initialState = task.state
     m And "collect the task state and progress"
-    var result = emptyList<Pair<Task.State, Int>>()
+    var result = emptyList<Task.State>()
     scope.launch {
       result = task.stateAndProgress.toList()
     }
     m And "wait until download passes 50%"
-    task.stateAndProgress.first { it.first == Task.State.DOWNLOADING && it.second >= 50 }
+    task.stateAndProgress.first { it is Task.State.Downloading && it.progress >= 50 }
     m And "call the task cancel"
     task.cancel()
     m And "wait until the task finishes"
@@ -623,12 +623,12 @@ internal class TasksTest {
     m Then "first collected data ends with cancelled state after on download"
     assertEquals(canceledDownload, result)
     m And "second collected data contains only cancelled state"
-    assertEquals(listOf(Task.State.CANCELED to -1), result2)
+    assertEquals(listOf(Task.State.Canceled), result2)
     m And "there is no task info in the repo for the outdated app package name"
     assertNull(mocks.taskInfoRepository.get(outdatedPackage))
     m And "remembered task states are as expected"
-    assertEquals(Task.State.PENDING, initialState)
-    assertEquals(Task.State.CANCELED, finalState)
+    assertEquals(Task.State.Pending, initialState)
+    assertEquals(Task.State.Canceled, finalState)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -646,12 +646,12 @@ internal class TasksTest {
     m When "remember current task state"
     val initialState = task.state
     m And "collect the task state and progress"
-    var result = emptyList<Pair<Task.State, Int>>()
+    var result = emptyList<Task.State>()
     scope.launch {
       result = task.stateAndProgress.toList()
     }
     m And "wait until installation passes 50%"
-    task.stateAndProgress.first { it.first == Task.State.INSTALLING && it.second >= 50 }
+    task.stateAndProgress.first { it is Task.State.Installing && it.progress >= 50 }
     m And "call the task cancel"
     task.cancel()
     m And "wait until the task finishes"
@@ -664,12 +664,12 @@ internal class TasksTest {
     m Then "first collected data ends with cancelled state on install"
     assertEquals(canceledInstall, result)
     m And "second collected data contains only cancelled state"
-    assertEquals(listOf(Task.State.CANCELED to -1), result2)
+    assertEquals(listOf(Task.State.Canceled), result2)
     m And "there is no task info in the repo for the outdated app package name"
     assertNull(mocks.taskInfoRepository.get(outdatedPackage))
     m And "remembered task states are as expected"
-    assertEquals(Task.State.PENDING, initialState)
-    assertEquals(Task.State.CANCELED, finalState)
+    assertEquals(Task.State.Pending, initialState)
+    assertEquals(Task.State.Canceled, finalState)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -687,12 +687,12 @@ internal class TasksTest {
     m When "remember current task state"
     val initialState = task.state
     m And "collect the task state and progress"
-    var result = emptyList<Pair<Task.State, Int>>()
+    var result = emptyList<Task.State>()
     scope.launch {
       result = task.stateAndProgress.toList()
     }
     m And "wait until uninstallation passes 50%"
-    task.stateAndProgress.first { it.first == Task.State.UNINSTALLING && it.second >= 50 }
+    task.stateAndProgress.first { it is Task.State.Uninstalling && it.progress >= 50 }
     m And "call the task cancel"
     task.cancel()
     m And "wait until the task finishes"
@@ -705,12 +705,12 @@ internal class TasksTest {
     m Then "first collected data ends with cancelled state on uninstall"
     assertEquals(canceledUninstall, result)
     m And "second collected data contains only cancelled state"
-    assertEquals(listOf(Task.State.CANCELED to -1), result2)
+    assertEquals(listOf(Task.State.Canceled), result2)
     m And "there is no task info in the repo for the outdated app package name"
     assertNull(mocks.taskInfoRepository.get(outdatedPackage))
     m And "remembered task states are as expected"
-    assertEquals(Task.State.PENDING, initialState)
-    assertEquals(Task.State.CANCELED, finalState)
+    assertEquals(Task.State.Pending, initialState)
+    assertEquals(Task.State.Canceled, finalState)
   }
 
   @ParameterizedTest(name = "{0}")
