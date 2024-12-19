@@ -13,6 +13,7 @@ import cm.aptoide.pt.install_manager.environment.NetworkConnection
 import cm.aptoide.pt.installer.AptoideDownloader
 import cm.aptoide.pt.installer.AptoideInstallPackageInfoMapper
 import cm.aptoide.pt.installer.AptoideInstaller
+import cm.aptoide.pt.installer.fetch.FetchDownloader
 import cm.aptoide.pt.installer.obb.OBBInstallManager
 import cm.aptoide.pt.task_info.AptoideTaskInfoRepository
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
@@ -52,6 +53,7 @@ class InstallerModule {
     featureFlags: FeatureFlags,
     taskInfoRepository: AptoideTaskInfoRepository,
     aptoideDownloader: AptoideDownloader,
+    fetchDownloader: FetchDownloader,
     installer: AptoideInstaller,
     installAnalytics: InstallAnalytics,
     networkConnection: NetworkConnection,
@@ -65,7 +67,7 @@ class InstallerModule {
         packageDownloader = DownloaderSelector(
           featureFlags = featureFlags,
           aptoidePackageDownloader = aptoideDownloader,
-          fetchPackageDownloader = aptoideDownloader
+          fetchPackageDownloader = fetchDownloader
         ),
         analytics = installAnalytics,
       ),

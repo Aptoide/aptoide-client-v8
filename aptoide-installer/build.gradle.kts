@@ -27,4 +27,8 @@ dependencies {
   //WorkManager
   implementation(libs.work.manager)
   implementation(libs.hilt.work)
+
+  //File downloader
+  implementation(libs.fetch)
+  implementation(libs.fetchOkHttp)
 }
