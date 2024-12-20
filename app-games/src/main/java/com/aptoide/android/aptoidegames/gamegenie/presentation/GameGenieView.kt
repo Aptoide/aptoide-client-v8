@@ -93,9 +93,10 @@ fun ChatScreen(
   Column(
     modifier = Modifier
       .padding(vertical = 4.dp, horizontal = 18.dp)
+      .fillMaxSize()
   ) {
     MessageList(
-      messages = uiState.conversation,
+      messages = uiState.conversation.asReversed(),
       navigateTo = navigateTo,
       modifier = Modifier
         .weight(1f),
