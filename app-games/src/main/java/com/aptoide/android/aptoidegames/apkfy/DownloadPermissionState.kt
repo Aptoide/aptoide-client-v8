@@ -1,6 +1,7 @@
 package com.aptoide.android.aptoidegames.apkfy
 
 import cm.aptoide.pt.install_manager.AbortException
+import cm.aptoide.pt.install_manager.DownloadInfo
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.workers.PackageDownloader
 import cm.aptoide.pt.installer.platform.REQUEST_INSTALL_PACKAGES_NOT_ALLOWED
@@ -31,10 +32,10 @@ class DownloadPermissionStateProbe(
   override fun download(
     packageName: String,
     installPackageInfo: InstallPackageInfo,
-  ): Flow<Int> = packageDownloader
+  ): Flow<DownloadInfo> = packageDownloader
     .download(packageName, installPackageInfo)
     .onEach {
-      if (it >= 0) _permissionsResult.emit(DownloadPermissionState.Allowed(packageName))
+      if (it.progress >= 0) _permissionsResult.emit(DownloadPermissionState.Allowed(packageName))
     }
     .onCompletion {
       when ((it as? AbortException)?.message) {
