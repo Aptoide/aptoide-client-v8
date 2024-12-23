@@ -4,6 +4,7 @@ import cm.aptoide.pt.install_manager.AbortException
 import cm.aptoide.pt.install_manager.DownloadInfo
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.workers.PackageDownloader
+import cm.aptoide.pt.installer.DownloadException
 import cm.aptoide.pt.installer.platform.REQUEST_INSTALL_PACKAGES_NOT_ALLOWED
 import cm.aptoide.pt.installer.platform.REQUEST_INSTALL_PACKAGES_RATIONALE_REJECTED
 import cm.aptoide.pt.installer.platform.WRITE_EXTERNAL_STORAGE_NOT_ALLOWED
@@ -67,10 +68,21 @@ class DownloadProbe(
                 downloadedBytesPerSecond = downloadSpeed,
                 errorMessage = it.message,
                 errorType = it::class.simpleName,
-                errorCode = null
+                errorCode = null,
+                errorUrl = null,
               )
             }
           }
+
+          is DownloadException -> analytics.sendDownloadErrorEvent(
+            packageName = packageName,
+            installPackageInfo = installPackageInfo,
+            downloadedBytesPerSecond = downloadSpeed,
+            errorMessage = it.cause.message,
+            errorType = it.cause::class.simpleName,
+            errorCode = (it.cause as? HttpException)?.code(),
+            errorUrl = it.url,
+          )
 
           null -> analytics.sendDownloadCompletedEvent(
             packageName = packageName,
@@ -84,7 +96,8 @@ class DownloadProbe(
             downloadedBytesPerSecond = downloadSpeed,
             errorMessage = it.message,
             errorType = it::class.simpleName,
-            errorCode = (it as? HttpException)?.code()
+            errorCode = (it as? HttpException)?.code(),
+            errorUrl = null
           )
         }
       }

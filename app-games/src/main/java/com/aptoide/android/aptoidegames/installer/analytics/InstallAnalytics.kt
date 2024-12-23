@@ -168,6 +168,7 @@ class InstallAnalytics(
     errorMessage: String?,
     errorType: String?,
     errorCode: Int?,
+    errorUrl: String?,
   ) {
     genericAnalytics.logEvent(
       name = "app_download",
@@ -186,6 +187,7 @@ class InstallAnalytics(
       P_ERROR_MESSAGE to errorMessage,
       P_ERROR_TYPE to errorType,
       P_ERROR_HTTP_CODE to errorCode,
+      P_ERROR_URL to errorUrl
     )
   }
 
@@ -497,6 +499,7 @@ class InstallAnalytics(
     private const val P_ERROR_MESSAGE = "error_message"
     private const val P_ERROR_TYPE = "error_type"
     private const val P_ERROR_HTTP_CODE = "error_http_code"
+    private const val P_ERROR_URL = "error_url"
     internal const val P_WIFI_SETTING = "wifi_setting"
     internal const val P_PROMPT_TYPE = "prompt_type"
     internal const val P_SERVICE = "service"
