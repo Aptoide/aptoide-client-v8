@@ -10,6 +10,7 @@ import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallationFile
 import cm.aptoide.pt.install_manager.dto.hasObb
 import cm.aptoide.pt.install_manager.workers.PackageDownloader
+import cm.aptoide.pt.installer.DownloadException
 import cm.aptoide.pt.installer.InstallerWorker
 import cm.aptoide.pt.installer.di.DownloadsPath
 import cm.aptoide.pt.installer.platform.InstallPermissions
@@ -186,7 +187,12 @@ class FetchDownloader @Inject constructor(
 
         override fun onQueued(download: Download, waitingOnNetwork: Boolean) {
           if (waitingOnNetwork) {
-            close(download.error.throwable ?: IOException("Network disconnected"))
+            close(
+              DownloadException(
+                url = download.url,
+                cause = download.error.throwable ?: IOException("Network disconnected")
+              )
+            )
           }
           super.onQueued(download, waitingOnNetwork)
         }
@@ -196,7 +202,12 @@ class FetchDownloader @Inject constructor(
           error: Error,
           throwable: Throwable?
         ) {
-          close(throwable ?: IllegalStateException("Error downloading files"))
+          close(
+            DownloadException(
+              url = download.url,
+              cause = throwable ?: IllegalStateException("Error downloading files")
+            )
+          )
         }
 
         override fun onProgress(

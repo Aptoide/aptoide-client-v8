@@ -3,9 +3,11 @@ package cm.aptoide.pt.installer.network
 import cm.aptoide.pt.aptoide_network.di.DownloadsOKHttp
 import cm.aptoide.pt.extensions.checkMd5
 import cm.aptoide.pt.install_manager.dto.InstallationFile
+import cm.aptoide.pt.installer.DownloadException
 import cm.aptoide.pt.installer.di.DownloadsPath
 import cm.aptoide.pt.installer.platform.copyWithProgressTo
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onCompletion
@@ -99,6 +101,9 @@ class DownloaderRepository @Inject constructor(
       .distinctUntilChanged()
       .retry(retries = RETRY_TIMES)
       .onCompletion { it?.printStackTrace() }
+      .catch {
+        throw DownloadException(url = installationFile.url, cause = it)
+      }
   }
 }
 
