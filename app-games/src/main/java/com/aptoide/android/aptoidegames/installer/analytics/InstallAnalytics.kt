@@ -517,6 +517,7 @@ private fun InstallPackageInfo.getAppSizeSegment(): Pair<String, Int> = P_APP_SI
   filesSize.toInt()
     .takeIf { it > 0 }
     ?.div(100_000_000)
+    ?.plus(1)
     ?.times(100)
     ?: 0
 )
@@ -556,7 +557,7 @@ private fun AnalyticsPayload?.toAppBIParameters(
 private fun Int.toTapsValue(): String = if (this == 1) "1-tap" else "$this-taps"
 
 fun getDownloadSpeedInterval(bytesPerSecond: Double): String {
-  if(bytesPerSecond <= 0.0) return "n-a"
+  if (bytesPerSecond <= 0.0) return "n-a"
 
   var speed = bytesPerSecond
   var scale = "BPS"
