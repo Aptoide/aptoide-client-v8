@@ -24,7 +24,7 @@ class DownloadProbe(
     packageName: String,
     installPackageInfo: InstallPackageInfo,
   ): Flow<DownloadInfo> {
-    val initialTimestamp = System.currentTimeMillis()
+    var initialTimestamp = 0L
     var totalDownloadedBytes = 0L
     return packageDownloader.download(packageName, installPackageInfo)
       .onStart {
@@ -33,7 +33,12 @@ class DownloadProbe(
           installPackageInfo = installPackageInfo
         )
       }
-      .onEach { totalDownloadedBytes = it.downloadedBytes }
+      .onEach {
+        if (initialTimestamp == 0L && it.progress >= 0) {
+          initialTimestamp = System.currentTimeMillis()
+        }
+        totalDownloadedBytes = it.downloadedBytes
+      }
       .onCompletion {
         val totalTime = (System.currentTimeMillis() - initialTimestamp) / 1000.0
         val downloadSpeed = totalDownloadedBytes / totalTime
