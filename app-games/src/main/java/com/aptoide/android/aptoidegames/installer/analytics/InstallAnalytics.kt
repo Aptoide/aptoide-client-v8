@@ -35,7 +35,7 @@ class InstallAnalytics(
         } else {
           "ab_test_download_lib_dec_19" to "group_a"
         }
-      }
+      }?.let { biAnalytics.setUserProperties(it) }
     }
   }
 
