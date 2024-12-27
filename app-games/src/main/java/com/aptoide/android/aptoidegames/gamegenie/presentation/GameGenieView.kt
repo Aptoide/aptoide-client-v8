@@ -21,6 +21,7 @@ import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.error_views.NoConnectionView
+import com.aptoide.android.aptoidegames.gamegenie.analytics.rememberGameGenieAnalytics
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.ChatParticipantName
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.MessageList
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.TextInputBar
@@ -35,12 +36,19 @@ fun gameGenieScreen() = ScreenData.withAnalytics(
 
   val viewModel = hiltViewModel<ChatbotViewModel>()
   val uiState by viewModel.uiState.collectAsState()
+  val analytics = rememberGameGenieAnalytics()
 
   ChatbotView(
     uiState = uiState,
     navigateTo = navigate,
     onError = viewModel::reload,
-    onMessageSend = viewModel::sendMessage,
+    onMessageSend = { message ->
+      viewModel.sendMessage(message)
+    },
+    onSuggestionSend = { message, index ->
+      viewModel.sendMessage(message)
+      analytics.sendGameGenieSuggestionClick(index)
+    },
     onAllAppsFail = viewModel::setGeneralError
   )
 }
@@ -51,6 +59,7 @@ fun ChatbotView(
   navigateTo: (String) -> Unit,
   onError: () -> Unit,
   onMessageSend: (String) -> Unit,
+  onSuggestionSend: (String, Int) -> Unit,
   onAllAppsFail: () -> Unit,
 ) {
   Column(
@@ -62,14 +71,21 @@ fun ChatbotView(
   ) {
     when (uiState.type) {
       GameGenieUIStateType.LOADING -> ChatScreen(
-        uiState = uiState, navigateTo = navigateTo, onMessageSend = {}, isLoading = true,
+        uiState = uiState,
+        navigateTo = navigateTo,
+        onMessageSend = {},
+        onSuggestionSend = { _, _ -> },
+        isLoading = true,
         onAllAppsFail = onAllAppsFail
       )
 
       GameGenieUIStateType.NO_CONNECTION -> NoConnectionView(onRetryClick = onError)
       GameGenieUIStateType.ERROR -> GenericErrorView(onError)
       GameGenieUIStateType.IDLE -> ChatScreen(
-        uiState = uiState, navigateTo = navigateTo, onMessageSend = onMessageSend,
+        uiState = uiState,
+        navigateTo = navigateTo,
+        onMessageSend = onMessageSend,
+        onSuggestionSend = onSuggestionSend,
         onAllAppsFail = onAllAppsFail
       )
     }
@@ -81,6 +97,7 @@ fun ChatScreen(
   uiState: GameGenieUIState,
   navigateTo: (String) -> Unit,
   onMessageSend: (String) -> Unit,
+  onSuggestionSend: (String, Int) -> Unit,
   isLoading: Boolean = false,
   onAllAppsFail: () -> Unit,
 ) {
@@ -102,7 +119,7 @@ fun ChatScreen(
         .weight(1f),
       onAllAppsFail = onAllAppsFail,
       suggestions = suggestions,
-      onSuggestionClick = onMessageSend
+      onSuggestionClick = onSuggestionSend
     )
     if (isLoading) {
       Row(
