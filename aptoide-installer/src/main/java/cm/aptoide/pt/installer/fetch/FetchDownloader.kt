@@ -5,7 +5,6 @@ import androidx.core.net.toFile
 import androidx.core.net.toUri
 import cm.aptoide.pt.aptoide_network.di.DownloadsOKHttp
 import cm.aptoide.pt.extensions.checkMd5
-import cm.aptoide.pt.install_manager.AbortException
 import cm.aptoide.pt.install_manager.DownloadInfo
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallationFile
@@ -189,7 +188,7 @@ class FetchDownloader @Inject constructor(
           error: Error,
           throwable: Throwable?
         ) {
-          close(throwable ?: AbortException("Error downloading files"))
+          close(throwable ?: IllegalStateException("Error downloading files"))
         }
 
         override fun onProgress(
