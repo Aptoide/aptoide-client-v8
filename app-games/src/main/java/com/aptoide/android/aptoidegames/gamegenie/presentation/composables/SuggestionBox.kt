@@ -20,7 +20,8 @@ import com.aptoide.android.aptoidegames.theme.Palette
 @Composable
 fun SuggestionBox(
   suggestion: String,
-  onClick: (String) -> Unit,
+  onClick: (String, Int) -> Unit,
+  index: Int,
 ) {
   Row(
     modifier = Modifier
@@ -35,7 +36,7 @@ fun SuggestionBox(
         )
         .border(2.dp, color = Palette.Primary)
         .width(272.dp)
-        .clickable { onClick(suggestion) }
+        .clickable { onClick(suggestion, index) }
         .padding(12.dp),
       horizontalAlignment = Alignment.Start
     ) {

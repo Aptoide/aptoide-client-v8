@@ -17,7 +17,7 @@ fun MessageList(
   modifier: Modifier = Modifier,
   onAllAppsFail: () -> Unit,
   suggestions: List<String>,
-  onSuggestionClick: (String) -> Unit,
+  onSuggestionClick: (String, Int) -> Unit,
 ) {
   val listState = rememberLazyListState()
 
@@ -44,8 +44,8 @@ fun MessageList(
       }
 
       if (idx == messages.lastIndex) {
-        suggestions.forEach { suggestion ->
-          SuggestionBox(suggestion, onSuggestionClick)
+        suggestions.forEachIndexed { index, suggestion ->
+          SuggestionBox(suggestion, onSuggestionClick, index)
         }
 
         MessageBubble(
