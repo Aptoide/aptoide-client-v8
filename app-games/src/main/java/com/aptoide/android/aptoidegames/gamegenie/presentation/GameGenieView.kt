@@ -113,7 +113,7 @@ fun ChatScreen(
       .fillMaxSize()
   ) {
     MessageList(
-      messages = uiState.conversation.asReversed(),
+      messages = uiState.chat.conversation.asReversed(),
       navigateTo = navigateTo,
       modifier = Modifier
         .weight(1f),
