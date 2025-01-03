@@ -9,11 +9,11 @@ import javax.inject.Inject
 class GameGenieRepository @Inject constructor(
   private val apiService: GameGenieApiService,
 ) {
-  suspend fun getMessages(
+  suspend fun postMessage(
     token: Token,
     request: GameGenieRequest,
   ): GameGenieResponse {
-    return apiService.postMessages("Bearer ${token.token}", request)
+    return apiService.postMessage("Bearer ${token.token}", request)
   }
 
   suspend fun getToken(): TokenResponse {
