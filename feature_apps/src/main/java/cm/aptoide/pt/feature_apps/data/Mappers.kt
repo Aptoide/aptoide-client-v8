@@ -107,6 +107,7 @@ private fun AppJSON.toDomainModel(
   aab = aab.toDomainModel(),
   obb = obb.toDomainModel(),
   developerName = this.developer?.name,
+  signature = this.file.signature?.sha1,
   campaigns = this.urls.mapCampaigns(campaignRepository)
     ?.apply { this.adListId = adListId }
 )

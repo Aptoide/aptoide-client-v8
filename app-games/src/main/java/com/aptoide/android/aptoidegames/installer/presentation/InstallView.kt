@@ -41,6 +41,7 @@ import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
 import com.aptoide.android.aptoidegames.R.string
+import com.aptoide.android.aptoidegames.design_system.AccentButton
 import com.aptoide.android.aptoidegames.design_system.PrimaryButton
 import com.aptoide.android.aptoidegames.design_system.PrimaryOutlinedButton
 import com.aptoide.android.aptoidegames.design_system.PrimarySmallButton
@@ -128,6 +129,12 @@ private fun InstallViewContent(
     is DownloadUiState.Install -> PrimaryButton(
       title = installViewState.actionLabel,
       onClick = state.install,
+      modifier = Modifier.fillMaxWidth(),
+    )
+
+    is DownloadUiState.Migrate -> AccentButton(
+      title = installViewState.actionLabel,
+      onClick = state.migrate,
       modifier = Modifier.fillMaxWidth(),
     )
 

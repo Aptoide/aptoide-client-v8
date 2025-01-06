@@ -14,6 +14,7 @@ import cm.aptoide.pt.download_view.presentation.downloadUiStates
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
+import com.aptoide.android.aptoidegames.design_system.AccentSmallButton
 import com.aptoide.android.aptoidegames.design_system.PrimarySmallButton
 import com.aptoide.android.aptoidegames.design_system.PrimarySmallOutlinedButton
 import com.aptoide.android.aptoidegames.design_system.SecondarySmallOutlinedButton
@@ -68,6 +69,11 @@ private fun InstallViewShortContent(
   when (val state = installViewState.uiState) {
     is DownloadUiState.Install -> PrimarySmallButton(
       onClick = state.install,
+      title = installViewState.actionLabel,
+    )
+
+    is DownloadUiState.Migrate -> AccentSmallButton(
+      onClick = state.migrate,
       title = installViewState.actionLabel,
     )
 

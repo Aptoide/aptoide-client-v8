@@ -48,6 +48,7 @@ data class App(
   val developerName: String?,
   val campaigns: CampaignImpl? = null,
   val hasMeta: Boolean = false,
+  val signature: String?,
 ) : AppSource {
   val appSize: Long by lazy {
     file.size + (obb?.size ?: 0) + (aab?.size ?: 0)
@@ -156,7 +157,8 @@ val emptyApp = App(
   ),
   aab = null,
   obb = null,
-  developerName = ""
+  developerName = "",
+  signature = "",
 )
 
 val emptyFile = File(

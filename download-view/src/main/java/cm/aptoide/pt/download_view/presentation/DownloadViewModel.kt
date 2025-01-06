@@ -3,7 +3,9 @@ package cm.aptoide.pt.download_view.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.extensions.compatVersionCode
+import cm.aptoide.pt.extensions.getSignature
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.data.isInCatappult
 import cm.aptoide.pt.install_info_mapper.domain.InstallPackageInfoMapper
 import cm.aptoide.pt.install_manager.InstallManager
 import cm.aptoide.pt.install_manager.Task
@@ -17,6 +19,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
@@ -52,7 +55,18 @@ class DownloadViewModel(
   init {
     val packageStates = appInstaller.packageInfoFlow.map { info ->
       info?.let {
-        if (it.compatVersionCode < app.versionCode) {
+        if (it.compatVersionCode <= app.versionCode
+          && app.isAppCoins
+          && !app.signature.isNullOrEmpty()
+          && app.signature?.lowercase() != it.getSignature()
+          && app.isInCatappult() == true
+        ) {
+          DownloadUiState.Migrate(
+            open = ::open,
+            uninstall = ::uninstall,
+            migrateWith = ::migrate
+          )
+        } else if (it.compatVersionCode < app.versionCode) {
           DownloadUiState.Outdated(
             open = ::open,
             updateWith = ::install,
@@ -205,6 +219,20 @@ class DownloadViewModel(
       viewModelState.update {
         DownloadUiState.Error(retryWith = ::uninstall)
       }
+    }
+  }
+
+  private fun migrate(resolver: ConstraintsResolver) {
+    try {
+      uninstall()
+      appInstaller.packageInfoFlow.filter { info ->
+        info == null
+      }
+        .map {
+          install(resolver)
+        }.launchIn(viewModelScope)
+    } catch (e: Exception) {
+      e.printStackTrace()
     }
   }
 

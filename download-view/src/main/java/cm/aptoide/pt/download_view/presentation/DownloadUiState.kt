@@ -70,6 +70,16 @@ sealed class DownloadUiState {
       get() = { retryWith(resolver) }
   }
 
+  data class Migrate(
+    val resolver: ConstraintsResolver = defaultResolver,
+    val open: () -> Unit,
+    val uninstall: () -> Unit,
+    val migrateWith: (resolver: ConstraintsResolver) -> Unit,
+  ) : DownloadUiState() {
+    val migrate: () -> Unit
+      get() = { migrateWith(resolver) }
+  }
+
   data class ReadyToInstall(
     val installPackageInfo: InstallPackageInfo = InstallPackageInfo(0),
     val cancel: () -> Unit,
@@ -91,6 +101,11 @@ val downloadUiStates: List<DownloadUiState>
       open = {},
       updateWith = {},
       uninstall = {}
+    ),
+    DownloadUiState.Migrate(
+      open = {},
+      uninstall = {},
+      migrateWith = {}
     ),
     DownloadUiState.Waiting(
       installPackageInfo = randomInstallPackageInfo,

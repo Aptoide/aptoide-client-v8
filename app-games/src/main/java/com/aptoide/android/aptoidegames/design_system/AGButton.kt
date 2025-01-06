@@ -299,6 +299,20 @@ fun SecondaryButton(
   textStyle = AGTypography.InputsL.copy(color = Palette.White)
 )
 
+@Composable fun AccentButton(
+  onClick: () -> Unit,
+  modifier: Modifier = Modifier,
+  enabled: Boolean = true,
+  title: String?,
+) = AGButton(
+  onClick = onClick,
+  modifier = modifier.height(48.dp),
+  enabled = enabled,
+  color = Palette.Secondary,
+  title = title,
+  textStyle = AGTypography.InputsL.copy(color = Palette.White)
+)
+
 @Composable fun PrimarySmallButton(
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
@@ -311,6 +325,20 @@ fun SecondaryButton(
   color = Palette.Primary,
   title = title,
   textStyle = AGTypography.InputsS.copy(color = Palette.Black)
+)
+
+@Composable fun AccentSmallButton(
+  onClick: () -> Unit,
+  modifier: Modifier = Modifier,
+  enabled: Boolean = true,
+  title: String?,
+) = AGButton(
+  onClick = onClick,
+  modifier = modifier.height(32.dp),
+  enabled = enabled,
+  color = Palette.Secondary,
+  title = title,
+  textStyle = AGTypography.InputsS.copy(color = Palette.White)
 )
 
 @Composable
