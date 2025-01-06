@@ -11,6 +11,7 @@ import cm.aptoide.pt.download_view.presentation.DownloadUiState.Error
 import cm.aptoide.pt.download_view.presentation.DownloadUiState.Install
 import cm.aptoide.pt.download_view.presentation.DownloadUiState.Installed
 import cm.aptoide.pt.download_view.presentation.DownloadUiState.Installing
+import cm.aptoide.pt.download_view.presentation.DownloadUiState.Migrate
 import cm.aptoide.pt.download_view.presentation.DownloadUiState.Outdated
 import cm.aptoide.pt.download_view.presentation.DownloadUiState.ReadyToInstall
 import cm.aptoide.pt.download_view.presentation.DownloadUiState.Uninstalling
@@ -54,7 +55,8 @@ private fun ProgressTextContent(
     is Install,
     is Outdated,
     is Installed,
-    -> app.versionName
+    is Migrate,
+      -> app.versionName
 
     is Waiting -> state.getStateDescription()
     is Downloading -> state.getProgressString()
@@ -70,7 +72,8 @@ private fun ProgressTextContent(
     is Install,
     is Outdated,
     is Installed,
-    -> if (showVersionName) {
+    is Migrate,
+      -> if (showVersionName) {
       Text(
         modifier = modifier,
         text = text,
@@ -88,7 +91,7 @@ private fun ProgressTextContent(
     is ReadyToInstall,
     is Installing,
     is Uninstalling,
-    -> Text(
+      -> Text(
       modifier = modifier,
       text = text,
       style = AGTypography.InputsS,
@@ -98,7 +101,7 @@ private fun ProgressTextContent(
     )
 
     is Error,
-    -> GenericErrorLabel(modifier = modifier)
+      -> GenericErrorLabel(modifier = modifier)
   }
 }
 

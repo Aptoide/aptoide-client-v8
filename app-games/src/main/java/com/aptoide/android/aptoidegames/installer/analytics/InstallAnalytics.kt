@@ -71,6 +71,27 @@ class InstallAnalytics(
     }
   }
 
+  fun sendMigrateClickEvent(
+    app: App,
+    analyticsContext: AnalyticsUIContext,
+    networkType: String,
+  ) {
+    genericAnalytics.logEvent(
+      name = "migrate_clicked",
+      params = analyticsContext.toGenericParameters(
+        *app.toGenericParameters(),
+        P_UPDATE_TYPE to getUserClicks(app.packageName),
+        P_SERVICE to networkType
+      )
+    )
+
+    sendBIClickEvent(
+      app = app,
+      analyticsContext = analyticsContext,
+      action = "migrate"
+    )
+  }
+
   fun sendUpdateClickEvent(
     app: App,
     analyticsContext: AnalyticsUIContext,
