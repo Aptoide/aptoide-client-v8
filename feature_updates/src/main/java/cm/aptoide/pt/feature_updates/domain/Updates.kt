@@ -81,8 +81,7 @@ class Updates @Inject constructor(
       }
 
       UpdatesWorker.enqueue(context)
-      if (updatesPreferencesRepository.shouldAutoUpdateGames().first())
-        AutoUpdateWorker.enqueue(context)
+      AutoUpdateWorker.enqueue(context)
     }
   }
 
@@ -129,6 +128,7 @@ class Updates @Inject constructor(
     }
 
   suspend fun autoUpdate() {
+    val shouldAutoUpdateGames = updatesPreferencesRepository.shouldAutoUpdateGames().first()
     val installers = installManager.installedApps
       .filter { it.updatesOwnerPackageName == myPackageName }
     val updates = installers
@@ -142,6 +142,9 @@ class Updates @Inject constructor(
           it.modifiedDate
         }
       }
+    if(!shouldAutoUpdateGames){
+      return
+    }
     installers.forEach { appInstaller ->
       updates
         .firstOrNull { it.packageName == appInstaller.packageName }
