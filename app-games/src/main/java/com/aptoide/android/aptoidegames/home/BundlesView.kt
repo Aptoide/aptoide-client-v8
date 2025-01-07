@@ -2,6 +2,7 @@ package com.aptoide.android.aptoidegames.home
 
 import android.content.Context
 import android.net.Uri.encode
+import android.os.Build
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -59,6 +60,7 @@ import cm.aptoide.pt.feature_home.presentation.BundlesViewUiState
 import cm.aptoide.pt.feature_home.presentation.BundlesViewUiStateType
 import cm.aptoide.pt.feature_home.presentation.bundlesList
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
+import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.InitialAnalyticsMeta
@@ -148,10 +150,12 @@ fun BundlesScreen(
           onRetryClick = loadFreshHomeBundles
         )
 
-        BundlesViewUiStateType.IDLE -> BundlesView(
-          viewState,
-          navigate
-        )
+        BundlesViewUiStateType.IDLE -> {
+          BundlesView(
+            viewState.filterHMD(),
+            navigate
+          )
+        }
       }
     }
 
@@ -468,4 +472,16 @@ private fun calculateLoopedBundleInitialItem(appsListSize: Int): Int {
 private fun Int.floorMod(other: Int): Int = when (other) {
   0 -> this
   else -> this - floorDiv(other) * other
+}
+
+private fun BundlesViewUiState.filterHMD(): BundlesViewUiState {
+  return if (BuildConfig.MARKET_NAME == "aptoide-games-hmd"
+    && Build.MANUFACTURER.lowercase().contains("hmd")
+    && (Build.MODEL.lowercase().contains("fusion") || Build.MODEL.lowercase()
+      .contains("nighthawk"))
+  ) {
+    this
+  } else {
+    this.copy(bundles = bundles.filter { it.tag != "apps-group-hmd-controller" })
+  }
 }
