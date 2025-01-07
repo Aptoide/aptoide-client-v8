@@ -168,6 +168,7 @@ class ChatbotViewModel @Inject constructor(
   ) {
     viewModelState.update {
       it.copy(
+        id = response.id,
         type = GameGenieUIStateType.IDLE,
         conversation = response.conversation,
         apps = apps,
