@@ -21,7 +21,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -46,28 +48,26 @@ class Updates @Inject constructor(
 
   private lateinit var myPackageName: String
 
+  // TODO: clean this for testability
   fun initialize(context: Context) {
     myPackageName = context.packageName
-    UpdatesWorker.enqueue(context)
-    // TODO: clean this for testability
-    CoroutineScope(Dispatchers.IO).launch {
-      if (updatesPreferencesRepository.shouldAutoUpdateGames().first())
-        AutoUpdateWorker.enqueue(context)
-      installManager.appsChanges
-        .collect { appInstaller ->
-          mutex.withLock {
-            val packageInfo = appInstaller.packageInfo
-            if (packageInfo == null) {
-              currentUpdates.find { it.packageName == appInstaller.packageName }
-            } else {
-              currentUpdates.find {
-                it.packageName == appInstaller.packageName
-                  && it.file.vercode <= packageInfo.compatVersionCode
-              }
+    installManager.appsChanges
+      .onEach { appInstaller ->
+        mutex.withLock {
+          val packageInfo = appInstaller.packageInfo
+          if (packageInfo == null) {
+            currentUpdates.find { it.packageName == appInstaller.packageName }
+          } else {
+            currentUpdates.find {
+              it.packageName == appInstaller.packageName
+                && it.file.vercode <= packageInfo.compatVersionCode
             }
-              ?.also { updatesRepository.remove(it) }
           }
+            ?.also { updatesRepository.remove(it) }
         }
+      }
+      .launchIn(CoroutineScope(Dispatchers.IO))
+    CoroutineScope(Dispatchers.IO).launch {
       mutex.withLock {
         val installedApps = installManager.installedApps
           .mapNotNull { it.packageInfo }
@@ -79,6 +79,10 @@ class Updates @Inject constructor(
         currentUpdates = values - toRemove
         updatesRepository.remove(*toRemove.toTypedArray())
       }
+
+      UpdatesWorker.enqueue(context)
+      if (updatesPreferencesRepository.shouldAutoUpdateGames().first())
+        AutoUpdateWorker.enqueue(context)
     }
   }
 
