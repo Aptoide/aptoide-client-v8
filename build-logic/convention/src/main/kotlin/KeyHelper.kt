@@ -3,4 +3,5 @@ object KeyHelper {
   const val KEY_STORE_PASS = "STORE_PASSWORD_VANILLA"
   const val KEY_ALIAS = "KEY_ALIAS_VANILLA"
   const val KEY_PASS = "KEY_PASSWORD_VANILLA"
+  const val OEMID = "OEMID_APTOIDEGAMES"
 }
