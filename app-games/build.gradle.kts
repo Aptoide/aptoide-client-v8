@@ -74,7 +74,7 @@ android {
     buildConfigField(
       type = "String",
       name = "OEMID",
-      value = "\"${project.property("OEMID_APTOIDEGAMES")}\""
+      value = "\"${project.properties[System.getenv("OEMID") ?: KeyHelper.OEMID]}\""
     )
 
     buildConfigFieldFromGradleProperty("ROOM_SCHEMA_VERSION")
