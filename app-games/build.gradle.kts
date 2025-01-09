@@ -138,11 +138,6 @@ android {
       )
       buildConfigField(
         type = "String",
-        name = "UTM_SOURCE",
-        value = "\"AG_dev\""
-      )
-      buildConfigField(
-        type = "String",
         name = "AHAB_DOMAIN",
         value = "\"https://api.dev.aptoide.com/ahab/8.20240801/\""
       )
@@ -180,11 +175,6 @@ android {
         type = "String",
         name = "APTOIDE_WEB_SERVICES_MMP_HOST",
         value = "\"https://aptoide-mmp.aptoide.com/api/v1/\""
-      )
-      buildConfigField(
-        type = "String",
-        name = "UTM_SOURCE",
-        value = "\"AG\""
       )
       buildConfigField(
         "String",

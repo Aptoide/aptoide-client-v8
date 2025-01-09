@@ -124,7 +124,7 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
     initIndicative()
     setUserProperties()
     updates.initialize(this)
-    AptoideMMPCampaign.init(BuildConfig.OEMID, BuildConfig.UTM_SOURCE)
+    AptoideMMPCampaign.init(BuildConfig.OEMID, BuildConfig.MARKET_NAME)
   }
 
   private fun initFeatureFlags() {
