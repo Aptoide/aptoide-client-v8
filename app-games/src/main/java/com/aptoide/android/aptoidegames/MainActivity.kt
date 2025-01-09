@@ -18,6 +18,8 @@ import com.aptoide.android.aptoidegames.installer.analytics.getNetworkType
 import com.aptoide.android.aptoidegames.installer.notifications.InstallerNotificationsBuilder
 import com.aptoide.android.aptoidegames.launch.AppLaunchPreferencesManager
 import com.aptoide.android.aptoidegames.network.repository.NetworkPreferencesRepository
+import com.aptoide.android.aptoidegames.notifications.analytics.FirebaseNotificationAnalytics
+import com.aptoide.android.aptoidegames.notifications.toFirebaseNotificationAnalyticsInfo
 import com.aptoide.android.aptoidegames.promo_codes.PromoCodeApp
 import com.aptoide.android.aptoidegames.promo_codes.PromoCodeRepository
 import dagger.hilt.android.AndroidEntryPoint
@@ -51,6 +53,9 @@ class MainActivity : AppCompatActivity() {
 
   @Inject
   lateinit var promoCodeRepository: PromoCodeRepository
+
+  @Inject
+  lateinit var firebaseNotificationAnalytics: FirebaseNotificationAnalytics
 
   private var navController: NavHostController? = null
 
@@ -123,6 +128,23 @@ class MainActivity : AppCompatActivity() {
     }
     intent.agDeepLink?.takeIf { it.scheme == "ag" }?.let {
       navController?.navigate(it)
+    }
+
+    handleFirebaseNotificationAnalytics(intent)
+  }
+
+  //TODO: recheck this code in case [firebase-messaging] dependency is updated.
+  //The code relies on internal data names defined by firebase messaging.
+  private fun handleFirebaseNotificationAnalytics(intent: Intent?) {
+    val messageId = intent?.extras?.getString("google.message_id")
+    val notificationAnalyticsBundle = intent?.extras?.getBundle("gcm.n.analytics_data")
+
+    if (messageId != null && notificationAnalyticsBundle != null) {
+      notificationAnalyticsBundle.putString("google.message_id", messageId)
+
+      notificationAnalyticsBundle.toFirebaseNotificationAnalyticsInfo()?.let {
+        firebaseNotificationAnalytics.sendNotificationOpened(it)
+      }
     }
   }
 
