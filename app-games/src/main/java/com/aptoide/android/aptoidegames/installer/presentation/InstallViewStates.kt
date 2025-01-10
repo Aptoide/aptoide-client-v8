@@ -123,6 +123,10 @@ fun installViewStates(
             app.campaigns?.toMMPLinkerCampaign()?.sendDownloadEvent(BuildConfig.OEMID)
             onInstallStarted()
             scheduledInstallListener.listenToWifiStart(app.packageName)
+            installAnalytics.sendOnInstallationQueued(
+              packageName = app.packageName,
+              analyticsContext = analyticsContext
+            )
             saveAppDetails(app) {
               installerNotifications.onInstallationQueued(app.packageName)
             }
@@ -177,6 +181,10 @@ fun installViewStates(
             app.campaigns?.toMMPLinkerCampaign()?.sendDownloadEvent(BuildConfig.OEMID)
             onInstallStarted()
             scheduledInstallListener.listenToWifiStart(app.packageName)
+            installAnalytics.sendOnInstallationQueued(
+              packageName = app.packageName,
+              analyticsContext = analyticsContext
+            )
             saveAppDetails(app) {
               installerNotifications.onInstallationQueued(app.packageName)
             }
@@ -207,6 +215,10 @@ fun installViewStates(
 
               else -> { ->
                 canceled = true
+                installAnalytics.sendOnInstallationRemovedFromQueue(
+                  packageName = app.packageName,
+                  installPackageInfo= downloadUiState.installPackageInfo
+                  )
                 installAnalytics.sendDownloadCancel(app, analyticsContext)
                 // While task is the queue the Package Downloader will not be called and cancellation
                 // will not be caught by the  Package Downloader probe.
@@ -267,6 +279,10 @@ fun installViewStates(
             )
             onInstallStarted()
             scheduledInstallListener.listenToWifiStart(app.packageName)
+            installAnalytics.sendOnInstallationQueued(
+              packageName = app.packageName,
+              analyticsContext = analyticsContext
+            )
             saveAppDetails(app) {
               installerNotifications.onInstallationQueued(app.packageName)
             }
