@@ -127,6 +127,28 @@ class InstallAnalytics(
     )
   }
 
+  fun sendOnInstallationQueued(
+    packageName: String,
+    analyticsContext: AnalyticsUIContext
+    )=
+    genericAnalytics.logEvent(
+      name = "queue_entry",
+      params = analyticsContext.toGenericParameters(
+        GenericAnalytics.P_PACKAGE_NAME to packageName,
+      )
+    )
+
+  fun sendOnInstallationRemovedFromQueue(
+    packageName: String,
+    installPackageInfo: InstallPackageInfo
+  )=
+    genericAnalytics.logEvent(
+      name = "queue_exit",
+      params = installPackageInfo.toAppGenericParameters(
+        packageName = packageName,
+      )
+    )
+
   fun sendDownloadStartedEvent(
     packageName: String,
     installPackageInfo: InstallPackageInfo

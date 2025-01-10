@@ -33,6 +33,10 @@ class DownloadProbe(
           packageName = packageName,
           installPackageInfo = installPackageInfo
         )
+        analytics.sendOnInstallationRemovedFromQueue(
+          packageName = packageName,
+          installPackageInfo = installPackageInfo
+        )
       }
       .onEach {
         if (initialTimestamp == 0L && it.progress >= 0) {
