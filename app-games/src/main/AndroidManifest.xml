@@ -66,6 +66,15 @@
         android:screenOrientation="portrait"
         android:windowSoftInputMode="adjustResize" />
 
+    <service
+        android:name="com.appcoins.payments.sdk.AppcoinsBillingService"
+        android:enabled="false"
+        tools:replace="android:enabled" />
+
+    <activity android:name="com.appcoins.payments.uri_handler.PaymentActivity"
+        android:enabled="false"
+        tools:replace="android:enabled" />
+
     <meta-data
         android:name="com.google.firebase.messaging.default_notification_icon"
         android:resource="@drawable/ic_notification_icon" />
