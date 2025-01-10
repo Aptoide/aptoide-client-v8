@@ -33,7 +33,7 @@ import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
 import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
-import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
+import com.aptoide.android.aptoidegames.analytics.presentation.OverrideAnalyticsScreen
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.design_system.PrimaryTextButton
 import com.aptoide.android.aptoidegames.drawables.icons.getPromotionBackground
@@ -58,22 +58,25 @@ fun PromotionDialog(navigate: (String) -> Unit) {
   }
 
   promotionData?.let { (promotion, app) ->
-    AnalyticsContext.current.currentScreen = "home_dialog"
-
-    PromotionDialogView(
-      onPositiveClick = {
-        promotionsViewModel.dismissPromotion()
-        promotionsAnalytics.sendAhabV2DialogUpdate(app.packageName)
-        navigate(buildAppViewRoute(app))
-      },
-      onNegativeClick = {
-        promotionsViewModel.dismissPromotion()
-        promotionsAnalytics.sendAhabV2DialogLater(app.packageName)
-      },
-      app = app,
-      title = promotion.title,
-      description = promotion.content,
-    )
+    OverrideAnalyticsScreen(
+      currentScreen = "home_dialog",
+      navigate = navigate
+    ) { navigate ->
+      PromotionDialogView(
+        onPositiveClick = {
+          promotionsViewModel.dismissPromotion()
+          promotionsAnalytics.sendAhabV2DialogUpdate(app.packageName)
+          navigate(buildAppViewRoute(app))
+        },
+        onNegativeClick = {
+          promotionsViewModel.dismissPromotion()
+          promotionsAnalytics.sendAhabV2DialogLater(app.packageName)
+        },
+        app = app,
+        title = promotion.title,
+        description = promotion.content,
+      )
+    }
   }
 }
 

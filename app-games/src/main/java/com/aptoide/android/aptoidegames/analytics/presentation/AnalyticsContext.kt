@@ -131,6 +131,29 @@ fun OverrideAnalyticsBundleMeta(
 }
 
 @Composable
+fun OverrideAnalyticsScreen(
+  currentScreen: String,
+  navigate: (String) -> Unit,
+  content: @Composable ((String) -> Unit) -> Unit,
+) {
+  val current = LocalAnalyticsContext.current
+  CompositionLocalProvider(
+    LocalAnalyticsContext provides AnalyticsUIContext(
+      currentScreen = currentScreen,
+      previousScreen = current.previousScreen,
+      bundleMeta = current.bundleMeta,
+      searchMeta = current.searchMeta,
+      itemPosition = current.itemPosition,
+      isApkfy = false
+    )
+  ) {
+    content {
+      navigate(it.withPrevScreen(currentScreen))
+    }
+  }
+}
+
+@Composable
 fun OverrideAnalyticsSearchMeta(
   searchMeta: SearchMeta?,
   navigate: (String) -> Unit,
