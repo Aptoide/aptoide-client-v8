@@ -31,8 +31,11 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.emptyApp
 import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
 import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
+import cm.aptoide.pt.feature_home.domain.BundleSource
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.analytics.dto.BundleMeta
+import com.aptoide.android.aptoidegames.analytics.presentation.OverrideAnalyticsBundleMeta
 import com.aptoide.android.aptoidegames.analytics.presentation.OverrideAnalyticsScreen
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.design_system.PrimaryTextButton
@@ -62,20 +65,28 @@ fun PromotionDialog(navigate: (String) -> Unit) {
       currentScreen = "home_dialog",
       navigate = navigate
     ) { navigate ->
-      PromotionDialogView(
-        onPositiveClick = {
-          promotionsViewModel.dismissPromotion()
-          promotionsAnalytics.sendAhabV2DialogUpdate(app.packageName)
-          navigate(buildAppViewRoute(app))
-        },
-        onNegativeClick = {
-          promotionsViewModel.dismissPromotion()
-          promotionsAnalytics.sendAhabV2DialogLater(app.packageName)
-        },
-        app = app,
-        title = promotion.title,
-        description = promotion.content,
-      )
+      OverrideAnalyticsBundleMeta(
+        bundleMeta = BundleMeta(
+          tag = "home_dialog",
+          bundleSource = BundleSource.MANUAL.name
+        ),
+        navigate = navigate
+      ) { navigate ->
+        PromotionDialogView(
+          onPositiveClick = {
+            promotionsViewModel.dismissPromotion()
+            promotionsAnalytics.sendAhabV2DialogUpdate(app.packageName)
+            navigate(buildAppViewRoute(app))
+          },
+          onNegativeClick = {
+            promotionsViewModel.dismissPromotion()
+            promotionsAnalytics.sendAhabV2DialogLater(app.packageName)
+          },
+          app = app,
+          title = promotion.title,
+          description = promotion.content,
+        )
+      }
     }
   }
 }
