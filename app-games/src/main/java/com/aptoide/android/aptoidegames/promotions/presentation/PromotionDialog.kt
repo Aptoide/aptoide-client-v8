@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -22,20 +24,55 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.hilt.navigation.compose.hiltViewModel
 import cm.aptoide.pt.extensions.PreviewAll
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.emptyApp
+import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
+import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
+import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.design_system.PrimaryTextButton
 import com.aptoide.android.aptoidegames.drawables.icons.getPromotionBackground
 import com.aptoide.android.aptoidegames.drawables.icons.getPromotionBonusIcon
 import com.aptoide.android.aptoidegames.installer.presentation.InstallView
+import com.aptoide.android.aptoidegames.promotions.analytics.rememberPromotionsAnalytics
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
-fun PromotionDialog(
+fun PromotionDialog(navigate: (String) -> Unit) {
+  val promotionsAnalytics = rememberPromotionsAnalytics()
+  val promotionsViewModel = hiltViewModel<PromotionsViewModel>()
+  val promotionData by promotionsViewModel.uiState.collectAsState()
+
+  promotionData?.let { (promotion, app) ->
+    AnalyticsContext.current.currentScreen = "home_dialog"
+    AptoideMMPCampaign.allowedBundleTags["home_dialog"] = "Ahab_v2" to promotion.uid
+    app.campaigns?.toAptoideMMPCampaign()?.sendImpressionEvent("home_dialog")
+    promotionsAnalytics.sendAhabV2DialogImpression(app.packageName)
+
+    PromotionDialogView(
+      onPositiveClick = {
+        promotionsViewModel.dismissPromotion()
+        promotionsAnalytics.sendAhabV2DialogUpdate(app.packageName)
+        navigate(buildAppViewRoute(app))
+      },
+      onNegativeClick = {
+        promotionsViewModel.dismissPromotion()
+        promotionsAnalytics.sendAhabV2DialogLater(app.packageName)
+      },
+      app = app,
+      title = promotion.title,
+      description = promotion.content,
+    )
+  }
+}
+
+@Composable
+fun PromotionDialogView(
   onPositiveClick: () -> Unit,
   onNegativeClick: () -> Unit,
   app: App,
@@ -163,7 +200,7 @@ fun PromotionDescriptionText(
 @PreviewAll
 @Composable
 private fun PromotionDialogPreview() {
-  PromotionDialog(
+  PromotionDialogView(
     onPositiveClick = {},
     onNegativeClick = {},
     app = emptyApp,
