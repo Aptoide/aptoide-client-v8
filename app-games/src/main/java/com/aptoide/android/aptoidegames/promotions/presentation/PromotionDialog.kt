@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -48,11 +49,16 @@ fun PromotionDialog(navigate: (String) -> Unit) {
   val promotionsViewModel = hiltViewModel<PromotionsViewModel>()
   val promotionData by promotionsViewModel.uiState.collectAsState()
 
+  LaunchedEffect(promotionData) {
+    promotionData?.let { (promotion, app) ->
+      AptoideMMPCampaign.allowedBundleTags["home_dialog"] = "Ahab_v2" to promotion.uid
+      app.campaigns?.toAptoideMMPCampaign()?.sendImpressionEvent("home_dialog")
+      promotionsAnalytics.sendAhabV2DialogImpression(app.packageName)
+    }
+  }
+
   promotionData?.let { (promotion, app) ->
     AnalyticsContext.current.currentScreen = "home_dialog"
-    AptoideMMPCampaign.allowedBundleTags["home_dialog"] = "Ahab_v2" to promotion.uid
-    app.campaigns?.toAptoideMMPCampaign()?.sendImpressionEvent("home_dialog")
-    promotionsAnalytics.sendAhabV2DialogImpression(app.packageName)
 
     PromotionDialogView(
       onPositiveClick = {
