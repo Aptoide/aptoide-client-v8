@@ -239,6 +239,12 @@ fun BundlesView(
               navigate = navigateTo,
             )
 
+            Type.NEW_APP_VERSION,
+            Type.IN_GAME_EVENT,
+            Type.NEW_APP,
+            Type.NEWS_ITEM,
+            Type.APP_COMING_SOON -> Unit
+
             else -> Unit
           }
         }
