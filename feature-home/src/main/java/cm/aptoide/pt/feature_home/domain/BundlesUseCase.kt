@@ -46,14 +46,19 @@ class BundlesUseCase @Inject constructor(
     WidgetType.MY_GAMES,
     WidgetType.GAMES_MATCH,
     WidgetType.ACTION_ITEM,
-    -> BundleSource.MANUAL
+    WidgetType.NEW_APP,
+    WidgetType.NEWS_ITEM,
+    WidgetType.APP_COMING_SOON,
+    WidgetType.IN_GAME_EVENT,
+    WidgetType.NEW_APP_VERSION
+      -> BundleSource.MANUAL
 
     WidgetType.HTML_GAMES -> BundleSource.AUTOMATIC
 
     WidgetType.APPS_GROUP,
     WidgetType.ESKILLS,
     WidgetType.STORE_GROUPS,
-    -> if (view?.contains("group_id") == false) {
+      -> if (view?.contains("group_id") == false) {
       BundleSource.AUTOMATIC
     } else {
       BundleSource.MANUAL
@@ -77,7 +82,7 @@ class BundlesUseCase @Inject constructor(
         WidgetLayout.LIST -> Type.APP_GRID
         WidgetLayout.CURATION_1,
         WidgetLayout.UNDEFINED,
-        -> Type.FEATURE_GRAPHIC
+          -> Type.FEATURE_GRAPHIC
       }
     }
 
@@ -90,6 +95,13 @@ class BundlesUseCase @Inject constructor(
 
     WidgetType.STORE_GROUPS -> Type.CATEGORIES
     WidgetType.HTML_GAMES -> Type.HTML_GAMES
+
+    WidgetType.NEW_APP -> Type.NEW_APP
+    WidgetType.NEWS_ITEM -> Type.NEWS_ITEM
+    WidgetType.APP_COMING_SOON -> Type.APP_COMING_SOON
+    WidgetType.IN_GAME_EVENT -> Type.IN_GAME_EVENT
+    WidgetType.NEW_APP_VERSION -> Type.NEW_APP_VERSION
+
     else -> Type.UNKNOWN_BUNDLE
   }
 

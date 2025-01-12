@@ -27,7 +27,12 @@ enum class WidgetType {
   MY_GAMES,
   GAMES_MATCH,
   STORE_GROUPS,
-  HTML_GAMES
+  HTML_GAMES,
+  NEWS_ITEM,
+  NEW_APP,
+  NEW_APP_VERSION,
+  IN_GAME_EVENT,
+  APP_COMING_SOON
 }
 
 enum class WidgetLayout {

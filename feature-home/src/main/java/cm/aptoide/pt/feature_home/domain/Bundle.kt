@@ -46,7 +46,12 @@ enum class Type {
   LIST,
   PUBLISHER_TAKEOVER,
   CATEGORIES,
-  HTML_GAMES
+  HTML_GAMES,
+  APP_COMING_SOON,
+  NEWS_ITEM,
+  NEW_APP,
+  NEW_APP_VERSION,
+  IN_GAME_EVENT,
 }
 
 val randomBundle
