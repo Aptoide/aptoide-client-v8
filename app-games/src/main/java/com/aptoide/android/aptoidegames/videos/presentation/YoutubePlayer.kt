@@ -1,6 +1,5 @@
 package com.aptoide.android.aptoidegames.videos.presentation
 
-import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.animation.AnimatedVisibility
@@ -32,7 +31,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -41,6 +39,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import cm.aptoide.pt.extensions.isActiveNetworkMetered
 import cm.aptoide.pt.extensions.runPreviewable
 import com.aptoide.android.aptoidegames.R
@@ -73,9 +72,7 @@ fun AppViewYoutubePlayer(
     }
   },
   real = {
-    val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
-
     val youtubePlayerTracker = remember { YouTubePlayerTracker() }
     var youtubePlayer: YouTubePlayer? by remember { mutableStateOf(null) }
 
@@ -90,16 +87,12 @@ fun AppViewYoutubePlayer(
     val autoplayAllowed = !meteredConnection
     val shouldAutoplay by remember { derivedStateOf { !userPaused && autoplayAllowed } }
 
-    val youtubePlayerView = remember {
-      buildYoutubePlayerView(
-        context = context,
-        lifecycle = lifecycleOwner.lifecycle,
-        videoId = videoId,
-        youtubePlayerTracker = youtubePlayerTracker,
-        startMuted = shouldMute,
-        autoplay = autoplayAllowed
-      )
-    }
+    val youtubePlayerView = rememberYoutubePlayerView(
+      videoId = videoId,
+      youtubePlayerTracker = youtubePlayerTracker,
+      startMuted = shouldMute,
+      autoplay = autoplayAllowed
+    )
 
     LaunchedEffect(shouldPause) {
       if (shouldPause) {
@@ -305,45 +298,51 @@ private fun AppViewYoutubePlayerContent(
   }
 }
 
-fun buildYoutubePlayerView(
-  context: Context,
-  lifecycle: Lifecycle,
+@Composable
+fun rememberYoutubePlayerView(
   videoId: String,
   youtubePlayerTracker: YouTubePlayerTracker,
   startMuted: Boolean,
   autoplay: Boolean,
-): YouTubePlayerView? = try {
-  val youtubePlayerView = YouTubePlayerView(context)
-  lifecycle.addObserver(youtubePlayerView)
-  youtubePlayerView.enableAutomaticInitialization = false
+): YouTubePlayerView? {
+  val context = LocalContext.current
+  val lifecycle = LocalLifecycleOwner.current.lifecycle
 
-  val youtubeListener = object : AbstractYouTubePlayerListener() {
-    override fun onReady(youTubePlayer: YouTubePlayer) {
-      youTubePlayer.addListener(youtubePlayerTracker)
+  val result = try {
+    val youtubePlayerView = YouTubePlayerView(context)
+    lifecycle.addObserver(youtubePlayerView)
+    youtubePlayerView.enableAutomaticInitialization = false
 
-      if (autoplay)
-        youTubePlayer.loadVideo(videoId, youtubePlayerTracker.currentSecond)
-      else
-        youTubePlayer.cueVideo(videoId, youtubePlayerTracker.currentSecond)
+    val youtubeListener = object : AbstractYouTubePlayerListener() {
+      override fun onReady(youTubePlayer: YouTubePlayer) {
+        youTubePlayer.addListener(youtubePlayerTracker)
+
+        if (autoplay)
+          youTubePlayer.loadVideo(videoId, youtubePlayerTracker.currentSecond)
+        else
+          youTubePlayer.cueVideo(videoId, youtubePlayerTracker.currentSecond)
+      }
     }
+
+    val iFramePlayerOptions = IFramePlayerOptions.Builder()
+      .apply {
+        rel(0)
+        controls(1)
+        ivLoadPolicy(3)
+        ccLoadPolicy(1)
+        modestBranding(0)
+        langPref(context.resources?.configuration?.locales?.get(0)?.language ?: "en")
+        if (startMuted) mute(1)
+      }.build()
+
+    youtubePlayerView.initialize(youtubeListener, iFramePlayerOptions)
+    youtubePlayerView
+  } catch (e: Throwable) {
+    e.printStackTrace()
+    null
   }
 
-  val iFramePlayerOptions = IFramePlayerOptions.Builder()
-    .apply {
-      rel(0)
-      controls(1)
-      ivLoadPolicy(3)
-      ccLoadPolicy(1)
-      modestBranding(0)
-      langPref(context.resources?.configuration?.locales?.get(0)?.language ?: "en")
-      if (startMuted) mute(1)
-    }.build()
-
-  youtubePlayerView.initialize(youtubeListener, iFramePlayerOptions)
-  youtubePlayerView
-} catch (e: Throwable) {
-  e.printStackTrace()
-  null
+  return remember { result }
 }
 
 fun View?.removeSelf() {
