@@ -13,6 +13,7 @@ import cm.aptoide.pt.feature_categories.analytics.AptoideAnalyticsInfoProvider
 import cm.aptoide.pt.feature_flags.domain.FeatureFlags
 import cm.aptoide.pt.install_manager.InstallManager
 import com.aptoide.android.aptoidegames.BuildConfig
+import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_ACTION
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_APKFY_APP_INSTALL
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_APP_AAB
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_APP_AAB_INSTALL_TIME
@@ -135,6 +136,7 @@ class BIAnalytics(private val analyticsSender: AnalyticsSender) {
   ) = analyticsSender.logEvent(name, params)
 
   companion object {
+    internal const val P_ACTION = "action"
     internal const val P_APP_AAB = "app_aab"
     internal const val P_APP_AAB_INSTALL_TIME = "app_aab_install_time"
     internal const val P_APP_APPC = "app_appc"
@@ -157,6 +159,7 @@ fun AnalyticsUIContext?.toBiParameters(vararg pairs: Pair<String, Any?>): Map<St
   this?.run {
     mapOfNonNull(
       *pairs,
+      P_ACTION to installAction?.name?.lowercase(),
       P_APKFY_APP_INSTALL to isApkfy,
       P_CONTEXT to currentScreen,
       P_PREVIOUS_CONTEXT to previousScreen,
