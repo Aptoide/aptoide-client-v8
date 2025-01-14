@@ -418,7 +418,6 @@ class InstallAnalytics(
     name = "click_on_install_button",
     app.toBIParameters(aabTypes = null) +
       analyticsContext.toBiParameters(
-        P_ACTION to analyticsContext.installAction?.name?.lowercase(),
         P_STORE to storeName,
         P_TRUSTED_BADGE to app.malware.asNullableParameter(),
         P_UPDATE_TYPE to getUserClicks(app.packageName)
@@ -477,7 +476,6 @@ class InstallAnalytics(
     .toTapsValue()
 
   companion object {
-    private const val P_ACTION = "action"
     private const val P_STORE = "store"
     private const val P_STATUS = "status"
     private const val P_TRUSTED_BADGE = "trusted_badge"
