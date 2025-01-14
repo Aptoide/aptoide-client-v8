@@ -38,14 +38,23 @@ data class Media(
   var description: String,
   var news: String,
   var videos: List<VideoJSON>,
+  var video: SingleVideoJSON,
   var screenshots: List<Screenshot>,
 )
 
 @Keep
 data class VideoJSON(
   val type: VideoTypeJSON,
+  val source: String,
   val url: String,
   val thumbnail: String,
+)
+
+@Keep
+data class SingleVideoJSON(
+  val source: String,
+  val url: String,
+  val thumb: String,
 )
 
 @Keep

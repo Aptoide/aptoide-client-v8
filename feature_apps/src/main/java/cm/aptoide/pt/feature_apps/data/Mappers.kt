@@ -82,6 +82,7 @@ private fun AppJSON.toDomainModel(
   description = this.media?.description,
   news = if (this.media?.news.isNullOrEmpty()) null else this.media.news,
   videos = this.media?.videos?.filter { it.type == VideoTypeJSON.YOUTUBE }?.map { it.url }
+    ?: this.media?.video?.takeIf { it.source == "youtube" }?.url?.let { listOf(it) }
     ?: emptyList(),
   store = Store(
     storeName = this.store.name,
