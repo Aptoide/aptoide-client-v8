@@ -87,6 +87,7 @@ import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
+import kotlin.math.sign
 
 val translatedTitles = mapOf(
   "Just Arrived" to R.string.fixed_bundle_just_arrived_title,
@@ -360,7 +361,6 @@ fun HorizontalPagerView(
   modifier: Modifier = Modifier,
   content: @Composable (modifier: Modifier, page: Int, app: App) -> Unit,
 ) {
-
   val screenWidth = LocalConfiguration.current.screenWidthDp.dp
   val padding = (screenWidth - 280.dp - 16.dp) / 2 + 8.dp
   val contentPadding = PaddingValues(
@@ -416,14 +416,17 @@ fun HorizontalPagerView(
         val pageOffset = (
           (pagerState.currentPage - index) + pagerState
             .currentPageOffsetFraction
-          ).absoluteValue
+          )
 
         lerp(
           start = 0.87f,
           stop = 1f,
-          fraction = 1f - pageOffset.coerceIn(0f, 1f)
+          fraction = 1f - pageOffset.absoluteValue.coerceIn(0f, 1f)
         ).also { scale ->
           scaleY = scale
+          scaleX = scale
+
+          translationX = ((size.width - (size.width * scale)) / 2) * pageOffset.sign
         }
       }
     content(pageModifier, page, app)
