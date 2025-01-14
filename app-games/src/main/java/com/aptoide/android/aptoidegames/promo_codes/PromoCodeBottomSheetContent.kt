@@ -119,6 +119,7 @@ fun PromoCodeBottomSheetContent(
       val downloadState = rememberDownloadState(app = walletApp)
       val showWalletSegment = remember { mutableStateOf(false) }
       val isWalletInstalled = downloadState is DownloadUiState.Installed
+        || downloadState is DownloadUiState.Outdated
 
       val promoCodeAnalytics = rememberPromoCodeAnalytics()
       val analyticsContext = AnalyticsContext.current
