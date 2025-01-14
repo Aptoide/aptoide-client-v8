@@ -5,6 +5,18 @@ import androidx.annotation.Keep
 import java.nio.charset.StandardCharsets
 
 @Keep
+@Suppress("unused")
+enum class InstallAction {
+  INSTALL,
+  UPDATE,
+  MIGRATE,
+  DOWNGRADE,
+  UPDATE_ALL,
+  RETRY,
+  UNINSTALL
+}
+
+@Keep
 data class AnalyticsUIContext(
   var currentScreen: String,
   val previousScreen: String?,
@@ -12,6 +24,7 @@ data class AnalyticsUIContext(
   val searchMeta: SearchMeta?,
   val itemPosition: Int?,
   val isApkfy: Boolean,
+  val installAction: InstallAction? = null
 ) {
   companion object {
     val Empty = AnalyticsUIContext(

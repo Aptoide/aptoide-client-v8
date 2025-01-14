@@ -29,6 +29,7 @@ import cm.aptoide.pt.feature_campaigns.toMMPLinkerCampaign
 import cm.aptoide.pt.install_manager.dto.Constraints
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.analytics.dto.InstallAction
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.feature_oos.OutOfSpaceDialog
 import com.aptoide.android.aptoidegames.installer.analytics.AnalyticsInstallPackageInfoMapper
@@ -82,10 +83,10 @@ fun installViewStates(
         null -> null
         is DownloadUiState.Install -> DownloadUiState.Install(
           resolver = resolver.onResolvedNotNull {
-            installAnalytics.sendInstallClickEvent(
+            installAnalytics.sendClickEvent(
               app = app,
               networkType = context.getNetworkType(),
-              analyticsContext = analyticsContext,
+              analyticsContext = analyticsContext.copy(installAction = InstallAction.INSTALL),
             )
             if (analyticsContext.currentScreen != "AppView") {
               app.campaigns?.toAptoideMMPCampaign()
@@ -132,7 +133,8 @@ fun installViewStates(
             }
           },
           installWith = {
-            AnalyticsInstallPackageInfoMapper.currentAnalyticsUIContext = analyticsContext
+            AnalyticsInstallPackageInfoMapper.currentAnalyticsUIContext =
+              analyticsContext.copy(installAction = InstallAction.INSTALL)
             downloadUiState.installWith(it)
           }
         )
@@ -140,10 +142,10 @@ fun installViewStates(
         is DownloadUiState.Outdated -> DownloadUiState.Outdated(
           open = downloadUiState.open,
           resolver = resolver.onResolvedNotNull {
-            installAnalytics.sendUpdateClickEvent(
+            installAnalytics.sendClickEvent(
               app = app,
               networkType = context.getNetworkType(),
-              analyticsContext = analyticsContext,
+              analyticsContext = analyticsContext.copy(installAction = InstallAction.UPDATE),
             )
             if (analyticsContext.currentScreen != "AppView") {
               app.campaigns?.toAptoideMMPCampaign()
@@ -191,11 +193,17 @@ fun installViewStates(
           },
           updateWith = {
             AnalyticsInstallPackageInfoMapper.currentAnalyticsUIContext = analyticsContext
+              .copy(installAction = InstallAction.UPDATE)
             downloadUiState.updateWith(it)
           },
           uninstall = {
+            installAnalytics.sendClickEvent(
+              app = app,
+              networkType = context.getNetworkType(),
+              analyticsContext = analyticsContext.copy(installAction = InstallAction.UNINSTALL),
+            )
             AnalyticsInstallPackageInfoMapper.currentAnalyticsUIContext = analyticsContext
-            installAnalytics.sendUninstallClick(app)
+              .copy(installAction = InstallAction.UNINSTALL)
             downloadUiState.uninstall()
           }
         )
@@ -203,10 +211,10 @@ fun installViewStates(
         is DownloadUiState.Migrate -> DownloadUiState.Migrate(
           open = downloadUiState.open,
           resolver = resolver.onResolvedNotNull {
-            installAnalytics.sendMigrateClickEvent(
+            installAnalytics.sendClickEvent(
               app = app,
               networkType = context.getNetworkType(),
-              analyticsContext = analyticsContext,
+              analyticsContext = analyticsContext.copy(installAction = InstallAction.MIGRATE),
             )
             if (analyticsContext.currentScreen != "AppView") {
               app.campaigns?.toAptoideMMPCampaign()
@@ -254,11 +262,17 @@ fun installViewStates(
           },
           migrateWith = {
             AnalyticsInstallPackageInfoMapper.currentAnalyticsUIContext = analyticsContext
+              .copy(installAction = InstallAction.MIGRATE)
             downloadUiState.migrateWith(it)
           },
           uninstall = {
+            installAnalytics.sendClickEvent(
+              app = app,
+              networkType = context.getNetworkType(),
+              analyticsContext = analyticsContext.copy(installAction = InstallAction.UNINSTALL),
+            )
             AnalyticsInstallPackageInfoMapper.currentAnalyticsUIContext = analyticsContext
-            installAnalytics.sendUninstallClick(app)
+              .copy(installAction = InstallAction.UNINSTALL)
             downloadUiState.uninstall()
           }
         )
@@ -280,8 +294,8 @@ fun installViewStates(
                 canceled = true
                 installAnalytics.sendOnInstallationRemovedFromQueue(
                   packageName = app.packageName,
-                  installPackageInfo= downloadUiState.installPackageInfo
-                  )
+                  installPackageInfo = downloadUiState.installPackageInfo
+                )
                 installAnalytics.sendDownloadCancel(app, analyticsContext)
                 // While task is the queue the Package Downloader will not be called and cancellation
                 // will not be caught by the  Package Downloader probe.
@@ -328,17 +342,23 @@ fun installViewStates(
             downloadUiState.open()
           },
           uninstall = {
-            installAnalytics.sendUninstallClick(app)
+            installAnalytics.sendClickEvent(
+              app = app,
+              networkType = context.getNetworkType(),
+              analyticsContext = analyticsContext.copy(installAction = InstallAction.UNINSTALL),
+            )
+            AnalyticsInstallPackageInfoMapper.currentAnalyticsUIContext = analyticsContext
+              .copy(installAction = InstallAction.UNINSTALL)
             downloadUiState.uninstall()
           }
         )
 
         is DownloadUiState.Error -> DownloadUiState.Error(
           resolver = resolver.onResolvedNotNull {
-            installAnalytics.sendRetryClick(
+            installAnalytics.sendClickEvent(
               app = app,
               networkType = context.getNetworkType(),
-              analyticsContext = analyticsContext,
+              analyticsContext = analyticsContext.copy(installAction = InstallAction.RETRY),
             )
             onInstallStarted()
             scheduledInstallListener.listenToWifiStart(app.packageName)
@@ -351,7 +371,8 @@ fun installViewStates(
             }
           },
           retryWith = {
-            AnalyticsInstallPackageInfoMapper.currentAnalyticsUIContext = analyticsContext
+            AnalyticsInstallPackageInfoMapper.currentAnalyticsUIContext =
+              analyticsContext.copy(installAction = InstallAction.RETRY)
             downloadUiState.retryWith(it)
           },
         )

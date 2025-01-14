@@ -8,6 +8,7 @@ import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.asNullableParameter
 import com.aptoide.android.aptoidegames.analytics.dto.AnalyticsUIContext
+import com.aptoide.android.aptoidegames.analytics.dto.InstallAction
 import com.aptoide.android.aptoidegames.analytics.mapOfNonNull
 import com.aptoide.android.aptoidegames.analytics.toBIParameters
 import com.aptoide.android.aptoidegames.analytics.toBiParameters
@@ -39,27 +40,39 @@ class InstallAnalytics(
     }
   }
 
-  fun sendInstallClickEvent(
+  fun sendClickEvent(
     app: App,
     analyticsContext: AnalyticsUIContext,
     networkType: String,
   ) {
-    genericAnalytics.logEvent(
-      name = "install_clicked",
-      params = analyticsContext.toGenericParameters(
-        *app.toGenericParameters(),
-        P_UPDATE_TYPE to getUserClicks(app.packageName),
-        P_SERVICE to networkType
+    when (analyticsContext.installAction) {
+      InstallAction.INSTALL -> "install_clicked"
+      InstallAction.UPDATE -> "update_clicked"
+      InstallAction.MIGRATE -> "migrate_clicked"
+      InstallAction.RETRY -> "retry_app_clicked"
+      InstallAction.UNINSTALL -> "oos_uninstall_clicked"
+      else -> null
+    }?.also { name ->
+      genericAnalytics.logEvent(
+        name = name,
+        params = analyticsContext.toGenericParameters(
+          *app.toGenericParameters(),
+          P_UPDATE_TYPE to getUserClicks(app.packageName),
+          P_SERVICE to networkType
+        )
       )
-    )
+    }
 
-    sendBIClickEvent(
-      app = app,
-      analyticsContext = analyticsContext,
-      action = "install"
-    )
+    when (analyticsContext.installAction) {
+      InstallAction.INSTALL,
+      InstallAction.UPDATE,
+      InstallAction.MIGRATE,
+      InstallAction.RETRY -> sendBIClickEvent(app = app, analyticsContext = analyticsContext)
 
-    if (analyticsContext.isApkfy) {
+      else -> Unit
+    }
+
+    if (analyticsContext.isApkfy && analyticsContext.installAction == InstallAction.INSTALL) {
       genericAnalytics.logEvent(
         name = "install_clicked_apkfy",
         params = analyticsContext.toGenericParameters(
@@ -69,68 +82,6 @@ class InstallAnalytics(
         )
       )
     }
-  }
-
-  fun sendMigrateClickEvent(
-    app: App,
-    analyticsContext: AnalyticsUIContext,
-    networkType: String,
-  ) {
-    genericAnalytics.logEvent(
-      name = "migrate_clicked",
-      params = analyticsContext.toGenericParameters(
-        *app.toGenericParameters(),
-        P_UPDATE_TYPE to getUserClicks(app.packageName),
-        P_SERVICE to networkType
-      )
-    )
-
-    sendBIClickEvent(
-      app = app,
-      analyticsContext = analyticsContext,
-      action = "migrate"
-    )
-  }
-
-  fun sendUpdateClickEvent(
-    app: App,
-    analyticsContext: AnalyticsUIContext,
-    networkType: String,
-  ) {
-    genericAnalytics.logEvent(
-      name = "update_clicked",
-      params = analyticsContext.toGenericParameters(
-        *app.toGenericParameters(),
-        P_UPDATE_TYPE to getUserClicks(app.packageName),
-        P_SERVICE to networkType
-      )
-    )
-
-    sendBIClickEvent(
-      app = app,
-      analyticsContext = analyticsContext,
-      action = "update"
-    )
-  }
-
-  fun sendRetryClick(
-    app: App,
-    networkType: String,
-    analyticsContext: AnalyticsUIContext,
-  ) {
-    genericAnalytics.logEvent(
-      name = "retry_app_clicked",
-      params = analyticsContext.toGenericParameters(
-        *app.toGenericParameters(),
-        P_UPDATE_TYPE to getUserClicks(app.packageName),
-        P_SERVICE to networkType
-      )
-    )
-    sendBIClickEvent(
-      app = app,
-      analyticsContext = analyticsContext,
-      action = "retry"
-    )
   }
 
   fun sendOpenClick(
@@ -151,24 +102,26 @@ class InstallAnalytics(
   fun sendOnInstallationQueued(
     packageName: String,
     analyticsContext: AnalyticsUIContext
-    )=
+  ) {
     genericAnalytics.logEvent(
       name = "queue_entry",
       params = analyticsContext.toGenericParameters(
         GenericAnalytics.P_PACKAGE_NAME to packageName,
       )
     )
+  }
 
   fun sendOnInstallationRemovedFromQueue(
     packageName: String,
     installPackageInfo: InstallPackageInfo
-  )=
+  ) {
     genericAnalytics.logEvent(
       name = "queue_exit",
       params = installPackageInfo.toAppGenericParameters(
         packageName = packageName,
       )
     )
+  }
 
   fun sendDownloadStartedEvent(
     packageName: String,
@@ -378,16 +331,6 @@ class InstallAnalytics(
     )
   }
 
-  fun sendUninstallClick(app: App) {
-    genericAnalytics.logEvent(
-      name = "oos_uninstall_clicked",
-      params = mapOf(
-        *app.toGenericParameters(),
-        P_UPDATE_TYPE to getUserClicks(app.packageName)
-      )
-    )
-  }
-
   fun sendResumeDownloadClick(
     app: App,
     downloadOnlyOverWifiSetting: Boolean,
@@ -471,12 +414,11 @@ class InstallAnalytics(
   private fun sendBIClickEvent(
     app: App,
     analyticsContext: AnalyticsUIContext,
-    action: String,
   ) = biAnalytics.logEvent(
     name = "click_on_install_button",
     app.toBIParameters(aabTypes = null) +
       analyticsContext.toBiParameters(
-        P_ACTION to action,
+        P_ACTION to analyticsContext.installAction?.name?.lowercase(),
         P_STORE to storeName,
         P_TRUSTED_BADGE to app.malware.asNullableParameter(),
         P_UPDATE_TYPE to getUserClicks(app.packageName)

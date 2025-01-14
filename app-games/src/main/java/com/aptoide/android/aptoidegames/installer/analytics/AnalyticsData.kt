@@ -3,10 +3,12 @@ package com.aptoide.android.aptoidegames.installer.analytics
 import androidx.annotation.Keep
 import com.aptoide.android.aptoidegames.analytics.dto.AnalyticsUIContext
 import com.aptoide.android.aptoidegames.analytics.dto.BundleMeta
+import com.aptoide.android.aptoidegames.analytics.dto.InstallAction
 import com.aptoide.android.aptoidegames.analytics.dto.SearchMeta
 
 @Keep
 data class AnalyticsPayload(
+  val action: InstallAction?,
   val isApkfy: Boolean,
   val isAab: Boolean,
   val aabTypes: String,
@@ -31,4 +33,5 @@ fun AnalyticsPayload.toAnalyticsUiContext(): AnalyticsUIContext = AnalyticsUICon
   bundleMeta = bundleMeta,
   searchMeta = searchMeta,
   itemPosition = itemPosition,
+  installAction = action
 )
