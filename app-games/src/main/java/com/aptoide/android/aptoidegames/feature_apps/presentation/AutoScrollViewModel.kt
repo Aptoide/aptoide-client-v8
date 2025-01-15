@@ -11,11 +11,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
-class AutoScrollViewModel : ViewModel() {
+const val DEFAULT_AUTO_SCROLL_SPEED = 4L
+
+class AutoScrollViewModel(scrollSpeedInSeconds: Long) : ViewModel() {
 
   private var currentItem: Int = 0
-  private var delayTime: Long = DEFAULT_AUTO_SCROLL_SPEED
+  private var delayTime: Long = TimeUnit.SECONDS.toMillis(scrollSpeedInSeconds)
 
   private val viewModelState = MutableStateFlow<Int?>(null)
 
@@ -69,20 +72,19 @@ class AutoScrollViewModel : ViewModel() {
     super.onCleared()
     cancel()
   }
-
-  companion object {
-    const val DEFAULT_AUTO_SCROLL_SPEED = 4000L
-  }
 }
 
 @Composable
-fun perCarouselViewModel(carouselTag: String): AutoScrollViewModel {
+fun perCarouselViewModel(
+  carouselTag: String,
+  scrollSpeedInSeconds: Long = DEFAULT_AUTO_SCROLL_SPEED
+): AutoScrollViewModel {
   return viewModel(
     key = carouselTag,
     factory = object : Factory {
       override fun <T : ViewModel> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
-        return AutoScrollViewModel() as T
+        return AutoScrollViewModel(scrollSpeedInSeconds) as T
       }
     }
   )

@@ -78,6 +78,7 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.AppsGridBundle
 import com.aptoide.android.aptoidegames.feature_apps.presentation.BonusSectionView
 import com.aptoide.android.aptoidegames.feature_apps.presentation.CarouselBundle
 import com.aptoide.android.aptoidegames.feature_apps.presentation.CarouselLargeBundle
+import com.aptoide.android.aptoidegames.feature_apps.presentation.DEFAULT_AUTO_SCROLL_SPEED
 import com.aptoide.android.aptoidegames.feature_apps.presentation.MyGamesBundleView
 import com.aptoide.android.aptoidegames.feature_apps.presentation.PublisherTakeOverBundle
 import com.aptoide.android.aptoidegames.feature_apps.presentation.buildSeeMoreRoute
@@ -359,6 +360,7 @@ fun SeeMoreView(
 fun HorizontalPagerView(
   appsList: List<App>,
   modifier: Modifier = Modifier,
+  scrollSpeedInSeconds: Long = DEFAULT_AUTO_SCROLL_SPEED,
   content: @Composable (modifier: Modifier, page: Int, app: App) -> Unit,
 ) {
   val screenWidth = LocalConfiguration.current.screenWidthDp.dp
@@ -376,7 +378,10 @@ fun HorizontalPagerView(
   )
   val scope = rememberCoroutineScope()
 
-  val autoScrollViewModel = perCarouselViewModel(carouselTag = appsList.hashCode().toString())
+  val autoScrollViewModel = perCarouselViewModel(
+    carouselTag = appsList.hashCode().toString(),
+    scrollSpeedInSeconds = scrollSpeedInSeconds.takeIf { it > 0L } ?: DEFAULT_AUTO_SCROLL_SPEED
+  )
   val currentPage by autoScrollViewModel.uiState.collectAsState()
 
   /*Used when the current page state is changed in the AutoScrollViewModel*/
