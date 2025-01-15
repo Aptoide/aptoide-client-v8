@@ -207,6 +207,9 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
 
   fun sendApkfyTimeout() = analyticsSender.logEvent("apkfy_timeout", params = emptyMap())
 
+  fun sendECVideosFlagReady() =
+    analyticsSender.logEvent("ec_videos_flag_ready", params = emptyMap())
+
   companion object {
     internal const val P_OPEN_TYPE = "open_type"
     internal const val P_FIRST_LAUNCH = "first_launch"
