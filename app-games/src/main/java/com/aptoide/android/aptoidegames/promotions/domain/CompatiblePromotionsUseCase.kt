@@ -1,5 +1,7 @@
 package com.aptoide.android.aptoidegames.promotions.domain
 
+import cm.aptoide.pt.extensions.compatVersionCode
+import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.AppsListRepository
 import cm.aptoide.pt.install_manager.InstallManager
 import com.aptoide.android.aptoidegames.promotions.data.PromotionsRepository
@@ -18,29 +20,29 @@ class CompatiblePromotionsUseCase @Inject constructor(
    *  1 - Promotion with highest bonus
    *  2 - In case of a tie, choose the one that comes first in the promotion list
    */
-  suspend fun getTopPromotion() = getCompatiblePromotions().maxByOrNull { it.first.userBonus }
-
-  /**
-   * Gets the promotions of apps that the user has installed and that have an outdated version
-   */
-  private suspend fun getCompatiblePromotions() = promotionsRepository.getAllPromotions()
-    .run { //used to filter out all previously skipped promotions
-      val skippedPromotions = skippedPromotionsRepository.getSkippedPromotions()
-      filter { !skippedPromotions.contains(it.packageName) }
-    }
-    .run {
-      val promotionApps = appsRepository.getAppsList(
-        packageNames = this.joinToString(separator = ",") { it.packageName }
+  suspend fun getTopPromotion(): Pair<Promotion, App>? {
+    val skippedPromotions = skippedPromotionsRepository.getSkippedPromotions()
+      .toSet()
+    val promotions = promotionsRepository.getAllPromotions()
+      //used to filter out all previously skipped promotions
+      .filter { it.packageName !in skippedPromotions }
+      .sortedBy(Promotion::userBonus)
+    val promotionApps = appsRepository
+      .getAppsList(
+        packageNames = promotions.joinToString(
+          separator = ",",
+          transform = Promotion::packageName
+        )
       )
-      mapNotNull { promotion ->
-        val promoApp = promotionApps.find { it.packageName == promotion.packageName }
-        val localAppInfo = installManager.getApp(promotion.packageName).packageInfo
+      .associateBy(App::packageName)
+    return promotions
+      .mapNotNull { promo -> promotionApps[promo.packageName]?.let { promo to it } }
+      .firstNotNullOfOrNull { it.takeIfPromotable() }
+  }
 
-        if (promoApp != null && localAppInfo != null
-          && localAppInfo.versionCode < promoApp.versionCode
-        ) {
-          promotion to promoApp
-        } else null
-      }
-    }
+  private fun Pair<Promotion, App>.takeIfPromotable(): Pair<Promotion, App>? = installManager
+    .getApp(first.packageName)
+    .packageInfo
+    ?.takeIf { it.compatVersionCode < second.versionCode }
+    ?.let { this }
 }
