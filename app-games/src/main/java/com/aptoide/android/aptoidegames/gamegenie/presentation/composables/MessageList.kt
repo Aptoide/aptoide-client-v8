@@ -44,8 +44,9 @@ fun MessageList(
       }
 
       if (idx == messages.lastIndex) {
-        suggestions.forEachIndexed { index, suggestion ->
-          SuggestionBox(suggestion, onSuggestionClick, index)
+        suggestions.forEachIndexed { reversedIndex, suggestion ->
+          val actualIndex = suggestions.size - reversedIndex
+          SuggestionBox(suggestion, onSuggestionClick, actualIndex)
         }
 
         MessageBubble(
