@@ -19,9 +19,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -223,16 +223,20 @@ class DownloadViewModel(
   }
 
   private fun migrate(resolver: ConstraintsResolver) {
-    try {
-      uninstall()
-      appInstaller.packageInfoFlow.filter { info ->
-        info == null
+    viewModelScope.launch {
+      try {
+        appInstaller.uninstall().stateAndProgress
+          .last()
+          .let {
+            if (it is Task.State.Completed) {
+              install(resolver)
+            }
+          }
+      } catch (_: Exception) {
+        viewModelState.update {
+          DownloadUiState.Error(retryWith = ::migrate)
+        }
       }
-        .map {
-          install(resolver)
-        }.launchIn(viewModelScope)
-    } catch (e: Exception) {
-      e.printStackTrace()
     }
   }
 
