@@ -29,6 +29,7 @@ internal class AGPromotionsRepository @Inject constructor(
 
 fun PromotionJson.toDomainModel() = Promotion(
   packageName = packageName,
+  aliases = aliases.values.toSet(),
   image = image,
   title = title,
   content = content,

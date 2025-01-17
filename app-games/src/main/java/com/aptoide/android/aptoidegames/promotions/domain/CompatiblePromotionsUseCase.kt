@@ -45,4 +45,11 @@ class CompatiblePromotionsUseCase @Inject constructor(
     .packageInfo
     ?.takeIf { it.compatVersionCode < second.versionCode }
     ?.let { this }
+    ?: first.aliases
+      .firstNotNullOfOrNull {
+        installManager.getApp(it)
+          .packageInfo
+          ?.takeIf { it.compatVersionCode <= second.versionCode }
+      }
+      ?.let { this }
 }
