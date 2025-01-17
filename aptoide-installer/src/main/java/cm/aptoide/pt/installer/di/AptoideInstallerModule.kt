@@ -5,6 +5,8 @@ import cm.aptoide.pt.installer.platform.InstallEvents
 import cm.aptoide.pt.installer.platform.InstallEventsImpl
 import cm.aptoide.pt.installer.platform.InstallPermissions
 import cm.aptoide.pt.installer.platform.InstallPermissionsImpl
+import cm.aptoide.pt.installer.platform.UninstallEvents
+import cm.aptoide.pt.installer.platform.UninstallEventsImpl
 import cm.aptoide.pt.installer.platform.UserActionHandler
 import cm.aptoide.pt.installer.platform.UserActionHandlerImpl
 import cm.aptoide.pt.installer.platform.UserActionLauncher
@@ -30,6 +32,11 @@ object AptoideInstallerModule {
   @Singleton
   fun providesInstallEvents(installFinisherImpl: InstallEventsImpl): InstallEvents =
     installFinisherImpl
+
+  @Provides
+  @Singleton
+  fun providesUninstallEvents(uninstallFinisherImpl: UninstallEventsImpl): UninstallEvents =
+    uninstallFinisherImpl
 
   @Provides
   @Singleton

@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.pm.PackageInstaller.PACKAGE_SOURCE_STORE
 import android.content.pm.PackageInstaller.Session
 import android.content.pm.PackageInstaller.SessionParams.USER_ACTION_NOT_REQUIRED
-import android.net.Uri
 import android.os.Build
 import cm.aptoide.pt.extensions.checkMd5
 import cm.aptoide.pt.extensions.hasPackageInstallsPermission
@@ -24,6 +23,9 @@ import cm.aptoide.pt.installer.platform.INSTALL_SESSION_API_COMPLETE_ACTION
 import cm.aptoide.pt.installer.platform.InstallEvents
 import cm.aptoide.pt.installer.platform.InstallPermissions
 import cm.aptoide.pt.installer.platform.InstallResult
+import cm.aptoide.pt.installer.platform.UNINSTALL_API_COMPLETE_ACTION
+import cm.aptoide.pt.installer.platform.UninstallEvents
+import cm.aptoide.pt.installer.platform.UninstallResult
 import cm.aptoide.pt.installer.platform.copyWithProgressTo
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
@@ -35,12 +37,14 @@ import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.random.Random
 
 @Singleton
 class AptoideInstaller @Inject constructor(
   @ApplicationContext private val context: Context,
   @DownloadsPath private val downloadsPath: File,
   private val installEvents: InstallEvents,
+  private val uninstallEvents: UninstallEvents,
   private val installPermissions: InstallPermissions,
 ) : PackageInstaller {
   private val initialPermissionsAllowed = getPermissionsState()
@@ -163,11 +167,32 @@ class AptoideInstaller @Inject constructor(
 
   override fun uninstall(packageName: String): Flow<Int> = flow {
     emit(0)
-    val intent = Intent(Intent.ACTION_DELETE)
-    intent.data = Uri.parse("package:$packageName")
-    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-    context.startActivity(intent)
+    val id = Random.nextInt()
+
+    val intentSender = PendingIntent
+      .getBroadcast(
+        context,
+        UNINSTALL_REQUEST_CODE,
+        Intent(UNINSTALL_API_COMPLETE_ACTION)
+          .putExtra("${context.packageName}.uninstall_id", id)
+          .setPackage(context.packageName),
+        // This is essential to be like that for having extras in the intent
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+          PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        } else {
+          PendingIntent.FLAG_UPDATE_CURRENT
+        }
+      )
+      .intentSender
+
+    context.packageManager.packageInstaller.uninstall(packageName, intentSender)
     emit(99)
+
+    when (val result = uninstallEvents.events.filter { it.id == id }.first()) {
+      is UninstallResult.Fail -> throw Exception(result.message)
+      is UninstallResult.Abort -> throw AbortException(result.message)
+      is UninstallResult.Success -> emit(100)
+    }
   }
 
   private suspend fun InstallPackageInfo.getCheckedFiles(
@@ -236,5 +261,6 @@ class AptoideInstaller @Inject constructor(
 
   companion object {
     private const val SESSION_INSTALL_REQUEST_CODE = 18
+    private const val UNINSTALL_REQUEST_CODE = 19
   }
 }
