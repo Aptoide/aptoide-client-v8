@@ -36,7 +36,6 @@ import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.BottomSheetContent
 import com.aptoide.android.aptoidegames.BottomSheetHeader
 import com.aptoide.android.aptoidegames.R
-import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
 import com.aptoide.android.aptoidegames.design_system.PrimarySmallButton
@@ -69,11 +68,10 @@ class PromoCodeBottomSheet(
     val (walletAppUiState, walletReload) = rememberWalletApp()
 
     val promoCodeAnalytics = rememberPromoCodeAnalytics()
-    val analyticsContext = AnalyticsContext.current
 
     LaunchedEffect(packageInfo) {
       if (packageInfo == null) {
-        promoCodeAnalytics.sendPromoCodeImpressionEvent(analyticsContext, "app_not_installed")
+        promoCodeAnalytics.sendPromoCodeImpressionEvent(status = "app_not_installed")
       }
     }
 
@@ -121,11 +119,9 @@ fun PromoCodeBottomSheetContent(
       val isWalletInstalled = downloadState is DownloadUiState.Installed
 
       val promoCodeAnalytics = rememberPromoCodeAnalytics()
-      val analyticsContext = AnalyticsContext.current
 
       LaunchedEffect(Unit) {
         promoCodeAnalytics.sendPromoCodeImpressionEvent(
-          analyticsContext = analyticsContext,
           status = "success",
           withWallet = isWalletInstalled
         )
@@ -221,10 +217,7 @@ fun PromoCodeBottomSheetContent(
           TertiarySmallButton(
             onClick = {
               showSnack(walletDisclaimer)
-              promoCodeAnalytics.sendPromoCodeClickEvent(
-                analyticsContext = analyticsContext,
-                withWallet = false
-              )
+              promoCodeAnalytics.sendPromoCodeClickEvent(withWallet = false)
             },
             title = stringResource(id = R.string.promo_code_use_button)
           )
@@ -234,10 +227,7 @@ fun PromoCodeBottomSheetContent(
               val uri = Uri.parse("appcoins://promocode?promocode=$promoCode")
               val intent = Intent(Intent.ACTION_VIEW, uri)
               context.startActivity(intent)
-              promoCodeAnalytics.sendPromoCodeClickEvent(
-                analyticsContext = analyticsContext,
-                withWallet = true
-              )
+              promoCodeAnalytics.sendPromoCodeClickEvent(withWallet = true)
             },
             title = stringResource(id = R.string.promo_code_use_button)
           )

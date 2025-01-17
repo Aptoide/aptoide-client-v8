@@ -1,42 +1,36 @@
 package com.aptoide.android.aptoidegames.promo_codes.analytics
 
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
-import com.aptoide.android.aptoidegames.analytics.dto.AnalyticsUIContext
-import com.aptoide.android.aptoidegames.analytics.toBiParameters
+import com.aptoide.android.aptoidegames.analytics.mapOfNonNull
 
 class PromoCodeAnalytics(
   private val biAnalytics: BIAnalytics,
 ) {
 
   fun sendPromoCodeImpressionEvent(
-    analyticsContext: AnalyticsUIContext,
     status: String,
     withWallet: Boolean? = null
   ) = sendPromoCodeEvent(
-    analyticsContext = analyticsContext,
     action = "impression",
     status = status,
     withWallet = withWallet
   )
 
   fun sendPromoCodeClickEvent(
-    analyticsContext: AnalyticsUIContext,
     withWallet: Boolean? = null
   ) = sendPromoCodeEvent(
-    analyticsContext = analyticsContext,
     action = "click",
     withWallet = withWallet
   )
 
   private fun sendPromoCodeEvent(
-    analyticsContext: AnalyticsUIContext,
     action: String,
     status: String? = null,
     withWallet: Boolean? = null
   ) {
     biAnalytics.logEvent(
       name = "ag_promo_codes",
-      analyticsContext.toBiParameters(
+      mapOfNonNull(
         P_ACTION to action,
         P_TYPE to when (withWallet) {
           true -> "with_wallet_app"
