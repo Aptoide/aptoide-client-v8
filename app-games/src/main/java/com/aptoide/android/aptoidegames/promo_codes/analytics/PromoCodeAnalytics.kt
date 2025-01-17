@@ -34,7 +34,7 @@ class PromoCodeAnalytics(
         P_ACTION to action,
         P_TYPE to when (withWallet) {
           true -> "with_wallet_app"
-          false -> "with_wallet_app"
+          false -> "without_wallet_app"
           null -> "n-a"
         },
         P_STATUS to status
