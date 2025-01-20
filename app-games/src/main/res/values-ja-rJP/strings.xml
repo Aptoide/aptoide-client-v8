@@ -172,7 +172,7 @@
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">詳細を教えてください：\n\u2022問題はいつ発生しましたか？\n\u2022どのゲームで購入されましたか？\n\n
 送信をタップすると、メールアプリが開きます。問題のスクリーンショットや動画を添付してください。</string>
   <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">このゲームをインストールしますか？</string>
-  <string name="apkfy_whats_aptoide_games_title">What\'s Aptoide Games?</string>
+  <string name="apkfy_whats_aptoide_games_title">Aptoide Gamesとは？</string>
   <string name="apkfy_install_body">Aptoide Gamesでお気に入りのゲームやその他のものを手に入れよう！</string>
   <string name="apkfy_install_bullet_points">\u2022 素晴らしいキュレーションのトップゲーム。\n\u2022 ログイン不要！\n\u2022 お好きなゲームで特別なプロモーションと報酬を。</string>
   <string name="app_size_mb_title" comment="s_mb">%s MB</string>
