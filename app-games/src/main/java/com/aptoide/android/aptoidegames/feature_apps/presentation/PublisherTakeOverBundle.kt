@@ -204,7 +204,7 @@ fun PublisherTakeOverListView(
   HorizontalPagerView(
     appsList = appsList,
     modifier = Modifier.padding(bottom = 24.dp)
-  ) { modifier, page, app ->
+  ) { modifier, page, app, _ ->
 
     Box(
       modifier

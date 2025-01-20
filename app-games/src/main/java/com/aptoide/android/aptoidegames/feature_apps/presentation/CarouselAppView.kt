@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,6 +25,8 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
+import cm.aptoide.pt.extensions.extractVideoId
+import cm.aptoide.pt.extensions.isYoutubeURL
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_apps.presentation.previewAppsListIdleState
@@ -40,12 +43,14 @@ import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.home.HorizontalPagerView
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
 import com.aptoide.android.aptoidegames.home.getSeeMoreRouteNavigation
+import com.aptoide.android.aptoidegames.home.rememberShouldShowVideos
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.installer.presentation.ProgressText
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
+import com.aptoide.android.aptoidegames.videos.presentation.CarouselAppYoutubePlayer
 
 @Composable
 fun CarouselBundle(
@@ -76,15 +81,18 @@ private fun RealCarouselBundle(
       titleColor = Palette.White,
     )
     when (uiState) {
-      is AppsListUiState.Idle -> CarouselListView(
-        appsList = uiState.apps,
-        navigate = navigate
-      )
+      is AppsListUiState.Idle -> {
+        CarouselListView(
+          appsList = uiState.apps,
+          bundleTag = bundle.tag,
+          navigate = navigate
+        )
+      }
 
       AppsListUiState.Empty,
       AppsListUiState.Error,
       AppsListUiState.NoConnection,
-      -> SmallEmptyView(modifier = Modifier.height(184.dp))
+        -> SmallEmptyView(modifier = Modifier.height(184.dp))
 
       AppsListUiState.Loading -> LoadingBundleView(height = 184.dp)
     }
@@ -94,12 +102,18 @@ private fun RealCarouselBundle(
 @Composable
 private fun CarouselListView(
   appsList: List<App>,
+  bundleTag: String,
   navigate: (String) -> Unit,
 ) {
   val analyticsContext = AnalyticsContext.current
   val genericAnalytics = rememberGenericAnalytics()
 
-  HorizontalPagerView(appsList = appsList) { modifier, page, item ->
+  val showVideos = rememberShouldShowVideos(bundleTag)
+
+  HorizontalPagerView(
+    appsList = appsList,
+    scrollSpeedInSeconds = if (showVideos) 9L else DEFAULT_AUTO_SCROLL_SPEED
+  ) { modifier, page, item, isCurrentPage ->
     Box(
       modifier
         .width(280.dp)
@@ -107,6 +121,7 @@ private fun CarouselListView(
     ) {
       CarouselAppView(
         app = item,
+        showVideo = showVideos && isCurrentPage,
         onClick = {
           genericAnalytics.sendAppPromoClick(
             app = item,
@@ -125,13 +140,18 @@ private fun CarouselListView(
 @Composable
 private fun CarouselAppView(
   app: App,
+  showVideo: Boolean,
   onClick: () -> Unit,
 ) {
+  val videoId = remember(app) {
+    app.videos.getOrNull(0)
+      ?.takeIf { it.isNotEmpty() && it.isYoutubeURL() }
+      ?.extractVideoId()
+  }
 
   Column(
     modifier = Modifier
       .requiredWidth(280.dp)
-      .height(184.dp)
       .semantics(mergeDescendants = true) {
         contentDescription = app.name
       }
@@ -140,13 +160,36 @@ private fun CarouselAppView(
     Box(
       contentAlignment = Alignment.TopEnd
     ) {
-      AptoideFeatureGraphicImage(
-        modifier = Modifier
-          .width(280.dp)
-          .height(136.dp),
-        data = app.featureGraphic,
-        contentDescription = null,
-      )
+      if (showVideo && videoId != null) {
+        CarouselAppYoutubePlayer(
+          modifier = Modifier
+            .width(280.dp)
+            .height(157.dp),
+          videoId = videoId,
+          onErrorContent = {
+            AptoideFeatureGraphicImage(
+              modifier = Modifier
+                .width(280.dp)
+                .height(157.dp),
+              data = app.featureGraphic,
+              contentDescription = null,
+            )
+          }
+        )
+        Box(
+          modifier = Modifier
+            .matchParentSize()
+            .clickable(onClick = onClick)
+        )
+      } else {
+        AptoideFeatureGraphicImage(
+          modifier = Modifier
+            .width(280.dp)
+            .height(136.dp),
+          data = app.featureGraphic,
+          contentDescription = null,
+        )
+      }
       if (app.isAppCoins) {
         Image(
           imageVector = getBonusIconRight(
