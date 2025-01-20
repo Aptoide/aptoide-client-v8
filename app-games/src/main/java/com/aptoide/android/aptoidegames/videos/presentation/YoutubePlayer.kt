@@ -56,6 +56,89 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTube
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 
 @Composable
+fun CarouselAppYoutubePlayer(
+  modifier: Modifier,
+  videoId: String,
+  onErrorContent: @Composable () -> Unit,
+) {
+  val lifecycleOwner = LocalLifecycleOwner.current
+  val youtubePlayerTracker = remember { YouTubePlayerTracker() }
+  val youtubePlayerView = rememberYoutubePlayerView(
+    videoId = videoId,
+    youtubePlayerTracker = youtubePlayerTracker,
+    startMuted = true,
+    autoplay = true
+  )
+
+  var youtubePlayer: YouTubePlayer? by remember { mutableStateOf(null) }
+  var showVideo by remember { mutableStateOf(false) }
+
+  DisposableEffect(lifecycleOwner) {
+    val observer = LifecycleEventObserver { _, event ->
+      when (event) {
+        Lifecycle.Event.ON_RESUME -> youtubePlayer?.play()
+        else -> {}
+      }
+    }
+
+    lifecycleOwner.lifecycle.addObserver(observer)
+
+    onDispose {
+      lifecycleOwner.lifecycle.removeObserver(observer)
+      youtubePlayerView?.release()
+    }
+  }
+
+  youtubePlayerView?.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
+    override fun onReady(youTubePlayer: YouTubePlayer) {
+      youtubePlayer = youTubePlayer
+      youtubePlayer?.hidePlayerControls()
+      youtubePlayer?.hideVideoTitle()
+    }
+
+    override fun onStateChange(
+      youTubePlayer: YouTubePlayer,
+      state: PlayerConstants.PlayerState,
+    ) {
+      when (state) {
+        PlayerConstants.PlayerState.VIDEO_CUED,
+        PlayerConstants.PlayerState.PAUSED,
+        PlayerConstants.PlayerState.PLAYING -> showVideo = true
+
+        PlayerConstants.PlayerState.ENDED -> youtubePlayer?.cueVideo(videoId, 0f)
+
+        else -> Unit
+      }
+    }
+  })
+
+  if (youtubePlayerView != null) {
+    AnimatedVisibility(
+      visible = showVideo,
+      enter = fadeIn(),
+    ) {
+      Box {
+        AndroidView<YouTubePlayerView>(
+          modifier = modifier,
+          factory = {
+            youtubePlayerView.removeSelf()
+            youtubePlayerView.toggleAccessibility(false)
+            youtubePlayerView
+          }
+        )
+      }
+    }
+  }
+
+  AnimatedVisibility(
+    visible = !showVideo,
+    exit = fadeOut()
+  ) {
+    onErrorContent()
+  }
+}
+
+@Composable
 fun AppViewYoutubePlayer(
   modifier: Modifier,
   videoId: String,

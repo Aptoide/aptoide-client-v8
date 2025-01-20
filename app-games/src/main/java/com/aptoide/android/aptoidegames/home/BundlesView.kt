@@ -361,7 +361,7 @@ fun HorizontalPagerView(
   appsList: List<App>,
   modifier: Modifier = Modifier,
   scrollSpeedInSeconds: Long = DEFAULT_AUTO_SCROLL_SPEED,
-  content: @Composable (modifier: Modifier, page: Int, app: App) -> Unit,
+  content: @Composable (modifier: Modifier, page: Int, app: App, isCurrentPage: Boolean) -> Unit,
 ) {
   val screenWidth = LocalConfiguration.current.screenWidthDp.dp
   val padding = (screenWidth - 280.dp - 16.dp) / 2 + 8.dp
@@ -434,7 +434,12 @@ fun HorizontalPagerView(
           translationX = ((size.width - (size.width * scale)) / 2) * pageOffset.sign
         }
       }
-    content(pageModifier, page, app)
+    content(
+      pageModifier,
+      page,
+      app,
+      page == pagerState.currentPage.minus(1).floorMod(appsList.size)
+    )
   }
 }
 
