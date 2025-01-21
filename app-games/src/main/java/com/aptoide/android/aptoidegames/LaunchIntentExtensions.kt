@@ -5,7 +5,7 @@ import android.net.Uri
 import com.aptoide.android.aptoidegames.analytics.presentation.withPrevScreen
 
 // Deep link
-private const val DEEPLINK_KEY = "dti.link"
+const val DEEPLINK_KEY = "dti.link"
 
 val Intent?.hasDeepLink get() = this?.extras?.containsKey(DEEPLINK_KEY) ?: false
 
