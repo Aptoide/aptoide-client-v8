@@ -43,7 +43,6 @@ apacheCommonsText = "1.9"
 adyenVersion = "4.13.3"
 indicative = "1.1.0"
 zoomable = "1.6.2"
-fetch = "3.4.1"
 
 #test libraries
 junit = "4.13.2"
@@ -112,8 +111,6 @@ work-manager = { module = "androidx.work:work-runtime-ktx", version.ref = "workM
 hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "hiltWork" }
 indicative-sdk = { module = "com.indicative.client.android:Indicative-Android", version.ref = "indicative" }
 zoomable = { module = "net.engawapg.lib:zoomable", version.ref = "zoomable" }
-fetch = { module = "com.github.tonyofrancis.Fetch:fetch2", version.ref = "fetch" }
-fetchOkHttp = { module = "com.github.tonyofrancis.Fetch:fetch2okhttp", version.ref = "fetch" }
 
 #Test library dependencies
 junit = { module = "junit:junit", version.ref = "junit" }
