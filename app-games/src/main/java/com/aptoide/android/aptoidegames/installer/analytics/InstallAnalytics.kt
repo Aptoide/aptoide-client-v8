@@ -15,7 +15,7 @@ import com.aptoide.android.aptoidegames.analytics.toBiParameters
 import com.aptoide.android.aptoidegames.analytics.toGenericParameters
 import com.aptoide.android.aptoidegames.installer.analytics.InstallAnalytics.Companion.P_APP_SIZE_MB
 import com.aptoide.android.aptoidegames.installer.analytics.InstallAnalytics.Companion.P_UPDATE_TYPE
-import com.aptoide.android.aptoidegames.installer.ff.isFetchDownloaderEnabled
+import com.aptoide.android.aptoidegames.installer.ff.getDownloaderVariant
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -30,13 +30,7 @@ class InstallAnalytics(
 
   init {
     CoroutineScope(Dispatchers.Main).launch {
-      featureFlags.isFetchDownloaderEnabled()?.let {
-        if (it) {
-          "ab_test_download_lib_dec_19" to "group_b"
-        } else {
-          "ab_test_download_lib_dec_19" to "group_a"
-        }
-      }?.let { biAnalytics.setUserProperties(it) }
+      biAnalytics.setUserProperties("downloader_variant" to featureFlags.getDownloaderVariant())
     }
   }
 
