@@ -25,9 +25,7 @@ class DownloaderSelector @Inject constructor(
     .flatMapLatest { it.download(packageName, installPackageInfo) }
 
   private suspend fun getPackageDownloader(): PackageDownloader =
-    if (featureFlags.isFetchDownloaderEnabled() == true) {
-      fetchPackageDownloader
-    } else {
-      aptoidePackageDownloader
+    when (featureFlags.isFetchDownloaderEnabled()) {
+      else -> aptoidePackageDownloader
     }
 }
