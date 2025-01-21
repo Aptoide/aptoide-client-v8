@@ -12,6 +12,7 @@ import cm.aptoide.pt.install_manager.InstallManager
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withPrevScreen
+import com.aptoide.android.aptoidegames.firebase.FirebaseConstants
 import com.aptoide.android.aptoidegames.home.MainView
 import com.aptoide.android.aptoidegames.installer.analytics.InstallAnalytics
 import com.aptoide.android.aptoidegames.installer.analytics.getNetworkType
@@ -133,14 +134,13 @@ class MainActivity : AppCompatActivity() {
     handleFirebaseNotificationAnalytics(intent)
   }
 
-  //TODO: recheck this code in case [firebase-messaging] dependency is updated.
-  //The code relies on internal data names defined by firebase messaging.
   private fun handleFirebaseNotificationAnalytics(intent: Intent?) {
-    val messageId = intent?.extras?.getString("google.message_id")
-    val notificationAnalyticsBundle = intent?.extras?.getBundle("gcm.n.analytics_data")
+    val messageId = intent?.extras?.getString(FirebaseConstants.FIREBASE_MESSAGE_ID)
+    val notificationAnalyticsBundle =
+      intent?.extras?.getBundle(FirebaseConstants.FIREBASE_ANALYTICS_DATA)
 
     if (messageId != null && notificationAnalyticsBundle != null) {
-      notificationAnalyticsBundle.putString("google.message_id", messageId)
+      notificationAnalyticsBundle.putString(FirebaseConstants.FIREBASE_MESSAGE_ID, messageId)
 
       notificationAnalyticsBundle.toFirebaseNotificationAnalyticsInfo()?.let {
         firebaseNotificationAnalytics.sendNotificationOpened(it)
