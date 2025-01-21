@@ -42,10 +42,10 @@ internal class AptoideWidgetsRepository @Inject constructor(
     }
 
   private fun WidgetsJSON.WidgetNetwork.toDomainModel(): Widget? {
-    val type = this.type ?: return null
+    val widgetType = type?.let(::mapWidgetType) ?: return null
     return Widget(
       title = this.title!!,
-      type = WidgetType.valueOf(type.name),
+      type = widgetType,
       layout = extractLayout(),
       view = this.view,
       tag = this.tag,
@@ -77,9 +77,12 @@ internal class AptoideWidgetsRepository @Inject constructor(
     }
   }
 
+  private fun mapWidgetType(type: String): WidgetType? = runCatching { WidgetType.valueOf(type) }
+    .getOrNull()
+
   private fun WidgetsJSON.WidgetNetwork.extractLayout() = try {
     WidgetLayout.valueOf(this.data!!.layout!!.name)
-  } catch (e: NullPointerException) {
+  } catch (_: NullPointerException) {
     WidgetLayout.UNDEFINED
   }
 

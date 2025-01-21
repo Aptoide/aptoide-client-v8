@@ -104,7 +104,7 @@ class InstallAnalytics(
     analyticsContext: AnalyticsUIContext
   ) {
     genericAnalytics.logEvent(
-      name = "queue_entry",
+      name = "download_queue_entry",
       params = analyticsContext.toGenericParameters(
         GenericAnalytics.P_PACKAGE_NAME to packageName,
       )
@@ -116,7 +116,7 @@ class InstallAnalytics(
     installPackageInfo: InstallPackageInfo
   ) {
     genericAnalytics.logEvent(
-      name = "queue_exit",
+      name = "download_queue_exit",
       params = installPackageInfo.toAppGenericParameters(
         packageName = packageName,
       )

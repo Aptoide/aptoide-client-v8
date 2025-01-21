@@ -6,7 +6,7 @@ import androidx.annotation.Keep
 class WidgetsJSON {
   @Keep
   data class WidgetNetwork(
-    var type: WidgetTypeJSON? = null,
+    var type: String? = null,
     var title: String? = null, // Highlighted, Games, Categories, Timeline, Recommended for you,
     var tag: String, // Aptoide Publishers
     var view: String? = null,
