@@ -4,7 +4,7 @@ import cm.aptoide.pt.feature_flags.domain.FeatureFlags
 import cm.aptoide.pt.install_manager.DownloadInfo
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.workers.PackageDownloader
-import com.aptoide.android.aptoidegames.installer.ff.isFetchDownloaderEnabled
+import com.aptoide.android.aptoidegames.installer.ff.getDownloaderVariant
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -14,7 +14,6 @@ import javax.inject.Inject
 class DownloaderSelector @Inject constructor(
   private val featureFlags: FeatureFlags,
   private val aptoidePackageDownloader: PackageDownloader,
-  private val fetchPackageDownloader: PackageDownloader,
 ) : PackageDownloader {
 
   @OptIn(ExperimentalCoroutinesApi::class)
@@ -25,7 +24,7 @@ class DownloaderSelector @Inject constructor(
     .flatMapLatest { it.download(packageName, installPackageInfo) }
 
   private suspend fun getPackageDownloader(): PackageDownloader =
-    when (featureFlags.isFetchDownloaderEnabled()) {
+    when (featureFlags.getDownloaderVariant()) {
       else -> aptoidePackageDownloader
     }
 }
