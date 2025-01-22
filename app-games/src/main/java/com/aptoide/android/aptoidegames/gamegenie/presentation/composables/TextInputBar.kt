@@ -33,7 +33,7 @@ fun TextInputBar(
   TextField(
     value = messageText,
     onValueChange = { newValue -> messageText = newValue },
-    textStyle = AGTypography.Body.copy(color = Palette.White),
+    textStyle = AGTypography.Chat.copy(color = Palette.White),
     singleLine = true,
     modifier = modifier
       .background(Palette.GreyDark),
@@ -42,7 +42,7 @@ fun TextInputBar(
         text = stringResource(R.string.genai_input_message_field),
         textAlign = TextAlign.Start,
         overflow = TextOverflow.Visible,
-        style = AGTypography.BodyBold,
+        style = AGTypography.ChatBold,
         color = Palette.GreyLight
       )
     },

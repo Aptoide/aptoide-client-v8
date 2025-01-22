@@ -115,4 +115,16 @@ object AGTypography {
     fontSize = 12.sp,
     lineHeight = 18.sp
   )
+  val Chat = TextStyle(
+    fontFamily = chakraPetchFontFamily,
+    fontWeight = FontWeight.Normal,
+    fontSize = 14.sp,
+    lineHeight = (18.2).sp
+  )
+  val ChatBold = TextStyle(
+    fontFamily = chakraPetchFontFamily,
+    fontWeight = FontWeight.Bold,
+    fontSize = 14.sp,
+    lineHeight = (18.2).sp
+  )
 }

@@ -59,7 +59,7 @@ fun MessageBubble(
     ) {
       Text(
         text = message?.replace("\"", "") ?: stringResource(R.string.genai_introduction_body),
-        style = AGTypography.Body,
+        style = AGTypography.Chat,
         color = if (isUserMessage) Palette.Black else Palette.White,
       )
 
