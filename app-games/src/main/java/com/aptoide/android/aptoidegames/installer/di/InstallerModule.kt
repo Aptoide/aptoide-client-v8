@@ -141,12 +141,14 @@ class InstallerModule {
   @Singleton
   @Provides
   fun providesInstallAnalytics(
+    @ApplicationContext context: Context,
     featureFlags: FeatureFlags,
     genericAnalytics: GenericAnalytics,
     biAnalytics: BIAnalytics,
     @StoreName storeName: String,
     silentInstallChecker: SilentInstallChecker,
   ): InstallAnalytics = InstallAnalyticsImpl(
+    context = context,
     featureFlags = featureFlags,
     genericAnalytics = genericAnalytics,
     biAnalytics = biAnalytics,
