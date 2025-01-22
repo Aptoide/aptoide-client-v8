@@ -83,6 +83,7 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.MyGamesBundleV
 import com.aptoide.android.aptoidegames.feature_apps.presentation.PublisherTakeOverBundle
 import com.aptoide.android.aptoidegames.feature_apps.presentation.buildSeeMoreRoute
 import com.aptoide.android.aptoidegames.feature_apps.presentation.perCarouselViewModel
+import com.aptoide.android.aptoidegames.feature_promotional.EventPromotionalView
 import com.aptoide.android.aptoidegames.feature_promotional.NewAppPromotionalView
 import com.aptoide.android.aptoidegames.feature_promotional.NewAppVersionPromotionalView
 import com.aptoide.android.aptoidegames.feature_promotional.NewsPromotionalView
@@ -257,7 +258,11 @@ fun BundlesView(
               navigate = navigateTo
             )
 
-            Type.IN_GAME_EVENT,
+            Type.IN_GAME_EVENT -> EventPromotionalView(
+              bundle = bundle,
+              navigate = navigateTo
+            )
+
             Type.APP_COMING_SOON -> Unit
 
             else -> Unit
