@@ -1,5 +1,7 @@
 package com.aptoide.android.aptoidegames.installer.analytics
 
+import android.content.Context
+import android.net.ConnectivityManager
 import cm.aptoide.pt.extensions.toInt
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_flags.domain.FeatureFlags
@@ -19,8 +21,11 @@ import com.aptoide.android.aptoidegames.installer.ff.getDownloaderVariant
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.net.Inet4Address
+import java.net.Inet6Address
 
 class InstallAnalyticsImpl(
+  private val context: Context,
   private val featureFlags: FeatureFlags,
   private val genericAnalytics: GenericAnalytics,
   private val biAnalytics: BIAnalytics,
@@ -434,6 +439,7 @@ class InstallAnalyticsImpl(
             P_STORE to it?.store,
             P_TRUSTED_BADGE to it?.trustedBadge,
             P_DOWNLOAD_SPEED_MB to getDownloadSpeedInterval(downloadedBytesPerSecond),
+            P_NETWORK_IP_VERSION to context.ipVersion,
             *pairs
           )
       }
@@ -475,6 +481,7 @@ class InstallAnalyticsImpl(
     private const val P_ERROR_TYPE = "error_type"
     private const val P_ERROR_HTTP_CODE = "error_http_code"
     private const val P_ERROR_URL = "error_url"
+    private const val P_NETWORK_IP_VERSION = "network_ip_version"
     internal const val P_WIFI_SETTING = "wifi_setting"
     internal const val P_PROMPT_TYPE = "prompt_type"
     internal const val P_SERVICE = "service"
@@ -569,3 +576,17 @@ fun getDownloadSpeedInterval(bytesPerSecond: Double): String {
 
   return "$interval $scale"
 }
+
+val Context.ipVersion
+  get() = (getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager)
+    .run { this?.getLinkProperties(activeNetwork)?.linkAddresses ?: emptyList() }
+    .mapNotNull {
+      when (it.address) {
+        is Inet4Address -> "ipv4"
+        is Inet6Address -> "ipv6"
+        else -> null // Normally will never end up here. But if it will we filter it out.
+      }
+    }
+    .toSet() // Remove duplicates
+    .sorted() // Make v 4 be first
+    .joinToString("+") // Results in `ipv4+ipv6` in case both networks are available
