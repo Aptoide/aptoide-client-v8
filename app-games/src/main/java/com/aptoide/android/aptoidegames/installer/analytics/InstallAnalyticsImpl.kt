@@ -2,6 +2,7 @@ package com.aptoide.android.aptoidegames.installer.analytics
 
 import android.content.Context
 import android.net.ConnectivityManager
+import cm.aptoide.pt.extensions.isActiveNetworkMetered
 import cm.aptoide.pt.extensions.toInt
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_flags.domain.FeatureFlags
@@ -440,6 +441,7 @@ class InstallAnalyticsImpl(
             P_TRUSTED_BADGE to it?.trustedBadge,
             P_DOWNLOAD_SPEED_MB to getDownloadSpeedInterval(downloadedBytesPerSecond),
             P_NETWORK_IP_VERSION to context.ipVersion,
+            P_NETWORK_TYPE to if (context.isActiveNetworkMetered) "metered" else "unmetered",
             *pairs
           )
       }
@@ -482,6 +484,7 @@ class InstallAnalyticsImpl(
     private const val P_ERROR_HTTP_CODE = "error_http_code"
     private const val P_ERROR_URL = "error_url"
     private const val P_NETWORK_IP_VERSION = "network_ip_version"
+    private const val P_NETWORK_TYPE = "network_type"
     internal const val P_WIFI_SETTING = "wifi_setting"
     internal const val P_PROMPT_TYPE = "prompt_type"
     internal const val P_SERVICE = "service"
