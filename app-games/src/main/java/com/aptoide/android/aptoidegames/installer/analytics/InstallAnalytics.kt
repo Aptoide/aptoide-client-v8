@@ -95,11 +95,12 @@ class InstallAnalytics(
 
   fun sendOnInstallationQueued(
     packageName: String,
-    analyticsContext: AnalyticsUIContext
+    installPackageInfo: InstallPackageInfo
   ) {
     genericAnalytics.logEvent(
       name = "download_queue_entry",
-      params = analyticsContext.toGenericParameters(
+      params = installPackageInfo.toAppGenericParameters(
+        packageName = packageName,
         GenericAnalytics.P_PACKAGE_NAME to packageName,
       )
     )

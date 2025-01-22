@@ -124,10 +124,6 @@ fun installViewStates(
             app.campaigns?.toMMPLinkerCampaign()?.sendDownloadEvent(BuildConfig.OEMID)
             onInstallStarted()
             scheduledInstallListener.listenToWifiStart(app.packageName)
-            installAnalytics.sendOnInstallationQueued(
-              packageName = app.packageName,
-              analyticsContext = analyticsContext
-            )
             saveAppDetails(app) {
               installerNotifications.onInstallationQueued(app.packageName)
             }
@@ -183,10 +179,6 @@ fun installViewStates(
             app.campaigns?.toMMPLinkerCampaign()?.sendDownloadEvent(BuildConfig.OEMID)
             onInstallStarted()
             scheduledInstallListener.listenToWifiStart(app.packageName)
-            installAnalytics.sendOnInstallationQueued(
-              packageName = app.packageName,
-              analyticsContext = analyticsContext
-            )
             saveAppDetails(app) {
               installerNotifications.onInstallationQueued(app.packageName)
             }
@@ -252,10 +244,6 @@ fun installViewStates(
             app.campaigns?.toMMPLinkerCampaign()?.sendDownloadEvent(BuildConfig.OEMID)
             onInstallStarted()
             scheduledInstallListener.listenToWifiStart(app.packageName)
-            installAnalytics.sendOnInstallationQueued(
-              packageName = app.packageName,
-              analyticsContext = analyticsContext
-            )
             saveAppDetails(app) {
               installerNotifications.onInstallationQueued(app.packageName)
             }
@@ -362,10 +350,6 @@ fun installViewStates(
             )
             onInstallStarted()
             scheduledInstallListener.listenToWifiStart(app.packageName)
-            installAnalytics.sendOnInstallationQueued(
-              packageName = app.packageName,
-              analyticsContext = analyticsContext
-            )
             saveAppDetails(app) {
               installerNotifications.onInstallationQueued(app.packageName)
             }

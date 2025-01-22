@@ -30,6 +30,7 @@ import com.aptoide.android.aptoidegames.installer.database.InstallerDatabase
 import com.aptoide.android.aptoidegames.installer.database.InstallerDatabase.FirstMigration
 import com.aptoide.android.aptoidegames.installer.notifications.InstallerNotificationsManager
 import com.aptoide.android.aptoidegames.installer.notifications.RealInstallerNotificationsManager
+import com.aptoide.android.aptoidegames.installer.task_info.AptoideTaskInfoProbe
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -60,7 +61,10 @@ class InstallerModule {
     context = appContext,
     installManager = InstallManager.with(
       context = appContext,
-      taskInfoRepository = taskInfoRepository,
+      taskInfoRepository = AptoideTaskInfoProbe(
+        taskInfoRepository = taskInfoRepository,
+        installAnalytics = installAnalytics
+      ),
       packageDownloader = DownloadProbe(
         packageDownloader = downloadPermissionStateProbe,
         analytics = installAnalytics,
