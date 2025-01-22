@@ -22,6 +22,7 @@ import com.aptoide.android.aptoidegames.installer.DownloaderSelector
 import com.aptoide.android.aptoidegames.installer.analytics.AnalyticsInstallPackageInfoMapper
 import com.aptoide.android.aptoidegames.installer.analytics.DownloadProbe
 import com.aptoide.android.aptoidegames.installer.analytics.InstallAnalytics
+import com.aptoide.android.aptoidegames.installer.analytics.InstallAnalyticsImpl
 import com.aptoide.android.aptoidegames.installer.analytics.InstallProbe
 import com.aptoide.android.aptoidegames.installer.analytics.SilentInstallChecker
 import com.aptoide.android.aptoidegames.installer.analytics.SilentInstallCheckerImpl
@@ -145,7 +146,7 @@ class InstallerModule {
     biAnalytics: BIAnalytics,
     @StoreName storeName: String,
     silentInstallChecker: SilentInstallChecker,
-  ): InstallAnalytics = InstallAnalytics(
+  ): InstallAnalytics = InstallAnalyticsImpl(
     featureFlags = featureFlags,
     genericAnalytics = genericAnalytics,
     biAnalytics = biAnalytics,
