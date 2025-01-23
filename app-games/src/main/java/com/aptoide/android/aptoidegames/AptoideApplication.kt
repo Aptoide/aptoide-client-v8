@@ -6,6 +6,8 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.hilt.work.HiltWorkerFactory
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.work.Configuration
 import androidx.work.Configuration.Provider
 import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
@@ -37,6 +39,8 @@ import com.aptoide.android.aptoidegames.installer.notifications.InstallerNotific
 import com.aptoide.android.aptoidegames.launch.AppLaunchPreferencesManager
 import com.aptoide.android.aptoidegames.network.AptoideGetHeaders
 import com.google.firebase.FirebaseApp
+import com.google.firebase.crashlytics.ktx.crashlytics
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.EntryPoint
 import dagger.hilt.EntryPoints
 import dagger.hilt.InstallIn
@@ -123,7 +127,13 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
     initPayments()
     initIndicative()
     setUserProperties()
-    updates.initialize(this)
+    AndroidViewModel(this).viewModelScope.launch {
+      try {
+        updates.initialize(this@AptoideApplication)
+      } catch (e: Throwable) {
+        Firebase.crashlytics.recordException(e)
+      }
+    }
     AptoideMMPCampaign.init(BuildConfig.OEMID, BuildConfig.MARKET_NAME)
   }
 
