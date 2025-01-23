@@ -758,7 +758,7 @@ http://aptoi.de/tv</string>
   <string name="faq_settings_body">Find all the answers you need!</string>
   <!--New e-Skills-->
   <string name="eskills_v2_home_card_title">Real Money Prizes!</string>
-  <string name="eskills_v2_home_card_without_withdrawal_title">Get Rewarded!</string>
+  <string name="eskills_v2_home_card_without_withdrawal_title">ਇਨਾਮ ਪ੍ਰਾਪਤ ਕਰੋ!</string>
   <string name="eskills_v2_home_card_body">In e-Skills games you get rewarded when beating other players. Show off your skills now!</string>
   <string name="eskills_v2_earnmore_header">Earn More</string>
   <string name="eskills_v2_page_header">e-Skills ਗੇਮਾਂ</string>
@@ -773,7 +773,7 @@ http://aptoi.de/tv</string>
   <string name="eskills_v2_card_4_title">24h</string>
   <string name="eskills_v2_card_4_body">We offer 24/7 support.</string>
   <string name="eskills_v2_card_5_title">Real Money Prizes</string>
-  <string name="eskills_v2_card_5_without_withdrawal_title">Get Rewarded!</string>
+  <string name="eskills_v2_card_5_without_withdrawal_title">ਇਨਾਮ ਪ੍ਰਾਪਤ ਕਰੋ!</string>
   <string name="eskills_v2_card_5_body">Play your favorite games and start earning real money now!</string>
   <string name="eskills_v2_card_5_without_withdrawal_body">Play your favorite games and get rewarded now!</string>
   <string name="eskills_v2_card_6_title">Fair Competition</string>
