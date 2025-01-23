@@ -18,18 +18,17 @@ import cm.aptoide.pt.install_manager.InstallManager
 import cm.aptoide.pt.install_manager.dto.Constraints
 import cm.aptoide.pt.install_manager.dto.Constraints.NetworkType.UNMETERED
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.coroutines.coroutineContext
 
 @Singleton
 class Updates @Inject constructor(
@@ -49,7 +48,7 @@ class Updates @Inject constructor(
   private lateinit var myPackageName: String
 
   // TODO: clean this for testability
-  fun initialize(context: Context) {
+  suspend fun initialize(context: Context) {
     myPackageName = context.packageName
     installManager.appsChanges
       .onEach { appInstaller ->
@@ -66,23 +65,21 @@ class Updates @Inject constructor(
             ?.also { updatesRepository.remove(it) }
         }
       }
-      .launchIn(CoroutineScope(Dispatchers.IO))
-    CoroutineScope(Dispatchers.IO).launch {
-      mutex.withLock {
-        val installedApps = installManager.installedApps
-          .mapNotNull { it.packageInfo }
-          .map { it.packageName to it.compatVersionCode }
-        val values = updatesRepository.getUpdates().first()
-        val toRemove = values.filterNot { update ->
-          installedApps.any { it.first == update.packageName && it.second < update.file.vercode }
-        }
-        currentUpdates = values - toRemove
-        updatesRepository.remove(*toRemove.toTypedArray())
+      .launchIn(CoroutineScope(coroutineContext))
+    mutex.withLock {
+      val installedApps = installManager.installedApps
+        .mapNotNull { it.packageInfo }
+        .map { it.packageName to it.compatVersionCode }
+      val values = updatesRepository.getUpdates().first()
+      val toRemove = values.filterNot { update ->
+        installedApps.any { it.first == update.packageName && it.second < update.file.vercode }
       }
-
-      UpdatesWorker.enqueue(context)
-      AutoUpdateWorker.enqueue(context)
+      currentUpdates = values - toRemove
+      updatesRepository.remove(*toRemove.toTypedArray())
     }
+
+    UpdatesWorker.enqueue(context)
+    AutoUpdateWorker.enqueue(context)
   }
 
   val appsUpdates: Flow<List<App>> = updatesRepository.getUpdates()
@@ -142,7 +139,7 @@ class Updates @Inject constructor(
           it.modifiedDate
         }
       }
-    if(!shouldAutoUpdateGames){
+    if (!shouldAutoUpdateGames) {
       return
     }
     installers.forEach { appInstaller ->
