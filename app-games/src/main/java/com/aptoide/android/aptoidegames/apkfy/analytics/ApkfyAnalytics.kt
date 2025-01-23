@@ -2,11 +2,38 @@ package com.aptoide.android.aptoidegames.apkfy.analytics
 
 import cm.aptoide.pt.feature_apkfy.domain.ApkfyModel
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
+import com.aptoide.android.aptoidegames.analytics.mapOfNonNull
 import jakarta.inject.Inject
 
 class ApkfyAnalytics @Inject constructor(
   private val biAnalytics: BIAnalytics,
 ) {
+
+  fun sendApkfySuccessEvent(
+    data: String,
+  ) {
+    biAnalytics.logEvent(
+      name = "ag_aptoide_mmp",
+      mapOfNonNull(
+        P_STATUS to "success",
+        P_DATA to data
+      )
+    )
+  }
+
+  fun sendApkfyFailEvent(
+    errorMessage: String?,
+    errorType: String?,
+    errorCode: Int? = null,
+  ) = biAnalytics.logEvent(
+    name = "ag_aptoide_mmp",
+    mapOfNonNull(
+      P_STATUS to "fail",
+      P_ERROR_MESSAGE to errorMessage,
+      P_ERROR_TYPE to errorType,
+      P_ERROR_HTTP_CODE to errorCode
+    )
+  )
 
   fun setApkfyUTMProperties(apkfyModel: ApkfyModel) {
     apkfyModel.run {
@@ -44,5 +71,11 @@ class ApkfyAnalytics @Inject constructor(
   companion object {
     private const val UTM_PROPERTY_NO_APKFY = "NO_APKFY"
     private const val UTM_PROPERTY_APKFY_WITHOUT_UTMS = "APKFY_BUT_NO_UTM"
+
+    private const val P_STATUS = "status"
+    private const val P_DATA = "data"
+    private const val P_ERROR_MESSAGE = "error_message"
+    private const val P_ERROR_TYPE = "error_type"
+    private const val P_ERROR_HTTP_CODE = "error_http_code"
   }
 }
