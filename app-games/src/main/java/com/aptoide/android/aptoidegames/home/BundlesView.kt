@@ -239,9 +239,17 @@ fun BundlesView(
               navigate = navigateTo,
             )
 
-            Type.NEW_APP_VERSION,
+            Type.NEW_APP -> NewAppPromotionalView(
+              bundle = bundle,
+              navigate = navigateTo
+            )
+
+            Type.NEW_APP_VERSION -> NewAppVersionPromotionalView(
+              bundle = bundle,
+              navigate = navigateTo
+            )
+
             Type.IN_GAME_EVENT,
-            Type.NEW_APP,
             Type.NEWS_ITEM,
             Type.APP_COMING_SOON -> Unit
 

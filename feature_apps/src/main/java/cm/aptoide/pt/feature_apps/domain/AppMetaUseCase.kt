@@ -13,15 +13,27 @@ class AppMetaUseCase @Inject constructor(
   private val appRepository: AppRepository,
   private val splitsRepository: SplitsRepository,
 ) {
-  suspend fun getMetaInfo(source: String): App = appRepository.getAppMeta(source = source)
-    .copy(hasMeta = true)
-    .run {
-      aab
-        ?.let {
-          val dSplits = splitsRepository.getAppsDynamicSplits(md5)
-          it.copy(dynamicSplits = dSplits.map(DynamicSplitJSON::toDomainModel))
-        }
-        ?.let { copy(aab = it) }
-        ?: this
-    }
+  suspend fun getMetaInfo(source: String): App {
+    return appRepository.getAppMeta(source = source.filterMetaSource())
+      .copy(hasMeta = true)
+      .run {
+        aab
+          ?.let {
+            val dSplits = splitsRepository.getAppsDynamicSplits(md5)
+            it.copy(dynamicSplits = dSplits.map(DynamicSplitJSON::toDomainModel))
+          }
+          ?.let { copy(aab = it) }
+          ?: this
+      }
+  }
+}
+
+fun String.filterMetaSource(): String {
+  if (this.contains("getMeta")) {
+    return this.split("getMeta/")[1]
+  } else if (this.contains("getApp")) {
+    return this.split("getApp/")[1]
+  } else {
+    return this
+  }
 }
