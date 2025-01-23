@@ -174,6 +174,8 @@
   <string name="apkfy_whats_aptoide_games_title">What\'s Aptoide Games?</string>
   <string name="apkfy_install_body">Get your favorite game and much more in Aptoide Games!</string>
   <string name="apkfy_install_bullet_points">\u2022 Top games with an amazing curation.\n\u2022 No need to log in!\n\u2022 Special promotions and rewards in your favorite games.</string>
+  <string name="apkfy_install_alternative_version_body">You\'re also unlocking Aptoide Games!</string>
+  <string name="apkfy_install_alternative_version_bullet_points">\u2022 Curated top games, just for you.\n\u2022 Exclusive rewards and special deals.\n\u2022 Your personal AI Assistant for game discovery.</string>
   <string name="app_size_mb_title" comment="s_mb">%s MB</string>
   <string name="uninstalled_title" comment="uninstalled">ျပန္ထုတ္ထားေသာ</string>
   <string name="error_no_internet_body" comment="please_check_your_internet_connection">Please check your Internet connection.</string>
