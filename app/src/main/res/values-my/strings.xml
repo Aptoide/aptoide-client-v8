@@ -755,7 +755,7 @@ http://aptoi.de/tv</string>
   <string name="faq_settings_body">သင္လိုအပ္ေသာ အေျဖအားလုံးကို ရွာေဖြလိုက္ပါ။</string>
   <!--New e-Skills-->
   <string name="eskills_v2_home_card_title">ေငြသားအစစ္ဆုမ်ား။</string>
-  <string name="eskills_v2_home_card_without_withdrawal_title">Get Rewarded!</string>
+  <string name="eskills_v2_home_card_without_withdrawal_title">ဆုကို ရယူလိုက္ပါ။</string>
   <string name="eskills_v2_home_card_body">E-Skills ဂိမ္းမ်ားတြင္ အျခားကစားသူမ်ားကို အႏိုင္ရပါက သင္ဆုရရွိပါသည္။ အခုပဲ အရည္အခ်င္းမ်ားကို ျပသလိုက္ပါ။</string>
   <string name="eskills_v2_earnmore_header">ပိုမိုရယူလိုက္ပါ</string>
   <string name="eskills_v2_page_header">e-Skills ဂိမ္းမ်ား</string>
@@ -770,7 +770,7 @@ http://aptoi.de/tv</string>
   <string name="eskills_v2_card_4_title">၂၄ နာရီ</string>
   <string name="eskills_v2_card_4_body">၂၄/၇ ကူညီပံ့ပိုးမႈ ေပးပါသည္။</string>
   <string name="eskills_v2_card_5_title">ေငြသားအစစ္ဆုမ်ား</string>
-  <string name="eskills_v2_card_5_without_withdrawal_title">Get Rewarded!</string>
+  <string name="eskills_v2_card_5_without_withdrawal_title">ဆုကို ရယူလိုက္ပါ။</string>
   <string name="eskills_v2_card_5_body">သင့္စိတ္ႀကိဳက္ဂိမ္းမ်ားကို ကစားကာ ယခုပင္ ေငြသားအစစ္ျဖင့္ ဆုစတင္ရယူလိုက္ပါ။</string>
   <string name="eskills_v2_card_5_without_withdrawal_body">Play your favorite games and get rewarded now!</string>
   <string name="eskills_v2_card_6_title">မွ်တေသာ ယွဥ္ၿပိဳင္ပြဲ</string>
