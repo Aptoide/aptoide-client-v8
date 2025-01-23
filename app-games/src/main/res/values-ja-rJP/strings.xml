@@ -172,9 +172,11 @@
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">詳細を教えてください：\n\u2022問題はいつ発生しましたか？\n\u2022どのゲームで購入されましたか？\n\n
 送信をタップすると、メールアプリが開きます。問題のスクリーンショットや動画を添付してください。</string>
   <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">このゲームをインストールしますか？</string>
-  <string name="apkfy_whats_aptoide_games_title">What\'s Aptoide Games?</string>
+  <string name="apkfy_whats_aptoide_games_title">Aptoide Gamesとは？</string>
   <string name="apkfy_install_body">Aptoide Gamesでお気に入りのゲームやその他のものを手に入れよう！</string>
   <string name="apkfy_install_bullet_points">\u2022 素晴らしいキュレーションのトップゲーム。\n\u2022 ログイン不要！\n\u2022 お好きなゲームで特別なプロモーションと報酬を。</string>
+  <string name="apkfy_install_alternative_version_body">You\'re also unlocking Aptoide Games!</string>
+  <string name="apkfy_install_alternative_version_bullet_points">\u2022 Curated top games, just for you.\n\u2022 Exclusive rewards and special deals.\n\u2022 Your personal AI Assistant for game discovery.</string>
   <string name="app_size_mb_title" comment="s_mb">%s MB</string>
   <string name="uninstalled_title" comment="uninstalled">アンインストールされました</string>
   <string name="error_no_internet_body" comment="please_check_your_internet_connection">インターネット接続を確認してください。</string>
@@ -265,4 +267,14 @@
   <string name="genai_example_1_body">ストラテジーゲームを探しています。</string>
   <string name="genai_example_2_body">最高のマルチプレイヤーゲームを紹介してください。</string>
   <string name="genai_example_3_body">オフラインのカジュアルなゲームを知っていますか？</string>
+  <!-- Promotional Cards -->
+  <string name="promotional_now_with_appcoins">Now With AppCoins Payment System</string>
+  <string name="promotional_new_version">New Version</string>
+  <string name="promotional_on_going_event">Ongoing event</string>
+  <string name="promotional_new_in_aptoide">Now available</string>
+  <string name="promotional_soon_in_aptoide">Available sson</string>
+  <string name="promotional_notify_button">Notify me</string>
+  <string name="promotional_new_notification_title">The app you were waiting for!</string>
+  <string name="promotional_new_notification_body">%s is now available.</string>
+  <string name="promotional_new_active">You\'ll be notified when available.</string>
 </resources>

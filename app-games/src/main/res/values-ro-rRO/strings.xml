@@ -174,6 +174,8 @@
   <string name="apkfy_whats_aptoide_games_title">What\'s Aptoide Games?</string>
   <string name="apkfy_install_body">Get your favorite game and much more in Aptoide Games!</string>
   <string name="apkfy_install_bullet_points">\u2022 Top games with an amazing curation.\n\u2022 No need to log in!\n\u2022 Special promotions and rewards in your favorite games.</string>
+  <string name="apkfy_install_alternative_version_body">You\'re also unlocking Aptoide Games!</string>
+  <string name="apkfy_install_alternative_version_bullet_points">\u2022 Curated top games, just for you.\n\u2022 Exclusive rewards and special deals.\n\u2022 Your personal AI Assistant for game discovery.</string>
   <string name="app_size_mb_title" comment="s_mb">%s MB</string>
   <string name="uninstalled_title" comment="uninstalled">Dezinstalat</string>
   <string name="error_no_internet_body" comment="please_check_your_internet_connection">Te rugăm să îți verifici conexiunea la internet.</string>
@@ -268,4 +270,14 @@
   <string name="genai_example_1_body">I\'m looking for strategy games.</string>
   <string name="genai_example_2_body">Please recommend me the best multiplayer games.</string>
   <string name="genai_example_3_body">Do you know offline casual games?</string>
+  <!-- Promotional Cards -->
+  <string name="promotional_now_with_appcoins">Now With AppCoins Payment System</string>
+  <string name="promotional_new_version">New Version</string>
+  <string name="promotional_on_going_event">Ongoing event</string>
+  <string name="promotional_new_in_aptoide">Now available</string>
+  <string name="promotional_soon_in_aptoide">Available sson</string>
+  <string name="promotional_notify_button">Notify me</string>
+  <string name="promotional_new_notification_title">The app you were waiting for!</string>
+  <string name="promotional_new_notification_body">%s is now available.</string>
+  <string name="promotional_new_active">You\'ll be notified when available.</string>
 </resources>
