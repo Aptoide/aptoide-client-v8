@@ -114,11 +114,11 @@
   <string name="screenshot_appview_4">Удобный интерфейс и лучший контент.</string>
   <string name="screenshot_appview_5">Специально подобранные игры только для вас.</string>
   <string name="not_now_button">Не сейчас</string>
-  <string name="later_button">Later</string>
-  <string name="trusted_game_badge">Trusted Game</string>
-  <string name="official_game_badge">Official Game</string>
-  <string name="see_more_button">See more</string>
-  <string name="generic_error_short_title">An error occurred.</string>
+  <string name="later_button">Позже</string>
+  <string name="trusted_game_badge">Проверенная игра</string>
+  <string name="official_game_badge">Официальная игра</string>
+  <string name="see_more_button">Посмотреть больше</string>
+  <string name="generic_error_short_title">Произошла ошибка.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Нет места</string>
   <string name="out_of_space_body">Вам необходимо %s чтобы продолжить установку.</string>
@@ -171,9 +171,9 @@
   <string name="contact_support_title" comment="contact_support">Свяжитесь с поддержкой</string>
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Сообщите нам всю информацию:\n\u2022 Когда возникла проблема\n\u2022 В какой игре вы совершаете покупку\n\nКак только вы нажмете «Отправить», откроется почтовое приложение. Если можете - прикрепите скриншот или видео о проблеме!</string>
   <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Хотите установить эту игру?</string>
-  <string name="apkfy_whats_aptoide_games_title">What\'s Aptoide Games?</string>
-  <string name="apkfy_install_body">Get your favorite game and much more in Aptoide Games!</string>
-  <string name="apkfy_install_bullet_points">\u2022 Top games with an amazing curation.\n\u2022 No need to log in!\n\u2022 Special promotions and rewards in your favorite games.</string>
+  <string name="apkfy_whats_aptoide_games_title">Что такое Aptoide Games?</string>
+  <string name="apkfy_install_body">Получите свою любимую игру и многое другое в Aptoide Games!</string>
+  <string name="apkfy_install_bullet_points">\u2022 Лучшие игры с потрясающей подборкой.\n\u2022 Не нужно входить в систему!\n\u2022 Специальные акции и награды в ваших любимых играх.</string>
   <string name="apkfy_install_alternative_version_body">You\'re also unlocking Aptoide Games!</string>
   <string name="apkfy_install_alternative_version_bullet_points">\u2022 Curated top games, just for you.\n\u2022 Exclusive rewards and special deals.\n\u2022 Your personal AI Assistant for game discovery.</string>
   <string name="app_size_mb_title" comment="s_mb">%s МБ</string>
@@ -266,8 +266,8 @@
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
   <string name="genai_assistant_title">Assistant</string>
   <string name="genai_me_title">Me</string>
-  <string name="genai_introduction_body">Hi! I\'m your AI assistant on everything related to apps and games discovery. Try with something like:</string>
-  <string name="genai_input_message_field">Type a message&#8230;</string>
+  <string name="genai_introduction_body">Привет! Я ваш помощник AI по всем вопросам, связанным с поиском приложений и игр. Попробуйте что-то вроде:</string>
+  <string name="genai_input_message_field">Введите сообщение&#8230;</string>
   <string name="genai_powered_by_ai_title">Powered by AI</string>
   <string name="genai_example_1_body">I\'m looking for strategy games.</string>
   <string name="genai_example_2_body">Please recommend me the best multiplayer games.</string>
@@ -281,5 +281,5 @@
   <string name="promotional_notify_button">Notify me</string>
   <string name="promotional_new_notification_title">The app you were waiting for!</string>
   <string name="promotional_new_notification_body">%s is now available.</string>
-  <string name="promotional_new_active">You\'ll be notified when available.</string>
+  <string name="promotional_new_active">Вы будете уведомлены, когда они станут доступны.</string>
 </resources>
