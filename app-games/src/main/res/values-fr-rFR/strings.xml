@@ -114,11 +114,11 @@
   <string name="screenshot_appview_4">Une interface transparente avec le meilleur des contenus.</string>
   <string name="screenshot_appview_5">Des jeux triés sur le volet, rien que pour vous.</string>
   <string name="not_now_button">Pas maintenant</string>
-  <string name="later_button">Later</string>
-  <string name="trusted_game_badge">Trusted Game</string>
-  <string name="official_game_badge">Official Game</string>
-  <string name="see_more_button">See more</string>
-  <string name="generic_error_short_title">An error occurred.</string>
+  <string name="later_button">Plus tard</string>
+  <string name="trusted_game_badge">Jeu Approuvé</string>
+  <string name="official_game_badge">Jeu Officiel</string>
+  <string name="see_more_button">Voir plus</string>
+  <string name="generic_error_short_title">Une erreur s\'est produite.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Espace insuffisant</string>
   <string name="out_of_space_body">Vous avez besoin de %s pour continuer l\'installation.</string>
@@ -171,11 +171,11 @@
   <string name="contact_support_title" comment="contact_support">Contacter le Support</string>
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Veuillez nous donner tous les détails :\n\u2022 Quand le problème a-t-il commencé\n\u2022 Sur quel jeu faites-vous un achat\n\nUne fois que vous avez cliqué sur Envoyer, votre application de messagerie s\'ouvrira. N\'hésitez pas à joindre une capture d\'écran ou une vidéo du problème !</string>
   <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Souhaitez-vous installer ce jeu ?</string>
-  <string name="apkfy_whats_aptoide_games_title">What\'s Aptoide Games?</string>
-  <string name="apkfy_install_body">Get your favorite game and much more in Aptoide Games!</string>
-  <string name="apkfy_install_bullet_points">\u2022 Top games with an amazing curation.\n\u2022 No need to log in!\n\u2022 Special promotions and rewards in your favorite games.</string>
-  <string name="apkfy_install_alternative_version_body">You\'re also unlocking Aptoide Games!</string>
-  <string name="apkfy_install_alternative_version_bullet_points">\u2022 Curated top games, just for you.\n\u2022 Exclusive rewards and special deals.\n\u2022 Your personal AI Assistant for game discovery.</string>
+  <string name="apkfy_whats_aptoide_games_title">Quels jeux Aptoide ?</string>
+  <string name="apkfy_install_body">Obtenez votre jeu préféré et bien plus encore avec Aptoide Games !</string>
+  <string name="apkfy_install_bullet_points">\u2022 Une sélection incroyable des meilleurs jeux.\n\u2022 Pas besoin de vous connecter !\n\u2022 Promotions et récompenses spéciales dans vos jeux préférés.</string>
+  <string name="apkfy_install_alternative_version_body">Vous débloquez également Aptoide Games !</string>
+  <string name="apkfy_install_alternative_version_bullet_points">\u2022 Les meilleurs jeux sélectionnés, rien que pour vous.\n\u2022 Récompenses exclusives et offres spéciales.\n\u2022 Votre assistant IA personnel pour la découverte de jeux.</string>
   <string name="app_size_mb_title" comment="s_mb">%s MB</string>
   <string name="uninstalled_title" comment="uninstalled">Désinstallé</string>
   <string name="error_no_internet_body" comment="please_check_your_internet_connection">Veuillez vérifier votre connexion Internet.</string>
@@ -261,7 +261,7 @@
   <string name="genai_bottom_navigation_genai_button">GenAI</string>
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
   <string name="genai_assistant_title">Assistant</string>
-  <string name="genai_me_title">Me</string>
+  <string name="genai_me_title">Moi</string>
   <string name="genai_introduction_body">Hi! I\'m your AI assistant on everything related to apps and games discovery. Try with something like:</string>
   <string name="genai_input_message_field">Type a message&#8230;</string>
   <string name="genai_powered_by_ai_title">Powered by AI</string>
