@@ -13,6 +13,8 @@ data class ApkfyModel(
   val utmTerm: String?,
   val utmContent: String?,
 ) : AppSource {
+  fun hasApkfy() = packageName != null || appId != null
+
   fun hasUTMs() = this.run {
     utmSource != null || utmMedium != null || utmCampaign != null || utmTerm != null || utmContent != null
   }
