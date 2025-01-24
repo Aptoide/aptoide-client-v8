@@ -22,6 +22,10 @@ val Intent?.isAhab: Boolean get() = this?.getBooleanExtra(AHAB_NOTIFICATION, fal
 
 fun Intent.markAsAhab(): Intent = putExtra(AHAB_NOTIFICATION, hasDeepLink)
 
+//External url
+const val EXTERNAL_KEY = "external_url"
+const val WEBVIEW_KEY = "webview"
+
 // Launch source
 private const val LAUNCH_SOURCE = "launchSource"
 
@@ -35,3 +39,12 @@ val Intent?.agDeepLink
     ?.getString(DEEPLINK_KEY)
     ?.withPrevScreen("notification")
     ?.let(Uri::parse)
+
+val Intent?.externalUrl
+  get() = this?.extras
+    ?.getString(EXTERNAL_KEY)
+    ?.let(Uri::parse)
+
+val Intent?.shouldOpenWebView
+  get() = this?.extras
+    ?.getString(WEBVIEW_KEY)?.toBooleanStrictOrNull() ?: false

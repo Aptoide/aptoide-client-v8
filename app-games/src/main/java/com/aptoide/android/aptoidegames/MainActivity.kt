@@ -111,6 +111,19 @@ class MainActivity : AppCompatActivity() {
     intent.takeIf { it.isAhab }?.agDeepLink.takeIf { it?.scheme == "promocode" }?.run {
       promoCodeRepository.setPromoCodeApp(PromoCodeApp(host!!, path!!))
     }
+
+    intent.externalUrl?.takeIf { it.scheme in listOf("http", "https") }
+      ?.let { uri ->
+        if (uri.toString().isNotEmpty()) {
+          if (intent.shouldOpenWebView) {
+            UrlActivity.open(this, uri.toString())
+          } else {
+            val intent = Intent(Intent.ACTION_VIEW, uri)
+            startActivity(intent)
+          }
+        }
+      }
+
     CoroutineScope(Dispatchers.IO).launch {
       intent?.getStringExtra(InstallerNotificationsBuilder.ALLOW_METERED_DOWNLOAD_FOR_PACKAGE)
         ?.let(installManager::getApp)
