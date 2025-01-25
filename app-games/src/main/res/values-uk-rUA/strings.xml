@@ -114,11 +114,11 @@
   <string name="screenshot_appview_4">Зручний інтерфейс з найкращим контентом.</string>
   <string name="screenshot_appview_5">Відібрані ігри спеціально для вас.</string>
   <string name="not_now_button">Не зараз</string>
-  <string name="later_button">Later</string>
-  <string name="trusted_game_badge">Trusted Game</string>
-  <string name="official_game_badge">Official Game</string>
-  <string name="see_more_button">See more</string>
-  <string name="generic_error_short_title">An error occurred.</string>
+  <string name="later_button">Пізніше</string>
+  <string name="trusted_game_badge">Перевірена гра</string>
+  <string name="official_game_badge">Офіційна гра</string>
+  <string name="see_more_button">Побачити більше</string>
+  <string name="generic_error_short_title">Виникла помилка.</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Немає вільного місця</string>
   <string name="out_of_space_body">Вам потрібно %s, щоб продовжити встановлення.</string>
@@ -171,11 +171,11 @@
   <string name="contact_support_title" comment="contact_support">Зв\'язатися зі службою підтримки</string>
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Будь ласка, повідомте нам усі подробиці:\n\u2022 Коли виникла проблема\n\u2022 У якій грі ви здійснюєте покупку\n\nПісля натискання на кнопку \"Надіслати\" відкриється ваш поштовий додаток. Ви також можете прикріпити скріншот або відео з проблемою!</string>
   <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Бажаєте встановити цю гру?</string>
-  <string name="apkfy_whats_aptoide_games_title">What\'s Aptoide Games?</string>
-  <string name="apkfy_install_body">Get your favorite game and much more in Aptoide Games!</string>
-  <string name="apkfy_install_bullet_points">\u2022 Top games with an amazing curation.\n\u2022 No need to log in!\n\u2022 Special promotions and rewards in your favorite games.</string>
-  <string name="apkfy_install_alternative_version_body">You\'re also unlocking Aptoide Games!</string>
-  <string name="apkfy_install_alternative_version_bullet_points">\u2022 Curated top games, just for you.\n\u2022 Exclusive rewards and special deals.\n\u2022 Your personal AI Assistant for game discovery.</string>
+  <string name="apkfy_whats_aptoide_games_title">Що таке Aptoide Games?</string>
+  <string name="apkfy_install_body">Знайдіть свою улюблену гру та багато іншого в Aptoide Games!</string>
+  <string name="apkfy_install_bullet_points">\u2022 Вражаюча підбірка найкращих ігор.\n\u2022 Не потрібно входити в систему!\n\u2022 Спеціальні акції та нагороди у ваших улюблених іграх.</string>
+  <string name="apkfy_install_alternative_version_body">Ви також розблоковуєте Aptoide Games!</string>
+  <string name="apkfy_install_alternative_version_bullet_points">\u2022 Кращі ігри, відібрані спеціально для вас.\n\u2022 Ексклюзивні нагороди та спеціальні пропозиції.\n\u2022 Персональний помічник зі штучним інтелектом для пошуку ігор.</string>
   <string name="app_size_mb_title" comment="s_mb">%s МБ</string>
   <string name="uninstalled_title" comment="uninstalled">Видалено</string>
   <string name="error_no_internet_body" comment="please_check_your_internet_connection">Будь ласка, перевірте своє інтернет-з\'єднання.</string>
