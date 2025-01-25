@@ -114,11 +114,11 @@
   <string name="screenshot_appview_4">उत्कृष्ट कंटेंटसह सीमलेस इंटरफेज.</string>
   <string name="screenshot_appview_5">फक्त आपल्यासाठी खास निवडलेले खेळ.</string>
   <string name="not_now_button">आता नाही</string>
-  <string name="later_button">Later</string>
-  <string name="trusted_game_badge">Trusted Game</string>
-  <string name="official_game_badge">Official Game</string>
-  <string name="see_more_button">See more</string>
-  <string name="generic_error_short_title">An error occurred.</string>
+  <string name="later_button">नंतर</string>
+  <string name="trusted_game_badge">विश्वासार्ह खेळ</string>
+  <string name="official_game_badge">अधिकृत खेळ</string>
+  <string name="see_more_button">अधिक पहा</string>
+  <string name="generic_error_short_title">काही त्रुटी आली आहे</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">जागा संपली</string>
   <string name="out_of_space_body">इंस्टलेशनसह %s हे चालू ठेवणे आपल्याला आवश्यक आहे.</string>
@@ -163,7 +163,7 @@
   <string name="purchase_done_bonus_wallet_installed_body">बोनस पहाण्यासाठी हे उघडा</string>
   <string name="bonus_banner_body">%s ची ओळख असणार्‍या सार्‍या खेळांमध्ये आपणांस बोनस मिळेल.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">%s%% पर्यंत बोनस</string>
-  <string name="settings_auto_update_button">Auto-update games</string>
+  <string name="settings_auto_update_button">खेळ आपोआप अद्यतनित करा</string>
   <string name="settings_payments_title" comment="contact_support_team">समर्थन गटाशी संपर्क साधा</string>
   <string name="settings_contact_support_body" comment="billing_terms_of_use">बिलिंग वापरण्याच्या अटी</string>
   <string name="settings_billing_terms_body" comment="payments">पेमेंटस</string>
@@ -171,8 +171,8 @@
   <string name="contact_support_title" comment="contact_support">समर्थनाशी संपर्क साधा</string>
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">कृपया आम्हांस सर्व तपशील द्या:\n\u2022 समस्या केव्हा सुरु झाली\n\u2022 आपण कोणत्या खेळात खरेदी करत होतात\n\nएकदा का आपण \'सेंड\' वर टॅप केलेत कि आपली ईमेल उघडेल. नंतर समस्येचा व्हिडीयो वा स्क्रीनशॉट जोडुन पाठवु शकता!</string>
   <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">आपणांस हा खेळ इंस्टॉल करायचा आहे का?</string>
-  <string name="apkfy_whats_aptoide_games_title">What\'s Aptoide Games?</string>
-  <string name="apkfy_install_body">Get your favorite game and much more in Aptoide Games!</string>
+  <string name="apkfy_whats_aptoide_games_title">Aptoide खेळ काय आहेत?</string>
+  <string name="apkfy_install_body">आपला आवडता खेळ आणि पुष्कळ काही मिळवा Aptoide खेळांमध्ये!</string>
   <string name="apkfy_install_bullet_points">\u2022 Top games with an amazing curation.\n\u2022 No need to log in!\n\u2022 Special promotions and rewards in your favorite games.</string>
   <string name="apkfy_install_alternative_version_body">You\'re also unlocking Aptoide Games!</string>
   <string name="apkfy_install_alternative_version_bullet_points">\u2022 Curated top games, just for you.\n\u2022 Exclusive rewards and special deals.\n\u2022 Your personal AI Assistant for game discovery.</string>
