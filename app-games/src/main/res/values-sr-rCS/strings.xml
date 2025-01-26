@@ -175,7 +175,7 @@
   <string name="apkfy_install_body">Preuzmite svoje omiljene igre i još mnogo toga u Aptoide Games!</string>
   <string name="apkfy_install_bullet_points">\u2022 Pažljivo odabrane najbolje igre.\n\u2022 Nema potrebe za prijavljivanjem!\n\u2022 Specijalne promocije i nagrade u vašim omiljenim igrama.</string>
   <string name="apkfy_install_alternative_version_body">Otključavate i Aptoide Games!</string>
-  <string name="apkfy_install_alternative_version_bullet_points">\u2022 Curated top games, just for you.\n\u2022 Exclusive rewards and special deals.\n\u2022 Your personal AI Assistant for game discovery.</string>
+  <string name="apkfy_install_alternative_version_bullet_points">\u2022 Pažljivo odabrane najbolje igre, samo za vas.\n\u2022 Ekskluzivne nagrade i specijalne ponude.\n\u2022 Vaš lični AI pomoćnik za otkrivanje igara.</string>
   <string name="app_size_mb_title" comment="s_mb">%s MB</string>
   <string name="uninstalled_title" comment="uninstalled">Деинсталирано</string>
   <string name="error_no_internet_body" comment="please_check_your_internet_connection">Proverite svoju internet vezu.</string>
