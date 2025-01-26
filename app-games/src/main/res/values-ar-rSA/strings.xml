@@ -275,15 +275,15 @@
   <string name="genai_powered_by_ai_title">مدعوم من الذكاء الاصطناعي AI</string>
   <string name="genai_example_1_body">أنا أبحث عن ألعاب الاستراتيجيات.</string>
   <string name="genai_example_2_body">يرجى اقتراح ألعاب متعددة اللاعبين.</string>
-  <string name="genai_example_3_body">Do you know offline casual games?</string>
+  <string name="genai_example_3_body">هل تعرف ألعاب عادية لا تحتاج إنترنت؟</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Now With AppCoins Payment System</string>
-  <string name="promotional_new_version">New Version</string>
-  <string name="promotional_on_going_event">Ongoing event</string>
-  <string name="promotional_new_in_aptoide">Now available</string>
-  <string name="promotional_soon_in_aptoide">Available sson</string>
-  <string name="promotional_notify_button">Notify me</string>
-  <string name="promotional_new_notification_title">The app you were waiting for!</string>
-  <string name="promotional_new_notification_body">%s is now available.</string>
-  <string name="promotional_new_active">You\'ll be notified when available.</string>
+  <string name="promotional_now_with_appcoins">الآن مع AppCoins Payment System</string>
+  <string name="promotional_new_version">إصدار جديد</string>
+  <string name="promotional_on_going_event">مناسبة مستمر</string>
+  <string name="promotional_new_in_aptoide">متوفر الآن</string>
+  <string name="promotional_soon_in_aptoide">سيتوفر قريبًآ</string>
+  <string name="promotional_notify_button">أخبرني</string>
+  <string name="promotional_new_notification_title">التطبيق الذي كنت تنتظره!</string>
+  <string name="promotional_new_notification_body">%s متوفر الآن.</string>
+  <string name="promotional_new_active">سنخبرك عندما يتوفر.</string>
 </resources>
