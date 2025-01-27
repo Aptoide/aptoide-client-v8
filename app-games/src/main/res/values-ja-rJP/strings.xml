@@ -119,6 +119,7 @@
   <string name="official_game_badge">公式ゲーム</string>
   <string name="see_more_button">さらに見る</string>
   <string name="generic_error_short_title">エラーが発生しました。</string>
+  <string name="editorial_card_views_short">%s views</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">空き容量不足</string>
   <string name="out_of_space_body">インストールを続行するには %s 必要です。</string>
@@ -268,13 +269,13 @@
   <string name="genai_example_2_body">最高のマルチプレイヤーゲームを紹介してください。</string>
   <string name="genai_example_3_body">オフラインのカジュアルなゲームを知っていますか？</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Now With AppCoins Payment System</string>
-  <string name="promotional_new_version">New Version</string>
-  <string name="promotional_on_going_event">Ongoing event</string>
+  <string name="promotional_now_with_appcoins">AppCoinsの決済システムに対応</string>
+  <string name="promotional_new_version">新しいバージョン</string>
+  <string name="promotional_on_going_event">進行中のイベント</string>
   <string name="promotional_new_in_aptoide">Now available</string>
   <string name="promotional_soon_in_aptoide">Available sson</string>
-  <string name="promotional_notify_button">Notify me</string>
-  <string name="promotional_new_notification_title">The app you were waiting for!</string>
+  <string name="promotional_notify_button">通知を受け取る</string>
+  <string name="promotional_new_notification_title">待ちに待ったアプリ！</string>
   <string name="promotional_new_notification_body">%s is now available.</string>
-  <string name="promotional_new_active">You\'ll be notified when available.</string>
+  <string name="promotional_new_active">利用可能になると通知されます。</string>
 </resources>
