@@ -173,9 +173,9 @@
   <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">이 게임을 설치하시겠습니까?</string>
   <string name="apkfy_whats_aptoide_games_title">Aptoide 게임이란 무엇인가요?</string>
   <string name="apkfy_install_body">Aptoide 게임에서 좋아하는 게임과 더 많은 것을 즐기세요!</string>
-  <string name="apkfy_install_bullet_points">\u2022 Top games with an amazing curation.\n\u2022 No need to log in!\n\u2022 Special promotions and rewards in your favorite games.</string>
-  <string name="apkfy_install_alternative_version_body">You\'re also unlocking Aptoide Games!</string>
-  <string name="apkfy_install_alternative_version_bullet_points">\u2022 Curated top games, just for you.\n\u2022 Exclusive rewards and special deals.\n\u2022 Your personal AI Assistant for game discovery.</string>
+  <string name="apkfy_install_bullet_points">\u2022 놀라운 큐레이션으로 최고의 게임들.\n\u2022 로그인할 필요 없어요!\n\u2022 좋아하는 게임의 특별 프로모션 및 보상.</string>
+  <string name="apkfy_install_alternative_version_body">Aptoide 게임도 잠금 해제 중입니다!</string>
+  <string name="apkfy_install_alternative_version_bullet_points">\u2022 당신만을 위한 최고의 큐레이티드 게임들.\n\u2022 독점 보상 및 특별 거래.\n\u2022 게임 발견을 위한 개인 AI 비서.</string>
   <string name="app_size_mb_title" comment="s_mb">%s MB</string>
   <string name="uninstalled_title" comment="uninstalled">삭제됨</string>
   <string name="error_no_internet_body" comment="please_check_your_internet_connection">인터넷 연결 상태를 확인하십시오.</string>
@@ -258,22 +258,22 @@
   <!-- GenAi -->
   <string name="genai_bottom_navigation_genai_button">GenAI</string>
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
-  <string name="genai_assistant_title">Assistant</string>
-  <string name="genai_me_title">Me</string>
-  <string name="genai_introduction_body">Hi! I\'m your AI assistant on everything related to apps and games discovery. Try with something like:</string>
-  <string name="genai_input_message_field">Type a message&#8230;</string>
-  <string name="genai_powered_by_ai_title">Powered by AI</string>
-  <string name="genai_example_1_body">I\'m looking for strategy games.</string>
-  <string name="genai_example_2_body">Please recommend me the best multiplayer games.</string>
-  <string name="genai_example_3_body">Do you know offline casual games?</string>
+  <string name="genai_assistant_title">어시스턴트</string>
+  <string name="genai_me_title">나</string>
+  <string name="genai_introduction_body">안녕하세요! 저는 앱과 게임 검색과 관련된 모든 것에 대한 AI 비서입니다. 이런 것을 사용해 보세요:</string>
+  <string name="genai_input_message_field">메시지 입력하기&#8230;</string>
+  <string name="genai_powered_by_ai_title">AI 기반</string>
+  <string name="genai_example_1_body">전략 게임을 찾고 있습니다.</string>
+  <string name="genai_example_2_body">최고의 멀티플레이어 게임을 추천해 주세요.</string>
+  <string name="genai_example_3_body">오프라인 캐주얼 게임을 아시나요?</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Now With AppCoins Payment System</string>
-  <string name="promotional_new_version">New Version</string>
-  <string name="promotional_on_going_event">Ongoing event</string>
-  <string name="promotional_new_in_aptoide">Now available</string>
-  <string name="promotional_soon_in_aptoide">Available sson</string>
-  <string name="promotional_notify_button">Notify me</string>
-  <string name="promotional_new_notification_title">The app you were waiting for!</string>
-  <string name="promotional_new_notification_body">%s is now available.</string>
-  <string name="promotional_new_active">You\'ll be notified when available.</string>
+  <string name="promotional_now_with_appcoins">이제 AppCoins 결제 시스템이 있습니다</string>
+  <string name="promotional_new_version">새로운 버전</string>
+  <string name="promotional_on_going_event">진행중인 이벤트</string>
+  <string name="promotional_new_in_aptoide">이제 사용 가능</string>
+  <string name="promotional_soon_in_aptoide">사용 가능한 sson</string>
+  <string name="promotional_notify_button">알려주세요</string>
+  <string name="promotional_new_notification_title">이 앱이 당신을 기다리고 있었어요!</string>
+  <string name="promotional_new_notification_body">이제 %s를(을) 사용할 수 있습니다.</string>
+  <string name="promotional_new_active">이용할 수 있을 때 알림을 드립니다.</string>
 </resources>
