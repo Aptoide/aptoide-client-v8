@@ -30,6 +30,7 @@ class ApkfyManagerProbe(
           apkfyModel = apkfyManager.getApkfy()
             ?.also(apkfyAnalytics::setApkfyUTMProperties)
             ?.also { idsRepository.saveId(GUEST_UID_KEY, it.guestUid) }
+            ?.also { apkfyAnalytics.setGuestUIDUserProperty(it.guestUid) }
             .also {
               // TODO: improve this logic
               AptoideMMPCampaign.guestUID = it?.guestUid ?: idsRepository.getId(GUEST_UID_KEY)
@@ -64,7 +65,10 @@ class ApkfyManagerProbe(
 
       return apkfyModel
     } else {
-      AptoideMMPCampaign.guestUID = idsRepository.getId(GUEST_UID_KEY)
+      idsRepository.getId(GUEST_UID_KEY).let {
+        apkfyAnalytics.setGuestUIDUserProperty(it)
+        AptoideMMPCampaign.guestUID = it
+      }
       return null
     }
   }
