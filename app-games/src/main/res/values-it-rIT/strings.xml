@@ -119,6 +119,7 @@
   <string name="official_game_badge">Gioco ufficiale</string>
   <string name="see_more_button">Scopri di più</string>
   <string name="generic_error_short_title">Si è verificato un errore.</string>
+  <string name="editorial_card_views_short">%s views</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Spazio esaurito</string>
   <string name="out_of_space_body">Spazio necessario per procedere con l\'installazione: %s.</string>
