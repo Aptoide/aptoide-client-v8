@@ -119,6 +119,7 @@
   <string name="official_game_badge">공식 게임</string>
   <string name="see_more_button">더 보기</string>
   <string name="generic_error_short_title">오류가 발생했습니다.</string>
+  <string name="editorial_card_views_short">%s views</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">공간 부족</string>
   <string name="out_of_space_body">설치를 계속하려면 %s이(가) 필요합니다.</string>
