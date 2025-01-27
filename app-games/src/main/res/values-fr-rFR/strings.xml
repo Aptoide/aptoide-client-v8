@@ -119,6 +119,7 @@
   <string name="official_game_badge">Jeu Officiel</string>
   <string name="see_more_button">Voir plus</string>
   <string name="generic_error_short_title">Une erreur s\'est produite.</string>
+  <string name="editorial_card_views_short">%s views</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Espace insuffisant</string>
   <string name="out_of_space_body">Vous avez besoin de %s pour continuer l\'installation.</string>
