@@ -119,6 +119,7 @@
   <string name="official_game_badge">官方游戏</string>
   <string name="see_more_button">查看更多</string>
   <string name="generic_error_short_title">发生错误。</string>
+  <string name="editorial_card_views_short">%s views</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">空间不足</string>
   <string name="out_of_space_body">需要%s才能继续安装。</string>
