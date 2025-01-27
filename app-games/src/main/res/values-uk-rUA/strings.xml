@@ -119,6 +119,7 @@
   <string name="official_game_badge">Офіційна гра</string>
   <string name="see_more_button">Побачити більше</string>
   <string name="generic_error_short_title">Виникла помилка.</string>
+  <string name="editorial_card_views_short">%s views</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Немає вільного місця</string>
   <string name="out_of_space_body">Вам потрібно %s, щоб продовжити встановлення.</string>
