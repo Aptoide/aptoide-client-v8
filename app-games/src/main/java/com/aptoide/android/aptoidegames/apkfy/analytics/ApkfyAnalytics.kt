@@ -9,6 +9,10 @@ class ApkfyAnalytics @Inject constructor(
   private val biAnalytics: BIAnalytics,
 ) {
 
+  fun setGuestUIDUserProperty(guestUid: String) = biAnalytics.setUserProperties(
+    "aptoide_mmp_guest_id" to guestUid
+  )
+
   fun sendApkfySuccessEvent(
     data: String,
     isRetry: Boolean,
