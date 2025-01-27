@@ -117,8 +117,9 @@
   <string name="later_button">Позже</string>
   <string name="trusted_game_badge">Проверенная игра</string>
   <string name="official_game_badge">Официальная игра</string>
-  <string name="see_more_button">Посмотреть больше</string>
+  <string name="see_more_button">Подробнее</string>
   <string name="generic_error_short_title">Произошла ошибка.</string>
+  <string name="editorial_card_views_short">%s views</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Нет места</string>
   <string name="out_of_space_body">Вам необходимо %s чтобы продолжить установку.</string>
