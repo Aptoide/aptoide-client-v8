@@ -119,6 +119,7 @@
   <string name="official_game_badge">Offizielles Spiel</string>
   <string name="see_more_button">Mehr anzeigen</string>
   <string name="generic_error_short_title">Ein Fehler ist aufgetreten.</string>
+  <string name="editorial_card_views_short">%s views</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Kein Speicher mehr</string>
   <string name="out_of_space_body">Sie benötigen %s um die Installation abschliessen zu können.</string>
