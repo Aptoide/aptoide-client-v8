@@ -1,6 +1,5 @@
-package com.aptoide.android.aptoidegames.home
+package com.aptoide.android.aptoidegames.feature_promotional
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,17 +16,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import cm.aptoide.pt.download_view.presentation.DownloadUiState
-import cm.aptoide.pt.download_view.presentation.DownloadUiState.Downloading
-import cm.aptoide.pt.download_view.presentation.DownloadUiState.Error
-import cm.aptoide.pt.download_view.presentation.DownloadUiState.Install
-import cm.aptoide.pt.download_view.presentation.DownloadUiState.Installed
-import cm.aptoide.pt.download_view.presentation.DownloadUiState.Installing
-import cm.aptoide.pt.download_view.presentation.DownloadUiState.Migrate
-import cm.aptoide.pt.download_view.presentation.DownloadUiState.Outdated
-import cm.aptoide.pt.download_view.presentation.DownloadUiState.ReadyToInstall
-import cm.aptoide.pt.download_view.presentation.DownloadUiState.Uninstalling
-import cm.aptoide.pt.download_view.presentation.DownloadUiState.Waiting
 import cm.aptoide.pt.download_view.presentation.rememberDownloadState
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
@@ -35,7 +23,8 @@ import cm.aptoide.pt.feature_apps.presentation.rememberApp
 import cm.aptoide.pt.feature_home.domain.Bundle
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
-import com.aptoide.android.aptoidegames.drawables.icons.getAppcoinsClearLogo
+import com.aptoide.android.aptoidegames.home.AptoidePromotionalFeatureGraphicImage
+import com.aptoide.android.aptoidegames.home.LoadingView
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.installer.presentation.ProgressText
@@ -43,20 +32,12 @@ import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
-fun NewAppPromotionalView(
-  bundle: Bundle,
-  navigate: (String) -> Unit
-) {
+fun NewAppVersionPromotionalView(bundle: Bundle, navigate: (String) -> Unit) {
   bundle.view?.let {
     val (uiState, _) = rememberApp(it)
 
     when (uiState) {
-      is AppUiState.Idle -> NewAppPromotional(
-        app = uiState.app,
-        label = bundle.title,
-        navigate = navigate
-      )
-
+      is AppUiState.Idle -> NewAppVersionPromotional(uiState.app, bundle.title, navigate)
       is AppUiState.Loading -> LoadingView()
       is AppUiState.NoConnection,
       is AppUiState.Error -> Unit
@@ -65,7 +46,7 @@ fun NewAppPromotionalView(
 }
 
 @Composable
-private fun NewAppPromotional(app: App, label: String, navigate: (String) -> Unit) {
+private fun NewAppVersionPromotional(app: App, label: String, navigate: (String) -> Unit) {
   val downloadState = rememberDownloadState(app)
   val isDownloading = remember(downloadState) {
     isDownloading(downloadState)
@@ -76,11 +57,7 @@ private fun NewAppPromotional(app: App, label: String, navigate: (String) -> Uni
       .padding(all = 16.dp)
       .clickable(onClick = { navigate(buildAppViewRoute(app)) })
   ) {
-    AptoidePromotionalFeatureGraphicImage(
-      featureGraphic = app.featureGraphic,
-      label = label,
-      hasAppCoins = app.isAppCoins
-    )
+    AptoidePromotionalFeatureGraphicImage(app.featureGraphic, label)
     Row(
       modifier = Modifier.padding(top = 8.dp),
       verticalAlignment = Alignment.CenterVertically
@@ -115,7 +92,6 @@ private fun NewAppPromotional(app: App, label: String, navigate: (String) -> Uni
         } else {
           AppInfo(app)
         }
-
       }
       InstallViewShort(app = app)
     }
@@ -124,47 +100,31 @@ private fun NewAppPromotional(app: App, label: String, navigate: (String) -> Uni
 
 @Composable
 private fun AppInfo(app: App) {
-  if (app.isAppCoins) {
-    Row(
+  Row(
+    modifier = Modifier
+      .wrapContentHeight(
+        unbounded = true,
+        align = Alignment.Top
+      ),
+    verticalAlignment = Alignment.CenterVertically
+  ) {
+    Text(
       modifier = Modifier
-        .wrapContentHeight(
-          unbounded = true,
-          align = Alignment.Top
-        ),
-      verticalAlignment = Alignment.CenterVertically
-    ) {
-      Image(
-        imageVector = getAppcoinsClearLogo(Palette.AppCoinsPink),
-        contentDescription = null,
-        modifier = Modifier
-          .padding(end = 8.dp)
-          .size(16.dp),
-      )
-      Text(
-        modifier = Modifier
-          .padding(end = 8.dp),
-        text = stringResource(R.string.promotional_now_with_appcoins),
-        maxLines = 1,
-        style = AGTypography.InputsXSRegular,
-        overflow = TextOverflow.Ellipsis,
-      )
-    }
-  }
-}
-
-fun isDownloading(downloadState: DownloadUiState?): Boolean {
-  return when (downloadState) {
-    is Downloading,
-    is Error,
-    is Installing,
-    is ReadyToInstall,
-    is Waiting,
-    is Uninstalling -> true
-
-    is Install,
-    is Outdated,
-    is Migrate,
-    is Installed,
-    null -> false
+        .padding(end = 8.dp),
+      text = stringResource(R.string.promotional_new_version),
+      maxLines = 1,
+      color = Palette.Primary,
+      style = AGTypography.InputsXS,
+      overflow = TextOverflow.Ellipsis,
+    )
+    Text(
+      modifier = Modifier
+        .padding(end = 8.dp),
+      text = app.versionName,
+      color = Palette.GreyLight,
+      maxLines = 1,
+      style = AGTypography.InputsXS,
+      overflow = TextOverflow.Ellipsis,
+    )
   }
 }

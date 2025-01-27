@@ -113,7 +113,7 @@ private fun NewsBundleContent(
 
 @PreviewDark
 @Composable
-private fun EditorialsBundlePreview(
+private fun NewsPreview(
   @PreviewParameter(ArticleListUiStateProvider::class) uiState: ArticleListUiState
 ) {
   AptoideTheme {
