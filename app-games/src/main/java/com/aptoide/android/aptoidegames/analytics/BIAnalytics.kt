@@ -49,11 +49,12 @@ class BIAnalytics(private val analyticsSender: AnalyticsSender) {
     appLaunchPreferencesManager: AppLaunchPreferencesManager,
     featureFlags: FeatureFlags,
   ) {
+    Indicative.launch(context, BuildConfig.INDICATIVE_KEY)
+
     CoroutineScope(Dispatchers.Main).launch {
       val isFirstLaunch = appLaunchPreferencesManager.isFirstLaunch()
       val locale = context.resources.configuration.locales[0]
 
-      Indicative.launch(context, BuildConfig.INDICATIVE_KEY)
       Indicative.setUniqueID(analyticsInfoProvider.getAnalyticsId())
 
       analyticsSender.setUserProperties(
