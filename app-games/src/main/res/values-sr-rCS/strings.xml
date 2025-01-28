@@ -119,7 +119,7 @@
   <string name="official_game_badge">Zvanična igra</string>
   <string name="see_more_button">Pogledajte više</string>
   <string name="generic_error_short_title">Došlo je do greške.</string>
-  <string name="editorial_card_views_short">%s views</string>
+  <string name="editorial_card_views_short">Broj pregleda: %s</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Nema više prostora</string>
   <string name="out_of_space_body">Potrebno vam je %s da biste nastavili sa instalacijom.</string>
