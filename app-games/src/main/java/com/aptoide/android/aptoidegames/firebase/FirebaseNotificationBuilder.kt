@@ -13,13 +13,9 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import cm.aptoide.pt.extensions.isAllowed
 import com.aptoide.android.aptoidegames.BuildConfig
-import com.aptoide.android.aptoidegames.DEEPLINK_KEY
 import com.aptoide.android.aptoidegames.MainActivity
 import com.aptoide.android.aptoidegames.installer.notifications.ImageDownloader
-import com.aptoide.android.aptoidegames.markAsAhab
 import com.aptoide.android.aptoidegames.notifications.getNotificationIcon
-import com.aptoide.android.aptoidegames.putDeeplink
-import com.aptoide.android.aptoidegames.putNotificationSource
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.google.firebase.messaging.RemoteMessage
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -79,19 +75,15 @@ class FirebaseNotificationBuilder @Inject constructor(
 
             val notificationSmallIcon = BuildConfig.FLAVOR.getNotificationIcon()
 
-            val clickIntent = message.data[DEEPLINK_KEY]?.let {
-              PendingIntent.getActivity(
-                context,
-                notificationId,
-                Intent(context, MainActivity::class.java)
-                  .putDeeplink(it)
-                  .putNotificationSource()
-                  .markAsAhab()
-                  .putExtra(FirebaseConstants.FIREBASE_MESSAGE_ID, message.messageId)
-                  .putExtra(FirebaseConstants.FIREBASE_ANALYTICS_DATA, message.toIntent().extras),
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-              )
-            }
+            val clickIntent = PendingIntent.getActivity(
+              context,
+              notificationId,
+              Intent(context, MainActivity::class.java)
+                .putExtras(message.toIntent())
+                .putExtra(FirebaseConstants.FIREBASE_MESSAGE_ID, message.messageId)
+                .putExtra(FirebaseConstants.FIREBASE_ANALYTICS_DATA, message.toIntent().extras),
+              PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
 
             val notification = NotificationCompat.Builder(context, FCM_NOTIFICATION_CHANNEL_ID)
               .setShowWhen(true)
