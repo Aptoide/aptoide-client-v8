@@ -117,8 +117,9 @@
   <string name="later_button">Depois</string>
   <string name="trusted_game_badge">Jogo Verificado</string>
   <string name="official_game_badge">Jogo Oficial</string>
-  <string name="see_more_button">See more</string>
-  <string name="generic_error_short_title">An error occurred.</string>
+  <string name="see_more_button">Ver mais</string>
+  <string name="generic_error_short_title">Ocorreu um erro.</string>
+  <string name="editorial_card_views_short">%s views</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Sem Espaço Disponível</string>
   <string name="out_of_space_body">Você precisa de %s para continuar a instalação.</string>
@@ -172,7 +173,7 @@
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Por favor, nos forneça todos os detalhes:\n\u2022 Quando o problema começou\n\u2022 Em qual jogo você está fazendo uma compra\n\nDepois de tocar em Enviar, seu aplicativo de e-mail será aberto. Sinta-se à vontade para anexar uma captura de tela ou vídeo sobre o problema!</string>
   <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Deseja instalar este jogo?</string>
   <string name="apkfy_whats_aptoide_games_title">What\'s Aptoide Games?</string>
-  <string name="apkfy_install_body">Get your favorite game and much more in Aptoide Games!</string>
+  <string name="apkfy_install_body">Baixe seu jogo favorito e muito mais na Aptoide Games!</string>
   <string name="apkfy_install_bullet_points">\u2022 Top games with an amazing curation.\n\u2022 No need to log in!\n\u2022 Special promotions and rewards in your favorite games.</string>
   <string name="apkfy_install_alternative_version_body">You\'re also unlocking Aptoide Games!</string>
   <string name="apkfy_install_alternative_version_bullet_points">\u2022 Curated top games, just for you.\n\u2022 Exclusive rewards and special deals.\n\u2022 Your personal AI Assistant for game discovery.</string>
@@ -269,13 +270,13 @@
   <string name="genai_example_2_body">Please recommend me the best multiplayer games.</string>
   <string name="genai_example_3_body">Do you know offline casual games?</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Now With AppCoins Payment System</string>
-  <string name="promotional_new_version">New Version</string>
-  <string name="promotional_on_going_event">Ongoing event</string>
+  <string name="promotional_now_with_appcoins">Agora com o Sistema de Pagamentos AppCoins</string>
+  <string name="promotional_new_version">Nova Versão</string>
+  <string name="promotional_on_going_event">Evento ativo</string>
   <string name="promotional_new_in_aptoide">Now available</string>
   <string name="promotional_soon_in_aptoide">Available sson</string>
-  <string name="promotional_notify_button">Notify me</string>
-  <string name="promotional_new_notification_title">The app you were waiting for!</string>
+  <string name="promotional_notify_button">Avise-me</string>
+  <string name="promotional_new_notification_title">O app que você esperava!</string>
   <string name="promotional_new_notification_body">%s is now available.</string>
-  <string name="promotional_new_active">You\'ll be notified when available.</string>
+  <string name="promotional_new_active">Você será notificado quando estiver disponível.</string>
 </resources>

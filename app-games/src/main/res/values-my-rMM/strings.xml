@@ -117,8 +117,9 @@
   <string name="later_button">Later</string>
   <string name="trusted_game_badge">Trusted Game</string>
   <string name="official_game_badge">Official Game</string>
-  <string name="see_more_button">See more</string>
-  <string name="generic_error_short_title">An error occurred.</string>
+  <string name="see_more_button">ပို၍ၾကည့္မည္</string>
+  <string name="generic_error_short_title">မွားယြင္းေနပါသည္</string>
+  <string name="editorial_card_views_short">%s views</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Out of Space</string>
   <string name="out_of_space_body">ထည့္သြင္းမႈကို ဆက္လုပ္ရန္အတြက္ %s ကို လိုအပ္ပါသည္။</string>
@@ -267,13 +268,13 @@
   <string name="genai_example_2_body">Please recommend me the best multiplayer games.</string>
   <string name="genai_example_3_body">Do you know offline casual games?</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Now With AppCoins Payment System</string>
-  <string name="promotional_new_version">New Version</string>
-  <string name="promotional_on_going_event">Ongoing event</string>
+  <string name="promotional_now_with_appcoins">ယခုအခါ AppCoins ေငြေပးေခ်မႈစနစ္ျဖင့္</string>
+  <string name="promotional_new_version">ဗားရွင္းအသစ္</string>
+  <string name="promotional_on_going_event">ေနာင္လာမည့္ အစီအစဥ္</string>
   <string name="promotional_new_in_aptoide">Now available</string>
   <string name="promotional_soon_in_aptoide">Available sson</string>
-  <string name="promotional_notify_button">Notify me</string>
-  <string name="promotional_new_notification_title">The app you were waiting for!</string>
+  <string name="promotional_notify_button">ကြၽႏ္ုပ္ကို အသိေပးပါ</string>
+  <string name="promotional_new_notification_title">သင္ေစာင့္ဆိုင္းေနခဲ့ရတဲ့အက္ပ္။</string>
   <string name="promotional_new_notification_body">%s is now available.</string>
-  <string name="promotional_new_active">You\'ll be notified when available.</string>
+  <string name="promotional_new_active">ရရွိသည့္အခါ သင့္ကိုအသိေပးပါမည္။</string>
 </resources>
