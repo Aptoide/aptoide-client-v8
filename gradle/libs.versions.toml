@@ -4,13 +4,13 @@ minSdk = "26"
 targetSdk = "35"
 
 #core
-kotlin = "2.0.21"
-coroutines = "1.9.0"
-navigation = "2.8.3"
+kotlin = "2.1.10"
+coroutines = "1.10.1"
+navigation = "2.8.5"
 
 #libraries
-coreKtx = "1.13.1"
-activityKtx = "1.9.3"
+coreKtx = "1.15.0"
+activityKtx = "1.10.0"
 appCompat = "1.7.0"
 material = "1.12.0"
 retrofit = "2.11.0"
@@ -18,31 +18,31 @@ retrofitGsonConverter = "2.11.0"
 okHttp = "4.12.0"
 timber = "5.0.1"
 lottie = "6.0.0"
-lifecycle = "2.8.6"
+lifecycle = "2.8.7"
 coil = "2.7.0"
 room = "2.6.1"
-activityCompose = "1.9.3"
-compose = "1.7.4"
-composeLifecycle = "2.8.6"
-viewmodelCompose = "2.8.6"
-navigationCompose = "2.8.3"
-materialIconsExtended = "1.7.4"
-hilt = "2.52"
+activityCompose = "1.10.0"
+compose = "1.7.6"
+composeLifecycle = "2.8.7"
+viewmodelCompose = "2.8.7"
+navigationCompose = "2.8.5"
+materialIconsExtended = "1.7.6"
+hilt = "2.55"
 hiltCompiler = "1.2.0"
 hiltNavCompose = "1.2.0"
-customChromeTab = "1.5.0"
-firebase = "33.5.1"
-datastore = "1.1.1"
-gmsPlayServicesAds = "18.1.0"
+customChromeTab = "1.8.0"
+firebase = "33.8.0"
+datastore = "1.1.2"
+gmsPlayServicesAds = "18.2.0"
 playServicesBasement = "18.5.0"
 accompanistWebview = "0.36.0"
-accompanistPermissions = "0.36.0"
-workManager = "2.9.1"
+accompanistPermissions = "0.37.0"
+workManager = "2.10.0"
 hiltWork = "1.2.0"
 apacheCommonsText = "1.9"
 adyenVersion = "4.13.3"
 indicative = "1.1.0"
-zoomable = "1.6.2"
+zoomable = "2.0.0"
 
 #test libraries
 junit = "4.13.2"
@@ -50,33 +50,33 @@ junit5 = "5.11.3"
 turbine = "1.2.0"
 
 #plugins
-applicationGradlePlugin = "8.7.2"
+applicationGradlePlugin = "8.7.3"
 kotlinAndroidGradlePlugin = "2.0.21"
 androidGradlePlugin = "8.5.2"
 hiltAndroidGradlePlugin = "2.52"
 googleServicesPlugin = "4.4.2"
 firebaseCrashlyticsGradle = "3.0.2"
 androidJunit5Plugin = "1.9.3.0"
-kspPlugin = "2.0.20-1.0.24"
+kspPlugin = "2.1.0-1.0.29"
 
 [libraries]
 core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
 activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtx" }
 app-compat = { module = "androidx.appcompat:appcompat", version.ref = "appCompat" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
-kotlin = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk7", version.ref = "kotlin"}
+kotlin = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk7", version.ref = "kotlin" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 retrofit-gson-converter = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofitGsonConverter" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okHttp" }
 logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okHttp" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines"}
-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines"}
+coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
+coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 lifecycle-common = { module = "androidx.lifecycle:lifecycle-common", version.ref = "lifecycle" }
 lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "lifecycle" }
 lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle" }
-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigation"}
-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigation"}
+navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigation" }
+navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigation" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 lottie = { module = "com.airbnb.android:lottie", version.ref = "lottie" }
 room = { module = "androidx.room:room-runtime", version.ref = "room" }
@@ -114,7 +114,7 @@ zoomable = { module = "net.engawapg.lib:zoomable", version.ref = "zoomable" }
 
 #Test library dependencies
 junit = { module = "junit:junit", version.ref = "junit" }
-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines"}
+coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit5" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit5" }
 junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junit5" }
