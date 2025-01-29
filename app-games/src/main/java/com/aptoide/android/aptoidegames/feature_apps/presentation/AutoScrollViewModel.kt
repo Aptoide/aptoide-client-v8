@@ -1,6 +1,7 @@
 package com.aptoide.android.aptoidegames.feature_apps.presentation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.viewModelScope
@@ -68,6 +69,11 @@ class AutoScrollViewModel(scrollSpeedInSeconds: Long) : ViewModel() {
     currentItem = item
   }
 
+  fun updateSpeed(scrollSpeedInSeconds: Long) {
+    delayTime = TimeUnit.SECONDS.toMillis(scrollSpeedInSeconds)
+    start()
+  }
+
   override fun onCleared() {
     super.onCleared()
     cancel()
@@ -79,7 +85,7 @@ fun perCarouselViewModel(
   carouselTag: String,
   scrollSpeedInSeconds: Long = DEFAULT_AUTO_SCROLL_SPEED
 ): AutoScrollViewModel {
-  return viewModel(
+  val vm: AutoScrollViewModel = viewModel(
     key = carouselTag,
     factory = object : Factory {
       override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -88,4 +94,10 @@ fun perCarouselViewModel(
       }
     }
   )
+
+  LaunchedEffect(scrollSpeedInSeconds) {
+    vm.updateSpeed(scrollSpeedInSeconds)
+  }
+
+  return vm
 }
