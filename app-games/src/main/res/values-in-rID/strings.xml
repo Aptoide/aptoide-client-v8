@@ -174,9 +174,9 @@
   <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Apakah Anda ingin memasang game ini?</string>
   <string name="apkfy_whats_aptoide_games_title">Apa itu Game Aptoide?</string>
   <string name="apkfy_install_body">Dapatkan game favorit Anda dan banyak lagi di Game Aptoide!</string>
-  <string name="apkfy_install_bullet_points">\u2022 Top games with an amazing curation.\n\u2022 No need to log in!\n\u2022 Special promotions and rewards in your favorite games.</string>
-  <string name="apkfy_install_alternative_version_body">You\'re also unlocking Aptoide Games!</string>
-  <string name="apkfy_install_alternative_version_bullet_points">\u2022 Curated top games, just for you.\n\u2022 Exclusive rewards and special deals.\n\u2022 Your personal AI Assistant for game discovery.</string>
+  <string name="apkfy_install_bullet_points">\u2022 Game teratas dengan kurasi luar biasa.\n\u2022 Tidak perlu masuk!\n\u2022 Promosi dan hadiah khusus di game favorit Anda.</string>
+  <string name="apkfy_install_alternative_version_body">Anda juga membuka Game Aptoide!</string>
+  <string name="apkfy_install_alternative_version_bullet_points">\u2022 Game-game terbaik yang dikurasi, hanya untuk Anda.\n\u2022 Hadiah eksklusif dan penawaran khusus.\n\u2022 Asisten AI pribadi Anda untuk penemuan game.</string>
   <string name="app_size_mb_title" comment="s_mb">%s MB</string>
   <string name="uninstalled_title" comment="uninstalled">Dicopot</string>
   <string name="error_no_internet_body" comment="please_check_your_internet_connection">Silakan periksa koneksi Internet Anda.</string>
@@ -261,7 +261,7 @@
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
   <string name="genai_assistant_title">Asisten</string>
   <string name="genai_me_title">Saya</string>
-  <string name="genai_introduction_body">Hi! I\'m your AI assistant on everything related to apps and games discovery. Try with something like:</string>
+  <string name="genai_introduction_body">Hai! Saya asisten AI Anda untuk segala hal yang berkaitan dengan penemuan aplikasi dan game. Coba dengan sesuatu seperti:</string>
   <string name="genai_input_message_field">Ketik pesan&#8230;</string>
   <string name="genai_powered_by_ai_title">Diberdayakan oleh AI</string>
   <string name="genai_example_1_body">Saya sedang mencari game strategi</string>
@@ -275,6 +275,6 @@
   <string name="promotional_soon_in_aptoide">Segera tersedia</string>
   <string name="promotional_notify_button">Beritahu saya</string>
   <string name="promotional_new_notification_title">Aplikasi yang Anda tunggu!</string>
-  <string name="promotional_new_notification_body">%s is now available.</string>
+  <string name="promotional_new_notification_body">%s sekarang tersedia.</string>
   <string name="promotional_new_active">Anda akan mendapatkan pemberitahuan, bila ada.</string>
 </resources>
