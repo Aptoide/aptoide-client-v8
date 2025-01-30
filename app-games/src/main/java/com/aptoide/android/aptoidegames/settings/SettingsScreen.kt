@@ -386,10 +386,7 @@ fun SettingsCaretItem(
 
 @PreviewDark
 @Composable
-fun SettingsScreenPreview(
-  @PreviewParameter(SettingsScreenStateProvider::class)
-  state: Boolean?,
-) {
+fun SettingsScreenPreview() {
   AptoideTheme(darkTheme = isSystemInDarkTheme()) {
     SettingsViewContent(
       title = "Settings",
@@ -400,8 +397,4 @@ fun SettingsScreenPreview(
       navigateBack = {},
     )
   }
-}
-
-class SettingsScreenStateProvider : PreviewParameterProvider<Boolean?> {
-  override val values: Sequence<Boolean?> = sequenceOf(null, false, true)
 }
