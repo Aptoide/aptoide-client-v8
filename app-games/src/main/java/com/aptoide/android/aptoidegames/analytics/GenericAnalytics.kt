@@ -183,11 +183,6 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
     params = emptyMap()
   )
 
-  fun sendPaymentSupportClicked() = analyticsSender.logEvent(
-    name = "payment_support_clicked",
-    params = emptyMap()
-  )
-
   fun sendSendFeedbackClicked() = analyticsSender.logEvent(
     name = "send_feedback_clicked",
     params = emptyMap()
