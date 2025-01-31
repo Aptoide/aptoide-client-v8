@@ -279,4 +279,5 @@
   <string name="promotional_new_notification_title">A app de que estavas à espera!</string>
   <string name="promotional_new_notification_body">%s já está disponível.</string>
   <string name="promotional_new_active">Serás notificado quando estiver disponível.</string>
+  <string name="promotional_now_available_body">Now available in Aptoide Games!</string>
 </resources>
