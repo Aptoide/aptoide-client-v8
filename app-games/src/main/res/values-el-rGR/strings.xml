@@ -279,4 +279,5 @@
   <string name="promotional_new_notification_title">Η εφαρμογή που περιμένατε!</string>
   <string name="promotional_new_notification_body">Το %s είναι τώρα διαθέσιμο.</string>
   <string name="promotional_new_active">Θα ειδοποιηθείτε όταν γίνει διαθέσιμο.</string>
+  <string name="promotional_now_available_body">Now available in Aptoide Games!</string>
 </resources>
