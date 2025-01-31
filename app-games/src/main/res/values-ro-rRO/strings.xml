@@ -281,4 +281,5 @@
   <string name="promotional_new_notification_title">Aplicația pe care o așteptai!</string>
   <string name="promotional_new_notification_body">%s este acum disponibil.</string>
   <string name="promotional_new_active">Vei fi notificat când este disponibil.</string>
+  <string name="promotional_now_available_body">Now available in Aptoide Games!</string>
 </resources>
