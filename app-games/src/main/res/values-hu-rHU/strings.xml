@@ -279,4 +279,5 @@
   <string name="promotional_new_notification_title">Az app, amire vártál!</string>
   <string name="promotional_new_notification_body">%s most elérhető.</string>
   <string name="promotional_new_active">Értesítünk, ha elérhető lesz.</string>
+  <string name="promotional_now_available_body">Now available in Aptoide Games!</string>
 </resources>
