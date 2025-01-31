@@ -277,4 +277,5 @@
   <string name="promotional_new_notification_title">Ứng dụng bạn mong chờ từ lâu!</string>
   <string name="promotional_new_notification_body">%s hiện đang khả dụng.</string>
   <string name="promotional_new_active">Bạn sẽ nhận được thông báo khi có thông tin mới.</string>
+  <string name="promotional_now_available_body">Now available in Aptoide Games!</string>
 </resources>
