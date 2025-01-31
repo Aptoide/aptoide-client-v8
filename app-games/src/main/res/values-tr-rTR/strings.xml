@@ -279,4 +279,5 @@
   <string name="promotional_new_notification_title">Beklediğiniz uygulama!</string>
   <string name="promotional_new_notification_body">%s is now available.</string>
   <string name="promotional_new_active">Mevcut olduğunda bilgilendirileceksiniz.</string>
+  <string name="promotional_now_available_body">Now available in Aptoide Games!</string>
 </resources>
