@@ -283,4 +283,5 @@
   <string name="promotional_new_notification_title">Додаток, на який ви чекали!</string>
   <string name="promotional_new_notification_body">%s тепер доступно.</string>
   <string name="promotional_new_active">Коли буде доступно, ви отримаєте сповіщення.</string>
+  <string name="promotional_now_available_body">Now available in Aptoide Games!</string>
 </resources>
