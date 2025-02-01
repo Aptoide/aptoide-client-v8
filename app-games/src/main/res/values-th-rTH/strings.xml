@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">เกมส์ Aptoide</string>
+  <string name="app_name">Aptoide Games</string>
   <!-- Bottom Bar -->
   <string name="games">เกมส์</string>
   <string name="categories">หมวดหมู่</string>
@@ -174,9 +174,9 @@
   <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">คุณต้องการติดตั้งเกมส์นี้ไหม</string>
   <string name="apkfy_whats_aptoide_games_title">เกมส์ Aptoide คืออะไร</string>
   <string name="apkfy_install_body">รับเกมส์โปรดของคุณและอีกมากมายในแอปเกมส์ของแอป!</string>
-  <string name="apkfy_install_bullet_points">\u2022 Top games with an amazing curation.\n\u2022 No need to log in!\n\u2022 Special promotions and rewards in your favorite games.</string>
-  <string name="apkfy_install_alternative_version_body">You\'re also unlocking Aptoide Games!</string>
-  <string name="apkfy_install_alternative_version_bullet_points">\u2022 Curated top games, just for you.\n\u2022 Exclusive rewards and special deals.\n\u2022 Your personal AI Assistant for game discovery.</string>
+  <string name="apkfy_install_bullet_points">\u2022 เกมส์ยอดนิยมพร้อมการดูแลจัดการที่น่าทึ่ง\n\u2022 ไม่จำเป็นต้องเข้าสู่ระบบ!\n\u2022 โปรโมชั่นและรางวัลพิเศษในเกมส์ที่คุณชื่นชอบ</string>
+  <string name="apkfy_install_alternative_version_body">คุณกำลังปลดล็อค Aptoide Games ด้วย!</string>
+  <string name="apkfy_install_alternative_version_bullet_points">\u2022 เกมส์ยอดนิยมที่คัดสรรมาเพื่อคุณโดยเฉพาะ\n\u2022 รางวัลและข้อเสนอพิเศษ\n\u2022 ผู้ช่วย AI ส่วนตัวของคุณสำหรับการค้นพบเกมส์</string>
   <string name="app_size_mb_title" comment="s_mb">%sMB</string>
   <string name="uninstalled_title" comment="uninstalled">ถอดการติดตั้งแล้ว</string>
   <string name="error_no_internet_body" comment="please_check_your_internet_connection">โปรดตรวจสอบการเชื่อมต่ออินเตอร์เน็ต</string>
@@ -261,12 +261,12 @@
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
   <string name="genai_assistant_title">ผู้ช่วย</string>
   <string name="genai_me_title">ฉัน</string>
-  <string name="genai_introduction_body">Hi! I\'m your AI assistant on everything related to apps and games discovery. Try with something like:</string>
+  <string name="genai_introduction_body">สวัสดี! ฉันเป็นผู้ช่วย AI ของคุณในทุกสิ่งที่เกี่ยวข้องกับการค้นพบแอปและเกมส์ ลองบางอย่างเช่น:</string>
   <string name="genai_input_message_field">พิมพ์ข้อความ&amp;#8230</string>
   <string name="genai_powered_by_ai_title">สนับสนุนโดย AI</string>
   <string name="genai_example_1_body">ฉันกำลังมองหาเกมส์กลยุทธ์</string>
   <string name="genai_example_2_body">โปรดแนะนำเกมส์หลายผู้เล่นที่ดีที่สุด</string>
-  <string name="genai_example_3_body">Do you know offline casual games?</string>
+  <string name="genai_example_3_body">คุณรู้จักเกมส์สบายๆ ออฟไลน์หรือไม่?</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">ระบบการชำระเงินด้วย AppCoins ได้ตอนนี้</string>
   <string name="promotional_new_version">เวอร์ชั่นใหม่</string>
