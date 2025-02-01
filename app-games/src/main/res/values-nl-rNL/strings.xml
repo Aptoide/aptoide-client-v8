@@ -115,11 +115,11 @@
   <string name="screenshot_appview_5">Speciaal voor jou geselecteerde games.</string>
   <string name="not_now_button">Niet nu</string>
   <string name="later_button">Later</string>
-  <string name="trusted_game_badge">Trusted Game</string>
-  <string name="official_game_badge">Official Game</string>
+  <string name="trusted_game_badge">Vertrouwde game</string>
+  <string name="official_game_badge">Officiële game</string>
   <string name="see_more_button">Meer bekijken</string>
   <string name="generic_error_short_title">Er is een fout opgetreden.</string>
-  <string name="editorial_card_views_short">%s views</string>
+  <string name="editorial_card_views_short">%s weergaven</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Geen opslagruimte</string>
   <string name="out_of_space_body">Je hebt %s nodig om met de installatie door te gaan.</string>
@@ -172,7 +172,7 @@
   <string name="contact_support_title" comment="contact_support">Neem contact op met support</string>
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">We vragen je de volgende informatie te verstrekken:\n\u2022 Wanneer je het probleem voor de eerste keer hebt ervaren\n\u2022 In welke game je de aankoop hebt gedaan\n\nZodra je op Sturen tikt, wordt je e-mailapp geopend. Je kunt een screenshot of video over het probleem toevoegen!</string>
   <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Wil je deze game installeren?</string>
-  <string name="apkfy_whats_aptoide_games_title">What\'s Aptoide Games?</string>
+  <string name="apkfy_whats_aptoide_games_title">Wat is Aptoide Games?</string>
   <string name="apkfy_install_body">Vind je favoriete game en nog veel meer in Aptoide Games!</string>
   <string name="apkfy_install_bullet_points">\u2022 Top games with an amazing curation.\n\u2022 No need to log in!\n\u2022 Special promotions and rewards in your favorite games.</string>
   <string name="apkfy_install_alternative_version_body">You\'re also unlocking Aptoide Games!</string>
