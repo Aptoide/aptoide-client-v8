@@ -119,7 +119,7 @@
   <string name="official_game_badge">Resmi Oyun</string>
   <string name="see_more_button">Daha fazlasını gör</string>
   <string name="generic_error_short_title">Bir hata meydana geldi.</string>
-  <string name="editorial_card_views_short">%s views</string>
+  <string name="editorial_card_views_short">%s görüntülenme</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Yer Yok</string>
   <string name="out_of_space_body">Yüklemeye devam etmek için %s gerekli.</string>
@@ -172,7 +172,7 @@
   <string name="contact_support_title" comment="contact_support">Destekle İletişime Geçin</string>
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Lütfen bize tüm ayrıntıları ver:\n\u2022 Sorun ne zaman başladı\n\u2022 Hangi oyunda satın alma işlemi yapıyorsun\n\nGönder butonuna dokunduğunda, posta uygulaman açılacak. Sorunla ilgili bir ekran görüntüsü veya video ekleyebilirsin!</string>
   <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Bu oyunu yüklemek istiyor musun?</string>
-  <string name="apkfy_whats_aptoide_games_title">What\'s Aptoide Games?</string>
+  <string name="apkfy_whats_aptoide_games_title">Aptoide Games nedir?</string>
   <string name="apkfy_install_body">Aptoide Games\'te en sevdiğin oyuna ve çok daha fazlasına eriş!</string>
   <string name="apkfy_install_bullet_points">\u2022 Top games with an amazing curation.\n\u2022 No need to log in!\n\u2022 Special promotions and rewards in your favorite games.</string>
   <string name="apkfy_install_alternative_version_body">You\'re also unlocking Aptoide Games!</string>
@@ -261,23 +261,23 @@
   <!-- GenAi -->
   <string name="genai_bottom_navigation_genai_button">GenAI</string>
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
-  <string name="genai_assistant_title">Assistant</string>
-  <string name="genai_me_title">Me</string>
-  <string name="genai_introduction_body">Hi! I\'m your AI assistant on everything related to apps and games discovery. Try with something like:</string>
-  <string name="genai_input_message_field">Type a message&#8230;</string>
-  <string name="genai_powered_by_ai_title">Powered by AI</string>
-  <string name="genai_example_1_body">I\'m looking for strategy games.</string>
-  <string name="genai_example_2_body">Please recommend me the best multiplayer games.</string>
+  <string name="genai_assistant_title">Asistan</string>
+  <string name="genai_me_title">Ben</string>
+  <string name="genai_introduction_body">Merhaba! Ben uygulamalar ve oyunlarla ilgili her konuda bilgi alabileceğin yapay zeka asistanınım. Şöyle bir şey deneyebilirsin:</string>
+  <string name="genai_input_message_field">Bir mesaj yaz&#8230;</string>
+  <string name="genai_powered_by_ai_title">AI tarafından desteklenmektedir</string>
+  <string name="genai_example_1_body">Strateji oyunları arıyorum.</string>
+  <string name="genai_example_2_body">Lütfen bana en iyi çok oyunculu oyunları öner.</string>
   <string name="genai_example_3_body">Do you know offline casual games?</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Artık AppCoins Ödeme Sistemiyle</string>
   <string name="promotional_new_version">Yeni Sürüm</string>
   <string name="promotional_on_going_event">Devam eden etkinlik</string>
-  <string name="promotional_new_in_aptoide">Now available</string>
-  <string name="promotional_soon_in_aptoide">Available sson</string>
+  <string name="promotional_new_in_aptoide">Artık mevcut</string>
+  <string name="promotional_soon_in_aptoide">Çok yakında</string>
   <string name="promotional_notify_button">Bana haber ver</string>
   <string name="promotional_new_notification_title">Beklediğiniz uygulama!</string>
-  <string name="promotional_new_notification_body">%s is now available.</string>
+  <string name="promotional_new_notification_body">%s artık mevcut.</string>
   <string name="promotional_new_active">Mevcut olduğunda bilgilendirileceksiniz.</string>
-  <string name="promotional_now_available_body">Now available in Aptoide Games!</string>
+  <string name="promotional_now_available_body">Artık Aptoide Games\'te mevcut!</string>
 </resources>
