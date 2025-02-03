@@ -3,6 +3,7 @@ package com.aptoide.android.aptoidegames.di
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import cm.aptoide.pt.appcomingsoon.repository.AppComingSoonPromotionalRepository
 import cm.aptoide.pt.aptoide_network.data.network.GetAcceptLanguage
 import cm.aptoide.pt.aptoide_network.data.network.GetUserAgent
 import cm.aptoide.pt.aptoide_network.data.network.QLogicInterceptor
@@ -32,6 +33,8 @@ import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 import com.aptoide.android.aptoidegames.appLaunchDataStore
 import com.aptoide.android.aptoidegames.dataStore
 import com.aptoide.android.aptoidegames.feature_flags.AptoideFeatureFlagsRepository
+import com.aptoide.android.aptoidegames.feature_promotional.domain.AppComingSoonManager
+import com.aptoide.android.aptoidegames.feature_promotional.repository.SubscribedAppsManager
 import com.aptoide.android.aptoidegames.home.repository.ThemePreferencesManager
 import com.aptoide.android.aptoidegames.idsDataStore
 import com.aptoide.android.aptoidegames.launch.AppLaunchPreferencesManager
@@ -43,6 +46,7 @@ import com.aptoide.android.aptoidegames.permissions.AppPermissionsManager
 import com.aptoide.android.aptoidegames.search.repository.AppGamesAutoCompleteSuggestionsRepository
 import com.aptoide.android.aptoidegames.search.repository.AppGamesAutoCompleteSuggestionsRepository.AutoCompleteSearchRetrofitService
 import com.aptoide.android.aptoidegames.search.repository.AppGamesSearchStoreManager
+import com.aptoide.android.aptoidegames.subscribedAppsDataStore
 import com.aptoide.android.aptoidegames.themeDataStore
 import com.aptoide.android.aptoidegames.userFeatureFlagsDataStore
 import dagger.Module
@@ -257,6 +261,30 @@ class RepositoryModule {
   @Provides
   fun provideIdsManager(@IdsDataStore dataStore: DataStore<Preferences>): IdsRepository =
     AptoideIdsRepository(dataStore)
+
+  @Singleton
+  @Provides
+  @SubscribedAppsDataStore
+  fun provideSubscribedAppsDataStore(@ApplicationContext appContext: Context): DataStore<Preferences> =
+    appContext.subscribedAppsDataStore
+
+  @Singleton
+  @Provides
+  fun provideSubscribedAppsManager(
+    @SubscribedAppsDataStore dataStore: DataStore<Preferences>,
+  ): SubscribedAppsManager {
+    return SubscribedAppsManager(dataStore)
+  }
+
+  @Singleton
+  @Provides
+  fun provideAppComingSoonManager(
+    @ApplicationContext appContext: Context,
+    subscribedAppsManager: SubscribedAppsManager,
+    repository: AppComingSoonPromotionalRepository
+  ): AppComingSoonManager {
+    return AppComingSoonManager(repository, subscribedAppsManager, appContext)
+  }
 }
 
 @Qualifier
@@ -274,6 +302,10 @@ annotation class AppLaunchDataStore
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class IdsDataStore
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class SubscribedAppsDataStore
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)

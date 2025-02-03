@@ -191,7 +191,7 @@ private fun AppGamesToolBar(
     }
   )
   if (showNotificationsDialog) {
-    NotificationsPermissionRequester(onDismissPermissionRequesterDialog)
+    NotificationsPermissionRequester({ onDismissPermissionRequesterDialog() })
   }
 }
 
