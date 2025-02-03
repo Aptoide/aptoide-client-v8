@@ -36,7 +36,6 @@ import cm.aptoide.pt.feature_home.domain.Bundle
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getAppcoinsClearLogo
-import com.aptoide.android.aptoidegames.home.AptoidePromotionalFeatureGraphicImage
 import com.aptoide.android.aptoidegames.home.LoadingView
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort

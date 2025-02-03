@@ -1,4 +1,4 @@
-package com.aptoide.android.aptoidegames.home
+package com.aptoide.android.aptoidegames.feature_promotional
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

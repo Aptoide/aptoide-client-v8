@@ -19,7 +19,6 @@ import cm.aptoide.pt.feature_editorial.presentation.rememberEditorialListState
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.randomBundle
 import com.aptoide.android.aptoidegames.editorial.buildEditorialRoute
-import com.aptoide.android.aptoidegames.home.AptoidePromotionalFeatureGraphicImage
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
