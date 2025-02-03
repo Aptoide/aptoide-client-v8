@@ -41,7 +41,7 @@ import timber.log.Timber
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun NotificationsPermissionRequester(
-  onDismiss: () -> Unit,
+  onDismiss: (Boolean) -> Unit,
 ) {
   val notificationsPermissionViewModel = hiltViewModel<NotificationsPermissionViewModel>()
   val context = LocalContext.current
@@ -63,7 +63,7 @@ fun NotificationsPermissionRequester(
       }
     }
 
-    onDismiss()
+    onDismiss(continueClicked)
   }
 }
 

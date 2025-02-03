@@ -232,6 +232,7 @@ dependencies {
   implementation(projects.installInfoMapper)
   implementation(projects.featureApkfy)
   implementation(projects.featureBonus)
+  implementation(projects.feautureAppComingSoon)
 
   //payments
   implementation(projects.payments.sdk)

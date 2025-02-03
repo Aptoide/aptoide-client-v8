@@ -69,6 +69,7 @@ val Context.paymentsPreferencesDataStore: DataStore<Preferences> by preferencesD
   name = "paymentsPreferences"
 )
 val Context.idsDataStore: DataStore<Preferences> by preferencesDataStore(name = "ids")
+val Context.subscribedAppsDataStore: DataStore<Preferences> by preferencesDataStore(name = "subscribedApps")
 
 @HiltAndroidApp
 class AptoideApplication : Application(), ImageLoaderFactory, Provider {

@@ -68,5 +68,6 @@ include(
   ":network-listener",
   ":feature-appcoins",
   ":feature-apkfy",
-  ":feature-bonus"
+  ":feature-bonus",
+  ":feauture_app_coming_soon"
 )

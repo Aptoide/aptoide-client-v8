@@ -96,7 +96,7 @@ fun MainView(navController: NavHostController) {
       ) { padding ->
         if (showNotificationsRationaleDialog) {
           NotificationsPermissionRequester(
-            onDismiss = notificationsPermissionViewModel::dismissDialog
+            onDismiss = { notificationsPermissionViewModel.dismissDialog() }
           )
         }
         PromotionDialog(navigate = navController::navigateTo)
