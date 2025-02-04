@@ -272,7 +272,7 @@
   <string name="promotional_new_version">新版本</string>
   <string name="promotional_on_going_event">正在开展的活动</string>
   <string name="promotional_new_in_aptoide">现已上线</string>
-  <string name="promotional_soon_in_aptoide">即将推出</string>
+  <string name="promotional_soon_in_aptoide">Available soon</string>
   <string name="promotional_notify_button">通知我</string>
   <string name="promotional_new_notification_title">您等待已久的应用！</string>
   <string name="promotional_new_notification_body">%s 现已上线。</string>
