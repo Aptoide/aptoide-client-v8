@@ -272,7 +272,7 @@
   <string name="promotional_new_version">새로운 버전</string>
   <string name="promotional_on_going_event">진행중인 이벤트</string>
   <string name="promotional_new_in_aptoide">이제 사용 가능</string>
-  <string name="promotional_soon_in_aptoide">사용 가능한 sson</string>
+  <string name="promotional_soon_in_aptoide">Available soon</string>
   <string name="promotional_notify_button">알려주세요</string>
   <string name="promotional_new_notification_title">이 앱이 당신을 기다리고 있었어요!</string>
   <string name="promotional_new_notification_body">이제 %s를(을) 사용할 수 있습니다.</string>
