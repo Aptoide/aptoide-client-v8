@@ -276,7 +276,7 @@
   <string name="promotional_new_version">Nova verzija</string>
   <string name="promotional_on_going_event">Tekući događaj</string>
   <string name="promotional_new_in_aptoide">Dostupno sada</string>
-  <string name="promotional_soon_in_aptoide">Stiže uskoro</string>
+  <string name="promotional_soon_in_aptoide">Available soon</string>
   <string name="promotional_notify_button">Obavesti me</string>
   <string name="promotional_new_notification_title">Aplikacija koju ste čekali!</string>
   <string name="promotional_new_notification_body">%s je sada dostupna.</string>
