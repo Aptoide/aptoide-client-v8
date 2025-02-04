@@ -278,7 +278,7 @@
   <string name="promotional_new_version">Нова версія</string>
   <string name="promotional_on_going_event">Поточна подія</string>
   <string name="promotional_new_in_aptoide">Тепер доступно</string>
-  <string name="promotional_soon_in_aptoide">Скоро буде доступно</string>
+  <string name="promotional_soon_in_aptoide">Available soon</string>
   <string name="promotional_notify_button">Повідомте мене</string>
   <string name="promotional_new_notification_title">Додаток, на який ви чекали!</string>
   <string name="promotional_new_notification_body">%s тепер доступно.</string>
