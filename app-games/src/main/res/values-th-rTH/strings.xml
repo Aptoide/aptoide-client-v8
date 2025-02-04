@@ -272,7 +272,7 @@
   <string name="promotional_new_version">เวอร์ชั่นใหม่</string>
   <string name="promotional_on_going_event">เหตุการณ์ที่ดำเนินอยู่</string>
   <string name="promotional_new_in_aptoide">ไม่สามารถใช้ได้</string>
-  <string name="promotional_soon_in_aptoide"></string>
+  <string name="promotional_soon_in_aptoide">Available soon</string>
   <string name="promotional_notify_button">แจ้งฉัน</string>
   <string name="promotional_new_notification_title">แอปที่คุณรอคอย!</string>
   <string name="promotional_new_notification_body">%sมีตอนนี้</string>
