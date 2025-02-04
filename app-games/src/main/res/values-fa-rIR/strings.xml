@@ -274,7 +274,7 @@
   <string name="promotional_new_version">نسخه جدید</string>
   <string name="promotional_on_going_event">رویداد در حال ادامه</string>
   <string name="promotional_new_in_aptoide">موجود نیست</string>
-  <string name="promotional_soon_in_aptoide">بزودی در دسترس</string>
+  <string name="promotional_soon_in_aptoide">Available soon</string>
   <string name="promotional_notify_button">به من اطلاع بده</string>
   <string name="promotional_new_notification_title">اپلیکیشن مورد انتظار شما!</string>
   <string name="promotional_new_notification_body">%s هم‌اکنون موجود است.</string>
