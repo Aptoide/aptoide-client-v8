@@ -274,7 +274,7 @@
   <string name="promotional_new_version">नविन आवृत्ती</string>
   <string name="promotional_on_going_event">चालू असलेले कार्यक्रम</string>
   <string name="promotional_new_in_aptoide">आता उपलब्ध</string>
-  <string name="promotional_soon_in_aptoide">लवकरच येत आहे</string>
+  <string name="promotional_soon_in_aptoide">Available soon</string>
   <string name="promotional_notify_button">मला सूचना द्या</string>
   <string name="promotional_new_notification_title">आपण ज्यासाठी थांबलायत ते अॅप!</string>
   <string name="promotional_new_notification_body">%s आता उपलब्ध आहे.</string>
