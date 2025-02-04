@@ -282,7 +282,7 @@
   <string name="promotional_new_version">إصدار جديد</string>
   <string name="promotional_on_going_event">مناسبة مستمر</string>
   <string name="promotional_new_in_aptoide">متوفر الآن</string>
-  <string name="promotional_soon_in_aptoide">سيتوفر قريبًآ</string>
+  <string name="promotional_soon_in_aptoide">Available soon</string>
   <string name="promotional_notify_button">أخبرني</string>
   <string name="promotional_new_notification_title">التطبيق الذي كنت تنتظره!</string>
   <string name="promotional_new_notification_body">%s متوفر الآن.</string>
