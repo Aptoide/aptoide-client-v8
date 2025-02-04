@@ -272,7 +272,7 @@
   <string name="promotional_new_version">Phiên bản mới</string>
   <string name="promotional_on_going_event">Sự kiện đang diễn ra</string>
   <string name="promotional_new_in_aptoide">Hiện đang khả dụng</string>
-  <string name="promotional_soon_in_aptoide">Sẽ sớm khả dụng</string>
+  <string name="promotional_soon_in_aptoide">Available soon</string>
   <string name="promotional_notify_button">Thông báo cho tôi</string>
   <string name="promotional_new_notification_title">Ứng dụng bạn mong chờ từ lâu!</string>
   <string name="promotional_new_notification_body">%s hiện đang khả dụng.</string>
