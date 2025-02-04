@@ -274,7 +274,7 @@
   <string name="promotional_new_version">Νέα Έκδοση</string>
   <string name="promotional_on_going_event">Τρέχουσα εκδήλωση</string>
   <string name="promotional_new_in_aptoide">Τώρα διαθέσιμο</string>
-  <string name="promotional_soon_in_aptoide">Διαθέσιμο σύντομα</string>
+  <string name="promotional_soon_in_aptoide">Available soon</string>
   <string name="promotional_notify_button">Ειδοποιήστε με</string>
   <string name="promotional_new_notification_title">Η εφαρμογή που περιμένατε!</string>
   <string name="promotional_new_notification_body">Το %s είναι τώρα διαθέσιμο.</string>
