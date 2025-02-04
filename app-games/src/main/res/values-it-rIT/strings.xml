@@ -274,7 +274,7 @@
   <string name="promotional_new_version">Nuova versione</string>
   <string name="promotional_on_going_event">Evento in corso</string>
   <string name="promotional_new_in_aptoide">Ora disponibile</string>
-  <string name="promotional_soon_in_aptoide">Disponibile a breve</string>
+  <string name="promotional_soon_in_aptoide">Available soon</string>
   <string name="promotional_notify_button">Avvisami</string>
   <string name="promotional_new_notification_title">L\'app che stavi aspettando!</string>
   <string name="promotional_new_notification_body">%s è ora disponibile.</string>
