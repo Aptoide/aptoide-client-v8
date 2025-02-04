@@ -274,7 +274,7 @@
   <string name="promotional_new_version">Nieuwe versie</string>
   <string name="promotional_on_going_event">Lopend evenement</string>
   <string name="promotional_new_in_aptoide">Nu beschikbaar</string>
-  <string name="promotional_soon_in_aptoide">Binnenkort beschikbaar</string>
+  <string name="promotional_soon_in_aptoide">Available soon</string>
   <string name="promotional_notify_button">Hou me op de hoogte</string>
   <string name="promotional_new_notification_title">De app waar je op wachtte!</string>
   <string name="promotional_new_notification_body">%s is nu beschikbaar.</string>
