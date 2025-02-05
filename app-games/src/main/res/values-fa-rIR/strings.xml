@@ -280,4 +280,5 @@
   <string name="promotional_new_notification_body">%s هم‌اکنون موجود است.</string>
   <string name="promotional_new_active">هر زمان موجود باشد شما را مطلع می کنید.</string>
   <string name="promotional_now_available_body">هم اکنون در Aptoide Games موجود است!</string>
+  <string name="promotional_now_available_tag">Now Available</string>
 </resources>
