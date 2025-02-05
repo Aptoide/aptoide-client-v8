@@ -279,4 +279,5 @@
   <string name="promotional_new_notification_body">%s is now available.</string>
   <string name="promotional_new_active">利用可能になると通知されます。</string>
   <string name="promotional_now_available_body">Now available in Aptoide Games!</string>
+  <string name="promotional_now_available_tag">Now Available</string>
 </resources>
