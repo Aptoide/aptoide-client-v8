@@ -279,4 +279,5 @@ Promosi khas dan ganjaran dalam permainan kegemaran anda.</string>
   <string name="promotional_new_notification_body">%s kini tersedia.</string>
   <string name="promotional_new_active">Anda akan dimaklumkan apabila tersedia.</string>
   <string name="promotional_now_available_body">Kini tersedia di Permainan Aptoide!</string>
+  <string name="promotional_now_available_tag">Now Available</string>
 </resources>
