@@ -278,4 +278,5 @@
   <string name="promotional_new_notification_body">%sมีตอนนี้</string>
   <string name="promotional_new_active">คุณจะถูกแจ้งเมื่อมีพร้อม</string>
   <string name="promotional_now_available_body">ตอนนี้มีที่ Apptoide!</string>
+  <string name="promotional_now_available_tag">Now Available</string>
 </resources>
