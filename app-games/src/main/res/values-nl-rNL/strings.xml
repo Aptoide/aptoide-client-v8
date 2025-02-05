@@ -280,4 +280,5 @@
   <string name="promotional_new_notification_body">%s is nu beschikbaar.</string>
   <string name="promotional_new_active">Je krijgt een melding als dit beschikbaar is.</string>
   <string name="promotional_now_available_body">Nu beschikbaar in Aptoide Games!</string>
+  <string name="promotional_now_available_tag">Now Available</string>
 </resources>
