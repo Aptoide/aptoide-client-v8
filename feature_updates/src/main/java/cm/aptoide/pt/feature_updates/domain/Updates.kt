@@ -7,6 +7,7 @@ import cm.aptoide.pt.extensions.getSignature
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.AppsListMapper
 import cm.aptoide.pt.feature_apps.data.model.AppJSON
+import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import cm.aptoide.pt.feature_updates.data.AutoUpdateWorker
 import cm.aptoide.pt.feature_updates.data.UpdatesRepository
 import cm.aptoide.pt.feature_updates.data.UpdatesWorker
@@ -153,6 +154,14 @@ class Updates @Inject constructor(
               networkType = UNMETERED
             )
           )
+
+          it.campaigns?.toAptoideMMPCampaign()
+            ?.sendDownloadEvent(
+              bundleTag = null,
+              searchKeyword = null,
+              currentScreen = null,
+              isCta = false
+            )
         }
     }
   }
