@@ -5,15 +5,16 @@ import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
 
 class Converters {
+  private val gson = Gson()
 
   @TypeConverter
   fun fromChatInteractionList(value: List<ChatInteractionEntity>): String {
-    return Gson().toJson(value)
+    return gson.toJson(value)
   }
 
   @TypeConverter
   fun toChatInteractionList(value: String): List<ChatInteractionEntity> {
     val type = object : TypeToken<List<ChatInteractionEntity>>() {}.type
-    return Gson().fromJson(value, type)
+    return gson.fromJson(value, type)
   }
 }

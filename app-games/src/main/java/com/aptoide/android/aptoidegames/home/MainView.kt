@@ -40,6 +40,7 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.seeAllMyGamesS
 import com.aptoide.android.aptoidegames.feature_apps.presentation.seeMoreBonusScreen
 import com.aptoide.android.aptoidegames.feature_apps.presentation.seeMoreScreen
 import com.aptoide.android.aptoidegames.gamegenie.presentation.gameGenieScreen
+import com.aptoide.android.aptoidegames.gamegenie.presentation.genieRoute
 import com.aptoide.android.aptoidegames.installer.UserActionDialog
 import com.aptoide.android.aptoidegames.notifications.NotificationsPermissionRequester
 import com.aptoide.android.aptoidegames.permissions.notifications.NotificationsPermissionViewModel
@@ -67,7 +68,14 @@ fun MainView(navController: NavHostController) {
 
   val apkfyState = rememberApkfyState()
   var apkfyShown by remember { mutableStateOf(false) }
+  var showTopBar by remember { mutableStateOf(true) }
   val (promoCodeApp, clearPromoCode) = rememberPromoCodeApp()
+
+  val currentRoute = navController.currentBackStackEntryFlow.collectAsState(initial = navController.currentBackStackEntry)
+
+  LaunchedEffect(currentRoute.value?.destination?.route) {
+    showTopBar = currentRoute.value?.destination?.route?.contains(genieRoute)?.not() ?: true
+  }
 
   //Forced theme do be dark to always apply dark background, for now.
   AptoideTheme(darkTheme = true) {
@@ -91,7 +99,9 @@ fun MainView(navController: NavHostController) {
           AppGamesBottomBar(navController = navController)
         },
         topBar = {
-          AppGamesToolBar(navigate = navController::navigateTo, goBackHome)
+          if (showTopBar){
+            AppGamesToolBar(navigate = navController::navigateTo, goBackHome)
+          }
         }
       ) { padding ->
         if (showNotificationsRationaleDialog) {
@@ -243,7 +253,7 @@ private fun NavigationGraph(
       screenData = updatesScreen()
     )
 
-    animatedComposable(
+    staticComposable(
       navigate = navController::navigateTo,
       goBack = navController::navigateUp,
       screenData = gameGenieScreen()

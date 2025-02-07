@@ -3,15 +3,17 @@ package com.aptoide.android.aptoidegames.gamegenie.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieRepository
-import com.aptoide.android.aptoidegames.gamegenie.data.database.GameGenieDatabase
 import com.aptoide.android.aptoidegames.gamegenie.data.database.model.ChatInteractionEntity
 import com.aptoide.android.aptoidegames.gamegenie.data.database.model.GameGenieHistoryEntity
 import com.aptoide.android.aptoidegames.gamegenie.domain.ChatInteraction
+import com.aptoide.android.aptoidegames.gamegenie.domain.ConversationInfo
+import com.aptoide.android.aptoidegames.gamegenie.domain.GameContext
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameGenieChat
 import com.aptoide.android.aptoidegames.gamegenie.domain.Token
 import com.aptoide.android.aptoidegames.gamegenie.domain.toToken
 import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieRequest
 import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieResponse
+import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,10 +30,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ChatbotViewModel @Inject constructor(
   private val gameGenieRepository: GameGenieRepository,
-  gameGenieDatabase: GameGenieDatabase,
 ) : ViewModel() {
   private val viewModelState = MutableStateFlow(ChatbotViewModelState())
-  private val database = gameGenieDatabase.getGameGenieHistoryDao()
 
   val uiState = viewModelState.map { it.toUiState() }
     .stateIn(
@@ -46,7 +46,7 @@ class ChatbotViewModel @Inject constructor(
         val token = gameGenieRepository.getToken()
         viewModelState.update {
           it.copy(
-            token = token.toToken()
+            token = token.toToken(),
           )
         }
       } catch (e: Exception) {
@@ -111,6 +111,24 @@ class ChatbotViewModel @Inject constructor(
   private suspend fun getTokenIfNeeded(): Token {
     return uiState.value.token ?: gameGenieRepository.getToken().toToken().also { newToken ->
       viewModelState.update { it.copy(token = newToken) }
+    }
+  }
+
+  fun loadConversation(id: String) {
+    viewModelScope.launch {
+      val newChat = gameGenieRepository.getChatById(id)
+      viewModelState.update {
+        it.copy(
+          chat = newChat.toDomain(),
+          apps = newChat.conversation.map { conv -> conv.apps }
+        )
+      }
+    }
+  }
+
+  fun createNewChat() {
+    viewModelState.update {
+      it.empty(it.token)
     }
   }
 
@@ -183,7 +201,7 @@ class ChatbotViewModel @Inject constructor(
       )
     }
 
-    database.saveChatById(
+    gameGenieRepository.saveChatById(
       uiState.value.chat.toEntity()
     )
   }
@@ -204,12 +222,31 @@ private data class ChatbotViewModelState(
   val apps: List<String> = emptyList(), //store package names
   val token: Token? = null,
 ) {
+  fun empty(
+    token: Token? = null,
+  ) =
+    ChatbotViewModelState(
+      GameGenieUIStateType.IDLE,
+      GameGenieChat(
+        "",
+        listOf(
+          ChatInteraction(
+            "",
+            null,
+            emptyList()
+          )
+        )
+      ),
+      emptyList(),
+      token,
+    )
+
   fun toUiState(): GameGenieUIState =
     GameGenieUIState(
       type = type,
       chat = chat,
       apps = apps,
-      token = token
+      token = token,
     )
 }
 
@@ -225,5 +262,33 @@ fun ChatInteraction.toEntity(): ChatInteractionEntity {
     gpt = this.gpt,
     user = this.user,
     apps = Gson().toJson(this.apps)
+  )
+}
+
+fun GameGenieHistoryEntity.toConversationInfo(): ConversationInfo {
+  val userMessage = conversation[0].user
+  return if (userMessage == null) ConversationInfo(
+    id = id,
+    title = null, // for now
+    firstMessage = conversation[0].gpt
+  ) else ConversationInfo(
+    id = id,
+    title = null, // for now
+    firstMessage = userMessage
+  )
+}
+
+fun GameGenieHistoryEntity.toDomain(): GameGenieChat {
+  return GameGenieChat(
+    id = this.id,
+    conversation = this.conversation.map { it.toDomain() }
+  )
+}
+
+fun ChatInteractionEntity.toDomain(): ChatInteraction {
+  return ChatInteraction(
+    gpt = this.gpt,
+    user = this.user,
+    apps = Gson().fromJson(this.apps, object : TypeToken<List<GameContext>>() {}.type)
   )
 }
