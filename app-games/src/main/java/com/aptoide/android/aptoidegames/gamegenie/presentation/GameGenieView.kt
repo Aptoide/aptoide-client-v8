@@ -1,5 +1,6 @@
 package com.aptoide.android.aptoidegames.gamegenie.presentation
 
+import ConversationsDrawer
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -38,18 +39,25 @@ fun gameGenieScreen() = ScreenData.withAnalytics(
   val uiState by viewModel.uiState.collectAsState()
   val analytics = rememberGameGenieAnalytics()
 
-  ChatbotView(
-    uiState = uiState,
-    navigateTo = navigate,
-    onError = viewModel::reload,
-    onMessageSend = { message ->
-      viewModel.sendMessage(message)
+  ConversationsDrawer(
+    mainScreen = {
+      ChatbotView(
+        uiState = uiState,
+        navigateTo = navigate,
+        onError = viewModel::reload,
+        onMessageSend = { message ->
+          viewModel.sendMessage(message)
+        },
+        onSuggestionSend = { message, index ->
+          viewModel.sendMessage(message)
+          analytics.sendGameGenieSuggestionClick(index)
+        },
+        onAllAppsFail = viewModel::setGeneralError
+      )
     },
-    onSuggestionSend = { message, index ->
-      viewModel.sendMessage(message)
-      analytics.sendGameGenieSuggestionClick(index)
-    },
-    onAllAppsFail = viewModel::setGeneralError
+    loadConversationFn = viewModel::loadConversation,
+    currentChatId = uiState.chat.id,
+    newChatFn = viewModel::createNewChat,
   )
 }
 
@@ -138,6 +146,7 @@ fun ChatScreen(
       onMessageSent = onMessageSend,
       modifier = Modifier
         .fillMaxWidth()
+        .padding(bottom = 8.dp)
     )
   }
 }

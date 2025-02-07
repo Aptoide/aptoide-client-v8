@@ -7,6 +7,7 @@ import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieApiService
 import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieRepository
 import com.aptoide.android.aptoidegames.gamegenie.data.database.GameGenieDatabase
+import com.aptoide.android.aptoidegames.gamegenie.data.database.GameGenieHistoryDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -31,8 +32,11 @@ internal object GameGenieModule {
   }
 
   @Provides
-  fun provideChatbotRepository(apiService: GameGenieApiService): GameGenieRepository {
-    return GameGenieRepository(apiService)
+  fun provideChatbotRepository(
+    apiService: GameGenieApiService,
+    dao: GameGenieHistoryDao,
+  ): GameGenieRepository {
+    return GameGenieRepository(apiService, dao)
   }
 
   @Singleton
@@ -44,4 +48,9 @@ internal object GameGenieModule {
     GameGenieDatabase::class.java,
     "ag_game_genie.db"
   ).build()
+
+  @Singleton
+  @Provides
+  fun provideGameGenieDao(database: GameGenieDatabase): GameGenieHistoryDao =
+    database.getGameGenieHistoryDao()
 }
