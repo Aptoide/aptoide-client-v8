@@ -267,6 +267,8 @@
   <string name="genai_example_1_body">ฉันกำลังมองหาเกมส์กลยุทธ์</string>
   <string name="genai_example_2_body">โปรดแนะนำเกมส์หลายผู้เล่นที่ดีที่สุด</string>
   <string name="genai_example_3_body">คุณรู้จักเกมส์สบายๆ ออฟไลน์หรือไม่?</string>
+  <string name="genai_history_body">GameGenie History</string>
+  <string name="genai_new_chat_button">New chat</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">ระบบการชำระเงินด้วย AppCoins ได้ตอนนี้</string>
   <string name="promotional_new_version">เวอร์ชั่นใหม่</string>
