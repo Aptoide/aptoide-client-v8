@@ -269,6 +269,8 @@
   <string name="genai_example_1_body">Ψάχνω παιχνίδια στρατηγικής.</string>
   <string name="genai_example_2_body">Πρότεινέ μου τα καλύτερα παιχνίδια για πολλούς παίκτες.</string>
   <string name="genai_example_3_body">Μήπως ξέρεις κάποια χαλαρά παιχνίδια εκτός σύνδεσης;</string>
+  <string name="genai_history_body">GameGenie History</string>
+  <string name="genai_new_chat_button">New chat</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Τώρα με το Σύστημα Πληρωμών AppCoins</string>
   <string name="promotional_new_version">Νέα Έκδοση</string>
