@@ -15,7 +15,11 @@ class IndicativeAnalyticsSender @Inject constructor() : AnalyticsSender {
         Timber.tag("BA").i("set UP  ${it.first} = ${it.second}")
       }
     }
+    //Add new properties
     Indicative.addProperties(props.toMap())
+
+    //Remove properties with null values
+    props.filter { it.second == null }.forEach { Indicative.removeProperty(it.first) }
   }
 
   override fun logEvent(
