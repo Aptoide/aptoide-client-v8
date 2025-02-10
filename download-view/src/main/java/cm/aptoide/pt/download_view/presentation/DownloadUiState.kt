@@ -84,6 +84,8 @@ sealed class DownloadUiState {
     val installPackageInfo: InstallPackageInfo = InstallPackageInfo(0),
     val cancel: () -> Unit,
   ) : DownloadUiState()
+
+  fun isPackageInstalled() = this is Installed || this is Outdated
 }
 
 enum class ExecutionBlocker {

@@ -16,7 +16,6 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,6 +28,7 @@ import cm.aptoide.pt.download_view.presentation.rememberDownloadState
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.getPackageInfo
 import cm.aptoide.pt.extensions.getRandomString
+import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.rememberWalletApp
@@ -114,10 +114,9 @@ fun PromoCodeBottomSheetContent(
       val context = LocalContext.current
       val walletDisclaimer = stringResource(id = R.string.promo_code_install_wallet_disclaimer)
       val walletApp = walletAppUiState.app
-      val downloadState = rememberDownloadState(app = walletApp)
-      val showWalletSegment = remember { mutableStateOf(false) }
-      val isWalletInstalled = downloadState is DownloadUiState.Installed
-        || downloadState is DownloadUiState.Outdated
+      val walletDownloadState = rememberDownloadState(app = walletApp)
+      val showWalletSegment = remember { walletDownloadState !is DownloadUiState.Installed }
+      val isWalletInstalled = walletDownloadState?.isPackageInstalled() == true
 
       val promoCodeAnalytics = rememberPromoCodeAnalytics()
 
@@ -128,59 +127,11 @@ fun PromoCodeBottomSheetContent(
         )
       }
 
-      LaunchedEffect(key1 = downloadState) {
-        when (downloadState) {
-          is DownloadUiState.Installed -> Unit
-          else -> showWalletSegment.value = true
-        }
-      }
-      if (showWalletSegment.value) {
-        Image(
-          imageVector = getBonusTextIcon(Palette.Secondary, Palette.Primary, Palette.Black),
-          contentDescription = null,
-          modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 24.dp)
-        )
-        Row(
-          verticalAlignment = Alignment.CenterVertically,
-          horizontalArrangement = Arrangement.spacedBy(8.dp),
-          modifier = Modifier.padding(bottom = 8.dp)
-        ) {
-          Image(
-            imageVector = getAppcoinsIconWithBackground(Palette.AppCoinsPink, Palette.White),
-            contentDescription = null,
-          )
-          Text(
-            text = stringResource(
-              id = R.string.promo_code_install_wallet_banner_title,
-              "20" //TODO Hardcoded value (should come from backend in the future)
-            ),
-            color = Palette.White,
-            style = AGTypography.InputsM
-          )
-        }
-        Text(
-          text = stringResource(id = R.string.promo_code_install_wallet_banner_body),
-          color = Palette.White,
-          style = AGTypography.Body,
-        )
-        AppItem(
-          app = walletApp,
-          onClick = {
-            navigate(
-              buildAppViewRoute(walletApp)
-            )
-            dismiss()
-          },
-          modifier = Modifier.padding(bottom = 8.dp)
-        ) {
-          InstallViewShort(app = walletApp)
-        }
-        Divider(
-          modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 12.dp)
+      if (showWalletSegment) {
+        WalletInstallSection(
+          walletApp = walletApp,
+          navigate = navigate,
+          dismiss = dismiss
         )
       }
 
@@ -240,6 +191,59 @@ fun PromoCodeBottomSheetContent(
     is AppUiState.Error -> BottomSheetGenericErrorView(onRetryClick = walletReload)
     is AppUiState.NoConnection -> BottomSheetNoConnectionView(onRetryClick = walletReload)
   }
+}
+
+@Composable
+private fun WalletInstallSection(
+  walletApp: App,
+  navigate: (String) -> Unit,
+  dismiss: () -> Unit
+) {
+  Image(
+    imageVector = getBonusTextIcon(Palette.Secondary, Palette.Primary, Palette.Black),
+    contentDescription = null,
+    modifier = Modifier
+      .fillMaxWidth()
+      .padding(bottom = 24.dp)
+  )
+  Row(
+    verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.spacedBy(8.dp),
+    modifier = Modifier.padding(bottom = 8.dp)
+  ) {
+    Image(
+      imageVector = getAppcoinsIconWithBackground(Palette.AppCoinsPink, Palette.White),
+      contentDescription = null,
+    )
+    Text(
+      text = stringResource(
+        id = R.string.promo_code_install_wallet_banner_title,
+        "20" //TODO Hardcoded value (should come from backend in the future)
+      ),
+      color = Palette.White,
+      style = AGTypography.InputsM
+    )
+  }
+  Text(
+    text = stringResource(id = R.string.promo_code_install_wallet_banner_body),
+    color = Palette.White,
+    style = AGTypography.Body,
+  )
+  AppItem(
+    app = walletApp,
+    onClick = {
+      navigate(buildAppViewRoute(walletApp))
+      dismiss()
+    },
+    modifier = Modifier.padding(bottom = 8.dp)
+  ) {
+    InstallViewShort(app = walletApp)
+  }
+  Divider(
+    modifier = Modifier
+      .fillMaxWidth()
+      .padding(bottom = 12.dp)
+  )
 }
 
 @Composable
