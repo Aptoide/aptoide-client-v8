@@ -269,6 +269,8 @@
   <string name="genai_example_1_body">Strateji oyunları arıyorum.</string>
   <string name="genai_example_2_body">Lütfen bana en iyi çok oyunculu oyunları öner.</string>
   <string name="genai_example_3_body">Çevrimdışı basit eğlence oyunlarını biliyor musun?</string>
+  <string name="genai_history_body">GameGenie History</string>
+  <string name="genai_new_chat_button">New chat</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Artık AppCoins Ödeme Sistemiyle</string>
   <string name="promotional_new_version">Yeni Sürüm</string>
