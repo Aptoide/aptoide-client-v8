@@ -269,6 +269,8 @@
   <string name="genai_example_1_body">Sto cercando dei giochi di strategia.</string>
   <string name="genai_example_2_body">Consigliami i migliori giochi multiplayer.</string>
   <string name="genai_example_3_body">Conosci dei giochi offline casual?</string>
+  <string name="genai_history_body">GameGenie History</string>
+  <string name="genai_new_chat_button">New chat</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Ora con sistema di pagamento in AppCoins</string>
   <string name="promotional_new_version">Nuova versione</string>
