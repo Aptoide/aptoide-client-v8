@@ -271,6 +271,8 @@
   <string name="genai_example_1_body">Caut jocuri de strategie.</string>
   <string name="genai_example_2_body">Te rog să îmi recomanzi cele mai bune jocuri multiplayer.</string>
   <string name="genai_example_3_body">Știi jocuri ocazionale offline?</string>
+  <string name="genai_history_body">GameGenie History</string>
+  <string name="genai_new_chat_button">New chat</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Acum cu sistemul de plăți cu AppCoins</string>
   <string name="promotional_new_version">Versiune nouă</string>
