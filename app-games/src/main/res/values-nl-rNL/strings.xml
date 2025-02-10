@@ -269,6 +269,8 @@
   <string name="genai_example_1_body">Ik ben op zoek naar strategiespellen.</string>
   <string name="genai_example_2_body">Wat zijn de beste multiplayerspellen?</string>
   <string name="genai_example_3_body">Wat zijn aanbevolen offline casual games?</string>
+  <string name="genai_history_body">GameGenie History</string>
+  <string name="genai_new_chat_button">New chat</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Nu met het AppCoins-betalingssysteem</string>
   <string name="promotional_new_version">Nieuwe versie</string>
