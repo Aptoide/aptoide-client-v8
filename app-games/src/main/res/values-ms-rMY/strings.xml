@@ -268,6 +268,8 @@ Promosi khas dan ganjaran dalam permainan kegemaran anda.</string>
   <string name="genai_example_1_body">Saya cari permainan strategi.</string>
   <string name="genai_example_2_body">Sila syorkan permainan berbilang pemain yang terbaik.</string>
   <string name="genai_example_3_body">Anda tahu permainan kasual luar talian?</string>
+  <string name="genai_history_body">GameGenie History</string>
+  <string name="genai_new_chat_button">New chat</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Kini Dengan Sistem Pembayaran AppCoins</string>
   <string name="promotional_new_version">Versi Baru</string>
