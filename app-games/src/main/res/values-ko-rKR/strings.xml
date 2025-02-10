@@ -267,6 +267,8 @@
   <string name="genai_example_1_body">전략 게임을 찾고 있습니다.</string>
   <string name="genai_example_2_body">최고의 멀티플레이어 게임을 추천해 주세요.</string>
   <string name="genai_example_3_body">오프라인 캐주얼 게임을 아시나요?</string>
+  <string name="genai_history_body">GameGenie History</string>
+  <string name="genai_new_chat_button">New chat</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">이제 AppCoins 결제 시스템이 있습니다</string>
   <string name="promotional_new_version">새로운 버전</string>
