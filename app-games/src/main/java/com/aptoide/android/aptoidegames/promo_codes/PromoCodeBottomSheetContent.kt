@@ -1,9 +1,7 @@
 package com.aptoide.android.aptoidegames.promo_codes
 
 import android.content.Intent
-import android.graphics.drawable.Drawable
 import android.net.Uri
-import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,7 +9,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -21,18 +18,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.download_view.presentation.DownloadUiState
 import cm.aptoide.pt.download_view.presentation.rememberDownloadState
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.getPackageInfo
-import cm.aptoide.pt.extensions.getRandomString
 import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_apps.data.randomApp
+import cm.aptoide.pt.feature_apps.data.walletApp
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
+import cm.aptoide.pt.feature_apps.presentation.rememberApp
 import cm.aptoide.pt.feature_apps.presentation.rememberWalletApp
-import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.BottomSheetContent
 import com.aptoide.android.aptoidegames.BottomSheetHeader
 import com.aptoide.android.aptoidegames.R
@@ -41,11 +36,9 @@ import com.aptoide.android.aptoidegames.design_system.PrimarySmallButton
 import com.aptoide.android.aptoidegames.design_system.TertiarySmallButton
 import com.aptoide.android.aptoidegames.drawables.icons.getAppcoinsIconWithBackground
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusTextIcon
-import com.aptoide.android.aptoidegames.error_views.BottomSheetGenericErrorOkView
 import com.aptoide.android.aptoidegames.error_views.BottomSheetGenericErrorView
 import com.aptoide.android.aptoidegames.error_views.BottomSheetNoConnectionView
 import com.aptoide.android.aptoidegames.feature_apps.presentation.AppItem
-import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberAppIconDrawable
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.promo_codes.analytics.rememberPromoCodeAnalytics
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -60,36 +53,22 @@ class PromoCodeBottomSheet(
     dismiss: () -> Unit,
     navigate: (String) -> Unit,
   ) {
-    val context = LocalContext.current
-    val packageInfo = remember { context.packageManager.getPackageInfo(promoCodeApp.packageName) }
-
-    val promoCode = promoCodeApp.promoCode
     val (walletAppUiState, walletReload) = rememberWalletApp()
-
-    val promoCodeAnalytics = rememberPromoCodeAnalytics()
-
-    LaunchedEffect(packageInfo) {
-      if (packageInfo == null) {
-        promoCodeAnalytics.sendPromoCodeImpressionEvent(status = "app_not_installed")
-      }
-    }
 
     Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 32.dp)) {
       BottomSheetHeader()
-      if (packageInfo != null) {
-        val appName = packageInfo.applicationInfo!!.loadLabel(context.packageManager).toString()
-        val icon =
-          rememberAppIconDrawable(packageName = promoCodeApp.packageName, context = context)
-        PromoCodeBottomSheetContent(
-          appName = appName,
-          appIcon = icon,
-          walletAppUiState = walletAppUiState,
-          promoCode = promoCode,
-          walletReload = walletReload,
-          showSnack = showSnack
-        )
-      } else {
-        BottomSheetGenericErrorOkView(onOkClick = dismiss)
+      when (walletAppUiState) {
+        is AppUiState.Idle -> {
+          PromoCodeBottomSheetContent(
+            promoCodeApp = promoCodeApp,
+            walletApp = walletAppUiState.app,
+            showSnack = showSnack
+          )
+        }
+
+        is AppUiState.Loading -> LoadingView()
+        is AppUiState.Error -> BottomSheetGenericErrorView(onRetryClick = walletReload)
+        is AppUiState.NoConnection -> BottomSheetNoConnectionView(onRetryClick = walletReload)
       }
     }
   }
@@ -97,23 +76,31 @@ class PromoCodeBottomSheet(
 
 @Composable
 fun PromoCodeBottomSheetContent(
-  appName: String,
-  appIcon: Drawable?,
-  walletAppUiState: AppUiState,
-  promoCode: String,
-  walletReload: () -> Unit,
+  promoCodeApp: PromoCodeApp,
+  walletApp: App,
   showSnack: (String) -> Unit
 ) {
-  when (walletAppUiState) {
+  val context = LocalContext.current
+  val packageInfo = remember { context.packageManager.getPackageInfo(promoCodeApp.packageName) }
+
+  val promoCodeAnalytics = rememberPromoCodeAnalytics()
+
+  LaunchedEffect(packageInfo) {
+    if (packageInfo == null) {
+      promoCodeAnalytics.sendPromoCodeImpressionEvent(status = "app_not_installed")
+    }
+  }
+
+  val (appState, reload) = rememberApp(promoCodeApp.asSource())
+
+  when (appState) {
     is AppUiState.Idle -> {
-      val context = LocalContext.current
       val walletDisclaimer = stringResource(id = R.string.promo_code_install_wallet_disclaimer)
-      val walletApp = walletAppUiState.app
       val walletDownloadState = rememberDownloadState(app = walletApp)
       val showWalletSegment = remember { walletDownloadState !is DownloadUiState.Installed }
       val isWalletInstalled = walletDownloadState?.isPackageInstalled() == true
 
-      val promoCodeAnalytics = rememberPromoCodeAnalytics()
+      val appDownloadState = rememberDownloadState(app = appState.app)
 
       LaunchedEffect(Unit) {
         promoCodeAnalytics.sendPromoCodeImpressionEvent(
@@ -135,52 +122,47 @@ fun PromoCodeBottomSheetContent(
         color = Palette.White,
         style = AGTypography.Title
       )
-      Row(
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(top = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-      ) {
-        AptoideAsyncImage(
-          modifier = Modifier.size(64.dp),
-          data = appIcon,
-          contentDescription = null,
-        )
-        Text(
-          text = appName,
-          style = AGTypography.DescriptionGames,
-          overflow = TextOverflow.Ellipsis,
-          maxLines = 2,
-          color = Palette.White,
-          modifier = Modifier
-            .padding(start = 16.dp, end = 16.dp)
-            .weight(1f),
-        )
-        if (!isWalletInstalled) {
-          TertiarySmallButton(
-            onClick = {
-              showSnack(walletDisclaimer)
-              promoCodeAnalytics.sendPromoCodeClickEvent(withWallet = false)
-            },
-            title = stringResource(id = R.string.promo_code_use_button)
-          )
-        } else {
-          PrimarySmallButton(
-            onClick = {
-              val uri = Uri.parse("appcoins://promocode?promocode=$promoCode")
-              val intent = Intent(Intent.ACTION_VIEW, uri)
-              context.startActivity(intent)
-              promoCodeAnalytics.sendPromoCodeClickEvent(withWallet = true)
-            },
-            title = stringResource(id = R.string.promo_code_use_button)
+      if (appDownloadState?.isPackageInstalled() == true) {
+        AppItem(
+          app = appState.app,
+          onClick = {},
+        ) {
+          if (!isWalletInstalled) {
+            TertiarySmallButton(
+              onClick = {
+                showSnack(walletDisclaimer)
+                promoCodeAnalytics.sendPromoCodeClickEvent(withWallet = false)
+              },
+              title = stringResource(id = R.string.promo_code_use_button)
+            )
+          } else {
+            PrimarySmallButton(
+              onClick = {
+                val uri = Uri.parse("appcoins://promocode?promocode=${promoCodeApp.promoCode}")
+                val intent = Intent(Intent.ACTION_VIEW, uri)
+                context.startActivity(intent)
+                promoCodeAnalytics.sendPromoCodeClickEvent(withWallet = true)
+              },
+              title = stringResource(id = R.string.promo_code_use_button)
+            )
+          }
+        }
+      } else {
+        AppItem(
+          app = appState.app,
+          onClick = {},
+        ) {
+          InstallViewShort(
+            app = appState.app,
+            onInstallStarted = {}
           )
         }
       }
     }
 
     is AppUiState.Loading -> LoadingView()
-    is AppUiState.Error -> BottomSheetGenericErrorView(onRetryClick = walletReload)
-    is AppUiState.NoConnection -> BottomSheetNoConnectionView(onRetryClick = walletReload)
+    is AppUiState.Error -> BottomSheetGenericErrorView(onRetryClick = reload)
+    is AppUiState.NoConnection -> BottomSheetNoConnectionView(onRetryClick = reload)
   }
 }
 
@@ -252,11 +234,8 @@ fun PreviewBottomSheetContent() {
     Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 32.dp)) {
       BottomSheetHeader()
       PromoCodeBottomSheetContent(
-        appName = getRandomString(1..10),
-        appIcon = getDrawable(LocalContext.current, R.mipmap.ic_launcher)!!,
-        walletAppUiState = AppUiState.Idle(randomApp),
-        promoCode = "123",
-        walletReload = { },
+        promoCodeApp = randomPromoCodeApp,
+        walletApp = walletApp,
         showSnack = { }
       )
     }
