@@ -269,6 +269,8 @@
   <string name="genai_example_1_body">Stratégiai játékokat keresek.</string>
   <string name="genai_example_2_body">Ajánld a legjobb multiplayer játékokat.</string>
   <string name="genai_example_3_body">Ismersz laza offline játékokat?</string>
+  <string name="genai_history_body">GameGenie History</string>
+  <string name="genai_new_chat_button">New chat</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Már AppCoins fizetési rendszerrel</string>
   <string name="promotional_new_version">Új verzió</string>
