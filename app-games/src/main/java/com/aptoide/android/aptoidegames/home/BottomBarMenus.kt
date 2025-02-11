@@ -21,9 +21,9 @@ import com.aptoide.android.aptoidegames.analytics.dto.BundleMeta
 import com.aptoide.android.aptoidegames.analytics.presentation.withBundleMeta
 import com.aptoide.android.aptoidegames.categories.presentation.buildAllCategoriesRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getCategories
-import com.aptoide.android.aptoidegames.drawables.icons.getDiscovery
 import com.aptoide.android.aptoidegames.drawables.icons.getDownloadIcon
 import com.aptoide.android.aptoidegames.drawables.icons.getGameGenie
+import com.aptoide.android.aptoidegames.drawables.icons.getGamesIcon
 import com.aptoide.android.aptoidegames.drawables.icons.getSearch
 import com.aptoide.android.aptoidegames.gamegenie.presentation.genieRoute
 import com.aptoide.android.aptoidegames.search.presentation.searchRoute
@@ -36,7 +36,7 @@ sealed class BottomBarMenus(
 ) {
   object Games : BottomBarMenus(
     route = gamesRoute,
-    titleId = R.string.bottom_navigation_discovery
+    titleId = R.string.games
   )
 
   object Search : BottomBarMenus(
@@ -64,7 +64,7 @@ sealed class BottomBarMenus(
 
 @Composable
 fun BottomBarMenus.Icon() = when (this) {
-  BottomBarMenus.Games -> getDiscovery(Palette.GreyLight).AsBottomBarIcon()
+  BottomBarMenus.Games -> getGamesIcon(Palette.GreyLight).AsBottomBarIcon()
   BottomBarMenus.Search -> getSearch(Palette.GreyLight).AsBottomBarIcon()
   BottomBarMenus.Categories -> getCategories(Palette.GreyLight).AsBottomBarIcon()
   BottomBarMenus.Updates -> {
