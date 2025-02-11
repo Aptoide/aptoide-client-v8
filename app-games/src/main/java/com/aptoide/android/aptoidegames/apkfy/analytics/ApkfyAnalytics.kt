@@ -1,12 +1,15 @@
 package com.aptoide.android.aptoidegames.apkfy.analytics
 
+import android.content.Context
 import cm.aptoide.pt.feature_apkfy.domain.ApkfyModel
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.analytics.mapOfNonNull
+import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
 
 class ApkfyAnalytics @Inject constructor(
   private val biAnalytics: BIAnalytics,
+  @ApplicationContext private val context: Context,
 ) {
 
   fun setGuestUIDUserProperty(guestUid: String) = biAnalytics.setUserProperties(
@@ -59,14 +62,25 @@ class ApkfyAnalytics @Inject constructor(
           utmPackageName = packageName ?: APKFY_BUT_NO_APP
         )
       } else if (hasApkfy()) {
-        biAnalytics.setUTMProperties(
-          utmSource = UTM_PROPERTY_APKFY_WITHOUT_UTMS,
-          utmMedium = UTM_PROPERTY_APKFY_WITHOUT_UTMS,
-          utmCampaign = UTM_PROPERTY_APKFY_WITHOUT_UTMS,
-          utmTerm = UTM_PROPERTY_APKFY_WITHOUT_UTMS,
-          utmContent = UTM_PROPERTY_APKFY_WITHOUT_UTMS,
-          utmPackageName = packageName
-        )
+        if (packageName == context.packageName) {
+          biAnalytics.setUTMProperties(
+            utmSource = UTM_PROPERTY_DIRECT_WITHOUT_UTMS,
+            utmMedium = UTM_PROPERTY_DIRECT_WITHOUT_UTMS,
+            utmCampaign = UTM_PROPERTY_DIRECT_WITHOUT_UTMS,
+            utmTerm = UTM_PROPERTY_DIRECT_WITHOUT_UTMS,
+            utmContent = UTM_PROPERTY_DIRECT_WITHOUT_UTMS,
+            utmPackageName = packageName
+          )
+        } else {
+          biAnalytics.setUTMProperties(
+            utmSource = UTM_PROPERTY_APKFY_WITHOUT_UTMS,
+            utmMedium = UTM_PROPERTY_APKFY_WITHOUT_UTMS,
+            utmCampaign = UTM_PROPERTY_APKFY_WITHOUT_UTMS,
+            utmTerm = UTM_PROPERTY_APKFY_WITHOUT_UTMS,
+            utmContent = UTM_PROPERTY_APKFY_WITHOUT_UTMS,
+            utmPackageName = packageName
+          )
+        }
       } else {
         biAnalytics.setUTMProperties(
           utmSource = UTM_PROPERTY_NO_APKFY,
@@ -84,6 +98,7 @@ class ApkfyAnalytics @Inject constructor(
     private const val UTM_PROPERTY_NO_APKFY = "NO_APKFY"
     private const val UTM_PROPERTY_APKFY_WITHOUT_UTMS = "APKFY_BUT_NO_UTM"
     private const val APKFY_BUT_NO_APP = "APKFY_BUT_NO_APP"
+    private const val UTM_PROPERTY_DIRECT_WITHOUT_UTMS = "DIRECT_BUT_NO_UTM"
 
     private const val P_STATUS = "status"
     private const val P_DATA = "data"
