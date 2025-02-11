@@ -114,12 +114,12 @@
   <string name="screenshot_appview_4">O interfață ușor de utilizat cu cel mai bun conținut.</string>
   <string name="screenshot_appview_5">Jocuri alese special pentru tine.</string>
   <string name="not_now_button">Nu acum</string>
-  <string name="later_button">Later</string>
-  <string name="trusted_game_badge">Trusted Game</string>
-  <string name="official_game_badge">Official Game</string>
+  <string name="later_button">Mai târziu</string>
+  <string name="trusted_game_badge">Joc De Încredere</string>
+  <string name="official_game_badge">Joc Oficial</string>
   <string name="see_more_button">Vezi mai multe</string>
   <string name="generic_error_short_title">A apărut o eroare.</string>
-  <string name="editorial_card_views_short">%s views</string>
+  <string name="editorial_card_views_short">%s vizualizări</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Spațiu epuizat</string>
   <string name="out_of_space_body">Ai nevoie de %s pentru a continua cu instalarea.</string>
@@ -172,11 +172,11 @@
   <string name="contact_support_title" comment="contact_support">Contactează echipa de asistență</string>
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Te rugăm să ne scrii toate detaliile:\n\u2022 Când a început problema\n\u2022 În ce joc faci achiziția\n\nDupă ce apeși pe Trimite, se va deschide aplicația de e-mail. Atașează o captură de ecran sau o înregistrare video cu problema!</string>
   <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Vrei să instalezi acest joc?</string>
-  <string name="apkfy_whats_aptoide_games_title">What\'s Aptoide Games?</string>
+  <string name="apkfy_whats_aptoide_games_title">Ce este Aptoide Games?</string>
   <string name="apkfy_install_body">Descarcă-ți jocul preferat și multe altele în Aptoide Games!</string>
-  <string name="apkfy_install_bullet_points">\u2022 Top games with an amazing curation.\n\u2022 No need to log in!\n\u2022 Special promotions and rewards in your favorite games.</string>
-  <string name="apkfy_install_alternative_version_body">You\'re also unlocking Aptoide Games!</string>
-  <string name="apkfy_install_alternative_version_bullet_points">\u2022 Curated top games, just for you.\n\u2022 Exclusive rewards and special deals.\n\u2022 Your personal AI Assistant for game discovery.</string>
+  <string name="apkfy_install_bullet_points">\u2022 Jocuri populare selectate cu atenție.\n\u2022Fără conectare!\n\u2022 Promoții speciale și recompense în jocurile tale preferate.</string>
+  <string name="apkfy_install_alternative_version_body">Deblochezi și Aptoide Games!</string>
+  <string name="apkfy_install_alternative_version_bullet_points">\u2022 Jocuri atent selectate, special pentru tine.\n\u2022 Recompense exclusive și oferte speciale.\n\u2022 Asistentul tău AI personal pentru descoperirea jocurilor.</string>
   <string name="app_size_mb_title" comment="s_mb">%s MB</string>
   <string name="uninstalled_title" comment="uninstalled">Dezinstalat</string>
   <string name="error_no_internet_body" comment="please_check_your_internet_connection">Te rugăm să îți verifici conexiunea la internet.</string>
@@ -263,22 +263,26 @@
   <!-- GenAi -->
   <string name="genai_bottom_navigation_genai_button">GenAI</string>
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
-  <string name="genai_assistant_title">Assistant</string>
-  <string name="genai_me_title">Me</string>
-  <string name="genai_introduction_body">Hi! I\'m your AI assistant on everything related to apps and games discovery. Try with something like:</string>
-  <string name="genai_input_message_field">Type a message&#8230;</string>
-  <string name="genai_powered_by_ai_title">Powered by AI</string>
-  <string name="genai_example_1_body">I\'m looking for strategy games.</string>
-  <string name="genai_example_2_body">Please recommend me the best multiplayer games.</string>
-  <string name="genai_example_3_body">Do you know offline casual games?</string>
+  <string name="genai_assistant_title">Asistent</string>
+  <string name="genai_me_title">Eu</string>
+  <string name="genai_introduction_body">Bună! Sunt Asistentul tău AI specializat în aplicații și descoperirea jocurilor. Poți începe cu ceva de genul:</string>
+  <string name="genai_input_message_field">Introdu un mesaj&#8230;</string>
+  <string name="genai_powered_by_ai_title">Alimentat de AI</string>
+  <string name="genai_example_1_body">Caut jocuri de strategie.</string>
+  <string name="genai_example_2_body">Te rog să îmi recomanzi cele mai bune jocuri multiplayer.</string>
+  <string name="genai_example_3_body">Știi jocuri ocazionale offline?</string>
+  <string name="genai_history_body">GameGenie History</string>
+  <string name="genai_new_chat_button">New chat</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Acum cu sistemul de plăți cu AppCoins</string>
   <string name="promotional_new_version">Versiune nouă</string>
   <string name="promotional_on_going_event">Eveniment în desfășurare</string>
-  <string name="promotional_new_in_aptoide">Now available</string>
-  <string name="promotional_soon_in_aptoide">Available sson</string>
+  <string name="promotional_new_in_aptoide">Disponibil acum</string>
+  <string name="promotional_soon_in_aptoide">Available soon</string>
   <string name="promotional_notify_button">Anunță-mă</string>
   <string name="promotional_new_notification_title">Aplicația pe care o așteptai!</string>
-  <string name="promotional_new_notification_body">%s is now available.</string>
+  <string name="promotional_new_notification_body">%s este acum disponibil.</string>
   <string name="promotional_new_active">Vei fi notificat când este disponibil.</string>
+  <string name="promotional_now_available_body">Now available in Aptoide Games!</string>
+  <string name="promotional_now_available_tag">Now Available</string>
 </resources>

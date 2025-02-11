@@ -269,14 +269,18 @@
   <string name="genai_example_1_body">Ich suche Strategiespiele.</string>
   <string name="genai_example_2_body">Bitte empfehle mir die besten Multiplayer-Spiele.</string>
   <string name="genai_example_3_body">Kennst du Offline-Gelegenheitsspiele?</string>
+  <string name="genai_history_body">GameGenie History</string>
+  <string name="genai_new_chat_button">New chat</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Jetzt mit AppCoins Zahlungssystem</string>
   <string name="promotional_new_version">Neue Version</string>
   <string name="promotional_on_going_event">Laufendes Event</string>
   <string name="promotional_new_in_aptoide">Jetzt verfügbar</string>
-  <string name="promotional_soon_in_aptoide">In Kürze verfügbar</string>
+  <string name="promotional_soon_in_aptoide">Available soon</string>
   <string name="promotional_notify_button">Benachrichtigt mich</string>
   <string name="promotional_new_notification_title">Die App, auf die du gewartet hast!</string>
   <string name="promotional_new_notification_body">%s ist jetzt verfügbar.</string>
   <string name="promotional_new_active">Bei Verfügbarkeit wirst du benachrichtigt.</string>
+  <string name="promotional_now_available_body">Now available in Aptoide Games!</string>
+  <string name="promotional_now_available_tag">Now Available</string>
 </resources>

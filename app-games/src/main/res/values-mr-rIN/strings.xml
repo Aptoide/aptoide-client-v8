@@ -269,14 +269,18 @@
   <string name="genai_example_1_body">मला रणनीति खेळ हवेत.</string>
   <string name="genai_example_2_body">मला उत्कृष्ट बहुखेळाडू खेळांची शिफारस द्या.</string>
   <string name="genai_example_3_body">आपणांस अधिकृत ऑफलाईन कॅज्युअल खेळ माहिती आहेत का?</string>
+  <string name="genai_history_body">GameGenie History</string>
+  <string name="genai_new_chat_button">New chat</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">आता अॅपकॉइन्स पेमेंट सिस्टम सह</string>
   <string name="promotional_new_version">नविन आवृत्ती</string>
   <string name="promotional_on_going_event">चालू असलेले कार्यक्रम</string>
   <string name="promotional_new_in_aptoide">आता उपलब्ध</string>
-  <string name="promotional_soon_in_aptoide">लवकरच येत आहे</string>
+  <string name="promotional_soon_in_aptoide">Available soon</string>
   <string name="promotional_notify_button">मला सूचना द्या</string>
   <string name="promotional_new_notification_title">आपण ज्यासाठी थांबलायत ते अॅप!</string>
   <string name="promotional_new_notification_body">%s आता उपलब्ध आहे.</string>
   <string name="promotional_new_active">जेव्हा उपलब्ध असेल तेव्हा आपल्याला सूचना मिळेल.</string>
+  <string name="promotional_now_available_body">Now available in Aptoide Games!</string>
+  <string name="promotional_now_available_tag">Now Available</string>
 </resources>

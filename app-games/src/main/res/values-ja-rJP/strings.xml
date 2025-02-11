@@ -268,14 +268,18 @@
   <string name="genai_example_1_body">ストラテジーゲームを探しています。</string>
   <string name="genai_example_2_body">最高のマルチプレイヤーゲームを紹介してください。</string>
   <string name="genai_example_3_body">オフラインのカジュアルなゲームを知っていますか？</string>
+  <string name="genai_history_body">GameGenie History</string>
+  <string name="genai_new_chat_button">New chat</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">AppCoinsの決済システムに対応</string>
   <string name="promotional_new_version">新しいバージョン</string>
   <string name="promotional_on_going_event">進行中のイベント</string>
   <string name="promotional_new_in_aptoide">Now available</string>
-  <string name="promotional_soon_in_aptoide">Available sson</string>
+  <string name="promotional_soon_in_aptoide">Available soon</string>
   <string name="promotional_notify_button">通知を受け取る</string>
   <string name="promotional_new_notification_title">待ちに待ったアプリ！</string>
   <string name="promotional_new_notification_body">%s is now available.</string>
   <string name="promotional_new_active">利用可能になると通知されます。</string>
+  <string name="promotional_now_available_body">Now available in Aptoide Games!</string>
+  <string name="promotional_now_available_tag">Now Available</string>
 </resources>
