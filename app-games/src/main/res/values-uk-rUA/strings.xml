@@ -273,14 +273,18 @@
   <string name="genai_example_1_body">Я шукаю стратегічні ігри.</string>
   <string name="genai_example_2_body">Порадь мені найкращі багатокористувацькі ігри.</string>
   <string name="genai_example_3_body">Знаєш якісь казуальні офлайн-ігри?</string>
+  <string name="genai_history_body">GameGenie History</string>
+  <string name="genai_new_chat_button">New chat</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Тепер з платіжною системою AppCoins</string>
   <string name="promotional_new_version">Нова версія</string>
   <string name="promotional_on_going_event">Поточна подія</string>
   <string name="promotional_new_in_aptoide">Тепер доступно</string>
-  <string name="promotional_soon_in_aptoide">Скоро буде доступно</string>
+  <string name="promotional_soon_in_aptoide">Available soon</string>
   <string name="promotional_notify_button">Повідомте мене</string>
   <string name="promotional_new_notification_title">Додаток, на який ви чекали!</string>
   <string name="promotional_new_notification_body">%s тепер доступно.</string>
   <string name="promotional_new_active">Коли буде доступно, ви отримаєте сповіщення.</string>
+  <string name="promotional_now_available_body">Now available in Aptoide Games!</string>
+  <string name="promotional_now_available_tag">Now Available</string>
 </resources>

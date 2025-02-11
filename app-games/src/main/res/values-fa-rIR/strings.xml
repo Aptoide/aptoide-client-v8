@@ -114,12 +114,12 @@
   <string name="screenshot_appview_4">محیط ساده با بهترین محتوا</string>
   <string name="screenshot_appview_5">بازی‌های انتخاب شده برای شما.</string>
   <string name="not_now_button">فعلا نه</string>
-  <string name="later_button">Later</string>
-  <string name="trusted_game_badge">Trusted Game</string>
-  <string name="official_game_badge">Official Game</string>
+  <string name="later_button">بعدا</string>
+  <string name="trusted_game_badge">بازی مورد‌اعتماد</string>
+  <string name="official_game_badge">بازی رسمی</string>
   <string name="see_more_button">مشاهده بیشتر</string>
   <string name="generic_error_short_title">خطایی رخ داده است.</string>
-  <string name="editorial_card_views_short">%s views</string>
+  <string name="editorial_card_views_short">%s نمایش</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">حافظه‌ پر است</string>
   <string name="out_of_space_body">برای ادامه نصب به %s نیاز دارید.</string>
@@ -164,7 +164,7 @@
   <string name="purchase_done_bonus_wallet_installed_body">برای یافتن بونوس، آن را باز کنید.</string>
   <string name="bonus_banner_body">در همه بازی‌هایی که با %s شناخته می‌شوند یک پاداش می‌گیرید.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">تا %s%% پاداش</string>
-  <string name="settings_auto_update_button">Auto-update games</string>
+  <string name="settings_auto_update_button">بروزرسانی اتوماتیک بازی‌ها</string>
   <string name="settings_payments_title" comment="contact_support_team">تماس با تیم پشتیبانی</string>
   <string name="settings_contact_support_body" comment="billing_terms_of_use">شرایط استفاده ار پرداخت</string>
   <string name="settings_billing_terms_body" comment="payments">پرداخت‌ها</string>
@@ -172,11 +172,11 @@
   <string name="contact_support_title" comment="contact_support">تماس با پشتیبانی</string>
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">لطفا همه جزییات را به ما بدهید:\n\u2022 مشکل در چه زمانی رخ داده‌است\n\u2022پرداخت شما در حال انجام چه بازی بود\n\nزمانی که روی ارسال کلیک می‌کنید اپلیکیشن ایمیل شما باز خواهد شد. می‌توانید یک اسکرین‌شات یا ویدیو درباره مشکل ارسال کنید!</string>
   <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">آیا می‌خواهید این بازی را نصب کنید؟</string>
-  <string name="apkfy_whats_aptoide_games_title">What\'s Aptoide Games?</string>
-  <string name="apkfy_install_body">Get your favorite game and much more in Aptoide Games!</string>
-  <string name="apkfy_install_bullet_points">\u2022 Top games with an amazing curation.\n\u2022 No need to log in!\n\u2022 Special promotions and rewards in your favorite games.</string>
-  <string name="apkfy_install_alternative_version_body">You\'re also unlocking Aptoide Games!</string>
-  <string name="apkfy_install_alternative_version_bullet_points">\u2022 Curated top games, just for you.\n\u2022 Exclusive rewards and special deals.\n\u2022 Your personal AI Assistant for game discovery.</string>
+  <string name="apkfy_whats_aptoide_games_title">Aptoide Games چیست؟</string>
+  <string name="apkfy_install_body">بازی‌های محبوب خود و خیلی چیزهای دیگر را در Aptoide Games بگیرید!</string>
+  <string name="apkfy_install_bullet_points">\u2022 بازی‌های برتر با داستان جذاب.\n\u2022 نیازی به ورود به سیستم نیست!\n\u2022 پیشنهادات و جوایز ویژه در بازی‌های محبوب خود.</string>
+  <string name="apkfy_install_alternative_version_body">شما Aptoide Games را نیز باز می‌کنید!</string>
+  <string name="apkfy_install_alternative_version_bullet_points">\u2022 بازی‌های برتر انتخابی، فقط برای تو.\n\u2022 جوایز اختصاصی و پیشنهادات ویژه.\n\u2022 دستیار هوش مصنوعی کشف بازی بصورت اختصاصی برای شما.</string>
   <string name="app_size_mb_title" comment="s_mb">%s MB</string>
   <string name="uninstalled_title" comment="uninstalled">حذف شده</string>
   <string name="error_no_internet_body" comment="please_check_your_internet_connection">لطفا اتصال اینترنت خود را بررسی کنید.</string>
@@ -242,41 +242,45 @@
   <!-- Update -->
   <string name="update_up_to_date_title">تبریک!</string>
   <string name="update_up_to_date_body">بروز هستید.</string>
-  <string name="update_auto_update_title">Enjoy the best gaming experience and keep your games updated.</string>
-  <string name="update_auto_update_slider">Keep games updated automatically</string>
+  <string name="update_auto_update_title">از بهترین تجربه بازی لذت ببرید و بازی‌های خود را بروزرسانی کنید.</string>
+  <string name="update_auto_update_slider">بازی‌ها را بصورت اتوماتیک بروزرسانی شده نگه دارید</string>
   <string name="update_update_all_button">همه برنامه‌ها را روز‌آمد کن</string>
   <string name="update_aptoide_games_title">نسخه جدید موجود است!</string>
-  <string name="update_aptoide_games_body">Update Aptoide Games to the latest version to keep enjoying the best gaming discovery experience.</string>
-  <string name="update_aptoide_games_update_close_body">Aptoide Games will close to update. Just open it again!</string>
+  <string name="update_aptoide_games_body">Aptoide Games را به آخرین نسخه بروزرسانی کنید تا از بهترین تجربه بازی لذت ببرید.</string>
+  <string name="update_aptoide_games_update_close_body">Aptoide Games برای بروزرسانی بسته می‌شود. مجددا آن را باز کنید!</string>
   <plurals name="update_games_can_be_updated_body">
-    <item quantity="one">%s game can be updated</item>
-    <item quantity="other">%s games can be updated</item>
+    <item quantity="one">%s بازی می‌تواند بروزرسانی شود</item>
+    <item quantity="other">%s بازی می‌تواند بروزرسانی شود</item>
   </plurals>
   <plurals name="update_notification_title">
-    <item quantity="one">You\'ve got %s update available</item>
-    <item quantity="other">You\'ve got %s updates available</item>
+    <item quantity="one">%s بروزرسانی برای شما موجود است</item>
+    <item quantity="other">%s بروزرسانی برای شما موجود است</item>
   </plurals>
-  <string name="update_notification_body">Tap here to install.</string>
-  <string name="update_aptoide_games_update_notification">There\'s a new version of Aptoide Games</string>
+  <string name="update_notification_body">برای نصب، اینجا را کلیک کنید.</string>
+  <string name="update_aptoide_games_update_notification">نسخه جدیدی از Aptoide Games موجود است</string>
   <!-- GenAi -->
   <string name="genai_bottom_navigation_genai_button">GenAI</string>
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
-  <string name="genai_assistant_title">Assistant</string>
-  <string name="genai_me_title">Me</string>
-  <string name="genai_introduction_body">Hi! I\'m your AI assistant on everything related to apps and games discovery. Try with something like:</string>
-  <string name="genai_input_message_field">Type a message&#8230;</string>
-  <string name="genai_powered_by_ai_title">Powered by AI</string>
-  <string name="genai_example_1_body">I\'m looking for strategy games.</string>
-  <string name="genai_example_2_body">Please recommend me the best multiplayer games.</string>
-  <string name="genai_example_3_body">Do you know offline casual games?</string>
+  <string name="genai_assistant_title">دستیار</string>
+  <string name="genai_me_title">من</string>
+  <string name="genai_introduction_body">سلام! من دستیار هوش مصنوعی شما در همه چیز مرتبط با کشف اپلیکیشن و بازی هستم. امتحان کنید مثلا:</string>
+  <string name="genai_input_message_field">پیامی بنویسید&#8230;</string>
+  <string name="genai_powered_by_ai_title">توسط هوش مصنوعی</string>
+  <string name="genai_example_1_body">به دنبال بازی استراتژی هستم.</string>
+  <string name="genai_example_2_body">لطفا بهترین بازی‌های چند نفره را پیشنهاد بده.</string>
+  <string name="genai_example_3_body">آیا بازی‌های روزمره آفلاین را می‌شناسی؟</string>
+  <string name="genai_history_body">GameGenie History</string>
+  <string name="genai_new_chat_button">New chat</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">هم اکنون با سیستم پرداخت AppCoins</string>
   <string name="promotional_new_version">نسخه جدید</string>
   <string name="promotional_on_going_event">رویداد در حال ادامه</string>
-  <string name="promotional_new_in_aptoide">Now available</string>
-  <string name="promotional_soon_in_aptoide">Available sson</string>
+  <string name="promotional_new_in_aptoide">موجود نیست</string>
+  <string name="promotional_soon_in_aptoide">Available soon</string>
   <string name="promotional_notify_button">به من اطلاع بده</string>
   <string name="promotional_new_notification_title">اپلیکیشن مورد انتظار شما!</string>
-  <string name="promotional_new_notification_body">%s is now available.</string>
+  <string name="promotional_new_notification_body">%s هم‌اکنون موجود است.</string>
   <string name="promotional_new_active">هر زمان موجود باشد شما را مطلع می کنید.</string>
+  <string name="promotional_now_available_body">هم اکنون در Aptoide Games موجود است!</string>
+  <string name="promotional_now_available_tag">Now Available</string>
 </resources>

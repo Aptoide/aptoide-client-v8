@@ -267,14 +267,18 @@
   <string name="genai_example_1_body">I\'m looking for strategy games.</string>
   <string name="genai_example_2_body">Please recommend me the best multiplayer games.</string>
   <string name="genai_example_3_body">Do you know offline casual games?</string>
+  <string name="genai_history_body">GameGenie History</string>
+  <string name="genai_new_chat_button">New chat</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">ယခုအခါ AppCoins ေငြေပးေခ်မႈစနစ္ျဖင့္</string>
   <string name="promotional_new_version">ဗားရွင္းအသစ္</string>
   <string name="promotional_on_going_event">ေနာင္လာမည့္ အစီအစဥ္</string>
   <string name="promotional_new_in_aptoide">Now available</string>
-  <string name="promotional_soon_in_aptoide">Available sson</string>
+  <string name="promotional_soon_in_aptoide">Available soon</string>
   <string name="promotional_notify_button">ကြၽႏ္ုပ္ကို အသိေပးပါ</string>
   <string name="promotional_new_notification_title">သင္ေစာင့္ဆိုင္းေနခဲ့ရတဲ့အက္ပ္။</string>
   <string name="promotional_new_notification_body">%s is now available.</string>
   <string name="promotional_new_active">ရရွိသည့္အခါ သင့္ကိုအသိေပးပါမည္။</string>
+  <string name="promotional_now_available_body">Now available in Aptoide Games!</string>
+  <string name="promotional_now_available_tag">Now Available</string>
 </resources>
