@@ -44,7 +44,8 @@ enum class WidgetLayout {
   PUBLISHER_TAKEOVER,
   CAROUSEL,
   CAROUSEL_LARGE,
-  LIST
+  LIST,
+  PROMO_GRAPHIC
 }
 
 data class WidgetAction(

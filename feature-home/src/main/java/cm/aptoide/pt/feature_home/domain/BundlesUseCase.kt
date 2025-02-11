@@ -79,6 +79,7 @@ class BundlesUseCase @Inject constructor(
         WidgetLayout.GRAPHIC,
         WidgetLayout.CAROUSEL_LARGE -> Type.CAROUSEL_LARGE
 
+        WidgetLayout.PROMO_GRAPHIC -> Type.NEW_APP
         WidgetLayout.LIST -> Type.APP_GRID
         WidgetLayout.CURATION_1,
         WidgetLayout.UNDEFINED,
