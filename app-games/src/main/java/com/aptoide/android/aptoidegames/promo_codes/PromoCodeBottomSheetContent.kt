@@ -36,7 +36,6 @@ import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.BottomSheetContent
 import com.aptoide.android.aptoidegames.BottomSheetHeader
 import com.aptoide.android.aptoidegames.R
-import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
 import com.aptoide.android.aptoidegames.design_system.PrimarySmallButton
 import com.aptoide.android.aptoidegames.design_system.TertiarySmallButton
@@ -85,8 +84,6 @@ class PromoCodeBottomSheet(
           appName = appName,
           appIcon = icon,
           walletAppUiState = walletAppUiState,
-          dismiss = dismiss,
-          navigate = navigate,
           promoCode = promoCode,
           walletReload = walletReload,
           showSnack = showSnack
@@ -103,8 +100,6 @@ fun PromoCodeBottomSheetContent(
   appName: String,
   appIcon: Drawable?,
   walletAppUiState: AppUiState,
-  dismiss: () -> Unit,
-  navigate: (String) -> Unit,
   promoCode: String,
   walletReload: () -> Unit,
   showSnack: (String) -> Unit
@@ -128,11 +123,7 @@ fun PromoCodeBottomSheetContent(
       }
 
       if (showWalletSegment) {
-        WalletInstallSection(
-          walletApp = walletApp,
-          navigate = navigate,
-          dismiss = dismiss
-        )
+        WalletInstallSection(walletApp = walletApp)
       }
 
       Text(
@@ -196,8 +187,6 @@ fun PromoCodeBottomSheetContent(
 @Composable
 private fun WalletInstallSection(
   walletApp: App,
-  navigate: (String) -> Unit,
-  dismiss: () -> Unit
 ) {
   Image(
     imageVector = getBonusTextIcon(Palette.Secondary, Palette.Primary, Palette.Black),
@@ -231,10 +220,7 @@ private fun WalletInstallSection(
   )
   AppItem(
     app = walletApp,
-    onClick = {
-      navigate(buildAppViewRoute(walletApp))
-      dismiss()
-    },
+    onClick = {},
     modifier = Modifier.padding(bottom = 8.dp)
   ) {
     InstallViewShort(app = walletApp)
@@ -269,8 +255,6 @@ fun PreviewBottomSheetContent() {
         appName = getRandomString(1..10),
         appIcon = getDrawable(LocalContext.current, R.mipmap.ic_launcher)!!,
         walletAppUiState = AppUiState.Idle(randomApp),
-        dismiss = { },
-        navigate = { },
         promoCode = "123",
         walletReload = { },
         showSnack = { }
