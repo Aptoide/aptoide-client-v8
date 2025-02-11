@@ -54,7 +54,7 @@ private fun NewAppVersionPromotional(app: App, label: String, navigate: (String)
 
   Column(
     modifier = Modifier
-      .padding(all = 16.dp)
+      .padding(horizontal = 16.dp)
       .clickable(onClick = { navigate(buildAppViewRoute(app)) })
   ) {
     AptoidePromotionalFeatureGraphicImage(app.featureGraphic, label)

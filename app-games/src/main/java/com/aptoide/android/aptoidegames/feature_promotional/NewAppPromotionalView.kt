@@ -75,7 +75,7 @@ private fun NewAppPromotional(app: App, label: String, navigate: (String) -> Uni
 
   Column(
     modifier = Modifier
-      .padding(all = 16.dp)
+      .padding(horizontal = 16.dp)
       .clickable(onClick = { navigate(buildAppViewRoute(app)) })
   ) {
     AptoidePromotionalFeatureGraphicImage(

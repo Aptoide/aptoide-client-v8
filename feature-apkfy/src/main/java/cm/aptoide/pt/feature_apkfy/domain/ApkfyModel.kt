@@ -1,7 +1,9 @@
 package cm.aptoide.pt.feature_apkfy.domain
 
+import androidx.annotation.Keep
 import cm.aptoide.pt.feature_apps.domain.AppSource
 
+@Keep
 data class ApkfyModel(
   override val packageName: String?,
   override val appId: Long?,

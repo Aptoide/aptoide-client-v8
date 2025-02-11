@@ -105,7 +105,7 @@ fun CarouselAppYoutubePlayer(
         PlayerConstants.PlayerState.PAUSED,
         PlayerConstants.PlayerState.PLAYING -> showVideo = true
 
-        PlayerConstants.PlayerState.ENDED -> youtubePlayer?.cueVideo(videoId, 0f)
+        PlayerConstants.PlayerState.ENDED -> youtubePlayer?.seekTo(0f)
 
         else -> Unit
       }
