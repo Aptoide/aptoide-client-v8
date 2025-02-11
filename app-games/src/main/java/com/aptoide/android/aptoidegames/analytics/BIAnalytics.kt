@@ -116,6 +116,7 @@ class BIAnalytics(private val analyticsSender: AnalyticsSender) {
     utmCampaign: String?,
     utmTerm: String?,
     utmContent: String?,
+    utmOemId: String?,
     utmPackageName: String?,
   ) = analyticsSender.setUserProperties(
     "utm_source" to utmSource,
@@ -123,6 +124,7 @@ class BIAnalytics(private val analyticsSender: AnalyticsSender) {
     "utm_campaign" to utmCampaign,
     "utm_term" to utmTerm,
     "utm_content" to utmContent,
+    "utm_oem_id" to utmOemId,
     "utm_package_name" to utmPackageName,
   )
 

@@ -59,6 +59,7 @@ class ApkfyAnalytics @Inject constructor(
           utmCampaign = utmCampaign,
           utmTerm = utmTerm,
           utmContent = utmContent,
+          utmOemId = oemId,
           utmPackageName = packageName ?: APKFY_BUT_NO_APP
         )
       } else if (hasApkfy()) {
@@ -69,6 +70,7 @@ class ApkfyAnalytics @Inject constructor(
             utmCampaign = UTM_PROPERTY_DIRECT_WITHOUT_UTMS,
             utmTerm = UTM_PROPERTY_DIRECT_WITHOUT_UTMS,
             utmContent = UTM_PROPERTY_DIRECT_WITHOUT_UTMS,
+            utmOemId = oemId ?: UTM_PROPERTY_DIRECT_WITHOUT_UTMS,
             utmPackageName = packageName
           )
         } else {
@@ -78,6 +80,7 @@ class ApkfyAnalytics @Inject constructor(
             utmCampaign = UTM_PROPERTY_APKFY_WITHOUT_UTMS,
             utmTerm = UTM_PROPERTY_APKFY_WITHOUT_UTMS,
             utmContent = UTM_PROPERTY_APKFY_WITHOUT_UTMS,
+            utmOemId = oemId ?: UTM_PROPERTY_APKFY_WITHOUT_UTMS,
             utmPackageName = packageName
           )
         }
@@ -88,6 +91,7 @@ class ApkfyAnalytics @Inject constructor(
           utmCampaign = UTM_PROPERTY_NO_APKFY,
           utmTerm = UTM_PROPERTY_NO_APKFY,
           utmContent = UTM_PROPERTY_NO_APKFY,
+          utmOemId = UTM_PROPERTY_NO_APKFY,
           utmPackageName = UTM_PROPERTY_NO_APKFY
         )
       }
