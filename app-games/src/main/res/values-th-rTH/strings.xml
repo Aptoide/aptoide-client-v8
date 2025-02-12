@@ -11,22 +11,15 @@
   <string name="overflow_menu_terms_conditions">ข้อตกลง&amp;เงื่อนไข</string>
   <string name="overflow_menu_privacy_policy">นโยบายความเป็นส่วนตัว</string>
   <string name="settings_about_hardware_title">สเปคของฮาร์ดแวร์</string>
-  <string name="settings_about_title">เกี่ยวกับเรา</string>
   <string name="settings_about_version">เวอร์ชั่น%1$s%2$s</string>
   <string name="settings_copied_to_clipboard_message">คัดลอกลงคลิปบอร์ด</string>
   <string name="settings_general_title">ทั่วไป</string>
-  <string name="settings_theme_option_dark">มืด</string>
-  <string name="settings_theme_option_light">สว่าง</string>
-  <string name="settings_theme_option_system">ค่าเริ่มต้นของระบบ</string>
-  <string name="settings_theme_options_title">ธีม</string>
   <string name="settings_title">การตั้งค่า</string>
   <string name="settings_support">สนับสนุน</string>
   <string name="settings_feedback_button">ส่งฟี๊ดแบ็ค</string>
   <string name="settings_feedback_title">ส่งฟี๊ดแบ็ค</string>
   <string name="settings_legal_title">กฎหมาย</string>
   <string name="settings_send_feedback_body">โปรดแจ้งให้เราทราบว่าคุณคิดอย่างไรเกี่ยวกับเกมส์ของ Aptoide!\n\u2022 ฟีเจอร์ใหม่ใดที่คุณอยากเห็น\n\u2022 คุณคิดว่าเราจะปรับปรุงได้อย่างไร</string>
-  <string name="settings_payment_support_description_title">รายละเอียด</string>
-  <string name="settings_contact_form_character_limit_title">(อย่างน้อย 50 อักขระ)</string>
   <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">คำบรรยาย(อย่างน้อย 50 อักขระ)</string>
   <string name="settings_storage_title">ล้างหน่วยความจำ</string>
   <string name="settings_storage_clear_cache_title">ล้างแคช</string>
@@ -39,7 +32,6 @@
   <string name="empty_category_body">ยังไม่มีแอปในหมวดหมู่นี้... !</string>
   <!-- Notifications -->
   <string name="notifications_context_title">รับการแจ้งเตือน!</string>
-  <string name="notification_installing_title">กำลังติดตั้ง</string>
   <string name="notification_preparing_title">กำลังเตรียม</string>
   <string name="notification_ready_install_title">บางแอปพร้อมสำหรับจะติดตั้งแล้ว!</string>
   <string name="notification_ready_install_body">แตะที่นี่เพื่อติดตั้ง%s</string>
@@ -68,10 +60,7 @@
   <string name="fixed_bundle_editors_choice_title">ตัวเลือกของผู้เขียน</string>
   <string name="fixed_bundle_editorial_title">บรรณาธิการ</string>
   <string name="fixed_bundle_trending_title">เทรน</string>
-  <string name="fixed_bundle_publisher_title">สนุกไปกับ%s</string>
   <string name="retry_button" comment="button_retry_title">ลอง</string>
-  <string name="generic_error_message">มีบางสิ่งผิด ลองอีกครั้ง</string>
-  <string name="generic_network_error_message">อุ๊ปส์ มีบางสิ่งผิดปกติ โปรดตรวจสอบการเชื่อมต่ออินเตอร์เน็ตของคุณ</string>
   <string name="install_waiting_installation_message">รอการติดตั้ง</string>
   <string name="install_installing_message">กำลังติดตั้ง</string>
   <string name="install_error_short_message">อุ๊ปส์ เกิดข้อผิดพลาด</string>
@@ -108,17 +97,10 @@
   <string name="error_install_permissions_body"><![CDATA[โปรดไปที่การตั้งค่าและให้สิทธิ์ <1>Aptoide Games</1> เพื่อติดตั้งแอป!]]></string>
   <string name="latest_title">ล่าสุด</string>
   <string name="whats_new_title">สิ่งใหม่</string>
-  <string name="screenshot_appview_1">โบนัสในการซื้อในแอปของคุณ</string>
-  <string name="screenshot_appview_2">หาเกมส์ใหม่ยอดนิยมสำหรับคุณ</string>
-  <string name="screenshot_appview_3">วิธีใหม่ในการค้นพบเกมส์ที่คุณชอบ</string>
-  <string name="screenshot_appview_4">อินเทอร์เฟซที่ราบรื่นพร้อมเนื้อหาที่ดีที่สุด</string>
-  <string name="screenshot_appview_5">เกมส์ที่คัดสรรมาเพื่อคุณเท่านั้น</string>
   <string name="not_now_button">ไม่ใช่ตอนนี้</string>
   <string name="later_button">ภายหลัง</string>
   <string name="trusted_game_badge">เกมส์ที่น่าเชื่อถือ</string>
   <string name="official_game_badge">เกมส์อย่างเป็นทางการ</string>
-  <string name="see_more_button">ดูเพิ่มเติม</string>
-  <string name="generic_error_short_title">มีข้อผิดพลาดเกอดขึ้น.</string>
   <string name="editorial_card_views_short">ดู %s</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">ไม่มีพื้นที่ว่าง</string>
@@ -141,13 +123,9 @@
   <!-- Install -->
   <string name="button_install_title">ติดตั้ง</string>
   <!-- Common -->
-  <string name="notice_at_collection_and_privacy_policy">ประกาศที่คอลเลกชัน &amp; นโยบายความเป็นส่วนตัว</string>
-  <string name="terms_and_conditions">เงื่อนไข</string>
-  <string name="continue_to_accept_tandc_and_pp_disclaimer">การดำเนินการต่อแสดงว่าคุณยอมรับ %1$s และ %2$s</string>
   <string name="appview_details_tab_title" comment="details">รายละเอียด</string>
   <string name="appview_related_tab_title" comment="related">เกี่ยวข้อง</string>
   <string name="appview_info_tab_title" comment="info">ข้อมูล</string>
-  <string name="bottom_navigation_discovery" comment="discovery">Discovery</string>
   <string name="appview_info_version_name_title" comment="version_name">ชื่อเวอร์ชั่น</string>
   <string name="appview_info_package_name_title" comment="package_name">ชื่อแพคเกจ</string>
   <string name="appview_info_release_title" comment="release">ปล่อย</string>
@@ -156,18 +134,9 @@
   <string name="appview_info_website_title" comment="website">เว็ปไซต์</string>
   <string name="appview_info_email_title" comment="email">อีเมล</string>
   <string name="appview_info_permissions_title" comment="permissions">สิทธิ์</string>
-  <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%%จาก%2$s</string>
-  <string name="error_short_title" comment="oops_an_error_occurred">อุ๊ปส์ เกิดข้อผิดพลาด</string>
-  <string name="purchase_done_bonus_title">รับโบนัส %s!</string>
-  <string name="purchase_done_bonus_body">ดาวน์โหลด AppCoins Wallet เพื่อรับโบนัสนี้และใช้ในการซื้อครั้งต่อไป</string>
-  <string name="purchase_done_bonus_wallet_installed_title">ติดตั้ง AppCoins Wallet</string>
-  <string name="purchase_done_bonus_wallet_installed_body">เปิดเพื่อค้นหาโบนัสของคุณ</string>
   <string name="bonus_banner_body">คุณจะได้รับโบนัสในเกมส์ที่กำหนดทั้งหมดด้วย%s</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">สูงสุด %s%% โบนัส</string>
   <string name="settings_auto_update_button">อัปเดตเกมอัตโนมัติ</string>
-  <string name="settings_payments_title" comment="contact_support_team">ติดต่อทีมสนับสนุน</string>
-  <string name="settings_contact_support_body" comment="billing_terms_of_use">เงื่อนไขการเรียกเก็บ Aptoide</string>
-  <string name="settings_billing_terms_body" comment="payments">การชำระเงิน</string>
   <string name="powered_by_title" comment="powered_by">สนับสนุนโดย</string>
   <string name="contact_support_title" comment="contact_support">ติดต่อฝ่ายสนับสนุน</string>
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">โปรดให้รายละเอียดทั้งหมดแก่เรา:\n\u2022 ปัญหาเริ่มต้นเมื่อใด\n\u2022 คุณกำลังทำการซื้อเกมใด\n\nเมื่อคุณแตะส่ง แอปอีเมลของคุณจะเปิดขึ้น คุณสามารถแนบภาพหน้าจอหรือวิดีโอเกี่ยวกับปัญหานี้ได้เลย!</string>
@@ -175,32 +144,21 @@
   <string name="apkfy_whats_aptoide_games_title">เกมส์ Aptoide คืออะไร</string>
   <string name="apkfy_install_body">รับเกมส์โปรดของคุณและอีกมากมายในแอปเกมส์ของแอป!</string>
   <string name="apkfy_install_bullet_points">\u2022 เกมส์ยอดนิยมพร้อมการดูแลจัดการที่น่าทึ่ง\n\u2022 ไม่จำเป็นต้องเข้าสู่ระบบ!\n\u2022 โปรโมชั่นและรางวัลพิเศษในเกมส์ที่คุณชื่นชอบ</string>
-  <string name="apkfy_install_alternative_version_body">คุณกำลังปลดล็อค Aptoide Games ด้วย!</string>
-  <string name="apkfy_install_alternative_version_bullet_points">\u2022 เกมส์ยอดนิยมที่คัดสรรมาเพื่อคุณโดยเฉพาะ\n\u2022 รางวัลและข้อเสนอพิเศษ\n\u2022 ผู้ช่วย AI ส่วนตัวของคุณสำหรับการค้นพบเกมส์</string>
-  <string name="app_size_mb_title" comment="s_mb">%sMB</string>
-  <string name="uninstalled_title" comment="uninstalled">ถอดการติดตั้งแล้ว</string>
-  <string name="error_no_internet_body" comment="please_check_your_internet_connection">โปรดตรวจสอบการเชื่อมต่ออินเตอร์เน็ต</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">ชำระด้วย AppCoins Wallet</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">มันจะถูกติดตั้งโดยอัตโนมัติและคุณจะได้รับโบนัสในการซื้อทั้งหมด!</string>
   <string name="buy_button" comment="buy">ซื้อ</string>
   <string name="iap_other_payment_methods_button" comment="other_payment_methods">วิธีการชำระเงินเพิ่มเติม</string>
   <string name="iap_remember_card_button" comment="remember_card">จดจำบัตร</string>
-  <string name="iap_card_number" comment="card_number">หมายเลขบัตร</string>
-  <string name="iap_card_expiry" comment="expiry_date">วันหมดอายุ</string>
-  <string name="iap_card_cvc" comment="cvc_cvv">CVC/CVV</string>
   <string name="iab_change_card_button" comment="change_card">เปลี่ยนบัตร</string>
   <string name="done_title">สำเร็จ!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">กำลังทำการซื้อ...</string>
-  <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">คุณแน่ใจหรือว่ารายละเอียดบัตรของคุณถูกต้อง? กรุณาลองอีกครั้ง!</string>
   <string name="log_out_button" comment="log_out">ออกจากระบบ</string>
-  <string name="get_a_bonus_in_all_purchases_title">คุณจะได้รับโบนัสจากการซื้อทั้งหมดของคุณ!</string>
   <string name="iap_appc_body">คุณจะได้รับโบนัสจากการซื้อทั้งหมดของคุณ!</string>
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">คุณสามารถซื้อได้ในตอนนี้</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed"></string>
   <string name="storage_access_permission_request_message">โปรดอนุญาตให้เข้าในส่วนจัดเก็บของโทรศัพท์ พวกเราสามารถดาวน์โหลดและติดตั้งแอปนี้</string>
   <string name="downloads_number_title">%s ดาวน์โหลด</string>
   <!-- Payment Errors-->
-  <string name="payments_error_not_enough_balance_body">คุณไม่มียอดคงเหลือเพียงพอ</string>
   <string name="payments_error_old_card_title">ดูเหมือนว่าคุณลงทะเบียนบัตรนี้เมื่อนานมาแล้ว!</string>
   <string name="payments_error_old_card_body">ใส่รายละเอียดบัตรอีกครั้งหรือใช้บัตรใบอื่น</string>
   <string name="purchase_error_payment_rejected">ธุรกรรมของคุณถูกปฏิเสธ</string>
@@ -215,7 +173,6 @@
   <string name="purchase_error_3d_title">รหัส 3D ของคุณมีปัญหา</string>
   <string name="purchase_card_rejected_title">ธุรกรรมของคุณถูกปฏิเสธโดยธนาคาร</string>
   <string name="purchase_error_invalid_credit_card_title">ไม่พบหมายเลขบัตรธนาคาร</string>
-  <string name="purchase_error_invalid_credit_card_body">โปรดตรวจสอบให้แน่ใจว่าตัวเลขทั้งหมดถูกต้อง</string>
   <string name="purchase_error_card_security_validation_title">มีข้อผิดพลาดในการตรวจสอบความถูกต้องระดับที่ 2 ของธุรกรรมนี้</string>
   <string name="purchase_error_in_progress_title">คำขอของคุณได้รับการประมวลผลแล้วหรือกำลังดำเนินการอยู่</string>
   <string name="purchase_card_error_CVV_title">CVV/CVC ไม่ถูกต้อง</string>
@@ -257,9 +214,7 @@
   <string name="update_notification_body">แตะที่นี่เพื่อติดตั้ง</string>
   <string name="update_aptoide_games_update_notification">มีเกมส์ Aptoide เวอร์ชันใหม่แล้ว</string>
   <!-- GenAi -->
-  <string name="genai_bottom_navigation_genai_button">GenAI</string>
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
-  <string name="genai_assistant_title">ผู้ช่วย</string>
   <string name="genai_me_title">ฉัน</string>
   <string name="genai_introduction_body">สวัสดี! ฉันเป็นผู้ช่วย AI ของคุณในทุกสิ่งที่เกี่ยวข้องกับการค้นพบแอปและเกมส์ ลองบางอย่างเช่น:</string>
   <string name="genai_input_message_field">พิมพ์ข้อความ&amp;#8230</string>
