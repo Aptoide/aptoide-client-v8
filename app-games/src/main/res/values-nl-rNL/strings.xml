@@ -11,22 +11,15 @@
   <string name="overflow_menu_terms_conditions">Algemene voorwaarden</string>
   <string name="overflow_menu_privacy_policy">Privacybeleid</string>
   <string name="settings_about_hardware_title">Hardwarespecificaties</string>
-  <string name="settings_about_title">Over ons</string>
   <string name="settings_about_version">Versie %1$s (%2$s)</string>
   <string name="settings_copied_to_clipboard_message">Naar klembord gekopieerd</string>
   <string name="settings_general_title">Algemeen</string>
-  <string name="settings_theme_option_dark">Donker</string>
-  <string name="settings_theme_option_light">Licht</string>
-  <string name="settings_theme_option_system">Systeemstandaard</string>
-  <string name="settings_theme_options_title">Thema</string>
   <string name="settings_title">Instellingen</string>
   <string name="settings_support">Ondersteuning</string>
   <string name="settings_feedback_button">Feedback verzenden</string>
   <string name="settings_feedback_title">Feedback verzenden</string>
   <string name="settings_legal_title">Juridisch</string>
   <string name="settings_send_feedback_body">Laat ons weten wat je van Aptoide Games vindt!\n\u2022 Mis je een functie die je graag zou gebruiken?\n\u2022 Wat kunnen we verbeteren?</string>
-  <string name="settings_payment_support_description_title">Beschrijving</string>
-  <string name="settings_contact_form_character_limit_title">(Minimaal 50 tekens)</string>
   <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Beschrijving (minimaal 50 tekens)</string>
   <string name="settings_storage_title">Opslag</string>
   <string name="settings_storage_clear_cache_title">Wis cache</string>
@@ -39,7 +32,6 @@
   <string name="empty_category_body">Er zijn geen apps in deze categorie... nog niet!</string>
   <!-- Notifications -->
   <string name="notifications_context_title">Ontvang een melding!</string>
-  <string name="notification_installing_title">Wordt geïnstalleerd</string>
   <string name="notification_preparing_title">Voorbereiden</string>
   <string name="notification_ready_install_title">Een app is klaar om geïnstalleerd te worden!</string>
   <string name="notification_ready_install_body">Tik hier om %s te installeren.</string>
@@ -68,10 +60,7 @@
   <string name="fixed_bundle_editors_choice_title">Onze aanbevelingen</string>
   <string name="fixed_bundle_editorial_title">Artikelen</string>
   <string name="fixed_bundle_trending_title">Trending</string>
-  <string name="fixed_bundle_publisher_title">Veel plezier met %s</string>
   <string name="retry_button" comment="button_retry_title">Opnieuw</string>
-  <string name="generic_error_message">Er is iets fout gegaan. Probeer het opnieuw.</string>
-  <string name="generic_network_error_message">Oeps, er is iets fout gegaan. Controleer je internetverbinding.</string>
   <string name="install_waiting_installation_message">Wachten op installatie</string>
   <string name="install_installing_message">Wordt geïnstalleerd</string>
   <string name="install_error_short_message">Oeps, er is een fout opgetreden.</string>
@@ -108,17 +97,10 @@
   <string name="error_install_permissions_body"><![CDATA[Ga naar Instellingen en geef <1>Aptoide Games</1> toestemming om apps te installeren!]]></string>
   <string name="latest_title">Nieuwste</string>
   <string name="whats_new_title">Wat is er nieuw</string>
-  <string name="screenshot_appview_1">Een bonus bij je in-app aankopen.</string>
-  <string name="screenshot_appview_2">Vind de beste nieuwe games, speciaal voor jou geselecteerd.</string>
-  <string name="screenshot_appview_3">Een nieuwe manier om je favoriete game te ontdekken.</string>
-  <string name="screenshot_appview_4">Een overzichtelijke interface met de beste content.</string>
-  <string name="screenshot_appview_5">Speciaal voor jou geselecteerde games.</string>
   <string name="not_now_button">Niet nu</string>
   <string name="later_button">Later</string>
   <string name="trusted_game_badge">Vertrouwde game</string>
   <string name="official_game_badge">Officiële game</string>
-  <string name="see_more_button">Meer bekijken</string>
-  <string name="generic_error_short_title">Er is een fout opgetreden.</string>
   <string name="editorial_card_views_short">%s weergaven</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Geen opslagruimte</string>
@@ -141,13 +123,9 @@
   <!-- Install -->
   <string name="button_install_title">Installeren</string>
   <!-- Common -->
-  <string name="notice_at_collection_and_privacy_policy">Kennisgeving over gegevensverzameling &amp; privacybeleid</string>
-  <string name="terms_and_conditions">Voorwaarden</string>
-  <string name="continue_to_accept_tandc_and_pp_disclaimer">Als je doorgaat, accepteer je de %1$s en het %2$s.</string>
   <string name="appview_details_tab_title" comment="details">Details</string>
   <string name="appview_related_tab_title" comment="related">Gerelateerd</string>
   <string name="appview_info_tab_title" comment="info">Info</string>
-  <string name="bottom_navigation_discovery" comment="discovery">Ontdekken</string>
   <string name="appview_info_version_name_title" comment="version_name">Naam van de versie</string>
   <string name="appview_info_package_name_title" comment="package_name">Naam van het pakket</string>
   <string name="appview_info_release_title" comment="release">Versie</string>
@@ -156,18 +134,9 @@
   <string name="appview_info_website_title" comment="website">Website</string>
   <string name="appview_info_email_title" comment="email">E-mail</string>
   <string name="appview_info_permissions_title" comment="permissions">Toestemmingen</string>
-  <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% van %2$s</string>
-  <string name="error_short_title" comment="oops_an_error_occurred">Oeps, er is een fout opgetreden</string>
-  <string name="purchase_done_bonus_title">Krijg een bonus van %s!</string>
-  <string name="purchase_done_bonus_body">Download de AppCoins Wallet om deze bonus te krijgen en bij je volgende aankoop te gebruiken.</string>
-  <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet is geïnstalleerd!</string>
-  <string name="purchase_done_bonus_wallet_installed_body">Open de wallet en ontdek je bonus.</string>
   <string name="bonus_banner_body">Je krijgt een bonus in alle games met %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Tot %s%% bonus</string>
   <string name="settings_auto_update_button">Games automatisch bijwerken</string>
-  <string name="settings_payments_title" comment="contact_support_team">Neem contact op met support</string>
-  <string name="settings_contact_support_body" comment="billing_terms_of_use">Factureringsvoorwaarden</string>
-  <string name="settings_billing_terms_body" comment="payments">Betalingen</string>
   <string name="powered_by_title" comment="powered_by">Aangeboden door</string>
   <string name="contact_support_title" comment="contact_support">Neem contact op met support</string>
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">We vragen je de volgende informatie te verstrekken:\n\u2022 Wanneer je het probleem voor de eerste keer hebt ervaren\n\u2022 In welke game je de aankoop hebt gedaan\n\nZodra je op Sturen tikt, wordt je e-mailapp geopend. Je kunt een screenshot of video over het probleem toevoegen!</string>
@@ -175,32 +144,21 @@
   <string name="apkfy_whats_aptoide_games_title">Wat is Aptoide Games?</string>
   <string name="apkfy_install_body">Vind je favoriete game en nog veel meer in Aptoide Games!</string>
   <string name="apkfy_install_bullet_points">\u2022 De beste speciaal geselecteerde games.\n\u2022 Je hoeft niet in te loggen!\n\u2022 Speciale acties en beloningen in je favoriete games.</string>
-  <string name="apkfy_install_alternative_version_body">Je krijgt ook toegang tot Aptoide Games!</string>
-  <string name="apkfy_install_alternative_version_bullet_points">\u2022 De beste games, speciaal voor jou geselecteerd.\n\u2022 Exclusieve beloningen en speciale aanbiedingen.\n\u2022 Jouw persoonlijke AI-assistent om games te ontdekken.</string>
-  <string name="app_size_mb_title" comment="s_mb">%s MB</string>
-  <string name="uninstalled_title" comment="uninstalled">Verwijderd</string>
-  <string name="error_no_internet_body" comment="please_check_your_internet_connection">Controleer je internetverbinding.</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Betaal met de AppCoins Wallet</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Het wordt automatisch geïnstalleerd en je krijgt een bonus bij alle aankopen!</string>
   <string name="buy_button" comment="buy">Kopen</string>
   <string name="iap_other_payment_methods_button" comment="other_payment_methods">Andere betaalmethoden</string>
   <string name="iap_remember_card_button" comment="remember_card">Kaart onthouden</string>
-  <string name="iap_card_number" comment="card_number">Kaartnummer</string>
-  <string name="iap_card_expiry" comment="expiry_date">Vervaldatum</string>
-  <string name="iap_card_cvc" comment="cvc_cvv">CVC/CVV</string>
   <string name="iab_change_card_button" comment="change_card">Kaart wijzigen</string>
   <string name="done_title">Gelukt!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">Aankoop verwerken...</string>
-  <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">Weet je zeker dat je kaartgegevens juist zijn? Probeer het opnieuw!</string>
   <string name="log_out_button" comment="log_out">Uitloggen</string>
-  <string name="get_a_bonus_in_all_purchases_title">Je krijgt een bonus bij alle aankopen!</string>
   <string name="iap_appc_body">Je krijgt een bonus bij alle aankopen!</string>
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Je kunt je aankoop nu voltooien.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">De AppCoins Wallet is nu geïnstalleerd!</string>
   <string name="storage_access_permission_request_message">Geef toegang tot de opslag van je telefoon zodat we deze app kunnen downloaden en installeren.</string>
   <string name="downloads_number_title">%s downloads</string>
   <!-- Payment Errors-->
-  <string name="payments_error_not_enough_balance_body">Je hebt niet genoeg saldo</string>
   <string name="payments_error_old_card_title">Het lijkt erop dat je deze kaart lang geleden hebt geregistreerd!</string>
   <string name="payments_error_old_card_body">Voer de kaartgegevens opnieuw in of gebruik een andere kaart.</string>
   <string name="purchase_error_payment_rejected">De transactie is afgewezen.</string>
@@ -215,7 +173,6 @@
   <string name="purchase_error_3d_title">Er is een probleem met je 3D-verificatie opgetreden.</string>
   <string name="purchase_card_rejected_title">De transactie is afgewezen door je bank.</string>
   <string name="purchase_error_invalid_credit_card_title">Ongeldig bankpasnummer.</string>
-  <string name="purchase_error_invalid_credit_card_body">Zorg ervoor dat alle cijfers correct zijn.</string>
   <string name="purchase_error_card_security_validation_title">Bij deze transactie is een fout bij de verificatie op het 2e niveau opgetreden.</string>
   <string name="purchase_error_in_progress_title">Je verzoek is al verwerkt of is in behandeling.</string>
   <string name="purchase_card_error_CVV_title">Onjuiste CVV/CVC</string>
@@ -259,9 +216,7 @@
   <string name="update_notification_body">Tik hier om te installeren.</string>
   <string name="update_aptoide_games_update_notification">Er is een nieuwe versie van Aptoide Games beschikbaar</string>
   <!-- GenAi -->
-  <string name="genai_bottom_navigation_genai_button">GenAI</string>
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
-  <string name="genai_assistant_title">Assistent</string>
   <string name="genai_me_title">Ik</string>
   <string name="genai_introduction_body">Hoi! Ik ben je AI-assistent voor alles wat met het ontdekken van apps en games te maken heeft. Probeer eens iets zoals:</string>
   <string name="genai_input_message_field">Typ een bericht&#8230;</string>
