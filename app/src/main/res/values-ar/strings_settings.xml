@@ -8,10 +8,8 @@
   <string name="setting_mobile">تنزيل عن طريق الواي فاي فقط</string>
   <string name="settings_beta_filter_setting_title">إصدارات بيتا</string>
   <string name="settings_beta_filter_summary">سترى أيضًا تطبيقات بيتا.</string>
-  <string name="setting_updates">التحديثات</string>
   <string name="settings_include_system_apps_title">تطبيقات النظام</string>
   <string name="settings_include_system_apps_summary">سوف ترى التحديثات لتطبيقات النظام</string>
-  <string name="settings_excluded_updates">التحديثات المستبعدة</string>
   <string name="setting_notifications">الإشعارات</string>
   <string name="setting_notifications_sub_section_1">تحديثات التطبيق</string>
   <string name="setting_notifications_sub_sub_section_1">عرض إشعارات لتحديثات التطبيق</string>
@@ -22,7 +20,6 @@
   <string name="settings_clear_cache_summary">حذف الملفات المؤقتة</string>
   <string name="settings_maxFileCache_title">تعيين الحد الأقصى لذاكرة التخزين المؤقت (ميجابايت)</string>
   <string name="settings_maxFileCache_sum">تحديد الحجم الأقصى لذاكرة التخزين المؤقت الخاصة بك</string>
-  <string name="setting_mature_filtering">محتوى للبالغين</string>
   <string name="setting_dont_show_mature_content">إظهار محتوى البالغين</string>
   <string name="set_mature_pin_title">تعيين رمز pin لمحتوى البالغين</string>
   <string name="set_mature_pin_summary">تعيين رمز سري لإلغاء قفل محتوى البالغين</string>
