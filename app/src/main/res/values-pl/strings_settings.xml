@@ -8,10 +8,8 @@
   <string name="setting_mobile">Pobieraj tylko przez Wi-Fi</string>
   <string name="settings_beta_filter_setting_title">Wersje beta</string>
   <string name="settings_beta_filter_summary">Zobaczysz także wersje beta.</string>
-  <string name="setting_updates">Aktualizacje</string>
   <string name="settings_include_system_apps_title">Aplikacje systemowe</string>
   <string name="settings_include_system_apps_summary">Zobaczysz aktualizacje dla aplikacji systemowych</string>
-  <string name="settings_excluded_updates">Pominięte aktualizacje</string>
   <string name="setting_notifications">Powiadomienia</string>
   <string name="setting_notifications_sub_section_1">Aktualizacje aplikacji</string>
   <string name="setting_notifications_sub_sub_section_1">Pokaż powiadomienia dla aktualizacji aplikacji</string>
@@ -22,7 +20,6 @@
   <string name="settings_clear_cache_summary">Usuń pliki tymczasowe</string>
   <string name="settings_maxFileCache_title">Ustaw max. rozmiar buforu (MB)</string>
   <string name="settings_maxFileCache_sum">Ustaw maksymalny rozmiar pamięci podręcznej</string>
-  <string name="setting_mature_filtering">Treści dla dorosłych</string>
   <string name="setting_dont_show_mature_content">Pokaż treści dla dorosłych</string>
   <string name="set_mature_pin_title">Ustaw kod PIN dla treści dla dorosłych</string>
   <string name="set_mature_pin_summary">Ustaw PIN, aby odblokować treści dla dorosłych</string>
