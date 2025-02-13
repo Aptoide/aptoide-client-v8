@@ -56,7 +56,7 @@ class ApkfyAnalytics @Inject constructor(
           utmCampaign = utmCampaign,
           utmTerm = utmTerm,
           utmContent = utmContent,
-          utmPackageName = packageName
+          utmPackageName = packageName ?: APKFY_BUT_NO_APP
         )
       } else if (hasApkfy()) {
         biAnalytics.setUTMProperties(
@@ -83,6 +83,7 @@ class ApkfyAnalytics @Inject constructor(
   companion object {
     private const val UTM_PROPERTY_NO_APKFY = "NO_APKFY"
     private const val UTM_PROPERTY_APKFY_WITHOUT_UTMS = "APKFY_BUT_NO_UTM"
+    private const val APKFY_BUT_NO_APP = "APKFY_BUT_NO_APP"
 
     private const val P_STATUS = "status"
     private const val P_DATA = "data"
