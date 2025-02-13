@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="username">ਈਮੇਲ</string>
-  <string name="register">ਸਾਇਨ ਅਪ</string>
-  <string name="title_successful">ਸਫਲ</string>
   <string name="unknown_error">ਅਣਜਾਣ ਗਲਤੀ</string>
   <string name="no_email_and_pass_error_message">ਕਿਰਪਾ ਕਰਕੇ ਈ-ਮੇਲ ਅਤੇ ਪਾਸਵਰਡ ਪਾਓ</string>
   <string name="no_pass_error_message">ਇੱਕ ਪਾਸਵਰਡ ਪਾਓ ਜੀ</string>
@@ -11,15 +8,9 @@
 ਘੱਟੋਂ-ਘੱਟ ਇੱਕ ਅੰਗਰੇਜ਼ੀ ਅੱਖਰ ਅਤੇ ਇੱਕ ਨੰਬਰ ਜਾਂ ਖਾਸ ਅੱਖਰ (!@#$%*) ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ</string>
   <string name="facebook_grant_permission_button">ਇਜਾਜ਼ਤ ਦਿਓ</string>
   <string name="facebook_email_permission_regected_message">ਖਾਤਾ ਬਣਾਉਣ ਲਈ ਸਾਨੂੰ ਇੱਕ ਈ-ਮੇਲ ਦੀ ਲੋੜ ਹੈ</string>
-  <string name="user_cancelled">ਉਪਭੋਗਤਾ ਵੱਲੋਂ ਰੱਦ</string>
   <string name="terms_and_conditions_privacy_sign_up_message">ਮੈਂ ਐਪਟਾਇਡ ਦੇ %1$s ਅਤੇ %2$s ਸਵੀਕਾਰ ਕਰਦਾ ਹਾਂ</string>
   <string name="accept_terms_title_loggedin">ਮਹੱਤਵਪੂਰਣ ਜਾਣਕਾਰੀ</string>
   <string name="accept_terms_message_loggedin">ਐਪਟਾਇਡ ਦੀ ਵਰਤੋਂ ਜਾਰੀ ਰੱਖਣ ਲਈ ਕਿਰਪਾ ਕਰਕੇ ਸਾਡੀਆਂ %1$s ਅਤੇ %2$s ਨੂੰ ਸਵੀਕਾਰ ਕਰੋ| ਇਨ੍ਹਾਂ ਦਸਤਾਵੇਜ਼ ਵਿੱਚ ਸਾਡੇ ਰਿਸ਼ਤੇਆਂ ਬਾਰੇ ਸਾਰੇ ਵੇਰਵੇ ਹਨ ਅਤੇ ਇਹ ਵੀ ਹੈ ਕਿ ਅਸੀਂ ਤੁਹਾਡੇ ਡੇਟਾ ਨੂੰ ਕਿਵੇਂ ਸਟੋਰ ਕਰਦੇ ਹਾਂ|</string>
-  <string name="accept_terms_loggedin_readTC">ਸ਼ਰਤਾਂ ਪੜ੍ਹੋ &amp; ਸ਼ਰਤਾਂ</string>
-  <string name="accept_terms_loggedin_readPP">ਨੀਜੀ ਪਾਲਸੀ ਪੜ੍ਹੋ</string>
-  <string name="accept_terms_loggedin_message">ਸਵੀਕਾਰ ਕਰੋ ਨੂੰ ਦਬਾ ਕੇ ਤੁਸੀਂ ਐਪਟਾਇਡ ਦੇ %1$s ਅਤੇ %2$s ਨਾਲ ਸਹਿਮਤ ਹੋ</string>
-  <string name="accept_terms_loggedin_button_accept">ਸਵੀਕਾਰ ਕਰੋ</string>
-  <string name="accept_terms_loggedin_button_close">CLOSE APTOIDE</string>
   <string name="user_upload_photo_failed">ਇਸ ਪਲ ਪਰੋਫਾਇਲ ਬਣਾਉਣਾ ਸਫਲ ਨਾ ਹੋ ਸੱਕਿਆ|</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">ਪ੍ਰੋਸੈਸ ਹੋ ਰਿਹਾ ਹੈ, ਇਸ ਨੂੰ ਕੁਝ ਸਮਾਂ ਲੱਗ ਸਕਦਾ ਹੈ…</string>
@@ -36,8 +27,6 @@
   <string name="follow" comment="follow">ਪਾਲਣਾ ਕਰੋ</string>
   <!--Create user fragment-->
   <string name="create_user_title">ਇੱਕ ਉਪਭੋਗੀ ਪਰੋਫਾਇਲ ਬਣਾਓ</string>
-  <string name="create_user_header"><b>ਆਪਣੀ ਯੂਜ਼ਰ ਪਰੋਫਾਇਲ ਬਣਾਓ</b> ਤਾਂ ਕਿ ਤੁਸੀ ਆਪਣੇ ਦੋਸਤ ਦੇ ਨਾਲ ਰੇਟ, ਕੋਮੇਂਟ ਅਤੇ ਸ਼ੇਅਰ ਕਰ ਸਕੋਂ</string>
-  <string name="edit_profile_header_message">Edit your profile with a beautiful image</string>
   <string name="create_user_take_picture">ਆਪਣੀ ਪਰੋਫਾਈਲ ਲਈ ਇੱਕ ਤਸਵੀਰ ਲਵੋ</string>
   <string name="create_user_choose_username">ਆਪਣਾ ਉਪਨਾਮ ਚੁਣੋ</string>
   <string name="create_user_username">ਉਪਨਾਮ</string>
@@ -75,8 +64,6 @@
   <string name="image_requirements_error_open_image">- ਚਿੱਤਰ ਨੂੰ ਖੋਲਣ ਵਿੱਚ ਗਲਤੀ\n</string>
   <string name="image_requirements_error_popup_title">ਚਿੱਤਰ</string>
   <!-- My account -->
-  <string name="myaccount_my_profile_title">My Profile</string>
-  <string name="myaccount_user_store_title">My Store</string>
   <string name="myaccount_edit_store_button">ਬਦਲਾਵ</string>
   <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Log Out</string>
   <string name="myaccount_header_title">ਸੂਚਨਾਵਾਂ</string>
@@ -89,7 +76,6 @@
   <string name="newaccount_create_store">ਸਟੋਰ ਬਣਾਓ</string>
   <string name="newaccount_create_store_message">ਦੁਨੀਆ ਨਾਲ ਐਪਾਂ ਨੂੰ ਸਾਂਝਾ ਕਰਨ ਲਈ ਇੱਕ ਸਟੋਰ ਬਣਾਓ|</string>
   <string name="newaccount_log_out">ਲਾਗ ਆਊਟ</string>
-  <string name="newaccount_notification_history">ਸੂਚਨਾ ਇਤਿਹਾਸ</string>
   <string name="newaccount_settings">ਸੈਟਿੰਗ</string>
   <string name="newaccount_edit">ਬਦਲਾਵ</string>
 </resources>
