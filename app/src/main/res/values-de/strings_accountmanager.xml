@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="username">E-Mail</string>
-  <string name="register">Anmelden</string>
-  <string name="title_successful">Erfolgreich</string>
   <string name="unknown_error">Unbekannter Fehler</string>
   <string name="no_email_and_pass_error_message">Geben Sie bitte eine E-Mail-Adresse und ein Passwort ein</string>
   <string name="no_pass_error_message">Bitte geben Sie ein Passwort ein</string>
@@ -11,15 +8,9 @@
 Buchstaben und Zahlen oder Sonderzeichen (!@#$%*) bestehen</string>
   <string name="facebook_grant_permission_button">Genehmigung erteilen</string>
   <string name="facebook_email_permission_regected_message">Um einen Account erstellen zu können benötigen wie ihre E-Mail-Adresse</string>
-  <string name="user_cancelled">Durch Nutzer storniert</string>
   <string name="terms_and_conditions_privacy_sign_up_message">Ich akzeptiere Aptoides %1$s und %2$s</string>
   <string name="accept_terms_title_loggedin">Wichtige Informationen</string>
   <string name="accept_terms_message_loggedin">Bitte akzeptieren Sie unsere %1$s und %2$s, damit Sie Aptoide weiternutzen können. Diese Dokumente enthalten alle Details über ihre Beziehung zu uns und es wird erklärt wie wir Ihre Daten speichern.</string>
-  <string name="accept_terms_loggedin_readTC">LESEN SIE DIE ALLGEMEINEN GESCHÄFTSBEDINGUNGEN</string>
-  <string name="accept_terms_loggedin_readPP">LESEN SIE DIE DATENSCHUTZRICHTLINEN</string>
-  <string name="accept_terms_loggedin_message">Durch Drücken des Akzeptieren-Buttons, erklären Sie sich mit den %1$s und den %2$s von Aptoide einverstanden</string>
-  <string name="accept_terms_loggedin_button_accept">AKZEPTIEREN</string>
-  <string name="accept_terms_loggedin_button_close">APTOIDE SCHLIESSEN</string>
   <string name="user_upload_photo_failed">Im Moment war es nicht möglich ein Profil zu erstellen.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">Wird bearbeitet, das keine eine Weile dauern…</string>
@@ -36,8 +27,6 @@ Buchstaben und Zahlen oder Sonderzeichen (!@#$%*) bestehen</string>
   <string name="follow" comment="follow">Folgen</string>
   <!--Create user fragment-->
   <string name="create_user_title">Erzeuge ein Nutzer-Fragment</string>
-  <string name="create_user_header"><b>Erstelle Dein Nutzer-Profil</b>, damit Du in der Lage bist zu bewerten, zu kommentieren und Apps mit deinen Freunden zu teilen</string>
-  <string name="edit_profile_header_message">Bearbeiten Sie Ihr Profil mit einem schönen Bild</string>
   <string name="create_user_take_picture">Mache eine Bild für dein Profil</string>
   <string name="create_user_choose_username">Wählen Sie ihren Nicknamen</string>
   <string name="create_user_username">Nickname</string>
@@ -75,8 +64,6 @@ Buchstaben und Zahlen oder Sonderzeichen (!@#$%*) bestehen</string>
   <string name="image_requirements_error_open_image">-Fehler beim Öffnen des Bildes\n</string>
   <string name="image_requirements_error_popup_title">Bild</string>
   <!-- My account -->
-  <string name="myaccount_my_profile_title">Mein Profil</string>
-  <string name="myaccount_user_store_title">Mein Store</string>
   <string name="myaccount_edit_store_button">Ändern</string>
   <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Abmelden</string>
   <string name="myaccount_header_title">Benachrichtigungen</string>
@@ -89,7 +76,6 @@ Buchstaben und Zahlen oder Sonderzeichen (!@#$%*) bestehen</string>
   <string name="newaccount_create_store">Erstellen Sie einen Store</string>
   <string name="newaccount_create_store_message">Erstelle einen Store, um Apps mit der Community teilen.</string>
   <string name="newaccount_log_out">ABMELDEN</string>
-  <string name="newaccount_notification_history">Benachrichtigungs-Historie</string>
   <string name="newaccount_settings">Einstellungen</string>
   <string name="newaccount_edit">Bearbeiten</string>
 </resources>
