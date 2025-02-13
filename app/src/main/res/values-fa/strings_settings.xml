@@ -8,10 +8,8 @@
   <string name="setting_mobile">دانلود تنها از طریق وای‌فای</string>
   <string name="settings_beta_filter_setting_title">نسخه‌های بتا</string>
   <string name="settings_beta_filter_summary">نسخه‌های بتا را هم خواهید دید.</string>
-  <string name="setting_updates">به‌روزرسانی‌ها</string>
   <string name="settings_include_system_apps_title">اپلیکیشن‌های سیستم</string>
   <string name="settings_include_system_apps_summary">شما تنها بروزرسانی‌های اپلیکیشن‌های سیستم را می‌بینید</string>
-  <string name="settings_excluded_updates">بروزرسانی‌های کنار گذاشته شده</string>
   <string name="setting_notifications">پیام‌ها</string>
   <string name="setting_notifications_sub_section_1">به‌روزرسانی‌های اپلیکیشن</string>
   <string name="setting_notifications_sub_sub_section_1">نمایش اطلاعیه برای بروزرسانی‌های اپلیکیشن</string>
@@ -22,7 +20,6 @@
   <string name="settings_clear_cache_summary">حذف فایل‌های موقتی</string>
   <string name="settings_maxFileCache_title">تنظیم حداکثر اندازه حافظه کش (مگابایت)</string>
   <string name="settings_maxFileCache_sum">تنظیم یک حداکثر برای حافظه کش خود</string>
-  <string name="setting_mature_filtering">محتوای بزرگسال</string>
   <string name="setting_dont_show_mature_content">نمایش محتوای بزرگسال</string>
   <string name="set_mature_pin_title">ایجاد رمز برای محتوای بزرگسال</string>
   <string name="set_mature_pin_summary">تنظیم رمز برای بازکردن محتوای بزرگسال</string>
