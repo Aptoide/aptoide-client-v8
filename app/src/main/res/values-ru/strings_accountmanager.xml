@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="username">E-mail</string>
-  <string name="register">Регистрация</string>
-  <string name="title_successful">Успешно</string>
   <string name="unknown_error">Неизвестная ошибка</string>
   <string name="no_email_and_pass_error_message">Пожалуйста, введите e-mail и пароль</string>
   <string name="no_pass_error_message">Пожалуйста, введите пароль</string>
@@ -11,15 +8,9 @@
         как минимум одну букву, одну цифру или специальный символ (!@#$%*)</string>
   <string name="facebook_grant_permission_button">Разрешить</string>
   <string name="facebook_email_permission_regected_message">Нам нужен ваш email, чтобы создать учетную запись</string>
-  <string name="user_cancelled">Отменено пользователем</string>
   <string name="terms_and_conditions_privacy_sign_up_message">Я принимаю %1$s и %2$s компании Aptoide</string>
   <string name="accept_terms_title_loggedin">Важная информация</string>
   <string name="accept_terms_message_loggedin">Пожалуйста, примите наши %1$s и %2$s, чтобы продолжить использование Aptoide. Эти документы содержат все подробности о наших отношениях и о том, как мы храним ваши данные.</string>
-  <string name="accept_terms_loggedin_readTC">ЧИТАТЬ УСЛОВИЯ И ОГРАНИЧЕНИЯ</string>
-  <string name="accept_terms_loggedin_readPP">ОЗНАКОМЬТЕСЬ С ПОЛИТИКОЙ КОНФИДЕНЦИАЛЬНОСТИ</string>
-  <string name="accept_terms_loggedin_message">Нажав \"ПРИНЯТЬ\" вы соглашаетесь с содержанием документов %1$s и %2$s Aptoide</string>
-  <string name="accept_terms_loggedin_button_accept">ПРИНЯТЬ</string>
-  <string name="accept_terms_loggedin_button_close">ЗЫКРЫТЬ APTOIDE</string>
   <string name="user_upload_photo_failed">В данный момент создать профиль не удалось.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">Идёт обработка, это может занять некоторое время…</string>
@@ -36,8 +27,6 @@
   <string name="follow" comment="follow">Подписаться</string>
   <!--Create user fragment-->
   <string name="create_user_title">Создать профиль пользователя</string>
-  <string name="create_user_header"><b>Создайте свой профиль пользователя</b> чтобы иметь возможность оценивать, комментировать и делиться приложениями с друзьями</string>
-  <string name="edit_profile_header_message">Дополните ваш профиль красивой картинкой</string>
   <string name="create_user_take_picture">Сделайте снимок для вашего профиля</string>
   <string name="create_user_choose_username">Выберите ваш никнейм</string>
   <string name="create_user_username">Никнейм</string>
@@ -75,8 +64,6 @@
   <string name="image_requirements_error_open_image">- Ошибка при попытке открыть картинку\n</string>
   <string name="image_requirements_error_popup_title">Изображение</string>
   <!-- My account -->
-  <string name="myaccount_my_profile_title">Мой профиль</string>
-  <string name="myaccount_user_store_title">все магазины</string>
   <string name="myaccount_edit_store_button">Править</string>
   <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Выйти</string>
   <string name="myaccount_header_title">Уведомления</string>
@@ -89,7 +76,6 @@
   <string name="newaccount_create_store">создать магазин</string>
   <string name="newaccount_create_store_message">Создайте магазин, чтобы делиться приложениями с сообществом.</string>
   <string name="newaccount_log_out">выйти</string>
-  <string name="newaccount_notification_history">История уведомлений</string>
   <string name="newaccount_settings">Настройки</string>
   <string name="newaccount_edit">Изменить</string>
 </resources>
