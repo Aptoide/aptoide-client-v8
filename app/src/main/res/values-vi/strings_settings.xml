@@ -8,10 +8,8 @@
   <string name="setting_mobile">Chỉ tải về bằng Wifi</string>
   <string name="settings_beta_filter_setting_title">Phiên bản beta</string>
   <string name="settings_beta_filter_summary">Bạn cũng sẽ thấy các ứng dụng beta.</string>
-  <string name="setting_updates">Cập nhật</string>
   <string name="settings_include_system_apps_title">Ứng dụng hệ thống</string>
   <string name="settings_include_system_apps_summary">Bạn sẽ thấy các cập nhật dành cho các ứng dụng hệ thống</string>
-  <string name="settings_excluded_updates">Cập nhật loại trừ</string>
   <string name="setting_notifications">Thông báo</string>
   <string name="setting_notifications_sub_section_1">Cập nhật ứng dụng</string>
   <string name="setting_notifications_sub_sub_section_1">Hiển thị thông báo cập nhật ứng dụng</string>
@@ -22,7 +20,6 @@
   <string name="settings_clear_cache_summary">Xóa các tập tin tạm thời</string>
   <string name="settings_maxFileCache_title">Đặt tối đa kích thước bộ nhớ cache (MB)</string>
   <string name="settings_maxFileCache_sum">Đặt kích thước tối đa cho bộ nhớ cache của bạn</string>
-  <string name="setting_mature_filtering">Nội dung người lớn</string>
   <string name="setting_dont_show_mature_content">Hiển thị nội dung người lớn</string>
   <string name="set_mature_pin_title">Cài mã pin Nội dung dành cho người lớn</string>
   <string name="set_mature_pin_summary">Đặt mã pin để mở khóa nội dung người lớn</string>
