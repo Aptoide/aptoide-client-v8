@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="username">E-mail</string>
-  <string name="register">Registrar-se</string>
-  <string name="title_successful">Sucesso!</string>
   <string name="unknown_error">Erro desconhecido</string>
   <string name="no_email_and_pass_error_message">Por favor, insira um e-mail e senha</string>
   <string name="no_pass_error_message">Por favor introduza a palavra-passe para se registar.</string>
@@ -11,15 +8,9 @@
  pelo menos uma letra e um número ou caracteres especiais (!@#$%*)</string>
   <string name="facebook_grant_permission_button">Dar permissão</string>
   <string name="facebook_email_permission_regected_message">Precisamos do seu e-mail para criar uma conta</string>
-  <string name="user_cancelled">Cancelado pelo usuário</string>
   <string name="terms_and_conditions_privacy_sign_up_message">Eu aceito os %1$s e a %2$s da Aptoide.</string>
   <string name="accept_terms_title_loggedin">Informações Importantes</string>
   <string name="accept_terms_message_loggedin">Por favor, aceite nosso %1$s e %2$s para continuar utilizando o Aptoide. Estes documentos incluem todos os detalhes sobre nossa relação e como armazenamos os seus dados.</string>
-  <string name="accept_terms_loggedin_readTC">LEIA OS TERMOS E CONDIÇÕES</string>
-  <string name="accept_terms_loggedin_readPP">LEIA A POLÍTICA DE PRIVACIDADE</string>
-  <string name="accept_terms_loggedin_message">Ao clicar em aceitar, você concorda com %1$s e %2$s da Aptoide</string>
-  <string name="accept_terms_loggedin_button_accept">ACEITO</string>
-  <string name="accept_terms_loggedin_button_close">FECHAR APTOIDE</string>
   <string name="user_upload_photo_failed">No momento não foi possível criar um perfil.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">Processando, pode demorar um pouco…</string>
@@ -36,8 +27,6 @@
   <string name="follow" comment="follow">Seguir</string>
   <!--Create user fragment-->
   <string name="create_user_title">Criar um Perfil de Usuário</string>
-  <string name="create_user_header"><b>Crie o seu Perfil de Usuário</b> para poder avaliar, comentar e compartilhar aplicativos com os seus amigos</string>
-  <string name="edit_profile_header_message">Edite seu perfil com uma bela imagem</string>
   <string name="create_user_take_picture">Tire uma foto para o seu perfil</string>
   <string name="create_user_choose_username">Escolha um apelido</string>
   <string name="create_user_username">Apelido</string>
@@ -75,8 +64,6 @@
   <string name="image_requirements_error_open_image">- Erro ao abrir a imagem\n</string>
   <string name="image_requirements_error_popup_title">Imagem</string>
   <!-- My account -->
-  <string name="myaccount_my_profile_title">Meu Perfil</string>
-  <string name="myaccount_user_store_title">Minha loja</string>
   <string name="myaccount_edit_store_button">Editar</string>
   <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Sair</string>
   <string name="myaccount_header_title">Notificações</string>
@@ -89,7 +76,6 @@
   <string name="newaccount_create_store">criar uma loja</string>
   <string name="newaccount_create_store_message">Crie uma loja para compartilhar apps com a comunidade.</string>
   <string name="newaccount_log_out">sair</string>
-  <string name="newaccount_notification_history">Histórico de notificações</string>
   <string name="newaccount_settings">Configurações</string>
   <string name="newaccount_edit">Editar</string>
 </resources>
