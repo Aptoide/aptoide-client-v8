@@ -12,9 +12,6 @@ or
     <item quantity="many">لديك %d تحديثًا جاهز للتثبيت</item>
     <item quantity="other">لديك %d تحديثًا جاهز للتثبيت</item>
   </plurals>
-  <string name="drawer_title_my_account">حسابي</string>
-  <string name="drawer_title_settings">إعدادات</string>
-  <string name="drawer_title_feedback_send_button">إرسال الملاحظات</string>
   <string name="feedback_subject">الموضوع</string>
   <string name="feedback_to_write2">اكتب هنا لترسل لنا رأيك…\n\n
         يرجى تزويدنا بكل التفاصيل الممكنة (بالإنجليزية):
@@ -26,23 +23,16 @@ or
   <!--Social Media-->
   <string name="aptoide_url">http://www.aptoide.com/</string>
   <string name="facebook">فيسبوك</string>
-  <string name="connect_facebook">ربط مع فيسبوك</string>
   <!--General-->
   <string name="all_button_feedback_send">إرسال الملاحظات</string>
   <string name="install">التثبيت</string>
   <string name="open">فتح</string>
   <string name="all_title_ad">إعلان</string>
   <string name="not_now_button">ليس الآن</string>
-  <string name="learn_more_button">اعرف المزيد</string>
-  <string name="learn_more_title_case_button">معرفة المزيد</string>
   <string name="continue_button">متابعة</string>
   <!-- Permission pop-ups messages -->
   <string name="uninstall_button">إلغاء التثبيت</string>
   <string name="access_to_get_accounts_rationale">تحتاج إلى السماح بالوصول إلى الحصول على حسابات</string>
-  <string name="developer_website">الموقع الإلكتروني: %s</string>
-  <string name="not_available">غير متاح</string>
-  <string name="developer_email">البريد الإلكتروني: %s</string>
-  <string name="developer_privacy_policy">سياسة الخصوصية: %s</string>
   <!--Bottom Navigation-->
   <string name="button_header_more">المزيد</string>
   <string name="bottomnavigation_button_home">الرئيسية</string>
@@ -50,24 +40,16 @@ or
   <string name="bottomnavigation_button_stores">المتاجر</string>
   <string name="bottomnavigation_button_apps">التطبيقات</string>
   <string name="bottomnavigation_button_editorial">مقالات</string>
-  <string name="bottomnavigation_button_news">الأخبار</string>
-  <string name="bottomnavigation_button_trending">الأكثر رواجا</string>
-  <string name="bottomnavigation_button_discover">اكتشف</string>
-  <string name="bottomnavigation_button_manager">المدير</string>
-  <string name="bottomnavigation_button_updates">تحديثات</string>
   <!-- AppView -->
-  <string name="bottomnavigation_button_my_apps">تطبيقاتي</string>
   <string name="appview_short_developer_website">الموقع</string>
   <string name="appview_short_developer_email">البريد الإلكتروني</string>
   <string name="appview_short_developer_privacy_policy">سياسة الخصوصية</string>
   <string name="appview_button_install">التثبيت</string>
   <string name="appview_button_downgrade">تراجع عن التحديث</string>
-  <string name="appview_button_open" comment="appview_button_open">فتح</string>
+  <string comment="appview_button_open" name="appview_button_open">فتح</string>
   <string name="appview_button_update">تحديث</string>
-  <string name="appview_button_buy">شراء</string>
   <string name="appview_followers_count_text">%1$s متابع</string>
   <string name="appview_other_versions">إصدارات أخرى</string>
-  <string name="appview_newer_version">النسخة الأحدث متوفرة</string>
   <string name="appview_latest_version_text">الإصدار الأخير</string>
   <string name="appview_latest_version_with_value">الإصدار الأخير %s</string>
   <string name="appview_version_text">الإصدار</string>
@@ -75,13 +57,9 @@ or
   <string name="appview_good_app_guaranteed">تطبيق جيد مضمون!</string>
   <string name="appview_good_app_description">\"هذا التطبيق اجتاز اختبار الأمن للبرامج الضارة والفيروسات وغيرها من الهجمات الخبيثة ولا
   يحتوي على أي تهديدات!\"</string>
-  <string name="appview_rating_card_text">تقييم</string>
-  <string name="appview_rating_empty_body">لا توجد آراء أو تقييم حتى الآن. كُن أول من يعرف!</string>
   <string name="appview_button_read_all">قراءة الكل<![CDATA[>]]>;</string>
   <string name="appview_header_trusted_text">موثوق به</string>
   <string name="see_more">شاهد المزيد</string>
-  <string name="appview_title_you_might_also_like">تطبيقات قد تعجبك</string>
-  <string name="appview_recommend_message">هل ترغب بتوصية هذا التطبيق لمتابعيك؟</string>
   <string name="appview_uploaded_by">تم رفع التطبيق بواسطة</string>
   <string name="appview_similar_apps">تطبيقات مشابهة</string>
   <string name="appview_short_downloading">جاري التنزيل</string>
@@ -89,20 +67,9 @@ or
   <string name="appview_message_apkfy_1">تحديثات آمنة 100%% لـ%s$1</string>
   <string name="appview_message_apkfy_2">الوصول للتطبيقات اللامحدودة</string>
   <string name="apkfy_install_message">هل تريد تثبيت هذا التطبيق؟</string>
-  <string name="appview_download_percentage_body">%1$s%1$s من %2$s</string>
   <!-- AppView Donations-->
   <string name="appview_download_error_missing_splits">عذرًا، واجهتنا مشكلة أثناء تنزيل هذا التطبيق. سنعمل على إصلاحها قريبًا!</string>
-  <string name="appview_title_donations_leaderboard">أفضل المتبرعين</string>
-  <string name="appview_message_donations_leaderboard">التبرعات هي أفضل طريقة للتعبير عن دعمك للمطوّرين وإحداث الفرق. تبرع بالآبكوينز الآن للحصول على مكانك في لوحة المتصدرين.</string>
-  <string name="appview_button_donations">تبرع</string>
-  <string name="appview_message_donations_card">هل يعجبك هذا التطبيق؟ تبرع لإظهار بعض الحب والدعم للمطوّر!</string>
-  <string name="appview_message_donations_nowallet">يبدو أنك لا تمتلك محفظة. هل تريد تثبيتها الآن؟</string>
-  <string name="appview_message_donations_empty">لا يوجد تبرعات حتى الآن. كن أول من يحصل على المركز الاول في لوحة المتصدرين!</string>
-  <string name="appview_title_donations_dialogue">تبرع</string>
-  <string name="appview_field_donations_dialogue">الاسم المستعار</string>
-  <string name="appview_message_donations_completed">شكرا على تبرعك، نتمنى أن تستمتع باستخدام التطبيق!</string>
   <!-- AppView developer area-->
-  <string name="appview_title_donations_leaderboard_unknown">متبرع مجهول</string>
   <string name="dialog_version_size">االإصدار: %1$s | الحجم: %2$s</string>
   <!-- Common (menu) -->
   <string name="other_versions_downloads_count_text">%1$s تحميل</string>
@@ -111,10 +78,7 @@ or
   <string name="menu_select_all">إختيار الكل</string>
   <string name="menu_select_none">عدم التحديد</string>
   <string name="clear">مسح</string>
-  <string name="more_options_button">المزيد من الخيارات</string>
-  <string name="powered_by">برعاية</string>
   <!-- Excluded Updates Fragment -->
-  <string name="loading">جاري التحميل &#8230;</string>
   <string name="excluded_updates">تحديثات مستبعدة</string>
   <!-- Excluded Updates Fragment (menu) -->
   <string name="no_excluded_updates_msg">ألا تعمل النسخة الأخيرة بشكل جيد؟ يمكنك منع التطبيق من التحديث! اضغط على زر التطبيقات في القائمة السفلية واضغط مطوّلاً على التطبيق الذي تريد.</string>
@@ -127,19 +91,15 @@ or
   <string name="virus">فيروس</string>
   <!-- "Other <app name> versions on different Stores" -->
   <string name="additional_information">معلومات إضافية</string>
-  <string name="social_facebook_screen_title">فيسبوك</string>
-  <string name="social_twitter_screen_title">تويتر</string>
   <string name="top_comments">أعلى تعليقات</string>
   <string name="rate">تقييم</string>
   <string name="rate_app">تقييم %s</string>
-  <string name="title">العنوان</string>
   <!-- preserve all lack of spaces when translating this string due to UI changes each space causes -->
   <string name="tap_a_star">انقر على النجمة للتقييم</string>
   <string name="other_versions_on_different_stores">إصدارات أخرى في متاجر اخرى</string>
   <string name="review_optional">تعليق (اختياري)</string>
   <string name="feedback_not_valid">من فضلك ادخل موضوع صالح!</string>
   <string name="thank_you_for_your_opinion">شكراً لك على إبداء رأيك!</string>
-  <string name="ignore_update">تجاهل التحديث</string>
   <string name="five_numeric">5</string>
   <string name="four_numeric">4</string>
   <string name="three_numeric">3</string>
@@ -147,9 +107,6 @@ or
   <string name="one_numeric">1</string>
   <string name="just_reviews">تعليقات فقط</string>
   <string name="downgrading_msg">خفض الإصدار</string>
-  <string name="updating_msg">جاري التحديث</string>
-  <string name="installing_msg">جاري التثبيت</string>
-  <string name="needs_permission_to_fs">بحاجة إلى تصريح باستخدام نظام ملفات خارجي</string>
   <string name="storage_access_permission_request_message">يرجى السماح بالوصول إلى موقع التخزين بهاتفك حتى يمكننا تحميل وتثبيت هذا التطبيق.</string>
   <string name="camera_access_permission_request_message">يرجى السماح بالوصول إلى كاميرا هاتفك حتى تتمكن من التقاط صور باستخدام هذا التطبيق.</string>
   <string name="remote_install_menu_title">التثبيت على التليفزيون</string>
@@ -181,7 +138,6 @@ or
   <string name="apps">تطبيقات</string>
   <!--Rate-->
   <string name="add_store_dialog_discover_top_stores">اكتشف أفضل المتاجر</string>
-  <string name="be_the_first_to_rate_this_app">كن الأول لتقييم هذا التطبيق</string>
   <string name="reviewappview_button_open">فتح</string>
   <string name="reviewappview_highlighted_reviews_explanation_1">هل ترغب في كتابة مراجعة مفصلة؟</string>
   <string name="reviewappview_highlighted_reviews_explanation_2">اكتب أكثر من 100 حرف</string>
@@ -191,15 +147,7 @@ or
   <string name="reviewappview_short_comments_by_language_current_language_first">اللغة الحالية أولًا</string>
   <string name="reviewappview_short_comments_by_language_english">الإنجليزية</string>
   <string name="appview_read_more">اقرأ المزيد</string>
-  <string name="dialog_install_warning_proceed_button">المتابعة</string>
-  <string name="dialog_install_warning_search_for_trusted_app_button">البحث عن</string>
-  <string name="dialog_install_warning_trusted_app_button">تطبيق موثوق به</string>
-  <string name="dialog_install_warning_careful_text">كن حذراً إذا اخترت تثبيت هذا التطبيق. من المحتمل أنه قد تم العبث به، أو يحتوي على فيروسات أو برامج ضارة.</string>
-  <string name="dialog_install_warning_trusted_version_button">الإصدار الموثوق به</string>
-  <string name="dialog_install_warning_get_trusted_version_button">احصل على</string>
   <string name="flag_results">ضع علامة على هذا التطبيق</string>
-  <string name="helpful">مفيد</string>
-  <string name="not_helpful">غير مفيد</string>
   <string name="description_not_available">لا يوجد وصف متاح لهذا التطبيق</string>
   <!--server translations hammered aka bundle names and tab names-->
   <string name="top_stores_fragment_title">المتاجر الافضل</string>
@@ -274,7 +222,6 @@ or
   <string name="libraries_demo">المكتبات والعروض التجريبية</string>
   <string name="shopping">التسوق</string>
   <string name="weather">الطقس</string>
-  <string name="other_category">أخرى</string>
   <string name="latest_applications">أحدث التطبيقات</string>
   <string name="top_apps_in_store">التطبيقات الافضل في هذا المتجر</string>
   <string name="apps_for_kids">تطبيقات للأطفال</string>
@@ -320,14 +267,11 @@ or
   <string name="create_store_displayable_explore_long_term_button">عرض المتجر</string>
   <!-- 02/2017 strings for login / sign up -->
   <string name="create_store_displayable_empty_description_message">يرجى إضافة وصف لمتجرك. كلما كان الوصف جميل ساعد ذلك بزيادة المتابعين والتفاعل في متجرك.</string>
-  <string name="join_company">انضم إلى %s</string>
-  <string name="onboarding_button_join_us">انضم إلينا</string>
   <string name="login">تسجيل الدخول</string>
   <string name="connect_with_facebook">الاتصال بالفيسبوك</string>
   <string name="connect_with_google">الاتصال بجوجل</string>
   <string name="accept_terms_signup">من خلال الانضمام إلى أبتويد فأنت توافق على الشروط والأحكام وسياسة المحتوى للمطورين في أبتويد.</string>
   <!--<string name="email">Email</string>-->
-  <string name="recover_password">استعادة كلمة السر الخاصة بك</string>
   <string name="password">كلمة المرور</string>
   <string name="store_suspended_message">تم تعليق المتجر</string>
   <string name="facebook_login_cancelled">الغاء تسجيل الدخول عبر الفيسبوك</string>
@@ -344,8 +288,6 @@ or
   <string name="comments_title_comments">التعليقات</string>
   <!-- Auto Update -->
   <string name="reviews">مراجعات</string>
-  <string name="update_self_title">تحديث متاح</string>
-  <string name="retrieving_update">يتم استرداد التحديث…</string>
   <string name="menu_search_item_go_to_store">الذهاب إلى المتجر</string>
   <!-- Badges -->
   <string name="srch_hint">البحث عن التطبيقات…</string>
@@ -355,10 +297,8 @@ or
   <!-- New Badges V7 -->
   <string name="critical">حرج</string>
   <string name="appviewbadge_message_signature_matches">لكل تطبيق توقيعٌ مميز ينشئه مطور التطبيق، وفي هذه الحالة، يثبت أن المُطور هو الشخص الصحيح.</string>
-  <string name="appviewbadge_message_signature_unknown">لكل تطبيق توقيعٌ مميز ينشئه مطور التطبيق، وفي هذه الحالة لم نتمكن من ربط هذا التوقيع بأي مطورٍ معروف.</string>
   <string name="appviewbadge_message_signature_different">لكل تطبيق توقيعٌ مميز ينشئه مطور التطبيق وفي هذه الحالة يبدو أن المؤلف ليس هو الشخص الرسمي.</string>
   <string name="appviewbadge_message_virus_no">جميع التطبيقات المتوفرة على منصتنا قد اجتازت فحص الفيروسات بواسطة عدة برامج مضادة للفيروسات ويبدو أن هذا التطبيق آمن تمامًا للاستخدام!</string>
-  <string name="appviewbadge_message_virus_yes">جميع التطبيقات المتوفرة على منصتنا قد اجتازت فحص الفيروسات بواسطة عدة برامج مضادة للفيروسات ويبدو أن هذا التطبيق مُصاب، لذلك لا تقم بتنزّيله أبدًا!</string>
   <!-- Comments -->
   <string name="appviewbadge_message_virus_in_analyses">جميع التطبيقات المتوفرة على منصتنا قد اجتازت فحص الفيروسات بواسطة عدة برامج مضادة للفيروسات لكن هذا التطبيق لم يُفحص بشكل كامل، لذلك ننصحك بانتظار نتائج الفحص قبل التنزيل.</string>
   <string name="dialog_title_comment">تعليق</string>
@@ -403,15 +343,9 @@ or
   <string name="store_username">اسم مستعار</string>
   <string name="share">مشاركة</string>
   <!-- Search Widget-->
-  <string name="share_store">مشاركة متجر</string>
-  <string name="no_search_results_message">لا توجد نتائج لبحثك. \nجرب استخدام كلمات أخرى أو تمكين خاصية محتوى البالغين.</string>
-  <string name="no_search_results_try_filters_message">لا توجد نتائج لهذا البحث. \nجرب استخدام كلمات أخرى أو غير خيارات التصفية!</string>
   <string name="no_search_results_enable_adult_content">إظهار محتوى البالغين</string>
   <!-- Search Fragment -->
-  <string name="no_search_results_other_filters">أو جرب تصفيات بحث أخرى</string>
-  <string name="all_stores">جميع المتاجر</string>
   <string name="followed_stores">متاجر تمت متابعتها</string>
-  <string name="search_minimum_chars">استعلام البحث يجب أن يكون مكون من حرفين على الأقل.</string>
   <!-- My account -->
   <string name="search_hint_title">ابحث في التطبيقات &amp; الألعاب</string>
   <string name="my_account_title_my_account">حسابي</string>
@@ -423,12 +357,9 @@ or
   <string name="generalscreen_short_root_install_success_install">تم تثبيت التطبيق بنجاح</string>
   <string name="notifications_empty_state_main_title">لا يوجد إشعارات!</string>
   <string name="notifications_empty_state_sub_title">تابع المزيد من ألاصدقاءً لتحصل على إشعارات حول افضل التطبيقات</string>
-  <string name="notifications_empty_state_button_follow_friends">ابحث عن أصدقاء</string>
   <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
   <string name="stores_message_private_user">حساب هذا المستخدم سري أو ليس لديه متجر.</string>
-  <string name="fragment_payment_login_description">لإتمام عملية الشراء يرجى تسجيل الدخول باستخدام</string>
   <!--store tab and home of store x: store widget and my store widget-->
-  <string name="fragment_payment_login_separator_description">أو استخدام بريدك الإلكتروني</string>
   <string name="storehometab_short_subscribers">متابِعون\n%s</string>
   <string name="storehometab_short_apps">تطبيقات\n%s</string>
   <string name="storehometab_short_following">متابَعون\n%s</string>
@@ -442,7 +373,6 @@ or
   <!--Strings for shortcuts-->
   <string name="iab_button_next">التالي</string>
   <string name="shortcut_button_search">البحث</string>
-  <string name="shortcut_button_timeline">التسلسل الزمني</string>
   <string name="shortcut_button_my_store">متجري</string>
   <string name="shortcut_button_pick_app">فاجئني</string>
   <string name="all_button_ok">موافق</string>
@@ -460,179 +390,71 @@ or
   <string name="appc_message_appview_appcoins_reward">قم بتجربة هذا التطبيق مدة دقيقتين واحصل على\n%s</string>
   <string name="appc_message_appview_appcoins_reward_with_value">قم بتجربة هذا التطبيق مدة دقيقتين واحصل على\n%1$s %2$s</string>
   <string name="appc_message_appview_appcoins_iab">المشتريات داخل التطبيق بواسطة الأبكوينز</string>
-  <string name="appc_short_get_appc">احصل على الأبكوينز</string>
-  <string name="appc_short_spend_appc">أنفق الأبكوينز</string>
   <string name="appc_card_short">أبكوينز</string>
   <string name="appc_title_homepage_card">يمكنك الحصول على أبكوينز الآن!</string>
   <string name="appc_message_homepage_card">العملة المشفرة للتعاملات الاقتصادية للتطبيق أصبحت هنا! احصل على أبكوينز مجانية باستخدام تطبيقاتك المفضلة.</string>
-  <string name="appc_title_appcoins_header_1">كل ما تود معرفته عن الأبكوينز</string>
-  <!-- Check this code: for the strings with comments: https://gist.github.com/analaragomes/f82de0d3bc26ff15f3a196ce2e20ff1b -->
-  <!--This variable is a link to AppCoins wallet app view. The text is AppCoins Wallet. This is done using html-->
-  <string name="appc_message_appcoins_header_2">الأشياء الأهم أولًا</string>
-  <string name="appc_message_appcoins_section_2a">أنت بحاجة إلى تثبيت محفظة AppCoins للحصول على المكافآت وإتمام كل عمليات الدفع. حالما تثبتها، ستؤدي كل ما عليها من أجلك!</string>
-  <string name="appc_message_appcoins_section_2b">قم بفتحها ليتم تعريفها تلقائيًّا. ستتلقى جائزتك هنا وستُعالِج كل تحويلاتك!</string>
-  <!--This variable is an image with APPC icon followed by id.string=appc_short_get_appc. This is done using html -->
-  <string name="appc_message_appcoins_header_3">احصل على المكافآت مقابل تثبيت التطبيقات!</string>
-  <string name="appc_message_appcoins_section_3">ستحصل على مكافأة مقابل تثبيت التطبيقات التي تحمل الرمز %s وقضاء دقيقتين فيها. يمكنك أن تجدها كلها في الحزمة \"اكسب رصيد AppCoins\" على صفحة Aptoide الرئيسية!</string>
-  <string name="appc_message_appcoins_header_4">مكافأة على كل عملية شراء!</string>
-  <!--This variable is an image with APPC icon followed by id.string=appc_short_spend_appc. This is done using html -->
-  <string name="appc_message_appcoins_header_5">المزايا</string>
-  <string name="appc_message_appcoins_benefit_1">خصومات كبرى</string>
-  <string name="appc_message_appcoins_benefit_2">احصل على رصيد أبكوينز مجاني</string>
-  <string name="appc_message_appcoins_benefit_3">آمن 100%</string>
-  <string name="appc_message_appcoins_benefit_4">لا حاجة إلى بطاقة ائتمانية</string>
   <string name="appc_title_settings_appcoins_wallet">محفظة الأبكوينز</string>
   <string name="appc_title_bundle">تطبيقات الأبكوينز</string>
   <!--Editorial Content-->
   <string name="appc_verification_cancelled_by_user_message">أنت بحاجة لتوثيق محفظتك لتلقي المكافآت. سيستغرق هذا بضع ثوانٍ فقط!</string>
-  <string name="editorial_card_views_short">مشاهدة %s </string>
   <string name="editorial_reactions_login_short">يرجى تسجيل الدخول للاستمرار!</string>
-  <string name="editorial_topsoftops_appcoins_body">مع مكافآت في كل المشتريات!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">تابعنا</string>
+  <string comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)" name="editorial_bottom_follow_us">تابعنا</string>
   <string name="holidayspromotion_message_1">ثبت التطبيقات التالية واحص على ما يصل إلى %s من رصيد AppCoins لتنفقها في ألعابك المفضلة!</string>
   <string name="holidayspromotion_message_2">أولا، أنشئ محفظة AppCoins Wallet لاستقبال أرصدة AppCoins.</string>
   <string name="holidayspromotion_message_3">بعدها ثبت أيًّا من هذه الألعاب لتحصل على مكافآتك!</string>
-  <string name="holidayspromotion_button_install">ثبت لتحصل على %s رصيد APPC</string>
-  <string name="holidayspromotion_button_update">حدِّث لتحصل على %s رصيد APPC</string>
-  <string name="holidayspromotion_button_claim">طالب برصيدك من %s APPC</string>
   <string name="holidayspromotion_button_claimed">تم الطلب</string>
   <string name="holidayspromotion_message_popup">احصل على %s رصيد AppCoins بتثبيت التطبيقات وأنفقها في ألعابك المفضلة!</string>
   <string name="holidayspromotion_button_popup">تحقق من ذلك!</string>
-  <string name="promotion_notification_title">احصل على %s رصيد APPC الآن!</string>
-  <string name="promotion_notification_body">لا تنسَ المطالبة برصيدك من %s AppCoins.</string>
-  <string name="promotion_update_popup_title">تحديث أبتويد</string>
-  <string name="promotion_update_popup_message">أنت بحاجة لتحديث أبتويد لمشاهدة هذا الإعلان.</string>
-  <string name="promotion_update_popup_update_button">تحديث الآن</string>
   <string name="promotion_over_title">لقد فاتتك الفرصة!</string>
   <string name="promotion_over_message">لقد انتهى هذا الإعلان للتو، لكن لا يزال هناك إعلان آخر قريبًا!</string>
-  <string name="FIATpromotion_over_title_2">اكسب رصيد AppCoins</string>
   <!--Promotion with FIAT-->
-  <string name="FIATpromotion_over_body_2">في هذه الأثناء، يمكنك أن تكسب رصيد AppCoins بتثبيت وقضاء دقيقتين في أي من هذه التطبيقات.</string>
-  <string name="FIATpromotion_message_1">ثبّت التطبيقات التالية واحصل على ما يصل إلى %s من رصيد AppCoins لتنفقها في ألعابك المفضلة!</string>
-  <string name="FIATpromotion_message_2">أولًا، عليك الحصول على محفظة AppCoins Wallet لاستقبال مكافآتك.</string>
-  <string name="FIATpromotion_message_3">بعدها ثبّت اأيًّا من هذه الألعاب لتحصل على مكافآتك!</string>
   <string name="FIATpromotion_install_to_get_short">ثبّت لتحصل على %1$s رصيد AppCoins (%2$s)</string>
   <string name="FIATpromotion_update_to_get_short">حّث لتحصل على %1$s رصيد AppCoins (%2$s)</string>
-  <string name="FIATpromotion_button_claimed">تمت المطالبة</string>
-  <string name="FIATpromotion_title_error_claimed">يا إلهي…</string>
-  <string name="FIATpromotion_short_error_claimed">لقد سبق أن طالبت بهذه المكافأة!</string>
-  <string name="FIATpromotion_message_popup">اكسب %s في رصيد AppCoins بتثبيت التطبيقات وأنفقها في ألعابك المفضلة!</string>
-  <string name="FIATpromotion_notification_title">احصل على %s من رصيد AppCoins الآن!</string>
-  <string name="FIATpromotion_notification_body">لا تنسَ المطالبة بـ %s.</string>
-  <string name="video_reward_title">مكافأة الفيديو</string>
-  <string name="video_reward_body">شغل الفيديو واحصل على رصيد AppCoins مجانًا لتنفقها في ألعابك المفضلة.</string>
-  <string name="video_reward_play_to_get_body">شغّل لتحصل على %1$s رصيد AppCoins (%2$s)</string>
-  <string name="video_reward_play_button">تشغيل</string>
   <!--Get Wallet Address-->
   <string name="promotion_claim_button">مطالبة</string>
   <string name="holidayspromotion_title_wallet">عنوان محفظة أبكوينز</string>
   <string name="holidayspromotion_message_wallet">أخبرنا بعنوان محفظتك! اكتب في الأسفل وستتكفل محفظة AppCoins بالباقي.</string>
   <string name="holidayspromotion_short_wallet_field">عنوان المحفظة</string>
   <string name="holidayspromotion_button_wallet_get">حقق ذلك</string>
-  <string name="holidayspromotion_short_wallet_valid">عنوان محفظة صالح</string>
   <string name="holidayspromotion_short_wallet_invalid">عنوان محفظة غير صالح</string>
   <string name="holidayspromotion_title_completed">تمّ!</string>
   <string name="holidayspromotion_message_completed">سيكون رصيد الأبكوينز الخاص بك متوفرًا في محفظتك قريبًا! استمتع باللعب!</string>
   <string name="holidayspromotion_button_completed">تمّ</string>
   <string name="holidayspromotion_title_error_claimed">عذرًا…</string>
   <string name="holidayspromotion_short_error_claimed">لقد قمت سابقًا بطلب هذه الجائزة!</string>
-  <!--Apps Short Description for promotions-->
-  <string name="holidayspromotion_short_error_wallet_address">عنوان غير صالح. حاول مرة اخرى!</string>
-  <string name="holidayspromotion_message_wallet_description">إن محفظة الأبكوينز هي وسيلتك لاستقبال APPC الخاصة بك وكذلك لإتمام عملية الدفع.</string>
-  <string name="holidayspromotion_message_legacy_description">القتال بالوقت الحقيقي في عالم خيالي ضخم! انضم الان إلى أصدقائك لقتال المنافسين في ساحة المعركة.</string>
-  <string name="holidayspromotion_message_era_description">قاتل من أجل تألقك في عالم الإليسيانس! نمنحك قتال متعدد اللاعبين ومعارك 1v1 (لاعب مقابل لاعب) بجودة عالية.</string>
-  <string name="holidayspromotion_message_shark_description">قم بالتحكم بسمك القرش الجائع وقم باجتياز البحر الهائج لتصارع للبقاء على قيد الحياة أطول فترة ممكنة.</string>
-  <string name="holidayspromotion_message_creative_description">لعبة الموبايل Sandbox Survival الجديدة التي تتميز بأمتع أعمال البناء ومعارك إطلاق النار.</string>
-  <string name="holidayspromotion_message_lords_description">الأسياد الذين يقودهم الطموح والجشع، يسعون خلف السلطة وإنهاء السلام الذي كان سائدًا فيما مضى.</string>
-  <string name="holidayspromotion_message_metal_description">مطلق نار ثنائي الأبعاد 2D متمركز حول جيش من المرتزقة يحاول إنقاذ العالم.</string>
-  <string name="holidayspromotion_message_maximum_description">لعبة سباق المسارات المحملة بالمتفجرات، ستجعلك تشعبر بأنك رهيب خلال ثوانٍ.</string>
-  <string name="holidayspromotion_message_word_jungle">ألعاب الكلمات الممتعة متوفرة بدون اتصال إنترنت. حاول أن تحزر كل الكلمات لكل مستوى!</string>
-  <string name="holidayspromotion_message_big_sweet_bomb">ابدأ رحلتك الممتعة والغامضة مع العديد من الحلوى والأطايب من أرض العجائب!</string>
-  <string name="holidayspromotion_message_word_mine">اكشف عن الإجابة المخفية بتدمير رُقع الأحرف. تحدّيات عقلية رائعة!</string>
-  <string name="holidayspromotion_message_brawling_animals">أهلا بك في الأدغال! أطلق وحشك وانطلق للقتال الملكي في معارك متعددة اللاعبين!</string>
-  <string name="holidayspromotion_message_tiny_gladiators">واجه الأعداء الأقوياء واكتشف عوالمَ افتراضية جديدة في لعبة آر بي جي المميزة هذه.</string>
-  <string name="holidayspromotion_message_skychamp_description">أحد أفضل مجاميع ألعاب أركيد إطلاق النار وجمع الوحوش.</string>
-  <string name="holidayspromotion_message_ropescape_description">تخطّى كل العقبات في الأدغال، في هذه اللعبة الممتعة للغاية.</string>
-  <string name="holidayspromotion_message_camera360_description">كاميرا مجانية لفلاتر التجميل ومجتمع عالمي من الصور مع أكثر من 800 مليون مستخدم.</string>
-  <string name="holidayspromotion_message_roadsofrome2_description">لعبة تسبب الإدمان تجمع بين خاصية الاستراتيجيات وإدارة الوقت!</string>
-  <string name="holidayspromotion_message_dealformillions_description">تغلب على المصرف بإبرام صفقات أو بعدم إبرامها والاحتفاظ بها للكشف عن حقيبتك.</string>
-  <string name="holidayspromotion_message_daysofempire_description">أنشئ جيشك، ابنِ مدينة ودمّر أعداءك في ساحات المعركة.</string>
-  <string name="holidayspromotion_message_hercules_description">ساعد هرقل وميجارا لعكس عملية الدمار التي قامت بها الآله المنتقمة في هذه المغامرة الإغريقية.</string>
-  <string name="holidayspromotion_message_space_shooter_description">إذا كنت من عشاق لعبة المعارك في السماء، Space Shooter: فلعبة جلاكسي أتّاك هي اللعبة المناسبة لك.</string>
-  <string name="holidayspromotion_message_mini_world_description">لعبة ساندبوكس ثلاثية الأبعاد المجانية عن المغامرة والاستكشاف وخلق عوالم أحلامك.</string>
-  <string name="holidayspromotion_message_tag_ryan_description">لعبة الجري اللانهائي الأمتع على الإطلاق! Outrun Combo Panda والسعي لربح أزياء رايان.</string>
-  <string name="holidayspromotion_message_rento_description">بِع واشترِ الأراضي، ابنِ المنازل، اربح المزادات، أدر عجلة الحظ، واستمتع بوقتك!</string>
-  <string name="promotion_message_wrestling_pro_description">مهنة المصارعة التي تتحداك داخل الحلبة وخلف الكواليس.</string>
-  <string name="promotion_message_zipline_description">لعبة أحجية لرسم مسارٍ آمن للإنزال وتجنب المخاطر!</string>
-  <string name="promotion_message_high_school_driver_description">بدأ التوتر، لذا عليك أن تقل بعض الطلاب وتنزلهم في المدرسة وتتولى أمر المرور.</string>
   <!--APPC install Promotion-->
-  <string name="blackfriday_promo_title">يوم الجمعة يعني عناصر اللعب!</string>
   <string name="wallet_promotion_title">احصل على رصيد %s APPC الآن!</string>
   <string name="wallet_promotion_wallet_installed_message">ثبت هذا التطبيق واحصل على رصيد %s APPC لإنفاقها في ألعابك المفضلة.</string>
   <string name="wallet_promotion_wallet_notinstalled_message">ثبت هذا التطبيق واحصل على رصيد %s APPC. أنت بحاجة إلى محفظة أبكوينز لتستقبل الرصيد.</string>
   <string name="wallet_promotion_wallet_installed_update_message">حدّث هذا التطبيق واحصل على رصيد %sAPPC لتنفقها في ألعابك المفضلة.</string>
-  <string name="wallet_promotion_wallet_notinstalled_update_message">حدّث هذا التطبيق واحصل على رصيد %s APPC. أنت بحاجة إلى محفظة أبكوينز لتستقبل الرصيد.</string>
   <string name="wallet_promotion_wallet_claim_message">لقد حصلت على رصيد %s APPC للمطالبة. استخدمها في شراء العناصر في تطبيقاتك المفضلة.</string>
-  <string name="wallet_promotion_message">ثبت محفظة أبكوينز واحصل على رصيد %s APPC لإنفاقها في ألعابك المفضلة.</string>
-  <string name="wallet_promotion_claim_message">لقد حصلت على رصيد %s APPC للمطالبة. استخدمها في شراء العناصر في تطبيقاتك المفضلة.</string>
   <string name="wallet_promotion_install_button">تثبيت المحفظة</string>
   <string name="wallet_promotion_no_button">لا، شكرًا</string>
   <string name="wallet_promotion_button_install_disabled">قم بالتثبيت للحصول على رصيد %s APPC</string>
   <!--AppCoins Remove Ads Wallet Promotion -->
   <string name="wallet_promotion_button_claim">اطلب رصيدك من %s APPC</string>
-  <string name="wallet_promotion_card_title">إزالة الإعلانات الآن!</string>
   <!--Play to APPC - Migrator - Promotion-->
-  <string name="wallet_promotion_card_body">ثبت محفظة أبكوينز الآن لإزالة الإعلانات!</string>
   <string name="promo_update2appc_data_disclaimer">قم بالتحقق من إعدادات اللعبة، إذا كان بإمكانك حفظ تقدمك باللعبة.</string>
-  <string name="promo_update2appc_appview_title">احصل على رصيد %s APPC الآن!</string>
-  <string name="promo_update2appc_appview_wallet_installed_message">حدّث هذا التطبيق واحصل على رصيد <b>%s APPC</b> لانفاقها في ألعابك المفضلة.</string>
-  <string name="promo_update2appc_appview_wallet_notinstalled_message">حدّث هذا التطبيق واحصل على رصيد <b>%s APPC </b>. أنت بحاجة إلى محفظة أبكوينز لاستقبال الرصيد.</string>
   <string name="promo_update2appc_appview_update_button">حدّث إلى نسخة أبكوينز</string>
-  <string name="promo_update2appc_appview_notupdated_button">حدّث للحصول على رصيد %s APPC</string>
-  <string name="promo_update2appc_notification_body">حدّث واحصل على مكافآت مع كل عملية شراء في أبكوينز!</string>
   <string name="promo_update2appc_notification_dismiss_button">تجاهل</string>
   <string name="promo_update2appc_notification_claim_button">مطالبة</string>
-  <string name="promo_update2appc_notification_update_button">حدّث إلى نسخة أبكوينز</string>
   <string name="promo_update2appc_claim_notification_title">احصل على رصيد %s APPC الآن!</string>
   <!--Promo Center-->
   <string name="promo_update2appc_claim_notification_body">لا تنسى المطالبة بجائزتك!</string>
-  <string name="promo_center_title">العروض</string>
-  <string name="promo_center_wizard_1_title">احصل على %s رصيد أبكوينز</string>
-  <string name="promo_center_wizard_1_body">أنت بحاجة إلى محفظة أبكوينز للحصول على جائزتك. ثبتها الآن!</string>
-  <string name="promo_center_wizard_2_body">استخدم رصيد الأبكوينز لشراء العناصر في ألعابك&#8230; المفضلة واحصل على المكافآت كل مرة!</string>
-  <string name="promo_center_wizard_3_body">حالما تقوم بتثبيت محفظة الأبكوينز لن ترى أي إعلانات على أبتويد مرة اخرى!</string>
-  <string name="promo_center_offerwall_tab_title">العروض</string>
-  <string name="promo_center_offerwall_card_title">احصل على رصيد %s APPC الآن!</string>
-  <string name="promo_center_offerwall_card_update_body">تحديث %s إلى الأبكوينز</string>
-  <string name="promo_center_offerwall_card_install_body">ثبّت أحد هذه التطبيقات مع الأبكوينز</string>
-  <string name="promo_center_offerwall_empty_body">لا تتوفر عروض حتى هذه اللحظة. عد إلينا في وقت اخر!</string>
-  <string name="promo_center_offerwall_empty_card_body">ثبت هذه التطبيقات واقضِ دقيقتين فيها للحصول على رصيد الأبكوينز.</string>
-  <string name="promo_center_pending_tab_title">قيد الانتظار</string>
-  <string name="promo_center_pending_title">لديك رصيد %s APPC لتطلبه!</string>
-  <string name="promo_center_pending_card_title">اطلب رصيد %s APPC الآن!</string>
-  <string name="promo_center_pending_card_install_body">لتنزيل %s</string>
   <string name="promo_center_pending_card_update_body">لتحديث %s</string>
-  <string name="promo_center_pending_card_seasonal_promo_body">للترقية %s</string>
-  <string name="promo_center_pending_claim_button">اطلب</string>
   <!--Purchase Flow - Wallet Installation-->
-  <string name="promo_center_pending_empty_body">لا يتوفر رصيد أبكوينز لتطلبه بعد! تفقّد قائمة العروض لمشاهدة العروض المتوفرة.</string>
   <string name="wallet_install_request_message_body">لشراء هذا العنصر أنت بحاجة للحصول على %s.</string>
   <string name="wallet_install_appcoins_wallet">محفظة أبكوينز</string>
-  <string name="wallet_install_request_close_button">إغلاق</string>
-  <string name="wallet_install_request_install_button">تثبيت المحفظة</string>
   <string name="wallet_install_complete_title">تمت عملية التثبيت بنجاح</string>
   <string name="appc_not_supported_body">يبدو أن هذا الجهاز لا يدعم عملة ألابكوينز. حاول استخدام جهاز آخر!</string>
   <string name="wallet_install_request_already_installed_title">تثبيت محفظة أبكوينز</string>
   <string name="wallet_install_request_already_installed_body">تمتع بمكافأة على كل عملية شراء داخل التطبيق!</string>
   <string name="wallet_verification_message_update_wallet_to_claim">حَدّث محفظة AppCoins لاستقبال المكافآت!</string>
-  <string name="wallet_verification_title_update_wallet">حدّث المحفظة</string>
-  <string name="wallet_verification_button_cancel_update">لا، شكرًا</string>
   <string name="wallet_verification_button_update">حدّث الآن</string>
   <!--POA exposure-->
   <string name="wallet_verification_button_update_wallet">حدّث المحفظة</string>
   <string name="poa_app_card_short">اكسب %s</string>
-  <string name="poa_home_card_title">احصل على رصيد AppCoins</string>
   <string name="poa_home_card_body">ثبّت هذه التطبيقات واقضِ دقيقتين فيها لتحصل على رصيد AppCoins.</string>
   <string name="poa_app_view_card_body_1">جرّب هذا التطبيق لدقيقتين واحصل على</string>
   <string name="poa_app_view_card_body_2">%1$s رصيد AppCoins (%2$s)</string>
@@ -641,40 +463,23 @@ or
   <string name="poa_time_left_hours">الساعات</string>
   <string name="poa_time_left_minutes">الدقائق</string>
   <string name="poa_time_left_seconds">ثواني</string>
-  <string name="poa_earn_view_title">احصل على رصيد AppCoins</string>
-  <string name="poa_earn_view_wallet_message">ثبّت محفظة AppCoins لتتلقى مكافآتك.</string>
   <!--APPC Info View-->
-  <string name="poa_bundle_title">اربح رصيد AppCoins</string>
-  <string name="appc_info_card_title">نقدم لكم AppCoins Universe!</string>
-  <string name="appc_info_card_body">اكسب رصيد AppCoins مجاني لتشتري العناصر في تطبيقاتك المفضلة.</string>
   <string name="appc_info_view_title_1">كل ما تحتاج معرفته حول AppCoins</string>
   <string name="appc_info_view_body_1_variable">AppCoins  وأرصدة AppCoins  هي عملات التبادلات المالية داخل التطبيقات. أفضل ما في الأمر؟ ستكسب حتى <b>%s%% مكافأة في كل عمليات الشراء!</b></string>
   <string name="appc_info_view_body_1_variable_no_data">AppCoins و AppCoins Credits هم العملتان المستخدمتان للتبادلات المالية داخل التطبيقات. أفضل ما في الأمر، أنك ستكسب <b>مكافأة على كل المشتريات!</b></string>
   <string name="appc_info_view_title_2">الأولوية للأهم</string>
   <string name="appc_info_view_body_2">أنت بحاجة إلى تثبيت محفظة AppCoins للحصول على المكافآت وإتمام كل عمليات الدفع. حالما تثبتها، ستؤدي كل ما عليها من أجلك!</string>
   <!-- The ones about PoA are not to be used -->
-  <string name="appc_info_view_title_3">احصل على المكافآت مقابل تثبيت التطبيقات!</string>
-  <string name="appc_info_view_body_3">ستحصل على مكافأة مقابل تثبيت التطبيقات التي تحمل الرمز %s وقضاء دقيقتين فيها. يمكنك أن تجدها كلها في الحزمة \"اكسب رصيد AppCoins\" على صفحة Aptoide الرئيسية!</string>
   <string name="appc_info_view_title_4">مكافأة على كل عملية شراء!</string>
   <string name="appc_info_view_title_5_variable">ستحصل على مكافأة قد تصل إلى %s%% لكل عملية شراء تجريها داخل التطبيقات التي تحمل الرمز %s. استغل الفرصة وكُن اللاعب المتميز!</string>
   <string name="appc_info_view_title_5_variable_no_data">ستحصل على مكافأة في كل عملية شراء تجريها داخل تطبيق يحمل رمز %s. استغل الفرصة واسعَ لتكون اللاعب الأفضل!</string>
-  <string name="appc_info_view_eskills_title">اربح المال مع e-Skills!</string>
-  <string name="appc_info_view_eskills_without_withdrawal_title">احصل على الجوائز مع e-Skills!</string>
-  <string name="appc_info_view_eskills_body">مع ألعاب e-Skills، ستحصل على جائزة عندما تهزم اللاعبين الآخرين. فقط نزّل اللعبة التي تعتقد أنك أفضل من يلعبها، بادر في بدء المعركة وأظهر مهاراتك لتبرهن أنك تستحق الجائزة بمال حقيقي. هل أنت جاهز للتحدي؟ ابحث عن كل الألعاب المتوفرة %s.</string>
-  <string name="appc_info_view_eskills_without_withdrawal_body">مع ألعاب e-Skills، ستفوز بالجوائز عندما تهزم اللاعبين. ما عليك سوى تنزيل اللعبة التي تعتقد أنك بارع فيها، قدم مساهماتك لتبدأ المعركة واستعرض مهاراتك لتثبت أنك تستحق الجائزة بعملة AppCoins Credits. مستعدّ للتحدي؟ ابحث عن كل الألعاب المتاحة %s.</string>
-  <string name="appc_info_view_eskills_body_button">هنا</string>
   <string name="appc_info_view_devs_title">هل أنت مطوِّر؟</string>
   <string name="appc_info_view_devs_body">اكتشف أحدث الطرق لتوزيع التطبيقات.</string>
   <!--Updates Notification-->
   <string name="appc_info_view_devs_button">اعرف المزيد</string>
-  <string name="updates_notification_title">لا تكن متخاذلًا!</string>
   <string name="updates_notification_dismiss_button">تجاهل</string>
-  <string name="updates_notification_update_button">تحديث</string>
   <string name="auto_update_popup_title">التحديث جاهز للتثبيت!</string>
   <string name="auto_update_popup_body">يتوفر إصدار جديد من Aptoide بمزايا جديدة وتصفح أسرع. سيأخذ هذا منك أقل من دقيقة واحدة!</string>
-  <!--Google Play Services-->
-  <string name="google_play_services_installation_message">يتطلب هذا التطبيق خدمات متجر تطبيقات جوجل. هل تريد تثبيته من مصدر موثوق (Open GApps) متوفر من خلال مجتمع المطوّرين؟</string>
-  <string name="google_play_services_dismiss_message">فشل التثبيت. الرجاء المحاولة لاحقًا.</string>
   <!--Dark Theme-->
   <string name="settings_dark_theme_title">النمط</string>
   <string name="settings_dark_theme_dialog_title">اختيار النمط</string>
@@ -684,7 +489,6 @@ or
   <string name="dark_theme_notification_title">لقد وصل النمط المعتم!</string>
   <string name="dark_theme_notification_body">احتفظ بشحن البطارية واحمِ عينيك في أوقات الإضاءة الخافتة.</string>
   <string name="dark_theme_notification_button">تشغيل</string>
-  <string name="dark_theme_notification_body_update">هل تود استخدام Aptoide بالنمط المعتم؟ احصل على النسخة الأحدث!</string>
   <string name="dark_theme_notification_disclaimer">يمكنك تغيير النمط متى شئت من خلال الإعدادات.</string>
   <!--New Login-->
   <string name="login_connect_with_email_button">الربط من خلال البريد الإلكتروني</string>
@@ -696,40 +500,22 @@ or
   <string name="login_check_email_title">تفقّد بريدك الإلكتروني!</string>
   <string name="login_check_email_body">أرسلنا رابطًا سحريًا إلى %s لتسجيل الدخول.</string>
   <string name="login_check_email_button">افتح تطبيق البريد الإلكتروني</string>
-  <string name="login_email_subject_line">سجل الدخول في Aptoide!</string>
-  <string name="login_email_header">كدنا ننتهي!</string>
-  <string name="login_email_body_1">يرجى ضغط هذا الزر لتسجيل الدخول إلى Aptoide:</string>
-  <string name="login_email_magic_link_button">سجل دخولك إلى Aptoide</string>
-  <string name="login_email_alternative_link">أو انسخ وألصق هذا الرابط في متصفحك:</string>
-  <string name="login_email_under_magic_link_expiry_body">هذا الرابط السحري سوف <b>تنتهي صلاحيته في 90 دقيقة</b> ولا يستخدم إلا مرة واحدة.</string>
-  <string name="login_email_body_2">إذا لم تكن قد بدأْتَ عملية تسجيل الدخول، يمكنك ببساطة تجاهل هذا الرسالة.</string>
-  <string name="login_email_rights_reserved">كل الحقوق محفوظة © 2020 aptoide.com</string>
   <string name="login_error_magic_link_expired">انتهت صلاحية رابطك السحري! أرسل غيره إلى بريدك الإلكتروني.</string>
   <string name="login_error_invalid_email">البريد الإلكتروني هذا غير صالح!</string>
-  <string name="login_completed_title">تم!</string>
-  <string name="login_completed_body">جاهز لأفضل التطبيقات؟</string>
   <!--Notification-->
-  <string name="notification_updates_available">بعض التطبيقات جاهزة للتحديث!</string>
   <string name="notification_install_ready_plural_title">بعض التطبيقات جاهزة للتثبيت!</string>
   <string name="notification_install_ready_plural_body">اضغط هنا لتثبيتها.</string>
   <string name="notification_install_ready_singular_title">هناك تطبيق جاهز للتثبيت!</string>
   <string name="notification_install_ready_singular_body">اضغط هنا للتثبيت %s.</string>
   <!--Empty States-->
   <string name="search_no_results_title">لا توجد نتائج لهذا البحث.</string>
-  <string name="search_no_results_body">جرب استخدام كلمات أخرى أو غير خيارات التصفية!</string>
   <string name="search_no_results_adult_body">غير خيارات التصفية أو فعّل خاصية محتوى البالغين.</string>
   <!--Search Filters-->
   <string name="search_filters_trusted">موثوق</string>
   <string name="search_filters_beta">إصدارات بيتا</string>
   <string name="search_filters_appcoins">AppCoins</string>
-  <string name="search_filters_all_stores">كل المتاجر</string>
   <string name="search_filters_followed_stores">المتاجر التي تتابعها</string>
-  <string name="search_filters_clear">مسح</string>
-  <!-- App bundles/MIUI -->
-  <string name="settings_force_native_installer_title">استخدم أداة التثبيت الأصلية</string>
-  <string name="settings_force_native_installer_summary">فقط إن كنت تستخدم MIUI (من Xiaomi) وتواجه مشكلة في تثبيت التطبيقات. يمكن أن لا ترى بعض إصدارات التطبيقات بعد الآن.</string>
   <!-- Out of space -->
-  <string name="out_space_title">لا توجد لديك مساحة كافية!</string>
   <string name="out_of_space_body">أنت بحاجة إلى %s لمتابعة التثبيت.</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">الآن مع AppCoins Payment System</string>
@@ -742,74 +528,8 @@ or
   <string name="promotional_new_notification_body">%s متوفرة الآن للأندرويد.</string>
   <string name="promotional_new_active">سنخبرك عندما تكون متوفرة.</string>
   <!--e-Skills-->
-  <string name="eskills_onboarding_title">تعرّف المهارات الإلكترونية</string>
-  <string name="eskills_onboarding_body">تحدى اللاعبين الآخرين، اهزمهم واكسب المال!</string>
-  <string name="eskills_home_title">اكسب المال</string>
-  <string name="eskills_home_subtitle">اهزم بقية اللاعبين بمهارات إلكترونية</string>
-  <string name="eskills_header">مهارات إلكترونية</string>
   <string name="eskills_title">أثبت مهاراتك و</string>
   <string name="eskills_title_2">اربح جائزة!</string>
   <string name="eskills_body">مع ألعاب المهارات الإلكترونية ستكسب جائزة كلما هزمت اللاعبين. هل أنت جاهز لتثبت للجميع من هو الأفضل؟</string>
   <string name="eskills_games_title">ألعاب المهارات الإلكترونية</string>
-  <!--e-Vouchers-->
-  <string name="voucher_home_title">بطاقة هدية إلكترونية</string>
-  <string name="voucher_home_subtitle">ابحث عن أفضل العروض للتطبيقات والألعاب!</string>
-  <string name="voucher_title">أفضل العروض للتطبيقات والألعاب!</string>
-  <string name="voucher_body">مع بطاقة الهدية الإلكترونية يمكنك الحصول على أفضل العروض عند الشراء داخل ألعابك المفضلة. الماس، أسلحة&#8230; لا يهم، كل المشتريات عليها مكافآت!</string>
-  <string name="voucher_games_title">بطاقات الهدايا المتوفرة</string>
-  <string name="voucher_wallet_needed_body">أنت بحاجة إلى AppCoins Wallet لتتم عملية الشراء.</string>
-  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">توكنز غير قابلة للاستبدال</string>
-  <!--FAQs-->
-  <string name="faq_settings_title">الأسئلة الشائعة</string>
-  <string name="faq_settings_body">ستجد كل الإجابات التي تحتاجها!</string>
-  <!--New e-Skills-->
-  <string name="eskills_v2_home_card_title">جوائز بمال حقيقي!</string>
-  <string name="eskills_v2_home_card_without_withdrawal_title">اربح الجائزة!</string>
-  <string name="eskills_v2_home_card_body">في ألعاب e-Skills ستحصل على الجوائز عندما تهزم اللاعبين الآخرين. استعرض مهاراتك الآن!</string>
-  <string name="eskills_v2_earnmore_header">اكسب المزيد</string>
-  <string name="eskills_v2_page_header">ألعاب e-Skills</string>
-  <string name="eskills_v2_page_body_">هل تستحق مهاراتك في اللعب جائزة بمال حقيقي؟</string>
-  <string name="eskills_v2_page_without_withdrawal_body_">هل مهاراتك في اللعب تستحق جائزة؟</string>
-  <string name="eskills_v2_card_1_title">%1$s%2$s</string>
-  <string name="eskills_v2_card_1_body">معدل مرات الفوز اليومية للمستخدم.</string>
-  <string name="eskills_v2_card_2_title">%1$s%2$s</string>
-  <string name="eskills_v2_card_2_body">مرات الفوز للمباراة</string>
-  <string name="eskills_v2_card_3_title">%1$s%2$s</string>
-  <string name="eskills_v2_card_3_body">جائزة الفائز الأول على قائمة المتصدرين الأسبوعية</string>
-  <string name="eskills_v2_card_4_title">24س</string>
-  <string name="eskills_v2_card_4_body">نوفّر الدعم على مدار 24/7.</string>
-  <string name="eskills_v2_card_5_title">جوائز بمال حقيقي</string>
-  <string name="eskills_v2_card_5_without_withdrawal_title">اربح الجائزة!</string>
-  <string name="eskills_v2_card_5_body">العب ألعابك المفضلة وابدأ بكسب المال الحقيقي الآن!</string>
-  <string name="eskills_v2_card_5_without_withdrawal_body">العب ألعابك المفضلة واربح الجوائز في الحال!</string>
-  <string name="eskills_v2_card_6_title">منافسة شريفة</string>
-  <string name="eskills_v2_card_6_body">ستبارز لاعبين من نفس مستوى مهارتك لتكون البطولات عادلة</string>
-  <string name="eskills_v2_card_7_title">كُن الأول على مستوى العالم</string>
-  <string name="eskills_v2_card_7_body">احصل على جوائز إضافية لتكون في قمة قائمة المتصدرين اليومية والأسبوعية.</string>
-  <string name="eskills_v2_card_8_title">اسحب بكبسة زر واحدة</string>
-  <string name="eskills_v2_card_8_without_withdrawal_title">استخدم جائزتك</string>
-  <string name="eskills_v2_card_8_body">يمكنك سحب المال الحقيقي الذي ربحته بسهولة مع محفظة AppCoins Wallet.</string>
-  <string name="eskills_v2_card_8_without_withdrawal_body">يمكنك استخدام جائزتك لتشتري العناصر في ألعابك المفضلة.</string>
-  <string name="eskills_v2_card_9_title">ابدأ الآن</string>
-  <string name="eskills_v2_card_9_body">اختبر مهاراتك وكن البطل لتفوز بالجوائز!</string>
-  <string name="eskills_v2_how_it_works_title">كيف يعمل؟</string>
-  <string name="eskills_v2_how_1">ثبّت لعبة e-Skills</string>
-  <string name="eskills_v2_wallet_disclaimer">اللعبة تأتي مدمجة مع محفظة AppCoins Wallet</string>
-  <string name="eskills_v2_how_2">تمرّن أو احصل على تذكرة لتشترك بالمباريات</string>
-  <string name="eskills_v2_how_3">اهزم اللاعبين الآخرين</string>
-  <string name="eskills_v2_how_4">اسحب مكتسباتك!</string>
-  <string name="eskills_v2_how_without_withdrawal_4">استخدم جائزتك لتشتري ما تريد!</string>
-  <string name="eskills_v2_faqs_title">الأسئلة الشائعة</string>
-  <string name="eskills_v2_faqs_1_title">ما هي ألعاب e-Skills؟</string>
-  <string name="eskills_v2_faqs_1_body_1">في ألعاب e-Skills، ستتحدى اللاعبين الآخرين وتلعبون ضد بعضكم وسيحصل الفائز على جائزة! ستصل الجائزة في صورة رصيد AppCoins Credits ويمكن سحبها إلى حسابك على PayPal بالذهاب إلى الإعدادات والضغط على مسحوبات e-Skills، أو e-Skills Withdrawals.</string>
-  <string name="eskills_v2_faqs_1_body_without_withdrawal_1">في ألعاب e-Skills، سوف تتحدى اللعبين الآخرين لتلعبوا ضد بعضكم البعض والفائز سيحصل على جائزة! هذه الجائزة تكون بعملة AppCoins Credits ويمكنك استخدامها في عمليات الشراء داخل ألعابك المفضلة.</string>
-  <string name="eskills_v2_faqs_2_title">ما هي محفظة AppCoins Wallet؟</string>
-  <string name="eskills_v2_faqs_2_body_1">محفظة AppCoins Wallet هي تطبي للأندرويد يمكن استخدامه لشراء عناصر رقمية في الألعاب والتطبيقات.</string>
-  <string name="eskills_v2_faqs_2_body_2">ستصلك جائزة في كل مرة تشتري فيها شيئًا داخل ألعاب وتطبيقات AppCoins! عليك فقط أن تثبّت محفظة AppCoins Wallet على جهازك وتُجري عملية شراء كالعادة في النسخة المتوافقة مع AppCoins مع ألعابك المفضلة.</string>
-  <string name="eskills_v2_faqs_3_title">كيف أسحب المال من محفظة AppCoins Wallet؟</string>
-  <string name="eskills_v2_faqs_3_body_1">يمكنك سحب رصيد AppCoins Credits التي فزت بها كجائزة في ألعاب e-Skills. للقيام بذلك، نرجو أن تتبع هذه الخطوات:\n1. اذهب إلى الإعدادات في الزاوية العلوية اليمنى من الصفحة الرئيسية.\n2. اضغط على e-Skills Withdrawals، ثم...\n3. أدخل عنوان بريدك الإلكتروني لحسابك على PayPal، والمبلغ الذي تريد سحبه.\n4. اضغط على سحب أو withdraw، ويتم الأمر!\nالحد الأدنى الذي يمكنك سحبه هو $20 وتحتاج العملية إلى 4 أسابيع على الأقل لتكتمل.</string>
-  <string name="eskills_v2_wallet_install_disclaimer_body">سيُثبّت تطبيق الدعم هذا بعد %s.</string>
-  <string name="eskills_v2_wallet_already_installed_disclaimer_body">لديك بالفعل <b>محفظة AppCoins Wallet مثبّتة!</b></string>
-  <string name="eskills_v2_wallet_installed_disclaimer_body">تمت عملية تثبيت محفظة AppCoins Wallet بنجاح!</string>
-  <string name="eskills_v2_wallet_disclaimer_2_body">ستحتاج إلى تثبيت محفظة AppCoins Wallet.</string>
 </resources>
