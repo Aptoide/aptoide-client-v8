@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="username">Sähköposti</string>
-  <string name="register">Rekisteröidy</string>
-  <string name="title_successful">Onnistui</string>
   <string name="unknown_error">Tuntematon virhe</string>
   <string name="no_email_and_pass_error_message">Syötä sähköposti ja salasana</string>
   <string name="no_pass_error_message">Syötä salasana</string>
@@ -11,15 +8,9 @@
 olla ainakin yksi kirjain sekä yksi numero tai erikoismerkki (!@#$%*)</string>
   <string name="facebook_grant_permission_button">Anna lupa</string>
   <string name="facebook_email_permission_regected_message">Tarvitsemme sähköpostiosoitteesi luodakseen tilin</string>
-  <string name="user_cancelled">Peruutettu käyttäjän toimesta</string>
   <string name="terms_and_conditions_privacy_sign_up_message">Hyväksyn Aptoiden %1$s ja %2$s</string>
   <string name="accept_terms_title_loggedin">Tärkeää tietoa</string>
   <string name="accept_terms_message_loggedin">Hyväksy %1$s ja %2$s jatkaaksesi Aptoiden käyttöä. Nämä asiakirjat sisältävät kaikki tiedot suhteestamme ja siitä miten säilytämme tietojasi.</string>
-  <string name="accept_terms_loggedin_readTC">LUE EHDOT &amp; KÄYTÄNNÖT</string>
-  <string name="accept_terms_loggedin_readPP">LUE KÄYTTÖEHDOT</string>
-  <string name="accept_terms_loggedin_message">Hyväksyt %1$s ja %2$s napauttamalla Hyväksy-painiketta</string>
-  <string name="accept_terms_loggedin_button_accept">HYVÄKSY</string>
-  <string name="accept_terms_loggedin_button_close">SULJE APTOIDE</string>
   <string name="user_upload_photo_failed">Profiilin luominen ei onnistunu juuri nyt.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">Käsitellään. Tämä voi viedä hetken...</string>
@@ -36,8 +27,6 @@ olla ainakin yksi kirjain sekä yksi numero tai erikoismerkki (!@#$%*)</string>
   <string name="follow" comment="follow">Seuraa</string>
   <!--Create user fragment-->
   <string name="create_user_title">Luo käyttäjäprofiili</string>
-  <string name="create_user_header"><b>Luo käyttäjäprofiili</b>, jotta voit arvostella, kommentoida ja jakaa sovelluksia ystäviesi kanssa</string>
-  <string name="edit_profile_header_message">Muokkaa profiiliasi kauniilla kuvalla</string>
   <string name="create_user_take_picture">Ota profiilikuva</string>
   <string name="create_user_choose_username">Valitse nimimerkkisi</string>
   <string name="create_user_username">Nimimerkki</string>
@@ -75,8 +64,6 @@ olla ainakin yksi kirjain sekä yksi numero tai erikoismerkki (!@#$%*)</string>
   <string name="image_requirements_error_open_image">- Virhe avattaessa kuvaa\n</string>
   <string name="image_requirements_error_popup_title">Kuva</string>
   <!-- My account -->
-  <string name="myaccount_my_profile_title">Profiilini</string>
-  <string name="myaccount_user_store_title">Kauppani</string>
   <string name="myaccount_edit_store_button">Muokkaa</string>
   <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Kirjaudu ulos</string>
   <string name="myaccount_header_title">Ilmoitukset</string>
@@ -89,7 +76,6 @@ olla ainakin yksi kirjain sekä yksi numero tai erikoismerkki (!@#$%*)</string>
   <string name="newaccount_create_store">luo kauppa</string>
   <string name="newaccount_create_store_message">Luo kauppa jakaaksesi sovelluksia yhteisön kanssa.</string>
   <string name="newaccount_log_out">kirjaudu ulos</string>
-  <string name="newaccount_notification_history">Ilmoitushistoria</string>
   <string name="newaccount_settings">Asetukset</string>
   <string name="newaccount_edit">Muokkaa</string>
 </resources>
