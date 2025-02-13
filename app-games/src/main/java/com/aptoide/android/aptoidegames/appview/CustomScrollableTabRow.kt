@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.debugInspectorInfo
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
@@ -37,11 +38,12 @@ import kotlin.random.nextInt
 
 @Composable
 fun CustomScrollableTabRow(
-  tabs: List<AppViewTab>,
+  tabs: List<String>,
   selectedTabIndex: Int,
   onTabClick: (Int) -> Unit,
   contentColor: Color,
   backgroundColor: Color,
+  tabTextStyle: TextStyle = AGTypography.InputsL,
 ) {
   val density = LocalDensity.current
   val indicatorWidths = remember(key1 = tabs.size) { MutableList(tabs.size) { 0.dp } }
@@ -72,8 +74,8 @@ fun CustomScrollableTabRow(
         onClick = { onTabClick(tabIndex) },
         text = {
           Text(
-            text = tab.getTabName(),
-            style = AGTypography.InputsL,
+            text = tab,
+            style = tabTextStyle,
             color = if (selectedTabIndex == tabIndex) {
               Palette.Primary
             } else {
@@ -131,7 +133,7 @@ enum class AppViewTab {
 @PreviewDark
 @Composable
 fun CustomScrollableTabRowPreview() {
-  val tabsList = List(Random.nextInt(1..3)) { AppViewTab.values()[it] }
+  val tabsList = List(Random.nextInt(1..3)) { AppViewTab.entries[it].getTabName() }
 
   AptoideTheme {
     CustomScrollableTabRow(
