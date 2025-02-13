@@ -8,10 +8,8 @@
   <string name="setting_mobile">Letöltés csak wifin keresztül</string>
   <string name="settings_beta_filter_setting_title">Béta verziók</string>
   <string name="settings_beta_filter_summary">Béta alkalmazásokat is látni fogsz.</string>
-  <string name="setting_updates">Frissítések</string>
   <string name="settings_include_system_apps_title">Rendszeralkalmazások</string>
   <string name="settings_include_system_apps_summary">Itt jelennek meg a rendszeralkalmazások frissítései</string>
-  <string name="settings_excluded_updates">Kihagyott frissítések</string>
   <string name="setting_notifications">Értesítések</string>
   <string name="setting_notifications_sub_section_1">Alkalmazásfrissítések</string>
   <string name="setting_notifications_sub_sub_section_1">Mutassa az alkalmazásfrissítésekkel kapcsolatos értesítéseket</string>
@@ -22,7 +20,6 @@
   <string name="settings_clear_cache_summary">Ideiglenes fájlok törlése</string>
   <string name="settings_maxFileCache_title">Gyorsítótár max méretének megadása (MB)</string>
   <string name="settings_maxFileCache_sum">Itt adhatja meg a gyorsítótár maximális méretét</string>
-  <string name="setting_mature_filtering">Felnőtt tartalom</string>
   <string name="setting_dont_show_mature_content">Felnőtt tartalom megjelenítése</string>
   <string name="set_mature_pin_title">Helyezze el a felnőtt tartalmakat engedélyező kitűzőt</string>
   <string name="set_mature_pin_summary">Pin-kód beállítása a felnőtt tartalmak feloldásához</string>
