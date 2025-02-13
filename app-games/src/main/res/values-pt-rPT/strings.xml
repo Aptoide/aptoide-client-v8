@@ -11,22 +11,15 @@
   <string name="overflow_menu_terms_conditions">Termos &amp; Condições</string>
   <string name="overflow_menu_privacy_policy">Política de Privacidade</string>
   <string name="settings_about_hardware_title">Especificações de hardware</string>
-  <string name="settings_about_title">Sobre Nós</string>
   <string name="settings_about_version">Versão %1$s (%2$s)</string>
   <string name="settings_copied_to_clipboard_message">Copiado para a área de transferência</string>
   <string name="settings_general_title">Geral</string>
-  <string name="settings_theme_option_dark">Escuro</string>
-  <string name="settings_theme_option_light">Claro</string>
-  <string name="settings_theme_option_system">Padrão do sistema</string>
-  <string name="settings_theme_options_title">Tema</string>
   <string name="settings_title">Definições</string>
   <string name="settings_support">Apoio</string>
   <string name="settings_feedback_button">Enviar feedback</string>
   <string name="settings_feedback_title">Enviar Comentários</string>
   <string name="settings_legal_title">Jurídico</string>
   <string name="settings_send_feedback_body">Diz-nos o que pensas sobre a Aptoide Games!\n\u2022 Alguma nova funcionalidade que gostarias de ver?\n\u2022 Como achas que podemos melhorar?</string>
-  <string name="settings_payment_support_description_title">Descrição</string>
-  <string name="settings_contact_form_character_limit_title">(50 Caracteres Mín.)</string>
   <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Descrição (50 caracteres mín.)</string>
   <string name="settings_storage_title">Armazenamento</string>
   <string name="settings_storage_clear_cache_title">Limpar o cache</string>
@@ -39,7 +32,6 @@
   <string name="empty_category_body">Não existem apps nesta categoria... Ainda!</string>
   <!-- Notifications -->
   <string name="notifications_context_title">Receber notificação!</string>
-  <string name="notification_installing_title">A instalar</string>
   <string name="notification_preparing_title">A preparar</string>
   <string name="notification_ready_install_title">Uma app está pronta para ser instalada!</string>
   <string name="notification_ready_install_body">Toca aqui para instalar %s.</string>
@@ -68,10 +60,7 @@
   <string name="fixed_bundle_editors_choice_title">Escolha do Editor</string>
   <string name="fixed_bundle_editorial_title">Editorial</string>
   <string name="fixed_bundle_trending_title">Tendência</string>
-  <string name="fixed_bundle_publisher_title">Diverte-te com %s</string>
   <string name="retry_button" comment="button_retry_title">Tentar novamente</string>
-  <string name="generic_error_message">Alguma coisa deu errado. Tenta de novo.</string>
-  <string name="generic_network_error_message">Ups, alguma coisa correu mal. Por favor verifica a tua ligação à internet.</string>
   <string name="install_waiting_installation_message">A aguardar para instalar</string>
   <string name="install_installing_message">A instalar</string>
   <string name="install_error_short_message">Ups, ocorreu um erro.</string>
@@ -108,17 +97,10 @@
   <string name="error_install_permissions_body"><![CDATA[Vai a Definições e concede <1>Aptoide Games</1> permissões para instalar apps!]]></string>
   <string name="latest_title">Mais recentes</string>
   <string name="whats_new_title">Novidades</string>
-  <string name="screenshot_appview_1">Um bónus nas tuas compras na app.</string>
-  <string name="screenshot_appview_2">Encontra os melhores jogos novos selecionados para ti.</string>
-  <string name="screenshot_appview_3">Uma nova forma de descobrires o teu jogo favorito.</string>
-  <string name="screenshot_appview_4">Um interface perfeito com os melhores conteúdos.</string>
-  <string name="screenshot_appview_5">Jogos escolhidos a dedo só para ti.</string>
   <string name="not_now_button">Agora não</string>
   <string name="later_button">Mais tarde</string>
   <string name="trusted_game_badge">Jogo de confiança</string>
   <string name="official_game_badge">Jogo Oficial</string>
-  <string name="see_more_button">Ver mais</string>
-  <string name="generic_error_short_title">Ocorreu um erro.</string>
   <string name="editorial_card_views_short">%s visualizações</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Sem Espaço</string>
@@ -141,13 +123,9 @@
   <!-- Install -->
   <string name="button_install_title">Instalar</string>
   <!-- Common -->
-  <string name="notice_at_collection_and_privacy_policy">Aviso na Coleção &amp; Política de Privacidade</string>
-  <string name="terms_and_conditions">Termos</string>
-  <string name="continue_to_accept_tandc_and_pp_disclaimer">Ao continuar, aceitas os %1$s e %2$s.</string>
   <string name="appview_details_tab_title" comment="details">Detalhes</string>
   <string name="appview_related_tab_title" comment="related">Relacionado</string>
   <string name="appview_info_tab_title" comment="info">Info</string>
-  <string name="bottom_navigation_discovery" comment="discovery">Descoberta</string>
   <string name="appview_info_version_name_title" comment="version_name">Nome da versão</string>
   <string name="appview_info_package_name_title" comment="package_name">Nome do pacote</string>
   <string name="appview_info_release_title" comment="release">Lançamento</string>
@@ -156,18 +134,9 @@
   <string name="appview_info_website_title" comment="website">Website</string>
   <string name="appview_info_email_title" comment="email">E-mail</string>
   <string name="appview_info_permissions_title" comment="permissions">Permissões</string>
-  <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% de %2$s</string>
-  <string name="error_short_title" comment="oops_an_error_occurred">Ups, ocorreu um erro</string>
-  <string name="purchase_done_bonus_title">Recebe um bónus de %s!</string>
-  <string name="purchase_done_bonus_body">Faz download da AppCoins Wallet para receberes este bónus e utiliza-o na tua próxima compra.</string>
-  <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet instalada!</string>
-  <string name="purchase_done_bonus_wallet_installed_body">Abra-a para encontrares o teu bónus.</string>
   <string name="bonus_banner_body">Vais receber um bónus em todos os jogos identificados com %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Até %s%% de Bónus</string>
   <string name="settings_auto_update_button">Atualizar jogos automaticamente</string>
-  <string name="settings_payments_title" comment="contact_support_team">Contacta a Equipa Apoio</string>
-  <string name="settings_contact_support_body" comment="billing_terms_of_use">Termos de Utilização da Faturação</string>
-  <string name="settings_billing_terms_body" comment="payments">Pagamentos</string>
   <string name="powered_by_title" comment="powered_by">Powered by</string>
   <string name="contact_support_title" comment="contact_support">Contacta a Equipa Apoio</string>
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Por favor, dá-nos todos os detalhes:\n\u2022 Quando é que o problema começou\n\u2022 Em que jogo estás a fazer uma compra\n\nDepois de tocares em Enviar, a tua app de e-mail será aberta. Estás à vontade para anexar um screenshot ou um vídeo sobre o problema!</string>
@@ -175,32 +144,21 @@
   <string name="apkfy_whats_aptoide_games_title">O que são os Jogos Aptoide?</string>
   <string name="apkfy_install_body">Recebe o teu jogo favorito e muito mais em Aptoide Games!</string>
   <string name="apkfy_install_bullet_points">\u2022 Os melhores jogos com uma curadoria fantástica.\n\u2022 Não é necessário iniciar sessão!\n\u2022 Promoções especiais e prémios nos teus jogos favoritos.</string>
-  <string name="apkfy_install_alternative_version_body">Também estás a desbloquear os Jogos Aptoide!</string>
-  <string name="apkfy_install_alternative_version_bullet_points">\u2022 Os melhores jogos escolhidos só para ti.\n\u2022 Recompensas exclusivas e ofertas especiais.\n\u2022 O teu Assistente de IA pessoal para descobrir jogos.</string>
-  <string name="app_size_mb_title" comment="s_mb">%s MB</string>
-  <string name="uninstalled_title" comment="uninstalled">Desinstalada</string>
-  <string name="error_no_internet_body" comment="please_check_your_internet_connection">Por favor, verifica a tua ligação à Internet.</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Pagar com a AppCoins Wallet</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Será instalado automaticamente e irás receber um bónus em todas as compras!</string>
   <string name="buy_button" comment="buy">Comprar</string>
   <string name="iap_other_payment_methods_button" comment="other_payment_methods">Outros métodos de pagamento</string>
   <string name="iap_remember_card_button" comment="remember_card">Lembrar cartão</string>
-  <string name="iap_card_number" comment="card_number">Número do cartão</string>
-  <string name="iap_card_expiry" comment="expiry_date">Data de validade</string>
-  <string name="iap_card_cvc" comment="cvc_cvv">CVC/CVV</string>
   <string name="iab_change_card_button" comment="change_card">Mudar de cartão</string>
   <string name="done_title">Feito!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">Efetuar a Compra...</string>
-  <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">Tens a certeza de que os detalhes do teu cartão estão corretos? Por favor, tenta novamente!</string>
   <string name="log_out_button" comment="log_out">Sair</string>
-  <string name="get_a_bonus_in_all_purchases_title">Vais receber um bónus em todas as compras!</string>
   <string name="iap_appc_body">Vais receber um bónus em todas as compras!</string>
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Já podes concluir a tua compra.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">A AppCoins Wallet está agora instalada!</string>
   <string name="storage_access_permission_request_message">Autoriza o acesso ao armazenamento do teu telefone para que possamos fazer download e instalar esta app.</string>
   <string name="downloads_number_title">%s downloads</string>
   <!-- Payment Errors-->
-  <string name="payments_error_not_enough_balance_body">Não tens saldo suficiente</string>
   <string name="payments_error_old_card_title">Parece que registaste este cartão há muito tempo!</string>
   <string name="payments_error_old_card_body">Insere novamente os dados do cartão ou utiliza um cartão diferente.</string>
   <string name="purchase_error_payment_rejected">A transação foi recusada.</string>
@@ -215,7 +173,6 @@
   <string name="purchase_error_3d_title">Ocorreu um problema com a tua autenticação 3D.</string>
   <string name="purchase_card_rejected_title">A transação foi recusada pelo teu banco.</string>
   <string name="purchase_error_invalid_credit_card_title">Número de cartão bancário inválido.</string>
-  <string name="purchase_error_invalid_credit_card_body">Certifica-te de que todos os dígitos estão corretos.</string>
   <string name="purchase_error_card_security_validation_title">Houve um erro na validação de 2º nível desta transação.</string>
   <string name="purchase_error_in_progress_title">O teu pedido já foi processado ou está em curso.</string>
   <string name="purchase_card_error_CVV_title">CVV/CVC errado</string>
@@ -259,9 +216,7 @@
   <string name="update_notification_body">Toca aqui para instalar.</string>
   <string name="update_aptoide_games_update_notification">Há uma nova versão dos Jogos Aptoide</string>
   <!-- GenAi -->
-  <string name="genai_bottom_navigation_genai_button">GenAI</string>
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
-  <string name="genai_assistant_title">Assistente</string>
   <string name="genai_me_title">Eu</string>
   <string name="genai_introduction_body">Olá! Sou o teu assistente de IA para tudo o que se relaciona com a descoberta de apps e jogos. Experimenta com algo do género:</string>
   <string name="genai_input_message_field">Escreve uma mensagem&#8230;</string>

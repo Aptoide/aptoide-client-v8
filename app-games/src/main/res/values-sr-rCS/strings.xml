@@ -11,22 +11,15 @@
   <string name="overflow_menu_terms_conditions">Uslovi i odredbe</string>
   <string name="overflow_menu_privacy_policy">Smernice za privatnost</string>
   <string name="settings_about_hardware_title">Hardverske specifikacije</string>
-  <string name="settings_about_title">O nama</string>
   <string name="settings_about_version">Verzija %1$s (%2$s)</string>
   <string name="settings_copied_to_clipboard_message">Kopirano u ostavu</string>
   <string name="settings_general_title">Opšte</string>
-  <string name="settings_theme_option_dark">Tamno</string>
-  <string name="settings_theme_option_light">Svetlo</string>
-  <string name="settings_theme_option_system">Podrazumevana sistemska</string>
-  <string name="settings_theme_options_title">Tema</string>
   <string name="settings_title">Podešavanja</string>
   <string name="settings_support">Podrška</string>
   <string name="settings_feedback_button">Pošaljite povratne informacije</string>
   <string name="settings_feedback_title">Pošaljite povratne informacije</string>
   <string name="settings_legal_title">Pravne informacije</string>
   <string name="settings_send_feedback_body">Recite nam šta mislite o Aptoide Games!\n\u2022 Da li postoje neke nove funkcije koje biste želeli da vidite?\n\u2022 Šta možemo unaprediti po vašem mišljenju?</string>
-  <string name="settings_payment_support_description_title">Opis</string>
-  <string name="settings_contact_form_character_limit_title">(50 znakova najmanje)</string>
   <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Opis (50 znakova najmanje)</string>
   <string name="settings_storage_title">Skladište</string>
   <string name="settings_storage_clear_cache_title">Obriši keš</string>
@@ -39,7 +32,6 @@
   <string name="empty_category_body">Nema aplikacija u ovoj kategoriji... Za sada!</string>
   <!-- Notifications -->
   <string name="notifications_context_title">Budite obavešteni!</string>
-  <string name="notification_installing_title">Instaliranje</string>
   <string name="notification_preparing_title">Priprema</string>
   <string name="notification_ready_install_title">Aplikacija je spremna za instaliranje!</string>
   <string name="notification_ready_install_body">Dodirnite ovde da biste instalirali %s.</string>
@@ -68,10 +60,7 @@
   <string name="fixed_bundle_editors_choice_title">Izbor urednika</string>
   <string name="fixed_bundle_editorial_title">Editorijal</string>
   <string name="fixed_bundle_trending_title">Popularno</string>
-  <string name="fixed_bundle_publisher_title">Zabavite se uz %s</string>
   <string name="retry_button" comment="button_retry_title">Pokušaj ponovo</string>
-  <string name="generic_error_message">Došlo je do greške. Pokušajte ponovo.</string>
-  <string name="generic_network_error_message">Ups, došlo je do greške. Proverite vezu sa internetom.</string>
   <string name="install_waiting_installation_message">Čeka se instaliranje</string>
   <string name="install_installing_message">Instaliranje</string>
   <string name="install_error_short_message">Ups, došlo je do greške.</string>
@@ -108,17 +97,10 @@
   <string name="error_install_permissions_body"><![CDATA[Idite u Podešavanja i dodelite dozvole za instaliranje aplikacija za <1>Aptoide Games</1>!]]></string>
   <string name="latest_title">Najnovije</string>
   <string name="whats_new_title">Šta je novo</string>
-  <string name="screenshot_appview_1">Bonus u kupovinama u aplikacijama.</string>
-  <string name="screenshot_appview_2">Pronađite najbolje nove igre odabrane samo za vas.</string>
-  <string name="screenshot_appview_3">Novi način da otkrijete svoju omiljenu igru.</string>
-  <string name="screenshot_appview_4">Nesmetan interfejs sa najboljim sadržajem.</string>
-  <string name="screenshot_appview_5">Pažljivo odabrane igre samo za vas.</string>
   <string name="not_now_button">Ne sada</string>
   <string name="later_button">Kasnije</string>
   <string name="trusted_game_badge">Pouzdana igra</string>
   <string name="official_game_badge">Zvanična igra</string>
-  <string name="see_more_button">Pogledajte više</string>
-  <string name="generic_error_short_title">Došlo je do greške.</string>
   <string name="editorial_card_views_short">Broj pregleda: %s</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Nema više prostora</string>
@@ -141,13 +123,9 @@
   <!-- Install -->
   <string name="button_install_title">Instaliraj</string>
   <!-- Common -->
-  <string name="notice_at_collection_and_privacy_policy">Obaveštenje o prikupljanju i politika privatnosti</string>
-  <string name="terms_and_conditions">Uslovi</string>
-  <string name="continue_to_accept_tandc_and_pp_disclaimer">Ako nastavite, saglasni ste sa %1$s i %2$s.</string>
   <string name="appview_details_tab_title" comment="details">Детаљи</string>
   <string name="appview_related_tab_title" comment="related">Povezano</string>
   <string name="appview_info_tab_title" comment="info">Инфо</string>
-  <string name="bottom_navigation_discovery" comment="discovery">Otkriće</string>
   <string name="appview_info_version_name_title" comment="version_name">Naziv verzije</string>
   <string name="appview_info_package_name_title" comment="package_name">Naziv paketa</string>
   <string name="appview_info_release_title" comment="release">Objavljivanje</string>
@@ -156,18 +134,9 @@
   <string name="appview_info_website_title" comment="website">Vebsajt</string>
   <string name="appview_info_email_title" comment="email">Имејл</string>
   <string name="appview_info_permissions_title" comment="permissions">Дозволе</string>
-  <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% od %2$s</string>
-  <string name="error_short_title" comment="oops_an_error_occurred">Ups, došlo je do greške</string>
-  <string name="purchase_done_bonus_title">Osvojite %s bonusa!</string>
-  <string name="purchase_done_bonus_body">Preuzmite AppCoins Wallet da biste preuzeli ovaj bonus i iskoristite ga u sledećoj kupovini.</string>
-  <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet je instaliran!</string>
-  <string name="purchase_done_bonus_wallet_installed_body">Otvorite ga i pronađite svoj bonus.</string>
   <string name="bonus_banner_body">Dobićete bonus u svim igrama koje su povezane sa %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Do %s%% bonusa</string>
   <string name="settings_auto_update_button">Ažuriraj igre automatski</string>
-  <string name="settings_payments_title" comment="contact_support_team">Obratite se timu korisničke podrške</string>
-  <string name="settings_contact_support_body" comment="billing_terms_of_use">Uslovi korišćenja naplate</string>
-  <string name="settings_billing_terms_body" comment="payments">Plaćanja</string>
   <string name="powered_by_title" comment="powered_by">Pokreće</string>
   <string name="contact_support_title" comment="contact_support">Obratite se podršci</string>
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Pružite nam sve detalje:\n\u2022 Kada je došlo do problema\n\u2022 U kojoj igri ste obavili kupovinu\n\nKada dodirnite opciju Pošalji, otvoriće se vaša aplikacija za slanje e-pošte. Slobodno nam pošaljite snimak ekrana ili video u kome se vidi problem!</string>
@@ -175,32 +144,21 @@
   <string name="apkfy_whats_aptoide_games_title">Šta je to Aptoide Games?</string>
   <string name="apkfy_install_body">Preuzmite svoje omiljene igre i još mnogo toga u Aptoide Games!</string>
   <string name="apkfy_install_bullet_points">\u2022 Pažljivo odabrane najbolje igre.\n\u2022 Nema potrebe za prijavljivanjem!\n\u2022 Specijalne promocije i nagrade u vašim omiljenim igrama.</string>
-  <string name="apkfy_install_alternative_version_body">Otključavate i Aptoide Games!</string>
-  <string name="apkfy_install_alternative_version_bullet_points">\u2022 Pažljivo odabrane najbolje igre, samo za vas.\n\u2022 Ekskluzivne nagrade i specijalne ponude.\n\u2022 Vaš lični AI pomoćnik za otkrivanje igara.</string>
-  <string name="app_size_mb_title" comment="s_mb">%s MB</string>
-  <string name="uninstalled_title" comment="uninstalled">Деинсталирано</string>
-  <string name="error_no_internet_body" comment="please_check_your_internet_connection">Proverite svoju internet vezu.</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Platite pomoću aplikacije AppCoins Wallet</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Biće instalirana automatski i dobićete bonus u svim kupovinama!</string>
   <string name="buy_button" comment="buy">Kupi</string>
   <string name="iap_other_payment_methods_button" comment="other_payment_methods">Drugi načini plaćanja</string>
   <string name="iap_remember_card_button" comment="remember_card">Zapamti karticu</string>
-  <string name="iap_card_number" comment="card_number">Broj kartice</string>
-  <string name="iap_card_expiry" comment="expiry_date">Datum isteka</string>
-  <string name="iap_card_cvc" comment="cvc_cvv">CVC/CVV</string>
   <string name="iab_change_card_button" comment="change_card">Promenite karticu</string>
   <string name="done_title">Gotovo!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">Obavljanje kupovine...</string>
-  <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">Da li ste sigurni da su podaci sa kartice tačni? Pokušajte ponovo!</string>
   <string name="log_out_button" comment="log_out">Odjavite se</string>
-  <string name="get_a_bonus_in_all_purchases_title">Dobićete bonus u svim kupovinama!</string>
   <string name="iap_appc_body">Dobićete bonus u svim kupovinama!</string>
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Sada možete dovršiti svoju kupovinu.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">Aplikacija AppCoins Wallet je instalirana!</string>
   <string name="storage_access_permission_request_message">Dozvolite pristup memoriji telefona kako bismo preuzeli i instalirali ovu aplikaciju.</string>
   <string name="downloads_number_title">%s preuzimanja</string>
   <!-- Payment Errors-->
-  <string name="payments_error_not_enough_balance_body">Vaše stanje je nedovoljno</string>
   <string name="payments_error_old_card_title">Izgleda da ste davno registrovali ovu karticu!</string>
   <string name="payments_error_old_card_body">Unesite ponovo detalje o kartici ili upotrebite drugu karticu.</string>
   <string name="purchase_error_payment_rejected">Transakcija je odbijena.</string>
@@ -215,7 +173,6 @@
   <string name="purchase_error_3d_title">Došlo je do problema sa vašom potvrdom autentičnosti.</string>
   <string name="purchase_card_rejected_title">Transakcija je odbijena od strane vaše banke.</string>
   <string name="purchase_error_invalid_credit_card_title">Neispravan broj bankovne kartice.</string>
-  <string name="purchase_error_invalid_credit_card_body">Proverite da li su sve cifre tačne.</string>
   <string name="purchase_error_card_security_validation_title">Došlo je do greške na 2. nivou potvrde ove transakcije.</string>
   <string name="purchase_error_in_progress_title">Vaš zahtev je već obrađen ili je u toku.</string>
   <string name="purchase_card_error_CVV_title">Pogrešan CVV/CVC</string>
@@ -261,9 +218,7 @@
   <string name="update_notification_body">Dodirnite ovde da biste instalirali.</string>
   <string name="update_aptoide_games_update_notification">Postoji nova verzija aplikacije Aptoide Games</string>
   <!-- GenAi -->
-  <string name="genai_bottom_navigation_genai_button">GenAI</string>
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
-  <string name="genai_assistant_title">Pomoćnik</string>
   <string name="genai_me_title">Ja</string>
   <string name="genai_introduction_body">Zdravo! Ja sam tvoj AI pomoćnik i tu sam da ti pomognem oko svega u vezi sa aplikacijama i igrama. Pokušaj nešto poput:</string>
   <string name="genai_input_message_field">Unesi poruku&#8230;</string>
