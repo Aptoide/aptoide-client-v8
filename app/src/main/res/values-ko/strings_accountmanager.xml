@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="username">이메일</string>
-  <string name="register">등록하기</string>
-  <string name="title_successful">성공</string>
   <string name="unknown_error">알수없는 에러</string>
   <string name="no_email_and_pass_error_message">이메일 주소와 비밀번호를 입력해 주세요</string>
   <string name="no_pass_error_message">등록하려면 비밀번호를 입력하세요.</string>
@@ -10,15 +7,9 @@
   <string name="password_validation_text">암호는 8자 이상이어야 하며 다음을 충족해야 합니다.         하나 이상의 문자와 숫자 또는 특수 문자(!@#$%*)입니다.</string>
   <string name="facebook_grant_permission_button">권한 부여</string>
   <string name="facebook_email_permission_regected_message">계정을 만들기 위해서는 이메일이 필요합니다.</string>
-  <string name="user_cancelled">사용자가 취소 함</string>
   <string name="terms_and_conditions_privacy_sign_up_message">Aptoide의 %1$s 및 %2$s에 동의합니다</string>
   <string name="accept_terms_title_loggedin">중요 정보</string>
   <string name="accept_terms_message_loggedin">Aptoide를 계속 사용하려면 %1$s 및 %2$s 동의가 필요합니다. 이 문서에는 당사의 관계와 당사의 데이터 저장 방법에 대한 모든 세부 정보가 포함되어 있습니다.</string>
-  <string name="accept_terms_loggedin_readTC">이용 약관 읽기</string>
-  <string name="accept_terms_loggedin_readPP">개인 정보 보호 정책 읽기</string>
-  <string name="accept_terms_loggedin_message">동의를 누름으로 Aptoide의 %1$s 및 %2$s 에 동의하는 것입니다.</string>
-  <string name="accept_terms_loggedin_button_accept">동의</string>
-  <string name="accept_terms_loggedin_button_close">APTOIDE 닫기</string>
   <string name="user_upload_photo_failed">At the moment it was not possible to create a profile.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">처리중, 시간이 걸릴 수 있습니다…</string>
@@ -35,8 +26,6 @@
   <string name="follow" comment="follow">팔로우</string>
   <!--Create user fragment-->
   <string name="create_user_title">Create a User Profile</string>
-  <string name="create_user_header"><b>Create your User Profile</b> so that you\'re able to rate, comment and share apps with your friends</string>
-  <string name="edit_profile_header_message">Edit your profile with a beautiful image</string>
   <string name="create_user_take_picture">프로필 사진을 찍으세요</string>
   <string name="create_user_choose_username">별명을 선택하세요</string>
   <string name="create_user_username">별명</string>
@@ -74,8 +63,6 @@
   <string name="image_requirements_error_open_image">- 이미지를 열 때 오류\n</string>
   <string name="image_requirements_error_popup_title">이미지</string>
   <!-- My account -->
-  <string name="myaccount_my_profile_title">My Profile</string>
-  <string name="myaccount_user_store_title">내 스토어</string>
   <string name="myaccount_edit_store_button">편집</string>
   <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Log Out</string>
   <string name="myaccount_header_title">알림</string>
@@ -88,7 +75,6 @@
   <string name="newaccount_create_store">스토어 만들기</string>
   <string name="newaccount_create_store_message">커뮤니티와 앱을 공유할 스토어를 만듭니다.</string>
   <string name="newaccount_log_out">log Out</string>
-  <string name="newaccount_notification_history">알림 내역</string>
   <string name="newaccount_settings">설정</string>
   <string name="newaccount_edit">편집</string>
 </resources>
