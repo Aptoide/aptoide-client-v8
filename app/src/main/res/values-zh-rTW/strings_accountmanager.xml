@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="username">電子郵件</string>
-  <string name="register">註冊</string>
-  <string name="title_successful">成功</string>
   <string name="unknown_error">未知错误</string>
   <string name="no_email_and_pass_error_message">請輸入電子信箱和密碼</string>
   <string name="no_pass_error_message">请输入密码</string>
@@ -10,15 +7,9 @@
   <string name="password_validation_text">密碼必須包含至少 8 個字元，並且至少有一個字母和一個數字或特殊字元 (! @# $%*)</string>
   <string name="facebook_grant_permission_button">批准许可</string>
   <string name="facebook_email_permission_regected_message">我們需要您的電子信箱，以建立一個帳號</string>
-  <string name="user_cancelled">用户已取消</string>
   <string name="terms_and_conditions_privacy_sign_up_message">I accept Aptoide\'s %1$s and %2$s</string>
   <string name="accept_terms_title_loggedin">Important Information</string>
   <string name="accept_terms_message_loggedin">Please accept our %1$s and %2$s to continue using Aptoide. These documents include all details about our relationship and how we store your data.</string>
-  <string name="accept_terms_loggedin_readTC">READ TERMS &amp; CONDITIONS</string>
-  <string name="accept_terms_loggedin_readPP">READ PRIVACY POLICY</string>
-  <string name="accept_terms_loggedin_message">By pressing accept you agree to Aptoide\'s %1$s and %2$s</string>
-  <string name="accept_terms_loggedin_button_accept">ACCEPT</string>
-  <string name="accept_terms_loggedin_button_close">CLOSE APTOIDE</string>
   <string name="user_upload_photo_failed">目前无法创建资料。</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">Processing, it may take a while…</string>
@@ -35,8 +26,6 @@
   <string name="follow" comment="follow">追蹤</string>
   <!--Create user fragment-->
   <string name="create_user_title">创建用户资料</string>
-  <string name="create_user_header"><b>创建您的用户资料</b>，这样您就可以评分、评论和与好友分享应用</string>
-  <string name="edit_profile_header_message">用一張好看的照片來編輯您的個人檔案</string>
   <string name="create_user_take_picture">为您的资料拍照</string>
   <string name="create_user_choose_username">Choose your nickname</string>
   <string name="create_user_username">Nickname</string>
@@ -74,8 +63,6 @@
   <string name="image_requirements_error_open_image">- 開啟圖像時發生錯誤\n</string>
   <string name="image_requirements_error_popup_title">图像</string>
   <!-- My account -->
-  <string name="myaccount_my_profile_title">我的檔案</string>
-  <string name="myaccount_user_store_title">我的商店</string>
   <string name="myaccount_edit_store_button">編輯</string>
   <string name="myaccount_log_out_button" comment="myaccount_log_out_button">登出</string>
   <string name="myaccount_header_title">通知</string>
@@ -88,7 +75,6 @@
   <string name="newaccount_create_store">create a store</string>
   <string name="newaccount_create_store_message">Create a store to share apps with the community.</string>
   <string name="newaccount_log_out">登出</string>
-  <string name="newaccount_notification_history">Notification history</string>
   <string name="newaccount_settings">設定</string>
   <string name="newaccount_edit">編輯</string>
 </resources>
