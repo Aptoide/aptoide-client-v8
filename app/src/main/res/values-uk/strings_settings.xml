@@ -8,10 +8,8 @@
   <string name="setting_mobile">Завантажувати лише через Wi -Fi</string>
   <string name="settings_beta_filter_setting_title">Бета-версії</string>
   <string name="settings_beta_filter_summary">Ви також побачите бета-версії додатків.</string>
-  <string name="setting_updates">Оновлення</string>
   <string name="settings_include_system_apps_title">Системні додатки</string>
   <string name="settings_include_system_apps_summary">Ви побачите оновлення для системних додатків</string>
-  <string name="settings_excluded_updates">Виключені оновлення</string>
   <string name="setting_notifications">Сповіщення</string>
   <string name="setting_notifications_sub_section_1">Оновлення додатків</string>
   <string name="setting_notifications_sub_sub_section_1">Показувати сповіщення про оновлення додатків</string>
@@ -22,7 +20,6 @@
   <string name="settings_clear_cache_summary">Видалити тимчасові файли</string>
   <string name="settings_maxFileCache_title">Встановити макс. розмір кешу (МБ)</string>
   <string name="settings_maxFileCache_sum">Встановіть максимальний розмір кешу</string>
-  <string name="setting_mature_filtering">Контент для дорослих</string>
   <string name="setting_dont_show_mature_content">Показувати контент для дорослих</string>
   <string name="set_mature_pin_title">Встановити пін-код для дорослого контенту</string>
   <string name="set_mature_pin_summary">Встановіть пін-код для розблокування контенту для дорослих</string>
