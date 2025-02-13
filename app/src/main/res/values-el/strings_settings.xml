@@ -8,10 +8,8 @@
   <string name="setting_mobile">Λήψη μόνο μέσω wifi</string>
   <string name="settings_beta_filter_setting_title">Εκδόσεις beta</string>
   <string name="settings_beta_filter_summary">Θα βλέπετε και εφαρμογές beta.</string>
-  <string name="setting_updates">Ενημερώσεις</string>
   <string name="settings_include_system_apps_title">Εφαρμογές συστήματος</string>
   <string name="settings_include_system_apps_summary">Θα βλέπετε ενημερώσεις για εφαρμογές συστήματος</string>
-  <string name="settings_excluded_updates">Αποκλεισμένες ενημερώσεις</string>
   <string name="setting_notifications">Ειδοποιήσεις</string>
   <string name="setting_notifications_sub_section_1">Ενημερώσεις εφαρμογών</string>
   <string name="setting_notifications_sub_sub_section_1">Προβολή ειδοποιήσεων για ενημερώσεις εφαρμογών</string>
@@ -22,7 +20,6 @@
   <string name="settings_clear_cache_summary">Διαγραφή προσωρινών αρχείων</string>
   <string name="settings_maxFileCache_title">Ορίστε μέγιστο μέγεθος cache (ΜΒ)</string>
   <string name="settings_maxFileCache_sum">Ορίστε μέγιστο μέγεθος για τα cache σας</string>
-  <string name="setting_mature_filtering">Περιεχόμενο για Ενήλικες</string>
   <string name="setting_dont_show_mature_content">Εμφάνιση περιεχομένου για ενήλικες</string>
   <string name="set_mature_pin_title">Ορίστε pin περιεχομένου για ενήλικες</string>
   <string name="set_mature_pin_summary">Ορίστε κωδικό pin για το ξεκλείδωμα περιεχομένου για ενήλικες</string>
