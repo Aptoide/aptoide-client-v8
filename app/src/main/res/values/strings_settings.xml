@@ -11,10 +11,8 @@
   <string name="settings_beta_filter_setting_title">Beta versions</string>
   <string name="settings_beta_filter_summary">You\'ll also see beta apps.</string>
 
-  <string name="setting_updates">Updates</string>
   <string name="settings_include_system_apps_title">System apps</string>
   <string name="settings_include_system_apps_summary">You\'ll see updates for system apps</string>
-  <string name="settings_excluded_updates">Excluded updates</string>
 
   <string name="setting_notifications">Notifications</string>
   <string name="setting_notifications_sub_section_1">App updates</string>
@@ -28,7 +26,6 @@
   <string name="settings_maxFileCache_title">Set max. cache size (MB)</string>
   <string name="settings_maxFileCache_sum">Set a maximum size for your cache</string>
 
-  <string name="setting_mature_filtering">Adult Content</string>
   <string name="setting_dont_show_mature_content">Show adult content</string>
   <string name="set_mature_pin_title">Set adult content pin</string>
   <string name="set_mature_pin_summary">Set a pin code to unlock adult content</string>
@@ -71,7 +68,7 @@
 
   <!--Clear storage: dialog-->
   <string name="freed_space">%s freed</string>
-  <string name="storage_dialog_title">Clear %1$s storage</string>
+  <string name="storage_dialog_title">Clear %1$s storage</string>®
   <string name="clear_cache_dialog_message">Are you sure you want to delete all icons, images, apk downloaded, obb, webservice data, …</string>
 
   <!--About dialog-->

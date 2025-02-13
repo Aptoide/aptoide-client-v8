@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="username">Email</string>
-  <string name="register">Sign Up</string>
-  <string name="title_successful">Successful</string>
   <string name="unknown_error">Unknown Error</string>
   <string name="no_email_and_pass_error_message">Please insert an email and password</string>
   <string name="no_pass_error_message">Please insert a password</string>
@@ -11,15 +8,9 @@
         at least one letter and one number or special characters (!@#$%*)</string>
   <string name="facebook_grant_permission_button">Grant permission</string>
   <string name="facebook_email_permission_regected_message">We need your email to create an account</string>
-  <string name="user_cancelled">Cancelled by user</string>
   <string name="terms_and_conditions_privacy_sign_up_message">I accept Aptoide\'s %1$s and %2$s</string>
   <string name="accept_terms_title_loggedin">Important Information</string>
   <string name="accept_terms_message_loggedin">Please accept our %1$s and %2$s to continue using Aptoide. These documents include all details about our relationship and how we store your data.</string>
-  <string name="accept_terms_loggedin_readTC">READ TERMS &amp; CONDITIONS</string>
-  <string name="accept_terms_loggedin_readPP">READ PRIVACY POLICY</string>
-  <string name="accept_terms_loggedin_message">By pressing accept you agree to Aptoide\'s %1$s and %2$s</string>
-  <string name="accept_terms_loggedin_button_accept">ACCEPT</string>
-  <string name="accept_terms_loggedin_button_close">CLOSE APTOIDE</string>
   <string name="user_upload_photo_failed">It wasn\'t possible to create a profile.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">Processing, it may take a while…</string>
@@ -36,8 +27,6 @@
   <string name="follow" comment="follow">Follow</string>
   <!--Create user fragment-->
   <string name="create_user_title">Create a user profile</string>
-  <string name="create_user_header"><b>Create your user profile</b> to rate, comment and share apps with your friends</string>
-  <string name="edit_profile_header_message">Add a nice image to your profile</string>
   <string name="create_user_take_picture">Take a picture for your profile</string>
   <string name="create_user_choose_username">Choose your nickname</string>
   <string name="create_user_username">Nickname</string>
@@ -75,8 +64,6 @@
   <string name="image_requirements_error_open_image">- Error opening the image\n</string>
   <string name="image_requirements_error_popup_title">Image</string>
   <!-- My account -->
-  <string name="myaccount_my_profile_title">My profile</string>
-  <string name="myaccount_user_store_title">My store</string>
   <string name="myaccount_edit_store_button">Edit</string>
   <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Log out</string>
   <string name="myaccount_header_title">Notifications</string>
@@ -89,7 +76,6 @@
   <string name="newaccount_create_store">create a store</string>
   <string name="newaccount_create_store_message">Create a store to share apps with the community.</string>
   <string name="newaccount_log_out">log out</string>
-  <string name="newaccount_notification_history">Notification history</string>
   <string name="newaccount_settings">Settings</string>
   <string name="newaccount_edit">Edit</string>
 </resources>
