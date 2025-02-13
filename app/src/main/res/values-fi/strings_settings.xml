@@ -8,10 +8,8 @@
   <string name="setting_mobile">Lataa vain WiFi-yhteydellä</string>
   <string name="settings_beta_filter_setting_title">Beta-versiot</string>
   <string name="settings_beta_filter_summary">Näet myös sovellusten beta-versiot.</string>
-  <string name="setting_updates">Päivitykset</string>
   <string name="settings_include_system_apps_title">Järjestelmäsovellukset</string>
   <string name="settings_include_system_apps_summary">Näet järjestelmäsovellusten päivitykset</string>
-  <string name="settings_excluded_updates">Ohitetut päivitykset</string>
   <string name="setting_notifications">Ilmoitukset</string>
   <string name="setting_notifications_sub_section_1">Sovelluspäivitykset</string>
   <string name="setting_notifications_sub_sub_section_1">Näytä ilmoituksia sovelluspäivityksistä</string>
@@ -22,7 +20,6 @@
   <string name="settings_clear_cache_summary">Poista tilapäistiedostot</string>
   <string name="settings_maxFileCache_title">Aseta välimuistin maksimikoko (Mb)</string>
   <string name="settings_maxFileCache_sum">Aseta välimuistin maksimikoko</string>
-  <string name="setting_mature_filtering">Aikuisviihde</string>
   <string name="setting_dont_show_mature_content">Näytä aikuisviihdesisältö</string>
   <string name="set_mature_pin_title">Aseta aikuisviihteelle pin-koodi</string>
   <string name="set_mature_pin_summary">Aseta aikuisviihdelukituksen pin-koodi</string>
