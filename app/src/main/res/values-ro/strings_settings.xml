@@ -8,10 +8,8 @@
   <string name="setting_mobile">Descarcă doar cu Wi-Fi</string>
   <string name="settings_beta_filter_setting_title">Versiuni beta</string>
   <string name="settings_beta_filter_summary">Vei vedea și aplicații în beta.</string>
-  <string name="setting_updates">Actualizări</string>
   <string name="settings_include_system_apps_title">Aplicații sistem</string>
   <string name="settings_include_system_apps_summary">Vei vedea actualizări pentru aplicațiile sistemului</string>
-  <string name="settings_excluded_updates">Actualizări excluse</string>
   <string name="setting_notifications">Notificări</string>
   <string name="setting_notifications_sub_section_1">Actualizări aplicații</string>
   <string name="setting_notifications_sub_sub_section_1">Arată notificări pentru actualizări aplicații</string>
@@ -22,7 +20,6 @@
   <string name="settings_clear_cache_summary">Șterge fișiere temporare</string>
   <string name="settings_maxFileCache_title">Setează dimensiune max. cache (MB)</string>
   <string name="settings_maxFileCache_sum">Setează o dimensiune maximă pentru cache-ul tău</string>
-  <string name="setting_mature_filtering">Conținut pentru adulți</string>
   <string name="setting_dont_show_mature_content">Arată conținut pentru adulți</string>
   <string name="set_mature_pin_title">Setare pin pentru conținutul pentru adulți</string>
   <string name="set_mature_pin_summary">Setează un cod pin pentru a debloca conținutul pentru adulți</string>
