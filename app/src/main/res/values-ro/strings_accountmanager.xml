@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="username">E-mail</string>
-  <string name="register">Înregistrare</string>
-  <string name="title_successful">Cu succes</string>
   <string name="unknown_error">Eroare necunoscută</string>
   <string name="no_email_and_pass_error_message">Te rugăm să introduci o adresă de e-mail și o parolă</string>
   <string name="no_pass_error_message">Introdu o parolă</string>
@@ -11,15 +8,9 @@
         și un număr sau caractere speciale (!@#$%*)</string>
   <string name="facebook_grant_permission_button">Acordă permisiune</string>
   <string name="facebook_email_permission_regected_message">Avem nevoie de e-mailul tău pentru a-ți crea un cont</string>
-  <string name="user_cancelled">Anulat de utilizator</string>
   <string name="terms_and_conditions_privacy_sign_up_message">Accept %1$s și %2$s ale Aptoide</string>
   <string name="accept_terms_title_loggedin">Informații importante</string>
   <string name="accept_terms_message_loggedin">Te rugăm să accepți %1$s și %2$s pentru a continua să folosești Aptoide. Aceste documente includ toate detaliile despre relația noastră și modul în care îți stocăm datele.</string>
-  <string name="accept_terms_loggedin_readTC">CITEȘTE TERMENI &amp; CONDIȚII</string>
-  <string name="accept_terms_loggedin_readPP">CITEȘTE POLITICA DE CONFIDENȚIALITATE</string>
-  <string name="accept_terms_loggedin_message">Prin apăsarea butonului Accept declari că ești de acord cu %1$s și %2$s Aptoide</string>
-  <string name="accept_terms_loggedin_button_accept">ACCEPT</string>
-  <string name="accept_terms_loggedin_button_close">ÎNCHIDE APTOIDE</string>
   <string name="user_upload_photo_failed">În acest moment, profilul nu a putut fi creat.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">Se procesează, s-ar putea să dureze un pic…</string>
@@ -36,8 +27,6 @@
   <string name="follow" comment="follow">Urmărește</string>
   <!--Create user fragment-->
   <string name="create_user_title">Creează un profil de utilizator</string>
-  <string name="create_user_header"><b>Creează un profil de utilizator</b> pentru a putea să evaluezi, comentezi și distribui aplicații împreună cu prietenii tăi</string>
-  <string name="edit_profile_header_message">Editează-ți profilul cu o imagine frumoasă</string>
   <string name="create_user_take_picture">Fă-ți o poză pentru profilul tău</string>
   <string name="create_user_choose_username">Alege pseudonimul tău</string>
   <string name="create_user_username">Pseudonim</string>
@@ -75,8 +64,6 @@
   <string name="image_requirements_error_open_image">- Eroare la deschiderea imaginii\n</string>
   <string name="image_requirements_error_popup_title">Imagine</string>
   <!-- My account -->
-  <string name="myaccount_my_profile_title">Profilul meu</string>
-  <string name="myaccount_user_store_title">Magazinul meu</string>
   <string name="myaccount_edit_store_button">Editează</string>
   <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Deconectare</string>
   <string name="myaccount_header_title">Notificări</string>
@@ -89,7 +76,6 @@
   <string name="newaccount_create_store">creează un magazin</string>
   <string name="newaccount_create_store_message">Creează un magazin ca să distribui aplicații în comunitate.</string>
   <string name="newaccount_log_out">deconectează-te</string>
-  <string name="newaccount_notification_history">Istoric notificări</string>
   <string name="newaccount_settings">Setări</string>
   <string name="newaccount_edit">Modifică</string>
 </resources>
