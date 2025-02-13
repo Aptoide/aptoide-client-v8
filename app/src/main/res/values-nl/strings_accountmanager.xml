@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="username">E-mail</string>
-  <string name="register">Aanmelden</string>
-  <string name="title_successful">Geslaagd</string>
   <string name="unknown_error">Onbekende fout</string>
   <string name="no_email_and_pass_error_message">Voer een e-mailadres en wachtwoord in</string>
   <string name="no_pass_error_message">Voer een wachtwoord in</string>
@@ -10,15 +7,9 @@
   <string name="password_validation_text">Wachtwoord moet minimaal 8 tekens lang zijn en minstens één letter en één cijfer of speciaal teken (!@#$%*) bevatten</string>
   <string name="facebook_grant_permission_button">Toestemming geven</string>
   <string name="facebook_email_permission_regected_message">We hebben je e-mailadres nodig om een account aan te maken</string>
-  <string name="user_cancelled">Geannuleerd door gebruiker</string>
   <string name="terms_and_conditions_privacy_sign_up_message">Ik accepteer de %1$s en het %2$s van Aptoide</string>
   <string name="accept_terms_title_loggedin">Belangrijke informatie</string>
   <string name="accept_terms_message_loggedin">Accepteer onze %1$s en ons %2$s om Aptoide te blijven gebruiken. Deze documenten bevatten alle details over onze relatie en de manier waarop we je gegevens opslaan.</string>
-  <string name="accept_terms_loggedin_readTC">ALGEMENE VOORWAARDEN LEZEN</string>
-  <string name="accept_terms_loggedin_readPP">PRIVACYBELEID LEZEN</string>
-  <string name="accept_terms_loggedin_message">Door op accepteren te klikken, ga je akkoord met de %1$s en het %2$s van Aptoide</string>
-  <string name="accept_terms_loggedin_button_accept">ACCEPTEREN</string>
-  <string name="accept_terms_loggedin_button_close">APTOIDE SLUITEN</string>
   <string name="user_upload_photo_failed">Profiel aanmaken mislukt.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">Verzoek aan het verwerken, dit kan even duren…</string>
@@ -35,8 +26,6 @@
   <string name="follow" comment="follow">Volgen</string>
   <!--Create user fragment-->
   <string name="create_user_title">Nieuw gebruikersprofiel aanmaken</string>
-  <string name="create_user_header"><b>Maak je gebruikersprofiel aan</b> om apps te beoordelen en met je vrienden te delen</string>
-  <string name="edit_profile_header_message">Voeg een mooie foto aan je profiel toe</string>
   <string name="create_user_take_picture">Neem een foto voor je profiel</string>
   <string name="create_user_choose_username">Kies je weergavenaam</string>
   <string name="create_user_username">Weergavenaam</string>
@@ -74,8 +63,6 @@
   <string name="image_requirements_error_open_image">- Fout bij het openen van de afbeelding\n</string>
   <string name="image_requirements_error_popup_title">Afbeelding</string>
   <!-- My account -->
-  <string name="myaccount_my_profile_title">Mijn profiel</string>
-  <string name="myaccount_user_store_title">Mijn winkel</string>
   <string name="myaccount_edit_store_button">Bewerken</string>
   <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Uitloggen</string>
   <string name="myaccount_header_title">Meldingen</string>
@@ -88,7 +75,6 @@
   <string name="newaccount_create_store">winkel aanmaken</string>
   <string name="newaccount_create_store_message">Creëer een winkel om apps met de gemeenschap te delen.</string>
   <string name="newaccount_log_out">uitloggen</string>
-  <string name="newaccount_notification_history">Eerdere meldingen</string>
   <string name="newaccount_settings">Instellingen</string>
   <string name="newaccount_edit">Bewerken</string>
 </resources>
