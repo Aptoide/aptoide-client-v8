@@ -8,10 +8,8 @@
   <string name="setting_mobile">Unduh hanya melalui wifi</string>
   <string name="settings_beta_filter_setting_title">Versi beta</string>
   <string name="settings_beta_filter_summary">Anda juga akan melihat aplikasi beta.</string>
-  <string name="setting_updates">Pembaruan</string>
   <string name="settings_include_system_apps_title">Aplikasi sistem</string>
   <string name="settings_include_system_apps_summary">Anda akan melihat pembaruan untuk aplikasi sistem</string>
-  <string name="settings_excluded_updates">Pembaruan dikecualikan</string>
   <string name="setting_notifications">Notifikasi</string>
   <string name="setting_notifications_sub_section_1">Pembaruan Aplikasi</string>
   <string name="setting_notifications_sub_sub_section_1">Tampilkan notifikasi untuk pembaruan aplikasi</string>
@@ -22,7 +20,6 @@
   <string name="settings_clear_cache_summary">Hapus file-file sementara</string>
   <string name="settings_maxFileCache_title">Tentukan ukuran cache maksimal (MB)</string>
   <string name="settings_maxFileCache_sum">Tentukan ukuran maksimal cache</string>
-  <string name="setting_mature_filtering">Konten Dewasa</string>
   <string name="setting_dont_show_mature_content">Tampilkan konten dewasa</string>
   <string name="set_mature_pin_title">Atur Pin Konten Dewasa</string>
   <string name="set_mature_pin_summary">Tentukan kode pin untuk membuka konten dewasa</string>
