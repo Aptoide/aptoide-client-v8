@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="username">อีเมล</string>
-  <string name="register">สมัคร</string>
-  <string name="title_successful">สำเร็จ</string>
   <string name="unknown_error">ความผิดพลาดที่ไม่ทราบ</string>
   <string name="no_email_and_pass_error_message">โปรดใส่อีเมลและรหัสผ่าน</string>
   <string name="no_pass_error_message">โปรดใส่รหัสผ่าน</string>
@@ -10,15 +7,9 @@
   <string name="password_validation_text">รหัสผ่านต้องประกอบด้วย8อักขระและควรมี        อย่างน้อย1ตัวอักษรและตัวเลข1ตัวหรืออักขระพิเศษ(!@#$%*)</string>
   <string name="facebook_grant_permission_button">การอนุญาต</string>
   <string name="facebook_email_permission_regected_message">พวกเราจำเป็นต้องมีอีเมลของคุณเพื่อสร้างบัญชี</string>
-  <string name="user_cancelled">ยกเลิกโดยผู้ใช้</string>
   <string name="terms_and_conditions_privacy_sign_up_message">ฉันยอมรับ%1$sและ%2$sของAptoide</string>
   <string name="accept_terms_title_loggedin">ข้อความสำคัญ</string>
   <string name="accept_terms_message_loggedin">โปรดยอมรับ %1$s และ %2$s ในการใช้ Aptoide ของเรา เอกสารเหล่านี้รวมถึงรายละเอียดทั้งหมดเกี่ยวกับความสัมพันธ์ของเราและวิธีที่เราจัดเก็บข้อมูลของคุณ</string>
-  <string name="accept_terms_loggedin_readTC">อ่านข้อกำหนด&amp; เงื่อนไข</string>
-  <string name="accept_terms_loggedin_readPP">อ่านนโยบายความเป็นส่วนตัว</string>
-  <string name="accept_terms_loggedin_message">โดยการกดยอมรับ คุณยอมรับ %1$s และ %2$sของAptoide</string>
-  <string name="accept_terms_loggedin_button_accept">ยอมรับ</string>
-  <string name="accept_terms_loggedin_button_close">CLOSE APTOIDE</string>
   <string name="user_upload_photo_failed">ไม่สามารถสร้างโปรไฟล์ได้ชั่วขณะ</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">การประมวลผลมันอาจใช้เวลาสักครู่...</string>
@@ -35,8 +26,6 @@
   <string name="follow" comment="follow">ติดตาม</string>
   <!--Create user fragment-->
   <string name="create_user_title">สร้างบัญชีผู้ใช้</string>
-  <string name="create_user_header"><b>สร้างบัญชีโปรไฟลืของคุณ</b> เพื่อที่ว่าคุณสามารถให้คะแนนได้ แสดงความคิดเห็นและแชร์แอปให้เพื่อนของคุณ</string>
-  <string name="edit_profile_header_message">แก้ไขโปรไฟล์ของคุณด้วยภาพสวยงาม</string>
   <string name="create_user_take_picture">ถ่ายรูปภาพเพื่อใช้ดปรไฟล์ของคุณ</string>
   <string name="create_user_choose_username">เลือกชื่อเล่นของคุณ</string>
   <string name="create_user_username">ชื่อเล่น</string>
@@ -74,8 +63,6 @@
   <string name="image_requirements_error_open_image">-มีข้อผิดพลาดในการเปิดรูป\n</string>
   <string name="image_requirements_error_popup_title">รูปแบบ</string>
   <!-- My account -->
-  <string name="myaccount_my_profile_title">โปรไฟล์ของฉัน</string>
-  <string name="myaccount_user_store_title">ร้านค้าของฉัน</string>
   <string name="myaccount_edit_store_button">แก้ไข</string>
   <string name="myaccount_log_out_button" comment="myaccount_log_out_button">ออกจากระบบ</string>
   <string name="myaccount_header_title">การแจ้งเตือน</string>
@@ -88,7 +75,6 @@
   <string name="newaccount_create_store">สร้างร้านค้า</string>
   <string name="newaccount_create_store_message">สร้างร้านค้าเพื่อแบ่งปันแอปกับคอมมิวนิตี้</string>
   <string name="newaccount_log_out">ออกจากระบบ</string>
-  <string name="newaccount_notification_history">ประวัติการแจ้งเตือน</string>
   <string name="newaccount_settings">การตั้งค่า</string>
   <string name="newaccount_edit">แก้ไข</string>
 </resources>
