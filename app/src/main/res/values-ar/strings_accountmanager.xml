@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="username">البريد الإلكتروني</string>
-  <string name="register">التسجيل</string>
-  <string name="title_successful">ناجح</string>
   <string name="unknown_error">خطأ مجهول</string>
   <string name="no_email_and_pass_error_message">يرجى إدخال بريد إلكتروني وكلمة مرور</string>
   <string name="no_pass_error_message">يرجى إدخال كلمة مرور</string>
@@ -11,15 +8,9 @@
         على حرف واحد ورقم أو رمز خاص (!@#$%*) واحد على الأقل</string>
   <string name="facebook_grant_permission_button">منح إذن</string>
   <string name="facebook_email_permission_regected_message">نحن بحاجة إلى بريدك الإلكتروني لإنشاء حساب</string>
-  <string name="user_cancelled">تم إلغاء من قبل المستخدم</string>
   <string name="terms_and_conditions_privacy_sign_up_message">أقبل بـ%1$s و%2$s الخاصة بـAptoide</string>
   <string name="accept_terms_title_loggedin">معلومات مهمة</string>
   <string name="accept_terms_message_loggedin">يرجى قبول %1$s و%2$s الخاصة بنا لمتابعة استخدام Aptoide. تحتوي هذه المستندات على كل تفاصيل علاقتنا وكيفية حفظنا لبياناتك.</string>
-  <string name="accept_terms_loggedin_readTC">اقرأ الشروط &amp; الأحكام</string>
-  <string name="accept_terms_loggedin_readPP">اقرأ سياسة الخصوصية</string>
-  <string name="accept_terms_loggedin_message">بالضغط على زر موافق أنت توافق على %1$s و%2$s الخاصة بـAptoide</string>
-  <string name="accept_terms_loggedin_button_accept">موافق</string>
-  <string name="accept_terms_loggedin_button_close">إغلاق Aptoide</string>
   <string name="user_upload_photo_failed">في الوقت الراهن لا يمكن انشاء ملف تعريف.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">قيد التنفيذ، هذا قد يستغرق بعض الوقت…</string>
@@ -36,8 +27,6 @@
   <string name="follow" comment="follow">متابعة</string>
   <!--Create user fragment-->
   <string name="create_user_title">إنشاء ملف تعريف المستخدم</string>
-  <string name="create_user_header"><b>إنشاء الملف التعريفي للمستخدم الخاص بك</b> حتى تكون قادراً على التقييم، التعليق ومشاركة التطبيقات مع أصدقائك</string>
-  <string name="edit_profile_header_message">أضف صورة جميلة لتعديل صفحتك</string>
   <string name="create_user_take_picture">التقاط صورة لملفك التعريفي</string>
   <string name="create_user_choose_username">اختر اسمك المستعار</string>
   <string name="create_user_username">الاسم المستعار</string>
@@ -75,8 +64,6 @@
   <string name="image_requirements_error_open_image">- حدث خطأ أثناء فتح الصورة\n</string>
   <string name="image_requirements_error_popup_title">الصورة</string>
   <!-- My account -->
-  <string name="myaccount_my_profile_title">ملفي الشخصي</string>
-  <string name="myaccount_user_store_title">متجري</string>
   <string name="myaccount_edit_store_button">تعديل</string>
   <string name="myaccount_log_out_button" comment="myaccount_log_out_button">تسجيل الخروج</string>
   <string name="myaccount_header_title">الإشعارات</string>
@@ -89,7 +76,6 @@
   <string name="newaccount_create_store">إنشاء متجر</string>
   <string name="newaccount_create_store_message">أنشئ متجرًا لمشاركة التطبيقات مع المجتمع.</string>
   <string name="newaccount_log_out">تسجيل الخروج</string>
-  <string name="newaccount_notification_history">سِجل الإشعارات</string>
   <string name="newaccount_settings">الإعدادات</string>
   <string name="newaccount_edit">تعديل</string>
 </resources>
