@@ -8,10 +8,8 @@
   <string name="setting_mobile">केवल वाईफाई पर डाउनलोड करें</string>
   <string name="settings_beta_filter_setting_title">बीटा संस्करण</string>
   <string name="settings_beta_filter_summary">आप बीटा ऐप्स भी देखेंगे।</string>
-  <string name="setting_updates">अपडेट्स</string>
   <string name="settings_include_system_apps_title">सिस्टम ऐप्स</string>
   <string name="settings_include_system_apps_summary">आप सिस्टम ऐप्स के लिए अपडेट देखेंगे</string>
-  <string name="settings_excluded_updates">छोड़े गए अपडेट</string>
   <string name="setting_notifications">सूचनाएं</string>
   <string name="setting_notifications_sub_section_1">एप्प अपडेट</string>
   <string name="setting_notifications_sub_sub_section_1">एप्प अपडेट के लिए अधिसूचनाएं दिखाएं</string>
@@ -22,7 +20,6 @@
   <string name="settings_clear_cache_summary">अस्थायी फाइलें हटाएँ</string>
   <string name="settings_maxFileCache_title">अधिकतम कैश आकार (एमबी) तय करें</string>
   <string name="settings_maxFileCache_sum">अपनी कैश के लिए अधिकतम आकार तय करें</string>
-  <string name="setting_mature_filtering">व्यस्क सामग्री</string>
   <string name="setting_dont_show_mature_content">व्यस्क सामग्री दिखाएं</string>
   <string name="set_mature_pin_title">वयस्क सामग्री पिन सेट करें</string>
   <string name="set_mature_pin_summary">वयस्क सामग्री अनलॉक करने के लिए पिन कोड तय करें</string>
