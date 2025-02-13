@@ -52,7 +52,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
-import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.Type
@@ -63,7 +62,6 @@ import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
-import com.aptoide.android.aptoidegames.analytics.presentation.InitialAnalyticsMeta
 import com.aptoide.android.aptoidegames.analytics.presentation.OverrideAnalyticsBundleMeta
 import com.aptoide.android.aptoidegames.analytics.presentation.SwipeListener
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
@@ -103,21 +101,6 @@ val translatedTitles = mapOf(
   "Trending" to R.string.fixed_bundle_trending_title,
   "Categories" to R.string.categories,
 )
-
-const val gamesRoute = "gamesView"
-
-fun gamesScreen() = ScreenData(
-  route = gamesRoute,
-) { _, navigate, _ ->
-  InitialAnalyticsMeta(
-    screenAnalyticsName = "Home",
-    navigate = navigate
-  ) {
-    BundlesScreen(
-      navigate = it,
-    )
-  }
-}
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
