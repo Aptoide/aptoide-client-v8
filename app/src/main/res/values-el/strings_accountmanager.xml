@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="username">Email</string>
-  <string name="register">Εγγραφή</string>
-  <string name="title_successful">Επιτυχία</string>
   <string name="unknown_error">Άγνωστο Σφάλμα</string>
   <string name="no_email_and_pass_error_message">Παρακαλούμε εισάγετε email και κωδικό πρόσβασης</string>
   <string name="no_pass_error_message">Παρακαλούμε εισάγετε έναν κωδικό πρόσβασης</string>
@@ -11,15 +8,9 @@
         τουλάχιστον ένα γράμμα και έναν αριθμό ή ειδικούς χαρακτήρες (!@#$%*)</string>
   <string name="facebook_grant_permission_button">Χορήγηση άδειας</string>
   <string name="facebook_email_permission_regected_message">Χρειαζόμαστε το email σας για τη δημιουργία ενός λογαριασμού</string>
-  <string name="user_cancelled">Ακυρώθηκε από το χρήστη</string>
   <string name="terms_and_conditions_privacy_sign_up_message">Δέχομαι τους %1$s και την %2$s του Aptoide</string>
   <string name="accept_terms_title_loggedin">Σημαντικές πληροφορίες</string>
   <string name="accept_terms_message_loggedin">Παρακαλούμε αποδεχτείτε τους %1$s και την %2$s μας, για να συνεχίσετε να χρησιμοποιείτε το Aptoide. Αυτά τα έγγραφα περιλαμβάνουν όλες τις λεπτομέρειες σχετικά με τη συμφωνία μας και το πώς αποθηκεύουμε τα δεδομένα σας.</string>
-  <string name="accept_terms_loggedin_readTC">ΔΙΑΒΑΣΤΕ ΤΟΥΣ ΟΡΟΥΣ &amp; ΠΡΟΫΠΟΘΕΣΕΙΣ</string>
-  <string name="accept_terms_loggedin_readPP">ΔΙΑΒΑΣΤΕ ΤΗΝ ΠΟΛΙΤΙΚΗ ΑΠΟΡΡΗΤΟΥ</string>
-  <string name="accept_terms_loggedin_message">Εάν πατήσετε αποδοχή, συμφωνείτε με τους %1$s και την %2$s του Aptoide</string>
-  <string name="accept_terms_loggedin_button_accept">ΑΠΟΔΟΧΗ</string>
-  <string name="accept_terms_loggedin_button_close">ΚΛΕΙΣΙΜΟ APTOIDE</string>
   <string name="user_upload_photo_failed">Δεν ήταν δυνατή η δημιουργία προφίλ.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">Γίνεται επεξεργασία, μπορεί να χρειαστεί λίγος χρόνος…</string>
@@ -36,8 +27,6 @@
   <string name="follow" comment="follow">Ακολουθήστε</string>
   <!--Create user fragment-->
   <string name="create_user_title">Δημιουργία προφίλ χρήστη</string>
-  <string name="create_user_header"><b>Δημιουργήστε το δικό σας προφίλ χρήστη</b> έτσι ώστε να μπορείτε να αξιολογείτε, να σχολιάζετε, και να μοιράζεστε εφαρμογές με τους φίλους σας</string>
-  <string name="edit_profile_header_message">Προσθέστε μια ωραία εικόνα στο προφίλ σας</string>
   <string name="create_user_take_picture">Τραβήξτε μια φωτογραφία για το προφίλ σας</string>
   <string name="create_user_choose_username">Επιλέξτε το ψευδώνυμό σας</string>
   <string name="create_user_username">Ψευδώνυμο</string>
@@ -75,8 +64,6 @@
   <string name="image_requirements_error_open_image">- Σφάλμα κατά το άνοιγμα της εικόνας\n</string>
   <string name="image_requirements_error_popup_title">Εικόνα</string>
   <!-- My account -->
-  <string name="myaccount_my_profile_title">Το προφίλ μου</string>
-  <string name="myaccount_user_store_title">Το store μου</string>
   <string name="myaccount_edit_store_button">Επεξεργασία</string>
   <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Αποσύνδεση</string>
   <string name="myaccount_header_title">Ειδοποιήσεις</string>
@@ -89,7 +76,6 @@
   <string name="newaccount_create_store">δημιουργήστε ένα store</string>
   <string name="newaccount_create_store_message">Δημιουργήστε ένα store για να μοιραστείτε εφαρμογές με την κοινότητα.</string>
   <string name="newaccount_log_out">αποσύνδεση</string>
-  <string name="newaccount_notification_history">Ιστορικό ειδοποιήσεων</string>
   <string name="newaccount_settings">Ρυθμίσεις</string>
   <string name="newaccount_edit">Επεξεργασία</string>
 </resources>
