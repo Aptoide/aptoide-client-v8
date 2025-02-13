@@ -11,22 +11,15 @@
   <string name="overflow_menu_terms_conditions">Termeni &amp; condiții</string>
   <string name="overflow_menu_privacy_policy">Politica de confidențialitate</string>
   <string name="settings_about_hardware_title">Specificații hardware</string>
-  <string name="settings_about_title">Despre noi</string>
   <string name="settings_about_version">Versiunea %1$s (%2$s)</string>
   <string name="settings_copied_to_clipboard_message">Copiat în clipboard</string>
   <string name="settings_general_title">General</string>
-  <string name="settings_theme_option_dark">Întunecat</string>
-  <string name="settings_theme_option_light">Luminos</string>
-  <string name="settings_theme_option_system">Prestabilită de sistem</string>
-  <string name="settings_theme_options_title">Temă</string>
   <string name="settings_title">Setări</string>
   <string name="settings_support">Suport</string>
   <string name="settings_feedback_button">Trimite feedback</string>
   <string name="settings_feedback_title">Trimite feedback</string>
   <string name="settings_legal_title">Juridic</string>
   <string name="settings_send_feedback_body">Spune-ne părerea ta despre Aptoide Games!\n\u2022 Ai vrea să vezi o funcție nouă?\n\u2022 Ce ar trebui să facem ca să devenim mai buni?</string>
-  <string name="settings_payment_support_description_title">Descriere</string>
-  <string name="settings_contact_form_character_limit_title">(min. 50 caractere)</string>
   <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Descriere (min. 50 caractere)</string>
   <string name="settings_storage_title">Stocare</string>
   <string name="settings_storage_clear_cache_title">Golire cache</string>
@@ -39,7 +32,6 @@
   <string name="empty_category_body">Nu există aplicații în această categorie...încă!</string>
   <!-- Notifications -->
   <string name="notifications_context_title">Primește notificări!</string>
-  <string name="notification_installing_title">Se instalează</string>
   <string name="notification_preparing_title">În pregătire</string>
   <string name="notification_ready_install_title">O aplicație este pregătită pentru instalare!</string>
   <string name="notification_ready_install_body">Apasă aici pentru a instala %s.</string>
@@ -68,10 +60,7 @@
   <string name="fixed_bundle_editors_choice_title">Alegerea editorului</string>
   <string name="fixed_bundle_editorial_title">Editorial</string>
   <string name="fixed_bundle_trending_title">Populare</string>
-  <string name="fixed_bundle_publisher_title">Distrează-te cu %s</string>
   <string name="retry_button" comment="button_retry_title">Reîncearcă</string>
-  <string name="generic_error_message">Ceva nu a mers cum trebuie. Încearcă din nou.</string>
-  <string name="generic_network_error_message">Ups, ceva nu a mers cum trebuie. Verifică-ți conexiunea la internet.</string>
   <string name="install_waiting_installation_message">Se așteaptă instalarea</string>
   <string name="install_installing_message">Se instalează</string>
   <string name="install_error_short_message">Ups, a apărut o eroare.</string>
@@ -108,17 +97,10 @@
   <string name="error_install_permissions_body"><![CDATA[Accesează Setări și acordă permisiunile pentru <1>Aptoide Games</1> pentru a instala aplicații!]]></string>
   <string name="latest_title">Noi</string>
   <string name="whats_new_title">Noutăți</string>
-  <string name="screenshot_appview_1">Un bonus la achizițiile tale în aplicație.</string>
-  <string name="screenshot_appview_2">Găsește jocuri noi de top selectate pentru tine.</string>
-  <string name="screenshot_appview_3">Un mod nou de a descoperi jocul tău preferat.</string>
-  <string name="screenshot_appview_4">O interfață ușor de utilizat cu cel mai bun conținut.</string>
-  <string name="screenshot_appview_5">Jocuri alese special pentru tine.</string>
   <string name="not_now_button">Nu acum</string>
   <string name="later_button">Mai târziu</string>
   <string name="trusted_game_badge">Joc De Încredere</string>
   <string name="official_game_badge">Joc Oficial</string>
-  <string name="see_more_button">Vezi mai multe</string>
-  <string name="generic_error_short_title">A apărut o eroare.</string>
   <string name="editorial_card_views_short">%s vizualizări</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Spațiu epuizat</string>
@@ -141,13 +123,9 @@
   <!-- Install -->
   <string name="button_install_title">Instalează</string>
   <!-- Common -->
-  <string name="notice_at_collection_and_privacy_policy">Notificare pentru Colectare &amp; Politică de confidențialitate</string>
-  <string name="terms_and_conditions">Termeni</string>
-  <string name="continue_to_accept_tandc_and_pp_disclaimer">Continuând, accepți %1$s și %2$s.</string>
   <string name="appview_details_tab_title" comment="details">Detalii</string>
   <string name="appview_related_tab_title" comment="related">Similare</string>
   <string name="appview_info_tab_title" comment="info">Informații</string>
-  <string name="bottom_navigation_discovery" comment="discovery">Descoperă</string>
   <string name="appview_info_version_name_title" comment="version_name">Nume versiune</string>
   <string name="appview_info_package_name_title" comment="package_name">Nume pachet</string>
   <string name="appview_info_release_title" comment="release">Lansat</string>
@@ -156,18 +134,9 @@
   <string name="appview_info_website_title" comment="website">Website</string>
   <string name="appview_info_email_title" comment="email">E-mail</string>
   <string name="appview_info_permissions_title" comment="permissions">Permisiuni</string>
-  <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% din %2$s</string>
-  <string name="error_short_title" comment="oops_an_error_occurred">Ups, a apărut o eroare</string>
-  <string name="purchase_done_bonus_title">Primești un bonus de %s!</string>
-  <string name="purchase_done_bonus_body">Descarcă AppCoins Wallet pentru a primi acest bonus și folosește-l la următoarea ta achiziție.</string>
-  <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet instalat!</string>
-  <string name="purchase_done_bonus_wallet_installed_body">Deschide pentru a găsi bonusul.</string>
   <string name="bonus_banner_body">Vei primi un bonus în toate jocurile marcate cu %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Bonus de până la %s%%</string>
   <string name="settings_auto_update_button">Actualizare automată jocuri</string>
-  <string name="settings_payments_title" comment="contact_support_team">Contactează echipa de asistență</string>
-  <string name="settings_contact_support_body" comment="billing_terms_of_use">Termeni de utilizare pentru Facturare</string>
-  <string name="settings_billing_terms_body" comment="payments">Plăți</string>
   <string name="powered_by_title" comment="powered_by">Realizat de</string>
   <string name="contact_support_title" comment="contact_support">Contactează echipa de asistență</string>
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Te rugăm să ne scrii toate detaliile:\n\u2022 Când a început problema\n\u2022 În ce joc faci achiziția\n\nDupă ce apeși pe Trimite, se va deschide aplicația de e-mail. Atașează o captură de ecran sau o înregistrare video cu problema!</string>
@@ -175,32 +144,21 @@
   <string name="apkfy_whats_aptoide_games_title">Ce este Aptoide Games?</string>
   <string name="apkfy_install_body">Descarcă-ți jocul preferat și multe altele în Aptoide Games!</string>
   <string name="apkfy_install_bullet_points">\u2022 Jocuri populare selectate cu atenție.\n\u2022Fără conectare!\n\u2022 Promoții speciale și recompense în jocurile tale preferate.</string>
-  <string name="apkfy_install_alternative_version_body">Deblochezi și Aptoide Games!</string>
-  <string name="apkfy_install_alternative_version_bullet_points">\u2022 Jocuri atent selectate, special pentru tine.\n\u2022 Recompense exclusive și oferte speciale.\n\u2022 Asistentul tău AI personal pentru descoperirea jocurilor.</string>
-  <string name="app_size_mb_title" comment="s_mb">%s MB</string>
-  <string name="uninstalled_title" comment="uninstalled">Dezinstalat</string>
-  <string name="error_no_internet_body" comment="please_check_your_internet_connection">Te rugăm să îți verifici conexiunea la internet.</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Plătește cu AppCoins Wallet</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Va fi instalat automat și vei primi un bonus la toate achizițiile!</string>
   <string name="buy_button" comment="buy">Cumpără</string>
   <string name="iap_other_payment_methods_button" comment="other_payment_methods">Alte metode de plată</string>
   <string name="iap_remember_card_button" comment="remember_card">Ține minte card</string>
-  <string name="iap_card_number" comment="card_number">Număr card</string>
-  <string name="iap_card_expiry" comment="expiry_date">Data expirării</string>
-  <string name="iap_card_cvc" comment="cvc_cvv">CVC/CVV</string>
   <string name="iab_change_card_button" comment="change_card">Utilizează un alt card</string>
   <string name="done_title">Gata!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">Se efectuează achiziția...</string>
-  <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">Ești sigur că detaliile cardului tău sunt corecte? Te rugăm să încerci din nou!</string>
   <string name="log_out_button" comment="log_out">Deconectare</string>
-  <string name="get_a_bonus_in_all_purchases_title">Vei primi un bonus la toate achizițiile!</string>
   <string name="iap_appc_body">Vei primi un bonus la toate achizițiile!</string>
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Acum poți finaliza achiziția.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">AppCoins Wallet a fost instalat!</string>
   <string name="storage_access_permission_request_message">Permite accesul la spațiul de stocare al telefonului tău pentru a putea să descărcăm și să instalăm această aplicație.</string>
   <string name="downloads_number_title">%s descărcări</string>
   <!-- Payment Errors-->
-  <string name="payments_error_not_enough_balance_body">Nu ai o balanță suficientă</string>
   <string name="payments_error_old_card_title">Se pare că ai înregistrat acest card acum mult timp!</string>
   <string name="payments_error_old_card_body">Introdu detaliile cardului din nou sau folosește un alt card.</string>
   <string name="purchase_error_payment_rejected">Tranzacția a fost refuzată.</string>
@@ -215,7 +173,6 @@
   <string name="purchase_error_3d_title">A apărut o problemă cu autentificarea ta 3D.</string>
   <string name="purchase_card_rejected_title">Tranzacția a fost refuzată de banca ta.</string>
   <string name="purchase_error_invalid_credit_card_title">Număr card bancar nevalid.</string>
-  <string name="purchase_error_invalid_credit_card_body">Asigură-te că toate cifrele sunt corecte.</string>
   <string name="purchase_error_card_security_validation_title">A apărut o eroare la nivelul 2 al validării acestei tranzacții.</string>
   <string name="purchase_error_in_progress_title">Cererea ta a fost deja procesată sau este în curs de procesare.</string>
   <string name="purchase_card_error_CVV_title">CVV/CVC greșit</string>
@@ -261,9 +218,7 @@
   <string name="update_notification_body">Apasă aici pentru a instala.</string>
   <string name="update_aptoide_games_update_notification">Avem o versiune nouă pentru Aptoide Games</string>
   <!-- GenAi -->
-  <string name="genai_bottom_navigation_genai_button">GenAI</string>
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
-  <string name="genai_assistant_title">Asistent</string>
   <string name="genai_me_title">Eu</string>
   <string name="genai_introduction_body">Bună! Sunt Asistentul tău AI specializat în aplicații și descoperirea jocurilor. Poți începe cu ceva de genul:</string>
   <string name="genai_input_message_field">Introdu un mesaj&#8230;</string>

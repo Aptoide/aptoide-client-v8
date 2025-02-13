@@ -11,22 +11,15 @@
   <string name="overflow_menu_terms_conditions">Terma &amp; Syarat</string>
   <string name="overflow_menu_privacy_policy">Dasar Privasi</string>
   <string name="settings_about_hardware_title">Spesifikasi pemacu keras</string>
-  <string name="settings_about_title">Perihal Kami</string>
   <string name="settings_about_version">Versi %1$s (%2$s)</string>
   <string name="settings_copied_to_clipboard_message">Disalin ke papan klip</string>
   <string name="settings_general_title">Am</string>
-  <string name="settings_theme_option_dark">Gelap</string>
-  <string name="settings_theme_option_light">Lampu</string>
-  <string name="settings_theme_option_system">Lalai sistem</string>
-  <string name="settings_theme_options_title">Tema</string>
   <string name="settings_title">Tetapan</string>
   <string name="settings_support">Sokongan</string>
   <string name="settings_feedback_button">Hantar Maklum Balas</string>
   <string name="settings_feedback_title">Hantar Maklum Balas</string>
   <string name="settings_legal_title">Undang-undang</string>
   <string name="settings_send_feedback_body">Kongsikan pandangan anda tentang Aptoide Games dengan kami\n\u2022 Sebarang ciri baru yang anda mahu lihat?\n\u2022 Apa cadangan anda untuk kami tambah baik?</string>
-  <string name="settings_payment_support_description_title">Keterangan</string>
-  <string name="settings_contact_form_character_limit_title">(Min. 50 Karakter)</string>
   <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Keterangan (Min. 50 karakter)</string>
   <string name="settings_storage_title">Bersihkan Ingatan</string>
   <string name="settings_storage_clear_cache_title">Bersihkan cache</string>
@@ -39,7 +32,6 @@
   <string name="empty_category_body">Belum ada aplikasi dalam kategori ini!</string>
   <!-- Notifications -->
   <string name="notifications_context_title">Dapatkan makluman!</string>
-  <string name="notification_installing_title">Memasang</string>
   <string name="notification_preparing_title">Menyediakan</string>
   <string name="notification_ready_install_title">Satu aplikasi sudah sedia untuk dipasang!</string>
   <string name="notification_ready_install_body">Ketik sini untuk pasang %s.</string>
@@ -68,10 +60,7 @@
   <string name="fixed_bundle_editors_choice_title">Pilihan Editor</string>
   <string name="fixed_bundle_editorial_title">Editorial</string>
   <string name="fixed_bundle_trending_title">Hangat</string>
-  <string name="fixed_bundle_publisher_title">Berseronok dengan %s</string>
   <string name="retry_button" comment="button_retry_title">Cuba lagi</string>
-  <string name="generic_error_message">Ada sesuatu yang tidak kena. Cuba lagi.</string>
-  <string name="generic_network_error_message">Oops, ada yang tak kena. Sila semak sambungan Internet anda.</string>
   <string name="install_waiting_installation_message">Tunggu pemasangan</string>
   <string name="install_installing_message">Memasang</string>
   <string name="install_error_short_message">Oops, ada ralat berlaku.</string>
@@ -108,17 +97,10 @@
   <string name="error_install_permissions_body"><![CDATA[Sila pergi ke Tetapan dan izinkan <1>Permainan Aptoide</1> untuk pasang aplikasi!]]></string>
   <string name="latest_title">Terkini</string>
   <string name="whats_new_title">Terbaru</string>
-  <string name="screenshot_appview_1">Bonus bagi semua pembelian dalam aplikasi.</string>
-  <string name="screenshot_appview_2">Temui permainan terpilih untuk anda.</string>
-  <string name="screenshot_appview_3">Cara baru untuk temui permainan kegemaran.</string>
-  <string name="screenshot_appview_4">Antara muka yang lancar dengan kandungan terbaik.</string>
-  <string name="screenshot_appview_5">Permainan yang dipilih khas untuk anda.</string>
   <string name="not_now_button">Bukan sekarang</string>
   <string name="later_button">Nanti</string>
   <string name="trusted_game_badge">Permainan Dipercayai</string>
   <string name="official_game_badge">Permainan Rasmi</string>
-  <string name="see_more_button">Lihat selanjutnya</string>
-  <string name="generic_error_short_title">Ralat berlaku.</string>
   <string name="editorial_card_views_short">dilihat %s</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Tiada Ruang</string>
@@ -141,13 +123,9 @@
   <!-- Install -->
   <string name="button_install_title">Pasang</string>
   <!-- Common -->
-  <string name="notice_at_collection_and_privacy_policy">Makluman di Koleksi &amp;Dasar Privasi</string>
-  <string name="terms_and_conditions">Terma</string>
-  <string name="continue_to_accept_tandc_and_pp_disclaimer">Jika anda teruskan, anda terima %1$s dan %2$s.</string>
   <string name="appview_details_tab_title" comment="details">Butiran</string>
   <string name="appview_related_tab_title" comment="related">Berkaitan</string>
   <string name="appview_info_tab_title" comment="info">Maklumat</string>
-  <string name="bottom_navigation_discovery" comment="discovery">Teroka</string>
   <string name="appview_info_version_name_title" comment="version_name">Nama versi</string>
   <string name="appview_info_package_name_title" comment="package_name">Nama Pakej</string>
   <string name="appview_info_release_title" comment="release">Terbitan</string>
@@ -156,18 +134,9 @@
   <string name="appview_info_website_title" comment="website">Laman Web</string>
   <string name="appview_info_email_title" comment="email">E-mel</string>
   <string name="appview_info_permissions_title" comment="permissions">Kebenaran</string>
-  <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% daripada %2$s</string>
-  <string name="error_short_title" comment="oops_an_error_occurred">Oops, ada ralat</string>
-  <string name="purchase_done_bonus_title">Dapatkan bonus %s!</string>
-  <string name="purchase_done_bonus_body">Muat turun Dompet AppCoins untuk peroleh bonus ini dan guna dalam pembelian seterusnya.</string>
-  <string name="purchase_done_bonus_wallet_installed_title">Dompet AppCoins Terpasang!</string>
-  <string name="purchase_done_bonus_wallet_installed_body">Buka untuk temui bonus anda.</string>
   <string name="bonus_banner_body">Anda akan terima bonus dalam semua permainan bertanda %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Bonus sehingga %s%%</string>
   <string name="settings_auto_update_button">Kemas kini auto permainan</string>
-  <string name="settings_payments_title" comment="contact_support_team">Hubungi Pasukan Sokongan</string>
-  <string name="settings_contact_support_body" comment="billing_terms_of_use">Terma Penggunaan Pembilan</string>
-  <string name="settings_billing_terms_body" comment="payments">Bayaran</string>
   <string name="powered_by_title" comment="powered_by">Dikuasakan oleh</string>
   <string name="contact_support_title" comment="contact_support">Hubungi Sokongan</string>
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Sila berikan kami segala butiran:\n\u2022 Bila masalah mula\n\u2022 Pada permainan mana anda buat pembelian\n\nSetelah anda ketik Hantar, aplikasi e-mel anda akan terbuka. Sila lampirkan tangkap layar atau video berkenaan isu!</string>
@@ -176,32 +145,21 @@
   <string name="apkfy_install_body">Dapatkan permainan kegemaran anda dan banyak lagi di Aptoide Games!</string>
   <string name="apkfy_install_bullet_points">\u2022 Permainan terbaik yang dikurasi hebat.\n\u2022 Tak perlu log masuk!\n\u2022
 Promosi khas dan ganjaran dalam permainan kegemaran anda.</string>
-  <string name="apkfy_install_alternative_version_body">Anda juga berjaya buka Permainan Aptoide!</string>
-  <string name="apkfy_install_alternative_version_bullet_points">\u2022 Perrmainan terbaik pilihan, khas untuk anda.\n\u2022 Ganjaran eksklusif dan tawaran hebat.\n\u2022 Pembantu peribadi AI anda untuk segala permainan.</string>
-  <string name="app_size_mb_title" comment="s_mb">%s MB</string>
-  <string name="uninstalled_title" comment="uninstalled">Telah Nyahpasang</string>
-  <string name="error_no_internet_body" comment="please_check_your_internet_connection">Sila semak capaian internet anda.</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Bayar dengan AppCoins Wallet</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Ia akan dipasang automatik dan anda akan dapat bonus dalam semua pembelian!</string>
   <string name="buy_button" comment="buy">Beli</string>
   <string name="iap_other_payment_methods_button" comment="other_payment_methods">Kaedah pembayaran lain</string>
   <string name="iap_remember_card_button" comment="remember_card">Ingat kad</string>
-  <string name="iap_card_number" comment="card_number">Nombor kad</string>
-  <string name="iap_card_expiry" comment="expiry_date">Tarikh luput</string>
-  <string name="iap_card_cvc" comment="cvc_cvv">CVC/CVV</string>
   <string name="iab_change_card_button" comment="change_card">Tukar kad</string>
   <string name="done_title">Selesai!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">Membuat Pembelian...</string>
-  <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">Anda pasti butiran kad anda betul? Sila cuba lagi!</string>
   <string name="log_out_button" comment="log_out">Log Keluar</string>
-  <string name="get_a_bonus_in_all_purchases_title">Anda akan terima bonus untuk semua pembelian anda!</string>
   <string name="iap_appc_body">Anda akan terima bonus untuk semua pembelian!</string>
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Kini anda boleh lengkapkan pembelian anda.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">Dompet AppCoins kini terpasang!</string>
   <string name="storage_access_permission_request_message">Benarkan akses ke storan telefon supaya boleh muat turun dan pasang aplikasi ini.</string>
   <string name="downloads_number_title">%s muat turun</string>
   <!-- Payment Errors-->
-  <string name="payments_error_not_enough_balance_body">Tidak cukup baki</string>
   <string name="payments_error_old_card_title">Nampaknya anda telah daftar kad ini lama dahulu!</string>
   <string name="payments_error_old_card_body">Masukkan butiran kad semula atau guna kad lain.</string>
   <string name="purchase_error_payment_rejected">Transaksi ditolak.</string>
@@ -216,7 +174,6 @@ Promosi khas dan ganjaran dalam permainan kegemaran anda.</string>
   <string name="purchase_error_3d_title">Ada masalah dengan pengesahan 3D anda.</string>
   <string name="purchase_card_rejected_title">Transaksi telah ditolak oleh bank anda.</string>
   <string name="purchase_error_invalid_credit_card_title">Nombor kad bank tidak sah.</string>
-  <string name="purchase_error_invalid_credit_card_body">Pastikan semua digit adalah betul.</string>
   <string name="purchase_error_card_security_validation_title">Ada ralat pada pengesahan peringkat kedua transaksi ini</string>
   <string name="purchase_error_in_progress_title">Permintaan anda telah diproses atau sedang diselesaikan.</string>
   <string name="purchase_card_error_CVV_title">CVV/CVC salah</string>
@@ -258,9 +215,7 @@ Promosi khas dan ganjaran dalam permainan kegemaran anda.</string>
   <string name="update_notification_body">Ketik sini untuk pasang.</string>
   <string name="update_aptoide_games_update_notification">Ada versi baru Aptoide Games</string>
   <!-- GenAi -->
-  <string name="genai_bottom_navigation_genai_button">GenAI</string>
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
-  <string name="genai_assistant_title">Pembantu</string>
   <string name="genai_me_title">Saya</string>
   <string name="genai_introduction_body">Hai! Saya pembantu AI anda untuk segalanya yang berkaitan dengan aplikasi dan permainan. Cuba:</string>
   <string name="genai_input_message_field">Taip mesej&#8230;</string>

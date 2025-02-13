@@ -11,22 +11,15 @@
   <string name="overflow_menu_terms_conditions">Условия и ограничения</string>
   <string name="overflow_menu_privacy_policy">Политика конфиденциальности</string>
   <string name="settings_about_hardware_title">Технические характеристики</string>
-  <string name="settings_about_title">О нас</string>
   <string name="settings_about_version">Версия %1$s (%2$s)</string>
   <string name="settings_copied_to_clipboard_message">Скопировано в буфер</string>
   <string name="settings_general_title">Общие</string>
-  <string name="settings_theme_option_dark">Темная</string>
-  <string name="settings_theme_option_light">Светлая</string>
-  <string name="settings_theme_option_system">Системный по-умолчанию</string>
-  <string name="settings_theme_options_title">Тема</string>
   <string name="settings_title">Настройки</string>
   <string name="settings_support">Поддержка</string>
   <string name="settings_feedback_button">Отправить</string>
   <string name="settings_feedback_title">Обратная связь</string>
   <string name="settings_legal_title">Законодательство</string>
   <string name="settings_send_feedback_body">Дайте нам знать, что вы думаете об Aptoide Games!\n\u2022 Какие новые функции вы хотели бы увидеть?\n\u2022 Как, по вашему мнению, мы можем улучшить?</string>
-  <string name="settings_payment_support_description_title">Описание</string>
-  <string name="settings_contact_form_character_limit_title">(50 символов мин.)</string>
   <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Описание (50 символов мин.)</string>
   <string name="settings_storage_title">Хранилище</string>
   <string name="settings_storage_clear_cache_title">Очистить кэш</string>
@@ -39,7 +32,6 @@
   <string name="empty_category_body">В этой категории нет приложений... пока что!</string>
   <!-- Notifications -->
   <string name="notifications_context_title">Получайте уведомления!</string>
-  <string name="notification_installing_title">Установка...</string>
   <string name="notification_preparing_title">Подготовка</string>
   <string name="notification_ready_install_title">Приложение готово к установке!</string>
   <string name="notification_ready_install_body">Нажмите сюда, чтобы установить %s.</string>
@@ -68,10 +60,7 @@
   <string name="fixed_bundle_editors_choice_title">Выбор редакции</string>
   <string name="fixed_bundle_editorial_title">От редакции</string>
   <string name="fixed_bundle_trending_title">Трендовые</string>
-  <string name="fixed_bundle_publisher_title">Развлекайтесь с %s</string>
   <string name="retry_button" comment="button_retry_title">Попробовать снова</string>
-  <string name="generic_error_message">Что-то пошло не так. Попробуйте снова.</string>
-  <string name="generic_network_error_message">Ой, что-то пошло не так. Пожалуйста, проверьте ваше соединение с Интернетом.</string>
   <string name="install_waiting_installation_message">Ожидание установки</string>
   <string name="install_installing_message">Установка...</string>
   <string name="install_error_short_message">Ой, произошла ошибка.</string>
@@ -108,17 +97,10 @@
   <string name="error_install_permissions_body"><![CDATA[Пожалуйста, перейдите в «Настройки» и предоставьте <1>Aptoide Games</1> разрешения на установку приложений!]]></string>
   <string name="latest_title">Новинки</string>
   <string name="whats_new_title">Что нового</string>
-  <string name="screenshot_appview_1">Бонус на покупки в приложениях.</string>
-  <string name="screenshot_appview_2">Найдите лучшие новые игры, подобранные специально для вас.</string>
-  <string name="screenshot_appview_3">Новый способ открыть для себя любимую игру.</string>
-  <string name="screenshot_appview_4">Удобный интерфейс и лучший контент.</string>
-  <string name="screenshot_appview_5">Специально подобранные игры только для вас.</string>
   <string name="not_now_button">Не сейчас</string>
   <string name="later_button">Позже</string>
   <string name="trusted_game_badge">Проверенная игра</string>
   <string name="official_game_badge">Официальная игра</string>
-  <string name="see_more_button">Подробнее</string>
-  <string name="generic_error_short_title">Произошла ошибка.</string>
   <string name="editorial_card_views_short">%s views</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Нет места</string>
@@ -141,13 +123,9 @@
   <!-- Install -->
   <string name="button_install_title">Установить</string>
   <!-- Common -->
-  <string name="notice_at_collection_and_privacy_policy">Уведомление в разделе Collection &amp; политика конфиденциальности</string>
-  <string name="terms_and_conditions">Правила</string>
-  <string name="continue_to_accept_tandc_and_pp_disclaimer">Продолжая, вы принимаете %1$s и %2$s.</string>
   <string name="appview_details_tab_title" comment="details">Подробности</string>
   <string name="appview_related_tab_title" comment="related">Связанные</string>
   <string name="appview_info_tab_title" comment="info">Информация</string>
-  <string name="bottom_navigation_discovery" comment="discovery">Открытие</string>
   <string name="appview_info_version_name_title" comment="version_name">Название версии</string>
   <string name="appview_info_package_name_title" comment="package_name">Имя пакета</string>
   <string name="appview_info_release_title" comment="release">Релиз</string>
@@ -156,18 +134,9 @@
   <string name="appview_info_website_title" comment="website">Сайт</string>
   <string name="appview_info_email_title" comment="email">E-mail</string>
   <string name="appview_info_permissions_title" comment="permissions">Разрешения</string>
-  <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% из %2$s</string>
-  <string name="error_short_title" comment="oops_an_error_occurred">Ой, произошла ошибка</string>
-  <string name="purchase_done_bonus_title">Получите бонус %s!</string>
-  <string name="purchase_done_bonus_body">Загрузите AppCoins Wallet, чтобы получить этот бонус и использовать его для следующей покупки.</string>
-  <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet установлен!</string>
-  <string name="purchase_done_bonus_wallet_installed_body">Откройте его, чтобы найти свой бонус.</string>
   <string name="bonus_banner_body">Вы получите бонус во всех играх, отмеченных %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Бонус до %s%%</string>
   <string name="settings_auto_update_button">Автоматически обновлять игры</string>
-  <string name="settings_payments_title" comment="contact_support_team">Связаться с поддержкой</string>
-  <string name="settings_contact_support_body" comment="billing_terms_of_use">Условия использования платежных данных</string>
-  <string name="settings_billing_terms_body" comment="payments">Платежи</string>
   <string name="powered_by_title" comment="powered_by">На основе</string>
   <string name="contact_support_title" comment="contact_support">Свяжитесь с поддержкой</string>
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Сообщите нам всю информацию:\n\u2022 Когда возникла проблема\n\u2022 В какой игре вы совершаете покупку\n\nКак только вы нажмете «Отправить», откроется почтовое приложение. Если можете - прикрепите скриншот или видео о проблеме!</string>
@@ -175,32 +144,21 @@
   <string name="apkfy_whats_aptoide_games_title">Что такое Aptoide Games?</string>
   <string name="apkfy_install_body">Получите свою любимую игру и многое другое в Aptoide Games!</string>
   <string name="apkfy_install_bullet_points">\u2022 Лучшие игры с потрясающей подборкой.\n\u2022 Не нужно входить в систему!\n\u2022 Специальные акции и награды в ваших любимых играх.</string>
-  <string name="apkfy_install_alternative_version_body">Вы также разблокируете Aptoide Games!</string>
-  <string name="apkfy_install_alternative_version_bullet_points">\u2022 \n Лучшие игры, подобранные специально для вас.\n\u2022 Эксклюзивные награды и специальные предложения.\n\u2022 Ваш персональный AI-ассистент для поиска игр.</string>
-  <string name="app_size_mb_title" comment="s_mb">%s МБ</string>
-  <string name="uninstalled_title" comment="uninstalled">Удалено</string>
-  <string name="error_no_internet_body" comment="please_check_your_internet_connection">Пожалуйста, проверьте подключение к интернету.</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Оплатить с AppCoins Wallet</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Он установится автоматически и вы будете получать бонусы при всех покупках!</string>
   <string name="buy_button" comment="buy">Купить</string>
   <string name="iap_other_payment_methods_button" comment="other_payment_methods">Другие способы оплаты</string>
   <string name="iap_remember_card_button" comment="remember_card">Запомнить карту</string>
-  <string name="iap_card_number" comment="card_number">Номер карты</string>
-  <string name="iap_card_expiry" comment="expiry_date">Дата окончания действия</string>
-  <string name="iap_card_cvc" comment="cvc_cvv">CVC/CVV</string>
   <string name="iab_change_card_button" comment="change_card">Сменить карту</string>
   <string name="done_title">Готово!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">Совершение покупки...</string>
-  <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">Вы уверены, что детали карты введены правильно? Пожалуйста, попробуйте снова!</string>
   <string name="log_out_button" comment="log_out">Выйти</string>
-  <string name="get_a_bonus_in_all_purchases_title">Вы получите бонус за все ваши покупки!</string>
   <string name="iap_appc_body">Вы получите бонус за все ваши покупки!</string>
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Теперь вы можете завершить покупку.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">Кошелек AppCoins установлен!</string>
   <string name="storage_access_permission_request_message">Откройте доступ к памяти вашего телефона, чтобы мы могли загрузить и установить приложение.</string>
   <string name="downloads_number_title">%s загрузок</string>
   <!-- Payment Errors-->
-  <string name="payments_error_not_enough_balance_body">У вас недостаточно средств</string>
   <string name="payments_error_old_card_title">Кажется, вы уже давно зарегистрировали эту карту!</string>
   <string name="payments_error_old_card_body">Вставьте данные карты еще раз или используйте другие.</string>
   <string name="purchase_error_payment_rejected">Транзакция отклонена.</string>
@@ -215,7 +173,6 @@
   <string name="purchase_error_3d_title">Возникла проблема с вашей 3D-аутентификацией.</string>
   <string name="purchase_card_rejected_title">Транзакция отклонена вашим банком.</string>
   <string name="purchase_error_invalid_credit_card_title">Недопустимый номер банковской карты.</string>
-  <string name="purchase_error_invalid_credit_card_body">Пожалуйста, убедитесь, что все цифры верны.</string>
   <string name="purchase_error_card_security_validation_title">Произошла ошибка на 2-ом уровне проверки транзакции.</string>
   <string name="purchase_error_in_progress_title">Ваш запрос уже обработан или ещё в процессе.</string>
   <string name="purchase_card_error_CVV_title">Неверный CVV/CVC</string>
@@ -263,9 +220,7 @@
   <string name="update_notification_body">Нажмите сюда, чтобы установить.</string>
   <string name="update_aptoide_games_update_notification">Вышла новая версия Aptoide Games</string>
   <!-- GenAi -->
-  <string name="genai_bottom_navigation_genai_button">GenAI</string>
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
-  <string name="genai_assistant_title">Ассистент</string>
   <string name="genai_me_title">Я</string>
   <string name="genai_introduction_body">Привет! Я ваш помощник AI по всем вопросам, связанным с поиском приложений и игр. Попробуйте что-то вроде:</string>
   <string name="genai_input_message_field">Введите сообщение&#8230;</string>

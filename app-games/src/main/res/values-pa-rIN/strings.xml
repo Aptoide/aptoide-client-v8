@@ -12,22 +12,15 @@
   <string name="overflow_menu_terms_conditions">Terms &amp; Conditions</string>
   <string name="overflow_menu_privacy_policy">ਗੋਪਨੀਯਤਾ ਨੀਤੀ</string>
   <string name="settings_about_hardware_title">Hardware specs</string>
-  <string name="settings_about_title">ਸਾਡੇ ਬਾਰੇ</string>
   <string name="settings_about_version">Version %1$s (%2$s)</string>
   <string name="settings_copied_to_clipboard_message">Copied to clipboard</string>
   <string name="settings_general_title">ਆਮ</string>
-  <string name="settings_theme_option_dark">ਗੂੜਾ</string>
-  <string name="settings_theme_option_light">ਫਿੱਕਾ</string>
-  <string name="settings_theme_option_system">System default</string>
-  <string name="settings_theme_options_title">ਥੀਮ</string>
   <string name="settings_title">ਸੈਟਿੰਗ</string>
   <string name="settings_support">ਸਹਿਯੋਗ</string>
   <string name="settings_feedback_button">ਫੀਡਬੈਕ ਭੇਜੋ</string>
   <string name="settings_feedback_title">ਫੀਡਬੈਕ ਭੇਜੋ</string>
   <string name="settings_legal_title">Legal</string>
   <string name="settings_send_feedback_body">Let us know what you think about Aptoide Games!\n\u2022 Any new feature you would like to see?\n\u2022 How do you think we can improve?</string>
-  <string name="settings_payment_support_description_title">ਵੇਰਵਾ</string>
-  <string name="settings_contact_form_character_limit_title">(50 Characters Min.)</string>
   <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Description (50 characters min.)</string>
   <string name="settings_storage_title">ਸਟੋਰੇਜ਼</string>
   <string name="settings_storage_clear_cache_title">ਕੈਸ਼ ਮਿਟਾਓ</string>
@@ -40,7 +33,6 @@
   <string name="empty_category_body">There\'re no apps in this category... Yet!</string>
   <!-- Notifications -->
   <string name="notifications_context_title">Get notified!</string>
-  <string name="notification_installing_title">ਇੰਸਟਾਲ ਹੋ ਰਿਹਾ ਹੈ</string>
   <string name="notification_preparing_title">Preparing</string>
   <string name="notification_ready_install_title">ਇੱਕ ਐਪ ਇੰਸਟਾਲ ਕੀਤੀ ਜਾਣ ਲਈ ਤਿਆਰ ਹੈ!</string>
   <string name="notification_ready_install_body">%s ਨੂੰ ਇੰਸਟਾਲ ਕਰਨ ਲਈ ਇੱਥੇ ਦੱਬੋ|</string>
@@ -70,10 +62,7 @@
   <string name="fixed_bundle_editors_choice_title">ਸੰਪਾਦਕ ਦੀ ਪਸੰਦ</string>
   <string name="fixed_bundle_editorial_title">ਸੰਪਾਦਕੀ</string>
   <string name="fixed_bundle_trending_title">ਹੁਣ ਚੱਲ ਰਿਹਾ</string>
-  <string name="fixed_bundle_publisher_title">Have Fun with %s</string>
   <string name="retry_button" comment="button_retry_title">ਮੁੜ ਕੋਸ਼ਿਸ ਕਰੋ</string>
-  <string name="generic_error_message">ਕੁੱਝ ਗਲਤ ਹੋ ਗਿਆ| ਫਿਰ ਕੋਸ਼ਿਸ਼ ਕਰੋ|</string>
-  <string name="generic_network_error_message">ਓਹ ਹੋ, ਕੁੱਝ ਗਲਤ ਹੋ ਗਿਆ| ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੇ ਇੰਟਰਨੈਟ ਕਨੈਕਸ਼ਨ ਦੀ ਜਾਂਚ ਕਰੋ|</string>
   <string name="install_waiting_installation_message">Waiting for install</string>
   <string name="install_installing_message">ਇੰਸਟਾਲ ਹੋ ਰਿਹਾ ਹੈ</string>
   <string name="install_error_short_message">Oops, an error occurred.</string>
@@ -110,17 +99,10 @@
   <string name="error_install_permissions_body"><![CDATA[Please go to Settings and grant <1>Aptoide Games</1> permissions to install apps!]]></string>
   <string name="latest_title">ਤਾਜ਼ਾ</string>
   <string name="whats_new_title">What\'s New</string>
-  <string name="screenshot_appview_1">A bonus in your in-app purchases.</string>
-  <string name="screenshot_appview_2">Find top new games curated for you.</string>
-  <string name="screenshot_appview_3">A new way to discover your favorite game.</string>
-  <string name="screenshot_appview_4">A seamless interface with the best content.</string>
-  <string name="screenshot_appview_5">Hand-picked games only for you.</string>
   <string name="not_now_button">ਹਾਲੇ ਨਹੀਂ</string>
   <string name="later_button">Later</string>
   <string name="trusted_game_badge">Trusted Game</string>
   <string name="official_game_badge">Official Game</string>
-  <string name="see_more_button">ਹੋਰ ਵੇਖੋ</string>
-  <string name="generic_error_short_title">ਇੱਕ ਗਲਤੀ ਹੋਈ ਹੈ.</string>
   <string name="editorial_card_views_short">%s views</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Out of Space</string>
@@ -143,13 +125,9 @@
   <!-- Install -->
   <string name="button_install_title">ਇੰਸਟਾਲ</string>
   <!-- Common -->
-  <string name="notice_at_collection_and_privacy_policy">Notice at Collection &amp; Privacy Policy</string>
-  <string name="terms_and_conditions">Terms</string>
-  <string name="continue_to_accept_tandc_and_pp_disclaimer">By continuing you accept the %1$s and %2$s.</string>
   <string name="appview_details_tab_title" comment="details">ਵੇਰਵਾ</string>
   <string name="appview_related_tab_title" comment="related">Related</string>
   <string name="appview_info_tab_title" comment="info">ਜਾਣਕਾਰੀ</string>
-  <string name="bottom_navigation_discovery" comment="discovery">Discovery</string>
   <string name="appview_info_version_name_title" comment="version_name">Version name</string>
   <string name="appview_info_package_name_title" comment="package_name">Package name</string>
   <string name="appview_info_release_title" comment="release">Release</string>
@@ -158,18 +136,9 @@
   <string name="appview_info_website_title" comment="website">ਵੈੱਬਸਾਈਟ</string>
   <string name="appview_info_email_title" comment="email">ਈਮੇਲ</string>
   <string name="appview_info_permissions_title" comment="permissions">ਅਧਿਕਾਰ</string>
-  <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% of %2$s</string>
-  <string name="error_short_title" comment="oops_an_error_occurred">Oops, an error occurred</string>
-  <string name="purchase_done_bonus_title">Get a %s bonus!</string>
-  <string name="purchase_done_bonus_body">Download the AppCoins Wallet to get this bonus and use it in your next purchase.</string>
-  <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet installed!</string>
-  <string name="purchase_done_bonus_wallet_installed_body">Open it to find your bonus.</string>
   <string name="bonus_banner_body">You\'ll get a bonus in all games identified with %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Up to %s%% Bonus</string>
   <string name="settings_auto_update_button">Auto-update games</string>
-  <string name="settings_payments_title" comment="contact_support_team">ਸਹਾਇਤਾ ਟੀਮ ਨਾਲ ਸੰਪਰਕ ਕਰੋ</string>
-  <string name="settings_contact_support_body" comment="billing_terms_of_use">Billing Terms of Use</string>
-  <string name="settings_billing_terms_body" comment="payments">Payments</string>
   <string name="powered_by_title" comment="powered_by">Powered by</string>
   <string name="contact_support_title" comment="contact_support">ਸਹਾਇਤਾ ਸੰਪਰਕ</string>
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Please give us all the details:\n\u2022 When did the problem start\n\u2022 On which game are you making a purchase\n\nOnce you tap on Send, your mail app will open. Feel free to attach a screenshot or video about the issue!</string>
@@ -177,32 +146,21 @@
   <string name="apkfy_whats_aptoide_games_title">What\'s Aptoide Games?</string>
   <string name="apkfy_install_body">Get your favorite game and much more in Aptoide Games!</string>
   <string name="apkfy_install_bullet_points">\u2022 Top games with an amazing curation.\n\u2022 No need to log in!\n\u2022 Special promotions and rewards in your favorite games.</string>
-  <string name="apkfy_install_alternative_version_body">You\'re also unlocking Aptoide Games!</string>
-  <string name="apkfy_install_alternative_version_bullet_points">\u2022 Curated top games, just for you.\n\u2022 Exclusive rewards and special deals.\n\u2022 Your personal AI Assistant for game discovery.</string>
-  <string name="app_size_mb_title" comment="s_mb">%s MB</string>
-  <string name="uninstalled_title" comment="uninstalled">ਅਨਇੰਸਟਾਲ ਕੀਤਾ ਗਿਆ</string>
-  <string name="error_no_internet_body" comment="please_check_your_internet_connection">Please check your Internet connection.</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Pay with the AppCoins Wallet</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">It\'ll be installed automatically and you\'ll get a bonus in all purchases!</string>
   <string name="buy_button" comment="buy">ਖਰੀਦੋ</string>
   <string name="iap_other_payment_methods_button" comment="other_payment_methods">Other payment methods</string>
   <string name="iap_remember_card_button" comment="remember_card">ਕਾਰਡ ਯਾਦ ਰੱਖੋ</string>
-  <string name="iap_card_number" comment="card_number">ਕਾਰਡ ਨੰਬਰ</string>
-  <string name="iap_card_expiry" comment="expiry_date">ਆਖਰੀ ਤਾਰੀਖ</string>
-  <string name="iap_card_cvc" comment="cvc_cvv">ਸੀਵੀਸੀ/ਸੀਵੀਵੀ</string>
   <string name="iab_change_card_button" comment="change_card">Change card</string>
   <string name="done_title">ਹੋ ਗਿਆ!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">Making Purchase...</string>
-  <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">ਕੀ ਤੁਹਾਨੂੰ ਯਕੀਨ ਹੈ ਕਿ ਤੁਹਾਡੇ ਕਾਰਡ ਦਾ ਵੇਰਵਾ ਸਹੀ ਹੈ? ਮੁੜ ਕੋਸ਼ਿਸ ਕਰੋ ਜੀ!</string>
   <string name="log_out_button" comment="log_out">Log Out</string>
-  <string name="get_a_bonus_in_all_purchases_title">You\'ll get a bonus in all purchases!</string>
   <string name="iap_appc_body">You\'ll get a bonus in all purchases!</string>
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">You can now complete your purchase.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">The AppCoins Wallet is now installed!</string>
   <string name="storage_access_permission_request_message">Allow access to your phone’s storage so we can download and install this app.</string>
   <string name="downloads_number_title">%s ਡਾਉਨਲੋਡ</string>
   <!-- Payment Errors-->
-  <string name="payments_error_not_enough_balance_body">You don\'t have enough balance</string>
   <string name="payments_error_old_card_title">It seems you registered this card long time ago!</string>
   <string name="payments_error_old_card_body">Insert the card details again or use a different one.</string>
   <string name="purchase_error_payment_rejected">The transaction has been rejected.</string>
@@ -217,7 +175,6 @@
   <string name="purchase_error_3d_title">There was a problem with your 3D authentication.</string>
   <string name="purchase_card_rejected_title">The transaction has been rejected by your bank.</string>
   <string name="purchase_error_invalid_credit_card_title">Invalid bank card number.</string>
-  <string name="purchase_error_invalid_credit_card_body">Please make sure all digits are correct.</string>
   <string name="purchase_error_card_security_validation_title">There was an error on the 2nd level validation of this transaction.</string>
   <string name="purchase_error_in_progress_title">Your request was already processed or is in progress.</string>
   <string name="purchase_card_error_CVV_title">ਗਲਤ ਸੀਵੀਵੀ/ਸੀਵੀਸੀ</string>
@@ -261,9 +218,7 @@
   <string name="update_notification_body">Tap here to install.</string>
   <string name="update_aptoide_games_update_notification">There\'s a new version of Aptoide Games</string>
   <!-- GenAi -->
-  <string name="genai_bottom_navigation_genai_button">GenAI</string>
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
-  <string name="genai_assistant_title">Assistant</string>
   <string name="genai_me_title">Me</string>
   <string name="genai_introduction_body">Hi! I\'m your AI assistant on everything related to apps and games discovery. Try with something like:</string>
   <string name="genai_input_message_field">Type a message&#8230;</string>

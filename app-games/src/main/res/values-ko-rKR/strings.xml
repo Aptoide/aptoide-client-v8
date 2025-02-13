@@ -11,22 +11,15 @@
   <string name="overflow_menu_terms_conditions">이용 약관</string>
   <string name="overflow_menu_privacy_policy">개인정보 보호정책</string>
   <string name="settings_about_hardware_title">하드웨어 사양</string>
-  <string name="settings_about_title">당사 소개</string>
   <string name="settings_about_version">버전 %1$s (%2$s)</string>
   <string name="settings_copied_to_clipboard_message">클립보드로 복사되었습니다</string>
   <string name="settings_general_title">일반</string>
-  <string name="settings_theme_option_dark">어두움</string>
-  <string name="settings_theme_option_light">밝음</string>
-  <string name="settings_theme_option_system">시스템 기본값</string>
-  <string name="settings_theme_options_title">테마</string>
   <string name="settings_title">설정</string>
   <string name="settings_support">지원</string>
   <string name="settings_feedback_button">피드백 보내기</string>
   <string name="settings_feedback_title">피드백 보내기</string>
   <string name="settings_legal_title">법규</string>
   <string name="settings_send_feedback_body">Aptoide 게임에 대해 어떻게 생각하시는지 알려주세요!\n\u2022 새로운 기능을 보고 싶으신가요?\n\u2022년 우리가 어떻게 개선할 수 있다고 생각하십니까?</string>
-  <string name="settings_payment_support_description_title">설명</string>
-  <string name="settings_contact_form_character_limit_title">(최소 50자)</string>
   <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">설명 (최소 50자 )</string>
   <string name="settings_storage_title">저장 공간</string>
   <string name="settings_storage_clear_cache_title">캐시 삭제</string>
@@ -39,7 +32,6 @@
   <string name="empty_category_body">이 카테고리에는 앱이 없어요... 하지만!</string>
   <!-- Notifications -->
   <string name="notifications_context_title">알림을 받으세요!</string>
-  <string name="notification_installing_title">설치중</string>
   <string name="notification_preparing_title">준비 중</string>
   <string name="notification_ready_install_title">앱을 설치할 준비가 되었습니다!</string>
   <string name="notification_ready_install_body">여기를 탭하여 %s 앱을 설치하세요.</string>
@@ -68,10 +60,7 @@
   <string name="fixed_bundle_editors_choice_title">에디터의 선택</string>
   <string name="fixed_bundle_editorial_title">사설</string>
   <string name="fixed_bundle_trending_title">경향</string>
-  <string name="fixed_bundle_publisher_title">%s와 즐거운 시간 보내세요</string>
   <string name="retry_button" comment="button_retry_title">재시도</string>
-  <string name="generic_error_message">무언가 잘못되었습니다. 다시 시도해 주세요.</string>
-  <string name="generic_network_error_message">이런, 무언가 잘못되었습니다. 인터넷이 연결되어 있는지 확인해 주세요.</string>
   <string name="install_waiting_installation_message">설치 대기 중</string>
   <string name="install_installing_message">설치중</string>
   <string name="install_error_short_message">이런, 오류가 발생했습니다.</string>
@@ -108,17 +97,10 @@
   <string name="error_install_permissions_body"><![CDATA[설정으로 이동하여 <1>Aptoide Games</1>에 앱 설치 권한을 부여하세요!]]></string>
   <string name="latest_title">최신</string>
   <string name="whats_new_title">새로운 사항</string>
-  <string name="screenshot_appview_1">인앱 구매 시 추가 보너스 제공</string>
-  <string name="screenshot_appview_2">당신을 위해 선별된 최고의 신작 게임을 찾아보세요.</string>
-  <string name="screenshot_appview_3">좋아하는 게임을 발견하는 새로운 방법.</string>
-  <string name="screenshot_appview_4">최고의 콘텐츠로 원활한 인터페이스를 제공합니다.</string>
-  <string name="screenshot_appview_5">당신을 위해 엄선된 게임.</string>
   <string name="not_now_button">나중에요</string>
   <string name="later_button">나중에</string>
   <string name="trusted_game_badge">신뢰할 수 있는 게임</string>
   <string name="official_game_badge">공식 게임</string>
-  <string name="see_more_button">더 보기</string>
-  <string name="generic_error_short_title">오류가 발생했습니다.</string>
   <string name="editorial_card_views_short">%s views</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">공간 부족</string>
@@ -141,13 +123,9 @@
   <!-- Install -->
   <string name="button_install_title">설치</string>
   <!-- Common -->
-  <string name="notice_at_collection_and_privacy_policy">수집 및 개인 정보 보호 정책에 대한 공지사항</string>
-  <string name="terms_and_conditions">기간</string>
-  <string name="continue_to_accept_tandc_and_pp_disclaimer">계속해서 %1$s 및 %2$s를 수락합니다.</string>
   <string name="appview_details_tab_title" comment="details">세부 정보</string>
   <string name="appview_related_tab_title" comment="related">관련</string>
   <string name="appview_info_tab_title" comment="info">정보</string>
-  <string name="bottom_navigation_discovery" comment="discovery">발견</string>
   <string name="appview_info_version_name_title" comment="version_name">버전명</string>
   <string name="appview_info_package_name_title" comment="package_name">패키지 이름</string>
   <string name="appview_info_release_title" comment="release">릴리즈</string>
@@ -156,18 +134,9 @@
   <string name="appview_info_website_title" comment="website">사이트</string>
   <string name="appview_info_email_title" comment="email">이메일</string>
   <string name="appview_info_permissions_title" comment="permissions">권한</string>
-  <string name="download_percentage_body" comment="1_s_of_2_s">%2$s의 %1$s%%</string>
-  <string name="error_short_title" comment="oops_an_error_occurred">이런, 오류가 발생했습니다</string>
-  <string name="purchase_done_bonus_title">%s 보너스를 받으세요!</string>
-  <string name="purchase_done_bonus_body">AppCoins 지갑을 다운로드하여 이 보너스를 받고 다음 구매에 사용하세요.</string>
-  <string name="purchase_done_bonus_wallet_installed_title">AppCoins 지갑 설치 됨!</string>
-  <string name="purchase_done_bonus_wallet_installed_body">열어서 보너스를 확인하세요.</string>
   <string name="bonus_banner_body">%s로 표시된 모든 게임에서 보너스를 받을 수 있습니다.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">최대 %s%% 보너스</string>
   <string name="settings_auto_update_button">자동 게임 업데이트</string>
-  <string name="settings_payments_title" comment="contact_support_team">지원 팀으로 연락하기</string>
-  <string name="settings_contact_support_body" comment="billing_terms_of_use">청구 이용약관</string>
-  <string name="settings_billing_terms_body" comment="payments">지불 금액</string>
   <string name="powered_by_title" comment="powered_by">제공자</string>
   <string name="contact_support_title" comment="contact_support">지원 팀으로 연락하기</string>
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">모든 세부 정보를 알려주세요:\n\u2022 언제부터 문제가 시작되었나요\n\u2022 어떤 게임에서 구매하시는지요\n\n 보내기를 누르면 메일 앱이 열립니다. 문제에 대한 스크린샷이나 비디오를 자유롭게 첨부하세요!</string>
@@ -175,32 +144,21 @@
   <string name="apkfy_whats_aptoide_games_title">Aptoide 게임이란 무엇인가요?</string>
   <string name="apkfy_install_body">Aptoide 게임에서 좋아하는 게임과 더 많은 것을 즐기세요!</string>
   <string name="apkfy_install_bullet_points">\u2022 놀라운 큐레이션으로 최고의 게임들.\n\u2022 로그인할 필요 없어요!\n\u2022 좋아하는 게임의 특별 프로모션 및 보상.</string>
-  <string name="apkfy_install_alternative_version_body">Aptoide 게임도 잠금 해제 중입니다!</string>
-  <string name="apkfy_install_alternative_version_bullet_points">\u2022 당신만을 위한 최고의 큐레이티드 게임들.\n\u2022 독점 보상 및 특별 거래.\n\u2022 게임 발견을 위한 개인 AI 비서.</string>
-  <string name="app_size_mb_title" comment="s_mb">%s MB</string>
-  <string name="uninstalled_title" comment="uninstalled">삭제됨</string>
-  <string name="error_no_internet_body" comment="please_check_your_internet_connection">인터넷 연결 상태를 확인하십시오.</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">AppCoins 지갑으로 지불</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">자동으로 설치되고 모든 구매 시 보너스가 지급됩니다!</string>
   <string name="buy_button" comment="buy">사기</string>
   <string name="iap_other_payment_methods_button" comment="other_payment_methods">기타 결제 방법</string>
   <string name="iap_remember_card_button" comment="remember_card">카드 기억하기</string>
-  <string name="iap_card_number" comment="card_number">카드 번호</string>
-  <string name="iap_card_expiry" comment="expiry_date">만료일</string>
-  <string name="iap_card_cvc" comment="cvc_cvv">CVC/CVV</string>
   <string name="iab_change_card_button" comment="change_card">카드 변경</string>
   <string name="done_title">완료!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">구매하는 중...</string>
-  <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">카드 상세 정보가 올바른가요? 확인하시고 다시 시도해 주세요!</string>
   <string name="log_out_button" comment="log_out">로그아웃</string>
-  <string name="get_a_bonus_in_all_purchases_title">모든 구매 시 보너스를 받으실 수 있습니다!</string>
   <string name="iap_appc_body">모든 구매 시 보너스를 받으실 수 있습니다!</string>
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">이제 구매를 완료할 수 있습니다.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">AppCoins 지갑이 설치되었습니다!</string>
   <string name="storage_access_permission_request_message">휴대폰 저장소에 대한 접근 권한을 주시면 이 앱을 다운로드하고 설치할 수 있습니다.</string>
   <string name="downloads_number_title">%s개의 다운로드</string>
   <!-- Payment Errors-->
-  <string name="payments_error_not_enough_balance_body">잔액이 부족합니다</string>
   <string name="payments_error_old_card_title">오래전에 이 카드를 등록하신 것 같네요!</string>
   <string name="payments_error_old_card_body">카드 내역을 다시 입력하거나 다른 카드를 사용하세요.</string>
   <string name="purchase_error_payment_rejected">거래가 거절되었습니다.</string>
@@ -215,7 +173,6 @@
   <string name="purchase_error_3d_title">3D 인증에 문제가 발생했습니다.</string>
   <string name="purchase_card_rejected_title">귀하의 은행에서 거래가 거부되었습니다.</string>
   <string name="purchase_error_invalid_credit_card_title">은행 카드 번호가 잘못되었습니다.</string>
-  <string name="purchase_error_invalid_credit_card_body">모든 숫자가 맞는지 확인해 주세요.</string>
   <string name="purchase_error_card_security_validation_title">이 거래의 2단계 검증에 오류가 발생했습니다.</string>
   <string name="purchase_error_in_progress_title">귀하의 요청이 이미 처리되었거나 진행 중입니다.</string>
   <string name="purchase_card_error_CVV_title">잘못된 CVV/CVC</string>
@@ -257,9 +214,7 @@
   <string name="update_notification_body">여기를 탭하여 설치하세요.</string>
   <string name="update_aptoide_games_update_notification">Aptoide Games의 새로운 버전이 있습니다.</string>
   <!-- GenAi -->
-  <string name="genai_bottom_navigation_genai_button">GenAI</string>
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
-  <string name="genai_assistant_title">어시스턴트</string>
   <string name="genai_me_title">나</string>
   <string name="genai_introduction_body">안녕하세요! 저는 앱과 게임 검색과 관련된 모든 것에 대한 AI 비서입니다. 이런 것을 사용해 보세요:</string>
   <string name="genai_input_message_field">메시지 입력하기&#8230;</string>

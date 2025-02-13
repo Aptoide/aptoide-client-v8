@@ -11,22 +11,15 @@
   <string name="overflow_menu_terms_conditions">شرایط &amp; ضوابط</string>
   <string name="overflow_menu_privacy_policy">سیاست حفظ حریم خصوصی</string>
   <string name="settings_about_hardware_title">مشخصات سخت افزاری</string>
-  <string name="settings_about_title">درباره ما</string>
   <string name="settings_about_version">نسخه %1$s (%2$s)</string>
   <string name="settings_copied_to_clipboard_message">به کلیپبورد کپی شد</string>
   <string name="settings_general_title">عمومی</string>
-  <string name="settings_theme_option_dark">ظلام</string>
-  <string name="settings_theme_option_light">إضاءة</string>
-  <string name="settings_theme_option_system">پیش‌فرض سیستم</string>
-  <string name="settings_theme_options_title">الموضوع</string>
   <string name="settings_title">تنظیمات</string>
   <string name="settings_support">پشتیبانی</string>
   <string name="settings_feedback_button">تجربه شما از اپ‌توید</string>
   <string name="settings_feedback_title">ارسال بازخورد</string>
   <string name="settings_legal_title">قانونی</string>
   <string name="settings_send_feedback_body">به ما بگویید که درباره بازی‌های Aptoide چه فکر می‌کنید!\n\u2022 آیا می‌خواهید ویژگی جدیدی ببینید؟\n\u2022 چگونه می‌توانیم خود را تقویت کنیم؟</string>
-  <string name="settings_payment_support_description_title">توضیح</string>
-  <string name="settings_contact_form_character_limit_title">(حداقل ۵۰ حرف)</string>
   <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">توضیحات (حداقل ۵۰ حرف)</string>
   <string name="settings_storage_title">حافظه</string>
   <string name="settings_storage_clear_cache_title">پاک کردن حافظه موقت</string>
@@ -39,7 +32,6 @@
   <string name="empty_category_body">هیچ اپلیکیشنی در این دسته وجود ندارد... هنوز!</string>
   <!-- Notifications -->
   <string name="notifications_context_title">باخبر شوید!</string>
-  <string name="notification_installing_title">در حال نصب</string>
   <string name="notification_preparing_title">درحال آماده‌سازی</string>
   <string name="notification_ready_install_title">یک اپلیکیشن آماده نصب است!</string>
   <string name="notification_ready_install_body">برای نصب %s، اینجا را کلیک کنید.</string>
@@ -68,10 +60,7 @@
   <string name="fixed_bundle_editors_choice_title">انتخاب ویراستار</string>
   <string name="fixed_bundle_editorial_title">سرمقاله</string>
   <string name="fixed_bundle_trending_title">روی‌ بورس</string>
-  <string name="fixed_bundle_publisher_title">از %s لذت ببرید</string>
   <string name="retry_button" comment="button_retry_title">تلاش مجدد</string>
-  <string name="generic_error_message">مشکلی پیش آمده است. دوباره تلاش کنید.</string>
-  <string name="generic_network_error_message">مشکلی پیش آمده است. لطفا اتصال خود را به اینترنت بررسی کنید.</string>
   <string name="install_waiting_installation_message">انتظار برای نصب</string>
   <string name="install_installing_message">در حال نصب</string>
   <string name="install_error_short_message">با عرض پوزش، خطایی رخ داده است.</string>
@@ -108,17 +97,10 @@
   <string name="error_install_permissions_body"><![CDATA[لطفا به تنظیمات بروید و به <1>Aptoide Games</1> اجازه نصب اپلیکیشن بدهید!]]></string>
   <string name="latest_title">آخرین</string>
   <string name="whats_new_title">تازه‌ها</string>
-  <string name="screenshot_appview_1">یک بونوس در خریدهای داخل اپلیکیشنی شما.</string>
-  <string name="screenshot_appview_2">بهترین بازی‌های طراحی شده برای خود را پیداکنید.</string>
-  <string name="screenshot_appview_3">روشی جدید برای کشف بازی‌های محبوب خود</string>
-  <string name="screenshot_appview_4">محیط ساده با بهترین محتوا</string>
-  <string name="screenshot_appview_5">بازی‌های انتخاب شده برای شما.</string>
   <string name="not_now_button">فعلا نه</string>
   <string name="later_button">بعدا</string>
   <string name="trusted_game_badge">بازی مورد‌اعتماد</string>
   <string name="official_game_badge">بازی رسمی</string>
-  <string name="see_more_button">مشاهده بیشتر</string>
-  <string name="generic_error_short_title">خطایی رخ داده است.</string>
   <string name="editorial_card_views_short">%s نمایش</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">حافظه‌ پر است</string>
@@ -141,13 +123,9 @@
   <!-- Install -->
   <string name="button_install_title">نصب</string>
   <!-- Common -->
-  <string name="notice_at_collection_and_privacy_policy">اعلامیه در کلکسیون &amp; شرایط حریم خصوصی</string>
-  <string name="terms_and_conditions">شرایط</string>
-  <string name="continue_to_accept_tandc_and_pp_disclaimer">با ادامه %1$s و %2$s را تایید می‌کنید.</string>
   <string name="appview_details_tab_title" comment="details">التفاصيل</string>
   <string name="appview_related_tab_title" comment="related">مرتبط</string>
   <string name="appview_info_tab_title" comment="info">المعلومات</string>
-  <string name="bottom_navigation_discovery" comment="discovery">کشف</string>
   <string name="appview_info_version_name_title" comment="version_name">نام نسخه</string>
   <string name="appview_info_package_name_title" comment="package_name">اسم الحزمة</string>
   <string name="appview_info_release_title" comment="release">انتشار</string>
@@ -156,18 +134,9 @@
   <string name="appview_info_website_title" comment="website">الموقع الإلكتروني</string>
   <string name="appview_info_email_title" comment="email">البريد الإلكتروني</string>
   <string name="appview_info_permissions_title" comment="permissions">الأذونات</string>
-  <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% از %2$s</string>
-  <string name="error_short_title" comment="oops_an_error_occurred">با عرض پوزش، خطایی رخ داده است</string>
-  <string name="purchase_done_bonus_title">یک بونوس %s بگیرید!</string>
-  <string name="purchase_done_bonus_body">برای دریافت این بونوس و استفاده در خرید بعدی AppCoins Wallet را دانلود کنید</string>
-  <string name="purchase_done_bonus_wallet_installed_title">AppCoins Wallet نصب شد!</string>
-  <string name="purchase_done_bonus_wallet_installed_body">برای یافتن بونوس، آن را باز کنید.</string>
   <string name="bonus_banner_body">در همه بازی‌هایی که با %s شناخته می‌شوند یک پاداش می‌گیرید.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">تا %s%% پاداش</string>
   <string name="settings_auto_update_button">بروزرسانی اتوماتیک بازی‌ها</string>
-  <string name="settings_payments_title" comment="contact_support_team">تماس با تیم پشتیبانی</string>
-  <string name="settings_contact_support_body" comment="billing_terms_of_use">شرایط استفاده ار پرداخت</string>
-  <string name="settings_billing_terms_body" comment="payments">پرداخت‌ها</string>
   <string name="powered_by_title" comment="powered_by">توسط:</string>
   <string name="contact_support_title" comment="contact_support">تماس با پشتیبانی</string>
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">لطفا همه جزییات را به ما بدهید:\n\u2022 مشکل در چه زمانی رخ داده‌است\n\u2022پرداخت شما در حال انجام چه بازی بود\n\nزمانی که روی ارسال کلیک می‌کنید اپلیکیشن ایمیل شما باز خواهد شد. می‌توانید یک اسکرین‌شات یا ویدیو درباره مشکل ارسال کنید!</string>
@@ -175,32 +144,21 @@
   <string name="apkfy_whats_aptoide_games_title">Aptoide Games چیست؟</string>
   <string name="apkfy_install_body">بازی‌های محبوب خود و خیلی چیزهای دیگر را در Aptoide Games بگیرید!</string>
   <string name="apkfy_install_bullet_points">\u2022 بازی‌های برتر با داستان جذاب.\n\u2022 نیازی به ورود به سیستم نیست!\n\u2022 پیشنهادات و جوایز ویژه در بازی‌های محبوب خود.</string>
-  <string name="apkfy_install_alternative_version_body">شما Aptoide Games را نیز باز می‌کنید!</string>
-  <string name="apkfy_install_alternative_version_bullet_points">\u2022 بازی‌های برتر انتخابی، فقط برای تو.\n\u2022 جوایز اختصاصی و پیشنهادات ویژه.\n\u2022 دستیار هوش مصنوعی کشف بازی بصورت اختصاصی برای شما.</string>
-  <string name="app_size_mb_title" comment="s_mb">%s MB</string>
-  <string name="uninstalled_title" comment="uninstalled">حذف شده</string>
-  <string name="error_no_internet_body" comment="please_check_your_internet_connection">لطفا اتصال اینترنت خود را بررسی کنید.</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">پرداخت با AppCoins Wallet</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">بصورت اتوماتیک نصب خواهد شد و پاداشی در هر پرداخت خواهید داشت!</string>
   <string name="buy_button" comment="buy">خرید</string>
   <string name="iap_other_payment_methods_button" comment="other_payment_methods">سایر روش‌های پرداخت</string>
   <string name="iap_remember_card_button" comment="remember_card">کارت را به یاد داشته باش</string>
-  <string name="iap_card_number" comment="card_number">شماره کارت</string>
-  <string name="iap_card_expiry" comment="expiry_date">تاریخ انقضا</string>
-  <string name="iap_card_cvc" comment="cvc_cvv">CVC/CVV</string>
   <string name="iab_change_card_button" comment="change_card">تغییر کارت</string>
   <string name="done_title">انجام شد!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">درحال انجام خرید...</string>
-  <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">آیا مطمئن هستید که اطلاعات کارت شما صحیح است؟ لطفا مجدد امتحان کنید!</string>
   <string name="log_out_button" comment="log_out">خروج</string>
-  <string name="get_a_bonus_in_all_purchases_title">در همه خریدهای خود پاداشی دریافت خواهید کرد!</string>
   <string name="iap_appc_body">در همه خریدهای خود پاداشی دریافت خواهید کرد!</string>
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">اکنون می‌توانید پرداخت خود را کامل کنید.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">AppCoins Wallet با موفقیت نصب شد!</string>
   <string name="storage_access_permission_request_message">برای دانلود و نصب این برنامه لازم است اجازه دسترسی به حافظه گوشی‌تان را بدهید.</string>
   <string name="downloads_number_title">%s دانلود</string>
   <!-- Payment Errors-->
-  <string name="payments_error_not_enough_balance_body">بالانس شما کافی نیست</string>
   <string name="payments_error_old_card_title">به نظر می‌رسد که این کارت خیلی وقت قبل ثبت شده‌است!</string>
   <string name="payments_error_old_card_body">اطلاعات کارت را مجدد وارد کنید یا کارت دیگری استفاده کنید.</string>
   <string name="purchase_error_payment_rejected">تراکنش رد شده‌است.</string>
@@ -215,7 +173,6 @@
   <string name="purchase_error_3d_title">مشکلی در ارتباط با تایید هویت سه‌بعدی شما وجود دارد.</string>
   <string name="purchase_card_rejected_title">تراکنش از طرف بانک شما رد شد.</string>
   <string name="purchase_error_invalid_credit_card_title">شماره نامعتبر کارت بانکی.</string>
-  <string name="purchase_error_invalid_credit_card_body">مطمئن شوید که اعداد صحیح را وارد کرده‌اید.</string>
   <string name="purchase_error_card_security_validation_title">مشکلی در مرحله دوم تایید این تراکنش پیش آمده‌است.</string>
   <string name="purchase_error_in_progress_title">درخواست شده قبلا اجرا شده و یا در حال اجراست.</string>
   <string name="purchase_card_error_CVV_title">CVV/CVC اشتباه</string>
@@ -259,9 +216,7 @@
   <string name="update_notification_body">برای نصب، اینجا را کلیک کنید.</string>
   <string name="update_aptoide_games_update_notification">نسخه جدیدی از Aptoide Games موجود است</string>
   <!-- GenAi -->
-  <string name="genai_bottom_navigation_genai_button">GenAI</string>
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
-  <string name="genai_assistant_title">دستیار</string>
   <string name="genai_me_title">من</string>
   <string name="genai_introduction_body">سلام! من دستیار هوش مصنوعی شما در همه چیز مرتبط با کشف اپلیکیشن و بازی هستم. امتحان کنید مثلا:</string>
   <string name="genai_input_message_field">پیامی بنویسید&#8230;</string>
