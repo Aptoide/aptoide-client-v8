@@ -8,10 +8,8 @@
   <string name="setting_mobile">ดาวน์โหลดผ่าน wifi เท่านั้น</string>
   <string name="settings_beta_filter_setting_title">เวอร์ชั่นเบต้า</string>
   <string name="settings_beta_filter_summary">คุณจะเห็นแอปเบต้าด้วย</string>
-  <string name="setting_updates">อัพเดต</string>
   <string name="settings_include_system_apps_title">ระบบแอป</string>
   <string name="settings_include_system_apps_summary">คุณจะเห็นการปรับปรุงสำหรับระบบแอป</string>
-  <string name="settings_excluded_updates">ยกเว้นการอัปเดต</string>
   <string name="setting_notifications">การแจ้งเตือน</string>
   <string name="setting_notifications_sub_section_1">อัพเดตแอป</string>
   <string name="setting_notifications_sub_sub_section_1">แสดงการแจ้งเตือนสำหรับแอปที่อัพเดต</string>
@@ -22,7 +20,6 @@
   <string name="settings_clear_cache_summary">ลบแฟ้มชั่วคราว</string>
   <string name="settings_maxFileCache_title">ตั้งขนาดแคชสูงสุด (MB)</string>
   <string name="settings_maxFileCache_sum">ตั้งค่าขนาดแคชสูงสุด</string>
-  <string name="setting_mature_filtering">เนื้อหาผู้ใหญ่</string>
   <string name="setting_dont_show_mature_content">แสดงเนื้อหาผู้ใหญ่</string>
   <string name="set_mature_pin_title">ตั้งค่าพินเนื้อหาผู้ใหญ่</string>
   <string name="set_mature_pin_summary">ตั้งรหัสพินเพื่อปลดล็อกเนื้อหาสำหรับผู้ใหญ่</string>
