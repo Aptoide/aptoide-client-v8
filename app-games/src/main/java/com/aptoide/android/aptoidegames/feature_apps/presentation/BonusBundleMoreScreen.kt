@@ -75,7 +75,7 @@ fun seeMoreBonusScreen() = ScreenData.withAnalytics(
   val bundleTitle = arguments?.getString("title")!!
   val bundleTag = arguments.getString("tag")!!
 
-  MoreBonusBundleView(
+  MoreBonusBundleScreen(
     title = bundleTitle,
     bundleTag = bundleTag,
     navigateBack = navigateBack,
@@ -89,7 +89,7 @@ fun buildSeeMoreBonusRoute(
 ) = "seeMoreBonus/$title/$bundleTag"
 
 @Composable
-fun MoreBonusBundleView(
+private fun MoreBonusBundleScreen(
   title: String,
   bundleTag: String,
   navigateBack: () -> Unit,
@@ -99,7 +99,7 @@ fun MoreBonusBundleView(
   val analyticsContext = AnalyticsContext.current
   val genericAnalytics = rememberGenericAnalytics()
 
-  RealMoreBonusBundleView(
+  MoreBonusBundleScreen(
     uiState = uiState,
     title = title,
     bundleTag = bundleTag,
@@ -116,7 +116,7 @@ fun MoreBonusBundleView(
 }
 
 @Composable
-private fun RealMoreBonusBundleView(
+private fun MoreBonusBundleScreen(
   uiState: AppsListUiState,
   title: String,
   bundleTag: String,
@@ -130,26 +130,43 @@ private fun RealMoreBonusBundleView(
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
     AppGamesTopBar(navigateBack = navigateBack, title = title)
-    when (uiState) {
-      AppsListUiState.Loading -> LoadingView()
-      AppsListUiState.NoConnection -> NoConnectionView(onRetryClick = noNetworkReload)
-      AppsListUiState.Error -> GenericErrorView(reload)
-      AppsListUiState.Empty -> MoreBonusBundleViewContent(
-        appList = emptyList(),
-        navigate = navigate
-      )
+    MoreBonusBundleView(
+      uiState = uiState,
+      bundleTag = bundleTag,
+      navigate = navigate,
+      reload = reload,
+      noNetworkReload = noNetworkReload
+    )
+  }
+}
 
-      is AppsListUiState.Idle -> MoreBonusBundleViewContent(
-        appList = uiState.apps.onEach {
-          it.campaigns?.run {
-            if (AptoideMMPCampaign.allowedBundleTags.keys.contains(bundleTag)) {
-              placementType = "see_all"
-            }
+@Composable
+fun MoreBonusBundleView(
+  uiState: AppsListUiState,
+  bundleTag: String,
+  navigate: (String) -> Unit,
+  reload: () -> Unit,
+  noNetworkReload: () -> Unit,
+) {
+  when (uiState) {
+    AppsListUiState.Loading -> LoadingView()
+    AppsListUiState.NoConnection -> NoConnectionView(onRetryClick = noNetworkReload)
+    AppsListUiState.Error -> GenericErrorView(reload)
+    AppsListUiState.Empty -> MoreBonusBundleViewContent(
+      appList = emptyList(),
+      navigate = navigate
+    )
+
+    is AppsListUiState.Idle -> MoreBonusBundleViewContent(
+      appList = uiState.apps.onEach {
+        it.campaigns?.run {
+          if (AptoideMMPCampaign.allowedBundleTags.keys.contains(bundleTag)) {
+            placementType = "see_all"
           }
-        },
-        navigate = navigate,
-      )
-    }
+        }
+      },
+      navigate = navigate,
+    )
   }
 }
 
@@ -357,7 +374,7 @@ private fun RealBonusBundlePreview(
   @PreviewParameter(AppsListUiStateProvider::class) uiState: AppsListUiState,
 ) {
   AptoideTheme {
-    RealMoreBonusBundleView(
+    MoreBonusBundleScreen(
       uiState = uiState,
       title = getRandomString(range = 1..5, capitalize = true),
       bundleTag = "",
