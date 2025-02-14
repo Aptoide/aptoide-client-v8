@@ -205,6 +205,9 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
   fun sendECVideosFlagReady() =
     analyticsSender.logEvent("ec_videos_flag_ready", params = emptyMap())
 
+  fun sendHomeTabClick(tab: String) =
+    analyticsSender.logEvent("home_tab_clicked", params = mapOf(P_NAME to tab))
+
   companion object {
     internal const val P_OPEN_TYPE = "open_type"
     internal const val P_FIRST_LAUNCH = "first_launch"
@@ -216,6 +219,7 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
     internal const val P_CATEGORY = "category"
     internal const val P_APPC_BILLING = "appc_billing"
     internal const val P_SERVICE = "service"
+    internal const val P_NAME = "name"
   }
 }
 
