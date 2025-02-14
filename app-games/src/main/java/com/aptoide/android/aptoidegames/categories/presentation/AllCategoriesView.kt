@@ -21,8 +21,6 @@ import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -31,16 +29,15 @@ import androidx.compose.ui.semantics.collectionInfo
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.ScreenData
-import cm.aptoide.pt.feature_categories.domain.randomCategory
 import cm.aptoide.pt.feature_categories.presentation.AllCategoriesUiState
-import cm.aptoide.pt.feature_categories.presentation.AllCategoriesUiStateType
-import cm.aptoide.pt.feature_categories.presentation.AllCategoriesViewModel
+import cm.aptoide.pt.feature_categories.presentation.AllCategoriesUiStateProvider
+import cm.aptoide.pt.feature_categories.presentation.rememberAllCategories
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
@@ -56,7 +53,6 @@ import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
-import kotlin.random.Random
 
 private const val titleArg = "title"
 private const val allCategoriesRoute = "allCategories"
@@ -73,13 +69,12 @@ fun allCategoriesScreen() = ScreenData.withAnalytics(
   arguments = allCategoriesArguments
 ) { arguments, navigate, navigateBack ->
   val categoriesBundleTitle = arguments?.getString(titleArg)
-  val viewModel = hiltViewModel<AllCategoriesViewModel>()
-  val uiState by viewModel.uiState.collectAsState()
+  val (uiState, reload) = rememberAllCategories()
 
   AllCategoriesView(
     title = categoriesBundleTitle,
     uiState = uiState,
-    onError = viewModel::reload,
+    onError = reload,
     navigateBack = navigateBack,
     navigate = navigate,
   )
@@ -109,15 +104,15 @@ fun AllCategoriesView(
       },
       title = title
     )
-    when (uiState.type) {
-      AllCategoriesUiStateType.LOADING -> LoadingView()
-      AllCategoriesUiStateType.NO_CONNECTION -> NoConnectionView(onRetryClick = onError)
-      AllCategoriesUiStateType.ERROR -> GenericErrorView(onError)
-      AllCategoriesUiStateType.IDLE -> CategoryList(
-        size = uiState.categoryList.size,
+    when (uiState) {
+      is AllCategoriesUiState.Loading -> LoadingView()
+      is AllCategoriesUiState.NoConnection -> NoConnectionView(onRetryClick = onError)
+      is AllCategoriesUiState.Error -> GenericErrorView(onError)
+      is AllCategoriesUiState.Idle -> CategoryList(
+        size = uiState.categories.size,
       ) {
         itemsIndexed(
-          uiState.categoryList,
+          uiState.categories,
           key = { _, category -> category.name }
         ) { index, category ->
           CategoryLargeItem(
@@ -213,15 +208,13 @@ fun CategoryLargeItem(
 
 @PreviewDark
 @Composable
-fun PreviewAllCategoriesView() {
-  val uiStateFake =
-    AllCategoriesUiState(List(Random.nextInt(until = 20)) {
-      randomCategory
-    }, AllCategoriesUiStateType.IDLE)
-  AptoideTheme(darkTheme = false) {
+fun PreviewAllCategoriesView(
+  @PreviewParameter(AllCategoriesUiStateProvider::class) uiState: AllCategoriesUiState,
+) {
+  AptoideTheme {
     AllCategoriesView(
       title = "Categories",
-      uiState = uiStateFake,
+      uiState = uiState,
       onError = {},
       navigateBack = { },
       navigate = {}
