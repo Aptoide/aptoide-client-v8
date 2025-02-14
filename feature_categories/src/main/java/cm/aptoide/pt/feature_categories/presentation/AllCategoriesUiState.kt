@@ -1,12 +1,23 @@
 package cm.aptoide.pt.feature_categories.presentation
 
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import cm.aptoide.pt.feature_categories.domain.Category
+import cm.aptoide.pt.feature_categories.domain.randomCategory
+import kotlin.random.Random
+import kotlin.random.nextInt
 
-data class AllCategoriesUiState(
-  val categoryList: List<Category>,
-  val type: AllCategoriesUiStateType,
-)
+sealed class AllCategoriesUiState {
+  data class Idle(val categories: List<Category>) : AllCategoriesUiState()
+  object Loading : AllCategoriesUiState()
+  object NoConnection : AllCategoriesUiState()
+  object Error : AllCategoriesUiState()
+}
 
-enum class AllCategoriesUiStateType {
-  IDLE, LOADING, NO_CONNECTION, ERROR
+class AllCategoriesUiStateProvider : PreviewParameterProvider<AllCategoriesUiState> {
+  override val values: Sequence<AllCategoriesUiState> = sequenceOf(
+    AllCategoriesUiState.Idle(List(Random.nextInt(1..20)) { randomCategory }),
+    AllCategoriesUiState.Loading,
+    AllCategoriesUiState.NoConnection,
+    AllCategoriesUiState.Error
+  )
 }
