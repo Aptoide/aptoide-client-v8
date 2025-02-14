@@ -34,8 +34,8 @@ fun gamesScreen() = ScreenData(
 private fun GamesScreenContent(
   navigate: (String) -> Unit
 ) {
-  val showHomeTabRow = rememberHomeTabRowState()
-  var selectedTab by rememberSaveable(key = defaultHomeTabs.size.toString()) { mutableIntStateOf(0) }
+  val (showHomeTabRow, tabs) = rememberHomeTabRowState()
+  var selectedTab by rememberSaveable(key = tabs.size.toString()) { mutableIntStateOf(0) }
 
   val genericAnalytics = rememberGenericAnalytics()
 
@@ -43,10 +43,10 @@ private fun GamesScreenContent(
     if (showHomeTabRow) {
       HomeTabRow(
         selectedTab = selectedTab,
-        tabsList = defaultHomeTabs.map { it.getTitle() },
+        tabsList = tabs.map { it.getTitle() },
         onSelectTab = {
           if (it != selectedTab) {
-            genericAnalytics.sendHomeTabClick(defaultHomeTabs[it]::class.simpleName.toString())
+            genericAnalytics.sendHomeTabClick(tabs[it]::class.simpleName.toString())
           }
           selectedTab = it
         }
@@ -54,7 +54,7 @@ private fun GamesScreenContent(
     }
     GamesScreenTabView(
       navigate = navigate,
-      currentTab = defaultHomeTabs[selectedTab]
+      currentTab = tabs[selectedTab]
     )
   }
 }
@@ -67,7 +67,7 @@ private fun GamesScreenTabView(
   when (currentTab) {
     HomeTab.ForYou -> BundlesScreen(navigate = navigate)
 
-    HomeTab.TopCharts -> TopChartsView(navigate = navigate)
+    is HomeTab.TopCharts -> TopChartsView(sort = currentTab.sort, navigate = navigate)
 
     HomeTab.Bonus -> AppCoinsTabView(navigate)
 

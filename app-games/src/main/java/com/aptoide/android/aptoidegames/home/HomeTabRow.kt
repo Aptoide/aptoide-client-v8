@@ -10,7 +10,7 @@ import com.aptoide.android.aptoidegames.theme.Palette
 
 val defaultHomeTabs = listOf<HomeTab>(
   HomeTab.ForYou,
-  HomeTab.TopCharts,
+  HomeTab.TopCharts(),
   HomeTab.Bonus,
   HomeTab.Editorial,
   HomeTab.Categories,
@@ -18,7 +18,7 @@ val defaultHomeTabs = listOf<HomeTab>(
 
 sealed class HomeTab {
   object ForYou : HomeTab()
-  object TopCharts : HomeTab()
+  data class TopCharts(val sort: String = "pdownloads") : HomeTab()
   object Bonus : HomeTab()
   object Editorial : HomeTab()
   object Categories : HomeTab()
@@ -27,7 +27,7 @@ sealed class HomeTab {
   fun getTitle() = stringResource(
     when (this) {
       ForYou -> R.string.tag_for_you
-      TopCharts -> R.string.tag_top_charts
+      is TopCharts -> R.string.tag_top_charts
       Bonus -> R.string.tag_bonus
       Editorial -> R.string.tag_editorial
       Categories -> R.string.tag_categories
