@@ -71,7 +71,7 @@ fun allCategoriesScreen() = ScreenData.withAnalytics(
   val categoriesBundleTitle = arguments?.getString(titleArg)
   val (uiState, reload) = rememberAllCategories()
 
-  AllCategoriesView(
+  AllCategoriesScreen(
     title = categoriesBundleTitle,
     uiState = uiState,
     onError = reload,
@@ -86,7 +86,7 @@ fun buildAllCategoriesRoute(categoriesBundleTitle: String? = null) = when {
 }
 
 @Composable
-fun AllCategoriesView(
+fun AllCategoriesScreen(
   title: String?,
   uiState: AllCategoriesUiState,
   onError: () -> Unit,
@@ -104,29 +104,45 @@ fun AllCategoriesView(
       },
       title = title
     )
-    when (uiState) {
-      is AllCategoriesUiState.Loading -> LoadingView()
-      is AllCategoriesUiState.NoConnection -> NoConnectionView(onRetryClick = onError)
-      is AllCategoriesUiState.Error -> GenericErrorView(onError)
-      is AllCategoriesUiState.Idle -> CategoryList(
-        size = uiState.categories.size,
-      ) {
-        itemsIndexed(
-          uiState.categories,
-          key = { _, category -> category.name }
-        ) { index, category ->
-          CategoryLargeItem(
-            title = category.title,
-            icon = category.icon,
-            onClick = {
-              genericAnalytics.sendCategoryClick(category.name, analyticsContext)
-              navigate(
-                buildCategoryDetailRoute(category.title, category.name)
-                  .withItemPosition(index)
-              )
-            }
-          )
-        }
+    AllCategoriesView(
+      uiState = uiState,
+      navigate = navigate,
+      onError = onError
+    )
+  }
+}
+
+@Composable
+fun AllCategoriesView(
+  uiState: AllCategoriesUiState,
+  navigate: (String) -> Unit,
+  onError: () -> Unit
+) {
+  val analyticsContext = AnalyticsContext.current
+  val genericAnalytics = rememberGenericAnalytics()
+
+  when (uiState) {
+    is AllCategoriesUiState.Loading -> LoadingView()
+    is AllCategoriesUiState.NoConnection -> NoConnectionView(onRetryClick = onError)
+    is AllCategoriesUiState.Error -> GenericErrorView(onError)
+    is AllCategoriesUiState.Idle -> CategoryList(
+      size = uiState.categories.size,
+    ) {
+      itemsIndexed(
+        uiState.categories,
+        key = { _, category -> category.name }
+      ) { index, category ->
+        CategoryLargeItem(
+          title = category.title,
+          icon = category.icon,
+          onClick = {
+            genericAnalytics.sendCategoryClick(category.name, analyticsContext)
+            navigate(
+              buildCategoryDetailRoute(category.title, category.name)
+                .withItemPosition(index)
+            )
+          }
+        )
       }
     }
   }
@@ -212,7 +228,7 @@ fun PreviewAllCategoriesView(
   @PreviewParameter(AllCategoriesUiStateProvider::class) uiState: AllCategoriesUiState,
 ) {
   AptoideTheme {
-    AllCategoriesView(
+    AllCategoriesScreen(
       title = "Categories",
       uiState = uiState,
       onError = {},
