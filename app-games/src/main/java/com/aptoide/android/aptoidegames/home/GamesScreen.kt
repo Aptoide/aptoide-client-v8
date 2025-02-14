@@ -33,20 +33,20 @@ fun gamesScreen() = ScreenData(
 private fun GamesScreenContent(
   navigate: (String) -> Unit
 ) {
-  val showHomeTabRow = rememberHomeTabRowState()
+  val (showHomeTabRow, tabs) = rememberHomeTabRowState()
   var selectedTab by rememberSaveable(key = defaultHomeTabs.size.toString()) { mutableIntStateOf(0) }
   
   Column {
     if (showHomeTabRow) {
       HomeTabRow(
         selectedTab = selectedTab,
-        tabsList = defaultHomeTabs.map(HomeTab::title),
+        tabsList = tabs.map(HomeTab::title),
         onSelectTab = { selectedTab = it }
       )
     }
     GamesScreenTabView(
       navigate = navigate,
-      currentTab = defaultHomeTabs[selectedTab]
+      currentTab = tabs[selectedTab]
     )
   }
 }
