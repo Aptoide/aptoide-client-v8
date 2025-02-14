@@ -1,7 +1,21 @@
 package com.aptoide.android.aptoidegames.home
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import cm.aptoide.pt.extensions.ScreenData
+import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
+import cm.aptoide.pt.feature_categories.presentation.rememberAllCategories
+import cm.aptoide.pt.feature_editorial.presentation.rememberEditorialListState
 import com.aptoide.android.aptoidegames.analytics.presentation.InitialAnalyticsMeta
+import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
+import com.aptoide.android.aptoidegames.categories.presentation.AllCategoriesView
+import com.aptoide.android.aptoidegames.editorial.SeeMoreEditorialsContent
+import com.aptoide.android.aptoidegames.feature_apps.presentation.MoreBonusBundleView
+import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberBonusBundle
 
 const val gamesRoute = "games"
 
@@ -12,8 +26,92 @@ fun gamesScreen() = ScreenData(
     screenAnalyticsName = "Home",
     navigate = navigate
   ) {
-    BundlesScreen(
-      navigate = it,
+    GamesScreenContent(navigate = navigate)
+  }
+}
+
+@Composable
+private fun GamesScreenContent(
+  navigate: (String) -> Unit
+) {
+  val showHomeTabRow = rememberHomeTabRowState()
+  var selectedTab by rememberSaveable(key = defaultHomeTabs.size.toString()) { mutableIntStateOf(0) }
+
+  val genericAnalytics = rememberGenericAnalytics()
+
+  Column {
+    if (showHomeTabRow) {
+      HomeTabRow(
+        selectedTab = selectedTab,
+        tabsList = defaultHomeTabs.map { it.getTitle() },
+        onSelectTab = {
+          if (it != selectedTab) {
+            genericAnalytics.sendHomeTabClick(defaultHomeTabs[it]::class.simpleName.toString())
+          }
+          selectedTab = it
+        }
+      )
+    }
+    GamesScreenTabView(
+      navigate = navigate,
+      currentTab = defaultHomeTabs[selectedTab]
     )
   }
+}
+
+@Composable
+private fun GamesScreenTabView(
+  navigate: (String) -> Unit,
+  currentTab: HomeTab
+) {
+  when (currentTab) {
+    HomeTab.ForYou -> BundlesScreen(navigate = navigate)
+
+    HomeTab.TopCharts -> TopChartsView(navigate = navigate)
+
+    HomeTab.Bonus -> AppCoinsTabView(navigate)
+
+    HomeTab.Editorial -> EditorialTabView(navigate)
+
+    HomeTab.Categories -> CategoriesTabView(navigate)
+  }
+}
+
+@Composable
+private fun AppCoinsTabView(navigate: (String) -> Unit) {
+  val (_, bonusBundleTag) = rememberBonusBundle()
+  val (uiState, reload) = rememberAppsByTag(bonusBundleTag)
+
+  MoreBonusBundleView(
+    uiState = uiState,
+    bundleTag = bonusBundleTag,
+    navigate = navigate,
+    reload = reload,
+    noNetworkReload = reload
+  )
+}
+
+@Composable
+private fun EditorialTabView(navigate: (String) -> Unit) {
+  val (uiState, reload) = rememberEditorialListState(
+    tag = "editorials-more",
+    subtype = null
+  )
+
+  SeeMoreEditorialsContent(
+    uiState = uiState,
+    navigate = navigate,
+    onError = reload
+  )
+}
+
+@Composable
+private fun CategoriesTabView(navigate: (String) -> Unit) {
+  val (uiState, reload) = rememberAllCategories()
+
+  AllCategoriesView(
+    uiState = uiState,
+    navigate = navigate,
+    onError = reload
+  )
 }
