@@ -66,7 +66,7 @@ fun seeMoreEditorialScreen() = ScreenData.withAnalytics(
     tag = tag,
     subtype = arguments.getString("subtype")
   )
-  SeeMoreEditorialsView(
+  SeeMoreEditorialsScreen(
     title = title,
     uiState = uiState,
     onError = reload,
@@ -82,14 +82,13 @@ fun buildSeeMoreEditorialsRoute(
 ) = "seeMoreEditorials/$title/$bundleTag?subtype=$subtype"
 
 @Composable
-fun SeeMoreEditorialsView(
+fun SeeMoreEditorialsScreen(
   title: String?,
   uiState: ArticleListUiState,
   onError: () -> Unit,
   navigateBack: () -> Unit,
   navigate: (String) -> Unit,
 ) {
-
   Column(
     modifier = Modifier
       .fillMaxWidth()
@@ -206,7 +205,6 @@ fun EditorialsViewCardLarge(
     color = Palette.White
   )
 }
-
 
 @PreviewDark
 @Composable
