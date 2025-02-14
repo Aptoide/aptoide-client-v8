@@ -1,0 +1,52 @@
+package com.aptoide.android.aptoidegames.home
+
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.appview.CustomScrollableTabRow
+import com.aptoide.android.aptoidegames.theme.AGTypography
+import com.aptoide.android.aptoidegames.theme.Palette
+
+val defaultHomeTabs = listOf<HomeTab>(
+  HomeTab.ForYou,
+  HomeTab.TopCharts,
+  HomeTab.Bonus,
+  HomeTab.Editorial,
+  HomeTab.Categories,
+)
+
+sealed class HomeTab {
+  object ForYou : HomeTab()
+  object TopCharts : HomeTab()
+  object Bonus : HomeTab()
+  object Editorial : HomeTab()
+  object Categories : HomeTab()
+
+  @Composable
+  fun getTitle() = stringResource(
+    when (this) {
+      ForYou -> R.string.tag_for_you
+      TopCharts -> R.string.tag_top_charts
+      Bonus -> R.string.tag_bonus
+      Editorial -> R.string.tag_editorial
+      Categories -> R.string.tag_categories
+    }
+  )
+}
+
+@Composable
+fun HomeTabRow(
+  selectedTab: Int,
+  tabsList: List<String>,
+  onSelectTab: (Int) -> Unit,
+) {
+  CustomScrollableTabRow(
+    tabs = tabsList,
+    selectedTabIndex = selectedTab,
+    onTabClick = onSelectTab,
+    contentColor = Palette.Primary,
+    backgroundColor = Color.Transparent,
+    tabTextStyle = AGTypography.InputsL
+  )
+}
