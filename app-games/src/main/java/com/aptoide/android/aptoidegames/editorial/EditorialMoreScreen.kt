@@ -105,7 +105,7 @@ fun SeeMoreEditorialsScreen(
 }
 
 @Composable
-private fun SeeMoreEditorialsContent(
+fun SeeMoreEditorialsContent(
   uiState: ArticleListUiState,
   navigate: (String) -> Unit,
   onError: () -> Unit
