@@ -45,11 +45,28 @@ fun ProgressText(
 }
 
 @Composable
+fun ProgressTextWithDownloads(
+  modifier: Modifier = Modifier,
+  app: App,
+) {
+  val state = rememberDownloadState(app = app)
+
+  ProgressTextContent(
+    modifier = modifier,
+    app = app,
+    state = state,
+    showVersionName = false,
+    showDownloads = true
+  )
+}
+
+@Composable
 private fun ProgressTextContent(
   modifier: Modifier = Modifier,
   app: App,
   state: DownloadUiState?,
   showVersionName: Boolean,
+  showDownloads: Boolean = false,
 ) {
   val text = when (state) {
     is Install,
@@ -83,7 +100,10 @@ private fun ProgressTextContent(
         maxLines = 1
       )
     } else {
-      AppRatingAndDownloads(rating = app.pRating)
+      AppRatingAndDownloads(
+        rating = app.pRating,
+        downloads = if (showDownloads) app.pDownloads else null
+      )
     }
 
     is Waiting,
