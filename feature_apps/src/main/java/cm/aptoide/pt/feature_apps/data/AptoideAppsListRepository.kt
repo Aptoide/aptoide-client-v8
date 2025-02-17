@@ -91,6 +91,17 @@ internal class AptoideAppsListRepository @Inject constructor(
         ?: throw IllegalStateException()
     }
 
+  override suspend fun getSortedAppsList(sort: String, limit: Int): List<App> =
+    withContext(scope.coroutineContext) {
+      appsRemoteDataSource.getSortedAppsList(
+        storeName = storeName,
+        sort = sort,
+        limit = limit
+      )
+        .datalist?.list?.let(mapper::map)
+        ?: throw IllegalStateException()
+    }
+
   internal interface Retrofit {
     @GET("apps/get/{query}")
     suspend fun getAppsList(
@@ -128,5 +139,13 @@ internal class AptoideAppsListRepository @Inject constructor(
       @Query("aab") aab: Int = 1,
       @Query("package_names") packageNames: String,
     ): BaseV7ListResponse<AppJSON>
+
+    @GET("apps/get/")
+    suspend fun getSortedAppsList(
+      @Query("store_name") storeName: String,
+      @Query("aab") aab: Int = 1,
+      @Query("sort") sort: String,
+      @Query("limit") limit: Int,
+    ): BaseV7DataListResponse<AppJSON>
   }
 }

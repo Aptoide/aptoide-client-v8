@@ -14,6 +14,7 @@ import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_apps.data.walletApp
 import cm.aptoide.pt.feature_apps.domain.AppMetaUseCase
 import cm.aptoide.pt.feature_apps.domain.AppVersionsUseCase
+import cm.aptoide.pt.feature_apps.domain.AppsBySortUseCase
 import cm.aptoide.pt.feature_apps.domain.AppsByTagUseCase
 import cm.aptoide.pt.feature_apps.domain.CategoryAppsUseCase
 import cm.aptoide.pt.feature_apps.domain.ESkillsAppsUseCase
@@ -28,6 +29,7 @@ class InjectionsProvider @Inject constructor(
   val appsByTagUseCase: AppsByTagUseCase,
   val eSkillsAppsUseCase: ESkillsAppsUseCase,
   val categoryAppsUseCase: CategoryAppsUseCase,
+  val appsBySortUseCase: AppsBySortUseCase,
 ) : ViewModel()
 
 @Composable
@@ -139,6 +141,28 @@ fun categoryApps(
         return AppsListViewModel(
           source = categoryName,
           appsListUseCase = injectionsProvider.categoryAppsUseCase,
+        ) as T
+      }
+    }
+  )
+  val uiState by vm.uiState.collectAsState()
+
+  return uiState to vm::reload
+}
+
+@Composable
+fun appsBySortType(
+  sort: String,
+): Pair<AppsListUiState, KFunction0<Unit>> {
+  val injectionsProvider = hiltViewModel<InjectionsProvider>()
+  val vm: AppsListViewModel = viewModel(
+    key = "appsBySortType/$sort",
+    factory = object : ViewModelProvider.Factory {
+      override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        @Suppress("UNCHECKED_CAST")
+        return AppsListViewModel(
+          source = sort,
+          appsListUseCase = injectionsProvider.appsBySortUseCase,
         ) as T
       }
     }
