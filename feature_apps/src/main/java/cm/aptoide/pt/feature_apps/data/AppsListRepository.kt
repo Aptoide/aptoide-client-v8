@@ -13,4 +13,6 @@ interface AppsListRepository {
   suspend fun getAppVersions(packageName: String): List<App>
 
   suspend fun getAppsList(packageNames: String): List<App>
+
+  suspend fun getSortedAppsList(sort: String, limit: Int): List<App>
 }
