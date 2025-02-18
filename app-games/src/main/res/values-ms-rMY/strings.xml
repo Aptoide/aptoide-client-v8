@@ -237,4 +237,11 @@ Promosi khas dan ganjaran dalam permainan kegemaran anda.</string>
   <string name="promotional_new_active">Anda akan dimaklumkan apabila tersedia.</string>
   <string name="promotional_now_available_body">Kini tersedia di Permainan Aptoide!</string>
   <string name="promotional_now_available_tag">Now Available</string>
+  <!-- Tags -->
+  <string name="tag_for_you">For You</string>
+  <string name="tag_top_charts">Top Charts</string>
+  <string name="tag_appcoins">AppCoins</string>
+  <string name="tag_editorial">Editorial</string>
+  <string name="tag_categories">Categories</string>
+  <string name="tag_bonus">Bonus</string>
 </resources>
