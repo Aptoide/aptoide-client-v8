@@ -238,4 +238,11 @@
   <string name="promotional_new_active">You\'ll be notified when available.</string>
   <string name="promotional_now_available_body">Now available in Aptoide Games!</string>
   <string name="promotional_now_available_tag">Now Available</string>
+  <!-- Tags -->
+  <string name="tag_for_you">For You</string>
+  <string name="tag_top_charts">Top Charts</string>
+  <string name="tag_appcoins">AppCoins</string>
+  <string name="tag_editorial">Editorial</string>
+  <string name="tag_categories">Categories</string>
+  <string name="tag_bonus">Bonus</string>
 </resources>
