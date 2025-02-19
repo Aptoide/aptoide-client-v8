@@ -5,9 +5,9 @@ import androidx.room.Room
 import cm.aptoide.pt.aptoide_network.di.BaseOkHttp
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieApiService
-import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieRepository
 import com.aptoide.android.aptoidegames.gamegenie.data.database.GameGenieDatabase
 import com.aptoide.android.aptoidegames.gamegenie.data.database.GameGenieHistoryDao
+import com.aptoide.android.aptoidegames.gamegenie.presentation.GameGenieManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,11 +32,11 @@ internal object GameGenieModule {
   }
 
   @Provides
-  fun provideChatbotRepository(
+  fun provideChatbotManager(
     apiService: GameGenieApiService,
-    dao: GameGenieHistoryDao,
-  ): GameGenieRepository {
-    return GameGenieRepository(apiService, dao)
+    db: GameGenieDatabase,
+  ): GameGenieManager {
+    return GameGenieManager(apiService, db)
   }
 
   @Singleton

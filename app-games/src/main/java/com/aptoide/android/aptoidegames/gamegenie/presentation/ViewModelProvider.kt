@@ -8,13 +8,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cm.aptoide.pt.extensions.runPreviewable
-import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class GameGenieViewModelInjectionsProvider @Inject constructor(
-  val gameGenieRepository: GameGenieRepository,
+  val gameGenieUseCase: GameGenieUseCase,
 ) : ViewModel()
 
 @Composable
@@ -30,7 +29,7 @@ fun rememberGameGenieHistoryUiState(): ConversationHistoryUIState =
           override fun <T : ViewModel> create(modelClass: Class<T>): T {
             @Suppress("UNCHECKED_CAST")
             return ConversationHistoryViewModel(
-              gameGenieRepository = injectionsProvider.gameGenieRepository,
+              gameGenieUseCase = injectionsProvider.gameGenieUseCase,
             ) as T
           }
         }

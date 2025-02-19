@@ -2,7 +2,6 @@ package com.aptoide.android.aptoidegames.gamegenie.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -16,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ConversationHistoryViewModel @Inject constructor(
-  private val gameGenieRepository: GameGenieRepository,
+  private val gameGenieUseCase: GameGenieUseCase,
 ) : ViewModel() {
 
   private val viewModelState =
@@ -31,9 +30,8 @@ class ConversationHistoryViewModel @Inject constructor(
 
   init {
     viewModelScope.launch {
-      gameGenieRepository.getAllChats().map {
-        val pastConversations =
-          it.map { conversation -> conversation.toConversationInfo() }.reversed()
+      gameGenieUseCase.getAllChats().map { chats ->
+        val pastConversations = chats.reversed()
         viewModelState.update {
           ConversationHistoryUIState.Idle(pastConversations, onDeleteChat = { deleteChat(it) })
         }
@@ -44,7 +42,7 @@ class ConversationHistoryViewModel @Inject constructor(
 
   private fun deleteChat(id: String) {
     viewModelScope.launch {
-      gameGenieRepository.deleteChat(id)
+      gameGenieUseCase.deleteChat(id)
     }
   }
 }
