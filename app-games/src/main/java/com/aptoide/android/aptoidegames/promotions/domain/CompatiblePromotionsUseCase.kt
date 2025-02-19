@@ -51,5 +51,8 @@ class CompatiblePromotionsUseCase @Inject constructor(
           .packageInfo
           ?.takeIf { it.compatVersionCode <= second.versionCode }
       }
-      ?.let { this }
+      ?.let { alias ->
+        this.second.uninstallAlias = alias.packageName
+        this
+      }
 }

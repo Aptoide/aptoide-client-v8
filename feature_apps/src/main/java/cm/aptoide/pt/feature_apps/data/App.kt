@@ -53,6 +53,8 @@ data class App(
   val appSize: Long by lazy {
     file.size + (obb?.size ?: 0) + (aab?.size ?: 0)
   }
+
+  var uninstallAlias: String? = null
 }
 
 data class File(
