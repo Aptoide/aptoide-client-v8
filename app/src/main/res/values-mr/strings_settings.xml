@@ -8,10 +8,8 @@
   <string name="setting_mobile">फक्त वायफायवरच डाऊनलोड करा</string>
   <string name="settings_beta_filter_setting_title">चाचणी आवृत्ती</string>
   <string name="settings_beta_filter_summary">आपल्याला चाचणी अॅप्सही दिसतील.</string>
-  <string name="setting_updates">अपडेट</string>
   <string name="settings_include_system_apps_title">सिस्टम अॅप्स</string>
   <string name="settings_include_system_apps_summary">आपण सिस्टम अॅप्ससाठी अपडेटस पहाल</string>
-  <string name="settings_excluded_updates">अपडेट वगळले</string>
   <string name="setting_notifications">सूचना</string>
   <string name="setting_notifications_sub_section_1">अॅप अपडेट्स</string>
   <string name="setting_notifications_sub_sub_section_1">अॅप अपडेटची सूचना दाखवा</string>
@@ -22,7 +20,6 @@
   <string name="settings_clear_cache_summary">टेंपररी फाईल्स मिटवा</string>
   <string name="settings_maxFileCache_title">कमाल कॅश साइझ (एमबी) ठरवा</string>
   <string name="settings_maxFileCache_sum">आपल्या कॅशसाठी कमाल साईझ ठरवा</string>
-  <string name="setting_mature_filtering">प्रौढ सामग्री</string>
   <string name="setting_dont_show_mature_content">प्रौढ सामग्री दाखवा</string>
   <string name="set_mature_pin_title">प्रौढ सामग्री पिन सेट करा</string>
   <string name="set_mature_pin_summary">प्रौढ सामग्री अनलॉक करण्यासाठी पिन कोड ठरवा</string>

@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="username">E-mel</string>
-  <string name="register">Daftar</string>
-  <string name="title_successful">Berjaya</string>
   <string name="unknown_error">Ralat tidak diketahui</string>
   <string name="no_email_and_pass_error_message">Sila masukkan e-mel dan kata laluan</string>
   <string name="no_pass_error_message">Sila masukkan kata laluan</string>
@@ -10,15 +7,9 @@
   <string name="password_validation_text">Kata laluan mestilah sekurang-kurangnya 8 aksara dan mesti mempunyai sekurang-kurangnya satu huruf dan satu nombor atau aksara khas (!@#$%*)</string>
   <string name="facebook_grant_permission_button">Beri kebenaran</string>
   <string name="facebook_email_permission_regected_message">Kami memerlukan e-mel anda untuk membuat akaun</string>
-  <string name="user_cancelled">Dibatalkan oleh pengguna</string>
   <string name="terms_and_conditions_privacy_sign_up_message">Saya terima %1$s dan %2$s Aptoide</string>
   <string name="accept_terms_title_loggedin">Maklumat penting</string>
   <string name="accept_terms_message_loggedin">Sila terima %1$s dan %2$s kami untuk terus menggunakan Aptoide. Dokumen-dokumen ini mengandungi segala butiran mengenai hubungan kami dan cara kami menyimpan data anda.</string>
-  <string name="accept_terms_loggedin_readTC">BACA TERMA &amp; SYARAT</string>
-  <string name="accept_terms_loggedin_readPP">BACA DASAR PRIVASI</string>
-  <string name="accept_terms_loggedin_message">Dengan menekan terima, anda bersetuju dengan %1$s dan %2$s Aptoide</string>
-  <string name="accept_terms_loggedin_button_accept">TERIMA</string>
-  <string name="accept_terms_loggedin_button_close">TUTUP APTOIDE</string>
   <string name="user_upload_photo_failed">Buat masa ini, adalah tidak mungkin untuk mencipta profil.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">Sedang proses, ia mungkin mengambil masa…</string>
@@ -35,8 +26,6 @@
   <string name="follow" comment="follow">Ikut</string>
   <!--Create user fragment-->
   <string name="create_user_title">Cipta Profil Pengguna</string>
-  <string name="create_user_header"><b>Cipta Profil Pengguna anda</b> supaya anda boleh menilai, memberi komen dan berkongsi apl dengan rakan-rakan anda</string>
-  <string name="edit_profile_header_message">Edit profil anda dengan imej yang indah</string>
   <string name="create_user_take_picture">Ambil gambar untuk profil anda</string>
   <string name="create_user_choose_username">Pilih nama samaran anda</string>
   <string name="create_user_username">Nama samaran</string>
@@ -74,8 +63,6 @@
   <string name="image_requirements_error_open_image">-Ralat membuka imej\n</string>
   <string name="image_requirements_error_popup_title">Imej</string>
   <!-- My account -->
-  <string name="myaccount_my_profile_title">Profil Saya</string>
-  <string name="myaccount_user_store_title">Gedung Saya</string>
   <string name="myaccount_edit_store_button">Sunting</string>
   <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Log Keluar</string>
   <string name="myaccount_header_title">Pemberitahuan</string>
@@ -88,7 +75,6 @@
   <string name="newaccount_create_store">cipta kedai</string>
   <string name="newaccount_create_store_message">Cipta kedai untuk berkongsi aplikasi dengan komuniti.</string>
   <string name="newaccount_log_out">log keluar</string>
-  <string name="newaccount_notification_history">Sejarah notifikasi</string>
   <string name="newaccount_settings">Tetapan</string>
   <string name="newaccount_edit">Sunting</string>
 </resources>

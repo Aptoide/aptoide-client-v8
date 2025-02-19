@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="username">အီးမေးလ်</string>
-  <string name="register">အကောင့်အသစ်လျှောက်ပါ</string>
-  <string name="title_successful">ေအာင္ျမင္ပါသည္</string>
   <string name="unknown_error">အမည်မသိအမှား</string>
   <string name="no_email_and_pass_error_message">အီးမေးလ်နှင့် စကားဝှက် ထည့်သွင်းပေးပါ</string>
   <string name="no_pass_error_message">စာရင္းသြင္းရန္ စကားဝွက္တစ္ခုထည့္ေပးပါ.</string>
@@ -11,15 +8,9 @@
   <string name="facebook_grant_permission_button">ခြင့္ျပဳခ်က္ေပးပါ</string>
   <string name="facebook_email_permission_regected_message">\"အကောင့်တစ်ခု ပြုလုပ်ရန်အတွက် သင့်အီးမေးလ်အား လိုအပ်ပါသည်
  \"</string>
-  <string name="user_cancelled">အသံုးျပဴသူမွ ပယ္ဖ်က္ပါသည္</string>
   <string name="terms_and_conditions_privacy_sign_up_message">ကၽြႏ္ုပ္သည္ Aptoide ၏ %1$s ႏွင့္ %2$s ကို သေဘာတူပါသည္</string>
   <string name="accept_terms_title_loggedin">အေရးႀကီးေသာ သတင္းအခ်က္အလက္</string>
   <string name="accept_terms_message_loggedin">Aptoide ကို ဆက္လက္အသံုးျပဳႏိုင္ရန္အတြက္ ကၽြႏ္ုပ္တုိ႔၏ %1$s ႏွင့္ %2$s တို႔ကို လက္ခံေပးပါ။ ဤစာရြက္စာတမ္းမ်ားတြင္ ကၽြႏ္ုပ္တို႔၏ ဆက္စပ္မႈနွင့္ သင့္အခ်က္အလက္မ်ားအား ကၽြႏ္ုပ္တို႔ သိမ္းဆည္းပံုတို႔ကို အေသးစိတ္ေဖာ္ျပထားပါသည္။</string>
-  <string name="accept_terms_loggedin_readTC">စည္းမ်ဥ္း &amp; စည္းကမ္းမ်ားကို ဖတ္မည္</string>
-  <string name="accept_terms_loggedin_readPP">ကုိယ္ေရးလံုၿခံဳမႈ မူဝါဒကိုဖတ္မည္</string>
-  <string name="accept_terms_loggedin_message">လက္ခံမည္ကို နွိပ္ျခင္းျဖင့္ သင္သည္ Aptoide ၏ %1$s ႏွင့္ %2$s ကို သေဘာတူျခင္း ျဖစ္ပါသည္</string>
-  <string name="accept_terms_loggedin_button_accept">လက္ခံမည္</string>
-  <string name="accept_terms_loggedin_button_close">APTOIDE ကိုပိတ္မည္</string>
   <string name="user_upload_photo_failed">လက္ရွိတြင္ ပ႐ိုဖိုင္တစ္ခု ဖန္တီးရန္ မျဖစ္ႏိုင္ပါ.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">စီစဥ္ေဆာင္ရြက္ေနပါသည္၊ အနည္းငယ္ၾကာႏိုင္ပါသည္…</string>
@@ -36,8 +27,6 @@
   <string name="follow" comment="follow">Follow လုပ္ပါ</string>
   <!--Create user fragment-->
   <string name="create_user_title">အသံုးျပဳသူ ပ႐ိုဖိုင္တစ္ခု ဖန္တီးပါ</string>
-  <string name="create_user_header">Apps မ်ားအား အကဲျဖတ္ရန္၊ မွတ္ခ်က္ေပးရန္ႏွင့္ သူငယ္ခ်င္းမ်ားႏွင့္မွ်ေဝႏိုင္ရန္ <b>သင့္အသံုးျပဳသူ ပ႐ိုဖိုင္အား ဖန္တီးပါ</b></string>
-  <string name="edit_profile_header_message">လွပေသာ ပံုတစ္ပံုျဖင့္ သင့္ပ႐ိုဖိုင္အား ျပဳျပင္ပါ</string>
   <string name="create_user_take_picture">သင့္ပ႐ိုဖိုင္အတြက္ ပံုတစ္ပံုအား ရယူပါ</string>
   <string name="create_user_choose_username">သင့္အမည္ေျပာင္ကို ေရြးခ်ယ္ပါ</string>
   <string name="create_user_username">အမည္ေျပာင္</string>
@@ -75,8 +64,6 @@
   <string name="image_requirements_error_open_image">- ပုံ\n အား ဖွင့်ရာတွင် အမှား</string>
   <string name="image_requirements_error_popup_title">ပုံ</string>
   <!-- My account -->
-  <string name="myaccount_my_profile_title">ကၽြႏ္ုပ္၏ ပ႐ိုဖိုင္</string>
-  <string name="myaccount_user_store_title">ကျွန်ုပ်၏စတိုး</string>
   <string name="myaccount_edit_store_button">ပြုပြင်ပါ</string>
   <string name="myaccount_log_out_button" comment="myaccount_log_out_button">အေကာင့္ထြက္မည္</string>
   <string name="myaccount_header_title">သတင်းပို့ချက်များ</string>
@@ -89,7 +76,6 @@
   <string name="newaccount_create_store">စတိုးတစ္ခုအား ဖန္တီးပါ</string>
   <string name="newaccount_create_store_message">အက္ပ္မ်ားအား အသိုင္းအဝိုင္းတြင္ မွ်ေဝရန္ စတိုးတစ္ခုကို ဖန္တီးပါ။</string>
   <string name="newaccount_log_out">အေကာင့္ထြက္မည္</string>
-  <string name="newaccount_notification_history">သတင္းေပးပို႔ခ်က္မွတ္တမ္း</string>
   <string name="newaccount_settings">ဆက္တင္</string>
   <string name="newaccount_edit">ျပဳျပင္ပါ</string>
 </resources>

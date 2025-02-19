@@ -8,10 +8,8 @@
   <string name="setting_mobile">ਸਿਰਫ਼ ਵਾਈਫਾਈ ਤੇ ਡਾਊਨਲੋਡ ਕਰੋ</string>
   <string name="settings_beta_filter_setting_title">ਬੀਟਾ ਵਰਜਨ</string>
   <string name="settings_beta_filter_summary">ਤੁਸੀਂ ਬੀਟਾ ਐਪਸ ਵੀ ਦੇਖੋਗੇ|</string>
-  <string name="setting_updates">ਅੱਪਡੇਟ</string>
   <string name="settings_include_system_apps_title">ਸਿਸਟਮ ਐਪਸ</string>
   <string name="settings_include_system_apps_summary">ਤੁਸੀਂ ਸਿਸਟਮ ਐਪਸ ਲਈ ਅਪਡੇਟਸ ਦੇਖੋਗੇ</string>
-  <string name="settings_excluded_updates">ਛੱਡੇ ਗਏ ਅੱਪਡੇਟ</string>
   <string name="setting_notifications">ਸੂਚਨਾਵਾਂ</string>
   <string name="setting_notifications_sub_section_1">ਐਪ ਅੱਪਡੇਟ</string>
   <string name="setting_notifications_sub_sub_section_1">ਐਪ ਅਪਡੇਟਾਂ ਲਈ ਸੂਚਨਾਵਾਂ ਦਿਖਾਓ</string>
@@ -22,7 +20,6 @@
   <string name="settings_clear_cache_summary">ਟੈਂਪੋਰਰੀ ਫਾਇਲਾਂ ਹਟਾਓ</string>
   <string name="settings_maxFileCache_title">ਅਧਿਕਤਮ ਕੈਸ਼ ਸਾਈਜ਼ ਸੈੱਟ ਕਰੋ (ਐਮਬੀ)</string>
   <string name="settings_maxFileCache_sum">ਆਪਣੇ ਕੈਸ਼ ਲਈ ਅਧਿਕਤਮ ਸਾਈਜ਼ ਸੈੱਟ ਕਰੋ</string>
-  <string name="setting_mature_filtering">ਬਾਲਗ ਸਮੱਗਰੀ</string>
   <string name="setting_dont_show_mature_content">ਬਾਲਗ ਸਮੱਗਰੀ ਦਿਖਾਓ</string>
   <string name="set_mature_pin_title">ਬਾਲਗ ਸਮੱਗਰੀ ਪਿਨ ਸੈੱਟ ਕਰੋ</string>
   <string name="set_mature_pin_summary">ਬਾਲਗ ਸਮੱਗਰੀ ਨੂੰ ਖੋਲਣ ਲਈ ਇੱਕ ਪਿਨ ਕੋਡ ਸੈਟ ਕਰੋ</string>

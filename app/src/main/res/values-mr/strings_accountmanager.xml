@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="username">इमेल</string>
-  <string name="register">साईन अप</string>
-  <string name="title_successful">यशस्वी</string>
   <string name="unknown_error">अज्ञात त्रुटी</string>
   <string name="no_email_and_pass_error_message">कृपया आपला इमेल आणि पासवर्ड प्रविष्ठ करा</string>
   <string name="no_pass_error_message">कृपया आपला पासवर्ड प्रविष्ठ करा</string>
@@ -11,15 +8,9 @@
 एक अक्षर आणि एक अंक किवा विशेष वर्ण (!@#$%*) असावा</string>
   <string name="facebook_grant_permission_button">परवानगी द्या</string>
   <string name="facebook_email_permission_regected_message">खाते तयार करण्यासाठी आम्हाला आपल्या ईमेलची गरज आहे</string>
-  <string name="user_cancelled">वापरकर्त्याने रद्द केले</string>
   <string name="terms_and_conditions_privacy_sign_up_message">मला Aptoideच्या %1$s आणि %2$s मान्य आहेत</string>
   <string name="accept_terms_title_loggedin">महत्वाची माहिती</string>
   <string name="accept_terms_message_loggedin">Aptoideचा वापर चालू ठेवण्यासाठी कृपया आमच्या %1$s आणि %2$s मान्य करा. ह्या कागदपत्रात आपल्या संबंधांबाबत आणि आम्ही आपला डेटा कसा साठवितो त्याबाबत पूर्ण तपशील आहे.</string>
-  <string name="accept_terms_loggedin_readTC">शर्ती &amp; अटी वाचा</string>
-  <string name="accept_terms_loggedin_readPP">गोपनीयता धोरण वाचा</string>
-  <string name="accept_terms_loggedin_message">अॅक्सेप्ट बटन दाबल्याने आपण Aptoide च्या %1$s आणि %2$s मान्य करीत आहात असे मानले जाईल</string>
-  <string name="accept_terms_loggedin_button_accept">मान्य</string>
-  <string name="accept_terms_loggedin_button_close">APTOIDE बंद करा</string>
   <string name="user_upload_photo_failed">या क्षणाला प्रोफाईल बनविणे शक्य झाले नाही.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">प्रक्रिया चालू आहे, थोडा वेळ लागु शकेल…</string>
@@ -36,8 +27,6 @@
   <string name="follow" comment="follow">फॉलो</string>
   <!--Create user fragment-->
   <string name="create_user_title">युजर प्रोफाईल तयार करा</string>
-  <string name="create_user_header">आपल्या मित्रांसोबत अॅप्स शेअर करण्यासाठी आणि त्यावर टिपणी आणि शेरे देण्यासाठी <b>युजर प्रोफाईल तयार करा</b></string>
-  <string name="edit_profile_header_message">एका सुंदर चित्राने आपली प्रोफाईल संपादित करा</string>
   <string name="create_user_take_picture">आपल्या प्रोफाईल साठी एक फोटो घ्या</string>
   <string name="create_user_choose_username">आपले टोपण नाव निवडा</string>
   <string name="create_user_username">टोपण नाव</string>
@@ -75,8 +64,6 @@
   <string name="image_requirements_error_open_image">- प्रतिमा उघडताना त्रुटी निर्माण झाली आहे\n</string>
   <string name="image_requirements_error_popup_title">प्रतिमा</string>
   <!-- My account -->
-  <string name="myaccount_my_profile_title">माझी प्रोफाईल</string>
-  <string name="myaccount_user_store_title">माझे स्टोर</string>
   <string name="myaccount_edit_store_button">संपादित करा</string>
   <string name="myaccount_log_out_button" comment="myaccount_log_out_button">लॉग आउट</string>
   <string name="myaccount_header_title">सूचना</string>
@@ -89,7 +76,6 @@
   <string name="newaccount_create_store">स्टोर निर्माण करा</string>
   <string name="newaccount_create_store_message">समुदायाबरोबर अॅप्स सामायिक करण्यासाठी स्टोर निर्माण करा.</string>
   <string name="newaccount_log_out">लॉग आउट</string>
-  <string name="newaccount_notification_history">सूचनांचा इतिहास</string>
   <string name="newaccount_settings">सेटिंग्ज</string>
   <string name="newaccount_edit">संपादित करा</string>
 </resources>

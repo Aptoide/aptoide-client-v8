@@ -8,10 +8,8 @@
   <string name="setting_mobile">Alleen via wifi downloaden</string>
   <string name="settings_beta_filter_setting_title">Bètaversies</string>
   <string name="settings_beta_filter_summary">Er worden ook bèta-apps getoond.</string>
-  <string name="setting_updates">Updates</string>
   <string name="settings_include_system_apps_title">Systeemapps</string>
   <string name="settings_include_system_apps_summary">Je krijgt updates voor systeemapps te zien</string>
-  <string name="settings_excluded_updates">Uitgesloten updates</string>
   <string name="setting_notifications">Meldingen</string>
   <string name="setting_notifications_sub_section_1">App-updates</string>
   <string name="setting_notifications_sub_sub_section_1">Meldingen voor app-updates weergeven</string>
@@ -22,7 +20,6 @@
   <string name="settings_clear_cache_summary">Tijdelijke bestanden verwijderen</string>
   <string name="settings_maxFileCache_title">Stel maximale cachegrootte (MB) in</string>
   <string name="settings_maxFileCache_sum">Stel een maximale grootte voor je cache in</string>
-  <string name="setting_mature_filtering">Inhoud voor volwassenen</string>
   <string name="setting_dont_show_mature_content">Inhoud voor volwassenen tonen</string>
   <string name="set_mature_pin_title">Pincode voor inhoud voor volwassen instellen</string>
   <string name="set_mature_pin_summary">Stel een pincode in om inhoud voor volwassenen te ontgrendelen</string>

@@ -8,10 +8,8 @@
   <string name="setting_mobile">WiFi接続時のみダウンロード</string>
   <string name="settings_beta_filter_setting_title">ベータ版</string>
   <string name="settings_beta_filter_summary">ベータ版のアプリも表示されます。</string>
-  <string name="setting_updates">更新</string>
   <string name="settings_include_system_apps_title">システムアプリ</string>
   <string name="settings_include_system_apps_summary">システムアプリのアップデートが表示されます</string>
-  <string name="settings_excluded_updates">除外された更新リスト</string>
   <string name="setting_notifications">通知</string>
   <string name="setting_notifications_sub_section_1">アプリの更新</string>
   <string name="setting_notifications_sub_sub_section_1">アプリの更新の通知を表示します</string>
@@ -22,7 +20,6 @@
   <string name="settings_clear_cache_summary">一時ファイルの削除</string>
   <string name="settings_maxFileCache_title">最大キャッシュサイズの設定 (MB)</string>
   <string name="settings_maxFileCache_sum">キャッシュの最大サイズを設定します</string>
-  <string name="setting_mature_filtering">アダルトコンテンツ</string>
   <string name="setting_dont_show_mature_content">成人向けコンテンツを表示</string>
   <string name="set_mature_pin_title">アダルトコンテンツピンを設定</string>
   <string name="set_mature_pin_summary">アダルトコンテンツを解除するピンコードの設定</string>

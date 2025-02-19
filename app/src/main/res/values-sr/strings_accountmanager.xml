@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="username">E-pošta</string>
-  <string name="register">Registracija</string>
-  <string name="title_successful">Uspešno</string>
   <string name="unknown_error">Nepoznata greška</string>
   <string name="no_email_and_pass_error_message">Unesite adresu e-pošte i lozinku</string>
   <string name="no_pass_error_message">Unesite lozinku</string>
@@ -11,15 +8,9 @@
         najmanje jedno slovo i jedan broj ili poseban znak (!@#$%*)</string>
   <string name="facebook_grant_permission_button">Dajte dozvolu</string>
   <string name="facebook_email_permission_regected_message">Potrebna nam je vaša adresa e-pošte da bismo napravili nalog</string>
-  <string name="user_cancelled">Korisnik je otkazao</string>
   <string name="terms_and_conditions_privacy_sign_up_message">Prihvatam Aptoide %1$s i %2$s</string>
   <string name="accept_terms_title_loggedin">Važna informacija</string>
   <string name="accept_terms_message_loggedin">Prihvatite naše %1$s i %2$s da biste nastavili da koristite Aptoide. Ti dokumenti sadrže sve informacije o našem međusobnom odnosu i načinu na koji čuvamo vaše podatke.</string>
-  <string name="accept_terms_loggedin_readTC">PROČITAJTE USLOVE I ODREDBE</string>
-  <string name="accept_terms_loggedin_readPP">PROČITAJTE SMERNICE ZA PRIVATNOST</string>
-  <string name="accept_terms_loggedin_message">Ako pritisnete Prihvatam, prihvatate Aptoide %1$s i %2$s</string>
-  <string name="accept_terms_loggedin_button_accept">PRIHVATAM</string>
-  <string name="accept_terms_loggedin_button_close">ZATVORI APTOIDE</string>
   <string name="user_upload_photo_failed">Nije moguće napraviti profil.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">Obrađuje se, možda će potrajati izvesno vreme…</string>
@@ -36,8 +27,6 @@
   <string name="follow" comment="follow">Pratite</string>
   <!--Create user fragment-->
   <string name="create_user_title">Napravite korisnički profil</string>
-  <string name="create_user_header"><b>Napravite korisnički profil</b> da biste mogli da ocenjujete, komentarišete i delite aplikacije sa prijateljima</string>
-  <string name="edit_profile_header_message">Dodajte profilu lepu sliku</string>
   <string name="create_user_take_picture">Slikajte se za profil</string>
   <string name="create_user_choose_username">Odaberite nadimak</string>
   <string name="create_user_username">Nadimak</string>
@@ -75,8 +64,6 @@
   <string name="image_requirements_error_open_image">- greška pri otvaranju slike\n</string>
   <string name="image_requirements_error_popup_title">Slika</string>
   <!-- My account -->
-  <string name="myaccount_my_profile_title">Moj profil</string>
-  <string name="myaccount_user_store_title">Moja prodavnica</string>
   <string name="myaccount_edit_store_button">Izmeni</string>
   <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Odjavite se</string>
   <string name="myaccount_header_title">Obaveštenja</string>
@@ -89,7 +76,6 @@
   <string name="newaccount_create_store">napravite prodavnicu</string>
   <string name="newaccount_create_store_message">Napravite prodavnicu da biste delili aplikacije sa zajednicom.</string>
   <string name="newaccount_log_out">odjavite se</string>
-  <string name="newaccount_notification_history">Istorija obaveštenja</string>
   <string name="newaccount_settings">Podešavanja</string>
   <string name="newaccount_edit">Izmeni</string>
 </resources>

@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="username">Posta elettronica</string>
-  <string name="register">Iscriviti</string>
-  <string name="title_successful">Effettuato con successo</string>
   <string name="unknown_error">Errore sconosciuto</string>
   <string name="no_email_and_pass_error_message">Si prega di inserire indirizzo e-mail e password</string>
   <string name="no_pass_error_message">Inserire una password</string>
@@ -12,15 +9,9 @@
   <string name="facebook_email_permission_regected_message">\"Abbiamo bisogno della tua e-mail per creare un
 account
  \"</string>
-  <string name="user_cancelled">Cancellato da utente</string>
   <string name="terms_and_conditions_privacy_sign_up_message">Accetto i %1$s e la %2$s di Aptoide</string>
   <string name="accept_terms_title_loggedin">Informazioni importanti</string>
   <string name="accept_terms_message_loggedin">Per poter continuare a usare Aptoide si prega di accettare i nostri %1$s e %2$s. Questi documenti contengono tutti i dettagli sul nostro rapporto e su come conserviamo i tuoi dati.</string>
-  <string name="accept_terms_loggedin_readTC">LEGGI TERMINI &amp; CONDIZIONI</string>
-  <string name="accept_terms_loggedin_readPP">LEGGI L\'INFORMATIVA SULLA PRIVACY</string>
-  <string name="accept_terms_loggedin_message">Premendo \"accetta\" acconsentirai ai %1$s e %2$s di Aptoide</string>
-  <string name="accept_terms_loggedin_button_accept">ACCETTA</string>
-  <string name="accept_terms_loggedin_button_close">CHIUDI APTOIDE</string>
   <string name="user_upload_photo_failed">Al momento non è stato possibile creare un profilo.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">In elaborazione, ci potrebbe volere un po\'…</string>
@@ -37,8 +28,6 @@ account
   <string name="follow" comment="follow">Segui</string>
   <!--Create user fragment-->
   <string name="create_user_title">Crea un Profilo Utente</string>
-  <string name="create_user_header"><b>Crea il tuo Profilo Utente</b> così potrai votare, commentare e condividere le app con i tuoi amici</string>
-  <string name="edit_profile_header_message">Modifica il tuo profilo con una bella immagine</string>
   <string name="create_user_take_picture">Scatta una foto per il tuo profilo</string>
   <string name="create_user_choose_username">Scegli il tuo nickname</string>
   <string name="create_user_username">Nickname</string>
@@ -76,8 +65,6 @@ account
   <string name="image_requirements_error_open_image">-Errore durante l\'apertura dell\' immagine\n</string>
   <string name="image_requirements_error_popup_title">Immagine</string>
   <!-- My account -->
-  <string name="myaccount_my_profile_title">Il Mio Profilo</string>
-  <string name="myaccount_user_store_title">Il Mio Store</string>
   <string name="myaccount_edit_store_button">Modifica</string>
   <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Logout</string>
   <string name="myaccount_header_title">Notifiche</string>
@@ -90,7 +77,6 @@ account
   <string name="newaccount_create_store">crea uno Store</string>
   <string name="newaccount_create_store_message">Crea uno store per condividere app nella community.</string>
   <string name="newaccount_log_out">logout</string>
-  <string name="newaccount_notification_history">Cronologia notifiche</string>
   <string name="newaccount_settings">Impostazioni</string>
   <string name="newaccount_edit">Modifica</string>
 </resources>

@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="username">البريد الإلكتروني</string>
-  <string name="register">ثبت‌نام</string>
-  <string name="title_successful">موفق</string>
   <string name="unknown_error">خطای نامشخص</string>
   <string name="no_email_and_pass_error_message">لطفا آدرس ایمیل و رمز عبور را وارد کنید</string>
   <string name="no_pass_error_message">لطفاً رمز عبور را وارد کنید</string>
@@ -10,15 +7,9 @@
   <string name="password_validation_text">کلمه عبور باید حداقل دارای ۸ حرف و ترکیبی از حداقل یک حرف و یک عدد یا یک کاراکتر ویژه (!❊#$٪*) باشد</string>
   <string name="facebook_grant_permission_button">تایید دسترسی</string>
   <string name="facebook_email_permission_regected_message">برای ایجاد یک حساب کاربری، به ایمیل شما نیاز داریم</string>
-  <string name="user_cancelled">انصراف توسط کاربر</string>
   <string name="terms_and_conditions_privacy_sign_up_message">من %1$s و %2$s در Aptoide را قبول می کنم</string>
   <string name="accept_terms_title_loggedin">اطلاعات مهم</string>
   <string name="accept_terms_message_loggedin">برای ادامه استفاده از Aptoide لطفا %1$s و %2$s ما را بپذیرید. این اسناد شامل همه جزییات درباره ارتباط ما و چگونگی ذخیره اطلاعات ما می‌شود.</string>
-  <string name="accept_terms_loggedin_readTC">مطالعه شرایط و قوانین</string>
-  <string name="accept_terms_loggedin_readPP">مطالعه سیاست حفظ حریم خصوصی</string>
-  <string name="accept_terms_loggedin_message">با فشار دادن پذیرش شما با %1$s و %2$s در Aptoide موافقت می کنید</string>
-  <string name="accept_terms_loggedin_button_accept">پذیرش</string>
-  <string name="accept_terms_loggedin_button_close">بستن APTOIDE</string>
   <string name="user_upload_photo_failed">در حال حاضر ساخت پروفایل امکان‌پذیر نیست.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">درحال پردازش، اندکی زمان لازم است…</string>
@@ -35,8 +26,6 @@
   <string name="follow" comment="follow">دنبال کردن</string>
   <!--Create user fragment-->
   <string name="create_user_title">ساخت حساب کاربری</string>
-  <string name="create_user_header"><b>حساب کاربری بسازید</b> تا بتوانید به برنامه‌ها و بازی‌ها امتیاز دهید، پای آن‌ها نظر بگذارید و برنامه‌های مورد علاقه‌تان را با دوستان‌تان به اشتراک بگذارید</string>
-  <string name="edit_profile_header_message">پروفایل خود را با تصویری زیبا ویرایش کنید</string>
   <string name="create_user_take_picture">برای حساب کاربری خود عکس بیندازید</string>
   <string name="create_user_choose_username">نام مستعار خود را انتخاب کنید</string>
   <string name="create_user_username">نام مستعار</string>
@@ -74,8 +63,6 @@
   <string name="image_requirements_error_open_image">- خطا در بازکردن عکس\n</string>
   <string name="image_requirements_error_popup_title">تصویر</string>
   <!-- My account -->
-  <string name="myaccount_my_profile_title">پروفایل من</string>
-  <string name="myaccount_user_store_title">فروشگاه من</string>
   <string name="myaccount_edit_store_button">تحرير</string>
   <string name="myaccount_log_out_button" comment="myaccount_log_out_button">خروج</string>
   <string name="myaccount_header_title">پیام‌ها</string>
@@ -88,7 +75,6 @@
   <string name="newaccount_create_store">ساخت فروشگاه</string>
   <string name="newaccount_create_store_message">یک فروشگاه بسازید تا بتوانید اپلیکیشن‌ها را با گروه کاربران به اشتراک بگذارید.</string>
   <string name="newaccount_log_out">خروج</string>
-  <string name="newaccount_notification_history">تاریخچه اعلان‌ها</string>
   <string name="newaccount_settings">تنظیمات</string>
   <string name="newaccount_edit">ویرایش</string>
 </resources>

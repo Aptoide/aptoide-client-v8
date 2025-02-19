@@ -8,10 +8,8 @@
   <string name="setting_mobile">仅通过 wifi 下载</string>
   <string name="settings_beta_filter_setting_title">测试版</string>
   <string name="settings_beta_filter_summary">您还将看到测试版应用。</string>
-  <string name="setting_updates">更新</string>
   <string name="settings_include_system_apps_title">系统应用</string>
   <string name="settings_include_system_apps_summary">您将看到系统应用的更新</string>
-  <string name="settings_excluded_updates">排除的更新</string>
   <string name="setting_notifications">通知</string>
   <string name="setting_notifications_sub_section_1">应用更新</string>
   <string name="setting_notifications_sub_sub_section_1">显示应用更新的通知</string>
@@ -22,7 +20,6 @@
   <string name="settings_clear_cache_summary">删除临时文件</string>
   <string name="settings_maxFileCache_title">设置最大缓存大小 (MB)</string>
   <string name="settings_maxFileCache_sum">设置最大缓存大小</string>
-  <string name="setting_mature_filtering">成人内容</string>
   <string name="setting_dont_show_mature_content">显示成人内容</string>
   <string name="set_mature_pin_title">设置成人内容的口令</string>
   <string name="set_mature_pin_summary">设置口令以解锁成人内容</string>

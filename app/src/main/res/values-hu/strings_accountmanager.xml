@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="username">E-mail</string>
-  <string name="register">Regisztráció</string>
-  <string name="title_successful">Sikeres</string>
   <string name="unknown_error">Ismeretlen hiba</string>
   <string name="no_email_and_pass_error_message">Kérjük, adjon meg egy e-mailt és jelszót</string>
   <string name="no_pass_error_message">Kérjük, a regisztrációhoz adj meg egy jelszót.</string>
@@ -10,15 +7,9 @@
   <string name="password_validation_text">A jelszónak legalább 8 karakterből kell állnia, és tartalmaznia kell legalább egy betűt és egy számot vagy speciális karaktert (!@#$%*)</string>
   <string name="facebook_grant_permission_button">Engedély megadása</string>
   <string name="facebook_email_permission_regected_message">Fiók létrehozásához szükségünk van az e-mail címére</string>
-  <string name="user_cancelled">A felhasználó megszakította</string>
   <string name="terms_and_conditions_privacy_sign_up_message">Elfogadom az Aptoide %1$s és %2$s szabályzatait</string>
   <string name="accept_terms_title_loggedin">Fontos közlemény</string>
   <string name="accept_terms_message_loggedin">Az Aptoide használatának folytatásához fogadd el a %1$s és %2$s dokumentumaink tartalmát. Ezekben mindent megtalálsz, amit adataid tárolásáról és felhasználásáról tudnod kel.</string>
-  <string name="accept_terms_loggedin_readTC">FELHASZNÁLÁSI FELTÉTELEK MEGTEKINTÉSE</string>
-  <string name="accept_terms_loggedin_readPP">ADATVÉDELMI NYILATKOZAT MEGTEKINTÉSE</string>
-  <string name="accept_terms_loggedin_message">Az Elfogadom gombra kattintva elfogadod az Aptoide %1$s és %2$s tartalmát</string>
-  <string name="accept_terms_loggedin_button_accept">ELFOGADOM</string>
-  <string name="accept_terms_loggedin_button_close">APTOIDE BEZÁRÁSA</string>
   <string name="user_upload_photo_failed">Ebben a pillanatban nem sikerült a profil létrehozása.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">Feldolgozás, ez eltarthat egy ideig…</string>
@@ -35,8 +26,6 @@
   <string name="follow" comment="follow">Követés</string>
   <!--Create user fragment-->
   <string name="create_user_title">Felhasználói profil létrehozása</string>
-  <string name="create_user_header"><b>Hozzon létre egy felhasználói profilt</b> azért, hogy értékelhessen kommentelhessen és megoszthasson appokat a barátaival</string>
-  <string name="edit_profile_header_message">Adjon egy szép profilképet adatlapjához</string>
   <string name="create_user_take_picture">Készítsen fotót a profiljához</string>
   <string name="create_user_choose_username">Válaszd ki a felhasználóneved</string>
   <string name="create_user_username">Becenév</string>
@@ -74,8 +63,6 @@
   <string name="image_requirements_error_open_image">- Kép megnyitása sikertelen\n</string>
   <string name="image_requirements_error_popup_title">Kép</string>
   <!-- My account -->
-  <string name="myaccount_my_profile_title">Saját profil</string>
-  <string name="myaccount_user_store_title">Saját áruház</string>
   <string name="myaccount_edit_store_button">Szerkesztés</string>
   <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Kijelentkezés</string>
   <string name="myaccount_header_title">Értesítések</string>
@@ -88,7 +75,6 @@
   <string name="newaccount_create_store">áruház létrehozása</string>
   <string name="newaccount_create_store_message">Hozz létre egy Aptoide áruházat, hogy appokat oszthass meg a közösséggel.</string>
   <string name="newaccount_log_out">kijelentkezés</string>
-  <string name="newaccount_notification_history">Értesítési előzmények</string>
   <string name="newaccount_settings">Beállítások</string>
   <string name="newaccount_edit">Szerkesztés</string>
 </resources>

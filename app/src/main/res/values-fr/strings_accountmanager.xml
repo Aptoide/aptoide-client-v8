@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="username">Email</string>
-  <string name="register">Inscription</string>
-  <string name="title_successful">Avec succès</string>
   <string name="unknown_error">Erreur inconnue</string>
   <string name="no_email_and_pass_error_message">Veuillez saisir une adresse email et un mot de passe</string>
   <string name="no_pass_error_message">Veuillez saisir un mot de passe</string>
@@ -11,15 +8,9 @@
         dont au moins une lettre et un chiffre ou un caractère spécial (!@#$%*)</string>
   <string name="facebook_grant_permission_button">Accorder l’autorisation</string>
   <string name="facebook_email_permission_regected_message">Nous avons besoin de votre adresse email pour créer un compte</string>
-  <string name="user_cancelled">Annulé par l\'utilisateur</string>
   <string name="terms_and_conditions_privacy_sign_up_message">J’accepte les %1$s et la %2$s d\'Aptoide</string>
   <string name="accept_terms_title_loggedin">Information importante</string>
   <string name="accept_terms_message_loggedin">Veuillez accepter nos %1$s et notre %2$s pour continuer à utiliser Aptoide. Ces documents comprennent toutes les informations sur notre relation et la façon dont nous conservons vos données.</string>
-  <string name="accept_terms_loggedin_readTC">LIRE LES CONDITIONS D\'UTILISATION</string>
-  <string name="accept_terms_loggedin_readPP">LIRE LA POLITIQUE DE CONFIDENTIALITÉ</string>
-  <string name="accept_terms_loggedin_message">En cliquant sur accepter, vous acceptez les %1$s et la %2$s d\'Aptoide</string>
-  <string name="accept_terms_loggedin_button_accept">ACCEPTER</string>
-  <string name="accept_terms_loggedin_button_close">FERMER APTOIDE</string>
   <string name="user_upload_photo_failed">La création du profil n\'a pas été possible.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">Traitement en cours, cela peut prendre un certain temps…</string>
@@ -36,8 +27,6 @@
   <string name="follow" comment="follow">S\'abonner</string>
   <!--Create user fragment-->
   <string name="create_user_title">Créer un profil d\'utilisateur</string>
-  <string name="create_user_header"><b>Créez votre profil d\'utilisateur</b> afin d\'évaluer, commenter et partager des applications avec vos amis</string>
-  <string name="edit_profile_header_message">Modifiez votre profil avec une belle image</string>
   <string name="create_user_take_picture">Prenez une photo pour votre profil</string>
   <string name="create_user_choose_username">Choisissez votre pseudo</string>
   <string name="create_user_username">Pseudo</string>
@@ -75,8 +64,6 @@
   <string name="image_requirements_error_open_image">- Erreur d’ouverture de l’image\n</string>
   <string name="image_requirements_error_popup_title">Image</string>
   <!-- My account -->
-  <string name="myaccount_my_profile_title">Mon profil</string>
-  <string name="myaccount_user_store_title">Ma Boutique</string>
   <string name="myaccount_edit_store_button">Modifier</string>
   <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Déconnexion</string>
   <string name="myaccount_header_title">Notifications</string>
@@ -89,7 +76,6 @@
   <string name="newaccount_create_store">créer une boutique</string>
   <string name="newaccount_create_store_message">Créez une boutique afin de partager des applications avec la communauté.</string>
   <string name="newaccount_log_out">déconnexion</string>
-  <string name="newaccount_notification_history">Historique des notifications</string>
   <string name="newaccount_settings">Paramètres</string>
   <string name="newaccount_edit">Modifier</string>
 </resources>

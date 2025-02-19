@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="username">电子邮件</string>
-  <string name="register">注册</string>
-  <string name="title_successful">成功</string>
   <string name="unknown_error">未知错误</string>
   <string name="no_email_and_pass_error_message">请输入电子邮件和密码</string>
   <string name="no_pass_error_message">请输入密码</string>
@@ -11,15 +8,9 @@
 一个数字或特殊字符 (!@#$%*)</string>
   <string name="facebook_grant_permission_button">批准许可</string>
   <string name="facebook_email_permission_regected_message">我们需要您的电子邮件来创建帐户</string>
-  <string name="user_cancelled">用户已取消</string>
   <string name="terms_and_conditions_privacy_sign_up_message">我接受Aptoide的%1$s和%2$s</string>
   <string name="accept_terms_title_loggedin">重要信息</string>
   <string name="accept_terms_message_loggedin">请接受我们的%1$s和%2$s以继续使用Aptoide。这些文档包括合作关系的所有细节以及我们存储数据的原则。</string>
-  <string name="accept_terms_loggedin_readTC">阅读条款与条件</string>
-  <string name="accept_terms_loggedin_readPP">阅读隐私政策</string>
-  <string name="accept_terms_loggedin_message">按“接受”则表示您同意Aptoide的%1$s和%2$s</string>
-  <string name="accept_terms_loggedin_button_accept">接受</string>
-  <string name="accept_terms_loggedin_button_close">关闭 APTOIDE</string>
   <string name="user_upload_photo_failed">目前无法创建资料。</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">正在处理，可能需要一点时间…</string>
@@ -36,8 +27,6 @@
   <string name="follow" comment="follow">关闭</string>
   <!--Create user fragment-->
   <string name="create_user_title">创建用户资料</string>
-  <string name="create_user_header"><b>创建您的用户资料</b>，这样您就可以评分、评论和与好友分享应用</string>
-  <string name="edit_profile_header_message">使用精美图像编辑个人资料</string>
   <string name="create_user_take_picture">为您的资料拍照</string>
   <string name="create_user_choose_username">选择昵称</string>
   <string name="create_user_username">昵称</string>
@@ -75,8 +64,6 @@
   <string name="image_requirements_error_open_image">- 打开图像出错\n</string>
   <string name="image_requirements_error_popup_title">图片</string>
   <!-- My account -->
-  <string name="myaccount_my_profile_title">我的档案</string>
-  <string name="myaccount_user_store_title">我的商店</string>
   <string name="myaccount_edit_store_button">编辑</string>
   <string name="myaccount_log_out_button" comment="myaccount_log_out_button">注销</string>
   <string name="myaccount_header_title">通知</string>
@@ -89,7 +76,6 @@
   <string name="newaccount_create_store">创建商店</string>
   <string name="newaccount_create_store_message">创建商店，与社区分享应用。</string>
   <string name="newaccount_log_out">注销</string>
-  <string name="newaccount_notification_history">通知历史记录</string>
   <string name="newaccount_settings">设置</string>
   <string name="newaccount_edit">编辑</string>
 </resources>

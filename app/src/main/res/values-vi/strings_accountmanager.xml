@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="username">Địa chỉ email</string>
-  <string name="register">Đăng Ký</string>
-  <string name="title_successful">Thành công</string>
   <string name="unknown_error">Lỗi không rõ</string>
   <string name="no_email_and_pass_error_message">Vui lòng nhập địa chỉ email và mật khẩu</string>
   <string name="no_pass_error_message">Nhập mật mã để đăng ký.</string>
@@ -10,15 +7,9 @@
   <string name="password_validation_text">Mật khẩu phải ít nhất 8 ký tự và nên có         ít nhất một chữ cái và một số hoặc một ký tự đặc biệt (!@#$%*)</string>
   <string name="facebook_grant_permission_button">Cấp phép</string>
   <string name="facebook_email_permission_regected_message">Bạn cần địa chỉ email của mình để tạo một tài khoản</string>
-  <string name="user_cancelled">Đã hủy bỏ bởi người dùng</string>
   <string name="terms_and_conditions_privacy_sign_up_message">Tôi chấp nhận %1$s và %2$s của Aptoide</string>
   <string name="accept_terms_title_loggedin">Thông tin quan trọng</string>
   <string name="accept_terms_message_loggedin">Vui lòng chấp nhận %1$s và %2$s của chúng tôi để tiếp tục sử dụng Aptoide. Những tài liệu này bao gồm tất cả các chi tiết về mối quan hệ của chúng tôi và cách mà chúng tôi lưu trữ dữ liệu của bạn.</string>
-  <string name="accept_terms_loggedin_readTC">ĐỌC ĐIỀU KHOẢN &amp; ĐIỀU KIỆN</string>
-  <string name="accept_terms_loggedin_readPP">ĐỌC CHÍNH SÁCH RIÊNG TƯ</string>
-  <string name="accept_terms_loggedin_message">Bằng việc nhấn chấp nhận, bạn đồng ý với %1$s và %2$s của Aptoide</string>
-  <string name="accept_terms_loggedin_button_accept">CHẤP NHẬN</string>
-  <string name="accept_terms_loggedin_button_close">ĐÓNG APTOIDE</string>
   <string name="user_upload_photo_failed">Hiện tại không thể tạo hồ sơ.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">Đang xử lý, có thể mất một lúc…</string>
@@ -35,8 +26,6 @@
   <string name="follow" comment="follow">Theo dõi</string>
   <!--Create user fragment-->
   <string name="create_user_title">Tạo một hồ sơ người dùng</string>
-  <string name="create_user_header"><b>Tạo hồ sơ người dùng của bạn</b> để bạn có thể đánh giá, bình luận và chia sẻ các ứng dụng với bạn bè</string>
-  <string name="edit_profile_header_message">Chỉnh sửa hồ sơ của bạn với một bức ảnh đẹp</string>
   <string name="create_user_take_picture">Chụp một bức ảnh cho hồ sơ của bạn</string>
   <string name="create_user_choose_username">Chọn nickname của bạn</string>
   <string name="create_user_username">Nickname</string>
@@ -74,8 +63,6 @@
   <string name="image_requirements_error_open_image">- Lỗi khi mở hình ảnh\n</string>
   <string name="image_requirements_error_popup_title">Hình ảnh</string>
   <!-- My account -->
-  <string name="myaccount_my_profile_title">Hồ sơ của tôi</string>
-  <string name="myaccount_user_store_title">Cửa hàng của tôi</string>
   <string name="myaccount_edit_store_button">Chỉnh sửa</string>
   <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Đăng xuất</string>
   <string name="myaccount_header_title">Thông báo</string>
@@ -88,7 +75,6 @@
   <string name="newaccount_create_store">tạo cửa hàng</string>
   <string name="newaccount_create_store_message">Tạo một cửa hàng để chia sẻ ứng dụng với cộng đồng.</string>
   <string name="newaccount_log_out">đăng xuất</string>
-  <string name="newaccount_notification_history">Lịch sử thông báo</string>
   <string name="newaccount_settings">Cài đặt</string>
   <string name="newaccount_edit">Chỉnh sửa</string>
 </resources>

@@ -8,10 +8,8 @@
   <string name="setting_mobile">Descargar solo por wifi</string>
   <string name="settings_beta_filter_setting_title">Versiones Beta</string>
   <string name="settings_beta_filter_summary">También verás apps beta.</string>
-  <string name="setting_updates">Actualizaciones</string>
   <string name="settings_include_system_apps_title">Apps del sistema</string>
   <string name="settings_include_system_apps_summary">Verás actualizaciones de apps del sistema</string>
-  <string name="settings_excluded_updates">Actualizaciones excluidas</string>
   <string name="setting_notifications">Notificaciones</string>
   <string name="setting_notifications_sub_section_1">Actualizaciones de la aplicación</string>
   <string name="setting_notifications_sub_sub_section_1">Mostrar notificaciones de actualizaciones de apps</string>
@@ -22,7 +20,6 @@
   <string name="settings_clear_cache_summary">Eliminar archivos temporales</string>
   <string name="settings_maxFileCache_title">Tamaño máx. de cache (MB)</string>
   <string name="settings_maxFileCache_sum">Establecer un tamaño máximo para el cache</string>
-  <string name="setting_mature_filtering">Contenido para adultos</string>
   <string name="setting_dont_show_mature_content">Mostrar contenido para adultos</string>
   <string name="set_mature_pin_title">Establecer pin para contenido para adultos</string>
   <string name="set_mature_pin_summary">Establecer un código pin para desbloquear rl contenido para adultos</string>

@@ -8,10 +8,8 @@
   <string name="setting_mobile">Scaricare solo tramite wifi</string>
   <string name="settings_beta_filter_setting_title">Versioni beta</string>
   <string name="settings_beta_filter_summary">Rendi disponibili anche le app in beta.</string>
-  <string name="setting_updates">Aggiornamenti</string>
   <string name="settings_include_system_apps_title">Applicazioni di sistema</string>
   <string name="settings_include_system_apps_summary">Vedrai gli aggiornamenti per le applicazioni di sistema</string>
-  <string name="settings_excluded_updates">Aggiornamenti esclusi</string>
   <string name="setting_notifications">Notifiche</string>
   <string name="setting_notifications_sub_section_1">Aggiornamenti delle app</string>
   <string name="setting_notifications_sub_sub_section_1">Mostra notifiche per gli aggiornamenti delle App</string>
@@ -22,7 +20,6 @@
   <string name="settings_clear_cache_summary">Elimina i file temporanei</string>
   <string name="settings_maxFileCache_title">Imposta dimensione cache max (MB)</string>
   <string name="settings_maxFileCache_sum">Imposta una dimensione massima per la tua cache</string>
-  <string name="setting_mature_filtering">Contenuti per adulti</string>
   <string name="setting_dont_show_mature_content">Mostra contenuti per adulti</string>
   <string name="set_mature_pin_title">Impostare il Pin per accedere ai contenuti per adulti</string>
   <string name="set_mature_pin_summary">Imposta un codice pin per sbloccare contenuti per adulti</string>

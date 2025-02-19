@@ -8,10 +8,8 @@
   <string name="setting_mobile">Preuzimanje samo preko Wi-Fi</string>
   <string name="settings_beta_filter_setting_title">Beta verzije</string>
   <string name="settings_beta_filter_summary">Videćete i beta verzije aplikacija.</string>
-  <string name="setting_updates">Ažuriranja</string>
   <string name="settings_include_system_apps_title">Sistemske aplikacije</string>
   <string name="settings_include_system_apps_summary">Videćete ažuriranja za sistemske aplikacije</string>
-  <string name="settings_excluded_updates">Izuzeta ažuriranja</string>
   <string name="setting_notifications">Obaveštenja</string>
   <string name="setting_notifications_sub_section_1">Ažuriranja aplikacija</string>
   <string name="setting_notifications_sub_sub_section_1">Prikaži obaveštenja za ažuriranja aplikacija</string>
@@ -22,7 +20,6 @@
   <string name="settings_clear_cache_summary">Izbriši privremene datoteke</string>
   <string name="settings_maxFileCache_title">Podesi najveću veličinu keša (MB)</string>
   <string name="settings_maxFileCache_sum">Podesite najveću veličinu keša</string>
-  <string name="setting_mature_filtering">Sadržaj za odrasle</string>
   <string name="setting_dont_show_mature_content">Prikaži sadržaj za odrasle</string>
   <string name="set_mature_pin_title">Podesi PIN za sadržaj za odrasle</string>
   <string name="set_mature_pin_summary">Podesite PIN kod za otključavanje sadržaja za odrasle</string>

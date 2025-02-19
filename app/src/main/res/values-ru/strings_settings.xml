@@ -8,10 +8,8 @@
   <string name="setting_mobile">Загружать только через Wi-Fi</string>
   <string name="settings_beta_filter_setting_title">Бета-версии</string>
   <string name="settings_beta_filter_summary">Вы также будете видеть бета-версии.</string>
-  <string name="setting_updates">Обновления</string>
   <string name="settings_include_system_apps_title">Системные приложения</string>
   <string name="settings_include_system_apps_summary">Вы будете видеть обновления для системных приложений</string>
-  <string name="settings_excluded_updates">Исключенные обновления</string>
   <string name="setting_notifications">Уведомления</string>
   <string name="setting_notifications_sub_section_1">Обновления приложения</string>
   <string name="setting_notifications_sub_sub_section_1">Показывать уведомления для обновлений приложения</string>
@@ -22,7 +20,6 @@
   <string name="settings_clear_cache_summary">Удалить временные файлы</string>
   <string name="settings_maxFileCache_title">Задать макс. размер кэша (МБ)</string>
   <string name="settings_maxFileCache_sum">Задать максимальный размер вашего кэша</string>
-  <string name="setting_mature_filtering">Взрослый контент</string>
   <string name="setting_dont_show_mature_content">Показывать содержимое для взрослых</string>
   <string name="set_mature_pin_title">Установить PIN на контент для взрослых</string>
   <string name="set_mature_pin_summary">Задать ПИН-код для разблокировки контента для взрослых</string>

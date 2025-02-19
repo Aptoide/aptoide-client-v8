@@ -8,10 +8,8 @@
   <string name="setting_mobile">ဝိုင္ဖိုင္ျဖင့္သာ ေဒါင္းလုဒ္ဆြဲပါ</string>
   <string name="settings_beta_filter_setting_title">စမ္းသပ္ဗားရွင္းမ်ား</string>
   <string name="settings_beta_filter_summary">အစမ္းအက္ပ္မ်ားကးိုလည္း သင္ျမင္ရပါမည္။</string>
-  <string name="setting_updates">အပ္ဒိတ္မ်ား</string>
   <string name="settings_include_system_apps_title">စနစ္ရွိအက္ပ္မ်ား</string>
   <string name="settings_include_system_apps_summary">စနစ္ရွိ အက္ပ္မ်ားအတြက္ အပ္ဒိတ္မ်ားကို ေတြ႕ရပါလိမ့္မည္။</string>
-  <string name="settings_excluded_updates">ဖယ္ထုတ္ထားေသာ အပ္ဒိတ္မ်ား</string>
   <string name="setting_notifications">သတင်းပို့ချက်များ</string>
   <string name="setting_notifications_sub_section_1">App အပ္ဒိတ္မ်ား</string>
   <string name="setting_notifications_sub_sub_section_1">အက္ပ္ အပ္ဒိတ္မ်ားအတြက္ သတင္းပို႔ခ်က္မ်ားကို ျပပါ</string>
@@ -22,7 +20,6 @@
   <string name="settings_clear_cache_summary">ယာယီဖိိုင္မ်ားကို ဖ်က္ပါ</string>
   <string name="settings_maxFileCache_title">အမ်ားဆံုး cache အရြယ္အစား (MB) ကို သတ္မွတ္မည္</string>
   <string name="settings_maxFileCache_sum">သင့္ cache အတြက္ အမ်ားဆံုး အရြယ္အစားကို သတ္မွတ္မည္</string>
-  <string name="setting_mature_filtering">အရြယ္ေရာက္သူအတြက္ ပါ၀င္မႈ</string>
   <string name="setting_dont_show_mature_content">အရြယ္ေရာက္ၿပီးသူမ်ားအတြက္ အေၾကာင္းအရာကို ျပပါ</string>
   <string name="set_mature_pin_title">အရြယ္ေရာက္ၿပီးသူမ်ား ဝင္ေရာက္ၾကည့္႐ႈႏိုင္ရန္ ပင္နံပါတ္သတ္မွတ္မည္</string>
   <string name="set_mature_pin_summary">အရြယ္ေရာက္ၿပီးသူမ်ားအတြက္ အေၾကာင္းအရာကို ဖြင့္ရန္ pin နံပါတ္ သတ္မွတ္မည္</string>

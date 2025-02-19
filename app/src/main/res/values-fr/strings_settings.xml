@@ -8,10 +8,8 @@
   <string name="setting_mobile">Télécharger uniquement par le wifi</string>
   <string name="settings_beta_filter_setting_title">Versions Beta</string>
   <string name="settings_beta_filter_summary">Vous verrez aussi les applications bêta.</string>
-  <string name="setting_updates">Mises à jour</string>
   <string name="settings_include_system_apps_title">Applications système</string>
   <string name="settings_include_system_apps_summary">Vous verrez les mises à jour pour les applications système</string>
-  <string name="settings_excluded_updates">Mises à jour exclues</string>
   <string name="setting_notifications">Notifications</string>
   <string name="setting_notifications_sub_section_1">Mises à jour des applications</string>
   <string name="setting_notifications_sub_sub_section_1">Afficher les notifications pour les mises à jour des applications</string>
@@ -22,7 +20,6 @@
   <string name="settings_clear_cache_summary">Supprimer les fichiers temporaires</string>
   <string name="settings_maxFileCache_title">Définir la taille max. du cache (MB)</string>
   <string name="settings_maxFileCache_sum">Définissez une taille maximale pour votre cache</string>
-  <string name="setting_mature_filtering">Contenu pour adultes</string>
   <string name="setting_dont_show_mature_content">Afficher le contenu pour adultes</string>
   <string name="set_mature_pin_title">Définir un code pin pour le contenu adulte</string>
   <string name="set_mature_pin_summary">Définissez un code pin pour déverrouiller le contenu pour adultes</string>
