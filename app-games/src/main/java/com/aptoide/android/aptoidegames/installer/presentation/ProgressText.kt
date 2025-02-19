@@ -12,6 +12,7 @@ import cm.aptoide.pt.download_view.presentation.DownloadUiState.Install
 import cm.aptoide.pt.download_view.presentation.DownloadUiState.Installed
 import cm.aptoide.pt.download_view.presentation.DownloadUiState.Installing
 import cm.aptoide.pt.download_view.presentation.DownloadUiState.Migrate
+import cm.aptoide.pt.download_view.presentation.DownloadUiState.MigrateAlias
 import cm.aptoide.pt.download_view.presentation.DownloadUiState.Outdated
 import cm.aptoide.pt.download_view.presentation.DownloadUiState.ReadyToInstall
 import cm.aptoide.pt.download_view.presentation.DownloadUiState.Uninstalling
@@ -90,6 +91,7 @@ private fun ProgressTextContent(
     is Outdated,
     is Installed,
     is Migrate,
+    is MigrateAlias,
       -> if (showVersionName) {
       Text(
         modifier = modifier,

@@ -19,6 +19,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.last
@@ -78,7 +80,20 @@ class DownloadViewModel(
             uninstall = ::uninstall
           )
         }
-      } ?: DownloadUiState.Install(installWith = ::install)
+      }
+        ?: app.uninstallAlias
+          ?.let(installManager::getApp)
+          ?.packageInfo
+          ?.let {
+            if (it.compatVersionCode <= app.versionCode) {
+              DownloadUiState.MigrateAlias(
+                migrateAliasWith = ::migrateAlias
+              )
+            } else {
+              null
+            }
+          }
+        ?: DownloadUiState.Install(installWith = ::install)
     }
 
     val taskStates = appInstaller.taskFlow.flatMapConcat { task ->
@@ -235,6 +250,27 @@ class DownloadViewModel(
       } catch (_: Exception) {
         viewModelState.update {
           DownloadUiState.Error(retryWith = ::migrate)
+        }
+      }
+    }
+  }
+
+  private fun migrateAlias(resolver: ConstraintsResolver) {
+    viewModelScope.launch {
+      try {
+        install(resolver)
+        appInstaller.taskFlow.filterNotNull().first().stateAndProgress
+          .last()
+          .let {
+            if (it is Task.State.Completed) {
+              app.uninstallAlias?.let {
+                installManager.getApp(it).uninstall()
+              }
+            }
+          }
+      } catch (_: Exception) {
+        viewModelState.update {
+          DownloadUiState.Error(retryWith = ::migrateAlias)
         }
       }
     }

@@ -10,6 +10,7 @@ enum class InstallAction {
   INSTALL,
   UPDATE,
   MIGRATE,
+  MIGRATE_ALIAS,
   DOWNGRADE,
   UPDATE_ALL,
   RETRY,

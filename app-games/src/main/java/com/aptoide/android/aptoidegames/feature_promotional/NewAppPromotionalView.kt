@@ -165,6 +165,7 @@ fun isDownloading(downloadState: DownloadUiState?): Boolean {
     is Install,
     is Outdated,
     is Migrate,
+    is DownloadUiState.MigrateAlias,
     is Installed,
     null -> false
   }
