@@ -35,7 +35,7 @@ fun gameGenieScreen() = ScreenData.withAnalytics(
   arguments = emptyList()
 ) { _, navigate, _ ->
 
-  val viewModel = hiltViewModel<ChatbotViewModel>()
+  val viewModel = hiltViewModel<GameGenieViewModel>()
   val uiState by viewModel.uiState.collectAsState()
   val analytics = rememberGameGenieAnalytics()
 

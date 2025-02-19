@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface GameGenieHistoryDao {
   @Insert(onConflict = OnConflictStrategy.REPLACE)
-  suspend fun saveChatById(gameGenieHistoryEntity: GameGenieHistoryEntity)
+  suspend fun saveChat(gameGenieHistoryEntity: GameGenieHistoryEntity)
 
   @Query("SELECT * FROM GameGenieHistory")
   fun getAllChats(): Flow<List<GameGenieHistoryEntity>>
