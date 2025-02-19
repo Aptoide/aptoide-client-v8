@@ -77,6 +77,11 @@ private fun InstallViewShortContent(
       title = installViewState.actionLabel,
     )
 
+    is DownloadUiState.MigrateAlias -> AccentSmallButton(
+      onClick = state.migrateAlias,
+      title = installViewState.actionLabel,
+    )
+
     is DownloadUiState.Outdated -> PrimarySmallButton(
       onClick = state.update,
       title = installViewState.actionLabel,

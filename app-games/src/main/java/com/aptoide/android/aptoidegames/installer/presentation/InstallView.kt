@@ -138,6 +138,12 @@ private fun InstallViewContent(
       modifier = Modifier.fillMaxWidth(),
     )
 
+    is DownloadUiState.MigrateAlias -> AccentButton(
+      title = installViewState.actionLabel,
+      onClick = state.migrateAlias,
+      modifier = Modifier.fillMaxWidth(),
+    )
+
     is DownloadUiState.Outdated -> PrimaryButton(
       title = installViewState.actionLabel,
       onClick = state.update,

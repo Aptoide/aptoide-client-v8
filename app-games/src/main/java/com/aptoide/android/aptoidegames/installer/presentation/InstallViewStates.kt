@@ -265,6 +265,60 @@ fun installViewStates(
           }
         )
 
+        is DownloadUiState.MigrateAlias -> DownloadUiState.MigrateAlias(
+          resolver = resolver.onResolvedNotNull {
+            installAnalytics.sendClickEvent(
+              app = app,
+              networkType = context.getNetworkType(),
+              analyticsContext = analyticsContext.copy(installAction = InstallAction.MIGRATE_ALIAS),
+            )
+            if (analyticsContext.currentScreen != "AppView") {
+              app.campaigns?.toAptoideMMPCampaign()
+                ?.sendClickEvent(bundleTag = analyticsContext.bundleMeta?.tag, isCta = true)
+              app.campaigns?.toAptoideMMPCampaign()
+                ?.sendDownloadEvent(
+                  bundleTag = analyticsContext.bundleMeta?.tag,
+                  searchKeyword = analyticsContext.searchMeta?.searchKeyword,
+                  currentScreen = analyticsContext.currentScreen,
+                  isCta = true
+                )
+            } else if (!app.campaigns?.deepLinkUtms?.get("utm_source").isNullOrEmpty()) {
+              app.campaigns?.placementType =
+                app.campaigns?.deepLinkUtms?.get("utm_content") ?: "appview"
+
+              app.campaigns?.toAptoideMMPCampaign()
+                ?.sendDownloadEvent(
+                  bundleTag = null,
+                  searchKeyword = null,
+                  utmCampaign = app.campaigns?.deepLinkUtms?.get("utm_campaign"),
+                  currentScreen = app.campaigns?.deepLinkUtms?.get("utm_medium")
+                    ?: analyticsContext.currentScreen,
+                  utmSourceExterior = app.campaigns?.deepLinkUtms?.get("utm_source")
+                )
+            } else {
+              app.campaigns?.placementType = "appview"
+
+              app.campaigns?.toAptoideMMPCampaign()
+                ?.sendDownloadEvent(
+                  bundleTag = analyticsContext.bundleMeta?.tag,
+                  searchKeyword = analyticsContext.searchMeta?.searchKeyword,
+                  currentScreen = analyticsContext.currentScreen
+                )
+            }
+            app.campaigns?.toMMPLinkerCampaign()?.sendDownloadEvent(BuildConfig.OEMID)
+            onInstallStarted()
+            scheduledInstallListener.listenToWifiStart(app.packageName)
+            saveAppDetails(app) {
+              installerNotifications.onInstallationQueued(app.packageName)
+            }
+          },
+          migrateAliasWith = {
+            AnalyticsInstallPackageInfoMapper.currentAnalyticsUIContext = analyticsContext
+              .copy(installAction = InstallAction.MIGRATE_ALIAS)
+            downloadUiState.migrateAliasWith(it)
+          }
+        )
+
         is DownloadUiState.Waiting -> DownloadUiState.Waiting(
           installPackageInfo = downloadUiState.installPackageInfo,
           blocker = downloadUiState.blocker,
@@ -386,6 +440,7 @@ fun DownloadUiState?.toInstallViewState(app: App): InstallViewState {
       -> stringResource(R.string.appview_status_failed_talkback)
 
     is DownloadUiState.Migrate -> stringResource(R.string.appview_status_outdated_talkback)
+    is DownloadUiState.MigrateAlias -> stringResource(R.string.appview_status_outdated_talkback)
   }
 
   val actionDescription: String? = when (this) {
@@ -405,6 +460,7 @@ fun DownloadUiState?.toInstallViewState(app: App): InstallViewState {
     is DownloadUiState.Installed -> stringResource(R.string.button_open_app_title)
     is DownloadUiState.Error -> stringResource(R.string.retry_button)
     is DownloadUiState.Migrate -> stringResource(R.string.button_update_title)
+    is DownloadUiState.MigrateAlias -> stringResource(R.string.button_update_title)
     null -> null
   }
 

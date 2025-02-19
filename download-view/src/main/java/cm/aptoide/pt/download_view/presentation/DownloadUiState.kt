@@ -80,6 +80,14 @@ sealed class DownloadUiState {
       get() = { migrateWith(resolver) }
   }
 
+  data class MigrateAlias(
+    val resolver: ConstraintsResolver = defaultResolver,
+    val migrateAliasWith: (resolver: ConstraintsResolver) -> Unit,
+  ) : DownloadUiState() {
+    val migrateAlias: () -> Unit
+      get() = { migrateAliasWith(resolver) }
+  }
+
   data class ReadyToInstall(
     val installPackageInfo: InstallPackageInfo = InstallPackageInfo(0),
     val cancel: () -> Unit,
