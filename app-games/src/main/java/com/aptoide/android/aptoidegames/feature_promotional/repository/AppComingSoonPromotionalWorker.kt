@@ -10,7 +10,6 @@ import androidx.work.NetworkType.CONNECTED
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import cm.aptoide.pt.extensions.hasNotificationsPermission
 import cm.aptoide.pt.feature_apps.domain.AppMetaUseCase
 import cm.aptoide.pt.feature_apps.domain.AppSource
 import cm.aptoide.pt.feature_apps.domain.AppSource.Companion.appendIfRequired
@@ -33,20 +32,17 @@ class AppComingSoonPromotionalWorker @AssistedInject constructor(
   override suspend fun doWork(): Result {
     val packageName = inputData.getString(PACKAGE_NAME)
     packageName?.let {
-      if (!applicationContext.hasNotificationsPermission()) {
-        appComingSoonManager.updateSubscribedApp(it, false)
-      } else {
-        try {
-          val app = appMetaUseCase.getMetaInfo(
-            source = AppSource.of(null, packageName).asSource()
-              .appendIfRequired(BuildConfig.MARKET_NAME)
-          )
-          appComingSoonNotificationBuilder.showAppComingSoonNotification(app)
-          appComingSoonManager.updateSubscribedApp(app.packageName, false)
-        } catch (t: Throwable) {
-          t.printStackTrace()
-        }
+      try {
+        val app = appMetaUseCase.getMetaInfo(
+          source = AppSource.of(null, packageName).asSource()
+            .appendIfRequired(BuildConfig.MARKET_NAME)
+        )
+        appComingSoonNotificationBuilder.showAppComingSoonNotification(app)
+        appComingSoonManager.updateSubscribedApp(app.packageName, false)
+      } catch (t: Throwable) {
+        t.printStackTrace()
       }
+
     }
     return Result.success()
   }
