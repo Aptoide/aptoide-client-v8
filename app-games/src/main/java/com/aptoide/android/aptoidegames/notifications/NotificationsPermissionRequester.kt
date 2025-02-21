@@ -2,6 +2,10 @@ package com.aptoide.android.aptoidegames.notifications
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.provider.Settings
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -13,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -23,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.aptoide.android.aptoidegames.MainActivity
+import cm.aptoide.pt.extensions.hasNotificationsPermission
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.design_system.PrimaryButton
@@ -35,35 +40,58 @@ import com.aptoide.android.aptoidegames.theme.Palette
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
-import timber.log.Timber
+import kotlinx.coroutines.launch
 
 @SuppressLint("InlinedApi")
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun NotificationsPermissionRequester(
-  onDismiss: (Boolean) -> Unit,
+  showDialog: Boolean,
+  onDismiss: () -> Unit,
+  onPermissionResult: (Boolean) -> Unit
 ) {
-  val notificationsPermissionViewModel = hiltViewModel<NotificationsPermissionViewModel>()
+  val scope = rememberCoroutineScope()
   val context = LocalContext.current
+  val notificationsPermissionViewModel = hiltViewModel<NotificationsPermissionViewModel>()
 
   val notificationsPermissionState = rememberPermissionState(
     permission = Manifest.permission.POST_NOTIFICATIONS
-  ) { }
+  ) { onPermissionResult(it) }
 
-  NotificationPermissionDialog { continueClicked ->
-    if (continueClicked) {
-      val shouldShowRationale = notificationsPermissionState.status.shouldShowRationale
-      notificationsPermissionViewModel.requestPermission(shouldShowRationale) {
-        try {
-          (context as MainActivity).requestPermissionLauncher
-            .launch(Manifest.permission.POST_NOTIFICATIONS)
-        } catch (exception: Exception) {
-          Timber.e(exception)
-        }
-      }
+  val intentLauncher = rememberLauncherForActivityResult(
+    contract = ActivityResultContracts.StartActivityForResult(),
+    onResult = { _ ->
+      //Permission is checked directly to avoid relying on the intent result.
+      onPermissionResult(context.hasNotificationsPermission())
     }
+  )
 
-    onDismiss(continueClicked)
+  if (showDialog) {
+    NotificationPermissionDialog(
+      onDismissDialog = { continueClicked ->
+        if (continueClicked) {
+          scope.launch {
+            val canRequestPermissions =
+              notificationsPermissionViewModel.canRequestPermission(notificationsPermissionState.status.shouldShowRationale)
+
+            if (canRequestPermissions) {
+              notificationsPermissionState.launchPermissionRequest()
+            } else {
+              intentLauncher.launch(
+                Intent().apply {
+                  action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
+                  putExtra("app_package", context.packageName)
+                  putExtra("app_uid", context.applicationInfo.uid)
+                  putExtra("android.provider.extra.APP_PACKAGE", context.packageName)
+                }
+              )
+            }
+          }
+        }
+
+        onDismiss()
+      }
+    )
   }
 }
 

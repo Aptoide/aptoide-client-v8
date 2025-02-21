@@ -71,7 +71,8 @@ fun MainView(navController: NavHostController) {
   var showTopBar by remember { mutableStateOf(true) }
   val (promoCodeApp, clearPromoCode) = rememberPromoCodeApp()
 
-  val currentRoute = navController.currentBackStackEntryFlow.collectAsState(initial = navController.currentBackStackEntry)
+  val currentRoute =
+    navController.currentBackStackEntryFlow.collectAsState(initial = navController.currentBackStackEntry)
 
   LaunchedEffect(currentRoute.value?.destination?.route) {
     showTopBar = currentRoute.value?.destination?.route?.contains(genieRoute)?.not() ?: true
@@ -99,16 +100,17 @@ fun MainView(navController: NavHostController) {
           AppGamesBottomBar(navController = navController)
         },
         topBar = {
-          if (showTopBar){
+          if (showTopBar) {
             AppGamesToolBar(navigate = navController::navigateTo, goBackHome)
           }
         }
       ) { padding ->
-        if (showNotificationsRationaleDialog) {
-          NotificationsPermissionRequester(
-            onDismiss = { notificationsPermissionViewModel.dismissDialog() }
-          )
-        }
+        NotificationsPermissionRequester(
+          showDialog = showNotificationsRationaleDialog,
+          onDismiss = { notificationsPermissionViewModel.dismissDialog() },
+          onPermissionResult = {}
+        )
+
         PromotionDialog(navigate = navController::navigateTo)
 
         Box(modifier = Modifier.padding(padding)) {
