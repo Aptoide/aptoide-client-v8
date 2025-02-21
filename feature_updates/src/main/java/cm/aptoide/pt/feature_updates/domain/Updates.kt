@@ -155,6 +155,8 @@ class Updates @Inject constructor(
             )
           )
 
+          it.campaigns?.placementType = "auto_update"
+          
           it.campaigns?.toAptoideMMPCampaign()
             ?.sendDownloadEvent(
               bundleTag = null,
