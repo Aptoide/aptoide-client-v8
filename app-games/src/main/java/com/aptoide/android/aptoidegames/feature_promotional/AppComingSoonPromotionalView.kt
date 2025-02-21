@@ -1,6 +1,5 @@
 package com.aptoide.android.aptoidegames.feature_promotional
 
-import android.Manifest
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -17,12 +16,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.appcomingsoon.domain.AppComingSoonCard
+import cm.aptoide.pt.extensions.hasNotificationsPermission
 import cm.aptoide.pt.feature_home.domain.Bundle
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.design_system.PrimarySmallOutlinedButton
@@ -36,8 +37,6 @@ import com.aptoide.android.aptoidegames.notifications.NotificationsPermissionReq
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
 
 @SuppressLint("InlinedApi")
 @OptIn(ExperimentalPermissionsApi::class)
@@ -45,9 +44,6 @@ import com.google.accompanist.permissions.rememberPermissionState
 fun AppComingSoonPromotionalView(
   bundle: Bundle,
 ) {
-  val notificationsPermissionState = rememberPermissionState(
-    permission = Manifest.permission.POST_NOTIFICATIONS
-  )
   var showNotificationsDialog by remember { mutableStateOf(false) }
   val onChangeNotificationDialogState = { shouldShow: Boolean ->
     showNotificationsDialog = shouldShow
@@ -61,7 +57,7 @@ fun AppComingSoonPromotionalView(
         appComingSoonCard = uiState.subscribedAppComingSoonCard.appComingSoonCard,
         isSubscribed = uiState.subscribedAppComingSoonCard.isSubscribed,
         onSubscribe = onSubscribe,
-        showNotificationsDialog = showNotificationsDialog && !notificationsPermissionState.status.isGranted,
+        showNotificationsDialog = showNotificationsDialog,
         onChangeNotificationDialogState = onChangeNotificationDialogState
       )
 
@@ -80,6 +76,8 @@ private fun AppComingSoonPromotional(
   showNotificationsDialog: Boolean,
   onChangeNotificationDialogState: (Boolean) -> Unit,
 ) {
+  val context = LocalContext.current
+
   Column(
     modifier = Modifier
       .padding(horizontal = 16.dp)
@@ -137,19 +135,19 @@ private fun AppComingSoonPromotional(
         PrimarySmallOutlinedButton(
           title = stringResource(R.string.promotional_notify_button),
           onClick = {
-            onChangeNotificationDialogState(true)
-            onSubscribe(appComingSoonCard.packageName, !isSubscribed)
+            if (context.hasNotificationsPermission()) {
+              onSubscribe(appComingSoonCard.packageName, !isSubscribed)
+            } else {
+              onChangeNotificationDialogState(true)
+            }
           })
       }
     }
   }
-  if (showNotificationsDialog) {
-    NotificationsPermissionRequester(
-      onDismiss = { continueClicked ->
-        if (!continueClicked) {
-          onSubscribe(appComingSoonCard.packageName, false)
-        }
-        onChangeNotificationDialogState(false)
-      })
-  }
+
+  NotificationsPermissionRequester(
+    showDialog = showNotificationsDialog,
+    onDismiss = { onChangeNotificationDialogState(false) },
+    onPermissionResult = { onSubscribe(appComingSoonCard.packageName, it) }
+  )
 }

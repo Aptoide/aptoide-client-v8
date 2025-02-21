@@ -2,9 +2,7 @@ package com.aptoide.android.aptoidegames.permissions.notifications
 
 import android.Manifest
 import android.content.Context
-import android.content.Intent
 import android.os.Build
-import android.provider.Settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.extensions.hasNotificationsPermission
@@ -51,39 +49,25 @@ class NotificationsPermissionViewModel @Inject constructor(
     }
   }
 
-  fun requestPermission(
+  suspend fun canRequestPermission(
     shouldShowRationale: Boolean,
-    openDialog: () -> Unit,
-  ) {
-    viewModelScope.launch {
-      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-        context.openAppNotificationSettings()
-        return@launch
-      }
+  ): Boolean {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+      return false
+    }
 
-      val hasRequestedNotificationPermissions =
-        appPermissionsManager.hasRequestedPermission(Manifest.permission.POST_NOTIFICATIONS)
+    val hasRequestedNotificationPermissions =
+      appPermissionsManager.hasRequestedPermission(Manifest.permission.POST_NOTIFICATIONS)
 
-      if (!hasRequestedNotificationPermissions && !shouldShowRationale) {
-        openDialog()
-      } else if (shouldShowRationale) {
-        openDialog()
-        //Should only be set here, since it is the last state before the case
-        //where the user is redirected to the device settings
-        appPermissionsManager.setPermissionRequested(Manifest.permission.POST_NOTIFICATIONS)
-      } else {
-        context.openAppNotificationSettings()
-      }
+    if (!hasRequestedNotificationPermissions && !shouldShowRationale) {
+      return true
+    } else if (shouldShowRationale) {
+      //Should only be set here, since it is the last state before the case
+      //where the user is redirected to the device settings
+      appPermissionsManager.setPermissionRequested(Manifest.permission.POST_NOTIFICATIONS)
+      return true
+    } else {
+      return false
     }
   }
-}
-
-private fun Context.openAppNotificationSettings() {
-  startActivity(Intent().apply {
-    action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
-    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-    putExtra("app_package", packageName)
-    putExtra("app_uid", applicationInfo.uid)
-    putExtra("android.provider.extra.APP_PACKAGE", packageName)
-  })
 }

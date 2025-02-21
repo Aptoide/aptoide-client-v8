@@ -190,9 +190,12 @@ private fun AppGamesToolBar(
       }
     }
   )
-  if (showNotificationsDialog) {
-    NotificationsPermissionRequester({ onDismissPermissionRequesterDialog() })
-  }
+
+  NotificationsPermissionRequester(
+    showDialog = showNotificationsDialog,
+    onDismiss = { onDismissPermissionRequesterDialog() },
+    onPermissionResult = {}
+  )
 }
 
 @Composable
