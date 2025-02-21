@@ -22,14 +22,11 @@ class PaymentAnalytics(
     productInfoData: ProductInfoData?,
   ) {
     val params = productInfoData.toGenericParameters(GenericAnalytics.P_PACKAGE_NAME to packageName)
-    genericAnalytics.logEvent(
-      name = "iap_payment_start",
-      params = params
-    )
     biAnalytics.logEvent(
       name = "iap_payment_start",
       params = params
     )
+    // TODO: removed from generic analytics - will have to add again as soon as we stop sending BiAnalytics it to multiple platforms
   }
 
   fun sendPaymentMethodsDismissedEvent(
@@ -79,26 +76,20 @@ class PaymentAnalytics(
 
   fun sendPaymentBuyEvent(paymentMethod: PaymentMethod<*>) {
     val params = paymentMethod.toGenericParameters()
-    genericAnalytics.logEvent(
-      name = "iap_payment_buy",
-      params = params
-    )
     biAnalytics.logEvent(
       name = "iap_payment_buy",
       params = params
     )
+    // TODO: removed from generic analytics - will have to add again as soon as we stop sending BiAnalytics it to multiple platforms
   }
 
   fun sendPaymentTryAgainEvent(paymentMethod: PaymentMethod<*>) {
     val params = paymentMethod.toGenericParameters()
-    genericAnalytics.logEvent(
-      name = "iap_payment_try_again",
-      params = params
-    )
     biAnalytics.logEvent(
       name = "iap_payment_try_again",
       params = params
     )
+    // TODO: removed from generic analytics - will have to add again as soon as we stop sending BiAnalytics it to multiple platforms
   }
 
   fun sendPaymentSuccessEvent(paymentMethod: PaymentMethod<*>) {
@@ -147,14 +138,11 @@ class PaymentAnalytics(
       GenericAnalytics.P_PACKAGE_NAME to paymentMethod.purchaseRequest.domain,
       P_PAYMENT_METHOD to paymentMethod.id
     )
-    genericAnalytics.logEvent(
-      name = "iap_payment_methods",
-      params = params
-    )
     biAnalytics.logEvent(
       name = "iap_payment_methods",
       params = params
     )
+    // TODO: removed from generic analytics - will have to add again as soon as we stop sending BiAnalytics it to multiple platforms
   }
 
   private fun logPaymentDismissed(params: Map<String, Any>) {
@@ -169,14 +157,11 @@ class PaymentAnalytics(
   }
 
   private fun logPaymentConclusion(params: Map<String, Any>) {
-    genericAnalytics.logEvent(
-      name = "iap_payment_conclusion",
-      params = params
-    )
     biAnalytics.logEvent(
       name = "iap_payment_conclusion",
       params = params
     )
+    // TODO: removed from generic analytics - will have to add again as soon as we stop sending BiAnalytics it to multiple platforms
   }
 
   companion object {
