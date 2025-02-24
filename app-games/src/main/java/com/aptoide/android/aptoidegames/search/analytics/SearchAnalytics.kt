@@ -27,7 +27,7 @@ class SearchAnalytics(
   fun sendSearchResultClickEvent(
     app: App,
     position: Int,
-    searchMeta: SearchMeta,
+    searchMeta: SearchMeta?,
   ) {
     genericAnalytics.sendAppPromoClick(
       app = app,

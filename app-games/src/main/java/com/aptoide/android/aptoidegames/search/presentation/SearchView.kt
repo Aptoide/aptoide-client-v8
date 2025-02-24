@@ -157,7 +157,7 @@ fun searchScreen() = ScreenData.withAnalytics(
         searchAnalytics.sendSearchResultClickEvent(
           app = app,
           position = index,
-          searchMeta = searchMeta!!,
+          searchMeta = searchMeta,
         )
         navigateTo(
           buildAppViewRoute(app).withItemPosition(index)
