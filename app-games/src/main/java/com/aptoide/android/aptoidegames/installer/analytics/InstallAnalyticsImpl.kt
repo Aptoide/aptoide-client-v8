@@ -602,6 +602,6 @@ private val InstallPackageInfo.domainPrefix: String?
     ?.url
     ?.toUri()
     ?.host
-    ?.replace(".apk.aptoide.com", "")
+    ?.replace("(\\.apk)?\\.aptoide\\.com".toRegex(), "")
     ?.ifEmpty { null }
     ?: "n-a"
