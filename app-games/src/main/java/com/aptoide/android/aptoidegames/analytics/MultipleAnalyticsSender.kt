@@ -11,7 +11,7 @@ class MultipleAnalyticsSender @Inject constructor(
 
   override fun setUserProperties(vararg props: Pair<String, Any?>) {
     for (analyticsSender in analyticsSenderList) {
-      analyticsSender.setUserProperties()
+      analyticsSender.setUserProperties(*props)
     }
   }
 
