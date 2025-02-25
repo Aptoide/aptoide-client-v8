@@ -9,7 +9,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -23,7 +23,7 @@ class AppComingSoonManager @Inject constructor(
 
   @OptIn(ExperimentalCoroutinesApi::class)
   suspend fun loadAppComingSoonCard(cardUrl: String): Flow<SubscribedAppComingSoonCard> {
-    return flowOf(repository.getAppComingSoonCard(cardUrl))
+    return flow { emit(repository.getAppComingSoonCard(cardUrl)) }
       .flatMapLatest { card ->
         subscribedAppsRepository.isAppSubscribed(card.packageName)
           .map { SubscribedAppComingSoonCard(appComingSoonCard = card, isSubscribed = it) }

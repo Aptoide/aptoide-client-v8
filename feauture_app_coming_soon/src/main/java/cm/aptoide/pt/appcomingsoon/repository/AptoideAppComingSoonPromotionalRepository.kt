@@ -18,11 +18,12 @@ internal class AptoideAppComingSoonPromotionalRepository @Inject constructor(
       return appComingSoonRemoteDataSource.getCard(url.split("cards/")[1])
         .datalist
         ?.list
+        .takeIf { !it.isNullOrEmpty() }
         ?.get(0)
         ?.toDomainModel()
-        ?: throw IllegalStateException()
+        ?: throw IllegalStateException("AppComingSoon Card can not be empty")
     } else {
-      throw IllegalStateException()
+      throw IllegalStateException("Invalid URL while trying to load AppComingSoon card")
     }
   }
 }

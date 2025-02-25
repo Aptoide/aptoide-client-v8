@@ -10,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -33,11 +34,12 @@ class AppComingSoonViewModel @Inject constructor(
     viewModelScope.launch {
       viewModelState.update { Loading }
       appComingSoonManager.loadAppComingSoonCard(cardUrl)
+        .map { card -> viewModelState.update { Idle(card) } }
         .catch {
           it.printStackTrace()
           viewModelState.update { AppComingSoonUIState.Error }
         }
-        .collect { card -> viewModelState.update { Idle(card) } }
+        .collect {}
     }
   }
 
