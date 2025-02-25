@@ -53,14 +53,6 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
    * Actual events sending in the same order as in the Google document
    */
 
-  fun sendAppCoinsInstallStarted(
-    packageName: String,
-    analyticsContext: AnalyticsUIContext,
-  ) = analyticsSender.logEvent(
-    name = "appcoins_install_initiated",
-    params = analyticsContext.toGenericParameters(P_PACKAGE_NAME to packageName)
-  )
-
   fun sendNoNetworkRetry() = analyticsSender.logEvent(
     name = "retry_no_connection_clicked",
     params = emptyMap()
