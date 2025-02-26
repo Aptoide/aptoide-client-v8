@@ -14,7 +14,7 @@
   <string name="incentives_badge_amount">%s%%</string>
   <string name="incentives_badge_bonus">ေဘာနပ္စ္</string>
   <string name="incentives_banner_title">၀ယ္ယူမႈတိုင္းအတြက္ %s%% အထိ ေဘာနပ္စ္။</string>
-  <string name="incentives_banner_body">ဤ %s အမွတ္အသားပါရွိေသာ အက္ပ္မ်ားတြင္ ပစၥည္းမ်ားကို ပိုရႏိုင္ေစရန္အတြက္ သင့္ AppCoins Credits မ်ားကို အသံုးျပဳလိုက္ပါ</string>
+  <string name="incentives_banner_body">Use your Aptoide balance to get more items in apps with this symbol %s</string>
   <!-- Download View -->
   <string name="appview_short_downloading">ဒေါင်းလုပ်ချနေသည်</string>
   <string name="apps_short_download_paused">ေဒါင္းလုဒ္ ရပ္တန္႕ခဲ့သည္</string>
