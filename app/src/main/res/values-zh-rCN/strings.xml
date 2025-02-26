@@ -373,94 +373,94 @@
   <!--URL -->
   <string name="my_stores_login_message">立即登录并开始分享应用！</string>
   <!--APPC-->
-  <string name="appc_title_iab">花费您的AppCoins</string>
-  <string name="appc_title_ads">使用 AppCoins 获得奖励</string>
-  <string name="appc_title_featured">精选AppCoins应用</string>
-  <string name="appc_home_bundle_iab">使用你的AppCoins</string>
-  <string name="appc_home_bundle_poa">赢取AppCoins积金</string>
-  <string name="appc_title_about_appcoins">关于 AppCoins</string>
+  <string name="appc_title_iab">Spend Your Aptoide Balance</string>
+  <string name="appc_title_ads">Get Rewarded with Aptoide Balance</string>
+  <string name="appc_title_featured">Featured Bonus Apps</string>
+  <string name="appc_home_bundle_iab">Use Your Aptoide Balance</string>
+  <string name="appc_home_bundle_poa">Earn Aptoide Balance</string>
+  <string name="appc_title_about_appcoins">About the Aptoide Wallet</string>
   <string name="appc_message_appview_appcoins_reward">试用此应用2分钟可获取\n%s</string>
   <string name="appc_message_appview_appcoins_reward_with_value">试用此应用2分钟可获取\n%1$s %2$s</string>
-  <string name="appc_message_appview_appcoins_iab">使用AppCoins在应用内购买</string>
-  <string name="appc_card_short">APPCOINS</string>
-  <string name="appc_title_homepage_card">您可以立即获取AppCoins！</string>
-  <string name="appc_message_homepage_card">为应用经济打造的加密货币来了！通过使用您最爱的应用来获取免费的AppCoins。</string>
-  <string name="appc_title_settings_appcoins_wallet">AppCoins Wallet</string>
-  <string name="appc_title_bundle">AppCoins应用</string>
+  <string name="appc_message_appview_appcoins_iab">In-app purchases with the Aptoide Wallet</string>
+  <string name="appc_card_short">BONUS</string>
+  <string name="appc_title_homepage_card">You can get Aptoide balance now!</string>
+  <string name="appc_message_homepage_card">The cryptocurrency for the app economy is here! Get free Aptoide balance by using your favorite apps.</string>
+  <string name="appc_title_settings_appcoins_wallet">Aptoide Wallet</string>
+  <string name="appc_title_bundle">Bonus Apps</string>
   <!--Editorial Content-->
   <string name="appc_verification_cancelled_by_user_message">您需要验证钱包以接收奖励。只需几秒钟！</string>
   <string name="editorial_reactions_login_short">登录以及时了解喜好的内容！</string>
   <!--Promotion in APPC-C (old)-->
   <string comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)" name="editorial_bottom_follow_us">关注我们</string>
-  <string name="holidayspromotion_message_1">安装以下应用，最多可获取%sAppCoins积金，可用于您喜爱的游戏！</string>
-  <string name="holidayspromotion_message_2">首先，获取AppCoins Wallet获得AppCoins积金。</string>
+  <string name="holidayspromotion_message_1">Install the following apps and get up to %s in Aptoide balance to spend in your favorite games!</string>
+  <string name="holidayspromotion_message_2">First, get the Aptoide Wallet to receive your Aptoide balance.</string>
   <string name="holidayspromotion_message_3">然后，安装以下任意一款游戏即可赢取奖励！</string>
   <string name="holidayspromotion_button_claimed">已领取</string>
-  <string name="holidayspromotion_message_popup">通过安装应用赢取%s AppCoins积金，用于您喜爱的游戏！</string>
+  <string name="holidayspromotion_message_popup">Earn %s in Aptoide balance by installing apps and spend them in your favorite games!</string>
   <string name="holidayspromotion_button_popup">立即了解！</string>
   <string name="promotion_over_title">您错过了！</string>
   <string name="promotion_over_message">这次促销刚刚结束，但我们很快就会进行下一次促销！</string>
   <!--Promotion with FIAT-->
-  <string name="FIATpromotion_install_to_get_short">安装可获取%1$s AppCoins积金(%2$s)</string>
-  <string name="FIATpromotion_update_to_get_short">更新可获取%1$s AppCoins积金(%2$s)</string>
+  <string name="FIATpromotion_install_to_get_short">Install to get %1$s in Aptoide balance (%2$s)</string>
+  <string name="FIATpromotion_update_to_get_short">Update to get %1$s in Aptoide balance (%2$s)</string>
   <!--Get Wallet Address-->
   <string name="promotion_claim_button">领取</string>
-  <string name="holidayspromotion_title_wallet">AppCoins Wallet地址</string>
-  <string name="holidayspromotion_message_wallet">请提供钱包地址！点击下方，AppCoins Wallet就将为您搞定一切。</string>
+  <string name="holidayspromotion_title_wallet">Aptoide Wallet Address</string>
+  <string name="holidayspromotion_message_wallet">Tell us your wallet address! Tap below and the Aptoide Wallet will take care of it.</string>
   <string name="holidayspromotion_short_wallet_field">钱包地址</string>
   <string name="holidayspromotion_button_wallet_get">立即实现</string>
   <string name="holidayspromotion_short_wallet_invalid">无效钱包地址</string>
   <string name="holidayspromotion_title_completed">完成！</string>
-  <string name="holidayspromotion_message_completed">您的钱包很快将收到AppCoins积金！祝您玩得愉快！</string>
+  <string name="holidayspromotion_message_completed">Your Aptoide balance will be available in your wallet soon! Enjoy your gaming!</string>
   <string name="holidayspromotion_button_completed">完成</string>
   <string name="holidayspromotion_title_error_claimed">糟糕…</string>
   <string name="holidayspromotion_short_error_claimed">您已领取此奖励！</string>
   <!--APPC install Promotion-->
-  <string name="wallet_promotion_title">立即获取%s APPC积金！</string>
-  <string name="wallet_promotion_wallet_installed_message">安装此应用，最多可获取%s APPC积金，可用于您喜爱的游戏。</string>
-  <string name="wallet_promotion_wallet_notinstalled_message">安装此应用，最多可获取%s APPC积金。您需要AppCoins Wallet来接收积金。</string>
-  <string name="wallet_promotion_wallet_installed_update_message">更新此应用，获取%s APPC积金，可用于您喜爱的游戏。</string>
-  <string name="wallet_promotion_wallet_claim_message">您已获取%s APPC积金，可用于在您喜爱的应用中购买物品。</string>
+  <string name="wallet_promotion_title">Get %s in Aptoide balance now!</string>
+  <string name="wallet_promotion_wallet_installed_message">Install this app and get %s in Aptoide balance to spend in your favorite games.</string>
+  <string name="wallet_promotion_wallet_notinstalled_message">Install this app and get %s APPC Credits. You need the Aptoide Wallet to receive them.</string>
+  <string name="wallet_promotion_wallet_installed_update_message">Update this app and get %s in Aptoide balance to spend in your favorite games.</string>
+  <string name="wallet_promotion_wallet_claim_message">You\'ve got %s in Aptoide balance to claim. Use them to buy items in your favorite apps.</string>
   <string name="wallet_promotion_install_button">安装钱包</string>
   <string name="wallet_promotion_no_button">不了，谢谢</string>
-  <string name="wallet_promotion_button_install_disabled">安装以获取%s APPC积金</string>
+  <string name="wallet_promotion_button_install_disabled">Install to get %s in Aptoide balance</string>
   <!--AppCoins Remove Ads Wallet Promotion -->
-  <string name="wallet_promotion_button_claim">领取%s APPC积金</string>
+  <string name="wallet_promotion_button_claim">Claim your %s in Aptoide balance</string>
   <!--Play to APPC - Migrator - Promotion-->
   <string name="promo_update2appc_data_disclaimer">在游戏设置中查看是否可以保存进度。</string>
-  <string name="promo_update2appc_appview_update_button">更新到AppCoins</string>
+  <string name="promo_update2appc_appview_update_button">Update to Aptoide Wallet version</string>
   <string name="promo_update2appc_notification_dismiss_button">解除</string>
   <string name="promo_update2appc_notification_claim_button">领取</string>
-  <string name="promo_update2appc_claim_notification_title">立即获取%s APPC积金！</string>
+  <string name="promo_update2appc_claim_notification_title">Get %s in Aptoide balance!</string>
   <!--Promo Center-->
   <string name="promo_update2appc_claim_notification_body">别忘了领取您的奖励！</string>
   <string name="promo_center_pending_card_update_body">因为更新了%s</string>
   <!--Purchase Flow - Wallet Installation-->
   <string name="wallet_install_request_message_body">要购买此物品，您首先需要获取%s。</string>
-  <string name="wallet_install_appcoins_wallet">AppCoins Wallet</string>
+  <string name="wallet_install_appcoins_wallet">Aptoide Wallet</string>
   <string name="wallet_install_complete_title">安装完成</string>
-  <string name="appc_not_supported_body">此设备似乎不支持AppCoins。请换其他设备试试！</string>
-  <string name="wallet_install_request_already_installed_title">AppCoins Wallet安装</string>
+  <string name="appc_not_supported_body">It seems this device doesn\'t support the Aptoide Wallet. Try with a different one!</string>
+  <string name="wallet_install_request_already_installed_title">Aptoide Wallet Install</string>
   <string name="wallet_install_request_already_installed_body">每次应用内购买均可享受奖励！</string>
-  <string name="wallet_verification_message_update_wallet_to_claim">更新AppCoins Wallet以接收此奖励！</string>
+  <string name="wallet_verification_message_update_wallet_to_claim">Update the Aptoide Wallet to receive this reward!</string>
   <string name="wallet_verification_button_update">立即更新</string>
   <!--POA exposure-->
   <string name="wallet_verification_button_update_wallet">更新钱包</string>
   <string name="poa_app_card_short">赢取%s</string>
-  <string name="poa_home_card_body">安装以下应用并花2分钟使用，即可获取AppCoins积金。</string>
+  <string name="poa_home_card_body">Install these apps and spend 2 minutes in them to earn Aptoide balance.</string>
   <string name="poa_app_view_card_body_1">试用此应用2分钟可获取</string>
-  <string name="poa_app_view_card_body_2">%1$s AppCoins积金(%2$s)</string>
+  <string name="poa_app_view_card_body_2">%1$s in Aptoide balance Credits (%2$s)</string>
   <string name="poa_APPCC_left_body">马上行动！只剩%s的奖励了。</string>
   <string name="poa_time_left_days">天</string>
   <string name="poa_time_left_hours">时</string>
   <string name="poa_time_left_minutes">分</string>
   <string name="poa_time_left_seconds">秒</string>
   <!--APPC Info View-->
-  <string name="appc_info_view_title_1">关于AppCoins的所有信息</string>
-  <string name="appc_info_view_body_1_variable">AppCoins和AppCoins积金是应用内交易货币。最大的优势何在？您最多可赢取所有购买中<b>%s%%的奖励！</b></string>
-  <string name="appc_info_view_body_1_variable_no_data">AppCoins和AppCoins积金是应用内交易货币。最大的优势何在？<b>每次购买都可赢得奖励！</b></string>
+  <string name="appc_info_view_title_1">Everything You Need to Know About the Aptoide Wallet</string>
+  <string name="appc_info_view_body_1_variable">Aptoide balance is the currency for in-app transactions. The best part? You\'ll earn up to <b>%s%% bonus in all purchases!</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">Aptoide balance is the currency for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
   <string name="appc_info_view_title_2">首要信息</string>
-  <string name="appc_info_view_body_2">您需要安装AppCoins Wallet以获取奖励和处理所有交易。安装后，系统将为您执行所有操作！</string>
+  <string name="appc_info_view_body_2">You need to install the Aptoide Wallet to get rewards and process all transactions. Once you install it, it\'ll do everything for you!</string>
   <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_4">每次购买都有奖励！</string>
   <string name="appc_info_view_title_5_variable">在带%s符号的应用中每完成一次购买，您最多可获取%s%%的奖励。充分利用此优势，成为终极玩家！</string>
@@ -505,12 +505,12 @@
   <!--Search Filters-->
   <string name="search_filters_trusted">可信任</string>
   <string name="search_filters_beta">测试版</string>
-  <string name="search_filters_appcoins">AppCoins</string>
+  <string name="search_filters_appcoins">Aptoide Wallet</string>
   <string name="search_filters_followed_stores">已关注的商店</string>
   <!-- Out of space -->
   <string name="out_of_space_body">需要%s才能继续安装。</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">立即使用AppCoins付款系统</string>
+  <string name="promotional_now_with_appcoins">Now compatible with the Aptoide Wallet</string>
   <string name="promotional_new_version">新版本</string>
   <string name="promotional_on_going_event">正在开展的活动</string>
   <string name="promotional_new_in_aptoide">现已在Aptoide上线</string>
