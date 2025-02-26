@@ -14,7 +14,7 @@
   <string name="incentives_badge_amount">%s%%</string>
   <string name="incentives_badge_bonus">Bonus</string>
   <string name="incentives_banner_title">Bonus hingga %s%% dalam setiap pembelian!</string>
-  <string name="incentives_banner_body">Gunakan Kredit AppCoins Anda untuk mendapatkan item lebih banyak di aplikasi yang bertandakan simbol ini %s</string>
+  <string name="incentives_banner_body">Use your Aptoide balance to get more items in apps with this symbol %s</string>
   <!-- Download View -->
   <string name="appview_short_downloading">Mengunduh</string>
   <string name="apps_short_download_paused">Unduhan diistirahatkan</string>
