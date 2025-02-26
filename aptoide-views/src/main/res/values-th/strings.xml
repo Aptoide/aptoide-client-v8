@@ -14,7 +14,7 @@
   <string name="incentives_badge_amount">%s%%</string>
   <string name="incentives_badge_bonus">โบนัส</string>
   <string name="incentives_banner_title">โบนัสสูงสุด %s%% สำหรับทุกการซื้อ!</string>
-  <string name="incentives_banner_body">ใช้ AppCoins Credits เพื่อรับไอเท็มเพิ่มเติมในแอปด้วยสัญลักษณ์ %s</string>
+  <string name="incentives_banner_body">Use your Aptoide balance to get more items in apps with this symbol %s</string>
   <!-- Download View -->
   <string name="appview_short_downloading">กำลังดาวน์โหลด</string>
   <string name="apps_short_download_paused">หยุดการดาวน์โหลดชั่วขณะ</string>
