@@ -14,7 +14,7 @@
   <string name="incentives_badge_amount">%s%%</string>
   <string name="incentives_badge_bonus">bónusz</string>
   <string name="incentives_banner_title">Akár %s%% bónusz minden vásárlás után!</string>
-  <string name="incentives_banner_body">Használd az AppCoins krediteket, hogy még több elemet szerezhess az appokban ezzel a szimbólummal: %s</string>
+  <string name="incentives_banner_body">Use your Aptoide balance to get more items in apps with this symbol %s</string>
   <!-- Download View -->
   <string name="appview_short_downloading">Letöltés folyamatban</string>
   <string name="apps_short_download_paused">Letöltés szünetelve</string>
