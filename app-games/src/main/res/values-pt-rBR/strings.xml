@@ -144,7 +144,7 @@
   <string name="apkfy_whats_aptoide_games_title">O que é a Aptoide Games?</string>
   <string name="apkfy_install_body">Baixe seu jogo favorito e muito mais na Aptoide Games!</string>
   <string name="apkfy_install_bullet_points">\u2022 Os melhores jogos com uma curadoria incrível.\n\u2022 Não é necessário fazer login!\n\u2022 Promoções e prêmios especiais em seus jogos favoritos.</string>
-  <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Pagar com a AppCoins Wallet</string>
+  <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Pay with the Aptoide Wallet</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Ele será instalado automaticamente e você receberá um bônus em todas as compras!</string>
   <string name="buy_button" comment="buy">Comprar</string>
   <string name="iap_other_payment_methods_button" comment="other_payment_methods">Outros métodos de pagamento</string>
@@ -155,7 +155,7 @@
   <string name="log_out_button" comment="log_out">Sair</string>
   <string name="iap_appc_body">Você receberá um bônus em todas as compras!</string>
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Agora você pode concluir a sua compra.</string>
-  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">A AppCoins Wallet foi instalada com sucesso!</string>
+  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">The Aptoide Wallet is now installed!</string>
   <string name="storage_access_permission_request_message">Permita o acesso ao armazenamento do seu telefone para que possamos baixar e instalar este app.</string>
   <string name="downloads_number_title">%s downloads</string>
   <!-- Payment Errors-->
@@ -181,19 +181,19 @@
   <string name="iap_already_processing_body">Essa compra pode demorar um pouco, então, por favor, aguarde até ser concluída ou entre em contato com nossa Equipe de Suporte.</string>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Um Bônus em Cada Compra</string>
-  <string name="bonus_page_body_1">Encontre os jogos identificados com %1$s, instale o AppCoins Wallet e ganhe até %2$s%% de bônus em todas as compras. Você poderá usar esse bônus em suas próximas compras nos seus jogos favoritos!</string>
+  <string name="bonus_page_body_1">Look for the games identified with %1$s, install the Aptoide Wallet and get up to %2$s%% bonus in all purchases. You can then use this bonus to make your next purchases in your favorite games!</string>
   <string name="bonus_page_title_2">Quer Mais?</string>
   <string name="bonus_page_body_2"><![CDATA[Você pode ganhar um bônus extra de <1>%s%%</1> usando um código promocional exclusivo do Aptoide Games em jogos específicos. Fique atento para as notificações!]]></string>
   <!-- Promo Code -->
   <string name="promo_code_install_wallet_banner_title">Até %s%% de Bônus em Cada Compra</string>
-  <string name="promo_code_install_wallet_banner_body">Use o AppCoins Wallet para fazer suas compras dentro do aplicativo e ganhe uma recompensa.</string>
+  <string name="promo_code_install_wallet_banner_body">Use the Aptoide Wallet to make your in-app purchases and get a reward.</string>
   <string name="promo_code_extra_title">Quer Mais? Receba um Bônus Extra de %s%%!</string>
   <string name="promo_code_use_button">Utilizar código</string>
-  <string name="promo_code_install_wallet_disclaimer">Primeiro, instale o AppCoins Wallet.</string>
+  <string name="promo_code_install_wallet_disclaimer">Install the Aptoide Wallet first.</string>
   <string name="promo_code_notification_title">Resgate seu Código</string>
   <string name="promo_code_notification_body">Use seu código promocional para obter bônus extras no seu jogo favorito.</string>
   <string name="promo_code_notification_without_wallet_title">Bônus Extra de %s%%!</string>
-  <string name="promo_code_notification_without_wallet_body">Baixe o AppCoins Wallet e use seu código promocional para receber bônus extras em todas as compras.</string>
+  <string name="promo_code_notification_without_wallet_body">Get the Aptoide Wallet and use your promo code to get extra bonuses in all purchases.</string>
   <string name="promo_code_share_title">Você recebeu um código promocional!</string>
   <string name="promo_code_share_body">Use este código promocional para obter bônus extras no seu jogo favorito.</string>
   <!-- Update -->
@@ -227,7 +227,7 @@
   <string name="genai_history_body">GameGenie History</string>
   <string name="genai_new_chat_button">New chat</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Agora com o Sistema de Pagamentos AppCoins</string>
+  <string name="promotional_now_with_appcoins">Now compatible with the Aptoide Wallet</string>
   <string name="promotional_new_version">Nova Versão</string>
   <string name="promotional_on_going_event">Evento ativo</string>
   <string name="promotional_new_in_aptoide">Disponível agora</string>
