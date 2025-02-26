@@ -14,7 +14,7 @@
   <string name="incentives_badge_amount">%s%%</string>
   <string name="incentives_badge_bonus">پاداش</string>
   <string name="incentives_banner_title">تا %s%% پاداش در همه خریدها!</string>
-  <string name="incentives_banner_body">از AppCoins Credits خود برای خرید آیتم‌ها در اپلیکیشن‌ها با این علامت %s استفاده کنید</string>
+  <string name="incentives_banner_body">Use your Aptoide balance to get more items in apps with this symbol %s</string>
   <!-- Download View -->
   <string name="appview_short_downloading">در حال دانلود</string>
   <string name="apps_short_download_paused">دانلود متوقف شد</string>
