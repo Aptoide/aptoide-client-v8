@@ -14,7 +14,7 @@
   <string name="incentives_badge_amount">%s%%</string>
   <string name="incentives_badge_bonus">tiền thưởng</string>
   <string name="incentives_banner_title">Lên đến %s%% tiền thưởng trong mỗi giao dịch mua!</string>
-  <string name="incentives_banner_body"> Sử dụng AppCoins Credits của mình để mua thêm các vật phẩm có biểu tượng %s trong ứng dụng</string>
+  <string name="incentives_banner_body">Use your Aptoide balance to get more items in apps with this symbol %s</string>
   <!-- Download View -->
   <string name="appview_short_downloading">Đang tải về</string>
   <string name="apps_short_download_paused">Đã tạm dừng tải về</string>
