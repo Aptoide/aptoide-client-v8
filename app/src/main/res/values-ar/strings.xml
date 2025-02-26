@@ -381,94 +381,94 @@ or
   <!--URL -->
   <string name="my_stores_login_message">سجل الدخول الآن وابدأ بمشاركتك تطبيقاتك!</string>
   <!--APPC-->
-  <string name="appc_title_iab">قم بأنفاق الأبكوينز خاصتك</string>
-  <string name="appc_title_ads">احصل على الجوائز بالأبكوينز الخاصة بك</string>
-  <string name="appc_title_featured">تطبيقات الأبكوينز المُرَشّحة</string>
-  <string name="appc_home_bundle_iab">استخدم الأبكوينز خاصتك</string>
-  <string name="appc_home_bundle_poa">اكسب رصيد أبكوينز</string>
-  <string name="appc_title_about_appcoins">حول آبكوينز</string>
+  <string name="appc_title_iab">Spend Your Aptoide Balance</string>
+  <string name="appc_title_ads">Get Rewarded with Aptoide Balance</string>
+  <string name="appc_title_featured">Featured Bonus Apps</string>
+  <string name="appc_home_bundle_iab">Use Your Aptoide Balance</string>
+  <string name="appc_home_bundle_poa">Earn Aptoide Balance</string>
+  <string name="appc_title_about_appcoins">About the Aptoide Wallet</string>
   <string name="appc_message_appview_appcoins_reward">قم بتجربة هذا التطبيق مدة دقيقتين واحصل على\n%s</string>
   <string name="appc_message_appview_appcoins_reward_with_value">قم بتجربة هذا التطبيق مدة دقيقتين واحصل على\n%1$s %2$s</string>
-  <string name="appc_message_appview_appcoins_iab">المشتريات داخل التطبيق بواسطة الأبكوينز</string>
-  <string name="appc_card_short">أبكوينز</string>
-  <string name="appc_title_homepage_card">يمكنك الحصول على أبكوينز الآن!</string>
-  <string name="appc_message_homepage_card">العملة المشفرة للتعاملات الاقتصادية للتطبيق أصبحت هنا! احصل على أبكوينز مجانية باستخدام تطبيقاتك المفضلة.</string>
-  <string name="appc_title_settings_appcoins_wallet">محفظة الأبكوينز</string>
-  <string name="appc_title_bundle">تطبيقات الأبكوينز</string>
+  <string name="appc_message_appview_appcoins_iab">In-app purchases with the Aptoide Wallet</string>
+  <string name="appc_card_short">BONUS</string>
+  <string name="appc_title_homepage_card">You can get Aptoide balance now!</string>
+  <string name="appc_message_homepage_card">The cryptocurrency for the app economy is here! Get free Aptoide balance by using your favorite apps.</string>
+  <string name="appc_title_settings_appcoins_wallet">Aptoide Wallet</string>
+  <string name="appc_title_bundle">Bonus Apps</string>
   <!--Editorial Content-->
   <string name="appc_verification_cancelled_by_user_message">أنت بحاجة لتوثيق محفظتك لتلقي المكافآت. سيستغرق هذا بضع ثوانٍ فقط!</string>
   <string name="editorial_reactions_login_short">يرجى تسجيل الدخول للاستمرار!</string>
   <!--Promotion in APPC-C (old)-->
   <string comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)" name="editorial_bottom_follow_us">تابعنا</string>
-  <string name="holidayspromotion_message_1">ثبت التطبيقات التالية واحص على ما يصل إلى %s من رصيد AppCoins لتنفقها في ألعابك المفضلة!</string>
-  <string name="holidayspromotion_message_2">أولا، أنشئ محفظة AppCoins Wallet لاستقبال أرصدة AppCoins.</string>
+  <string name="holidayspromotion_message_1">Install the following apps and get up to %s in Aptoide balance to spend in your favorite games!</string>
+  <string name="holidayspromotion_message_2">First, get the Aptoide Wallet to receive your Aptoide balance.</string>
   <string name="holidayspromotion_message_3">بعدها ثبت أيًّا من هذه الألعاب لتحصل على مكافآتك!</string>
   <string name="holidayspromotion_button_claimed">تم الطلب</string>
-  <string name="holidayspromotion_message_popup">احصل على %s رصيد AppCoins بتثبيت التطبيقات وأنفقها في ألعابك المفضلة!</string>
+  <string name="holidayspromotion_message_popup">Earn %s in Aptoide balance by installing apps and spend them in your favorite games!</string>
   <string name="holidayspromotion_button_popup">تحقق من ذلك!</string>
   <string name="promotion_over_title">لقد فاتتك الفرصة!</string>
   <string name="promotion_over_message">لقد انتهى هذا الإعلان للتو، لكن لا يزال هناك إعلان آخر قريبًا!</string>
   <!--Promotion with FIAT-->
-  <string name="FIATpromotion_install_to_get_short">ثبّت لتحصل على %1$s رصيد AppCoins (%2$s)</string>
-  <string name="FIATpromotion_update_to_get_short">حّث لتحصل على %1$s رصيد AppCoins (%2$s)</string>
+  <string name="FIATpromotion_install_to_get_short">Install to get %1$s in Aptoide balance (%2$s)</string>
+  <string name="FIATpromotion_update_to_get_short">Update to get %1$s in Aptoide balance (%2$s)</string>
   <!--Get Wallet Address-->
   <string name="promotion_claim_button">مطالبة</string>
-  <string name="holidayspromotion_title_wallet">عنوان محفظة أبكوينز</string>
-  <string name="holidayspromotion_message_wallet">أخبرنا بعنوان محفظتك! اكتب في الأسفل وستتكفل محفظة AppCoins بالباقي.</string>
+  <string name="holidayspromotion_title_wallet">Aptoide Wallet Address</string>
+  <string name="holidayspromotion_message_wallet">Tell us your wallet address! Tap below and the Aptoide Wallet will take care of it.</string>
   <string name="holidayspromotion_short_wallet_field">عنوان المحفظة</string>
   <string name="holidayspromotion_button_wallet_get">حقق ذلك</string>
   <string name="holidayspromotion_short_wallet_invalid">عنوان محفظة غير صالح</string>
   <string name="holidayspromotion_title_completed">تمّ!</string>
-  <string name="holidayspromotion_message_completed">سيكون رصيد الأبكوينز الخاص بك متوفرًا في محفظتك قريبًا! استمتع باللعب!</string>
+  <string name="holidayspromotion_message_completed">Your Aptoide balance will be available in your wallet soon! Enjoy your gaming!</string>
   <string name="holidayspromotion_button_completed">تمّ</string>
   <string name="holidayspromotion_title_error_claimed">عذرًا…</string>
   <string name="holidayspromotion_short_error_claimed">لقد قمت سابقًا بطلب هذه الجائزة!</string>
   <!--APPC install Promotion-->
-  <string name="wallet_promotion_title">احصل على رصيد %s APPC الآن!</string>
-  <string name="wallet_promotion_wallet_installed_message">ثبت هذا التطبيق واحصل على رصيد %s APPC لإنفاقها في ألعابك المفضلة.</string>
-  <string name="wallet_promotion_wallet_notinstalled_message">ثبت هذا التطبيق واحصل على رصيد %s APPC. أنت بحاجة إلى محفظة أبكوينز لتستقبل الرصيد.</string>
-  <string name="wallet_promotion_wallet_installed_update_message">حدّث هذا التطبيق واحصل على رصيد %sAPPC لتنفقها في ألعابك المفضلة.</string>
-  <string name="wallet_promotion_wallet_claim_message">لقد حصلت على رصيد %s APPC للمطالبة. استخدمها في شراء العناصر في تطبيقاتك المفضلة.</string>
+  <string name="wallet_promotion_title">Get %s in Aptoide balance now!</string>
+  <string name="wallet_promotion_wallet_installed_message">Install this app and get %s in Aptoide balance to spend in your favorite games.</string>
+  <string name="wallet_promotion_wallet_notinstalled_message">Install this app and get %s APPC Credits. You need the Aptoide Wallet to receive them.</string>
+  <string name="wallet_promotion_wallet_installed_update_message">Update this app and get %s in Aptoide balance to spend in your favorite games.</string>
+  <string name="wallet_promotion_wallet_claim_message">You\'ve got %s in Aptoide balance to claim. Use them to buy items in your favorite apps.</string>
   <string name="wallet_promotion_install_button">تثبيت المحفظة</string>
   <string name="wallet_promotion_no_button">لا، شكرًا</string>
-  <string name="wallet_promotion_button_install_disabled">قم بالتثبيت للحصول على رصيد %s APPC</string>
+  <string name="wallet_promotion_button_install_disabled">Install to get %s in Aptoide balance</string>
   <!--AppCoins Remove Ads Wallet Promotion -->
-  <string name="wallet_promotion_button_claim">اطلب رصيدك من %s APPC</string>
+  <string name="wallet_promotion_button_claim">Claim your %s in Aptoide balance</string>
   <!--Play to APPC - Migrator - Promotion-->
   <string name="promo_update2appc_data_disclaimer">قم بالتحقق من إعدادات اللعبة، إذا كان بإمكانك حفظ تقدمك باللعبة.</string>
-  <string name="promo_update2appc_appview_update_button">حدّث إلى نسخة أبكوينز</string>
+  <string name="promo_update2appc_appview_update_button">Update to Aptoide Wallet version</string>
   <string name="promo_update2appc_notification_dismiss_button">تجاهل</string>
   <string name="promo_update2appc_notification_claim_button">مطالبة</string>
-  <string name="promo_update2appc_claim_notification_title">احصل على رصيد %s APPC الآن!</string>
+  <string name="promo_update2appc_claim_notification_title">Get %s in Aptoide balance!</string>
   <!--Promo Center-->
   <string name="promo_update2appc_claim_notification_body">لا تنسى المطالبة بجائزتك!</string>
   <string name="promo_center_pending_card_update_body">لتحديث %s</string>
   <!--Purchase Flow - Wallet Installation-->
   <string name="wallet_install_request_message_body">لشراء هذا العنصر أنت بحاجة للحصول على %s.</string>
-  <string name="wallet_install_appcoins_wallet">محفظة أبكوينز</string>
+  <string name="wallet_install_appcoins_wallet">Aptoide Wallet</string>
   <string name="wallet_install_complete_title">تمت عملية التثبيت بنجاح</string>
-  <string name="appc_not_supported_body">يبدو أن هذا الجهاز لا يدعم عملة ألابكوينز. حاول استخدام جهاز آخر!</string>
-  <string name="wallet_install_request_already_installed_title">تثبيت محفظة أبكوينز</string>
+  <string name="appc_not_supported_body">It seems this device doesn\'t support the Aptoide Wallet. Try with a different one!</string>
+  <string name="wallet_install_request_already_installed_title">Aptoide Wallet Install</string>
   <string name="wallet_install_request_already_installed_body">تمتع بمكافأة على كل عملية شراء داخل التطبيق!</string>
-  <string name="wallet_verification_message_update_wallet_to_claim">حَدّث محفظة AppCoins لاستقبال المكافآت!</string>
+  <string name="wallet_verification_message_update_wallet_to_claim">Update the Aptoide Wallet to receive this reward!</string>
   <string name="wallet_verification_button_update">حدّث الآن</string>
   <!--POA exposure-->
   <string name="wallet_verification_button_update_wallet">حدّث المحفظة</string>
   <string name="poa_app_card_short">اكسب %s</string>
-  <string name="poa_home_card_body">ثبّت هذه التطبيقات واقضِ دقيقتين فيها لتحصل على رصيد AppCoins.</string>
+  <string name="poa_home_card_body">Install these apps and spend 2 minutes in them to earn Aptoide balance.</string>
   <string name="poa_app_view_card_body_1">جرّب هذا التطبيق لدقيقتين واحصل على</string>
-  <string name="poa_app_view_card_body_2">%1$s رصيد AppCoins (%2$s)</string>
+  <string name="poa_app_view_card_body_2">%1$s in Aptoide balance Credits (%2$s)</string>
   <string name="poa_APPCC_left_body">أسرع! لم يتبقَّ سوى %s جائزة متوفرة.</string>
   <string name="poa_time_left_days">الأيام</string>
   <string name="poa_time_left_hours">الساعات</string>
   <string name="poa_time_left_minutes">الدقائق</string>
   <string name="poa_time_left_seconds">ثواني</string>
   <!--APPC Info View-->
-  <string name="appc_info_view_title_1">كل ما تحتاج معرفته حول AppCoins</string>
-  <string name="appc_info_view_body_1_variable">AppCoins  وأرصدة AppCoins  هي عملات التبادلات المالية داخل التطبيقات. أفضل ما في الأمر؟ ستكسب حتى <b>%s%% مكافأة في كل عمليات الشراء!</b></string>
-  <string name="appc_info_view_body_1_variable_no_data">AppCoins و AppCoins Credits هم العملتان المستخدمتان للتبادلات المالية داخل التطبيقات. أفضل ما في الأمر، أنك ستكسب <b>مكافأة على كل المشتريات!</b></string>
+  <string name="appc_info_view_title_1">Everything You Need to Know About the Aptoide Wallet</string>
+  <string name="appc_info_view_body_1_variable">Aptoide balance is the currency for in-app transactions. The best part? You\'ll earn up to <b>%s%% bonus in all purchases!</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">Aptoide balance is the currency for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
   <string name="appc_info_view_title_2">الأولوية للأهم</string>
-  <string name="appc_info_view_body_2">أنت بحاجة إلى تثبيت محفظة AppCoins للحصول على المكافآت وإتمام كل عمليات الدفع. حالما تثبتها، ستؤدي كل ما عليها من أجلك!</string>
+  <string name="appc_info_view_body_2">You need to install the Aptoide Wallet to get rewards and process all transactions. Once you install it, it\'ll do everything for you!</string>
   <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_4">مكافأة على كل عملية شراء!</string>
   <string name="appc_info_view_title_5_variable">ستحصل على مكافأة قد تصل إلى %s%% لكل عملية شراء تجريها داخل التطبيقات التي تحمل الرمز %s. استغل الفرصة وكُن اللاعب المتميز!</string>
@@ -513,12 +513,12 @@ or
   <!--Search Filters-->
   <string name="search_filters_trusted">موثوق</string>
   <string name="search_filters_beta">إصدارات بيتا</string>
-  <string name="search_filters_appcoins">AppCoins</string>
+  <string name="search_filters_appcoins">Aptoide Wallet</string>
   <string name="search_filters_followed_stores">المتاجر التي تتابعها</string>
   <!-- Out of space -->
   <string name="out_of_space_body">أنت بحاجة إلى %s لمتابعة التثبيت.</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">الآن مع AppCoins Payment System</string>
+  <string name="promotional_now_with_appcoins">Now compatible with the Aptoide Wallet</string>
   <string name="promotional_new_version">نسخة جديدة</string>
   <string name="promotional_on_going_event">فعالية مستمرة</string>
   <string name="promotional_new_in_aptoide">متوفرة الآن للأندرويد</string>
