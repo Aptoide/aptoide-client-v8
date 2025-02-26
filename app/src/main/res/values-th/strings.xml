@@ -373,94 +373,94 @@
   <!--URL -->
   <string name="my_stores_login_message">เข้าสู่ระบบตอนนี้และเริ่มแชร์แอปของคุณ!</string>
   <!--APPC-->
-  <string name="appc_title_iab">ใช้ AppCoins ของคุณ</string>
-  <string name="appc_title_ads">รับรางวัลด้วย AppCoins</string>
-  <string name="appc_title_featured">ฟีเจอร์แอป Appcoins</string>
-  <string name="appc_home_bundle_iab">ใช้ AppCoins ของคุณ</string>
-  <string name="appc_home_bundle_poa">รับเครดิต Appcoins</string>
-  <string name="appc_title_about_appcoins">เกี่ยวกับ AppCoins</string>
+  <string name="appc_title_iab">Spend Your Aptoide Balance</string>
+  <string name="appc_title_ads">Get Rewarded with Aptoide Balance</string>
+  <string name="appc_title_featured">Featured Bonus Apps</string>
+  <string name="appc_home_bundle_iab">Use Your Aptoide Balance</string>
+  <string name="appc_home_bundle_poa">Earn Aptoide Balance</string>
+  <string name="appc_title_about_appcoins">About the Aptoide Wallet</string>
   <string name="appc_message_appview_appcoins_reward">ลองแอปนี้ 2 นาทีและรับ\n%s</string>
   <string name="appc_message_appview_appcoins_reward_with_value">ลองแอปนี้ 2 นาทีและรับ\n%1$s %2$s</string>
-  <string name="appc_message_appview_appcoins_iab">ซื้อในแอปด้วย AppCoins</string>
-  <string name="appc_card_short">APPCOINS</string>
-  <string name="appc_title_homepage_card">ตอนนี้คุณสามารถรับ AppCoinsได้!</string>
-  <string name="appc_message_homepage_card">Cryptocurrency ่สำหรับแอปเศรษฐกิจทีนี่! รับ AppCoins ฟรีโดยการใช้แอปที่คุณโปรดปราน</string>
-  <string name="appc_title_settings_appcoins_wallet">กระเป๋าสตางค์ AppCoins</string>
-  <string name="appc_title_bundle">แอป AppCoins</string>
+  <string name="appc_message_appview_appcoins_iab">In-app purchases with the Aptoide Wallet</string>
+  <string name="appc_card_short">BONUS</string>
+  <string name="appc_title_homepage_card">You can get Aptoide balance now!</string>
+  <string name="appc_message_homepage_card">The cryptocurrency for the app economy is here! Get free Aptoide balance by using your favorite apps.</string>
+  <string name="appc_title_settings_appcoins_wallet">Aptoide Wallet</string>
+  <string name="appc_title_bundle">Bonus Apps</string>
   <!--Editorial Content-->
   <string name="appc_verification_cancelled_by_user_message">คุณต้องยืนยันกระเป๋าสตางค์เพื่อรับรางวัล โดยใช้เวลาเพียงไม่กี่วินาที!</string>
   <string name="editorial_reactions_login_short">เข้าสู่ระบบให้ทันกับสิ่งที่ชื่นชอบ!</string>
   <!--Promotion in APPC-C (old)-->
   <string comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)" name="editorial_bottom_follow_us">ติดตามเรา</string>
-  <string name="holidayspromotion_message_1">ติดตั้งแอปต่อไปนี้และรับเครดิตของ AppCoins มากถึง %s เพื่อใช้ในเกมโปรดของคุณ!</string>
-  <string name="holidayspromotion_message_2">ก่อนอื่นรับ AppCoins Wallet เพื่อรับเครดิต AppCoins ของคุณ</string>
+  <string name="holidayspromotion_message_1">Install the following apps and get up to %s in Aptoide balance to spend in your favorite games!</string>
+  <string name="holidayspromotion_message_2">First, get the Aptoide Wallet to receive your Aptoide balance.</string>
   <string name="holidayspromotion_message_3">จากนั้นติดตั้งเกมส์เหล่านี้เพื่อรับรางวัลของคุณ!</string>
   <string name="holidayspromotion_button_claimed">เคลม</string>
-  <string name="holidayspromotion_message_popup">รับ %s AppCoins Credits โดยการติดตั้งแอพและใช้ในเกมส์ที่คุณชื่นชอบ!</string>
+  <string name="holidayspromotion_message_popup">Earn %s in Aptoide balance by installing apps and spend them in your favorite games!</string>
   <string name="holidayspromotion_button_popup">ตรวจสอบ!</string>
   <string name="promotion_over_title">ห้ามพลาด!</string>
   <string name="promotion_over_message">โปรโมชั่นนี้ลดลง แต่เราจะมีอีกในไม่ช้า!</string>
   <!--Promotion with FIAT-->
-  <string name="FIATpromotion_install_to_get_short">ติดตั้งเพื่อรับ %1$s AppCoins Credits (%2$s)</string>
-  <string name="FIATpromotion_update_to_get_short">อัพเดตเพื่อรับ %1$s AppCoins Credits (%2$s)</string>
+  <string name="FIATpromotion_install_to_get_short">Install to get %1$s in Aptoide balance (%2$s)</string>
+  <string name="FIATpromotion_update_to_get_short">Update to get %1$s in Aptoide balance (%2$s)</string>
   <!--Get Wallet Address-->
   <string name="promotion_claim_button">แลก</string>
-  <string name="holidayspromotion_title_wallet">ที่อยู่กระเป๋าสตางค์ AppCoins</string>
-  <string name="holidayspromotion_message_wallet">บอกที่อยู่กระเป๋าเงินของคุณ! แตะด้านล่างและกระเป๋าสตางค์ AppCoins จะดูแลเอง</string>
+  <string name="holidayspromotion_title_wallet">Aptoide Wallet Address</string>
+  <string name="holidayspromotion_message_wallet">Tell us your wallet address! Tap below and the Aptoide Wallet will take care of it.</string>
   <string name="holidayspromotion_short_wallet_field">ที่อยู่กระเป๋าสตางค์</string>
   <string name="holidayspromotion_button_wallet_get">ทำให้มันเกิดขึ้นจริง</string>
   <string name="holidayspromotion_short_wallet_invalid">ที่อยู่กระเป๋าสตางค์ไม่ถูกต้อง</string>
   <string name="holidayspromotion_title_completed">สำเร็จ!</string>
-  <string name="holidayspromotion_message_completed">เครดิตของคุณ AppCoins จะอยู่ในกระเป๋าสตางค์ของคุณเร็วๆนี้ เพลิดเพลินกับการเล่นเกมส์ของคุณ!</string>
+  <string name="holidayspromotion_message_completed">Your Aptoide balance will be available in your wallet soon! Enjoy your gaming!</string>
   <string name="holidayspromotion_button_completed">สำเร็จ</string>
   <string name="holidayspromotion_title_error_claimed">โอ๊ะ...</string>
   <string name="holidayspromotion_short_error_claimed">คุณได้รับรางวัลนี้แล้ว!</string>
   <!--APPC install Promotion-->
-  <string name="wallet_promotion_title">รับ %s เครดิต APPC ตอนนี้!</string>
-  <string name="wallet_promotion_wallet_installed_message">ติดตั้งโปรแกรมต่อไปนี้และรับเครดิต %s AppCoins เพื่อใช้ซื้อเกมส์โปรดของคุณ</string>
-  <string name="wallet_promotion_wallet_notinstalled_message">ติดตั้งแอปนี้และรับ %s เครดิต APPC คุณจำเป็นต้องมีกระเป๋าสตางค์ AppCoins เพื่อไว้รับมัน</string>
-  <string name="wallet_promotion_wallet_installed_update_message">อัปเดตแอปนี้และรับเครดิต %s APPC เพื่อใช้จ่ายเกมส์โปรดของคุณ</string>
-  <string name="wallet_promotion_wallet_claim_message">คุณได้ %s เครดิต APPC เพื่อแลกรับ ใช้ในการซื้อสินค้าในแอปที่คุณโปรดปราน</string>
+  <string name="wallet_promotion_title">Get %s in Aptoide balance now!</string>
+  <string name="wallet_promotion_wallet_installed_message">Install this app and get %s in Aptoide balance to spend in your favorite games.</string>
+  <string name="wallet_promotion_wallet_notinstalled_message">Install this app and get %s APPC Credits. You need the Aptoide Wallet to receive them.</string>
+  <string name="wallet_promotion_wallet_installed_update_message">Update this app and get %s in Aptoide balance to spend in your favorite games.</string>
+  <string name="wallet_promotion_wallet_claim_message">You\'ve got %s in Aptoide balance to claim. Use them to buy items in your favorite apps.</string>
   <string name="wallet_promotion_install_button">ติดตั้งกระเป๋าสตางค์</string>
   <string name="wallet_promotion_no_button">ไม่ล่ะขอบใจ</string>
-  <string name="wallet_promotion_button_install_disabled">ติดตั้งเพื่อรับเครดิต %s APPC</string>
+  <string name="wallet_promotion_button_install_disabled">Install to get %s in Aptoide balance</string>
   <!--AppCoins Remove Ads Wallet Promotion -->
-  <string name="wallet_promotion_button_claim">แลกรับเครดิต %s APPC ของคุณ</string>
+  <string name="wallet_promotion_button_claim">Claim your %s in Aptoide balance</string>
   <!--Play to APPC - Migrator - Promotion-->
   <string name="promo_update2appc_data_disclaimer">ตรวจสอบการตั้งค่าเกม หากคุณสามารถบันทึกความคืบหน้า</string>
-  <string name="promo_update2appc_appview_update_button">อัปเดตเป็น AppCoins</string>
+  <string name="promo_update2appc_appview_update_button">Update to Aptoide Wallet version</string>
   <string name="promo_update2appc_notification_dismiss_button">ละทิ้ง</string>
   <string name="promo_update2appc_notification_claim_button">เคลม</string>
-  <string name="promo_update2appc_claim_notification_title">รับ %s เครดิต APPC ตอนนี้!</string>
+  <string name="promo_update2appc_claim_notification_title">Get %s in Aptoide balance!</string>
   <!--Promo Center-->
   <string name="promo_update2appc_claim_notification_body">อย่าลืมแลกรางวัลของคุณ!</string>
   <string name="promo_center_pending_card_update_body">สำหรับอัพเดต %s</string>
   <!--Purchase Flow - Wallet Installation-->
   <string name="wallet_install_request_message_body">ในการซื้อรายการนี้คุณต้องได้รับ %s ก่อน</string>
-  <string name="wallet_install_appcoins_wallet">กระเป๋าสตางค์ AppCoins</string>
+  <string name="wallet_install_appcoins_wallet">Aptoide Wallet</string>
   <string name="wallet_install_complete_title">การติดตั้งสำเร็จ</string>
-  <string name="appc_not_supported_body">ดูเหมือนว่าอุปกรณ์นี้ไม่สนับสนุน AppCoins ลองใหม่บนอุปกรณ์อื่นอีกครั้ง!</string>
-  <string name="wallet_install_request_already_installed_title">ติดตั้งกระเป๋าสตางค์ AppCoins</string>
+  <string name="appc_not_supported_body">It seems this device doesn\'t support the Aptoide Wallet. Try with a different one!</string>
+  <string name="wallet_install_request_already_installed_title">Aptoide Wallet Install</string>
   <string name="wallet_install_request_already_installed_body">เพลิดเพลินกับโบนัสในทุกการซื้อ!</string>
-  <string name="wallet_verification_message_update_wallet_to_claim">อัพเดตกระเป๋าสตางค์ AppCoins เพื่อรับรางวัลนี้!</string>
+  <string name="wallet_verification_message_update_wallet_to_claim">Update the Aptoide Wallet to receive this reward!</string>
   <string name="wallet_verification_button_update">อัพเดตตอนนี้</string>
   <!--POA exposure-->
   <string name="wallet_verification_button_update_wallet">อัพเดตกระเป๋าสตางค์</string>
   <string name="poa_app_card_short">รายได้ %s</string>
-  <string name="poa_home_card_body">ติดตั้งแอปเหล่านี้และใช้เวลา 2 นาทีในการรับเครดิต AppCoins</string>
+  <string name="poa_home_card_body">Install these apps and spend 2 minutes in them to earn Aptoide balance.</string>
   <string name="poa_app_view_card_body_1">ลองแอปนี้ 2 นาทีและรับ</string>
-  <string name="poa_app_view_card_body_2">%1$s เครดิต AppCoins (%2$s)</string>
+  <string name="poa_app_view_card_body_2">%1$s in Aptoide balance Credits (%2$s)</string>
   <string name="poa_APPCC_left_body">เร็วหน่อย! มีรางวัลเพียง %sรางวัล</string>
   <string name="poa_time_left_days">วัน</string>
   <string name="poa_time_left_hours">ชั่วโมง</string>
   <string name="poa_time_left_minutes">นาที</string>
   <string name="poa_time_left_seconds">วินาที</string>
   <!--APPC Info View-->
-  <string name="appc_info_view_title_1">ทุกสิ่งที่คุณจำเป็นต้องรู้เกี่ยวกับ AppCoins</string>
-  <string name="appc_info_view_body_1_variable">AppCoins และเครดิต AppCoins เป็นสกุลในการทำธุรกรรมในแอป ส่วนที่ดีที่สุด? คุณจะได้รับโบนัสสูงสุด<b> %s%% ในการซื้อทั้งหมด!</b></string>
-  <string name="appc_info_view_body_1_variable_no_data">เครดิต AppCoins และ AppCoins เป็นสกุลเงินสำหรับการทำธุรกรรมในแอป ส่วนที่ดีที่สุด? คุณจะได้รับโบนัส <b>ในการซื้อทุกครั้ง!</b></string>
+  <string name="appc_info_view_title_1">Everything You Need to Know About the Aptoide Wallet</string>
+  <string name="appc_info_view_body_1_variable">Aptoide balance is the currency for in-app transactions. The best part? You\'ll earn up to <b>%s%% bonus in all purchases!</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">Aptoide balance is the currency for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
   <string name="appc_info_view_title_2">สิ่งแรก</string>
-  <string name="appc_info_view_body_2">คุณจำเป็นต้องติดตั้งกระเป๋าสตางค์ AppCoins เพื่อรับรางวัลและดำเนินธุรกรรมทั้งหมด เมื่อคุณติดตั้ง มันจะทำทุสิ่งให้คุณ!</string>
+  <string name="appc_info_view_body_2">You need to install the Aptoide Wallet to get rewards and process all transactions. Once you install it, it\'ll do everything for you!</string>
   <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_4">โบนัสในทุกการซื้อ!</string>
   <string name="appc_info_view_title_5_variable">คุณจะได้รับโบนัสสูงสุด %s%% สำหรับทุกการซื้อในแอปที่มีสัญลักษณ์ %s รับประโยชน์และมาเป็นเกมเมอร์กัน!</string>
@@ -505,12 +505,12 @@
   <!--Search Filters-->
   <string name="search_filters_trusted">มั่นใจ</string>
   <string name="search_filters_beta">เวอร์ชั่นเบต้า</string>
-  <string name="search_filters_appcoins">AppCoins</string>
+  <string name="search_filters_appcoins">Aptoide Wallet</string>
   <string name="search_filters_followed_stores">ติดตามร้านค้า</string>
   <!-- Out of space -->
   <string name="out_of_space_body">คุณต้องใช้ %s เพื่อดำเนินการติดตั้งต่อ</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">ระบบการชำระเงินด้วย AppCoins ได้ตอนนี้</string>
+  <string name="promotional_now_with_appcoins">Now compatible with the Aptoide Wallet</string>
   <string name="promotional_new_version">เวอร์ชั่นใหม่</string>
   <string name="promotional_on_going_event">เหตุการณ์ที่ดำเนินอยู่</string>
   <string name="promotional_new_in_aptoide">ตอนนี้มีที่ AppCoins</string>
