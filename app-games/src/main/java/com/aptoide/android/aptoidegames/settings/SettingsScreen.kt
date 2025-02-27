@@ -1,5 +1,6 @@
 package com.aptoide.android.aptoidegames.settings
 
+import android.os.Build
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -64,7 +65,11 @@ fun settingsScreen(showSnack: (String) -> Unit) = ScreenData(
   val genericAnalytics = rememberGenericAnalytics()
   val networkPreferencesViewModel = hiltViewModel<NetworkPreferencesViewModel>()
   val downloadOnlyOverWifi by networkPreferencesViewModel.downloadOnlyOverWifi.collectAsState()
-  val (autoUpdateGames, toggleAutoUpdateGames) = rememberAutoUpdate()
+  val (autoUpdateGames, toggleAutoUpdateGames) = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+    rememberAutoUpdate()
+  } else {
+    false to { _ -> }
+  }
   val deviceInfo = rememberDeviceInfo()
   val clipboardManager: ClipboardManager = LocalClipboardManager.current
   val copiedMessage = stringResource(R.string.settings_copied_to_clipboard_message)
@@ -135,11 +140,13 @@ fun SettingsViewContent(
             enabled = downloadOnlyOverWifi,
             onToggle = toggleDownloadOnlyOverWifi
           )
-          SettingsSwitchItem(
-            title = stringResource(R.string.settings_auto_update_button),
-            enabled = autoUpdateGames,
-            onToggle = toggleAutoUpdateGames
-          )
+          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            SettingsSwitchItem(
+              title = stringResource(R.string.settings_auto_update_button),
+              enabled = autoUpdateGames,
+              onToggle = toggleAutoUpdateGames
+            )
+          }
         }
       }
       SettingsSectionDivider()
