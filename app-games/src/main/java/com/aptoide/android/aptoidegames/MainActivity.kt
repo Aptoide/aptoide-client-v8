@@ -3,7 +3,6 @@ package com.aptoide.android.aptoidegames
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
@@ -26,7 +25,6 @@ import com.aptoide.android.aptoidegames.promo_codes.PromoCodeRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -59,19 +57,6 @@ class MainActivity : AppCompatActivity() {
   lateinit var firebaseNotificationAnalytics: FirebaseNotificationAnalytics
 
   private var navController: NavHostController? = null
-
-  private val coroutinesScope: CoroutineScope = CoroutineScope(Job() + Dispatchers.IO)
-
-  val requestPermissionLauncher =
-    registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-      coroutinesScope.launch {
-        if (isGranted) {
-          genericAnalytics.sendNotificationOptIn()
-        } else {
-          genericAnalytics.sendNotificationOptOut()
-        }
-      }
-    }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

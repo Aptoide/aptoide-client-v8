@@ -53,16 +53,27 @@ fun NotificationsPermissionRequester(
   val scope = rememberCoroutineScope()
   val context = LocalContext.current
   val notificationsPermissionViewModel = hiltViewModel<NotificationsPermissionViewModel>()
+  val genericAnalytics = rememberGenericAnalytics()
+
+  val onResult: (Boolean) -> Unit = { isGranted ->
+    onPermissionResult(isGranted)
+    
+    if (isGranted) {
+      genericAnalytics.sendNotificationOptIn()
+    } else {
+      genericAnalytics.sendNotificationOptOut()
+    }
+  }
 
   val notificationsPermissionState = rememberPermissionState(
     permission = Manifest.permission.POST_NOTIFICATIONS
-  ) { onPermissionResult(it) }
+  ) { onResult(it) }
 
   val intentLauncher = rememberLauncherForActivityResult(
     contract = ActivityResultContracts.StartActivityForResult(),
     onResult = { _ ->
       //Permission is checked directly to avoid relying on the intent result.
-      onPermissionResult(context.hasNotificationsPermission())
+      onResult(context.hasNotificationsPermission())
     }
   )
 
