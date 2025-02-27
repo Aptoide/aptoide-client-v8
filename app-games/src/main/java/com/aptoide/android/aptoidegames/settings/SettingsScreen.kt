@@ -42,7 +42,6 @@ import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.SupportActivity
 import com.aptoide.android.aptoidegames.UrlActivity
-import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.design_system.AptoideGamesSwitch
 import com.aptoide.android.aptoidegames.design_system.PrimarySmallOutlinedButton
 import com.aptoide.android.aptoidegames.drawables.icons.getAptoideLogo
@@ -61,7 +60,7 @@ fun settingsScreen(showSnack: (String) -> Unit) = ScreenData(
   route = settingsRoute,
 ) { _, _, navigateBack ->
   val context = LocalContext.current
-  val genericAnalytics = rememberGenericAnalytics()
+  val settingsAnalytics = rememberSettingsAnalytics()
   val networkPreferencesViewModel = hiltViewModel<NetworkPreferencesViewModel>()
   val downloadOnlyOverWifi by networkPreferencesViewModel.downloadOnlyOverWifi.collectAsState()
   val (autoUpdateGames, toggleAutoUpdateGames) = rememberAutoUpdate()
@@ -78,9 +77,9 @@ fun settingsScreen(showSnack: (String) -> Unit) = ScreenData(
     toggleDownloadOnlyOverWifi = { isChecked ->
       networkPreferencesViewModel.setDownloadOnlyOverWifi(isChecked)
       if (isChecked) {
-        genericAnalytics.sendDownloadOverWifiEnabled()
+        settingsAnalytics.sendDownloadOverWifiEnabled()
       } else {
-        genericAnalytics.sendDownloadOverWifiDisabled()
+        settingsAnalytics.sendDownloadOverWifiDisabled()
       }
     },
     toggleAutoUpdateGames = { isChecked ->
@@ -89,7 +88,7 @@ fun settingsScreen(showSnack: (String) -> Unit) = ScreenData(
     onPrivacyPolicyClick = { UrlActivity.open(context, ppUrl) },
     onTermsConditionsClick = { UrlActivity.open(context, tcUrl) },
     sendFeedback = {
-      genericAnalytics.sendSendFeedbackClicked()
+      settingsAnalytics.sendSendFeedbackClicked()
       SupportActivity.openForFeedBack(context)
     },
     copyInfo = {

@@ -116,21 +116,6 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
     params = searchMeta.toGenericParameters()
   )
 
-  fun sendDownloadOverWifiDisabled() = analyticsSender.logEvent(
-    name = "download_over_wifi_disabled",
-    params = emptyMap()
-  )
-
-  fun sendDownloadOverWifiEnabled() = analyticsSender.logEvent(
-    name = "download_over_wifi_enabled",
-    params = emptyMap()
-  )
-
-  fun sendSendFeedbackClicked() = analyticsSender.logEvent(
-    name = "send_feedback_clicked",
-    params = emptyMap()
-  )
-
   fun sendFeedbackSent(feedbackType: String) = analyticsSender.logEvent(
     name = "feedback_sent",
     params = mapOf("feedback_type" to feedbackType)
