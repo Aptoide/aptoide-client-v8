@@ -2,13 +2,13 @@ package com.aptoide.android.aptoidegames.feature_flags
 
 import cm.aptoide.pt.extensions.SuspendValue
 import cm.aptoide.pt.feature_flags.data.FeatureFlagsRepository
-import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
+import com.aptoide.android.aptoidegames.feature_flags.analytics.FeatureFlagsAnalytics
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import org.json.JSONObject
 
 class AptoideFeatureFlagsRepository(
-  private val genericAnalytics: GenericAnalytics
+  private val featureFlagsAnalytics: FeatureFlagsAnalytics
 ) : FeatureFlagsRepository {
 
   // Used to signal about remote config results
@@ -24,7 +24,7 @@ class AptoideFeatureFlagsRepository(
         val currentTimestamp = System.currentTimeMillis()
 
         if (currentFetchTime > previousFetchTime) {
-          genericAnalytics.sendFeatureFlagsFetch(duration = currentTimestamp - initialTimestamp)
+          featureFlagsAnalytics.sendFeatureFlagsFetch(duration = currentTimestamp - initialTimestamp)
         }
       }
 

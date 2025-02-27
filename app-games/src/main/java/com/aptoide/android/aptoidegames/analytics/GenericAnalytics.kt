@@ -111,11 +111,6 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
     params = emptyMap()
   )
 
-  fun sendFeatureFlagsFetch(duration: Long) = analyticsSender.logEvent(
-    name = "feature_flags_fetch",
-    params = mapOf("duration" to duration)
-  )
-
   fun sendECVideosFlagReady() =
     analyticsSender.logEvent("ec_videos_flag_ready", params = emptyMap())
 
