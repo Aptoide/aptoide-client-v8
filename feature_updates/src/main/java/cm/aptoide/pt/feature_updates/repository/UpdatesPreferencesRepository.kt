@@ -1,11 +1,13 @@
 package cm.aptoide.pt.feature_updates.repository
 
+import android.os.Build
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import cm.aptoide.pt.feature_updates.di.UpdatesPreferencesDataStore
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -25,8 +27,13 @@ class UpdatesPreferencesRepository @Inject constructor(
     }
   }
 
-  fun shouldAutoUpdateGames(): Flow<Boolean> =
-    dataStore.data.map { preferences ->
-      preferences[AUTO_UPDATE_GAMES] ?: true
+  fun shouldAutoUpdateGames(): Flow<Boolean> {
+    return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+      return flowOf(false)
+    } else {
+      dataStore.data.map { preferences ->
+        preferences[AUTO_UPDATE_GAMES] ?: true
+      }
     }
+  }
 }

@@ -46,7 +46,7 @@ internal class AppInfoRepositoryImpl(context: Context) : BroadcastReceiver(), Ap
     ?.takeIf(PackageInfo::ifNormalAppOrGame)
 
   override fun getUpdateOwnerPackageName(packageName: String): String? = runCatching {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
       pm.getInstallSourceInfo(packageName).run {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
           updateOwnerPackageName ?: installingPackageName
