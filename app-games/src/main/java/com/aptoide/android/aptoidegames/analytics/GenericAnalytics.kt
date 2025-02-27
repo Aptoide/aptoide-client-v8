@@ -111,12 +111,6 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
     params = emptyMap()
   )
 
-  fun sendECVideosFlagReady() =
-    analyticsSender.logEvent("ec_videos_flag_ready", params = emptyMap())
-
-  fun sendHomeTabClick(tab: String) =
-    analyticsSender.logEvent("home_tab_clicked", params = mapOf(P_NAME to tab))
-
   companion object {
     internal const val P_OPEN_TYPE = "open_type"
     internal const val P_FIRST_LAUNCH = "first_launch"

@@ -23,12 +23,3 @@ fun rememberGenericAnalytics(): GenericAnalytics = runPreviewable(
     hiltViewModel<InjectionsProvider>().genericAnalytics
   }
 )
-
-@Composable
-fun rememberBIAnalytics(): BIAnalytics = runPreviewable(
-  preview = { BIAnalytics(object : AnalyticsSender {}) },
-  real = {
-    val analyticsViewModel = hiltViewModel<InjectionsProvider>()
-    analyticsViewModel.biAnalytics
-  }
-)

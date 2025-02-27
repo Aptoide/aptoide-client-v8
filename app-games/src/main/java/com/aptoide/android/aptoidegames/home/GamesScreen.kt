@@ -11,7 +11,6 @@ import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
 import cm.aptoide.pt.feature_categories.presentation.rememberAllCategories
 import cm.aptoide.pt.feature_editorial.presentation.rememberEditorialListState
 import com.aptoide.android.aptoidegames.analytics.presentation.InitialAnalyticsMeta
-import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.categories.presentation.AllCategoriesView
 import com.aptoide.android.aptoidegames.editorial.SeeMoreEditorialsContent
 import com.aptoide.android.aptoidegames.feature_apps.presentation.MoreBonusBundleView
@@ -37,7 +36,7 @@ private fun GamesScreenContent(
   val (showHomeTabRow, tabs) = rememberHomeTabRowState()
   var selectedTab by rememberSaveable(key = tabs.size.toString()) { mutableIntStateOf(0) }
 
-  val genericAnalytics = rememberGenericAnalytics()
+  val homeAnalytics = rememberHomeAnalytics()
 
   Column {
     if (showHomeTabRow) {
@@ -46,7 +45,7 @@ private fun GamesScreenContent(
         tabsList = tabs.map { it.getTitle() },
         onSelectTab = {
           if (it != selectedTab) {
-            genericAnalytics.sendHomeTabClick(tabs[it]::class.simpleName.toString())
+            homeAnalytics.sendHomeTabClick(tabs[it]::class.simpleName.toString())
           }
           selectedTab = it
         }
