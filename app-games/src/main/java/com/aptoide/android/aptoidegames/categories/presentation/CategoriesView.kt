@@ -38,6 +38,7 @@ import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAn
 import com.aptoide.android.aptoidegames.analytics.presentation.withBundleMeta
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.feature_apps.presentation.SmallEmptyView
+import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberBundleAnalytics
 import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
 import com.aptoide.android.aptoidegames.home.analytics.meta
@@ -51,7 +52,7 @@ fun CategoriesBundle(
 ) = bundle.view?.let {
   val uiState = rememberCategoriesState(requestUrl = it)
   val analyticsContext = AnalyticsContext.current
-  val genericAnalytics = rememberGenericAnalytics()
+  val bundleAnalytics = rememberBundleAnalytics()
 
   Column(
     modifier = Modifier
@@ -63,7 +64,7 @@ fun CategoriesBundle(
       icon = bundle.bundleIcon,
       hasMoreAction = bundle.hasMoreAction,
       onClick = {
-        genericAnalytics.sendSeeAllClick(analyticsContext)
+        bundleAnalytics.sendSeeAllClick(analyticsContext)
         navigate(
           buildAllCategoriesRoute(bundle.title)
             .withBundleMeta(bundle.meta.copy(tag = "${bundle.tag}-more"))

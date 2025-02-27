@@ -135,7 +135,7 @@ private fun AppsList(
   navigate: (String) -> Unit,
 ) {
   val analyticsContext = AnalyticsContext.current
-  val genericAnalytics = rememberGenericAnalytics()
+  val bundleAnalytics = rememberBundleAnalytics()
 
   Spacer(modifier = Modifier.fillMaxWidth())
   LazyColumn(
@@ -149,7 +149,7 @@ private fun AppsList(
         app = app,
         onClick = {
           app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(analyticsContext.bundleMeta?.tag)
-          genericAnalytics.sendAppPromoClick(
+          bundleAnalytics.sendAppPromoClick(
             app = app,
             analyticsContext = analyticsContext.copy(itemPosition = index)
           )

@@ -76,32 +76,9 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
     params = emptyMap()
   )
 
-  fun sendAppPromoClick(
-    app: App,
-    analyticsContext: AnalyticsUIContext,
-  ) = analyticsSender.logEvent(
-    name = "app_promo_clicked",
-    params = analyticsContext.toGenericParameters(
-      *app.toGenericParameters()
-    )
-  )
-
-  fun sendSeeAllClick(analyticsContext: AnalyticsUIContext) = analyticsSender.logEvent(
-    name = "see_all_clicked",
-    params = analyticsContext.bundleMeta.toGenericParameters()
-  )
-
   fun sendBackButtonClick(analyticsContext: AnalyticsUIContext) = analyticsSender.logEvent(
     name = "back_button_clicked",
     params = analyticsContext.toGenericParameters()
-  )
-
-  fun sendCarouselSwipe(
-    count: Int,
-    analyticsContext: AnalyticsUIContext,
-  ) = analyticsSender.logEvent(
-    name = "carousel_swipe",
-    params = analyticsContext.bundleMeta.toGenericParameters(P_SCROLL_COUNT to count)
   )
 
   fun sendMenuClick(link: String) = analyticsSender.logEvent(

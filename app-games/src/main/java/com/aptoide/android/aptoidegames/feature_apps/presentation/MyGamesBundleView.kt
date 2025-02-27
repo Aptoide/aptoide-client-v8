@@ -44,7 +44,6 @@ import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.SwipeListener
-import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
 import com.aptoide.android.aptoidegames.design_system.PrimarySmallButton
 import com.aptoide.android.aptoidegames.drawables.icons.getSingleGamepad
@@ -61,7 +60,7 @@ fun MyGamesBundleView(
   navigate: (String) -> Unit,
 ) {
   val analyticsContext = AnalyticsContext.current
-  val genericAnalytics = rememberGenericAnalytics()
+  val bundleAnalytics = rememberBundleAnalytics()
   val installAnalytics = rememberInstallAnalytics()
   val (uiState, retry, openApp) = rememberMyGamesBundleUIState()
 
@@ -70,7 +69,7 @@ fun MyGamesBundleView(
     icon = icon,
     uiState = uiState,
     onSeeMoreClick = {
-      genericAnalytics.sendSeeAllClick(analyticsContext)
+      bundleAnalytics.sendSeeAllClick(analyticsContext)
       navigate(buildSeeAllMyGamesRoute(title))
     },
     onAppClick = { packageName ->

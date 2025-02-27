@@ -35,7 +35,6 @@ import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.randomBundle
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
-import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusIconRight
@@ -106,7 +105,7 @@ private fun CarouselListView(
   navigate: (String) -> Unit,
 ) {
   val analyticsContext = AnalyticsContext.current
-  val genericAnalytics = rememberGenericAnalytics()
+  val bundleAnalytics = rememberBundleAnalytics()
 
   val showVideos = rememberShouldShowVideos(bundleTag)
 
@@ -123,7 +122,7 @@ private fun CarouselListView(
         app = item,
         showVideo = showVideos && isCurrentPage,
         onClick = {
-          genericAnalytics.sendAppPromoClick(
+          bundleAnalytics.sendAppPromoClick(
             app = item,
             analyticsContext = analyticsContext.copy(itemPosition = page)
           )

@@ -64,7 +64,6 @@ import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.OverrideAnalyticsBundleMeta
 import com.aptoide.android.aptoidegames.analytics.presentation.SwipeListener
-import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withBundleMeta
 import com.aptoide.android.aptoidegames.categories.presentation.CategoriesBundle
 import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
@@ -81,6 +80,7 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.MyGamesBundleV
 import com.aptoide.android.aptoidegames.feature_apps.presentation.PublisherTakeOverBundle
 import com.aptoide.android.aptoidegames.feature_apps.presentation.buildSeeMoreRoute
 import com.aptoide.android.aptoidegames.feature_apps.presentation.perCarouselViewModel
+import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberBundleAnalytics
 import com.aptoide.android.aptoidegames.feature_promotional.AppComingSoonPromotionalView
 import com.aptoide.android.aptoidegames.feature_promotional.EventPromotionalView
 import com.aptoide.android.aptoidegames.feature_promotional.NewAppPromotionalView
@@ -474,12 +474,12 @@ fun getSeeMoreRouteNavigation(
   navigate: (String) -> Unit,
 ): () -> Unit {
   val analyticsContext = AnalyticsContext.current
-  val genericAnalytics = rememberGenericAnalytics()
+  val bundleAnalytics = rememberBundleAnalytics()
 
   val context = LocalContext.current
   val title = encode(bundle.title.translateOrKeep(context))
   return {
-    genericAnalytics.sendSeeAllClick(analyticsContext)
+    bundleAnalytics.sendSeeAllClick(analyticsContext)
     navigate(
       buildSeeMoreRoute(title, "${bundle.tag}-more")
         .withBundleMeta(bundle.meta.copy(tag = "${bundle.tag}-more"))

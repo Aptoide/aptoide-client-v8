@@ -37,7 +37,6 @@ import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.SwipeListener
-import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusIconRight
@@ -100,7 +99,7 @@ private fun RealCarouselLargeBundle(
         AppsListUiState.Empty,
         AppsListUiState.Error,
         AppsListUiState.NoConnection,
-        -> SmallEmptyView(modifier = Modifier.height(184.dp))
+          -> SmallEmptyView(modifier = Modifier.height(184.dp))
 
         AppsListUiState.Loading -> LoadingBundleView(height = 184.dp)
       }
@@ -114,7 +113,7 @@ private fun CarouselLargeListView(
   navigate: (String) -> Unit,
 ) {
   val analyticsContext = AnalyticsContext.current
-  val genericAnalytics = rememberGenericAnalytics()
+  val bundleAnalytics = rememberBundleAnalytics()
   val lazyListState = rememberLazyListState()
 
   SwipeListener(interactionSource = lazyListState.interactionSource)
@@ -132,7 +131,7 @@ private fun CarouselLargeListView(
       CarouselLargeAppView(
         app = item,
         onClick = {
-          genericAnalytics.sendAppPromoClick(
+          bundleAnalytics.sendAppPromoClick(
             app = item,
             analyticsContext = analyticsContext.copy(itemPosition = index)
           )

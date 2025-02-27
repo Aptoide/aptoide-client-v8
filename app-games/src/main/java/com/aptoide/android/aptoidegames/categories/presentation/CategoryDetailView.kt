@@ -36,6 +36,7 @@ import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.error_views.NoConnectionView
 import com.aptoide.android.aptoidegames.feature_apps.presentation.AppItem
 import com.aptoide.android.aptoidegames.feature_apps.presentation.LargeAppItem
+import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberBundleAnalytics
 import com.aptoide.android.aptoidegames.home.LoadingView
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
@@ -76,6 +77,7 @@ fun CategoryDetailView(
 ) {
   val analyticsContext = AnalyticsContext.current
   val genericAnalytics = rememberGenericAnalytics()
+  val bundleAnalytics = rememberBundleAnalytics()
 
   val navigateToApp = { app: App, index: Int ->
     navigate(
@@ -119,7 +121,7 @@ fun CategoryDetailView(
             LargeAppItem(
               app = app,
               onClick = {
-                genericAnalytics.sendAppPromoClick(
+                bundleAnalytics.sendAppPromoClick(
                   app = app,
                   analyticsContext = analyticsContext.copy(itemPosition = index)
                 )
@@ -132,7 +134,7 @@ fun CategoryDetailView(
             AppItem(
               app = app,
               onClick = {
-                genericAnalytics.sendAppPromoClick(
+                bundleAnalytics.sendAppPromoClick(
                   app = app,
                   analyticsContext = analyticsContext.copy(itemPosition = index)
                 )
