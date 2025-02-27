@@ -1,5 +1,6 @@
 package cm.aptoide.pt.feature_updates.di
 
+import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -19,7 +20,7 @@ class InjectionsProvider @Inject constructor(
 ) : ViewModel()
 
 @Composable
-fun rememberAutoUpdate(): Pair<Boolean, (Boolean) -> Unit> = runPreviewable(
+fun rememberAutoUpdate(): Pair<Boolean?, (Boolean) -> Unit> = runPreviewable(
   preview = { false to {} },
   real = {
     val injectionsProvider = hiltViewModel<InjectionsProvider>()
@@ -34,7 +35,11 @@ fun rememberAutoUpdate(): Pair<Boolean, (Boolean) -> Unit> = runPreviewable(
         }
       }
     )
-    val uiState by vm.shouldAutoUpdateGames.collectAsState()
-    uiState to vm::setAutoUpdateGames
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+      val uiState by vm.shouldAutoUpdateGames.collectAsState()
+      uiState to vm::setAutoUpdateGames
+    } else {
+      null to { _ -> }
+    }
   }
 )

@@ -1,6 +1,5 @@
 package com.aptoide.android.aptoidegames.updates.presentation
 
-import android.os.Build
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -89,15 +88,11 @@ fun UpdatesScreen(
 
 @Composable
 fun NoUpdatesScreen() {
-  val (autoUpdateGames, toggleAutoUpdate) = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-    rememberAutoUpdate()
-  } else {
-    false to { _ -> }
-  }
+  val (autoUpdateGames, toggleAutoUpdate) = rememberAutoUpdate()
   val showAutoUpdateToggle = remember { mutableStateOf(false) }
   LaunchedEffect(key1 = autoUpdateGames) {
-    if (!autoUpdateGames && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) showAutoUpdateToggle.value =
-      true
+    if (autoUpdateGames == false)
+      showAutoUpdateToggle.value = true
   }
 
   Column(
@@ -107,7 +102,7 @@ fun NoUpdatesScreen() {
   ) {
     if (showAutoUpdateToggle.value) {
       NoUpdatesTopSection(40)
-      NoUpdatesViewWithAutoUpdateOff(autoUpdateGames, toggleAutoUpdate)
+      autoUpdateGames?.let { NoUpdatesViewWithAutoUpdateOff(it, toggleAutoUpdate) }
     } else {
       NoUpdatesTopSection(88)
     }
