@@ -30,10 +30,10 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import cm.aptoide.pt.extensions.hasNotificationsPermission
 import com.aptoide.android.aptoidegames.R
-import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.design_system.PrimaryButton
 import com.aptoide.android.aptoidegames.design_system.PrimaryTextButton
 import com.aptoide.android.aptoidegames.drawables.icons.getNotificationsPermissionIcon
+import com.aptoide.android.aptoidegames.notifications.presentation.rememberNotificationsAnalytics
 import com.aptoide.android.aptoidegames.permissions.notifications.NotificationsPermissionViewModel
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -53,15 +53,15 @@ fun NotificationsPermissionRequester(
   val scope = rememberCoroutineScope()
   val context = LocalContext.current
   val notificationsPermissionViewModel = hiltViewModel<NotificationsPermissionViewModel>()
-  val genericAnalytics = rememberGenericAnalytics()
+  val notificationsAnalytics = rememberNotificationsAnalytics()
 
   val onResult: (Boolean) -> Unit = { isGranted ->
     onPermissionResult(isGranted)
-    
+
     if (isGranted) {
-      genericAnalytics.sendNotificationOptIn()
+      notificationsAnalytics.sendNotificationOptIn()
     } else {
-      genericAnalytics.sendNotificationOptOut()
+      notificationsAnalytics.sendNotificationOptOut()
     }
   }
 
@@ -110,7 +110,7 @@ fun NotificationsPermissionRequester(
 fun NotificationPermissionDialog(
   onDismissDialog: (Boolean) -> Unit,
 ) {
-  val genericAnalytics = rememberGenericAnalytics()
+  val notificationsAnalytics = rememberNotificationsAnalytics()
 
   Dialog(
     onDismissRequest = { onDismissDialog(false) },
@@ -120,7 +120,7 @@ fun NotificationPermissionDialog(
     ),
   ) {
     val onContinueClick: () -> Unit = {
-      genericAnalytics.sendGetNotifiedContinueClick()
+      notificationsAnalytics.sendGetNotifiedContinueClick()
       onDismissDialog(true)
     }
     val onCancelClick: () -> Unit = { onDismissDialog(false) }

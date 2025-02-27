@@ -111,21 +111,6 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
     params = emptyMap()
   )
 
-  fun sendNotificationOptIn() = analyticsSender.logEvent(
-    name = "notification_opt_in",
-    params = emptyMap()
-  )
-
-  fun sendNotificationOptOut() = analyticsSender.logEvent(
-    name = "notification_opt_out",
-    params = emptyMap()
-  )
-
-  fun sendGetNotifiedContinueClick() = analyticsSender.logEvent(
-    name = "get_notified_continue_clicked",
-    params = emptyMap()
-  )
-
   fun sendSearchMadeEvent(searchMeta: SearchMeta) = analyticsSender.logEvent(
     name = "search_made",
     params = searchMeta.toGenericParameters()
