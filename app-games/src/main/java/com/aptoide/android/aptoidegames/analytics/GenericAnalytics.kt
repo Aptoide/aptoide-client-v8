@@ -111,11 +111,6 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
     params = emptyMap()
   )
 
-  fun sendSearchMadeEvent(searchMeta: SearchMeta) = analyticsSender.logEvent(
-    name = "search_made",
-    params = searchMeta.toGenericParameters()
-  )
-
   fun sendFeatureFlagsFetch(duration: Long) = analyticsSender.logEvent(
     name = "feature_flags_fetch",
     params = mapOf("duration" to duration)
