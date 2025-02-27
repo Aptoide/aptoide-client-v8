@@ -34,8 +34,8 @@ import com.aptoide.android.aptoidegames.BottomSheetContent
 import com.aptoide.android.aptoidegames.BottomSheetHeader
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.OverrideAnalyticsAPKFY
-import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.apkfy.presentation.ApkfyUiState
+import com.aptoide.android.aptoidegames.apkfy.presentation.rememberApkfyAnalytics
 import com.aptoide.android.aptoidegames.apkfy.presentation.rememberDownloadPermissionState
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getAGIcon
@@ -55,14 +55,14 @@ class ApkfyBottomSheetContent(private val apkfyState: ApkfyUiState) : BottomShee
     dismiss: () -> Unit,
     navigate: (String) -> Unit,
   ) {
-    val analytics = rememberGenericAnalytics()
+    val apkfyAnalytics = rememberApkfyAnalytics()
     val app = apkfyState.app
 
     LaunchedEffect(Unit) {
       if (apkfyState is ApkfyUiState.Default) {
-        analytics.sendApkfyTimeout()
+        apkfyAnalytics.sendApkfyTimeout()
       } else {
-        analytics.sendApkfyShown()
+        apkfyAnalytics.sendApkfyShown()
       }
     }
 

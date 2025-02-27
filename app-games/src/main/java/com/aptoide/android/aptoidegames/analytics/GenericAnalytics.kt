@@ -116,10 +116,6 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
     params = mapOf("duration" to duration)
   )
 
-  fun sendApkfyShown() = analyticsSender.logEvent("apkfy_shown", params = emptyMap())
-
-  fun sendApkfyTimeout() = analyticsSender.logEvent("apkfy_timeout", params = emptyMap())
-
   fun sendECVideosFlagReady() =
     analyticsSender.logEvent("ec_videos_flag_ready", params = emptyMap())
 
