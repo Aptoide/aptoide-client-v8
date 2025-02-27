@@ -86,17 +86,6 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
     params = mapOf("link" to link)
   )
 
-  fun sendCategoryClick(
-    categoryName: String,
-    analyticsContext: AnalyticsUIContext,
-  ) = analyticsSender.logEvent(
-    name = "category_clicked",
-    params = mapOfNonNull(
-      P_CATEGORY to categoryName,
-      P_ITEM_POSITION to analyticsContext.itemPosition
-    )
-  )
-
   fun sendBottomBarHomeClick() = analyticsSender.logEvent(
     name = "bn_home_clicked",
     params = emptyMap()

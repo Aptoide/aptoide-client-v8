@@ -119,7 +119,7 @@ fun AllCategoriesView(
   onError: () -> Unit
 ) {
   val analyticsContext = AnalyticsContext.current
-  val genericAnalytics = rememberGenericAnalytics()
+  val categoriesAnalytics = rememberCategoriesAnalytics()
 
   when (uiState) {
     is AllCategoriesUiState.Loading -> LoadingView()
@@ -136,7 +136,7 @@ fun AllCategoriesView(
           title = category.title,
           icon = category.icon,
           onClick = {
-            genericAnalytics.sendCategoryClick(category.name, analyticsContext)
+            categoriesAnalytics.sendCategoryClick(category.name, analyticsContext)
             navigate(
               buildCategoryDetailRoute(category.title, category.name)
                 .withItemPosition(index)
