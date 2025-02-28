@@ -373,16 +373,16 @@
   <!--URL -->
   <string name="my_stores_login_message">今すぐログインして、アプリの共有を開始!</string>
   <!--APPC-->
-  <string name="appc_title_iab">Spend Your Aptoide Balance</string>
-  <string name="appc_title_ads">Get Rewarded with Aptoide Balance</string>
-  <string name="appc_title_featured">Featured Bonus Apps</string>
-  <string name="appc_home_bundle_iab">Use Your Aptoide Balance</string>
-  <string name="appc_home_bundle_poa">Earn Aptoide Balance</string>
-  <string name="appc_title_about_appcoins">About the Aptoide Wallet</string>
+  <string name="appc_title_iab">Aptoideクレジットを使う</string>
+  <string name="appc_title_ads">Aptoideクレジットで報酬を得る</string>
+  <string name="appc_title_featured">注目のボーナスアプリ</string>
+  <string name="appc_home_bundle_iab">Aptoideクレジットを使う</string>
+  <string name="appc_home_bundle_poa">Aptoideクレジットを獲得</string>
+  <string name="appc_title_about_appcoins">Aptoide Walletについて</string>
   <string name="appc_message_appview_appcoins_reward">このアプリを2分間使って\n%sをゲット</string>
   <string name="appc_message_appview_appcoins_reward_with_value">このアプリを2分間使って\n%1$s %2$sをゲット</string>
-  <string name="appc_message_appview_appcoins_iab">In-app purchases with the Aptoide Wallet</string>
-  <string name="appc_card_short">BONUS</string>
+  <string name="appc_message_appview_appcoins_iab">Aptoide Walletでアプリ内課金</string>
+  <string name="appc_card_short">ボーナス</string>
   <string name="appc_title_homepage_card">You can get Aptoide balance now!</string>
   <string name="appc_message_homepage_card">The currency for the app economy is here! Get free Aptoide balance by using your favorite apps.</string>
   <string name="appc_title_settings_appcoins_wallet">Aptoide Wallet</string>
