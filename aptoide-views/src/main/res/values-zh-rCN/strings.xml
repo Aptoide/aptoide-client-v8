@@ -14,7 +14,7 @@
   <string name="incentives_badge_amount">%s%%</string>
   <string name="incentives_badge_bonus">的奖励</string>
   <string name="incentives_banner_title">每次购买可获得高达%s%%的奖励！</string>
-  <string name="incentives_banner_body">Use your Aptoide balance to get more items in apps with this symbol %s</string>
+  <string name="incentives_banner_body">使用您的 Aptoide 余额，在带有此标志 %s 的应用中获取更多物品</string>
   <!-- Download View -->
   <string name="appview_short_downloading">下载中</string>
   <string name="apps_short_download_paused">下载已暂停</string>
