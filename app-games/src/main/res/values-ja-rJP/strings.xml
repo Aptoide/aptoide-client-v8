@@ -101,7 +101,7 @@
   <string name="later_button">後で</string>
   <string name="trusted_game_badge">信頼できるゲーム</string>
   <string name="official_game_badge">公式ゲーム</string>
-  <string name="editorial_card_views_short">%s views</string>
+  <string name="editorial_card_views_short">%s ビュー</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">空き容量不足</string>
   <string name="out_of_space_body">インストールを続行するには %s 必要です。</string>
@@ -145,7 +145,7 @@
   <string name="apkfy_whats_aptoide_games_title">Aptoide Gamesとは？</string>
   <string name="apkfy_install_body">Aptoide Gamesでお気に入りのゲームやその他のものを手に入れよう！</string>
   <string name="apkfy_install_bullet_points">\u2022 素晴らしいキュレーションのトップゲーム。\n\u2022 ログイン不要！\n\u2022 お好きなゲームで特別なプロモーションと報酬を。</string>
-  <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Pay with the Aptoide Wallet</string>
+  <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Aptoide Walletで支払い</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">自動的にインストールされ、すべての購入にボーナスがつきます</string>
   <string name="buy_button" comment="buy">購入</string>
   <string name="iap_other_payment_methods_button" comment="other_payment_methods">他の支払い方法</string>
@@ -156,7 +156,7 @@
   <string name="log_out_button" comment="log_out">ログアウト</string>
   <string name="iap_appc_body">すべて購入での追加ボーナスをゲット。</string>
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">これで購入を完了できます。</string>
-  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">The Aptoide Wallet is now installed!</string>
+  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">Aptoide Walletがインストールされました！</string>
   <string name="storage_access_permission_request_message">このアプリをダウンロードしてインストールできるように、ストレージへのアクセスを許可してください。</string>
   <string name="downloads_number_title">%sダウンロード</string>
   <!-- Payment Errors-->
@@ -182,19 +182,19 @@
   <string name="iap_already_processing_body">この購入にはしばらく時間がかかる場合がありますので、完了するまでお待ちいただくか、弊社サポートチームまでご連絡ください。</string>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">購入のたびにボーナス</string>
-  <string name="bonus_page_body_1">Look for the games identified with %1$s, install the Aptoide Wallet and get up to %2$s%% bonus in all purchases. You can then use this bonus to make your next purchases in your favorite games!</string>
+  <string name="bonus_page_body_1">%1$sで識別されるゲームを探し、Aptoide Walletをインストールして、すべての購入で最大%2$s%%のボーナスを獲得してください。このボーナスを使用して、お気に入りのゲームを次回購入することができます！</string>
   <string name="bonus_page_title_2">さらに？</string>
   <string name="bonus_page_body_2"><![CDATA[特定のゲームでAptoide Games限定プロモコードを使用すると、さらに<1>%s%%ボーナス</1>を獲得できます。ご期待ください！]]></string>
   <!-- Promo Code -->
   <string name="promo_code_install_wallet_banner_title">購入毎に最大 %s%% のボーナスを獲得！</string>
-  <string name="promo_code_install_wallet_banner_body">Use the Aptoide Wallet to make your in-app purchases and get a reward.</string>
+  <string name="promo_code_install_wallet_banner_body">Aptoide Walletでアプリ内課金をして、報酬をゲットしましょう。</string>
   <string name="promo_code_extra_title">もっと欲しい？ %s%% 追加ボーナスをゲット！</string>
   <string name="promo_code_use_button">コードを使用</string>
-  <string name="promo_code_install_wallet_disclaimer">Install the Aptoide Wallet first.</string>
+  <string name="promo_code_install_wallet_disclaimer">まずAptoide Walletをインストールしてください。</string>
   <string name="promo_code_notification_title">プロモコードを使う</string>
   <string name="promo_code_notification_body">プロモコードを使って、好きなゲームで追加ボーナスをゲット。</string>
   <string name="promo_code_notification_without_wallet_title">%s%% 追加ボーナス！</string>
-  <string name="promo_code_notification_without_wallet_body">Get the Aptoide Wallet and use your promo code to get extra bonuses in all purchases.</string>
+  <string name="promo_code_notification_without_wallet_body">Aptoide Walletを入手し、プロモコードを使用すると、すべての購入で特別ボーナスを得ることができます。</string>
   <string name="promo_code_share_title">プロモコードをゲットしました！</string>
   <string name="promo_code_share_body">このプロモコードを使って、お気に入りのゲームで追加ボーナスをゲットしましょう。</string>
   <!-- Update -->
@@ -223,25 +223,25 @@
   <string name="genai_example_1_body">ストラテジーゲームを探しています。</string>
   <string name="genai_example_2_body">最高のマルチプレイヤーゲームを紹介してください。</string>
   <string name="genai_example_3_body">オフラインのカジュアルなゲームを知っていますか？</string>
-  <string name="genai_history_body">GameGenie History</string>
-  <string name="genai_new_chat_button">New chat</string>
+  <string name="genai_history_body">GameGenieのヒストリー</string>
+  <string name="genai_new_chat_button">新しいチャット</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Now compatible with the Aptoide Wallet</string>
+  <string name="promotional_now_with_appcoins">Aptoide Walletに対応</string>
   <string name="promotional_new_version">新しいバージョン</string>
   <string name="promotional_on_going_event">進行中のイベント</string>
-  <string name="promotional_new_in_aptoide">Now available</string>
-  <string name="promotional_soon_in_aptoide">Available soon</string>
+  <string name="promotional_new_in_aptoide">利用不可</string>
+  <string name="promotional_soon_in_aptoide">まもなく利用可能</string>
   <string name="promotional_notify_button">通知を受け取る</string>
   <string name="promotional_new_notification_title">待ちに待ったアプリ！</string>
-  <string name="promotional_new_notification_body">%s is now available.</string>
+  <string name="promotional_new_notification_body">%sが利用可能になりました。</string>
   <string name="promotional_new_active">利用可能になると通知されます。</string>
-  <string name="promotional_now_available_body">Now available in Aptoide Games!</string>
-  <string name="promotional_now_available_tag">Now Available</string>
+  <string name="promotional_now_available_body">Aptoide Gamesで利用可能に!</string>
+  <string name="promotional_now_available_tag">利用不可</string>
   <!-- Tags -->
   <string name="tag_for_you">For You</string>
-  <string name="tag_top_charts">Top Charts</string>
+  <string name="tag_top_charts">トップチャート</string>
   <string name="tag_appcoins">AppCoins</string>
-  <string name="tag_editorial">Editorial</string>
-  <string name="tag_categories">Categories</string>
-  <string name="tag_bonus">Bonus</string>
+  <string name="tag_editorial">エディトリアル</string>
+  <string name="tag_categories">カテゴリー</string>
+  <string name="tag_bonus">ボーナス</string>
 </resources>
