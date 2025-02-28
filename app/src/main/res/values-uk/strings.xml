@@ -374,12 +374,12 @@
   <!--URL -->
   <string name="my_stores_login_message">Увійдіть зараз і почніть ділитися своїми додатками!</string>
   <!--APPC-->
-  <string name="appc_title_iab">Spend Your Aptoide Balance</string>
-  <string name="appc_title_ads">Get Rewarded with Aptoide Balance</string>
-  <string name="appc_title_featured">Featured Bonus Apps</string>
-  <string name="appc_home_bundle_iab">Use Your Aptoide Balance</string>
-  <string name="appc_home_bundle_poa">Earn Aptoide Balance</string>
-  <string name="appc_title_about_appcoins">About the Aptoide Wallet</string>
+  <string name="appc_title_iab">Витрачайте свій баланс Aptoide</string>
+  <string name="appc_title_ads">Отримайте винагороду у вигляді балансу Aptoide</string>
+  <string name="appc_title_featured">Рекомендовані бонусні програми</string>
+  <string name="appc_home_bundle_iab">Використовуйте свій баланс Aptoide</string>
+  <string name="appc_home_bundle_poa">Заробляйте баланс Aptoide</string>
+  <string name="appc_title_about_appcoins">Про Aptoide Wallet</string>
   <string name="appc_message_appview_appcoins_reward">Спробуйте цей додаток протягом 2 хвилин і отримаєте \n%s</string>
   <string name="appc_message_appview_appcoins_reward_with_value">Спробуйте цей додаток протягом 2 хвилин і отримайте\n%1$s %2$s</string>
   <string name="appc_message_appview_appcoins_iab">In-app purchases with the Aptoide Wallet</string>
