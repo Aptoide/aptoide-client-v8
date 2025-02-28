@@ -383,55 +383,55 @@
   <string name="appc_message_appview_appcoins_reward_with_value">このアプリを2分間使って\n%1$s %2$sをゲット</string>
   <string name="appc_message_appview_appcoins_iab">Aptoide Walletでアプリ内課金</string>
   <string name="appc_card_short">ボーナス</string>
-  <string name="appc_title_homepage_card">You can get Aptoide balance now!</string>
-  <string name="appc_message_homepage_card">The currency for the app economy is here! Get free Aptoide balance by using your favorite apps.</string>
+  <string name="appc_title_homepage_card">今すぐAptoideクレジットを獲得できます！</string>
+  <string name="appc_message_homepage_card">アプリ経済の通貨がここに！お気に入りのアプリを使ってAptoideクレジットを無料でゲット。</string>
   <string name="appc_title_settings_appcoins_wallet">Aptoide Wallet</string>
-  <string name="appc_title_bundle">Bonus Apps</string>
+  <string name="appc_title_bundle">ボーナスアプリ</string>
   <!--Editorial Content-->
   <string name="appc_verification_cancelled_by_user_message">報酬を受け取るためには、ウォレットの確認が必要です。数秒で完了します！</string>
   <string name="editorial_reactions_login_short">ログインをしてもっといいねをしよう！</string>
   <!--Promotion in APPC-C (old)-->
   <string comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)" name="editorial_bottom_follow_us">フォロー</string>
-  <string name="holidayspromotion_message_1">Install the following apps and get up to %s in Aptoide balance to spend in your favorite games!</string>
-  <string name="holidayspromotion_message_2">First, get the Aptoide Wallet to receive your Aptoide balance.</string>
+  <string name="holidayspromotion_message_1">以下のアプリをインストールして、お気に入りのゲームで使えるAptoideクレジットを最大%sゲットしましょう！</string>
+  <string name="holidayspromotion_message_2">まず、Aptoide Walletを入手してAptoideクレジットを受け取りましょう。</string>
   <string name="holidayspromotion_message_3">そして、これらのゲームのいずれかをインストールしすると、報酬を得ることができます！</string>
   <string name="holidayspromotion_button_claimed">請求済み</string>
-  <string name="holidayspromotion_message_popup">Earn %s in Aptoide balance by installing apps and spend them in your favorite games!</string>
+  <string name="holidayspromotion_message_popup">アプリをインストールして%sのAptoideクレジットを獲得、そしてお好きなゲームでお使いください！</string>
   <string name="holidayspromotion_button_popup">チェックしてみる！</string>
   <string name="promotion_over_title">残念！</string>
   <string name="promotion_over_message">今回のプロモーションはすぐに終わってしまいましたが、また近いうちに別のプロモーションを行います！</string>
   <!--Promotion with FIAT-->
-  <string name="FIATpromotion_install_to_get_short">Install to get %1$s in Aptoide balance (%2$s)</string>
-  <string name="FIATpromotion_update_to_get_short">Update to get %1$s in Aptoide balance (%2$s)</string>
+  <string name="FIATpromotion_install_to_get_short">インストールしてAptoideクレジットで%1$sを獲得 (%2$s)</string>
+  <string name="FIATpromotion_update_to_get_short">アップデートしてAptoideクレジットを%1$s獲得 (%2$s)</string>
   <!--Get Wallet Address-->
   <string name="promotion_claim_button">請求</string>
-  <string name="holidayspromotion_title_wallet">Aptoide Wallet Address</string>
-  <string name="holidayspromotion_message_wallet">Tell us your wallet address! Tap below and the Aptoide Wallet will take care of it.</string>
+  <string name="holidayspromotion_title_wallet">Aptoide Walletアドレス</string>
+  <string name="holidayspromotion_message_wallet">あなたのウォレットアドレスを教えてください！下記をタップすると、Aptoide Walletが処理します。</string>
   <string name="holidayspromotion_short_wallet_field">ウォレットアドレス</string>
   <string name="holidayspromotion_button_wallet_get">Make it happen</string>
   <string name="holidayspromotion_short_wallet_invalid">無効なウォレットアドレス</string>
   <string name="holidayspromotion_title_completed">完了!</string>
-  <string name="holidayspromotion_message_completed">Your Aptoide balance will be available in your wallet soon! Enjoy your gaming!</string>
+  <string name="holidayspromotion_message_completed">Aptoideクレジットはすぐにあなたのウォレットに入金されます！ゲームをお楽しみください！</string>
   <string name="holidayspromotion_button_completed">完了</string>
   <string name="holidayspromotion_title_error_claimed">おっと...</string>
   <string name="holidayspromotion_short_error_claimed">この報酬は受け取り済みです！</string>
   <!--APPC install Promotion-->
-  <string name="wallet_promotion_title">Get %s in Aptoide balance now!</string>
-  <string name="wallet_promotion_wallet_installed_message">Install this app and get %s in Aptoide balance to spend in your favorite games.</string>
-  <string name="wallet_promotion_wallet_notinstalled_message">Install this app and get %s APPC Credits. You need the Aptoide Wallet to receive them.</string>
-  <string name="wallet_promotion_wallet_installed_update_message">Update this app and get %s in Aptoide balance to spend in your favorite games.</string>
-  <string name="wallet_promotion_wallet_claim_message">You\'ve got %s in Aptoide balance to claim. Use them to buy items in your favorite apps.</string>
+  <string name="wallet_promotion_title">今すぐ%s Aptoideクレジットを獲得！</string>
+  <string name="wallet_promotion_wallet_installed_message">このアプリをインストールして、お気に入りのゲームで使えるAptoideクレジットを%s手に入れましょう。</string>
+  <string name="wallet_promotion_wallet_notinstalled_message">このアプリをインストールすると、%sのAPPCクレジットがもらえます。受け取るには、 Aptoide Walletが必要です。</string>
+  <string name="wallet_promotion_wallet_installed_update_message">このアプリをインストールして、お気に入りのゲームで使えるAptoideクレジットを%s手に入れましょう。</string>
+  <string name="wallet_promotion_wallet_claim_message">%sのAptoideクレジットを請求できます。お気に入りのアプリでアイテムを購入するためにお使いください。</string>
   <string name="wallet_promotion_install_button">ウォレットをインストール</string>
   <string name="wallet_promotion_no_button">いいえ、結構です</string>
-  <string name="wallet_promotion_button_install_disabled">Install to get %s in Aptoide balance</string>
+  <string name="wallet_promotion_button_install_disabled">インストールして%sのAptoideクレジットを獲得</string>
   <!--AppCoins Remove Ads Wallet Promotion -->
-  <string name="wallet_promotion_button_claim">Claim your %s in Aptoide balance</string>
+  <string name="wallet_promotion_button_claim">%sのAptoideクレジットを受け取る</string>
   <!--Play to APPC - Migrator - Promotion-->
   <string name="promo_update2appc_data_disclaimer">ゲームの設定で、進捗状況を保存できるかどうかを確認してください。</string>
-  <string name="promo_update2appc_appview_update_button">Update to Aptoide Wallet version</string>
+  <string name="promo_update2appc_appview_update_button">Aptoide Walletバージョンに更新</string>
   <string name="promo_update2appc_notification_dismiss_button">退ける</string>
   <string name="promo_update2appc_notification_claim_button">請求</string>
-  <string name="promo_update2appc_claim_notification_title">Get %s in Aptoide balance!</string>
+  <string name="promo_update2appc_claim_notification_title">%sのAptoideクレジットを獲得！</string>
   <!--Promo Center-->
   <string name="promo_update2appc_claim_notification_body">報酬の請求をお忘れなく！</string>
   <string name="promo_center_pending_card_update_body">%sのアップデートで</string>
@@ -439,28 +439,28 @@
   <string name="wallet_install_request_message_body">このアイテムを購入するには、まず%sを取得する必要があります。</string>
   <string name="wallet_install_appcoins_wallet">Aptoide Wallet</string>
   <string name="wallet_install_complete_title">インストール完了</string>
-  <string name="appc_not_supported_body">It seems this device doesn\'t support the Aptoide Wallet. Try with a different one!</string>
-  <string name="wallet_install_request_already_installed_title">Aptoide Wallet Install</string>
+  <string name="appc_not_supported_body">この端末はAptoide Walletに対応していないようです。別の端末でお試しください！</string>
+  <string name="wallet_install_request_already_installed_title">Aptoide Walletのインストール</string>
   <string name="wallet_install_request_already_installed_body">アプリ内での購入ごとにボーナスをお楽しみください！</string>
-  <string name="wallet_verification_message_update_wallet_to_claim">Update the Aptoide Wallet to receive this reward!</string>
+  <string name="wallet_verification_message_update_wallet_to_claim">Aptoide Walletをアップデートして、この報酬を受け取りましょう！</string>
   <string name="wallet_verification_button_update">今すぐアップデート</string>
   <!--POA exposure-->
   <string name="wallet_verification_button_update_wallet">ウォレットをアップデート</string>
   <string name="poa_app_card_short">%sを獲得</string>
-  <string name="poa_home_card_body">Install these apps and spend 2 minutes in them to earn Aptoide balance.</string>
+  <string name="poa_home_card_body">これらのアプリをインストールして、2分間利用するとAptoideクレジットを獲得できます。</string>
   <string name="poa_app_view_card_body_1">このアプリを2分間試してゲット：</string>
-  <string name="poa_app_view_card_body_2">%1$s in Aptoide balance Credits (%2$s)</string>
+  <string name="poa_app_view_card_body_2">%1$sのAptoideクレジット (%2$s)</string>
   <string name="poa_APPCC_left_body">お急ぎください！%s の報酬があります。</string>
   <string name="poa_time_left_days">日</string>
   <string name="poa_time_left_hours">時</string>
   <string name="poa_time_left_minutes">分</string>
   <string name="poa_time_left_seconds">秒</string>
   <!--APPC Info View-->
-  <string name="appc_info_view_title_1">Everything You Need to Know About the Aptoide Wallet</string>
-  <string name="appc_info_view_body_1_variable">Aptoide balance is the currency for in-app transactions. The best part? You\'ll earn up to <b>%s%% bonus in all purchases!</b></string>
-  <string name="appc_info_view_body_1_variable_no_data">Aptoide balance is the currency for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
+  <string name="appc_info_view_title_1">Aptoide Walletについて知っておくべきこと</string>
+  <string name="appc_info_view_body_1_variable">Aptoideクレジットは、アプリ内の取引のための通貨です。一番の魅力は？<b>すべての購入で最大%s%%のボーナスを獲得できることです！</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">Aptoideクレジットは、アプリ内の取引のための通貨です。一番の魅力は？<b>すべての購入でボーナスを獲得できることです！</b></string>
   <string name="appc_info_view_title_2">まず最初に</string>
-  <string name="appc_info_view_body_2">You need to install the Aptoide Wallet to get rewards and process all transactions. Once you install it, it\'ll do everything for you!</string>
+  <string name="appc_info_view_body_2">報酬を得たり、すべての取引を処理するには、Aptoide Walletをインストールする必要があります。一度インストールしてしまえば、あとは簡単です！</string>
   <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_4">すべての購入でボーナス！</string>
   <string name="appc_info_view_title_5_variable">%s シンボルの付いたアプリで購入するたびに、最大%s%%のボーナスを獲得できます。この機会に究極のゲーマーを目指しましょう！</string>
@@ -510,7 +510,7 @@
   <!-- Out of space -->
   <string name="out_of_space_body">インストールを続行するには %s 必要です。</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Now compatible with the Aptoide Wallet</string>
+  <string name="promotional_now_with_appcoins">Aptoide Walletに対応</string>
   <string name="promotional_new_version">新しいバージョン</string>
   <string name="promotional_on_going_event">進行中のイベント</string>
   <string name="promotional_new_in_aptoide">Aptoideで利用可能に</string>
