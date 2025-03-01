@@ -372,62 +372,62 @@
   <!--URL -->
   <string name="my_stores_login_message">Jelentkezzen be és ossza meg appjait!</string>
   <!--APPC-->
-  <string name="appc_title_iab">Spend Your Aptoide Balance</string>
-  <string name="appc_title_ads">Get Rewarded with Aptoide Balance</string>
-  <string name="appc_title_featured">Featured Bonus Apps</string>
-  <string name="appc_home_bundle_iab">Use Your Aptoide Balance</string>
-  <string name="appc_home_bundle_poa">Earn Aptoide Balance</string>
-  <string name="appc_title_about_appcoins">About the Aptoide Wallet</string>
+  <string name="appc_title_iab">Használd az Aptoide egyenleged</string>
+  <string name="appc_title_ads">Jutalom Aptoide egyenleg formájában</string>
+  <string name="appc_title_featured">Kiemelt bónusz appok</string>
+  <string name="appc_home_bundle_iab">Használd az Aptoide egyenleged</string>
+  <string name="appc_home_bundle_poa">Szerezz Aptoide egyenleget</string>
+  <string name="appc_title_about_appcoins">Az Aptoide Walletről</string>
   <string name="appc_message_appview_appcoins_reward">Próbáld ki ezt az appot 2 percen át \n%s jutalomért</string>
   <string name="appc_message_appview_appcoins_reward_with_value">Próbáld ki ezt az appot 2 percen át \n%1$s %2$s jutalomért</string>
-  <string name="appc_message_appview_appcoins_iab">In-app purchases with the Aptoide Wallet</string>
-  <string name="appc_card_short">BONUS</string>
-  <string name="appc_title_homepage_card">You can get Aptoide balance now!</string>
-  <string name="appc_message_homepage_card">The currency for the app economy is here! Get free Aptoide balance by using your favorite apps.</string>
+  <string name="appc_message_appview_appcoins_iab">Appon belüli vásárlás az Aptoide Wallettel</string>
+  <string name="appc_card_short">BÓNUSZ</string>
+  <string name="appc_title_homepage_card">Most Aptoide egyenleget szerezhetsz!</string>
+  <string name="appc_message_homepage_card">Megérkezett az alkalmazásokon belüli vásárlásokat segítő valuta! Kedvenc appjaid használatával kaphatsz Aptoide egyenleget.</string>
   <string name="appc_title_settings_appcoins_wallet">Aptoide Wallet</string>
-  <string name="appc_title_bundle">Bonus Apps</string>
+  <string name="appc_title_bundle">Bónusz appok</string>
   <!--Editorial Content-->
   <string name="appc_verification_cancelled_by_user_message">A jutalmak megszerzéséhez hitelesítened kell a pénztárcád. Csak néhány másodpercet vesz igénybe.</string>
   <string name="editorial_reactions_login_short">Jelentkezz be, hogy lépést tarthass a kedvelésekkel!</string>
   <!--Promotion in APPC-C (old)-->
   <string comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)" name="editorial_bottom_follow_us">Kövess minket</string>
-  <string name="holidayspromotion_message_1">Install the following apps and get up to %s in Aptoide balance to spend in your favorite games!</string>
-  <string name="holidayspromotion_message_2">First, get the Aptoide Wallet to receive your Aptoide balance.</string>
+  <string name="holidayspromotion_message_1">Telepítsd az alábbi appokat, hogy akár %s Aptoide egyenleget kapj, melyet kedvenc játékaidban költheted el!</string>
+  <string name="holidayspromotion_message_2">Először is töltsd le az Aptoide Walletet, hogy Aptoide egyenleget szerezhess.</string>
   <string name="holidayspromotion_message_3">Majd töltsd le az alábbi játékok bármelyikét, hogy jutalmakat kapj!</string>
   <string name="holidayspromotion_button_claimed">Megszerezve</string>
-  <string name="holidayspromotion_message_popup">Earn %s in Aptoide balance by installing apps and spend them in your favorite games!</string>
+  <string name="holidayspromotion_message_popup">%s Aptoide egyenleget kaphatsz appok telepítésével, amit a kedvenc játékaidban költhetsz el!</string>
   <string name="holidayspromotion_button_popup">Nézd meg!</string>
   <string name="promotion_over_title">Lemaradtál róla!</string>
   <string name="promotion_over_message">Erről a promócióról már lecsúsztál, de nemsokára egy másik vár majd rád!</string>
   <!--Promotion with FIAT-->
-  <string name="FIATpromotion_install_to_get_short">Install to get %1$s in Aptoide balance (%2$s)</string>
-  <string name="FIATpromotion_update_to_get_short">Update to get %1$s in Aptoide balance (%2$s)</string>
+  <string name="FIATpromotion_install_to_get_short">Telepítsd, hogy %1$s Aptoide egyenleget szerezhess (%2$s)</string>
+  <string name="FIATpromotion_update_to_get_short">Frissítsd, hogy %1$s Aptoide egyenleget szerezhess (%2$s)</string>
   <!--Get Wallet Address-->
   <string name="promotion_claim_button">LEKÉRÉS</string>
-  <string name="holidayspromotion_title_wallet">Aptoide Wallet Address</string>
-  <string name="holidayspromotion_message_wallet">Tell us your wallet address! Tap below and the Aptoide Wallet will take care of it.</string>
+  <string name="holidayspromotion_title_wallet">Aptoide Wallet címe</string>
+  <string name="holidayspromotion_message_wallet">Add meg a tárcád címét! Pöccints alulra, az Aptoide Wallet mindenről gondoskodik.</string>
   <string name="holidayspromotion_short_wallet_field">Tárca címe</string>
   <string name="holidayspromotion_button_wallet_get">Váltsd valóra</string>
   <string name="holidayspromotion_short_wallet_invalid">Érvénytelen tárcacím</string>
   <string name="holidayspromotion_title_completed">Kész!</string>
-  <string name="holidayspromotion_message_completed">Your Aptoide balance will be available in your wallet soon! Enjoy your gaming!</string>
+  <string name="holidayspromotion_message_completed">Nemsokára megérkezik az Aptoide egyenleg a tárcádba! Jó játékot kívánunk!</string>
   <string name="holidayspromotion_button_completed">Kész</string>
   <string name="holidayspromotion_title_error_claimed">Hoppá…</string>
   <string name="holidayspromotion_short_error_claimed">Már megszerezted ezt a jutalmat!</string>
   <!--APPC install Promotion-->
-  <string name="wallet_promotion_title">Get %s in Aptoide balance now!</string>
-  <string name="wallet_promotion_wallet_installed_message">Install this app and get %s in Aptoide balance to spend in your favorite games.</string>
-  <string name="wallet_promotion_wallet_notinstalled_message">Install this app and get %s APPC Credits. You need the Aptoide Wallet to receive them.</string>
-  <string name="wallet_promotion_wallet_installed_update_message">Update this app and get %s in Aptoide balance to spend in your favorite games.</string>
-  <string name="wallet_promotion_wallet_claim_message">You\'ve got %s in Aptoide balance to claim. Use them to buy items in your favorite apps.</string>
+  <string name="wallet_promotion_title">Szerezz %s Aptoide egyenleget!</string>
+  <string name="wallet_promotion_wallet_installed_message">Telepítsd az appot, és szerezz %s Aptoide egyenleg formájában, amit a kedvenc játékaidban költhetsz el!</string>
+  <string name="wallet_promotion_wallet_notinstalled_message">Telepítsd az appot, és szerezz %s Aptoide egyenleget. A fogadásukhoz Aptoide Wallet szükséges.</string>
+  <string name="wallet_promotion_wallet_installed_update_message">Frissítsd ezt az appot, és szerezz %s Aptoide egyenleg formájában, amit a kedvenc játékaidban költhetsz el.</string>
+  <string name="wallet_promotion_wallet_claim_message">Lehívható %s Aptoide egyenleg formájában. A kedvenc appjaidban vásárolhatsz elemeket velük.</string>
   <string name="wallet_promotion_install_button">Wallet telepítése</string>
   <string name="wallet_promotion_no_button">Köszönöm, nem</string>
-  <string name="wallet_promotion_button_install_disabled">Install to get %s in Aptoide balance</string>
+  <string name="wallet_promotion_button_install_disabled">Telepítsd és szerezz %s Aptoide egyenleget</string>
   <!--AppCoins Remove Ads Wallet Promotion -->
-  <string name="wallet_promotion_button_claim">Claim your %s in Aptoide balance</string>
+  <string name="wallet_promotion_button_claim">Hívd le ezt az összeget Aptoide egyenleg formájában: %s</string>
   <!--Play to APPC - Migrator - Promotion-->
   <string name="promo_update2appc_data_disclaimer">A játékok beállításainál nézd meg, hogy átvihető-e az előrehaladásod.</string>
-  <string name="promo_update2appc_appview_update_button">Update to Aptoide Wallet version</string>
+  <string name="promo_update2appc_appview_update_button">Frissíts az Aptoide Wallet verziójára</string>
   <string name="promo_update2appc_notification_dismiss_button">Bezárás</string>
   <string name="promo_update2appc_notification_claim_button">OK</string>
   <string name="promo_update2appc_claim_notification_title">Get %s in Aptoide balance!</string>
