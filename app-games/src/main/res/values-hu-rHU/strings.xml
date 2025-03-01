@@ -144,7 +144,7 @@
   <string name="apkfy_whats_aptoide_games_title">Mi az Aptoide Games?</string>
   <string name="apkfy_install_body">Szerezd meg a kedvenc játékod és még sok mást az Aptoide Gamesen!</string>
   <string name="apkfy_install_bullet_points">\u2022 A legjobb játékok nagyszerű választéka.\n\u2022 Nem szükséges a bejelentkezés!\n\u2022 Különleges promóciók és jutalmak a kedvenc játékaidban.</string>
-  <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Pay with the Aptoide Wallet</string>
+  <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Fizetés Aptoide Wallettal</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Automatikusan telepítve lesz, és minden vásárlás után bónuszt kapsz.</string>
   <string name="buy_button" comment="buy">Vásárlás</string>
   <string name="iap_other_payment_methods_button" comment="other_payment_methods">Egyéb fizetési módok</string>
@@ -155,7 +155,7 @@
   <string name="log_out_button" comment="log_out">Kijelentkezés</string>
   <string name="iap_appc_body">Minden vásárlás után bónuszt fogsz kapni!</string>
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Most befejezheted a vásárlást.</string>
-  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">The Aptoide Wallet is now installed!</string>
+  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">Az Aptoide Wallet telepítése sikeres!</string>
   <string name="storage_access_permission_request_message">Az alkalmazás letöltéséhez és telepítéséhez engedélyezd a hozzáférést a telefon tárhelyéhez.</string>
   <string name="downloads_number_title">%s letöltés</string>
   <!-- Payment Errors-->
@@ -181,19 +181,19 @@
   <string name="iap_already_processing_body">Ez a vásárlás több időt vesz igénybe. Várj amíg befejeződik vagy lépj kapcsolatba az ügyfélszolgálattal.</string>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Bónusz minden vásárlásért cserébe</string>
-  <string name="bonus_page_body_1">Look for the games identified with %1$s, install the Aptoide Wallet and get up to %2$s%% bonus in all purchases. You can then use this bonus to make your next purchases in your favorite games!</string>
+  <string name="bonus_page_body_1">Keresd a %1$s jellel jelölt játékokat, telepítsd az Aptoide Walletet, és szerezz akár %2$s%% bónuszt minden vásárlás után. Ezt a bónuszt pedig felhasználhatod a legközelebbi vásárlás során a kedvenc játékodban!</string>
   <string name="bonus_page_title_2">Többet szeretnél?</string>
   <string name="bonus_page_body_2"><![CDATA[Extra <1>%s%% bónuszhoz</1> juthatsz, ha az Aptoide Játékok exkluzív promókódját használod egyes játékokban! Maradj velünk, és nemsokára megosztjuk veled a részleteket!]]></string>
   <!-- Promo Code -->
   <string name="promo_code_install_wallet_banner_title">Akár %s%% bónusz minden vásárlás után</string>
-  <string name="promo_code_install_wallet_banner_body">Use the Aptoide Wallet to make your in-app purchases and get a reward.</string>
+  <string name="promo_code_install_wallet_banner_body">Használd az Aptoide Walletet az appon belüli vásárlás során és szerezz jutalmat.</string>
   <string name="promo_code_extra_title">Még többre vágysz? Szerezz %s%% extra bónuszt!</string>
   <string name="promo_code_use_button">Kód használata</string>
-  <string name="promo_code_install_wallet_disclaimer">Install the Aptoide Wallet first.</string>
+  <string name="promo_code_install_wallet_disclaimer">Először telepítsd az Aptoide Walletet.</string>
   <string name="promo_code_notification_title">Váltsd be a promókódod</string>
   <string name="promo_code_notification_body">A promókóddal extra bónuszokat szerezhetsz a kedvenc játékodhoz.</string>
   <string name="promo_code_notification_without_wallet_title">%s%% extra bónusz!</string>
-  <string name="promo_code_notification_without_wallet_body">Get the Aptoide Wallet and use your promo code to get extra bonuses in all purchases.</string>
+  <string name="promo_code_notification_without_wallet_body">Töltsd le az Aptoide Walletet és használd a promókódod, hogy extra bónuszt kapj minden vásárlás után.</string>
   <string name="promo_code_share_title">Van egy promókódod!</string>
   <string name="promo_code_share_body">Ezzel a promókóddal extra bónuszokat szerezhetsz a kedvenc játékodban.</string>
   <!-- Update -->
@@ -224,25 +224,25 @@
   <string name="genai_example_1_body">Stratégiai játékokat keresek.</string>
   <string name="genai_example_2_body">Ajánld a legjobb multiplayer játékokat.</string>
   <string name="genai_example_3_body">Ismersz laza offline játékokat?</string>
-  <string name="genai_history_body">GameGenie History</string>
-  <string name="genai_new_chat_button">New chat</string>
+  <string name="genai_history_body">GameGenie előzmények</string>
+  <string name="genai_new_chat_button">Új chat</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Now compatible with the Aptoide Wallet</string>
+  <string name="promotional_now_with_appcoins">Mostantól kompatibilis az Aptoide Wallettel</string>
   <string name="promotional_new_version">Új verzió</string>
   <string name="promotional_on_going_event">Folyamatban lévő esemény</string>
   <string name="promotional_new_in_aptoide">Elérhető</string>
-  <string name="promotional_soon_in_aptoide">Available soon</string>
+  <string name="promotional_soon_in_aptoide">Hamarosan elérhető</string>
   <string name="promotional_notify_button">Értesítést kérek</string>
   <string name="promotional_new_notification_title">Az app, amire vártál!</string>
   <string name="promotional_new_notification_body">%s most elérhető.</string>
   <string name="promotional_new_active">Értesítünk, ha elérhető lesz.</string>
-  <string name="promotional_now_available_body">Now available in Aptoide Games!</string>
-  <string name="promotional_now_available_tag">Now Available</string>
+  <string name="promotional_now_available_body">Már elérhető az Aptoide Gamesen!</string>
+  <string name="promotional_now_available_tag">Már elérhető</string>
   <!-- Tags -->
-  <string name="tag_for_you">For You</string>
-  <string name="tag_top_charts">Top Charts</string>
+  <string name="tag_for_you">Neked</string>
+  <string name="tag_top_charts">Legmenőbb</string>
   <string name="tag_appcoins">AppCoins</string>
-  <string name="tag_editorial">Editorial</string>
-  <string name="tag_categories">Categories</string>
-  <string name="tag_bonus">Bonus</string>
+  <string name="tag_editorial">Szerkesztőség</string>
+  <string name="tag_categories">Kategóriák</string>
+  <string name="tag_bonus">Bónusz</string>
 </resources>
