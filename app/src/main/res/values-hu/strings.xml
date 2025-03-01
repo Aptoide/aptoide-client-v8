@@ -430,7 +430,7 @@
   <string name="promo_update2appc_appview_update_button">Frissíts az Aptoide Wallet verziójára</string>
   <string name="promo_update2appc_notification_dismiss_button">Bezárás</string>
   <string name="promo_update2appc_notification_claim_button">OK</string>
-  <string name="promo_update2appc_claim_notification_title">Get %s in Aptoide balance!</string>
+  <string name="promo_update2appc_claim_notification_title">Szerezz %s Aptoide egyenleget!</string>
   <!--Promo Center-->
   <string name="promo_update2appc_claim_notification_body">Ne felejtsd el lekérni a jutalmad!</string>
   <string name="promo_center_pending_card_update_body">%s frissítéséért</string>
@@ -438,28 +438,28 @@
   <string name="wallet_install_request_message_body">Az elem megvásárolásához a következőre lesz szükséged: %s.</string>
   <string name="wallet_install_appcoins_wallet">Aptoide Wallet</string>
   <string name="wallet_install_complete_title">A telepítés befejeződött</string>
-  <string name="appc_not_supported_body">It seems this device doesn\'t support the Aptoide Wallet. Try with a different one!</string>
-  <string name="wallet_install_request_already_installed_title">Aptoide Wallet Install</string>
+  <string name="appc_not_supported_body">Úgy tűnik, ez az eszköz nem támogatja az Aptoide Walletet. Próbálkozz másikkal!</string>
+  <string name="wallet_install_request_already_installed_title">Aptoide Wallet telepítése</string>
   <string name="wallet_install_request_already_installed_body">Élvezd az összes appon belüli vásárlás után járó bónuszt!</string>
-  <string name="wallet_verification_message_update_wallet_to_claim">Update the Aptoide Wallet to receive this reward!</string>
+  <string name="wallet_verification_message_update_wallet_to_claim">Frissítsd az Aptoide Walletet a jutalom megszerzéséhez!</string>
   <string name="wallet_verification_button_update">Frissítés most</string>
   <!--POA exposure-->
   <string name="wallet_verification_button_update_wallet">Wallet frissítése</string>
   <string name="poa_app_card_short">%s MEGKERESÉSE</string>
-  <string name="poa_home_card_body">Install these apps and spend 2 minutes in them to earn Aptoide balance.</string>
+  <string name="poa_home_card_body">Telepítsd ezeket az appokat, majd tölts el bennük 2 percet, hogy Aptoide egyenleget szerezz.</string>
   <string name="poa_app_view_card_body_1">Próbáld ki ezt az appot 2 percen át és szerezz</string>
-  <string name="poa_app_view_card_body_2">%1$s in Aptoide balance Credits (%2$s)</string>
+  <string name="poa_app_view_card_body_2">%1$s Aptoide egyenleg kreditben (%2$s)</string>
   <string name="poa_APPCC_left_body">Siess! Már csak %s jutalom maradt.</string>
   <string name="poa_time_left_days">NAP</string>
   <string name="poa_time_left_hours">ÓRA</string>
   <string name="poa_time_left_minutes">PERC</string>
   <string name="poa_time_left_seconds">MÁSODPERC</string>
   <!--APPC Info View-->
-  <string name="appc_info_view_title_1">Everything You Need to Know About the Aptoide Wallet</string>
-  <string name="appc_info_view_body_1_variable">Aptoide balance is the currency for in-app transactions. The best part? You\'ll earn up to <b>%s%% bonus in all purchases!</b></string>
-  <string name="appc_info_view_body_1_variable_no_data">Aptoide balance is the currency for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
+  <string name="appc_info_view_title_1">Minden, amit tudnod kell az Aptoide Walletről</string>
+  <string name="appc_info_view_body_1_variable">Az Aptoide egyenleg az appon belüli tranzakciók során használt valuta. Hogy mi a legjobb benne? Akár <b>%s%% bónusz jár minden vásárlás után!</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">Az Aptoide egyenleg az appon belüli tranzakciók során használt valuta. Hogy mi a legjobb benne? Akár <b>%s%% bónusz jár minden vásárlás után!</b></string>
   <string name="appc_info_view_title_2">Első teendők</string>
-  <string name="appc_info_view_body_2">You need to install the Aptoide Wallet to get rewards and process all transactions. Once you install it, it\'ll do everything for you!</string>
+  <string name="appc_info_view_body_2">A jutalmak megszerzéséhez és a tranzakciók elvégzéséhez az Aptoide Walletet kell telepítened. Telepítés után mindent elvégez helyetted!</string>
   <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_4">Bónusz minden vásárlást követően!</string>
   <string name="appc_info_view_title_5_variable">Akár %s%% bónusz jár minden %s szimbólummal ellátott appon belüli vásárlásért. Használd ki és légy te a legjobb játékos!</string>
@@ -509,7 +509,7 @@
   <!-- Out of space -->
   <string name="out_of_space_body">A telepítés folytatásához %s tárhely szükséges.</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Now compatible with the Aptoide Wallet</string>
+  <string name="promotional_now_with_appcoins">Mostantól kompatibilis az Aptoide Wallettel</string>
   <string name="promotional_new_version">Új verzió</string>
   <string name="promotional_on_going_event">Folyamatban lévő esemény</string>
   <string name="promotional_new_in_aptoide">Nem elérhető az Aptoide-on</string>
