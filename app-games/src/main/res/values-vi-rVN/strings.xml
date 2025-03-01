@@ -181,7 +181,7 @@
   <string name="iap_already_processing_body">Quá trình mua hàng này có thể mất một chút thời gian, vì vậy, vui lòng đợi cho đến khi hoàn tất hoặc liên hệ với Đội hỗ trợ của chúng tôi.</string>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Tiền thưởng cho mỗi lần mua hàng</string>
-  <string name="bonus_page_body_1">Tìm kiếm các trò chơi được xác định bằng %1$s, cài đặt Aptoide Wallet và nhận tiền thưởng lên đến %2$s%% trong mọi giao dịch mua. Sau đó, bạn có thể dùng tiền thưởng này để thực hiện các giao dịch mua tiếp theo trong trò chơi yêu thích của mình!</string>
+  <string name="bonus_page_body_1">Tìm các trò chơi được xác định bằng %1$s, cài đặt Aptoide Wallet và nhận đến %2$s%% tiền thưởng trong mọi giao dịch mua. Sau đó, bạn có thể dùng tiền thưởng này để thực hiện các giao dịch mua tiếp theo trong trò chơi yêu thích của mình!</string>
   <string name="bonus_page_title_2">Bạn vẫn muốn thêm?</string>
   <string name="bonus_page_body_2"><![CDATA[Bạn có thể nhận thêm <1>%s%% tiền thưởng</1> bằng cách sử dụng mã khuyến mãi độc quyền của Aptoide Games trong các trò chơi cụ thể. Hãy theo dõi và bạn sẽ nhận được thông báo!]]></string>
   <!-- Promo Code -->
@@ -189,7 +189,7 @@
   <string name="promo_code_install_wallet_banner_body">Sử dụng Aptoide Wallet để thực hiện giao dịch mua trong ứng dụng và nhận phần thưởng.</string>
   <string name="promo_code_extra_title">Muốn nhiều hơn? Nhận thêm %s%% tiền thưởng!</string>
   <string name="promo_code_use_button">Sử dụng mã</string>
-  <string name="promo_code_install_wallet_disclaimer">Trước tiên hãy cài đặt Aptoide Wallet.</string>
+  <string name="promo_code_install_wallet_disclaimer">Trước tiên, hãy cài đặt Aptoide Wallet.</string>
   <string name="promo_code_notification_title">Đổi mã khuyến mãi của bạn</string>
   <string name="promo_code_notification_body">Sử dụng mã khuyến mãi để nhận thêm tiền thưởng trong trò chơi yêu thích của bạn.</string>
   <string name="promo_code_notification_without_wallet_title">Thêm %s%% tiền thưởng!</string>
@@ -241,6 +241,6 @@
   <string name="tag_top_charts">Bảng xếp hạng hàng đầu</string>
   <string name="tag_appcoins">AppCoins</string>
   <string name="tag_editorial">Bài viết biên tập</string>
-  <string name="tag_categories">Categories</string>
-  <string name="tag_bonus">Bonus</string>
+  <string name="tag_categories">Danh mục</string>
+  <string name="tag_bonus">Tiền thưởng</string>
 </resources>
