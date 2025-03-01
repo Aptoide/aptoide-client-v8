@@ -14,7 +14,7 @@
   <string name="incentives_badge_amount">%s%%</string>
   <string name="incentives_badge_bonus">Bónus</string>
   <string name="incentives_banner_title">Até %s%% de bónus em cada compra!</string>
-  <string name="incentives_banner_body">Use your Aptoide balance to get more items in apps with this symbol %s</string>
+  <string name="incentives_banner_body">Usa o teu saldo Aptoide para receber mais itens em apps com este símbolo %s</string>
   <!-- Download View -->
   <string name="appview_short_downloading">A transferir</string>
   <string name="apps_short_download_paused">Download pausado</string>
