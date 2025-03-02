@@ -373,12 +373,12 @@
   <!--URL -->
   <string name="my_stores_login_message">Prijavite se sada i počnite da delite svoje aplikacije!</string>
   <!--APPC-->
-  <string name="appc_title_iab">Spend Your Aptoide Balance</string>
-  <string name="appc_title_ads">Get Rewarded with Aptoide Balance</string>
-  <string name="appc_title_featured">Featured Bonus Apps</string>
-  <string name="appc_home_bundle_iab">Use Your Aptoide Balance</string>
-  <string name="appc_home_bundle_poa">Earn Aptoide Balance</string>
-  <string name="appc_title_about_appcoins">About the Aptoide Wallet</string>
+  <string name="appc_title_iab">Potrošite svoj Aptoide bilans</string>
+  <string name="appc_title_ads">Osvojite nagrade uz Aptoide bilans</string>
+  <string name="appc_title_featured">Preporučene Bonus aplikacije</string>
+  <string name="appc_home_bundle_iab">Iskoristite svoj Aptoide bilans</string>
+  <string name="appc_home_bundle_poa">Zaradite Aptoide bilans</string>
+  <string name="appc_title_about_appcoins">O aplikaciji Aptoide Wallet</string>
   <string name="appc_message_appview_appcoins_reward">Isprobajte ovu aplikaciju 2 minuta i dobijte\n%s</string>
   <string name="appc_message_appview_appcoins_reward_with_value">Isprobajte ovu aplikaciju 2 minuta i dobijte\n%1$s %2$s</string>
   <string name="appc_message_appview_appcoins_iab">In-app purchases with the Aptoide Wallet</string>
