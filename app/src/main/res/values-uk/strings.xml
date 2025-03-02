@@ -440,28 +440,28 @@
   <string name="wallet_install_request_message_body">Щоб придбати цей товар, спочатку потрібно отримати %s.</string>
   <string name="wallet_install_appcoins_wallet">Aptoide Wallet</string>
   <string name="wallet_install_complete_title">Установка завершена</string>
-  <string name="appc_not_supported_body">It seems this device doesn\'t support the Aptoide Wallet. Try with a different one!</string>
-  <string name="wallet_install_request_already_installed_title">Aptoide Wallet Install</string>
+  <string name="appc_not_supported_body">Здається, цей пристрій не підтримує Aptoide Wallet. Спробуйте на іншому!</string>
+  <string name="wallet_install_request_already_installed_title">Встановлення Aptoide Wallet</string>
   <string name="wallet_install_request_already_installed_body">Насолоджуйтесь бонусом при кожній покупці через додаток!</string>
-  <string name="wallet_verification_message_update_wallet_to_claim">Update the Aptoide Wallet to receive this reward!</string>
+  <string name="wallet_verification_message_update_wallet_to_claim">Оновіть Aptoide Wallet, щоб отримати цю винагороду!</string>
   <string name="wallet_verification_button_update">Оновити зараз</string>
   <!--POA exposure-->
   <string name="wallet_verification_button_update_wallet">Оновити гаманець</string>
   <string name="poa_app_card_short">ЗАРОБІТЬ %s</string>
-  <string name="poa_home_card_body">Install these apps and spend 2 minutes in them to earn Aptoide balance.</string>
+  <string name="poa_home_card_body">Встановіть ці додатки та проведіть у них 2 хвилини, щоб заробити баланс Aptoide.</string>
   <string name="poa_app_view_card_body_1">Спробуйте цю програму протягом 2 хвилин і отримайте</string>
-  <string name="poa_app_view_card_body_2">%1$s in Aptoide balance Credits (%2$s)</string>
+  <string name="poa_app_view_card_body_2">%1$s у вигляді балансу Aptoide Credits (%2$s)</string>
   <string name="poa_APPCC_left_body">Поспішай! Доступні лише %s винагороди.</string>
   <string name="poa_time_left_days">ДНІ</string>
   <string name="poa_time_left_hours">ГОДИНИ</string>
   <string name="poa_time_left_minutes">ХВИЛИНИ</string>
   <string name="poa_time_left_seconds">СЕКУНДИ</string>
   <!--APPC Info View-->
-  <string name="appc_info_view_title_1">Everything You Need to Know About the Aptoide Wallet</string>
-  <string name="appc_info_view_body_1_variable">Aptoide balance is the currency for in-app transactions. The best part? You\'ll earn up to <b>%s%% bonus in all purchases!</b></string>
-  <string name="appc_info_view_body_1_variable_no_data">Aptoide balance is the currency for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
+  <string name="appc_info_view_title_1">Все, що вам потрібно знати про Aptoide Wallet</string>
+  <string name="appc_info_view_body_1_variable">Баланс Aptoide — це валюта для транзакцій у додатках. А знаєте, що найкраще? Ви отримуватимете до <b>%s%% бонусів за всі покупки!</b>.</string>
+  <string name="appc_info_view_body_1_variable_no_data">Баланс Aptoide — це валюта для транзакцій у додатках. А знаєте, що найкраще? Ви отримуватимете <b>бонус за кожну покупку!</b>.</string>
   <string name="appc_info_view_title_2">Насамперед</string>
-  <string name="appc_info_view_body_2">You need to install the Aptoide Wallet to get rewards and process all transactions. Once you install it, it\'ll do everything for you!</string>
+  <string name="appc_info_view_body_2">Вам потрібно встановити Aptoide Wallet, щоб отримувати винагороду та здійснювати всі транзакції. Як тільки ви його встановите, він зробить все за вас!</string>
   <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_4">Бонус при кожній покупці!</string>
   <string name="appc_info_view_title_5_variable">Ви отримаєте до %s %% бонусу за кожну покупку, зроблену у програмі з символом %s. Скористайтеся перевагами і станьте найкращим гравцем!</string>
@@ -511,7 +511,7 @@
   <!-- Out of space -->
   <string name="out_of_space_body">Вам потрібно %s, щоб продовжити встановлення.</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Now compatible with the Aptoide Wallet</string>
+  <string name="promotional_now_with_appcoins">Тепер сумісно з Aptoide Wallet</string>
   <string name="promotional_new_version">Нова версія</string>
   <string name="promotional_on_going_event">Подія, яка триває</string>
   <string name="promotional_new_in_aptoide">Тепер доступно в Aptoide</string>
