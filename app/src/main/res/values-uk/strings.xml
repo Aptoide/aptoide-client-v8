@@ -424,15 +424,15 @@
   <string name="wallet_promotion_wallet_claim_message">На вашому балансі Aptoide є %s, які можна використати. Використовуйте їх, щоб купувати товари в улюблених додатках.</string>
   <string name="wallet_promotion_install_button">Встановити Wallet</string>
   <string name="wallet_promotion_no_button">Ні, дякую</string>
-  <string name="wallet_promotion_button_install_disabled">Install to get %s in Aptoide balance</string>
+  <string name="wallet_promotion_button_install_disabled">Встановіть, щоб отримати %s у вигляді балансу Aptoide</string>
   <!--AppCoins Remove Ads Wallet Promotion -->
-  <string name="wallet_promotion_button_claim">Claim your %s in Aptoide balance</string>
+  <string name="wallet_promotion_button_claim">Отримайте свої %s у вигляді балансу Aptoide</string>
   <!--Play to APPC - Migrator - Promotion-->
   <string name="promo_update2appc_data_disclaimer">Перевірте в налаштуваннях гри, чи можете ви зберегти свій прогрес.</string>
-  <string name="promo_update2appc_appview_update_button">Update to Aptoide Wallet version</string>
+  <string name="promo_update2appc_appview_update_button">Оновлення до версії Aptoide Wallet</string>
   <string name="promo_update2appc_notification_dismiss_button">Відхилити</string>
   <string name="promo_update2appc_notification_claim_button">Отримати</string>
-  <string name="promo_update2appc_claim_notification_title">Get %s in Aptoide balance!</string>
+  <string name="promo_update2appc_claim_notification_title">Отримайте %s у вигляді балансу Aptoide!</string>
   <!--Promo Center-->
   <string name="promo_update2appc_claim_notification_body">Не забудьте отримати винагороду!</string>
   <string name="promo_center_pending_card_update_body">Для оновлення %s</string>
