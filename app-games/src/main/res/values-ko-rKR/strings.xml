@@ -101,7 +101,7 @@
   <string name="later_button">나중에</string>
   <string name="trusted_game_badge">신뢰할 수 있는 게임</string>
   <string name="official_game_badge">공식 게임</string>
-  <string name="editorial_card_views_short">%s의 뷰</string>
+  <string name="editorial_card_views_short">%s 뷰</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">공간 부족</string>
   <string name="out_of_space_body">설치를 계속하려면 %s이(가) 필요합니다.</string>
