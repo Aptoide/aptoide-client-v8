@@ -373,10 +373,10 @@ ancaman apa pun!</string>
   <!--URL -->
   <string name="my_stores_login_message">Masuk sekarang dan mulai berbagi aplikasi!</string>
   <!--APPC-->
-  <string name="appc_title_iab">Spend Your Aptoide Balance</string>
-  <string name="appc_title_ads">Get Rewarded with Aptoide Balance</string>
-  <string name="appc_title_featured">Featured Bonus Apps</string>
-  <string name="appc_home_bundle_iab">Use Your Aptoide Balance</string>
+  <string name="appc_title_iab">Belanjakan Saldo Aptoide Anda</string>
+  <string name="appc_title_ads">Dapatkan Hadiah dengan Saldo Aptoide</string>
+  <string name="appc_title_featured">Aplikasi Bonus Teratas</string>
+  <string name="appc_home_bundle_iab">Gunakan Saldo Aptoide Anda</string>
   <string name="appc_home_bundle_poa">Earn Aptoide Balance</string>
   <string name="appc_title_about_appcoins">About the Aptoide Wallet</string>
   <string name="appc_message_appview_appcoins_reward">Coba aplikasi ini selama 2 menit dan dapatkan\n%s</string>
