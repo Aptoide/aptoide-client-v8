@@ -14,7 +14,7 @@
   <string name="incentives_badge_amount">%s%%</string>
   <string name="incentives_badge_bonus">보너스</string>
   <string name="incentives_banner_title">매 구매시마다 최대 %s%% 보너스</string>
-  <string name="incentives_banner_body">Use your Aptoide balance to get more items in apps with this symbol %s</string>
+  <string name="incentives_banner_body">Aptoide 잔액을 사용하여 %s 기호의 앱에서 더 많은 항목을 확인하세요</string>
   <!-- Download View -->
   <string name="appview_short_downloading">다운로드중</string>
   <string name="apps_short_download_paused">다운로드 일시정지</string>
