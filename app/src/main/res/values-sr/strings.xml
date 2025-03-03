@@ -381,22 +381,22 @@
   <string name="appc_title_about_appcoins">O aplikaciji Aptoide Wallet</string>
   <string name="appc_message_appview_appcoins_reward">Isprobajte ovu aplikaciju 2 minuta i dobijte\n%s</string>
   <string name="appc_message_appview_appcoins_reward_with_value">Isprobajte ovu aplikaciju 2 minuta i dobijte\n%1$s %2$s</string>
-  <string name="appc_message_appview_appcoins_iab">In-app purchases with the Aptoide Wallet</string>
+  <string name="appc_message_appview_appcoins_iab">Kupovine u aplikacijama uz Aptoide Wallet</string>
   <string name="appc_card_short">BONUS</string>
-  <string name="appc_title_homepage_card">You can get Aptoide balance now!</string>
-  <string name="appc_message_homepage_card">The currency for the app economy is here! Get free Aptoide balance by using your favorite apps.</string>
+  <string name="appc_title_homepage_card">Možete nabaviti Aptoide bilans sada!</string>
+  <string name="appc_message_homepage_card">Valuta za ekonomiju u aplikacijama je stigla! Dobijte besplatno Aptoide bilans tako što ćete koristiti omiljene aplikacije.</string>
   <string name="appc_title_settings_appcoins_wallet">Aptoide Wallet</string>
-  <string name="appc_title_bundle">Bonus Apps</string>
+  <string name="appc_title_bundle">Bonus aplikacije</string>
   <!--Editorial Content-->
   <string name="appc_verification_cancelled_by_user_message">Morate da potvrdite svoj novčanik da biste dobijali nagrade. To traje samo nekoliko sekundi!</string>
   <string name="editorial_reactions_login_short">Prijavite se kako biste nastavili da označavate da vam se sviđaju članci!</string>
   <!--Promotion in APPC-C (old)-->
   <string comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)" name="editorial_bottom_follow_us">Zapratite nas</string>
-  <string name="holidayspromotion_message_1">Install the following apps and get up to %s in Aptoide balance to spend in your favorite games!</string>
-  <string name="holidayspromotion_message_2">First, get the Aptoide Wallet to receive your Aptoide balance.</string>
+  <string name="holidayspromotion_message_1">Instalirajte sledeće aplikacije i dobijte do %s u Aptoide bilansu koje možete da potrošite u omiljenim igrama!</string>
+  <string name="holidayspromotion_message_2">Najpre preuzmite Aptoide Wallet da biste dobili Aptoide bilans.</string>
   <string name="holidayspromotion_message_3">Zatim instalirajte bilo koju od ovih igara da biste dobili nagrade!</string>
   <string name="holidayspromotion_button_claimed">Preuzeto</string>
-  <string name="holidayspromotion_message_popup">Earn %s in Aptoide balance by installing apps and spend them in your favorite games!</string>
+  <string name="holidayspromotion_message_popup">Zaradite %s u Aptoide bilansu tako što ćete instalirati aplikacije i potrošite ih u omiljenim igrama!</string>
   <string name="holidayspromotion_button_popup">Pogledajte!</string>
   <string name="promotion_over_title">Propustili ste je!</string>
   <string name="promotion_over_message">Ova promocija vam je promakla, ali uskoro ćemo imati drugu!</string>
