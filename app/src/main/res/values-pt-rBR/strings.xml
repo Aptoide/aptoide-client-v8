@@ -374,50 +374,50 @@
   <!--URL -->
   <string name="my_stores_login_message">Inicie sessão e comece a compartilhar seus aplicativos!</string>
   <!--APPC-->
-  <string name="appc_title_iab">Spend Your Aptoide Balance</string>
-  <string name="appc_title_ads">Get Rewarded with Aptoide Balance</string>
-  <string name="appc_title_featured">Featured Bonus Apps</string>
-  <string name="appc_home_bundle_iab">Use Your Aptoide Balance</string>
-  <string name="appc_home_bundle_poa">Earn Aptoide Balance</string>
-  <string name="appc_title_about_appcoins">About the Aptoide Wallet</string>
+  <string name="appc_title_iab">Use seu Saldo Aptoide</string>
+  <string name="appc_title_ads">Seja Recompensado com Saldo Aptoide</string>
+  <string name="appc_title_featured">Apps com Bônus em Destaque</string>
+  <string name="appc_home_bundle_iab">Use seu Saldo Aptoide</string>
+  <string name="appc_home_bundle_poa">Ganhe Saldo Aptoide</string>
+  <string name="appc_title_about_appcoins">Sobre a Aptoide Wallet</string>
   <string name="appc_message_appview_appcoins_reward">Experimente este app por 2 minutos e receba\n%s</string>
   <string name="appc_message_appview_appcoins_reward_with_value">Experimente este app por 2 minutos e receba\n%1$s %2$s</string>
-  <string name="appc_message_appview_appcoins_iab">In-app purchases with the Aptoide Wallet</string>
-  <string name="appc_card_short">BONUS</string>
-  <string name="appc_title_homepage_card">You can get Aptoide balance now!</string>
-  <string name="appc_message_homepage_card">The currency for the app economy is here! Get free Aptoide balance by using your favorite apps.</string>
+  <string name="appc_message_appview_appcoins_iab">Compras no app com a Aptoide Wallet</string>
+  <string name="appc_card_short">BÔNUS</string>
+  <string name="appc_title_homepage_card">Você pode ganhar saldo Aptoide agora!</string>
+  <string name="appc_message_homepage_card">A moeda para a economia de aplicativos está aqui! Receba gratuitamente saldo Aptoide usando seus apps favoritos.</string>
   <string name="appc_title_settings_appcoins_wallet">Aptoide Wallet</string>
-  <string name="appc_title_bundle">Bonus Apps</string>
+  <string name="appc_title_bundle">Apps com Bônus</string>
   <!--Editorial Content-->
   <string name="appc_verification_cancelled_by_user_message">Você precisa verificar sua wallet para receber recompensas. Isso leva apenas alguns segundos!</string>
   <string name="editorial_reactions_login_short">Faça o login para continuar curtindo as postagens!</string>
   <!--Promotion in APPC-C (old)-->
   <string comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)" name="editorial_bottom_follow_us">Siga-nos</string>
-  <string name="holidayspromotion_message_1">Install the following apps and get up to %s in Aptoide balance to spend in your favorite games!</string>
-  <string name="holidayspromotion_message_2">First, get the Aptoide Wallet to receive your Aptoide balance.</string>
+  <string name="holidayspromotion_message_1">Instale os seguintes apps e ganhe %s em saldo Aptoide para usar em seus jogos favoritos!</string>
+  <string name="holidayspromotion_message_2">Primeiro, instale a Aptoide Wallet para receber saldo Aptoide.</string>
   <string name="holidayspromotion_message_3">Depois instale qualquer um destes jogos para ganhar suas recompensas!</string>
   <string name="holidayspromotion_button_claimed">Recebido</string>
-  <string name="holidayspromotion_message_popup">Earn %s in Aptoide balance by installing apps and spend them in your favorite games!</string>
+  <string name="holidayspromotion_message_popup">Ganhe %s em saldo Aptoide ao instalar apps e utilize-os em seus jogos favoritos!</string>
   <string name="holidayspromotion_button_popup">Confira!</string>
   <string name="promotion_over_title">Não foi desta vez!</string>
   <string name="promotion_over_message">Esta promoção acabou de encerrar, mas faremos outra em breve!</string>
   <!--Promotion with FIAT-->
-  <string name="FIATpromotion_install_to_get_short">Install to get %1$s in Aptoide balance (%2$s)</string>
-  <string name="FIATpromotion_update_to_get_short">Update to get %1$s in Aptoide balance (%2$s)</string>
+  <string name="FIATpromotion_install_to_get_short">Instale para receber %1$s em saldo Aptoide (%2$s)</string>
+  <string name="FIATpromotion_update_to_get_short">Atualize para receber %1$s em saldo Aptoide (%2$s)</string>
   <!--Get Wallet Address-->
   <string name="promotion_claim_button">RECEBER</string>
-  <string name="holidayspromotion_title_wallet">Aptoide Wallet Address</string>
-  <string name="holidayspromotion_message_wallet">Tell us your wallet address! Tap below and the Aptoide Wallet will take care of it.</string>
+  <string name="holidayspromotion_title_wallet">Endereço da Wallet Aptoide</string>
+  <string name="holidayspromotion_message_wallet">Informe o endereço de sua wallet! Toque abaixo e a Aptoide Wallet fará o restante.</string>
   <string name="holidayspromotion_short_wallet_field">Endereço da wallet</string>
   <string name="holidayspromotion_button_wallet_get">Fazer isso</string>
   <string name="holidayspromotion_short_wallet_invalid">Endereço da wallet inválido</string>
   <string name="holidayspromotion_title_completed">Feito!</string>
-  <string name="holidayspromotion_message_completed">Your Aptoide balance will be available in your wallet soon! Enjoy your gaming!</string>
+  <string name="holidayspromotion_message_completed">Seu saldo Aptoide será disponibilizado em breve na sua wallet! Divirta-se com seus jogos!</string>
   <string name="holidayspromotion_button_completed">Feito</string>
   <string name="holidayspromotion_title_error_claimed">Ops…</string>
   <string name="holidayspromotion_short_error_claimed">Você já solicitou esta recompensa!</string>
   <!--APPC install Promotion-->
-  <string name="wallet_promotion_title">Get %s in Aptoide balance now!</string>
+  <string name="wallet_promotion_title">Receba %s em saldo Aptoide agora!</string>
   <string name="wallet_promotion_wallet_installed_message">Install this app and get %s in Aptoide balance to spend in your favorite games.</string>
   <string name="wallet_promotion_wallet_notinstalled_message">Install this app and get %s APPC Credits. You need the Aptoide Wallet to receive them.</string>
   <string name="wallet_promotion_wallet_installed_update_message">Update this app and get %s in Aptoide balance to spend in your favorite games.</string>
