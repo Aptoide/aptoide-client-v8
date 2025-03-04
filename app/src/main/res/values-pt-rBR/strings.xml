@@ -418,13 +418,13 @@
   <string name="holidayspromotion_short_error_claimed">Você já solicitou esta recompensa!</string>
   <!--APPC install Promotion-->
   <string name="wallet_promotion_title">Receba %s em saldo Aptoide agora!</string>
-  <string name="wallet_promotion_wallet_installed_message">Install this app and get %s in Aptoide balance to spend in your favorite games.</string>
-  <string name="wallet_promotion_wallet_notinstalled_message">Install this app and get %s APPC Credits. You need the Aptoide Wallet to receive them.</string>
-  <string name="wallet_promotion_wallet_installed_update_message">Update this app and get %s in Aptoide balance to spend in your favorite games.</string>
-  <string name="wallet_promotion_wallet_claim_message">You\'ve got %s in Aptoide balance to claim. Use them to buy items in your favorite apps.</string>
+  <string name="wallet_promotion_wallet_installed_message">Instale este app e receba %s em saldo Aptoide para usar em seus jogos favoritos.</string>
+  <string name="wallet_promotion_wallet_notinstalled_message">Instale este app e receba %s em saldo Aptoide. Você precisa da Aptoide Wallet para recebê-los.</string>
+  <string name="wallet_promotion_wallet_installed_update_message">Atualize este app e receba %s em saldo Aptoide para usar em seus jogos favoritos.</string>
+  <string name="wallet_promotion_wallet_claim_message">Você tem direito a receber %s em saldo Aptoide. Utilize-os para comprar itens em seus apps favoritos.</string>
   <string name="wallet_promotion_install_button">Instalar a Wallet</string>
   <string name="wallet_promotion_no_button">Não, obrigado</string>
-  <string name="wallet_promotion_button_install_disabled">Install to get %s in Aptoide balance</string>
+  <string name="wallet_promotion_button_install_disabled">Instale para receber %s em saldo Aptoide</string>
   <!--AppCoins Remove Ads Wallet Promotion -->
   <string name="wallet_promotion_button_claim">Claim your %s in Aptoide balance</string>
   <!--Play to APPC - Migrator - Promotion-->
