@@ -240,9 +240,9 @@
   <string name="promotional_now_available_tag">Nu beschikbaar</string>
   <!-- Tags -->
   <string name="tag_for_you">Voor jou</string>
-  <string name="tag_top_charts">Top Charts</string>
+  <string name="tag_top_charts">Beste apps</string>
   <string name="tag_appcoins">AppCoins</string>
-  <string name="tag_editorial">Editorial</string>
+  <string name="tag_editorial">Nieuws</string>
   <string name="tag_categories">Categorieën</string>
   <string name="tag_bonus">Bonus</string>
 </resources>
