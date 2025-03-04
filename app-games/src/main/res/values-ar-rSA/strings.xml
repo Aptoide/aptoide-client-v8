@@ -101,7 +101,7 @@
   <string name="later_button">لاحقًا</string>
   <string name="trusted_game_badge">الألعاب الموثوقة</string>
   <string name="official_game_badge">الألعاب الرسمية</string>
-  <string name="editorial_card_views_short">%s views</string>
+  <string name="editorial_card_views_short">%s مشاهدة</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">لا توجد مساحة</string>
   <string name="out_of_space_body">أنت بحاجة إلى %s لمتابعة التثبيت.</string>
@@ -144,7 +144,7 @@
   <string name="apkfy_whats_aptoide_games_title">ما هو Aptoide Games؟</string>
   <string name="apkfy_install_body">استمتع بألعابك المفضلة والمزيد في Aptoide Games!</string>
   <string name="apkfy_install_bullet_points">\u2022 أفضل الألعاب الرائعة المختارة.\n\u2022 لا حاجة لتسجيل الدخول!\n\u2022 ترقيات وجوائز مميزة في ألعابك المفضلة.</string>
-  <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Pay with the Aptoide Wallet</string>
+  <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">ادفع باستخدام محفظة Aptoide</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">سيتم تثبيته تلقائيًا وستحصل على مكافأة على كل المشتريات!</string>
   <string name="buy_button" comment="buy">شراء</string>
   <string name="iap_other_payment_methods_button" comment="other_payment_methods">وسائل دفع أخرى</string>
@@ -155,7 +155,7 @@
   <string name="log_out_button" comment="log_out">تسجيل الخروج</string>
   <string name="iap_appc_body">ستحصل على مكافأة على كل المشتريات!</string>
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">يمكنك الآن إتمام عملية الشراء.</string>
-  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">The Aptoide Wallet is now installed!</string>
+  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">تم تثبيت محفظة Aptoide!</string>
   <string name="storage_access_permission_request_message">اسمح بالدخول إلى ذاكرة الجوال لنتمكن من تنزيل وتثبيت هذا التطبيق.</string>
   <string name="downloads_number_title">%s تنزيلات</string>
   <!-- Payment Errors-->
@@ -181,12 +181,12 @@
   <string name="iap_already_processing_body">قد تحتاج عملية الشراء هذه بعض الوقت، لذلك يرجى الانتظار حتى تتم أو تواصل مع فريق الدعم لدينا.</string>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">مكافأة على كل عملية شراء</string>
-  <string name="bonus_page_body_1">Look for the games identified with %1$s, install the Aptoide Wallet and get up to %2$s%% bonus in all purchases. You can then use this bonus to make your next purchases in your favorite games!</string>
+  <string name="bonus_page_body_1">ابحث عن ألعاب معرّفة بـ %1$s، ثبت محفظة Aptoide واحصل على مكافأة تصل إلى %2$s%% على كل المشتريات. يمكنك استخدام هذه المكافآت فيما بعد لإجراء عمليات الشراء التالية في ألعابك المفضلة!</string>
   <string name="bonus_page_title_2">تريد المزيد؟</string>
   <string name="bonus_page_body_2"><![CDATA[يمكنك الحصول على <1>%s%% مكافأة</1> إضافية باستخدام الرمز الترويجي الحصري لـ Aptoide Games في ألعاب محددة. تابع لتعرف وسنرسل لك إشعارًا!]]></string>
   <!-- Promo Code -->
   <string name="promo_code_install_wallet_banner_title">مكافآت حتى %s%% على كل المشتريات</string>
-  <string name="promo_code_install_wallet_banner_body">Use the Aptoide Wallet to make your in-app purchases and get a reward.</string>
+  <string name="promo_code_install_wallet_banner_body">استخدم محفظة Aptoide لإجراء عمليات الشراء داخل التطبيقات واحصل على جائزة.</string>
   <string name="promo_code_extra_title">تريد المزيد؟ احصل على %s%% مكافأة إضافية!</string>
   <string name="promo_code_use_button">استخدم الرمز</string>
   <string name="promo_code_install_wallet_disclaimer">Install the Aptoide Wallet first.</string>
