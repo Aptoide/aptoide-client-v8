@@ -144,7 +144,7 @@
   <string name="apkfy_whats_aptoide_games_title">Wat is Aptoide Games?</string>
   <string name="apkfy_install_body">Vind je favoriete game en nog veel meer in Aptoide Games!</string>
   <string name="apkfy_install_bullet_points">\u2022 De beste speciaal geselecteerde games.\n\u2022 Je hoeft niet in te loggen!\n\u2022 Speciale acties en beloningen in je favoriete games.</string>
-  <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Pay with the Aptoide Wallet</string>
+  <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Betaal met de Aptoide Wallet</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Het wordt automatisch geïnstalleerd en je krijgt een bonus bij alle aankopen!</string>
   <string name="buy_button" comment="buy">Kopen</string>
   <string name="iap_other_payment_methods_button" comment="other_payment_methods">Andere betaalmethoden</string>
@@ -155,7 +155,7 @@
   <string name="log_out_button" comment="log_out">Uitloggen</string>
   <string name="iap_appc_body">Je krijgt een bonus bij alle aankopen!</string>
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Je kunt je aankoop nu voltooien.</string>
-  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">The Aptoide Wallet is now installed!</string>
+  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">De Aptoide Wallet is nu geïnstalleerd!</string>
   <string name="storage_access_permission_request_message">Geef toegang tot de opslag van je telefoon zodat we deze app kunnen downloaden en installeren.</string>
   <string name="downloads_number_title">%s downloads</string>
   <!-- Payment Errors-->
@@ -181,19 +181,19 @@
   <string name="iap_already_processing_body">Het kan even duren om deze aankoop te verwerken. Je kunt wachten tot de aankoop is voltooid of contact met ons ondersteuningsteam opnemen.</string>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Een bonus bij elke aankoop</string>
-  <string name="bonus_page_body_1">Look for the games identified with %1$s, install the Aptoide Wallet and get up to %2$s%% bonus in all purchases. You can then use this bonus to make your next purchases in your favorite games!</string>
+  <string name="bonus_page_body_1">Zoek naar games met %1$s, installeer de Aptoide Wallet en krijg tot %2$s%% bonus bij alle aankopen. Daarna kun je deze bonus voor je volgende aankopen in je favoriete games gebruiken!</string>
   <string name="bonus_page_title_2">Nog meer voordeel?</string>
   <string name="bonus_page_body_2"><![CDATA[Je kunt <1>%s%% extra bonus</1> krijgen door een exclusieve Aptoide Games-actiecode in specifieke games te gebruiken. We sturen je een melding om je op de hoogte te houden.]]></string>
   <!-- Promo Code -->
   <string name="promo_code_install_wallet_banner_title">Tot %s%% bonus bij elke aankoop</string>
-  <string name="promo_code_install_wallet_banner_body">Use the Aptoide Wallet to make your in-app purchases and get a reward.</string>
+  <string name="promo_code_install_wallet_banner_body">Gebruik de Aptoide Wallet om je in-app aankopen te doen en krijg een beloning.</string>
   <string name="promo_code_extra_title">Meer voordeel? Krijg %s%% extra bonus!</string>
   <string name="promo_code_use_button">Code gebruiken</string>
-  <string name="promo_code_install_wallet_disclaimer">Install the Aptoide Wallet first.</string>
+  <string name="promo_code_install_wallet_disclaimer">Installeer eerst de Aptoide Wallet.</string>
   <string name="promo_code_notification_title">Wissel je actiecode in</string>
   <string name="promo_code_notification_body">Gebruik je actiecode om extra bonussen in je favoriete game te krijgen.</string>
   <string name="promo_code_notification_without_wallet_title">%s%% extra bonus!</string>
-  <string name="promo_code_notification_without_wallet_body">Get the Aptoide Wallet and use your promo code to get extra bonuses in all purchases.</string>
+  <string name="promo_code_notification_without_wallet_body">Download de Aptoide Wallet en gebruik je actiecode om extra bonussen bij al je aankopen te krijgen.</string>
   <string name="promo_code_share_title">Je hebt een actiecode!</string>
   <string name="promo_code_share_body">Gebruik deze actiecode om extra bonussen in je favoriete game te krijgen.</string>
   <!-- Update -->
@@ -224,25 +224,25 @@
   <string name="genai_example_1_body">Ik ben op zoek naar strategiespellen.</string>
   <string name="genai_example_2_body">Wat zijn de beste multiplayerspellen?</string>
   <string name="genai_example_3_body">Wat zijn aanbevolen offline casual games?</string>
-  <string name="genai_history_body">GameGenie History</string>
-  <string name="genai_new_chat_button">New chat</string>
+  <string name="genai_history_body">Eerdere chats met GameGenie</string>
+  <string name="genai_new_chat_button">Nieuwe chat</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Now compatible with the Aptoide Wallet</string>
+  <string name="promotional_now_with_appcoins">Nu compatibel met de Aptoide Wallet</string>
   <string name="promotional_new_version">Nieuwe versie</string>
   <string name="promotional_on_going_event">Lopend evenement</string>
   <string name="promotional_new_in_aptoide">Nu beschikbaar</string>
-  <string name="promotional_soon_in_aptoide">Available soon</string>
+  <string name="promotional_soon_in_aptoide">Binnenkort beschikbaar</string>
   <string name="promotional_notify_button">Hou me op de hoogte</string>
   <string name="promotional_new_notification_title">De app waar je op wachtte!</string>
   <string name="promotional_new_notification_body">%s is nu beschikbaar.</string>
   <string name="promotional_new_active">Je krijgt een melding als dit beschikbaar is.</string>
   <string name="promotional_now_available_body">Nu beschikbaar in Aptoide Games!</string>
-  <string name="promotional_now_available_tag">Now Available</string>
+  <string name="promotional_now_available_tag">Nu beschikbaar</string>
   <!-- Tags -->
-  <string name="tag_for_you">For You</string>
+  <string name="tag_for_you">Voor jou</string>
   <string name="tag_top_charts">Top Charts</string>
   <string name="tag_appcoins">AppCoins</string>
   <string name="tag_editorial">Editorial</string>
-  <string name="tag_categories">Categories</string>
+  <string name="tag_categories">Categorieën</string>
   <string name="tag_bonus">Bonus</string>
 </resources>
