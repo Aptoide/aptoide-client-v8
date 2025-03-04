@@ -373,7 +373,7 @@
   <string name="my_stores_login_message">Log nu in en begin met het delen van je apps!</string>
   <!--APPC-->
   <string name="appc_title_iab">Besteed je Aptoide-tegoed</string>
-  <string name="appc_title_ads">Krijg een beloming in Aptoide-tegoed</string>
+  <string name="appc_title_ads">Krijg een beloning in Aptoide-tegoed</string>
   <string name="appc_title_featured">Aanbevolen apps met een bonus</string>
   <string name="appc_home_bundle_iab">Gebruik je Aptoide-tegoed</string>
   <string name="appc_home_bundle_poa">Verdien Aptoide-tegoed</string>
@@ -382,7 +382,7 @@
   <string name="appc_message_appview_appcoins_reward_with_value">Probeer deze app 2 minuten en krijg\n%1$s %2$s</string>
   <string name="appc_message_appview_appcoins_iab">In-app aankopen met de Aptoide Wallet</string>
   <string name="appc_card_short">BONUS</string>
-  <string name="appc_title_homepage_card">Je kunt nu Aptoide-tegoed verdienen!</string>
+  <string name="appc_title_homepage_card">Je kunt nu Aptoide-tegoed krijgen!</string>
   <string name="appc_message_homepage_card">De valuta voor app-gebruikers! Verdien gratis Aptoide-tegoed door je favoriete apps te gebruiken.</string>
   <string name="appc_title_settings_appcoins_wallet">Aptoide Wallet</string>
   <string name="appc_title_bundle">Apps met een bonus</string>
@@ -401,7 +401,7 @@
   <string name="promotion_over_message">Je bent deze actie net misgelopen, maar binnenkort hebben we weer een actie!</string>
   <!--Promotion with FIAT-->
   <string name="FIATpromotion_install_to_get_short">Installeer om %1$s in Aptoide-tegoed te krijgen (%2$s)</string>
-  <string name="FIATpromotion_update_to_get_short">Update om %1$s in Aptoide-tegoed te krijgen (%2$s)</string>
+  <string name="FIATpromotion_update_to_get_short">Werk bij om %1$s in Aptoide-tegoed te krijgen (%2$s)</string>
   <!--Get Wallet Address-->
   <string name="promotion_claim_button">CLAIMEN</string>
   <string name="holidayspromotion_title_wallet">Aptoide Wallet-adres</string>
@@ -417,8 +417,8 @@
   <!--APPC install Promotion-->
   <string name="wallet_promotion_title">Krijg nu %s in Aptoide-tegoed!</string>
   <string name="wallet_promotion_wallet_installed_message">Installeer deze app en krijg %s in Aptoide-tegoed dat je in je favoriete games kunt besteden.</string>
-  <string name="wallet_promotion_wallet_notinstalled_message">Installeer deze app en krijg %s Aptoide-tegoed. Je hebt de AppCoins Wallet nodig om het tegoed te ontvangen.</string>
-  <string name="wallet_promotion_wallet_installed_update_message">Update deze app en krijg %s in Aptoide-tegoed dat je in je favoriete games kunt besteden.</string>
+  <string name="wallet_promotion_wallet_notinstalled_message">Installeer deze app en krijg %s Aptoide-tegoed. Je hebt de Aptoide Wallet nodig om het tegoed te ontvangen.</string>
+  <string name="wallet_promotion_wallet_installed_update_message">Werk deze app bij en krijg %s in Aptoide-tegoed dat je in je favoriete games kunt besteden.</string>
   <string name="wallet_promotion_wallet_claim_message">Je kunt %s in Aptoide-tegoed claimen. Dit tegoed kun je gebruiken om items in je favoriete apps te kopen.</string>
   <string name="wallet_promotion_install_button">Wallet installeren</string>
   <string name="wallet_promotion_no_button">Nee bedankt</string>
