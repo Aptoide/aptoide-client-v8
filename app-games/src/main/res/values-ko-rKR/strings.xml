@@ -101,7 +101,7 @@
   <string name="later_button">나중에</string>
   <string name="trusted_game_badge">신뢰할 수 있는 게임</string>
   <string name="official_game_badge">공식 게임</string>
-  <string name="editorial_card_views_short">%s views</string>
+  <string name="editorial_card_views_short">%s 뷰</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">공간 부족</string>
   <string name="out_of_space_body">설치를 계속하려면 %s이(가) 필요합니다.</string>
@@ -144,7 +144,7 @@
   <string name="apkfy_whats_aptoide_games_title">Aptoide 게임이란 무엇인가요?</string>
   <string name="apkfy_install_body">Aptoide 게임에서 좋아하는 게임과 더 많은 것을 즐기세요!</string>
   <string name="apkfy_install_bullet_points">\u2022 놀라운 큐레이션으로 최고의 게임들.\n\u2022 로그인할 필요 없어요!\n\u2022 좋아하는 게임의 특별 프로모션 및 보상.</string>
-  <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">AppCoins 지갑으로 지불</string>
+  <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Aptoide 지갑으로 결제</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">자동으로 설치되고 모든 구매 시 보너스가 지급됩니다!</string>
   <string name="buy_button" comment="buy">사기</string>
   <string name="iap_other_payment_methods_button" comment="other_payment_methods">기타 결제 방법</string>
@@ -155,7 +155,7 @@
   <string name="log_out_button" comment="log_out">로그아웃</string>
   <string name="iap_appc_body">모든 구매 시 보너스를 받으실 수 있습니다!</string>
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">이제 구매를 완료할 수 있습니다.</string>
-  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">AppCoins 지갑이 설치되었습니다!</string>
+  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">Aptoide 지갑이 설치되었습니다!</string>
   <string name="storage_access_permission_request_message">휴대폰 저장소에 대한 접근 권한을 주시면 이 앱을 다운로드하고 설치할 수 있습니다.</string>
   <string name="downloads_number_title">%s개의 다운로드</string>
   <!-- Payment Errors-->
@@ -181,19 +181,19 @@
   <string name="iap_already_processing_body">이 구매는 시간이 조금 걸릴 수 있으니, 완료될 때까지 기다려 주시거나 고객 지원팀에 문의해 주세요.</string>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">모든 구매 시 보너스 제공</string>
-  <string name="bonus_page_body_1">%1$s로 표시된 게임을 찾아 AppCoins Wallet을 설치하고 모든 구매 시 최대 %2$s%% 보너스를 받으세요. 이 보너스를 사용하여 좋아하는 게임에서 다음 구매를 진행할 수 있습니다!</string>
+  <string name="bonus_page_body_1">%1$s로 표시된 게임을 찾아 Aptoide 지갑을 설치하고 모든 구매 시 최대 %2$s%% 보너스를 받으세요. 이 보너스를 사용하여 좋아하는 게임에서 다음 구매를 진행할 수 있습니다!</string>
   <string name="bonus_page_title_2">더 원하는 것이 있으신가요?</string>
   <string name="bonus_page_body_2"><![CDATA[특정 게임에서 Aptoide Games 전용 프로모션 코드를 사용하면 <1>%s%% 추가 보너스</1>를 받을 수 있습니다. 계속 지켜보시면 알림을 받아보실 수 있습니다!]]></string>
   <!-- Promo Code -->
   <string name="promo_code_install_wallet_banner_title">모든 구매 시 최대 %s%% 보너스 제공</string>
-  <string name="promo_code_install_wallet_banner_body">AppCoins 지갑을 사용하여 앱내 구매를 하고 보상을 받으세요.</string>
+  <string name="promo_code_install_wallet_banner_body">Aptoide 지갑을 사용하여 인앱 구매를 하고 보상을 받으세요.</string>
   <string name="promo_code_extra_title">더 원하시나요? %s%% 추가 보너스를 받으세요!</string>
   <string name="promo_code_use_button">코드 사용</string>
-  <string name="promo_code_install_wallet_disclaimer">먼저 AppCoins 지갑을 설치하세요.</string>
+  <string name="promo_code_install_wallet_disclaimer">먼저 Aptoide 지갑을 설치하세요.</string>
   <string name="promo_code_notification_title">프로모션 코드를 사용하세요.</string>
   <string name="promo_code_notification_body">프로모션 코드를 사용하여 좋아하는 게임에서 추가 보너스를 받으세요.</string>
   <string name="promo_code_notification_without_wallet_title">%s%% 추가 보너스!</string>
-  <string name="promo_code_notification_without_wallet_body">AppCoins 지갑을 다운로드하고 프로모션 코드를 사용하여 모든 구매에서 추가 보너스를 받으세요.</string>
+  <string name="promo_code_notification_without_wallet_body">Aptoide 지갑을 다운로드하고 프로모션 코드를 사용하여 모든 구매에서 추가 보너스를 받으세요.</string>
   <string name="promo_code_share_title">프로모션 코드를 받으셨습니다!</string>
   <string name="promo_code_share_body">이 프로모션 코드를 사용하여 좋아하는 게임에서 추가 보너스를 받으세요.</string>
   <!-- Update -->
@@ -222,25 +222,25 @@
   <string name="genai_example_1_body">전략 게임을 찾고 있습니다.</string>
   <string name="genai_example_2_body">최고의 멀티플레이어 게임을 추천해 주세요.</string>
   <string name="genai_example_3_body">오프라인 캐주얼 게임을 아시나요?</string>
-  <string name="genai_history_body">GameGenie History</string>
-  <string name="genai_new_chat_button">New chat</string>
+  <string name="genai_history_body">GameGenie 이력</string>
+  <string name="genai_new_chat_button">새 채팅</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">이제 AppCoins 결제 시스템이 있습니다</string>
+  <string name="promotional_now_with_appcoins">이제 Aptoide 지갑과 호환 가능</string>
   <string name="promotional_new_version">새로운 버전</string>
   <string name="promotional_on_going_event">진행중인 이벤트</string>
   <string name="promotional_new_in_aptoide">이제 사용 가능</string>
-  <string name="promotional_soon_in_aptoide">Available soon</string>
+  <string name="promotional_soon_in_aptoide">곧 이용 가능합니다</string>
   <string name="promotional_notify_button">알려주세요</string>
   <string name="promotional_new_notification_title">이 앱이 당신을 기다리고 있었어요!</string>
   <string name="promotional_new_notification_body">이제 %s를(을) 사용할 수 있습니다.</string>
   <string name="promotional_new_active">이용할 수 있을 때 알림을 드립니다.</string>
-  <string name="promotional_now_available_body">Now available in Aptoide Games!</string>
-  <string name="promotional_now_available_tag">Now Available</string>
+  <string name="promotional_now_available_body">이제 Aptoide Games에서 이용 가능합니다!</string>
+  <string name="promotional_now_available_tag">이제 사용 가능</string>
   <!-- Tags -->
-  <string name="tag_for_you">For You</string>
-  <string name="tag_top_charts">Top Charts</string>
+  <string name="tag_for_you">당신을 위해</string>
+  <string name="tag_top_charts">상위 차트</string>
   <string name="tag_appcoins">AppCoins</string>
-  <string name="tag_editorial">Editorial</string>
-  <string name="tag_categories">Categories</string>
-  <string name="tag_bonus">Bonus</string>
+  <string name="tag_editorial">사설</string>
+  <string name="tag_categories">카테고리</string>
+  <string name="tag_bonus">보너스</string>
 </resources>
