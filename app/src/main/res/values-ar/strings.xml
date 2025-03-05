@@ -457,7 +457,7 @@ or
   <string name="poa_app_card_short">اكسب %s</string>
   <string name="poa_home_card_body">ثبّت هذه التطبيقات واقضِ دقيقتين فيها لتحصل على رصيد Aptoide.</string>
   <string name="poa_app_view_card_body_1">جرّب هذا التطبيق لدقيقتين واحصل على</string>
-  <string name="poa_app_view_card_body_2">%1$s في رصيد Aptoide Credits (%2$s)</string>
+  <string name="poa_app_view_card_body_2">%1$s in Aptoide balance (%2$s)</string>
   <string name="poa_APPCC_left_body">أسرع! لم يتبقَّ سوى %s جائزة متوفرة.</string>
   <string name="poa_time_left_days">الأيام</string>
   <string name="poa_time_left_hours">الساعات</string>
