@@ -448,7 +448,7 @@
   <string name="poa_app_card_short">ΚΕΡΔΟΣ %s</string>
   <string name="poa_home_card_body">Install these apps and spend 2 minutes in them to earn Aptoide balance.</string>
   <string name="poa_app_view_card_body_1">Δοκιμάστε αυτήν την εφαρμογή για 2 λεπτά και λάβετε</string>
-  <string name="poa_app_view_card_body_2">%1$s in Aptoide balance Credits (%2$s)</string>
+  <string name="poa_app_view_card_body_2">%1$s in Aptoide balance (%2$s)</string>
   <string name="poa_APPCC_left_body">Βιαστείτε! Έχουν απομείνει μόνο %s αμοιβές.</string>
   <string name="poa_time_left_days">ΗΜΕΡΕΣ</string>
   <string name="poa_time_left_hours">ΩΡΕΣ</string>
