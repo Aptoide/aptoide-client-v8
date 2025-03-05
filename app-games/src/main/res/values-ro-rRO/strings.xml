@@ -181,19 +181,19 @@
   <string name="iap_already_processing_body">Această achiziție poate dura mai mult timp, așa că te rugăm să aștepți până la finalizare sau să contactezi echipa noastră de asistență.</string>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Un Bonus la Fiecare Achiziție</string>
-  <string name="bonus_page_body_1">Look for the games identified with %1$s, install the Aptoide Wallet and get up to %2$s%% bonus in all purchases. You can then use this bonus to make your next purchases in your favorite games!</string>
+  <string name="bonus_page_body_1">Caută jocurile identificate cu %1$s, instalează Aptoide Wallet și primești un bonus de până la %2$s%% la toate achizițiile. Poți folosi acest bonus pentru a face achiziții în jocurile tale preferate!</string>
   <string name="bonus_page_title_2">Vrei mai mult?</string>
   <string name="bonus_page_body_2"><![CDATA[Poți obține un <1>bonus suplimentar de %s%%</1> utilizând un cod promoțional exclusiv Aptoide Games în anumite jocuri. Fii pe fază și vei fi anunțat!]]></string>
   <!-- Promo Code -->
   <string name="promo_code_install_wallet_banner_title">Bonus de până la %s%% la Fiecare Achiziție</string>
-  <string name="promo_code_install_wallet_banner_body">Use the Aptoide Wallet to make your in-app purchases and get a reward.</string>
+  <string name="promo_code_install_wallet_banner_body">Folosește Aptoide Wallet pentru a face achizițiile în aplicație și vei obține o recompensă.</string>
   <string name="promo_code_extra_title">Vrei mai mult? Obține un Bonus Extra de %s%%!</string>
   <string name="promo_code_use_button">Folosește codul</string>
-  <string name="promo_code_install_wallet_disclaimer">Install the Aptoide Wallet first.</string>
+  <string name="promo_code_install_wallet_disclaimer">Instalează mai întâi Aptoide Wallet.</string>
   <string name="promo_code_notification_title">Revendică-ți Codul Promo</string>
   <string name="promo_code_notification_body">Folosește codul tău promoțional pentru a obține bonusuri suplimentare în jocul tău preferat.</string>
   <string name="promo_code_notification_without_wallet_title">Bonus Extra %s%%</string>
-  <string name="promo_code_notification_without_wallet_body">Get the Aptoide Wallet and use your promo code to get extra bonuses in all purchases.</string>
+  <string name="promo_code_notification_without_wallet_body">Instalează Aptoide Wallet și folosește codul promoțional pentru a primi bonusuri suplimentare la toate achizițiile.</string>
   <string name="promo_code_share_title">Ai primit un cod promo!</string>
   <string name="promo_code_share_body">Folosește acest cod promoțional pentru a obține bonusuri suplimentare în jocul tău preferat.</string>
   <!-- Update -->
@@ -226,25 +226,25 @@
   <string name="genai_example_1_body">Caut jocuri de strategie.</string>
   <string name="genai_example_2_body">Te rog să îmi recomanzi cele mai bune jocuri multiplayer.</string>
   <string name="genai_example_3_body">Știi jocuri ocazionale offline?</string>
-  <string name="genai_history_body">GameGenie History</string>
-  <string name="genai_new_chat_button">New chat</string>
+  <string name="genai_history_body">Istoric GameGenie</string>
+  <string name="genai_new_chat_button">Chat nou</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Now compatible with the Aptoide Wallet</string>
+  <string name="promotional_now_with_appcoins">Acum compatibil cu Aptoide Wallet</string>
   <string name="promotional_new_version">Versiune nouă</string>
   <string name="promotional_on_going_event">Eveniment în desfășurare</string>
   <string name="promotional_new_in_aptoide">Disponibil acum</string>
-  <string name="promotional_soon_in_aptoide">Available soon</string>
+  <string name="promotional_soon_in_aptoide">Disponibilă în curând</string>
   <string name="promotional_notify_button">Anunță-mă</string>
   <string name="promotional_new_notification_title">Aplicația pe care o așteptai!</string>
   <string name="promotional_new_notification_body">%s este acum disponibil.</string>
   <string name="promotional_new_active">Vei fi notificat când este disponibil.</string>
-  <string name="promotional_now_available_body">Now available in Aptoide Games!</string>
-  <string name="promotional_now_available_tag">Now Available</string>
+  <string name="promotional_now_available_body">Acum disponibilă în Aptoide Games!</string>
+  <string name="promotional_now_available_tag">Disponibilă acum</string>
   <!-- Tags -->
-  <string name="tag_for_you">For You</string>
-  <string name="tag_top_charts">Top Charts</string>
+  <string name="tag_for_you">Pentru tine</string>
+  <string name="tag_top_charts">De Top</string>
   <string name="tag_appcoins">AppCoins</string>
   <string name="tag_editorial">Editorial</string>
-  <string name="tag_categories">Categories</string>
+  <string name="tag_categories">Categorii</string>
   <string name="tag_bonus">Bonus</string>
 </resources>
