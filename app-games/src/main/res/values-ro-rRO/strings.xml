@@ -144,7 +144,7 @@
   <string name="apkfy_whats_aptoide_games_title">Ce este Aptoide Games?</string>
   <string name="apkfy_install_body">Descarcă-ți jocul preferat și multe altele în Aptoide Games!</string>
   <string name="apkfy_install_bullet_points">\u2022 Jocuri populare selectate cu atenție.\n\u2022Fără conectare!\n\u2022 Promoții speciale și recompense în jocurile tale preferate.</string>
-  <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Pay with the Aptoide Wallet</string>
+  <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Plătește cu Aptoide Wallet</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Va fi instalat automat și vei primi un bonus la toate achizițiile!</string>
   <string name="buy_button" comment="buy">Cumpără</string>
   <string name="iap_other_payment_methods_button" comment="other_payment_methods">Alte metode de plată</string>
@@ -155,7 +155,7 @@
   <string name="log_out_button" comment="log_out">Deconectare</string>
   <string name="iap_appc_body">Vei primi un bonus la toate achizițiile!</string>
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Acum poți finaliza achiziția.</string>
-  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">The Aptoide Wallet is now installed!</string>
+  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">Aptoide Wallet a fost instalat!</string>
   <string name="storage_access_permission_request_message">Permite accesul la spațiul de stocare al telefonului tău pentru a putea să descărcăm și să instalăm această aplicație.</string>
   <string name="downloads_number_title">%s descărcări</string>
   <!-- Payment Errors-->
