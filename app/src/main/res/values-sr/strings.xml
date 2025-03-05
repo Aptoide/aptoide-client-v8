@@ -449,7 +449,7 @@
   <string name="poa_app_card_short">ZARADITE %s</string>
   <string name="poa_home_card_body">Instalirajte ove aplikacije i provedite 2 minuta u njima da biste zaradili Aptoide bilans.</string>
   <string name="poa_app_view_card_body_1">Isprobajte ovu aplikaciju 2 minuta i dobijte</string>
-  <string name="poa_app_view_card_body_2">%1$s u Aptoide bilans Credits (%2$s)</string>
+  <string name="poa_app_view_card_body_2">%1$s in Aptoide balance (%2$s)</string>
   <string name="poa_APPCC_left_body">Požurite! Nema još mnogo dostupnih nagrada (%s).</string>
   <string name="poa_time_left_days">DANI</string>
   <string name="poa_time_left_hours">SATI</string>
