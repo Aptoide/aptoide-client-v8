@@ -381,8 +381,8 @@ or
   <!--URL -->
   <string name="my_stores_login_message">سجل الدخول الآن وابدأ بمشاركتك تطبيقاتك!</string>
   <!--APPC-->
-  <string name="appc_title_iab">Spend Your Aptoide Balance</string>
-  <string name="appc_title_ads">Get Rewarded with Aptoide Balance</string>
+  <string name="appc_title_iab">أنفق رصيد Aptoide الذي لديك</string>
+  <string name="appc_title_ads">احصل على الجوائز مع رصيد Aptoide</string>
   <string name="appc_title_featured">Featured Bonus Apps</string>
   <string name="appc_home_bundle_iab">Use Your Aptoide Balance</string>
   <string name="appc_home_bundle_poa">Earn Aptoide Balance</string>
