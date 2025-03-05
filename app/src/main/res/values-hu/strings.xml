@@ -448,7 +448,7 @@
   <string name="poa_app_card_short">%s MEGKERESÉSE</string>
   <string name="poa_home_card_body">Telepítsd ezeket az appokat, majd tölts el bennük 2 percet, hogy Aptoide egyenleget szerezz.</string>
   <string name="poa_app_view_card_body_1">Próbáld ki ezt az appot 2 percen át és szerezz</string>
-  <string name="poa_app_view_card_body_2">%1$s Aptoide egyenleg kreditben (%2$s)</string>
+  <string name="poa_app_view_card_body_2">%1$s in Aptoide balance (%2$s)</string>
   <string name="poa_APPCC_left_body">Siess! Már csak %s jutalom maradt.</string>
   <string name="poa_time_left_days">NAP</string>
   <string name="poa_time_left_hours">ÓRA</string>
