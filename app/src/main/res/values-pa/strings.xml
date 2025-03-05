@@ -451,7 +451,7 @@ http://aptoi.de/tv</string>
   <string name="poa_app_card_short">%s ਕਮਾਓ</string>
   <string name="poa_home_card_body">Install these apps and spend 2 minutes in them to earn Aptoide balance.</string>
   <string name="poa_app_view_card_body_1">ਇਸ ਐਪ ਨੂੰ 2 ਮਿੰਟ ਲਈ ਵਰਤੋ ਅਤੇ ਪ੍ਰਾਪਤ ਕਰੋ</string>
-  <string name="poa_app_view_card_body_2">%1$s in Aptoide balance Credits (%2$s)</string>
+  <string name="poa_app_view_card_body_2">%1$s in Aptoide balance (%2$s)</string>
   <string name="poa_APPCC_left_body">ਜਲਦੀ ਕਰੋ! ਇੱਥੇ ਸਿਰਫ %s ਇਨਾਮ ਉਪਲਬਧ ਹਨ|</string>
   <string name="poa_time_left_days">ਦਿਨ</string>
   <string name="poa_time_left_hours">ਘੰਟੇ</string>
