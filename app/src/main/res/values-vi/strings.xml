@@ -448,7 +448,7 @@ chứa bất kỳ mối đe dọa nào!</string>
   <string name="poa_app_card_short">KIẾM %s</string>
   <string name="poa_home_card_body">Cài đặt các ứng dụng này và dành 2 phút trải nghiệm để kiếm số dư Aptoide.</string>
   <string name="poa_app_view_card_body_1">Trải nghiệm thử ứng dụng này trong 2 phút và nhận</string>
-  <string name="poa_app_view_card_body_2">%1$s bằng Credits số dư Aptoide (%2$s)</string>
+  <string name="poa_app_view_card_body_2">%1$s in Aptoide balance (%2$s)</string>
   <string name="poa_APPCC_left_body">Nhanh lên nào! Chỉ còn %s phần thưởng nữa thôi.</string>
   <string name="poa_time_left_days">NGÀY</string>
   <string name="poa_time_left_hours">GIỜ</string>
