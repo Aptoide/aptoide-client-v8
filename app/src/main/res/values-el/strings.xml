@@ -457,9 +457,9 @@
   <!--APPC Info View-->
   <string name="appc_info_view_title_1">Όλα όσα πρέπει να ξέρετε για το Aptoide Wallet</string>
   <string name="appc_info_view_body_1_variable">Το υπόλοιπο Aptoide είναι το νόμισμα για συναλλαγές εντός εφαρμογών. Το καλύτερο; Θα κερδίζετε έως <b>%s%% bonus σε όλες τις αγορές!</b></string>
-  <string name="appc_info_view_body_1_variable_no_data">Aptoide balance is the currency for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">Το υπόλοιπο Aptoide είναι το νόμισμα για συναλλαγές εντός εφαρμογών. Το καλύτερο; Θα κερδίζετε <b>%% bonus σε κάθε αγορά!</b></string>
   <string name="appc_info_view_title_2">Καταρχάς</string>
-  <string name="appc_info_view_body_2">You need to install the Aptoide Wallet to get rewards and process all transactions. Once you install it, it\'ll do everything for you!</string>
+  <string name="appc_info_view_body_2">Πρέπει να εγκαταστήσετε το Aptoide Wallet για να λαμβάνετε αμοιβές και να πραγματοποιείτε συναλλαγές. Μόλις το εγκαταστήσετε, θα γίνονται όλα μέσα από αυτό!</string>
   <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_4">Ένα Bonus σε Κάθε Αγορά!</string>
   <string name="appc_info_view_title_5_variable">Θα λαμβάνετε έως %s%% Bonus για κάθε αγορά που πραγματοποιείτε εντός των εφαρμογών με το σύμβολο %s. Εκμεταλλευτείτε το και γίνετε ο απόλυτος παίκτης!</string>
@@ -509,7 +509,7 @@
   <!-- Out of space -->
   <string name="out_of_space_body">Χρειάζονται %s για να συνεχιστεί η εγκατάσταση.</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Now compatible with the Aptoide Wallet</string>
+  <string name="promotional_now_with_appcoins">Τώρα συμβατό με το Aptoide Wallet</string>
   <string name="promotional_new_version">Νέα Έκδοση</string>
   <string name="promotional_on_going_event">Τρέχουσα εκδήλωση</string>
   <string name="promotional_new_in_aptoide">Τώρα διαθέσιμο στο Aptoide</string>
