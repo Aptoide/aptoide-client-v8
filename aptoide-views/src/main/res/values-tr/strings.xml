@@ -14,7 +14,7 @@
   <string name="incentives_badge_amount">varan</string>
   <string name="incentives_badge_bonus">Bonus</string>
   <string name="incentives_banner_title">Her satın alma işleminde %%%s\'e varan bonus!</string>
-  <string name="incentives_banner_body">Use your Aptoide balance to get more items in apps with this symbol %s</string>
+  <string name="incentives_banner_body">Bu sembole %s sahip uygulamalarda daha fazla eşya edinmek için Aptoide bakiyeni kullan</string>
   <!-- Download View -->
   <string name="appview_short_downloading">İndiriliyor</string>
   <string name="apps_short_download_paused">İndirme duraklatıldı</string>
