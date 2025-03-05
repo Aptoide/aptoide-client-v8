@@ -448,7 +448,7 @@
   <string name="poa_app_card_short">VERDIEN %s</string>
   <string name="poa_home_card_body">Installeer deze apps en gebruik de apps 2 minuten om Aptoide-tegoed te verdienen.</string>
   <string name="poa_app_view_card_body_1">Probeer deze app 2 minuten en krijg</string>
-  <string name="poa_app_view_card_body_2">%1$s in Aptoide-tegoed (%2$s)</string>
+  <string name="poa_app_view_card_body_2">%1$s in Aptoide balance (%2$s)</string>
   <string name="poa_APPCC_left_body">Wees snel. Er zijn slechts %s beloningen beschikbaar.</string>
   <string name="poa_time_left_days">DAGEN</string>
   <string name="poa_time_left_hours">UUR</string>
