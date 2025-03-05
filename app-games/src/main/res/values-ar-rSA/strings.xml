@@ -189,11 +189,11 @@
   <string name="promo_code_install_wallet_banner_body">استخدم محفظة Aptoide لإجراء عمليات الشراء داخل التطبيقات واحصل على جائزة.</string>
   <string name="promo_code_extra_title">تريد المزيد؟ احصل على %s%% مكافأة إضافية!</string>
   <string name="promo_code_use_button">استخدم الرمز</string>
-  <string name="promo_code_install_wallet_disclaimer">Install the Aptoide Wallet first.</string>
+  <string name="promo_code_install_wallet_disclaimer">ثبت محفظة Aptoide أولًا.</string>
   <string name="promo_code_notification_title">استخدم الرمز الترويجي</string>
   <string name="promo_code_notification_body">استخدم الرمز الترويجي للحصول على مكافآت إضافية في ألعابك المفضلة.</string>
   <string name="promo_code_notification_without_wallet_title">مكافأة إضافية %s%%!</string>
-  <string name="promo_code_notification_without_wallet_body">Get the Aptoide Wallet and use your promo code to get extra bonuses in all purchases.</string>
+  <string name="promo_code_notification_without_wallet_body">مع محفظة Aptoide استخدم الرمز الترويجي لتحصل على مكافآت إضافية على كل المشتريات.</string>
   <string name="promo_code_share_title">حصلت على رمز ترويجي!</string>
   <string name="promo_code_share_body">استخدم هذا الرمز التويجي لتحصل على مكافآت إضافية في ألعابك المفضلة.</string>
   <!-- Update -->
@@ -232,25 +232,25 @@
   <string name="genai_example_1_body">أنا أبحث عن ألعاب الاستراتيجيات.</string>
   <string name="genai_example_2_body">يرجى اقتراح ألعاب متعددة اللاعبين.</string>
   <string name="genai_example_3_body">هل تعرف ألعاب عادية لا تحتاج إنترنت؟</string>
-  <string name="genai_history_body">GameGenie History</string>
-  <string name="genai_new_chat_button">New chat</string>
+  <string name="genai_history_body">سِجِل GameGenie</string>
+  <string name="genai_new_chat_button">محادثة جديدة</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Now compatible with the Aptoide Wallet</string>
+  <string name="promotional_now_with_appcoins">الآن صار متوافقًا مع محفظة Aptoide</string>
   <string name="promotional_new_version">إصدار جديد</string>
   <string name="promotional_on_going_event">مناسبة مستمر</string>
   <string name="promotional_new_in_aptoide">متوفر الآن</string>
-  <string name="promotional_soon_in_aptoide">Available soon</string>
+  <string name="promotional_soon_in_aptoide">سيتوفر قريبًا</string>
   <string name="promotional_notify_button">أخبرني</string>
   <string name="promotional_new_notification_title">التطبيق الذي كنت تنتظره!</string>
   <string name="promotional_new_notification_body">%s متوفر الآن.</string>
   <string name="promotional_new_active">سنخبرك عندما يتوفر.</string>
-  <string name="promotional_now_available_body">Now available in Aptoide Games!</string>
-  <string name="promotional_now_available_tag">Now Available</string>
+  <string name="promotional_now_available_body">متوفر الآن في ألعاب Aptoide!</string>
+  <string name="promotional_now_available_tag">متوفر الآن</string>
   <!-- Tags -->
   <string name="tag_for_you">For You</string>
   <string name="tag_top_charts">Top Charts</string>
   <string name="tag_appcoins">AppCoins</string>
-  <string name="tag_editorial">Editorial</string>
-  <string name="tag_categories">Categories</string>
-  <string name="tag_bonus">Bonus</string>
+  <string name="tag_editorial">الكلمة الافتتاحية</string>
+  <string name="tag_categories">الفئات</string>
+  <string name="tag_bonus">المكافآت</string>
 </resources>
