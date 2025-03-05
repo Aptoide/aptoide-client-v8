@@ -450,7 +450,7 @@ et ne contient aucune menaceU+00A0!</string>
   <string name="poa_app_card_short">GAIN %s</string>
   <string name="poa_home_card_body">Installez ces applications et passez-y 2 minutes pour gagner du Solde Aptoide.</string>
   <string name="poa_app_view_card_body_1">Essayez cette application pendant 2 mn et obtenez</string>
-  <string name="poa_app_view_card_body_2">%1$s dans votre Solde Aptoide %2$s</string>
+  <string name="poa_app_view_card_body_2">%1$s in Aptoide balance (%2$s)</string>
   <string name="poa_APPCC_left_body">Dépêchez-vous ! Il ne reste que %s récompenses disponibles.</string>
   <string name="poa_time_left_days">JOURS</string>
   <string name="poa_time_left_hours">HEURES</string>
