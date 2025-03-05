@@ -456,7 +456,7 @@
   <string name="poa_app_card_short">ZARABIAJ %s</string>
   <string name="poa_home_card_body">Install these apps and spend 2 minutes in them to earn Aptoide balance.</string>
   <string name="poa_app_view_card_body_1">Wypróbuj tą aplikację przez 2 minuty i otrzymaj </string>
-  <string name="poa_app_view_card_body_2">%1$s in Aptoide balance Credits (%2$s)</string>
+  <string name="poa_app_view_card_body_2">%1$s in Aptoide balance (%2$s)</string>
   <string name="poa_APPCC_left_body">Spiesz się! Dostępnych jest tylko %s nagród.</string>
   <string name="poa_time_left_days">DNI</string>
   <string name="poa_time_left_hours">GODZINY</string>
