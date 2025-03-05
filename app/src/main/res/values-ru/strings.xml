@@ -452,7 +452,7 @@
   <string name="poa_app_card_short">ПОЛУЧИТЕ %s</string>
   <string name="poa_home_card_body">Установите эти приложения и проведите в них 2 минуты, чтобы заработать средства на баланс Aptoide.</string>
   <string name="poa_app_view_card_body_1">Проведите в этом приложении 2 минуты и получите</string>
-  <string name="poa_app_view_card_body_2">%1$s кредитах Aptoide баланс (%2$s)</string>
+  <string name="poa_app_view_card_body_2">%1$s in Aptoide balance (%2$s)</string>
   <string name="poa_APPCC_left_body">Поторопитесь! Осталось всего %s наград.</string>
   <string name="poa_time_left_days">ДНИ</string>
   <string name="poa_time_left_hours">ЧАСЫ</string>
