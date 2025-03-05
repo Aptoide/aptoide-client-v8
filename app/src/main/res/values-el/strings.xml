@@ -416,21 +416,21 @@
   <string name="holidayspromotion_short_error_claimed">Έχετε ήδη διεκδικήσει αυτήν την αμοιβή!</string>
   <!--APPC install Promotion-->
   <string name="wallet_promotion_title">Λάβετε τώρα %s σε υπόλοιπο Aptoide!</string>
-  <string name="wallet_promotion_wallet_installed_message">Install this app and get %s in Aptoide balance to spend in your favorite games.</string>
-  <string name="wallet_promotion_wallet_notinstalled_message">Install this app and get %s APPC Credits. You need the Aptoide Wallet to receive them.</string>
-  <string name="wallet_promotion_wallet_installed_update_message">Update this app and get %s in Aptoide balance to spend in your favorite games.</string>
-  <string name="wallet_promotion_wallet_claim_message">You\'ve got %s in Aptoide balance to claim. Use them to buy items in your favorite apps.</string>
+  <string name="wallet_promotion_wallet_installed_message">Εγκαταστήστε αυτήν την εφαρμογή και λάβετε %s σε υπόλοιπο Aptoide για να ξοδέψετε στα αγαπημένα σας παιχνίδια.</string>
+  <string name="wallet_promotion_wallet_notinstalled_message">Εγκαταστήστε αυτήν την εφαρμογή και λάβετε %s υπόλοιπο Aptoide. Θα χρειαστείτε το Aptoide Wallet για να το λάβετε.</string>
+  <string name="wallet_promotion_wallet_installed_update_message">Ενημερώστε αυτήν την εφαρμογή και λάβετε %s σε υπόλοιπο Aptoide για να ξοδέψετε στα αγαπημένα σας παιχνίδια.</string>
+  <string name="wallet_promotion_wallet_claim_message">Μπορείτε να διεκδικήσετε %s σε υπόλοιπο Aptoide. Χρησιμοποιήστε το για αγορές στις αγαπημένες σας εφαρμογές.</string>
   <string name="wallet_promotion_install_button">Εγκατάσταση Wallet</string>
   <string name="wallet_promotion_no_button">Όχι, ευχαριστώ</string>
-  <string name="wallet_promotion_button_install_disabled">Install to get %s in Aptoide balance</string>
+  <string name="wallet_promotion_button_install_disabled">Εγκαταστήστε για να λάβετε %s σε υπόλοιπο Aptoide</string>
   <!--AppCoins Remove Ads Wallet Promotion -->
-  <string name="wallet_promotion_button_claim">Claim your %s in Aptoide balance</string>
+  <string name="wallet_promotion_button_claim">Διεκδικήστε το %s σας σε υπόλοιπο Aptoide</string>
   <!--Play to APPC - Migrator - Promotion-->
   <string name="promo_update2appc_data_disclaimer">Ελέγξτε στις ρυθμίσεις του παιχνιδιού εάν μπορείτε να αποθηκεύσετε την πρόοδό σας.</string>
-  <string name="promo_update2appc_appview_update_button">Update to Aptoide Wallet version</string>
+  <string name="promo_update2appc_appview_update_button">Ενημερώστε σε έκδοση Aptoide Wallet</string>
   <string name="promo_update2appc_notification_dismiss_button">Απόρριψη</string>
   <string name="promo_update2appc_notification_claim_button">Διεκδίκηση</string>
-  <string name="promo_update2appc_claim_notification_title">Get %s in Aptoide balance!</string>
+  <string name="promo_update2appc_claim_notification_title">Λάβετε %s σε υπόλοιπο Aptoide!</string>
   <!--Promo Center-->
   <string name="promo_update2appc_claim_notification_body">Μην ξεχάσετε να διεκδικήσετε την αμοιβή σας!</string>
   <string name="promo_center_pending_card_update_body">Για την ενημέρωση του %s</string>
@@ -438,15 +438,15 @@
   <string name="wallet_install_request_message_body">Για να πραγματοποιήσετε αυτήν την αγορά, πρέπει πρώτα να λάβετε το %s.</string>
   <string name="wallet_install_appcoins_wallet">Aptoide Wallet</string>
   <string name="wallet_install_complete_title">Η εγκατάσταση ολοκληρώθηκε</string>
-  <string name="appc_not_supported_body">It seems this device doesn\'t support the Aptoide Wallet. Try with a different one!</string>
-  <string name="wallet_install_request_already_installed_title">Aptoide Wallet Install</string>
+  <string name="appc_not_supported_body">Φαίνεται πως αυτή η συσκευή δεν υποστηρίζει το Aptoide Wallet. Δοκιμάστε με μια άλλη!</string>
+  <string name="wallet_install_request_already_installed_title">Εγκατάσταση Aptoide Wallet</string>
   <string name="wallet_install_request_already_installed_body">Απολαύστε το bonus σε κάθε αγορά εντός εφαρμογής!</string>
-  <string name="wallet_verification_message_update_wallet_to_claim">Update the Aptoide Wallet to receive this reward!</string>
+  <string name="wallet_verification_message_update_wallet_to_claim">Ενημερώστε το Aptoide Wallet για να λάβετε αυτήν την ανταμοιβή!</string>
   <string name="wallet_verification_button_update">Ενημέρωση τώρα</string>
   <!--POA exposure-->
   <string name="wallet_verification_button_update_wallet">Ενημέρωση Wallet</string>
   <string name="poa_app_card_short">ΚΕΡΔΟΣ %s</string>
-  <string name="poa_home_card_body">Install these apps and spend 2 minutes in them to earn Aptoide balance.</string>
+  <string name="poa_home_card_body">Εγκαταστήστε αυτές τις εφαρμογές και χρησιμοποιήστε τες για 2 λεπτά για να κερδίσετε υπόλοιπο Aptoide.</string>
   <string name="poa_app_view_card_body_1">Δοκιμάστε αυτήν την εφαρμογή για 2 λεπτά και λάβετε</string>
   <string name="poa_app_view_card_body_2">%1$s in Aptoide balance (%2$s)</string>
   <string name="poa_APPCC_left_body">Βιαστείτε! Έχουν απομείνει μόνο %s αμοιβές.</string>
@@ -455,8 +455,8 @@
   <string name="poa_time_left_minutes">ΛΕΠΤΑ</string>
   <string name="poa_time_left_seconds">ΔΕΥΤΕΡΟΛΕΠΤΑ</string>
   <!--APPC Info View-->
-  <string name="appc_info_view_title_1">Everything You Need to Know About the Aptoide Wallet</string>
-  <string name="appc_info_view_body_1_variable">Aptoide balance is the currency for in-app transactions. The best part? You\'ll earn up to <b>%s%% bonus in all purchases!</b></string>
+  <string name="appc_info_view_title_1">Όλα όσα πρέπει να ξέρετε για το Aptoide Wallet</string>
+  <string name="appc_info_view_body_1_variable">Το υπόλοιπο Aptoide είναι το νόμισμα για συναλλαγές εντός εφαρμογών. Το καλύτερο; Θα κερδίζετε έως <b>%s%% bonus σε όλες τις αγορές!</b></string>
   <string name="appc_info_view_body_1_variable_no_data">Aptoide balance is the currency for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
   <string name="appc_info_view_title_2">Καταρχάς</string>
   <string name="appc_info_view_body_2">You need to install the Aptoide Wallet to get rewards and process all transactions. Once you install it, it\'ll do everything for you!</string>
