@@ -449,7 +449,7 @@
   <string name="poa_app_card_short">%s कमाएं</string>
   <string name="poa_home_card_body">Install these apps and spend 2 minutes in them to earn Aptoide balance.</string>
   <string name="poa_app_view_card_body_1">2 मिनट के लिए यह एप्प परखें और पाएँ</string>
-  <string name="poa_app_view_card_body_2">%1$s in Aptoide balance Credits (%2$s)</string>
+  <string name="poa_app_view_card_body_2">%1$s in Aptoide balance (%2$s)</string>
   <string name="poa_APPCC_left_body">जल्दी करें! केवल %s पुरस्कार उपलब्ध हैं।</string>
   <string name="poa_time_left_days">दिन</string>
   <string name="poa_time_left_hours">घंटे</string>
