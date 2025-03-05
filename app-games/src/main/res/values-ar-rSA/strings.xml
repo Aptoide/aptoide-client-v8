@@ -101,7 +101,7 @@
   <string name="later_button">لاحقًا</string>
   <string name="trusted_game_badge">الألعاب الموثوقة</string>
   <string name="official_game_badge">الألعاب الرسمية</string>
-  <string name="editorial_card_views_short">%s views</string>
+  <string name="editorial_card_views_short">%s مشاهدة</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">لا توجد مساحة</string>
   <string name="out_of_space_body">أنت بحاجة إلى %s لمتابعة التثبيت.</string>
@@ -144,7 +144,7 @@
   <string name="apkfy_whats_aptoide_games_title">ما هو Aptoide Games؟</string>
   <string name="apkfy_install_body">استمتع بألعابك المفضلة والمزيد في Aptoide Games!</string>
   <string name="apkfy_install_bullet_points">\u2022 أفضل الألعاب الرائعة المختارة.\n\u2022 لا حاجة لتسجيل الدخول!\n\u2022 ترقيات وجوائز مميزة في ألعابك المفضلة.</string>
-  <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">دفع بواسطة محفظة AppCoins Wallet</string>
+  <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">ادفع باستخدام محفظة Aptoide</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">سيتم تثبيته تلقائيًا وستحصل على مكافأة على كل المشتريات!</string>
   <string name="buy_button" comment="buy">شراء</string>
   <string name="iap_other_payment_methods_button" comment="other_payment_methods">وسائل دفع أخرى</string>
@@ -155,7 +155,7 @@
   <string name="log_out_button" comment="log_out">تسجيل الخروج</string>
   <string name="iap_appc_body">ستحصل على مكافأة على كل المشتريات!</string>
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">يمكنك الآن إتمام عملية الشراء.</string>
-  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">تم تثبيت محفظة AppCoins Wallet!</string>
+  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">تم تثبيت محفظة Aptoide!</string>
   <string name="storage_access_permission_request_message">اسمح بالدخول إلى ذاكرة الجوال لنتمكن من تنزيل وتثبيت هذا التطبيق.</string>
   <string name="downloads_number_title">%s تنزيلات</string>
   <!-- Payment Errors-->
@@ -181,19 +181,19 @@
   <string name="iap_already_processing_body">قد تحتاج عملية الشراء هذه بعض الوقت، لذلك يرجى الانتظار حتى تتم أو تواصل مع فريق الدعم لدينا.</string>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">مكافأة على كل عملية شراء</string>
-  <string name="bonus_page_body_1">ابحث عن الألعاب المعرّفة مع %1$s، ثبت محفظة AppCoins Wallet واحصل على %2$s%% مكافآت على كل مشترياتك. يمكنك استخدام تلك المكافآت لعملية الشراء التالية داخل ألعابك المفضلة.</string>
+  <string name="bonus_page_body_1">ابحث عن ألعاب معرّفة بـ %1$s، ثبت محفظة Aptoide واحصل على مكافأة تصل إلى %2$s%% على كل المشتريات. يمكنك استخدام هذه المكافآت فيما بعد لإجراء عمليات الشراء التالية في ألعابك المفضلة!</string>
   <string name="bonus_page_title_2">تريد المزيد؟</string>
   <string name="bonus_page_body_2"><![CDATA[يمكنك الحصول على <1>%s%% مكافأة</1> إضافية باستخدام الرمز الترويجي الحصري لـ Aptoide Games في ألعاب محددة. تابع لتعرف وسنرسل لك إشعارًا!]]></string>
   <!-- Promo Code -->
   <string name="promo_code_install_wallet_banner_title">مكافآت حتى %s%% على كل المشتريات</string>
-  <string name="promo_code_install_wallet_banner_body">استخدم AppCoins Wallet لإتمام عمليات الشراء داخل التطبيقات واحصل على الجوائز.</string>
+  <string name="promo_code_install_wallet_banner_body">استخدم محفظة Aptoide لإجراء عمليات الشراء داخل التطبيقات واحصل على جائزة.</string>
   <string name="promo_code_extra_title">تريد المزيد؟ احصل على %s%% مكافأة إضافية!</string>
   <string name="promo_code_use_button">استخدم الرمز</string>
-  <string name="promo_code_install_wallet_disclaimer">ثبت محفظة AppCoins Wallet أولاً.</string>
+  <string name="promo_code_install_wallet_disclaimer">ثبت محفظة Aptoide أولًا.</string>
   <string name="promo_code_notification_title">استخدم الرمز الترويجي</string>
   <string name="promo_code_notification_body">استخدم الرمز الترويجي للحصول على مكافآت إضافية في ألعابك المفضلة.</string>
   <string name="promo_code_notification_without_wallet_title">مكافأة إضافية %s%%!</string>
-  <string name="promo_code_notification_without_wallet_body">احصل على AppCoins Wallet واستخدم رمزك الترويجي لتحصل على مكافآت إضافية على كل مشترياتك.</string>
+  <string name="promo_code_notification_without_wallet_body">مع محفظة Aptoide استخدم الرمز الترويجي لتحصل على مكافآت إضافية على كل المشتريات.</string>
   <string name="promo_code_share_title">حصلت على رمز ترويجي!</string>
   <string name="promo_code_share_body">استخدم هذا الرمز التويجي لتحصل على مكافآت إضافية في ألعابك المفضلة.</string>
   <!-- Update -->
@@ -232,25 +232,25 @@
   <string name="genai_example_1_body">أنا أبحث عن ألعاب الاستراتيجيات.</string>
   <string name="genai_example_2_body">يرجى اقتراح ألعاب متعددة اللاعبين.</string>
   <string name="genai_example_3_body">هل تعرف ألعاب عادية لا تحتاج إنترنت؟</string>
-  <string name="genai_history_body">GameGenie History</string>
-  <string name="genai_new_chat_button">New chat</string>
+  <string name="genai_history_body">سِجِل GameGenie</string>
+  <string name="genai_new_chat_button">محادثة جديدة</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">الآن مع AppCoins Payment System</string>
+  <string name="promotional_now_with_appcoins">الآن صار متوافقًا مع محفظة Aptoide</string>
   <string name="promotional_new_version">إصدار جديد</string>
   <string name="promotional_on_going_event">مناسبة مستمر</string>
   <string name="promotional_new_in_aptoide">متوفر الآن</string>
-  <string name="promotional_soon_in_aptoide">Available soon</string>
+  <string name="promotional_soon_in_aptoide">سيتوفر قريبًا</string>
   <string name="promotional_notify_button">أخبرني</string>
   <string name="promotional_new_notification_title">التطبيق الذي كنت تنتظره!</string>
   <string name="promotional_new_notification_body">%s متوفر الآن.</string>
   <string name="promotional_new_active">سنخبرك عندما يتوفر.</string>
-  <string name="promotional_now_available_body">Now available in Aptoide Games!</string>
-  <string name="promotional_now_available_tag">Now Available</string>
+  <string name="promotional_now_available_body">متوفر الآن في ألعاب Aptoide!</string>
+  <string name="promotional_now_available_tag">متوفر الآن</string>
   <!-- Tags -->
   <string name="tag_for_you">For You</string>
   <string name="tag_top_charts">Top Charts</string>
   <string name="tag_appcoins">AppCoins</string>
-  <string name="tag_editorial">Editorial</string>
-  <string name="tag_categories">Categories</string>
-  <string name="tag_bonus">Bonus</string>
+  <string name="tag_editorial">الكلمة الافتتاحية</string>
+  <string name="tag_categories">الفئات</string>
+  <string name="tag_bonus">المكافآت</string>
 </resources>
