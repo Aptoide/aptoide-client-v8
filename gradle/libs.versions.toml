@@ -42,6 +42,7 @@ hiltWork = "1.2.0"
 apacheCommonsText = "1.9"
 adyenVersion = "4.13.3"
 indicative = "1.1.0"
+mintegral = "16.9.51"
 zoomable = "2.0.0"
 
 #test libraries
@@ -111,6 +112,8 @@ work-manager = { module = "androidx.work:work-runtime-ktx", version.ref = "workM
 hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "hiltWork" }
 indicative-sdk = { module = "com.indicative.client.android:Indicative-Android", version.ref = "indicative" }
 zoomable = { module = "net.engawapg.lib:zoomable", version.ref = "zoomable" }
+mintegral = { module = "com.mbridge.msdk.oversea:mbridge_android_sdk", version.ref = "mintegral" }
+
 
 #Test library dependencies
 junit = { module = "junit:junit", version.ref = "junit" }

@@ -16,6 +16,8 @@ android {
   namespace = "com.aptoide.android.aptoidegames"
 
   defaultConfig {
+    val mintegralKey = project.property("MINTEGRAL_APP_KEY").toString()
+
     applicationId = "com.aptoide.android.aptoidegames"
     versionCode = Integer.parseInt(project.property("VERSION_CODE_APTOIDEGAMES").toString())
     versionName = (System.getenv("VERSION_NAME") ?: "").ifBlank { "internal.${getDate()}" }
@@ -72,6 +74,12 @@ android {
       value = "\"${project.properties[System.getenv("OEMID") ?: KeyHelper.OEMID]}\""
     )
 
+    buildConfigField(
+      type = "String",
+      name = "MINTEGRAL_APP_KEY",
+      value = mintegralKey
+    )
+
     buildConfigFieldFromGradleProperty("ROOM_SCHEMA_VERSION")
     buildConfigFieldFromGradleProperty("ROOM_DATABASE_NAME")
 
@@ -108,6 +116,10 @@ android {
 
   productFlavors {
     create("dev") {
+      val appId = project.property("MINTEGRAL_APP_ID_DEV").toString()
+      val placementId = project.property("NATIVE_PLACEMENT_ID_DEV").toString()
+      val unitId = project.property("NATIVE_UNIT_ID_DEV").toString()
+
       val adyenKey = project.property("ADYEN_PUBLIC_KEY_DEV").toString()
       dimension = "mode"
       applicationIdSuffix = ".dev"
@@ -141,9 +153,27 @@ android {
         "STORE_ENV_DOMAIN",
         "\"https://ws75-devel.aptoide.com/api/7.20240701/\""
       )
+      buildConfigField(
+        type = "String",
+        name = "MINTEGRAL_APP_ID",
+        value = appId
+      )
+      buildConfigField(
+        type = "String",
+        name = "NATIVE_PLACEMENT_ID",
+        value = placementId
+      )
+      buildConfigField(
+        type = "String",
+        name = "NATIVE_UNIT_ID",
+        value = unitId
+      )
     }
 
     create("prod") {
+      val appId = project.property("MINTEGRAL_APP_ID_PROD").toString()
+      val placementId= project.property("NATIVE_PLACEMENT_ID_PROD").toString()
+      val unitId = project.property("NATIVE_UNIT_ID_PROD").toString()
       val adyenKey = project.property("ADYEN_PUBLIC_KEY").toString()
       dimension = "mode"
 
@@ -180,6 +210,21 @@ android {
         type = "String",
         name = "AHAB_DOMAIN",
         value = "\"https://api.aptoide.com/ahab/8.20240801/\""
+      )
+      buildConfigField(
+        type = "String",
+        name = "MINTEGRAL_APP_ID",
+        value = appId
+      )
+      buildConfigField(
+        type = "String",
+        name = "NATIVE_PLACEMENT_ID",
+        value = placementId
+      )
+      buildConfigField(
+        type = "String",
+        name = "NATIVE_UNIT_ID",
+        value = unitId
       )
     }
   }
@@ -272,6 +317,9 @@ dependencies {
 
   //Pinch to zoom
   implementation(libs.zoomable)
+
+  //Ads
+  implementation(libs.mintegral)
 }
 
 fun BaseFlavor.buildConfigFieldFromGradleProperty(gradlePropertyName: String) {

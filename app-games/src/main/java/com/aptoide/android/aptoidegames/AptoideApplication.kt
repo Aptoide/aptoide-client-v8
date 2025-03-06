@@ -32,6 +32,7 @@ import com.appcoins.payments.di.restClientInjectParams
 import com.appcoins.payments.uri_handler.PaymentScreenContentProvider
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
+import com.aptoide.android.aptoidegames.feature_ad.Mintegral
 import com.aptoide.android.aptoidegames.feature_payments.analytics.AGLogger
 import com.aptoide.android.aptoidegames.home.repository.ThemePreferencesManager
 import com.aptoide.android.aptoidegames.installer.analytics.ScheduledDownloadsListenerImpl
@@ -119,6 +120,9 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
   @Inject
   lateinit var updates: Updates
 
+  @Inject
+  lateinit var mintegral: Mintegral
+
   override fun onCreate() {
     FirebaseApp.initializeApp(this)
     super.onCreate()
@@ -136,6 +140,7 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
       }
     }
     AptoideMMPCampaign.init(BuildConfig.OEMID, BuildConfig.MARKET_NAME)
+    mintegral.initializeSdk()
   }
 
   private fun initFeatureFlags() {
