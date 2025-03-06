@@ -1,5 +1,7 @@
 package com.aptoide.android.aptoidegames.feature_apps.presentation
 
+import android.view.ViewGroup.LayoutParams
+import android.widget.FrameLayout
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,19 +17,26 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.extractVideoId
 import cm.aptoide.pt.extensions.isYoutubeURL
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.domain.AppSource
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_apps.presentation.previewAppsListIdleState
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
@@ -38,6 +47,8 @@ import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusIconRight
+import com.aptoide.android.aptoidegames.feature_ad.MintegralAdApp
+import com.aptoide.android.aptoidegames.feature_ad.rememberAd
 import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.home.HorizontalPagerView
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
@@ -50,6 +61,7 @@ import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.videos.presentation.CarouselAppYoutubePlayer
+import okhttp3.internal.toImmutableList
 
 @Composable
 fun CarouselBundle(
@@ -106,11 +118,36 @@ private fun CarouselListView(
 ) {
   val analyticsContext = AnalyticsContext.current
   val bundleAnalytics = rememberBundleAnalytics()
+  var app: App? by remember { mutableStateOf(null) }
+  val adApp: MintegralAdApp? = rememberAd(
+    { packageName ->
+      navigate(
+        buildAppViewRoute(
+          if (app?.appId != null) {
+            AppSource.of(app?.appId, null)
+          } else {
+            AppSource.of(null, packageName)
+          }
+        ).withItemPosition(0)
+      )
+    }
+  )
+  LaunchedEffect(adApp) {
+    adApp?.let{
+      app = it.app
+    }
+  }
+  val updatedList: List<App> = remember(adApp) {
+    adApp?.let {
+      appsList.toMutableList().apply {
+        add(1, it.app)
+      }.toImmutableList()
+    } ?: appsList
+  }
 
   val showVideos = rememberShouldShowVideos(bundleTag)
-
   HorizontalPagerView(
-    appsList = appsList,
+    appsList = updatedList,
     scrollSpeedInSeconds = if (showVideos) 9L else DEFAULT_AUTO_SCROLL_SPEED
   ) { modifier, page, item, isCurrentPage ->
     Box(
@@ -118,43 +155,95 @@ private fun CarouselListView(
         .width(280.dp)
         .background(color = Color.Transparent)
     ) {
-      CarouselAppView(
-        app = item,
-        showVideo = showVideos && isCurrentPage,
-        onClick = {
-          bundleAnalytics.sendAppPromoClick(
-            app = item,
-            analyticsContext = analyticsContext.copy(itemPosition = page)
-          )
-          navigate(
-            buildAppViewRoute(item)
-              .withItemPosition(page)
-          )
-        }
-      )
+      if (adApp != null && page == 1) {
+        MintegralNativeAdView(
+          adApp = adApp,
+          item = item,
+          showVideos = showVideos,
+          isCurrentPage = isCurrentPage
+        )
+      } else {
+        CarouselAppView(
+          app = item,
+          showVideo = showVideos && isCurrentPage,
+          onClick = {
+            bundleAnalytics.sendAppPromoClick(
+              app = item,
+              analyticsContext = analyticsContext.copy(itemPosition = page)
+            )
+            navigate(
+              buildAppViewRoute(item)
+                .withItemPosition(page)
+            )
+          }
+        )
+      }
     }
   }
+}
+
+@Composable
+fun MintegralNativeAdView(
+  adApp: MintegralAdApp,
+  item: App,
+  showVideos: Boolean,
+  isCurrentPage: Boolean,
+) {
+  AndroidView(
+    factory = { context ->
+      val container = FrameLayout(context).apply {
+        layoutParams = LayoutParams(
+          LayoutParams.MATCH_PARENT,
+          LayoutParams.WRAP_CONTENT
+        )
+      }
+
+      val composeView = ComposeView(context).apply {
+        setContent {
+          CarouselAppView(
+            app = item,
+            showVideo = showVideos && isCurrentPage,
+            onClick = null
+          )
+        }
+      }
+      container.addView(
+        composeView,
+        FrameLayout.LayoutParams(
+          FrameLayout.LayoutParams.MATCH_PARENT,
+          FrameLayout.LayoutParams.WRAP_CONTENT
+        )
+      )
+      adApp.register(container)
+
+      container
+    }
+  )
 }
 
 @Composable
 private fun CarouselAppView(
   app: App,
   showVideo: Boolean,
-  onClick: () -> Unit,
+  onClick: (() -> Unit)?,
 ) {
+  val clickableModifier = if (onClick != null) {
+    Modifier.clickable(onClick = onClick)
+  } else {
+    Modifier
+  }
   val videoId = remember(app) {
     app.videos.getOrNull(0)
       ?.takeIf { it.isNotEmpty() && it.isYoutubeURL() }
       ?.extractVideoId()
   }
-
   Column(
     modifier = Modifier
       .requiredWidth(280.dp)
       .semantics(mergeDescendants = true) {
         contentDescription = app.name
       }
-      .clickable(onClick = onClick)
+      .then(clickableModifier)
   ) {
     Box(
       contentAlignment = Alignment.TopEnd
@@ -178,7 +267,7 @@ private fun CarouselAppView(
         Box(
           modifier = Modifier
             .matchParentSize()
-            .clickable(onClick = onClick)
+            .then(clickableModifier)
         )
       } else {
         AptoideFeatureGraphicImage(
