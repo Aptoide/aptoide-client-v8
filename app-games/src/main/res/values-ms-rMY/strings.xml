@@ -187,14 +187,14 @@ Promosi khas dan ganjaran dalam permainan kegemaran anda.</string>
   <string name="bonus_page_body_2"><![CDATA[Anda boleh dapat bonus <1>%s%% ekstra</1> dengan gunakan kod promo istimewa Permainan Aptoide dlm permainan terpilih. Terus ikuti perkembangan kami!]]></string>
   <!-- Promo Code -->
   <string name="promo_code_install_wallet_banner_title">Bonus sehingga %s%% dalam Setiap Pembelian</string>
-  <string name="promo_code_install_wallet_banner_body">Use the Aptoide Wallet to make your in-app purchases and get a reward.</string>
+  <string name="promo_code_install_wallet_banner_body">Guna Aptoide Wallet untuk membeli dalam aplikasi dan dapat ganjaran.</string>
   <string name="promo_code_extra_title">Nak Lagi? Dapatkan Bonus Ekstra %s%%!</string>
   <string name="promo_code_use_button">Guna kod</string>
-  <string name="promo_code_install_wallet_disclaimer">Install the Aptoide Wallet first.</string>
+  <string name="promo_code_install_wallet_disclaimer">Pasang Aptoide Wallet dahulu.</string>
   <string name="promo_code_notification_title">Tebus Kod Promo Anda</string>
   <string name="promo_code_notification_body">Guna kod promo anda untuk dapatkan bonus ekstra dalam permainan kegemaran anda.</string>
   <string name="promo_code_notification_without_wallet_title">Bonus Ekstra %s%%!</string>
-  <string name="promo_code_notification_without_wallet_body">Get the Aptoide Wallet and use your promo code to get extra bonuses in all purchases.</string>
+  <string name="promo_code_notification_without_wallet_body">Dapatkan Aptoide Wallet dan gunakan kod promo anda untuk peroleh bonus ekstra dalam semua pembelian.</string>
   <string name="promo_code_share_title">Anda ada kod promo!</string>
   <string name="promo_code_share_body">Guna kod promo ini untuk dapatkan bonus ekstra dalam permainan kegemaran anda.</string>
   <!-- Update -->
@@ -223,10 +223,10 @@ Promosi khas dan ganjaran dalam permainan kegemaran anda.</string>
   <string name="genai_example_1_body">Saya cari permainan strategi.</string>
   <string name="genai_example_2_body">Sila syorkan permainan berbilang pemain yang terbaik.</string>
   <string name="genai_example_3_body">Anda tahu permainan kasual luar talian?</string>
-  <string name="genai_history_body">GameGenie History</string>
-  <string name="genai_new_chat_button">New chat</string>
+  <string name="genai_history_body">Sejarah GameGenie</string>
+  <string name="genai_new_chat_button">Sembang baru</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Now compatible with the Aptoide Wallet</string>
+  <string name="promotional_now_with_appcoins">Kini serasi dengan Aptoide Wallet</string>
   <string name="promotional_new_version">Versi Baru</string>
   <string name="promotional_on_going_event">Acara semasa</string>
   <string name="promotional_new_in_aptoide">Kini tersedia</string>
@@ -236,12 +236,12 @@ Promosi khas dan ganjaran dalam permainan kegemaran anda.</string>
   <string name="promotional_new_notification_body">%s kini tersedia.</string>
   <string name="promotional_new_active">Anda akan dimaklumkan apabila tersedia.</string>
   <string name="promotional_now_available_body">Kini tersedia di Permainan Aptoide!</string>
-  <string name="promotional_now_available_tag">Now Available</string>
+  <string name="promotional_now_available_tag">Kini Tersedia</string>
   <!-- Tags -->
-  <string name="tag_for_you">For You</string>
-  <string name="tag_top_charts">Top Charts</string>
+  <string name="tag_for_you">Untuk Anda</string>
+  <string name="tag_top_charts">Carta Teratas</string>
   <string name="tag_appcoins">AppCoins</string>
   <string name="tag_editorial">Editorial</string>
-  <string name="tag_categories">Categories</string>
+  <string name="tag_categories">Kategori</string>
   <string name="tag_bonus">Bonus</string>
 </resources>
