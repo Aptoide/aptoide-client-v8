@@ -373,65 +373,65 @@
   <!--URL -->
   <string name="my_stores_login_message">Log masuk sekarang dan mula berkongsi aplikasi anda!</string>
   <!--APPC-->
-  <string name="appc_title_iab">Spend Your Aptoide Balance</string>
-  <string name="appc_title_ads">Get Rewarded with Aptoide Balance</string>
-  <string name="appc_title_featured">Featured Bonus Apps</string>
-  <string name="appc_home_bundle_iab">Use Your Aptoide Balance</string>
-  <string name="appc_home_bundle_poa">Earn Aptoide Balance</string>
-  <string name="appc_title_about_appcoins">About the Aptoide Wallet</string>
+  <string name="appc_title_iab">Belanja Baki Aptoide Anda</string>
+  <string name="appc_title_ads">Dapat Ganjaran dengan Aptoide Balance</string>
+  <string name="appc_title_featured">Aplikasi Bonus Pilihan</string>
+  <string name="appc_home_bundle_iab">Guna Baki Aptoide Anda</string>
+  <string name="appc_home_bundle_poa">Peroleh Baki Aptoide</string>
+  <string name="appc_title_about_appcoins">Perihal Aptoide Wallet</string>
   <string name="appc_message_appview_appcoins_reward">Cuba aplikasi ini selama 2 minit dan dapatkan\n%s</string>
   <string name="appc_message_appview_appcoins_reward_with_value">Cuba aplikasi ini selama 2 minit dan dapatkan\n%1$s %2$s</string>
-  <string name="appc_message_appview_appcoins_iab">In-app purchases with the Aptoide Wallet</string>
+  <string name="appc_message_appview_appcoins_iab">Beli dalam aplikasi dengan Aptoide Wallet</string>
   <string name="appc_card_short">BONUS</string>
-  <string name="appc_title_homepage_card">You can get Aptoide balance now!</string>
-  <string name="appc_message_homepage_card">The currency for the app economy is here! Get free Aptoide balance by using your favorite apps.</string>
+  <string name="appc_title_homepage_card">Anda boleh dapat baki Aptoide sekarang!</string>
+  <string name="appc_message_homepage_card">Mata wang untuk ekonomi aplikasi sudah tiba! Dapatkan baki Aptoide percuma dengan menggunakan aplikasi kegemaran anda.</string>
   <string name="appc_title_settings_appcoins_wallet">Aptoide Wallet</string>
-  <string name="appc_title_bundle">Bonus Apps</string>
+  <string name="appc_title_bundle">Aplikasi Bonus</string>
   <!--Editorial Content-->
   <string name="appc_verification_cancelled_by_user_message">Anda perlu sahkan dompet anda untuk terima ganjaran. Hanya beberapa saat saja!</string>
   <string name="editorial_reactions_login_short">Log masuk untuk terus sukai artikel!</string>
   <!--Promotion in APPC-C (old)-->
   <string comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)" name="editorial_bottom_follow_us">Ikut kami</string>
-  <string name="holidayspromotion_message_1">Install the following apps and get up to %s in Aptoide balance to spend in your favorite games!</string>
-  <string name="holidayspromotion_message_2">First, get the Aptoide Wallet to receive your Aptoide balance.</string>
+  <string name="holidayspromotion_message_1">Pasang aplikasi berikut dan terima sehingga %s dalam bentuk baki Aptoide untuk belanja dalam permainan kegemaran anda!</string>
+  <string name="holidayspromotion_message_2">Pertama, dapatkan Aptoide Wallet untuk terima baki Aptoide anda.</string>
   <string name="holidayspromotion_message_3">Kemudian, pasang mana-mana permainan ini untuk dapat ganjaran anda!</string>
   <string name="holidayspromotion_button_claimed">Dituntut</string>
-  <string name="holidayspromotion_message_popup">Earn %s in Aptoide balance by installing apps and spend them in your favorite games!</string>
+  <string name="holidayspromotion_message_popup">Peroleh %s dalam bentuk baki Aptoide dengan pasang aplikasi dan belanjakan ia dalam permainan kegemaran anda!</string>
   <string name="holidayspromotion_button_popup">Jum tengok!</string>
   <string name="promotion_over_title">Anda terlepas!</string>
   <string name="promotion_over_message">Promosi ini baru saja tamat, tapi ada promosi lain tidak lama lagi!</string>
   <!--Promotion with FIAT-->
-  <string name="FIATpromotion_install_to_get_short">Install to get %1$s in Aptoide balance (%2$s)</string>
-  <string name="FIATpromotion_update_to_get_short">Update to get %1$s in Aptoide balance (%2$s)</string>
+  <string name="FIATpromotion_install_to_get_short">Pasang untuk dapatkan %1$s dalam bentuk baki Aptoide (%2$s)</string>
+  <string name="FIATpromotion_update_to_get_short">Kemas kini untuk dapatkan %1$s dalam bentuk baki Aptoide (%2$s)</string>
   <!--Get Wallet Address-->
   <string name="promotion_claim_button">TUNTUT</string>
-  <string name="holidayspromotion_title_wallet">Aptoide Wallet Address</string>
-  <string name="holidayspromotion_message_wallet">Tell us your wallet address! Tap below and the Aptoide Wallet will take care of it.</string>
+  <string name="holidayspromotion_title_wallet">Alamat Aptoide Wallet</string>
+  <string name="holidayspromotion_message_wallet">Beritahu kami alamat dompet anda! Ketik di bawah dan Aptoide Wallet akan uruskan segalanya.</string>
   <string name="holidayspromotion_short_wallet_field">Alamat dompet</string>
   <string name="holidayspromotion_button_wallet_get">Jadikan ia kenyataan</string>
   <string name="holidayspromotion_short_wallet_invalid">Alamat dompet tidak sah</string>
   <string name="holidayspromotion_title_completed">Selesai!</string>
-  <string name="holidayspromotion_message_completed">Your Aptoide balance will be available in your wallet soon! Enjoy your gaming!</string>
+  <string name="holidayspromotion_message_completed">Baki Aptoide anda akan tersedia di dalam dompet anda tidak lama lagi! Nikmati permainan anda!</string>
   <string name="holidayspromotion_button_completed">Selesai</string>
   <string name="holidayspromotion_title_error_claimed">Oops…</string>
   <string name="holidayspromotion_short_error_claimed">Anda sudah tuntut ganjaran ini!</string>
   <!--APPC install Promotion-->
-  <string name="wallet_promotion_title">Get %s in Aptoide balance now!</string>
-  <string name="wallet_promotion_wallet_installed_message">Install this app and get %s in Aptoide balance to spend in your favorite games.</string>
-  <string name="wallet_promotion_wallet_notinstalled_message">Install this app and get %s APPC Credits. You need the Aptoide Wallet to receive them.</string>
-  <string name="wallet_promotion_wallet_installed_update_message">Update this app and get %s in Aptoide balance to spend in your favorite games.</string>
-  <string name="wallet_promotion_wallet_claim_message">You\'ve got %s in Aptoide balance to claim. Use them to buy items in your favorite apps.</string>
+  <string name="wallet_promotion_title">Dapatkan %s dalam baki Aptoide sekarang!</string>
+  <string name="wallet_promotion_wallet_installed_message">Pasang aplikasi ini dan terima %s dalam bentuk baki Aptoide untuk belanja dalam permainan kegemaran anda.</string>
+  <string name="wallet_promotion_wallet_notinstalled_message">Pasang aplikasi ini dan dapatkan %s baki Aptoide. Anda perlukan Aptoide Wallet untuk menerimanya.</string>
+  <string name="wallet_promotion_wallet_installed_update_message">Kemas kini aplikasi ini dan terima %s dalam bentuk baki Aptoide untuk belanja dalam permainan kegemaran anda.</string>
+  <string name="wallet_promotion_wallet_claim_message">Anda ada %s baki Aptoide untuk dituntut. Gunakannya untuk beli item dalam aplikasi kegemaran anda.</string>
   <string name="wallet_promotion_install_button">Pasang Dompet</string>
   <string name="wallet_promotion_no_button">Tidak mahu</string>
-  <string name="wallet_promotion_button_install_disabled">Install to get %s in Aptoide balance</string>
+  <string name="wallet_promotion_button_install_disabled">Pasang untuk dapatkan %s dalam bentuk baki Aptoide</string>
   <!--AppCoins Remove Ads Wallet Promotion -->
-  <string name="wallet_promotion_button_claim">Claim your %s in Aptoide balance</string>
+  <string name="wallet_promotion_button_claim">Tuntuk %s anda dalam baki Aptoide.</string>
   <!--Play to APPC - Migrator - Promotion-->
   <string name="promo_update2appc_data_disclaimer">Semak di tetapan permainan jika anda boleh simpan perkembangan anda.</string>
-  <string name="promo_update2appc_appview_update_button">Update to Aptoide Wallet version</string>
+  <string name="promo_update2appc_appview_update_button">Kemas kini ke versi Aptoide Wallet</string>
   <string name="promo_update2appc_notification_dismiss_button">Abaikan</string>
   <string name="promo_update2appc_notification_claim_button">Tuntut</string>
-  <string name="promo_update2appc_claim_notification_title">Get %s in Aptoide balance!</string>
+  <string name="promo_update2appc_claim_notification_title">Dapatkan %s dalam baki Aptoide!</string>
   <!--Promo Center-->
   <string name="promo_update2appc_claim_notification_body">Jangan lupa untuk tuntut ganjaran anda!</string>
   <string name="promo_center_pending_card_update_body">Kerana kemas kini %s</string>
@@ -439,15 +439,15 @@
   <string name="wallet_install_request_message_body">Untuk beli item ini, anda perlu dapatkan %s dahulu.</string>
   <string name="wallet_install_appcoins_wallet">Aptoide Wallet</string>
   <string name="wallet_install_complete_title">Pemasangan Selesai</string>
-  <string name="appc_not_supported_body">It seems this device doesn\'t support the Aptoide Wallet. Try with a different one!</string>
-  <string name="wallet_install_request_already_installed_title">Aptoide Wallet Install</string>
+  <string name="appc_not_supported_body">Nampaknya peranti ini tidak sokong Aptoide Wallet. Cuba peranti lain!</string>
+  <string name="wallet_install_request_already_installed_title">Pasang Aptoide Wallet</string>
   <string name="wallet_install_request_already_installed_body">Nikmati bonus bagi setiap pembelian dalam aplikasi!</string>
-  <string name="wallet_verification_message_update_wallet_to_claim">Update the Aptoide Wallet to receive this reward!</string>
+  <string name="wallet_verification_message_update_wallet_to_claim">Kemas kini Aptoide Wallet untuk terima ganjaran ini!</string>
   <string name="wallet_verification_button_update">Kemas kini sekarang</string>
   <!--POA exposure-->
   <string name="wallet_verification_button_update_wallet">Kemas Kini Dompet</string>
   <string name="poa_app_card_short">DAPAT %s</string>
-  <string name="poa_home_card_body">Install these apps and spend 2 minutes in them to earn Aptoide balance.</string>
+  <string name="poa_home_card_body">Pasang aplikasi ini dan gunakannya selama 2 minit untuk dapat baki Aptoide.</string>
   <string name="poa_app_view_card_body_1">Cuba aplikasi ini selama 2 minit dan dapatkan</string>
   <string name="poa_app_view_card_body_2">%1$s in Aptoide balance (%2$s)</string>
   <string name="poa_APPCC_left_body">Cepat! Hanya ada %s ganjaran tersedia.</string>
@@ -456,11 +456,11 @@
   <string name="poa_time_left_minutes">MINIT</string>
   <string name="poa_time_left_seconds">SAAT</string>
   <!--APPC Info View-->
-  <string name="appc_info_view_title_1">Everything You Need to Know About the Aptoide Wallet</string>
-  <string name="appc_info_view_body_1_variable">Aptoide balance is the currency for in-app transactions. The best part? You\'ll earn up to <b>%s%% bonus in all purchases!</b></string>
-  <string name="appc_info_view_body_1_variable_no_data">Aptoide balance is the currency for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
+  <string name="appc_info_view_title_1">Segala yang Anda Perlu Tahu Tentang Aptoide Wallet</string>
+  <string name="appc_info_view_body_1_variable">Baki Aptoide ialah mata wang untuk transaksi dalam aplikasi. Ciri terbaik? Anda akan peroleh bonus sehingga <b>%s%% dalam semua pembelian!</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">Baki Aptoide ialah mata wang untuk transaksi dalam aplikasi. Ciri terbaik? Anda akan peroleh <b>bonus dalam setiap pembelian</b></string>
   <string name="appc_info_view_title_2">Perkara Utama</string>
-  <string name="appc_info_view_body_2">You need to install the Aptoide Wallet to get rewards and process all transactions. Once you install it, it\'ll do everything for you!</string>
+  <string name="appc_info_view_body_2">Anda perlu pasang Aptoide Wallet untuk mendapat ganjaran dan memproses semua transaksi. Setelah anda pasang, ia akan buat segalanya untuk anda!</string>
   <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_4">Bonus bagi Setiap Pembelian!</string>
   <string name="appc_info_view_title_5_variable">Anda akan peroleh Bonus sehingga %s%% bagi setiap pembelian yang anda buat dalam aplikasi dengan simbol %s. Jangan lepaskan peluang ini untuk jadi pemain terhebat!</string>
@@ -510,7 +510,7 @@
   <!-- Out of space -->
   <string name="out_of_space_body">Anda perlu %s untuk teruskan pemasangan.</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Now compatible with the Aptoide Wallet</string>
+  <string name="promotional_now_with_appcoins">Kini serasi dengan Aptoide Wallet</string>
   <string name="promotional_new_version">Versi Baru</string>
   <string name="promotional_on_going_event">Acara semasa</string>
   <string name="promotional_new_in_aptoide">Kini tersedia di Aptoide</string>
