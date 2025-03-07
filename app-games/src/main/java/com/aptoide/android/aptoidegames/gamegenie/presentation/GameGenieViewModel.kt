@@ -52,7 +52,10 @@ class GameGenieViewModel @Inject constructor(
     viewModelScope.launch {
       try {
         updateLoadingState { updateConversation(userMessage) }
-        val chat = gameGenieUseCase.sendMessage(chat = uiState.value.chat, userMessage = userMessage)
+        val chat = gameGenieUseCase.sendMessage(
+                      chat = uiState.value.chat,
+                      userMessage = userMessage
+                    )
         updateSuccessState(chat)
       } catch (e: Throwable) {
         handleError(e)
@@ -104,7 +107,11 @@ class GameGenieViewModel @Inject constructor(
     viewModelState.update {
       it.copy(
         type = GameGenieUIStateType.IDLE,
-        chat = it.chat.copy(id = response.id, conversation = response.conversation),
+        chat = it.chat.copy(
+          id = response.id,
+          title = response.title,
+          conversation = response.conversation
+        ),
         apps = response.conversation.lastOrNull()?.apps?.map { app -> app.packageName }
           ?: emptyList()
       )
@@ -138,6 +145,7 @@ private data class GameGenieViewModelState(
   val type: GameGenieUIStateType = GameGenieUIStateType.IDLE,
   val chat: GameGenieChat = GameGenieChat(
     "",
+    "",
     listOf(
       ChatInteraction(
         "",
@@ -155,6 +163,7 @@ private data class GameGenieViewModelState(
     GameGenieViewModelState(
       GameGenieUIStateType.IDLE,
       GameGenieChat(
+        "",
         "",
         listOf(
           ChatInteraction(

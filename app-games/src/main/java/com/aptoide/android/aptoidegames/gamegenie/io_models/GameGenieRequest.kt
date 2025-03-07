@@ -6,5 +6,6 @@ import com.aptoide.android.aptoidegames.gamegenie.domain.ChatInteraction
 @Keep
 data class GameGenieRequest(
   val id: String?,
+  val title: String?,
   val conversation: List<ChatInteraction>,
 )

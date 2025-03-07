@@ -11,6 +11,8 @@ import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
+private const val MAX_CHATS = 15
+
 class GameGenieUseCase @Inject constructor(
   private val gameGenieManager: GameGenieManager,
 ) {
@@ -19,7 +21,11 @@ class GameGenieUseCase @Inject constructor(
   }
 
   suspend fun reloadConversation(chat: GameGenieChat): GameGenieChat {
-    return sendMessage(chat, chat.conversation.lastOrNull()?.user ?: "")
+    val lastMessage = chat.conversation.lastOrNull()?.user ?: ""
+    return if (lastMessage.isNotEmpty())
+      sendMessage(chat, lastMessage)
+    else
+      chat
   }
 
   suspend fun sendMessage(
@@ -31,7 +37,7 @@ class GameGenieUseCase @Inject constructor(
         this[lastIndex] = last().copy(user = userMessage)
       }
     }
-    return postMessage(chat.id, updatedConversation).fold(
+    return postMessage(chat.id, chat.title, updatedConversation).fold(
       onSuccess = { response ->
         val convertedChat = response.toGameGenieChat()
         gameGenieManager.saveChat(convertedChat)
@@ -45,18 +51,29 @@ class GameGenieUseCase @Inject constructor(
     return runCatching { gameGenieManager.getChatById(id).toDomain() }.getOrNull()
   }
 
-  fun getAllChats(): Flow<List<ConversationInfo>> {
-    return gameGenieManager.getAllChats()
-      .map { conversations -> conversations.map { conversation -> conversation.toConversationInfo() } }
-  }
+  fun getDrawerChats(): Flow<List<ConversationInfo>> =
+    gameGenieManager.getAllChats()
+      .map { conversations ->
+        val pastConversations = conversations.reversed()
+
+        if (pastConversations.size > MAX_CHATS) {
+          val chatToDelete = pastConversations.last()
+          deleteChat(chatToDelete.id)
+        }
+
+        pastConversations.map { conversation ->
+          conversation.toConversationInfo()
+        }
+      }
 
   private suspend fun postMessage(
     id: String,
+    title: String,
     conversation: List<ChatInteraction>,
   ): Result<GameGenieResponse> {
     return runCatching {
       val token = getToken()
-      gameGenieManager.postMessage(token, GameGenieRequest(id, conversation))
+      gameGenieManager.postMessage(token, GameGenieRequest(id, title, conversation))
     }
   }
 
@@ -68,11 +85,11 @@ class GameGenieUseCase @Inject constructor(
     val userMessage = conversation[0].user
     return if (userMessage == null) ConversationInfo(
       id = id,
-      title = null, // for now
+      title = title,
       firstMessage = conversation[0].gpt
     ) else ConversationInfo(
       id = id,
-      title = null, // for now
+      title = title,
       firstMessage = userMessage
     )
   }
