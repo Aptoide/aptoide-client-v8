@@ -427,7 +427,7 @@
   <string name="wallet_promotion_button_claim">Aptoide 잔액에서 %s 요청하기</string>
   <!--Play to APPC - Migrator - Promotion-->
   <string name="promo_update2appc_data_disclaimer">진행 상태를 저장할 수 있다면 게임 설정을 확인해보세요.</string>
-  <string name="promo_update2appc_appview_update_button">Aptoide 지갑 버전 업데이트</string>
+  <string name="promo_update2appc_appview_update_button">Update to bonus version</string>
   <string name="promo_update2appc_notification_dismiss_button">무시</string>
   <string name="promo_update2appc_notification_claim_button">요청</string>
   <string name="promo_update2appc_claim_notification_title">Aptoide 잔액에서 %s를 획득하세요!</string>
