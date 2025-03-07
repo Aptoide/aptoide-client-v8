@@ -429,7 +429,7 @@ et ne contient aucune menaceU+00A0!</string>
   <string name="wallet_promotion_button_claim">Réclamez vos %s dans votre Solde Aptoide</string>
   <!--Play to APPC - Migrator - Promotion-->
   <string name="promo_update2appc_data_disclaimer">Vérifiez les paramètres du jeu pour savoir si vous pouvez sauvegarder votre progression.</string>
-  <string name="promo_update2appc_appview_update_button">Mettez à jour vers la version Aptoide Wallet</string>
+  <string name="promo_update2appc_appview_update_button">Update to bonus version</string>
   <string name="promo_update2appc_notification_dismiss_button">Rejeter</string>
   <string name="promo_update2appc_notification_claim_button">Réclamer</string>
   <string name="promo_update2appc_claim_notification_title">Obtenez %s en Solde Aptoide !</string>
