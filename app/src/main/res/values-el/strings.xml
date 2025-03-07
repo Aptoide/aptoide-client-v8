@@ -427,7 +427,7 @@
   <string name="wallet_promotion_button_claim">Διεκδικήστε το %s σας σε υπόλοιπο Aptoide</string>
   <!--Play to APPC - Migrator - Promotion-->
   <string name="promo_update2appc_data_disclaimer">Ελέγξτε στις ρυθμίσεις του παιχνιδιού εάν μπορείτε να αποθηκεύσετε την πρόοδό σας.</string>
-  <string name="promo_update2appc_appview_update_button">Ενημερώστε σε έκδοση Aptoide Wallet</string>
+  <string name="promo_update2appc_appview_update_button">Update to bonus version</string>
   <string name="promo_update2appc_notification_dismiss_button">Απόρριψη</string>
   <string name="promo_update2appc_notification_claim_button">Διεκδίκηση</string>
   <string name="promo_update2appc_claim_notification_title">Λάβετε %s σε υπόλοιπο Aptoide!</string>
