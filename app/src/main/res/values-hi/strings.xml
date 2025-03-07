@@ -428,7 +428,7 @@
   <string name="wallet_promotion_button_claim">Claim your %s in Aptoide balance</string>
   <!--Play to APPC - Migrator - Promotion-->
   <string name="promo_update2appc_data_disclaimer">गेम सेटिंग्स में देखें अगर आप अपनी प्रगति को सहेज सकते हैं।</string>
-  <string name="promo_update2appc_appview_update_button">Update to Aptoide Wallet version</string>
+  <string name="promo_update2appc_appview_update_button">Update to bonus version</string>
   <string name="promo_update2appc_notification_dismiss_button">रद्द करें</string>
   <string name="promo_update2appc_notification_claim_button">दावा करें</string>
   <string name="promo_update2appc_claim_notification_title">Get %s in Aptoide balance!</string>
