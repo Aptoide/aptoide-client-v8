@@ -436,7 +436,7 @@
   <string name="wallet_promotion_button_claim">Claim your %s in Aptoide balance</string>
   <!--Play to APPC - Migrator - Promotion-->
   <string name="promo_update2appc_data_disclaimer">Check in the game settings if you can save your progress.</string>
-  <string name="promo_update2appc_appview_update_button">Update to Aptoide Wallet version</string>
+  <string name="promo_update2appc_appview_update_button">Update to bonus version</string>
   <string name="promo_update2appc_notification_dismiss_button">Dismiss</string>
   <string name="promo_update2appc_notification_claim_button">Claim</string>
   <string name="promo_update2appc_claim_notification_title">Get %s in Aptoide balance!</string>
