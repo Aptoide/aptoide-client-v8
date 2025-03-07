@@ -429,7 +429,7 @@
   <string name="wallet_promotion_button_claim">Hol dir %s Aptoide-Guthaben</string>
   <!--Play to APPC - Migrator - Promotion-->
   <string name="promo_update2appc_data_disclaimer">Wenn Sie ihren Fortschritt speichern können, dann überprüfen Sie ihre Spieleinstellungen.</string>
-  <string name="promo_update2appc_appview_update_button">Update auf die Aptoide Wallet-Version</string>
+  <string name="promo_update2appc_appview_update_button">Update to bonus version</string>
   <string name="promo_update2appc_notification_dismiss_button">Verwerfen</string>
   <string name="promo_update2appc_notification_claim_button">Beanspruchen</string>
   <string name="promo_update2appc_claim_notification_title">Erhalte %s Aptoide-Guthaben!</string>
