@@ -428,7 +428,7 @@
   <string name="wallet_promotion_button_claim">领取您的 %s（以 Aptoide 余额形式发放）</string>
   <!--Play to APPC - Migrator - Promotion-->
   <string name="promo_update2appc_data_disclaimer">在游戏设置中查看是否可以保存进度。</string>
-  <string name="promo_update2appc_appview_update_button">更新至最新版本的 Aptoide Wallet</string>
+  <string name="promo_update2appc_appview_update_button">Update to bonus version</string>
   <string name="promo_update2appc_notification_dismiss_button">解除</string>
   <string name="promo_update2appc_notification_claim_button">领取</string>
   <string name="promo_update2appc_claim_notification_title">获得 %s 的 Aptoide 余额！</string>
