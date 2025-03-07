@@ -428,7 +428,7 @@
   <string name="wallet_promotion_button_claim">%s Aptoide bakiyeni al</string>
   <!--Play to APPC - Migrator - Promotion-->
   <string name="promo_update2appc_data_disclaimer">İlerlemenizi kaydetmek için oyun ayarlarından kontrol edin.</string>
-  <string name="promo_update2appc_appview_update_button">Aptoide Wallet sürümüne güncelle</string>
+  <string name="promo_update2appc_appview_update_button">Update to bonus version</string>
   <string name="promo_update2appc_notification_dismiss_button">Yoksay</string>
   <string name="promo_update2appc_notification_claim_button">Al</string>
   <string name="promo_update2appc_claim_notification_title">%s Aptoide bakiyesi al!</string>
