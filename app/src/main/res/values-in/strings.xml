@@ -428,7 +428,7 @@ ancaman apa pun!</string>
   <string name="wallet_promotion_button_claim">Klaim saldo Aptoide Anda sebesar %s</string>
   <!--Play to APPC - Migrator - Promotion-->
   <string name="promo_update2appc_data_disclaimer">Periksa pengaturan permainan apakah Anda dapat menyimpan progres.</string>
-  <string name="promo_update2appc_appview_update_button">Perbarui ke versi Aptoide Wallet</string>
+  <string name="promo_update2appc_appview_update_button">Update to bonus version</string>
   <string name="promo_update2appc_notification_dismiss_button">Abaikan</string>
   <string name="promo_update2appc_notification_claim_button">Klaim</string>
   <string name="promo_update2appc_claim_notification_title">Dapatkan saldo Aptoide sebesar %s!</string>
