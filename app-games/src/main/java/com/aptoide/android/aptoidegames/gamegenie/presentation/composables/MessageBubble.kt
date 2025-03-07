@@ -90,8 +90,7 @@ fun MessageBubble(
       }
 
       processedApps?.let {
-        if (processedApps.isNotEmpty() && processedApps.all { state -> state == AppUiState.Error || state == AppUiState.NoConnection }) {
-          // not sure if I should be changing the outer state, but since its controlled via interface it should be ok
+        if (processedApps.isNotEmpty() && processedApps.all { state -> state == AppUiState.NoConnection }) {
           onAllAppsFail()
         }
       }
