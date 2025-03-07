@@ -430,7 +430,7 @@ e com a Política de Conteúdo para Programadores.</string>
   <string name="wallet_promotion_button_claim">Reclama os teus %s em saldo Aptoide</string>
   <!--Play to APPC - Migrator - Promotion-->
   <string name="promo_update2appc_data_disclaimer">Vê nas definições do jogo se podes salvar o teu progresso.</string>
-  <string name="promo_update2appc_appview_update_button">Atualiza para versão da Aptoide Wallet</string>
+  <string name="promo_update2appc_appview_update_button">Update to bonus version</string>
   <string name="promo_update2appc_notification_dismiss_button">Rejeitar</string>
   <string name="promo_update2appc_notification_claim_button">Pedir</string>
   <string name="promo_update2appc_claim_notification_title">Recebe %s em saldo Aptoide!</string>
