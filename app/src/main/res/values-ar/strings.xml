@@ -436,7 +436,7 @@ or
   <string name="wallet_promotion_button_claim">طالب بـ %s الخاص بك في رصيد Aptoide</string>
   <!--Play to APPC - Migrator - Promotion-->
   <string name="promo_update2appc_data_disclaimer">قم بالتحقق من إعدادات اللعبة، إذا كان بإمكانك حفظ تقدمك باللعبة.</string>
-  <string name="promo_update2appc_appview_update_button">حدّث إلى نسخة محفظة Aptoide</string>
+  <string name="promo_update2appc_appview_update_button">Update to bonus version</string>
   <string name="promo_update2appc_notification_dismiss_button">تجاهل</string>
   <string name="promo_update2appc_notification_claim_button">مطالبة</string>
   <string name="promo_update2appc_claim_notification_title">احصل على %s في رصيد Aptoide!</string>
