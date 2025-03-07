@@ -427,7 +427,7 @@ http://aptoi.de/tv</string>
   <string name="wallet_promotion_button_claim">Solicita tus %s en saldo Aptoide</string>
   <!--Play to APPC - Migrator - Promotion-->
   <string name="promo_update2appc_data_disclaimer">Comprueba en los ajustes del juego si puedes guardar tu progreso.</string>
-  <string name="promo_update2appc_appview_update_button">Actualiza a la versión Aptoide Wallet</string>
+  <string name="promo_update2appc_appview_update_button">Update to bonus version</string>
   <string name="promo_update2appc_notification_dismiss_button">Descartar</string>
   <string name="promo_update2appc_notification_claim_button">Recibir</string>
   <string name="promo_update2appc_claim_notification_title">¡Recibe %s en saldo Aptoide!</string>
