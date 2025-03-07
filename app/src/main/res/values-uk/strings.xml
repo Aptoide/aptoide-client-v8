@@ -429,7 +429,7 @@
   <string name="wallet_promotion_button_claim">Отримайте свої %s у вигляді балансу Aptoide</string>
   <!--Play to APPC - Migrator - Promotion-->
   <string name="promo_update2appc_data_disclaimer">Перевірте в налаштуваннях гри, чи можете ви зберегти свій прогрес.</string>
-  <string name="promo_update2appc_appview_update_button">Оновлення до версії Aptoide Wallet</string>
+  <string name="promo_update2appc_appview_update_button">Update to bonus version</string>
   <string name="promo_update2appc_notification_dismiss_button">Відхилити</string>
   <string name="promo_update2appc_notification_claim_button">Отримати</string>
   <string name="promo_update2appc_claim_notification_title">Отримайте %s у вигляді балансу Aptoide!</string>
