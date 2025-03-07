@@ -430,7 +430,7 @@ http://aptoi.de/tv</string>
   <string name="wallet_promotion_button_claim">Claim your %s in Aptoide balance</string>
   <!--Play to APPC - Migrator - Promotion-->
   <string name="promo_update2appc_data_disclaimer">ਜੇ ਤੁਸੀਂ ਆਪਣੀ ਤਰੱਕੀ ਨੂੰ ਸੇਵ ਕਰ ਸਕਦੇ ਹੋ ਤਾਂ ਗੇਮ ਸੈਟਿੰਗਾਂ ਵਿਚ ਦੇਖੋ|</string>
-  <string name="promo_update2appc_appview_update_button">Update to Aptoide Wallet version</string>
+  <string name="promo_update2appc_appview_update_button">Update to bonus version</string>
   <string name="promo_update2appc_notification_dismiss_button">ਬਰਖਾਸਤ</string>
   <string name="promo_update2appc_notification_claim_button">ਦਾਅਵਾ ਕਰੋ</string>
   <string name="promo_update2appc_claim_notification_title">Get %s in Aptoide balance!</string>
