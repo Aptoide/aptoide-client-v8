@@ -428,7 +428,7 @@
   <string name="wallet_promotion_button_claim">%sのAptoideクレジットを受け取る</string>
   <!--Play to APPC - Migrator - Promotion-->
   <string name="promo_update2appc_data_disclaimer">ゲームの設定で、進捗状況を保存できるかどうかを確認してください。</string>
-  <string name="promo_update2appc_appview_update_button">Aptoide Walletバージョンに更新</string>
+  <string name="promo_update2appc_appview_update_button">Update to bonus version</string>
   <string name="promo_update2appc_notification_dismiss_button">退ける</string>
   <string name="promo_update2appc_notification_claim_button">請求</string>
   <string name="promo_update2appc_claim_notification_title">%sのAptoideクレジットを獲得！</string>
