@@ -55,7 +55,7 @@ fun ConversationHistoryBox(
         contentDescription = null
       )
       Text(
-        text = conversationInfo.title ?: conversationInfo.firstMessage,
+        text = if (conversationInfo.title.isNullOrEmpty()) conversationInfo.firstMessage else conversationInfo.title,
         style = AGTypography.DescriptionGames,
         color = Palette.GreyLight,
         overflow = TextOverflow.Ellipsis,

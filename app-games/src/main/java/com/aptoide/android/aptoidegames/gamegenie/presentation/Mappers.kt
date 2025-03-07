@@ -11,6 +11,7 @@ import com.google.gson.reflect.TypeToken
 
 fun GameGenieChat.toEntity() = GameGenieHistoryEntity(
   id = this.id,
+  title = this.title,
   conversation = this.conversation.map { it.toEntity() }
 )
 
@@ -22,6 +23,7 @@ fun ChatInteraction.toEntity() = ChatInteractionEntity(
 
 fun GameGenieHistoryEntity.toDomain() = GameGenieChat(
   id = this.id,
+  title = this.title,
   conversation = this.conversation.map { it.toDomain() }
 )
 
@@ -34,5 +36,6 @@ fun ChatInteractionEntity.toDomain() = ChatInteraction(
 fun GameGenieResponse.toGameGenieChat() =
   GameGenieChat(
     id = this.id,
+    title = this.title,
     conversation = this.conversation
   )

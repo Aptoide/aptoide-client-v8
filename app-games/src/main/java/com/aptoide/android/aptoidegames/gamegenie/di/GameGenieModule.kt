@@ -47,7 +47,9 @@ internal object GameGenieModule {
     appContext,
     GameGenieDatabase::class.java,
     "ag_game_genie.db"
-  ).build()
+  )
+    .addMigrations(GameGenieDatabase.FirstMigration())
+    .build()
 
   @Singleton
   @Provides
