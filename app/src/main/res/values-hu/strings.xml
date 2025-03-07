@@ -427,7 +427,7 @@
   <string name="wallet_promotion_button_claim">Hívd le ezt az összeget Aptoide egyenleg formájában: %s</string>
   <!--Play to APPC - Migrator - Promotion-->
   <string name="promo_update2appc_data_disclaimer">A játékok beállításainál nézd meg, hogy átvihető-e az előrehaladásod.</string>
-  <string name="promo_update2appc_appview_update_button">Frissíts az Aptoide Wallet verziójára</string>
+  <string name="promo_update2appc_appview_update_button">Update to bonus version</string>
   <string name="promo_update2appc_notification_dismiss_button">Bezárás</string>
   <string name="promo_update2appc_notification_claim_button">OK</string>
   <string name="promo_update2appc_claim_notification_title">Szerezz %s Aptoide egyenleget!</string>
