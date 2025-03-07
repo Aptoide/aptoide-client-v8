@@ -427,7 +427,7 @@
   <string name="wallet_promotion_button_claim">Claim je %s in Aptoide-tegoed</string>
   <!--Play to APPC - Migrator - Promotion-->
   <string name="promo_update2appc_data_disclaimer">Controleer via de instellingen van het spel of je je voortgang kunt opslaan.</string>
-  <string name="promo_update2appc_appview_update_button">Werk bij naar de Aptoide Wallet-versie</string>
+  <string name="promo_update2appc_appview_update_button">Update to bonus version</string>
   <string name="promo_update2appc_notification_dismiss_button">Annuleren</string>
   <string name="promo_update2appc_notification_claim_button">Claimen</string>
   <string name="promo_update2appc_claim_notification_title">Krijg %s in Aptoide-tegoed!</string>
