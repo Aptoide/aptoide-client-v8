@@ -428,7 +428,7 @@
   <string name="wallet_promotion_button_claim">Zatražite svojih %s u Aptoide bilansu</string>
   <!--Play to APPC - Migrator - Promotion-->
   <string name="promo_update2appc_data_disclaimer">Proverite u podešavanjima igre da li možete da sačuvate napredak.</string>
-  <string name="promo_update2appc_appview_update_button">Ažurirajte na verziju Aptoide Wallet</string>
+  <string name="promo_update2appc_appview_update_button">Update to bonus version</string>
   <string name="promo_update2appc_notification_dismiss_button">Odbaci</string>
   <string name="promo_update2appc_notification_claim_button">Preuzmi</string>
   <string name="promo_update2appc_claim_notification_title">Dobijte %s u Aptoide bilansu!</string>
