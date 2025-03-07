@@ -13,6 +13,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+private const val MAX_CHATS = 15
+
 @HiltViewModel
 class ConversationHistoryViewModel @Inject constructor(
   private val gameGenieUseCase: GameGenieUseCase,
@@ -31,7 +33,14 @@ class ConversationHistoryViewModel @Inject constructor(
   init {
     viewModelScope.launch {
       gameGenieUseCase.getAllChats().map { chats ->
-        val pastConversations = chats.reversed()
+        var pastConversations = chats.reversed()
+
+        if (pastConversations.size > MAX_CHATS) {
+          val chatToDelete = pastConversations.last()
+          deleteChat(chatToDelete.id)
+          pastConversations = pastConversations.dropLast(1)
+        }
+
         viewModelState.update {
           ConversationHistoryUIState.Idle(pastConversations, onDeleteChat = { deleteChat(it) })
         }
