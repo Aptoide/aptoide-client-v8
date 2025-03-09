@@ -459,9 +459,9 @@
   <!--APPC Info View-->
   <string name="appc_info_view_title_1">هر چیزی که باید درباره Aptoide Wallet بدانید</string>
   <string name="appc_info_view_body_1_variable">Aptoide balance واحد تراکنش‌های داخل اپلیکیشنی هستند. بهترین قسمت؟ شما تا <b>%s%% بونوس در همه خریدها</b> بدست خواهید آورد!</string>
-  <string name="appc_info_view_body_1_variable_no_data">Aptoide balance is the currency for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">Aptoide balance واحد تراکنش‌های داخل اپلیکیشنی هستند. بهترین قسمت؟ شما تا <b>بونوس در همه خریدها</b> بدست خواهید آورد!</string>
   <string name="appc_info_view_title_2">اولین چیزها در ابتدا</string>
-  <string name="appc_info_view_body_2">You need to install the Aptoide Wallet to get rewards and process all transactions. Once you install it, it\'ll do everything for you!</string>
+  <string name="appc_info_view_body_2">برای دریافت پاداش باید Aptoide Wallet را نصب کنید و همه تراکنش‌ها را پردازش کنید. کافی است آن را نصب کنید و برای شما همه کار انجام خواهد داد!</string>
   <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_4">یک پاداش برای هر خرید!</string>
   <string name="appc_info_view_title_5_variable">شما تا %s%% پاداش برای همه خریدها در اپلیکیشن با علامت %s بدست خواهید آورد. از آن استفاده کنید و یک گیمر خفن شوید!</string>
@@ -511,7 +511,7 @@
   <!-- Out of space -->
   <string name="out_of_space_body">برای ادامه نصب به %s نیاز دارید.</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Now compatible with the Aptoide Wallet</string>
+  <string name="promotional_now_with_appcoins">اکنون سازگار با Aptoide Wallet</string>
   <string name="promotional_new_version">نسخه جدید</string>
   <string name="promotional_on_going_event">رویداد در حال ادامه</string>
   <string name="promotional_new_in_aptoide">هم اکنون در Aptoide موجود است</string>
