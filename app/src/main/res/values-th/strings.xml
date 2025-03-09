@@ -373,7 +373,7 @@
   <!--URL -->
   <string name="my_stores_login_message">เข้าสู่ระบบตอนนี้และเริ่มแชร์แอปของคุณ!</string>
   <!--APPC-->
-  <string name="appc_title_iab">Spend Your Aptoide Balance</string>
+  <string name="appc_title_iab">ใช้ยอดเงินคงเหลือของคุณ</string>
   <string name="appc_title_ads">Get Rewarded with Aptoide Balance</string>
   <string name="appc_title_featured">Featured Bonus Apps</string>
   <string name="appc_home_bundle_iab">Use Your Aptoide Balance</string>
