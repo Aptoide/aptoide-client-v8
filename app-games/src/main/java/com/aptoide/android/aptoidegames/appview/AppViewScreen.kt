@@ -84,7 +84,7 @@ import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.mapOfNonNull
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
-import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
+import com.aptoide.android.aptoidegames.analytics.presentation.rememberGeneralAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.appview.AppViewHeaderConstants.FEATURE_GRAPHIC_HEIGHT
 import com.aptoide.android.aptoidegames.appview.AppViewHeaderConstants.VIDEO_HEIGHT
@@ -193,7 +193,7 @@ fun AppViewScreen(
 ) {
   val (uiState, reload) = rememberApp(source = source)
   val analyticsContext = AnalyticsContext.current
-  val genericAnalytics = rememberGenericAnalytics()
+  val generalAnalytics = rememberGeneralAnalytics()
 
   val relatedEditorialsUiState = (uiState as? AppUiState.Idle)?.app?.packageName?.let {
     rememberRelatedEditorials(packageName = it)
@@ -215,7 +215,7 @@ fun AppViewScreen(
     noNetworkReload = reload,
     navigate = navigate,
     navigateBack = {
-      genericAnalytics.sendBackButtonClick(analyticsContext)
+      generalAnalytics.sendBackButtonClick(analyticsContext)
       navigateBack()
     },
     tabsList = tabsList,

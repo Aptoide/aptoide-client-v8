@@ -29,7 +29,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.runPreviewable
-import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
+import com.aptoide.android.aptoidegames.analytics.presentation.rememberGeneralAnalytics
 import com.aptoide.android.aptoidegames.gamegenie.presentation.rememberGameGenieVisibility
 import com.aptoide.android.aptoidegames.home.BottomBarMenuHandler
 import com.aptoide.android.aptoidegames.home.BottomBarMenus
@@ -56,7 +56,7 @@ fun AppGamesBottomBarPreview() {
 
 @Composable
 fun AppGamesBottomBar(navController: NavController) {
-  val genericAnalytics = rememberGenericAnalytics()
+  val generalAnalytics = rememberGeneralAnalytics()
   val shouldShowGameGenie = rememberGameGenieVisibility()
   val filteredBottomNavigationItems = bottomNavigationItems.filter(shouldShowGameGenie)
   val selection =
@@ -72,11 +72,11 @@ fun AppGamesBottomBar(navController: NavController) {
           isSelected = isSelected,
           onItemClicked = {
             when (item) {
-              BottomBarMenus.Games -> genericAnalytics.sendBottomBarHomeClick()
-              BottomBarMenus.Search -> genericAnalytics.sendBottomBarSearchClick()
-              BottomBarMenus.Categories -> genericAnalytics.sendBottomBarCategoriesClick()
-              BottomBarMenus.Updates -> genericAnalytics.sendBottomBarUpdatesClick()
-              BottomBarMenus.GameGenie -> genericAnalytics.sendBottomBarGameGenieClick()
+              BottomBarMenus.Games -> generalAnalytics.sendBottomBarHomeClick()
+              BottomBarMenus.Search -> generalAnalytics.sendBottomBarSearchClick()
+              BottomBarMenus.Categories -> generalAnalytics.sendBottomBarCategoriesClick()
+              BottomBarMenus.Updates -> generalAnalytics.sendBottomBarUpdatesClick()
+              BottomBarMenus.GameGenie -> generalAnalytics.sendBottomBarGameGenieClick()
             }
             if (!isSelected) {
               navController.navigate(item.route) {

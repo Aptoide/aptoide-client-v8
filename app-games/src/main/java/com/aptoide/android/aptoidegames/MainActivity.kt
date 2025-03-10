@@ -9,7 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import cm.aptoide.pt.install_manager.InstallManager
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
-import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
+import com.aptoide.android.aptoidegames.analytics.GeneralAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withPrevScreen
 import com.aptoide.android.aptoidegames.firebase.FirebaseConstants
 import com.aptoide.android.aptoidegames.home.MainView
@@ -33,7 +33,7 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity() {
 
   @Inject
-  lateinit var genericAnalytics: GenericAnalytics
+  lateinit var generalAnalytics: GeneralAnalytics
 
   @Inject
   lateinit var installAnalytics: InstallAnalytics
@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity() {
   private fun sendAGStartAnalytics() {
     CoroutineScope(Dispatchers.Main).launch {
       val isFirstLaunch = appLaunchPreferencesManager.isFirstLaunch()
-      genericAnalytics.sendOpenAppEvent(
+      generalAnalytics.sendOpenAppEvent(
         appOpenSource = intent.appOpenSource,
         isFirstLaunch = isFirstLaunch,
         networkType = getNetworkType()
@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() {
         appLaunchPreferencesManager.setIsNotFirstLaunch()
         biAnalytics.sendFirstLaunchEvent()
       } else {
-        genericAnalytics.sendEngagedUserEvent()
+        generalAnalytics.sendEngagedUserEvent()
       }
     }
   }

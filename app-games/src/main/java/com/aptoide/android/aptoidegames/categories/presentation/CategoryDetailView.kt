@@ -26,7 +26,7 @@ import cm.aptoide.pt.feature_apps.presentation.AppsListUiStateProvider
 import cm.aptoide.pt.feature_apps.presentation.categoryApps
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
-import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
+import com.aptoide.android.aptoidegames.analytics.presentation.rememberGeneralAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withBundleMeta
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
@@ -76,7 +76,7 @@ fun CategoryDetailView(
   navigate: (String) -> Unit,
 ) {
   val analyticsContext = AnalyticsContext.current
-  val genericAnalytics = rememberGenericAnalytics()
+  val generalAnalytics = rememberGeneralAnalytics()
   val bundleAnalytics = rememberBundleAnalytics()
 
   val navigateToApp = { app: App, index: Int ->
@@ -90,7 +90,7 @@ fun CategoryDetailView(
   CategoryDetailViewContent {
     AppGamesTopBar(
       navigateBack = {
-        genericAnalytics.sendBackButtonClick(
+        generalAnalytics.sendBackButtonClick(
           analyticsContext = analyticsContext.copy(itemPosition = null)
         )
         navigateBack()

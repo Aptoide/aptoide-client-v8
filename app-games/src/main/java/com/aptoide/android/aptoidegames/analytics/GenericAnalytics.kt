@@ -49,68 +49,6 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
     params: Map<String, Any>?,
   ) = analyticsSender.logEvent(name, params)
 
-  /**
-   * Actual events sending in the same order as in the Google document
-   */
-
-  fun sendNoNetworkRetry() = analyticsSender.logEvent(
-    name = "retry_no_connection_clicked",
-    params = emptyMap()
-  )
-
-  fun sendOpenAppEvent(
-    appOpenSource: String,
-    isFirstLaunch: Boolean,
-    networkType: String,
-  ) = analyticsSender.logEvent(
-    name = "app_open",
-    params = mapOf(
-      P_OPEN_TYPE to appOpenSource,
-      P_FIRST_LAUNCH to if (isFirstLaunch) "true" else "false",
-      P_SERVICE to networkType
-    )
-  )
-
-  fun sendEngagedUserEvent() = analyticsSender.logEvent(
-    name = "engaged_user",
-    params = emptyMap()
-  )
-
-  fun sendBackButtonClick(analyticsContext: AnalyticsUIContext) = analyticsSender.logEvent(
-    name = "back_button_clicked",
-    params = analyticsContext.toGenericParameters()
-  )
-
-  fun sendMenuClick(link: String) = analyticsSender.logEvent(
-    name = "menu_clicked",
-    params = mapOf("link" to link)
-  )
-
-  fun sendBottomBarHomeClick() = analyticsSender.logEvent(
-    name = "bn_home_clicked",
-    params = emptyMap()
-  )
-
-  fun sendBottomBarSearchClick() = analyticsSender.logEvent(
-    name = "bn_search_clicked",
-    params = emptyMap()
-  )
-
-  fun sendBottomBarGameGenieClick() = analyticsSender.logEvent(
-    name = "bn_gamegenie_clicked",
-    params = emptyMap()
-  )
-
-  fun sendBottomBarCategoriesClick() = analyticsSender.logEvent(
-    name = "bn_categories_clicked",
-    params = emptyMap()
-  )
-
-  fun sendBottomBarUpdatesClick() = analyticsSender.logEvent(
-    name = "bn_updates_clicked",
-    params = emptyMap()
-  )
-
   companion object {
     internal const val P_OPEN_TYPE = "open_type"
     internal const val P_FIRST_LAUNCH = "first_launch"

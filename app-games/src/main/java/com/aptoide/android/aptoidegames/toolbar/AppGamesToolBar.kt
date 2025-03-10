@@ -38,7 +38,7 @@ import cm.aptoide.pt.extensions.PreviewDark
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.UrlActivity
-import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
+import com.aptoide.android.aptoidegames.analytics.presentation.rememberGeneralAnalytics
 import com.aptoide.android.aptoidegames.drawables.icons.getMoreVert
 import com.aptoide.android.aptoidegames.drawables.icons.getNotificationBell
 import com.aptoide.android.aptoidegames.notifications.NotificationsPermissionRequester
@@ -59,7 +59,7 @@ fun AppGamesToolBar(
 ) {
   var showMenu by remember { mutableStateOf(false) }
   val context = LocalContext.current
-  val genericAnalytics = rememberGenericAnalytics()
+  val generalAnalytics = rememberGeneralAnalytics()
 
   var showNotificationsDialog by remember { mutableStateOf(false) }
 
@@ -72,17 +72,17 @@ fun AppGamesToolBar(
   val onShowMenuClick = { showMenu = !showMenu }
   val onDropDownSettingsClick = {
     showMenu = false
-    genericAnalytics.sendMenuClick("settings")
+    generalAnalytics.sendMenuClick("settings")
     navigate(settingsRoute)
   }
   val onDropDownTermsConditionsClick = {
     showMenu = false
-    genericAnalytics.sendMenuClick("terms & conditions")
+    generalAnalytics.sendMenuClick("terms & conditions")
     UrlActivity.open(context, tcUrl)
   }
   val onDropDownPrivacyPolicyClick = {
     showMenu = false
-    genericAnalytics.sendMenuClick("privacy policy")
+    generalAnalytics.sendMenuClick("privacy policy")
     UrlActivity.open(context, ppUrl)
   }
   val onDropDownDismissRequest = { showMenu = false }

@@ -45,15 +45,15 @@ import cm.aptoide.pt.feature_home.domain.BundleSource.MANUAL
 import cm.aptoide.pt.feature_home.domain.Type.EDITORIAL
 import cm.aptoide.pt.feature_home.domain.WidgetAction
 import cm.aptoide.pt.feature_home.domain.WidgetActionType.BUTTON
-import com.aptoide.android.aptoidegames.AptoideAsyncImageWithFullscreen
 import com.aptoide.android.aptoidegames.APP_LINK_HOST
 import com.aptoide.android.aptoidegames.APP_LINK_SCHEMA
+import com.aptoide.android.aptoidegames.AptoideAsyncImageWithFullscreen
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.UrlActivity
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
-import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
+import com.aptoide.android.aptoidegames.analytics.presentation.rememberGeneralAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
@@ -88,13 +88,13 @@ fun editorialScreen() = ScreenData.withAnalytics(
 
   val viewModel = editorialViewModel(source)
   val analyticsContext = AnalyticsContext.current
-  val genericAnalytics = rememberGenericAnalytics()
+  val generalAnalytics = rememberGeneralAnalytics()
   val uiState by viewModel.uiState.collectAsState()
 
   EditorialViewScreen(
     state = uiState,
     navigateBack = {
-      genericAnalytics.sendBackButtonClick(analyticsContext)
+      generalAnalytics.sendBackButtonClick(analyticsContext)
       navigateBack()
     },
     navigate = { navigate(it) },

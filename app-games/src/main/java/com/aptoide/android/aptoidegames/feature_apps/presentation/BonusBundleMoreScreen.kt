@@ -47,7 +47,7 @@ import com.aptoide.android.aptoidegames.AptoideOutlinedText
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
-import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
+import com.aptoide.android.aptoidegames.analytics.presentation.rememberGeneralAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
@@ -97,7 +97,7 @@ private fun MoreBonusBundleScreen(
 ) {
   val (uiState, reload) = rememberAppsByTag(bundleTag)
   val analyticsContext = AnalyticsContext.current
-  val genericAnalytics = rememberGenericAnalytics()
+  val generalAnalytics = rememberGeneralAnalytics()
 
   MoreBonusBundleScreen(
     uiState = uiState,
@@ -108,7 +108,7 @@ private fun MoreBonusBundleScreen(
       reload()
     },
     navigateBack = {
-      genericAnalytics.sendBackButtonClick(analyticsContext.copy(itemPosition = null))
+      generalAnalytics.sendBackButtonClick(analyticsContext.copy(itemPosition = null))
       navigateBack()
     },
     navigate = navigate,
