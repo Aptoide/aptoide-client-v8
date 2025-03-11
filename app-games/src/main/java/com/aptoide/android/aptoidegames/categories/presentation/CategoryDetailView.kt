@@ -26,7 +26,7 @@ import cm.aptoide.pt.feature_apps.presentation.AppsListUiStateProvider
 import cm.aptoide.pt.feature_apps.presentation.categoryApps
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
-import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
+import com.aptoide.android.aptoidegames.analytics.presentation.rememberGeneralAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withBundleMeta
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
@@ -36,6 +36,7 @@ import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.error_views.NoConnectionView
 import com.aptoide.android.aptoidegames.feature_apps.presentation.AppItem
 import com.aptoide.android.aptoidegames.feature_apps.presentation.LargeAppItem
+import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberBundleAnalytics
 import com.aptoide.android.aptoidegames.home.LoadingView
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
@@ -75,7 +76,8 @@ fun CategoryDetailView(
   navigate: (String) -> Unit,
 ) {
   val analyticsContext = AnalyticsContext.current
-  val genericAnalytics = rememberGenericAnalytics()
+  val generalAnalytics = rememberGeneralAnalytics()
+  val bundleAnalytics = rememberBundleAnalytics()
 
   val navigateToApp = { app: App, index: Int ->
     navigate(
@@ -88,7 +90,7 @@ fun CategoryDetailView(
   CategoryDetailViewContent {
     AppGamesTopBar(
       navigateBack = {
-        genericAnalytics.sendBackButtonClick(
+        generalAnalytics.sendBackButtonClick(
           analyticsContext = analyticsContext.copy(itemPosition = null)
         )
         navigateBack()
@@ -119,7 +121,7 @@ fun CategoryDetailView(
             LargeAppItem(
               app = app,
               onClick = {
-                genericAnalytics.sendAppPromoClick(
+                bundleAnalytics.sendAppPromoClick(
                   app = app,
                   analyticsContext = analyticsContext.copy(itemPosition = index)
                 )
@@ -132,7 +134,7 @@ fun CategoryDetailView(
             AppItem(
               app = app,
               onClick = {
-                genericAnalytics.sendAppPromoClick(
+                bundleAnalytics.sendAppPromoClick(
                   app = app,
                   analyticsContext = analyticsContext.copy(itemPosition = index)
                 )

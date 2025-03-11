@@ -29,10 +29,10 @@ import com.aptoide.android.aptoidegames.AptoideIdsRepository
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.IdsRepository
 import com.aptoide.android.aptoidegames.ahab.di.AhabDomain
-import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 import com.aptoide.android.aptoidegames.appLaunchDataStore
 import com.aptoide.android.aptoidegames.dataStore
 import com.aptoide.android.aptoidegames.feature_flags.AptoideFeatureFlagsRepository
+import com.aptoide.android.aptoidegames.feature_flags.analytics.FeatureFlagsAnalytics
 import com.aptoide.android.aptoidegames.feature_promotional.domain.AppComingSoonManager
 import com.aptoide.android.aptoidegames.feature_promotional.repository.SubscribedAppsManager
 import com.aptoide.android.aptoidegames.home.repository.ThemePreferencesManager
@@ -232,8 +232,8 @@ class RepositoryModule {
 
   @Provides
   @Singleton
-  fun provideAptoideFeatureFlagsRepository(genericAnalytics: GenericAnalytics): FeatureFlagsRepository =
-    AptoideFeatureFlagsRepository(genericAnalytics = genericAnalytics)
+  fun provideAptoideFeatureFlagsRepository(featureFlagsAnalytics: FeatureFlagsAnalytics): FeatureFlagsRepository =
+    AptoideFeatureFlagsRepository(featureFlagsAnalytics = featureFlagsAnalytics)
 
   @Singleton
   @Provides

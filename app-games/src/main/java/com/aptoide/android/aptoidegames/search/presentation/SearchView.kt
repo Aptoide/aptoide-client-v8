@@ -65,6 +65,7 @@ import cm.aptoide.pt.feature_search.utils.fixQuery
 import cm.aptoide.pt.feature_search.utils.isValidSearch
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.dto.SearchMeta
+import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.OverrideAnalyticsSearchMeta
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
@@ -80,6 +81,7 @@ import com.aptoide.android.aptoidegames.error_views.NoConnectionView
 import com.aptoide.android.aptoidegames.feature_apps.presentation.AppItem
 import com.aptoide.android.aptoidegames.feature_apps.presentation.AppsGridBundle
 import com.aptoide.android.aptoidegames.feature_apps.presentation.LargeAppItem
+import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberBundleAnalytics
 import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberTrendingBundle
 import com.aptoide.android.aptoidegames.home.rememberBottomBarMenuScrollState
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
@@ -98,6 +100,8 @@ fun searchScreen() = ScreenData.withAnalytics(
   val searchViewModel: SearchViewModel = hiltViewModel()
   val uiState by searchViewModel.uiState.collectAsState()
   val searchAnalytics = rememberSearchAnalytics()
+  val bundleAnalytics = rememberBundleAnalytics()
+  val analyticsContext = AnalyticsContext.current
 
   var searchValue by rememberSaveable { mutableStateOf("") }
   var searchMeta by rememberSaveable(
@@ -154,6 +158,10 @@ fun searchScreen() = ScreenData.withAnalytics(
         }
       },
       onItemClick = { index, app ->
+        bundleAnalytics.sendAppPromoClick(
+          app = app,
+          analyticsContext = analyticsContext
+        )
         searchAnalytics.sendSearchResultClickEvent(
           app = app,
           position = index,

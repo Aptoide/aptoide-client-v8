@@ -3,11 +3,13 @@ package com.aptoide.android.aptoidegames.apkfy.analytics
 import android.content.Context
 import cm.aptoide.pt.feature_apkfy.domain.ApkfyModel
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
+import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.mapOfNonNull
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
 
 class ApkfyAnalytics @Inject constructor(
+  private val genericAnalytics: GenericAnalytics,
   private val biAnalytics: BIAnalytics,
   @ApplicationContext private val context: Context,
 ) {
@@ -49,6 +51,10 @@ class ApkfyAnalytics @Inject constructor(
       P_CALL_NUMBER to callNumber
     )
   )
+
+  fun sendApkfyShown() = genericAnalytics.logEvent("apkfy_shown", params = emptyMap())
+
+  fun sendApkfyTimeout() = genericAnalytics.logEvent("apkfy_timeout", params = emptyMap())
 
   fun setApkfyUTMProperties(apkfyModel: ApkfyModel) {
     apkfyModel.run {

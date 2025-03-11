@@ -12,8 +12,6 @@ import androidx.lifecycle.ViewModel
 import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.feature_flags.domain.FeatureFlags
 import cm.aptoide.pt.install_manager.environment.NetworkConnection
-import com.aptoide.android.aptoidegames.analytics.presentation.rememberBIAnalytics
-import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.apkfy.presentation.InjectionsProvider
 import com.aptoide.android.aptoidegames.network.presentation.rememberNetworkState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,8 +29,7 @@ fun rememberShouldShowVideos(bundleTag: String): Boolean = runPreviewable(
   real = {
     val vm = hiltViewModel<InjectionsProvider>()
 
-    val analytics = rememberGenericAnalytics()
-    val biAnalytics = rememberBIAnalytics()
+    val homeAnalytics = rememberHomeAnalytics()
     val networkState = rememberNetworkState()
     val unmeteredConnection by remember(networkState) {
       derivedStateOf { networkState == NetworkConnection.State.UNMETERED }
@@ -50,7 +47,7 @@ fun rememberShouldShowVideos(bundleTag: String): Boolean = runPreviewable(
     LaunchedEffect(Unit) {
       ecVideoVariant = vm.featureFlags.getFlagAsString("ab_test_ec_videos_jan_29")?.also {
         //Flag fetched but user the A/B test has not activated yet
-        biAnalytics.setUserProperties("ab_test_ec_videos_jan_29" to "n-a")
+        homeAnalytics.setECVideoFlagProperty("n-a")
       }
       shouldShowECVideo = when (vm.featureFlags.getFlagAsString("ab_test_ec_videos_jan_29")) {
         "group_a" -> false
@@ -61,10 +58,10 @@ fun rememberShouldShowVideos(bundleTag: String): Boolean = runPreviewable(
 
     LaunchedEffect(shouldShowECVideo, unmeteredConnection) {
       if (bundleTag == "apps-group-editors-choice" && shouldShowECVideo != null && unmeteredConnection) {
-        analytics.sendECVideosFlagReady()
+        homeAnalytics.sendECVideosFlagReady()
 
         ecVideoVariant?.let {
-          biAnalytics.setUserProperties("ab_test_ec_videos_jan_29" to it)
+          homeAnalytics.setECVideoFlagProperty(it)
         }
       }
     }

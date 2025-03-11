@@ -40,7 +40,6 @@ import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
-import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusIconRight
@@ -199,7 +198,7 @@ fun PublisherTakeOverListView(
   navigate: (String) -> Unit,
 ) {
   val analyticsContext = AnalyticsContext.current
-  val genericAnalytics = rememberGenericAnalytics()
+  val bundleAnalytics = rememberBundleAnalytics()
 
   HorizontalPagerView(
     appsList = appsList,
@@ -219,7 +218,7 @@ fun PublisherTakeOverListView(
             app.campaigns
               ?.toAptoideMMPCampaign()
               ?.sendClickEvent(bundleTag)
-            genericAnalytics.sendAppPromoClick(
+            bundleAnalytics.sendAppPromoClick(
               app = app,
               analyticsContext = analyticsContext.copy(itemPosition = page)
             )

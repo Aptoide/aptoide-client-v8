@@ -3,12 +3,11 @@ package com.aptoide.android.aptoidegames.search.analytics
 import cm.aptoide.pt.feature_apps.data.App
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
-import com.aptoide.android.aptoidegames.analytics.dto.AnalyticsUIContext
 import com.aptoide.android.aptoidegames.analytics.dto.SearchMeta
 import com.aptoide.android.aptoidegames.analytics.toBIParameters
+import com.aptoide.android.aptoidegames.analytics.toGenericParameters
 
 class SearchAnalytics(
-  private val analyticsUIContext: AnalyticsUIContext,
   private val biAnalytics: BIAnalytics,
   private val genericAnalytics: GenericAnalytics,
 ) {
@@ -17,7 +16,10 @@ class SearchAnalytics(
     searchMeta: SearchMeta,
     searchTermPosition: Int? = null,
   ) {
-    genericAnalytics.sendSearchMadeEvent(searchMeta)
+    genericAnalytics.logEvent(
+      name = "search_made",
+      params = searchMeta.toGenericParameters()
+    )
     biAnalytics.logEvent(
       name = "Search",
       searchMeta.toBIParameters(searchTermPosition)
@@ -29,10 +31,6 @@ class SearchAnalytics(
     position: Int,
     searchMeta: SearchMeta?,
   ) {
-    genericAnalytics.sendAppPromoClick(
-      app = app,
-      analyticsContext = analyticsUIContext
-    )
     biAnalytics.logEvent(
       name = "Search_Result_Click",
       params = app.toBIParameters(

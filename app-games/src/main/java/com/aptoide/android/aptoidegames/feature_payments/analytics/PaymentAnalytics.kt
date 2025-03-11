@@ -5,7 +5,9 @@ import com.appcoins.payments.arch.ProductInfoData
 import com.appcoins.payments.arch.Transaction
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
+import com.aptoide.android.aptoidegames.analytics.dto.AnalyticsUIContext
 import com.aptoide.android.aptoidegames.analytics.mapOfNonNull
+import com.aptoide.android.aptoidegames.analytics.toGenericParameters
 import com.aptoide.android.aptoidegames.feature_payments.analytics.PaymentAnalytics.Companion.P_CURRENCY
 import com.aptoide.android.aptoidegames.feature_payments.analytics.PaymentAnalytics.Companion.P_PAYMENT_METHOD
 import com.aptoide.android.aptoidegames.feature_payments.analytics.PaymentAnalytics.Companion.P_PRICE
@@ -144,6 +146,14 @@ class PaymentAnalytics(
     )
     // TODO: removed from generic analytics - will have to add again as soon as we stop sending BiAnalytics it to multiple platforms
   }
+
+  fun sendAppCoinsInstallStarted(
+    packageName: String,
+    analyticsContext: AnalyticsUIContext,
+  ) = genericAnalytics.logEvent(
+    name = "appcoins_install_initiated",
+    params = analyticsContext.toGenericParameters(GenericAnalytics.P_PACKAGE_NAME to packageName)
+  )
 
   private fun logPaymentDismissed(params: Map<String, Any>) {
     genericAnalytics.logEvent(

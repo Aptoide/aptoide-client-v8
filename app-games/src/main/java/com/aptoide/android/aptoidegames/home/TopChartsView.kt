@@ -33,12 +33,12 @@ import cm.aptoide.pt.feature_apps.presentation.AppsListUiStateProvider
 import cm.aptoide.pt.feature_apps.presentation.appsBySortType
 import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
-import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusIconRight
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.error_views.NoConnectionView
+import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberBundleAnalytics
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.installer.presentation.ProgressTextWithDownloads
@@ -90,7 +90,7 @@ fun TopChartsList(
   navigate: (String) -> Unit
 ) {
   val analyticsContext = AnalyticsContext.current
-  val genericAnalytics = rememberGenericAnalytics()
+  val bundleAnalytics = rememberBundleAnalytics()
 
   LazyColumn(
     modifier = Modifier
@@ -105,7 +105,7 @@ fun TopChartsList(
         rank = index + 1,
         onClick = {
           app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(analyticsContext.bundleMeta?.tag)
-          genericAnalytics.sendAppPromoClick(
+          bundleAnalytics.sendAppPromoClick(
             app = app,
             analyticsContext = analyticsContext.copy(itemPosition = index)
           )

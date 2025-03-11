@@ -39,7 +39,6 @@ import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.getRandomString
 import cm.aptoide.pt.extensions.sendMail
 import com.aptoide.android.aptoidegames.R
-import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.design_system.PrimaryButton
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
@@ -59,7 +58,7 @@ fun SupportView(
   context: Context,
   navigateBack: () -> Unit,
 ) {
-  val genericAnalytics = rememberGenericAnalytics()
+  val supportAnalytics = rememberSupportAnalytics()
   var text by remember { mutableStateOf("") }
   val characterThreshold = 50L
   val bodyCore = "\n\n\nMy Hardware specs are\n" + deviceInfo + "\n\nPowered by Aptoide"
@@ -125,7 +124,7 @@ fun SupportView(
       }
       PrimaryButton(
         onClick = {
-          genericAnalytics.sendFeedbackSent(type)
+          supportAnalytics.sendFeedbackSent(type)
           context.sendMail(
             subject = subject,
             destinationEmail = email,

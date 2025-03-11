@@ -43,7 +43,6 @@ import com.appcoins.payments.uri_handler.PaymentsCancelledResult
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.dto.BundleMeta
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
-import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withBundleMeta
 import com.aptoide.android.aptoidegames.drawables.icons.getAppcoinsClearLogo
@@ -159,7 +158,7 @@ fun PaymentsWalletInstallationView(
 ) {
   val configuration = LocalConfiguration.current
   val analyticsContext = AnalyticsContext.current
-  val genericAnalytics = rememberGenericAnalytics()
+  val paymentAnalytics = rememberPaymentAnalytics()
 
   AppGamesPaymentBottomSheet(
     onOutsideClick = onOutsideClick
@@ -194,7 +193,7 @@ fun PaymentsWalletInstallationView(
             walletApp = walletApp,
             buyingPackage = purchaseRequest.domain,
             onWalletInstallStarted = {
-              genericAnalytics.sendAppCoinsInstallStarted(
+              paymentAnalytics.sendAppCoinsInstallStarted(
                 packageName = walletApp.packageName,
                 analyticsContext = analyticsContext
               )
@@ -206,7 +205,7 @@ fun PaymentsWalletInstallationView(
             walletApp = walletApp,
             buyingPackage = purchaseRequest.domain,
             onWalletInstallStarted = {
-              genericAnalytics.sendAppCoinsInstallStarted(
+              paymentAnalytics.sendAppCoinsInstallStarted(
                 packageName = walletApp.packageName,
                 analyticsContext = analyticsContext
               )

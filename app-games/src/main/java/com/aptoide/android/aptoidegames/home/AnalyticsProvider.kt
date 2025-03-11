@@ -1,4 +1,4 @@
-package com.aptoide.android.aptoidegames.analytics.presentation
+package com.aptoide.android.aptoidegames.home
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -7,32 +7,37 @@ import androidx.lifecycle.ViewModel
 import cm.aptoide.pt.extensions.runPreviewable
 import com.aptoide.android.aptoidegames.analytics.AnalyticsSender
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
-import com.aptoide.android.aptoidegames.analytics.GeneralAnalytics
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
+import com.aptoide.android.aptoidegames.home.analytics.HomeAnalytics
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class InjectionsProvider @Inject constructor(
+class AnalyticsInjectionsProvider @Inject constructor(
   val genericAnalytics: GenericAnalytics,
   val biAnalytics: BIAnalytics,
-) : ViewModel()
+) : ViewModel() {
+  operator fun component1() = genericAnalytics
+  operator fun component2() = biAnalytics
+}
 
 @Composable
-fun rememberGeneralAnalytics(): GeneralAnalytics = runPreviewable(
+fun rememberHomeAnalytics(): HomeAnalytics = runPreviewable(
   preview = {
-    GeneralAnalytics(
+    HomeAnalytics(
       GenericAnalytics(object : AnalyticsSender {}),
+      BIAnalytics(object : AnalyticsSender {}),
     )
   },
   real = {
-    val analyticsProvider = hiltViewModel<InjectionsProvider>()
-    val generalAnalytics = remember(key1 = analyticsProvider.genericAnalytics) {
-      GeneralAnalytics(
-        genericAnalytics = analyticsProvider.genericAnalytics,
+    val (genericAnalytics, biAnalytics) = hiltViewModel<AnalyticsInjectionsProvider>()
+    val homeAnalytics = remember(key1 = genericAnalytics) {
+      HomeAnalytics(
+        genericAnalytics = genericAnalytics,
+        biAnalytics = biAnalytics
       )
     }
 
-    generalAnalytics
+    homeAnalytics
   }
 )

@@ -37,7 +37,6 @@ import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.randomBundle
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.SwipeListener
-import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.appview.AppRatingAndDownloads
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
@@ -86,7 +85,7 @@ private fun RealAppsGridBundle(
       AppsListUiState.Empty,
       AppsListUiState.Error,
       AppsListUiState.NoConnection,
-      -> SmallEmptyView(modifier = Modifier.height(184.dp))
+        -> SmallEmptyView(modifier = Modifier.height(184.dp))
 
       AppsListUiState.Loading -> LoadingBundleView(height = 184.dp)
     }
@@ -99,7 +98,7 @@ internal fun AppsRowView(
   navigate: (String) -> Unit,
 ) {
   val analyticsContext = AnalyticsContext.current
-  val genericAnalytics = rememberGenericAnalytics()
+  val bundleAnalytics = rememberBundleAnalytics()
   val lazyListState = rememberLazyListState()
 
   SwipeListener(interactionSource = lazyListState.interactionSource)
@@ -119,7 +118,7 @@ internal fun AppsRowView(
         app = item,
         onClick = {
           item.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(analyticsContext.bundleMeta?.tag)
-          genericAnalytics.sendAppPromoClick(
+          bundleAnalytics.sendAppPromoClick(
             app = item,
             analyticsContext = analyticsContext.copy(itemPosition = index)
           )

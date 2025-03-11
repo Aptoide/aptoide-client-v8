@@ -34,10 +34,10 @@ import cm.aptoide.pt.feature_home.domain.Bundle
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
-import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withBundleMeta
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.feature_apps.presentation.SmallEmptyView
+import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberBundleAnalytics
 import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
 import com.aptoide.android.aptoidegames.home.analytics.meta
@@ -51,7 +51,7 @@ fun CategoriesBundle(
 ) = bundle.view?.let {
   val uiState = rememberCategoriesState(requestUrl = it)
   val analyticsContext = AnalyticsContext.current
-  val genericAnalytics = rememberGenericAnalytics()
+  val bundleAnalytics = rememberBundleAnalytics()
 
   Column(
     modifier = Modifier
@@ -63,7 +63,7 @@ fun CategoriesBundle(
       icon = bundle.bundleIcon,
       hasMoreAction = bundle.hasMoreAction,
       onClick = {
-        genericAnalytics.sendSeeAllClick(analyticsContext)
+        bundleAnalytics.sendSeeAllClick(analyticsContext)
         navigate(
           buildAllCategoriesRoute(bundle.title)
             .withBundleMeta(bundle.meta.copy(tag = "${bundle.tag}-more"))
@@ -85,7 +85,7 @@ fun CategoriesListView(
   navigate: (String) -> Unit,
 ) {
   val analyticsContext = AnalyticsContext.current
-  val genericAnalytics = rememberGenericAnalytics()
+  val categoriesAnalytics = rememberCategoriesAnalytics()
   val lazyListState = rememberLazyListState()
 
   if (loading) {
@@ -109,7 +109,7 @@ fun CategoriesListView(
           title = category.title,
           icon = category.icon,
           onClick = {
-            genericAnalytics.sendCategoryClick(
+            categoriesAnalytics.sendCategoryClick(
               categoryName = category.name,
               analyticsContext = analyticsContext.copy(itemPosition = index)
             )
