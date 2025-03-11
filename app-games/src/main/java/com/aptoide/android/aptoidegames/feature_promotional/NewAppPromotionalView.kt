@@ -35,7 +35,7 @@ import cm.aptoide.pt.feature_apps.presentation.rememberApp
 import cm.aptoide.pt.feature_home.domain.Bundle
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
-import com.aptoide.android.aptoidegames.drawables.icons.getAppcoinsClearLogo
+import com.aptoide.android.aptoidegames.drawables.icons.getBonusIcon
 import com.aptoide.android.aptoidegames.home.LoadingView
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
@@ -135,7 +135,10 @@ private fun AppInfo(app: App) {
       verticalAlignment = Alignment.CenterVertically
     ) {
       Image(
-        imageVector = getAppcoinsClearLogo(Palette.AppCoinsPink),
+        imageVector = getBonusIcon(
+          giftColor = Palette.Primary,
+          outlineColor = Palette.Black,
+        ),
         contentDescription = null,
         modifier = Modifier
           .padding(end = 8.dp)
