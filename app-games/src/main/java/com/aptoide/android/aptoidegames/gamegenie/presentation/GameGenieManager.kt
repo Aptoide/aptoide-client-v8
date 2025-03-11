@@ -8,11 +8,11 @@ import com.aptoide.android.aptoidegames.gamegenie.domain.Token
 import com.aptoide.android.aptoidegames.gamegenie.domain.toToken
 import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieRequest
 import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieResponse
-import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import retrofit2.HttpException
 import timber.log.Timber
 import java.io.IOException
+import javax.inject.Inject
 
 class GameGenieManager @Inject constructor(
   private val gameGenieApi: GameGenieApiService,

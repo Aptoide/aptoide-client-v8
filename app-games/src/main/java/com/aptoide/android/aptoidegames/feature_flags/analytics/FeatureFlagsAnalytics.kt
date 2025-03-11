@@ -1,7 +1,7 @@
 package com.aptoide.android.aptoidegames.feature_flags.analytics
 
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
-import jakarta.inject.Inject
+import javax.inject.Inject
 
 class FeatureFlagsAnalytics @Inject constructor(
   private val genericAnalytics: GenericAnalytics,

@@ -6,7 +6,7 @@ import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.mapOfNonNull
 import dagger.hilt.android.qualifiers.ApplicationContext
-import jakarta.inject.Inject
+import javax.inject.Inject
 
 class ApkfyAnalytics @Inject constructor(
   private val genericAnalytics: GenericAnalytics,

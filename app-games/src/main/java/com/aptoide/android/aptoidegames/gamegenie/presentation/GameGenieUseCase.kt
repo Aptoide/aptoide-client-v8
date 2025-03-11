@@ -7,9 +7,9 @@ import com.aptoide.android.aptoidegames.gamegenie.domain.GameGenieChat
 import com.aptoide.android.aptoidegames.gamegenie.domain.Token
 import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieRequest
 import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieResponse
-import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
 private const val MAX_CHATS = 15
 
