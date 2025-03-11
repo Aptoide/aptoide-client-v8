@@ -34,7 +34,7 @@ import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
 import com.aptoide.android.aptoidegames.design_system.PrimarySmallButton
 import com.aptoide.android.aptoidegames.design_system.TertiarySmallButton
-import com.aptoide.android.aptoidegames.drawables.icons.getAppcoinsIconWithBackground
+import com.aptoide.android.aptoidegames.drawables.icons.getBonusIcon
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusTextIcon
 import com.aptoide.android.aptoidegames.error_views.BottomSheetGenericErrorView
 import com.aptoide.android.aptoidegames.error_views.BottomSheetNoConnectionView
@@ -183,7 +183,10 @@ private fun WalletInstallSection(
     modifier = Modifier.padding(bottom = 8.dp)
   ) {
     Image(
-      imageVector = getAppcoinsIconWithBackground(Palette.AppCoinsPink, Palette.White),
+      imageVector = getBonusIcon(
+        giftColor = Palette.Primary,
+        outlineColor = Palette.Black,
+      ),
       contentDescription = null,
     )
     Text(

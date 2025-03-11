@@ -4,8 +4,8 @@ import android.content.Intent
 import android.content.res.Configuration
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -20,7 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -35,7 +34,6 @@ import com.appcoins.payments.uri_handler.PaymentsActivityResult
 import com.appcoins.payments.uri_handler.PaymentsCancelledResult
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
-import com.aptoide.android.aptoidegames.drawables.icons.getWalletInstalled
 import com.aptoide.android.aptoidegames.feature_payments.AppGamesPaymentBottomSheet
 import com.aptoide.android.aptoidegames.feature_payments.analytics.PaymentContext
 import com.aptoide.android.aptoidegames.feature_payments.analytics.rememberPaymentAnalytics
@@ -152,17 +150,8 @@ fun WalletInstalledPortraitView() {
       .wrapContentHeight(),
     horizontalAlignment = Alignment.CenterHorizontally,
   ) {
-    Image(
-      modifier = Modifier.padding(top = 40.dp, start = 16.dp, end = 16.dp),
-      imageVector = getWalletInstalled(
-        color1 = Palette.AppCoinsPink,
-        color2 = Palette.White,
-        color3 = Palette.Primary,
-        color4 = Palette.Black
-      ),
-      contentScale = ContentScale.FillBounds,
-      contentDescription = null
-    )
+    Spacer(modifier = Modifier.padding(top = 150.dp))
+
     Text(
       modifier = Modifier.padding(top = 54.dp, start = 32.dp, end = 32.dp),
       text = stringResource(id = R.string.iap_appc_wallet_install_success_body),
@@ -189,17 +178,8 @@ fun WalletInstalledLandscapeView() {
       .verticalScroll(rememberScrollState()),
     horizontalAlignment = Alignment.CenterHorizontally,
   ) {
-    Image(
-      modifier = Modifier.padding(top = 40.dp),
-      imageVector = getWalletInstalled(
-        color1 = Palette.AppCoinsPink,
-        color2 = Palette.White,
-        color3 = Palette.Primary,
-        color4 = Palette.Black
-      ),
-      contentScale = ContentScale.FillBounds,
-      contentDescription = null
-    )
+    Spacer(modifier = Modifier.padding(top = 150.dp))
+
     Text(
       modifier = Modifier.padding(top = 16.dp, start = 10.dp, end = 10.dp),
       text = stringResource(id = R.string.iap_appc_wallet_install_success_body),
