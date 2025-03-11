@@ -29,8 +29,9 @@ class GameGenieManager @Inject constructor(
       val newToken = gameGenieApi.getToken().toToken()
       cachedToken = newToken
       newToken
-    }.getOrElse {
-      throw IOException("Failed to fetch token", it)
+    }.getOrElse { e ->
+      Timber.e(e, "Failed to fetch token")
+      cachedToken ?: throw IOException("Failed to fetch token and no cached token available", e)
     }
   }
 

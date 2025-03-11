@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.aptoide.android.aptoidegames.gamegenie.domain.ChatInteraction
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameGenieChat
 import com.aptoide.android.aptoidegames.gamegenie.domain.Token
+import com.aptoide.android.aptoidegames.gamegenie.presentation.GameGenieUIStateType.NO_CONNECTION
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -35,16 +36,24 @@ class GameGenieViewModel @Inject constructor(
 
   private fun refreshToken() {
     viewModelScope.launch {
-      gameGenieUseCase.getToken().let { token ->
-        viewModelState.update { it.copy(token = token) }
+      runCatching {
+        gameGenieUseCase.getToken().let { token ->
+          viewModelState.update { it.copy(token = token) }
+        }
+      }.getOrElse {
+        viewModelState.update {
+          it.copy(type = NO_CONNECTION)
+        }
       }
     }
   }
 
   fun reload() {
     viewModelScope.launch {
-      val chat = gameGenieUseCase.reloadConversation(uiState.value.chat)
-      updateSuccessState(chat)
+      runCatching {
+        val chat = gameGenieUseCase.reloadConversation(uiState.value.chat)
+        updateSuccessState(chat)
+      }.getOrNull()
     }
   }
 
@@ -135,7 +144,7 @@ class GameGenieViewModel @Inject constructor(
 
   private fun mapErrorToState(e: Throwable): GameGenieUIStateType {
     return when (e) {
-      is IOException -> GameGenieUIStateType.NO_CONNECTION
+      is IOException -> NO_CONNECTION
       else -> GameGenieUIStateType.ERROR
     }
   }
