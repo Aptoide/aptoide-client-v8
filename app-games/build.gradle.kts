@@ -16,8 +16,6 @@ android {
   namespace = "com.aptoide.android.aptoidegames"
 
   defaultConfig {
-    val mintegralKey = project.property("MINTEGRAL_APP_KEY").toString()
-
     applicationId = "com.aptoide.android.aptoidegames"
     versionCode = Integer.parseInt(project.property("VERSION_CODE_APTOIDEGAMES").toString())
     versionName = (System.getenv("VERSION_NAME") ?: "").ifBlank { "internal.${getDate()}" }
@@ -77,7 +75,7 @@ android {
     buildConfigField(
       type = "String",
       name = "MINTEGRAL_APP_KEY",
-      value = mintegralKey
+      value = "\"${project.property("MINTEGRAL_APP_KEY")}\""
     )
 
     buildConfigFieldFromGradleProperty("ROOM_SCHEMA_VERSION")
@@ -116,10 +114,6 @@ android {
 
   productFlavors {
     create("dev") {
-      val appId = project.property("MINTEGRAL_APP_ID_DEV").toString()
-      val placementId = project.property("NATIVE_PLACEMENT_ID_DEV").toString()
-      val unitId = project.property("NATIVE_UNIT_ID_DEV").toString()
-
       val adyenKey = project.property("ADYEN_PUBLIC_KEY_DEV").toString()
       dimension = "mode"
       applicationIdSuffix = ".dev"
@@ -156,24 +150,21 @@ android {
       buildConfigField(
         type = "String",
         name = "MINTEGRAL_APP_ID",
-        value = appId
+        value = "\"${project.property("MINTEGRAL_APP_ID_DEV")}\""
       )
       buildConfigField(
         type = "String",
         name = "NATIVE_PLACEMENT_ID",
-        value = placementId
+        value = "\"${project.property("NATIVE_PLACEMENT_ID_DEV")}\""
       )
       buildConfigField(
         type = "String",
         name = "NATIVE_UNIT_ID",
-        value = unitId
+        value = "\"${project.property("NATIVE_UNIT_ID_DEV")}\""
       )
     }
 
     create("prod") {
-      val appId = project.property("MINTEGRAL_APP_ID_PROD").toString()
-      val placementId= project.property("NATIVE_PLACEMENT_ID_PROD").toString()
-      val unitId = project.property("NATIVE_UNIT_ID_PROD").toString()
       val adyenKey = project.property("ADYEN_PUBLIC_KEY").toString()
       dimension = "mode"
 
@@ -214,17 +205,17 @@ android {
       buildConfigField(
         type = "String",
         name = "MINTEGRAL_APP_ID",
-        value = appId
+        value = "\"${project.property("MINTEGRAL_APP_ID_PROD")}\""
       )
       buildConfigField(
         type = "String",
         name = "NATIVE_PLACEMENT_ID",
-        value = placementId
+        value = "\"${project.property("NATIVE_PLACEMENT_ID_PROD")}\""
       )
       buildConfigField(
         type = "String",
         name = "NATIVE_UNIT_ID",
-        value = unitId
+        value = "\"${project.property("NATIVE_UNIT_ID_PROD")}\""
       )
     }
   }
