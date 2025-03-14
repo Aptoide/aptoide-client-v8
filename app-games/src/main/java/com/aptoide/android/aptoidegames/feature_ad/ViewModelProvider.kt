@@ -13,6 +13,8 @@ import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_apps.domain.AppMetaUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,8 +24,8 @@ class InjectionsProvider @Inject constructor(
 ) : ViewModel()
 
 @Composable
-fun rememberMintegralAd(adClick: (String) -> Unit): MintegralAd? = runPreviewable(
-  preview = { MintegralAd(randomApp, {}) },
+fun rememberMintegralAd(): Pair<MintegralAd?, Flow<MintegralAdEvent>> = runPreviewable(
+  preview = { MintegralAd(randomApp, {}) to emptyFlow() },
   real = {
     val injectionsProvider = hiltViewModel<InjectionsProvider>()
     val vm: AdViewModel = viewModel(
@@ -35,13 +37,12 @@ fun rememberMintegralAd(adClick: (String) -> Unit): MintegralAd? = runPreviewabl
           return AdViewModel(
             mintegral = injectionsProvider.mintegral,
             appMetaUseCase = injectionsProvider.appMetaUseCase,
-            adClick = adClick
           ) as T
         }
       }
     )
 
     val uiState by vm.uiState.collectAsState()
-    uiState
+    uiState to vm.mintegralAdEvents
   }
 )
