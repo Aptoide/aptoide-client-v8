@@ -17,13 +17,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class InjectionsProvider @Inject constructor(
-   val mintegral: Mintegral,
-   val appMetaUseCase: AppMetaUseCase,
+  val mintegral: Mintegral,
+  val appMetaUseCase: AppMetaUseCase,
 ) : ViewModel()
 
 @Composable
-fun rememberAd(adClick: (String) -> Unit): MintegralAdApp? = runPreviewable(
-  preview = { MintegralAdApp(randomApp, {}) },
+fun rememberMintegralAd(adClick: (String) -> Unit): MintegralAd? = runPreviewable(
+  preview = { MintegralAd(randomApp, {}) },
   real = {
     val injectionsProvider = hiltViewModel<InjectionsProvider>()
     val vm: AdViewModel = viewModel(
