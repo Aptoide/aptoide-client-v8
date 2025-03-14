@@ -48,6 +48,7 @@ import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusIconRight
 import com.aptoide.android.aptoidegames.feature_ad.MintegralAd
+import com.aptoide.android.aptoidegames.feature_ad.MintegralAdEvent
 import com.aptoide.android.aptoidegames.feature_ad.rememberMintegralAd
 import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.home.HorizontalPagerView
@@ -119,24 +120,30 @@ private fun CarouselListView(
   val analyticsContext = AnalyticsContext.current
   val bundleAnalytics = rememberBundleAnalytics()
   var app: App? by remember { mutableStateOf(null) }
-  val ad: MintegralAd? = rememberMintegralAd(
-    { packageName ->
-      navigate(
-        buildAppViewRoute(
-          if (app?.appId != null) {
-            AppSource.of(app?.appId, null)
-          } else {
-            AppSource.of(null, packageName)
-          }
-        ).withItemPosition(0)
-      )
-    }
-  )
+  val (ad, adEvents) = rememberMintegralAd()
+
   LaunchedEffect(ad) {
     ad?.let {
       app = it.app
     }
   }
+
+  LaunchedEffect(adEvents) {
+    adEvents.collect { event ->
+      if (event is MintegralAdEvent.AdClick && app?.packageName == event.packageName) {
+        navigate(
+          buildAppViewRoute(
+            if (app?.appId != null) {
+              AppSource.of(app?.appId, null)
+            } else {
+              AppSource.of(null, event.packageName)
+            }
+          ).withItemPosition(0)
+        )
+      }
+    }
+  }
+
   val updatedList: List<App> = remember(ad) {
     ad?.let {
       appsList.toMutableList().apply {
