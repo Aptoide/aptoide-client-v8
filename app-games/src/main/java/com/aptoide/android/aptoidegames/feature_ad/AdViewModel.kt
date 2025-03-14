@@ -17,7 +17,7 @@ class AdViewModel(
   private val appMetaUseCase: AppMetaUseCase,
 ) : ViewModel() {
 
-  private val viewModelState = MutableStateFlow<MintegralAdApp?>(null)
+  private val viewModelState = MutableStateFlow<MintegralAd?>(null)
 
   val uiState = viewModelState
     .stateIn(
@@ -35,11 +35,11 @@ class AdViewModel(
       viewModelState.update { null }
       try {
         mintegral.initNativeAd(adClick = adClick).collect { newCampaign ->
-          if(newCampaign != null){
+          if (newCampaign != null) {
             val app = appMetaUseCase
               .getMetaInfo(source = AppSource.of(null, newCampaign.packageName).asSource())
             viewModelState.update {
-              MintegralAdApp(app = app, register = { view ->
+              MintegralAd(app = app, register = { view ->
                 mintegral.registerNativeAdView(view, newCampaign)
               })
             }

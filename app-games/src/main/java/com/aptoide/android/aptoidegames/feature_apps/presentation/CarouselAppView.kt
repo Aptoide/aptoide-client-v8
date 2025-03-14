@@ -47,8 +47,8 @@ import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusIconRight
-import com.aptoide.android.aptoidegames.feature_ad.MintegralAdApp
-import com.aptoide.android.aptoidegames.feature_ad.rememberAd
+import com.aptoide.android.aptoidegames.feature_ad.MintegralAd
+import com.aptoide.android.aptoidegames.feature_ad.rememberMintegralAd
 import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.home.HorizontalPagerView
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
@@ -119,7 +119,7 @@ private fun CarouselListView(
   val analyticsContext = AnalyticsContext.current
   val bundleAnalytics = rememberBundleAnalytics()
   var app: App? by remember { mutableStateOf(null) }
-  val adApp: MintegralAdApp? = rememberAd(
+  val ad: MintegralAd? = rememberMintegralAd(
     { packageName ->
       navigate(
         buildAppViewRoute(
@@ -132,13 +132,13 @@ private fun CarouselListView(
       )
     }
   )
-  LaunchedEffect(adApp) {
-    adApp?.let{
+  LaunchedEffect(ad) {
+    ad?.let {
       app = it.app
     }
   }
-  val updatedList: List<App> = remember(adApp) {
-    adApp?.let {
+  val updatedList: List<App> = remember(ad) {
+    ad?.let {
       appsList.toMutableList().apply {
         add(1, it.app)
       }.toImmutableList()
@@ -155,9 +155,9 @@ private fun CarouselListView(
         .width(280.dp)
         .background(color = Color.Transparent)
     ) {
-      if (adApp != null && page == 1) {
+      if (ad != null && page == 1) {
         MintegralNativeAdView(
-          adApp = adApp,
+          ad = ad,
           item = item,
           showVideos = showVideos,
           isCurrentPage = isCurrentPage
@@ -184,7 +184,7 @@ private fun CarouselListView(
 
 @Composable
 fun MintegralNativeAdView(
-  adApp: MintegralAdApp,
+  ad: MintegralAd,
   item: App,
   showVideos: Boolean,
   isCurrentPage: Boolean,
@@ -214,7 +214,7 @@ fun MintegralNativeAdView(
           FrameLayout.LayoutParams.WRAP_CONTENT
         )
       )
-      adApp.register(container)
+      ad.register(container)
 
       container
     }
