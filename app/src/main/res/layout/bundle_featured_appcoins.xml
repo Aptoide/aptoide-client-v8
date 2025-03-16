@@ -73,16 +73,15 @@
         app:layout_constraintTop_toBottomOf="@+id/bonus_appc_view"
         />
 
-    <cm.aptoide.aptoideviews.appcoins.BonusAppcView
+    <ImageView
         android:id="@+id/bonus_appc_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="visible"
-        app:enable_card_padding="false"
+        app:placeholder_color="?attr/backgroundCardSecondaryColor"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:placeholder_color="?attr/backgroundCardSecondaryColor"
-        app:side="LEFT"
+        android:src="@drawable/aptoide_bonus_brand"
         />
 
     <cm.aptoide.aptoideviews.skeleton.SkeletonView

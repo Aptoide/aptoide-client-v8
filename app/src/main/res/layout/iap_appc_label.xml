@@ -9,7 +9,7 @@
   <ImageView
       android:layout_width="14dp"
       android:layout_height="14dp"
-      android:src="@drawable/ic_appcoins_white_border"
+      android:src="@drawable/ic_aptoide_balance"
       />
 
   <TextView

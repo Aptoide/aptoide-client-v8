@@ -7,6 +7,9 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,7 +49,6 @@ import rx.Observable;
 public class AppCoinsInfoFragment extends BackButtonFragment
     implements AppCoinsInfoView, NotBottomNavigationView {
 
-  public static final String NAVIGATE_TO_ESKILLS = "navigateToESkills";
   @Inject AppCoinsInfoPresenter appCoinsInfoPresenter;
   @Inject @Named("screenWidth") float screenWidth;
   @Inject @Named("screenHeight") float screenHeight;
@@ -186,7 +188,7 @@ public class AppCoinsInfoFragment extends BackButtonFragment
       Drawable drawable = null;
       try {
         drawable = getResources().getDrawable(Integer.parseInt(source));
-        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+        drawable.setBounds(0, 0, 45, 45);
       } catch (Resources.NotFoundException e) {
         Log.e("log_tag", "Image not found. Check the ID.", e);
       } catch (NumberFormatException e) {
@@ -251,8 +253,41 @@ public class AppCoinsInfoFragment extends BackButtonFragment
     appcMessageAppCoinsSection1.setText(
         String.format(getString(R.string.appc_info_view_body_1_variable), bonusAppc));
 
-    setupTextView(getString(R.string.appc_info_view_title_5_variable), appcMessageAppcoinsSection3,
-        bonusAppc, getAppCoinsLogoString());
+    /*setupTextViewWithLogo(getString(R.string.appc_info_view_title_5_variable), appcMessageAppcoinsSection3,
+        bonusAppc);*/
+
+    //setupTextView(getString(R.string.appc_info_view_title_5_variable), appcMessageAppcoinsSection3,
+      //  bonusAppc, getAppCoinsLogoString());
+    setTextWithImage();
+  }
+
+  private void setTextWithImage() {
+    String text = getString(R.string.appc_info_view_title_5_variable);
+
+    //String formattedString = String.format(text, 25);
+    String formattedString = text.replaceFirst("%s%", String.valueOf(25));
+
+    // Encontra a última ocorrência de %s
+    int lastIndex = formattedString.lastIndexOf("%s");
+
+    if (lastIndex != -1) {
+      SpannableString spannableText = new SpannableString(formattedString);
+
+      // Cria o drawable e ajusta seu tamanho
+      Drawable drawable = ContextCompat.getDrawable(this.getActivity().getApplicationContext(),
+          R.drawable.ic_aptoide_balance);
+      drawable.setBounds(0, 0, 45, 45); // Ajuste diretamente o tamanho da imagem
+
+      // Cria o ImageSpan
+      ImageSpan imageSpan = new ImageSpan(drawable, ImageSpan.ALIGN_BASELINE);
+
+      // Substitui o último %s por um ImageSpan
+      spannableText.setSpan(imageSpan, lastIndex, lastIndex + 2,
+          Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+      // Define o texto no TextView
+      appcMessageAppcoinsSection3.setText(spannableText);
+    }
   }
 
   @Override public void setNoBonusAppcView() {
@@ -262,8 +297,9 @@ public class AppCoinsInfoFragment extends BackButtonFragment
   }
 
   private String getAppCoinsLogoString() {
-    String format = "<img width='24px' height='20px' src=\"%1$s\"/>";
-    return String.format(format, R.drawable.ic_spend_appc);
+    String format =
+        "<img width='45px' height='45px' style='vertical-align: text-bottom; ' src=\"%1$s\" />";
+    return String.format(format, R.drawable.ic_aptoide_balance);
   }
 
   private void configureAppCardAnimation(View layoutToHide, View layoutToShow, float hideScale,

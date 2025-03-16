@@ -73,7 +73,7 @@ class BonusAppcView : FrameLayout {
 
   }
 
-  fun setSide(side: Side) {
+  private fun setSide(side: Side) {
     when (side) {
       Side.LEFT -> root_layout.setBackgroundResource(R.drawable.appc_gradient_right_rounded)
       Side.RIGHT -> root_layout.setBackgroundResource(R.drawable.appc_gradient_left_rounded)

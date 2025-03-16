@@ -71,10 +71,10 @@ class WalletInstallPresenter(
     view.lifecycleEvent
       .filter { lifecycleEvent -> View.LifecycleEvent.CREATE == lifecycleEvent }
       .doOnNext {
-        if (!hasMinimumSdk())
+        if (hasMinimumSdk())
           view.showSdkErrorView()
       }
-      .filter { hasMinimumSdk() }
+      .filter {! hasMinimumSdk() }
       .flatMap {
         showWalletInitialState()
       }
@@ -129,9 +129,7 @@ class WalletInstallPresenter(
     }.observeOn(viewScheduler)
       .flatMap {
         permissionManager.requestDownloadAllowingMobileData(permissionService)
-          .flatMap {
-            permissionManager.requestExternalStoragePermission(permissionService)
-          }
+
           .observeOn(Schedulers.io())
           .flatMapCompletable {
             walletInstallManager.downloadApp(walletApp)

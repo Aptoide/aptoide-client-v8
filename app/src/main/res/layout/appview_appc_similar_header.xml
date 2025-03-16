@@ -11,7 +11,7 @@
       android:layout_width="53dp"
       android:layout_height="53dp"
       android:layout_gravity="center_horizontal"
-      android:src="@drawable/appcoins_icon_gradient"
+      android:src="@drawable/ic_aptoide_balance_round_white"
       />
   <TextView
       android:layout_width="105dp"

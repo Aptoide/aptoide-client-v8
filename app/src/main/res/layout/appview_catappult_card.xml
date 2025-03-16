@@ -11,7 +11,7 @@
   <RelativeLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:background="@color/catappult_purple"
+      android:background="@color/default_orange_gradient_end"
       >
 
     <TextView
@@ -22,7 +22,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="11dp"
         android:text="@string/appc_info_view_devs_title"
-        android:textColor="@color/catappult_pink"
+        android:textColor="@color/white"
         android:textStyle="bold"
         style="@style/Aptoide.TextView.Medium.L"
         />

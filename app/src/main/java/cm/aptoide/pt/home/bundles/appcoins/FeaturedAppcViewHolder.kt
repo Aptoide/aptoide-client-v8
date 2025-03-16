@@ -68,11 +68,10 @@ class FeaturedAppcViewHolder(val view: View,
         toggleSkeleton(true)
       } else {
         toggleSkeleton(false)
-        itemView.bonus_appc_view.setPercentage(bundle.bonusPercentage)
         itemView.title.text = itemView.context.getString(R.string.incentives_banner_title,
             bundle.bonusPercentage.toString())
         itemView.description.text = itemView.resources.getString(R.string.incentives_banner_body)
-            .formatWithHtmlImage(R.drawable.ic_spend_appc, 24, 20, itemView.resources)
+            .formatWithHtmlImage(R.drawable.ic_aptoide_balance, 24, 20, itemView.resources)
 
         appsInBundleAdapter.updateBundle(homeBundle, position)
         appsInBundleAdapter.update(homeBundle.apps)

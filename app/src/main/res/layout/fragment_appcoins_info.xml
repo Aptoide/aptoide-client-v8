@@ -165,7 +165,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/appc_gradient"
+                android:background="#FE6446"
                 >
 
               <androidx.cardview.widget.CardView
@@ -255,13 +255,21 @@
               style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:layout_marginTop="19dp"
+              android:layout_marginTop="16dp"
               android:text="@string/appc_info_view_title_4"
               app:layout_constraintEnd_toStartOf="@+id/guideline_right"
               app:layout_constraintHorizontal_bias="0"
               app:layout_constraintStart_toStartOf="@id/guideline_left"
               app:layout_constraintTop_toBottomOf="@+id/app_card_layout"
               />
+
+
+          <androidx.constraintlayout.widget.Guideline
+              android:id="@+id/guideline_bottom"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal"
+              app:layout_constraintGuide_end="16dp" />
 
           <TextView
               android:id="@+id/appc_message_appcoins_section_3"
@@ -272,9 +280,21 @@
               android:text="@string/appc_info_view_title_5_variable"
               app:layout_constraintEnd_toStartOf="@+id/guideline_right"
               app:layout_constraintHorizontal_bias="0"
+              app:layout_constraintBottom_toTopOf="@+id/guideline_bottom"
               app:layout_constraintStart_toStartOf="@id/guideline_left"
               app:layout_constraintTop_toBottomOf="@+id/appc_message_appcoins_header_3"
               />
+
+
+
+
+          <!--<View
+              android:layout_width="0dp"
+              android:layout_height="16dp"
+              app:layout_constraintTop_toBottomOf="@id/appc_message_appcoins_section_3"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintEnd_toEndOf="parent"
+              android:visibility="invisible" />-->
 
           <androidx.constraintlayout.widget.Guideline
               android:id="@+id/guideline_left"
@@ -310,7 +330,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/catappult_purple"
+            android:background="@color/default_orange_gradient_end"
             >
 
           <TextView
@@ -321,7 +341,7 @@
               android:layout_centerHorizontal="true"
               android:layout_marginTop="13dp"
               android:text="@string/appc_info_view_devs_title"
-              android:textColor="@color/catappult_pink"
+              android:textColor="@color/white"
               android:textStyle="bold"
               />
 
@@ -339,7 +359,7 @@
 
           <android.widget.Button
               android:id="@+id/catappult_dev_button"
-              style="@style/Aptoide.Button.Catappult"
+              style="@style/Aptoide.Button.Flat.M.White"
               android:layout_width="match_parent"
               android:layout_height="40dp"
               android:layout_alignParentBottom="true"

@@ -115,7 +115,7 @@
       android:layout_width="82dp"
       android:layout_height="82dp"
       android:layout_marginTop="31dp"
-      android:src="@drawable/ic_appcoins"
+      android:src="@drawable/appcoins_wallet_icon"
       android:visibility="gone"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"

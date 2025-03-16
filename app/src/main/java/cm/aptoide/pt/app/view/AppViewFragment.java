@@ -245,7 +245,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private View iabInfo;
   private View apkfyElement;
   private View flagThisAppSection;
-  private View collapsingAppcBackground;
+  //private View collapsingAppcBackground;
   private TextView installStateText;
   private View catappultCard;
 
@@ -408,7 +408,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     viewProgress = view.findViewById(R.id.appview_progress);
     appview = view.findViewById(R.id.appview_full);
     toolbar = view.findViewById(R.id.toolbar);
-    collapsingAppcBackground = view.findViewById(R.id.collapsing_appc_coins_background);
+    //collapsingAppcBackground = view.findViewById(R.id.collapsing_appc_coins_background);
 
     bonusAppcView = view.findViewById(R.id.bonus_appc_view);
 
@@ -473,7 +473,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
           bonusAppcView.setTranslationX(-(percentage * 1.15f) * bonusAppcView.getMeasuredWidth());
           ((ToolbarArcBackground) view.findViewById(R.id.toolbar_background_arc)).setScale(
               percentage);
-          collapsingAppcBackground.setAlpha(1 - percentage);
+          //collapsingAppcBackground.setAlpha(1 - percentage);
         });
 
     if (savedInstanceState != null) {
@@ -1073,24 +1073,24 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         .resolveAttribute(R.attr.appview_toolbar_bg_appc, value, true);
     int drawableId = value.resourceId;
 
-    TransitionDrawable transition =
+    /*TransitionDrawable transition =
         (TransitionDrawable) ContextCompat.getDrawable(getContext(), drawableId);
     collapsingToolbarLayout.setBackgroundDrawable(transition);
-    transition.startTransition(APPC_TRANSITION_MS);
+    transition.startTransition(APPC_TRANSITION_MS);*/
 
     if (hasBilling && bonusAppcModel.getHasBonusAppc()) {
       bonusAppcView.setPercentage(bonusAppcModel.getBonusPercentage());
       bonusAppcView.setVisibility(View.VISIBLE);
     } else {
-      AlphaAnimation animation1 = new AlphaAnimation(0f, 1.0f);
-      animation1.setDuration(APPC_TRANSITION_MS);
-      collapsingAppcBackground.setAlpha(1f);
+      /*AlphaAnimation animation1 = new AlphaAnimation(0f, 1.0f);
+      animation1.setDuration(APPC_TRANSITION_MS);*/
+      /*collapsingAppcBackground.setAlpha(1f);
       collapsingAppcBackground.setVisibility(View.VISIBLE);
-      collapsingAppcBackground.startAnimation(animation1);
+      collapsingAppcBackground.startAnimation(animation1);*/
     }
 
     install.setBackgroundDrawable(getContext().getResources()
-        .getDrawable(R.drawable.appc_gradient_rounded));
+        .getDrawable(R.color.default_orange_gradient_end));
     downloadProgressBar.setProgressDrawable(
         ContextCompat.getDrawable(getContext(), R.drawable.appc_progress));
     flagThisAppSection.setVisibility(View.GONE);
