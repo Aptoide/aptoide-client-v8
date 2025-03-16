@@ -129,6 +129,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
 
     aptoideInstalledAppsRepository.getInstalled(packageName)
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .observeOn(AndroidSchedulers.mainThread())
         .subscribe(installed -> {
           if (installed != null) {
             // app installed... update text
