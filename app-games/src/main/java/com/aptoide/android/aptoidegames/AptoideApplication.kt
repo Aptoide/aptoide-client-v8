@@ -2,6 +2,7 @@ package com.aptoide.android.aptoidegames
 
 import android.app.Application
 import android.content.Context
+import android.os.Process
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
@@ -10,6 +11,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.Configuration
 import androidx.work.Configuration.Provider
+import cm.aptoide.pt.extensions.getProcessName
 import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
 import cm.aptoide.pt.feature_categories.analytics.AptoideAnalyticsInfoProvider
 import cm.aptoide.pt.feature_flags.domain.FeatureFlags
@@ -140,7 +142,7 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
       }
     }
     AptoideMMPCampaign.init(BuildConfig.OEMID, BuildConfig.MARKET_NAME)
-    mintegral.initializeSdk()
+    initAds()
   }
 
   private fun initFeatureFlags() {
@@ -172,6 +174,15 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
       channel = "APTOIDEGAMES"
       paymentScreenContentProvider = psContentProvider
       adyenKey = BuildConfig.ADYEN_KEY
+    }
+  }
+
+  private fun initAds() {
+    if (applicationContext.getProcessName(
+        Process.myPid()
+      ) != "${applicationContext.packageName}:obbMoverProcess"
+    ) {
+      mintegral.initializeSdk()
     }
   }
 
