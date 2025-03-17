@@ -5,8 +5,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -33,6 +35,7 @@ fun EventPromotionalView(
   bundle: Bundle,
   modifier: Modifier = Modifier,
   navigate: (String) -> Unit,
+  spaceBy: Int = 0
 ) {
   val (uiState) = rememberEditorialListState(
     tag = bundle.tag,
@@ -42,7 +45,8 @@ fun EventPromotionalView(
     uiState = uiState,
     bundle = bundle,
     modifier = modifier,
-    navigate = navigate
+    navigate = navigate,
+    spaceBy = spaceBy
   )
 }
 
@@ -52,13 +56,17 @@ private fun EventBundleContent(
   bundle: Bundle,
   modifier: Modifier = Modifier,
   navigate: (String) -> Unit,
+  spaceBy: Int = 0,
 ) {
   when (uiState) {
     ArticleListUiState.Empty,
     ArticleListUiState.Error,
     ArticleListUiState.NoConnection -> Unit
 
-    ArticleListUiState.Loading -> LoadingBundleView(height = 240.dp)
+    ArticleListUiState.Loading -> {
+      LoadingBundleView(height = 240.dp)
+      Spacer(Modifier.size(spaceBy.dp))
+    }
 
     is ArticleListUiState.Idle -> {
       val editorialMeta = uiState.articles[0]
@@ -72,6 +80,7 @@ private fun EventBundleContent(
           )
         },
       )
+      Spacer(Modifier.size(spaceBy.dp))
     }
   }
 }

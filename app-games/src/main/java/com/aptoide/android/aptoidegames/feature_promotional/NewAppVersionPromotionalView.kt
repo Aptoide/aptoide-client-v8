@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -31,13 +32,24 @@ import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
-fun NewAppVersionPromotionalView(bundle: Bundle, navigate: (String) -> Unit) {
+fun NewAppVersionPromotionalView(
+  bundle: Bundle,
+  navigate: (String) -> Unit,
+  spaceBy: Int = 0
+) {
   bundle.view?.let {
     val (uiState, _) = rememberApp(it)
 
     when (uiState) {
-      is AppUiState.Idle -> NewAppVersionPromotional(uiState.app, bundle.title, navigate)
-      is AppUiState.Loading -> LoadingView()
+      is AppUiState.Idle -> {
+        NewAppVersionPromotional(uiState.app, bundle.title, navigate)
+        Spacer(Modifier.size(spaceBy.dp))
+      }
+
+      is AppUiState.Loading -> {
+        LoadingView()
+        Spacer(Modifier.size(spaceBy.dp))
+      }
       is AppUiState.NoConnection,
       is AppUiState.Error -> Unit
     }

@@ -58,6 +58,7 @@ fun MyGamesBundleView(
   title: String,
   icon: String?,
   navigate: (String) -> Unit,
+  spaceBy: Int = 0,
 ) {
   val analyticsContext = AnalyticsContext.current
   val bundleAnalytics = rememberBundleAnalytics()
@@ -78,6 +79,7 @@ fun MyGamesBundleView(
     },
     onRetryClick = retry,
   )
+  Spacer(Modifier.size(spaceBy.dp))
 }
 
 @Composable

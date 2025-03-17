@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredWidth
@@ -68,13 +69,15 @@ import okhttp3.internal.toImmutableList
 fun CarouselBundle(
   bundle: Bundle,
   navigate: (String) -> Unit,
+  spaceBy: Int = 0,
 ) {
   val (uiState, _) = rememberAppsByTag(bundle.tag, bundle.timestamp)
 
   RealCarouselBundle(
     bundle = bundle,
     uiState = uiState,
-    navigate = navigate
+    navigate = navigate,
+    spaceBy = spaceBy
   )
 }
 
@@ -83,6 +86,7 @@ private fun RealCarouselBundle(
   bundle: Bundle,
   uiState: AppsListUiState,
   navigate: (String) -> Unit,
+  spaceBy: Int = 0
 ) {
   Column {
     BundleHeader(
@@ -99,14 +103,18 @@ private fun RealCarouselBundle(
           bundleTag = bundle.tag,
           navigate = navigate
         )
+        Spacer(Modifier.size(spaceBy.dp))
       }
 
       AppsListUiState.Empty,
       AppsListUiState.Error,
       AppsListUiState.NoConnection,
-        -> SmallEmptyView(modifier = Modifier.height(184.dp))
+        -> Unit
 
-      AppsListUiState.Loading -> LoadingBundleView(height = 184.dp)
+      AppsListUiState.Loading -> {
+        LoadingBundleView(height = 184.dp)
+        Spacer(Modifier.size(spaceBy.dp))
+      }
     }
   }
 }
