@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -84,6 +85,7 @@ fun AptoideMMPController(
 fun PublisherTakeOverBundle(
   bundle: Bundle,
   navigate: (String) -> Unit,
+  spaceBy: Int = 0,
 ) {
   val (uiState, _) = rememberAppsByTag(bundle.tag, bundle.timestamp)
   val (bottomUiState, _) = rememberAppsByTag(bundle.bottomTag ?: "", bundle.timestamp)
@@ -106,7 +108,8 @@ fun PublisherTakeOverBundle(
     bundle = bundle,
     uiState = uiState,
     bottomUiState = bottomUiState,
-    navigate = navigate
+    navigate = navigate,
+    spaceBy = spaceBy
   )
 }
 
@@ -116,6 +119,7 @@ fun PublisherTakeOverContent(
   uiState: AppsListUiState,
   bottomUiState: AppsListUiState,
   navigate: (String) -> Unit,
+  spaceBy: Int = 0
 ) {
   Column {
     Box {
@@ -173,10 +177,13 @@ fun PublisherTakeOverContent(
           AppsListUiState.Loading -> LoadingBundleView(height = 184.dp)
         }
         when (bottomUiState) {
-          is AppsListUiState.Idle -> AppsRowView(
-            appsList = bottomUiState.apps,
-            navigate = navigate,
-          )
+          is AppsListUiState.Idle -> {
+            AppsRowView(
+              appsList = bottomUiState.apps,
+              navigate = navigate,
+            )
+            Spacer(Modifier.size(spaceBy.dp))
+          }
 
           AppsListUiState.Empty,
           AppsListUiState.Error,
@@ -184,7 +191,10 @@ fun PublisherTakeOverContent(
             -> { /*nothing to show*/
           }
 
-          AppsListUiState.Loading -> LoadingBundleView(height = 184.dp)
+          AppsListUiState.Loading -> {
+            LoadingBundleView(height = 184.dp)
+            Spacer(Modifier.size(spaceBy.dp))
+          }
         }
       }
     }

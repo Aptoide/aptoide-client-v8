@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -43,6 +44,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 @Composable
 fun AppComingSoonPromotionalView(
   bundle: Bundle,
+  spaceBy: Int = 0,
 ) {
   var showNotificationsDialog by remember { mutableStateOf(false) }
   val onChangeNotificationDialogState = { shouldShow: Boolean ->
@@ -53,15 +55,21 @@ fun AppComingSoonPromotionalView(
     val (uiState, onSubscribe) = rememberAppComingSoon(it)
 
     when (uiState) {
-      is Idle -> AppComingSoonPromotional(
-        appComingSoonCard = uiState.subscribedAppComingSoonCard.appComingSoonCard,
-        isSubscribed = uiState.subscribedAppComingSoonCard.isSubscribed,
-        onSubscribe = onSubscribe,
-        showNotificationsDialog = showNotificationsDialog,
-        onChangeNotificationDialogState = onChangeNotificationDialogState
-      )
+      is Idle -> {
+        AppComingSoonPromotional(
+          appComingSoonCard = uiState.subscribedAppComingSoonCard.appComingSoonCard,
+          isSubscribed = uiState.subscribedAppComingSoonCard.isSubscribed,
+          onSubscribe = onSubscribe,
+          showNotificationsDialog = showNotificationsDialog,
+          onChangeNotificationDialogState = onChangeNotificationDialogState
+        )
+        Spacer(Modifier.size(spaceBy.dp))
+      }
 
-      Loading -> LoadingView()
+      Loading -> {
+        LoadingView()
+        Spacer(Modifier.size(spaceBy.dp))
+      }
       Error,
       NoConnection -> Unit
     }

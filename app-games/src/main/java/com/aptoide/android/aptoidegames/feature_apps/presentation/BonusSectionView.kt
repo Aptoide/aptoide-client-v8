@@ -50,7 +50,8 @@ import com.aptoide.android.aptoidegames.theme.Palette
 @Composable
 fun BonusSectionView(
   bundle: Bundle,
-  navigate: (String) -> Unit
+  navigate: (String) -> Unit,
+  spaceBy: Int = 0,
 ) {
   val context = LocalContext.current
   Column(modifier = Modifier.fillMaxWidth()) {
@@ -98,6 +99,7 @@ fun BonusSectionView(
       bundle = bundle,
       navigate = navigate
     )
+    Spacer(Modifier.size(spaceBy.dp))
   }
 }
 
@@ -178,7 +180,7 @@ fun BonusBundleView(
     AppsListUiState.Empty,
     AppsListUiState.Error,
     AppsListUiState.NoConnection,
-      -> SmallEmptyView(modifier = Modifier.height(184.dp))
+      -> Unit
 
     AppsListUiState.Loading -> LoadingBundleView(height = 184.dp)
   }

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -48,6 +49,7 @@ import com.aptoide.android.aptoidegames.theme.Palette
 fun CategoriesBundle(
   bundle: Bundle,
   navigate: (String) -> Unit,
+  spaceBy: Int = 0,
 ) = bundle.view?.let {
   val uiState = rememberCategoriesState(requestUrl = it)
   val analyticsContext = AnalyticsContext.current
@@ -73,9 +75,11 @@ fun CategoriesBundle(
     CategoriesListView(
       loading = uiState.loading,
       categories = uiState.categories,
-      navigate = navigate
+      navigate = navigate,
+      spaceBy = spaceBy
     )
   }
+
 }
 
 @Composable
@@ -83,6 +87,7 @@ fun CategoriesListView(
   loading: Boolean,
   categories: List<Category>,
   navigate: (String) -> Unit,
+  spaceBy: Int = 0
 ) {
   val analyticsContext = AnalyticsContext.current
   val categoriesAnalytics = rememberCategoriesAnalytics()
@@ -90,8 +95,10 @@ fun CategoriesListView(
 
   if (loading) {
     LoadingBundleView(height = 132.dp)
+    Spacer(Modifier.size(spaceBy.dp))
   } else if (categories.isEmpty()) {
     SmallEmptyView(modifier = Modifier.height(132.dp))
+    Spacer(Modifier.size(spaceBy.dp))
   } else {
     LazyRow(
       modifier = Modifier
@@ -121,6 +128,7 @@ fun CategoriesListView(
         )
       }
     }
+    Spacer(Modifier.size(spaceBy.dp))
   }
 }
 

@@ -181,7 +181,6 @@ fun BundlesView(
       modifier = Modifier
         .fillMaxSize()
         .wrapContentSize(Alignment.TopCenter),
-      verticalArrangement = Arrangement.spacedBy(32.dp),
       contentPadding = PaddingValues(bottom = 72.dp)
     ) {
       items(viewState.bundles) { bundle ->
@@ -190,66 +189,79 @@ fun BundlesView(
             Type.APP_GRID -> AppsGridBundle(
               bundle = bundle,
               navigate = navigateTo,
+              spaceBy = 32
             )
 
             Type.EDITORIAL -> EditorialBundle(
               bundle = bundle,
               navigate = navigateTo,
+              spaceBy = 32
             )
 
             Type.CAROUSEL -> CarouselBundle(
               bundle = bundle,
               navigate = navigateTo,
+              spaceBy = 32
             )
 
             Type.CAROUSEL_LARGE -> CarouselLargeBundle(
               bundle = bundle,
               navigate = navigateTo,
+              spaceBy = 32
             )
 
             Type.CATEGORIES -> CategoriesBundle(
               bundle = bundle,
-              navigate = navigateTo
+              navigate = navigateTo,
+              spaceBy = 32
             )
 
             Type.MY_GAMES -> MyGamesBundleView(
               title = bundle.title.translateOrKeep(LocalContext.current),
               icon = bundle.bundleIcon,
               navigate = navigateTo,
+              spaceBy = 32
             )
 
             Type.PUBLISHER_TAKEOVER -> PublisherTakeOverBundle(
               bundle = bundle,
               navigate = navigateTo,
+              spaceBy = 32
             )
 
             Type.APPC_BANNER -> BonusSectionView(
               bundle = bundle,
               navigate = navigateTo,
+              spaceBy = 32
             )
 
             Type.NEW_APP -> NewAppPromotionalView(
               bundle = bundle,
-              navigate = navigateTo
+              navigate = navigateTo,
+              spaceBy = 32
             )
 
             Type.NEW_APP_VERSION -> NewAppVersionPromotionalView(
               bundle = bundle,
-              navigate = navigateTo
+              navigate = navigateTo,
+              spaceBy = 32
             )
 
             Type.NEWS_ITEM -> NewsPromotionalView(
               bundle = bundle,
-              navigate = navigateTo
+              navigate = navigateTo,
+              spaceBy = 32
             )
 
             Type.IN_GAME_EVENT -> EventPromotionalView(
               bundle = bundle,
-              navigate = navigateTo
+              navigate = navigateTo,
+              spaceBy = 32
             )
 
             Type.APP_COMING_SOON -> AppComingSoonPromotionalView(
-              bundle = bundle
+              bundle = bundle,
+              spaceBy = 32
             )
 
             else -> Unit

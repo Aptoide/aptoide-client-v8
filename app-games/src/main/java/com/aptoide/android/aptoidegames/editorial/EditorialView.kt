@@ -6,9 +6,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
@@ -34,7 +36,6 @@ import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
 import com.aptoide.android.aptoidegames.analytics.presentation.SwipeListener
 import com.aptoide.android.aptoidegames.analytics.presentation.withBundleMeta
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
-import com.aptoide.android.aptoidegames.feature_apps.presentation.SmallEmptyView
 import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
 import com.aptoide.android.aptoidegames.home.analytics.meta
@@ -50,6 +51,7 @@ fun EditorialBundle(
   filterId: String? = null,
   subtype: String? = null,
   navigate: (String) -> Unit,
+  spaceBy: Int = 0,
 ) {
   val (uiState, reload) = rememberEditorialListState(
     tag = bundle.tag,
@@ -63,7 +65,8 @@ fun EditorialBundle(
     listenForPosition = listenForPosition,
     filterId = filterId,
     subtype = subtype,
-    navigate = navigate
+    navigate = navigate,
+    spaceBy = spaceBy
   )
 }
 
@@ -76,13 +79,17 @@ private fun EditorialBundleContent(
   filterId: String? = null,
   subtype: String? = null,
   navigate: (String) -> Unit,
+  spaceBy: Int = 0,
 ) {
   when (uiState) {
     ArticleListUiState.Empty,
     ArticleListUiState.Error,
-    ArticleListUiState.NoConnection -> SmallEmptyView(modifier = Modifier.height(240.dp))
+    ArticleListUiState.NoConnection -> Unit
 
-    ArticleListUiState.Loading -> LoadingBundleView(height = 240.dp)
+    ArticleListUiState.Loading -> {
+      LoadingBundleView(height = 240.dp)
+      Spacer(Modifier.size(spaceBy.dp))
+    }
 
     is ArticleListUiState.Idle -> {
       val items = uiState.articles.filter { it.id != filterId }
@@ -96,6 +103,7 @@ private fun EditorialBundleContent(
         navigate = navigate,
         subtype = subtype,
       )
+      Spacer(Modifier.size(spaceBy.dp))
     }
   }
 }
