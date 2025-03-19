@@ -2,7 +2,9 @@ package cm.aptoide.pt.extensions
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.ActivityManager
 import android.content.Context
+import android.content.Context.ACTIVITY_SERVICE
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
@@ -65,4 +67,15 @@ fun Context.sendMail(
   } catch (t: Throwable) {
     Timber.e(t)
   }
+}
+
+fun Context.getProcessName(pid: Int): String? {
+  val am = getSystemService(ACTIVITY_SERVICE) as ActivityManager
+  val runningApps = am.runningAppProcesses ?: return null
+  for (procInfo in runningApps) {
+    if (procInfo.pid == pid) {
+      return procInfo.processName
+    }
+  }
+  return null
 }

@@ -33,6 +33,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -382,7 +383,9 @@ fun HorizontalPagerView(
     end = padding
   )
 
-  val initialItem = calculateLoopedBundleInitialItem(appsList.size)
+  val initialItem = remember(appsList) {
+    calculateLoopedBundleInitialItem(appsList.size)
+  }
 
   val pagerState = rememberPagerState(
     initialPage = initialItem,
@@ -395,6 +398,10 @@ fun HorizontalPagerView(
     scrollSpeedInSeconds = scrollSpeedInSeconds.takeIf { it > 0L } ?: DEFAULT_AUTO_SCROLL_SPEED
   )
   val currentPage by autoScrollViewModel.uiState.collectAsState()
+
+  LaunchedEffect(initialItem) {
+    pagerState.animateScrollToPage(initialItem)
+  }
 
   /*Used when the current page state is changed in the AutoScrollViewModel*/
   LaunchedEffect(currentPage) {
