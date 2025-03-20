@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.utils;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -512,7 +511,7 @@ public class AptoideUtils {
      * provided elements.</p> <p> <p>No delimiter is added before or after the list. A {@code null}
      * separator is the same as an empty String ("").</p>
      *
-     * @param iterable  the {@code Iterable} providing the values to join together, may be null
+     * @param iterable the {@code Iterable} providing the values to join together, may be null
      * @param separator the separator character to use, null treated as ""
      * @return the joined String, {@code null} if null iterator input
      * @since 2.3
@@ -529,7 +528,7 @@ public class AptoideUtils {
      * provided elements.</p> <p> <p>No delimiter is added before or after the list. A {@code null}
      * separator is the same as an empty String ("").</p>
      *
-     * @param iterator  the {@code Iterator} of values to join together, may be null
+     * @param iterator the {@code Iterator} of values to join together, may be null
      * @param separator the separator character to use, null treated as ""
      * @return the joined String, {@code null} if null iterator input
      */
@@ -713,7 +712,18 @@ public class AptoideUtils {
 
     public static PackageInfo getPackageInfo(String packageName, PackageManager packageManager) {
       try {
-        return packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNATURES);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+          return packageManager.getPackageInfo(packageName, PackageManager.PackageInfoFlags.of(
+              PackageManager.GET_META_DATA
+                  | PackageManager.GET_ACTIVITIES
+                  | PackageManager.GET_SIGNING_CERTIFICATES));
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+          return packageManager.getPackageInfo(packageName, PackageManager.GET_META_DATA
+              | PackageManager.GET_ACTIVITIES
+              | PackageManager.GET_SIGNING_CERTIFICATES);
+        } else {
+          return packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNATURES);
+        }
       } catch (PackageManager.NameNotFoundException e) {
         e.printStackTrace();
       }
@@ -740,7 +750,18 @@ public class AptoideUtils {
     }
 
     public static List<PackageInfo> getAllInstalledApps(PackageManager packageManager) {
-      return packageManager.getInstalledPackages(PackageManager.GET_SIGNATURES);
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        return packageManager.getInstalledPackages(PackageManager.PackageInfoFlags.of(
+            PackageManager.GET_META_DATA
+                | PackageManager.GET_ACTIVITIES
+                | PackageManager.GET_SIGNING_CERTIFICATES));
+      } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+        return packageManager.getInstalledPackages(PackageManager.GET_META_DATA
+            | PackageManager.GET_ACTIVITIES
+            | PackageManager.GET_SIGNING_CERTIFICATES);
+      } else {
+        return packageManager.getInstalledPackages(PackageManager.GET_SIGNATURES);
+      }
     }
 
     public static String getApkLabel(PackageInfo packageInfo, PackageManager packageManager) {

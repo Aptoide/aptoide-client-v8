@@ -3,6 +3,8 @@ package cm.aptoide.pt.database.room;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.Signature;
+import android.os.Build;
 import android.os.Environment;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -76,9 +78,10 @@ import java.io.File;
     setStoreName(storeName);
     this.packageAndVersionCode = packageInfo.packageName + packageInfo.versionCode;
     setSystemApp((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0);
-    if (packageInfo.signatures != null && packageInfo.signatures.length > 0) {
-      setSignature(
-          AptoideUtils.AlgorithmU.computeSha1WithColon(packageInfo.signatures[0].toByteArray()));
+
+    String signature = getAppSignature(packageInfo);
+    if (signature != null) {
+      setSignature(signature);
     }
     setStatus(STATUS_COMPLETED);
     setType(TYPE_UNKNOWN);
@@ -222,5 +225,32 @@ import java.io.File;
       }
     }
     return 0;
+  }
+
+  private String getAppSignature(PackageInfo packageInfo) {
+
+    byte[] signature;
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+      if (packageInfo.signingInfo != null) {
+        Signature[] signingHistory = packageInfo.signingInfo.getSigningCertificateHistory();
+        if (signingHistory != null && signingHistory.length > 0) {
+          signature = signingHistory[signingHistory.length - 1].toByteArray();
+        } else {
+          signature = packageInfo.signingInfo.getApkContentsSigners()[0].toByteArray();
+        }
+      } else {
+        return null;
+      }
+    } else {
+      Signature[] signatures = packageInfo.signatures;
+      if (signatures != null && signatures.length > 0) {
+        signature = signatures[0].toByteArray();
+      } else {
+        return null;
+      }
+    }
+
+    return AptoideUtils.AlgorithmU.computeSha1WithColon(signature);
   }
 }
