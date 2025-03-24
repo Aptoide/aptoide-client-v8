@@ -63,7 +63,7 @@ class AptoideInstallPackageInfoMapper @Inject constructor(
 }
 
 private fun File.toInstallationFile(type: InstallationFile.Type) = InstallationFile(
-  name = fileName,
+  name = fileName.takeIf { it.endsWith(".apk") } ?: "$fileName.apk",
   type = type,
   md5 = md5,
   fileSize = size,
