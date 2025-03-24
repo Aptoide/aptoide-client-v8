@@ -13,12 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import cm.aptoide.pt.feature_apps.presentation.AppUiState
-import cm.aptoide.pt.feature_apps.presentation.rememberApp
+import cm.aptoide.pt.feature_apps.data.App
 import com.aptoide.android.aptoidegames.R
-import com.aptoide.android.aptoidegames.appview.LoadingView
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
-import com.aptoide.android.aptoidegames.error_views.NoConnectionView
 import com.aptoide.android.aptoidegames.feature_apps.presentation.AppItem
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -28,9 +25,8 @@ import com.aptoide.android.aptoidegames.theme.Palette
 fun MessageBubble(
   message: String?,
   isUserMessage: Boolean,
-  apps: List<String>? = null,
+  apps: List<App>? = null,
   navigateTo: (String) -> Unit = {},
-  onAllAppsFail: () -> Unit,
 ) {
   Column(
     modifier = Modifier
@@ -63,35 +59,16 @@ fun MessageBubble(
         color = if (isUserMessage) Palette.Black else Palette.White,
       )
 
-      val processedApps = apps?.map { app ->
-        val rememberedApp = rememberApp("package_name=$app")
-        val fn = rememberedApp.second
-        val state = rememberedApp.first
-        when (state) {
-          AppUiState.Error -> {}
-          is AppUiState.Idle -> {
-            val fullApp = state.app
-            AppItem(
-              app = fullApp,
-              onClick = {
-                navigateTo(
-                  buildAppViewRoute(fullApp)
-                )
-              },
-            ) {
-              InstallViewShort(fullApp)
-            }
-          }
-
-          AppUiState.Loading -> LoadingView()
-          AppUiState.NoConnection -> NoConnectionView(fn)
-        }
-        state
-      }
-
-      processedApps?.let {
-        if (processedApps.isNotEmpty() && processedApps.all { state -> state == AppUiState.NoConnection }) {
-          onAllAppsFail()
+      apps?.forEach { app ->
+        AppItem(
+          app = app,
+          onClick = {
+            navigateTo(
+              buildAppViewRoute(app)
+            )
+          },
+        ) {
+          InstallViewShort(app)
         }
       }
     }

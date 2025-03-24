@@ -1,0 +1,24 @@
+package com.aptoide.android.aptoidegames.gamegenie.io_models
+
+import androidx.annotation.Keep
+import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7Response
+import cm.aptoide.pt.feature_apps.data.model.AppJSON
+
+@Keep
+data class ChatInteractionResponse(
+  val gpt: String,
+  val user: String?,
+  val apps: List<AppJSON>?,
+)
+
+@Keep
+data class GetAppResponse(var nodes: Nodes) : BaseV7Response()
+
+@Keep
+data class Nodes(
+  var meta: GetAppMeta,
+)
+
+@Keep
+data class GetAppMeta(val data: AppJSON)
+

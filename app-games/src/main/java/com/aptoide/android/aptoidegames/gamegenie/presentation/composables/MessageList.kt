@@ -15,7 +15,6 @@ fun MessageList(
   messages: List<ChatInteraction>,
   navigateTo: (String) -> Unit,
   modifier: Modifier = Modifier,
-  onAllAppsFail: () -> Unit,
   suggestions: List<String>,
   onSuggestionClick: (String, Int) -> Unit,
 ) {
@@ -38,8 +37,7 @@ fun MessageList(
           message = userMessage,
           isUserMessage = true,
           apps = emptyList(), // No apps for user messages
-          navigateTo = navigateTo,
-          onAllAppsFail = onAllAppsFail,
+          navigateTo = navigateTo
         )
       }
 
@@ -51,16 +49,14 @@ fun MessageList(
 
         MessageBubble(
           message = null, isUserMessage = false,
-          apps = message.apps.map { app -> app.packageName },
-          navigateTo = navigateTo,
-          onAllAppsFail = onAllAppsFail,
+          apps = message.apps,
+          navigateTo = navigateTo
         )
       } else {
         MessageBubble(
           message = message.gpt, isUserMessage = false,
-          apps = message.apps.map { app -> app.packageName },
-          navigateTo = navigateTo,
-          onAllAppsFail = onAllAppsFail,
+          apps = message.apps,
+          navigateTo = navigateTo
         )
       }
     }

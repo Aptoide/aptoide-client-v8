@@ -52,7 +52,6 @@ fun gameGenieScreen() = ScreenData.withAnalytics(
           viewModel.sendMessage(message)
           analytics.sendGameGenieSuggestionClick(index)
         },
-        onAllAppsFail = viewModel::setGeneralError
       )
     },
     loadConversationFn = viewModel::loadConversation,
@@ -68,7 +67,6 @@ fun ChatbotView(
   onError: () -> Unit,
   onMessageSend: (String) -> Unit,
   onSuggestionSend: (String, Int) -> Unit,
-  onAllAppsFail: () -> Unit,
 ) {
   Column(
     modifier = Modifier
@@ -83,8 +81,7 @@ fun ChatbotView(
         navigateTo = navigateTo,
         onMessageSend = {},
         onSuggestionSend = { _, _ -> },
-        isLoading = true,
-        onAllAppsFail = onAllAppsFail
+        isLoading = true
       )
 
       GameGenieUIStateType.NO_CONNECTION -> NoConnectionView(onRetryClick = onError)
@@ -93,8 +90,7 @@ fun ChatbotView(
         uiState = uiState,
         navigateTo = navigateTo,
         onMessageSend = onMessageSend,
-        onSuggestionSend = onSuggestionSend,
-        onAllAppsFail = onAllAppsFail
+        onSuggestionSend = onSuggestionSend
       )
     }
   }
@@ -107,7 +103,6 @@ fun ChatScreen(
   onMessageSend: (String) -> Unit,
   onSuggestionSend: (String, Int) -> Unit,
   isLoading: Boolean = false,
-  onAllAppsFail: () -> Unit,
 ) {
   val suggestions = listOf(
     stringResource(R.string.genai_example_1_body),
@@ -125,7 +120,6 @@ fun ChatScreen(
       navigateTo = navigateTo,
       modifier = Modifier
         .weight(1f),
-      onAllAppsFail = onAllAppsFail,
       suggestions = suggestions,
       onSuggestionClick = onSuggestionSend
     )

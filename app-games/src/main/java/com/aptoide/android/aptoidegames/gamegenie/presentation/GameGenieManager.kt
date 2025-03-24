@@ -52,12 +52,33 @@ class GameGenieManager @Inject constructor(
     }
   }
 
-  suspend fun getChatById(id: String): GameGenieHistoryEntity {
-    return gameGenieDatabase.getGameGenieHistoryDao().getChatById(id)
+  suspend fun getChatById(id: String): GameGenieHistoryEntity? {
+    return runCatching {
+      gameGenieDatabase.getGameGenieHistoryDao().getChatById(id)
+    }.getOrNull()
   }
 
-  suspend fun saveChat(chat: GameGenieChat) {
-    gameGenieDatabase.getGameGenieHistoryDao().saveChat(chat.toEntity())
+  suspend fun saveOrUpdateChat(chat: GameGenieChat) {
+    val oldChat = getChatById(chat.id)
+    val newChat = chat.toEntity()
+    if (oldChat != null) {
+      val lastMessage = oldChat.conversation.last()
+        .copy(
+          user = chat.conversation[chat.conversation.size - 2].user
+        )
+      val fixedOldChat = oldChat.conversation.dropLast(1) + lastMessage
+      gameGenieDatabase
+        .getGameGenieHistoryDao()
+        .saveChat(
+          oldChat.copy(
+            conversation = fixedOldChat + newChat.conversation.last()
+          )
+        )
+    } else {
+      gameGenieDatabase
+        .getGameGenieHistoryDao()
+        .saveChat(newChat)
+    }
   }
 
   fun getAllChats(): Flow<List<GameGenieHistoryEntity>> {

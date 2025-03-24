@@ -17,7 +17,7 @@ import javax.inject.Inject
 import kotlin.random.Random
 
 @HiltViewModel
-class InjectionsProvider @Inject constructor(
+class GameGenieInjectionsProvider @Inject constructor(
   val featureFlags: FeatureFlags,
 ) : ViewModel()
 
@@ -27,7 +27,7 @@ fun rememberGameGenieVisibility(): Boolean = runPreviewable(
   real = {
     val coroutineScope = rememberCoroutineScope()
     var state by remember { mutableStateOf(false) }
-    val vm = hiltViewModel<InjectionsProvider>()
+    val vm = hiltViewModel<GameGenieInjectionsProvider>()
     LaunchedEffect(key1 = Unit) {
       coroutineScope.launch {
         state = vm.featureFlags.getFlag("show_game_genie", false)

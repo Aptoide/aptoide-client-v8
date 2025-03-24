@@ -3,12 +3,14 @@ package com.aptoide.android.aptoidegames.gamegenie.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aptoide.android.aptoidegames.gamegenie.domain.ChatInteraction
+import com.aptoide.android.aptoidegames.gamegenie.domain.GameContext
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameGenieChat
 import com.aptoide.android.aptoidegames.gamegenie.domain.Token
 import com.aptoide.android.aptoidegames.gamegenie.presentation.GameGenieUIStateType.NO_CONNECTION
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -22,6 +24,7 @@ class GameGenieViewModel @Inject constructor(
   private val gameGenieUseCase: GameGenieUseCase,
 ) : ViewModel() {
   private val viewModelState = MutableStateFlow(GameGenieViewModelState())
+  private val _installedApps = MutableStateFlow<List<GameContext>>(emptyList())
 
   val uiState = viewModelState.map { it.toUiState() }
     .stateIn(
@@ -31,7 +34,16 @@ class GameGenieViewModel @Inject constructor(
     )
 
   init {
+    loadInstalledApps()
     refreshToken()
+  }
+
+  private fun loadInstalledApps() {
+    viewModelScope.launch {
+      gameGenieUseCase.getInstalledApps().collect { apps ->
+        _installedApps.value = apps
+      }
+    }
   }
 
   private fun refreshToken() {
@@ -62,9 +74,10 @@ class GameGenieViewModel @Inject constructor(
       try {
         updateLoadingState { updateConversation(userMessage) }
         val chat = gameGenieUseCase.sendMessage(
-                      chat = uiState.value.chat,
-                      userMessage = userMessage
-                    )
+          chat = uiState.value.chat.toGameGenieChatHistory(),
+          userMessage = userMessage,
+          installedApps = _installedApps.value
+        )
         updateSuccessState(chat)
       } catch (e: Throwable) {
         handleError(e)
@@ -88,16 +101,19 @@ class GameGenieViewModel @Inject constructor(
 
   fun loadConversation(id: String) {
     viewModelScope.launch {
-      gameGenieUseCase.loadChat(id)?.let { newChat ->
-        viewModelState.update {
-          it.copy(
-            chat = newChat,
-            apps = newChat.conversation.flatMap { interaction ->
-              interaction.apps.map { app -> app.packageName }
+      gameGenieUseCase.loadChat(id)
+        .collectLatest { newChat ->
+          newChat?.let {
+            viewModelState.update { state ->
+              state.copy(
+                chat = newChat,
+                apps = newChat.conversation.flatMap { interaction ->
+                  interaction.apps.map { app -> app.packageName }
+                }
+              )
             }
-          )
+          }
         }
-      }
     }
   }
 
@@ -119,7 +135,7 @@ class GameGenieViewModel @Inject constructor(
         chat = it.chat.copy(
           id = response.id,
           title = response.title,
-          conversation = response.conversation
+          conversation = viewModelState.value.chat.conversation + response.conversation.last()
         ),
         apps = response.conversation.lastOrNull()?.apps?.map { app -> app.packageName }
           ?: emptyList()
