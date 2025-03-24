@@ -13,12 +13,14 @@ import cm.aptoide.pt.install_manager.environment.NetworkConnection
 import cm.aptoide.pt.installer.AptoideDownloader
 import cm.aptoide.pt.installer.AptoideInstallPackageInfoMapper
 import cm.aptoide.pt.installer.AptoideInstaller
+import cm.aptoide.pt.installer.LegacyInstaller
 import cm.aptoide.pt.installer.obb.OBBInstallManager
 import cm.aptoide.pt.task_info.AptoideTaskInfoRepository
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 import com.aptoide.android.aptoidegames.apkfy.DownloadPermissionStateProbe
 import com.aptoide.android.aptoidegames.installer.DownloaderSelector
+import com.aptoide.android.aptoidegames.installer.InstallerSelector
 import com.aptoide.android.aptoidegames.installer.analytics.AnalyticsInstallPackageInfoMapper
 import com.aptoide.android.aptoidegames.installer.analytics.DownloadProbe
 import com.aptoide.android.aptoidegames.installer.analytics.InstallAnalytics
@@ -54,7 +56,7 @@ class InstallerModule {
     @ApplicationContext appContext: Context,
     taskInfoRepository: AptoideTaskInfoRepository,
     downloadPermissionStateProbe: DownloadPermissionStateProbe,
-    installer: AptoideInstaller,
+    installerSelector: InstallerSelector,
     installAnalytics: InstallAnalytics,
     networkConnection: NetworkConnection,
     silentInstallChecker: SilentInstallChecker,
@@ -71,7 +73,7 @@ class InstallerModule {
         analytics = installAnalytics,
       ),
       packageInstaller = InstallProbe(
-        packageInstaller = installer,
+        packageInstaller = installerSelector,
         analytics = installAnalytics,
       ),
       networkConnection = networkConnection
@@ -89,6 +91,16 @@ class InstallerModule {
   ): DownloaderSelector = DownloaderSelector(
     featureFlags = featureFlags,
     aptoidePackageDownloader = aptoideDownloader,
+  )
+
+  @Singleton
+  @Provides
+  fun provideInstallerSelector(
+    aptoideInstaller: AptoideInstaller,
+    legacyInstaller: LegacyInstaller
+  ): InstallerSelector = InstallerSelector(
+    aptoideInstaller = aptoideInstaller,
+    legacyInstaller = legacyInstaller,
   )
 
   @Singleton
