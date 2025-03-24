@@ -5,6 +5,8 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import cm.aptoide.pt.extensions.isMIUI
+import cm.aptoide.pt.extensions.isMiuiOptimizationDisabled
 import cm.aptoide.pt.feature_updates.di.UpdatesPreferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -28,7 +30,7 @@ class UpdatesPreferencesRepository @Inject constructor(
   }
 
   fun shouldAutoUpdateGames(): Flow<Boolean?> {
-    return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+    return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || areSilentUpdatesUnsupported()) {
       return flowOf(null)
     } else {
       dataStore.data.map { preferences ->
@@ -36,4 +38,6 @@ class UpdatesPreferencesRepository @Inject constructor(
       }
     }
   }
+
+  private fun areSilentUpdatesUnsupported() = isMIUI() && !isMiuiOptimizationDisabled()
 }
