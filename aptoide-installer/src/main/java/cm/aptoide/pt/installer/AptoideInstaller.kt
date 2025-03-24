@@ -7,6 +7,7 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageInstaller.PACKAGE_SOURCE_STORE
 import android.content.pm.PackageInstaller.Session
 import android.content.pm.PackageInstaller.SessionParams.USER_ACTION_NOT_REQUIRED
+import android.content.pm.PackageManager
 import android.os.Build
 import cm.aptoide.pt.extensions.checkMd5
 import cm.aptoide.pt.extensions.hasPackageInstallsPermission
@@ -122,6 +123,7 @@ class AptoideInstaller @Inject constructor(
             }
 
             setInstallLocation(PackageInfo.INSTALL_LOCATION_AUTO)
+            setInstallReason(PackageManager.INSTALL_REASON_USER)
           }
       )
       openSession(sessionId).run {
