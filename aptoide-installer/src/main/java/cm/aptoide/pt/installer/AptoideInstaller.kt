@@ -7,9 +7,6 @@ import android.content.pm.PackageInstaller.PACKAGE_SOURCE_STORE
 import android.content.pm.PackageInstaller.Session
 import android.content.pm.PackageInstaller.SessionParams.USER_ACTION_NOT_REQUIRED
 import android.os.Build
-import cm.aptoide.pt.extensions.checkMd5
-import cm.aptoide.pt.extensions.hasPackageInstallsPermission
-import cm.aptoide.pt.extensions.hasWriteExternalStoragePermission
 import cm.aptoide.pt.install_manager.AbortException
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallationFile
@@ -47,7 +44,7 @@ class AptoideInstaller @Inject constructor(
   private val uninstallEvents: UninstallEvents,
   private val installPermissions: InstallPermissions,
 ) : PackageInstaller {
-  private val initialPermissionsAllowed = getPermissionsState()
+  private val initialPermissionsAllowed = context.getPermissionsState()
 
   init {
     // Clean up all old sessions on app start
@@ -220,14 +217,6 @@ class AptoideInstaller @Inject constructor(
     apks to obbs
   }
 
-  private fun InstallationFile.toCheckedFile(parentDir: File): File =
-    File(parentDir, name)
-      .takeIf { it.checkMd5(md5) }
-      ?: throw IllegalStateException("MD5 check failed: File $name is corrupt")
-
-  private val Collection<File>.totalLength
-    get() = map(File::length).reduceOrNull { acc, l -> acc + l } ?: 0
-
   private suspend fun Session.loadFiles(
     files: Collection<File>,
     progress: suspend (Long) -> Unit,
@@ -249,14 +238,6 @@ class AptoideInstaller @Inject constructor(
         }
       processedSize += size
     }
-  }
-
-  private fun Collection<File>.deleteFromCache() = forEach(File::delete)
-
-  private fun getPermissionsState() = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-    context.hasPackageInstallsPermission() && context.hasWriteExternalStoragePermission()
-  } else {
-    context.hasPackageInstallsPermission()
   }
 
   companion object {
