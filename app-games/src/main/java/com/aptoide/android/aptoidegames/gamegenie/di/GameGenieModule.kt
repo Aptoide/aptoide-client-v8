@@ -1,10 +1,15 @@
 package com.aptoide.android.aptoidegames.gamegenie.di
 
 import android.content.Context
+import android.content.pm.PackageManager
 import androidx.room.Room
 import cm.aptoide.pt.aptoide_network.di.BaseOkHttp
+import cm.aptoide.pt.aptoide_network.di.RetrofitV7
+import cm.aptoide.pt.feature_apps.data.AppMapper
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieApiService
+import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieAppRepository
+import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieAppRepositoryImpl
 import com.aptoide.android.aptoidegames.gamegenie.data.database.GameGenieDatabase
 import com.aptoide.android.aptoidegames.gamegenie.data.database.GameGenieHistoryDao
 import com.aptoide.android.aptoidegames.gamegenie.presentation.GameGenieManager
@@ -13,6 +18,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -48,11 +55,27 @@ internal object GameGenieModule {
     GameGenieDatabase::class.java,
     "ag_game_genie.db"
   )
-    .addMigrations(GameGenieDatabase.FirstMigration())
+    .addMigrations(
+      GameGenieDatabase.FirstMigration(),
+      GameGenieDatabase.SecondMigration()
+    )
     .build()
 
   @Singleton
   @Provides
   fun provideGameGenieDao(database: GameGenieDatabase): GameGenieHistoryDao =
     database.getGameGenieHistoryDao()
+
+  @Provides
+  @Singleton
+  fun providesAppRepository(
+    @RetrofitV7 retrofitV7: Retrofit,
+    appMapper: AppMapper,
+    packageManager: PackageManager,
+  ): GameGenieAppRepository = GameGenieAppRepositoryImpl(
+    appsRemoteDataSource = retrofitV7.create(GameGenieAppRepositoryImpl.Retrofit::class.java),
+    mapper = appMapper,
+    scope = CoroutineScope(Dispatchers.IO),
+    packageManager = packageManager
+  )
 }

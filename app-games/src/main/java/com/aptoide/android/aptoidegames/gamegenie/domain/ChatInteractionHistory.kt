@@ -1,11 +1,10 @@
 package com.aptoide.android.aptoidegames.gamegenie.domain
 
 import androidx.annotation.Keep
-import cm.aptoide.pt.feature_apps.data.App
 
 @Keep
-data class ChatInteraction(
+data class ChatInteractionHistory(
   val gpt: String,
   val user: String?,
-  val apps: List<App>,
+  val apps: List<String>,
 )
