@@ -76,6 +76,12 @@ interface InstallAnalytics {
   ) {
   }
 
+  fun sendAutomaticQueueDownloadCancelEvent(
+    packageName: String,
+    installPackageInfo: InstallPackageInfo
+  ) {
+  }
+
   fun sendInstallDialogImpressionEvent(
     packageName: String,
     analyticsPayload: AnalyticsPayload?

@@ -38,6 +38,7 @@ import com.aptoide.android.aptoidegames.installer.analytics.rememberInstallAnaly
 import com.aptoide.android.aptoidegames.installer.analytics.rememberScheduledInstalls
 import com.aptoide.android.aptoidegames.installer.installConstraints
 import com.aptoide.android.aptoidegames.installer.notifications.rememberInstallerNotifications
+import com.aptoide.android.aptoidegames.installer.rememberInstallerQueueHandler
 import com.aptoide.android.aptoidegames.installer.wifiInstallConstraints
 import com.aptoide.android.aptoidegames.network.presentation.NetworkPreferencesViewModel
 import com.aptoide.android.aptoidegames.network.presentation.WifiPromptDialog
@@ -67,6 +68,7 @@ fun installViewStates(
   val (saveAppDetails) = rememberSaveAppDetails()
   val downloadOnlyOverWifi = rememberDownloadOverWifi()
   val scheduledInstallListener = rememberScheduledInstalls()
+  val installerQueueHandler = rememberInstallerQueueHandler()
 
   var canceled by remember { mutableStateOf(false) }
   LaunchedEffect(key1 = downloadUiState) {
@@ -330,6 +332,7 @@ fun installViewStates(
                   downloadOnlyOverWifiSetting = downloadOnlyOverWifi
                 )
                 cancel()
+                installerQueueHandler.clearRemainingQueue(app.packageName)
               }
 
               else -> { ->
@@ -347,6 +350,7 @@ fun installViewStates(
                   installPackageInfo = downloadUiState.installPackageInfo
                 )
                 cancel()
+                installerQueueHandler.clearRemainingQueue(app.packageName)
               }
             }
           }

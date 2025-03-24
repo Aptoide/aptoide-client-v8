@@ -245,6 +245,19 @@ class InstallAnalyticsImpl(
     )
   }
 
+  override fun sendAutomaticQueueDownloadCancelEvent(
+    packageName: String,
+    installPackageInfo: InstallPackageInfo
+  ) {
+    logBIDownloadEvent(
+      packageName = packageName,
+      status = "cancel_queue",
+      installPackageInfo = installPackageInfo,
+      downloadedBytesPerSecond = -1.0,
+      P_ERROR_TYPE to "queue"
+    )
+  }
+
   override fun sendInstallDialogImpressionEvent(
     packageName: String,
     analyticsPayload: AnalyticsPayload?
