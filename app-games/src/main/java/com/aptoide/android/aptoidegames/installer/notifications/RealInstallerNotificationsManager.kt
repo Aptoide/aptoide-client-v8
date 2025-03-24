@@ -15,6 +15,7 @@ import cm.aptoide.pt.installer.platform.UserActionRequest
 import cm.aptoide.pt.network_listener.NetworkConnectionImpl
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.installer.AppDetailsUseCase
+import com.aptoide.android.aptoidegames.installer.isInstallationIntent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -64,7 +65,7 @@ class RealInstallerNotificationsManager @Inject constructor(
     userActionHandler.requests.collect {
       if (isOnForeground == false
         && it is UserActionRequest.InstallationAction
-        && it.intent.action == "android.content.pm.action.CONFIRM_INSTALL"
+        && it.intent.isInstallationIntent()
       ) {
         val packageName = it.intent
           .getStringExtra("${BuildConfig.APPLICATION_ID}.pn") ?: "NaN"

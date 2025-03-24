@@ -1,6 +1,7 @@
 package com.aptoide.android.aptoidegames.installer
 
 import android.app.Activity
+import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -112,8 +113,7 @@ fun UserActionDialog() {
         when (val it = state) {
           is InstallationAction -> {
             if (!installationActionLaunched) {
-              //System action, we cannot access it any other way
-              if (it.intent.action == "android.content.pm.action.CONFIRM_INSTALL") {
+              if (it.intent.isInstallationIntent()) {
                 val packageName = it.intent
                   .getStringExtra("${BuildConfig.APPLICATION_ID}.pn") ?: "NaN"
                 val analyticsPayload = it.intent
@@ -259,3 +259,7 @@ fun PermissionsDialogPreview() {
     }
   }
 }
+
+//System action, we cannot access it any other way
+fun Intent.isInstallationIntent() =
+  action == "android.content.pm.action.CONFIRM_INSTALL" || action == "android.intent.action.INSTALL_PACKAGE"
