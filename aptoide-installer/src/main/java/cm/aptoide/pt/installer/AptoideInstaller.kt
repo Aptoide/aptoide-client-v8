@@ -3,6 +3,7 @@ package cm.aptoide.pt.installer
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageInfo
 import android.content.pm.PackageInstaller.PACKAGE_SOURCE_STORE
 import android.content.pm.PackageInstaller.Session
 import android.content.pm.PackageInstaller.SessionParams.USER_ACTION_NOT_REQUIRED
@@ -119,6 +120,8 @@ class AptoideInstaller @Inject constructor(
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
               setPackageSource(PACKAGE_SOURCE_STORE)
             }
+
+            setInstallLocation(PackageInfo.INSTALL_LOCATION_AUTO)
           }
       )
       openSession(sessionId).run {
