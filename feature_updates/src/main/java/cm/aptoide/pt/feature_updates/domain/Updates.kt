@@ -140,7 +140,7 @@ class Updates @Inject constructor(
           it.modifiedDate
         }
       }
-    if (!shouldAutoUpdateGames) {
+    if (shouldAutoUpdateGames != true) {
       return
     }
     installers.forEach { appInstaller ->
