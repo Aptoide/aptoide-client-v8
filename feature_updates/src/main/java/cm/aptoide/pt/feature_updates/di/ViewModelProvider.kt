@@ -1,6 +1,5 @@
 package cm.aptoide.pt.feature_updates.di
 
-import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -35,11 +34,9 @@ fun rememberAutoUpdate(): Pair<Boolean?, (Boolean) -> Unit> = runPreviewable(
         }
       }
     )
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-      val uiState by vm.shouldAutoUpdateGames.collectAsState()
-      uiState to vm::setAutoUpdateGames
-    } else {
-      null to { _ -> }
-    }
+    val uiState by vm.shouldAutoUpdateGames.collectAsState()
+    uiState?.let {
+      it to vm::setAutoUpdateGames
+    } ?: (null to {})
   }
 )

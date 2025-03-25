@@ -17,7 +17,7 @@ class UpdatesPreferencesViewModel @Inject constructor(
   private val updatesPreferencesRepository: UpdatesPreferencesRepository
 ) : ViewModel() {
 
-  private val viewModelState = MutableStateFlow(true)
+  private val viewModelState = MutableStateFlow<Boolean?>(null)
 
   val shouldAutoUpdateGames = viewModelState
     .stateIn(

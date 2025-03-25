@@ -27,9 +27,9 @@ class UpdatesPreferencesRepository @Inject constructor(
     }
   }
 
-  fun shouldAutoUpdateGames(): Flow<Boolean> {
+  fun shouldAutoUpdateGames(): Flow<Boolean?> {
     return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
-      return flowOf(false)
+      return flowOf(null)
     } else {
       dataStore.data.map { preferences ->
         preferences[AUTO_UPDATE_GAMES] ?: true
