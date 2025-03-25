@@ -37,7 +37,6 @@ class AptoideDownloader @Inject constructor(
         if (installPackageInfo.hasObb()) {
           installPermissions.checkIfCanWriteExternal()
         }
-        installPermissions.checkIfCanInstall()
       }
       .flatMapMerge(concurrency = 5) { item ->
         var fileProgress = 0.0
