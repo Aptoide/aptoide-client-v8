@@ -1,7 +1,12 @@
 package com.aptoide.android.aptoidegames.installer.analytics
 
+import cm.aptoide.pt.install_manager.AbortException
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.workers.PackageInstaller
+import cm.aptoide.pt.installer.platform.REQUEST_INSTALL_PACKAGES_NOT_ALLOWED
+import cm.aptoide.pt.installer.platform.REQUEST_INSTALL_PACKAGES_RATIONALE_REJECTED
+import cm.aptoide.pt.installer.platform.WRITE_EXTERNAL_STORAGE_NOT_ALLOWED
+import cm.aptoide.pt.installer.platform.WRITE_EXTERNAL_STORAGE_RATIONALE_REJECTED
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onCompletion
@@ -29,6 +34,26 @@ class InstallProbe(
             packageName = packageName,
             installPackageInfo = installPackageInfo
           )
+
+          is AbortException -> {
+            when (it.message) {
+              REQUEST_INSTALL_PACKAGES_NOT_ALLOWED,
+              REQUEST_INSTALL_PACKAGES_RATIONALE_REJECTED,
+              WRITE_EXTERNAL_STORAGE_NOT_ALLOWED,
+              WRITE_EXTERNAL_STORAGE_RATIONALE_REJECTED -> analytics.sendInstallAbortEvent(
+                packageName = packageName,
+                installPackageInfo = installPackageInfo,
+                errorMessage = it.message
+              )
+
+              else -> analytics.sendInstallErrorEvent(
+                packageName = packageName,
+                installPackageInfo = installPackageInfo,
+                errorMessage = it.message,
+                errorType = it::class.simpleName
+              )
+            }
+          }
 
           null -> {
             analytics.sendInstallCompletedEvent(

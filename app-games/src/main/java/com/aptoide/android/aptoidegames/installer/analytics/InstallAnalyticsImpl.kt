@@ -330,6 +330,29 @@ class InstallAnalyticsImpl(
     )
   }
 
+  override fun sendInstallAbortEvent(
+    packageName: String,
+    installPackageInfo: InstallPackageInfo,
+    errorMessage: String?,
+  ) {
+    genericAnalytics.logEvent(
+      name = "app_installed",
+      params = installPackageInfo.toAppGenericParameters(
+        packageName = packageName,
+        P_STATUS to "fail",
+        P_ERROR_MESSAGE to (errorMessage ?: "failure")
+      )
+    )
+
+    logBIInstallEvent(
+      packageName = packageName,
+      status = "abort",
+      installPackageInfo = installPackageInfo,
+      P_ERROR_MESSAGE to errorMessage,
+      P_ERROR_TYPE to "permission",
+    )
+  }
+
   override fun sendResumeDownloadClick(
     app: App,
     downloadOnlyOverWifiSetting: Boolean,

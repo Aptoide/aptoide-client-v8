@@ -108,6 +108,13 @@ interface InstallAnalytics {
   ) {
   }
 
+  fun sendInstallAbortEvent(
+    packageName: String,
+    installPackageInfo: InstallPackageInfo,
+    errorMessage: String?,
+  ) {
+  }
+
   fun sendResumeDownloadClick(
     app: App,
     downloadOnlyOverWifiSetting: Boolean,
