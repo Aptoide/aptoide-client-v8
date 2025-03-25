@@ -151,13 +151,20 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
     }
   }
 
-  private fun initIndicative() = biAnalytics.setup(
-    context = applicationContext,
-    installManager = installManager,
-    analyticsInfoProvider = analyticsInfoProvider,
-    appLaunchPreferencesManager = appLaunchPreferencesManager,
-    featureFlags = featureFlags,
-  )
+  private fun initIndicative() {
+    if (applicationContext.getProcessName(
+        Process.myPid()
+      ) != "${applicationContext.packageName}:obbMoverProcess"
+    ) {
+      biAnalytics.setup(
+        context = applicationContext,
+        installManager = installManager,
+        analyticsInfoProvider = analyticsInfoProvider,
+        appLaunchPreferencesManager = appLaunchPreferencesManager,
+        featureFlags = featureFlags,
+      )
+    }
+  }
 
   private fun initPayments() {
     Payments.init(
