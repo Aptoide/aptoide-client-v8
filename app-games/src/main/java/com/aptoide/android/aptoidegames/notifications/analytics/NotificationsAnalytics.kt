@@ -1,8 +1,9 @@
 package com.aptoide.android.aptoidegames.notifications.analytics
 
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
+import javax.inject.Inject
 
-class NotificationsAnalytics(
+class NotificationsAnalytics @Inject constructor(
   private val genericAnalytics: GenericAnalytics,
 ) {
 

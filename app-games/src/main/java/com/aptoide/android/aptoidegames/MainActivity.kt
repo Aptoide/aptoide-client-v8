@@ -1,8 +1,11 @@
 package com.aptoide.android.aptoidegames
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
@@ -19,14 +22,17 @@ import com.aptoide.android.aptoidegames.installer.notifications.InstallerNotific
 import com.aptoide.android.aptoidegames.launch.AppLaunchPreferencesManager
 import com.aptoide.android.aptoidegames.network.repository.NetworkPreferencesRepository
 import com.aptoide.android.aptoidegames.notifications.analytics.FirebaseNotificationAnalytics
+import com.aptoide.android.aptoidegames.notifications.analytics.NotificationsAnalytics
 import com.aptoide.android.aptoidegames.notifications.toFirebaseNotificationAnalyticsInfo
 import com.aptoide.android.aptoidegames.promo_codes.PromoCodeApp
 import com.aptoide.android.aptoidegames.promo_codes.PromoCodeRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -37,6 +43,9 @@ class MainActivity : AppCompatActivity() {
 
   @Inject
   lateinit var installAnalytics: InstallAnalytics
+
+  @Inject
+  lateinit var notificationsAnalytics: NotificationsAnalytics
 
   @Inject
   lateinit var biAnalytics: BIAnalytics
@@ -58,10 +67,24 @@ class MainActivity : AppCompatActivity() {
 
   private var navController: NavHostController? = null
 
+  private val coroutinesScope: CoroutineScope = CoroutineScope(Job() + Dispatchers.IO)
+
+  val notificationsPermissionLauncher =
+    registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+      coroutinesScope.launch {
+        if (isGranted) {
+          notificationsAnalytics.sendNotificationOptIn()
+        } else {
+          notificationsAnalytics.sendNotificationOptOut()
+        }
+      }
+    }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     intent.addSourceContext()
 
+    requestInitialPermissions()
     sendAGStartAnalytics()
     setContent {
       val navController = rememberNavController()
@@ -71,6 +94,17 @@ class MainActivity : AppCompatActivity() {
 
       LaunchedEffect(key1 = navController) {
         handleNotificationIntent(intent = intent)
+      }
+    }
+  }
+
+  @SuppressLint("InlinedApi")
+  private fun requestInitialPermissions() {
+    coroutinesScope.launch {
+      if (appLaunchPreferencesManager.isFirstLaunch()) {
+        withContext(Dispatchers.Main) {
+          notificationsPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
       }
     }
   }
