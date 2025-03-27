@@ -22,7 +22,8 @@ abstract class GameGenieDatabase : RoomDatabase() {
 
   class SecondMigration : Migration(2, 3) {
     override fun migrate(db: SupportSQLiteDatabase) {
-      db.execSQL("DELETE FROM GameGenieHistory")
+      db.execSQL("DROP TABLE GameGenieHistory")
+      db.execSQL("CREATE TABLE GameGenieHistory (id TEXT NOT NULL PRIMARY KEY, conversation TEXT NOT NULL, title TEXT NOT NULL DEFAULT '')")
     }
   }
 }
