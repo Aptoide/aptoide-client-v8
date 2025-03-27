@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap.Companion.Butt
 import androidx.compose.ui.graphics.StrokeJoin.Companion.Miter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.ImageVector.Builder
 import androidx.compose.ui.graphics.vector.group
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,7 +32,8 @@ fun getMoreBonusViewHeader(
   color1: Color = Palette.Secondary,
   color2: Color = Palette.Primary,
   color3: Color = Palette.Black,
-): ImageVector = ImageVector.Builder(
+  color4: Color = Palette.GreyDark
+): ImageVector = Builder(
   name = "MoreBonusHeader",
   defaultWidth = 360.0.dp,
   defaultHeight = 56.0.dp,
@@ -39,153 +41,17 @@ fun getMoreBonusViewHeader(
   viewportHeight = 56.0f
 ).apply {
   path(
-    fill = SolidColor(color1),
-    stroke = null,
-    strokeLineWidth = 0.0f,
-    strokeLineCap = Butt,
-    strokeLineJoin = Miter,
-    strokeLineMiter = 4.0f,
-    pathFillType = NonZero
-  ) {
-    moveTo(0.0f, 40.0f)
-    horizontalLineToRelative(360.0f)
-    verticalLineToRelative(16.0f)
-    horizontalLineToRelative(-360.0f)
-    close()
-  }
-  path(
-    fill = SolidColor(color1),
-    stroke = null,
-    strokeLineWidth = 0.0f,
-    strokeLineCap = Butt,
-    strokeLineJoin = Miter,
-    strokeLineMiter = 4.0f,
-    pathFillType = EvenOdd
-  ) {
-    moveTo(352.0f, 50.0f)
-    verticalLineTo(29.0f)
-    horizontalLineTo(347.0f)
-    verticalLineTo(16.0f)
-    horizontalLineTo(312.0f)
-    verticalLineTo(50.0f)
-    horizontalLineTo(318.0f)
-    verticalLineTo(56.0f)
-    horizontalLineTo(339.0f)
-    verticalLineTo(50.0f)
-    horizontalLineTo(352.0f)
-    close()
-  }
+  fill = SolidColor(color4),
+  stroke = null,
+  pathFillType = NonZero
+) {
+  moveTo(0.0f, 34.0f)
+  lineTo(360.0f, 34.0f)
+  lineTo(360.0f, 56.0f)
+  lineTo(0.0f, 56.0f)
+  close()
+}
   group {
-    path(
-      fill = SolidColor(color2),
-      stroke = null,
-      strokeLineWidth = 0.0f,
-      strokeLineCap = Butt,
-      strokeLineJoin = Miter,
-      strokeLineMiter = 4.0f,
-      pathFillType = NonZero
-    ) {
-      moveTo(340.887f, 34.889f)
-      verticalLineTo(47.111f)
-      horizontalLineTo(323.109f)
-      verticalLineTo(34.889f)
-      horizontalLineTo(320.887f)
-      verticalLineTo(28.222f)
-      horizontalLineTo(326.665f)
-      curveTo(326.591f, 28.037f, 326.535f, 27.857f, 326.498f, 27.681f)
-      curveTo(326.461f, 27.505f, 326.443f, 27.315f, 326.443f, 27.111f)
-      curveTo(326.443f, 26.185f, 326.767f, 25.398f, 327.415f, 24.75f)
-      curveTo(328.063f, 24.102f, 328.85f, 23.778f, 329.776f, 23.778f)
-      curveTo(330.202f, 23.778f, 330.6f, 23.852f, 330.97f, 24.0f)
-      curveTo(331.341f, 24.148f, 331.683f, 24.37f, 331.998f, 24.667f)
-      curveTo(332.313f, 24.389f, 332.656f, 24.171f, 333.026f, 24.014f)
-      curveTo(333.396f, 23.857f, 333.795f, 23.778f, 334.22f, 23.778f)
-      curveTo(335.146f, 23.778f, 335.933f, 24.102f, 336.582f, 24.75f)
-      curveTo(337.23f, 25.398f, 337.554f, 26.185f, 337.554f, 27.111f)
-      curveTo(337.554f, 27.315f, 337.54f, 27.509f, 337.512f, 27.694f)
-      curveTo(337.484f, 27.88f, 337.424f, 28.056f, 337.332f, 28.222f)
-      horizontalLineTo(343.109f)
-      verticalLineTo(34.889f)
-      horizontalLineTo(340.887f)
-      close()
-    }
-    path(
-      fill = SolidColor(color3),
-      stroke = null,
-      strokeLineWidth = 0.0f,
-      strokeLineCap = Butt,
-      strokeLineJoin = Miter,
-      strokeLineMiter = 4.0f,
-      pathFillType = NonZero
-    ) {
-      moveTo(340.887f, 47.111f)
-      verticalLineTo(34.889f)
-      horizontalLineTo(343.109f)
-      verticalLineTo(28.222f)
-      horizontalLineTo(337.332f)
-      curveTo(337.424f, 28.056f, 337.484f, 27.88f, 337.512f, 27.694f)
-      curveTo(337.54f, 27.509f, 337.554f, 27.315f, 337.554f, 27.111f)
-      curveTo(337.554f, 26.185f, 337.23f, 25.398f, 336.582f, 24.75f)
-      curveTo(335.933f, 24.102f, 335.146f, 23.778f, 334.22f, 23.778f)
-      curveTo(333.795f, 23.778f, 333.396f, 23.857f, 333.026f, 24.014f)
-      curveTo(332.656f, 24.171f, 332.313f, 24.389f, 331.998f, 24.667f)
-      curveTo(331.683f, 24.37f, 331.341f, 24.148f, 330.97f, 24.0f)
-      curveTo(330.6f, 23.852f, 330.202f, 23.778f, 329.776f, 23.778f)
-      curveTo(328.85f, 23.778f, 328.063f, 24.102f, 327.415f, 24.75f)
-      curveTo(326.767f, 25.398f, 326.443f, 26.185f, 326.443f, 27.111f)
-      curveTo(326.443f, 27.315f, 326.461f, 27.505f, 326.498f, 27.681f)
-      curveTo(326.535f, 27.857f, 326.591f, 28.037f, 326.665f, 28.222f)
-      horizontalLineTo(320.887f)
-      verticalLineTo(34.889f)
-      horizontalLineTo(323.109f)
-      verticalLineTo(47.111f)
-      horizontalLineTo(340.887f)
-      close()
-      moveTo(329.776f, 26.0f)
-      curveTo(330.091f, 26.0f, 330.355f, 26.107f, 330.568f, 26.319f)
-      curveTo(330.781f, 26.532f, 330.887f, 26.796f, 330.887f, 27.111f)
-      curveTo(330.887f, 27.426f, 330.781f, 27.69f, 330.568f, 27.903f)
-      curveTo(330.355f, 28.116f, 330.091f, 28.222f, 329.776f, 28.222f)
-      curveTo(329.461f, 28.222f, 329.197f, 28.116f, 328.984f, 27.903f)
-      curveTo(328.771f, 27.69f, 328.665f, 27.426f, 328.665f, 27.111f)
-      curveTo(328.665f, 26.796f, 328.771f, 26.532f, 328.984f, 26.319f)
-      curveTo(329.197f, 26.107f, 329.461f, 26.0f, 329.776f, 26.0f)
-      close()
-      moveTo(335.332f, 27.111f)
-      curveTo(335.332f, 27.426f, 335.225f, 27.69f, 335.012f, 27.903f)
-      curveTo(334.799f, 28.116f, 334.535f, 28.222f, 334.22f, 28.222f)
-      curveTo(333.906f, 28.222f, 333.642f, 28.116f, 333.429f, 27.903f)
-      curveTo(333.216f, 27.69f, 333.109f, 27.426f, 333.109f, 27.111f)
-      curveTo(333.109f, 26.796f, 333.216f, 26.532f, 333.429f, 26.319f)
-      curveTo(333.642f, 26.107f, 333.906f, 26.0f, 334.22f, 26.0f)
-      curveTo(334.535f, 26.0f, 334.799f, 26.107f, 335.012f, 26.319f)
-      curveTo(335.225f, 26.532f, 335.332f, 26.796f, 335.332f, 27.111f)
-      close()
-      moveTo(340.887f, 30.444f)
-      verticalLineTo(32.667f)
-      horizontalLineTo(333.109f)
-      verticalLineTo(30.444f)
-      horizontalLineTo(340.887f)
-      close()
-      moveTo(333.109f, 44.889f)
-      verticalLineTo(34.889f)
-      horizontalLineTo(338.665f)
-      verticalLineTo(44.889f)
-      horizontalLineTo(333.109f)
-      close()
-      moveTo(330.887f, 44.889f)
-      horizontalLineTo(325.332f)
-      verticalLineTo(34.889f)
-      horizontalLineTo(330.887f)
-      verticalLineTo(44.889f)
-      close()
-      moveTo(323.109f, 32.667f)
-      verticalLineTo(30.444f)
-      horizontalLineTo(330.887f)
-      verticalLineTo(32.667f)
-      horizontalLineTo(323.109f)
-      close()
-    }
     path(
       fill = SolidColor(color1),
       stroke = null,

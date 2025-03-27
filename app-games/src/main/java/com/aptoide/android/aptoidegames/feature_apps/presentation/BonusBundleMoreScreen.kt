@@ -51,7 +51,6 @@ import com.aptoide.android.aptoidegames.analytics.presentation.rememberGeneralAn
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
-import com.aptoide.android.aptoidegames.drawables.backgrounds.getMoreBonusViewFooter
 import com.aptoide.android.aptoidegames.drawables.backgrounds.getMoreBonusViewHeader
 import com.aptoide.android.aptoidegames.drawables.backgrounds.getWantMoreViewFooter
 import com.aptoide.android.aptoidegames.drawables.backgrounds.getWantMoreViewHeader
@@ -257,7 +256,7 @@ fun MoreBonusSectionView(
 
     Column(
       modifier = Modifier
-        .background(Palette.Secondary)
+        .background(Palette.GreyDark)
         .padding(horizontal = 16.dp)
     ) {
       BonusBannerText(
@@ -267,15 +266,6 @@ fun MoreBonusSectionView(
       )
       WalletAppItem(onWalletClick = onWalletClick)
     }
-
-    Image(
-      imageVector = getMoreBonusViewFooter(),
-      contentDescription = null,
-      modifier = Modifier
-        .fillMaxWidth()
-        .offset(y = (-1).dp),
-      contentScale = ContentScale.FillWidth,
-    )
   }
 }
 
