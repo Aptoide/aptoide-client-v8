@@ -55,6 +55,7 @@ internal object GameGenieModule {
     GameGenieDatabase::class.java,
     "ag_game_genie.db"
   )
+    .fallbackToDestructiveMigration()
     .addMigrations(
       GameGenieDatabase.FirstMigration(),
       GameGenieDatabase.SecondMigration()
