@@ -35,14 +35,12 @@ internal class AptoideAppRepository @Inject constructor(
     suspend fun getApp(
       @Query(value = "package_name", encoded = true) path: String,
       @Query("store_name") storeName: String? = null,
-      @Query("aab") aab: Int = 1,
     ): GetAppResponse
 
     @GET("app/getMeta/{source}")
     suspend fun getAppMeta(
       @Path(value = "source", encoded = true) path: String,
       @Query("store_name") storeName: String? = null,
-      @Query("aab") aab: Int = 1,
     ): GetMetaResponse
   }
 }
