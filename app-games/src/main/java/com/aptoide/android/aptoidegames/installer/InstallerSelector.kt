@@ -6,6 +6,7 @@ import cm.aptoide.pt.extensions.isMiuiOptimizationDisabled
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.hasSplitApks
 import cm.aptoide.pt.install_manager.workers.PackageInstaller
+import com.aptoide.android.aptoidegames.Platform
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -28,9 +29,7 @@ class InstallerSelector @Inject constructor(
     .flatMapLatest { it.uninstall(packageName) }
 
   fun getPackageInstaller(installPackageInfo: InstallPackageInfo): PackageInstaller =
-    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R && isMIUI()
-      && !isMiuiOptimizationDisabled() && !installPackageInfo.hasSplitApks()
-    ) {
+    if (Platform.shouldUseLegacyInstaller && !installPackageInfo.hasSplitApks()) {
       legacyInstaller
     } else {
       aptoideInstaller
