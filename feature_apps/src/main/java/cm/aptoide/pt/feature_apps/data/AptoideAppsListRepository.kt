@@ -107,7 +107,6 @@ internal class AptoideAppsListRepository @Inject constructor(
     suspend fun getAppsList(
       @Path(value = "query", encoded = true) path: String,
       @Query("store_name") storeName: String,
-      @Query("aab") aab: Int = 1,
       @Header(CacheConstants.CACHE_CONTROL_HEADER) bypassCache: String?,
     ): BaseV7DataListResponse<AppJSON>
 
@@ -115,7 +114,6 @@ internal class AptoideAppsListRepository @Inject constructor(
     suspend fun getAppsList(
       @Query("store_id", encoded = true) storeId: Long,
       @Query("group_id", encoded = true) groupId: Long,
-      @Query("aab") aab: Int = 1,
       @Header(CacheConstants.CACHE_CONTROL_HEADER) bypassCache: String?,
     ): BaseV7DataListResponse<AppJSON>
 
@@ -123,27 +121,23 @@ internal class AptoideAppsListRepository @Inject constructor(
     suspend fun getRecommendedAppsList(
       @Path(value = "query", encoded = true) path: String,
       @Query("store_name") storeName: String,
-      @Query("aab") aab: Int = 1,
     ): BaseV7DataListResponse<AppJSON>
 
     @GET("listAppVersions/")
     suspend fun getAppVersionsList(
       @Query(value = "package_name", encoded = true) path: String,
       @Query("store_name") storeName: String,
-      @Query("aab") aab: Int = 1,
     ): BaseV7ListResponse<AppJSON>
 
     @GET("apps/getPackages")
     suspend fun getAppsList(
       @Query("store_name") storeName: String,
-      @Query("aab") aab: Int = 1,
       @Query("package_names") packageNames: String,
     ): BaseV7ListResponse<AppJSON>
 
     @GET("apps/get/")
     suspend fun getSortedAppsList(
       @Query("store_name") storeName: String,
-      @Query("aab") aab: Int = 1,
       @Query("sort") sort: String,
       @Query("limit") limit: Int,
     ): BaseV7DataListResponse<AppJSON>
