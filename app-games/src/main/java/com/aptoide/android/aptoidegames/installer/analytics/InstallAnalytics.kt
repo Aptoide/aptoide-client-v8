@@ -6,6 +6,8 @@ import com.aptoide.android.aptoidegames.analytics.dto.AnalyticsUIContext
 
 interface InstallAnalytics {
 
+  fun setUsedInstallerProperty(installerUsed: String) {}
+
   fun sendClickEvent(
     app: App,
     analyticsContext: AnalyticsUIContext,
