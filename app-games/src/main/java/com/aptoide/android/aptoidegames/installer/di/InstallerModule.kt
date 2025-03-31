@@ -97,10 +97,12 @@ class InstallerModule {
   @Provides
   fun provideInstallerSelector(
     aptoideInstaller: AptoideInstaller,
-    legacyInstaller: LegacyInstaller
+    legacyInstaller: LegacyInstaller,
+    installAnalytics: InstallAnalytics
   ): InstallerSelector = InstallerSelector(
     aptoideInstaller = aptoideInstaller,
     legacyInstaller = legacyInstaller,
+    installAnalytics = installAnalytics
   )
 
   @Singleton

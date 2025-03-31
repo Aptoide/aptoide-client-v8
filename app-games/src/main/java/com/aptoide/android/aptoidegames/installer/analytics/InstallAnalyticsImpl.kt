@@ -41,6 +41,10 @@ class InstallAnalyticsImpl(
     }
   }
 
+  override fun setUsedInstallerProperty(installerUsed: String) {
+    biAnalytics.setUserProperties("installer" to installerUsed)
+  }
+
   override fun sendClickEvent(
     app: App,
     analyticsContext: AnalyticsUIContext,
