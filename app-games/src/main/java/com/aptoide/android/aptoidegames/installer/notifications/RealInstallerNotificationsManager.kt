@@ -36,7 +36,8 @@ class RealInstallerNotificationsManager @Inject constructor(
   private val installerNotificationsManager: InstallerNotificationsBuilder,
   private val appDetailsUseCase: AppDetailsUseCase,
   private val networkConnection: NetworkConnectionImpl,
-  private val userActionHandler: UserActionHandler
+  private val userActionHandler: UserActionHandler,
+  private val imageDownloader: ImageDownloader,
 ) : InstallerNotificationsManager, CoroutineScope, LifecycleObserver {
 
   override val coroutineContext: CoroutineContext
@@ -89,9 +90,12 @@ class RealInstallerNotificationsManager @Inject constructor(
   private suspend fun onReadyToInstall(app: App) {
     app.task?.let {
       val appDetails = appDetailsUseCase.getAppDetails(app)
+      val appIcon = imageDownloader.downloadImageFrom(appDetails?.iconUrl)
+
       installerNotificationsManager.showReadyToInstallNotification(
         packageName = app.packageName,
-        appDetails = appDetails
+        appDetails = appDetails,
+        appIcon = appIcon
       )
     }
   }
@@ -99,9 +103,10 @@ class RealInstallerNotificationsManager @Inject constructor(
   @OptIn(ExperimentalCoroutinesApi::class)
   private suspend fun onInstallationQueued(app: App) {
     app.task?.let {
-      it.stateAndProgress.flatMapLatest { state ->
-        val appDetails = appDetailsUseCase.getAppDetails(app)
+      val appDetails = appDetailsUseCase.getAppDetails(app)
+      val appIcon = imageDownloader.downloadImageFrom(appDetails?.iconUrl)
 
+      it.stateAndProgress.flatMapLatest { state ->
         if (state is State.Pending) {
           networkConnection.states.map { networkState ->
             val networkConstraint = it.constraints.networkType
@@ -109,11 +114,13 @@ class RealInstallerNotificationsManager @Inject constructor(
               installerNotificationsManager.showWaitingForWifiNotification(
                 packageName = app.packageName,
                 appDetails = appDetails,
+                appIcon = appIcon
               )
             } else {
               installerNotificationsManager.showWaitingForDownloadNotification(
                 packageName = app.packageName,
                 appDetails = appDetails,
+                appIcon = appIcon
               )
             }
           }
@@ -123,6 +130,7 @@ class RealInstallerNotificationsManager @Inject constructor(
             appDetails = appDetails,
             state = state,
             size = it.installPackageInfo.filesSize,
+            appIcon = appIcon
           )
           flowOf(Unit)
         }
