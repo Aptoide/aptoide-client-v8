@@ -6,6 +6,8 @@ import cm.aptoide.pt.extensions.isMiuiOptimizationDisabled
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.hasSplitApks
 import cm.aptoide.pt.install_manager.workers.PackageInstaller
+import com.aptoide.android.aptoidegames.Platform
+import com.aptoide.android.aptoidegames.installer.analytics.InstallAnalytics
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -15,7 +17,8 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 class InstallerSelector @Inject constructor(
   val aptoideInstaller: PackageInstaller,
-  val legacyInstaller: PackageInstaller
+  val legacyInstaller: PackageInstaller,
+  val installAnalytics: InstallAnalytics
 ) : PackageInstaller {
 
   override fun install(
@@ -28,11 +31,11 @@ class InstallerSelector @Inject constructor(
     .flatMapLatest { it.uninstall(packageName) }
 
   fun getPackageInstaller(installPackageInfo: InstallPackageInfo): PackageInstaller =
-    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R && isMIUI()
-      && !isMiuiOptimizationDisabled() && !installPackageInfo.hasSplitApks()
-    ) {
+    if (Platform.shouldUseLegacyInstaller && !installPackageInfo.hasSplitApks()) {
+      installAnalytics.setUsedInstallerProperty("legacy_installer")
       legacyInstaller
     } else {
+      installAnalytics.setUsedInstallerProperty("package_installer")
       aptoideInstaller
     }
 
@@ -40,8 +43,10 @@ class InstallerSelector @Inject constructor(
     if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R && isMIUI()
       && !isMiuiOptimizationDisabled()
     ) {
+      installAnalytics.setUsedInstallerProperty("legacy_installer")
       legacyInstaller
     } else {
+      installAnalytics.setUsedInstallerProperty("package_installer")
       aptoideInstaller
     }
 }

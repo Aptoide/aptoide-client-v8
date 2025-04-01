@@ -43,7 +43,6 @@ internal class GameGenieAppRepositoryImpl @Inject constructor(
     @GET("app/get/")
     suspend fun getApp(
       @Query(value = "package_name", encoded = true) path: String,
-      @Query("aab") aab: Int = 1,
     ): GetAppResponse
   }
 }

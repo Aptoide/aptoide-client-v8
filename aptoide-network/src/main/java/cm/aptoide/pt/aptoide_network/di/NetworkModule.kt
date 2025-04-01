@@ -1,6 +1,7 @@
 package cm.aptoide.pt.aptoide_network.di
 
 import android.content.Context
+import cm.aptoide.pt.aptoide_network.data.network.AABInterceptor
 import cm.aptoide.pt.aptoide_network.data.network.AcceptLanguageInterceptor
 import cm.aptoide.pt.aptoide_network.data.network.PostCacheInterceptor
 import cm.aptoide.pt.aptoide_network.data.network.QLogicInterceptor
@@ -37,7 +38,8 @@ object NetworkModule {
     versionCodeInterceptor: VersionCodeInterceptor,
     languageInterceptor: AcceptLanguageInterceptor,
     httpLoggingInterceptor: HttpLoggingInterceptor,
-    postCacheInterceptor: PostCacheInterceptor
+    postCacheInterceptor: PostCacheInterceptor,
+    aabInterceptor: AABInterceptor
   ): OkHttpClient =
     OkHttpClient.Builder()
       .cache(Cache(context.cacheDir, 10 * 1024 * 1024))
@@ -48,6 +50,7 @@ object NetworkModule {
       .addInterceptor(languageInterceptor)
       .addInterceptor(httpLoggingInterceptor)
       .addInterceptor(postCacheInterceptor)
+      .addInterceptor(aabInterceptor)
       .build()
 
   @SimpleOkHttp

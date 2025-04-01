@@ -23,7 +23,6 @@ internal class SplitsRepositoryImpl @Inject constructor(
     @GET("app/getDynamicSplits")
     suspend fun getDynamicSplits(
       @Query("apk_md5sum") md5: String,
-      @Query("aab") aab: Int = 1,
     ): BaseV7ListResponse<DynamicSplitJSON>
   }
 }

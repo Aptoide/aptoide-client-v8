@@ -91,7 +91,6 @@ internal class AptoideWidgetsRepository @Inject constructor(
     suspend fun getStoreWidgets(
       @Url url: String,
       @Query("store_name") storeName: String,
-      @Query("aab") aab: Int = 1,
       @Query("context") context: String?,
       @Header(CacheConstants.CACHE_CONTROL_HEADER) bypassCache: String?,
     ): BaseV7DataListResponse<WidgetsJSON.WidgetNetwork>

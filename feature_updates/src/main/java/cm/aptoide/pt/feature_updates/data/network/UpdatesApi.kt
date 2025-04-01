@@ -10,7 +10,6 @@ interface UpdatesApi {
   @POST("apps/getUpdates")
   suspend fun getAppsUpdates(
     @Query("store_name") storeName: String,
-    @Query("aab") aab: Boolean = true,
     @Body request: UpdatesRequest,
   ): BaseV7ListResponse<AppJSON>
 }

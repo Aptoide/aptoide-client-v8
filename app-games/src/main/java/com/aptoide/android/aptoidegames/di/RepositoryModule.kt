@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import cm.aptoide.pt.appcomingsoon.repository.AppComingSoonPromotionalRepository
+import cm.aptoide.pt.aptoide_network.data.network.AABInterceptor
 import cm.aptoide.pt.aptoide_network.data.network.GetAcceptLanguage
 import cm.aptoide.pt.aptoide_network.data.network.GetUserAgent
 import cm.aptoide.pt.aptoide_network.data.network.QLogicInterceptor
@@ -38,6 +39,7 @@ import com.aptoide.android.aptoidegames.feature_promotional.repository.Subscribe
 import com.aptoide.android.aptoidegames.home.repository.ThemePreferencesManager
 import com.aptoide.android.aptoidegames.idsDataStore
 import com.aptoide.android.aptoidegames.launch.AppLaunchPreferencesManager
+import com.aptoide.android.aptoidegames.network.AptoideAABInterceptor
 import com.aptoide.android.aptoidegames.network.AptoideGetHeaders
 import com.aptoide.android.aptoidegames.network.AptoideQLogicInterceptor
 import com.aptoide.android.aptoidegames.network.AptoideQueryLangInterceptor
@@ -208,6 +210,12 @@ class RepositoryModule {
     return AptoideQLogicInterceptor(
       deviceInfo = deviceInfo,
     )
+  }
+
+  @Provides
+  @Singleton
+  fun providesAABInterceptor(): AABInterceptor {
+    return AptoideAABInterceptor()
   }
 
   @Provides

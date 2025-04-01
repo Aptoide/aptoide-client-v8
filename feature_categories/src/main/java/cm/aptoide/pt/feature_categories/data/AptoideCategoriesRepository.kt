@@ -80,13 +80,11 @@ internal class AptoideCategoriesRepository @Inject constructor(
     suspend fun getCategoriesList(
       @Path(value = "query", encoded = true) path: String,
       @Query("store_name") storeName: String,
-      @Query("aab") aab: Int = 1,
     ): BaseV7DataListResponse<CategoryJson>
 
     @GET("apks/groups/get/{query}")
     suspend fun getGlobalCategoriesList(
       @Path(value = "query", encoded = true) path: String,
-      @Query("aab") aab: Int = 1,
     ): BaseV7DataListResponse<CategoryJson>
   }
 
