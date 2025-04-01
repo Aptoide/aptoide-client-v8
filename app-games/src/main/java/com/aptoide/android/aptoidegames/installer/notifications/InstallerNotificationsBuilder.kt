@@ -43,6 +43,7 @@ class InstallerNotificationsBuilder @Inject constructor(
     const val READY_TO_INSTALL_NOTIFICATION_CHANNEL_ID = "ready_to_install_notification_channel"
     const val READY_TO_INSTALL_NOTIFICATION_CHANNEL_NAME = "Ready To Install Notification Channel"
     const val ALLOW_METERED_DOWNLOAD_FOR_PACKAGE = "allowMeteredDownloadForPackage"
+    const val INSTALL_NOTIFICATIONS_GROUP = "install_notifications_group"
   }
 
   init {
@@ -255,6 +256,8 @@ class InstallerNotificationsBuilder @Inject constructor(
       .setPriority(NotificationCompat.PRIORITY_DEFAULT)
       .setAutoCancel(true)
       .setContentIntent(clickIntent)
+      .setOnlyAlertOnce(true)
+      .setGroup(INSTALL_NOTIFICATIONS_GROUP)
       .apply {
         when (progress) {
           null -> setStyle(
