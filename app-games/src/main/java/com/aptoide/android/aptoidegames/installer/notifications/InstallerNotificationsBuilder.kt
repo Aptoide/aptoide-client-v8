@@ -9,6 +9,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Bitmap
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -34,7 +35,6 @@ import kotlin.math.max
 class InstallerNotificationsBuilder @Inject constructor(
   @ApplicationContext private val context: Context,
   private val stringToIntConverter: StringToIntConverter,
-  private val imageDownloader: ImageDownloader,
 ) {
 
   companion object {
@@ -91,9 +91,10 @@ class InstallerNotificationsBuilder @Inject constructor(
     }
   }
 
-  suspend fun showInstallationStateNotification(
+  fun showInstallationStateNotification(
     packageName: String,
     appDetails: AppDetails?,
+    appIcon: Bitmap?,
     state: State,
     size: Long,
   ) {
@@ -111,7 +112,7 @@ class InstallerNotificationsBuilder @Inject constructor(
           is State.Installing,
           State.ReadyToInstall,
           is State.Pending,
-          -> -1
+            -> -1
 
           else -> null
         },
@@ -125,16 +126,18 @@ class InstallerNotificationsBuilder @Inject constructor(
 
           is State.Installing -> context.getString(R.string.notification_preparing_title)
           else -> ""
-        }
+        },
+        largeIcon = appIcon
       )
 
       notification?.let { showNotification(notificationId, notification) }
     }
   }
 
-  suspend fun showWaitingForDownloadNotification(
+  fun showWaitingForDownloadNotification(
     packageName: String,
     appDetails: AppDetails?,
+    appIcon: Bitmap?
   ) {
     val notificationId = stringToIntConverter.getStringId(packageName)
 
@@ -144,14 +147,16 @@ class InstallerNotificationsBuilder @Inject constructor(
       appDetails = appDetails,
       contentText = context.getString(R.string.notification_waiting_body),
       progress = -1,
+      largeIcon = appIcon
     )
 
     notification?.let { showNotification(notificationId, notification) }
   }
 
-  suspend fun showReadyToInstallNotification(
+  fun showReadyToInstallNotification(
     packageName: String,
-    appDetails: AppDetails?
+    appDetails: AppDetails?,
+    appIcon: Bitmap?
   ) {
     val notificationId = stringToIntConverter.getStringId(packageName)
 
@@ -164,7 +169,8 @@ class InstallerNotificationsBuilder @Inject constructor(
       contentTitle = context.getString(R.string.notification_ready_install_title),
       contentText = context.getString(R.string.notification_ready_install_body, appDetails?.name),
       progress = null,
-      channel = READY_TO_INSTALL_NOTIFICATION_CHANNEL_ID
+      channel = READY_TO_INSTALL_NOTIFICATION_CHANNEL_ID,
+      largeIcon = appIcon
     )
 
     notification?.let { showNotification(notificationId, notification) }
@@ -186,9 +192,10 @@ class InstallerNotificationsBuilder @Inject constructor(
     }
   }
 
-  suspend fun showWaitingForWifiNotification(
+  fun showWaitingForWifiNotification(
     packageName: String,
     appDetails: AppDetails?,
+    appIcon: Bitmap?
   ) {
     val notificationId = stringToIntConverter.getStringId(packageName)
 
@@ -198,13 +205,14 @@ class InstallerNotificationsBuilder @Inject constructor(
       appDetails = appDetails,
       contentText = context.getString(R.string.notification_waiting_for_wifi_title),
       progress = -1,
-      hasAction = true
+      hasAction = true,
+      largeIcon = appIcon
     )
 
     notification?.let { showNotification(notificationId, notification) }
   }
 
-  private suspend fun buildNotification(
+  private fun buildNotification(
     requestCode: Int,
     packageName: String,
     appDetails: AppDetails?,
@@ -212,7 +220,8 @@ class InstallerNotificationsBuilder @Inject constructor(
     contentTitle: String? = null,
     contentText: String,
     hasAction: Boolean = false,
-    channel: String = INSTALLER_NOTIFICATION_CHANNEL_ID
+    channel: String = INSTALLER_NOTIFICATION_CHANNEL_ID,
+    largeIcon: Bitmap?,
   ): Notification? = if (context.isAllowed(Manifest.permission.POST_NOTIFICATIONS)) {
 
     val deepLink = buildAppViewDeepLinkUri(
@@ -242,7 +251,7 @@ class InstallerNotificationsBuilder @Inject constructor(
       .setColor(colorToUse)
       .setContentTitle(contentTitle ?: appDetails?.name)
       .setContentText(contentText)
-      .setLargeIcon(imageDownloader.downloadImageFrom(appDetails?.iconUrl))
+      .setLargeIcon(largeIcon)
       .setPriority(NotificationCompat.PRIORITY_DEFAULT)
       .setAutoCancel(true)
       .setContentIntent(clickIntent)
