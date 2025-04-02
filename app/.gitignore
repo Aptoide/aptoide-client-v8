@@ -2,3 +2,6 @@
 
 .idea/instapk.xml
 instapk.log*
+
+#google-services json file from firebase
+google-services.json

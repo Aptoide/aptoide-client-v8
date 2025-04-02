@@ -95,6 +95,8 @@ import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
 import com.flurry.android.FlurryPerformance;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.indicative.client.android.Indicative;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
@@ -183,6 +185,7 @@ public abstract class AptoideApplication extends Application {
   @Inject AppInBackgroundTracker appInBackgroundTracker;
   @Inject AppCoinsManager appCoinsManager;
   @Inject FileManager fileManager;
+  @Inject FirebaseAnalytics firebaseAnalytics;
   private LeakTool leakTool;
   private NotificationCenter notificationCenter;
   private NotificationProvider notificationProvider;
@@ -239,6 +242,7 @@ public abstract class AptoideApplication extends Application {
       CrashReport.getInstance()
           .log(e);
     }
+    FirebaseApp.initializeApp(this);
 
     super.onCreate();
 
@@ -267,7 +271,8 @@ public abstract class AptoideApplication extends Application {
     //}
     analyticsManager.setup();
     UiModeManager uiModeManager = (UiModeManager) getSystemService(Context.UI_MODE_SERVICE);
-    aptoideApplicationAnalytics = new AptoideApplicationAnalytics(analyticsManager);
+    aptoideApplicationAnalytics =
+        new AptoideApplicationAnalytics(analyticsManager, firebaseAnalytics);
 
     androidx.work.Configuration configuration =
         new androidx.work.Configuration.Builder().setWorkerFactory(aptoideWorkerFactory)
@@ -334,21 +339,30 @@ public abstract class AptoideApplication extends Application {
     aptoideInstalledAppsRepository.isInstalled(APPCOINS_WALLET_PACKAGE_NAME)
         .observeOn(Schedulers.io())
         .distinctUntilChanged()
-        .doOnNext(isInstalled -> Indicative.addProperty("is_wallet_app_installed", isInstalled))
+        .doOnNext(isInstalled -> {
+          Indicative.addProperty("is_wallet_app_installed", isInstalled);
+          firebaseAnalytics.setUserProperty("is_wallet_app_installed", String.valueOf(isInstalled));
+        })
         .subscribe(created -> {
         }, Throwable::printStackTrace);
 
     aptoideInstalledAppsRepository.isInstalled(GAMES_HUB_PACKAGE_NAME)
         .observeOn(Schedulers.io())
         .distinctUntilChanged()
-        .doOnNext(isInstalled -> Indicative.addProperty("is_gh_installed", isInstalled))
+        .doOnNext(isInstalled -> {
+          Indicative.addProperty("is_gh_installed", isInstalled);
+          firebaseAnalytics.setUserProperty("is_gh_installed", String.valueOf(isInstalled));
+        })
         .subscribe(created -> {
         }, Throwable::printStackTrace);
 
     aptoideInstalledAppsRepository.isInstalled(APTOIDE_GAMES_PACKAGE_NAME)
         .observeOn(Schedulers.io())
         .distinctUntilChanged()
-        .doOnNext(isInstalled -> Indicative.addProperty("is_ag_installed", isInstalled))
+        .doOnNext(isInstalled -> {
+          Indicative.addProperty("is_ag_installed", isInstalled);
+          firebaseAnalytics.setUserProperty("is_ag_installed", String.valueOf(isInstalled));
+        })
         .subscribe(created -> {
         }, Throwable::printStackTrace);
   }

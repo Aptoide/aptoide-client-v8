@@ -31,6 +31,7 @@ import cm.aptoide.analytics.SessionLogger;
 import cm.aptoide.analytics.implementation.EventsPersistence;
 import cm.aptoide.analytics.implementation.PageViewsAnalytics;
 import cm.aptoide.analytics.implementation.loggers.FacebookEventLogger;
+import cm.aptoide.analytics.implementation.loggers.FirebaseEventLogger;
 import cm.aptoide.analytics.implementation.loggers.FlurryEventLogger;
 import cm.aptoide.analytics.implementation.loggers.HttpKnockEventLogger;
 import cm.aptoide.analytics.implementation.loggers.IndicativeEventLogger;
@@ -288,6 +289,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.safetynet.SafetyNet;
 import com.google.android.gms.safetynet.SafetyNetClient;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.liulishuo.filedownloader.FileDownloader;
@@ -363,7 +365,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       StoreCredentialsProvider storeCredentialsProvider,
       @Named("default-followed-stores") List<String> defaultFollowedStores,
       StoreUtilsProxy storeUtilsProxy, @Named("mature-pool-v7")
-  BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> accountSettingsBodyInterceptorPoolV7,
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> accountSettingsBodyInterceptorPoolV7,
       AptoideAccountManager aptoideAccountManager, @Named("default") OkHttpClient httpClient,
       TokenInvalidator tokenInvalidator,
       @Named("default") SharedPreferences defaultSharedPreferences) {
@@ -577,6 +579,15 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides AppEventsLogger provideAppEventsLogger() {
     return AppEventsLogger.newLogger(application);
+  }
+
+  @Singleton @Provides FirebaseAnalytics provideFirebaseAnalytics() {
+    return FirebaseAnalytics.getInstance(application);
+  }
+
+  @Singleton @Provides FirebaseNotificationAnalytics provideFirebaseNotificationAnalytics(
+      AnalyticsManager analyticsManager) {
+    return new FirebaseNotificationAnalytics(analyticsManager);
   }
 
   @Singleton @Provides AptoideInstalledAppsRepository provideInstalledRepository(
@@ -1460,7 +1471,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides PromotionsService providesPromotionsService(@Named("mature-pool-v7")
-  BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
       Converter.Factory converterFactory, @Named("default") SharedPreferences sharedPreferences,
       SplitsMapper splitsMapper) {
@@ -1511,6 +1522,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new IndicativeEventLogger(logger);
   }
 
+  @Singleton @Provides @Named("firebaseEventLogger") EventLogger providesFirebaseEventLogger(
+      FirebaseAnalytics firebaseAnalytics, AnalyticsLogger logger) {
+    return new FirebaseEventLogger(firebaseAnalytics, logger);
+  }
+
   @Singleton @Provides @Named("flurryLogger") EventLogger providesFlurryEventLogger(
       @Named("flurry") FlurryEventLogger eventLogger) {
     return eventLogger;
@@ -1536,13 +1552,17 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("rakamEventLogger") EventLogger rakamEventLogger,
       @Named("rakamEvents") Collection<String> rakamEvents,
       @Named("indicativeEventLogger") EventLogger indicativeEventLogger,
-      @Named("indicativeEvents") Collection<String> indicativeEvents, AnalyticsLogger logger) {
+      @Named("indicativeEvents") Collection<String> indicativeEvents,
+      @Named("firebaseEventLogger") EventLogger firebaseEventLogger,
+      @Named("firebaseEvents") Collection<String> firebaseEvents,
+      AnalyticsLogger logger) {
 
     return new AnalyticsManager.Builder()
         .addLogger(facebookEventLogger, facebookEvents)
         .addLogger(flurryEventLogger, flurryEvents)
         .addLogger(rakamEventLogger, rakamEvents)
         .addLogger(indicativeEventLogger, indicativeEvents)
+        .addLogger(firebaseEventLogger, firebaseEvents)
         .addSessionLogger(flurrySessionLogger)
         .setKnockLogger(knockEventLogger)
         .setAnalyticsNormalizer(analyticsNormalizer)
@@ -1564,6 +1584,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         HomeAnalytics.VANILLA_PROMOTIONAL_CARDS);
   }
 
+  @Singleton @Provides @Named("firebaseEvents") Collection<String> providesFirebaseEvents() {
+    return Arrays.asList(InstallAnalytics.CLICK_ON_INSTALL, DownloadAnalytics.RAKAM_DOWNLOAD_EVENT,
+        InstallAnalytics.RAKAM_INSTALL_EVENT, SearchAnalytics.SEARCH,
+        SearchAnalytics.SEARCH_RESULT_CLICK, FirstLaunchAnalytics.FIRST_LAUNCH_RAKAM,
+        HomeAnalytics.VANILLA_PROMOTIONAL_CARDS, FirebaseNotificationAnalytics.NOTIFICATION_OPEN,
+        FirebaseNotificationAnalytics.NOTIFICATION_RECEIVE);
+  }
+
   @Singleton @Provides @Named("normalizer")
   AnalyticsEventParametersNormalizer providesAnalyticsNormalizer() {
     return new AnalyticsEventParametersNormalizer();
@@ -1581,7 +1609,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides AppService providesAppService(
       StoreCredentialsProvider storeCredentialsProvider, @Named("mature-pool-v7")
-  BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
       @Named("default") SharedPreferences sharedPreferences, SplitsMapper splitsMapper,
       CampaignMapper campaignMapper) {
@@ -1610,7 +1638,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AppCoinsService providesAppCoinsService(@Named("mature-pool-v7")
-  BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
       @Named("default") SharedPreferences sharedPreferences, Converter.Factory converterFactory) {
     return new AppCoinsService(okHttpClient, tokenInvalidator, sharedPreferences,
@@ -1700,7 +1728,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides UpdateRepository providesUpdateRepository(
       UpdatePersistence updatePersistence, RoomStoreRepository storeRepository,
       IdsRepository idsRepository, @Named("mature-pool-v7")
-  BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences,
       UpdateMapper updateMapper,
@@ -1737,7 +1765,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides ReviewsService providesReviewsService(
       StoreCredentialsProvider storeCredentialsProvider, @Named("mature-pool-v7")
-  BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
       @Named("default") SharedPreferences sharedPreferences) {
     return new ReviewsService(storeCredentialsProvider, bodyInterceptorPoolV7, okHttpClient,
@@ -1823,7 +1851,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides EditorialService providesEditorialService(@Named("mature-pool-v7")
-  BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences,
       SplitsMapper splitsMapper, CampaignMapper campaignMapper) {
@@ -1871,8 +1899,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AptoideApplicationAnalytics provideAptoideApplicationAnalytics(
-      AnalyticsManager analyticsManager) {
-    return new AptoideApplicationAnalytics(analyticsManager);
+      AnalyticsManager analyticsManager, FirebaseAnalytics firebaseAnalytics) {
+    return new AptoideApplicationAnalytics(analyticsManager, firebaseAnalytics);
   }
 
   @Singleton @Provides MoPubAnalytics providesMoPubAnalytics() {
@@ -2107,8 +2135,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new ImageInfoProvider(application.getContentResolver());
   }
 
-  @Singleton @Provides ThemeAnalytics providesThemeAnalytics(AnalyticsManager analyticsManager) {
-    return new ThemeAnalytics(analyticsManager);
+  @Singleton @Provides ThemeAnalytics providesThemeAnalytics(AnalyticsManager analyticsManager,
+      FirebaseAnalytics firebaseAnalytics) {
+    return new ThemeAnalytics(analyticsManager, firebaseAnalytics);
   }
 
   @Singleton @Provides NewFeature providesNewFeature() {
@@ -2172,7 +2201,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides SearchRepository providesSearchRepository(
       RoomStoreRepository roomStoreRepository, @Named("mature-pool-v7")
-  BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
       @Named("default") SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
       OemidProvider oemidProvider, CampaignMapper campaignMapper) {

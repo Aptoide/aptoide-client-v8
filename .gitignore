@@ -54,3 +54,6 @@ crowdin.properties
 
 #sentry properties file
 sentry.properties
+
+#google-services json file from firebase
+google-services.json

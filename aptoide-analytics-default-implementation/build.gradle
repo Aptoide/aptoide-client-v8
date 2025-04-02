@@ -60,6 +60,10 @@ dependencies {
 
   //indicative
   implementation "com.indicative.client.android:Indicative-Android:${INDICATIVE_VERSION}"
+
+  //firebase analytics
+  implementation 'com.google.firebase:firebase-analytics:17.2.0'
+
 }
 
 version = "1.0.3"

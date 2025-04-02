@@ -23,6 +23,8 @@ public interface ApplicationComponent {
 
   void inject(DownloadService downloadService);
 
+  void inject(AptoideFirebaseNotificationService aptoideFirebaseNotificationService);
+
   void inject(InstalledIntentService installedIntentService);
 
   void inject(PullingContentService pullingContentService);

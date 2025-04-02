@@ -17,6 +17,8 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
+import cm.aptoide.pt.FirebaseConstants;
+import cm.aptoide.pt.FirebaseNotificationAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
@@ -51,6 +53,7 @@ public class MainActivity extends BottomNavigationActivity
   @Inject MarketResourceFormatter marketResourceFormatter;
   @Inject ThemeAnalytics themeAnalytics;
   @Inject DeepLinkManager deepLinkManager;
+  @Inject FirebaseNotificationAnalytics firebaseNotificationAnalytics;
   private InstallManager installManager;
   private View snackBarLayout;
   private PublishRelay<Void> installErrorsDismissEvent;
@@ -88,9 +91,30 @@ public class MainActivity extends BottomNavigationActivity
           (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
       manager.cancel(intent.getIntExtra(NOTIFICATION_NOTIFICATION_ID, -1));
       notificationPublishRelay.call(notificationInfo);
+    } else if (isFirebaseNotification(intent)) {
+      sendFirebaseNotificationAnalytics(intent);
     }
 
     attachPresenter(presenter);
+  }
+
+  private void sendFirebaseNotificationAnalytics(Intent intent) {
+    String messageId = intent.getStringExtra(FirebaseConstants.FIREBASE_MESSAGE_ID);
+    Bundle notificationAnalyticsBundle =
+        intent.getBundleExtra(FirebaseConstants.FIREBASE_ANALYTICS_DATA);
+    if (messageId != null && notificationAnalyticsBundle != null) {
+      String messageName =
+          notificationAnalyticsBundle.getString(FirebaseConstants.FIREBASE_MESSAGE_NAME);
+      Long messageDeviceTime = System.currentTimeMillis();
+      String label =
+          notificationAnalyticsBundle.getString(FirebaseConstants.FIREBASE_MESSAGE_LABEL);
+      firebaseNotificationAnalytics.sendFirebaseNotificationOpened(messageId, messageName,
+          messageDeviceTime, label);
+    }
+  }
+
+  private boolean isFirebaseNotification(Intent intent) {
+    return intent.getStringExtra(FirebaseConstants.FIREBASE_MESSAGE_ID) != null;
   }
 
   @Override protected void onDestroy() {
@@ -124,6 +148,8 @@ public class MainActivity extends BottomNavigationActivity
           (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
       manager.cancel(intent.getIntExtra(NOTIFICATION_NOTIFICATION_ID, -1));
       notificationPublishRelay.call(notificationInfo);
+    } else if (isFirebaseNotification(intent)) {
+      sendFirebaseNotificationAnalytics(intent);
     } else {
       deepLinkManager.showDeepLink(intent);
     }

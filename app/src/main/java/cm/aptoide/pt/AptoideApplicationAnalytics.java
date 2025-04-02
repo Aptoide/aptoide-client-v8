@@ -5,6 +5,7 @@ import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.logger.Logger;
 import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.indicative.client.android.Indicative;
 import io.rakam.api.Rakam;
 import java.util.HashMap;
@@ -24,9 +25,12 @@ public class AptoideApplicationAnalytics {
   private static final String APTOIDE_PACKAGE = "aptoide_package";
   private static final String IS_ANDROID_TV_FIELD = "is_android_tv";
   private final AnalyticsManager analyticsManager;
+  private final FirebaseAnalytics firebaseAnalytics;
 
-  public AptoideApplicationAnalytics(AnalyticsManager analyticsManager) {
+  public AptoideApplicationAnalytics(AnalyticsManager analyticsManager,
+      FirebaseAnalytics firebaseAnalytics) {
     this.analyticsManager = analyticsManager;
+    this.firebaseAnalytics = firebaseAnalytics;
   }
 
   public void updateDimension(boolean isLoggedIn) {
@@ -39,6 +43,7 @@ public class AptoideApplicationAnalytics {
         .setSuperProperties(addJsonLoginSuperProperty(isLoggedIn, Rakam.getInstance()
             .getSuperProperties()));
     Indicative.addProperty("logged_in", isLoggedIn);
+    firebaseAnalytics.setUserProperty("logged_in", String.valueOf(isLoggedIn));
   }
 
   @NotNull

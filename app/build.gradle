@@ -7,6 +7,9 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.sentry.android.gradle'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
+
 
 buildscript {
 
@@ -515,6 +518,15 @@ dependencies {
   implementation "androidx.work:work-runtime:2.7.1"
   // Kotlin + coroutines
   implementation "androidx.work:work-runtime-ktx:2.7.1"
+
+  //firebase analytics
+  implementation 'com.google.firebase:firebase-analytics:17.2.0'
+  //notifications
+  implementation 'com.google.firebase:firebase-messaging:21.1.0'
+  //crashlytics
+  implementation 'com.google.firebase:firebase-crashlytics:18.6.1'
+
+
 }
 
 String getDate() {
