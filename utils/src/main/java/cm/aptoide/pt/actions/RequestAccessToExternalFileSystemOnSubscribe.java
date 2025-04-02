@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.actions;
 
-import android.os.Build;
 import rx.Observable;
 import rx.Subscriber;
 
@@ -21,21 +20,12 @@ public class RequestAccessToExternalFileSystemOnSubscribe implements Observable.
   }
 
   @Override public void call(Subscriber<? super Void> subscriber) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+    permissionService.requestAccessToExternalFileSystem(() -> {
       if (!subscriber.isUnsubscribed()) {
         subscriber.onNext(null);
         subscriber.onCompleted();
       }
-    } else {
-      permissionService.requestAccessToExternalFileSystem(() -> {
-        if (!subscriber.isUnsubscribed()) {
-          subscriber.onNext(null);
-          subscriber.onCompleted();
-        }
-      }, () -> {
-        subscriber.onError(
-            new SecurityException("Permission denied to access to external storage."));
-      });
-    }
+    }, () -> subscriber.onError(
+        new SecurityException("Permission denied to access to external storage.")));
   }
 }

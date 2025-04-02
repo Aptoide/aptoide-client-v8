@@ -287,9 +287,9 @@ import rx.functions.Action0;
   private void showBypassWifiMessage(long size,
       SimpleSubscriber<GenericDialogs.EResponse> subscriber) {
     GenericDialogs.createGenericOkCancelMessageWithColorButton(this, "",
-        getString(R.string.general_downloads_dialog_only_wifi_message),
-        getString(R.string.general_downloads_dialog_only_wifi_install_button,
-            AptoideUtils.StringU.formatBytes(size, false)), getString(R.string.cancel))
+            getString(R.string.general_downloads_dialog_only_wifi_message),
+            getString(R.string.general_downloads_dialog_only_wifi_install_button,
+                AptoideUtils.StringU.formatBytes(size, false)), getString(R.string.cancel))
         .subscribe(subscriber);
   }
 
@@ -301,7 +301,7 @@ import rx.functions.Action0;
   private void showMessageOKCancel(String message,
       SimpleSubscriber<GenericDialogs.EResponse> subscriber) {
     GenericDialogs.createGenericOkCancelMessage(this, "", message,
-        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
+            themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
         .subscribe(subscriber);
   }
 

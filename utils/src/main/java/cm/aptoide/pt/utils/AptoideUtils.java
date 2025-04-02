@@ -712,12 +712,7 @@ public class AptoideUtils {
 
     public static PackageInfo getPackageInfo(String packageName, PackageManager packageManager) {
       try {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-          return packageManager.getPackageInfo(packageName, PackageManager.PackageInfoFlags.of(
-              PackageManager.GET_META_DATA
-                  | PackageManager.GET_ACTIVITIES
-                  | PackageManager.GET_SIGNING_CERTIFICATES));
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
           return packageManager.getPackageInfo(packageName, PackageManager.GET_META_DATA
               | PackageManager.GET_ACTIVITIES
               | PackageManager.GET_SIGNING_CERTIFICATES);
@@ -750,12 +745,7 @@ public class AptoideUtils {
     }
 
     public static List<PackageInfo> getAllInstalledApps(PackageManager packageManager) {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        return packageManager.getInstalledPackages(PackageManager.PackageInfoFlags.of(
-            PackageManager.GET_META_DATA
-                | PackageManager.GET_ACTIVITIES
-                | PackageManager.GET_SIGNING_CERTIFICATES));
-      } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
         return packageManager.getInstalledPackages(PackageManager.GET_META_DATA
             | PackageManager.GET_ACTIVITIES
             | PackageManager.GET_SIGNING_CERTIFICATES);
