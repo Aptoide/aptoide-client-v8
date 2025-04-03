@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.LaunchedEffect
@@ -67,20 +68,22 @@ class MainActivity : AppCompatActivity() {
 
   private val coroutinesScope: CoroutineScope = CoroutineScope(Job() + Dispatchers.IO)
 
-  val notificationsPermissionLauncher =
-    registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-      coroutinesScope.launch {
-        if (isGranted) {
-          notificationsAnalytics.sendNotificationOptIn()
-        } else {
-          notificationsAnalytics.sendNotificationOptOut()
-        }
-      }
-    }
+  private var notificationsPermissionLauncher: ActivityResultLauncher<String>? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     intent.addSourceContext()
+
+    notificationsPermissionLauncher =
+      registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+        coroutinesScope.launch {
+          if (isGranted) {
+            notificationsAnalytics.sendNotificationOptIn()
+          } else {
+            notificationsAnalytics.sendNotificationOptOut()
+          }
+        }
+      }
 
     handleStartup()
     setContent {
@@ -101,7 +104,7 @@ class MainActivity : AppCompatActivity() {
       sendAGStartAnalytics(isFirstLaunch)
 
       if (isFirstLaunch) {
-        notificationsPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        notificationsPermissionLauncher?.launch(Manifest.permission.POST_NOTIFICATIONS)
         appLaunchPreferencesManager.setIsNotFirstLaunch()
       }
     }
