@@ -55,8 +55,7 @@ interface UserActionHandler {
 @Singleton
 class UserActionHandlerImpl @Inject constructor() : UserActionLauncher, UserActionHandler {
 
-  private val _requests =
-    MutableSharedFlow<UserActionRequest?>(replay = 1, extraBufferCapacity = 10)
+  private val _requests = MutableSharedFlow<UserActionRequest?>()
 
   override val requests: Flow<UserActionRequest?> = _requests
 
