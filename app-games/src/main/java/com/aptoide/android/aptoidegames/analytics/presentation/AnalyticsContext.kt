@@ -30,6 +30,7 @@ private const val BUNDLE_META_PARAM = "bundleMeta"
 private const val SEARCH_META_PARAM = "searchMeta"
 private const val ITEM_POSITION_PARAM = "itemPosition"
 private const val IS_APKFY_PARAM = "isApkfy"
+private const val HOME_TAB_PARAM = "HomeTab"
 
 fun ScreenData.Companion.withAnalytics(
   route: String,
@@ -44,7 +45,8 @@ fun ScreenData.Companion.withAnalytics(
       .withBundleMeta("{$BUNDLE_META_PARAM}")
       .withSearchMeta("{$SEARCH_META_PARAM}")
       .withItemPosition("{$ITEM_POSITION_PARAM}")
-      .withApkfy("{$IS_APKFY_PARAM}"),
+      .withApkfy("{$IS_APKFY_PARAM}")
+      .withHomeTab("{$HOME_TAB_PARAM}"),
     arguments = arguments + listOf(
       navArgument(PREV_SCREEN_PARAM) {
         type = NavType.StringType
@@ -76,6 +78,7 @@ fun ScreenData.Companion.withAnalytics(
       val searchMeta = args?.getString(SEARCH_META_PARAM)?.let(SearchMeta::fromString)
       val itemPosition = args?.getString(ITEM_POSITION_PARAM)?.toIntOrNull()
       val isApkfy = args?.getBoolean(IS_APKFY_PARAM, false) ?: false
+      val homeTab = args?.getString(HOME_TAB_PARAM, null)
 
       //So that UI drawn outside of this screen is aware of the current screen
       AnalyticsContext.current.currentScreen = screenAnalyticsName
@@ -88,6 +91,7 @@ fun ScreenData.Companion.withAnalytics(
           searchMeta = searchMeta,
           itemPosition = itemPosition,
           isApkfy = isApkfy,
+          homeTab = homeTab
         )
       ) {
         content(
@@ -98,6 +102,7 @@ fun ScreenData.Companion.withAnalytics(
               .withSearchMeta(searchMeta)
               .withItemPosition(itemPosition)
               .withApkfy(isApkfy)
+              .withHomeTab(homeTab)
               .also(navigate)
           },
           goBack
@@ -121,7 +126,8 @@ fun OverrideAnalyticsBundleMeta(
       bundleMeta = bundleMeta,
       searchMeta = current.searchMeta,
       itemPosition = current.itemPosition,
-      isApkfy = false
+      isApkfy = false,
+      homeTab = current.homeTab
     )
   ) {
     content {
@@ -144,11 +150,36 @@ fun OverrideAnalyticsScreen(
       bundleMeta = current.bundleMeta,
       searchMeta = current.searchMeta,
       itemPosition = current.itemPosition,
-      isApkfy = false
+      isApkfy = false,
+      homeTab = null
     )
   ) {
     content {
       navigate(it.withPrevScreen(currentScreen))
+    }
+  }
+}
+
+@Composable
+fun OverrideAnalyticsHomeTab(
+  homeTab: String,
+  navigate: (String) -> Unit,
+  content: @Composable ((String) -> Unit) -> Unit,
+) {
+  val current = LocalAnalyticsContext.current
+  CompositionLocalProvider(
+    LocalAnalyticsContext provides AnalyticsUIContext(
+      currentScreen = current.currentScreen,
+      previousScreen = current.previousScreen,
+      bundleMeta = current.bundleMeta,
+      searchMeta = current.searchMeta,
+      itemPosition = current.itemPosition,
+      isApkfy = false,
+      homeTab = homeTab
+    )
+  ) {
+    content {
+      navigate(it.withHomeTab(homeTab))
     }
   }
 }
@@ -167,7 +198,8 @@ fun OverrideAnalyticsSearchMeta(
       bundleMeta = current.bundleMeta,
       searchMeta = searchMeta,
       itemPosition = current.itemPosition,
-      isApkfy = false
+      isApkfy = false,
+      homeTab = null
     )
   ) {
     content {
@@ -192,7 +224,8 @@ fun InitialAnalyticsMeta(
       bundleMeta = null,
       searchMeta = null,
       itemPosition = null,
-      isApkfy = false
+      isApkfy = false,
+      homeTab = null
     )
   ) {
     content {
@@ -214,7 +247,8 @@ fun OverrideAnalyticsAPKFY(
       bundleMeta = null,
       searchMeta = null,
       itemPosition = null,
-      isApkfy = true
+      isApkfy = true,
+      homeTab = null
     )
   ) {
     content {
@@ -245,6 +279,10 @@ fun String.withItemPosition(itemPosition: String?) =
 
 fun String.withApkfy(isApkfy: String?) =
   withParameter(IS_APKFY_PARAM, isApkfy)
+
+fun String.withHomeTab(homeTab: String?) =
+  withParameter(HOME_TAB_PARAM, homeTab)
+
 
 private fun String.withParameter(
   name: String,

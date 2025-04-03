@@ -10,6 +10,7 @@ import com.aptoide.android.aptoidegames.analytics.dto.SearchMeta
 data class AnalyticsPayload(
   val action: InstallAction?,
   val isApkfy: Boolean,
+  val homeTab: String?,
   val isAab: Boolean,
   val aabTypes: String,
   val isAppCoins: Boolean,
@@ -28,6 +29,7 @@ data class AnalyticsPayload(
 
 fun AnalyticsPayload.toAnalyticsUiContext(): AnalyticsUIContext = AnalyticsUIContext(
   isApkfy = isApkfy,
+  homeTab = homeTab,
   currentScreen = context,
   previousScreen = previousContext,
   bundleMeta = bundleMeta,

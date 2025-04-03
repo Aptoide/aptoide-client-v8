@@ -23,6 +23,7 @@ import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_APP_OB
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_APP_VERSION_CODE
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_CONTEXT
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_INSERTED_KEYWORD
+import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_TAB
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_PACKAGE_NAME
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_PREVIOUS_CONTEXT
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_SEARCH_TERM
@@ -155,6 +156,7 @@ class BIAnalytics(private val analyticsSender: AnalyticsSender) {
     internal const val P_CONTEXT = "context"
     internal const val P_PREVIOUS_CONTEXT = "previous_context"
     internal const val P_TAG = "tag"
+    internal const val P_TAB = "tab"
   }
 }
 
@@ -167,6 +169,7 @@ fun AnalyticsUIContext?.toBiParameters(vararg pairs: Pair<String, Any?>): Map<St
       P_CONTEXT to currentScreen,
       P_PREVIOUS_CONTEXT to previousScreen,
       P_TAG to bundleMeta?.tag,
+      P_TAB to homeTab
     )
   } ?: mapOfNonNull(*pairs)
 

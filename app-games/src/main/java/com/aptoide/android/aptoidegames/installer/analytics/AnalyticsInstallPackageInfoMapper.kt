@@ -29,6 +29,7 @@ class AnalyticsInstallPackageInfoMapper(
         payload = AnalyticsPayload(
           action = context.installAction,
           isApkfy = context.isApkfy,
+          homeTab = context.homeTab,
           isAab = temporaryPayload?.isAab ?: app.isAab(),
           aabTypes = getSplitTypesAnalyticsString(
             installationFiles = installationFiles
