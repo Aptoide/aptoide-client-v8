@@ -1,7 +1,6 @@
 package com.aptoide.android.aptoidegames
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -32,7 +31,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -84,8 +82,7 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     intent.addSourceContext()
 
-    requestInitialPermissions()
-    sendAGStartAnalytics()
+    handleStartup()
     setContent {
       val navController = rememberNavController()
         .also { this.navController = it }
@@ -98,31 +95,28 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
-  @SuppressLint("InlinedApi")
-  private fun requestInitialPermissions() {
-    coroutinesScope.launch {
-      if (appLaunchPreferencesManager.isFirstLaunch()) {
-        withContext(Dispatchers.Main) {
-          notificationsPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-        }
+  private fun handleStartup() {
+    CoroutineScope(Dispatchers.Main).launch {
+      val isFirstLaunch = appLaunchPreferencesManager.isFirstLaunch()
+      sendAGStartAnalytics(isFirstLaunch)
+
+      if (isFirstLaunch) {
+        notificationsPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        appLaunchPreferencesManager.setIsNotFirstLaunch()
       }
     }
   }
 
-  private fun sendAGStartAnalytics() {
-    CoroutineScope(Dispatchers.Main).launch {
-      val isFirstLaunch = appLaunchPreferencesManager.isFirstLaunch()
-      generalAnalytics.sendOpenAppEvent(
-        appOpenSource = intent.appOpenSource,
-        isFirstLaunch = isFirstLaunch,
-        networkType = getNetworkType()
-      )
-      if (isFirstLaunch) {
-        appLaunchPreferencesManager.setIsNotFirstLaunch()
-        biAnalytics.sendFirstLaunchEvent()
-      } else {
-        generalAnalytics.sendEngagedUserEvent()
-      }
+  private fun sendAGStartAnalytics(isFirstLaunch: Boolean) {
+    generalAnalytics.sendOpenAppEvent(
+      appOpenSource = intent.appOpenSource,
+      isFirstLaunch = isFirstLaunch,
+      networkType = getNetworkType()
+    )
+    if (isFirstLaunch) {
+      biAnalytics.sendFirstLaunchEvent()
+    } else {
+      generalAnalytics.sendEngagedUserEvent()
     }
   }
 
