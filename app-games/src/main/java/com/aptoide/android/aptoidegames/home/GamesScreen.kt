@@ -11,6 +11,7 @@ import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
 import cm.aptoide.pt.feature_categories.presentation.rememberAllCategories
 import cm.aptoide.pt.feature_editorial.presentation.rememberEditorialListState
 import com.aptoide.android.aptoidegames.analytics.presentation.InitialAnalyticsMeta
+import com.aptoide.android.aptoidegames.analytics.presentation.OverrideAnalyticsHomeTab
 import com.aptoide.android.aptoidegames.categories.presentation.AllCategoriesView
 import com.aptoide.android.aptoidegames.editorial.SeeMoreEditorialsContent
 import com.aptoide.android.aptoidegames.feature_apps.presentation.MoreBonusBundleView
@@ -63,16 +64,21 @@ private fun GamesScreenTabView(
   navigate: (String) -> Unit,
   currentTab: HomeTab
 ) {
-  when (currentTab) {
-    HomeTab.ForYou -> BundlesScreen(navigate = navigate)
+  OverrideAnalyticsHomeTab(
+    navigate = navigate,
+    homeTab = currentTab::class.simpleName.toString(),
+  ) { navigateTo ->
+    when (currentTab) {
+      HomeTab.ForYou -> BundlesScreen(navigate = navigateTo)
 
-    is HomeTab.TopCharts -> TopChartsView(sort = currentTab.sort, navigate = navigate)
+      is HomeTab.TopCharts -> TopChartsView(sort = currentTab.sort, navigate = navigateTo)
 
-    HomeTab.Bonus -> AppCoinsTabView(navigate)
+      HomeTab.Bonus -> AppCoinsTabView(navigateTo)
 
-    HomeTab.Editorial -> EditorialTabView(navigate)
+      HomeTab.Editorial -> EditorialTabView(navigateTo)
 
-    HomeTab.Categories -> CategoriesTabView(navigate)
+      HomeTab.Categories -> CategoriesTabView(navigateTo)
+    }
   }
 }
 
