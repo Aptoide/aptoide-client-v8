@@ -383,7 +383,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   }
 
   @NotNull @Override public Observable<String> getMagicLinkClick() {
-    return sendMagicLinkView.getMagicLinkSubmit();
+    return sendMagicLinkView.getMagicLinkSubmit().map(String::toLowerCase);
   }
 
   @Override public void setInitialState() {
