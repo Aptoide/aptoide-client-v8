@@ -66,6 +66,7 @@ class PromoCodeBottomSheet(
         is PromoCodeSheetUiState.Idle -> {
           LaunchedEffect(Unit) {
             promoCodeAnalytics.sendPromoCodeImpressionEvent(
+              packageName = promoCode.packageName,
               status = "success",
               isWalletInstalled = context.isAppInstalled(walletApp.packageName),
               isPromoCodeAppInstalled = context.isAppInstalled(promoCode.packageName)
@@ -85,6 +86,7 @@ class PromoCodeBottomSheet(
           LaunchedEffect(Unit) {
             if (!impressionSent) {
               promoCodeAnalytics.sendPromoCodeImpressionEvent(
+                packageName = promoCode.packageName,
                 status = "error",
                 isWalletInstalled = context.isAppInstalled(walletApp.packageName),
                 isPromoCodeAppInstalled = context.isAppInstalled(promoCode.packageName)
@@ -100,6 +102,7 @@ class PromoCodeBottomSheet(
           LaunchedEffect(Unit) {
             if (!impressionSent) {
               promoCodeAnalytics.sendPromoCodeImpressionEvent(
+                packageName = promoCode.packageName,
                 status = "error",
                 isWalletInstalled = context.isAppInstalled(walletApp.packageName),
                 isPromoCodeAppInstalled = context.isAppInstalled(promoCode.packageName)
@@ -159,6 +162,7 @@ fun PromoCodeBottomSheetContent(
           onClick = {
             showSnack(walletDisclaimer)
             promoCodeAnalytics.sendPromoCodeClickEvent(
+              packageName = promoCodeApp.packageName,
               isWalletInstalled = isWalletInstalled,
               isPromoCodeAppInstalled = isAppInstalled
             )
@@ -172,6 +176,7 @@ fun PromoCodeBottomSheetContent(
             val intent = Intent(Intent.ACTION_VIEW, uri)
             context.startActivity(intent)
             promoCodeAnalytics.sendPromoCodeClickEvent(
+              packageName = promoCodeApp.packageName,
               isWalletInstalled = isWalletInstalled,
               isPromoCodeAppInstalled = isAppInstalled
             )
