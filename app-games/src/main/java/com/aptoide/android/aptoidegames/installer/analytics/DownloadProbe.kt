@@ -83,7 +83,11 @@ class DownloadProbe(
             installPackageInfo = installPackageInfo,
             downloadedBytesPerSecond = downloadSpeed,
             errorMessage = it.cause.message,
-            errorType = it.cause::class.simpleName,
+            errorType = if (it.cause is HttpException) {
+              "HttpException"
+            } else {
+              it.cause::class.simpleName
+            },
             errorCode = (it.cause as? HttpException)?.code(),
             errorUrl = it.url,
           )
