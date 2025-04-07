@@ -6,6 +6,8 @@
 package cm.aptoide.pt.dataprovider.model.v7.listapp;
 
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import java.util.Date;
 
 /**
  * Class used on an App item TODO: Incomplete
@@ -19,6 +21,7 @@ public class File {
   private String pathAlt;
   private long filesize;
   private Malware malware;
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC") private Date added;
 
   public File() {
   }
@@ -151,5 +154,13 @@ public class File {
 
   protected boolean canEqual(Object other) {
     return other instanceof File;
+  }
+
+  public Date getAdded() {
+    return added;
+  }
+
+  public void setAdded(Date added) {
+    this.added = added;
   }
 }

@@ -76,9 +76,15 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable>
           .getVername());
       version.setOnClickListener(v -> navigateToAppView());
       setBadge(app);
-      date.setText(AptoideUtils.DateTimeU.getInstance(getContext())
-          .getTimeDiffString(getContext(), app.getModified()
-              .getTime(), getContext().getResources()));
+      if (app.getStore().getName().equals("catappult")) {
+        date.setText(AptoideUtils.DateTimeU.getInstance(getContext())
+            .getTimeDiffString(getContext(), app.getFile().getAdded().getTime(),
+                getContext().getResources()));
+      } else {
+        date.setText(AptoideUtils.DateTimeU.getInstance(getContext())
+            .getTimeDiffString(getContext(), app.getModified()
+                .getTime(), getContext().getResources()));
+      }
       downloads.setText(String.format(DEFAULT_LOCALE,
           getContext().getString(R.string.other_versions_downloads_count_text),
           AptoideUtils.StringU.withSuffix(app.getStats()
