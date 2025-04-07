@@ -36,8 +36,6 @@ public class AptoideApplicationAnalytics {
   public void updateDimension(boolean isLoggedIn) {
     Bundle bundle = new Bundle();
     bundle.putString("Logged In", isLoggedIn ? "Logged In" : "Not Logged In");
-    AppEventsLogger.updateUserProperties(bundle, response -> Logger.getInstance()
-        .d("Facebook Analytics: ", response.toString()));
     FlurryAgent.UserProperties.add("Logged In", isLoggedIn ? "Logged In" : "Not Logged In");
     Rakam.getInstance()
         .setSuperProperties(addJsonLoginSuperProperty(isLoggedIn, Rakam.getInstance()
@@ -62,16 +60,12 @@ public class AptoideApplicationAnalytics {
   public void setPackageDimension(String packageName) {
     Bundle bundle = new Bundle();
     bundle.putString(APTOIDE_PACKAGE, packageName);
-    AppEventsLogger.updateUserProperties(bundle, response -> Logger.getInstance()
-        .d("Facebook Analytics: ", response.toString()));
     FlurryAgent.UserProperties.add(APTOIDE_PACKAGE, packageName);
   }
 
   public void setVersionCodeDimension(String versionCode) {
     Bundle bundle = new Bundle();
     bundle.putString("version code", versionCode);
-    AppEventsLogger.updateUserProperties(bundle, response -> Logger.getInstance()
-        .d("Facebook Analytics: ", response.toString()));
     FlurryAgent.UserProperties.add("version code", versionCode);
   }
 

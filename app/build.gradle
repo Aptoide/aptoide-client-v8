@@ -248,6 +248,7 @@ android {
       //vanilla
       variant.buildConfigField "String", "OEMID", "\"" + project.VANILLA_OEMID + "\""
       variant.resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID_VANILLA + "\""
+      variant.resValue "string", "facebook_client_token", "\"" + project.FACEBOOK_CLIENT_TOKEN_VANILLA + "\""
       resValue "string", "fb_login_protocol_scheme",
           "\"" + "fb" + project.FACEBOOK_APP_ID_VANILLA + "\""
       variant.buildConfigField "String", "APTOIDE_THEME", "\"" + "default" + "\""

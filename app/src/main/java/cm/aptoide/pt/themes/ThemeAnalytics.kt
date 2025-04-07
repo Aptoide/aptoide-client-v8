@@ -2,15 +2,16 @@ package cm.aptoide.pt.themes
 
 import android.os.Bundle
 import cm.aptoide.analytics.AnalyticsManager
-import com.facebook.appevents.AppEventsLogger
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.indicative.client.android.Indicative
 import io.rakam.api.Rakam
 import org.json.JSONException
 import org.json.JSONObject
-import java.util.*
 
-class ThemeAnalytics(val analyticsManager: AnalyticsManager, val firebaseAnalytics: FirebaseAnalytics) {
+class ThemeAnalytics(
+  val analyticsManager: AnalyticsManager,
+  val firebaseAnalytics: FirebaseAnalytics
+) {
 
   companion object {
     const val DARK_THEME_INTERACT_EVENT = "Dark_Theme_Interact"
@@ -31,18 +32,19 @@ class ThemeAnalytics(val analyticsManager: AnalyticsManager, val firebaseAnalyti
   fun setDarkThemeUserProperty(darkThemeMode: DarkThemeMode) {
     val params = Bundle()
     params.putBoolean("dark_theme", darkThemeMode.isDark())
-    AppEventsLogger.updateUserProperties(params) { }
 
     val rakamClient = Rakam.getInstance()
     rakamClient.superProperties =
-        createDarkThemeRakamSuperProperty(rakamClient.superProperties, darkThemeMode)
+      createDarkThemeRakamSuperProperty(rakamClient.superProperties, darkThemeMode)
 
     Indicative.addProperty("theme", darkThemeMode.name.toLowerCase())
     firebaseAnalytics.setUserProperty("theme", darkThemeMode.name.toLowerCase())
   }
 
-  private fun createDarkThemeRakamSuperProperty(currentProperties: JSONObject?,
-                                                darkThemeMode: DarkThemeMode): JSONObject {
+  private fun createDarkThemeRakamSuperProperty(
+    currentProperties: JSONObject?,
+    darkThemeMode: DarkThemeMode
+  ): JSONObject {
     val superProperties = currentProperties ?: JSONObject()
     try {
       superProperties.put("theme", darkThemeMode.name.toLowerCase())
@@ -55,8 +57,10 @@ class ThemeAnalytics(val analyticsManager: AnalyticsManager, val firebaseAnalyti
   private fun sendDarkThemeInteractEvent(action: String, context: String) {
     val params = HashMap<String, Any>()
     params["action"] = action
-    analyticsManager.logEvent(params, DARK_THEME_INTERACT_EVENT, AnalyticsManager.Action.CLICK,
-        context)
+    analyticsManager.logEvent(
+      params, DARK_THEME_INTERACT_EVENT, AnalyticsManager.Action.CLICK,
+      context
+    )
   }
 
   private fun getThemeOptionName(themeOption: ThemeManager.ThemeOption): String {

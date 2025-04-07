@@ -17,8 +17,8 @@ public class MoPubAnalytics {
   public void setMoPubAbTestGroup(boolean isControlGroup) {
     Bundle bundle = new Bundle();
     bundle.putString("ASV-1377-MoPub-Ads", isControlGroup ? "a_without_mopub" : "b_with_mopub");
-    AppEventsLogger.updateUserProperties(bundle, response -> Logger.getInstance()
-        .d("Facebook Analytics: ", response.toString()));
+    /*AppEventsLogger.updateUserProperties(bundle, response -> Logger.getInstance()
+        .d("Facebook Analytics: ", response.toString()));*/
     FlurryAgent.UserProperties.add("ASV-1377-MoPub-Ads",
         isControlGroup ? "a_without_mopub" : "b_with_mopub");
   }
@@ -28,8 +28,6 @@ public class MoPubAnalytics {
     Bundle bundle = new Bundle();
     String ads = mapToAdsVisibility(offerResponseStatus).getType();
     bundle.putString(ADS_STATUS_USER_PROPERTY, ads);
-    AppEventsLogger.updateUserProperties(bundle, response -> Logger.getInstance()
-        .d("Facebook Analytics: ", response.toString()));
     FlurryAgent.UserProperties.add(ADS_STATUS_USER_PROPERTY, ads);
 
     String adsStatusByAnalyticsValue = mapAdsVisibilityToAnalyticsValues(offerResponseStatus);

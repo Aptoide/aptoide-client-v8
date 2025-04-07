@@ -226,8 +226,6 @@ public class FirstLaunchAnalytics {
   private void setUserProperties(String key, String value) {
     Bundle parameters = new Bundle();
     parameters.putString(key, value);
-    AppEventsLogger.updateUserProperties(parameters,
-        response -> logger.logDebug("Facebook Analytics: ", response.toString()));
     FlurryAgent.UserProperties.add(key, value);
   }
 
