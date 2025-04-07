@@ -2,6 +2,7 @@ package com.aptoide.android.aptoidegames
 
 import android.app.Application
 import android.content.Context
+import android.os.Build
 import android.os.Process
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -32,6 +33,7 @@ import com.appcoins.payments.di.paymentScreenContentProvider
 import com.appcoins.payments.di.paypalPaymentMethodFactory
 import com.appcoins.payments.di.restClientInjectParams
 import com.appcoins.payments.uri_handler.PaymentScreenContentProvider
+import com.aptoide.android.aptoidegames.Platform.isHMD
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 import com.aptoide.android.aptoidegames.feature_ad.Mintegral
@@ -142,7 +144,9 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
       }
     }
     AptoideMMPCampaign.init(BuildConfig.OEMID, BuildConfig.MARKET_NAME)
-    initAds()
+    if (isHMD.not()) {
+      initAds()
+    }
   }
 
   private fun initFeatureFlags() {
