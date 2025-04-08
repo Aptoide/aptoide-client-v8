@@ -61,7 +61,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   private ProgressDialog progressDialog;
   private RxAlertDialog facebookEmailRequiredDialog;
   private Button googleLoginButton;
-  private View facebookLoginButton;
+  //private View facebookLoginButton;
   private View loginSignupSelectionArea;
   private Button connectWithEmailButton;
   private SendMagicLinkView sendMagicLinkView;
@@ -100,7 +100,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
     googleLoginButton = view.findViewById(R.id.google_login_button);
 
-    facebookLoginButton = view.findViewById(R.id.fb_login_button);
+    //facebookLoginButton = view.findViewById(R.id.fb_login_button);
 
     loginSignupSelectionArea = view.findViewById(R.id.login_signup_selection_layout);
     sendMagicLinkView = view.findViewById(R.id.send_magic_link_view);
@@ -193,17 +193,17 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
             getStartupClickOrigin()));
   }
 
-  @Override public Observable<Void> facebookSignUpWithRequiredPermissionsInEvent() {
+  /*@Override public Observable<Void> facebookSignUpWithRequiredPermissionsInEvent() {
     return facebookEmailRequiredDialog.positiveClicks()
         .map(dialog -> null);
-  }
+  }*/
 
-  @Override public Observable<Boolean> facebookSignUpEvent() {
+/*  @Override public Observable<Boolean> facebookSignUpEvent() {
     return RxView.clicks(facebookLoginButton)
         .map(event -> termsConditionsCheckBox.isChecked())
         .doOnNext(__ -> accountAnalytics.clickIn(AccountAnalytics.StartupClick.CONNECT_FACEBOOK,
             getStartupClickOrigin()));
-  }
+  }*/
 
   @Override public Observable<Void> termsAndConditionsClickEvent() {
     return termsAndConditionsSubject;
@@ -270,19 +270,21 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
         .show();
   }
 
+  /*
   @Override public void showFacebookLogin() {
     facebookLoginButton.setVisibility(View.VISIBLE);
   }
+  */
 
-  @Override public void showFacebookPermissionsRequiredError(Throwable throwable) {
+  /*@Override public void showFacebookPermissionsRequiredError(Throwable throwable) {
     if (!facebookEmailRequiredDialog.isShowing()) {
       facebookEmailRequiredDialog.show();
     }
-  }
-
+  }*/
+/*
   @Override public void hideFacebookLogin() {
     facebookLoginButton.setVisibility(View.GONE);
-  }
+  }*/
 
   @Override public void dismiss() {
     getActivity().finish();

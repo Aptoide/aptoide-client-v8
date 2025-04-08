@@ -15,9 +15,9 @@ public interface LoginSignUpCredentialsView extends GooglePlayServicesView {
 
   Observable<Boolean> googleSignUpEvent();
 
-  Observable<Void> facebookSignUpWithRequiredPermissionsInEvent();
+  //Observable<Void> facebookSignUpWithRequiredPermissionsInEvent();
 
-  Observable<Boolean> facebookSignUpEvent();
+  //Observable<Boolean> facebookSignUpEvent();
 
   Observable<Void> termsAndConditionsClickEvent();
 
@@ -35,11 +35,11 @@ public interface LoginSignUpCredentialsView extends GooglePlayServicesView {
 
   void showError(String message);
 
-  void showFacebookLogin();
+  //void showFacebookLogin();
 
-  void showFacebookPermissionsRequiredError(Throwable throwable);
+ // void showFacebookPermissionsRequiredError(Throwable throwable);
 
-  void hideFacebookLogin();
+  //void hideFacebookLogin();
 
   void dismiss();
 

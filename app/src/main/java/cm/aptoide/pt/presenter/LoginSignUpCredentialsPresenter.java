@@ -51,9 +51,9 @@ public abstract class LoginSignUpCredentialsPresenter
     handleGoogleSignUpEvent();
     handleGoogleSignUpResult();
 
-    handleFacebookSignUpResult();
-    handleFacebookSignUpEvent();
-    handleFacebookSignUpWithRequiredPermissionsEvent();
+    //handleFacebookSignUpResult();
+    //handleFacebookSignUpEvent();
+    //handleFacebookSignUpWithRequiredPermissionsEvent();
 
     handleAccountStatusChangeWhileShowingView();
   }
@@ -148,7 +148,7 @@ public abstract class LoginSignUpCredentialsPresenter
         .subscribe();
   }
 
-  private void handleFacebookSignUpEvent() {
+/*  private void handleFacebookSignUpEvent() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> showOrHideFacebookSignUp())
@@ -220,7 +220,7 @@ public abstract class LoginSignUpCredentialsPresenter
     } else {
       view.hideFacebookLogin();
     }
-  }
+  }*/
 
   private void showOrHideGoogleSignUp() {
     if (accountManager.isSignUpEnabled(GoogleSignUpAdapter.TYPE)) {
