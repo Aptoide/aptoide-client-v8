@@ -8,11 +8,11 @@ import javax.inject.Singleton
 @Singleton
 class PromoCodeRepository @Inject constructor() {
 
-  private val promoCodeApp = MutableStateFlow<PromoCodeApp?>(null)
+  private val promoCode = MutableStateFlow<PromoCode?>(null)
 
-  fun setPromoCodeApp(pcApp: PromoCodeApp?) {
-    promoCodeApp.tryEmit(pcApp)
+  fun setPromoCode(pc: PromoCode?) {
+    promoCode.tryEmit(pc)
   }
 
-  fun promoCodeApp(): Flow<PromoCodeApp?> = promoCodeApp
+  fun promoCode(): Flow<PromoCode?> = promoCode
 }

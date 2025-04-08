@@ -6,12 +6,12 @@ import com.google.errorprone.annotations.Keep
 import kotlin.random.Random
 
 @Keep
-data class PromoCodeApp(
+data class PromoCode(
   override val packageName: String,
-  val promoCode: String,
+  val code: String,
 ) : AppSource
 
-val randomPromoCodeApp = PromoCodeApp(
+val randomPromoCode = PromoCode(
   packageName = getRandomString(range = 3..5, separator = "."),
-  promoCode = Random.nextLong().toString()
+  code = Random.nextLong().toString()
 )

@@ -18,8 +18,8 @@ class PromoCodeViewModel @Inject constructor(
   private val promoCodeRepository: PromoCodeRepository,
 ) : ViewModel() {
 
-  val uiState = promoCodeRepository.promoCodeApp()
-    .map { it to { promoCodeRepository.setPromoCodeApp(null) } }
+  val uiState = promoCodeRepository.promoCode()
+    .map { it to { promoCodeRepository.setPromoCode(null) } }
     .stateIn(
       viewModelScope,
       SharingStarted.Eagerly,

@@ -1,7 +1,6 @@
 package com.aptoide.android.aptoidegames.promo_codes
 
 import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import cm.aptoide.pt.download_view.presentation.DownloadUiState
 import cm.aptoide.pt.download_view.presentation.rememberDownloadState
 import cm.aptoide.pt.extensions.PreviewDark
@@ -46,7 +46,7 @@ import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 
 class PromoCodeBottomSheet(
-  private val promoCodeApp: PromoCodeApp,
+  private val promoCode: PromoCode,
   private val showSnack: (String) -> Unit,
 ) : BottomSheetContent {
   @Composable override fun Draw(
@@ -60,7 +60,7 @@ class PromoCodeBottomSheet(
       when (walletAppUiState) {
         is AppUiState.Idle -> {
           PromoCodeBottomSheetContent(
-            promoCodeApp = promoCodeApp,
+            promoCode = promoCode,
             walletApp = walletAppUiState.app,
             showSnack = showSnack
           )
@@ -76,12 +76,12 @@ class PromoCodeBottomSheet(
 
 @Composable
 fun PromoCodeBottomSheetContent(
-  promoCodeApp: PromoCodeApp,
+  promoCode: PromoCode,
   walletApp: App,
   showSnack: (String) -> Unit
 ) {
   val context = LocalContext.current
-  val packageInfo = remember { context.packageManager.getPackageInfo(promoCodeApp.packageName) }
+  val packageInfo = remember { context.packageManager.getPackageInfo(promoCode.packageName) }
 
   val promoCodeAnalytics = rememberPromoCodeAnalytics()
 
@@ -91,7 +91,7 @@ fun PromoCodeBottomSheetContent(
     }
   }
 
-  val (appState, reload) = rememberApp(promoCodeApp.asSource())
+  val (appState, reload) = rememberApp(promoCode.asSource())
 
   when (appState) {
     is AppUiState.Idle -> {
@@ -138,7 +138,7 @@ fun PromoCodeBottomSheetContent(
           } else {
             PrimarySmallButton(
               onClick = {
-                val uri = Uri.parse("appcoins://promocode?promocode=${promoCodeApp.promoCode}")
+                val uri = "appcoins://promocode?promocode=${promoCode.code}".toUri()
                 val intent = Intent(Intent.ACTION_VIEW, uri)
                 context.startActivity(intent)
                 promoCodeAnalytics.sendPromoCodeClickEvent(withWallet = true)
@@ -237,7 +237,7 @@ fun PreviewBottomSheetContent() {
     Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 32.dp)) {
       BottomSheetHeader()
       PromoCodeBottomSheetContent(
-        promoCodeApp = randomPromoCodeApp,
+        promoCode = randomPromoCode,
         walletApp = walletApp,
         showSnack = { }
       )

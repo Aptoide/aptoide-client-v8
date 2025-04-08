@@ -24,7 +24,7 @@ import com.aptoide.android.aptoidegames.network.repository.NetworkPreferencesRep
 import com.aptoide.android.aptoidegames.notifications.analytics.FirebaseNotificationAnalytics
 import com.aptoide.android.aptoidegames.notifications.analytics.NotificationsAnalytics
 import com.aptoide.android.aptoidegames.notifications.toFirebaseNotificationAnalyticsInfo
-import com.aptoide.android.aptoidegames.promo_codes.PromoCodeApp
+import com.aptoide.android.aptoidegames.promo_codes.PromoCode
 import com.aptoide.android.aptoidegames.promo_codes.PromoCodeRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -128,7 +128,7 @@ class MainActivity : AppCompatActivity() {
 
   private fun handleNotificationIntent(intent: Intent?) {
     intent.takeIf { it.isAhab }?.agDeepLink.takeIf { it?.scheme == "promocode" }?.run {
-      promoCodeRepository.setPromoCodeApp(PromoCodeApp(host!!, path!!))
+      promoCodeRepository.setPromoCode(PromoCode(host!!, path!!))
     }
 
     intent.externalUrl?.takeIf { it.scheme in listOf("http", "https") }
