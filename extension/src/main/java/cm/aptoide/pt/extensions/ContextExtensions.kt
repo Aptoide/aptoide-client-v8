@@ -79,3 +79,5 @@ fun Context.getProcessName(pid: Int): String? {
   }
   return null
 }
+
+fun Context.isAppInstalled(packageName: String) = packageManager.getPackageInfo(packageName) != null

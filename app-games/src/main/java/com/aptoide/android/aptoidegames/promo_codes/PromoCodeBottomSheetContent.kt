@@ -12,7 +12,10 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -22,7 +25,7 @@ import androidx.core.net.toUri
 import cm.aptoide.pt.download_view.presentation.DownloadUiState
 import cm.aptoide.pt.download_view.presentation.rememberDownloadState
 import cm.aptoide.pt.extensions.PreviewDark
-import cm.aptoide.pt.extensions.getPackageInfo
+import cm.aptoide.pt.extensions.isAppInstalled
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_apps.data.walletApp
@@ -51,12 +54,24 @@ class PromoCodeBottomSheet(
     dismiss: () -> Unit,
     navigate: (String) -> Unit,
   ) {
+    val context = LocalContext.current
     val (promoCodeSheetState, reload) = rememberPromoCodeSheetState(promoCode)
+
+    val promoCodeAnalytics = rememberPromoCodeAnalytics()
+    var impressionSent by remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 32.dp)) {
       BottomSheetHeader()
       when (promoCodeSheetState) {
         is PromoCodeSheetUiState.Idle -> {
+          LaunchedEffect(Unit) {
+            promoCodeAnalytics.sendPromoCodeImpressionEvent(
+              status = "success",
+              isWalletInstalled = context.isAppInstalled(walletApp.packageName),
+              isPromoCodeAppInstalled = context.isAppInstalled(promoCode.packageName)
+            )
+          }
+
           PromoCodeBottomSheetContent(
             promoCode = promoCode.code,
             promoCodeApp = promoCodeSheetState.promoCodeApp,
@@ -66,8 +81,35 @@ class PromoCodeBottomSheet(
         }
 
         is PromoCodeSheetUiState.Loading -> LoadingView()
-        is PromoCodeSheetUiState.Error -> BottomSheetGenericErrorView(onRetryClick = reload)
-        is PromoCodeSheetUiState.NoConnection -> BottomSheetNoConnectionView(onRetryClick = reload)
+        is PromoCodeSheetUiState.Error -> {
+          LaunchedEffect(Unit) {
+            if (!impressionSent) {
+              promoCodeAnalytics.sendPromoCodeImpressionEvent(
+                status = "error",
+                isWalletInstalled = context.isAppInstalled(walletApp.packageName),
+                isPromoCodeAppInstalled = context.isAppInstalled(promoCode.packageName)
+              )
+              impressionSent = true
+            }
+          }
+
+          BottomSheetGenericErrorView(onRetryClick = reload)
+        }
+
+        is PromoCodeSheetUiState.NoConnection -> {
+          LaunchedEffect(Unit) {
+            if (!impressionSent) {
+              promoCodeAnalytics.sendPromoCodeImpressionEvent(
+                status = "error",
+                isWalletInstalled = context.isAppInstalled(walletApp.packageName),
+                isPromoCodeAppInstalled = context.isAppInstalled(promoCode.packageName)
+              )
+              impressionSent = true
+            }
+          }
+
+          BottomSheetNoConnectionView(onRetryClick = reload)
+        }
       }
     }
   }
@@ -81,29 +123,18 @@ fun PromoCodeBottomSheetContent(
   showSnack: (String) -> Unit
 ) {
   val context = LocalContext.current
-  val packageInfo = remember { context.packageManager.getPackageInfo(promoCodeApp.packageName) }
 
   val promoCodeAnalytics = rememberPromoCodeAnalytics()
-
-  LaunchedEffect(packageInfo) {
-    if (packageInfo == null) {
-      promoCodeAnalytics.sendPromoCodeImpressionEvent(status = "app_not_installed")
-    }
-  }
 
   val walletDisclaimer = stringResource(id = R.string.promo_code_install_wallet_disclaimer)
   val walletDownloadState = rememberDownloadState(app = walletApp)
   val showWalletSegment = remember { walletDownloadState !is DownloadUiState.Installed }
-  val isWalletInstalled = walletDownloadState?.isPackageInstalled() == true
+  val isWalletInstalled =
+    remember(walletDownloadState) { walletDownloadState?.isPackageInstalled() == true }
 
   val appDownloadState = rememberDownloadState(app = promoCodeApp)
-
-  LaunchedEffect(Unit) {
-    promoCodeAnalytics.sendPromoCodeImpressionEvent(
-      status = "success",
-      withWallet = isWalletInstalled
-    )
-  }
+  var isAppInstalled =
+    remember(appDownloadState) { context.isAppInstalled(promoCodeApp.packageName) }
 
   if (showWalletSegment) {
     WalletInstallSection(walletApp = walletApp)
@@ -127,7 +158,10 @@ fun PromoCodeBottomSheetContent(
         TertiarySmallButton(
           onClick = {
             showSnack(walletDisclaimer)
-            promoCodeAnalytics.sendPromoCodeClickEvent(withWallet = false)
+            promoCodeAnalytics.sendPromoCodeClickEvent(
+              isWalletInstalled = isWalletInstalled,
+              isPromoCodeAppInstalled = isAppInstalled
+            )
           },
           title = stringResource(id = R.string.promo_code_use_button)
         )
@@ -137,7 +171,10 @@ fun PromoCodeBottomSheetContent(
             val uri = "appcoins://promocode?promocode=${promoCode}".toUri()
             val intent = Intent(Intent.ACTION_VIEW, uri)
             context.startActivity(intent)
-            promoCodeAnalytics.sendPromoCodeClickEvent(withWallet = true)
+            promoCodeAnalytics.sendPromoCodeClickEvent(
+              isWalletInstalled = isWalletInstalled,
+              isPromoCodeAppInstalled = isAppInstalled
+            )
           },
           title = stringResource(id = R.string.promo_code_use_button)
         )

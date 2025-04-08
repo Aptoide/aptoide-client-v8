@@ -9,34 +9,36 @@ class PromoCodeAnalytics(
 
   fun sendPromoCodeImpressionEvent(
     status: String,
-    withWallet: Boolean? = null
+    isWalletInstalled: Boolean,
+    isPromoCodeAppInstalled: Boolean
   ) = sendPromoCodeEvent(
     action = "impression",
     status = status,
-    withWallet = withWallet
+    isWalletInstalled = isWalletInstalled,
+    isPromoCodeAppInstalled = isPromoCodeAppInstalled
   )
 
   fun sendPromoCodeClickEvent(
-    withWallet: Boolean? = null
+    isWalletInstalled: Boolean,
+    isPromoCodeAppInstalled: Boolean
   ) = sendPromoCodeEvent(
     action = "click",
-    withWallet = withWallet
+    isWalletInstalled = isWalletInstalled,
+    isPromoCodeAppInstalled = isPromoCodeAppInstalled
   )
 
   private fun sendPromoCodeEvent(
     action: String,
     status: String? = null,
-    withWallet: Boolean? = null
+    isWalletInstalled: Boolean,
+    isPromoCodeAppInstalled: Boolean
   ) {
     biAnalytics.logEvent(
       name = "ag_promo_codes",
       mapOfNonNull(
         P_ACTION to action,
-        P_TYPE to when (withWallet) {
-          true -> "with_wallet_app"
-          false -> "without_wallet_app"
-          null -> "n-a"
-        },
+        P_WALLET_IS_INSTALLED to isWalletInstalled,
+        P_APP_IS_INSTALLED to isPromoCodeAppInstalled,
         P_STATUS to status
       )
     )
@@ -44,7 +46,8 @@ class PromoCodeAnalytics(
 
   companion object {
     private const val P_ACTION = "action"
-    private const val P_TYPE = "type"
+    private const val P_WALLET_IS_INSTALLED = "wallet_is_installed"
+    private const val P_APP_IS_INSTALLED = "app_is_installed"
     private const val P_STATUS = "status"
   }
 }
