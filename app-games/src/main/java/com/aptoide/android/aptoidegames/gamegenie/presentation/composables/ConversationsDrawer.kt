@@ -27,6 +27,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.gamegenie.analytics.rememberGameGenieAnalytics
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.DrawerContent
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.getToolBarLogo
@@ -45,12 +46,14 @@ fun ConversationsDrawer(
   val isOpen = remember { mutableStateOf(false) }
   val screenOffsetX = remember { Animatable(0f) }
   val scope = rememberCoroutineScope()
+  val analytics = rememberGameGenieAnalytics()
 
   fun openDrawer() {
     scope.launch {
       screenOffsetX.animateTo(DRAWER_SIZE, tween(ANIMATION_DURATION))
       isOpen.value = true
     }
+    analytics.sendGameGenieHistoryOpen()
   }
 
   fun closeDrawer() {
@@ -134,15 +137,17 @@ fun ConversationsDrawer(
       DrawerContent(
         { id ->
           loadConversationFn(id)
+          analytics.sendGameGenieHistoryClick()
           closeDrawer()
         },
         currentChatId,
         {
           newChatFn()
+          analytics.sendGameGenieNewChat()
           closeDrawer()
-        }
+        },
+        analytics::sendGameGenieHistoryDelete
       )
     }
   }
 }
-

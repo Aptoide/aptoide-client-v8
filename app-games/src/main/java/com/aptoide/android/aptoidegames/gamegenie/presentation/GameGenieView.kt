@@ -47,6 +47,7 @@ fun gameGenieScreen() = ScreenData.withAnalytics(
         onError = viewModel::reload,
         onMessageSend = { message ->
           viewModel.sendMessage(message)
+          analytics.sendGameGenieMessageSent()
         },
         onSuggestionSend = { message, index ->
           viewModel.sendMessage(message)

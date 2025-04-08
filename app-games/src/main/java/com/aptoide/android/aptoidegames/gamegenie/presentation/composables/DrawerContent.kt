@@ -39,6 +39,7 @@ fun DrawerContent(
   onConversationClick: (String) -> Unit,
   currentChatId: String,
   onNewChatClick: () -> Unit,
+  onChatDeleteAnalytics: () -> Unit
 ) {
 
   when (val uiState = rememberGameGenieHistoryUiState()) {
@@ -47,7 +48,10 @@ fun DrawerContent(
       currentChatId = currentChatId,
       onNewChatClick = onNewChatClick,
       conversations = uiState.pastConversations,
-      onDeleteChat = uiState.onDeleteChat
+      onDeleteChat = {
+        uiState.onDeleteChat
+        onChatDeleteAnalytics()
+      }
     )
 
     Loading -> {}
