@@ -17,6 +17,7 @@ import cm.aptoide.pt.feature_apps.data.App
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.feature_apps.presentation.AppItem
+import com.aptoide.android.aptoidegames.gamegenie.analytics.rememberGameGenieAnalytics
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -28,6 +29,8 @@ fun MessageBubble(
   apps: List<App>? = null,
   navigateTo: (String) -> Unit = {},
 ) {
+  val analytics = rememberGameGenieAnalytics()
+
   Column(
     modifier = Modifier
       .fillMaxWidth()
@@ -59,13 +62,14 @@ fun MessageBubble(
         color = if (isUserMessage) Palette.Black else Palette.White,
       )
 
-      apps?.forEach { app ->
+      apps?.forEachIndexed { index, app ->
         AppItem(
           app = app,
           onClick = {
             navigateTo(
               buildAppViewRoute(app)
             )
+            analytics.sendGameGenieAppClick(app.packageName, index)
           },
         ) {
           InstallViewShort(app)
