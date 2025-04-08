@@ -134,7 +134,7 @@ fun MainView(navController: NavHostController) {
           if (promoCodeApp != null) {
             showBottomSheet(
               PromoCodeBottomSheet(
-                promoCodeApp = promoCodeApp,
+                promoCode = promoCodeApp,
                 showSnack = {
                   coroutineScope.launch {
                     snackBarHostState.showSnackbar(message = it)
