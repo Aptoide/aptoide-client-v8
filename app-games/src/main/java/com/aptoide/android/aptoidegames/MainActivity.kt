@@ -125,7 +125,13 @@ class MainActivity : AppCompatActivity() {
 
   private fun handleNotificationIntent(intent: Intent?) {
     intent.takeIf { it.isAhab }?.agDeepLink.takeIf { it?.scheme == "promocode" }?.run {
-      promoCodeRepository.setPromoCode(PromoCode(host!!, path!!))
+      promoCodeRepository.setPromoCode(
+        PromoCode(
+          packageName = host!!,
+          code = path!!,
+          value = getQueryParameter("value")?.toIntOrNull()?.takeIf { it in 1..100 }
+        )
+      )
     }
 
     intent.externalUrl?.takeIf { it.scheme in listOf("http", "https") }
