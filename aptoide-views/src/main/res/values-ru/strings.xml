@@ -14,7 +14,7 @@
   <string name="incentives_badge_amount">%s%%</string>
   <string name="incentives_badge_bonus">Бонус</string>
   <string name="incentives_banner_title">Бонус до %s%% с каждой покупкой!</string>
-  <string name="incentives_banner_body">Используйте ваши AppCoins Credits, чтобы получить больше предметов в приложениях с символом %s</string>
+  <string name="incentives_banner_body">Используйте ваш баланс Aptoide, чтобы получить больше предметов в приложениях с символом %s</string>
   <!-- Download View -->
   <string name="appview_short_downloading">Загрузка…</string>
   <string name="apps_short_download_paused">Загрузка приостановлена</string>

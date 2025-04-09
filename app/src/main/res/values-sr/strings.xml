@@ -373,94 +373,94 @@
   <!--URL -->
   <string name="my_stores_login_message">Prijavite se sada i počnite da delite svoje aplikacije!</string>
   <!--APPC-->
-  <string name="appc_title_iab">Potrošite AppCoins</string>
-  <string name="appc_title_ads">Dobijte AppCoins kao nagradu</string>
-  <string name="appc_title_featured">Preporučene AppCoins aplikacije</string>
-  <string name="appc_home_bundle_iab">Iskoristite AppCoins</string>
-  <string name="appc_home_bundle_poa">Zaradite AppCoins Credits</string>
-  <string name="appc_title_about_appcoins">O AppCoins</string>
+  <string name="appc_title_iab">Potrošite svoj Aptoide bilans</string>
+  <string name="appc_title_ads">Osvojite nagrade uz Aptoide bilans</string>
+  <string name="appc_title_featured">Preporučene Bonus aplikacije</string>
+  <string name="appc_home_bundle_iab">Iskoristite svoj Aptoide bilans</string>
+  <string name="appc_home_bundle_poa">Zaradite Aptoide bilans</string>
+  <string name="appc_title_about_appcoins">O aplikaciji Aptoide Wallet</string>
   <string name="appc_message_appview_appcoins_reward">Isprobajte ovu aplikaciju 2 minuta i dobijte\n%s</string>
   <string name="appc_message_appview_appcoins_reward_with_value">Isprobajte ovu aplikaciju 2 minuta i dobijte\n%1$s %2$s</string>
-  <string name="appc_message_appview_appcoins_iab">Kupovine u aplikaciji pomoću AppCoins</string>
-  <string name="appc_card_short">APPCOINS</string>
-  <string name="appc_title_homepage_card">Sada možete da dobijete AppCoins!</string>
-  <string name="appc_message_homepage_card">Kriptovaluta za ekonomiju aplikacija je stigla! Dobijte besplatne AppCoins tako što ćete koristiti omiljene aplikacije.</string>
-  <string name="appc_title_settings_appcoins_wallet">Novčanik za AppCoins</string>
-  <string name="appc_title_bundle">Aplikacije za AppCoins</string>
+  <string name="appc_message_appview_appcoins_iab">Kupovine u aplikacijama uz Aptoide Wallet</string>
+  <string name="appc_card_short">BONUS</string>
+  <string name="appc_title_homepage_card">Možete nabaviti Aptoide bilans sada!</string>
+  <string name="appc_message_homepage_card">Valuta za ekonomiju u aplikacijama je stigla! Dobijte besplatno Aptoide bilans tako što ćete koristiti omiljene aplikacije.</string>
+  <string name="appc_title_settings_appcoins_wallet">Aptoide Wallet</string>
+  <string name="appc_title_bundle">Bonus aplikacije</string>
   <!--Editorial Content-->
   <string name="appc_verification_cancelled_by_user_message">Morate da potvrdite svoj novčanik da biste dobijali nagrade. To traje samo nekoliko sekundi!</string>
   <string name="editorial_reactions_login_short">Prijavite se kako biste nastavili da označavate da vam se sviđaju članci!</string>
   <!--Promotion in APPC-C (old)-->
   <string comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)" name="editorial_bottom_follow_us">Zapratite nas</string>
-  <string name="holidayspromotion_message_1">Instalirajte sledeće aplikacije i dobijte do %s AppCoins Credits koje možete da potrošite u omiljenim igrama!</string>
-  <string name="holidayspromotion_message_2">Najpre preuzmite AppCoins Wallet da biste dobili AppCoins Credits.</string>
+  <string name="holidayspromotion_message_1">Instalirajte sledeće aplikacije i dobijte do %s u Aptoide bilansu koje možete da potrošite u omiljenim igrama!</string>
+  <string name="holidayspromotion_message_2">Najpre preuzmite Aptoide Wallet da biste dobili Aptoide bilans.</string>
   <string name="holidayspromotion_message_3">Zatim instalirajte bilo koju od ovih igara da biste dobili nagrade!</string>
   <string name="holidayspromotion_button_claimed">Preuzeto</string>
-  <string name="holidayspromotion_message_popup">Zaradite %s AppCoins Credits tako što ćete instalirati aplikacije i potrošite ih u omiljenim igrama!</string>
+  <string name="holidayspromotion_message_popup">Zaradite %s u Aptoide bilansu tako što ćete instalirati aplikacije i potrošite ih u omiljenim igrama!</string>
   <string name="holidayspromotion_button_popup">Pogledajte!</string>
   <string name="promotion_over_title">Propustili ste je!</string>
   <string name="promotion_over_message">Ova promocija vam je promakla, ali uskoro ćemo imati drugu!</string>
   <!--Promotion with FIAT-->
-  <string name="FIATpromotion_install_to_get_short">Instalirajte da biste dobili %1$s AppCoins Credits (%2$s)</string>
-  <string name="FIATpromotion_update_to_get_short">Ažurirajte da biste dobili %1$s AppCoins Credits (%2$s)</string>
+  <string name="FIATpromotion_install_to_get_short">Instalirajte da biste dobili %1$s u Aptoide bilansu (%2$s)</string>
+  <string name="FIATpromotion_update_to_get_short">Ažurirajte da biste dobili %1$s u Aptoide bilansu (%2$s)</string>
   <!--Get Wallet Address-->
   <string name="promotion_claim_button">PREUZMI</string>
-  <string name="holidayspromotion_title_wallet">AppCoins Wallet adresa</string>
-  <string name="holidayspromotion_message_wallet">Javite nam adresu svog novčanika! Dodirnite ispod i AppCoins Wallet će to srediti umesto vas.</string>
+  <string name="holidayspromotion_title_wallet">Aptoide Wallet adresa</string>
+  <string name="holidayspromotion_message_wallet">Javite nam adresu svog novčanika! Dodirnite ispod i Aptoide Wallet će to srediti umesto vas.</string>
   <string name="holidayspromotion_short_wallet_field">Adresa novčanika</string>
   <string name="holidayspromotion_button_wallet_get">Sredi</string>
   <string name="holidayspromotion_short_wallet_invalid">Neispravna adresa novčanika</string>
   <string name="holidayspromotion_title_completed">Gotovo!</string>
-  <string name="holidayspromotion_message_completed">Vaši AppCoins Credits će uskoro biti dostupni u vašem novčaniku! Uživajte u igranju!</string>
+  <string name="holidayspromotion_message_completed">Vaš Aptoide bilans će uskoro biti dostupan u vašem novčaniku! Uživajte u igranju!</string>
   <string name="holidayspromotion_button_completed">Gotovo</string>
   <string name="holidayspromotion_title_error_claimed">Ups…</string>
   <string name="holidayspromotion_short_error_claimed">Već ste preuzeli ovu nagradu!</string>
   <!--APPC install Promotion-->
-  <string name="wallet_promotion_title">Dobijte %s APPC Credits odmah!</string>
-  <string name="wallet_promotion_wallet_installed_message">Instalirajte ovu aplikaciju i dobijte APPC Credits (%s) koje možete da potrošite u omiljenim igrama.</string>
-  <string name="wallet_promotion_wallet_notinstalled_message">Instalirajte ovu aplikaciju i dobijte %s APPC Credits. Da biste ga preuzeli potreban vam je AppCoins Wallet.</string>
-  <string name="wallet_promotion_wallet_installed_update_message">Ažurirajte ovu aplikaciju i dobijte APPC Credits (%s) koje možete da potrošite u omiljenim igrama.</string>
-  <string name="wallet_promotion_wallet_claim_message">Imate APPC Credits (%s) koje treba da preuzmete. Upotrebite ih za kupovinu artikala u svojim omiljenim igrama.</string>
+  <string name="wallet_promotion_title">Dobijte %s u Aptoide bilansu sada!</string>
+  <string name="wallet_promotion_wallet_installed_message">Instalirajte ovu aplikaciju i dobijte do %s u Aptoide bilansu koje možete da potrošite u omiljenim igrama.</string>
+  <string name="wallet_promotion_wallet_notinstalled_message">Instalirajte ovu aplikaciju i dobijte %s APPC Credits. Da biste ga preuzeli potreban vam je Aptoide Wallet.</string>
+  <string name="wallet_promotion_wallet_installed_update_message">Ažurirajte ovu aplikaciju i dobijte do %s u Aptoide bilansu koje možete da potrošite u omiljenim igrama.</string>
+  <string name="wallet_promotion_wallet_claim_message">Imate %s u Aptoide bilansu spremno za preuzimanje. Upotrebite ih za kupovinu artikala u svojim omiljenim igrama.</string>
   <string name="wallet_promotion_install_button">Instaliraj novčanik</string>
   <string name="wallet_promotion_no_button">Ne, hvala</string>
-  <string name="wallet_promotion_button_install_disabled">Instalirajte da biste dobili %s APPC Credits</string>
+  <string name="wallet_promotion_button_install_disabled">Instalirajte da biste dobili %s u Aptoide bilansu</string>
   <!--AppCoins Remove Ads Wallet Promotion -->
-  <string name="wallet_promotion_button_claim">Preuzimte svoje APPC Credits (%s)</string>
+  <string name="wallet_promotion_button_claim">Zatražite svojih %s u Aptoide bilansu</string>
   <!--Play to APPC - Migrator - Promotion-->
   <string name="promo_update2appc_data_disclaimer">Proverite u podešavanjima igre da li možete da sačuvate napredak.</string>
-  <string name="promo_update2appc_appview_update_button">Ažuriraj na verziju za AppCoins</string>
+  <string name="promo_update2appc_appview_update_button">Update to bonus version</string>
   <string name="promo_update2appc_notification_dismiss_button">Odbaci</string>
   <string name="promo_update2appc_notification_claim_button">Preuzmi</string>
-  <string name="promo_update2appc_claim_notification_title">Dobijte APPC Credits (%s) odmah!</string>
+  <string name="promo_update2appc_claim_notification_title">Dobijte %s u Aptoide bilansu!</string>
   <!--Promo Center-->
   <string name="promo_update2appc_claim_notification_body">Ne zaboravite da preuzmete svoju nagradu!</string>
   <string name="promo_center_pending_card_update_body">Za ažuriranje aplikacije %s</string>
   <!--Purchase Flow - Wallet Installation-->
   <string name="wallet_install_request_message_body">Da biste kupili ovaj artikal prvo morate da preuzmete %s.</string>
-  <string name="wallet_install_appcoins_wallet">AppCoins Wallet</string>
+  <string name="wallet_install_appcoins_wallet">Aptoide Wallet</string>
   <string name="wallet_install_complete_title">Instalacija je dovršena</string>
-  <string name="appc_not_supported_body">Izgleda da ovaj uređaj ne podržava AppCoins. Pokušajte na drugom uređaju!</string>
-  <string name="wallet_install_request_already_installed_title">AppCoins Wallet je instaliran</string>
+  <string name="appc_not_supported_body">Izgleda da ovaj uređaj ne podržava Aptoide Wallet. Pokušajte na drugom uređaju!</string>
+  <string name="wallet_install_request_already_installed_title">Aptoide Wallet instalacija</string>
   <string name="wallet_install_request_already_installed_body">Uživajte u bonusu za svaku kupovinu u aplikaciji!</string>
-  <string name="wallet_verification_message_update_wallet_to_claim">Ažurirajte AppCoins Wallet da biste dobili ovu nagradu!</string>
+  <string name="wallet_verification_message_update_wallet_to_claim">Ažurirajte Aptoide Wallet da biste dobili ovu nagradu!</string>
   <string name="wallet_verification_button_update">Ažuriraj odmah</string>
   <!--POA exposure-->
   <string name="wallet_verification_button_update_wallet">Ažuriraj novčanik</string>
   <string name="poa_app_card_short">ZARADITE %s</string>
-  <string name="poa_home_card_body">Instalirajte ove aplikacije i provedite 2 minuta u njima da biste zaradili AppCoins Credits.</string>
+  <string name="poa_home_card_body">Instalirajte ove aplikacije i provedite 2 minuta u njima da biste zaradili Aptoide bilans.</string>
   <string name="poa_app_view_card_body_1">Isprobajte ovu aplikaciju 2 minuta i dobijte</string>
-  <string name="poa_app_view_card_body_2">%1$s AppCoins Credits (%2$s)</string>
+  <string name="poa_app_view_card_body_2">%1$s in Aptoide balance (%2$s)</string>
   <string name="poa_APPCC_left_body">Požurite! Nema još mnogo dostupnih nagrada (%s).</string>
   <string name="poa_time_left_days">DANI</string>
   <string name="poa_time_left_hours">SATI</string>
   <string name="poa_time_left_minutes">MINUTI</string>
   <string name="poa_time_left_seconds">SEKUNDE</string>
   <!--APPC Info View-->
-  <string name="appc_info_view_title_1">Sve što treba da znate o AppCoins</string>
-  <string name="appc_info_view_body_1_variable">AppCoins i AppCoins Credits su valute za transakcije u aplikacijama. A najbolje je što ćete zaraditi do <b>%s%% bonusa u svim kupovinama!</b></string>
-  <string name="appc_info_view_body_1_variable_no_data">AppCoins i AppCoins Credits su valute za transakcije u aplikacijama. Najbolje od svega? Zaradićete <b>bonus prilikom svake kupovine!</b></string>
+  <string name="appc_info_view_title_1">Sve što treba da znate o aplikaciji Aptoide Wallet</string>
+  <string name="appc_info_view_body_1_variable">Aptoide bilans je valuta za transakcije u aplikacijama. A najbolje je što ćete zaraditi do <b>%s%% bonusa u svim kupovinama!</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">Aptoide bilans je valuta za transakcije u aplikacijama. A najbolje je što ćete zaraditi <b>bonus pri svakoj kupovini!</b></string>
   <string name="appc_info_view_title_2">Da počnemo od početka</string>
-  <string name="appc_info_view_body_2">Treba da instalirate AppCoins Wallet da biste dobijali nagrade i obrađivali transakcije. Kada ga budete instalirali, radiće sve to umesto vas!</string>
+  <string name="appc_info_view_body_2">Treba da instalirate Aptoide Wallet da biste dobijali nagrade i obrađivali transakcije. Kada ga budete instalirali, radiće sve to umesto vas!</string>
   <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_4">Bonus za svaku kupovinu!</string>
   <string name="appc_info_view_title_5_variable">Dobićete do %s%% bonusa za svaku kupovinu koju obavite u aplikaciji sa simbolom %s. Iskoristite tu prednost da postanete vrhunski gejmer!</string>
@@ -505,12 +505,12 @@
   <!--Search Filters-->
   <string name="search_filters_trusted">Pouzdano</string>
   <string name="search_filters_beta">Beta verzije</string>
-  <string name="search_filters_appcoins">AppCoins</string>
+  <string name="search_filters_appcoins">Aptoide Wallet</string>
   <string name="search_filters_followed_stores">Prodavnice koje pratite</string>
   <!-- Out of space -->
   <string name="out_of_space_body">Potrebno vam je %s da biste nastavili sa instalacijom.</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Sada uz AppCoins sistem plaćanja</string>
+  <string name="promotional_now_with_appcoins">Sada kompatibilno sa aplikacijom Aptoide Wallet</string>
   <string name="promotional_new_version">Nova verzija</string>
   <string name="promotional_on_going_event">Tekući događaj</string>
   <string name="promotional_new_in_aptoide">Sada dostupno na Aptoide</string>

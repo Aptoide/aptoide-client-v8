@@ -373,94 +373,94 @@ ancaman apa pun!</string>
   <!--URL -->
   <string name="my_stores_login_message">Masuk sekarang dan mulai berbagi aplikasi!</string>
   <!--APPC-->
-  <string name="appc_title_iab">Gunakan AppCoins Anda</string>
-  <string name="appc_title_ads">Dapatkan Hadiah dengan AppCoin</string>
-  <string name="appc_title_featured">Aplikasi AppCoins Teratas</string>
-  <string name="appc_home_bundle_iab">Gunakan AppCoins Anda</string>
-  <string name="appc_home_bundle_poa">Dapatkan AppCoins Credits</string>
-  <string name="appc_title_about_appcoins">Tentang AppCoins</string>
+  <string name="appc_title_iab">Belanjakan Saldo Aptoide Anda</string>
+  <string name="appc_title_ads">Dapatkan Hadiah dengan Saldo Aptoide</string>
+  <string name="appc_title_featured">Aplikasi Bonus Teratas</string>
+  <string name="appc_home_bundle_iab">Gunakan Saldo Aptoide Anda</string>
+  <string name="appc_home_bundle_poa">Dapatkan Saldo Aptoide</string>
+  <string name="appc_title_about_appcoins">Tentang Aptoide Wallet</string>
   <string name="appc_message_appview_appcoins_reward">Coba aplikasi ini selama 2 menit dan dapatkan\n%s</string>
   <string name="appc_message_appview_appcoins_reward_with_value">Coba aplikasi ini selama 2 menit dan dapatkan\n%1$s %2$s</string>
-  <string name="appc_message_appview_appcoins_iab">Pembelian in-app dengan AppCoins</string>
-  <string name="appc_card_short">APPCOINS</string>
-  <string name="appc_title_homepage_card">Anda bisa mendapatkan AppCoins sekarang!</string>
-  <string name="appc_message_homepage_card">Mata uang kripto bagi perekonomian aplikasi kini telah hadir! Dapatkan AppCoins gratis dengan menggunakan aplikasi favorit Anda.</string>
-  <string name="appc_title_settings_appcoins_wallet">Dompet AppCoins</string>
-  <string name="appc_title_bundle">Aplikasi AppCoins</string>
+  <string name="appc_message_appview_appcoins_iab">Pembelian dalam aplikasi dengan Aptoide Wallet</string>
+  <string name="appc_card_short">BONUS</string>
+  <string name="appc_title_homepage_card">Anda bisa mendapatkan saldo Aptoide sekarang!</string>
+  <string name="appc_message_homepage_card">Mata uang bagi perekonomian aplikasi kini telah hadir! Dapatkan saldo Aptoide gratis dengan menggunakan aplikasi favorit Anda.</string>
+  <string name="appc_title_settings_appcoins_wallet">Aptoide Wallet</string>
+  <string name="appc_title_bundle">Aplikasi Bonus</string>
   <!--Editorial Content-->
   <string name="appc_verification_cancelled_by_user_message">Anda perlu memverifikasi dompet Anda untuk menerima hadiah. Hanya perlu waktu beberapa detik!</string>
   <string name="editorial_reactions_login_short">Masuk untuk mengikuti keinginan!</string>
   <!--Promotion in APPC-C (old)-->
   <string comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)" name="editorial_bottom_follow_us">Ikuti kami</string>
-  <string name="holidayspromotion_message_1">Instal aplikasi berikut ini, lalu dapatkan %s Kredit AppCoins untuk dibelanjakan di permainan favorit Anda!</string>
-  <string name="holidayspromotion_message_2">Pertama, dapatkan Dompet AppCoins untuk menerima Kredit AppCoins.</string>
+  <string name="holidayspromotion_message_1">Instal aplikasi-aplikasi berikut dan dapatkan saldo Aptoide senilai %s untuk dibelanjakan di game favorit Anda!</string>
+  <string name="holidayspromotion_message_2">Pertama, dapatkan Aptoide Wallet untuk menampung saldo Aptoide Anda.</string>
   <string name="holidayspromotion_message_3">Lalu instal salah satu dari permainan-permainan berikut ini untuk mendapatkan hadiah!</string>
   <string name="holidayspromotion_button_claimed">Diklaim</string>
-  <string name="holidayspromotion_message_popup">Dapatkan %s Kredit AppCoins dengan menginstal aplikasi dan membelanjakan kredit itu di permainan favorit Anda!</string>
+  <string name="holidayspromotion_message_popup">Dapatkan saldo Aptoide sebesar %s dengan menginstal aplikasi dan membelanjakannya di game favorit Anda!</string>
   <string name="holidayspromotion_button_popup">Lihat!</string>
   <string name="promotion_over_title">Anda melewatkannya!</string>
   <string name="promotion_over_message">Promosi ini sudah hilang barusan, tetapi kami akan segera mengadakan promosi lain!</string>
   <!--Promotion with FIAT-->
-  <string name="FIATpromotion_install_to_get_short">Instal untuk mendapatkan %1$s Kredit AppCoins (%2$s)</string>
-  <string name="FIATpromotion_update_to_get_short">Perbarui untuk mendapatkan %1$s Kredit AppCoins (%2$s)</string>
+  <string name="FIATpromotion_install_to_get_short">Instal untuk mendapatkan saldo Aptoide sebesar %1$s (%2$s)</string>
+  <string name="FIATpromotion_update_to_get_short">Perbarui untuk mendapatkan saldo Aptoide sebesar %1$s (%2$s)</string>
   <!--Get Wallet Address-->
   <string name="promotion_claim_button">KLAIM</string>
-  <string name="holidayspromotion_title_wallet">Alamat Dompet AppCoin</string>
-  <string name="holidayspromotion_message_wallet">Informasikan alamat dompet Anda! Ketuk di bawah, nanti AppCoins Wallet akan menanganinya.</string>
+  <string name="holidayspromotion_title_wallet">Alamat Aptoide Wallet</string>
+  <string name="holidayspromotion_message_wallet">Informasikan alamat dompet Anda! Ketuk di bawah, nanti Aptoide Wallet yang akan menyelesaikannya.</string>
   <string name="holidayspromotion_short_wallet_field">Alamat dompet</string>
   <string name="holidayspromotion_button_wallet_get">Wujudkan</string>
   <string name="holidayspromotion_short_wallet_invalid">Alamat dompet tidak valid</string>
   <string name="holidayspromotion_title_completed">Selesai!</string>
-  <string name="holidayspromotion_message_completed">Kredit AppCoin akan segera masuk ke dompet Anda! Nikmati permainan Anda!</string>
+  <string name="holidayspromotion_message_completed">Saldo Aptoide akan segera masuk ke dompet Anda! Nikmati permainan Anda!</string>
   <string name="holidayspromotion_button_completed">Selesai</string>
   <string name="holidayspromotion_title_error_claimed">Ups…</string>
   <string name="holidayspromotion_short_error_claimed">Anda sudah mengklaim hadiah ini!</string>
   <!--APPC install Promotion-->
-  <string name="wallet_promotion_title">Dapatkan %s Kredit APPC sekarang!</string>
-  <string name="wallet_promotion_wallet_installed_message">Pasang aplikasi ini dan dapatkan %s Kredit APPC untuk Anda gunakan dalam permainan favorit.</string>
-  <string name="wallet_promotion_wallet_notinstalled_message">Pasang aplikasi ini dan dapatkan %s Kredit APPC. Anda membutuhkan Dompet AppCoins untuk menerimanya.</string>
-  <string name="wallet_promotion_wallet_installed_update_message">Perbarui aplikasi ini dan dapatkan %s Kredit APPC untuk Anda gunakan dalam permainan favorit.</string>
-  <string name="wallet_promotion_wallet_claim_message">Anda memiliki %s Kredit APPC untuk diklaim. Gunakan untuk membeli item di aplikasi favorit Anda.</string>
+  <string name="wallet_promotion_title">Dapatkan saldo Aptoide sebesar %s sekarang!</string>
+  <string name="wallet_promotion_wallet_installed_message">Instal aplikasi ini dan dapatkan saldo Aptoide senilai %s untuk dibelanjakan di game favorit Anda.</string>
+  <string name="wallet_promotion_wallet_notinstalled_message">Instal aplikasi ini dan dapatkan %s Kredit APPC. Anda membutuhkan Aptoide Wallet untuk menerimanya.</string>
+  <string name="wallet_promotion_wallet_installed_update_message">Perbarui aplikasi ini dan dapatkan saldo Aptoide senilai %s untuk dibelanjakan di game favorit Anda.</string>
+  <string name="wallet_promotion_wallet_claim_message">Anda memiliki saldo Aptoide sebesar %s untuk diklaim. Gunakan untuk membeli item di aplikasi favorit Anda.</string>
   <string name="wallet_promotion_install_button">Instal Dompet</string>
   <string name="wallet_promotion_no_button">Tidak, terima kasih</string>
-  <string name="wallet_promotion_button_install_disabled">Pasang untuk mendapatkan %s Kredit APPC</string>
+  <string name="wallet_promotion_button_install_disabled">Instal untuk mendapatkan saldo Aptoide sebesar %s</string>
   <!--AppCoins Remove Ads Wallet Promotion -->
-  <string name="wallet_promotion_button_claim">Klaim %s Kredit APPC Anda</string>
+  <string name="wallet_promotion_button_claim">Klaim saldo Aptoide Anda sebesar %s</string>
   <!--Play to APPC - Migrator - Promotion-->
   <string name="promo_update2appc_data_disclaimer">Periksa pengaturan permainan apakah Anda dapat menyimpan progres.</string>
-  <string name="promo_update2appc_appview_update_button">Perbarui ke AppCoins</string>
+  <string name="promo_update2appc_appview_update_button">Update to bonus version</string>
   <string name="promo_update2appc_notification_dismiss_button">Abaikan</string>
   <string name="promo_update2appc_notification_claim_button">Klaim</string>
-  <string name="promo_update2appc_claim_notification_title">Dapatkan %s Kredit APPC Sekarang!</string>
+  <string name="promo_update2appc_claim_notification_title">Dapatkan saldo Aptoide sebesar %s!</string>
   <!--Promo Center-->
   <string name="promo_update2appc_claim_notification_body">Jangan lupa untuk mengklaim hadiah Anda!</string>
   <string name="promo_center_pending_card_update_body">Untuk memperbarui %s</string>
   <!--Purchase Flow - Wallet Installation-->
   <string name="wallet_install_request_message_body">Untuk membeli item ini, Anda harus mendapatkan %s dulu.</string>
-  <string name="wallet_install_appcoins_wallet">Dompet AppCoins</string>
+  <string name="wallet_install_appcoins_wallet">Aptoide Wallet</string>
   <string name="wallet_install_complete_title">Instalasi selesai</string>
-  <string name="appc_not_supported_body">Sepertinya perangkat ini tidak mendukung AppCoins. Coba perangkat yang lain!</string>
-  <string name="wallet_install_request_already_installed_title">Instalasi Dompet AppCoins</string>
+  <string name="appc_not_supported_body">Sepertinya perangkat ini tidak mendukung Aptoide Wallet. Coba perangkat yang lain!</string>
+  <string name="wallet_install_request_already_installed_title">Instalasi Aptoide Wallet</string>
   <string name="wallet_install_request_already_installed_body">Nikmati bonus di setiap pembelian in-app!</string>
-  <string name="wallet_verification_message_update_wallet_to_claim">Perbarui Dompet AppCoins untuk menerima hadiah ini!</string>
+  <string name="wallet_verification_message_update_wallet_to_claim">Perbarui Aptoide Wallet untuk menerima hadiah ini!</string>
   <string name="wallet_verification_button_update">Perbarui sekarang</string>
   <!--POA exposure-->
   <string name="wallet_verification_button_update_wallet">Perbarui Dompet</string>
   <string name="poa_app_card_short">DAPATKAN %s</string>
-  <string name="poa_home_card_body">Pasang aplikasi ini, lalu sempatkan waktu 2 menit untuk mendapatkan Kredit AppCoins.</string>
+  <string name="poa_home_card_body">Instal aplikasi ini, lalu sempatkan waktu 2 menit untuk mendapatkan saldo Aptoide.</string>
   <string name="poa_app_view_card_body_1">Coba aplikasi ini selama 2 menit dan dapatkan</string>
-  <string name="poa_app_view_card_body_2">%1$s Kredit AppCoins (%2$s)</string>
+  <string name="poa_app_view_card_body_2">%1$s in Aptoide balance (%2$s)</string>
   <string name="poa_APPCC_left_body">Lekas! Hanya tersedia %s hadiah.</string>
   <string name="poa_time_left_days">HARI</string>
   <string name="poa_time_left_hours">JAM</string>
   <string name="poa_time_left_minutes">MENIT</string>
   <string name="poa_time_left_seconds">DETIK</string>
   <!--APPC Info View-->
-  <string name="appc_info_view_title_1">Semua Hal yang Perlu Anda Ketahui tentang AppCoins</string>
-  <string name="appc_info_view_body_1_variable">AppCoins dan Kredit AppCoins adalah mata uang untuk transaksi in-app. Hal terbaiknya? Anda akan mendapatkan <b>bonus hingga %s%% untuk semua pembelian!</b></string>
-  <string name="appc_info_view_body_1_variable_no_data">AppCoins dan Kredit AppCoins adalah mata uang untuk transaksi in-app. Hal terbaiknya? Anda akan mendapatkan <b>bonus untuk setiap pembelian!</b></string>
+  <string name="appc_info_view_title_1">Semua Hal yang Perlu Anda Ketahui tentang Aptoide Wallet</string>
+  <string name="appc_info_view_body_1_variable">Saldo Aptoide adalah mata uang untuk transaksi dalam aplikasi. Hal terbaiknya? Anda akan mendapatkan <b>bonus hingga %s%% untuk semua pembelian!</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">Saldo Aptoide adalah mata uang untuk transaksi dalam aplikasi. Hal terbaiknya? Anda akan mendapatkan <b>bonus untuk semua pembelian!</b></string>
   <string name="appc_info_view_title_2">Hal-hal yang Perlu Diprioritaskan</string>
-  <string name="appc_info_view_body_2">Anda perlu memasang Dompet AppCoins untuk mendapatkan hadiah dan memproses semua transaksi. Setelah dipasang, Dompet AppCoins akan melakukan segalanya untuk Anda!</string>
+  <string name="appc_info_view_body_2">Anda perlu menginstal Aptoide Wallet untuk mendapatkan hadiah dan memproses semua transaksi. Setelah diinstal, Aptoide Wallet akan melakukan segalanya untuk Anda!</string>
   <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_4">Bonus untuk Setiap Pembelian!</string>
   <string name="appc_info_view_title_5_variable">Anda akan mendapatkan Bonus hingga %s%% untuk setiap pembelian yang Anda lakukan dalam aplikasi dengan simbol %s. Raih manfaat dan jadilah gamer terbaik!</string>
@@ -505,12 +505,12 @@ ancaman apa pun!</string>
   <!--Search Filters-->
   <string name="search_filters_trusted">Tepercaya</string>
   <string name="search_filters_beta">Versi beta</string>
-  <string name="search_filters_appcoins">AppCoins</string>
+  <string name="search_filters_appcoins">Aptoide Wallet</string>
   <string name="search_filters_followed_stores">Toko yang diikuti</string>
   <!-- Out of space -->
   <string name="out_of_space_body">Anda membutuhkan %s untuk melanjutkan instalasi.</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Sekarang Dengan Sistem Pembayaran AppCoins</string>
+  <string name="promotional_now_with_appcoins">Sekarang kompatibel dengan Aptoide Wallet</string>
   <string name="promotional_new_version">Versi Baru</string>
   <string name="promotional_on_going_event">Acara terkini</string>
   <string name="promotional_new_in_aptoide">Sekarang tersedia di Aptoide</string>

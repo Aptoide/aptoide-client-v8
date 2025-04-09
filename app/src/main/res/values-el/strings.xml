@@ -372,94 +372,94 @@
   <!--URL -->
   <string name="my_stores_login_message">Συνδεθείτε τώρα και ξεκινήστε να μοιράζεστε τις εφαρμογές σας!</string>
   <!--APPC-->
-  <string name="appc_title_iab">Ξοδέψτε τα AppCoins σας</string>
-  <string name="appc_title_ads">Ανταμειφθείτε με AppCoins</string>
-  <string name="appc_title_featured">Προτεινόμενες Εφαρμογές AppCoins</string>
-  <string name="appc_home_bundle_iab">Χρησιμοποιήστε τα AppCoins σας</string>
-  <string name="appc_home_bundle_poa">Κερδίστε AppCoins Credits</string>
-  <string name="appc_title_about_appcoins">Σχετικά με τα AppCoins</string>
+  <string name="appc_title_iab">Ξοδέψτε το Υπόλοιπο Aptoide σας</string>
+  <string name="appc_title_ads">Ανταμειφθείτε με Aptoide Balance</string>
+  <string name="appc_title_featured">Προτεινόμενες Εφαρμογές Bonus</string>
+  <string name="appc_home_bundle_iab">Χρησιμοποιήστε το Υπόλοιπο Aptoide σας</string>
+  <string name="appc_home_bundle_poa">Κερδίστε Υπόλοιπο Aptoide</string>
+  <string name="appc_title_about_appcoins">Σχετικά με το Aptoide Wallet</string>
   <string name="appc_message_appview_appcoins_reward">Δοκιμάστε αυτήν την εφαρμογή για 2 λεπτά και λάβετε\n%s</string>
   <string name="appc_message_appview_appcoins_reward_with_value">Δοκιμάστε αυτήν την εφαρμογή για 2 λεπτά και λάβετε\n%1$s %2$s</string>
-  <string name="appc_message_appview_appcoins_iab">Αγορές εντός εφαρμογής με AppCoins</string>
-  <string name="appc_card_short">APPCOINS</string>
-  <string name="appc_title_homepage_card">Μπορείτε να λάβετε AppCoins τώρα!</string>
-  <string name="appc_message_homepage_card">Το κρυπτονόμισμα για την οικονομία των εφαρμογών έφτασε! Λάβετε δωρεάν AppCoins, χρησιμοποιώντας τις αγαπημένες σας εφαρμογές.</string>
-  <string name="appc_title_settings_appcoins_wallet">AppCoins Wallet</string>
-  <string name="appc_title_bundle">Εφαρμογές με AppCoins</string>
+  <string name="appc_message_appview_appcoins_iab">Αγορές εντός εφαρμογής με το Aptoide Wallet</string>
+  <string name="appc_card_short">BONUS</string>
+  <string name="appc_title_homepage_card">Μπορείτε τώρα να αποκτήσετε υπόλοιπο Aptoide!</string>
+  <string name="appc_message_homepage_card">Το νόμισμα για την οικονομία των εφαρμογών έφτασε! Λάβετε δωρεάν υπόλοιπο Aptoide, χρησιμοποιώντας τις αγαπημένες σας εφαρμογές.</string>
+  <string name="appc_title_settings_appcoins_wallet">Aptoide Wallet</string>
+  <string name="appc_title_bundle">Bonus Εφαρμογές</string>
   <!--Editorial Content-->
   <string name="appc_verification_cancelled_by_user_message">Για να λάβετε αμοιβές, πρέπει να πιστοποιήσετε το wallet σας. Θα χρειαστούν μόνο λίγα δευτερόλεπτα!</string>
   <string name="editorial_reactions_login_short">Συνδεθείτε για να συνεχίσετε να πατάτε «Μου αρέσει»!</string>
   <!--Promotion in APPC-C (old)-->
   <string comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)" name="editorial_bottom_follow_us">Ακολουθήστε μας</string>
-  <string name="holidayspromotion_message_1">Εγκαταστήστε τις ακόλουθες εφαρμογές και λάβετε έως %s AppCoins Credits για να ξοδέψετε στα αγαπημένα σας παιχνίδια!</string>
-  <string name="holidayspromotion_message_2">Αρχικά, εγκαταστήστε το AppCoins Wallet για να λάβετε τα AppCoins Credits.</string>
+  <string name="holidayspromotion_message_1">Εγκαταστήστε τις ακόλουθες εφαρμογές και λάβετε έως και %s σε Υπόλοιπο Aptoide για να ξοδέψετε στα αγαπημένα σας παιχνίδια!</string>
+  <string name="holidayspromotion_message_2">Αρχικά, εγκαταστήστε το Aptoide Wallet για να λάβετε το Υπόλοιπό σας Aptoide.</string>
   <string name="holidayspromotion_message_3">Στη συνέχεια εγκαταστήστε οποιαδήποτε από αυτά τα παιχνίδια για να κερδίσετε τις αμοιβές σας!</string>
   <string name="holidayspromotion_button_claimed">Διεκδικήθηκε</string>
-  <string name="holidayspromotion_message_popup">Λάβετε %s AppCoins Credits εγκαθιστώντας εφαρμογές και ξοδέψτε τα στα αγαπημένα σας παιχνίδια!</string>
+  <string name="holidayspromotion_message_popup">Λάβετε %s σε Υπόλοιπο Aptoide εγκαθιστώντας εφαρμογές και ξοδέψτε το στα αγαπημένα σας παιχνίδια!</string>
   <string name="holidayspromotion_button_popup">Δείτε το!</string>
   <string name="promotion_over_title">Δεν προλάβατε!</string>
   <string name="promotion_over_message">Αυτή η προώθηση μόλις τελείωσε, αλλά θα έχουμε κι άλλη σύντομα!</string>
   <!--Promotion with FIAT-->
-  <string name="FIATpromotion_install_to_get_short">Εγκαταστήστε για να λάβετε %1$s AppCoins Credits (%2$s)</string>
-  <string name="FIATpromotion_update_to_get_short">Ενημερώστε για να λάβετε %1$s AppCoins Credits (%2$s)</string>
+  <string name="FIATpromotion_install_to_get_short">Εγκαταστήστε για να λάβετε %1$s σε υπόλοιπο Aptoide (%2$s)</string>
+  <string name="FIATpromotion_update_to_get_short">Ενημερώστε για να λάβετε %1$s σε υπόλοιπο Aptoide (%2$s)</string>
   <!--Get Wallet Address-->
   <string name="promotion_claim_button">ΔΙΕΚΔΙΚΗΣΗ</string>
-  <string name="holidayspromotion_title_wallet">Διεύθυνση AppCoins Wallet</string>
-  <string name="holidayspromotion_message_wallet">Πείτε μας τη διεύθυνση του wallet σας! Πατήστε παρακάτω και θα τα αναλάβει όλα το AppCoins Wallet.</string>
+  <string name="holidayspromotion_title_wallet">Διεύθυνση Aptoide Wallet</string>
+  <string name="holidayspromotion_message_wallet">Πείτε μας τη διεύθυνση του wallet σας! Πατήστε παρακάτω και θα τα αναλάβει όλα το Aptoide Wallet.</string>
   <string name="holidayspromotion_short_wallet_field">Διεύθυνση Wallet</string>
   <string name="holidayspromotion_button_wallet_get">Ας το κάνουμε</string>
   <string name="holidayspromotion_short_wallet_invalid">Μη έγκυρη διεύθυνση wallet</string>
   <string name="holidayspromotion_title_completed">Τέλος!</string>
-  <string name="holidayspromotion_message_completed">Τα AppCoins Credits σας θα είναι σύντομα διαθέσιμα στο wallet σας! Καλό παιχνίδι!</string>
+  <string name="holidayspromotion_message_completed">Το υπόλοιπο Aptoide σας θα είναι σύντομα διαθέσιμο στο wallet σας! Καλό παιχνίδι!</string>
   <string name="holidayspromotion_button_completed">Τέλος</string>
   <string name="holidayspromotion_title_error_claimed">Ωχ…</string>
   <string name="holidayspromotion_short_error_claimed">Έχετε ήδη διεκδικήσει αυτήν την αμοιβή!</string>
   <!--APPC install Promotion-->
-  <string name="wallet_promotion_title">Λάβετε %s APPC Credits τώρα!</string>
-  <string name="wallet_promotion_wallet_installed_message">Εγκαταστήστε αυτήν την εφαρμογή και λάβετε %s APPC Credits για να ξοδέψετε στα αγαπημένα σας παιχνίδια.</string>
-  <string name="wallet_promotion_wallet_notinstalled_message">Εγκαταστήστε αυτήν την εφαρμογή και λάβετε %s APPC Credits. Θα χρειαστείτε το AppCoins Wallet για να τα λάβετε.</string>
-  <string name="wallet_promotion_wallet_installed_update_message">Ενημερώστε αυτήν την εφαρμογή και λάβετε %s APPC Credits για να τα ξοδέψετε στα αγαπημένα σας παιχνίδια.</string>
-  <string name="wallet_promotion_wallet_claim_message">Μπορείτε να διεκδικήσετε %s APPC Credits. Χρησιμοποιήστε τα για αγορές στις αγαπημένες σας εφαρμογές.</string>
+  <string name="wallet_promotion_title">Λάβετε τώρα %s σε υπόλοιπο Aptoide!</string>
+  <string name="wallet_promotion_wallet_installed_message">Εγκαταστήστε αυτήν την εφαρμογή και λάβετε %s σε υπόλοιπο Aptoide για να ξοδέψετε στα αγαπημένα σας παιχνίδια.</string>
+  <string name="wallet_promotion_wallet_notinstalled_message">Εγκαταστήστε αυτήν την εφαρμογή και λάβετε %s υπόλοιπο Aptoide. Θα χρειαστείτε το Aptoide Wallet για να το λάβετε.</string>
+  <string name="wallet_promotion_wallet_installed_update_message">Ενημερώστε αυτήν την εφαρμογή και λάβετε %s σε υπόλοιπο Aptoide για να ξοδέψετε στα αγαπημένα σας παιχνίδια.</string>
+  <string name="wallet_promotion_wallet_claim_message">Μπορείτε να διεκδικήσετε %s σε υπόλοιπο Aptoide. Χρησιμοποιήστε το για αγορές στις αγαπημένες σας εφαρμογές.</string>
   <string name="wallet_promotion_install_button">Εγκατάσταση Wallet</string>
   <string name="wallet_promotion_no_button">Όχι, ευχαριστώ</string>
-  <string name="wallet_promotion_button_install_disabled">Εγκαταστήστε για να λάβετε %s APPC Credits</string>
+  <string name="wallet_promotion_button_install_disabled">Εγκαταστήστε για να λάβετε %s σε υπόλοιπο Aptoide</string>
   <!--AppCoins Remove Ads Wallet Promotion -->
-  <string name="wallet_promotion_button_claim">Διεκδικήστε τα %s APPC Credits σας</string>
+  <string name="wallet_promotion_button_claim">Διεκδικήστε το %s σας σε υπόλοιπο Aptoide</string>
   <!--Play to APPC - Migrator - Promotion-->
   <string name="promo_update2appc_data_disclaimer">Ελέγξτε στις ρυθμίσεις του παιχνιδιού εάν μπορείτε να αποθηκεύσετε την πρόοδό σας.</string>
-  <string name="promo_update2appc_appview_update_button">Ενημέρωση σε AppCoins</string>
+  <string name="promo_update2appc_appview_update_button">Update to bonus version</string>
   <string name="promo_update2appc_notification_dismiss_button">Απόρριψη</string>
   <string name="promo_update2appc_notification_claim_button">Διεκδίκηση</string>
-  <string name="promo_update2appc_claim_notification_title">Λάβετε %s APPC Credits τώρα!</string>
+  <string name="promo_update2appc_claim_notification_title">Λάβετε %s σε υπόλοιπο Aptoide!</string>
   <!--Promo Center-->
   <string name="promo_update2appc_claim_notification_body">Μην ξεχάσετε να διεκδικήσετε την αμοιβή σας!</string>
   <string name="promo_center_pending_card_update_body">Για την ενημέρωση του %s</string>
   <!--Purchase Flow - Wallet Installation-->
   <string name="wallet_install_request_message_body">Για να πραγματοποιήσετε αυτήν την αγορά, πρέπει πρώτα να λάβετε το %s.</string>
-  <string name="wallet_install_appcoins_wallet">AppCoins Wallet</string>
+  <string name="wallet_install_appcoins_wallet">Aptoide Wallet</string>
   <string name="wallet_install_complete_title">Η εγκατάσταση ολοκληρώθηκε</string>
-  <string name="appc_not_supported_body">Φαίνεται πως αυτή η συσκευή δεν υποστηρίζει τα AppCoins. Δοκιμάστε κάτι άλλο!</string>
-  <string name="wallet_install_request_already_installed_title">Εγκατάσταση AppCoins Wallet</string>
+  <string name="appc_not_supported_body">Φαίνεται πως αυτή η συσκευή δεν υποστηρίζει το Aptoide Wallet. Δοκιμάστε με μια άλλη!</string>
+  <string name="wallet_install_request_already_installed_title">Εγκατάσταση Aptoide Wallet</string>
   <string name="wallet_install_request_already_installed_body">Απολαύστε το bonus σε κάθε αγορά εντός εφαρμογής!</string>
-  <string name="wallet_verification_message_update_wallet_to_claim">Ενημερώστε το AppCoins Wallet για να λάβετε αυτήν την αμοιβή!</string>
+  <string name="wallet_verification_message_update_wallet_to_claim">Ενημερώστε το Aptoide Wallet για να λάβετε αυτήν την ανταμοιβή!</string>
   <string name="wallet_verification_button_update">Ενημέρωση τώρα</string>
   <!--POA exposure-->
   <string name="wallet_verification_button_update_wallet">Ενημέρωση Wallet</string>
   <string name="poa_app_card_short">ΚΕΡΔΟΣ %s</string>
-  <string name="poa_home_card_body">Εγκαταστήστε αυτές τις εφαρμογές και χρησιμοποιήστε τες για 2 λεπτά για να κερδίσετε AppCoins Credits.</string>
+  <string name="poa_home_card_body">Εγκαταστήστε αυτές τις εφαρμογές και χρησιμοποιήστε τες για 2 λεπτά για να κερδίσετε υπόλοιπο Aptoide.</string>
   <string name="poa_app_view_card_body_1">Δοκιμάστε αυτήν την εφαρμογή για 2 λεπτά και λάβετε</string>
-  <string name="poa_app_view_card_body_2">%1$s AppCoins Credits (%2$s)</string>
+  <string name="poa_app_view_card_body_2">%1$s in Aptoide balance (%2$s)</string>
   <string name="poa_APPCC_left_body">Βιαστείτε! Έχουν απομείνει μόνο %s αμοιβές.</string>
   <string name="poa_time_left_days">ΗΜΕΡΕΣ</string>
   <string name="poa_time_left_hours">ΩΡΕΣ</string>
   <string name="poa_time_left_minutes">ΛΕΠΤΑ</string>
   <string name="poa_time_left_seconds">ΔΕΥΤΕΡΟΛΕΠΤΑ</string>
   <!--APPC Info View-->
-  <string name="appc_info_view_title_1">Όλα όσα πρέπει να ξέρετε για τα AppCoins</string>
-  <string name="appc_info_view_body_1_variable">Τα AppCoins και τα AppCoins Credits είναι τα νομίσματα για συναλλαγές εντός εφαρμογών. Το καλύτερο; Θα κερδίζετε έως <b>%s%% bonus σε όλες τις αγορές!</b></string>
-  <string name="appc_info_view_body_1_variable_no_data">Τα AppCoins και τα AppCoins Credits είναι τα νομίσματα για συναλλαγές εντός εφαρμογών. Το καλύτερο; Θα κερδίζετε <b>bonus σε κάθε αγορά!</b></string>
+  <string name="appc_info_view_title_1">Όλα όσα πρέπει να ξέρετε για το Aptoide Wallet</string>
+  <string name="appc_info_view_body_1_variable">Το υπόλοιπο Aptoide είναι το νόμισμα για συναλλαγές εντός εφαρμογών. Το καλύτερο; Θα κερδίζετε έως <b>%s%% bonus σε όλες τις αγορές!</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">Το υπόλοιπο Aptoide είναι το νόμισμα για συναλλαγές εντός εφαρμογών. Το καλύτερο; Θα κερδίζετε <b>%% bonus σε κάθε αγορά!</b></string>
   <string name="appc_info_view_title_2">Καταρχάς</string>
-  <string name="appc_info_view_body_2">Πρέπει να εγκαταστήσετε το AppCoins Wallet για να λαμβάνετε αμοιβές και να πραγματοποιείτε συναλλαγές. Μόλις το εγκαταστήσετε, θα γίνονται όλα μέσα από αυτό!</string>
+  <string name="appc_info_view_body_2">Πρέπει να εγκαταστήσετε το Aptoide Wallet για να λαμβάνετε αμοιβές και να πραγματοποιείτε συναλλαγές. Μόλις το εγκαταστήσετε, θα γίνονται όλα μέσα από αυτό!</string>
   <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_4">Ένα Bonus σε Κάθε Αγορά!</string>
   <string name="appc_info_view_title_5_variable">Θα λαμβάνετε έως %s%% Bonus για κάθε αγορά που πραγματοποιείτε εντός των εφαρμογών με το σύμβολο %s. Εκμεταλλευτείτε το και γίνετε ο απόλυτος παίκτης!</string>
@@ -504,12 +504,12 @@
   <!--Search Filters-->
   <string name="search_filters_trusted">Έμπιστα</string>
   <string name="search_filters_beta">Εκδόσεις beta</string>
-  <string name="search_filters_appcoins">AppCoins</string>
+  <string name="search_filters_appcoins">Aptoide Wallet</string>
   <string name="search_filters_followed_stores">Stores που ακολουθούνται</string>
   <!-- Out of space -->
   <string name="out_of_space_body">Χρειάζονται %s για να συνεχιστεί η εγκατάσταση.</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Τώρα με το Σύστημα Πληρωμών AppCoins</string>
+  <string name="promotional_now_with_appcoins">Τώρα συμβατό με το Aptoide Wallet</string>
   <string name="promotional_new_version">Νέα Έκδοση</string>
   <string name="promotional_on_going_event">Τρέχουσα εκδήλωση</string>
   <string name="promotional_new_in_aptoide">Τώρα διαθέσιμο στο Aptoide</string>

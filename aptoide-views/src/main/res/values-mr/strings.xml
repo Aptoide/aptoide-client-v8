@@ -14,7 +14,7 @@
   <string name="incentives_badge_amount">%s%%</string>
   <string name="incentives_badge_bonus">बोनस</string>
   <string name="incentives_banner_title">आपल्या प्रत्येक खरेदीत %s%% पर्यंत बोनस!</string>
-  <string name="incentives_banner_body">%s चिन्ह असणार्‍या अॅपमध्ये जास्त वस्तु मिळविण्यासाठी आपल्या अॅपकॉईन्स वापरा</string>
+  <string name="incentives_banner_body">Use your Aptoide balance to get more items in apps with this symbol %s</string>
   <!-- Download View -->
   <string name="appview_short_downloading">डाउनलोड करत आहे</string>
   <string name="apps_short_download_paused">डाउनलोड थांबविला गेला आहे</string>

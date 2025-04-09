@@ -373,94 +373,94 @@
   <!--URL -->
   <string name="my_stores_login_message">Hemen giriş yap ve uygulamalarını paylaşmaya başla!</string>
   <!--APPC-->
-  <string name="appc_title_iab">AppCoin\'lerini Harca</string>
-  <string name="appc_title_ads">AppCoins ile ödül alın</string>
-  <string name="appc_title_featured">Öne Çıkan AppCoins Uygulamaları</string>
-  <string name="appc_home_bundle_iab">AppCoins\'lerinizi Kullanın</string>
-  <string name="appc_home_bundle_poa">AppCoins Credits Kazanın</string>
-  <string name="appc_title_about_appcoins">AppCoins hakkında</string>
+  <string name="appc_title_iab">Aptoide Bakiyeni Harca</string>
+  <string name="appc_title_ads">Aptoide Bakiyesi ile Ödül Kazan</string>
+  <string name="appc_title_featured">Öne Çıkan Bonus Uygulamalar</string>
+  <string name="appc_home_bundle_iab">Aptoide Bakiyeni Kullan</string>
+  <string name="appc_home_bundle_poa">Aptoide Bakiyesi Kazan</string>
+  <string name="appc_title_about_appcoins">Aptoide Wallet Hakkında</string>
   <string name="appc_message_appview_appcoins_reward">Bu uygulamayı 2 dakika dene\nve %s kazan</string>
   <string name="appc_message_appview_appcoins_reward_with_value">Bu uygulamayı 2 dakika dene\nve %1$s %2$s kazan</string>
-  <string name="appc_message_appview_appcoins_iab">AppCoins\'le uygulama içi satın alımlar</string>
-  <string name="appc_card_short">APPCOINS</string>
-  <string name="appc_title_homepage_card">Hemen AppCoins edinebilirsiniz!</string>
-  <string name="appc_message_homepage_card">Uygulama ekonomisinin kripto para birimi burada! En sevdiğin uygulamaları kullanarak ücretsiz AppCoins kazan.</string>
-  <string name="appc_title_settings_appcoins_wallet">AppCoins Wallet</string>
-  <string name="appc_title_bundle">AppCoins Uygulamaları</string>
+  <string name="appc_message_appview_appcoins_iab">Aptoide Wallet ile uygulama içi alışverişler</string>
+  <string name="appc_card_short">BONUS</string>
+  <string name="appc_title_homepage_card">Aptoide bakiyesini hemen alabilirsin!</string>
+  <string name="appc_message_homepage_card">Uygulama ekonomisinin para birimi burada! En sevdiğin uygulamaları kullanarak ücretsiz Aptoide bakiyesi kazan.</string>
+  <string name="appc_title_settings_appcoins_wallet">Aptoide Wallet</string>
+  <string name="appc_title_bundle">Bonus Uygulamalar</string>
   <!--Editorial Content-->
   <string name="appc_verification_cancelled_by_user_message">Ödül almak için cüzdanınızı doğrulamanız gerekiyor. Bu sadece birkaç saniyenizi alır!</string>
   <string name="editorial_reactions_login_short">Beğenmeyi sürdürmek için giriş yapın!</string>
   <!--Promotion in APPC-C (old)-->
   <string comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)" name="editorial_bottom_follow_us">Bizi takip edin</string>
-  <string name="holidayspromotion_message_1">Aşağıdaki uygulamaları yükleyin ve en sevdiğiniz oyunlarda harcamak için en az %s AppCoins Credits kazanın!</string>
-  <string name="holidayspromotion_message_2">İlk olarak, AppCoins Credits\'inizi almak için AppCoin Wallet\'ı edinin.</string>
+  <string name="holidayspromotion_message_1">Aşağıdaki uygulamaları yükle ve en sevdiğin oyunlarda harcamak için en az %s Aptoide bakiyesi kazan!</string>
+  <string name="holidayspromotion_message_2">İlk olarak, Aptoide bakiyeni almak için Aptoide Wallet\'ı edin.</string>
   <string name="holidayspromotion_message_3">Ardından, ödüllerinizi kazanmak için bu oyunların herhangi birini yükleyin!</string>
   <string name="holidayspromotion_button_claimed">Alındı</string>
-  <string name="holidayspromotion_message_popup">Uygulamaları yükleyerek %s AppCoins Credits kazanın ve bunları en sevdiğiniz oyunlarda harcayın!</string>
+  <string name="holidayspromotion_message_popup">Uygulamaları yükleyerek %s Aptoide bakiyesi kazan ve bunu en sevdiğin oyunlarda harca!</string>
   <string name="holidayspromotion_button_popup">Göz atın!</string>
   <string name="promotion_over_title">Kaçırdınız!</string>
   <string name="promotion_over_message">Bu promosyon bitti ama yakında başka bir promosyonumuz olacak!</string>
   <!--Promotion with FIAT-->
-  <string name="FIATpromotion_install_to_get_short">%1$s AppCoins Credits (%2$s) kazanmak için yükleyin</string>
-  <string name="FIATpromotion_update_to_get_short">%1$s AppCoins Credits (%2$s) kazanmak için güncelleyin</string>
+  <string name="FIATpromotion_install_to_get_short">%1$s Aptoide bakiyesi almak için yükle (%2$s)</string>
+  <string name="FIATpromotion_update_to_get_short">%1$s Aptoide bakiyesi almak için güncelle (%2$s)</string>
   <!--Get Wallet Address-->
   <string name="promotion_claim_button">AL</string>
-  <string name="holidayspromotion_title_wallet">AppCoins Wallet Adresi</string>
-  <string name="holidayspromotion_message_wallet">Bize cüzdan adresinizi söyleyin! Aşağıya dokunduğunuzda AppCoins Wallet gerisini halleder.</string>
+  <string name="holidayspromotion_title_wallet">Aptoide Wallet Adresi</string>
+  <string name="holidayspromotion_message_wallet">Cüzdan adresini bizimle paylaş! Aşağıya dokun, gerisini Aptoide Wallet halletsin.</string>
   <string name="holidayspromotion_short_wallet_field">Cüzdan adresi</string>
   <string name="holidayspromotion_button_wallet_get">Halledin</string>
   <string name="holidayspromotion_short_wallet_invalid">Geçersiz cüzdan adresi</string>
   <string name="holidayspromotion_title_completed">Bitti!</string>
-  <string name="holidayspromotion_message_completed">AppCoins Credits\'iniz yakında cüzdanınızda olacak! Oyunların keyfini çıkarın!</string>
+  <string name="holidayspromotion_message_completed">Aptoide bakiyen yakında cüzdanında olacak! Oyunların keyfini çıkar!</string>
   <string name="holidayspromotion_button_completed">Bitti</string>
   <string name="holidayspromotion_title_error_claimed">Hata…</string>
   <string name="holidayspromotion_short_error_claimed">Bu ödülü zaten aldınız!</string>
   <!--APPC install Promotion-->
-  <string name="wallet_promotion_title">Hemen %s APPC Credits kazanın!</string>
-  <string name="wallet_promotion_wallet_installed_message">Bu uygulamayı yükleyin ve en sevdiğiniz oyunlarda harcamak için %s APPC Credits kazanın.</string>
-  <string name="wallet_promotion_wallet_notinstalled_message">Bu uygulamayı yükleyin ve %s APPC Credits kazanın. Kredileri almak için AppCoins Wallet\'a ihtiyacınız var.</string>
-  <string name="wallet_promotion_wallet_installed_update_message">Bu uygulamayı güncelleyin ve en sevdiğiniz oyunlarda harcamak için %s APPC Credits kazanın.</string>
-  <string name="wallet_promotion_wallet_claim_message">Ücretsiz %s APPC Credits alabilirsiniz. Bunları favori uygulamalarınızdaki öğeleri satın almak için kullanın.</string>
+  <string name="wallet_promotion_title">%s Aptoide bakiyesi al!</string>
+  <string name="wallet_promotion_wallet_installed_message">Bu uygulamayı yükle ve en sevdiğin oyunlarda harcamak için %s Aptoide bakiyesi kazan.</string>
+  <string name="wallet_promotion_wallet_notinstalled_message">Bu uygulamayı yükle ve %s APPC Credits kazan. Kredileri almak için Aptoide Wallet\'a ihtiyacın var.</string>
+  <string name="wallet_promotion_wallet_installed_update_message">Bu uygulamayı güncelle ve en sevdiğin oyunlarda harcamak için %s Aptoide bakiyesi kazan.</string>
+  <string name="wallet_promotion_wallet_claim_message">%s Aptoide bakiyesi alabilirsin. Bunları favori uygulamalarındaki öğeleri satın almak için kullan.</string>
   <string name="wallet_promotion_install_button">Cüzdanı Yükleyin</string>
   <string name="wallet_promotion_no_button">Hayır, teşekkürler</string>
-  <string name="wallet_promotion_button_install_disabled">%s APPC Credits edinmek için yükleyin</string>
+  <string name="wallet_promotion_button_install_disabled">%s Aptoide bakiyesi almak için yükle</string>
   <!--AppCoins Remove Ads Wallet Promotion -->
-  <string name="wallet_promotion_button_claim">%s APPC Credits\'inizi alın</string>
+  <string name="wallet_promotion_button_claim">%s Aptoide bakiyeni al</string>
   <!--Play to APPC - Migrator - Promotion-->
   <string name="promo_update2appc_data_disclaimer">İlerlemenizi kaydetmek için oyun ayarlarından kontrol edin.</string>
-  <string name="promo_update2appc_appview_update_button">AppCoins\'e Güncelleyin</string>
+  <string name="promo_update2appc_appview_update_button">Update to bonus version</string>
   <string name="promo_update2appc_notification_dismiss_button">Yoksay</string>
   <string name="promo_update2appc_notification_claim_button">Al</string>
-  <string name="promo_update2appc_claim_notification_title">Hemen %s APPC Credits Kazanın!</string>
+  <string name="promo_update2appc_claim_notification_title">%s Aptoide bakiyesi al!</string>
   <!--Promo Center-->
   <string name="promo_update2appc_claim_notification_body">Ödülünüzü almayı unutmayın!</string>
   <string name="promo_center_pending_card_update_body">%s uygulamasını güncellediğiniz için</string>
   <!--Purchase Flow - Wallet Installation-->
   <string name="wallet_install_request_message_body">Bu öğeyi satın almak için önce %s almanız gerekiyor.</string>
-  <string name="wallet_install_appcoins_wallet">AppCoins Wallet</string>
+  <string name="wallet_install_appcoins_wallet">Aptoide Wallet</string>
   <string name="wallet_install_complete_title">Yükleme Tamamlandı</string>
-  <string name="appc_not_supported_body">Bu cihaz AppCoins\'i desteklemiyor gibi görünüyor. Farklı bir cihaz deneyin!</string>
-  <string name="wallet_install_request_already_installed_title">AppCoins Wallet Yüklemesi</string>
+  <string name="appc_not_supported_body">Bu cihaz Aptoide Wallet\'ı desteklemiyor gibi görünüyor. Farklı bir cihaz dene!</string>
+  <string name="wallet_install_request_already_installed_title">Aptoide Wallet Yüklemesi</string>
   <string name="wallet_install_request_already_installed_body">Her uygulama içi satın alma işleminde bonusun keyfini çıkarın!</string>
-  <string name="wallet_verification_message_update_wallet_to_claim">Bu ödülü almak için AppCoins Wallet\'ı güncelleyin!</string>
+  <string name="wallet_verification_message_update_wallet_to_claim">Bu ödülü almak için Aptoide Wallet\'ı güncelle!</string>
   <string name="wallet_verification_button_update">Hemen güncelleyin</string>
   <!--POA exposure-->
   <string name="wallet_verification_button_update_wallet">Wallet\'ı Güncelle</string>
   <string name="poa_app_card_short">%s KAZANIN</string>
-  <string name="poa_home_card_body">Bu uygulamaları yükleyin ve AppCoins Credits kazanmak için uygulamada 2 dakika geçirin.</string>
+  <string name="poa_home_card_body">Bu uygulamaları yükle ve Aptoide bakiyesi kazanmak için uygulamalarda 2 dakika geçir.</string>
   <string name="poa_app_view_card_body_1">Bu uygulamayı 2 dakika denediğinizde ödülünüz</string>
-  <string name="poa_app_view_card_body_2">%1$s AppCoins Credits (%2$s)</string>
+  <string name="poa_app_view_card_body_2">%1$s in Aptoide balance (%2$s)</string>
   <string name="poa_APPCC_left_body">Acele edin! Sadece %s ödül var.</string>
   <string name="poa_time_left_days">GÜN</string>
   <string name="poa_time_left_hours">SAAT</string>
   <string name="poa_time_left_minutes">DAKİKA</string>
   <string name="poa_time_left_seconds">SANİYE</string>
   <!--APPC Info View-->
-  <string name="appc_info_view_title_1">AppCoins Hakkında Bilmeniz Gereken Her Şey</string>
-  <string name="appc_info_view_body_1_variable">AppCoins ve AppCoins Credits, uygulama içi işlemler için para birimidir. En iyi kısmıysa, <b>tüm satın alma işlemlerinde %%%s varan oranlarda bonus</b> kazanacak olmanız!</string>
-  <string name="appc_info_view_body_1_variable_no_data">AppCoins ve AppCoins Credits, uygulama içi işlemler için para birimidir. En iyi kısmı ne mi? <b>Her satın alma işleminde bonus</b> kazanacak olmanız!</string>
+  <string name="appc_info_view_title_1">Aptoide Wallet Hakkında Bilmen Gereken Her Şey</string>
+  <string name="appc_info_view_body_1_variable">Aptoide bakiyesi, uygulama içi işlemler için para birimidir. En iyi kısmıysa, <b>tüm satın alma işlemlerinde %%%s varan oranlarda bonus</b> kazanacak olman!</string>
+  <string name="appc_info_view_body_1_variable_no_data">Aptoide bakiyesi, uygulama içi işlemler için para birimidir. En iyi kısmıysa, <b>tüm satın alma işlemlerinde bonus</b> kazanacak olman!</string>
   <string name="appc_info_view_title_2">Her Şeyden Önce</string>
-  <string name="appc_info_view_body_2">Ödül almak ve işlem yapmak için AppCoins Wallet\'ı yüklemeniz gerekiyor. Yükledikten sonra sizin için her şeyi yapacak!</string>
+  <string name="appc_info_view_body_2">Ödül almak ve işlem yapmak için Aptoide Wallet\'ı yüklemen gerekiyor. Yükledikten sonra her şeyi senin yerine halledecek!</string>
   <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_4">Her Satın Alma İşlemi için Bonus!</string>
   <string name="appc_info_view_title_5_variable">%s sembollü uygulamalarda yaptığınız satın alma işlemleri için %%%s oranına varan Bonus kazanırsınız. Fırsattan yararlanın ve en iyi oyuncu siz olun!</string>
@@ -505,12 +505,12 @@
   <!--Search Filters-->
   <string name="search_filters_trusted">Güvenilir</string>
   <string name="search_filters_beta">Beta sürümler</string>
-  <string name="search_filters_appcoins">AppCoins</string>
+  <string name="search_filters_appcoins">Aptoide Wallet</string>
   <string name="search_filters_followed_stores">Takip edilen mağazalar</string>
   <!-- Out of space -->
   <string name="out_of_space_body">Yüklemeye devam etmek için %s gerekli.</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Artık AppCoins Ödeme Sistemiyle</string>
+  <string name="promotional_now_with_appcoins">Artık Aptoide Wallet ile uyumlu</string>
   <string name="promotional_new_version">Yeni Sürüm</string>
   <string name="promotional_on_going_event">Devam eden etkinlik</string>
   <string name="promotional_new_in_aptoide">Artık Aptoide\'de mevcut</string>

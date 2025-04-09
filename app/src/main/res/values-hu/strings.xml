@@ -372,94 +372,94 @@
   <!--URL -->
   <string name="my_stores_login_message">Jelentkezzen be és ossza meg appjait!</string>
   <!--APPC-->
-  <string name="appc_title_iab">AppCoin-ok elköltése</string>
-  <string name="appc_title_ads">Szerezzen AppCoin-okat</string>
-  <string name="appc_title_featured">Kiemelt AppCoins Appok</string>
-  <string name="appc_home_bundle_iab">AppCoinok elköltése</string>
-  <string name="appc_home_bundle_poa">Szerezz AppCoins krediteket</string>
-  <string name="appc_title_about_appcoins">Az AppCoin-okról</string>
+  <string name="appc_title_iab">Használd az Aptoide egyenleged</string>
+  <string name="appc_title_ads">Jutalom Aptoide egyenleg formájában</string>
+  <string name="appc_title_featured">Kiemelt bónusz appok</string>
+  <string name="appc_home_bundle_iab">Használd az Aptoide egyenleged</string>
+  <string name="appc_home_bundle_poa">Szerezz Aptoide egyenleget</string>
+  <string name="appc_title_about_appcoins">Az Aptoide Walletről</string>
   <string name="appc_message_appview_appcoins_reward">Próbáld ki ezt az appot 2 percen át \n%s jutalomért</string>
   <string name="appc_message_appview_appcoins_reward_with_value">Próbáld ki ezt az appot 2 percen át \n%1$s %2$s jutalomért</string>
-  <string name="appc_message_appview_appcoins_iab">Appon belüli vásárlások AppCoins-szal</string>
-  <string name="appc_card_short">APPCOINOK</string>
-  <string name="appc_title_homepage_card">Már szerezhetsz AppCoin-okat!</string>
-  <string name="appc_message_homepage_card">Megérkezett az alkalmazásokon belüli vásárlásokat segítő kriptovaluta! Kedvenc appjaid használatával kaphatsz AppCoin-okat.</string>
-  <string name="appc_title_settings_appcoins_wallet">AppCoins pénztárca</string>
-  <string name="appc_title_bundle">AppCoins appok</string>
+  <string name="appc_message_appview_appcoins_iab">Appon belüli vásárlás az Aptoide Wallettel</string>
+  <string name="appc_card_short">BÓNUSZ</string>
+  <string name="appc_title_homepage_card">Most Aptoide egyenleget szerezhetsz!</string>
+  <string name="appc_message_homepage_card">Megérkezett az alkalmazásokon belüli vásárlásokat segítő valuta! Kedvenc appjaid használatával kaphatsz Aptoide egyenleget.</string>
+  <string name="appc_title_settings_appcoins_wallet">Aptoide Wallet</string>
+  <string name="appc_title_bundle">Bónusz appok</string>
   <!--Editorial Content-->
   <string name="appc_verification_cancelled_by_user_message">A jutalmak megszerzéséhez hitelesítened kell a pénztárcád. Csak néhány másodpercet vesz igénybe.</string>
   <string name="editorial_reactions_login_short">Jelentkezz be, hogy lépést tarthass a kedvelésekkel!</string>
   <!--Promotion in APPC-C (old)-->
   <string comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)" name="editorial_bottom_follow_us">Kövess minket</string>
-  <string name="holidayspromotion_message_1">Telepítsd fel az alábbi appokat, hogy akár %s AppCoins kreditet kapj, melyeket kedvenc játékaidban költhetsz el!</string>
-  <string name="holidayspromotion_message_2">Először is töltsd le az AppCoins Wallet-et, hogy AppCoins Credits-eket kaphass.</string>
+  <string name="holidayspromotion_message_1">Telepítsd az alábbi appokat, hogy akár %s Aptoide egyenleget kapj, melyet kedvenc játékaidban költheted el!</string>
+  <string name="holidayspromotion_message_2">Először is töltsd le az Aptoide Walletet, hogy Aptoide egyenleget szerezhess.</string>
   <string name="holidayspromotion_message_3">Majd töltsd le az alábbi játékok bármelyikét, hogy jutalmakat kapj!</string>
   <string name="holidayspromotion_button_claimed">Megszerezve</string>
-  <string name="holidayspromotion_message_popup">Szerezz %s AppCoins kreditet appok telepítésével és költsd el őket a kedvenc játékaidban!</string>
+  <string name="holidayspromotion_message_popup">%s Aptoide egyenleget kaphatsz appok telepítésével, amit a kedvenc játékaidban költhetsz el!</string>
   <string name="holidayspromotion_button_popup">Nézd meg!</string>
   <string name="promotion_over_title">Lemaradtál róla!</string>
   <string name="promotion_over_message">Erről a promócióról már lecsúsztál, de nemsokára egy másik vár majd rád!</string>
   <!--Promotion with FIAT-->
-  <string name="FIATpromotion_install_to_get_short">Telepítsd %1$s AppCoins kreditért (%2$s)</string>
-  <string name="FIATpromotion_update_to_get_short">Frissítsd %1$s AppCoins kreditért (%2$s)</string>
+  <string name="FIATpromotion_install_to_get_short">Telepítsd, hogy %1$s Aptoide egyenleget szerezhess (%2$s)</string>
+  <string name="FIATpromotion_update_to_get_short">Frissítsd, hogy %1$s Aptoide egyenleget szerezhess (%2$s)</string>
   <!--Get Wallet Address-->
   <string name="promotion_claim_button">LEKÉRÉS</string>
-  <string name="holidayspromotion_title_wallet">AppCoins Wallet-cím</string>
-  <string name="holidayspromotion_message_wallet">Oszd meg velünk a pénztárcád címét! Koppints alulra és az AppCoins Wallet gondoskodik a többiről.</string>
+  <string name="holidayspromotion_title_wallet">Aptoide Wallet címe</string>
+  <string name="holidayspromotion_message_wallet">Add meg a tárcád címét! Pöccints alulra, az Aptoide Wallet mindenről gondoskodik.</string>
   <string name="holidayspromotion_short_wallet_field">Tárca címe</string>
   <string name="holidayspromotion_button_wallet_get">Váltsd valóra</string>
   <string name="holidayspromotion_short_wallet_invalid">Érvénytelen tárcacím</string>
   <string name="holidayspromotion_title_completed">Kész!</string>
-  <string name="holidayspromotion_message_completed">Hamarosan megérkeznek pénztárcádba az AppCoins Credit-jeid! Jó játékot!</string>
+  <string name="holidayspromotion_message_completed">Nemsokára megérkezik az Aptoide egyenleg a tárcádba! Jó játékot kívánunk!</string>
   <string name="holidayspromotion_button_completed">Kész</string>
   <string name="holidayspromotion_title_error_claimed">Hoppá…</string>
   <string name="holidayspromotion_short_error_claimed">Már megszerezted ezt a jutalmat!</string>
   <!--APPC install Promotion-->
-  <string name="wallet_promotion_title">Szerezz %s APPC kreditet!</string>
-  <string name="wallet_promotion_wallet_installed_message">Telepítsd ezt az appot %s AppCoins kreditért, melyet kedvenc játékaidban költhetsz el.</string>
-  <string name="wallet_promotion_wallet_notinstalled_message">Telepítsd ezt az appot %s APPC Credits-ért, melyek átvételéhez szükséges az AppCoins Wallet megléte is.</string>
-  <string name="wallet_promotion_wallet_installed_update_message">Frissítsd ez az appot és szerezz %s APPC kreditet a kedvenc játékaidhoz.</string>
-  <string name="wallet_promotion_wallet_claim_message">%s APPC kredit vár rád. Használd fel őket és vásárolj elemeket a kedvenc appjaidban.</string>
+  <string name="wallet_promotion_title">Szerezz %s Aptoide egyenleget!</string>
+  <string name="wallet_promotion_wallet_installed_message">Telepítsd az appot, és szerezz %s Aptoide egyenleg formájában, amit a kedvenc játékaidban költhetsz el!</string>
+  <string name="wallet_promotion_wallet_notinstalled_message">Telepítsd az appot, és szerezz %s Aptoide egyenleget. A fogadásukhoz Aptoide Wallet szükséges.</string>
+  <string name="wallet_promotion_wallet_installed_update_message">Frissítsd ezt az appot, és szerezz %s Aptoide egyenleg formájában, amit a kedvenc játékaidban költhetsz el.</string>
+  <string name="wallet_promotion_wallet_claim_message">Lehívható %s Aptoide egyenleg formájában. A kedvenc appjaidban vásárolhatsz elemeket velük.</string>
   <string name="wallet_promotion_install_button">Wallet telepítése</string>
   <string name="wallet_promotion_no_button">Köszönöm, nem</string>
-  <string name="wallet_promotion_button_install_disabled">Telepítés %s APPC Credits-ért</string>
+  <string name="wallet_promotion_button_install_disabled">Telepítsd és szerezz %s Aptoide egyenleget</string>
   <!--AppCoins Remove Ads Wallet Promotion -->
-  <string name="wallet_promotion_button_claim">%s APPC Credits megszerzése</string>
+  <string name="wallet_promotion_button_claim">Hívd le ezt az összeget Aptoide egyenleg formájában: %s</string>
   <!--Play to APPC - Migrator - Promotion-->
   <string name="promo_update2appc_data_disclaimer">A játékok beállításainál nézd meg, hogy átvihető-e az előrehaladásod.</string>
-  <string name="promo_update2appc_appview_update_button">Frissítés AppCoins-ra</string>
+  <string name="promo_update2appc_appview_update_button">Update to bonus version</string>
   <string name="promo_update2appc_notification_dismiss_button">Bezárás</string>
   <string name="promo_update2appc_notification_claim_button">OK</string>
-  <string name="promo_update2appc_claim_notification_title">Szerezz %s APPC kreditet!</string>
+  <string name="promo_update2appc_claim_notification_title">Szerezz %s Aptoide egyenleget!</string>
   <!--Promo Center-->
   <string name="promo_update2appc_claim_notification_body">Ne felejtsd el lekérni a jutalmad!</string>
   <string name="promo_center_pending_card_update_body">%s frissítéséért</string>
   <!--Purchase Flow - Wallet Installation-->
   <string name="wallet_install_request_message_body">Az elem megvásárolásához a következőre lesz szükséged: %s.</string>
-  <string name="wallet_install_appcoins_wallet">AppCoins pénztárca</string>
+  <string name="wallet_install_appcoins_wallet">Aptoide Wallet</string>
   <string name="wallet_install_complete_title">A telepítés befejeződött</string>
-  <string name="appc_not_supported_body">Úgy tűnik, ez az eszköz nem támogatja az AppCoins-t. Próbálkozz egy másikkal!</string>
-  <string name="wallet_install_request_already_installed_title">AppCoins Wallet telepítés</string>
+  <string name="appc_not_supported_body">Úgy tűnik, ez az eszköz nem támogatja az Aptoide Walletet. Próbálkozz másikkal!</string>
+  <string name="wallet_install_request_already_installed_title">Aptoide Wallet telepítése</string>
   <string name="wallet_install_request_already_installed_body">Élvezd az összes appon belüli vásárlás után járó bónuszt!</string>
-  <string name="wallet_verification_message_update_wallet_to_claim">A jutalom megszerzéséhez frissítsd az AppCoins Walletet!</string>
+  <string name="wallet_verification_message_update_wallet_to_claim">Frissítsd az Aptoide Walletet a jutalom megszerzéséhez!</string>
   <string name="wallet_verification_button_update">Frissítés most</string>
   <!--POA exposure-->
   <string name="wallet_verification_button_update_wallet">Wallet frissítése</string>
   <string name="poa_app_card_short">%s MEGKERESÉSE</string>
-  <string name="poa_home_card_body">Telepítsd ezt a két appot és tölts el bennük 2 percet, hogy AppCoins krediteket szerezhess.</string>
+  <string name="poa_home_card_body">Telepítsd ezeket az appokat, majd tölts el bennük 2 percet, hogy Aptoide egyenleget szerezz.</string>
   <string name="poa_app_view_card_body_1">Próbáld ki ezt az appot 2 percen át és szerezz</string>
-  <string name="poa_app_view_card_body_2">%1$s AppCoins kreditet (%2$s)</string>
+  <string name="poa_app_view_card_body_2">%1$s in Aptoide balance (%2$s)</string>
   <string name="poa_APPCC_left_body">Siess! Már csak %s jutalom maradt.</string>
   <string name="poa_time_left_days">NAP</string>
   <string name="poa_time_left_hours">ÓRA</string>
   <string name="poa_time_left_minutes">PERC</string>
   <string name="poa_time_left_seconds">MÁSODPERC</string>
   <!--APPC Info View-->
-  <string name="appc_info_view_title_1">Minden, amit az AppCoins-ról tudnod kell</string>
-  <string name="appc_info_view_body_1_variable">Az AppCoinok és az AppCoins kreditek az alkalmazáson belüli tranzakciókhoz szükségesek. Hogy mi ebben a legjobb? Minden vásárlás után akár <b>%s%% bónuszt kapsz!</b></string>
-  <string name="appc_info_view_body_1_variable_no_data">Az AppCoinok és az AppCoins kreditek az alkalmazáson belüli tranzakciókhoz szükségesek. Hogy mi ebben a legjobb? Akár <b>%% bónuszt kapsz minden vásárlás után!</b></string>
+  <string name="appc_info_view_title_1">Minden, amit tudnod kell az Aptoide Walletről</string>
+  <string name="appc_info_view_body_1_variable">Az Aptoide egyenleg az appon belüli tranzakciók során használt valuta. Hogy mi a legjobb benne? Akár <b>%s%% bónusz jár minden vásárlás után!</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">Az Aptoide egyenleg az appon belüli tranzakciók során használt valuta. Hogy mi a legjobb benne? Akár <b>%s%% bónusz jár minden vásárlás után!</b></string>
   <string name="appc_info_view_title_2">Első teendők</string>
-  <string name="appc_info_view_body_2">A jutalmak megszerzéséhez és a tranzakciók feldolgozásához telepítened kell az AppCoins Walletet. A telepítést követően mindent elvégez neked.</string>
+  <string name="appc_info_view_body_2">A jutalmak megszerzéséhez és a tranzakciók elvégzéséhez az Aptoide Walletet kell telepítened. Telepítés után mindent elvégez helyetted!</string>
   <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_4">Bónusz minden vásárlást követően!</string>
   <string name="appc_info_view_title_5_variable">Akár %s%% bónusz jár minden %s szimbólummal ellátott appon belüli vásárlásért. Használd ki és légy te a legjobb játékos!</string>
@@ -504,12 +504,12 @@
   <!--Search Filters-->
   <string name="search_filters_trusted">Megbízható</string>
   <string name="search_filters_beta">Béta verziók</string>
-  <string name="search_filters_appcoins">AppCoins</string>
+  <string name="search_filters_appcoins">Aptoide Wallet</string>
   <string name="search_filters_followed_stores">Követett áruházak</string>
   <!-- Out of space -->
   <string name="out_of_space_body">A telepítés folytatásához %s tárhely szükséges.</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Már AppCoins fizetési rendszerrel</string>
+  <string name="promotional_now_with_appcoins">Mostantól kompatibilis az Aptoide Wallettel</string>
   <string name="promotional_new_version">Új verzió</string>
   <string name="promotional_on_going_event">Folyamatban lévő esemény</string>
   <string name="promotional_new_in_aptoide">Nem elérhető az Aptoide-on</string>

@@ -14,7 +14,7 @@
   <string name="incentives_badge_amount">%s%%</string>
   <string name="incentives_badge_bonus">ਬੋਨਸ</string>
   <string name="incentives_banner_title">ਹਰ ਖਰੀਦ ਤੇ %s%% ਤੱਕ ਬੋਨਸ</string>
-  <string name="incentives_banner_body">ਇਸ ਚਿੰਨ ਦੇ ਨਾਲ ਐਪਾਂ ਵਿਚ ਹੋਰ ਆਈਟਮਾਂ ਪ੍ਰਾਪਤ ਕਰਨ ਲਈ ਆਪਣੇ ਐਪ ਸਿੱਕੇ ਕ੍ਰੈਡਿਟ ਦੀ ਵਰਤੋਂ ਕਰੋ</string>
+  <string name="incentives_banner_body">Use your Aptoide balance to get more items in apps with this symbol %s</string>
   <!-- Download View -->
   <string name="appview_short_downloading">ਡਾਊਨਲੋਡ ਹੋ ਰਿਹਾ ਹੈ</string>
   <string name="apps_short_download_paused">ਡਾਊਨਲੋਡ ਵਿਰਾਮ</string>
