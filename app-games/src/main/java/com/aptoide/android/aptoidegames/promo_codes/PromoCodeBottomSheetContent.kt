@@ -94,6 +94,7 @@ fun PromoCodeBottomSheet(
 
           PromoCodeBottomSheetContent(
             promoCode = promoCode.code,
+            value = promoCode.value,
             promoCodeApp = promoCodeSheetState.promoCodeApp,
             walletApp = promoCodeSheetState.walletApp,
             showSnack = showSnack
@@ -140,6 +141,7 @@ fun PromoCodeBottomSheet(
 @Composable
 fun PromoCodeBottomSheetContent(
   promoCode: String,
+  value: Int?,
   promoCodeApp: App,
   walletApp: App,
   showSnack: (String) -> Unit
@@ -166,7 +168,7 @@ fun PromoCodeBottomSheetContent(
     modifier = Modifier.padding(top = 4.dp),
     text = stringResource(
       id = R.string.promo_code_extra_title,
-      "10" //TODO Hardcoded value (should come from backend in the future)
+      value ?: "10"
     ),
     color = Palette.White,
     style = AGTypography.Title
@@ -289,6 +291,7 @@ fun PreviewBottomSheetContent() {
       BottomSheetHeader()
       PromoCodeBottomSheetContent(
         promoCode = randomPromoCode.code,
+        value = null,
         promoCodeApp = randomApp,
         walletApp = walletApp,
         showSnack = { }
