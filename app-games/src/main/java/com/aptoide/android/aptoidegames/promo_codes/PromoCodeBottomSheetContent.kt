@@ -32,6 +32,7 @@ import cm.aptoide.pt.feature_apps.data.walletApp
 import com.aptoide.android.aptoidegames.BottomSheetContent
 import com.aptoide.android.aptoidegames.BottomSheetHeader
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.analytics.presentation.OverrideAnalyticsScreen
 import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
 import com.aptoide.android.aptoidegames.design_system.PrimarySmallButton
 import com.aptoide.android.aptoidegames.design_system.TertiarySmallButton
@@ -53,6 +54,24 @@ class PromoCodeBottomSheet(
   @Composable override fun Draw(
     dismiss: () -> Unit,
     navigate: (String) -> Unit,
+  ) {
+    PromoCodeBottomSheet(
+      promoCode = promoCode,
+      showSnack = showSnack,
+      navigate = navigate
+    )
+  }
+}
+
+@Composable
+fun PromoCodeBottomSheet(
+  promoCode: PromoCode,
+  showSnack: (String) -> Unit,
+  navigate: (String) -> Unit,
+) {
+  OverrideAnalyticsScreen(
+    currentScreen = "promo_code",
+    navigate = navigate
   ) {
     val context = LocalContext.current
     val (promoCodeSheetState, reload) = rememberPromoCodeSheetState(promoCode)
