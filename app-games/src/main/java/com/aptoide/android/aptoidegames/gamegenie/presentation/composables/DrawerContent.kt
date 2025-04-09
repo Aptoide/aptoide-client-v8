@@ -48,8 +48,8 @@ fun DrawerContent(
       currentChatId = currentChatId,
       onNewChatClick = onNewChatClick,
       conversations = uiState.pastConversations,
-      onDeleteChat = {
-        uiState.onDeleteChat
+      onDeleteChat = { chatId ->
+        uiState.onDeleteChat(chatId)
         onChatDeleteAnalytics()
       }
     )

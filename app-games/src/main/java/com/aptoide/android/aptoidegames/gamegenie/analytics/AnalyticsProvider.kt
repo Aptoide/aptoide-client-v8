@@ -8,27 +8,27 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import cm.aptoide.pt.extensions.runPreviewable
 import com.aptoide.android.aptoidegames.analytics.AnalyticsSender
-import com.aptoide.android.aptoidegames.analytics.BIAnalytics
+import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class AnalyticsInjectionsProvider @Inject constructor(
-  val biAnalytics: BIAnalytics,
+  val genericAnalytics: GenericAnalytics,
 ) : ViewModel()
 
 @Composable
 fun rememberGameGenieAnalytics(): GameGenieAnalytics = runPreviewable(
   preview = {
-    GameGenieAnalytics(BIAnalytics(object : AnalyticsSender {}))
+    GameGenieAnalytics(GenericAnalytics(object : AnalyticsSender {}))
   },
   real = {
     val analyticsProvider = hiltViewModel<AnalyticsInjectionsProvider>()
 
-    val gameGenieAnalytics by remember(key1 = analyticsProvider.biAnalytics) {
+    val gameGenieAnalytics by remember(key1 = analyticsProvider.genericAnalytics) {
       derivedStateOf {
         GameGenieAnalytics(
-          biAnalytics = analyticsProvider.biAnalytics,
+          genericAnalytics = analyticsProvider.genericAnalytics,
         )
       }
     }

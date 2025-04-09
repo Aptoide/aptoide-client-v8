@@ -1,22 +1,22 @@
 package com.aptoide.android.aptoidegames.gamegenie.analytics
 
-import com.aptoide.android.aptoidegames.analytics.BIAnalytics
+import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 
 class GameGenieAnalytics(
-  private val biAnalytics: BIAnalytics,
+  private val genericAnalytics: GenericAnalytics,
 ) {
 
-  fun sendGameGenieSuggestionClick(index: Int) = biAnalytics.logEvent(
+  fun sendGameGenieSuggestionClick(index: Int) = genericAnalytics.logEvent(
     name = "gamegenie_suggests_click",
     params = mapOf("position" to index)
   )
 
-  fun sendGameGenieMessageSent() = biAnalytics.logEvent(
+  fun sendGameGenieMessageSent() = genericAnalytics.logEvent(
     name = "gamegenie_send_message",
     params = emptyMap()
   )
 
-  fun sendGameGenieAppClick(packageName: String, appPosition: Int) = biAnalytics.logEvent(
+  fun sendGameGenieAppClick(packageName: String, appPosition: Int) = genericAnalytics.logEvent(
     name = "gamegenie_app_click",
     params = mapOf(
       "package_name" to packageName,
@@ -24,22 +24,22 @@ class GameGenieAnalytics(
     )
   )
 
-  fun sendGameGenieHistoryOpen() = biAnalytics.logEvent(
+  fun sendGameGenieHistoryOpen() = genericAnalytics.logEvent(
     name = "gamegenie_history_open",
     params = emptyMap()
   )
 
-  fun sendGameGenieHistoryClick() = biAnalytics.logEvent(
+  fun sendGameGenieHistoryClick() = genericAnalytics.logEvent(
     name = "gamegenie_history_click",
     params = emptyMap()
   )
 
-  fun sendGameGenieHistoryDelete() = biAnalytics.logEvent(
+  fun sendGameGenieHistoryDelete() = genericAnalytics.logEvent(
     name = "gamegenie_history_delete",
     params = emptyMap()
   )
 
-  fun sendGameGenieNewChat() = biAnalytics.logEvent(
+  fun sendGameGenieNewChat() = genericAnalytics.logEvent(
     name = "gamegenie_new_chat",
     params = emptyMap()
   )
