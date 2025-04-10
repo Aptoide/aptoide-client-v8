@@ -32,63 +32,65 @@ fun getMoreBonusViewHeader(
   color1: Color = Palette.Secondary,
   color2: Color = Palette.Primary,
   color3: Color = Palette.Black,
-  color4: Color = Palette.GreyDark
+  color4: Color = Palette.GreyDark,
 ): ImageVector = Builder(
-  name = "MoreBonusHeader",
-  defaultWidth = 360.0.dp,
-  defaultHeight = 56.0.dp,
-  viewportWidth = 360.0f,
-  viewportHeight = 56.0f
+  name = "Bannerbonus",
+  defaultWidth = 262.0.dp,
+  defaultHeight = 41.0.dp,
+  viewportWidth = 262.0f,
+  viewportHeight = 41.0f
 ).apply {
   path(
-  fill = SolidColor(color4),
-  stroke = null,
-  pathFillType = NonZero
-) {
-  moveTo(0.0f, 34.0f)
-  lineTo(360.0f, 34.0f)
-  lineTo(360.0f, 56.0f)
-  lineTo(0.0f, 56.0f)
-  close()
-}
-  group {
-    path(
-      fill = SolidColor(color1),
-      stroke = null,
-      strokeLineWidth = 0.0f,
-      strokeLineCap = Butt,
-      strokeLineJoin = Miter,
-      strokeLineMiter = 4.0f,
-      pathFillType = NonZero
-    ) {
-      moveTo(40.0f, 10.0f)
-      horizontalLineToRelative(222.0f)
-      verticalLineToRelative(24.0f)
-      horizontalLineToRelative(-222.0f)
-      close()
-    }
-    path(
-      fill = SolidColor(color1),
-      stroke = null,
-      strokeLineWidth = 0.0f,
-      strokeLineCap = Butt,
-      strokeLineJoin = Miter,
-      strokeLineMiter = 4.0f,
-      pathFillType = EvenOdd
-    ) {
-      moveTo(40.0f, 34.0f)
-      verticalLineTo(13.0f)
-      horizontalLineTo(35.0f)
-      verticalLineTo(0.0f)
-      horizontalLineTo(0.0f)
-      verticalLineTo(34.0f)
-      horizontalLineTo(6.0f)
-      verticalLineTo(40.0f)
-      horizontalLineTo(27.0f)
-      verticalLineTo(34.0f)
-      horizontalLineTo(40.0f)
-      close()
-    }
+    fill = SolidColor(color4),
+    stroke = null,
+    strokeLineWidth = 0.0f,
+    strokeLineCap = Butt,
+    strokeLineJoin = Miter,
+    strokeLineMiter = 4.0f,
+    pathFillType = NonZero
+  ) {
+    moveTo(0f, 20.5f)
+    lineTo(262f, 20.5f)
+    lineTo(262f, 41f)
+    lineTo(0f, 41f)
+    close()
+  }
+  path(
+    fill = SolidColor(color1),
+    stroke = null,
+    strokeLineWidth = 0.0f,
+    strokeLineCap = Butt,
+    strokeLineJoin = Miter,
+    strokeLineMiter = 4.0f,
+    pathFillType = NonZero
+  ) {
+    moveTo(40.0f, 10.118f)
+    horizontalLineToRelative(222.0f)
+    verticalLineToRelative(24.282f)
+    horizontalLineToRelative(-222.0f)
+    close()
+  }
+  path(
+    fill = SolidColor(color1),
+    stroke = null,
+    strokeLineWidth = 0.0f,
+    strokeLineCap = Butt,
+    strokeLineJoin = Miter,
+    strokeLineMiter = 4.0f,
+    pathFillType = EvenOdd
+  ) {
+    moveTo(40.0f, 34.4f)
+    verticalLineTo(13.153f)
+    horizontalLineTo(35.0f)
+    verticalLineTo(0.0f)
+    horizontalLineTo(0.0f)
+    verticalLineTo(34.4f)
+    horizontalLineTo(6.0f)
+    verticalLineTo(40.471f)
+    horizontalLineTo(27.0f)
+    verticalLineTo(34.4f)
+    horizontalLineTo(40.0f)
+    close()
   }
   group {
     path(
@@ -100,28 +102,28 @@ fun getMoreBonusViewHeader(
       strokeLineMiter = 4.0f,
       pathFillType = NonZero
     ) {
-      moveTo(28.887f, 18.889f)
-      verticalLineTo(31.111f)
-      horizontalLineTo(11.109f)
-      verticalLineTo(18.889f)
-      horizontalLineTo(8.887f)
-      verticalLineTo(12.222f)
-      horizontalLineTo(14.665f)
-      curveTo(14.591f, 12.037f, 14.535f, 11.856f, 14.498f, 11.681f)
-      curveTo(14.461f, 11.505f, 14.443f, 11.315f, 14.443f, 11.111f)
-      curveTo(14.443f, 10.185f, 14.767f, 9.398f, 15.415f, 8.75f)
-      curveTo(16.063f, 8.102f, 16.85f, 7.778f, 17.776f, 7.778f)
-      curveTo(18.202f, 7.778f, 18.6f, 7.852f, 18.971f, 8.0f)
-      curveTo(19.341f, 8.148f, 19.683f, 8.37f, 19.998f, 8.667f)
-      curveTo(20.313f, 8.389f, 20.656f, 8.171f, 21.026f, 8.014f)
-      curveTo(21.396f, 7.857f, 21.795f, 7.778f, 22.221f, 7.778f)
-      curveTo(23.146f, 7.778f, 23.933f, 8.102f, 24.582f, 8.75f)
-      curveTo(25.23f, 9.398f, 25.554f, 10.185f, 25.554f, 11.111f)
-      curveTo(25.554f, 11.315f, 25.54f, 11.509f, 25.512f, 11.694f)
-      curveTo(25.484f, 11.88f, 25.424f, 12.056f, 25.332f, 12.222f)
-      horizontalLineTo(31.109f)
-      verticalLineTo(18.889f)
-      horizontalLineTo(28.887f)
+      moveTo(28.889f, 19.111f)
+      verticalLineTo(31.477f)
+      horizontalLineTo(11.111f)
+      verticalLineTo(19.111f)
+      horizontalLineTo(8.889f)
+      verticalLineTo(12.366f)
+      horizontalLineTo(14.667f)
+      curveTo(14.593f, 12.179f, 14.537f, 11.996f, 14.5f, 11.818f)
+      curveTo(14.463f, 11.64f, 14.445f, 11.448f, 14.445f, 11.242f)
+      curveTo(14.445f, 10.305f, 14.769f, 9.509f, 15.417f, 8.853f)
+      curveTo(16.065f, 8.197f, 16.852f, 7.869f, 17.778f, 7.869f)
+      curveTo(18.204f, 7.869f, 18.602f, 7.944f, 18.972f, 8.094f)
+      curveTo(19.343f, 8.244f, 19.685f, 8.469f, 20.0f, 8.769f)
+      curveTo(20.315f, 8.488f, 20.658f, 8.267f, 21.028f, 8.108f)
+      curveTo(21.398f, 7.949f, 21.796f, 7.869f, 22.222f, 7.869f)
+      curveTo(23.148f, 7.869f, 23.935f, 8.197f, 24.584f, 8.853f)
+      curveTo(25.232f, 9.509f, 25.556f, 10.305f, 25.556f, 11.242f)
+      curveTo(25.556f, 11.448f, 25.542f, 11.645f, 25.514f, 11.832f)
+      curveTo(25.486f, 12.019f, 25.426f, 12.197f, 25.333f, 12.366f)
+      horizontalLineTo(31.111f)
+      verticalLineTo(19.111f)
+      horizontalLineTo(28.889f)
       close()
     }
     path(
@@ -133,72 +135,72 @@ fun getMoreBonusViewHeader(
       strokeLineMiter = 4.0f,
       pathFillType = NonZero
     ) {
-      moveTo(28.887f, 31.111f)
-      verticalLineTo(18.889f)
-      horizontalLineTo(31.109f)
-      verticalLineTo(12.222f)
-      horizontalLineTo(25.332f)
-      curveTo(25.424f, 12.056f, 25.484f, 11.88f, 25.512f, 11.694f)
-      curveTo(25.54f, 11.509f, 25.554f, 11.315f, 25.554f, 11.111f)
-      curveTo(25.554f, 10.185f, 25.23f, 9.398f, 24.582f, 8.75f)
-      curveTo(23.933f, 8.102f, 23.146f, 7.778f, 22.221f, 7.778f)
-      curveTo(21.795f, 7.778f, 21.396f, 7.857f, 21.026f, 8.014f)
-      curveTo(20.656f, 8.171f, 20.313f, 8.389f, 19.998f, 8.667f)
-      curveTo(19.683f, 8.37f, 19.341f, 8.148f, 18.971f, 8.0f)
-      curveTo(18.6f, 7.852f, 18.202f, 7.778f, 17.776f, 7.778f)
-      curveTo(16.85f, 7.778f, 16.063f, 8.102f, 15.415f, 8.75f)
-      curveTo(14.767f, 9.398f, 14.443f, 10.185f, 14.443f, 11.111f)
-      curveTo(14.443f, 11.315f, 14.461f, 11.505f, 14.498f, 11.681f)
-      curveTo(14.535f, 11.856f, 14.591f, 12.037f, 14.665f, 12.222f)
-      horizontalLineTo(8.887f)
-      verticalLineTo(18.889f)
-      horizontalLineTo(11.109f)
-      verticalLineTo(31.111f)
-      horizontalLineTo(28.887f)
+      moveTo(28.889f, 31.477f)
+      verticalLineTo(19.111f)
+      horizontalLineTo(31.111f)
+      verticalLineTo(12.366f)
+      horizontalLineTo(25.333f)
+      curveTo(25.426f, 12.197f, 25.486f, 12.019f, 25.514f, 11.832f)
+      curveTo(25.542f, 11.645f, 25.556f, 11.448f, 25.556f, 11.242f)
+      curveTo(25.556f, 10.305f, 25.232f, 9.509f, 24.584f, 8.853f)
+      curveTo(23.935f, 8.197f, 23.148f, 7.869f, 22.222f, 7.869f)
+      curveTo(21.796f, 7.869f, 21.398f, 7.949f, 21.028f, 8.108f)
+      curveTo(20.658f, 8.267f, 20.315f, 8.488f, 20.0f, 8.769f)
+      curveTo(19.685f, 8.469f, 19.343f, 8.244f, 18.972f, 8.094f)
+      curveTo(18.602f, 7.944f, 18.204f, 7.869f, 17.778f, 7.869f)
+      curveTo(16.852f, 7.869f, 16.065f, 8.197f, 15.417f, 8.853f)
+      curveTo(14.769f, 9.509f, 14.445f, 10.305f, 14.445f, 11.242f)
+      curveTo(14.445f, 11.448f, 14.463f, 11.64f, 14.5f, 11.818f)
+      curveTo(14.537f, 11.996f, 14.593f, 12.179f, 14.667f, 12.366f)
+      horizontalLineTo(8.889f)
+      verticalLineTo(19.111f)
+      horizontalLineTo(11.111f)
+      verticalLineTo(31.477f)
+      horizontalLineTo(28.889f)
       close()
-      moveTo(17.776f, 10.0f)
-      curveTo(18.091f, 10.0f, 18.355f, 10.106f, 18.568f, 10.319f)
-      curveTo(18.781f, 10.533f, 18.887f, 10.796f, 18.887f, 11.111f)
-      curveTo(18.887f, 11.426f, 18.781f, 11.69f, 18.568f, 11.903f)
-      curveTo(18.355f, 12.116f, 18.091f, 12.222f, 17.776f, 12.222f)
-      curveTo(17.461f, 12.222f, 17.197f, 12.116f, 16.984f, 11.903f)
-      curveTo(16.771f, 11.69f, 16.665f, 11.426f, 16.665f, 11.111f)
-      curveTo(16.665f, 10.796f, 16.771f, 10.533f, 16.984f, 10.319f)
-      curveTo(17.197f, 10.106f, 17.461f, 10.0f, 17.776f, 10.0f)
+      moveTo(17.778f, 10.118f)
+      curveTo(18.093f, 10.118f, 18.357f, 10.225f, 18.57f, 10.441f)
+      curveTo(18.783f, 10.656f, 18.889f, 10.923f, 18.889f, 11.242f)
+      curveTo(18.889f, 11.56f, 18.783f, 11.827f, 18.57f, 12.043f)
+      curveTo(18.357f, 12.258f, 18.093f, 12.366f, 17.778f, 12.366f)
+      curveTo(17.463f, 12.366f, 17.199f, 12.258f, 16.986f, 12.043f)
+      curveTo(16.773f, 11.827f, 16.667f, 11.56f, 16.667f, 11.242f)
+      curveTo(16.667f, 10.923f, 16.773f, 10.656f, 16.986f, 10.441f)
+      curveTo(17.199f, 10.225f, 17.463f, 10.118f, 17.778f, 10.118f)
       close()
-      moveTo(23.332f, 11.111f)
-      curveTo(23.332f, 11.426f, 23.225f, 11.69f, 23.012f, 11.903f)
-      curveTo(22.799f, 12.116f, 22.535f, 12.222f, 22.221f, 12.222f)
-      curveTo(21.906f, 12.222f, 21.642f, 12.116f, 21.429f, 11.903f)
-      curveTo(21.216f, 11.69f, 21.109f, 11.426f, 21.109f, 11.111f)
-      curveTo(21.109f, 10.796f, 21.216f, 10.533f, 21.429f, 10.319f)
-      curveTo(21.642f, 10.106f, 21.906f, 10.0f, 22.221f, 10.0f)
-      curveTo(22.535f, 10.0f, 22.799f, 10.106f, 23.012f, 10.319f)
-      curveTo(23.225f, 10.533f, 23.332f, 10.796f, 23.332f, 11.111f)
+      moveTo(23.334f, 11.242f)
+      curveTo(23.334f, 11.56f, 23.227f, 11.827f, 23.014f, 12.043f)
+      curveTo(22.801f, 12.258f, 22.537f, 12.366f, 22.222f, 12.366f)
+      curveTo(21.908f, 12.366f, 21.644f, 12.258f, 21.431f, 12.043f)
+      curveTo(21.218f, 11.827f, 21.111f, 11.56f, 21.111f, 11.242f)
+      curveTo(21.111f, 10.923f, 21.218f, 10.656f, 21.431f, 10.441f)
+      curveTo(21.644f, 10.225f, 21.908f, 10.118f, 22.222f, 10.118f)
+      curveTo(22.537f, 10.118f, 22.801f, 10.225f, 23.014f, 10.441f)
+      curveTo(23.227f, 10.656f, 23.334f, 10.923f, 23.334f, 11.242f)
       close()
-      moveTo(28.887f, 14.444f)
-      verticalLineTo(16.667f)
-      horizontalLineTo(21.109f)
-      verticalLineTo(14.444f)
-      horizontalLineTo(28.887f)
+      moveTo(28.889f, 14.614f)
+      verticalLineTo(16.863f)
+      horizontalLineTo(21.111f)
+      verticalLineTo(14.614f)
+      horizontalLineTo(28.889f)
       close()
-      moveTo(21.109f, 28.889f)
-      verticalLineTo(18.889f)
-      horizontalLineTo(26.665f)
-      verticalLineTo(28.889f)
-      horizontalLineTo(21.109f)
+      moveTo(21.111f, 29.229f)
+      verticalLineTo(19.111f)
+      horizontalLineTo(26.667f)
+      verticalLineTo(29.229f)
+      horizontalLineTo(21.111f)
       close()
-      moveTo(18.887f, 28.889f)
-      horizontalLineTo(13.332f)
-      verticalLineTo(18.889f)
-      horizontalLineTo(18.887f)
-      verticalLineTo(28.889f)
+      moveTo(18.889f, 29.229f)
+      horizontalLineTo(13.334f)
+      verticalLineTo(19.111f)
+      horizontalLineTo(18.889f)
+      verticalLineTo(29.229f)
       close()
-      moveTo(11.109f, 16.667f)
-      verticalLineTo(14.444f)
-      horizontalLineTo(18.887f)
-      verticalLineTo(16.667f)
-      horizontalLineTo(11.109f)
+      moveTo(11.111f, 16.863f)
+      verticalLineTo(14.614f)
+      horizontalLineTo(18.889f)
+      verticalLineTo(16.863f)
+      horizontalLineTo(11.111f)
       close()
     }
   }
