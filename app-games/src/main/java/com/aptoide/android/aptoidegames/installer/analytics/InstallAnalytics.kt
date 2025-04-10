@@ -47,6 +47,12 @@ interface InstallAnalytics {
   ) {
   }
 
+  fun sendDownloadCachedEvent(
+    packageName: String,
+    installPackageInfo: InstallPackageInfo,
+  ) {
+  }
+
   fun sendDownloadErrorEvent(
     packageName: String,
     installPackageInfo: InstallPackageInfo,

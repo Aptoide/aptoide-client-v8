@@ -92,11 +92,18 @@ class DownloadProbe(
             errorUrl = it.url,
           )
 
-          null -> analytics.sendDownloadCompletedEvent(
-            packageName = packageName,
-            installPackageInfo = installPackageInfo,
-            downloadedBytesPerSecond = downloadSpeed
-          )
+          null -> if (totalDownloadedBytes > 0) {
+            analytics.sendDownloadCompletedEvent(
+              packageName = packageName,
+              installPackageInfo = installPackageInfo,
+              downloadedBytesPerSecond = downloadSpeed
+            )
+          } else {
+            analytics.sendDownloadCachedEvent(
+              packageName = packageName,
+              installPackageInfo = installPackageInfo,
+            )
+          }
 
           else -> analytics.sendDownloadErrorEvent(
             packageName = packageName,

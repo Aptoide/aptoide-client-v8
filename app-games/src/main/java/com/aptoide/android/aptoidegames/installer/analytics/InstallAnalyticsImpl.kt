@@ -160,6 +160,25 @@ class InstallAnalyticsImpl(
     )
   }
 
+  override fun sendDownloadCachedEvent(
+    packageName: String,
+    installPackageInfo: InstallPackageInfo,
+  ) {
+    genericAnalytics.logEvent(
+      name = "app_download",
+      params = installPackageInfo.toAppGenericParameters(
+        packageName = packageName,
+        P_STATUS to "cached"
+      )
+    )
+
+    logBIDownloadEvent(
+      packageName = packageName,
+      status = "cached",
+      installPackageInfo = installPackageInfo
+    )
+  }
+
   override fun sendDownloadErrorEvent(
     packageName: String,
     installPackageInfo: InstallPackageInfo,
