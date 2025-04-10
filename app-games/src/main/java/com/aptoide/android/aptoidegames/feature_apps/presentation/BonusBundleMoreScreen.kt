@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
@@ -19,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.CollectionInfo
 import androidx.compose.ui.semantics.collectionInfo
@@ -206,6 +208,8 @@ fun MoreBonusSectionView(
   Column(
     modifier = Modifier.padding(vertical = 24.dp)
   ) {
+    val configuration = LocalConfiguration.current
+    val startPadding = (configuration.screenWidthDp * 0.15).dp
     val splitText = stringResource(id = R.string.bonus_page_body_1, "%s", 20).split("%s")
     val annotatedString = buildAnnotatedString {
       append(splitText[0])
@@ -237,27 +241,34 @@ fun MoreBonusSectionView(
         contentDescription = null,
         modifier = Modifier
           .fillMaxWidth()
+          .padding(end = 98.dp)
           .offset(y = 1.dp),
         contentScale = ContentScale.FillWidth,
       )
 
-      AptoideOutlinedText(
-        text = stringResource(
-          id = R.string.bonus_banner_title,
-          "20" //TODO Hardcoded value (should come from backend in the future)
-        ),
-        style = AGTypography.InputsM,
-        outlineWidth = 10f,
-        outlineColor = Palette.Black,
-        textColor = Palette.Primary,
-        modifier = Modifier.padding(start = 56.dp, top = 14.dp)
-      )
+      Row(
+        modifier = Modifier
+          .matchParentSize()
+          .padding(start = startPadding, top = 14.dp),
+        verticalAlignment = Alignment.CenterVertically
+      ) {
+        AptoideOutlinedText(
+          text = stringResource(
+            id = R.string.bonus_banner_title,
+            "20" //TODO Hardcoded value (should come from backend in the future)
+          ),
+          style = AGTypography.InputsM,
+          outlineWidth = 10f,
+          outlineColor = Palette.Black,
+          textColor = Palette.Primary,
+        )
+      }
     }
 
     Column(
       modifier = Modifier
         .background(Palette.GreyDark)
-        .padding(horizontal = 16.dp)
+        .padding(horizontal = 16.dp, vertical = 16.dp)
     ) {
       BonusBannerText(
         title = stringResource(id = R.string.bonus_page_title_1),
