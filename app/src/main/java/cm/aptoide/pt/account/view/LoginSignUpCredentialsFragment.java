@@ -423,7 +423,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   }
 
   private void changeBottomSheetHeight(int heightPx) {
-    if (bottomSheetBehavior != null) {
+    if (bottomSheetBehavior != null && this.getContext() != null) {
       bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
       bottomSheetBehavior.setPeekHeight(
           (int) (heightPx * getResources().getDisplayMetrics().density));
