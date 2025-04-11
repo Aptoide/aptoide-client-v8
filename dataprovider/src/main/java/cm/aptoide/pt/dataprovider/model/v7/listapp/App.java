@@ -6,6 +6,7 @@
 package cm.aptoide.pt.dataprovider.model.v7.listapp;
 
 import cm.aptoide.pt.dataprovider.model.v7.Aab;
+import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -28,6 +29,7 @@ public class App {
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC") private Date updated;
   private String uptype;
   private Store store;
+  private GetAppMeta.Developer developer;
   private File file;
   private Stats stats;
   private Obb obb;
@@ -36,6 +38,14 @@ public class App {
   private Urls urls;
 
   public App() {
+  }
+
+  public GetAppMeta.Developer getDeveloper() {
+    return developer;
+  }
+
+  public void setDeveloper(GetAppMeta.Developer developer) {
+    this.developer = developer;
   }
 
   public long getId() {

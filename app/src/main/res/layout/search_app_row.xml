@@ -122,34 +122,22 @@
         app:layout_constraintTop_toTopOf="@+id/downloads_icon"
         tools:text="123 K"
         />
-    <ImageView
-        android:id="@+id/store_icon"
-        android:layout_width="10dp"
-        android:layout_height="10dp"
-        android:src="@drawable/ic_store"
-        app:tint="@color/grey"
+
+    <TextView
+        android:id="@+id/developer_name"
+        style="@style/Aptoide.TextView.Medium.XXS.Grey"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        app:layout_constraintEnd_toStartOf="@+id/appc_label_layout"
+        app:layout_constraintRight_toLeftOf="@+id/appc_label_layout"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintBottom_toBottomOf="@id/app_icon"
         app:layout_constraintStart_toStartOf="@id/star_icon"
         app:layout_constraintLeft_toLeftOf="@id/star_icon"
         app:layout_constraintTop_toBottomOf="@id/star_icon"
         app:layout_constraintVertical_chainStyle="spread"
-        />
-    <TextView
-        android:id="@+id/store_name"
-        style="@style/Aptoide.TextView.Medium.XXS.Grey"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginLeft="5dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        app:layout_constraintBottom_toBottomOf="@+id/store_icon"
-        app:layout_constraintEnd_toStartOf="@+id/appc_label_layout"
-        app:layout_constraintRight_toLeftOf="@+id/appc_label_layout"
-        app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintStart_toEndOf="@+id/store_icon"
-        app:layout_constraintLeft_toRightOf="@+id/store_icon"
-        app:layout_constraintTop_toTopOf="@+id/store_icon"
-        tools:text="Royale App Store"
+        tools:text="The Developer"
         />
 
     <LinearLayout
@@ -161,7 +149,7 @@
       app:layout_constraintBottom_toBottomOf="@id/app_icon"
       app:layout_constraintEnd_toEndOf="@id/guideline_right"
       app:layout_constraintRight_toRightOf="@id/guideline_right"
-      app:layout_constraintTop_toTopOf="@+id/store_name"
+      app:layout_constraintTop_toTopOf="@+id/developer_name"
       >
       <include
         layout="@layout/appc_label"

@@ -19,6 +19,7 @@ public class SearchAppResult implements SearchItem {
   private long totalDownloads;
   private boolean hasOtherVersions;
   private boolean isHighlightedResult;
+  private String developerName;
 
   private List<AppScreenshot> screenshots;
 
@@ -38,8 +39,9 @@ public class SearchAppResult implements SearchItem {
       boolean advertising, String oemId, boolean isHighlightedResult, Obb obb,
       List<String> requiredSplits, List<Split> splits, DownloadStatusModel downloadModel,
       List<AppScreenshot> screenshots, boolean isInCatappult, String appCategory,
-      Campaign campaign) {
+      Campaign campaign, String developerName) {
     this.rank = rank;
+    this.developerName = developerName;
     this.storeTheme = storeTheme;
     this.modifiedDate = modifiedDate;
     this.averageRating = averageRating;
@@ -67,7 +69,11 @@ public class SearchAppResult implements SearchItem {
         app.getVersionName(), app.getPath(), app.getPathAlt(), app.getMalware(), app.getSize(),
         app.hasOtherVersions(), app.hasBilling(), app.hasAdvertising(), app.getOemId(),
         app.isHighlightedResult(), app.getObb(), app.getRequiredSplits(), app.getSplits(),
-        downloadModel, screenshots, isAppInCatappult, appCategory, campaign);
+        downloadModel, screenshots, isAppInCatappult, appCategory, campaign, app.developerName);
+  }
+
+  public String getDeveloperName() {
+    return developerName;
   }
 
   public int getRank() {

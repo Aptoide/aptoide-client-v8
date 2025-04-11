@@ -16,10 +16,18 @@ import cm.aptoide.pt.search.model.SearchAppResult
 import cm.aptoide.pt.search.model.SearchAppResultWrapper
 import cm.aptoide.pt.utils.AptoideUtils
 import cm.aptoide.pt.view.app.AppScreenshot
-import kotlinx.android.synthetic.main.search_app_row.view.*
+import kotlinx.android.synthetic.main.search_app_row.view.app_badge
+import kotlinx.android.synthetic.main.search_app_row.view.app_icon
+import kotlinx.android.synthetic.main.search_app_row.view.app_name
+import kotlinx.android.synthetic.main.search_app_row.view.developer_name
+import kotlinx.android.synthetic.main.search_app_row.view.download_progress_view
+import kotlinx.android.synthetic.main.search_app_row.view.downloads
+import kotlinx.android.synthetic.main.search_app_row.view.install_button
+import kotlinx.android.synthetic.main.search_app_row.view.media_rv
+import kotlinx.android.synthetic.main.search_app_row.view.rating
 import rx.subjects.PublishSubject
 import java.text.DecimalFormat
-import java.util.*
+import java.util.Collections
 
 class SearchResultViewHolder(
   itemView: View,
@@ -102,7 +110,7 @@ class SearchResultViewHolder(
       itemView.rating.text = DecimalFormat("0.0").format(avgRating.toDouble())
     }
 
-    itemView.store_name.text = result.storeName
+    itemView.developer_name.text = result.developerName
     appInfoViewHolder.setInfo(
       result.hasBilling() || result.hasAdvertising(), result.averageRating,
       false, false
@@ -113,14 +121,17 @@ class SearchResultViewHolder(
         ImageLoader.with(itemView.app_badge.context)
           .load(R.drawable.ic_badges_trusted, itemView.app_badge)
       }
+
       Malware.Rank.CRITICAL.ordinal -> {
         ImageLoader.with(itemView.app_badge.context)
           .load(R.drawable.ic_badges_critical, itemView.app_badge)
       }
+
       Malware.Rank.WARNING.ordinal -> {
         ImageLoader.with(itemView.app_badge.context)
           .load(R.drawable.ic_badges_warning, itemView.app_badge)
       }
+
       Malware.Rank.UNKNOWN.ordinal -> {
         ImageLoader.with(itemView.app_badge.context)
           .load(R.drawable.ic_badges_unknown, itemView.app_badge)
