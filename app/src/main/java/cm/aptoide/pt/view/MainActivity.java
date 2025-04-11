@@ -10,6 +10,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -93,8 +94,8 @@ public class MainActivity extends BottomNavigationActivity
       notificationPublishRelay.call(notificationInfo);
     } else if (isFirebaseNotification(intent)) {
       sendFirebaseNotificationAnalytics(intent);
+      handleFirebaseDeeplink(intent);
     }
-
     attachPresenter(presenter);
   }
 
@@ -150,8 +151,18 @@ public class MainActivity extends BottomNavigationActivity
       notificationPublishRelay.call(notificationInfo);
     } else if (isFirebaseNotification(intent)) {
       sendFirebaseNotificationAnalytics(intent);
+      handleFirebaseDeeplink(intent);
     } else {
       deepLinkManager.showDeepLink(intent);
+    }
+  }
+
+  private void handleFirebaseDeeplink(Intent originalIntent) {
+    String url = originalIntent.getStringExtra("dti.link");
+    if (url != null && !url.isEmpty()) {
+      Intent intent = new Intent(this.getApplicationContext(), DeepLinkIntentReceiver.class);
+      intent.setData(Uri.parse(url));
+      startActivity(intent);
     }
   }
 
