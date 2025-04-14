@@ -43,7 +43,8 @@ class InstallerNotificationsBuilder @Inject constructor(
     const val READY_TO_INSTALL_NOTIFICATION_CHANNEL_ID = "ready_to_install_notification_channel"
     const val READY_TO_INSTALL_NOTIFICATION_CHANNEL_NAME = "Ready To Install Notification Channel"
     const val ALLOW_METERED_DOWNLOAD_FOR_PACKAGE = "allowMeteredDownloadForPackage"
-    const val INSTALL_NOTIFICATIONS_GROUP = "install_notifications_group"
+    const val DOWNLOADING_NOTIFICATIONS_GROUP = "downloading_notifications_group"
+    const val READY_TO_INSTALL_NOTIFICATIONS_GROUP = "ready_to_install_notifications_group"
   }
 
   init {
@@ -128,7 +129,12 @@ class InstallerNotificationsBuilder @Inject constructor(
           is State.Installing -> context.getString(R.string.notification_preparing_title)
           else -> ""
         },
-        largeIcon = appIcon
+        largeIcon = appIcon,
+        notificationGroup = when (state) {
+          is State.Downloading -> DOWNLOADING_NOTIFICATIONS_GROUP + appDetails?.name
+          is State.Installing -> READY_TO_INSTALL_NOTIFICATIONS_GROUP
+          else -> null
+        }
       )
 
       notification?.let { showNotification(notificationId, notification) }
@@ -146,9 +152,10 @@ class InstallerNotificationsBuilder @Inject constructor(
       requestCode = notificationId,
       packageName = packageName,
       appDetails = appDetails,
-      contentText = context.getString(R.string.notification_waiting_body),
       progress = -1,
-      largeIcon = appIcon
+      contentText = context.getString(R.string.notification_waiting_body),
+      largeIcon = appIcon,
+      notificationGroup = null
     )
 
     notification?.let { showNotification(notificationId, notification) }
@@ -167,11 +174,12 @@ class InstallerNotificationsBuilder @Inject constructor(
       requestCode = notificationId,
       packageName = packageName,
       appDetails = appDetails,
+      progress = null,
       contentTitle = context.getString(R.string.notification_ready_install_title),
       contentText = context.getString(R.string.notification_ready_install_body, appDetails?.name),
-      progress = null,
       channel = READY_TO_INSTALL_NOTIFICATION_CHANNEL_ID,
-      largeIcon = appIcon
+      largeIcon = appIcon,
+      notificationGroup = READY_TO_INSTALL_NOTIFICATIONS_GROUP
     )
 
     notification?.let { showNotification(notificationId, notification) }
@@ -204,10 +212,11 @@ class InstallerNotificationsBuilder @Inject constructor(
       requestCode = notificationId,
       packageName = packageName,
       appDetails = appDetails,
-      contentText = context.getString(R.string.notification_waiting_for_wifi_title),
       progress = -1,
+      contentText = context.getString(R.string.notification_waiting_for_wifi_title),
       hasAction = true,
-      largeIcon = appIcon
+      largeIcon = appIcon,
+      notificationGroup = null
     )
 
     notification?.let { showNotification(notificationId, notification) }
@@ -223,6 +232,7 @@ class InstallerNotificationsBuilder @Inject constructor(
     hasAction: Boolean = false,
     channel: String = INSTALLER_NOTIFICATION_CHANNEL_ID,
     largeIcon: Bitmap?,
+    notificationGroup: String?,
   ): Notification? = if (context.isAllowed(Manifest.permission.POST_NOTIFICATIONS)) {
 
     val deepLink = buildAppViewDeepLinkUri(
@@ -257,7 +267,6 @@ class InstallerNotificationsBuilder @Inject constructor(
       .setAutoCancel(true)
       .setContentIntent(clickIntent)
       .setOnlyAlertOnce(true)
-      .setGroup(INSTALL_NOTIFICATIONS_GROUP)
       .apply {
         when (progress) {
           null -> setStyle(
@@ -266,6 +275,10 @@ class InstallerNotificationsBuilder @Inject constructor(
 
           -1 -> setProgress(0, 0, true)
           else -> setProgress(100, progress, false)
+        }
+
+        if (notificationGroup != null) {
+          setGroup(notificationGroup)
         }
 
         if (hasAction) {
