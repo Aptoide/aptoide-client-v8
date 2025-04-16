@@ -280,7 +280,7 @@ class SearchRepository(
       app.store.name.equals("catappult"),
       "",
       campaignMapper.mapCampaign(app.urls),
-      app.developer.name
+      app.developer?.name ?: ""
     )
   }
 

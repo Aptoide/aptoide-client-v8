@@ -110,7 +110,12 @@ class SearchResultViewHolder(
       itemView.rating.text = DecimalFormat("0.0").format(avgRating.toDouble())
     }
 
-    itemView.developer_name.text = result.developerName
+    if (result.developerName.isNullOrEmpty()) {
+      itemView.developer_name.visibility = View.INVISIBLE
+    } else {
+      itemView.developer_name.text = result.developerName
+    }
+
     appInfoViewHolder.setInfo(
       result.hasBilling() || result.hasAdvertising(), result.averageRating,
       false, false
