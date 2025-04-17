@@ -1,5 +1,6 @@
 package com.aptoide.android.aptoidegames.home
 
+import androidx.annotation.Keep
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -16,12 +17,13 @@ val defaultHomeTabs = listOf<HomeTab>(
   HomeTab.Categories,
 )
 
+@Keep
 sealed class HomeTab {
-  object ForYou : HomeTab()
-  data class TopCharts(val sort: String = "pdownloads") : HomeTab()
-  object Bonus : HomeTab()
-  object Editorial : HomeTab()
-  object Categories : HomeTab()
+  @Keep object ForYou : HomeTab()
+  @Keep data class TopCharts(val sort: String = "pdownloads") : HomeTab()
+  @Keep object Bonus : HomeTab()
+  @Keep object Editorial : HomeTab()
+  @Keep object Categories : HomeTab()
 
   @Composable
   fun getTitle() = stringResource(
