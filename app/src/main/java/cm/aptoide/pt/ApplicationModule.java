@@ -1105,24 +1105,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       RoomMigrationProvider roomMigrationProvider) {
     return Room.databaseBuilder(application.getApplicationContext(), AptoideDatabase.class,
             BuildConfig.ROOM_DATABASE_NAME)
-        .fallbackToDestructiveMigrationFrom(getSQLiteIntArrayVersions())
         .addMigrations(roomMigrationProvider.getMigrations())
+        .fallbackToDestructiveMigration()
         .build();
   }
 
   @Singleton @Provides RoomMigrationProvider providesRoomMigrationProvider() {
     return new RoomMigrationProvider();
-  }
-
-  private int[] getSQLiteIntArrayVersions() {
-    int minSQLiteVersion = 0;
-    int maxSQLiteVersion = 60;
-    int count = maxSQLiteVersion - minSQLiteVersion + 1;
-    int[] SQLiteVersions = new int[count];
-    for (int i = minSQLiteVersion; i <= maxSQLiteVersion; i++) {
-      SQLiteVersions[i - minSQLiteVersion] = i;
-    }
-    return SQLiteVersions;
   }
 
   @Singleton @Provides RoomEventPersistence providesRoomEventPersistence(

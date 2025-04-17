@@ -1,10 +1,11 @@
 package cm.aptoide.pt
 
+import android.os.Build
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 class RoomMigrationProvider {
-  val migrations = arrayOf(object : Migration(100, 101) {
+  private val previousErrorMigrations = arrayOf(object : Migration(100, 101) {
     override fun migrate(database: SupportSQLiteDatabase) {
       database.execSQL("ALTER TABLE download ADD COLUMN attributionId TEXT")
     }
@@ -47,13 +48,20 @@ class RoomMigrationProvider {
     override fun migrate(database: SupportSQLiteDatabase) {
       database.execSQL("ALTER TABLE `update` ADD COLUMN downloadCampaigns TEXT")
     }
-  }, object : Migration(108, 109) {
-      override fun migrate(database: SupportSQLiteDatabase) {
-        database.execSQL("ALTER TABLE download RENAME COLUMN downloadSpeed TO averageApkDownloadSpeed")
-        database.execSQL("ALTER TABLE download ADD COLUMN averageObbDownloadSpeed INTEGER DEFAULT 0 NOT NULL")
-        database.execSQL("ALTER TABLE download ADD COLUMN averageSplitsDownloadSpeed INTEGER DEFAULT 0 NOT NULL")
+  })
 
-      }
+  fun getMigrations(): Array<Migration> {
+    var migrationsList = previousErrorMigrations
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+      migrationsList = migrationsList.plus(
+        object : Migration(108, 109) {
+          override fun migrate(database: SupportSQLiteDatabase) {
+            database.execSQL("ALTER TABLE download RENAME COLUMN downloadSpeed TO averageApkDownloadSpeed")
+            database.execSQL("ALTER TABLE download ADD COLUMN averageObbDownloadSpeed INTEGER DEFAULT 0 NOT NULL")
+            database.execSQL("ALTER TABLE download ADD COLUMN averageSplitsDownloadSpeed INTEGER DEFAULT 0 NOT NULL")
+          }
+        })
     }
-  )
+    return migrationsList
+  }
 }
