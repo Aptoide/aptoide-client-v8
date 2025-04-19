@@ -439,15 +439,15 @@ contiene minacce!</string>
   <string name="wallet_install_request_message_body">Prima di acquistare questo articolo ti serve l\'%s.</string>
   <string name="wallet_install_appcoins_wallet">Aptoide Wallet</string>
   <string name="wallet_install_complete_title">Installazione completata</string>
-  <string name="appc_not_supported_body">It seems this device doesn\'t support the Aptoide Wallet. Try with a different one!</string>
-  <string name="wallet_install_request_already_installed_title">Aptoide Wallet Install</string>
+  <string name="appc_not_supported_body">Sembra che questo dispositivo non supporti l\'Aptoide Wallet. Prova con un altro!</string>
+  <string name="wallet_install_request_already_installed_title">Installazione Aptoide Wallet</string>
   <string name="wallet_install_request_already_installed_body">Sfrutta un bonus per ogni acquisto in-app!</string>
-  <string name="wallet_verification_message_update_wallet_to_claim">Update the Aptoide Wallet to receive this reward!</string>
+  <string name="wallet_verification_message_update_wallet_to_claim">Aggiorna l\'Aptoide Wallet per ricevere questo premio!</string>
   <string name="wallet_verification_button_update">Aggiorna adesso</string>
   <!--POA exposure-->
   <string name="wallet_verification_button_update_wallet">Aggiorna wallet</string>
   <string name="poa_app_card_short">RICEVI %s</string>
-  <string name="poa_home_card_body">Install these apps and spend 2 minutes in them to earn Aptoide balance.</string>
+  <string name="poa_home_card_body">Installa queste app e usale per 2 minuti per ricevere saldo Aptoide.</string>
   <string name="poa_app_view_card_body_1">Prova questa app per 2 minuti e ricevi</string>
   <string name="poa_app_view_card_body_2">%1$s in Aptoide balance (%2$s)</string>
   <string name="poa_APPCC_left_body">Non perdere tempo! Ci sono solo %s premi disponibili.</string>
@@ -456,11 +456,11 @@ contiene minacce!</string>
   <string name="poa_time_left_minutes">MINUTI</string>
   <string name="poa_time_left_seconds">SECONDI</string>
   <!--APPC Info View-->
-  <string name="appc_info_view_title_1">Everything You Need to Know About the Aptoide Wallet</string>
-  <string name="appc_info_view_body_1_variable">Aptoide balance is the currency for in-app transactions. The best part? You\'ll earn up to <b>%s%% bonus in all purchases!</b></string>
-  <string name="appc_info_view_body_1_variable_no_data">Aptoide balance is the currency for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
+  <string name="appc_info_view_title_1">Tutto ciò che devi sapere sull\'Aptoide Wallet</string>
+  <string name="appc_info_view_body_1_variable">Il saldo Aptoide è la valuta per gli acquisti in-app. Sai qual è il bello? Riceverai un <b>bonus fino al %s%% su tutti gli acquisti!</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">Il saldo Aptoide è la valuta per gli acquisti in-app. Sai qual è il bello? Riceverai un <b>bonus su tutti gli acquisti!</b></string>
   <string name="appc_info_view_title_2">Iniziamo come si deve</string>
-  <string name="appc_info_view_body_2">You need to install the Aptoide Wallet to get rewards and process all transactions. Once you install it, it\'ll do everything for you!</string>
+  <string name="appc_info_view_body_2">Per ricevere premi e processare tutte le transazioni dovrai installare l\'Aptoide Wallet. Una volta fatto, penseremo noi a tutto!</string>
   <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_4">Un bonus a ogni acquisto!</string>
   <string name="appc_info_view_title_5_variable">Potrai ricevere fino al %s%%  di bonus per ogni acquisto effettuato nelle app contrassegnate dal simbolo %s. Sfrutta questa occasione e diventa un giocatore pro!</string>
@@ -510,7 +510,7 @@ contiene minacce!</string>
   <!-- Out of space -->
   <string name="out_of_space_body">Spazio necessario per procedere con l\'installazione: %s.</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Now compatible with the Aptoide Wallet</string>
+  <string name="promotional_now_with_appcoins">Ora compatibile con Aptoide Wallet</string>
   <string name="promotional_new_version">Nuova versione</string>
   <string name="promotional_on_going_event">Evento in corso</string>
   <string name="promotional_new_in_aptoide">Ora disponibile su Aptoide</string>
