@@ -2,6 +2,7 @@ package com.aptoide.android.aptoidegames
 
 import android.Manifest
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
@@ -104,7 +105,9 @@ class MainActivity : AppCompatActivity() {
       sendAGStartAnalytics(isFirstLaunch)
 
       if (isFirstLaunch) {
-        notificationsPermissionLauncher?.launch(Manifest.permission.POST_NOTIFICATIONS)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+          notificationsPermissionLauncher?.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
         appLaunchPreferencesManager.setIsNotFirstLaunch()
       }
     }
