@@ -106,7 +106,9 @@ class MainActivity : AppCompatActivity() {
 
       if (isFirstLaunch) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-          notificationsPermissionLauncher?.launch(Manifest.permission.POST_NOTIFICATIONS)
+          runCatching {
+            notificationsPermissionLauncher?.launch(Manifest.permission.POST_NOTIFICATIONS)
+          }
         }
         appLaunchPreferencesManager.setIsNotFirstLaunch()
       }
