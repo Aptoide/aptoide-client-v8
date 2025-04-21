@@ -12,18 +12,25 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.emptyFlow
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import javax.inject.Inject
 import javax.inject.Singleton
 
+interface Mintegral {
+  fun initializeSdk() {}
+  fun initNativeAd(adClick: (String) -> Unit): Flow<Campaign?> = emptyFlow()
+  fun registerNativeAdView(view: View, campaign: Campaign) {}
+}
+
 @Singleton
-class Mintegral @Inject constructor(
+class MintegralImpl @Inject constructor(
   @ApplicationContext private val context: Context
-) {
+) : Mintegral {
   private var nativeHandler: MBNativeHandler? = null
 
-  fun initializeSdk() {
+  override fun initializeSdk() {
     val sdk = MBridgeSDKFactory.getMBridgeSDK()
     val configMap = sdk.getMBConfigurationMap(
       BuildConfig.MINTEGRAL_APP_ID,
@@ -44,7 +51,7 @@ class Mintegral @Inject constructor(
     })
   }
 
-  fun initNativeAd(adClick: (String) -> Unit): Flow<Campaign?> {
+  override fun initNativeAd(adClick: (String) -> Unit): Flow<Campaign?> {
     val appContext = context
     val properties = MBNativeHandler.getNativeProperties(
       BuildConfig.NATIVE_PLACEMENT_ID,
@@ -79,13 +86,13 @@ class Mintegral @Inject constructor(
     }
   }
 
-  fun registerNativeAdView(view: View, campaign: Campaign) {
+  override fun registerNativeAdView(view: View, campaign: Campaign) {
     val handler = nativeHandler
       ?: throw IllegalStateException("Native handler not initialized")
     handler.registerView(view, campaign)
   }
 
-  fun httpKnock(url: String) {
+  private fun httpKnock(url: String) {
     val client = OkHttpClient()
     val request = Request.Builder()
       .url(url)
