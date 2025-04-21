@@ -59,8 +59,8 @@ import cm.aptoide.pt.feature_home.presentation.BundlesViewUiState
 import cm.aptoide.pt.feature_home.presentation.BundlesViewUiStateType
 import cm.aptoide.pt.feature_home.presentation.bundlesList
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
-import com.aptoide.android.aptoidegames.Platform.isHMD
-import com.aptoide.android.aptoidegames.Platform.isHMDdevice
+import com.aptoide.android.aptoidegames.Platform.isHmd
+import com.aptoide.android.aptoidegames.Platform.isHmdDevice
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.OverrideAnalyticsBundleMeta
@@ -519,7 +519,7 @@ private fun Int.floorMod(other: Int): Int = when (other) {
 }
 
 private fun BundlesViewUiState.filterHMD(): BundlesViewUiState {
-  return if (isHMD && isHMDdevice) {
+  return if (isHmd && isHmdDevice) {
     this
   } else {
     this.copy(bundles = bundles.filter { it.tag != "apps-group-hmd-controller" })
