@@ -13,6 +13,7 @@ import androidx.work.Configuration
 import androidx.work.Configuration.Provider
 import cm.aptoide.pt.extensions.getProcessName
 import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
+import cm.aptoide.pt.feature_campaigns.MMPLinkerCampaign
 import cm.aptoide.pt.feature_categories.analytics.AptoideAnalyticsInfoProvider
 import cm.aptoide.pt.feature_flags.domain.FeatureFlags
 import cm.aptoide.pt.feature_updates.domain.Updates
@@ -142,6 +143,7 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
       }
     }
     AptoideMMPCampaign.init(BuildConfig.OEMID, BuildConfig.MARKET_NAME)
+    MMPLinkerCampaign.init(BuildConfig.OEMID)
     initAds()
   }
 
