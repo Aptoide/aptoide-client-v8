@@ -27,7 +27,6 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import cm.aptoide.pt.feature_campaigns.toMMPLinkerCampaign
 import cm.aptoide.pt.install_manager.dto.Constraints
-import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.dto.InstallAction
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
@@ -123,7 +122,7 @@ fun installViewStates(
                   currentScreen = analyticsContext.currentScreen
                 )
             }
-            app.campaigns?.toMMPLinkerCampaign()?.sendDownloadEvent(BuildConfig.OEMID)
+            app.campaigns?.toMMPLinkerCampaign()?.sendDownloadEvent()
             onInstallStarted()
             scheduledInstallListener.listenToWifiStart(app.packageName)
             saveAppDetails(app) {
@@ -178,7 +177,7 @@ fun installViewStates(
                   currentScreen = analyticsContext.currentScreen
                 )
             }
-            app.campaigns?.toMMPLinkerCampaign()?.sendDownloadEvent(BuildConfig.OEMID)
+            app.campaigns?.toMMPLinkerCampaign()?.sendDownloadEvent()
             onInstallStarted()
             scheduledInstallListener.listenToWifiStart(app.packageName)
             saveAppDetails(app) {
@@ -243,7 +242,7 @@ fun installViewStates(
                   currentScreen = analyticsContext.currentScreen
                 )
             }
-            app.campaigns?.toMMPLinkerCampaign()?.sendDownloadEvent(BuildConfig.OEMID)
+            app.campaigns?.toMMPLinkerCampaign()?.sendDownloadEvent()
             onInstallStarted()
             scheduledInstallListener.listenToWifiStart(app.packageName)
             saveAppDetails(app) {
@@ -307,7 +306,7 @@ fun installViewStates(
                   currentScreen = analyticsContext.currentScreen
                 )
             }
-            app.campaigns?.toMMPLinkerCampaign()?.sendDownloadEvent(BuildConfig.OEMID)
+            app.campaigns?.toMMPLinkerCampaign()?.sendDownloadEvent()
             onInstallStarted()
             scheduledInstallListener.listenToWifiStart(app.packageName)
             saveAppDetails(app) {
