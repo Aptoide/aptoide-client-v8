@@ -1,8 +1,8 @@
 package com.aptoide.android.aptoidegames.home
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri.encode
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -380,7 +380,7 @@ fun SeeMoreView(
   }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+@SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
 fun HorizontalPagerView(
   appsList: List<App>,
