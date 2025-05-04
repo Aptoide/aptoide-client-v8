@@ -78,6 +78,7 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.BonusSectionVi
 import com.aptoide.android.aptoidegames.feature_apps.presentation.CarouselBundle
 import com.aptoide.android.aptoidegames.feature_apps.presentation.CarouselLargeBundle
 import com.aptoide.android.aptoidegames.feature_apps.presentation.DEFAULT_AUTO_SCROLL_SPEED
+import com.aptoide.android.aptoidegames.feature_apps.presentation.EditorsChoiceBundle
 import com.aptoide.android.aptoidegames.feature_apps.presentation.MyGamesBundleView
 import com.aptoide.android.aptoidegames.feature_apps.presentation.PublisherTakeOverBundle
 import com.aptoide.android.aptoidegames.feature_apps.presentation.buildSeeMoreRoute
@@ -199,11 +200,21 @@ fun BundlesView(
               spaceBy = 32
             )
 
-            Type.CAROUSEL -> CarouselBundle(
-              bundle = bundle,
-              navigate = navigateTo,
-              spaceBy = 32
-            )
+            Type.CAROUSEL -> {
+              if (bundle.tag == "apps-group-editors-choice") {
+                EditorsChoiceBundle(
+                  bundle = bundle,
+                  navigate = navigateTo,
+                  spaceBy = 32
+                )
+              } else {
+                CarouselBundle(
+                  bundle = bundle,
+                  navigate = navigateTo,
+                  spaceBy = 32
+                )
+              }
+            }
 
             Type.CAROUSEL_LARGE -> CarouselLargeBundle(
               bundle = bundle,
@@ -513,14 +524,14 @@ fun getSeeMoreRouteNavigation(
   }
 }
 
-private fun calculateLoopedBundleInitialItem(appsListSize: Int): Int {
+fun calculateLoopedBundleInitialItem(appsListSize: Int): Int {
   val numberOfLists: Int = Int.MAX_VALUE / appsListSize
   val middleList: Int = numberOfLists / 2
   val middleListLastIndex: Int = middleList * appsListSize
   return (middleListLastIndex - appsListSize) + 1
 }
 
-private fun Int.floorMod(other: Int): Int = when (other) {
+fun Int.floorMod(other: Int): Int = when (other) {
   0 -> this
   else -> this - floorDiv(other) * other
 }
