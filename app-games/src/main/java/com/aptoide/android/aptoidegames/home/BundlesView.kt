@@ -3,6 +3,7 @@ package com.aptoide.android.aptoidegames.home
 import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri.encode
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -412,14 +413,20 @@ fun HorizontalPagerView(
   val currentPage by autoScrollViewModel.uiState.collectAsState()
 
   LaunchedEffect(initialItem) {
-    pagerState.animateScrollToPage(initialItem)
+    pagerState.animateScrollToPage(
+      page = initialItem,
+      animationSpec = tween(durationMillis = 500)
+    )
   }
 
   /*Used when the current page state is changed in the AutoScrollViewModel*/
   LaunchedEffect(currentPage) {
     currentPage?.let {
       scope.launch {
-        pagerState.animateScrollToPage(it)
+        pagerState.animateScrollToPage(
+          page = it,
+          animationSpec = tween(durationMillis = 500)
+        )
       }
     }
   }
