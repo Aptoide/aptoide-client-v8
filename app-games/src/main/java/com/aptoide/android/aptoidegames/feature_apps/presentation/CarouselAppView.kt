@@ -1,7 +1,5 @@
 package com.aptoide.android.aptoidegames.feature_apps.presentation
 
-import android.view.ViewGroup.LayoutParams
-import android.widget.FrameLayout
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -26,13 +24,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.extractVideoId
 import cm.aptoide.pt.extensions.isYoutubeURL
@@ -48,8 +44,8 @@ import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusIconRight
-import com.aptoide.android.aptoidegames.feature_ad.MintegralAd
 import com.aptoide.android.aptoidegames.feature_ad.MintegralAdEvent
+import com.aptoide.android.aptoidegames.feature_ad.presentation.MintegralAdWrapper
 import com.aptoide.android.aptoidegames.feature_ad.rememberMintegralAd
 import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.home.HorizontalPagerView
@@ -165,75 +161,37 @@ private fun CarouselListView(
     appsList = updatedList,
     scrollSpeedInSeconds = if (showVideos) 9L else DEFAULT_AUTO_SCROLL_SPEED
   ) { modifier, page, item, isCurrentPage ->
+    val appContent = @Composable {
+      CarouselAppView(
+        app = item,
+        showVideo = showVideos && isCurrentPage,
+        onClick = {
+          bundleAnalytics.sendAppPromoClick(
+            app = item,
+            analyticsContext = analyticsContext.copy(itemPosition = page)
+          )
+          navigate(
+            buildAppViewRoute(item)
+              .withItemPosition(page)
+          )
+        }
+      )
+    }
+
     Box(
       modifier
         .width(280.dp)
         .background(color = Color.Transparent)
     ) {
       if (ad != null && page == 1) {
-        MintegralNativeAdView(
-          ad = ad,
-          item = item,
-          showVideos = showVideos,
-          isCurrentPage = isCurrentPage
-        )
+        MintegralAdWrapper(ad = ad) {
+          appContent()
+        }
       } else {
-        CarouselAppView(
-          app = item,
-          showVideo = showVideos && isCurrentPage,
-          onClick = {
-            bundleAnalytics.sendAppPromoClick(
-              app = item,
-              analyticsContext = analyticsContext.copy(itemPosition = page)
-            )
-            navigate(
-              buildAppViewRoute(item)
-                .withItemPosition(page)
-            )
-          }
-        )
+        appContent()
       }
     }
   }
-}
-
-@Composable
-fun MintegralNativeAdView(
-  ad: MintegralAd,
-  item: App,
-  showVideos: Boolean,
-  isCurrentPage: Boolean,
-) {
-  AndroidView(
-    factory = { context ->
-      val container = FrameLayout(context).apply {
-        layoutParams = LayoutParams(
-          LayoutParams.MATCH_PARENT,
-          LayoutParams.WRAP_CONTENT
-        )
-      }
-
-      val composeView = ComposeView(context).apply {
-        setContent {
-          CarouselAppView(
-            app = item,
-            showVideo = showVideos && isCurrentPage,
-            onClick = null
-          )
-        }
-      }
-      container.addView(
-        composeView,
-        FrameLayout.LayoutParams(
-          FrameLayout.LayoutParams.MATCH_PARENT,
-          FrameLayout.LayoutParams.WRAP_CONTENT
-        )
-      )
-      ad.register(container)
-
-      container
-    }
-  )
 }
 
 @Composable
