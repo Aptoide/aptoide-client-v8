@@ -63,7 +63,7 @@ class GameGenieViewModel @Inject constructor(
   fun reload() {
     viewModelScope.launch {
       runCatching {
-        val chat = gameGenieUseCase.reloadConversation(uiState.value.chat)
+        val chat = gameGenieUseCase.reloadConversation(uiState.value.chat, _installedApps.value)
         updateSuccessState(chat)
       }.getOrNull()
     }
