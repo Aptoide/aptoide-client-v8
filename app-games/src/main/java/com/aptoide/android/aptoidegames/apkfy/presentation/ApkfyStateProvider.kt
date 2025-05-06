@@ -1,5 +1,6 @@
 package com.aptoide.android.aptoidegames.apkfy.presentation
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -76,6 +77,8 @@ fun rememberApkfyState(): ApkfyUiState? = runPreviewable(
   }
 )
 
+@SuppressLint("ContextCastToActivity")
+@Suppress("unused")
 @Composable
 fun rememberDownloadPermissionState(app: App): DownloadPermissionState? = runPreviewable(
   preview = { DownloadPermissionState.Allowed(app.packageName) },
