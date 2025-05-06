@@ -52,10 +52,10 @@ fun rememberApkfyState(): ApkfyUiState? = runPreviewable(
         apkfyApp?.let { app ->
           apkfyFeatureFlags?.let { flags ->
             when (flags.apkfyVariant) {
-              "v1" -> ApkfyUiState.VariantA(app)
-              "v2" -> ApkfyUiState.VariantB(app)
-              "v4" -> ApkfyUiState.VariantC(app)
-              "v5" -> ApkfyUiState.VariantD(app)
+              "a" -> ApkfyUiState.VariantA(app)
+              "b" -> ApkfyUiState.VariantB(app)
+              "c" -> ApkfyUiState.VariantC(app)
+              "d" -> ApkfyUiState.VariantD(app)
               else -> ApkfyUiState.Default(app)
             }
           }
@@ -67,7 +67,7 @@ fun rememberApkfyState(): ApkfyUiState? = runPreviewable(
       coroutineScope.launch {
         apkfyFeatureFlags = withTimeoutOrNull(5000) {
           ApkfyFeatureFlags(
-            apkfyVariant = vm.featureFlags.getFlagAsString("apkfy_variant"),
+            apkfyVariant = vm.featureFlags.getFlagAsString("apkfy_test_variant"),
           )
         } ?: ApkfyFeatureFlags()
       }

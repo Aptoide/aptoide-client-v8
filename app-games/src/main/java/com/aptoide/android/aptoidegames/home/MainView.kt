@@ -28,6 +28,7 @@ import cm.aptoide.pt.extensions.animatedComposable
 import cm.aptoide.pt.extensions.staticComposable
 import com.aptoide.android.aptoidegames.AptoideGamesBottomSheet
 import com.aptoide.android.aptoidegames.apkfy.presentation.ApkfyHandler
+import com.aptoide.android.aptoidegames.apkfy.presentation.apkfyScreen
 import com.aptoide.android.aptoidegames.appview.appViewScreen
 import com.aptoide.android.aptoidegames.appview.permissions.appPermissionsScreen
 import com.aptoide.android.aptoidegames.bottom_bar.AppGamesBottomBar
@@ -120,7 +121,7 @@ fun MainView(navController: NavHostController) {
             }
           )
         }
-        ApkfyHandler(showBottomSheet)
+        ApkfyHandler(showBottomSheet = showBottomSheet, navigate = navController::navigateTo)
 
         LaunchedEffect(promoCodeApp) {
           if (promoCodeApp != null) {
@@ -251,6 +252,12 @@ private fun NavigationGraph(
       navigate = navController::navigateTo,
       goBack = navController::navigateUp,
       screenData = gameGenieScreen()
+    )
+
+    animatedComposable(
+      navigate = navController::navigateTo,
+      goBack = navController::navigateUp,
+      screenData = apkfyScreen()
     )
   }
 }

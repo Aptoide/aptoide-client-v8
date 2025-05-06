@@ -98,17 +98,17 @@ class BIAnalytics(private val analyticsSender: AnalyticsSender) {
     analyticsSender.setUserProperties(*props)
 
   private suspend fun setFeatureFlagsProperties(featureFlags: FeatureFlags) {
-    val apkfyVariant = featureFlags.getFlagAsString("apkfy_variant")
+    val apkfyVariant = featureFlags.getFlagAsString("apkfy_test_variant")
     val testGroup =
       when (apkfyVariant) {
-        "v1" -> "group_a"
-        "v2" -> "group_b"
-        "v4" -> "group_c"
-        "v5" -> "group_d"
+        "a" -> "group_a"
+        "b" -> "group_b"
+        "c" -> "group_c"
+        "d" -> "group_d"
         else -> "NA"
       }
 
-    analyticsSender.setUserProperties("ab_test_apkfy_dec_11" to testGroup)
+    analyticsSender.setUserProperties("ab_test_apkfy_may_21" to testGroup)
   }
 
   fun setUTMProperties(
