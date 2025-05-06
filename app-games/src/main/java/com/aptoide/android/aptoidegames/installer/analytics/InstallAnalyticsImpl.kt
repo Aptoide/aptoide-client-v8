@@ -340,6 +340,15 @@ class InstallAnalyticsImpl(
       status = "success",
       installPackageInfo = installPackageInfo
     )
+
+    if (installPackageInfo.payload.toAnalyticsPayload()?.isApkfy == true) {
+      genericAnalytics.logEvent(
+        name = "apkfy_install_success",
+        params = installPackageInfo.toAppGenericParameters(
+          packageName = packageName,
+        )
+      )
+    }
   }
 
   override fun sendInstallErrorEvent(

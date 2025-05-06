@@ -21,6 +21,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+private var apkfyApp: App? = null
+
 @HiltViewModel
 class ApkfyViewModel @Inject constructor(
   @ApplicationContext private val context: Context,
@@ -40,17 +42,22 @@ class ApkfyViewModel @Inject constructor(
 
   init {
     viewModelScope.launch {
-      try {
-        apkfyManager.getApkfy()
-          ?.takeIf { it.packageName != context.packageName }
-          ?.takeIf { it.appId != null || it.packageName != null }
-          ?.let(apkfyFilter::filter)
-          ?.let {
-            val app = appMetaUseCase.getMetaInfo(source = it.asSource())
-            viewModelState.update { app }
-          }
-      } catch (e: Throwable) {
-        e.printStackTrace()
+      if (apkfyApp == null) {
+        try {
+          apkfyManager.getApkfy()
+            ?.takeIf { it.packageName != context.packageName }
+            ?.takeIf { it.appId != null || it.packageName != null }
+            ?.let(apkfyFilter::filter)
+            ?.let {
+              val app = appMetaUseCase.getMetaInfo(source = it.asSource())
+              apkfyApp = app
+              viewModelState.update { apkfyApp }
+            }
+        } catch (e: Throwable) {
+          e.printStackTrace()
+        }
+      } else {
+        viewModelState.update { apkfyApp }
       }
     }
   }
