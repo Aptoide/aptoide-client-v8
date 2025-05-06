@@ -33,10 +33,10 @@ class GameGenieUseCase @Inject constructor(
 
   fun getInstalledApps(): Flow<List<GameContext>> = appRepository.getInstalledApps()
 
-  suspend fun reloadConversation(chat: GameGenieChat): GameGenieChat {
+  suspend fun reloadConversation(chat: GameGenieChat, installedApps: List<GameContext>): GameGenieChat {
     val lastMessage = chat.conversation.lastOrNull()?.user ?: ""
     return if (lastMessage.isNotEmpty())
-      sendMessage(chat.toGameGenieChatHistory(), lastMessage, emptyList())
+      sendMessage(chat.toGameGenieChatHistory(), lastMessage, installedApps)
     else
       chat
   }
