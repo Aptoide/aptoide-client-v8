@@ -1,22 +1,24 @@
-package com.aptoide.android.aptoidegames.installer.presentation
+package com.aptoide.android.aptoidegames.apkfy.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
-import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -44,16 +46,19 @@ import com.aptoide.android.aptoidegames.R.string
 import com.aptoide.android.aptoidegames.design_system.AccentButton
 import com.aptoide.android.aptoidegames.design_system.PrimaryButton
 import com.aptoide.android.aptoidegames.design_system.PrimaryOutlinedButton
-import com.aptoide.android.aptoidegames.design_system.PrimarySmallButton
-import com.aptoide.android.aptoidegames.design_system.SecondarySmallOutlinedButton
+import com.aptoide.android.aptoidegames.design_system.SecondaryOutlinedButton
 import com.aptoide.android.aptoidegames.drawables.icons.getError
+import com.aptoide.android.aptoidegames.installer.presentation.InstallViewState
+import com.aptoide.android.aptoidegames.installer.presentation.getProgressString
+import com.aptoide.android.aptoidegames.installer.presentation.installViewStates
+import com.aptoide.android.aptoidegames.installer.presentation.toInstallViewState
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 
 @PreviewDark
 @Composable
-private fun InstallViewProcessingPreview() {
+private fun ApkfyInstallViewProcessingPreview() {
   // A contrast divider to highlight items boundaries
   val divider = @Composable {
     Divider(
@@ -69,7 +74,7 @@ private fun InstallViewProcessingPreview() {
     ) {
       states.forEach {
         divider()
-        InstallViewContent(installViewState = it.toInstallViewState(randomApp))
+        ApkfyInstallViewContent(installViewState = it.toInstallViewState(randomApp))
       }
       divider()
     }
@@ -77,7 +82,7 @@ private fun InstallViewProcessingPreview() {
 }
 
 @Composable
-fun InstallView(
+fun ApkfyInstallView(
   app: App,
   modifier: Modifier = Modifier,
   onInstallStarted: () -> Unit = {},
@@ -89,7 +94,7 @@ fun InstallView(
     onCancel = onCancel
   )
 
-  InstallViewContent(
+  ApkfyInstallViewContent(
     installViewState = installViewState,
     modifier = modifier.clearAndSetSemantics {
       installViewState.actionLabel?.let {
@@ -114,55 +119,56 @@ fun InstallView(
 }
 
 @Composable
-private fun InstallViewContent(
+private fun ApkfyInstallViewContent(
   installViewState: InstallViewState,
   modifier: Modifier = Modifier,
-  verticalSpacing: Dp = 8.dp,
-  horizontalSpacing: Dp = 24.dp,
+  verticalSpacing: Dp = 24.dp,
 ) = Box(
   modifier = modifier
-    .fillMaxWidth()
-    .wrapContentHeight(),
+    .fillMaxHeight()
+    .wrapContentWidth(),
+  contentAlignment = Alignment.BottomCenter
 ) {
   when (val state = installViewState.uiState) {
     null -> Unit
     is DownloadUiState.Install -> PrimaryButton(
+      modifier = Modifier.fillMaxWidth(),
       title = installViewState.actionLabel,
       onClick = state.install,
-      modifier = Modifier.fillMaxWidth(),
     )
 
     is DownloadUiState.Migrate -> AccentButton(
+      modifier = Modifier.fillMaxWidth(),
       title = installViewState.actionLabel,
       onClick = state.migrate,
-      modifier = Modifier.fillMaxWidth(),
     )
 
     is DownloadUiState.MigrateAlias -> AccentButton(
+      modifier = Modifier.fillMaxWidth(),
       title = installViewState.actionLabel,
       onClick = state.migrateAlias,
-      modifier = Modifier.fillMaxWidth(),
     )
 
     is DownloadUiState.Outdated -> PrimaryButton(
+      modifier = Modifier.fillMaxWidth(),
       title = installViewState.actionLabel,
       onClick = state.update,
-      modifier = Modifier.fillMaxWidth(),
     )
 
-    is DownloadUiState.Waiting -> ProgressView(
+    is DownloadUiState.Waiting -> ProgressText(
       title = installViewState.stateDescription,
       verticalSpacing = verticalSpacing,
-      horizontalSpacing = horizontalSpacing,
     ) {
       state.action?.let {
         if (state.blocker == UNMETERED) {
-          PrimarySmallButton(
+          PrimaryButton(
+            modifier = Modifier.fillMaxWidth(),
             title = installViewState.actionLabel,
             onClick = it,
           )
         } else {
-          SecondarySmallOutlinedButton(
+          SecondaryOutlinedButton(
+            modifier = Modifier.fillMaxWidth(),
             title = installViewState.actionLabel,
             onClick = it,
           )
@@ -170,59 +176,53 @@ private fun InstallViewContent(
       }
     }
 
-    is DownloadUiState.Downloading -> ProgressView(
+    is DownloadUiState.Downloading -> ProgressText(
       title = state.getProgressString(),
-      progressValue = state.downloadProgress,
       verticalSpacing = verticalSpacing,
-      horizontalSpacing = horizontalSpacing,
     ) {
-      SecondarySmallOutlinedButton(
+      SecondaryOutlinedButton(
+        modifier = Modifier.fillMaxWidth(),
         title = installViewState.actionLabel,
         onClick = state.cancel,
       )
     }
 
-    is DownloadUiState.ReadyToInstall -> ProgressView(
+    is DownloadUiState.ReadyToInstall -> ProgressText(
       title = installViewState.stateDescription,
       verticalSpacing = verticalSpacing,
-      horizontalSpacing = horizontalSpacing,
     ) {
-      SecondarySmallOutlinedButton(
+      SecondaryOutlinedButton(
+        modifier = Modifier.fillMaxWidth(),
         title = installViewState.actionLabel,
         onClick = state.cancel,
       )
     }
 
-    is DownloadUiState.Installing -> ProgressView(
+    is DownloadUiState.Installing -> ProgressText(
       title = installViewState.stateDescription,
       verticalSpacing = verticalSpacing,
-      horizontalSpacing = horizontalSpacing,
     )
 
-    is DownloadUiState.Uninstalling -> ProgressView(
+    is DownloadUiState.Uninstalling -> ProgressText(
       title = installViewState.stateDescription,
       verticalSpacing = verticalSpacing,
-      horizontalSpacing = horizontalSpacing,
     )
 
     is DownloadUiState.Installed -> PrimaryOutlinedButton(
+      modifier = Modifier.fillMaxWidth(),
       title = installViewState.actionLabel,
       onClick = state.open,
-      modifier = Modifier.fillMaxWidth(),
     )
 
-    is DownloadUiState.Error -> Row(
+    is DownloadUiState.Error -> Column(
       modifier = Modifier
         .fillMaxWidth()
         .wrapContentHeight(),
-      verticalAlignment = Alignment.CenterVertically,
-      horizontalArrangement = Arrangement.spacedBy(horizontalSpacing),
+      horizontalAlignment = Alignment.CenterHorizontally,
+      verticalArrangement = Arrangement.spacedBy(verticalSpacing),
     ) {
-      InstallViewError(
-        modifier = Modifier
-          .padding(end = 16.dp)
-          .weight(1f)
-      )
+      ApkfyInstallViewError()
+      Spacer(modifier = Modifier.weight(1f))
       PrimaryButton(
         modifier = Modifier.width(136.dp),
         title = installViewState.actionLabel,
@@ -233,7 +233,7 @@ private fun InstallViewContent(
 }
 
 @Composable
-private fun InstallViewError(modifier: Modifier = Modifier) {
+private fun ApkfyInstallViewError(modifier: Modifier = Modifier) {
   Row(
     modifier = modifier,
     verticalAlignment = Alignment.CenterVertically,
@@ -255,58 +255,27 @@ private fun InstallViewError(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun ProgressView(
+private fun ProgressText(
   title: String,
-  progressValue: Int? = null,
   verticalSpacing: Dp,
-  horizontalSpacing: Dp,
-  content: @Composable RowScope.() -> Unit = {},
+  action: @Composable ColumnScope.() -> Unit = {},
 ) {
   val tintColor = Palette.Primary
-  Row(
-    horizontalArrangement = Arrangement.spacedBy(horizontalSpacing),
-    verticalAlignment = Alignment.Bottom,
+  Column(
+    horizontalAlignment = Alignment.CenterHorizontally
   ) {
-    Column(
-      modifier = Modifier.weight(1f),
-      verticalArrangement = Arrangement.spacedBy(verticalSpacing),
-    ) {
-      Text(
-        text = title,
-        style = AGTypography.InputsS,
-        color = tintColor,
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis
-      )
-      LinearProgress(
-        progress = progressValue?.takeIf { it >= 0 },
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(bottom = 12.dp)
-          .height(8.dp),
-        backgroundColor = Palette.Grey,
-        color = tintColor
-      )
-    }
-    content()
+    Text(
+      text = title,
+      style = AGTypography.InputsS,
+      color = tintColor,
+      maxLines = 1,
+      overflow = TextOverflow.Ellipsis
+    )
+    Spacer(
+      modifier = Modifier
+        .height(verticalSpacing)
+        .weight(1f)
+    )
+    action()
   }
 }
-
-@Composable
-fun LinearProgress(
-  progress: Int?,
-  backgroundColor: Color,
-  color: Color,
-  modifier: Modifier = Modifier,
-) = progress?.let {
-  LinearProgressIndicator(
-    progress = it / 100f,
-    modifier = modifier,
-    backgroundColor = backgroundColor,
-    color = color
-  )
-} ?: LinearProgressIndicator(
-  modifier = modifier,
-  backgroundColor = backgroundColor,
-  color = color
-)

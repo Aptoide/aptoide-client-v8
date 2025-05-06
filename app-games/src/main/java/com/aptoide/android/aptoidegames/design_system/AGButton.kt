@@ -299,6 +299,22 @@ fun SecondaryButton(
   textStyle = AGTypography.InputsL.copy(color = Palette.White)
 )
 
+@Composable
+fun SecondaryOutlinedButton(
+  onClick: () -> Unit,
+  modifier: Modifier = Modifier,
+  enabled: Boolean = true,
+  title: String?,
+) = AGOutlinedButton(
+  onClick = onClick,
+  modifier = modifier.height(48.dp),
+  enabled = enabled,
+  color = Palette.Grey,
+  strokeWidth = 3.dp,
+  title = title,
+  textStyle = AGTypography.InputsL.copy(color = Palette.White)
+)
+
 @Composable fun AccentButton(
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
