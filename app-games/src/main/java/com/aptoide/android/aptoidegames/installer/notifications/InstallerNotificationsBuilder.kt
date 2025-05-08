@@ -166,9 +166,11 @@ class InstallerNotificationsBuilder @Inject constructor(
     appDetails: AppDetails?,
     appIcon: Bitmap?
   ) {
-    val notificationId = stringToIntConverter.getStringId(packageName)
+    val notificationId = stringToIntConverter.getStringId(packageName + READY_TO_INSTALL_NOTIFICATION_CHANNEL_ID)
+    val otherNotificationsId = stringToIntConverter.getStringId(packageName)
 
     cancelNotification(notificationId)
+    cancelNotification(otherNotificationsId)
 
     val notification = buildNotification(
       requestCode = notificationId,
