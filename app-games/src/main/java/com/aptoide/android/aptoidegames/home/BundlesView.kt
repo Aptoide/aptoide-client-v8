@@ -517,7 +517,7 @@ private fun calculateLoopedBundleInitialItem(appsListSize: Int): Int {
   val numberOfLists: Int = Int.MAX_VALUE / appsListSize
   val middleList: Int = numberOfLists / 2
   val middleListLastIndex: Int = middleList * appsListSize
-  return (middleListLastIndex - appsListSize) + 2
+  return (middleListLastIndex - appsListSize) + 1
 }
 
 private fun Int.floorMod(other: Int): Int = when (other) {
