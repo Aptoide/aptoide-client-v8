@@ -15,6 +15,10 @@ plugins {
 android {
   namespace = "com.aptoide.android.aptoidegames"
 
+  ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+  }
+
   defaultConfig {
     applicationId = "com.aptoide.android.aptoidegames"
     versionCode = Integer.parseInt(project.property("VERSION_CODE_APTOIDEGAMES").toString())
@@ -80,11 +84,6 @@ android {
 
     buildConfigFieldFromGradleProperty("ROOM_SCHEMA_VERSION")
     buildConfigFieldFromGradleProperty("ROOM_DATABASE_NAME")
-
-    ksp {
-      arg("room.schemaLocation", "$projectDir/schemas")
-    }
-
   }
 
   signingConfigs {
