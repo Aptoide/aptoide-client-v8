@@ -27,8 +27,7 @@ import androidx.navigation.compose.NavHost
 import cm.aptoide.pt.extensions.animatedComposable
 import cm.aptoide.pt.extensions.staticComposable
 import com.aptoide.android.aptoidegames.AptoideGamesBottomSheet
-import com.aptoide.android.aptoidegames.apkfy.ApkfyBottomSheetContent
-import com.aptoide.android.aptoidegames.apkfy.presentation.rememberApkfyState
+import com.aptoide.android.aptoidegames.apkfy.presentation.ApkfyHandler
 import com.aptoide.android.aptoidegames.appview.appViewScreen
 import com.aptoide.android.aptoidegames.appview.permissions.appPermissionsScreen
 import com.aptoide.android.aptoidegames.bottom_bar.AppGamesBottomBar
@@ -66,8 +65,6 @@ fun MainView(navController: NavHostController) {
   val goBackHome: () -> Unit =
     { navController.popBackStack(navController.graph.startDestinationId, false) }
 
-  val apkfyState = rememberApkfyState()
-  var apkfyShown by remember { mutableStateOf(false) }
   var showTopBar by remember { mutableStateOf(true) }
   val (promoCodeApp, clearPromoCode) = rememberPromoCodeApp()
 
@@ -123,12 +120,7 @@ fun MainView(navController: NavHostController) {
             }
           )
         }
-        LaunchedEffect(apkfyState, apkfyShown) {
-          if (apkfyState != null && !apkfyShown) {
-            showBottomSheet(ApkfyBottomSheetContent(apkfyState))
-            apkfyShown = true
-          }
-        }
+        ApkfyHandler(showBottomSheet)
 
         LaunchedEffect(promoCodeApp) {
           if (promoCodeApp != null) {
