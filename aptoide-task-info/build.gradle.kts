@@ -8,10 +8,8 @@ plugins {
 android {
   namespace = "cm.aptoide.pt.downloads_database"
 
-  defaultConfig {
-    ksp {
-      arg("room.schemaLocation", "$projectDir/schemas")
-    }
+  ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
   }
 }
 
