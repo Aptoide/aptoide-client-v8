@@ -1,8 +1,10 @@
 package com.aptoide.android.aptoidegames.apkfy.di
 
+import cm.aptoide.pt.feature_apkfy.domain.ApkfyFilter
 import cm.aptoide.pt.feature_apkfy.domain.ApkfyManager
 import cm.aptoide.pt.feature_apkfy.domain.ApkfyManagerImpl
 import com.aptoide.android.aptoidegames.IdsRepository
+import com.aptoide.android.aptoidegames.apkfy.AGApkfyFilter
 import com.aptoide.android.aptoidegames.apkfy.DownloadPermissionStateProbe
 import com.aptoide.android.aptoidegames.apkfy.analytics.ApkfyAnalytics
 import com.aptoide.android.aptoidegames.apkfy.analytics.ApkfyManagerProbe
@@ -37,4 +39,8 @@ internal object RepositoryModule {
   ): DownloadPermissionStateProbe = DownloadPermissionStateProbe(
     packageDownloader = downloaderSelector,
   )
+
+  @Provides
+  @Singleton
+  fun provideApkfyFilter(): ApkfyFilter = AGApkfyFilter()
 }
