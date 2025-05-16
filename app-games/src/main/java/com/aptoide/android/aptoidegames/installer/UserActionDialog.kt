@@ -80,7 +80,7 @@ fun UserActionDialog() {
     val observer = LifecycleEventObserver { _, event ->
       if (event == Lifecycle.Event.ON_RESUME) {
         isOnForeground = true
-      } else if (event == Lifecycle.Event.ON_PAUSE) {
+      } else if (event == Lifecycle.Event.ON_STOP) {
         isOnForeground = false
       }
     }
