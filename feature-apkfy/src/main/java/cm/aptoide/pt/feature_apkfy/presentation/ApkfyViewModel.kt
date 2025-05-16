@@ -8,6 +8,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.extensions.runPreviewable
+import cm.aptoide.pt.feature_apkfy.domain.ApkfyFilter
 import cm.aptoide.pt.feature_apkfy.domain.ApkfyManager
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.domain.AppMetaUseCase
@@ -25,6 +26,7 @@ class ApkfyViewModel @Inject constructor(
   @ApplicationContext private val context: Context,
   private val apkfyManager: ApkfyManager,
   private val appMetaUseCase: AppMetaUseCase,
+  private val apkfyFilter: ApkfyFilter
 ) : ViewModel() {
 
   private val viewModelState = MutableStateFlow<App?>(value = null)
@@ -42,7 +44,7 @@ class ApkfyViewModel @Inject constructor(
         apkfyManager.getApkfy()
           ?.takeIf { it.packageName != context.packageName }
           ?.takeIf { it.appId != null || it.packageName != null }
-          ?.takeIf { it.utmSource != "AG" && it.utmSource != "AG_dev" }
+          ?.let(apkfyFilter::filter)
           ?.let {
             val app = appMetaUseCase.getMetaInfo(source = it.asSource())
             viewModelState.update { app }
