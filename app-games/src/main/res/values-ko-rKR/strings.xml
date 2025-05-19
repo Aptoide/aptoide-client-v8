@@ -213,6 +213,7 @@
   </plurals>
   <string name="update_notification_body">여기를 탭하여 설치하세요.</string>
   <string name="update_aptoide_games_update_notification">Aptoide Games의 새로운 버전이 있습니다.</string>
+  <string name="update_available_vip_update_notification">%s : New version available</string>
   <!-- GenAi -->
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
   <string name="genai_me_title">나</string>
