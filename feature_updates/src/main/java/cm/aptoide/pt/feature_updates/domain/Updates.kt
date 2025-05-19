@@ -12,6 +12,7 @@ import cm.aptoide.pt.feature_campaigns.toMMPLinkerCampaign
 import cm.aptoide.pt.feature_updates.data.AutoUpdateWorker
 import cm.aptoide.pt.feature_updates.data.UpdatesRepository
 import cm.aptoide.pt.feature_updates.data.UpdatesWorker
+import cm.aptoide.pt.feature_updates.data.VIPUpdatesWorker
 import cm.aptoide.pt.feature_updates.di.PrioritizedPackagesFilter
 import cm.aptoide.pt.feature_updates.presentation.UpdatesNotificationProvider
 import cm.aptoide.pt.feature_updates.repository.UpdatesPreferencesRepository
@@ -82,6 +83,7 @@ class Updates @Inject constructor(
 
     UpdatesWorker.enqueue(context)
     AutoUpdateWorker.enqueue(context)
+    VIPUpdatesWorker.enqueue(context)
   }
 
   val appsUpdates: Flow<List<App>> = updatesRepository.getUpdates()
@@ -107,6 +109,45 @@ class Updates @Inject constructor(
       if (it.isNotEmpty()) {
         updatesNotificationBuilder.showUpdatesNotification(it)
       }
+    }
+  }
+
+  suspend fun checkVIPUpdates(vipPackages: List<String>) {
+    val installedAppsToUpdate = installManager.installedApps
+      .filter { it.packageName in vipPackages }
+
+    val updates =
+      getUpdates(installedAppsToUpdate.mapNotNull { it.packageInfo }).let(appsListMapper::map)
+
+    //val shouldInstall = installManager.workingAppInstallers.firstOrNull() == null
+    val shouldInstall = false
+    if (shouldInstall) {
+      installedAppsToUpdate.forEach { appInstaller ->
+        updates
+          .firstOrNull { it.packageName == appInstaller.packageName }
+          ?.also {
+            appInstaller.install(
+              installPackageInfo = installPackageInfoMapper.map(it),
+              constraints = Constraints(
+                checkForFreeSpace = false,
+                networkType = UNMETERED
+              )
+            )
+
+            it.campaigns?.run {
+              toAptoideMMPCampaign().sendDownloadEvent(
+                bundleTag = null,
+                searchKeyword = null,
+                currentScreen = null,
+                isCta = false
+              )
+
+              toMMPLinkerCampaign().sendDownloadEvent()
+            }
+          }
+      }
+    } else {
+      updates.forEach { updatesNotificationBuilder.showVIPUpdateNotification(it) }
     }
   }
 
