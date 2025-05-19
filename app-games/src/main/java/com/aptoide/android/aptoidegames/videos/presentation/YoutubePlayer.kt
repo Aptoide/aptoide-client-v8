@@ -1,7 +1,10 @@
 package com.aptoide.android.aptoidegames.videos.presentation
 
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams
+import android.widget.FrameLayout
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -30,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -343,6 +347,7 @@ private fun AppViewYoutubePlayerContent(
         toggleFullscreen()
       },
       properties = DialogProperties(
+        dismissOnClickOutside = false,
         usePlatformDefaultWidth = false
       )
     ) {
@@ -390,42 +395,50 @@ fun rememberYoutubePlayerView(
 ): YouTubePlayerView? {
   val context = LocalContext.current
   val lifecycle = LocalLifecycleOwner.current.lifecycle
+  val configuration = LocalConfiguration.current
 
-  val result = try {
-    val youtubePlayerView = YouTubePlayerView(context)
-    lifecycle.addObserver(youtubePlayerView)
-    youtubePlayerView.enableAutomaticInitialization = false
+  val result = remember {
+    try {
+      val youtubePlayerView = YouTubePlayerView(context)
+      lifecycle.addObserver(youtubePlayerView)
+      youtubePlayerView.enableAutomaticInitialization = false
 
-    val youtubeListener = object : AbstractYouTubePlayerListener() {
-      override fun onReady(youTubePlayer: YouTubePlayer) {
-        youTubePlayer.addListener(youtubePlayerTracker)
+      youtubePlayerView.layoutParams = FrameLayout.LayoutParams(
+        LayoutParams.MATCH_PARENT,
+        LayoutParams.MATCH_PARENT
+      ).apply { gravity = Gravity.CENTER }
 
-        if (autoplay)
-          youTubePlayer.loadVideo(videoId, youtubePlayerTracker.currentSecond)
-        else
-          youTubePlayer.cueVideo(videoId, youtubePlayerTracker.currentSecond)
+      val youtubeListener = object : AbstractYouTubePlayerListener() {
+        override fun onReady(youTubePlayer: YouTubePlayer) {
+          youTubePlayer.addListener(youtubePlayerTracker)
+
+          if (autoplay)
+            youTubePlayer.loadVideo(videoId, youtubePlayerTracker.currentSecond)
+          else
+            youTubePlayer.cueVideo(videoId, youtubePlayerTracker.currentSecond)
+        }
       }
+
+      val iFramePlayerOptions = IFramePlayerOptions.Builder()
+        .apply {
+          rel(0)
+          controls(1)
+          ivLoadPolicy(3)
+          ccLoadPolicy(1)
+          modestBranding(0)
+          langPref(configuration.locales.get(0)?.language ?: "en")
+          if (startMuted) mute(1)
+        }.build()
+
+      youtubePlayerView.initialize(youtubeListener, iFramePlayerOptions)
+      youtubePlayerView
+    } catch (e: Throwable) {
+      e.printStackTrace()
+      null
     }
-
-    val iFramePlayerOptions = IFramePlayerOptions.Builder()
-      .apply {
-        rel(0)
-        controls(1)
-        ivLoadPolicy(3)
-        ccLoadPolicy(1)
-        modestBranding(0)
-        langPref(context.resources?.configuration?.locales?.get(0)?.language ?: "en")
-        if (startMuted) mute(1)
-      }.build()
-
-    youtubePlayerView.initialize(youtubeListener, iFramePlayerOptions)
-    youtubePlayerView
-  } catch (e: Throwable) {
-    e.printStackTrace()
-    null
   }
 
-  return remember { result }
+  return result
 }
 
 fun View?.removeSelf() {
