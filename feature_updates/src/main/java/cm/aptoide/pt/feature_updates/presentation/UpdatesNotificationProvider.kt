@@ -4,4 +4,5 @@ import cm.aptoide.pt.feature_apps.data.App
 
 interface UpdatesNotificationProvider {
   suspend fun showUpdatesNotification(updates: List<App>) {}
+  suspend fun showVIPUpdateNotification(app: App)
 }

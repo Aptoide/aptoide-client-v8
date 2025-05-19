@@ -1,7 +1,11 @@
 package com.aptoide.android.aptoidegames.updates.di
 
 import android.content.Context
+import cm.aptoide.pt.feature_flags.domain.FeatureFlags
+import cm.aptoide.pt.feature_updates.data.VIPUpdatesProvider
 import cm.aptoide.pt.feature_updates.presentation.UpdatesNotificationProvider
+import com.aptoide.android.aptoidegames.installer.notifications.ImageDownloader
+import com.aptoide.android.aptoidegames.updates.presentation.AptoideVIPUpdatesProvider
 import com.aptoide.android.aptoidegames.updates.presentation.UpdatesNotificationBuilder
 import dagger.Module
 import dagger.Provides
@@ -18,7 +22,13 @@ internal object RepositoryModule {
   @Singleton
   fun providesUpdatesNotificationProvider(
     @ApplicationContext context: Context,
+    imageDownloader: ImageDownloader
   ): UpdatesNotificationProvider {
-    return UpdatesNotificationBuilder(context)
+    return UpdatesNotificationBuilder(context, imageDownloader)
   }
+
+  @Provides
+  @Singleton
+  fun provideVIPUpdatesProvider(featureFlags: FeatureFlags): VIPUpdatesProvider =
+    AptoideVIPUpdatesProvider(featureFlags)
 }

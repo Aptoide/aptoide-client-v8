@@ -9,6 +9,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Bitmap
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -16,10 +17,13 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import cm.aptoide.pt.extensions.isAllowed
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.domain.AppSource
 import cm.aptoide.pt.feature_updates.presentation.UpdatesNotificationProvider
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.MainActivity
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.appview.buildAppViewDeepLinkUri
+import com.aptoide.android.aptoidegames.installer.notifications.ImageDownloader
 import com.aptoide.android.aptoidegames.notifications.getNotificationIcon
 import com.aptoide.android.aptoidegames.putDeeplink
 import com.aptoide.android.aptoidegames.putNotificationSource
@@ -31,6 +35,7 @@ import javax.inject.Singleton
 @Singleton
 class UpdatesNotificationBuilder @Inject constructor(
   @ApplicationContext private val context: Context,
+  private val imageDownloader: ImageDownloader
 ) : UpdatesNotificationProvider {
 
   companion object {
@@ -85,6 +90,24 @@ class UpdatesNotificationBuilder @Inject constructor(
     notification?.let { showNotification(notificationId, notification) }
   }
 
+  override suspend fun showVIPUpdateNotification(app: App) {
+    val deepLink = buildAppViewDeepLinkUri(
+      appSource = AppSource.of(appId = null, packageName = app.packageName)
+    )
+    val appIcon = imageDownloader.downloadImageFrom(app.icon)
+    val title = "${app.name} has an update"
+    val notificationId = "VIPUpdates${app.packageName}".hashCode()
+    val notification = buildNotification(
+      requestCode = notificationId,
+      contentText = context.getString(R.string.update_notification_body),
+      contentTitle = title,
+      deepLink = deepLink,
+      largeIcon = appIcon,
+    )
+
+    notification?.let { showNotification(notificationId, notification) }
+  }
+
   @SuppressLint("MissingPermission")
   private fun showNotification(
     notificationId: Int,
@@ -99,10 +122,10 @@ class UpdatesNotificationBuilder @Inject constructor(
     requestCode: Int,
     contentTitle: String? = null,
     contentText: String,
-    channel: String = UPDATES_NOTIFICATION_CHANNEL_ID
+    channel: String = UPDATES_NOTIFICATION_CHANNEL_ID,
+    deepLink: String = buildUpdatesDeepLinkUri(),
+    largeIcon: Bitmap? = null
   ): Notification? = if (context.isAllowed(Manifest.permission.POST_NOTIFICATIONS)) {
-
-    val deepLink = buildUpdatesDeepLinkUri()
 
     val clickIntent = PendingIntent.getActivity(
       context,
@@ -126,7 +149,8 @@ class UpdatesNotificationBuilder @Inject constructor(
       .setColor(colorToUse)
       .setSmallIcon(notificationIcon)
       .setLargeIcon(
-        VectorDrawableCompat.create(context.resources, R.drawable.app_icon, null)?.toBitmap()
+        largeIcon ?: VectorDrawableCompat.create(context.resources, R.drawable.app_icon, null)
+          ?.toBitmap()
       )
       .setContentTitle(contentTitle)
       .setContentText(contentText)
