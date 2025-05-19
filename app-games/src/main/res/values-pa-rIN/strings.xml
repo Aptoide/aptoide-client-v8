@@ -217,6 +217,7 @@
   </plurals>
   <string name="update_notification_body">Tap here to install.</string>
   <string name="update_aptoide_games_update_notification">There\'s a new version of Aptoide Games</string>
+  <string name="update_available_vip_update_notification">%s : New version available</string>
   <!-- GenAi -->
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
   <string name="genai_me_title">Me</string>
