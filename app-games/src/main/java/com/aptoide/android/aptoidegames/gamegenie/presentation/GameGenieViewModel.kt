@@ -175,6 +175,7 @@ private data class GameGenieViewModelState(
       ChatInteraction(
         "",
         null,
+        null,
         emptyList()
       )
     )
@@ -193,6 +194,7 @@ private data class GameGenieViewModelState(
         listOf(
           ChatInteraction(
             "",
+            null,
             null,
             emptyList()
           )

@@ -8,7 +8,7 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface GameGenieApiService {
-  @POST("v1/chat")
+  @POST("v2/chat")
   suspend fun postMessage(
     @Header("Authorization") bearerToken: String,
     @Body request: GameGenieRequest,

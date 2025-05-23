@@ -7,5 +7,6 @@ import cm.aptoide.pt.feature_apps.data.App
 data class ChatInteraction(
   val gpt: String,
   val user: String?,
+  val videoId: String?,
   val apps: List<App>,
 )

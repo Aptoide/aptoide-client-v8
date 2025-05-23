@@ -33,7 +33,10 @@ class GameGenieUseCase @Inject constructor(
 
   fun getInstalledApps(): Flow<List<GameContext>> = appRepository.getInstalledApps()
 
-  suspend fun reloadConversation(chat: GameGenieChat, installedApps: List<GameContext>): GameGenieChat {
+  suspend fun reloadConversation(
+    chat: GameGenieChat,
+    installedApps: List<GameContext>,
+  ): GameGenieChat {
     val lastMessage = chat.conversation.lastOrNull()?.user ?: ""
     return if (lastMessage.isNotEmpty())
       sendMessage(chat.toGameGenieChatHistory(), lastMessage, installedApps)
@@ -72,6 +75,7 @@ class GameGenieUseCase @Inject constructor(
           ChatInteraction(
             gpt = interaction.gpt,
             user = interaction.user,
+            videoId = interaction.videoId,
             apps = interaction.apps.mapNotNull { app ->
               runCatching { appRepository.getApp(app).copy(hasMeta = true) }.getOrNull()
             }

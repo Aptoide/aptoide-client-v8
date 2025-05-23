@@ -6,5 +6,6 @@ import androidx.annotation.Keep
 data class ChatInteractionHistory(
   val gpt: String,
   val user: String?,
+  val videoId: String?,
   val apps: List<String>,
 )

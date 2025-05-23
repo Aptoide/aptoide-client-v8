@@ -8,6 +8,7 @@ import cm.aptoide.pt.feature_apps.data.model.AppJSON
 data class ChatInteractionResponse(
   val gpt: String,
   val user: String?,
+  val video: String?,
   val apps: List<AppJSON>?,
 )
 
