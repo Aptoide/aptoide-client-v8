@@ -56,6 +56,9 @@ class ApkfyAnalytics @Inject constructor(
 
   fun sendApkfyTimeout() = genericAnalytics.logEvent("apkfy_timeout", params = emptyMap())
 
+  fun sendApkfyScreenBackClicked() =
+    genericAnalytics.logEvent("apkfy_screen_back_clicked", params = emptyMap())
+
   fun setApkfyUTMProperties(apkfyModel: ApkfyModel) {
     apkfyModel.run {
       if (hasUTMs()) {

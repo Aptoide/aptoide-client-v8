@@ -1,5 +1,6 @@
 package com.aptoide.android.aptoidegames.apkfy.presentation
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,9 +42,21 @@ fun apkfyScreen() = ScreenData.withAnalytics(
   screenAnalyticsName = "Apkfy",
 ) { _, navigate, navigateBack ->
   val apkfyState = rememberApkfyState()
+  val apkfyAnalytics = rememberApkfyAnalytics()
+
+  BackHandler {
+    apkfyAnalytics.sendApkfyScreenBackClicked()
+    navigateBack()
+  }
 
   Column {
-    AppGamesTopBar(navigateBack = navigateBack, title = "")
+    AppGamesTopBar(
+      navigateBack = {
+        apkfyAnalytics.sendApkfyScreenBackClicked()
+        navigateBack()
+      },
+      title = ""
+    )
     apkfyState?.app?.let {
       ApkfyScreen(
         app = it,
