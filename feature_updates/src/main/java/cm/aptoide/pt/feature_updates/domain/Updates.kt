@@ -102,8 +102,10 @@ class Updates @Inject constructor(
     }
 
   suspend fun checkNonUpdatableApps() {
+    val vipPackages = vipUpdatesProvider.getVIPUpdatesList()
     installManager.installedApps
       .filter { it.updatesOwnerPackageName != myPackageName }
+      .filter { it.packageName !in vipPackages }
       .mapNotNull { it.packageInfo }
       .also { getUpdates(it) }
 
