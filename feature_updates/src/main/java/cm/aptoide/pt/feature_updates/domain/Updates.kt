@@ -12,6 +12,7 @@ import cm.aptoide.pt.feature_campaigns.toMMPLinkerCampaign
 import cm.aptoide.pt.feature_updates.data.AutoUpdateWorker
 import cm.aptoide.pt.feature_updates.data.UpdatesRepository
 import cm.aptoide.pt.feature_updates.data.UpdatesWorker
+import cm.aptoide.pt.feature_updates.data.VIPUpdatesProvider
 import cm.aptoide.pt.feature_updates.data.VIPUpdatesWorker
 import cm.aptoide.pt.feature_updates.di.PrioritizedPackagesFilter
 import cm.aptoide.pt.feature_updates.presentation.UpdatesNotificationProvider
@@ -42,6 +43,7 @@ class Updates @Inject constructor(
   private val updatesNotificationBuilder: UpdatesNotificationProvider,
   private val installPackageInfoMapper: InstallPackageInfoMapper,
   private val updatesPreferencesRepository: UpdatesPreferencesRepository,
+  private val vipUpdatesProvider: VIPUpdatesProvider
 ) {
 
   val mutex: Mutex = Mutex()
@@ -112,42 +114,57 @@ class Updates @Inject constructor(
     }
   }
 
-  suspend fun checkVIPUpdates(vipPackages: List<String>) {
-    val installedAppsToUpdate = installManager.installedApps
-      .filter { it.packageName in vipPackages }
+  suspend fun checkVIPUpdates() {
+    val vipPackages = vipUpdatesProvider.getVIPUpdatesList()
+    if (vipPackages.isNotEmpty()) {
 
-    val updates =
-      getUpdates(installedAppsToUpdate.mapNotNull { it.packageInfo }).let(appsListMapper::map)
+      val savedUpdates = updatesRepository.getUpdates().first()
 
-    //val shouldInstall = installManager.workingAppInstallers.firstOrNull() == null
-    val shouldInstall = false
-    if (shouldInstall) {
-      installedAppsToUpdate.forEach { appInstaller ->
-        updates
-          .firstOrNull { it.packageName == appInstaller.packageName }
-          ?.also {
-            appInstaller.install(
-              installPackageInfo = installPackageInfoMapper.map(it),
-              constraints = Constraints(
-                checkForFreeSpace = false,
-                networkType = UNMETERED
-              )
-            )
+      val installedAppsToUpdate = installManager.installedApps
+        .filter { it.packageName in vipPackages }
 
-            it.campaigns?.run {
-              toAptoideMMPCampaign().sendDownloadEvent(
-                bundleTag = null,
-                searchKeyword = null,
-                currentScreen = null,
-                isCta = false
-              )
+      val updates =
+        getUpdates(installedAppsToUpdate.mapNotNull { it.packageInfo }).let(appsListMapper::map)
 
-              toMMPLinkerCampaign().sendDownloadEvent()
-            }
-          }
+      val filteredUpdates = savedUpdates.let { savedList ->
+        updates.filter { update ->
+          val saved = savedList.find { it.packageName == update.packageName }
+          saved == null || update.versionCode > saved.file.vercode
+        }
       }
-    } else {
-      updates.forEach { updatesNotificationBuilder.showVIPUpdateNotification(it) }
+
+      //val shouldInstall = installManager.workingAppInstallers.firstOrNull() == null
+      val shouldInstall = false
+      if (shouldInstall) {
+        installedAppsToUpdate.forEach { appInstaller ->
+          updates
+            .firstOrNull { it.packageName == appInstaller.packageName }
+            ?.also {
+              appInstaller.install(
+                installPackageInfo = installPackageInfoMapper.map(it),
+                constraints = Constraints(
+                  checkForFreeSpace = false,
+                  networkType = UNMETERED
+                )
+              )
+
+              it.campaigns?.run {
+                toAptoideMMPCampaign().sendDownloadEvent(
+                  bundleTag = null,
+                  searchKeyword = null,
+                  currentScreen = null,
+                  isCta = false
+                )
+
+                toMMPLinkerCampaign().sendDownloadEvent()
+              }
+            }
+        }
+      } else {
+        filteredUpdates.forEach {
+          updatesNotificationBuilder.showVIPUpdateNotification(it)
+        }
+      }
     }
   }
 

@@ -18,15 +18,11 @@ import java.time.Duration
 class VIPUpdatesWorker @AssistedInject constructor(
   @Assisted appContext: Context,
   @Assisted workerParams: WorkerParameters,
-  private val vipUpdatesProvider: VIPUpdatesProvider,
   private val updates: Updates
 ) : CoroutineWorker(appContext, workerParams) {
 
   override suspend fun doWork(): Result {
-    val updatesList = vipUpdatesProvider.getVIPUpdatesList()
-    if (updatesList.isNotEmpty()) {
-      updates.checkVIPUpdates(updatesList)
-    }
+    updates.checkVIPUpdates()
     return Result.success()
   }
 

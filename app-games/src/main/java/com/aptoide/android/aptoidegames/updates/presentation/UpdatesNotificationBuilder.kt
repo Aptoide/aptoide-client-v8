@@ -24,9 +24,12 @@ import com.aptoide.android.aptoidegames.MainActivity
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.appview.buildAppViewDeepLinkUri
 import com.aptoide.android.aptoidegames.installer.notifications.ImageDownloader
+import com.aptoide.android.aptoidegames.notifications.analytics.NotificationsAnalytics
 import com.aptoide.android.aptoidegames.notifications.getNotificationIcon
 import com.aptoide.android.aptoidegames.putDeeplink
+import com.aptoide.android.aptoidegames.putNotificationPackage
 import com.aptoide.android.aptoidegames.putNotificationSource
+import com.aptoide.android.aptoidegames.putNotificationTag
 import com.aptoide.android.aptoidegames.theme.Palette
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -35,12 +38,15 @@ import javax.inject.Singleton
 @Singleton
 class UpdatesNotificationBuilder @Inject constructor(
   @ApplicationContext private val context: Context,
-  private val imageDownloader: ImageDownloader
+  private val imageDownloader: ImageDownloader,
+  private val notificationsAnalytics: NotificationsAnalytics
 ) : UpdatesNotificationProvider {
 
   companion object {
     const val UPDATES_NOTIFICATION_CHANNEL_ID = "updates_notification_channel"
     const val UPDATES_NOTIFICATION_CHANNEL_NAME = "Updates Notification Channel"
+    const val UPDATES_NOTIFICATION_TAG = "general_updates_notification"
+    const val VIP_UPDATES_NOTIFICATION_TAG = "vip_updates_notification"
   }
 
   init {
@@ -84,10 +90,13 @@ class UpdatesNotificationBuilder @Inject constructor(
     val notification = buildNotification(
       requestCode = notificationId,
       contentText = context.getString(R.string.update_notification_body),
-      contentTitle = title
+      contentTitle = title,
+      notificationTag = UPDATES_NOTIFICATION_TAG
     )
 
-    notification?.let { showNotification(notificationId, notification) }
+    notification?.let {
+      showNotification(notificationId, notification, UPDATES_NOTIFICATION_TAG, "n-a")
+    }
   }
 
   override suspend fun showVIPUpdateNotification(app: App) {
@@ -103,17 +112,29 @@ class UpdatesNotificationBuilder @Inject constructor(
       contentTitle = title,
       deepLink = deepLink,
       largeIcon = appIcon,
+      notificationTag = VIP_UPDATES_NOTIFICATION_TAG,
+      notificationPackage = app.packageName
     )
 
-    notification?.let { showNotification(notificationId, notification) }
+    notification?.let {
+      showNotification(
+        notificationId = notificationId,
+        notification = notification,
+        notificationTag = VIP_UPDATES_NOTIFICATION_TAG,
+        notificationPackage = app.packageName
+      )
+    }
   }
 
   @SuppressLint("MissingPermission")
   private fun showNotification(
     notificationId: Int,
     notification: Notification,
+    notificationTag: String,
+    notificationPackage: String
   ) {
     if (context.isAllowed(Manifest.permission.POST_NOTIFICATIONS)) {
+      notificationsAnalytics.sendNotificationImpression(notificationTag, notificationPackage)
       NotificationManagerCompat.from(context).notify(notificationId, notification)
     }
   }
@@ -124,7 +145,9 @@ class UpdatesNotificationBuilder @Inject constructor(
     contentText: String,
     channel: String = UPDATES_NOTIFICATION_CHANNEL_ID,
     deepLink: String = buildUpdatesDeepLinkUri(),
-    largeIcon: Bitmap? = null
+    largeIcon: Bitmap? = null,
+    notificationTag: String,
+    notificationPackage: String? = null
   ): Notification? = if (context.isAllowed(Manifest.permission.POST_NOTIFICATIONS)) {
 
     val clickIntent = PendingIntent.getActivity(
@@ -132,7 +155,9 @@ class UpdatesNotificationBuilder @Inject constructor(
       requestCode,
       Intent(context, MainActivity::class.java)
         .putDeeplink(deepLink)
-        .putNotificationSource(),
+        .putNotificationSource()
+        .putNotificationTag(notificationTag)
+        .putNotificationPackage(notificationPackage),
       PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
     )
 
