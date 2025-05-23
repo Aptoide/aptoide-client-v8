@@ -36,6 +36,7 @@ fun MessageList(
         MessageBubble(
           message = userMessage,
           isUserMessage = true,
+          videoId = null,
           apps = emptyList(), // No apps for user messages
           navigateTo = navigateTo
         )
@@ -49,12 +50,14 @@ fun MessageList(
 
         MessageBubble(
           message = null, isUserMessage = false,
+          videoId = message.videoId,
           apps = message.apps,
           navigateTo = navigateTo
         )
       } else {
         MessageBubble(
           message = message.gpt, isUserMessage = false,
+          videoId = message.videoId,
           apps = message.apps,
           navigateTo = navigateTo
         )

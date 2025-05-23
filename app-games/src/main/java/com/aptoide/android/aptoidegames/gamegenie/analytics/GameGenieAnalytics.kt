@@ -16,7 +16,10 @@ class GameGenieAnalytics(
     params = emptyMap()
   )
 
-  fun sendGameGenieAppClick(packageName: String, appPosition: Int) = genericAnalytics.logEvent(
+  fun sendGameGenieAppClick(
+    packageName: String,
+    appPosition: Int,
+  ) = genericAnalytics.logEvent(
     name = "gamegenie_app_click",
     params = mapOf(
       "package_name" to packageName,

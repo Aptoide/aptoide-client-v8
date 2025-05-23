@@ -21,6 +21,7 @@ fun GameGenieChat.toEntity() = GameGenieHistoryEntity(
 fun ChatInteraction.toEntity() = ChatInteractionEntity(
   gpt = this.gpt,
   user = this.user,
+  videoId = this.videoId,
   apps = Gson().toJson(this.apps.map { it.packageName })
 )
 
@@ -33,12 +34,14 @@ fun GameGenieHistoryEntity.toDomain() = GameGenieChatHistory(
 fun ChatInteractionEntity.toDomain() = ChatInteractionHistory(
   gpt = this.gpt,
   user = this.user,
+  videoId = this.videoId,
   apps = Gson().fromJson(this.apps, object : TypeToken<List<String>>() {}.type)
 )
 
 fun ChatInteractionResponse.toChatInteraction(mapper: AppMapper) = ChatInteraction(
   gpt = this.gpt,
   user = this.user,
+  videoId = this.video,
   apps =
   if (this.apps.isNullOrEmpty())
     emptyList()
@@ -63,6 +66,7 @@ fun GameGenieChat.toGameGenieChatHistory() =
       ChatInteractionHistory(
         gpt = interaction.gpt,
         user = interaction.user,
+        videoId = interaction.videoId,
         apps = interaction.apps.map { app -> app.packageName }
       )
     }

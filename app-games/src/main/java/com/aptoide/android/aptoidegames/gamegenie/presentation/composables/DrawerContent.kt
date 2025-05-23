@@ -39,7 +39,7 @@ fun DrawerContent(
   onConversationClick: (String) -> Unit,
   currentChatId: String,
   onNewChatClick: () -> Unit,
-  onChatDeleteAnalytics: () -> Unit
+  onChatDeleteAnalytics: () -> Unit,
 ) {
 
   when (val uiState = rememberGameGenieHistoryUiState()) {
