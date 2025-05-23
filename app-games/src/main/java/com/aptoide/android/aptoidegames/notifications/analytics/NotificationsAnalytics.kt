@@ -21,4 +21,34 @@ class NotificationsAnalytics @Inject constructor(
     name = "get_notified_continue_clicked",
     params = emptyMap()
   )
+
+  fun sendNotificationOpened(notificationTag: String, notificationPackage: String?) {
+    genericAnalytics.logEvent(
+      name = "notification_event",
+      params = mapOf(
+        NOTIFICATION_ACTION to NOTIFICATION_ACTION_CLICK,
+        NOTIFICATION_TAG to notificationTag,
+        NOTIFICATION_PACKAGE to (notificationPackage ?: "n-a")
+      )
+    )
+  }
+
+  fun sendNotificationImpression(notificationTag: String, notificationPackage: String) {
+    genericAnalytics.logEvent(
+      name = "notification_event",
+      params = mapOf(
+        NOTIFICATION_ACTION to NOTIFICATION_ACTION_IMPRESSION,
+        NOTIFICATION_TAG to notificationTag,
+        NOTIFICATION_PACKAGE to notificationPackage
+      )
+    )
+  }
+
+  companion object {
+    internal const val NOTIFICATION_ACTION = "action"
+    internal const val NOTIFICATION_ACTION_CLICK = "click"
+    internal const val NOTIFICATION_ACTION_IMPRESSION = "impression"
+    internal const val NOTIFICATION_TAG = "tag"
+    internal const val NOTIFICATION_PACKAGE = "package"
+  }
 }

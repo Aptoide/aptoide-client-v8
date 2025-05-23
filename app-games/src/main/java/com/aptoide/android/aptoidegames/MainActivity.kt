@@ -171,6 +171,13 @@ class MainActivity : AppCompatActivity() {
       navController?.navigate(it)
     }
 
+    intent.takeIf { it.isAGNotification }?.let {
+      val notificationTag = it.notificationTag
+      val notificationPackage = it.notificationPackage
+
+      notificationsAnalytics.sendNotificationOpened(notificationTag!!, notificationPackage)
+    }
+
     handleFirebaseNotificationAnalytics(intent)
   }
 

@@ -28,17 +28,37 @@ const val WEBVIEW_KEY = "webview"
 
 // Launch source
 private const val LAUNCH_SOURCE = "launchSource"
+private const val NOTIFICATION_TAG = "notificationTag"
+private const val NOTIFICATION_PACKAGE = "notificationPackage"
 
 val Intent.appOpenSource: String
   get() = getStringExtra(LAUNCH_SOURCE) ?: "app_icon_click"
 
 fun Intent.putNotificationSource(): Intent = putExtra(LAUNCH_SOURCE, "notification")
 
+fun Intent.putNotificationTag(tag: String? = null): Intent =
+  putExtra(NOTIFICATION_TAG, tag)
+
+fun Intent.putNotificationPackage(packageName: String? = null): Intent =
+  putExtra(NOTIFICATION_PACKAGE, packageName)
+
 val Intent?.agDeepLink
   get() = this?.extras
     ?.getString(DEEPLINK_KEY)
     ?.withPrevScreen("notification")
     ?.let(Uri::parse)
+
+val Intent?.isAGNotification: Boolean
+  get() = this?.extras?.getString(LAUNCH_SOURCE) == "notification"
+    && this.notificationTag != null
+
+val Intent?.notificationTag: String?
+  get() = this?.extras
+    ?.getString(NOTIFICATION_TAG)
+
+val Intent?.notificationPackage: String?
+  get() = this?.extras
+    ?.getString(NOTIFICATION_PACKAGE)
 
 val Intent?.externalUrl
   get() = this?.extras

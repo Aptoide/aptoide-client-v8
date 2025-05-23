@@ -20,9 +20,12 @@ import com.aptoide.android.aptoidegames.MainActivity
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.appview.buildAppViewDeepLinkUri
 import com.aptoide.android.aptoidegames.installer.notifications.ImageDownloader
+import com.aptoide.android.aptoidegames.notifications.analytics.NotificationsAnalytics
 import com.aptoide.android.aptoidegames.notifications.getNotificationIcon
 import com.aptoide.android.aptoidegames.putDeeplink
+import com.aptoide.android.aptoidegames.putNotificationPackage
 import com.aptoide.android.aptoidegames.putNotificationSource
+import com.aptoide.android.aptoidegames.putNotificationTag
 import com.aptoide.android.aptoidegames.theme.Palette
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -32,11 +35,13 @@ import javax.inject.Singleton
 class AppComingSoonNotificationBuilder @Inject constructor(
   @ApplicationContext private val context: Context,
   private val imageDownloader: ImageDownloader,
+  private val notificationsAnalytics: NotificationsAnalytics
 ) {
 
   companion object {
     const val APP_COMING_SOON_NOTIFICATION_CHANNEL_ID = "app_coming_soon_notification_channel"
     const val APP_COMING_SOON_NOTIFICATION_CHANNEL_NAME = "App_Coming_Soon Notification Channel"
+    const val APP_COMING_SOON_NOTIFICATION_TAG = "app_coming_soon_notification"
   }
 
   init {
@@ -76,15 +81,25 @@ class AppComingSoonNotificationBuilder @Inject constructor(
       app = app
     )
 
-    notification?.let { showNotification(notificationId, notification) }
+    notification?.let {
+      showNotification(
+        notificationId = notificationId,
+        notification = notification,
+        notificationTag = APP_COMING_SOON_NOTIFICATION_TAG,
+        notificationPackage = app.packageName
+      )
+    }
   }
 
   @SuppressLint("MissingPermission")
   private fun showNotification(
     notificationId: Int,
     notification: Notification,
+    notificationTag: String,
+    notificationPackage: String
   ) {
     if (context.isAllowed(Manifest.permission.POST_NOTIFICATIONS)) {
+      notificationsAnalytics.sendNotificationImpression(notificationTag, notificationPackage)
       NotificationManagerCompat.from(context).notify(notificationId, notification)
     }
   }
@@ -109,7 +124,9 @@ class AppComingSoonNotificationBuilder @Inject constructor(
       requestCode,
       Intent(context, MainActivity::class.java)
         .putDeeplink(deepLink)
-        .putNotificationSource(),
+        .putNotificationSource()
+        .putNotificationTag(APP_COMING_SOON_NOTIFICATION_TAG)
+        .putNotificationPackage(app.packageName),
       PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
     )
 
