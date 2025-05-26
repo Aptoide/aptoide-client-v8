@@ -214,7 +214,7 @@
   </plurals>
   <string name="update_notification_body">ここをタップしてをインストール。</string>
   <string name="update_aptoide_games_update_notification">Aptoide Games の新しいバージョンがあります。</string>
-  <string name="update_available_vip_update_notification">%s : New version available</string>
+  <string name="update_available_vip_update_notification">%s 新バージョン</string>
   <!-- GenAi -->
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
   <string name="genai_me_title">自分</string>
