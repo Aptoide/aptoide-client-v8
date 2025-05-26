@@ -101,7 +101,7 @@
   <string name="later_button">Later</string>
   <string name="trusted_game_badge">Trusted Game</string>
   <string name="official_game_badge">Official Game</string>
-  <string name="editorial_card_views_short">%s views</string>
+  <string name="editorial_card_views_short">%s ၾကည့္႐ွဳမႈမ်ား</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Out of Space</string>
   <string name="out_of_space_body">ထည့္သြင္းမႈကို ဆက္လုပ္ရန္အတြက္ %s ကို လိုအပ္ပါသည္။</string>
@@ -230,7 +230,7 @@
   <string name="promotional_new_version">ဗားရွင္းအသစ္</string>
   <string name="promotional_on_going_event">ေနာင္လာမည့္ အစီအစဥ္</string>
   <string name="promotional_new_in_aptoide">Now available</string>
-  <string name="promotional_soon_in_aptoide">Available soon</string>
+  <string name="promotional_soon_in_aptoide">မၾကာမီ ရရွိပါမည္</string>
   <string name="promotional_notify_button">ကြၽႏ္ုပ္ကို အသိေပးပါ</string>
   <string name="promotional_new_notification_title">သင္ေစာင့္ဆိုင္းေနခဲ့ရတဲ့အက္ပ္။</string>
   <string name="promotional_new_notification_body">%s is now available.</string>
@@ -241,7 +241,7 @@
   <string name="tag_for_you">For You</string>
   <string name="tag_top_charts">Top Charts</string>
   <string name="tag_appcoins">AppCoins</string>
-  <string name="tag_editorial">Editorial</string>
-  <string name="tag_categories">Categories</string>
-  <string name="tag_bonus">Bonus</string>
+  <string name="tag_editorial">အယ္ဒီတာ့အာေဘာ္</string>
+  <string name="tag_categories">ကဏ္ဍများ</string>
+  <string name="tag_bonus">ေဘာနပ္စ္</string>
 </resources>
