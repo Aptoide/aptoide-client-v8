@@ -101,7 +101,7 @@
   <string name="later_button">Later</string>
   <string name="trusted_game_badge">Trusted Game</string>
   <string name="official_game_badge">Official Game</string>
-  <string name="editorial_card_views_short">%s views</string>
+  <string name="editorial_card_views_short">%s बार देखा गया</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Out of Space</string>
   <string name="out_of_space_body">You need %s to continue with the installation.</string>
@@ -232,7 +232,7 @@
   <string name="promotional_new_version">New Version</string>
   <string name="promotional_on_going_event">Ongoing event</string>
   <string name="promotional_new_in_aptoide">Now available</string>
-  <string name="promotional_soon_in_aptoide">Available soon</string>
+  <string name="promotional_soon_in_aptoide">शीघ्र उपलब्ध</string>
   <string name="promotional_notify_button">Notify me</string>
   <string name="promotional_new_notification_title">The app you were waiting for!</string>
   <string name="promotional_new_notification_body">%s is now available.</string>
@@ -243,7 +243,7 @@
   <string name="tag_for_you">For You</string>
   <string name="tag_top_charts">Top Charts</string>
   <string name="tag_appcoins">AppCoins</string>
-  <string name="tag_editorial">Editorial</string>
-  <string name="tag_categories">Categories</string>
-  <string name="tag_bonus">Bonus</string>
+  <string name="tag_editorial">एडिटोरियल</string>
+  <string name="tag_categories">कैटेगरीज़</string>
+  <string name="tag_bonus">बोनस</string>
 </resources>
