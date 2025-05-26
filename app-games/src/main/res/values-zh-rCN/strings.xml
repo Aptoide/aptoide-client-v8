@@ -213,7 +213,7 @@
   </plurals>
   <string name="update_notification_body">点击此处安装。</string>
   <string name="update_aptoide_games_update_notification">Aptoide Games 已发布新版本。</string>
-  <string name="update_available_vip_update_notification">%s : New version available</string>
+  <string name="update_available_vip_update_notification">%s ：提供新版本</string>
   <!-- GenAi -->
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
   <string name="genai_me_title">我</string>
