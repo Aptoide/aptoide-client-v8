@@ -215,7 +215,7 @@
   </plurals>
   <string name="update_notification_body">Πατήστε εδώ για εγκατάσταση.</string>
   <string name="update_aptoide_games_update_notification">Υπάρχει μια νέα έκδοση του Aptoide Games</string>
-  <string name="update_available_vip_update_notification">%s : New version available</string>
+  <string name="update_available_vip_update_notification">%s : Νέα έκδοση διαθέσιμη</string>
   <!-- GenAi -->
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
   <string name="genai_me_title">Εγώ</string>
