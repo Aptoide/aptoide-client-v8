@@ -103,7 +103,7 @@
   <string name="later_button">Later</string>
   <string name="trusted_game_badge">Trusted Game</string>
   <string name="official_game_badge">Official Game</string>
-  <string name="editorial_card_views_short">%s views</string>
+  <string name="editorial_card_views_short">%s ਵਾਰ ਵੇਖਿਆ ਗਿਆ</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Out of Space</string>
   <string name="out_of_space_body">ਇੰਸਟਾਲੇਸ਼ਨ ਨੂੰ ਜਾਰੀ ਰੱਖਣ ਲਈ ਤੁਹਾਨੂੰ %s ਦੀ ਲੋੜ ਹੈ|</string>
@@ -234,7 +234,7 @@
   <string name="promotional_new_version">ਨਵਾਂ ਵਰਜਨ</string>
   <string name="promotional_on_going_event">ਚੱਲ ਰਿਹਾ ਸਮਾਗਮ</string>
   <string name="promotional_new_in_aptoide">Now available</string>
-  <string name="promotional_soon_in_aptoide">Available soon</string>
+  <string name="promotional_soon_in_aptoide">ਛੇਤੀ ਹੀ ਉਪਲਬਧ</string>
   <string name="promotional_notify_button">ਮੈਨੂੰ ਸੂਚਿਤ ਕਰੋ</string>
   <string name="promotional_new_notification_title">ਐਪ ਜਿਸ ਨੂੰ ਤੁਸੀਂ ਉਡੀਕ ਰਹੇ ਸੀ!</string>
   <string name="promotional_new_notification_body">%s is now available.</string>
@@ -245,7 +245,7 @@
   <string name="tag_for_you">For You</string>
   <string name="tag_top_charts">Top Charts</string>
   <string name="tag_appcoins">AppCoins</string>
-  <string name="tag_editorial">Editorial</string>
-  <string name="tag_categories">Categories</string>
-  <string name="tag_bonus">Bonus</string>
+  <string name="tag_editorial">ਸੰਪਾਦਕੀ</string>
+  <string name="tag_categories">ਵਰਗ</string>
+  <string name="tag_bonus">ਬੋਨਸ</string>
 </resources>
