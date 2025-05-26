@@ -223,6 +223,7 @@
   </plurals>
   <string name="update_notification_body">اضغط هنا لتثبيت.</string>
   <string name="update_aptoide_games_update_notification">تتوفر نسخة جديدة من Aptoide Games</string>
+  <string name="update_available_vip_update_notification">%s :: يتوفر إصدار جديد</string>
   <!-- GenAi -->
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
   <string name="genai_me_title">أنا</string>

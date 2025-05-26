@@ -217,6 +217,7 @@
   </plurals>
   <string name="update_notification_body">Apasă aici pentru a instala.</string>
   <string name="update_aptoide_games_update_notification">Avem o versiune nouă pentru Aptoide Games</string>
+  <string name="update_available_vip_update_notification">%s : Noua versiune disponibilă</string>
   <!-- GenAi -->
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
   <string name="genai_me_title">Eu</string>

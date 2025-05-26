@@ -8,76 +8,76 @@
   <string name="bottom_navigation_updates">Aktualizacje</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Ustawienia</string>
-  <string name="overflow_menu_terms_conditions">Terms &amp; Conditions</string>
+  <string name="overflow_menu_terms_conditions">Warunki &amp; Warunki</string>
   <string name="overflow_menu_privacy_policy">Polityka prywatności</string>
-  <string name="settings_about_hardware_title">Hardware specs</string>
-  <string name="settings_about_version">Version %1$s (%2$s)</string>
-  <string name="settings_copied_to_clipboard_message">Copied to clipboard</string>
+  <string name="settings_about_hardware_title">Specyfikacja sprzętu</string>
+  <string name="settings_about_version">Wersja %1$s (%2$s)</string>
+  <string name="settings_copied_to_clipboard_message">Skopiowane do schowka</string>
   <string name="settings_general_title">Ogólne</string>
   <string name="settings_title">Ustawienia</string>
   <string name="settings_support">Wsparcie</string>
   <string name="settings_feedback_button">Wyślij opinię</string>
   <string name="settings_feedback_title">Wyślij opinię</string>
   <string name="settings_legal_title">Aspekty prawne</string>
-  <string name="settings_send_feedback_body">Let us know what you think about Aptoide Games!\n\u2022 Any new feature you would like to see?\n\u2022 How do you think we can improve?</string>
-  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Description (50 characters min.)</string>
+  <string name="settings_send_feedback_body">Daj nam znać, co myślisz o Aptoide Games!\n\u2022 Jakieś nowe funkcje, które chciałbyś zobaczyć?\n\u2022 Jak myślisz, co możemy poprawić?</string>
+  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Opis (min. 50 znaków)</string>
   <string name="settings_storage_title">Wyczyść pamięć</string>
   <string name="settings_storage_clear_cache_title">Wyczyść pamięć podręczną</string>
   <string name="settings_storage_cache_size_title">Ustaw max. rozmiar buforu (MB)</string>
-  <string name="settings_clear_cache_title">Clear Aptoide Games storage</string>
-  <string name="settings_clear_cache_body">Are you sure you want to delete all icons, images, apk downloaded, obb, webservice data...</string>
+  <string name="settings_clear_cache_title">Wyczyść pamięć Aptoide Games</string>
+  <string name="settings_clear_cache_body">Czy na pewno chcesz usunąć wszystkie ikony, obrazy, pobrane apk, obb, dane webservice...</string>
   <!-- MyGames -->
-  <string name="my_games_empty">We couldn\'t find any games installed on your device!</string>
-  <string name="my_games_progress_message">Organizing your games</string>
-  <string name="empty_category_body">There\'re no apps in this category... Yet!</string>
+  <string name="my_games_empty">Nie mogliśmy znaleźć żadnych gier zainstalowanych na Twoim urządzeniu!</string>
+  <string name="my_games_progress_message">Organizacja gier</string>
+  <string name="empty_category_body">Nie ma aplikacji w tej kategorii... Jeszcze!</string>
   <!-- Notifications -->
-  <string name="notifications_context_title">Get notified!</string>
-  <string name="notification_preparing_title">Preparing</string>
+  <string name="notifications_context_title">Otrzymuj powiadomienia!</string>
+  <string name="notification_preparing_title">Przygotowanie</string>
   <string name="notification_ready_install_title">Apka gotowa do zainstalowania.</string>
   <string name="notification_ready_install_body">Dotknij, by zainstalować %s.</string>
-  <string name="notification_waiting_body">Waiting for download</string>
+  <string name="notification_waiting_body">Oczekiwanie na pobranie</string>
   <string name="notification_1_installed_title">Zainstalowano</string>
-  <string name="notification_downloading_body">Downloading %1$s%% of %2$s</string>
-  <string name="notification_waiting_for_wifi_title">Waiting for Wi-Fi</string>
-  <string name="notifications_context_body">We\'ll let you know about the latest trends in the gaming world!</string>
+  <string name="notification_downloading_body">Pobieranie %1$s%% z %2$s</string>
+  <string name="notification_waiting_for_wifi_title">Oczekiwanie na Wi-Fi</string>
+  <string name="notifications_context_body">Poinformujemy Cię o najnowszych trendach w świecie gier!</string>
   <!-- Talkback -->
-  <string name="home_overflow_talkback">Options</string>
-  <string name="app_view_image_description_body">Image of %1$s</string>
-  <string name="app_view_screenshot_number">Screenshot %1$s</string>
-  <string name="app_view_icon_description_body">Icon of %1$s</string>
-  <string name="search_remove_from_recent_talkback">remove from recent searches</string>
-  <string name="search_clear_talkback">clear search</string>
+  <string name="home_overflow_talkback">Opcje</string>
+  <string name="app_view_image_description_body">Obraz strony %1$s</string>
+  <string name="app_view_screenshot_number">Zrzut ekranu %1$s</string>
+  <string name="app_view_icon_description_body">Ikona %1$s</string>
+  <string name="search_remove_from_recent_talkback">usuń z ostatnich wyszukiwań</string>
+  <string name="search_clear_talkback">wyraźne wyszukiwanie</string>
   <string name="search_item_talkback">szukaj</string>
   <!-- Download over Wi-Fi -->
-  <string name="wifi_settings_title">Download only over Wi-Fi</string>
-  <string name="wifi_disclaimer_on_body">You\'re currently using your mobile data. Do you want to download %s when Wi-Fi is available?</string>
-  <string name="wifi_disclamer_off_body">This is a big file (%s). Do you want to download it when Wi-Fi is available?</string>
+  <string name="wifi_settings_title">Pobieranie tylko przez sieć Wi-Fi</string>
+  <string name="wifi_disclaimer_on_body">Obecnie korzystasz z danych mobilnych. Czy chcesz pobrać %s , gdy dostępne będzie Wi-Fi?</string>
+  <string name="wifi_disclamer_off_body">Jest to duży plik (%s). Czy chcesz go pobrać, gdy Wi-Fi będzie dostępne?</string>
   <string name="wifi_disclaimer_title">Na pewno?</string>
   <!-- Fixed bundles -->
-  <string name="editorial_more_articles_title">More articles</string>
-  <string name="fixed_bundle_just_arrived_title">Just Arrived</string>
-  <string name="fixed_bundle_my_games_title">My Games</string>
+  <string name="editorial_more_articles_title">Więcej artykułów</string>
+  <string name="fixed_bundle_just_arrived_title">Właśnie przybyłem</string>
+  <string name="fixed_bundle_my_games_title">Moje gry</string>
   <string name="fixed_bundle_editors_choice_title">Wybór redakcji</string>
   <string name="fixed_bundle_editorial_title">Edytorial</string>
   <string name="fixed_bundle_trending_title">Popularne</string>
   <string name="retry_button" comment="button_retry_title">Spróbuj ponownie</string>
-  <string name="install_waiting_installation_message">Waiting for install</string>
+  <string name="install_waiting_installation_message">Oczekiwanie na instalację</string>
   <string name="install_installing_message">Instalowanie</string>
-  <string name="install_error_short_message">Oops, an error occurred.</string>
+  <string name="install_error_short_message">Ups, wystąpił błąd.</string>
   <string name="error_message_no_internet_title">Ojej, coś poszło nie tak</string>
-  <string name="error_message_no_internet_body">Please check your Internet connection.</string>
+  <string name="error_message_no_internet_body">Sprawdź połączenie internetowe.</string>
   <string name="error_message_generic_title">Coś poszło nie tak</string>
   <string name="error_message_generic_body">Spróbuj ponownie.</string>
-  <string name="app_info_send_email_subject">Feedback</string>
+  <string name="app_info_send_email_subject">Informacje zwrotne</string>
   <string name="button_copy_title">Kopiuj</string>
   <string name="button_back_title">Wróć</string>
   <string name="button_see_all_title">Zobacz wszystko</string>
-  <string name="editorials_view_no_content_message">Oops, there\'s no content here yet!</string>
-  <string name="error_no_content_body">Oops, we couldn\'t find related content yet!</string>
+  <string name="editorials_view_no_content_message">Ups, nie ma tu jeszcze żadnej zawartości!</string>
+  <string name="error_no_content_body">Ups, nie mogliśmy jeszcze znaleźć powiązanych treści!</string>
   <string name="button_update_title">Aktualizacja</string>
   <string name="button_open_app_title">Otwórz</string>
-  <string name="install_waiting_download_message">Waiting for download</string>
-  <string name="downloading_percentage_body">%1$s%% of %2$s</string>
+  <string name="install_waiting_download_message">Oczekiwanie na pobranie</string>
+  <string name="downloading_percentage_body">%1$s%% %2$s</string>
   <string name="install_downloading_message">Pobieranie</string>
   <!-- Common -->
   <string name="send_button">Wyślij</string>
@@ -85,168 +85,169 @@
   <string name="please_wait">Proszę czekać.</string>
   <string name="ok_button">Ok</string>
   <string name="cancel_button">Anuluj</string>
-  <string name="download_now_button">Download Now</string>
+  <string name="download_now_button">Pobierz teraz</string>
   <string name="uninstall_button">Odinstaluj</string>
-  <string name="go_back_button">Go Back</string>
-  <string name="go_back_to_game_button">Go Back to Game</string>
-  <string name="uninstalling">Uninstalling</string>
+  <string name="go_back_button">Wróć</string>
+  <string name="go_back_to_game_button">Wróć do gry</string>
+  <string name="uninstalling">Odinstalowywanie</string>
   <string name="resume_button">Kontynuuj</string>
-  <string name="waiting_for_connection">Waiting for connection</string>
-  <string name="wait_for_wifi_button">Wait for Wi-Fi</string>
+  <string name="waiting_for_connection">Oczekiwanie na połączenie</string>
+  <string name="wait_for_wifi_button">Poczekaj na Wi-Fi</string>
   <string name="continue_button">Dalej</string>
-  <string name="error_install_permissions_body"><![CDATA[Please go to Settings and grant <1>Aptoide Games</1> permissions to install apps!]]></string>
+  <string name="error_install_permissions_body"><![CDATA[Przejdź do Ustawień i przyznaj <1>Aptoide Games</1> uprawnienia do instalowania aplikacji!]]></string>
   <string name="latest_title">Najnowsze</string>
-  <string name="whats_new_title">What\'s New</string>
+  <string name="whats_new_title">Co nowego</string>
   <string name="not_now_button">Nie teraz</string>
-  <string name="later_button">Later</string>
-  <string name="trusted_game_badge">Trusted Game</string>
-  <string name="official_game_badge">Official Game</string>
-  <string name="editorial_card_views_short">%s views</string>
+  <string name="later_button">Później</string>
+  <string name="trusted_game_badge">Zaufana gra</string>
+  <string name="official_game_badge">Oficjalna gra</string>
+  <string name="editorial_card_views_short">%s wyświetlenia</string>
   <!-- Out of Space -->
-  <string name="out_of_space_title">Out of Space</string>
+  <string name="out_of_space_title">Poza przestrzenią</string>
   <string name="out_of_space_body">Potrzebujesz %s, by kontynuować instalację.</string>
-  <string name="out_of_space_enough_body">You have enough free space now!</string>
+  <string name="out_of_space_enough_body">Masz teraz wystarczająco dużo wolnego miejsca!</string>
   <!-- Talkback -->
-  <string name="appview_status_outdated_talkback">Outdated</string>
-  <string name="appview_status_not_installed_talkback">Not installed</string>
+  <string name="appview_status_outdated_talkback">Nieaktualne</string>
+  <string name="appview_status_not_installed_talkback">Nie zainstalowano</string>
   <string name="appview_status_installed_talkback">Zainstalowano</string>
   <string name="appview_status_failed_talkback">Nie udało się</string>
   <string name="appview_action_cancel_talkback">Anuluj</string>
-  <string name="appview_installer_talkback">%1$s installer.</string>
-  <string name="appview_action_double_tap_talkback">Double tap to %1$s</string>
+  <string name="appview_installer_talkback">%1$s instalator.</string>
+  <string name="appview_action_double_tap_talkback">Stuknij dwukrotnie w %1$s</string>
   <!-- Search -->
-  <string name="search_suggested_title">Suggested Searches</string>
-  <string name="search_recent_title">Recent Searches</string>
-  <string name="search_popular_title">Popular Searches</string>
-  <string name="search_bar_label">Search for games...</string>
-  <string name="search_empty_body">Oops, there are no results for \"%s\".\nTry with different words!</string>
+  <string name="search_suggested_title">Sugerowane wyszukiwania</string>
+  <string name="search_recent_title">Ostatnie wyszukiwania</string>
+  <string name="search_popular_title">Popularne wyszukiwania</string>
+  <string name="search_bar_label">Wyszukiwanie gier...</string>
+  <string name="search_empty_body">Ups, nie ma żadnych wyników dla \"%s\".\nSpróbuj z innymi słowami!</string>
   <!-- Install -->
   <string name="button_install_title">Zainstaluj</string>
   <!-- Common -->
   <string name="appview_details_tab_title" comment="details">Szczegóły</string>
-  <string name="appview_related_tab_title" comment="related">Related</string>
+  <string name="appview_related_tab_title" comment="related">Powiązane</string>
   <string name="appview_info_tab_title" comment="info">Info</string>
-  <string name="appview_info_version_name_title" comment="version_name">Version name</string>
-  <string name="appview_info_package_name_title" comment="package_name">Package name</string>
-  <string name="appview_info_release_title" comment="release">Release</string>
-  <string name="appview_info_update_title" comment="updated_on">Updated on</string>
-  <string name="appview_info_download_size_title" comment="download_size">Download size</string>
+  <string name="appview_info_version_name_title" comment="version_name">Nazwa wersji</string>
+  <string name="appview_info_package_name_title" comment="package_name">Nazwa pakietu</string>
+  <string name="appview_info_release_title" comment="release">Zwolnienie</string>
+  <string name="appview_info_update_title" comment="updated_on">Zaktualizowano na</string>
+  <string name="appview_info_download_size_title" comment="download_size">Rozmiar pobierania</string>
   <string name="appview_info_website_title" comment="website">Strona internetowa</string>
   <string name="appview_info_email_title" comment="email">Email</string>
   <string name="appview_info_permissions_title" comment="permissions">Uprawnienia</string>
-  <string name="bonus_banner_body">You\'ll get a bonus in all games identified with %s.</string>
-  <string name="bonus_banner_title" comment="up_to_s_bonus">Up to %s%% Bonus</string>
-  <string name="settings_auto_update_button">Auto-update games</string>
+  <string name="bonus_banner_body">Otrzymasz bonus we wszystkich grach oznaczonych jako %s.</string>
+  <string name="bonus_banner_title" comment="up_to_s_bonus">Do %s%% Bonus</string>
+  <string name="settings_auto_update_button">Automatyczna aktualizacja gier</string>
   <string name="powered_by_title" comment="powered_by">Zasilana przez</string>
   <string name="contact_support_title" comment="contact_support">Pomoc</string>
-  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Please give us all the details:\n\u2022 When did the problem start\n\u2022 On which game are you making a purchase\n\nOnce you tap on Send, your mail app will open. Feel free to attach a screenshot or video about the issue!</string>
-  <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Do you want to install this game?</string>
-  <string name="apkfy_whats_aptoide_games_title">What\'s Aptoide Games?</string>
-  <string name="apkfy_install_body">Get your favorite game and much more in Aptoide Games!</string>
-  <string name="apkfy_install_bullet_points">\u2022 Top games with an amazing curation.\n\u2022 No need to log in!\n\u2022 Special promotions and rewards in your favorite games.</string>
-  <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Pay with the Aptoide Wallet</string>
-  <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">It\'ll be installed automatically and you\'ll get a bonus in all purchases!</string>
+  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Podaj nam wszystkie szczegóły:\n\u2022 Kiedy zaczął się problem\n\u2022 W jakiej grze dokonujesz zakupu\n\nPo stuknięciu w Wyślij otworzy się Twoja aplikacja pocztowa. Zachęcamy do załączenia zrzutu ekranu lub filmu na temat problemu!</string>
+  <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Czy chcesz zainstalować tę grę?</string>
+  <string name="apkfy_whats_aptoide_games_title">Czym jest Aptoide Games?</string>
+  <string name="apkfy_install_body">Pobierz swoją ulubioną grę i wiele więcej w Aptoide Games!</string>
+  <string name="apkfy_install_bullet_points">\u2022 Najlepsze gry z niesamowitą selekcją.\n\u2022 Nie trzeba się logować!\n\u2022 Specjalne promocje i nagrody w ulubionych grach.</string>
+  <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Płać za pomocą portfela Aptoide</string>
+  <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Zostanie ona zainstalowana automatycznie i otrzymasz bonus do wszystkich zakupów!</string>
   <string name="buy_button" comment="buy">Kup</string>
   <string name="iap_other_payment_methods_button" comment="other_payment_methods">Inne metody płatności</string>
   <string name="iap_remember_card_button" comment="remember_card">Pamiętaj kartę</string>
   <string name="iab_change_card_button" comment="change_card">Zmień kartę</string>
   <string name="done_title">Gotowe!</string>
-  <string name="purchase_making_purchase_title" comment="making_purchase">Making Purchase...</string>
+  <string name="purchase_making_purchase_title" comment="making_purchase">Dokonywanie zakupów...</string>
   <string name="log_out_button" comment="log_out">Wyloguj się</string>
-  <string name="iap_appc_body">You\'ll get a bonus in all purchases!</string>
-  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">You can now complete your purchase.</string>
-  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">The Aptoide Wallet is now installed!</string>
-  <string name="storage_access_permission_request_message">Allow access to your phone’s storage so we can download and install this app.</string>
+  <string name="iap_appc_body">Otrzymasz bonus za wszystkie zakupy!</string>
+  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Możesz teraz dokończyć zakup.</string>
+  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">Portfel Aptoide jest już zainstalowany!</string>
+  <string name="storage_access_permission_request_message">Zezwól na dostęp do pamięci telefonu, abyśmy mogli pobrać i zainstalować tę aplikację.</string>
   <string name="downloads_number_title">%s pobrań</string>
   <!-- Payment Errors-->
-  <string name="payments_error_old_card_title">It seems you registered this card long time ago!</string>
-  <string name="payments_error_old_card_body">Insert the card details again or use a different one.</string>
-  <string name="purchase_error_payment_rejected">The transaction has been rejected.</string>
-  <string name="purchase_error_try_other_card_body">Please try with a different card or payment method.</string>
-  <string name="purchase_card_error_general_title">There was a problem with your card.</string>
-  <string name="purchase_error_try_other_payment_method_body">Please try with a different payment method.</string>
-  <string name="purchase_card_error_no_funds">It seems you don\'t have enough funds or there\'s a limit on your card.</string>
-  <string name="purchase_card_error_invalid_details_title">Invalid card number.</string>
-  <string name="purchase_error_check_it_body">Please check it and try again.</string>
-  <string name="purchase_card_error_not_supported_title">Your card is not supported yet.</string>
-  <string name="purchase_error_wrong_pin_title">There was a problem with your pin.</string>
-  <string name="purchase_error_3d_title">There was a problem with your 3D authentication.</string>
-  <string name="purchase_card_rejected_title">The transaction has been rejected by your bank.</string>
-  <string name="purchase_error_invalid_credit_card_title">Invalid bank card number.</string>
-  <string name="purchase_error_card_security_validation_title">There was an error on the 2nd level validation of this transaction.</string>
-  <string name="purchase_error_in_progress_title">Your request was already processed or is in progress.</string>
+  <string name="payments_error_old_card_title">Wygląda na to, że zarejestrowałeś tę kartę dawno temu!</string>
+  <string name="payments_error_old_card_body">Wprowadź ponownie dane karty lub użyj innej karty.</string>
+  <string name="purchase_error_payment_rejected">Transakcja została odrzucona.</string>
+  <string name="purchase_error_try_other_card_body">Spróbuj użyć innej karty lub metody płatności.</string>
+  <string name="purchase_card_error_general_title">Wystąpił problem z kartą.</string>
+  <string name="purchase_error_try_other_payment_method_body">Spróbuj użyć innej metody płatności.</string>
+  <string name="purchase_card_error_no_funds">Wygląda na to, że nie masz wystarczających środków lub na Twojej karcie obowiązuje limit.</string>
+  <string name="purchase_card_error_invalid_details_title">Nieprawidłowy numer karty.</string>
+  <string name="purchase_error_check_it_body">Sprawdź to i spróbuj ponownie.</string>
+  <string name="purchase_card_error_not_supported_title">Twoja karta nie jest jeszcze obsługiwana.</string>
+  <string name="purchase_error_wrong_pin_title">Wystąpił problem z pinem.</string>
+  <string name="purchase_error_3d_title">Wystąpił problem z uwierzytelnianiem 3D.</string>
+  <string name="purchase_card_rejected_title">Transakcja została odrzucona przez bank.</string>
+  <string name="purchase_error_invalid_credit_card_title">Nieprawidłowy numer karty bankowej.</string>
+  <string name="purchase_error_card_security_validation_title">Wystąpił błąd na drugim poziomie walidacji tej transakcji.</string>
+  <string name="purchase_error_in_progress_title">Twoje żądanie zostało już przetworzone lub jest w trakcie przetwarzania.</string>
   <string name="purchase_card_error_CVV_title">Nieprawidłowy CVV/CVC</string>
-  <string name="purchase_error_expired_card_title">It seems your card is expired.</string>
-  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
-  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
+  <string name="purchase_error_expired_card_title">Wygląda na to, że ważność karty wygasła.</string>
+  <string name="iap_already_processing_title">Wygląda na to, że ten zakup jest już przetwarzany.</string>
+  <string name="iap_already_processing_body">Zakup ten może chwilę potrwać, więc prosimy o wstrzymanie się z zakupem do czasu jego zakończenia lub skontaktowanie się z naszym zespołem pomocy technicznej.</string>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Bonus za każdy zakup</string>
-  <string name="bonus_page_body_1">Look for the games identified with %1$s, install the Aptoide Wallet and get up to %2$s%% bonus in all purchases. You can then use this bonus to make your next purchases in your favorite games!</string>
-  <string name="bonus_page_title_2">Want More?</string>
-  <string name="bonus_page_body_2"><![CDATA[You can get an extra <1>%s%% bonus</1> by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!]]></string>
+  <string name="bonus_page_body_1">Poszukaj gier oznaczonych %1$s, zainstaluj Aptoide Wallet i uzyskaj do %2$s%% bonusu na wszystkie zakupy. Następnie możesz wykorzystać ten bonus, aby dokonać kolejnych zakupów w swoich ulubionych grach!</string>
+  <string name="bonus_page_title_2">Chcesz więcej?</string>
+  <string name="bonus_page_body_2"><![CDATA[Możesz uzyskać dodatkowy <1> bonus%s%%</1>, używając ekskluzywnego kodu promocyjnego Aptoide Games w określonych grach. Bądź na bieżąco, a otrzymasz powiadomienie!]]></string>
   <!-- Promo Code -->
-  <string name="promo_code_install_wallet_banner_title">Up to %s%% Bonus in Every Purchase</string>
-  <string name="promo_code_install_wallet_banner_body">Use the Aptoide Wallet to make your in-app purchases and get a reward.</string>
-  <string name="promo_code_extra_title">Want More? Get %s%% Extra Bonus!</string>
-  <string name="promo_code_use_button">Use code</string>
-  <string name="promo_code_install_wallet_disclaimer">Install the Aptoide Wallet first.</string>
-  <string name="promo_code_notification_title">Redeem Your Promo Code</string>
-  <string name="promo_code_notification_body">Use your promo code to get extra bonuses in your favorite game.</string>
-  <string name="promo_code_notification_without_wallet_title">%s%% Extra Bonus!</string>
-  <string name="promo_code_notification_without_wallet_body">Get the Aptoide Wallet and use your promo code to get extra bonuses in all purchases.</string>
-  <string name="promo_code_share_title">You\'ve got a promo code!</string>
-  <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorite game.</string>
+  <string name="promo_code_install_wallet_banner_title">Do %s%% bonusu przy każdym zakupie</string>
+  <string name="promo_code_install_wallet_banner_body">Korzystaj z Aptoide Wallet, aby dokonywać zakupów w aplikacji i otrzymywać nagrody.</string>
+  <string name="promo_code_extra_title">Chcesz więcej? Zdobądź %s%% dodatkowego bonusu!</string>
+  <string name="promo_code_use_button">Użyj kodu</string>
+  <string name="promo_code_install_wallet_disclaimer">Najpierw zainstaluj Aptoide Wallet.</string>
+  <string name="promo_code_notification_title">Zrealizuj swój kod promocyjny</string>
+  <string name="promo_code_notification_body">Użyj kodu promocyjnego, aby otrzymać dodatkowe bonusy w swojej ulubionej grze.</string>
+  <string name="promo_code_notification_without_wallet_title">%s%% Dodatkowy bonus!</string>
+  <string name="promo_code_notification_without_wallet_body">Pobierz Aptoide Wallet i użyj kodu promocyjnego, aby uzyskać dodatkowe bonusy przy wszystkich zakupach.</string>
+  <string name="promo_code_share_title">Masz kod promocyjny!</string>
+  <string name="promo_code_share_body">Użyj tego kodu promocyjnego, aby otrzymać dodatkowe bonusy w swojej ulubionej grze.</string>
   <!-- Update -->
-  <string name="update_up_to_date_title">Congrats!</string>
+  <string name="update_up_to_date_title">Gratulacje!</string>
   <string name="update_up_to_date_body">Masz najnowszą wersję.</string>
-  <string name="update_auto_update_title">Enjoy the best gaming experience and keep your games updated.</string>
-  <string name="update_auto_update_slider">Keep games updated automatically</string>
+  <string name="update_auto_update_title">Ciesz się najlepszymi wrażeniami z gry i aktualizuj swoje gry.</string>
+  <string name="update_auto_update_slider">Automatyczna aktualizacja gier</string>
   <string name="update_update_all_button">Uaktualnij wszystko</string>
-  <string name="update_aptoide_games_title">New Version Available!</string>
-  <string name="update_aptoide_games_body">Update Aptoide Games to the latest version to keep enjoying the best gaming discovery experience.</string>
-  <string name="update_aptoide_games_update_close_body">Aptoide Games will close to update. Just open it again!</string>
+  <string name="update_aptoide_games_title">Nowa wersja dostępna!</string>
+  <string name="update_aptoide_games_body">Zaktualizuj Aptoide Games do najnowszej wersji, aby nadal cieszyć się najlepszymi wrażeniami z odkrywania gier.</string>
+  <string name="update_aptoide_games_update_close_body">Aplikacja Aptoide Games zostanie zamknięta w celu aktualizacji. Wystarczy otworzyć ją ponownie!</string>
   <plurals name="update_games_can_be_updated_body">
-    <item quantity="one">%s game can be updated</item>
-    <item quantity="few">%s games can be updated</item>
-    <item quantity="many">%s games can be updated</item>
-    <item quantity="other">%s games can be updated</item>
+    <item quantity="one">%s gra może być aktualizowana</item>
+    <item quantity="few">%s gry mogą być aktualizowane</item>
+    <item quantity="many">%s gry mogą być aktualizowane</item>
+    <item quantity="other">%s gry mogą być aktualizowane</item>
   </plurals>
   <plurals name="update_notification_title">
-    <item quantity="one">You\'ve got %s update available</item>
-    <item quantity="few">You\'ve got %s updates available</item>
-    <item quantity="many">You\'ve got %s updates available</item>
-    <item quantity="other">You\'ve got %s updates available</item>
+    <item quantity="one">Dostępna jest aktualizacja %s</item>
+    <item quantity="few">Dostępne są aktualizacje %s</item>
+    <item quantity="many">Dostępne są aktualizacje %s</item>
+    <item quantity="other">Dostępne są aktualizacje %s</item>
   </plurals>
   <string name="update_notification_body">Dotknij, by zainstalować.</string>
-  <string name="update_aptoide_games_update_notification">There\'s a new version of Aptoide Games</string>
+  <string name="update_aptoide_games_update_notification">Pojawiła się nowa wersja Aptoide Games</string>
+  <string name="update_available_vip_update_notification">%s Nowa wersja dostępna</string>
   <!-- GenAi -->
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
-  <string name="genai_me_title">Me</string>
-  <string name="genai_introduction_body">Hi! I\'m your AI assistant on everything related to apps and games discovery. Try with something like:</string>
-  <string name="genai_input_message_field">Type a message&#8230;</string>
-  <string name="genai_powered_by_ai_title">Powered by AI</string>
-  <string name="genai_example_1_body">I\'m looking for strategy games.</string>
-  <string name="genai_example_2_body">Please recommend me the best multiplayer games.</string>
-  <string name="genai_example_3_body">Do you know offline casual games?</string>
-  <string name="genai_history_body">GameGenie History</string>
-  <string name="genai_new_chat_button">New chat</string>
+  <string name="genai_me_title">Ja</string>
+  <string name="genai_introduction_body">Jestem twoim asystentem AI we wszystkim, co związane z odkrywaniem aplikacji i gier. Spróbuj z czymś takim:</string>
+  <string name="genai_input_message_field">Wpisz wiadomość&#8230;</string>
+  <string name="genai_powered_by_ai_title">Zasilany przez sztuczną inteligencję</string>
+  <string name="genai_example_1_body">Szukam gier strategicznych.</string>
+  <string name="genai_example_2_body">Proszę poleć mi najlepsze gry multiplayer.</string>
+  <string name="genai_example_3_body">Czy znasz gry casual offline?</string>
+  <string name="genai_history_body">Historia GameGenie</string>
+  <string name="genai_new_chat_button">Nowy czat</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Now compatible with the Aptoide Wallet</string>
+  <string name="promotional_now_with_appcoins">Teraz kompatybilny z portfelem Aptoide</string>
   <string name="promotional_new_version">Nowa wersja</string>
   <string name="promotional_on_going_event">Dzieje się</string>
-  <string name="promotional_new_in_aptoide">Now available</string>
-  <string name="promotional_soon_in_aptoide">Available soon</string>
+  <string name="promotional_new_in_aptoide">Teraz dostępne</string>
+  <string name="promotional_soon_in_aptoide">Wkrótce dostępne</string>
   <string name="promotional_notify_button">Powiadom mnie</string>
   <string name="promotional_new_notification_title">Aplikacja, na którą czekałeś!</string>
-  <string name="promotional_new_notification_body">%s is now available.</string>
+  <string name="promotional_new_notification_body">%s jest już dostępny.</string>
   <string name="promotional_new_active">Otrzymasz powiadomienie o dostępności.</string>
-  <string name="promotional_now_available_body">Now available in Aptoide Games!</string>
-  <string name="promotional_now_available_tag">Now Available</string>
+  <string name="promotional_now_available_body">Teraz dostępne w Aptoide Games!</string>
+  <string name="promotional_now_available_tag">Już dostępny</string>
   <!-- Tags -->
-  <string name="tag_for_you">For You</string>
-  <string name="tag_top_charts">Top Charts</string>
+  <string name="tag_for_you">Dla Ciebie</string>
+  <string name="tag_top_charts">Najlepsze listy przebojów</string>
   <string name="tag_appcoins">AppCoins</string>
-  <string name="tag_editorial">Editorial</string>
-  <string name="tag_categories">Categories</string>
+  <string name="tag_editorial">Edytorial</string>
+  <string name="tag_categories">Kategorie</string>
   <string name="tag_bonus">Bonus</string>
 </resources>

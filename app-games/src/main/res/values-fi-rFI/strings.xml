@@ -8,241 +8,242 @@
   <string name="bottom_navigation_updates">Päivitykset</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Asetukset</string>
-  <string name="overflow_menu_terms_conditions">Terms &amp; Conditions</string>
+  <string name="overflow_menu_terms_conditions">Ehdot &amp; Ehdot</string>
   <string name="overflow_menu_privacy_policy">Tietosuojakäytäntö</string>
-  <string name="settings_about_hardware_title">Hardware specs</string>
-  <string name="settings_about_version">Version %1$s (%2$s)</string>
-  <string name="settings_copied_to_clipboard_message">Copied to clipboard</string>
+  <string name="settings_about_hardware_title">Laitteiston tekniset tiedot</string>
+  <string name="settings_about_version">Versio %1$s (%2$s)</string>
+  <string name="settings_copied_to_clipboard_message">Kopioitu leikepöydälle</string>
   <string name="settings_general_title">Yleinen</string>
   <string name="settings_title">Asetukset</string>
   <string name="settings_support">Tuki</string>
   <string name="settings_feedback_button">Lähetä palautetta</string>
   <string name="settings_feedback_title">Lähetä palautetta</string>
-  <string name="settings_legal_title">Legal</string>
-  <string name="settings_send_feedback_body">Let us know what you think about Aptoide Games!\n\u2022 Any new feature you would like to see?\n\u2022 How do you think we can improve?</string>
-  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Description (50 characters min.)</string>
+  <string name="settings_legal_title">Oikeudellinen</string>
+  <string name="settings_send_feedback_body">Kerro meille, mitä mieltä olet Aptoide Gamesista!\n\u2022 Haluaisitko nähdä jonkin uuden ominaisuuden?\n\u2022 Miten voisimme mielestäsi parantaa?</string>
+  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Kuvaus (vähintään 50 merkkiä)</string>
   <string name="settings_storage_title">Tyhjennä muisti</string>
   <string name="settings_storage_clear_cache_title">Tyhjennä välimuisti</string>
   <string name="settings_storage_cache_size_title">Aseta välimuistin maksimikoko (Mb)</string>
-  <string name="settings_clear_cache_title">Clear Aptoide Games storage</string>
-  <string name="settings_clear_cache_body">Are you sure you want to delete all icons, images, apk downloaded, obb, webservice data...</string>
+  <string name="settings_clear_cache_title">Tyhjennä Aptoide Gamesin tallennus</string>
+  <string name="settings_clear_cache_body">Oletko varma, että haluat poistaa kaikki kuvakkeet, kuvat, ladatut apk-tiedostot, obb- ja verkkopalvelutiedot...?</string>
   <!-- MyGames -->
-  <string name="my_games_empty">We couldn\'t find any games installed on your device!</string>
-  <string name="my_games_progress_message">Organizing your games</string>
-  <string name="empty_category_body">There\'re no apps in this category... Yet!</string>
+  <string name="my_games_empty">Emme löytäneet laitteeseesi asennettuja pelejä!</string>
+  <string name="my_games_progress_message">Pelien järjestäminen</string>
+  <string name="empty_category_body">Tässä kategoriassa ei ole sovelluksia... Vielä!</string>
   <!-- Notifications -->
-  <string name="notifications_context_title">Get notified!</string>
-  <string name="notification_preparing_title">Preparing</string>
+  <string name="notifications_context_title">Saat ilmoituksen!</string>
+  <string name="notification_preparing_title">Valmistelu</string>
   <string name="notification_ready_install_title">Sovellus on valmiina asennettavaksi!</string>
   <string name="notification_ready_install_body">Napauta tästä asentaaksesi %s.</string>
-  <string name="notification_waiting_body">Waiting for download</string>
+  <string name="notification_waiting_body">Odottaa latausta</string>
   <string name="notification_1_installed_title">Asennettu</string>
-  <string name="notification_downloading_body">Downloading %1$s%% of %2$s</string>
-  <string name="notification_waiting_for_wifi_title">Waiting for Wi-Fi</string>
-  <string name="notifications_context_body">We\'ll let you know about the latest trends in the gaming world!</string>
+  <string name="notification_downloading_body">Lataus %1$s%% of %2$s</string>
+  <string name="notification_waiting_for_wifi_title">Wi-Fi:n odottaminen</string>
+  <string name="notifications_context_body">Kerromme sinulle pelimaailman uusimmista trendeistä!</string>
   <!-- Talkback -->
-  <string name="home_overflow_talkback">Options</string>
+  <string name="home_overflow_talkback">Vaihtoehdot</string>
   <string name="app_view_image_description_body">Image of %1$s</string>
-  <string name="app_view_screenshot_number">Screenshot %1$s</string>
-  <string name="app_view_icon_description_body">Icon of %1$s</string>
-  <string name="search_remove_from_recent_talkback">remove from recent searches</string>
-  <string name="search_clear_talkback">clear search</string>
+  <string name="app_view_screenshot_number">Kuvakaappaus %1$s</string>
+  <string name="app_view_icon_description_body">Ikonen %1$s</string>
+  <string name="search_remove_from_recent_talkback">poista viimeisimmistä hauista</string>
+  <string name="search_clear_talkback">selkeä haku</string>
   <string name="search_item_talkback">haku</string>
   <!-- Download over Wi-Fi -->
-  <string name="wifi_settings_title">Download only over Wi-Fi</string>
-  <string name="wifi_disclaimer_on_body">You\'re currently using your mobile data. Do you want to download %s when Wi-Fi is available?</string>
-  <string name="wifi_disclamer_off_body">This is a big file (%s). Do you want to download it when Wi-Fi is available?</string>
-  <string name="wifi_disclaimer_title">Are you sure?</string>
+  <string name="wifi_settings_title">Lataa vain Wi-Fi-yhteyden kautta</string>
+  <string name="wifi_disclaimer_on_body">Käytät parhaillaan mobiilidataa. Haluatko ladata %s , kun Wi-Fi on käytettävissä?</string>
+  <string name="wifi_disclamer_off_body">Tämä on suuri tiedosto (%s). Haluatko ladata sen, kun Wi-Fi on käytettävissä?</string>
+  <string name="wifi_disclaimer_title">Oletko varma?</string>
   <!-- Fixed bundles -->
-  <string name="editorial_more_articles_title">More articles</string>
-  <string name="fixed_bundle_just_arrived_title">Just Arrived</string>
-  <string name="fixed_bundle_my_games_title">My Games</string>
-  <string name="fixed_bundle_editors_choice_title">Editor\'s Choice</string>
+  <string name="editorial_more_articles_title">Lisää artikkeleita</string>
+  <string name="fixed_bundle_just_arrived_title">Juuri saapunut</string>
+  <string name="fixed_bundle_my_games_title">Minun pelini</string>
+  <string name="fixed_bundle_editors_choice_title">Toimittajan valinta</string>
   <string name="fixed_bundle_editorial_title">Pääkirjoitus</string>
   <string name="fixed_bundle_trending_title">Nousussa</string>
   <string name="retry_button" comment="button_retry_title">Yritä uudelleen</string>
-  <string name="install_waiting_installation_message">Waiting for install</string>
+  <string name="install_waiting_installation_message">Odottaa asennusta</string>
   <string name="install_installing_message">Asennetaan</string>
-  <string name="install_error_short_message">Oops, an error occurred.</string>
-  <string name="error_message_no_internet_title">Oops, something went wrong</string>
-  <string name="error_message_no_internet_body">Please check your Internet connection.</string>
-  <string name="error_message_generic_title">Something went wrong</string>
-  <string name="error_message_generic_body">Try again.</string>
-  <string name="app_info_send_email_subject">Feedback</string>
-  <string name="button_copy_title">Copy</string>
+  <string name="install_error_short_message">Hups, tapahtui virhe.</string>
+  <string name="error_message_no_internet_title">Hups, jokin meni pieleen</string>
+  <string name="error_message_no_internet_body">Tarkista Internet-yhteytesi.</string>
+  <string name="error_message_generic_title">Jokin meni pieleen</string>
+  <string name="error_message_generic_body">Yritä uudelleen.</string>
+  <string name="app_info_send_email_subject">Palaute</string>
+  <string name="button_copy_title">Kopioi</string>
   <string name="button_back_title">Takaisin</string>
   <string name="button_see_all_title">Näytä kaikki</string>
-  <string name="editorials_view_no_content_message">Oops, there\'s no content here yet!</string>
-  <string name="error_no_content_body">Oops, we couldn\'t find related content yet!</string>
+  <string name="editorials_view_no_content_message">Hups, täällä ei ole vielä sisältöä!</string>
+  <string name="error_no_content_body">Hups, emme löytäneet vielä aiheeseen liittyvää sisältöä!</string>
   <string name="button_update_title">Päivitä</string>
   <string name="button_open_app_title">Avaa</string>
-  <string name="install_waiting_download_message">Waiting for download</string>
+  <string name="install_waiting_download_message">Odottaa latausta</string>
   <string name="downloading_percentage_body">%1$s%% of %2$s</string>
   <string name="install_downloading_message">Ladataan</string>
   <!-- Common -->
   <string name="send_button">Lähetä</string>
-  <string name="try_again">Please try again.</string>
+  <string name="try_again">Yritä uudelleen.</string>
   <string name="please_wait">Odota.</string>
   <string name="ok_button">Ok</string>
   <string name="cancel_button">Peruuta</string>
-  <string name="download_now_button">Download Now</string>
+  <string name="download_now_button">Lataa nyt</string>
   <string name="uninstall_button">Poista asennus</string>
-  <string name="go_back_button">Go Back</string>
-  <string name="go_back_to_game_button">Go Back to Game</string>
-  <string name="uninstalling">Uninstalling</string>
+  <string name="go_back_button">Palaa takaisin</string>
+  <string name="go_back_to_game_button">Takaisin peliin</string>
+  <string name="uninstalling">Asennuksen poistaminen</string>
   <string name="resume_button">Jatka</string>
-  <string name="waiting_for_connection">Waiting for connection</string>
-  <string name="wait_for_wifi_button">Wait for Wi-Fi</string>
+  <string name="waiting_for_connection">Yhteyttä odotetaan</string>
+  <string name="wait_for_wifi_button">Odota Wi-Fi-yhteyttä</string>
   <string name="continue_button">Jatka</string>
-  <string name="error_install_permissions_body"><![CDATA[Please go to Settings and grant <1>Aptoide Games</1> permissions to install apps!]]></string>
-  <string name="latest_title">Latest</string>
-  <string name="whats_new_title">What\'s New</string>
+  <string name="error_install_permissions_body"><![CDATA[Mene Asetuksiin ja anna <1>Aptoide Gamesille</1> oikeudet asentaa sovelluksia!]]></string>
+  <string name="latest_title">Uusimmat</string>
+  <string name="whats_new_title">Mitä uutta</string>
   <string name="not_now_button">Ei nyt</string>
-  <string name="later_button">Later</string>
-  <string name="trusted_game_badge">Trusted Game</string>
-  <string name="official_game_badge">Official Game</string>
-  <string name="editorial_card_views_short">%s views</string>
+  <string name="later_button">Myöhemmin</string>
+  <string name="trusted_game_badge">Luotettu peli</string>
+  <string name="official_game_badge">Virallinen peli</string>
+  <string name="editorial_card_views_short">%s näyttöä</string>
   <!-- Out of Space -->
-  <string name="out_of_space_title">Out of Space</string>
+  <string name="out_of_space_title">Tilan loppu</string>
   <string name="out_of_space_body">Tarvitset %s jatkaaksesi asennusta.</string>
-  <string name="out_of_space_enough_body">You have enough free space now!</string>
+  <string name="out_of_space_enough_body">Sinulla on nyt tarpeeksi vapaata tilaa!</string>
   <!-- Talkback -->
-  <string name="appview_status_outdated_talkback">Outdated</string>
-  <string name="appview_status_not_installed_talkback">Not installed</string>
+  <string name="appview_status_outdated_talkback">Vanhentunut</string>
+  <string name="appview_status_not_installed_talkback">Ei asennettu</string>
   <string name="appview_status_installed_talkback">Asennettu</string>
-  <string name="appview_status_failed_talkback">Failed</string>
+  <string name="appview_status_failed_talkback">Epäonnistunut</string>
   <string name="appview_action_cancel_talkback">Peruuta</string>
-  <string name="appview_installer_talkback">%1$s installer.</string>
-  <string name="appview_action_double_tap_talkback">Double tap to %1$s</string>
+  <string name="appview_installer_talkback">%1$s asentaja.</string>
+  <string name="appview_action_double_tap_talkback">Kaksoisnapauta %1$s</string>
   <!-- Search -->
-  <string name="search_suggested_title">Suggested Searches</string>
-  <string name="search_recent_title">Recent Searches</string>
-  <string name="search_popular_title">Popular Searches</string>
-  <string name="search_bar_label">Search for games...</string>
-  <string name="search_empty_body">Oops, there are no results for \"%s\".\nTry with different words!</string>
+  <string name="search_suggested_title">Ehdotetut haut</string>
+  <string name="search_recent_title">Viimeisimmät haut</string>
+  <string name="search_popular_title">Suosittuja hakuja</string>
+  <string name="search_bar_label">Etsi pelejä...</string>
+  <string name="search_empty_body">Hups, hakusanalla \"%s\" ei ole tuloksia.\nKokeile eri sanoilla!</string>
   <!-- Install -->
   <string name="button_install_title">Asenna</string>
   <!-- Common -->
-  <string name="appview_details_tab_title" comment="details">Details</string>
-  <string name="appview_related_tab_title" comment="related">Related</string>
+  <string name="appview_details_tab_title" comment="details">Yksityiskohdat</string>
+  <string name="appview_related_tab_title" comment="related">Aiheeseen liittyvät</string>
   <string name="appview_info_tab_title" comment="info">Info</string>
-  <string name="appview_info_version_name_title" comment="version_name">Version name</string>
-  <string name="appview_info_package_name_title" comment="package_name">Package name</string>
-  <string name="appview_info_release_title" comment="release">Release</string>
-  <string name="appview_info_update_title" comment="updated_on">Updated on</string>
-  <string name="appview_info_download_size_title" comment="download_size">Download size</string>
+  <string name="appview_info_version_name_title" comment="version_name">Version nimi</string>
+  <string name="appview_info_package_name_title" comment="package_name">Paketin nimi</string>
+  <string name="appview_info_release_title" comment="release">Julkaisu</string>
+  <string name="appview_info_update_title" comment="updated_on">Päivitetty</string>
+  <string name="appview_info_download_size_title" comment="download_size">Lataa koko</string>
   <string name="appview_info_website_title" comment="website">Kotisivu</string>
   <string name="appview_info_email_title" comment="email">Sähköposti</string>
   <string name="appview_info_permissions_title" comment="permissions">Luvat</string>
-  <string name="bonus_banner_body">You\'ll get a bonus in all games identified with %s.</string>
-  <string name="bonus_banner_title" comment="up_to_s_bonus">Up to %s%% Bonus</string>
-  <string name="settings_auto_update_button">Auto-update games</string>
+  <string name="bonus_banner_body">Saat bonuksen kaikissa peleissä, jotka on tunnistettu %s.</string>
+  <string name="bonus_banner_title" comment="up_to_s_bonus">Jopa %s%% bonus</string>
+  <string name="settings_auto_update_button">Automaattisesti päivittyvät pelit</string>
   <string name="powered_by_title" comment="powered_by">Powered by</string>
-  <string name="contact_support_title" comment="contact_support">Contact Support</string>
-  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Please give us all the details:\n\u2022 When did the problem start\n\u2022 On which game are you making a purchase\n\nOnce you tap on Send, your mail app will open. Feel free to attach a screenshot or video about the issue!</string>
-  <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Do you want to install this game?</string>
-  <string name="apkfy_whats_aptoide_games_title">What\'s Aptoide Games?</string>
-  <string name="apkfy_install_body">Get your favorite game and much more in Aptoide Games!</string>
-  <string name="apkfy_install_bullet_points">\u2022 Top games with an amazing curation.\n\u2022 No need to log in!\n\u2022 Special promotions and rewards in your favorite games.</string>
-  <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Pay with the Aptoide Wallet</string>
-  <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">It\'ll be installed automatically and you\'ll get a bonus in all purchases!</string>
+  <string name="contact_support_title" comment="contact_support">Ota yhteyttä asiakaspalveluun</string>
+  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Kerro meille kaikki yksityiskohdat:\n\u2022\n\u2022 Missä pelissä teet ostoksen\n\nKun napautat Lähetä, sähköpostisovellus avautuu. Voit vapaasti liittää kuvakaappauksen tai videon ongelmasta!</string>
+  <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Haluatko asentaa tämän pelin?</string>
+  <string name="apkfy_whats_aptoide_games_title">Mikä on Aptoide Games?</string>
+  <string name="apkfy_install_body">Hanki suosikkipelisi ja paljon muuta Aptoide Gamesissa!</string>
+  <string name="apkfy_install_bullet_points">\u2022 Huippupelejä, joissa on uskomaton kuratointi.\n\u2022 Ei tarvitse kirjautua sisään!\n\u2022 Erikoiskampanjoita ja palkintoja suosikkipeleissäsi.</string>
+  <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Maksaminen Aptoide-lompakolla</string>
+  <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Se asennetaan automaattisesti ja saat bonuksen kaikista ostoksista!</string>
   <string name="buy_button" comment="buy">Osta</string>
-  <string name="iap_other_payment_methods_button" comment="other_payment_methods">Other payment methods</string>
-  <string name="iap_remember_card_button" comment="remember_card">Remember card</string>
-  <string name="iab_change_card_button" comment="change_card">Change card</string>
+  <string name="iap_other_payment_methods_button" comment="other_payment_methods">Muut maksutavat</string>
+  <string name="iap_remember_card_button" comment="remember_card">Muista kortti</string>
+  <string name="iab_change_card_button" comment="change_card">Vaihda kortti</string>
   <string name="done_title">Siinä se!</string>
-  <string name="purchase_making_purchase_title" comment="making_purchase">Making Purchase...</string>
+  <string name="purchase_making_purchase_title" comment="making_purchase">Ostosten tekeminen...</string>
   <string name="log_out_button" comment="log_out">Kirjaudu ulos</string>
-  <string name="iap_appc_body">You\'ll get a bonus in all purchases!</string>
-  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">You can now complete your purchase.</string>
-  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">The Aptoide Wallet is now installed!</string>
-  <string name="storage_access_permission_request_message">Allow access to your phone’s storage so we can download and install this app.</string>
+  <string name="iap_appc_body">Saat bonuksen kaikista ostoksista!</string>
+  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Voit nyt viimeistellä ostoksesi.</string>
+  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">Aptoide-lompakko on nyt asennettu!</string>
+  <string name="storage_access_permission_request_message">Anna puhelimesi tallennustilaan pääsy, jotta voimme ladata ja asentaa tämän sovelluksen.</string>
   <string name="downloads_number_title">%s latausta</string>
   <!-- Payment Errors-->
-  <string name="payments_error_old_card_title">It seems you registered this card long time ago!</string>
-  <string name="payments_error_old_card_body">Insert the card details again or use a different one.</string>
-  <string name="purchase_error_payment_rejected">The transaction has been rejected.</string>
-  <string name="purchase_error_try_other_card_body">Please try with a different card or payment method.</string>
-  <string name="purchase_card_error_general_title">There was a problem with your card.</string>
-  <string name="purchase_error_try_other_payment_method_body">Please try with a different payment method.</string>
-  <string name="purchase_card_error_no_funds">It seems you don\'t have enough funds or there\'s a limit on your card.</string>
-  <string name="purchase_card_error_invalid_details_title">Invalid card number.</string>
-  <string name="purchase_error_check_it_body">Please check it and try again.</string>
-  <string name="purchase_card_error_not_supported_title">Your card is not supported yet.</string>
-  <string name="purchase_error_wrong_pin_title">There was a problem with your pin.</string>
-  <string name="purchase_error_3d_title">There was a problem with your 3D authentication.</string>
-  <string name="purchase_card_rejected_title">The transaction has been rejected by your bank.</string>
-  <string name="purchase_error_invalid_credit_card_title">Invalid bank card number.</string>
-  <string name="purchase_error_card_security_validation_title">There was an error on the 2nd level validation of this transaction.</string>
-  <string name="purchase_error_in_progress_title">Your request was already processed or is in progress.</string>
-  <string name="purchase_card_error_CVV_title">Wrong CVV/CVC</string>
-  <string name="purchase_error_expired_card_title">It seems your card is expired.</string>
-  <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
-  <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
+  <string name="payments_error_old_card_title">Näyttää siltä, että olet rekisteröinyt tämän kortin kauan sitten!</string>
+  <string name="payments_error_old_card_body">Aseta kortin tiedot uudelleen tai käytä toista korttia.</string>
+  <string name="purchase_error_payment_rejected">Tapahtuma on hylätty.</string>
+  <string name="purchase_error_try_other_card_body">Yritä käyttää eri korttia tai maksutapaa.</string>
+  <string name="purchase_card_error_general_title">Korttisi kanssa oli ongelma.</string>
+  <string name="purchase_error_try_other_payment_method_body">Yritä käyttää eri maksutapaa.</string>
+  <string name="purchase_card_error_no_funds">Näyttää siltä, että sinulla ei ole tarpeeksi varoja tai korttisi on rajoitettu.</string>
+  <string name="purchase_card_error_invalid_details_title">Virheellinen kortin numero.</string>
+  <string name="purchase_error_check_it_body">Tarkista se ja yritä uudelleen.</string>
+  <string name="purchase_card_error_not_supported_title">Korttisi ei ole vielä tuettu.</string>
+  <string name="purchase_error_wrong_pin_title">Pinissäsi oli ongelma.</string>
+  <string name="purchase_error_3d_title">3D-tunnistautumisessa oli ongelma.</string>
+  <string name="purchase_card_rejected_title">Pankkisi on hylännyt maksutapahtuman.</string>
+  <string name="purchase_error_invalid_credit_card_title">Pankkikortin numero on virheellinen.</string>
+  <string name="purchase_error_card_security_validation_title">Tämän tapahtuman 2. tason validoinnissa tapahtui virhe.</string>
+  <string name="purchase_error_in_progress_title">Pyyntösi on jo käsitelty tai se on käynnissä.</string>
+  <string name="purchase_card_error_CVV_title">Väärä CVV/CVC</string>
+  <string name="purchase_error_expired_card_title">Näyttää siltä, että korttisi on vanhentunut.</string>
+  <string name="iap_already_processing_title">Näyttää siltä, että tämä ostos on jo käsitelty.</string>
+  <string name="iap_already_processing_body">Tämä osto voi kestää jonkin aikaa, joten odota, kunnes se on valmis, tai ota yhteyttä tukitiimiimme.</string>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Bonusta jokaisesta ostoksesta</string>
-  <string name="bonus_page_body_1">Look for the games identified with %1$s, install the Aptoide Wallet and get up to %2$s%% bonus in all purchases. You can then use this bonus to make your next purchases in your favorite games!</string>
-  <string name="bonus_page_title_2">Want More?</string>
-  <string name="bonus_page_body_2"><![CDATA[You can get an extra <1>%s%% bonus</1> by using an Aptoide Games exclusive promo code in specific games. Stay tuned and you\'ll be notified!]]></string>
+  <string name="bonus_page_body_1">Etsi pelejä, jotka on tunnistettu %1$s, asenna Aptoide Wallet ja saat jopa %2$s%% bonuksen kaikista ostoksista. Voit sitten käyttää tämän bonuksen seuraaviin ostoksiisi suosikkipeleissäsi!</string>
+  <string name="bonus_page_title_2">Haluatko lisää?</string>
+  <string name="bonus_page_body_2"><![CDATA[Voit saada ylimääräisen <1>%s%% bonuksen</1> käyttämällä Aptoide Gamesin eksklusiivista tarjouskoodia tietyissä peleissä. Pysy kuulolla ja saat ilmoituksen!]]></string>
   <!-- Promo Code -->
-  <string name="promo_code_install_wallet_banner_title">Up to %s%% Bonus in Every Purchase</string>
-  <string name="promo_code_install_wallet_banner_body">Use the Aptoide Wallet to make your in-app purchases and get a reward.</string>
-  <string name="promo_code_extra_title">Want More? Get %s%% Extra Bonus!</string>
-  <string name="promo_code_use_button">Use code</string>
-  <string name="promo_code_install_wallet_disclaimer">Install the Aptoide Wallet first.</string>
-  <string name="promo_code_notification_title">Redeem Your Promo Code</string>
-  <string name="promo_code_notification_body">Use your promo code to get extra bonuses in your favorite game.</string>
-  <string name="promo_code_notification_without_wallet_title">%s%% Extra Bonus!</string>
-  <string name="promo_code_notification_without_wallet_body">Get the Aptoide Wallet and use your promo code to get extra bonuses in all purchases.</string>
-  <string name="promo_code_share_title">You\'ve got a promo code!</string>
-  <string name="promo_code_share_body">Use this promo code to get extra bonuses in your favorite game.</string>
+  <string name="promo_code_install_wallet_banner_title">Jopa %s%% bonus jokaisesta ostoksesta</string>
+  <string name="promo_code_install_wallet_banner_body">Käytä Aptoide-lompakkoa sovelluksen sisäisten ostosten tekemiseen ja saat palkkion.</string>
+  <string name="promo_code_extra_title">Haluatko lisää? Hanki %s%% lisäbonus!</string>
+  <string name="promo_code_use_button">Käytä koodia</string>
+  <string name="promo_code_install_wallet_disclaimer">Asenna ensin Aptoide Wallet.</string>
+  <string name="promo_code_notification_title">Lunasta kampanjakoodisi</string>
+  <string name="promo_code_notification_body">Käytä tarjouskoodia saadaksesi ylimääräisiä bonuksia suosikkipelissäsi.</string>
+  <string name="promo_code_notification_without_wallet_title">%s%% Lisäbonus!</string>
+  <string name="promo_code_notification_without_wallet_body">Hanki Aptoide-lompakko ja käytä tarjouskoodia saadaksesi ylimääräisiä bonuksia kaikissa ostoksissa.</string>
+  <string name="promo_code_share_title">Sinulla on tarjouskoodi!</string>
+  <string name="promo_code_share_body">Käytä tätä tarjouskoodia saadaksesi ylimääräisiä bonuksia suosikkipelissäsi.</string>
   <!-- Update -->
-  <string name="update_up_to_date_title">Congrats!</string>
-  <string name="update_up_to_date_body">You\'re up to date.</string>
-  <string name="update_auto_update_title">Enjoy the best gaming experience and keep your games updated.</string>
-  <string name="update_auto_update_slider">Keep games updated automatically</string>
+  <string name="update_up_to_date_title">Onneksi olkoon!</string>
+  <string name="update_up_to_date_body">Olet ajan tasalla.</string>
+  <string name="update_auto_update_title">Nauti parhaasta pelikokemuksesta ja pidä pelisi ajan tasalla.</string>
+  <string name="update_auto_update_slider">Pidä pelit päivittyvät automaattisesti</string>
   <string name="update_update_all_button">Päivitä kaikki</string>
-  <string name="update_aptoide_games_title">New Version Available!</string>
-  <string name="update_aptoide_games_body">Update Aptoide Games to the latest version to keep enjoying the best gaming discovery experience.</string>
-  <string name="update_aptoide_games_update_close_body">Aptoide Games will close to update. Just open it again!</string>
+  <string name="update_aptoide_games_title">Uusi versio saatavilla!</string>
+  <string name="update_aptoide_games_body">Päivitä Aptoide Games uusimpaan versioon, jotta voit nauttia parhaasta pelikokemuksesta.</string>
+  <string name="update_aptoide_games_update_close_body">Aptoide Games sulkee päivityksen. Avaa se uudelleen!</string>
   <plurals name="update_games_can_be_updated_body">
-    <item quantity="one">%s game can be updated</item>
-    <item quantity="other">%s games can be updated</item>
+    <item quantity="one">%s peli voidaan päivittää</item>
+    <item quantity="other">%s pelejä voidaan päivittää</item>
   </plurals>
   <plurals name="update_notification_title">
-    <item quantity="one">You\'ve got %s update available</item>
-    <item quantity="other">You\'ve got %s updates available</item>
+    <item quantity="one">Sinulla on saatavilla %s päivitys</item>
+    <item quantity="other">Sinulla on saatavilla %s päivitykset</item>
   </plurals>
   <string name="update_notification_body">Napauta tästä asentaaksesi.</string>
-  <string name="update_aptoide_games_update_notification">There\'s a new version of Aptoide Games</string>
+  <string name="update_aptoide_games_update_notification">On uusi versio Aptoide Gamesista</string>
+  <string name="update_available_vip_update_notification">%s : Uusi versio saatavilla</string>
   <!-- GenAi -->
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
-  <string name="genai_me_title">Me</string>
-  <string name="genai_introduction_body">Hi! I\'m your AI assistant on everything related to apps and games discovery. Try with something like:</string>
-  <string name="genai_input_message_field">Type a message&#8230;</string>
+  <string name="genai_me_title">Minä</string>
+  <string name="genai_introduction_body">Hei! Olen tekoälyavustajasi kaikessa, mikä liittyy sovellusten ja pelien löytämiseen. Kokeile jotain sellaista kuin:</string>
+  <string name="genai_input_message_field">Kirjoita viesti&#8230;</string>
   <string name="genai_powered_by_ai_title">Powered by AI</string>
-  <string name="genai_example_1_body">I\'m looking for strategy games.</string>
-  <string name="genai_example_2_body">Please recommend me the best multiplayer games.</string>
-  <string name="genai_example_3_body">Do you know offline casual games?</string>
-  <string name="genai_history_body">GameGenie History</string>
-  <string name="genai_new_chat_button">New chat</string>
+  <string name="genai_example_1_body">Etsin strategiapelejä.</string>
+  <string name="genai_example_2_body">Suosittele minulle parhaita moninpelejä.</string>
+  <string name="genai_example_3_body">Tunnetko offline-rennot pelit?</string>
+  <string name="genai_history_body">GameGenien historia</string>
+  <string name="genai_new_chat_button">Uusi keskustelu</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Now compatible with the Aptoide Wallet</string>
+  <string name="promotional_now_with_appcoins">Nyt yhteensopiva Aptoide-lompakon kanssa</string>
   <string name="promotional_new_version">Uusi versio</string>
   <string name="promotional_on_going_event">Meneillään oleva tapahtuma</string>
-  <string name="promotional_new_in_aptoide">Now available</string>
-  <string name="promotional_soon_in_aptoide">Available soon</string>
+  <string name="promotional_new_in_aptoide">Nyt saatavilla</string>
+  <string name="promotional_soon_in_aptoide">Saatavilla pian</string>
   <string name="promotional_notify_button">Ilmoita minulle</string>
   <string name="promotional_new_notification_title">Sovellus, jota olet odottanut!</string>
-  <string name="promotional_new_notification_body">%s is now available.</string>
+  <string name="promotional_new_notification_body">%s on nyt saatavilla.</string>
   <string name="promotional_new_active">Saat ilmoituksen, kun saatavissa.</string>
-  <string name="promotional_now_available_body">Now available in Aptoide Games!</string>
-  <string name="promotional_now_available_tag">Now Available</string>
+  <string name="promotional_now_available_body">Nyt saatavilla Aptoide Gamesissa!</string>
+  <string name="promotional_now_available_tag">Nyt saatavilla</string>
   <!-- Tags -->
-  <string name="tag_for_you">For You</string>
+  <string name="tag_for_you">Sinulle</string>
   <string name="tag_top_charts">Top Charts</string>
   <string name="tag_appcoins">AppCoins</string>
-  <string name="tag_editorial">Editorial</string>
-  <string name="tag_categories">Categories</string>
-  <string name="tag_bonus">Bonus</string>
+  <string name="tag_editorial">Pääkirjoitus</string>
+  <string name="tag_categories">Kategoriat</string>
+  <string name="tag_bonus">bonusta</string>
 </resources>
