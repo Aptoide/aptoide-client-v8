@@ -24,11 +24,10 @@ import com.aptoide.android.aptoidegames.UrlActivity
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.feature_apps.presentation.AppItem
 import com.aptoide.android.aptoidegames.gamegenie.analytics.rememberGameGenieAnalytics
+import com.aptoide.android.aptoidegames.gamegenie.presentation.GameGenieYoutubePlayer
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.theme.Palette
-import com.aptoide.android.aptoidegames.videos.presentation.AppViewYoutubePlayer
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun MessageBubble(
   message: String?,
@@ -94,7 +93,7 @@ fun MessageBubble(
       }
 
       videoId?.let {
-        AppViewYoutubePlayer(
+        GameGenieYoutubePlayer(
           Modifier
             .padding(vertical = (8.5).dp, horizontal = 8.dp)
             .height(200.dp)
