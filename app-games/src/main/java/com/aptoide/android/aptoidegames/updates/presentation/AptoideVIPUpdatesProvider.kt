@@ -2,8 +2,8 @@ package com.aptoide.android.aptoidegames.updates.presentation
 
 import cm.aptoide.pt.feature_flags.domain.FeatureFlags
 import cm.aptoide.pt.feature_updates.data.VIPUpdatesProvider
-import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import javax.inject.Inject
 import javax.inject.Singleton
 
