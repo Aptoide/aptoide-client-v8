@@ -101,11 +101,17 @@ class GameGenieViewModel @Inject constructor(
 
   fun loadConversation(id: String) {
     viewModelScope.launch {
+      viewModelState.update {
+        it.copy(
+          type = GameGenieUIStateType.LOADING_CHAT,
+        )
+      }
       gameGenieUseCase.loadChat(id)
         .collectLatest { newChat ->
           newChat?.let {
             viewModelState.update { state ->
               state.copy(
+                type = GameGenieUIStateType.IDLE,
                 chat = newChat,
                 apps = newChat.conversation.flatMap { interaction ->
                   interaction.apps.map { app -> app.packageName }

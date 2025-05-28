@@ -26,6 +26,7 @@ import com.aptoide.android.aptoidegames.gamegenie.analytics.rememberGameGenieAna
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.ChatParticipantName
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.MessageList
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.TextInputBar
+import com.aptoide.android.aptoidegames.home.LoadingView
 
 const val genieRoute = "chatbot"
 
@@ -93,6 +94,7 @@ fun ChatbotView(
         onMessageSend = onMessageSend,
         onSuggestionSend = onSuggestionSend
       )
+      GameGenieUIStateType.LOADING_CHAT -> LoadingView()
     }
   }
 }
