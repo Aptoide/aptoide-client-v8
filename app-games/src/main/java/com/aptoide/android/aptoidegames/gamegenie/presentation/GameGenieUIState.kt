@@ -14,5 +14,6 @@ enum class GameGenieUIStateType {
   IDLE,
   LOADING,
   NO_CONNECTION,
-  ERROR
+  ERROR,
+  LOADING_CHAT
 }
