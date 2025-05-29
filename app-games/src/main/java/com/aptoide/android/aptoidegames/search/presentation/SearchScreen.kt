@@ -259,8 +259,10 @@ fun SearchAppBar(
       .onKeyEvent {
         if (it.nativeKeyEvent.keyCode == KeyEvent.KEYCODE_ENTER) {
           onSearchQueryClick()
+          true
+        } else {
+          false
         }
-        true
       }
       .semantics {
         contentDescription = placeholderText
@@ -627,7 +629,8 @@ fun EmptySearchView(
       items = searchResults,
     ) { index, app ->
       val installViewShort: @Composable () -> Unit = {
-        InstallViewShort(app,
+        InstallViewShort(
+          app,
           onInstallStarted = { onItemInstallStarted(app) }
         )
       }
