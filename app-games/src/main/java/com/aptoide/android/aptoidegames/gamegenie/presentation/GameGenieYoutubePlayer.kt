@@ -63,7 +63,6 @@ fun GameGenieYoutubePlayer(
   modifier: Modifier,
   videoId: String,
   contentDesc: String = "",
-  onErrorContent: @Composable () -> Unit,
 ) = runPreviewable(
   preview = {
     Box(
@@ -177,12 +176,6 @@ fun GameGenieYoutubePlayer(
         toggleFullscreen = { showFullscreen = !showFullscreen },
         contentDescription = contentDesc
       )
-    }
-    AnimatedVisibility(
-      visible = !show,
-      exit = fadeOut()
-    ) {
-      onErrorContent()
     }
   }
 )

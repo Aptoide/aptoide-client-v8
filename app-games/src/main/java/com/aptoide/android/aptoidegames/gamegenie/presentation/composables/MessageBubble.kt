@@ -99,7 +99,7 @@ fun MessageBubble(
             .height(200.dp)
             .fillMaxWidth(),
           it,
-        ) { }
+        )
       }
 
       apps?.forEachIndexed { index, app ->
