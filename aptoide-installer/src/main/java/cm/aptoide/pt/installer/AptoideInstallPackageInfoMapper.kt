@@ -63,7 +63,7 @@ class AptoideInstallPackageInfoMapper @Inject constructor(
 }
 
 private fun File.toInstallationFile(type: InstallationFile.Type) = InstallationFile(
-  name = fileName.takeIf { it.endsWith(".apk") } ?: "$fileName.apk",
+  name = fileName.ensureInstallationFileExtension(type),
   type = type,
   md5 = md5,
   fileSize = size,
@@ -104,3 +104,8 @@ private val obbInstallationFileTypes = listOf(
   InstallationFile.Type.OBB_MAIN,
   InstallationFile.Type.OBB_PATCH
 )
+
+private fun String.ensureInstallationFileExtension(fileType: InstallationFile.Type): String {
+  return this.takeIf { it.endsWith(fileType.extension, ignoreCase = true) }
+    ?: "$this${fileType.extension}"
+}

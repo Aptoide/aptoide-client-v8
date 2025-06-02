@@ -15,16 +15,16 @@ data class InstallationFile(
    * Sorted in order of installation priority
    */
   @Suppress("unused")
-  enum class Type {
-    BASE,
-    OBB_MAIN,
-    OBB_PATCH,
-    PFD_INSTALL_TIME,
-    PFD_ON_DEMAND,
-    PFD_CONDITIONAL,
-    PFD_INSTANT,
-    PAD_INSTALL_TIME,
-    PAD_FAST_FOLLOW,
-    PAD_ON_DEMAND,
+  enum class Type(val extension: String) {
+    BASE(".apk"),
+    OBB_MAIN(".obb"),
+    OBB_PATCH(".obb"),
+    PFD_INSTALL_TIME(".apk"),
+    PFD_ON_DEMAND(".apk"),
+    PFD_CONDITIONAL(".apk"),
+    PFD_INSTANT(".apk"),
+    PAD_INSTALL_TIME(".apk"),
+    PAD_FAST_FOLLOW(".apk"),
+    PAD_ON_DEMAND(".apk"),
   }
 }
