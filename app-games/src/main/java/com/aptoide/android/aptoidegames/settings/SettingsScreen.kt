@@ -128,7 +128,9 @@ fun SettingsViewContent(
       SettingsSection(
         title = stringResource(R.string.settings_general_title)
       ) {
-        Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+        Column(
+          modifier = Modifier.padding(horizontal = 16.dp),
+        ) {
           SettingsSwitchItem(
             title = stringResource(R.string.wifi_settings_title),
             enabled = downloadOnlyOverWifi,
@@ -147,11 +149,12 @@ fun SettingsViewContent(
       SettingsSection(
         title = stringResource(R.string.settings_support)
       ) {
-
         val copyText = stringResource(R.string.button_copy_title)
         val hardwareSpecsText = stringResource(R.string.settings_about_hardware_title)
 
-        Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+        Column(
+          modifier = Modifier.padding(horizontal = 16.dp),
+        ) {
           SettingsCaretItem(
             title = stringResource(R.string.settings_feedback_button),
             onClick = sendFeedback
@@ -161,8 +164,7 @@ fun SettingsViewContent(
             style = AGTypography.InputsM,
             modifier = Modifier
               .defaultMinSize(minHeight = 48.dp)
-              .wrapContentHeight()
-              .padding(horizontal = 8.dp, vertical = 8.dp),
+              .wrapContentHeight(),
             color = Palette.GreyLight
           )
           Row(
@@ -170,7 +172,6 @@ fun SettingsViewContent(
             modifier = Modifier
               .clickable(onClick = copyInfo)
               .defaultMinSize(minHeight = 48.dp)
-              .padding(start = 8.dp, top = 8.dp, bottom = 8.dp)
               .clearAndSetSemantics {
                 contentDescription = hardwareSpecsText
                 onClick(label = copyText) {
@@ -196,7 +197,9 @@ fun SettingsViewContent(
       SettingsSection(
         title = stringResource(R.string.settings_legal_title)
       ) {
-        Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+        Column(
+          modifier = Modifier.padding(horizontal = 16.dp),
+        ) {
           SettingsCaretItem(
             title = stringResource(R.string.overflow_menu_privacy_policy),
             onClick = onPrivacyPolicyClick
@@ -207,32 +210,22 @@ fun SettingsViewContent(
           )
         }
       }
-      Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-        Row(
-          verticalAlignment = Alignment.CenterVertically,
-          horizontalArrangement = Arrangement.Center,
-          modifier = Modifier
-            .padding(start = 8.dp, top = 8.dp, bottom = 4.dp)
-            .fillMaxWidth()
-        ) {
-          Text(
-            text = stringResource(id = R.string.powered_by_title),
-            style = AGTypography.Body,
-            color = Palette.GreyLight
-          )
-        }
-        Row(
-          verticalAlignment = Alignment.CenterVertically,
-          horizontalArrangement = Arrangement.Center,
-          modifier = Modifier
-            .padding(start = 8.dp, bottom = 33.dp)
-            .fillMaxWidth()
-        ) {
-          Image(
-            imageVector = getAptoideLogo(Palette.White),
-            contentDescription = null,
-          )
-        }
+      Column(
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(top = 36.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+      ) {
+        Text(
+          modifier = Modifier.padding(bottom = 4.dp),
+          text = stringResource(id = R.string.powered_by_title),
+          style = AGTypography.Body,
+          color = Palette.GreyLight
+        )
+        Image(
+          imageVector = getAptoideLogo(Palette.White),
+          contentDescription = null,
+        )
       }
     }
   }
@@ -256,14 +249,14 @@ fun SettingsSectionHeader(
   Text(
     text = title,
     style = AGTypography.Title,
-    modifier = Modifier.padding(start = 24.dp, top = 16.dp),
+    modifier = Modifier.padding(start = 16.dp, top = 24.dp),
     color = Palette.White
   )
   subTitle?.let {
     Text(
       text = it,
       style = AGTypography.SmallGames,
-      modifier = Modifier.padding(start = 24.dp),
+      modifier = Modifier.padding(start = 16.dp),
       color = Palette.GreyLight
     )
   }
@@ -272,7 +265,7 @@ fun SettingsSectionHeader(
 @Composable
 fun SettingsSectionDivider() {
   Divider(
-    modifier = Modifier.padding(top = 12.dp),
+    modifier = Modifier.padding(top = 20.dp),
     color = Palette.Grey
   )
 }
@@ -293,7 +286,6 @@ fun SettingsSwitchItem(
       )
       .defaultMinSize(minHeight = 48.dp)
       .fillMaxWidth()
-      .padding(start = 8.dp)
       .minimumInteractiveComponentSize()
       .clearAndSetSemantics {
         contentDescription = title
@@ -321,10 +313,9 @@ fun SettingsCaretItem(
   Row(
     verticalAlignment = Alignment.CenterVertically,
     modifier = Modifier
-      .clickable(onClick = onClick)
-      .defaultMinSize(minHeight = 48.dp)
       .fillMaxWidth()
-      .padding(horizontal = 8.dp, vertical = 8.dp)
+      .defaultMinSize(minHeight = 48.dp)
+      .clickable(onClick = onClick)
   ) {
     if (subtitle == null) {
       Text(
@@ -356,8 +347,7 @@ fun SettingsCaretItem(
     Image(
       imageVector = getForward(Palette.Primary),
       contentDescription = null,
-      modifier = Modifier
-        .size(32.dp)
+      modifier = Modifier.size(32.dp)
     )
   }
 }
