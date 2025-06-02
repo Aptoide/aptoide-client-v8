@@ -1,5 +1,6 @@
 package com.aptoide.android.aptoidegames.settings
 
+import android.content.ClipData
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -23,10 +24,11 @@ import androidx.compose.material.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.ClipboardManager
-import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.ClipEntry
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -53,6 +55,7 @@ import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
+import kotlinx.coroutines.launch
 
 const val settingsRoute = "settings"
 
@@ -65,7 +68,8 @@ fun settingsScreen(showSnack: (String) -> Unit) = ScreenData(
   val downloadOnlyOverWifi by networkPreferencesViewModel.downloadOnlyOverWifi.collectAsState()
   val (autoUpdateGames, toggleAutoUpdateGames) = rememberAutoUpdate()
   val deviceInfo = rememberDeviceInfo()
-  val clipboardManager: ClipboardManager = LocalClipboardManager.current
+  val clipboard = LocalClipboard.current
+  val coroutineScope = rememberCoroutineScope()
   val copiedMessage = stringResource(R.string.settings_copied_to_clipboard_message)
 
   SettingsViewContent(
@@ -92,7 +96,9 @@ fun settingsScreen(showSnack: (String) -> Unit) = ScreenData(
       SupportActivity.openForFeedBack(context)
     },
     copyInfo = {
-      clipboardManager.setText(deviceInfo)
+      coroutineScope.launch {
+        clipboard.setClipEntry(ClipEntry(ClipData.newPlainText("Device info", deviceInfo)))
+      }
       showSnack(copiedMessage)
     },
     navigateBack = navigateBack,
