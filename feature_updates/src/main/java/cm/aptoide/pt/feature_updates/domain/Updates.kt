@@ -73,6 +73,7 @@ class Updates @Inject constructor(
       .launchIn(CoroutineScope(coroutineContext))
     mutex.withLock {
       val installedApps = installManager.installedApps
+        .filterNormalAppsOrGames()
         .mapNotNull { it.packageInfo }
         .map { it.packageName to it.compatVersionCode }
       val values = updatesRepository.getUpdates().first()
@@ -106,6 +107,7 @@ class Updates @Inject constructor(
     installManager.installedApps
       .filter { it.updatesOwnerPackageName != myPackageName }
       .filter { it.packageName !in vipPackages }
+      .filterNormalAppsOrGames()
       .mapNotNull { it.packageInfo }
       .also { getUpdates(it) }
 
@@ -124,6 +126,7 @@ class Updates @Inject constructor(
 
       val installedAppsToUpdate = installManager.installedApps
         .filter { it.packageName in vipPackages }
+        .filterNormalAppsOrGames()
 
       val updates =
         getUpdates(installedAppsToUpdate.mapNotNull { it.packageInfo }).let(appsListMapper::map)
@@ -134,38 +137,8 @@ class Updates @Inject constructor(
           saved == null || update.versionCode > saved.file.vercode
         }
       }
-
-      //val shouldInstall = installManager.workingAppInstallers.firstOrNull() == null
-      val shouldInstall = false
-      if (shouldInstall) {
-        installedAppsToUpdate.forEach { appInstaller ->
-          updates
-            .firstOrNull { it.packageName == appInstaller.packageName }
-            ?.also {
-              appInstaller.install(
-                installPackageInfo = installPackageInfoMapper.map(it),
-                constraints = Constraints(
-                  checkForFreeSpace = false,
-                  networkType = UNMETERED
-                )
-              )
-
-              it.campaigns?.run {
-                toAptoideMMPCampaign().sendDownloadEvent(
-                  bundleTag = null,
-                  searchKeyword = null,
-                  currentScreen = null,
-                  isCta = false
-                )
-
-                toMMPLinkerCampaign().sendDownloadEvent()
-              }
-            }
-        }
-      } else {
-        filteredUpdates.forEach {
-          updatesNotificationBuilder.showVIPUpdateNotification(it)
-        }
+      filteredUpdates.forEach {
+        updatesNotificationBuilder.showVIPUpdateNotification(it)
       }
     }
   }
@@ -190,6 +163,7 @@ class Updates @Inject constructor(
     val shouldAutoUpdateGames = updatesPreferencesRepository.shouldAutoUpdateGames().first()
     val installers = installManager.installedApps
       .filter { it.updatesOwnerPackageName == myPackageName }
+      .filterNormalAppsOrGames()
     val updates = installers
       .mapNotNull { it.packageInfo }
       .let { getUpdates(it) }

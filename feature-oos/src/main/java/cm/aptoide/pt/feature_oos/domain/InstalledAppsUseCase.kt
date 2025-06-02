@@ -1,6 +1,7 @@
 package cm.aptoide.pt.feature_oos.domain
 
 import cm.aptoide.pt.extensions.getAppSize
+import cm.aptoide.pt.extensions.ifNormalAppOrGame
 import cm.aptoide.pt.install_manager.InstallManager
 import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
@@ -12,6 +13,7 @@ class InstalledAppsUseCase @Inject constructor(
 
   fun getInstalledApps(filterPackages: List<String> = emptyList()): List<String> =
     installManager.installedApps
+      .filter { it.packageInfo?.ifNormalAppOrGame() ?: false }
       .map { it to (it.packageInfo?.getAppSize() ?: 0) }
       .sortedByDescending { it.second }
       .map { it.first.packageName }
