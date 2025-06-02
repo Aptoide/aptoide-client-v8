@@ -1,6 +1,10 @@
 package com.aptoide.android.aptoidegames.settings
 
 import android.content.ClipData
+import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -39,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.ScreenData
+import cm.aptoide.pt.extensions.multiTap
 import cm.aptoide.pt.feature_updates.di.rememberAutoUpdate
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
@@ -46,8 +51,10 @@ import com.aptoide.android.aptoidegames.SupportActivity
 import com.aptoide.android.aptoidegames.UrlActivity
 import com.aptoide.android.aptoidegames.design_system.AptoideGamesSwitch
 import com.aptoide.android.aptoidegames.design_system.PrimarySmallOutlinedButton
+import com.aptoide.android.aptoidegames.developer.rememberAGDeveloperOptions
 import com.aptoide.android.aptoidegames.drawables.icons.getAptoideLogo
 import com.aptoide.android.aptoidegames.drawables.icons.getForward
+import com.aptoide.android.aptoidegames.firebase.rememberFirebaseToken
 import com.aptoide.android.aptoidegames.network.presentation.NetworkPreferencesViewModel
 import com.aptoide.android.aptoidegames.terms_and_conditions.ppUrl
 import com.aptoide.android.aptoidegames.terms_and_conditions.tcUrl
@@ -120,6 +127,10 @@ fun SettingsViewContent(
   onTermsConditionsClick: () -> Unit = {},
   navigateBack: () -> Unit = {},
 ) {
+  val context = LocalContext.current
+  val (areAGDeveloperOptionsEnabled, toggleAGDeveloperOptions) = rememberAGDeveloperOptions()
+  val settingsAnalytics = rememberSettingsAnalytics()
+
   Column(
     modifier = Modifier
       .fillMaxSize()
@@ -170,7 +181,12 @@ fun SettingsViewContent(
             style = AGTypography.InputsM,
             modifier = Modifier
               .defaultMinSize(minHeight = 48.dp)
-              .wrapContentHeight(),
+              .wrapContentHeight()
+              .multiTap(enabled = !areAGDeveloperOptionsEnabled) {
+                toggleAGDeveloperOptions(true)
+                Toast.makeText(context, "Developer options activated!", Toast.LENGTH_SHORT).show()
+                settingsAnalytics.sendAGDevOptionsEnabled()
+              },
             color = Palette.GreyLight
           )
           Row(
@@ -216,6 +232,16 @@ fun SettingsViewContent(
           )
         }
       }
+      AnimatedVisibility(
+        visible = areAGDeveloperOptionsEnabled,
+        enter = fadeIn(),
+        exit = fadeOut()
+      ) {
+        Column {
+          SettingsSectionDivider()
+          AGDeveloperOptionsSection()
+        }
+      }
       Column(
         modifier = Modifier
           .fillMaxWidth()
@@ -232,6 +258,64 @@ fun SettingsViewContent(
           imageVector = getAptoideLogo(Palette.White),
           contentDescription = null,
         )
+      }
+    }
+  }
+}
+
+@Composable
+fun AGDeveloperOptionsSection() {
+  val firebaseToken = rememberFirebaseToken()
+  val clipboard = LocalClipboard.current
+  val coroutineScope = rememberCoroutineScope()
+  val (areAGDeveloperOptionsEnabled, toggleAGDeveloperOptions) = rememberAGDeveloperOptions()
+
+  Column(
+    modifier = Modifier
+      .fillMaxWidth()
+      .wrapContentHeight()
+  ) {
+    SettingsSection(
+      title = "Developer Options"
+    ) {
+      Column(
+        modifier = Modifier.padding(horizontal = 16.dp)
+      ) {
+        SettingsSwitchItem(
+          title = "Turn off developer options",
+          enabled = areAGDeveloperOptionsEnabled,
+          onToggle = toggleAGDeveloperOptions
+        )
+        Row(
+          verticalAlignment = Alignment.CenterVertically,
+          horizontalArrangement = Arrangement.SpaceBetween,
+          modifier = Modifier.defaultMinSize(minHeight = 48.dp)
+        ) {
+          Text(
+            modifier = Modifier
+              .padding(end = 16.dp)
+              .wrapContentHeight(),
+            text = "FCM Token",
+            style = AGTypography.InputsM,
+            color = Palette.GreyLight
+          )
+
+          firebaseToken?.let {
+            Text(
+              modifier = Modifier
+                .defaultMinSize(minHeight = 48.dp)
+                .wrapContentHeight()
+                .clickable {
+                  coroutineScope.launch {
+                    clipboard.setClipEntry(ClipEntry(ClipData.newPlainText("FCM token", it)))
+                  }
+                },
+              text = it,
+              style = AGTypography.InputsM,
+              color = Palette.GreyLight
+            )
+          }
+        }
       }
     }
   }

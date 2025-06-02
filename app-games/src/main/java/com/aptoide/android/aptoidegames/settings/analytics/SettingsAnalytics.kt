@@ -20,4 +20,9 @@ class SettingsAnalytics(
     name = "send_feedback_clicked",
     params = emptyMap()
   )
+
+  fun sendAGDevOptionsEnabled() = genericAnalytics.logEvent(
+    name = "ag_dev_options_enabled",
+    params = emptyMap()
+  )
 }
