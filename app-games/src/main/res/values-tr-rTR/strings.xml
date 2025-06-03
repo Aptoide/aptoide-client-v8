@@ -145,7 +145,7 @@
   <string name="apkfy_install_body">Aptoide Games\'te en sevdiğin oyuna ve çok daha fazlasına eriş!</string>
   <string name="apkfy_install_bullet_points">\u2022 Harika bir seçkiye sahip en iyi oyunlar. \n\u2022 Giriş yapmaya gerek yok!\n\u2022 En sevdiğin oyunlarda özel promosyonlar ve ödüller.</string>
   <string name="apkfy_install_installing">Installing %1$s</string>
-  <string name="apkfy_install_button">Install %1$s</string>
+  <string name="apkfy_install_button">%1$s Yükle</string>
   <string name="apkfy_aptoide_games_intro">You\’re using Aptoide Games to install %1$s - always the latest version, faster and safer.</string>
   <string name="apkfy_aptoide_games_advantages_title">Why keep Aptoide Games?</string>
   <string name="apkfy_aptoide_games_advantage_updates">Get %1$s updates first</string>
