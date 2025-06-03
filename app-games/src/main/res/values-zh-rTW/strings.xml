@@ -145,7 +145,7 @@
   <string name="apkfy_install_body">在 Aptoide Games 獲得您喜愛的遊戲和更多！</string>
   <string name="apkfy_install_bullet_points">\u2022 頂尖的遊戲，令人驚嘆的策展。\n\u2022 無需登入！\n\u2022 您最喜愛的遊戲中的特別促銷和獎勵。</string>
   <string name="apkfy_install_installing">Installing %1$s</string>
-  <string name="apkfy_install_button">Install %1$s</string>
+  <string name="apkfy_install_button">安裝 %1$s</string>
   <string name="apkfy_aptoide_games_intro">You\’re using Aptoide Games to install %1$s - always the latest version, faster and safer.</string>
   <string name="apkfy_aptoide_games_advantages_title">Why keep Aptoide Games?</string>
   <string name="apkfy_aptoide_games_advantage_updates">Get %1$s updates first</string>
