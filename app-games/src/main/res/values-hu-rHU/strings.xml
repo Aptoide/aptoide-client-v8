@@ -145,7 +145,7 @@
   <string name="apkfy_install_body">Szerezd meg a kedvenc játékod és még sok mást az Aptoide Gamesen!</string>
   <string name="apkfy_install_bullet_points">\u2022 A legjobb játékok nagyszerű választéka.\n\u2022 Nem szükséges a bejelentkezés!\n\u2022 Különleges promóciók és jutalmak a kedvenc játékaidban.</string>
   <string name="apkfy_install_installing">Installing %1$s</string>
-  <string name="apkfy_install_button">Install %1$s</string>
+  <string name="apkfy_install_button">%1$s telepítése</string>
   <string name="apkfy_aptoide_games_intro">You\’re using Aptoide Games to install %1$s - always the latest version, faster and safer.</string>
   <string name="apkfy_aptoide_games_advantages_title">Why keep Aptoide Games?</string>
   <string name="apkfy_aptoide_games_advantage_updates">Get %1$s updates first</string>
