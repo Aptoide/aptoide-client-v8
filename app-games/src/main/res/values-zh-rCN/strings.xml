@@ -144,6 +144,13 @@
   <string name="apkfy_whats_aptoide_games_title">什么是 Aptoide Games？</string>
   <string name="apkfy_install_body">在 Aptoide Games 获取您最喜爱的游戏和更多精彩内容！</string>
   <string name="apkfy_install_bullet_points">\u2022 热门游戏精心挑选，带来非凡体验。\n\u2022 无需登录，即刻畅玩！\n\u2022 专属优惠和丰厚奖励，尽在您喜爱的游戏中。</string>
+  <string name="apkfy_install_installing">安装 %1$s</string>
+  <string name="apkfy_install_button">安装%1$s</string>
+  <string name="apkfy_aptoide_games_intro">您正在使用Aptoide Games安装《 %1$s 》——始终提供最新版本，更快更安全。</string>
+  <string name="apkfy_aptoide_games_advantages_title">为什么保留Aptoide Games？</string>
+  <string name="apkfy_aptoide_games_advantage_updates">第一时间获取 %1$s 更新</string>
+  <string name="apkfy_aptoide_games_advantage_safety">安全且经过验证的APK文件</string>
+  <string name="apkfy_aptoide_games_advantage_no_login">无需登录</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">使用 Aptoide Wallet 付款</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">它将自动安装，并且您将在每次购买时均获得奖金！</string>
   <string name="buy_button" comment="buy">购买</string>
