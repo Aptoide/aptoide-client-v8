@@ -144,6 +144,13 @@
   <string name="apkfy_whats_aptoide_games_title">Quels jeux Aptoide ?</string>
   <string name="apkfy_install_body">Obtenez votre jeu préféré et bien plus encore avec Aptoide Games !</string>
   <string name="apkfy_install_bullet_points">\u2022 Une sélection incroyable des meilleurs jeux.\n\u2022 Pas besoin de vous connecter !\n\u2022 Promotions et récompenses spéciales dans vos jeux préférés.</string>
+  <string name="apkfy_install_installing">Installing %1$s</string>
+  <string name="apkfy_install_button">Install %1$s</string>
+  <string name="apkfy_aptoide_games_intro">You\’re using Aptoide Games to install %1$s - always the latest version, faster and safer.</string>
+  <string name="apkfy_aptoide_games_advantages_title">Why keep Aptoide Games?</string>
+  <string name="apkfy_aptoide_games_advantage_updates">Get %1$s updates first</string>
+  <string name="apkfy_aptoide_games_advantage_safety">Safe and verified APKs</string>
+  <string name="apkfy_aptoide_games_advantage_no_login">No login needed</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Payez avec Aptoide Wallet</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Il sera installé automatiquement et vous obtiendrez un bonus pour tout achat !</string>
   <string name="buy_button" comment="buy">Acheter</string>
