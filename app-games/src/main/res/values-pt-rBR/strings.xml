@@ -144,13 +144,13 @@
   <string name="apkfy_whats_aptoide_games_title">O que é a Aptoide Games?</string>
   <string name="apkfy_install_body">Baixe seu jogo favorito e muito mais na Aptoide Games!</string>
   <string name="apkfy_install_bullet_points">\u2022 Os melhores jogos com uma curadoria incrível.\n\u2022 Não é necessário fazer login!\n\u2022 Promoções e prêmios especiais em seus jogos favoritos.</string>
-  <string name="apkfy_install_installing">Installing %1$s</string>
+  <string name="apkfy_install_installing">Instalando %1$s</string>
   <string name="apkfy_install_button">Instale %1$s</string>
-  <string name="apkfy_aptoide_games_intro">You\’re using Aptoide Games to install %1$s - always the latest version, faster and safer.</string>
-  <string name="apkfy_aptoide_games_advantages_title">Why keep Aptoide Games?</string>
-  <string name="apkfy_aptoide_games_advantage_updates">Get %1$s updates first</string>
-  <string name="apkfy_aptoide_games_advantage_safety">Safe and verified APKs</string>
-  <string name="apkfy_aptoide_games_advantage_no_login">No login needed</string>
+  <string name="apkfy_aptoide_games_intro">Você está usando o Aptoide Games para instalar %1$s - sempre a versão mais recente, mais rápida e segura.</string>
+  <string name="apkfy_aptoide_games_advantages_title">Por que manter o Aptoide Games?</string>
+  <string name="apkfy_aptoide_games_advantage_updates">Receba as atualizações do %1$s em primeira mão</string>
+  <string name="apkfy_aptoide_games_advantage_safety">APKs seguros e verificados</string>
+  <string name="apkfy_aptoide_games_advantage_no_login">Não é necessário fazer login</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Pagar com a Aptoide Wallet</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Ele será instalado automaticamente e você receberá um bônus em todas as compras!</string>
   <string name="buy_button" comment="buy">Comprar</string>
