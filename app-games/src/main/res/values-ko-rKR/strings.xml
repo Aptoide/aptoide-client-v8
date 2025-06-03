@@ -144,6 +144,13 @@
   <string name="apkfy_whats_aptoide_games_title">Aptoide 게임이란 무엇인가요?</string>
   <string name="apkfy_install_body">Aptoide 게임에서 좋아하는 게임과 더 많은 것을 즐기세요!</string>
   <string name="apkfy_install_bullet_points">\u2022 놀라운 큐레이션으로 최고의 게임들.\n\u2022 로그인할 필요 없어요!\n\u2022 좋아하는 게임의 특별 프로모션 및 보상.</string>
+  <string name="apkfy_install_installing">Installing %1$s</string>
+  <string name="apkfy_install_button">Install %1$s</string>
+  <string name="apkfy_aptoide_games_intro">You\’re using Aptoide Games to install %1$s - always the latest version, faster and safer.</string>
+  <string name="apkfy_aptoide_games_advantages_title">Why keep Aptoide Games?</string>
+  <string name="apkfy_aptoide_games_advantage_updates">Get %1$s updates first</string>
+  <string name="apkfy_aptoide_games_advantage_safety">Safe and verified APKs</string>
+  <string name="apkfy_aptoide_games_advantage_no_login">No login needed</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Aptoide 지갑으로 결제</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">자동으로 설치되고 모든 구매 시 보너스가 지급됩니다!</string>
   <string name="buy_button" comment="buy">사기</string>
