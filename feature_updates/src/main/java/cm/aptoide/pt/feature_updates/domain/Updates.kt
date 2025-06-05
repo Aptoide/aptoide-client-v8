@@ -24,6 +24,7 @@ import cm.aptoide.pt.install_manager.dto.Constraints.NetworkType.UNMETERED
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -118,25 +119,64 @@ class Updates @Inject constructor(
     }
   }
 
-  suspend fun checkVIPUpdates() {
+  suspend fun checkVIPUpdates(hasPackageInstallsPermission: Boolean) {
     val vipPackages = vipUpdatesProvider.getVIPUpdatesList()
-    if (vipPackages.isNotEmpty()) {
+    if (vipPackages.isEmpty()) {
+      return
+    }
 
-      val savedUpdates = updatesRepository.getUpdates().first()
+    val savedUpdates = updatesRepository.getUpdates().first()
+    val installedAppsToUpdate = installManager.installedApps
+      .filter { it.packageName in vipPackages }
+      .filterNormalAppsOrGames()
+    val updates =
+      getUpdates(installedAppsToUpdate.mapNotNull { it.packageInfo }).let(appsListMapper::map)
 
-      val installedAppsToUpdate = installManager.installedApps
-        .filter { it.packageName in vipPackages }
-        .filterNormalAppsOrGames()
-
-      val updates =
-        getUpdates(installedAppsToUpdate.mapNotNull { it.packageInfo }).let(appsListMapper::map)
-
-      val filteredUpdates = savedUpdates.let { savedList ->
-        updates.filter { update ->
-          val saved = savedList.find { it.packageName == update.packageName }
-          saved == null || update.versionCode > saved.file.vercode
-        }
+    val filteredUpdates = savedUpdates.let { savedList ->
+      updates.filter { update ->
+        val saved = savedList.find { it.packageName == update.packageName }
+        saved == null || update.versionCode > saved.file.vercode
       }
+    }
+
+    val hasNoRunningDownloads = installManager.workingAppInstallers.firstOrNull() == null
+    val shouldAutoUpdateGames = updatesPreferencesRepository.shouldAutoUpdateGames().first()
+
+    val shouldInstall =
+      ((shouldAutoUpdateGames == true) && hasNoRunningDownloads && hasPackageInstallsPermission)
+
+    if (shouldInstall) {
+      installedAppsToUpdate
+        .forEach { appInstaller ->
+          filteredUpdates
+            .firstOrNull { it.packageName == appInstaller.packageName }
+            ?.also {
+              if (appInstaller.updatesOwnerPackageName == myPackageName) {
+                appInstaller.install(
+                  installPackageInfo = installPackageInfoMapper.map(it),
+                  constraints = Constraints(
+                    checkForFreeSpace = false,
+                    networkType = UNMETERED
+                  )
+                )
+
+                it.campaigns?.run {
+                  toAptoideMMPCampaign().sendDownloadEvent(
+                    bundleTag = null,
+                    searchKeyword = null,
+                    currentScreen = null,
+                    isCta = false
+                  )
+
+                  toMMPLinkerCampaign().sendDownloadEvent()
+                }
+              } else {
+                updatesNotificationBuilder.showVIPUpdateNotification(it)
+              }
+
+            }
+        }
+    } else {
       filteredUpdates.forEach {
         updatesNotificationBuilder.showVIPUpdateNotification(it)
       }

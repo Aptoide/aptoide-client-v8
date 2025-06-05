@@ -9,6 +9,7 @@ import androidx.work.NetworkType.CONNECTED
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import cm.aptoide.pt.extensions.hasPackageInstallsPermission
 import cm.aptoide.pt.feature_updates.domain.Updates
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -22,7 +23,7 @@ class VIPUpdatesWorker @AssistedInject constructor(
 ) : CoroutineWorker(appContext, workerParams) {
 
   override suspend fun doWork(): Result {
-    updates.checkVIPUpdates()
+    updates.checkVIPUpdates(applicationContext.hasPackageInstallsPermission())
     return Result.success()
   }
 
