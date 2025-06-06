@@ -145,7 +145,7 @@
   <string name="apkfy_install_body">Tải trò chơi yêu thích của bạn và nhiều hơn nữa tại Trò chơi Aptoide!</string>
   <string name="apkfy_install_bullet_points">\u2022 Trò chơi hàng đầu với sự tuyển chọn tuyệt vời.\n\u2022 Không cần đăng nhập!\n\u2022 Khuyến mãi và phần thưởng đặc biệt trong trò chơi yêu thích của bạn.</string>
   <!-- APKFY full screen-->
-  <string name="apkfy_install_installing">Installing</string>
+  <string name="apkfy_install_installing">Đang cài đặt</string>
   <string name="apkfy_install_button">Cài đặt %1$s</string>
   <string name="apkfy_aptoide_games_intro">You\’re using Aptoide Games to install %1$s</string>
   <string name="apkfy_aptoide_games_intro_2">always the latest version, faster and safer</string>
