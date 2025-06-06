@@ -145,7 +145,7 @@
   <string name="apkfy_install_body">Aptoide 게임에서 좋아하는 게임과 더 많은 것을 즐기세요!</string>
   <string name="apkfy_install_bullet_points">\u2022 놀라운 큐레이션으로 최고의 게임들.\n\u2022 로그인할 필요 없어요!\n\u2022 좋아하는 게임의 특별 프로모션 및 보상.</string>
   <!-- APKFY full screen-->
-  <string name="apkfy_install_installing">Installing</string>
+  <string name="apkfy_install_installing">설치중</string>
   <string name="apkfy_install_button">설치 %1$s</string>
   <string name="apkfy_aptoide_games_intro">You\’re using Aptoide Games to install %1$s</string>
   <string name="apkfy_aptoide_games_intro_2">always the latest version, faster and safer</string>
