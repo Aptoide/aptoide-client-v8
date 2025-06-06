@@ -145,7 +145,7 @@
   <string name="apkfy_install_body">आपला आवडता खेळ आणि पुष्कळ काही मिळवा Aptoide खेळांमध्ये!</string>
   <string name="apkfy_install_bullet_points">\u2022 उच्चीच्या खेळांसह अमेझिंग क्युरेशन.\u2022 लॉगइनची गरज नाही!\u2022 आपल्या आवडत्या खेळात विशेष प्रमोशन्स आणि बक्षिसे.</string>
   <!-- APKFY full screen-->
-  <string name="apkfy_install_installing">Installing</string>
+  <string name="apkfy_install_installing">इंस्टॉल करत आहे</string>
   <string name="apkfy_install_button">%1$s इन्स्टॉल करा</string>
   <string name="apkfy_aptoide_games_intro">You\’re using Aptoide Games to install %1$s</string>
   <string name="apkfy_aptoide_games_intro_2">always the latest version, faster and safer</string>
