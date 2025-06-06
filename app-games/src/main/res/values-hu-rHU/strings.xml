@@ -144,13 +144,19 @@
   <string name="apkfy_whats_aptoide_games_title">Mi az Aptoide Games?</string>
   <string name="apkfy_install_body">Szerezd meg a kedvenc játékod és még sok mást az Aptoide Gamesen!</string>
   <string name="apkfy_install_bullet_points">\u2022 A legjobb játékok nagyszerű választéka.\n\u2022 Nem szükséges a bejelentkezés!\n\u2022 Különleges promóciók és jutalmak a kedvenc játékaidban.</string>
-  <string name="apkfy_install_installing">%1$stelepítése</string>
+  <!-- APKFY full screen-->
+  <string name="apkfy_install_installing">Installing</string>
   <string name="apkfy_install_button">%1$s telepítése</string>
-  <string name="apkfy_aptoide_games_intro">Az Aptoide Games alkalmazást használod az %1$s telepítéséhez – mindig a legújabb verziót, gyorsabban és biztonságosabban.</string>
+  <string name="apkfy_aptoide_games_intro">You\’re using Aptoide Games to install %1$s</string>
+  <string name="apkfy_aptoide_games_intro_2">always the latest version, faster and safer</string>
   <string name="apkfy_aptoide_games_advantages_title">Miért érdemes megtartani az Aptoide Games alkalmazást?</string>
-  <string name="apkfy_aptoide_games_advantage_updates">%1$s frissítések elsőként</string>
+  <string name="apkfy_aptoide_games_advantage_updates"><![CDATA[Get <1>%1$s</1> updates first]]></string>
   <string name="apkfy_aptoide_games_advantage_safety">Biztonságos és ellenőrzött APK-k</string>
   <string name="apkfy_aptoide_games_advantage_no_login">Bejelentkezés nem szükséges</string>
+  <!-- APKFY full screen Roblox-->
+  <string name="apkfy_aptoide_games_advantage_updates_roblox"><![CDATA[No Aptoide Games? <1>No Roblox updates.</1>]]></string>
+  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">Keep Aptoide Games - get updates first, play first.</string>
+  <string name="apkfy_aptoide_games_advantage_space_roblox">Only 10MB. You won’t even feel it.</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Fizetés Aptoide Wallettal</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Automatikusan telepítve lesz, és minden vásárlás után bónuszt kapsz.</string>
   <string name="buy_button" comment="buy">Vásárlás</string>
