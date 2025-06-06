@@ -145,7 +145,7 @@
   <string name="apkfy_install_body">بازی‌های محبوب خود و خیلی چیزهای دیگر را در Aptoide Games بگیرید!</string>
   <string name="apkfy_install_bullet_points">\u2022 بازی‌های برتر با داستان جذاب.\n\u2022 نیازی به ورود به سیستم نیست!\n\u2022 پیشنهادات و جوایز ویژه در بازی‌های محبوب خود.</string>
   <!-- APKFY full screen-->
-  <string name="apkfy_install_installing">Installing</string>
+  <string name="apkfy_install_installing">در حال نصب</string>
   <string name="apkfy_install_button">نصب %1$s</string>
   <string name="apkfy_aptoide_games_intro">You\’re using Aptoide Games to install %1$s</string>
   <string name="apkfy_aptoide_games_intro_2">always the latest version, faster and safer</string>
