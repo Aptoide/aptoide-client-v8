@@ -144,13 +144,19 @@
   <string name="apkfy_whats_aptoide_games_title">Ce este Aptoide Games?</string>
   <string name="apkfy_install_body">Descarcă-ți jocul preferat și multe altele în Aptoide Games!</string>
   <string name="apkfy_install_bullet_points">\u2022 Jocuri populare selectate cu atenție.\n\u2022Fără conectare!\n\u2022 Promoții speciale și recompense în jocurile tale preferate.</string>
-  <string name="apkfy_install_installing">Instalarea %1$s</string>
+  <!-- APKFY full screen-->
+  <string name="apkfy_install_installing">Installing</string>
   <string name="apkfy_install_button">Instalează %1$s</string>
-  <string name="apkfy_aptoide_games_intro">Utilizați Aptoide Games pentru a instala %1$s - întotdeauna cea mai recentă versiune, mai rapidă și mai sigură.</string>
+  <string name="apkfy_aptoide_games_intro">You\’re using Aptoide Games to install %1$s</string>
+  <string name="apkfy_aptoide_games_intro_2">always the latest version, faster and safer</string>
   <string name="apkfy_aptoide_games_advantages_title">De ce să păstrați Aptoide Games?</string>
-  <string name="apkfy_aptoide_games_advantage_updates">Fii primul care primește noutăți despre \" %1$s\"</string>
+  <string name="apkfy_aptoide_games_advantage_updates"><![CDATA[Get <1>%1$s</1> updates first]]></string>
   <string name="apkfy_aptoide_games_advantage_safety">APK-uri sigure și verificate</string>
   <string name="apkfy_aptoide_games_advantage_no_login">Nu este necesară autentificarea</string>
+  <!-- APKFY full screen Roblox-->
+  <string name="apkfy_aptoide_games_advantage_updates_roblox"><![CDATA[No Aptoide Games? <1>No Roblox updates.</1>]]></string>
+  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">Keep Aptoide Games - get updates first, play first.</string>
+  <string name="apkfy_aptoide_games_advantage_space_roblox">Only 10MB. You won’t even feel it.</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Plătește cu Aptoide Wallet</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Va fi instalat automat și vei primi un bonus la toate achizițiile!</string>
   <string name="buy_button" comment="buy">Cumpără</string>
