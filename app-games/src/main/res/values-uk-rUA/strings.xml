@@ -144,13 +144,19 @@
   <string name="apkfy_whats_aptoide_games_title">Що таке Aptoide Games?</string>
   <string name="apkfy_install_body">Знайдіть свою улюблену гру та багато іншого в Aptoide Games!</string>
   <string name="apkfy_install_bullet_points">\u2022 Вражаюча підбірка найкращих ігор.\n\u2022 Не потрібно входити в систему!\n\u2022 Спеціальні акції та нагороди у ваших улюблених іграх.</string>
-  <string name="apkfy_install_installing">Встановлення %1$s</string>
+  <!-- APKFY full screen-->
+  <string name="apkfy_install_installing">Installing</string>
   <string name="apkfy_install_button">Інсталювати %1$s</string>
-  <string name="apkfy_aptoide_games_intro">Ви використовуєте Aptoide Games для встановлення %1$s - завжди найновіша версія, швидша та безпечніша.</string>
+  <string name="apkfy_aptoide_games_intro">You\’re using Aptoide Games to install %1$s</string>
+  <string name="apkfy_aptoide_games_intro_2">always the latest version, faster and safer</string>
   <string name="apkfy_aptoide_games_advantages_title">Навіщо зберігати Aptoide Games?</string>
-  <string name="apkfy_aptoide_games_advantage_updates">Отримуйте оновлення про %1$s першими</string>
+  <string name="apkfy_aptoide_games_advantage_updates"><![CDATA[Get <1>%1$s</1> updates first]]></string>
   <string name="apkfy_aptoide_games_advantage_safety">Безпечні та перевірені APK-файли</string>
   <string name="apkfy_aptoide_games_advantage_no_login">Не потрібно входити в систему</string>
+  <!-- APKFY full screen Roblox-->
+  <string name="apkfy_aptoide_games_advantage_updates_roblox"><![CDATA[No Aptoide Games? <1>No Roblox updates.</1>]]></string>
+  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">Keep Aptoide Games - get updates first, play first.</string>
+  <string name="apkfy_aptoide_games_advantage_space_roblox">Only 10MB. You won’t even feel it.</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Оплачуйте за допомогою Aptoide Wallet</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Встановлення відбудеться автоматично, а ви отримаєте бонус на всі покупки!</string>
   <string name="buy_button" comment="buy">Купити</string>
