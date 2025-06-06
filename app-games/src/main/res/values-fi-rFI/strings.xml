@@ -145,7 +145,7 @@
   <string name="apkfy_install_body">Hanki suosikkipelisi ja paljon muuta Aptoide Gamesissa!</string>
   <string name="apkfy_install_bullet_points">\u2022 Huippupelejä, joissa on uskomaton kuratointi.\n\u2022 Ei tarvitse kirjautua sisään!\n\u2022 Erikoiskampanjoita ja palkintoja suosikkipeleissäsi.</string>
   <!-- APKFY full screen-->
-  <string name="apkfy_install_installing">Installing</string>
+  <string name="apkfy_install_installing">Asennetaan</string>
   <string name="apkfy_install_button">Asenna %1$s</string>
   <string name="apkfy_aptoide_games_intro">You\’re using Aptoide Games to install %1$s</string>
   <string name="apkfy_aptoide_games_intro_2">always the latest version, faster and safer</string>
