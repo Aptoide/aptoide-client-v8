@@ -144,13 +144,19 @@
   <string name="apkfy_whats_aptoide_games_title">Τι είναι το Aptoide Games;</string>
   <string name="apkfy_install_body">Κατεβάστε το αγαπημένο σας παιχνίδι και πολλά περισσότερα από το Aptoide Games!</string>
   <string name="apkfy_install_bullet_points">\u2022 Κορυφαία παιχνίδια με εξαιρετική επιμέλεια.\n\u2022 Δεν απαιτείται σύνδεση!\n\u2022 Ειδικές προσφορές και ανταμοιβές στα αγαπημένα σας παιχνίδια.</string>
-  <string name="apkfy_install_installing">Εγκατάσταση του %1$s</string>
+  <!-- APKFY full screen-->
+  <string name="apkfy_install_installing">Γίνεται εγκατάσταση</string>
   <string name="apkfy_install_button">Εγκατάσταση %1$s</string>
-  <string name="apkfy_aptoide_games_intro">Χρησιμοποιείτε το Aptoide Games για να εγκαταστήσετε το %1$s - πάντα την τελευταία έκδοση, πιο γρήγορα και με μεγαλύτερη ασφάλεια.</string>
+  <string name="apkfy_aptoide_games_intro">Χρησιμοποιείτε το Aptoide Games για να εγκαταστήσετε το %1$s</string>
+  <string name="apkfy_aptoide_games_intro_2">πάντα η τελευταία έκδοση, ταχύτερη και ασφαλέστερη</string>
   <string name="apkfy_aptoide_games_advantages_title">Γιατί να κρατήσετε το Aptoide Games;</string>
-  <string name="apkfy_aptoide_games_advantage_updates">Λάβετε πρώτοι τις ενημερώσεις για το %1$s</string>
+  <string name="apkfy_aptoide_games_advantage_updates"><![CDATA[Λήψη <1>%1$s</1> τις ενημερώσεις πρώτος]]></string>
   <string name="apkfy_aptoide_games_advantage_safety">Ασφαλή και επαληθευμένα APK</string>
   <string name="apkfy_aptoide_games_advantage_no_login">Δεν απαιτείται σύνδεση</string>
+  <!-- APKFY full screen Roblox-->
+  <string name="apkfy_aptoide_games_advantage_updates_roblox"><![CDATA[Δεν υπάρχουν παιχνίδια Aptoide; <1>Δεν υπάρχουν ενημερώσεις Roblox.</1>]]></string>
+  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">Κρατήστε το Aptoide Games - λάβετε πρώτοι τις ενημερώσεις, παίξτε πρώτοι.</string>
+  <string name="apkfy_aptoide_games_advantage_space_roblox">Μόνο 10 MB. Δεν θα το καταλάβετε καν.</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Πληρώστε με το Aptoide Wallet</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Θα εγκατασταθεί αυτόματα και θα λάβετε ένα bonus σε όλες τις αγορές!</string>
   <string name="buy_button" comment="buy">Αγορά</string>

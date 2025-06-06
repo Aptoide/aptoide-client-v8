@@ -144,13 +144,19 @@
   <string name="apkfy_whats_aptoide_games_title">Mikä on Aptoide Games?</string>
   <string name="apkfy_install_body">Hanki suosikkipelisi ja paljon muuta Aptoide Gamesissa!</string>
   <string name="apkfy_install_bullet_points">\u2022 Huippupelejä, joissa on uskomaton kuratointi.\n\u2022 Ei tarvitse kirjautua sisään!\n\u2022 Erikoiskampanjoita ja palkintoja suosikkipeleissäsi.</string>
-  <string name="apkfy_install_installing">%1$s:n asentaminen</string>
+  <!-- APKFY full screen-->
+  <string name="apkfy_install_installing">Asennetaan</string>
   <string name="apkfy_install_button">Asenna %1$s</string>
-  <string name="apkfy_aptoide_games_intro">Käytät Aptoide Games -sovellusta asentaaksesi %1$s -sovelluksen – aina uusin versio, nopeammin ja turvallisemmin.</string>
+  <string name="apkfy_aptoide_games_intro">Käytät Aptoide Games -sovellusta asentaaksesi %1$s</string>
+  <string name="apkfy_aptoide_games_intro_2">aina uusin versio, nopeampi ja turvallisempi</string>
   <string name="apkfy_aptoide_games_advantages_title">Miksi säilyttää Aptoide Games?</string>
-  <string name="apkfy_aptoide_games_advantage_updates">Saat %1$s -päivitykset ensimmäisenä</string>
+  <string name="apkfy_aptoide_games_advantage_updates"><![CDATA[Hanki <1>%1$s</1> päivitykset ensimmäisenä]]></string>
   <string name="apkfy_aptoide_games_advantage_safety">Turvalliset ja vahvistetut APK-tiedostot</string>
   <string name="apkfy_aptoide_games_advantage_no_login">Kirjautumista ei tarvita</string>
+  <!-- APKFY full screen Roblox-->
+  <string name="apkfy_aptoide_games_advantage_updates_roblox"><![CDATA[Ei Aptoide-pelejä? <1>Ei Roblox-päivityksiä.</1>]]></string>
+  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">Säilytä Aptoide Games - saat päivitykset ensimmäisenä, pelaa ensimmäisenä.</string>
+  <string name="apkfy_aptoide_games_advantage_space_roblox">Vain 10 Mt. Et edes huomaa sitä.</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Maksaminen Aptoide-lompakolla</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Se asennetaan automaattisesti ja saat bonuksen kaikista ostoksista!</string>
   <string name="buy_button" comment="buy">Osta</string>

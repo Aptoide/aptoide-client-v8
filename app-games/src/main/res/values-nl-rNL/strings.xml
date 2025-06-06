@@ -144,13 +144,19 @@
   <string name="apkfy_whats_aptoide_games_title">Wat is Aptoide Games?</string>
   <string name="apkfy_install_body">Vind je favoriete game en nog veel meer in Aptoide Games!</string>
   <string name="apkfy_install_bullet_points">\u2022 De beste speciaal geselecteerde games.\n\u2022 Je hoeft niet in te loggen!\n\u2022 Speciale acties en beloningen in je favoriete games.</string>
-  <string name="apkfy_install_installing">%1$sinstalleren</string>
+  <!-- APKFY full screen-->
+  <string name="apkfy_install_installing">Wordt geïnstalleerd</string>
   <string name="apkfy_install_button">Installeer %1$s</string>
-  <string name="apkfy_aptoide_games_intro">Je gebruikt Aptoide Games om %1$s te installeren - altijd de nieuwste versie, sneller en veiliger.</string>
+  <string name="apkfy_aptoide_games_intro">Je gebruikt Aptoide Games om %1$ste installeren.</string>
+  <string name="apkfy_aptoide_games_intro_2">altijd de nieuwste versie, sneller en veiliger</string>
   <string name="apkfy_aptoide_games_advantages_title">Waarom Aptoide Games behouden?</string>
-  <string name="apkfy_aptoide_games_advantage_updates">Ontvang als eerste updates over %1$s</string>
+  <string name="apkfy_aptoide_games_advantage_updates"><![CDATA[Ontvang <1>%1$s</1> als eerste op de hoogte]]></string>
   <string name="apkfy_aptoide_games_advantage_safety">Veilige en geverifieerde APK\'s</string>
   <string name="apkfy_aptoide_games_advantage_no_login">Inloggen niet nodig</string>
+  <!-- APKFY full screen Roblox-->
+  <string name="apkfy_aptoide_games_advantage_updates_roblox"><![CDATA[Geen Aptoide-games? <1>Geen Roblox-updates.</1>]]></string>
+  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">Houd Aptoide Games - ontvang updates als eerste, speel als eerste.</string>
+  <string name="apkfy_aptoide_games_advantage_space_roblox">Slechts 10 MB. Je merkt er niets van.</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Betaal met de Aptoide Wallet</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Het wordt automatisch geïnstalleerd en je krijgt een bonus bij alle aankopen!</string>
   <string name="buy_button" comment="buy">Kopen</string>

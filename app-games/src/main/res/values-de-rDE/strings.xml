@@ -144,13 +144,19 @@
   <string name="apkfy_whats_aptoide_games_title">Was ist Aptoide Games?</string>
   <string name="apkfy_install_body">Hol dir dein Lieblingsspiel und vieles mehr in Aptoide Games!</string>
   <string name="apkfy_install_bullet_points">\u2022 Top-Spiele mit einer tollen Auswahl.\n\u2022 Kein Login notwendig!\n\u2022 Spezielle Aktionen und Belohnungen in deinen Lieblingsspielen.</string>
-  <string name="apkfy_install_installing">%1$sinstallieren</string>
+  <!-- APKFY full screen-->
+  <string name="apkfy_install_installing">Installation läuft</string>
   <string name="apkfy_install_button">Installieren %1$s</string>
-  <string name="apkfy_aptoide_games_intro">Sie verwenden Aptoide Games, um \" %1$s \" zu installieren – immer die neueste Version, schneller und sicherer.</string>
+  <string name="apkfy_aptoide_games_intro">Sie verwenden Aptoide Games, um %1$s</string>
+  <string name="apkfy_aptoide_games_intro_2">immer die neueste Version, schneller und sicherer</string>
   <string name="apkfy_aptoide_games_advantages_title">Warum Aptoide Games behalten?</string>
-  <string name="apkfy_aptoide_games_advantage_updates">Erhalten Sie Updates zu \" %1$s \" als Erste</string>
+  <string name="apkfy_aptoide_games_advantage_updates"><![CDATA[Aktualisierungen <1>%1$s</1> Aktualisierungen als Erste]]></string>
   <string name="apkfy_aptoide_games_advantage_safety">Sichere und verifizierte APKs</string>
   <string name="apkfy_aptoide_games_advantage_no_login">Keine Anmeldung erforderlich</string>
+  <!-- APKFY full screen Roblox-->
+  <string name="apkfy_aptoide_games_advantage_updates_roblox"><![CDATA[Keine Aptoide-Spiele? <1>Keine Roblox-Updates.</1>]]></string>
+  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">Behalte Aptoide Games – erhalte Updates als Erster und spiele als Erster.</string>
+  <string name="apkfy_aptoide_games_advantage_space_roblox">Nur 10 MB. Das merkt man gar nicht.</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Mit der Aptoide Wallet bezahlen</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Es wird automatisch installiert und du erhältst einen Bonus auf alle Einkäufe!</string>
   <string name="buy_button" comment="buy">Kaufen</string>

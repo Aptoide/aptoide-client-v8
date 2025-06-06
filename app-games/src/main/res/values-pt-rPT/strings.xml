@@ -144,13 +144,19 @@
   <string name="apkfy_whats_aptoide_games_title">O que são os Jogos Aptoide?</string>
   <string name="apkfy_install_body">Recebe o teu jogo favorito e muito mais em Aptoide Games!</string>
   <string name="apkfy_install_bullet_points">\u2022 Os melhores jogos com uma curadoria fantástica.\n\u2022 Não é necessário iniciar sessão!\n\u2022 Promoções especiais e prémios nos teus jogos favoritos.</string>
-  <string name="apkfy_install_installing">Instalar o %1$s</string>
+  <!-- APKFY full screen-->
+  <string name="apkfy_install_installing">A instalar</string>
   <string name="apkfy_install_button">Instalar %1$s</string>
-  <string name="apkfy_aptoide_games_intro">Está a utilizar o Aptoide Games para instalar %1$s - sempre a versão mais recente, mais rápida e segura.</string>
+  <string name="apkfy_aptoide_games_intro">Está a utilizar o Aptoide Games para instalar %1$s</string>
+  <string name="apkfy_aptoide_games_intro_2">sempre a versão mais recente, mais rápida e segura</string>
   <string name="apkfy_aptoide_games_advantages_title">Porquê manter o Aptoide Games?</string>
-  <string name="apkfy_aptoide_games_advantage_updates">Receba as atualizações do %1$s em primeira mão</string>
+  <string name="apkfy_aptoide_games_advantage_updates"><![CDATA[Receba <1>%1$s</1> atualizações em primeira mão]]></string>
   <string name="apkfy_aptoide_games_advantage_safety">APKs seguros e verificados</string>
   <string name="apkfy_aptoide_games_advantage_no_login">Não é necessário fazer login</string>
+  <!-- APKFY full screen Roblox-->
+  <string name="apkfy_aptoide_games_advantage_updates_roblox"><![CDATA[Sem jogos Aptoide? <1>Sem atualizações do Roblox.</1>]]></string>
+  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">Mantenha o Aptoide Games - receba atualizações em primeira mão e jogue antes de todos.</string>
+  <string name="apkfy_aptoide_games_advantage_space_roblox">Apenas 10 MB. Nem vai notar.</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Pagar com a Aptoide Wallet</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Será instalado automaticamente e irás receber um bónus em todas as compras!</string>
   <string name="buy_button" comment="buy">Comprar</string>
