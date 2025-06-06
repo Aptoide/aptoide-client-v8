@@ -147,16 +147,16 @@
   <!-- APKFY full screen-->
   <string name="apkfy_install_installing">Instalowanie</string>
   <string name="apkfy_install_button">Zainstaluj %1$s</string>
-  <string name="apkfy_aptoide_games_intro">You\’re using Aptoide Games to install %1$s</string>
-  <string name="apkfy_aptoide_games_intro_2">always the latest version, faster and safer</string>
+  <string name="apkfy_aptoide_games_intro">Używasz Aptoide Games do zainstalowania %1$s</string>
+  <string name="apkfy_aptoide_games_intro_2">zawsze najnowsza wersja, szybsza i bezpieczniejsza</string>
   <string name="apkfy_aptoide_games_advantages_title">Dlaczego warto zachować gry Aptoide?</string>
-  <string name="apkfy_aptoide_games_advantage_updates"><![CDATA[Get <1>%1$s</1> updates first]]></string>
+  <string name="apkfy_aptoide_games_advantage_updates"><![CDATA[Otrzymuj <1>%1$s</1> aktualizacje jako pierwszy]]></string>
   <string name="apkfy_aptoide_games_advantage_safety">Bezpieczne i zweryfikowane pliki APK</string>
   <string name="apkfy_aptoide_games_advantage_no_login">Nie trzeba się logować</string>
   <!-- APKFY full screen Roblox-->
-  <string name="apkfy_aptoide_games_advantage_updates_roblox"><![CDATA[No Aptoide Games? <1>No Roblox updates.</1>]]></string>
-  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">Keep Aptoide Games - get updates first, play first.</string>
-  <string name="apkfy_aptoide_games_advantage_space_roblox">Only 10MB. You won’t even feel it.</string>
+  <string name="apkfy_aptoide_games_advantage_updates_roblox"><![CDATA[Nie masz gier Aptoide? <1>Nie masz aktualizacji Roblox.</1>]]></string>
+  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">Zachowaj gry Aptoide – otrzymuj aktualizacje jako pierwszy i graj jako pierwszy.</string>
+  <string name="apkfy_aptoide_games_advantage_space_roblox">Tylko 10 MB. Nawet tego nie poczujesz.</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Płać za pomocą portfela Aptoide</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Zostanie ona zainstalowana automatycznie i otrzymasz bonus do wszystkich zakupów!</string>
   <string name="buy_button" comment="buy">Kup</string>
