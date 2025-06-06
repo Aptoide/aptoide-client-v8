@@ -147,16 +147,16 @@
   <!-- APKFY full screen-->
   <string name="apkfy_install_installing">Yükleniyor</string>
   <string name="apkfy_install_button">%1$s Yükle</string>
-  <string name="apkfy_aptoide_games_intro">You\’re using Aptoide Games to install %1$s</string>
-  <string name="apkfy_aptoide_games_intro_2">always the latest version, faster and safer</string>
+  <string name="apkfy_aptoide_games_intro">%1$s\'i yüklemek için Aptoide Games kullanıyorsunuz.</string>
+  <string name="apkfy_aptoide_games_intro_2">her zaman en son sürüm, daha hızlı ve daha güvenli</string>
   <string name="apkfy_aptoide_games_advantages_title">Aptoide Games\'i neden saklamalıyım?</string>
-  <string name="apkfy_aptoide_games_advantage_updates"><![CDATA[Get <1>%1$s</1> updates first]]></string>
+  <string name="apkfy_aptoide_games_advantage_updates"><![CDATA[Güncellemeleri <1>%1$s</1> güncellemeleri ilk olarak alın]]></string>
   <string name="apkfy_aptoide_games_advantage_safety">Güvenli ve doğrulanmış APK\'lar</string>
   <string name="apkfy_aptoide_games_advantage_no_login">Giriş gerekmez</string>
   <!-- APKFY full screen Roblox-->
-  <string name="apkfy_aptoide_games_advantage_updates_roblox"><![CDATA[No Aptoide Games? <1>No Roblox updates.</1>]]></string>
-  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">Keep Aptoide Games - get updates first, play first.</string>
-  <string name="apkfy_aptoide_games_advantage_space_roblox">Only 10MB. You won’t even feel it.</string>
+  <string name="apkfy_aptoide_games_advantage_updates_roblox"><![CDATA[Aptoide Oyunları Yok mu? <1>Roblox güncellemeleri yok.</1>]]></string>
+  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">Aptoide Games\'i saklayın - güncellemeleri ilk siz alın, ilk siz oynayın.</string>
+  <string name="apkfy_aptoide_games_advantage_space_roblox">Sadece 10 MB. Farkına bile varmayacaksınız.</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Aptoide Wallet ile öde</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Otomatik olarak yüklenecek ve tüm satın alma işlemlerinde bonus kazanacaksın!</string>
   <string name="buy_button" comment="buy">Satın Al</string>
