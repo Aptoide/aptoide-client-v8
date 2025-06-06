@@ -145,7 +145,7 @@
   <string name="apkfy_install_body">Get your favorite game and much more in Aptoide Games!</string>
   <string name="apkfy_install_bullet_points">\u2022 Top games with an amazing curation.\n\u2022 No need to log in!\n\u2022 Special promotions and rewards in your favorite games.</string>
   <!-- APKFY full screen-->
-  <string name="apkfy_install_installing">Installing</string>
+  <string name="apkfy_install_installing">ထည့္သြင္းေနပါသည္</string>
   <string name="apkfy_install_button">%1$s  ကို ထည့္သြင္းပါ</string>
   <string name="apkfy_aptoide_games_intro">You\’re using Aptoide Games to install %1$s</string>
   <string name="apkfy_aptoide_games_intro_2">always the latest version, faster and safer</string>
