@@ -147,16 +147,16 @@
   <!-- APKFY full screen-->
   <string name="apkfy_install_installing">Instalando</string>
   <string name="apkfy_install_button">Instale %1$s</string>
-  <string name="apkfy_aptoide_games_intro">You\’re using Aptoide Games to install %1$s</string>
-  <string name="apkfy_aptoide_games_intro_2">always the latest version, faster and safer</string>
+  <string name="apkfy_aptoide_games_intro">Você está usando o Aptoide Games para instalar %1$s</string>
+  <string name="apkfy_aptoide_games_intro_2">sempre a versão mais recente, mais rápida e segura</string>
   <string name="apkfy_aptoide_games_advantages_title">Por que manter o Aptoide Games?</string>
-  <string name="apkfy_aptoide_games_advantage_updates"><![CDATA[Get <1>%1$s</1> updates first]]></string>
+  <string name="apkfy_aptoide_games_advantage_updates"><![CDATA[Receba <1>%1$s</1> as atualizações primeiro]]></string>
   <string name="apkfy_aptoide_games_advantage_safety">APKs seguros e verificados</string>
   <string name="apkfy_aptoide_games_advantage_no_login">Não é necessário fazer login</string>
   <!-- APKFY full screen Roblox-->
-  <string name="apkfy_aptoide_games_advantage_updates_roblox"><![CDATA[No Aptoide Games? <1>No Roblox updates.</1>]]></string>
-  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">Keep Aptoide Games - get updates first, play first.</string>
-  <string name="apkfy_aptoide_games_advantage_space_roblox">Only 10MB. You won’t even feel it.</string>
+  <string name="apkfy_aptoide_games_advantage_updates_roblox"><![CDATA[Sem jogos Aptoide? <1>Sem atualizações do Roblox.</1>]]></string>
+  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">Mantenha o Aptoide Games - receba atualizações em primeira mão e jogue antes de todo mundo.</string>
+  <string name="apkfy_aptoide_games_advantage_space_roblox">Apenas 10 MB. Você nem vai perceber.</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Pagar com a Aptoide Wallet</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Ele será instalado automaticamente e você receberá um bônus em todas as compras!</string>
   <string name="buy_button" comment="buy">Comprar</string>
