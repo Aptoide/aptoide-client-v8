@@ -147,16 +147,16 @@
   <!-- APKFY full screen-->
   <string name="apkfy_install_installing">جاري التثبيت</string>
   <string name="apkfy_install_button">تثبيت %1$s</string>
-  <string name="apkfy_aptoide_games_intro">You\’re using Aptoide Games to install %1$s</string>
-  <string name="apkfy_aptoide_games_intro_2">always the latest version, faster and safer</string>
+  <string name="apkfy_aptoide_games_intro">أنت تستخدم Aptoide Games لتثبيت %1$s</string>
+  <string name="apkfy_aptoide_games_intro_2">دائماً أحدث إصدار، أسرع وأكثر أماناً</string>
   <string name="apkfy_aptoide_games_advantages_title">لماذا تحتفظ بألعاب Aptoide؟</string>
-  <string name="apkfy_aptoide_games_advantage_updates"><![CDATA[Get <1>%1$s</1> updates first]]></string>
+  <string name="apkfy_aptoide_games_advantage_updates"><![CDATA[احصل على <1>%1$s</1> بالتحديثات أولاً]]></string>
   <string name="apkfy_aptoide_games_advantage_safety">ملفات APK آمنة وموثوقة</string>
   <string name="apkfy_aptoide_games_advantage_no_login">لا حاجة لتسجيل الدخول</string>
   <!-- APKFY full screen Roblox-->
-  <string name="apkfy_aptoide_games_advantage_updates_roblox"><![CDATA[No Aptoide Games? <1>No Roblox updates.</1>]]></string>
-  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">Keep Aptoide Games - get updates first, play first.</string>
-  <string name="apkfy_aptoide_games_advantage_space_roblox">Only 10MB. You won’t even feel it.</string>
+  <string name="apkfy_aptoide_games_advantage_updates_roblox"><![CDATA[لا توجد ألعاب Aptoide؟ <1>لا توجد تحديثات Roblox.</1>]]></string>
+  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">احتفظ بألعاب Aptoide - احصل على التحديثات أولاً، والعب أولاً.</string>
+  <string name="apkfy_aptoide_games_advantage_space_roblox">10 ميغابايت فقط. لن تشعر بها حتى.</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">ادفع باستخدام محفظة Aptoide</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">سيتم تثبيته تلقائيًا وستحصل على مكافأة على كل المشتريات!</string>
   <string name="buy_button" comment="buy">شراء</string>
