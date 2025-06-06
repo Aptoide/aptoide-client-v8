@@ -148,16 +148,16 @@
   <!-- APKFY full screen-->
   <string name="apkfy_install_installing">インストール中</string>
   <string name="apkfy_install_button">%1$s をインストール</string>
-  <string name="apkfy_aptoide_games_intro">You\’re using Aptoide Games to install %1$s</string>
-  <string name="apkfy_aptoide_games_intro_2">always the latest version, faster and safer</string>
+  <string name="apkfy_aptoide_games_intro">あなたはAptoide Gamesを使用して、 %1$sをインストールしています。</string>
+  <string name="apkfy_aptoide_games_intro_2">常に最新のバージョン、より高速で安全です。</string>
   <string name="apkfy_aptoide_games_advantages_title">なぜアプトイド ゲームズを続ける必要があるのでしょうか？</string>
-  <string name="apkfy_aptoide_games_advantage_updates"><![CDATA[Get <1>%1$s</1> updates first]]></string>
+  <string name="apkfy_aptoide_games_advantage_updates"><![CDATA[最新情報を入手 <1>%1$s</1>最新情報をいち早く入手]]></string>
   <string name="apkfy_aptoide_games_advantage_safety">安全で検証済みのAPK</string>
   <string name="apkfy_aptoide_games_advantage_no_login">ログイン不要</string>
   <!-- APKFY full screen Roblox-->
-  <string name="apkfy_aptoide_games_advantage_updates_roblox"><![CDATA[No Aptoide Games? <1>No Roblox updates.</1>]]></string>
-  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">Keep Aptoide Games - get updates first, play first.</string>
-  <string name="apkfy_aptoide_games_advantage_space_roblox">Only 10MB. You won’t even feel it.</string>
+  <string name="apkfy_aptoide_games_advantage_updates_roblox"><![CDATA[アプトイドのゲームがない？<1>ロブロックスのアップデートもありません。</1>]]></string>
+  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">アプトイド ゲームを継続してご利用ください - 最新のアップデートを最速で入手し、いち早くプレイできます。</string>
+  <string name="apkfy_aptoide_games_advantage_space_roblox">たった10MB。ほとんど気になりません。</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Aptoide Walletで支払い</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">自動的にインストールされ、すべての購入にボーナスがつきます</string>
   <string name="buy_button" comment="buy">購入</string>
