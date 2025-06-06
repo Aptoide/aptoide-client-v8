@@ -146,7 +146,7 @@
   <string name="apkfy_install_body">Aptoide Gamesでお気に入りのゲームやその他のものを手に入れよう！</string>
   <string name="apkfy_install_bullet_points">\u2022 素晴らしいキュレーションのトップゲーム。\n\u2022 ログイン不要！\n\u2022 お好きなゲームで特別なプロモーションと報酬を。</string>
   <!-- APKFY full screen-->
-  <string name="apkfy_install_installing">Installing</string>
+  <string name="apkfy_install_installing">インストール中</string>
   <string name="apkfy_install_button">%1$s をインストール</string>
   <string name="apkfy_aptoide_games_intro">You\’re using Aptoide Games to install %1$s</string>
   <string name="apkfy_aptoide_games_intro_2">always the latest version, faster and safer</string>
