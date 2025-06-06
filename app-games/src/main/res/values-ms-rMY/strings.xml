@@ -146,7 +146,7 @@
   <string name="apkfy_install_bullet_points">\u2022 Permainan terbaik yang dikurasi hebat.\n\u2022 Tak perlu log masuk!\n\u2022
 Promosi khas dan ganjaran dalam permainan kegemaran anda.</string>
   <!-- APKFY full screen-->
-  <string name="apkfy_install_installing">Installing</string>
+  <string name="apkfy_install_installing">Memasang</string>
   <string name="apkfy_install_button">Pasang %1$s</string>
   <string name="apkfy_aptoide_games_intro">You\’re using Aptoide Games to install %1$s</string>
   <string name="apkfy_aptoide_games_intro_2">always the latest version, faster and safer</string>
