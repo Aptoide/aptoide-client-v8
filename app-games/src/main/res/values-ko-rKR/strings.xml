@@ -147,16 +147,16 @@
   <!-- APKFY full screen-->
   <string name="apkfy_install_installing">설치중</string>
   <string name="apkfy_install_button">설치 %1$s</string>
-  <string name="apkfy_aptoide_games_intro">You\’re using Aptoide Games to install %1$s</string>
-  <string name="apkfy_aptoide_games_intro_2">always the latest version, faster and safer</string>
+  <string name="apkfy_aptoide_games_intro">Aptoide Games를 사용하여 \' %1$s\'를 설치하고 있습니다.</string>
+  <string name="apkfy_aptoide_games_intro_2">항상 최신 버전, 더 빠르고 안전합니다.</string>
   <string name="apkfy_aptoide_games_advantages_title">왜 Aptoide Games를 계속 사용해야 하나요?</string>
-  <string name="apkfy_aptoide_games_advantage_updates"><![CDATA[Get <1>%1$s</1> updates first]]></string>
+  <string name="apkfy_aptoide_games_advantage_updates"><![CDATA[최신 업데이트를 먼저 받아보세요 <1>%1$s</1> 최신 정보를 먼저 받아보세요]]></string>
   <string name="apkfy_aptoide_games_advantage_safety">안전하고 검증된 APK 파일</string>
   <string name="apkfy_aptoide_games_advantage_no_login">로그인 필요 없음</string>
   <!-- APKFY full screen Roblox-->
-  <string name="apkfy_aptoide_games_advantage_updates_roblox"><![CDATA[No Aptoide Games? <1>No Roblox updates.</1>]]></string>
-  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">Keep Aptoide Games - get updates first, play first.</string>
-  <string name="apkfy_aptoide_games_advantage_space_roblox">Only 10MB. You won’t even feel it.</string>
+  <string name="apkfy_aptoide_games_advantage_updates_roblox"><![CDATA[Aptoide 게임이 없나요? <1>Roblox 업데이트가 없습니다.</1>]]></string>
+  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">Aptoide Games를 계속 사용하세요 - 업데이트를 가장 먼저 받고, 가장 먼저 플레이하세요.</string>
+  <string name="apkfy_aptoide_games_advantage_space_roblox">단 10MB입니다. 전혀 느껴지지 않을 거예요.</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Aptoide 지갑으로 결제</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">자동으로 설치되고 모든 구매 시 보너스가 지급됩니다!</string>
   <string name="buy_button" comment="buy">사기</string>
