@@ -26,7 +26,7 @@ import com.aptoide.android.aptoidegames.drawables.icons.getGameGenie
 import com.aptoide.android.aptoidegames.drawables.icons.getGamesIcon
 import com.aptoide.android.aptoidegames.drawables.icons.getSearch
 import com.aptoide.android.aptoidegames.gamegenie.presentation.genieRoute
-import com.aptoide.android.aptoidegames.search.presentation.searchRoute
+import com.aptoide.android.aptoidegames.search.presentation.buildSearchRoute
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.updates.presentation.updatesRoute
 
@@ -40,7 +40,7 @@ sealed class BottomBarMenus(
   )
 
   object Search : BottomBarMenus(
-    route = searchRoute
+    route = buildSearchRoute()
       .withBundleMeta(BundleMeta("search", "app")),
     titleId = R.string.search
   )

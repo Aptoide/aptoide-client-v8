@@ -1,6 +1,7 @@
 package com.aptoide.android.aptoidegames.search.presentation
 
 import android.view.KeyEvent
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,6 +26,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -55,12 +57,14 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType
 import cm.aptoide.pt.feature_search.presentation.SearchUiState
-import cm.aptoide.pt.feature_search.presentation.SearchViewModel
+import cm.aptoide.pt.feature_search.presentation.SingleSearchViewModel
+import cm.aptoide.pt.feature_search.presentation.singleSearchViewModel
 import cm.aptoide.pt.feature_search.utils.fixQuery
 import cm.aptoide.pt.feature_search.utils.isValidSearch
 import com.aptoide.android.aptoidegames.R
@@ -89,15 +93,28 @@ import com.aptoide.android.aptoidegames.search.SearchType
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 
-const val searchRoute = "search"
+private const val QUERY = "query"
+
+private const val searchRoute = "search?$QUERY={$QUERY}"
+
+fun buildSearchRoute(query: String? = null): String =
+  searchRoute.replace("{$QUERY}", query.toString())
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun searchScreen() = ScreenData.withAnalytics(
   route = searchRoute,
   screenAnalyticsName = "Search",
+  arguments = listOf(
+    navArgument(QUERY) {
+      type = NavType.StringType
+      nullable = true
+    },
+  )
   // TODO deepLinks = listOf(navDeepLink { uriPattern = BuildConfig.DEEP_LINK_SCHEMA + searchRoute })
-) { _, navigate, _ ->
-  val searchViewModel: SearchViewModel = hiltViewModel()
+) { args, navigate, navigateBack ->
+  val queryValue = args?.getString(QUERY)
+
+  val searchViewModel: SingleSearchViewModel = singleSearchViewModel(queryValue)
   val uiState by searchViewModel.uiState.collectAsState()
   val searchAnalytics = rememberSearchAnalytics()
   val bundleAnalytics = rememberBundleAnalytics()
@@ -115,6 +132,23 @@ fun searchScreen() = ScreenData.withAnalytics(
   )
   val focusManager = LocalFocusManager.current
   val keyboardController = LocalSoftwareKeyboardController.current
+
+  LaunchedEffect(Unit) {
+    searchValue = queryValue ?: ""
+
+    if (!queryValue.isNullOrBlank()) {
+      searchViewModel.loadResults()
+    }
+  }
+
+  BackHandler {
+    if (uiState is SearchUiState.Suggestions && searchViewModel.hasResults()) {
+      searchValue = queryValue ?: ""
+      searchViewModel.loadResults()
+    } else {
+      navigateBack()
+    }
+  }
 
   OverrideAnalyticsSearchMeta(searchMeta = searchMeta, navigate = navigate) { navigateTo ->
     SearchView(
@@ -135,7 +169,7 @@ fun searchScreen() = ScreenData.withAnalytics(
             )
           }
         searchValue = suggestion
-        searchViewModel.onSelectSearchSuggestion(suggestion)
+        navigateTo(buildSearchRoute(suggestion))
       },
       onRemoveSuggestion = { searchViewModel.onRemoveSearchSuggestion(it) },
       onSearchValueChanged = {
@@ -154,7 +188,7 @@ fun searchScreen() = ScreenData.withAnalytics(
             .also(searchAnalytics::sendSearchEvent)
           focusManager.clearFocus()
           keyboardController?.hide()
-          searchViewModel.searchApp(searchValue)
+          navigateTo(buildSearchRoute(searchValue))
         }
       },
       onItemClick = { index, app ->
@@ -175,6 +209,20 @@ fun searchScreen() = ScreenData.withAnalytics(
       onEmptyView = {
         searchMeta?.let { searchAnalytics.sendEmptySearchResultClickEvent(it) }
       },
+      onRetry = {
+        if (searchValue.isValidSearch()) {
+          searchValue = searchValue.trim()
+          searchMeta = SearchMeta(
+            insertedKeyword = searchValue,
+            searchKeyword = searchValue,
+            searchType = SearchType.MANUAL.type
+          )
+            .also(searchAnalytics::sendSearchEvent)
+          focusManager.clearFocus()
+          keyboardController?.hide()
+          searchViewModel.loadResults()
+        }
+      },
       navigate = navigateTo,
     )
   }
@@ -191,6 +239,7 @@ fun SearchView(
   onItemClick: (Int, App) -> Unit,
   onItemInstallStarted: (App) -> Unit,
   onEmptyView: () -> Unit,
+  onRetry: () -> Unit,
   navigate: (String) -> Unit,
 ) {
   Column {
@@ -201,8 +250,8 @@ fun SearchView(
     )
 
     when (uiState) {
-      is SearchUiState.NoConnection -> NoConnectionView(onRetryClick = onSearchQueryClick)
-      is SearchUiState.Error -> GenericErrorView(onRetryClick = onSearchQueryClick)
+      is SearchUiState.NoConnection -> NoConnectionView(onRetryClick = onRetry)
+      is SearchUiState.Error -> GenericErrorView(onRetryClick = onRetry)
       is SearchUiState.FirstLoading, SearchUiState.ResultsLoading -> LoadingView()
       is SearchUiState.Suggestions -> {
         // TODO buzz implementation after migration
