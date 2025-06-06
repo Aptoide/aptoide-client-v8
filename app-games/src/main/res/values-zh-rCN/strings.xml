@@ -145,7 +145,7 @@
   <string name="apkfy_install_body">在 Aptoide Games 获取您最喜爱的游戏和更多精彩内容！</string>
   <string name="apkfy_install_bullet_points">\u2022 热门游戏精心挑选，带来非凡体验。\n\u2022 无需登录，即刻畅玩！\n\u2022 专属优惠和丰厚奖励，尽在您喜爱的游戏中。</string>
   <!-- APKFY full screen-->
-  <string name="apkfy_install_installing">Installing</string>
+  <string name="apkfy_install_installing">正在安装</string>
   <string name="apkfy_install_button">安装%1$s</string>
   <string name="apkfy_aptoide_games_intro">You\’re using Aptoide Games to install %1$s</string>
   <string name="apkfy_aptoide_games_intro_2">always the latest version, faster and safer</string>
