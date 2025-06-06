@@ -144,13 +144,19 @@
   <string name="apkfy_whats_aptoide_games_title">什麼是 Aptoide Games？</string>
   <string name="apkfy_install_body">在 Aptoide Games 獲得您喜愛的遊戲和更多！</string>
   <string name="apkfy_install_bullet_points">\u2022 頂尖的遊戲，令人驚嘆的策展。\n\u2022 無需登入！\n\u2022 您最喜愛的遊戲中的特別促銷和獎勵。</string>
-  <string name="apkfy_install_installing">安裝 %1$s</string>
+  <!-- APKFY full screen-->
+  <string name="apkfy_install_installing">Installing</string>
   <string name="apkfy_install_button">安裝 %1$s</string>
-  <string name="apkfy_aptoide_games_intro">您正在使用 Aptoide Games 安裝《 %1$s 》——始終為您提供最新版本，更快、更安全。</string>
+  <string name="apkfy_aptoide_games_intro">You\’re using Aptoide Games to install %1$s</string>
+  <string name="apkfy_aptoide_games_intro_2">always the latest version, faster and safer</string>
   <string name="apkfy_aptoide_games_advantages_title">為什麼要保留 Aptoide Games？</string>
-  <string name="apkfy_aptoide_games_advantage_updates">%1$s 更新信息</string>
+  <string name="apkfy_aptoide_games_advantage_updates"><![CDATA[Get <1>%1$s</1> updates first]]></string>
   <string name="apkfy_aptoide_games_advantage_safety">安全且经过验证的 APK</string>
   <string name="apkfy_aptoide_games_advantage_no_login">無需登入</string>
+  <!-- APKFY full screen Roblox-->
+  <string name="apkfy_aptoide_games_advantage_updates_roblox"><![CDATA[No Aptoide Games? <1>No Roblox updates.</1>]]></string>
+  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">Keep Aptoide Games - get updates first, play first.</string>
+  <string name="apkfy_aptoide_games_advantage_space_roblox">Only 10MB. You won’t even feel it.</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">使用 Aptoide 電子錢包付款</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">它會自動安裝，而且您在所有購物中都會獲得獎金！</string>
   <string name="buy_button" comment="buy">購買</string>
