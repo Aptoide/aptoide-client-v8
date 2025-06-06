@@ -145,7 +145,7 @@
   <string name="apkfy_install_body">Dapatkan game favorit Anda dan banyak lagi di Game Aptoide!</string>
   <string name="apkfy_install_bullet_points">\u2022 Game teratas dengan kurasi luar biasa.\n\u2022 Tidak perlu masuk!\n\u2022 Promosi dan hadiah khusus di game favorit Anda.</string>
   <!-- APKFY full screen-->
-  <string name="apkfy_install_installing">Installing</string>
+  <string name="apkfy_install_installing">Memasang</string>
   <string name="apkfy_install_button">Unduh %1$s</string>
   <string name="apkfy_aptoide_games_intro">You\’re using Aptoide Games to install %1$s</string>
   <string name="apkfy_aptoide_games_intro_2">always the latest version, faster and safer</string>
