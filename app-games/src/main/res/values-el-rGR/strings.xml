@@ -145,7 +145,7 @@
   <string name="apkfy_install_body">Κατεβάστε το αγαπημένο σας παιχνίδι και πολλά περισσότερα από το Aptoide Games!</string>
   <string name="apkfy_install_bullet_points">\u2022 Κορυφαία παιχνίδια με εξαιρετική επιμέλεια.\n\u2022 Δεν απαιτείται σύνδεση!\n\u2022 Ειδικές προσφορές και ανταμοιβές στα αγαπημένα σας παιχνίδια.</string>
   <!-- APKFY full screen-->
-  <string name="apkfy_install_installing">Installing</string>
+  <string name="apkfy_install_installing">Γίνεται εγκατάσταση</string>
   <string name="apkfy_install_button">Εγκατάσταση %1$s</string>
   <string name="apkfy_aptoide_games_intro">You\’re using Aptoide Games to install %1$s</string>
   <string name="apkfy_aptoide_games_intro_2">always the latest version, faster and safer</string>
