@@ -77,7 +77,7 @@ class InstallAnalyticsImpl(
       else -> Unit
     }
 
-    if (analyticsContext.isApkfy && analyticsContext.installAction == InstallAction.INSTALL) {
+    if (analyticsContext.isApkfy) {
       genericAnalytics.logEvent(
         name = "install_clicked_apkfy",
         params = analyticsContext.toGenericParameters(

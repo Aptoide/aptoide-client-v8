@@ -68,9 +68,9 @@ fun apkfyScreen() = ScreenData.withAnalytics(
         .verticalScroll(scrollState)
         .height(IntrinsicSize.Max)
     ) {
-      apkfyState?.app?.let {
+      apkfyState?.let {
         ApkfyScreen(
-          app = it,
+          apkfyState = it,
           navigate = navigate,
         )
       } ?: GenericErrorView(navigateBack)
@@ -80,13 +80,17 @@ fun apkfyScreen() = ScreenData.withAnalytics(
 
 @Composable
 fun ApkfyScreen(
-  app: App,
+  apkfyState: ApkfyUiState,
   navigate: (String) -> Unit,
 ) {
   val apkfyAnalytics = rememberApkfyAnalytics()
 
   LaunchedEffect(Unit) {
-    apkfyAnalytics.sendApkfyShown()
+    if (apkfyState is ApkfyUiState.Default) {
+      apkfyAnalytics.sendApkfyTimeout()
+    } else {
+      apkfyAnalytics.sendApkfyShown()
+    }
   }
 
   OverrideAnalyticsAPKFY(navigate) { navigateTo ->
@@ -104,14 +108,14 @@ fun ApkfyScreen(
         textAlign = TextAlign.Center
       )
       Spacer(modifier = Modifier.height(55.dp))
-      ApkfyAppInfo(app = app)
+      ApkfyAppInfo(app = apkfyState.app)
       Spacer(modifier = Modifier.height(17.dp))
       ApkfyInstallView(
         modifier = Modifier
           .fillMaxHeight()
           .padding(horizontal = 16.dp)
           .padding(bottom = 32.dp),
-        app = app,
+        app = apkfyState.app,
         onInstallStarted = {}
       )
     }
@@ -174,7 +178,7 @@ private fun ApkfyAppInfo(
 fun ApkfyScreenPreview() {
   AptoideTheme {
     ApkfyScreen(
-      app = randomApp,
+      apkfyState = ApkfyUiState.Default(randomApp),
       navigate = {},
     )
   }

@@ -21,6 +21,8 @@ interface FeatureFlags {
 
   suspend fun getFlagAsString(key: String): String? = null
 
+  suspend fun getFlagsAsString(vararg keys: String): Map<String, String?> = emptyMap()
+
   suspend fun getStrings(key: String): List<String> = emptyList()
 
   suspend fun <T> getObject(key: String, klass: Class<T>): T? = null
@@ -30,7 +32,7 @@ interface FeatureFlags {
 class FeatureFlagsImpl @Inject constructor(
   private val settingsRepository: FeatureFlagsRepository,
   private val settingsLocalRepository: FeatureFlagsLocalRepository,
-): FeatureFlags {
+) : FeatureFlags {
 
   private var featureFlags = JSONObject()
   private val mutex = Mutex()
@@ -58,6 +60,12 @@ class FeatureFlagsImpl @Inject constructor(
 
   override suspend fun getFlagAsString(key: String): String? = mutex.withLock {
     runCatching { featureFlags.getString(key) }.getOrNull()
+  }
+
+  override suspend fun getFlagsAsString(vararg keys: String) = mutex.withLock {
+    keys.associateWith {
+      runCatching { featureFlags.getString(it) }.getOrNull()
+    }
   }
 
   override suspend fun getStrings(key: String): List<String> = mutex.withLock {
