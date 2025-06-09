@@ -4,12 +4,15 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -44,6 +47,8 @@ fun apkfyScreen() = ScreenData.withAnalytics(
   val apkfyState = rememberApkfyState()
   val apkfyAnalytics = rememberApkfyAnalytics()
 
+  val scrollState = rememberScrollState()
+
   BackHandler {
     apkfyAnalytics.sendApkfyScreenBackClicked()
     navigateBack()
@@ -57,12 +62,19 @@ fun apkfyScreen() = ScreenData.withAnalytics(
       },
       title = ""
     )
-    apkfyState?.app?.let {
-      ApkfyScreen(
-        app = it,
-        navigate = navigate,
-      )
-    } ?: GenericErrorView(navigateBack)
+    Column(
+      modifier = Modifier
+        .fillMaxHeight()
+        .verticalScroll(scrollState)
+        .height(IntrinsicSize.Max)
+    ) {
+      apkfyState?.app?.let {
+        ApkfyScreen(
+          app = it,
+          navigate = navigate,
+        )
+      } ?: GenericErrorView(navigateBack)
+    }
   }
 }
 
@@ -79,9 +91,7 @@ fun ApkfyScreen(
 
   OverrideAnalyticsAPKFY(navigate) { navigateTo ->
     Column(
-      modifier = Modifier
-        .fillMaxWidth()
-        .fillMaxHeight(),
+      modifier = Modifier.fillMaxSize(),
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
       Text(
@@ -98,6 +108,7 @@ fun ApkfyScreen(
       Spacer(modifier = Modifier.height(17.dp))
       ApkfyInstallView(
         modifier = Modifier
+          .fillMaxHeight()
           .padding(horizontal = 16.dp)
           .padding(bottom = 32.dp),
         app = app,
