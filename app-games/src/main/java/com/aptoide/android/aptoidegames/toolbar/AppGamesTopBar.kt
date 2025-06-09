@@ -53,7 +53,7 @@ private fun TopBar(
       .defaultMinSize(minHeight = 56.dp)
       .background(color = Color.Transparent)
       .padding(horizontal = 16.dp),
-    horizontalArrangement = Arrangement.Start,
+    horizontalArrangement = Arrangement.spacedBy(32.dp, alignment = Alignment.Start),
     verticalAlignment = Alignment.CenterVertically,
   ) {
     Image(

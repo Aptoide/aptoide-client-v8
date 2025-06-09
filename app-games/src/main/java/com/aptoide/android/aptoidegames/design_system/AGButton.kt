@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -305,6 +306,7 @@ fun SecondaryOutlinedButton(
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
   title: String?,
+  textStyle: TextStyle = AGTypography.InputsL.copy(color = Palette.White),
 ) = AGOutlinedButton(
   onClick = onClick,
   modifier = modifier.height(48.dp),
@@ -312,7 +314,7 @@ fun SecondaryOutlinedButton(
   color = Palette.Grey,
   strokeWidth = 3.dp,
   title = title,
-  textStyle = AGTypography.InputsL.copy(color = Palette.White)
+  textStyle = textStyle
 )
 
 @Composable fun AccentButton(
@@ -499,3 +501,44 @@ private fun AGOutlinedButton(
     }
   }
 }
+
+@Composable
+private fun AGContentButton(
+  onClick: () -> Unit,
+  modifier: Modifier = Modifier,
+  enabled: Boolean,
+  color: Color,
+  content: @Composable RowScope.() -> Unit,
+) {
+  val interactionSource = remember { MutableInteractionSource() }
+  val isPressed by interactionSource.collectIsPressedAsState()
+  val overlayColor = if (isPressed) Palette.Black.copy(alpha = 0.1f) else Color.Transparent
+
+  Button(
+    onClick = onClick,
+    modifier = modifier,
+    enabled = enabled,
+    elevation = ButtonDefaults.elevation(defaultElevation = 0.dp),
+    shape = CutCornerShape(0),
+    interactionSource = interactionSource,
+    colors = ButtonDefaults.buttonColors(
+      backgroundColor = overlayColor.compositeOver(color),
+      disabledBackgroundColor = Palette.Grey,
+    ),
+    contentPadding = PaddingValues(horizontal = 16.dp),
+    content = content
+  )
+}
+
+@Composable fun PrimaryContentButton(
+  onClick: () -> Unit,
+  modifier: Modifier = Modifier,
+  enabled: Boolean = true,
+  content: @Composable RowScope.() -> Unit,
+) = AGContentButton(
+  onClick = onClick,
+  modifier = modifier.height(48.dp),
+  enabled = enabled,
+  color = Palette.Primary,
+  content = content
+)
