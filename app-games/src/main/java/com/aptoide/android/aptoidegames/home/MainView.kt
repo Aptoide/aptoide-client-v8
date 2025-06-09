@@ -29,6 +29,7 @@ import cm.aptoide.pt.extensions.staticComposable
 import com.aptoide.android.aptoidegames.AptoideGamesBottomSheet
 import com.aptoide.android.aptoidegames.apkfy.presentation.ApkfyHandler
 import com.aptoide.android.aptoidegames.apkfy.presentation.apkfyScreen
+import com.aptoide.android.aptoidegames.apkfy.presentation.detailedApkfyScreen
 import com.aptoide.android.aptoidegames.appview.appViewScreen
 import com.aptoide.android.aptoidegames.appview.permissions.appPermissionsScreen
 import com.aptoide.android.aptoidegames.bottom_bar.AppGamesBottomBar
@@ -258,6 +259,12 @@ private fun NavigationGraph(
       navigate = navController::navigateTo,
       goBack = navController::navigateUp,
       screenData = apkfyScreen()
+    )
+
+    animatedComposable(
+      navigate = navController::navigateTo,
+      goBack = navController::navigateUp,
+      screenData = detailedApkfyScreen()
     )
   }
 }
