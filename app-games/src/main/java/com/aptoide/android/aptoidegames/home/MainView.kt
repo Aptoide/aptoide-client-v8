@@ -29,7 +29,9 @@ import cm.aptoide.pt.extensions.staticComposable
 import com.aptoide.android.aptoidegames.AptoideGamesBottomSheet
 import com.aptoide.android.aptoidegames.apkfy.presentation.ApkfyHandler
 import com.aptoide.android.aptoidegames.apkfy.presentation.apkfyScreen
+import com.aptoide.android.aptoidegames.apkfy.presentation.detailedApkfyRoute
 import com.aptoide.android.aptoidegames.apkfy.presentation.detailedApkfyScreen
+import com.aptoide.android.aptoidegames.apkfy.presentation.robloxApkfyRoute
 import com.aptoide.android.aptoidegames.apkfy.presentation.robloxApkfyScreen
 import com.aptoide.android.aptoidegames.appview.appViewScreen
 import com.aptoide.android.aptoidegames.appview.permissions.appPermissionsScreen
@@ -75,7 +77,13 @@ fun MainView(navController: NavHostController) {
     navController.currentBackStackEntryFlow.collectAsState(initial = navController.currentBackStackEntry)
 
   LaunchedEffect(currentRoute.value?.destination?.route) {
-    showTopBar = currentRoute.value?.destination?.route?.contains(genieRoute)?.not() ?: true
+    val currentRoute = currentRoute.value?.destination?.route
+    showTopBar = if (currentRoute != null) {
+      !currentRoute.contains(genieRoute) && !currentRoute.contains(detailedApkfyRoute)
+        && !currentRoute.contains(robloxApkfyRoute)
+    } else {
+      true
+    }
   }
 
   //Forced theme do be dark to always apply dark background, for now.
@@ -123,7 +131,7 @@ fun MainView(navController: NavHostController) {
             }
           )
         }
-        ApkfyHandler(showBottomSheet = showBottomSheet, navigate = navController::navigateTo)
+        ApkfyHandler(navigate = navController::navigateTo)
 
         LaunchedEffect(promoCodeApp) {
           if (promoCodeApp != null) {

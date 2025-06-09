@@ -23,6 +23,7 @@ import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_flags.domain.FeatureFlags
 import com.aptoide.android.aptoidegames.apkfy.DownloadPermissionState
 import com.aptoide.android.aptoidegames.apkfy.DownloadPermissionStateProbe
+import com.aptoide.android.aptoidegames.apkfy.isRoblox
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
@@ -35,7 +36,8 @@ class InjectionsProvider @Inject constructor(
 ) : ViewModel()
 
 data class ApkfyFeatureFlags(
-  val apkfyVariant: String? = null
+  val apkfyVariant: String? = null,
+  val robloxApkfyVariant: String? = null
 )
 
 @Composable
@@ -51,12 +53,18 @@ fun rememberApkfyState(): ApkfyUiState? = runPreviewable(
       derivedStateOf {
         apkfyApp?.let { app ->
           apkfyFeatureFlags?.let { flags ->
-            when (flags.apkfyVariant) {
-              "a" -> ApkfyUiState.VariantA(app)
-              "b" -> ApkfyUiState.VariantB(app)
-              "c" -> ApkfyUiState.VariantC(app)
-              "d" -> ApkfyUiState.VariantD(app)
-              else -> ApkfyUiState.Default(app)
+            if (app.isRoblox()) {
+              when (flags.robloxApkfyVariant) {
+                "baseline" -> ApkfyUiState.RobloxBaseline(app)
+                "a" -> ApkfyUiState.RobloxVariantA(app)
+                else -> ApkfyUiState.Default(app)
+              }
+            } else {
+              when (flags.apkfyVariant) {
+                "baseline" -> ApkfyUiState.Baseline(app)
+                "a" -> ApkfyUiState.VariantA(app)
+                else -> ApkfyUiState.Default(app)
+              }
             }
           }
         }
@@ -66,8 +74,12 @@ fun rememberApkfyState(): ApkfyUiState? = runPreviewable(
     LaunchedEffect(Unit) {
       coroutineScope.launch {
         apkfyFeatureFlags = withTimeoutOrNull(5000) {
+          val flags =
+            vm.featureFlags.getFlagsAsString("apkfy_fullscreen_variant", "apkfy_roblox_variant")
+
           ApkfyFeatureFlags(
-            apkfyVariant = vm.featureFlags.getFlagAsString("apkfy_test_variant"),
+            apkfyVariant = flags["apkfy_fullscreen_variant"],
+            robloxApkfyVariant = flags["apkfy_roblox_variant"]
           )
         } ?: ApkfyFeatureFlags()
       }
