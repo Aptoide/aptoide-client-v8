@@ -44,7 +44,7 @@ android {
     buildConfigField(
       type = "String",
       name = "APTOIDE_WEB_SERVICES_MMP_HOST",
-      value = "\"https://aptoide-mmp.dev.aptoide.com/api/v1/\""
+      value = "\"https://aptoide-mmp-v3-dev.aptoide.com/api/v1/\""
     )
 
     buildConfigField(
