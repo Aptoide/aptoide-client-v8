@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -124,9 +123,7 @@ private fun ApkfyInstallViewContent(
   modifier: Modifier = Modifier,
   verticalSpacing: Dp = 24.dp,
 ) = Box(
-  modifier = modifier
-    .fillMaxHeight()
-    .wrapContentWidth(),
+  modifier = modifier.wrapContentWidth(),
   contentAlignment = Alignment.BottomCenter
 ) {
   when (val state = installViewState.uiState) {
