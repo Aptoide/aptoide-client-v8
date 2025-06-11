@@ -39,6 +39,10 @@
 -keep class com.google.firebase.installations.** {
   *;
 }
+-keepclassmembers class androidx.datastore.preferences.** {
+    <fields>;
+    <init>(...);
+}
 
 -keep interface com.google.firebase.installations.** {
   *;
