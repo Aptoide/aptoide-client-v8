@@ -23,12 +23,12 @@ import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_APP_OB
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_APP_VERSION_CODE
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_CONTEXT
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_INSERTED_KEYWORD
-import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_TAB
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_PACKAGE_NAME
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_PREVIOUS_CONTEXT
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_SEARCH_TERM
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_SEARCH_TERM_POSITION
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_SEARCH_TERM_SOURCE
+import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_TAB
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_TAG
 import com.aptoide.android.aptoidegames.analytics.dto.AnalyticsUIContext
 import com.aptoide.android.aptoidegames.analytics.dto.SearchMeta
@@ -98,17 +98,11 @@ class BIAnalytics(private val analyticsSender: AnalyticsSender) {
     analyticsSender.setUserProperties(*props)
 
   private suspend fun setFeatureFlagsProperties(featureFlags: FeatureFlags) {
-    val apkfyVariant = featureFlags.getFlagAsString("apkfy_test_variant")
-    val testGroup =
-      when (apkfyVariant) {
-        "a" -> "group_a"
-        "b" -> "group_b"
-        "c" -> "group_c"
-        "d" -> "group_d"
-        else -> "NA"
-      }
+    val apkfyVariant = featureFlags.getFlagAsString("apkfy_fullscreen_variant")
+    val apkfyRobloxVariant = featureFlags.getFlagAsString("apkfy_roblox_variant")
 
-    analyticsSender.setUserProperties("ab_test_apkfy_may_21" to testGroup)
+    analyticsSender.setUserProperties("ab_test_apkfy_fullscreen_jun_12" to (apkfyVariant ?: "NA"))
+    analyticsSender.setUserProperties("ab_test_apkfy_roblox_jun_12" to (apkfyRobloxVariant ?: "NA"))
   }
 
   fun setUTMProperties(
