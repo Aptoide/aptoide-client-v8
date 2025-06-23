@@ -83,7 +83,7 @@ class DeviceInfo @Inject constructor(
   fun getSupportedABIs() = Build.SUPPORTED_ABIS.joinToString(separator = ",")
 
   fun getScreenDimensions() =
-    "${deviceInfoRepository.screenWidth}x${deviceInfoRepository.screenHeight}"
+    "${getScreenWidth()}x${getScreenHeight()}"
 
   fun getManufacturer(): String = Build.MANUFACTURER
 
@@ -93,4 +93,10 @@ class DeviceInfo @Inject constructor(
     return if (deviceInfoRepository.currentModeType == Configuration.UI_MODE_TYPE_TELEVISION)
       "1" else "0"
   }
+
+  fun getScreenWidth() = deviceInfoRepository.screenWidth
+  fun getScreenHeight() = deviceInfoRepository.screenHeight
+  fun getScreenDensity() = deviceInfoRepository.density
+  fun getDeviceLanguage() = deviceInfoRepository.language
+
 }

@@ -36,6 +36,12 @@ class DeviceInfoRepository @Inject constructor(@ApplicationContext private val c
 
   val currentModeType: Int get() = uiModeManager.currentModeType
 
+  val language: String
+    get() {
+      val locale = context.resources.configuration.locales[0]
+      return "${locale.language}-${locale.country}"
+    }
+
   fun getLogsFile(header: String): Uri {
     try {
       val directory = File(context.cacheDir, "logs")
