@@ -54,13 +54,32 @@ fun BonusSectionView(
   spaceBy: Int = 0,
 ) {
   val context = LocalContext.current
+  BonusSectionGeneralizedView(
+    onHeaderClick = getBonusRouteNavigation(
+      context = context,
+      bundle = bundle,
+      navigate = navigate
+    ),
+    spaceBy = spaceBy,
+  ) {
+    BonusBundleView(
+      bundle = bundle,
+      navigate = navigate
+    )
+  }
+}
+
+@Composable
+fun BonusSectionGeneralizedView(
+  onHeaderClick: () -> Unit,
+  spaceBy: Int = 0,
+  showMoreButton: Boolean = true,
+  bundleContent: @Composable () -> Unit
+) {
   Column(modifier = Modifier.fillMaxWidth()) {
     BonusSectionHeader(
-      onClick = getBonusRouteNavigation(
-        context = context,
-        bundle = bundle,
-        navigate = navigate
-      )
+      onClick = onHeaderClick,
+      showMoreButton = showMoreButton
     )
     val splitText = stringResource(id = R.string.bonus_banner_body).split("%s")
     val annotatedString = buildAnnotatedString {
@@ -95,17 +114,15 @@ fun BonusSectionView(
       color = Palette.White,
       maxLines = 2,
     )
-    BonusBundleView(
-      bundle = bundle,
-      navigate = navigate
-    )
+    bundleContent()
     Spacer(Modifier.size(spaceBy.dp))
   }
 }
 
 @Composable
 fun BonusSectionHeader(
-  onClick: () -> Unit
+  onClick: () -> Unit,
+  showMoreButton: Boolean = true
 ) {
   Row(
     modifier = Modifier
@@ -152,13 +169,15 @@ fun BonusSectionHeader(
       }
     }
     Spacer(Modifier.width(40.dp))
-    Column {
-      Spacer(Modifier.height(16.dp))
-      Image(
-        imageVector = getForward(Palette.Primary),
-        modifier = Modifier.size(18.dp),
-        contentDescription = null,
-      )
+    if (showMoreButton) {
+      Column {
+        Spacer(Modifier.height(16.dp))
+        Image(
+          imageVector = getForward(Palette.Primary),
+          modifier = Modifier.size(18.dp),
+          contentDescription = null,
+        )
+      }
     }
 
     Spacer(Modifier.width(16.dp))
