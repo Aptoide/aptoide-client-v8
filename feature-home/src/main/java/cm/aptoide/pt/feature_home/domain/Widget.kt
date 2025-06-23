@@ -32,7 +32,8 @@ enum class WidgetType {
   NEW_APP,
   NEW_APP_VERSION,
   IN_GAME_EVENT,
-  APP_COMING_SOON
+  APP_COMING_SOON,
+  RTB_PROMO
 }
 
 enum class WidgetLayout {

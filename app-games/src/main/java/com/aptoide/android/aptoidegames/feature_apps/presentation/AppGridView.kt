@@ -142,7 +142,7 @@ internal fun AppsRowView(
 }
 
 @Composable
-private fun AppGridView(
+fun AppGridView(
   app: App,
   onClick: () -> Unit,
 ) {

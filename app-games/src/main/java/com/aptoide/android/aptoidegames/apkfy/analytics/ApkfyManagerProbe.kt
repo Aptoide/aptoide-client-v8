@@ -15,7 +15,7 @@ class ApkfyManagerProbe(
 ) : ApkfyManager {
 
   companion object {
-    private const val GUEST_UID_KEY = "GUEST_UID"
+    const val GUEST_UID_KEY = "GUEST_UID"
   }
 
   override suspend fun getApkfy(): ApkfyModel? {

@@ -53,7 +53,9 @@ class BundlesUseCase @Inject constructor(
     WidgetType.NEW_APP_VERSION
       -> BundleSource.MANUAL
 
-    WidgetType.HTML_GAMES -> BundleSource.AUTOMATIC
+    WidgetType.HTML_GAMES,
+    WidgetType.RTB_PROMO
+      -> BundleSource.AUTOMATIC
 
     WidgetType.APPS_GROUP,
     WidgetType.ESKILLS,
@@ -90,6 +92,7 @@ class BundlesUseCase @Inject constructor(
     WidgetType.APPC_BANNER -> Type.APPC_BANNER
     WidgetType.ESKILLS -> Type.ESKILLS
     WidgetType.MY_GAMES -> Type.MY_GAMES
+    WidgetType.RTB_PROMO -> Type.RTB_PROMO
     WidgetType.GAMES_MATCH -> Type.GAMES_MATCH
     WidgetType.ACTION_ITEM,
     WidgetType.EDITORIAL -> Type.EDITORIAL

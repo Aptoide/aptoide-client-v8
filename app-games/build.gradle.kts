@@ -55,6 +55,12 @@ android {
 
     buildConfigField(
       type = "String",
+      name = "RTB_HOST",
+      value = "\"https://aptoide-rtb.aptoide.com\""
+    )
+
+    buildConfigField(
+      type = "String",
       name = "DEEP_LINK_SCHEMA",
       value = "\"ag://\""
     )

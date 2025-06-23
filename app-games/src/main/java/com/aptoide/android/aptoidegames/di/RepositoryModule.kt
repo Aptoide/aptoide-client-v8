@@ -18,6 +18,7 @@ import cm.aptoide.pt.aptoide_network.di.VersionCode
 import cm.aptoide.pt.environment_info.DeviceInfo
 import cm.aptoide.pt.feature_apkfy.di.MMPDomain
 import cm.aptoide.pt.feature_apps.data.walletApp
+import cm.aptoide.pt.feature_campaigns.CampaignRepository
 import cm.aptoide.pt.feature_editorial.di.DefaultEditorialUrl
 import cm.aptoide.pt.feature_flags.data.FeatureFlagsRepository
 import cm.aptoide.pt.feature_flags.di.FeatureFlagsDataStore
@@ -36,6 +37,10 @@ import com.aptoide.android.aptoidegames.feature_flags.AptoideFeatureFlagsReposit
 import com.aptoide.android.aptoidegames.feature_flags.analytics.FeatureFlagsAnalytics
 import com.aptoide.android.aptoidegames.feature_promotional.domain.AppComingSoonManager
 import com.aptoide.android.aptoidegames.feature_promotional.repository.SubscribedAppsManager
+import com.aptoide.android.aptoidegames.feature_rtb.di.RetrofitRTB
+import com.aptoide.android.aptoidegames.feature_rtb.repository.AptoideRTBRepository
+import com.aptoide.android.aptoidegames.feature_rtb.repository.RTBApi
+import com.aptoide.android.aptoidegames.feature_rtb.repository.RTBRepository
 import com.aptoide.android.aptoidegames.home.repository.ThemePreferencesManager
 import com.aptoide.android.aptoidegames.idsDataStore
 import com.aptoide.android.aptoidegames.launch.AppLaunchPreferencesManager
@@ -56,6 +61,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -292,6 +299,23 @@ class RepositoryModule {
     repository: AppComingSoonPromotionalRepository
   ): AppComingSoonManager {
     return AppComingSoonManager(repository, subscribedAppsManager, appContext)
+  }
+
+  @Singleton
+  @Provides
+  fun provideRTBRepository(
+    @RetrofitRTB retrofit: Retrofit,
+    deviceInfo: DeviceInfo,
+    idsRepository: IdsRepository,
+    campaignRepository: CampaignRepository
+  ): RTBRepository {
+    return AptoideRTBRepository(
+      rtbApi = retrofit.create(RTBApi::class.java),
+      scope = CoroutineScope(Dispatchers.IO),
+      deviceInfo = deviceInfo,
+      idsRepository = idsRepository,
+      campaignRepository = campaignRepository
+    )
   }
 }
 
