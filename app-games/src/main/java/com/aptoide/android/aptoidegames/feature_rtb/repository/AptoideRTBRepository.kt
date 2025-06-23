@@ -1,0 +1,78 @@
+package com.aptoide.android.aptoidegames.feature_rtb.repository
+
+import cm.aptoide.pt.environment_info.DeviceInfo
+import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.data.File
+import cm.aptoide.pt.feature_apps.data.emptyApp
+import cm.aptoide.pt.feature_apps.domain.Rating
+import cm.aptoide.pt.feature_campaigns.CampaignImpl
+import cm.aptoide.pt.feature_campaigns.CampaignRepository
+import cm.aptoide.pt.feature_campaigns.CampaignTuple
+import com.aptoide.android.aptoidegames.BuildConfig
+import com.aptoide.android.aptoidegames.IdsRepository
+import com.aptoide.android.aptoidegames.apkfy.analytics.ApkfyManagerProbe
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
+
+class AptoideRTBRepository @Inject constructor(
+  private val rtbApi: RTBApi,
+  private val scope: CoroutineScope,
+  private val deviceInfo: DeviceInfo,
+  private val idsRepository: IdsRepository,
+  private val campaignRepository: CampaignRepository
+) : RTBRepository {
+
+  override suspend fun getRTBApps(placement: String): List<App> =
+    withContext(scope.coroutineContext) {
+      val guestUid = idsRepository.getId(ApkfyManagerProbe.GUEST_UID_KEY)
+      val result = rtbApi.getApps(
+        RTBRequest(
+          listOf(
+            Placement(placement, 1)
+          ),
+          guestUid,
+          BuildConfig.APPLICATION_ID,
+          deviceInfo.getDeviceLanguage(),
+          Device(
+            os = "Android",
+            os_version = deviceInfo.getAndroidRelease(),
+            model = deviceInfo.getModel()
+          ),
+          Screen(
+            deviceInfo.getScreenWidth(),
+            deviceInfo.getScreenHeight(),
+            deviceInfo.getScreenDensity()
+          ),
+        )
+      )
+      if (result.isEmpty()) {
+        emptyList()
+      } else {
+        result.map { it.toDomainModel(campaignRepository) }
+      }
+    }
+}
+
+private fun RTBResponse.toDomainModel(campaignRepository: CampaignRepository): App {
+  return emptyApp.copy(
+    name = this.appName,
+    icon = this.creative.asset,
+    isAppCoins = true,
+    file = File(md5 = "", size = -1, path = "", path_alt = ""),
+    packageName = this.packageName,
+    rating = Rating(this.rating, 0, emptyList()),
+    pRating = Rating(this.rating, 0, emptyList()),
+    campaigns = this.tracking.aptoideMmp?.mapRTBMMPCampaigns(campaignRepository)
+  )
+}
+
+private fun AptoideMmp.mapRTBMMPCampaigns(campaignRepository: CampaignRepository): CampaignImpl? {
+  return CampaignImpl(
+    impressions = this.impression?.let { listOf(CampaignTuple("aptoide-mmp", this.impression)) }
+      ?: emptyList(),
+    clicks = this.click?.let { listOf(CampaignTuple("aptoide-mmp", this.click)) } ?: emptyList(),
+    downloads = emptyList(),
+    repository = campaignRepository
+  )
+}

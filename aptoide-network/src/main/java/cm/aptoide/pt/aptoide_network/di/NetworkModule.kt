@@ -71,6 +71,18 @@ object NetworkModule {
       .addInterceptor(postCacheInterceptor)
       .build()
 
+  @RawOkHttp
+  @Provides
+  @Singleton
+  fun provideRTBOkHttpClient(
+    userAgentInterceptor: UserAgentInterceptor,
+    httpLoggingInterceptor: HttpLoggingInterceptor,
+  ): OkHttpClient =
+    OkHttpClient.Builder()
+      .addInterceptor(userAgentInterceptor)
+      .addInterceptor(httpLoggingInterceptor)
+      .build()
+
   @DownloadsOKHttp
   @Provides
   @Singleton
@@ -211,6 +223,10 @@ annotation class BaseOkHttp
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class SimpleOkHttp
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class RawOkHttp
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)

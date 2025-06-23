@@ -89,6 +89,7 @@ import com.aptoide.android.aptoidegames.feature_promotional.EventPromotionalView
 import com.aptoide.android.aptoidegames.feature_promotional.NewAppPromotionalView
 import com.aptoide.android.aptoidegames.feature_promotional.NewAppVersionPromotionalView
 import com.aptoide.android.aptoidegames.feature_promotional.NewsPromotionalView
+import com.aptoide.android.aptoidegames.feature_rtb.presentation.RTBSectionView
 import com.aptoide.android.aptoidegames.home.analytics.meta
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -273,6 +274,12 @@ fun BundlesView(
 
             Type.APP_COMING_SOON -> AppComingSoonPromotionalView(
               bundle = bundle,
+              spaceBy = 32
+            )
+
+            Type.RTB_PROMO -> RTBSectionView(
+              bundle = bundle,
+              navigate = navigateTo,
               spaceBy = 32
             )
 
