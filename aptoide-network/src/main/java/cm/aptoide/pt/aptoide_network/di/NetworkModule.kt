@@ -90,6 +90,35 @@ object NetworkModule {
       .addInterceptor(languageInterceptor)
       .build()
 
+  @GameGenieOkHttp
+  @Provides
+  @Singleton
+  fun provideGameGenieOkHttpClient(
+    @ApplicationContext context: Context,
+    userAgentInterceptor: UserAgentInterceptor,
+    qLogicInterceptor: QLogicInterceptor,
+    queryLangInterceptor: QueryLangInterceptor,
+    versionCodeInterceptor: VersionCodeInterceptor,
+    languageInterceptor: AcceptLanguageInterceptor,
+    httpLoggingInterceptor: HttpLoggingInterceptor,
+    postCacheInterceptor: PostCacheInterceptor,
+    aabInterceptor: AABInterceptor
+  ): OkHttpClient =
+    OkHttpClient.Builder()
+      .cache(Cache(context.cacheDir, 10 * 1024 * 1024))
+      .connectTimeout(30, SECONDS)
+      .readTimeout(30, SECONDS)
+      .writeTimeout(30, SECONDS)
+      .addInterceptor(userAgentInterceptor)
+      .addInterceptor(queryLangInterceptor)
+      .addInterceptor(qLogicInterceptor)
+      .addInterceptor(versionCodeInterceptor)
+      .addInterceptor(languageInterceptor)
+      .addInterceptor(httpLoggingInterceptor)
+      .addInterceptor(postCacheInterceptor)
+      .addInterceptor(aabInterceptor)
+      .build()
+
   @RetrofitV7
   @Provides
   @Singleton
@@ -215,6 +244,10 @@ annotation class SimpleOkHttp
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class DownloadsOKHttp
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class GameGenieOkHttp
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
