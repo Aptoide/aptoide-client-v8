@@ -3,7 +3,7 @@ package com.aptoide.android.aptoidegames.gamegenie.di
 import android.content.Context
 import android.content.pm.PackageManager
 import androidx.room.Room
-import cm.aptoide.pt.aptoide_network.di.BaseOkHttp
+import cm.aptoide.pt.aptoide_network.di.GameGenieOkHttp
 import cm.aptoide.pt.aptoide_network.di.RetrofitV7
 import cm.aptoide.pt.feature_apps.data.AppMapper
 import com.aptoide.android.aptoidegames.BuildConfig
@@ -29,7 +29,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 internal object GameGenieModule {
   @Provides
-  fun provideChatbotApiService(@BaseOkHttp okHttpClient: OkHttpClient): GameGenieApiService {
+  fun provideChatbotApiService(@GameGenieOkHttp okHttpClient: OkHttpClient): GameGenieApiService {
     return Retrofit.Builder()
       .client(okHttpClient)
       .baseUrl(BuildConfig.GAME_GENIE_API)
