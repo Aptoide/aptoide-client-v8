@@ -29,7 +29,7 @@ class AptoideRTBRepository @Inject constructor(
       val result = rtbApi.getApps(
         RTBRequest(
           listOf(
-            Placement(placement, 1)
+            Placement(placement, 20)
           ),
           guestUid,
           BuildConfig.APPLICATION_ID,
