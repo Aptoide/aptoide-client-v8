@@ -70,7 +70,7 @@ fun RTBBundleView(
   navigate: (String) -> Unit
 ) {
 
-  val (uiState, _) = rememberRTBApps()
+  val (uiState, _) = rememberRTBApps(bundle.tag, bundle.timestamp)
   RTBAptoideMMPController(uiState, bundle.tag, "home-bundle")
   when (uiState) {
     is AppsListUiState.Idle -> AppsRowView(

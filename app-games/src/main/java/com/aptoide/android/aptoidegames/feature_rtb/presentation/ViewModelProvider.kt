@@ -20,13 +20,16 @@ class InjectionsProvider @Inject constructor(
 ) : ViewModel()
 
 @Composable
-fun rememberRTBApps(): Pair<AppsListUiState, () -> Unit> = runPreviewable(
+fun rememberRTBApps(
+  tag: String,
+  salt: String? = null,
+): Pair<AppsListUiState, () -> Unit> = runPreviewable(
   preview = {
     AppsListUiState.Idle(List((0..50).random()) { randomApp }) to {}
   }, real = {
     val injectionsProvider = hiltViewModel<InjectionsProvider>()
     val vm: RTBAppListViewModel = viewModel(
-      key = "rtb",
+      key = "rtb/$tag/$salt",
       factory = object : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
           @Suppress("UNCHECKED_CAST")
