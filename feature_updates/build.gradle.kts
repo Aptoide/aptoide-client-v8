@@ -16,6 +16,7 @@ dependencies {
   implementation(projects.installManager)
   implementation(projects.extension)
   implementation(projects.installInfoMapper)
+  implementation(projects.featureFlags)
 
   //room
   implementation(libs.room)
