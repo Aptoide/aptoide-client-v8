@@ -44,6 +44,17 @@ class NotificationsAnalytics @Inject constructor(
     )
   }
 
+  fun sendExperimentNotificationClick(notificationTag: String, notificationPackage: String?) {
+    genericAnalytics.logEvent(
+      name = "experiment3_notification_click",
+      params = mapOf(
+        NOTIFICATION_ACTION to NOTIFICATION_ACTION_CLICK,
+        NOTIFICATION_TAG to notificationTag,
+        NOTIFICATION_PACKAGE to (notificationPackage ?: "n-a")
+      )
+    )
+  }
+
   companion object {
     internal const val NOTIFICATION_ACTION = "action"
     internal const val NOTIFICATION_ACTION_CLICK = "click"

@@ -7,9 +7,11 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import cm.aptoide.pt.extensions.isMIUI
 import cm.aptoide.pt.extensions.isMiuiOptimizationDisabled
+import cm.aptoide.pt.feature_flags.domain.FeatureFlags
 import cm.aptoide.pt.feature_updates.di.UpdatesPreferencesDataStore
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -17,6 +19,7 @@ import javax.inject.Singleton
 @Singleton
 class UpdatesPreferencesRepository @Inject constructor(
   @UpdatesPreferencesDataStore private val dataStore: DataStore<Preferences>,
+  private val featureFlags: FeatureFlags
 ) {
 
   companion object PreferencesKeys {
@@ -29,15 +32,19 @@ class UpdatesPreferencesRepository @Inject constructor(
     }
   }
 
-  fun shouldAutoUpdateGames(): Flow<Boolean?> {
-    return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || areSilentUpdatesUnsupported()) {
-      return flowOf(null)
+  fun shouldAutoUpdateGames(): Flow<Boolean?> = flow {
+    if (shouldHideAutoUpdate() || Build.VERSION.SDK_INT < Build.VERSION_CODES.S || areSilentUpdatesUnsupported()) {
+      emit(null)
     } else {
-      dataStore.data.map { preferences ->
+      emitAll(dataStore.data.map { preferences ->
         preferences[AUTO_UPDATE_GAMES] ?: true
-      }
+      })
     }
   }
 
   private fun areSilentUpdatesUnsupported() = isMIUI() && !isMiuiOptimizationDisabled()
+
+  private suspend fun shouldHideAutoUpdate(): Boolean {
+    return featureFlags.getFlag("show_auto_update_feature") == false
+  }
 }

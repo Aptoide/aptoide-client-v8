@@ -175,6 +175,7 @@ class MainActivity : AppCompatActivity() {
       val notificationTag = it.notificationTag
       val notificationPackage = it.notificationPackage
 
+      notificationsAnalytics.sendExperimentNotificationClick(notificationTag!!, notificationPackage)
       notificationsAnalytics.sendNotificationOpened(notificationTag!!, notificationPackage)
     }
 
