@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Process
 import android.provider.Settings
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import cm.aptoide.pt.installer.platform.UserActionLauncher
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,6 +30,17 @@ class UsageStatsPermissionViewModel @Inject constructor(
     true
   }
 
+  suspend fun requestOverlayPermission() {
+    if (!Settings.canDrawOverlays(context)) {
+      userActionLauncher.launchIntent(
+        Intent(
+          Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+          ("package:" + context.packageName).toUri()
+        )
+      )
+    }
+  }
+
   fun getGrantStatus(): Boolean {
     val appOps = context.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
 
@@ -42,5 +54,20 @@ class UsageStatsPermissionViewModel @Inject constructor(
     } else {
       return (mode == AppOpsManager.MODE_ALLOWED)
     }
+  }
+}
+
+fun Context.hasUsageStatsPermission(): Boolean {
+  val appOps = getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
+
+  val mode = appOps.checkOpNoThrow(
+    AppOpsManager.OPSTR_GET_USAGE_STATS,
+    Process.myUid(), packageName
+  )
+
+  if (mode == AppOpsManager.MODE_DEFAULT) {
+    return (checkCallingOrSelfPermission(Manifest.permission.PACKAGE_USAGE_STATS) == PackageManager.PERMISSION_GRANTED)
+  } else {
+    return (mode == AppOpsManager.MODE_ALLOWED)
   }
 }

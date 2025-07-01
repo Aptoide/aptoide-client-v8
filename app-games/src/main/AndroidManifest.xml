@@ -9,6 +9,11 @@
   <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"
       tools:ignore="ProtectedPermissions" />
 
+  <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"/>
+
   <application
       android:name=".AptoideApplication"
       android:allowBackup="false"
@@ -120,5 +125,15 @@
           android:name="android.support.FILE_PROVIDER_PATHS"
           android:resource="@xml/paths" />
     </provider>
+
+    <service
+        android:name=".usage_stats.PackageUsageStatsForegroundService"
+        android:exported="false"
+        android:foregroundServiceType="specialUse" />
+
+    <service
+        android:name=".usage_stats.UsageEventsForegroundService"
+        android:exported="false"
+        android:foregroundServiceType="specialUse" />
   </application>
 </manifest>

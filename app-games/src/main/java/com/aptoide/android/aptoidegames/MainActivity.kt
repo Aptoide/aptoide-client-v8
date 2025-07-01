@@ -13,6 +13,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -32,6 +33,8 @@ import com.aptoide.android.aptoidegames.notifications.analytics.NotificationsAna
 import com.aptoide.android.aptoidegames.notifications.toFirebaseNotificationAnalyticsInfo
 import com.aptoide.android.aptoidegames.promo_codes.PromoCode
 import com.aptoide.android.aptoidegames.promo_codes.PromoCodeRepository
+import com.aptoide.android.aptoidegames.usage_stats.PackageUsageStatsForegroundService
+import com.aptoide.android.aptoidegames.usage_stats.UsageEventsForegroundService
 import com.aptoide.android.aptoidegames.usage_stats.UsageStatsPermissionViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -110,21 +113,21 @@ class MainActivity : AppCompatActivity() {
       LaunchedEffect(Unit) {
         val accepted = statsPermissions.requestUsageStatsPermission()
 
+        /*
         if (accepted) {
-          println("AAAAA accepted")
           val usageStatsManager = context.getSystemService(USAGE_STATS_SERVICE) as UsageStatsManager
 
-          val startTime = System.currentTimeMillis() - 1000 * 60 * 60 * 24
+          val startTime = System.currentTimeMillis() - 1000 * 60 * 60
           val endTime = System.currentTimeMillis()
 
           val usageStatsList: MutableList<UsageStats> = usageStatsManager.queryUsageStats(
-            UsageStatsManager.INTERVAL_DAILY,
+            UsageStatsManager.INTERVAL_BEST,
             startTime,
             endTime
           )
 
+
           usageStatsList.forEach { usageStats ->
-            usageStats.lastTimeForegroundServiceUsed
             if (usageStats.packageName == "com.roblox.client")
               println(
                 "Usage Stats:\n" +
@@ -139,32 +142,14 @@ class MainActivity : AppCompatActivity() {
                   "└─ Total Time Foreground Service Used: ${usageStats.totalTimeForegroundServiceUsed} ms\n"
               )
           }
-
-          val usageStatsAggregated = usageStatsManager.queryAndAggregateUsageStats(
-            System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 7,
-            endTime
-          )
-
-          usageStatsAggregated.forEach {
-            if (it.key == "com.roblox.client") {
-              val usageStats = it.value
-              println(
-                "Usage Stats Aggregated:\n" +
-                  "├─ Package: ${usageStats.packageName}\n" +
-                  "├─ Last Time Used: ${usageStats.lastTimeUsed} ms epoch\n" +
-                  "├─ Last Time Visible: ${usageStats.lastTimeVisible} ms epoch\n" +
-                  "├─ First Time Stamp: ${usageStats.firstTimeStamp} ms epoch\n" +
-                  "├─ Last Time Stamp: ${usageStats.lastTimeStamp} ms epoch\n" +
-                  "├─ Total Time in Foreground: ${usageStats.totalTimeInForeground} ms\n" +
-                  "├─ Total Time Visible: ${usageStats.totalTimeVisible} ms\n" +
-                  "├─ Last Time Foreground Service Used: ${usageStats.lastTimeForegroundServiceUsed} ms epoch\n" +
-                  "└─ Total Time Foreground Service Used: ${usageStats.totalTimeForegroundServiceUsed} ms\n"
-              )
-            }
-          }
         }
-      }
+         */
 
+        statsPermissions.requestOverlayPermission()
+
+        val serviceIntent = Intent(context, UsageEventsForegroundService::class.java)
+        ContextCompat.startForegroundService(context, serviceIntent)
+      }
     }
   }
 

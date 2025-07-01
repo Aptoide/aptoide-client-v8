@@ -44,6 +44,7 @@ adyenVersion = "4.13.3"
 indicative = "1.1.0"
 mintegral = "16.9.51"
 zoomable = "2.0.0"
+lifecycleService = "2.9.1"
 
 #test libraries
 junit = "4.13.2"
@@ -113,6 +114,7 @@ hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "hiltWork" }
 indicative-sdk = { module = "com.indicative.client.android:Indicative-Android", version.ref = "indicative" }
 zoomable = { module = "net.engawapg.lib:zoomable", version.ref = "zoomable" }
 mintegral = { module = "com.mbridge.msdk.oversea:mbridge_android_sdk", version.ref = "mintegral" }
+lifecycle-service = { module = "androidx.lifecycle:lifecycle-service", version.ref = "lifecycleService" }
 
 
 #Test library dependencies

@@ -316,6 +316,8 @@ dependencies {
 
   //Ads
   implementation(libs.mintegral)
+
+  implementation(libs.lifecycle.service)
 }
 
 fun BaseFlavor.buildConfigFieldFromGradleProperty(gradlePropertyName: String) {
