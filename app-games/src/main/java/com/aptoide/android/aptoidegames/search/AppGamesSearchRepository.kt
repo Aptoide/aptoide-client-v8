@@ -1,12 +1,15 @@
-package cm.aptoide.pt.feature_search.data
+package com.aptoide.android.aptoidegames.search
 
 import cm.aptoide.pt.feature_apps.data.AppMapper
+import cm.aptoide.pt.feature_flags.domain.FeatureFlags
+import cm.aptoide.pt.feature_search.data.AutoCompleteSuggestionsRepository
 import cm.aptoide.pt.feature_search.data.database.SearchHistoryRepository
 import cm.aptoide.pt.feature_search.data.database.model.SearchHistoryEntity
 import cm.aptoide.pt.feature_search.data.network.RemoteSearchRepository
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository.PopularAppSearchResult
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository.SearchAppResult
+import com.aptoide.android.aptoidegames.gamegenie.presentation.GameGenieManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -18,26 +21,47 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AptoideSearchRepository @Inject constructor(
+class AppGamesSearchRepository @Inject constructor(
   private val mapper: AppMapper,
   private val searchHistoryRepository: SearchHistoryRepository,
   private val remoteSearchRepository: RemoteSearchRepository,
   private val autoCompleteSuggestionsRepository: AutoCompleteSuggestionsRepository,
+  private val gameGenieManager: GameGenieManager,
+  private val featureFlags: FeatureFlags,
 ) : SearchRepository {
-
-  override fun searchApp(keyword: String): Flow<SearchAppResult> {
-    return flow {
-      val searchResponse = remoteSearchRepository.searchApp(keyword)
-      if (searchResponse.isSuccessful) {
-        searchResponse.body()?.datalist?.list?.let {
-          val adListId = UUID.randomUUID().toString()
-          emit(SearchAppResult.Success(it.map { mapper.map(it, adListId) }))
+  override fun searchApp(keyword: String): Flow<SearchAppResult> = flow {
+    when (featureFlags.getFlagAsString("search_game_genie")) {
+      "genie" -> {
+        val apps = try {
+          val result = gameGenieManager.searchApp(keyword)
+          result.list.map { mapper.map(it) }
+        } catch (e: Exception) {
+          emptyList()
         }
-      } else {
-        emit(SearchAppResult.Error(IllegalStateException()))
+        emit(SearchAppResult.Success(apps))
       }
-    }.flowOn(Dispatchers.IO)
-  }
+      "genie_with_store" -> {
+        val apps = try {
+          val result = gameGenieManager.searchApp(keyword, "aptoide-games")
+          result.list.map { mapper.map(it) }
+        } catch (e: Exception) {
+          emptyList()
+        }
+        emit(SearchAppResult.Success(apps))
+      }
+      else -> {
+        val apps = try {
+          val searchResponse = remoteSearchRepository.searchApp(keyword)
+          if (searchResponse.isSuccessful) {
+            searchResponse.body()?.datalist?.list?.map { mapper.map(it) } ?: emptyList()
+          } else emptyList()
+        } catch (e: Exception) {
+          emptyList()
+        }
+        emit(SearchAppResult.Success(apps))
+      }
+    }
+  }.flowOn(Dispatchers.IO)
 
   override fun getSearchHistory(): Flow<List<String>> {
     return searchHistoryRepository.getSearchHistory()

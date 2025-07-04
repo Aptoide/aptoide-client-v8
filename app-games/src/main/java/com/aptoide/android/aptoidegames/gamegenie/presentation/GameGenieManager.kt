@@ -1,5 +1,6 @@
 package com.aptoide.android.aptoidegames.gamegenie.presentation
 
+import cm.aptoide.pt.feature_flags.domain.FeatureFlags
 import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieApiService
 import com.aptoide.android.aptoidegames.gamegenie.data.database.GameGenieDatabase
 import com.aptoide.android.aptoidegames.gamegenie.data.database.model.GameGenieHistoryEntity
@@ -8,6 +9,7 @@ import com.aptoide.android.aptoidegames.gamegenie.domain.Token
 import com.aptoide.android.aptoidegames.gamegenie.domain.toToken
 import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieRequest
 import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieResponse
+import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieSearchResponse
 import kotlinx.coroutines.flow.Flow
 import retrofit2.HttpException
 import timber.log.Timber
@@ -32,6 +34,21 @@ class GameGenieManager @Inject constructor(
     }.getOrElse { e ->
       Timber.e(e, "Failed to fetch token")
       cachedToken ?: throw IOException("Failed to fetch token and no cached token available", e)
+    }
+  }
+
+  suspend fun searchApp(keyword: String, store: String? = null): GameGenieSearchResponse {
+    return try {
+      val token = getToken()
+      gameGenieApi.searchApps("Bearer ${token.token}", keyword, store)
+    } catch (e: HttpException) {
+      if (e.code() == 401) {
+        Timber.i("Token expired, requesting a new token")
+        val newToken = fetchNewToken()
+        gameGenieApi.searchApps("Bearer ${newToken.token}", keyword, store) // Retry with new token
+      } else {
+        throw e
+      }
     }
   }
 
