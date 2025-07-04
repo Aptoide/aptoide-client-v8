@@ -19,6 +19,7 @@ import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PlayAndEarnBundleHeader
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.app_items.PlayAndEarnCompactAppItem
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.layout.PlayAndEarnHorizontalCarousel
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.playAndEarnRewardsRoute
 
 @Composable
 fun PlayAndEarnHeaderBundle(
@@ -40,7 +41,7 @@ fun PlayAndEarnHeaderBundle(
       modifier = Modifier.padding(top = 16.dp, bottom = 24.dp),
       verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-      PlayAndEarnBundleHeader(onClick = {})
+      PlayAndEarnBundleHeader(onClick = { navigate(playAndEarnRewardsRoute) })
       PlayAndEarnHorizontalCarousel(
         apps = apps,
         modifier = Modifier
