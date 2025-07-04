@@ -1,9 +1,12 @@
 package com.aptoide.android.aptoidegames.home
 
 import androidx.annotation.Keep
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.appview.CustomScrollableTabRow
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -44,6 +47,7 @@ fun HomeTabRow(
   onSelectTab: (Int) -> Unit,
 ) {
   CustomScrollableTabRow(
+    modifier = Modifier.padding(top = 8.dp),
     tabs = tabsList,
     selectedTabIndex = selectedTab,
     onTabClick = onSelectTab,
