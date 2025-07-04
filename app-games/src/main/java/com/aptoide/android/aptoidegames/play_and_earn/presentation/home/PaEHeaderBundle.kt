@@ -21,6 +21,7 @@ import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaEBundleHeader
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.app_items.PaECompactAppItem
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.layout.PaEHorizontalCarousel
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.playAndEarnRewardsRoute
 
 @Composable
 fun PaEHeaderBundle(
@@ -42,7 +43,7 @@ fun PaEHeaderBundle(
       modifier = Modifier.padding(top = 16.dp, bottom = 24.dp),
       verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-      PaEBundleHeader(onClick = {})
+      PaEBundleHeader(onClick = { navigate(playAndEarnRewardsRoute) })
       PaEHorizontalCarousel(
         apps = bundle.apps,
         modifier = Modifier
