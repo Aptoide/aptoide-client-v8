@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.ScrollableTabRow
@@ -43,6 +42,7 @@ fun CustomScrollableTabRow(
   onTabClick: (Int) -> Unit,
   contentColor: Color,
   backgroundColor: Color,
+  modifier: Modifier = Modifier,
   tabTextStyle: TextStyle = AGTypography.InputsL,
 ) {
   val density = LocalDensity.current
@@ -52,9 +52,7 @@ fun CustomScrollableTabRow(
     selectedTabIndex = selectedTabIndex,
     contentColor = contentColor,
     backgroundColor = backgroundColor,
-    modifier = Modifier
-      .padding(top = 24.dp, bottom = 4.dp)
-      .height(40.dp),
+    modifier = modifier.height(40.dp),
     edgePadding = 0.dp,
     indicator = { tabPositions ->
       TabRowDefaults.Indicator(

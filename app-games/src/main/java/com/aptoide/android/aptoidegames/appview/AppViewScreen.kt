@@ -422,6 +422,7 @@ fun AppInfoViewPager(
   onSelectTab: (Int) -> Unit,
 ) {
   CustomScrollableTabRow(
+    modifier = Modifier.padding(top = 24.dp, bottom = 4.dp),
     tabs = tabsList.map { it.getTabName() },
     selectedTabIndex = selectedTab,
     onTabClick = onSelectTab,

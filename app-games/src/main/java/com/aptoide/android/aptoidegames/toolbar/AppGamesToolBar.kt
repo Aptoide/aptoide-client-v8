@@ -6,20 +6,15 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.material.DropdownMenu
-import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
@@ -30,21 +25,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
-import com.aptoide.android.aptoidegames.UrlActivity
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGeneralAnalytics
-import com.aptoide.android.aptoidegames.drawables.icons.getMoreVert
 import com.aptoide.android.aptoidegames.drawables.icons.getNotificationBell
+import com.aptoide.android.aptoidegames.drawables.icons.getProfileNoAccountIcon
 import com.aptoide.android.aptoidegames.notifications.NotificationsPermissionRequester
 import com.aptoide.android.aptoidegames.settings.settingsRoute
-import com.aptoide.android.aptoidegames.terms_and_conditions.ppUrl
-import com.aptoide.android.aptoidegames.terms_and_conditions.tcUrl
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -57,8 +49,6 @@ fun AppGamesToolBar(
   navigate: (String) -> Unit,
   goBackHome: () -> Unit,
 ) {
-  var showMenu by remember { mutableStateOf(false) }
-  val context = LocalContext.current
   val generalAnalytics = rememberGeneralAnalytics()
 
   var showNotificationsDialog by remember { mutableStateOf(false) }
@@ -69,79 +59,60 @@ fun AppGamesToolBar(
 
   val onNotificationsClick = { showNotificationsDialog = true }
 
-  val onShowMenuClick = { showMenu = !showMenu }
-  val onDropDownSettingsClick = {
-    showMenu = false
+  val onProfileClick = {
     generalAnalytics.sendMenuClick("settings")
     navigate(settingsRoute)
   }
-  val onDropDownTermsConditionsClick = {
-    showMenu = false
-    generalAnalytics.sendMenuClick("terms & conditions")
-    UrlActivity.open(context, tcUrl)
-  }
-  val onDropDownPrivacyPolicyClick = {
-    showMenu = false
-    generalAnalytics.sendMenuClick("privacy policy")
-    UrlActivity.open(context, ppUrl)
-  }
-  val onDropDownDismissRequest = { showMenu = false }
   val onDismissPermissionRequesterDialog = {
     showNotificationsDialog = false
   }
 
   AppGamesToolBar(
-    showMenu = showMenu,
-    showNotificationsDialog = showNotificationsDialog,
     notificationsPermissionState = notificationsPermissionState.status.isGranted,
     onLogoClick = goBackHome,
     onNotificationsClick = onNotificationsClick,
-    onShowMenuClick = onShowMenuClick,
-    onDropDownSettingsClick = onDropDownSettingsClick,
-    onDropDownTermsConditionsClick = onDropDownTermsConditionsClick,
-    onDropDownPrivacyPolicyClick = onDropDownPrivacyPolicyClick,
-    onDropDownDismissRequest = onDropDownDismissRequest,
-    onDismissPermissionRequesterDialog = onDismissPermissionRequesterDialog,
+    onProfileClick = onProfileClick,
+  )
+
+  NotificationsPermissionRequester(
+    showDialog = showNotificationsDialog,
+    onDismiss = { onDismissPermissionRequesterDialog() },
+    onPermissionResult = {}
   )
 }
 
 @Composable
 private fun AppGamesToolBar(
-  showMenu: Boolean,
-  showNotificationsDialog: Boolean,
   notificationsPermissionState: Boolean,
   onLogoClick: () -> Unit,
   onNotificationsClick: () -> Unit,
-  onShowMenuClick: () -> Unit,
-  onDropDownSettingsClick: () -> Unit,
-  onDropDownTermsConditionsClick: () -> Unit,
-  onDropDownPrivacyPolicyClick: () -> Unit,
-  onDropDownDismissRequest: () -> Unit,
-  onDismissPermissionRequesterDialog: () -> Unit,
+  onProfileClick: () -> Unit,
 ) {
   TopAppBar(
     backgroundColor = Palette.Black,
     elevation = Dp(0f),
     content = {
       Row(
-        modifier = Modifier.padding(horizontal = 8.dp),
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(start = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
       ) {
-        Spacer(modifier = Modifier.width(96.dp))
         Image(
           imageVector = BuildConfig.FLAVOR.getToolBarLogo(Palette.Primary),
           contentDescription = null,
           modifier = Modifier
-            .padding(vertical = 8.dp)
+            .padding(vertical = 12.dp)
+            .height(20.dp)
             .clickable(
               // remove ripple effect
               interactionSource = remember { MutableInteractionSource() },
               indication = null,
               onClick = onLogoClick,
             )
-            .minimumInteractiveComponentSize()
-            .weight(1f)
+            .minimumInteractiveComponentSize(),
+          contentScale = ContentScale.FillHeight
         )
         Row(modifier = Modifier.wrapContentWidth()) {
           if (!notificationsPermissionState) {
@@ -156,45 +127,17 @@ private fun AppGamesToolBar(
                 modifier = Modifier.size(24.dp)
               )
             }
-          } else {
-            Spacer(modifier = Modifier.width(48.dp))
           }
-          Column {
-            IconButton(onClick = onShowMenuClick) {
-              Icon(
-                imageVector = getMoreVert(Palette.White),
-                contentDescription = stringResource(R.string.home_overflow_talkback),
-                tint = Palette.White,
-              )
-            }
-            DropdownMenu(
-              expanded = showMenu,
-              onDismissRequest = onDropDownDismissRequest
-            ) {
-              DropdownMenuItem(onClick = onDropDownSettingsClick) {
-                Text(text = stringResource(R.string.overflow_menu_settings))
-              }
-              DropdownMenuItem(
-                onClick = onDropDownTermsConditionsClick
-              ) {
-                Text(text = stringResource(R.string.overflow_menu_terms_conditions))
-              }
-              DropdownMenuItem(
-                onClick = onDropDownPrivacyPolicyClick
-              ) {
-                Text(text = stringResource(R.string.overflow_menu_privacy_policy))
-              }
-            }
+          IconButton(onClick = onProfileClick) {
+            Icon(
+              imageVector = getProfileNoAccountIcon(),
+              contentDescription = null,
+              tint = Color.Unspecified
+            )
           }
         }
       }
     }
-  )
-
-  NotificationsPermissionRequester(
-    showDialog = showNotificationsDialog,
-    onDismiss = { onDismissPermissionRequesterDialog() },
-    onPermissionResult = {}
   )
 }
 
@@ -223,16 +166,9 @@ fun SimpleAppGamesToolbar() {
 @Composable
 private fun AppGamesToolBarPreview() {
   AppGamesToolBar(
-    showMenu = false,
-    showNotificationsDialog = false,
     notificationsPermissionState = false,
     onLogoClick = {},
     onNotificationsClick = {},
-    onShowMenuClick = {},
-    onDropDownSettingsClick = {},
-    onDropDownTermsConditionsClick = {},
-    onDropDownPrivacyPolicyClick = {},
-    onDropDownDismissRequest = {},
-    onDismissPermissionRequesterDialog = {},
+    onProfileClick = {},
   )
 }
