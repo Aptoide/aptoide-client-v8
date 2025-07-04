@@ -54,6 +54,7 @@ import com.aptoide.android.aptoidegames.installer.UserActionDialog
 import com.aptoide.android.aptoidegames.notifications.NotificationsPermissionRequester
 import com.aptoide.android.aptoidegames.permissions.notifications.NotificationsPermissionViewModel
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.home.PaEHomeLayout
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.playAndEarnRewardsScreen
 import com.aptoide.android.aptoidegames.promo_codes.PromoCodeBottomSheet
 import com.aptoide.android.aptoidegames.promo_codes.rememberPromoCodeApp
 import com.aptoide.android.aptoidegames.promotions.presentation.PromotionDialog
@@ -85,11 +86,11 @@ fun MainView(navController: NavHostController) {
   LaunchedEffect(currentRoute.value?.destination?.route) {
     val currentRoute = currentRoute.value?.destination?.route
     showTopBar = if (currentRoute != null) {
-        !currentRoute.contains(genieRoute) &&
+      !currentRoute.contains(genieRoute) &&
         !currentRoute.contains(detailedApkfyRoute) &&
         !currentRoute.contains(
-        genieSearchRoute
-      ) &&
+          genieSearchRoute
+        ) &&
         !currentRoute.contains(robloxApkfyRoute)
     } else {
       true
@@ -323,6 +324,12 @@ private fun NavigationGraph(
       navigate = navController::navigateTo,
       goBack = navController::navigateUp,
       screenData = gamesFeedScreen()
+    )
+
+    animatedComposable(
+      navigate = navController::navigateTo,
+      goBack = navController::navigateUp,
+      screenData = playAndEarnRewardsScreen()
     )
   }
 }
