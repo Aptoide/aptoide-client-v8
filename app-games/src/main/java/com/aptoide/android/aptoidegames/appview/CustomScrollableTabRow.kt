@@ -53,7 +53,7 @@ fun CustomScrollableTabRow(
     contentColor = contentColor,
     backgroundColor = backgroundColor,
     modifier = Modifier
-      .padding(top = 24.dp, bottom = 4.dp)
+      .padding(top = 8.dp)
       .height(40.dp),
     edgePadding = 0.dp,
     indicator = { tabPositions ->
