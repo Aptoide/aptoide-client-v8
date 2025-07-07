@@ -109,7 +109,14 @@ fun MainView(navController: NavHostController) {
         },
         topBar = {
           if (showTopBar) {
-            AppGamesToolBar(navigate = navController::navigateTo, goBackHome)
+            AppGamesToolBar(
+              navigate = {
+                if (currentRoute.value?.destination?.route != it) {
+                  navController.navigateTo(it)
+                }
+              },
+              goBackHome
+            )
           }
         }
       ) { padding ->
