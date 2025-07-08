@@ -260,7 +260,7 @@
   <string name="tag_categories">Kategóriák</string>
   <string name="tag_bonus">Bónusz</string>
   <!-- AB Test for roblox companion apps -->
-  <string name="companion_apps_roblox_notification_title">Enjoying Roblox? 🔥</string>
-  <string name="companion_apps_roblox_notification_body">These are the must have apps for Roblox players</string>
-  <string name="companion_apps_roblox_bundle_title">For Roblox players</string>
+  <string name="companion_apps_roblox_notification_title">Élvezed a Robloxot? 🔥</string>
+  <string name="companion_apps_roblox_notification_body">Ezek a Roblox játékosok számára elengedhetetlen alkalmazások</string>
+  <string name="companion_apps_roblox_bundle_title">Roblox játékosok számára</string>
 </resources>
