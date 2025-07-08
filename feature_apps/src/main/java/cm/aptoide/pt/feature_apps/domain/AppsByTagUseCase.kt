@@ -21,7 +21,7 @@ class AppsByTagUseCase @Inject constructor(
         bypassCache = urlsCache.isInvalid(id = source)
       )
     }
-    ?: throw IllegalStateException("No url cached")
+    ?: throw IllegalStateException("No url cached for $source")
 
   suspend fun getAppsListWithLimit(
     source: String,

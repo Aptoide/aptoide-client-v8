@@ -62,6 +62,11 @@ fun buildSeeMoreRoute(
   bundleTag: String,
 ) = "seeMore/$title/$bundleTag"
 
+fun buildSeeMoreDeepLinkUri(
+  title: String,
+  bundleTag: String,
+) = BuildConfig.DEEP_LINK_SCHEMA + buildSeeMoreRoute(title, bundleTag)
+
 @Composable
 fun MoreBundleView(
   title: String,

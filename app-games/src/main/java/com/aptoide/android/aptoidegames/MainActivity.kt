@@ -15,6 +15,7 @@ import cm.aptoide.pt.install_manager.InstallManager
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.analytics.GeneralAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withPrevScreen
+import com.aptoide.android.aptoidegames.feature_companion_apps_notification.CompanionAppsNotificationBuilder
 import com.aptoide.android.aptoidegames.firebase.FirebaseConstants
 import com.aptoide.android.aptoidegames.home.MainView
 import com.aptoide.android.aptoidegames.installer.analytics.InstallAnalytics
@@ -177,6 +178,10 @@ class MainActivity : AppCompatActivity() {
 
       notificationsAnalytics.sendExperimentNotificationClick(notificationTag!!, notificationPackage)
       notificationsAnalytics.sendNotificationOpened(notificationTag!!, notificationPackage)
+
+      if (notificationTag == CompanionAppsNotificationBuilder.COMPANION_APPS_NOTIFICATION_TAG) {
+        notificationsAnalytics.sendRobloxNotificationClick()
+      }
     }
 
     handleFirebaseNotificationAnalytics(intent)

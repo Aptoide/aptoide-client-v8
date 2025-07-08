@@ -29,6 +29,7 @@ class AptoideUrlsCacheInitializer(
           emptyMap()
         } ?: mapOf(
           "bonus-banner-more" to "listApps/store_id=3613731/group_id=15614123/order=rand"
-        ))
+        )) +
+        mapOf("ab-test-companion-app-bundle" to "listApps/store_name=aptoide-games/group_name=enjoying-roblox/nocache=1/aab=1")
     }
 }

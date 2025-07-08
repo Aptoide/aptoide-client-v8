@@ -55,6 +55,27 @@ class NotificationsAnalytics @Inject constructor(
     )
   }
 
+  fun sendRobloxNofiticationShown() {
+    genericAnalytics.logEvent(
+      name = "roblox_notification_shown",
+      params = emptyMap()
+    )
+  }
+
+  fun sendRobloxNotificationClick() {
+    genericAnalytics.logEvent(
+      name = "roblox_notification_clicked",
+      params = emptyMap()
+    )
+  }
+
+  fun sendCompanionAppNotificationOptIn() {
+    genericAnalytics.logEvent(
+      name = "roblox_companion_apps_participate",
+      params = emptyMap()
+    )
+  }
+
   companion object {
     internal const val NOTIFICATION_ACTION = "action"
     internal const val NOTIFICATION_ACTION_CLICK = "click"

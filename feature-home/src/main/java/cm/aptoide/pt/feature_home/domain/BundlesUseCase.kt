@@ -10,8 +10,9 @@ class BundlesUseCase @Inject constructor(
   private val urlsCache: UrlsCache,
 ) {
 
-  suspend fun getHomeBundles(context: String? = null): List<Bundle> =
-    widgetsRepository.getStoreWidgets(
+  suspend fun getHomeBundles(context: String? = null): List<Bundle> {
+    urlsCache.putAll(mapOf("ab-test-companion-app-bundle" to "listApps/store_name=aptoide-games/group_name=enjoying-roblox/nocache=1/aab=1"))
+    return widgetsRepository.getStoreWidgets(
       context = context,
       bypassCache = urlsCache.isInvalid(WIDGETS_TAG)
         .also { urlsCache.putAll(mapOf(WIDGETS_TAG to "")) }
@@ -41,6 +42,7 @@ class BundlesUseCase @Inject constructor(
           url = it.url
         )
       }
+  }
 
   private fun Widget.getBundleSource(): BundleSource = when (type) {
     WidgetType.MY_GAMES,
