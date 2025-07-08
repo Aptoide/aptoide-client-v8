@@ -19,3 +19,9 @@ val randomPaEBundle
     title = getRandomString(range = 2..5, capitalize = true),
     apps = List(Random.nextInt(2..10)) { randomPaEApp }
   )
+
+val randomPaEBundles
+  get() = PaEBundles(
+    keepPlaying = randomPaEBundle,
+    trending = randomPaEBundle
+  )
