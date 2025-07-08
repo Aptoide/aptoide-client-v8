@@ -260,7 +260,7 @@
   <string name="tag_categories">Categorías</string>
   <string name="tag_bonus">Bonus</string>
   <!-- AB Test for roblox companion apps -->
-  <string name="companion_apps_roblox_notification_title">Enjoying Roblox? 🔥</string>
-  <string name="companion_apps_roblox_notification_body">These are the must have apps for Roblox players</string>
-  <string name="companion_apps_roblox_bundle_title">For Roblox players</string>
+  <string name="companion_apps_roblox_notification_title">¿Te gusta Roblox? 🔥</string>
+  <string name="companion_apps_roblox_notification_body">Estas son las aplicaciones imprescindibles para los jugadores de Roblox.</string>
+  <string name="companion_apps_roblox_bundle_title">Para los jugadores de Roblox</string>
 </resources>
