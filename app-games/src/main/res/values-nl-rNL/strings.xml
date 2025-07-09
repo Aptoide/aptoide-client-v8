@@ -259,4 +259,8 @@
   <string name="tag_editorial">Nieuws</string>
   <string name="tag_categories">Categorieën</string>
   <string name="tag_bonus">Bonus</string>
+  <!-- AB Test for roblox companion apps -->
+  <string name="companion_apps_roblox_notification_title">Geniet u van Roblox? 🔥</string>
+  <string name="companion_apps_roblox_notification_body">Dit zijn de apps die Roblox-spelers moeten hebben</string>
+  <string name="companion_apps_roblox_bundle_title">Voor Roblox-spelers</string>
 </resources>

@@ -263,4 +263,8 @@
   <string name="tag_editorial">От редакции</string>
   <string name="tag_categories">Категории</string>
   <string name="tag_bonus">Бонус</string>
+  <!-- AB Test for roblox companion apps -->
+  <string name="companion_apps_roblox_notification_title">Нравится Roblox? 🔥</string>
+  <string name="companion_apps_roblox_notification_body">Это приложения, которые должны быть у всех игроков Roblox.</string>
+  <string name="companion_apps_roblox_bundle_title">Для игроков Roblox</string>
 </resources>

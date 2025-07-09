@@ -257,4 +257,8 @@
   <string name="tag_editorial">사설</string>
   <string name="tag_categories">카테고리</string>
   <string name="tag_bonus">보너스</string>
+  <!-- AB Test for roblox companion apps -->
+  <string name="companion_apps_roblox_notification_title">로블록스 즐기고 계신가요? 🔥</string>
+  <string name="companion_apps_roblox_notification_body">로블록스 플레이어들이 반드시 설치해야 할 필수 앱들입니다.</string>
+  <string name="companion_apps_roblox_bundle_title">로블록스 플레이어들을 위해</string>
 </resources>

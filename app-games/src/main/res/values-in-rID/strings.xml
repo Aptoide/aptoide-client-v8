@@ -257,4 +257,8 @@
   <string name="tag_editorial">Editorial</string>
   <string name="tag_categories">Kategori</string>
   <string name="tag_bonus">Bonus</string>
+  <!-- AB Test for roblox companion apps -->
+  <string name="companion_apps_roblox_notification_title">Suka bermain Roblox? 🔥</string>
+  <string name="companion_apps_roblox_notification_body">Ini adalah aplikasi yang wajib dimiliki oleh para pemain Roblox.</string>
+  <string name="companion_apps_roblox_bundle_title">Untuk para pemain Roblox</string>
 </resources>

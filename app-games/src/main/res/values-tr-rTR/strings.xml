@@ -259,4 +259,8 @@
   <string name="tag_editorial">Makaleler</string>
   <string name="tag_categories">Kategoriler</string>
   <string name="tag_bonus">Bonus</string>
+  <!-- AB Test for roblox companion apps -->
+  <string name="companion_apps_roblox_notification_title">Roblox\'u seviyor musun? 🔥</string>
+  <string name="companion_apps_roblox_notification_body">Roblox oyuncuları için olmazsa olmaz uygulamalar</string>
+  <string name="companion_apps_roblox_bundle_title">Roblox oyuncuları için</string>
 </resources>
