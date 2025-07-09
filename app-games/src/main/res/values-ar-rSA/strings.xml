@@ -267,4 +267,8 @@
   <string name="tag_editorial">الكلمة الافتتاحية</string>
   <string name="tag_categories">الفئات</string>
   <string name="tag_bonus">المكافآت</string>
+  <!-- AB Test for roblox companion apps -->
+  <string name="companion_apps_roblox_notification_title">هل تستمتع بلعبة Roblox؟ 🔥</string>
+  <string name="companion_apps_roblox_notification_body">هذه هي التطبيقات التي لا غنى عنها للاعبين Roblox</string>
+  <string name="companion_apps_roblox_bundle_title">لاعبو Roblox</string>
 </resources>

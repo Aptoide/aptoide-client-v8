@@ -259,4 +259,8 @@
   <string name="tag_editorial">Άρθρα</string>
   <string name="tag_categories">Κατηγορίες</string>
   <string name="tag_bonus">Bonus</string>
+  <!-- AB Test for roblox companion apps -->
+  <string name="companion_apps_roblox_notification_title">Σας αρέσει το Roblox; 🔥</string>
+  <string name="companion_apps_roblox_notification_body">Αυτές είναι οι εφαρμογές που πρέπει να έχουν οι παίκτες του Roblox</string>
+  <string name="companion_apps_roblox_bundle_title">Για τους παίκτες του Roblox</string>
 </resources>

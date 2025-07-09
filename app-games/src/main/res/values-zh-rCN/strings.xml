@@ -257,4 +257,8 @@
   <string name="tag_editorial">编辑精选</string>
   <string name="tag_categories">类别</string>
   <string name="tag_bonus">奖金</string>
+  <!-- AB Test for roblox companion apps -->
+  <string name="companion_apps_roblox_notification_title">喜欢玩Roblox吗？ 🔥</string>
+  <string name="companion_apps_roblox_notification_body">以下是Roblox玩家必备的应用程序。</string>
+  <string name="companion_apps_roblox_bundle_title">对于Roblox玩家</string>
 </resources>

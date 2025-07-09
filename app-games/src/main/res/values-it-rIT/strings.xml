@@ -259,4 +259,8 @@
   <string name="tag_editorial">Editoriale</string>
   <string name="tag_categories">Categorie</string>
   <string name="tag_bonus">Bonus</string>
+  <!-- AB Test for roblox companion apps -->
+  <string name="companion_apps_roblox_notification_title">Ti piace Roblox? 🔥</string>
+  <string name="companion_apps_roblox_notification_body">Queste sono le app indispensabili per i giocatori di Roblox</string>
+  <string name="companion_apps_roblox_bundle_title">Per i giocatori di Roblox</string>
 </resources>

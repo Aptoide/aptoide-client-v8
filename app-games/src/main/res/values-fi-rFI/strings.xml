@@ -259,4 +259,8 @@
   <string name="tag_editorial">Pääkirjoitus</string>
   <string name="tag_categories">Kategoriat</string>
   <string name="tag_bonus">bonusta</string>
+  <!-- AB Test for roblox companion apps -->
+  <string name="companion_apps_roblox_notification_title">Nautitko Robloxista? 🔥</string>
+  <string name="companion_apps_roblox_notification_body">Nämä ovat Roblox-pelaajien välttämättömät sovellukset</string>
+  <string name="companion_apps_roblox_bundle_title">Roblox-pelaajille</string>
 </resources>
