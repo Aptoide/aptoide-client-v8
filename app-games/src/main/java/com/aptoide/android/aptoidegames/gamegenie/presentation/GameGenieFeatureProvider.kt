@@ -36,3 +36,19 @@ fun rememberGameGenieVisibility(): Boolean = runPreviewable(
     state
   }
 )
+
+@Composable
+fun rememberSearchGameGenie(): Boolean = runPreviewable(
+  preview = { Random.nextBoolean() },
+  real = {
+    val coroutineScope = rememberCoroutineScope()
+    var state by remember { mutableStateOf(false) }
+    val vm = hiltViewModel<GameGenieInjectionsProvider>()
+    LaunchedEffect(key1 = Unit) {
+      coroutineScope.launch {
+        state = vm.featureFlags.getFlag("search_game_genie", false)
+      }
+    }
+    state
+  }
+)
