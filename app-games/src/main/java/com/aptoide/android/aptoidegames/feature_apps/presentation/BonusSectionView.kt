@@ -54,18 +54,30 @@ fun BonusSectionView(
   spaceBy: Int = 0,
 ) {
   val context = LocalContext.current
-  BonusSectionGeneralizedView(
-    onHeaderClick = getBonusRouteNavigation(
-      context = context,
-      bundle = bundle,
-      navigate = navigate
-    ),
-    spaceBy = spaceBy,
-  ) {
-    BonusBundleView(
-      bundle = bundle,
-      navigate = navigate
-    )
+  val (uiState, _) = rememberAppsByTag(bundle.tag)
+  when (uiState) {
+    is AppsListUiState.Idle -> {
+      BonusSectionGeneralizedView(
+        onHeaderClick = getBonusRouteNavigation(
+          context = context,
+          bundle = bundle,
+          navigate = navigate
+        ),
+        spaceBy = spaceBy,
+      ) {
+        AppsRowView(
+          appsList = uiState.apps,
+          navigate = navigate,
+        )
+      }
+    }
+
+    AppsListUiState.Empty,
+    AppsListUiState.Error,
+    AppsListUiState.NoConnection,
+      -> Unit
+
+    AppsListUiState.Loading -> LoadingBundleView(height = 184.dp)
   }
 }
 
@@ -181,27 +193,6 @@ fun BonusSectionHeader(
     }
 
     Spacer(Modifier.width(16.dp))
-  }
-}
-
-@Composable
-fun BonusBundleView(
-  bundle: Bundle,
-  navigate: (String) -> Unit
-) {
-  val (uiState, _) = rememberAppsByTag(bundle.tag)
-  when (uiState) {
-    is AppsListUiState.Idle -> AppsRowView(
-      appsList = uiState.apps,
-      navigate = navigate,
-    )
-
-    AppsListUiState.Empty,
-    AppsListUiState.Error,
-    AppsListUiState.NoConnection,
-      -> Unit
-
-    AppsListUiState.Loading -> LoadingBundleView(height = 184.dp)
   }
 }
 

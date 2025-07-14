@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
+import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
 import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
@@ -18,26 +19,21 @@ internal var hasSentImpression = false
 
 @Composable
 private fun RTBAptoideMMPController(
-  appsListUiState: AppsListUiState,
+  apps: List<App>,
   bundleTag: String,
   placement: String,
 ) {
-  when (appsListUiState) {
-    is AppsListUiState.Idle ->
-      appsListUiState.apps.forEachIndexed { index, rtbApp ->
-        if (!hasSentImpression) {
-          rtbApp.campaigns?.toAptoideMMPCampaign()
-            ?.sendImpressionEvent(bundleTag, rtbApp.packageName)
-          rtbApp.campaigns?.run {
-            placementType = placement
-          }
-          if (index == appsListUiState.apps.size - 1) {
-            hasSentImpression = true
-          }
-        }
+  apps.forEachIndexed { index, rtbApp ->
+    if (!hasSentImpression) {
+      rtbApp.campaigns?.toAptoideMMPCampaign()
+        ?.sendImpressionEvent(bundleTag, rtbApp.packageName)
+      rtbApp.campaigns?.run {
+        placementType = placement
       }
-
-    else -> {}
+      if (index == apps.size - 1) {
+        hasSentImpression = true
+      }
+    }
   }
 }
 
@@ -47,36 +43,22 @@ fun RTBSectionView(
   navigate: (String) -> Unit,
   spaceBy: Int = 0,
 ) {
-  LaunchedEffect(Unit) {
-    if (!AptoideMMPCampaign.allowedBundleTags.keys.contains(bundle.tag)) {
-      AptoideMMPCampaign.allowedBundleTags[bundle.tag] = "ag-rtb" to ("ag-rtb-${bundle.tag}")
-    }
-  }
-  BonusSectionGeneralizedView(
-    onHeaderClick = {},
-    spaceBy = spaceBy,
-    showMoreButton = false
-  ) {
-    RTBBundleView(
-      bundle = bundle,
-      navigate = navigate
-    )
-  }
-}
-
-@Composable
-fun RTBBundleView(
-  bundle: Bundle,
-  navigate: (String) -> Unit
-) {
-
   val (uiState, _) = rememberRTBApps(bundle.tag, bundle.timestamp)
-  RTBAptoideMMPController(uiState, bundle.tag, "home-bundle")
+
   when (uiState) {
-    is AppsListUiState.Idle -> AppsRowView(
-      appsList = uiState.apps,
-      navigate = navigate,
-    )
+    is AppsListUiState.Idle -> {
+      BonusSectionGeneralizedView(
+        onHeaderClick = {},
+        spaceBy = spaceBy,
+        showMoreButton = false
+      ) {
+        RTBBundleView(
+          bundle = bundle,
+          navigate = navigate,
+          apps = uiState.apps
+        )
+      }
+    }
 
     AppsListUiState.Empty,
     AppsListUiState.Error,
@@ -85,6 +67,25 @@ fun RTBBundleView(
 
     AppsListUiState.Loading -> LoadingBundleView(height = 184.dp)
   }
+
+  LaunchedEffect(Unit) {
+    if (!AptoideMMPCampaign.allowedBundleTags.keys.contains(bundle.tag)) {
+      AptoideMMPCampaign.allowedBundleTags[bundle.tag] = "ag-rtb" to ("ag-rtb-${bundle.tag}")
+    }
+  }
+}
+
+@Composable
+fun RTBBundleView(
+  bundle: Bundle,
+  navigate: (String) -> Unit,
+  apps: List<App>,
+) {
+  RTBAptoideMMPController(apps, bundle.tag, "home-bundle")
+  AppsRowView(
+    appsList = apps,
+    navigate = navigate,
+  )
 }
 
 @PreviewDark
