@@ -23,8 +23,14 @@ class AptoideRTBRepository @Inject constructor(
   private val campaignRepository: CampaignRepository
 ) : RTBRepository {
 
+  private val rtbCache: MutableMap<String, List<App>> = mutableMapOf()
+
   override suspend fun getRTBApps(placement: String): List<App> =
     withContext(scope.coroutineContext) {
+      rtbCache[placement]?.let {
+        return@withContext it
+      }
+
       val guestUid = idsRepository.getId(ApkfyManagerProbe.GUEST_UID_KEY)
       val result = rtbApi.getApps(
         RTBRequest(
@@ -46,11 +52,13 @@ class AptoideRTBRepository @Inject constructor(
           ),
         )
       )
-      if (result.isEmpty()) {
+      val apps = if (result.isEmpty()) {
         emptyList()
       } else {
         result.map { it.toDomainModel(campaignRepository) }
       }
+      rtbCache[placement] = apps
+      return@withContext apps
     }
 }
 
