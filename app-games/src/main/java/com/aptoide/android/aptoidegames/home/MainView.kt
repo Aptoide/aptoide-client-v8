@@ -44,7 +44,9 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.seeAllMyGamesS
 import com.aptoide.android.aptoidegames.feature_apps.presentation.seeMoreBonusScreen
 import com.aptoide.android.aptoidegames.feature_apps.presentation.seeMoreScreen
 import com.aptoide.android.aptoidegames.gamegenie.presentation.gameGenieScreen
+import com.aptoide.android.aptoidegames.gamegenie.presentation.gameGenieSearchScreen
 import com.aptoide.android.aptoidegames.gamegenie.presentation.genieRoute
+import com.aptoide.android.aptoidegames.gamegenie.presentation.genieSearchRoute
 import com.aptoide.android.aptoidegames.installer.UserActionDialog
 import com.aptoide.android.aptoidegames.notifications.NotificationsPermissionRequester
 import com.aptoide.android.aptoidegames.permissions.notifications.NotificationsPermissionViewModel
@@ -79,7 +81,7 @@ fun MainView(navController: NavHostController) {
   LaunchedEffect(currentRoute.value?.destination?.route) {
     val currentRoute = currentRoute.value?.destination?.route
     showTopBar = if (currentRoute != null) {
-      !currentRoute.contains(genieRoute) && !currentRoute.contains(detailedApkfyRoute)
+      !currentRoute.contains(genieRoute) && !currentRoute.contains(detailedApkfyRoute) && !currentRoute.contains(genieSearchRoute)
         && !currentRoute.contains(robloxApkfyRoute)
     } else {
       true
@@ -262,6 +264,12 @@ private fun NavigationGraph(
       navigate = navController::navigateTo,
       goBack = navController::navigateUp,
       screenData = gameGenieScreen()
+    )
+
+    staticComposable(
+      navigate = navController::navigateTo,
+      goBack = navController::navigateUp,
+      screenData = gameGenieSearchScreen()
     )
 
     animatedComposable(

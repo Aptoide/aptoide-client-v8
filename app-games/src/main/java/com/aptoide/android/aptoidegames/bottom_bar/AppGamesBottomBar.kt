@@ -31,6 +31,7 @@ import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.runPreviewable
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGeneralAnalytics
 import com.aptoide.android.aptoidegames.gamegenie.presentation.rememberGameGenieVisibility
+import com.aptoide.android.aptoidegames.gamegenie.presentation.rememberSearchGameGenie
 import com.aptoide.android.aptoidegames.home.BottomBarMenuHandler
 import com.aptoide.android.aptoidegames.home.BottomBarMenus
 import com.aptoide.android.aptoidegames.home.Icon
@@ -58,7 +59,9 @@ fun AppGamesBottomBarPreview() {
 fun AppGamesBottomBar(navController: NavController) {
   val generalAnalytics = rememberGeneralAnalytics()
   val shouldShowGameGenie = rememberGameGenieVisibility()
-  val filteredBottomNavigationItems = bottomNavigationItems.filter(shouldShowGameGenie)
+  val shouldSearchGameGenie = rememberSearchGameGenie()
+  val filteredBottomNavigationItems =
+    bottomNavigationItems.filter(shouldShowGameGenie, shouldSearchGameGenie)
   val selection =
     selectionIndex(items = filteredBottomNavigationItems, navController = navController)
   if (selection >= 0) {
@@ -74,6 +77,7 @@ fun AppGamesBottomBar(navController: NavController) {
             when (item) {
               BottomBarMenus.Games -> generalAnalytics.sendBottomBarHomeClick()
               BottomBarMenus.Search -> generalAnalytics.sendBottomBarSearchClick()
+              BottomBarMenus.GenieSearch -> generalAnalytics.sendBottomBarSearchClick()
               BottomBarMenus.Categories -> generalAnalytics.sendBottomBarCategoriesClick()
               BottomBarMenus.Updates -> generalAnalytics.sendBottomBarUpdatesClick()
               BottomBarMenus.GameGenie -> generalAnalytics.sendBottomBarGameGenieClick()
@@ -96,12 +100,17 @@ fun AppGamesBottomBar(navController: NavController) {
   }
 }
 
-fun List<BottomBarMenus>.filter(shouldShowGameGenie: Boolean) =
+fun List<BottomBarMenus>.filter(
+  shouldShowGameGenie: Boolean,
+  shouldSearchGameGenie: Boolean,
+) =
   filter {
-    if (shouldShowGameGenie) {
-      it != BottomBarMenus.Categories
-    } else {
-      it != BottomBarMenus.GameGenie
+    when (it) {
+      BottomBarMenus.Categories -> shouldShowGameGenie.not()
+      BottomBarMenus.GameGenie -> shouldShowGameGenie
+      BottomBarMenus.Search -> shouldSearchGameGenie.not()
+      BottomBarMenus.GenieSearch -> shouldSearchGameGenie
+      else -> true
     }
   }
 
@@ -159,6 +168,7 @@ private fun selectionIndex(
 val bottomNavigationItems = listOf(
   BottomBarMenus.Games,
   BottomBarMenus.Search,
+  BottomBarMenus.GenieSearch,
   BottomBarMenus.Categories,
   BottomBarMenus.GameGenie,
   BottomBarMenus.Updates,

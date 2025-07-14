@@ -26,6 +26,7 @@ import com.aptoide.android.aptoidegames.drawables.icons.getGameGenie
 import com.aptoide.android.aptoidegames.drawables.icons.getGamesIcon
 import com.aptoide.android.aptoidegames.drawables.icons.getSearch
 import com.aptoide.android.aptoidegames.gamegenie.presentation.genieRoute
+import com.aptoide.android.aptoidegames.gamegenie.presentation.genieSearchRoute
 import com.aptoide.android.aptoidegames.search.presentation.buildSearchRoute
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.updates.presentation.updatesRoute
@@ -40,8 +41,12 @@ sealed class BottomBarMenus(
   )
 
   object Search : BottomBarMenus(
-    route = buildSearchRoute()
-      .withBundleMeta(BundleMeta("search", "app")),
+    route = buildSearchRoute().withBundleMeta(BundleMeta("search", "app")),
+    titleId = R.string.search
+  )
+
+  object GenieSearch : BottomBarMenus(
+    route = genieSearchRoute.withBundleMeta(BundleMeta("geniesearch", "app")),
     titleId = R.string.search
   )
 
@@ -66,6 +71,7 @@ sealed class BottomBarMenus(
 fun BottomBarMenus.Icon() = when (this) {
   BottomBarMenus.Games -> getGamesIcon(Palette.GreyLight).AsBottomBarIcon()
   BottomBarMenus.Search -> getSearch(Palette.GreyLight).AsBottomBarIcon()
+  BottomBarMenus.GenieSearch -> getSearch(Palette.GreyLight).AsBottomBarIcon()
   BottomBarMenus.Categories -> getCategories(Palette.GreyLight).AsBottomBarIcon()
   BottomBarMenus.Updates -> {
     val updatesUiState = rememberUpdates()
@@ -101,7 +107,6 @@ fun BottomBarMenus.Icon() = when (this) {
       }
     }
   }
-
 }
 
 @Composable
