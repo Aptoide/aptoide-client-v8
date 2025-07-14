@@ -43,6 +43,7 @@ import com.aptoide.android.aptoidegames.editorial.seeMoreEditorialScreen
 import com.aptoide.android.aptoidegames.feature_apps.presentation.seeAllMyGamesScreen
 import com.aptoide.android.aptoidegames.feature_apps.presentation.seeMoreBonusScreen
 import com.aptoide.android.aptoidegames.feature_apps.presentation.seeMoreScreen
+import com.aptoide.android.aptoidegames.feature_rtb.presentation.rtbSeeMoreScreen
 import com.aptoide.android.aptoidegames.gamegenie.presentation.gameGenieScreen
 import com.aptoide.android.aptoidegames.gamegenie.presentation.gameGenieSearchScreen
 import com.aptoide.android.aptoidegames.gamegenie.presentation.genieRoute
@@ -222,6 +223,12 @@ private fun NavigationGraph(
       navigate = navController::navigateTo,
       goBack = navController::navigateUp,
       screenData = seeMoreBonusScreen()
+    )
+
+    animatedComposable(
+      navigate = navController::navigateTo,
+      goBack = navController::navigateUp,
+      screenData = rtbSeeMoreScreen()
     )
 
     animatedComposable(

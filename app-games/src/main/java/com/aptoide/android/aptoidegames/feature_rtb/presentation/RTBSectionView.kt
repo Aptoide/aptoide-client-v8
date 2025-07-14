@@ -1,5 +1,6 @@
 package com.aptoide.android.aptoidegames.feature_rtb.presentation
 
+import android.net.Uri.encode
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.unit.dp
@@ -10,15 +11,17 @@ import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
 import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.randomBundle
+import com.aptoide.android.aptoidegames.analytics.presentation.withBundleMeta
 import com.aptoide.android.aptoidegames.feature_apps.presentation.AppsRowView
 import com.aptoide.android.aptoidegames.feature_apps.presentation.BonusSectionGeneralizedView
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
+import com.aptoide.android.aptoidegames.home.analytics.meta
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 
-internal var hasSentImpression = false
+private var hasSentImpression = false
 
 @Composable
-private fun RTBAptoideMMPController(
+fun RTBAptoideMMPController(
   apps: List<App>,
   bundleTag: String,
   placement: String,
@@ -47,10 +50,14 @@ fun RTBSectionView(
 
   when (uiState) {
     is AppsListUiState.Idle -> {
+
       BonusSectionGeneralizedView(
-        onHeaderClick = {},
+        onHeaderClick = getRTBMoreRouteNavigation(
+          bundle = bundle,
+          navigate = navigate
+        ),
         spaceBy = spaceBy,
-        showMoreButton = false
+        showMoreButton = true
       ) {
         RTBBundleView(
           bundle = bundle,
@@ -81,10 +88,22 @@ fun RTBBundleView(
   navigate: (String) -> Unit,
   apps: List<App>,
 ) {
-  RTBAptoideMMPController(apps, bundle.tag, "home-bundle")
+  val homeApps = apps.take(9)
+  RTBAptoideMMPController(homeApps, bundle.tag, "home-bundle")
   AppsRowView(
-    appsList = apps,
+    appsList = homeApps,
     navigate = navigate,
+  )
+}
+
+@Composable
+fun getRTBMoreRouteNavigation(
+  bundle: Bundle,
+  navigate: (String) -> Unit,
+): () -> Unit = {
+  navigate(
+    buildRtbSeeMoreRoute(encode(bundle.title), "${bundle.tag}-more")
+      .withBundleMeta(bundle.meta.copy(tag = "${bundle.tag}-more"))
   )
 }
 

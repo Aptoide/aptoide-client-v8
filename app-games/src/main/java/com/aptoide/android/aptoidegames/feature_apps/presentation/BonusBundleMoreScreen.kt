@@ -117,7 +117,7 @@ private fun MoreBonusBundleScreen(
 }
 
 @Composable
-private fun MoreBonusBundleScreen(
+fun MoreBonusBundleScreen(
   uiState: AppsListUiState,
   title: String,
   bundleTag: String,
