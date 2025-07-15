@@ -43,7 +43,7 @@ fun PlayAndEarnHomeBundle(
       modifier = Modifier.padding(top = 16.dp, bottom = 24.dp),
       verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-      PlayAndEarnCTAHeader(onClick = {})
+      PlayAndEarnCTAHeader(onClick = { navigate(playAndEarnRewardsRoute) })
       PlayAndEarnLargeAppCarousel(
         apps = apps,
         modifier = Modifier

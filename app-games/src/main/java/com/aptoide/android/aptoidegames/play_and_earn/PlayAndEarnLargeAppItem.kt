@@ -109,7 +109,7 @@ fun AppXPText(currentXp: Int, totalXp: Int) {
 }
 
 @Composable
-private fun ProgressIndicator(modifier: Modifier = Modifier, progress: Float) {
+fun ProgressIndicator(modifier: Modifier = Modifier, progress: Float) {
   Box(
     modifier = modifier
       .fillMaxWidth()
