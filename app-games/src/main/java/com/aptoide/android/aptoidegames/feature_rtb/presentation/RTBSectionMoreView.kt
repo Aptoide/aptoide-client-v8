@@ -1,17 +1,22 @@
 package com.aptoide.android.aptoidegames.feature_rtb.presentation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.navDeepLink
 import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
+import cm.aptoide.pt.feature_home.domain.Bundle
 import com.aptoide.android.aptoidegames.BuildConfig
+import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGeneralAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
+import com.aptoide.android.aptoidegames.analytics.presentation.withBundleMeta
 import com.aptoide.android.aptoidegames.feature_apps.presentation.MoreBonusBundleScreen
+import com.aptoide.android.aptoidegames.home.analytics.meta
 
-const val rtbSeeMoreRoute = "rtbSeeMore/{title}/{tag}"
+const val rtbSeeMoreRoute = "rtbSeeMore/{tag}"
 private var hasSentImpression = false
 
 fun rtbSeeMoreScreen() = ScreenData.withAnalytics(
@@ -19,11 +24,9 @@ fun rtbSeeMoreScreen() = ScreenData.withAnalytics(
   screenAnalyticsName = "SeeAll",
   deepLinks = listOf(navDeepLink { uriPattern = BuildConfig.DEEP_LINK_SCHEMA + rtbSeeMoreRoute })
 ) { arguments, navigate, navigateBack ->
-  val bundleTitle = arguments?.getString("title")!!
-  val bundleTag = arguments.getString("tag")!!
+  val bundleTag = arguments?.getString("tag")!!
 
   RtbMoreBundleScreen(
-    title = bundleTitle,
     bundleTag = bundleTag,
     navigateBack = navigateBack,
     navigate = navigate,
@@ -31,9 +34,8 @@ fun rtbSeeMoreScreen() = ScreenData.withAnalytics(
 }
 
 fun buildRtbSeeMoreRoute(
-  title: String,
   bundleTag: String,
-) = "rtbSeeMore/$title/$bundleTag"
+) = "rtbSeeMore/$bundleTag"
 
 @Composable
 private fun RTBMoreAptoideMMPController(
@@ -62,7 +64,6 @@ private fun RTBMoreAptoideMMPController(
 
 @Composable
 private fun RtbMoreBundleScreen(
-  title: String,
   bundleTag: String,
   navigateBack: () -> Unit,
   navigate: (String) -> Unit,
@@ -75,7 +76,7 @@ private fun RtbMoreBundleScreen(
 
   MoreBonusBundleScreen(
     uiState = uiState,
-    title = title,
+    title = stringResource(R.string.bonus_banner_title, "20"),
     bundleTag = bundleTag,
     reload = reload,
     noNetworkReload = {
@@ -86,5 +87,16 @@ private fun RtbMoreBundleScreen(
       navigateBack()
     },
     navigate = navigate,
+  )
+}
+
+@Composable
+fun getRTBMoreRouteNavigation(
+  bundle: Bundle,
+  navigate: (String) -> Unit,
+): () -> Unit = {
+  navigate(
+    buildRtbSeeMoreRoute("${bundle.tag}-more")
+      .withBundleMeta(bundle.meta.copy(tag = "${bundle.tag}-more"))
   )
 }

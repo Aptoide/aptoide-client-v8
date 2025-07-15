@@ -1,6 +1,5 @@
 package com.aptoide.android.aptoidegames.feature_rtb.presentation
 
-import android.net.Uri.encode
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.unit.dp
@@ -11,11 +10,9 @@ import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
 import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.randomBundle
-import com.aptoide.android.aptoidegames.analytics.presentation.withBundleMeta
 import com.aptoide.android.aptoidegames.feature_apps.presentation.AppsRowView
 import com.aptoide.android.aptoidegames.feature_apps.presentation.BonusSectionGeneralizedView
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
-import com.aptoide.android.aptoidegames.home.analytics.meta
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 
 private var hasSentImpression = false
@@ -93,17 +90,6 @@ fun RTBBundleView(
   AppsRowView(
     appsList = homeApps,
     navigate = navigate,
-  )
-}
-
-@Composable
-fun getRTBMoreRouteNavigation(
-  bundle: Bundle,
-  navigate: (String) -> Unit,
-): () -> Unit = {
-  navigate(
-    buildRtbSeeMoreRoute(encode(bundle.title), "${bundle.tag}-more")
-      .withBundleMeta(bundle.meta.copy(tag = "${bundle.tag}-more"))
   )
 }
 
