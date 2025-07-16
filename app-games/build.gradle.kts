@@ -332,6 +332,8 @@ dependencies {
 
   //animations
   implementation(libs.lottie.compose)
+
+  implementation(libs.lottie.compose)
 }
 
 fun BaseFlavor.buildConfigFieldFromGradleProperty(gradlePropertyName: String) {
