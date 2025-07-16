@@ -18,6 +18,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
@@ -26,6 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import cm.aptoide.pt.extensions.runPreviewable
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.transform.Transformation
@@ -33,6 +36,8 @@ import com.aptoide.android.aptoidegames.drawables.icons.getLeftArrow
 import com.aptoide.android.aptoidegames.theme.Palette
 import net.engawapg.lib.zoomable.rememberZoomState
 import net.engawapg.lib.zoomable.zoomable
+import kotlin.random.Random
+import kotlin.random.nextInt
 
 @Composable
 fun AptoideFeatureGraphicImage(
@@ -81,8 +86,13 @@ fun AptoideAsyncImage(
   transformations: Transformation? = null,
   colorFilter: ColorFilter? = null,
   contentScale: ContentScale = ContentScale.Crop,
+) = runPreviewable(
+  preview = {
+    Box(
+      modifier = modifier.background(brush = generateRandomGradient()),
+    )
+  }
 ) {
-
   val placeholderColor = Palette.Grey
 
   AsyncImage(
@@ -198,4 +208,25 @@ fun buildModel(
     .crossfade(600)
   transformations?.let { builder.transformations(it) }
   return builder.build()
+}
+
+fun generateRandomGradient(): Brush {
+  val colors = List(Random.nextInt(3..5)) {
+    Color(
+      red = Random.nextFloat(),
+      green = Random.nextFloat(),
+      blue = Random.nextFloat(),
+      alpha = 1f
+    )
+  }
+
+  val gradientBuilders = listOf<(List<Color>) -> Brush>(
+    { colors -> Brush.verticalGradient(colors) },
+    { colors -> Brush.radialGradient(colors) },
+    { colors -> Brush.linearGradient(colors) },
+    { colors -> Brush.sweepGradient(colors) },
+    { colors -> Brush.horizontalGradient(colors) },
+  )
+
+  return gradientBuilders.random().invoke(colors)
 }
