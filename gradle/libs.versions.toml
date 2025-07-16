@@ -17,8 +17,7 @@ retrofit = "2.11.0"
 retrofitGsonConverter = "2.11.0"
 okHttp = "4.12.0"
 timber = "5.0.1"
-lottie = "6.0.0"
-lottie-compose = "6.6.7"
+lottie = "6.6.7"
 lifecycle = "2.9.0"
 coil = "2.7.0"
 room = "2.7.1"
@@ -82,7 +81,7 @@ navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-kt
 navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigation" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 lottie = { module = "com.airbnb.android:lottie", version.ref = "lottie" }
-lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie-compose" }
+lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie" }
 room = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
