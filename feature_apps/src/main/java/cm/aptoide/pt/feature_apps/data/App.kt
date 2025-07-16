@@ -288,6 +288,18 @@ val randomApp
       developerName = getRandomString(range = 2..5, capitalize = true)
     )
 
+val randomAppWithImages: App
+  get() = randomApp.copy(
+    icon = listOf(
+      "https://pool.img.aptoide.com/catappult/ace2a42a06d9b201b2ec0cf92535dc3e_icon.png",
+      "https://pool.img.aptoide.com/appupdater/4a9077cbfa4327d55e8a1bb097e92112_icon.png"
+    ).random(),
+    featureGraphic = listOf(
+      "https://pool.img.aptoide.com/catappult/273695aa006058ecff08d11049e3e080_fgraphic.jpg",
+      "https://pool.img.aptoide.com/appupdater/e20ec6115dba6067d65846a57f16cf0e_fgraphic.jpg"
+    ).random()
+  )
+
 fun App.isInCatappult(): Boolean? {
   return bdsFlags?.contains("STORE_BDS")
 }
