@@ -50,6 +50,8 @@ import com.aptoide.android.aptoidegames.notifications.NotificationsPermissionReq
 import com.aptoide.android.aptoidegames.permissions.notifications.NotificationsPermissionViewModel
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.home.PlayAndEarnHomeLayout
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.playAndEarnRewardsScreen
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnLoginRoute
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnLoginScreen
 import com.aptoide.android.aptoidegames.promo_codes.PromoCodeBottomSheet
 import com.aptoide.android.aptoidegames.promo_codes.rememberPromoCodeApp
 import com.aptoide.android.aptoidegames.promotions.presentation.PromotionDialog
@@ -297,6 +299,16 @@ private fun NavigationGraph(
       navigate = navController::navigateTo,
       goBack = navController::navigateUp,
       screenData = playAndEarnRewardsScreen()
+    )
+
+    animatedComposable(
+      navigate = {
+        navController.navigate(it) {
+          popUpTo(playAndEarnLoginRoute) { inclusive = true }
+        }
+      },
+      goBack = navController::navigateUp,
+      screenData = playAndEarnLoginScreen()
     )
   }
 }

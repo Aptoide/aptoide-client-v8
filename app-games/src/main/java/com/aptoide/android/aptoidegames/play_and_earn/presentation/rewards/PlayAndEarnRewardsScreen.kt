@@ -22,6 +22,7 @@ import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getThumbUpIcon
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PlayAndEarnSectionHeader
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.app_items.PlayAndEarnLargeAppItem
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnLoginRoute
 import kotlin.random.Random
 
 const val playAndEarnRewardsRoute = "playAndEarnRewards"
@@ -49,7 +50,7 @@ fun PlayAndEarnRewardsScreen(
     PlayAndEarnHowItWorksSection()
     PlayAndEarnLetsGoCard(
       modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-      onLetsGoClick = {}
+      onLetsGoClick = { navigate(playAndEarnLoginRoute) }
     )
     PlayAndEarnFavouritesList(navigate)
   }
