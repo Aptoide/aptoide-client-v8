@@ -277,4 +277,6 @@
   <string name="tag_editorial">Editorial</string>
   <string name="tag_categories">Categories</string>
   <string name="tag_bonus">Bonus</string>
+
+  <string name="play_and_earn_permissions">"<![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]>"</string>
 </resources>
