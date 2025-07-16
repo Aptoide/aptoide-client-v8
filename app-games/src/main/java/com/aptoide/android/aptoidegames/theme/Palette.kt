@@ -5,6 +5,7 @@ import androidx.compose.ui.graphics.Color
 object Palette {
   val Primary = Color(0xFFC8ED4F)
   val Secondary = Color(0xFF913DD8)
+  val SecondaryLight = Color(0xFFCA8BFF)
   val Error = Color(0xFFFF0000)
 
   val Black = Color(0xFF1E1E26)
@@ -13,6 +14,7 @@ object Palette {
   val GreyLight = Color(0xFFD2D2D2)
   val White = Color(0xFFFFFFFF)
   val AppCoinsPink = Color(0xFFFF6381)
+  val Yellow = Color(0xFFFFC93E)
 
   val Trusted = Color(0xFF25B47E)
   val Official = Color(0xFF007AFF)
