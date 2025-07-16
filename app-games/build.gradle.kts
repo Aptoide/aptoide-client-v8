@@ -316,6 +316,8 @@ dependencies {
 
   //Ads
   implementation(libs.mintegral)
+
+  implementation(libs.lottie.compose)
 }
 
 fun BaseFlavor.buildConfigFieldFromGradleProperty(gradlePropertyName: String) {
