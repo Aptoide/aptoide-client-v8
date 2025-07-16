@@ -298,4 +298,6 @@
   <string name="apkfy_multi_install_intro_2">More fun awaits!</string>
   <string name="apkfy_multi_install_intro_3">Try these games inspired by Roblox.</string>
 
+
+  <string name="play_and_earn_permissions">"<![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]>"</string>
 </resources>
