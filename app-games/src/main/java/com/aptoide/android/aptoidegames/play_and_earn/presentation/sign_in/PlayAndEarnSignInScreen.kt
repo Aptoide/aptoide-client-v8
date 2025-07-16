@@ -31,6 +31,7 @@ import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.playAndEarnPermissionsRoute
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
@@ -53,7 +54,7 @@ private fun PlayAndEarnSignInScreen(
   val signInVM = hiltViewModel<GoogleSignInViewModel>()
   val uiState by signInVM.uiState.collectAsState()
 
-  GoogleSignInEventHandler(onSuccess = {})
+  GoogleSignInEventHandler(onSuccess = { navigate(playAndEarnPermissionsRoute) })
 
   Column(
     modifier = Modifier.fillMaxSize()
