@@ -23,6 +23,7 @@ import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getThumbUpIcon
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaESectionHeader
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.app_items.PaELargeAppItem
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnSignInRoute
 
 const val playAndEarnRewardsRoute = "playAndEarnRewards"
 
@@ -54,7 +55,7 @@ fun PlayAndEarnRewardsScreen(
     PaEHowItWorksSection()
     PaELetsGoCard(
       modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-      onLetsGoClick = {}
+      onLetsGoClick = { navigate(playAndEarnSignInRoute) }
     )
     trendingBundle?.let {
       PaEVerticalBundleView(it, navigate)
