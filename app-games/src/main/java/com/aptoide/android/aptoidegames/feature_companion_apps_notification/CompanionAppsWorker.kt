@@ -42,7 +42,7 @@ class CompanionAppsWorker @AssistedInject constructor(
 
   companion object {
     private const val WORK_NAME = "CompanionAppsWorker"
-    private const val PACKAGE_NAME = "package_name"
+    private const val PACKAGE_NAME = "package_name "
 
     fun enqueue(context: Context, packageName: String, delayDays: Long) {
       val data: Data.Builder = Data.Builder()
