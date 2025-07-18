@@ -37,6 +37,7 @@ import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 import com.aptoide.android.aptoidegames.feature_ad.Mintegral
 import com.aptoide.android.aptoidegames.feature_companion_apps_notification.CompanionAppsManager
+import com.aptoide.android.aptoidegames.feature_editors_choice_recommendation.EditorsChoiceRecommendationManager
 import com.aptoide.android.aptoidegames.feature_payments.analytics.AGLogger
 import com.aptoide.android.aptoidegames.home.repository.ThemePreferencesManager
 import com.aptoide.android.aptoidegames.installer.analytics.ScheduledDownloadsListenerImpl
@@ -130,6 +131,9 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
   @Inject
   lateinit var companionAppsManager: CompanionAppsManager
 
+  @Inject
+  lateinit var editorsChoiceRecommendationManager: EditorsChoiceRecommendationManager
+
   override fun onCreate() {
     FirebaseApp.initializeApp(this)
     super.onCreate()
@@ -150,6 +154,13 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
     MMPLinkerCampaign.init(BuildConfig.OEMID)
     initAds()
     initCompanionAppsManager()
+    initTrendingAppsRecommendationManager()
+  }
+
+  private fun initTrendingAppsRecommendationManager() {
+    CoroutineScope(Dispatchers.IO).launch {
+      editorsChoiceRecommendationManager.initialize()
+    }
   }
 
   private fun initCompanionAppsManager() {

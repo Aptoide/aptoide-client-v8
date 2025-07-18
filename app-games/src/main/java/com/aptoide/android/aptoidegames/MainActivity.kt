@@ -16,6 +16,7 @@ import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.analytics.GeneralAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withPrevScreen
 import com.aptoide.android.aptoidegames.feature_companion_apps_notification.CompanionAppsNotificationBuilder
+import com.aptoide.android.aptoidegames.feature_editors_choice_recommendation.EditorsChoiceAppsRecommendationNotificationBuilder
 import com.aptoide.android.aptoidegames.firebase.FirebaseConstants
 import com.aptoide.android.aptoidegames.home.MainView
 import com.aptoide.android.aptoidegames.installer.analytics.InstallAnalytics
@@ -181,7 +182,10 @@ class MainActivity : AppCompatActivity() {
 
       if (notificationTag == CompanionAppsNotificationBuilder.COMPANION_APPS_NOTIFICATION_TAG) {
         notificationsAnalytics.sendRobloxNotificationClick()
+      } else if (notificationTag == EditorsChoiceAppsRecommendationNotificationBuilder.EDITORS_CHOICE_RECOMMENDATION_NOTIFICATION_TAG) {
+        notificationsAnalytics.sendEditorsChoiceNotificationClick()
       }
+
     }
 
     handleFirebaseNotificationAnalytics(intent)
