@@ -16,6 +16,7 @@ import com.aptoide.android.aptoidegames.categories.presentation.AllCategoriesVie
 import com.aptoide.android.aptoidegames.editorial.SeeMoreEditorialsContent
 import com.aptoide.android.aptoidegames.feature_apps.presentation.MoreBonusBundleView
 import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberBonusBundle
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PlayAndEarnRewardsScreen
 
 const val gamesRoute = "games"
 
@@ -78,6 +79,8 @@ private fun GamesScreenTabView(
       HomeTab.Editorial -> EditorialTabView(navigateTo)
 
       HomeTab.Categories -> CategoriesTabView(navigateTo)
+
+      HomeTab.Rewards -> PlayAndEarnRewardsScreen(navigateTo)
     }
   }
 }

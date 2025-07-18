@@ -19,11 +19,18 @@ val defaultHomeTabs = listOf<HomeTab>(
 
 @Keep
 sealed class HomeTab {
-  @Keep object ForYou : HomeTab()
-  @Keep data class TopCharts(val sort: String = "pdownloads") : HomeTab()
-  @Keep object Bonus : HomeTab()
-  @Keep object Editorial : HomeTab()
-  @Keep object Categories : HomeTab()
+  @Keep
+  object ForYou : HomeTab()
+  @Keep
+  data class TopCharts(val sort: String = "pdownloads") : HomeTab()
+  @Keep
+  object Bonus : HomeTab()
+  @Keep
+  object Editorial : HomeTab()
+  @Keep
+  object Categories : HomeTab()
+  @Keep
+  object Rewards : HomeTab()
 
   @Composable
   fun getTitle() = stringResource(
@@ -33,6 +40,7 @@ sealed class HomeTab {
       Bonus -> R.string.tag_bonus
       Editorial -> R.string.tag_editorial
       Categories -> R.string.tag_categories
+      Rewards -> R.string.tag_rewards
     }
   )
 }

@@ -50,6 +50,7 @@ fun rememberHomeTabRowState(): Pair<Boolean, List<HomeTab>> = runPreviewable(
             "Bonus" -> HomeTab.Bonus
             "Editorial" -> HomeTab.Editorial
             "Categories" -> HomeTab.Categories
+            "Rewards" -> HomeTab.Rewards
             else -> null
           }
         }
