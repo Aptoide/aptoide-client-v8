@@ -33,13 +33,13 @@ class NotificationsAnalytics @Inject constructor(
     )
   }
 
-  fun sendNotificationImpression(notificationTag: String, notificationPackage: String) {
+  fun sendNotificationImpression(notificationTag: String, notificationPackage: String? = null) {
     genericAnalytics.logEvent(
       name = "notification_event",
       params = mapOf(
         NOTIFICATION_ACTION to NOTIFICATION_ACTION_IMPRESSION,
         NOTIFICATION_TAG to notificationTag,
-        NOTIFICATION_PACKAGE to notificationPackage
+        NOTIFICATION_PACKAGE to (notificationPackage ?: "n-a")
       )
     )
   }
@@ -72,6 +72,20 @@ class NotificationsAnalytics @Inject constructor(
   fun sendCompanionAppNotificationOptIn() {
     genericAnalytics.logEvent(
       name = "roblox_companion_apps_participate",
+      params = emptyMap()
+    )
+  }
+
+  fun sendEditorsChoiceNotificationShown() {
+    genericAnalytics.logEvent(
+      name = "experiment6_notification_impression",
+      params = emptyMap()
+    )
+  }
+
+  fun sendEditorsChoiceNotificationClick() {
+    genericAnalytics.logEvent(
+      name = "experiment6_notification_click",
       params = emptyMap()
     )
   }
