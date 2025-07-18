@@ -277,6 +277,7 @@
   <string name="tag_editorial">Editorial</string>
   <string name="tag_categories">Categories</string>
   <string name="tag_bonus">Bonus</string>
+  <string name="tag_rewards">Rewards</string>
 
   <!-- AB Test for roblox companion apps -->
   <string name="companion_apps_roblox_notification_title">Enjoying Roblox? 🔥</string>
