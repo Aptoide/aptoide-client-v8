@@ -26,7 +26,7 @@ fun rtbSeeMoreScreen() = ScreenData.withAnalytics(
 ) { arguments, navigate, navigateBack ->
   val bundleTag = arguments?.getString("tag")!!
 
-  RtbMoreBundleScreen(
+  RTBMoreBundleScreen(
     bundleTag = bundleTag,
     navigateBack = navigateBack,
     navigate = navigate,
@@ -63,7 +63,7 @@ private fun RTBMoreAptoideMMPController(
 }
 
 @Composable
-private fun RtbMoreBundleScreen(
+fun RTBMoreBundleScreen(
   bundleTag: String,
   navigateBack: () -> Unit,
   navigate: (String) -> Unit,
