@@ -310,6 +310,7 @@ dependencies {
   implementation(projects.featureWallet.authorization)
   implementation(projects.featureWallet.walletInfo)
   implementation(projects.featureWallet.gamification)
+  implementation(projects.featureWallet.datastore)
 
   //payments
   implementation(projects.payments.sdk)
@@ -365,6 +366,8 @@ dependencies {
   implementation(libs.credentials.playServices)
   implementation(libs.googleId)
   implementation(libs.play.services.auth)
+
+  implementation(libs.constraintLayout.compose)
 }
 
 fun BaseFlavor.buildConfigFieldFromGradleProperty(gradlePropertyName: String) {

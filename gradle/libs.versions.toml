@@ -48,6 +48,7 @@ palette = "1.0.0"
 credentials = "1.3.0"
 googleId = "1.1.1"
 playServicesAuth = "21.4.0"
+constraintLayoutCompose = "1.0.1"
 
 #test libraries
 junit = "4.13.2"
@@ -124,6 +125,7 @@ credentials = { module = "androidx.credentials:credentials", version.ref = "cred
 credentials-playServices = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "credentials" }
 googleId = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "googleId" }
 play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
+constraintLayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintLayoutCompose" }
 
 
 #Test library dependencies
