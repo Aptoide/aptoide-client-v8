@@ -318,6 +318,7 @@ dependencies {
   implementation(libs.mintegral)
 
   implementation(libs.lottie.compose)
+  implementation(libs.constraintLayout.compose)
 }
 
 fun BaseFlavor.buildConfigFieldFromGradleProperty(gradlePropertyName: String) {
