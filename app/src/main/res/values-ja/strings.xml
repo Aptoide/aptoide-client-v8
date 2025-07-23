@@ -463,7 +463,7 @@
   <string name="appc_info_view_body_2">報酬を得たり、すべての取引を処理するには、Aptoide Walletをインストールする必要があります。一度インストールしてしまえば、あとは簡単です！</string>
   <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_4">すべての購入でボーナス！</string>
-  <string name="appc_info_view_title_5_variable">%s シンボルの付いたアプリで購入するたびに、最大%s%%のボーナスを獲得できます。この機会に究極のゲーマーを目指しましょう！</string>
+  <string name="appc_info_view_title_5_variable">%s シンボルの付いたアプリで購入するたびに、最大%%%sのボーナスを獲得できます。この機会に究極のゲーマーを目指しましょう！</string>
   <string name="appc_info_view_title_5_variable_no_data"> %s. シンボルの付いたアプリで購入するたびに、ボーナスを獲得できます。この機会に究極のゲーマーを目指しましょう！</string>
   <string name="appc_info_view_devs_title">開発者の方ですか？</string>
   <string name="appc_info_view_devs_body">アプリの新しい配信方法をチェック。</string>
