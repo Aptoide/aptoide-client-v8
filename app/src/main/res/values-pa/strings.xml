@@ -465,7 +465,7 @@ http://aptoi.de/tv</string>
   <string name="appc_info_view_body_2">You need to install the Aptoide Wallet to get rewards and process all transactions. Once you install it, it\'ll do everything for you!</string>
   <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_4">ਹਰ ਖਰੀਦ ਤੇ ਇਕ ਬੋਨਸ!</string>
-  <string name="appc_info_view_title_5_variable">ਤੁਸੀਂ %s ਪ੍ਰਤੀਕ ਵਾਲੀ ਐਪ ਵਿੱਚ ਹਰ ਖਰੀਦ ਤੇ %s%% ਤੱਕ ਦਾ ਬੋਨਸ ਪ੍ਰਾਪਤ ਕਰੋਗੇ| ਫਾਇਦਾ ਉਠਾਓ ਅਤੇ ਅੱਤ ਦੇ ਗੇਮਰ ਬਣੋ!</string>
+  <string name="appc_info_view_title_5_variable">ਤੁਸੀਂ %s ਪ੍ਰਤੀਕ ਵਾਲੀ ਐਪ ਵਿੱਚ ਹਰ ਖਰੀਦ ਤੇ %%%s ਤੱਕ ਦਾ ਬੋਨਸ ਪ੍ਰਾਪਤ ਕਰੋਗੇ| ਫਾਇਦਾ ਉਠਾਓ ਅਤੇ ਅੱਤ ਦੇ ਗੇਮਰ ਬਣੋ!</string>
   <string name="appc_info_view_title_5_variable_no_data">ਤੁਸੀਂ %s ਪ੍ਰਤੀਕ ਵਾਲੀ ਗੇਮ ਵਿੱਚ ਹਰ ਖਰੀਦ ਤੇ ਬੋਨਸ ਪ੍ਰਾਪਤ ਕਰੋਗੇ| ਫਾਇਦਾ ਉਠਾਓ ਅਤੇ ਅੱਤ ਦੇ ਗੇਮਰ ਬਣੋ!</string>
   <string name="appc_info_view_devs_title">ਕੀ ਤੁਸੀਂ ਇੱਕ ਡਿਵੈਲਪਰ ਹੋ?</string>
   <string name="appc_info_view_devs_body">ਐਪਾਂ ਵੰਡਣ ਦਾ ਨਵਾਂ ਤਰੀਕਾ ਜਾਣੋ|</string>
