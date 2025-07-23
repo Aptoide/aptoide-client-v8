@@ -499,7 +499,7 @@
   <string name="notification_install_ready_plural_title">Viele Apps warten darauf installiert zu werden!</string>
   <string name="notification_install_ready_plural_body">Um sie zu istallieren drücken Sie hier drauf.</string>
   <string name="notification_install_ready_singular_title">Eine App wartet darauf installiert zu werden!</string>
-  <string name="notification_install_ready_singular_body">Um sie zu istallieren drücken Sie hier drauf.</string>
+  <string name="notification_install_ready_singular_body">Tap here to install %s.</string>
   <!--Empty States-->
   <string name="search_no_results_title">Es gibt für ihre Suche kein Ergebnis.</string>
   <string name="search_no_results_adult_body">Ändern Sie die Filtereinstellungen oder aktivieren Sie Inhalte für Erwachsene</string>
