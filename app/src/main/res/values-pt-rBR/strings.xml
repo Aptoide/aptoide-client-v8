@@ -518,7 +518,7 @@
   <string name="promotional_soon_in_aptoide">Logo disponível na Aptoide</string>
   <string name="promotional_notify_button">Avise-me</string>
   <string name="promotional_new_notification_title">O app que você esperava!</string>
-  <string name="promotional_new_notification_body">% está agora disponível na Aptoide.</string>
+  <string name="promotional_new_notification_body">%s is now available in Aptoide.</string>
   <string name="promotional_new_active">Você será notificado quando estiver disponível.</string>
   <!--e-Skills-->
   <string name="eskills_title">Prove suas habilidades e</string>
