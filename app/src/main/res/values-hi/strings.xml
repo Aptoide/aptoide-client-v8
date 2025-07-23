@@ -463,7 +463,7 @@
   <string name="appc_info_view_body_2">You need to install the Aptoide Wallet to get rewards and process all transactions. Once you install it, it\'ll do everything for you!</string>
   <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_4">प्रत्येक खरीद पर एक बोनस!</string>
-  <string name="appc_info_view_title_5_variable">चिह्न %s के साथ किसी एप्प में की गई प्रत्येक खरीद के लिए आपको %s%% तक बोनस मिलेगा। लाभ उठाएं और अल्टीमेट गेमर बनें!</string>
+  <string name="appc_info_view_title_5_variable">चिह्न %s के साथ किसी एप्प में की गई प्रत्येक खरीद के लिए आपको %%%s तक बोनस मिलेगा। लाभ उठाएं और अल्टीमेट गेमर बनें!</string>
   <string name="appc_info_view_title_5_variable_no_data">You\'ll get a bonus in every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
   <string name="appc_info_view_devs_title">क्या आप डेवलपर हैं?</string>
   <string name="appc_info_view_devs_body">एप्प वितरित करने के लिए नया तरीका देखें।</string>
