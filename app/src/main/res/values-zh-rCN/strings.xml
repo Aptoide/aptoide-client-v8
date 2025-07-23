@@ -463,7 +463,7 @@
   <string name="appc_info_view_body_2">您需要安装 Aptoide Wallet 以获得奖励并处理所有交易。安装后，系统将为您执行所有操作！</string>
   <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_4">每次购买都有奖励！</string>
-  <string name="appc_info_view_title_5_variable">在带%s符号的应用中每完成一次购买，您最多可获取%s%%的奖励。充分利用此优势，成为终极玩家！</string>
+  <string name="appc_info_view_title_5_variable">在带%s符号的应用中每完成一次购买，您最多可获取%%%s的奖励。充分利用此优势，成为终极玩家！</string>
   <string name="appc_info_view_title_5_variable_no_data">在带%s符号的应用中每完成一次购买即可获得奖励。充分利用此优势，成为终极玩家！</string>
   <string name="appc_info_view_devs_title">您是开发者吗？</string>
   <string name="appc_info_view_devs_body">查看推广应用的新方法。</string>
