@@ -9,11 +9,11 @@
   <string name="gms_register_checkbox_dontaskmeagain">Tekrar sorma</string>
   <string name="gms_register_message_login">Google uygulamalarının doğru çalışabilmesi için Google\'a giriş yapmanız gerekiyor.</string>
   <!--Incentive Bonus Badge-->
-  <string name="incentives_badge_full">%%%s\'e varan Bonus</string>
+  <string name="incentives_badge_full">%s%%\'e varan Bonus</string>
   <string name="incentives_badge_up_to">%%%s\'e</string>
-  <string name="incentives_badge_amount">varan</string>
+  <string name="incentives_badge_amount">%s%%</string>
   <string name="incentives_badge_bonus">Bonus</string>
-  <string name="incentives_banner_title">Her satın alma işleminde %%%s\'e varan bonus!</string>
+  <string name="incentives_banner_title">Her satın alma işleminde %s%%\'e varan bonus!</string>
   <string name="incentives_banner_body">Bu sembole %s sahip uygulamalarda daha fazla eşya edinmek için Aptoide bakiyeni kullan</string>
   <!-- Download View -->
   <string name="appview_short_downloading">İndiriliyor</string>
