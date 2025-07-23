@@ -57,7 +57,7 @@
   <string name="appview_similar_apps">اپلیکیشن های مشابه</string>
   <string name="appview_short_downloading">در حال دانلود</string>
   <string name="appview_title_apkfy">کماکان Aptoide را نصب شده نگه دارید برای استفاده از</string>
-  <string name="appview_message_apkfy_1">100%% بروزرسانی امن %s$1</string>
+  <string name="appview_message_apkfy_1">100%% safe updates of %1$s</string>
   <string name="appview_message_apkfy_2">دسترسی به اپلیکیشن‌های بدون محدودیت</string>
   <string name="apkfy_install_message">آیا می‌خواهید این اپلیکیشن را نصب کنید؟</string>
   <!-- AppView Donations-->
