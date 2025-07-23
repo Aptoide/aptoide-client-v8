@@ -457,7 +457,7 @@
   <string name="poa_time_left_seconds">SANİYE</string>
   <!--APPC Info View-->
   <string name="appc_info_view_title_1">Aptoide Wallet Hakkında Bilmen Gereken Her Şey</string>
-  <string name="appc_info_view_body_1_variable">Aptoide bakiyesi, uygulama içi işlemler için para birimidir. En iyi kısmıysa, <b>tüm satın alma işlemlerinde %%%s varan oranlarda bonus</b> kazanacak olman!</string>
+  <string name="appc_info_view_body_1_variable">Aptoide bakiyesi, uygulama içi işlemler için para birimidir. En iyi kısmıysa, <b>tüm satın alma işlemlerinde %s%% varan oranlarda bonus</b> kazanacak olman!</string>
   <string name="appc_info_view_body_1_variable_no_data">Aptoide bakiyesi, uygulama içi işlemler için para birimidir. En iyi kısmıysa, <b>tüm satın alma işlemlerinde bonus</b> kazanacak olman!</string>
   <string name="appc_info_view_title_2">Her Şeyden Önce</string>
   <string name="appc_info_view_body_2">Ödül almak ve işlem yapmak için Aptoide Wallet\'ı yüklemen gerekiyor. Yükledikten sonra her şeyi senin yerine halledecek!</string>
