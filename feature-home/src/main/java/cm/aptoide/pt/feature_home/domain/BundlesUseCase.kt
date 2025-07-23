@@ -11,11 +11,9 @@ class BundlesUseCase @Inject constructor(
 ) {
 
   suspend fun getHomeBundles(context: String? = null): List<Bundle> {
-    urlsCache.putAll(mapOf("ab-test-companion-app-bundle" to "listApps/store_name=aptoide-games/group_name=enjoying-roblox/nocache=1/aab=1"))
     return widgetsRepository.getStoreWidgets(
       context = context,
       bypassCache = urlsCache.isInvalid(WIDGETS_TAG)
-        .also { urlsCache.putAll(mapOf(WIDGETS_TAG to "")) }
     )
       .also { urlsCache.putAll(it.tagsUrls) }
       .also {
@@ -28,6 +26,10 @@ class BundlesUseCase @Inject constructor(
             "bonus-banner-more" to "listApps/store_id=3613731/group_id=15614123/order=rand"
           )
         )
+      }
+      .also {
+        urlsCache.putAll(mapOf("ab-test-companion-app-bundle" to "listApps/store_name=aptoide-games/group_name=enjoying-roblox/nocache=1/aab=1"))
+        urlsCache.putAll(mapOf(WIDGETS_TAG to ""))
       }
       .map {
         Bundle(
