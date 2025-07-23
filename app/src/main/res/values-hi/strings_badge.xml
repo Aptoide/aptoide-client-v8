@@ -4,8 +4,8 @@
   <string name="badgedialog_message_tin"> बधाई हो!%s \ nYou टिन पदक मिल गया, क्योंकि तुम पहुंच गए: </string>
   <string name="badgedialog_message_tin_1">स्टोर बनाया गया</string>
   <string name="badgedialog_title_bronze">कांस्य पदक</string>
-  <string name="badgedialog_message_bronze"> बधाई हो!% S \ n आप कांस्य पदक पा चुके हैं, क्योंकि आप पहुंचे: </string>
-  <string name="badgedialog_message_bronze_lock">कोशिश कर रहें!% S \ n कांस्य पदक को अनलॉक करने के लिए, आपको यहां पहुंचना होगा:</string>
+  <string name="badgedialog_message_bronze"> Congratulations!%s\nYou got the bronze medal, because you reached: </string>
+  <string name="badgedialog_message_bronze_lock">Keep trying!%s\nTo unlock the bronze medal, you must reach:</string>
   <string name="badgedialog_message_bronze_1">50 ऐप्स</string>
   <string name="badgedialog_message_bronze_2">750 डाउनलोड</string>
   <string name="badgedialog_message_bronze_3">500 अनुयायियों</string>
