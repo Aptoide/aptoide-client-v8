@@ -7,7 +7,7 @@
 or 
 ليست لديك أي تحديثات جاهزة للتثبيت</item>
     <item quantity="one">لديك تحديث %d جاهز للتثبيت</item>
-    <item quantity="two">لديك تحديثان جاهزان للتثبيت</item>
+    <item quantity="two">You\'ve got %d updates ready to install</item>
     <item quantity="few">لديك %d تحديثات جاهزة للتثبيت</item>
     <item quantity="many">لديك %d تحديثًا جاهز للتثبيت</item>
     <item quantity="other">لديك %d تحديثًا جاهز للتثبيت</item>
@@ -64,7 +64,7 @@ or
   <string name="appview_similar_apps">تطبيقات مشابهة</string>
   <string name="appview_short_downloading">جاري التنزيل</string>
   <string name="appview_title_apkfy">احتفظ بأبتويد مثبتًا لتحصل على </string>
-  <string name="appview_message_apkfy_1">تحديثات آمنة 100%% لـ%s$1</string>
+  <string name="appview_message_apkfy_1">100%% safe updates of %1$s</string>
   <string name="appview_message_apkfy_2">الوصول للتطبيقات اللامحدودة</string>
   <string name="apkfy_install_message">هل تريد تثبيت هذا التطبيق؟</string>
   <!-- AppView Donations-->
