@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="badgedialog_title_tin">錫メダル</string>
-  <string name="badgedialog_message_tin"> おめでとうございます！次のレベルに到達したため錫メダルをゲット：</string>
+  <string name="badgedialog_message_tin"> Congratulations!%s\nYou got the tin medal, because you reached: </string>
   <string name="badgedialog_message_tin_1">ストアを作成しました</string>
   <string name="badgedialog_title_bronze">銅メダル</string>
   <string name="badgedialog_message_bronze"> おめでとうございます！%s\n次の条件に達したため錫メダルをゲット：</string>
