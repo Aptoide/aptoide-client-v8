@@ -2,7 +2,7 @@
 <resources>
   <!-- NavDrawer List items -->
   <plurals name="updates_notification_body">
-    <item quantity="other">설치 준비가 된 8개의 업데이트가 있습니다.</item>
+    <item quantity="other">You\'ve got %d updates ready to install</item>
   </plurals>
   <string name="feedback_subject">제목</string>
   <string name="feedback_to_write2">피드백을 여기에 적어주세요…\n\n
@@ -489,7 +489,7 @@
   <!--  <string name="login_safe_body_1">Secure login</string>-->
   <!--  <string name="login_safe_body_2">No passwords saved on our side</string>-->
   <string name="login_check_email_title">이메일을 확인해 주세요!</string>
-  <string name="login_check_email_body">로그인할 수 있도록 마법의 링크를 전송했습니다.</string>
+  <string name="login_check_email_body">We\'ve sent a magic link to %s to log in.</string>
   <string name="login_check_email_button">이메일 앱 열기</string>
   <string name="login_error_magic_link_expired">마법의 링크가 만료되었습니다! 이메일로 새 것을 보내세요.</string>
   <string name="login_error_invalid_email">이 이메일은 유효하지 않습니다!</string>
