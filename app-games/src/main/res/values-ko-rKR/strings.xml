@@ -262,6 +262,6 @@
   <string name="companion_apps_roblox_notification_body">로블록스 플레이어들이 반드시 설치해야 할 필수 앱들입니다.</string>
   <string name="companion_apps_roblox_bundle_title">로블록스 플레이어들을 위해</string>
   <!-- AB Test for Experiment 6 editors choice recommendation apps -->
-  <string name="editors_choice_recommendation_notification_title">Trending now</string>
-  <string name="editors_choice_recommendation_notification_body">🔥 Everyone\'s playing THESE games today</string>
+  <string name="editors_choice_recommendation_notification_title">현재 인기 있는</string>
+  <string name="editors_choice_recommendation_notification_body">🔥 오늘 모두가 이 게임들을 플레이하고 있어요!</string>
 </resources>
