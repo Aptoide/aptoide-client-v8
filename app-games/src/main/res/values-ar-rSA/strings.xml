@@ -271,4 +271,7 @@
   <string name="companion_apps_roblox_notification_title">هل تستمتع بلعبة Roblox؟ 🔥</string>
   <string name="companion_apps_roblox_notification_body">هذه هي التطبيقات التي لا غنى عنها للاعبين Roblox</string>
   <string name="companion_apps_roblox_bundle_title">لاعبو Roblox</string>
+  <!-- AB Test for Experiment 6 editors choice recommendation apps -->
+  <string name="editors_choice_recommendation_notification_title">الشائع الآن</string>
+  <string name="editors_choice_recommendation_notification_body">🔥 الجميع يلعبون هذه الألعاب اليوم</string>
 </resources>

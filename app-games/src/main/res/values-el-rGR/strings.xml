@@ -263,4 +263,7 @@
   <string name="companion_apps_roblox_notification_title">Σας αρέσει το Roblox; 🔥</string>
   <string name="companion_apps_roblox_notification_body">Αυτές είναι οι εφαρμογές που πρέπει να έχουν οι παίκτες του Roblox</string>
   <string name="companion_apps_roblox_bundle_title">Για τους παίκτες του Roblox</string>
+  <!-- AB Test for Experiment 6 editors choice recommendation apps -->
+  <string name="editors_choice_recommendation_notification_title">Τρέχουσες τάσεις</string>
+  <string name="editors_choice_recommendation_notification_body">🔥 Όλοι παίζουν ΑΥΤΑ τα παιχνίδια σήμερα</string>
 </resources>

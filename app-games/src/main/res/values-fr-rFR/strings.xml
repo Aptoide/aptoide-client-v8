@@ -263,4 +263,7 @@
   <string name="companion_apps_roblox_notification_title">Vous aimez Roblox ? 🔥</string>
   <string name="companion_apps_roblox_notification_body">Voici les applications indispensables pour les joueurs Roblox.</string>
   <string name="companion_apps_roblox_bundle_title">Pour les joueurs Roblox</string>
+  <!-- AB Test for Experiment 6 editors choice recommendation apps -->
+  <string name="editors_choice_recommendation_notification_title">Tendances actuelles</string>
+  <string name="editors_choice_recommendation_notification_body">🔥 Tout le monde joue à CES jeux aujourd\'hui</string>
 </resources>

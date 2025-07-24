@@ -267,4 +267,7 @@
   <string name="companion_apps_roblox_notification_title">Подобається Roblox? 🔥</string>
   <string name="companion_apps_roblox_notification_body">Це обов\'язкові додатки для гравців Roblox</string>
   <string name="companion_apps_roblox_bundle_title">Для гравців Roblox</string>
+  <!-- AB Test for Experiment 6 editors choice recommendation apps -->
+  <string name="editors_choice_recommendation_notification_title">Популярне зараз</string>
+  <string name="editors_choice_recommendation_notification_body">🔥 Сьогодні всі грають в ЦІ ігри</string>
 </resources>
