@@ -262,6 +262,6 @@
   <string name="companion_apps_roblox_notification_body">Ini adalah aplikasi yang wajib dimiliki oleh para pemain Roblox.</string>
   <string name="companion_apps_roblox_bundle_title">Untuk para pemain Roblox</string>
   <!-- AB Test for Experiment 6 editors choice recommendation apps -->
-  <string name="editors_choice_recommendation_notification_title">Trending now</string>
-  <string name="editors_choice_recommendation_notification_body">🔥 Everyone\'s playing THESE games today</string>
+  <string name="editors_choice_recommendation_notification_title">Yang sedang tren saat ini</string>
+  <string name="editors_choice_recommendation_notification_body">🔥 Semua orang sedang memainkan GAME-GAME ini hari ini!</string>
 </resources>
