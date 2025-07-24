@@ -264,6 +264,6 @@
   <string name="companion_apps_roblox_notification_body">Dies sind die unverzichtbaren Apps für Roblox-Spieler.</string>
   <string name="companion_apps_roblox_bundle_title">Für Roblox-Spieler</string>
   <!-- AB Test for Experiment 6 editors choice recommendation apps -->
-  <string name="editors_choice_recommendation_notification_title">Trending now</string>
-  <string name="editors_choice_recommendation_notification_body">🔥 Everyone\'s playing THESE games today</string>
+  <string name="editors_choice_recommendation_notification_title">Derzeit im Trend</string>
+  <string name="editors_choice_recommendation_notification_body">🔥 Heute spielen alle DIESE Spiele</string>
 </resources>
