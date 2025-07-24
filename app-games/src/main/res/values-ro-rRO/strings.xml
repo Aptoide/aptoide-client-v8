@@ -265,4 +265,7 @@
   <string name="companion_apps_roblox_notification_title">Îți place Roblox? 🔥</string>
   <string name="companion_apps_roblox_notification_body">Acestea sunt aplicațiile indispensabile pentru jucătorii Roblox</string>
   <string name="companion_apps_roblox_bundle_title">Pentru jucătorii Roblox</string>
+  <!-- AB Test for Experiment 6 editors choice recommendation apps -->
+  <string name="editors_choice_recommendation_notification_title">În tendințe acum</string>
+  <string name="editors_choice_recommendation_notification_body">🔥 Toată lumea joacă ASTEJ jocuri astăzi</string>
 </resources>

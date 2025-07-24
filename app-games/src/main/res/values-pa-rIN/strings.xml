@@ -137,7 +137,7 @@
   <string name="appview_info_email_title" comment="email">ਈਮੇਲ</string>
   <string name="appview_info_permissions_title" comment="permissions">ਅਧਿਕਾਰ</string>
   <string name="bonus_banner_body">You\'ll get a bonus in all games identified with %s.</string>
-  <string name="bonus_banner_title" comment="up_to_s_bonus">Up to %s%% Bonus</string>
+  <string name="bonus_banner_title" comment="up_to_s_bonus">%s%% ਤੱਕ ਬੋਨਸ</string>
   <string name="settings_auto_update_button">Auto-update games</string>
   <string name="powered_by_title" comment="powered_by">Powered by</string>
   <string name="contact_support_title" comment="contact_support">ਸਹਾਇਤਾ ਸੰਪਰਕ</string>
@@ -265,4 +265,7 @@
   <string name="companion_apps_roblox_notification_title">Enjoying Roblox? 🔥</string>
   <string name="companion_apps_roblox_notification_body">These are the must have apps for Roblox players</string>
   <string name="companion_apps_roblox_bundle_title">For Roblox players</string>
+  <!-- AB Test for Experiment 6 editors choice recommendation apps -->
+  <string name="editors_choice_recommendation_notification_title">Trending now</string>
+  <string name="editors_choice_recommendation_notification_body">🔥 Everyone\'s playing THESE games today</string>
 </resources>
