@@ -268,6 +268,6 @@
   <string name="companion_apps_roblox_notification_body">Это приложения, которые должны быть у всех игроков Roblox.</string>
   <string name="companion_apps_roblox_bundle_title">Для игроков Roblox</string>
   <!-- AB Test for Experiment 6 editors choice recommendation apps -->
-  <string name="editors_choice_recommendation_notification_title">Trending now</string>
-  <string name="editors_choice_recommendation_notification_body">🔥 Everyone\'s playing THESE games today</string>
+  <string name="editors_choice_recommendation_notification_title">Сейчас в тренде</string>
+  <string name="editors_choice_recommendation_notification_body">🔥 Сегодня все играют в ЭТИ игры</string>
 </resources>
