@@ -262,6 +262,6 @@
   <string name="companion_apps_roblox_notification_body">以下是Roblox玩家必备的应用程序。</string>
   <string name="companion_apps_roblox_bundle_title">对于Roblox玩家</string>
   <!-- AB Test for Experiment 6 editors choice recommendation apps -->
-  <string name="editors_choice_recommendation_notification_title">Trending now</string>
-  <string name="editors_choice_recommendation_notification_body">🔥 Everyone\'s playing THESE games today</string>
+  <string name="editors_choice_recommendation_notification_title">当前热门</string>
+  <string name="editors_choice_recommendation_notification_body">🔥 今天大家都玩这些游戏！</string>
 </resources>
