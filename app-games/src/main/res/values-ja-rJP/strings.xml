@@ -263,6 +263,6 @@
   <string name="companion_apps_roblox_notification_body">Robloxプレイヤー必携のアプリです。</string>
   <string name="companion_apps_roblox_bundle_title">ロブロックスのプレイヤーの皆様へ</string>
   <!-- AB Test for Experiment 6 editors choice recommendation apps -->
-  <string name="editors_choice_recommendation_notification_title">Trending now</string>
-  <string name="editors_choice_recommendation_notification_body">🔥 Everyone\'s playing THESE games today</string>
+  <string name="editors_choice_recommendation_notification_title">現在人気急上昇中</string>
+  <string name="editors_choice_recommendation_notification_body">🔥 今日はみんながこれらのゲームをプレイしています！</string>
 </resources>
