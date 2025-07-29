@@ -124,6 +124,7 @@
   <string name="button_install_title">Install</string>
   <!-- Common -->
   <string name="appview_details_tab_title" comment="details">Details</string>
+  <string name="appview_rewards_tab_title" comment="details">Rewards</string>
   <string name="appview_related_tab_title" comment="related">Related</string>
   <string name="appview_info_tab_title" comment="info">Info</string>
   <string name="appview_info_version_name_title" comment="version_name">Version name</string>
