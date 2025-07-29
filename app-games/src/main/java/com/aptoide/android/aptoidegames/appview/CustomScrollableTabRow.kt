@@ -3,11 +3,13 @@ package com.aptoide.android.aptoidegames.appview
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.ScrollableTabRow
@@ -22,12 +24,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.debugInspectorInfo
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import cm.aptoide.pt.extensions.PreviewDark
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -37,6 +41,54 @@ import kotlin.random.Random
 import kotlin.random.nextInt
 
 @Composable
+fun GenericScrollableTabRow(
+  tabs: List<(@Composable () -> Unit)>,
+  selectedTabIndex: Int,
+  onTabClick: (Int) -> Unit,
+  contentColor: Color,
+  backgroundColor: Color,
+) {
+  val density = LocalDensity.current
+  val indicatorWidths = remember(key1 = tabs.size) { MutableList(tabs.size) { 0.dp } }
+
+  ScrollableTabRow(
+    selectedTabIndex = selectedTabIndex,
+    contentColor = contentColor,
+    backgroundColor = backgroundColor,
+    modifier = Modifier
+      .padding(top = 8.dp)
+      .height(40.dp),
+    edgePadding = 0.dp,
+    indicator = { tabPositions ->
+      TabRowDefaults.Indicator(
+        modifier = Modifier.customTabIndicatorOffset(
+          currentTabPosition = tabPositions[selectedTabIndex],
+          tabWidth = indicatorWidths[selectedTabIndex]
+        )
+      )
+    },
+    divider = { Box {} }
+  ) {
+    tabs.forEachIndexed { tabIndex, tab ->
+      Tab(
+        selected = selectedTabIndex == tabIndex,
+        onClick = { onTabClick(tabIndex) },
+        text = {
+          Box(
+            modifier = Modifier.onGloballyPositioned {
+              indicatorWidths[tabIndex] =
+                with(density) { it.size.width.toDp() }
+            }
+          ) {
+            tab()
+          }
+        },
+      )
+    }
+  }
+}
+
+@Composable
 fun CustomScrollableTabRow(
   tabs: List<String>,
   selectedTabIndex: Int,
@@ -44,6 +96,7 @@ fun CustomScrollableTabRow(
   contentColor: Color,
   backgroundColor: Color,
   tabTextStyle: TextStyle = AGTypography.InputsL,
+  showIcons: Boolean = false
 ) {
   val density = LocalDensity.current
   val indicatorWidths = remember(key1 = tabs.size) { MutableList(tabs.size) { 0.dp } }
@@ -86,6 +139,21 @@ fun CustomScrollableTabRow(
                 with(density) { textLayoutResult.size.width.toDp() }
             }
           )
+        },
+        icon = {
+          Box(
+            modifier = Modifier
+              .size(20.dp, 11.dp)
+              .background(Palette.Primary)
+              .padding(top = 10.dp),
+            contentAlignment = Alignment.Center
+          ) {
+            Text(
+              text = "NEW",
+              style = AGTypography.InputsXS.copy(fontSize = 7.sp, lineHeight = 5.sp),
+              color = Palette.Black
+            )
+          }
         }
       )
     }

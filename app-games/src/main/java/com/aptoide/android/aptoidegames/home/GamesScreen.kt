@@ -42,9 +42,9 @@ private fun GamesScreenContent(
 
   Column {
     if (showHomeTabRow) {
-      HomeTabRow(
+      GenericHomeTabRow(
         selectedTab = selectedTab,
-        tabsList = tabs.map { it.getTitle() },
+        tabs = tabs.mapIndexed { index, tab ->  tab.getContent(selectedTab == index) },
         onSelectTab = {
           if (it != selectedTab) {
             homeAnalytics.sendHomeTabClick(tabs[it]::class.simpleName.toString())
