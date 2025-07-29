@@ -9,7 +9,6 @@ public class CurationCard {
   private final String subTitle;
   private final String icon;
   private final String title;
-  private final String views;
   private final String type;
   private final String date;
   private final String captionColor;
@@ -18,13 +17,12 @@ public class CurationCard {
   private String userReaction;
   private int numberOfReactions;
 
-  public CurationCard(String id, String subTitle, String icon, String title, String views,
+  public CurationCard(String id, String subTitle, String icon, String title,
       String type, String date, String captionColor, String flair) {
     this.id = id;
     this.subTitle = subTitle;
     this.icon = icon;
     this.title = title;
-    this.views = views;
     this.type = type;
     this.date = date;
     this.captionColor = captionColor;
@@ -39,7 +37,6 @@ public class CurationCard {
     subTitle = "";
     icon = "";
     title = "";
-    views = "";
     type = "";
     date = "";
     captionColor = "";
@@ -60,10 +57,6 @@ public class CurationCard {
 
   public String getTitle() {
     return title;
-  }
-
-  public String getViews() {
-    return views;
   }
 
   public String getType() {

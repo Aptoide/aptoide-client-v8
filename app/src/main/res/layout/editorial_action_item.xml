@@ -102,12 +102,6 @@
           android:layout_marginStart="16dp"
           android:layout_marginLeft="16dp"
           />
-
-      <include
-          android:id="@+id/views_layout"
-          layout="@layout/views_layout"
-
-          />
     </RelativeLayout>
   </RelativeLayout>
 

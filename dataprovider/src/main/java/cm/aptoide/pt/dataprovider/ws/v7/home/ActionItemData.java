@@ -10,7 +10,6 @@ public class ActionItemData {
   private String caption;
   private String summary;
   private String url;
-  private String views;
   private String date;
   private String flair;
   private Appearance appearance;
@@ -63,14 +62,6 @@ public class ActionItemData {
 
   public void setUrl(String url) {
     this.url = url;
-  }
-
-  public String getViews() {
-    return views;
-  }
-
-  public void setViews(String views) {
-    this.views = views;
   }
 
   public String getDate() {

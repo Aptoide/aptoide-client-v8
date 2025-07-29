@@ -31,7 +31,6 @@ import java.util.Date;
 import java.util.List;
 import rx.subjects.PublishSubject;
 
-import static cm.aptoide.pt.editorial.ViewsFormatter.formatNumberOfViews;
 import static cm.aptoide.pt.reactions.ReactionMapper.mapReaction;
 import static cm.aptoide.pt.reactions.ReactionMapper.mapUserReaction;
 
@@ -45,7 +44,6 @@ public class EditorialBundleViewHolder extends EditorialViewHolder {
   private final TextView editorialTitle;
   private final TextView editorialDate;
   private final ImageView backgroundImage;
-  private final TextView editorialViews;
   private final ImageButton reactButton;
   private final CardView curationTypeCaption;
   private final TextView curationTypeCaptionText;
@@ -62,7 +60,6 @@ public class EditorialBundleViewHolder extends EditorialViewHolder {
     this.editorialCard = view.findViewById(R.id.editorial_card);
     this.editorialTitle = view.findViewById(R.id.editorial_title);
     this.editorialDate = view.findViewById(R.id.editorial_date);
-    this.editorialViews = view.findViewById(R.id.editorial_views);
     this.backgroundImage = view.findViewById(R.id.background_image);
     this.reactButton = view.findViewById(R.id.add_reactions);
     this.curationTypeCaption = view.findViewById(R.id.curation_type_bubble);
@@ -93,7 +90,7 @@ public class EditorialBundleViewHolder extends EditorialViewHolder {
     } else {
       skeleton.showOriginal();
       setBundleInformation(actionItem.getIcon(), actionItem.getTitle(), actionItem.getSubTitle(),
-          actionItem.getCardId(), actionItem.getNumberOfViews(), actionItem.getType(),
+          actionItem.getCardId(), actionItem.getType(),
           actionItem.getDate(), getAdapterPosition(), homeBundle, actionItem.getReactionList(),
           actionItem.getTotal(), actionItem.getUserReaction(), actionItem.getCaptionColor(),
           actionItem.getFlair(), hasBonus, bonusValue);
@@ -101,7 +98,7 @@ public class EditorialBundleViewHolder extends EditorialViewHolder {
   }
 
   private void setBundleInformation(String icon, String title, String subTitle, String cardId,
-      String numberOfViews, String type, String date, int position, HomeBundle homeBundle,
+      String type, String date, int position, HomeBundle homeBundle,
       List<TopReaction> reactions, int numberOfReactions, String userReaction, String captionColor,
       String flair, boolean hasBonusAppc, int bonusPercentage) {
     clearReactions();
@@ -109,9 +106,6 @@ public class EditorialBundleViewHolder extends EditorialViewHolder {
     ImageLoader.with(itemView.getContext())
         .load(icon, backgroundImage);
     editorialTitle.setText(title);
-    editorialViews.setText(String.format(itemView.getContext()
-            .getString(R.string.editorial_card_short_number_views),
-        formatNumberOfViews(numberOfViews)));
     curationTypeCaptionText.setText(subTitle);
     captionBackgroundPainter.addColorBackgroundToCaption(curationTypeCaption, captionColor);
     setupCalendarDateString(date);
@@ -152,7 +146,7 @@ public class EditorialBundleViewHolder extends EditorialViewHolder {
       newDate = dateFormat.parse(newFormatDate);
     } catch (ParseException parseException) {
       Snackbar.make(editorialCard, itemView.getContext()
-          .getString(R.string.unknown_error), Snackbar.LENGTH_SHORT)
+              .getString(R.string.unknown_error), Snackbar.LENGTH_SHORT)
           .show();
     }
     if (newDate != null) {
@@ -172,7 +166,7 @@ public class EditorialBundleViewHolder extends EditorialViewHolder {
       BonusAppcModel bonusAppcModel) {
     skeleton.showOriginal();
     setBundleInformation(curationCard.getIcon(), curationCard.getTitle(),
-        curationCard.getSubTitle(), curationCard.getId(), curationCard.getViews(),
+        curationCard.getSubTitle(), curationCard.getId(),
         curationCard.getType(), curationCard.getDate(), position, null, curationCard.getReactions(),
         curationCard.getNumberOfReactions(), curationCard.getUserReaction(),
         curationCard.getCaptionColor(), curationCard.getFlair(), bonusAppcModel.getHasBonusAppc(),

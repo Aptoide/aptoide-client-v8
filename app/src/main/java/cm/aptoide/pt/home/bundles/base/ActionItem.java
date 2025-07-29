@@ -11,7 +11,6 @@ public class ActionItem {
   private final String subTitle;
   private final String icon;
   private final String url;
-  private final String numberOfViews;
   private final String date;
   private final String captionColor;
   private final String flair;
@@ -23,7 +22,7 @@ public class ActionItem {
   private String userReaction;
 
   public ActionItem(String cardId, String type, String title, String subTitle, String icon,
-      String url, String numberOfViews, String date, String captionColor, String flair,
+      String url, String date, String captionColor, String flair,
       String summary, String packageName, String featureGraphic) {
     this.cardId = cardId;
     this.type = type;
@@ -31,7 +30,6 @@ public class ActionItem {
     this.subTitle = subTitle;
     this.icon = icon;
     this.url = url;
-    this.numberOfViews = numberOfViews;
     this.date = date;
     this.captionColor = captionColor;
     this.packageName = packageName;
@@ -65,10 +63,6 @@ public class ActionItem {
 
   public String getUrl() {
     return url;
-  }
-
-  public String getNumberOfViews() {
-    return numberOfViews;
   }
 
   public String getDate() {

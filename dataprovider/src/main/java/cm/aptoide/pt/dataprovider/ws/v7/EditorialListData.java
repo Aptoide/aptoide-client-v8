@@ -10,7 +10,6 @@ public class EditorialListData extends BaseV7EndlessDataListResponse {
   public String title;
   public String caption;
   public String icon;
-  public String views;
   public String date;
   public String flair;
   public Appearance appearance;
@@ -37,10 +36,6 @@ public class EditorialListData extends BaseV7EndlessDataListResponse {
 
   public String getIcon() {
     return icon;
-  }
-
-  public String getViews() {
-    return views;
   }
 
   public String getDate() {
