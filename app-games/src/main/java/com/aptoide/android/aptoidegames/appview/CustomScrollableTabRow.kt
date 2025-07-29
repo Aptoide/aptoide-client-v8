@@ -3,11 +3,13 @@ package com.aptoide.android.aptoidegames.appview
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.ScrollableTabRow
@@ -28,6 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import cm.aptoide.pt.extensions.PreviewDark
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -73,19 +76,52 @@ fun CustomScrollableTabRow(
         selected = selectedTabIndex == tabIndex,
         onClick = { onTabClick(tabIndex) },
         text = {
-          Text(
-            text = tab,
-            style = tabTextStyle,
-            color = if (selectedTabIndex == tabIndex) {
-              Palette.Primary
-            } else {
-              Palette.White
-            },
-            onTextLayout = { textLayoutResult ->
-              indicatorWidths[tabIndex] =
-                with(density) { textLayoutResult.size.width.toDp() }
+          if (tab == "Rewards") {
+            Box {
+              Box(
+                modifier = Modifier
+                  .offset(x = 5.dp, y = (-11).dp)
+                  .align(Alignment.TopEnd)
+                  .size(20.dp, 11.dp)
+                  .background(Palette.Primary)
+                  .padding(2.dp),
+                contentAlignment = Alignment.Center
+              ) {
+                Text(
+                  text = "NEW",
+                  style = AGTypography.InputsXS.copy(fontSize = 7.sp, lineHeight = 5.sp),
+                  color = Palette.Black
+                )
+              }
+              Text(
+                text = tab,
+                style = tabTextStyle,
+                color = if (selectedTabIndex == tabIndex) {
+                  Palette.Primary
+                } else {
+                  Palette.White
+                },
+                onTextLayout = { textLayoutResult ->
+                  indicatorWidths[tabIndex] =
+                    with(density) { textLayoutResult.size.width.toDp() }
+                }
+              )
             }
-          )
+          } else {
+            Text(
+              text = tab,
+              style = tabTextStyle,
+              color = if (selectedTabIndex == tabIndex) {
+                Palette.Primary
+              } else {
+                Palette.White
+              },
+              onTextLayout = { textLayoutResult ->
+                indicatorWidths[tabIndex] =
+                  with(density) { textLayoutResult.size.width.toDp() }
+              }
+            )
+          }
         }
       )
     }
