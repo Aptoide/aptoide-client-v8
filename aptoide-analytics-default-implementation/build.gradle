@@ -1,6 +1,5 @@
 apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
-apply plugin: 'com.jfrog.bintray'
 
 buildscript {}
 
@@ -116,20 +115,3 @@ publishing {
     }
   }
 }
-
-bintray {
-  user = "${APTOIDE_BINTRAY_USER}"
-  key = "${APTOIDE_BINTRAY_KEY}"
-  publications = ['MyPublication']
-  pkg {
-    repo = 'Aptoide'
-    name = "${project.name}"
-    licenses = ['GPL-3.0']
-    vcsUrl = 'https://github.com/Aptoide/aptoide-client-v8'
-
-    version {
-      name = project.version
-    }
-  }
-}
-//endregion
