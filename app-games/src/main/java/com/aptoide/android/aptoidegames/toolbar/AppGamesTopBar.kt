@@ -35,9 +35,10 @@ import com.aptoide.android.aptoidegames.theme.Palette
 fun AppGamesTopBar(
   navigateBack: () -> Unit,
   title: String?,
+  iconColor: Color = Palette.Primary
 ) {
   title?.let {
-    TopBar(navigateBack, it)
+    TopBar(navigateBack, it, iconColor)
   }
 }
 
@@ -45,6 +46,7 @@ fun AppGamesTopBar(
 private fun TopBar(
   navigateBack: () -> Unit,
   title: String,
+  iconColor: Color
 ) {
   Row(
     Modifier
@@ -57,7 +59,7 @@ private fun TopBar(
     verticalAlignment = Alignment.CenterVertically,
   ) {
     Image(
-      imageVector = getLeftArrow(Palette.Primary, Palette.Black),
+      imageVector = getLeftArrow(iconColor, Palette.Black),
       contentDescription = stringResource(id = R.string.button_back_title),
       contentScale = ContentScale.Crop,
       modifier = Modifier
