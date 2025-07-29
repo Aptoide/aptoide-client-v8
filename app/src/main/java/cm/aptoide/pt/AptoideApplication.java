@@ -221,8 +221,10 @@ public abstract class AptoideApplication extends Application {
 
   @Override public void onCreate() {
     getApplicationComponent().inject(this);
-    packageChangeReceiver = new InstalledBroadcastReceiver();
-    packageChangeReceiver.register(this);
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+      packageChangeReceiver = new InstalledBroadcastReceiver();
+      packageChangeReceiver.register(this);
+    }
 
     appInBackgroundTracker.initialize();
     CrashReport.getInstance()
