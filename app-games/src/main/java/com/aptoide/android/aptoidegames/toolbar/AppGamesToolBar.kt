@@ -36,6 +36,8 @@ import com.aptoide.android.aptoidegames.analytics.presentation.rememberGeneralAn
 import com.aptoide.android.aptoidegames.drawables.icons.getNotificationBell
 import com.aptoide.android.aptoidegames.drawables.icons.getProfileNoAccountIcon
 import com.aptoide.android.aptoidegames.notifications.NotificationsPermissionRequester
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PlayAndEarnTopBarBadge
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.level_up.levelUpRoute
 import com.aptoide.android.aptoidegames.settings.settingsRoute
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -71,6 +73,7 @@ fun AppGamesToolBar(
     notificationsPermissionState = notificationsPermissionState.status.isGranted,
     onLogoClick = goBackHome,
     onNotificationsClick = onNotificationsClick,
+    onPlayAndEarnClick = { navigate(levelUpRoute) },
     onProfileClick = onProfileClick,
   )
 
@@ -86,6 +89,7 @@ private fun AppGamesToolBar(
   notificationsPermissionState: Boolean,
   onLogoClick: () -> Unit,
   onNotificationsClick: () -> Unit,
+  onPlayAndEarnClick: () -> Unit,
   onProfileClick: () -> Unit,
 ) {
   TopAppBar(
@@ -114,7 +118,10 @@ private fun AppGamesToolBar(
             .minimumInteractiveComponentSize(),
           contentScale = ContentScale.FillHeight
         )
-        Row(modifier = Modifier.wrapContentWidth()) {
+        Row(
+          modifier = Modifier.wrapContentWidth(),
+          verticalAlignment = Alignment.CenterVertically,
+        ) {
           if (!notificationsPermissionState) {
             IconButton(onClick = onNotificationsClick) {
               Icon(
@@ -128,6 +135,7 @@ private fun AppGamesToolBar(
               )
             }
           }
+          PlayAndEarnTopBarBadge(onClick = onPlayAndEarnClick)
           IconButton(onClick = onProfileClick) {
             Icon(
               imageVector = getProfileNoAccountIcon(),
@@ -169,6 +177,7 @@ private fun AppGamesToolBarPreview() {
     notificationsPermissionState = false,
     onLogoClick = {},
     onNotificationsClick = {},
+    onPlayAndEarnClick = {},
     onProfileClick = {},
   )
 }
