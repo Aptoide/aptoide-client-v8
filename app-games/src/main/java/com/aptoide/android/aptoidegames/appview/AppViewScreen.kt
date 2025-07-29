@@ -103,6 +103,8 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.SmallEmptyView
 import com.aptoide.android.aptoidegames.feature_apps.presentation.buildSeeMoreBonusRoute
 import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberBonusBundle
 import com.aptoide.android.aptoidegames.installer.presentation.InstallView
+import com.aptoide.android.aptoidegames.play_and_earn.AppRewardsView
+import com.aptoide.android.aptoidegames.play_and_earn.domain.playAndEarnPackages
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -110,8 +112,9 @@ import com.aptoide.android.aptoidegames.videos.presentation.AppViewYoutubePlayer
 
 private val tabsList = listOf(
   AppViewTab.DETAILS,
+  AppViewTab.REWARDS,
   AppViewTab.RELATED,
-  AppViewTab.INFO
+  AppViewTab.INFO,
 )
 private const val PACKAGE_UNAME = "package_uname"
 
@@ -199,13 +202,35 @@ fun AppViewScreen(
     rememberRelatedEditorials(packageName = it)
   }
 
-  val tabsList by remember(relatedEditorialsUiState) {
+  val isGamified by remember(uiState) {
     derivedStateOf {
-      if (relatedEditorialsUiState.isNullOrEmpty()) {
-        tabsList.filter { it != AppViewTab.RELATED }
+      if (uiState is AppUiState.Idle) {
+        println("AAAAA package: ${uiState.app.packageName}")
+        playAndEarnPackages.contains(uiState.app.packageName)
       } else {
-        tabsList
+        false
       }
+    }
+  }
+
+  val tabsList by remember(relatedEditorialsUiState, isGamified) {
+    derivedStateOf {
+      tabsList
+        .let {
+          if (relatedEditorialsUiState.isNullOrEmpty()) {
+            it.filter { it != AppViewTab.RELATED }
+          } else {
+            it
+          }
+        }
+        .let {
+          println("AAAAA isGamified: $isGamified")
+          if (isGamified) {
+            it
+          } else {
+            it.filter { it != AppViewTab.REWARDS }
+          }
+        }
     }
   }
 
@@ -426,6 +451,8 @@ fun ViewPagerContent(
 ) {
   when (selectedTab) {
     AppViewTab.DETAILS -> DetailsView(app = app)
+
+    AppViewTab.REWARDS -> AppRewardsView(packageName = app.packageName)
 
     AppViewTab.RELATED -> RelatedContentView(
       packageName = app.packageName,
