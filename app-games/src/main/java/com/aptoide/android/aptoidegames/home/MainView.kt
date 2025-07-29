@@ -127,7 +127,7 @@ fun MainView(navController: NavHostController) {
             if (showTopBar) {
               AppGamesToolBar(
                 navigate = {
-                  if (currentRoute.value?.destination?.route != it) {
+                  if (currentRoute.value?.destination?.route?.substringBefore("?") != it) {
                     navController.navigateTo(it)
                   }
                 },
