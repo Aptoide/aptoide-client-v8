@@ -47,6 +47,7 @@ fun CustomScrollableTabRow(
   contentColor: Color,
   backgroundColor: Color,
   tabTextStyle: TextStyle = AGTypography.InputsL,
+  showIcons: Boolean = false
 ) {
   val density = LocalDensity.current
   val indicatorWidths = remember(key1 = tabs.size) { MutableList(tabs.size) { 0.dp } }
@@ -76,7 +77,7 @@ fun CustomScrollableTabRow(
         selected = selectedTabIndex == tabIndex,
         onClick = { onTabClick(tabIndex) },
         text = {
-          if (tab == "Rewards") {
+          if (tab == "Rewards" && showIcons) {
             Box {
               Box(
                 modifier = Modifier

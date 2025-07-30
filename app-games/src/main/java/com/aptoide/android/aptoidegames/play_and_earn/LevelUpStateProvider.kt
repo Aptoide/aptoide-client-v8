@@ -14,13 +14,13 @@ fun rememberLevelUpState(): LevelUpUiState {
   val levelUpUiState = remember {
     LevelUpUiState.Idle(
       currentLevel = Level(
-        xp = 1500,
+        xp = 1640,
         level = 2,
         tier = Tier.BRONZE_PLUS,
         bonus = 0f,
         status = LevelCheckpointStatus.CURRENT
       ),
-      availableUnits = 245,
+      availableUnits = 260,
       balance = Random.nextInt(2..10).toFloat(),
       levels = levels
     )

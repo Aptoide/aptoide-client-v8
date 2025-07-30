@@ -24,7 +24,7 @@ fun PlayAndEarnTopBarBadge(onClick: () -> Unit) {
     modifier = Modifier.clickable(onClick = onClick),
     verticalAlignment = Alignment.CenterVertically,
   ) {
-    TierBadge(tier = Tier.BRONZE)
+    TierBadge(tier = Tier.BRONZE_PLUS)
     Box(
       modifier = Modifier.offset(x = (-6).dp, y = (-4).dp),
       contentAlignment = Alignment.Center

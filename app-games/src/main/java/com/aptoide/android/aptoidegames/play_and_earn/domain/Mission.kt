@@ -1,5 +1,6 @@
 package com.aptoide.android.aptoidegames.play_and_earn.domain
 
+import com.aptoide.android.aptoidegames.R
 import kotlin.random.Random
 
 data class Missions(
@@ -11,7 +12,7 @@ data class Mission(
   val id: Int = Random.nextInt(),
   val title: String,
   val description: String? = null,
-  val icon: String? = null,
+  val icon: Any? = null,
   val type: MissionType,
   val arguments: Map<String, Any>? = null,
   val units: Int? = null,
@@ -47,7 +48,7 @@ val missions = Missions(
       title = "Recruit",
       description = "Play during 20 minutes",
       type = MissionType.PLAY_TIME,
-      icon = "",
+      icon = R.drawable.book,
       units = 5,
       status = MissionStatus.PENDING
     ),
@@ -55,7 +56,7 @@ val missions = Missions(
       title = "Night Owl",
       description = "Play during 1 hour",
       type = MissionType.NIGHT_OWL,
-      icon = "",
+      icon = R.drawable.cauldron,
       units = 12,
       status = MissionStatus.COMPLETED
     )

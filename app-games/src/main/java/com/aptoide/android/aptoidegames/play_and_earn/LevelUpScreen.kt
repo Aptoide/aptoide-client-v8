@@ -452,16 +452,18 @@ private fun ExchangeableUnitsCard(availableUnits: Int) {
             }
           }
         }
-        Text(
-          text = "Exchange $availableUnits units for \$${
-            (availableUnits * 2f / 100f).let {
-              String.format(Locale.getDefault(), "%.2f", it)
-            }
-          } in your Aptoide Balance.",
-          style = AGTypography.InputsS,
-          color = Palette.White,
-          textAlign = TextAlign.Center
-        )
+        ((availableUnits / 100) * 100).let { units ->
+          Text(
+            text = "Exchange $units units for \$${
+              (units * 2f / 100f).let {
+                String.format(Locale.getDefault(), "%.2f", it)
+              }
+            } in your Aptoide Balance.",
+            style = AGTypography.InputsS,
+            color = Palette.White,
+            textAlign = TextAlign.Center
+          )
+        }
       }
       AccentSmallButton(
         title = "Exchange Now", //TODO: hardcoded string

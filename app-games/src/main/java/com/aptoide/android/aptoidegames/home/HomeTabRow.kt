@@ -57,6 +57,7 @@ fun HomeTabRow(
     onTabClick = onSelectTab,
     contentColor = Palette.Primary,
     backgroundColor = Color.Transparent,
-    tabTextStyle = AGTypography.InputsL
+    tabTextStyle = AGTypography.InputsL,
+    showIcons = true
   )
 }

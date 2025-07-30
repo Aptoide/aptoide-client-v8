@@ -107,7 +107,7 @@ private fun CheckpointItem(checkpoint: Mission) {
           color = Palette.White
         )
         ProgressIndicator(
-          progress = Random.nextDouble(0.2, 0.8).toFloat(),
+          progress = 20f/50f,
         )
         Row(
           modifier = Modifier.fillMaxWidth(),
@@ -151,9 +151,7 @@ private fun MissionItem(mission: Mission) {
       horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
       AptoideAsyncImage(
-        modifier = Modifier
-          .padding(14.dp)
-          .size(50.dp),
+        modifier = Modifier.size(64.dp),
         data = mission.icon,
         contentDescription = null
       )
