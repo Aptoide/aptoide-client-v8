@@ -60,6 +60,7 @@ import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.Pa
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaESectionHeader
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.animations.CurrentLevelAnimation
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.playAndEarnRewardsRoute
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchange.exchangeUnitsRoute
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
@@ -90,7 +91,7 @@ fun LevelUpScreen(
       levels = levelUpState.levels,
       onBackClick = navigateBack,
       onPlayAndEarnCardClick = { navigate(playAndEarnRewardsRoute) },
-      onExchangeClick = {}
+      onExchangeClick = { navigate(exchangeUnitsRoute) }
     )
 
     LevelUpUiState.Loading -> {
