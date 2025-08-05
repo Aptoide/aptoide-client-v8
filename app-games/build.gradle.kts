@@ -318,6 +318,7 @@ dependencies {
   implementation(projects.featureBonus)
   implementation(projects.feautureAppComingSoon)
   implementation(projects.playAndEarn.campaigns)
+  implementation(projects.playAndEarn.exchange)
   implementation(projects.featureWallet.authorization)
   implementation(projects.featureWallet.walletInfo)
   implementation(projects.featureWallet.gamification)
