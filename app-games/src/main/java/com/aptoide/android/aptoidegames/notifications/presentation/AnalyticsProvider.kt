@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import cm.aptoide.pt.extensions.runPreviewable
 import com.aptoide.android.aptoidegames.analytics.AnalyticsSender
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
-import com.aptoide.android.aptoidegames.feature_apps.presentation.AnalyticsInjectionsProvider
 import com.aptoide.android.aptoidegames.notifications.analytics.NotificationsAnalytics
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

@@ -47,6 +47,7 @@ class UpdatesNotificationBuilder @Inject constructor(
     const val UPDATES_NOTIFICATION_CHANNEL_NAME = "Updates Notification Channel"
     const val UPDATES_NOTIFICATION_TAG = "general_updates_notification"
     const val VIP_UPDATES_NOTIFICATION_TAG = "vip_updates_notification"
+    const val AUTO_UPDATE_SUCCESS_NOTIFICATION_TAG = "auto_update_success_update_notification"
   }
 
   init {
@@ -104,7 +105,7 @@ class UpdatesNotificationBuilder @Inject constructor(
       appSource = AppSource.of(appId = null, packageName = app.packageName)
     )
     val appIcon = imageDownloader.downloadImageFrom(app.icon)
-    val title = "${app.name} has an update"
+    val title = context.resources.getString(R.string.update_available_vip_update_notification, app.name)
     val notificationId = "VIPUpdates${app.packageName}".hashCode()
     val notification = buildNotification(
       requestCode = notificationId,
@@ -121,6 +122,33 @@ class UpdatesNotificationBuilder @Inject constructor(
         notificationId = notificationId,
         notification = notification,
         notificationTag = VIP_UPDATES_NOTIFICATION_TAG,
+        notificationPackage = app.packageName
+      )
+    }
+  }
+
+  override suspend fun showSuccessAutoUpdatedGameNotification(app: App) {
+    val deepLink = buildAppViewDeepLinkUri(
+      appSource = AppSource.of(appId = null, packageName = app.packageName)
+    )
+    val appIcon = imageDownloader.downloadImageFrom(app.icon)
+    val title = context.resources.getString(R.string.update_app_updated_notification_title, app.name)
+    val notificationId = "AutoUpdateSuccess${app.packageName}".hashCode()
+    val notification = buildNotification(
+      requestCode = notificationId,
+      contentText = context.resources.getString(R.string.update_app_updated_notification_body),
+      contentTitle = title,
+      deepLink = deepLink,
+      largeIcon = appIcon,
+      notificationTag = AUTO_UPDATE_SUCCESS_NOTIFICATION_TAG,
+      notificationPackage = app.packageName
+    )
+
+    notification?.let {
+      showNotification(
+        notificationId = notificationId,
+        notification = notification,
+        notificationTag = AUTO_UPDATE_SUCCESS_NOTIFICATION_TAG,
         notificationPackage = app.packageName
       )
     }

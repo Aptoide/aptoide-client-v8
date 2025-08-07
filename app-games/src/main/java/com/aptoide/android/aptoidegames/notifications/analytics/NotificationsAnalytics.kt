@@ -7,6 +7,11 @@ class NotificationsAnalytics @Inject constructor(
   private val genericAnalytics: GenericAnalytics,
 ) {
 
+  fun sendExperimentNotificationsAllowed() = genericAnalytics.logEvent(
+    name = "experiment_notifications_allowed",
+    params = emptyMap()
+  )
+
   fun sendNotificationOptIn() = genericAnalytics.logEvent(
     name = "notification_opt_in",
     params = emptyMap()
