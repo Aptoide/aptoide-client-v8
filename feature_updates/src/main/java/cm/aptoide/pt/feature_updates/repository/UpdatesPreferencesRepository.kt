@@ -45,6 +45,7 @@ class UpdatesPreferencesRepository @Inject constructor(
   private fun areSilentUpdatesUnsupported() = isMIUI() && !isMiuiOptimizationDisabled()
 
   private suspend fun shouldHideAutoUpdate(): Boolean {
-    return featureFlags.getFlag("show_auto_update_feature") == false
+    val variant = featureFlags.getFlagAsString("updates_notification_type")
+    return variant == "auto_update_off" || variant == "generic_only"
   }
 }

@@ -29,6 +29,7 @@ import com.aptoide.android.aptoidegames.notifications.analytics.NotificationsAna
 import com.aptoide.android.aptoidegames.notifications.toFirebaseNotificationAnalyticsInfo
 import com.aptoide.android.aptoidegames.promo_codes.PromoCode
 import com.aptoide.android.aptoidegames.promo_codes.PromoCodeRepository
+import com.aptoide.android.aptoidegames.updates.domain.UpdatesNotificationAnalyticsManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -67,6 +68,9 @@ class MainActivity : AppCompatActivity() {
   @Inject
   lateinit var firebaseNotificationAnalytics: FirebaseNotificationAnalytics
 
+  @Inject
+  lateinit var updatesNotificationAnalyticsManager: UpdatesNotificationAnalyticsManager
+
   private var navController: NavHostController? = null
 
   private val coroutinesScope: CoroutineScope = CoroutineScope(Job() + Dispatchers.IO)
@@ -82,6 +86,8 @@ class MainActivity : AppCompatActivity() {
         coroutinesScope.launch {
           if (isGranted) {
             notificationsAnalytics.sendNotificationOptIn()
+            notificationsAnalytics.sendExperimentNotificationsAllowed()
+            updatesNotificationAnalyticsManager.loadUserProperty()
           } else {
             notificationsAnalytics.sendNotificationOptOut()
           }
@@ -111,6 +117,9 @@ class MainActivity : AppCompatActivity() {
           runCatching {
             notificationsPermissionLauncher?.launch(Manifest.permission.POST_NOTIFICATIONS)
           }
+        } else {
+          notificationsAnalytics.sendExperimentNotificationsAllowed()
+          updatesNotificationAnalyticsManager.loadUserProperty()
         }
         appLaunchPreferencesManager.setIsNotFirstLaunch()
       }
