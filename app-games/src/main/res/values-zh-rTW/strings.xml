@@ -265,6 +265,6 @@
   <string name="editors_choice_recommendation_notification_title">現在趨勢</string>
   <string name="editors_choice_recommendation_notification_body">今天大家都在玩這些遊戲</string>
   <!-- AB Test for Experiment 7 : Updates Notifications -->
-  <string name="update_app_updated_notification_title">%s has been updated</string>
-  <string name="update_app_updated_notification_body">Discover what\'s new</string>
+  <string name="update_app_updated_notification_title">%s 已更新</string>
+  <string name="update_app_updated_notification_body">探索最新資訊</string>
 </resources>
