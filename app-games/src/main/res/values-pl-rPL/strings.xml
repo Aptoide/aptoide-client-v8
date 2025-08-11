@@ -270,4 +270,7 @@
   <!-- AB Test for Experiment 6 editors choice recommendation apps -->
   <string name="editors_choice_recommendation_notification_title">Teraz na topie</string>
   <string name="editors_choice_recommendation_notification_body">🔥 Wszyscy grają dzisiaj w TE gry</string>
+  <!-- AB Test for Experiment 7 : Updates Notifications -->
+  <string name="update_app_updated_notification_title">%s został zaktualizowany</string>
+  <string name="update_app_updated_notification_body">Odkryj nowości</string>
 </resources>

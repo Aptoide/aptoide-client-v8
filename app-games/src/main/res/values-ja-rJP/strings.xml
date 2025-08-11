@@ -265,4 +265,7 @@
   <!-- AB Test for Experiment 6 editors choice recommendation apps -->
   <string name="editors_choice_recommendation_notification_title">現在人気急上昇中</string>
   <string name="editors_choice_recommendation_notification_body">🔥 今日はみんながこれらのゲームをプレイしています！</string>
+  <!-- AB Test for Experiment 7 : Updates Notifications -->
+  <string name="update_app_updated_notification_title">%s 更新されました</string>
+  <string name="update_app_updated_notification_body">新着情報をチェック</string>
 </resources>

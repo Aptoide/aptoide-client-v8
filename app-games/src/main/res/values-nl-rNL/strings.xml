@@ -266,4 +266,7 @@
   <!-- AB Test for Experiment 6 editors choice recommendation apps -->
   <string name="editors_choice_recommendation_notification_title">Nu populair</string>
   <string name="editors_choice_recommendation_notification_body">🔥 Iedereen speelt vandaag DEZE games</string>
+  <!-- AB Test for Experiment 7 : Updates Notifications -->
+  <string name="update_app_updated_notification_title">%s is bijgewerkt</string>
+  <string name="update_app_updated_notification_body">Ontdek wat er nieuw is</string>
 </resources>
