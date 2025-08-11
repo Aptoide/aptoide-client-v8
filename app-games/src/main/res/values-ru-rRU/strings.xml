@@ -271,6 +271,6 @@
   <string name="editors_choice_recommendation_notification_title">Сейчас в тренде</string>
   <string name="editors_choice_recommendation_notification_body">🔥 Сегодня все играют в ЭТИ игры</string>
   <!-- AB Test for Experiment 7 : Updates Notifications -->
-  <string name="update_app_updated_notification_title">%s has been updated</string>
-  <string name="update_app_updated_notification_body">Discover what\'s new</string>
+  <string name="update_app_updated_notification_title">%s был обновлен</string>
+  <string name="update_app_updated_notification_body">Узнайте, что нового</string>
 </resources>
