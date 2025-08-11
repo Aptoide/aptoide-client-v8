@@ -264,4 +264,7 @@
   <!-- AB Test for Experiment 6 editors choice recommendation apps -->
   <string name="editors_choice_recommendation_notification_title">현재 인기 있는</string>
   <string name="editors_choice_recommendation_notification_body">🔥 오늘 모두가 이 게임들을 플레이하고 있어요!</string>
+  <!-- AB Test for Experiment 7 : Updates Notifications -->
+  <string name="update_app_updated_notification_title">%s 업데이트되었습니다.</string>
+  <string name="update_app_updated_notification_body">새로워진 것을 확인하세요</string>
 </resources>

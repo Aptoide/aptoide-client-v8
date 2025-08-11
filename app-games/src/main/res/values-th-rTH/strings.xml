@@ -147,16 +147,16 @@
   <!-- APKFY full screen-->
   <string name="apkfy_install_installing">กำลังติดตั้ง</string>
   <string name="apkfy_install_button">ติดตั้ง %1$s</string>
-  <string name="apkfy_aptoide_games_intro">You\’re using Aptoide Games to install %1$s</string>
-  <string name="apkfy_aptoide_games_intro_2">always the latest version, faster and safer</string>
-  <string name="apkfy_aptoide_games_advantages_title">Why keep Aptoide Games?</string>
-  <string name="apkfy_aptoide_games_advantage_updates"><![CDATA[Get <1>%1$s</1> updates first]]></string>
-  <string name="apkfy_aptoide_games_advantage_safety">Safe and verified APKs</string>
-  <string name="apkfy_aptoide_games_advantage_no_login">No login needed</string>
+  <string name="apkfy_aptoide_games_intro">คุณกำลังใช้ Aptoide Games เพื่อติดตั้ง %1$s</string>
+  <string name="apkfy_aptoide_games_intro_2">เวอร์ชันล่าสุดเสมอ เร็วขึ้นและปลอดภัยยิ่งขึ้น</string>
+  <string name="apkfy_aptoide_games_advantages_title">ทำไมต้องเก็บ Aptoide Games?</string>
+  <string name="apkfy_aptoide_games_advantage_updates"><![CDATA[รับ <1>%1$s</1>อัปเดตก่อน]]></string>
+  <string name="apkfy_aptoide_games_advantage_safety">แอปที่ปลอดภัยและได้รับการตรวจสอบแล้ว</string>
+  <string name="apkfy_aptoide_games_advantage_no_login">ไม่ต้องเข้าสู่ระบบ</string>
   <!-- APKFY full screen Roblox-->
-  <string name="apkfy_aptoide_games_advantage_updates_roblox"><![CDATA[No Aptoide Games? <1>No Roblox updates.</1>]]></string>
-  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">Keep Aptoide Games - get updates first, play first.</string>
-  <string name="apkfy_aptoide_games_advantage_space_roblox">Only 10MB. You won’t even feel it.</string>
+  <string name="apkfy_aptoide_games_advantage_updates_roblox"><![CDATA[ไม่มีเกม Aptoide?<1>ไม่มีการอัปเดต Roblox.</1>]]></string>
+  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">เก็บ Aptoide Games - รับอัปเดตก่อน เล่นก่อน</string>
+  <string name="apkfy_aptoide_games_advantage_space_roblox">เพียง 10MB. คุณแทบไม่รู้สึกเลย.</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">ชำระด้วย Aptoide Wallet</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">มันจะถูกติดตั้งโดยอัตโนมัติและคุณจะได้รับโบนัสในการซื้อทั้งหมด!</string>
   <string name="buy_button" comment="buy">ซื้อ</string>
@@ -226,7 +226,7 @@
   </plurals>
   <string name="update_notification_body">แตะที่นี่เพื่อติดตั้ง</string>
   <string name="update_aptoide_games_update_notification">มีเกมส์ Aptoide เวอร์ชันใหม่แล้ว</string>
-  <string name="update_available_vip_update_notification">%s : New version available</string>
+  <string name="update_available_vip_update_notification">%s : มีเวอร์ชันใหม่พร้อมใช้งาน</string>
   <!-- GenAi -->
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
   <string name="genai_me_title">ฉัน</string>
@@ -258,10 +258,13 @@
   <string name="tag_categories">หมวดหมู่</string>
   <string name="tag_bonus">โบนัส</string>
   <!-- AB Test for roblox companion apps -->
-  <string name="companion_apps_roblox_notification_title">Enjoying Roblox? 🔥</string>
-  <string name="companion_apps_roblox_notification_body">These are the must have apps for Roblox players</string>
-  <string name="companion_apps_roblox_bundle_title">For Roblox players</string>
+  <string name="companion_apps_roblox_notification_title">สนุกกับ Roblox ไหม? 🔥</string>
+  <string name="companion_apps_roblox_notification_body">นี่คือแอปที่ต้องมีสำหรับผู้เล่น Roblox</string>
+  <string name="companion_apps_roblox_bundle_title">สำหรับผู้เล่น Roblox</string>
   <!-- AB Test for Experiment 6 editors choice recommendation apps -->
-  <string name="editors_choice_recommendation_notification_title">Trending now</string>
-  <string name="editors_choice_recommendation_notification_body">🔥 Everyone\'s playing THESE games today</string>
+  <string name="editors_choice_recommendation_notification_title">กำลังเป็นที่นิยมในขณะนี้</string>
+  <string name="editors_choice_recommendation_notification_body">🔥 ทุกคนกำลังเล่นเกมเหล่านี้วันนี้</string>
+  <!-- AB Test for Experiment 7 : Updates Notifications -->
+  <string name="update_app_updated_notification_title">%s ได้รับการอัปเดตแล้ว</string>
+  <string name="update_app_updated_notification_body">ค้นพบสิ่งใหม่</string>
 </resources>

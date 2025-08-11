@@ -266,4 +266,7 @@
   <!-- AB Test for Experiment 6 editors choice recommendation apps -->
   <string name="editors_choice_recommendation_notification_title">Derzeit im Trend</string>
   <string name="editors_choice_recommendation_notification_body">🔥 Heute spielen alle DIESE Spiele</string>
+  <!-- AB Test for Experiment 7 : Updates Notifications -->
+  <string name="update_app_updated_notification_title">%s wurde aktualisiert</string>
+  <string name="update_app_updated_notification_body">Entdecken Sie die Neuheiten</string>
 </resources>
