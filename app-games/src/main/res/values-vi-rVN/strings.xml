@@ -147,16 +147,16 @@
   <!-- APKFY full screen-->
   <string name="apkfy_install_installing">Đang cài đặt</string>
   <string name="apkfy_install_button">Cài đặt %1$s</string>
-  <string name="apkfy_aptoide_games_intro">You\’re using Aptoide Games to install %1$s</string>
-  <string name="apkfy_aptoide_games_intro_2">always the latest version, faster and safer</string>
-  <string name="apkfy_aptoide_games_advantages_title">Why keep Aptoide Games?</string>
-  <string name="apkfy_aptoide_games_advantage_updates"><![CDATA[Get <1>%1$s</1> updates first]]></string>
-  <string name="apkfy_aptoide_games_advantage_safety">Safe and verified APKs</string>
-  <string name="apkfy_aptoide_games_advantage_no_login">No login needed</string>
+  <string name="apkfy_aptoide_games_intro">Bạn đang sử dụng Aptoide Games để cài đặt %1$s</string>
+  <string name="apkfy_aptoide_games_intro_2">Luôn luôn là phiên bản mới nhất, nhanh hơn và an toàn hơn.</string>
+  <string name="apkfy_aptoide_games_advantages_title">Tại sao nên giữ Aptoide Games?</string>
+  <string name="apkfy_aptoide_games_advantage_updates"><![CDATA[Nhận <1>%1$s</1> cập nhật đầu tiên]]></string>
+  <string name="apkfy_aptoide_games_advantage_safety">APK an toàn và đã được xác minh</string>
+  <string name="apkfy_aptoide_games_advantage_no_login">Không cần đăng nhập</string>
   <!-- APKFY full screen Roblox-->
-  <string name="apkfy_aptoide_games_advantage_updates_roblox"><![CDATA[No Aptoide Games? <1>No Roblox updates.</1>]]></string>
-  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">Keep Aptoide Games - get updates first, play first.</string>
-  <string name="apkfy_aptoide_games_advantage_space_roblox">Only 10MB. You won’t even feel it.</string>
+  <string name="apkfy_aptoide_games_advantage_updates_roblox"><![CDATA[Không có trò chơi Aptoide? <1>Không có bản cập nhật Roblox.</1>]]></string>
+  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">Giữ Aptoide Games - nhận cập nhật trước, chơi trước.</string>
+  <string name="apkfy_aptoide_games_advantage_space_roblox">Chỉ 10MB. Bạn sẽ không cảm thấy gì cả.</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Thanh toán bằng Aptoide Wallet</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Nó sẽ được tự động cài đặt và bạn sẽ nhận được tiền thưởng khi mua hàng!</string>
   <string name="buy_button" comment="buy">Mua</string>
@@ -226,7 +226,7 @@
   </plurals>
   <string name="update_notification_body">Nhấn vào đây để cài đặt.</string>
   <string name="update_aptoide_games_update_notification">Có phiên bản mới của Trò chơi Aptoide</string>
-  <string name="update_available_vip_update_notification">%s : New version available</string>
+  <string name="update_available_vip_update_notification">%s Phiên bản mới đã có sẵn</string>
   <!-- GenAi -->
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
   <string name="genai_me_title">Tôi</string>
@@ -258,13 +258,13 @@
   <string name="tag_categories">Danh mục</string>
   <string name="tag_bonus">Tiền thưởng</string>
   <!-- AB Test for roblox companion apps -->
-  <string name="companion_apps_roblox_notification_title">Enjoying Roblox? 🔥</string>
-  <string name="companion_apps_roblox_notification_body">These are the must have apps for Roblox players</string>
-  <string name="companion_apps_roblox_bundle_title">For Roblox players</string>
+  <string name="companion_apps_roblox_notification_title">Bạn đang thích Roblox? 🔥</string>
+  <string name="companion_apps_roblox_notification_body">Đây là những ứng dụng không thể thiếu cho người chơi Roblox.</string>
+  <string name="companion_apps_roblox_bundle_title">Dành cho người chơi Roblox</string>
   <!-- AB Test for Experiment 6 editors choice recommendation apps -->
-  <string name="editors_choice_recommendation_notification_title">Trending now</string>
-  <string name="editors_choice_recommendation_notification_body">🔥 Everyone\'s playing THESE games today</string>
+  <string name="editors_choice_recommendation_notification_title">Đang hot hiện nay</string>
+  <string name="editors_choice_recommendation_notification_body">🔥 Mọi người đang chơi NHỮNG trò chơi này hôm nay</string>
   <!-- AB Test for Experiment 7 : Updates Notifications -->
-  <string name="update_app_updated_notification_title">%s has been updated</string>
-  <string name="update_app_updated_notification_body">Discover what\'s new</string>
+  <string name="update_app_updated_notification_title">%s đã được cập nhật</string>
+  <string name="update_app_updated_notification_body">Khám phá những điều mới mẻ</string>
 </resources>
