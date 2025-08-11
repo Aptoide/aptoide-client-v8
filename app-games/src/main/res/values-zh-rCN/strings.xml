@@ -264,4 +264,7 @@
   <!-- AB Test for Experiment 6 editors choice recommendation apps -->
   <string name="editors_choice_recommendation_notification_title">当前热门</string>
   <string name="editors_choice_recommendation_notification_body">🔥 今天大家都玩这些游戏！</string>
+  <!-- AB Test for Experiment 7 : Updates Notifications -->
+  <string name="update_app_updated_notification_title">%s has been updated</string>
+  <string name="update_app_updated_notification_body">Discover what\'s new</string>
 </resources>
