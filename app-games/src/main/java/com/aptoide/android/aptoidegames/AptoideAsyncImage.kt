@@ -45,6 +45,7 @@ fun AptoideFeatureGraphicImage(
   data: String?,
   contentDescription: String?,
   transformations: Transformation? = null,
+  colorFilter: ColorFilter? = null,
 ) {
   val finalUrl = data?.let {
     "$data?w=512&h=250"
@@ -53,7 +54,8 @@ fun AptoideFeatureGraphicImage(
     modifier = modifier,
     data = finalUrl,
     contentDescription = contentDescription,
-    transformations = transformations
+    transformations = transformations,
+    colorFilter = colorFilter
   )
 }
 
