@@ -39,10 +39,12 @@ fun gameGenieScreen() = ScreenData.withAnalytics(
   val viewModel = hiltViewModel<GameGenieViewModel>()
   val uiState by viewModel.uiState.collectAsState()
   val analytics = rememberGameGenieAnalytics()
+  val firstLoad by viewModel.firstLoad.collectAsState(true)
 
   ConversationsDrawer(
     mainScreen = {
       ChatbotView(
+        firstLoad = firstLoad,
         uiState = uiState,
         navigateTo = navigate,
         onError = viewModel::reload,
@@ -50,6 +52,7 @@ fun gameGenieScreen() = ScreenData.withAnalytics(
           viewModel.sendMessage(message)
           analytics.sendGameGenieMessageSent()
         },
+        setFirstLoadDone = viewModel::setFirstLoadDone,
         onSuggestionSend = { message, index ->
           viewModel.sendMessage(message)
           analytics.sendGameGenieSuggestionClick(index)
@@ -64,10 +67,12 @@ fun gameGenieScreen() = ScreenData.withAnalytics(
 
 @Composable
 fun ChatbotView(
+  firstLoad: Boolean,
   uiState: GameGenieUIState,
   navigateTo: (String) -> Unit,
   onError: () -> Unit,
   onMessageSend: (String) -> Unit,
+  setFirstLoadDone: () -> Unit,
   onSuggestionSend: (String, Int) -> Unit,
 ) {
   Column(
@@ -77,24 +82,21 @@ fun ChatbotView(
       .imePadding(),
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
-    when (uiState.type) {
-      GameGenieUIStateType.LOADING -> ChatScreen(
-        uiState = uiState,
-        navigateTo = navigateTo,
-        onMessageSend = {},
-        onSuggestionSend = { _, _ -> },
-        isLoading = true
-      )
+    val isLoading = uiState.type == GameGenieUIStateType.LOADING
 
+    when (uiState.type) {
+      GameGenieUIStateType.LOADING_CHAT -> LoadingView()
       GameGenieUIStateType.NO_CONNECTION -> NoConnectionView(onRetryClick = onError)
       GameGenieUIStateType.ERROR -> GenericErrorView(onError)
-      GameGenieUIStateType.IDLE -> ChatScreen(
+      else -> ChatScreen(
         uiState = uiState,
+        firstLoad = firstLoad,
         navigateTo = navigateTo,
         onMessageSend = onMessageSend,
-        onSuggestionSend = onSuggestionSend
+        onSuggestionSend = onSuggestionSend,
+        setFirstLoadDone = setFirstLoadDone,
+        isLoading = isLoading
       )
-      GameGenieUIStateType.LOADING_CHAT -> LoadingView()
     }
   }
 }
@@ -102,9 +104,11 @@ fun ChatbotView(
 @Composable
 fun ChatScreen(
   uiState: GameGenieUIState,
+  firstLoad: Boolean,
   navigateTo: (String) -> Unit,
   onMessageSend: (String) -> Unit,
   onSuggestionSend: (String, Int) -> Unit,
+  setFirstLoadDone: () -> Unit,
   isLoading: Boolean = false,
 ) {
   val suggestions = listOf(
@@ -119,11 +123,13 @@ fun ChatScreen(
       .fillMaxSize()
   ) {
     MessageList(
-      messages = uiState.chat.conversation.asReversed(),
+      messages = uiState.chat.conversation,
+      firstLoad = firstLoad,
       navigateTo = navigateTo,
       modifier = Modifier
         .weight(1f),
       suggestions = suggestions,
+      setFirstLoadDone = setFirstLoadDone,
       onSuggestionClick = onSuggestionSend
     )
     if (isLoading) {

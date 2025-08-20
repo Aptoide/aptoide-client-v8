@@ -8,8 +8,10 @@ import com.aptoide.android.aptoidegames.gamegenie.domain.GameGenieChat
 import com.aptoide.android.aptoidegames.gamegenie.domain.Token
 import com.aptoide.android.aptoidegames.gamegenie.presentation.GameGenieUIStateType.NO_CONNECTION
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -26,6 +28,13 @@ class GameGenieViewModel @Inject constructor(
   private val viewModelState = MutableStateFlow(GameGenieViewModelState())
   private val _installedApps = MutableStateFlow<List<GameContext>>(emptyList())
 
+  private val _conversation = MutableStateFlow<List<ChatInteraction>>(emptyList())
+  val conversation: Flow<List<ChatInteraction>> = _conversation
+    .map { it.asReversed() }
+
+  private val _firstLoad = MutableStateFlow(true)
+  val firstLoad: Flow<Boolean> = _firstLoad
+
   val uiState = viewModelState.map { it.toUiState() }
     .stateIn(
       viewModelScope,
@@ -36,6 +45,7 @@ class GameGenieViewModel @Inject constructor(
   init {
     loadInstalledApps()
     refreshToken()
+    _conversation.value = viewModelState.value.chat.conversation
   }
 
   private fun loadInstalledApps() {
@@ -72,7 +82,8 @@ class GameGenieViewModel @Inject constructor(
   fun sendMessage(userMessage: String) {
     viewModelScope.launch {
       try {
-        updateLoadingState { updateConversation(userMessage) }
+        updateConversation(userMessage)
+        updateLoadingState()
         val chat = gameGenieUseCase.sendMessage(
           chat = uiState.value.chat.toGameGenieChatHistory(),
           userMessage = userMessage,
@@ -85,37 +96,46 @@ class GameGenieViewModel @Inject constructor(
     }
   }
 
-  private fun updateConversation(userMessage: String): List<ChatInteraction> =
-    uiState.value.chat.conversation.run {
-      if (isNotEmpty()) {
-        val lastInteraction = last().copy(user = userMessage)
-        dropLast(1) + lastInteraction
-      } else {
-        this
-      }
+  fun updateConversation(userMessage: String) {
+    val current = _conversation.value
+    val updated = if (current.isNotEmpty()) {
+      val lastInteraction = current.last().copy(user = userMessage)
+      current.dropLast(1) + lastInteraction
+    } else {
+      current
     }
+    _conversation.value = updated
+  }
+
 
   fun createNewChat() {
-    viewModelState.update { it.empty(it.token) }
+    viewModelScope.launch {
+      _firstLoad.value = true
+      viewModelState.update { it.empty(it.token) }
+      _conversation.value = viewModelState.value.chat.conversation
+    }
+  }
+
+  fun setFirstLoadDone() {
+    _firstLoad.value = false
   }
 
   fun loadConversation(id: String) {
     viewModelScope.launch {
+      _firstLoad.value = true
       viewModelState.update {
-        it.copy(
-          type = GameGenieUIStateType.LOADING_CHAT,
-        )
+        it.copy(type = GameGenieUIStateType.LOADING_CHAT)
       }
+
       gameGenieUseCase.loadChat(id)
         .collectLatest { newChat ->
           newChat?.let {
+            _conversation.value = newChat.conversation
             viewModelState.update { state ->
               state.copy(
                 type = GameGenieUIStateType.IDLE,
                 chat = newChat,
-                apps = newChat.conversation.flatMap { interaction ->
-                  interaction.apps.map { app -> app.packageName }
-                }
+                apps = newChat.conversation.flatMap { it.apps.map { app -> app.packageName } }
               )
             }
           }
@@ -123,36 +143,30 @@ class GameGenieViewModel @Inject constructor(
     }
   }
 
-  private fun updateLoadingState(updateConversation: () -> List<ChatInteraction>) {
-    val updatedConversation = updateConversation()
+  private fun updateLoadingState() {
+    val updated = _conversation.value
     viewModelState.update {
       it.copy(
         type = GameGenieUIStateType.LOADING,
-        chat = it.chat.copy(conversation = updatedConversation),
+        chat = it.chat.copy(conversation = updated),
         apps = emptyList()
       )
     }
   }
 
   private fun updateSuccessState(response: GameGenieChat) {
+    val newMessage = response.conversation.last()
+    _conversation.value += newMessage
+
     viewModelState.update {
       it.copy(
         type = GameGenieUIStateType.IDLE,
         chat = it.chat.copy(
           id = response.id,
           title = response.title,
-          conversation = viewModelState.value.chat.conversation + response.conversation.last()
+          conversation = _conversation.value
         ),
-        apps = response.conversation.lastOrNull()?.apps?.map { app -> app.packageName }
-          ?: emptyList()
-      )
-    }
-  }
-
-  fun setGeneralError() {
-    viewModelState.update {
-      it.copy(
-        type = GameGenieUIStateType.ERROR
+        apps = newMessage.apps.map { app -> app.packageName }
       )
     }
   }
