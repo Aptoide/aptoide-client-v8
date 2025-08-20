@@ -19,10 +19,12 @@ fun gameGenieSearchScreen() = ScreenData.withAnalytics(
   val viewModel = hiltViewModel<GameGenieViewModel>()
   val uiState by viewModel.uiState.collectAsState()
   val analytics = rememberGameGenieAnalytics()
+  val firstLoad by viewModel.firstLoad.collectAsState(true)
 
   ConversationsDrawer(
     mainScreen = {
       ChatbotView(
+        firstLoad = firstLoad,
         uiState = uiState,
         navigateTo = navigate,
         onError = viewModel::reload,
@@ -30,6 +32,7 @@ fun gameGenieSearchScreen() = ScreenData.withAnalytics(
           viewModel.sendMessage(message)
           analytics.sendGameGenieMessageSent()
         },
+        setFirstLoadDone = viewModel::setFirstLoadDone,
         onSuggestionSend = { message, index ->
           viewModel.sendMessage(message)
           analytics.sendGameGenieSuggestionClick(index)

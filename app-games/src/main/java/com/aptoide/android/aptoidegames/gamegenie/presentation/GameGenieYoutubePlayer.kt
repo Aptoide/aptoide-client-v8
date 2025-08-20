@@ -62,6 +62,7 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTube
 fun GameGenieYoutubePlayer(
   modifier: Modifier,
   videoId: String,
+  playerCache: MutableMap<String, YouTubePlayerView>,
   contentDesc: String = "",
 ) = runPreviewable(
   preview = {
@@ -80,12 +81,12 @@ fun GameGenieYoutubePlayer(
     val videoSettingsViewModel = hiltViewModel<VideoSettingsViewModel>()
     val shouldMute by videoSettingsViewModel.uiState.collectAsState()
 
-    var showVideo by remember { mutableStateOf(false) }
+    var showVideo by remember { mutableStateOf(true) }
     var showFullscreen by remember { mutableStateOf(false) }
     var userPaused by remember { mutableStateOf(false) }
 
     LaunchedEffect(videoId) {
-      showVideo = false
+      showVideo = true
       showFullscreen = false
       userPaused = false
     }
@@ -94,6 +95,7 @@ fun GameGenieYoutubePlayer(
       videoId = videoId,
       youtubePlayerTracker = youtubePlayerTracker,
       startMuted = shouldMute,
+      playerCache = playerCache
     )
 
     DisposableEffect(lifecycleOwner) {
@@ -113,7 +115,7 @@ fun GameGenieYoutubePlayer(
 
       onDispose {
         lifecycleOwner.lifecycle.removeObserver(observer)
-        youtubePlayerView?.release()
+        //youtubePlayerView?.release()
       }
     }
 
@@ -171,7 +173,7 @@ fun GameGenieYoutubePlayer(
     ) {
       GameGenieYoutubePlayerContent(
         modifier = modifier,
-        youtubePlayerView = youtubePlayerView!!, //check on visible already
+        youtubePlayerView = youtubePlayerView, //check on visible already
         showFullscreen = showFullscreen,
         toggleFullscreen = { showFullscreen = !showFullscreen },
         contentDescription = contentDesc
@@ -273,13 +275,14 @@ fun rememberYoutubePlayerView(
   videoId: String,
   youtubePlayerTracker: YouTubePlayerTracker,
   startMuted: Boolean,
-): YouTubePlayerView? {
+  playerCache: MutableMap<String, YouTubePlayerView>
+): YouTubePlayerView {
   val context = LocalContext.current
   val lifecycle = LocalLifecycleOwner.current.lifecycle
   val configuration = LocalConfiguration.current
 
-  val result = remember(videoId) {
-    try {
+  return remember(videoId) {
+    playerCache.getOrPut(videoId) {
       val youtubePlayerView = YouTubePlayerView(context)
       lifecycle.addObserver(youtubePlayerView)
       youtubePlayerView.enableAutomaticInitialization = false
@@ -292,7 +295,6 @@ fun rememberYoutubePlayerView(
       val youtubeListener = object : AbstractYouTubePlayerListener() {
         override fun onReady(youTubePlayer: YouTubePlayer) {
           youTubePlayer.addListener(youtubePlayerTracker)
-
           youTubePlayer.cueVideo(videoId, youtubePlayerTracker.currentSecond)
         }
       }
@@ -310,13 +312,8 @@ fun rememberYoutubePlayerView(
 
       youtubePlayerView.initialize(youtubeListener, iFramePlayerOptions)
       youtubePlayerView
-    } catch (e: Throwable) {
-      e.printStackTrace()
-      null
     }
   }
-
-  return result
 }
 
 fun View?.removeSelf() {
