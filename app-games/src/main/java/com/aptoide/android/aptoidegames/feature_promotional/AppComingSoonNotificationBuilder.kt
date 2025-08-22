@@ -99,7 +99,7 @@ class AppComingSoonNotificationBuilder @Inject constructor(
     notificationPackage: String
   ) {
     if (context.isAllowed(Manifest.permission.POST_NOTIFICATIONS)) {
-      notificationsAnalytics.sendNotificationImpression(notificationTag, notificationPackage)
+      notificationsAnalytics.sendNotificationReceived(notificationTag, notificationPackage)
       NotificationManagerCompat.from(context).notify(notificationId, notification)
     }
   }

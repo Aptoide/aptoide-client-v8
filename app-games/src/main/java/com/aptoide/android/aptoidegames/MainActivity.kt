@@ -187,7 +187,7 @@ class MainActivity : AppCompatActivity() {
       val notificationPackage = it.notificationPackage
 
       notificationsAnalytics.sendExperimentNotificationClick(notificationTag!!, notificationPackage)
-      notificationsAnalytics.sendNotificationOpened(notificationTag!!, notificationPackage)
+      notificationsAnalytics.sendNotificationClicked(notificationTag!!, notificationPackage)
 
       if (notificationTag == CompanionAppsNotificationBuilder.COMPANION_APPS_NOTIFICATION_TAG) {
         notificationsAnalytics.sendRobloxNotificationClick()
