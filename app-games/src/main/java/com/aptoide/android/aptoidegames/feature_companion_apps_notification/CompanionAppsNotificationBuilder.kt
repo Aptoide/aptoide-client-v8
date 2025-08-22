@@ -99,7 +99,7 @@ class CompanionAppsNotificationBuilder @Inject constructor(
     notificationPackage: String
   ) {
     if (context.isAllowed(Manifest.permission.POST_NOTIFICATIONS)) {
-      notificationsAnalytics.sendNotificationImpression(notificationTag, notificationPackage)
+      notificationsAnalytics.sendNotificationReceived(notificationTag, notificationPackage)
       notificationsAnalytics.sendRobloxNofiticationShown()
       NotificationManagerCompat.from(context).notify(notificationId, notification)
     }

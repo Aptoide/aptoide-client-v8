@@ -27,22 +27,20 @@ class NotificationsAnalytics @Inject constructor(
     params = emptyMap()
   )
 
-  fun sendNotificationOpened(notificationTag: String, notificationPackage: String?) {
+  fun sendNotificationClicked(notificationTag: String, notificationPackage: String?) {
     genericAnalytics.logEvent(
-      name = "notification_event",
+      name = "notification_clicked",
       params = mapOf(
-        NOTIFICATION_ACTION to NOTIFICATION_ACTION_CLICK,
         NOTIFICATION_TAG to notificationTag,
         NOTIFICATION_PACKAGE to (notificationPackage ?: "n-a")
       )
     )
   }
 
-  fun sendNotificationImpression(notificationTag: String, notificationPackage: String? = null) {
+  fun sendNotificationReceived(notificationTag: String, notificationPackage: String? = null) {
     genericAnalytics.logEvent(
-      name = "notification_event",
+      name = "notification_received",
       params = mapOf(
-        NOTIFICATION_ACTION to NOTIFICATION_ACTION_IMPRESSION,
         NOTIFICATION_TAG to notificationTag,
         NOTIFICATION_PACKAGE to (notificationPackage ?: "n-a")
       )
@@ -98,7 +96,6 @@ class NotificationsAnalytics @Inject constructor(
   companion object {
     internal const val NOTIFICATION_ACTION = "action"
     internal const val NOTIFICATION_ACTION_CLICK = "click"
-    internal const val NOTIFICATION_ACTION_IMPRESSION = "impression"
     internal const val NOTIFICATION_TAG = "tag"
     internal const val NOTIFICATION_PACKAGE = "package"
   }

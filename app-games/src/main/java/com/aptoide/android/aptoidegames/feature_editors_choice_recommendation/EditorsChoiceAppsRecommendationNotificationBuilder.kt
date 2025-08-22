@@ -94,7 +94,7 @@ class EditorsChoiceAppsRecommendationNotificationBuilder @Inject constructor(
     notificationTag: String,
   ) {
     if (context.isAllowed(Manifest.permission.POST_NOTIFICATIONS)) {
-      notificationsAnalytics.sendNotificationImpression(notificationTag, null)
+      notificationsAnalytics.sendNotificationReceived(notificationTag, null)
       notificationsAnalytics.sendEditorsChoiceNotificationShown()
       NotificationManagerCompat.from(context).notify(notificationId, notification)
     }
