@@ -13,6 +13,6 @@ class UpdatesNotificationAnalyticsManager @Inject constructor(
 
   suspend fun loadUserProperty() {
     val variant = featureFlags.getFlagAsString("updates_notification_type")
-    biAnalytics.setUserProperties("experiment7_updates_notification_variant" to variant)
+    biAnalytics.setUserProperties("exp7_updates_variant" to variant)
   }
 }
