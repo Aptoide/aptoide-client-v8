@@ -33,7 +33,7 @@ class AptoideMMPCampaign(
         buildReplaceMap(packageName),
         buildBaseMap(
           utmMedium = allowedBundleTags[bundleTag]?.first,
-          utmCampaign = allowedBundleTags[bundleTag]?.second
+          utmCampaign = campaign.campaignId ?: allowedBundleTags[bundleTag]?.second
         )
       )
     }
@@ -50,7 +50,7 @@ class AptoideMMPCampaign(
         buildReplaceMap(),
         buildAppendMap(
           utmMedium = allowedBundleTags[bundleTag]?.first,
-          utmCampaign = allowedBundleTags[bundleTag]?.second,
+          utmCampaign = campaign.campaignId ?: allowedBundleTags[bundleTag]?.second,
           isCta = isCta,
         )
       )

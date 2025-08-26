@@ -115,9 +115,11 @@ fun installViewStates(
             } else {
               app.campaigns?.placementType = "appview"
 
+              val campaignId = app.campaigns?.deepLinkUtms?.get("utm_campaign")
               app.campaigns?.toAptoideMMPCampaign()
                 ?.sendDownloadEvent(
                   bundleTag = analyticsContext.bundleMeta?.tag,
+                  utmCampaign = campaignId,
                   searchKeyword = analyticsContext.searchMeta?.searchKeyword,
                   currentScreen = analyticsContext.currentScreen
                 )
@@ -170,9 +172,11 @@ fun installViewStates(
             } else {
               app.campaigns?.placementType = "appview"
 
+              val campaignId = app.campaigns?.deepLinkUtms?.get("utm_campaign")
               app.campaigns?.toAptoideMMPCampaign()
                 ?.sendDownloadEvent(
                   bundleTag = analyticsContext.bundleMeta?.tag,
+                  utmCampaign = campaignId,
                   searchKeyword = analyticsContext.searchMeta?.searchKeyword,
                   currentScreen = analyticsContext.currentScreen
                 )
@@ -235,9 +239,11 @@ fun installViewStates(
             } else {
               app.campaigns?.placementType = "appview"
 
+              val campaignId = app.campaigns?.deepLinkUtms?.get("utm_campaign")
               app.campaigns?.toAptoideMMPCampaign()
                 ?.sendDownloadEvent(
                   bundleTag = analyticsContext.bundleMeta?.tag,
+                  utmCampaign = campaignId,
                   searchKeyword = analyticsContext.searchMeta?.searchKeyword,
                   currentScreen = analyticsContext.currentScreen
                 )
@@ -299,9 +305,11 @@ fun installViewStates(
             } else {
               app.campaigns?.placementType = "appview"
 
+              val campaignId = app.campaigns?.deepLinkUtms?.get("utm_campaign")
               app.campaigns?.toAptoideMMPCampaign()
                 ?.sendDownloadEvent(
                   bundleTag = analyticsContext.bundleMeta?.tag,
+                  utmCampaign = campaignId,
                   searchKeyword = analyticsContext.searchMeta?.searchKeyword,
                   currentScreen = analyticsContext.currentScreen
                 )

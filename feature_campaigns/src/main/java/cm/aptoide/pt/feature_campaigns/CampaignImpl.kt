@@ -7,6 +7,7 @@ import kotlinx.coroutines.withContext
 
 interface Campaign {
   val adListId: String?
+  val campaignId: String?
 
   //TODO Refactor This Later - Not very good architecturally
   val placementType: String?
@@ -40,6 +41,7 @@ data class CampaignImpl constructor(
   private val impressions: List<CampaignTuple>,
   private val clicks: List<CampaignTuple>,
   val downloads: List<CampaignTuple>,
+  override val campaignId: String? = null,
   private val repository: CampaignRepository,
 ) : Campaign {
   override var adListId: String? = null
