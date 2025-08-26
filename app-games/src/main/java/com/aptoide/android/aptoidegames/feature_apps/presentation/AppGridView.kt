@@ -132,7 +132,10 @@ internal fun AppsRowView(
             analyticsContext = analyticsContext.copy(itemPosition = index)
           )
           navigate(
-            buildAppViewRoute(item)
+            buildAppViewRoute(
+              appSource = item,
+              utmCampaign = item.campaigns?.campaignId
+            )
               .withItemPosition(index)
           )
         },

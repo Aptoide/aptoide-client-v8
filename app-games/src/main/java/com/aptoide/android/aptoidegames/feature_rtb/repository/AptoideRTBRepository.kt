@@ -71,16 +71,20 @@ private fun RTBResponse.toDomainModel(campaignRepository: CampaignRepository): A
     packageName = this.packageName,
     rating = Rating(this.rating, 0, emptyList()),
     pRating = Rating(this.rating, 0, emptyList()),
-    campaigns = this.tracking.aptoideMmp?.mapRTBMMPCampaigns(campaignRepository)
+    campaigns = this.tracking.aptoideMmp?.mapRTBMMPCampaigns(campaignRepository, this.campaignId)
   )
 }
 
-private fun AptoideMmp.mapRTBMMPCampaigns(campaignRepository: CampaignRepository): CampaignImpl? {
+private fun AptoideMmp.mapRTBMMPCampaigns(
+  campaignRepository: CampaignRepository,
+  campaignId: String
+): CampaignImpl? {
   return CampaignImpl(
     impressions = this.impression?.let { listOf(CampaignTuple("aptoide-mmp", this.impression)) }
       ?: emptyList(),
     clicks = this.click?.let { listOf(CampaignTuple("aptoide-mmp", this.click)) } ?: emptyList(),
     downloads = emptyList(),
+    campaignId = campaignId,
     repository = campaignRepository
   )
 }

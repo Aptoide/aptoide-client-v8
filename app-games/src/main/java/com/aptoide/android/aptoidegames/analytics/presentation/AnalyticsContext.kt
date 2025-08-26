@@ -284,7 +284,7 @@ fun String.withHomeTab(homeTab: String?) =
   withParameter(HOME_TAB_PARAM, homeTab)
 
 
-private fun String.withParameter(
+fun String.withParameter(
   name: String,
   value: String?,
 ) = when {

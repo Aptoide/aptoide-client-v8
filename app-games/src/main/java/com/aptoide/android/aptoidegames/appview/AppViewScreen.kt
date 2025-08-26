@@ -86,6 +86,7 @@ import com.aptoide.android.aptoidegames.analytics.mapOfNonNull
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGeneralAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
+import com.aptoide.android.aptoidegames.analytics.presentation.withParameter
 import com.aptoide.android.aptoidegames.appview.AppViewHeaderConstants.FEATURE_GRAPHIC_HEIGHT
 import com.aptoide.android.aptoidegames.appview.AppViewHeaderConstants.VIDEO_HEIGHT
 import com.aptoide.android.aptoidegames.appview.permissions.buildAppPermissionsRoute
@@ -143,10 +144,11 @@ private val allAppViewArguments = listOf(
   },
 )
 
-const val appViewRoute = "${APP_PATH}/{$SOURCE}?"
+const val appViewRoute =
+  "${APP_PATH}/{$SOURCE}?"
 
 fun appViewScreen() = ScreenData.withAnalytics(
-  route = appViewRoute,
+  route = "$appViewRoute$UTM_MEDIUM={$UTM_MEDIUM}&$UTM_CONTENT={$UTM_CONTENT}&$UTM_SOURCE={$UTM_SOURCE}&$UTM_CAMPAIGN={$UTM_CAMPAIGN}",
   screenAnalyticsName = "AppView",
   arguments = allAppViewArguments,
   deepLinks = listOf(
@@ -178,8 +180,18 @@ fun appViewScreen() = ScreenData.withAnalytics(
   )
 }
 
-fun buildAppViewRoute(appSource: AppSource): String =
+fun buildAppViewRoute(
+  appSource: AppSource,
+  utmCampaign: String? = "",
+  utmMedium: String? = "",
+  utmContent: String? = "",
+  utmSource: String? = ""
+): String =
   appViewRoute.replace("{$SOURCE}", appSource.asSource())
+    .withParameter(UTM_CAMPAIGN, utmCampaign)
+    .withParameter(UTM_MEDIUM, utmMedium)
+    .withParameter(UTM_CONTENT, utmContent)
+    .withParameter(UTM_SOURCE, utmSource)
 
 fun buildAppViewDeepLinkUri(appSource: AppSource) =
   BuildConfig.DEEP_LINK_SCHEMA + buildAppViewRoute(appSource)
