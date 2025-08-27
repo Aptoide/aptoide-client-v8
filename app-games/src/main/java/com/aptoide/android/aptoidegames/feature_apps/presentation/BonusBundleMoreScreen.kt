@@ -45,6 +45,7 @@ import cm.aptoide.pt.feature_apps.presentation.AppsListUiStateProvider
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
 import cm.aptoide.pt.feature_apps.presentation.rememberWalletApp
 import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
+import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import com.aptoide.android.aptoidegames.AptoideOutlinedText
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
@@ -176,9 +177,15 @@ fun MoreBonusBundleViewContent(
   appList: List<App>,
   navigate: (String) -> Unit,
 ) {
+  val analyticsContext = AnalyticsContext.current
+  val bundleAnalytics = rememberBundleAnalytics()
+
   val navigateToApp = { app: App, index: Int? ->
     navigate(
-      buildAppViewRoute(app).withItemPosition(index)
+      buildAppViewRoute(
+        appSource = app,
+        utmCampaign = app.campaigns?.campaignId
+      ).withItemPosition(index)
     )
   }
 
@@ -192,7 +199,14 @@ fun MoreBonusBundleViewContent(
       AppItem(
         modifier = Modifier.padding(horizontal = 16.dp),
         app = app,
-        onClick = { navigateToApp(app, index) },
+        onClick = {
+          app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(analyticsContext.bundleMeta?.tag)
+          bundleAnalytics.sendAppPromoClick(
+            app = app,
+            analyticsContext = analyticsContext.copy(itemPosition = index)
+          )
+          navigateToApp(app, index)
+        },
       ) {
         InstallViewShort(app)
       }
