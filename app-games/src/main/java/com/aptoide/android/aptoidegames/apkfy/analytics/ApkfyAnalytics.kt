@@ -4,6 +4,7 @@ import android.content.Context
 import cm.aptoide.pt.feature_apkfy.domain.ApkfyModel
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
+import com.aptoide.android.aptoidegames.analytics.UserProperty
 import com.aptoide.android.aptoidegames.analytics.mapOfNonNull
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -14,9 +15,8 @@ class ApkfyAnalytics @Inject constructor(
   @ApplicationContext private val context: Context,
 ) {
 
-  fun setGuestUIDUserProperty(guestUid: String) = biAnalytics.setUserProperties(
-    "aptoide_mmp_guest_id" to guestUid
-  )
+  fun setGuestUIDUserProperty(guestUid: String) =
+    biAnalytics.setUserProperties(UserProperty("aptoide_mmp_guest_id", guestUid))
 
   fun sendApkfySuccessEvent(
     data: String,

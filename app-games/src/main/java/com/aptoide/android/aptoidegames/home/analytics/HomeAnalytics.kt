@@ -3,6 +3,7 @@ package com.aptoide.android.aptoidegames.home.analytics
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics.Companion.P_NAME
+import com.aptoide.android.aptoidegames.analytics.UserProperty
 
 class HomeAnalytics(
   private val genericAnalytics: GenericAnalytics,
@@ -10,7 +11,7 @@ class HomeAnalytics(
 ) {
 
   fun setECVideoFlagProperty(variant: String) =
-    biAnalytics.setUserProperties("ab_test_ec_videos_jan_29" to variant)
+    biAnalytics.setUserProperties(UserProperty("ab_test_ec_videos_jan_29", variant))
 
   fun sendECVideosFlagReady() =
     genericAnalytics.logEvent("ec_videos_flag_ready", params = emptyMap())

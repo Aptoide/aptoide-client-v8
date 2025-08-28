@@ -10,6 +10,7 @@ import cm.aptoide.pt.feature_flags.domain.FeatureFlags
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
+import com.aptoide.android.aptoidegames.analytics.UserProperty
 import com.aptoide.android.aptoidegames.analytics.asNullableParameter
 import com.aptoide.android.aptoidegames.analytics.dto.AnalyticsUIContext
 import com.aptoide.android.aptoidegames.analytics.dto.InstallAction
@@ -37,12 +38,17 @@ class InstallAnalyticsImpl(
 
   init {
     CoroutineScope(Dispatchers.Main).launch {
-      biAnalytics.setUserProperties("downloader_variant" to featureFlags.getDownloaderVariant())
+      biAnalytics.setUserProperties(
+        UserProperty(
+          "downloader_variant",
+          featureFlags.getDownloaderVariant()
+        )
+      )
     }
   }
 
   override fun setUsedInstallerProperty(installerUsed: String) {
-    biAnalytics.setUserProperties("installer" to installerUsed)
+    biAnalytics.setUserProperties(UserProperty("installer", installerUsed))
   }
 
   override fun sendClickEvent(

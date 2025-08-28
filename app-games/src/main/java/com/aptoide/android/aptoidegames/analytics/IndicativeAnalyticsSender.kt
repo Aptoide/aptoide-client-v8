@@ -9,17 +9,18 @@ import javax.inject.Singleton
 
 @Singleton
 class IndicativeAnalyticsSender @Inject constructor() : AnalyticsSender {
-  override fun setUserProperties(vararg props: Pair<String, Any?>) {
+  override fun setUserProperties(vararg props: UserProperty) {
     if (BuildConfig.DEBUG) {
       props.forEach {
-        Timber.tag("BA").i("set UP  ${it.first} = ${it.second}")
+        Timber.tag("BA").i("set UP  ${it.name} = ${it.value}")
       }
     }
     //Add new properties
-    Indicative.addProperties(props.toMap())
+    val map = props.associate { it.name to it.value }
+    Indicative.addProperties(map)
 
     //Remove properties with null values
-    props.filter { it.second == null }.forEach { Indicative.removeProperty(it.first) }
+    props.filter { it.value == null }.forEach { Indicative.removeProperty(it.name) }
   }
 
   override fun logEvent(
