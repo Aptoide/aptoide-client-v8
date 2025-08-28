@@ -12,11 +12,11 @@ import javax.inject.Singleton
 class FirebaseAnalyticsSender @Inject constructor(
   private val firebaseAnalytics: FirebaseAnalytics,
 ) : AnalyticsSender {
-  override fun setUserProperties(vararg props: Pair<String, Any?>) = props.forEach {
+  override fun setUserProperties(vararg props: UserProperty) = props.forEach {
     if (BuildConfig.DEBUG) {
-      Timber.tag("GA").i("set UP  ${it.first} = ${it.second}")
+      Timber.tag("GA").i("set UP  ${it.name} = ${it.value}")
     }
-    firebaseAnalytics.setUserProperty(it.first, it.second?.toString())
+    firebaseAnalytics.setUserProperty(it.name, it.value?.toString())
   }
 
   override fun logEvent(

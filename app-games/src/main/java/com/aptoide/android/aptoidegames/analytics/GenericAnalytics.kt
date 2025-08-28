@@ -30,13 +30,13 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
     themePreferencesManager
       .isDarkTheme()
       .map { if (it ?: context.isNightMode) "system_dark" else "system_light" }
-      .onEach { analyticsSender.setUserProperties("theme" to it) }
+      .onEach { analyticsSender.setUserProperties(UserProperty("theme", it)) }
       .launchIn(CoroutineScope(Dispatchers.IO))
     installManager
       .getApp(walletApp.packageName)
       .packageInfoFlow
       .map { (it != null).toString() }
-      .onEach { analyticsSender.setUserProperties("wallet_installed" to it) }
+      .onEach { analyticsSender.setUserProperties(UserProperty("wallet_installed", it)) }
       .launchIn(CoroutineScope(Dispatchers.IO))
   }
 

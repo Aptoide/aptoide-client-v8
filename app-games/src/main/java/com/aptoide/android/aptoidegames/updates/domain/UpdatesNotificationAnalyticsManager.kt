@@ -2,6 +2,7 @@ package com.aptoide.android.aptoidegames.updates.domain
 
 import cm.aptoide.pt.feature_flags.domain.FeatureFlags
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
+import com.aptoide.android.aptoidegames.analytics.UserProperty
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -13,6 +14,6 @@ class UpdatesNotificationAnalyticsManager @Inject constructor(
 
   suspend fun loadUserProperty() {
     val variant = featureFlags.getFlagAsString("updates_notification_type")
-    biAnalytics.setUserProperties("exp7_updates_variant" to variant)
+    biAnalytics.setUserProperties(UserProperty("exp7_updates_variant", variant))
   }
 }

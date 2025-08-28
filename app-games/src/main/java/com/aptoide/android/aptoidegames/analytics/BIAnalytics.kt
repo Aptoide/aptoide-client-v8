@@ -23,12 +23,12 @@ import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_APP_OB
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_APP_VERSION_CODE
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_CONTEXT
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_INSERTED_KEYWORD
-import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_TAB
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_PACKAGE_NAME
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_PREVIOUS_CONTEXT
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_SEARCH_TERM
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_SEARCH_TERM_POSITION
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_SEARCH_TERM_SOURCE
+import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_TAB
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_TAG
 import com.aptoide.android.aptoidegames.analytics.dto.AnalyticsUIContext
 import com.aptoide.android.aptoidegames.analytics.dto.SearchMeta
@@ -59,42 +59,42 @@ class BIAnalytics(private val analyticsSender: AnalyticsSender) {
       Indicative.setUniqueID(analyticsInfoProvider.getAnalyticsId())
 
       analyticsSender.setUserProperties(
-        "android_api_level" to VERSION.SDK_INT,
-        "aptoide_version_code" to BuildConfig.VERSION_CODE,
-        "android_brand" to Build.MANUFACTURER,
-        "android_model" to Build.MODEL,
-        "aptoide_package" to BuildConfig.APPLICATION_ID,
-        "aptoide_store" to BuildConfig.MARKET_NAME,
-        "android_language" to "${locale.language}-${locale.country}",
-        "theme" to "dark",
-        "logged_in" to "NA",
-        "gms" to context.getGMSValue()
+        UserProperty("android_api_level", VERSION.SDK_INT),
+        UserProperty("aptoide_version_code", BuildConfig.VERSION_CODE),
+        UserProperty("android_brand", Build.MANUFACTURER),
+        UserProperty("android_model", Build.MODEL),
+        UserProperty("aptoide_package", BuildConfig.APPLICATION_ID),
+        UserProperty("aptoide_store", BuildConfig.MARKET_NAME),
+        UserProperty("android_language", "${locale.language}-${locale.country}"),
+        UserProperty("theme", "dark"),
+        UserProperty("logged_in", "NA"),
+        UserProperty("gms", context.getGMSValue())
       )
       installManager
         .getApp("com.dti.folderlauncher")
         .packageInfoFlow
         .map { it != null }
-        .onEach { setUserProperties("is_gh_installed" to it) }
+        .onEach { setUserProperties(UserProperty("is_gh_installed", it)) }
         .launchIn(this)
       installManager
         .getApp("cm.aptoide.pt")
         .packageInfoFlow
         .map { it != null }
-        .onEach { setUserProperties("is_vanilla_installed" to it) }
+        .onEach { setUserProperties(UserProperty("is_vanilla_installed", it)) }
         .launchIn(this)
       installManager
         .getApp(walletApp.packageName)
         .packageInfoFlow
         .map { it != null }
-        .onEach { setUserProperties("is_wallet_app_installed" to it) }
+        .onEach { setUserProperties(UserProperty("is_wallet_app_installed", it)) }
         .launchIn(this)
 
-      setUserProperties("first_session" to isFirstLaunch)
+      setUserProperties(UserProperty("first_session", isFirstLaunch))
       setFeatureFlagsProperties(featureFlags)
     }
   }
 
-  fun setUserProperties(vararg props: Pair<String, Any?>) =
+  fun setUserProperties(vararg props: UserProperty) =
     analyticsSender.setUserProperties(*props)
 
   private suspend fun setFeatureFlagsProperties(featureFlags: FeatureFlags) {
@@ -108,7 +108,7 @@ class BIAnalytics(private val analyticsSender: AnalyticsSender) {
         else -> "NA"
       }
 
-    analyticsSender.setUserProperties("ab_test_apkfy_may_21" to testGroup)
+    analyticsSender.setUserProperties(UserProperty("ab_test_apkfy_may_21", testGroup))
   }
 
   fun setUTMProperties(
@@ -120,13 +120,13 @@ class BIAnalytics(private val analyticsSender: AnalyticsSender) {
     utmOemId: String?,
     utmPackageName: String?,
   ) = analyticsSender.setUserProperties(
-    "utm_source" to utmSource,
-    "utm_medium" to utmMedium,
-    "utm_campaign" to utmCampaign,
-    "utm_term" to utmTerm,
-    "utm_content" to utmContent,
-    "utm_oem_id" to utmOemId,
-    "utm_package_name" to utmPackageName,
+    UserProperty("utm_source", utmSource),
+    UserProperty("utm_medium", utmMedium),
+    UserProperty("utm_campaign", utmCampaign),
+    UserProperty("utm_term", utmTerm),
+    UserProperty("utm_content", utmContent),
+    UserProperty("utm_oem_id", utmOemId),
+    UserProperty("utm_package_name", utmPackageName),
   )
 
   fun sendFirstLaunchEvent() = analyticsSender.logEvent(
