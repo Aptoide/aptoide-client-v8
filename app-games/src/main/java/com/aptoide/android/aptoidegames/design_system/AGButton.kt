@@ -407,7 +407,7 @@ fun SecondarySmallOutlinedButton(
 )
 
 @Composable
-private fun AGButton(
+fun AGButton(
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
   enabled: Boolean,
@@ -503,7 +503,7 @@ private fun AGOutlinedButton(
 }
 
 @Composable
-private fun AGContentButton(
+fun AGContentButton(
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
   enabled: Boolean,
