@@ -69,6 +69,7 @@ include(
   ":install-info-mapper",
   ":network-listener",
   ":feature-appcoins",
+  ":feature-appcoins:gamification",
   ":feature-apkfy",
   ":feature-bonus",
   ":feauture_app_coming_soon",
