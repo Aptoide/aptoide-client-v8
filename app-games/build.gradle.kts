@@ -167,6 +167,12 @@ android {
         name = "NATIVE_UNIT_ID",
         value = "\"${project.property("NATIVE_UNIT_ID_DEV")}\""
       )
+
+      buildConfigField(
+        type = "String",
+        name = "API_CHAIN_CATAPPULT_HOST",
+        value = "\"${project.property("API_CHAIN_CATAPPULT_HOST_DEV")}\""
+      )
     }
 
     create("prod") {
@@ -221,6 +227,11 @@ android {
         type = "String",
         name = "NATIVE_UNIT_ID",
         value = "\"${project.property("NATIVE_UNIT_ID_PROD")}\""
+      )
+      buildConfigField(
+        type = "String",
+        name = "API_CHAIN_CATAPPULT_HOST",
+        value = "\"${project.property("API_CHAIN_CATAPPULT_HOST")}\""
       )
     }
   }
