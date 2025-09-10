@@ -268,3 +268,7 @@ annotation class GameGenieOkHttp
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class SearchBuzzClientKey
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class ApiChainCatappultDomain
