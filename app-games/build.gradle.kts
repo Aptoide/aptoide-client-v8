@@ -307,6 +307,7 @@ dependencies {
   implementation(projects.feautureAppComingSoon)
   implementation(projects.playAndEarn.campaigns)
   implementation(projects.featureWallet.authorization)
+  implementation(projects.featureWallet.walletInfo)
 
   //payments
   implementation(projects.payments.sdk)
