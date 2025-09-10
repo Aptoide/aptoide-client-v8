@@ -75,5 +75,6 @@ include(
   ":feature-wallet:datastore",
   ":play-and-earn:campaigns",
   ":feature-wallet:authorization",
-  ":feature-wallet:wallet-info"
+  ":feature-wallet:wallet-info",
+  ":feature-wallet:gamification"
 )
