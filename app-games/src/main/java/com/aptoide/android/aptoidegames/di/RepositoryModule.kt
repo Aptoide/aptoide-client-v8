@@ -9,6 +9,7 @@ import cm.aptoide.pt.aptoide_network.data.network.GetAcceptLanguage
 import cm.aptoide.pt.aptoide_network.data.network.GetUserAgent
 import cm.aptoide.pt.aptoide_network.data.network.QLogicInterceptor
 import cm.aptoide.pt.aptoide_network.data.network.QueryLangInterceptor
+import cm.aptoide.pt.aptoide_network.di.ApiChainCatappultDomain
 import cm.aptoide.pt.aptoide_network.di.BaseOkHttp
 import cm.aptoide.pt.aptoide_network.di.RetrofitBuzz
 import cm.aptoide.pt.aptoide_network.di.StoreDomain
@@ -116,6 +117,11 @@ class RepositoryModule {
   @Provides
   @MMPDomain
   fun provideMMPDomain(): String = BuildConfig.APTOIDE_WEB_SERVICES_MMP_HOST
+
+  @Singleton
+  @Provides
+  @ApiChainCatappultDomain
+  fun provideApiChainCatappultDomain(): String = BuildConfig.API_CHAIN_CATAPPULT_HOST
 
   @Provides
   @Singleton
