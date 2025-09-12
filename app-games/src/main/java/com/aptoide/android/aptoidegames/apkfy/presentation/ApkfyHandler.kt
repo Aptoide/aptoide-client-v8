@@ -25,16 +25,8 @@ fun ApkfyHandler(navigate: (String) -> Unit) {
           navigate(apkfyScreenRoute)
         }
 
-        is ApkfyUiState.VariantA -> {
-          navigate(detailedApkfyRoute)
-        }
-
-        is ApkfyUiState.RobloxBaseline -> {
-          navigate(detailedApkfyRoute)
-        }
-
-        is ApkfyUiState.RobloxVariantA -> {
-          navigate(robloxApkfyRoute)
+        is ApkfyUiState.RobloxCompanionAppsVariant -> {
+          navigate(robloxMultiInstallApkfyRoute)
         }
       }
 

@@ -28,6 +28,7 @@ import cm.aptoide.pt.extensions.animatedComposable
 import cm.aptoide.pt.extensions.staticComposable
 import com.aptoide.android.aptoidegames.AptoideGamesBottomSheet
 import com.aptoide.android.aptoidegames.apkfy.presentation.ApkfyHandler
+import com.aptoide.android.aptoidegames.apkfy.presentation.RobloxApkfyMultiInstallScreen
 import com.aptoide.android.aptoidegames.apkfy.presentation.apkfyScreen
 import com.aptoide.android.aptoidegames.apkfy.presentation.detailedApkfyRoute
 import com.aptoide.android.aptoidegames.apkfy.presentation.detailedApkfyScreen
@@ -82,7 +83,9 @@ fun MainView(navController: NavHostController) {
   LaunchedEffect(currentRoute.value?.destination?.route) {
     val currentRoute = currentRoute.value?.destination?.route
     showTopBar = if (currentRoute != null) {
-      !currentRoute.contains(genieRoute) && !currentRoute.contains(detailedApkfyRoute) && !currentRoute.contains(genieSearchRoute)
+      !currentRoute.contains(genieRoute) && !currentRoute.contains(detailedApkfyRoute) && !currentRoute.contains(
+        genieSearchRoute
+      )
         && !currentRoute.contains(robloxApkfyRoute)
     } else {
       true
@@ -302,6 +305,12 @@ private fun NavigationGraph(
       navigate = navController::navigateTo,
       goBack = navController::navigateUp,
       screenData = robloxApkfyScreen()
+    )
+
+    animatedComposable(
+      navigate = navController::navigateTo,
+      goBack = navController::navigateUp,
+      screenData = RobloxApkfyMultiInstallScreen()
     )
   }
 }

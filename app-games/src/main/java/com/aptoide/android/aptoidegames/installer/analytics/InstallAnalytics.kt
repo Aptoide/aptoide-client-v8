@@ -166,4 +166,6 @@ interface InstallAnalytics {
     downloadOnlyOverWifi: Boolean,
   ) {
   }
+
+  fun sendApkfyRobloxExp8InstallClickEvent(numberOfCheckPresses: Int) {}
 }
