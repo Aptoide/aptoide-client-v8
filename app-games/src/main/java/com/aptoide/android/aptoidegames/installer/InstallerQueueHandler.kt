@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.install_manager.InstallManager
 import com.aptoide.android.aptoidegames.installer.analytics.InstallAnalytics
+import com.aptoide.android.aptoidegames.installer.analytics.toAnalyticsPayload
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -25,6 +26,7 @@ class InstallerQueueHandlerImpl @Inject constructor(
     installManager.scheduledApps.forEach { app ->
       app.takeIf { it.packageName != canceledPackageName }
         ?.task
+        ?.takeIf { task -> task.installPackageInfo.payload.toAnalyticsPayload()?.isApkfy == false }
         ?.run {
           cancel()
           installAnalytics.sendAutomaticQueueDownloadCancelEvent(packageName, installPackageInfo)

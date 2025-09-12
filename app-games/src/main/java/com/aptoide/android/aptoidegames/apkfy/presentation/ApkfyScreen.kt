@@ -29,6 +29,7 @@ import cm.aptoide.pt.feature_apps.data.randomApp
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.OverrideAnalyticsAPKFY
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
+import com.aptoide.android.aptoidegames.apkfy.isRoblox
 import com.aptoide.android.aptoidegames.appview.AppRatingAndDownloads
 import com.aptoide.android.aptoidegames.drawables.backgrounds.myiconpack.getApkfyAppIconBackground
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
@@ -90,6 +91,9 @@ fun ApkfyScreen(
       apkfyAnalytics.sendApkfyTimeout()
     } else {
       apkfyAnalytics.sendApkfyShown()
+      if (apkfyState.app.isRoblox()) {
+        apkfyAnalytics.sendRobloxExp8ApkfyShown()
+      }
     }
   }
 
