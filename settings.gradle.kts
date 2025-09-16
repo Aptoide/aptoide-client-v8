@@ -72,5 +72,6 @@ include(
   ":feature-apkfy",
   ":feature-bonus",
   ":feauture_app_coming_soon",
-  ":feature-wallet:datastore"
+  ":feature-wallet:datastore",
+  ":play-and-earn:campaigns"
 )
