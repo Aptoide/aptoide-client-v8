@@ -285,6 +285,7 @@ dependencies {
   implementation(projects.featureApkfy)
   implementation(projects.featureBonus)
   implementation(projects.feautureAppComingSoon)
+  implementation(projects.playAndEarn.campaigns)
 
   //payments
   implementation(projects.payments.sdk)
