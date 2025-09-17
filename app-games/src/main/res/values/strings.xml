@@ -254,8 +254,8 @@
   <string name="genai_example_3_body">Do you know offline casual games?</string>
   <string name="genai_history_body">GameGenie History</string>
   <string name="genai_new_chat_button">New chat</string>
-  
-  
+
+
 
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Now compatible with the Aptoide Wallet</string>
@@ -290,4 +290,11 @@
   <!-- AB Test for Experiment 7 : Updates Notifications -->
   <string name="update_app_updated_notification_title">%s has been updated</string>
   <string name="update_app_updated_notification_body">Discover what\'s new</string>
+
+  <!-- AB Test for Experiment 8 : Roblox Companion Apps -->
+  <string name="apkfy_multi_install_install_button">Install [%d]</string>
+  <string name="apkfy_multi_install_intro_1">Do you want to install this app ?</string>
+  <string name="apkfy_multi_install_intro_2">More fun awaits!</string>
+  <string name="apkfy_multi_install_intro_3">Try these games inspired by Roblox.</string>
+
 </resources>
