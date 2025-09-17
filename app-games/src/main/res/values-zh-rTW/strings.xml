@@ -267,4 +267,9 @@
   <!-- AB Test for Experiment 7 : Updates Notifications -->
   <string name="update_app_updated_notification_title">%s 已更新</string>
   <string name="update_app_updated_notification_body">探索最新資訊</string>
+  <!-- AB Test for Experiment 8 : Roblox Companion Apps -->
+  <string name="apkfy_multi_install_install_button">安裝 [%d]</string>
+  <string name="apkfy_multi_install_intro_1">您要安裝此應用程式嗎？</string>
+  <string name="apkfy_multi_install_intro_2">更多樂趣正等著你！</string>
+  <string name="apkfy_multi_install_intro_3">試試這些受Roblox啟發的遊戲。</string>
 </resources>

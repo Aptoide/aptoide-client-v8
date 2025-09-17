@@ -269,4 +269,9 @@
   <!-- AB Test for Experiment 7 : Updates Notifications -->
   <string name="update_app_updated_notification_title">%s güncellenmiştir</string>
   <string name="update_app_updated_notification_body">Yenilikleri keşfedin</string>
+  <!-- AB Test for Experiment 8 : Roblox Companion Apps -->
+  <string name="apkfy_multi_install_install_button">[%d]\'yi yükleyin.</string>
+  <string name="apkfy_multi_install_intro_1">Bu uygulamayı yüklemek ister misiniz?</string>
+  <string name="apkfy_multi_install_intro_2">Daha fazla eğlence sizi bekliyor!</string>
+  <string name="apkfy_multi_install_intro_3">Roblox\'tan esinlenerek geliştirilen bu oyunları deneyin.</string>
 </resources>

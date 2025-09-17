@@ -267,4 +267,9 @@
   <!-- AB Test for Experiment 7 : Updates Notifications -->
   <string name="update_app_updated_notification_title">%s telah diperbarui</string>
   <string name="update_app_updated_notification_body">Temukan hal-hal baru</string>
+  <!-- AB Test for Experiment 8 : Roblox Companion Apps -->
+  <string name="apkfy_multi_install_install_button">Pasang [%d]</string>
+  <string name="apkfy_multi_install_intro_1">Apakah Anda ingin menginstal aplikasi ini?</string>
+  <string name="apkfy_multi_install_intro_2">Lebih banyak keseruan menanti!</string>
+  <string name="apkfy_multi_install_intro_3">Coba permainan-permainan ini yang terinspirasi dari Roblox.</string>
 </resources>
