@@ -71,5 +71,6 @@ include(
   ":feature-appcoins",
   ":feature-apkfy",
   ":feature-bonus",
-  ":feauture_app_coming_soon"
+  ":feauture_app_coming_soon",
+  ":feature-wallet:datastore"
 )
