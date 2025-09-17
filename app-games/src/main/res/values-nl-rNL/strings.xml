@@ -270,8 +270,8 @@
   <string name="update_app_updated_notification_title">%s is bijgewerkt</string>
   <string name="update_app_updated_notification_body">Ontdek wat er nieuw is</string>
   <!-- AB Test for Experiment 8 : Roblox Companion Apps -->
-  <string name="apkfy_multi_install_install_button">Install [%d]</string>
-  <string name="apkfy_multi_install_intro_1">Do you want to install this app ?</string>
-  <string name="apkfy_multi_install_intro_2">More fun awaits!</string>
-  <string name="apkfy_multi_install_intro_3">Try these games inspired by Roblox.</string>
+  <string name="apkfy_multi_install_install_button">Installeer [%d]</string>
+  <string name="apkfy_multi_install_intro_1">Wilt u deze app installeren?</string>
+  <string name="apkfy_multi_install_intro_2">Er staat nog meer plezier te wachten!</string>
+  <string name="apkfy_multi_install_intro_3">Probeer deze games geïnspireerd door Roblox eens uit.</string>
 </resources>
