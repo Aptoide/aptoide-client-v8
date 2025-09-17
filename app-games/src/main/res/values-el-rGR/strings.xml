@@ -270,8 +270,8 @@
   <string name="update_app_updated_notification_title">%s έχει ενημερωθεί</string>
   <string name="update_app_updated_notification_body">Ανακαλύψτε τα νέα</string>
   <!-- AB Test for Experiment 8 : Roblox Companion Apps -->
-  <string name="apkfy_multi_install_install_button">Install [%d]</string>
-  <string name="apkfy_multi_install_intro_1">Do you want to install this app ?</string>
-  <string name="apkfy_multi_install_intro_2">More fun awaits!</string>
-  <string name="apkfy_multi_install_intro_3">Try these games inspired by Roblox.</string>
+  <string name="apkfy_multi_install_install_button">Εγκατάσταση [%d]</string>
+  <string name="apkfy_multi_install_intro_1">Θέλετε να εγκαταστήσετε αυτήν την εφαρμογή;</string>
+  <string name="apkfy_multi_install_intro_2">Περισσότερη διασκέδαση σας περιμένει!</string>
+  <string name="apkfy_multi_install_intro_3">Δοκιμάστε αυτά τα παιχνίδια που είναι εμπνευσμένα από το Roblox.</string>
 </resources>
