@@ -1,9 +1,15 @@
 package cm.aptoide.pt.campaigns.data
 
+import cm.aptoide.pt.campaigns.domain.PaEApp
 import cm.aptoide.pt.campaigns.domain.PaEBundle
 import cm.aptoide.pt.campaigns.domain.PaEBundles
+import cm.aptoide.pt.campaigns.domain.PaEMission
+import cm.aptoide.pt.campaigns.domain.PaEMissionProgress
+import cm.aptoide.pt.campaigns.domain.PaEMissionStatus
+import cm.aptoide.pt.campaigns.domain.PaEMissionType
+import cm.aptoide.pt.campaigns.domain.PaEMissions
 import cm.aptoide.pt.campaigns.domain.PaEProgress
-import cm.aptoide.pt.campaigns.domain.PaEApp
+import com.google.gson.JsonObject
 
 val paEApp1 = PaEApp(
   packageName = "com.mobile.legends",
@@ -51,4 +57,54 @@ val paeCampaigns = PaEBundles(
     title = "Everyone's favourites",
     apps = listOf(paEApp1, paEApp2, paEApp3)
   )
+)
+
+val paeCheckpoint1 = PaEMission(
+  title = "Checkpoint 1",
+  description = "This is the first checkpoint.",
+  icon = "https://pool.img.aptoide.com/catappult/d42291cca5551c6e9e39d56aa8d420d0_icon.png",
+  type = PaEMissionType.CHECKPOINT,
+  arguments = JsonObject(),
+  units = 50,
+  progress = PaEMissionProgress(
+    current = 30,
+    target = 50,
+    type = "Checkpoint",
+    status = PaEMissionStatus.ONGOING
+  )
+)
+
+val paeMission1 = PaEMission(
+  title = "Quick Throw",
+  description = "Play for 2 minutes",
+  icon = "https://pool.img.aptoide.com/catappult/d42291cca5551c6e9e39d56aa8d420d0_icon.png",
+  type = PaEMissionType.PLAY_TIME,
+  arguments = JsonObject(),
+  units = 5,
+  progress = null
+)
+
+val paeMission2 = PaEMission(
+  title = "Dice Grinder",
+  description = "Play for 10 minutes",
+  icon = "https://pool.img.aptoide.com/catappult/d42291cca5551c6e9e39d56aa8d420d0_icon.png",
+  type = PaEMissionType.PLAY_TIME,
+  arguments = JsonObject(),
+  units = 10,
+  progress = null
+)
+
+val paeMission3 = PaEMission(
+  title = "Midnight Gambler",
+  description = "Play for 5 minutes during night",
+  icon = "https://pool.img.aptoide.com/catappult/d42291cca5551c6e9e39d56aa8d420d0_icon.png",
+  type = PaEMissionType.PLAY_TIME,
+  arguments = JsonObject(),
+  units = 10,
+  progress = null
+)
+
+val paeMissions = PaEMissions(
+  checkpoints = listOf(paeCheckpoint1),
+  missions = listOf(paeMission1, paeMission2, paeMission3)
 )
