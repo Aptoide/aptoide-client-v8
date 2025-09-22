@@ -174,6 +174,11 @@ android {
         name = "API_CHAIN_CATAPPULT_HOST",
         value = "\"${project.property("API_CHAIN_CATAPPULT_HOST_DEV")}\""
       )
+      buildConfigField(
+        type = "String",
+        name = "APTOIDE_WEB_SERVICES_HOST",
+        value = "\"${project.property("APTOIDE_WEB_SERVICES_HOST_DEV")}\""
+      )
     }
 
     create("prod") {
@@ -234,6 +239,11 @@ android {
         name = "API_CHAIN_CATAPPULT_HOST",
         value = "\"${project.property("API_CHAIN_CATAPPULT_HOST")}\""
       )
+      buildConfigField(
+        type = "String",
+        name = "APTOIDE_WEB_SERVICES_HOST",
+        value = "\"${project.property("APTOIDE_WEB_SERVICES_HOST_PROD")}\""
+      )
     }
   }
 
@@ -287,6 +297,7 @@ dependencies {
   implementation(projects.featureBonus)
   implementation(projects.feautureAppComingSoon)
   implementation(projects.playAndEarn.campaigns)
+  implementation(projects.featureWallet.authorization)
 
   //payments
   implementation(projects.payments.sdk)

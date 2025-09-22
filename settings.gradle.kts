@@ -73,5 +73,6 @@ include(
   ":feature-bonus",
   ":feauture_app_coming_soon",
   ":feature-wallet:datastore",
-  ":play-and-earn:campaigns"
+  ":play-and-earn:campaigns",
+  ":feature-wallet:authorization"
 )
