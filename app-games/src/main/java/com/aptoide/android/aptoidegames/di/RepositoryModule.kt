@@ -16,6 +16,7 @@ import cm.aptoide.pt.aptoide_network.di.StoreDomain
 import cm.aptoide.pt.aptoide_network.di.StoreEnvironmentDomain
 import cm.aptoide.pt.aptoide_network.di.StoreName
 import cm.aptoide.pt.aptoide_network.di.VersionCode
+import cm.aptoide.pt.aptoide_network.di.WebServicesDomain
 import cm.aptoide.pt.environment_info.DeviceInfo
 import cm.aptoide.pt.feature_apkfy.di.MMPDomain
 import cm.aptoide.pt.feature_apps.data.walletApp
@@ -121,6 +122,11 @@ class RepositoryModule {
   @Provides
   @ApiChainCatappultDomain
   fun provideApiChainCatappultDomain(): String = BuildConfig.API_CHAIN_CATAPPULT_HOST
+
+  @Singleton
+  @Provides
+  @WebServicesDomain
+  fun provideWebServicesDomain(): String = BuildConfig.APTOIDE_WEB_SERVICES_HOST
 
   @Provides
   @Singleton
