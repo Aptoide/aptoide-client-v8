@@ -276,3 +276,7 @@ annotation class SearchBuzzClientKey
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class ApiChainCatappultDomain
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class WebServicesDomain
