@@ -2,6 +2,7 @@ package com.aptoide.android.aptoidegames.gamegenie.presentation
 
 import cm.aptoide.pt.feature_apps.data.AppMapper
 import com.aptoide.android.aptoidegames.gamegenie.data.database.model.ChatInteractionEntity
+import com.aptoide.android.aptoidegames.gamegenie.data.database.model.GameCompanionEntity
 import com.aptoide.android.aptoidegames.gamegenie.data.database.model.GameGenieHistoryEntity
 import com.aptoide.android.aptoidegames.gamegenie.domain.ChatInteraction
 import com.aptoide.android.aptoidegames.gamegenie.domain.ChatInteractionHistory
@@ -18,6 +19,13 @@ fun GameGenieChat.toEntity() = GameGenieHistoryEntity(
   conversation = this.conversation.map { it.toEntity() }
 )
 
+fun GameGenieChat.toCompanionEntity(packageName: String) = GameCompanionEntity(
+  id = this.id,
+  name = this.title,
+  gamePackageName = packageName,
+  conversation = this.conversation.map { it.toEntity() },
+)
+
 fun ChatInteraction.toEntity() = ChatInteractionEntity(
   gpt = this.gpt,
   user = this.user,
@@ -28,6 +36,12 @@ fun ChatInteraction.toEntity() = ChatInteractionEntity(
 fun GameGenieHistoryEntity.toDomain() = GameGenieChatHistory(
   id = this.id,
   title = this.title,
+  conversation = this.conversation.map { it.toDomain() }
+)
+
+fun GameCompanionEntity.toDomain() = GameGenieChatHistory(
+  id = this.id,
+  title = this.name,
   conversation = this.conversation.map { it.toDomain() }
 )
 

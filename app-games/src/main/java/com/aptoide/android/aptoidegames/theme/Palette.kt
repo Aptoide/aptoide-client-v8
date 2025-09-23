@@ -9,6 +9,7 @@ object Palette {
 
   val Black = Color(0xFF1E1E26)
   val GreyDark = Color(0xFF312D35)
+  val GameGenieGrey = Color(0xFF2D3224)
   val Grey = Color(0xFF595959)
   val GreyLight = Color(0xFFD2D2D2)
   val White = Color(0xFFFFFFFF)

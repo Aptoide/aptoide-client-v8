@@ -1,17 +1,35 @@
 package com.aptoide.android.aptoidegames.gamegenie.presentation.composables
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.gamegenie.domain.ChatInteraction
+import com.aptoide.android.aptoidegames.theme.AGTypography
+import com.aptoide.android.aptoidegames.theme.Palette
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 
 @Composable
@@ -20,9 +38,9 @@ fun MessageList(
   firstLoad: Boolean,
   navigateTo: (String) -> Unit,
   modifier: Modifier = Modifier,
-  suggestions: List<String>,
+  suggestions: List<String> = emptyList(),
   setFirstLoadDone: () -> Unit,
-  onSuggestionClick: (String, Int) -> Unit,
+  onSuggestionClick: (String, Int) -> Unit = { _, _ -> },
 ) {
   val listState = rememberLazyListState()
   val playerCache = remember { mutableMapOf<String, YouTubePlayerView>() }
@@ -73,9 +91,16 @@ fun MessageList(
       }
 
       if (idx == messageList.lastIndex) {
-        suggestions.forEachIndexed { reversedIndex, suggestion ->
-          val actualIndex = suggestions.size - reversedIndex
-          SuggestionBox(suggestion, onSuggestionClick, actualIndex)
+        if (suggestions.isNotEmpty()) {
+            LazyRow(
+              contentPadding = PaddingValues(vertical = 4.dp),
+              horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+              itemsIndexed(suggestions) { reversedIndex, suggestion ->
+                val actualIndex = suggestions.size - reversedIndex
+                SuggestionBox(suggestion, onSuggestionClick, actualIndex)
+              }
+            }
         }
 
         MessageBubble(
@@ -98,6 +123,29 @@ fun MessageList(
     }
     item {
       PoweredByAi()
+    }
+
+    item {
+      Box(
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(bottom = 88.dp),
+        contentAlignment = Alignment.Center
+      ) {
+        AnimationComposable(
+          modifier = Modifier.size(175.dp),
+          resId = R.raw.game_genie_chat_big_animation
+        )
+
+        Text(
+          text = stringResource(R.string.genai_bottom_navigation_gamegenie_button),
+          style = AGTypography.InputsL,
+          color = Palette.Primary,
+          modifier = Modifier
+            .align(Alignment.Center)
+            .offset(y = 70.dp)
+        )
+      }
     }
   }
 }

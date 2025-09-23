@@ -36,11 +36,11 @@ fun gameGenieSearchScreen() = ScreenData.withAnalytics(
         onSuggestionSend = { message, index ->
           viewModel.sendMessage(message)
           analytics.sendGameGenieSuggestionClick(index)
-        },
+        }
       )
     },
     loadConversationFn = viewModel::loadConversation,
     currentChatId = uiState.chat.id,
-    newChatFn = viewModel::createNewChat,
+    newChatFn = viewModel::emptyChat,
   )
 }

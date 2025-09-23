@@ -13,6 +13,15 @@ data class GameGenieRequest(
 )
 
 @Keep
+data class GameGenieCompanionRequest(
+  val id: String?,
+  val title: String?,
+  val conversation: List<ChatInteractionHistory>,
+  val selectedGame: String,
+)
+
+
+@Keep
 data class GameGenieMetadata(
   val packages: List<GameContext>,
 )

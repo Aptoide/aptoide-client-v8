@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
@@ -35,7 +36,8 @@ fun SuggestionBox(
           color = Palette.Primary.copy(alpha = 0.1f),
         )
         .border(2.dp, color = Palette.Primary)
-        .width(272.dp)
+        .width(160.dp)
+        .height(72.dp)
         .clickable { onClick(suggestion, index) }
         .padding(12.dp),
       horizontalAlignment = Alignment.Start

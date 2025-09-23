@@ -1,11 +1,15 @@
 package com.aptoide.android.aptoidegames.gamegenie.presentation
 
 import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieApiService
+import com.aptoide.android.aptoidegames.gamegenie.data.database.GameCompanionDao
 import com.aptoide.android.aptoidegames.gamegenie.data.database.GameGenieDatabase
+import com.aptoide.android.aptoidegames.gamegenie.data.database.GameGenieHistoryDao
+import com.aptoide.android.aptoidegames.gamegenie.data.database.model.GameCompanionEntity
 import com.aptoide.android.aptoidegames.gamegenie.data.database.model.GameGenieHistoryEntity
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameGenieChat
 import com.aptoide.android.aptoidegames.gamegenie.domain.Token
 import com.aptoide.android.aptoidegames.gamegenie.domain.toToken
+import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieCompanionRequest
 import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieRequest
 import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieResponse
 import kotlinx.coroutines.flow.Flow
@@ -16,7 +20,8 @@ import javax.inject.Inject
 
 class GameGenieManager @Inject constructor(
   private val gameGenieApi: GameGenieApiService,
-  private val gameGenieDatabase: GameGenieDatabase,
+  private val gameGenieHistoryDao: GameGenieHistoryDao,
+  private val gameCompanionDao: GameCompanionDao,
 ) {
   private var cachedToken: Token? = null
 
@@ -52,9 +57,32 @@ class GameGenieManager @Inject constructor(
     }
   }
 
+  suspend fun postMessageCompanion(
+    token: Token,
+    request: GameGenieCompanionRequest,
+  ): GameGenieResponse {
+    return try {
+      gameGenieApi.postMessageCompanion("Bearer ${token.token}", request)
+    } catch (e: HttpException) {
+      if (e.code() == 401) {
+        Timber.i("Token expired, requesting a new token")
+        val newToken = fetchNewToken()
+        gameGenieApi.postMessageCompanion("Bearer ${newToken.token}", request) // Retry with new token
+      } else {
+        throw e
+      }
+    }
+  }
+
   suspend fun getChatById(id: String): GameGenieHistoryEntity? {
     return runCatching {
-      gameGenieDatabase.getGameGenieHistoryDao().getChatById(id)
+      gameGenieHistoryDao.getChatById(id)
+    }.getOrNull()
+  }
+
+  suspend fun getGameCompanionChat(packageName: String): GameCompanionEntity? {
+    return runCatching {
+      gameCompanionDao.getChatByPackageName(packageName)
     }.getOrNull()
   }
 
@@ -67,25 +95,44 @@ class GameGenieManager @Inject constructor(
           user = chat.conversation[chat.conversation.size - 2].user
         )
       val fixedOldChat = oldChat.conversation.dropLast(1) + lastMessage
-      gameGenieDatabase
-        .getGameGenieHistoryDao()
+      gameGenieHistoryDao
         .saveChat(
           oldChat.copy(
             conversation = fixedOldChat + newChat.conversation.last()
           )
         )
     } else {
-      gameGenieDatabase
-        .getGameGenieHistoryDao()
+      gameGenieHistoryDao
+        .saveChat(newChat)
+    }
+  }
+
+  suspend fun saveOrUpdateChatCompanion(packageName: String, chat: GameGenieChat) {
+    val oldChat = getGameCompanionChat(packageName)
+    val newChat = chat.toCompanionEntity(packageName)
+    if (oldChat != null) {
+      val lastMessage = oldChat.conversation.last()
+        .copy(
+          user = chat.conversation[chat.conversation.size - 2].user
+        )
+      val fixedOldChat = oldChat.conversation.dropLast(1) + lastMessage
+      gameCompanionDao
+        .saveChat(
+          oldChat.copy(
+            conversation = fixedOldChat + newChat.conversation.last()
+          )
+        )
+    } else {
+      gameCompanionDao
         .saveChat(newChat)
     }
   }
 
   fun getAllChats(): Flow<List<GameGenieHistoryEntity>> {
-    return gameGenieDatabase.getGameGenieHistoryDao().getAllChats()
+    return gameGenieHistoryDao.getAllChats()
   }
 
   suspend fun deleteChat(id: String) {
-    gameGenieDatabase.getGameGenieHistoryDao().deleteChat(id)
+    gameGenieHistoryDao.deleteChat(id)
   }
 }

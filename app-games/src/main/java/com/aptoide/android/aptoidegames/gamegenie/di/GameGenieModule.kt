@@ -43,7 +43,11 @@ internal object GameGenieModule {
     apiService: GameGenieApiService,
     db: GameGenieDatabase,
   ): GameGenieManager {
-    return GameGenieManager(apiService, db)
+    return GameGenieManager(
+      apiService,
+      db.getGameGenieHistoryDao(),
+      db.getGameCompanionDao()
+    )
   }
 
   @Singleton
@@ -58,7 +62,8 @@ internal object GameGenieModule {
     .fallbackToDestructiveMigration()
     .addMigrations(
       GameGenieDatabase.FirstMigration(),
-      GameGenieDatabase.SecondMigration()
+      GameGenieDatabase.SecondMigration(),
+      GameGenieDatabase.ThirdMigration()
     )
     .build()
 

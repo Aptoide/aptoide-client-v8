@@ -1,13 +1,18 @@
 package com.aptoide.android.aptoidegames.bottom_bar
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.MaterialTheme
@@ -18,18 +23,24 @@ import androidx.compose.material.contentColorFor
 import androidx.compose.material.primarySurface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.runPreviewable
+import com.aptoide.android.aptoidegames.analytics.GeneralAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGeneralAnalytics
+import com.aptoide.android.aptoidegames.gamegenie.presentation.genieRoute
 import com.aptoide.android.aptoidegames.gamegenie.presentation.rememberGameGenieVisibility
 import com.aptoide.android.aptoidegames.gamegenie.presentation.rememberSearchGameGenie
 import com.aptoide.android.aptoidegames.home.BottomBarMenuHandler
@@ -65,36 +76,74 @@ fun AppGamesBottomBar(navController: NavController) {
   val selection =
     selectionIndex(items = filteredBottomNavigationItems, navController = navController)
   if (selection >= 0) {
-    AppGamesBottomNavigation(backgroundColor = Color.Transparent) {
-      filteredBottomNavigationItems.forEachIndexed { index, item ->
-        val isSelected = selection == index
-        if (isSelected)
-          BottomBarMenuHandler.menuSelected(item)
-        AddBottomNavigationItem(
-          item = item,
-          isSelected = isSelected,
-          onItemClicked = {
-            when (item) {
-              BottomBarMenus.Games -> generalAnalytics.sendBottomBarHomeClick()
-              BottomBarMenus.Search -> generalAnalytics.sendBottomBarSearchClick()
-              BottomBarMenus.GenieSearch -> generalAnalytics.sendBottomBarSearchClick()
-              BottomBarMenus.Categories -> generalAnalytics.sendBottomBarCategoriesClick()
-              BottomBarMenus.Updates -> generalAnalytics.sendBottomBarUpdatesClick()
-              BottomBarMenus.GameGenie -> generalAnalytics.sendBottomBarGameGenieClick()
-            }
-            if (!isSelected) {
-              navController.navigate(item.route) {
-                popUpTo(navController.graph.startDestinationId) {
-                  inclusive =
-                    BottomBarMenus.Games.route == item.route
-                      && BottomBarMenus.Games.route == navController.currentDestination?.route
+    Box(modifier = Modifier.fillMaxWidth()) {
+      AppGamesBottomNavigation(backgroundColor = Color.Transparent) {
+        filteredBottomNavigationItems.forEachIndexed { index, item ->
+          val isSelected = selection == index
+          if (isSelected) BottomBarMenuHandler.menuSelected(item)
+
+          if (item == BottomBarMenus.GameGenie) {
+            Spacer(modifier = Modifier.weight(1f))
+          } else {
+            AddBottomNavigationItem(
+              item = item,
+              isSelected = isSelected,
+              onItemClicked = {
+                when (item) {
+                  BottomBarMenus.Games -> generalAnalytics.sendBottomBarHomeClick()
+                  BottomBarMenus.Search -> generalAnalytics.sendBottomBarSearchClick()
+                  BottomBarMenus.GenieSearch -> generalAnalytics.sendBottomBarSearchClick()
+                  BottomBarMenus.Categories -> generalAnalytics.sendBottomBarCategoriesClick()
+                  BottomBarMenus.Updates -> generalAnalytics.sendBottomBarUpdatesClick()
+                  BottomBarMenus.GameGenie -> generalAnalytics.sendBottomBarGameGenieClick()
                 }
-                launchSingleTop = true
-              }
-            }
-            BottomBarMenuHandler.menuSelected(item)
+                if (!isSelected) {
+                  navController.navigate(item.route) {
+                    popUpTo(navController.graph.startDestinationId) {
+                      inclusive =
+                        BottomBarMenus.Games.route == item.route &&
+                          BottomBarMenus.Games.route == navController.currentDestination?.route
+                    }
+                    launchSingleTop = true
+                  }
+                }
+                BottomBarMenuHandler.menuSelected(item)
+              },
+              modifier = Modifier.weight(1f)
+            )
           }
-        )
+        }
+      }
+
+      val genieIndex = filteredBottomNavigationItems.indexOf(BottomBarMenus.GameGenie)
+      if (genieIndex >= 0) {
+        val isSelected = selection == genieIndex
+        Box(
+          modifier = Modifier
+            .align(Alignment.BottomCenter)
+            .offset(y = (-22).dp)
+            .zIndex(2f)
+            .clickable(
+              indication = null,
+              interactionSource = remember { MutableInteractionSource() }
+            ) {
+              generalAnalytics.sendBottomBarGameGenieClick()
+              if (!isSelected) {
+                navController.navigate(BottomBarMenus.GameGenie.route) {
+                  popUpTo(navController.graph.startDestinationId) {
+                    inclusive =
+                      BottomBarMenus.Games.route == BottomBarMenus.GameGenie.route &&
+                        BottomBarMenus.Games.route == navController.currentDestination?.route
+                  }
+                  launchSingleTop = true
+                }
+              }
+              BottomBarMenuHandler.menuSelected(BottomBarMenus.GameGenie)
+            },
+          contentAlignment = Alignment.Center
+        ) {
+          BottomBarMenus.GameGenie.Icon(isSelected)
+        }
       }
     }
   }
@@ -106,7 +155,6 @@ fun List<BottomBarMenus>.filter(
 ) =
   filter {
     when (it) {
-      BottomBarMenus.Categories -> shouldShowGameGenie.not()
       BottomBarMenus.GameGenie -> shouldShowGameGenie
       BottomBarMenus.Search -> shouldSearchGameGenie.not()
       BottomBarMenus.GenieSearch -> shouldSearchGameGenie
@@ -119,29 +167,33 @@ fun RowScope.AddBottomNavigationItem(
   item: BottomBarMenus,
   isSelected: Boolean,
   onItemClicked: () -> Unit,
+  modifier: Modifier = Modifier
 ) {
   BottomNavigationItem(
-    modifier = Modifier.fillMaxHeight(),
+    modifier = modifier
+      .fillMaxHeight(),
     selected = isSelected,
     onClick = onItemClicked,
     alwaysShowLabel = true,
-    icon = { item.Icon() },
+    icon = { item.Icon(isSelected) },
     label = {
-      Text(
-        text = stringResource(id = item.titleId),
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis,
-        style = if (isSelected) {
-          AGTypography.BodyBold
-        } else {
-          AGTypography.Body
-        },
-        color = if (isSelected) {
-          Palette.Primary
-        } else {
-          Palette.GreyLight
-        }
-      )
+      if (!item.route.contains(genieRoute)) {
+        Text(
+          text = stringResource(id = item.titleId),
+          maxLines = 1,
+          overflow = TextOverflow.Ellipsis,
+          style = if (isSelected) {
+            AGTypography.BodyBold
+          } else {
+            AGTypography.Body
+          },
+          color = if (isSelected) {
+            Palette.Primary
+          } else {
+            Palette.GreyLight
+          }
+        )
+      }
     },
     selectedContentColor = Palette.Primary,
     unselectedContentColor = Palette.GreyLight,
@@ -169,8 +221,8 @@ val bottomNavigationItems = listOf(
   BottomBarMenus.Games,
   BottomBarMenus.Search,
   BottomBarMenus.GenieSearch,
-  BottomBarMenus.Categories,
   BottomBarMenus.GameGenie,
+  BottomBarMenus.Categories,
   BottomBarMenus.Updates,
 )
 

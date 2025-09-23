@@ -83,10 +83,12 @@ fun MainView(navController: NavHostController) {
   LaunchedEffect(currentRoute.value?.destination?.route) {
     val currentRoute = currentRoute.value?.destination?.route
     showTopBar = if (currentRoute != null) {
-      !currentRoute.contains(genieRoute) && !currentRoute.contains(detailedApkfyRoute) && !currentRoute.contains(
+        !currentRoute.contains(genieRoute) &&
+        !currentRoute.contains(detailedApkfyRoute) &&
+        !currentRoute.contains(
         genieSearchRoute
-      )
-        && !currentRoute.contains(robloxApkfyRoute)
+      ) &&
+        !currentRoute.contains(robloxApkfyRoute)
     } else {
       true
     }
