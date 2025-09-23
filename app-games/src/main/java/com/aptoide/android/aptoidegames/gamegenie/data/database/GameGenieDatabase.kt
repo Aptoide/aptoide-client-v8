@@ -6,13 +6,16 @@ import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.aptoide.android.aptoidegames.gamegenie.data.database.model.Converters
+import com.aptoide.android.aptoidegames.gamegenie.data.database.model.GameCompanionEntity
 import com.aptoide.android.aptoidegames.gamegenie.data.database.model.GameGenieHistoryEntity
 
-@Database(entities = [GameGenieHistoryEntity::class], version = 3)
+@Database(entities = [GameGenieHistoryEntity::class, GameCompanionEntity::class], version = 4)
 @TypeConverters(Converters::class)
 abstract class GameGenieDatabase : RoomDatabase() {
 
   abstract fun getGameGenieHistoryDao(): GameGenieHistoryDao
+
+  abstract fun getGameCompanionDao(): GameCompanionDao
 
   class FirstMigration : Migration(1, 2) {
     override fun migrate(db: SupportSQLiteDatabase) {
@@ -28,4 +31,20 @@ abstract class GameGenieDatabase : RoomDatabase() {
       )
     }
   }
+
+  class ThirdMigration : Migration(3, 4) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+      db.execSQL(
+        """
+      CREATE TABLE IF NOT EXISTS `GameCompanion` (
+        `id` TEXT NOT NULL PRIMARY KEY,
+        `name` TEXT NOT NULL,
+        `conversation` TEXT NOT NULL,
+        `gamePackageName` TEXT NOT NULL
+      )
+      """.trimIndent()
+      )
+    }
+  }
+
 }

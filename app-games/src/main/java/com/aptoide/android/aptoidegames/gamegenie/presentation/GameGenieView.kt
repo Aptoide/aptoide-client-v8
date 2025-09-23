@@ -12,6 +12,9 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -23,12 +26,16 @@ import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.error_views.NoConnectionView
 import com.aptoide.android.aptoidegames.gamegenie.analytics.rememberGameGenieAnalytics
+import com.aptoide.android.aptoidegames.gamegenie.domain.GameCompanion
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.ChatParticipantName
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.MessageList
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.TextInputBar
+import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.companion.ChatbotViewCompanion
 import com.aptoide.android.aptoidegames.home.LoadingView
 
 const val genieRoute = "chatbot"
+
+private enum class EntryChoice { General, Companion }
 
 fun gameGenieScreen() = ScreenData.withAnalytics(
   route = genieRoute,
@@ -41,27 +48,71 @@ fun gameGenieScreen() = ScreenData.withAnalytics(
   val analytics = rememberGameGenieAnalytics()
   val firstLoad by viewModel.firstLoad.collectAsState(true)
 
+  var selectedEntry by remember { mutableStateOf<EntryChoice?>(null) }
+
   ConversationsDrawer(
     mainScreen = {
-      ChatbotView(
-        firstLoad = firstLoad,
-        uiState = uiState,
-        navigateTo = navigate,
-        onError = viewModel::reload,
-        onMessageSend = { message ->
-          viewModel.sendMessage(message)
-          analytics.sendGameGenieMessageSent()
-        },
-        setFirstLoadDone = viewModel::setFirstLoadDone,
-        onSuggestionSend = { message, index ->
-          viewModel.sendMessage(message)
-          analytics.sendGameGenieSuggestionClick(index)
-        },
-      )
+      when (selectedEntry) {
+        null -> {
+          GameGenieEntryScreen(
+            myGames = viewModel.installedGames.collectAsState().value,
+            onChooseGeneral = {
+              viewModel.resetSelectedGame()
+              selectedEntry = EntryChoice.General
+            },
+            onChooseCompanion = { selectedGame ->
+              viewModel.updateLoadingState()
+              viewModel.setSelectedGame(selectedGame)
+              viewModel.loadCompanionChat(selectedGame.packageName)
+              selectedEntry = EntryChoice.Companion
+            }
+          )
+        }
+        EntryChoice.General -> {
+          ChatbotView(
+            firstLoad = firstLoad,
+            uiState = uiState,
+            navigateTo = navigate,
+            onError = viewModel::reload,
+            onMessageSend = { message ->
+              viewModel.sendMessage(message)
+              analytics.sendGameGenieMessageSent()
+            },
+            setFirstLoadDone = viewModel::setFirstLoadDone,
+            onSuggestionSend = { message, index ->
+              viewModel.sendMessage(message)
+              analytics.sendGameGenieSuggestionClick(index)
+            }
+          )
+        }
+        EntryChoice.Companion -> {
+          viewModel.selectedGame.collectAsState().value?.let {
+            ChatbotViewCompanion(
+              selectedGame = it,
+              firstLoad = firstLoad,
+              navigateBack = {
+                viewModel.resetSelectedGame()
+                selectedEntry = null },
+              uiState = uiState,
+              navigateTo = navigate,
+              onError = viewModel::reload,
+              setFirstLoadDone = viewModel::setFirstLoadDone,
+              onMessageSend = { message ->
+                viewModel.sendMessage(message)
+                analytics.sendGameGenieMessageSent()
+              }
+            )
+          }
+        }
+      }
     },
-    loadConversationFn = viewModel::loadConversation,
+    loadConversationFn = { id ->
+      selectedEntry = EntryChoice.General
+      viewModel.resetSelectedGame()
+      viewModel.loadConversation(id)
+    },
     currentChatId = uiState.chat.id,
-    newChatFn = viewModel::createNewChat,
+    newChatFn = viewModel::emptyChat,
   )
 }
 
@@ -95,7 +146,7 @@ fun ChatbotView(
         onMessageSend = onMessageSend,
         onSuggestionSend = onSuggestionSend,
         setFirstLoadDone = setFirstLoadDone,
-        isLoading = isLoading
+        isLoading = isLoading,
       )
     }
   }
@@ -110,8 +161,12 @@ fun ChatScreen(
   onSuggestionSend: (String, Int) -> Unit,
   setFirstLoadDone: () -> Unit,
   isLoading: Boolean = false,
+  selectedGame: GameCompanion? = null,
 ) {
-  val suggestions = listOf(
+  val suggestions =
+    if (selectedGame != null)
+      emptyList()
+    else listOf(
     stringResource(R.string.genai_example_1_body),
     stringResource(R.string.genai_example_2_body),
     stringResource(R.string.genai_example_3_body)

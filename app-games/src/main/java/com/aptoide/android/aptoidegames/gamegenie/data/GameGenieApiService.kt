@@ -1,5 +1,6 @@
 package com.aptoide.android.aptoidegames.gamegenie.data
 
+import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieCompanionRequest
 import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieRequest
 import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieResponse
 import com.aptoide.android.aptoidegames.gamegenie.io_models.TokenResponse
@@ -12,6 +13,12 @@ interface GameGenieApiService {
   suspend fun postMessage(
     @Header("Authorization") bearerToken: String,
     @Body request: GameGenieRequest,
+  ): GameGenieResponse
+
+  @POST("v2/chat/companion")
+  suspend fun postMessageCompanion(
+    @Header("Authorization") bearerToken: String,
+    @Body request: GameGenieCompanionRequest,
   ): GameGenieResponse
 
   @POST("token")

@@ -285,6 +285,7 @@ dependencies {
 
   //room
   implementation(libs.room)
+  implementation(libs.lifecycle.service)
   ksp(libs.room.compiler)
   implementation(libs.room.ktx)
 
@@ -316,6 +317,9 @@ dependencies {
 
   //Ads
   implementation(libs.mintegral)
+
+  //animations
+  implementation(libs.lottie.compose)
 }
 
 fun BaseFlavor.buildConfigFieldFromGradleProperty(gradlePropertyName: String) {

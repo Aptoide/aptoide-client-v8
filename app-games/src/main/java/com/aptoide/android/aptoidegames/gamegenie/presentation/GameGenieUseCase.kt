@@ -1,11 +1,19 @@
 package com.aptoide.android.aptoidegames.gamegenie.presentation
 
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
 import cm.aptoide.pt.feature_apps.data.AppMapper
+import cm.aptoide.pt.feature_categories.data.CategoriesRepository
+import cm.aptoide.pt.install_manager.App
+import cm.aptoide.pt.install_manager.InstallManager
+import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieCompanionRequest
 import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieAppRepository
 import com.aptoide.android.aptoidegames.gamegenie.data.database.model.GameGenieHistoryEntity
 import com.aptoide.android.aptoidegames.gamegenie.domain.ChatInteraction
 import com.aptoide.android.aptoidegames.gamegenie.domain.ChatInteractionHistory
 import com.aptoide.android.aptoidegames.gamegenie.domain.ConversationInfo
+import com.aptoide.android.aptoidegames.gamegenie.domain.GameCompanion
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameContext
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameGenieChat
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameGenieChatHistory
@@ -18,7 +26,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
+import java.io.IOException
 import javax.inject.Inject
+import kotlin.collections.forEach
+import kotlin.collections.map
 
 private const val MAX_CHATS = 15
 
@@ -26,12 +38,64 @@ class GameGenieUseCase @Inject constructor(
   private val gameGenieManager: GameGenieManager,
   private val mapper: AppMapper,
   private val appRepository: GameGenieAppRepository,
-) {
+  private val packageManager: PackageManager,
+  private val installManager: InstallManager,
+  private val repository: CategoriesRepository,
+  ) {
   suspend fun getToken(): Token {
     return gameGenieManager.getToken()
   }
 
   fun getInstalledApps(): Flow<List<GameContext>> = appRepository.getInstalledApps()
+
+  fun getGameCompanionsList(): Flow<List<GameCompanion>> {
+    val apps = installManager.installedApps.toMutableSet()
+    return installManager.appsChanges
+      .map { apps.apply { add(it) } }
+      .onStart { emit(apps) }
+      .map { set ->
+        filterGames(set.mapNotNull(App::packageInfo))
+          .sortedByDescending { it.firstInstallTime }
+          .map {
+            GameCompanion(
+              name = it.applicationInfo?.loadLabel(packageManager).toString(),
+              packageName = it.packageName,
+              versionName = it.versionName,
+              image = it.applicationInfo?.loadIcon(packageManager)
+            )
+          }
+      }
+  }
+
+  private suspend fun filterGames(appsList: List<PackageInfo>): List<PackageInfo> {
+    val gamesPackageInfoList = ArrayList<PackageInfo>()
+    val undefinedPackageInfoMap = HashMap<String, PackageInfo>()
+    appsList.forEach { packageInfo ->
+      when (packageInfo.applicationInfo?.category) {
+        ApplicationInfo.CATEGORY_GAME -> gamesPackageInfoList.add(packageInfo)
+        else -> undefinedPackageInfoMap[packageInfo.packageName] = packageInfo
+      }
+    }
+    try {
+      repository.getAppsCategories(undefinedPackageInfoMap.keys.toList())
+        .map { appCategory ->
+          when (appCategory.type) {
+            "GAME" -> undefinedPackageInfoMap[appCategory.name]?.let {
+              gamesPackageInfoList.add(
+                it
+              )
+            }
+
+            else -> {}
+          }
+        }
+    } catch (e: IOException) {
+      e.printStackTrace()
+    } catch (t: Throwable) {
+      t.printStackTrace()
+    }
+    return gamesPackageInfoList
+  }
 
   suspend fun reloadConversation(
     chat: GameGenieChat,
@@ -64,6 +128,26 @@ class GameGenieUseCase @Inject constructor(
     )
   }
 
+  suspend fun sendCompanionMessage(
+    chat: GameGenieChatHistory,
+    userMessage: String,
+    selectedGame: String,
+  ): GameGenieChat {
+    val updatedConversation = chat.conversation.toMutableList().apply {
+      if (isNotEmpty()) {
+        this[lastIndex] = last().copy(user = userMessage)
+      }
+    }
+    return postCompanionMessage(chat.id, chat.title, updatedConversation, selectedGame).fold(
+      onSuccess = { response ->
+        val convertedChat = response.toGameGenieChat(mapper)
+        gameGenieManager.saveOrUpdateChatCompanion(selectedGame, convertedChat)
+        convertedChat
+      },
+      onFailure = { throw it }
+    )
+  }
+
   fun loadChat(id: String): Flow<GameGenieChat?> = flow {
     runCatching {
       val chat = gameGenieManager.getChatById(id) ?: return@flow emit(null)
@@ -84,6 +168,29 @@ class GameGenieUseCase @Inject constructor(
       )
       emit(gameGenieChat)
     }
+  }.flowOn(Dispatchers.IO)
+
+  fun loadCompanionChat(packageName: String): Flow<GameGenieChat?> = flow {
+    gameGenieManager.getGameCompanionChat(packageName)
+      ?.toDomain()
+      ?.let { chatHistory ->
+        val gameGenieChat = GameGenieChat(
+          id = chatHistory.id,
+          title = chatHistory.title,
+          conversation = chatHistory.conversation.map { interaction ->
+            ChatInteraction(
+              gpt = interaction.gpt,
+              user = interaction.user,
+              videoId = interaction.videoId,
+              apps = interaction.apps.mapNotNull { appName ->
+                runCatching { appRepository.getApp(appName).copy(hasMeta = true) }.getOrNull()
+              }
+            )
+          }
+        )
+        gameGenieChat
+      }
+      .also { emit(it) }
   }.flowOn(Dispatchers.IO)
 
   fun getDrawerChats(): Flow<List<ConversationInfo>> =
@@ -116,6 +223,26 @@ class GameGenieUseCase @Inject constructor(
           title,
           conversation,
           GameGenieMetadata(installedApps)
+        )
+      )
+    }
+  }
+
+  private suspend fun postCompanionMessage(
+    id: String,
+    title: String,
+    conversation: List<ChatInteractionHistory>,
+    selectedGame: String,
+  ): Result<GameGenieResponse> {
+    return runCatching {
+      val token = getToken()
+      gameGenieManager.postMessageCompanion(
+        token,
+        GameGenieCompanionRequest(
+          id,
+          title,
+          conversation,
+          selectedGame
         )
       )
     }

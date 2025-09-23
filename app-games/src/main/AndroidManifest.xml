@@ -90,6 +90,12 @@
       </intent-filter>
     </service>
 
+    <service
+        android:name=".gamegenie.presentation.ChatOverlayService"
+        android:exported="false"
+        android:foregroundServiceType="specialUse"
+        android:permission="android.permission.FOREGROUND_SERVICE" />
+
     <meta-data
         android:name="com.google.firebase.messaging.default_notification_icon"
         android:resource="@drawable/ic_notification_icon" />
