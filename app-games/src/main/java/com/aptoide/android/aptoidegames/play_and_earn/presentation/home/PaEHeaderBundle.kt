@@ -55,7 +55,7 @@ fun PaEHeaderBundle(
           app = app,
           onClick = {
             navigate(
-              buildAppViewRoute(app).withItemPosition(index)
+              buildAppViewRoute(app, isGamified = true).withItemPosition(index)
             )
           }
         )
