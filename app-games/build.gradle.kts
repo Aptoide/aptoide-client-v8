@@ -178,6 +178,11 @@ android {
         name = "APTOIDE_WEB_SERVICES_HOST",
         value = "\"${project.property("APTOIDE_WEB_SERVICES_HOST_DEV")}\""
       )
+      buildConfigField(
+        type = "String",
+        name = "GOOGLE_AUTH_CLIENT_ID",
+        value = "\"${project.property("GOOGLE_AUTH_CLIENT_ID")}\""
+      )
     }
 
     create("prod") {
@@ -242,6 +247,11 @@ android {
         type = "String",
         name = "APTOIDE_WEB_SERVICES_HOST",
         value = "\"${project.property("APTOIDE_WEB_SERVICES_HOST_PROD")}\""
+      )
+      buildConfigField(
+        type = "String",
+        name = "GOOGLE_AUTH_CLIENT_ID",
+        value = "\"${project.property("GOOGLE_AUTH_CLIENT_ID")}\""
       )
     }
   }
@@ -343,6 +353,12 @@ dependencies {
 
   //animations
   implementation(libs.lottie.compose)
+
+  //Authentication and authorization
+  implementation(libs.credentials)
+  implementation(libs.credentials.playServices)
+  implementation(libs.googleId)
+  implementation(libs.play.services.auth)
 }
 
 fun BaseFlavor.buildConfigFieldFromGradleProperty(gradlePropertyName: String) {
