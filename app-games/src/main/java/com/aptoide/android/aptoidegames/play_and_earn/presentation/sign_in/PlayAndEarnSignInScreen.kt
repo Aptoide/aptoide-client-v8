@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,6 +20,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import cm.aptoide.pt.extensions.ScreenData
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
@@ -27,6 +29,8 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
+import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
+import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
@@ -46,18 +50,39 @@ private fun PlayAndEarnSignInScreen(
   navigate: (String) -> Unit,
   navigateBack: () -> Unit
 ) {
+  val signInVM = hiltViewModel<GoogleSignInViewModel>()
+  val uiState by signInVM.uiState.collectAsState()
+
+  GoogleSignInEventHandler(onSuccess = {})
+
   Column(
     modifier = Modifier.fillMaxSize()
   ) {
     AppGamesTopBar(navigateBack = navigateBack, title = "Start Earning")
-    PaESignInScreenContent(onSignInClick = {})
+    PaESignInScreenContent(
+      uiState = uiState,
+      onSignInClick = { signInVM.signIn() },
+      onRetryClick = { signInVM.reset() }
+    )
   }
 }
 
 @Composable
 private fun PaESignInScreenContent(
-  onSignInClick: () -> Unit
+  uiState: GoogleSignInUiState,
+  onSignInClick: () -> Unit,
+  onRetryClick: () -> Unit
 ) {
+  when (uiState) {
+    is GoogleSignInUiState.Error -> GenericErrorView(onRetryClick = onRetryClick)
+    is GoogleSignInUiState.HandleAuthorization -> PaESignInScreenWaiting()
+    GoogleSignInUiState.Idle -> PaESignInScreenIdle(onSignInClick = onSignInClick)
+    GoogleSignInUiState.Success -> PaESignInScreenIdle(onSignInClick = onSignInClick)
+  }
+}
+
+@Composable
+private fun PaESignInScreenIdle(onSignInClick: () -> Unit) {
   val composition by rememberLottieComposition(
     LottieCompositionSpec.RawRes(R.raw.play_and_earn_login_animation)
   )
@@ -106,6 +131,40 @@ private fun PaESignInScreenContent(
         contentDescription = null,
         modifier = Modifier.clickable(enabled = true, onClick = onSignInClick),
         contentScale = ContentScale.Fit
+      )
+    }
+  }
+}
+
+@Composable
+private fun PaESignInScreenWaiting() {
+  Column(
+    modifier = Modifier
+      .fillMaxWidth()
+      .padding(vertical = 66.dp, horizontal = 24.dp),
+    horizontalAlignment = Alignment.CenterHorizontally,
+    verticalArrangement = Arrangement.spacedBy(62.dp)
+  ) {
+    Spacer(modifier = Modifier.fillMaxHeight(0.1f))
+
+    IndeterminateCircularLoading(color = Palette.Primary)
+
+    Column(
+      horizontalAlignment = Alignment.CenterHorizontally,
+      verticalArrangement = Arrangement.spacedBy(24.dp)
+    ) {
+      Text(
+        text = "Waiting...",
+        style = AGTypography.Title,
+        color = Palette.Primary,
+        textAlign = TextAlign.Center
+      )
+
+      Text(
+        text = "We’re getting things ready for you…",
+        style = AGTypography.SubHeadingM,
+        color = Palette.White,
+        textAlign = TextAlign.Center
       )
     }
   }

@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.TopAppBar
@@ -24,18 +25,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
+import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGeneralAnalytics
 import com.aptoide.android.aptoidegames.drawables.icons.getNotificationBell
 import com.aptoide.android.aptoidegames.drawables.icons.getProfileNoAccountIcon
 import com.aptoide.android.aptoidegames.notifications.NotificationsPermissionRequester
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.rememberUserInfo
 import com.aptoide.android.aptoidegames.settings.settingsRoute
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -88,6 +92,8 @@ private fun AppGamesToolBar(
   onNotificationsClick: () -> Unit,
   onProfileClick: () -> Unit,
 ) {
+  val userInfo = rememberUserInfo()
+
   TopAppBar(
     backgroundColor = Palette.Black,
     elevation = Dp(0f),
@@ -129,7 +135,15 @@ private fun AppGamesToolBar(
             }
           }
           IconButton(onClick = onProfileClick) {
-            Icon(
+            userInfo?.profilePicture?.let {
+              AptoideAsyncImage(
+                data = it,
+                contentDescription = null,
+                modifier = Modifier
+                  .size(24.dp)
+                  .clip(CircleShape)
+              )
+            } ?: Icon(
               imageVector = getProfileNoAccountIcon(),
               contentDescription = null,
               tint = Color.Unspecified
