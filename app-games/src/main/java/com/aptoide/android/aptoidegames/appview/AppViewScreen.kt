@@ -104,6 +104,7 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.SmallEmptyView
 import com.aptoide.android.aptoidegames.feature_apps.presentation.buildSeeMoreBonusRoute
 import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberBonusBundle
 import com.aptoide.android.aptoidegames.installer.presentation.InstallView
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaEInstallView
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -124,6 +125,7 @@ private const val UTM_CAMPAIGN = "utm_campaign"
 private const val UTM_MEDIUM = "utm_medium"
 private const val UTM_SOURCE = "utm_source"
 private const val UTM_CONTENT = "utm_content"
+private const val IS_GAMIFIED = "is_gamified"
 
 private val allAppViewArguments = listOf(
   navArgument(UTM_CAMPAIGN) {
@@ -142,13 +144,17 @@ private val allAppViewArguments = listOf(
     type = NavType.StringType
     nullable = true
   },
+  navArgument(IS_GAMIFIED) {
+    type = NavType.BoolType
+    defaultValue = false
+  },
 )
 
 const val appViewRoute =
   "${APP_PATH}/{$SOURCE}?"
 
 fun appViewScreen() = ScreenData.withAnalytics(
-  route = "$appViewRoute$UTM_MEDIUM={$UTM_MEDIUM}&$UTM_CONTENT={$UTM_CONTENT}&$UTM_SOURCE={$UTM_SOURCE}&$UTM_CAMPAIGN={$UTM_CAMPAIGN}",
+  route = "$appViewRoute$UTM_MEDIUM={$UTM_MEDIUM}&$UTM_CONTENT={$UTM_CONTENT}&$UTM_SOURCE={$UTM_SOURCE}&$UTM_CAMPAIGN={$UTM_CAMPAIGN}&$IS_GAMIFIED={$IS_GAMIFIED}",
   screenAnalyticsName = "AppView",
   arguments = allAppViewArguments,
   deepLinks = listOf(
@@ -172,11 +178,14 @@ fun appViewScreen() = ScreenData.withAnalytics(
     UTM_SOURCE to arguments.getString(UTM_SOURCE),
   )
 
+  val isGamified = arguments.getBoolean(IS_GAMIFIED, false)
+
   AppViewScreen(
     source = source.appendIfRequired(BuildConfig.MARKET_NAME),
     navigate = navigate,
     navigateBack = navigateBack,
     utmsMap = utmsMap,
+    isGamified = isGamified
   )
 }
 
@@ -185,13 +194,15 @@ fun buildAppViewRoute(
   utmCampaign: String? = "",
   utmMedium: String? = "",
   utmContent: String? = "",
-  utmSource: String? = ""
+  utmSource: String? = "",
+  isGamified: Boolean = false
 ): String =
   appViewRoute.replace("{$SOURCE}", appSource.asSource())
     .withParameter(UTM_CAMPAIGN, utmCampaign)
     .withParameter(UTM_MEDIUM, utmMedium)
     .withParameter(UTM_CONTENT, utmContent)
     .withParameter(UTM_SOURCE, utmSource)
+    .withParameter(IS_GAMIFIED, isGamified.toString())
 
 fun buildAppViewDeepLinkUri(appSource: AppSource) =
   BuildConfig.DEEP_LINK_SCHEMA + buildAppViewRoute(appSource)
@@ -202,6 +213,7 @@ fun AppViewScreen(
   navigate: (String) -> Unit,
   navigateBack: () -> Unit,
   utmsMap: Map<String, String>,
+  isGamified: Boolean
 ) {
   val (uiState, reload) = rememberApp(source = source)
   val analyticsContext = AnalyticsContext.current
@@ -231,7 +243,8 @@ fun AppViewScreen(
       navigateBack()
     },
     tabsList = tabsList,
-    utmsMap = utmsMap
+    utmsMap = utmsMap,
+    isGamified = isGamified
   )
 }
 
@@ -244,6 +257,7 @@ fun MainAppViewView(
   navigateBack: () -> Unit,
   tabsList: List<AppViewTab>,
   utmsMap: Map<String, String>,
+  isGamified: Boolean,
 ) {
   when (uiState) {
     is AppUiState.Idle ->
@@ -252,7 +266,8 @@ fun MainAppViewView(
         tabsList = tabsList,
         navigate = navigate,
         navigateBack = navigateBack,
-        utmsMap = utmsMap
+        utmsMap = utmsMap,
+        isGamified = isGamified
       )
 
     is AppUiState.NoConnection -> NoConnectionView(onRetryClick = noNetworkReload)
@@ -281,6 +296,7 @@ fun AppViewContent(
   navigate: (String) -> Unit,
   navigateBack: () -> Unit,
   utmsMap: Map<String, String>,
+  isGamified: Boolean
 ) {
   val bonusBundle = rememberBonusBundle()
 
@@ -353,10 +369,18 @@ fun AppViewContent(
 
       AppPresentationView(app)
 
-      InstallView(
-        modifier = Modifier.padding(top = 24.dp, start = 16.dp, end = 16.dp),
-        app = app
-      )
+      if (isGamified) {
+        PaEInstallView(
+          modifier = Modifier.padding(top = 24.dp, start = 16.dp, end = 16.dp),
+          app = app
+        )
+      } else {
+        InstallView(
+          modifier = Modifier.padding(top = 24.dp, start = 16.dp, end = 16.dp),
+          app = app
+        )
+      }
+
 
       AppInfoViewPager(
         selectedTab = selectedTab,
@@ -942,7 +966,8 @@ fun AppViewScreenPreview() {
       ),
       navigateBack = {},
       navigate = {},
-      utmsMap = emptyMap()
+      utmsMap = emptyMap(),
+      isGamified = false
     )
   }
 }
