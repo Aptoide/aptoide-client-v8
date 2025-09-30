@@ -88,9 +88,7 @@ fun PaEVerticalBundleView(
       bundle.apps.forEachIndexed { index, app ->
         PaELargeAppItem(
           app = app,
-          onClick = {
-            navigate(buildAppViewRoute(app).withItemPosition(index))
-          }
+          onClick = { navigate(buildAppViewRoute(app, isGamified = true).withItemPosition(index)) }
         )
       }
     }

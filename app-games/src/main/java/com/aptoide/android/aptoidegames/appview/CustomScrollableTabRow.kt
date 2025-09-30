@@ -117,6 +117,7 @@ private fun Modifier.customTabIndicatorOffset(
 fun AppViewTab.getTabName(): String = stringResource(
   when (this) {
     AppViewTab.DETAILS -> R.string.appview_details_tab_title
+    AppViewTab.REWARDS -> R.string.appview_rewards_tab_title
     AppViewTab.RELATED -> R.string.appview_related_tab_title
     AppViewTab.INFO -> R.string.appview_info_tab_title
   }
@@ -124,6 +125,7 @@ fun AppViewTab.getTabName(): String = stringResource(
 
 enum class AppViewTab {
   DETAILS,
+  REWARDS,
   RELATED,
   INFO
 }
