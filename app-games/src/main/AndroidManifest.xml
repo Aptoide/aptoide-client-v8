@@ -11,6 +11,9 @@
 
   <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"/>
+
   <application
       android:name=".AptoideApplication"
       android:allowBackup="false"
@@ -138,5 +141,10 @@
         android:name=".play_and_earn.presentation.permissions.UsageStatsPermissionActivity"
         android:exported="false"
         android:noHistory="false"/>
+
+    <service
+        android:name=".play_and_earn.presentation.service.PaEForegroundService"
+        android:exported="false"
+        android:foregroundServiceType="specialUse" />
   </application>
 </manifest>
