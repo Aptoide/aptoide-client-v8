@@ -37,6 +37,7 @@ import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.design_system.AccentSmallButton
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.rememberPaEAnalytics
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.service.PaEForegroundService
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
@@ -66,6 +67,8 @@ private fun PlayAndEarnPermissionsScreen(
     val observer = LifecycleEventObserver { _, event ->
       if (event == Lifecycle.Event.ON_RESUME) {
         if (context.hasOverlayPermission() && context.hasUsageStatsPermissionStatus()) {
+          PaEForegroundService.start(context)
+
           navigateBack()
         }
       }
