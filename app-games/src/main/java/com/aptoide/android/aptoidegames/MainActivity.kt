@@ -9,6 +9,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.LaunchedEffect
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import cm.aptoide.pt.install_manager.InstallManager
@@ -27,6 +28,7 @@ import com.aptoide.android.aptoidegames.network.repository.NetworkPreferencesRep
 import com.aptoide.android.aptoidegames.notifications.analytics.FirebaseNotificationAnalytics
 import com.aptoide.android.aptoidegames.notifications.analytics.NotificationsAnalytics
 import com.aptoide.android.aptoidegames.notifications.toFirebaseNotificationAnalyticsInfo
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.service.PaEForegroundService
 import com.aptoide.android.aptoidegames.promo_codes.PromoCode
 import com.aptoide.android.aptoidegames.promo_codes.PromoCodeRepository
 import com.aptoide.android.aptoidegames.updates.domain.UpdatesNotificationAnalyticsManager
@@ -105,6 +107,9 @@ class MainActivity : AppCompatActivity() {
         handleNotificationIntent(intent = intent)
       }
     }
+
+    val serviceIntent = Intent(this, PaEForegroundService::class.java)
+    ContextCompat.startForegroundService(this, serviceIntent)
   }
 
   private fun handleStartup() {
