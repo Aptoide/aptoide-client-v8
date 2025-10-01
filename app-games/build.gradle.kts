@@ -377,6 +377,8 @@ dependencies {
   implementation(libs.play.services.auth)
 
   implementation(libs.constraintLayout.compose)
+
+  implementation(libs.lifecycle.service)
 }
 
 fun BaseFlavor.buildConfigFieldFromGradleProperty(gradlePropertyName: String) {
