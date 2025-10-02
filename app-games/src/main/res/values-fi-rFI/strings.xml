@@ -274,6 +274,6 @@
   <string name="apkfy_multi_install_intro_1">Haluatko asentaa tämän sovelluksen?</string>
   <string name="apkfy_multi_install_intro_2">Lisää hauskaa odottaa!</string>
   <string name="apkfy_multi_install_intro_3">Kokeile näitä Robloxista inspiraationsa saaneita pelejä.</string>
-  <string name="gamegenie_entry_screen_general_section">Find your next favorite game with GameGenie.</string>
-  <string name="gamegenie_entry_screen_companion_section">...or tap your game - I\'ll help you master it.</string>
+  <string name="gamegenie_entry_screen_general_section">Löydä seuraava suosikkipelisi GameGenien avulla.</string>
+  <string name="gamegenie_entry_screen_companion_section">...tai napauta peliäsi - autan sinua hallitsemaan sen.</string>
 </resources>
