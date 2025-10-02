@@ -274,6 +274,6 @@
   <string name="apkfy_multi_install_intro_1">Bu uygulamayı yüklemek ister misiniz?</string>
   <string name="apkfy_multi_install_intro_2">Daha fazla eğlence sizi bekliyor!</string>
   <string name="apkfy_multi_install_intro_3">Roblox\'tan esinlenerek geliştirilen bu oyunları deneyin.</string>
-  <string name="gamegenie_entry_screen_general_section">Find your next favorite game with GameGenie.</string>
-  <string name="gamegenie_entry_screen_companion_section">...or tap your game - I\'ll help you master it.</string>
+  <string name="gamegenie_entry_screen_general_section">GameGenie ile bir sonraki favori oyununuzu bulun.</string>
+  <string name="gamegenie_entry_screen_companion_section">...ya da oyununuzu seçin - ustalaşmanıza yardımcı olacağım.</string>
 </resources>
