@@ -273,4 +273,6 @@
   <string name="apkfy_multi_install_intro_1">このアプリをインストールしますか？</string>
   <string name="apkfy_multi_install_intro_2">もっと楽しいことが待っている！</string>
   <string name="apkfy_multi_install_intro_3">Robloxにインスパイアされたこれらのゲームを試してみてください。</string>
+  <string name="gamegenie_entry_screen_general_section">GameGenieで次のお気に入りゲームを見つけよう。</string>
+  <string name="gamegenie_entry_screen_companion_section">…あるいはゲームに没頭しよう——君が極めるのを手伝うよ。</string>
 </resources>
