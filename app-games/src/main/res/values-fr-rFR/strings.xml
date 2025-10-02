@@ -274,4 +274,6 @@
   <string name="apkfy_multi_install_intro_1">Voulez-vous installer cette application ?</string>
   <string name="apkfy_multi_install_intro_2">Encore plus de plaisir vous attend !</string>
   <string name="apkfy_multi_install_intro_3">Essayez ces jeux inspirés de Roblox.</string>
+  <string name="gamegenie_entry_screen_general_section">Trouvez votre prochain jeu préféré avec GameGenie.</string>
+  <string name="gamegenie_entry_screen_companion_section">...ou tapez sur votre jeu - je vous aiderai à le maîtriser.</string>
 </resources>
