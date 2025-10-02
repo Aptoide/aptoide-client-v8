@@ -297,4 +297,9 @@
   <string name="apkfy_multi_install_intro_2">More fun awaits!</string>
   <string name="apkfy_multi_install_intro_3">Try these games inspired by Roblox.</string>
 
+
+  <string name="gamegenie_entry_screen_general_section">Find your next favorite game with GameGenie.</string>
+  <string name="gamegenie_entry_screen_companion_section">...or tap your game - I\'ll help you master it.</string>
+
+
 </resources>
