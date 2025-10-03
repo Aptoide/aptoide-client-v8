@@ -17,7 +17,7 @@ class DefaultPackageUsageManager(context: Context) : PackageUsageManager {
 
   override fun getForegroundPackage(): String? {
     val endTime = System.currentTimeMillis()
-    val startTime = endTime - 1000 * 60 // check last minute
+    val startTime = endTime - 1000 * 10 // check last 10 seconds
 
     val usageEvents: UsageEvents = usageStatsManager.queryEvents(startTime, endTime)
     val event = UsageEvents.Event()
@@ -42,7 +42,7 @@ class DefaultPackageUsageManager(context: Context) : PackageUsageManager {
         UsageEvents.Event.ACTIVITY_PAUSED,
         UsageEvents.Event.ACTIVITY_STOPPED -> {
           val className = event.className ?: "unknown"
-          resumedActivities.get(packageName)?.remove(className)
+          resumedActivities[packageName]?.remove(className)
 
           if (resumedActivities.get(packageName)?.isEmpty() == true) {
             resumedActivities.remove(packageName)
@@ -51,10 +51,10 @@ class DefaultPackageUsageManager(context: Context) : PackageUsageManager {
       }
     }
 
-    if (resumedActivities.isNotEmpty() && resumedActivities.contains(lastPackage)) {
-      return lastPackage
+    return if (resumedActivities.isNotEmpty() && resumedActivities.contains(lastPackage)) {
+      lastPackage
     } else {
-      return null
+      null
     }
   }
 }

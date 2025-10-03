@@ -4,17 +4,17 @@ import android.content.Context
 import androidx.room.Room
 import cm.aptoide.pt.aptoide_network.di.ApiChainCatappultDomain
 import cm.aptoide.pt.aptoide_network.di.BaseOkHttp
-import cm.aptoide.pt.campaigns.data.DefaultPaECampaignsRepository
+import cm.aptoide.pt.campaigns.data.FakePaECampaignsRepository
 import cm.aptoide.pt.campaigns.data.PaECampaignsApi
 import cm.aptoide.pt.campaigns.data.PaECampaignsRepository
 import cm.aptoide.pt.campaigns.data.database.PaECampaignsDatabase
+import cm.aptoide.pt.campaigns.data.database.PaeMissionDao
 import cm.aptoide.pt.wallet.authorization.data.WalletAuthInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.Dispatchers
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -31,10 +31,11 @@ internal object RepositoryModule {
     @ApiChainCatappultDomain apiChainCatappultDomain: String,
     walletAuthInterceptor: WalletAuthInterceptor
   ): PaECampaignsApi {
-    val client = okHttpClient.newBuilder().addInterceptor(walletAuthInterceptor).build()
+    //TODO: Readd once the auth is fixed on missions
+    //val client = okHttpClient.newBuilder().addInterceptor(walletAuthInterceptor).build()
 
     return Retrofit.Builder()
-      .client(client)
+      .client(okHttpClient)
       .baseUrl(apiChainCatappultDomain)
       .addConverterFactory(GsonConverterFactory.create())
       .build()
@@ -43,20 +44,18 @@ internal object RepositoryModule {
 
   @Provides
   @Singleton
-  fun providePaECampaignsRepository(
-    paeCampaignsApi: PaECampaignsApi,
-    paECampaignsDatabase: PaECampaignsDatabase
-  ): PaECampaignsRepository = DefaultPaECampaignsRepository(
-    paeCampaignsApi = paeCampaignsApi,
-    paEAppsDao = paECampaignsDatabase.paeAppsDao(),
-    paeMissionDao = paECampaignsDatabase.paeMissionDao(),
-    dispatcher = Dispatchers.IO
-  )
+  fun providePaECampaignsRepository(): PaECampaignsRepository = FakePaECampaignsRepository()
 
   @Singleton
   @Provides
   fun providePaECampaignsDatabase(@ApplicationContext appContext: Context): PaECampaignsDatabase {
     return Room.databaseBuilder(appContext, PaECampaignsDatabase::class.java, "pae_campaigns.db")
       .build()
+  }
+
+  @Singleton
+  @Provides
+  fun providePaEMissionsDao(paECampaignsDatabase: PaECampaignsDatabase): PaeMissionDao {
+    return paECampaignsDatabase.paeMissionDao()
   }
 }

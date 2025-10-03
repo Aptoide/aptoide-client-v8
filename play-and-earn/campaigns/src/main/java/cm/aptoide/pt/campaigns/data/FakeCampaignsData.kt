@@ -26,11 +26,11 @@ val paEApp1 = PaEApp(
 )
 
 val paEApp2 = PaEApp(
-  packageName = "com.appcoins.wallet",
-  icon = "https://pool.img.aptoide.com/catappult/d42291cca5551c6e9e39d56aa8d420d0_icon.png",
-  graphic = "https://pool.img.aptoide.com/catappult/277096cced71e00af898784187110a7b_fgraphic.png",
-  name = "Aptoide Wallet",
-  uname = "appcoins-wallet",
+  packageName = "com.cmsj.bugsquad.google",
+  icon = "https://pool.img.aptoide.com/aptoide-games/c4bb8e62e47a11582bd8a6ff883792f3_icon.png",
+  graphic = "https://pool.img.aptoide.com/aptoide-games/b2fd10a571c3891ddee80b9533318bf0_fgraphic.png",
+  name = "Bug Brawl",
+  uname = "bug-brawl",
   progress = PaEProgress(
     current = 15,
     target = 50,
@@ -40,11 +40,11 @@ val paEApp2 = PaEApp(
 )
 
 val paEApp3 = PaEApp(
-  packageName = "com.aptoide.diceroll.sdk.dev",
-  icon = "https://cdn6.aptoide.com/imgs/d/7/a/d7a1e9676547714cbaa366997183e136_icon.png",
-  graphic = "https://cdn6.aptoide.com/imgs/c/e/f/ceffc555296046d89ca0c3e69b4c9439_fgraphic.jpg",
-  name = "Aptoide Diceroll SDK Dev",
-  uname = "aptoide-diceroll-sdk-dev",
+  packageName = "com.td.watcherofrealms.cata",
+  icon = "https://pool.img.aptoide.com/aptoide-games/e8f3ef0b3a37982b1566eaa8e5cbc9b9_icon.png",
+  graphic = "https://pool.img.aptoide.com/aptoide-games/f45fda0b2c95d88267b27f776eedc3f9_fgraphic.jpg",
+  name = "Watcher of Realms",
+  uname = "watcher-of-realms",
   progress = null
 )
 
@@ -76,22 +76,32 @@ val paeCheckpoint1 = PaEMission(
 
 val paeMission1 = PaEMission(
   title = "Quick Throw",
-  description = "Play for 2 minutes",
+  description = "Play for 30 seconds",
   icon = "https://pool.img.aptoide.com/catappult/d42291cca5551c6e9e39d56aa8d420d0_icon.png",
   type = PaEMissionType.PLAY_TIME,
   arguments = JsonObject(),
   units = 5,
-  progress = null
+  progress = PaEMissionProgress(
+    current = 0,
+    target = 30,
+    type = "Mission",
+    status = PaEMissionStatus.ONGOING
+  )
 )
 
 val paeMission2 = PaEMission(
   title = "Dice Grinder",
-  description = "Play for 10 minutes",
+  description = "Play for 1 minute",
   icon = "https://pool.img.aptoide.com/catappult/d42291cca5551c6e9e39d56aa8d420d0_icon.png",
   type = PaEMissionType.PLAY_TIME,
   arguments = JsonObject(),
   units = 10,
-  progress = null
+  progress = PaEMissionProgress(
+    current = 0,
+    target = 60,
+    type = "Mission",
+    status = PaEMissionStatus.ONGOING
+  )
 )
 
 val paeMission3 = PaEMission(
