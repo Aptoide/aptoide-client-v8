@@ -40,6 +40,8 @@ fun GameCompanionList(
               onClick = onClick,
               imageSize = 56
             )
+          } else {
+            GameIconShimmerLoading()
           }
         }
       }
@@ -47,3 +49,27 @@ fun GameCompanionList(
   }
 }
 
+@Composable
+fun GameIconShimmerLoading(
+  iconSize: Int = 56,
+  textHeight: Int = 12,
+  textWidth: Int = 56,
+  spaceBetween: Int = 8,
+) {
+  Column(
+    horizontalAlignment = Alignment.CenterHorizontally
+  ) {
+    Box(
+      modifier = Modifier
+        .size(iconSize.dp)
+        .shimmerLoading(Palette.Primary)
+    )
+    Spacer(modifier = Modifier.height(spaceBetween.dp))
+    Box(
+      modifier = Modifier
+        .height(textHeight.dp)
+        .width(textWidth.dp)
+        .shimmerLoading(Palette.Primary)
+    )
+  }
+}
