@@ -1,13 +1,9 @@
 package com.aptoide.android.aptoidegames.gamegenie.presentation.composables
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -22,8 +18,6 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aptoide.android.aptoidegames.R
@@ -41,6 +35,8 @@ fun MessageList(
   suggestions: List<String> = emptyList(),
   setFirstLoadDone: () -> Unit,
   onSuggestionClick: (String, Int) -> Unit = { _, _ -> },
+  isCompanion: Boolean = false,
+  gameName: String = "",
 ) {
   val listState = rememberLazyListState()
   val playerCache = remember { mutableMapOf<String, YouTubePlayerView>() }
@@ -67,10 +63,9 @@ fun MessageList(
     reverseLayout = true,
     state = listState,
     modifier = modifier
-      .padding(vertical = 8.dp),
+      .padding(bottom = 8.dp),
     contentPadding = PaddingValues(vertical = 8.dp)
   ) {
-
     itemsIndexed(
       items = messageList,
       key = { idx, _ -> "${messageList.size - idx}" }) { idx, message ->
@@ -92,15 +87,15 @@ fun MessageList(
 
       if (idx == messageList.lastIndex) {
         if (suggestions.isNotEmpty()) {
-            LazyRow(
-              contentPadding = PaddingValues(vertical = 4.dp),
-              horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-              itemsIndexed(suggestions) { reversedIndex, suggestion ->
-                val actualIndex = suggestions.size - reversedIndex
-                SuggestionBox(suggestion, onSuggestionClick, actualIndex)
-              }
+          LazyRow(
+            contentPadding = PaddingValues(vertical = 4.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+          ) {
+            itemsIndexed(suggestions) { reversedIndex, suggestion ->
+              val actualIndex = suggestions.size - reversedIndex
+              SuggestionBox(suggestion, onSuggestionClick, actualIndex)
             }
+          }
         }
 
         MessageBubble(
@@ -108,7 +103,9 @@ fun MessageList(
           videoId = message.videoId,
           apps = message.apps,
           navigateTo = navigateTo,
-          playerCache
+          playerCache = playerCache,
+          isCompanion = isCompanion,
+          gameName = gameName,
         )
       } else {
         MessageBubble(
@@ -132,19 +129,21 @@ fun MessageList(
           .padding(bottom = 88.dp),
         contentAlignment = Alignment.Center
       ) {
-        AnimationComposable(
-          modifier = Modifier.size(175.dp),
-          resId = R.raw.game_genie_chat_big_animation
-        )
+        if (!isCompanion) {
+          AnimationComposable(
+            modifier = Modifier.size(175.dp),
+            resId = R.raw.game_genie_chat_big_animation
+          )
 
-        Text(
-          text = stringResource(R.string.genai_bottom_navigation_gamegenie_button),
-          style = AGTypography.InputsL,
-          color = Palette.Primary,
-          modifier = Modifier
-            .align(Alignment.Center)
-            .offset(y = 70.dp)
-        )
+          Text(
+            text = stringResource(R.string.genai_bottom_navigation_gamegenie_button),
+            style = AGTypography.InputsL,
+            color = Palette.Primary,
+            modifier = Modifier
+              .align(Alignment.Center)
+              .offset(y = 70.dp)
+          )
+        }
       }
     }
   }

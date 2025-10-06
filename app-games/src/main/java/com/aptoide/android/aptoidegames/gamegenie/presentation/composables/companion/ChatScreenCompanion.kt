@@ -33,10 +33,12 @@ fun ChatScreenCompanion(
 ) {
   Column(
     modifier = Modifier
-      .padding(vertical = 4.dp, horizontal = 18.dp)
+      .padding(horizontal = 18.dp)
       .fillMaxSize()
   ) {
-    SelectedGameCompanion(selectedGame) {
+    val showImage = uiState.chat.conversation.size < 2
+
+    SelectedGameCompanion(selectedGame, showImage) {
       navigateBack()
     }
 
@@ -45,8 +47,9 @@ fun ChatScreenCompanion(
       firstLoad = firstLoad,
       navigateTo = navigateTo,
       setFirstLoadDone = setFirstLoadDone,
-      modifier = Modifier
-        .weight(1f),
+      isCompanion = true,
+      modifier = Modifier.weight(1f),
+      gameName = selectedGame.name
     )
 
     if (isLoading) {

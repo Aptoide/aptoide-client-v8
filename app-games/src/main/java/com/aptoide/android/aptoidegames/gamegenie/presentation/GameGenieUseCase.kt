@@ -7,7 +7,6 @@ import cm.aptoide.pt.feature_apps.data.AppMapper
 import cm.aptoide.pt.feature_categories.data.CategoriesRepository
 import cm.aptoide.pt.install_manager.App
 import cm.aptoide.pt.install_manager.InstallManager
-import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieCompanionRequest
 import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieAppRepository
 import com.aptoide.android.aptoidegames.gamegenie.data.database.model.GameGenieHistoryEntity
 import com.aptoide.android.aptoidegames.gamegenie.domain.ChatInteraction
@@ -18,6 +17,7 @@ import com.aptoide.android.aptoidegames.gamegenie.domain.GameContext
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameGenieChat
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameGenieChatHistory
 import com.aptoide.android.aptoidegames.gamegenie.domain.Token
+import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieCompanionRequest
 import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieMetadata
 import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieRequest
 import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieResponse
@@ -29,8 +29,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import java.io.IOException
 import javax.inject.Inject
-import kotlin.collections.forEach
-import kotlin.collections.map
 
 private const val MAX_CHATS = 15
 
@@ -41,7 +39,7 @@ class GameGenieUseCase @Inject constructor(
   private val packageManager: PackageManager,
   private val installManager: InstallManager,
   private val repository: CategoriesRepository,
-  ) {
+) {
   suspend fun getToken(): Token {
     return gameGenieManager.getToken()
   }

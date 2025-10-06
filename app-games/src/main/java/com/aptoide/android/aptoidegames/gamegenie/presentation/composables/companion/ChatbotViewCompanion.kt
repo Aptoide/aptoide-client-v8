@@ -24,7 +24,7 @@ fun ChatbotViewCompanion(
   onError: () -> Unit,
   onMessageSend: (String) -> Unit,
   setFirstLoadDone: () -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   Column(
     modifier = modifier

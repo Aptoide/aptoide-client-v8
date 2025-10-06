@@ -27,6 +27,7 @@ import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.error_views.NoConnectionView
 import com.aptoide.android.aptoidegames.gamegenie.analytics.rememberGameGenieAnalytics
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameCompanion
+import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.ChatBackButton
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.ChatParticipantName
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.MessageList
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.TextInputBar
@@ -35,7 +36,10 @@ import com.aptoide.android.aptoidegames.home.LoadingView
 
 const val genieRoute = "chatbot"
 
-private enum class EntryChoice { General, Companion }
+private enum class EntryChoice {
+  General,
+  Companion
+}
 
 fun gameGenieScreen() = ScreenData.withAnalytics(
   route = genieRoute,
@@ -68,11 +72,16 @@ fun gameGenieScreen() = ScreenData.withAnalytics(
             }
           )
         }
+
         EntryChoice.General -> {
           ChatbotView(
             firstLoad = firstLoad,
             uiState = uiState,
             navigateTo = navigate,
+            navigateBack = {
+              viewModel.resetSelectedGame()
+              selectedEntry = null
+            },
             onError = viewModel::reload,
             onMessageSend = { message ->
               viewModel.sendMessage(message)
@@ -85,6 +94,7 @@ fun gameGenieScreen() = ScreenData.withAnalytics(
             }
           )
         }
+
         EntryChoice.Companion -> {
           viewModel.selectedGame.collectAsState().value?.let {
             ChatbotViewCompanion(
@@ -92,7 +102,8 @@ fun gameGenieScreen() = ScreenData.withAnalytics(
               firstLoad = firstLoad,
               navigateBack = {
                 viewModel.resetSelectedGame()
-                selectedEntry = null },
+                selectedEntry = null
+              },
               uiState = uiState,
               navigateTo = navigate,
               onError = viewModel::reload,
@@ -121,6 +132,7 @@ fun ChatbotView(
   firstLoad: Boolean,
   uiState: GameGenieUIState,
   navigateTo: (String) -> Unit,
+  navigateBack: (() -> Unit)? = null,
   onError: () -> Unit,
   onMessageSend: (String) -> Unit,
   setFirstLoadDone: () -> Unit,
@@ -143,6 +155,7 @@ fun ChatbotView(
         uiState = uiState,
         firstLoad = firstLoad,
         navigateTo = navigateTo,
+        navigateBack = navigateBack,
         onMessageSend = onMessageSend,
         onSuggestionSend = onSuggestionSend,
         setFirstLoadDone = setFirstLoadDone,
@@ -157,6 +170,7 @@ fun ChatScreen(
   uiState: GameGenieUIState,
   firstLoad: Boolean,
   navigateTo: (String) -> Unit,
+  navigateBack: (() -> Unit)?,
   onMessageSend: (String) -> Unit,
   onSuggestionSend: (String, Int) -> Unit,
   setFirstLoadDone: () -> Unit,
@@ -167,16 +181,19 @@ fun ChatScreen(
     if (selectedGame != null)
       emptyList()
     else listOf(
-    stringResource(R.string.genai_example_1_body),
-    stringResource(R.string.genai_example_2_body),
-    stringResource(R.string.genai_example_3_body)
-  )
+      stringResource(R.string.genai_example_1_body),
+      stringResource(R.string.genai_example_2_body),
+      stringResource(R.string.genai_example_3_body)
+    )
 
   Column(
     modifier = Modifier
       .padding(vertical = 4.dp, horizontal = 18.dp)
       .fillMaxSize()
   ) {
+    if (navigateBack != null) {
+      ChatBackButton { navigateBack() }
+    }
     MessageList(
       messages = uiState.chat.conversation,
       firstLoad = firstLoad,

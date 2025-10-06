@@ -2,32 +2,21 @@ package com.aptoide.android.aptoidegames.gamegenie.presentation.composables
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.drawables.icons.getLeftArrow
-import com.aptoide.android.aptoidegames.gamegenie.domain.GameCompanion
 import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
-fun SelectedGameCompanion(
-  game: GameCompanion,
-  showImage: Boolean,
+fun ChatBackButton(
   navigateBack: () -> Unit,
 ) {
   Row(
@@ -41,33 +30,6 @@ fun SelectedGameCompanion(
       modifier = Modifier
         .padding(vertical = 12.dp)
         .clickable(onClick = navigateBack)
-        .size(32.dp)
-    )
-
-    Column(
-      modifier = Modifier
-        .weight(1f)
-        .heightIn(56.dp),
-      horizontalAlignment = Alignment.CenterHorizontally,
-      verticalArrangement = Arrangement.Center
-    ) {
-      if (showImage) {
-        Spacer(modifier = Modifier.height(32.dp))
-      }
-      GameCompanionIcon(
-        game = game,
-        imageSize = 72,
-        textSize = 20.sp,
-        clickableEnabled = false,
-        showImage = showImage,
-        modifier = Modifier,
-        animationSize = 136
-      )
-    }
-
-    Box(
-      modifier = Modifier
-        .padding(end = 16.dp)
         .size(32.dp)
     )
   }
