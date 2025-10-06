@@ -57,12 +57,12 @@ fun ChatInteractionResponse.toChatInteraction(mapper: AppMapper) = ChatInteracti
   user = this.user,
   videoId = this.video,
   apps =
-  if (this.apps.isNullOrEmpty())
-    emptyList()
-  else
-    this.apps.map { app ->
-      app.let(mapper::map)
-    }
+    if (this.apps.isNullOrEmpty())
+      emptyList()
+    else
+      this.apps.map { app ->
+        app.let(mapper::map)
+      }
 )
 
 fun GameGenieResponse.toGameGenieChat(mapper: AppMapper) =

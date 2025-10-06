@@ -1,10 +1,19 @@
 package com.aptoide.android.aptoidegames.gamegenie.presentation
 
-import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
@@ -13,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -74,7 +84,7 @@ fun PlaceholderBox(
 ) {
   Box(
     modifier = modifier
-      .padding(start = 22.dp, end = 22.dp)
+      .padding(start = 18.dp, end = 18.dp)
       .background(backgroundColor.copy(alpha = 0.1f))
       .drawBehind {
         val dash = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
@@ -93,7 +103,7 @@ fun PlaceholderBox(
         else
           Modifier
       ),
-      contentAlignment = if (gifRes != null) Alignment.Center else Alignment.TopCenter
+    contentAlignment = if (gifRes != null) Alignment.Center else Alignment.TopCenter
   ) {
     Column(
       modifier = Modifier

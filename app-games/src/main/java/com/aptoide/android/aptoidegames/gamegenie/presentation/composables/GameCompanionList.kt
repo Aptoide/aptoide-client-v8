@@ -3,7 +3,7 @@ package com.aptoide.android.aptoidegames.gamegenie.presentation.composables
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -24,26 +24,27 @@ fun GameCompanionList(
 ) {
   val displayGames = games.takeIf { !it.isNullOrEmpty() } ?: List(4) { null }
 
-  Column(
+  FlowRow(
     modifier = Modifier
-      .padding(start = 22.dp, end = 22.dp, top = 16.dp, bottom = 19.dp),
-    verticalArrangement = Arrangement.spacedBy(10.dp)
+      .padding(start = 18.dp, end = 18.dp, top = 24.dp, bottom = 19.dp),
+    horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterHorizontally),
+    verticalArrangement = Arrangement.spacedBy(16.dp),
+    maxItemsInEachRow = 4
   ) {
-    displayGames.chunked(4).forEach { rowGames ->
-      Row(
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
-      ) {
-        rowGames.forEach { game ->
-          if (game != null) {
-            GameCompanionIcon(
-              game = game,
-              onClick = onClick,
-              imageSize = 56
-            )
-          } else {
-            GameIconShimmerLoading()
-          }
-        }
+    displayGames.forEach { game ->
+      if (game != null) {
+        GameCompanionIcon(
+          game = game,
+          onClick = onClick,
+          imageSize = 64,
+          showAnimation = false
+        )
+      } else {
+        GameIconShimmerLoading(
+          iconSize = 64,
+          textWidth = 64,
+          spaceBetween = 10,
+        )
       }
     }
   }
@@ -54,7 +55,7 @@ fun GameIconShimmerLoading(
   iconSize: Int = 56,
   textHeight: Int = 12,
   textWidth: Int = 56,
-  spaceBetween: Int = 8,
+  spaceBetween: Int = 16,
 ) {
   Column(
     horizontalAlignment = Alignment.CenterHorizontally

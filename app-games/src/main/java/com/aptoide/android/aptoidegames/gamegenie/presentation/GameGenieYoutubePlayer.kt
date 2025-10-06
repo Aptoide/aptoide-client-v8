@@ -7,7 +7,6 @@ import android.view.ViewGroup.LayoutParams
 import android.widget.FrameLayout
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -107,6 +106,7 @@ fun GameGenieYoutubePlayer(
             if (youtubePlayerTracker.currentSecond > 0f)
               youtubePlayer?.seekTo(youtubePlayerTracker.currentSecond)
           }
+
           else -> {}
         }
       }
@@ -275,7 +275,7 @@ fun rememberYoutubePlayerView(
   videoId: String,
   youtubePlayerTracker: YouTubePlayerTracker,
   startMuted: Boolean,
-  playerCache: MutableMap<String, YouTubePlayerView>
+  playerCache: MutableMap<String, YouTubePlayerView>,
 ): YouTubePlayerView {
   val context = LocalContext.current
   val lifecycle = LocalLifecycleOwner.current.lifecycle

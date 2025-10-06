@@ -2,7 +2,6 @@ package com.aptoide.android.aptoidegames.gamegenie.presentation
 
 import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieApiService
 import com.aptoide.android.aptoidegames.gamegenie.data.database.GameCompanionDao
-import com.aptoide.android.aptoidegames.gamegenie.data.database.GameGenieDatabase
 import com.aptoide.android.aptoidegames.gamegenie.data.database.GameGenieHistoryDao
 import com.aptoide.android.aptoidegames.gamegenie.data.database.model.GameCompanionEntity
 import com.aptoide.android.aptoidegames.gamegenie.data.database.model.GameGenieHistoryEntity
@@ -67,7 +66,9 @@ class GameGenieManager @Inject constructor(
       if (e.code() == 401) {
         Timber.i("Token expired, requesting a new token")
         val newToken = fetchNewToken()
-        gameGenieApi.postMessageCompanion("Bearer ${newToken.token}", request) // Retry with new token
+        gameGenieApi.postMessageCompanion(
+          "Bearer ${newToken.token}", request
+        ) // Retry with new token
       } else {
         throw e
       }
@@ -107,7 +108,10 @@ class GameGenieManager @Inject constructor(
     }
   }
 
-  suspend fun saveOrUpdateChatCompanion(packageName: String, chat: GameGenieChat) {
+  suspend fun saveOrUpdateChatCompanion(
+    packageName: String,
+    chat: GameGenieChat,
+  ) {
     val oldChat = getGameCompanionChat(packageName)
     val newChat = chat.toCompanionEntity(packageName)
     if (oldChat != null) {

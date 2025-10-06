@@ -199,7 +199,6 @@ class GameGenieViewModel @Inject constructor(
     }
   }
 
-
   fun updateLoadingState() {
     val updated = _conversation.value
     viewModelState.update {

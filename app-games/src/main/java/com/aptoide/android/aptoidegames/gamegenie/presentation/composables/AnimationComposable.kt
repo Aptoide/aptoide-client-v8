@@ -20,7 +20,7 @@ fun AnimationComposable(
   modifier: Modifier = Modifier,
   isSelected: Boolean = false,
   resId: Int,
-  selectedResId: Int = R.raw.game_genie_bottom_bar_icon
+  selectedResId: Int = R.raw.game_genie_bottom_bar_icon,
 ) {
   val composition by rememberLottieComposition(
     LottieCompositionSpec.RawRes(resId)
