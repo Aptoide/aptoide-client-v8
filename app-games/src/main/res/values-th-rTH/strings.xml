@@ -272,7 +272,7 @@
   <string name="apkfy_multi_install_intro_1">คุณต้องการติดตั้งแอปนี้หรือไม่</string>
   <string name="apkfy_multi_install_intro_2">สนุกยิ่งกว่าเดิมรออยู่!</string>
   <string name="apkfy_multi_install_intro_3">ลองเล่นเกมเหล่านี้ที่ได้รับแรงบันดาลใจจาก Roblox</string>
-  <string name="gamegenie_entry_screen_general_section">ค้นหาเกมโปรดเกมต่อไปของคุณกับ GameGenie</string>
+  <string name="gamegenie_entry_screen_general_section">ค้นหาเกมโปรดเกมถัดไปของคุณกับ GameGenie</string>
   <string name="gamegenie_entry_screen_companion_section">... หรือแตะเกมของคุณ - ฉันจะช่วยคุณเชี่ยวชาญมัน</string>
-  <string name="gamegenie_introduction_companion_section"><![CDATA[สวัสดี! ฉันคือผู้ช่วย AI ของคุณในทุกเรื่องที่เกี่ยวข้องกับ <1>%1$s</1>]]></string>
+  <string name="gamegenie_introduction_companion_section"><![CDATA[สวัสดี! ฉันคือผู้ช่วย AI ของคุณในทุกเรื่องที่เกี่ยวข้องกับ <1>%1$s</1>.]]></string>
 </resources>
