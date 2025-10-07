@@ -278,7 +278,7 @@
   <string name="apkfy_multi_install_intro_1">Ви хочете встановити цю програму?</string>
   <string name="apkfy_multi_install_intro_2">Ще більше веселощів чекає на вас!</string>
   <string name="apkfy_multi_install_intro_3">Спробуйте ці ігри, натхненні Roblox.</string>
-  <string name="gamegenie_entry_screen_general_section">Find your next favorite game with GameGenie</string>
+  <string name="gamegenie_entry_screen_general_section">Знайдіть свою наступну улюблену гру з GameGenie</string>
   <string name="gamegenie_entry_screen_companion_section">... або натисніть на свою гру - я допоможу вам її освоїти</string>
-  <string name="gamegenie_introduction_companion_section"><![CDATA[Hi! I\'m your AI assistant on everything related to <1>%1$s</1>.]]></string>
+  <string name="gamegenie_introduction_companion_section"><![CDATA[Привіт! Я ваш AI-асистент з усіх питань, пов\'язаних з <1>%1$s</1>.]]></string>
 </resources>
