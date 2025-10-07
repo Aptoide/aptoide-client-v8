@@ -273,6 +273,6 @@
   <string name="apkfy_multi_install_intro_2">더 많은 재미가 기다리고 있습니다!</string>
   <string name="apkfy_multi_install_intro_3">Roblox에서 영감을 받은 이 게임들을 시도해 보세요.</string>
   <string name="gamegenie_entry_screen_general_section">게임지니로 다음에 빠져들 게임 찾기</string>
-  <string name="gamegenie_entry_screen_companion_section">... or tap your game - I\'ll help you master it</string>
-  <string name="gamegenie_introduction_companion_section"><![CDATA[Hi! I\'m your AI assistant on everything related to <1>%1$s</1>]]></string>
+  <string name="gamegenie_entry_screen_companion_section">... 아니면 게임을 탭하세요 - 제가 마스터하도록 도와드릴게요</string>
+  <string name="gamegenie_introduction_companion_section"><![CDATA[안녕하세요! 저는 모든 것과 관련된 여러분의 AI 어시스턴트입니다. <1>%1$s</1>]]></string>
 </resources>
