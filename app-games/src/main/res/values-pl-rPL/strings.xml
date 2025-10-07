@@ -279,6 +279,6 @@
   <string name="apkfy_multi_install_intro_2">Czeka nas jeszcze więcej zabawy!</string>
   <string name="apkfy_multi_install_intro_3">Wypróbuj te gry inspirowane Robloxem.</string>
   <string name="gamegenie_entry_screen_general_section">Znajdź swoją kolejną ulubioną grę dzięki GameGenie.</string>
-  <string name="gamegenie_entry_screen_companion_section">... or tap your game - I\'ll help you master it</string>
-  <string name="gamegenie_introduction_companion_section"><![CDATA[Hi! I\'m your AI assistant on everything related to <1>%1$s</1>]]></string>
+  <string name="gamegenie_entry_screen_companion_section">... lub dotknij swoją grę – pomogę Ci ją opanować</string>
+  <string name="gamegenie_introduction_companion_section"><![CDATA[Cześć! Jestem Twoim asystentem AI we wszystkim, co dotyczy <1>%1$s</1>]]></string>
 </resources>
