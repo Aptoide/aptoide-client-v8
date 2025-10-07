@@ -2,6 +2,8 @@ package cm.aptoide.pt.campaigns.data
 
 import cm.aptoide.pt.campaigns.data.database.PaEAppEntity
 import cm.aptoide.pt.campaigns.data.database.PaEAppsDao
+import cm.aptoide.pt.campaigns.data.database.PaeMissionDao
+import cm.aptoide.pt.campaigns.data.database.model.toEntity
 import cm.aptoide.pt.campaigns.data.model.PaEAppJson
 import cm.aptoide.pt.campaigns.data.model.PaECampaignJson
 import cm.aptoide.pt.campaigns.data.model.PaEMissionJson
@@ -29,6 +31,7 @@ import javax.inject.Singleton
 internal class DefaultPaECampaignsRepository @Inject constructor(
   private val paeCampaignsApi: PaECampaignsApi,
   private val paEAppsDao: PaEAppsDao,
+  private val paeMissionDao: PaeMissionDao,
   private val dispatcher: CoroutineDispatcher
 ) : PaECampaignsRepository {
   override suspend fun getCampaigns(): Result<PaEBundles> = withContext(dispatcher) {
@@ -52,8 +55,15 @@ internal class DefaultPaECampaignsRepository @Inject constructor(
   override suspend fun getCampaignMissions(packageName: String): Result<PaEMissions> =
     withContext(dispatcher) {
       try {
-        Result.success(paeCampaignsApi.getCampaignMissions(packageName).toDomainModel())
+        val missions = paeCampaignsApi.getCampaignMissions(packageName).toDomainModel()
+
+        paeMissionDao.clearAppMissions(packageName)
+        paeMissionDao.insertAll(missions.checkpoints.map { it.toEntity(packageName) })
+        paeMissionDao.insertAll(missions.missions.map { it.toEntity(packageName) })
+
+        Result.success(missions)
       } catch (e: Throwable) {
+        e.printStackTrace()
         Result.failure(e)
       }
     }

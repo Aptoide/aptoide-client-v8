@@ -49,6 +49,7 @@ internal object RepositoryModule {
   ): PaECampaignsRepository = DefaultPaECampaignsRepository(
     paeCampaignsApi = paeCampaignsApi,
     paEAppsDao = paECampaignsDatabase.paeAppsDao(),
+    paeMissionDao = paECampaignsDatabase.paeMissionDao(),
     dispatcher = Dispatchers.IO
   )
 
