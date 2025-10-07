@@ -273,6 +273,6 @@
   <string name="apkfy_multi_install_intro_2">Còn nhiều điều thú vị đang chờ đón bạn!</string>
   <string name="apkfy_multi_install_intro_3">Hãy thử những trò chơi được lấy cảm hứng từ Roblox.</string>
   <string name="gamegenie_entry_screen_general_section">Tìm trò chơi yêu thích tiếp theo của bạn với GameGenie.</string>
-  <string name="gamegenie_entry_screen_companion_section">... or tap your game - I\'ll help you master it</string>
-  <string name="gamegenie_introduction_companion_section"><![CDATA[Hi! I\'m your AI assistant on everything related to <1>%1$s</1>]]></string>
+  <string name="gamegenie_entry_screen_companion_section">... hoặc chạm vào trò chơi của bạn - tôi sẽ giúp bạn thành thạo nó.</string>
+  <string name="gamegenie_introduction_companion_section"><![CDATA[Xin chào! Tôi là trợ lý AI của bạn cho mọi vấn đề liên quan đến <1>%1$s</1>]]></string>
 </resources>
