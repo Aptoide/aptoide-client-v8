@@ -277,6 +277,6 @@
   <string name="apkfy_multi_install_intro_2">Te așteaptă și mai multă distracție!</string>
   <string name="apkfy_multi_install_intro_3">Încearcă aceste jocuri inspirate de Roblox.</string>
   <string name="gamegenie_entry_screen_general_section">Găsește-ți următorul joc preferat cu GameGenie.</string>
-  <string name="gamegenie_entry_screen_companion_section">... or tap your game - I\'ll help you master it</string>
-  <string name="gamegenie_introduction_companion_section"><![CDATA[Hi! I\'m your AI assistant on everything related to <1>%1$s</1>]]></string>
+  <string name="gamegenie_entry_screen_companion_section">... sau atingeți jocul - vă voi ajuta să îl stăpâniți</string>
+  <string name="gamegenie_introduction_companion_section"><![CDATA[Bună! Sunt asistentul tău AI pentru tot ce ține de <1>%1$s</1>]]></string>
 </resources>
