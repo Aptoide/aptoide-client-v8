@@ -273,5 +273,6 @@
   <string name="apkfy_multi_install_intro_2">更多樂趣正等著你！</string>
   <string name="apkfy_multi_install_intro_3">試試這些受Roblox啟發的遊戲。</string>
   <string name="gamegenie_entry_screen_general_section">用GameGenie找到你下一個最愛的遊戲。</string>
-  <string name="gamegenie_entry_screen_companion_section">...或點擊你的遊戲——我將助你精通它。</string>
+  <string name="gamegenie_entry_screen_companion_section">... or tap your game - I\'ll help you master it</string>
+  <string name="gamegenie_introduction_companion_section"><![CDATA[Hi! I\'m your AI assistant on everything related to <1>%1$s</1>]]></string>
 </resources>
