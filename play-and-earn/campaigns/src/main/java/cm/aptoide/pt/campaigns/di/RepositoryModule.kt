@@ -1,14 +1,18 @@
 package cm.aptoide.pt.campaigns.di
 
+import android.content.Context
+import androidx.room.Room
 import cm.aptoide.pt.aptoide_network.di.BaseOkHttp
 import cm.aptoide.pt.aptoide_network.di.RewardsDomain
 import cm.aptoide.pt.campaigns.data.DefaultPaECampaignsRepository
 import cm.aptoide.pt.campaigns.data.PaECampaignsApi
 import cm.aptoide.pt.campaigns.data.PaECampaignsRepository
+import cm.aptoide.pt.campaigns.data.database.PaECampaignsDatabase
 import cm.aptoide.pt.wallet.authorization.data.WalletAuthInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.Dispatchers
 import okhttp3.OkHttpClient
@@ -41,8 +45,17 @@ internal object RepositoryModule {
   @Singleton
   fun providePaECampaignsRepository(
     paeCampaignsApi: PaECampaignsApi,
+    paECampaignsDatabase: PaECampaignsDatabase
   ): PaECampaignsRepository = DefaultPaECampaignsRepository(
     paeCampaignsApi = paeCampaignsApi,
+    paeMissionDao = paECampaignsDatabase.paeMissionDao(),
     dispatcher = Dispatchers.IO
   )
+
+  @Singleton
+  @Provides
+  fun providePaECampaignsDatabase(@ApplicationContext appContext: Context): PaECampaignsDatabase {
+    return Room.databaseBuilder(appContext, PaECampaignsDatabase::class.java, "pae_campaigns.db")
+      .build()
+  }
 }
