@@ -1,6 +1,8 @@
 package com.aptoide.android.aptoidegames.gamegenie.presentation.composables
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -15,8 +17,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import com.aptoide.android.aptoidegames.R
@@ -28,15 +32,16 @@ fun TextInputBar(
   onMessageSent: (String) -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  var messageText by remember { mutableStateOf(TextFieldValue("")) }
+  var messageText by remember { mutableStateOf("") }
+  val keyboardController = LocalSoftwareKeyboardController.current
+  val focusManager = LocalFocusManager.current
 
   TextField(
     value = messageText,
     onValueChange = { newValue -> messageText = newValue },
     textStyle = AGTypography.Chat.copy(color = Palette.White),
     singleLine = true,
-    modifier = modifier
-      .background(Palette.GreyDark),
+    modifier = modifier.background(Palette.GreyDark),
     placeholder = {
       Text(
         text = stringResource(R.string.genai_input_message_field),
@@ -47,17 +52,18 @@ fun TextInputBar(
       )
     },
     trailingIcon = {
-      val isEnabled = messageText.text.isNotBlank()
+      val isEnabled = messageText.isNotBlank()
       val iconTint = if (isEnabled) Palette.Primary else Palette.GreyLight
 
       IconButton(
         enabled = isEnabled,
-        modifier = Modifier
-          .background(Color.Transparent),
+        modifier = Modifier.background(Color.Transparent),
         onClick = {
           if (isEnabled) {
-            onMessageSent(messageText.text)
-            messageText = TextFieldValue("")
+            onMessageSent(messageText)
+            messageText = ""
+            keyboardController?.hide()
+            focusManager.clearFocus()
           }
         }
       ) {
@@ -68,6 +74,19 @@ fun TextInputBar(
         )
       }
     },
+    keyboardOptions = KeyboardOptions.Default.copy(
+      imeAction = ImeAction.Send
+    ),
+    keyboardActions = KeyboardActions(
+      onSend = {
+        if (messageText.isNotBlank()) {
+          onMessageSent(messageText)
+          messageText = ""
+          keyboardController?.hide()
+          focusManager.clearFocus()
+        }
+      }
+    ),
     colors = TextFieldDefaults.textFieldColors(
       backgroundColor = Color.Transparent,
       focusedIndicatorColor = Color.Transparent,
