@@ -2,6 +2,8 @@ package com.aptoide.android.aptoidegames.gamegenie.presentation.composables
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Matrix
+import android.graphics.Paint
 import android.graphics.drawable.AdaptiveIconDrawable
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
@@ -32,6 +34,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.createBitmap
+import androidx.core.graphics.scale
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameCompanion
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -50,6 +53,9 @@ fun GameCompanionIcon(
   clickableEnabled: Boolean = true,
   onClick: (GameCompanion) -> Unit = {},
 ) {
+  val density = androidx.compose.ui.platform.LocalDensity.current
+  val imagePxSize = with(density) { imageSize.dp.roundToPx() }
+
   Column(
     modifier = modifier
       .then(
@@ -70,7 +76,7 @@ fun GameCompanionIcon(
       ) {
         if (game.image != null) {
           val painter = remember {
-            BitmapPainter(game.image.toBitmap(imageSize, imageSize).asImageBitmap())
+            BitmapPainter(game.image.toBitmap(imagePxSize, imagePxSize).asImageBitmap())
           }
 
           Image(
@@ -98,11 +104,8 @@ fun GameCompanionIcon(
           )
         }
       }
-      if (clickableEnabled) {
-        Spacer(modifier = Modifier.height(8.dp))
-      } else {
-        Spacer(modifier = Modifier.height(16.dp))
-      }
+
+      Spacer(modifier = Modifier.height(if (clickableEnabled) 8.dp else 16.dp))
     }
 
     Text(
@@ -127,25 +130,33 @@ private fun Drawable.toBitmap(
   height: Int = intrinsicHeight,
 ): Bitmap {
   if (this is BitmapDrawable && bitmap != null) {
-    return bitmap
+    return bitmap.scale(width, height)
   }
 
-  val bmp = if (width > 0 && height > 0) {
-    createBitmap(width, height)
-  } else {
-    createBitmap(1, 1) // fallback
-  }
-  val canvas = Canvas(bmp)
+  val safeWidth = if (width > 0) width else 1
+  val safeHeight = if (height > 0) height else 1
+
+  val bitmap = createBitmap(safeWidth, safeHeight)
+  val canvas = Canvas(bitmap)
 
   if (this is AdaptiveIconDrawable) {
-    this.background?.setBounds(0, 0, canvas.width, canvas.height)
-    this.background?.draw(canvas)
-    this.foreground?.setBounds(0, 0, canvas.width, canvas.height)
-    this.foreground?.draw(canvas)
+    val layerBitmap = createBitmap(safeWidth, safeHeight)
+    val layerCanvas = Canvas(layerBitmap)
+
+    this.background?.setBounds(0, 0, safeWidth, safeHeight)
+    this.background?.draw(layerCanvas)
+    this.foreground?.setBounds(0, 0, safeWidth, safeHeight)
+    this.foreground?.draw(layerCanvas)
+
+    val scale = 1.4f
+    val matrix = Matrix().apply {
+      postScale(scale, scale, safeWidth / 2f, safeHeight / 2f)
+    }
+    canvas.drawBitmap(layerBitmap, matrix, Paint(Paint.ANTI_ALIAS_FLAG))
   } else {
     setBounds(0, 0, canvas.width, canvas.height)
     draw(canvas)
   }
 
-  return bmp
+  return bitmap
 }
