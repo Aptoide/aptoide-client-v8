@@ -1,6 +1,7 @@
 package cm.aptoide.pt.wallet.authorization.data
 
 import android.content.Context
+import cm.aptoide.pt.wallet.authorization.data.model.RefreshUserWalletResponse
 import cm.aptoide.pt.wallet.authorization.data.model.UserAuthData
 import cm.aptoide.pt.wallet.authorization.data.model.UserAuthorizationResponse
 import cm.aptoide.pt.wallet.authorization.domain.UserWalletData
@@ -15,6 +16,7 @@ import javax.inject.Singleton
 internal class WalletAuthRepositoryImpl @Inject constructor(
   @ApplicationContext private val context: Context,
   private val userAuthApi: UserAuthApi,
+  private val walletRefreshApi: WalletRefreshApi,
   private val dispatcher: CoroutineDispatcher,
   private val walletCoreDataSource: WalletCoreDataSource,
   private val userWalletAuthDataStore: UserWalletAuthDataStore
@@ -41,6 +43,22 @@ internal class WalletAuthRepositoryImpl @Inject constructor(
     }
   }
 
+  override suspend fun refreshUserWallet(refreshToken: String): Result<UserWalletData> =
+    withContext(dispatcher) {
+      try {
+        val response = walletRefreshApi.refreshUserWallet("Bearer $refreshToken")
+
+        val userWalletData = response.toDomainModel()
+        userWalletAuthDataStore.setCurrentWalletData(userWalletData)
+        userWalletAuthDataStore.setCurrentRefreshToken(response.refreshToken)
+
+        Result.success(userWalletData)
+      } catch (e: Throwable) {
+        e.printStackTrace()
+        Result.failure(e)
+      }
+    }
+
   override suspend fun clearAuthorizationData() {
     walletCoreDataSource.clearWalletData()
   }
@@ -50,4 +68,10 @@ private fun UserAuthorizationResponse.toDomainModel() = UserWalletData(
   address = data.address,
   authToken = data.authToken,
   email = data.email
+)
+
+private fun RefreshUserWalletResponse.toDomainModel() = UserWalletData(
+  address = address,
+  authToken = authToken,
+  email = null
 )
