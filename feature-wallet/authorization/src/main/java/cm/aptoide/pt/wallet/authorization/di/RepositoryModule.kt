@@ -4,6 +4,7 @@ import android.content.Context
 import cm.aptoide.pt.aptoide_network.di.RawOkHttp
 import cm.aptoide.pt.aptoide_network.di.WebServicesDomain
 import cm.aptoide.pt.wallet.authorization.data.UserAuthApi
+import cm.aptoide.pt.wallet.authorization.data.UserWalletAuthDataStore
 import cm.aptoide.pt.wallet.authorization.data.WalletAuthRepository
 import cm.aptoide.pt.wallet.authorization.data.WalletAuthRepositoryImpl
 import cm.aptoide.pt.wallet.datastore.WalletCoreDataSource
@@ -41,13 +42,15 @@ internal class RepositoryModule {
   fun provideWalletAuthRepository(
     @ApplicationContext context: Context,
     userAuthApi: UserAuthApi,
-    walletCoreDataSource: WalletCoreDataSource
+    walletCoreDataSource: WalletCoreDataSource,
+    userWalletAuthDataStore: UserWalletAuthDataStore
   ): WalletAuthRepository {
     return WalletAuthRepositoryImpl(
       context = context,
       userAuthApi = userAuthApi,
       dispatcher = Dispatchers.IO,
-      walletCoreDataSource = walletCoreDataSource
+      walletCoreDataSource = walletCoreDataSource,
+      userWalletAuthDataStore = userWalletAuthDataStore
     )
   }
 }
