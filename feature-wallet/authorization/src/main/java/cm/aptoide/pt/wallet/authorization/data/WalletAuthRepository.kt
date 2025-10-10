@@ -6,5 +6,7 @@ interface WalletAuthRepository {
 
   suspend fun authorizeGoogleUser(token: String): Result<UserWalletData>
 
+  suspend fun refreshUserWallet(refreshToken: String): Result<UserWalletData>
+
   suspend fun clearAuthorizationData()
 }
