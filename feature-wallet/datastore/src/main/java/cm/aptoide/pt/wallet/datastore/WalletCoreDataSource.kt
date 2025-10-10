@@ -18,7 +18,6 @@ class WalletCoreDataSource @Inject constructor(
 
   companion object PreferencesKeys {
     private val CURRENT_WALLET_ADDRESS = stringPreferencesKey("current_wallet_address")
-    private val CURRENT_AUTH_TOKEN = stringPreferencesKey("current_auth_token")
   }
 
   suspend fun setCurrentWalletAddress(address: String) {
@@ -39,22 +38,9 @@ class WalletCoreDataSource @Inject constructor(
     }
   }
 
-  suspend fun setCurrentAuthToken(token: String) {
-    dataStore.edit { preferences ->
-      preferences[CURRENT_AUTH_TOKEN] = token
-    }
-  }
-
-  suspend fun getCurrentAuthToken(): String? {
-    return dataStore.data.map { preferences ->
-      preferences[CURRENT_AUTH_TOKEN]
-    }.first()
-  }
-
   suspend fun clearWalletData() {
     dataStore.edit { preferences ->
       preferences.remove(CURRENT_WALLET_ADDRESS)
-      preferences.remove(CURRENT_AUTH_TOKEN)
     }
   }
 }
