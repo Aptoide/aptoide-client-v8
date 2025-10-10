@@ -12,4 +12,5 @@ dependencies {
   implementation(projects.aptoideNetwork)
   implementation(projects.extension)
   implementation(projects.featureWallet.datastore)
+  implementation(libs.datastore)
 }
