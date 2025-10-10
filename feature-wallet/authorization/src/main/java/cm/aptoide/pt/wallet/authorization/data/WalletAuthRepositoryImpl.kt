@@ -16,7 +16,8 @@ internal class WalletAuthRepositoryImpl @Inject constructor(
   @ApplicationContext private val context: Context,
   private val userAuthApi: UserAuthApi,
   private val dispatcher: CoroutineDispatcher,
-  private val walletCoreDataSource: WalletCoreDataSource
+  private val walletCoreDataSource: WalletCoreDataSource,
+  private val userWalletAuthDataStore: UserWalletAuthDataStore
 ) : WalletAuthRepository {
 
   override suspend fun authorizeGoogleUser(token: String) = withContext(dispatcher) {
@@ -28,8 +29,12 @@ internal class WalletAuthRepositoryImpl @Inject constructor(
 
       val authResponse = userAuthApi.authorizeUser(userAuthData)
       walletCoreDataSource.setCurrentWalletAddress(authResponse.data.address)
-      walletCoreDataSource.setCurrentAuthToken(authResponse.data.authToken)
-      Result.success(authResponse.toDomainModel())
+
+      val userWalletData = authResponse.toDomainModel()
+      userWalletAuthDataStore.setCurrentWalletData(userWalletData)
+      userWalletAuthDataStore.setCurrentRefreshToken(authResponse.data.refreshToken)
+
+      Result.success(userWalletData)
     } catch (e: Throwable) {
       e.printStackTrace()
       Result.failure(e)
