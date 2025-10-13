@@ -77,5 +77,6 @@ include(
   ":feature-wallet:authorization",
   ":feature-wallet:wallet-info",
   ":feature-wallet:gamification",
-  ":feature-usage-stats"
+  ":feature-usage-stats",
+  ":play-and-earn:sessions"
 )
