@@ -5,6 +5,7 @@ import cm.aptoide.pt.aptoide_network.di.BaseOkHttp
 import cm.aptoide.pt.campaigns.data.DefaultPaECampaignsRepository
 import cm.aptoide.pt.campaigns.data.PaECampaignsApi
 import cm.aptoide.pt.campaigns.data.PaECampaignsRepository
+import cm.aptoide.pt.wallet.authorization.data.WalletAuthInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,9 +25,12 @@ internal object RepositoryModule {
   fun providePaECampaignsApi(
     @BaseOkHttp okHttpClient: OkHttpClient,
     @ApiChainCatappultDomain apiChainCatappultDomain: String,
+    walletAuthInterceptor: WalletAuthInterceptor
   ): PaECampaignsApi {
+    val client = okHttpClient.newBuilder().addInterceptor(walletAuthInterceptor).build()
+
     return Retrofit.Builder()
-      .client(okHttpClient)
+      .client(client)
       .baseUrl(apiChainCatappultDomain)
       .addConverterFactory(GsonConverterFactory.create())
       .build()
