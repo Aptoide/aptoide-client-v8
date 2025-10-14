@@ -9,7 +9,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 
 @Database(
-  entities = [PaEMissionEntity::class],
+  entities = [PaEMissionEntity::class, PaEAppEntity::class],
   version = 1,
   exportSchema = true
 )
@@ -17,6 +17,8 @@ import com.google.gson.JsonParser
 internal abstract class PaECampaignsDatabase : RoomDatabase() {
 
   abstract fun paeMissionDao(): PaeMissionDao
+
+  abstract fun paeAppsDao(): PaEAppsDao
 }
 
 class PaeCampaignsConverters {
