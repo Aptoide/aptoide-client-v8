@@ -1,7 +1,7 @@
 package cm.aptoide.pt.campaigns.data
 
-import cm.aptoide.pt.campaigns.domain.PaEMissions
 import cm.aptoide.pt.campaigns.domain.PaEBundles
+import cm.aptoide.pt.campaigns.domain.PaEMissions
 
 @Suppress("unused")
 internal class FakePaECampaignsRepository : PaECampaignsRepository {
@@ -10,4 +10,13 @@ internal class FakePaECampaignsRepository : PaECampaignsRepository {
 
   override suspend fun getCampaignMissions(packageName: String): Result<PaEMissions> =
     Result.success(paeMissions)
+
+  override suspend fun getCampaignPackages(): Result<List<String>> {
+    val packages = mutableSetOf<String>()
+
+    packages.addAll(paeCampaigns.trending?.apps?.map { it.packageName }.orEmpty())
+    packages.addAll(paeCampaigns.keepPlaying?.apps?.map { it.packageName }.orEmpty())
+
+    return Result.success(packages.toList())
+  }
 }
