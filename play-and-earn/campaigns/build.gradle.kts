@@ -14,4 +14,9 @@ dependencies {
   implementation(projects.extension)
   implementation(projects.featureApps)
   implementation(projects.featureWallet.authorization)
+
+  //room
+  implementation(libs.room)
+  ksp(libs.room.compiler)
+  implementation(libs.room.ktx)
 }

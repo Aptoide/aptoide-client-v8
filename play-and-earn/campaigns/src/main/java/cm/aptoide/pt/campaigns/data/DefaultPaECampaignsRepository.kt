@@ -1,5 +1,7 @@
 package cm.aptoide.pt.campaigns.data
 
+import cm.aptoide.pt.campaigns.data.database.PaEAppEntity
+import cm.aptoide.pt.campaigns.data.database.PaEAppsDao
 import cm.aptoide.pt.campaigns.data.model.PaEAppJson
 import cm.aptoide.pt.campaigns.data.model.PaECampaignJson
 import cm.aptoide.pt.campaigns.data.model.PaEMissionJson
@@ -8,6 +10,7 @@ import cm.aptoide.pt.campaigns.data.model.PaEMissionStatusJson
 import cm.aptoide.pt.campaigns.data.model.PaEMissionTypeJson
 import cm.aptoide.pt.campaigns.data.model.PaEMissionsJson
 import cm.aptoide.pt.campaigns.data.model.PaEProgressJson
+import cm.aptoide.pt.campaigns.domain.PaEApp
 import cm.aptoide.pt.campaigns.domain.PaEBundle
 import cm.aptoide.pt.campaigns.domain.PaEBundles
 import cm.aptoide.pt.campaigns.domain.PaEMission
@@ -16,8 +19,8 @@ import cm.aptoide.pt.campaigns.domain.PaEMissionStatus
 import cm.aptoide.pt.campaigns.domain.PaEMissionType
 import cm.aptoide.pt.campaigns.domain.PaEMissions
 import cm.aptoide.pt.campaigns.domain.PaEProgress
-import cm.aptoide.pt.campaigns.domain.PaEApp
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -25,11 +28,22 @@ import javax.inject.Singleton
 @Singleton
 internal class DefaultPaECampaignsRepository @Inject constructor(
   private val paeCampaignsApi: PaECampaignsApi,
+  private val paEAppsDao: PaEAppsDao,
   private val dispatcher: CoroutineDispatcher
 ) : PaECampaignsRepository {
   override suspend fun getCampaigns(): Result<PaEBundles> = withContext(dispatcher) {
     try {
-      Result.success(paeCampaignsApi.getCampaigns().toDomainModel())
+      val campaignsJson = paeCampaignsApi.getCampaigns()
+
+      val packageNames =
+        (campaignsJson.trending.orEmpty() + campaignsJson.keepPlayingCampaign.orEmpty()).map {
+          PaEAppEntity(it.appInfo.packageName)
+        }
+
+      paEAppsDao.clearAll()
+      paEAppsDao.insertAll(packageNames)
+
+      Result.success(campaignsJson.toDomainModel())
     } catch (e: Throwable) {
       Result.failure(e)
     }
@@ -43,6 +57,11 @@ internal class DefaultPaECampaignsRepository @Inject constructor(
         Result.failure(e)
       }
     }
+
+  override suspend fun getCampaignPackages(): Result<List<String>> {
+    val packages = paEAppsDao.getAllPackageNames().first()
+    return Result.success(packages)
+  }
 }
 
 private fun PaECampaignJson.toDomainModel(): PaEBundles = PaEBundles(
