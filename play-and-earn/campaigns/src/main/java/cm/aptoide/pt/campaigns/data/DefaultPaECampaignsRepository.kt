@@ -1,5 +1,7 @@
 package cm.aptoide.pt.campaigns.data
 
+import cm.aptoide.pt.campaigns.data.database.PaEAppEntity
+import cm.aptoide.pt.campaigns.data.database.PaEAppsDao
 import cm.aptoide.pt.campaigns.data.database.PaeMissionDao
 import cm.aptoide.pt.campaigns.data.database.model.toDomain
 import cm.aptoide.pt.campaigns.data.database.model.toEntity
@@ -31,15 +33,30 @@ import javax.inject.Singleton
 @Singleton
 internal class DefaultPaECampaignsRepository @Inject constructor(
   private val paeCampaignsApi: PaECampaignsApi,
+  private val paEAppsDao: PaEAppsDao,
   private val paeMissionDao: PaeMissionDao,
   private val dispatcher: CoroutineDispatcher
 ) : PaECampaignsRepository {
   override suspend fun getCampaigns(): Result<PaEBundles> = withContext(dispatcher) {
     try {
-      Result.success(paeCampaignsApi.getCampaigns().toDomainModel())
+      val paeBundles = paeCampaignsApi.getCampaigns().toDomainModel()
+
+      cacheCampaignPackages(paeBundles)
+
+      Result.success(paeBundles)
     } catch (e: Throwable) {
       Result.failure(e)
     }
+  }
+
+  private suspend fun cacheCampaignPackages(bundles: PaEBundles) {
+    val packageNames = buildSet {
+      bundles.trending?.apps?.forEach { add(it.packageName) }
+      bundles.keepPlaying?.apps?.forEach { add(it.packageName) }
+    }
+
+    val entities = packageNames.map { PaEAppEntity(it) }
+    paEAppsDao.replaceAll(entities)
   }
 
   override suspend fun getCampaignMissions(
@@ -97,6 +114,15 @@ internal class DefaultPaECampaignsRepository @Inject constructor(
     paeMissionDao.insertAll(entities)
 
     return missions
+  }
+
+  override suspend fun getAvailablePackages(): Result<Set<String>> = withContext(dispatcher) {
+    try {
+      val packages = paEAppsDao.getAvailablePaEPackageNames().toSet()
+      Result.success(packages)
+    } catch (e: Throwable) {
+      Result.failure(e)
+    }
   }
 }
 

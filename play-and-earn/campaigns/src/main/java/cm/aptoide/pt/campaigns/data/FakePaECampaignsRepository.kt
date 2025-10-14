@@ -18,4 +18,13 @@ internal class FakePaECampaignsRepository : PaECampaignsRepository {
 
   override fun observeCampaignMissions(packageName: String): Flow<Result<PaEMissions>> =
     flowOf(Result.success(paeMissions))
+
+  override suspend fun getAvailablePackages(): Result<Set<String>> {
+    val packages = mutableSetOf<String>()
+
+    packages.addAll(paeCampaigns.trending?.apps?.map { it.packageName }.orEmpty())
+    packages.addAll(paeCampaigns.keepPlaying?.apps?.map { it.packageName }.orEmpty())
+
+    return Result.success(packages)
+  }
 }

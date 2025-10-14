@@ -14,4 +14,6 @@ interface PaECampaignsRepository {
   ): Result<PaEMissions>
 
   fun observeCampaignMissions(packageName: String): Flow<Result<PaEMissions>>
+
+  suspend fun getAvailablePackages(): Result<Set<String>>
 }
