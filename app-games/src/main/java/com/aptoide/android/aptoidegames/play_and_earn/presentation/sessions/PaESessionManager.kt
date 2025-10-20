@@ -1,7 +1,7 @@
 package com.aptoide.android.aptoidegames.play_and_earn.presentation.sessions
 
+import android.util.Log
 import cm.aptoide.pt.campaigns.data.LocalMissionsRepository
-import cm.aptoide.pt.campaigns.data.PaECampaignsRepository
 import cm.aptoide.pt.campaigns.domain.PaEMission
 import cm.aptoide.pt.play_and_earn.sessions.data.PaESessionsRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -41,6 +41,7 @@ class PaESessionManager @Inject constructor(
       session.usageTimeSinceLastSync += 6
 
       if (session.shouldSync()) {
+        Log.d("lol", "syncSessions: going to sync")
         val syncResult = paESessionsRepository.heartbeatSession(
           session.sessionId,
           session.packageName,
@@ -72,6 +73,8 @@ class PaESessionManager @Inject constructor(
             }
           }
         }
+      }else {
+        Log.d("lol", "syncSessions: should not sync")
       }
     }
   }
