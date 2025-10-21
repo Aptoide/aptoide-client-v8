@@ -87,6 +87,8 @@ class GameGenieManager @Inject constructor(
     }.getOrNull()
   }
 
+  fun getAllGameCompanions(): Flow<List<GameCompanionEntity>> = gameCompanionDao.getAllChats()
+
   suspend fun saveOrUpdateChat(chat: GameGenieChat) {
     val oldChat = getChatById(chat.id)
     val newChat = chat.toEntity()

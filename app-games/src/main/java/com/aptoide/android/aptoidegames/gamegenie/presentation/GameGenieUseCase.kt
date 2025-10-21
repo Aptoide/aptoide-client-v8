@@ -8,6 +8,7 @@ import cm.aptoide.pt.feature_categories.data.CategoriesRepository
 import cm.aptoide.pt.install_manager.App
 import cm.aptoide.pt.install_manager.InstallManager
 import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieAppRepository
+import com.aptoide.android.aptoidegames.gamegenie.data.database.model.GameCompanionEntity
 import com.aptoide.android.aptoidegames.gamegenie.data.database.model.GameGenieHistoryEntity
 import com.aptoide.android.aptoidegames.gamegenie.domain.ChatInteraction
 import com.aptoide.android.aptoidegames.gamegenie.domain.ChatInteractionHistory
@@ -23,6 +24,7 @@ import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieRequest
 import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -46,23 +48,47 @@ class GameGenieUseCase @Inject constructor(
 
   fun getInstalledApps(): Flow<List<GameContext>> = appRepository.getInstalledApps()
 
-  fun getGameCompanionsList(): Flow<List<GameCompanion>> {
+  suspend fun getGameCompanionsList(): Flow<List<GameCompanion>> {
     val apps = installManager.installedApps.toMutableSet()
-    return installManager.appsChanges
+
+    val installedAppsFlow: Flow<List<PackageInfo>> = installManager.appsChanges
       .map { apps.apply { add(it) } }
       .onStart { emit(apps) }
-      .map { set ->
-        filterGames(set.mapNotNull(App::packageInfo))
-          .sortedByDescending { it.firstInstallTime }
-          .map {
-            GameCompanion(
-              name = it.applicationInfo?.loadLabel(packageManager).toString(),
-              packageName = it.packageName,
-              versionName = it.versionName,
-              image = it.applicationInfo?.loadIcon(packageManager)
-            )
-          }
-      }
+      .map { set -> filterGames(set.mapNotNull(App::packageInfo)) }
+
+    return combine(
+      gameGenieManager.getAllGameCompanions(),
+      installedAppsFlow
+    ) { companionsFromDb: List<GameCompanionEntity>, installedPackages: List<PackageInfo> ->
+
+      val installedMap = installedPackages.associateBy { it.packageName }
+
+      val orderedFromDb = companionsFromDb
+        .filter { installedMap.containsKey(it.gamePackageName) }
+        .map { entity ->
+          val pkg = installedMap[entity.gamePackageName]!!
+          GameCompanion(
+            name = pkg.applicationInfo?.loadLabel(packageManager).toString(),
+            packageName = pkg.packageName,
+            versionName = pkg.versionName,
+            image = pkg.applicationInfo?.loadIcon(packageManager)
+          )
+        }
+
+      val missingFromDb = installedPackages
+        .filterNot { pkg -> companionsFromDb.any { it.gamePackageName == pkg.packageName } }
+        .sortedByDescending { it.firstInstallTime }
+        .map { pkg ->
+          GameCompanion(
+            name = pkg.applicationInfo?.loadLabel(packageManager).toString(),
+            packageName = pkg.packageName,
+            versionName = pkg.versionName,
+            image = pkg.applicationInfo?.loadIcon(packageManager)
+          )
+        }
+
+      orderedFromDb + missingFromDb
+    }
   }
 
   private suspend fun filterGames(appsList: List<PackageInfo>): List<PackageInfo> {
