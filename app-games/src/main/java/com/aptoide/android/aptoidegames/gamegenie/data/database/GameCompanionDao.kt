@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.aptoide.android.aptoidegames.gamegenie.data.database.model.GameCompanionEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface GameCompanionDao {
@@ -13,4 +14,7 @@ interface GameCompanionDao {
 
   @Query("SELECT * FROM GameCompanion WHERE gamePackageName=:packageName")
   suspend fun getChatByPackageName(packageName: String): GameCompanionEntity
+
+  @Query("SELECT * FROM GameCompanion ORDER BY lastMessageTimestamp DESC")
+  fun getAllChats(): Flow<List<GameCompanionEntity>>
 }

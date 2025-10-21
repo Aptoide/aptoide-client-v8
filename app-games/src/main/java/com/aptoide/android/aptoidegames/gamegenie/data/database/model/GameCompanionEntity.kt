@@ -8,5 +8,6 @@ data class GameCompanionEntity(
   @PrimaryKey val id: String,
   val name: String,
   val conversation: List<ChatInteractionEntity>,
-  val gamePackageName: String
+  val gamePackageName: String,
+  val lastMessageTimestamp: Long
 )

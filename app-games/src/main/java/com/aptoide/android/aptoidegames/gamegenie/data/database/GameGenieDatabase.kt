@@ -9,7 +9,7 @@ import com.aptoide.android.aptoidegames.gamegenie.data.database.model.Converters
 import com.aptoide.android.aptoidegames.gamegenie.data.database.model.GameCompanionEntity
 import com.aptoide.android.aptoidegames.gamegenie.data.database.model.GameGenieHistoryEntity
 
-@Database(entities = [GameGenieHistoryEntity::class, GameCompanionEntity::class], version = 4)
+@Database(entities = [GameGenieHistoryEntity::class, GameCompanionEntity::class], version = 5)
 @TypeConverters(Converters::class)
 abstract class GameGenieDatabase : RoomDatabase() {
 
@@ -47,4 +47,14 @@ abstract class GameGenieDatabase : RoomDatabase() {
     }
   }
 
+  class FourthMigration : Migration(4, 5) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+      db.execSQL(
+        """
+          ALTER TABLE GameCompanion 
+            ADD COLUMN lastMessageTimestamp INTEGER NOT NULL DEFAULT 0
+      """.trimIndent()
+      )
+    }
+  }
 }

@@ -24,6 +24,7 @@ fun GameGenieChat.toCompanionEntity(packageName: String) = GameCompanionEntity(
   name = this.title,
   gamePackageName = packageName,
   conversation = this.conversation.map { it.toEntity() },
+  lastMessageTimestamp = System.currentTimeMillis()
 )
 
 fun ChatInteraction.toEntity() = ChatInteractionEntity(

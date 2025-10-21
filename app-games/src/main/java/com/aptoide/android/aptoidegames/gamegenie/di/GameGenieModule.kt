@@ -63,7 +63,8 @@ internal object GameGenieModule {
     .addMigrations(
       GameGenieDatabase.FirstMigration(),
       GameGenieDatabase.SecondMigration(),
-      GameGenieDatabase.ThirdMigration()
+      GameGenieDatabase.ThirdMigration(),
+      GameGenieDatabase.FourthMigration()
     )
     .build()
 
