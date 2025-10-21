@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import cm.aptoide.pt.aptoide_network.di.ApiChainCatappultDomain
 import cm.aptoide.pt.aptoide_network.di.BaseOkHttp
-import cm.aptoide.pt.campaigns.data.FakePaECampaignsRepository
+import cm.aptoide.pt.campaigns.data.DefaultPaECampaignsRepository
 import cm.aptoide.pt.campaigns.data.PaECampaignsApi
 import cm.aptoide.pt.campaigns.data.PaECampaignsRepository
 import cm.aptoide.pt.campaigns.data.database.PaECampaignsDatabase
@@ -15,8 +15,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.Dispatchers
 import okhttp3.OkHttpClient
-import retrofit2.Retrofit
+import retrofit2.Retrofit.Builder
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
@@ -31,11 +32,10 @@ internal object RepositoryModule {
     @ApiChainCatappultDomain apiChainCatappultDomain: String,
     walletAuthInterceptor: WalletAuthInterceptor
   ): PaECampaignsApi {
-    //TODO: Readd once the auth is fixed on missions
-    //val client = okHttpClient.newBuilder().addInterceptor(walletAuthInterceptor).build()
+    val client = okHttpClient.newBuilder().addInterceptor(walletAuthInterceptor).build()
 
-    return Retrofit.Builder()
-      .client(okHttpClient)
+    return Builder()
+      .client(client)
       .baseUrl(apiChainCatappultDomain)
       .addConverterFactory(GsonConverterFactory.create())
       .build()
@@ -44,7 +44,16 @@ internal object RepositoryModule {
 
   @Provides
   @Singleton
-  fun providePaECampaignsRepository(): PaECampaignsRepository = FakePaECampaignsRepository()
+  //fun providePaECampaignsRepository(): PaECampaignsRepository = FakePaECampaignsRepository()
+  fun providePaECampaignsRepository(
+    paeCaompaignsApi: PaECampaignsApi,
+    paECampaignsDatabase: PaECampaignsDatabase
+  ): PaECampaignsRepository = DefaultPaECampaignsRepository(
+    paeCampaignsApi = paeCaompaignsApi,
+    paEAppsDao = paECampaignsDatabase.paeAppsDao(),
+    paeMissionDao = paECampaignsDatabase.paeMissionDao(),
+    dispatcher = Dispatchers.IO
+  )
 
   @Singleton
   @Provides

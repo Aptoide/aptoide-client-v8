@@ -13,14 +13,12 @@ import androidx.savedstate.SavedStateRegistryController
 import androidx.savedstate.SavedStateRegistryOwner
 import cm.aptoide.pt.campaigns.data.PaECampaignsRepository
 import cm.aptoide.pt.campaigns.data.paeCampaigns
-import cm.aptoide.pt.campaigns.domain.PaEApp
 import cm.aptoide.pt.usage_stats.PackageUsageManager
 import com.aptoide.android.aptoidegames.MainActivity
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.overlays.OverlayViewManager
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.hasOverlayPermission
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.hasUsageStatsPermissionStatus
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.sessions.FakePaESessionManager
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sessions.PaESessionManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -44,8 +42,8 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
   lateinit var overlayViewManager: OverlayViewManager
 
   @Inject
-  lateinit var paESessionManager: FakePaESessionManager
-  //lateinit var paESessionManager: PaESessionManager
+  //lateinit var paESessionManager: FakePaESessionManager
+  lateinit var paESessionManager: PaESessionManager
 
   @Inject
   lateinit var paECampaignsRepository: PaECampaignsRepository
