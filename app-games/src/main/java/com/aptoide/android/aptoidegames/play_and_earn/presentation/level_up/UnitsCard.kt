@@ -43,7 +43,7 @@ fun UnitsCard(
       verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
       Text(
-        text = "Aptoide Balance", //TODO: hardcoded string
+        text = "Your Units", //TODO: hardcoded string
         style = AGTypography.InputsM,
         color = Palette.White,
       )
