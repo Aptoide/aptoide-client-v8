@@ -67,6 +67,7 @@ import com.aptoide.android.aptoidegames.drawables.icons.getForward
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getStartEarningIcon
 import com.aptoide.android.aptoidegames.firebase.rememberFirebaseToken
 import com.aptoide.android.aptoidegames.network.presentation.NetworkPreferencesViewModel
+import com.aptoide.android.aptoidegames.play_and_earn.di.rememberWalletAddress
 import com.aptoide.android.aptoidegames.play_and_earn.domain.UserInfo
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaESmallTextButton
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.GoogleSignInViewModel
@@ -357,6 +358,7 @@ private fun CurrentUserInfoSection(
 @Composable
 fun AGDeveloperOptionsSection() {
   val firebaseToken = rememberFirebaseToken()
+  val walletAddress = rememberWalletAddress()
   val clipboard = LocalClipboard.current
   val coroutineScope = rememberCoroutineScope()
   val (areAGDeveloperOptionsEnabled, toggleAGDeveloperOptions) = rememberAGDeveloperOptions()
@@ -399,6 +401,39 @@ fun AGDeveloperOptionsSection() {
                 .clickable {
                   coroutineScope.launch {
                     clipboard.setClipEntry(ClipEntry(ClipData.newPlainText("FCM token", it)))
+                  }
+                },
+              text = it,
+              style = AGTypography.InputsM,
+              color = Palette.GreyLight
+            )
+          }
+        }
+
+        Row(
+          verticalAlignment = Alignment.CenterVertically,
+          horizontalArrangement = Arrangement.SpaceBetween,
+          modifier = Modifier
+            .defaultMinSize(minHeight = 48.dp)
+            .padding(top = 8.dp)
+        ) {
+          Text(
+            modifier = Modifier
+              .padding(end = 16.dp)
+              .wrapContentHeight(),
+            text = "Wallet address",
+            style = AGTypography.InputsM,
+            color = Palette.GreyLight
+          )
+
+          walletAddress?.let {
+            Text(
+              modifier = Modifier
+                .defaultMinSize(minHeight = 48.dp)
+                .wrapContentHeight()
+                .clickable {
+                  coroutineScope.launch {
+                    clipboard.setClipEntry(ClipEntry(ClipData.newPlainText("Wallet address", it)))
                   }
                 },
               text = it,
