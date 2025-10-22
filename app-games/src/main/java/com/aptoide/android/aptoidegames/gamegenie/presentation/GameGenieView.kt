@@ -61,10 +61,12 @@ fun gameGenieScreen() = ScreenData.withAnalytics(
           GameGenieEntryScreen(
             myGames = viewModel.installedGames.collectAsState().value,
             onChooseGeneral = {
+              analytics.sendGameGenieEntryScreenSearch()
               viewModel.resetSelectedGame()
               selectedEntry = EntryChoice.General
             },
             onChooseCompanion = { selectedGame ->
+              analytics.sendGameGenieCompanionClick(selectedGame.packageName)
               viewModel.updateLoadingState()
               viewModel.setSelectedGame(selectedGame)
               viewModel.loadCompanionChat(selectedGame.packageName)

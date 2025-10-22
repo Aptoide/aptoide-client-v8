@@ -46,4 +46,18 @@ class GameGenieAnalytics(
     name = "gamegenie_new_chat",
     params = emptyMap()
   )
+
+  fun sendGameGenieEntryScreenSearch() = genericAnalytics.logEvent(
+    name = "gamegenie_find_click",
+    params = emptyMap()
+  )
+
+  fun sendGameGenieCompanionClick(
+    packageName: String,
+  ) = genericAnalytics.logEvent(
+    name = "gamegenie_installedgame_click",
+    params = mapOf(
+      "package_name" to packageName,
+    )
+  )
 }
