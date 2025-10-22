@@ -106,7 +106,12 @@ data class CampaignImpl constructor(
     toReplace.forEach {
       newUrl = newUrl.replace(it.key, it.value)
     }
-    val params = toAppend
+
+    val filtered = toAppend.filterNot { (k, _) ->
+      Regex("([?&])$k=").containsMatchIn(newUrl)
+    }
+
+    val params = filtered
       .map { "${it.key}=${it.value}" }
       .joinToString("&")
       .takeIf { it.isNotEmpty() }
