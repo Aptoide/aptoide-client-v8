@@ -16,6 +16,7 @@ import cm.aptoide.pt.play_and_earn.sessions.domain.SessionInfo
 import cm.aptoide.pt.play_and_earn.sessions.domain.SessionStartInfo
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import java.util.TimeZone
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -55,12 +56,18 @@ internal class DefaultPaESessionsRepository @Inject constructor(
       val deviceId =
         deviceIdProvider.getDeviceId() ?: throw IllegalStateException("Missing device ID")
 
+      val deviceTsInMs = System.currentTimeMillis()
+      val tzOffsetMin =
+        TimeZone.getDefault().getOffset(deviceTsInMs).toLong() / 60_000L
+
       val request = SessionHeartbeatData(
         sessionId = sessionId,
         packageName = packageName,
         sequence = sequence,
         seconds = seconds,
-        deviceId = deviceId
+        deviceId = deviceId,
+        deviceTsInMs = deviceTsInMs,
+        tzOffset = tzOffsetMin
       )
 
       val response = sessionsApi.heartbeatSession(request)
