@@ -174,6 +174,13 @@ android {
         name = "API_CHAIN_CATAPPULT_HOST",
         value = "\"${project.property("API_CHAIN_CATAPPULT_HOST_DEV")}\""
       )
+
+      buildConfigField(
+        type = "String",
+        name = "REWARDS_HOST",
+        value = "\"${project.property("REWARDS_HOST_DEV")}\""
+      )
+
       buildConfigField(
         type = "String",
         name = "APTOIDE_WEB_SERVICES_HOST",
@@ -243,6 +250,11 @@ android {
         type = "String",
         name = "API_CHAIN_CATAPPULT_HOST",
         value = "\"${project.property("API_CHAIN_CATAPPULT_HOST")}\""
+      )
+      buildConfigField(
+        type = "String",
+        name = "REWARDS_HOST",
+        value = "\"${project.property("REWARDS_HOST")}\""
       )
       buildConfigField(
         type = "String",
