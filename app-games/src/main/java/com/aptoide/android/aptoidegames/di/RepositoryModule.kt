@@ -12,6 +12,7 @@ import cm.aptoide.pt.aptoide_network.data.network.QueryLangInterceptor
 import cm.aptoide.pt.aptoide_network.di.ApiChainCatappultDomain
 import cm.aptoide.pt.aptoide_network.di.BaseOkHttp
 import cm.aptoide.pt.aptoide_network.di.RetrofitBuzz
+import cm.aptoide.pt.aptoide_network.di.RewardsDomain
 import cm.aptoide.pt.aptoide_network.di.StoreDomain
 import cm.aptoide.pt.aptoide_network.di.StoreEnvironmentDomain
 import cm.aptoide.pt.aptoide_network.di.StoreName
@@ -122,6 +123,11 @@ class RepositoryModule {
   @Provides
   @ApiChainCatappultDomain
   fun provideApiChainCatappultDomain(): String = BuildConfig.API_CHAIN_CATAPPULT_HOST
+
+  @Singleton
+  @Provides
+  @RewardsDomain
+  fun provideRewardsDomain(): String = BuildConfig.REWARDS_HOST
 
   @Singleton
   @Provides
