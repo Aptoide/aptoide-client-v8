@@ -1,7 +1,7 @@
 package cm.aptoide.pt.campaigns.di
 
-import cm.aptoide.pt.aptoide_network.di.ApiChainCatappultDomain
 import cm.aptoide.pt.aptoide_network.di.BaseOkHttp
+import cm.aptoide.pt.aptoide_network.di.RewardsDomain
 import cm.aptoide.pt.campaigns.data.DefaultPaECampaignsRepository
 import cm.aptoide.pt.campaigns.data.PaECampaignsApi
 import cm.aptoide.pt.campaigns.data.PaECampaignsRepository
@@ -24,14 +24,14 @@ internal object RepositoryModule {
   @Singleton
   fun providePaECampaignsApi(
     @BaseOkHttp okHttpClient: OkHttpClient,
-    @ApiChainCatappultDomain apiChainCatappultDomain: String,
+    @RewardsDomain rewardsDomain: String,
     walletAuthInterceptor: WalletAuthInterceptor
   ): PaECampaignsApi {
     val client = okHttpClient.newBuilder().addInterceptor(walletAuthInterceptor).build()
 
     return Retrofit.Builder()
       .client(client)
-      .baseUrl(apiChainCatappultDomain)
+      .baseUrl(rewardsDomain)
       .addConverterFactory(GsonConverterFactory.create())
       .build()
       .create(PaECampaignsApi::class.java)
