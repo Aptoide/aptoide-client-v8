@@ -2,10 +2,8 @@ package com.aptoide.android.aptoidegames.gamegenie.presentation.composables
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -13,7 +11,6 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,7 +18,6 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.toAnnotatedString
 import cm.aptoide.pt.feature_apps.data.App
@@ -50,9 +46,6 @@ fun MessageBubble(
 ) {
   val context = LocalContext.current
   val analytics = rememberGameGenieAnalytics()
-  val textToRender = message?.replace("\"", "") ?: ""
-  val segments = remember(textToRender) { parseStylizedText(textToRender) }
-  val linkSegments = segments.filterIsInstance<TextSegment.Link>()
 
   Box(
     modifier = Modifier
@@ -108,21 +101,6 @@ fun MessageBubble(
             },
             isUserMessage = isUserMessage
           )
-        }
-
-        if (linkSegments.isNotEmpty()) {
-          FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-          ) {
-            linkSegments.forEach { linkSegment ->
-              LinkChip(
-                text = linkSegment.text,
-                onClick = { UrlActivity.open(context, linkSegment.url) },
-                modifier = Modifier
-                  .padding(top = 8.dp),
-              )
-            }
-          }
         }
 
         videoId?.let { id ->
