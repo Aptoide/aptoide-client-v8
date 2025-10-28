@@ -7,13 +7,12 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 internal interface PaECampaignsApi {
-
-  @GET("/play-and-earn/campaigns")
+  @GET("api/campaigns")
   suspend fun getCampaigns(
     @Query("sections") sections: List<String> = listOf("trending")
   ): PaECampaignJson
 
-  @GET("/play-and-earn/campaigns/{package_name}/missions")
+  @GET("api/campaigns/{package_name}/missions")
   suspend fun getCampaignMissions(
     @Path("package_name") packageName: String
   ): PaEMissionsJson
