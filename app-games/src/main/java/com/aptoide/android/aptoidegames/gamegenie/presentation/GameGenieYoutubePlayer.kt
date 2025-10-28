@@ -299,7 +299,7 @@ fun rememberYoutubePlayerView(
         }
       }
 
-      val iFramePlayerOptions = IFramePlayerOptions.Builder()
+      val iFramePlayerOptions = IFramePlayerOptions.Builder(context)
         .apply {
           rel(0)
           controls(1)
