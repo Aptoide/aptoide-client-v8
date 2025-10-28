@@ -90,6 +90,13 @@ fun GameGenieYoutubePlayer(
       userPaused = false
     }
 
+    LaunchedEffect(showFullscreen) {
+      if (showFullscreen && !userPaused && youtubePlayerTracker.currentSecond > 0f) {
+        youtubePlayer?.seekTo(youtubePlayerTracker.currentSecond)
+        youtubePlayer?.play()
+      }
+    }
+
     val youtubePlayerView = rememberYoutubePlayerView(
       videoId = videoId,
       youtubePlayerTracker = youtubePlayerTracker,

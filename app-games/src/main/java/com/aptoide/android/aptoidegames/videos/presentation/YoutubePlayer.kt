@@ -181,6 +181,13 @@ fun AppViewYoutubePlayer(
       autoplay = autoplayAllowed
     )
 
+    LaunchedEffect(showFullscreen) {
+      if (showFullscreen && !userPaused && youtubePlayerTracker.currentSecond > 0f) {
+        youtubePlayer?.seekTo(youtubePlayerTracker.currentSecond)
+        youtubePlayer?.play()
+      }
+    }
+
     LaunchedEffect(shouldPause) {
       if (shouldPause) {
         youtubePlayer?.pause()
