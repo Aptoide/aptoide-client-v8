@@ -275,4 +275,8 @@ annotation class ApiChainCatappultDomain
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
+annotation class RewardsDomain
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
 annotation class WebServicesDomain

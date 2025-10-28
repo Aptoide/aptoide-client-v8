@@ -10,18 +10,17 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 internal interface SessionsApi {
-
-  @POST("/play-and-earn/v1/sessions/start")
+  @POST("api/v1/sessions/start")
   suspend fun startSession(
     @Body sessionStartData: SessionStartRequestData
   ): SessionStartInfoJson
 
-  @POST("/play-and-earn/v1/sessions/heartbeat")
+  @POST("api/v1/sessions/heartbeat")
   suspend fun heartbeatSession(
     @Body sessionHeartbeatData: SessionHeartbeatData
   ): SessionInfoJson
 
-  @POST("/play-and-earn/v1/sessions/end")
+  @POST("api/v1/sessions/end")
   suspend fun endSession(
     @Body sessionEndRequestData: SessionEndRequestData
   ): SessionEndInfoJson

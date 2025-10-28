@@ -1,7 +1,7 @@
 package cm.aptoide.pt.play_and_earn.sessions.di
 
-import cm.aptoide.pt.aptoide_network.di.ApiChainCatappultDomain
 import cm.aptoide.pt.aptoide_network.di.RawOkHttp
+import cm.aptoide.pt.aptoide_network.di.RewardsDomain
 import cm.aptoide.pt.environment_info.DeviceIdProvider
 import cm.aptoide.pt.play_and_earn.sessions.data.DefaultPaESessionsRepository
 import cm.aptoide.pt.play_and_earn.sessions.data.PaESessionsRepository
@@ -25,14 +25,14 @@ internal object RepositoryModule {
   @Singleton
   fun providePaESessionsApi(
     @RawOkHttp okHttpClient: OkHttpClient,
-    @ApiChainCatappultDomain apiChainCatappultDomain: String,
+    @RewardsDomain rewardsDomain: String,
     walletAuthInterceptor: WalletAuthInterceptor
   ): SessionsApi {
     val client = okHttpClient.newBuilder().addInterceptor(walletAuthInterceptor).build()
 
     return Retrofit.Builder()
       .client(client)
-      .baseUrl(apiChainCatappultDomain)
+      .baseUrl(rewardsDomain)
       .addConverterFactory(GsonConverterFactory.create())
       .build()
       .create(SessionsApi::class.java)
