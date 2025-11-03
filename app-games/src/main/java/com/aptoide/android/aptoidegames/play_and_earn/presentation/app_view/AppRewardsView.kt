@@ -8,28 +8,32 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ColorMatrix
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.campaigns.domain.PaEMission
 import cm.aptoide.pt.campaigns.domain.PaEMissionStatus
 import cm.aptoide.pt.campaigns.presentation.PaEMissionsUiState
 import cm.aptoide.pt.campaigns.presentation.rememberPaEMissions
+import cm.aptoide.pt.feature_apps.data.randomApp
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getMissionHexagonCompletedIcon
-import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getMissionHexagonPendingIcon
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getSmallCoinIcon
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaEProgressIndicator
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.getAppXPAnnotatedString
@@ -59,31 +63,57 @@ fun AppRewardsView(
 
 @Composable
 private fun MissionsSection(missions: List<PaEMission>) {
-  Column(
-    modifier = Modifier.padding(16.dp),
-    verticalArrangement = Arrangement.spacedBy(16.dp)
-  ) {
-    RewardsSectionHeader("Missions")
-    Column {
-      missions.forEach {
-        MissionItem(it)
-      }
-    }
-  }
+  RewardsSection(
+    title = "Missions",
+    items = missions,
+    itemContent = { mission -> MissionItem(mission) }
+  )
 }
 
 @Composable
 private fun CheckpointsSection(checkpoints: List<PaEMission>) {
+  RewardsSection(
+    title = "Checkpoints",
+    items = checkpoints,
+    itemContent = { checkpoint -> CheckpointItem(checkpoint) },
+  )
+}
+
+@Composable
+private fun RewardsSection(
+  title: String,
+  items: List<PaEMission>,
+  itemContent: @Composable (PaEMission) -> Unit
+) {
+  // Sort items: ongoing first, then completed
+  val sortedItems = items.sortedBy {
+    it.progress?.status == PaEMissionStatus.COMPLETED
+  }
+
   Column(
     modifier = Modifier.padding(16.dp),
     verticalArrangement = Arrangement.spacedBy(16.dp)
   ) {
-    RewardsSectionHeader("Checkpoints")
-    Column(
-      verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-      checkpoints.forEach {
-        CheckpointItem(it)
+    RewardsSectionHeader(title)
+    Column {
+      sortedItems.forEachIndexed { index, item ->
+        itemContent(item)
+
+        if (index < sortedItems.size - 1) {
+          val isCurrentCompleted = item.progress?.status == PaEMissionStatus.COMPLETED
+          val isNextCompleted =
+            sortedItems[index + 1].progress?.status == PaEMissionStatus.COMPLETED
+
+          if (isCurrentCompleted && isNextCompleted) {
+            Divider(
+              modifier = Modifier.padding(vertical = 4.dp),
+              color = Palette.GreyDark,
+              thickness = 1.dp
+            )
+          } else {
+            Spacer(modifier = Modifier.height(16.dp))
+          }
+        }
       }
     }
   }
@@ -91,52 +121,99 @@ private fun CheckpointsSection(checkpoints: List<PaEMission>) {
 
 @Composable
 private fun CheckpointItem(checkpoint: PaEMission) {
+  val isCompleted = checkpoint.progress?.status == PaEMissionStatus.COMPLETED
+
   Box(
     modifier = Modifier
       .fillMaxWidth()
-      .background(Palette.GreyDark),
+      .background(if (isCompleted) Color.Transparent else Palette.GreyDark),
     contentAlignment = Alignment.Center
   ) {
     Row(
-      modifier = Modifier.padding(start = 8.dp, end = 16.dp),
+      modifier = Modifier.padding(all = 8.dp),
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
       Image(
         painter = painterResource(R.drawable.checkpoint_icon),
         contentDescription = null,
-        modifier = Modifier.size(64.dp)
+        modifier = Modifier.size(64.dp),
+        alpha = if (isCompleted) 0.5f else 1f,
+        colorFilter = if (isCompleted) ColorFilter.colorMatrix(
+          ColorMatrix().apply { setToSaturation(0f) }
+        ) else null
       )
-      Column(
-        modifier = Modifier.padding(vertical = 13.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-      ) {
-        Text(
-          text = checkpoint.title,
-          style = AGTypography.InputsM,
-          color = Palette.White
-        )
-        PaEProgressIndicator(
-          progress = checkpoint.progress?.getNormalizedProgress() ?: 0f,
-        )
-        Row(
-          modifier = Modifier.fillMaxWidth(),
-          verticalAlignment = Alignment.CenterVertically,
-          horizontalArrangement = Arrangement.SpaceBetween
+
+      if (isCompleted) {
+        Column(
+          modifier = Modifier.weight(1f),
+          verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
           Text(
-            text = getAppXPAnnotatedString(
-              checkpoint.progress?.current ?: 0,
-              checkpoint.progress?.target ?: 0
-            ),
-            style = AGTypography.InputsXS,
-            color = Palette.White
+            text = checkpoint.title,
+            style = AGTypography.InputsM,
+            color = Palette.Grey
           )
+          Text(
+            text = "${checkpoint.progress?.target ?: 0} XP",
+            style = AGTypography.InputsXS,
+            color = Palette.Grey
+          )
+        }
+        Row(
+          verticalAlignment = Alignment.CenterVertically,
+          horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
           Text(
             text = "+ ${checkpoint.units} UNITS",
             style = AGTypography.InputsS,
             color = Palette.SecondaryLight
           )
+          Image(
+            imageVector = getMissionHexagonCompletedIcon(),
+            contentDescription = null,
+            modifier = Modifier
+              .size(21.dp, 24.dp)
+              .shadow(
+                elevation = 6.dp,
+                shape = CircleShape,
+                spotColor = Color(0x80C279FF),
+                clip = false
+              )
+          )
+        }
+      } else {
+        Column(
+          modifier = Modifier.padding(top = 5.dp, bottom = 5.dp, end = 8.dp),
+          verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+          Text(
+            text = checkpoint.title,
+            style = AGTypography.InputsM,
+            color = Palette.White
+          )
+          PaEProgressIndicator(
+            progress = checkpoint.progress?.getNormalizedProgress() ?: 0f,
+          )
+          Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+          ) {
+            Text(
+              text = getAppXPAnnotatedString(
+                checkpoint.progress?.current ?: 0,
+                checkpoint.progress?.target ?: 0
+              ),
+              style = AGTypography.InputsXS,
+              color = Palette.White
+            )
+            Text(
+              text = "+ ${checkpoint.units} UNITS",
+              style = AGTypography.InputsS,
+              color = Palette.SecondaryLight
+            )
+          }
         }
       }
     }
@@ -145,67 +222,78 @@ private fun CheckpointItem(checkpoint: PaEMission) {
 
 @Composable
 private fun MissionItem(mission: PaEMission) {
+  val isCompleted = mission.progress?.status == PaEMissionStatus.COMPLETED
+
   Box(
     modifier = Modifier
       .fillMaxWidth()
-      .drawBehind {
-        val strokeWidth = 1.dp.toPx()
-        drawLine(
-          color = Palette.GreyDark,
-          start = Offset(0f, size.height),
-          end = Offset(size.width, size.height),
-          strokeWidth = strokeWidth
-        )
-      },
+      .background(if (isCompleted) Color.Transparent else Palette.GreyDark),
     contentAlignment = Alignment.Center
   ) {
     Row(
+      modifier = Modifier.padding(all = 8.dp),
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
       AptoideAsyncImage(
-        modifier = Modifier.size(64.dp),
+        modifier = Modifier
+          .size(64.dp)
+          .graphicsLayer {
+            alpha = if (isCompleted) 0.5f else 1f
+          },
         data = R.drawable.book,
-        contentDescription = null
+        contentDescription = null,
+        colorFilter = if (isCompleted) ColorFilter.colorMatrix(
+          ColorMatrix().apply { setToSaturation(0f) }
+        ) else null
       )
-      Column {
+      Column(
+        modifier = Modifier.weight(1f),
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+      ) {
         Text(
           text = mission.title,
           style = AGTypography.InputsM,
-          color = Palette.White
+          color = if (isCompleted) Palette.Grey else Palette.White
         )
         Text(
           text = mission.description ?: "",
           style = AGTypography.Body,
-          color = Palette.GreyLight
+          color = if (isCompleted) Palette.Grey else Palette.GreyLight,
+          maxLines = 2,
+          overflow = TextOverflow.Ellipsis
         )
       }
 
-      Spacer(modifier = Modifier.weight(1f))
-      Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-      ) {
+      if (isCompleted) {
+        Row(
+          verticalAlignment = Alignment.CenterVertically,
+          horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+          Text(
+            text = "+ ${mission.units} UNITS",
+            style = AGTypography.InputsXS,
+            color = Palette.SecondaryLight
+          )
+          Image(
+            imageVector = getMissionHexagonCompletedIcon(),
+            contentDescription = null,
+            modifier = Modifier
+              .size(21.dp, 24.dp)
+              .shadow(
+                elevation = 6.dp,
+                shape = CircleShape,
+                spotColor = Color(0x80C279FF),
+                clip = false
+              )
+          )
+        }
+      } else {
         Text(
+          modifier = Modifier.padding(end = 8.dp),
           text = "+ ${mission.units} UNITS",
           style = AGTypography.InputsXS,
           color = Palette.SecondaryLight
-        )
-        Image(
-          imageVector = if (mission.progress?.status == PaEMissionStatus.COMPLETED) {
-            getMissionHexagonCompletedIcon()
-          } else {
-            getMissionHexagonPendingIcon()
-          },
-          contentDescription = null,
-          modifier = Modifier
-            .size(21.dp, 24.dp)
-            .shadow(
-              elevation = 6.dp,
-              shape = CircleShape,
-              spotColor = Color(0x80C279FF),
-              clip = false
-            )
         )
       }
     }
@@ -233,5 +321,5 @@ private fun RewardsSectionHeader(title: String) {
 @Preview
 @Composable
 fun AppRewardsViewPreview() {
-  AppRewardsView(packageName = "com.mobile.legends")
+  AppRewardsView(packageName = randomApp.packageName)
 }
