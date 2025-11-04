@@ -8,7 +8,10 @@ interface PaECampaignsRepository {
 
   suspend fun getCampaigns(): Result<PaEBundles>
 
-  suspend fun getCampaignMissions(packageName: String): Result<PaEMissions>
+  suspend fun getCampaignMissions(
+    packageName: String,
+    forceRefresh: Boolean = false
+  ): Result<PaEMissions>
 
   fun observeCampaignMissions(packageName: String): Flow<Result<PaEMissions>>
 }
