@@ -10,7 +10,10 @@ internal class FakePaECampaignsRepository : PaECampaignsRepository {
   override suspend fun getCampaigns(): Result<PaEBundles> =
     Result.success(paeCampaigns)
 
-  override suspend fun getCampaignMissions(packageName: String): Result<PaEMissions> =
+  override suspend fun getCampaignMissions(
+    packageName: String,
+    forceRefresh: Boolean
+  ): Result<PaEMissions> =
     Result.success(paeMissions)
 
   override fun observeCampaignMissions(packageName: String): Flow<Result<PaEMissions>> =
