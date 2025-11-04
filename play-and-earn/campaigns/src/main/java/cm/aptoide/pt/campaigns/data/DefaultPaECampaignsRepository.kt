@@ -42,9 +42,16 @@ internal class DefaultPaECampaignsRepository @Inject constructor(
     }
   }
 
-  override suspend fun getCampaignMissions(packageName: String): Result<PaEMissions> =
+  override suspend fun getCampaignMissions(
+    packageName: String,
+    forceRefresh: Boolean
+  ): Result<PaEMissions> =
     withContext(dispatcher) {
       try {
+        if (!forceRefresh) {
+          getCachedMissions(packageName)?.let { return@withContext Result.success(it) }
+        }
+
         val missions = fetchMissions(packageName)
         Result.success(missions)
       } catch (e: Throwable) {
