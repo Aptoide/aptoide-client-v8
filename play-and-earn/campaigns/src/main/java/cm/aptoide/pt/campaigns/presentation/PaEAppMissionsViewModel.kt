@@ -43,19 +43,24 @@ class PaEAppMissionsViewModel(
   fun reload() {
     viewModelScope.launch {
       viewModelState.update { PaEMissionsUiState.Loading }
-      try {
-        val result = paECampaignsRepository.getCampaignMissions(packageName).getOrThrow()
-        viewModelState.update {
-          PaEMissionsUiState.Idle(paeMissions = result)
-        }
-      } catch (t: Throwable) {
-        Timber.w(t)
-        viewModelState.update {
-          when (t) {
-            is IOException -> PaEMissionsUiState.NoConnection
-            else -> PaEMissionsUiState.Error
+
+      paECampaignsRepository.observeCampaignMissions(packageName).collect { result ->
+        result.fold(
+          onSuccess = { missions ->
+            viewModelState.update { PaEMissionsUiState.Idle(paeMissions = missions) }
+          },
+          onFailure = { throwable ->
+            Timber.w(throwable)
+            if (viewModelState.value is PaEMissionsUiState.Loading) {
+              viewModelState.update {
+                when (throwable) {
+                  is IOException -> PaEMissionsUiState.NoConnection
+                  else -> PaEMissionsUiState.Error
+                }
+              }
+            }
           }
-        }
+        )
       }
     }
   }
