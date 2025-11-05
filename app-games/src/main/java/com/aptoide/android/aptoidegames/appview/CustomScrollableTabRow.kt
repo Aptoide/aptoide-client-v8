@@ -4,8 +4,8 @@ import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
@@ -44,6 +44,7 @@ fun CustomScrollableTabRow(
   backgroundColor: Color,
   modifier: Modifier = Modifier,
   tabTextStyle: TextStyle = AGTypography.InputsL,
+  tabBadges: List<(@Composable BoxScope.() -> Unit)?> = List(tabs.size) { null },
 ) {
   val density = LocalDensity.current
   val indicatorWidths = remember(key1 = tabs.size) { MutableList(tabs.size) { 0.dp } }
@@ -52,7 +53,7 @@ fun CustomScrollableTabRow(
     selectedTabIndex = selectedTabIndex,
     contentColor = contentColor,
     backgroundColor = backgroundColor,
-    modifier = modifier.height(40.dp),
+    modifier = modifier,
     edgePadding = 0.dp,
     indicator = { tabPositions ->
       TabRowDefaults.Indicator(
@@ -71,19 +72,25 @@ fun CustomScrollableTabRow(
         selected = selectedTabIndex == tabIndex,
         onClick = { onTabClick(tabIndex) },
         text = {
-          Text(
-            text = tab,
-            style = tabTextStyle,
-            color = if (selectedTabIndex == tabIndex) {
-              Palette.Primary
-            } else {
-              Palette.White
-            },
-            onTextLayout = { textLayoutResult ->
-              indicatorWidths[tabIndex] =
-                with(density) { textLayoutResult.size.width.toDp() }
+          Box {
+            Text(
+              text = tab,
+              style = tabTextStyle,
+              color = if (selectedTabIndex == tabIndex) {
+                Palette.Primary
+              } else {
+                Palette.White
+              },
+              onTextLayout = { textLayoutResult ->
+                indicatorWidths[tabIndex] =
+                  with(density) { textLayoutResult.size.width.toDp() }
+              }
+            )
+
+            tabBadges.getOrNull(tabIndex)?.let { badge ->
+              badge()
             }
-          )
+          }
         }
       )
     }
