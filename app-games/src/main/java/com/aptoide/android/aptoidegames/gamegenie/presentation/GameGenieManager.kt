@@ -125,7 +125,8 @@ class GameGenieManager @Inject constructor(
       gameCompanionDao
         .saveChat(
           oldChat.copy(
-            conversation = fixedOldChat + newChat.conversation.last()
+            conversation = fixedOldChat + newChat.conversation.last(),
+            lastMessageTimestamp = newChat.lastMessageTimestamp
           )
         )
     } else {
