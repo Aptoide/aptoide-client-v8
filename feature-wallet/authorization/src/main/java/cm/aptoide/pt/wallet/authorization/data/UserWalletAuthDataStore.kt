@@ -15,11 +15,13 @@ import javax.inject.Singleton
 @Singleton
 internal class UserWalletAuthDataStore @Inject constructor(
   @WalletAuthDataStore private val dataStore: DataStore<Preferences>,
+  private val secureTokenStorage: SecureTokenStorage,
 ) {
 
   companion object PreferencesKeys {
     private val CURRENT_WALLET_DATA = stringPreferencesKey("current_wallet_data")
-    private val CURRENT_REFRESH_TOKEN = stringPreferencesKey("current_refresh_token")
+    private val ENCRYPTED_REFRESH_TOKEN = stringPreferencesKey("encrypted_refresh_token")
+    private val REFRESH_TOKEN_IV = stringPreferencesKey("refresh_token_iv")
   }
 
   suspend fun setCurrentWalletData(walletUserData: UserWalletData) {
@@ -35,14 +37,44 @@ internal class UserWalletAuthDataStore @Inject constructor(
   }
 
   suspend fun setCurrentRefreshToken(refreshToken: String) {
-    dataStore.edit { preferences ->
-      preferences[CURRENT_REFRESH_TOKEN] = refreshToken
+    try {
+      val encryptedData = secureTokenStorage.encryptToken(refreshToken)
+
+      dataStore.edit { preferences ->
+        preferences[ENCRYPTED_REFRESH_TOKEN] = encryptedData.encryptedContent
+        preferences[REFRESH_TOKEN_IV] = encryptedData.iv
+      }
+    } catch (e: Exception) {
+      e.printStackTrace()
+      throw SecurityException("Failed to save refresh token", e)
     }
   }
 
   suspend fun getCurrentRefreshToken(): String? {
-    return dataStore.data.map { preferences ->
-      preferences[CURRENT_REFRESH_TOKEN]
-    }.first()
+    return try {
+      val encryptedContent = dataStore.data.map { preferences ->
+        preferences[ENCRYPTED_REFRESH_TOKEN]
+      }.first() ?: return null
+
+      val iv = dataStore.data.map { preferences ->
+        preferences[REFRESH_TOKEN_IV]
+      }.first() ?: return null
+
+      val encryptedData = EncryptedData(encryptedContent, iv)
+      secureTokenStorage.decryptToken(encryptedData)
+    } catch (e: Exception) {
+      e.printStackTrace()
+      null
+    }
+  }
+
+  suspend fun clear() {
+    try {
+      dataStore.edit { preferences ->
+        preferences.clear()
+      }
+    } catch (e: Exception) {
+      e.printStackTrace()
+    }
   }
 }
