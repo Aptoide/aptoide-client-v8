@@ -61,6 +61,7 @@ internal class WalletAuthRepositoryImpl @Inject constructor(
 
   override suspend fun clearAuthorizationData() {
     walletCoreDataSource.clearWalletData()
+    userWalletAuthDataStore.clear()
   }
 }
 
