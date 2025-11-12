@@ -16,11 +16,15 @@ import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getPaESmal
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import java.math.BigDecimal
+import java.math.RoundingMode
+import java.text.NumberFormat
+import java.util.Currency
 import java.util.Locale
 
 @Composable
 fun BalanceCard(
   balance: BigDecimal,
+  currency: String,
   modifier: Modifier = Modifier
 ) {
   Box(
@@ -44,10 +48,27 @@ fun BalanceCard(
         modifier = Modifier.size(58.dp)
       )
       Text(
-        text = "$${String.format(Locale.getDefault(), "%.2f", balance)}", //TODO: hardcoded string
+        text = formatCurrency(balance, currency),
         style = AGTypography.InputsL,
         color = Palette.White,
       )
     }
+  }
+}
+
+/**
+ * Formats a currency amount to ensure correct positioning of its symbol, based on the locale.
+ */
+private fun formatCurrency(balance: BigDecimal, currencyCode: String): String {
+  return try {
+    val currency = Currency.getInstance(currencyCode)
+
+    val formatter = NumberFormat.getCurrencyInstance(Locale.getDefault())
+    formatter.currency = currency
+    formatter.roundingMode = RoundingMode.DOWN
+
+    formatter.format(balance)
+  } catch (_: Throwable) {
+    "${balance.setScale(2, RoundingMode.DOWN)} $currencyCode"
   }
 }
