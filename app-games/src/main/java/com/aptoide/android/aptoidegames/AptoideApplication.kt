@@ -76,6 +76,7 @@ val Context.paymentsPreferencesDataStore: DataStore<Preferences> by preferencesD
 )
 val Context.idsDataStore: DataStore<Preferences> by preferencesDataStore(name = "ids")
 val Context.subscribedAppsDataStore: DataStore<Preferences> by preferencesDataStore(name = "subscribedApps")
+val Context.gamesFeedVisibilityDataStore: DataStore<Preferences> by preferencesDataStore(name = "gamesFeedVisibility")
 
 @HiltAndroidApp
 class AptoideApplication : Application(), ImageLoaderFactory, Provider {
