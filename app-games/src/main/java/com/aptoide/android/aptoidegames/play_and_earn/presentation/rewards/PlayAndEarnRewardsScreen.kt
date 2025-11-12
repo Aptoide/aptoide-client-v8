@@ -11,12 +11,14 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.campaigns.domain.PaEBundle
 import cm.aptoide.pt.campaigns.presentation.PaEBundlesUiState
 import cm.aptoide.pt.campaigns.presentation.rememberPaEBundles
 import cm.aptoide.pt.extensions.ScreenData
+import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.OverrideAnalyticsPlayAndEarn
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
@@ -118,7 +120,7 @@ fun PaEHorizontalBundleView(
   ) {
     PaESectionHeader(
       icon = getPlayPauseIcon(),
-      text = "Keep Playing"
+      text = stringResource(R.string.play_and_earn_keep_playing_title)
     )
     PaEHorizontalCarousel(
       apps = bundle.apps,
@@ -151,7 +153,7 @@ fun PaEVerticalBundleView(
   ) {
     PaESectionHeader(
       icon = getThumbUpIcon(),
-      text = "Everyone’s favourites"
+      text = stringResource(R.string.play_and_earn_everyones_favourites_title)
     )
     Column(
       modifier = Modifier

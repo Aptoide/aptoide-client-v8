@@ -23,8 +23,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.drawables.icons.getAGAppIcon
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -75,13 +77,13 @@ fun WelcomeBackOverlayViewContent() {
           modifier = Modifier.size(18.dp)
         )
         Text(
-          text = "Play & Earn",
+          text = stringResource(R.string.play_and_earn_title),
           style = AGTypography.InputsL,
           color = Palette.White
         )
       }
       Text(
-        text = "Welcome Back",
+        text = stringResource(R.string.play_and_earn_welcome_back_title),
         style = AGTypography.InputsM,
         color = Palette.Primary
       )

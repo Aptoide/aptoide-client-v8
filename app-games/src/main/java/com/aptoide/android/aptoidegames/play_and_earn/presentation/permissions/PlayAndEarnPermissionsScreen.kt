@@ -83,7 +83,10 @@ private fun PlayAndEarnPermissionsScreen(
   Column(
     modifier = Modifier.fillMaxSize()
   ) {
-    AppGamesTopBar(navigateBack = navigateBack, title = "Start Earning")
+    AppGamesTopBar(
+      navigateBack = navigateBack,
+      title = stringResource(R.string.play_and_earn_start_earning_title)
+    )
     PaEPermissionsScreenContent(
       onPermissionClick = {
         paeAnalytics.sendPaEPermissionLetsDoItClick()
@@ -134,7 +137,7 @@ private fun PaEPermissionsScreenContent(
       verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
       Text(
-        text = "You’re almost there!",
+        text = stringResource(R.string.play_and_earn_almost_there_title),
         style = AGTypography.Title,
         color = Palette.Yellow100,
         textAlign = TextAlign.Center
@@ -149,7 +152,7 @@ private fun PaEPermissionsScreenContent(
 
       //TODO: fix button
       AccentSmallButton(
-        title = "Let’s do it!", //TODO: hardcoded string
+        title = stringResource(R.string.play_and_earn_lets_do_it_button),
         onClick = onPermissionClick,
         modifier = Modifier
           .fillMaxWidth()

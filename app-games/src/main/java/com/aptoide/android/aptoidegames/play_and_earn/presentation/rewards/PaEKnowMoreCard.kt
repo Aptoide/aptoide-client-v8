@@ -17,9 +17,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.levels.level_badges.getLevelEightBadge
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.levels.level_badges.getLevelFiveBadge
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.levels.level_badges.getLevelFourBadge
@@ -73,7 +75,7 @@ fun PaEKnowMoreCard(
       }
 
       Text(
-        text = "Level $currentLevel achieved!",
+        text = stringResource(R.string.play_and_earn_level_achieved_body, currentLevel ?: 0),
         style = AGTypography.InputsL,
         color = Palette.White
       )
@@ -82,7 +84,7 @@ fun PaEKnowMoreCard(
         verticalAlignment = Alignment.CenterVertically
       ) {
         Text(
-          text = "The more you play, the more you earn! Check your rewards and see your balance grow.",
+          text = stringResource(R.string.play_and_earn_more_you_play_body),
           style = AGTypography.Body,
           color = Palette.White,
           textAlign = TextAlign.Center
@@ -90,7 +92,7 @@ fun PaEKnowMoreCard(
       }
 
       PaESmallTextButton(
-        title = "Know More",
+        title = stringResource(R.string.play_and_earn_know_more_button),
         onClick = onClick,
         modifier = Modifier.fillMaxWidth()
       )

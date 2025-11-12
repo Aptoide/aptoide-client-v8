@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -81,7 +82,7 @@ fun AppRewardsView(
 @Composable
 private fun MissionsSection(missions: List<PaEMission>) {
   RewardsSection(
-    title = "Missions",
+    title = stringResource(R.string.play_and_earn_missions_title),
     items = missions,
     itemContent = { mission -> MissionItem(mission) }
   )
@@ -90,7 +91,7 @@ private fun MissionsSection(missions: List<PaEMission>) {
 @Composable
 private fun CheckpointsSection(checkpoints: List<PaEMission>) {
   RewardsSection(
-    title = "Checkpoints",
+    title = stringResource(R.string.play_and_earn_checkpoints_title),
     items = checkpoints,
     itemContent = { checkpoint -> CheckpointItem(checkpoint) },
   )
