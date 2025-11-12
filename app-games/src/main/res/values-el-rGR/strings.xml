@@ -124,7 +124,7 @@
   <string name="button_install_title">Εγκατάσταση</string>
   <!-- Common -->
   <string name="appview_details_tab_title" comment="details">Λεπτομέρειες</string>
-  <string name="appview_rewards_tab_title" comment="rewards">Rewards</string>
+  <string name="appview_rewards_tab_title" comment="rewards">Ανταμοιβές</string>
   <string name="appview_related_tab_title" comment="related">Σχετικά</string>
   <string name="appview_info_tab_title" comment="info">Info</string>
   <string name="appview_info_version_name_title" comment="version_name">Όνομα έκδοσης</string>
@@ -260,7 +260,7 @@
   <string name="tag_editorial">Άρθρα</string>
   <string name="tag_categories">Κατηγορίες</string>
   <string name="tag_bonus">Bonus</string>
-  <string name="tag_rewards">Rewards</string>
+  <string name="tag_rewards">Ανταμοιβές</string>
   <!-- AB Test for roblox companion apps -->
   <string name="companion_apps_roblox_notification_title">Σας αρέσει το Roblox; 🔥</string>
   <string name="companion_apps_roblox_notification_body">Αυτές είναι οι εφαρμογές που πρέπει να έχουν οι παίκτες του Roblox</string>
@@ -280,37 +280,37 @@
   <string name="gamegenie_entry_screen_companion_section">... ή πατήστε το παιχνίδι σας - θα σας βοηθήσω να το κατακτήσετε</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[Γεια! Είμαι η βοηθός τεχνητής νοημοσύνης σας για όλα όσα σχετίζονται με το <1>%1$s</1>.]]></string>
   <!-- Play and Earn -->
-  <string name="play_and_earn_title">Play &amp; Earn</string>
-  <string name="play_and_earn_start_earning_title">Start Earning</string>
-  <string name="play_and_earn_level_up_rewards_title">Level up your rewards!</string>
-  <string name="play_and_earn_login_unlock_access_body">Login to unlock access to incredible prizes while you play!</string>
-  <string name="play_and_earn_waiting_title">Waiting...</string>
-  <string name="play_and_earn_getting_ready_body">We\'re getting things ready for you…</string>
-  <string name="play_and_earn_almost_there_title">You\'re almost there!</string>
-  <string name="play_and_earn_lets_do_it_button">Let\'s do it!</string>
-  <string name="play_and_earn_everyones_favourites_title">Everyone\'s favourites</string>
-  <string name="play_and_earn_get_started_now_title">Get started now!</string>
-  <string name="play_and_earn_grant_permissions_body">Log in and grant permissions to unlock access to incredible prizes while you play!</string>
+  <string name="play_and_earn_title">Παίξτε &amp; Κερδίστε</string>
+  <string name="play_and_earn_start_earning_title">Ξεκινήστε να κερδίζετε</string>
+  <string name="play_and_earn_level_up_rewards_title">Ανεβάστε το επίπεδο των ανταμοιβών σας!</string>
+  <string name="play_and_earn_login_unlock_access_body">Συνδεθείτε για να ξεκλειδώσετε την πρόσβαση σε απίστευτα δώρα ενώ παίζετε!</string>
+  <string name="play_and_earn_waiting_title">Αναμονή...</string>
+  <string name="play_and_earn_getting_ready_body">Ετοιμάζουμε τα πάντα για εσάς…</string>
+  <string name="play_and_earn_almost_there_title">Σχεδόν έφτασες!</string>
+  <string name="play_and_earn_lets_do_it_button">Ας το κάνουμε!</string>
+  <string name="play_and_earn_everyones_favourites_title">Τα αγαπημένα όλων</string>
+  <string name="play_and_earn_get_started_now_title">Ξεκινήστε τώρα!</string>
+  <string name="play_and_earn_grant_permissions_body">Συνδεθείτε και παραχωρήστε δικαιώματα για να ξεκλειδώσετε την πρόσβαση σε απίστευτα δώρα ενώ παίζετε!</string>
   <string name="play_and_earn_permissions">"<![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]>"</string>
-  <string name="play_and_earn_lets_go_button">Let\'s Go</string>
-  <string name="play_and_earn_how_it_works_title">How it works</string>
-  <string name="play_and_earn_pick_featured_game_body">Pick a featured game</string>
-  <string name="play_and_earn_xp_contributes_checkpoints_body">XP contributes to checkpoints</string>
-  <string name="play_and_earn_unlock_rewards_convert_balance_body">Unlock rewards &amp; convert to balance</string>
-  <string name="play_and_earn_choose_game_start_playing_body">Choose your game and start playing!</string>
-  <string name="play_and_earn_challenge_completed_title">Challenge Completed</string>
-  <string name="play_and_earn_welcome_back_title">Welcome Back</string>
-  <string name="play_and_earn_level_up_title">Level Up</string>
-  <string name="play_and_earn_your_level_title">Your Level</string>
-  <string name="play_and_earn_your_units_title">Your Units</string>
+  <string name="play_and_earn_lets_go_button">Πάμε</string>
+  <string name="play_and_earn_how_it_works_title">Πώς λειτουργεί</string>
+  <string name="play_and_earn_pick_featured_game_body">Επιλέξτε ένα προτεινόμενο παιχνίδι</string>
+  <string name="play_and_earn_xp_contributes_checkpoints_body">Το XP συμβάλλει στα σημεία ελέγχου</string>
+  <string name="play_and_earn_unlock_rewards_convert_balance_body">Ξεκλείδωσε ανταμοιβές &amp; μετατροπή σε υπόλοιπο</string>
+  <string name="play_and_earn_choose_game_start_playing_body">Επιλέξτε το παιχνίδι σας και αρχίστε να παίζετε!</string>
+  <string name="play_and_earn_challenge_completed_title">Πρόκληση ολοκληρώθηκε</string>
+  <string name="play_and_earn_welcome_back_title">Καλώς ήρθατε ξανά</string>
+  <string name="play_and_earn_level_up_title">Ανεβείτε επίπεδο</string>
+  <string name="play_and_earn_your_level_title">Το επίπεδό σας</string>
+  <string name="play_and_earn_your_units_title">Οι μονάδες σας</string>
   <string name="play_and_earn_units_limit_body"><![CDATA[<1>%1$d</1>/100]]></string>
-  <string name="play_and_earn_aptoide_balance_title">Aptoide Balance</string>
-  <string name="play_and_earn_exchange_now_button">Exchange Now</string>
-  <string name="play_and_earn_collect_more_units_body">Collect %1$d more units to earn $1.00 in Aptoide Balance.</string>
-  <string name="play_and_earn_exchange_units_body">Exchange %1$d units for $%2$s in your Aptoide Balance.</string>
-  <string name="play_and_earn_earn_rewards_by_playing_body">Earn rewards by playing new games!</string>
-  <string name="play_and_earn_earning_now_title">Earning Now</string>
-  <string name="play_and_earn_missions_title">Missions</string>
-  <string name="play_and_earn_checkpoints_title">Checkpoints</string>
-  <string name="play_and_earn_bonus_percentage_label">%1$s%% Bonus</string>
+  <string name="play_and_earn_aptoide_balance_title">Aptoide Ισορροπία</string>
+  <string name="play_and_earn_exchange_now_button">Ανταλλάξτε τώρα</string>
+  <string name="play_and_earn_collect_more_units_body">Συλλέξτε %1$d περισσότερες μονάδες για να κερδίσετε 1,00 $ στο Aptoide Balance.</string>
+  <string name="play_and_earn_exchange_units_body">Ανταλλάξτε %1$d μονάδες με $%2$s στο υπόλοιπό σας στο Aptoide.</string>
+  <string name="play_and_earn_earn_rewards_by_playing_body">Κερδίστε ανταμοιβές παίζοντας νέα παιχνίδια!</string>
+  <string name="play_and_earn_earning_now_title">Κερδίζοντας τώρα</string>
+  <string name="play_and_earn_missions_title">Αποστολές</string>
+  <string name="play_and_earn_checkpoints_title">Σημεία ελέγχου</string>
+  <string name="play_and_earn_bonus_percentage_label">%1$s%% Μπόνους</string>
 </resources>
