@@ -27,9 +27,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.aptoide.android.aptoidegames.R
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.play_and_earn.exchange.presentation.ExchangeUiState
@@ -114,7 +116,7 @@ private fun SingleUnitExchangeView(
         .clickable(onClick = onExchange)
     )
     Text(
-      text = "Tap the gem to exchange your units for balance",
+      text = stringResource(R.string.play_and_earn_tap_gem_exchange_body),
       modifier = Modifier.padding(horizontal = 24.dp),
       style = AGTypography.Title,
       color = Palette.White,
@@ -156,7 +158,7 @@ private fun MultipleUnitsExchangeView(
           .clickable(onClick = onExchange)
       )
       Text(
-        text = "Tap the gem to exchange your units for balance",
+        text = stringResource(R.string.play_and_earn_tap_gem_exchange_body),
         modifier = Modifier.padding(horizontal = 24.dp),
         style = AGTypography.Title,
         color = Palette.White,
@@ -215,7 +217,7 @@ private fun ExchangeSuccessView(
         }
       }
       Text(
-        text = "You just earned $1 in Aptoide Balance to use on your games",
+        text = stringResource(R.string.play_and_earn_earned_balance_body),
         modifier = Modifier.padding(horizontal = 24.dp),
         style = AGTypography.Title,
         color = Palette.White,
@@ -223,7 +225,7 @@ private fun ExchangeSuccessView(
       )
       Spacer(modifier = Modifier.weight(128f))
       PaELargeCoinButton(
-        title = "Awesome",
+        title = stringResource(R.string.play_and_earn_awesome_button),
         onClick = onProceed,
         modifier = Modifier
           .padding(horizontal = 24.dp)

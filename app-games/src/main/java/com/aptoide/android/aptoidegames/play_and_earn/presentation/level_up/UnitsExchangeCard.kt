@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.aptoide.android.aptoidegames.R
@@ -21,7 +22,6 @@ import com.aptoide.android.aptoidegames.design_system.AccentSmallButton
 import com.aptoide.android.aptoidegames.play_and_earn.SmallUnitsMultiplierBubble
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
-import java.util.Locale
 
 @Composable
 fun UnitsExchangeCard(
@@ -57,7 +57,11 @@ private fun InsufficientUnitsCard(availableUnits: Long) {
         contentDescription = null
       )
       Text(
-        text = "Collect ${100 - availableUnits} more units to earn \$2.00 in Aptoide Balance.",
+        text = stringResource(
+          R.string.play_and_earn_collect_more_units_body,
+          100 - availableUnits,
+          "$1.00"
+        ),
         style = AGTypography.InputsS,
         color = Palette.White
       )
@@ -70,11 +74,6 @@ private fun ExchangeableUnitsCard(
   availableUnits: Long,
   onExchangeClick: () -> Unit
 ) {
-  val exchangeableUnits = (availableUnits / 100) * 100
-  val currencyValue = (exchangeableUnits * 2f / 100f).let {
-    String.format(Locale.getDefault(), "%.2f", it)
-  }
-
   Box(
     modifier = Modifier
       .fillMaxWidth()
@@ -102,14 +101,18 @@ private fun ExchangeableUnitsCard(
           )
         }
         Text(
-          text = "Exchange $exchangeableUnits units for \$${currencyValue} in your Aptoide Balance.",
+          text = stringResource(
+            R.string.play_and_earn_exchange_units_body,
+            100,
+            "$1.00"
+          ),
           style = AGTypography.InputsS,
           color = Palette.White,
           textAlign = TextAlign.Center
         )
       }
       AccentSmallButton(
-        title = "Exchange Now", //TODO: hardcoded string
+        title = stringResource(R.string.play_and_earn_exchange_now_button),
         onClick = onExchangeClick,
         modifier = Modifier.fillMaxWidth(),
       )

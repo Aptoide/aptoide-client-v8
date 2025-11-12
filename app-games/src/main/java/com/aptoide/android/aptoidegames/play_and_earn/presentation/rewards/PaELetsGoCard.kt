@@ -16,8 +16,10 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.design_system.AccentSmallButton
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getStartEarningIcon
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.animations.PaEAnimatedGift
@@ -56,7 +58,7 @@ fun PaELetsGoCard(
       )
 
       Text(
-        text = "Get started now!", //TODO: hardcoded string
+        text = stringResource(R.string.play_and_earn_get_started_now_title),
         style = AGTypography.InputsL,
         color = Palette.Yellow100
       )
@@ -70,7 +72,7 @@ fun PaELetsGoCard(
         )
 
         Text(
-          text = "Log in and grant permissions to unlock access to incredible prizes while you play!", //TODO: hardcoded string
+          text = stringResource(R.string.play_and_earn_grant_permissions_body),
           style = AGTypography.Body,
           color = Palette.White
         )
@@ -78,7 +80,7 @@ fun PaELetsGoCard(
 
       //TODO: fix button
       AccentSmallButton(
-        title = "Let's Go", //TODO: hardcoded string
+        title = stringResource(R.string.play_and_earn_lets_go_button),
         onClick = onLetsGoClick,
         modifier = Modifier
           .fillMaxWidth()

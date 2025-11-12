@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -62,7 +63,10 @@ private fun PlayAndEarnSignInScreen(
   Column(
     modifier = Modifier.fillMaxSize()
   ) {
-    AppGamesTopBar(navigateBack = navigateBack, title = "Start Earning")
+    AppGamesTopBar(
+      navigateBack = navigateBack,
+      title = stringResource(R.string.play_and_earn_start_earning_title)
+    )
     PaESignInScreenContent(
       uiState = uiState,
       onSignInClick = {
@@ -120,14 +124,14 @@ private fun PaESignInScreenIdle(onSignInClick: () -> Unit) {
       verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
       Text(
-        text = "Level up your rewards!",
+        text = stringResource(R.string.play_and_earn_level_up_rewards_title),
         style = AGTypography.Title,
         color = Palette.Yellow100,
         textAlign = TextAlign.Center
       )
 
       Text(
-        text = "Login to unlock access to incredible prizes while you play!",
+        text = stringResource(R.string.play_and_earn_login_unlock_access_body),
         style = AGTypography.SubHeadingS,
         color = Palette.White,
         textAlign = TextAlign.Center
@@ -161,14 +165,14 @@ private fun PaESignInScreenWaiting() {
       verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
       Text(
-        text = "Waiting...",
+        text = stringResource(R.string.play_and_earn_waiting_title),
         style = AGTypography.Title,
         color = Palette.Primary,
         textAlign = TextAlign.Center
       )
 
       Text(
-        text = "We’re getting things ready for you…",
+        text = stringResource(R.string.play_and_earn_getting_ready_body),
         style = AGTypography.SubHeadingM,
         color = Palette.White,
         textAlign = TextAlign.Center

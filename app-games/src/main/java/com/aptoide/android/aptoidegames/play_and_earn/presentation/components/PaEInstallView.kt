@@ -249,7 +249,7 @@ private fun PaEPlayButton(
   val paeSetupRoute = rememberPlayAndEarnSetupRoute()
 
   PaELargeCoinButton(
-    title = "Play",
+    title = stringResource(string.play_and_earn_play_button),
     onClick = {
       if (isPaEReady || navigate == null) {
         onClick()

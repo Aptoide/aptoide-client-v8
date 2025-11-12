@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -46,6 +47,7 @@ import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.wallet.gamification.domain.GamificationStats
 import cm.aptoide.pt.wallet.gamification.domain.Levels
 import cm.aptoide.pt.wallet.gamification.domain.getCurrentLevelProgressRatio
+import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
 import com.aptoide.android.aptoidegames.drawables.backgrounds.getLevelUpBackground
@@ -227,7 +229,11 @@ private fun LevelUpHeaderSection(
     Box(
       modifier = Modifier.align(Alignment.TopCenter)
     ) {
-      AppGamesTopBar(navigateBack = onBackClick, title = "Level Up", iconColor = Palette.White)
+      AppGamesTopBar(
+        navigateBack = onBackClick,
+        title = stringResource(R.string.play_and_earn_level_up_title),
+        iconColor = Palette.White
+      )
     }
   }
 }
@@ -334,7 +340,10 @@ private fun UserLevelProgressSection(
       .padding(bottom = 25.dp),
     verticalArrangement = Arrangement.spacedBy(8.dp)
   ) {
-    PaESectionHeader(icon = getLeaderboardIcon(), text = "Your Level")
+    PaESectionHeader(
+      icon = getLeaderboardIcon(),
+      text = stringResource(R.string.play_and_earn_your_level_title)
+    )
     UserLevelStateBar(levels = levels, gamificationStats = gamificationStats)
   }
 }
