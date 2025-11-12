@@ -124,7 +124,7 @@
   <string name="button_install_title">安装</string>
   <!-- Common -->
   <string name="appview_details_tab_title" comment="details">详情</string>
-  <string name="appview_rewards_tab_title" comment="rewards">Rewards</string>
+  <string name="appview_rewards_tab_title" comment="rewards">奖励</string>
   <string name="appview_related_tab_title" comment="related">相关信息</string>
   <string name="appview_info_tab_title" comment="info">信息</string>
   <string name="appview_info_version_name_title" comment="version_name">版本名称</string>
@@ -258,7 +258,7 @@
   <string name="tag_editorial">编辑精选</string>
   <string name="tag_categories">类别</string>
   <string name="tag_bonus">奖金</string>
-  <string name="tag_rewards">Rewards</string>
+  <string name="tag_rewards">奖励</string>
   <!-- AB Test for roblox companion apps -->
   <string name="companion_apps_roblox_notification_title">喜欢玩Roblox吗？ 🔥</string>
   <string name="companion_apps_roblox_notification_body">以下是Roblox玩家必备的应用程序。</string>
@@ -278,37 +278,37 @@
   <string name="gamegenie_entry_screen_companion_section">...或轻点你的游戏——我将助你驾轻就熟</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[你好！我是你的人工智能助手，负责处理所有与 <1>%1$s</1>。]]></string>
   <!-- Play and Earn -->
-  <string name="play_and_earn_title">Play &amp; Earn</string>
-  <string name="play_and_earn_start_earning_title">Start Earning</string>
-  <string name="play_and_earn_level_up_rewards_title">Level up your rewards!</string>
-  <string name="play_and_earn_login_unlock_access_body">Login to unlock access to incredible prizes while you play!</string>
-  <string name="play_and_earn_waiting_title">Waiting...</string>
-  <string name="play_and_earn_getting_ready_body">We\'re getting things ready for you…</string>
-  <string name="play_and_earn_almost_there_title">You\'re almost there!</string>
-  <string name="play_and_earn_lets_do_it_button">Let\'s do it!</string>
-  <string name="play_and_earn_everyones_favourites_title">Everyone\'s favourites</string>
-  <string name="play_and_earn_get_started_now_title">Get started now!</string>
-  <string name="play_and_earn_grant_permissions_body">Log in and grant permissions to unlock access to incredible prizes while you play!</string>
+  <string name="play_and_earn_title">玩 &amp; 赚取</string>
+  <string name="play_and_earn_start_earning_title">开始赚钱</string>
+  <string name="play_and_earn_level_up_rewards_title">升级您的奖励！</string>
+  <string name="play_and_earn_login_unlock_access_body">登录即可解锁游戏中的超值奖励！</string>
+  <string name="play_and_earn_waiting_title">等待中...</string>
+  <string name="play_and_earn_getting_ready_body">我们正在为您准备一切…</string>
+  <string name="play_and_earn_almost_there_title">你快到了！</string>
+  <string name="play_and_earn_lets_do_it_button">干吧！</string>
+  <string name="play_and_earn_everyones_favourites_title">人人都爱</string>
+  <string name="play_and_earn_get_started_now_title">立即开始！</string>
+  <string name="play_and_earn_grant_permissions_body">登录并授予权限，即可解锁游戏中的超值奖品！</string>
   <string name="play_and_earn_permissions">"<![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]>"</string>
-  <string name="play_and_earn_lets_go_button">Let\'s Go</string>
-  <string name="play_and_earn_how_it_works_title">How it works</string>
-  <string name="play_and_earn_pick_featured_game_body">Pick a featured game</string>
-  <string name="play_and_earn_xp_contributes_checkpoints_body">XP contributes to checkpoints</string>
-  <string name="play_and_earn_unlock_rewards_convert_balance_body">Unlock rewards &amp; convert to balance</string>
-  <string name="play_and_earn_choose_game_start_playing_body">Choose your game and start playing!</string>
-  <string name="play_and_earn_challenge_completed_title">Challenge Completed</string>
-  <string name="play_and_earn_welcome_back_title">Welcome Back</string>
-  <string name="play_and_earn_level_up_title">Level Up</string>
-  <string name="play_and_earn_your_level_title">Your Level</string>
-  <string name="play_and_earn_your_units_title">Your Units</string>
+  <string name="play_and_earn_lets_go_button">出发吧</string>
+  <string name="play_and_earn_how_it_works_title">工作原理</string>
+  <string name="play_and_earn_pick_featured_game_body">选择一款精选游戏</string>
+  <string name="play_and_earn_xp_contributes_checkpoints_body">XP 促进检查点</string>
+  <string name="play_and_earn_unlock_rewards_convert_balance_body">解锁奖励 &amp; 转换为余额</string>
+  <string name="play_and_earn_choose_game_start_playing_body">选择你的游戏，开始玩吧！</string>
+  <string name="play_and_earn_challenge_completed_title">挑战完成</string>
+  <string name="play_and_earn_welcome_back_title">欢迎回来</string>
+  <string name="play_and_earn_level_up_title">升级</string>
+  <string name="play_and_earn_your_level_title">您的等级</string>
+  <string name="play_and_earn_your_units_title">您的单位</string>
   <string name="play_and_earn_units_limit_body"><![CDATA[<1>%1$d</1>/100]]></string>
-  <string name="play_and_earn_aptoide_balance_title">Aptoide Balance</string>
-  <string name="play_and_earn_exchange_now_button">Exchange Now</string>
-  <string name="play_and_earn_collect_more_units_body">Collect %1$d more units to earn $1.00 in Aptoide Balance.</string>
-  <string name="play_and_earn_exchange_units_body">Exchange %1$d units for $%2$s in your Aptoide Balance.</string>
-  <string name="play_and_earn_earn_rewards_by_playing_body">Earn rewards by playing new games!</string>
-  <string name="play_and_earn_earning_now_title">Earning Now</string>
-  <string name="play_and_earn_missions_title">Missions</string>
-  <string name="play_and_earn_checkpoints_title">Checkpoints</string>
-  <string name="play_and_earn_bonus_percentage_label">%1$s%% Bonus</string>
+  <string name="play_and_earn_aptoide_balance_title">Aptoide 平衡</string>
+  <string name="play_and_earn_exchange_now_button">立即兑换</string>
+  <string name="play_and_earn_collect_more_units_body">收集 %1$d 更多积分，即可获得 $1.00 的 Aptoide 余额。</string>
+  <string name="play_and_earn_exchange_units_body">兑换 %1$d 单位，获得 $%2$s 的 Aptoide 余额。</string>
+  <string name="play_and_earn_earn_rewards_by_playing_body">玩新游戏，赢奖励！</string>
+  <string name="play_and_earn_earning_now_title">立即赚取</string>
+  <string name="play_and_earn_missions_title">任务</string>
+  <string name="play_and_earn_checkpoints_title">检查点</string>
+  <string name="play_and_earn_bonus_percentage_label">%1$s%% 奖励</string>
 </resources>
