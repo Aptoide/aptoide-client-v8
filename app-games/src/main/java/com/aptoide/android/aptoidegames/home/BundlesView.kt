@@ -90,6 +90,8 @@ import com.aptoide.android.aptoidegames.feature_promotional.NewAppPromotionalVie
 import com.aptoide.android.aptoidegames.feature_promotional.NewAppVersionPromotionalView
 import com.aptoide.android.aptoidegames.feature_promotional.NewsPromotionalView
 import com.aptoide.android.aptoidegames.feature_rtb.presentation.RTBSectionView
+import com.aptoide.android.aptoidegames.gamesfeed.presentation.GamesFeedBundle
+import com.aptoide.android.aptoidegames.gamesfeed.presentation.rememberGamesFeedVisibility
 import com.aptoide.android.aptoidegames.home.analytics.meta
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -112,6 +114,7 @@ fun BundlesScreen(
   navigate: (String) -> Unit,
 ) {
   val (viewState, loadFreshHomeBundles) = bundlesList()
+  val shouldShowGamesFeed = rememberGamesFeedVisibility()
 
   val isRefreshing = (viewState.type == BundlesViewUiStateType.RELOADING)
 
@@ -145,8 +148,18 @@ fun BundlesScreen(
         )
 
         BundlesViewUiStateType.IDLE -> {
+          val filteredBundles = remember(viewState.bundles, shouldShowGamesFeed) {
+            val bundles = if (shouldShowGamesFeed == true) {
+              viewState.bundles.injectGamesFeed()
+            } else {
+              viewState.bundles
+            }
+
+            viewState.copy(bundles = bundles).filterHMD().bundles
+          }
+
           BundlesView(
-            viewState.filterHMD(),
+            viewState.copy(bundles = filteredBundles),
             navigate
           )
         }
@@ -242,6 +255,12 @@ fun BundlesView(
               spaceBy = 32
             )
 
+            Type.GAMES_FEED -> GamesFeedBundle(
+              bundle = bundle,
+              navigate = navigateTo,
+              spaceBy = 32
+            )
+
             Type.APPC_BANNER -> BonusSectionView(
               bundle = bundle,
               navigate = navigateTo,
@@ -289,12 +308,6 @@ fun BundlesView(
       }
     }
   }
-}
-
-fun String.translateOrKeep(localContext: Context): String {
-  return translatedTitles[this]
-    ?.let { localContext.getString(it) }
-    ?: this
 }
 
 @Composable
@@ -549,4 +562,27 @@ private fun BundlesViewUiState.filterHMD(): BundlesViewUiState {
   } else {
     this.copy(bundles = bundles.filter { it.tag != "apps-group-hmd-controller" })
   }
+}
+
+fun List<Bundle>.injectGamesFeed(): List<Bundle> {
+  val gamesFeedBundle = Bundle(
+    title = "Roblox",
+    actions = emptyList(),
+    type = Type.GAMES_FEED,
+    tag = "games-feed",
+    bundleIcon = null,
+    background = null,
+    view = null
+  )
+
+  return toMutableList().apply {
+    val insertPosition = if (size >= 1) 1 else 0
+    add(insertPosition, gamesFeedBundle)
+  }
+}
+
+fun String.translateOrKeep(localContext: Context): String {
+  return translatedTitles[this]
+    ?.let { localContext.getString(it) }
+    ?: this
 }

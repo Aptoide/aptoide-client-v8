@@ -268,7 +268,7 @@ private fun ArticleViewContent(
               .fillMaxWidth()
               .background(color = Palette.Black)
               .padding(16.dp),
-            text = DateUtils.getTimeDiffString(LocalContext.current, date),
+            text = DateUtils.getTimeDiffPublishedString(LocalContext.current, date),
             style = AGTypography.SmallGames,
             color = Palette.White,
           )

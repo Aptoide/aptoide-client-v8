@@ -49,6 +49,7 @@ import com.aptoide.android.aptoidegames.gamegenie.presentation.gameGenieScreen
 import com.aptoide.android.aptoidegames.gamegenie.presentation.gameGenieSearchScreen
 import com.aptoide.android.aptoidegames.gamegenie.presentation.genieRoute
 import com.aptoide.android.aptoidegames.gamegenie.presentation.genieSearchRoute
+import com.aptoide.android.aptoidegames.gamesfeed.presentation.gamesFeedScreen
 import com.aptoide.android.aptoidegames.installer.UserActionDialog
 import com.aptoide.android.aptoidegames.notifications.NotificationsPermissionRequester
 import com.aptoide.android.aptoidegames.permissions.notifications.NotificationsPermissionViewModel
@@ -313,6 +314,12 @@ private fun NavigationGraph(
       navigate = navController::navigateTo,
       goBack = navController::navigateUp,
       screenData = RobloxApkfyMultiInstallScreen()
+    )
+
+    animatedComposable(
+      navigate = navController::navigateTo,
+      goBack = navController::navigateUp,
+      screenData = gamesFeedScreen()
     )
   }
 }

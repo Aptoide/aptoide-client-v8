@@ -9,7 +9,6 @@ class DateUtils private constructor() : DateUtils() {
   companion object {
     private const val millisInADay = (1000 * 60 * 60 * 24).toLong()
 
-
     /**
      * Checks if the given date is yesterday.
      *
@@ -22,7 +21,7 @@ class DateUtils private constructor() : DateUtils() {
       val yesterdayDate = Calendar.getInstance()
       yesterdayDate.add(Calendar.DATE, -1)
       return (yesterdayDate[Calendar.YEAR] == currentDate[Calendar.YEAR]
-          && yesterdayDate[Calendar.DAY_OF_YEAR] == currentDate[Calendar.DAY_OF_YEAR])
+        && yesterdayDate[Calendar.DAY_OF_YEAR] == currentDate[Calendar.DAY_OF_YEAR])
     }
 
     /**
@@ -31,7 +30,7 @@ class DateUtils private constructor() : DateUtils() {
      * @param timeDate Timestamp to format as date difference from now
      * @return Friendly-formatted date diff string
      */
-    fun getTimeDiffString(context: Context, timeDate: String): String {
+    fun getTimeDiffPublishedString(context: Context, timeDate: String): String {
       val timeDateAsMilliseconds = TextFormatter.parseDateToLong(timeDate)
       val startDateTime = Calendar.getInstance()
       val endDateTime = Calendar.getInstance()
@@ -71,6 +70,46 @@ class DateUtils private constructor() : DateUtils() {
           R.string.date_published_on,
           TextFormatter.formatDateToSystemLocale(context, timeDate)
         )
+      }
+    }
+
+    fun getTimeDiffString(context: Context, timeDate: String): String {
+      val timeDateAsMilliseconds = TextFormatter.parseDateToLong(timeDate)
+      val startDateTime = Calendar.getInstance()
+      val endDateTime = Calendar.getInstance()
+      endDateTime.timeInMillis = timeDateAsMilliseconds
+      val milliseconds1 = startDateTime.timeInMillis
+      val milliseconds2 = endDateTime.timeInMillis
+      val diff = milliseconds1 - milliseconds2
+      val hours = diff / (60 * 60 * 1000)
+      var minutes = diff / (60 * 1000)
+      minutes -= 60 * hours
+      val isToday = isToday(timeDateAsMilliseconds)
+      val isYesterday = isYesterday(timeDateAsMilliseconds)
+      return if (hours in 1..11) {
+        "${hours} hours ago"
+      } else if (hours <= 0) {
+        if (minutes > 0)
+          "${minutes} minutes ago"
+        else
+          "Just now"
+      } else if (isToday) {
+        "Today"
+      } else if (isYesterday) {
+        "Yesterday"
+      } else if (startDateTime.timeInMillis - timeDateAsMilliseconds < millisInADay * 6) {
+        val dayOfWeek = when (endDateTime[Calendar.DAY_OF_WEEK]) {
+          Calendar.MONDAY -> "Monday"
+          Calendar.TUESDAY -> "Tuesday"
+          Calendar.WEDNESDAY -> "Wednesday"
+          Calendar.THURSDAY -> "Thursday"
+          Calendar.FRIDAY -> "Friday"
+          Calendar.SATURDAY -> "Saturday"
+          else -> "Sunday"
+        }
+        dayOfWeek
+      } else {
+        TextFormatter.formatDateToSystemLocale(context, timeDate)
       }
     }
   }

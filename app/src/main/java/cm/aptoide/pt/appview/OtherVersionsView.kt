@@ -79,7 +79,7 @@ fun OtherVersionRow(app: App) {
         }
         app.updateDate?.let {
           Text(
-            text = DateUtils.getTimeDiffString(LocalContext.current, it),
+            text = DateUtils.getTimeDiffPublishedString(LocalContext.current, it),
             color = AppTheme.colors.greyText,
             style = AppTheme.typography.regular_XXS,
             modifier = Modifier.padding(bottom = 2.dp)
