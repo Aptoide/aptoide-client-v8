@@ -104,7 +104,7 @@ fun BoxScope.NewBadge() {
   ) {
     Text(
       modifier = Modifier.padding(horizontal = 2.dp, vertical = 2.dp),
-      text = "NEW",
+      text = stringResource(R.string.new_badge).uppercase(),
       style = TextStyle(
         fontFamily = AGTypography.InputsM.fontFamily,
         fontWeight = AGTypography.InputsM.fontWeight,

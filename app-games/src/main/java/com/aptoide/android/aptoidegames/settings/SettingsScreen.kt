@@ -581,7 +581,7 @@ fun LogoutItem(
       .clickable(onClick = onClick)
   ) {
     Text(
-      text = "Logout",
+      text = stringResource(R.string.logout_button),
       modifier = Modifier.weight(weight = 1f),
       style = AGTypography.InputsM,
       color = Palette.Error
@@ -628,12 +628,12 @@ fun PaESettingsLetsGoCard(
           verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
           Text(
-            text = "Get started now!", //TODO: hardcoded string
+            text = stringResource(R.string.play_and_earn_get_started_now_title),
             style = AGTypography.InputsM,
             color = Palette.Yellow100
           )
           Text(
-            text = "Log in and grant permissions to unlock access to incredible prizes while you play!", //TODO: hardcoded string
+            text = stringResource(R.string.play_and_earn_grant_permissions_body),
             style = AGTypography.Body,
             color = Palette.White
           )
@@ -641,7 +641,7 @@ fun PaESettingsLetsGoCard(
       }
 
       PaESmallTextButton(
-        title = "Let's Go",
+        title = stringResource(R.string.play_and_earn_lets_go_button),
         onClick = onLetsGoClick,
         modifier = Modifier.fillMaxWidth()
       )

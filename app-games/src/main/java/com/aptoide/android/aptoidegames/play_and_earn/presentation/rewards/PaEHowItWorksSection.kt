@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -34,7 +35,7 @@ fun PaEHowItWorksSection() {
   ) {
     PaESectionHeader(
       icon = getDiamondShine(),
-      text = "How it works", //TODO: hardcoded string
+      text = stringResource(R.string.play_and_earn_how_it_works_title),
     )
 
     Row(
@@ -44,19 +45,19 @@ fun PaEHowItWorksSection() {
       horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
       PaEHowItWorksCard(
-        text = "Pick a featured game", //TODO: hardcoded string
+        text = stringResource(R.string.play_and_earn_pick_featured_game_body),
         iconRes = R.drawable.sword
       )
       PaEHowItWorksCard(
-        text = "XP contributes to checkpoints", //TODO: hardcoded string
+        text = stringResource(R.string.play_and_earn_xp_contributes_checkpoints_body),
         iconRes = R.drawable.map
       )
       PaEHowItWorksCard(
-        text = "Unlock rewards & convert to balance", //TODO: hardcoded string
+        text = stringResource(R.string.play_and_earn_unlock_rewards_convert_balance_body),
         iconRes = R.drawable.chest
       )
       PaEHowItWorksCard(
-        text = "Choose your game and start playing!", //TODO: hardcoded string
+        text = stringResource(R.string.play_and_earn_choose_game_start_playing_body),
         iconRes = R.drawable.potion
       )
     }

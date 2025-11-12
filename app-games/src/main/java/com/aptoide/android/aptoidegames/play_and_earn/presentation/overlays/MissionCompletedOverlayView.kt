@@ -32,10 +32,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.campaigns.data.paeMission1
 import cm.aptoide.pt.campaigns.domain.PaEMission
+import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.drawables.icons.getAGAppIcon
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getMissionHexagonCompletedIcon
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaEProgressIndicator
@@ -142,7 +144,7 @@ private fun MissionCompletedOverlayViewContent(
             color = Palette.White
           )
           Text(
-            text = "Challenge Completed",
+            text = stringResource(R.string.play_and_earn_challenge_completed_title),
             style = AGTypography.InputsXSRegular,
             color = Palette.White
           )

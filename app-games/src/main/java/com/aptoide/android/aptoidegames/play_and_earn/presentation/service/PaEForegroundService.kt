@@ -156,8 +156,8 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
 
     val notification =
       NotificationCompat.Builder(applicationContext, PAE_USAGE_NOTIFICATION_CHANNEL_ID)
-        .setContentTitle("Recording usage time")
-        .setContentText("AptoideGames is recording app usage time")
+        .setContentTitle(getString(R.string.play_and_earn_notification_recording_title))
+        .setContentText(getString(R.string.play_and_earn_notification_recording_body))
         .setSmallIcon(R.drawable.notification_icon)
         .setContentIntent(
           PendingIntent.getActivity(
