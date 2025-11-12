@@ -74,6 +74,7 @@ include(
   ":feauture_app_coming_soon",
   ":feature-wallet:datastore",
   ":play-and-earn:campaigns",
+  ":play-and-earn:exchange",
   ":feature-wallet:authorization",
   ":feature-wallet:wallet-info",
   ":feature-wallet:gamification"
