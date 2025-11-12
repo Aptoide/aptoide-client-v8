@@ -188,7 +188,7 @@ android {
       buildConfigField(
         type = "String",
         name = "GOOGLE_AUTH_CLIENT_ID",
-        value = "\"${project.property("GOOGLE_AUTH_CLIENT_ID")}\""
+        value = "\"${project.property("GOOGLE_AUTH_CLIENT_ID_DEV")}\""
       )
     }
 
@@ -263,7 +263,7 @@ android {
       buildConfigField(
         type = "String",
         name = "GOOGLE_AUTH_CLIENT_ID",
-        value = "\"${project.property("GOOGLE_AUTH_CLIENT_ID")}\""
+        value = "\"${project.property("GOOGLE_AUTH_CLIENT_ID_PROD")}\""
       )
     }
   }
