@@ -124,6 +124,7 @@
   <string name="button_install_title">تثبيت</string>
   <!-- Common -->
   <string name="appview_details_tab_title" comment="details">التفاصيل</string>
+  <string name="appview_rewards_tab_title" comment="rewards">المكافآت</string>
   <string name="appview_related_tab_title" comment="related">ذات صلة</string>
   <string name="appview_info_tab_title" comment="info">المعلومات</string>
   <string name="appview_info_version_name_title" comment="version_name">اسم الإصدار</string>
@@ -267,6 +268,7 @@
   <string name="tag_editorial">الكلمة الافتتاحية</string>
   <string name="tag_categories">الفئات</string>
   <string name="tag_bonus">المكافآت</string>
+  <string name="tag_rewards">المكافآت</string>
   <!-- AB Test for roblox companion apps -->
   <string name="companion_apps_roblox_notification_title">هل تستمتع بلعبة Roblox؟ 🔥</string>
   <string name="companion_apps_roblox_notification_body">هذه هي التطبيقات التي لا غنى عنها للاعبين Roblox</string>
@@ -285,4 +287,38 @@
   <string name="gamegenie_entry_screen_general_section">اعثر على لعبتك المفضلة التالية مع GameGenie</string>
   <string name="gamegenie_entry_screen_companion_section">... أو اضغط على لعبتك - سأساعدك على إتقانها</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[مرحبًا! أنا مساعدك الذكي في كل ما يتعلق بـ <1>%1$s</1>.]]></string>
+  <!-- Play and Earn -->
+  <string name="play_and_earn_title">العب &amp; اربح</string>
+  <string name="play_and_earn_start_earning_title">ابدأ في الكسب</string>
+  <string name="play_and_earn_level_up_rewards_title">ارفع مستوى مكافآتك!</string>
+  <string name="play_and_earn_login_unlock_access_body">سجّل الدخول لتفتح الباب أمام جوائز مذهلة أثناء اللعب!</string>
+  <string name="play_and_earn_waiting_title">في انتظار...</string>
+  <string name="play_and_earn_getting_ready_body">نحن نجهز كل شيء من أجلك…</string>
+  <string name="play_and_earn_almost_there_title">لقد أوشكت على الوصول!</string>
+  <string name="play_and_earn_lets_do_it_button">لنفعلها!</string>
+  <string name="play_and_earn_everyones_favourites_title">المفضلة لدى الجميع</string>
+  <string name="play_and_earn_get_started_now_title">ابدأ الآن!</string>
+  <string name="play_and_earn_grant_permissions_body">سجّل الدخول ومنح الأذونات لفتح الوصول إلى جوائز مذهلة أثناء اللعب!</string>
+  <string name="play_and_earn_permissions">"<![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]>"</string>
+  <string name="play_and_earn_lets_go_button">هيا بنا</string>
+  <string name="play_and_earn_how_it_works_title">كيف يعمل</string>
+  <string name="play_and_earn_pick_featured_game_body">اختر لعبة مميزة</string>
+  <string name="play_and_earn_xp_contributes_checkpoints_body">XP تساهم في نقاط التفتيش</string>
+  <string name="play_and_earn_unlock_rewards_convert_balance_body">فتح المكافآت &amp; تحويل إلى الرصيد</string>
+  <string name="play_and_earn_choose_game_start_playing_body">اختر لعبتك وابدأ اللعب!</string>
+  <string name="play_and_earn_challenge_completed_title">التحدي اكتمل</string>
+  <string name="play_and_earn_welcome_back_title">مرحبًا بعودتك</string>
+  <string name="play_and_earn_level_up_title">الارتقاء بالمستوى</string>
+  <string name="play_and_earn_your_level_title">مستواك</string>
+  <string name="play_and_earn_your_units_title">وحداتك</string>
+  <string name="play_and_earn_units_limit_body"><![CDATA[<1>%1$d</1>/100]]></string>
+  <string name="play_and_earn_aptoide_balance_title">رصيد Aptoide</string>
+  <string name="play_and_earn_exchange_now_button">تبادل الآن</string>
+  <string name="play_and_earn_collect_more_units_body">اجمع %1$d المزيد من الوحدات لتربح 1.00 دولار في رصيد Aptoide.</string>
+  <string name="play_and_earn_exchange_units_body">استبدل %1$d بـ%2$s في رصيد Aptoide الخاص بك.</string>
+  <string name="play_and_earn_earn_rewards_by_playing_body">اربح مكافآت من خلال لعب ألعاب جديدة!</string>
+  <string name="play_and_earn_earning_now_title">كسب الآن</string>
+  <string name="play_and_earn_missions_title">المهام</string>
+  <string name="play_and_earn_checkpoints_title">نقاط التفتيش</string>
+  <string name="play_and_earn_bonus_percentage_label">%1$s[٪] مكافأة</string>
 </resources>

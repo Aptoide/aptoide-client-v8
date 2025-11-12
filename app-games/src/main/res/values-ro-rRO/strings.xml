@@ -124,6 +124,7 @@
   <string name="button_install_title">Instalează</string>
   <!-- Common -->
   <string name="appview_details_tab_title" comment="details">Detalii</string>
+  <string name="appview_rewards_tab_title" comment="rewards">Recompense</string>
   <string name="appview_related_tab_title" comment="related">Similare</string>
   <string name="appview_info_tab_title" comment="info">Informații</string>
   <string name="appview_info_version_name_title" comment="version_name">Nume versiune</string>
@@ -261,6 +262,7 @@
   <string name="tag_editorial">Editorial</string>
   <string name="tag_categories">Categorii</string>
   <string name="tag_bonus">Bonus</string>
+  <string name="tag_rewards">Recompense</string>
   <!-- AB Test for roblox companion apps -->
   <string name="companion_apps_roblox_notification_title">Îți place Roblox? 🔥</string>
   <string name="companion_apps_roblox_notification_body">Acestea sunt aplicațiile indispensabile pentru jucătorii Roblox</string>
@@ -279,4 +281,38 @@
   <string name="gamegenie_entry_screen_general_section">Găsiți următorul joc preferat cu GameGenie</string>
   <string name="gamegenie_entry_screen_companion_section">... sau atingeți jocul - vă voi ajuta să îl stăpâniți</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[Bună! Sunt asistentul tău AI pentru tot ce ține de <1>%1$s</1>.]]></string>
+  <!-- Play and Earn -->
+  <string name="play_and_earn_title">Joacă &amp; Câștigă</string>
+  <string name="play_and_earn_start_earning_title">Începeți să câștigați</string>
+  <string name="play_and_earn_level_up_rewards_title">Creșteți-vă recompensele!</string>
+  <string name="play_and_earn_login_unlock_access_body">Conectează-te pentru a debloca accesul la premii incredibile în timp ce joci!</string>
+  <string name="play_and_earn_waiting_title">Așteptare...</string>
+  <string name="play_and_earn_getting_ready_body">Pregătim totul pentru tine…</string>
+  <string name="play_and_earn_almost_there_title">Aproape ai ajuns!</string>
+  <string name="play_and_earn_lets_do_it_button">Să o facem!</string>
+  <string name="play_and_earn_everyones_favourites_title">Preferatele tuturor</string>
+  <string name="play_and_earn_get_started_now_title">Începeți acum!</string>
+  <string name="play_and_earn_grant_permissions_body">Conectează-te și acordă permisiuni pentru a debloca accesul la premii incredibile în timp ce joci!</string>
+  <string name="play_and_earn_permissions">"<![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]>"</string>
+  <string name="play_and_earn_lets_go_button">Să mergem</string>
+  <string name="play_and_earn_how_it_works_title">Cum funcționează</string>
+  <string name="play_and_earn_pick_featured_game_body">Alege un joc recomandat</string>
+  <string name="play_and_earn_xp_contributes_checkpoints_body">XP contribuie la punctele de control</string>
+  <string name="play_and_earn_unlock_rewards_convert_balance_body">Deblocați recompense &amp; convertiți în sold</string>
+  <string name="play_and_earn_choose_game_start_playing_body">Alegeți jocul și începeți să jucați!</string>
+  <string name="play_and_earn_challenge_completed_title">Provocare finalizată</string>
+  <string name="play_and_earn_welcome_back_title">Bine ai revenit</string>
+  <string name="play_and_earn_level_up_title">Nivel superior</string>
+  <string name="play_and_earn_your_level_title">Nivelul tău</string>
+  <string name="play_and_earn_your_units_title">Unitățile tale</string>
+  <string name="play_and_earn_units_limit_body"><![CDATA[<1>%1$d</1>/100]]></string>
+  <string name="play_and_earn_aptoide_balance_title">Echilibru Aptoide</string>
+  <string name="play_and_earn_exchange_now_button">Schimbă acum</string>
+  <string name="play_and_earn_collect_more_units_body">Colectează %1$d mai multe unități pentru a câștiga 1,00 $ în soldul Aptoide.</string>
+  <string name="play_and_earn_exchange_units_body">Schimbați  unități %1$d pentru $%2$s în soldul dvs. Aptoide.</string>
+  <string name="play_and_earn_earn_rewards_by_playing_body">Câștigați recompense jucând jocuri noi!</string>
+  <string name="play_and_earn_earning_now_title">Câștigă acum</string>
+  <string name="play_and_earn_missions_title">Misiuni</string>
+  <string name="play_and_earn_checkpoints_title">Puncte de control</string>
+  <string name="play_and_earn_bonus_percentage_label">%1$s%% Bonus</string>
 </resources>
