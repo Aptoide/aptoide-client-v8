@@ -11,7 +11,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getPaESmallLogo
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -38,7 +40,7 @@ fun BalanceCard(
       verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
       Text(
-        text = "Aptoide Balance", //TODO: hardcoded string
+        text = stringResource(R.string.play_and_earn_aptoide_balance_title),
         style = AGTypography.InputsM,
         color = Palette.White,
       )

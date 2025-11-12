@@ -12,7 +12,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.drawables.icons.getForward
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getPaESmallLogo
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -40,7 +42,7 @@ fun PaEBundleHeader(
         )
 
         Text(
-          text = "Play & Earn",
+          text = stringResource(R.string.play_and_earn_title),
           style = AGTypography.Title,
           color = Palette.White
         )
@@ -51,7 +53,7 @@ fun PaEBundleHeader(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
       ) {
         Text(
-          text = "Earning Now",
+          text = stringResource(R.string.play_and_earn_earning_now_title),
           style = AGTypography.InputsM,
           color = Palette.White
         )
@@ -65,7 +67,7 @@ fun PaEBundleHeader(
     }
 
     Text(
-      text = "Earn rewards by playing new games!",
+      text = stringResource(R.string.play_and_earn_earn_rewards_by_playing_body),
       style = AGTypography.InputsM,
       color = Palette.White
     )

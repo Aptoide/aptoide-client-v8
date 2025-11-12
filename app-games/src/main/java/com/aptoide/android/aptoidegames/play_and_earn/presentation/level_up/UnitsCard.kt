@@ -11,10 +11,11 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import cm.aptoide.pt.extensions.toAnnotatedString
+import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 
@@ -23,14 +24,11 @@ fun UnitsCard(
   availableUnits: Long,
   modifier: Modifier = Modifier
 ) {
-  val annotatedString = buildAnnotatedString {
-    withStyle(style = AGTypography.InputsL.toSpanStyle().copy(color = Palette.Yellow100)) {
-      append(availableUnits.toString())
-    }
-    withStyle(style = AGTypography.InputsXSRegular.toSpanStyle().copy(color = Palette.White)) {
-      append("/100") //TODO: hardcoded string
-    }
-  }
+  val originalString =
+    stringResource(id = R.string.play_and_earn_units_limit_body, availableUnits)
+  val annotatedString = originalString.toAnnotatedString(
+    AGTypography.InputsL.toSpanStyle().copy(color = Palette.Yellow100)
+  )
 
   Box(
     modifier = modifier
@@ -43,7 +41,7 @@ fun UnitsCard(
       verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
       Text(
-        text = "Your Units", //TODO: hardcoded string
+        text = stringResource(R.string.play_and_earn_your_units_title),
         style = AGTypography.InputsM,
         color = Palette.White,
       )
@@ -55,7 +53,7 @@ fun UnitsCard(
 
       Text(
         text = annotatedString,
-        style = AGTypography.InputsL,
+        style = AGTypography.InputsXSRegular,
         color = Palette.White,
       )
     }
