@@ -124,6 +124,7 @@
   <string name="button_install_title">Установить</string>
   <!-- Common -->
   <string name="appview_details_tab_title" comment="details">Подробности</string>
+  <string name="appview_rewards_tab_title" comment="rewards">Награды</string>
   <string name="appview_related_tab_title" comment="related">Связанные</string>
   <string name="appview_info_tab_title" comment="info">Информация</string>
   <string name="appview_info_version_name_title" comment="version_name">Название версии</string>
@@ -263,6 +264,7 @@
   <string name="tag_editorial">От редакции</string>
   <string name="tag_categories">Категории</string>
   <string name="tag_bonus">Бонус</string>
+  <string name="tag_rewards">Награды</string>
   <!-- AB Test for roblox companion apps -->
   <string name="companion_apps_roblox_notification_title">Нравится Roblox? 🔥</string>
   <string name="companion_apps_roblox_notification_body">Это приложения, которые должны быть у всех игроков Roblox.</string>
@@ -281,4 +283,38 @@
   <string name="gamegenie_entry_screen_general_section">Найдите свою следующую любимую игру с GameGenie</string>
   <string name="gamegenie_entry_screen_companion_section">... или нажмите на свою игру — я помогу вам освоить ее</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[Привет! Я твой ИИ-помощник по всем вопросам, связанным с <1>%1$s</1>.]]></string>
+  <!-- Play and Earn -->
+  <string name="play_and_earn_title">Играть в &amp; Зарабатывать</string>
+  <string name="play_and_earn_start_earning_title">Начните зарабатывать</string>
+  <string name="play_and_earn_level_up_rewards_title">Повышайте уровень своих наград!</string>
+  <string name="play_and_earn_login_unlock_access_body">Войдите в систему, чтобы получить доступ к невероятным призам во время игры!</string>
+  <string name="play_and_earn_waiting_title">Ожидание...</string>
+  <string name="play_and_earn_getting_ready_body">Мы готовим для вас все необходимое…</string>
+  <string name="play_and_earn_almost_there_title">Вы почти готовы!</string>
+  <string name="play_and_earn_lets_do_it_button">Давайте сделаем это!</string>
+  <string name="play_and_earn_everyones_favourites_title">Любимые всеми</string>
+  <string name="play_and_earn_get_started_now_title">Начните прямо сейчас!</string>
+  <string name="play_and_earn_grant_permissions_body">Войдите в систему и предоставьте разрешения, чтобы разблокировать доступ к невероятным призам во время игры!</string>
+  <string name="play_and_earn_permissions">"<![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]>"</string>
+  <string name="play_and_earn_lets_go_button">Поехали!</string>
+  <string name="play_and_earn_how_it_works_title">Как это работает</string>
+  <string name="play_and_earn_pick_featured_game_body">Выберите популярную игру</string>
+  <string name="play_and_earn_xp_contributes_checkpoints_body">XP способствует созданию контрольных точек</string>
+  <string name="play_and_earn_unlock_rewards_convert_balance_body">Разблокировать награды &amp; конвертировать в баланс</string>
+  <string name="play_and_earn_choose_game_start_playing_body">Выбери игру и начни играть!</string>
+  <string name="play_and_earn_challenge_completed_title">Задача выполнена</string>
+  <string name="play_and_earn_welcome_back_title">Добро пожаловать обратно</string>
+  <string name="play_and_earn_level_up_title">Повышение уровня</string>
+  <string name="play_and_earn_your_level_title">Ваш уровень</string>
+  <string name="play_and_earn_your_units_title">Ваши подразделения</string>
+  <string name="play_and_earn_units_limit_body"><![CDATA[<1>%1$d</1>/100]]></string>
+  <string name="play_and_earn_aptoide_balance_title">Баланс Aptoide</string>
+  <string name="play_and_earn_exchange_now_button">Обменять сейчас</string>
+  <string name="play_and_earn_collect_more_units_body">Соберите %1$d еще единиц, чтобы заработать 1,00 $ на балансе Aptoide.</string>
+  <string name="play_and_earn_exchange_units_body">Обменяйте %1$d единиц на $%2$s в вашем балансе Aptoide.</string>
+  <string name="play_and_earn_earn_rewards_by_playing_body">Зарабатывайте награды, играя в новые игры!</string>
+  <string name="play_and_earn_earning_now_title">Зарабатывайте сейчас</string>
+  <string name="play_and_earn_missions_title">Миссии</string>
+  <string name="play_and_earn_checkpoints_title">Контрольные пункты</string>
+  <string name="play_and_earn_bonus_percentage_label">%1$s%% Бонус</string>
 </resources>

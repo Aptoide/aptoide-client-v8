@@ -124,6 +124,7 @@
   <string name="button_install_title">ติดตั้ง</string>
   <!-- Common -->
   <string name="appview_details_tab_title" comment="details">รายละเอียด</string>
+  <string name="appview_rewards_tab_title" comment="rewards">รางวัล</string>
   <string name="appview_related_tab_title" comment="related">เกี่ยวข้อง</string>
   <string name="appview_info_tab_title" comment="info">ข้อมูล</string>
   <string name="appview_info_version_name_title" comment="version_name">ชื่อเวอร์ชั่น</string>
@@ -257,6 +258,7 @@
   <string name="tag_editorial">บรรณาธิการ</string>
   <string name="tag_categories">หมวดหมู่</string>
   <string name="tag_bonus">โบนัส</string>
+  <string name="tag_rewards">รางวัล</string>
   <!-- AB Test for roblox companion apps -->
   <string name="companion_apps_roblox_notification_title">สนุกกับ Roblox ไหม? 🔥</string>
   <string name="companion_apps_roblox_notification_body">นี่คือแอปที่ต้องมีสำหรับผู้เล่น Roblox</string>
@@ -275,4 +277,38 @@
   <string name="gamegenie_entry_screen_general_section">ค้นหาเกมโปรดเกมถัดไปของคุณกับ GameGenie</string>
   <string name="gamegenie_entry_screen_companion_section">... หรือแตะเกมของคุณ - ฉันจะช่วยคุณเชี่ยวชาญมัน</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[สวัสดี! ฉันคือผู้ช่วย AI ของคุณในทุกเรื่องที่เกี่ยวข้องกับ <1>%1$s</1>.]]></string>
+  <!-- Play and Earn -->
+  <string name="play_and_earn_title">เล่น &amp; รับรางวัล</string>
+  <string name="play_and_earn_start_earning_title">เริ่มสร้างรายได้</string>
+  <string name="play_and_earn_level_up_rewards_title">เพิ่มระดับรางวัลของคุณ!</string>
+  <string name="play_and_earn_login_unlock_access_body">เข้าสู่ระบบเพื่อปลดล็อกการเข้าถึงรางวัลสุดพิเศษขณะที่คุณเล่น!</string>
+  <string name="play_and_earn_waiting_title">กำลังรอ...</string>
+  <string name="play_and_earn_getting_ready_body">เรากำลังเตรียมทุกอย่างให้คุณ…</string>
+  <string name="play_and_earn_almost_there_title">คุณใกล้จะถึงแล้ว!</string>
+  <string name="play_and_earn_lets_do_it_button">มาทำกันเถอะ!</string>
+  <string name="play_and_earn_everyones_favourites_title">รายการโปรดของทุกคน</string>
+  <string name="play_and_earn_get_started_now_title">เริ่มต้นเลย!</string>
+  <string name="play_and_earn_grant_permissions_body">เข้าสู่ระบบและให้สิทธิ์เพื่อปลดล็อกการเข้าถึงรางวัลที่น่าทึ่งขณะที่คุณเล่น!</string>
+  <string name="play_and_earn_permissions">"<![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]>"</string>
+  <string name="play_and_earn_lets_go_button">ไปกันเถอะ</string>
+  <string name="play_and_earn_how_it_works_title">วิธีการทำงาน</string>
+  <string name="play_and_earn_pick_featured_game_body">เลือกเกมแนะนำ</string>
+  <string name="play_and_earn_xp_contributes_checkpoints_body">XP มีส่วนช่วยในการตรวจสอบจุด</string>
+  <string name="play_and_earn_unlock_rewards_convert_balance_body">ปลดล็อกรางวัล &amp; แปลงเป็นยอดเงิน</string>
+  <string name="play_and_earn_choose_game_start_playing_body">เลือกเกมของคุณแล้วเริ่มเล่นได้เลย!</string>
+  <string name="play_and_earn_challenge_completed_title">ท้าทายสำเร็จ</string>
+  <string name="play_and_earn_welcome_back_title">ยินดีต้อนรับกลับ</string>
+  <string name="play_and_earn_level_up_title">เลเวลอัพ</string>
+  <string name="play_and_earn_your_level_title">ระดับของคุณ</string>
+  <string name="play_and_earn_your_units_title">หน่วยของคุณ</string>
+  <string name="play_and_earn_units_limit_body"><![CDATA[<1>%1$d</1>/100]]></string>
+  <string name="play_and_earn_aptoide_balance_title">Aptoide Balance</string>
+  <string name="play_and_earn_exchange_now_button">แลกเปลี่ยนตอนนี้</string>
+  <string name="play_and_earn_collect_more_units_body">สะสม %1$d หน่วยเพิ่มเติมเพื่อรับ $1.00 ในยอดคงเหลือของ Aptoide</string>
+  <string name="play_and_earn_exchange_units_body">แลกเปลี่ยนหน่วย %1$d เป็น $%2$s ในยอดคงเหลือของคุณใน Aptoide</string>
+  <string name="play_and_earn_earn_rewards_by_playing_body">รับรางวัลโดยการเล่นเกมใหม่!</string>
+  <string name="play_and_earn_earning_now_title">กำลังได้รับรายได้</string>
+  <string name="play_and_earn_missions_title">ภารกิจ</string>
+  <string name="play_and_earn_checkpoints_title">จุดตรวจ</string>
+  <string name="play_and_earn_bonus_percentage_label">%1$s%% โบนัส</string>
 </resources>

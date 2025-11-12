@@ -124,6 +124,7 @@
   <string name="button_install_title">Installer</string>
   <!-- Common -->
   <string name="appview_details_tab_title" comment="details">Détails</string>
+  <string name="appview_rewards_tab_title" comment="rewards">Récompenses</string>
   <string name="appview_related_tab_title" comment="related">Relié</string>
   <string name="appview_info_tab_title" comment="info">Info</string>
   <string name="appview_info_version_name_title" comment="version_name">Nom de la version</string>
@@ -259,6 +260,7 @@
   <string name="tag_editorial">Éditorial</string>
   <string name="tag_categories">Catégories</string>
   <string name="tag_bonus">Bonus</string>
+  <string name="tag_rewards">Récompenses</string>
   <!-- AB Test for roblox companion apps -->
   <string name="companion_apps_roblox_notification_title">Vous aimez Roblox ? 🔥</string>
   <string name="companion_apps_roblox_notification_body">Voici les applications indispensables pour les joueurs Roblox.</string>
@@ -277,4 +279,38 @@
   <string name="gamegenie_entry_screen_general_section">Trouvez votre prochain jeu préféré avec GameGenie</string>
   <string name="gamegenie_entry_screen_companion_section">... ou essayez votre jeu - je vous aiderai à le maîtriser</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[Bonjour ! Je suis votre assistant IA pour tout ce qui concerne <1>%1$s</1>.]]></string>
+  <!-- Play and Earn -->
+  <string name="play_and_earn_title">Jouer à &amp; Gagner</string>
+  <string name="play_and_earn_start_earning_title">Commencez à gagner</string>
+  <string name="play_and_earn_level_up_rewards_title">Augmentez vos récompenses !</string>
+  <string name="play_and_earn_login_unlock_access_body">Connectez-vous pour débloquer l\'accès à des prix incroyables pendant que vous jouez !</string>
+  <string name="play_and_earn_waiting_title">En attente...</string>
+  <string name="play_and_earn_getting_ready_body">Nous préparons tout pour vous…</string>
+  <string name="play_and_earn_almost_there_title">Vous y êtes presque !</string>
+  <string name="play_and_earn_lets_do_it_button">Allons-y !</string>
+  <string name="play_and_earn_everyones_favourites_title">Les préférés de tous</string>
+  <string name="play_and_earn_get_started_now_title">Commencez dès maintenant !</string>
+  <string name="play_and_earn_grant_permissions_body">Connectez-vous et accordez les autorisations nécessaires pour débloquer l\'accès à des prix incroyables pendant que vous jouez !</string>
+  <string name="play_and_earn_permissions">"<![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]>"</string>
+  <string name="play_and_earn_lets_go_button">Allons-y</string>
+  <string name="play_and_earn_how_it_works_title">Comment ça marche</string>
+  <string name="play_and_earn_pick_featured_game_body">Choisissez un jeu en vedette</string>
+  <string name="play_and_earn_xp_contributes_checkpoints_body">XP contribue aux points de contrôle</string>
+  <string name="play_and_earn_unlock_rewards_convert_balance_body">Débloquer les récompenses &amp; convertir en solde</string>
+  <string name="play_and_earn_choose_game_start_playing_body">Choisissez votre jeu et commencez à jouer !</string>
+  <string name="play_and_earn_challenge_completed_title">Défi relevé</string>
+  <string name="play_and_earn_welcome_back_title">Bon retour</string>
+  <string name="play_and_earn_level_up_title">Passer au niveau supérieur</string>
+  <string name="play_and_earn_your_level_title">Votre niveau</string>
+  <string name="play_and_earn_your_units_title">Vos unités</string>
+  <string name="play_and_earn_units_limit_body"><![CDATA[<1>%1$d</1>/100]]></string>
+  <string name="play_and_earn_aptoide_balance_title">Solde Aptoide</string>
+  <string name="play_and_earn_exchange_now_button">Échanger maintenant</string>
+  <string name="play_and_earn_collect_more_units_body">Collectez %1$d plus d\'unités pour gagner 1,00 $ dans votre solde Aptoide.</string>
+  <string name="play_and_earn_exchange_units_body">Échangez des unités %1$d contre%2$s dans votre solde Aptoide.</string>
+  <string name="play_and_earn_earn_rewards_by_playing_body">Gagnez des récompenses en jouant à de nouveaux jeux !</string>
+  <string name="play_and_earn_earning_now_title">Gagner maintenant</string>
+  <string name="play_and_earn_missions_title">Missions</string>
+  <string name="play_and_earn_checkpoints_title">Points de contrôle</string>
+  <string name="play_and_earn_bonus_percentage_label">%1$s%% Bonus</string>
 </resources>

@@ -124,6 +124,7 @@
   <string name="button_install_title">설치</string>
   <!-- Common -->
   <string name="appview_details_tab_title" comment="details">세부 정보</string>
+  <string name="appview_rewards_tab_title" comment="rewards">보상</string>
   <string name="appview_related_tab_title" comment="related">관련</string>
   <string name="appview_info_tab_title" comment="info">정보</string>
   <string name="appview_info_version_name_title" comment="version_name">버전명</string>
@@ -257,6 +258,7 @@
   <string name="tag_editorial">사설</string>
   <string name="tag_categories">카테고리</string>
   <string name="tag_bonus">보너스</string>
+  <string name="tag_rewards">보상</string>
   <!-- AB Test for roblox companion apps -->
   <string name="companion_apps_roblox_notification_title">로블록스 즐기고 계신가요? 🔥</string>
   <string name="companion_apps_roblox_notification_body">로블록스 플레이어들이 반드시 설치해야 할 필수 앱들입니다.</string>
@@ -275,4 +277,38 @@
   <string name="gamegenie_entry_screen_general_section">게임지니로 다음에 빠져들 게임 찾기</string>
   <string name="gamegenie_entry_screen_companion_section">... 아니면 게임을 탭하세요 - 제가 마스터하도록 도와드릴게요</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[안녕하세요! 저는 <1>%1$s</1>.]]></string>
+  <!-- Play and Earn -->
+  <string name="play_and_earn_title">플레이 &amp; 수익 창출</string>
+  <string name="play_and_earn_start_earning_title">수익 창출 시작하기</string>
+  <string name="play_and_earn_level_up_rewards_title">보상을 업그레이드하세요!</string>
+  <string name="play_and_earn_login_unlock_access_body">로그인하여 놀라운 상품을 획득하세요!</string>
+  <string name="play_and_earn_waiting_title">기다림...</string>
+  <string name="play_and_earn_getting_ready_body">여러분을 위해 준비 중입니다…</string>
+  <string name="play_and_earn_almost_there_title">거의 다 왔어요!</string>
+  <string name="play_and_earn_lets_do_it_button">하자!</string>
+  <string name="play_and_earn_everyones_favourites_title">모두가 좋아하는 것들</string>
+  <string name="play_and_earn_get_started_now_title">지금 시작하세요!</string>
+  <string name="play_and_earn_grant_permissions_body">로그인하고 권한을 부여하여 놀라운 상품을 획득할 수 있는 기회를 열어보세요!</string>
+  <string name="play_and_earn_permissions">"<![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]>"</string>
+  <string name="play_and_earn_lets_go_button">가자</string>
+  <string name="play_and_earn_how_it_works_title">작동 방식</string>
+  <string name="play_and_earn_pick_featured_game_body">추천 게임 선택하기</string>
+  <string name="play_and_earn_xp_contributes_checkpoints_body">XP는 체크포인트에 기여합니다</string>
+  <string name="play_and_earn_unlock_rewards_convert_balance_body">보상 잠금 해제 &amp; 잔액으로 전환</string>
+  <string name="play_and_earn_choose_game_start_playing_body">원하는 게임을 선택하고 플레이를 시작하세요!</string>
+  <string name="play_and_earn_challenge_completed_title">도전 완료</string>
+  <string name="play_and_earn_welcome_back_title">다시 오신 것을 환영합니다</string>
+  <string name="play_and_earn_level_up_title">레벨 업</string>
+  <string name="play_and_earn_your_level_title">당신의 레벨</string>
+  <string name="play_and_earn_your_units_title">당신의 유닛들</string>
+  <string name="play_and_earn_units_limit_body"><![CDATA[<1>%1$d</1>/100]]></string>
+  <string name="play_and_earn_aptoide_balance_title">아프토이드 밸런스</string>
+  <string name="play_and_earn_exchange_now_button">지금 교환하세요</string>
+  <string name="play_and_earn_collect_more_units_body">%1$d 단위를 더 모으면 Aptoide 잔액으로 $1.00를 획득할 수 있습니다.</string>
+  <string name="play_and_earn_exchange_units_body">%1$d 단위를 Aptoide 잔액의 $%2$s 로 교환하세요.</string>
+  <string name="play_and_earn_earn_rewards_by_playing_body">새로운 게임을 플레이하며 보상을 획득하세요!</string>
+  <string name="play_and_earn_earning_now_title">지금 수익 창출</string>
+  <string name="play_and_earn_missions_title">미션</string>
+  <string name="play_and_earn_checkpoints_title">검문소</string>
+  <string name="play_and_earn_bonus_percentage_label">%1$s%% 보너스</string>
 </resources>

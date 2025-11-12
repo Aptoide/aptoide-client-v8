@@ -124,6 +124,7 @@
   <string name="button_install_title">Telepítés</string>
   <!-- Common -->
   <string name="appview_details_tab_title" comment="details">Részletek</string>
+  <string name="appview_rewards_tab_title" comment="rewards">Jutalmak</string>
   <string name="appview_related_tab_title" comment="related">Kapcsolódó</string>
   <string name="appview_info_tab_title" comment="info">Infó</string>
   <string name="appview_info_version_name_title" comment="version_name">Verzió neve</string>
@@ -259,6 +260,7 @@
   <string name="tag_editorial">Szerkesztőség</string>
   <string name="tag_categories">Kategóriák</string>
   <string name="tag_bonus">Bónusz</string>
+  <string name="tag_rewards">Jutalmak</string>
   <!-- AB Test for roblox companion apps -->
   <string name="companion_apps_roblox_notification_title">Élvezed a Robloxot? 🔥</string>
   <string name="companion_apps_roblox_notification_body">Ezek a Roblox játékosok számára elengedhetetlen alkalmazások</string>
@@ -277,4 +279,38 @@
   <string name="gamegenie_entry_screen_general_section">Találd meg következő kedvenc játékodat a GameGenie segítségével</string>
   <string name="gamegenie_entry_screen_companion_section">... vagy érintse meg a játékot - segítek elsajátítani</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[Szia! Én vagyok a mesterséges intelligencia asszisztensed mindenben, ami a <1>%1$s</1>.]]></string>
+  <!-- Play and Earn -->
+  <string name="play_and_earn_title">Játssz &amp; Keress</string>
+  <string name="play_and_earn_start_earning_title">Kezdjen el keresni</string>
+  <string name="play_and_earn_level_up_rewards_title">Növelje jutalmainak szintjét!</string>
+  <string name="play_and_earn_login_unlock_access_body">Jelentkezz be, hogy játék közben hozzáférhess hihetetlen nyereményekhez!</string>
+  <string name="play_and_earn_waiting_title">Várakozás...</string>
+  <string name="play_and_earn_getting_ready_body">…</string>
+  <string name="play_and_earn_almost_there_title">Már majdnem megvan!</string>
+  <string name="play_and_earn_lets_do_it_button">Csináljuk!</string>
+  <string name="play_and_earn_everyones_favourites_title">Mindenki kedvencei</string>
+  <string name="play_and_earn_get_started_now_title">Kezdje el most!</string>
+  <string name="play_and_earn_grant_permissions_body">Jelentkezz be és adj engedélyeket, hogy játék közben hozzáférhess hihetetlen nyereményekhez!</string>
+  <string name="play_and_earn_permissions">"<![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]>"</string>
+  <string name="play_and_earn_lets_go_button">Induljunk!</string>
+  <string name="play_and_earn_how_it_works_title">Hogyan működik?</string>
+  <string name="play_and_earn_pick_featured_game_body">Válasszon egy kiemelt játékot</string>
+  <string name="play_and_earn_xp_contributes_checkpoints_body">Az XP hozzájárul az ellenőrzőpontokhoz</string>
+  <string name="play_and_earn_unlock_rewards_convert_balance_body">Jutalmak feloldása &amp; átváltás egyenlegre</string>
+  <string name="play_and_earn_choose_game_start_playing_body">Válassza ki a játékot, és kezdjen el játszani!</string>
+  <string name="play_and_earn_challenge_completed_title">Kihívás teljesítve</string>
+  <string name="play_and_earn_welcome_back_title">Üdvözöljük újra!</string>
+  <string name="play_and_earn_level_up_title">Szintlépés</string>
+  <string name="play_and_earn_your_level_title">A szinted</string>
+  <string name="play_and_earn_your_units_title">Az Ön egységei</string>
+  <string name="play_and_earn_units_limit_body"><![CDATA[<1>%1$d</1>/100]]></string>
+  <string name="play_and_earn_aptoide_balance_title">Aptoide egyenleg</string>
+  <string name="play_and_earn_exchange_now_button">Cseréljen most</string>
+  <string name="play_and_earn_collect_more_units_body">Gyűjtsön %1$d több egységet, hogy 1,00 dollárt keressen az Aptoide Balance-ben.</string>
+  <string name="play_and_earn_exchange_units_body">Cserélje %1$d egységeket%2$s dollárra az Aptoide egyenlegén.</string>
+  <string name="play_and_earn_earn_rewards_by_playing_body">Nyerj jutalmakat új játékok játszásával!</string>
+  <string name="play_and_earn_earning_now_title">Most keresni</string>
+  <string name="play_and_earn_missions_title">Küldetések</string>
+  <string name="play_and_earn_checkpoints_title">Ellenőrzőpontok</string>
+  <string name="play_and_earn_bonus_percentage_label">%1$s%% Bónusz</string>
 </resources>

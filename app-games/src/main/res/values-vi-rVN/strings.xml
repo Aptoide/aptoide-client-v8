@@ -124,6 +124,7 @@
   <string name="button_install_title">Cài đặt</string>
   <!-- Common -->
   <string name="appview_details_tab_title" comment="details">Chi tiết</string>
+  <string name="appview_rewards_tab_title" comment="rewards">Phần thưởng</string>
   <string name="appview_related_tab_title" comment="related">Liên quan</string>
   <string name="appview_info_tab_title" comment="info">thông tin</string>
   <string name="appview_info_version_name_title" comment="version_name">Tên phiên bản</string>
@@ -257,6 +258,7 @@
   <string name="tag_editorial">Bài viết biên tập</string>
   <string name="tag_categories">Danh mục</string>
   <string name="tag_bonus">Tiền thưởng</string>
+  <string name="tag_rewards">Phần thưởng</string>
   <!-- AB Test for roblox companion apps -->
   <string name="companion_apps_roblox_notification_title">Bạn đang thích Roblox? 🔥</string>
   <string name="companion_apps_roblox_notification_body">Đây là những ứng dụng không thể thiếu cho người chơi Roblox.</string>
@@ -275,4 +277,38 @@
   <string name="gamegenie_entry_screen_general_section">Tìm trò chơi yêu thích tiếp theo của bạn với GameGenie</string>
   <string name="gamegenie_entry_screen_companion_section">... hoặc chạm vào trò chơi của bạn - tôi sẽ giúp bạn thành thạo nó.</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[Xin chào! Tôi là trợ lý AI của bạn cho mọi vấn đề liên quan đến <1>%1$s</1>.]]></string>
+  <!-- Play and Earn -->
+  <string name="play_and_earn_title">Chơi &amp; Kiếm tiền</string>
+  <string name="play_and_earn_start_earning_title">Bắt đầu kiếm tiền</string>
+  <string name="play_and_earn_level_up_rewards_title">Nâng cấp phần thưởng của bạn!</string>
+  <string name="play_and_earn_login_unlock_access_body">Đăng nhập để mở khóa quyền truy cập vào những phần thưởng tuyệt vời trong khi bạn chơi!</string>
+  <string name="play_and_earn_waiting_title">Đang chờ...</string>
+  <string name="play_and_earn_getting_ready_body">Chúng tôi đang chuẩn bị mọi thứ cho bạn…</string>
+  <string name="play_and_earn_almost_there_title">Bạn sắp đến rồi!</string>
+  <string name="play_and_earn_lets_do_it_button">Hãy làm đi!</string>
+  <string name="play_and_earn_everyones_favourites_title">Những món yêu thích của mọi người</string>
+  <string name="play_and_earn_get_started_now_title">Bắt đầu ngay bây giờ!</string>
+  <string name="play_and_earn_grant_permissions_body">Đăng nhập và cấp quyền để mở khóa quyền truy cập vào những phần thưởng tuyệt vời trong khi bạn chơi!</string>
+  <string name="play_and_earn_permissions">"<![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]>"</string>
+  <string name="play_and_earn_lets_go_button">Hãy đi nào!</string>
+  <string name="play_and_earn_how_it_works_title">Cách thức hoạt động</string>
+  <string name="play_and_earn_pick_featured_game_body">Chọn trò chơi nổi bật</string>
+  <string name="play_and_earn_xp_contributes_checkpoints_body">XP đóng góp vào các điểm kiểm tra.</string>
+  <string name="play_and_earn_unlock_rewards_convert_balance_body">Mở khóa phần thưởng &amp; chuyển đổi thành số dư</string>
+  <string name="play_and_earn_choose_game_start_playing_body">Chọn trò chơi của bạn và bắt đầu chơi!</string>
+  <string name="play_and_earn_challenge_completed_title">Thử thách đã hoàn thành</string>
+  <string name="play_and_earn_welcome_back_title">Chào mừng trở lại</string>
+  <string name="play_and_earn_level_up_title">Nâng cấp</string>
+  <string name="play_and_earn_your_level_title">Cấp độ của bạn</string>
+  <string name="play_and_earn_your_units_title">Các đơn vị của bạn</string>
+  <string name="play_and_earn_units_limit_body"><![CDATA[<1>%1$d</1>/100]]></string>
+  <string name="play_and_earn_aptoide_balance_title">Cân bằng Aptoide</string>
+  <string name="play_and_earn_exchange_now_button">Đổi ngay</string>
+  <string name="play_and_earn_collect_more_units_body">Thu thập %1$d nhiều đơn vị hơn để kiếm $1.00 trong tài khoản Aptoide Balance.</string>
+  <string name="play_and_earn_exchange_units_body">Đổi các đơn vị %1$d lấy $%2$s trong tài khoản Aptoide Balance của bạn.</string>
+  <string name="play_and_earn_earn_rewards_by_playing_body">Kiếm phần thưởng bằng cách chơi các trò chơi mới!</string>
+  <string name="play_and_earn_earning_now_title">Kiếm tiền ngay bây giờ</string>
+  <string name="play_and_earn_missions_title">Nhiệm vụ</string>
+  <string name="play_and_earn_checkpoints_title">Điểm kiểm tra</string>
+  <string name="play_and_earn_bonus_percentage_label">%1$s%% Phần thưởng</string>
 </resources>
