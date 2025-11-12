@@ -140,7 +140,8 @@ private fun LevelUpScreenContent(
     ) {
       BalanceCard(
         modifier = Modifier.weight(1f),
-        balance = walletInfo.walletBalance.amount
+        balance = walletInfo.walletBalance.amount,
+        currency = walletInfo.walletBalance.currency,
       )
       UnitsCard(
         modifier = Modifier.weight(1f),
