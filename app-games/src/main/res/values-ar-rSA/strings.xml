@@ -124,6 +124,7 @@
   <string name="button_install_title">تثبيت</string>
   <!-- Common -->
   <string name="appview_details_tab_title" comment="details">التفاصيل</string>
+  <string name="appview_rewards_tab_title" comment="rewards">Rewards</string>
   <string name="appview_related_tab_title" comment="related">ذات صلة</string>
   <string name="appview_info_tab_title" comment="info">المعلومات</string>
   <string name="appview_info_version_name_title" comment="version_name">اسم الإصدار</string>
@@ -267,6 +268,7 @@
   <string name="tag_editorial">الكلمة الافتتاحية</string>
   <string name="tag_categories">الفئات</string>
   <string name="tag_bonus">المكافآت</string>
+  <string name="tag_rewards">Rewards</string>
   <!-- AB Test for roblox companion apps -->
   <string name="companion_apps_roblox_notification_title">هل تستمتع بلعبة Roblox؟ 🔥</string>
   <string name="companion_apps_roblox_notification_body">هذه هي التطبيقات التي لا غنى عنها للاعبين Roblox</string>
@@ -285,4 +287,38 @@
   <string name="gamegenie_entry_screen_general_section">اعثر على لعبتك المفضلة التالية مع GameGenie</string>
   <string name="gamegenie_entry_screen_companion_section">... أو اضغط على لعبتك - سأساعدك على إتقانها</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[مرحبًا! أنا مساعدك الذكي في كل ما يتعلق بـ <1>%1$s</1>.]]></string>
+  <!-- Play and Earn -->
+  <string name="play_and_earn_title">Play &amp; Earn</string>
+  <string name="play_and_earn_start_earning_title">Start Earning</string>
+  <string name="play_and_earn_level_up_rewards_title">Level up your rewards!</string>
+  <string name="play_and_earn_login_unlock_access_body">Login to unlock access to incredible prizes while you play!</string>
+  <string name="play_and_earn_waiting_title">Waiting...</string>
+  <string name="play_and_earn_getting_ready_body">We\'re getting things ready for you…</string>
+  <string name="play_and_earn_almost_there_title">You\'re almost there!</string>
+  <string name="play_and_earn_lets_do_it_button">Let\'s do it!</string>
+  <string name="play_and_earn_everyones_favourites_title">Everyone\'s favourites</string>
+  <string name="play_and_earn_get_started_now_title">Get started now!</string>
+  <string name="play_and_earn_grant_permissions_body">Log in and grant permissions to unlock access to incredible prizes while you play!</string>
+  <string name="play_and_earn_permissions">"<![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]>"</string>
+  <string name="play_and_earn_lets_go_button">Let\'s Go</string>
+  <string name="play_and_earn_how_it_works_title">How it works</string>
+  <string name="play_and_earn_pick_featured_game_body">Pick a featured game</string>
+  <string name="play_and_earn_xp_contributes_checkpoints_body">XP contributes to checkpoints</string>
+  <string name="play_and_earn_unlock_rewards_convert_balance_body">Unlock rewards &amp; convert to balance</string>
+  <string name="play_and_earn_choose_game_start_playing_body">Choose your game and start playing!</string>
+  <string name="play_and_earn_challenge_completed_title">Challenge Completed</string>
+  <string name="play_and_earn_welcome_back_title">Welcome Back</string>
+  <string name="play_and_earn_level_up_title">Level Up</string>
+  <string name="play_and_earn_your_level_title">Your Level</string>
+  <string name="play_and_earn_your_units_title">Your Units</string>
+  <string name="play_and_earn_units_limit_body"><![CDATA[<1>%1$d</1>/100]]></string>
+  <string name="play_and_earn_aptoide_balance_title">Aptoide Balance</string>
+  <string name="play_and_earn_exchange_now_button">Exchange Now</string>
+  <string name="play_and_earn_collect_more_units_body">Collect %1$d more units to earn $1.00 in Aptoide Balance.</string>
+  <string name="play_and_earn_exchange_units_body">Exchange %1$d units for $%2$s in your Aptoide Balance.</string>
+  <string name="play_and_earn_earn_rewards_by_playing_body">Earn rewards by playing new games!</string>
+  <string name="play_and_earn_earning_now_title">Earning Now</string>
+  <string name="play_and_earn_missions_title">Missions</string>
+  <string name="play_and_earn_checkpoints_title">Checkpoints</string>
+  <string name="play_and_earn_bonus_percentage_label">%1$s%% Bonus</string>
 </resources>
