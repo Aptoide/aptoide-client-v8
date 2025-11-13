@@ -1,6 +1,50 @@
 package com.aptoide.android.aptoidegames.play_and_earn
 
-object PlayAndEarnManager {
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
+import cm.aptoide.pt.extensions.runPreviewable
+import cm.aptoide.pt.feature_flags.domain.FeatureFlags
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+import javax.inject.Singleton
+import kotlin.random.Random
 
-  val shouldShowPlayAndEarn = false
+@Singleton
+class PlayAndEarnManager @Inject constructor(
+  private val featureFlags: FeatureFlags
+) {
+
+  companion object {
+    private const val PAE_VISIBILITY_FLAG_KEY = "show_play_and_earn"
+  }
+
+  suspend fun shouldShowPlayAndEarn(): Boolean {
+    return featureFlags.getFlag(PAE_VISIBILITY_FLAG_KEY, false)
+  }
 }
+
+@HiltViewModel
+class InjectionsProvider @Inject constructor(
+  val playAndEarnManager: PlayAndEarnManager
+) : ViewModel()
+
+@Composable
+fun rememberShouldShowPlayAndEarn(): Boolean = runPreviewable(
+  preview = { Random.nextBoolean() },
+  real = {
+    val vm = hiltViewModel<InjectionsProvider>()
+    var shouldShowPlayAndEarn by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+      shouldShowPlayAndEarn = vm.playAndEarnManager.shouldShowPlayAndEarn()
+    }
+
+    shouldShowPlayAndEarn
+  }
+)
