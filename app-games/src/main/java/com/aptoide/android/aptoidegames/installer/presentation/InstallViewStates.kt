@@ -43,6 +43,9 @@ import com.aptoide.android.aptoidegames.network.presentation.NetworkPreferencesV
 import com.aptoide.android.aptoidegames.network.presentation.WifiPromptDialog
 import com.aptoide.android.aptoidegames.network.presentation.WifiPromptType
 import com.aptoide.android.aptoidegames.network.rememberDownloadOverWifi
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.rememberPaEAnalytics
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.hasOverlayPermission
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.hasUsageStatsPermissionStatus
 
 const val MAX_APP_SIZE_METERED_DOWNLOAD = 500
 
@@ -68,6 +71,7 @@ fun installViewStates(
   val downloadOnlyOverWifi = rememberDownloadOverWifi()
   val scheduledInstallListener = rememberScheduledInstalls()
   val installerQueueHandler = rememberInstallerQueueHandler()
+  val paeAnalytics = rememberPaEAnalytics()
 
   var canceled by remember { mutableStateOf(false) }
   LaunchedEffect(key1 = downloadUiState) {
@@ -392,6 +396,16 @@ fun installViewStates(
               hasAPPCBilling = app.isAppCoins,
               analyticsContext = analyticsContext,
             )
+            runCatching {
+              if (analyticsContext.isPlayAndEarn) {
+                paeAnalytics.sendPaEPlayClick(app.packageName, analyticsContext)
+
+                if (context.hasUsageStatsPermissionStatus() && context.hasOverlayPermission()) {
+                  paeAnalytics.sendPaEAppLaunched(app.packageName, analyticsContext)
+                }
+              }
+            }
+
             downloadUiState.open()
           },
           uninstall = {
