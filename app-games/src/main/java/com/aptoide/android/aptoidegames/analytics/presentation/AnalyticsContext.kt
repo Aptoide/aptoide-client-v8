@@ -52,7 +52,8 @@ fun ScreenData.Companion.withAnalytics(
       .withItemPosition("{$ITEM_POSITION_PARAM}")
       .withApkfy("{$IS_APKFY_PARAM}")
       .withHomeTab("{$HOME_TAB_PARAM}")
-      .withUtmInfo("{$UTM_INFO_PARAM}"),
+      .withUtmInfo("{$UTM_INFO_PARAM}")
+      .withPlayAndEarn("{$IS_PLAY_AND_EARN_PARAM}"),
     arguments = arguments + listOf(
       navArgument(PREV_SCREEN_PARAM) {
         type = NavType.StringType
@@ -77,6 +78,10 @@ fun ScreenData.Companion.withAnalytics(
       navArgument(UTM_INFO_PARAM) {
         type = NavType.StringType
         nullable = true
+      },
+      navArgument(IS_PLAY_AND_EARN_PARAM) {
+        type = NavType.BoolType
+        defaultValue = false
       }
     ),
     deepLinks = deepLinks.map {
@@ -90,6 +95,7 @@ fun ScreenData.Companion.withAnalytics(
       val isApkfy = args?.getBoolean(IS_APKFY_PARAM, false) ?: false
       val homeTab = args?.getString(HOME_TAB_PARAM, null)
       val utmInfo = args?.getString(UTM_INFO_PARAM)?.let(UTMInfo::fromString)
+      val isPlayAndEarn = args?.getBoolean(IS_PLAY_AND_EARN_PARAM, false) ?: false
 
       val utmContext = UTMContext.current
 
@@ -105,6 +111,7 @@ fun ScreenData.Companion.withAnalytics(
           itemPosition = itemPosition,
           isApkfy = isApkfy,
           homeTab = homeTab,
+          isPlayAndEarn = isPlayAndEarn
         ),
         LocalUTMInfo provides (utmInfo ?: utmContext)
       ) {
@@ -118,6 +125,7 @@ fun ScreenData.Companion.withAnalytics(
               .withApkfy(isApkfy)
               .withHomeTab(homeTab)
               .withUtmInfo(utmInfo)
+              .withPlayAndEarn(isPlayAndEarn)
               .also(navigate)
           },
           goBack
