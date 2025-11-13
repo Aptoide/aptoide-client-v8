@@ -1,0 +1,62 @@
+package com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics
+
+import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
+import com.aptoide.android.aptoidegames.analytics.GenericAnalytics.Companion.P_PACKAGE_NAME
+import com.aptoide.android.aptoidegames.analytics.mapOfNonNull
+import javax.inject.Inject
+
+class PaEAnalytics @Inject constructor(
+  private val genericAnalytics: GenericAnalytics,
+) {
+
+  fun sendPaEHomeAppClick(packageName: String) {
+    genericAnalytics.logEvent(
+      name = "playandearn_home_click_app",
+      params = mapOfNonNull(
+        P_PACKAGE_NAME to packageName,
+      )
+    )
+  }
+
+  fun sendPaEHomeEarnNowClick() {
+    genericAnalytics.logEvent(
+      name = "playandearn_home_click_earnnow",
+      params = null
+    )
+  }
+
+  fun sendPaEActionBarBadgeClick() {
+    genericAnalytics.logEvent(
+      name = "playandearn_actionbar_click_badge",
+      params = null
+    )
+  }
+
+  fun sendPaERewardsHomeTabClick() {
+    genericAnalytics.logEvent(
+      name = "playandearn_rewards_click_tab",
+      params = null
+    )
+  }
+
+  fun sendPaERewardsHubKnowMoreClick() {
+    genericAnalytics.logEvent(
+      name = "playandearn_hub_click_knowmore",
+      params = null
+    )
+  }
+
+  fun sendPaEGoogleLoginClick() {
+    genericAnalytics.logEvent(
+      name = "playandearn_steps_glogin",
+      params = null
+    )
+  }
+
+  fun sendPaEPermissionLetsDoItClick() {
+    genericAnalytics.logEvent(
+      name = "playandearn_steps_permission_letsdoit",
+      params = null
+    )
+  }
+}
