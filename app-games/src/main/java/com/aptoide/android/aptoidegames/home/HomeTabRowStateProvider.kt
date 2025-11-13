@@ -28,11 +28,13 @@ fun rememberHomeTabRowState(): Pair<Boolean, List<HomeTab>> = runPreviewable(
   real = {
     val vm = hiltViewModel<HomeTabRowInjectionsProvider>()
     var showHomeTabRow by remember { mutableStateOf(false) }
+    var showPlayAndEarn by remember { mutableStateOf(false) }
 
     var tabs: List<HomeTab>? by remember { mutableStateOf(null) }
 
     LaunchedEffect(Unit) {
       showHomeTabRow = vm.featureFlags.getFlag("show_home_tabs", false)
+      showPlayAndEarn = vm.featureFlags.getFlag("show_play_and_earn", false)
 
       try {
         val tabsJson = vm.featureFlags.getFlagAsString("home_tabs")
@@ -53,7 +55,7 @@ fun rememberHomeTabRowState(): Pair<Boolean, List<HomeTab>> = runPreviewable(
             "Rewards" -> HomeTab.Rewards
             else -> null
           }
-        }
+        }.filterNot { it is HomeTab.Rewards && !showPlayAndEarn }
       } catch (e: Throwable) {
         Timber.e(e)
       }
