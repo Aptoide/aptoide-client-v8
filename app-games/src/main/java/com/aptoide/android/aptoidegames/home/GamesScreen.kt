@@ -15,6 +15,7 @@ import com.aptoide.android.aptoidegames.categories.presentation.AllCategoriesVie
 import com.aptoide.android.aptoidegames.editorial.SeeMoreEditorialsContent
 import com.aptoide.android.aptoidegames.feature_apps.presentation.MoreBonusBundleView
 import com.aptoide.android.aptoidegames.feature_rtb.presentation.rememberRTBApps
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.rememberPaEAnalytics
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PlayAndEarnRewardsScreen
 
 const val gamesRoute = "games"
@@ -38,6 +39,7 @@ private fun GamesScreenContent(
   var selectedTab by rememberSaveable(key = tabs.size.toString()) { mutableIntStateOf(0) }
 
   val homeAnalytics = rememberHomeAnalytics()
+  val paeAnalytics = rememberPaEAnalytics()
 
   Column {
     if (showHomeTabRow) {
@@ -47,6 +49,10 @@ private fun GamesScreenContent(
         onSelectTab = {
           if (it != selectedTab) {
             homeAnalytics.sendHomeTabClick(tabs[it]::class.simpleName.toString())
+
+            if (tabs[it] is HomeTab.Rewards) {
+              paeAnalytics.sendPaERewardsHomeTabClick()
+            }
           }
           selectedTab = it
         }

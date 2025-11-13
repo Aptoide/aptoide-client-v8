@@ -30,6 +30,7 @@ private const val BUNDLE_META_PARAM = "bundleMeta"
 private const val SEARCH_META_PARAM = "searchMeta"
 private const val ITEM_POSITION_PARAM = "itemPosition"
 private const val IS_APKFY_PARAM = "isApkfy"
+private const val IS_PLAY_AND_EARN_PARAM = "isPlayAndEarn"
 private const val HOME_TAB_PARAM = "HomeTab"
 
 fun ScreenData.Companion.withAnalytics(
@@ -257,6 +258,30 @@ fun OverrideAnalyticsAPKFY(
   }
 }
 
+@Composable
+fun OverrideAnalyticsPlayAndEarn(
+  navigate: (String) -> Unit,
+  content: @Composable ((String) -> Unit) -> Unit,
+) {
+  val current = LocalAnalyticsContext.current
+  CompositionLocalProvider(
+    LocalAnalyticsContext provides AnalyticsUIContext(
+      currentScreen = current.currentScreen,
+      previousScreen = current.previousScreen,
+      bundleMeta = null,
+      searchMeta = null,
+      itemPosition = null,
+      isApkfy = false,
+      homeTab = null,
+      isPlayAndEarn = true
+    )
+  ) {
+    content {
+      navigate(it.withPlayAndEarn(true).withPrevScreen(current.currentScreen))
+    }
+  }
+}
+
 fun String.withBundleMeta(bundleMeta: BundleMeta?) = withBundleMeta(bundleMeta?.toString())
 
 fun String.withSearchMeta(searchMeta: SearchMeta?) = withSearchMeta(searchMeta?.toString())
@@ -264,6 +289,8 @@ fun String.withSearchMeta(searchMeta: SearchMeta?) = withSearchMeta(searchMeta?.
 fun String.withItemPosition(itemPosition: Int?) = withItemPosition(itemPosition?.toString())
 
 fun String.withApkfy(isApkfy: Boolean?) = withApkfy(isApkfy?.toString())
+
+fun String.withPlayAndEarn(isPlayAndEarn: Boolean?) = withPlayAndEarn(isPlayAndEarn?.toString())
 
 fun String.withPrevScreen(previousScreen: String) =
   withParameter(PREV_SCREEN_PARAM, previousScreen)
@@ -280,9 +307,11 @@ fun String.withItemPosition(itemPosition: String?) =
 fun String.withApkfy(isApkfy: String?) =
   withParameter(IS_APKFY_PARAM, isApkfy)
 
+fun String.withPlayAndEarn(isPlayAndEarn: String?) =
+  withParameter(IS_PLAY_AND_EARN_PARAM, isPlayAndEarn)
+
 fun String.withHomeTab(homeTab: String?) =
   withParameter(HOME_TAB_PARAM, homeTab)
-
 
 fun String.withParameter(
   name: String,
