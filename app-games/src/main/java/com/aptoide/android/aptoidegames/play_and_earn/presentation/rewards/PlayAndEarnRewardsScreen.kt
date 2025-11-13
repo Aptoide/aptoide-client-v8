@@ -17,6 +17,7 @@ import cm.aptoide.pt.campaigns.domain.PaEBundle
 import cm.aptoide.pt.campaigns.presentation.PaEBundlesUiState
 import cm.aptoide.pt.campaigns.presentation.rememberPaEBundles
 import cm.aptoide.pt.extensions.ScreenData
+import com.aptoide.android.aptoidegames.analytics.presentation.OverrideAnalyticsPlayAndEarn
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
@@ -60,31 +61,35 @@ fun PlayAndEarnRewardsScreen(
     ?.bundles?.keepPlaying
     ?.takeIf { it.apps.isNotEmpty() }
 
-  Column(
-    modifier = Modifier
-      .fillMaxSize()
-      .verticalScroll(scrollState),
-    verticalArrangement = Arrangement.spacedBy(8.dp),
-    horizontalAlignment = Alignment.CenterHorizontally
-  ) {
-    PaEHowItWorksSection()
-    if (isPaEReady) {
-      PaEKnowMoreCard(
-        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-        currentLevel = currentLevel?.plus(1),
-        onClick = { navigate(levelUpRoute) }
-      )
-    } else {
-      PaELetsGoCard(
-        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-        onLetsGoClick = { navigate(playAndEarnSignInRoute) }
-      )
-    }
-    keepPlayingBundle?.let {
-      PaEHorizontalBundleView(it, navigate)
-    }
-    trendingBundle?.let {
-      PaEVerticalBundleView(it, navigate)
+  OverrideAnalyticsPlayAndEarn(
+    navigate = navigate
+  ) { navigateTo ->
+    Column(
+      modifier = Modifier
+        .fillMaxSize()
+        .verticalScroll(scrollState),
+      verticalArrangement = Arrangement.spacedBy(8.dp),
+      horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+      PaEHowItWorksSection()
+      if (isPaEReady) {
+        PaEKnowMoreCard(
+          modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+          currentLevel = currentLevel?.plus(1),
+          onClick = { navigateTo(levelUpRoute) }
+        )
+      } else {
+        PaELetsGoCard(
+          modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+          onLetsGoClick = { navigateTo(playAndEarnSignInRoute) }
+        )
+      }
+      keepPlayingBundle?.let {
+        PaEHorizontalBundleView(it, navigateTo)
+      }
+      trendingBundle?.let {
+        PaEVerticalBundleView(it, navigateTo)
+      }
     }
   }
 }
