@@ -2,7 +2,9 @@ package com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics
 
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics.Companion.P_PACKAGE_NAME
+import com.aptoide.android.aptoidegames.analytics.dto.AnalyticsUIContext
 import com.aptoide.android.aptoidegames.analytics.mapOfNonNull
+import com.aptoide.android.aptoidegames.analytics.toGenericParameters
 import javax.inject.Inject
 
 class PaEAnalytics @Inject constructor(
@@ -43,6 +45,30 @@ class PaEAnalytics @Inject constructor(
     genericAnalytics.logEvent(
       name = "playandearn_hub_click_knowmore",
       params = null
+    )
+  }
+
+  fun sendPaEPlayClick(
+    packageName: String,
+    analyticsContext: AnalyticsUIContext,
+  ) {
+    genericAnalytics.logEvent(
+      name = "playandearn_play",
+      params = analyticsContext.toGenericParameters(
+        P_PACKAGE_NAME to packageName,
+      )
+    )
+  }
+
+  fun sendPaEAppLaunched(
+    packageName: String,
+    analyticsContext: AnalyticsUIContext,
+  ) {
+    genericAnalytics.logEvent(
+      name = "playandearn_home_applaunched",
+      params = analyticsContext.toGenericParameters(
+        P_PACKAGE_NAME to packageName,
+      )
     )
   }
 
