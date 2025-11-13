@@ -2,6 +2,7 @@ package com.aptoide.android.aptoidegames.feature_flags
 
 import cm.aptoide.pt.extensions.SuspendValue
 import cm.aptoide.pt.feature_flags.data.FeatureFlagsRepository
+import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.feature_flags.analytics.FeatureFlagsAnalytics
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ktx.remoteConfig
@@ -11,8 +12,11 @@ class AptoideFeatureFlagsRepository(
   private val featureFlagsAnalytics: FeatureFlagsAnalytics
 ) : FeatureFlagsRepository {
 
-  // Used to signal about remote config results
   private var result: SuspendValue<JSONObject> = SuspendValue()
+
+  init {
+    Firebase.remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
+  }
 
   override suspend fun getFeatureFlags(): JSONObject {
     val initialTimestamp = System.currentTimeMillis()

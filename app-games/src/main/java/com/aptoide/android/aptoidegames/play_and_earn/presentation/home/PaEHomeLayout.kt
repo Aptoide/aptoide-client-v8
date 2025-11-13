@@ -38,7 +38,7 @@ import cm.aptoide.pt.campaigns.presentation.rememberPaEBundles
 import com.aptoide.android.aptoidegames.bottom_bar.AppGamesBottomBar
 import com.aptoide.android.aptoidegames.home.gamesRoute
 import com.aptoide.android.aptoidegames.home.navigateTo
-import com.aptoide.android.aptoidegames.play_and_earn.PlayAndEarnManager
+import com.aptoide.android.aptoidegames.play_and_earn.rememberShouldShowPlayAndEarn
 import com.aptoide.android.aptoidegames.theme.Palette
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -53,7 +53,9 @@ fun PaEHomeLayout(
     ?.bundles?.trending
     ?.takeIf { it.apps.isNotEmpty() }
 
-  if (bundle != null && PlayAndEarnManager.shouldShowPlayAndEarn) {
+  val shouldShowPlayAndEarn = rememberShouldShowPlayAndEarn()
+
+  if (bundle != null && shouldShowPlayAndEarn) {
     val coroutineScope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
 
