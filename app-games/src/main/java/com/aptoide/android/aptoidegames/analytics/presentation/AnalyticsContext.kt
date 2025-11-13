@@ -47,7 +47,8 @@ fun ScreenData.Companion.withAnalytics(
       .withSearchMeta("{$SEARCH_META_PARAM}")
       .withItemPosition("{$ITEM_POSITION_PARAM}")
       .withApkfy("{$IS_APKFY_PARAM}")
-      .withHomeTab("{$HOME_TAB_PARAM}"),
+      .withHomeTab("{$HOME_TAB_PARAM}")
+      .withPlayAndEarn("{$IS_PLAY_AND_EARN_PARAM}"),
     arguments = arguments + listOf(
       navArgument(PREV_SCREEN_PARAM) {
         type = NavType.StringType
@@ -68,6 +69,10 @@ fun ScreenData.Companion.withAnalytics(
       navArgument(IS_APKFY_PARAM) {
         type = NavType.BoolType
         defaultValue = false
+      },
+      navArgument(IS_PLAY_AND_EARN_PARAM) {
+        type = NavType.BoolType
+        defaultValue = false
       }
     ),
     deepLinks = deepLinks.map {
@@ -80,6 +85,7 @@ fun ScreenData.Companion.withAnalytics(
       val itemPosition = args?.getString(ITEM_POSITION_PARAM)?.toIntOrNull()
       val isApkfy = args?.getBoolean(IS_APKFY_PARAM, false) ?: false
       val homeTab = args?.getString(HOME_TAB_PARAM, null)
+      val isPlayAndEarn = args?.getBoolean(IS_PLAY_AND_EARN_PARAM, false) ?: false
 
       //So that UI drawn outside of this screen is aware of the current screen
       AnalyticsContext.current.currentScreen = screenAnalyticsName
@@ -92,7 +98,8 @@ fun ScreenData.Companion.withAnalytics(
           searchMeta = searchMeta,
           itemPosition = itemPosition,
           isApkfy = isApkfy,
-          homeTab = homeTab
+          homeTab = homeTab,
+          isPlayAndEarn = isPlayAndEarn
         )
       ) {
         content(
@@ -104,6 +111,7 @@ fun ScreenData.Companion.withAnalytics(
               .withItemPosition(itemPosition)
               .withApkfy(isApkfy)
               .withHomeTab(homeTab)
+              .withPlayAndEarn(isPlayAndEarn)
               .also(navigate)
           },
           goBack
