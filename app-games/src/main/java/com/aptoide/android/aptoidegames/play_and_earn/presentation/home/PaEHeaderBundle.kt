@@ -18,6 +18,7 @@ import cm.aptoide.pt.campaigns.domain.randomPaEBundle
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.rememberPaEAnalytics
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaEBundleHeader
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.app_items.PaECompactAppItem
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.layout.PaEHorizontalCarousel
@@ -29,6 +30,8 @@ fun PaEHeaderBundle(
   modifier: Modifier = Modifier,
   navigate: (String) -> Unit
 ) {
+  val paeAnalytics = rememberPaEAnalytics()
+
   Box(
     modifier = modifier.wrapContentHeight()
   ) {
@@ -43,7 +46,12 @@ fun PaEHeaderBundle(
       modifier = Modifier.padding(top = 16.dp, bottom = 24.dp),
       verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-      PaEBundleHeader(onClick = { navigate(playAndEarnRewardsRoute) })
+      PaEBundleHeader(
+        onClick = {
+          paeAnalytics.sendPaEHomeEarnNowClick()
+          navigate(playAndEarnRewardsRoute)
+        }
+      )
       PaEHorizontalCarousel(
         apps = bundle.apps,
         modifier = Modifier
@@ -54,6 +62,7 @@ fun PaEHeaderBundle(
         PaECompactAppItem(
           app = app,
           onClick = {
+            paeAnalytics.sendPaEHomeAppClick(app.packageName)
             navigate(
               buildAppViewRoute(app, isGamified = true).withItemPosition(index)
             )
