@@ -16,17 +16,19 @@ import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.TierBadge
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.animations.PaEAnimatedGift
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.level_up.LevelProperties
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.level_up.rememberCurrentPaELevel
+import com.aptoide.android.aptoidegames.play_and_earn.rememberShouldShowPlayAndEarn
 
 @Composable
 fun PlayAndEarnTopBarBadge(onClick: () -> Unit) {
   val currentLevel = rememberCurrentPaELevel()
+  val shouldShowPlayAndEarn = rememberShouldShowPlayAndEarn()
 
-  currentLevel?.let {
+  if (shouldShowPlayAndEarn && currentLevel != null) {
     Row(
       modifier = Modifier.clickable(onClick = onClick),
       verticalAlignment = Alignment.CenterVertically,
     ) {
-      TierBadge(levelProperties = LevelProperties.Companion.fromLevel(it))
+      TierBadge(levelProperties = LevelProperties.Companion.fromLevel(currentLevel))
       Box(
         modifier = Modifier.offset(x = (-6).dp, y = (-4).dp),
         contentAlignment = Alignment.Center
