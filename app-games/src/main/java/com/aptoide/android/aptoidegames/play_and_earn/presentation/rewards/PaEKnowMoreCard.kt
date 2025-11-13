@@ -38,7 +38,7 @@ import kotlin.random.nextInt
 
 @Composable
 fun PaEKnowMoreCard(
-  currentLevel: Int,
+  currentLevel: Int?,
   modifier: Modifier = Modifier,
   onClick: () -> Unit,
 ) {
@@ -98,7 +98,7 @@ fun PaEKnowMoreCard(
   }
 }
 
-private fun getCurrentLevelBadge(level: Int): ImageVector? = when (level) {
+private fun getCurrentLevelBadge(level: Int?): ImageVector? = when (level) {
   1 -> getLevelOneBadge()
   2 -> getLevelTwoBadge()
   3 -> getLevelThreeBadge()
