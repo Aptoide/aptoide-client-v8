@@ -26,7 +26,8 @@ data class AnalyticsUIContext(
   val itemPosition: Int?,
   val isApkfy: Boolean,
   val installAction: InstallAction? = null,
-  val homeTab: String? = null
+  val homeTab: String? = null,
+  val isPlayAndEarn: Boolean = false
 ) {
   companion object {
     val Empty = AnalyticsUIContext(
@@ -36,7 +37,8 @@ data class AnalyticsUIContext(
       searchMeta = null,
       itemPosition = null,
       isApkfy = false,
-      homeTab = null
+      homeTab = null,
+      isPlayAndEarn = false
     )
   }
 }

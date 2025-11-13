@@ -31,6 +31,7 @@ import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.rememberPaEAnalytics
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.playAndEarnPermissionsRoute
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -54,6 +55,8 @@ private fun PlayAndEarnSignInScreen(
   val signInVM = hiltViewModel<GoogleSignInViewModel>()
   val uiState by signInVM.uiState.collectAsState()
 
+  val paeAnalytics = rememberPaEAnalytics()
+
   GoogleSignInEventHandler(onSuccess = { navigate(playAndEarnPermissionsRoute) })
 
   Column(
@@ -62,7 +65,10 @@ private fun PlayAndEarnSignInScreen(
     AppGamesTopBar(navigateBack = navigateBack, title = "Start Earning")
     PaESignInScreenContent(
       uiState = uiState,
-      onSignInClick = { signInVM.signIn() },
+      onSignInClick = {
+        paeAnalytics.sendPaEGoogleLoginClick()
+        signInVM.signIn()
+      },
       onRetryClick = { signInVM.reset() }
     )
   }

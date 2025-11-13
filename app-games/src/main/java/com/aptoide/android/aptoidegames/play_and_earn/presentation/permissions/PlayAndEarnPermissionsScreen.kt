@@ -36,6 +36,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.design_system.AccentSmallButton
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.rememberPaEAnalytics
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
@@ -56,10 +57,10 @@ private fun PlayAndEarnPermissionsScreen(
   navigateBack: () -> Unit
 ) {
   val coroutineScope = rememberCoroutineScope()
-
   val context = LocalContext.current
-
   val lifecycleOwner = LocalLifecycleOwner.current
+
+  val paeAnalytics = rememberPaEAnalytics()
 
   DisposableEffect(lifecycleOwner) {
     val observer = LifecycleEventObserver { _, event ->
@@ -82,6 +83,7 @@ private fun PlayAndEarnPermissionsScreen(
     AppGamesTopBar(navigateBack = navigateBack, title = "Start Earning")
     PaEPermissionsScreenContent(
       onPermissionClick = {
+        paeAnalytics.sendPaEPermissionLetsDoItClick()
         coroutineScope.launch {
           context.startActivity(Intent(context, OverlayPermissionActivity::class.java))
         }
