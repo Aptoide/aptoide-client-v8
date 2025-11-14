@@ -31,7 +31,10 @@ internal object RepositoryModule {
     @RewardsDomain rewardsDomain: String,
     walletAuthInterceptor: WalletAuthInterceptor
   ): PaECampaignsApi {
-    val client = okHttpClient.newBuilder().addInterceptor(walletAuthInterceptor).build()
+    val client = okHttpClient
+      .newBuilder()
+      .addInterceptor(walletAuthInterceptor)
+      .build()
 
     return Retrofit.Builder()
       .client(client)
