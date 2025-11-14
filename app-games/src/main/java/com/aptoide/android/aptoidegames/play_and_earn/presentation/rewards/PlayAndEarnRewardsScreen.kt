@@ -20,9 +20,12 @@ import cm.aptoide.pt.extensions.ScreenData
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
+import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getPlayPauseIcon
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getThumbUpIcon
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaESectionHeader
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.app_items.PaEDefaultAppItem
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.app_items.PaELargeAppItem
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.layout.PaEHorizontalCarousel
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.level_up.levelUpRoute
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.level_up.rememberCurrentPaELevel
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnSignInRoute
@@ -46,9 +49,15 @@ fun PlayAndEarnRewardsScreen(
   val currentLevel = rememberCurrentPaELevel()
 
   val scrollState = rememberScrollState()
-  val trendingBundle = rememberPaEBundles()
+  val uiState = rememberPaEBundles()
+  val trendingBundle = uiState
     .let { it as? PaEBundlesUiState.Idle }
     ?.bundles?.trending
+    ?.takeIf { it.apps.isNotEmpty() }
+
+  val keepPlayingBundle = uiState
+    .let { it as? PaEBundlesUiState.Idle }
+    ?.bundles?.keepPlaying
     ?.takeIf { it.apps.isNotEmpty() }
 
   Column(
@@ -71,8 +80,43 @@ fun PlayAndEarnRewardsScreen(
         onLetsGoClick = { navigate(playAndEarnSignInRoute) }
       )
     }
+    keepPlayingBundle?.let {
+      PaEHorizontalBundleView(it, navigate)
+    }
     trendingBundle?.let {
       PaEVerticalBundleView(it, navigate)
+    }
+  }
+}
+
+@Composable
+fun PaEHorizontalBundleView(
+  bundle: PaEBundle,
+  navigate: (String) -> Unit
+) {
+  Column(
+    modifier = Modifier
+      .fillMaxWidth()
+      .padding(start = 16.dp, top = 16.dp, bottom = 16.dp),
+    verticalArrangement = Arrangement.spacedBy(16.dp)
+  ) {
+    PaESectionHeader(
+      icon = getPlayPauseIcon(),
+      text = "Keep Playing"
+    )
+    PaEHorizontalCarousel(
+      apps = bundle.apps,
+      modifier = Modifier.fillMaxWidth()
+    ) { index ->
+      val app = bundle.apps[index]
+      PaEDefaultAppItem(
+        app = app,
+        onClick = {
+          navigate(
+            buildAppViewRoute(app, isGamified = true).withItemPosition(index)
+          )
+        }
+      )
     }
   }
 }

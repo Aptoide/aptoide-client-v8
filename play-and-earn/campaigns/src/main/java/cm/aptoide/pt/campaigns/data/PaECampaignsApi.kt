@@ -9,7 +9,7 @@ import retrofit2.http.Query
 internal interface PaECampaignsApi {
   @GET("api/campaigns")
   suspend fun getCampaigns(
-    @Query("sections") sections: List<String> = listOf("trending")
+    @Query("sections") sections: List<String> = listOf("trending", "keep_playing"),
   ): PaECampaignJson
 
   @GET("api/campaigns/{package_name}/missions")
