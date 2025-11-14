@@ -60,6 +60,7 @@ import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.levels.get
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.levels.getLevelThreeCoinIcon
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.levels.getLevelTwoCoinIcon
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.rememberPaEAnalytics
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaECard
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaESectionHeader
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.animations.CurrentLevelAnimation
@@ -87,6 +88,7 @@ fun LevelUpScreen(
   navigateBack: () -> Unit
 ) {
   val (levelUpState, reload) = rememberLevelUpState()
+  val paeAnalytics = rememberPaEAnalytics()
   val lifecycleOwner = LocalLifecycleOwner.current
 
   DisposableEffect(lifecycleOwner) {
@@ -110,7 +112,10 @@ fun LevelUpScreen(
       levels = levelUpState.levels,
       onBackClick = navigateBack,
       onPlayAndEarnCardClick = { navigate(playAndEarnRewardsRoute) },
-      onExchangeClick = { navigate(exchangeUnitsRoute) }
+      onExchangeClick = {
+        paeAnalytics.sendPaEExchangeNowClick()
+        navigate(exchangeUnitsRoute)
+      }
     )
 
     LevelUpUiState.Loading -> {
