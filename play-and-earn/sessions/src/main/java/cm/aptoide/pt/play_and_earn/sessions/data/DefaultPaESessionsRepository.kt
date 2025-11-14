@@ -105,6 +105,7 @@ private fun checkSessionStatus(status: SessionStatus) {
   when (status) {
     SessionStatus.OK -> Unit
     SessionStatus.DUPLICATE_OR_OUT_OF_ORDER -> throw DuplicateOrOutOfOrderException("Session status is duplicate or out of order")
+    SessionStatus.SESSION_EXPIRED -> throw SessionExpiredException("Session has already expired")
   }
 }
 
