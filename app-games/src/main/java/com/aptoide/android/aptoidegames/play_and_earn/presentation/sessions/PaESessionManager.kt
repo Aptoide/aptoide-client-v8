@@ -3,6 +3,7 @@ package com.aptoide.android.aptoidegames.play_and_earn.presentation.sessions
 import cm.aptoide.pt.campaigns.data.PaECampaignsRepository
 import cm.aptoide.pt.campaigns.domain.PaEMission
 import cm.aptoide.pt.play_and_earn.sessions.data.PaESessionsRepository
+import cm.aptoide.pt.play_and_earn.sessions.data.SessionExpiredException
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import javax.inject.Inject
@@ -61,7 +62,11 @@ class PaESessionManager @Inject constructor(
             session.packageName,
             session.syncSequence,
             session.usageTimeSinceLastSync
-          ).getOrNull()
+          ).also {
+            if (it.isFailure && it.exceptionOrNull() is SessionExpiredException) {
+              sessionsToRemove.add(session)
+            }
+          }.getOrNull()
 
           if (syncResult != null) {
             session.lastSyncTime = System.currentTimeMillis()
