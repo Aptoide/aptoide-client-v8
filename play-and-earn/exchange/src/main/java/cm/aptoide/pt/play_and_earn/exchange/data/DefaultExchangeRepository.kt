@@ -2,7 +2,6 @@ package cm.aptoide.pt.play_and_earn.exchange.data
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import java.util.Locale
 import javax.inject.Inject
 
 internal class DefaultExchangeRepository @Inject constructor(
@@ -10,12 +9,14 @@ internal class DefaultExchangeRepository @Inject constructor(
   private val dispatcher: CoroutineDispatcher
 ) : ExchangeRepository {
 
+  private companion object {
+    const val DEFAULT_COUNTRY_CODE = "PT"
+  }
+
   override suspend fun exchangeUnits(): Result<Unit> =
     withContext(dispatcher) {
       try {
-        val countryCode = Locale.getDefault().country
-
-        val response = exchangeApi.exchangeUnits(countryCode)
+        val response = exchangeApi.exchangeUnits(DEFAULT_COUNTRY_CODE)
 
         if (response.isSuccess()) {
           Result.success(Unit)
