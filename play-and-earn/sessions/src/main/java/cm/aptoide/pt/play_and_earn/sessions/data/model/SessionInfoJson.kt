@@ -25,5 +25,8 @@ internal enum class SessionStatus {
   OK,
 
   @SerializedName("duplicate_or_out_of_order")
-  DUPLICATE_OR_OUT_OF_ORDER
+  DUPLICATE_OR_OUT_OF_ORDER,
+
+  @SerializedName("session_expired")
+  SESSION_EXPIRED
 }
