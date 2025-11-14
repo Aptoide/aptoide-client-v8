@@ -23,6 +23,7 @@ import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getPlayPauseIcon
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getThumbUpIcon
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.rememberPaEAnalytics
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaESectionHeader
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.app_items.PaEDefaultAppItem
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.app_items.PaELargeAppItem
@@ -46,6 +47,7 @@ fun playAndEarnRewardsScreen() = ScreenData.withAnalytics(
 fun PlayAndEarnRewardsScreen(
   navigate: (String) -> Unit
 ) {
+  val analytics = rememberPaEAnalytics()
   val isPaEReady = rememberPlayAndEarnReady()
   val currentLevel = rememberCurrentPaELevel()
 
@@ -76,12 +78,18 @@ fun PlayAndEarnRewardsScreen(
         PaEKnowMoreCard(
           modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
           currentLevel = currentLevel?.plus(1),
-          onClick = { navigateTo(levelUpRoute) }
+          onClick = {
+            navigateTo(levelUpRoute)
+            analytics.sendPaERewardsHubKnowMoreClick()
+          }
         )
       } else {
         PaELetsGoCard(
           modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-          onLetsGoClick = { navigateTo(playAndEarnSignInRoute) }
+          onLetsGoClick = {
+            navigateTo(playAndEarnSignInRoute)
+            analytics.sendPaERewardsHubLetsGoClick()
+          }
         )
       }
       keepPlayingBundle?.let {
