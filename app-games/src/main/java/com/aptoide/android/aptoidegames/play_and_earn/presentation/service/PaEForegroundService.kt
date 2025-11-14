@@ -13,19 +13,39 @@ import androidx.lifecycle.lifecycleScope
 import androidx.savedstate.SavedStateRegistry
 import androidx.savedstate.SavedStateRegistryController
 import androidx.savedstate.SavedStateRegistryOwner
+import cm.aptoide.pt.campaigns.data.PaECampaignsRepository
+import cm.aptoide.pt.usage_stats.PackageUsageManager
 import com.aptoide.android.aptoidegames.MainActivity
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.overlays.PaEOverlayViewManager
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.hasOverlayPermission
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.hasUsageStatsPermissionStatus
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.sessions.PaESessionManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
+
+  @Inject
+  lateinit var packageUsageManager: PackageUsageManager
+
+  @Inject
+  lateinit var paeOverlayViewManager: PaEOverlayViewManager
+
+  @Inject
+  lateinit var paESessionManager: PaESessionManager
+
+  @Inject
+  lateinit var paECampaignsRepository: PaECampaignsRepository
 
   private val savedStateRegistryController = SavedStateRegistryController.Companion.create(this)
 
@@ -34,7 +54,12 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
 
   private val pollingInterval = 6_000L
   private var pollingJob: Job? = null
+  private var completedMissionsJob: Job? = null
   private var isMonitoringStarted = false
+
+  private var lastForegroundPackage: String? = null
+
+  var availablePaEPackages: Set<String>? = null
 
   override fun onCreate() {
     super.onCreate()
@@ -45,13 +70,28 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
 
   override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
     super.onStartCommand(intent, flags, startId)
+
     startForegroundWithNotification()
 
+    init()
     if (!isMonitoringStarted) {
       startUsageMonitoring()
       isMonitoringStarted = true
     }
+
     return START_STICKY
+  }
+
+  private fun init() {
+    if (!applicationContext.hasUsageStatsPermissionStatus() || !applicationContext.hasOverlayPermission()) {
+      this.stopSelf()
+    } else {
+      runBlocking {
+        withTimeout(5000L) {
+          availablePaEPackages = paECampaignsRepository.getAvailablePackages().getOrNull()
+        }
+      }
+    }
   }
 
   private fun startForegroundWithNotification() {
@@ -61,12 +101,53 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
 
   private fun startUsageMonitoring() {
     if (applicationContext.hasUsageStatsPermissionStatus() && applicationContext.hasOverlayPermission()) {
+      completedMissionsJob?.cancel()
+      completedMissionsJob = lifecycleScope.launch(Dispatchers.IO) {
+        paESessionManager.completedMissions.collect {
+          withContext(Dispatchers.Main) {
+            paeOverlayViewManager.showMissionCompletedOverlayView(
+              it,
+              this@PaEForegroundService,
+              this@PaEForegroundService
+            )
+          }
+        }
+      }
+
       pollingJob?.cancel()
       pollingJob = lifecycleScope.launch(Dispatchers.IO) {
         while (isActive) {
+          syncService()
           delay(pollingInterval)
         }
       }
+    }
+  }
+
+  private suspend fun syncService() {
+    val foregroundPackage = packageUsageManager.getForegroundPackage()
+
+    //New foreground package
+    if (foregroundPackage != null && foregroundPackage != lastForegroundPackage) {
+      lastForegroundPackage = foregroundPackage
+
+      //Game available in PaE. Start session
+      if (availablePaEPackages?.contains(foregroundPackage) == true) {
+        //Should check if a session already exists and is not finished
+        val sessionCreated = paESessionManager.createSession(foregroundPackage)
+
+        //Always show welcome back overlay, even if session already exists
+        if (sessionCreated || paESessionManager.activeSessions.any { it.packageName == foregroundPackage }) {
+          withContext(Dispatchers.Main) {
+            paeOverlayViewManager.showWelcomeBackOverlayView(
+              this@PaEForegroundService,
+              this@PaEForegroundService
+            )
+          }
+        }
+      }
+    } else { //Sync sessions if package is the same or if it is null
+      paESessionManager.syncSessions(lastForegroundPackage)
     }
   }
 
@@ -115,6 +196,7 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
   override fun onDestroy() {
     super.onDestroy()
     pollingJob?.cancel()
+    completedMissionsJob?.cancel()
     isMonitoringStarted = false
   }
 
