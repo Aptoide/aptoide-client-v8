@@ -48,6 +48,13 @@ class PaEAnalytics @Inject constructor(
     )
   }
 
+  fun sendPaERewardsHubLetsGoClick() {
+    genericAnalytics.logEvent(
+      name = "playandearn_hub_click_letsgo",
+      params = null
+    )
+  }
+
   fun sendPaEPlayClick(
     packageName: String,
     analyticsContext: AnalyticsUIContext,
