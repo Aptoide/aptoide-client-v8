@@ -92,4 +92,11 @@ class PaEAnalytics @Inject constructor(
       params = null
     )
   }
+
+  fun sendPaEExchangeNowClick() {
+    genericAnalytics.logEvent(
+      name = "playandearn_exchangenow_click",
+      params = null
+    )
+  }
 }
