@@ -45,6 +45,7 @@ import cm.aptoide.pt.appcoins.domain.WalletInfo
 import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.wallet.gamification.domain.GamificationStats
 import cm.aptoide.pt.wallet.gamification.domain.Levels
+import cm.aptoide.pt.wallet.gamification.domain.getCurrentLevelProgressRatio
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
 import com.aptoide.android.aptoidegames.drawables.backgrounds.getLevelUpBackground
@@ -262,11 +263,7 @@ private fun CurrentLevelBar(
   var targetProgress by remember { mutableFloatStateOf(0f) }
 
   LaunchedEffect(Unit) {
-    targetProgress = if (gamificationStats.nextLevelAmount != null) {
-      (gamificationStats.totalSpend.divide(gamificationStats.nextLevelAmount)).toFloat()
-    } else {
-      1f
-    }
+    targetProgress = gamificationStats.getCurrentLevelProgressRatio()
   }
 
   val animatedProgress by animateFloatAsState(
