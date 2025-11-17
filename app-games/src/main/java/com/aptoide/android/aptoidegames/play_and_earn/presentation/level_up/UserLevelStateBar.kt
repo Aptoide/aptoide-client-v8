@@ -27,6 +27,7 @@ import cm.aptoide.pt.wallet.gamification.domain.GamificationLevelStatus
 import cm.aptoide.pt.wallet.gamification.domain.GamificationStats
 import cm.aptoide.pt.wallet.gamification.domain.Level
 import cm.aptoide.pt.wallet.gamification.domain.Levels
+import cm.aptoide.pt.wallet.gamification.domain.getCurrentLevelProgressRatio
 import cm.aptoide.pt.wallet.gamification.domain.previewLevels
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.TierBadge
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.levels.hexagons.getHexagonLevelCurrent
@@ -41,11 +42,7 @@ import kotlin.math.pow
 
 @Composable
 fun UserLevelStateBar(levels: Levels, gamificationStats: GamificationStats) {
-  val progress =
-    gamificationStats.totalSpend.divide(
-      gamificationStats.nextLevelAmount ?: gamificationStats.totalSpend
-    ).toFloat()
-
+  val progress = gamificationStats.getCurrentLevelProgressRatio()
   val levelList = levels.levelList
 
   //Vertical level bar
