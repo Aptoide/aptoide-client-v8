@@ -30,7 +30,7 @@ import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.ap
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.layout.PaEHorizontalCarousel
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.level_up.levelUpRoute
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.level_up.rememberCurrentPaELevel
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnSignInRoute
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.rememberPlayAndEarnSetupRoute
 import com.aptoide.android.aptoidegames.play_and_earn.rememberPlayAndEarnReady
 
 const val playAndEarnRewardsRoute = "playAndEarnRewards"
@@ -50,6 +50,7 @@ fun PlayAndEarnRewardsScreen(
   val analytics = rememberPaEAnalytics()
   val isPaEReady = rememberPlayAndEarnReady()
   val currentLevel = rememberCurrentPaELevel()
+  val paeSetupRoute = rememberPlayAndEarnSetupRoute()
 
   val scrollState = rememberScrollState()
   val uiState = rememberPaEBundles()
@@ -87,7 +88,7 @@ fun PlayAndEarnRewardsScreen(
         PaELetsGoCard(
           modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
           onLetsGoClick = {
-            navigateTo(playAndEarnSignInRoute)
+            navigateTo(paeSetupRoute)
             analytics.sendPaERewardsHubLetsGoClick()
           }
         )
