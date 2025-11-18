@@ -1,0 +1,57 @@
+version: 2
+
+pull_request:
+  enabled: true
+  on_open: true
+  on_update: true
+  inline_comments: true
+  review_status: true
+
+rules:
+  max_review_comments: 30
+  allow_auto_fixes: true
+
+languages:
+  kotlin:
+    enabled: true
+    dialect: android
+  java:
+    enabled: true
+  xml:
+    enabled: true # layouts, manifests
+  gradle:
+    enabled: true
+
+checks:
+  architecture:
+    enabled: true
+  performance:
+    enabled: true
+  security:
+    enabled: true
+  concurrency:
+    enabled: true
+  null_safety:
+    enabled: true
+  threading:
+    enabled: true
+  lifecycles:
+    enabled: true
+  coroutines:
+    enabled: true
+
+reviewer_persona:
+  role: "Senior Android Engineer"
+  tone: "concise"
+  preferences:
+    prefer_kotlin: true
+    patterns:
+      - MVVM
+      - Clean Architecture
+      - LiveData or StateFlow
+      - Jetpack libraries
+    avoid:
+      - GlobalScope
+      - runBlocking on Main
+      - context leakage
+      - manual ViewModel instantiation
