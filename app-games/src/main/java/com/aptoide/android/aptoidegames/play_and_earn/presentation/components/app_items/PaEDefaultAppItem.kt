@@ -34,6 +34,7 @@ fun PaEDefaultAppItem(
   app: PaEApp,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
+  navigate: ((String) -> Unit)? = null,
 ) {
   val state = rememberDownloadState(app.asNormalApp())
   val colorFilter = rememberDownloadGraphicFilter(state)
@@ -85,7 +86,10 @@ fun PaEDefaultAppItem(
         PaEInstallProgressText(app = app)
       }
 
-      PaEInstallViewShort(app = app)
+      PaEInstallViewShort(
+        app = app,
+        navigate = navigate
+      )
     }
   }
 }
