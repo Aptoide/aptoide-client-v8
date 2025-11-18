@@ -280,7 +280,6 @@
   <string name="gamegenie_entry_screen_companion_section">... oder tippen Sie auf Ihr Spiel – ich helfe Ihnen dabei, es zu meistern.</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[Hallo! Ich bin Ihr KI-Assistent für alles, was mit <1>%1$s</1>.]]></string>
   <!-- Play and Earn -->
-  <string name="play_and_earn_title">&amp; spielen  Verdienen</string>
   <string name="play_and_earn_start_earning_title">Verdienen Sie Geld</string>
   <string name="play_and_earn_level_up_rewards_title">Steigern Sie Ihre Belohnungen!</string>
   <string name="play_and_earn_login_unlock_access_body">Melden Sie sich an, um während des Spiels Zugang zu unglaublichen Preisen zu erhalten!</string>
