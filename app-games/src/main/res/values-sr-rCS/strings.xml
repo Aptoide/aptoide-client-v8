@@ -282,7 +282,6 @@
   <string name="gamegenie_entry_screen_companion_section">... or tap your game - I\'ll help you master it</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[Hi! I\'m your AI assistant on everything related to <1>%1$s</1>.]]></string>
   <!-- Play and Earn -->
-  <string name="play_and_earn_title">Play &amp; Earn</string>
   <string name="play_and_earn_start_earning_title">Start Earning</string>
   <string name="play_and_earn_level_up_rewards_title">Level up your rewards!</string>
   <string name="play_and_earn_login_unlock_access_body">Login to unlock access to incredible prizes while you play!</string>
