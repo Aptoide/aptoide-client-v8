@@ -19,6 +19,8 @@ import com.aptoide.android.aptoidegames.design_system.SecondarySmallOutlinedButt
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewState
 import com.aptoide.android.aptoidegames.installer.presentation.installViewStates
 import com.aptoide.android.aptoidegames.installer.presentation.toInstallViewState
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.rememberPlayAndEarnSetupRoute
+import com.aptoide.android.aptoidegames.play_and_earn.rememberPlayAndEarnReady
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 
 @PreviewDark
@@ -49,6 +51,7 @@ fun PaEInstallViewShort(
   onInstallStarted: () -> Unit = {},
   onCancel: () -> Unit = {},
   cancelable: Boolean = true,
+  navigate: ((String) -> Unit)? = null,
 ) {
   val installViewState = installViewStates(
     app = app.asNormalApp(),
@@ -59,12 +62,14 @@ fun PaEInstallViewShort(
   PaEInstallViewShortContent(
     installViewState = installViewState,
     cancelable = cancelable,
+    navigate = navigate,
   )
 }
 
 @Composable
 private fun PaEInstallViewShortContent(
   installViewState: InstallViewState,
+  navigate: ((String) -> Unit)? = null,
   cancelable: Boolean = true,
 ) {
   when (val state = installViewState.uiState) {
@@ -113,9 +118,9 @@ private fun PaEInstallViewShortContent(
       )
     }
 
-    is DownloadUiState.Installed -> PaESmallCoinButton(
+    is DownloadUiState.Installed -> PaESmallPlayButton(
       onClick = state.open,
-      title = installViewState.actionLabel ?: "",
+      navigate = navigate
     )
 
     is DownloadUiState.Error -> PaESmallTextButton(
@@ -128,4 +133,24 @@ private fun PaEInstallViewShortContent(
     is DownloadUiState.Uninstalling,
       -> Unit
   }
+}
+
+@Composable
+private fun PaESmallPlayButton(
+  onClick: () -> Unit,
+  navigate: ((String) -> Unit)?,
+) {
+  val isPaEReady = rememberPlayAndEarnReady()
+  val paeSetupRoute = rememberPlayAndEarnSetupRoute()
+
+  PaESmallCoinButton(
+    onClick = {
+      if (isPaEReady || navigate == null) {
+        onClick()
+      } else {
+        navigate(paeSetupRoute)
+      }
+    },
+    title = "Play",
+  )
 }
