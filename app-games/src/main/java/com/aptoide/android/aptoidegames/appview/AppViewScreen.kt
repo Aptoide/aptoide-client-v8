@@ -421,7 +421,8 @@ fun AppViewContent(
       if (isGamified) {
         PaEInstallView(
           modifier = Modifier.padding(top = 24.dp, start = 16.dp, end = 16.dp),
-          app = app
+          app = app,
+          navigate = navigate
         )
       } else {
         InstallView(

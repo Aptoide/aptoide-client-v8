@@ -129,7 +129,8 @@ fun PaEHorizontalBundleView(
           navigate(
             buildAppViewRoute(app, isGamified = true).withItemPosition(index)
           )
-        }
+        },
+        navigate = navigate
       )
     }
   }
@@ -160,7 +161,8 @@ fun PaEVerticalBundleView(
       bundle.apps.forEachIndexed { index, app ->
         PaELargeAppItem(
           app = app,
-          onClick = { navigate(buildAppViewRoute(app, isGamified = true).withItemPosition(index)) }
+          onClick = { navigate(buildAppViewRoute(app, isGamified = true).withItemPosition(index)) },
+          navigate = navigate
         )
       }
     }
