@@ -278,7 +278,6 @@
   <string name="gamegenie_entry_screen_companion_section">...或轻点你的游戏——我将助你驾轻就熟</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[你好！我是你的人工智能助手，负责处理所有与 <1>%1$s</1>。]]></string>
   <!-- Play and Earn -->
-  <string name="play_and_earn_title">玩 &amp; 赚取</string>
   <string name="play_and_earn_start_earning_title">开始赚钱</string>
   <string name="play_and_earn_level_up_rewards_title">升级您的奖励！</string>
   <string name="play_and_earn_login_unlock_access_body">登录即可解锁游戏中的超值奖励！</string>
