@@ -280,7 +280,6 @@
   <string name="gamegenie_entry_screen_companion_section">... o tocca il tuo gioco: ti aiuterò a padroneggiarlo</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[Ciao! Sono il tuo assistente AI per tutto ciò che riguarda <1>%1$s</1>.]]></string>
   <!-- Play and Earn -->
-  <string name="play_and_earn_title">Gioca a &amp; Guadagna</string>
   <string name="play_and_earn_start_earning_title">Inizia a guadagnare</string>
   <string name="play_and_earn_level_up_rewards_title">Aumenta i tuoi premi!</string>
   <string name="play_and_earn_login_unlock_access_body">Accedi per sbloccare l\'accesso a incredibili premi mentre giochi!</string>
@@ -313,4 +312,15 @@
   <string name="play_and_earn_missions_title">Missioni</string>
   <string name="play_and_earn_checkpoints_title">Punti di controllo</string>
   <string name="play_and_earn_bonus_percentage_label">%1$s%% Bonus</string>
+  <string name="play_and_earn_know_more_button">Per saperne di più</string>
+  <string name="play_and_earn_level_achieved_body">Livello %1$d raggiunto!</string>
+  <string name="play_and_earn_more_you_play_body">Più giochi, più guadagni! Controlla i tuoi premi e guarda crescere il tuo saldo.</string>
+  <string name="play_and_earn_keep_playing_title">Continua a giocare</string>
+  <string name="play_and_earn_tap_gem_exchange_body">Tocca la gemma per scambiare le tue unità con il saldo</string>
+  <string name="play_and_earn_awesome_button">Fantastico</string>
+  <string name="play_and_earn_earned_balance_body">Hai appena guadagnato 1 $ nel saldo Aptoide da utilizzare per i tuoi giochi.</string>
+  <string name="play_and_earn_play_button">Gioca</string>
+  <string name="play_and_earn_install_button">Installare</string>
+  <string name="play_and_earn_notification_recording_title">Monitoraggio del tempo di gioco per ottenere ricompense</string>
+  <string name="play_and_earn_notification_recording_body">Il tempo di gioco viene conteggiato ai fini delle missioni.</string>
 </resources>

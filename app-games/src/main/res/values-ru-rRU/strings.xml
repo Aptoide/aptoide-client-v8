@@ -284,7 +284,6 @@
   <string name="gamegenie_entry_screen_companion_section">... или нажмите на свою игру — я помогу вам освоить ее</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[Привет! Я твой ИИ-помощник по всем вопросам, связанным с <1>%1$s</1>.]]></string>
   <!-- Play and Earn -->
-  <string name="play_and_earn_title">Играть в &amp; Зарабатывать</string>
   <string name="play_and_earn_start_earning_title">Начните зарабатывать</string>
   <string name="play_and_earn_level_up_rewards_title">Повышайте уровень своих наград!</string>
   <string name="play_and_earn_login_unlock_access_body">Войдите в систему, чтобы получить доступ к невероятным призам во время игры!</string>
@@ -313,8 +312,19 @@
   <string name="play_and_earn_collect_more_units_body">Соберите %1$d еще единиц, чтобы заработать 1,00 $ на балансе Aptoide.</string>
   <string name="play_and_earn_exchange_units_body">Обменяйте %1$d единиц на $%2$s в вашем балансе Aptoide.</string>
   <string name="play_and_earn_earn_rewards_by_playing_body">Зарабатывайте награды, играя в новые игры!</string>
-  <string name="play_and_earn_earning_now_title">Зарабатывайте сейчас</string>
+  <string name="play_and_earn_earning_now_title">Заработайте сейчас</string>
   <string name="play_and_earn_missions_title">Миссии</string>
   <string name="play_and_earn_checkpoints_title">Контрольные пункты</string>
   <string name="play_and_earn_bonus_percentage_label">%1$s%% Бонус</string>
+  <string name="play_and_earn_know_more_button">Узнать больше</string>
+  <string name="play_and_earn_level_achieved_body">Уровень %1$d достигнут!</string>
+  <string name="play_and_earn_more_you_play_body">Чем больше вы играете, тем больше зарабатываете! Проверяйте свои награды и наблюдайте, как растет ваш баланс.</string>
+  <string name="play_and_earn_keep_playing_title">Продолжай играть</string>
+  <string name="play_and_earn_tap_gem_exchange_body">Нажмите на драгоценный камень, чтобы обменять свои единицы на баланс.</string>
+  <string name="play_and_earn_awesome_button">Потрясающе</string>
+  <string name="play_and_earn_earned_balance_body">Вы только что заработали 1 доллар на балансе Aptoide, который можно использовать в играх.</string>
+  <string name="play_and_earn_play_button">Играть</string>
+  <string name="play_and_earn_install_button">Установить</string>
+  <string name="play_and_earn_notification_recording_title">Отслеживание игрового времени для получения вознаграждений</string>
+  <string name="play_and_earn_notification_recording_body">Ваше игровое время учитывается в ваших миссиях.</string>
 </resources>

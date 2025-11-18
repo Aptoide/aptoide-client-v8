@@ -279,7 +279,6 @@
   <string name="gamegenie_entry_screen_companion_section">…あるいはゲームにタップして――君がそれをマスターするのを手伝うよ</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[こんにちは！私はあらゆることにまつわるあなたのAIアシスタントです <1>%1$s</1>。]]></string>
   <!-- Play and Earn -->
-  <string name="play_and_earn_title">プレイ &amp; 獲得</string>
   <string name="play_and_earn_start_earning_title">今すぐ稼ぎ始めよう</string>
   <string name="play_and_earn_level_up_rewards_title">報酬をレベルアップ！</string>
   <string name="play_and_earn_login_unlock_access_body">プレイしながらログインして、素晴らしい賞品へのアクセスをアンロックしよう！</string>
@@ -312,4 +311,15 @@
   <string name="play_and_earn_missions_title">ミッション</string>
   <string name="play_and_earn_checkpoints_title">チェックポイント</string>
   <string name="play_and_earn_bonus_percentage_label">%1$s%% ボーナス</string>
+  <string name="play_and_earn_know_more_button">もっと知る</string>
+  <string name="play_and_earn_level_achieved_body">レベル %1$d を達成しました！</string>
+  <string name="play_and_earn_more_you_play_body">プレイすればするほど、より多く稼げます！報酬を確認して、残高が増えるのを見てみましょう。</string>
+  <string name="play_and_earn_keep_playing_title">プレイを続けよう</string>
+  <string name="play_and_earn_tap_gem_exchange_body">宝石をタップしてユニットをバランスと交換する</string>
+  <string name="play_and_earn_awesome_button">すごい</string>
+  <string name="play_and_earn_earned_balance_body">ゲームで使えるアプトイド残高が1ドル獲得されました</string>
+  <string name="play_and_earn_play_button">プレイ</string>
+  <string name="play_and_earn_install_button">インストール</string>
+  <string name="play_and_earn_notification_recording_title">報酬のためのプレイ時間の追跡</string>
+  <string name="play_and_earn_notification_recording_body">あなたのプレイ時間はミッションの進行にカウントされています。</string>
 </resources>

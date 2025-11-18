@@ -278,7 +278,6 @@
   <string name="gamegenie_entry_screen_companion_section">...或轻点你的游戏——我将助你驾轻就熟</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[你好！我是你的人工智能助手，负责处理所有与 <1>%1$s</1>。]]></string>
   <!-- Play and Earn -->
-  <string name="play_and_earn_title">玩 &amp; 赚取</string>
   <string name="play_and_earn_start_earning_title">开始赚钱</string>
   <string name="play_and_earn_level_up_rewards_title">升级您的奖励！</string>
   <string name="play_and_earn_login_unlock_access_body">登录即可解锁游戏中的超值奖励！</string>
@@ -311,4 +310,15 @@
   <string name="play_and_earn_missions_title">任务</string>
   <string name="play_and_earn_checkpoints_title">检查点</string>
   <string name="play_and_earn_bonus_percentage_label">%1$s%% 奖励</string>
+  <string name="play_and_earn_know_more_button">了解更多</string>
+  <string name="play_and_earn_level_achieved_body">%1$d 等级达成！</string>
+  <string name="play_and_earn_more_you_play_body">玩得越多，赚得越多！查看您的奖励，见证余额增长。</string>
+  <string name="play_and_earn_keep_playing_title">继续玩</string>
+  <string name="play_and_earn_tap_gem_exchange_body">点击宝石，用你的单位兑换平衡</string>
+  <string name="play_and_earn_awesome_button">太棒了</string>
+  <string name="play_and_earn_earned_balance_body">您刚刚获得1美元的Aptoide余额，可用于购买游戏。</string>
+  <string name="play_and_earn_play_button">玩</string>
+  <string name="play_and_earn_install_button">安装</string>
+  <string name="play_and_earn_notification_recording_title">追踪游戏时间以获取奖励</string>
+  <string name="play_and_earn_notification_recording_body">您的游戏时间正在计入任务进度。</string>
 </resources>
