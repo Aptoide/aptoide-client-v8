@@ -279,7 +279,6 @@
   <string name="gamegenie_entry_screen_companion_section">…あるいはゲームにタップして――君がそれをマスターするのを手伝うよ</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[こんにちは！私はあらゆることにまつわるあなたのAIアシスタントです <1>%1$s</1>。]]></string>
   <!-- Play and Earn -->
-  <string name="play_and_earn_title">プレイ &amp; 獲得</string>
   <string name="play_and_earn_start_earning_title">今すぐ稼ぎ始めよう</string>
   <string name="play_and_earn_level_up_rewards_title">報酬をレベルアップ！</string>
   <string name="play_and_earn_login_unlock_access_body">プレイしながらログインして、素晴らしい賞品へのアクセスをアンロックしよう！</string>
