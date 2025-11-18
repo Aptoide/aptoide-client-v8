@@ -284,7 +284,6 @@
   <string name="gamegenie_entry_screen_companion_section">... или нажмите на свою игру — я помогу вам освоить ее</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[Привет! Я твой ИИ-помощник по всем вопросам, связанным с <1>%1$s</1>.]]></string>
   <!-- Play and Earn -->
-  <string name="play_and_earn_title">Играть в &amp; Зарабатывать</string>
   <string name="play_and_earn_start_earning_title">Начните зарабатывать</string>
   <string name="play_and_earn_level_up_rewards_title">Повышайте уровень своих наград!</string>
   <string name="play_and_earn_login_unlock_access_body">Войдите в систему, чтобы получить доступ к невероятным призам во время игры!</string>
