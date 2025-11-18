@@ -55,3 +55,14 @@ reviewer_persona:
       - runBlocking on Main
       - context leakage
       - manual ViewModel instantiation
+
+ignore_paths:
+  - "**/build/**"
+  - "**/generated/**"
+  - "**/R.java"
+  - "**/R.kt"
+  - "**/*.png"
+
+linters:
+  android_lint: true
+  detekt: true
