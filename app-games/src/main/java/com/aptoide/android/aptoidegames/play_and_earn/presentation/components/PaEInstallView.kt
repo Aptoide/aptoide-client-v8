@@ -49,6 +49,8 @@ import com.aptoide.android.aptoidegames.installer.presentation.InstallViewState
 import com.aptoide.android.aptoidegames.installer.presentation.getProgressString
 import com.aptoide.android.aptoidegames.installer.presentation.installViewStates
 import com.aptoide.android.aptoidegames.installer.presentation.toInstallViewState
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.rememberPlayAndEarnSetupRoute
+import com.aptoide.android.aptoidegames.play_and_earn.rememberPlayAndEarnReady
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -84,6 +86,7 @@ fun PaEInstallView(
   modifier: Modifier = Modifier,
   onInstallStarted: () -> Unit = {},
   onCancel: () -> Unit = {},
+  navigate: ((String) -> Unit)? = null,
 ) {
   val installViewState = installViewStates(
     app = app,
@@ -93,6 +96,7 @@ fun PaEInstallView(
 
   PaEInstallViewContent(
     installViewState = installViewState,
+    navigate = navigate,
     modifier = modifier.clearAndSetSemantics {
       installViewState.actionLabel?.let {
         onClick(label = it) {
@@ -119,6 +123,7 @@ fun PaEInstallView(
 private fun PaEInstallViewContent(
   installViewState: InstallViewState,
   modifier: Modifier = Modifier,
+  navigate: ((String) -> Unit)? = null,
   verticalSpacing: Dp = 8.dp,
   horizontalSpacing: Dp = 24.dp,
 ) = Box(
@@ -207,9 +212,9 @@ private fun PaEInstallViewContent(
       horizontalSpacing = horizontalSpacing,
     )
 
-    is DownloadUiState.Installed -> PaELargeCoinButton(
-      title = "Play",
+    is DownloadUiState.Installed -> PaEPlayButton(
       onClick = state.open,
+      navigate = navigate,
       modifier = Modifier.fillMaxWidth(),
     )
 
@@ -232,6 +237,28 @@ private fun PaEInstallViewContent(
       )
     }
   }
+}
+
+@Composable
+private fun PaEPlayButton(
+  onClick: () -> Unit,
+  navigate: ((String) -> Unit)?,
+  modifier: Modifier = Modifier,
+) {
+  val isPaEReady = rememberPlayAndEarnReady()
+  val paeSetupRoute = rememberPlayAndEarnSetupRoute()
+
+  PaELargeCoinButton(
+    title = "Play",
+    onClick = {
+      if (isPaEReady || navigate == null) {
+        onClick()
+      } else {
+        navigate(paeSetupRoute)
+      }
+    },
+    modifier = modifier,
+  )
 }
 
 @Composable
