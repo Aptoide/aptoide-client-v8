@@ -278,7 +278,6 @@
   <string name="gamegenie_entry_screen_companion_section">... 아니면 게임을 탭하세요 - 제가 마스터하도록 도와드릴게요</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[안녕하세요! 저는 <1>%1$s</1>.]]></string>
   <!-- Play and Earn -->
-  <string name="play_and_earn_title">플레이 &amp; 수익 창출</string>
   <string name="play_and_earn_start_earning_title">수익 창출 시작하기</string>
   <string name="play_and_earn_level_up_rewards_title">보상을 업그레이드하세요!</string>
   <string name="play_and_earn_login_unlock_access_body">로그인하여 놀라운 상품을 획득하세요!</string>
