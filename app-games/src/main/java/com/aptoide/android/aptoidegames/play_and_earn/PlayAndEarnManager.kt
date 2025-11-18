@@ -35,9 +35,12 @@ class PlayAndEarnManager @Inject constructor(
     return featureFlags.getFlag(PAE_VISIBILITY_FLAG_KEY, false)
   }
 
+  suspend fun isSignedIn(): Boolean {
+    return walletCoreDataSource.getCurrentWalletAddress() != null
+  }
+
   suspend fun isPlayAndEarnReady(): Boolean {
-    val walletAddress = walletCoreDataSource.getCurrentWalletAddress()
-    return walletAddress != null && hasRequiredPermissions()
+    return isSignedIn() && hasRequiredPermissions()
   }
 
   fun hasRequiredPermissions(): Boolean =
@@ -76,5 +79,20 @@ fun rememberPlayAndEarnReady(): Boolean = runPreviewable(
     }
 
     isPlayAndEarnReady
+  }
+)
+
+@Composable
+fun rememberIsSignedIn(): Boolean = runPreviewable(
+  preview = { Random.nextBoolean() },
+  real = {
+    val vm = hiltViewModel<InjectionsProvider>()
+    var isSignedIn by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+      isSignedIn = vm.playAndEarnManager.isSignedIn()
+    }
+
+    isSignedIn
   }
 )
