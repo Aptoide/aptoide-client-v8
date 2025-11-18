@@ -280,7 +280,6 @@
   <string name="gamegenie_entry_screen_companion_section">... ou essayez votre jeu - je vous aiderai à le maîtriser</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[Bonjour ! Je suis votre assistant IA pour tout ce qui concerne <1>%1$s</1>.]]></string>
   <!-- Play and Earn -->
-  <string name="play_and_earn_title">Jouer à &amp; Gagner</string>
   <string name="play_and_earn_start_earning_title">Commencez à gagner</string>
   <string name="play_and_earn_level_up_rewards_title">Augmentez vos récompenses !</string>
   <string name="play_and_earn_login_unlock_access_body">Connectez-vous pour débloquer l\'accès à des prix incroyables pendant que vous jouez !</string>
@@ -309,8 +308,19 @@
   <string name="play_and_earn_collect_more_units_body">Collectez %1$d plus d\'unités pour gagner 1,00 $ dans votre solde Aptoide.</string>
   <string name="play_and_earn_exchange_units_body">Échangez des unités %1$d contre%2$s dans votre solde Aptoide.</string>
   <string name="play_and_earn_earn_rewards_by_playing_body">Gagnez des récompenses en jouant à de nouveaux jeux !</string>
-  <string name="play_and_earn_earning_now_title">Gagner maintenant</string>
+  <string name="play_and_earn_earning_now_title">Gagnez dès maintenant</string>
   <string name="play_and_earn_missions_title">Missions</string>
   <string name="play_and_earn_checkpoints_title">Points de contrôle</string>
   <string name="play_and_earn_bonus_percentage_label">%1$s%% Bonus</string>
+  <string name="play_and_earn_know_more_button">En savoir plus</string>
+  <string name="play_and_earn_level_achieved_body">Niveau %1$d atteint !</string>
+  <string name="play_and_earn_more_you_play_body">Plus vous jouez, plus vous gagnez ! Vérifiez vos récompenses et voyez votre solde augmenter.</string>
+  <string name="play_and_earn_keep_playing_title">Continuer à jouer</string>
+  <string name="play_and_earn_tap_gem_exchange_body">Appuyez sur la gemme pour échanger vos unités contre un solde.</string>
+  <string name="play_and_earn_awesome_button">Génial</string>
+  <string name="play_and_earn_earned_balance_body">Vous venez de gagner 1 $ dans votre solde Aptoide à utiliser pour vos jeux.</string>
+  <string name="play_and_earn_play_button">Jouer</string>
+  <string name="play_and_earn_install_button">Installer</string>
+  <string name="play_and_earn_notification_recording_title">Suivi du temps de jeu pour obtenir des récompenses</string>
+  <string name="play_and_earn_notification_recording_body">Votre temps de jeu est pris en compte dans vos missions.</string>
 </resources>

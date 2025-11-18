@@ -280,7 +280,6 @@
   <string name="gamegenie_entry_screen_companion_section">... ή πατήστε το παιχνίδι σας - θα σας βοηθήσω να το κατακτήσετε</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[Γεια! Είμαι η βοηθός τεχνητής νοημοσύνης σας για όλα όσα σχετίζονται με το <1>%1$s</1>.]]></string>
   <!-- Play and Earn -->
-  <string name="play_and_earn_title">Παίξτε &amp; Κερδίστε</string>
   <string name="play_and_earn_start_earning_title">Ξεκινήστε να κερδίζετε</string>
   <string name="play_and_earn_level_up_rewards_title">Ανεβάστε το επίπεδο των ανταμοιβών σας!</string>
   <string name="play_and_earn_login_unlock_access_body">Συνδεθείτε για να ξεκλειδώσετε την πρόσβαση σε απίστευτα δώρα ενώ παίζετε!</string>
@@ -309,8 +308,19 @@
   <string name="play_and_earn_collect_more_units_body">Συλλέξτε %1$d περισσότερες μονάδες για να κερδίσετε 1,00 $ στο Aptoide Balance.</string>
   <string name="play_and_earn_exchange_units_body">Ανταλλάξτε %1$d μονάδες με $%2$s στο υπόλοιπό σας στο Aptoide.</string>
   <string name="play_and_earn_earn_rewards_by_playing_body">Κερδίστε ανταμοιβές παίζοντας νέα παιχνίδια!</string>
-  <string name="play_and_earn_earning_now_title">Κερδίζοντας τώρα</string>
+  <string name="play_and_earn_earning_now_title">Κερδίστε τώρα</string>
   <string name="play_and_earn_missions_title">Αποστολές</string>
   <string name="play_and_earn_checkpoints_title">Σημεία ελέγχου</string>
   <string name="play_and_earn_bonus_percentage_label">%1$s%% Μπόνους</string>
+  <string name="play_and_earn_know_more_button">Μάθετε περισσότερα</string>
+  <string name="play_and_earn_level_achieved_body">Επίπεδο %1$d επιτεύχθηκε!</string>
+  <string name="play_and_earn_more_you_play_body">Όσο περισσότερο παίζετε, τόσο περισσότερα κερδίζετε! Ελέγξτε τις ανταμοιβές σας και δείτε το υπόλοιπό σας να αυξάνεται.</string>
+  <string name="play_and_earn_keep_playing_title">Συνέχισε να παίζεις</string>
+  <string name="play_and_earn_tap_gem_exchange_body">Πατήστε το πετράδι για να ανταλλάξετε τις μονάδες σας με υπόλοιπο</string>
+  <string name="play_and_earn_awesome_button">Φοβερό</string>
+  <string name="play_and_earn_earned_balance_body">Μόλις κερδίσατε 1 $ στο Aptoide Balance για να το χρησιμοποιήσετε στα παιχνίδια σας.</string>
+  <string name="play_and_earn_play_button">Παιχνίδι</string>
+  <string name="play_and_earn_install_button">Εγκατάσταση</string>
+  <string name="play_and_earn_notification_recording_title">Παρακολούθηση χρόνου παιχνιδιού για ανταμοιβές</string>
+  <string name="play_and_earn_notification_recording_body">Ο χρόνος παιχνιδιού σας υπολογίζεται στις αποστολές σας.</string>
 </resources>

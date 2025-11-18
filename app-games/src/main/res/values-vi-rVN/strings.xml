@@ -278,7 +278,6 @@
   <string name="gamegenie_entry_screen_companion_section">... hoặc chạm vào trò chơi của bạn - tôi sẽ giúp bạn thành thạo nó.</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[Xin chào! Tôi là trợ lý AI của bạn cho mọi vấn đề liên quan đến <1>%1$s</1>.]]></string>
   <!-- Play and Earn -->
-  <string name="play_and_earn_title">Chơi &amp; Kiếm tiền</string>
   <string name="play_and_earn_start_earning_title">Bắt đầu kiếm tiền</string>
   <string name="play_and_earn_level_up_rewards_title">Nâng cấp phần thưởng của bạn!</string>
   <string name="play_and_earn_login_unlock_access_body">Đăng nhập để mở khóa quyền truy cập vào những phần thưởng tuyệt vời trong khi bạn chơi!</string>
@@ -307,8 +306,19 @@
   <string name="play_and_earn_collect_more_units_body">Thu thập %1$d nhiều đơn vị hơn để kiếm $1.00 trong tài khoản Aptoide Balance.</string>
   <string name="play_and_earn_exchange_units_body">Đổi các đơn vị %1$d lấy $%2$s trong tài khoản Aptoide Balance của bạn.</string>
   <string name="play_and_earn_earn_rewards_by_playing_body">Kiếm phần thưởng bằng cách chơi các trò chơi mới!</string>
-  <string name="play_and_earn_earning_now_title">Kiếm tiền ngay bây giờ</string>
+  <string name="play_and_earn_earning_now_title">Kiếm tiền ngay</string>
   <string name="play_and_earn_missions_title">Nhiệm vụ</string>
   <string name="play_and_earn_checkpoints_title">Điểm kiểm tra</string>
   <string name="play_and_earn_bonus_percentage_label">%1$s%% Phần thưởng</string>
+  <string name="play_and_earn_know_more_button">Tìm hiểu thêm</string>
+  <string name="play_and_earn_level_achieved_body">Cấp độ %1$d đã đạt được!</string>
+  <string name="play_and_earn_more_you_play_body">Càng chơi nhiều, bạn càng kiếm được nhiều! Kiểm tra phần thưởng của bạn và xem số dư của bạn tăng lên.</string>
+  <string name="play_and_earn_keep_playing_title">Tiếp tục chơi</string>
+  <string name="play_and_earn_tap_gem_exchange_body">Nhấn vào viên ngọc để đổi các đơn vị của bạn lấy số dư.</string>
+  <string name="play_and_earn_awesome_button">Tuyệt vời</string>
+  <string name="play_and_earn_earned_balance_body">Bạn vừa kiếm được $1 trong tài khoản Aptoide Balance để sử dụng cho các trò chơi của mình.</string>
+  <string name="play_and_earn_play_button">Chơi</string>
+  <string name="play_and_earn_install_button">Cài đặt</string>
+  <string name="play_and_earn_notification_recording_title">Theo dõi thời gian chơi để nhận phần thưởng</string>
+  <string name="play_and_earn_notification_recording_body">Thời gian chơi game của bạn đang được tính vào các nhiệm vụ của bạn.</string>
 </resources>

@@ -288,7 +288,6 @@
   <string name="gamegenie_entry_screen_companion_section">... أو اضغط على لعبتك - سأساعدك على إتقانها</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[مرحبًا! أنا مساعدك الذكي في كل ما يتعلق بـ <1>%1$s</1>.]]></string>
   <!-- Play and Earn -->
-  <string name="play_and_earn_title">العب &amp; اربح</string>
   <string name="play_and_earn_start_earning_title">ابدأ في الكسب</string>
   <string name="play_and_earn_level_up_rewards_title">ارفع مستوى مكافآتك!</string>
   <string name="play_and_earn_login_unlock_access_body">سجّل الدخول لتفتح الباب أمام جوائز مذهلة أثناء اللعب!</string>
@@ -317,8 +316,19 @@
   <string name="play_and_earn_collect_more_units_body">اجمع %1$d المزيد من الوحدات لتربح 1.00 دولار في رصيد Aptoide.</string>
   <string name="play_and_earn_exchange_units_body">استبدل %1$d بـ%2$s في رصيد Aptoide الخاص بك.</string>
   <string name="play_and_earn_earn_rewards_by_playing_body">اربح مكافآت من خلال لعب ألعاب جديدة!</string>
-  <string name="play_and_earn_earning_now_title">كسب الآن</string>
+  <string name="play_and_earn_earning_now_title">اربح الآن</string>
   <string name="play_and_earn_missions_title">المهام</string>
   <string name="play_and_earn_checkpoints_title">نقاط التفتيش</string>
   <string name="play_and_earn_bonus_percentage_label">%1$s[٪] مكافأة</string>
+  <string name="play_and_earn_know_more_button">اعرف المزيد</string>
+  <string name="play_and_earn_level_achieved_body">تم تحقيق مستوى %1$d !</string>
+  <string name="play_and_earn_more_you_play_body">كلما لعبت أكثر، كلما ربحت أكثر! تحقق من مكافآتك وشاهد رصيدك ينمو.</string>
+  <string name="play_and_earn_keep_playing_title">استمر في اللعب</string>
+  <string name="play_and_earn_tap_gem_exchange_body">اضغط على الجوهرة لتبادل وحداتك مقابل الرصيد</string>
+  <string name="play_and_earn_awesome_button">رائع</string>
+  <string name="play_and_earn_earned_balance_body">لقد حصلت للتو على 1 دولار في رصيد Aptoide لاستخدامه في ألعابك</string>
+  <string name="play_and_earn_play_button">العب</string>
+  <string name="play_and_earn_install_button">تثبيت</string>
+  <string name="play_and_earn_notification_recording_title">تتبع وقت اللعب للحصول على المكافآت</string>
+  <string name="play_and_earn_notification_recording_body">يتم احتساب وقت اللعب في مهامك.</string>
 </resources>

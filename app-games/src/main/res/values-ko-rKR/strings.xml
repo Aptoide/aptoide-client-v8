@@ -278,7 +278,6 @@
   <string name="gamegenie_entry_screen_companion_section">... 아니면 게임을 탭하세요 - 제가 마스터하도록 도와드릴게요</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[안녕하세요! 저는 <1>%1$s</1>.]]></string>
   <!-- Play and Earn -->
-  <string name="play_and_earn_title">플레이 &amp; 수익 창출</string>
   <string name="play_and_earn_start_earning_title">수익 창출 시작하기</string>
   <string name="play_and_earn_level_up_rewards_title">보상을 업그레이드하세요!</string>
   <string name="play_and_earn_login_unlock_access_body">로그인하여 놀라운 상품을 획득하세요!</string>
@@ -311,4 +310,15 @@
   <string name="play_and_earn_missions_title">미션</string>
   <string name="play_and_earn_checkpoints_title">검문소</string>
   <string name="play_and_earn_bonus_percentage_label">%1$s%% 보너스</string>
+  <string name="play_and_earn_know_more_button">더 알아보기</string>
+  <string name="play_and_earn_level_achieved_body">레벨 %1$d 달성!</string>
+  <string name="play_and_earn_more_you_play_body">더 많이 플레이할수록 더 많이 벌 수 있어요! 보상을 확인하고 잔액이 늘어나는 걸 지켜보세요.</string>
+  <string name="play_and_earn_keep_playing_title">계속 플레이하세요</string>
+  <string name="play_and_earn_tap_gem_exchange_body">보석을 탭하여 유닛을 균형으로 교환하세요</string>
+  <string name="play_and_earn_awesome_button">대단해</string>
+  <string name="play_and_earn_earned_balance_body">게임에 사용할 수 있는 Aptoide 잔액으로 1달러를 획득하셨습니다.</string>
+  <string name="play_and_earn_play_button">플레이</string>
+  <string name="play_and_earn_install_button">설치</string>
+  <string name="play_and_earn_notification_recording_title">보상을 위한 플레이 시간 추적</string>
+  <string name="play_and_earn_notification_recording_body">당신의 게임 플레이 시간이 미션 진행 시간으로 계산되고 있습니다.</string>
 </resources>

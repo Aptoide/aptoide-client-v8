@@ -280,7 +280,6 @@
   <string name="gamegenie_entry_screen_companion_section">... tai napauta peliäsi - autan sinua hallitsemaan sen</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[Hei! Olen tekoälyavustajasi kaikissa <1>%1$s</1>.]]></string>
   <!-- Play and Earn -->
-  <string name="play_and_earn_title">Pelaa &amp; Ansaitse</string>
   <string name="play_and_earn_start_earning_title">Aloita ansaitseminen</string>
   <string name="play_and_earn_level_up_rewards_title">Nosta palkkiosi tasoa!</string>
   <string name="play_and_earn_login_unlock_access_body">Kirjaudu sisään ja avaa pääsy uskomattomiin palkintoihin pelatessasi!</string>
@@ -313,4 +312,15 @@
   <string name="play_and_earn_missions_title">Tehtävät</string>
   <string name="play_and_earn_checkpoints_title">Tarkastuspisteet</string>
   <string name="play_and_earn_bonus_percentage_label">%1$s%% Bonus</string>
+  <string name="play_and_earn_know_more_button">Lisätietoja</string>
+  <string name="play_and_earn_level_achieved_body">Taso %1$d saavutettu!</string>
+  <string name="play_and_earn_more_you_play_body">Mitä enemmän pelaat, sitä enemmän ansaitset! Tarkista palkkiosi ja katso, kuinka saldosi kasvaa.</string>
+  <string name="play_and_earn_keep_playing_title">Jatka pelaamista</string>
+  <string name="play_and_earn_tap_gem_exchange_body">Napauta jalokiviä vaihtaaksesi yksikkösi saldoon.</string>
+  <string name="play_and_earn_awesome_button">Mahtavaa</string>
+  <string name="play_and_earn_earned_balance_body">Ansaitsit juuri 1 dollarin Aptoide-saldoa, jota voit käyttää peleissäsi.</string>
+  <string name="play_and_earn_play_button">Pelaa</string>
+  <string name="play_and_earn_install_button">Asenna</string>
+  <string name="play_and_earn_notification_recording_title">Pelitilan seuranta palkintoja varten</string>
+  <string name="play_and_earn_notification_recording_body">Pelituntisi lasketaan mukaan tehtäviisi.</string>
 </resources>

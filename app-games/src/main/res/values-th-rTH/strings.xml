@@ -278,7 +278,6 @@
   <string name="gamegenie_entry_screen_companion_section">... หรือแตะเกมของคุณ - ฉันจะช่วยคุณเชี่ยวชาญมัน</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[สวัสดี! ฉันคือผู้ช่วย AI ของคุณในทุกเรื่องที่เกี่ยวข้องกับ <1>%1$s</1>.]]></string>
   <!-- Play and Earn -->
-  <string name="play_and_earn_title">เล่น &amp; รับรางวัล</string>
   <string name="play_and_earn_start_earning_title">เริ่มสร้างรายได้</string>
   <string name="play_and_earn_level_up_rewards_title">เพิ่มระดับรางวัลของคุณ!</string>
   <string name="play_and_earn_login_unlock_access_body">เข้าสู่ระบบเพื่อปลดล็อกการเข้าถึงรางวัลสุดพิเศษขณะที่คุณเล่น!</string>
@@ -307,8 +306,19 @@
   <string name="play_and_earn_collect_more_units_body">สะสม %1$d หน่วยเพิ่มเติมเพื่อรับ $1.00 ในยอดคงเหลือของ Aptoide</string>
   <string name="play_and_earn_exchange_units_body">แลกเปลี่ยนหน่วย %1$d เป็น $%2$s ในยอดคงเหลือของคุณใน Aptoide</string>
   <string name="play_and_earn_earn_rewards_by_playing_body">รับรางวัลโดยการเล่นเกมใหม่!</string>
-  <string name="play_and_earn_earning_now_title">กำลังได้รับรายได้</string>
+  <string name="play_and_earn_earning_now_title">รับรายได้ทันที</string>
   <string name="play_and_earn_missions_title">ภารกิจ</string>
   <string name="play_and_earn_checkpoints_title">จุดตรวจ</string>
   <string name="play_and_earn_bonus_percentage_label">%1$s%% โบนัส</string>
+  <string name="play_and_earn_know_more_button">รู้เพิ่มเติม</string>
+  <string name="play_and_earn_level_achieved_body">ระดับ %1$d สำเร็จแล้ว!</string>
+  <string name="play_and_earn_more_you_play_body">ยิ่งเล่นมาก ยิ่งได้มาก! ตรวจสอบรางวัลของคุณและดูยอดเงินของคุณเพิ่มขึ้น</string>
+  <string name="play_and_earn_keep_playing_title">เล่นต่อไป</string>
+  <string name="play_and_earn_tap_gem_exchange_body">แตะที่อัญมณีเพื่อแลกเปลี่ยนหน่วยของคุณเป็นยอดคงเหลือ</string>
+  <string name="play_and_earn_awesome_button">ยอดเยี่ยม</string>
+  <string name="play_and_earn_earned_balance_body">คุณเพิ่งได้รับเงิน $1 ใน Aptoide Balance เพื่อใช้กับเกมของคุณ</string>
+  <string name="play_and_earn_play_button">เล่น</string>
+  <string name="play_and_earn_install_button">ติดตั้ง</string>
+  <string name="play_and_earn_notification_recording_title">ติดตามเวลาการเล่นเพื่อรับรางวัล</string>
+  <string name="play_and_earn_notification_recording_body">เวลาที่คุณเล่นเกมกำลังถูกนับรวมในภารกิจของคุณ</string>
 </resources>
