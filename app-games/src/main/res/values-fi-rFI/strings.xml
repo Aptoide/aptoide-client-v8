@@ -280,7 +280,6 @@
   <string name="gamegenie_entry_screen_companion_section">... tai napauta peliäsi - autan sinua hallitsemaan sen</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[Hei! Olen tekoälyavustajasi kaikissa <1>%1$s</1>.]]></string>
   <!-- Play and Earn -->
-  <string name="play_and_earn_title">Pelaa &amp; Ansaitse</string>
   <string name="play_and_earn_start_earning_title">Aloita ansaitseminen</string>
   <string name="play_and_earn_level_up_rewards_title">Nosta palkkiosi tasoa!</string>
   <string name="play_and_earn_login_unlock_access_body">Kirjaudu sisään ja avaa pääsy uskomattomiin palkintoihin pelatessasi!</string>
