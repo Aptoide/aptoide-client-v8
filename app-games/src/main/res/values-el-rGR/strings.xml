@@ -309,8 +309,19 @@
   <string name="play_and_earn_collect_more_units_body">Συλλέξτε %1$d περισσότερες μονάδες για να κερδίσετε 1,00 $ στο Aptoide Balance.</string>
   <string name="play_and_earn_exchange_units_body">Ανταλλάξτε %1$d μονάδες με $%2$s στο υπόλοιπό σας στο Aptoide.</string>
   <string name="play_and_earn_earn_rewards_by_playing_body">Κερδίστε ανταμοιβές παίζοντας νέα παιχνίδια!</string>
-  <string name="play_and_earn_earning_now_title">Κερδίζοντας τώρα</string>
+  <string name="play_and_earn_earning_now_title">Earn Now</string>
   <string name="play_and_earn_missions_title">Αποστολές</string>
   <string name="play_and_earn_checkpoints_title">Σημεία ελέγχου</string>
   <string name="play_and_earn_bonus_percentage_label">%1$s%% Μπόνους</string>
+  <string name="play_and_earn_know_more_button">Know More</string>
+  <string name="play_and_earn_level_achieved_body">Level %1$d achieved!</string>
+  <string name="play_and_earn_more_you_play_body">The more you play, the more you earn! Check your rewards and see your balance grow.</string>
+  <string name="play_and_earn_keep_playing_title">Keep Playing</string>
+  <string name="play_and_earn_tap_gem_exchange_body">Tap the gem to exchange your units for balance</string>
+  <string name="play_and_earn_awesome_button">Awesome</string>
+  <string name="play_and_earn_earned_balance_body">You just earned $1 in Aptoide Balance to use on your games</string>
+  <string name="play_and_earn_play_button">Play</string>
+  <string name="play_and_earn_install_button">Install</string>
+  <string name="play_and_earn_notification_recording_title">Tracking playtime for rewards</string>
+  <string name="play_and_earn_notification_recording_body">Your gameplay time is being counted towards your missions.</string>
 </resources>
