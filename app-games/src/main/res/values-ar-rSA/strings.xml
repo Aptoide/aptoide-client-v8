@@ -288,7 +288,6 @@
   <string name="gamegenie_entry_screen_companion_section">... أو اضغط على لعبتك - سأساعدك على إتقانها</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[مرحبًا! أنا مساعدك الذكي في كل ما يتعلق بـ <1>%1$s</1>.]]></string>
   <!-- Play and Earn -->
-  <string name="play_and_earn_title">العب &amp; اربح</string>
   <string name="play_and_earn_start_earning_title">ابدأ في الكسب</string>
   <string name="play_and_earn_level_up_rewards_title">ارفع مستوى مكافآتك!</string>
   <string name="play_and_earn_login_unlock_access_body">سجّل الدخول لتفتح الباب أمام جوائز مذهلة أثناء اللعب!</string>
