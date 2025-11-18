@@ -280,7 +280,6 @@
   <string name="gamegenie_entry_screen_companion_section">... vagy érintse meg a játékot - segítek elsajátítani</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[Szia! Én vagyok a mesterséges intelligencia asszisztensed mindenben, ami a <1>%1$s</1>.]]></string>
   <!-- Play and Earn -->
-  <string name="play_and_earn_title">Játssz &amp; Keress</string>
   <string name="play_and_earn_start_earning_title">Kezdjen el keresni</string>
   <string name="play_and_earn_level_up_rewards_title">Növelje jutalmainak szintjét!</string>
   <string name="play_and_earn_login_unlock_access_body">Jelentkezz be, hogy játék közben hozzáférhess hihetetlen nyereményekhez!</string>
