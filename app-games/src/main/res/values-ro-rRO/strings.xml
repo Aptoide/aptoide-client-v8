@@ -282,7 +282,6 @@
   <string name="gamegenie_entry_screen_companion_section">... sau atingeți jocul - vă voi ajuta să îl stăpâniți</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[Bună! Sunt asistentul tău AI pentru tot ce ține de <1>%1$s</1>.]]></string>
   <!-- Play and Earn -->
-  <string name="play_and_earn_title">Joacă &amp; Câștigă</string>
   <string name="play_and_earn_start_earning_title">Începeți să câștigați</string>
   <string name="play_and_earn_level_up_rewards_title">Creșteți-vă recompensele!</string>
   <string name="play_and_earn_login_unlock_access_body">Conectează-te pentru a debloca accesul la premii incredibile în timp ce joci!</string>
