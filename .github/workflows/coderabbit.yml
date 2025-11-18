@@ -1,0 +1,14 @@
+name: CodeRabbit Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: CodeRabbit Review
+        uses: coderabbitai/feedback-action@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
