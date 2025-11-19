@@ -326,7 +326,6 @@
   <string name="play_and_earn_everyones_favourites_title">みんなのお気に入り</string>
   <string name="play_and_earn_get_started_now_title">今すぐ始めましょう！</string>
   <string name="play_and_earn_grant_permissions_body">ログインして権限を許可し、プレイしながら素晴らしい賞品へのアクセスをアンロックしましょう！</string>
-  <string name="play_and_earn_permissions">"<![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]>"</string>
   <string name="play_and_earn_lets_go_button">レッツゴー</string>
   <string name="play_and_earn_how_it_works_title">仕組み</string>
   <string name="play_and_earn_pick_featured_game_body">注目のゲームを選ぶ</string>
@@ -341,8 +340,8 @@
   <string name="play_and_earn_units_limit_body"><![CDATA[<1>%1$d</1>/100]]></string>
   <string name="play_and_earn_aptoide_balance_title">アプトイド・バランス</string>
   <string name="play_and_earn_exchange_now_button">今すぐ交換</string>
-  <string name="play_and_earn_collect_more_units_body">%1$d をさらに集めると、Aptoide残高で1.00ドルを獲得できます。</string>
-  <string name="play_and_earn_exchange_units_body">%1$d ユニットを、Aptoide残高の%2$s と交換してください。</string>
+  <string name="play_and_earn_collect_more_units_body">Collect %1$d more units to earn %2$s in Aptoide Balance.</string>
+  <string name="play_and_earn_exchange_units_body">Exchange %1$d units for %2$s in your Aptoide Balance.</string>
   <string name="play_and_earn_earn_rewards_by_playing_body">新しいゲームをプレイして報酬を獲得しよう！</string>
   <string name="play_and_earn_earning_now_title">今すぐ稼ぐ</string>
   <string name="play_and_earn_missions_title">ミッション</string>
