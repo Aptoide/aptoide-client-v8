@@ -337,7 +337,6 @@
   <string name="play_and_earn_everyones_favourites_title">Preferatele tuturor</string>
   <string name="play_and_earn_get_started_now_title">Începeți acum!</string>
   <string name="play_and_earn_grant_permissions_body">Conectează-te și acordă permisiuni pentru a debloca accesul la premii incredibile în timp ce joci!</string>
-  <string name="play_and_earn_permissions">"<![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]>"</string>
   <string name="play_and_earn_lets_go_button">Să mergem</string>
   <string name="play_and_earn_how_it_works_title">Cum funcționează</string>
   <string name="play_and_earn_pick_featured_game_body">Alege un joc recomandat</string>
@@ -352,8 +351,8 @@
   <string name="play_and_earn_units_limit_body"><![CDATA[<1>%1$d</1>/100]]></string>
   <string name="play_and_earn_aptoide_balance_title">Echilibru Aptoide</string>
   <string name="play_and_earn_exchange_now_button">Schimbă acum</string>
-  <string name="play_and_earn_collect_more_units_body">Colectează %1$d mai multe unități pentru a câștiga 1,00 $ în soldul Aptoide.</string>
-  <string name="play_and_earn_exchange_units_body">Schimbați  unități %1$d pentru $%2$s în soldul dvs. Aptoide.</string>
+  <string name="play_and_earn_collect_more_units_body">Collect %1$d more units to earn %2$s in Aptoide Balance.</string>
+  <string name="play_and_earn_exchange_units_body">Exchange %1$d units for %2$s in your Aptoide Balance.</string>
   <string name="play_and_earn_earn_rewards_by_playing_body">Câștigați recompense jucând jocuri noi!</string>
   <string name="play_and_earn_earning_now_title">Câștigați acum</string>
   <string name="play_and_earn_missions_title">Misiuni</string>
