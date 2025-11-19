@@ -76,14 +76,16 @@ fun PlayAndEarnRewardsScreen(
     ) {
       PaEHowItWorksSection()
       if (isPaEReady) {
-        PaEKnowMoreCard(
-          modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-          currentLevel = currentLevel?.plus(1),
-          onClick = {
-            navigateTo(levelUpRoute)
-            analytics.sendPaERewardsHubKnowMoreClick()
-          }
-        )
+        currentLevel?.let { level ->
+          PaEKnowMoreCard(
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+            currentLevel = level + 1,
+            onClick = {
+              navigateTo(levelUpRoute)
+              analytics.sendPaERewardsHubKnowMoreClick()
+            }
+          )
+        }
       } else {
         PaELetsGoCard(
           modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
