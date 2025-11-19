@@ -355,7 +355,7 @@
   <string name="play_and_earn_everyones_favourites_title">المفضلة لدى الجميع</string>
   <string name="play_and_earn_get_started_now_title">ابدأ الآن!</string>
   <string name="play_and_earn_grant_permissions_body">سجّل الدخول ومنح الأذونات لفتح الوصول إلى جوائز مذهلة أثناء اللعب!</string>
-  <string name="play_and_earn_permissions_body">"<![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]>"</string>
+  <string name="play_and_earn_permissions_body"><![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]></string>
   <string name="play_and_earn_lets_go_button">هيا بنا</string>
   <string name="play_and_earn_how_it_works_title">كيف يعمل</string>
   <string name="play_and_earn_pick_featured_game_body">اختر لعبة مميزة</string>
