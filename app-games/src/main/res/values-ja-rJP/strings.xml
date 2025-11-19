@@ -194,6 +194,40 @@
   <string name="purchase_error_expired_card_title">カードの有効期限が切れているようです。</string>
   <string name="iap_already_processing_title">この購入はすでに処理されているようです。</string>
   <string name="iap_already_processing_body">この購入にはしばらく時間がかかる場合がありますので、完了するまでお待ちいただくか、弊社サポートチームまでご連絡ください。</string>
+  <!-- Dates -->
+  <string name="date_published_on">公開日 %s</string>
+  <string name="published_on_monday">月曜日に公開</string>
+  <string name="published_on_tuesday">火曜日発行</string>
+  <string name="published_on_wednesday">水曜日に公開</string>
+  <string name="published_on_thursday">木曜日に公開</string>
+  <string name="published_on_friday">金曜日発行</string>
+  <string name="published_on_saturday">土曜日に公開</string>
+  <string name="published_on_sunday">日曜日に掲載</string>
+  <string name="published_just_now">ちょうど今公開されました</string>
+  <string name="published_today">本日公開</string>
+  <string name="published_yesterday">昨日公開された</string>
+  <plurals name="published_hours">
+    <item quantity="other">%d 時間前に公開されました</item>
+  </plurals>
+  <plurals name="published_minutes">
+    <item quantity="other">%d 分前に公開されました</item>
+  </plurals>
+  <string name="monday">月曜日</string>
+  <string name="tuesday">火曜日</string>
+  <string name="wednesday">水曜日</string>
+  <string name="thursday">木曜日</string>
+  <string name="friday">金曜日</string>
+  <string name="saturday">土曜日</string>
+  <string name="sunday">日曜日</string>
+  <string name="just_now">ついさっき</string>
+  <string name="today">今日</string>
+  <string name="yesterday">昨日</string>
+  <plurals name="hours">
+    <item quantity="other">%d 数時間前</item>
+  </plurals>
+  <plurals name="minutes">
+    <item quantity="other">%d 数分前</item>
+  </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">購入のたびにボーナス</string>
   <string name="bonus_page_body_1">%1$sで識別されるゲームを探し、Aptoide Walletをインストールして、すべての購入で最大%2$s%%のボーナスを獲得してください。このボーナスを使用して、お気に入りのゲームを次回購入することができます！</string>

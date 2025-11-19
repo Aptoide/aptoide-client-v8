@@ -193,6 +193,40 @@
   <string name="purchase_error_expired_card_title">您的卡片似乎已經過期。</string>
   <string name="iap_already_processing_title">此購買似乎已在處理中。</string>
   <string name="iap_already_processing_body">此購買可能需要一段時間，因此，請稍候直至完成或聯絡我們的支援團隊。</string>
+  <!-- Dates -->
+  <string name="date_published_on">發佈於 %s</string>
+  <string name="published_on_monday">於週一發佈</string>
+  <string name="published_on_tuesday">發表於星期二</string>
+  <string name="published_on_wednesday">發表於星期三</string>
+  <string name="published_on_thursday">發表於星期四</string>
+  <string name="published_on_friday">於週五發佈</string>
+  <string name="published_on_saturday">發表於星期六</string>
+  <string name="published_on_sunday">發表於星期日</string>
+  <string name="published_just_now">剛剛發佈</string>
+  <string name="published_today">今日發佈</string>
+  <string name="published_yesterday">昨日發佈</string>
+  <plurals name="published_hours">
+    <item quantity="other">發佈於 %d 小時前</item>
+  </plurals>
+  <plurals name="published_minutes">
+    <item quantity="other">發佈於 %d 分鐘前</item>
+  </plurals>
+  <string name="monday">星期一</string>
+  <string name="tuesday">星期二</string>
+  <string name="wednesday">星期三</string>
+  <string name="thursday">星期四</string>
+  <string name="friday">星期五</string>
+  <string name="saturday">星期六</string>
+  <string name="sunday">星期日</string>
+  <string name="just_now">剛剛</string>
+  <string name="today">今日</string>
+  <string name="yesterday">昨天</string>
+  <plurals name="hours">
+    <item quantity="other">%d 數小時前</item>
+  </plurals>
+  <plurals name="minutes">
+    <item quantity="other">%d 幾分鐘前</item>
+  </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">每次購物都有獎金</string>
   <string name="bonus_page_body_1">尋找以 %1$s標示的遊戲，安裝 Aptoide Wallet 並在所有購買中獲得高達 %2$s%% 的獎金。然後，您可以使用此獎金在您最喜愛的遊戲中進行下一次購買！</string>

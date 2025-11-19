@@ -193,6 +193,40 @@
   <string name="purchase_error_expired_card_title">Có vẻ như thẻ của bạn đã hết hạn.</string>
   <string name="iap_already_processing_title">Có vẻ như giao dịch mua này đang được xử lý.</string>
   <string name="iap_already_processing_body">Quá trình mua hàng này có thể mất một chút thời gian, vì vậy, vui lòng đợi cho đến khi hoàn tất hoặc liên hệ với Đội hỗ trợ của chúng tôi.</string>
+  <!-- Dates -->
+  <string name="date_published_on">Được xuất bản vào %s</string>
+  <string name="published_on_monday">Được đăng vào thứ Hai</string>
+  <string name="published_on_tuesday">Được đăng vào thứ Ba</string>
+  <string name="published_on_wednesday">Được đăng vào thứ Tư</string>
+  <string name="published_on_thursday">Được đăng vào thứ Năm</string>
+  <string name="published_on_friday">Được đăng vào thứ Sáu</string>
+  <string name="published_on_saturday">Được đăng vào thứ Bảy</string>
+  <string name="published_on_sunday">Được đăng vào Chủ nhật</string>
+  <string name="published_just_now">Vừa được xuất bản</string>
+  <string name="published_today">Được xuất bản hôm nay</string>
+  <string name="published_yesterday">Được xuất bản vào ngày hôm qua</string>
+  <plurals name="published_hours">
+    <item quantity="other">Được đăng bởi %d giờ trước</item>
+  </plurals>
+  <plurals name="published_minutes">
+    <item quantity="other">Được đăng bởi %d phút trước</item>
+  </plurals>
+  <string name="monday">Thứ Hai</string>
+  <string name="tuesday">Thứ Ba</string>
+  <string name="wednesday">Thứ Tư</string>
+  <string name="thursday">Thứ Năm</string>
+  <string name="friday">Thứ Sáu</string>
+  <string name="saturday">Thứ Bảy</string>
+  <string name="sunday">Chủ nhật</string>
+  <string name="just_now">Vừa rồi</string>
+  <string name="today">Hôm nay</string>
+  <string name="yesterday">Hôm qua</string>
+  <plurals name="hours">
+    <item quantity="other">%d cách đây vài giờ</item>
+  </plurals>
+  <plurals name="minutes">
+    <item quantity="other">%d cách đây vài phút</item>
+  </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Tiền thưởng cho mỗi lần mua hàng</string>
   <string name="bonus_page_body_1">Tìm các trò chơi được xác định bằng %1$s, cài đặt Aptoide Wallet và nhận đến %2$s%% tiền thưởng trong mọi giao dịch mua. Sau đó, bạn có thể dùng tiền thưởng này để thực hiện các giao dịch mua tiếp theo trong trò chơi yêu thích của mình!</string>

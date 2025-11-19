@@ -193,6 +193,44 @@
   <string name="purchase_error_expired_card_title">Deine Karte scheint abgelaufen zu sein.</string>
   <string name="iap_already_processing_title">Es scheint, als würde dieser Kauf bereits bearbeitet werden.</string>
   <string name="iap_already_processing_body">Dieser Kauf kann eine Weile dauern, bitte habe Geduld, bis er abgeschlossen ist, oder wende dich an unser Support-Team.</string>
+  <!-- Dates -->
+  <string name="date_published_on">Veröffentlicht am %s</string>
+  <string name="published_on_monday">Veröffentlicht am Montag</string>
+  <string name="published_on_tuesday">Veröffentlicht am Dienstag</string>
+  <string name="published_on_wednesday">Veröffentlicht am Mittwoch</string>
+  <string name="published_on_thursday">Veröffentlicht am Donnerstag</string>
+  <string name="published_on_friday">Veröffentlicht am Freitag</string>
+  <string name="published_on_saturday">Veröffentlicht am Samstag</string>
+  <string name="published_on_sunday">Veröffentlicht am Sonntag</string>
+  <string name="published_just_now">Gerade veröffentlicht</string>
+  <string name="published_today">Heute veröffentlicht</string>
+  <string name="published_yesterday">Gestern veröffentlicht</string>
+  <plurals name="published_hours">
+    <item quantity="one">Veröffentlicht %d vor einer Stunde</item>
+    <item quantity="other">Veröffentlicht %d vor Stunden</item>
+  </plurals>
+  <plurals name="published_minutes">
+    <item quantity="one">Veröffentlicht %d vor einer Minute</item>
+    <item quantity="other">Veröffentlicht %d vor wenigen Minuten</item>
+  </plurals>
+  <string name="monday">Montag</string>
+  <string name="tuesday">Dienstag</string>
+  <string name="wednesday">Mittwoch</string>
+  <string name="thursday">Donnerstag</string>
+  <string name="friday">Freitag</string>
+  <string name="saturday">Samstag</string>
+  <string name="sunday">Sonntag</string>
+  <string name="just_now">Gerade eben</string>
+  <string name="today">Heute</string>
+  <string name="yesterday">Gestern</string>
+  <plurals name="hours">
+    <item quantity="one"> %d vor einer Stunde</item>
+    <item quantity="other">%d vor Stunden</item>
+  </plurals>
+  <plurals name="minutes">
+    <item quantity="one">%d vor einer Minute</item>
+    <item quantity="other">%d vor wenigen Minuten</item>
+  </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Ein Bonus für jeden Einkauf</string>
   <string name="bonus_page_body_1">Halte Ausschau nach Spielen, die mit %1$s gekennzeichnet sind, installiere die Aptoide Wallet und erhalte einen Bonus von bis zu %2$s%% auf alle deine Einkäufe. Diesen Bonus kannst du dann für deine nächsten Einkäufe in deinen Lieblingsspielen verwenden!</string>

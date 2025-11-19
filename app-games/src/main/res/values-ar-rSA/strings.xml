@@ -193,6 +193,60 @@
   <string name="purchase_error_expired_card_title">يبدو أن بطاقتك منتهية الصلاحية</string>
   <string name="iap_already_processing_title">يبدو أن عملية الشراء هذه قيد التنفيذ بالفعل.</string>
   <string name="iap_already_processing_body">قد تحتاج عملية الشراء هذه بعض الوقت، لذلك يرجى الانتظار حتى تتم أو تواصل مع فريق الدعم لدينا.</string>
+  <!-- Dates -->
+  <string name="date_published_on">نشر في %s</string>
+  <string name="published_on_monday">نُشر يوم الاثنين</string>
+  <string name="published_on_tuesday">نُشر يوم الثلاثاء</string>
+  <string name="published_on_wednesday">نُشر يوم الأربعاء</string>
+  <string name="published_on_thursday">نُشر يوم الخميس</string>
+  <string name="published_on_friday">نُشر يوم الجمعة</string>
+  <string name="published_on_saturday">نُشر يوم السبت</string>
+  <string name="published_on_sunday">نشر يوم الأحد</string>
+  <string name="published_just_now">نُشر للتو</string>
+  <string name="published_today">نُشر اليوم</string>
+  <string name="published_yesterday">نُشر أمس</string>
+  <plurals name="published_hours">
+    <item quantity="zero">نُشر %d قبل ساعات</item>
+    <item quantity="one">نُشر %d قبل ساعة</item>
+    <item quantity="two">نُشر %d قبل ساعات</item>
+    <item quantity="few">نُشر %d قبل ساعات</item>
+    <item quantity="many">نُشر %d قبل ساعات</item>
+    <item quantity="other">نُشر %d قبل ساعات</item>
+  </plurals>
+  <plurals name="published_minutes">
+    <item quantity="zero">نُشر %d قبل دقائق</item>
+    <item quantity="one">نُشر %d قبل دقيقة</item>
+    <item quantity="two">نُشر %d قبل دقائق</item>
+    <item quantity="few">نُشر %d قبل دقائق</item>
+    <item quantity="many">نُشر %d قبل دقائق</item>
+    <item quantity="other">نُشر %d قبل دقائق</item>
+  </plurals>
+  <string name="monday">الاثنين</string>
+  <string name="tuesday">الثلاثاء</string>
+  <string name="wednesday">الأربعاء</string>
+  <string name="thursday">الخميس</string>
+  <string name="friday">الجمعة</string>
+  <string name="saturday">السبت</string>
+  <string name="sunday">الأحد</string>
+  <string name="just_now">الآن</string>
+  <string name="today">اليوم</string>
+  <string name="yesterday">أمس</string>
+  <plurals name="hours">
+    <item quantity="zero">%d قبل ساعات</item>
+    <item quantity="one"> %d قبل ساعة</item>
+    <item quantity="two">%d قبل ساعات</item>
+    <item quantity="few">%d قبل ساعات</item>
+    <item quantity="many">%d قبل ساعات</item>
+    <item quantity="other">%d قبل ساعات</item>
+  </plurals>
+  <plurals name="minutes">
+    <item quantity="zero">%d قبل دقائق</item>
+    <item quantity="one">%d قبل دقيقة</item>
+    <item quantity="two">%d قبل دقائق</item>
+    <item quantity="few">%d قبل دقائق</item>
+    <item quantity="many">%d قبل دقائق</item>
+    <item quantity="other">%d قبل دقائق</item>
+  </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">مكافأة على كل عملية شراء</string>
   <string name="bonus_page_body_1">ابحث عن ألعاب معرّفة بـ %1$s، ثبت محفظة Aptoide واحصل على مكافأة تصل إلى %2$s%% على كل المشتريات. يمكنك استخدام هذه المكافآت فيما بعد لإجراء عمليات الشراء التالية في ألعابك المفضلة!</string>

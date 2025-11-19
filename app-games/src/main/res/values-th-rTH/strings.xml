@@ -193,6 +193,40 @@
   <string name="purchase_error_expired_card_title">ดูเหมือนว่าบัตรของคุณจะหมดอายุ</string>
   <string name="iap_already_processing_title">ดูเหมือนว่าการซื้อนี้ดำเนินการแล้ว</string>
   <string name="iap_already_processing_body">การซื้อนี้อาจใช้เวลาสักครู่ ดังนั้นโปรดรอจนกว่าจะเสร็จสิ้นหรือติดต่อทีมสนับสนุนของเรา</string>
+  <!-- Dates -->
+  <string name="date_published_on">เผยแพร่เมื่อ %s</string>
+  <string name="published_on_monday">เผยแพร่เมื่อวันจันทร์</string>
+  <string name="published_on_tuesday">เผยแพร่เมื่อวันอังคาร</string>
+  <string name="published_on_wednesday">เผยแพร่เมื่อวันพุธ</string>
+  <string name="published_on_thursday">เผยแพร่เมื่อวันพฤหัสบดี</string>
+  <string name="published_on_friday">เผยแพร่เมื่อวันศุกร์</string>
+  <string name="published_on_saturday">เผยแพร่เมื่อวันเสาร์</string>
+  <string name="published_on_sunday">เผยแพร่เมื่อวันอาทิตย์</string>
+  <string name="published_just_now">เผยแพร่เมื่อสักครู่</string>
+  <string name="published_today">เผยแพร่แล้ววันนี้</string>
+  <string name="published_yesterday">เผยแพร่เมื่อวานนี้</string>
+  <plurals name="published_hours">
+    <item quantity="other">เผยแพร่ %d ชั่วโมงที่ผ่านมา</item>
+  </plurals>
+  <plurals name="published_minutes">
+    <item quantity="other">เผยแพร่ %d นาทีที่ผ่านมา</item>
+  </plurals>
+  <string name="monday">วันจันทร์</string>
+  <string name="tuesday">วันอังคาร</string>
+  <string name="wednesday">วันพุธ</string>
+  <string name="thursday">วันพฤหัสบดี</string>
+  <string name="friday">วันศุกร์</string>
+  <string name="saturday">วันเสาร์</string>
+  <string name="sunday">วันอาทิตย์</string>
+  <string name="just_now">เมื่อสักครู่</string>
+  <string name="today">วันนี้</string>
+  <string name="yesterday">เมื่อวาน</string>
+  <plurals name="hours">
+    <item quantity="other">%d หลายชั่วโมงที่ผ่านมา</item>
+  </plurals>
+  <plurals name="minutes">
+    <item quantity="other">%d ไม่กี่นาทีที่ผ่านมา</item>
+  </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">โบนัสในทุกการซื้อ</string>
   <string name="bonus_page_body_1">มองหาเกมส์ที่มี %1$s ติดตั้ง Aptoide Wallet และรับโบนัสสูงสุดถึง %2$s%% ของการซื้อทั้งหมด จากนั้นคุณสามารถใช้โบนัสนี้ในการซื้อสินค้าครั้งต่อไปในเกมส์ที่คุณชื่นชอบได้!</string>
