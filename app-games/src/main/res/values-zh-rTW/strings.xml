@@ -325,7 +325,6 @@
   <string name="play_and_earn_everyones_favourites_title">眾人最愛</string>
   <string name="play_and_earn_get_started_now_title">立即開始！</string>
   <string name="play_and_earn_grant_permissions_body">登入並授予權限，即可在遊戲過程中解鎖驚喜獎品！</string>
-  <string name="play_and_earn_permissions">"<![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]>"</string>
   <string name="play_and_earn_lets_go_button">走吧</string>
   <string name="play_and_earn_how_it_works_title">運作原理</string>
   <string name="play_and_earn_pick_featured_game_body">挑選一款精選遊戲</string>
@@ -340,8 +339,8 @@
   <string name="play_and_earn_units_limit_body"><![CDATA[<1>%1$d</1>/100]]></string>
   <string name="play_and_earn_aptoide_balance_title">Aptoide 平衡</string>
   <string name="play_and_earn_exchange_now_button">立即兌換</string>
-  <string name="play_and_earn_collect_more_units_body">收集 %1$d 更多單位即可獲得 $1.00 的 Aptoide 餘額。</string>
-  <string name="play_and_earn_exchange_units_body">將您的「 %1$d 」單位兌換為「%2$s 」金額，存入您的Aptoide帳戶餘額。</string>
+  <string name="play_and_earn_collect_more_units_body">Collect %1$d more units to earn %2$s in Aptoide Balance.</string>
+  <string name="play_and_earn_exchange_units_body">Exchange %1$d units for %2$s in your Aptoide Balance.</string>
   <string name="play_and_earn_earn_rewards_by_playing_body">玩新遊戲賺取獎勵！</string>
   <string name="play_and_earn_earning_now_title">立即賺取</string>
   <string name="play_and_earn_missions_title">任務</string>
