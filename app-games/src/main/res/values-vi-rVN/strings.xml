@@ -325,6 +325,7 @@
   <string name="play_and_earn_everyones_favourites_title">Những món yêu thích của mọi người</string>
   <string name="play_and_earn_get_started_now_title">Bắt đầu ngay bây giờ!</string>
   <string name="play_and_earn_grant_permissions_body">Đăng nhập và cấp quyền để mở khóa quyền truy cập vào những phần thưởng tuyệt vời trong khi bạn chơi!</string>
+  <string name="play_and_earn_permissions">"<![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]>"</string>
   <string name="play_and_earn_lets_go_button">Hãy đi nào!</string>
   <string name="play_and_earn_how_it_works_title">Cách thức hoạt động</string>
   <string name="play_and_earn_pick_featured_game_body">Chọn trò chơi nổi bật</string>
