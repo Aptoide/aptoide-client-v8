@@ -38,7 +38,7 @@ import kotlin.random.nextInt
 
 @Composable
 fun PaEKnowMoreCard(
-  currentLevel: Int?,
+  currentLevel: Int,
   modifier: Modifier = Modifier,
   onClick: () -> Unit,
 ) {
