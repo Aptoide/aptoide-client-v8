@@ -337,6 +337,7 @@
   <string name="play_and_earn_everyones_favourites_title">Preferatele tuturor</string>
   <string name="play_and_earn_get_started_now_title">Începeți acum!</string>
   <string name="play_and_earn_grant_permissions_body">Conectează-te și acordă permisiuni pentru a debloca accesul la premii incredibile în timp ce joci!</string>
+  <string name="play_and_earn_permissions">"<![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]>"</string>
   <string name="play_and_earn_lets_go_button">Să mergem</string>
   <string name="play_and_earn_how_it_works_title">Cum funcționează</string>
   <string name="play_and_earn_pick_featured_game_body">Alege un joc recomandat</string>
