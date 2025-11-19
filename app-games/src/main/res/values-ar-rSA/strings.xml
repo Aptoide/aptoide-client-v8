@@ -193,6 +193,60 @@
   <string name="purchase_error_expired_card_title">يبدو أن بطاقتك منتهية الصلاحية</string>
   <string name="iap_already_processing_title">يبدو أن عملية الشراء هذه قيد التنفيذ بالفعل.</string>
   <string name="iap_already_processing_body">قد تحتاج عملية الشراء هذه بعض الوقت، لذلك يرجى الانتظار حتى تتم أو تواصل مع فريق الدعم لدينا.</string>
+  <!-- Dates -->
+  <string name="date_published_on">Published on %s</string>
+  <string name="published_on_monday">Published on Monday</string>
+  <string name="published_on_tuesday">Published on Tuesday</string>
+  <string name="published_on_wednesday">Published on Wednesday</string>
+  <string name="published_on_thursday">Published on Thursday</string>
+  <string name="published_on_friday">Published on Friday</string>
+  <string name="published_on_saturday">Published on Saturday</string>
+  <string name="published_on_sunday">Published on Sunday</string>
+  <string name="published_just_now">Published just now</string>
+  <string name="published_today">Published today</string>
+  <string name="published_yesterday">Published yesterday</string>
+  <plurals name="published_hours">
+    <item quantity="zero">Published %d hours ago</item>
+    <item quantity="one">Published %d hour ago</item>
+    <item quantity="two">Published %d hours ago</item>
+    <item quantity="few">Published %d hours ago</item>
+    <item quantity="many">Published %d hours ago</item>
+    <item quantity="other">Published %d hours ago</item>
+  </plurals>
+  <plurals name="published_minutes">
+    <item quantity="zero">Published %d minutes ago</item>
+    <item quantity="one">Published %d minute ago</item>
+    <item quantity="two">Published %d minutes ago</item>
+    <item quantity="few">Published %d minutes ago</item>
+    <item quantity="many">Published %d minutes ago</item>
+    <item quantity="other">Published %d minutes ago</item>
+  </plurals>
+  <string name="monday">Monday</string>
+  <string name="tuesday">Tuesday</string>
+  <string name="wednesday">Wednesday</string>
+  <string name="thursday">Thursday</string>
+  <string name="friday">Friday</string>
+  <string name="saturday">Saturday</string>
+  <string name="sunday">Sunday</string>
+  <string name="just_now">Just now</string>
+  <string name="today">Today</string>
+  <string name="yesterday">Yesterday</string>
+  <plurals name="hours">
+    <item quantity="zero">%d hours ago</item>
+    <item quantity="one"> %d hour ago</item>
+    <item quantity="two">%d hours ago</item>
+    <item quantity="few">%d hours ago</item>
+    <item quantity="many">%d hours ago</item>
+    <item quantity="other">%d hours ago</item>
+  </plurals>
+  <plurals name="minutes">
+    <item quantity="zero">%d minutes ago</item>
+    <item quantity="one">%d minute ago</item>
+    <item quantity="two">%d minutes ago</item>
+    <item quantity="few">%d minutes ago</item>
+    <item quantity="many">%d minutes ago</item>
+    <item quantity="other">%d minutes ago</item>
+  </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">مكافأة على كل عملية شراء</string>
   <string name="bonus_page_body_1">ابحث عن ألعاب معرّفة بـ %1$s، ثبت محفظة Aptoide واحصل على مكافأة تصل إلى %2$s%% على كل المشتريات. يمكنك استخدام هذه المكافآت فيما بعد لإجراء عمليات الشراء التالية في ألعابك المفضلة!</string>
