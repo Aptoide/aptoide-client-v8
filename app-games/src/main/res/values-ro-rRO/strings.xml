@@ -352,8 +352,8 @@
   <string name="play_and_earn_units_limit_body"><![CDATA[<1>%1$d</1>/100]]></string>
   <string name="play_and_earn_aptoide_balance_title">Echilibru Aptoide</string>
   <string name="play_and_earn_exchange_now_button">Schimbă acum</string>
-  <string name="play_and_earn_collect_more_units_body">Collect %1$d more units to earn %2$s in Aptoide Balance.</string>
-  <string name="play_and_earn_exchange_units_body">Exchange %1$d units for %2$s in your Aptoide Balance.</string>
+  <string name="play_and_earn_collect_more_units_body">Colectează %1$d mai multe unități pentru a câștiga %2$s în Aptoide Balance.</string>
+  <string name="play_and_earn_exchange_units_body">Schimbă unitățile %1$d pentru %2$s din soldul tău Aptoide.</string>
   <string name="play_and_earn_earn_rewards_by_playing_body">Câștigați recompense jucând jocuri noi!</string>
   <string name="play_and_earn_earning_now_title">Câștigați acum</string>
   <string name="play_and_earn_missions_title">Misiuni</string>
