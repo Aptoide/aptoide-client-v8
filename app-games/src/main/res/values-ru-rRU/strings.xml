@@ -358,8 +358,8 @@
   <string name="play_and_earn_units_limit_body"><![CDATA[<1>%1$d</1>/100]]></string>
   <string name="play_and_earn_aptoide_balance_title">Баланс Aptoide</string>
   <string name="play_and_earn_exchange_now_button">Обменять сейчас</string>
-  <string name="play_and_earn_collect_more_units_body">Collect %1$d more units to earn %2$s in Aptoide Balance.</string>
-  <string name="play_and_earn_exchange_units_body">Exchange %1$d units for %2$s in your Aptoide Balance.</string>
+  <string name="play_and_earn_collect_more_units_body">Соберите %1$d больше единиц, чтобы заработать %2$s в Aptoide Balance.</string>
+  <string name="play_and_earn_exchange_units_body">Обменяйте %1$d единиц на %2$s в вашем балансе Aptoide.</string>
   <string name="play_and_earn_earn_rewards_by_playing_body">Зарабатывайте награды, играя в новые игры!</string>
   <string name="play_and_earn_earning_now_title">Заработайте сейчас</string>
   <string name="play_and_earn_missions_title">Миссии</string>
