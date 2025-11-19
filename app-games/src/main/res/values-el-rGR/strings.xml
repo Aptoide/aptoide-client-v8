@@ -331,7 +331,7 @@
   <string name="play_and_earn_everyones_favourites_title">Τα αγαπημένα όλων</string>
   <string name="play_and_earn_get_started_now_title">Ξεκινήστε τώρα!</string>
   <string name="play_and_earn_grant_permissions_body">Συνδεθείτε και παραχωρήστε δικαιώματα για να ξεκλειδώσετε την πρόσβαση σε απίστευτα δώρα ενώ παίζετε!</string>
-  <string name="play_and_earn_permissions">"<![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]>"</string>
+  <string name="play_and_earn_permissions_body"><![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]></string>
   <string name="play_and_earn_lets_go_button">Πάμε</string>
   <string name="play_and_earn_how_it_works_title">Πώς λειτουργεί</string>
   <string name="play_and_earn_pick_featured_game_body">Επιλέξτε ένα προτεινόμενο παιχνίδι</string>
@@ -346,8 +346,8 @@
   <string name="play_and_earn_units_limit_body"><![CDATA[<1>%1$d</1>/100]]></string>
   <string name="play_and_earn_aptoide_balance_title">Aptoide Ισορροπία</string>
   <string name="play_and_earn_exchange_now_button">Ανταλλάξτε τώρα</string>
-  <string name="play_and_earn_collect_more_units_body">Συλλέξτε %1$d περισσότερες μονάδες για να κερδίσετε 1,00 $ στο Aptoide Balance.</string>
-  <string name="play_and_earn_exchange_units_body">Ανταλλάξτε %1$d μονάδες με $%2$s στο υπόλοιπό σας στο Aptoide.</string>
+  <string name="play_and_earn_collect_more_units_body">Συλλέξτε %1$d περισσότερες μονάδες για να κερδίσετε %2$s στο Aptoide Balance.</string>
+  <string name="play_and_earn_exchange_units_body">Ανταλλάξτε %1$d μονάδες με %2$s στο Aptoide Balance σας.</string>
   <string name="play_and_earn_earn_rewards_by_playing_body">Κερδίστε ανταμοιβές παίζοντας νέα παιχνίδια!</string>
   <string name="play_and_earn_earning_now_title">Κερδίστε τώρα</string>
   <string name="play_and_earn_missions_title">Αποστολές</string>
