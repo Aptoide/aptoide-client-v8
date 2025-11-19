@@ -325,7 +325,7 @@
   <string name="play_and_earn_everyones_favourites_title">Favorit semua orang</string>
   <string name="play_and_earn_get_started_now_title">Mulai sekarang!</string>
   <string name="play_and_earn_grant_permissions_body">Masuk dan berikan izin untuk membuka akses ke hadiah-hadiah menakjubkan saat Anda bermain!</string>
-  <string name="play_and_earn_permissions">"<![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]>"</string>
+  <string name="play_and_earn_permissions_body">"<![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]>"</string>
   <string name="play_and_earn_lets_go_button">Ayo kita pergi!</string>
   <string name="play_and_earn_how_it_works_title">Bagaimana cara kerjanya</string>
   <string name="play_and_earn_pick_featured_game_body">Pilih permainan unggulan</string>
