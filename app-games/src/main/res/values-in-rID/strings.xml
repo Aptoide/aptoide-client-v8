@@ -325,7 +325,6 @@
   <string name="play_and_earn_everyones_favourites_title">Favorit semua orang</string>
   <string name="play_and_earn_get_started_now_title">Mulai sekarang!</string>
   <string name="play_and_earn_grant_permissions_body">Masuk dan berikan izin untuk membuka akses ke hadiah-hadiah menakjubkan saat Anda bermain!</string>
-  <string name="play_and_earn_permissions">"<![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]>"</string>
   <string name="play_and_earn_lets_go_button">Ayo kita pergi!</string>
   <string name="play_and_earn_how_it_works_title">Bagaimana cara kerjanya</string>
   <string name="play_and_earn_pick_featured_game_body">Pilih permainan unggulan</string>
@@ -340,8 +339,8 @@
   <string name="play_and_earn_units_limit_body"><![CDATA[<1>%1$d</1>/100]]></string>
   <string name="play_and_earn_aptoide_balance_title">Keseimbangan Aptoide</string>
   <string name="play_and_earn_exchange_now_button">Tukar Sekarang</string>
-  <string name="play_and_earn_collect_more_units_body">Kumpulkan %1$d lebih banyak unit untuk mendapatkan $1.00 di Aptoide Balance.</string>
-  <string name="play_and_earn_exchange_units_body">Tukarkan unit %1$d dengan $%2$s di saldo Aptoide Anda.</string>
+  <string name="play_and_earn_collect_more_units_body">Collect %1$d more units to earn %2$s in Aptoide Balance.</string>
+  <string name="play_and_earn_exchange_units_body">Exchange %1$d units for %2$s in your Aptoide Balance.</string>
   <string name="play_and_earn_earn_rewards_by_playing_body">Dapatkan hadiah dengan memainkan game-game baru!</string>
   <string name="play_and_earn_earning_now_title">Dapatkan Penghasilan Sekarang</string>
   <string name="play_and_earn_missions_title">Misi</string>
