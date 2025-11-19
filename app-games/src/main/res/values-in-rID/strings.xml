@@ -194,38 +194,38 @@
   <string name="iap_already_processing_title">Sepertinya pembelian ini sudah diproses.</string>
   <string name="iap_already_processing_body">Pembelian ini mungkin memakan waktu cukup lama, jadi silakan tunggu sampai selesai atau hubungi Tim Dukungan kami.</string>
   <!-- Dates -->
-  <string name="date_published_on">Published on %s</string>
-  <string name="published_on_monday">Published on Monday</string>
-  <string name="published_on_tuesday">Published on Tuesday</string>
-  <string name="published_on_wednesday">Published on Wednesday</string>
-  <string name="published_on_thursday">Published on Thursday</string>
-  <string name="published_on_friday">Published on Friday</string>
-  <string name="published_on_saturday">Published on Saturday</string>
-  <string name="published_on_sunday">Published on Sunday</string>
-  <string name="published_just_now">Published just now</string>
-  <string name="published_today">Published today</string>
-  <string name="published_yesterday">Published yesterday</string>
+  <string name="date_published_on">Diterbitkan pada %s</string>
+  <string name="published_on_monday">Diterbitkan pada hari Senin</string>
+  <string name="published_on_tuesday">Diterbitkan pada hari Selasa</string>
+  <string name="published_on_wednesday">Diterbitkan pada Rabu</string>
+  <string name="published_on_thursday">Diterbitkan pada hari Kamis</string>
+  <string name="published_on_friday">Diterbitkan pada hari Jumat</string>
+  <string name="published_on_saturday">Diterbitkan pada hari Sabtu</string>
+  <string name="published_on_sunday">Diterbitkan pada hari Minggu</string>
+  <string name="published_just_now">Baru saja diterbitkan</string>
+  <string name="published_today">Diterbitkan hari ini</string>
+  <string name="published_yesterday">Diterbitkan kemarin</string>
   <plurals name="published_hours">
-    <item quantity="other">Published %d hours ago</item>
+    <item quantity="other">Diterbitkan %d beberapa jam yang lalu</item>
   </plurals>
   <plurals name="published_minutes">
-    <item quantity="other">Published %d minutes ago</item>
+    <item quantity="other">Diterbitkan %d beberapa menit yang lalu</item>
   </plurals>
-  <string name="monday">Monday</string>
-  <string name="tuesday">Tuesday</string>
-  <string name="wednesday">Wednesday</string>
-  <string name="thursday">Thursday</string>
-  <string name="friday">Friday</string>
-  <string name="saturday">Saturday</string>
-  <string name="sunday">Sunday</string>
-  <string name="just_now">Just now</string>
-  <string name="today">Today</string>
-  <string name="yesterday">Yesterday</string>
+  <string name="monday">Senin</string>
+  <string name="tuesday">Selasa</string>
+  <string name="wednesday">Rabu</string>
+  <string name="thursday">Kamis</string>
+  <string name="friday">Jumat</string>
+  <string name="saturday">Sabtu</string>
+  <string name="sunday">Minggu</string>
+  <string name="just_now">Baru saja</string>
+  <string name="today">Hari ini</string>
+  <string name="yesterday">Kemarin</string>
   <plurals name="hours">
-    <item quantity="other">%d hours ago</item>
+    <item quantity="other">%d beberapa jam yang lalu</item>
   </plurals>
   <plurals name="minutes">
-    <item quantity="other">%d minutes ago</item>
+    <item quantity="other">%d beberapa menit yang lalu</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Bonus di Setiap Pembelian</string>
