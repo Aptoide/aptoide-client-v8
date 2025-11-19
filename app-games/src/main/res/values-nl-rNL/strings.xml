@@ -276,6 +276,9 @@
   <string name="apkfy_multi_install_intro_1">Wilt u deze app installeren?</string>
   <string name="apkfy_multi_install_intro_2">Er staat nog meer plezier te wachten!</string>
   <string name="apkfy_multi_install_intro_3">Probeer deze games geïnspireerd door Roblox eens uit.</string>
+  <!-- AB Test for Experiment 9 : GamesFeed -->
+  <string name="gamesfeed_bundle_header_1">For you</string>
+  <string name="gamesfeed_detail_header">Weekly highlights based on Roblox</string>
   <string name="gamegenie_entry_screen_general_section">Vind je volgende favoriete game met GameGenie</string>
   <string name="gamegenie_entry_screen_companion_section">... of tik op je spel - ik help je het onder de knie te krijgen</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[Hallo! Ik ben je AI-assistent voor alles wat te maken heeft met <1>%1$s</1>.]]></string>
