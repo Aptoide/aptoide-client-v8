@@ -343,6 +343,7 @@
   <string name="play_and_earn_everyones_favourites_title">Улюблені всіма</string>
   <string name="play_and_earn_get_started_now_title">Почніть зараз!</string>
   <string name="play_and_earn_grant_permissions_body">Увійдіть у систему та надайте дозволи, щоб отримати доступ до неймовірних призів під час гри!</string>
+  <string name="play_and_earn_permissions">"<![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]>"</string>
   <string name="play_and_earn_lets_go_button">Поїхали</string>
   <string name="play_and_earn_how_it_works_title">Як це працює</string>
   <string name="play_and_earn_pick_featured_game_body">Виберіть популярну гру</string>
