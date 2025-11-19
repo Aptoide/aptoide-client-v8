@@ -340,8 +340,8 @@
   <string name="play_and_earn_units_limit_body"><![CDATA[<1>%1$d</1>/100]]></string>
   <string name="play_and_earn_aptoide_balance_title">Aptoide 平衡</string>
   <string name="play_and_earn_exchange_now_button">立即兑换</string>
-  <string name="play_and_earn_collect_more_units_body">Collect %1$d more units to earn %2$s in Aptoide Balance.</string>
-  <string name="play_and_earn_exchange_units_body">Exchange %1$d units for %2$s in your Aptoide Balance.</string>
+  <string name="play_and_earn_collect_more_units_body">收集 %1$d 更多积分，即可在Aptoide账户中获得 %2$s 。</string>
+  <string name="play_and_earn_exchange_units_body">在您的Aptoide账户余额中，将 %1$d 单位兑换为 %2$s。</string>
   <string name="play_and_earn_earn_rewards_by_playing_body">玩新游戏，赢奖励！</string>
   <string name="play_and_earn_earning_now_title">立即赚取</string>
   <string name="play_and_earn_missions_title">任务</string>
