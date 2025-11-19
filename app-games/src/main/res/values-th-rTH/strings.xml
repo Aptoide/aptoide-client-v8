@@ -325,7 +325,7 @@
   <string name="play_and_earn_everyones_favourites_title">รายการโปรดของทุกคน</string>
   <string name="play_and_earn_get_started_now_title">เริ่มต้นเลย!</string>
   <string name="play_and_earn_grant_permissions_body">เข้าสู่ระบบและให้สิทธิ์เพื่อปลดล็อกการเข้าถึงรางวัลที่น่าทึ่งขณะที่คุณเล่น!</string>
-  <string name="play_and_earn_permissions">"<![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]>"</string>
+  <string name="play_and_earn_permissions_body"><![CDATA[<1>อนุญาตการซ้อนทับของรางวัลและเวลาในเกม</1>เพื่อแสดงความคืบหน้าและรางวัลของคุณตามเวลาที่คุณเล่นในเกม]]></string>
   <string name="play_and_earn_lets_go_button">ไปกันเถอะ</string>
   <string name="play_and_earn_how_it_works_title">วิธีการทำงาน</string>
   <string name="play_and_earn_pick_featured_game_body">เลือกเกมแนะนำ</string>
@@ -340,8 +340,8 @@
   <string name="play_and_earn_units_limit_body"><![CDATA[<1>%1$d</1>/100]]></string>
   <string name="play_and_earn_aptoide_balance_title">Aptoide Balance</string>
   <string name="play_and_earn_exchange_now_button">แลกเปลี่ยนตอนนี้</string>
-  <string name="play_and_earn_collect_more_units_body">สะสม %1$d หน่วยเพิ่มเติมเพื่อรับ $1.00 ในยอดคงเหลือของ Aptoide</string>
-  <string name="play_and_earn_exchange_units_body">แลกเปลี่ยนหน่วย %1$d เป็น $%2$s ในยอดคงเหลือของคุณใน Aptoide</string>
+  <string name="play_and_earn_collect_more_units_body">สะสม %1$d หน่วยเพิ่มเติมเพื่อรับ %2$s ในยอดคงเหลือของ Aptoide</string>
+  <string name="play_and_earn_exchange_units_body">แลกเปลี่ยนหน่วย %1$d เป็น %2$s ในยอดคงเหลือของคุณใน Aptoide</string>
   <string name="play_and_earn_earn_rewards_by_playing_body">รับรางวัลโดยการเล่นเกมใหม่!</string>
   <string name="play_and_earn_earning_now_title">รับรายได้ทันที</string>
   <string name="play_and_earn_missions_title">ภารกิจ</string>
