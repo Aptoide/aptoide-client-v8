@@ -331,7 +331,7 @@
   <string name="play_and_earn_everyones_favourites_title">Die Favoriten aller</string>
   <string name="play_and_earn_get_started_now_title">Jetzt loslegen!</string>
   <string name="play_and_earn_grant_permissions_body">Melden Sie sich an und erteilen Sie Berechtigungen, um während des Spiels Zugang zu unglaublichen Preisen zu erhalten!</string>
-  <string name="play_and_earn_permissions">"<![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]>"</string>
+  <string name="play_and_earn_permissions_body"><![CDATA[Erteile <1>Overlay- und Spielzeitberechtigungen</1>, um deinen Fortschritt und deine Belohnungen basierend auf deiner Spielzeit im Spiel anzuzeigen.]]></string>
   <string name="play_and_earn_lets_go_button">Auf geht\'s!</string>
   <string name="play_and_earn_how_it_works_title">So funktioniert es</string>
   <string name="play_and_earn_pick_featured_game_body">Wähle ein vorgestelltes Spiel aus</string>
@@ -346,8 +346,8 @@
   <string name="play_and_earn_units_limit_body"><![CDATA[<1>%1$d</1>/100]]></string>
   <string name="play_and_earn_aptoide_balance_title">Aptoide-Guthaben</string>
   <string name="play_and_earn_exchange_now_button">Jetzt umtauschen</string>
-  <string name="play_and_earn_collect_more_units_body">Sammeln Sie %1$d weitere Einheiten, um 1,00 $ in Ihrem Aptoide-Guthaben zu verdienen.</string>
-  <string name="play_and_earn_exchange_units_body">Tauschen Sie %1$d Einheiten gegen $%2$s in Ihrem Aptoide-Guthaben ein.</string>
+  <string name="play_and_earn_collect_more_units_body">Sammeln Sie %1$d weitere Einheiten, um %2$s in Aptoide Balance zu verdienen.</string>
+  <string name="play_and_earn_exchange_units_body">Tauschen Sie %1$d Einheiten gegen %2$s in Ihrem Aptoide-Guthaben ein.</string>
   <string name="play_and_earn_earn_rewards_by_playing_body">Verdiene Belohnungen, indem du neue Spiele spielst!</string>
   <string name="play_and_earn_earning_now_title">Jetzt verdienen</string>
   <string name="play_and_earn_missions_title">Missionen</string>
