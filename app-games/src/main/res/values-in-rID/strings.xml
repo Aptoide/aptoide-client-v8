@@ -340,8 +340,8 @@
   <string name="play_and_earn_units_limit_body"><![CDATA[<1>%1$d</1>/100]]></string>
   <string name="play_and_earn_aptoide_balance_title">Keseimbangan Aptoide</string>
   <string name="play_and_earn_exchange_now_button">Tukar Sekarang</string>
-  <string name="play_and_earn_collect_more_units_body">Collect %1$d more units to earn %2$s in Aptoide Balance.</string>
-  <string name="play_and_earn_exchange_units_body">Exchange %1$d units for %2$s in your Aptoide Balance.</string>
+  <string name="play_and_earn_collect_more_units_body">Kumpulkan %1$d lebih banyak unit untuk mendapatkan %2$s di Aptoide Balance.</string>
+  <string name="play_and_earn_exchange_units_body">Tukarkan unit %1$d dengan %2$s di saldo Aptoide Anda.</string>
   <string name="play_and_earn_earn_rewards_by_playing_body">Dapatkan hadiah dengan memainkan game-game baru!</string>
   <string name="play_and_earn_earning_now_title">Dapatkan Penghasilan Sekarang</string>
   <string name="play_and_earn_missions_title">Misi</string>
