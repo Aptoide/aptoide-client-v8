@@ -326,7 +326,7 @@
   <string name="play_and_earn_everyones_favourites_title">みんなのお気に入り</string>
   <string name="play_and_earn_get_started_now_title">今すぐ始めましょう！</string>
   <string name="play_and_earn_grant_permissions_body">ログインして権限を許可し、プレイしながら素晴らしい賞品へのアクセスをアンロックしましょう！</string>
-  <string name="play_and_earn_permissions_body">"<![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]>"</string>
+  <string name="play_and_earn_permissions_body"><![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]></string>
   <string name="play_and_earn_lets_go_button">レッツゴー</string>
   <string name="play_and_earn_how_it_works_title">仕組み</string>
   <string name="play_and_earn_pick_featured_game_body">注目のゲームを選ぶ</string>
