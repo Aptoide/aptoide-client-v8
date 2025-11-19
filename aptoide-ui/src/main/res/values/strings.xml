@@ -1,7 +1,7 @@
 <resources>
   <string name="toolbar_title">Title Placeholder</string>
-    
-  
+
+
   <!-- Dates -->
   <string name="date_published_on">Published on %s</string>
   <string name="published_on_monday">Published on Monday</string>
@@ -28,7 +28,30 @@
         <item quantity="many">Published %d minutes ago</item>
         <item quantity="other">Published %d minutes ago</item>
   </plurals>
-  
-  
-  
+
+  <string name="monday">Monday</string>
+  <string name="tuesday">Tuesday</string>
+  <string name="wednesday">Wednesday</string>
+  <string name="thursday">Thursday</string>
+  <string name="friday">Friday</string>
+  <string name="saturday">Saturday</string>
+  <string name="sunday">Sunday</string>
+  <string name="just_now">Just now</string>
+  <string name="today">Today</string>
+  <string name="yesterday">Yesterday</string>
+  <plurals name="hours">
+    <item quantity="one"> %d hour ago</item>
+    <item quantity="two">%d hours ago</item>
+    <item quantity="few">%d hours ago</item>
+    <item quantity="many">%d hours ago</item>
+    <item quantity="other">%d hours ago</item>
+  </plurals>
+  <plurals name="minutes">
+    <item quantity="one">%d minute ago</item>
+    <item quantity="two">%d minutes ago</item>
+    <item quantity="few">%d minutes ago</item>
+    <item quantity="many">%d minutes ago</item>
+    <item quantity="other">%d minutes ago</item>
+  </plurals>
+
 </resources>
