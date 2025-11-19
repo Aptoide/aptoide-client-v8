@@ -331,7 +331,7 @@
   <string name="play_and_earn_everyones_favourites_title">Herkesin favorileri</string>
   <string name="play_and_earn_get_started_now_title">Hemen başlayın!</string>
   <string name="play_and_earn_grant_permissions_body">Oynarken inanılmaz ödüllere erişmek için oturum açın ve izinleri verin!</string>
-  <string name="play_and_earn_permissions_body"><![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]></string>
+  <string name="play_and_earn_permissions_body"><![CDATA[Oyun içindeki <1>oyun</1> sürenize göre ilerlemenizi ve ödüllerinizi görüntülemek için <1>overlay ve oyun süresi izinlerini</1> verin.]]></string>
   <string name="play_and_earn_lets_go_button">Hadi gidelim</string>
   <string name="play_and_earn_how_it_works_title">Nasıl çalışır</string>
   <string name="play_and_earn_pick_featured_game_body">Öne çıkan bir oyun seçin</string>
