@@ -331,7 +331,7 @@
   <string name="play_and_earn_everyones_favourites_title">Kaikkien suosikit</string>
   <string name="play_and_earn_get_started_now_title">Aloita nyt!</string>
   <string name="play_and_earn_grant_permissions_body">Kirjaudu sisään ja myönnä käyttöoikeudet, jotta voit avata pääsyn uskomattomiin palkintoihin pelatessasi!</string>
-  <string name="play_and_earn_permissions"><![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]></string>
+  <string name="play_and_earn_permissions"><![CDATA[Myönnä <1>päällekkäiset käyttöoikeudet ja peliaikakäyttöoikeudet</1>, jotta voit näyttää edistymisesi ja palkintosi pelissä viettämäsi peliajan perusteella.]]></string>
   <string name="play_and_earn_lets_go_button">Lähdetään</string>
   <string name="play_and_earn_how_it_works_title">Kuinka se toimii</string>
   <string name="play_and_earn_pick_featured_game_body">Valitse esitelty peli</string>
