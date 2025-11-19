@@ -193,6 +193,44 @@
   <string name="purchase_error_expired_card_title">La tua carta è scaduta.</string>
   <string name="iap_already_processing_title">Sembra che questo acquisto sia già stato elaborato.</string>
   <string name="iap_already_processing_body">Questo acquisto potrebbe impiegare diverso tempo. Attendi il completamento della transazione o contatta il nostro servizio clienti.</string>
+  <!-- Dates -->
+  <string name="date_published_on">Pubblicato il %s</string>
+  <string name="published_on_monday">Pubblicato lunedì</string>
+  <string name="published_on_tuesday">Pubblicato martedì</string>
+  <string name="published_on_wednesday">Pubblicato mercoledì</string>
+  <string name="published_on_thursday">Pubblicato giovedì</string>
+  <string name="published_on_friday">Pubblicato venerdì</string>
+  <string name="published_on_saturday">Pubblicato sabato</string>
+  <string name="published_on_sunday">Pubblicato domenica</string>
+  <string name="published_just_now">Pubblicato proprio ora</string>
+  <string name="published_today">Pubblicato oggi</string>
+  <string name="published_yesterday">Pubblicato ieri</string>
+  <plurals name="published_hours">
+    <item quantity="one">Pubblicato %d ora fa</item>
+    <item quantity="other">Pubblicato %d ore fa</item>
+  </plurals>
+  <plurals name="published_minutes">
+    <item quantity="one">Pubblicato %d minuto fa</item>
+    <item quantity="other">Pubblicato %d minuti fa</item>
+  </plurals>
+  <string name="monday">Lunedì</string>
+  <string name="tuesday">martedì</string>
+  <string name="wednesday">mercoledì</string>
+  <string name="thursday">giovedì</string>
+  <string name="friday">Venerdì</string>
+  <string name="saturday">Sabato</string>
+  <string name="sunday">Domenica</string>
+  <string name="just_now">Proprio ora</string>
+  <string name="today">Oggi</string>
+  <string name="yesterday">Ieri</string>
+  <plurals name="hours">
+    <item quantity="one"> %d un\'ora fa</item>
+    <item quantity="other">%d ore fa</item>
+  </plurals>
+  <plurals name="minutes">
+    <item quantity="one">%d un minuto fa</item>
+    <item quantity="other">%d minuti fa</item>
+  </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Un bonus a ogni acquisto</string>
   <string name="bonus_page_body_1">Cerca i giochi con identificazione %1$s, installa l\'Apoide Wallet e ricevi fino al %2$s%% di bonus su tutti gli acquisti. Potrai poi utilizzare questo bonus per effettuare acquisti sui tuoi giochi preferiti!</string>

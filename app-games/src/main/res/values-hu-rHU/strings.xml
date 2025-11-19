@@ -193,6 +193,44 @@
   <string name="purchase_error_expired_card_title">Úgy tűnik, lejárt a kártyád.</string>
   <string name="iap_already_processing_title">Úgy tűnik ezt a vásárlást már feldolgozták…</string>
   <string name="iap_already_processing_body">Ez a vásárlás több időt vesz igénybe. Várj amíg befejeződik vagy lépj kapcsolatba az ügyfélszolgálattal.</string>
+  <!-- Dates -->
+  <string name="date_published_on">Közzététel dátuma %s</string>
+  <string name="published_on_monday">Közzététel: hétfő</string>
+  <string name="published_on_tuesday">Közzététel: kedd</string>
+  <string name="published_on_wednesday">Közzététel: szerda</string>
+  <string name="published_on_thursday">Közzététel: csütörtök</string>
+  <string name="published_on_friday">Pénteken közzétett</string>
+  <string name="published_on_saturday">Szombaton közzétett</string>
+  <string name="published_on_sunday">Vasárnap publikálva</string>
+  <string name="published_just_now">Most jelent meg</string>
+  <string name="published_today">Ma megjelent</string>
+  <string name="published_yesterday">Tegnap publikálva</string>
+  <plurals name="published_hours">
+    <item quantity="one">Közzététel %d órával ezelőtt</item>
+    <item quantity="other">%d órával ezelőtt publikálva</item>
+  </plurals>
+  <plurals name="published_minutes">
+    <item quantity="one">Közzététel %d perce</item>
+    <item quantity="other">%d perce</item>
+  </plurals>
+  <string name="monday">hétfő</string>
+  <string name="tuesday">kedd</string>
+  <string name="wednesday">Szerda</string>
+  <string name="thursday">csütörtök</string>
+  <string name="friday">péntek</string>
+  <string name="saturday">szombat</string>
+  <string name="sunday">vasárnap</string>
+  <string name="just_now">Épp most</string>
+  <string name="today">Ma</string>
+  <string name="yesterday">Tegnap</string>
+  <plurals name="hours">
+    <item quantity="one"> %d egy órával ezelőtt</item>
+    <item quantity="other">%d órákkal ezelőtt</item>
+  </plurals>
+  <plurals name="minutes">
+    <item quantity="one">%d egy perce</item>
+    <item quantity="other">%d percekkel ezelőtt</item>
+  </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Bónusz minden vásárlásért cserébe</string>
   <string name="bonus_page_body_1">Keresd a %1$s jellel jelölt játékokat, telepítsd az Aptoide Walletet, és szerezz akár %2$s%% bónuszt minden vásárlás után. Ezt a bónuszt pedig felhasználhatod a legközelebbi vásárlás során a kedvenc játékodban!</string>

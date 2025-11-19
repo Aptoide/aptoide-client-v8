@@ -193,6 +193,44 @@
   <string name="purchase_error_expired_card_title">Näyttää siltä, että korttisi on vanhentunut.</string>
   <string name="iap_already_processing_title">Näyttää siltä, että tämä ostos on jo käsitelty.</string>
   <string name="iap_already_processing_body">Tämä osto voi kestää jonkin aikaa, joten odota, kunnes se on valmis, tai ota yhteyttä tukitiimiimme.</string>
+  <!-- Dates -->
+  <string name="date_published_on">Julkaistu %s</string>
+  <string name="published_on_monday">Julkaistu maanantaina</string>
+  <string name="published_on_tuesday">Julkaistu tiistaina</string>
+  <string name="published_on_wednesday">Julkaistu keskiviikkona</string>
+  <string name="published_on_thursday">Julkaistu torstaina</string>
+  <string name="published_on_friday">Julkaistu perjantaina</string>
+  <string name="published_on_saturday">Julkaistu lauantaina</string>
+  <string name="published_on_sunday">Julkaistu sunnuntaina</string>
+  <string name="published_just_now">Julkaistu juuri äsken</string>
+  <string name="published_today">Julkaistu tänään</string>
+  <string name="published_yesterday">Julkaistu eilen</string>
+  <plurals name="published_hours">
+    <item quantity="one">Julkaistu %d tunti sitten</item>
+    <item quantity="other">Julkaistu %d tuntia sitten</item>
+  </plurals>
+  <plurals name="published_minutes">
+    <item quantity="one">Julkaistu %d minuuttia sitten</item>
+    <item quantity="other">Julkaistu %d minuuttia sitten</item>
+  </plurals>
+  <string name="monday">maanantai</string>
+  <string name="tuesday">tiistai</string>
+  <string name="wednesday">keskiviikko</string>
+  <string name="thursday">torstai</string>
+  <string name="friday">perjantai</string>
+  <string name="saturday">lauantai</string>
+  <string name="sunday">sunnuntai</string>
+  <string name="just_now">Juuri nyt</string>
+  <string name="today">Tänään</string>
+  <string name="yesterday">Eilen</string>
+  <plurals name="hours">
+    <item quantity="one"> %d tunti sitten</item>
+    <item quantity="other">%d tunteja sitten</item>
+  </plurals>
+  <plurals name="minutes">
+    <item quantity="one">%d minuutti sitten</item>
+    <item quantity="other">%d muutama minuutti sitten</item>
+  </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Bonusta jokaisesta ostoksesta</string>
   <string name="bonus_page_body_1">Etsi pelejä, jotka on tunnistettu %1$s, asenna Aptoide Wallet ja saat jopa %2$s%% bonuksen kaikista ostoksista. Voit sitten käyttää tämän bonuksen seuraaviin ostoksiisi suosikkipeleissäsi!</string>

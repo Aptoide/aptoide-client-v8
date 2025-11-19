@@ -193,6 +193,40 @@
   <string name="purchase_error_expired_card_title">카드가 만료되는 것 같습니다.</string>
   <string name="iap_already_processing_title">이 구매는 이미 처리 중인 것 같습니다.</string>
   <string name="iap_already_processing_body">이 구매는 시간이 조금 걸릴 수 있으니, 완료될 때까지 기다려 주시거나 고객 지원팀에 문의해 주세요.</string>
+  <!-- Dates -->
+  <string name="date_published_on">게재됨 %s</string>
+  <string name="published_on_monday">월요일에 게시됨</string>
+  <string name="published_on_tuesday">화요일에 게시됨</string>
+  <string name="published_on_wednesday">수요일 발행</string>
+  <string name="published_on_thursday">목요일에 게시됨</string>
+  <string name="published_on_friday">금요일에 게시됨</string>
+  <string name="published_on_saturday">토요일에 발행됨</string>
+  <string name="published_on_sunday">일요일에 발행됨</string>
+  <string name="published_just_now">방금 게시됨</string>
+  <string name="published_today">오늘 발행됨</string>
+  <string name="published_yesterday">어제 게시됨</string>
+  <plurals name="published_hours">
+    <item quantity="other">게시됨 %d 시간 전</item>
+  </plurals>
+  <plurals name="published_minutes">
+    <item quantity="other">게시됨 %d 분 전</item>
+  </plurals>
+  <string name="monday">월요일</string>
+  <string name="tuesday">화요일</string>
+  <string name="wednesday">수요일</string>
+  <string name="thursday">목요일</string>
+  <string name="friday">금요일</string>
+  <string name="saturday">토요일</string>
+  <string name="sunday">일요일</string>
+  <string name="just_now">방금</string>
+  <string name="today">오늘</string>
+  <string name="yesterday">어제</string>
+  <plurals name="hours">
+    <item quantity="other">%d 몇 시간 전</item>
+  </plurals>
+  <plurals name="minutes">
+    <item quantity="other">%d 몇 분 전에</item>
+  </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">모든 구매 시 보너스 제공</string>
   <string name="bonus_page_body_1">%1$s로 표시된 게임을 찾아 Aptoide 지갑을 설치하고 모든 구매 시 최대 %2$s%% 보너스를 받으세요. 이 보너스를 사용하여 좋아하는 게임에서 다음 구매를 진행할 수 있습니다!</string>
