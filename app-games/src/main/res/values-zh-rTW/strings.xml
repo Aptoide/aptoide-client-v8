@@ -325,7 +325,7 @@
   <string name="play_and_earn_everyones_favourites_title">眾人最愛</string>
   <string name="play_and_earn_get_started_now_title">立即開始！</string>
   <string name="play_and_earn_grant_permissions_body">登入並授予權限，即可在遊戲過程中解鎖驚喜獎品！</string>
-  <string name="play_and_earn_permissions"><![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]></string>
+  <string name="play_and_earn_permissions"><![CDATA[授予<1>遊戲疊加層與遊戲時間權限</1>，以便根據您在遊戲中的遊玩時間顯示進度與獎勵。]]></string>
   <string name="play_and_earn_lets_go_button">走吧</string>
   <string name="play_and_earn_how_it_works_title">運作原理</string>
   <string name="play_and_earn_pick_featured_game_body">挑選一款精選遊戲</string>
