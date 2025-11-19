@@ -194,6 +194,40 @@
   <string name="purchase_error_expired_card_title">カードの有効期限が切れているようです。</string>
   <string name="iap_already_processing_title">この購入はすでに処理されているようです。</string>
   <string name="iap_already_processing_body">この購入にはしばらく時間がかかる場合がありますので、完了するまでお待ちいただくか、弊社サポートチームまでご連絡ください。</string>
+  <!-- Dates -->
+  <string name="date_published_on">Published on %s</string>
+  <string name="published_on_monday">Published on Monday</string>
+  <string name="published_on_tuesday">Published on Tuesday</string>
+  <string name="published_on_wednesday">Published on Wednesday</string>
+  <string name="published_on_thursday">Published on Thursday</string>
+  <string name="published_on_friday">Published on Friday</string>
+  <string name="published_on_saturday">Published on Saturday</string>
+  <string name="published_on_sunday">Published on Sunday</string>
+  <string name="published_just_now">Published just now</string>
+  <string name="published_today">Published today</string>
+  <string name="published_yesterday">Published yesterday</string>
+  <plurals name="published_hours">
+    <item quantity="other">Published %d hours ago</item>
+  </plurals>
+  <plurals name="published_minutes">
+    <item quantity="other">Published %d minutes ago</item>
+  </plurals>
+  <string name="monday">Monday</string>
+  <string name="tuesday">Tuesday</string>
+  <string name="wednesday">Wednesday</string>
+  <string name="thursday">Thursday</string>
+  <string name="friday">Friday</string>
+  <string name="saturday">Saturday</string>
+  <string name="sunday">Sunday</string>
+  <string name="just_now">Just now</string>
+  <string name="today">Today</string>
+  <string name="yesterday">Yesterday</string>
+  <plurals name="hours">
+    <item quantity="other">%d hours ago</item>
+  </plurals>
+  <plurals name="minutes">
+    <item quantity="other">%d minutes ago</item>
+  </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">購入のたびにボーナス</string>
   <string name="bonus_page_body_1">%1$sで識別されるゲームを探し、Aptoide Walletをインストールして、すべての購入で最大%2$s%%のボーナスを獲得してください。このボーナスを使用して、お気に入りのゲームを次回購入することができます！</string>
