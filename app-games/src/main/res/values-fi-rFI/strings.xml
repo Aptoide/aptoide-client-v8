@@ -276,6 +276,9 @@
   <string name="apkfy_multi_install_intro_1">Haluatko asentaa tämän sovelluksen?</string>
   <string name="apkfy_multi_install_intro_2">Lisää hauskaa odottaa!</string>
   <string name="apkfy_multi_install_intro_3">Kokeile näitä Robloxista inspiraationsa saaneita pelejä.</string>
+  <!-- AB Test for Experiment 9 : GamesFeed -->
+  <string name="gamesfeed_bundle_header_1">Sinulle</string>
+  <string name="gamesfeed_detail_header">Robloxin viikoittaiset kohokohdat</string>
   <string name="gamegenie_entry_screen_general_section">Löydä seuraava suosikkipelisi GameGenien avulla</string>
   <string name="gamegenie_entry_screen_companion_section">... tai napauta peliäsi - autan sinua hallitsemaan sen</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[Hei! Olen tekoälyavustajasi kaikissa <1>%1$s</1>.]]></string>
