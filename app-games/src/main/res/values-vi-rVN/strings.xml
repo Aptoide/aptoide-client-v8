@@ -325,7 +325,7 @@
   <string name="play_and_earn_everyones_favourites_title">Những món yêu thích của mọi người</string>
   <string name="play_and_earn_get_started_now_title">Bắt đầu ngay bây giờ!</string>
   <string name="play_and_earn_grant_permissions_body">Đăng nhập và cấp quyền để mở khóa quyền truy cập vào những phần thưởng tuyệt vời trong khi bạn chơi!</string>
-  <string name="play_and_earn_permissions">"<![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]>"</string>
+  <string name="play_and_earn_permissions_body"><![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]></string>
   <string name="play_and_earn_lets_go_button">Hãy đi nào!</string>
   <string name="play_and_earn_how_it_works_title">Cách thức hoạt động</string>
   <string name="play_and_earn_pick_featured_game_body">Chọn trò chơi nổi bật</string>
@@ -340,8 +340,8 @@
   <string name="play_and_earn_units_limit_body"><![CDATA[<1>%1$d</1>/100]]></string>
   <string name="play_and_earn_aptoide_balance_title">Cân bằng Aptoide</string>
   <string name="play_and_earn_exchange_now_button">Đổi ngay</string>
-  <string name="play_and_earn_collect_more_units_body">Thu thập %1$d nhiều đơn vị hơn để kiếm $1.00 trong tài khoản Aptoide Balance.</string>
-  <string name="play_and_earn_exchange_units_body">Đổi các đơn vị %1$d lấy $%2$s trong tài khoản Aptoide Balance của bạn.</string>
+  <string name="play_and_earn_collect_more_units_body">Thu thập %1$d nhiều đơn vị hơn để kiếm %2$s trong Aptoide Balance.</string>
+  <string name="play_and_earn_exchange_units_body">Đổi các đơn vị %1$d lấy %2$s trong tài khoản Aptoide Balance của bạn.</string>
   <string name="play_and_earn_earn_rewards_by_playing_body">Kiếm phần thưởng bằng cách chơi các trò chơi mới!</string>
   <string name="play_and_earn_earning_now_title">Kiếm tiền ngay</string>
   <string name="play_and_earn_missions_title">Nhiệm vụ</string>
