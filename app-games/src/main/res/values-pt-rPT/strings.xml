@@ -331,7 +331,6 @@
   <string name="play_and_earn_everyones_favourites_title">Os favoritos de todos</string>
   <string name="play_and_earn_get_started_now_title">Comece agora mesmo!</string>
   <string name="play_and_earn_grant_permissions_body">Inicie sessão e conceda permissões para desbloquear o acesso a prémios incríveis enquanto joga!</string>
-  <string name="play_and_earn_permissions">"<![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]>"</string>
   <string name="play_and_earn_lets_go_button">Vamos lá</string>
   <string name="play_and_earn_how_it_works_title">Como funciona</string>
   <string name="play_and_earn_pick_featured_game_body">Escolha um jogo em destaque</string>
@@ -346,8 +345,8 @@
   <string name="play_and_earn_units_limit_body"><![CDATA[<1>%1$d</1>/100]]></string>
   <string name="play_and_earn_aptoide_balance_title">Aptoide Balance</string>
   <string name="play_and_earn_exchange_now_button">Trocar agora</string>
-  <string name="play_and_earn_collect_more_units_body">Acumule %1$d mais unidades para ganhar $1,00 no saldo Aptoide.</string>
-  <string name="play_and_earn_exchange_units_body">Troque %1$d unidades por $%2$s no seu saldo Aptoide.</string>
+  <string name="play_and_earn_collect_more_units_body">Collect %1$d more units to earn %2$s in Aptoide Balance.</string>
+  <string name="play_and_earn_exchange_units_body">Exchange %1$d units for %2$s in your Aptoide Balance.</string>
   <string name="play_and_earn_earn_rewards_by_playing_body">Ganhe recompensas jogando novos jogos!</string>
   <string name="play_and_earn_earning_now_title">Ganhe agora</string>
   <string name="play_and_earn_missions_title">Missões</string>
