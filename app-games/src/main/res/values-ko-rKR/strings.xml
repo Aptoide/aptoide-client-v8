@@ -194,38 +194,38 @@
   <string name="iap_already_processing_title">이 구매는 이미 처리 중인 것 같습니다.</string>
   <string name="iap_already_processing_body">이 구매는 시간이 조금 걸릴 수 있으니, 완료될 때까지 기다려 주시거나 고객 지원팀에 문의해 주세요.</string>
   <!-- Dates -->
-  <string name="date_published_on">Published on %s</string>
-  <string name="published_on_monday">Published on Monday</string>
-  <string name="published_on_tuesday">Published on Tuesday</string>
-  <string name="published_on_wednesday">Published on Wednesday</string>
-  <string name="published_on_thursday">Published on Thursday</string>
-  <string name="published_on_friday">Published on Friday</string>
-  <string name="published_on_saturday">Published on Saturday</string>
-  <string name="published_on_sunday">Published on Sunday</string>
-  <string name="published_just_now">Published just now</string>
-  <string name="published_today">Published today</string>
-  <string name="published_yesterday">Published yesterday</string>
+  <string name="date_published_on">게재됨 %s</string>
+  <string name="published_on_monday">월요일에 게시됨</string>
+  <string name="published_on_tuesday">화요일에 게시됨</string>
+  <string name="published_on_wednesday">수요일 발행</string>
+  <string name="published_on_thursday">목요일에 게시됨</string>
+  <string name="published_on_friday">금요일에 게시됨</string>
+  <string name="published_on_saturday">토요일에 발행됨</string>
+  <string name="published_on_sunday">일요일에 발행됨</string>
+  <string name="published_just_now">방금 게시됨</string>
+  <string name="published_today">오늘 발행됨</string>
+  <string name="published_yesterday">어제 게시됨</string>
   <plurals name="published_hours">
-    <item quantity="other">Published %d hours ago</item>
+    <item quantity="other">게시됨 %d 시간 전</item>
   </plurals>
   <plurals name="published_minutes">
-    <item quantity="other">Published %d minutes ago</item>
+    <item quantity="other">게시됨 %d 분 전</item>
   </plurals>
-  <string name="monday">Monday</string>
-  <string name="tuesday">Tuesday</string>
-  <string name="wednesday">Wednesday</string>
-  <string name="thursday">Thursday</string>
-  <string name="friday">Friday</string>
-  <string name="saturday">Saturday</string>
-  <string name="sunday">Sunday</string>
-  <string name="just_now">Just now</string>
-  <string name="today">Today</string>
-  <string name="yesterday">Yesterday</string>
+  <string name="monday">월요일</string>
+  <string name="tuesday">화요일</string>
+  <string name="wednesday">수요일</string>
+  <string name="thursday">목요일</string>
+  <string name="friday">금요일</string>
+  <string name="saturday">토요일</string>
+  <string name="sunday">일요일</string>
+  <string name="just_now">방금</string>
+  <string name="today">오늘</string>
+  <string name="yesterday">어제</string>
   <plurals name="hours">
-    <item quantity="other">%d hours ago</item>
+    <item quantity="other">%d 몇 시간 전</item>
   </plurals>
   <plurals name="minutes">
-    <item quantity="other">%d minutes ago</item>
+    <item quantity="other">%d 몇 분 전에</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">모든 구매 시 보너스 제공</string>
