@@ -194,38 +194,38 @@
   <string name="iap_already_processing_title">Có vẻ như giao dịch mua này đang được xử lý.</string>
   <string name="iap_already_processing_body">Quá trình mua hàng này có thể mất một chút thời gian, vì vậy, vui lòng đợi cho đến khi hoàn tất hoặc liên hệ với Đội hỗ trợ của chúng tôi.</string>
   <!-- Dates -->
-  <string name="date_published_on">Published on %s</string>
-  <string name="published_on_monday">Published on Monday</string>
-  <string name="published_on_tuesday">Published on Tuesday</string>
-  <string name="published_on_wednesday">Published on Wednesday</string>
-  <string name="published_on_thursday">Published on Thursday</string>
-  <string name="published_on_friday">Published on Friday</string>
-  <string name="published_on_saturday">Published on Saturday</string>
-  <string name="published_on_sunday">Published on Sunday</string>
-  <string name="published_just_now">Published just now</string>
-  <string name="published_today">Published today</string>
-  <string name="published_yesterday">Published yesterday</string>
+  <string name="date_published_on">Được xuất bản vào %s</string>
+  <string name="published_on_monday">Được đăng vào thứ Hai</string>
+  <string name="published_on_tuesday">Được đăng vào thứ Ba</string>
+  <string name="published_on_wednesday">Được đăng vào thứ Tư</string>
+  <string name="published_on_thursday">Được đăng vào thứ Năm</string>
+  <string name="published_on_friday">Được đăng vào thứ Sáu</string>
+  <string name="published_on_saturday">Được đăng vào thứ Bảy</string>
+  <string name="published_on_sunday">Được đăng vào Chủ nhật</string>
+  <string name="published_just_now">Vừa được xuất bản</string>
+  <string name="published_today">Được xuất bản hôm nay</string>
+  <string name="published_yesterday">Được xuất bản vào ngày hôm qua</string>
   <plurals name="published_hours">
-    <item quantity="other">Published %d hours ago</item>
+    <item quantity="other">Được đăng bởi %d giờ trước</item>
   </plurals>
   <plurals name="published_minutes">
-    <item quantity="other">Published %d minutes ago</item>
+    <item quantity="other">Được đăng bởi %d phút trước</item>
   </plurals>
-  <string name="monday">Monday</string>
-  <string name="tuesday">Tuesday</string>
-  <string name="wednesday">Wednesday</string>
-  <string name="thursday">Thursday</string>
-  <string name="friday">Friday</string>
-  <string name="saturday">Saturday</string>
-  <string name="sunday">Sunday</string>
-  <string name="just_now">Just now</string>
-  <string name="today">Today</string>
-  <string name="yesterday">Yesterday</string>
+  <string name="monday">Thứ Hai</string>
+  <string name="tuesday">Thứ Ba</string>
+  <string name="wednesday">Thứ Tư</string>
+  <string name="thursday">Thứ Năm</string>
+  <string name="friday">Thứ Sáu</string>
+  <string name="saturday">Thứ Bảy</string>
+  <string name="sunday">Chủ nhật</string>
+  <string name="just_now">Vừa rồi</string>
+  <string name="today">Hôm nay</string>
+  <string name="yesterday">Hôm qua</string>
   <plurals name="hours">
-    <item quantity="other">%d hours ago</item>
+    <item quantity="other">%d cách đây vài giờ</item>
   </plurals>
   <plurals name="minutes">
-    <item quantity="other">%d minutes ago</item>
+    <item quantity="other">%d cách đây vài phút</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Tiền thưởng cho mỗi lần mua hàng</string>
