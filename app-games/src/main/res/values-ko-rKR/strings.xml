@@ -325,7 +325,7 @@
   <string name="play_and_earn_everyones_favourites_title">모두가 좋아하는 것들</string>
   <string name="play_and_earn_get_started_now_title">지금 시작하세요!</string>
   <string name="play_and_earn_grant_permissions_body">로그인하고 권한을 부여하여 놀라운 상품을 획득할 수 있는 기회를 열어보세요!</string>
-  <string name="play_and_earn_permissions_body"><![CDATA[게임 내 플레이 시간에 기반하여 진행 상황과 보상을 표시하기 위해 <1>오버레이 및 게임 시간 권한을</1> 부여하십시오.]]></string>
+  <string name="play_and_earn_permissions"><![CDATA[게임 내 플레이 시간에 기반하여 진행 상황과 보상을 표시하기 위해 <1>오버레이 및 게임 시간 권한을</1> 부여하십시오.]]></string>
   <string name="play_and_earn_lets_go_button">가자</string>
   <string name="play_and_earn_how_it_works_title">작동 방식</string>
   <string name="play_and_earn_pick_featured_game_body">추천 게임 선택하기</string>

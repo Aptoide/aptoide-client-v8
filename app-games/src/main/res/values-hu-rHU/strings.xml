@@ -331,7 +331,7 @@
   <string name="play_and_earn_everyones_favourites_title">Mindenki kedvencei</string>
   <string name="play_and_earn_get_started_now_title">Kezdje el most!</string>
   <string name="play_and_earn_grant_permissions_body">Jelentkezz be és adj engedélyeket, hogy játék közben hozzáférhess hihetetlen nyereményekhez!</string>
-  <string name="play_and_earn_permissions_body"><![CDATA[Adj meg <1>overlay és játékidő engedélyeket</1>, hogy a játékban eltöltött idő alapján megjelenjen az előrehaladásod és a jutalmaid.]]></string>
+  <string name="play_and_earn_permissions"><![CDATA[Adj meg <1>overlay és játékidő engedélyeket</1>, hogy a játékban eltöltött idő alapján megjelenjen az előrehaladásod és a jutalmaid.]]></string>
   <string name="play_and_earn_lets_go_button">Induljunk!</string>
   <string name="play_and_earn_how_it_works_title">Hogyan működik?</string>
   <string name="play_and_earn_pick_featured_game_body">Válasszon egy kiemelt játékot</string>
