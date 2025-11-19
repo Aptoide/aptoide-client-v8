@@ -285,8 +285,8 @@
   <string name="apkfy_multi_install_intro_2">المزيد من المرح في انتظارك!</string>
   <string name="apkfy_multi_install_intro_3">جرب هذه الألعاب المستوحاة من Roblox.</string>
   <!-- AB Test for Experiment 9 : GamesFeed -->
-  <string name="gamesfeed_bundle_header_1">For you</string>
-  <string name="gamesfeed_detail_header">Weekly highlights based on Roblox</string>
+  <string name="gamesfeed_bundle_header_1">من أجلك</string>
+  <string name="gamesfeed_detail_header">أهم الأحداث الأسبوعية استنادًا إلى Roblox</string>
   <string name="gamegenie_entry_screen_general_section">اعثر على لعبتك المفضلة التالية مع GameGenie</string>
   <string name="gamegenie_entry_screen_companion_section">... أو اضغط على لعبتك - سأساعدك على إتقانها</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[مرحبًا! أنا مساعدك الذكي في كل ما يتعلق بـ <1>%1$s</1>.]]></string>
