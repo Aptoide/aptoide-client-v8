@@ -331,7 +331,6 @@
   <string name="play_and_earn_everyones_favourites_title">Kaikkien suosikit</string>
   <string name="play_and_earn_get_started_now_title">Aloita nyt!</string>
   <string name="play_and_earn_grant_permissions_body">Kirjaudu sisään ja myönnä käyttöoikeudet, jotta voit avata pääsyn uskomattomiin palkintoihin pelatessasi!</string>
-  <string name="play_and_earn_permissions">"<![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]>"</string>
   <string name="play_and_earn_lets_go_button">Lähdetään</string>
   <string name="play_and_earn_how_it_works_title">Kuinka se toimii</string>
   <string name="play_and_earn_pick_featured_game_body">Valitse esitelty peli</string>
@@ -346,8 +345,8 @@
   <string name="play_and_earn_units_limit_body"><![CDATA[<1>%1$d</1>/100]]></string>
   <string name="play_and_earn_aptoide_balance_title">Aptoide-saldo</string>
   <string name="play_and_earn_exchange_now_button">Vaihda nyt</string>
-  <string name="play_and_earn_collect_more_units_body">Kerää %1$d lisää yksiköitä ansaitaksesi 1,00 dollaria Aptoide-saldossa.</string>
-  <string name="play_and_earn_exchange_units_body">Vaihda %1$d yksiköt%2$s -dollareiksi Aptoide-saldossasi.</string>
+  <string name="play_and_earn_collect_more_units_body">Collect %1$d more units to earn %2$s in Aptoide Balance.</string>
+  <string name="play_and_earn_exchange_units_body">Exchange %1$d units for %2$s in your Aptoide Balance.</string>
   <string name="play_and_earn_earn_rewards_by_playing_body">Ansaitse palkintoja pelaamalla uusia pelejä!</string>
   <string name="play_and_earn_earning_now_title">Ansaitse nyt</string>
   <string name="play_and_earn_missions_title">Tehtävät</string>
