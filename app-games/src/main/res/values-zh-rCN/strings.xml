@@ -325,7 +325,7 @@
   <string name="play_and_earn_everyones_favourites_title">人人都爱</string>
   <string name="play_and_earn_get_started_now_title">立即开始！</string>
   <string name="play_and_earn_grant_permissions_body">登录并授予权限，即可解锁游戏中的超值奖品！</string>
-  <string name="play_and_earn_permissions_body">"<![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]>"</string>
+  <string name="play_and_earn_permissions_body"><![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]></string>
   <string name="play_and_earn_lets_go_button">出发吧</string>
   <string name="play_and_earn_how_it_works_title">工作原理</string>
   <string name="play_and_earn_pick_featured_game_body">选择一款精选游戏</string>
