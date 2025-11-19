@@ -194,42 +194,42 @@
   <string name="iap_already_processing_title">Sembra che questo acquisto sia già stato elaborato.</string>
   <string name="iap_already_processing_body">Questo acquisto potrebbe impiegare diverso tempo. Attendi il completamento della transazione o contatta il nostro servizio clienti.</string>
   <!-- Dates -->
-  <string name="date_published_on">Published on %s</string>
-  <string name="published_on_monday">Published on Monday</string>
-  <string name="published_on_tuesday">Published on Tuesday</string>
-  <string name="published_on_wednesday">Published on Wednesday</string>
-  <string name="published_on_thursday">Published on Thursday</string>
-  <string name="published_on_friday">Published on Friday</string>
-  <string name="published_on_saturday">Published on Saturday</string>
-  <string name="published_on_sunday">Published on Sunday</string>
-  <string name="published_just_now">Published just now</string>
-  <string name="published_today">Published today</string>
-  <string name="published_yesterday">Published yesterday</string>
+  <string name="date_published_on">Pubblicato il %s</string>
+  <string name="published_on_monday">Pubblicato lunedì</string>
+  <string name="published_on_tuesday">Pubblicato martedì</string>
+  <string name="published_on_wednesday">Pubblicato mercoledì</string>
+  <string name="published_on_thursday">Pubblicato giovedì</string>
+  <string name="published_on_friday">Pubblicato venerdì</string>
+  <string name="published_on_saturday">Pubblicato sabato</string>
+  <string name="published_on_sunday">Pubblicato domenica</string>
+  <string name="published_just_now">Pubblicato proprio ora</string>
+  <string name="published_today">Pubblicato oggi</string>
+  <string name="published_yesterday">Pubblicato ieri</string>
   <plurals name="published_hours">
-    <item quantity="one">Published %d hour ago</item>
-    <item quantity="other">Published %d hours ago</item>
+    <item quantity="one">Pubblicato %d ora fa</item>
+    <item quantity="other">Pubblicato %d ore fa</item>
   </plurals>
   <plurals name="published_minutes">
-    <item quantity="one">Published %d minute ago</item>
-    <item quantity="other">Published %d minutes ago</item>
+    <item quantity="one">Pubblicato %d minuto fa</item>
+    <item quantity="other">Pubblicato %d minuti fa</item>
   </plurals>
-  <string name="monday">Monday</string>
-  <string name="tuesday">Tuesday</string>
-  <string name="wednesday">Wednesday</string>
-  <string name="thursday">Thursday</string>
-  <string name="friday">Friday</string>
-  <string name="saturday">Saturday</string>
-  <string name="sunday">Sunday</string>
-  <string name="just_now">Just now</string>
-  <string name="today">Today</string>
-  <string name="yesterday">Yesterday</string>
+  <string name="monday">Lunedì</string>
+  <string name="tuesday">martedì</string>
+  <string name="wednesday">mercoledì</string>
+  <string name="thursday">giovedì</string>
+  <string name="friday">Venerdì</string>
+  <string name="saturday">Sabato</string>
+  <string name="sunday">Domenica</string>
+  <string name="just_now">Proprio ora</string>
+  <string name="today">Oggi</string>
+  <string name="yesterday">Ieri</string>
   <plurals name="hours">
-    <item quantity="one"> %d hour ago</item>
-    <item quantity="other">%d hours ago</item>
+    <item quantity="one"> %d un\'ora fa</item>
+    <item quantity="other">%d ore fa</item>
   </plurals>
   <plurals name="minutes">
-    <item quantity="one">%d minute ago</item>
-    <item quantity="other">%d minutes ago</item>
+    <item quantity="one">%d un minuto fa</item>
+    <item quantity="other">%d minuti fa</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Un bonus a ogni acquisto</string>
