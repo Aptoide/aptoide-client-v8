@@ -331,7 +331,7 @@
   <string name="play_and_earn_everyones_favourites_title">Os favoritos de todos</string>
   <string name="play_and_earn_get_started_now_title">Comece agora mesmo!</string>
   <string name="play_and_earn_grant_permissions_body">Faça login e conceda permissões para desbloquear o acesso a prêmios incríveis enquanto joga!</string>
-  <string name="play_and_earn_permissions_body"><![CDATA[Conceda <1>permissões de sobreposição e tempo de jogo</1> para exibir seu progresso e recompensas com base no tempo de jogo.]]></string>
+  <string name="play_and_earn_permissions"><![CDATA[Conceda <1>permissões de sobreposição e tempo de jogo</1> para exibir seu progresso e recompensas com base no tempo de jogo.]]></string>
   <string name="play_and_earn_lets_go_button">Vamos lá</string>
   <string name="play_and_earn_how_it_works_title">Como funciona</string>
   <string name="play_and_earn_pick_featured_game_body">Escolha um jogo em destaque</string>

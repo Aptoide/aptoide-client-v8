@@ -331,7 +331,7 @@
   <string name="play_and_earn_everyones_favourites_title">Les préférés de tous</string>
   <string name="play_and_earn_get_started_now_title">Commencez dès maintenant !</string>
   <string name="play_and_earn_grant_permissions_body">Connectez-vous et accordez les autorisations nécessaires pour débloquer l\'accès à des prix incroyables pendant que vous jouez !</string>
-  <string name="play_and_earn_permissions_body"><![CDATA[Accordez <1>des autorisations de superposition et de temps de jeu</1> pour afficher votre progression et vos récompenses en fonction de votre temps de jeu.]]></string>
+  <string name="play_and_earn_permissions"><![CDATA[Accordez <1>des autorisations de superposition et de temps de jeu</1> pour afficher votre progression et vos récompenses en fonction de votre temps de jeu.]]></string>
   <string name="play_and_earn_lets_go_button">Allons-y</string>
   <string name="play_and_earn_how_it_works_title">Comment ça marche</string>
   <string name="play_and_earn_pick_featured_game_body">Choisissez un jeu en vedette</string>
