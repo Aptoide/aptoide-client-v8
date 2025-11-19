@@ -194,42 +194,42 @@
   <string name="iap_already_processing_title">Görünüşe göre bu satın alma işlemi zaten işleniyor.</string>
   <string name="iap_already_processing_body">Bu satın alma işlemi biraz vakit alabilir, bu yüzden lütfen işlem tamamlanana kadar bekle veya Destek Ekibimizle iletişime geç.</string>
   <!-- Dates -->
-  <string name="date_published_on">Published on %s</string>
-  <string name="published_on_monday">Published on Monday</string>
-  <string name="published_on_tuesday">Published on Tuesday</string>
-  <string name="published_on_wednesday">Published on Wednesday</string>
-  <string name="published_on_thursday">Published on Thursday</string>
-  <string name="published_on_friday">Published on Friday</string>
-  <string name="published_on_saturday">Published on Saturday</string>
-  <string name="published_on_sunday">Published on Sunday</string>
-  <string name="published_just_now">Published just now</string>
-  <string name="published_today">Published today</string>
-  <string name="published_yesterday">Published yesterday</string>
+  <string name="date_published_on">Yayın tarihi %s</string>
+  <string name="published_on_monday">Pazartesi günü yayınlandı</string>
+  <string name="published_on_tuesday">Salı günü yayınlandı</string>
+  <string name="published_on_wednesday">Çarşamba günü yayınlandı</string>
+  <string name="published_on_thursday">Perşembe günü yayınlandı</string>
+  <string name="published_on_friday">Cuma günü yayınlandı</string>
+  <string name="published_on_saturday">Cumartesi günü yayınlandı</string>
+  <string name="published_on_sunday">Pazar günü yayınlandı</string>
+  <string name="published_just_now">Az önce yayınlandı</string>
+  <string name="published_today">Bugün yayınlandı</string>
+  <string name="published_yesterday">Dün yayınlandı</string>
   <plurals name="published_hours">
-    <item quantity="one">Published %d hour ago</item>
-    <item quantity="other">Published %d hours ago</item>
+    <item quantity="one">%d saat önce yayınlandı</item>
+    <item quantity="other">%d saat önce yayınlandı</item>
   </plurals>
   <plurals name="published_minutes">
-    <item quantity="one">Published %d minute ago</item>
-    <item quantity="other">Published %d minutes ago</item>
+    <item quantity="one">%d dakika önce yayınlandı</item>
+    <item quantity="other">%d dakika önce yayınlandı</item>
   </plurals>
-  <string name="monday">Monday</string>
-  <string name="tuesday">Tuesday</string>
-  <string name="wednesday">Wednesday</string>
-  <string name="thursday">Thursday</string>
-  <string name="friday">Friday</string>
-  <string name="saturday">Saturday</string>
-  <string name="sunday">Sunday</string>
-  <string name="just_now">Just now</string>
-  <string name="today">Today</string>
-  <string name="yesterday">Yesterday</string>
+  <string name="monday">Pazartesi</string>
+  <string name="tuesday">Salı</string>
+  <string name="wednesday">Çarşamba</string>
+  <string name="thursday">Perşembe</string>
+  <string name="friday">Cuma</string>
+  <string name="saturday">Cumartesi</string>
+  <string name="sunday">Pazar</string>
+  <string name="just_now">Az önce</string>
+  <string name="today">Bugün</string>
+  <string name="yesterday">Dün</string>
   <plurals name="hours">
-    <item quantity="one"> %d hour ago</item>
-    <item quantity="other">%d hours ago</item>
+    <item quantity="one"> %d bir saat önce</item>
+    <item quantity="other">%d saatler önce</item>
   </plurals>
   <plurals name="minutes">
-    <item quantity="one">%d minute ago</item>
-    <item quantity="other">%d minutes ago</item>
+    <item quantity="one">%d bir dakika önce</item>
+    <item quantity="other">%d birkaç dakika önce</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Her Satın Alma İşleminde Bonus</string>
