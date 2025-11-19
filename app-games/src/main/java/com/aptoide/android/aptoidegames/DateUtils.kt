@@ -1,8 +1,8 @@
-package cm.aptoide.pt.aptoide_ui.textformatter
+package com.aptoide.android.aptoidegames
 
 import android.content.Context
 import android.text.format.DateUtils
-import cm.aptoide.pt.aptoide_ui.R
+import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import java.util.Calendar
 
 class DateUtils private constructor() : DateUtils() {
@@ -31,7 +31,7 @@ class DateUtils private constructor() : DateUtils() {
      * @return Friendly-formatted date diff string
      */
     fun getTimeDiffPublishedString(context: Context, timeDate: String): String {
-      val timeDateAsMilliseconds = TextFormatter.parseDateToLong(timeDate)
+      val timeDateAsMilliseconds = TextFormatter.Companion.parseDateToLong(timeDate)
       val startDateTime = Calendar.getInstance()
       val endDateTime = Calendar.getInstance()
       endDateTime.timeInMillis = timeDateAsMilliseconds
@@ -68,13 +68,13 @@ class DateUtils private constructor() : DateUtils() {
       } else {
         context.getString(
           R.string.date_published_on,
-          TextFormatter.formatDateToSystemLocale(context, timeDate)
+          TextFormatter.Companion.formatDateToSystemLocale(context, timeDate)
         )
       }
     }
 
     fun getTimeDiffString(context: Context, timeDate: String): String {
-      val timeDateAsMilliseconds = TextFormatter.parseDateToLong(timeDate)
+      val timeDateAsMilliseconds = TextFormatter.Companion.parseDateToLong(timeDate)
       val startDateTime = Calendar.getInstance()
       val endDateTime = Calendar.getInstance()
       endDateTime.timeInMillis = timeDateAsMilliseconds
@@ -87,29 +87,29 @@ class DateUtils private constructor() : DateUtils() {
       val isToday = isToday(timeDateAsMilliseconds)
       val isYesterday = isYesterday(timeDateAsMilliseconds)
       return if (hours in 1..11) {
-        "${hours} hours ago"
+        context.resources.getQuantityString(R.plurals.hours, hours.toInt(), hours)
       } else if (hours <= 0) {
         if (minutes > 0)
-          "${minutes} minutes ago"
+          context.resources.getQuantityString(R.plurals.minutes, minutes.toInt(), minutes)
         else
-          "Just now"
+          context.resources.getString(R.string.just_now)
       } else if (isToday) {
-        "Today"
+        context.resources.getString(R.string.today)
       } else if (isYesterday) {
-        "Yesterday"
+        context.resources.getString(R.string.yesterday)
       } else if (startDateTime.timeInMillis - timeDateAsMilliseconds < millisInADay * 6) {
         val dayOfWeek = when (endDateTime[Calendar.DAY_OF_WEEK]) {
-          Calendar.MONDAY -> "Monday"
-          Calendar.TUESDAY -> "Tuesday"
-          Calendar.WEDNESDAY -> "Wednesday"
-          Calendar.THURSDAY -> "Thursday"
-          Calendar.FRIDAY -> "Friday"
-          Calendar.SATURDAY -> "Saturday"
-          else -> "Sunday"
+          Calendar.MONDAY -> context.resources.getString(R.string.monday)
+          Calendar.TUESDAY -> context.resources.getString(R.string.tuesday)
+          Calendar.WEDNESDAY -> context.resources.getString(R.string.wednesday)
+          Calendar.THURSDAY -> context.resources.getString(R.string.thursday)
+          Calendar.FRIDAY -> context.resources.getString(R.string.friday)
+          Calendar.SATURDAY -> context.resources.getString(R.string.saturday)
+          else -> context.resources.getString(R.string.sunday)
         }
         dayOfWeek
       } else {
-        TextFormatter.formatDateToSystemLocale(context, timeDate)
+        TextFormatter.Companion.formatDateToSystemLocale(context, timeDate)
       }
     }
   }

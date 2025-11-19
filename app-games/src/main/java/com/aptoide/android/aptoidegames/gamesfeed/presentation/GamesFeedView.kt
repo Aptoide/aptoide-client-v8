@@ -29,10 +29,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.navDeepLink
-import cm.aptoide.pt.aptoide_ui.textformatter.DateUtils
 import cm.aptoide.pt.extensions.ScreenData
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.BuildConfig
+import com.aptoide.android.aptoidegames.DateUtils
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.drawables.icons.playCircleIcon
