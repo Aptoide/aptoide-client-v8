@@ -194,38 +194,38 @@
   <string name="iap_already_processing_title">此購買似乎已在處理中。</string>
   <string name="iap_already_processing_body">此購買可能需要一段時間，因此，請稍候直至完成或聯絡我們的支援團隊。</string>
   <!-- Dates -->
-  <string name="date_published_on">Published on %s</string>
-  <string name="published_on_monday">Published on Monday</string>
-  <string name="published_on_tuesday">Published on Tuesday</string>
-  <string name="published_on_wednesday">Published on Wednesday</string>
-  <string name="published_on_thursday">Published on Thursday</string>
-  <string name="published_on_friday">Published on Friday</string>
-  <string name="published_on_saturday">Published on Saturday</string>
-  <string name="published_on_sunday">Published on Sunday</string>
-  <string name="published_just_now">Published just now</string>
-  <string name="published_today">Published today</string>
-  <string name="published_yesterday">Published yesterday</string>
+  <string name="date_published_on">發佈於 %s</string>
+  <string name="published_on_monday">於週一發佈</string>
+  <string name="published_on_tuesday">發表於星期二</string>
+  <string name="published_on_wednesday">發表於星期三</string>
+  <string name="published_on_thursday">發表於星期四</string>
+  <string name="published_on_friday">於週五發佈</string>
+  <string name="published_on_saturday">發表於星期六</string>
+  <string name="published_on_sunday">發表於星期日</string>
+  <string name="published_just_now">剛剛發佈</string>
+  <string name="published_today">今日發佈</string>
+  <string name="published_yesterday">昨日發佈</string>
   <plurals name="published_hours">
-    <item quantity="other">Published %d hours ago</item>
+    <item quantity="other">發佈於 %d 小時前</item>
   </plurals>
   <plurals name="published_minutes">
-    <item quantity="other">Published %d minutes ago</item>
+    <item quantity="other">發佈於 %d 分鐘前</item>
   </plurals>
-  <string name="monday">Monday</string>
-  <string name="tuesday">Tuesday</string>
-  <string name="wednesday">Wednesday</string>
-  <string name="thursday">Thursday</string>
-  <string name="friday">Friday</string>
-  <string name="saturday">Saturday</string>
-  <string name="sunday">Sunday</string>
-  <string name="just_now">Just now</string>
-  <string name="today">Today</string>
-  <string name="yesterday">Yesterday</string>
+  <string name="monday">星期一</string>
+  <string name="tuesday">星期二</string>
+  <string name="wednesday">星期三</string>
+  <string name="thursday">星期四</string>
+  <string name="friday">星期五</string>
+  <string name="saturday">星期六</string>
+  <string name="sunday">星期日</string>
+  <string name="just_now">剛剛</string>
+  <string name="today">今日</string>
+  <string name="yesterday">昨天</string>
   <plurals name="hours">
-    <item quantity="other">%d hours ago</item>
+    <item quantity="other">%d 數小時前</item>
   </plurals>
   <plurals name="minutes">
-    <item quantity="other">%d minutes ago</item>
+    <item quantity="other">%d 幾分鐘前</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">每次購物都有獎金</string>
