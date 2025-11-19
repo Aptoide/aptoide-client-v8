@@ -194,42 +194,42 @@
   <string name="iap_already_processing_title">Het lijkt erop dat deze aankoop al wordt verwerkt.</string>
   <string name="iap_already_processing_body">Het kan even duren om deze aankoop te verwerken. Je kunt wachten tot de aankoop is voltooid of contact met ons ondersteuningsteam opnemen.</string>
   <!-- Dates -->
-  <string name="date_published_on">Published on %s</string>
-  <string name="published_on_monday">Published on Monday</string>
-  <string name="published_on_tuesday">Published on Tuesday</string>
-  <string name="published_on_wednesday">Published on Wednesday</string>
-  <string name="published_on_thursday">Published on Thursday</string>
-  <string name="published_on_friday">Published on Friday</string>
-  <string name="published_on_saturday">Published on Saturday</string>
-  <string name="published_on_sunday">Published on Sunday</string>
-  <string name="published_just_now">Published just now</string>
-  <string name="published_today">Published today</string>
-  <string name="published_yesterday">Published yesterday</string>
+  <string name="date_published_on">Gepubliceerd op %s</string>
+  <string name="published_on_monday">Gepubliceerd op maandag</string>
+  <string name="published_on_tuesday">Gepubliceerd op dinsdag</string>
+  <string name="published_on_wednesday">Gepubliceerd op woensdag</string>
+  <string name="published_on_thursday">Gepubliceerd op donderdag</string>
+  <string name="published_on_friday">Gepubliceerd op vrijdag</string>
+  <string name="published_on_saturday">Gepubliceerd op zaterdag</string>
+  <string name="published_on_sunday">Gepubliceerd op zondag</string>
+  <string name="published_just_now">Zojuist gepubliceerd</string>
+  <string name="published_today">Vandaag gepubliceerd</string>
+  <string name="published_yesterday">Gisteren gepubliceerd</string>
   <plurals name="published_hours">
-    <item quantity="one">Published %d hour ago</item>
-    <item quantity="other">Published %d hours ago</item>
+    <item quantity="one">Gepubliceerd %d uur geleden</item>
+    <item quantity="other">Gepubliceerd %d uren geleden</item>
   </plurals>
   <plurals name="published_minutes">
-    <item quantity="one">Published %d minute ago</item>
-    <item quantity="other">Published %d minutes ago</item>
+    <item quantity="one">Gepubliceerd %d minuut geleden</item>
+    <item quantity="other">Gepubliceerd %d minuten geleden</item>
   </plurals>
-  <string name="monday">Monday</string>
-  <string name="tuesday">Tuesday</string>
-  <string name="wednesday">Wednesday</string>
-  <string name="thursday">Thursday</string>
-  <string name="friday">Friday</string>
-  <string name="saturday">Saturday</string>
-  <string name="sunday">Sunday</string>
-  <string name="just_now">Just now</string>
-  <string name="today">Today</string>
-  <string name="yesterday">Yesterday</string>
+  <string name="monday">Maandag</string>
+  <string name="tuesday">dinsdag</string>
+  <string name="wednesday">woensdag</string>
+  <string name="thursday">donderdag</string>
+  <string name="friday">vrijdag</string>
+  <string name="saturday">zaterdag</string>
+  <string name="sunday">Zondag</string>
+  <string name="just_now">Net nu</string>
+  <string name="today">Vandaag</string>
+  <string name="yesterday">Gisteren</string>
   <plurals name="hours">
-    <item quantity="one"> %d hour ago</item>
-    <item quantity="other">%d hours ago</item>
+    <item quantity="one"> %d een uur geleden</item>
+    <item quantity="other">%d uren geleden</item>
   </plurals>
   <plurals name="minutes">
-    <item quantity="one">%d minute ago</item>
-    <item quantity="other">%d minutes ago</item>
+    <item quantity="one">%d minuut geleden</item>
+    <item quantity="other">%d enkele minuten geleden</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Een bonus bij elke aankoop</string>
