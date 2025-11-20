@@ -167,6 +167,7 @@
   <string name="done_title">हो गया!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">Making Purchase...</string>
   <string name="log_out_button" comment="log_out">लॉग आउट करें</string>
+  <string name="logout_button">Logout</string>
   <string name="iap_appc_body">You\'ll get a bonus in all purchases!</string>
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">You can now complete your purchase.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">The Aptoide Wallet is now installed!</string>
