@@ -167,6 +167,7 @@
   <string name="done_title">انتهى!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">إجراء عملية شراء...</string>
   <string name="log_out_button" comment="log_out">تسجيل الخروج</string>
+  <string name="logout_button">تسجيل الخروج</string>
   <string name="iap_appc_body">ستحصل على مكافأة على كل المشتريات!</string>
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">يمكنك الآن إتمام عملية الشراء.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">تم تثبيت محفظة Aptoide!</string>

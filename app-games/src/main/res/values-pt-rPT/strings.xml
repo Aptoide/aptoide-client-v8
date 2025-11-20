@@ -167,6 +167,7 @@
   <string name="done_title">Feito!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">Efetuar a Compra...</string>
   <string name="log_out_button" comment="log_out">Sair</string>
+  <string name="logout_button">Sair</string>
   <string name="iap_appc_body">Vais receber um bónus em todas as compras!</string>
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Já podes concluir a tua compra.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">A Aptoide Wallet está agora instalada!</string>
