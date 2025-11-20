@@ -167,6 +167,7 @@
   <string name="done_title">झाले!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">खरेदी करणे...</string>
   <string name="log_out_button" comment="log_out">लॉग आउट</string>
+  <string name="logout_button">Logout</string>
   <string name="iap_appc_body">आपणांस सर्व खरेदीवर बोनस मिळेल!</string>
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">आता आपण आपली खरेदी पूर्ण करु शकता.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">Aptoide वॉलेट आता इंस्टॉल झाले आहे!</string>
