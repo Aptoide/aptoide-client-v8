@@ -315,7 +315,7 @@
   <string name="gamegenie_entry_screen_general_section">Temukan game favoritmu berikutnya dengan GameGenie</string>
   <string name="gamegenie_entry_screen_companion_section">... atau ketuk permainanmu - aku akan membantumu menguasainya</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[Halo! Saya adalah asisten AI Anda untuk segala hal yang berkaitan dengan <1>%1$s</1>.]]></string>
-  <string name="new_badge">New</string>
+  <string name="new_badge">Baru</string>
   <!-- Play and Earn -->
   <string name="play_and_earn_start_earning_title">Mulai Menghasilkan</string>
   <string name="play_and_earn_level_up_rewards_title">Tingkatkan hadiah Anda!</string>
