@@ -321,6 +321,7 @@
   <string name="gamegenie_entry_screen_general_section">Finden Sie Ihr nächstes Lieblingsspiel mit GameGenie</string>
   <string name="gamegenie_entry_screen_companion_section">... oder tippen Sie auf Ihr Spiel – ich helfe Ihnen dabei, es zu meistern.</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[Hallo! Ich bin Ihr KI-Assistent für alles, was mit <1>%1$s</1>.]]></string>
+  <string name="new_badge">Neu</string>
   <!-- Play and Earn -->
   <string name="play_and_earn_start_earning_title">Verdienen Sie Geld</string>
   <string name="play_and_earn_level_up_rewards_title">Steigern Sie Ihre Belohnungen!</string>

@@ -333,6 +333,7 @@
   <string name="gamegenie_entry_screen_general_section">Найдите свою следующую любимую игру с GameGenie</string>
   <string name="gamegenie_entry_screen_companion_section">... или нажмите на свою игру — я помогу вам освоить ее</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[Привет! Я твой ИИ-помощник по всем вопросам, связанным с <1>%1$s</1>.]]></string>
+  <string name="new_badge">Новый</string>
   <!-- Play and Earn -->
   <string name="play_and_earn_start_earning_title">Начните зарабатывать</string>
   <string name="play_and_earn_level_up_rewards_title">Повышайте уровень своих наград!</string>

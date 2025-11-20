@@ -321,6 +321,7 @@
   <string name="gamegenie_entry_screen_general_section">Βρείτε το επόμενο αγαπημένο σας παιχνίδι με το GameGenie</string>
   <string name="gamegenie_entry_screen_companion_section">... ή πατήστε το παιχνίδι σας - θα σας βοηθήσω να το κατακτήσετε</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[Γεια! Είμαι η βοηθός τεχνητής νοημοσύνης σας για όλα όσα σχετίζονται με το <1>%1$s</1>.]]></string>
+  <string name="new_badge">Νέο</string>
   <!-- Play and Earn -->
   <string name="play_and_earn_start_earning_title">Ξεκινήστε να κερδίζετε</string>
   <string name="play_and_earn_level_up_rewards_title">Ανεβάστε το επίπεδο των ανταμοιβών σας!</string>
