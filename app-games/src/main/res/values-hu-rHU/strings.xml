@@ -167,6 +167,7 @@
   <string name="done_title">Kész!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">Vásárlás...</string>
   <string name="log_out_button" comment="log_out">Kijelentkezés</string>
+  <string name="logout_button">Kijelentkezés</string>
   <string name="iap_appc_body">Minden vásárlás után bónuszt fogsz kapni!</string>
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Most befejezheted a vásárlást.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">Az Aptoide Wallet telepítése sikeres!</string>

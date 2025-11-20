@@ -167,6 +167,7 @@
   <string name="done_title">Gelukt!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">Aankoop verwerken...</string>
   <string name="log_out_button" comment="log_out">Uitloggen</string>
+  <string name="logout_button">Uitloggen</string>
   <string name="iap_appc_body">Je krijgt een bonus bij alle aankopen!</string>
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Je kunt je aankoop nu voltooien.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">De Aptoide Wallet is nu geïnstalleerd!</string>

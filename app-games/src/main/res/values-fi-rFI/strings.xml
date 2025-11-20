@@ -167,6 +167,7 @@
   <string name="done_title">Siinä se!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">Ostosten tekeminen...</string>
   <string name="log_out_button" comment="log_out">Kirjaudu ulos</string>
+  <string name="logout_button">Kirjaudu ulos</string>
   <string name="iap_appc_body">Saat bonuksen kaikista ostoksista!</string>
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Voit nyt viimeistellä ostoksesi.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">Aptoide-lompakko on nyt asennettu!</string>

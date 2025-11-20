@@ -168,6 +168,7 @@ Promosi khas dan ganjaran dalam permainan kegemaran anda.</string>
   <string name="done_title">Selesai!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">Membuat Pembelian...</string>
   <string name="log_out_button" comment="log_out">Log Keluar</string>
+  <string name="logout_button">Logout</string>
   <string name="iap_appc_body">Anda akan terima bonus untuk semua pembelian!</string>
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Kini anda boleh lengkapkan pembelian anda.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">Aptoide Wallet kini terpasang!</string>
