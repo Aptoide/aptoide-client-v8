@@ -109,6 +109,8 @@ import com.aptoide.android.aptoidegames.installer.presentation.InstallView
 import com.aptoide.android.aptoidegames.mmp.WithUTM
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.app_view.AppRewardsView
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaEInstallView
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.rememberIsPackageInPaE
+import com.aptoide.android.aptoidegames.play_and_earn.rememberShouldShowPlayAndEarn
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -256,7 +258,12 @@ fun AppViewScreen(
     rememberRelatedEditorials(packageName = it)
   }
 
-  val tabsList by remember(relatedEditorialsUiState, isGamified) {
+  val showPaE = rememberShouldShowPlayAndEarn()
+  val isPackageInPaE = (uiState as? AppUiState.Idle)?.app?.packageName?.let {
+    rememberIsPackageInPaE(packageName = it)
+  } ?: false
+
+  val tabsList by remember(relatedEditorialsUiState, isPackageInPaE) {
     derivedStateOf {
       tabsList
         .let {
@@ -267,7 +274,7 @@ fun AppViewScreen(
           }
         }
         .let {
-          if (isGamified) {
+          if (showPaE && isPackageInPaE) {
             it
           } else {
             it.filter { it != AppViewTab.REWARDS }
