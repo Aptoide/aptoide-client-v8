@@ -323,6 +323,7 @@
   <string name="gamegenie_entry_screen_general_section">Find your next favorite game with GameGenie</string>
   <string name="gamegenie_entry_screen_companion_section">... or tap your game - I\'ll help you master it</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[Hi! I\'m your AI assistant on everything related to <1>%1$s</1>.]]></string>
+  <string name="new_badge">New</string>
   <!-- Play and Earn -->
   <string name="play_and_earn_start_earning_title">Start Earning</string>
   <string name="play_and_earn_level_up_rewards_title">Level up your rewards!</string>
