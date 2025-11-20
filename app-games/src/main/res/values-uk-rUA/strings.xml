@@ -167,7 +167,7 @@
   <string name="done_title">Готово!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">Здійснення покупки...</string>
   <string name="log_out_button" comment="log_out">Вийти</string>
-  <string name="logout_button">Logout</string>
+  <string name="logout_button">Вийти</string>
   <string name="iap_appc_body">Ви отримаєте бонус на всі покупки!</string>
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Тепер ви можете завершити покупку.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">Aptoide Wallet встановлено!</string>
