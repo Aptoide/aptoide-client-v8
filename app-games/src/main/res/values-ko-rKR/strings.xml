@@ -167,7 +167,7 @@
   <string name="done_title">완료!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">구매하는 중...</string>
   <string name="log_out_button" comment="log_out">로그아웃</string>
-  <string name="logout_button">Logout</string>
+  <string name="logout_button">로그아웃</string>
   <string name="iap_appc_body">모든 구매 시 보너스를 받으실 수 있습니다!</string>
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">이제 구매를 완료할 수 있습니다.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">Aptoide 지갑이 설치되었습니다!</string>
