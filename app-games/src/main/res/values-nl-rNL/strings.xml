@@ -321,6 +321,7 @@
   <string name="gamegenie_entry_screen_general_section">Vind je volgende favoriete game met GameGenie</string>
   <string name="gamegenie_entry_screen_companion_section">... of tik op je spel - ik help je het onder de knie te krijgen</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[Hallo! Ik ben je AI-assistent voor alles wat te maken heeft met <1>%1$s</1>.]]></string>
+  <string name="new_badge">New</string>
   <!-- Play and Earn -->
   <string name="play_and_earn_start_earning_title">Begin met verdienen</string>
   <string name="play_and_earn_level_up_rewards_title">Verhoog je beloningen!</string>
