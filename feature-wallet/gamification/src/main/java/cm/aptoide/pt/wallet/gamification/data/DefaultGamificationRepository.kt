@@ -21,8 +21,8 @@ internal class DefaultGamificationRepository @Inject constructor(
   private val dispatcher: CoroutineDispatcher
 ) : GamificationRepository {
 
-  override suspend fun getGamificationStats(wallet: String) = try {
-    getUserStats(wallet = wallet).let { userStats ->
+  override suspend fun getGamificationStats(wallet: String, currency: String?) = try {
+    getUserStats(wallet = wallet, currency = currency).let { userStats ->
       val gamificationResponse = userStats.promotions.firstOrNull { it.id == "GAMIFICATION" }
 
       val gamificationStats = gamificationResponse?.toDomainModel()
@@ -45,11 +45,11 @@ internal class DefaultGamificationRepository @Inject constructor(
       }
     }
 
-  private suspend fun getUserStats(wallet: String) = withContext(dispatcher) {
+  private suspend fun getUserStats(wallet: String, currency: String?) = withContext(dispatcher) {
     gamificationApi.getUserStats(
       wallet,
       Locale.getDefault().language,
-      currencyPreferencesDataSource.getPreferredCurrency()
+      currency ?: currencyPreferencesDataSource.getPreferredCurrency()
     )
   }
 }
