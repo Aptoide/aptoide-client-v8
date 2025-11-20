@@ -321,6 +321,7 @@
   <string name="gamegenie_entry_screen_general_section">Löydä seuraava suosikkipelisi GameGenien avulla</string>
   <string name="gamegenie_entry_screen_companion_section">... tai napauta peliäsi - autan sinua hallitsemaan sen</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[Hei! Olen tekoälyavustajasi kaikissa <1>%1$s</1>.]]></string>
+  <string name="new_badge">Uusi</string>
   <!-- Play and Earn -->
   <string name="play_and_earn_start_earning_title">Aloita ansaitseminen</string>
   <string name="play_and_earn_level_up_rewards_title">Nosta palkkiosi tasoa!</string>
