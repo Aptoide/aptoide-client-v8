@@ -7,6 +7,7 @@ import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.campaigns.domain.PaEApp
 import cm.aptoide.pt.campaigns.domain.asNormalApp
@@ -15,6 +16,7 @@ import cm.aptoide.pt.download_view.presentation.ExecutionBlocker.UNMETERED
 import cm.aptoide.pt.download_view.presentation.downloadUiStates
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.randomApp
+import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.design_system.SecondarySmallOutlinedButton
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewState
 import com.aptoide.android.aptoidegames.installer.presentation.installViewStates
@@ -151,6 +153,6 @@ private fun PaESmallPlayButton(
         navigate(paeSetupRoute)
       }
     },
-    title = "Play",
+    title = stringResource(R.string.play_and_earn_play_button),
   )
 }
