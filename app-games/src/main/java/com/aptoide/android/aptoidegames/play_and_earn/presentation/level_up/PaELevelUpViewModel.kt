@@ -27,6 +27,10 @@ class PaELevelUpViewModel @Inject constructor(
   private val walletCoreDataSource: WalletCoreDataSource,
 ) : ViewModel() {
 
+  private companion object {
+    const val DEFAULT_CURRENCY = "APPC"
+  }
+
   private val viewModelState = MutableStateFlow<LevelUpUiState>(LevelUpUiState.Loading)
 
   val uiState = viewModelState
@@ -48,8 +52,9 @@ class PaELevelUpViewModel @Inject constructor(
 
         if (walletAddress != null) {
           var gamificationStats =
-            gamificationRepository.getGamificationStats(walletAddress).getOrThrow()
-          val levels = gamificationRepository.getLevels().getOrThrow()
+            gamificationRepository.getGamificationStats(walletAddress, currency = DEFAULT_CURRENCY)
+              .getOrThrow()
+          val levels = gamificationRepository.getLevels(currency = DEFAULT_CURRENCY).getOrThrow()
           val walletInfo = walletInfoRepository.getWalletInfo(walletAddress)
 
           if (gamificationStats.gamificationStatus == GamificationLevelStatus.NONE) {
