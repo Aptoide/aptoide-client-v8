@@ -321,6 +321,7 @@
   <string name="gamegenie_entry_screen_general_section">GameGenie ile bir sonraki favori oyununuzu bulun</string>
   <string name="gamegenie_entry_screen_companion_section">... veya oyununuzu dokunun - ustalaşmanıza yardımcı olacağım</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[Merhaba! Ben, <1>%1$s</1>.]]></string>
+  <string name="new_badge">New</string>
   <!-- Play and Earn -->
   <string name="play_and_earn_start_earning_title">Kazanmaya Başlayın</string>
   <string name="play_and_earn_level_up_rewards_title">Ödüllerinizi bir üst seviyeye taşıyın!</string>
