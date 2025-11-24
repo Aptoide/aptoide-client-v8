@@ -21,6 +21,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.debugInspectorInfo
 import androidx.compose.ui.text.TextStyle
@@ -44,6 +46,7 @@ fun CustomScrollableTabRow(
   modifier: Modifier = Modifier,
   tabTextStyle: TextStyle = AGTypography.InputsL,
   tabBadges: List<(@Composable BoxScope.() -> Unit)?> = List(tabs.size) { null },
+  onTabPositioned: (index: Int, x: Float, width: Float) -> Unit = { _, _, _ -> },
 ) {
   val density = LocalDensity.current
   val indicatorWidths = remember(key1 = tabs.size) { MutableList(tabs.size) { 0.dp } }
@@ -68,6 +71,14 @@ fun CustomScrollableTabRow(
   ) {
     tabs.forEachIndexed { tabIndex, tab ->
       Tab(
+        modifier = Modifier
+          .onGloballyPositioned { coordinates ->
+            onTabPositioned(
+              tabIndex,
+              coordinates.positionInParent().x,
+              coordinates.size.width.toFloat()
+            )
+          },
         selected = selectedTabIndex == tabIndex,
         onClick = { onTabClick(tabIndex) },
         text = {
@@ -76,7 +87,7 @@ fun CustomScrollableTabRow(
               text = tab,
               style = tabTextStyle,
               color = if (selectedTabIndex == tabIndex) {
-                Palette.Primary
+                contentColor
               } else {
                 Palette.White
               },
