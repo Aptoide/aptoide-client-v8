@@ -512,15 +512,13 @@ fun AppInfoViewPager(
   tabsList: List<AppViewTab>,
   onSelectTab: (Int) -> Unit,
 ) {
-  CustomScrollableTabRow(
+  AppViewTabRow(
     modifier = Modifier
       .padding(top = 24.dp, bottom = 4.dp)
       .height(40.dp),
-    tabs = tabsList.map { it.getTabName() },
+    tabsList = tabsList,
     selectedTabIndex = selectedTab,
-    onTabClick = onSelectTab,
-    contentColor = Palette.Primary,
-    backgroundColor = Color.Transparent
+    onSelectTab = onSelectTab
   )
 }
 
