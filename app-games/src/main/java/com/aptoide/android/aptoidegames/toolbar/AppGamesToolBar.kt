@@ -127,6 +127,7 @@ private fun AppGamesToolBar(
         Row(
           modifier = Modifier.wrapContentWidth(),
           verticalAlignment = Alignment.CenterVertically,
+          horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
           if (!notificationsPermissionState) {
             IconButton(onClick = onNotificationsClick) {
