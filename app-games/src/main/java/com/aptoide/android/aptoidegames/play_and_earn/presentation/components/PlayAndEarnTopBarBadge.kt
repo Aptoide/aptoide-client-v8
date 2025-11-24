@@ -17,6 +17,7 @@ import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.rem
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.animations.PaEAnimatedGift
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.level_up.LevelProperties
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.level_up.rememberCurrentPaELevel
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.level_up.rememberWalletUnits
 import com.aptoide.android.aptoidegames.play_and_earn.rememberShouldShowPlayAndEarn
 
 @Composable
@@ -24,6 +25,9 @@ fun PlayAndEarnTopBarBadge(onClick: () -> Unit) {
   val currentLevel = rememberCurrentPaELevel()
   val shouldShowPlayAndEarn = rememberShouldShowPlayAndEarn()
   val paeAnalytics = rememberPaEAnalytics()
+  val walletUnits = rememberWalletUnits()
+
+  val hasUnitsToExchange = walletUnits != null && walletUnits >= 100L
 
   if (shouldShowPlayAndEarn && currentLevel != null) {
     Row(
@@ -36,17 +40,20 @@ fun PlayAndEarnTopBarBadge(onClick: () -> Unit) {
       verticalAlignment = Alignment.CenterVertically,
     ) {
       TierBadge(levelProperties = LevelProperties.Companion.fromLevel(currentLevel))
-      Box(
-        modifier = Modifier.offset(x = (-6).dp, y = (-4).dp),
-        contentAlignment = Alignment.Center
-      ) {
-        Image(
-          imageVector = getBadgeGiftBackground(),
-          contentDescription = null
-        )
-        PaEAnimatedGift(
-          modifier = Modifier.size(24.dp, 30.dp)
-        )
+
+      if (hasUnitsToExchange) {
+        Box(
+          modifier = Modifier.offset(x = (-6).dp, y = (-4).dp),
+          contentAlignment = Alignment.Center
+        ) {
+          Image(
+            imageVector = getBadgeGiftBackground(),
+            contentDescription = null
+          )
+          PaEAnimatedGift(
+            modifier = Modifier.size(24.dp, 30.dp)
+          )
+        }
       }
     }
   }
