@@ -13,51 +13,75 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import cm.aptoide.pt.campaigns.domain.PaEBundle
-import cm.aptoide.pt.campaigns.domain.randomPaEBundle
+import cm.aptoide.pt.campaigns.presentation.PaEBundlesUiState
+import cm.aptoide.pt.campaigns.presentation.rememberPaEBundles
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.analytics.presentation.OverrideAnalyticsPlayAndEarn
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.rememberPaEAnalytics
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.app_items.PaECompactAppItem
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.layout.PaEHorizontalCarousel
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.playAndEarnRewardsRoute
 
 @Composable
 fun PaEBundleView(
-  bundle: PaEBundle,
   navigate: (String) -> Unit,
+  spaceBy: Int = 0,
 ) {
-  Box(
-    modifier = Modifier.wrapContentHeight()
-  ) {
-    Image(
-      modifier = Modifier
-        .matchParentSize()
-        .padding(bottom = 112.dp),
-      painter = painterResource(R.drawable.play_and_earn_bg_2),
-      contentDescription = null,
-      contentScale = ContentScale.Crop,
-    )
+  val bundle = rememberPaEBundles()
+    .let { it as? PaEBundlesUiState.Idle }
+    ?.bundles?.trending
+    ?.takeIf { it.apps.isNotEmpty() }
 
-    Column(
-      modifier = Modifier.padding(top = 16.dp, bottom = 24.dp),
-      verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-      PaEBundleHeader(onClick = {})
-      PaEHorizontalCarousel(
-        apps = bundle.apps,
+  val paeAnalytics = rememberPaEAnalytics()
+
+  if (bundle != null) {
+    OverrideAnalyticsPlayAndEarn(
+      navigate = navigate
+    ) { navigateTo ->
+      Box(
         modifier = Modifier
-          .fillMaxWidth()
-          .padding(start = 16.dp)
-      ) { index ->
-        val app = bundle.apps[index]
-        PaECompactAppItem(
-          app = app,
-          onClick = {
-            navigate(
-              buildAppViewRoute(app).withItemPosition(index)
+          .wrapContentHeight()
+          .padding(bottom = spaceBy.dp)
+      ) {
+        Image(
+          modifier = Modifier
+            .matchParentSize()
+            .padding(bottom = 112.dp),
+          painter = painterResource(R.drawable.play_and_earn_bg_2),
+          contentDescription = null,
+          contentScale = ContentScale.Crop,
+        )
+
+        Column(
+          modifier = Modifier.padding(top = 16.dp, bottom = 24.dp),
+          verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+          PaEBundleHeader(
+            onClick = {
+              paeAnalytics.sendPaEHomeEarnNowClick()
+              navigateTo(playAndEarnRewardsRoute)
+            }
+          )
+          PaEHorizontalCarousel(
+            apps = bundle.apps,
+            modifier = Modifier
+              .fillMaxWidth()
+              .padding(start = 16.dp)
+          ) { index ->
+            val app = bundle.apps[index]
+            PaECompactAppItem(
+              app = app,
+              onClick = {
+                paeAnalytics.sendPaEHomeAppClick(app.packageName)
+                navigateTo(
+                  buildAppViewRoute(app, isGamified = true).withItemPosition(index)
+                )
+              }
             )
           }
-        )
+        }
       }
     }
   }
@@ -66,8 +90,5 @@ fun PaEBundleView(
 @Preview
 @Composable
 private fun PaEBundleViewPreview() {
-  PaEBundleView(
-    bundle = randomPaEBundle,
-    navigate = {},
-  )
+  PaEBundleView(navigate = {})
 }

@@ -19,6 +19,10 @@ val Context.userAccountPreferencesDataStore: DataStore<Preferences> by preferenc
   name = "userAccountPreferences"
 )
 
+val Context.paePreferencesDataStore: DataStore<Preferences> by preferencesDataStore(
+  name = "playAndEarnPreferences"
+)
+
 @Module
 @InstallIn(SingletonComponent::class)
 class RepositoryModule {
@@ -39,8 +43,21 @@ class RepositoryModule {
   ): UserInfoRepository {
     return DefaultUserInfoRepository(userAccountPreferencesRepository)
   }
+
+  @Singleton
+  @Provides
+  @PaEPreferencesDataStore
+  fun providePaEPreferencesDataStore(
+    @ApplicationContext appContext: Context,
+  ): DataStore<Preferences> {
+    return appContext.paePreferencesDataStore
+  }
 }
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class UserAccountPreferencesDataStore
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class PaEPreferencesDataStore
