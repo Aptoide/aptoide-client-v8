@@ -53,7 +53,8 @@ enum class Type {
   NEW_APP_VERSION,
   IN_GAME_EVENT,
   RTB_PROMO,
-  GAMES_FEED
+  GAMES_FEED,
+  PLAY_AND_EARN
 }
 
 val randomBundle

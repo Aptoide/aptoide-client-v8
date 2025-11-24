@@ -54,8 +54,9 @@ fun PaEHomeLayout(
     ?.takeIf { it.apps.isNotEmpty() }
 
   val shouldShowPlayAndEarn = rememberShouldShowPlayAndEarn()
+  val (hasShownHeader, markHeaderAsShown) = rememberPaEHeaderState()
 
-  if (bundle != null && shouldShowPlayAndEarn) {
+  if (bundle != null && shouldShowPlayAndEarn && hasShownHeader == false) {
     val coroutineScope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
 
@@ -114,6 +115,9 @@ fun PaEHomeLayout(
     LaunchedEffect(scrollState.value) {
       if (scrollState.value == layoutHeightPx) {
         canScroll = false
+
+        // Mark the header bundle as shown when user scrolls it away
+        markHeaderAsShown()
       }
     }
 

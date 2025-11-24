@@ -97,6 +97,9 @@ import com.aptoide.android.aptoidegames.gamesfeed.presentation.rememberGamesFeed
 import com.aptoide.android.aptoidegames.home.analytics.meta
 import com.aptoide.android.aptoidegames.mmp.WithUTM
 import com.aptoide.android.aptoidegames.mmp.getUTMConfig
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaEBundleView
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.home.rememberPaEHeaderState
+import com.aptoide.android.aptoidegames.play_and_earn.rememberShouldShowPlayAndEarn
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import kotlinx.coroutines.launch
@@ -163,7 +166,7 @@ fun BundlesScreen(
           }
 
           BundlesView(
-            viewState.copy(bundles = filteredBundles),
+            viewState = viewState.copy(bundles = filteredBundles).injectPaEBundle(),
             navigate = navigate,
             onShowLoading = { showLoading ->
               shouldShowLoadingView = showLoading
@@ -313,6 +316,11 @@ fun BundlesView(
                 navigate = navigateTo,
                 spaceBy = 32,
                 onShowLoading = onShowLoading
+              )
+
+              Type.PLAY_AND_EARN -> PaEBundleView(
+                navigate = navigateTo,
+                spaceBy = 32
               )
 
               else -> Unit
@@ -592,6 +600,33 @@ fun List<Bundle>.injectGamesFeed(): List<Bundle> {
   return toMutableList().apply {
     val insertPosition = if (size >= 1) 1 else 0
     add(insertPosition, gamesFeedBundle)
+  }
+}
+
+@Composable
+private fun BundlesViewUiState.injectPaEBundle(): BundlesViewUiState {
+  val shouldShowPlayAndEarn = rememberShouldShowPlayAndEarn()
+  val (hasShownHeader, _) = rememberPaEHeaderState()
+
+  if (shouldShowPlayAndEarn && hasShownHeader == true) {
+    val paeBundle = Bundle(
+      title = stringResource(R.string.play_and_earn_title),
+      actions = emptyList(),
+      type = Type.PLAY_AND_EARN,
+      tag = "play-and-earn-injected-bundle"
+    )
+
+    return copy(
+      bundles = bundles.toMutableList().apply {
+        if (bundles.size >= 3) {
+          add(2, paeBundle)
+        } else {
+          add(paeBundle)
+        }
+      }
+    )
+  } else {
+    return this
   }
 }
 
