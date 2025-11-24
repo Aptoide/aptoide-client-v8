@@ -187,7 +187,7 @@ private fun PaEMissionJson.getType() = when (type) {
 
 private fun PaEMissionProgressJson.getType() = when (status) {
   PaEMissionStatusJson.PENDING -> PaEMissionStatus.PENDING
-  PaEMissionStatusJson.ONGOING -> PaEMissionStatus.ONGOING
+  PaEMissionStatusJson.IN_PROGRESS -> PaEMissionStatus.IN_PROGRESS
   PaEMissionStatusJson.COMPLETED -> PaEMissionStatus.COMPLETED
   null -> null
 }
