@@ -23,12 +23,11 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.debugInspectorInfo
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
-import com.aptoide.android.aptoidegames.R
+import cm.aptoide.pt.extensions.getRandomString
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -120,27 +119,10 @@ private fun Modifier.customTabIndicatorOffset(
     .width(currentTabWidth)
 }
 
-@Composable
-fun AppViewTab.getTabName(): String = stringResource(
-  when (this) {
-    AppViewTab.DETAILS -> R.string.appview_details_tab_title
-    AppViewTab.REWARDS -> R.string.appview_rewards_tab_title
-    AppViewTab.RELATED -> R.string.appview_related_tab_title
-    AppViewTab.INFO -> R.string.appview_info_tab_title
-  }
-)
-
-enum class AppViewTab {
-  DETAILS,
-  REWARDS,
-  RELATED,
-  INFO
-}
-
 @PreviewDark
 @Composable
 fun CustomScrollableTabRowPreview() {
-  val tabsList = List(Random.nextInt(1..3)) { AppViewTab.entries[it].getTabName() }
+  val tabsList = List(Random.nextInt(1..3)) { getRandomString(1..1, capitalize = true) }
 
   AptoideTheme {
     CustomScrollableTabRow(
