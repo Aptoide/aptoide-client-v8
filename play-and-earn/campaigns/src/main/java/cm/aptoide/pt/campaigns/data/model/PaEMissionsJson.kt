@@ -38,6 +38,6 @@ internal enum class PaEMissionTypeJson {
 @Keep
 internal enum class PaEMissionStatusJson {
   PENDING,
-  ONGOING,
+  IN_PROGRESS,
   COMPLETED,
 }
