@@ -34,6 +34,6 @@ enum class PaEMissionType {
 
 enum class PaEMissionStatus {
   PENDING,
-  ONGOING,
+  IN_PROGRESS,
   COMPLETED,
 }

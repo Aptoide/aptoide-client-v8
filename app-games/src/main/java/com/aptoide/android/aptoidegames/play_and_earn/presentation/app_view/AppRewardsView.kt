@@ -103,9 +103,14 @@ private fun RewardsSection(
   items: List<PaEMission>,
   itemContent: @Composable (PaEMission) -> Unit
 ) {
-  // Sort items: ongoing first, then completed
-  val sortedItems = items.sortedBy {
-    it.progress?.status == PaEMissionStatus.COMPLETED
+  // Sort items: ONGOING first, then PENDING, then COMPLETED
+  val sortedItems = items.sortedBy { mission ->
+    when (mission.progress?.status) {
+      PaEMissionStatus.IN_PROGRESS -> 0
+      PaEMissionStatus.PENDING -> 1
+      PaEMissionStatus.COMPLETED -> 2
+      null -> 1
+    }
   }
 
   Column(
@@ -240,12 +245,117 @@ private fun CheckpointItem(checkpoint: PaEMission) {
 
 @Composable
 private fun MissionItem(mission: PaEMission) {
-  val isCompleted = mission.progress?.status == PaEMissionStatus.COMPLETED
+  when (mission.progress?.status) {
+    PaEMissionStatus.IN_PROGRESS -> OngoingMissionItem(mission)
+    PaEMissionStatus.COMPLETED -> CompletedMissionItem(mission)
 
+    PaEMissionStatus.PENDING,
+    null -> PendingMissionItem(mission)
+  }
+}
+
+@Composable
+private fun PendingMissionItem(mission: PaEMission) {
   Box(
     modifier = Modifier
       .fillMaxWidth()
-      .background(if (isCompleted) Color.Transparent else Palette.GreyDark),
+      .background(Palette.GreyDark),
+    contentAlignment = Alignment.Center
+  ) {
+    Row(
+      modifier = Modifier.padding(all = 8.dp),
+      verticalAlignment = Alignment.CenterVertically,
+      horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+      AptoideAsyncImage(
+        modifier = Modifier.size(64.dp),
+        data = R.drawable.book,
+        contentDescription = null,
+      )
+      Column(
+        modifier = Modifier.weight(1f),
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+      ) {
+        Text(
+          text = mission.title,
+          style = AGTypography.InputsM,
+          color = Palette.White
+        )
+        Text(
+          text = mission.description ?: "",
+          style = AGTypography.Body,
+          color = Palette.GreyLight,
+          maxLines = 2,
+          overflow = TextOverflow.Ellipsis
+        )
+      }
+
+      Text(
+        modifier = Modifier.padding(end = 8.dp),
+        text = "+ ${mission.units} UNITS",
+        style = AGTypography.InputsXS,
+        color = Palette.SecondaryLight
+      )
+    }
+  }
+}
+
+@Composable
+private fun OngoingMissionItem(mission: PaEMission) {
+  Box(
+    modifier = Modifier
+      .fillMaxWidth()
+      .background(Palette.GreyDark),
+    contentAlignment = Alignment.Center
+  ) {
+    Row(
+      modifier = Modifier.padding(all = 8.dp),
+      verticalAlignment = Alignment.CenterVertically,
+      horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+      AptoideAsyncImage(
+        modifier = Modifier.size(64.dp),
+        data = R.drawable.book,
+        contentDescription = null,
+      )
+      Column(
+        modifier = Modifier.padding(end = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+      ) {
+        Column {
+          Text(
+            text = mission.title,
+            style = AGTypography.InputsM,
+            color = Palette.White
+          )
+          Text(
+            text = mission.description ?: "",
+            style = AGTypography.Body,
+            color = Palette.GreyLight,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis
+          )
+        }
+
+        PaEProgressIndicator(
+          progress = mission.progress?.getNormalizedProgress() ?: 0f,
+        )
+
+        Text(
+          modifier = Modifier.align(Alignment.End),
+          text = "+ ${mission.units} UNITS",
+          style = AGTypography.InputsXS,
+          color = Palette.SecondaryLight
+        )
+      }
+    }
+  }
+}
+
+@Composable
+private fun CompletedMissionItem(mission: PaEMission) {
+  Box(
+    modifier = Modifier.fillMaxWidth(),
     contentAlignment = Alignment.Center
   ) {
     Row(
@@ -256,14 +366,12 @@ private fun MissionItem(mission: PaEMission) {
       AptoideAsyncImage(
         modifier = Modifier
           .size(64.dp)
-          .graphicsLayer {
-            alpha = if (isCompleted) 0.5f else 1f
-          },
+          .graphicsLayer { alpha = 0.5f },
         data = R.drawable.book,
         contentDescription = null,
-        colorFilter = if (isCompleted) ColorFilter.colorMatrix(
+        colorFilter = ColorFilter.colorMatrix(
           ColorMatrix().apply { setToSaturation(0f) }
-        ) else null
+        )
       )
       Column(
         modifier = Modifier.weight(1f),
@@ -272,46 +380,37 @@ private fun MissionItem(mission: PaEMission) {
         Text(
           text = mission.title,
           style = AGTypography.InputsM,
-          color = if (isCompleted) Palette.Grey else Palette.White
+          color = Palette.Grey
         )
         Text(
           text = mission.description ?: "",
           style = AGTypography.Body,
-          color = if (isCompleted) Palette.Grey else Palette.GreyLight,
+          color = Palette.Grey,
           maxLines = 2,
           overflow = TextOverflow.Ellipsis
         )
       }
 
-      if (isCompleted) {
-        Row(
-          verticalAlignment = Alignment.CenterVertically,
-          horizontalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-          Text(
-            text = "+ ${mission.units} UNITS",
-            style = AGTypography.InputsXS,
-            color = Palette.SecondaryLight
-          )
-          Image(
-            imageVector = getMissionHexagonCompletedIcon(),
-            contentDescription = null,
-            modifier = Modifier
-              .size(21.dp, 24.dp)
-              .shadow(
-                elevation = 6.dp,
-                shape = CircleShape,
-                spotColor = Color(0x80C279FF),
-                clip = false
-              )
-          )
-        }
-      } else {
+      Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+      ) {
         Text(
-          modifier = Modifier.padding(end = 8.dp),
           text = "+ ${mission.units} UNITS",
-          style = AGTypography.InputsXS,
+          style = AGTypography.InputsS,
           color = Palette.SecondaryLight
+        )
+        Image(
+          imageVector = getMissionHexagonCompletedIcon(),
+          contentDescription = null,
+          modifier = Modifier
+            .size(21.dp, 24.dp)
+            .shadow(
+              elevation = 6.dp,
+              shape = CircleShape,
+              spotColor = Color(0x80C279FF),
+              clip = false
+            )
         )
       }
     }

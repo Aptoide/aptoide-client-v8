@@ -73,7 +73,7 @@ class InjectionsProvider @Inject constructor(
 
 @Composable
 fun rememberPaEMissions(packageName: String): Pair<PaEMissionsUiState, () -> Unit> = runPreviewable(
-  preview = { PaEMissionsUiStateProvider().values.toSet().random() to {} },
+  preview = { PaEMissionsUiStateProvider().values.first() to {} },
   real = {
     val injectionsProvider = hiltViewModel<InjectionsProvider>()
     val vm: PaEAppMissionsViewModel = viewModel(

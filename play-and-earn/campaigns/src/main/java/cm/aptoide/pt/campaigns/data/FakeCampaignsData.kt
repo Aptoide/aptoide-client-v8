@@ -70,7 +70,7 @@ val paeCheckpoint1 = PaEMission(
     current = 30,
     target = 50,
     type = "Checkpoint",
-    status = PaEMissionStatus.ONGOING
+    status = PaEMissionStatus.IN_PROGRESS
   )
 )
 
@@ -91,7 +91,12 @@ val paeMission2 = PaEMission(
   type = PaEMissionType.PLAY_TIME,
   arguments = JsonObject(),
   units = 10,
-  progress = null
+  progress = PaEMissionProgress(
+    current = 30,
+    target = 50,
+    type = "Mission",
+    status = PaEMissionStatus.IN_PROGRESS
+  )
 )
 
 val paeMission3 = PaEMission(
@@ -101,7 +106,12 @@ val paeMission3 = PaEMission(
   type = PaEMissionType.PLAY_TIME,
   arguments = JsonObject(),
   units = 10,
-  progress = null
+  progress = PaEMissionProgress(
+    current = 50,
+    target = 50,
+    type = "Mission",
+    status = PaEMissionStatus.COMPLETED
+  )
 )
 
 val paeMissions = PaEMissions(
