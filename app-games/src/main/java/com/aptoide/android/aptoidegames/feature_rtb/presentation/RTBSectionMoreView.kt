@@ -97,9 +97,14 @@ fun RTBMoreBundleScreen(
 fun getRTBMoreRouteNavigation(
   bundle: Bundle,
   navigate: (String) -> Unit,
-): () -> Unit = {
-  navigate(
-    buildRtbSeeMoreRoute("${bundle.tag}-more")
-      .withBundleMeta(bundle.meta.copy(tag = "${bundle.tag}-more"))
-  )
+): () -> Unit {
+  val analyticsContext = AnalyticsContext.current
+  val bundleAnalytics = rememberBundleAnalytics()
+  return {
+    bundleAnalytics.sendSeeAllClick(analyticsContext)
+    navigate(
+      buildRtbSeeMoreRoute("${bundle.tag}-more")
+        .withBundleMeta(bundle.meta.copy(tag = "${bundle.tag}-more"))
+    )
+  }
 }
