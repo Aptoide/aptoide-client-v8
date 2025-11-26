@@ -106,6 +106,7 @@ val translatedTitles = mapOf(
   "Editorial" to R.string.fixed_bundle_editorial_title,
   "Trending" to R.string.fixed_bundle_trending_title,
   "Categories" to R.string.categories,
+  "Highlighted" to R.string.fixed_bundle_highlighted
 )
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -297,7 +298,7 @@ fun BundlesView(
             )
 
             Type.RTB_PROMO -> RTBSectionView(
-              bundle = bundle,
+              bundle = bundle.copy(title = "Highlighted".translateOrKeep(LocalContext.current)),
               navigate = navigateTo,
               spaceBy = 32
             )
