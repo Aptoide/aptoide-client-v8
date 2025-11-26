@@ -1,7 +1,11 @@
 package com.aptoide.android.aptoidegames.feature_rtb.presentation
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.App
@@ -10,8 +14,9 @@ import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
 import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.randomBundle
+import com.aptoide.android.aptoidegames.analytics.dto.AnalyticsUIContext
 import com.aptoide.android.aptoidegames.feature_apps.presentation.AppsRowView
-import com.aptoide.android.aptoidegames.feature_apps.presentation.BonusSectionGeneralizedView
+import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 
@@ -47,20 +52,23 @@ fun RTBSectionView(
 
   when (uiState) {
     is AppsListUiState.Idle -> {
-
-      BonusSectionGeneralizedView(
-        onHeaderClick = getRTBMoreRouteNavigation(
-          bundle = bundle,
-          navigate = navigate
-        ),
-        spaceBy = spaceBy,
-        showMoreButton = true
-      ) {
+      Column {
+        BundleHeader(
+          title = bundle.title,
+          icon = bundle.bundleIcon,
+          hasMoreAction = true,
+          onClick =
+            getRTBMoreRouteNavigation(
+              bundle = bundle,
+              navigate = navigate
+            )
+        )
         RTBBundleView(
           bundle = bundle,
           navigate = navigate,
-          apps = uiState.apps
+          apps = uiState.apps,
         )
+        Spacer(Modifier.size(spaceBy.dp))
       }
     }
 
@@ -69,7 +77,10 @@ fun RTBSectionView(
     AppsListUiState.NoConnection,
       -> Unit
 
-    AppsListUiState.Loading -> LoadingBundleView(height = 184.dp)
+    AppsListUiState.Loading -> {
+      LoadingBundleView(height = 184.dp)
+      Spacer(Modifier.size(spaceBy.dp))
+    }
   }
 
   LaunchedEffect(Unit) {

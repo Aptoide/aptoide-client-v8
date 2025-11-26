@@ -1,20 +1,23 @@
 package com.aptoide.android.aptoidegames.feature_rtb.presentation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.navDeepLink
 import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
+import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
 import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import cm.aptoide.pt.feature_home.domain.Bundle
 import com.aptoide.android.aptoidegames.BuildConfig
-import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGeneralAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withBundleMeta
-import com.aptoide.android.aptoidegames.feature_apps.presentation.MoreBonusBundleScreen
+import com.aptoide.android.aptoidegames.feature_apps.presentation.MoreBundleViewContent
+import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberBundleAnalytics
 import com.aptoide.android.aptoidegames.home.analytics.meta
+import com.aptoide.android.aptoidegames.home.translateOrKeep
 
 const val rtbSeeMoreRoute = "rtbSeeMore/{tag}"
 private var hasSentImpression = false
@@ -74,9 +77,9 @@ fun RTBMoreBundleScreen(
 
   RTBMoreAptoideMMPController(uiState, bundleTag, "home-bundle")
 
-  MoreBonusBundleScreen(
+  MoreBundleViewContent(
     uiState = uiState,
-    title = stringResource(R.string.bonus_banner_title, "20"),
+    title = "Highlighted".translateOrKeep(LocalContext.current),
     bundleTag = bundleTag,
     reload = reload,
     noNetworkReload = {
