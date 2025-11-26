@@ -60,6 +60,7 @@
   <string name="fixed_bundle_editors_choice_title">Izbor urednika</string>
   <string name="fixed_bundle_editorial_title">Editorijal</string>
   <string name="fixed_bundle_trending_title">Popularno</string>
+  <string name="fixed_bundle_higlighted">Маркирано</string>
   <string name="retry_button" comment="button_retry_title">Pokušaj ponovo</string>
   <string name="install_waiting_installation_message">Čeka se instaliranje</string>
   <string name="install_installing_message">Instaliranje</string>
@@ -124,7 +125,7 @@
   <string name="button_install_title">Instaliraj</string>
   <!-- Common -->
   <string name="appview_details_tab_title" comment="details">Детаљи</string>
-  <string name="appview_rewards_tab_title" comment="rewards">Rewards</string>
+  <string name="appview_rewards_tab_title" comment="rewards">Nagrade</string>
   <string name="appview_related_tab_title" comment="related">Povezano</string>
   <string name="appview_info_tab_title" comment="info">Инфо</string>
   <string name="appview_info_version_name_title" comment="version_name">Naziv verzije</string>
@@ -167,7 +168,7 @@
   <string name="done_title">Gotovo!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">Obavljanje kupovine...</string>
   <string name="log_out_button" comment="log_out">Odjavite se</string>
-  <string name="logout_button">Logout</string>
+  <string name="logout_button">Одјављивање</string>
   <string name="iap_appc_body">Dobićete bonus u svim kupovinama!</string>
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Sada možete dovršiti svoju kupovinu.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">Aplikacija Aptoide Wallet je instalirana!</string>
@@ -204,8 +205,8 @@
   <string name="published_on_saturday">Published on Saturday</string>
   <string name="published_on_sunday">Published on Sunday</string>
   <string name="published_just_now">Published just now</string>
-  <string name="published_today">Published today</string>
-  <string name="published_yesterday">Published yesterday</string>
+  <string name="published_today">Objavljeno danas</string>
+  <string name="published_yesterday">Objavljeno juče</string>
   <plurals name="published_hours">
     <item quantity="one">Published %d hour ago</item>
     <item quantity="few">Published %d hours ago</item>
@@ -223,18 +224,18 @@
   <string name="friday">Friday</string>
   <string name="saturday">Saturday</string>
   <string name="sunday">Sunday</string>
-  <string name="just_now">Just now</string>
-  <string name="today">Today</string>
-  <string name="yesterday">Yesterday</string>
+  <string name="just_now">Upravo sada</string>
+  <string name="today">Danas</string>
+  <string name="yesterday">Juče</string>
   <plurals name="hours">
-    <item quantity="one"> %d hour ago</item>
-    <item quantity="few">%d hours ago</item>
-    <item quantity="other">%d hours ago</item>
+    <item quantity="one"> Pre %d sati</item>
+    <item quantity="few">%d sata/i ranije</item>
+    <item quantity="other">%d sata/i ranije</item>
   </plurals>
   <plurals name="minutes">
-    <item quantity="one">%d minute ago</item>
-    <item quantity="few">%d minutes ago</item>
-    <item quantity="other">%d minutes ago</item>
+    <item quantity="one">Pre %d minuta</item>
+    <item quantity="few">%d minuta ranije</item>
+    <item quantity="other">%d minuta ranije</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Bonus pri svakoj kupovini</string>
@@ -305,7 +306,7 @@
   <string name="tag_editorial">Editorijal</string>
   <string name="tag_categories">Kategorije</string>
   <string name="tag_bonus">Bonus</string>
-  <string name="tag_rewards">Rewards</string>
+  <string name="tag_rewards">Nagrade</string>
   <!-- AB Test for roblox companion apps -->
   <string name="companion_apps_roblox_notification_title">Enjoying Roblox? 🔥</string>
   <string name="companion_apps_roblox_notification_body">These are the must have apps for Roblox players</string>
@@ -318,7 +319,7 @@
   <string name="update_app_updated_notification_body">Discover what\'s new</string>
   <!-- AB Test for Experiment 8 : Roblox Companion Apps -->
   <string name="apkfy_multi_install_install_button">Install [%d]</string>
-  <string name="apkfy_multi_install_intro_1">Do you want to install this app ?</string>
+  <string name="apkfy_multi_install_intro_1">Želite li da instalirate ovu aplikaciju ?</string>
   <string name="apkfy_multi_install_intro_2">More fun awaits!</string>
   <string name="apkfy_multi_install_intro_3">Try these games inspired by Roblox.</string>
   <!-- AB Test for Experiment 9 : GamesFeed -->
@@ -327,7 +328,7 @@
   <string name="gamegenie_entry_screen_general_section">Find your next favorite game with GameGenie</string>
   <string name="gamegenie_entry_screen_companion_section">... or tap your game - I\'ll help you master it</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[Hi! I\'m your AI assistant on everything related to <1>%1$s</1>.]]></string>
-  <string name="new_badge">New</string>
+  <string name="new_badge">Novo</string>
   <!-- Play and Earn -->
   <string name="play_and_earn_start_earning_title">Start Earning</string>
   <string name="play_and_earn_level_up_rewards_title">Level up your rewards!</string>
@@ -340,7 +341,7 @@
   <string name="play_and_earn_get_started_now_title">Get started now!</string>
   <string name="play_and_earn_grant_permissions_body">Log in and grant permissions to unlock access to incredible prizes while you play!</string>
   <string name="play_and_earn_permissions"><![CDATA[Grant <1>overlay & game time permissions</1> to display your progress and rewards based on your playtime within the game.]]></string>
-  <string name="play_and_earn_lets_go_button">Let\'s Go</string>
+  <string name="play_and_earn_lets_go_button">Idemo</string>
   <string name="play_and_earn_how_it_works_title">How it works</string>
   <string name="play_and_earn_pick_featured_game_body">Pick a featured game</string>
   <string name="play_and_earn_xp_contributes_checkpoints_body">XP contributes to checkpoints</string>
@@ -361,15 +362,15 @@
   <string name="play_and_earn_missions_title">Missions</string>
   <string name="play_and_earn_checkpoints_title">Checkpoints</string>
   <string name="play_and_earn_bonus_percentage_label">%1$s%% Bonus</string>
-  <string name="play_and_earn_know_more_button">Know More</string>
+  <string name="play_and_earn_know_more_button">Saznajte više</string>
   <string name="play_and_earn_level_achieved_body">Level %1$d achieved!</string>
   <string name="play_and_earn_more_you_play_body">The more you play, the more you earn! Check your rewards and see your balance grow.</string>
   <string name="play_and_earn_keep_playing_title">Keep Playing</string>
   <string name="play_and_earn_tap_gem_exchange_body">Tap the gem to exchange your units for balance</string>
   <string name="play_and_earn_awesome_button">Awesome</string>
   <string name="play_and_earn_earned_balance_body">You just earned $1 in Aptoide Balance to use on your games</string>
-  <string name="play_and_earn_play_button">Play</string>
-  <string name="play_and_earn_install_button">Install</string>
+  <string name="play_and_earn_play_button">Igraj</string>
+  <string name="play_and_earn_install_button">Instaliraj</string>
   <string name="play_and_earn_notification_recording_title">Tracking playtime for rewards</string>
   <string name="play_and_earn_notification_recording_body">Your gameplay time is being counted towards your missions.</string>
 </resources>
