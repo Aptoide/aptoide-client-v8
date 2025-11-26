@@ -83,7 +83,8 @@ private fun AptoideMmp.mapRTBMMPCampaigns(
     impressions = this.impression?.let { listOf(CampaignTuple("aptoide-mmp", this.impression)) }
       ?: emptyList(),
     clicks = this.click?.let { listOf(CampaignTuple("aptoide-mmp", this.click)) } ?: emptyList(),
-    downloads = emptyList(),
+    downloads = this.download?.let { listOf(CampaignTuple("aptoide-mmp", this.download)) }
+      ?: emptyList(),
     campaignId = campaignId,
     repository = campaignRepository
   )

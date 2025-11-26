@@ -32,5 +32,6 @@ data class Tracking(
 @Keep
 data class AptoideMmp(
   val impression: String?,
-  val click: String?
+  val click: String?,
+  val download: String?
 )
