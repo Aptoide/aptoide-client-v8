@@ -75,6 +75,12 @@ fun RTBMoreBundleScreen(
   val analyticsContext = AnalyticsContext.current
   val generalAnalytics = rememberGeneralAnalytics()
 
+  LaunchedEffect(Unit) {
+    if (!AptoideMMPCampaign.allowedBundleTags.keys.contains(bundleTag)) {
+      AptoideMMPCampaign.allowedBundleTags[bundleTag] = "ag-rtb" to ("ag-rtb-${bundleTag}")
+    }
+  }
+
   RTBMoreAptoideMMPController(uiState, bundleTag, "home-bundle")
 
   MoreBundleViewContent(
