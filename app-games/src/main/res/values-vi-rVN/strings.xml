@@ -60,6 +60,7 @@
   <string name="fixed_bundle_editors_choice_title">Lựa chọn từ Ban Biên Tập</string>
   <string name="fixed_bundle_editorial_title">Biên tập</string>
   <string name="fixed_bundle_trending_title">Thịnh hành</string>
+  <string name="fixed_bundle_higlighted">Highlighted</string>
   <string name="retry_button" comment="button_retry_title">Thử lại</string>
   <string name="install_waiting_installation_message">Đang chờ cài đặt</string>
   <string name="install_installing_message">Đang cài đặt</string>
