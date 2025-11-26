@@ -60,7 +60,7 @@
   <string name="fixed_bundle_editors_choice_title">에디터의 선택</string>
   <string name="fixed_bundle_editorial_title">사설</string>
   <string name="fixed_bundle_trending_title">경향</string>
-  <string name="fixed_bundle_higlighted">Highlighted</string>
+  <string name="fixed_bundle_higlighted">하이라이트</string>
   <string name="retry_button" comment="button_retry_title">재시도</string>
   <string name="install_waiting_installation_message">설치 대기 중</string>
   <string name="install_installing_message">설치중</string>
