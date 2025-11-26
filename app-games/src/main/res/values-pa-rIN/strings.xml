@@ -62,7 +62,7 @@
   <string name="fixed_bundle_editors_choice_title">ਸੰਪਾਦਕ ਦੀ ਪਸੰਦ</string>
   <string name="fixed_bundle_editorial_title">ਸੰਪਾਦਕੀ</string>
   <string name="fixed_bundle_trending_title">ਹੁਣ ਚੱਲ ਰਿਹਾ</string>
-  <string name="fixed_bundle_higlighted">Highlighted</string>
+  <string name="fixed_bundle_higlighted">ਉਜਾਗਰ ਕੀਤੀ ਗਈ</string>
   <string name="retry_button" comment="button_retry_title">ਮੁੜ ਕੋਸ਼ਿਸ ਕਰੋ</string>
   <string name="install_waiting_installation_message">Waiting for install</string>
   <string name="install_installing_message">ਇੰਸਟਾਲ ਹੋ ਰਿਹਾ ਹੈ</string>
@@ -170,7 +170,7 @@
   <string name="done_title">ਹੋ ਗਿਆ!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">Making Purchase...</string>
   <string name="log_out_button" comment="log_out">Log Out</string>
-  <string name="logout_button">Logout</string>
+  <string name="logout_button">ਲਾੱਗ ਆਊਟ</string>
   <string name="iap_appc_body">You\'ll get a bonus in all purchases!</string>
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">You can now complete your purchase.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">The Aptoide Wallet is now installed!</string>
@@ -224,16 +224,16 @@
   <string name="friday">Friday</string>
   <string name="saturday">Saturday</string>
   <string name="sunday">Sunday</string>
-  <string name="just_now">Just now</string>
-  <string name="today">Today</string>
-  <string name="yesterday">Yesterday</string>
+  <string name="just_now">ਹੁਣੇ ਹੀ</string>
+  <string name="today">ਅੱਜ</string>
+  <string name="yesterday">ਕੱਲ੍ਹ</string>
   <plurals name="hours">
     <item quantity="one"> %d hour ago</item>
-    <item quantity="other">%d hours ago</item>
+    <item quantity="other">%d ਘੰਟੇ ਪਹਿਲਾਂ</item>
   </plurals>
   <plurals name="minutes">
-    <item quantity="one">%d minute ago</item>
-    <item quantity="other">%d minutes ago</item>
+    <item quantity="one">%d ਮਿੰਟਾਂ ਪਹਿਲਾਂ</item>
+    <item quantity="other">%d ਮਿੰਟਾਂ ਪਹਿਲਾਂ</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">ਹਰ ਖਰੀਦ ਤੇ ਇਕ ਬੋਨਸ</string>
@@ -324,7 +324,7 @@
   <string name="gamegenie_entry_screen_general_section">Find your next favorite game with GameGenie</string>
   <string name="gamegenie_entry_screen_companion_section">... or tap your game - I\'ll help you master it</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[Hi! I\'m your AI assistant on everything related to <1>%1$s</1>.]]></string>
-  <string name="new_badge">New</string>
+  <string name="new_badge">ਨਵਾਂ</string>
   <!-- Play and Earn -->
   <string name="play_and_earn_start_earning_title">Start Earning</string>
   <string name="play_and_earn_level_up_rewards_title">Level up your rewards!</string>
@@ -358,7 +358,7 @@
   <string name="play_and_earn_missions_title">Missions</string>
   <string name="play_and_earn_checkpoints_title">Checkpoints</string>
   <string name="play_and_earn_bonus_percentage_label">%1$s%% Bonus</string>
-  <string name="play_and_earn_know_more_button">Know More</string>
+  <string name="play_and_earn_know_more_button">ਹੋਰ ਜਾਣੋ</string>
   <string name="play_and_earn_level_achieved_body">Level %1$d achieved!</string>
   <string name="play_and_earn_more_you_play_body">The more you play, the more you earn! Check your rewards and see your balance grow.</string>
   <string name="play_and_earn_keep_playing_title">Keep Playing</string>
@@ -366,7 +366,7 @@
   <string name="play_and_earn_awesome_button">Awesome</string>
   <string name="play_and_earn_earned_balance_body">You just earned $1 in Aptoide Balance to use on your games</string>
   <string name="play_and_earn_play_button">Play</string>
-  <string name="play_and_earn_install_button">Install</string>
+  <string name="play_and_earn_install_button">ਇੰਸਟਾਲ</string>
   <string name="play_and_earn_notification_recording_title">Tracking playtime for rewards</string>
   <string name="play_and_earn_notification_recording_body">Your gameplay time is being counted towards your missions.</string>
 </resources>
