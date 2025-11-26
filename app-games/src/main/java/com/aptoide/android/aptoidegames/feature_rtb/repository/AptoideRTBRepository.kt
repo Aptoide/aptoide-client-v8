@@ -66,7 +66,7 @@ private fun RTBResponse.toDomainModel(campaignRepository: CampaignRepository): A
   return emptyApp.copy(
     name = this.appName,
     icon = this.creative.asset,
-    isAppCoins = true,
+    isAppCoins = false,
     file = File(md5 = "", size = -1, path = "", path_alt = ""),
     packageName = this.packageName,
     rating = Rating(this.rating, 0, emptyList()),
