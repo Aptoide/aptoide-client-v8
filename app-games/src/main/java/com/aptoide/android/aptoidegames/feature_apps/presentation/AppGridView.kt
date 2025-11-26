@@ -134,7 +134,7 @@ internal fun AppsRowView(
           navigate(
             buildAppViewRoute(
               appSource = item,
-              utmCampaign = item.campaigns?.campaignId
+              utmCampaign = item.campaigns?.campaignId,
             )
               .withItemPosition(index)
           )

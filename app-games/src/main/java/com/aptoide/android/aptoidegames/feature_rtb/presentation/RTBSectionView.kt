@@ -114,3 +114,6 @@ private fun RealBonusBundlePreview() {
     )
   }
 }
+
+fun AnalyticsUIContext.isRTB() =
+  this.bundleMeta?.tag?.lowercase()?.contains("rtb") ?: false

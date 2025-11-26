@@ -95,7 +95,7 @@ fun MoreBundleView(
 }
 
 @Composable
-private fun MoreBundleViewContent(
+fun MoreBundleViewContent(
   uiState: AppsListUiState,
   title: String,
   bundleTag: String,
@@ -159,7 +159,10 @@ private fun AppsList(
             analyticsContext = analyticsContext.copy(itemPosition = index)
           )
           navigate(
-            buildAppViewRoute(app)
+            buildAppViewRoute(
+              appSource = app,
+              utmCampaign = app.campaigns?.campaignId,
+            )
               .withItemPosition(index)
           )
         },

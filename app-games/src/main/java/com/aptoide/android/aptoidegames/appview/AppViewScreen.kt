@@ -103,6 +103,7 @@ import com.aptoide.android.aptoidegames.error_views.NoConnectionView
 import com.aptoide.android.aptoidegames.feature_apps.presentation.SmallEmptyView
 import com.aptoide.android.aptoidegames.feature_apps.presentation.buildSeeMoreBonusRoute
 import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberBonusBundle
+import com.aptoide.android.aptoidegames.feature_rtb.presentation.isRTB
 import com.aptoide.android.aptoidegames.installer.presentation.InstallView
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
@@ -164,7 +165,7 @@ fun appViewScreen() = ScreenData.withAnalytics(
     "app" -> "$PACKAGE_UNAME=${arguments.getString(SOURCE)}"
     else -> arguments?.getString(SOURCE)!!
   }
-
+  val isRtb = AnalyticsContext.current.isRTB()
   val utmsMap = mapOfNonNull(
     UTM_CAMPAIGN to arguments.getString(UTM_CAMPAIGN),
     UTM_MEDIUM to arguments.getString(UTM_MEDIUM),
@@ -173,7 +174,7 @@ fun appViewScreen() = ScreenData.withAnalytics(
   )
 
   AppViewScreen(
-    source = source.appendIfRequired(BuildConfig.MARKET_NAME),
+    source = if (isRtb) source else source.appendIfRequired(BuildConfig.MARKET_NAME),
     navigate = navigate,
     navigateBack = navigateBack,
     utmsMap = utmsMap,
