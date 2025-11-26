@@ -19,4 +19,10 @@ class PaESession(
   var syncSequence = 0
 
   fun shouldSync() = (System.currentTimeMillis() / 1000L) - (lastSyncTime / 1000L) > 15L
+
+  fun isExpired(currentTimeSeconds: Long): Boolean {
+    val lastSyncTimeSeconds = lastSyncTime / 1000L
+    val timeSinceLastSync = currentTimeSeconds - lastSyncTimeSeconds
+    return timeSinceLastSync > ttlSeconds
+  }
 }

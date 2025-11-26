@@ -4,6 +4,7 @@ import cm.aptoide.pt.campaigns.data.PaEMissionsRepository
 import cm.aptoide.pt.campaigns.domain.PaEMission
 import cm.aptoide.pt.play_and_earn.sessions.data.PaESessionsRepository
 import cm.aptoide.pt.play_and_earn.sessions.data.SessionExpiredException
+import cm.aptoide.pt.play_and_earn.sessions.domain.SessionInfo
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import javax.inject.Inject
@@ -17,96 +18,118 @@ class PaESessionManager @Inject constructor(
 
   val activeSessions = mutableListOf<PaESession>()
 
-  val _completedMissions = MutableSharedFlow<PaEMission>()
+  private val _completedMissions = MutableSharedFlow<PaEMission>()
   val completedMissions = _completedMissions.asSharedFlow()
 
+  /**
+   * Creates a new session for the given package
+   * @return true if session was successfully created, false otherwise
+   */
   suspend fun createSession(packageName: String): Boolean {
-    //Only create session if there is not already one with the same package
-    if (activeSessions.none { it.packageName == packageName }) {
-      val session = paESessionsRepository.startSession(packageName).getOrNull()
-
-      if (session != null && session.sessionId.isNotBlank()) {
-        val sessionMissions =
-          paeMissionsRepository.getCampaignMissions(packageName).getOrElse { return false }
-
-        activeSessions.add(
-          PaESession(
-            sessionId = session.sessionId,
-            packageName = packageName,
-            ttlSeconds = session.ttl,
-            missions = sessionMissions
-          )
-        )
-
-        return true
-      } else {
-        return false
-      }
+    if (hasActiveSession(packageName)) {
+      return false
     }
 
-    return false
+    val session = paESessionsRepository.startSession(packageName).getOrElse { return false }
+
+    if (session.sessionId.isBlank()) {
+      return false
+    }
+
+    val sessionMissions = paeMissionsRepository.getCampaignMissions(packageName)
+      .getOrElse { return false }
+
+    activeSessions.add(
+      PaESession(
+        sessionId = session.sessionId,
+        packageName = packageName,
+        ttlSeconds = session.ttl,
+        missions = sessionMissions
+      )
+    )
+
+    return true
   }
 
-  suspend fun syncSessions(currentForegroundPackage: String?) {
+  private fun hasActiveSession(packageName: String): Boolean {
+    return activeSessions.any { it.packageName == packageName }
+  }
+
+  suspend fun syncSessions(currentForegroundPackage: String?, syncIntervalSeconds: Int = 6) {
+    val currentTimeSeconds = System.currentTimeMillis() / 1000L
     val sessionsToRemove = mutableListOf<PaESession>()
 
     activeSessions.forEach { session ->
-      if (session.packageName == currentForegroundPackage) { //Sync current session
-        //Update last sync time
-        session.usageTimeSinceLastSync += 6
-
-        if (session.shouldSync()) {
-          //Sessions needs to sync. Perform session heartbeat.
-          val syncResult = paESessionsRepository.heartbeatSession(
-            session.sessionId,
-            session.packageName,
-            session.syncSequence,
-            session.usageTimeSinceLastSync
-          ).also {
-            if (it.isFailure && it.exceptionOrNull() is SessionExpiredException) {
-              sessionsToRemove.add(session)
-            }
-          }.getOrNull()
-
-          if (syncResult != null) {
-            session.lastSyncTime = System.currentTimeMillis()
-            session.syncSequence++
-            session.usageTimeSinceLastSync = 0
-
-            session.totalSessionTime += syncResult.appliedSeconds
-
-            //Check for completed mission events
-            syncResult.events
-              .filter { it.packageName == session.packageName }
-              .forEach { mission ->
-                if (!session.completedMissions.contains(mission.missionTitle)) {
-                  val completedMission =
-                    session.missions?.missions?.find { it.title == mission.missionTitle }
-
-                  session.completedMissions.add(mission.missionTitle)
-
-                  if (completedMission != null) {
-                    _completedMissions.emit(completedMission)
-                  }
-                }
-              }
-          }
-        }
+      val shouldRemove = if (session.packageName == currentForegroundPackage) {
+        // Sync the active session and check if it expired
+        syncActiveSession(session, syncIntervalSeconds)
       } else {
-        // Not the current session. Check if TTL has expired
-        val currentTimeSeconds = System.currentTimeMillis() / 1000L
-        val lastSyncTimeSeconds = session.lastSyncTime / 1000L
-        val timeSinceLastSync = currentTimeSeconds - lastSyncTimeSeconds
+        // Check if inactive session has expired
+        session.isExpired(currentTimeSeconds)
+      }
 
-        if (timeSinceLastSync > session.ttlSeconds) {
-          // Session expired. Mark for removal
-          sessionsToRemove.add(session)
-        }
+      if (shouldRemove) {
+        sessionsToRemove.add(session)
       }
     }
 
-    sessionsToRemove.forEach {
-      activeSessions.remove(it)
-    }
+    activeSessions.removeAll(sessionsToRemove.toSet())
+  }
+
+  /**
+   * Syncs an active session by performing a heartbeat and processing results
+   * @return true if session expired and should be removed, false otherwise
+   */
+  private suspend fun syncActiveSession(
+    session: PaESession,
+    syncIntervalSeconds: Int
+  ): Boolean {
+    session.usageTimeSinceLastSync += syncIntervalSeconds
+
+    if (!session.shouldSync()) return false
+
+    return paESessionsRepository.heartbeatSession(
+      session.sessionId,
+      session.packageName,
+      session.syncSequence,
+      session.usageTimeSinceLastSync
+    ).fold(
+      onSuccess = { syncResult ->
+        updateSessionAfterSync(session, syncResult)
+        processCompletedMissions(session, syncResult)
+        false  // Session is healthy, don't remove
+      },
+      onFailure = { exception ->
+        exception is SessionExpiredException  // Session is expired and should be removed. Return true
+      }
+    )
+  }
+
+  private fun updateSessionAfterSync(
+    session: PaESession,
+    syncResult: SessionInfo
+  ) {
+    session.lastSyncTime = System.currentTimeMillis()
+    session.syncSequence++
+    session.usageTimeSinceLastSync = 0
+    session.totalSessionTime += syncResult.appliedSeconds
+  }
+
+  private suspend fun processCompletedMissions(
+    session: PaESession,
+    syncResult: SessionInfo
+  ) {
+    syncResult.events
+      .filter { it.packageName == session.packageName }
+      .forEach { missionEvent ->
+        if (missionEvent.missionTitle !in session.completedMissions) {
+          session.missions?.missions
+            ?.find { it.title == missionEvent.missionTitle }
+            ?.let { completedMission ->
+              session.completedMissions.add(missionEvent.missionTitle)
+              _completedMissions.tryEmit(completedMission)
+            }
+        }
+      }
   }
 }
