@@ -20,7 +20,6 @@ import com.google.android.gms.common.api.Scope
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
@@ -32,7 +31,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GoogleSignInViewModel @Inject constructor(
-  @ApplicationContext private val context: Context,
   private val credentialManager: CredentialManager,
   private val userAuthRepository: WalletAuthRepository,
   private val userAccountPreferencesRepository: UserAccountPreferencesRepository
@@ -48,11 +46,11 @@ class GoogleSignInViewModel @Inject constructor(
       viewModelState.value
     )
 
-  fun signIn() {
-    launchAuthentication()
+  fun signIn(activityContext: Context) {
+    launchAuthentication(activityContext)
   }
 
-  private fun launchAuthentication() {
+  private fun launchAuthentication(activityContext: Context) {
     val googleIdOption = GetSignInWithGoogleOption.Builder(BuildConfig.GOOGLE_AUTH_CLIENT_ID)
       .setNonce(generateSecureRandomNonce())
       .build()
@@ -65,13 +63,14 @@ class GoogleSignInViewModel @Inject constructor(
     viewModelScope.launch {
       try {
         val result = credentialManager.getCredential(
-          context = context,
+          context = activityContext,
           request = request
         )
 
         handleAuthentication(result.credential)
       } catch (e: Throwable) {
         Timber.e("Couldn't retrieve user's credentials: ${e.message}")
+        viewModelState.emit(GoogleSignInUiState.Error())
       }
     }
   }
