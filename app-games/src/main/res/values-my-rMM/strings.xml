@@ -60,6 +60,7 @@
   <string name="fixed_bundle_editors_choice_title">အယ္ဒီတာ ေရြးခ်ယ္မႈ</string>
   <string name="fixed_bundle_editorial_title">အယ္ဒီတာ့အာေဘာ္</string>
   <string name="fixed_bundle_trending_title">လူႀကိဳက္မ်ားေနေသာ</string>
+  <string name="fixed_bundle_higlighted">ထင်ရှားစေရန် ပြုလုပ်ထားသော</string>
   <string name="retry_button" comment="button_retry_title">ျပန္ႀကိဳးစားမည္</string>
   <string name="install_waiting_installation_message">Waiting for install</string>
   <string name="install_installing_message">ထည့္သြင္းေနပါသည္</string>
@@ -124,7 +125,7 @@
   <string name="button_install_title">ထည့္သြင္းပါ</string>
   <!-- Common -->
   <string name="appview_details_tab_title" comment="details">အသေးစိတ်များ</string>
-  <string name="appview_rewards_tab_title" comment="rewards">Rewards</string>
+  <string name="appview_rewards_tab_title" comment="rewards">ဆုမ်ား</string>
   <string name="appview_related_tab_title" comment="related">Related</string>
   <string name="appview_info_tab_title" comment="info">အချက်အလက်</string>
   <string name="appview_info_version_name_title" comment="version_name">Version name</string>
@@ -167,7 +168,7 @@
   <string name="done_title">ၿပီးပါၿပီ။</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">Making Purchase...</string>
   <string name="log_out_button" comment="log_out">အေကာင့္ထြက္မည္</string>
-  <string name="logout_button">Logout</string>
+  <string name="logout_button">အကောင့်ထွက်မည်</string>
   <string name="iap_appc_body">You\'ll get a bonus in all purchases!</string>
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">You can now complete your purchase.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">The Aptoide Wallet is now installed!</string>
@@ -204,29 +205,29 @@
   <string name="published_on_saturday">Published on Saturday</string>
   <string name="published_on_sunday">Published on Sunday</string>
   <string name="published_just_now">Published just now</string>
-  <string name="published_today">Published today</string>
-  <string name="published_yesterday">Published yesterday</string>
+  <string name="published_today">ယေန႔လႊင့္တင္ခဲ့သည္</string>
+  <string name="published_yesterday">မေန႔က လႊင့္တင္ခဲ့သည္</string>
   <plurals name="published_hours">
     <item quantity="other">Published %d hours ago</item>
   </plurals>
   <plurals name="published_minutes">
     <item quantity="other">Published %d minutes ago</item>
   </plurals>
-  <string name="monday">Monday</string>
-  <string name="tuesday">Tuesday</string>
-  <string name="wednesday">Wednesday</string>
-  <string name="thursday">Thursday</string>
-  <string name="friday">Friday</string>
-  <string name="saturday">Saturday</string>
-  <string name="sunday">Sunday</string>
-  <string name="just_now">Just now</string>
-  <string name="today">Today</string>
-  <string name="yesterday">Yesterday</string>
+  <string name="monday">တနင်္လာနေ့</string>
+  <string name="tuesday">အင်္ဂါနေ့</string>
+  <string name="wednesday">ဗုဒၶဟူးေန႔</string>
+  <string name="thursday">ၾကာသပေတးေန႔</string>
+  <string name="friday">ေသာၾကာေန႔</string>
+  <string name="saturday">စေနေန႔</string>
+  <string name="sunday">တနဂၤေႏြေန႔</string>
+  <string name="just_now">ယခုချက်ချင်း</string>
+  <string name="today">ယေန႔</string>
+  <string name="yesterday">မနေ့က</string>
   <plurals name="hours">
-    <item quantity="other">%d hours ago</item>
+    <item quantity="other">လြန္ခဲ့ေသာ %d  မိနစ္က</item>
   </plurals>
   <plurals name="minutes">
-    <item quantity="other">%d minutes ago</item>
+    <item quantity="other">လြန္ခဲ့ေသာ %d  မိနစ္က</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">A Bonus on Every Purchase</string>
@@ -293,7 +294,7 @@
   <string name="tag_editorial">အယ္ဒီတာ့အာေဘာ္</string>
   <string name="tag_categories">ကဏ္ဍများ</string>
   <string name="tag_bonus">ေဘာနပ္စ္</string>
-  <string name="tag_rewards">Rewards</string>
+  <string name="tag_rewards">ဆုမ်ား</string>
   <!-- AB Test for roblox companion apps -->
   <string name="companion_apps_roblox_notification_title">Enjoying Roblox? 🔥</string>
   <string name="companion_apps_roblox_notification_body">These are the must have apps for Roblox players</string>
@@ -315,7 +316,7 @@
   <string name="gamegenie_entry_screen_general_section">Find your next favorite game with GameGenie</string>
   <string name="gamegenie_entry_screen_companion_section">... or tap your game - I\'ll help you master it</string>
   <string name="gamegenie_introduction_companion_section"><![CDATA[Hi! I\'m your AI assistant on everything related to <1>%1$s</1>.]]></string>
-  <string name="new_badge">New</string>
+  <string name="new_badge">အသစ္</string>
   <!-- Play and Earn -->
   <string name="play_and_earn_start_earning_title">Start Earning</string>
   <string name="play_and_earn_level_up_rewards_title">Level up your rewards!</string>
@@ -349,15 +350,15 @@
   <string name="play_and_earn_missions_title">Missions</string>
   <string name="play_and_earn_checkpoints_title">Checkpoints</string>
   <string name="play_and_earn_bonus_percentage_label">%1$s%% Bonus</string>
-  <string name="play_and_earn_know_more_button">Know More</string>
+  <string name="play_and_earn_know_more_button">ပိုမိုသိရွိရန္</string>
   <string name="play_and_earn_level_achieved_body">Level %1$d achieved!</string>
   <string name="play_and_earn_more_you_play_body">The more you play, the more you earn! Check your rewards and see your balance grow.</string>
   <string name="play_and_earn_keep_playing_title">Keep Playing</string>
   <string name="play_and_earn_tap_gem_exchange_body">Tap the gem to exchange your units for balance</string>
   <string name="play_and_earn_awesome_button">Awesome</string>
   <string name="play_and_earn_earned_balance_body">You just earned $1 in Aptoide Balance to use on your games</string>
-  <string name="play_and_earn_play_button">Play</string>
-  <string name="play_and_earn_install_button">Install</string>
+  <string name="play_and_earn_play_button">ကစားမည္</string>
+  <string name="play_and_earn_install_button">ထည့္သြင္းပါ</string>
   <string name="play_and_earn_notification_recording_title">Tracking playtime for rewards</string>
   <string name="play_and_earn_notification_recording_body">Your gameplay time is being counted towards your missions.</string>
 </resources>
