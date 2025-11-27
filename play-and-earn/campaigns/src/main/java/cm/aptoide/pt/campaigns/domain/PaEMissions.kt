@@ -10,7 +10,7 @@ data class PaEMissions(
 data class PaEMission(
   val title: String,
   val description: String?,
-  val icon: String,
+  val icon: String?,
   val type: PaEMissionType,
   val arguments: JsonObject,
   val units: Int,
