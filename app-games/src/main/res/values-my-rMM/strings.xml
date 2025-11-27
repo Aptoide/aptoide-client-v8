@@ -60,7 +60,7 @@
   <string name="fixed_bundle_editors_choice_title">အယ္ဒီတာ ေရြးခ်ယ္မႈ</string>
   <string name="fixed_bundle_editorial_title">အယ္ဒီတာ့အာေဘာ္</string>
   <string name="fixed_bundle_trending_title">လူႀကိဳက္မ်ားေနေသာ</string>
-  <string name="fixed_bundle_highlighted">Highlighted</string>
+  <string name="fixed_bundle_highlighted">ထင်ရှားစေရန် ပြုလုပ်ထားသော</string>
   <string name="retry_button" comment="button_retry_title">ျပန္ႀကိဳးစားမည္</string>
   <string name="install_waiting_installation_message">Waiting for install</string>
   <string name="install_installing_message">ထည့္သြင္းေနပါသည္</string>
