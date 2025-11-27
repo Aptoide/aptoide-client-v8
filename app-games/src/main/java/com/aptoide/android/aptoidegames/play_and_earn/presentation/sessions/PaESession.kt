@@ -8,7 +8,10 @@ class PaESession(
   val ttlSeconds: Int,
   val missions: PaEMissions?
 ) {
+  // Missions confirmed as completed by the server
   val completedMissions = mutableListOf<String>()
+
+  val pendingServerConfirmationMissions = mutableSetOf<String>()
 
   val sessionStartTime: Long = System.currentTimeMillis()
   var lastSyncTime: Long = sessionStartTime
@@ -24,5 +27,15 @@ class PaESession(
     val lastSyncTimeSeconds = lastSyncTime / 1000L
     val timeSinceLastSync = currentTimeSeconds - lastSyncTimeSeconds
     return timeSinceLastSync > ttlSeconds
+  }
+
+  fun toSessionContext(): SessionContext {
+    return SessionContext(
+      totalSessionTime = totalSessionTime,
+      usageTimeSinceLastSync = usageTimeSinceLastSync,
+      completedMissionTitles = completedMissions.toSet(),
+      pendingConfirmationMissionTitles = pendingServerConfirmationMissions,
+      sessionStartTime = sessionStartTime
+    )
   }
 }
