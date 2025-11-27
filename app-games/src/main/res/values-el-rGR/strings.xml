@@ -60,7 +60,7 @@
   <string name="fixed_bundle_editors_choice_title">Επιλογή Συντάκτη</string>
   <string name="fixed_bundle_editorial_title">Νέα</string>
   <string name="fixed_bundle_trending_title">Δημοφιλή</string>
-  <string name="fixed_bundle_highlighted">Highlighted</string>
+  <string name="fixed_bundle_highlighted">Δημοφιλή</string>
   <string name="retry_button" comment="button_retry_title">Νέα προσπάθεια</string>
   <string name="install_waiting_installation_message">Σε αναμονή εγκατάστασης</string>
   <string name="install_installing_message">Γίνεται εγκατάσταση</string>
