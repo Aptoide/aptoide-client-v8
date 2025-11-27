@@ -5,6 +5,7 @@ import cm.aptoide.pt.campaigns.domain.PaEMission
 import cm.aptoide.pt.play_and_earn.sessions.data.PaESessionsRepository
 import cm.aptoide.pt.play_and_earn.sessions.data.SessionExpiredException
 import cm.aptoide.pt.play_and_earn.sessions.domain.SessionInfo
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.missions.PaEMissionManager
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import javax.inject.Inject
@@ -13,7 +14,8 @@ import javax.inject.Singleton
 @Singleton
 class PaESessionManager @Inject constructor(
   private val paESessionsRepository: PaESessionsRepository,
-  private val paeMissionsRepository: PaEMissionsRepository
+  private val paeMissionsRepository: PaEMissionsRepository,
+  private val paeMissionManager: PaEMissionManager
 ) {
 
   val activeSessions = mutableListOf<PaESession>()
@@ -86,7 +88,27 @@ class PaESessionManager @Inject constructor(
   ): Boolean {
     session.usageTimeSinceLastSync += syncIntervalSeconds
 
-    if (!session.shouldSync()) return false
+    val sessionMissions = session.missions?.missions.orEmpty()
+    val sessionContext = session.toSessionContext()
+
+    // Check if there are any newly completed missions that haven't been synced yet
+    val locallyCompletedMissions = paeMissionManager.getLocallyCompletedMissions(
+      packageName = session.packageName,
+      missions = sessionMissions,
+      sessionContext = sessionContext
+    )
+    
+    val newlyCompletedMissions = locallyCompletedMissions
+      .filterNot { it.title in session.pendingServerConfirmationMissions }
+
+    val shouldForceSyncForMission = newlyCompletedMissions.isNotEmpty()
+    val shouldPerformSync = shouldForceSyncForMission || session.shouldSync()
+
+    if (!shouldPerformSync) return false
+
+    newlyCompletedMissions.forEach { mission ->
+      session.pendingServerConfirmationMissions.add(mission.title)
+    }
 
     return paESessionsRepository.heartbeatSession(
       session.sessionId,
@@ -127,6 +149,8 @@ class PaESessionManager @Inject constructor(
             ?.find { it.title == missionEvent.missionTitle }
             ?.let { completedMission ->
               session.completedMissions.add(missionEvent.missionTitle)
+
+              session.pendingServerConfirmationMissions.remove(missionEvent.missionTitle)
 
               // Mark mission as completed in local DB
               paeMissionsRepository.markMissionAsCompleted(
