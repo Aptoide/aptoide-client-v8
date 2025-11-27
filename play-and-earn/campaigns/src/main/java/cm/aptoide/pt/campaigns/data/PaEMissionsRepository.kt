@@ -12,5 +12,7 @@ interface PaEMissionsRepository {
 
   fun observeCampaignMissions(packageName: String): Flow<Result<PaEMissions>>
 
+  suspend fun getCachedMissions(packageName: String): PaEMissions?
+
   suspend fun markMissionAsCompleted(packageName: String, missionTitle: String)
 }

@@ -60,7 +60,7 @@ internal class DefaultPaEMissionsRepository @Inject constructor(
     }
   }.flowOn(dispatcher)
 
-  private suspend fun getCachedMissions(packageName: String): PaEMissions? {
+  override suspend fun getCachedMissions(packageName: String): PaEMissions? {
     val cachedMissions = paeMissionDao.getAppMissions(packageName)
     if (cachedMissions.isEmpty()) {
       return null
