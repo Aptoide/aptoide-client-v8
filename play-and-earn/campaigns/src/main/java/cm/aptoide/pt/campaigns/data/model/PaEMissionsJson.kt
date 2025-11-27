@@ -13,7 +13,7 @@ internal data class PaEMissionsJson(
 internal data class PaEMissionJson(
   val title: String,
   val description: String?,
-  val icon: String,
+  val icon: String?,
   val type: PaEMissionTypeJson,
   val arguments: JsonObject,
   val units: Int,

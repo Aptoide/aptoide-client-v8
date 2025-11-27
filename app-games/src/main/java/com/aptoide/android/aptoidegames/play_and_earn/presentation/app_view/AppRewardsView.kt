@@ -23,7 +23,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -157,11 +156,14 @@ private fun CheckpointItem(checkpoint: PaEMission) {
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-      Image(
-        painter = painterResource(R.drawable.checkpoint_icon),
+      AptoideAsyncImage(
+        modifier = Modifier
+          .size(64.dp)
+          .graphicsLayer {
+            alpha = if (isCompleted) 0.5f else 1f
+          },
+        data = checkpoint.icon ?: R.drawable.checkpoint_icon,
         contentDescription = null,
-        modifier = Modifier.size(64.dp),
-        alpha = if (isCompleted) 0.5f else 1f,
         colorFilter = if (isCompleted) ColorFilter.colorMatrix(
           ColorMatrix().apply { setToSaturation(0f) }
         ) else null
@@ -269,7 +271,7 @@ private fun PendingMissionItem(mission: PaEMission) {
     ) {
       AptoideAsyncImage(
         modifier = Modifier.size(64.dp),
-        data = R.drawable.book,
+        data = mission.icon ?: R.drawable.book,
         contentDescription = null,
       )
       Column(
@@ -315,7 +317,7 @@ private fun OngoingMissionItem(mission: PaEMission) {
     ) {
       AptoideAsyncImage(
         modifier = Modifier.size(64.dp),
-        data = R.drawable.book,
+        data = mission.icon ?: R.drawable.book,
         contentDescription = null,
       )
       Column(
@@ -367,7 +369,7 @@ private fun CompletedMissionItem(mission: PaEMission) {
         modifier = Modifier
           .size(64.dp)
           .graphicsLayer { alpha = 0.5f },
-        data = R.drawable.book,
+        data = mission.icon ?: R.drawable.book,
         contentDescription = null,
         colorFilter = ColorFilter.colorMatrix(
           ColorMatrix().apply { setToSaturation(0f) }
