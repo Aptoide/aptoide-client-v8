@@ -60,7 +60,7 @@
   <string name="fixed_bundle_editors_choice_title">Pilihan Editor</string>
   <string name="fixed_bundle_editorial_title">Editorial</string>
   <string name="fixed_bundle_trending_title">Sedang Tren</string>
-  <string name="fixed_bundle_higlighted">Sorotan</string>
+  <string name="fixed_bundle_highlighted">Sorotan</string>
   <string name="retry_button" comment="button_retry_title">Coba lagi</string>
   <string name="install_waiting_installation_message">Menunggu pemasangan</string>
   <string name="install_installing_message">Memasang</string>

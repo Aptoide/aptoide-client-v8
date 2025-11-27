@@ -60,7 +60,7 @@
   <string name="fixed_bundle_editors_choice_title">Izbor urednika</string>
   <string name="fixed_bundle_editorial_title">Editorijal</string>
   <string name="fixed_bundle_trending_title">Popularno</string>
-  <string name="fixed_bundle_higlighted">Маркирано</string>
+  <string name="fixed_bundle_highlighted">Маркирано</string>
   <string name="retry_button" comment="button_retry_title">Pokušaj ponovo</string>
   <string name="install_waiting_installation_message">Čeka se instaliranje</string>
   <string name="install_installing_message">Instaliranje</string>

@@ -60,7 +60,7 @@
   <string name="fixed_bundle_editors_choice_title">Editörün Seçimi</string>
   <string name="fixed_bundle_editorial_title">Yazılar</string>
   <string name="fixed_bundle_trending_title">Popüler</string>
-  <string name="fixed_bundle_higlighted">Vurgulanan</string>
+  <string name="fixed_bundle_highlighted">Vurgulanan</string>
   <string name="retry_button" comment="button_retry_title">Yeniden dene</string>
   <string name="install_waiting_installation_message">Kurulum bekleniyor</string>
   <string name="install_installing_message">Yükleniyor</string>

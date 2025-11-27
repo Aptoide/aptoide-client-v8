@@ -60,7 +60,7 @@
   <string name="fixed_bundle_editors_choice_title">संपादक की पसंद</string>
   <string name="fixed_bundle_editorial_title">एडिटोरियल</string>
   <string name="fixed_bundle_trending_title">ट्रेंडिंग</string>
-  <string name="fixed_bundle_higlighted">हाईलाइट किए हुए</string>
+  <string name="fixed_bundle_highlighted">हाईलाइट किए हुए</string>
   <string name="retry_button" comment="button_retry_title">पुनः करें</string>
   <string name="install_waiting_installation_message">Waiting for install</string>
   <string name="install_installing_message">इन्स्टाल कर रहा है</string>

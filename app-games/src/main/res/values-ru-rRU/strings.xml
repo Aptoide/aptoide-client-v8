@@ -60,7 +60,7 @@
   <string name="fixed_bundle_editors_choice_title">Выбор редакции</string>
   <string name="fixed_bundle_editorial_title">От редакции</string>
   <string name="fixed_bundle_trending_title">Трендовые</string>
-  <string name="fixed_bundle_higlighted">Выделенные</string>
+  <string name="fixed_bundle_highlighted">Выделенные</string>
   <string name="retry_button" comment="button_retry_title">Попробовать снова</string>
   <string name="install_waiting_installation_message">Ожидание установки</string>
   <string name="install_installing_message">Установка...</string>
