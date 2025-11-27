@@ -60,7 +60,7 @@
   <string name="fixed_bundle_editors_choice_title">Вибір редакції</string>
   <string name="fixed_bundle_editorial_title">Від редакції</string>
   <string name="fixed_bundle_trending_title">Популярні</string>
-  <string name="fixed_bundle_higlighted">Зверніть увагу</string>
+  <string name="fixed_bundle_highlighted">Зверніть увагу</string>
   <string name="retry_button" comment="button_retry_title">Повторити</string>
   <string name="install_waiting_installation_message">Очікує на встановлення</string>
   <string name="install_installing_message">Встановлення</string>

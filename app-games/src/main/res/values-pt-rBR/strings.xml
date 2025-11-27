@@ -60,7 +60,7 @@
   <string name="fixed_bundle_editors_choice_title">Escolha dos Editores</string>
   <string name="fixed_bundle_editorial_title">Editorial</string>
   <string name="fixed_bundle_trending_title">Em Alta</string>
-  <string name="fixed_bundle_higlighted">Destacado</string>
+  <string name="fixed_bundle_highlighted">Destacado</string>
   <string name="retry_button" comment="button_retry_title">Repetir</string>
   <string name="install_waiting_installation_message">Aguarando instalação</string>
   <string name="install_installing_message">Instalando</string>

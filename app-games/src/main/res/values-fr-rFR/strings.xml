@@ -60,7 +60,7 @@
   <string name="fixed_bundle_editors_choice_title">Choix de la Rédaction</string>
   <string name="fixed_bundle_editorial_title">Éditorial</string>
   <string name="fixed_bundle_trending_title">Tendances</string>
-  <string name="fixed_bundle_higlighted">En vedette</string>
+  <string name="fixed_bundle_highlighted">En vedette</string>
   <string name="retry_button" comment="button_retry_title">Réessayer</string>
   <string name="install_waiting_installation_message">En attente d\'installation</string>
   <string name="install_installing_message">Installation</string>
