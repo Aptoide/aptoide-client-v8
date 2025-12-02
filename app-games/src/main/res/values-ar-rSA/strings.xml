@@ -233,21 +233,21 @@
   <string name="just_now">الآن</string>
   <string name="today">اليوم</string>
   <string name="yesterday">أمس</string>
-  <plurals name="hours">
-    <item quantity="zero">%d قبل ساعات</item>
-    <item quantity="one"> %d قبل ساعة</item>
-    <item quantity="two">%d قبل ساعات</item>
-    <item quantity="few">%d قبل ساعات</item>
-    <item quantity="many">%d قبل ساعات</item>
-    <item quantity="other">%d قبل ساعات</item>
+  <plurals name="hours_ago">
+    <item quantity="zero">%d hours ago</item>
+    <item quantity="one"> %d hour ago</item>
+    <item quantity="two">%d hours ago</item>
+    <item quantity="few">%d hours ago</item>
+    <item quantity="many">%d hours ago</item>
+    <item quantity="other">%d hours ago</item>
   </plurals>
-  <plurals name="minutes">
-    <item quantity="zero">%d قبل دقائق</item>
-    <item quantity="one">%d قبل دقيقة</item>
-    <item quantity="two">%d قبل دقائق</item>
-    <item quantity="few">%d قبل دقائق</item>
-    <item quantity="many">%d قبل دقائق</item>
-    <item quantity="other">%d قبل دقائق</item>
+  <plurals name="minutes_ago">
+    <item quantity="zero">%d minutes ago</item>
+    <item quantity="one">%d minute ago</item>
+    <item quantity="two">%d minutes ago</item>
+    <item quantity="few">%d minutes ago</item>
+    <item quantity="many">%d minutes ago</item>
+    <item quantity="other">%d minutes ago</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">مكافأة على كل عملية شراء</string>
