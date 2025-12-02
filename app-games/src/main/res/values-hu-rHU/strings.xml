@@ -234,20 +234,20 @@
     <item quantity="other">%d perccel ezelőtt</item>
   </plurals>
   <plurals name="hours">
-    <item quantity="one"> %d hour</item>
-    <item quantity="other">%d hours</item>
+    <item quantity="one"> %d óra</item>
+    <item quantity="other">%d órák</item>
   </plurals>
   <plurals name="minutes">
-    <item quantity="one">%d minute</item>
-    <item quantity="other">%d minutes</item>
+    <item quantity="one">%d perc</item>
+    <item quantity="other">%d percek</item>
   </plurals>
   <plurals name="weeks">
-    <item quantity="one">%d week</item>
-    <item quantity="other">%d weeks</item>
+    <item quantity="one">%d hét</item>
+    <item quantity="other">%d hetek</item>
   </plurals>
   <plurals name="months">
-    <item quantity="one">%d month</item>
-    <item quantity="other">%d months</item>
+    <item quantity="one">%d hónap</item>
+    <item quantity="other">%d hónapok</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Bónusz minden vásárlásért cserébe</string>
