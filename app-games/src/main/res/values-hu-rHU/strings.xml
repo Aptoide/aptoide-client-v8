@@ -241,6 +241,10 @@
     <item quantity="one">%d perc</item>
     <item quantity="other">%d percek</item>
   </plurals>
+  <plurals name="days">
+    <item quantity="one">%d day</item>
+    <item quantity="other">%d days</item>
+  </plurals>
   <plurals name="weeks">
     <item quantity="one">%d hét</item>
     <item quantity="other">%d hetek</item>
