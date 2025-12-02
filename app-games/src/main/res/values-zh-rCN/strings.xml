@@ -230,16 +230,16 @@
     <item quantity="other">%d分钟前</item>
   </plurals>
   <plurals name="hours">
-    <item quantity="other">%d hours</item>
+    <item quantity="other">%d 小时</item>
   </plurals>
   <plurals name="minutes">
-    <item quantity="other">%d minutes</item>
+    <item quantity="other">%d 会议记录</item>
   </plurals>
   <plurals name="weeks">
-    <item quantity="other">%d weeks</item>
+    <item quantity="other">%d 几周</item>
   </plurals>
   <plurals name="months">
-    <item quantity="other">%d months</item>
+    <item quantity="other">%d 数月</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">每次购买均会获得奖金</string>
