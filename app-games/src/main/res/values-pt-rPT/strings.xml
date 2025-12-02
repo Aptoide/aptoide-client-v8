@@ -234,20 +234,20 @@
     <item quantity="other">há %d minutos</item>
   </plurals>
   <plurals name="hours">
-    <item quantity="one"> %d hour</item>
-    <item quantity="other">%d hours</item>
+    <item quantity="one"> %d hora</item>
+    <item quantity="other">%d horas</item>
   </plurals>
   <plurals name="minutes">
-    <item quantity="one">%d minute</item>
-    <item quantity="other">%d minutes</item>
+    <item quantity="one">%d minuto</item>
+    <item quantity="other">%d minutos</item>
   </plurals>
   <plurals name="weeks">
-    <item quantity="one">%d week</item>
-    <item quantity="other">%d weeks</item>
+    <item quantity="one">%d semana</item>
+    <item quantity="other">%d semanas</item>
   </plurals>
   <plurals name="months">
-    <item quantity="one">%d month</item>
-    <item quantity="other">%d months</item>
+    <item quantity="one">%d mês</item>
+    <item quantity="other">%d meses</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Um Bónus em Cada Compra</string>
