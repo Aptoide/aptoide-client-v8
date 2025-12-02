@@ -226,12 +226,12 @@
   <string name="today">Tänään</string>
   <string name="yesterday">Eilen</string>
   <plurals name="hours_ago">
-    <item quantity="one"> %d tunti sitten</item>
-    <item quantity="other">%d tunteja sitten</item>
+    <item quantity="one"> %d tuntia sitten</item>
+    <item quantity="other">%d tuntia sitten</item>
   </plurals>
   <plurals name="minutes_ago">
-    <item quantity="one">%d minuutti sitten</item>
-    <item quantity="other">%d muutama minuutti sitten</item>
+    <item quantity="one">%d minuuttia sitten</item>
+    <item quantity="other">%d minuuttia sitten</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Bonusta jokaisesta ostoksesta</string>
