@@ -229,6 +229,18 @@
   <plurals name="minutes_ago">
     <item quantity="other">%d分钟前</item>
   </plurals>
+  <plurals name="hours">
+    <item quantity="other">%d hours</item>
+  </plurals>
+  <plurals name="minutes">
+    <item quantity="other">%d minutes</item>
+  </plurals>
+  <plurals name="weeks">
+    <item quantity="other">%d weeks</item>
+  </plurals>
+  <plurals name="months">
+    <item quantity="other">%d months</item>
+  </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">每次購物都有獎金</string>
   <string name="bonus_page_body_1">尋找以 %1$s標示的遊戲，安裝 Aptoide Wallet 並在所有購買中獲得高達 %2$s%% 的獎金。然後，您可以使用此獎金在您最喜愛的遊戲中進行下一次購買！</string>
