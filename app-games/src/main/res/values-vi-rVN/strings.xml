@@ -229,6 +229,18 @@
   <plurals name="minutes_ago">
     <item quantity="other">%d phút trước</item>
   </plurals>
+  <plurals name="hours">
+    <item quantity="other">%d hours</item>
+  </plurals>
+  <plurals name="minutes">
+    <item quantity="other">%d minutes</item>
+  </plurals>
+  <plurals name="weeks">
+    <item quantity="other">%d weeks</item>
+  </plurals>
+  <plurals name="months">
+    <item quantity="other">%d months</item>
+  </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Tiền thưởng cho mỗi lần mua hàng</string>
   <string name="bonus_page_body_1">Tìm các trò chơi được xác định bằng %1$s, cài đặt Aptoide Wallet và nhận đến %2$s%% tiền thưởng trong mọi giao dịch mua. Sau đó, bạn có thể dùng tiền thưởng này để thực hiện các giao dịch mua tiếp theo trong trò chơi yêu thích của mình!</string>
