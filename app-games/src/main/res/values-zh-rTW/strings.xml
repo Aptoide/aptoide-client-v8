@@ -224,10 +224,10 @@
   <string name="today">今日</string>
   <string name="yesterday">昨天</string>
   <plurals name="hours_ago">
-    <item quantity="other">%d 數小時前</item>
+    <item quantity="other">%d小时前</item>
   </plurals>
   <plurals name="minutes_ago">
-    <item quantity="other">%d 幾分鐘前</item>
+    <item quantity="other">%d分钟前</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">每次購物都有獎金</string>
