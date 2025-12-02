@@ -241,6 +241,10 @@
     <item quantity="one">%d Minute</item>
     <item quantity="other">%d Protokolle</item>
   </plurals>
+  <plurals name="days">
+    <item quantity="one">%d day</item>
+    <item quantity="other">%d days</item>
+  </plurals>
   <plurals name="weeks">
     <item quantity="one">%d Woche</item>
     <item quantity="other">%d Wochen</item>
