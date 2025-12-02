@@ -226,12 +226,12 @@
   <string name="today">Oggi</string>
   <string name="yesterday">Ieri</string>
   <plurals name="hours_ago">
-    <item quantity="one"> %d hour ago</item>
-    <item quantity="other">%d hours ago</item>
+    <item quantity="one"> %d ore fa</item>
+    <item quantity="other">%d ore fa</item>
   </plurals>
   <plurals name="minutes_ago">
-    <item quantity="one">%d minute ago</item>
-    <item quantity="other">%d minutes ago</item>
+    <item quantity="one">%d minuti fa</item>
+    <item quantity="other">%d minuti fa</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Un bonus a ogni acquisto</string>
