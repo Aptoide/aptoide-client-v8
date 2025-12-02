@@ -224,10 +224,10 @@
   <string name="today">오늘</string>
   <string name="yesterday">어제</string>
   <plurals name="hours_ago">
-    <item quantity="other">%d 몇 시간 전</item>
+    <item quantity="other">%d 시간 전</item>
   </plurals>
   <plurals name="minutes_ago">
-    <item quantity="other">%d 몇 분 전에</item>
+    <item quantity="other">%d 분 전</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">모든 구매 시 보너스 제공</string>
