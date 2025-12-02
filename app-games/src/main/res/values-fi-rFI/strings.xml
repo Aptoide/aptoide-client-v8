@@ -241,6 +241,10 @@
     <item quantity="one">%d minuutti</item>
     <item quantity="other">%d pöytäkirjat</item>
   </plurals>
+  <plurals name="days">
+    <item quantity="one">%d päivä</item>
+    <item quantity="other">%d päivät</item>
+  </plurals>
   <plurals name="weeks">
     <item quantity="one">%d viikko</item>
     <item quantity="other">%d viikkoja</item>

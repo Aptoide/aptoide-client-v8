@@ -253,6 +253,12 @@
     <item quantity="many">%d protokoły</item>
     <item quantity="other">%d protokoły</item>
   </plurals>
+  <plurals name="days">
+    <item quantity="one">%d dzień</item>
+    <item quantity="few">%d dni</item>
+    <item quantity="many">%d dni</item>
+    <item quantity="other">%d dni</item>
+  </plurals>
   <plurals name="weeks">
     <item quantity="one">%d tydzień</item>
     <item quantity="few">%d tygodnie</item>
