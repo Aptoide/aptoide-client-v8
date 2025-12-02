@@ -226,12 +226,12 @@
   <string name="today">Ma</string>
   <string name="yesterday">Tegnap</string>
   <plurals name="hours_ago">
-    <item quantity="one"> %d egy órával ezelőtt</item>
-    <item quantity="other">%d órákkal ezelőtt</item>
+    <item quantity="one"> %d órával ezelőtt</item>
+    <item quantity="other">%d órával ezelőtt</item>
   </plurals>
   <plurals name="minutes_ago">
-    <item quantity="one">%d egy perce</item>
-    <item quantity="other">%d percekkel ezelőtt</item>
+    <item quantity="one">%d perccel ezelőtt</item>
+    <item quantity="other">%d perccel ezelőtt</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Bónusz minden vásárlásért cserébe</string>

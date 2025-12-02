@@ -224,10 +224,10 @@
   <string name="today">วันนี้</string>
   <string name="yesterday">เมื่อวาน</string>
   <plurals name="hours_ago">
-    <item quantity="other">%d หลายชั่วโมงที่ผ่านมา</item>
+    <item quantity="other">%d ชั่วโมงที่ผ่านมา</item>
   </plurals>
   <plurals name="minutes_ago">
-    <item quantity="other">%d ไม่กี่นาทีที่ผ่านมา</item>
+    <item quantity="other">%d นาทีที่ผ่านมา</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">โบนัสในทุกการซื้อ</string>

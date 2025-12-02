@@ -226,12 +226,12 @@
   <string name="today">Vandaag</string>
   <string name="yesterday">Gisteren</string>
   <plurals name="hours_ago">
-    <item quantity="one"> %d een uur geleden</item>
+    <item quantity="one"> %d uur geleden</item>
     <item quantity="other">%d uren geleden</item>
   </plurals>
   <plurals name="minutes_ago">
-    <item quantity="one">%d minuut geleden</item>
-    <item quantity="other">%d enkele minuten geleden</item>
+    <item quantity="one">%d minuten geleden</item>
+    <item quantity="other">%d minuten geleden</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Een bonus bij elke aankoop</string>
