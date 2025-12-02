@@ -127,6 +127,13 @@ class PaESessionManager @Inject constructor(
             ?.find { it.title == missionEvent.missionTitle }
             ?.let { completedMission ->
               session.completedMissions.add(missionEvent.missionTitle)
+
+              // Mark mission as completed in local DB
+              paeMissionsRepository.markMissionAsCompleted(
+                packageName = session.packageName,
+                missionTitle = missionEvent.missionTitle
+              )
+
               _completedMissions.tryEmit(completedMission)
             }
         }
