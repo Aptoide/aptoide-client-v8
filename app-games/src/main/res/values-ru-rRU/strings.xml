@@ -229,13 +229,13 @@
   <string name="just_now">Только что</string>
   <string name="today">Сегодня</string>
   <string name="yesterday">Вчера</string>
-  <plurals name="hours">
+  <plurals name="hours_ago">
     <item quantity="one"> %d час назад</item>
     <item quantity="few">%d несколько часов назад</item>
     <item quantity="many">%d несколько часов назад</item>
     <item quantity="other">%d несколько часов назад</item>
   </plurals>
-  <plurals name="minutes">
+  <plurals name="minutes_ago">
     <item quantity="one">%d минуту назад</item>
     <item quantity="few">%d несколько минут назад</item>
     <item quantity="many">%d несколько минут назад</item>

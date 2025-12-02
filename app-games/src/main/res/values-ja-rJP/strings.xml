@@ -224,10 +224,10 @@
   <string name="just_now">ついさっき</string>
   <string name="today">今日</string>
   <string name="yesterday">昨日</string>
-  <plurals name="hours">
+  <plurals name="hours_ago">
     <item quantity="other">%d 数時間前</item>
   </plurals>
-  <plurals name="minutes">
+  <plurals name="minutes_ago">
     <item quantity="other">%d 数分前</item>
   </plurals>
   <!-- Bonus Page -->

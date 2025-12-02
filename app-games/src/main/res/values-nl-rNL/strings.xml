@@ -225,11 +225,11 @@
   <string name="just_now">Net nu</string>
   <string name="today">Vandaag</string>
   <string name="yesterday">Gisteren</string>
-  <plurals name="hours">
+  <plurals name="hours_ago">
     <item quantity="one"> %d een uur geleden</item>
     <item quantity="other">%d uren geleden</item>
   </plurals>
-  <plurals name="minutes">
+  <plurals name="minutes_ago">
     <item quantity="one">%d minuut geleden</item>
     <item quantity="other">%d enkele minuten geleden</item>
   </plurals>

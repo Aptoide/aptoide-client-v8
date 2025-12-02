@@ -225,11 +225,11 @@
   <string name="just_now">बस अभी</string>
   <string name="today">आज</string>
   <string name="yesterday">कल</string>
-  <plurals name="hours">
+  <plurals name="hours_ago">
     <item quantity="one"> %d hour ago</item>
     <item quantity="other">%d घंटों पहले</item>
   </plurals>
-  <plurals name="minutes">
+  <plurals name="minutes_ago">
     <item quantity="one">%d मिनट पहले</item>
     <item quantity="other">%d मिनटों पहले</item>
   </plurals>

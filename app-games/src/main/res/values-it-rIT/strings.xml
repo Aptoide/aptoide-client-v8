@@ -225,11 +225,11 @@
   <string name="just_now">Proprio ora</string>
   <string name="today">Oggi</string>
   <string name="yesterday">Ieri</string>
-  <plurals name="hours">
+  <plurals name="hours_ago">
     <item quantity="one"> %d un\'ora fa</item>
     <item quantity="other">%d ore fa</item>
   </plurals>
-  <plurals name="minutes">
+  <plurals name="minutes_ago">
     <item quantity="one">%d un minuto fa</item>
     <item quantity="other">%d minuti fa</item>
   </plurals>

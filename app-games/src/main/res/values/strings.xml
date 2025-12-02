@@ -235,14 +235,14 @@
   <string name="just_now">Just now</string>
   <string name="today">Today</string>
   <string name="yesterday">Yesterday</string>
-  <plurals name="hours">
+  <plurals name="hours_ago">
     <item quantity="one"> %d hour ago</item>
     <item quantity="two">%d hours ago</item>
     <item quantity="few">%d hours ago</item>
     <item quantity="many">%d hours ago</item>
     <item quantity="other">%d hours ago</item>
   </plurals>
-  <plurals name="minutes">
+  <plurals name="minutes_ago">
     <item quantity="one">%d minute ago</item>
     <item quantity="two">%d minutes ago</item>
     <item quantity="few">%d minutes ago</item>
