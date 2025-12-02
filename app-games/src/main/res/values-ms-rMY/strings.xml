@@ -224,11 +224,11 @@ Promosi khas dan ganjaran dalam permainan kegemaran anda.</string>
   <string name="just_now">Sebentar tadi</string>
   <string name="today">Hari ini</string>
   <string name="yesterday">Semalam</string>
-  <plurals name="hours">
-    <item quantity="other">%d jam lalu</item>
+  <plurals name="hours_ago">
+    <item quantity="other">%d hours ago</item>
   </plurals>
-  <plurals name="minutes">
-    <item quantity="other">%d minit lalu</item>
+  <plurals name="minutes_ago">
+    <item quantity="other">%d minutes ago</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Bonus bagi Setiap Pembelian</string>
