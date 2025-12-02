@@ -234,20 +234,20 @@
   <string name="today">اليوم</string>
   <string name="yesterday">أمس</string>
   <plurals name="hours_ago">
-    <item quantity="zero">%d hours ago</item>
-    <item quantity="one"> %d hour ago</item>
-    <item quantity="two">%d hours ago</item>
-    <item quantity="few">%d hours ago</item>
-    <item quantity="many">%d hours ago</item>
-    <item quantity="other">%d hours ago</item>
+    <item quantity="zero">منذ %d ساعة</item>
+    <item quantity="one"> منذ %d ساعة</item>
+    <item quantity="two">منذ %d ساعة</item>
+    <item quantity="few">منذ %d ساعة</item>
+    <item quantity="many">منذ %d ساعة</item>
+    <item quantity="other">منذ %d ساعة</item>
   </plurals>
   <plurals name="minutes_ago">
-    <item quantity="zero">%d minutes ago</item>
-    <item quantity="one">%d minute ago</item>
-    <item quantity="two">%d minutes ago</item>
-    <item quantity="few">%d minutes ago</item>
-    <item quantity="many">%d minutes ago</item>
-    <item quantity="other">%d minutes ago</item>
+    <item quantity="zero">منذ %d دقيقة</item>
+    <item quantity="one">منذ %d دقيقة</item>
+    <item quantity="two">منذ %d دقيقة</item>
+    <item quantity="few">منذ %d دقيقة</item>
+    <item quantity="many">منذ %d دقيقة</item>
+    <item quantity="other">منذ %d دقيقة</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">مكافأة على كل عملية شراء</string>
