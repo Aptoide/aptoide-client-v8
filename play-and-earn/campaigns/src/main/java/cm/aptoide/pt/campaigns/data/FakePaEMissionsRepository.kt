@@ -14,4 +14,7 @@ internal class FakePaEMissionsRepository : PaEMissionsRepository {
 
   override fun observeCampaignMissions(packageName: String): Flow<Result<PaEMissions>> =
     flowOf(Result.success(paeMissions))
+
+  override suspend fun markMissionAsCompleted(packageName: String, missionTitle: String) {
+  }
 }
