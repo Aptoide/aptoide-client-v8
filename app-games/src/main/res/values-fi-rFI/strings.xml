@@ -234,20 +234,20 @@
     <item quantity="other">%d minuuttia sitten</item>
   </plurals>
   <plurals name="hours">
-    <item quantity="one"> %d hour</item>
-    <item quantity="other">%d hours</item>
+    <item quantity="one"> %d tunti</item>
+    <item quantity="other">%d tuntia</item>
   </plurals>
   <plurals name="minutes">
-    <item quantity="one">%d minute</item>
-    <item quantity="other">%d minutes</item>
+    <item quantity="one">%d minuutti</item>
+    <item quantity="other">%d pöytäkirjat</item>
   </plurals>
   <plurals name="weeks">
-    <item quantity="one">%d week</item>
-    <item quantity="other">%d weeks</item>
+    <item quantity="one">%d viikko</item>
+    <item quantity="other">%d viikkoja</item>
   </plurals>
   <plurals name="months">
-    <item quantity="one">%d month</item>
-    <item quantity="other">%d months</item>
+    <item quantity="one">%d kuukausi</item>
+    <item quantity="other">%d kuukausia</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Bonusta jokaisesta ostoksesta</string>
