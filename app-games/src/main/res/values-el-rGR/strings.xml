@@ -234,20 +234,20 @@
     <item quantity="other">πριν %d λεπτά</item>
   </plurals>
   <plurals name="hours">
-    <item quantity="one"> %d hour</item>
-    <item quantity="other">%d hours</item>
+    <item quantity="one"> %d ώρα</item>
+    <item quantity="other">%d ώρες</item>
   </plurals>
   <plurals name="minutes">
-    <item quantity="one">%d minute</item>
-    <item quantity="other">%d minutes</item>
+    <item quantity="one">%d λεπτό</item>
+    <item quantity="other">%d λεπτά</item>
   </plurals>
   <plurals name="weeks">
-    <item quantity="one">%d week</item>
-    <item quantity="other">%d weeks</item>
+    <item quantity="one">%d εβδομάδα</item>
+    <item quantity="other">%d εβδομάδες</item>
   </plurals>
   <plurals name="months">
-    <item quantity="one">%d month</item>
-    <item quantity="other">%d months</item>
+    <item quantity="one">%d μήνας</item>
+    <item quantity="other">%d μήνες</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Ένα Bonus σε Κάθε Αγορά</string>
