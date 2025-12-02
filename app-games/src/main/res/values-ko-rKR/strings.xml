@@ -230,16 +230,16 @@
     <item quantity="other">%d 분 전</item>
   </plurals>
   <plurals name="hours">
-    <item quantity="other">%d hours</item>
+    <item quantity="other">%d 시간</item>
   </plurals>
   <plurals name="minutes">
-    <item quantity="other">%d minutes</item>
+    <item quantity="other">%d 분</item>
   </plurals>
   <plurals name="weeks">
-    <item quantity="other">%d weeks</item>
+    <item quantity="other">%d 주</item>
   </plurals>
   <plurals name="months">
-    <item quantity="other">%d months</item>
+    <item quantity="other">%d 개월</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">모든 구매 시 보너스 제공</string>
