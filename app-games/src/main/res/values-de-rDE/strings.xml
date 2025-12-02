@@ -234,20 +234,20 @@
     <item quantity="other">vor %d Minuten</item>
   </plurals>
   <plurals name="hours">
-    <item quantity="one"> %d hour</item>
-    <item quantity="other">%d hours</item>
+    <item quantity="one"> %d Stunde</item>
+    <item quantity="other">%d Stunden</item>
   </plurals>
   <plurals name="minutes">
-    <item quantity="one">%d minute</item>
-    <item quantity="other">%d minutes</item>
+    <item quantity="one">%d Minute</item>
+    <item quantity="other">%d Protokolle</item>
   </plurals>
   <plurals name="weeks">
-    <item quantity="one">%d week</item>
-    <item quantity="other">%d weeks</item>
+    <item quantity="one">%d Woche</item>
+    <item quantity="other">%d Wochen</item>
   </plurals>
   <plurals name="months">
-    <item quantity="one">%d month</item>
-    <item quantity="other">%d months</item>
+    <item quantity="one">%d Monat</item>
+    <item quantity="other">%d Monate</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Ein Bonus für jeden Einkauf</string>
