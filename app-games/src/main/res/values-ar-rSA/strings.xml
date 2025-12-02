@@ -249,6 +249,38 @@
     <item quantity="many">منذ %d دقيقة</item>
     <item quantity="other">منذ %d دقيقة</item>
   </plurals>
+  <plurals name="hours">
+    <item quantity="zero">%d hours</item>
+    <item quantity="one"> %d hour</item>
+    <item quantity="two">%d hours</item>
+    <item quantity="few">%d hours</item>
+    <item quantity="many">%d hours</item>
+    <item quantity="other">%d hours</item>
+  </plurals>
+  <plurals name="minutes">
+    <item quantity="zero">%d minutes</item>
+    <item quantity="one">%d minute</item>
+    <item quantity="two">%d minutes</item>
+    <item quantity="few">%d minutes</item>
+    <item quantity="many">%d minutes</item>
+    <item quantity="other">%d minutes</item>
+  </plurals>
+  <plurals name="weeks">
+    <item quantity="zero">%d weeks</item>
+    <item quantity="one">%d week</item>
+    <item quantity="two">%d weeks</item>
+    <item quantity="few">%d weeks</item>
+    <item quantity="many">%d weeks</item>
+    <item quantity="other">%d weeks</item>
+  </plurals>
+  <plurals name="months">
+    <item quantity="zero">%d months</item>
+    <item quantity="one">%d month</item>
+    <item quantity="two">%d months</item>
+    <item quantity="few">%d months</item>
+    <item quantity="many">%d months</item>
+    <item quantity="other">%d months</item>
+  </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">مكافأة على كل عملية شراء</string>
   <string name="bonus_page_body_1">ابحث عن ألعاب معرّفة بـ %1$s، ثبت محفظة Aptoide واحصل على مكافأة تصل إلى %2$s%% على كل المشتريات. يمكنك استخدام هذه المكافآت فيما بعد لإجراء عمليات الشراء التالية في ألعابك المفضلة!</string>
