@@ -230,6 +230,18 @@
   <plurals name="minutes_ago">
     <item quantity="other">%d　分前</item>
   </plurals>
+  <plurals name="hours">
+    <item quantity="other">%d 時間</item>
+  </plurals>
+  <plurals name="minutes">
+    <item quantity="other">%d 議事録</item>
+  </plurals>
+  <plurals name="weeks">
+    <item quantity="other">%d 週間</item>
+  </plurals>
+  <plurals name="months">
+    <item quantity="other">%d 数か月</item>
+  </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">購入のたびにボーナス</string>
   <string name="bonus_page_body_1">%1$sで識別されるゲームを探し、Aptoide Walletをインストールして、すべての購入で最大%2$s%%のボーナスを獲得してください。このボーナスを使用して、お気に入りのゲームを次回購入することができます！</string>

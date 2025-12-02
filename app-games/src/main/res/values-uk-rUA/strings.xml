@@ -236,10 +236,34 @@
     <item quantity="other">%d годин тому</item>
   </plurals>
   <plurals name="minutes_ago">
-    <item quantity="one">%d minute ago</item>
+    <item quantity="one">%d хвилину тому</item>
     <item quantity="few">%d хвилин тому</item>
     <item quantity="many">%d хвилин тому</item>
     <item quantity="other">%d хвилин тому</item>
+  </plurals>
+  <plurals name="hours">
+    <item quantity="one"> %d година</item>
+    <item quantity="few">%d години</item>
+    <item quantity="many">%d години</item>
+    <item quantity="other">%d години</item>
+  </plurals>
+  <plurals name="minutes">
+    <item quantity="one">%d хвилина</item>
+    <item quantity="few">%d хвилини</item>
+    <item quantity="many">%d хвилини</item>
+    <item quantity="other">%d хвилини</item>
+  </plurals>
+  <plurals name="weeks">
+    <item quantity="one">%d тиждень</item>
+    <item quantity="few">%d тижні</item>
+    <item quantity="many">%d тижні</item>
+    <item quantity="other">%d тижні</item>
+  </plurals>
+  <plurals name="months">
+    <item quantity="one">%d місяць</item>
+    <item quantity="few">%d місяці</item>
+    <item quantity="many">%d місяці</item>
+    <item quantity="other">%d місяці</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Бонус за кожну покупку</string>

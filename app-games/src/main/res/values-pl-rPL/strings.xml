@@ -241,6 +241,30 @@
     <item quantity="many">%d minut temu</item>
     <item quantity="other">%d minut temu</item>
   </plurals>
+  <plurals name="hours">
+    <item quantity="one"> %d godzina</item>
+    <item quantity="few">%d godziny</item>
+    <item quantity="many">%d godziny</item>
+    <item quantity="other">%d godziny</item>
+  </plurals>
+  <plurals name="minutes">
+    <item quantity="one">%d minuta</item>
+    <item quantity="few">%d protokoły</item>
+    <item quantity="many">%d protokoły</item>
+    <item quantity="other">%d protokoły</item>
+  </plurals>
+  <plurals name="weeks">
+    <item quantity="one">%d tydzień</item>
+    <item quantity="few">%d tygodnie</item>
+    <item quantity="many">%d tygodnie</item>
+    <item quantity="other">%d tygodnie</item>
+  </plurals>
+  <plurals name="months">
+    <item quantity="one">%d miesiąc</item>
+    <item quantity="few">%d miesiące</item>
+    <item quantity="many">%d miesiące</item>
+    <item quantity="other">%d miesiące</item>
+  </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Bonus za każdy zakup</string>
   <string name="bonus_page_body_1">Poszukaj gier oznaczonych %1$s, zainstaluj Aptoide Wallet i uzyskaj do %2$s%% bonusu na wszystkie zakupy. Następnie możesz wykorzystać ten bonus, aby dokonać kolejnych zakupów w swoich ulubionych grach!</string>

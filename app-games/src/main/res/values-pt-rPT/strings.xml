@@ -233,6 +233,22 @@
     <item quantity="one">há %d minutos</item>
     <item quantity="other">há %d minutos</item>
   </plurals>
+  <plurals name="hours">
+    <item quantity="one"> %d hora</item>
+    <item quantity="other">%d horas</item>
+  </plurals>
+  <plurals name="minutes">
+    <item quantity="one">%d minuto</item>
+    <item quantity="other">%d minutos</item>
+  </plurals>
+  <plurals name="weeks">
+    <item quantity="one">%d semana</item>
+    <item quantity="other">%d semanas</item>
+  </plurals>
+  <plurals name="months">
+    <item quantity="one">%d mês</item>
+    <item quantity="other">%d meses</item>
+  </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Um Bónus em Cada Compra</string>
   <string name="bonus_page_body_1">Procura os jogos identificados com %1$s, instala a Aptoide Wallet e recebe até %2$s%% de bónus em todas as compras. Depois podes utilizar este bónus para fazeres as tuas próximas compras nos teus jogos favoritos!</string>

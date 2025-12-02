@@ -233,6 +233,22 @@
     <item quantity="one">%d minuuttia sitten</item>
     <item quantity="other">%d minuuttia sitten</item>
   </plurals>
+  <plurals name="hours">
+    <item quantity="one"> %d tunti</item>
+    <item quantity="other">%d tuntia</item>
+  </plurals>
+  <plurals name="minutes">
+    <item quantity="one">%d minuutti</item>
+    <item quantity="other">%d pöytäkirjat</item>
+  </plurals>
+  <plurals name="weeks">
+    <item quantity="one">%d viikko</item>
+    <item quantity="other">%d viikkoja</item>
+  </plurals>
+  <plurals name="months">
+    <item quantity="one">%d kuukausi</item>
+    <item quantity="other">%d kuukausia</item>
+  </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Bonusta jokaisesta ostoksesta</string>
   <string name="bonus_page_body_1">Etsi pelejä, jotka on tunnistettu %1$s, asenna Aptoide Wallet ja saat jopa %2$s%% bonuksen kaikista ostoksista. Voit sitten käyttää tämän bonuksen seuraaviin ostoksiisi suosikkipeleissäsi!</string>

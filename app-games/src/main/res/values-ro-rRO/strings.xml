@@ -237,6 +237,26 @@
     <item quantity="few">acum %d minute</item>
     <item quantity="other">acum %d minute</item>
   </plurals>
+  <plurals name="hours">
+    <item quantity="one"> %d oră</item>
+    <item quantity="few">%d ore</item>
+    <item quantity="other">%d ore</item>
+  </plurals>
+  <plurals name="minutes">
+    <item quantity="one">%d minut</item>
+    <item quantity="few">%d minute</item>
+    <item quantity="other">%d minute</item>
+  </plurals>
+  <plurals name="weeks">
+    <item quantity="one">%d săptămână</item>
+    <item quantity="few">%d săptămâni</item>
+    <item quantity="other">%d săptămâni</item>
+  </plurals>
+  <plurals name="months">
+    <item quantity="one">%d lună</item>
+    <item quantity="few">%d luni</item>
+    <item quantity="other">%d luni</item>
+  </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Un Bonus la Fiecare Achiziție</string>
   <string name="bonus_page_body_1">Caută jocurile identificate cu %1$s, instalează Aptoide Wallet și primești un bonus de până la %2$s%% la toate achizițiile. Poți folosi acest bonus pentru a face achiziții în jocurile tale preferate!</string>
