@@ -225,13 +225,13 @@
   <string name="just_now">Μόλις τώρα</string>
   <string name="today">Σήμερα</string>
   <string name="yesterday">Χθες</string>
-  <plurals name="hours">
-    <item quantity="one"> %d πριν από μία ώρα</item>
-    <item quantity="other">%d πριν από ώρες</item>
+  <plurals name="hours_ago">
+    <item quantity="one"> %d hour ago</item>
+    <item quantity="other">%d hours ago</item>
   </plurals>
-  <plurals name="minutes">
-    <item quantity="one">%d πριν από ένα λεπτό</item>
-    <item quantity="other">%d πριν από λίγα λεπτά</item>
+  <plurals name="minutes_ago">
+    <item quantity="one">%d minute ago</item>
+    <item quantity="other">%d minutes ago</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Ένα Bonus σε Κάθε Αγορά</string>
