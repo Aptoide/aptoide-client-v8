@@ -242,8 +242,8 @@
     <item quantity="other">%d pöytäkirjat</item>
   </plurals>
   <plurals name="days">
-    <item quantity="one">%d day</item>
-    <item quantity="other">%d days</item>
+    <item quantity="one">%d päivä</item>
+    <item quantity="other">%d päivät</item>
   </plurals>
   <plurals name="weeks">
     <item quantity="one">%d viikko</item>
