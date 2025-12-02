@@ -227,15 +227,15 @@
   <string name="just_now">Upravo sada</string>
   <string name="today">Danas</string>
   <string name="yesterday">Juče</string>
-  <plurals name="hours">
-    <item quantity="one"> Pre %d sati</item>
-    <item quantity="few">%d sata/i ranije</item>
-    <item quantity="other">%d sata/i ranije</item>
+  <plurals name="hours_ago">
+    <item quantity="one"> %d hour ago</item>
+    <item quantity="few">%d hours ago</item>
+    <item quantity="other">%d hours ago</item>
   </plurals>
-  <plurals name="minutes">
-    <item quantity="one">Pre %d minuta</item>
-    <item quantity="few">%d minuta ranije</item>
-    <item quantity="other">%d minuta ranije</item>
+  <plurals name="minutes_ago">
+    <item quantity="one">%d minute ago</item>
+    <item quantity="few">%d minutes ago</item>
+    <item quantity="other">%d minutes ago</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Bonus pri svakoj kupovini</string>
