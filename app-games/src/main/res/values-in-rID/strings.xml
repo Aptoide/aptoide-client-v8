@@ -236,7 +236,7 @@
     <item quantity="other">%d menit</item>
   </plurals>
   <plurals name="days">
-    <item quantity="other">%d days</item>
+    <item quantity="other">%d hari</item>
   </plurals>
   <plurals name="weeks">
     <item quantity="other">%d minggu</item>
