@@ -229,6 +229,18 @@
   <plurals name="minutes_ago">
     <item quantity="other">%d 분 전</item>
   </plurals>
+  <plurals name="hours">
+    <item quantity="other">%d hours</item>
+  </plurals>
+  <plurals name="minutes">
+    <item quantity="other">%d minutes</item>
+  </plurals>
+  <plurals name="weeks">
+    <item quantity="other">%d weeks</item>
+  </plurals>
+  <plurals name="months">
+    <item quantity="other">%d months</item>
+  </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">모든 구매 시 보너스 제공</string>
   <string name="bonus_page_body_1">%1$s로 표시된 게임을 찾아 Aptoide 지갑을 설치하고 모든 구매 시 최대 %2$s%% 보너스를 받으세요. 이 보너스를 사용하여 좋아하는 게임에서 다음 구매를 진행할 수 있습니다!</string>
