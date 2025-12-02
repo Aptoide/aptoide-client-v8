@@ -229,17 +229,17 @@
   <string name="just_now">Якраз зараз</string>
   <string name="today">Сьогодні</string>
   <string name="yesterday">Вчора</string>
-  <plurals name="hours">
-    <item quantity="one"> %d годину тому</item>
-    <item quantity="few">%d кілька годин тому</item>
-    <item quantity="many">%d кілька годин тому</item>
-    <item quantity="other">%d кілька годин тому</item>
+  <plurals name="hours_ago">
+    <item quantity="one"> %d hour ago</item>
+    <item quantity="few">%d hours ago</item>
+    <item quantity="many">%d hours ago</item>
+    <item quantity="other">%d hours ago</item>
   </plurals>
-  <plurals name="minutes">
-    <item quantity="one">%d хвилину тому</item>
-    <item quantity="few">%d кілька хвилин тому</item>
-    <item quantity="many">%d кілька хвилин тому</item>
-    <item quantity="other">%d кілька хвилин тому</item>
+  <plurals name="minutes_ago">
+    <item quantity="one">%d minute ago</item>
+    <item quantity="few">%d minutes ago</item>
+    <item quantity="many">%d minutes ago</item>
+    <item quantity="other">%d minutes ago</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Бонус за кожну покупку</string>
