@@ -229,6 +229,18 @@
   <plurals name="minutes_ago">
     <item quantity="other">%d menit lalu</item>
   </plurals>
+  <plurals name="hours">
+    <item quantity="other">%d hours</item>
+  </plurals>
+  <plurals name="minutes">
+    <item quantity="other">%d minutes</item>
+  </plurals>
+  <plurals name="weeks">
+    <item quantity="other">%d weeks</item>
+  </plurals>
+  <plurals name="months">
+    <item quantity="other">%d months</item>
+  </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Bonus di Setiap Pembelian</string>
   <string name="bonus_page_body_1">Cari game yang diidentifikasi dengan %1$s, instal Aptoide Wallet dan dapatkan bonus hingga %2$s%% di semua pembelian. Selanjutnya Anda bisa menggunakan bonus ini untuk melakukan pembelian berikutnya di game favorit Anda!</string>
