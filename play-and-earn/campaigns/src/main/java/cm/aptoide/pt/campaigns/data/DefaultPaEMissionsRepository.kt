@@ -73,6 +73,20 @@ internal class DefaultPaEMissionsRepository @Inject constructor(
     return PaEMissions(checkpoints = checkpoints, missions = regularMissions)
   }
 
+  override suspend fun markMissionAsCompleted(packageName: String, missionTitle: String) {
+    withContext(dispatcher) {
+      try {
+        paeMissionDao.updateMissionStatus(
+          packageName = packageName,
+          missionTitle = missionTitle,
+          status = PaEMissionStatus.COMPLETED
+        )
+      } catch (e: Throwable) {
+        e.printStackTrace()
+      }
+    }
+  }
+
   private suspend fun fetchMissions(packageName: String): PaEMissions {
     val missions = paeCampaignsApi.getCampaignMissions(packageName).toDomainModel()
 
