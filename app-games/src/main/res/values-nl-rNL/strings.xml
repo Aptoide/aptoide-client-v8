@@ -241,6 +241,10 @@
     <item quantity="one">%d minuut</item>
     <item quantity="other">%d notulen</item>
   </plurals>
+  <plurals name="days">
+    <item quantity="one">%d dag</item>
+    <item quantity="other">%d dagen</item>
+  </plurals>
   <plurals name="weeks">
     <item quantity="one">%d week</item>
     <item quantity="other">%d weken</item>

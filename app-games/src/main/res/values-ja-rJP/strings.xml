@@ -236,6 +236,9 @@
   <plurals name="minutes">
     <item quantity="other">%d 議事録</item>
   </plurals>
+  <plurals name="days">
+    <item quantity="other">%d 日</item>
+  </plurals>
   <plurals name="weeks">
     <item quantity="other">%d 週間</item>
   </plurals>

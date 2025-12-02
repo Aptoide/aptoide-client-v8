@@ -235,6 +235,9 @@
   <plurals name="minutes">
     <item quantity="other">%d 會議記錄</item>
   </plurals>
+  <plurals name="days">
+    <item quantity="other">%d 日子</item>
+  </plurals>
   <plurals name="weeks">
     <item quantity="other">%d 週</item>
   </plurals>

@@ -253,6 +253,12 @@
     <item quantity="many">%d хвилини</item>
     <item quantity="other">%d хвилини</item>
   </plurals>
+  <plurals name="days">
+    <item quantity="one">%d день</item>
+    <item quantity="few">%d дні</item>
+    <item quantity="many">%d дні</item>
+    <item quantity="other">%d дні</item>
+  </plurals>
   <plurals name="weeks">
     <item quantity="one">%d тиждень</item>
     <item quantity="few">%d тижні</item>

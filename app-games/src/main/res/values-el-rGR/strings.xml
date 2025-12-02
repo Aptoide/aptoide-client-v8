@@ -241,6 +241,10 @@
     <item quantity="one">%d λεπτό</item>
     <item quantity="other">%d λεπτά</item>
   </plurals>
+  <plurals name="days">
+    <item quantity="one">%d ημέρα</item>
+    <item quantity="other">%d ημέρες</item>
+  </plurals>
   <plurals name="weeks">
     <item quantity="one">%d εβδομάδα</item>
     <item quantity="other">%d εβδομάδες</item>

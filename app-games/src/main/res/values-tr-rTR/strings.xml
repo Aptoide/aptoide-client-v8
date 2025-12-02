@@ -241,6 +241,10 @@
     <item quantity="one">%d dakika</item>
     <item quantity="other">%d dakikalar</item>
   </plurals>
+  <plurals name="days">
+    <item quantity="one">%d gün</item>
+    <item quantity="other">%d günler</item>
+  </plurals>
   <plurals name="weeks">
     <item quantity="one">%d hafta</item>
     <item quantity="other">%d haftalar</item>
