@@ -242,8 +242,8 @@
     <item quantity="other">%d minutos</item>
   </plurals>
   <plurals name="days">
-    <item quantity="one">%d day</item>
-    <item quantity="other">%d days</item>
+    <item quantity="one">%d dia</item>
+    <item quantity="other">%d dias</item>
   </plurals>
   <plurals name="weeks">
     <item quantity="one">%d semana</item>
