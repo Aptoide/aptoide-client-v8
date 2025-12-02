@@ -112,5 +112,49 @@ class DateUtils private constructor() : DateUtils() {
         TextFormatter.Companion.formatDateToSystemLocale(context, timeDate)
       }
     }
+
+    fun getTimeDiffWithoutDate(context: Context, timeDate: String): String {
+      val timeDateAsMilliseconds = TextFormatter.Companion.parseDateToLong(timeDate)
+      val now = System.currentTimeMillis()
+      val diff = (now - timeDateAsMilliseconds).coerceAtLeast(0L)
+
+      val minutes = diff / (60 * 1000)
+      val hours = diff / (60 * 60 * 1000)
+      val days = diff / (24 * 60 * 60 * 1000)
+      val weeks = days / 7
+      val months = (days / 30).coerceAtLeast(1L)
+
+      return when {
+        minutes < 60 -> context.resources.getQuantityString(
+          R.plurals.minutes,
+          minutes.toInt(),
+          minutes
+        )
+
+        hours < 24 -> context.resources.getQuantityString(
+          R.plurals.hours,
+          hours.toInt(),
+          hours
+        )
+
+        days < 7 -> context.resources.getQuantityString(
+          R.plurals.days,
+          days.toInt(),
+          days
+        )
+
+        weeks < 4 -> context.resources.getQuantityString(
+          R.plurals.weeks,
+          weeks.toInt(),
+          weeks
+        )
+
+        else -> context.resources.getQuantityString(
+          R.plurals.months,
+          months.toInt(),
+          months
+        )
+      }
+    }
   }
 }
