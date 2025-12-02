@@ -227,15 +227,15 @@
   <string name="just_now">Chiar acum</string>
   <string name="today">Astăzi</string>
   <string name="yesterday">Ieri</string>
-  <plurals name="hours">
-    <item quantity="one"> %d acum o oră</item>
-    <item quantity="few">%d acum câteva ore</item>
-    <item quantity="other">%d acum câteva ore</item>
+  <plurals name="hours_ago">
+    <item quantity="one"> %d hour ago</item>
+    <item quantity="few">%d hours ago</item>
+    <item quantity="other">%d hours ago</item>
   </plurals>
-  <plurals name="minutes">
-    <item quantity="one">%d acum un minut</item>
-    <item quantity="few">%d acum câteva minute</item>
-    <item quantity="other">%d acum câteva minute</item>
+  <plurals name="minutes_ago">
+    <item quantity="one">%d minute ago</item>
+    <item quantity="few">%d minutes ago</item>
+    <item quantity="other">%d minutes ago</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Un Bonus la Fiecare Achiziție</string>
