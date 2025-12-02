@@ -227,11 +227,11 @@
   <string name="yesterday">काल</string>
   <plurals name="hours_ago">
     <item quantity="one"> %d hour ago</item>
-    <item quantity="other">%d hours ago</item>
+    <item quantity="other">%d दिवस आधी</item>
   </plurals>
   <plurals name="minutes_ago">
-    <item quantity="one">%d minute ago</item>
-    <item quantity="other">%d minutes ago</item>
+    <item quantity="one">%d तास आधी</item>
+    <item quantity="other">%d तास आधी</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">प्रत्येक खरेदीवर बोनस</string>
