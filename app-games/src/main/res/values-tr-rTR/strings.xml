@@ -233,6 +233,22 @@
     <item quantity="one">%d dakika önce</item>
     <item quantity="other">%d dakika önce</item>
   </plurals>
+  <plurals name="hours">
+    <item quantity="one"> %d hour</item>
+    <item quantity="other">%d hours</item>
+  </plurals>
+  <plurals name="minutes">
+    <item quantity="one">%d minute</item>
+    <item quantity="other">%d minutes</item>
+  </plurals>
+  <plurals name="weeks">
+    <item quantity="one">%d week</item>
+    <item quantity="other">%d weeks</item>
+  </plurals>
+  <plurals name="months">
+    <item quantity="one">%d month</item>
+    <item quantity="other">%d months</item>
+  </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Her Satın Alma İşleminde Bonus</string>
   <string name="bonus_page_body_1">%1$s ile tanımlanmış oyunları ara, Aptoide Wallet\'ı yükle ve tüm satın alma işlemlerinde %2$s%% bonus kazan. Bu bonusu daha sonra favori oyunlarındaki satın alma işlemleri için kullanabilirsin!</string>
