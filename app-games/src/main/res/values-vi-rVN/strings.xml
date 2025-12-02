@@ -223,11 +223,11 @@
   <string name="just_now">Vừa rồi</string>
   <string name="today">Hôm nay</string>
   <string name="yesterday">Hôm qua</string>
-  <plurals name="hours">
-    <item quantity="other">%d cách đây vài giờ</item>
+  <plurals name="hours_ago">
+    <item quantity="other">%d hours ago</item>
   </plurals>
-  <plurals name="minutes">
-    <item quantity="other">%d cách đây vài phút</item>
+  <plurals name="minutes_ago">
+    <item quantity="other">%d minutes ago</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Tiền thưởng cho mỗi lần mua hàng</string>
