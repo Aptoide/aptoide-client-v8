@@ -265,6 +265,14 @@
     <item quantity="many">%d دقائق</item>
     <item quantity="other">%d دقائق</item>
   </plurals>
+  <plurals name="days">
+    <item quantity="zero">%d days</item>
+    <item quantity="one">%d day</item>
+    <item quantity="two">%d days</item>
+    <item quantity="few">%d days</item>
+    <item quantity="many">%d days</item>
+    <item quantity="other">%d days</item>
+  </plurals>
   <plurals name="weeks">
     <item quantity="zero">%d أسابيع</item>
     <item quantity="one">%d أسبوع</item>
