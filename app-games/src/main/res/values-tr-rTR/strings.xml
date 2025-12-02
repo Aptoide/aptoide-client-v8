@@ -226,12 +226,12 @@
   <string name="today">Bugün</string>
   <string name="yesterday">Dün</string>
   <plurals name="hours_ago">
-    <item quantity="one"> %d hour ago</item>
-    <item quantity="other">%d hours ago</item>
+    <item quantity="one"> %d saat önce</item>
+    <item quantity="other">%d saat önce</item>
   </plurals>
   <plurals name="minutes_ago">
-    <item quantity="one">%d minute ago</item>
-    <item quantity="other">%d minutes ago</item>
+    <item quantity="one">%d dakika önce</item>
+    <item quantity="other">%d dakika önce</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Her Satın Alma İşleminde Bonus</string>
