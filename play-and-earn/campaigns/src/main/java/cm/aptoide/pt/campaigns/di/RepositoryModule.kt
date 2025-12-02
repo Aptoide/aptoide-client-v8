@@ -5,8 +5,10 @@ import androidx.room.Room
 import cm.aptoide.pt.aptoide_network.di.BaseOkHttp
 import cm.aptoide.pt.aptoide_network.di.RewardsDomain
 import cm.aptoide.pt.campaigns.data.DefaultPaECampaignsRepository
+import cm.aptoide.pt.campaigns.data.DefaultPaEMissionsRepository
 import cm.aptoide.pt.campaigns.data.PaECampaignsApi
 import cm.aptoide.pt.campaigns.data.PaECampaignsRepository
+import cm.aptoide.pt.campaigns.data.PaEMissionsRepository
 import cm.aptoide.pt.campaigns.data.database.PaECampaignsDatabase
 import cm.aptoide.pt.wallet.authorization.data.WalletAuthInterceptor
 import dagger.Module
@@ -51,8 +53,18 @@ internal object RepositoryModule {
     paECampaignsDatabase: PaECampaignsDatabase
   ): PaECampaignsRepository = DefaultPaECampaignsRepository(
     paeCampaignsApi = paeCampaignsApi,
-    paeMissionDao = paECampaignsDatabase.paeMissionDao(),
     paEAppsDao = paECampaignsDatabase.paeAppsDao(),
+    dispatcher = Dispatchers.IO
+  )
+
+  @Provides
+  @Singleton
+  fun providePaEMissionsRepository(
+    paeCampaignsApi: PaECampaignsApi,
+    paECampaignsDatabase: PaECampaignsDatabase
+  ): PaEMissionsRepository = DefaultPaEMissionsRepository(
+    paeCampaignsApi = paeCampaignsApi,
+    paeMissionDao = paECampaignsDatabase.paeMissionDao(),
     dispatcher = Dispatchers.IO
   )
 

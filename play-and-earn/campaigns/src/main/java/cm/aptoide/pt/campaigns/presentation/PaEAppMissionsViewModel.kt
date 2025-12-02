@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
-import cm.aptoide.pt.campaigns.data.PaECampaignsRepository
+import cm.aptoide.pt.campaigns.data.PaEMissionsRepository
 import cm.aptoide.pt.extensions.runPreviewable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,7 +24,7 @@ import javax.inject.Inject
 
 class PaEAppMissionsViewModel(
   private val packageName: String,
-  private val paECampaignsRepository: PaECampaignsRepository,
+  private val paEMissionsRepository: PaEMissionsRepository,
 ) : ViewModel() {
 
   private val viewModelState = MutableStateFlow<PaEMissionsUiState>(PaEMissionsUiState.Loading)
@@ -44,7 +44,7 @@ class PaEAppMissionsViewModel(
     viewModelScope.launch {
       viewModelState.update { PaEMissionsUiState.Loading }
 
-      paECampaignsRepository.observeCampaignMissions(packageName).collect { result ->
+      paEMissionsRepository.observeCampaignMissions(packageName).collect { result ->
         result.fold(
           onSuccess = { missions ->
             viewModelState.update { PaEMissionsUiState.Idle(paeMissions = missions) }
@@ -68,7 +68,7 @@ class PaEAppMissionsViewModel(
 
 @HiltViewModel
 class InjectionsProvider @Inject constructor(
-  val paECampaignsRepository: PaECampaignsRepository
+  val paEMissionsRepository: PaEMissionsRepository
 ) : ViewModel()
 
 @Composable
@@ -84,7 +84,7 @@ fun rememberPaEMissions(packageName: String): Pair<PaEMissionsUiState, () -> Uni
           @Suppress("UNCHECKED_CAST")
           return PaEAppMissionsViewModel(
             packageName = packageName,
-            paECampaignsRepository = injectionsProvider.paECampaignsRepository
+            paEMissionsRepository = injectionsProvider.paEMissionsRepository
           ) as T
         }
       }
