@@ -233,6 +233,22 @@
     <item quantity="one">%d دقیقه قبل</item>
     <item quantity="other">%d دقیقه پیش</item>
   </plurals>
+  <plurals name="hours">
+    <item quantity="one"> %d hour</item>
+    <item quantity="other">%d hours</item>
+  </plurals>
+  <plurals name="minutes">
+    <item quantity="one">%d minute</item>
+    <item quantity="other">%d minutes</item>
+  </plurals>
+  <plurals name="weeks">
+    <item quantity="one">%d week</item>
+    <item quantity="other">%d weeks</item>
+  </plurals>
+  <plurals name="months">
+    <item quantity="one">%d month</item>
+    <item quantity="other">%d months</item>
+  </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">یک پاداش برای هر خرید</string>
   <string name="bonus_page_body_1">به دنبال بازی‌هایی با مشخصه %1$s باشید، Aptoide Wallet را نصب کنید و تا %2$s%% بونوس در همه خریدهای دریافت کنید. از این بونوس می‌توانید در خرید در بازی‌های محبوب خود استفاده کنید.</string>

@@ -237,6 +237,26 @@
     <item quantity="few">%d minuta ranije</item>
     <item quantity="other">%d minuta ranije</item>
   </plurals>
+  <plurals name="hours">
+    <item quantity="one"> %d hour</item>
+    <item quantity="few">%d hours</item>
+    <item quantity="other">%d hours</item>
+  </plurals>
+  <plurals name="minutes">
+    <item quantity="one">%d minute</item>
+    <item quantity="few">%d minutes</item>
+    <item quantity="other">%d minutes</item>
+  </plurals>
+  <plurals name="weeks">
+    <item quantity="one">%d week</item>
+    <item quantity="few">%d weeks</item>
+    <item quantity="other">%d weeks</item>
+  </plurals>
+  <plurals name="months">
+    <item quantity="one">%d month</item>
+    <item quantity="few">%d months</item>
+    <item quantity="other">%d months</item>
+  </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Bonus pri svakoj kupovini</string>
   <string name="bonus_page_body_1">Potražite igre označene sa %1$s, instalirajte Aptoide Wallet i osvojite do %2$s%% bonusa pri svakoj kupovini. Zatim možete iskoristiti ovaj bonus da biste obavili svoje sledeće kupovine u omiljenim igrama!</string>

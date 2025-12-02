@@ -241,6 +241,30 @@
     <item quantity="many">%d минуты назад</item>
     <item quantity="other">%d минуты назад</item>
   </plurals>
+  <plurals name="hours">
+    <item quantity="one"> %d час</item>
+    <item quantity="few">%d часы</item>
+    <item quantity="many">%d часы</item>
+    <item quantity="other">%d часы</item>
+  </plurals>
+  <plurals name="minutes">
+    <item quantity="one">%d минута</item>
+    <item quantity="few">%d протоколы</item>
+    <item quantity="many">%d протоколы</item>
+    <item quantity="other">%d протоколы</item>
+  </plurals>
+  <plurals name="weeks">
+    <item quantity="one">%d неделя</item>
+    <item quantity="few">%d недели</item>
+    <item quantity="many">%d недели</item>
+    <item quantity="other">%d недели</item>
+  </plurals>
+  <plurals name="months">
+    <item quantity="one">%d месяц</item>
+    <item quantity="few">%d месяцы</item>
+    <item quantity="many">%d месяцы</item>
+    <item quantity="other">%d месяцы</item>
+  </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Бонус за каждую покупку</string>
   <string name="bonus_page_body_1">Найдите игры, обозначенные как %1$s, установите Aptoide Wallet и получите бонус до %2$s%% на все покупки. Затем вы можете использовать этот бонус для совершения следующих покупок в ваших любимых играх!</string>

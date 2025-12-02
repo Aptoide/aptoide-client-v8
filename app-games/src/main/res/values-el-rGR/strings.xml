@@ -233,6 +233,22 @@
     <item quantity="one">πριν %d λεπτά</item>
     <item quantity="other">πριν %d λεπτά</item>
   </plurals>
+  <plurals name="hours">
+    <item quantity="one"> %d ώρα</item>
+    <item quantity="other">%d ώρες</item>
+  </plurals>
+  <plurals name="minutes">
+    <item quantity="one">%d λεπτό</item>
+    <item quantity="other">%d λεπτά</item>
+  </plurals>
+  <plurals name="weeks">
+    <item quantity="one">%d εβδομάδα</item>
+    <item quantity="other">%d εβδομάδες</item>
+  </plurals>
+  <plurals name="months">
+    <item quantity="one">%d μήνας</item>
+    <item quantity="other">%d μήνες</item>
+  </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Ένα Bonus σε Κάθε Αγορά</string>
   <string name="bonus_page_body_1">Αναζητήστε τα παιχνίδια που έχουν επισημανθεί με %1$s, εγκαταστήστε το Aptoide Wallet και αποκτήστε έως και %2$s%% bonus σε όλες τις αγορές. Στη συνέχεια, μπορείτε να χρησιμοποιήσετε αυτό το bonus για τις επόμενες αγορές σας στα αγαπημένα σας παιχνίδια!</string>

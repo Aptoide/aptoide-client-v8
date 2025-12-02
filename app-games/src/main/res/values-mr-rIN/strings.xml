@@ -233,6 +233,22 @@
     <item quantity="one">%d तास आधी</item>
     <item quantity="other">%d तास आधी</item>
   </plurals>
+  <plurals name="hours">
+    <item quantity="one"> %d hour</item>
+    <item quantity="other">%d hours</item>
+  </plurals>
+  <plurals name="minutes">
+    <item quantity="one">%d minute</item>
+    <item quantity="other">%d minutes</item>
+  </plurals>
+  <plurals name="weeks">
+    <item quantity="one">%d week</item>
+    <item quantity="other">%d weeks</item>
+  </plurals>
+  <plurals name="months">
+    <item quantity="one">%d month</item>
+    <item quantity="other">%d months</item>
+  </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">प्रत्येक खरेदीवर बोनस</string>
   <string name="bonus_page_body_1">%1$s ने चिन्हाकिंत खेळ शोधा, Aptoide वॉलेट इंस्टॉल करा आणि सर्व खरेदीवर %2$s%% पर्यंत बोनस मिळवा. नंतर मग आपण ह्या बोनसचा वापर करुन आपल्या आवडत्या खेळातील पुढील खरेदी करु शकता!</string>
