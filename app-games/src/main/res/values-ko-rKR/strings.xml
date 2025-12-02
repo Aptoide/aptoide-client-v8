@@ -223,11 +223,11 @@
   <string name="just_now">방금</string>
   <string name="today">오늘</string>
   <string name="yesterday">어제</string>
-  <plurals name="hours">
-    <item quantity="other">%d 몇 시간 전</item>
+  <plurals name="hours_ago">
+    <item quantity="other">%d hours ago</item>
   </plurals>
-  <plurals name="minutes">
-    <item quantity="other">%d 몇 분 전에</item>
+  <plurals name="minutes_ago">
+    <item quantity="other">%d minutes ago</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">모든 구매 시 보너스 제공</string>
