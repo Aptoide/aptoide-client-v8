@@ -225,13 +225,13 @@
   <string name="just_now">Net nu</string>
   <string name="today">Vandaag</string>
   <string name="yesterday">Gisteren</string>
-  <plurals name="hours">
-    <item quantity="one"> %d een uur geleden</item>
-    <item quantity="other">%d uren geleden</item>
+  <plurals name="hours_ago">
+    <item quantity="one"> %d hour ago</item>
+    <item quantity="other">%d hours ago</item>
   </plurals>
-  <plurals name="minutes">
-    <item quantity="one">%d minuut geleden</item>
-    <item quantity="other">%d enkele minuten geleden</item>
+  <plurals name="minutes_ago">
+    <item quantity="one">%d minute ago</item>
+    <item quantity="other">%d minutes ago</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Een bonus bij elke aankoop</string>
