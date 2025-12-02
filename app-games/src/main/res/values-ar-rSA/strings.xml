@@ -250,36 +250,36 @@
     <item quantity="other">منذ %d دقيقة</item>
   </plurals>
   <plurals name="hours">
-    <item quantity="zero">%d hours</item>
-    <item quantity="one"> %d hour</item>
-    <item quantity="two">%d hours</item>
-    <item quantity="few">%d hours</item>
-    <item quantity="many">%d hours</item>
-    <item quantity="other">%d hours</item>
+    <item quantity="zero">%d ساعات</item>
+    <item quantity="one"> %d ساعة</item>
+    <item quantity="two">%d ساعات</item>
+    <item quantity="few">%d ساعات</item>
+    <item quantity="many">%d ساعات</item>
+    <item quantity="other">%d ساعات</item>
   </plurals>
   <plurals name="minutes">
-    <item quantity="zero">%d minutes</item>
-    <item quantity="one">%d minute</item>
-    <item quantity="two">%d minutes</item>
-    <item quantity="few">%d minutes</item>
-    <item quantity="many">%d minutes</item>
-    <item quantity="other">%d minutes</item>
+    <item quantity="zero">%d دقائق</item>
+    <item quantity="one">%d دقيقة</item>
+    <item quantity="two">%d دقائق</item>
+    <item quantity="few">%d دقائق</item>
+    <item quantity="many">%d دقائق</item>
+    <item quantity="other">%d دقائق</item>
   </plurals>
   <plurals name="weeks">
-    <item quantity="zero">%d weeks</item>
-    <item quantity="one">%d week</item>
-    <item quantity="two">%d weeks</item>
-    <item quantity="few">%d weeks</item>
-    <item quantity="many">%d weeks</item>
-    <item quantity="other">%d weeks</item>
+    <item quantity="zero">%d أسابيع</item>
+    <item quantity="one">%d أسبوع</item>
+    <item quantity="two">%d أسابيع</item>
+    <item quantity="few">%d أسابيع</item>
+    <item quantity="many">%d أسابيع</item>
+    <item quantity="other">%d أسابيع</item>
   </plurals>
   <plurals name="months">
-    <item quantity="zero">%d months</item>
-    <item quantity="one">%d month</item>
-    <item quantity="two">%d months</item>
-    <item quantity="few">%d months</item>
-    <item quantity="many">%d months</item>
-    <item quantity="other">%d months</item>
+    <item quantity="zero">%d أشهر</item>
+    <item quantity="one">%d شهر</item>
+    <item quantity="two">%d أشهر</item>
+    <item quantity="few">%d أشهر</item>
+    <item quantity="many">%d أشهر</item>
+    <item quantity="other">%d أشهر</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">مكافأة على كل عملية شراء</string>
