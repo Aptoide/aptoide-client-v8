@@ -235,6 +235,9 @@
   <plurals name="minutes">
     <item quantity="other">%d phút</item>
   </plurals>
+  <plurals name="days">
+    <item quantity="other">%d days</item>
+  </plurals>
   <plurals name="weeks">
     <item quantity="other">%d tuần</item>
   </plurals>
