@@ -231,15 +231,15 @@
   <string name="yesterday">Вчора</string>
   <plurals name="hours_ago">
     <item quantity="one"> %d годину тому</item>
-    <item quantity="few">%d кілька годин тому</item>
-    <item quantity="many">%d кілька годин тому</item>
-    <item quantity="other">%d кілька годин тому</item>
+    <item quantity="few">%d годин тому</item>
+    <item quantity="many">%d годин тому</item>
+    <item quantity="other">%d годин тому</item>
   </plurals>
   <plurals name="minutes_ago">
-    <item quantity="one">%d хвилину тому</item>
-    <item quantity="few">%d кілька хвилин тому</item>
-    <item quantity="many">%d кілька хвилин тому</item>
-    <item quantity="other">%d кілька хвилин тому</item>
+    <item quantity="one">%d minute ago</item>
+    <item quantity="few">%d хвилин тому</item>
+    <item quantity="many">%d хвилин тому</item>
+    <item quantity="other">%d хвилин тому</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Бонус за кожну покупку</string>
