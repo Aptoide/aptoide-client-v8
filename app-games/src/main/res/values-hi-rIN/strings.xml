@@ -241,6 +241,10 @@
     <item quantity="one">%d minute</item>
     <item quantity="other">%d minutes</item>
   </plurals>
+  <plurals name="days">
+    <item quantity="one">%d day</item>
+    <item quantity="other">%d days</item>
+  </plurals>
   <plurals name="weeks">
     <item quantity="one">%d week</item>
     <item quantity="other">%d weeks</item>
