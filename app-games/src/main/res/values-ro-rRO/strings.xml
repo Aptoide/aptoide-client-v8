@@ -247,6 +247,11 @@
     <item quantity="few">%d minute</item>
     <item quantity="other">%d minute</item>
   </plurals>
+  <plurals name="days">
+    <item quantity="one">%d day</item>
+    <item quantity="few">%d days</item>
+    <item quantity="other">%d days</item>
+  </plurals>
   <plurals name="weeks">
     <item quantity="one">%d săptămână</item>
     <item quantity="few">%d săptămâni</item>
