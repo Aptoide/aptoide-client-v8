@@ -242,28 +242,28 @@
     <item quantity="other">%d минуты назад</item>
   </plurals>
   <plurals name="hours">
-    <item quantity="one"> %d hour</item>
-    <item quantity="few">%d hours</item>
-    <item quantity="many">%d hours</item>
-    <item quantity="other">%d hours</item>
+    <item quantity="one"> %d час</item>
+    <item quantity="few">%d часы</item>
+    <item quantity="many">%d часы</item>
+    <item quantity="other">%d часы</item>
   </plurals>
   <plurals name="minutes">
-    <item quantity="one">%d minute</item>
-    <item quantity="few">%d minutes</item>
-    <item quantity="many">%d minutes</item>
-    <item quantity="other">%d minutes</item>
+    <item quantity="one">%d минута</item>
+    <item quantity="few">%d протоколы</item>
+    <item quantity="many">%d протоколы</item>
+    <item quantity="other">%d протоколы</item>
   </plurals>
   <plurals name="weeks">
-    <item quantity="one">%d week</item>
-    <item quantity="few">%d weeks</item>
-    <item quantity="many">%d weeks</item>
-    <item quantity="other">%d weeks</item>
+    <item quantity="one">%d неделя</item>
+    <item quantity="few">%d недели</item>
+    <item quantity="many">%d недели</item>
+    <item quantity="other">%d недели</item>
   </plurals>
   <plurals name="months">
-    <item quantity="one">%d month</item>
-    <item quantity="few">%d months</item>
-    <item quantity="many">%d months</item>
-    <item quantity="other">%d months</item>
+    <item quantity="one">%d месяц</item>
+    <item quantity="few">%d месяцы</item>
+    <item quantity="many">%d месяцы</item>
+    <item quantity="other">%d месяцы</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Бонус за каждую покупку</string>
