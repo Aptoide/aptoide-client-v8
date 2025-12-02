@@ -233,7 +233,7 @@
   <string name="just_now">الآن</string>
   <string name="today">اليوم</string>
   <string name="yesterday">أمس</string>
-  <plurals name="hours">
+  <plurals name="hours_ago">
     <item quantity="zero">%d قبل ساعات</item>
     <item quantity="one"> %d قبل ساعة</item>
     <item quantity="two">%d قبل ساعات</item>
@@ -241,7 +241,7 @@
     <item quantity="many">%d قبل ساعات</item>
     <item quantity="other">%d قبل ساعات</item>
   </plurals>
-  <plurals name="minutes">
+  <plurals name="minutes_ago">
     <item quantity="zero">%d قبل دقائق</item>
     <item quantity="one">%d قبل دقيقة</item>
     <item quantity="two">%d قبل دقائق</item>

@@ -225,11 +225,11 @@
   <string name="just_now">Justo ahora</string>
   <string name="today">Hoy</string>
   <string name="yesterday">Ayer</string>
-  <plurals name="hours">
+  <plurals name="hours_ago">
     <item quantity="one"> %d hace una hora</item>
     <item quantity="other">%d hace horas</item>
   </plurals>
-  <plurals name="minutes">
+  <plurals name="minutes_ago">
     <item quantity="one">%d Hace un minuto</item>
     <item quantity="other">%d Hace unos minutos</item>
   </plurals>

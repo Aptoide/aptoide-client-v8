@@ -87,10 +87,10 @@ class DateUtils private constructor() : DateUtils() {
       val isToday = isToday(timeDateAsMilliseconds)
       val isYesterday = isYesterday(timeDateAsMilliseconds)
       return if (hours in 1..11) {
-        context.resources.getQuantityString(R.plurals.hours, hours.toInt(), hours)
+        context.resources.getQuantityString(R.plurals.hours_ago, hours.toInt(), hours)
       } else if (hours <= 0) {
         if (minutes > 0)
-          context.resources.getQuantityString(R.plurals.minutes, minutes.toInt(), minutes)
+          context.resources.getQuantityString(R.plurals.minutes_ago, minutes.toInt(), minutes)
         else
           context.resources.getString(R.string.just_now)
       } else if (isToday) {
