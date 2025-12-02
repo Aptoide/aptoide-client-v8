@@ -254,10 +254,10 @@
     <item quantity="other">%d протоколы</item>
   </plurals>
   <plurals name="days">
-    <item quantity="one">%d day</item>
-    <item quantity="few">%d days</item>
-    <item quantity="many">%d days</item>
-    <item quantity="other">%d days</item>
+    <item quantity="one">%d день</item>
+    <item quantity="few">%d дни</item>
+    <item quantity="many">%d дни</item>
+    <item quantity="other">%d дни</item>
   </plurals>
   <plurals name="weeks">
     <item quantity="one">%d неделя</item>
