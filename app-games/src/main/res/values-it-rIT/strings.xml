@@ -242,8 +242,8 @@
     <item quantity="other">%d verbali</item>
   </plurals>
   <plurals name="days">
-    <item quantity="one">%d day</item>
-    <item quantity="other">%d days</item>
+    <item quantity="one">%d giorno</item>
+    <item quantity="other">%d giorni</item>
   </plurals>
   <plurals name="weeks">
     <item quantity="one">%d settimana</item>
