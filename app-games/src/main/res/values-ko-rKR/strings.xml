@@ -236,7 +236,7 @@
     <item quantity="other">%d 분</item>
   </plurals>
   <plurals name="days">
-    <item quantity="other">%d days</item>
+    <item quantity="other">%d 날들</item>
   </plurals>
   <plurals name="weeks">
     <item quantity="other">%d 주</item>
