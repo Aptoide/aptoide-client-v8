@@ -1,6 +1,6 @@
 package com.aptoide.android.aptoidegames.play_and_earn.presentation.sessions
 
-import cm.aptoide.pt.campaigns.data.PaECampaignsRepository
+import cm.aptoide.pt.campaigns.data.PaEMissionsRepository
 import cm.aptoide.pt.campaigns.domain.PaEMission
 import cm.aptoide.pt.play_and_earn.sessions.data.PaESessionsRepository
 import cm.aptoide.pt.play_and_earn.sessions.data.SessionExpiredException
@@ -12,7 +12,7 @@ import javax.inject.Singleton
 @Singleton
 class PaESessionManager @Inject constructor(
   private val paESessionsRepository: PaESessionsRepository,
-  private val paeCampaignsRepository: PaECampaignsRepository
+  private val paeMissionsRepository: PaEMissionsRepository
 ) {
 
   val activeSessions = mutableListOf<PaESession>()
@@ -27,7 +27,7 @@ class PaESessionManager @Inject constructor(
 
       if (session != null && session.sessionId.isNotBlank()) {
         val sessionMissions =
-          paeCampaignsRepository.getCampaignMissions(packageName).getOrElse { return false }
+          paeMissionsRepository.getCampaignMissions(packageName).getOrElse { return false }
 
         activeSessions.add(
           PaESession(
