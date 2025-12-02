@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import cm.aptoide.pt.campaigns.data.database.model.PaEMissionEntity
+import cm.aptoide.pt.campaigns.domain.PaEMissionStatus
 
 @Dao
 interface PaeMissionDao {
@@ -24,4 +25,11 @@ interface PaeMissionDao {
     clearAppMissions(packageName)
     insertAll(missions)
   }
+
+  @Query("UPDATE pae_missions SET progressstatus = :status WHERE packageName = :packageName AND title = :missionTitle")
+  suspend fun updateMissionStatus(
+    packageName: String,
+    missionTitle: String,
+    status: PaEMissionStatus
+  )
 }

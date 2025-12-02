@@ -11,4 +11,6 @@ interface PaEMissionsRepository {
   ): Result<PaEMissions>
 
   fun observeCampaignMissions(packageName: String): Flow<Result<PaEMissions>>
+
+  suspend fun markMissionAsCompleted(packageName: String, missionTitle: String)
 }
