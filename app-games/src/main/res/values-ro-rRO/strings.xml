@@ -228,14 +228,14 @@
   <string name="today">Astăzi</string>
   <string name="yesterday">Ieri</string>
   <plurals name="hours_ago">
-    <item quantity="one"> %d hour ago</item>
-    <item quantity="few">%d hours ago</item>
-    <item quantity="other">%d hours ago</item>
+    <item quantity="one"> acum %d ore</item>
+    <item quantity="few">acum %d ore</item>
+    <item quantity="other">acum %d ore</item>
   </plurals>
   <plurals name="minutes_ago">
-    <item quantity="one">%d minute ago</item>
-    <item quantity="few">%d minutes ago</item>
-    <item quantity="other">%d minutes ago</item>
+    <item quantity="one">acum %d minute</item>
+    <item quantity="few">acum %d minute</item>
+    <item quantity="other">acum %d minute</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Un Bonus la Fiecare Achiziție</string>
