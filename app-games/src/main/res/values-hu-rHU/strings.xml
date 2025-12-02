@@ -225,13 +225,13 @@
   <string name="just_now">Épp most</string>
   <string name="today">Ma</string>
   <string name="yesterday">Tegnap</string>
-  <plurals name="hours">
-    <item quantity="one"> %d egy órával ezelőtt</item>
-    <item quantity="other">%d órákkal ezelőtt</item>
+  <plurals name="hours_ago">
+    <item quantity="one"> %d hour ago</item>
+    <item quantity="other">%d hours ago</item>
   </plurals>
-  <plurals name="minutes">
-    <item quantity="one">%d egy perce</item>
-    <item quantity="other">%d percekkel ezelőtt</item>
+  <plurals name="minutes_ago">
+    <item quantity="one">%d minute ago</item>
+    <item quantity="other">%d minutes ago</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Bónusz minden vásárlásért cserébe</string>
