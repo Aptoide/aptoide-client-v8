@@ -225,13 +225,13 @@
   <string name="just_now">बस अभी</string>
   <string name="today">आज</string>
   <string name="yesterday">कल</string>
-  <plurals name="hours">
+  <plurals name="hours_ago">
     <item quantity="one"> %d hour ago</item>
-    <item quantity="other">%d घंटों पहले</item>
+    <item quantity="other">%d hours ago</item>
   </plurals>
-  <plurals name="minutes">
-    <item quantity="one">%d मिनट पहले</item>
-    <item quantity="other">%d मिनटों पहले</item>
+  <plurals name="minutes_ago">
+    <item quantity="one">%d minute ago</item>
+    <item quantity="other">%d minutes ago</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">प्रत्येक खरीद पर एक बोनस</string>
