@@ -224,10 +224,10 @@
   <string name="today">Hari ini</string>
   <string name="yesterday">Kemarin</string>
   <plurals name="hours_ago">
-    <item quantity="other">%d beberapa jam yang lalu</item>
+    <item quantity="other">%d jam lalu</item>
   </plurals>
   <plurals name="minutes_ago">
-    <item quantity="other">%d beberapa menit yang lalu</item>
+    <item quantity="other">%d menit lalu</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Bonus di Setiap Pembelian</string>
