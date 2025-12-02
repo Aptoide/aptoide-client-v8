@@ -242,28 +242,28 @@
     <item quantity="other">%d minut temu</item>
   </plurals>
   <plurals name="hours">
-    <item quantity="one"> %d hour</item>
-    <item quantity="few">%d hours</item>
-    <item quantity="many">%d hours</item>
-    <item quantity="other">%d hours</item>
+    <item quantity="one"> %d godzina</item>
+    <item quantity="few">%d godziny</item>
+    <item quantity="many">%d godziny</item>
+    <item quantity="other">%d godziny</item>
   </plurals>
   <plurals name="minutes">
-    <item quantity="one">%d minute</item>
-    <item quantity="few">%d minutes</item>
-    <item quantity="many">%d minutes</item>
-    <item quantity="other">%d minutes</item>
+    <item quantity="one">%d minuta</item>
+    <item quantity="few">%d protokoły</item>
+    <item quantity="many">%d protokoły</item>
+    <item quantity="other">%d protokoły</item>
   </plurals>
   <plurals name="weeks">
-    <item quantity="one">%d week</item>
-    <item quantity="few">%d weeks</item>
-    <item quantity="many">%d weeks</item>
-    <item quantity="other">%d weeks</item>
+    <item quantity="one">%d tydzień</item>
+    <item quantity="few">%d tygodnie</item>
+    <item quantity="many">%d tygodnie</item>
+    <item quantity="other">%d tygodnie</item>
   </plurals>
   <plurals name="months">
-    <item quantity="one">%d month</item>
-    <item quantity="few">%d months</item>
-    <item quantity="many">%d months</item>
-    <item quantity="other">%d months</item>
+    <item quantity="one">%d miesiąc</item>
+    <item quantity="few">%d miesiące</item>
+    <item quantity="many">%d miesiące</item>
+    <item quantity="other">%d miesiące</item>
   </plurals>
   <!-- Bonus Page -->
   <string name="bonus_page_title_1">Bonus za każdy zakup</string>
