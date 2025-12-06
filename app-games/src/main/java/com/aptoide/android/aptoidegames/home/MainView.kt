@@ -75,6 +75,7 @@ import com.aptoide.android.aptoidegames.promotions.presentation.PromotionDialog
 import com.aptoide.android.aptoidegames.search.presentation.searchScreen
 import com.aptoide.android.aptoidegames.settings.settingsScreen
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
+import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesToolBar
 import com.aptoide.android.aptoidegames.updates.presentation.updatesScreen
 import kotlinx.coroutines.delay
@@ -133,6 +134,8 @@ fun MainView(navController: NavHostController) {
                     modifier = Modifier
                       .focusable(false)
                       .clearAndSetSemantics {},
+                    backgroundColor = Palette.GreyDark,
+                    contentColor = Palette.White
                   )
                 }
               }
@@ -421,7 +424,7 @@ private fun NavigationGraph(
     animatedComposable(
       navigate = navController::navigateTo,
       goBack = navController::navigateUp,
-      screenData = playAndEarnPermissionsScreen()
+      screenData = playAndEarnPermissionsScreen(showSnack = showSnack)
     )
 
     animatedComposable(
