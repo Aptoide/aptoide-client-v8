@@ -3,6 +3,8 @@ package com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions
 import android.content.Intent
 import android.os.Build
 import android.provider.Settings
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -15,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
@@ -36,6 +39,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.zIndex
 import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
@@ -51,6 +56,8 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.design_system.AccentSmallButton
+import com.aptoide.android.aptoidegames.design_system.PrimaryButton
+import com.aptoide.android.aptoidegames.design_system.PrimaryTextButton
 import com.aptoide.android.aptoidegames.drawables.figures.getCheckCircle
 import com.aptoide.android.aptoidegames.drawables.figures.getPermissionAllowFigure
 import com.aptoide.android.aptoidegames.drawables.icons.getTrustedIcon
@@ -63,17 +70,18 @@ import kotlinx.coroutines.launch
 
 const val playAndEarnPermissionsRoute = "playAndEarnPermissions"
 
-fun playAndEarnPermissionsScreen() = ScreenData.withAnalytics(
+fun playAndEarnPermissionsScreen(showSnack: (String) -> Unit) = ScreenData.withAnalytics(
   route = playAndEarnPermissionsRoute,
   screenAnalyticsName = "PlayAndEarnPermissions",
 ) { _, navigate, navigateBack ->
 
-  PlayAndEarnPermissionsScreen(navigateBack)
+  PlayAndEarnPermissionsScreen(navigateBack = navigateBack, showSnack = showSnack)
 }
 
 @Composable
 private fun PlayAndEarnPermissionsScreen(
-  navigateBack: () -> Unit
+  navigateBack: () -> Unit,
+  showSnack: (String) -> Unit = {}
 ) {
   val coroutineScope = rememberCoroutineScope()
   val context = LocalContext.current
@@ -82,12 +90,15 @@ private fun PlayAndEarnPermissionsScreen(
   val paeAnalytics = rememberPaEAnalytics()
 
   var allowedRestrictedSettings by remember { mutableStateOf(false) }
+  var showPermissionDeniedDialog by remember { mutableStateOf(false) }
 
+  // Check if permissions are already granted on screen resume
   DisposableEffect(lifecycleOwner) {
     val observer = LifecycleEventObserver { _, event ->
       if (event == Lifecycle.Event.ON_RESUME) {
         if (context.hasOverlayPermission() && context.hasUsageStatsPermissionStatus()) {
           PaEForegroundService.start(context)
+          showSnack(context.getString(R.string.play_and_earn_permissions_success_snackbar))
           navigateBack()
         }
 
@@ -102,11 +113,17 @@ private fun PlayAndEarnPermissionsScreen(
     }
   }
 
+  val permissionActivityLauncher = rememberLauncherForActivityResult(
+    contract = ActivityResultContracts.StartActivityForResult()
+  ) { result ->
+    if (!context.hasOverlayPermission() || !context.hasUsageStatsPermissionStatus()) {
+      showPermissionDeniedDialog = true
+    }
+  }
+
   val onPermissionClick: () -> Unit = {
     paeAnalytics.sendPaEFinalPermissionsClick()
-    coroutineScope.launch {
-      context.startActivity(Intent(context, OverlayPermissionActivity::class.java))
-    }
+    permissionActivityLauncher.launch(Intent(context, OverlayPermissionActivity::class.java))
   }
 
   val onRestrictedSettingsClick: () -> Unit = {
@@ -131,6 +148,16 @@ private fun PlayAndEarnPermissionsScreen(
       onRestrictedSettingsClick = onRestrictedSettingsClick,
       onFinalPermissionsClick = onPermissionClick,
       allowedRestrictedSettings = allowedRestrictedSettings
+    )
+  }
+
+  if (showPermissionDeniedDialog) {
+    PermissionDeniedDialog(
+      onDismiss = { showPermissionDeniedDialog = false },
+      onRetry = {
+        showPermissionDeniedDialog = false
+        onPermissionClick()
+      }
     )
   }
 }
@@ -432,8 +459,72 @@ private fun TrustedAppBadge(modifier: Modifier = Modifier) {
   }
 }
 
+@Composable
+private fun PermissionDeniedDialog(
+  onDismiss: () -> Unit,
+  onRetry: () -> Unit
+) {
+  Dialog(
+    onDismissRequest = onDismiss,
+    properties = DialogProperties(
+      usePlatformDefaultWidth = false
+    )
+  ) {
+    Box(
+      modifier = Modifier
+        .width(328.dp)
+        .padding(16.dp)
+        .background(color = Palette.GreyDark),
+      contentAlignment = Alignment.Center
+    ) {
+      Column(
+        modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 48.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+      ) {
+        Text(
+          text = stringResource(R.string.play_and_earn_permissions_denied_dialog_title),
+          style = AGTypography.Title,
+          color = Palette.Primary,
+          textAlign = TextAlign.Center
+        )
+
+        Text(
+          text = stringResource(R.string.play_and_earn_permissions_denied_dialog_body),
+          color = Palette.White,
+          textAlign = TextAlign.Center,
+          style = AGTypography.SubHeadingS
+        )
+
+        Column {
+          PrimaryButton(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = onRetry,
+            title = stringResource(R.string.play_and_earn_permissions_enable_now_button)
+          )
+          PrimaryTextButton(
+            modifier = Modifier.padding(vertical = 8.dp),
+            onClick = onDismiss,
+            color = Palette.GreyLight,
+            text = stringResource(R.string.later_button)
+          )
+        }
+      }
+    }
+  }
+}
+
 @Preview
 @Composable
 private fun PlayAndEarnPermissionsScreenPreview() {
   PlayAndEarnPermissionsScreen(navigateBack = {})
+}
+
+@Preview
+@Composable
+private fun PermissionDeniedDialogPreview() {
+  PermissionDeniedDialog(
+    onDismiss = {},
+    onRetry = {}
+  )
 }
