@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -91,6 +92,7 @@ import com.aptoide.android.aptoidegames.appview.AppViewHeaderConstants.FEATURE_G
 import com.aptoide.android.aptoidegames.appview.AppViewHeaderConstants.VIDEO_HEIGHT
 import com.aptoide.android.aptoidegames.appview.permissions.buildAppPermissionsRoute
 import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
+import com.aptoide.android.aptoidegames.drawables.backgrounds.myiconpack.getAppViewBonusGiftBackground
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusIconLeft
 import com.aptoide.android.aptoidegames.drawables.icons.getBookmarkStar
 import com.aptoide.android.aptoidegames.drawables.icons.getForward
@@ -109,6 +111,7 @@ import com.aptoide.android.aptoidegames.installer.presentation.InstallView
 import com.aptoide.android.aptoidegames.mmp.WithUTM
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.app_view.AppRewardsView
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaEInstallView
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.animations.PaEAnimatedGift
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rememberIsPackageInPaE
 import com.aptoide.android.aptoidegames.play_and_earn.rememberShouldShowPlayAndEarn
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -458,19 +461,40 @@ fun AppViewContent(
             navigate(route)
           }
       ) {
-        Image(
-          imageVector = getBonusIconLeft(
-            iconColor = Palette.Primary,
-            outlineColor = Palette.Black,
-            backgroundColor = Palette.Secondary
-          ),
-          contentDescription = null,
-          modifier = Modifier
-            .size(40.dp)
-            .graphicsLayer {
-              this.translationY = 6.dp.toPx()
-            }
-        )
+        if (isGamified) {
+          Box(
+            modifier = Modifier
+              .size(40.dp)
+              .graphicsLayer {
+                this.translationY = 6.dp.toPx()
+              },
+            contentAlignment = Alignment.Center
+          ) {
+            Image(
+              imageVector = getAppViewBonusGiftBackground(),
+              contentDescription = null,
+            )
+            PaEAnimatedGift(
+              modifier = Modifier
+                .size(44.dp)
+                .offset(x = (-2).dp)
+            )
+          }
+        } else {
+          Image(
+            imageVector = getBonusIconLeft(
+              iconColor = Palette.Primary,
+              outlineColor = Palette.Black,
+              backgroundColor = Palette.Secondary
+            ),
+            contentDescription = null,
+            modifier = Modifier
+              .size(40.dp)
+              .graphicsLayer {
+                this.translationY = 6.dp.toPx()
+              }
+          )
+        }
         AptoideOutlinedText(
           text = stringResource(
             id = R.string.bonus_banner_title,
@@ -479,11 +503,11 @@ fun AppViewContent(
           style = AGTypography.InputsM,
           outlineWidth = 10f,
           outlineColor = Palette.Black,
-          textColor = Palette.Primary,
+          textColor = Palette.White,
           modifier = Modifier
             .align(Alignment.Bottom)
             .background(color = Palette.Secondary)
-            .padding(start = 16.dp, end = 92.dp)
+            .padding(horizontal = 8.dp, vertical = 4.dp)
         )
       }
     }
