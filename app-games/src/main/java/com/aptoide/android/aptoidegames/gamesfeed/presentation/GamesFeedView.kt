@@ -179,7 +179,7 @@ private fun GamesFeedPost(
 
         item.publishedAt?.let { timestamp ->
           Text(
-            text = DateUtils.getTimeDiffString(LocalContext.current, timestamp),
+            text = DateUtils.getTimeDiffWithoutDate(LocalContext.current, timestamp),
             style = AGTypography.SmallGames,
             color = Palette.GreyLight
           )
@@ -222,73 +222,6 @@ private fun VideoFeatureGraphic(item: GamesFeedItem) {
       modifier = Modifier
         .size(48.dp)
         .align(Alignment.Center),
-    )
-  }
-}
-
-@Composable
-private fun ArticleCard(
-  item: GamesFeedItem,
-  onClick: () -> Unit
-) {
-  Column(
-    modifier = Modifier
-      .fillMaxWidth()
-      .padding(horizontal = 16.dp)
-      .clickable(onClick = onClick)
-  ) {
-    AptoideAsyncImage(
-      data = item.featureGraphic,
-      contentDescription = item.title,
-      modifier = Modifier.height(160.dp),
-      contentScale = ContentScale.Crop
-    )
-
-    Spacer(modifier = Modifier.height(8.dp))
-
-    Column {
-      Text(
-        text = item.title,
-        style = AGTypography.InputsL,
-        color = Palette.White,
-        maxLines = 2,
-        overflow = TextOverflow.Ellipsis
-      )
-      item.description?.takeIf { it.isNotBlank() }?.let { description ->
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-          text = description,
-          style = AGTypography.SmallGames,
-          color = Palette.White,
-          maxLines = 3,
-          overflow = TextOverflow.Ellipsis
-        )
-      }
-
-      Spacer(modifier = Modifier.height(8.dp))
-
-      Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-      ) {
-        AuthorRow(item.authorLogo, item.authorName)
-
-        item.publishedAt?.let { timestamp ->
-          Text(
-            text = DateUtils.getTimeDiffString(LocalContext.current, timestamp),
-            style = AGTypography.SmallGames,
-            color = Palette.GreyLight
-          )
-        }
-      }
-    }
-
-    Spacer(modifier = Modifier.height(16.dp))
-
-    Divider(
-      color = Palette.GreyDark,
-      thickness = 1.dp
     )
   }
 }
