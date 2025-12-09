@@ -123,7 +123,11 @@ private fun PlayAndEarnPermissionsScreen(
 
   val onPermissionClick: () -> Unit = {
     paeAnalytics.sendPaEFinalPermissionsClick()
-    permissionActivityLauncher.launch(Intent(context, OverlayPermissionActivity::class.java))
+    if (!context.hasOverlayPermission()) {
+      permissionActivityLauncher.launch(Intent(context, OverlayPermissionActivity::class.java))
+    } else {
+      permissionActivityLauncher.launch(Intent(context, UsageStatsPermissionActivity::class.java))
+    }
   }
 
   val onRestrictedSettingsClick: () -> Unit = {
