@@ -2,7 +2,7 @@ package com.aptoide.android.aptoidegames.feature_rtb.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
+import com.aptoide.android.aptoidegames.feature_rtb.data.RTBAppsListUiState
 import com.aptoide.android.aptoidegames.feature_rtb.repository.RTBRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -14,7 +14,7 @@ import java.io.IOException
 
 class RTBAppListViewModel(private val repository: RTBRepository) : ViewModel() {
 
-  private val viewModelState = MutableStateFlow<AppsListUiState>(AppsListUiState.Loading)
+  private val viewModelState = MutableStateFlow<RTBAppsListUiState>(RTBAppsListUiState.Loading)
 
   val uiState = viewModelState
     .stateIn(
@@ -29,22 +29,22 @@ class RTBAppListViewModel(private val repository: RTBRepository) : ViewModel() {
 
   fun reload() {
     viewModelScope.launch {
-      viewModelState.update { AppsListUiState.Loading }
+      viewModelState.update { RTBAppsListUiState.Loading }
       try {
         val result = repository.getRTBApps("home-bundle")
         viewModelState.update {
           if (result.isEmpty()) {
-            AppsListUiState.Empty
+            RTBAppsListUiState.Empty
           } else {
-            AppsListUiState.Idle(apps = result)
+            RTBAppsListUiState.Idle(apps = result)
           }
         }
       } catch (t: Throwable) {
         Timber.w(t)
         viewModelState.update {
           when (t) {
-            is IOException -> AppsListUiState.NoConnection
-            else -> AppsListUiState.Error
+            is IOException -> RTBAppsListUiState.NoConnection
+            else -> RTBAppsListUiState.Error
           }
         }
       }

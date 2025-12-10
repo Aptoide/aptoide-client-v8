@@ -1,7 +1,6 @@
 package com.aptoide.android.aptoidegames.feature_rtb.repository
 
 import cm.aptoide.pt.environment_info.DeviceInfo
-import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.File
 import cm.aptoide.pt.feature_apps.data.emptyApp
 import cm.aptoide.pt.feature_apps.domain.Rating
@@ -11,7 +10,9 @@ import cm.aptoide.pt.feature_campaigns.CampaignTuple
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.IdsRepository
 import com.aptoide.android.aptoidegames.apkfy.analytics.ApkfyManagerProbe
+import com.aptoide.android.aptoidegames.feature_rtb.data.RTBApp
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -20,12 +21,13 @@ class AptoideRTBRepository @Inject constructor(
   private val scope: CoroutineScope,
   private val deviceInfo: DeviceInfo,
   private val idsRepository: IdsRepository,
-  private val campaignRepository: CampaignRepository
+  private val campaignRepository: CampaignRepository,
+  private val rtbAdsRepository: RTBAdsRepository
 ) : RTBRepository {
 
-  private val rtbCache: MutableMap<String, List<App>> = mutableMapOf()
+  private val rtbCache: MutableMap<String, List<RTBApp>> = mutableMapOf()
 
-  override suspend fun getRTBApps(placement: String): List<App> =
+  override suspend fun getRTBApps(placement: String): List<RTBApp> =
     withContext(scope.coroutineContext) {
       rtbCache[placement]?.let {
         return@withContext it
@@ -60,18 +62,26 @@ class AptoideRTBRepository @Inject constructor(
       rtbCache[placement] = apps
       return@withContext apps
     }
+
+  override suspend fun resolveAdRedirects(url: String): Result<String> {
+    return rtbAdsRepository.resolveAdRedirects(url)
+  }
 }
 
-private fun RTBResponse.toDomainModel(campaignRepository: CampaignRepository): App {
-  return emptyApp.copy(
-    name = this.appName,
-    icon = this.creative.asset,
-    isAppCoins = false,
-    file = File(md5 = "", size = -1, path = "", path_alt = ""),
-    packageName = this.packageName,
-    rating = Rating(this.rating, 0, emptyList()),
-    pRating = Rating(this.rating, 0, emptyList()),
-    campaigns = this.tracking.aptoideMmp?.mapRTBMMPCampaigns(campaignRepository, this.campaignId)
+private fun RTBResponse.toDomainModel(campaignRepository: CampaignRepository): RTBApp {
+  return RTBApp(
+    app = emptyApp.copy(
+      name = this.appName,
+      icon = this.creative.asset,
+      isAppCoins = this.billingProvider?.contains("aptoide") ?: false,
+      file = File(md5 = "", size = -1, path = "", path_alt = ""),
+      packageName = this.packageName,
+      rating = Rating(this.rating, 0, emptyList()),
+      pRating = Rating(this.rating, 0, emptyList()),
+      campaigns = this.tracking.aptoideMmp?.mapRTBMMPCampaigns(campaignRepository, this.campaignId)
+    ),
+    adUrl = this.tracking.adsNetwork?.click,
+    isAptoideInstall = this.installFrom?.contains("aptoide") ?: true
   )
 }
 

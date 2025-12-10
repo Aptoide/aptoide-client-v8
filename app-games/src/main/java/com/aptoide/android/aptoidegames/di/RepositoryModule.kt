@@ -39,6 +39,7 @@ import com.aptoide.android.aptoidegames.feature_promotional.domain.AppComingSoon
 import com.aptoide.android.aptoidegames.feature_promotional.repository.SubscribedAppsManager
 import com.aptoide.android.aptoidegames.feature_rtb.di.RetrofitRTB
 import com.aptoide.android.aptoidegames.feature_rtb.repository.AptoideRTBRepository
+import com.aptoide.android.aptoidegames.feature_rtb.repository.RTBAdsRepository
 import com.aptoide.android.aptoidegames.feature_rtb.repository.RTBApi
 import com.aptoide.android.aptoidegames.feature_rtb.repository.RTBRepository
 import com.aptoide.android.aptoidegames.home.repository.ThemePreferencesManager
@@ -307,14 +308,16 @@ class RepositoryModule {
     @RetrofitRTB retrofit: Retrofit,
     deviceInfo: DeviceInfo,
     idsRepository: IdsRepository,
-    campaignRepository: CampaignRepository
+    campaignRepository: CampaignRepository,
+    rtbAdsRepository: RTBAdsRepository
   ): RTBRepository {
     return AptoideRTBRepository(
       rtbApi = retrofit.create(RTBApi::class.java),
       scope = CoroutineScope(Dispatchers.IO),
       deviceInfo = deviceInfo,
       idsRepository = idsRepository,
-      campaignRepository = campaignRepository
+      campaignRepository = campaignRepository,
+      rtbAdsRepository = rtbAdsRepository
     )
   }
 }

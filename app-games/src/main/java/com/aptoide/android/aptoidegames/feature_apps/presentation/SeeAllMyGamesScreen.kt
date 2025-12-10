@@ -123,7 +123,7 @@ fun SeeAllMyGamesViewContent(
 }
 
 @Composable
-fun AppsList(
+private fun AppsList(
   size: Int,
   content: LazyListScope.() -> Unit,
 ) {

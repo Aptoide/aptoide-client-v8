@@ -10,6 +10,8 @@ data class RTBResponse(
   @SerializedName("package_name") val packageName: String,
   @SerializedName("app_name") val appName: String,
   val rating: Double,
+  @SerializedName("billing_provider") val billingProvider: String?,
+  @SerializedName("install_from") val installFrom: String?,
   @SerializedName("cta_text") val ctaText: String,
   @SerializedName("ad_domain") val adDomain: String,
   val creative: Creative,
@@ -26,7 +28,9 @@ data class Creative(
 @Keep
 data class Tracking(
   @SerializedName("aptoide-mmp")
-  val aptoideMmp: AptoideMmp?
+  val aptoideMmp: AptoideMmp?,
+  @SerializedName("adsnetwork")
+  val adsNetwork: AdsNetwork?,
 )
 
 @Keep
@@ -34,4 +38,9 @@ data class AptoideMmp(
   val impression: String?,
   val click: String?,
   val download: String?
+)
+
+@Keep
+data class AdsNetwork(
+  val click: String?,
 )

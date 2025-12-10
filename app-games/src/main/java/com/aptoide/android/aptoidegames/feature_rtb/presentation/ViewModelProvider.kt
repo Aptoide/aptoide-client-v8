@@ -8,8 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cm.aptoide.pt.extensions.runPreviewable
-import cm.aptoide.pt.feature_apps.data.randomApp
-import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
+import com.aptoide.android.aptoidegames.feature_rtb.data.RTBAppsListUiState
+import com.aptoide.android.aptoidegames.feature_rtb.data.randomRTBApp
 import com.aptoide.android.aptoidegames.feature_rtb.repository.RTBRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -23,9 +23,9 @@ class InjectionsProvider @Inject constructor(
 fun rememberRTBApps(
   tag: String,
   salt: String? = null,
-): Pair<AppsListUiState, () -> Unit> = runPreviewable(
+): Pair<RTBAppsListUiState, () -> Unit> = runPreviewable(
   preview = {
-    AppsListUiState.Idle(List((0..50).random()) { randomApp }) to {}
+    RTBAppsListUiState.Idle(List((0..50).random()) { randomRTBApp }) to {}
   }, real = {
     val injectionsProvider = hiltViewModel<InjectionsProvider>()
     val vm: RTBAppListViewModel = viewModel(
@@ -43,3 +43,19 @@ fun rememberRTBApps(
     uiState to vm::reload
   }
 )
+
+@Composable
+fun rememberRTBAd(): RTBAdViewModel {
+  val injectionsProvider = hiltViewModel<InjectionsProvider>()
+  return viewModel(
+    key = "rtb/ad/",
+    factory = object : ViewModelProvider.Factory {
+      override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        @Suppress("UNCHECKED_CAST")
+        return RTBAdViewModel(
+          rtbRepository = injectionsProvider.repository,
+        ) as T
+      }
+    }
+  )
+}

@@ -79,6 +79,10 @@ object NetworkModule {
     httpLoggingInterceptor: HttpLoggingInterceptor,
   ): OkHttpClient =
     OkHttpClient.Builder()
+      .followRedirects(false)
+      .followSslRedirects(false)
+      .connectTimeout(10, SECONDS)
+      .readTimeout(10, SECONDS)
       .addInterceptor(userAgentInterceptor)
       .addInterceptor(httpLoggingInterceptor)
       .build()
