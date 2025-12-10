@@ -13,7 +13,6 @@ import com.aptoide.android.aptoidegames.analytics.presentation.InitialAnalyticsM
 import com.aptoide.android.aptoidegames.analytics.presentation.OverrideAnalyticsHomeTab
 import com.aptoide.android.aptoidegames.categories.presentation.AllCategoriesView
 import com.aptoide.android.aptoidegames.editorial.SeeMoreEditorialsContent
-import com.aptoide.android.aptoidegames.feature_apps.presentation.MoreBonusBundleView
 import com.aptoide.android.aptoidegames.feature_rtb.presentation.rememberRTBApps
 
 const val gamesRoute = "games"
@@ -84,13 +83,14 @@ private fun GamesScreenTabView(
 @Composable
 private fun AppCoinsTabView(navigate: (String) -> Unit) {
   val (uiState, reload) = rememberRTBApps("rtb-promo")
-  MoreBonusBundleView(
+
+  /*MoreBonusBundleView(
     uiState = uiState,
     bundleTag = "rtb-promo",
     navigate = navigate,
     reload = reload,
     noNetworkReload = reload
-  )
+  )*/
 }
 
 @Composable

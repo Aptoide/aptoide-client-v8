@@ -34,6 +34,7 @@ import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.error_views.NoConnectionView
+import com.aptoide.android.aptoidegames.feature_rtb.presentation.isRTB
 import com.aptoide.android.aptoidegames.home.LoadingView
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
@@ -135,9 +136,10 @@ fun MoreBundleViewContent(
 }
 
 @Composable
-private fun AppsList(
+fun AppsList(
   appList: List<App>,
   navigate: (String) -> Unit,
+  handleRTBAdClick: (String, Int) -> Unit = { _, _ -> },
 ) {
   val analyticsContext = AnalyticsContext.current
   val bundleAnalytics = rememberBundleAnalytics()
@@ -158,13 +160,17 @@ private fun AppsList(
             app = app,
             analyticsContext = analyticsContext.copy(itemPosition = index)
           )
-          navigate(
-            buildAppViewRoute(
-              appSource = app,
-              utmCampaign = app.campaigns?.campaignId,
+          if (analyticsContext.isRTB()) {
+            handleRTBAdClick(app.packageName, index)
+          } else {
+            navigate(
+              buildAppViewRoute(
+                appSource = app,
+                utmCampaign = app.campaigns?.campaignId,
+              )
+                .withItemPosition(index)
             )
-              .withItemPosition(index)
-          )
+          }
         },
       ) {
         InstallViewShort(app)

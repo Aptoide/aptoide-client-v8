@@ -33,8 +33,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -116,6 +118,7 @@ fun BundlesScreen(
 ) {
   val (viewState, loadFreshHomeBundles) = bundlesList()
   val shouldShowGamesFeed = rememberGamesFeedVisibility()
+  var shouldShowLoadingView by remember { mutableStateOf(false) }
 
   val isRefreshing = (viewState.type == BundlesViewUiStateType.RELOADING)
 
@@ -133,22 +136,20 @@ fun BundlesScreen(
         .fillMaxSize()
         .wrapContentSize(Alignment.TopCenter)
     ) {
-      when (viewState.type) {
-        BundlesViewUiStateType.LOADING,
-        BundlesViewUiStateType.RELOADING,
-          -> LoadingView()
+      when {
+        shouldShowLoadingView || viewState.type == BundlesViewUiStateType.LOADING || viewState.type == BundlesViewUiStateType.RELOADING -> LoadingView()
 
-        BundlesViewUiStateType.NO_CONNECTION -> NoConnectionView(
+        viewState.type == BundlesViewUiStateType.NO_CONNECTION -> NoConnectionView(
           onRetryClick = {
             loadFreshHomeBundles()
           }
         )
 
-        BundlesViewUiStateType.ERROR -> GenericErrorView(
+        viewState.type == BundlesViewUiStateType.ERROR -> GenericErrorView(
           onRetryClick = loadFreshHomeBundles
         )
 
-        BundlesViewUiStateType.IDLE -> {
+        viewState.type == BundlesViewUiStateType.IDLE -> {
           val filteredBundles = remember(viewState.bundles, shouldShowGamesFeed) {
             val bundles = if (shouldShowGamesFeed == true) {
               viewState.bundles.injectGamesFeed()
@@ -161,7 +162,10 @@ fun BundlesScreen(
 
           BundlesView(
             viewState.copy(bundles = filteredBundles),
-            navigate
+            navigate = navigate,
+            onShowLoading = { showLoading ->
+              shouldShowLoadingView = showLoading
+            }
           )
         }
       }
@@ -186,6 +190,7 @@ fun BundlesScreen(
 fun BundlesView(
   viewState: BundlesViewUiState,
   navigate: (String) -> Unit,
+  onShowLoading: (Boolean) -> Unit
 ) {
   Column(
     modifier = Modifier
@@ -300,7 +305,8 @@ fun BundlesView(
             Type.RTB_PROMO -> RTBSectionView(
               bundle = bundle.copy(title = "Highlighted".translateOrKeep(LocalContext.current)),
               navigate = navigateTo,
-              spaceBy = 32
+              spaceBy = 32,
+              onShowLoading = onShowLoading
             )
 
             else -> Unit

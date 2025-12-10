@@ -41,6 +41,7 @@ import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.appview.AppRatingAndDownloads
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusIconRight
+import com.aptoide.android.aptoidegames.feature_rtb.presentation.isRTB
 import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
 import com.aptoide.android.aptoidegames.home.getSeeMoreRouteNavigation
@@ -105,6 +106,7 @@ private fun RealAppsGridBundle(
 internal fun AppsRowView(
   appsList: List<App>,
   navigate: (String) -> Unit,
+  onRTBAdClick: (String, Int) -> Unit = { _, _ -> }
 ) {
   val analyticsContext = AnalyticsContext.current
   val bundleAnalytics = rememberBundleAnalytics()
@@ -131,13 +133,17 @@ internal fun AppsRowView(
             app = item,
             analyticsContext = analyticsContext.copy(itemPosition = index)
           )
-          navigate(
-            buildAppViewRoute(
-              appSource = item,
-              utmCampaign = item.campaigns?.campaignId,
+          if (analyticsContext.isRTB()) {
+            onRTBAdClick(item.packageName, index)
+          } else {
+            navigate(
+              buildAppViewRoute(
+                appSource = item,
+                utmCampaign = item.campaigns?.campaignId
+              )
+                .withItemPosition(index)
             )
-              .withItemPosition(index)
-          )
+          }
         },
       )
     }

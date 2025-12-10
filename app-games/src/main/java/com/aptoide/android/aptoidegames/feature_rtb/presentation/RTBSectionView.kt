@@ -8,14 +8,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
-import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
 import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.randomBundle
 import com.aptoide.android.aptoidegames.analytics.dto.AnalyticsUIContext
-import com.aptoide.android.aptoidegames.feature_apps.presentation.AppsRowView
+import com.aptoide.android.aptoidegames.feature_rtb.data.RTBApp
+import com.aptoide.android.aptoidegames.feature_rtb.data.RTBAppsListUiState
 import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
@@ -24,15 +23,16 @@ private var hasSentImpression = false
 
 @Composable
 fun RTBAptoideMMPController(
-  apps: List<App>,
+  apps: List<RTBApp>,
   bundleTag: String,
   placement: String,
 ) {
   apps.forEachIndexed { index, rtbApp ->
+    val app = rtbApp.app
     if (!hasSentImpression) {
-      rtbApp.campaigns?.toAptoideMMPCampaign()
-        ?.sendImpressionEvent(bundleTag, rtbApp.packageName)
-      rtbApp.campaigns?.run {
+      app.campaigns?.toAptoideMMPCampaign()
+        ?.sendImpressionEvent(bundleTag, app.packageName)
+      app.campaigns?.run {
         placementType = placement
       }
       if (index == apps.size - 1) {
@@ -47,11 +47,12 @@ fun RTBSectionView(
   bundle: Bundle,
   navigate: (String) -> Unit,
   spaceBy: Int = 0,
+  onShowLoading: (Boolean) -> Unit = {}
 ) {
   val (uiState, _) = rememberRTBApps(bundle.tag, bundle.timestamp)
 
   when (uiState) {
-    is AppsListUiState.Idle -> {
+    is RTBAppsListUiState.Idle -> {
       Column {
         BundleHeader(
           title = bundle.title,
@@ -67,17 +68,18 @@ fun RTBSectionView(
           bundle = bundle,
           navigate = navigate,
           apps = uiState.apps,
+          onShowLoading = onShowLoading
         )
         Spacer(Modifier.size(spaceBy.dp))
       }
     }
 
-    AppsListUiState.Empty,
-    AppsListUiState.Error,
-    AppsListUiState.NoConnection,
+    RTBAppsListUiState.Empty,
+    RTBAppsListUiState.Error,
+    RTBAppsListUiState.NoConnection,
       -> Unit
 
-    AppsListUiState.Loading -> {
+    RTBAppsListUiState.Loading -> {
       LoadingBundleView(height = 184.dp)
       Spacer(Modifier.size(spaceBy.dp))
     }
@@ -94,13 +96,15 @@ fun RTBSectionView(
 fun RTBBundleView(
   bundle: Bundle,
   navigate: (String) -> Unit,
-  apps: List<App>,
+  apps: List<RTBApp>,
+  onShowLoading: (Boolean) -> Unit = {}
 ) {
   val homeApps = apps.take(9)
   RTBAptoideMMPController(homeApps, bundle.tag, "home-bundle")
-  AppsRowView(
-    appsList = homeApps,
+  RTBAppsRowView(
+    rtbAppsList = homeApps,
     navigate = navigate,
+    onShowLoading = onShowLoading
   )
 }
 
@@ -110,7 +114,8 @@ private fun RealBonusBundlePreview() {
   AptoideTheme {
     RTBSectionView(
       bundle = randomBundle,
-      navigate = {}
+      navigate = {},
+      onShowLoading = {}
     )
   }
 }
