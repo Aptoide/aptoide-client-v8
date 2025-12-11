@@ -112,23 +112,28 @@ class GameGenieViewModel @Inject constructor(
     }
   }
 
-  fun sendMessage(userMessage: String) {
+  fun sendMessage(
+    userMessage: String,
+    imagePathOrBase64: String? = null,
+  ) {
     viewModelScope.launch {
       try {
-        updateConversation(userMessage)
+        updateConversation(userMessage, imagePathOrBase64)
         updateLoadingState()
         val selectedGame = _selectedGame.value
         val chat = selectedGame?.packageName?.let {
           gameGenieUseCase.sendCompanionMessage(
             chat = uiState.value.chat.toGameGenieChatHistory(),
             userMessage = userMessage,
-            selectedGame = it
+            selectedGame = it,
+            imageBase64 = imagePathOrBase64
           )
         }
           ?: gameGenieUseCase.sendMessage(
             chat = uiState.value.chat.toGameGenieChatHistory(),
             userMessage = userMessage,
-            installedApps = _installedApps.value
+            installedApps = _installedApps.value,
+            imageBase64 = imagePathOrBase64
           )
         updateSuccessState(chat)
       } catch (e: Throwable) {
@@ -137,10 +142,18 @@ class GameGenieViewModel @Inject constructor(
     }
   }
 
-  private fun updateConversation(userMessage: String) {
+  private fun updateConversation(
+    userMessage: String,
+    imagePath: String? = null,
+  ) {
     val current = _conversation.value
     val updated = if (current.isNotEmpty()) {
-      val lastInteraction = current.last().copy(user = userMessage)
+      val lastInteraction = current.last().copy(
+        user = com.aptoide.android.aptoidegames.gamegenie.domain.UserMessage(
+          text = userMessage,
+          image = imagePath
+        )
+      )
       current.dropLast(1) + lastInteraction
     } else {
       current

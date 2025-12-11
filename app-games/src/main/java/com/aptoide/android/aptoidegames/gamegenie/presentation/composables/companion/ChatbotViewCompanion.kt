@@ -7,8 +7,11 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.aptoide.android.aptoidegames.BottomSheetContent
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.error_views.NoConnectionView
+import com.aptoide.android.aptoidegames.gamegenie.analytics.rememberGameGenieAnalytics
+import com.aptoide.android.aptoidegames.gamegenie.data.rememberGameGeniePreferences
 import com.aptoide.android.aptoidegames.gamegenie.domain.Suggestion
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameCompanion
 import com.aptoide.android.aptoidegames.gamegenie.presentation.GameGenieUIState
@@ -23,9 +26,10 @@ fun ChatbotViewCompanion(
   uiState: GameGenieUIState,
   navigateTo: (String) -> Unit,
   onError: () -> Unit,
-  onMessageSend: (String) -> Unit,
+  onMessageSend: (String, String?) -> Unit,
   setFirstLoadDone: () -> Unit,
   modifier: Modifier = Modifier,
+  showBottomSheet: ((BottomSheetContent?) -> Unit)? = null,
   suggestions: List<Suggestion> = emptyList(),
   onSuggestionClick: (String, Int) -> Unit = { _, _ -> },
 ) {
@@ -47,10 +51,11 @@ fun ChatbotViewCompanion(
         firstLoad = firstLoad,
         setFirstLoadDone = setFirstLoadDone,
         navigateTo = navigateTo,
-        onMessageSend = onMessageSend,
+        onMessageSend = { message, image -> onMessageSend(message, image) },
         selectedGame = selectedGame,
         navigateBack = navigateBack,
         isLoading = isLoading,
+        showBottomSheet = showBottomSheet,
         suggestions = suggestions,
         onSuggestionClick = onSuggestionClick
       )

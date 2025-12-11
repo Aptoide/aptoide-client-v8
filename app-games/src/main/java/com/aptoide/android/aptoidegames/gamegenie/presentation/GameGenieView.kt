@@ -21,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cm.aptoide.pt.extensions.ScreenData
+import com.aptoide.android.aptoidegames.BottomSheetContent
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
@@ -42,7 +43,9 @@ private enum class EntryChoice {
   Companion
 }
 
-fun gameGenieScreen() = ScreenData.withAnalytics(
+fun gameGenieScreen(
+  showBottomSheet: ((BottomSheetContent?) -> Unit)? = null,
+) = ScreenData.withAnalytics(
   route = genieRoute,
   screenAnalyticsName = "gamegenie",
   arguments = emptyList()
@@ -86,13 +89,13 @@ fun gameGenieScreen() = ScreenData.withAnalytics(
               selectedEntry = null
             },
             onError = viewModel::reload,
-            onMessageSend = { message ->
-              viewModel.sendMessage(message)
+            onMessageSend = { message, image ->
+              viewModel.sendMessage(message, image)
               analytics.sendGameGenieMessageSent()
             },
             setFirstLoadDone = viewModel::setFirstLoadDone,
             onSuggestionSend = { message, index ->
-              viewModel.sendMessage(message)
+              viewModel.sendMessage(message, null)
               analytics.sendGameGenieSuggestionClick(index)
             }
           )
@@ -112,10 +115,11 @@ fun gameGenieScreen() = ScreenData.withAnalytics(
               navigateTo = navigate,
               onError = viewModel::reload,
               setFirstLoadDone = viewModel::setFirstLoadDone,
-              onMessageSend = { message ->
-                viewModel.sendMessage(message)
+              onMessageSend = { message, image ->
+                viewModel.sendMessage(message, image)
                 analytics.sendGameGenieMessageSent()
               },
+              showBottomSheet = showBottomSheet,
               suggestions = companionSuggestions,
               onSuggestionClick = { message, index ->
                 viewModel.sendMessage(message)
@@ -143,7 +147,7 @@ fun ChatbotView(
   navigateTo: (String) -> Unit,
   navigateBack: (() -> Unit)? = null,
   onError: () -> Unit,
-  onMessageSend: (String) -> Unit,
+  onMessageSend: (String, String?) -> Unit,
   setFirstLoadDone: () -> Unit,
   onSuggestionSend: (String, Int) -> Unit,
 ) {
@@ -180,7 +184,7 @@ fun ChatScreen(
   firstLoad: Boolean,
   navigateTo: (String) -> Unit,
   navigateBack: (() -> Unit)?,
-  onMessageSend: (String) -> Unit,
+  onMessageSend: (String, String?) -> Unit,
   onSuggestionSend: (String, Int) -> Unit,
   setFirstLoadDone: () -> Unit,
   isLoading: Boolean = false,
@@ -227,7 +231,11 @@ fun ChatScreen(
     }
 
     TextInputBar(
-      onMessageSent = onMessageSend,
+      onMessageSent = { message, imagePath ->
+        onMessageSend(message, null)
+      },
+      screenshotPath = null,
+      onClearScreenshot = {},
       modifier = Modifier
         .fillMaxWidth()
         .padding(bottom = 8.dp)

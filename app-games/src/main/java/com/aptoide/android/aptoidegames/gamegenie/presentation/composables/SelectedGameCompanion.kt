@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,6 +30,7 @@ fun SelectedGameCompanion(
   game: GameCompanion,
   showImage: Boolean,
   navigateBack: () -> Unit,
+  onLaunchOverlay: (packageName: String) -> Unit
 ) {
   Row(
     modifier = Modifier
@@ -67,8 +69,33 @@ fun SelectedGameCompanion(
 
     Box(
       modifier = Modifier
-        .padding(end = 16.dp)
-        .size(32.dp)
-    )
+        .padding(vertical = 12.dp)
+        .size(40.dp)
+    ) {
+      if (!showImage) {
+        Image(
+          imageVector = getLaunchGameGenieArrow(Palette.White, Palette.Secondary),
+          contentDescription = stringResource(id = R.string.gamegenie_overlay_launch),
+          contentScale = ContentScale.Crop,
+          modifier = Modifier
+            .size(32.dp)
+            .align(Alignment.Center)
+            .clickable { onLaunchOverlay(game.packageName) }
+        )
+
+        Box(
+          modifier = Modifier
+            .matchParentSize()
+            .align(Alignment.Center)
+        ) {
+          AnimationComposable(
+            modifier = Modifier
+              .width(40.dp)
+              .height(40.dp),
+            resId = R.raw.game_genie_launch_overlay_small,
+          )
+        }
+      }
+    }
   }
 }

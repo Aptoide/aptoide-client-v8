@@ -10,9 +10,12 @@ import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieApiService
 import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieAppRepository
 import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieAppRepositoryImpl
+import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieLocalRepository
+import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieSharedPreferencesRepository
 import com.aptoide.android.aptoidegames.gamegenie.data.database.GameGenieDatabase
 import com.aptoide.android.aptoidegames.gamegenie.data.database.GameGenieHistoryDao
 import com.aptoide.android.aptoidegames.gamegenie.presentation.GameGenieManager
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,9 +30,23 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
+internal abstract class GameGenieBindsModule {
+
+  @Binds
+  @Singleton
+  abstract fun bindGameGenieLocalRepository(
+    impl: GameGenieSharedPreferencesRepository
+  ): GameGenieLocalRepository
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
 internal object GameGenieModule {
   @Provides
-  fun provideChatbotApiService(@GameGenieOkHttp okHttpClient: OkHttpClient): GameGenieApiService {
+  @Singleton
+  fun provideChatbotApiService(
+    @GameGenieOkHttp okHttpClient: OkHttpClient,
+  ): GameGenieApiService {
     return Retrofit.Builder()
       .client(okHttpClient)
       .baseUrl(BuildConfig.GAME_GENIE_API)
