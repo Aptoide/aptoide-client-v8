@@ -4,10 +4,12 @@ import cm.aptoide.pt.feature_apps.data.AppMapper
 import com.aptoide.android.aptoidegames.gamegenie.data.database.model.ChatInteractionEntity
 import com.aptoide.android.aptoidegames.gamegenie.data.database.model.GameCompanionEntity
 import com.aptoide.android.aptoidegames.gamegenie.data.database.model.GameGenieHistoryEntity
+import com.aptoide.android.aptoidegames.gamegenie.data.database.model.UserMessageEntity
 import com.aptoide.android.aptoidegames.gamegenie.domain.ChatInteraction
 import com.aptoide.android.aptoidegames.gamegenie.domain.ChatInteractionHistory
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameGenieChat
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameGenieChatHistory
+import com.aptoide.android.aptoidegames.gamegenie.domain.UserMessage
 import com.aptoide.android.aptoidegames.gamegenie.io_models.ChatInteractionResponse
 import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieResponse
 import com.google.gson.Gson
@@ -29,9 +31,14 @@ fun GameGenieChat.toCompanionEntity(packageName: String) = GameCompanionEntity(
 
 fun ChatInteraction.toEntity() = ChatInteractionEntity(
   gpt = this.gpt,
-  user = this.user,
+  user = this.user?.toEntity(),
   videoId = this.videoId,
   apps = Gson().toJson(this.apps.map { it.packageName })
+)
+
+fun UserMessage.toEntity() = UserMessageEntity(
+  text = this.text,
+  image = this.image
 )
 
 fun GameGenieHistoryEntity.toDomain() = GameGenieChatHistory(
@@ -48,9 +55,14 @@ fun GameCompanionEntity.toDomain() = GameGenieChatHistory(
 
 fun ChatInteractionEntity.toDomain() = ChatInteractionHistory(
   gpt = this.gpt,
-  user = this.user,
+  user = this.user?.toDomain(),
   videoId = this.videoId,
   apps = Gson().fromJson(this.apps, object : TypeToken<List<String>>() {}.type)
+)
+
+fun UserMessageEntity.toDomain() = UserMessage(
+  text = this.text,
+  image = this.image
 )
 
 fun ChatInteractionResponse.toChatInteraction(mapper: AppMapper) = ChatInteraction(

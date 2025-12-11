@@ -10,6 +10,7 @@ import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.IndicativeAnalyticsSender
 import com.aptoide.android.aptoidegames.analytics.MultipleAnalyticsSender
 import com.aptoide.android.aptoidegames.firebase.FirebaseInfoProvider
+import com.aptoide.android.aptoidegames.gamegenie.analytics.GameGenieAnalytics
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.messaging.FirebaseMessaging
@@ -63,4 +64,9 @@ class AnalyticsModule {
   @Provides
   fun providesGenericAnalytics(firebaseAnalyticsSender: FirebaseAnalyticsSender): GenericAnalytics =
     GenericAnalytics(firebaseAnalyticsSender)
+
+  @Singleton
+  @Provides
+  fun provideGameGenieAnalytics(genericAnalytics: GenericAnalytics): GameGenieAnalytics =
+    GameGenieAnalytics(genericAnalytics)
 }

@@ -60,4 +60,47 @@ class GameGenieAnalytics(
       "package_name" to packageName,
     )
   )
+
+  fun sendGameGenieTryLaunchOverlay(
+    packageName: String,
+  ) = genericAnalytics.logEvent(
+    name = "gamegenie_try_launch_overlay",
+    params = mapOf(
+      "package_name" to packageName,
+    )
+  )
+
+  fun sendGameGenieOverlayLaunched(
+    packageName: String,
+  ) = genericAnalytics.logEvent(
+    name = "gamegenie_overlay_launched",
+    params = mapOf(
+      "package_name" to packageName,
+    )
+  )
+
+  fun sendGameGenieOverlayDialogLetsDoIt() = genericAnalytics.logEvent(
+    name = "gamegenie_overlay_dialog_letsdoit",
+    params = emptyMap()
+  )
+
+  fun sendGameGenieOverlayClick() = genericAnalytics.logEvent(
+    name = "gamegenie_overlay_click",
+    params = emptyMap()
+  )
+
+  fun sendGameGenieOverlayRemove() = genericAnalytics.logEvent(
+    name = "gamegenie_overlay_remove",
+    params = emptyMap()
+  )
+
+  fun sendGameGenieOverlayAskAnything() = genericAnalytics.logEvent(
+    name = "gamegenie_overlay_ask_anything",
+    params = emptyMap()
+  )
+
+  fun sendGameGenieOverlayScreenshot() = genericAnalytics.logEvent(
+    name = "gamegenie_overlay_screenshot",
+    params = emptyMap()
+  )
 }

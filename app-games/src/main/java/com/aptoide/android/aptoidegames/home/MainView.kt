@@ -32,6 +32,7 @@ import cm.aptoide.pt.extensions.animatedComposable
 import cm.aptoide.pt.extensions.staticComposable
 import cm.aptoide.pt.feature_apkfy.presentation.rememberApkfyApp
 import com.aptoide.android.aptoidegames.AptoideGamesBottomSheet
+import com.aptoide.android.aptoidegames.BottomSheetContent
 import com.aptoide.android.aptoidegames.apkfy.presentation.ApkfyHandler
 import com.aptoide.android.aptoidegames.apkfy.presentation.RobloxApkfyMultiInstallScreen
 import com.aptoide.android.aptoidegames.apkfy.presentation.apkfyScreen
@@ -153,7 +154,8 @@ fun MainView(navController: NavHostController) {
               coroutineScope.launch {
                 snackBarHostState.showSnackbar(message = it)
               }
-            }
+            },
+            showBottomSheet = showBottomSheet
           )
         }
         ApkfyHandler(navigate = navController::navigateTo)
@@ -252,6 +254,7 @@ fun NavHostController.navigateTo(route: String) {
 private fun NavigationGraph(
   navController: NavHostController,
   showSnack: (String) -> Unit,
+  showBottomSheet: (BottomSheetContent?) -> Unit,
 ) {
   NavHost(
     navController = navController,
@@ -344,7 +347,7 @@ private fun NavigationGraph(
     staticComposable(
       navigate = navController::navigateTo,
       goBack = navController::navigateUp,
-      screenData = gameGenieScreen()
+      screenData = gameGenieScreen(showBottomSheet = showBottomSheet)
     )
 
     staticComposable(
