@@ -17,4 +17,14 @@ class Converters {
     val type = object : TypeToken<List<ChatInteractionEntity>>() {}.type
     return gson.fromJson(value, type)
   }
+
+  @TypeConverter
+  fun fromUserMessageEntity(value: UserMessageEntity?): String? {
+    return if (value == null) null else gson.toJson(value)
+  }
+
+  @TypeConverter
+  fun toUserMessageEntity(value: String?): UserMessageEntity? {
+    return if (value == null) null else gson.fromJson(value, UserMessageEntity::class.java)
+  }
 }

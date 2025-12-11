@@ -5,6 +5,9 @@
   <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
   <uses-permission android:name="android.permission.INTERNET" />
   <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
+  <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
 
   <application
       android:name=".AptoideApplication"
@@ -91,9 +94,9 @@
     </service>
 
     <service
-        android:name=".gamegenie.presentation.ChatOverlayService"
+        android:name=".gamegenie.presentation.GameGenieOverlayService"
         android:exported="false"
-        android:foregroundServiceType="specialUse"
+        android:foregroundServiceType="mediaProjection"
         android:permission="android.permission.FOREGROUND_SERVICE" />
 
     <meta-data

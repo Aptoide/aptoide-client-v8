@@ -3,6 +3,8 @@ package com.aptoide.android.aptoidegames.gamegenie.presentation
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.util.Base64.NO_WRAP
+import android.util.Base64.encodeToString
 import cm.aptoide.pt.feature_apps.data.AppMapper
 import cm.aptoide.pt.feature_categories.data.CategoriesRepository
 import cm.aptoide.pt.install_manager.App
@@ -19,6 +21,7 @@ import com.aptoide.android.aptoidegames.gamegenie.domain.GameContext
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameGenieChat
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameGenieChatHistory
 import com.aptoide.android.aptoidegames.gamegenie.domain.Token
+import com.aptoide.android.aptoidegames.gamegenie.domain.UserMessage
 import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieCompanionRequest
 import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieMetadata
 import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieRequest
@@ -34,6 +37,34 @@ import java.io.IOException
 import javax.inject.Inject
 
 private const val MAX_CHATS = 15
+
+private fun isBase64String(str: String): Boolean {
+  if (str.contains("/") && str.length < 500) {
+    return false
+  }
+
+  if (str.length > 500 && str.matches(Regex("^[A-Za-z0-9+/]*={0,2}$"))) {
+    return true
+  }
+
+  return false
+}
+
+private fun encodeImageFileToBase64(filePath: String?): String? {
+  return filePath?.let { path ->
+    try {
+      val file = java.io.File(path)
+      if (file.exists()) {
+        val bytes = file.readBytes()
+        encodeToString(bytes, NO_WRAP)
+      } else {
+        null
+      }
+    } catch (e: Exception) {
+      null
+    }
+  }
+}
 
 class GameGenieUseCase @Inject constructor(
   private val gameGenieManager: GameGenieManager,
@@ -126,9 +157,10 @@ class GameGenieUseCase @Inject constructor(
     chat: GameGenieChat,
     installedApps: List<GameContext>,
   ): GameGenieChat {
-    val lastMessage = chat.conversation.lastOrNull()?.user ?: ""
-    return if (lastMessage.isNotEmpty())
-      sendMessage(chat.toGameGenieChatHistory(), lastMessage, installedApps)
+    val lastMessage = chat.conversation.lastOrNull()?.user
+    val lastMessageText = lastMessage?.text ?: ""
+    return if (lastMessageText.isNotEmpty())
+      sendMessage(chat.toGameGenieChatHistory(), lastMessageText, installedApps)
     else
       chat
   }
@@ -137,17 +169,49 @@ class GameGenieUseCase @Inject constructor(
     chat: GameGenieChatHistory,
     userMessage: String,
     installedApps: List<GameContext>,
+    imageBase64: String? = null,
   ): GameGenieChat {
+    val imageForApi = encodeImageFileToBase64(imageBase64)
+
     val updatedConversation = chat.conversation.toMutableList().apply {
       if (isNotEmpty()) {
-        this[lastIndex] = last().copy(user = userMessage)
+        val userMessageObj = UserMessage(text = userMessage, image = imageBase64)
+        this[lastIndex] = last().copy(user = userMessageObj)
       }
     }
-    return postMessage(chat.id, chat.title, updatedConversation, installedApps).fold(
+
+    val conversationForApi = updatedConversation.map { interaction ->
+      if (interaction.user?.image != null && interaction.user.image == imageBase64) {
+        interaction.copy(user = interaction.user.copy(image = imageForApi))
+      } else {
+        interaction
+      }
+    }
+
+    return postMessage(chat.id, chat.title, conversationForApi, installedApps).fold(
       onSuccess = { response ->
         val convertedChat = response.toGameGenieChat(mapper)
-        gameGenieManager.saveOrUpdateChat(convertedChat)
-        convertedChat
+        val chatWithFilePaths = convertedChat.copy(
+          conversation = convertedChat.conversation.mapIndexed { index, interaction ->
+            val userImage = interaction.user?.image
+            val localInteraction = updatedConversation.getOrNull(index)
+            val localImagePath = localInteraction?.user?.image
+
+            if (localImagePath != null && interaction.user != null) {
+              interaction.copy(user = interaction.user.copy(image = localImagePath))
+            } else if (userImage != null && isBase64String(userImage)) {
+              if (index == convertedChat.conversation.lastIndex && imageBase64 != null) {
+                interaction.copy(user = interaction.user.copy(image = imageBase64))
+              } else {
+                interaction
+              }
+            } else {
+              interaction
+            }
+          }
+        )
+        gameGenieManager.saveOrUpdateChat(chatWithFilePaths)
+        chatWithFilePaths
       },
       onFailure = { throw it }
     )
@@ -157,17 +221,51 @@ class GameGenieUseCase @Inject constructor(
     chat: GameGenieChatHistory,
     userMessage: String,
     selectedGame: String,
+    imageBase64: String? = null,
   ): GameGenieChat {
+    val imageForApi = encodeImageFileToBase64(imageBase64)
+
     val updatedConversation = chat.conversation.toMutableList().apply {
       if (isNotEmpty()) {
-        this[lastIndex] = last().copy(user = userMessage)
+        val userMessageObj = UserMessage(text = userMessage, image = imageBase64)
+        this[lastIndex] = last().copy(user = userMessageObj)
       }
     }
-    return postCompanionMessage(chat.id, chat.title, updatedConversation, selectedGame).fold(
+
+    val conversationForApi = updatedConversation.map { interaction ->
+      if (interaction.user?.image != null && interaction.user.image == imageBase64) {
+        interaction.copy(user = interaction.user.copy(image = imageForApi))
+      } else {
+        interaction
+      }
+    }
+
+    return postCompanionMessage(
+      chat.id, chat.title, conversationForApi, selectedGame
+    ).fold(
       onSuccess = { response ->
         val convertedChat = response.toGameGenieChat(mapper)
-        gameGenieManager.saveOrUpdateChatCompanion(selectedGame, convertedChat)
-        convertedChat
+        val chatWithFilePaths = convertedChat.copy(
+          conversation = convertedChat.conversation.mapIndexed { index, interaction ->
+            val userImage = interaction.user?.image
+            val localInteraction = updatedConversation.getOrNull(index)
+            val localImagePath = localInteraction?.user?.image
+
+            if (localImagePath != null && interaction.user != null) {
+              interaction.copy(user = interaction.user.copy(image = localImagePath))
+            } else if (userImage != null && isBase64String(userImage)) {
+              if (index == convertedChat.conversation.lastIndex && imageBase64 != null) {
+                interaction.copy(user = interaction.user.copy(image = imageBase64))
+              } else {
+                interaction
+              }
+            } else {
+              interaction
+            }
+          }
+        )
+        gameGenieManager.saveOrUpdateChatCompanion(selectedGame, chatWithFilePaths)
+        chatWithFilePaths
       },
       onFailure = { throw it }
     )
@@ -247,7 +345,7 @@ class GameGenieUseCase @Inject constructor(
           id,
           title,
           conversation,
-          GameGenieMetadata(installedApps)
+          GameGenieMetadata(installedApps),
         )
       )
     }
@@ -267,7 +365,7 @@ class GameGenieUseCase @Inject constructor(
           id,
           title,
           conversation,
-          selectedGame
+          selectedGame,
         )
       )
     }
@@ -294,7 +392,7 @@ class GameGenieUseCase @Inject constructor(
     ) else ConversationInfo(
       id = id,
       title = title,
-      firstMessage = userMessage
+      firstMessage = userMessage.text
     )
   }
 }

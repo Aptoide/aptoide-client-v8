@@ -17,9 +17,9 @@ import com.aptoide.android.aptoidegames.R
 
 @Composable
 fun AnimationComposable(
+  resId: Int,
   modifier: Modifier = Modifier,
   isSelected: Boolean = false,
-  resId: Int,
   selectedResId: Int = R.raw.game_genie_bottom_bar_icon,
 ) {
   val composition by rememberLottieComposition(

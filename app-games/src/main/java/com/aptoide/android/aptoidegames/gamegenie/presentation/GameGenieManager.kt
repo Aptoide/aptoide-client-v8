@@ -97,7 +97,7 @@ class GameGenieManager @Inject constructor(
     if (oldChat != null) {
       val lastMessage = oldChat.conversation.last()
         .copy(
-          user = chat.conversation[chat.conversation.size - 2].user
+          user = chat.conversation[chat.conversation.size - 2].user?.toEntity()
         )
       val fixedOldChat = oldChat.conversation.dropLast(1) + lastMessage
       gameGenieHistoryDao
@@ -121,7 +121,7 @@ class GameGenieManager @Inject constructor(
     if (oldChat != null) {
       val lastMessage = oldChat.conversation.last()
         .copy(
-          user = chat.conversation[chat.conversation.size - 2].user
+          user = chat.conversation[chat.conversation.size - 2].user?.toEntity()
         )
       val fixedOldChat = oldChat.conversation.dropLast(1) + lastMessage
       gameCompanionDao
