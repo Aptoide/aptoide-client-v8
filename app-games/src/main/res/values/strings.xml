@@ -197,7 +197,7 @@
   <string name="purchase_error_expired_card_title">It seems your card is expired.</string>
   <string name="iap_already_processing_title">It seems this purchase is already being processed.</string>
   <string name="iap_already_processing_body">This purchase may take a while, so, please hold on until completed or contact our Support Team.</string>
-  
+
   <!-- Dates -->
   <string name="date_published_on">Published on %s</string>
   <string name="published_on_monday">Published on Monday</string>

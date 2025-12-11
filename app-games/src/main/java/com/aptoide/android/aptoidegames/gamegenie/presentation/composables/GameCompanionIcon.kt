@@ -101,7 +101,7 @@ fun GameCompanionIcon(
             modifier = Modifier
               .size(animationSize.dp)
               .align(Alignment.Center),
-            resId = R.raw.game_genie_transparent_shine
+            resId = R.raw.game_genie_updated_transparent_shine
           )
         }
       }

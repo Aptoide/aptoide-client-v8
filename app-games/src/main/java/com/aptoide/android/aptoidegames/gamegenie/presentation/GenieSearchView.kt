@@ -28,7 +28,7 @@ fun gameGenieSearchScreen() = ScreenData.withAnalytics(
         uiState = uiState,
         navigateTo = navigate,
         onError = viewModel::reload,
-        onMessageSend = { message ->
+        onMessageSend = { message,_ ->
           viewModel.sendMessage(message)
           analytics.sendGameGenieMessageSent()
         },
