@@ -22,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.gamegenie.domain.ChatInteraction
+import com.aptoide.android.aptoidegames.gamegenie.domain.UserMessage
 import com.aptoide.android.aptoidegames.gamegenie.domain.Suggestion
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -38,15 +39,17 @@ fun MessageList(
   onSuggestionClick: (String, Int) -> Unit = { _, _ -> },
   isCompanion: Boolean = false,
   gameName: String = "",
+  onLaunchOverlay: () -> Unit = {}
 ) {
   val listState = rememberLazyListState()
   val playerCache = remember { mutableMapOf<String, YouTubePlayerView>() }
   val messageList = messages.asReversed()
+  val hasUserMessages = remember(messageList) { messageList.any { it.user != null } }
 
   val lastUserIndex = remember(messageList) { messageList.indexOfFirst { it.user != null } }
   val lastUserHeightPx = remember { mutableIntStateOf(0) }
 
-  LaunchedEffect(lastUserIndex, lastUserHeightPx.intValue, messageList) {
+  LaunchedEffect(lastUserIndex, messageList.size) {
     if (lastUserIndex != -1 && !firstLoad) {
       val viewportHeight =
         listState.layoutInfo.viewportEndOffset - listState.layoutInfo.viewportStartOffset
@@ -67,12 +70,23 @@ fun MessageList(
       .padding(bottom = 8.dp),
     contentPadding = PaddingValues(vertical = 8.dp)
   ) {
+    item {
+      if (!hasUserMessages && isCompanion) {
+        PlaySmarterBox(
+          modifier = Modifier.padding(top = 16.dp)
+        ) {
+          onLaunchOverlay()
+        }
+      }
+    }
+
     itemsIndexed(
       items = messageList,
       key = { idx, _ -> "${messageList.size - idx}" }) { idx, message ->
       message.user?.let { userMessage ->
         MessageBubble(
-          message = userMessage,
+          message = userMessage.text,
+          image = userMessage.image,
           isUserMessage = true,
           videoId = null,
           apps = emptyList(), // No apps for user messages
@@ -127,7 +141,6 @@ fun MessageList(
     item {
       PoweredByAi()
     }
-
     item {
       Box(
         modifier = Modifier
