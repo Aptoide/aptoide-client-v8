@@ -5,12 +5,14 @@ import com.aptoide.android.aptoidegames.gamegenie.data.database.GameCompanionDao
 import com.aptoide.android.aptoidegames.gamegenie.data.database.GameGenieHistoryDao
 import com.aptoide.android.aptoidegames.gamegenie.data.database.model.GameCompanionEntity
 import com.aptoide.android.aptoidegames.gamegenie.data.database.model.GameGenieHistoryEntity
+import com.aptoide.android.aptoidegames.gamegenie.domain.CompanionSuggestions
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameGenieChat
 import com.aptoide.android.aptoidegames.gamegenie.domain.Token
 import com.aptoide.android.aptoidegames.gamegenie.domain.toToken
 import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieCompanionRequest
 import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieRequest
 import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieResponse
+import com.aptoide.android.aptoidegames.gamegenie.io_models.toDomain
 import kotlinx.coroutines.flow.Flow
 import retrofit2.HttpException
 import timber.log.Timber
@@ -141,5 +143,27 @@ class GameGenieManager @Inject constructor(
 
   suspend fun deleteChat(id: String) {
     gameGenieHistoryDao.deleteChat(id)
+  }
+
+  suspend fun getCompanionSuggestions(
+    token: Token,
+    selectedGame: String,
+    lang: String,
+  ): CompanionSuggestions {
+    return try {
+      gameGenieApi.getCompanionSuggestions("Bearer ${token.token}", selectedGame, lang).toDomain()
+    } catch (e: HttpException) {
+      if (e.code() == 401) {
+        Timber.i("Token expired, requesting a new token")
+        val newToken = fetchNewToken()
+        gameGenieApi.getCompanionSuggestions(
+          "Bearer ${newToken.token}",
+          selectedGame,
+          lang
+        ).toDomain()
+      } else {
+        throw e
+      }
+    }
   }
 }

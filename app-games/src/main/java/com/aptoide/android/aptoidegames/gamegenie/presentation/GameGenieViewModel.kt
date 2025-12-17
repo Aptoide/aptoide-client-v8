@@ -1,14 +1,17 @@
 package com.aptoide.android.aptoidegames.gamegenie.presentation
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aptoide.android.aptoidegames.gamegenie.domain.ChatInteraction
+import com.aptoide.android.aptoidegames.gamegenie.domain.Suggestion
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameCompanion
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameContext
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameGenieChat
 import com.aptoide.android.aptoidegames.gamegenie.domain.Token
 import com.aptoide.android.aptoidegames.gamegenie.presentation.GameGenieUIStateType.NO_CONNECTION
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -25,6 +28,7 @@ import javax.inject.Inject
 @HiltViewModel
 class GameGenieViewModel @Inject constructor(
   private val gameGenieUseCase: GameGenieUseCase,
+  @ApplicationContext private val context: Context,
 ) : ViewModel() {
   private val viewModelState = MutableStateFlow(GameGenieViewModelState())
   private val _installedApps = MutableStateFlow<List<GameContext>>(emptyList())
@@ -41,6 +45,9 @@ class GameGenieViewModel @Inject constructor(
 
   private val _selectedGame = MutableStateFlow<GameCompanion?>(null)
   val selectedGame = _selectedGame.asStateFlow()
+
+  private val _suggestions = MutableStateFlow<List<Suggestion>>(emptyList())
+  val companionSuggestions = _suggestions.asStateFlow()
 
   val uiState = viewModelState.map { it.toUiState() }
     .stateIn(
@@ -62,6 +69,7 @@ class GameGenieViewModel @Inject constructor(
 
   fun resetSelectedGame() {
     _selectedGame.value = null
+    _suggestions.value = emptyList()
     emptyChat()
   }
 
@@ -178,7 +186,12 @@ class GameGenieViewModel @Inject constructor(
   fun loadCompanionChat(packageName: String) {
     viewModelScope.launch {
       _firstLoad.value = true
+      _suggestions.value = emptyList()
       viewModelState.update { it.copy(type = GameGenieUIStateType.LOADING_CHAT) }
+
+      _selectedGame.value?.name?.let { gameName ->
+        loadCompanionSuggestions(gameName)
+      }
 
       gameGenieUseCase.loadCompanionChat(packageName)
         .collectLatest { newChat ->
@@ -196,6 +209,23 @@ class GameGenieViewModel @Inject constructor(
             emptyChat()
           }
         }
+    }
+  }
+
+  private fun loadCompanionSuggestions(gameName: String) {
+    viewModelScope.launch {
+      runCatching {
+        val locale = context.resources.configuration.locales[0]
+        val lang = locale.language
+        val suggestions = gameGenieUseCase.getCompanionSuggestions(
+          selectedGame = gameName,
+          lang = lang
+        )
+        _suggestions.value = suggestions.suggestions
+      }.onFailure { e ->
+        Timber.w(e, "Failed to load companion suggestions")
+        _suggestions.value = emptyList()
+      }
     }
   }
 

@@ -12,6 +12,7 @@ import com.aptoide.android.aptoidegames.gamegenie.data.database.model.GameCompan
 import com.aptoide.android.aptoidegames.gamegenie.data.database.model.GameGenieHistoryEntity
 import com.aptoide.android.aptoidegames.gamegenie.domain.ChatInteraction
 import com.aptoide.android.aptoidegames.gamegenie.domain.ChatInteractionHistory
+import com.aptoide.android.aptoidegames.gamegenie.domain.CompanionSuggestions
 import com.aptoide.android.aptoidegames.gamegenie.domain.ConversationInfo
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameCompanion
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameContext
@@ -274,6 +275,14 @@ class GameGenieUseCase @Inject constructor(
 
   suspend fun deleteChat(id: String) {
     gameGenieManager.deleteChat(id)
+  }
+
+  suspend fun getCompanionSuggestions(
+    selectedGame: String,
+    lang: String,
+  ): CompanionSuggestions {
+    val token = getToken()
+    return gameGenieManager.getCompanionSuggestions(token, selectedGame, lang)
   }
 
   private fun GameGenieHistoryEntity.toConversationInfo(): ConversationInfo {
