@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.error_views.NoConnectionView
+import com.aptoide.android.aptoidegames.gamegenie.domain.Suggestion
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameCompanion
 import com.aptoide.android.aptoidegames.gamegenie.presentation.GameGenieUIState
 import com.aptoide.android.aptoidegames.gamegenie.presentation.GameGenieUIStateType
@@ -25,6 +26,8 @@ fun ChatbotViewCompanion(
   onMessageSend: (String) -> Unit,
   setFirstLoadDone: () -> Unit,
   modifier: Modifier = Modifier,
+  suggestions: List<Suggestion> = emptyList(),
+  onSuggestionClick: (String, Int) -> Unit = { _, _ -> },
 ) {
   Column(
     modifier = modifier
@@ -47,7 +50,9 @@ fun ChatbotViewCompanion(
         onMessageSend = onMessageSend,
         selectedGame = selectedGame,
         navigateBack = navigateBack,
-        isLoading = isLoading
+        isLoading = isLoading,
+        suggestions = suggestions,
+        onSuggestionClick = onSuggestionClick
       )
     }
   }

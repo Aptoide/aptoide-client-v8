@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -53,7 +54,7 @@ fun GameCompanionIcon(
   clickableEnabled: Boolean = true,
   onClick: (GameCompanion) -> Unit = {},
 ) {
-  val density = androidx.compose.ui.platform.LocalDensity.current
+  val density = LocalDensity.current
   val imagePxSize = with(density) { imageSize.dp.roundToPx() }
 
   Column(

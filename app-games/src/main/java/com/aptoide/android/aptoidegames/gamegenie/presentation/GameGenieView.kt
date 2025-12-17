@@ -27,6 +27,7 @@ import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.error_views.NoConnectionView
 import com.aptoide.android.aptoidegames.gamegenie.analytics.rememberGameGenieAnalytics
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameCompanion
+import com.aptoide.android.aptoidegames.gamegenie.domain.Suggestion
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.ChatBackButton
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.ChatParticipantName
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.MessageList
@@ -99,6 +100,7 @@ fun gameGenieScreen() = ScreenData.withAnalytics(
 
         EntryChoice.Companion -> {
           viewModel.selectedGame.collectAsState().value?.let {
+            val companionSuggestions by viewModel.companionSuggestions.collectAsState()
             ChatbotViewCompanion(
               selectedGame = it,
               firstLoad = firstLoad,
@@ -113,6 +115,11 @@ fun gameGenieScreen() = ScreenData.withAnalytics(
               onMessageSend = { message ->
                 viewModel.sendMessage(message)
                 analytics.sendGameGenieMessageSent()
+              },
+              suggestions = companionSuggestions,
+              onSuggestionClick = { message, index ->
+                viewModel.sendMessage(message)
+                analytics.sendGameGenieSuggestionClick(index)
               }
             )
           }
@@ -183,9 +190,9 @@ fun ChatScreen(
     if (selectedGame != null)
       emptyList()
     else listOf(
-      stringResource(R.string.genai_example_1_body),
-      stringResource(R.string.genai_example_2_body),
-      stringResource(R.string.genai_example_3_body)
+      Suggestion(stringResource(R.string.genai_example_1_body), null),
+      Suggestion(stringResource(R.string.genai_example_2_body), null),
+      Suggestion(stringResource(R.string.genai_example_3_body), null)
     )
 
   Column(

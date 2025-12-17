@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.gamegenie.domain.Suggestion
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameCompanion
 import com.aptoide.android.aptoidegames.gamegenie.presentation.GameGenieUIState
 import com.aptoide.android.aptoidegames.gamegenie.presentation.TypingAnimation
@@ -30,6 +31,8 @@ fun ChatScreenCompanion(
   setFirstLoadDone: () -> Unit,
   onMessageSend: (String) -> Unit,
   isLoading: Boolean = false,
+  suggestions: List<Suggestion> = emptyList(),
+  onSuggestionClick: (String, Int) -> Unit = { _, _ -> },
 ) {
   Column(
     modifier = Modifier
@@ -49,7 +52,9 @@ fun ChatScreenCompanion(
       setFirstLoadDone = setFirstLoadDone,
       isCompanion = true,
       modifier = Modifier.weight(1f),
-      gameName = selectedGame.name
+      gameName = selectedGame.name,
+      suggestions = suggestions,
+      onSuggestionClick = onSuggestionClick
     )
 
     if (isLoading) {

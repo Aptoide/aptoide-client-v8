@@ -22,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.gamegenie.domain.ChatInteraction
+import com.aptoide.android.aptoidegames.gamegenie.domain.Suggestion
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
@@ -32,7 +33,7 @@ fun MessageList(
   firstLoad: Boolean,
   navigateTo: (String) -> Unit,
   modifier: Modifier = Modifier,
-  suggestions: List<String> = emptyList(),
+  suggestions: List<Suggestion> = emptyList(),
   setFirstLoadDone: () -> Unit,
   onSuggestionClick: (String, Int) -> Unit = { _, _ -> },
   isCompanion: Boolean = false,
@@ -88,12 +89,17 @@ fun MessageList(
       if (idx == messageList.lastIndex) {
         if (suggestions.isNotEmpty()) {
           LazyRow(
-            contentPadding = PaddingValues(vertical = 4.dp),
+            contentPadding = PaddingValues(top = 16.dp, bottom = 4.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
           ) {
             itemsIndexed(suggestions) { reversedIndex, suggestion ->
               val actualIndex = suggestions.size - reversedIndex
-              SuggestionBox(suggestion, onSuggestionClick, actualIndex)
+              SuggestionBox(
+                suggestion = suggestion.suggestion,
+                onClick = onSuggestionClick,
+                index = actualIndex,
+                emoji = suggestion.emoji
+              )
             }
           }
         }
