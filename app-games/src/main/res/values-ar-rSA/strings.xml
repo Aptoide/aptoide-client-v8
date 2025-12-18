@@ -431,4 +431,24 @@
   <string name="play_and_earn_install_button">تثبيت</string>
   <string name="play_and_earn_notification_recording_title">تتبع وقت اللعب للحصول على المكافآت</string>
   <string name="play_and_earn_notification_recording_body">يتم احتساب وقت اللعب في مهامك.</string>
+  <!-- Play and Earn - Permissions-->
+  <string name="play_and_earn_permissions_success_snackbar">نجاح! تبدأ رحلة مكافآتك الآن 🎉</string>
+  <string name="play_and_earn_permissions_google_drama_title">جوجل تحب القليل من الدراما 🙄</string>
+  <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[يصعب تحقيق أرباح خارج متجر Google. امنحنا هذه الأذونات حتى نتمكن من <1>التحقق من اللعب</1> <2>وإرسال المكافآت إلى محفظتك.</2>]]></string>
+  <string name="play_and_earn_permissions_restricted_settings_title">السماح بالإعدادات المقيدة</string>
+  <string name="play_and_earn_permissions_restricted_settings_body">يخفي Google الزر. في الشاشة التالية:</string>
+  <string name="play_and_earn_permissions_settings_path">الإعدادات → التطبيقات → Aptoide Games → ⋮ → السماح بالإعدادات المقيدة</string>
+  <string name="play_and_earn_permissions_screenshot_description">لقطة شاشة تظهر موقع الإعدادات المقيدة</string>
+  <string name="play_and_earn_permissions_allowed">مسموح</string>
+  <string name="play_and_earn_permissions_final_permissions_title">الأذونات النهائية</string>
+  <string name="play_and_earn_permissions_display_over_apps">السماح بـ \"العرض فوق التطبيقات الأخرى\"</string>
+  <string name="play_and_earn_permissions_display_description">شاهد مكافآتك تزداد في الوقت الفعلي دون توقف اللعبة.</string>
+  <string name="play_and_earn_permissions_app_usage_data">السماح بـ \"بيانات استخدام التطبيق\"</string>
+  <string name="play_and_earn_permissions_usage_description">هذا يثبت أنك تلعب حتى نتمكن من فتح رصيدك.</string>
+  <string name="play_and_earn_permissions_go_button">اذهب!</string>
+  <string name="play_and_earn_permissions_trusted_app">تطبيق موثوق</string>
+  <string name="play_and_earn_permissions_denied_dialog_title">المكافآت متوقفة مؤقتًا ⏸️</string>
+  <string name="play_and_earn_permissions_denied_dialog_body">لا يمكننا حساب وقت اللعب الخاص بك بعد. قم بتمكين هذا الإعداد لبدء الكسب.</string>
+  <string name="play_and_earn_permissions_enable_now_button">تمكين الآن</string>
+  <string name="play_and_earn_permissions_not_now_button">ليس الآن</string>
 </resources>

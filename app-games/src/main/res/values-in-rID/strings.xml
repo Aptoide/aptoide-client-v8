@@ -376,4 +376,24 @@
   <string name="play_and_earn_install_button">Pasang</string>
   <string name="play_and_earn_notification_recording_title">Melacak waktu bermain untuk mendapatkan hadiah</string>
   <string name="play_and_earn_notification_recording_body">Waktu bermain Anda dihitung sebagai bagian dari misi Anda.</string>
+  <!-- Play and Earn - Permissions-->
+  <string name="play_and_earn_permissions_success_snackbar">Selamat! Perjalanan Anda untuk mendapatkan hadiah dimulai sekarang 🎉</string>
+  <string name="play_and_earn_permissions_google_drama_title">Google suka sedikit drama 🙄</string>
+  <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Mendapatkan penghasilan di luar toko Google cukup rumit. Berikan izin ini agar kami dapat <1>memverifikasi permainan</1> dan <2>mengirimkan hadiah ke dompet Anda.</2>]]></string>
+  <string name="play_and_earn_permissions_restricted_settings_title">Izinkan Pengaturan Terbatas</string>
+  <string name="play_and_earn_permissions_restricted_settings_body">Google menyembunyikan tombol. Pada layar berikutnya:</string>
+  <string name="play_and_earn_permissions_settings_path">Pengaturan → Aplikasi → Aptoide Games → ⋮ → Izinkan pengaturan terbatas</string>
+  <string name="play_and_earn_permissions_screenshot_description">Screenshot yang menunjukkan lokasi pengaturan yang dibatasi</string>
+  <string name="play_and_earn_permissions_allowed">Diizinkan</string>
+  <string name="play_and_earn_permissions_final_permissions_title">Izin Akhir</string>
+  <string name="play_and_earn_permissions_display_over_apps">Izinkan \'Tampilkan di atas aplikasi lain\'</string>
+  <string name="play_and_earn_permissions_display_description">Lihat hadiah Anda bertambah secara real-time tanpa perlu menghentikan permainan Anda.</string>
+  <string name="play_and_earn_permissions_app_usage_data">Izinkan \'Data penggunaan aplikasi\'</string>
+  <string name="play_and_earn_permissions_usage_description">Ini membuktikan bahwa Anda sedang bermain, sehingga kami dapat membuka pembayaran Anda.</string>
+  <string name="play_and_earn_permissions_go_button">Ayo!</string>
+  <string name="play_and_earn_permissions_trusted_app">Aplikasi Terpercaya</string>
+  <string name="play_and_earn_permissions_denied_dialog_title">Hadiah ditunda ⏸️</string>
+  <string name="play_and_earn_permissions_denied_dialog_body">Kami belum dapat menghitung waktu bermain Anda. Aktifkan pengaturan ini untuk mulai mendapatkan poin.</string>
+  <string name="play_and_earn_permissions_enable_now_button">Aktifkan Sekarang</string>
+  <string name="play_and_earn_permissions_not_now_button">Tidak Sekarang</string>
 </resources>
