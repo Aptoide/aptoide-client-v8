@@ -398,4 +398,24 @@
   <string name="play_and_earn_install_button">Instalați</string>
   <string name="play_and_earn_notification_recording_title">Urmărirea timpului de joc pentru recompense</string>
   <string name="play_and_earn_notification_recording_body">Timpul petrecut în joc este luat în calcul pentru misiunile tale.</string>
+  <!-- Play and Earn - Permissions-->
+  <string name="play_and_earn_permissions_success_snackbar">Success! Your rewards journey begins now 🎉</string>
+  <string name="play_and_earn_permissions_google_drama_title">Google loves a bit of drama 🙄</string>
+  <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Earning outside Google’s store is tricky. Grant these permissions so we can <1>verify gameplay</1> and <2>send rewards to your wallet.</2>]]></string>
+  <string name="play_and_earn_permissions_restricted_settings_title">Allow Restricted Settings</string>
+  <string name="play_and_earn_permissions_restricted_settings_body">Google hides the button. On the next screen:</string>
+  <string name="play_and_earn_permissions_settings_path">Settings → Apps → Aptoide Games → ⋮ → Allow restricted settings</string>
+  <string name="play_and_earn_permissions_screenshot_description">Screenshot showing restricted settings location</string>
+  <string name="play_and_earn_permissions_allowed">Allowed</string>
+  <string name="play_and_earn_permissions_final_permissions_title">Final Permissions</string>
+  <string name="play_and_earn_permissions_display_over_apps">Allow \'Display over other apps\'</string>
+  <string name="play_and_earn_permissions_display_description">See your rewards grow in real-time without pausing your game.</string>
+  <string name="play_and_earn_permissions_app_usage_data">Allow \'App usage data\'</string>
+  <string name="play_and_earn_permissions_usage_description">This proves you\'re playing so we can unlock your payout.</string>
+  <string name="play_and_earn_permissions_go_button">Go!</string>
+  <string name="play_and_earn_permissions_trusted_app">Trusted App</string>
+  <string name="play_and_earn_permissions_denied_dialog_title">Rewards are paused ⏸️</string>
+  <string name="play_and_earn_permissions_denied_dialog_body">We can’t count your playtime yet. Enable this setting to start earning.</string>
+  <string name="play_and_earn_permissions_enable_now_button">Enable Now</string>
+  <string name="play_and_earn_permissions_not_now_button">Not Now</string>
 </resources>
