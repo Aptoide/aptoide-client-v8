@@ -376,4 +376,24 @@
   <string name="play_and_earn_install_button">설치</string>
   <string name="play_and_earn_notification_recording_title">보상을 위한 플레이 시간 추적</string>
   <string name="play_and_earn_notification_recording_body">당신의 게임 플레이 시간이 미션 진행 시간으로 계산되고 있습니다.</string>
+  <!-- Play and Earn - Permissions-->
+  <string name="play_and_earn_permissions_success_snackbar">성공! 이제 보상의 여정이 시작됩니다 🎉</string>
+  <string name="play_and_earn_permissions_google_drama_title">구글은 약간의 드라마를 좋아하네 🙄</string>
+  <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Google 스토어 외부에서 수익을 창출하는 것은 까다롭습니다. <1>게임 플레이를 확인하고</1> <2>보상을 지갑으로 전송할</2> 수 있도록 해당 권한을 허용해 주세요 <2>.</2>]]></string>
+  <string name="play_and_earn_permissions_restricted_settings_title">제한된 설정 허용</string>
+  <string name="play_and_earn_permissions_restricted_settings_body">Google은 버튼을 숨깁니다. 다음 화면에서:</string>
+  <string name="play_and_earn_permissions_settings_path">설정 → 앱 → Aptoide 게임 → ⋮ → 제한된 설정 허용</string>
+  <string name="play_and_earn_permissions_screenshot_description">제한된 설정 위치가 표시된 스크린샷</string>
+  <string name="play_and_earn_permissions_allowed">허용됨</string>
+  <string name="play_and_earn_permissions_final_permissions_title">최종 권한</string>
+  <string name="play_and_earn_permissions_display_over_apps">\'다른 앱 위에 표시\' 허용</string>
+  <string name="play_and_earn_permissions_display_description">게임을 멈추지 않고도 실시간으로 보상이 늘어나는 모습을 확인하세요.</string>
+  <string name="play_and_earn_permissions_app_usage_data">\'앱 사용 데이터\' 허용</string>
+  <string name="play_and_earn_permissions_usage_description">이것은 당신이 게임을 하고 있음을 증명하므로, 당사는 당신의 지급금을 해제할 수 있습니다.</string>
+  <string name="play_and_earn_permissions_go_button">가!</string>
+  <string name="play_and_earn_permissions_trusted_app">신뢰할 수 있는 앱</string>
+  <string name="play_and_earn_permissions_denied_dialog_title">보상이 일시 중지되었습니다 ⏸️</string>
+  <string name="play_and_earn_permissions_denied_dialog_body">아직 플레이 시간을 집계할 수 없습니다. 수익을 얻으려면 이 설정을 활성화하세요.</string>
+  <string name="play_and_earn_permissions_enable_now_button">지금 활성화</string>
+  <string name="play_and_earn_permissions_not_now_button">지금은 안 돼</string>
 </resources>

@@ -387,4 +387,24 @@
   <string name="play_and_earn_install_button">Yükle</string>
   <string name="play_and_earn_notification_recording_title">Ödüller için oyun süresini takip etme</string>
   <string name="play_and_earn_notification_recording_body">Oyun oynama süreniz görevlerinize sayılıyor.</string>
+  <!-- Play and Earn - Permissions-->
+  <string name="play_and_earn_permissions_success_snackbar">Başarılı! Ödül yolculuğunuz şimdi başlıyor 🎉</string>
+  <string name="play_and_earn_permissions_google_drama_title">Google biraz dramayı sever 🙄</string>
+  <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Google mağazasının dışında para kazanmak zordur. <1>Oyun oynanışını doğrulayabilmemiz</1> ve <2>ödülleri cüzdanınıza gönderebilmemiz</2> için bu izinleri verin <2>.</2>]]></string>
+  <string name="play_and_earn_permissions_restricted_settings_title">Kısıtlı Ayarlara İzin Ver</string>
+  <string name="play_and_earn_permissions_restricted_settings_body">Google düğmeyi gizler. Bir sonraki ekranda:</string>
+  <string name="play_and_earn_permissions_settings_path">Ayarlar → Uygulamalar → Aptoide Oyunları → ⋮ → Kısıtlı ayarlara izin ver</string>
+  <string name="play_and_earn_permissions_screenshot_description">Kısıtlı ayarların konumunu gösteren ekran görüntüsü</string>
+  <string name="play_and_earn_permissions_allowed">İzin verilen</string>
+  <string name="play_and_earn_permissions_final_permissions_title">Son İzinler</string>
+  <string name="play_and_earn_permissions_display_over_apps">\'Diğer uygulamaların üzerinde göster\' seçeneğini etkinleştirin</string>
+  <string name="play_and_earn_permissions_display_description">Oyunu duraklatmadan ödüllerinizin gerçek zamanlı olarak artmasını izleyin.</string>
+  <string name="play_and_earn_permissions_app_usage_data">\'Uygulama kullanım verilerini\' izin ver</string>
+  <string name="play_and_earn_permissions_usage_description">Bu, oynadığınızı kanıtlar ve böylece ödemenizi serbest bırakabiliriz.</string>
+  <string name="play_and_earn_permissions_go_button">Git!</string>
+  <string name="play_and_earn_permissions_trusted_app">Güvenilir Uygulama</string>
+  <string name="play_and_earn_permissions_denied_dialog_title">Ödüller duraklatıldı ⏸️</string>
+  <string name="play_and_earn_permissions_denied_dialog_body">Henüz oyun sürenizi hesaplayamıyoruz. Kazanmaya başlamak için bu ayarı etkinleştirin.</string>
+  <string name="play_and_earn_permissions_enable_now_button">Şimdi Etkinleştir</string>
+  <string name="play_and_earn_permissions_not_now_button">Şimdi değil</string>
 </resources>

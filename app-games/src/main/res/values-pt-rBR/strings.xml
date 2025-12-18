@@ -387,4 +387,24 @@
   <string name="play_and_earn_install_button">Instalar</string>
   <string name="play_and_earn_notification_recording_title">Acompanhamento do tempo de jogo para recompensas</string>
   <string name="play_and_earn_notification_recording_body">Seu tempo de jogo está sendo contabilizado para suas missões.</string>
+  <!-- Play and Earn - Permissions-->
+  <string name="play_and_earn_permissions_success_snackbar">Sucesso! Sua jornada de recompensas começa agora 🎉</string>
+  <string name="play_and_earn_permissions_google_drama_title">O Google adora um pouco de drama 🙄</string>
+  <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Ganhar dinheiro fora da loja do Google é complicado. Conceda essas permissões para que possamos <1>verificar o jogo</1> e <2>enviar recompensas para sua carteira.</2>]]></string>
+  <string name="play_and_earn_permissions_restricted_settings_title">Permitir configurações restritas</string>
+  <string name="play_and_earn_permissions_restricted_settings_body">O Google oculta o botão. Na próxima tela:</string>
+  <string name="play_and_earn_permissions_settings_path">Configurações → Aplicativos → Aptoide Games → ⋮ → Permitir configurações restritas</string>
+  <string name="play_and_earn_permissions_screenshot_description">Captura de tela mostrando a localização das configurações restritas</string>
+  <string name="play_and_earn_permissions_allowed">Permitido</string>
+  <string name="play_and_earn_permissions_final_permissions_title">Permissões finais</string>
+  <string name="play_and_earn_permissions_display_over_apps">Permitir \"Exibir sobre outros aplicativos\"</string>
+  <string name="play_and_earn_permissions_display_description">Veja suas recompensas crescerem em tempo real sem pausar o jogo.</string>
+  <string name="play_and_earn_permissions_app_usage_data">Permitir “Dados de uso do aplicativo”</string>
+  <string name="play_and_earn_permissions_usage_description">Isso prova que você está jogando, para que possamos desbloquear seu pagamento.</string>
+  <string name="play_and_earn_permissions_go_button">Vá!</string>
+  <string name="play_and_earn_permissions_trusted_app">Aplicativo confiável</string>
+  <string name="play_and_earn_permissions_denied_dialog_title">As recompensas estão suspensas ⏸️</string>
+  <string name="play_and_earn_permissions_denied_dialog_body">Ainda não podemos contabilizar o seu tempo de jogo. Ative esta configuração para começar a ganhar.</string>
+  <string name="play_and_earn_permissions_enable_now_button">Ativar agora</string>
+  <string name="play_and_earn_permissions_not_now_button">Não agora</string>
 </resources>
