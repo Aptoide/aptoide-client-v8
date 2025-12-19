@@ -33,7 +33,9 @@ class AptoideRTBRepository @Inject constructor(
         return@withContext it
       }
 
-      val guestUid = idsRepository.getId(ApkfyManagerProbe.GUEST_UID_KEY)
+      val guestUid = idsRepository.observeId(ApkfyManagerProbe.GUEST_UID_KEY)
+        .first { it.isNotEmpty() }
+
       val result = rtbApi.getApps(
         RTBRequest(
           listOf(
