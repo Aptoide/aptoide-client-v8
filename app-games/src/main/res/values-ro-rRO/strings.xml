@@ -401,7 +401,7 @@
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Succes! Călătoria ta către recompense începe acum 🎉</string>
   <string name="play_and_earn_permissions_google_drama_title">Google adoră puțin dramatismul 🙄</string>
-  <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Earning outside Google\'s store is tricky. Grant these permissions so we can <1>verify gameplay</1> and <2>send rewards to your wallet</2>.]]></string>
+  <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Câștigarea de bani în afara magazinului Google este dificilă. Acordați aceste permisiuni pentru ca noi să putem <1>verifica jocul</1> și <2>să trimitem recompense în portofelul dvs.</2>]]></string>
   <string name="play_and_earn_permissions_restricted_settings_title">Permiteți setări restricționate</string>
   <string name="play_and_earn_permissions_restricted_settings_body">Google ascunde butonul. Pe ecranul următor:</string>
   <string name="play_and_earn_permissions_settings_path">Setări → Aplicații → Aptoide Games → ⋮ → Permite setări restricționate</string>
@@ -415,7 +415,7 @@
   <string name="play_and_earn_permissions_go_button">Du-te!</string>
   <string name="play_and_earn_permissions_trusted_app">Aplicație de încredere</string>
   <string name="play_and_earn_permissions_denied_dialog_title">Recompensele sunt suspendate ⏸️</string>
-  <string name="play_and_earn_permissions_denied_dialog_body">We can\'t count your playtime yet. Enable this setting to start earning.</string>
+  <string name="play_and_earn_permissions_denied_dialog_body">Nu putem încă să îți calculăm timpul de joc. Activează această setare pentru a începe să câștigi.</string>
   <string name="play_and_earn_permissions_enable_now_button">Activați acum</string>
   <string name="play_and_earn_permissions_not_now_button">Nu acum</string>
 </resources>
