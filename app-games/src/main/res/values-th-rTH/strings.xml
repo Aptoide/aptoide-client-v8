@@ -379,7 +379,7 @@
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">สำเร็จ! การเดินทางสู่รางวัลของคุณเริ่มต้นขึ้นแล้ว 🎉</string>
   <string name="play_and_earn_permissions_google_drama_title">Google ชอบเรื่องดราม่าเล็กๆ น้อยๆ 🙄</string>
-  <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[การหารายได้นอกร้านค้าของ Google นั้นค่อนข้างซับซ้อน โปรดอนุญาตสิทธิ์เหล่านี้<1>เพื่อให้เราสามารถตรวจสอบการเล่นเกม</1> <2>และส่งรางวัลไปยังกระเป๋าเงินของคุณได้</2>]]></string>
+  <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Earning outside Google’s store is tricky. Grant these permissions so we can <1>verify gameplay</1> and <2>send rewards to your wallet</2>.]]></string>
   <string name="play_and_earn_permissions_restricted_settings_title">อนุญาตการตั้งค่าที่ถูกจำกัด</string>
   <string name="play_and_earn_permissions_restricted_settings_body">Google ซ่อนปุ่มไว้ บนหน้าจอถัดไป:</string>
   <string name="play_and_earn_permissions_settings_path">การตั้งค่า → แอป → Aptoide Games → ⋮ → อนุญาตการตั้งค่าที่ถูกจำกัด</string>
