@@ -412,7 +412,7 @@
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Успіх! Ваша подорож до винагород починається зараз 🎉</string>
   <string name="play_and_earn_permissions_google_drama_title">Google любить трохи драматизму 🙄</string>
-  <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Earning outside Google\'s store is tricky. Grant these permissions so we can <1>verify gameplay</1> and <2>send rewards to your wallet</2>.]]></string>
+  <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Заробляти гроші поза межами магазину Google непросто. Надайте ці дозволи, щоб ми могли <1>перевірити ігровий процес</1> і <2>надіслати винагороду на ваш гаманець</2>.]]></string>
   <string name="play_and_earn_permissions_restricted_settings_title">Дозволити обмежені налаштування</string>
   <string name="play_and_earn_permissions_restricted_settings_body">Google приховує кнопку. На наступному екрані:</string>
   <string name="play_and_earn_permissions_settings_path">Налаштування → Додатки → Aptoide Games → ⋮ → Дозволити обмежені налаштування</string>
@@ -426,7 +426,7 @@
   <string name="play_and_earn_permissions_go_button">Вперед!</string>
   <string name="play_and_earn_permissions_trusted_app">Довірена програма</string>
   <string name="play_and_earn_permissions_denied_dialog_title">Винагороди призупинені ⏸️</string>
-  <string name="play_and_earn_permissions_denied_dialog_body">We can\'t count your playtime yet. Enable this setting to start earning.</string>
+  <string name="play_and_earn_permissions_denied_dialog_body">Ми ще не можемо підрахувати ваш ігровий час. Увімкніть це налаштування, щоб почати заробляти.</string>
   <string name="play_and_earn_permissions_enable_now_button">Увімкнути зараз</string>
   <string name="play_and_earn_permissions_not_now_button">Не зараз</string>
 </resources>
