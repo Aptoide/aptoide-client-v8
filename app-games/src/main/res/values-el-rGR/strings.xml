@@ -390,7 +390,7 @@
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Επιτυχία! Το ταξίδι σας προς τις ανταμοιβές ξεκινά τώρα 🎉</string>
   <string name="play_and_earn_permissions_google_drama_title">Η Google λατρεύει το δράμα 🙄</string>
-  <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Earning outside Google’s store is tricky. Grant these permissions so we can <1>verify gameplay</1> and <2>send rewards to your wallet</2>.]]></string>
+  <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Η απόκτηση εσόδων εκτός του καταστήματος της Google είναι δύσκολη. Χορηγήστε αυτές τις άδειες, ώστε να μπορούμε <1>να επαληθεύσουμε το παιχνίδι</1> και <2>να στείλουμε ανταμοιβές στο πορτοφόλι σας</2>.]]></string>
   <string name="play_and_earn_permissions_restricted_settings_title">Επιτρέψτε περιορισμένες ρυθμίσεις</string>
   <string name="play_and_earn_permissions_restricted_settings_body">Η Google κρύβει το κουμπί. Στην επόμενη οθόνη:</string>
   <string name="play_and_earn_permissions_settings_path">Ρυθμίσεις → Εφαρμογές → Aptoide Games → ⋮ → Να επιτρέπονται οι περιορισμένες ρυθμίσεις</string>
