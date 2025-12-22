@@ -412,7 +412,7 @@
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Успіх! Ваша подорож до винагород починається зараз 🎉</string>
   <string name="play_and_earn_permissions_google_drama_title">Google любить трохи драматизму 🙄</string>
-  <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Заробляти поза межами магазину Google складно. Надайте ці дозволи, щоб ми могли <1>перевірити ігровий процес</1> і <2>надіслати винагороду на ваш гаманець.</2>]]></string>
+  <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Заробляти поза межами магазину Google складно. Надайте ці дозволи, щоб ми могли <1>перевірити ігровий процес</1> і <2>надіслати винагороду на ваш гаманець</2>.]]></string>
   <string name="play_and_earn_permissions_restricted_settings_title">Дозволити обмежені налаштування</string>
   <string name="play_and_earn_permissions_restricted_settings_body">Google приховує кнопку. На наступному екрані:</string>
   <string name="play_and_earn_permissions_settings_path">Налаштування → Додатки → Aptoide Games → ⋮ → Дозволити обмежені налаштування</string>
