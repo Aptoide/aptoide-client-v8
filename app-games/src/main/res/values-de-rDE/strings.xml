@@ -390,7 +390,7 @@
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Erfolg! Ihre Belohnungsreise beginnt jetzt 🎉</string>
   <string name="play_and_earn_permissions_google_drama_title">Google liebt ein bisschen Drama 🙄</string>
-  <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Außerhalb des Google-Stores Geld zu verdienen ist schwierig. Erteilen Sie diese Berechtigungen, damit wir <1>das Spielgeschehen überprüfen</1> und <2>Belohnungen an Ihre Wallet senden</2> können <2>.</2>]]></string>
+  <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Außerhalb des Google-Stores Geld zu verdienen ist schwierig. Erteilen Sie diese Berechtigungen, damit wir <1>das Spielgeschehen überprüfen</1> und <2>Belohnungen an Ihre Wallet senden</2> können.]]></string>
   <string name="play_and_earn_permissions_restricted_settings_title">Eingeschränkte Einstellungen zulassen</string>
   <string name="play_and_earn_permissions_restricted_settings_body">Google verbirgt die Schaltfläche. Auf dem nächsten Bildschirm:</string>
   <string name="play_and_earn_permissions_settings_path">Einstellungen → Apps → Aptoide Games → ⋮ → Eingeschränkte Einstellungen zulassen</string>
