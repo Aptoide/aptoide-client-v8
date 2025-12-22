@@ -390,7 +390,7 @@
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Siker! A jutalom utazásod most kezdődik 🎉</string>
   <string name="play_and_earn_permissions_google_drama_title">A Google szereti a kis drámát 🙄</string>
-  <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[A Google áruházán kívül pénzt keresni nem egyszerű. Engedélyezze ezeket a jogosultságokat, hogy <1>ellenőrizhessük a játékmenetet</1>, és <2>jutalmakat küldhessünk a pénztárcájába.</2>]]></string>
+  <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Earning outside Google’s store is tricky. Grant these permissions so we can <1>verify gameplay</1> and <2>send rewards to your wallet</2>.]]></string>
   <string name="play_and_earn_permissions_restricted_settings_title">Korlátozott beállítások engedélyezése</string>
   <string name="play_and_earn_permissions_restricted_settings_body">A Google elrejti a gombot. A következő képernyőn:</string>
   <string name="play_and_earn_permissions_settings_path">Beállítások → Alkalmazások → Aptoide Games → ⋮ → Korlátozott beállítások engedélyezése</string>
