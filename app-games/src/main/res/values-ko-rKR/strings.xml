@@ -379,7 +379,7 @@
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">성공! 이제 보상의 여정이 시작됩니다 🎉</string>
   <string name="play_and_earn_permissions_google_drama_title">구글은 약간의 드라마를 좋아하네 🙄</string>
-  <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Google 스토어 외부에서 수익을 창출하는 것은 까다롭습니다. <1>게임 플레이를 확인하고</1> <2>보상을 지갑으로 전송할</2> 수 있도록 해당 권한을 허용해 주세요 <2>.</2>]]></string>
+  <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Google 스토어 외부에서 수익을 창출하는 것은 까다롭습니다. <1>게임 플레이를 확인하고</1> <2>보상을 지갑으로 전송할</2> 수 있도록 해당 권한을 허용해 주세요.]]></string>
   <string name="play_and_earn_permissions_restricted_settings_title">제한된 설정 허용</string>
   <string name="play_and_earn_permissions_restricted_settings_body">Google은 버튼을 숨깁니다. 다음 화면에서:</string>
   <string name="play_and_earn_permissions_settings_path">설정 → 앱 → Aptoide 게임 → ⋮ → 제한된 설정 허용</string>
