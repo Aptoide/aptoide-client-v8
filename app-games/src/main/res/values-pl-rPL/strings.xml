@@ -426,7 +426,7 @@
   <string name="play_and_earn_permissions_go_button">Dalej!</string>
   <string name="play_and_earn_permissions_trusted_app">Zaufana aplikacja</string>
   <string name="play_and_earn_permissions_denied_dialog_title">Nagrody są wstrzymane ⏸️</string>
-  <string name="play_and_earn_permissions_denied_dialog_body">Nie możemy jeszcze policzyć czasu gry. Włącz to ustawienie, aby zacząć zarabiać.</string>
+  <string name="play_and_earn_permissions_denied_dialog_body">Nie możemy jeszcze policzyć Twojego czasu gry. Włącz to ustawienie, aby zacząć zarabiać.</string>
   <string name="play_and_earn_permissions_enable_now_button">Włącz teraz</string>
   <string name="play_and_earn_permissions_not_now_button">Nie teraz</string>
 </resources>

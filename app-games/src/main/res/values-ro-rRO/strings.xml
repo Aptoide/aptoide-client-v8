@@ -401,7 +401,7 @@
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Succes! Călătoria ta către recompense începe acum 🎉</string>
   <string name="play_and_earn_permissions_google_drama_title">Google adoră puțin dramatismul 🙄</string>
-  <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Este dificil să câștigi bani în afara magazinului Google. Acordă aceste permisiuni pentru ca noi să putem <1>verifica jocul</1> și <2>să trimitem recompense în portofelul tău</2>.]]></string>
+  <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Câștigarea de bani în afara magazinului Google este dificilă. Acordați aceste permisiuni pentru ca noi să putem <1>verifica jocul</1> și <2>să trimitem recompense în portofelul dvs.</2>]]></string>
   <string name="play_and_earn_permissions_restricted_settings_title">Permiteți setări restricționate</string>
   <string name="play_and_earn_permissions_restricted_settings_body">Google ascunde butonul. Pe ecranul următor:</string>
   <string name="play_and_earn_permissions_settings_path">Setări → Aplicații → Aptoide Games → ⋮ → Permite setări restricționate</string>
