@@ -379,7 +379,7 @@
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">成功！您的奖励之旅即刻启程 🎉</string>
   <string name="play_and_earn_permissions_google_drama_title">谷歌就是爱搞点戏剧性🙄</string>
-  <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[在谷歌商店外获取收益存在风险。请授予这些权限，以便我们<1>验证游戏进度</1>并将<2>奖励发送到您的钱包</2>。]]></string>
+  <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Earning outside Google\'s store is tricky. Grant these permissions so we can <1>verify gameplay</1> and <2>send rewards to your wallet</2>.]]></string>
   <string name="play_and_earn_permissions_restricted_settings_title">允许受限设置</string>
   <string name="play_and_earn_permissions_restricted_settings_body">谷歌隐藏了按钮。在下一屏幕：</string>
   <string name="play_and_earn_permissions_settings_path">设置 → 应用 → Aptoide 游戏 → ⋮ → 允许受限设置</string>
@@ -393,7 +393,7 @@
   <string name="play_and_earn_permissions_go_button">出发！</string>
   <string name="play_and_earn_permissions_trusted_app">可信应用</string>
   <string name="play_and_earn_permissions_denied_dialog_title">奖励已暂停 ⏸️</string>
-  <string name="play_and_earn_permissions_denied_dialog_body">我们目前无法统计您的游戏时间。请启用此设置开始累积时长。</string>
+  <string name="play_and_earn_permissions_denied_dialog_body">We can\'t count your playtime yet. Enable this setting to start earning.</string>
   <string name="play_and_earn_permissions_enable_now_button">立即启用</string>
   <string name="play_and_earn_permissions_not_now_button">现在不行</string>
 </resources>
