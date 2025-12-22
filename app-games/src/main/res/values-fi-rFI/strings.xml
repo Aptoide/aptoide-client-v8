@@ -390,7 +390,7 @@
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Onnistui! Palkintomatkasi alkaa nyt 🎉</string>
   <string name="play_and_earn_permissions_google_drama_title">Google rakastaa hieman draamaa 🙄</string>
-  <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Googlen kaupan ulkopuolella ansaitseminen on hankalaa. Myönnä nämä käyttöoikeudet, jotta voimme <1>tarkistaa pelin kulun</1> ja <2>lähettää palkkiot lompakkoosi.</2>]]></string>
+  <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Googlen kaupan ulkopuolella ansaitseminen on hankalaa. Myönnä nämä käyttöoikeudet, jotta voimme <1>tarkistaa pelin kulun</1> ja <2>lähettää palkkiot lompakkoosi</2>.]]></string>
   <string name="play_and_earn_permissions_restricted_settings_title">Salli rajoitetut asetukset</string>
   <string name="play_and_earn_permissions_restricted_settings_body">Google piilottaa painikkeen. Seuraavalla näytöllä:</string>
   <string name="play_and_earn_permissions_settings_path">Asetukset → Sovellukset → Aptoide Games → ⋮ → Salli rajoitetut asetukset</string>
