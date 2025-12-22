@@ -412,7 +412,7 @@
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Успех! Ваше путешествие к наградам начинается сейчас 🎉</string>
   <string name="play_and_earn_permissions_google_drama_title">Google любит немного драматизма 🙄</string>
-  <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Earning outside Google’s store is tricky. Grant these permissions so we can <1>verify gameplay</1> and <2>send rewards to your wallet</2>.]]></string>
+  <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Зарабатывать вне магазина Google довольно сложно. Предоставьте эти разрешения, чтобы мы могли <1>проверить игровой процесс</1> и <2>отправить вознаграждения в ваш кошелек</2>.]]></string>
   <string name="play_and_earn_permissions_restricted_settings_title">Разрешить ограниченные настройки</string>
   <string name="play_and_earn_permissions_restricted_settings_body">Google скрывает кнопку. На следующем экране:</string>
   <string name="play_and_earn_permissions_settings_path">Настройки → Приложения → Aptoide Games → ⋮ → Разрешить ограниченные настройки</string>
