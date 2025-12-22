@@ -390,7 +390,7 @@
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Siker! A jutalom utazásod most kezdődik 🎉</string>
   <string name="play_and_earn_permissions_google_drama_title">A Google szereti a kis drámát 🙄</string>
-  <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[A Google áruházán kívül pénzt keresni nem egyszerű. Engedélyezze ezeket a jogosultságokat, hogy <1>ellenőrizhessük a játékmenetet</1>, és <2>jutalmakat küldhessünk a pénztárcájába</2>.]]></string>
+  <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Earning outside Google\'s store is tricky. Grant these permissions so we can <1>verify gameplay</1> and <2>send rewards to your wallet</2>.]]></string>
   <string name="play_and_earn_permissions_restricted_settings_title">Korlátozott beállítások engedélyezése</string>
   <string name="play_and_earn_permissions_restricted_settings_body">A Google elrejti a gombot. A következő képernyőn:</string>
   <string name="play_and_earn_permissions_settings_path">Beállítások → Alkalmazások → Aptoide Games → ⋮ → Korlátozott beállítások engedélyezése</string>
@@ -404,7 +404,7 @@
   <string name="play_and_earn_permissions_go_button">Menj!</string>
   <string name="play_and_earn_permissions_trusted_app">Megbízható alkalmazás</string>
   <string name="play_and_earn_permissions_denied_dialog_title">A jutalmak szünetelnek ⏸️</string>
-  <string name="play_and_earn_permissions_denied_dialog_body">Még nem tudjuk számolni a játékidőt. Engedélyezze ezt a beállítást, hogy elkezdhesse a pontgyűjtést.</string>
+  <string name="play_and_earn_permissions_denied_dialog_body">We can\'t count your playtime yet. Enable this setting to start earning.</string>
   <string name="play_and_earn_permissions_enable_now_button">Most engedélyezés</string>
   <string name="play_and_earn_permissions_not_now_button">Most nem</string>
 </resources>
