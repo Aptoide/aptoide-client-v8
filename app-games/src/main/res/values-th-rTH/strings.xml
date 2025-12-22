@@ -379,7 +379,7 @@
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">สำเร็จ! การเดินทางสู่รางวัลของคุณเริ่มต้นขึ้นแล้ว 🎉</string>
   <string name="play_and_earn_permissions_google_drama_title">Google ชอบเรื่องดราม่าเล็กๆ น้อยๆ 🙄</string>
-  <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[การหารายได้นอกร้านค้าของ Google นั้นค่อนข้างซับซ้อน โปรดอนุญาตสิทธิ์เหล่านี้<1>เพื่อให้เราสามารถตรวจสอบการเล่นเกม</1> <2>และส่งรางวัลไปยังกระเป๋าเงินของคุณได้</2>]]></string>
+  <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Earning outside Google\'s store is tricky. Grant these permissions so we can <1>verify gameplay</1> and <2>send rewards to your wallet</2>.]]></string>
   <string name="play_and_earn_permissions_restricted_settings_title">อนุญาตการตั้งค่าที่ถูกจำกัด</string>
   <string name="play_and_earn_permissions_restricted_settings_body">Google ซ่อนปุ่มไว้ บนหน้าจอถัดไป:</string>
   <string name="play_and_earn_permissions_settings_path">การตั้งค่า → แอป → Aptoide Games → ⋮ → อนุญาตการตั้งค่าที่ถูกจำกัด</string>
@@ -393,7 +393,7 @@
   <string name="play_and_earn_permissions_go_button">ไป!</string>
   <string name="play_and_earn_permissions_trusted_app">แอปที่เชื่อถือได้</string>
   <string name="play_and_earn_permissions_denied_dialog_title">รางวัลถูกหยุดชั่วคราว ⏸️</string>
-  <string name="play_and_earn_permissions_denied_dialog_body">เรายังไม่สามารถนับเวลาเล่นของคุณได้ เปิดใช้งานการตั้งค่านี้เพื่อเริ่มรับรางวัล</string>
+  <string name="play_and_earn_permissions_denied_dialog_body">We can\'t count your playtime yet. Enable this setting to start earning.</string>
   <string name="play_and_earn_permissions_enable_now_button">เปิดใช้งานตอนนี้</string>
   <string name="play_and_earn_permissions_not_now_button">ไม่ตอนนี้</string>
 </resources>
