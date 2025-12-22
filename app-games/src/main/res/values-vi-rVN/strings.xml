@@ -379,7 +379,7 @@
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Thành công! Hành trình nhận thưởng của bạn bắt đầu ngay bây giờ 🎉</string>
   <string name="play_and_earn_permissions_google_drama_title">Google thích một chút kịch tính 🙄</string>
-  <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Kiếm tiền bên ngoài cửa hàng của Google là điều khá phức tạp. Hãy cấp các quyền này để chúng tôi có thể <1>xác minh hoạt động chơi game</1> và <2>gửi phần thưởng vào ví của bạn.</2>]]></string>
+  <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Kiếm tiền bên ngoài cửa hàng của Google là điều khá phức tạp. Hãy cấp các quyền này để chúng tôi có thể <1>xác minh hoạt động chơi game</1> và <2>gửi phần thưởng vào ví của bạn</2>.]]></string>
   <string name="play_and_earn_permissions_restricted_settings_title">Cho phép cài đặt bị giới hạn</string>
   <string name="play_and_earn_permissions_restricted_settings_body">Google ẩn nút. Trên màn hình tiếp theo:</string>
   <string name="play_and_earn_permissions_settings_path">Cài đặt → Ứng dụng → Aptoide Games → ⋮ → Cho phép cài đặt bị hạn chế</string>
