@@ -76,11 +76,9 @@ internal class DefaultPaEMissionsRepository @Inject constructor(
   private suspend fun fetchMissions(packageName: String): PaEMissions {
     val missions = paeCampaignsApi.getCampaignMissions(packageName).toDomainModel()
 
-    // Replace cache with network results
-    paeMissionDao.clearAppMissions(packageName)
     val allMissions = missions.checkpoints + missions.missions
     val entities = allMissions.map { it.toEntity(packageName) }
-    paeMissionDao.insertAll(entities)
+    paeMissionDao.replaceAppMissions(packageName, entities)
 
     return missions
   }
