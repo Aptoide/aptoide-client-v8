@@ -97,7 +97,7 @@ class PaESessionManager @Inject constructor(
       missions = sessionMissions,
       sessionContext = sessionContext
     )
-    
+
     val newlyCompletedMissions = locallyCompletedMissions
       .filterNot { it.title in session.pendingServerConfirmationMissions }
 
@@ -158,7 +158,7 @@ class PaESessionManager @Inject constructor(
                 missionTitle = missionEvent.missionTitle
               )
 
-              _completedMissions.tryEmit(completedMission)
+              _completedMissions.emit(completedMission)
             }
         }
       }
