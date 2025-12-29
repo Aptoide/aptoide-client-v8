@@ -333,10 +333,10 @@
   <string name="update_app_updated_notification_body">Ανακαλύψτε τα νέα</string>
   <!-- AB Test for Experiment 8 : Roblox Companion Apps -->
   <string name="apkfy_multi_install_install_button">Εγκατάσταση [%d]</string>
-  <string name="apkfy_multi_install_intro_1">Do you want to install this game ?</string>
-  <string name="apkfy_multi_install_intro_2">Popular with Roblox players</string>
-  <string name="apkfy_multi_install_intro_3">People who play Roblox are also installing these</string>
-  <string name="apkfy_multi_install_highlighted_game">Top Played on Aptoide Games</string>
+  <string name="apkfy_multi_install_intro_1">Θέλετε να εγκαταστήσετε αυτό το παιχνίδι;</string>
+  <string name="apkfy_multi_install_intro_2">Δημοφιλές στους παίκτες του Roblox</string>
+  <string name="apkfy_multi_install_intro_3">Οι άνθρωποι που παίζουν Roblox εγκαθιστούν επίσης τα εξής</string>
+  <string name="apkfy_multi_install_highlighted_game">Τα πιο δημοφιλή παιχνίδια στο Aptoide Games</string>
   <!-- AB Test for Experiment 9 : GamesFeed -->
   <string name="gamesfeed_bundle_header_1">Για εσάς</string>
   <string name="gamesfeed_detail_header">Εβδομαδιαία highlights με βάση το Roblox</string>
