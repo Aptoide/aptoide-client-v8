@@ -3,6 +3,7 @@ package cm.aptoide.pt.feature_campaigns
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class AptoideMMPCampaign(
   private val campaign: Campaign,
@@ -28,13 +29,22 @@ class AptoideMMPCampaign(
     packageName: String? = null,
   ) {
     CoroutineScope(Dispatchers.Main).launch {
+      val utmParams = buildBaseMap(
+        utmMedium = allowedBundleTags[bundleTag]?.first,
+        utmCampaign = campaign.campaignId ?: allowedBundleTags[bundleTag]?.second
+      )
+
+      if (BuildConfig.DEBUG) {
+        Timber.tag("MMP").i("Impression Event - Type: $campaignType")
+        utmParams.entries.forEach {
+          Timber.tag("MMP").i("  ${it.key}: ${it.value}")
+        }
+      }
+
       campaign.sendImpressionEvent(
         campaignType,
         buildReplaceMap(packageName),
-        buildBaseMap(
-          utmMedium = allowedBundleTags[bundleTag]?.first,
-          utmCampaign = campaign.campaignId ?: allowedBundleTags[bundleTag]?.second
-        )
+        utmParams
       )
     }
   }
@@ -45,14 +55,23 @@ class AptoideMMPCampaign(
   ) {
     if (!allowedBundleTags.keys.contains(bundleTag)) return
     CoroutineScope(Dispatchers.Main).launch {
+      val utmParams = buildAppendMap(
+        utmMedium = allowedBundleTags[bundleTag]?.first,
+        utmCampaign = campaign.campaignId ?: allowedBundleTags[bundleTag]?.second,
+        isCta = isCta,
+      )
+
+      if (BuildConfig.DEBUG) {
+        Timber.tag("MMP").i("Click Event - Type: $campaignType")
+        utmParams.entries.forEach {
+          Timber.tag("MMP").i("  ${it.key}: ${it.value}")
+        }
+      }
+
       campaign.sendClickEvent(
         campaignType,
         buildReplaceMap(),
-        buildAppendMap(
-          utmMedium = allowedBundleTags[bundleTag]?.first,
-          utmCampaign = campaign.campaignId ?: allowedBundleTags[bundleTag]?.second,
-          isCta = isCta,
-        )
+        utmParams
       )
     }
   }
@@ -69,16 +88,25 @@ class AptoideMMPCampaign(
       allowedBundleTags[it]?.first
     } ?: currentScreen
     CoroutineScope(Dispatchers.Main).launch {
+      val utmParams = buildAppendMap(
+        utmMedium = utmMedium,
+        utmCampaign = utmCampaign ?: allowedBundleTags[bundleTag]?.second,
+        searchKeyword = searchKeyword,
+        utmSourceExterior = utmSourceExterior,
+        isCta = isCta
+      )
+
+      if (BuildConfig.DEBUG) {
+        Timber.tag("MMP").i("Download Event - Type: $campaignType")
+        utmParams.entries.forEach {
+          Timber.tag("MMP").i("  ${it.key}: ${it.value}")
+        }
+      }
+
       campaign.sendDownloadEvent(
         campaignType,
         buildReplaceMap(),
-        buildAppendMap(
-          utmMedium = utmMedium,
-          utmCampaign = utmCampaign ?: allowedBundleTags[bundleTag]?.second,
-          searchKeyword = searchKeyword,
-          utmSourceExterior = utmSourceExterior,
-          isCta = isCta
-        )
+        utmParams
       )
     }
   }
