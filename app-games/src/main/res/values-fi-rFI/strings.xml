@@ -333,9 +333,10 @@
   <string name="update_app_updated_notification_body">Tutustu uutuuksiin</string>
   <!-- AB Test for Experiment 8 : Roblox Companion Apps -->
   <string name="apkfy_multi_install_install_button">Asenna [%d]</string>
-  <string name="apkfy_multi_install_intro_1">Haluatko asentaa tämän sovelluksen?</string>
-  <string name="apkfy_multi_install_intro_2">Lisää hauskaa odottaa!</string>
-  <string name="apkfy_multi_install_intro_3">Kokeile näitä Robloxista inspiraationsa saaneita pelejä.</string>
+  <string name="apkfy_multi_install_intro_1">Haluatko asentaa tämän pelin?</string>
+  <string name="apkfy_multi_install_intro_2">Suosittu Roblox-pelaajien keskuudessa</string>
+  <string name="apkfy_multi_install_intro_3">Robloxia pelaavat ihmiset asentavat myös nämä</string>
+  <string name="apkfy_multi_install_highlighted_game">Aptoide-pelien suosituimmat pelit</string>
   <!-- AB Test for Experiment 9 : GamesFeed -->
   <string name="gamesfeed_bundle_header_1">Sinulle</string>
   <string name="gamesfeed_detail_header">Robloxin viikoittaiset kohokohdat</string>

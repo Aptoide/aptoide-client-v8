@@ -322,9 +322,10 @@
   <string name="update_app_updated_notification_body">Temukan hal-hal baru</string>
   <!-- AB Test for Experiment 8 : Roblox Companion Apps -->
   <string name="apkfy_multi_install_install_button">Pasang [%d]</string>
-  <string name="apkfy_multi_install_intro_1">Apakah Anda ingin menginstal aplikasi ini?</string>
-  <string name="apkfy_multi_install_intro_2">Lebih banyak keseruan menanti!</string>
-  <string name="apkfy_multi_install_intro_3">Coba permainan-permainan ini yang terinspirasi dari Roblox.</string>
+  <string name="apkfy_multi_install_intro_1">Apakah Anda ingin menginstal game ini?</string>
+  <string name="apkfy_multi_install_intro_2">Populer di kalangan pemain Roblox</string>
+  <string name="apkfy_multi_install_intro_3">Orang yang bermain Roblox juga menginstal ini.</string>
+  <string name="apkfy_multi_install_highlighted_game">Permainan Terpopuler di Aptoide</string>
   <!-- AB Test for Experiment 9 : GamesFeed -->
   <string name="gamesfeed_bundle_header_1">Untuk Anda</string>
   <string name="gamesfeed_detail_header">Sorotan mingguan berdasarkan Roblox</string>

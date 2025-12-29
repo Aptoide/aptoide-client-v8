@@ -322,9 +322,10 @@
   <string name="update_app_updated_notification_body">探索最新动态</string>
   <!-- AB Test for Experiment 8 : Roblox Companion Apps -->
   <string name="apkfy_multi_install_install_button">安装 [%d]</string>
-  <string name="apkfy_multi_install_intro_1">您要安装此应用吗？</string>
-  <string name="apkfy_multi_install_intro_2">更多乐趣正等着你！</string>
-  <string name="apkfy_multi_install_intro_3">试试这些受Roblox启发的游戏。</string>
+  <string name="apkfy_multi_install_intro_1">您要安装这款游戏吗？</string>
+  <string name="apkfy_multi_install_intro_2">深受Roblox玩家欢迎</string>
+  <string name="apkfy_multi_install_intro_3">玩Roblox的人也在安装这些</string>
+  <string name="apkfy_multi_install_highlighted_game">Aptoide游戏平台热门榜单</string>
   <!-- AB Test for Experiment 9 : GamesFeed -->
   <string name="gamesfeed_bundle_header_1">为你</string>
   <string name="gamesfeed_detail_header">基于Roblox的每周精选</string>
