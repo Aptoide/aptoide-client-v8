@@ -30,6 +30,7 @@ import cm.aptoide.pt.extensions.PreviewAll
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.emptyApp
 import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
+import cm.aptoide.pt.feature_campaigns.UTMInfo
 import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import cm.aptoide.pt.feature_home.domain.BundleSource
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
@@ -54,7 +55,11 @@ fun PromotionDialog(navigate: (String) -> Unit) {
 
   LaunchedEffect(promotionData) {
     promotionData?.let { (promotion, app) ->
-      AptoideMMPCampaign.allowedBundleTags["home_dialog"] = "Ahab_v2" to promotion.uid
+      AptoideMMPCampaign.allowedBundleTags["home_dialog"] = UTMInfo(
+        utmMedium = "Ahab_v2",
+        utmCampaign = promotion.uid,
+        utmContent = "home-promo-card"
+      )
       app.campaigns?.toAptoideMMPCampaign()?.sendImpressionEvent("home_dialog")
       promotionsAnalytics.sendAhabV2DialogImpression(app.packageName)
     }

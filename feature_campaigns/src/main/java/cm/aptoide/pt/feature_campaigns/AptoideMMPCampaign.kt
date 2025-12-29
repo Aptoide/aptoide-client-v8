@@ -14,7 +14,7 @@ class AptoideMMPCampaign(
     lateinit var oemid: String
     lateinit var utmSource: String
     var guestUID: String? = null
-    val allowedBundleTags: MutableMap<String, Pair<String, String>> = mutableMapOf()
+    val allowedBundleTags: MutableMap<String, UTMInfo> = mutableMapOf()
     fun init(
       oemid: String,
       utmSource: String,
@@ -29,9 +29,10 @@ class AptoideMMPCampaign(
     packageName: String? = null,
   ) {
     CoroutineScope(Dispatchers.Main).launch {
+      val utmInfo = allowedBundleTags[bundleTag]
       val utmParams = buildBaseMap(
-        utmMedium = allowedBundleTags[bundleTag]?.first,
-        utmCampaign = campaign.campaignId ?: allowedBundleTags[bundleTag]?.second
+        utmMedium = utmInfo?.utmMedium,
+        utmCampaign = campaign.campaignId ?: utmInfo?.utmCampaign
       )
 
       if (BuildConfig.DEBUG) {
@@ -55,9 +56,11 @@ class AptoideMMPCampaign(
   ) {
     if (!allowedBundleTags.keys.contains(bundleTag)) return
     CoroutineScope(Dispatchers.Main).launch {
+      val utmInfo = allowedBundleTags[bundleTag]
       val utmParams = buildAppendMap(
-        utmMedium = allowedBundleTags[bundleTag]?.first,
-        utmCampaign = campaign.campaignId ?: allowedBundleTags[bundleTag]?.second,
+        utmMedium = utmInfo?.utmMedium,
+        utmCampaign = campaign.campaignId ?: utmInfo?.utmCampaign,
+        searchKeyword = utmInfo?.utmTerm,
         isCta = isCta,
       )
 
@@ -84,14 +87,13 @@ class AptoideMMPCampaign(
     utmSourceExterior: String? = null,
     isCta: Boolean = false,
   ) {
-    val utmMedium = bundleTag?.let {
-      allowedBundleTags[it]?.first
-    } ?: currentScreen
+    val utmInfo = allowedBundleTags[bundleTag]
+    val utmMedium = bundleTag?.let { utmInfo?.utmMedium } ?: currentScreen
     CoroutineScope(Dispatchers.Main).launch {
       val utmParams = buildAppendMap(
         utmMedium = utmMedium,
-        utmCampaign = utmCampaign ?: allowedBundleTags[bundleTag]?.second,
-        searchKeyword = searchKeyword,
+        utmCampaign = utmCampaign ?: utmInfo?.utmCampaign,
+        searchKeyword = searchKeyword ?: utmInfo?.utmTerm,
         utmSourceExterior = utmSourceExterior,
         isCta = isCta
       )
