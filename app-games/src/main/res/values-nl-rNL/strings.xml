@@ -333,9 +333,10 @@
   <string name="update_app_updated_notification_body">Ontdek wat er nieuw is</string>
   <!-- AB Test for Experiment 8 : Roblox Companion Apps -->
   <string name="apkfy_multi_install_install_button">Installeer [%d]</string>
-  <string name="apkfy_multi_install_intro_1">Wilt u deze app installeren?</string>
-  <string name="apkfy_multi_install_intro_2">Er staat nog meer plezier te wachten!</string>
-  <string name="apkfy_multi_install_intro_3">Probeer deze games geïnspireerd door Roblox eens uit.</string>
+  <string name="apkfy_multi_install_intro_1">Do you want to install this game ?</string>
+  <string name="apkfy_multi_install_intro_2">Popular with Roblox players</string>
+  <string name="apkfy_multi_install_intro_3">People who play Roblox are also installing these</string>
+  <string name="apkfy_multi_install_highlighted_game">Top Played on Aptoide Games</string>
   <!-- AB Test for Experiment 9 : GamesFeed -->
   <string name="gamesfeed_bundle_header_1">Voor jou</string>
   <string name="gamesfeed_detail_header">Wekelijkse hoogtepunten op basis van Roblox</string>
