@@ -14,6 +14,8 @@ import javax.inject.Singleton
 @Singleton
 class AppLaunchPreferencesManager @Inject constructor(private val dataStore: DataStore<Preferences>) {
 
+  private var isFirstLaunch: Boolean? = null
+
   private object PreferencesKeys {
     val IS_FIRST_LAUNCH = booleanPreferencesKey("is_first_launch")
     val SHOULD_SHOW_NOTIFICATIONS_DIALOG = booleanPreferencesKey("should_show_notifications_dialog")
@@ -23,9 +25,14 @@ class AppLaunchPreferencesManager @Inject constructor(private val dataStore: Dat
     dataStore.edit { it[IS_FIRST_LAUNCH] = false }
   }
 
-  suspend fun isFirstLaunch(): Boolean = dataStore.data
-    .map { it[IS_FIRST_LAUNCH] ?: true }
-    .first()
+  suspend fun isFirstLaunch(): Boolean {
+    if (isFirstLaunch == null) {
+      isFirstLaunch = dataStore.data
+        .map { it[IS_FIRST_LAUNCH] ?: true }
+        .first()
+    }
+    return isFirstLaunch!!
+  }
 
   suspend fun setNotificationDialogShown() {
     dataStore.edit { it[SHOULD_SHOW_NOTIFICATIONS_DIALOG] = false }
