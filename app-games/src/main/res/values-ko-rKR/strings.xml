@@ -322,9 +322,10 @@
   <string name="update_app_updated_notification_body">새로워진 것을 확인하세요</string>
   <!-- AB Test for Experiment 8 : Roblox Companion Apps -->
   <string name="apkfy_multi_install_install_button">[%d] 설치</string>
-  <string name="apkfy_multi_install_intro_1">이 앱을 설치하시겠습니까?</string>
-  <string name="apkfy_multi_install_intro_2">더 많은 재미가 기다리고 있습니다!</string>
-  <string name="apkfy_multi_install_intro_3">Roblox에서 영감을 받은 이 게임들을 시도해 보세요.</string>
+  <string name="apkfy_multi_install_intro_1">이 게임을 설치하시겠습니까?</string>
+  <string name="apkfy_multi_install_intro_2">로블록스 플레이어들에게 인기 있는</string>
+  <string name="apkfy_multi_install_intro_3">Roblox를 플레이하는 사람들도 이들을 설치하고 있습니다</string>
+  <string name="apkfy_multi_install_highlighted_game">Aptoide 게임에서 가장 많이 플레이된 게임</string>
   <!-- AB Test for Experiment 9 : GamesFeed -->
   <string name="gamesfeed_bundle_header_1">당신을 위해</string>
   <string name="gamesfeed_detail_header">Roblox 기반 주간 하이라이트</string>

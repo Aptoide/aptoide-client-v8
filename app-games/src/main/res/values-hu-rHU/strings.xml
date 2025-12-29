@@ -333,9 +333,10 @@
   <string name="update_app_updated_notification_body">Fedezze fel az újdonságokat</string>
   <!-- AB Test for Experiment 8 : Roblox Companion Apps -->
   <string name="apkfy_multi_install_install_button">Telepítse a [%d] programot.</string>
-  <string name="apkfy_multi_install_intro_1">Szeretné telepíteni ezt az alkalmazást?</string>
-  <string name="apkfy_multi_install_intro_2">Még több szórakozás vár rád!</string>
-  <string name="apkfy_multi_install_intro_3">Próbáld ki ezeket a Roblox ihlette játékokat.</string>
+  <string name="apkfy_multi_install_intro_1">Szeretné telepíteni ezt a játékot?</string>
+  <string name="apkfy_multi_install_intro_2">Népszerű a Roblox játékosok körében</string>
+  <string name="apkfy_multi_install_intro_3">A Robloxot játszó emberek ezeket is telepítik</string>
+  <string name="apkfy_multi_install_highlighted_game">Legnépszerűbb játékok az Aptoide Games-en</string>
   <!-- AB Test for Experiment 9 : GamesFeed -->
   <string name="gamesfeed_bundle_header_1">Neked</string>
   <string name="gamesfeed_detail_header">A Roblox alapján összeállított heti kiemelt események</string>
