@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Checkbox
@@ -32,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.feature_apps.data.App
@@ -43,6 +45,7 @@ import com.aptoide.android.aptoidegames.analytics.presentation.OverrideAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.design_system.PrimaryButton
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusIconRight
+import com.aptoide.android.aptoidegames.drawables.icons.getCrownIcon
 import com.aptoide.android.aptoidegames.drawables.icons.getFireIcon
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.installer.analytics.getNetworkType
@@ -68,7 +71,8 @@ fun RobloxApkfyMultiInstallScreen() = ScreenData.withAnalytics(
     cm.aptoide.pt.feature_apps.presentation.AppsListUiState.Loading,
     cm.aptoide.pt.feature_apps.presentation.AppsListUiState.NoConnection -> emptyList()
 
-    is cm.aptoide.pt.feature_apps.presentation.AppsListUiState.Idle -> apkfyCompanionAppsState.apps
+    is cm.aptoide.pt.feature_apps.presentation.AppsListUiState.Idle -> apkfyCompanionAppsState.apps.sortedBy { !it.isAppCoins }
+      .take(4)
   }
 
   BackHandler {
@@ -110,7 +114,7 @@ fun RobloxApkfyMultiInstallView(
 ) {
   val apkfyAnalytics = rememberApkfyAnalytics()
   LaunchedEffect(Unit) {
-    apkfyAnalytics.sendRobloxExp8ApkfyShown()
+    apkfyAnalytics.sendRobloxExp81ApkfyShown()
     apkfyAnalytics.sendApkfyShown()
   }
   var hasSelectedApps by rememberSaveable { mutableStateOf(false) }
@@ -174,12 +178,13 @@ private fun MultiInstallButton(
 
 @Composable
 fun RobloxAppCard(apkfyApp: App) {
-  Column(modifier = Modifier.padding(start = 24.dp, end = 24.dp)) {
+  Column {
     Text(
       text = stringResource(R.string.apkfy_multi_install_intro_1),
       style = AGTypography.Title,
       modifier = Modifier
-        .padding(start = 40.dp, bottom = 16.dp)
+        .padding(horizontal = 24.dp)
+        .padding(bottom = 16.dp)
         .fillMaxWidth(),
     )
     CompanionAppItem(app = apkfyApp, isSelectable = false)
@@ -197,14 +202,14 @@ fun CompanionAppsSection(
     modifier = Modifier
       .fillMaxSize()
       .background(Palette.GreyDark)
-      .padding(horizontal = 24.dp)
       .padding(bottom = 160.dp)
   ) {
     Row(
       verticalAlignment = Alignment.CenterVertically,
       modifier = Modifier
         .fillMaxWidth()
-        .padding(top = 24.dp, bottom = 28.dp)
+        .padding(horizontal = 24.dp)
+        .padding(top = 24.dp, bottom = 16.dp)
     ) {
       Image(
         imageVector = getFireIcon(color = Palette.White),
@@ -224,14 +229,74 @@ fun CompanionAppsSection(
     }
 
     companionAppsList.forEachIndexed { index, item ->
-      CompanionAppItem(
-        app = item,
-        isSelected = selectedApps.contains(item.packageName),
-        onToggleApp = onToggleApp,
-        hasSelectedApps = hasSelectedApps
-      )
+      if (index == 0) {
+        TopPlayedCompanionItem(
+          app = item,
+          isSelected = selectedApps.contains(item.packageName),
+          onToggleApp = onToggleApp,
+          hasSelectedApps = hasSelectedApps,
+        )
+      } else {
+        CompanionAppItem(
+          app = item,
+          isSelected = selectedApps.contains(item.packageName),
+          onToggleApp = onToggleApp,
+          hasSelectedApps = hasSelectedApps,
+        )
+      }
     }
 
+  }
+}
+
+@Composable fun TopPlayedCompanionItem(
+  app: App,
+  isSelected: Boolean,
+  onToggleApp: (String) -> Unit,
+  hasSelectedApps: Boolean
+) {
+  Column {
+    TopPlayedCompanionBanner()
+    Box(
+      modifier = Modifier
+        .padding(bottom = 16.dp)
+        .background(color = Palette.Secondary.copy(alpha = 0.2f))
+        .height(80.dp)
+        .fillMaxWidth(),
+      contentAlignment = Alignment.CenterStart
+    ) {
+      CompanionAppItem(
+        app = app,
+        isSelected = isSelected,
+        onToggleApp = onToggleApp,
+        hasSelectedApps = hasSelectedApps,
+        paddingBottom = 0.dp
+      )
+    }
+  }
+}
+
+@Composable fun TopPlayedCompanionBanner() {
+  Row(
+    modifier = Modifier
+      .height(24.dp)
+      .wrapContentWidth()
+      .background(Palette.Secondary.copy(alpha = 0.4f))
+      .padding(horizontal = 16.dp),
+    verticalAlignment = Alignment.CenterVertically
+  ) {
+    Image(
+      imageVector = getCrownIcon(color = Palette.Yellow),
+      contentDescription = null,
+      modifier = Modifier
+        .padding(end = 4.dp)
+        .size(16.dp),
+    )
+    Text(
+      text = stringResource(R.string.apkfy_multi_install_highlighted_game),
+      style = AGTypography.InputsXS,
+      color = Palette.Yellow,
+    )
   }
 }
 
@@ -241,14 +306,16 @@ private fun CompanionAppItem(
   isSelected: Boolean = false,
   onToggleApp: (String) -> Unit = {},
   hasSelectedApps: Boolean = false,
-  isSelectable: Boolean = true
+  isSelectable: Boolean = true,
+  paddingBottom: Dp = 24.dp
 ) {
   val checked = remember { mutableStateOf(isSelected) }
 
   Row(
     verticalAlignment = Alignment.CenterVertically,
     modifier = Modifier
-      .padding(bottom = 24.dp)
+      .padding(bottom = paddingBottom)
+      .padding(horizontal = 24.dp)
       .height(64.dp)
       .fillMaxWidth()
   ) {
@@ -269,7 +336,7 @@ private fun CompanionAppItem(
         )
       )
     } else {
-      Spacer(modifier = Modifier.padding(start = 40.dp))
+      Spacer(modifier = Modifier.padding(start = if (!isSelectable) 0.dp else 24.dp))
     }
     Box(
       contentAlignment = Alignment.TopEnd

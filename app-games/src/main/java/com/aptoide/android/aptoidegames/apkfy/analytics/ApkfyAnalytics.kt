@@ -56,7 +56,7 @@ class ApkfyAnalytics @Inject constructor(
 
   fun sendRobloxApkfyShown() = genericAnalytics.logEvent("roblox_apkfy_shown", params = emptyMap())
 
-  fun sendRobloxExp8ApkfyShown() = genericAnalytics.logEvent("exp8_roblox_apkfy_shown", params = emptyMap())
+  fun sendRobloxExp81ApkfyShown() = genericAnalytics.logEvent("exp81_roblox_apkfy_shown", params = emptyMap())
 
   fun sendApkfyTimeout() = genericAnalytics.logEvent("apkfy_timeout", params = emptyMap())
 

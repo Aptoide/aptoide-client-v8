@@ -1,12 +1,9 @@
 package com.aptoide.android.aptoidegames
 
-import android.Manifest
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
@@ -33,7 +30,6 @@ import com.aptoide.android.aptoidegames.updates.domain.UpdatesNotificationAnalyt
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -73,26 +69,9 @@ class MainActivity : AppCompatActivity() {
 
   private var navController: NavHostController? = null
 
-  private val coroutinesScope: CoroutineScope = CoroutineScope(Job() + Dispatchers.IO)
-
-  private var notificationsPermissionLauncher: ActivityResultLauncher<String>? = null
-
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     intent.addSourceContext()
-
-    notificationsPermissionLauncher =
-      registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-        coroutinesScope.launch {
-          if (isGranted) {
-            notificationsAnalytics.sendNotificationOptIn()
-            notificationsAnalytics.sendExperimentNotificationsAllowed()
-            updatesNotificationAnalyticsManager.loadUserProperty()
-          } else {
-            notificationsAnalytics.sendNotificationOptOut()
-          }
-        }
-      }
 
     handleStartup()
     setContent {
@@ -113,11 +92,7 @@ class MainActivity : AppCompatActivity() {
       sendAGStartAnalytics(isFirstLaunch)
 
       if (isFirstLaunch) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-          runCatching {
-            notificationsPermissionLauncher?.launch(Manifest.permission.POST_NOTIFICATIONS)
-          }
-        } else {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
           notificationsAnalytics.sendExperimentNotificationsAllowed()
           updatesNotificationAnalyticsManager.loadUserProperty()
         }

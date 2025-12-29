@@ -1,6 +1,10 @@
 package com.aptoide.android.aptoidegames.home
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
@@ -26,6 +30,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import cm.aptoide.pt.extensions.animatedComposable
 import cm.aptoide.pt.extensions.staticComposable
+import cm.aptoide.pt.feature_apkfy.presentation.rememberApkfyApp
 import com.aptoide.android.aptoidegames.AptoideGamesBottomSheet
 import com.aptoide.android.aptoidegames.apkfy.presentation.ApkfyHandler
 import com.aptoide.android.aptoidegames.apkfy.presentation.RobloxApkfyMultiInstallScreen
@@ -51,7 +56,9 @@ import com.aptoide.android.aptoidegames.gamegenie.presentation.genieRoute
 import com.aptoide.android.aptoidegames.gamegenie.presentation.genieSearchRoute
 import com.aptoide.android.aptoidegames.gamesfeed.presentation.gamesFeedScreen
 import com.aptoide.android.aptoidegames.installer.UserActionDialog
+import com.aptoide.android.aptoidegames.launch.rememberIsFirstLaunch
 import com.aptoide.android.aptoidegames.notifications.NotificationsPermissionRequester
+import com.aptoide.android.aptoidegames.notifications.presentation.rememberNotificationsAnalytics
 import com.aptoide.android.aptoidegames.permissions.notifications.NotificationsPermissionViewModel
 import com.aptoide.android.aptoidegames.promo_codes.PromoCodeBottomSheet
 import com.aptoide.android.aptoidegames.promo_codes.rememberPromoCodeApp
@@ -61,6 +68,7 @@ import com.aptoide.android.aptoidegames.settings.settingsScreen
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.toolbar.AppGamesToolBar
 import com.aptoide.android.aptoidegames.updates.presentation.updatesScreen
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -84,11 +92,11 @@ fun MainView(navController: NavHostController) {
   LaunchedEffect(currentRoute.value?.destination?.route) {
     val currentRoute = currentRoute.value?.destination?.route
     showTopBar = if (currentRoute != null) {
-        !currentRoute.contains(genieRoute) &&
+      !currentRoute.contains(genieRoute) &&
         !currentRoute.contains(detailedApkfyRoute) &&
         !currentRoute.contains(
-        genieSearchRoute
-      ) &&
+          genieSearchRoute
+        ) &&
         !currentRoute.contains(robloxApkfyRoute)
     } else {
       true
@@ -129,7 +137,8 @@ fun MainView(navController: NavHostController) {
           }
         }
       ) { padding ->
-        NotificationsPermissionRequester(
+
+        NotificationsPermissionWrapper(
           showDialog = showNotificationsRationaleDialog,
           onDismiss = { notificationsPermissionViewModel.dismissDialog() },
           onPermissionResult = {}
@@ -167,6 +176,58 @@ fun MainView(navController: NavHostController) {
       }
     }
     UserActionDialog()
+  }
+}
+
+@SuppressLint("InlinedApi")
+@Composable
+private fun NotificationsPermissionWrapper(
+  showDialog: Boolean,
+  onDismiss: () -> Unit,
+  onPermissionResult: (Boolean) -> Unit
+) {
+  val notificationsAnalytics = rememberNotificationsAnalytics()
+
+  val isFirstLaunch = rememberIsFirstLaunch()
+
+  var delayComplete by remember { mutableStateOf(false) }
+  var apkfyApp by remember { mutableStateOf<Any?>(null) }
+
+  LaunchedEffect(Unit) {
+    delay(5000)
+    delayComplete = true
+  }
+
+  if (delayComplete) {
+    apkfyApp = rememberApkfyApp()
+  }
+
+  val isApkfy = apkfyApp != null
+
+  if (isFirstLaunch && !isApkfy && delayComplete) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+      val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+      ) { isGranted ->
+        onPermissionResult(isGranted)
+        if (isGranted) {
+          notificationsAnalytics.sendNotificationOptIn()
+          notificationsAnalytics.sendExperimentNotificationsAllowed()
+        } else {
+          notificationsAnalytics.sendNotificationOptOut()
+        }
+      }
+
+      LaunchedEffect(Unit) {
+        permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+      }
+    }
+  } else {
+    NotificationsPermissionRequester(
+      showDialog = showDialog,
+      onDismiss = onDismiss,
+      onPermissionResult = onPermissionResult
+    )
   }
 }
 

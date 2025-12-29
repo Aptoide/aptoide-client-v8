@@ -77,7 +77,7 @@ fun rememberApkfyState(): ApkfyUiState? = runPreviewable(
       coroutineScope.launch {
         apkfyFeatureFlags = withTimeoutOrNull(5000) {
           val flag =
-            vm.featureFlags.getFlagAsString("exp8_apkfy_variant")
+            vm.featureFlags.getFlagAsString("exp81_apkfy_variant")
           ApkfyFeatureFlags(
             apkfyVariant = flag
           )

@@ -17,4 +17,6 @@ object Palette {
 
   val Trusted = Color(0xFF25B47E)
   val Official = Color(0xFF007AFF)
+
+  val Yellow = Color(0xFFFFC93E)
 }
