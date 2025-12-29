@@ -34,6 +34,7 @@ import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
 import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
+import cm.aptoide.pt.feature_campaigns.UTMInfo
 import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.randomBundle
@@ -92,8 +93,16 @@ fun PublisherTakeOverBundle(
 
   LaunchedEffect(Unit) {
     if (!AptoideMMPCampaign.allowedBundleTags.keys.contains(bundle.tag)) {
-      AptoideMMPCampaign.allowedBundleTags[bundle.tag] = "PTO" to ("pto-${bundle.tag}")
-      AptoideMMPCampaign.allowedBundleTags["${bundle.tag}-more"] = "PTO" to ("pto-${bundle.tag}")
+      AptoideMMPCampaign.allowedBundleTags[bundle.tag] = UTMInfo(
+        utmMedium = "PTO",
+        utmCampaign = "pto-${bundle.tag}",
+        utmContent = "home-pto"
+      )
+      AptoideMMPCampaign.allowedBundleTags["${bundle.tag}-more"] = UTMInfo(
+        utmMedium = "PTO",
+        utmCampaign = "pto-${bundle.tag}",
+        utmContent = "pto-seeall"
+      )
     }
   }
 

@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
+import cm.aptoide.pt.feature_campaigns.UTMInfo
 import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.randomBundle
@@ -87,7 +88,11 @@ fun RTBSectionView(
 
   LaunchedEffect(Unit) {
     if (!AptoideMMPCampaign.allowedBundleTags.keys.contains(bundle.tag)) {
-      AptoideMMPCampaign.allowedBundleTags[bundle.tag] = "ag-rtb" to ("ag-rtb-${bundle.tag}")
+      AptoideMMPCampaign.allowedBundleTags[bundle.tag] = UTMInfo(
+        utmMedium = "ag-rtb",
+        utmCampaign = "ag-rtb-${bundle.tag}",
+        utmContent = "home-bundle"
+      )
     }
   }
 }

@@ -15,6 +15,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.navDeepLink
 import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
+import cm.aptoide.pt.feature_campaigns.UTMInfo
 import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import cm.aptoide.pt.feature_home.domain.Bundle
 import com.aptoide.android.aptoidegames.BuildConfig
@@ -93,7 +94,11 @@ fun RTBMoreBundleScreen(
 
   LaunchedEffect(Unit) {
     if (!AptoideMMPCampaign.allowedBundleTags.keys.contains(bundleTag)) {
-      AptoideMMPCampaign.allowedBundleTags[bundleTag] = "ag-rtb" to ("ag-rtb-${bundleTag}")
+      AptoideMMPCampaign.allowedBundleTags[bundleTag] = UTMInfo(
+        utmMedium = "ag-rtb",
+        utmCampaign = "ag-rtb-${bundleTag}",
+        utmContent = "rtb-seeall"
+      )
     }
   }
 
