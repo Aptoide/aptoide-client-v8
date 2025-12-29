@@ -7,10 +7,15 @@ plugins {
 
 android {
   namespace = "cm.aptoide.pt.feature_campaigns"
+  
+  buildFeatures {
+    buildConfig = true
+  }
 }
 
 dependencies {
   implementation(projects.aptoideNetwork)
 
   implementation(libs.gms.play.services.ads)
+  implementation(libs.timber)
 }
