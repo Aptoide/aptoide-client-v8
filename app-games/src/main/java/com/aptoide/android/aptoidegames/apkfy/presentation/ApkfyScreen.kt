@@ -92,7 +92,7 @@ fun ApkfyScreen(
     } else {
       apkfyAnalytics.sendApkfyShown()
       if (apkfyState.app.isRoblox()) {
-        apkfyAnalytics.sendRobloxExp8ApkfyShown()
+        apkfyAnalytics.sendRobloxExp81ApkfyShown()
       }
     }
   }

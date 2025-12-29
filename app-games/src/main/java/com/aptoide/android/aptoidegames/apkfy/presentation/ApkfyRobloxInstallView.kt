@@ -54,7 +54,7 @@ fun ApkfyRobloxInstallView(
   app: App,
   onInstallStarted: () -> Unit = {},
   onCancel: () -> Unit = {},
-  cancelable: Boolean = true
+  cancelable: Boolean = false
 ) {
   val installViewState = installViewStates(
     app = app,
@@ -71,7 +71,7 @@ fun ApkfyRobloxInstallView(
 @Composable
 private fun ApkfyMultiInstallViewContent(
   installViewState: InstallViewState,
-  cancelable: Boolean = true,
+  cancelable: Boolean = false,
 ) {
   when (val state = installViewState.uiState) {
     is DownloadUiState.Install,

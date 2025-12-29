@@ -167,5 +167,5 @@ interface InstallAnalytics {
   ) {
   }
 
-  fun sendApkfyRobloxExp8InstallClickEvent(numberOfCheckPresses: Int) {}
+  fun sendApkfyRobloxExp81InstallClickEvent(numberOfCheckPresses: Int) {}
 }

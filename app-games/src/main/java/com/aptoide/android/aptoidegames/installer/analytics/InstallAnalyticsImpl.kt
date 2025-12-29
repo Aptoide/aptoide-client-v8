@@ -482,9 +482,9 @@ class InstallAnalyticsImpl(
     )
   )
 
-  override fun sendApkfyRobloxExp8InstallClickEvent(numberOfCheckPresses: Int) {
+  override fun sendApkfyRobloxExp81InstallClickEvent(numberOfCheckPresses: Int) {
     genericAnalytics.logEvent(
-      name = "exp8_apkfy_install_click",
+      name = "exp81_apkfy_install_click",
       params = mapOf("check_diff" to numberOfCheckPresses)
     )
   }

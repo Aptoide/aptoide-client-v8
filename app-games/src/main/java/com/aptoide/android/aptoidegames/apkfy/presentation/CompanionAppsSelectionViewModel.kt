@@ -25,7 +25,7 @@ class CompanionAppsSelectionViewModel(
 
   private var counter: Int = 0
   private val _selectedIds =
-    MutableStateFlow(companionAppsList.take(2).map { it.packageName }
+    MutableStateFlow(companionAppsList.filter { it.isAppCoins }.take(1).map { it.packageName }
       .toSet())
   val selectedIds: StateFlow<Set<String>> = _selectedIds
 
@@ -46,19 +46,8 @@ class CompanionAppsSelectionViewModel(
       AnalyticsInstallPackageInfoMapper.currentAnalyticsUIContext =
         analyticsContext.copy(installAction = InstallAction.INSTALL)
 
-      installAnalytics.sendApkfyRobloxExp8InstallClickEvent(counter)
+      installAnalytics.sendApkfyRobloxExp81InstallClickEvent(counter)
       installAnalytics.sendClickEvent(apkfyApp, analyticsContext, networkType)
-
-      installManager.getApp(apkfyApp.packageName).install(installPackageInfoMapper.map(apkfyApp))
-      apkfyApp.campaigns?.toAptoideMMPCampaign()
-        ?.sendClickEvent(bundleTag = analyticsContext.bundleMeta?.tag, isCta = true)
-      apkfyApp.campaigns?.toAptoideMMPCampaign()
-        ?.sendDownloadEvent(
-          bundleTag = analyticsContext.bundleMeta?.tag,
-          searchKeyword = analyticsContext.searchMeta?.searchKeyword,
-          currentScreen = analyticsContext.currentScreen,
-          isCta = true
-        )
 
       companionAppsList.filter { it.packageName in selectedIds.value }.forEach {
         installManager.getApp(it.packageName).install(installPackageInfoMapper.map(it))
@@ -73,6 +62,18 @@ class CompanionAppsSelectionViewModel(
             isCta = true
           )
       }
+
+      installManager.getApp(apkfyApp.packageName).install(installPackageInfoMapper.map(apkfyApp))
+      apkfyApp.campaigns?.toAptoideMMPCampaign()
+        ?.sendClickEvent(bundleTag = analyticsContext.bundleMeta?.tag, isCta = true)
+      apkfyApp.campaigns?.toAptoideMMPCampaign()
+        ?.sendDownloadEvent(
+          bundleTag = analyticsContext.bundleMeta?.tag,
+          searchKeyword = analyticsContext.searchMeta?.searchKeyword,
+          currentScreen = analyticsContext.currentScreen,
+          isCta = true
+        )
+
     }
   }
 }
