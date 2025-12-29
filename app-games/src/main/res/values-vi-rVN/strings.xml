@@ -322,10 +322,10 @@
   <string name="update_app_updated_notification_body">Khám phá những điều mới mẻ</string>
   <!-- AB Test for Experiment 8 : Roblox Companion Apps -->
   <string name="apkfy_multi_install_install_button">Cài đặt [%d]</string>
-  <string name="apkfy_multi_install_intro_1">Do you want to install this game ?</string>
-  <string name="apkfy_multi_install_intro_2">Popular with Roblox players</string>
-  <string name="apkfy_multi_install_intro_3">People who play Roblox are also installing these</string>
-  <string name="apkfy_multi_install_highlighted_game">Top Played on Aptoide Games</string>
+  <string name="apkfy_multi_install_intro_1">Bạn có muốn cài đặt trò chơi này không?</string>
+  <string name="apkfy_multi_install_intro_2">Được ưa chuộng bởi người chơi Roblox</string>
+  <string name="apkfy_multi_install_intro_3">Những người chơi Roblox cũng đang cài đặt những ứng dụng này.</string>
+  <string name="apkfy_multi_install_highlighted_game">Trò chơi được chơi nhiều nhất trên Aptoide</string>
   <!-- AB Test for Experiment 9 : GamesFeed -->
   <string name="gamesfeed_bundle_header_1">Dành cho bạn</string>
   <string name="gamesfeed_detail_header">Các điểm nhấn hàng tuần dựa trên Roblox</string>
