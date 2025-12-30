@@ -18,7 +18,7 @@ import javax.inject.Inject
 class UpdatesRepository @Inject constructor(
   private val appUpdateDao: AppUpdateDao,
   private val updatesApi: UpdatesApi,
-  private val storeName: String,
+  private val storeNameProvider: StoreNameProvider,
   private val scope: CoroutineScope,
 ) {
 
@@ -26,6 +26,7 @@ class UpdatesRepository @Inject constructor(
 
   suspend fun loadUpdates(apksData: List<ApkData>): List<AppJSON> =
     withContext(scope.coroutineContext) {
+      val storeName = storeNameProvider.getStoreName()
       apksData.chunked(100)
         .map {
           async {

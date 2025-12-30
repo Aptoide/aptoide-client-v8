@@ -6,7 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
 import cm.aptoide.pt.aptoide_network.di.RetrofitV7
-import cm.aptoide.pt.aptoide_network.di.StoreName
+import cm.aptoide.pt.feature_updates.data.StoreNameProvider
 import cm.aptoide.pt.feature_updates.data.UpdatesRepository
 import cm.aptoide.pt.feature_updates.data.database.AppUpdateDao
 import cm.aptoide.pt.feature_updates.data.database.UpdatesDatabase
@@ -34,12 +34,12 @@ internal object RepositoryModule {
   @Singleton
   fun providesUpdatesRepository(
     @RetrofitV7 retrofitV7: Retrofit,
-    @StoreName storeName: String,
+    storeNameProvider: StoreNameProvider,
     appUpdateDao: AppUpdateDao,
   ): UpdatesRepository = UpdatesRepository(
     appUpdateDao = appUpdateDao,
     updatesApi = retrofitV7.create(UpdatesApi::class.java),
-    storeName = storeName,
+    storeNameProvider = storeNameProvider,
     scope = CoroutineScope(Dispatchers.IO)
   )
 

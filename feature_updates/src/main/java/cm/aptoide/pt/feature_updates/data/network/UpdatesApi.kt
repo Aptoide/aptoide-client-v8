@@ -9,7 +9,7 @@ import retrofit2.http.Query
 interface UpdatesApi {
   @POST("apps/getUpdates")
   suspend fun getAppsUpdates(
-    @Query("store_name") storeName: String,
+    @Query("store_name") storeName: String?,
     @Body request: UpdatesRequest,
   ): BaseV7ListResponse<AppJSON>
 }
