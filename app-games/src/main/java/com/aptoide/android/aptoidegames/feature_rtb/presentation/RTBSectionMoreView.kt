@@ -59,7 +59,6 @@ fun buildRtbSeeMoreRoute(
 private fun RTBMoreAptoideMMPController(
   uiState: RTBAppsListUiState,
   bundleTag: String,
-  placement: String,
 ) {
   when (uiState) {
     is RTBAppsListUiState.Idle ->
@@ -68,9 +67,6 @@ private fun RTBMoreAptoideMMPController(
         if (!hasSentImpression) {
           app.campaigns?.toAptoideMMPCampaign()
             ?.sendImpressionEvent(bundleTag, app.packageName)
-          app.campaigns?.run {
-            placementType = placement
-          }
           if (index == uiState.apps.size - 1) {
             hasSentImpression = true
           }
@@ -95,14 +91,14 @@ fun RTBMoreBundleScreen(
   LaunchedEffect(Unit) {
     if (!AptoideMMPCampaign.allowedBundleTags.keys.contains(bundleTag)) {
       AptoideMMPCampaign.allowedBundleTags[bundleTag] = UTMInfo(
-        utmMedium = "ag-rtb",
-        utmCampaign = "ag-rtb-${bundleTag}",
+        utmMedium = "rtb",
+        utmCampaign = "regular",
         utmContent = "rtb-seeall"
       )
     }
   }
 
-  RTBMoreAptoideMMPController(uiState, bundleTag, "home-bundle")
+  RTBMoreAptoideMMPController(uiState, bundleTag)
 
   Column(
     modifier = Modifier
@@ -128,13 +124,7 @@ fun RTBMoreBundleScreen(
       )
 
       uiState is RTBAppsListUiState.Idle -> RTBMoreAppsList(
-        rtbAppsList = uiState.apps.onEach {
-          it.app.campaigns?.run {
-            if (AptoideMMPCampaign.allowedBundleTags.keys.contains(bundleTag)) {
-              placementType = "see_all"
-            }
-          }
-        },
+        rtbAppsList = uiState.apps,
         navigate = navigate,
         onLoadingChange = { isLoading = it }
       )

@@ -50,18 +50,15 @@ class AptoideMMPCampaign(
     }
   }
 
-  fun sendClickEvent(
-    bundleTag: String?,
-    isCta: Boolean = false,
-  ) {
+  fun sendClickEvent(bundleTag: String?) {
     if (!allowedBundleTags.keys.contains(bundleTag)) return
     CoroutineScope(Dispatchers.Main).launch {
       val utmInfo = allowedBundleTags[bundleTag]
       val utmParams = buildAppendMap(
         utmMedium = utmInfo?.utmMedium,
         utmCampaign = campaign.campaignId ?: utmInfo?.utmCampaign,
+        utmContent = utmInfo?.utmContent,
         searchKeyword = utmInfo?.utmTerm,
-        isCta = isCta,
       )
 
       if (BuildConfig.DEBUG) {
@@ -85,7 +82,6 @@ class AptoideMMPCampaign(
     currentScreen: String?,
     utmCampaign: String? = null,
     utmSourceExterior: String? = null,
-    isCta: Boolean = false,
   ) {
     val utmInfo = allowedBundleTags[bundleTag]
     val utmMedium = bundleTag?.let { utmInfo?.utmMedium } ?: currentScreen
@@ -93,9 +89,9 @@ class AptoideMMPCampaign(
       val utmParams = buildAppendMap(
         utmMedium = utmMedium,
         utmCampaign = utmCampaign ?: utmInfo?.utmCampaign,
+        utmContent = utmInfo?.utmContent,
         searchKeyword = searchKeyword ?: utmInfo?.utmTerm,
         utmSourceExterior = utmSourceExterior,
-        isCta = isCta
       )
 
       if (BuildConfig.DEBUG) {
@@ -143,18 +139,12 @@ class AptoideMMPCampaign(
   private fun buildAppendMap(
     utmMedium: String?,
     utmCampaign: String?,
+    utmContent: String?,
     utmSourceExterior: String? = null,
     searchKeyword: String? = null,
-    isCta: Boolean,
   ): Map<String, String> {
     val map = buildBaseMap(utmMedium, utmCampaign, utmSourceExterior).toMutableMap()
-    utmCampaign?.let { _ ->
-      if (isCta) {
-        map["utm_content"] = "cta"
-      } else {
-        this.campaign.placementType?.let { map["utm_content"] = it }
-      }
-    }
+    utmContent?.let { map["utm_content"] = it }
     searchKeyword?.takeIf { it.isNotEmpty() }?.let { map["utm_term"] = it }
     return map
   }

@@ -56,7 +56,7 @@ fun PromotionDialog(navigate: (String) -> Unit) {
   LaunchedEffect(promotionData) {
     promotionData?.let { (promotion, app) ->
       AptoideMMPCampaign.allowedBundleTags["home_dialog"] = UTMInfo(
-        utmMedium = "Ahab_v2",
+        utmMedium = "promo-card",
         utmCampaign = promotion.uid,
         utmContent = "home-promo-card"
       )

@@ -26,16 +26,12 @@ private var hasSentImpression = false
 fun RTBAptoideMMPController(
   apps: List<RTBApp>,
   bundleTag: String,
-  placement: String,
 ) {
   apps.forEachIndexed { index, rtbApp ->
     val app = rtbApp.app
     if (!hasSentImpression) {
       app.campaigns?.toAptoideMMPCampaign()
         ?.sendImpressionEvent(bundleTag, app.packageName)
-      app.campaigns?.run {
-        placementType = placement
-      }
       if (index == apps.size - 1) {
         hasSentImpression = true
       }
@@ -89,8 +85,8 @@ fun RTBSectionView(
   LaunchedEffect(Unit) {
     if (!AptoideMMPCampaign.allowedBundleTags.keys.contains(bundle.tag)) {
       AptoideMMPCampaign.allowedBundleTags[bundle.tag] = UTMInfo(
-        utmMedium = "ag-rtb",
-        utmCampaign = "ag-rtb-${bundle.tag}",
+        utmMedium = "rtb",
+        utmCampaign = "regular",
         utmContent = "home-bundle"
       )
     }
@@ -105,7 +101,7 @@ fun RTBBundleView(
   onShowLoading: (Boolean) -> Unit = {}
 ) {
   val homeApps = apps.take(9)
-  RTBAptoideMMPController(homeApps, bundle.tag, "home-bundle")
+  RTBAptoideMMPController(homeApps, bundle.tag)
   RTBAppsRowView(
     rtbAppsList = homeApps,
     navigate = navigate,

@@ -9,8 +9,6 @@ interface Campaign {
   val adListId: String?
   val campaignId: String?
 
-  //TODO Refactor This Later - Not very good architecturally
-  val placementType: String?
   var deepLinkUtms: Map<String, String>
 
   suspend fun sendImpressionEvent(
@@ -46,7 +44,6 @@ data class CampaignImpl constructor(
 ) : Campaign {
   override var adListId: String? = null
 
-  override var placementType: String? = null
   override var deepLinkUtms: Map<String, String> = mutableMapOf()
 
   override suspend fun sendImpressionEvent(

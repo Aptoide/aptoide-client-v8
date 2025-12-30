@@ -44,7 +44,6 @@ import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiStateProvider
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
 import cm.aptoide.pt.feature_apps.presentation.rememberWalletApp
-import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
 import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import com.aptoide.android.aptoidegames.AptoideOutlinedText
 import com.aptoide.android.aptoidegames.BuildConfig
@@ -104,7 +103,6 @@ private fun MoreBonusBundleScreen(
   MoreBonusBundleScreen(
     uiState = uiState,
     title = title,
-    bundleTag = bundleTag,
     reload = reload,
     noNetworkReload = {
       reload()
@@ -121,7 +119,6 @@ private fun MoreBonusBundleScreen(
 fun MoreBonusBundleScreen(
   uiState: AppsListUiState,
   title: String,
-  bundleTag: String,
   reload: () -> Unit,
   noNetworkReload: () -> Unit,
   navigateBack: () -> Unit,
@@ -134,7 +131,6 @@ fun MoreBonusBundleScreen(
     AppGamesTopBar(navigateBack = navigateBack, title = title)
     MoreBonusBundleView(
       uiState = uiState,
-      bundleTag = bundleTag,
       navigate = navigate,
       reload = reload,
       noNetworkReload = noNetworkReload
@@ -145,7 +141,6 @@ fun MoreBonusBundleScreen(
 @Composable
 fun MoreBonusBundleView(
   uiState: AppsListUiState,
-  bundleTag: String,
   navigate: (String) -> Unit,
   reload: () -> Unit,
   noNetworkReload: () -> Unit,
@@ -160,13 +155,7 @@ fun MoreBonusBundleView(
     )
 
     is AppsListUiState.Idle -> MoreBonusBundleViewContent(
-      appList = uiState.apps.onEach {
-        it.campaigns?.run {
-          if (AptoideMMPCampaign.allowedBundleTags.keys.contains(bundleTag)) {
-            placementType = "see_all"
-          }
-        }
-      },
+      appList = uiState.apps,
       navigate = navigate,
     )
   }
@@ -392,7 +381,6 @@ private fun RealBonusBundlePreview(
     MoreBonusBundleScreen(
       uiState = uiState,
       title = getRandomString(range = 1..5, capitalize = true),
-      bundleTag = "",
       reload = {},
       noNetworkReload = {},
       navigateBack = {},

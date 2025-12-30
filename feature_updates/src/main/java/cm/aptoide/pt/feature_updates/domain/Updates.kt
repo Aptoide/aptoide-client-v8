@@ -188,7 +188,6 @@ class Updates @Inject constructor(
                       bundleTag = null,
                       searchKeyword = null,
                       currentScreen = null,
-                      isCta = false
                     )
 
                     toMMPLinkerCampaign().sendDownloadEvent()
@@ -275,7 +274,6 @@ class Updates @Inject constructor(
                 bundleTag = null,
                 searchKeyword = null,
                 currentScreen = null,
-                isCta = false
               )
 
               toMMPLinkerCampaign().sendDownloadEvent()

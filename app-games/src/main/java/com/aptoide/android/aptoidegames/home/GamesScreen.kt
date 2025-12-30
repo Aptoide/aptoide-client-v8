@@ -89,7 +89,6 @@ private fun AppCoinsTabView(navigate: (String) -> Unit) {
 
   MoreBonusBundleView(
     uiState = uiState,
-    bundleTag = "$bonusBundleTag-more",
     navigate = navigate,
     reload = reload,
     noNetworkReload = reload
