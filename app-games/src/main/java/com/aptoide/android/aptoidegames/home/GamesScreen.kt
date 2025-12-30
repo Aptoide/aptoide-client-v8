@@ -97,12 +97,14 @@ private fun AppCoinsTabView(navigate: (String) -> Unit) {
 
 @Composable
 private fun EditorialTabView(navigate: (String) -> Unit) {
+  val tag = "editorials-more"
   val (uiState, reload) = rememberEditorialListState(
-    tag = "editorials-more",
+    tag = tag,
     subtype = null
   )
 
   SeeMoreEditorialsContent(
+    tag = tag,
     uiState = uiState,
     navigate = navigate,
     onError = reload

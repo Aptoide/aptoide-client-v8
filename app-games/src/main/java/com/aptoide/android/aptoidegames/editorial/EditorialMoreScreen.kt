@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.CollectionInfo
@@ -28,12 +29,17 @@ import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.ScreenData
+import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
+import cm.aptoide.pt.feature_campaigns.UTMInfo
 import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
 import cm.aptoide.pt.feature_editorial.presentation.ArticleListUiState
 import cm.aptoide.pt.feature_editorial.presentation.previewArticlesListIdleState
 import cm.aptoide.pt.feature_editorial.presentation.rememberEditorialListState
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
 import com.aptoide.android.aptoidegames.BuildConfig
+import com.aptoide.android.aptoidegames.analytics.dto.BundleMeta
+import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
+import com.aptoide.android.aptoidegames.analytics.presentation.OverrideAnalyticsBundleMeta
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
@@ -66,8 +72,10 @@ fun seeMoreEditorialScreen() = ScreenData.withAnalytics(
     tag = tag,
     subtype = arguments.getString("subtype")
   )
+
   SeeMoreEditorialsScreen(
     title = title,
+    tag = tag,
     uiState = uiState,
     onError = reload,
     navigateBack = navigateBack,
@@ -84,6 +92,7 @@ fun buildSeeMoreEditorialsRoute(
 @Composable
 fun SeeMoreEditorialsScreen(
   title: String?,
+  tag: String,
   uiState: ArticleListUiState,
   onError: () -> Unit,
   navigateBack: () -> Unit,
@@ -97,6 +106,7 @@ fun SeeMoreEditorialsScreen(
   ) {
     AppGamesTopBar(navigateBack = navigateBack, title = title)
     SeeMoreEditorialsContent(
+      tag = tag,
       uiState = uiState,
       navigate = navigate,
       onError = onError
@@ -106,24 +116,43 @@ fun SeeMoreEditorialsScreen(
 
 @Composable
 fun SeeMoreEditorialsContent(
+  tag: String,
   uiState: ArticleListUiState,
   navigate: (String) -> Unit,
   onError: () -> Unit
 ) {
-  when (uiState) {
-    is ArticleListUiState.Loading -> LoadingView()
-    is ArticleListUiState.Error -> GenericErrorView(onRetryClick = onError)
-    is ArticleListUiState.NoConnection -> NoConnectionView(onRetryClick = onError)
-    is ArticleListUiState.Empty -> ArticlesList(
-      articleList = emptyList(),
-      navigate = navigate,
-    )
-
-    is ArticleListUiState.Idle ->
-      ArticlesList(
-        articleList = uiState.articles,
-        navigate = navigate
+  LaunchedEffect(tag) {
+    if (!AptoideMMPCampaign.allowedBundleTags.keys.contains(tag)) {
+      AptoideMMPCampaign.allowedBundleTags[tag] = UTMInfo(
+        utmMedium = "editorial",
+        utmCampaign = "editorial",
+        utmContent = "editorial-seeall"
       )
+    }
+  }
+
+  val analyticsContext = AnalyticsContext.current
+  val bundleMeta = analyticsContext.bundleMeta ?: BundleMeta(tag = tag, bundleSource = "manual")
+
+  OverrideAnalyticsBundleMeta(
+    bundleMeta = bundleMeta,
+    navigate = navigate
+  ) { navigateTo ->
+    when (uiState) {
+      is ArticleListUiState.Loading -> LoadingView()
+      is ArticleListUiState.Error -> GenericErrorView(onRetryClick = onError)
+      is ArticleListUiState.NoConnection -> NoConnectionView(onRetryClick = onError)
+      is ArticleListUiState.Empty -> ArticlesList(
+        articleList = emptyList(),
+        navigate = navigateTo,
+      )
+
+      is ArticleListUiState.Idle ->
+        ArticlesList(
+          articleList = uiState.articles,
+          navigate = navigateTo
+        )
+    }
   }
 }
 
@@ -210,6 +239,7 @@ fun EditorialsViewCardLarge(
 @Composable
 private fun EditorialMoreViewPreview() {
   SeeMoreEditorialsContent(
+    tag = "editorial-preview",
     uiState = previewArticlesListIdleState,
     navigate = { },
     onError = { }
