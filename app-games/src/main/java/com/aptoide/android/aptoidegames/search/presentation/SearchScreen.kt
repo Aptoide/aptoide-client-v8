@@ -73,6 +73,7 @@ import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.OverrideAnalyticsSearchMeta
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
+import com.aptoide.android.aptoidegames.analytics.presentation.withSearchMeta
 import com.aptoide.android.aptoidegames.appview.LoadingView
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getAsterisk
@@ -128,7 +129,7 @@ fun searchScreen() = ScreenData.withAnalytics(
         mutableStateOf(value.takeUnless { it == "null" }?.let(SearchMeta::fromString))
       }
     ),
-    init = { mutableStateOf<SearchMeta?>(null) }
+    init = { mutableStateOf(analyticsContext.searchMeta) }
   )
   val focusManager = LocalFocusManager.current
   val keyboardController = LocalSoftwareKeyboardController.current
@@ -169,7 +170,7 @@ fun searchScreen() = ScreenData.withAnalytics(
             )
           }
         searchValue = suggestion
-        navigateTo(buildSearchRoute(suggestion))
+        navigateTo(buildSearchRoute(suggestion).withSearchMeta(searchMeta))
       },
       onRemoveSuggestion = { searchViewModel.onRemoveSearchSuggestion(it) },
       onSearchValueChanged = {
@@ -188,7 +189,7 @@ fun searchScreen() = ScreenData.withAnalytics(
             .also(searchAnalytics::sendSearchEvent)
           focusManager.clearFocus()
           keyboardController?.hide()
-          navigateTo(buildSearchRoute(searchValue))
+          navigateTo(buildSearchRoute(searchValue).withSearchMeta(searchMeta))
         }
       },
       onItemClick = { index, app ->
