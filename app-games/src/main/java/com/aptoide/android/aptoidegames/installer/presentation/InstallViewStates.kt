@@ -91,18 +91,14 @@ fun installViewStates(
             )
             if (analyticsContext.currentScreen != "AppView") {
               app.campaigns?.toAptoideMMPCampaign()
-                ?.sendClickEvent(bundleTag = analyticsContext.bundleMeta?.tag, isCta = true)
+                ?.sendClickEvent(bundleTag = analyticsContext.bundleMeta?.tag)
               app.campaigns?.toAptoideMMPCampaign()
                 ?.sendDownloadEvent(
                   bundleTag = analyticsContext.bundleMeta?.tag,
                   searchKeyword = analyticsContext.searchMeta?.searchKeyword,
                   currentScreen = analyticsContext.currentScreen,
-                  isCta = true
                 )
             } else if (!app.campaigns?.deepLinkUtms?.get("utm_source").isNullOrEmpty()) {
-              app.campaigns?.placementType =
-                app.campaigns?.deepLinkUtms?.get("utm_content") ?: "appview"
-
               app.campaigns?.toAptoideMMPCampaign()
                 ?.sendDownloadEvent(
                   bundleTag = null,
@@ -113,8 +109,6 @@ fun installViewStates(
                   utmSourceExterior = app.campaigns?.deepLinkUtms?.get("utm_source")
                 )
             } else {
-              app.campaigns?.placementType = "appview"
-
               val campaignId = app.campaigns?.deepLinkUtms?.get("utm_campaign")
               app.campaigns?.toAptoideMMPCampaign()
                 ?.sendDownloadEvent(
@@ -148,18 +142,14 @@ fun installViewStates(
             )
             if (analyticsContext.currentScreen != "AppView") {
               app.campaigns?.toAptoideMMPCampaign()
-                ?.sendClickEvent(bundleTag = analyticsContext.bundleMeta?.tag, isCta = true)
+                ?.sendClickEvent(bundleTag = analyticsContext.bundleMeta?.tag)
               app.campaigns?.toAptoideMMPCampaign()
                 ?.sendDownloadEvent(
                   bundleTag = analyticsContext.bundleMeta?.tag,
                   searchKeyword = analyticsContext.searchMeta?.searchKeyword,
                   currentScreen = analyticsContext.currentScreen,
-                  isCta = true
                 )
             } else if (!app.campaigns?.deepLinkUtms?.get("utm_source").isNullOrEmpty()) {
-              app.campaigns?.placementType =
-                app.campaigns?.deepLinkUtms?.get("utm_content") ?: "appview"
-
               app.campaigns?.toAptoideMMPCampaign()
                 ?.sendDownloadEvent(
                   bundleTag = null,
@@ -170,8 +160,6 @@ fun installViewStates(
                   utmSourceExterior = app.campaigns?.deepLinkUtms?.get("utm_source")
                 )
             } else {
-              app.campaigns?.placementType = "appview"
-
               val campaignId = app.campaigns?.deepLinkUtms?.get("utm_campaign")
               app.campaigns?.toAptoideMMPCampaign()
                 ?.sendDownloadEvent(
@@ -215,18 +203,14 @@ fun installViewStates(
             )
             if (analyticsContext.currentScreen != "AppView") {
               app.campaigns?.toAptoideMMPCampaign()
-                ?.sendClickEvent(bundleTag = analyticsContext.bundleMeta?.tag, isCta = true)
+                ?.sendClickEvent(bundleTag = analyticsContext.bundleMeta?.tag)
               app.campaigns?.toAptoideMMPCampaign()
                 ?.sendDownloadEvent(
                   bundleTag = analyticsContext.bundleMeta?.tag,
                   searchKeyword = analyticsContext.searchMeta?.searchKeyword,
                   currentScreen = analyticsContext.currentScreen,
-                  isCta = true
                 )
             } else if (!app.campaigns?.deepLinkUtms?.get("utm_source").isNullOrEmpty()) {
-              app.campaigns?.placementType =
-                app.campaigns?.deepLinkUtms?.get("utm_content") ?: "appview"
-
               app.campaigns?.toAptoideMMPCampaign()
                 ?.sendDownloadEvent(
                   bundleTag = null,
@@ -237,8 +221,6 @@ fun installViewStates(
                   utmSourceExterior = app.campaigns?.deepLinkUtms?.get("utm_source")
                 )
             } else {
-              app.campaigns?.placementType = "appview"
-
               val campaignId = app.campaigns?.deepLinkUtms?.get("utm_campaign")
               app.campaigns?.toAptoideMMPCampaign()
                 ?.sendDownloadEvent(
@@ -281,18 +263,14 @@ fun installViewStates(
             )
             if (analyticsContext.currentScreen != "AppView") {
               app.campaigns?.toAptoideMMPCampaign()
-                ?.sendClickEvent(bundleTag = analyticsContext.bundleMeta?.tag, isCta = true)
+                ?.sendClickEvent(bundleTag = analyticsContext.bundleMeta?.tag)
               app.campaigns?.toAptoideMMPCampaign()
                 ?.sendDownloadEvent(
                   bundleTag = analyticsContext.bundleMeta?.tag,
                   searchKeyword = analyticsContext.searchMeta?.searchKeyword,
                   currentScreen = analyticsContext.currentScreen,
-                  isCta = true
                 )
             } else if (!app.campaigns?.deepLinkUtms?.get("utm_source").isNullOrEmpty()) {
-              app.campaigns?.placementType =
-                app.campaigns?.deepLinkUtms?.get("utm_content") ?: "appview"
-
               app.campaigns?.toAptoideMMPCampaign()
                 ?.sendDownloadEvent(
                   bundleTag = null,
@@ -303,8 +281,6 @@ fun installViewStates(
                   utmSourceExterior = app.campaigns?.deepLinkUtms?.get("utm_source")
                 )
             } else {
-              app.campaigns?.placementType = "appview"
-
               val campaignId = app.campaigns?.deepLinkUtms?.get("utm_campaign")
               app.campaigns?.toAptoideMMPCampaign()
                 ?.sendDownloadEvent(

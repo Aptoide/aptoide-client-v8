@@ -63,7 +63,6 @@ internal var hasSentImpression = false
 fun AptoideMMPController(
   appsListUiState: AppsListUiState,
   bundleTag: String,
-  placement: String,
 ) {
   when (appsListUiState) {
     is AppsListUiState.Idle ->
@@ -72,9 +71,6 @@ fun AptoideMMPController(
           it.campaigns?.toAptoideMMPCampaign()
             ?.sendImpressionEvent(bundleTag, BuildConfig.APPLICATION_ID)
           hasSentImpression = true
-        }
-        it.campaigns?.run {
-          placementType = placement
         }
       }
 
@@ -94,24 +90,22 @@ fun PublisherTakeOverBundle(
   LaunchedEffect(Unit) {
     if (!AptoideMMPCampaign.allowedBundleTags.keys.contains(bundle.tag)) {
       AptoideMMPCampaign.allowedBundleTags[bundle.tag] = UTMInfo(
-        utmMedium = "PTO",
+        utmMedium = "pto",
         utmCampaign = "pto-${bundle.tag}",
         utmContent = "home-pto"
       )
-      AptoideMMPCampaign.allowedBundleTags["${bundle.tag}-more"] = UTMInfo(
-        utmMedium = "PTO",
-        utmCampaign = "pto-${bundle.tag}",
-        utmContent = "pto-seeall"
-      )
+      if (bundle.hasMoreAction) {
+        AptoideMMPCampaign.allowedBundleTags["${bundle.tag}-more"] = UTMInfo(
+          utmMedium = "pto",
+          utmCampaign = "pto-${bundle.tag}",
+          utmContent = "pto-seeall"
+        )
+      }
     }
   }
 
-  AptoideMMPController(
-    appsListUiState = uiState, bundleTag = bundle.tag, placement = "app_1st_line"
-  )
-  AptoideMMPController(
-    appsListUiState = bottomUiState, bundleTag = bundle.tag, placement = "app_2nd_line"
-  )
+  AptoideMMPController(appsListUiState = uiState, bundleTag = bundle.tag)
+  AptoideMMPController(appsListUiState = bottomUiState, bundleTag = bundle.tag)
 
   PublisherTakeOverContent(
     bundle = bundle,

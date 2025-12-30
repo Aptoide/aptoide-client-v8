@@ -53,27 +53,24 @@ class CompanionAppsSelectionViewModel(
         installManager.getApp(it.packageName).install(installPackageInfoMapper.map(it))
 
         it.campaigns?.toAptoideMMPCampaign()
-          ?.sendClickEvent(bundleTag = analyticsContext.bundleMeta?.tag, isCta = true)
+          ?.sendClickEvent(bundleTag = analyticsContext.bundleMeta?.tag)
         it.campaigns?.toAptoideMMPCampaign()
           ?.sendDownloadEvent(
             bundleTag = analyticsContext.bundleMeta?.tag,
             searchKeyword = analyticsContext.searchMeta?.searchKeyword,
             currentScreen = analyticsContext.currentScreen,
-            isCta = true
           )
       }
 
       installManager.getApp(apkfyApp.packageName).install(installPackageInfoMapper.map(apkfyApp))
       apkfyApp.campaigns?.toAptoideMMPCampaign()
-        ?.sendClickEvent(bundleTag = analyticsContext.bundleMeta?.tag, isCta = true)
+        ?.sendClickEvent(bundleTag = analyticsContext.bundleMeta?.tag)
       apkfyApp.campaigns?.toAptoideMMPCampaign()
         ?.sendDownloadEvent(
           bundleTag = analyticsContext.bundleMeta?.tag,
           searchKeyword = analyticsContext.searchMeta?.searchKeyword,
           currentScreen = analyticsContext.currentScreen,
-          isCta = true
         )
-
     }
   }
 }

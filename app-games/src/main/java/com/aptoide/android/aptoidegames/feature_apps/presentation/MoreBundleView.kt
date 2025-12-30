@@ -24,7 +24,6 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiStateProvider
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
-import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
 import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
@@ -82,7 +81,6 @@ fun MoreBundleView(
   MoreBundleViewContent(
     uiState = uiState,
     title = title,
-    bundleTag = bundleTag,
     reload = reload,
     noNetworkReload = {
       reload()
@@ -99,7 +97,6 @@ fun MoreBundleView(
 fun MoreBundleViewContent(
   uiState: AppsListUiState,
   title: String,
-  bundleTag: String,
   reload: () -> Unit,
   noNetworkReload: () -> Unit,
   navigateBack: () -> Unit,
@@ -122,13 +119,7 @@ fun MoreBundleViewContent(
       )
 
       is AppsListUiState.Idle -> AppsList(
-        appList = uiState.apps.onEach {
-          it.campaigns?.run {
-            if (AptoideMMPCampaign.allowedBundleTags.keys.contains(bundleTag)) {
-              placementType = "see_all"
-            }
-          }
-        },
+        appList = uiState.apps,
         navigate = navigate,
       )
     }
@@ -188,7 +179,6 @@ private fun MoreBundleViewPreview(
     MoreBundleViewContent(
       uiState = uiState,
       title = getRandomString(range = 1..5, capitalize = true),
-      bundleTag = "",
       reload = {},
       noNetworkReload = {},
       navigateBack = {},
