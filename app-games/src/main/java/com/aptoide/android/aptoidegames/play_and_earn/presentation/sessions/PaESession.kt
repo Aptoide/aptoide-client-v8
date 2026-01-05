@@ -16,10 +16,16 @@ class PaESession(
   val sessionStartTime: Long = System.currentTimeMillis()
   var lastSyncTime: Long = sessionStartTime
 
+  var lastAppOpenTime: Long = System.currentTimeMillis()
+
   var totalSessionTime: Int = 0
   var usageTimeSinceLastSync: Int = 0
 
   var syncSequence = 0
+
+  fun pause() {
+    lastAppOpenTime = System.currentTimeMillis()
+  }
 
   fun shouldSync() = (System.currentTimeMillis() / 1000L) - (lastSyncTime / 1000L) > 15L
 
