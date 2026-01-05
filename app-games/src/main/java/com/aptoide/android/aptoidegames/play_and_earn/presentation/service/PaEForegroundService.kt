@@ -15,6 +15,7 @@ import androidx.savedstate.SavedStateRegistryController
 import androidx.savedstate.SavedStateRegistryOwner
 import cm.aptoide.pt.campaigns.data.PaECampaignsRepository
 import cm.aptoide.pt.usage_stats.PackageUsageManager
+import cm.aptoide.pt.usage_stats.PackageUsageState
 import com.aptoide.android.aptoidegames.MainActivity
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.overlays.PaEOverlayViewManager
@@ -125,29 +126,51 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
   }
 
   private suspend fun syncService() {
-    val foregroundPackage = packageUsageManager.getForegroundPackage()
+    val activeSession = paESessionManager.activeSessions
+      .firstOrNull { it.packageName == lastForegroundPackage }
 
-    //New foreground package
-    if (foregroundPackage != null && foregroundPackage != lastForegroundPackage) {
-      lastForegroundPackage = foregroundPackage
+    val packageState =
+      packageUsageManager.getForegroundPackageState(activeSession?.sessionStartTime)
 
-      //Game available in PaE. Start session
-      if (availablePaEPackages?.contains(foregroundPackage) == true) {
-        //Should check if a session already exists and is not finished
-        val sessionCreated = paESessionManager.createSession(foregroundPackage)
+    when (packageState) {
+      is PackageUsageState.ForegroundPackage -> {
+        val foregroundPackage = packageState.packageName
 
-        //Always show welcome back overlay, even if session already exists
-        if (sessionCreated || paESessionManager.activeSessions.any { it.packageName == foregroundPackage }) {
-          withContext(Dispatchers.Main) {
-            paeOverlayViewManager.showWelcomeBackOverlayView(
-              this@PaEForegroundService,
-              this@PaEForegroundService
-            )
+        // New foreground package detected
+        if (foregroundPackage != lastForegroundPackage) {
+          lastForegroundPackage = foregroundPackage
+
+          // Game available in PaE. Start session
+          if (availablePaEPackages?.contains(foregroundPackage) == true) {
+            // Check if a session already exists and is not finished
+            val sessionCreated = paESessionManager.createSession(foregroundPackage)
+
+            // Always show welcome back overlay, even if session already exists
+            if (sessionCreated || paESessionManager.activeSessions.any { it.packageName == foregroundPackage }) {
+              withContext(Dispatchers.Main) {
+                paeOverlayViewManager.showWelcomeBackOverlayView(
+                  this@PaEForegroundService,
+                  this@PaEForegroundService
+                )
+              }
+            }
           }
+        } else {
+          // Same package still in foreground - sync active sessions
+          paESessionManager.syncSessions(lastForegroundPackage)
         }
       }
-    } else { //Sync sessions if package is the same or if it is null
-      paESessionManager.syncSessions(lastForegroundPackage)
+
+      is PackageUsageState.NoForegroundPackage -> {
+        // No package in foreground (e.g., screen locked, all apps paused)
+        // Don't sync sessions as no time should be tracked while paused
+        // Sessions will handle their own expiration via TTL
+      }
+
+      is PackageUsageState.Error -> {
+        // Error means we couldn't determine state (no events in window or OEM failure)
+        // Don't sync to avoid incorrectly counting time.
+      }
     }
   }
 

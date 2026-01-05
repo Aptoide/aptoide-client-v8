@@ -57,13 +57,87 @@ class DefaultPackageUsageManager(context: Context) : PackageUsageManager {
       null
     }
   }
+
+  override fun getForegroundPackageState(startTimeMs: Long?): PackageUsageState {
+    return try {
+      val endTime = System.currentTimeMillis()
+      val defaultStartTime = endTime - QUERY_WINDOW_MS
+
+      // Subtract a buffer to ensure the capture of RESUMED events
+      val adjustedStartTime = startTimeMs?.let { it - QUERY_WINDOW_MS }
+
+      val queryStartTime =
+        adjustedStartTime?.let { minOf(it, defaultStartTime) } ?: defaultStartTime
+
+      val usageEvents: UsageEvents = usageStatsManager.queryEvents(queryStartTime, endTime)
+      val event = UsageEvents.Event()
+
+      val resumedActivities = mutableMapOf<String, MutableSet<String>>()
+      var lastResumedPackage: String? = null
+      var hasAnyActivityEvents = false
+
+      while (usageEvents.hasNextEvent()) {
+        usageEvents.getNextEvent(event)
+        val packageName = event.packageName
+
+        when (event.eventType) {
+          UsageEvents.Event.ACTIVITY_RESUMED -> {
+            hasAnyActivityEvents = true
+            val activeClasses = resumedActivities.getOrPut(packageName) { mutableSetOf() }
+            val className = event.className ?: "unknown"
+
+            activeClasses.add(className)
+            lastResumedPackage = packageName
+          }
+
+          UsageEvents.Event.ACTIVITY_PAUSED,
+          UsageEvents.Event.ACTIVITY_STOPPED -> {
+            hasAnyActivityEvents = true
+            val className = event.className ?: "unknown"
+
+            resumedActivities[packageName]?.remove(className)
+
+            // If all activities for this package are paused/stopped, remove from map
+            if (resumedActivities[packageName]?.isEmpty() == true) {
+              resumedActivities.remove(packageName)
+            }
+          }
+        }
+      }
+
+      // Determine the state based on what we found
+      when {
+        // If we have resumed activities, return the most recent one
+        resumedActivities.isNotEmpty() -> {
+          // Find the package that's actually in foreground (the last one resumed that's still active)
+          val foregroundPackage = if (resumedActivities.contains(lastResumedPackage)) {
+            lastResumedPackage
+          } else {
+            // Fallback to any resumed package
+            resumedActivities.keys.firstOrNull()
+          }
+          foregroundPackage?.let { PackageUsageState.ForegroundPackage(it) }
+            ?: PackageUsageState.NoForegroundPackage
+        }
+
+        // If we saw activity events but nothing is resumed, apps were paused/stopped
+        hasAnyActivityEvents -> {
+          PackageUsageState.NoForegroundPackage
+        }
+
+        // Either no activity or a failure fetching the events.
+        // We treat this as Error to be safe and avoid incorrect time tracking
+        else -> {
+          PackageUsageState.Error
+        }
+      }
+    } catch (e: Exception) {
+      e.printStackTrace()
+      PackageUsageState.Error
+    }
+  }
+
+  companion object {
+    private const val QUERY_WINDOW_MS = 60_000L
+  }
 }
-
-data class AppUsageInfo(
-  val classes: MutableMap<String, ClassUsageState> = mutableMapOf(),
-)
-
-data class ClassUsageState(
-  var isResumed: Boolean,
-  val startTimestamp: Long
-)
