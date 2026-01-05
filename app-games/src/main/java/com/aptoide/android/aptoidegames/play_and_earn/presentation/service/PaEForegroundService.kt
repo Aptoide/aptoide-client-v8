@@ -130,7 +130,7 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
       .firstOrNull { it.packageName == lastForegroundPackage }
 
     val packageState =
-      packageUsageManager.getForegroundPackageState(activeSession?.sessionStartTime)
+      packageUsageManager.getForegroundPackageState(activeSession?.lastAppOpenTime)
 
     when (packageState) {
       is PackageUsageState.ForegroundPackage -> {
@@ -138,6 +138,7 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
 
         // New foreground package detected
         if (foregroundPackage != lastForegroundPackage) {
+          activeSession?.pause()
           lastForegroundPackage = foregroundPackage
 
           // Game available in PaE. Start session
