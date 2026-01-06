@@ -304,7 +304,7 @@
   <string name="genai_new_chat_button">Nuova chat</string>
   <string name="gamegenie_companion_play">Gioca</string>
   <string name="gamegenie_companion_play_smarter">Oppure gioca in modo più intelligente utilizzando l\'overlay in-game di GameGenie.</string>
-  <string name="gamegenie_overlay_permission_message"><![CDATA[Attiva <1>l'autorizzazione alla sovrapposizione</1> e lascia che GameGenie ti guidi alla vittoria!]]></string>
+  <string name="gamegenie_overlay_permission_message"><![CDATA[Attiva <1>l\'autorizzazione alla sovrapposizione</1> e lascia che GameGenie ti guidi alla vittoria!]]></string>
   <string name="gamegenie_overlay_permission_accept">Facciamolo!</string>
   <string name="gamegenie_overlay_tooltip">Gioca con overlay nel gioco</string>
   <!-- Promotional Cards -->
