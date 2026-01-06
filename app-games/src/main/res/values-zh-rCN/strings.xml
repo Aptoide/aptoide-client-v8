@@ -284,18 +284,18 @@
   <string name="genai_me_title">我</string>
   <string name="genai_introduction_body">嗨！我是您的 AI 助手，帮您轻松发现优质应用和精彩游戏。不妨试试这样开始：</string>
   <string name="genai_input_message_field">问任何问题</string>
-  <string name="genai_input_message_field_with_screenshot">Ask about what I\'m seeing now</string>
+  <string name="genai_input_message_field_with_screenshot">问我此刻所见为何</string>
   <string name="genai_powered_by_ai_title">由 AI 提供支持</string>
   <string name="genai_example_1_body">请推荐一些策略类游戏。</string>
   <string name="genai_example_2_body">请推荐几款特别好玩的多人游戏。</string>
   <string name="genai_example_3_body">你能推荐一些离线的休闲游戏吗？</string>
   <string name="genai_history_body">GameGenie 历史记录</string>
   <string name="genai_new_chat_button">新聊天</string>
-  <string name="gamegenie_companion_play">Play</string>
-  <string name="gamegenie_companion_play_smarter">Or play smarter using GameGenie\'s in-game overlay.</string>
-  <string name="gamegenie_overlay_permission_message"><![CDATA[Turn on <1>overlay permission</1> and let GameGenie guide you to victory!]]></string>
-  <string name="gamegenie_overlay_permission_accept">Let\'s do it!</string>
-  <string name="gamegenie_overlay_tooltip">Play in-game overlay</string>
+  <string name="gamegenie_companion_play">玩</string>
+  <string name="gamegenie_companion_play_smarter">或者通过GameGenie的游戏内叠加层更聪明地玩游戏。</string>
+  <string name="gamegenie_overlay_permission_message"><![CDATA[<1>开启叠加权限</1>，让GameGenie引领你走向胜利！]]></string>
+  <string name="gamegenie_overlay_permission_accept">干吧！</string>
+  <string name="gamegenie_overlay_tooltip">在游戏中播放叠加层</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">现已兼容 Aptoide Wallet</string>
   <string name="promotional_new_version">新版本</string>
@@ -404,11 +404,11 @@
   <string name="play_and_earn_permissions_enable_now_button">立即启用</string>
   <string name="play_and_earn_permissions_not_now_button">现在不行</string>
   <!-- GameGenie Overlay Menu -->
-  <string name="gamegenie_overlay_ask_anything">Ask anything</string>
-  <string name="gamegenie_overlay_ask_screenshot">Ask about what I\'m seeing now</string>
-  <string name="gamegenie_overlay_remove">Remove overlay</string>
-  <string name="gamegenie_overlay_launch">Launch GameGenie overlay</string>
+  <string name="gamegenie_overlay_ask_anything">问任何问题</string>
+  <string name="gamegenie_overlay_ask_screenshot">问我此刻所见为何</string>
+  <string name="gamegenie_overlay_remove">移除覆盖层</string>
+  <string name="gamegenie_overlay_launch">启动GameGenie叠加层</string>
   <!-- GameGenie Overlay Notification -->
-  <string name="gamegenie_overlay_notification_title">GameGenie Chat Overlay</string>
-  <string name="gamegenie_overlay_notification_text">GameGenie is ready to assist you!</string>
+  <string name="gamegenie_overlay_notification_title">游戏精灵聊天叠加层</string>
+  <string name="gamegenie_overlay_notification_text">GameGenie已准备好为您服务！</string>
 </resources>
