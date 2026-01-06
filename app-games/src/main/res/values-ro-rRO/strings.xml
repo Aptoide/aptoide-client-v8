@@ -306,18 +306,18 @@
   <string name="genai_me_title">Eu</string>
   <string name="genai_introduction_body">Bună! Sunt Asistentul tău AI specializat în aplicații și descoperirea jocurilor. Poți începe cu ceva de genul:</string>
   <string name="genai_input_message_field">Întrebați orice</string>
-  <string name="genai_input_message_field_with_screenshot">Ask about what I\'m seeing now</string>
+  <string name="genai_input_message_field_with_screenshot">Întreabă-mă ce văd acum</string>
   <string name="genai_powered_by_ai_title">Alimentat de AI</string>
   <string name="genai_example_1_body">Caut jocuri de strategie.</string>
   <string name="genai_example_2_body">Te rog să îmi recomanzi cele mai bune jocuri multiplayer.</string>
   <string name="genai_example_3_body">Știi jocuri ocazionale offline?</string>
   <string name="genai_history_body">Istoric GameGenie</string>
   <string name="genai_new_chat_button">Chat nou</string>
-  <string name="gamegenie_companion_play">Play</string>
-  <string name="gamegenie_companion_play_smarter">Or play smarter using GameGenie\'s in-game overlay.</string>
-  <string name="gamegenie_overlay_permission_message"><![CDATA[Turn on <1>overlay permission</1> and let GameGenie guide you to victory!]]></string>
-  <string name="gamegenie_overlay_permission_accept">Let\'s do it!</string>
-  <string name="gamegenie_overlay_tooltip">Play in-game overlay</string>
+  <string name="gamegenie_companion_play">Joacă</string>
+  <string name="gamegenie_companion_play_smarter">Sau joacă mai inteligent folosind suprapunerea în joc a GameGenie.</string>
+  <string name="gamegenie_overlay_permission_message"><![CDATA[Activează <1>permisiunea de suprapunere</1> și lasă GameGenie să te ghideze spre victorie!]]></string>
+  <string name="gamegenie_overlay_permission_accept">Să o facem!</string>
+  <string name="gamegenie_overlay_tooltip">Redare în suprapunere în joc</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Acum compatibil cu Aptoide Wallet</string>
   <string name="promotional_new_version">Versiune nouă</string>
@@ -426,11 +426,11 @@
   <string name="play_and_earn_permissions_enable_now_button">Activați acum</string>
   <string name="play_and_earn_permissions_not_now_button">Nu acum</string>
   <!-- GameGenie Overlay Menu -->
-  <string name="gamegenie_overlay_ask_anything">Ask anything</string>
-  <string name="gamegenie_overlay_ask_screenshot">Ask about what I\'m seeing now</string>
-  <string name="gamegenie_overlay_remove">Remove overlay</string>
-  <string name="gamegenie_overlay_launch">Launch GameGenie overlay</string>
+  <string name="gamegenie_overlay_ask_anything">Întrebați orice</string>
+  <string name="gamegenie_overlay_ask_screenshot">Întreabă-mă ce văd acum</string>
+  <string name="gamegenie_overlay_remove">Eliminare suprapunere</string>
+  <string name="gamegenie_overlay_launch">Lansați suprapunerea GameGenie</string>
   <!-- GameGenie Overlay Notification -->
-  <string name="gamegenie_overlay_notification_title">GameGenie Chat Overlay</string>
-  <string name="gamegenie_overlay_notification_text">GameGenie is ready to assist you!</string>
+  <string name="gamegenie_overlay_notification_title">Suprapunere chat GameGenie</string>
+  <string name="gamegenie_overlay_notification_text">GameGenie este gata să vă ajute!</string>
 </resources>
