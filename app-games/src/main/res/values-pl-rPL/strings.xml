@@ -317,12 +317,18 @@
   <string name="genai_me_title">Ja</string>
   <string name="genai_introduction_body">Jestem twoim asystentem AI we wszystkim, co związane z odkrywaniem aplikacji i gier. Spróbuj z czymś takim:</string>
   <string name="genai_input_message_field">Zapytaj o wszystko</string>
+  <string name="genai_input_message_field_with_screenshot">Zapytaj o to, co teraz widzę</string>
   <string name="genai_powered_by_ai_title">Zasilany przez sztuczną inteligencję</string>
   <string name="genai_example_1_body">Szukam gier strategicznych.</string>
   <string name="genai_example_2_body">Proszę poleć mi najlepsze gry multiplayer.</string>
   <string name="genai_example_3_body">Czy znasz gry casual offline?</string>
   <string name="genai_history_body">Historia GameGenie</string>
   <string name="genai_new_chat_button">Nowy czat</string>
+  <string name="gamegenie_companion_play">Zagraj</string>
+  <string name="gamegenie_companion_play_smarter">Albo graj mądrzej, korzystając z nakładki GameGenie w grze.</string>
+  <string name="gamegenie_overlay_permission_message"><![CDATA[Włącz <1>uprawnienia nakładki</1> i pozwól GameGenie poprowadzić Cię do zwycięstwa!]]></string>
+  <string name="gamegenie_overlay_permission_accept">Zróbmy to!</string>
+  <string name="gamegenie_overlay_tooltip">Odtwarzaj nakładkę w grze</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Teraz kompatybilny z portfelem Aptoide</string>
   <string name="promotional_new_version">Nowa wersja</string>
@@ -430,4 +436,12 @@
   <string name="play_and_earn_permissions_denied_dialog_body">Nie możemy jeszcze policzyć Twojego czasu gry. Włącz to ustawienie, aby zacząć zarabiać.</string>
   <string name="play_and_earn_permissions_enable_now_button">Włącz teraz</string>
   <string name="play_and_earn_permissions_not_now_button">Nie teraz</string>
+  <!-- GameGenie Overlay Menu -->
+  <string name="gamegenie_overlay_ask_anything">Zapytaj o wszystko</string>
+  <string name="gamegenie_overlay_ask_screenshot">Zapytaj o to, co teraz widzę</string>
+  <string name="gamegenie_overlay_remove">Usuń nakładkę</string>
+  <string name="gamegenie_overlay_launch">Uruchom nakładkę GameGenie</string>
+  <!-- GameGenie Overlay Notification -->
+  <string name="gamegenie_overlay_notification_title">Nakładka czatu GameGenie</string>
+  <string name="gamegenie_overlay_notification_text">GameGenie jest gotowy, aby Ci pomóc!</string>
 </resources>

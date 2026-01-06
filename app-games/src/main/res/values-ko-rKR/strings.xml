@@ -284,12 +284,18 @@
   <string name="genai_me_title">나</string>
   <string name="genai_introduction_body">안녕하세요! 저는 앱과 게임 검색과 관련된 모든 것에 대한 AI 비서입니다. 이런 것을 사용해 보세요:</string>
   <string name="genai_input_message_field">뭐든지 물어보세요</string>
+  <string name="genai_input_message_field_with_screenshot">지금 내가 보고 있는 것에 대해 물어보세요</string>
   <string name="genai_powered_by_ai_title">AI 기반</string>
   <string name="genai_example_1_body">전략 게임을 찾고 있습니다.</string>
   <string name="genai_example_2_body">최고의 멀티플레이어 게임을 추천해 주세요.</string>
   <string name="genai_example_3_body">오프라인 캐주얼 게임을 아시나요?</string>
   <string name="genai_history_body">GameGenie 이력</string>
   <string name="genai_new_chat_button">새 채팅</string>
+  <string name="gamegenie_companion_play">플레이</string>
+  <string name="gamegenie_companion_play_smarter">또는 GameGenie의 게임 내 오버레이를 활용해 더 스마트하게 플레이하세요.</string>
+  <string name="gamegenie_overlay_permission_message"><![CDATA[<1>오버레이 권한을</1> 켜고 GameGenie가 승리로 이끄는 길을 안내받으세요!]]></string>
+  <string name="gamegenie_overlay_permission_accept">하자!</string>
+  <string name="gamegenie_overlay_tooltip">게임 내 오버레이 재생</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">이제 Aptoide 지갑과 호환 가능</string>
   <string name="promotional_new_version">새로운 버전</string>
@@ -397,4 +403,12 @@
   <string name="play_and_earn_permissions_denied_dialog_body">아직 플레이 시간을 집계할 수 없습니다. 수익을 얻으려면 이 설정을 활성화하세요.</string>
   <string name="play_and_earn_permissions_enable_now_button">지금 활성화</string>
   <string name="play_and_earn_permissions_not_now_button">지금은 안 돼</string>
+  <!-- GameGenie Overlay Menu -->
+  <string name="gamegenie_overlay_ask_anything">뭐든지 물어보세요</string>
+  <string name="gamegenie_overlay_ask_screenshot">지금 내가 보고 있는 것에 대해 물어보세요</string>
+  <string name="gamegenie_overlay_remove">오버레이 제거</string>
+  <string name="gamegenie_overlay_launch">게임지니 오버레이 실행</string>
+  <!-- GameGenie Overlay Notification -->
+  <string name="gamegenie_overlay_notification_title">게임지니 채팅 오버레이</string>
+  <string name="gamegenie_overlay_notification_text">게임지니가 여러분을 도와드리겠습니다!</string>
 </resources>
