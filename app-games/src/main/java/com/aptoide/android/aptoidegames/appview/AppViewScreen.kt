@@ -29,6 +29,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -360,6 +361,7 @@ fun AppViewContent(
 
   var selectedTab by rememberSaveable(key = tabsList.size.toString()) { mutableIntStateOf(0) }
   var showRecommends by rememberSaveable { mutableStateOf(false) }
+  var hasAutoSelectedRewards by rememberSaveable { mutableStateOf(false) }
   val appImageString = stringResource(id = R.string.app_view_image_description_body, app.name)
 
   val scrollState = rememberScrollState()
@@ -367,6 +369,13 @@ fun AppViewContent(
 
   val showYoutubeVideo = app.videos.isNotEmpty()
     && app.videos[0].let { it.isNotEmpty() && it.isYoutubeURL() }
+
+  LaunchedEffect(tabsList) {
+    if (isGamified && !hasAutoSelectedRewards && tabsList.contains(AppViewTab.REWARDS)) {
+      selectedTab = tabsList.indexOf(AppViewTab.REWARDS)
+      hasAutoSelectedRewards = true
+    }
+  }
 
   Box(
     modifier = Modifier.verticalScroll(scrollState)
