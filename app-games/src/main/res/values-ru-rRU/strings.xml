@@ -317,18 +317,18 @@
   <string name="genai_me_title">Я</string>
   <string name="genai_introduction_body">Привет! Я ваш помощник AI по всем вопросам, связанным с поиском приложений и игр. Попробуйте что-то вроде:</string>
   <string name="genai_input_message_field">Спросите что угодно</string>
-  <string name="genai_input_message_field_with_screenshot">Ask about what I\'m seeing now</string>
+  <string name="genai_input_message_field_with_screenshot">Спросите о том, что я вижу сейчас</string>
   <string name="genai_powered_by_ai_title">На основе AI</string>
   <string name="genai_example_1_body">Я ищу стратегические игры.</string>
   <string name="genai_example_2_body">Порекомендуй мне, пожалуйста, лучшие многопользовательские игры.</string>
   <string name="genai_example_3_body">Знаешь ли ты оффлайн казуальные игры?</string>
   <string name="genai_history_body">История GameGenie</string>
   <string name="genai_new_chat_button">Новый чат</string>
-  <string name="gamegenie_companion_play">Play</string>
-  <string name="gamegenie_companion_play_smarter">Or play smarter using GameGenie\'s in-game overlay.</string>
-  <string name="gamegenie_overlay_permission_message"><![CDATA[Turn on <1>overlay permission</1> and let GameGenie guide you to victory!]]></string>
-  <string name="gamegenie_overlay_permission_accept">Let\'s do it!</string>
-  <string name="gamegenie_overlay_tooltip">Play in-game overlay</string>
+  <string name="gamegenie_companion_play">Играть</string>
+  <string name="gamegenie_companion_play_smarter">Или играйте умнее, используя игровой оверлей GameGenie.</string>
+  <string name="gamegenie_overlay_permission_message"><![CDATA[Включите <1>разрешение на наложение</1> и позвольте GameGenie привести вас к победе!]]></string>
+  <string name="gamegenie_overlay_permission_accept">Давайте сделаем это!</string>
+  <string name="gamegenie_overlay_tooltip">Играть в игре с оверлеем</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Теперь совместимо с Aptoide Wallet</string>
   <string name="promotional_new_version">Новая версия</string>
@@ -437,11 +437,11 @@
   <string name="play_and_earn_permissions_enable_now_button">Включить сейчас</string>
   <string name="play_and_earn_permissions_not_now_button">Не сейчас</string>
   <!-- GameGenie Overlay Menu -->
-  <string name="gamegenie_overlay_ask_anything">Ask anything</string>
-  <string name="gamegenie_overlay_ask_screenshot">Ask about what I\'m seeing now</string>
-  <string name="gamegenie_overlay_remove">Remove overlay</string>
-  <string name="gamegenie_overlay_launch">Launch GameGenie overlay</string>
+  <string name="gamegenie_overlay_ask_anything">Спросите что угодно</string>
+  <string name="gamegenie_overlay_ask_screenshot">Спросите о том, что я вижу сейчас</string>
+  <string name="gamegenie_overlay_remove">Удалить наложение</string>
+  <string name="gamegenie_overlay_launch">Запустить оверлей GameGenie</string>
   <!-- GameGenie Overlay Notification -->
-  <string name="gamegenie_overlay_notification_title">GameGenie Chat Overlay</string>
-  <string name="gamegenie_overlay_notification_text">GameGenie is ready to assist you!</string>
+  <string name="gamegenie_overlay_notification_title">Наложение чата GameGenie</string>
+  <string name="gamegenie_overlay_notification_text">GameGenie готов помочь вам!</string>
 </resources>
