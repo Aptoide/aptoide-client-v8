@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
@@ -23,7 +23,7 @@ fun rememberIsPackageInPaE(packageName: String): Boolean = runPreviewable(
   preview = { false },
   real = {
     val vm = hiltViewModel<PaEPackagesProvider>()
-    var isPackageInPaE by remember { mutableStateOf(false) }
+    var isPackageInPaE by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(packageName) {
       isPackageInPaE = vm.availablePackagesUseCase().getOrNull()?.contains(packageName) ?: false

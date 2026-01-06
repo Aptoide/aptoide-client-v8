@@ -6,6 +6,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
@@ -57,7 +58,7 @@ fun rememberShouldShowPlayAndEarn(): Boolean = runPreviewable(
   preview = { Random.nextBoolean() },
   real = {
     val vm = hiltViewModel<InjectionsProvider>()
-    var shouldShowPlayAndEarn by remember { mutableStateOf(false) }
+    var shouldShowPlayAndEarn by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
       shouldShowPlayAndEarn = vm.playAndEarnManager.shouldShowPlayAndEarn()
