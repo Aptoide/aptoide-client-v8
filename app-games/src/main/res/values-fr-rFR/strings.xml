@@ -304,7 +304,7 @@
   <string name="genai_new_chat_button">Nouveau Chat</string>
   <string name="gamegenie_companion_play">Jouer</string>
   <string name="gamegenie_companion_play_smarter">Ou jouez plus intelligemment grâce à la superposition en jeu de GameGenie.</string>
-  <string name="gamegenie_overlay_permission_message"><![CDATA[Activez <1>l'autorisation de superposition</1> et laissez GameGenie vous guider vers la victoire !]]></string>
+  <string name="gamegenie_overlay_permission_message"><![CDATA[Activez <1>l\'autorisation de superposition</1> et laissez GameGenie vous guider vers la victoire !]]></string>
   <string name="gamegenie_overlay_permission_accept">Allons-y !</string>
   <string name="gamegenie_overlay_tooltip">Jouer en mode superposé dans le jeu</string>
   <!-- Promotional Cards -->

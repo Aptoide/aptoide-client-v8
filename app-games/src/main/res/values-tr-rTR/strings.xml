@@ -304,7 +304,7 @@
   <string name="genai_new_chat_button">Yeni sohbet</string>
   <string name="gamegenie_companion_play">Oynat</string>
   <string name="gamegenie_companion_play_smarter">Ya da GameGenie\'nin oyun içi arayüzünü kullanarak daha akıllı oynayın.</string>
-  <string name="gamegenie_overlay_permission_message"><![CDATA[<1>Overlay iznini</1> açın ve GameGenie'nin sizi zafere götürmesine izin verin!]]></string>
+  <string name="gamegenie_overlay_permission_message"><![CDATA[<1>Overlay iznini</1> açın ve GameGenie\'nin sizi zafere götürmesine izin verin!]]></string>
   <string name="gamegenie_overlay_permission_accept">Hadi yapalım!</string>
   <string name="gamegenie_overlay_tooltip">Oyun içi üst katman oynat</string>
   <!-- Promotional Cards -->
