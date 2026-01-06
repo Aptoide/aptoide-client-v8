@@ -284,12 +284,18 @@
   <string name="genai_me_title">我</string>
   <string name="genai_introduction_body">嗨！我是您的 AI 助手，幫您發現與應用程式和遊戲相關的一切。請嘗試使用類似功能：</string>
   <string name="genai_input_message_field">詢問任何問題</string>
+  <string name="genai_input_message_field_with_screenshot">請問我現在看到的是什麼</string>
   <string name="genai_powered_by_ai_title">由 AI 驅動</string>
   <string name="genai_example_1_body">我在找策略遊戲。</string>
   <string name="genai_example_2_body">請推薦給我最好的多人遊戲。</string>
   <string name="genai_example_3_body">您知道離線休閒遊戲嗎？</string>
   <string name="genai_history_body">GameGenie 歷史</string>
   <string name="genai_new_chat_button">新聊天</string>
+  <string name="gamegenie_companion_play">遊玩</string>
+  <string name="gamegenie_companion_play_smarter">或透過GameGenie的遊戲內疊加功能，更聰明地遊玩。</string>
+  <string name="gamegenie_overlay_permission_message"><![CDATA[開啟<1>疊加權</1>限，讓GameGenie引領你邁向勝利！]]></string>
+  <string name="gamegenie_overlay_permission_accept">我們開始吧！</string>
+  <string name="gamegenie_overlay_tooltip">在遊戲中播放覆蓋層</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">現在與 Aptoide 皮夾相容</string>
   <string name="promotional_new_version">新版本</string>
@@ -397,4 +403,12 @@
   <string name="play_and_earn_permissions_denied_dialog_body">我們目前無法計算您的遊戲時間。請啟用此設定以開始累積時間。</string>
   <string name="play_and_earn_permissions_enable_now_button">立即啟用</string>
   <string name="play_and_earn_permissions_not_now_button">現在不行</string>
+  <!-- GameGenie Overlay Menu -->
+  <string name="gamegenie_overlay_ask_anything">儘管問吧</string>
+  <string name="gamegenie_overlay_ask_screenshot">請問我現在看到的是什麼</string>
+  <string name="gamegenie_overlay_remove">移除覆蓋層</string>
+  <string name="gamegenie_overlay_launch">啟動 GameGenie 覆蓋視窗</string>
+  <!-- GameGenie Overlay Notification -->
+  <string name="gamegenie_overlay_notification_title">GameGenie 聊天疊加層</string>
+  <string name="gamegenie_overlay_notification_text">GameGenie已準備好為您提供協助！</string>
 </resources>

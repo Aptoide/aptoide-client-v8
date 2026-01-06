@@ -295,12 +295,18 @@
   <string name="genai_me_title">Eu</string>
   <string name="genai_introduction_body">Olá! Sou o teu assistente de IA para tudo o que se relaciona com a descoberta de apps e jogos. Experimenta com algo do género:</string>
   <string name="genai_input_message_field">Pergunte qualquer coisa</string>
+  <string name="genai_input_message_field_with_screenshot">Pergunte sobre o que estou a ver agora</string>
   <string name="genai_powered_by_ai_title">Powered by IA</string>
   <string name="genai_example_1_body">Procuro jogos de estratégia.</string>
   <string name="genai_example_2_body">Recomenda-me os melhores jogos multijogador.</string>
   <string name="genai_example_3_body">Conhece jogos simples offline?</string>
   <string name="genai_history_body">História do GameGenie</string>
   <string name="genai_new_chat_button">Novo chat</string>
+  <string name="gamegenie_companion_play">Jogar</string>
+  <string name="gamegenie_companion_play_smarter">Ou jogue de forma mais inteligente usando a sobreposição no jogo do GameGenie.</string>
+  <string name="gamegenie_overlay_permission_message"><![CDATA[Ative <1>a permissão de sobreposição</1> e deixe o GameGenie guiá-lo até a vitória!]]></string>
+  <string name="gamegenie_overlay_permission_accept">Vamos lá!</string>
+  <string name="gamegenie_overlay_tooltip">Reproduzir sobreposição no jogo</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Agora compatível com a Aptoide Wallet</string>
   <string name="promotional_new_version">Nova Versão</string>
@@ -408,4 +414,12 @@
   <string name="play_and_earn_permissions_denied_dialog_body">Ainda não podemos contabilizar o seu tempo de jogo. Ative esta configuração para começar a ganhar.</string>
   <string name="play_and_earn_permissions_enable_now_button">Ativar agora</string>
   <string name="play_and_earn_permissions_not_now_button">Não agora</string>
+  <!-- GameGenie Overlay Menu -->
+  <string name="gamegenie_overlay_ask_anything">Pergunte qualquer coisa</string>
+  <string name="gamegenie_overlay_ask_screenshot">Pergunte sobre o que estou a ver agora</string>
+  <string name="gamegenie_overlay_remove">Remover sobreposição</string>
+  <string name="gamegenie_overlay_launch">Inicie a sobreposição GameGenie</string>
+  <!-- GameGenie Overlay Notification -->
+  <string name="gamegenie_overlay_notification_title">Sobreposição de chat do GameGenie</string>
+  <string name="gamegenie_overlay_notification_text">A GameGenie está pronta para ajudá-lo!</string>
 </resources>

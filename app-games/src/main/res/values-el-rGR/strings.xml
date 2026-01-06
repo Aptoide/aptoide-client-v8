@@ -295,12 +295,18 @@
   <string name="genai_me_title">Εγώ</string>
   <string name="genai_introduction_body">Γεια σας! «Είμαι ο βοηθός σας ΤΝ για ανακάλυψη εφαρμογών και παιχνιδιών. Δοκομάστε κάτι όπως:»</string>
   <string name="genai_input_message_field">Ρωτήστε οτιδήποτε</string>
+  <string name="genai_input_message_field_with_screenshot">Ρώτα για αυτό που βλέπω τώρα</string>
   <string name="genai_powered_by_ai_title">Υποστηρίζεται από ΤΝ</string>
   <string name="genai_example_1_body">Ψάχνω παιχνίδια στρατηγικής.</string>
   <string name="genai_example_2_body">Πρότεινέ μου τα καλύτερα παιχνίδια για πολλούς παίκτες.</string>
   <string name="genai_example_3_body">Μήπως ξέρεις κάποια χαλαρά παιχνίδια εκτός σύνδεσης;</string>
   <string name="genai_history_body">Ιστορικό GameGenie</string>
   <string name="genai_new_chat_button">Νέα συνομιλία</string>
+  <string name="gamegenie_companion_play">Παιχνίδι</string>
+  <string name="gamegenie_companion_play_smarter">Ή παίξτε πιο έξυπνα χρησιμοποιώντας το overlay του GameGenie μέσα στο παιχνίδι.</string>
+  <string name="gamegenie_overlay_permission_message"><![CDATA[Ενεργοποιήστε <1>την άδεια επικάλυψης</1> και αφήστε το GameGenie να σας οδηγήσει στη νίκη!]]></string>
+  <string name="gamegenie_overlay_permission_accept">Ας το κάνουμε!</string>
+  <string name="gamegenie_overlay_tooltip">Παίξτε με επικάλυψη εντός παιχνιδιού</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Τώρα συμβατό με το Aptoide Wallet</string>
   <string name="promotional_new_version">Νέα Έκδοση</string>
@@ -408,4 +414,12 @@
   <string name="play_and_earn_permissions_denied_dialog_body">Δεν μπορούμε να μετρήσουμε ακόμα τον χρόνο παιχνιδιού σας. Ενεργοποιήστε αυτή τη ρύθμιση για να αρχίσετε να κερδίζετε.</string>
   <string name="play_and_earn_permissions_enable_now_button">Ενεργοποίηση τώρα</string>
   <string name="play_and_earn_permissions_not_now_button">Όχι τώρα</string>
+  <!-- GameGenie Overlay Menu -->
+  <string name="gamegenie_overlay_ask_anything">Ρωτήστε οτιδήποτε</string>
+  <string name="gamegenie_overlay_ask_screenshot">Ρώτα για αυτό που βλέπω τώρα</string>
+  <string name="gamegenie_overlay_remove">Κατάργηση επικάλυψης</string>
+  <string name="gamegenie_overlay_launch">Εκκίνηση επικάλυψης GameGenie</string>
+  <!-- GameGenie Overlay Notification -->
+  <string name="gamegenie_overlay_notification_title">Επικάλυψη συνομιλίας GameGenie</string>
+  <string name="gamegenie_overlay_notification_text">Το GameGenie είναι έτοιμο να σας βοηθήσει!</string>
 </resources>

@@ -295,12 +295,18 @@
   <string name="genai_me_title">Ik</string>
   <string name="genai_introduction_body">Hoi! Ik ben je AI-assistent voor alles wat met het ontdekken van apps en games te maken heeft. Probeer eens iets zoals:</string>
   <string name="genai_input_message_field">Vraag alles</string>
+  <string name="genai_input_message_field_with_screenshot">Vraag naar wat ik nu zie</string>
   <string name="genai_powered_by_ai_title">Ondersteund door AI</string>
   <string name="genai_example_1_body">Ik ben op zoek naar strategiespellen.</string>
   <string name="genai_example_2_body">Wat zijn de beste multiplayerspellen?</string>
   <string name="genai_example_3_body">Wat zijn aanbevolen offline casual games?</string>
   <string name="genai_history_body">Eerdere chats met GameGenie</string>
   <string name="genai_new_chat_button">Nieuwe chat</string>
+  <string name="gamegenie_companion_play">Spelen</string>
+  <string name="gamegenie_companion_play_smarter">Of speel slimmer met behulp van GameGenie\'s in-game overlay.</string>
+  <string name="gamegenie_overlay_permission_message"><![CDATA[Schakel <1>overlay-toestemming</1> in en laat GameGenie je naar de overwinning leiden!]]></string>
+  <string name="gamegenie_overlay_permission_accept">Laten we het doen!</string>
+  <string name="gamegenie_overlay_tooltip">Speel in-game overlay</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Nu compatibel met de Aptoide Wallet</string>
   <string name="promotional_new_version">Nieuwe versie</string>
@@ -408,4 +414,12 @@
   <string name="play_and_earn_permissions_denied_dialog_body">We kunnen je speeltijd nog niet tellen. Schakel deze instelling in om te beginnen met verdienen.</string>
   <string name="play_and_earn_permissions_enable_now_button">Nu inschakelen</string>
   <string name="play_and_earn_permissions_not_now_button">Nu niet</string>
+  <!-- GameGenie Overlay Menu -->
+  <string name="gamegenie_overlay_ask_anything">Vraag alles</string>
+  <string name="gamegenie_overlay_ask_screenshot">Vraag naar wat ik nu zie</string>
+  <string name="gamegenie_overlay_remove">Overlay verwijderen</string>
+  <string name="gamegenie_overlay_launch">Start GameGenie-overlay</string>
+  <!-- GameGenie Overlay Notification -->
+  <string name="gamegenie_overlay_notification_title">GameGenie Chat-overlay</string>
+  <string name="gamegenie_overlay_notification_text">GameGenie staat klaar om je te helpen!</string>
 </resources>
