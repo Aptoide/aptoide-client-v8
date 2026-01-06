@@ -323,14 +323,18 @@
   <string name="genai_me_title">Me</string>
   <string name="genai_introduction_body">Hi! I\'m your AI assistant on everything related to apps and games discovery. Try with something like:</string>
   <string name="genai_input_message_field">Ask anything</string>
+  <string name="genai_input_message_field_with_screenshot">Ask about what I\'m seeing now</string>
   <string name="genai_powered_by_ai_title">Powered by AI</string>
   <string name="genai_example_1_body">I\'m looking for strategy games.</string>
   <string name="genai_example_2_body">Please recommend me the best multiplayer games.</string>
   <string name="genai_example_3_body">Do you know offline casual games?</string>
   <string name="genai_history_body">GameGenie History</string>
   <string name="genai_new_chat_button">New chat</string>
-
-
+  <string name="gamegenie_companion_play">Play</string>
+  <string name="gamegenie_companion_play_smarter">Or play smarter using GameGenie\'s in-game overlay.</string>
+  <string name="gamegenie_overlay_permission_message"><![CDATA[Turn on <1>overlay permission</1> and let GameGenie guide you to victory!]]></string>
+  <string name="gamegenie_overlay_permission_accept">Let\'s do it!</string>
+  <string name="gamegenie_overlay_tooltip">Play in-game overlay</string>
 
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Now compatible with the Aptoide Wallet</string>
@@ -449,4 +453,15 @@
   <string name="play_and_earn_permissions_denied_dialog_body">We can\'t count your playtime yet. Enable this setting to start earning.</string>
   <string name="play_and_earn_permissions_enable_now_button">Enable Now</string>
   <string name="play_and_earn_permissions_not_now_button">Not Now</string>
+
+  <!-- GameGenie Overlay Menu -->
+  <string name="gamegenie_overlay_ask_anything">Ask anything</string>
+  <string name="gamegenie_overlay_ask_screenshot">Ask about what I\'m seeing now</string>
+  <string name="gamegenie_overlay_remove">Remove overlay</string>
+  <string name="gamegenie_overlay_launch">Launch GameGenie overlay</string>
+
+  <!-- GameGenie Overlay Notification -->
+  <string name="gamegenie_overlay_notification_title">GameGenie Chat Overlay</string>
+  <string name="gamegenie_overlay_notification_text">GameGenie is ready to assist you!</string>
+
 </resources>
