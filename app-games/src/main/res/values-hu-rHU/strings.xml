@@ -295,12 +295,18 @@
   <string name="genai_me_title">Én</string>
   <string name="genai_introduction_body">Helló! Én vagyok az AI-asszisztensed, aki az appok és a játékok felfedezéséért felel. Próbálkozz valami ilyesmivel:</string>
   <string name="genai_input_message_field">Kérdezzen bármit</string>
+  <string name="genai_input_message_field_with_screenshot">Ask about what I\'m seeing now</string>
   <string name="genai_powered_by_ai_title">Működteti: AI</string>
   <string name="genai_example_1_body">Stratégiai játékokat keresek.</string>
   <string name="genai_example_2_body">Ajánld a legjobb multiplayer játékokat.</string>
   <string name="genai_example_3_body">Ismersz laza offline játékokat?</string>
   <string name="genai_history_body">GameGenie előzmények</string>
   <string name="genai_new_chat_button">Új chat</string>
+  <string name="gamegenie_companion_play">Play</string>
+  <string name="gamegenie_companion_play_smarter">Or play smarter using GameGenie\'s in-game overlay.</string>
+  <string name="gamegenie_overlay_permission_message"><![CDATA[Turn on <1>overlay permission</1> and let GameGenie guide you to victory!]]></string>
+  <string name="gamegenie_overlay_permission_accept">Let\'s do it!</string>
+  <string name="gamegenie_overlay_tooltip">Play in-game overlay</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Mostantól kompatibilis az Aptoide Wallettel</string>
   <string name="promotional_new_version">Új verzió</string>
@@ -408,4 +414,12 @@
   <string name="play_and_earn_permissions_denied_dialog_body">Még nem tudjuk számolni a játékidőt. Engedélyezze ezt a beállítást, hogy elkezdhesse a pontgyűjtést.</string>
   <string name="play_and_earn_permissions_enable_now_button">Most engedélyezés</string>
   <string name="play_and_earn_permissions_not_now_button">Most nem</string>
+  <!-- GameGenie Overlay Menu -->
+  <string name="gamegenie_overlay_ask_anything">Ask anything</string>
+  <string name="gamegenie_overlay_ask_screenshot">Ask about what I\'m seeing now</string>
+  <string name="gamegenie_overlay_remove">Remove overlay</string>
+  <string name="gamegenie_overlay_launch">Launch GameGenie overlay</string>
+  <!-- GameGenie Overlay Notification -->
+  <string name="gamegenie_overlay_notification_title">GameGenie Chat Overlay</string>
+  <string name="gamegenie_overlay_notification_text">GameGenie is ready to assist you!</string>
 </resources>
