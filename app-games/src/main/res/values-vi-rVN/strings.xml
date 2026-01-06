@@ -284,18 +284,18 @@
   <string name="genai_me_title">Tôi</string>
   <string name="genai_introduction_body">Xin chào! Tôi là trợ lý AI của bạn về mọi thứ liên quan đến trải nghiệm khám phá ứng dụng và trò chơi. Hãy thử với một cái gì đó như:</string>
   <string name="genai_input_message_field">Hỏi bất cứ điều gì</string>
-  <string name="genai_input_message_field_with_screenshot">Ask about what I\'m seeing now</string>
+  <string name="genai_input_message_field_with_screenshot">Hỏi về những gì tôi đang nhìn thấy bây giờ.</string>
   <string name="genai_powered_by_ai_title">Được cung cấp bởi AI</string>
   <string name="genai_example_1_body">Tôi đang tìm các trò chơi chiến thuật.</string>
   <string name="genai_example_2_body">Vui lòng giới thiệu cho tôi các trò chơi sinh tồn hay nhất.</string>
   <string name="genai_example_3_body">Bạn có biết các trò chơi thông thường ngoại tuyến không?</string>
   <string name="genai_history_body">Lịch sử GameGenie</string>
   <string name="genai_new_chat_button">Trò chuyện mới</string>
-  <string name="gamegenie_companion_play">Play</string>
-  <string name="gamegenie_companion_play_smarter">Or play smarter using GameGenie\'s in-game overlay.</string>
-  <string name="gamegenie_overlay_permission_message"><![CDATA[Turn on <1>overlay permission</1> and let GameGenie guide you to victory!]]></string>
-  <string name="gamegenie_overlay_permission_accept">Let\'s do it!</string>
-  <string name="gamegenie_overlay_tooltip">Play in-game overlay</string>
+  <string name="gamegenie_companion_play">Chơi</string>
+  <string name="gamegenie_companion_play_smarter">Hoặc chơi thông minh hơn bằng cách sử dụng giao diện trong trò chơi của GameGenie.</string>
+  <string name="gamegenie_overlay_permission_message"><![CDATA[Bật <1>quyền truy cập lớp phủ</1> và để GameGenie dẫn dắt bạn đến chiến thắng!]]></string>
+  <string name="gamegenie_overlay_permission_accept">Hãy làm đi!</string>
+  <string name="gamegenie_overlay_tooltip">Chơi chế độ hiển thị trong trò chơi</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Hiện tương thích với Aptoide Wallet</string>
   <string name="promotional_new_version">Phiên bản mới</string>
@@ -404,11 +404,11 @@
   <string name="play_and_earn_permissions_enable_now_button">Bật ngay bây giờ</string>
   <string name="play_and_earn_permissions_not_now_button">Không bây giờ</string>
   <!-- GameGenie Overlay Menu -->
-  <string name="gamegenie_overlay_ask_anything">Ask anything</string>
-  <string name="gamegenie_overlay_ask_screenshot">Ask about what I\'m seeing now</string>
-  <string name="gamegenie_overlay_remove">Remove overlay</string>
-  <string name="gamegenie_overlay_launch">Launch GameGenie overlay</string>
+  <string name="gamegenie_overlay_ask_anything">Hỏi bất cứ điều gì</string>
+  <string name="gamegenie_overlay_ask_screenshot">Hỏi về những gì tôi đang nhìn thấy bây giờ.</string>
+  <string name="gamegenie_overlay_remove">Xóa lớp phủ</string>
+  <string name="gamegenie_overlay_launch">Khởi chạy giao diện GameGenie</string>
   <!-- GameGenie Overlay Notification -->
-  <string name="gamegenie_overlay_notification_title">GameGenie Chat Overlay</string>
-  <string name="gamegenie_overlay_notification_text">GameGenie is ready to assist you!</string>
+  <string name="gamegenie_overlay_notification_title">Giao diện trò chuyện GameGenie</string>
+  <string name="gamegenie_overlay_notification_text">GameGenie sẵn sàng hỗ trợ bạn!</string>
 </resources>
