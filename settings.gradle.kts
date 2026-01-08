@@ -64,6 +64,7 @@ include(
   ":feature-profile",
   ":feature-settings",
   ":environment-info",
+  ":exception-handler",
   ":extension",
   ":feature-oos",
   ":install-info-mapper",
