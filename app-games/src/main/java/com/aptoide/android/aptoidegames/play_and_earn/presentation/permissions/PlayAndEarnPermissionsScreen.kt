@@ -63,6 +63,7 @@ import com.aptoide.android.aptoidegames.drawables.figures.getPermissionAllowFigu
 import com.aptoide.android.aptoidegames.drawables.icons.getTrustedIcon
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.rememberPaEAnalytics
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.service.PaEForegroundService
+import com.aptoide.android.aptoidegames.play_and_earn.rememberPaEClientConfigManager
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
@@ -88,6 +89,7 @@ private fun PlayAndEarnPermissionsScreen(
   val lifecycleOwner = LocalLifecycleOwner.current
 
   val paeAnalytics = rememberPaEAnalytics()
+  val paEClientConfigManager = rememberPaEClientConfigManager()
 
   var allowedRestrictedSettings by remember { mutableStateOf(false) }
   var showPermissionDeniedDialog by remember { mutableStateOf(false) }
@@ -98,6 +100,9 @@ private fun PlayAndEarnPermissionsScreen(
       if (event == Lifecycle.Event.ON_RESUME) {
         if (context.hasOverlayPermission() && context.hasUsageStatsPermissionStatus()) {
           PaEForegroundService.start(context)
+          coroutineScope.launch {
+            paEClientConfigManager.fetchAndSaveClientConfig()
+          }
           showSnack(context.getString(R.string.play_and_earn_permissions_success_snackbar))
           navigateBack()
         }
