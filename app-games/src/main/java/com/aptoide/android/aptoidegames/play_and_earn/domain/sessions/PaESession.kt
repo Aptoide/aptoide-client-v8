@@ -1,4 +1,4 @@
-package com.aptoide.android.aptoidegames.play_and_earn.presentation.sessions
+package com.aptoide.android.aptoidegames.play_and_earn.domain.sessions
 
 import cm.aptoide.pt.campaigns.domain.PaEMissions
 
