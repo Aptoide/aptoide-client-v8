@@ -306,6 +306,7 @@ dependencies {
   implementation(projects.aptoideNetwork)
   implementation(projects.featureCampaigns)
   implementation(projects.environmentInfo)
+  implementation(projects.exceptionHandler)
   implementation(projects.extension)
   implementation(projects.installManager)
   implementation(projects.aptoideTaskInfo)
