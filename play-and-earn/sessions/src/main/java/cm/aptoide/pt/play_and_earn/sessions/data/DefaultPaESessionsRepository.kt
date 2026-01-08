@@ -1,6 +1,7 @@
 package cm.aptoide.pt.play_and_earn.sessions.data
 
 import cm.aptoide.pt.environment_info.DeviceIdProvider
+import cm.aptoide.pt.exception_handler.ExceptionHandler
 import cm.aptoide.pt.play_and_earn.sessions.data.model.SessionEndInfoJson
 import cm.aptoide.pt.play_and_earn.sessions.data.model.SessionEndRequestData
 import cm.aptoide.pt.play_and_earn.sessions.data.model.SessionEndStatus
@@ -24,7 +25,8 @@ import javax.inject.Singleton
 internal class DefaultPaESessionsRepository @Inject constructor(
   private val sessionsApi: SessionsApi,
   private val deviceIdProvider: DeviceIdProvider,
-  private val dispatcher: CoroutineDispatcher
+  private val dispatcher: CoroutineDispatcher,
+  private val exceptionHandler: ExceptionHandler
 ) : PaESessionsRepository {
 
   override suspend fun startSession(packageName: String) = withContext(dispatcher) {
@@ -42,6 +44,7 @@ internal class DefaultPaESessionsRepository @Inject constructor(
       Result.success(response)
     } catch (e: Throwable) {
       e.printStackTrace()
+      exceptionHandler.recordException(e)
       Result.failure(e)
     }
   }
@@ -76,6 +79,7 @@ internal class DefaultPaESessionsRepository @Inject constructor(
       Result.success(response.toDomainModel())
     } catch (e: Throwable) {
       e.printStackTrace()
+      exceptionHandler.recordException(e)
       Result.failure(e)
     }
   }
@@ -96,6 +100,7 @@ internal class DefaultPaESessionsRepository @Inject constructor(
         Result.success(response.toDomainModel())
       } catch (e: Throwable) {
         e.printStackTrace()
+        exceptionHandler.recordException(e)
         Result.failure(e)
       }
     }

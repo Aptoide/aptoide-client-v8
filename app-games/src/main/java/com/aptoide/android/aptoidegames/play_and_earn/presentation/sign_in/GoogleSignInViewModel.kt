@@ -6,9 +6,10 @@ import androidx.credentials.Credential
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
-import androidx.credentials.exceptions.ClearCredentialException
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cm.aptoide.pt.exception_handler.ExceptionHandler
+import cm.aptoide.pt.exception_handler.runCatchingAndRecord
 import cm.aptoide.pt.wallet.authorization.data.WalletAuthRepository
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.play_and_earn.data.UserAccountPreferencesRepository
@@ -33,7 +34,8 @@ import javax.inject.Inject
 class GoogleSignInViewModel @Inject constructor(
   private val credentialManager: CredentialManager,
   private val userAuthRepository: WalletAuthRepository,
-  private val userAccountPreferencesRepository: UserAccountPreferencesRepository
+  private val userAccountPreferencesRepository: UserAccountPreferencesRepository,
+  private val exceptionHandler: ExceptionHandler
 ) : ViewModel() {
   private var googleIdTokenCredential: GoogleIdTokenCredential? = null
 
@@ -61,14 +63,14 @@ class GoogleSignInViewModel @Inject constructor(
 
 
     viewModelScope.launch {
-      try {
+      runCatchingAndRecord(exceptionHandler) {
         val result = credentialManager.getCredential(
           context = activityContext,
           request = request
         )
 
         handleAuthentication(result.credential)
-      } catch (e: Throwable) {
+      }.onFailure { e ->
         Timber.e("Couldn't retrieve user's credentials: ${e.message}")
         viewModelState.emit(GoogleSignInUiState.Error())
       }
@@ -135,12 +137,12 @@ class GoogleSignInViewModel @Inject constructor(
 
   fun signOut() {
     viewModelScope.launch {
-      try {
+      runCatchingAndRecord(exceptionHandler) {
         val clearRequest = ClearCredentialStateRequest()
         credentialManager.clearCredentialState(clearRequest)
         userAccountPreferencesRepository.clearUserInfo()
         userAuthRepository.clearAuthorizationData()
-      } catch (e: ClearCredentialException) {
+      }.onFailure { e ->
         Timber.e("Couldn't clear user credentials: ${e.localizedMessage}")
       }
     }
