@@ -10,6 +10,7 @@ android {
 
 dependencies {
   implementation(projects.aptoideNetwork)
+  implementation(projects.exceptionHandler)
   implementation(projects.extension)
   implementation(projects.featureWallet.authorization)
   implementation(projects.environmentInfo)

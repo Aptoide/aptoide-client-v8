@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cm.aptoide.pt.exception_handler.ExceptionHandler
 import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.play_and_earn.exchange.domain.ExchangeUnitsUseCase
 import cm.aptoide.pt.wallet.wallet_info.domain.GetWalletUnitsUseCase
@@ -20,7 +21,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ExchangeViewModel @Inject constructor(
   private val exchangeUnitsUseCase: ExchangeUnitsUseCase,
-  private val getWalletUnitsUseCase: GetWalletUnitsUseCase
+  private val getWalletUnitsUseCase: GetWalletUnitsUseCase,
+  private val exceptionHandler: ExceptionHandler
 ) : ViewModel() {
 
   private val _uiState = MutableStateFlow<ExchangeUiState>(ExchangeUiState.Loading)
@@ -50,6 +52,8 @@ class ExchangeViewModel @Inject constructor(
           _uiState.update { ExchangeUiState.Success(availableUnits = availableUnits!!) }
         },
         onFailure = { error ->
+          exceptionHandler.recordException(error)
+          
           _uiState.update {
             ExchangeUiState.Error(
               message = error.message ?: "",

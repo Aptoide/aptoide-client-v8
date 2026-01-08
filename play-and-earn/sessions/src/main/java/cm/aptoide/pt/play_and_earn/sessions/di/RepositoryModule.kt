@@ -3,6 +3,7 @@ package cm.aptoide.pt.play_and_earn.sessions.di
 import cm.aptoide.pt.aptoide_network.di.RawOkHttp
 import cm.aptoide.pt.aptoide_network.di.RewardsDomain
 import cm.aptoide.pt.environment_info.DeviceIdProvider
+import cm.aptoide.pt.exception_handler.ExceptionHandler
 import cm.aptoide.pt.play_and_earn.sessions.data.DefaultPaESessionsRepository
 import cm.aptoide.pt.play_and_earn.sessions.data.PaESessionsRepository
 import cm.aptoide.pt.play_and_earn.sessions.data.SessionsApi
@@ -42,10 +43,12 @@ internal object RepositoryModule {
   @Singleton
   fun providePaESessionsRepository(
     sessionsApi: SessionsApi,
-    deviceIdProvider: DeviceIdProvider
+    deviceIdProvider: DeviceIdProvider,
+    exceptionHandler: ExceptionHandler
   ): PaESessionsRepository = DefaultPaESessionsRepository(
     sessionsApi = sessionsApi,
     deviceIdProvider = deviceIdProvider,
-    dispatcher = Dispatchers.IO
+    dispatcher = Dispatchers.IO,
+    exceptionHandler = exceptionHandler
   )
 }
