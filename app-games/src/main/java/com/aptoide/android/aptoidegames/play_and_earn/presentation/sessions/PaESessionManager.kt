@@ -5,6 +5,7 @@ import cm.aptoide.pt.campaigns.domain.PaEMission
 import cm.aptoide.pt.play_and_earn.sessions.data.PaESessionsRepository
 import cm.aptoide.pt.play_and_earn.sessions.data.SessionExpiredException
 import cm.aptoide.pt.play_and_earn.sessions.domain.SessionInfo
+import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPreferencesRepository
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaESession
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.missions.PaEMissionManager
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -16,7 +17,8 @@ import javax.inject.Singleton
 class PaESessionManager @Inject constructor(
   private val paESessionsRepository: PaESessionsRepository,
   private val paeMissionsRepository: PaEMissionsRepository,
-  private val paeMissionManager: PaEMissionManager
+  private val paeMissionManager: PaEMissionManager,
+  private val paEPreferencesRepository: PaEPreferencesRepository
 ) {
 
   val activeSessions = mutableListOf<PaESession>()
@@ -42,12 +44,15 @@ class PaESessionManager @Inject constructor(
     val sessionMissions = paeMissionsRepository.getCampaignMissions(packageName)
       .getOrElse { return false }
 
+    val heartbeatIntervalSeconds = paEPreferencesRepository.getHeartbeatIntervalSeconds()
+
     activeSessions.add(
       PaESession(
         sessionId = session.sessionId,
         packageName = packageName,
         ttlSeconds = session.ttl,
-        missions = sessionMissions
+        missions = sessionMissions,
+        heartbeatIntervalSeconds = heartbeatIntervalSeconds
       )
     )
 
