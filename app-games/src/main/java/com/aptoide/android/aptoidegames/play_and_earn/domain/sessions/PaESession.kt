@@ -6,7 +6,8 @@ class PaESession(
   val sessionId: String,
   val packageName: String,
   val ttlSeconds: Int,
-  val missions: PaEMissions?
+  val missions: PaEMissions?,
+  val heartbeatIntervalSeconds: Int
 ) {
   // Missions confirmed as completed by the server
   val completedMissions = mutableListOf<String>()
@@ -27,7 +28,8 @@ class PaESession(
     lastAppOpenTime = System.currentTimeMillis()
   }
 
-  fun shouldSync() = (System.currentTimeMillis() / 1000L) - (lastSyncTime / 1000L) > 15L
+  fun shouldSync() =
+    (System.currentTimeMillis() / 1000L) - (lastSyncTime / 1000L) > heartbeatIntervalSeconds
 
   fun isExpired(currentTimeSeconds: Long): Boolean {
     val lastSyncTimeSeconds = lastSyncTime / 1000L
