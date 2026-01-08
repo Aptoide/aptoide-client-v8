@@ -4,7 +4,10 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import cm.aptoide.pt.aptoide_network.di.RawOkHttp
+import cm.aptoide.pt.aptoide_network.di.RewardsDomain
 import com.aptoide.android.aptoidegames.play_and_earn.data.DefaultUserInfoRepository
+import com.aptoide.android.aptoidegames.play_and_earn.data.PaEClientConfigApi
 import com.aptoide.android.aptoidegames.play_and_earn.data.UserAccountPreferencesRepository
 import com.aptoide.android.aptoidegames.play_and_earn.data.UserInfoRepository
 import dagger.Module
@@ -12,6 +15,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
@@ -51,6 +57,20 @@ class RepositoryModule {
     @ApplicationContext appContext: Context,
   ): DataStore<Preferences> {
     return appContext.paePreferencesDataStore
+  }
+
+  @Provides
+  @Singleton
+  fun providePaEClientConfigApi(
+    @RawOkHttp okHttpClient: OkHttpClient,
+    @RewardsDomain rewardsDomain: String
+  ): PaEClientConfigApi {
+    return Retrofit.Builder()
+      .client(okHttpClient)
+      .baseUrl(rewardsDomain)
+      .addConverterFactory(GsonConverterFactory.create())
+      .build()
+      .create(PaEClientConfigApi::class.java)
   }
 }
 
