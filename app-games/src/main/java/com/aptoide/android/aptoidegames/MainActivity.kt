@@ -30,6 +30,7 @@ import com.aptoide.android.aptoidegames.network.repository.NetworkPreferencesRep
 import com.aptoide.android.aptoidegames.notifications.analytics.FirebaseNotificationAnalytics
 import com.aptoide.android.aptoidegames.notifications.analytics.NotificationsAnalytics
 import com.aptoide.android.aptoidegames.notifications.toFirebaseNotificationAnalyticsInfo
+import com.aptoide.android.aptoidegames.play_and_earn.PaEClientConfigManager
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.service.PaEForegroundService
 import com.aptoide.android.aptoidegames.promo_codes.PromoCode
 import com.aptoide.android.aptoidegames.promo_codes.PromoCodeRepository
@@ -74,6 +75,9 @@ class MainActivity : AppCompatActivity() {
 
   @Inject
   lateinit var updatesNotificationAnalyticsManager: UpdatesNotificationAnalyticsManager
+
+  @Inject
+  lateinit var paEClientConfigManager: PaEClientConfigManager
 
   private var navController: NavHostController? = null
 
@@ -129,6 +133,10 @@ class MainActivity : AppCompatActivity() {
         }
         appLaunchPreferencesManager.setIsNotFirstLaunch()
       }
+    }
+
+    coroutinesScope.launch {
+      paEClientConfigManager.fetchAndSaveClientConfig()
     }
   }
 
