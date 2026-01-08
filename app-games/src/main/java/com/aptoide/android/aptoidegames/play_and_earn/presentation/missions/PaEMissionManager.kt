@@ -4,7 +4,7 @@ import cm.aptoide.pt.campaigns.data.PaEMissionsRepository
 import cm.aptoide.pt.campaigns.domain.PaEMission
 import cm.aptoide.pt.campaigns.domain.PaEMissionStatus
 import cm.aptoide.pt.campaigns.domain.PaEMissionType
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.sessions.SessionContext
+import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.SessionContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
