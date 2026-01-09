@@ -22,7 +22,6 @@ class AptoideRTBRepository @Inject constructor(
   private val deviceInfo: DeviceInfo,
   private val idsRepository: IdsRepository,
   private val campaignRepository: CampaignRepository,
-  private val rtbAdsRepository: RTBAdsRepository
 ) : RTBRepository {
 
   private val rtbCache: MutableMap<String, List<RTBApp>> = mutableMapOf()
@@ -64,10 +63,6 @@ class AptoideRTBRepository @Inject constructor(
       rtbCache[placement] = apps
       return@withContext apps
     }
-
-  override suspend fun resolveAdRedirects(url: String): Result<String> {
-    return rtbAdsRepository.resolveAdRedirects(url)
-  }
 }
 
 private fun RTBResponse.toDomainModel(campaignRepository: CampaignRepository): RTBApp {

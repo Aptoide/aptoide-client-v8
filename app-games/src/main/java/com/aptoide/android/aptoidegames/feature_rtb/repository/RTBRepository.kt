@@ -4,5 +4,4 @@ import com.aptoide.android.aptoidegames.feature_rtb.data.RTBApp
 
 interface RTBRepository {
   suspend fun getRTBApps(placement: String): List<RTBApp>
-  suspend fun resolveAdRedirects(url: String): Result<String>
 }
