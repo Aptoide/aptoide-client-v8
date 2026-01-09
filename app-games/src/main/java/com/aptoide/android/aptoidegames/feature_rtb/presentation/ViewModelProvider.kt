@@ -43,19 +43,3 @@ fun rememberRTBApps(
     uiState to vm::reload
   }
 )
-
-@Composable
-fun rememberRTBAd(): RTBAdViewModel {
-  val injectionsProvider = hiltViewModel<InjectionsProvider>()
-  return viewModel(
-    key = "rtb/ad/",
-    factory = object : ViewModelProvider.Factory {
-      override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        @Suppress("UNCHECKED_CAST")
-        return RTBAdViewModel(
-          rtbRepository = injectionsProvider.repository,
-        ) as T
-      }
-    }
-  )
-}

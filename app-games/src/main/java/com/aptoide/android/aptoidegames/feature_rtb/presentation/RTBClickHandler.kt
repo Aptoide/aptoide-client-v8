@@ -7,7 +7,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.net.toUri
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
-import com.aptoide.android.aptoidegames.feature_rtb.analytics.RTBAdAnalytics
 import com.aptoide.android.aptoidegames.feature_rtb.analytics.rememberRTBAdAnalytics
 import com.aptoide.android.aptoidegames.feature_rtb.data.RTBApp
 import timber.log.Timber
@@ -19,136 +18,51 @@ fun rememberRTBAdClickHandler(
   onLoadingChange: (Boolean) -> Unit = {}
 ): (String, Int) -> Unit {
   val rtbAdAnalytics = rememberRTBAdAnalytics()
-  val rtbAdViewModel = rememberRTBAd()
   val context = LocalContext.current
 
   return { packageName, index ->
     rtbAppsList.getOrNull(index)?.let { rtbApp ->
-      handleRTBAdClick(
-        rtbApp = rtbApp,
-        index = index,
-        context = context,
-        navigate = navigate,
-        onLoadingChange = onLoadingChange,
-        rtbAdViewModel = rtbAdViewModel,
-        rtbAdAnalytics = rtbAdAnalytics
-      )
+      if (rtbApp.adUrl.isNullOrBlank()) {
+        navigateToAppView(navigate, rtbApp.app, index)
+        return@let
+      }
+
+      onLoadingChange(true)
+
+      val callback: (AdRedirectWebViewActivity.AdRedirectResult) -> Unit = { result ->
+        onLoadingChange(false)
+        when (result) {
+          is AdRedirectWebViewActivity.AdRedirectResult.Success -> {
+            Timber.d("Success! Opening Google Play with URL: ${result.finalUrl}")
+            rtbAdAnalytics.sendRTBAdLoadSuccess(rtbApp.adUrl, result.finalUrl)
+            openGooglePlayUrl(context, result.finalUrl)
+          }
+
+          is AdRedirectWebViewActivity.AdRedirectResult.Error -> {
+            Timber.d("Error: ${result.message}")
+            rtbAdAnalytics.sendRTBAdLoadError(rtbApp.adUrl, result.message)
+            navigateToAppView(navigate, rtbApp.app, index)
+          }
+        }
+      }
+
+      val intent = AdRedirectWebViewActivity.createIntent(context, rtbApp.adUrl, callback)
+      context.startActivity(intent)
     }
   }
 }
 
-internal fun handleRTBAdClick(
-  rtbApp: RTBApp,
-  index: Int,
-  context: Context,
+private fun navigateToAppView(
   navigate: (String) -> Unit,
-  onLoadingChange: (Boolean) -> Unit,
-  rtbAdViewModel: RTBAdViewModel,
-  rtbAdAnalytics: RTBAdAnalytics
+  app: cm.aptoide.pt.feature_apps.data.App,
+  index: Int
 ) {
-  val app = rtbApp.app
-
-  if (rtbApp.adUrl.isNullOrBlank()) {
-    navigate(
-      buildAppViewRoute(
-        appSource = app,
-        utmCampaign = app.campaigns?.campaignId
-      ).withItemPosition(index)
-    )
-    return
-  }
-
-  if (rtbApp.isAptoideInstall) {
-    handleAptoideInstallClick(
-      rtbApp = rtbApp,
-      index = index,
-      navigate = navigate,
-      rtbAdViewModel = rtbAdViewModel,
-      rtbAdAnalytics = rtbAdAnalytics
-    )
-  } else {
-    handleExternalInstallClick(
-      rtbApp = rtbApp,
-      index = index,
-      context = context,
-      navigate = navigate,
-      onLoadingChange = onLoadingChange,
-      rtbAdViewModel = rtbAdViewModel,
-      rtbAdAnalytics = rtbAdAnalytics
-    )
-  }
-}
-
-internal fun handleAptoideInstallClick(
-  rtbApp: RTBApp,
-  index: Int,
-  navigate: (String) -> Unit,
-  rtbAdViewModel: RTBAdViewModel,
-  rtbAdAnalytics: RTBAdAnalytics
-) {
-  val app = rtbApp.app
-
   navigate(
     buildAppViewRoute(
       appSource = app,
       utmCampaign = app.campaigns?.campaignId
     ).withItemPosition(index)
   )
-
-  rtbAdViewModel.onAdCampaignClick(rtbApp.adUrl ?: "") { result ->
-    when (result) {
-      is AdClickResult.Success -> {
-        rtbAdAnalytics.sendRTBAdLoadSuccess(rtbApp.adUrl ?: "", result.finalUrl)
-      }
-
-      is AdClickResult.Error -> {
-        Timber.e("Ad click error: ${result.message}")
-        rtbAdAnalytics.sendRTBAdLoadError(rtbApp.adUrl ?: "", result.message)
-      }
-
-      else -> { /* Handle other states if needed */
-      }
-    }
-  }
-}
-
-internal fun handleExternalInstallClick(
-  rtbApp: RTBApp,
-  index: Int,
-  context: Context,
-  navigate: (String) -> Unit,
-  onLoadingChange: (Boolean) -> Unit,
-  rtbAdViewModel: RTBAdViewModel,
-  rtbAdAnalytics: RTBAdAnalytics
-) {
-  val app = rtbApp.app
-  onLoadingChange(true)
-
-  rtbAdViewModel.onAdCampaignClick(rtbApp.adUrl ?: "") { result ->
-    when (result) {
-      is AdClickResult.Success -> {
-        onLoadingChange(false)
-        rtbAdAnalytics.sendRTBAdLoadSuccess(rtbApp.adUrl ?: "", result.finalUrl)
-        openGooglePlayUrl(context, result.finalUrl)
-      }
-
-      is AdClickResult.Error -> {
-        onLoadingChange(false)
-        Timber.e("Ad click error: ${result.message}")
-        rtbAdAnalytics.sendRTBAdLoadError(rtbApp.adUrl ?: "", result.message)
-        navigate(
-          buildAppViewRoute(
-            appSource = app,
-            utmCampaign = app.campaigns?.campaignId
-          ).withItemPosition(index)
-        )
-      }
-
-      else -> {
-        onLoadingChange(true)
-      }
-    }
-  }
 }
 
 internal fun openGooglePlayUrl(context: Context, url: String) {
@@ -158,8 +72,15 @@ internal fun openGooglePlayUrl(context: Context, url: String) {
       addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
     }
     context.startActivity(intent)
-    Timber.d("Successfully opened URL: $url")
   } catch (e: Exception) {
     Timber.e(e, "Failed to open URL: $url")
+    try {
+      val browserIntent = Intent(Intent.ACTION_VIEW, url.toUri()).apply {
+        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+      }
+      context.startActivity(browserIntent)
+    } catch (e2: Exception) {
+      Timber.e(e2, "Failed to open URL in browser: $url")
+    }
   }
 }

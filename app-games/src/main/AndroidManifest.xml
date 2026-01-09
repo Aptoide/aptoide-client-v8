@@ -69,6 +69,11 @@
         android:screenOrientation="portrait"
         android:windowSoftInputMode="adjustResize" />
 
+    <activity
+        android:name=".feature_rtb.presentation.AdRedirectWebViewActivity"
+        android:exported="false"
+        android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
     <service
         android:name="com.appcoins.payments.sdk.AppcoinsBillingService"
         android:enabled="false"
