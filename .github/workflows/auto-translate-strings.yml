@@ -1,0 +1,104 @@
+name: Auto-translate Android strings
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  translate:
+    # 🔒 Critical: only run on PRs from the same repo (NOT forks)
+    if: github.event.pull_request.head.repo.full_name == github.repository
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Prevent infinite loop
+        run: |
+          LAST_AUTHOR=$(git log -1 --pretty=format:'%an')
+          echo "Last author: $LAST_AUTHOR"
+          if [ "$LAST_AUTHOR" = "translation-bot" ]; then
+            echo "Last commit from bot; skipping."
+            exit 0
+          fi
+
+      - name: Check if base strings.xml changed
+        id: changes
+        run: |
+          git fetch origin ${{ github.base_ref }}
+          if git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -q "^app-games/src/main/res/values/strings.xml$"; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Stop if no base strings changed
+        if: steps.changes.outputs.changed != 'true'
+        run: echo "No changes to res/values/strings.xml; exiting."
+
+      - name: Setup Python
+        if: steps.changes.outputs.changed == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Python dependencies
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Extract changed strings
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          python scripts/extract_changed_strings.py \
+            --base-ref origin/${{ github.base_ref }} \
+            --strings-path app-games/src/main/res/values/strings.xml \
+            --out changed_strings.json
+
+          echo "Changed strings JSON:"
+          cat changed_strings.json
+
+      - name: Translate with OpenAI
+        if: steps.changes.outputs.changed == 'true'
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          python scripts/translate_strings_openai.py \
+            --in changed_strings.json \
+            --source-locale en \
+            --locales "es,fr,pt-rBR,ja,ar" \
+            --model "gpt-4o-mini" \
+            --out translations.json
+
+          echo "Translations JSON:"
+          cat translations.json
+
+      - name: Apply translations into XML files
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          python scripts/apply_translations.py \
+            --translations translations.json \
+            --res-dir app-games/src/main/res
+
+      - name: Commit and push
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config user.name "translation-bot"
+          git config user.email "translation-bot@users.noreply.github.com"
+
+          git add res/values-*/strings.xml
+
+          # commit only if there are changes
+          git diff --cached --quiet && echo "No translation changes to commit" && exit 0
+
+          git commit -m "New translation updates"
+          git push
