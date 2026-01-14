@@ -112,6 +112,7 @@ fun PublisherTakeOverBundle(
     medium = "pto",
     campaign = "pto-${bundle.tag}",
     content = "home-pto",
+    shouldSendClickEvents = true,
     navigate = navigate
   ) { navigate ->
     PublisherTakeOverContent(
