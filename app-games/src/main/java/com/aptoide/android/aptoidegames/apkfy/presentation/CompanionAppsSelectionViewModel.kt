@@ -3,6 +3,7 @@ package com.aptoide.android.aptoidegames.apkfy.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_campaigns.UTMInfo
 import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import cm.aptoide.pt.install_info_mapper.domain.InstallPackageInfoMapper
 import cm.aptoide.pt.install_manager.InstallManager
@@ -41,7 +42,11 @@ class CompanionAppsSelectionViewModel(
     }
   }
 
-  fun install(analyticsContext: AnalyticsUIContext, networkType: String) {
+  fun install(
+    analyticsContext: AnalyticsUIContext,
+    utmInfo: UTMInfo,
+    networkType: String
+  ) {
     viewModelScope.launch {
       AnalyticsInstallPackageInfoMapper.currentAnalyticsUIContext =
         analyticsContext.copy(installAction = InstallAction.INSTALL)
@@ -52,25 +57,13 @@ class CompanionAppsSelectionViewModel(
       companionAppsList.filter { it.packageName in selectedIds.value }.forEach {
         installManager.getApp(it.packageName).install(installPackageInfoMapper.map(it))
 
-        it.campaigns?.toAptoideMMPCampaign()
-          ?.sendClickEvent(bundleTag = analyticsContext.bundleMeta?.tag)
-        it.campaigns?.toAptoideMMPCampaign()
-          ?.sendDownloadEvent(
-            bundleTag = analyticsContext.bundleMeta?.tag,
-            searchKeyword = analyticsContext.searchMeta?.searchKeyword,
-            currentScreen = analyticsContext.currentScreen,
-          )
+        it.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(utmInfo)
+        it.campaigns?.toAptoideMMPCampaign()?.sendDownloadEvent(utmInfo)
       }
 
       installManager.getApp(apkfyApp.packageName).install(installPackageInfoMapper.map(apkfyApp))
-      apkfyApp.campaigns?.toAptoideMMPCampaign()
-        ?.sendClickEvent(bundleTag = analyticsContext.bundleMeta?.tag)
-      apkfyApp.campaigns?.toAptoideMMPCampaign()
-        ?.sendDownloadEvent(
-          bundleTag = analyticsContext.bundleMeta?.tag,
-          searchKeyword = analyticsContext.searchMeta?.searchKeyword,
-          currentScreen = analyticsContext.currentScreen,
-        )
+      apkfyApp.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(utmInfo)
+      apkfyApp.campaigns?.toAptoideMMPCampaign()?.sendDownloadEvent(utmInfo)
     }
   }
 }
@@ -78,5 +71,5 @@ class CompanionAppsSelectionViewModel(
 data class CompanionAppsState(
   val selectedPackages: Set<String>,
   val toggleSelection: (String) -> Unit,
-  val install: (AnalyticsUIContext, String) -> Unit
+  val install: (AnalyticsUIContext, UTMInfo, String) -> Unit
 )

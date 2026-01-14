@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -14,8 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.navDeepLink
 import cm.aptoide.pt.extensions.ScreenData
-import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
-import cm.aptoide.pt.feature_campaigns.UTMInfo
 import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import cm.aptoide.pt.feature_home.domain.Bundle
 import com.aptoide.android.aptoidegames.BuildConfig
@@ -32,6 +29,7 @@ import com.aptoide.android.aptoidegames.feature_rtb.data.RTBAppsListUiState
 import com.aptoide.android.aptoidegames.home.LoadingView
 import com.aptoide.android.aptoidegames.home.analytics.meta
 import com.aptoide.android.aptoidegames.home.translateOrKeep
+import com.aptoide.android.aptoidegames.mmp.UTMContext
 import com.aptoide.android.aptoidegames.mmp.WithUTM
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 
@@ -66,7 +64,6 @@ fun buildRtbSeeMoreRoute(
 @Composable
 private fun RTBMoreAptoideMMPController(
   uiState: RTBAppsListUiState,
-  bundleTag: String,
 ) {
   when (uiState) {
     is RTBAppsListUiState.Idle ->
@@ -74,7 +71,7 @@ private fun RTBMoreAptoideMMPController(
         val app = rtbApp.app
         if (!hasSentImpression) {
           app.campaigns?.toAptoideMMPCampaign()
-            ?.sendImpressionEvent(bundleTag, app.packageName)
+            ?.sendImpressionEvent(UTMContext.current, app.packageName)
           if (index == uiState.apps.size - 1) {
             hasSentImpression = true
           }
@@ -96,17 +93,7 @@ fun RTBMoreBundleScreen(
   val generalAnalytics = rememberGeneralAnalytics()
   var isLoading by remember { mutableStateOf(false) }
 
-  LaunchedEffect(Unit) {
-    if (!AptoideMMPCampaign.allowedBundleTags.keys.contains(bundleTag)) {
-      AptoideMMPCampaign.allowedBundleTags[bundleTag] = UTMInfo(
-        utmMedium = "rtb",
-        utmCampaign = "regular",
-        utmContent = "rtb-seeall"
-      )
-    }
-  }
-
-  RTBMoreAptoideMMPController(uiState, bundleTag)
+  RTBMoreAptoideMMPController(uiState)
 
   Column(
     modifier = Modifier

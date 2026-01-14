@@ -7,6 +7,7 @@ import cm.aptoide.pt.extensions.getSignature
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.AppsListMapper
 import cm.aptoide.pt.feature_apps.data.model.AppJSON
+import cm.aptoide.pt.feature_campaigns.UTMInfo
 import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import cm.aptoide.pt.feature_campaigns.toMMPLinkerCampaign
 import cm.aptoide.pt.feature_updates.data.AutoUpdateWorker
@@ -185,9 +186,10 @@ class Updates @Inject constructor(
 
                   it.campaigns?.run {
                     toAptoideMMPCampaign().sendDownloadEvent(
-                      bundleTag = null,
-                      searchKeyword = null,
-                      currentScreen = null,
+                      utmInfo = UTMInfo(
+                        utmSource = "aptoide",
+                        utmContent = "updates"
+                      )
                     )
 
                     toMMPLinkerCampaign().sendDownloadEvent()
@@ -271,9 +273,10 @@ class Updates @Inject constructor(
 
             it.campaigns?.run {
               toAptoideMMPCampaign().sendDownloadEvent(
-                bundleTag = null,
-                searchKeyword = null,
-                currentScreen = null,
+                utmInfo = UTMInfo(
+                  utmSource = "aptoide",
+                  utmContent = "auto-updates"
+                )
               )
 
               toMMPLinkerCampaign().sendDownloadEvent()

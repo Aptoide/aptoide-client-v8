@@ -42,6 +42,7 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberBundle
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.installer.presentation.ProgressTextWithDownloads
+import com.aptoide.android.aptoidegames.mmp.UTMContext
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -90,6 +91,7 @@ fun TopChartsList(
   navigate: (String) -> Unit
 ) {
   val analyticsContext = AnalyticsContext.current
+  val utmContext = UTMContext.current
   val bundleAnalytics = rememberBundleAnalytics()
 
   LazyColumn(
@@ -104,7 +106,7 @@ fun TopChartsList(
         app = app,
         rank = index + 1,
         onClick = {
-          app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(analyticsContext.bundleMeta?.tag)
+          app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(utmContext)
           bundleAnalytics.sendAppPromoClick(
             app = app,
             analyticsContext = analyticsContext.copy(itemPosition = index)

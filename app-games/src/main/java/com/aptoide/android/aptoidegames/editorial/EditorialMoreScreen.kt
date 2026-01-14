@@ -16,7 +16,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.CollectionInfo
@@ -29,8 +28,6 @@ import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.ScreenData
-import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
-import cm.aptoide.pt.feature_campaigns.UTMInfo
 import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
 import cm.aptoide.pt.feature_editorial.presentation.ArticleListUiState
 import cm.aptoide.pt.feature_editorial.presentation.previewArticlesListIdleState
@@ -122,16 +119,6 @@ fun SeeMoreEditorialsContent(
   navigate: (String) -> Unit,
   onError: () -> Unit
 ) {
-  LaunchedEffect(tag) {
-    if (!AptoideMMPCampaign.allowedBundleTags.keys.contains(tag)) {
-      AptoideMMPCampaign.allowedBundleTags[tag] = UTMInfo(
-        utmMedium = "editorial",
-        utmCampaign = "editorial",
-        utmContent = "editorial-seeall"
-      )
-    }
-  }
-
   val analyticsContext = AnalyticsContext.current
   val bundleMeta = analyticsContext.bundleMeta ?: BundleMeta(tag = tag, bundleSource = "manual")
 

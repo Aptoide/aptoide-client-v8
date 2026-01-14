@@ -129,7 +129,7 @@ fun rememberDownloadPermissionState(app: App): DownloadPermissionState? = runPre
 @Composable
 fun rememberCompanionAppsSelection(apkfyApp: App, appList: List<App>): CompanionAppsState =
   runPreviewable(
-    preview = { CompanionAppsState(setOf("cm.aptoide.pt"), {}, { _, _ -> }) },
+    preview = { CompanionAppsState(setOf("cm.aptoide.pt"), {}, { _, _, _ -> }) },
     real = {
       val injectionsProvider = hiltViewModel<InjectionsProvider>()
       val companionAppsSelectionViewModel: CompanionAppsSelectionViewModel = viewModel(

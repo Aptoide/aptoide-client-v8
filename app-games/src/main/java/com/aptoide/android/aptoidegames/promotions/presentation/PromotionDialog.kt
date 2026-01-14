@@ -29,8 +29,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cm.aptoide.pt.extensions.PreviewAll
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.emptyApp
-import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
-import cm.aptoide.pt.feature_campaigns.UTMInfo
 import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import cm.aptoide.pt.feature_home.domain.BundleSource
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
@@ -43,6 +41,7 @@ import com.aptoide.android.aptoidegames.design_system.PrimaryTextButton
 import com.aptoide.android.aptoidegames.drawables.icons.getPromotionBackground
 import com.aptoide.android.aptoidegames.drawables.icons.getPromotionBonusIcon
 import com.aptoide.android.aptoidegames.installer.presentation.InstallView
+import com.aptoide.android.aptoidegames.mmp.UTMContext
 import com.aptoide.android.aptoidegames.mmp.WithUTM
 import com.aptoide.android.aptoidegames.promotions.analytics.rememberPromotionsAnalytics
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -54,18 +53,6 @@ fun PromotionDialog(navigate: (String) -> Unit) {
   val promotionsViewModel = hiltViewModel<PromotionsViewModel>()
   val promotionData by promotionsViewModel.uiState.collectAsState()
 
-  LaunchedEffect(promotionData) {
-    promotionData?.let { (promotion, app) ->
-      AptoideMMPCampaign.allowedBundleTags["home_dialog"] = UTMInfo(
-        utmMedium = "promo-card",
-        utmCampaign = promotion.uid,
-        utmContent = "home-promo-card"
-      )
-      app.campaigns?.toAptoideMMPCampaign()?.sendImpressionEvent("home_dialog")
-      promotionsAnalytics.sendAhabV2DialogImpression(app.packageName)
-    }
-  }
-
   promotionData?.let { (promotion, app) ->
     WithUTM(
       medium = "promo-card",
@@ -73,6 +60,8 @@ fun PromotionDialog(navigate: (String) -> Unit) {
       content = "home-promo-card",
       navigate = navigate
     ) {
+      val utmContext = UTMContext.current
+
       OverrideAnalyticsScreen(
         currentScreen = "home_dialog",
         navigate = navigate
@@ -98,6 +87,13 @@ fun PromotionDialog(navigate: (String) -> Unit) {
             title = promotion.title,
             description = promotion.content,
           )
+        }
+      }
+
+      LaunchedEffect(promotionData) {
+        promotionData?.let { (promotion, app) ->
+          app.campaigns?.toAptoideMMPCampaign()?.sendImpressionEvent(utmContext)
+          promotionsAnalytics.sendAhabV2DialogImpression(app.packageName)
         }
       }
     }

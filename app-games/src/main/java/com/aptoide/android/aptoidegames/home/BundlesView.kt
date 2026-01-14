@@ -95,7 +95,6 @@ import com.aptoide.android.aptoidegames.feature_rtb.presentation.RTBSectionView
 import com.aptoide.android.aptoidegames.gamesfeed.presentation.GamesFeedBundle
 import com.aptoide.android.aptoidegames.gamesfeed.presentation.rememberGamesFeedVisibility
 import com.aptoide.android.aptoidegames.home.analytics.meta
-import com.aptoide.android.aptoidegames.mmp.BundleUTMSetup
 import com.aptoide.android.aptoidegames.mmp.WithUTM
 import com.aptoide.android.aptoidegames.mmp.getUTMConfig
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -214,8 +213,6 @@ fun BundlesView(
           navigate = navigate
         ) { navigate ->
           OverrideAnalyticsBundleMeta(bundle.meta, navigate) { navigateTo ->
-            BundleUTMSetup(bundle = bundle)
-
             when (bundle.type) {
               Type.APP_GRID -> AppsGridBundle(
                 bundle = bundle,

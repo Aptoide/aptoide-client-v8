@@ -61,8 +61,6 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
-import cm.aptoide.pt.feature_campaigns.UTMInfo
 import cm.aptoide.pt.feature_home.domain.BundleSource
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType
 import cm.aptoide.pt.feature_search.presentation.SearchUiState
@@ -148,15 +146,6 @@ fun searchScreen() = ScreenData.withAnalytics(
     if (!queryValue.isNullOrBlank()) {
       searchViewModel.loadResults()
     }
-  }
-
-  LaunchedEffect(searchMeta) {
-    AptoideMMPCampaign.allowedBundleTags[TAG] = UTMInfo(
-      utmMedium = "store-placement",
-      utmCampaign = "organic-discovery",
-      utmContent = "search",
-      utmTerm = searchMeta?.searchKeyword
-    )
   }
 
   BackHandler {

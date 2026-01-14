@@ -36,6 +36,7 @@ import com.aptoide.android.aptoidegames.error_views.NoConnectionView
 import com.aptoide.android.aptoidegames.feature_rtb.presentation.isRTB
 import com.aptoide.android.aptoidegames.home.LoadingView
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
+import com.aptoide.android.aptoidegames.mmp.UTMContext
 import com.aptoide.android.aptoidegames.mmp.WithUTM
 import com.aptoide.android.aptoidegames.mmp.getUTMConfig
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
@@ -140,6 +141,7 @@ fun AppsList(
   handleRTBAdClick: (String, Int) -> Unit = { _, _ -> },
 ) {
   val analyticsContext = AnalyticsContext.current
+  val utmContext = UTMContext.current
   val bundleAnalytics = rememberBundleAnalytics()
 
   Spacer(modifier = Modifier.fillMaxWidth())
@@ -153,7 +155,7 @@ fun AppsList(
       AppItem(
         app = app,
         onClick = {
-          app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(analyticsContext.bundleMeta?.tag)
+          app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(utmContext)
           bundleAnalytics.sendAppPromoClick(
             app = app,
             analyticsContext = analyticsContext.copy(itemPosition = index)

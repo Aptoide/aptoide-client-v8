@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
+import cm.aptoide.pt.feature_campaigns.UTMInfo
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.dto.AnalyticsUIContext
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
@@ -51,6 +52,7 @@ import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.installer.analytics.getNetworkType
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
 import com.aptoide.android.aptoidegames.installer.presentation.ProgressText
+import com.aptoide.android.aptoidegames.mmp.UTMContext
 import com.aptoide.android.aptoidegames.mmp.WithUTM
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -164,18 +166,19 @@ fun RobloxApkfyMultiInstallView(
 @Composable
 private fun MultiInstallButton(
   numberOfSelectedApps: Int,
-  install: (AnalyticsUIContext, String) -> Unit,
+  install: (AnalyticsUIContext, UTMInfo, String) -> Unit,
   onInstallClick: () -> Unit,
   modifier: Modifier = Modifier
 ) {
   val context = LocalContext.current
   val analyticsUIContext = AnalyticsContext.current
+  val utmContext = UTMContext.current
   val networkType = context.getNetworkType()
   val totalAppsToInstall = numberOfSelectedApps + 1
   PrimaryButton(
     title = stringResource(R.string.apkfy_multi_install_install_button, totalAppsToInstall),
     onClick = {
-      install(analyticsUIContext, networkType)
+      install(analyticsUIContext, utmContext, networkType)
       onInstallClick()
     },
     modifier = modifier
