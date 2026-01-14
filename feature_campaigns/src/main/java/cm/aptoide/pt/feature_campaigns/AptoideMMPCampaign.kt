@@ -12,28 +12,18 @@ class AptoideMMPCampaign(
 
   companion object {
     lateinit var oemid: String
-    lateinit var utmSource: String
     var guestUID: String? = null
-    val allowedBundleTags: MutableMap<String, UTMInfo> = mutableMapOf()
-    fun init(
-      oemid: String,
-      utmSource: String,
-    ) {
+    fun init(oemid: String) {
       this.oemid = oemid
-      this.utmSource = utmSource
     }
   }
 
   fun sendImpressionEvent(
-    bundleTag: String,
+    utmInfo: UTMInfo,
     packageName: String? = null,
   ) {
     CoroutineScope(Dispatchers.Main).launch {
-      val utmInfo = allowedBundleTags[bundleTag]
-      val utmParams = buildBaseMap(
-        utmMedium = utmInfo?.utmMedium,
-        utmCampaign = campaign.campaignId ?: utmInfo?.utmCampaign
-      )
+      val utmParams = buildBaseMap(utmInfo)
 
       if (BuildConfig.DEBUG) {
         Timber.tag("MMP").i("Impression Event - Type: $campaignType")
@@ -50,16 +40,10 @@ class AptoideMMPCampaign(
     }
   }
 
-  fun sendClickEvent(bundleTag: String?) {
-    if (!allowedBundleTags.keys.contains(bundleTag)) return
+  fun sendClickEvent(utmInfo: UTMInfo) {
+    if (!utmInfo.shouldSendClickEvents) return
     CoroutineScope(Dispatchers.Main).launch {
-      val utmInfo = allowedBundleTags[bundleTag]
-      val utmParams = buildAppendMap(
-        utmMedium = utmInfo?.utmMedium,
-        utmCampaign = campaign.campaignId ?: utmInfo?.utmCampaign,
-        utmContent = utmInfo?.utmContent,
-        searchKeyword = utmInfo?.utmTerm,
-      )
+      val utmParams = buildAppendMap(utmInfo)
 
       if (BuildConfig.DEBUG) {
         Timber.tag("MMP").i("Click Event - Type: $campaignType")
@@ -76,23 +60,9 @@ class AptoideMMPCampaign(
     }
   }
 
-  fun sendDownloadEvent(
-    bundleTag: String?,
-    searchKeyword: String? = null,
-    currentScreen: String?,
-    utmCampaign: String? = null,
-    utmSourceExterior: String? = null,
-  ) {
-    val utmInfo = allowedBundleTags[bundleTag]
-    val utmMedium = bundleTag?.let { utmInfo?.utmMedium } ?: currentScreen
+  fun sendDownloadEvent(utmInfo: UTMInfo) {
     CoroutineScope(Dispatchers.Main).launch {
-      val utmParams = buildAppendMap(
-        utmMedium = utmMedium,
-        utmCampaign = utmCampaign ?: utmInfo?.utmCampaign,
-        utmContent = utmInfo?.utmContent,
-        searchKeyword = searchKeyword ?: utmInfo?.utmTerm,
-        utmSourceExterior = utmSourceExterior,
-      )
+      val utmParams = buildAppendMap(utmInfo)
 
       if (BuildConfig.DEBUG) {
         Timber.tag("MMP").i("Download Event - Type: $campaignType")
@@ -117,35 +87,21 @@ class AptoideMMPCampaign(
     return map
   }
 
-  private fun buildBaseMap(
-    utmMedium: String?,
-    utmCampaign: String?,
-    utmSourceExterior: String? = null,
-  ): Map<String, String> {
+  private fun buildBaseMap(utmInfo: UTMInfo): Map<String, String> {
     val map = mutableMapOf<String, String>()
-    if (utmSourceExterior != null) {
-      utmSourceExterior.let { map["utm_source"] = "$it+$utmSource" }
-    } else {
-      utmSource.let { map["utm_source"] = it }
-    }
-    utmMedium?.let { map["utm_medium"] = it }
-    utmCampaign?.let { campaign ->
+    utmInfo.utmSource?.let { map["utm_source"] = it }
+    utmInfo.utmMedium?.let { map["utm_medium"] = it }
+    utmInfo.utmCampaign?.let { campaign ->
       map["utm_campaign"] = campaign
     }
     guestUID?.takeIf { it.isNotEmpty() }?.let { map["guest_uid"] = it }
     return map
   }
 
-  private fun buildAppendMap(
-    utmMedium: String?,
-    utmCampaign: String?,
-    utmContent: String?,
-    utmSourceExterior: String? = null,
-    searchKeyword: String? = null,
-  ): Map<String, String> {
-    val map = buildBaseMap(utmMedium, utmCampaign, utmSourceExterior).toMutableMap()
-    utmContent?.let { map["utm_content"] = it }
-    searchKeyword?.takeIf { it.isNotEmpty() }?.let { map["utm_term"] = it }
+  private fun buildAppendMap(utmInfo: UTMInfo): Map<String, String> {
+    val map = buildBaseMap(utmInfo).toMutableMap()
+    utmInfo.utmContent?.let { map["utm_content"] = it }
+    utmInfo.utmTerm?.takeIf { it.isNotEmpty() }?.let { map["utm_term"] = it }
     return map
   }
 }

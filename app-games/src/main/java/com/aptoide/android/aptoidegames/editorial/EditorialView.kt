@@ -18,7 +18,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.CollectionInfo
 import androidx.compose.ui.semantics.collectionInfo
@@ -27,8 +26,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
-import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
-import cm.aptoide.pt.feature_campaigns.UTMInfo
 import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
 import cm.aptoide.pt.feature_editorial.presentation.ArticleListUiState
 import cm.aptoide.pt.feature_editorial.presentation.ArticleListUiStateProvider
@@ -57,23 +54,6 @@ fun EditorialBundle(
   navigate: (String) -> Unit,
   spaceBy: Int = 0,
 ) {
-  LaunchedEffect(Unit) {
-    if (!AptoideMMPCampaign.allowedBundleTags.keys.contains(bundle.tag)) {
-      AptoideMMPCampaign.allowedBundleTags[bundle.tag] = UTMInfo(
-        utmMedium = "editorial",
-        utmCampaign = "editorial",
-        utmContent = "home-editorial"
-      )
-      if (bundle.hasMoreAction) {
-        AptoideMMPCampaign.allowedBundleTags["${bundle.tag}-more"] = UTMInfo(
-          utmMedium = "editorial",
-          utmCampaign = "editorial",
-          utmContent = "editorial-seeall"
-        )
-      }
-    }
-  }
-
   val (uiState, reload) = rememberEditorialListState(
     tag = bundle.tag,
     subtype = subtype,

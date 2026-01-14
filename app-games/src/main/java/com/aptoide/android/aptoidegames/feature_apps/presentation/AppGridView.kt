@@ -46,6 +46,7 @@ import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
 import com.aptoide.android.aptoidegames.home.getSeeMoreRouteNavigation
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
+import com.aptoide.android.aptoidegames.mmp.UTMContext
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -109,6 +110,7 @@ internal fun AppsRowView(
   onRTBAdClick: (String, Int) -> Unit = { _, _ -> }
 ) {
   val analyticsContext = AnalyticsContext.current
+  val utmContext = UTMContext.current
   val bundleAnalytics = rememberBundleAnalytics()
   val lazyListState = rememberLazyListState()
 
@@ -128,7 +130,7 @@ internal fun AppsRowView(
       AppGridView(
         app = item,
         onClick = {
-          item.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(analyticsContext.bundleMeta?.tag)
+          item.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(utmContext)
           bundleAnalytics.sendAppPromoClick(
             app = item,
             analyticsContext = analyticsContext.copy(itemPosition = index)

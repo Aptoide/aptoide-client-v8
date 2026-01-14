@@ -39,6 +39,7 @@ import com.aptoide.android.aptoidegames.installer.installConstraints
 import com.aptoide.android.aptoidegames.installer.notifications.rememberInstallerNotifications
 import com.aptoide.android.aptoidegames.installer.rememberInstallerQueueHandler
 import com.aptoide.android.aptoidegames.installer.wifiInstallConstraints
+import com.aptoide.android.aptoidegames.mmp.UTMContext
 import com.aptoide.android.aptoidegames.network.presentation.NetworkPreferencesViewModel
 import com.aptoide.android.aptoidegames.network.presentation.WifiPromptDialog
 import com.aptoide.android.aptoidegames.network.presentation.WifiPromptType
@@ -61,6 +62,7 @@ fun installViewStates(
 ): InstallViewState {
   val context = LocalContext.current
   val analyticsContext = AnalyticsContext.current
+  val utmContext = UTMContext.current
   val installAnalytics = rememberInstallAnalytics()
   val downloadUiState = rememberDownloadState(app = app)
   val installerNotifications = rememberInstallerNotifications()
@@ -89,36 +91,13 @@ fun installViewStates(
               networkType = context.getNetworkType(),
               analyticsContext = analyticsContext.copy(installAction = InstallAction.INSTALL),
             )
+
             if (analyticsContext.currentScreen != "AppView") {
-              app.campaigns?.toAptoideMMPCampaign()
-                ?.sendClickEvent(bundleTag = analyticsContext.bundleMeta?.tag)
-              app.campaigns?.toAptoideMMPCampaign()
-                ?.sendDownloadEvent(
-                  bundleTag = analyticsContext.bundleMeta?.tag,
-                  searchKeyword = analyticsContext.searchMeta?.searchKeyword,
-                  currentScreen = analyticsContext.currentScreen,
-                )
-            } else if (!app.campaigns?.deepLinkUtms?.get("utm_source").isNullOrEmpty()) {
-              app.campaigns?.toAptoideMMPCampaign()
-                ?.sendDownloadEvent(
-                  bundleTag = null,
-                  searchKeyword = null,
-                  utmCampaign = app.campaigns?.deepLinkUtms?.get("utm_campaign"),
-                  currentScreen = app.campaigns?.deepLinkUtms?.get("utm_medium")
-                    ?: analyticsContext.currentScreen,
-                  utmSourceExterior = app.campaigns?.deepLinkUtms?.get("utm_source")
-                )
-            } else {
-              val campaignId = app.campaigns?.deepLinkUtms?.get("utm_campaign")
-              app.campaigns?.toAptoideMMPCampaign()
-                ?.sendDownloadEvent(
-                  bundleTag = analyticsContext.bundleMeta?.tag,
-                  utmCampaign = campaignId,
-                  searchKeyword = analyticsContext.searchMeta?.searchKeyword,
-                  currentScreen = analyticsContext.currentScreen
-                )
+              app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(utmInfo = utmContext)
             }
+            app.campaigns?.toAptoideMMPCampaign()?.sendDownloadEvent(utmInfo = utmContext)
             app.campaigns?.toMMPLinkerCampaign()?.sendDownloadEvent()
+
             onInstallStarted()
             scheduledInstallListener.listenToWifiStart(app.packageName)
             saveAppDetails(app) {
@@ -140,36 +119,13 @@ fun installViewStates(
               networkType = context.getNetworkType(),
               analyticsContext = analyticsContext.copy(installAction = InstallAction.UPDATE),
             )
+
             if (analyticsContext.currentScreen != "AppView") {
-              app.campaigns?.toAptoideMMPCampaign()
-                ?.sendClickEvent(bundleTag = analyticsContext.bundleMeta?.tag)
-              app.campaigns?.toAptoideMMPCampaign()
-                ?.sendDownloadEvent(
-                  bundleTag = analyticsContext.bundleMeta?.tag,
-                  searchKeyword = analyticsContext.searchMeta?.searchKeyword,
-                  currentScreen = analyticsContext.currentScreen,
-                )
-            } else if (!app.campaigns?.deepLinkUtms?.get("utm_source").isNullOrEmpty()) {
-              app.campaigns?.toAptoideMMPCampaign()
-                ?.sendDownloadEvent(
-                  bundleTag = null,
-                  searchKeyword = null,
-                  utmCampaign = app.campaigns?.deepLinkUtms?.get("utm_campaign"),
-                  currentScreen = app.campaigns?.deepLinkUtms?.get("utm_medium")
-                    ?: analyticsContext.currentScreen,
-                  utmSourceExterior = app.campaigns?.deepLinkUtms?.get("utm_source")
-                )
-            } else {
-              val campaignId = app.campaigns?.deepLinkUtms?.get("utm_campaign")
-              app.campaigns?.toAptoideMMPCampaign()
-                ?.sendDownloadEvent(
-                  bundleTag = analyticsContext.bundleMeta?.tag,
-                  utmCampaign = campaignId,
-                  searchKeyword = analyticsContext.searchMeta?.searchKeyword,
-                  currentScreen = analyticsContext.currentScreen
-                )
+              app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(utmInfo = utmContext)
             }
+            app.campaigns?.toAptoideMMPCampaign()?.sendDownloadEvent(utmInfo = utmContext)
             app.campaigns?.toMMPLinkerCampaign()?.sendDownloadEvent()
+
             onInstallStarted()
             scheduledInstallListener.listenToWifiStart(app.packageName)
             saveAppDetails(app) {
@@ -201,36 +157,13 @@ fun installViewStates(
               networkType = context.getNetworkType(),
               analyticsContext = analyticsContext.copy(installAction = InstallAction.MIGRATE),
             )
+
             if (analyticsContext.currentScreen != "AppView") {
-              app.campaigns?.toAptoideMMPCampaign()
-                ?.sendClickEvent(bundleTag = analyticsContext.bundleMeta?.tag)
-              app.campaigns?.toAptoideMMPCampaign()
-                ?.sendDownloadEvent(
-                  bundleTag = analyticsContext.bundleMeta?.tag,
-                  searchKeyword = analyticsContext.searchMeta?.searchKeyword,
-                  currentScreen = analyticsContext.currentScreen,
-                )
-            } else if (!app.campaigns?.deepLinkUtms?.get("utm_source").isNullOrEmpty()) {
-              app.campaigns?.toAptoideMMPCampaign()
-                ?.sendDownloadEvent(
-                  bundleTag = null,
-                  searchKeyword = null,
-                  utmCampaign = app.campaigns?.deepLinkUtms?.get("utm_campaign"),
-                  currentScreen = app.campaigns?.deepLinkUtms?.get("utm_medium")
-                    ?: analyticsContext.currentScreen,
-                  utmSourceExterior = app.campaigns?.deepLinkUtms?.get("utm_source")
-                )
-            } else {
-              val campaignId = app.campaigns?.deepLinkUtms?.get("utm_campaign")
-              app.campaigns?.toAptoideMMPCampaign()
-                ?.sendDownloadEvent(
-                  bundleTag = analyticsContext.bundleMeta?.tag,
-                  utmCampaign = campaignId,
-                  searchKeyword = analyticsContext.searchMeta?.searchKeyword,
-                  currentScreen = analyticsContext.currentScreen
-                )
+              app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(utmInfo = utmContext)
             }
+            app.campaigns?.toAptoideMMPCampaign()?.sendDownloadEvent(utmInfo = utmContext)
             app.campaigns?.toMMPLinkerCampaign()?.sendDownloadEvent()
+
             onInstallStarted()
             scheduledInstallListener.listenToWifiStart(app.packageName)
             saveAppDetails(app) {
@@ -261,36 +194,13 @@ fun installViewStates(
               networkType = context.getNetworkType(),
               analyticsContext = analyticsContext.copy(installAction = InstallAction.MIGRATE_ALIAS),
             )
+
             if (analyticsContext.currentScreen != "AppView") {
-              app.campaigns?.toAptoideMMPCampaign()
-                ?.sendClickEvent(bundleTag = analyticsContext.bundleMeta?.tag)
-              app.campaigns?.toAptoideMMPCampaign()
-                ?.sendDownloadEvent(
-                  bundleTag = analyticsContext.bundleMeta?.tag,
-                  searchKeyword = analyticsContext.searchMeta?.searchKeyword,
-                  currentScreen = analyticsContext.currentScreen,
-                )
-            } else if (!app.campaigns?.deepLinkUtms?.get("utm_source").isNullOrEmpty()) {
-              app.campaigns?.toAptoideMMPCampaign()
-                ?.sendDownloadEvent(
-                  bundleTag = null,
-                  searchKeyword = null,
-                  utmCampaign = app.campaigns?.deepLinkUtms?.get("utm_campaign"),
-                  currentScreen = app.campaigns?.deepLinkUtms?.get("utm_medium")
-                    ?: analyticsContext.currentScreen,
-                  utmSourceExterior = app.campaigns?.deepLinkUtms?.get("utm_source")
-                )
-            } else {
-              val campaignId = app.campaigns?.deepLinkUtms?.get("utm_campaign")
-              app.campaigns?.toAptoideMMPCampaign()
-                ?.sendDownloadEvent(
-                  bundleTag = analyticsContext.bundleMeta?.tag,
-                  utmCampaign = campaignId,
-                  searchKeyword = analyticsContext.searchMeta?.searchKeyword,
-                  currentScreen = analyticsContext.currentScreen
-                )
+              app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(utmInfo = utmContext)
             }
+            app.campaigns?.toAptoideMMPCampaign()?.sendDownloadEvent(utmInfo = utmContext)
             app.campaigns?.toMMPLinkerCampaign()?.sendDownloadEvent()
+            
             onInstallStarted()
             scheduledInstallListener.listenToWifiStart(app.packageName)
             saveAppDetails(app) {

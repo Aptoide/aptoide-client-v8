@@ -61,6 +61,7 @@ import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.error_views.NoConnectionView
 import com.aptoide.android.aptoidegames.home.LoadingView
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
+import com.aptoide.android.aptoidegames.mmp.UTMContext
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -167,6 +168,7 @@ fun MoreBonusBundleViewContent(
   navigate: (String) -> Unit,
 ) {
   val analyticsContext = AnalyticsContext.current
+  val utmContext = UTMContext.current
   val bundleAnalytics = rememberBundleAnalytics()
 
   val navigateToApp = { app: App, index: Int? ->
@@ -189,7 +191,7 @@ fun MoreBonusBundleViewContent(
         modifier = Modifier.padding(horizontal = 16.dp),
         app = app,
         onClick = {
-          app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(analyticsContext.bundleMeta?.tag)
+          app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(utmContext)
           bundleAnalytics.sendAppPromoClick(
             app = app,
             analyticsContext = analyticsContext.copy(itemPosition = index)

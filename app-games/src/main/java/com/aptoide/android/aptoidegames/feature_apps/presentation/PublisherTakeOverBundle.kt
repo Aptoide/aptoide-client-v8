@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,8 +32,6 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
-import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
-import cm.aptoide.pt.feature_campaigns.UTMInfo
 import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.randomBundle
@@ -51,6 +48,7 @@ import com.aptoide.android.aptoidegames.home.translateOrKeep
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.installer.presentation.ProgressText
+import com.aptoide.android.aptoidegames.mmp.UTMContext
 import com.aptoide.android.aptoidegames.mmp.WithUTM
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
@@ -63,14 +61,15 @@ internal var hasSentImpression = false
 @Composable
 fun AptoideMMPController(
   appsListUiState: AppsListUiState,
-  bundleTag: String,
 ) {
   when (appsListUiState) {
     is AppsListUiState.Idle ->
       appsListUiState.apps.onEach {
         if (it.isAppCoins && !hasSentImpression) {
-          it.campaigns?.toAptoideMMPCampaign()
-            ?.sendImpressionEvent(bundleTag, BuildConfig.APPLICATION_ID)
+          it.campaigns?.toAptoideMMPCampaign()?.sendImpressionEvent(
+            utmInfo = UTMContext.current,
+            packageName = BuildConfig.APPLICATION_ID
+          )
           hasSentImpression = true
         }
       }
@@ -88,26 +87,6 @@ fun PublisherTakeOverBundle(
   val (uiState, _) = rememberAppsByTag(bundle.tag, bundle.timestamp)
   val (bottomUiState, _) = rememberAppsByTag(bundle.bottomTag ?: "", bundle.timestamp)
 
-  LaunchedEffect(Unit) {
-    if (!AptoideMMPCampaign.allowedBundleTags.keys.contains(bundle.tag)) {
-      AptoideMMPCampaign.allowedBundleTags[bundle.tag] = UTMInfo(
-        utmMedium = "pto",
-        utmCampaign = "pto-${bundle.tag}",
-        utmContent = "home-pto"
-      )
-      if (bundle.hasMoreAction) {
-        AptoideMMPCampaign.allowedBundleTags["${bundle.tag}-more"] = UTMInfo(
-          utmMedium = "pto",
-          utmCampaign = "pto-${bundle.tag}",
-          utmContent = "pto-seeall"
-        )
-      }
-    }
-  }
-
-  AptoideMMPController(appsListUiState = uiState, bundleTag = bundle.tag)
-  AptoideMMPController(appsListUiState = bottomUiState, bundleTag = bundle.tag)
-
   WithUTM(
     medium = "pto",
     campaign = "pto-${bundle.tag}",
@@ -122,6 +101,9 @@ fun PublisherTakeOverBundle(
       navigate = navigate,
       spaceBy = spaceBy
     )
+
+    AptoideMMPController(appsListUiState = uiState)
+    AptoideMMPController(appsListUiState = bottomUiState)
   }
 }
 
@@ -175,7 +157,6 @@ fun PublisherTakeOverContent(
 
         when (uiState) {
           is AppsListUiState.Idle -> PublisherTakeOverListView(
-            bundleTag = bundle.tag,
             appsList = uiState.apps,
             navigate = navigate,
           )
@@ -215,11 +196,11 @@ fun PublisherTakeOverContent(
 
 @Composable
 fun PublisherTakeOverListView(
-  bundleTag: String,
   appsList: List<App>,
   navigate: (String) -> Unit,
 ) {
   val analyticsContext = AnalyticsContext.current
+  val utmContext = UTMContext.current
   val bundleAnalytics = rememberBundleAnalytics()
 
   HorizontalPagerView(
@@ -239,7 +220,7 @@ fun PublisherTakeOverListView(
           .clickable(onClick = {
             app.campaigns
               ?.toAptoideMMPCampaign()
-              ?.sendClickEvent(bundleTag)
+              ?.sendClickEvent(utmContext)
             bundleAnalytics.sendAppPromoClick(
               app = app,
               analyticsContext = analyticsContext.copy(itemPosition = page)

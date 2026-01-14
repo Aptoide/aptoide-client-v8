@@ -151,7 +151,7 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
         Firebase.crashlytics.recordException(e)
       }
     }
-    AptoideMMPCampaign.init(BuildConfig.OEMID, "aptoide")
+    AptoideMMPCampaign.init(BuildConfig.OEMID)
     MMPLinkerCampaign.init(BuildConfig.OEMID)
     initAds()
     initCompanionAppsManager()
