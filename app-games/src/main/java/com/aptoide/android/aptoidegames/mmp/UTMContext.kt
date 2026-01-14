@@ -30,6 +30,7 @@ fun WithUTM(
   campaign: String? = null,
   content: String? = null,
   term: String? = null,
+  shouldSendClickEvents: Boolean = false,
   navigate: (String) -> Unit,
   block: @Composable ((String) -> Unit) -> Unit,
 ) {
@@ -39,7 +40,9 @@ fun WithUTM(
     utmMedium = medium ?: parentUtmInfo.utmMedium,
     utmCampaign = campaign ?: parentUtmInfo.utmCampaign,
     utmContent = content ?: parentUtmInfo.utmContent,
-    utmTerm = term ?: parentUtmInfo.utmTerm
+    utmTerm = term ?: parentUtmInfo.utmTerm,
+    //shouldSendClickEvents shouldn't default to parent's value. It should only send clicks at this scope. This avoids unnecessary click events if a parent UTM context as the wrong flag value.
+    shouldSendClickEvents = shouldSendClickEvents
   )
   CompositionLocalProvider(LocalUTMInfo provides mergedUtmInfo) {
     block {

@@ -12,7 +12,8 @@ data class UTMInfo(
   val utmMedium: String? = null,
   val utmCampaign: String? = null,
   val utmContent: String? = null,
-  val utmTerm: String? = null
+  val utmTerm: String? = null,
+  val shouldSendClickEvents: Boolean = false
 ) {
   /**
    * Serializes UTMInfo to a URL-safe string for navigation.
