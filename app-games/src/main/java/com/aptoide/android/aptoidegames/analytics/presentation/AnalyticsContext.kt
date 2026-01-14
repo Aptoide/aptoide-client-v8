@@ -12,9 +12,12 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import cm.aptoide.pt.extensions.ScreenData
+import cm.aptoide.pt.feature_campaigns.UTMInfo
 import com.aptoide.android.aptoidegames.analytics.dto.AnalyticsUIContext
 import com.aptoide.android.aptoidegames.analytics.dto.BundleMeta
 import com.aptoide.android.aptoidegames.analytics.dto.SearchMeta
+import com.aptoide.android.aptoidegames.mmp.LocalUTMInfo
+import com.aptoide.android.aptoidegames.mmp.UTMContext
 
 object AnalyticsContext {
   val current: AnalyticsUIContext
@@ -31,6 +34,7 @@ private const val SEARCH_META_PARAM = "searchMeta"
 private const val ITEM_POSITION_PARAM = "itemPosition"
 private const val IS_APKFY_PARAM = "isApkfy"
 private const val HOME_TAB_PARAM = "HomeTab"
+private const val UTM_INFO_PARAM = "utmInfo"
 
 fun ScreenData.Companion.withAnalytics(
   route: String,
@@ -46,7 +50,8 @@ fun ScreenData.Companion.withAnalytics(
       .withSearchMeta("{$SEARCH_META_PARAM}")
       .withItemPosition("{$ITEM_POSITION_PARAM}")
       .withApkfy("{$IS_APKFY_PARAM}")
-      .withHomeTab("{$HOME_TAB_PARAM}"),
+      .withHomeTab("{$HOME_TAB_PARAM}")
+      .withUtmInfo("{$UTM_INFO_PARAM}"),
     arguments = arguments + listOf(
       navArgument(PREV_SCREEN_PARAM) {
         type = NavType.StringType
@@ -67,6 +72,10 @@ fun ScreenData.Companion.withAnalytics(
       navArgument(IS_APKFY_PARAM) {
         type = NavType.BoolType
         defaultValue = false
+      },
+      navArgument(UTM_INFO_PARAM) {
+        type = NavType.StringType
+        nullable = true
       }
     ),
     deepLinks = deepLinks.map {
@@ -79,6 +88,9 @@ fun ScreenData.Companion.withAnalytics(
       val itemPosition = args?.getString(ITEM_POSITION_PARAM)?.toIntOrNull()
       val isApkfy = args?.getBoolean(IS_APKFY_PARAM, false) ?: false
       val homeTab = args?.getString(HOME_TAB_PARAM, null)
+      val utmInfo = args?.getString(UTM_INFO_PARAM)?.let(UTMInfo::fromString)
+
+      val utmContext = UTMContext.current
 
       //So that UI drawn outside of this screen is aware of the current screen
       AnalyticsContext.current.currentScreen = screenAnalyticsName
@@ -91,8 +103,9 @@ fun ScreenData.Companion.withAnalytics(
           searchMeta = searchMeta,
           itemPosition = itemPosition,
           isApkfy = isApkfy,
-          homeTab = homeTab
-        )
+          homeTab = homeTab,
+        ),
+        LocalUTMInfo provides (utmInfo ?: utmContext)
       ) {
         content(
           args,
@@ -103,6 +116,7 @@ fun ScreenData.Companion.withAnalytics(
               .withItemPosition(itemPosition)
               .withApkfy(isApkfy)
               .withHomeTab(homeTab)
+              .withUtmInfo(utmInfo)
               .also(navigate)
           },
           goBack
@@ -283,6 +297,10 @@ fun String.withApkfy(isApkfy: String?) =
 fun String.withHomeTab(homeTab: String?) =
   withParameter(HOME_TAB_PARAM, homeTab)
 
+fun String.withUtmInfo(utmInfo: UTMInfo?) = withUtmInfo(utmInfo?.toString())
+
+private fun String.withUtmInfo(utmInfo: String?) =
+  withParameter(UTM_INFO_PARAM, utmInfo)
 
 fun String.withParameter(
   name: String,
