@@ -106,6 +106,7 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberBonusB
 import com.aptoide.android.aptoidegames.feature_rtb.presentation.isRTB
 import com.aptoide.android.aptoidegames.feature_rtb.presentation.rememberRTBCampaigns
 import com.aptoide.android.aptoidegames.installer.presentation.InstallView
+import com.aptoide.android.aptoidegames.mmp.WithUTM
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -174,13 +175,21 @@ fun appViewScreen() = ScreenData.withAnalytics(
     UTM_SOURCE to arguments.getString(UTM_SOURCE),
   )
 
-  AppViewScreen(
-    source = if (isRtb) source else source.appendIfRequired(BuildConfig.MARKET_NAME),
+  WithUTM(
+    source = arguments.getString(UTM_SOURCE),
+    campaign = arguments.getString(UTM_CAMPAIGN),
+    medium = arguments.getString(UTM_MEDIUM),
+    content = arguments.getString(UTM_CONTENT),
     navigate = navigate,
-    navigateBack = navigateBack,
-    utmsMap = utmsMap,
-    isRtb = isRtb,
-  )
+  ) { navigate ->
+    AppViewScreen(
+      source = if (isRtb) source else source.appendIfRequired(BuildConfig.MARKET_NAME),
+      navigate = navigate,
+      navigateBack = navigateBack,
+      utmsMap = utmsMap,
+      isRtb = isRtb,
+    )
+  }
 }
 
 fun buildAppViewRoute(

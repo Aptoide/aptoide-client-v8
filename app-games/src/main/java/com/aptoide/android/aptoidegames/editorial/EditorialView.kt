@@ -42,6 +42,7 @@ import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
 import com.aptoide.android.aptoidegames.home.analytics.meta
+import com.aptoide.android.aptoidegames.mmp.WithUTM
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -78,16 +79,24 @@ fun EditorialBundle(
     subtype = subtype,
     salt = bundle.timestamp
   )
-  EditorialBundleContent(
-    uiState = uiState,
-    bundle = bundle,
-    modifier = modifier,
-    listenForPosition = listenForPosition,
-    filterId = filterId,
-    subtype = subtype,
-    navigate = navigate,
-    spaceBy = spaceBy
-  )
+
+  WithUTM(
+    medium = "editorial",
+    campaign = "editorial",
+    content = "home-editorial",
+    navigate = navigate
+  ) { navigate ->
+    EditorialBundleContent(
+      uiState = uiState,
+      bundle = bundle,
+      modifier = modifier,
+      listenForPosition = listenForPosition,
+      filterId = filterId,
+      subtype = subtype,
+      navigate = navigate,
+      spaceBy = spaceBy
+    )
+  }
 }
 
 @Composable

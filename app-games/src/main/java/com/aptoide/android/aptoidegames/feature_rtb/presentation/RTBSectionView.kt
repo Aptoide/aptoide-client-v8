@@ -18,6 +18,7 @@ import com.aptoide.android.aptoidegames.feature_rtb.data.RTBApp
 import com.aptoide.android.aptoidegames.feature_rtb.data.RTBAppsListUiState
 import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
+import com.aptoide.android.aptoidegames.mmp.WithUTM
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 
 private var hasSentImpression = false
@@ -41,6 +42,38 @@ fun RTBAptoideMMPController(
 
 @Composable
 fun RTBSectionView(
+  bundle: Bundle,
+  navigate: (String) -> Unit,
+  spaceBy: Int = 0,
+  onShowLoading: (Boolean) -> Unit = {}
+) {
+  WithUTM(
+    medium = "rtb",
+    campaign = "regular",
+    content = "home-bundle",
+    navigate = navigate
+  ) { navigate ->
+    RTBSectionViewContent(
+      bundle = bundle,
+      navigate = navigate,
+      spaceBy = spaceBy,
+      onShowLoading = onShowLoading
+    )
+  }
+
+  LaunchedEffect(Unit) {
+    if (!AptoideMMPCampaign.allowedBundleTags.keys.contains(bundle.tag)) {
+      AptoideMMPCampaign.allowedBundleTags[bundle.tag] = UTMInfo(
+        utmMedium = "rtb",
+        utmCampaign = "regular",
+        utmContent = "home-bundle"
+      )
+    }
+  }
+}
+
+@Composable
+private fun RTBSectionViewContent(
   bundle: Bundle,
   navigate: (String) -> Unit,
   spaceBy: Int = 0,

@@ -96,6 +96,8 @@ import com.aptoide.android.aptoidegames.gamesfeed.presentation.GamesFeedBundle
 import com.aptoide.android.aptoidegames.gamesfeed.presentation.rememberGamesFeedVisibility
 import com.aptoide.android.aptoidegames.home.analytics.meta
 import com.aptoide.android.aptoidegames.mmp.BundleUTMSetup
+import com.aptoide.android.aptoidegames.mmp.WithUTM
+import com.aptoide.android.aptoidegames.mmp.getUTMConfig
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import kotlinx.coroutines.launch
@@ -207,112 +209,117 @@ fun BundlesView(
       contentPadding = PaddingValues(bottom = 72.dp)
     ) {
       items(viewState.bundles) { bundle ->
-        OverrideAnalyticsBundleMeta(bundle.meta, navigate) { navigateTo ->
-          BundleUTMSetup(bundle = bundle)
+        WithUTM(
+          content = getUTMConfig(bundle.tag)?.homeContent,
+          navigate = navigate
+        ) { navigate ->
+          OverrideAnalyticsBundleMeta(bundle.meta, navigate) { navigateTo ->
+            BundleUTMSetup(bundle = bundle)
 
-          when (bundle.type) {
-            Type.APP_GRID -> AppsGridBundle(
-              bundle = bundle,
-              navigate = navigateTo,
-              spaceBy = 32
-            )
+            when (bundle.type) {
+              Type.APP_GRID -> AppsGridBundle(
+                bundle = bundle,
+                navigate = navigateTo,
+                spaceBy = 32
+              )
 
-            Type.EDITORIAL -> EditorialBundle(
-              bundle = bundle,
-              navigate = navigateTo,
-              spaceBy = 32
-            )
+              Type.EDITORIAL -> EditorialBundle(
+                bundle = bundle,
+                navigate = navigateTo,
+                spaceBy = 32
+              )
 
-            Type.CAROUSEL -> {
-              if (bundle.tag == "apps-group-editors-choice") {
-                EditorsChoiceBundle(
-                  bundle = bundle,
-                  navigate = navigateTo,
-                  spaceBy = 32
-                )
-              } else {
-                CarouselBundle(
-                  bundle = bundle,
-                  navigate = navigateTo,
-                  spaceBy = 32
-                )
+              Type.CAROUSEL -> {
+                if (bundle.tag == "apps-group-editors-choice") {
+                  EditorsChoiceBundle(
+                    bundle = bundle,
+                    navigate = navigateTo,
+                    spaceBy = 32
+                  )
+                } else {
+                  CarouselBundle(
+                    bundle = bundle,
+                    navigate = navigateTo,
+                    spaceBy = 32
+                  )
+                }
               }
+
+              Type.CAROUSEL_LARGE -> CarouselLargeBundle(
+                bundle = bundle,
+                navigate = navigateTo,
+                spaceBy = 32
+              )
+
+              Type.CATEGORIES -> CategoriesBundle(
+                bundle = bundle,
+                navigate = navigateTo,
+                spaceBy = 32
+              )
+
+              Type.MY_GAMES -> MyGamesBundleView(
+                title = bundle.title.translateOrKeep(LocalContext.current),
+                icon = bundle.bundleIcon,
+                navigate = navigateTo,
+                spaceBy = 32
+              )
+
+              Type.PUBLISHER_TAKEOVER -> PublisherTakeOverBundle(
+                bundle = bundle,
+                navigate = navigateTo,
+                spaceBy = 32
+              )
+
+              Type.GAMES_FEED -> GamesFeedBundle(
+                bundle = bundle,
+                navigate = navigateTo,
+                spaceBy = 32
+              )
+
+              Type.APPC_BANNER -> BonusSectionView(
+                bundle = bundle,
+                navigate = navigateTo,
+                spaceBy = 32
+              )
+
+              Type.NEW_APP -> NewAppPromotionalView(
+                bundle = bundle,
+                navigate = navigateTo,
+                spaceBy = 32
+              )
+
+              Type.NEW_APP_VERSION -> NewAppVersionPromotionalView(
+                bundle = bundle,
+                navigate = navigateTo,
+                spaceBy = 32
+              )
+
+              Type.NEWS_ITEM -> NewsPromotionalView(
+                bundle = bundle,
+                navigate = navigateTo,
+                spaceBy = 32
+              )
+
+              Type.IN_GAME_EVENT -> EventPromotionalView(
+                bundle = bundle,
+                navigate = navigateTo,
+                spaceBy = 32
+              )
+
+              Type.APP_COMING_SOON -> AppComingSoonPromotionalView(
+                bundle = bundle,
+                spaceBy = 32
+              )
+
+              Type.RTB_PROMO -> RTBSectionView(
+                bundle = bundle.copy(title = "Highlighted".translateOrKeep(LocalContext.current)),
+                navigate = navigateTo,
+                spaceBy = 32,
+                onShowLoading = onShowLoading
+              )
+
+              else -> Unit
             }
-
-            Type.CAROUSEL_LARGE -> CarouselLargeBundle(
-              bundle = bundle,
-              navigate = navigateTo,
-              spaceBy = 32
-            )
-
-            Type.CATEGORIES -> CategoriesBundle(
-              bundle = bundle,
-              navigate = navigateTo,
-              spaceBy = 32
-            )
-
-            Type.MY_GAMES -> MyGamesBundleView(
-              title = bundle.title.translateOrKeep(LocalContext.current),
-              icon = bundle.bundleIcon,
-              navigate = navigateTo,
-              spaceBy = 32
-            )
-
-            Type.PUBLISHER_TAKEOVER -> PublisherTakeOverBundle(
-              bundle = bundle,
-              navigate = navigateTo,
-              spaceBy = 32
-            )
-
-            Type.GAMES_FEED -> GamesFeedBundle(
-              bundle = bundle,
-              navigate = navigateTo,
-              spaceBy = 32
-            )
-
-            Type.APPC_BANNER -> BonusSectionView(
-              bundle = bundle,
-              navigate = navigateTo,
-              spaceBy = 32
-            )
-
-            Type.NEW_APP -> NewAppPromotionalView(
-              bundle = bundle,
-              navigate = navigateTo,
-              spaceBy = 32
-            )
-
-            Type.NEW_APP_VERSION -> NewAppVersionPromotionalView(
-              bundle = bundle,
-              navigate = navigateTo,
-              spaceBy = 32
-            )
-
-            Type.NEWS_ITEM -> NewsPromotionalView(
-              bundle = bundle,
-              navigate = navigateTo,
-              spaceBy = 32
-            )
-
-            Type.IN_GAME_EVENT -> EventPromotionalView(
-              bundle = bundle,
-              navigate = navigateTo,
-              spaceBy = 32
-            )
-
-            Type.APP_COMING_SOON -> AppComingSoonPromotionalView(
-              bundle = bundle,
-              spaceBy = 32
-            )
-
-            Type.RTB_PROMO -> RTBSectionView(
-              bundle = bundle.copy(title = "Highlighted".translateOrKeep(LocalContext.current)),
-              navigate = navigateTo,
-              spaceBy = 32,
-              onShowLoading = onShowLoading
-            )
-
-            else -> Unit
           }
         }
       }

@@ -95,6 +95,7 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberBundle
 import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberTrendingBundle
 import com.aptoide.android.aptoidegames.home.rememberBottomBarMenuScrollState
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
+import com.aptoide.android.aptoidegames.mmp.WithUTM
 import com.aptoide.android.aptoidegames.search.SearchType
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -167,88 +168,94 @@ fun searchScreen() = ScreenData.withAnalytics(
     }
   }
 
-  OverrideAnalyticsBundleMeta(
-    bundleMeta = BundleMeta(
-      tag = "search",
-      bundleSource = BundleSource.MANUAL.name
-    ),
-    navigate = navigate
-  ) {
-    OverrideAnalyticsSearchMeta(searchMeta = searchMeta, navigate = it) { navigateTo ->
-      SearchView(
-        uiState = uiState,
-        searchValue = searchValue,
-        onSelectSearchSuggestion = { suggestion, searchType, index ->
-          focusManager.clearFocus()
-          keyboardController?.hide()
-          searchMeta = SearchMeta(
-            insertedKeyword = searchValue,
-            searchKeyword = suggestion,
-            searchType = searchType.type
-          )
-            .also {
-              searchAnalytics.sendSearchEvent(
-                searchMeta = it,
-                searchTermPosition = index,
+  WithUTM(
+    content = "search",
+    term = searchMeta?.searchKeyword,
+    navigate = navigate,
+  ) { navigate ->
+    OverrideAnalyticsBundleMeta(
+      bundleMeta = BundleMeta(
+        tag = "search",
+        bundleSource = BundleSource.MANUAL.name
+      ),
+      navigate = navigate
+    ) {
+      OverrideAnalyticsSearchMeta(searchMeta = searchMeta, navigate = it) { navigateTo ->
+        SearchView(
+          uiState = uiState,
+          searchValue = searchValue,
+          onSelectSearchSuggestion = { suggestion, searchType, index ->
+            focusManager.clearFocus()
+            keyboardController?.hide()
+            searchMeta = SearchMeta(
+              insertedKeyword = searchValue,
+              searchKeyword = suggestion,
+              searchType = searchType.type
+            )
+              .also {
+                searchAnalytics.sendSearchEvent(
+                  searchMeta = it,
+                  searchTermPosition = index,
+                )
+              }
+            searchValue = suggestion
+            navigateTo(buildSearchRoute(suggestion).withSearchMeta(searchMeta))
+          },
+          onRemoveSuggestion = { searchViewModel.onRemoveSearchSuggestion(it) },
+          onSearchValueChanged = {
+            searchValue = it
+            searchMeta = null
+            searchViewModel.onSearchInputValueChanged(it)
+          },
+          onSearchQueryClick = {
+            if (searchValue.isValidSearch()) {
+              searchValue = searchValue.trim()
+              searchMeta = SearchMeta(
+                insertedKeyword = searchValue,
+                searchKeyword = searchValue,
+                searchType = SearchType.MANUAL.type
               )
+                .also(searchAnalytics::sendSearchEvent)
+              focusManager.clearFocus()
+              keyboardController?.hide()
+              navigateTo(buildSearchRoute(searchValue).withSearchMeta(searchMeta))
             }
-          searchValue = suggestion
-          navigateTo(buildSearchRoute(suggestion).withSearchMeta(searchMeta))
-        },
-        onRemoveSuggestion = { searchViewModel.onRemoveSearchSuggestion(it) },
-        onSearchValueChanged = {
-          searchValue = it
-          searchMeta = null
-          searchViewModel.onSearchInputValueChanged(it)
-        },
-        onSearchQueryClick = {
-          if (searchValue.isValidSearch()) {
-            searchValue = searchValue.trim()
-            searchMeta = SearchMeta(
-              insertedKeyword = searchValue,
-              searchKeyword = searchValue,
-              searchType = SearchType.MANUAL.type
+          },
+          onItemClick = { index, app ->
+            bundleAnalytics.sendAppPromoClick(
+              app = app,
+              analyticsContext = analyticsContext
             )
-              .also(searchAnalytics::sendSearchEvent)
-            focusManager.clearFocus()
-            keyboardController?.hide()
-            navigateTo(buildSearchRoute(searchValue).withSearchMeta(searchMeta))
-          }
-        },
-        onItemClick = { index, app ->
-          bundleAnalytics.sendAppPromoClick(
-            app = app,
-            analyticsContext = analyticsContext
-          )
-          searchAnalytics.sendSearchResultClickEvent(
-            app = app,
-            position = index,
-            searchMeta = searchMeta,
-          )
-          navigateTo(
-            buildAppViewRoute(app).withItemPosition(index)
-          )
-        },
-        onItemInstallStarted = {},
-        onEmptyView = {
-          searchMeta?.let { searchAnalytics.sendEmptySearchResultClickEvent(it) }
-        },
-        onRetry = {
-          if (searchValue.isValidSearch()) {
-            searchValue = searchValue.trim()
-            searchMeta = SearchMeta(
-              insertedKeyword = searchValue,
-              searchKeyword = searchValue,
-              searchType = SearchType.MANUAL.type
+            searchAnalytics.sendSearchResultClickEvent(
+              app = app,
+              position = index,
+              searchMeta = searchMeta,
             )
-              .also(searchAnalytics::sendSearchEvent)
-            focusManager.clearFocus()
-            keyboardController?.hide()
-            searchViewModel.loadResults()
-          }
-        },
-        navigate = navigateTo,
-      )
+            navigateTo(
+              buildAppViewRoute(app).withItemPosition(index)
+            )
+          },
+          onItemInstallStarted = {},
+          onEmptyView = {
+            searchMeta?.let { searchAnalytics.sendEmptySearchResultClickEvent(it) }
+          },
+          onRetry = {
+            if (searchValue.isValidSearch()) {
+              searchValue = searchValue.trim()
+              searchMeta = SearchMeta(
+                insertedKeyword = searchValue,
+                searchKeyword = searchValue,
+                searchType = SearchType.MANUAL.type
+              )
+                .also(searchAnalytics::sendSearchEvent)
+              focusManager.clearFocus()
+              keyboardController?.hide()
+              searchViewModel.loadResults()
+            }
+          },
+          navigate = navigateTo,
+        )
+      }
     }
   }
 }
