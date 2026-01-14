@@ -45,6 +45,7 @@ import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.error_views.NoConnectionView
 import com.aptoide.android.aptoidegames.home.LoadingView
+import com.aptoide.android.aptoidegames.mmp.WithUTM
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
@@ -134,24 +135,31 @@ fun SeeMoreEditorialsContent(
   val analyticsContext = AnalyticsContext.current
   val bundleMeta = analyticsContext.bundleMeta ?: BundleMeta(tag = tag, bundleSource = "manual")
 
-  OverrideAnalyticsBundleMeta(
-    bundleMeta = bundleMeta,
+  WithUTM(
+    medium = "editorial",
+    campaign = "editorial",
+    content = "editorial-seeall",
     navigate = navigate
-  ) { navigateTo ->
-    when (uiState) {
-      is ArticleListUiState.Loading -> LoadingView()
-      is ArticleListUiState.Error -> GenericErrorView(onRetryClick = onError)
-      is ArticleListUiState.NoConnection -> NoConnectionView(onRetryClick = onError)
-      is ArticleListUiState.Empty -> ArticlesList(
-        articleList = emptyList(),
-        navigate = navigateTo,
-      )
-
-      is ArticleListUiState.Idle ->
-        ArticlesList(
-          articleList = uiState.articles,
-          navigate = navigateTo
+  ) { navigate ->
+    OverrideAnalyticsBundleMeta(
+      bundleMeta = bundleMeta,
+      navigate = navigate
+    ) { navigateTo ->
+      when (uiState) {
+        is ArticleListUiState.Loading -> LoadingView()
+        is ArticleListUiState.Error -> GenericErrorView(onRetryClick = onError)
+        is ArticleListUiState.NoConnection -> NoConnectionView(onRetryClick = onError)
+        is ArticleListUiState.Empty -> ArticlesList(
+          articleList = emptyList(),
+          navigate = navigateTo,
         )
+
+        is ArticleListUiState.Idle ->
+          ArticlesList(
+            articleList = uiState.articles,
+            navigate = navigateTo
+          )
+      }
     }
   }
 }

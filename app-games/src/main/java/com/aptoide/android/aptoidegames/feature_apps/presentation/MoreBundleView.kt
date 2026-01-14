@@ -36,6 +36,8 @@ import com.aptoide.android.aptoidegames.error_views.NoConnectionView
 import com.aptoide.android.aptoidegames.feature_rtb.presentation.isRTB
 import com.aptoide.android.aptoidegames.home.LoadingView
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
+import com.aptoide.android.aptoidegames.mmp.WithUTM
+import com.aptoide.android.aptoidegames.mmp.getUTMConfig
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 
@@ -49,12 +51,17 @@ fun seeMoreScreen() = ScreenData.withAnalytics(
   val bundleTitle = arguments?.getString("title")!!
   val bundleTag = arguments.getString("tag")!!
 
-  MoreBundleView(
-    title = bundleTitle,
-    bundleTag = bundleTag,
-    navigateBack = navigateBack,
-    navigate = navigate,
-  )
+  WithUTM(
+    content = getUTMConfig(bundleTag)?.seeAllContent,
+    navigate = navigate
+  ) { navigate ->
+    MoreBundleView(
+      title = bundleTitle,
+      bundleTag = bundleTag,
+      navigateBack = navigateBack,
+      navigate = navigate,
+    )
+  }
 }
 
 fun buildSeeMoreRoute(

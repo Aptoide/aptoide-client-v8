@@ -43,6 +43,7 @@ import com.aptoide.android.aptoidegames.design_system.PrimaryTextButton
 import com.aptoide.android.aptoidegames.drawables.icons.getPromotionBackground
 import com.aptoide.android.aptoidegames.drawables.icons.getPromotionBonusIcon
 import com.aptoide.android.aptoidegames.installer.presentation.InstallView
+import com.aptoide.android.aptoidegames.mmp.WithUTM
 import com.aptoide.android.aptoidegames.promotions.analytics.rememberPromotionsAnalytics
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -66,31 +67,38 @@ fun PromotionDialog(navigate: (String) -> Unit) {
   }
 
   promotionData?.let { (promotion, app) ->
-    OverrideAnalyticsScreen(
-      currentScreen = "home_dialog",
+    WithUTM(
+      medium = "promo-card",
+      campaign = promotion.uid,
+      content = "home-promo-card",
       navigate = navigate
-    ) { navigate ->
-      OverrideAnalyticsBundleMeta(
-        bundleMeta = BundleMeta(
-          tag = "home_dialog",
-          bundleSource = BundleSource.MANUAL.name
-        ),
+    ) {
+      OverrideAnalyticsScreen(
+        currentScreen = "home_dialog",
         navigate = navigate
       ) { navigate ->
-        PromotionDialogView(
-          onPositiveClick = {
-            promotionsViewModel.dismissPromotion()
-            promotionsAnalytics.sendAhabV2DialogUpdate(app.packageName)
-            navigate(buildAppViewRoute(app))
-          },
-          onNegativeClick = {
-            promotionsViewModel.dismissPromotion()
-            promotionsAnalytics.sendAhabV2DialogLater(app.packageName)
-          },
-          app = app,
-          title = promotion.title,
-          description = promotion.content,
-        )
+        OverrideAnalyticsBundleMeta(
+          bundleMeta = BundleMeta(
+            tag = "home_dialog",
+            bundleSource = BundleSource.MANUAL.name
+          ),
+          navigate = navigate
+        ) { navigate ->
+          PromotionDialogView(
+            onPositiveClick = {
+              promotionsViewModel.dismissPromotion()
+              promotionsAnalytics.sendAhabV2DialogUpdate(app.packageName)
+              navigate(buildAppViewRoute(app))
+            },
+            onNegativeClick = {
+              promotionsViewModel.dismissPromotion()
+              promotionsAnalytics.sendAhabV2DialogLater(app.packageName)
+            },
+            app = app,
+            title = promotion.title,
+            description = promotion.content,
+          )
+        }
       }
     }
   }

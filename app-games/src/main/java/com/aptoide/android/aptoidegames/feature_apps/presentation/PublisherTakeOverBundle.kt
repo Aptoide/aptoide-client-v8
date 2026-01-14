@@ -51,6 +51,7 @@ import com.aptoide.android.aptoidegames.home.translateOrKeep
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.installer.presentation.ProgressText
+import com.aptoide.android.aptoidegames.mmp.WithUTM
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -107,13 +108,20 @@ fun PublisherTakeOverBundle(
   AptoideMMPController(appsListUiState = uiState, bundleTag = bundle.tag)
   AptoideMMPController(appsListUiState = bottomUiState, bundleTag = bundle.tag)
 
-  PublisherTakeOverContent(
-    bundle = bundle,
-    uiState = uiState,
-    bottomUiState = bottomUiState,
-    navigate = navigate,
-    spaceBy = spaceBy
-  )
+  WithUTM(
+    medium = "pto",
+    campaign = "pto-${bundle.tag}",
+    content = "home-pto",
+    navigate = navigate
+  ) { navigate ->
+    PublisherTakeOverContent(
+      bundle = bundle,
+      uiState = uiState,
+      bottomUiState = bottomUiState,
+      navigate = navigate,
+      spaceBy = spaceBy
+    )
+  }
 }
 
 @Composable

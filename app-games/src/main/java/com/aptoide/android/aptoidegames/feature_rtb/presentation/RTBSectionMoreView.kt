@@ -32,6 +32,7 @@ import com.aptoide.android.aptoidegames.feature_rtb.data.RTBAppsListUiState
 import com.aptoide.android.aptoidegames.home.LoadingView
 import com.aptoide.android.aptoidegames.home.analytics.meta
 import com.aptoide.android.aptoidegames.home.translateOrKeep
+import com.aptoide.android.aptoidegames.mmp.WithUTM
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 
 const val rtbSeeMoreRoute = "rtbSeeMore/{tag}"
@@ -44,11 +45,18 @@ fun rtbSeeMoreScreen() = ScreenData.withAnalytics(
 ) { arguments, navigate, navigateBack ->
   val bundleTag = arguments?.getString("tag")!!
 
-  RTBMoreBundleScreen(
-    bundleTag = bundleTag,
-    navigateBack = navigateBack,
-    navigate = navigate,
-  )
+  WithUTM(
+    medium = "rtb",
+    campaign = "regular",
+    content = "rtb-seeall",
+    navigate = navigate
+  ) { navigate ->
+    RTBMoreBundleScreen(
+      bundleTag = bundleTag,
+      navigateBack = navigateBack,
+      navigate = navigate,
+    )
+  }
 }
 
 fun buildRtbSeeMoreRoute(
