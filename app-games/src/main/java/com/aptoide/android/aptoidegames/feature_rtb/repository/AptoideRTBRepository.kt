@@ -63,6 +63,13 @@ class AptoideRTBRepository @Inject constructor(
       rtbCache[placement] = apps
       return@withContext apps
     }
+
+  override fun getCachedCampaigns(packageName: String): CampaignImpl? {
+    return rtbCache.values
+      .flatten()
+      .find { it.app.packageName == packageName }
+      ?.app?.campaigns
+  }
 }
 
 private fun RTBResponse.toDomainModel(campaignRepository: CampaignRepository): RTBApp {
