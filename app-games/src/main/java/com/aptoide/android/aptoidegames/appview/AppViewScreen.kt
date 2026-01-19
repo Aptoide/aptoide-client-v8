@@ -104,6 +104,7 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.SmallEmptyView
 import com.aptoide.android.aptoidegames.feature_apps.presentation.buildSeeMoreBonusRoute
 import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberBonusBundle
 import com.aptoide.android.aptoidegames.feature_rtb.presentation.isRTB
+import com.aptoide.android.aptoidegames.feature_rtb.presentation.rememberRTBCampaigns
 import com.aptoide.android.aptoidegames.installer.presentation.InstallView
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
@@ -178,6 +179,7 @@ fun appViewScreen() = ScreenData.withAnalytics(
     navigate = navigate,
     navigateBack = navigateBack,
     utmsMap = utmsMap,
+    isRtb = isRtb,
   )
 }
 
@@ -203,10 +205,29 @@ fun AppViewScreen(
   navigate: (String) -> Unit,
   navigateBack: () -> Unit,
   utmsMap: Map<String, String>,
+  isRtb: Boolean = false,
 ) {
-  val (uiState, reload) = rememberApp(source = source)
+  val (baseUiState, reload) = rememberApp(source = source)
   val analyticsContext = AnalyticsContext.current
   val generalAnalytics = rememberGeneralAnalytics()
+
+  val uiState = when (baseUiState) {
+    is AppUiState.Idle -> {
+      val app = baseUiState.app
+      val rtbCampaigns = if (isRtb) {
+        rememberRTBCampaigns(app.packageName)
+      } else {
+        null
+      }
+      if (rtbCampaigns != null) {
+        AppUiState.Idle(app.copy(campaigns = rtbCampaigns))
+      } else {
+        baseUiState
+      }
+    }
+
+    else -> baseUiState
+  }
 
   val relatedEditorialsUiState = (uiState as? AppUiState.Idle)?.app?.packageName?.let {
     rememberRelatedEditorials(packageName = it)
