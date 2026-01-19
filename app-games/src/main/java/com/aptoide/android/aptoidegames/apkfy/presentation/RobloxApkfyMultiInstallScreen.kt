@@ -51,6 +51,7 @@ import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.installer.analytics.getNetworkType
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
 import com.aptoide.android.aptoidegames.installer.presentation.ProgressText
+import com.aptoide.android.aptoidegames.mmp.WithUTM
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
@@ -80,7 +81,7 @@ fun RobloxApkfyMultiInstallScreen() = ScreenData.withAnalytics(
     navigateBack()
   }
 
-  OverrideAnalyticsAPKFY(navigate) { navigateTo ->
+  OverrideAnalyticsAPKFY(navigate) {
     Column(modifier = Modifier.fillMaxSize()) {
       AppGamesTopBar(
         navigateBack = {
@@ -94,17 +95,24 @@ fun RobloxApkfyMultiInstallScreen() = ScreenData.withAnalytics(
           .fillMaxSize()
           .height(IntrinsicSize.Max)
       ) {
-        apkfyState?.app?.let {
-
-          RobloxApkfyMultiInstallView(
-            apkfyApp = it,
-            companionAppsList = apkfyCompanionAppsList
-          )
+        apkfyState?.data?.let { apkfyData ->
+          WithUTM(
+            source = apkfyData.utmSource,
+            medium = apkfyData.utmMedium,
+            campaign = apkfyData.utmCampaign,
+            content = apkfyData.utmContent,
+            term = apkfyData.utmTerm,
+            navigate = navigate,
+          ) {
+            RobloxApkfyMultiInstallView(
+              apkfyApp = apkfyData.app,
+              companionAppsList = apkfyCompanionAppsList
+            )
+          }
         } ?: GenericErrorView(navigateBack)
       }
     }
   }
-
 }
 
 @Composable

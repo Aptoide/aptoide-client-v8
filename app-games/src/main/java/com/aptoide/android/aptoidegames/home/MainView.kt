@@ -30,7 +30,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import cm.aptoide.pt.extensions.animatedComposable
 import cm.aptoide.pt.extensions.staticComposable
-import cm.aptoide.pt.feature_apkfy.presentation.rememberApkfyApp
+import cm.aptoide.pt.feature_apkfy.presentation.rememberApkfyData
 import com.aptoide.android.aptoidegames.AptoideGamesBottomSheet
 import com.aptoide.android.aptoidegames.BottomSheetContent
 import com.aptoide.android.aptoidegames.apkfy.presentation.ApkfyHandler
@@ -201,7 +201,7 @@ private fun NotificationsPermissionWrapper(
   val isFirstLaunch = rememberIsFirstLaunch()
 
   var delayComplete by remember { mutableStateOf(false) }
-  var apkfyApp by remember { mutableStateOf<Any?>(null) }
+  var apkfyData by remember { mutableStateOf<Any?>(null) }
 
   LaunchedEffect(Unit) {
     delay(5000)
@@ -209,10 +209,10 @@ private fun NotificationsPermissionWrapper(
   }
 
   if (delayComplete) {
-    apkfyApp = rememberApkfyApp()
+    apkfyData = rememberApkfyData()
   }
 
-  val isApkfy = apkfyApp != null
+  val isApkfy = apkfyData != null
 
   if (isFirstLaunch && !isApkfy && delayComplete) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

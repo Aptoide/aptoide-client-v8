@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.feature_apkfy.domain.ApkfyFilter
 import cm.aptoide.pt.feature_apkfy.domain.ApkfyManager
+import cm.aptoide.pt.feature_apkfy.domain.ApkfyModel
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.domain.AppMetaUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,7 +22,16 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-private var apkfyApp: App? = null
+data class ApkfyData(
+  val app: App,
+  val utmSource: String?,
+  val utmMedium: String?,
+  val utmCampaign: String?,
+  val utmContent: String?,
+  val utmTerm: String?,
+)
+
+private var cachedApkfyData: ApkfyData? = null
 
 @HiltViewModel
 class ApkfyViewModel @Inject constructor(
@@ -31,7 +41,7 @@ class ApkfyViewModel @Inject constructor(
   private val apkfyFilter: ApkfyFilter
 ) : ViewModel() {
 
-  private val viewModelState = MutableStateFlow<App?>(value = null)
+  private val viewModelState = MutableStateFlow<ApkfyData?>(value = null)
 
   val uiState = viewModelState
     .stateIn(
@@ -42,33 +52,42 @@ class ApkfyViewModel @Inject constructor(
 
   init {
     viewModelScope.launch {
-      if (apkfyApp == null) {
+      if (cachedApkfyData == null) {
         try {
           apkfyManager.getApkfy()
             ?.takeIf { it.packageName != context.packageName }
             ?.takeIf { it.appId != null || it.packageName != null }
             ?.let(apkfyFilter::filter)
-            ?.let {
-              val app = appMetaUseCase.getMetaInfo(source = it.asSource())
-              apkfyApp = app
-              viewModelState.update { apkfyApp }
+            ?.let { apkfyModel ->
+              val app = appMetaUseCase.getMetaInfo(source = apkfyModel.asSource())
+              cachedApkfyData = apkfyModel.toApkfyData(app)
+              viewModelState.update { cachedApkfyData }
             }
         } catch (e: Throwable) {
           e.printStackTrace()
         }
       } else {
-        viewModelState.update { apkfyApp }
+        viewModelState.update { cachedApkfyData }
       }
     }
   }
+
+  private fun ApkfyModel.toApkfyData(app: App) = ApkfyData(
+    app = app,
+    utmSource = utmSource,
+    utmMedium = utmMedium,
+    utmCampaign = utmCampaign,
+    utmContent = utmContent,
+    utmTerm = utmTerm,
+  )
 }
 
 @Composable
-fun rememberApkfyApp() = runPreviewable(
+fun rememberApkfyData() = runPreviewable(
   preview = { null },
   real = {
     val vm = hiltViewModel<ApkfyViewModel>()
-    val app by vm.uiState.collectAsState()
-    app
+    val apkfyData by vm.uiState.collectAsState()
+    apkfyData
   }
 )
