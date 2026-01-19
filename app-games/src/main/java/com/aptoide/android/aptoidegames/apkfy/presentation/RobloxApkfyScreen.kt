@@ -44,6 +44,7 @@ import com.aptoide.android.aptoidegames.drawables.icons.getCrownIcon
 import com.aptoide.android.aptoidegames.drawables.icons.getRocketIcon
 import com.aptoide.android.aptoidegames.drawables.icons.getUpdateDisabledIcon
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
+import com.aptoide.android.aptoidegames.mmp.WithUTM
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -79,11 +80,20 @@ fun robloxApkfyScreen() = ScreenData.withAnalytics(
         .verticalScroll(scrollState)
         .height(IntrinsicSize.Max)
     ) {
-      apkfyState?.app?.let {
-        RobloxApkfyScreen(
-          app = it,
+      apkfyState?.data?.let { apkfyData ->
+        WithUTM(
+          source = apkfyData.utmSource,
+          medium = apkfyData.utmMedium,
+          campaign = apkfyData.utmCampaign,
+          content = apkfyData.utmContent,
+          term = apkfyData.utmTerm,
           navigate = navigate,
-        )
+        ) { navigate ->
+          RobloxApkfyScreen(
+            app = apkfyData.app,
+            navigate = navigate,
+          )
+        }
       } ?: GenericErrorView(navigateBack)
     }
   }

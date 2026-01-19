@@ -18,7 +18,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cm.aptoide.pt.extensions.runPreviewable
-import cm.aptoide.pt.feature_apkfy.presentation.rememberApkfyApp
+import cm.aptoide.pt.feature_apkfy.presentation.ApkfyData
+import cm.aptoide.pt.feature_apkfy.presentation.rememberApkfyData
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_flags.domain.FeatureFlags
@@ -46,27 +47,36 @@ data class ApkfyFeatureFlags(
   val apkfyVariant: String? = null,
 )
 
+val previewApkfyData = ApkfyData(
+  app = randomApp,
+  utmSource = null,
+  utmMedium = null,
+  utmCampaign = null,
+  utmContent = null,
+  utmTerm = null,
+)
+
 @Composable
 fun rememberApkfyState(): ApkfyUiState? = runPreviewable(
-  preview = { ApkfyUiState.Default(randomApp) },
+  preview = { ApkfyUiState.Default(previewApkfyData) },
   real = {
     val coroutineScope = rememberCoroutineScope()
-    val apkfyApp = rememberApkfyApp()
+    val apkfyData = rememberApkfyData()
     var apkfyFeatureFlags: ApkfyFeatureFlags? by remember { mutableStateOf(null) }
     val vm = hiltViewModel<InjectionsProvider>()
 
-    val apkfyUiState by remember(apkfyApp, apkfyFeatureFlags) {
+    val apkfyUiState by remember(apkfyData, apkfyFeatureFlags) {
       derivedStateOf {
-        apkfyApp?.let { app ->
+        apkfyData?.let { data ->
           apkfyFeatureFlags?.let { flags ->
-            if (app.isRoblox()) {
+            if (data.app.isRoblox()) {
               when (flags.apkfyVariant) {
-                "baseline" -> ApkfyUiState.Baseline(app)
-                "roblox_multi_install" -> ApkfyUiState.RobloxCompanionAppsVariant(app)
-                else -> ApkfyUiState.Default(app)
+                "baseline" -> ApkfyUiState.Baseline(data)
+                "roblox_multi_install" -> ApkfyUiState.RobloxCompanionAppsVariant(data)
+                else -> ApkfyUiState.Default(data)
               }
             } else {
-              ApkfyUiState.Baseline(app)
+              ApkfyUiState.Baseline(data)
             }
           }
         }

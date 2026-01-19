@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_apps.data.randomApp
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.OverrideAnalyticsAPKFY
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
@@ -34,6 +33,7 @@ import com.aptoide.android.aptoidegames.appview.AppRatingAndDownloads
 import com.aptoide.android.aptoidegames.drawables.backgrounds.myiconpack.getApkfyAppIconBackground
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
+import com.aptoide.android.aptoidegames.mmp.WithUTM
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -85,43 +85,53 @@ fun ApkfyScreen(
   navigate: (String) -> Unit,
 ) {
   val apkfyAnalytics = rememberApkfyAnalytics()
+  val apkfyData = apkfyState.data
 
   LaunchedEffect(Unit) {
     if (apkfyState is ApkfyUiState.Default) {
       apkfyAnalytics.sendApkfyTimeout()
     } else {
       apkfyAnalytics.sendApkfyShown()
-      if (apkfyState.app.isRoblox()) {
+      if (apkfyData.app.isRoblox()) {
         apkfyAnalytics.sendRobloxExp81ApkfyShown()
       }
     }
   }
 
-  OverrideAnalyticsAPKFY(navigate) { navigateTo ->
-    Column(
-      modifier = Modifier.fillMaxSize(),
-      horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-      Text(
-        modifier = Modifier
-          .padding(horizontal = 40.dp)
-          .padding(top = 44.dp),
-        text = stringResource(id = R.string.apkfy_install_title),
-        style = AGTypography.Title,
-        color = Palette.White,
-        textAlign = TextAlign.Center
-      )
-      Spacer(modifier = Modifier.height(55.dp))
-      ApkfyAppInfo(app = apkfyState.app)
-      Spacer(modifier = Modifier.height(17.dp))
-      ApkfyInstallView(
-        modifier = Modifier
-          .fillMaxHeight()
-          .padding(horizontal = 16.dp)
-          .padding(bottom = 32.dp),
-        app = apkfyState.app,
-        onInstallStarted = {}
-      )
+  WithUTM(
+    source = apkfyData.utmSource,
+    medium = apkfyData.utmMedium,
+    campaign = apkfyData.utmCampaign,
+    content = apkfyData.utmContent,
+    term = apkfyData.utmTerm,
+    navigate = navigate,
+  ) { navigateWithUtm ->
+    OverrideAnalyticsAPKFY(navigateWithUtm) {
+      Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+      ) {
+        Text(
+          modifier = Modifier
+            .padding(horizontal = 40.dp)
+            .padding(top = 44.dp),
+          text = stringResource(id = R.string.apkfy_install_title),
+          style = AGTypography.Title,
+          color = Palette.White,
+          textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(55.dp))
+        ApkfyAppInfo(app = apkfyData.app)
+        Spacer(modifier = Modifier.height(17.dp))
+        ApkfyInstallView(
+          modifier = Modifier
+            .fillMaxHeight()
+            .padding(horizontal = 16.dp)
+            .padding(bottom = 32.dp),
+          app = apkfyData.app,
+          onInstallStarted = {}
+        )
+      }
     }
   }
 }
@@ -182,7 +192,7 @@ private fun ApkfyAppInfo(
 fun ApkfyScreenPreview() {
   AptoideTheme {
     ApkfyScreen(
-      apkfyState = ApkfyUiState.Default(randomApp),
+      apkfyState = ApkfyUiState.Default(previewApkfyData),
       navigate = {},
     )
   }
