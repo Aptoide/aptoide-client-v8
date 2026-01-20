@@ -48,7 +48,8 @@ fun RTBSectionView(
     medium = "rtb",
     campaign = "regular",
     content = "home-bundle",
-    navigate = navigate
+    navigate = navigate,
+    shouldSendClickEvents = true
   ) { navigate ->
     RTBSectionViewContent(
       bundle = bundle,

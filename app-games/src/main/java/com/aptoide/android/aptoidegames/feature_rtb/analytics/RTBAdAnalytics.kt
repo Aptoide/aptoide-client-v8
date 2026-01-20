@@ -8,23 +8,33 @@ class RTBAdAnalytics(
 
   fun sendRTBAdLoadSuccess(
     initialUrl: String,
-    finalUrl: String
+    finalUrl: String,
+    campaignId: String?
   ) = genericAnalytics.logEvent(
     name = "rtb_ad_load_success",
-    params = mapOf(
-      "initial_url" to initialUrl,
-      "final_url" to finalUrl
-    )
+    params = buildMap {
+      put("initial_url", initialUrl)
+      put("final_url", finalUrl)
+      campaignId?.let { put("campaign_id", it) }
+    }
   )
 
   fun sendRTBAdLoadError(
     initialUrl: String,
-    errorMessage: String
+    errorMessage: String,
+    campaignId: String? = null,
+    lastUrl: String? = null,
+    lastErrorType: String? = null,
+    lastErrorDescription: String? = null
   ) = genericAnalytics.logEvent(
     name = "rtb_ad_load_error",
-    params = mapOf(
-      "initial_url" to initialUrl,
-      "error_message" to errorMessage
-    )
+    params = buildMap {
+      put("initial_url", initialUrl)
+      put("error_message", errorMessage)
+      campaignId?.let { put("campaign_id", it) }
+      lastUrl?.let { put("last_url", it) }
+      lastErrorType?.let { put("last_error_type", it) }
+      lastErrorDescription?.let { put("last_error_description", it) }
+    }
   )
 }
