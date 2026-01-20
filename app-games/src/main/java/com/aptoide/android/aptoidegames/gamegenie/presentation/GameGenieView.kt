@@ -35,6 +35,7 @@ import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.Messa
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.TextInputBar
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.companion.ChatbotViewCompanion
 import com.aptoide.android.aptoidegames.home.LoadingView
+import com.aptoide.android.aptoidegames.mmp.WithUTM
 
 const val genieRoute = "chatbot"
 
@@ -58,86 +59,93 @@ fun gameGenieScreen(
 
   var selectedEntry by remember { mutableStateOf<EntryChoice?>(null) }
 
-  ConversationsDrawer(
-    mainScreen = {
-      when (selectedEntry) {
-        null -> {
-          GameGenieEntryScreen(
-            myGames = viewModel.installedGames.collectAsState().value,
-            onChooseGeneral = {
-              analytics.sendGameGenieEntryScreenSearch()
-              viewModel.resetSelectedGame()
-              selectedEntry = EntryChoice.General
-            },
-            onChooseCompanion = { selectedGame ->
-              analytics.sendGameGenieCompanionClick(selectedGame.packageName)
-              viewModel.updateLoadingState()
-              viewModel.setSelectedGame(selectedGame)
-              viewModel.loadCompanionChat(selectedGame.packageName)
-              selectedEntry = EntryChoice.Companion
-            }
-          )
-        }
+  WithUTM(
+    medium = "gamegenie",
+    campaign = "gamegenie",
+    content = "gamegenie-results",
+    navigate = navigate
+  ) { navigate ->
+    ConversationsDrawer(
+      mainScreen = {
+        when (selectedEntry) {
+          null -> {
+            GameGenieEntryScreen(
+              myGames = viewModel.installedGames.collectAsState().value,
+              onChooseGeneral = {
+                analytics.sendGameGenieEntryScreenSearch()
+                viewModel.resetSelectedGame()
+                selectedEntry = EntryChoice.General
+              },
+              onChooseCompanion = { selectedGame ->
+                analytics.sendGameGenieCompanionClick(selectedGame.packageName)
+                viewModel.updateLoadingState()
+                viewModel.setSelectedGame(selectedGame)
+                viewModel.loadCompanionChat(selectedGame.packageName)
+                selectedEntry = EntryChoice.Companion
+              }
+            )
+          }
 
-        EntryChoice.General -> {
-          ChatbotView(
-            firstLoad = firstLoad,
-            uiState = uiState,
-            navigateTo = navigate,
-            navigateBack = {
-              viewModel.resetSelectedGame()
-              selectedEntry = null
-            },
-            onError = viewModel::reload,
-            onMessageSend = { message, image ->
-              viewModel.sendMessage(message, image)
-              analytics.sendGameGenieMessageSent()
-            },
-            setFirstLoadDone = viewModel::setFirstLoadDone,
-            onSuggestionSend = { message, index ->
-              viewModel.sendMessage(message, null)
-              analytics.sendGameGenieSuggestionClick(index)
-            }
-          )
-        }
-
-        EntryChoice.Companion -> {
-          viewModel.selectedGame.collectAsState().value?.let {
-            val companionSuggestions by viewModel.companionSuggestions.collectAsState()
-            ChatbotViewCompanion(
-              selectedGame = it,
+          EntryChoice.General -> {
+            ChatbotView(
               firstLoad = firstLoad,
+              uiState = uiState,
+              navigateTo = navigate,
               navigateBack = {
                 viewModel.resetSelectedGame()
                 selectedEntry = null
               },
-              uiState = uiState,
-              navigateTo = navigate,
               onError = viewModel::reload,
-              setFirstLoadDone = viewModel::setFirstLoadDone,
               onMessageSend = { message, image ->
                 viewModel.sendMessage(message, image)
                 analytics.sendGameGenieMessageSent()
               },
-              showBottomSheet = showBottomSheet,
-              suggestions = companionSuggestions,
-              onSuggestionClick = { message, index ->
-                viewModel.sendMessage(message)
+              setFirstLoadDone = viewModel::setFirstLoadDone,
+              onSuggestionSend = { message, index ->
+                viewModel.sendMessage(message, null)
                 analytics.sendGameGenieSuggestionClick(index)
               }
             )
           }
+
+          EntryChoice.Companion -> {
+            viewModel.selectedGame.collectAsState().value?.let {
+              val companionSuggestions by viewModel.companionSuggestions.collectAsState()
+              ChatbotViewCompanion(
+                selectedGame = it,
+                firstLoad = firstLoad,
+                navigateBack = {
+                  viewModel.resetSelectedGame()
+                  selectedEntry = null
+                },
+                uiState = uiState,
+                navigateTo = navigate,
+                onError = viewModel::reload,
+                setFirstLoadDone = viewModel::setFirstLoadDone,
+                onMessageSend = { message, image ->
+                  viewModel.sendMessage(message, image)
+                  analytics.sendGameGenieMessageSent()
+                },
+                showBottomSheet = showBottomSheet,
+                suggestions = companionSuggestions,
+                onSuggestionClick = { message, index ->
+                  viewModel.sendMessage(message)
+                  analytics.sendGameGenieSuggestionClick(index)
+                }
+              )
+            }
+          }
         }
-      }
-    },
-    loadConversationFn = { id ->
-      selectedEntry = EntryChoice.General
-      viewModel.resetSelectedGame()
-      viewModel.loadConversation(id)
-    },
-    currentChatId = uiState.chat.id,
-    newChatFn = viewModel::emptyChat,
-  )
+      },
+      loadConversationFn = { id ->
+        selectedEntry = EntryChoice.General
+        viewModel.resetSelectedGame()
+        viewModel.loadConversation(id)
+      },
+      currentChatId = uiState.chat.id,
+      newChatFn = viewModel::emptyChat,
+    )
+  }
 }
 
 @Composable
