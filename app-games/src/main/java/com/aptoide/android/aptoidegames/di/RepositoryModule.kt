@@ -10,6 +10,7 @@ import cm.aptoide.pt.aptoide_network.data.network.GetUserAgent
 import cm.aptoide.pt.aptoide_network.data.network.QLogicInterceptor
 import cm.aptoide.pt.aptoide_network.data.network.QueryLangInterceptor
 import cm.aptoide.pt.aptoide_network.di.BaseOkHttp
+import cm.aptoide.pt.aptoide_network.di.RawOkHttp
 import cm.aptoide.pt.aptoide_network.di.RetrofitBuzz
 import cm.aptoide.pt.aptoide_network.di.StoreDomain
 import cm.aptoide.pt.aptoide_network.di.StoreEnvironmentDomain
@@ -22,6 +23,7 @@ import cm.aptoide.pt.feature_campaigns.CampaignRepository
 import cm.aptoide.pt.feature_editorial.di.DefaultEditorialUrl
 import cm.aptoide.pt.feature_flags.data.FeatureFlagsRepository
 import cm.aptoide.pt.feature_flags.di.FeatureFlagsDataStore
+import cm.aptoide.pt.feature_flags.domain.FeatureFlags
 import cm.aptoide.pt.feature_home.di.WidgetsUrl
 import cm.aptoide.pt.feature_oos.di.UninstallPackagesFilter
 import cm.aptoide.pt.feature_search.data.AutoCompleteSuggestionsRepository
@@ -37,6 +39,7 @@ import com.aptoide.android.aptoidegames.feature_flags.AptoideFeatureFlagsReposit
 import com.aptoide.android.aptoidegames.feature_flags.analytics.FeatureFlagsAnalytics
 import com.aptoide.android.aptoidegames.feature_promotional.domain.AppComingSoonManager
 import com.aptoide.android.aptoidegames.feature_promotional.repository.SubscribedAppsManager
+import com.aptoide.android.aptoidegames.feature_rtb.analytics.RTBErrorLogger
 import com.aptoide.android.aptoidegames.feature_rtb.di.RetrofitRTB
 import com.aptoide.android.aptoidegames.feature_rtb.repository.AptoideRTBRepository
 import com.aptoide.android.aptoidegames.feature_rtb.repository.RTBApi
@@ -317,6 +320,17 @@ class RepositoryModule {
       campaignRepository = campaignRepository,
     )
   }
+
+  @Singleton
+  @Provides
+  fun provideRTBErrorLogger(
+    featureFlags: FeatureFlags,
+    @RawOkHttp okHttpClient: OkHttpClient
+  ): RTBErrorLogger = RTBErrorLogger(
+    featureFlags = featureFlags,
+    okHttpClient = okHttpClient,
+    scope = CoroutineScope(Dispatchers.IO)
+  )
 }
 
 @Qualifier

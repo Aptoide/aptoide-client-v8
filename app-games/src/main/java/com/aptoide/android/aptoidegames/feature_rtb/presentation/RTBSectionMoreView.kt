@@ -47,7 +47,8 @@ fun rtbSeeMoreScreen() = ScreenData.withAnalytics(
     medium = "rtb",
     campaign = "regular",
     content = "rtb-seeall",
-    navigate = navigate
+    navigate = navigate,
+    shouldSendClickEvents = true
   ) { navigate ->
     RTBMoreBundleScreen(
       bundleTag = bundleTag,
