@@ -34,19 +34,36 @@ fun rememberRTBAdClickHandler(
         when (result) {
           is AdRedirectWebViewActivity.AdRedirectResult.Success -> {
             Timber.d("Success! Opening Google Play with URL: ${result.finalUrl}")
-            rtbAdAnalytics.sendRTBAdLoadSuccess(rtbApp.adUrl, result.finalUrl)
+            rtbAdAnalytics.sendRTBAdLoadSuccess(
+              initialUrl = rtbApp.adUrl,
+              finalUrl = result.finalUrl,
+              campaignId = rtbApp.app.campaigns?.campaignId
+            )
             openGooglePlayUrl(context, result.finalUrl)
           }
 
           is AdRedirectWebViewActivity.AdRedirectResult.Error -> {
-            Timber.d("Error: ${result.message}")
-            rtbAdAnalytics.sendRTBAdLoadError(rtbApp.adUrl, result.message)
+            Timber.d("Error: ${result.message}, lastUrl: ${result.lastUrl}, errorType: ${result.lastErrorType}, errorDescription: ${result.lastErrorDescription}")
+            rtbAdAnalytics.sendRTBAdLoadError(
+              initialUrl = rtbApp.adUrl,
+              errorMessage = result.message,
+              campaignId = rtbApp.app.campaigns?.campaignId,
+              lastUrl = result.lastUrl,
+              lastErrorType = result.lastErrorType,
+              lastErrorDescription = result.lastErrorDescription
+            )
             navigateToAppView(navigate, rtbApp.app, index)
           }
         }
       }
 
-      val intent = AdRedirectWebViewActivity.createIntent(context, rtbApp.adUrl, rtbApp.adTimeout, callback)
+      val intent = AdRedirectWebViewActivity.createIntent(
+        context = context,
+        trackingUrl = rtbApp.adUrl,
+        campaignId = rtbApp.app.campaigns?.campaignId,
+        timeoutSeconds = rtbApp.adTimeout,
+        callback = callback
+      )
       context.startActivity(intent)
     }
   }
