@@ -380,7 +380,7 @@ fun ChatScreenCompanion(
         TextInputBar(
           onMessageSent = { message, imagePath ->
             markOverlayClicked()
-            
+
             if (imagePath != null) {
               onMessageSend(message, imagePath)
               onClearScreenshot()
