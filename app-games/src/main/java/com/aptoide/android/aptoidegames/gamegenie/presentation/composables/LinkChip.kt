@@ -24,7 +24,7 @@ fun LinkChip(
     verticalAlignment = Alignment.CenterVertically,
     modifier = modifier
       .clip(RoundedCornerShape(50))
-      .background(Palette.GreyDark)
+      .background(Palette.Black)
       .clickable(onClick = onClick)
   ) {
     Text(

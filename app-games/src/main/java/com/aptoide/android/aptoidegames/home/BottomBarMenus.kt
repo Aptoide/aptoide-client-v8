@@ -3,6 +3,7 @@ package com.aptoide.android.aptoidegames.home
 import android.graphics.Paint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -18,6 +19,7 @@ import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.feature_updates.presentation.UpdatesUiState
 import cm.aptoide.pt.feature_updates.presentation.rememberUpdates
@@ -33,6 +35,7 @@ import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.Anima
 import com.aptoide.android.aptoidegames.gamegenie.presentation.genieRoute
 import com.aptoide.android.aptoidegames.gamegenie.presentation.genieSearchRoute
 import com.aptoide.android.aptoidegames.search.presentation.buildSearchRoute
+import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.getAiBottomBarIcon
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.updates.presentation.updatesRoute
 
@@ -127,6 +130,15 @@ fun BottomBarMenus.Icon(isSelected: Boolean) = when (this) {
         isSelected = isSelected,
         resId = R.raw.game_genie_bottom_bar_idle,
         selectedResId = R.raw.game_genie_chat_big_animation
+      )
+      Icon(
+        imageVector = getAiBottomBarIcon(),
+        contentDescription = null,
+        modifier = Modifier
+          .align(Alignment.BottomEnd)
+          .offset(x = (-10).dp, y = (-10).dp)
+          .size(14.dp),
+        tint = Color.Unspecified
       )
     }
   }

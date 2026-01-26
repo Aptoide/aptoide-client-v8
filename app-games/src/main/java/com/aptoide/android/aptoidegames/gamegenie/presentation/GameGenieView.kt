@@ -1,7 +1,9 @@
 package com.aptoide.android.aptoidegames.gamegenie.presentation
 
 import ConversationsDrawer
+import android.app.Activity
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,11 +14,13 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -31,6 +35,7 @@ import com.aptoide.android.aptoidegames.gamegenie.domain.GameCompanion
 import com.aptoide.android.aptoidegames.gamegenie.domain.Suggestion
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.ChatBackButton
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.ChatParticipantName
+import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.CompanionGamesStrip
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.MessageList
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.TextInputBar
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.companion.ChatbotViewCompanion
@@ -39,7 +44,7 @@ import com.aptoide.android.aptoidegames.mmp.WithUTM
 
 const val genieRoute = "chatbot"
 
-private enum class EntryChoice {
+private enum class ChatMode {
   General,
   Companion
 }
@@ -57,7 +62,7 @@ fun gameGenieScreen(
   val analytics = rememberGameGenieAnalytics()
   val firstLoad by viewModel.firstLoad.collectAsState(true)
 
-  var selectedEntry by remember { mutableStateOf<EntryChoice?>(null) }
+  var chatMode by remember { mutableStateOf(ChatMode.General) }
 
   WithUTM(
     medium = "gamegenie",
@@ -67,56 +72,45 @@ fun gameGenieScreen(
   ) { navigate ->
     ConversationsDrawer(
       mainScreen = {
-        when (selectedEntry) {
-          null -> {
-            GameGenieEntryScreen(
-              myGames = viewModel.installedGames.collectAsState().value,
-              onChooseGeneral = {
-                analytics.sendGameGenieEntryScreenSearch()
-                viewModel.resetSelectedGame()
-                selectedEntry = EntryChoice.General
-              },
-              onChooseCompanion = { selectedGame ->
-                analytics.sendGameGenieCompanionClick(selectedGame.packageName)
-                viewModel.updateLoadingState()
-                viewModel.setSelectedGame(selectedGame)
-                viewModel.loadCompanionChat(selectedGame.packageName)
-                selectedEntry = EntryChoice.Companion
-              }
-            )
-          }
-
-          EntryChoice.General -> {
-            ChatbotView(
-              firstLoad = firstLoad,
-              uiState = uiState,
+        when (chatMode) {
+        ChatMode.General -> {
+          ChatbotView(
+            firstLoad = firstLoad,
+            uiState = uiState,
+            installedGames = viewModel.installedGames.collectAsState().value,
               navigateTo = navigate,
-              navigateBack = {
-                viewModel.resetSelectedGame()
-                selectedEntry = null
-              },
+              navigateBack = null,
               onError = viewModel::reload,
-              onMessageSend = { message, image ->
-                viewModel.sendMessage(message, image)
-                analytics.sendGameGenieMessageSent()
-              },
-              setFirstLoadDone = viewModel::setFirstLoadDone,
-              onSuggestionSend = { message, index ->
-                viewModel.sendMessage(message, null)
-                analytics.sendGameGenieSuggestionClick(index)
+            onMessageSend = { message, image ->
+              viewModel.sendMessage(message, image)
+              analytics.sendGameGenieMessageSent()
+            },
+            setFirstLoadDone = viewModel::setFirstLoadDone,
+            onSuggestionSend = { message, index ->
+              viewModel.sendMessage(message, null)
+              analytics.sendGameGenieSuggestionClick(index)
+            },
+            onGameClick = { selectedGame ->
+              analytics.sendGameGenieCompanionClick(selectedGame.packageName)
+              viewModel.updateLoadingState()
+              viewModel.setSelectedGame(selectedGame)
+              viewModel.loadCompanionChat(selectedGame.packageName)
+              chatMode = ChatMode.Companion
               }
             )
           }
 
-          EntryChoice.Companion -> {
+          ChatMode.Companion -> {
             viewModel.selectedGame.collectAsState().value?.let {
               val companionSuggestions by viewModel.companionSuggestions.collectAsState()
-              ChatbotViewCompanion(
-                selectedGame = it,
-                firstLoad = firstLoad,
-                navigateBack = {
-                  viewModel.resetSelectedGame()
-                  selectedEntry = null
+              val installedGames by viewModel.installedGames.collectAsState()
+            ChatbotViewCompanion(
+              selectedGame = it,
+              firstLoad = firstLoad,
+              navigateBack = {
+                viewModel.resetSelectedGame()
+                viewModel.emptyChat()
+                chatMode = ChatMode.General
                 },
                 uiState = uiState,
                 navigateTo = navigate,
@@ -131,14 +125,21 @@ fun gameGenieScreen(
                 onSuggestionClick = { message, index ->
                   viewModel.sendMessage(message)
                   analytics.sendGameGenieSuggestionClick(index)
-                }
-              )
-            }
+                },
+              installedGames = installedGames,
+              onGameSwitch = { newGame ->
+                viewModel.setSelectedGame(newGame)
+                viewModel.loadCompanionChat(newGame.packageName)
+              },
+              onOverlayInteraction = viewModel::setClickedOverlayButton,
+              onClearScreenshot = viewModel::clearScreenshot
+            )
           }
         }
-      },
-      loadConversationFn = { id ->
-        selectedEntry = EntryChoice.General
+      }
+    },
+    loadConversationFn = { id ->
+      chatMode = ChatMode.General
         viewModel.resetSelectedGame()
         viewModel.loadConversation(id)
       },
@@ -152,12 +153,14 @@ fun gameGenieScreen(
 fun ChatbotView(
   firstLoad: Boolean,
   uiState: GameGenieUIState,
+  installedGames: List<GameCompanion> = emptyList(),
   navigateTo: (String) -> Unit,
   navigateBack: (() -> Unit)? = null,
   onError: () -> Unit,
   onMessageSend: (String, String?) -> Unit,
   setFirstLoadDone: () -> Unit,
   onSuggestionSend: (String, Int) -> Unit,
+  onGameClick: (GameCompanion) -> Unit = {},
 ) {
   Column(
     modifier = Modifier
@@ -175,12 +178,14 @@ fun ChatbotView(
       else -> ChatScreen(
         uiState = uiState,
         firstLoad = firstLoad,
+        installedGames = installedGames,
         navigateTo = navigateTo,
         navigateBack = navigateBack,
         onMessageSend = onMessageSend,
         onSuggestionSend = onSuggestionSend,
         setFirstLoadDone = setFirstLoadDone,
         isLoading = isLoading,
+        onGameClick = onGameClick,
       )
     }
   }
@@ -190,6 +195,7 @@ fun ChatbotView(
 fun ChatScreen(
   uiState: GameGenieUIState,
   firstLoad: Boolean,
+  installedGames: List<GameCompanion> = emptyList(),
   navigateTo: (String) -> Unit,
   navigateBack: (() -> Unit)?,
   onMessageSend: (String, String?) -> Unit,
@@ -197,9 +203,12 @@ fun ChatScreen(
   setFirstLoadDone: () -> Unit,
   isLoading: Boolean = false,
   selectedGame: GameCompanion? = null,
+  onGameClick: (GameCompanion) -> Unit = {},
 ) {
+  val hasUserMessages = uiState.chat.conversation.any { it.user != null }
+
   val suggestions =
-    if (selectedGame != null)
+    if (selectedGame != null || hasUserMessages)
       emptyList()
     else listOf(
       Suggestion(stringResource(R.string.genai_example_1_body), null),
@@ -209,27 +218,40 @@ fun ChatScreen(
 
   Column(
     modifier = Modifier
-      .padding(vertical = 4.dp, horizontal = 18.dp)
+      .padding(vertical = 4.dp)
       .fillMaxSize()
   ) {
     if (navigateBack != null) {
-      ChatBackButton { navigateBack() }
+      ChatBackButton(modifier = Modifier.padding(horizontal = 18.dp)) { navigateBack() }
     }
-    MessageList(
-      messages = uiState.chat.conversation,
-      firstLoad = firstLoad,
-      navigateTo = navigateTo,
-      modifier = Modifier
-        .weight(1f),
-      suggestions = suggestions,
-      setFirstLoadDone = setFirstLoadDone,
-      onSuggestionClick = onSuggestionSend
-    )
+
+    if (hasUserMessages) {
+      CompanionGamesStrip(
+        games = installedGames,
+        onGameClick = onGameClick
+      )
+    }
+
+    Box(modifier = Modifier.weight(1f)) {
+      MessageList(
+        messages = uiState.chat.conversation,
+        firstLoad = firstLoad,
+        navigateTo = navigateTo,
+        modifier = Modifier
+          .fillMaxSize()
+          .padding(horizontal = 18.dp),
+        suggestions = suggestions,
+        setFirstLoadDone = setFirstLoadDone,
+        onSuggestionClick = onSuggestionSend,
+        installedGames = if (hasUserMessages) emptyList() else installedGames,
+        onGameClick = onGameClick
+      )
+    }
     if (isLoading) {
       Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(bottom = 8.dp)
+        modifier = Modifier.padding(start = 18.dp, end = 18.dp, bottom = 8.dp)
       ) {
         ChatParticipantName(
           stringResource(R.string.genai_bottom_navigation_gamegenie_button)
@@ -246,7 +268,7 @@ fun ChatScreen(
       onClearScreenshot = {},
       modifier = Modifier
         .fillMaxWidth()
-        .padding(bottom = 8.dp)
+        .padding(start = 18.dp, end = 18.dp, bottom = 8.dp)
     )
   }
 }
