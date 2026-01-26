@@ -10,8 +10,6 @@ import androidx.compose.ui.Modifier
 import com.aptoide.android.aptoidegames.BottomSheetContent
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.error_views.NoConnectionView
-import com.aptoide.android.aptoidegames.gamegenie.analytics.rememberGameGenieAnalytics
-import com.aptoide.android.aptoidegames.gamegenie.data.rememberGameGeniePreferences
 import com.aptoide.android.aptoidegames.gamegenie.domain.Suggestion
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameCompanion
 import com.aptoide.android.aptoidegames.gamegenie.presentation.GameGenieUIState
@@ -32,6 +30,10 @@ fun ChatbotViewCompanion(
   showBottomSheet: ((BottomSheetContent?) -> Unit)? = null,
   suggestions: List<Suggestion> = emptyList(),
   onSuggestionClick: (String, Int) -> Unit = { _, _ -> },
+  installedGames: List<GameCompanion> = emptyList(),
+  onGameSwitch: (GameCompanion) -> Unit = {},
+  onOverlayInteraction: () -> Unit = {},
+  onClearScreenshot: () -> Unit = {},
 ) {
   Column(
     modifier = modifier
@@ -57,7 +59,11 @@ fun ChatbotViewCompanion(
         isLoading = isLoading,
         showBottomSheet = showBottomSheet,
         suggestions = suggestions,
-        onSuggestionClick = onSuggestionClick
+        onSuggestionClick = onSuggestionClick,
+        installedGames = installedGames,
+        onGameSwitch = onGameSwitch,
+        onOverlayInteraction = onOverlayInteraction,
+        onClearScreenshot = onClearScreenshot
       )
     }
   }

@@ -44,14 +44,14 @@ fun SuggestionBox(
     spacingPx = emojiSpacingPx + horizontalPaddingPx
   )
 
-  val boxWidthDp = with(density) { boxWidthPx.toDp() }
+  val boxWidthDp = with(density) { boxWidthPx.toDp() + 8.dp }
 
   Row(
     modifier = Modifier
       .height(56.dp)
       .width(boxWidthDp)
       .background(Palette.Primary.copy(alpha = 0.1f))
-      .border(2.dp, Palette.Primary)
+      .border(1.dp, Palette.Primary)
       .clickable { onClick(suggestion, index) }
       .padding(12.dp),
     verticalAlignment = Alignment.CenterVertically

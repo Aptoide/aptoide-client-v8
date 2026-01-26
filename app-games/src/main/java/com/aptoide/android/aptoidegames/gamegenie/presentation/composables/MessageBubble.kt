@@ -92,7 +92,7 @@ fun MessageBubble(
     ) {
       if (!isUserMessage) {
         ChatParticipantName(
-          stringResource(R.string.genai_bottom_navigation_gamegenie_button)
+          stringResource(R.string.game_genie_chat_name)
         )
       } else {
         ChatParticipantName(
@@ -185,11 +185,10 @@ fun MessageBubble(
         Column(
           modifier = Modifier
             .background(
-              color = if (isUserMessage) Palette.Primary else Color.Transparent,
+              color = if (isUserMessage) Palette.Primary else Palette.GreyDark,
             )
-            .border(2.dp, color = Palette.Primary)
             .fillMaxWidth()
-            .padding(12.dp)
+            .padding(16.dp)
         ) {
           if (isCompanion) {
             val originalString =
