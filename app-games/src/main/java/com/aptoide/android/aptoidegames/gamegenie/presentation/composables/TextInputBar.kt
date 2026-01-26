@@ -6,11 +6,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -20,7 +17,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -102,10 +98,11 @@ fun TextInputBar(
     TextField(
       value = messageText,
       onValueChange = { newValue -> messageText = newValue },
-      textStyle = AGTypography.Chat.copy(color = Palette.White),
+    textStyle = AGTypography.ChatBold.copy(color = Palette.White),
       singleLine = true,
       modifier = Modifier
         .fillMaxWidth()
+        .height(48.dp)
         .background(Palette.GreyDark),
       placeholder = {
         Text(
@@ -118,31 +115,27 @@ fun TextInputBar(
           ),
           textAlign = TextAlign.Start,
           overflow = TextOverflow.Visible,
-          style = AGTypography.ChatBold,
+          style = AGTypography.Chat,
           color = Palette.GreyLight
         )
       },
       trailingIcon = {
-        val isEnabled = messageText.isNotBlank()
-        val iconTint = if (isEnabled) Palette.Primary else Palette.GreyLight
-
-        IconButton(
-          enabled = isEnabled,
-          modifier = Modifier.background(Color.Transparent),
-          onClick = {
-            if (isEnabled) {
+        if (messageText.isNotBlank()) {
+          IconButton(
+            modifier = Modifier.background(Color.Transparent),
+            onClick = {
               onMessageSent(messageText, screenshotPath)
               messageText = ""
               keyboardController?.hide()
               focusManager.clearFocus()
             }
+          ) {
+            Icon(
+              imageVector = getSendIconEnabled(),
+              tint = Palette.Primary,
+              contentDescription = "Send Message"
+            )
           }
-        ) {
-          Icon(
-            imageVector = Icons.AutoMirrored.Filled.Send,
-            tint = iconTint,
-            contentDescription = "Send Message"
-          )
         }
       },
       keyboardOptions = KeyboardOptions.Default.copy(

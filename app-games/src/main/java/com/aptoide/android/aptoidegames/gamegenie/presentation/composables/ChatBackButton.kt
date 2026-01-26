@@ -17,10 +17,11 @@ import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
 fun ChatBackButton(
+  modifier: Modifier = Modifier,
   navigateBack: () -> Unit,
 ) {
   Row(
-    modifier = Modifier
+    modifier = modifier
       .fillMaxWidth(),
   ) {
     Image(

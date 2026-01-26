@@ -48,10 +48,13 @@ fun GameCompanionIcon(
   textStyle: TextStyle = AGTypography.DescriptionGames,
   textSize: TextUnit = AGTypography.DescriptionGames.fontSize,
   imageSize: Int = 56,
+  textHeight: Int? = null,
   showImage: Boolean = true,
+  showText: Boolean = true,
   showAnimation: Boolean = true,
   animationSize: Int = 74,
   clickableEnabled: Boolean = true,
+  showBorder: Boolean = true,
   onClick: (GameCompanion) -> Unit = {},
 ) {
   val density = LocalDensity.current
@@ -70,7 +73,7 @@ fun GameCompanionIcon(
         modifier = Modifier
           .size(imageSize.dp + 6.dp)
           .then(
-            if (clickableEnabled) Modifier.border(3.dp, Palette.Primary, RectangleShape)
+            if (clickableEnabled && showBorder) Modifier.border(3.dp, Palette.Primary, RectangleShape)
             else Modifier
           ),
         contentAlignment = Alignment.Center
@@ -86,13 +89,13 @@ fun GameCompanionIcon(
             contentScale = ContentScale.Crop,
             modifier = Modifier
               .size(imageSize.dp)
-              .background(Color.LightGray)
+              .background(Color.Transparent)
           )
         } else {
           Box(
             modifier = Modifier
               .size(imageSize.dp)
-              .background(Color.LightGray)
+              .background(Color.Transparent)
           )
         }
 
@@ -106,23 +109,30 @@ fun GameCompanionIcon(
         }
       }
 
-      Spacer(modifier = Modifier.height(if (clickableEnabled) 8.dp else 16.dp))
+      if (showText) {
+        Spacer(modifier = Modifier.height(if (clickableEnabled) 8.dp else 16.dp))
+      }
     }
 
-    Text(
-      text = game.name,
-      style = textStyle,
-      fontSize = textSize,
-      color = Palette.White,
-      textAlign = if (clickableEnabled) TextAlign.Start else TextAlign.Center,
-      maxLines = if (clickableEnabled) 2 else 1,
-      overflow = TextOverflow.Ellipsis,
-      modifier = if (clickableEnabled) {
-        Modifier.width(imageSize.dp)
-      } else {
-        Modifier.wrapContentWidth()
-      }
-    )
+    if (showText) {
+      Text(
+        text = game.name,
+        style = textStyle,
+        fontSize = textSize,
+        color = textStyle.color.takeIf { it != Color.Unspecified } ?: Palette.White,
+        textAlign = if (clickableEnabled) TextAlign.Start else TextAlign.Center,
+        maxLines = if (textHeight != null) 2 else if (clickableEnabled) 2 else 1,
+        overflow = if (textHeight != null) TextOverflow.Visible else TextOverflow.Ellipsis,
+        softWrap = true,
+        modifier = if (clickableEnabled) {
+          Modifier
+            .width(imageSize.dp)
+            .then(if (textHeight != null) Modifier.height(textHeight.dp) else Modifier)
+        } else {
+          Modifier.wrapContentWidth()
+        }
+      )
+    }
   }
 }
 

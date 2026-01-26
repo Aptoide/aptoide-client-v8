@@ -3,6 +3,7 @@ package com.aptoide.android.aptoidegames.gamegenie.presentation
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieLocalRepository
 import com.aptoide.android.aptoidegames.gamegenie.domain.ChatInteraction
 import com.aptoide.android.aptoidegames.gamegenie.domain.Suggestion
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameCompanion
@@ -28,6 +29,7 @@ import javax.inject.Inject
 @HiltViewModel
 class GameGenieViewModel @Inject constructor(
   private val gameGenieUseCase: GameGenieUseCase,
+  private val gameGenieLocalRepository: GameGenieLocalRepository,
   @ApplicationContext private val context: Context,
 ) : ViewModel() {
   private val viewModelState = MutableStateFlow(GameGenieViewModelState())
@@ -71,6 +73,18 @@ class GameGenieViewModel @Inject constructor(
     _selectedGame.value = null
     _suggestions.value = emptyList()
     emptyChat()
+  }
+
+  fun setClickedOverlayButton() {
+    viewModelScope.launch {
+      gameGenieLocalRepository.setClickedOverlayButton(true)
+    }
+  }
+
+  fun clearScreenshot() {
+    viewModelScope.launch {
+      gameGenieLocalRepository.clearScreenshot()
+    }
   }
 
   private fun loadInstalledApps() {

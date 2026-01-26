@@ -9,7 +9,7 @@ import com.aptoide.android.aptoidegames.gamegenie.data.database.model.Converters
 import com.aptoide.android.aptoidegames.gamegenie.data.database.model.GameCompanionEntity
 import com.aptoide.android.aptoidegames.gamegenie.data.database.model.GameGenieHistoryEntity
 
-@Database(entities = [GameGenieHistoryEntity::class, GameCompanionEntity::class], version = 5)
+@Database(entities = [GameGenieHistoryEntity::class, GameCompanionEntity::class], version = 6)
 @TypeConverters(Converters::class)
 abstract class GameGenieDatabase : RoomDatabase() {
 

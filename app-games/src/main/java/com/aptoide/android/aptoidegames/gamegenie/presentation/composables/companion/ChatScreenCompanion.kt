@@ -29,8 +29,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import androidx.core.content.ContextCompat.startForegroundService
@@ -47,8 +50,9 @@ import com.aptoide.android.aptoidegames.gamegenie.presentation.ScreenshotBroadca
 import com.aptoide.android.aptoidegames.gamegenie.presentation.TypingAnimation
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.ChatParticipantName
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.MessageList
-import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.PlayInGameOverlayTooltip
+import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.OverlayLaunchButton
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.SelectedGameCompanion
+import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.CompanionGameSwitcherExpandableContent
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.TextInputBar
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.GameGenieOverlayPermissionSheet
 import com.aptoide.android.aptoidegames.BottomSheetContent
@@ -57,6 +61,7 @@ import com.aptoide.android.aptoidegames.gamegenie.analytics.rememberGameGenieAna
 import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieLocalRepository
 import com.aptoide.android.aptoidegames.gamegenie.data.rememberGameGeniePreferences
 import java.io.File
+import kotlin.math.roundToInt
 
 private suspend fun loadScreenshotIfValid(
   repository: GameGenieLocalRepository,
@@ -87,10 +92,9 @@ fun launchOverlayAndGame(
 ) {
   analytics.sendGameGenieTryLaunchOverlay(selectedGame.packageName)
   val overlayIntent = Intent(context, GameGenieOverlayService::class.java).apply {
-    putExtra("TARGET_PACKAGE", selectedGame.packageName)
     if (mediaProjectionResultCode != 0 && mediaProjectionData != null) {
-      putExtra("MEDIA_PROJECTION_RESULT_CODE", mediaProjectionResultCode)
-      putExtra("MEDIA_PROJECTION_DATA", mediaProjectionData)
+      putExtra(GameGenieOverlayService.EXTRA_MEDIA_PROJECTION_RESULT_CODE, mediaProjectionResultCode)
+      putExtra(GameGenieOverlayService.EXTRA_MEDIA_PROJECTION_DATA, mediaProjectionData)
     }
   }
   startForegroundService(context, overlayIntent)
@@ -114,7 +118,11 @@ fun ChatScreenCompanion(
   isLoading: Boolean = false,
   suggestions: List<Suggestion> = emptyList(),
   onSuggestionClick: (String, Int) -> Unit = { _, _ -> },
+  onOverlayInteraction: () -> Unit = {},
+  onClearScreenshot: () -> Unit = {},
   showBottomSheet: ((BottomSheetContent?) -> Unit)? = null,
+  installedGames: List<GameCompanion> = emptyList(),
+  onGameSwitch: (GameCompanion) -> Unit = {},
 ) {
   val context = LocalContext.current
   val coroutineScope = rememberCoroutineScope()
@@ -122,10 +130,12 @@ fun ChatScreenCompanion(
   val repository = rememberGameGeniePreferences()
 
   var screenshotPath by remember { mutableStateOf<String?>(null) }
-  var hasClickedOverlayButton by remember { mutableStateOf(false) }
+  var hasClickedOverlayButton by remember { mutableStateOf(true) }
+  var isGameSwitcherExpanded by remember { mutableStateOf(false) }
+  var backButtonBottomPx by remember { mutableStateOf(0) }
+  var messageContainerTopPx by remember { mutableStateOf(0) }
 
-  val shouldShowTooltip = uiState.chat.conversation.size > 1
-  val showTooltip = shouldShowTooltip && !hasClickedOverlayButton
+  val showTooltip = !hasClickedOverlayButton
 
   LaunchedEffect(Unit) {
     hasClickedOverlayButton = repository.hasClickedOverlayButton()
@@ -179,8 +189,6 @@ fun ChatScreenCompanion(
       context.unregisterReceiver(broadcastReceiver)
     }
   }
-
-  val showImage = uiState.chat.conversation.size < 2
 
   Box(
     modifier = Modifier.fillMaxSize()
@@ -253,11 +261,13 @@ fun ChatScreenCompanion(
         }
       }
 
-      val onLaunchOverlay: (String) -> Unit = { packageName ->
+      val markOverlayClicked = {
         hasClickedOverlayButton = true
-        coroutineScope.launch {
-          repository.setClickedOverlayButton(true)
-        }
+        onOverlayInteraction()
+      }
+
+      val onLaunchOverlay: (String) -> Unit = { packageName ->
+        markOverlayClicked()
         analytics.sendGameGenieTryLaunchOverlay(packageName)
 
         if (GameGenieOverlayService.isServiceRunning && GameGenieOverlayService.hasScreenshotPermission) {
@@ -296,19 +306,55 @@ fun ChatScreenCompanion(
         }
       }
 
-      SelectedGameCompanion(selectedGame, showImage, navigateBack, onLaunchOverlay)
+      SelectedGameCompanion(
+        game = selectedGame,
+        navigateBack = navigateBack,
+        installedGames = installedGames,
+        isDropdownExpanded = isGameSwitcherExpanded,
+        onDropdownToggle = { isGameSwitcherExpanded = !isGameSwitcherExpanded },
+        onBackButtonBottomPositioned = { bottomPx ->
+          backButtonBottomPx = bottomPx
+        }
+      )
 
-      MessageList(
-        messages = uiState.chat.conversation,
-        firstLoad = firstLoad,
-        navigateTo = navigateTo,
-        setFirstLoadDone = setFirstLoadDone,
-        isCompanion = true,
-        modifier = Modifier.weight(1f),
-        gameName = selectedGame.name,
-        suggestions = suggestions,
-        onSuggestionClick = onSuggestionClick) {
-        onLaunchOverlay(selectedGame.packageName)
+      Box(
+        modifier = Modifier
+          .weight(1f)
+          .onGloballyPositioned { coordinates ->
+            messageContainerTopPx = coordinates.positionInWindow().y.roundToInt()
+          }
+      ) {
+        MessageList(
+          messages = uiState.chat.conversation,
+          firstLoad = firstLoad,
+          navigateTo = navigateTo,
+          setFirstLoadDone = setFirstLoadDone,
+          isCompanion = true,
+          modifier = Modifier.fillMaxSize(),
+          gameName = selectedGame.name,
+          suggestions = suggestions,
+          onSuggestionClick = { suggestion, index ->
+            markOverlayClicked()
+            onSuggestionClick(suggestion, index)
+          }
+        )
+
+        CompanionGameSwitcherExpandableContent(
+          isExpanded = isGameSwitcherExpanded,
+          games = installedGames,
+          onGameClick = { game ->
+            isGameSwitcherExpanded = false
+            if (game.packageName != selectedGame.packageName) {
+              onGameSwitch(game)
+            }
+          },
+          selectedGame = selectedGame,
+          modifier = Modifier
+            .align(Alignment.TopStart)
+            .offset {
+              IntOffset(0, backButtonBottomPx - messageContainerTopPx)
+            }
+        )
       }
 
       if (isLoading) {
@@ -324,41 +370,37 @@ fun ChatScreenCompanion(
         }
       }
 
-      TextInputBar(
-        onMessageSent = { message, imagePath ->
-          if (imagePath != null) {
-            onMessageSend(message, imagePath)
-            coroutineScope.launch {
-              repository.clearScreenshot()
-            }
-            screenshotPath = null
-          } else {
-            onMessageSend(message, null)
-          }
-        },
-        screenshotPath = screenshotPath,
-        onClearScreenshot = {
-          coroutineScope.launch {
-            repository.clearScreenshot()
-          }
-          screenshotPath = null
-        },
+      Row(
         modifier = Modifier
           .fillMaxWidth()
-          .padding(bottom = 8.dp)
-      )
-    }
-
-    if (showTooltip && !showImage) {
-      Box(
-        modifier = Modifier
-          .align(Alignment.TopEnd)
-          .padding(
-            top = 52.dp, end = 0.dp
-          )
-          .offset(x = (-9).dp)
+          .padding(bottom = 8.dp),
+        verticalAlignment = Alignment.Bottom,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
       ) {
-        PlayInGameOverlayTooltip()
+        TextInputBar(
+          onMessageSent = { message, imagePath ->
+            markOverlayClicked()
+            
+            if (imagePath != null) {
+              onMessageSend(message, imagePath)
+              onClearScreenshot()
+              screenshotPath = null
+            } else {
+              onMessageSend(message, null)
+            }
+          },
+          screenshotPath = screenshotPath,
+          onClearScreenshot = {
+            onClearScreenshot()
+            screenshotPath = null
+          },
+          modifier = Modifier.weight(1f)
+        )
+
+        OverlayLaunchButton(
+          onClick = { onLaunchOverlay(selectedGame.packageName) },
+          showTooltip = showTooltip
+        )
       }
     }
   }
