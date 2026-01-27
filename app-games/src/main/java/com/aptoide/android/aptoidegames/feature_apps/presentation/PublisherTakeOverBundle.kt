@@ -171,11 +171,17 @@ fun PublisherTakeOverContent(
         }
         when (bottomUiState) {
           is AppsListUiState.Idle -> {
-            AppsRowView(
-              appsList = bottomUiState.apps,
-              navigate = navigate,
-            )
-            Spacer(Modifier.size(spaceBy.dp))
+            WithUTM(
+              content = "pto-seeall",
+              shouldSendClickEvents = true,
+              navigate = navigate
+            ) {
+              AppsRowView(
+                appsList = bottomUiState.apps,
+                navigate = navigate,
+              )
+              Spacer(Modifier.size(spaceBy.dp))
+            }
           }
 
           AppsListUiState.Empty,
