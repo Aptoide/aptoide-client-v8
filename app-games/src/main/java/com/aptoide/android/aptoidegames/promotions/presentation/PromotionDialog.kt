@@ -58,6 +58,7 @@ fun PromotionDialog(navigate: (String) -> Unit) {
       medium = "promo-card",
       campaign = promotion.uid,
       content = "home-promo-card",
+      shouldSendClickEvents = true,
       navigate = navigate
     ) {
       val utmContext = UTMContext.current
