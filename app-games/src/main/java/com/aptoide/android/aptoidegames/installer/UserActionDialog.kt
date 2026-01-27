@@ -57,8 +57,6 @@ import com.aptoide.android.aptoidegames.permissions.AppPermissionsViewModel
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
-import com.google.firebase.crashlytics.ktx.crashlytics
-import com.google.firebase.ktx.Firebase
 
 @Composable
 fun UserActionDialog() {
@@ -122,17 +120,7 @@ fun UserActionDialog() {
                   .getStringExtra("${BuildConfig.APPLICATION_ID}.ap").toAnalyticsPayload()
                 installAnalytics.sendInstallDialogImpressionEvent(packageName, analyticsPayload)
               }
-              val sessionId = it.intent.extras?.getInt("android.content.pm.extra.SESSION_ID")
-              val sessionInfo = sessionId?.let {
-                context.packageManager.packageInstaller.getSessionInfo(it)
-              }
-
-              if (sessionId == null || sessionInfo != null) {
-                intentLauncher.launch(it.intent)
-              } else {
-                Firebase.crashlytics.recordException(IllegalStateException("Error getting session info. Install dialog not launched"))
-              }
-
+              intentLauncher.launch(it.intent)
               installationActionLaunched = true
             }
           }
