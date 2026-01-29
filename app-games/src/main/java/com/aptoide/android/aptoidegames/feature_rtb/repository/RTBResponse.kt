@@ -43,4 +43,5 @@ data class AptoideMmp(
 @Keep
 data class AdsNetwork(
   val click: String?,
+  val timeout: Int?,
 )

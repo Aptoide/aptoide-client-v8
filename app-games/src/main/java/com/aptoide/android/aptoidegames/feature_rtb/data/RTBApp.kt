@@ -7,6 +7,7 @@ import kotlin.random.Random
 data class RTBApp(
   val app: App,
   val adUrl: String?,
+  val adTimeout: Int?,
   val isAptoideInstall: Boolean
 )
 
@@ -14,5 +15,6 @@ val randomRTBApp
   get() = RTBApp(
     app = randomApp,
     adUrl = "https://en.aptoide.com",
+    adTimeout = 10,
     isAptoideInstall = Random.nextBoolean()
   )
