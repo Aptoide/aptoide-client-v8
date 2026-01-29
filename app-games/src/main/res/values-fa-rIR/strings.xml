@@ -297,8 +297,8 @@
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
   <string name="genai_me_title">من</string>
   <string name="genai_introduction_body">سلام! من دستیار هوش مصنوعی شما در همه چیز مرتبط با کشف اپلیکیشن و بازی هستم. امتحان کنید مثلا:</string>
-  <string name="genai_input_message_field">Ask anything</string>
-  <string name="genai_input_message_field_with_screenshot">Ask about what I\'m seeing now</string>
+  <string name="genai_input_message_field">Ask anything...</string>
+  <string name="genai_input_message_field_with_screenshot">Ask about this screen...</string>
   <string name="genai_powered_by_ai_title">توسط هوش مصنوعی</string>
   <string name="genai_example_1_body">به دنبال بازی استراتژی هستم.</string>
   <string name="genai_example_2_body">لطفا بهترین بازی‌های چند نفره را پیشنهاد بده.</string>
@@ -437,6 +437,4 @@
   <string name="gamegenie_companion_game_choice_title">Your installed games</string>
   <string name="gamegenie_companion_master_fav_games">Master your fav game</string>
   <string name="gamegenie_companion_tap_fav_game">Or tap your fav game - you\'ll master it.</string>
-  <string name="genai_input_message_field">Ask anything...</string>
-  <string name="genai_input_message_field_with_screenshot">Ask about this screen...</string>
 </resources>

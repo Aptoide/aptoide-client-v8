@@ -297,8 +297,8 @@
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
   <string name="genai_me_title">Ik</string>
   <string name="genai_introduction_body">Hoi! Ik ben je AI-assistent voor alles wat met het ontdekken van apps en games te maken heeft. Probeer eens iets zoals:</string>
-  <string name="genai_input_message_field">Vraag alles</string>
-  <string name="genai_input_message_field_with_screenshot">Vraag naar wat ik nu zie</string>
+  <string name="genai_input_message_field">Vraag wat je wilt...</string>
+  <string name="genai_input_message_field_with_screenshot">Vraag naar dit scherm...</string>
   <string name="genai_powered_by_ai_title">Ondersteund door AI</string>
   <string name="genai_example_1_body">Ik ben op zoek naar strategiespellen.</string>
   <string name="genai_example_2_body">Wat zijn de beste multiplayerspellen?</string>
@@ -437,6 +437,4 @@
   <string name="gamegenie_companion_game_choice_title">Je geïnstalleerde games</string>
   <string name="gamegenie_companion_master_fav_games">Word een meester in je favoriete game</string>
   <string name="gamegenie_companion_tap_fav_game">Of tik op je favoriete game - je zult het onder de knie krijgen.</string>
-  <string name="genai_input_message_field">Vraag wat je wilt...</string>
-  <string name="genai_input_message_field_with_screenshot">Vraag naar dit scherm...</string>
 </resources>

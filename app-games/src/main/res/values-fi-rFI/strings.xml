@@ -297,8 +297,8 @@
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
   <string name="genai_me_title">Minä</string>
   <string name="genai_introduction_body">Hei! Olen tekoälyavustajasi kaikessa, mikä liittyy sovellusten ja pelien löytämiseen. Kokeile jotain sellaista kuin:</string>
-  <string name="genai_input_message_field">Kysy mitä tahansa</string>
-  <string name="genai_input_message_field_with_screenshot">Kysy, mitä näen nyt</string>
+  <string name="genai_input_message_field">Kysy mitä tahansa...</string>
+  <string name="genai_input_message_field_with_screenshot">Kysy tästä näytöstä...</string>
   <string name="genai_powered_by_ai_title">Powered by AI</string>
   <string name="genai_example_1_body">Etsin strategiapelejä.</string>
   <string name="genai_example_2_body">Suosittele minulle parhaita moninpelejä.</string>
@@ -437,6 +437,4 @@
   <string name="gamegenie_companion_game_choice_title">Asennetut pelisi</string>
   <string name="gamegenie_companion_master_fav_games">Hallitse suosikkipelisi</string>
   <string name="gamegenie_companion_tap_fav_game">Tai napauta suosikkipeliäsi – hallitset sen pian.</string>
-  <string name="genai_input_message_field">Kysy mitä tahansa...</string>
-  <string name="genai_input_message_field_with_screenshot">Kysy tästä näytöstä...</string>
 </resources>
