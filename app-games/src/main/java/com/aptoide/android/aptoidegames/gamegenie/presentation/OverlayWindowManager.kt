@@ -16,7 +16,8 @@ class OverlayWindowManager(private val context: Context) {
     const val FAB_SIZE_DP = 56
     const val EDGE_PADDING_DP = 8
     const val MENU_WIDTH_DP = 260
-    const val MENU_HEIGHT_DP = 120
+    const val MENU_HEIGHT_DP = 80
+    const val MENU_REMOVE_HEIGHT_DP = 32
     const val MENU_SPACING_DP = 24
     const val MENU_LEFT_EXTENSION_DP =
       204
@@ -124,10 +125,7 @@ class OverlayWindowManager(private val context: Context) {
     val maxX = (screenWidth - fabSize - edgePadding).coerceAtLeast(edgePadding)
     val newX = currentX.coerceIn(edgePadding, maxX)
 
-    val spacingPx = (MENU_SPACING_DP * context.resources.displayMetrics.density).toInt()
-    val menuHeightPx = (MENU_HEIGHT_DP * context.resources.displayMetrics.density).toInt()
-    val maxYRaw = screenHeight - fabSize - spacingPx - menuHeightPx
-    val maxY = maxYRaw.coerceAtLeast(edgePadding)
+    val maxY = (screenHeight - fabSize - edgePadding).coerceAtLeast(edgePadding)
     val newY = currentY.coerceIn(edgePadding, maxY)
 
     return Pair(newX, newY)
@@ -163,6 +161,10 @@ class OverlayWindowManager(private val context: Context) {
 
   fun getMenuHeightPx(): Int {
     return (MENU_HEIGHT_DP * context.resources.displayMetrics.density).toInt()
+  }
+
+  fun getRemoveMenuHeightPx(): Int {
+    return (MENU_REMOVE_HEIGHT_DP * context.resources.displayMetrics.density).toInt()
   }
 
   fun getMenuWidthPx(): Int {

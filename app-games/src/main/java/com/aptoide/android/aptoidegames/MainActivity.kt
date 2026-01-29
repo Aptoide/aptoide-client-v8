@@ -18,7 +18,10 @@ import com.aptoide.android.aptoidegames.analytics.presentation.withPrevScreen
 import com.aptoide.android.aptoidegames.feature_companion_apps_notification.CompanionAppsNotificationBuilder
 import com.aptoide.android.aptoidegames.feature_editors_choice_recommendation.EditorsChoiceAppsRecommendationNotificationBuilder
 import com.aptoide.android.aptoidegames.firebase.FirebaseConstants
+import com.aptoide.android.aptoidegames.gamegenie.presentation.GameGenieOverlayService
+import com.aptoide.android.aptoidegames.gamegenie.presentation.buildGameGenieRoute
 import com.aptoide.android.aptoidegames.home.MainView
+import com.aptoide.android.aptoidegames.home.navigateTo
 import com.aptoide.android.aptoidegames.installer.analytics.InstallAnalytics
 import com.aptoide.android.aptoidegames.installer.analytics.getNetworkType
 import com.aptoide.android.aptoidegames.installer.notifications.InstallerNotificationsBuilder
@@ -198,6 +201,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     handleFirebaseNotificationAnalytics(intent)
+    handleGameGenieOverlayIntent(intent)
   }
 
   private fun handleFirebaseNotificationAnalytics(intent: Intent?) {
@@ -211,6 +215,14 @@ class MainActivity : AppCompatActivity() {
       notificationAnalyticsBundle.toFirebaseNotificationAnalyticsInfo()?.let {
         firebaseNotificationAnalytics.sendNotificationOpened(it)
       }
+    }
+  }
+
+  private fun handleGameGenieOverlayIntent(intent: Intent?) {
+    val companionPackage = intent?.getStringExtra(GameGenieOverlayService.EXTRA_COMPANION_PACKAGE)
+    if (!companionPackage.isNullOrBlank()) {
+      intent.removeExtra(GameGenieOverlayService.EXTRA_COMPANION_PACKAGE)
+      navController?.navigateTo(buildGameGenieRoute(companionPackage))
     }
   }
 

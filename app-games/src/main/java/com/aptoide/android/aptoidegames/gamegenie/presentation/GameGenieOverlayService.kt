@@ -8,18 +8,26 @@ import android.graphics.Bitmap
 import android.os.Build
 import android.os.IBinder
 import android.view.WindowManager
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.unit.dp
 import androidx.core.app.NotificationCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.setViewTreeLifecycleOwner
@@ -29,6 +37,7 @@ import androidx.savedstate.SavedStateRegistryController
 import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.gamegenie.analytics.GameGenieAnalytics
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.EntryPointAccessors
@@ -38,6 +47,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
@@ -54,6 +66,8 @@ class GameGenieOverlayService : Service(),
     const val EXTRA_MEDIA_PROJECTION_RESULT_CODE = "MEDIA_PROJECTION_RESULT_CODE"
     const val EXTRA_MEDIA_PROJECTION_DATA = "MEDIA_PROJECTION_DATA"
     const val EXTRA_REQUEST_MEDIA_PROJECTION = "REQUEST_MEDIA_PROJECTION"
+    const val EXTRA_TARGET_PACKAGE = "TARGET_PACKAGE"
+    const val EXTRA_COMPANION_PACKAGE = "COMPANION_PACKAGE"
 
     private const val ANIMATION_DURATION_MS = 300L
     private const val ANIMATION_FRAME_DELAY_MS = 16L
@@ -63,6 +77,9 @@ class GameGenieOverlayService : Service(),
     @Volatile
     var isServiceRunning: Boolean = false
       private set
+
+    private val _overlayRunningState = MutableStateFlow(false)
+    val overlayRunningState: StateFlow<Boolean> = _overlayRunningState.asStateFlow()
     
     @Volatile
     var hasScreenshotPermission: Boolean = false
@@ -100,12 +117,15 @@ class GameGenieOverlayService : Service(),
 
   private var pendingMediaProjectionResultCode: Int = 0
   private var pendingMediaProjectionData: Intent? = null
+  private var targetPackage by mutableStateOf<String?>(null)
+  private var processLifecycleObserver: LifecycleEventObserver? = null
 
   override fun onBind(intent: Intent?): IBinder? = null
 
   override fun onCreate() {
     super.onCreate()
     isServiceRunning = true
+    _overlayRunningState.value = true
     startAsForegroundService()
 
     try {
@@ -169,11 +189,30 @@ class GameGenieOverlayService : Service(),
       var fabX by mutableIntStateOf(params.x)
       var fabY by mutableIntStateOf(params.y)
       var showMenu by mutableStateOf(false)
+      var isAptoideGamesInForeground by mutableStateOf(
+        ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)
+      )
 
       onOrientationChanged = { newX, newY ->
         fabX = newX
         fabY = newY
       }
+
+      processLifecycleObserver?.let { ProcessLifecycleOwner.get().lifecycle.removeObserver(it) }
+      processLifecycleObserver = LifecycleEventObserver { _, event ->
+        when (event) {
+          Lifecycle.Event.ON_START,
+          Lifecycle.Event.ON_RESUME -> {
+            isAptoideGamesInForeground = true
+          }
+          Lifecycle.Event.ON_PAUSE,
+          Lifecycle.Event.ON_STOP -> {
+            isAptoideGamesInForeground = false
+          }
+          else -> Unit
+        }
+      }
+      ProcessLifecycleOwner.get().lifecycle.addObserver(processLifecycleObserver!!)
 
       val onMenuToggle: () -> Unit = {
         val newMenuState = !showMenu
@@ -183,7 +222,13 @@ class GameGenieOverlayService : Service(),
           val layoutParams = overlayView.layoutParams as WindowManager.LayoutParams
           val actualX = layoutParams.x
           val actualY = layoutParams.y
-          showMenuWindow(actualX, actualY, actualX < windowManager.screenWidth / 2, analytics)
+          showMenuWindow(
+            actualX,
+            actualY,
+            actualX < windowManager.screenWidth / 2,
+            analytics,
+            showOnlyRemove = isAptoideGamesInForeground
+          )
         } else {
           showMenu = false
           hideMenuWindow()
@@ -193,10 +238,13 @@ class GameGenieOverlayService : Service(),
       setContent {
         val fabSize = OverlayWindowManager.FAB_SIZE_DP.dp
         val fabSizePx = with(LocalDensity.current) { fabSize.toPx().toInt() }
+        val targetAppIcon = rememberTargetAppIcon(targetPackage)
 
         AptoideTheme {
           GameGenieOverlay(
             showMenu = showMenu,
+            isAptoideGamesInForeground = isAptoideGamesInForeground,
+            targetAppIcon = targetAppIcon,
             onMenuToggle = onMenuToggle,
             onDrag = { dx, dy ->
               fabX = (fabX + dx)
@@ -205,11 +253,11 @@ class GameGenieOverlayService : Service(),
                   windowManager.screenWidth - fabSizePx - windowManager.getEdgePaddingPx()
                 )
 
-              val maxYForMenu = windowManager.screenHeight - fabSizePx -
-                windowManager.getMenuSpacingPx() - windowManager.getMenuHeightPx()
-
               fabY = (fabY + dy)
-                .coerceIn(windowManager.getEdgePaddingPx(), maxYForMenu)
+                .coerceIn(
+                  windowManager.getEdgePaddingPx(),
+                  windowManager.screenHeight - fabSizePx - windowManager.getEdgePaddingPx()
+                )
 
               val layoutParams = overlayView.layoutParams as WindowManager.LayoutParams
               layoutParams.x = fabX
@@ -235,7 +283,11 @@ class GameGenieOverlayService : Service(),
               }
             },
             onScreenshotRequest = {
-              takeScreenshot()
+              if (isAptoideGamesInForeground()) {
+                returnToTargetApp()
+              } else {
+                takeScreenshot()
+              }
             },
             onMenuClosed = {
               hideMenuWindow()
@@ -285,6 +337,10 @@ class GameGenieOverlayService : Service(),
   ): Int {
     super.onStartCommand(intent, flags, startId)
 
+    intent?.getStringExtra(EXTRA_TARGET_PACKAGE)?.let { packageName ->
+      targetPackage = packageName
+    }
+
     val newResultCode = intent?.getIntExtra(EXTRA_MEDIA_PROJECTION_RESULT_CODE, 0) ?: 0
     val newData: Intent? =
       if (Build.VERSION.SDK_INT >= 33) {
@@ -311,14 +367,15 @@ class GameGenieOverlayService : Service(),
       }
     }
 
-    return START_STICKY
+    return START_NOT_STICKY
   }
 
   private fun showMenuWindow(
     fabX: Int,
     fabY: Int,
     isFabOnLeftSide: Boolean,
-    analytics: com.aptoide.android.aptoidegames.gamegenie.analytics.GameGenieAnalytics,
+    analytics: GameGenieAnalytics,
+    showOnlyRemove: Boolean,
   ) {
     hideMenuWindow()
 
@@ -330,11 +387,6 @@ class GameGenieOverlayService : Service(),
       setContent {
         AptoideTheme {
           GameGenieMenu(
-            onAskAnything = {
-              analytics.sendGameGenieOverlayAskAnything()
-              hideMenuWindow()
-              returnToAptoideGames()
-            },
             onScreenshot = {
               analytics.sendGameGenieOverlayScreenshot()
               hideMenuWindow()
@@ -344,7 +396,8 @@ class GameGenieOverlayService : Service(),
               analytics.sendGameGenieOverlayRemove()
               hideMenuWindow()
               stopService(Intent(this@GameGenieOverlayService, GameGenieOverlayService::class.java))
-            }
+            },
+            showOnlyRemove = showOnlyRemove
           )
         }
       }
@@ -352,17 +405,30 @@ class GameGenieOverlayService : Service(),
 
     val fabSizePx = windowManager.getFabSizePx()
     val spacingPx = windowManager.getMenuSpacingPx()
+    val menuHeightPx = if (showOnlyRemove) {
+      windowManager.getRemoveMenuHeightPx()
+    } else {
+      windowManager.getMenuHeightPx()
+    }
+    val edgePaddingPx = windowManager.getEdgePaddingPx()
 
     val menuX = if (isFabOnLeftSide) {
       fabX
     } else {
       fabX - windowManager.getMenuLeftExtensionPx()
     }
-    val menuY = fabY + fabSizePx + spacingPx
+    val preferredBelowY = fabY + fabSizePx + spacingPx
+    val preferredAboveY = fabY - spacingPx - menuHeightPx
+    val hasSpaceBelow = preferredBelowY + menuHeightPx <= windowManager.screenHeight - edgePaddingPx
+    val rawMenuY = if (hasSpaceBelow) preferredBelowY else preferredAboveY
+    val menuY = rawMenuY.coerceIn(
+      edgePaddingPx,
+      windowManager.screenHeight - menuHeightPx - edgePaddingPx
+    )
 
     val menuParams = WindowManager.LayoutParams(
       windowManager.getMenuWidthPx(),
-      windowManager.getMenuHeightPx(),
+      menuHeightPx,
       WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
       WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
         WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
@@ -407,6 +473,18 @@ class GameGenieOverlayService : Service(),
     val intent = packageManager.getLaunchIntentForPackage(packageName)
     intent?.apply {
       addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+      if (!isAptoideGamesInForeground()) {
+        targetPackage?.let { putExtra(EXTRA_COMPANION_PACKAGE, it) }
+      }
+      startActivity(this)
+    }
+  }
+
+  private fun returnToTargetApp() {
+    val target = targetPackage ?: return
+    val intent = packageManager.getLaunchIntentForPackage(target)
+    intent?.apply {
+      addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
       startActivity(this)
     }
   }
@@ -416,6 +494,9 @@ class GameGenieOverlayService : Service(),
     val intent = packageManager.getLaunchIntentForPackage(packageName)
     intent?.apply {
       addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+      if (!isAptoideGamesInForeground()) {
+        targetPackage?.let { putExtra(EXTRA_COMPANION_PACKAGE, it) }
+      }
       putExtra(EXTRA_REQUEST_MEDIA_PROJECTION, true)
       startActivity(this)
     }
@@ -575,10 +656,46 @@ class GameGenieOverlayService : Service(),
     }
   }
 
+  private fun isAptoideGamesInForeground(): Boolean {
+    val state = ProcessLifecycleOwner.get().lifecycle.currentState
+    return state.isAtLeast(Lifecycle.State.STARTED)
+  }
+
+  @Composable
+  private fun rememberTargetAppIcon(packageName: String?): ImageBitmap? {
+    val context = LocalContext.current
+    var icon by remember(packageName) { mutableStateOf<ImageBitmap?>(null) }
+
+    LaunchedEffect(packageName) {
+      icon = if (packageName.isNullOrBlank()) {
+        null
+      } else {
+        withContext(Dispatchers.IO) {
+          runCatching {
+            context.packageManager.getApplicationIcon(packageName)
+              .toBitmap()
+              .asImageBitmap()
+          }.getOrNull()
+        }
+      }
+    }
+
+    return icon
+  }
+
+  override fun onTaskRemoved(rootIntent: Intent?) {
+    super.onTaskRemoved(rootIntent)
+    stopSelf()
+  }
+
   override fun onDestroy() {
     super.onDestroy()
     isServiceRunning = false
     hasScreenshotPermission = false
+    _overlayRunningState.value = false
+
+    processLifecycleObserver?.let { ProcessLifecycleOwner.get().lifecycle.removeObserver(it) }
+    processLifecycleObserver = null
 
     try {
       displayMonitor.stop()

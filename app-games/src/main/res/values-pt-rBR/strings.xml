@@ -297,8 +297,8 @@
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
   <string name="genai_me_title">Eu</string>
   <string name="genai_introduction_body">Olá! Sou seu assistente de IA para tudo relacionado à descoberta de apps e jogos. Experimente com algo como:</string>
-  <string name="genai_input_message_field">Pergunte qualquer coisa</string>
-  <string name="genai_input_message_field_with_screenshot">Pergunte sobre o que estou vendo agora</string>
+  <string name="genai_input_message_field">Pergunte qualquer coisa...</string>
+  <string name="genai_input_message_field_with_screenshot">Pergunte sobre esta tela...</string>
   <string name="genai_powered_by_ai_title">Com tecnologia de IA</string>
   <string name="genai_example_1_body">Estou procurando jogos de estratégia.</string>
   <string name="genai_example_2_body">Por favor, indique-me os melhores jogos multiplayer.</string>
@@ -437,6 +437,4 @@
   <string name="gamegenie_companion_game_choice_title">Seus jogos instalados</string>
   <string name="gamegenie_companion_master_fav_games">Domine seu jogo favorito</string>
   <string name="gamegenie_companion_tap_fav_game">Ou toque no seu jogo favorito - você vai dominá-lo.</string>
-  <string name="genai_input_message_field">Pergunte qualquer coisa...</string>
-  <string name="genai_input_message_field_with_screenshot">Pergunte sobre esta tela...</string>
 </resources>

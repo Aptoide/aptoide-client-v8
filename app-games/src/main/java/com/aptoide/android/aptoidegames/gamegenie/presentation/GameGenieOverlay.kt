@@ -23,11 +23,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.aptoide.android.aptoidegames.R
@@ -39,6 +41,8 @@ import kotlin.math.abs
 @Composable
 fun GameGenieOverlay(
   showMenu: Boolean,
+  isAptoideGamesInForeground: Boolean,
+  targetAppIcon: ImageBitmap?,
   onMenuToggle: () -> Unit,
   onDrag: (dx: Int, dy: Int) -> Unit,
   onDragEnd: () -> Unit,
@@ -53,6 +57,8 @@ fun GameGenieOverlay(
         .size(56.dp)
     ) {
       GameGenieIconFab(
+        isAptoideGamesInForeground = isAptoideGamesInForeground,
+        targetAppIcon = targetAppIcon,
         modifier = Modifier
           .pointerInput(Unit) {
             var totalDragDistance = 0f
@@ -96,42 +102,29 @@ fun GameGenieOverlay(
 
 @Composable
 fun GameGenieMenu(
-  onAskAnything: () -> Unit,
   onScreenshot: () -> Unit,
   onCloseOverlay: () -> Unit,
+  showOnlyRemove: Boolean,
 ) {
   Column(
     horizontalAlignment = Alignment.End
   ) {
-    Surface(
-      shape = RectangleShape,
-      color = Palette.Black,
-      modifier = Modifier
-    ) {
-      GameGenieMenuItem(
-        iconId = R.drawable.ask_anything,
-        text = stringResource(R.string.gamegenie_overlay_ask_anything),
-        textColor = Palette.Primary,
-        onClick = onAskAnything,
+    if (!showOnlyRemove) {
+      Surface(
+        shape = RectangleShape,
+        color = Palette.Black,
         modifier = Modifier
-          .width(152.dp)
-          .heightIn(40.dp)
-      )
-    }
-    Surface(
-      shape = RectangleShape,
-      color = Palette.Black,
-      modifier = Modifier
-    ) {
-      GameGenieMenuItem(
-        iconId = R.drawable.ask_what_im_seeing,
-        text = stringResource(R.string.gamegenie_overlay_ask_screenshot),
-        textColor = Palette.Primary,
-        onClick = onScreenshot,
-        modifier = Modifier
-          .width(240.dp)
-          .heightIn(48.dp)
-      )
+      ) {
+        GameGenieMenuItem(
+          iconId = R.drawable.ask_what_im_seeing,
+          text = stringResource(R.string.gamegenie_overlay_ask_screenshot),
+          textColor = Palette.Primary,
+          onClick = onScreenshot,
+          modifier = Modifier
+            .width(240.dp)
+            .heightIn(48.dp)
+        )
+      }
     }
     Surface(
       shape = RectangleShape,
@@ -186,6 +179,8 @@ private fun GameGenieMenuItem(
 @Composable
 fun GameGenieIconFab(
   modifier: Modifier = Modifier,
+  isAptoideGamesInForeground: Boolean,
+  targetAppIcon: ImageBitmap? = null,
   onClick: () -> Unit = {},
   onLongClick: () -> Unit = {},
 ) {
@@ -193,19 +188,69 @@ fun GameGenieIconFab(
     modifier = modifier.size(56.dp),
     contentAlignment = Alignment.Center
   ) {
-    Image(
-      painter = painterResource(R.drawable.app_icon),
-      contentDescription = "Aptoide Games Overlay Icon",
-      modifier = Modifier
-        .size(40.dp)
-        .graphicsLayer {
-          shadowElevation = 4.dp.toPx()
-          shape = CircleShape
-        }
-        .combinedClickable(
-          onClick = onClick,
-          onLongClick = onLongClick
+    val iconSize = if (isAptoideGamesInForeground) 48.dp else 40.dp
+    val iconModifier = Modifier
+      .size(iconSize)
+      .graphicsLayer {
+        shadowElevation = 4.dp.toPx()
+        shape = CircleShape
+        val shadowOffset = if (isAptoideGamesInForeground) - 4.dp.toPx() else 0f
+        translationY = shadowOffset
+        translationX = shadowOffset
+      }
+      .combinedClickable(
+        onClick = onClick,
+        onLongClick = onLongClick
+      )
+
+
+    if (isAptoideGamesInForeground) {
+      Box(
+        modifier = iconModifier,
+        contentAlignment = Alignment.Center
+      ) {
+        Image(
+          painter = painterResource(
+            R.drawable.aptoide_games_fab_foreground
+          ),
+          contentDescription = "Aptoide Games Overlay Icon",
+          modifier = Modifier.fillMaxSize()
         )
-    )
+        if (targetAppIcon != null) {
+          Image(
+            bitmap = targetAppIcon,
+            contentDescription = "Target App Icon",
+            modifier = Modifier
+              .size(20.dp)
+              .align(Alignment.BottomEnd)
+          )
+        }
+      }
+    } else {
+      Image(
+        painter = painterResource(
+          R.drawable.app_icon
+        ),
+        contentDescription = "Aptoide Games Overlay Icon",
+        modifier = iconModifier
+      )
+    }
   }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun GameGenieIconFabForegroundPreview() {
+  GameGenieIconFab(
+    isAptoideGamesInForeground = true,
+    targetAppIcon = ImageBitmap(20, 20)
+  )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun GameGenieIconFabBackgroundPreview() {
+  GameGenieIconFab(
+    isAptoideGamesInForeground = false
+  )
 }

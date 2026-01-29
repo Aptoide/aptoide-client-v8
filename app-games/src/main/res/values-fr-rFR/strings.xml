@@ -297,8 +297,8 @@
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
   <string name="genai_me_title">Moi</string>
   <string name="genai_introduction_body">Salut! Je suis votre assistant IA pour tout ce qui concerne la découverte d\'applications et de jeux. Essayez avec quelque chose comme :</string>
-  <string name="genai_input_message_field">Demandez n\'importe quoi</string>
-  <string name="genai_input_message_field_with_screenshot">Demandez-moi ce que je vois en ce moment</string>
+  <string name="genai_input_message_field">Demandez n\'importe quoi...</string>
+  <string name="genai_input_message_field_with_screenshot">Demandez des informations sur cet écran...</string>
   <string name="genai_powered_by_ai_title">Opéré par IA</string>
   <string name="genai_example_1_body">Je suis à la recherche de jeux de stratégie.</string>
   <string name="genai_example_2_body">Recommande-moi les meilleurs jeux multijoueurs.</string>
@@ -437,6 +437,4 @@
   <string name="gamegenie_companion_game_choice_title">Vos jeux installés</string>
   <string name="gamegenie_companion_master_fav_games">Maîtrisez votre jeu préféré</string>
   <string name="gamegenie_companion_tap_fav_game">Ou appuyez sur votre jeu préféré : vous le maîtriserez.</string>
-  <string name="genai_input_message_field">Demandez n\'importe quoi...</string>
-  <string name="genai_input_message_field_with_screenshot">Demandez des informations sur cet écran...</string>
 </resources>
