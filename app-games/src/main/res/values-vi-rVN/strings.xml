@@ -286,8 +286,8 @@
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
   <string name="genai_me_title">Tôi</string>
   <string name="genai_introduction_body">Xin chào! Tôi là trợ lý AI của bạn về mọi thứ liên quan đến trải nghiệm khám phá ứng dụng và trò chơi. Hãy thử với một cái gì đó như:</string>
-  <string name="genai_input_message_field">Hỏi bất cứ điều gì</string>
-  <string name="genai_input_message_field_with_screenshot">Hỏi về những gì tôi đang nhìn thấy bây giờ.</string>
+  <string name="genai_input_message_field">Hỏi bất cứ điều gì...</string>
+  <string name="genai_input_message_field_with_screenshot">Hỏi về màn hình này...</string>
   <string name="genai_powered_by_ai_title">Được cung cấp bởi AI</string>
   <string name="genai_example_1_body">Tôi đang tìm các trò chơi chiến thuật.</string>
   <string name="genai_example_2_body">Vui lòng giới thiệu cho tôi các trò chơi sinh tồn hay nhất.</string>
@@ -426,6 +426,4 @@
   <string name="gamegenie_companion_game_choice_title">Các trò chơi đã cài đặt của bạn</string>
   <string name="gamegenie_companion_master_fav_games">Nắm vững trò chơi yêu thích của bạn</string>
   <string name="gamegenie_companion_tap_fav_game">Hoặc chạm vào trò chơi yêu thích của bạn - bạn sẽ thành thạo nó.</string>
-  <string name="genai_input_message_field">Hỏi bất cứ điều gì...</string>
-  <string name="genai_input_message_field_with_screenshot">Hỏi về màn hình này...</string>
 </resources>

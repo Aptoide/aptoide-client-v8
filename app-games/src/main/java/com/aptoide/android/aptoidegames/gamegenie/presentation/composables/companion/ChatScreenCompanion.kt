@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.media.projection.MediaProjectionManager
+import android.os.Build
 import android.provider.Settings
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -27,6 +28,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -92,6 +94,7 @@ fun launchOverlayAndGame(
 ) {
   analytics.sendGameGenieTryLaunchOverlay(selectedGame.packageName)
   val overlayIntent = Intent(context, GameGenieOverlayService::class.java).apply {
+    putExtra(GameGenieOverlayService.EXTRA_TARGET_PACKAGE, selectedGame.packageName)
     if (mediaProjectionResultCode != 0 && mediaProjectionData != null) {
       putExtra(GameGenieOverlayService.EXTRA_MEDIA_PROJECTION_RESULT_CODE, mediaProjectionResultCode)
       putExtra(GameGenieOverlayService.EXTRA_MEDIA_PROJECTION_DATA, mediaProjectionData)
@@ -134,6 +137,9 @@ fun ChatScreenCompanion(
   var isGameSwitcherExpanded by remember { mutableStateOf(false) }
   var backButtonBottomPx by remember { mutableStateOf(0) }
   var messageContainerTopPx by remember { mutableStateOf(0) }
+  val isOverlayRunning by GameGenieOverlayService.overlayRunningState.collectAsState(
+    initial = GameGenieOverlayService.isServiceRunning
+  )
 
   val showTooltip = !hasClickedOverlayButton
 
@@ -143,6 +149,7 @@ fun ChatScreenCompanion(
       screenshotPath = path
     }
   }
+
 
   var shouldRequestMediaProjection by remember { mutableStateOf(false) }
 
@@ -176,7 +183,7 @@ fun ChatScreenCompanion(
   @SuppressLint("UnspecifiedRegisterReceiverFlag")
   DisposableEffect(Unit) {
     val filter = IntentFilter(ScreenshotBroadcastReceiver.ACTION_SCREENSHOT_CAPTURED)
-    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
       context.registerReceiver(
         broadcastReceiver,
         filter,
@@ -239,6 +246,7 @@ fun ChatScreenCompanion(
       ) { result ->
         if (result.resultCode == Activity.RESULT_OK && result.data != null) {
           val overlayIntent = Intent(context, GameGenieOverlayService::class.java).apply {
+            putExtra(GameGenieOverlayService.EXTRA_TARGET_PACKAGE, selectedGame.packageName)
             putExtra(GameGenieOverlayService.EXTRA_MEDIA_PROJECTION_RESULT_CODE, result.resultCode)
             putExtra(GameGenieOverlayService.EXTRA_MEDIA_PROJECTION_DATA, result.data)
           }
@@ -271,6 +279,10 @@ fun ChatScreenCompanion(
         analytics.sendGameGenieTryLaunchOverlay(packageName)
 
         if (GameGenieOverlayService.isServiceRunning && GameGenieOverlayService.hasScreenshotPermission) {
+          val updateTargetIntent = Intent(context, GameGenieOverlayService::class.java).apply {
+            putExtra(GameGenieOverlayService.EXTRA_TARGET_PACKAGE, packageName)
+          }
+          context.startService(updateTargetIntent)
           val launchIntent = context.packageManager.getLaunchIntentForPackage(packageName)
           if (launchIntent != null) {
             targetAppLauncher.launch(launchIntent)
@@ -397,10 +409,12 @@ fun ChatScreenCompanion(
           modifier = Modifier.weight(1f)
         )
 
-        OverlayLaunchButton(
-          onClick = { onLaunchOverlay(selectedGame.packageName) },
-          showTooltip = showTooltip
-        )
+        if (!isOverlayRunning) {
+          OverlayLaunchButton(
+            onClick = { onLaunchOverlay(selectedGame.packageName) },
+            showTooltip = showTooltip
+          )
+        }
       }
     }
   }

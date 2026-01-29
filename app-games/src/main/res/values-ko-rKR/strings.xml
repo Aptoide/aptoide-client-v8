@@ -286,8 +286,8 @@
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
   <string name="genai_me_title">나</string>
   <string name="genai_introduction_body">안녕하세요! 저는 앱과 게임 검색과 관련된 모든 것에 대한 AI 비서입니다. 이런 것을 사용해 보세요:</string>
-  <string name="genai_input_message_field">뭐든지 물어보세요</string>
-  <string name="genai_input_message_field_with_screenshot">지금 내가 보고 있는 것에 대해 물어보세요</string>
+  <string name="genai_input_message_field">뭐든지 물어보세요...</string>
+  <string name="genai_input_message_field_with_screenshot">이 화면에 대해 문의하세요...</string>
   <string name="genai_powered_by_ai_title">AI 기반</string>
   <string name="genai_example_1_body">전략 게임을 찾고 있습니다.</string>
   <string name="genai_example_2_body">최고의 멀티플레이어 게임을 추천해 주세요.</string>
@@ -426,6 +426,4 @@
   <string name="gamegenie_companion_game_choice_title">설치된 게임들</string>
   <string name="gamegenie_companion_master_fav_games">좋아하는 게임을 마스터하세요</string>
   <string name="gamegenie_companion_tap_fav_game">좋아하는 게임을 탭해봐 - 금방 마스터할 수 있을 거야.</string>
-  <string name="genai_input_message_field">뭐든지 물어보세요...</string>
-  <string name="genai_input_message_field_with_screenshot">이 화면에 대해 문의하세요...</string>
 </resources>

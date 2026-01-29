@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.LaunchedEffect
@@ -41,8 +42,16 @@ import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.TextI
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.companion.ChatbotViewCompanion
 import com.aptoide.android.aptoidegames.home.LoadingView
 import com.aptoide.android.aptoidegames.mmp.WithUTM
+import android.net.Uri
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 
 const val genieRoute = "chatbot"
+private const val genieCompanionPackageArg = "companionPackage"
+private const val genieRouteWithCompanion = "$genieRoute?$genieCompanionPackageArg={$genieCompanionPackageArg}"
+
+fun buildGameGenieRoute(companionPackage: String? = null): String =
+  companionPackage?.let { "$genieRoute?$genieCompanionPackageArg=${Uri.encode(it)}" } ?: genieRoute
 
 private enum class ChatMode {
   General,
@@ -52,17 +61,31 @@ private enum class ChatMode {
 fun gameGenieScreen(
   showBottomSheet: ((BottomSheetContent?) -> Unit)? = null,
 ) = ScreenData.withAnalytics(
-  route = genieRoute,
+  route = genieRouteWithCompanion,
   screenAnalyticsName = "gamegenie",
-  arguments = emptyList()
-) { _, navigate, _ ->
+  arguments = listOf(
+    navArgument(genieCompanionPackageArg) {
+      type = NavType.StringType
+      nullable = true
+      defaultValue = null
+    }
+  )
+) { arguments, navigate, _ ->
 
   val viewModel = hiltViewModel<GameGenieViewModel>()
+  val installedGames by viewModel.installedGames.collectAsState()
+  val selectedGame by viewModel.selectedGame.collectAsState()
   val uiState by viewModel.uiState.collectAsState()
   val analytics = rememberGameGenieAnalytics()
   val firstLoad by viewModel.firstLoad.collectAsState(true)
+  val companionPackage = remember(arguments) { arguments?.getString(genieCompanionPackageArg) }
 
-  var chatMode by remember { mutableStateOf(ChatMode.General) }
+  var chatMode by remember(companionPackage) {
+    mutableStateOf(
+      if (companionPackage.isNullOrBlank()) ChatMode.General else ChatMode.Companion
+    )
+  }
+  var deepLinkHandled by remember(companionPackage) { mutableStateOf(false) }
 
   WithUTM(
     medium = "gamegenie",
@@ -72,45 +95,69 @@ fun gameGenieScreen(
   ) { navigate ->
     ConversationsDrawer(
       mainScreen = {
+        LaunchedEffect(companionPackage, installedGames, selectedGame) {
+          val packageName = companionPackage
+          if (!deepLinkHandled && !packageName.isNullOrBlank()) {
+            if (selectedGame?.packageName == packageName) {
+              chatMode = ChatMode.Companion
+              deepLinkHandled = true
+              return@LaunchedEffect
+            }
+            val selected = installedGames.firstOrNull { game -> game.packageName == packageName }
+            if (selected != null) {
+              analytics.sendGameGenieCompanionClick(selected.packageName)
+              viewModel.updateLoadingState()
+              viewModel.setSelectedGame(selected)
+              viewModel.loadCompanionChat(selected.packageName)
+              chatMode = ChatMode.Companion
+              deepLinkHandled = true
+            } else if (installedGames.isNotEmpty()) {
+              chatMode = ChatMode.General
+              deepLinkHandled = true
+            }
+          }
+        }
         when (chatMode) {
-        ChatMode.General -> {
-          ChatbotView(
-            firstLoad = firstLoad,
-            uiState = uiState,
-            installedGames = viewModel.installedGames.collectAsState().value,
+          ChatMode.General -> {
+            ChatbotView(
+              firstLoad = firstLoad,
+              uiState = uiState,
+              installedGames = installedGames,
               navigateTo = navigate,
               navigateBack = null,
               onError = viewModel::reload,
-            onMessageSend = { message, image ->
-              viewModel.sendMessage(message, image)
-              analytics.sendGameGenieMessageSent()
-            },
-            setFirstLoadDone = viewModel::setFirstLoadDone,
-            onSuggestionSend = { message, index ->
-              viewModel.sendMessage(message, null)
-              analytics.sendGameGenieSuggestionClick(index)
-            },
-            onGameClick = { selectedGame ->
-              analytics.sendGameGenieCompanionClick(selectedGame.packageName)
-              viewModel.updateLoadingState()
-              viewModel.setSelectedGame(selectedGame)
-              viewModel.loadCompanionChat(selectedGame.packageName)
-              chatMode = ChatMode.Companion
+              onMessageSend = { message, image ->
+                viewModel.sendMessage(message, image)
+                analytics.sendGameGenieMessageSent()
+              },
+              setFirstLoadDone = viewModel::setFirstLoadDone,
+              onSuggestionSend = { message, index ->
+                viewModel.sendMessage(message, null)
+                analytics.sendGameGenieSuggestionClick(index)
+              },
+              onGameClick = { selectedGame ->
+                analytics.sendGameGenieCompanionClick(selectedGame.packageName)
+                viewModel.updateLoadingState()
+                viewModel.setSelectedGame(selectedGame)
+                viewModel.loadCompanionChat(selectedGame.packageName)
+                chatMode = ChatMode.Companion
               }
             )
           }
 
           ChatMode.Companion -> {
-            viewModel.selectedGame.collectAsState().value?.let {
+            val currentSelectedGame = selectedGame
+            if (currentSelectedGame == null) {
+              LoadingView()
+            } else {
               val companionSuggestions by viewModel.companionSuggestions.collectAsState()
-              val installedGames by viewModel.installedGames.collectAsState()
-            ChatbotViewCompanion(
-              selectedGame = it,
-              firstLoad = firstLoad,
-              navigateBack = {
-                viewModel.resetSelectedGame()
-                viewModel.emptyChat()
-                chatMode = ChatMode.General
+              ChatbotViewCompanion(
+                selectedGame = currentSelectedGame,
+                firstLoad = firstLoad,
+                navigateBack = {
+                  viewModel.resetSelectedGame()
+                  viewModel.emptyChat()
+                  chatMode = ChatMode.General
                 },
                 uiState = uiState,
                 navigateTo = navigate,
@@ -126,20 +173,19 @@ fun gameGenieScreen(
                   viewModel.sendMessage(message)
                   analytics.sendGameGenieSuggestionClick(index)
                 },
-              installedGames = installedGames,
-              onGameSwitch = { newGame ->
-                viewModel.setSelectedGame(newGame)
-                viewModel.loadCompanionChat(newGame.packageName)
-              },
+                installedGames = installedGames,
+                onGameSwitch = { newGame ->
+                  viewModel.setSelectedGame(newGame)
+                  viewModel.loadCompanionChat(newGame.packageName)
+                },
               onOverlayInteraction = viewModel::setClickedOverlayButton,
-              onClearScreenshot = viewModel::clearScreenshot
-            )
+              onClearScreenshot = viewModel::clearScreenshot)
+            }
           }
         }
-      }
-    },
-    loadConversationFn = { id ->
-      chatMode = ChatMode.General
+      },
+      loadConversationFn = { id ->
+        chatMode = ChatMode.General
         viewModel.resetSelectedGame()
         viewModel.loadConversation(id)
       },

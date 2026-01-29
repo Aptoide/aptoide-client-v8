@@ -286,8 +286,8 @@
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
   <string name="genai_me_title">我</string>
   <string name="genai_introduction_body">嗨！我是您的 AI 助手，幫您發現與應用程式和遊戲相關的一切。請嘗試使用類似功能：</string>
-  <string name="genai_input_message_field">詢問任何問題</string>
-  <string name="genai_input_message_field_with_screenshot">請問我現在看到的是什麼</string>
+  <string name="genai_input_message_field">儘管問吧...</string>
+  <string name="genai_input_message_field_with_screenshot">詢問關於此畫面...</string>
   <string name="genai_powered_by_ai_title">由 AI 驅動</string>
   <string name="genai_example_1_body">我在找策略遊戲。</string>
   <string name="genai_example_2_body">請推薦給我最好的多人遊戲。</string>
@@ -426,6 +426,4 @@
   <string name="gamegenie_companion_game_choice_title">您已安裝的遊戲</string>
   <string name="gamegenie_companion_master_fav_games">精通你最愛的遊戲</string>
   <string name="gamegenie_companion_tap_fav_game">或點擊你最愛的遊戲——你將精通它。</string>
-  <string name="genai_input_message_field">儘管問吧...</string>
-  <string name="genai_input_message_field_with_screenshot">詢問關於此畫面...</string>
 </resources>

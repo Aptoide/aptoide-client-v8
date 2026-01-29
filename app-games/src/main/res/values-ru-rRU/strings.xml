@@ -319,8 +319,8 @@
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
   <string name="genai_me_title">Я</string>
   <string name="genai_introduction_body">Привет! Я ваш помощник AI по всем вопросам, связанным с поиском приложений и игр. Попробуйте что-то вроде:</string>
-  <string name="genai_input_message_field">Спросите что угодно</string>
-  <string name="genai_input_message_field_with_screenshot">Спросите о том, что я вижу сейчас</string>
+  <string name="genai_input_message_field">Спросите что угодно...</string>
+  <string name="genai_input_message_field_with_screenshot">Спросите об этом экране...</string>
   <string name="genai_powered_by_ai_title">На основе AI</string>
   <string name="genai_example_1_body">Я ищу стратегические игры.</string>
   <string name="genai_example_2_body">Порекомендуй мне, пожалуйста, лучшие многопользовательские игры.</string>
@@ -459,6 +459,4 @@
   <string name="gamegenie_companion_game_choice_title">Ваши установленные игры</string>
   <string name="gamegenie_companion_master_fav_games">Освойте свою любимую игру</string>
   <string name="gamegenie_companion_tap_fav_game">Или нажмите на свою любимую игру — вы освоите ее.</string>
-  <string name="genai_input_message_field">Спросите что угодно...</string>
-  <string name="genai_input_message_field_with_screenshot">Спросите об этом экране...</string>
 </resources>
