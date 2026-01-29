@@ -46,7 +46,7 @@ fun rememberRTBAdClickHandler(
         }
       }
 
-      val intent = AdRedirectWebViewActivity.createIntent(context, rtbApp.adUrl, callback)
+      val intent = AdRedirectWebViewActivity.createIntent(context, rtbApp.adUrl, rtbApp.adTimeout, callback)
       context.startActivity(intent)
     }
   }

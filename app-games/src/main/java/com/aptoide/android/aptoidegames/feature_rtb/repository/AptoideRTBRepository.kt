@@ -85,6 +85,7 @@ private fun RTBResponse.toDomainModel(campaignRepository: CampaignRepository): R
       campaigns = this.tracking.aptoideMmp?.mapRTBMMPCampaigns(campaignRepository, this.campaignId)
     ),
     adUrl = this.tracking.adsNetwork?.click,
+    adTimeout = this.tracking.adsNetwork?.timeout,
     isAptoideInstall = this.installFrom?.contains("aptoide") ?: true
   )
 }
