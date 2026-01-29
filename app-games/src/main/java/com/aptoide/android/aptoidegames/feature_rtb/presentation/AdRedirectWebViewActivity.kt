@@ -28,17 +28,21 @@ class AdRedirectWebViewActivity : Activity() {
 
   companion object {
     const val EXTRA_TRACKING_URL = "extra_tracking_url"
+    const val EXTRA_TIMEOUT_SECONDS = "extra_timeout_seconds"
+    private const val DEFAULT_TIMEOUT_SECONDS = 10
 
     private var onResultCallback: ((AdRedirectResult) -> Unit)? = null
 
     fun createIntent(
       context: Context,
       trackingUrl: String,
+      timeoutSeconds: Int?,
       callback: (AdRedirectResult) -> Unit
     ): Intent {
       onResultCallback = callback
       return Intent(context, AdRedirectWebViewActivity::class.java).apply {
         putExtra(EXTRA_TRACKING_URL, trackingUrl)
+        putExtra(EXTRA_TIMEOUT_SECONDS, timeoutSeconds ?: DEFAULT_TIMEOUT_SECONDS)
       }
     }
 
@@ -81,15 +85,18 @@ class AdRedirectWebViewActivity : Activity() {
       return
     }
 
-    Timber.d("WebView: Starting redirect resolution for URL: $trackingUrl")
+    val timeoutSeconds = intent.getIntExtra(EXTRA_TIMEOUT_SECONDS, DEFAULT_TIMEOUT_SECONDS)
+    val timeoutMillis = timeoutSeconds * 1000L
+
+    Timber.d("WebView: Starting redirect resolution for URL: $trackingUrl with timeout: ${timeoutSeconds}s")
     wv.loadUrl(trackingUrl)
 
     wv.postDelayed({
       if (!hasFoundFinalUrl) {
-        Timber.d("WebView: Timeout reached, returning current URL")
+        Timber.d("WebView: Timeout reached (${timeoutSeconds}s), returning current URL")
         finishWithError("Timeout waiting for redirect")
       }
-    }, 10000)
+    }, timeoutMillis)
   }
 
   @SuppressLint("SetJavaScriptEnabled")
