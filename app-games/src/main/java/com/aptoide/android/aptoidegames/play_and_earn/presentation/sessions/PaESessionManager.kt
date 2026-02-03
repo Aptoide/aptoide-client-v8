@@ -63,6 +63,10 @@ class PaESessionManager @Inject constructor(
     return activeSessions.any { it.packageName == packageName }
   }
 
+  fun clearAllSessions() {
+    activeSessions.clear()
+  }
+
   suspend fun syncSessions(currentForegroundPackage: String?, syncIntervalSeconds: Int = 6) {
     val currentTimeSeconds = System.currentTimeMillis() / 1000L
     val sessionsToRemove = mutableListOf<PaESession>()

@@ -31,6 +31,7 @@ import com.aptoide.android.aptoidegames.notifications.analytics.FirebaseNotifica
 import com.aptoide.android.aptoidegames.notifications.analytics.NotificationsAnalytics
 import com.aptoide.android.aptoidegames.notifications.toFirebaseNotificationAnalyticsInfo
 import com.aptoide.android.aptoidegames.play_and_earn.PaEClientConfigManager
+import com.aptoide.android.aptoidegames.play_and_earn.PlayAndEarnManager
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.service.PaEForegroundService
 import com.aptoide.android.aptoidegames.promo_codes.PromoCode
 import com.aptoide.android.aptoidegames.promo_codes.PromoCodeRepository
@@ -79,6 +80,9 @@ class MainActivity : AppCompatActivity() {
   @Inject
   lateinit var paEClientConfigManager: PaEClientConfigManager
 
+  @Inject
+  lateinit var playAndEarnManager: PlayAndEarnManager
+  
   private var navController: NavHostController? = null
 
   private val coroutinesScope: CoroutineScope = CoroutineScope(Job() + Dispatchers.IO)
@@ -114,7 +118,15 @@ class MainActivity : AppCompatActivity() {
       }
     }
 
-    PaEForegroundService.start(this)
+    startPaEServiceIfEnabled()
+  }
+
+  private fun startPaEServiceIfEnabled() {
+    coroutinesScope.launch {
+      if (playAndEarnManager.shouldShowPlayAndEarn()) {
+        PaEForegroundService.start(this@MainActivity)
+      }
+    }
   }
 
   private fun handleStartup() {
