@@ -71,6 +71,20 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
 
     savedStateRegistryController.performAttach()
     savedStateRegistryController.performRestore(null)
+
+    observePlayAndEarnVisibility()
+  }
+
+  private fun observePlayAndEarnVisibility() {
+    lifecycleScope.launch {
+      playAndEarnManager.observePlayAndEarnVisibility().collect { isEnabled ->
+        if (!isEnabled) {
+          Timber.d("Feature flag disabled remotely, clearing sessions and stopping foreground service")
+          paESessionManager.clearAllSessions()
+          stopSelf()
+        }
+      }
+    }
   }
 
   override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
