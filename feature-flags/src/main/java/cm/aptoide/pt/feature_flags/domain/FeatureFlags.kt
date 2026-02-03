@@ -26,6 +26,11 @@ interface FeatureFlags {
   suspend fun getStrings(key: String): List<String> = emptyList()
 
   suspend fun <T> getObject(key: String, klass: Class<T>): T? = null
+
+  /**
+   * Updates a specific flag in the cache. Used for real-time updates from remote config.
+   */
+  suspend fun updateFlag(key: String, value: String) {}
 }
 
 @Singleton
@@ -84,5 +89,12 @@ class FeatureFlagsImpl @Inject constructor(
       val jsonStr = featureFlags.getJSONObject(key).toString()
       Gson().fromJson(jsonStr, klass)
     }.getOrNull()
+  }
+
+  override suspend fun updateFlag(key: String, value: String) {
+    mutex.withLock {
+      featureFlags.put(key, value)
+      settingsLocalRepository.saveFeatureFlags(featureFlags)
+    }
   }
 }
