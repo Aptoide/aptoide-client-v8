@@ -18,6 +18,7 @@ import cm.aptoide.pt.usage_stats.PackageUsageManager
 import cm.aptoide.pt.usage_stats.PackageUsageState
 import com.aptoide.android.aptoidegames.MainActivity
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.play_and_earn.PlayAndEarnManager
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.overlays.PaEOverlayViewManager
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.hasOverlayPermission
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.hasUsageStatsPermissionStatus
@@ -28,9 +29,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -47,6 +48,9 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
 
   @Inject
   lateinit var paECampaignsRepository: PaECampaignsRepository
+
+  @Inject
+  lateinit var playAndEarnManager: PlayAndEarnManager
 
   private val savedStateRegistryController = SavedStateRegistryController.Companion.create(this)
 
@@ -74,24 +78,44 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
 
     startForegroundWithNotification()
 
-    init()
-    if (!isMonitoringStarted) {
-      startUsageMonitoring()
-      isMonitoringStarted = true
+    if (!applicationContext.hasUsageStatsPermissionStatus() || !applicationContext.hasOverlayPermission()) {
+      stopSelf()
+      return START_NOT_STICKY
     }
+
+    init()
 
     return START_STICKY
   }
 
   private fun init() {
-    if (!applicationContext.hasUsageStatsPermissionStatus() || !applicationContext.hasOverlayPermission()) {
-      this.stopSelf()
-    } else {
-      runBlocking {
-        withTimeout(5000L) {
-          availablePaEPackages = paECampaignsRepository.getAvailablePackages().getOrNull()
-        }
+    // Start monitoring synchronously (same as original - needed for overlay lifecycle)
+    if (!isMonitoringStarted) {
+      startUsageMonitoring()
+      isMonitoringStarted = true
+    }
+
+    // Check flag and fetch packages asynchronously to avoid ANR
+    lifecycleScope.launch(Dispatchers.IO) {
+      checkFlagAndFetchPackages()
+    }
+  }
+
+  private suspend fun checkFlagAndFetchPackages() {
+    try {
+      // Check if feature is enabled remotely
+      if (!playAndEarnManager.shouldShowPlayAndEarn()) {
+        paESessionManager.clearAllSessions()
+        stopSelf()
+        return
       }
+
+      // Fetch available packages (non-blocking)
+      withTimeout(5000L) {
+        availablePaEPackages = paECampaignsRepository.getAvailablePackages().getOrNull()
+      }
+    } catch (e: Exception) {
+      Timber.e(e, "PaEForegroundService: checkFlagAndFetchPackages failed")
     }
   }
 
@@ -221,6 +245,7 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
     super.onDestroy()
     pollingJob?.cancel()
     completedMissionsJob?.cancel()
+    paESessionManager.clearAllSessions()
     isMonitoringStarted = false
   }
 
