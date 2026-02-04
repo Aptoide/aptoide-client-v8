@@ -11,6 +11,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.feature_flags.domain.FeatureFlags
+import com.aptoide.android.aptoidegames.play_and_earn.rememberShouldShowPlayAndEarn
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,17 +29,16 @@ fun rememberHomeTabRowState(): Pair<Boolean, List<HomeTab>> = runPreviewable(
   real = {
     val vm = hiltViewModel<HomeTabRowInjectionsProvider>()
     var showHomeTabRow by remember { mutableStateOf(false) }
-    var showPlayAndEarn by remember { mutableStateOf(false) }
+    val showPlayAndEarn = rememberShouldShowPlayAndEarn()
 
-    var tabs: List<HomeTab>? by remember { mutableStateOf(null) }
+    var unfilteredTabs: List<HomeTab>? by remember { mutableStateOf(null) }
 
     LaunchedEffect(Unit) {
       showHomeTabRow = vm.featureFlags.getFlag("show_home_tabs", false)
-      showPlayAndEarn = vm.featureFlags.getFlag("show_play_and_earn", false)
 
       try {
         val tabsJson = vm.featureFlags.getFlagAsString("home_tabs")
-        tabs = Gson().fromJson(tabsJson, FeatureFlagTabRow::class.java).tabs.mapNotNull {
+        unfilteredTabs = Gson().fromJson(tabsJson, FeatureFlagTabRow::class.java).tabs.mapNotNull {
           when (it.id) {
             "ForYou" -> HomeTab.ForYou
 
@@ -55,13 +55,15 @@ fun rememberHomeTabRowState(): Pair<Boolean, List<HomeTab>> = runPreviewable(
             "Rewards" -> HomeTab.Rewards
             else -> null
           }
-        }.filterNot { it is HomeTab.Rewards && !showPlayAndEarn }
+        }
       } catch (e: Throwable) {
         Timber.e(e)
       }
     }
 
-    showHomeTabRow to (tabs.takeIf { !it.isNullOrEmpty() } ?: defaultHomeTabs)
+    val filteredTabs = unfilteredTabs?.filterNot { it is HomeTab.Rewards && !showPlayAndEarn }
+
+    showHomeTabRow to (filteredTabs.takeIf { !it.isNullOrEmpty() } ?: defaultHomeTabs)
   }
 )
 
