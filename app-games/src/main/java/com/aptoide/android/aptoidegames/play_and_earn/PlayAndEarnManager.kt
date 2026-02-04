@@ -13,6 +13,8 @@ import androidx.lifecycle.ViewModel
 import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.feature_flags.domain.FeatureFlags
 import cm.aptoide.pt.wallet.datastore.WalletCoreDataSource
+import com.aptoide.android.aptoidegames.BuildConfig
+import com.aptoide.android.aptoidegames.device_info.DeviceSecurityChecker
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.hasOverlayPermission
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.hasUsageStatsPermissionStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,7 +27,8 @@ import kotlin.random.Random
 class PlayAndEarnManager @Inject constructor(
   @ApplicationContext private val context: Context,
   private val featureFlags: FeatureFlags,
-  private val walletCoreDataSource: WalletCoreDataSource
+  private val walletCoreDataSource: WalletCoreDataSource,
+  private val deviceSecurityChecker: DeviceSecurityChecker
 ) {
 
   companion object {
@@ -33,6 +36,9 @@ class PlayAndEarnManager @Inject constructor(
   }
 
   suspend fun shouldShowPlayAndEarn(): Boolean {
+    if (!BuildConfig.DEBUG && deviceSecurityChecker.isCompromisedDevice()) {
+      return false
+    }
     return featureFlags.getFlag(PAE_VISIBILITY_FLAG_KEY, false)
   }
 
