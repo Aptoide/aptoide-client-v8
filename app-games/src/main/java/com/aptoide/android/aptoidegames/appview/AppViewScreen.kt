@@ -1,6 +1,9 @@
 package com.aptoide.android.aptoidegames.appview
 
 import android.net.Uri.encode
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -29,6 +32,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -90,6 +94,7 @@ import com.aptoide.android.aptoidegames.analytics.presentation.withParameter
 import com.aptoide.android.aptoidegames.appview.AppViewHeaderConstants.FEATURE_GRAPHIC_HEIGHT
 import com.aptoide.android.aptoidegames.appview.AppViewHeaderConstants.VIDEO_HEIGHT
 import com.aptoide.android.aptoidegames.appview.permissions.buildAppPermissionsRoute
+import com.aptoide.android.aptoidegames.appview.postinstall.PostInstallRecommendsView
 import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusIconLeft
 import com.aptoide.android.aptoidegames.drawables.icons.getBookmarkStar
@@ -316,6 +321,7 @@ fun AppViewContent(
   val bonusBundle = rememberBonusBundle()
 
   var selectedTab by rememberSaveable(key = tabsList.size.toString()) { mutableIntStateOf(0) }
+  var showRecommends by rememberSaveable { mutableStateOf(false) }
   val appImageString = stringResource(id = R.string.app_view_image_description_body, app.name)
 
   val scrollState = rememberScrollState()
@@ -386,8 +392,19 @@ fun AppViewContent(
 
       InstallView(
         modifier = Modifier.padding(top = 24.dp, start = 16.dp, end = 16.dp),
-        app = app
+        app = app,
+        onInstallStarted = { showRecommends = true }
       )
+
+      AnimatedVisibility(
+        visible = showRecommends,
+        enter = expandVertically() + fadeIn(),
+      ) {
+        PostInstallRecommendsView(
+          navigate = navigate,
+          modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)
+        )
+      }
 
       AppInfoViewPager(
         selectedTab = selectedTab,
