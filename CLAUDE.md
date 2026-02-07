@@ -118,3 +118,45 @@ plugins {
 | `:app` | `cm.aptoide.pt.v10` | Aptoide Vanilla |
 | `:app-games` | `com.aptoide.android.aptoidegames` | Aptoide Games |
 | `:app-dt` | `com.dti.hub` | Digital Turbine GamesHub (variant of Aptoide Games) |
+
+## Common Patterns & Conventions
+
+### Commit Messages
+
+Format: `[AND-XXX] Short description` (Jira ticket prefix)
+
+### String Resources
+
+- **Client-side strings**: use `stringResource(R.string.xxx)` — never hardcode user-facing text
+- **Naming**: snake_case with feature prefix: `{feature}_{component}_{property}` (e.g., `appview_info_version_name_title`, `post_install_sponsored_label`)
+- **Server-provided strings**: use `"text".translateOrKeep(LocalContext.current)`
+
+### AppCoins Billing Indicator
+
+Any app card showing an icon must include the gift overlay for apps with `app.isAppCoins`:
+```kotlin
+Box(contentAlignment = Alignment.TopEnd) {
+  AppIconWProgress(app = app, ...)
+  if (app.isAppCoins) {
+    Image(
+      imageVector = getBonusIconRight(
+        iconColor = Palette.Primary,
+        outlineColor = Palette.Black,
+        backgroundColor = Palette.Secondary
+      ),
+      contentDescription = null,
+      modifier = Modifier.size(32.dp),
+    )
+  }
+}
+```
+Reference implementations: `AppItems.kt`, `AppGridView.kt`, `CarouselAppView.kt`
+
+### RTB / Analytics Wrappers
+
+- RTB placements must be wrapped in `OverrideAnalyticsBundleMeta` + `WithUTM`
+- `rememberRTBApps(tag, salt)` uses `salt` as a ViewModel key — the salt **must** be stable across recompositions (wrap in `remember {}` if computed)
+
+### Import Ordering
+
+Alphabetical within package groups (enforced by code style)
