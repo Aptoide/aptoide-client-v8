@@ -10,6 +10,7 @@ plugins {
   alias(libs.plugins.ksp)
   alias(libs.plugins.gms)
   alias(libs.plugins.crashlytics)
+  alias(libs.plugins.tests)
 }
 
 android {
@@ -320,6 +321,9 @@ dependencies {
 
   //animations
   implementation(libs.lottie.compose)
+
+  //Palette (dominant color extraction)
+  implementation(libs.palette)
 }
 
 fun BaseFlavor.buildConfigFieldFromGradleProperty(gradlePropertyName: String) {

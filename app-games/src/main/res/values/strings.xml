@@ -464,4 +464,9 @@
   <string name="gamegenie_overlay_notification_title">GameGenie Chat Overlay</string>
   <string name="gamegenie_overlay_notification_text">GameGenie is ready to assist you!</string>
 
+  <!-- Search Sponsored Banner -->
+  <string name="search_sponsored_install">Install</string>
+  <string name="search_sponsored_suggested">Suggested for You 🔥</string>
+  <string name="search_sponsored_label">Sponsored</string>
+
 </resources>

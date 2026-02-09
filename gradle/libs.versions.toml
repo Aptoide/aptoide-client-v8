@@ -45,6 +45,7 @@ adyenVersion = "4.13.3"
 indicative = "1.1.0"
 mintegral = "16.9.51"
 zoomable = "2.0.0"
+palette = "1.0.0"
 
 #test libraries
 junit = "4.13.2"
@@ -116,6 +117,7 @@ hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "hiltWork" }
 indicative-sdk = { module = "com.indicative.client.android:Indicative-Android", version.ref = "indicative" }
 zoomable = { module = "net.engawapg.lib:zoomable", version.ref = "zoomable" }
 mintegral = { module = "com.mbridge.msdk.oversea:mbridge_android_sdk", version.ref = "mintegral" }
+palette = { module = "androidx.palette:palette", version.ref = "palette" }
 
 
 #Test library dependencies
