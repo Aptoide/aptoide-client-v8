@@ -54,7 +54,8 @@ fun ApkfyRobloxInstallView(
   app: App,
   onInstallStarted: () -> Unit = {},
   onCancel: () -> Unit = {},
-  cancelable: Boolean = false
+  cancelable: Boolean = false,
+  shouldShowTrusted: Boolean = false,
 ) {
   val installViewState = installViewStates(
     app = app,
@@ -65,6 +66,7 @@ fun ApkfyRobloxInstallView(
   ApkfyMultiInstallViewContent(
     installViewState = installViewState,
     cancelable = cancelable,
+    shouldShowTrusted = shouldShowTrusted
   )
 }
 
@@ -72,12 +74,16 @@ fun ApkfyRobloxInstallView(
 private fun ApkfyMultiInstallViewContent(
   installViewState: InstallViewState,
   cancelable: Boolean = false,
+  shouldShowTrusted: Boolean = false
 ) {
   when (val state = installViewState.uiState) {
     is DownloadUiState.Install,
     is DownloadUiState.Migrate,
     is DownloadUiState.MigrateAlias,
     is DownloadUiState.Outdated -> {
+      if (shouldShowTrusted) {
+        TrustedBadge()
+      }
     }
 
     is DownloadUiState.Waiting -> {
