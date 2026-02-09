@@ -1,68 +1,98 @@
-version: 2
-
-pull_request:
-  enabled: true
-  on_open: true
-  on_update: true
-  inline_comments: true
+version: 3
+reviews:
+  request_changes_workflow: true
+  high_level_summary: true
+  poem: true
   review_status: true
+  collapse_walkthrough: false
+  sequence_diagrams: false
+  changed_files_summary: true
+  auto_review:
+    enabled: true
+    drafts: false
+    base_branches:
+      - dev-v10
+      - dev
+  path_filters:
+    - "!**/build/**"
+    - "!**/generated/**"
+    - "!**/R.java"
+    - "!**/R.kt"
+    - "!**/*.png"
+    - "!**/*.webp"
+    - "!**/*.jpg"
+    - "!**/*.svg"
+    - "!**/*.json"
+    - "!**/test/**"
+    - "!**/androidTest/**"
+  path_instructions:
+    - path: "**/*.kt"
+      instructions: |
+        You are a Senior Android Engineer. Focus ONLY on issues that impact
+        correctness, maintainability, performance, or user experience.
+        Do NOT comment on: minor style preferences, naming nitpicks,
+        missing KDoc on private methods, or single-use variable extractions.
 
-rules:
-  max_review_comments: 30
-  allow_auto_fixes: true
+        CRITICAL (always flag):
+        - Memory leaks: context leaks, unremoved callbacks, uncancelled coroutines
+        - Threading bugs: runBlocking on Main, GlobalScope, missing Dispatchers.IO for disk/network
+        - Lifecycle issues: work surviving configuration changes incorrectly,
+          collecting flows in wrong lifecycle state, Fragment view references after onDestroyView
+        - Crash risks: uncaught exceptions in coroutines, missing null checks on platform types,
+          unsafe casts, IndexOutOfBoundsException risks
+        - Security: hardcoded secrets/API keys, insecure HTTP, exposed components,
+          logging sensitive user data, SQL injection in raw queries
+        - Data loss: missing SavedStateHandle usage where needed,
+          race conditions in shared mutable state
 
-languages:
-  kotlin:
-    enabled: true
-    dialect: android
-  java:
-    enabled: true
-  xml:
-    enabled: true # layouts, manifests
-  gradle:
-    enabled: true
+        IMPORTANT (flag when clear):
+        - Hardcoded user-facing strings (should use R.string resources)
+        - Manual ViewModel instantiation without ViewModelProvider/Hilt
+        - Missing error handling on network/IO operations
+        - Blocking the main thread with synchronous IO
+        - N+1 query patterns or unnecessary recompositions
+        - LiveData observed without a lifecycle owner
+        - Mutable state exposed from ViewModel (should expose immutable)
 
-checks:
-  architecture:
-    enabled: true
-  performance:
-    enabled: true
-  security:
-    enabled: true
-  concurrency:
-    enabled: true
-  null_safety:
-    enabled: true
-  threading:
-    enabled: true
-  lifecycles:
-    enabled: true
-  coroutines:
-    enabled: true
+        IGNORE:
+        - Code formatting (leave to detekt/ktlint)
+        - Import ordering
+        - Whether to use `it` vs named lambda parameter
+        - Single-expression function refactoring suggestions
+        - Adding explicit return types on private functions
+    - path: "**/*.java"
+      instructions: |
+        Review as legacy Android Java code. Focus on correctness and safety only.
+        Do NOT suggest Kotlin migration on every file — only mention it if the file
+        is being substantially rewritten in the PR.
 
-reviewer_persona:
-  role: "Senior Android Engineer"
-  tone: "concise"
-  preferences:
-    prefer_kotlin: true
-    patterns:
-      - MVVM
-      - Clean Architecture
-      - LiveData or StateFlow
-      - Jetpack libraries
-    avoid:
-      - GlobalScope
-      - runBlocking on Main
-      - context leakage
-      - manual ViewModel instantiation
-
-ignore_paths:
-  - "**/build/**"
-  - "**/generated/**"
-  - "**/R.java"
-  - "**/R.kt"
-  - "**/*.png"
-
-linters:
-  android_lint: true
-  detekt: true
+        Flag: null pointer risks, resource leaks, threading issues, context leaks,
+        hardcoded user-facing strings, missing error handling on IO operations.
+        Ignore style and formatting.
+    - path: "**/*.xml"
+      instructions: |
+        Focus on functional issues only.
+        Flag: hardcoded user-facing strings in android:text, android:hint,
+        android:contentDescription (must use @string/ resources).
+        Flag: missing contentDescription on interactive ImageViews (accessibility).
+        Flag: deprecated attributes or removed API usage.
+        Ignore: minor layout optimization suggestions, style preferences,
+        dp value choices, margin/padding nitpicks.
+    - path: "**/*.gradle*"
+      instructions: |
+        Flag ONLY: dependency vulnerabilities, duplicate dependencies,
+        deprecated configurations (compile vs implementation),
+        and minSdk/targetSdk issues.
+        Ignore: formatting, property ordering, minor version bumps.
+    - path: "**/AndroidManifest.xml"
+      instructions: |
+        Flag: exported components without intent-filters or permissions,
+        missing network security config, cleartext traffic enabled,
+        overly broad permissions, backup rules exposing sensitive data.
+    - path: "**/proguard-rules*.pro"
+      instructions: |
+        Flag: overly broad keep rules (-keep class ** { *; }),
+        missing rules for reflection-based libraries (Gson, Retrofit, etc.),
+        rules that would break minification effectiveness.
+chat:
+  auto_reply: true
