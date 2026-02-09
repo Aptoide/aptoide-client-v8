@@ -15,15 +15,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Checkbox
 import androidx.compose.material.CheckboxDefaults
+import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -32,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -40,18 +42,24 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
 import cm.aptoide.pt.feature_campaigns.UTMInfo
 import com.aptoide.android.aptoidegames.R
-import com.aptoide.android.aptoidegames.analytics.dto.AnalyticsUIContext
+import com.aptoide.android.aptoidegames.analytics.dto.InstallAction
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.OverrideAnalyticsAPKFY
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
+import com.aptoide.android.aptoidegames.design_system.AptoideGamesSwitch
 import com.aptoide.android.aptoidegames.design_system.PrimaryButton
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusIconRight
 import com.aptoide.android.aptoidegames.drawables.icons.getCrownIcon
 import com.aptoide.android.aptoidegames.drawables.icons.getFireIcon
+import com.aptoide.android.aptoidegames.drawables.icons.getTrustedIcon
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
+import com.aptoide.android.aptoidegames.installer.analytics.AnalyticsInstallPackageInfoMapper
+import com.aptoide.android.aptoidegames.installer.analytics.InstallAnalytics
 import com.aptoide.android.aptoidegames.installer.analytics.getNetworkType
+import com.aptoide.android.aptoidegames.installer.analytics.rememberInstallAnalytics
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
 import com.aptoide.android.aptoidegames.installer.presentation.ProgressText
+import com.aptoide.android.aptoidegames.mmp.LocalUTMInfo
 import com.aptoide.android.aptoidegames.mmp.UTMContext
 import com.aptoide.android.aptoidegames.mmp.WithUTM
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -90,7 +98,12 @@ fun RobloxApkfyMultiInstallScreen() = ScreenData.withAnalytics(
           apkfyAnalytics.sendApkfyScreenBackClicked()
           navigateBack()
         },
-        title = ""
+        title = apkfyState?.data?.app?.name?.let {
+          stringResource(
+            R.string.apkfy_multi_install_install_title,
+            it
+          )
+        } ?: ""
       )
       Column(
         modifier = Modifier
@@ -98,9 +111,15 @@ fun RobloxApkfyMultiInstallScreen() = ScreenData.withAnalytics(
           .height(IntrinsicSize.Max)
       ) {
         apkfyState?.data?.let { apkfyData ->
+          val autoOpenDefault =
+            (apkfyState as? ApkfyUiState.RobloxCompanionAppsVariant)?.autoOpenDefault ?: false
+          val utmMedium = apkfyData.utmMedium?.takeIf { it.isNotEmpty() }
+            ?: LocalUTMInfo.current.utmMedium
+          val autoOpenUTMMedium = "$utmMedium-${if (autoOpenDefault) "open-on" else "open-off"}"
+
           WithUTM(
             source = apkfyData.utmSource,
-            medium = apkfyData.utmMedium,
+            medium = autoOpenUTMMedium,
             campaign = apkfyData.utmCampaign,
             content = apkfyData.utmContent,
             term = apkfyData.utmTerm,
@@ -108,7 +127,8 @@ fun RobloxApkfyMultiInstallScreen() = ScreenData.withAnalytics(
           ) {
             RobloxApkfyMultiInstallView(
               apkfyApp = apkfyData.app,
-              companionAppsList = apkfyCompanionAppsList
+              companionAppsList = apkfyCompanionAppsList,
+              autoOpenDefault = autoOpenDefault
             )
           }
         } ?: GenericErrorView(navigateBack)
@@ -121,19 +141,29 @@ fun RobloxApkfyMultiInstallScreen() = ScreenData.withAnalytics(
 fun RobloxApkfyMultiInstallView(
   apkfyApp: App,
   companionAppsList: List<App>,
+  autoOpenDefault: Boolean = false,
 ) {
   val apkfyAnalytics = rememberApkfyAnalytics()
+  val installAnalytics = rememberInstallAnalytics()
   LaunchedEffect(Unit) {
-    apkfyAnalytics.sendRobloxExp81ApkfyShown()
+    apkfyAnalytics.sendRobloxExp82ApkfyShown()
     apkfyAnalytics.sendApkfyShown()
   }
   var hasSelectedApps by rememberSaveable { mutableStateOf(false) }
   val onSelectApps: () -> Unit = { hasSelectedApps = true }
+  var autoOpenEnabled by rememberSaveable { mutableStateOf(autoOpenDefault) }
+  var checkDiffCounter by rememberSaveable { mutableIntStateOf(0) }
+  var switchCounter by rememberSaveable { mutableIntStateOf(0) }
 
   val (selectedApps, onToggleApp, install) = rememberCompanionAppsSelection(
     apkfyApp = apkfyApp,
-    appList = companionAppsList
+    appList = companionAppsList,
   )
+
+  val onToggleAppWithCounter: (String) -> Unit = { packageName ->
+    checkDiffCounter += if (selectedApps.contains(packageName)) -1 else 1
+    onToggleApp(packageName)
+  }
 
   val scrollState = rememberScrollState()
   Box(modifier = Modifier.fillMaxSize()) {
@@ -143,42 +173,88 @@ fun RobloxApkfyMultiInstallView(
         .verticalScroll(scrollState)
         .height(IntrinsicSize.Max)
     ) {
-      RobloxAppCard(apkfyApp)
+      CompanionAppItem(
+        app = apkfyApp,
+        isSelected = selectedApps.contains(apkfyApp.packageName),
+        onToggleApp = onToggleAppWithCounter,
+        hasSelectedApps = hasSelectedApps,
+        shouldShowTrusted = true,
+        paddingBottom = 6.dp
+      )
+      Divider(
+        color = Palette.Grey,
+        thickness = 1.dp,
+        modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp)
+      )
       CompanionAppsSection(
         companionAppsList,
         selectedApps,
-        onToggleApp,
+        onToggleApp = onToggleAppWithCounter,
         hasSelectedApps,
       )
     }
 
     if (!hasSelectedApps) {
-      MultiInstallButton(
-        selectedApps.size,
-        install,
-        onSelectApps,
-        Modifier.align(Alignment.BottomCenter)
-      )
+      Column(
+        modifier = Modifier
+          .align(Alignment.BottomCenter)
+          .fillMaxWidth()
+      ) {
+        AutoOpenToggleRow(
+          enabled = autoOpenEnabled,
+          onToggle = {
+            autoOpenEnabled = it
+            switchCounter += 1
+          }
+        )
+        MultiInstallButton(
+          apkfyApp = apkfyApp,
+          numberOfSelectedApps = selectedApps.size,
+          install = install,
+          installAnalytics = installAnalytics,
+          onInstallClick = onSelectApps,
+          autoOpenDefault = autoOpenDefault,
+          autoOpenFinal = autoOpenEnabled,
+          checkDiffCounter = checkDiffCounter,
+          switchCounter = switchCounter,
+          modifier = Modifier
+        )
+      }
     }
   }
 }
 
 @Composable
 private fun MultiInstallButton(
+  apkfyApp: App,
   numberOfSelectedApps: Int,
-  install: (AnalyticsUIContext, UTMInfo, String) -> Unit,
+  install: (UTMInfo, Boolean) -> Unit,
+  installAnalytics: InstallAnalytics,
   onInstallClick: () -> Unit,
+  autoOpenDefault: Boolean,
+  autoOpenFinal: Boolean,
+  checkDiffCounter: Int,
+  switchCounter: Int,
   modifier: Modifier = Modifier
 ) {
   val context = LocalContext.current
   val analyticsUIContext = AnalyticsContext.current
   val utmContext = UTMContext.current
   val networkType = context.getNetworkType()
-  val totalAppsToInstall = numberOfSelectedApps + 1
+  val totalAppsToInstall = numberOfSelectedApps
   PrimaryButton(
     title = stringResource(R.string.apkfy_multi_install_install_button, totalAppsToInstall),
     onClick = {
-      install(analyticsUIContext, utmContext, networkType)
+      AnalyticsInstallPackageInfoMapper.currentAnalyticsUIContext =
+        analyticsUIContext.copy(installAction = InstallAction.INSTALL)
+      installAnalytics.sendApkfyRobloxExp82InstallClickEvent(
+        numberOfCheckPresses = checkDiffCounter,
+        autoOpenDefault = autoOpenDefault,
+        autoOpenFinal = autoOpenFinal,
+        switchCheckDiff = switchCounter
+      )
+      installAnalytics.sendClickEvent(apkfyApp, analyticsUIContext, networkType)
+      install(utmContext, autoOpenFinal)
       onInstallClick()
     },
     modifier = modifier
@@ -188,17 +264,31 @@ private fun MultiInstallButton(
 }
 
 @Composable
-fun RobloxAppCard(apkfyApp: App) {
-  Column {
-    Text(
-      text = stringResource(R.string.apkfy_multi_install_intro_1),
-      style = AGTypography.Title,
-      modifier = Modifier
-        .padding(horizontal = 24.dp)
-        .padding(bottom = 16.dp)
-        .fillMaxWidth(),
+private fun AutoOpenToggleRow(
+  enabled: Boolean,
+  onToggle: (Boolean) -> Unit
+) {
+  Row(
+    verticalAlignment = Alignment.CenterVertically,
+    modifier = Modifier
+      .padding(horizontal = 16.dp)
+      .height(56.dp)
+      .fillMaxWidth()
+      .background(Palette.GreyDark)
+      .padding(horizontal = 16.dp)
+  ) {
+    AptoideGamesSwitch(
+      checked = enabled,
+      onCheckedChanged = onToggle
     )
-    CompanionAppItem(app = apkfyApp, isSelectable = false)
+    Text(
+      text = stringResource(R.string.apkfy_multi_install_auto_open),
+      style = AGTypography.InputsS,
+      color = Palette.White,
+      modifier = Modifier
+        .weight(1f)
+        .padding(start = 12.dp)
+    )
   }
 }
 
@@ -212,7 +302,6 @@ fun CompanionAppsSection(
   Column(
     modifier = Modifier
       .fillMaxSize()
-      .background(Palette.GreyDark)
       .padding(bottom = 160.dp)
   ) {
     Row(
@@ -220,7 +309,7 @@ fun CompanionAppsSection(
       modifier = Modifier
         .fillMaxWidth()
         .padding(horizontal = 24.dp)
-        .padding(top = 24.dp, bottom = 16.dp)
+        .padding(bottom = 16.dp)
     ) {
       Image(
         imageVector = getFireIcon(color = Palette.White),
@@ -240,73 +329,56 @@ fun CompanionAppsSection(
     }
 
     companionAppsList.forEachIndexed { index, item ->
-      if (index == 0) {
-        TopPlayedCompanionItem(
-          app = item,
-          isSelected = selectedApps.contains(item.packageName),
-          onToggleApp = onToggleApp,
-          hasSelectedApps = hasSelectedApps,
-        )
-      } else {
-        CompanionAppItem(
-          app = item,
-          isSelected = selectedApps.contains(item.packageName),
-          onToggleApp = onToggleApp,
-          hasSelectedApps = hasSelectedApps,
-        )
-      }
-    }
-
-  }
-}
-
-@Composable fun TopPlayedCompanionItem(
-  app: App,
-  isSelected: Boolean,
-  onToggleApp: (String) -> Unit,
-  hasSelectedApps: Boolean
-) {
-  Column {
-    TopPlayedCompanionBanner()
-    Box(
-      modifier = Modifier
-        .padding(bottom = 16.dp)
-        .background(color = Palette.Secondary.copy(alpha = 0.2f))
-        .height(80.dp)
-        .fillMaxWidth(),
-      contentAlignment = Alignment.CenterStart
-    ) {
       CompanionAppItem(
-        app = app,
-        isSelected = isSelected,
+        app = item,
+        isSelected = selectedApps.contains(item.packageName),
         onToggleApp = onToggleApp,
         hasSelectedApps = hasSelectedApps,
-        paddingBottom = 0.dp
+        isTopPlayAppRecommendation = index == 0
       )
     }
   }
 }
 
-@Composable fun TopPlayedCompanionBanner() {
+@Composable
+fun TopPlayedCompanionBanner() {
   Row(
+    verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.spacedBy(4.dp),
     modifier = Modifier
-      .height(24.dp)
-      .wrapContentWidth()
-      .background(Palette.Secondary.copy(alpha = 0.4f))
-      .padding(horizontal = 16.dp),
-    verticalAlignment = Alignment.CenterVertically
+      .background(color = Palette.Secondary.copy(alpha = 0.4f))
+      .padding(horizontal = 8.dp, vertical = 4.dp)
   ) {
     Image(
       imageVector = getCrownIcon(color = Palette.Yellow),
       contentDescription = null,
-      modifier = Modifier
-        .padding(end = 4.dp)
-        .size(16.dp),
+      modifier = Modifier.size(12.dp)
     )
     Text(
-      text = stringResource(R.string.apkfy_multi_install_highlighted_game),
-      style = AGTypography.InputsXS,
+      text = stringResource(R.string.apkfy_multi_install_highlighted_game_short),
       color = Palette.Yellow,
+      style = AGTypography.InputsXXS.copy(fontWeight = Bold)
+    )
+  }
+}
+
+@Composable
+fun TrustedBadge() {
+  Row(
+    verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.spacedBy(2.dp),
+    modifier = Modifier
+      .padding(horizontal = 4.dp, vertical = 3.dp)
+  ) {
+    Image(
+      imageVector = getTrustedIcon(Palette.Trusted),
+      contentDescription = null,
+      modifier = Modifier.size(16.dp)
+    )
+    Text(
+      text = stringResource(R.string.trusted_badge),
+      color = Palette.Trusted,
+      style = AGTypography.InputsXS
     )
   }
 }
@@ -317,8 +389,9 @@ private fun CompanionAppItem(
   isSelected: Boolean = false,
   onToggleApp: (String) -> Unit = {},
   hasSelectedApps: Boolean = false,
-  isSelectable: Boolean = true,
-  paddingBottom: Dp = 24.dp
+  paddingBottom: Dp = 24.dp,
+  shouldShowTrusted: Boolean = false,
+  isTopPlayAppRecommendation: Boolean = false
 ) {
   val checked = remember { mutableStateOf(isSelected) }
 
@@ -330,7 +403,7 @@ private fun CompanionAppItem(
       .height(64.dp)
       .fillMaxWidth()
   ) {
-    if (isSelectable && !hasSelectedApps) {
+    if (!hasSelectedApps) {
       Checkbox(
         modifier = Modifier
           .padding(end = 16.dp)
@@ -347,7 +420,7 @@ private fun CompanionAppItem(
         )
       )
     } else {
-      Spacer(modifier = Modifier.padding(start = if (!isSelectable) 0.dp else 24.dp))
+      Spacer(modifier = Modifier.padding(start = 40.dp))
     }
     Box(
       contentAlignment = Alignment.TopEnd
@@ -372,7 +445,7 @@ private fun CompanionAppItem(
 
     Column(
       modifier = Modifier
-        .padding(start = 8.dp, end = 8.dp)
+        .padding(start = 8.dp)
         .weight(1f),
       verticalArrangement = Arrangement.Center
     ) {
@@ -384,12 +457,29 @@ private fun CompanionAppItem(
         overflow = TextOverflow.Ellipsis,
         style = AGTypography.DescriptionGames
       )
-      ProgressText(
-        modifier = Modifier.wrapContentHeight(unbounded = true, align = Alignment.Top),
-        app = app,
-        showVersionName = false
-      )
+      Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier.padding(top = 8.dp)
+      ) {
+        if (isTopPlayAppRecommendation) {
+          ProgressText(
+            modifier = Modifier
+              .wrapContentHeight(unbounded = true, align = Alignment.Top),
+            app = app,
+            showVersionName = false
+          )
+          TopPlayedCompanionBanner()
+        } else {
+          ProgressText(
+            modifier = Modifier
+              .wrapContentHeight(unbounded = true, align = Alignment.Top),
+            app = app,
+            showVersionName = false
+          )
+        }
+      }
     }
-    ApkfyRobloxInstallView(app)
+    ApkfyRobloxInstallView(app = app, shouldShowTrusted = shouldShowTrusted)
   }
 }

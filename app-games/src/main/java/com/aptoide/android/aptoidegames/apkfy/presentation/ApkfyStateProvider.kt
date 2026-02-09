@@ -17,6 +17,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import cm.aptoide.pt.download_view.presentation.InstalledAppOpener
 import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.feature_apkfy.presentation.ApkfyData
 import cm.aptoide.pt.feature_apkfy.presentation.rememberApkfyData
@@ -28,7 +29,7 @@ import cm.aptoide.pt.install_manager.InstallManager
 import com.aptoide.android.aptoidegames.apkfy.DownloadPermissionState
 import com.aptoide.android.aptoidegames.apkfy.DownloadPermissionStateProbe
 import com.aptoide.android.aptoidegames.apkfy.isRoblox
-import com.aptoide.android.aptoidegames.installer.analytics.InstallAnalytics
+
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
@@ -40,7 +41,7 @@ class InjectionsProvider @Inject constructor(
   val downloadPermissionStateProbe: DownloadPermissionStateProbe,
   val installManager: InstallManager,
   val installPackageInfoMapper: InstallPackageInfoMapper,
-  val installAnalytics: InstallAnalytics
+  val installedAppOpener: InstalledAppOpener
 ) : ViewModel()
 
 data class ApkfyFeatureFlags(
@@ -72,7 +73,16 @@ fun rememberApkfyState(): ApkfyUiState? = runPreviewable(
             if (data.app.isRoblox()) {
               when (flags.apkfyVariant) {
                 "baseline" -> ApkfyUiState.Baseline(data)
-                "roblox_multi_install" -> ApkfyUiState.RobloxCompanionAppsVariant(data)
+                "roblox_multi_install_open_off" -> ApkfyUiState.RobloxCompanionAppsVariant(
+                  data,
+                  false
+                )
+
+                "roblox_multi_install_open_on" -> ApkfyUiState.RobloxCompanionAppsVariant(
+                  data,
+                  true
+                )
+
                 else -> ApkfyUiState.Default(data)
               }
             } else {
@@ -87,7 +97,7 @@ fun rememberApkfyState(): ApkfyUiState? = runPreviewable(
       coroutineScope.launch {
         apkfyFeatureFlags = withTimeoutOrNull(5000) {
           val flag =
-            vm.featureFlags.getFlagAsString("exp81_apkfy_variant")
+            vm.featureFlags.getFlagAsString("exp82_apkfy_variant")
           ApkfyFeatureFlags(
             apkfyVariant = flag
           )
@@ -127,9 +137,12 @@ fun rememberDownloadPermissionState(app: App): DownloadPermissionState? = runPre
 
 @SuppressLint("ContextCastToActivity")
 @Composable
-fun rememberCompanionAppsSelection(apkfyApp: App, appList: List<App>): CompanionAppsState =
+fun rememberCompanionAppsSelection(
+  apkfyApp: App,
+  appList: List<App>,
+): CompanionAppsState =
   runPreviewable(
-    preview = { CompanionAppsState(setOf("cm.aptoide.pt"), {}, { _, _, _ -> }) },
+    preview = { CompanionAppsState(setOf("cm.aptoide.pt"), {}, { _, _ -> }) },
     real = {
       val injectionsProvider = hiltViewModel<InjectionsProvider>()
       val companionAppsSelectionViewModel: CompanionAppsSelectionViewModel = viewModel(
@@ -143,7 +156,7 @@ fun rememberCompanionAppsSelection(apkfyApp: App, appList: List<App>): Companion
               companionAppsList = appList,
               installManager = injectionsProvider.installManager,
               installPackageInfoMapper = injectionsProvider.installPackageInfoMapper,
-              installAnalytics = injectionsProvider.installAnalytics
+              installedAppOpener = injectionsProvider.installedAppOpener
             ) as T
           }
         }

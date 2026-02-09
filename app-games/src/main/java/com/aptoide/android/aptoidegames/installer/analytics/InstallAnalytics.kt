@@ -167,5 +167,10 @@ interface InstallAnalytics {
   ) {
   }
 
-  fun sendApkfyRobloxExp81InstallClickEvent(numberOfCheckPresses: Int) {}
+  fun sendApkfyRobloxExp82InstallClickEvent(
+    numberOfCheckPresses: Int,
+    autoOpenDefault: Boolean,
+    autoOpenFinal: Boolean,
+    switchCheckDiff: Int
+  ) {}
 }
