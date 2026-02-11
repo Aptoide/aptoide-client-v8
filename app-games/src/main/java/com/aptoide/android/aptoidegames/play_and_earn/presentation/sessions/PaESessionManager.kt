@@ -132,6 +132,9 @@ class PaESessionManager @Inject constructor(
         false  // Session is healthy, don't remove
       },
       onFailure = { exception ->
+        // Update session state even on failure to prevent immediate retries
+        // and ensure sequence numbers remain unique
+        updateSessionAfterSync(session)
         exception is SessionExpiredException  // Session is expired and should be removed. Return true
       }
     )
@@ -139,12 +142,14 @@ class PaESessionManager @Inject constructor(
 
   private fun updateSessionAfterSync(
     session: PaESession,
-    syncResult: SessionInfo
+    syncResult: SessionInfo? = null
   ) {
     session.lastSyncTime = System.currentTimeMillis()
     session.syncSequence++
-    session.usageTimeSinceLastSync = 0
-    session.totalSessionTime += syncResult.appliedSeconds
+    if (syncResult != null) {
+      session.usageTimeSinceLastSync = 0
+      session.totalSessionTime += syncResult.appliedSeconds
+    }
   }
 
   private suspend fun processCompletedMissions(
