@@ -443,4 +443,11 @@
   <string name="search_sponsored_install">Instalați</string>
   <string name="search_sponsored_suggested">Sugestii pentru tine 🔥</string>
   <string name="search_sponsored_label">Sponsorizat</string>
+  <string name="game_genie_chat_name">GameGenie ✨</string>
+  <string name="game_genie_more_installed">"Mai multe jocuri instalate înseamnă mai multe modalități de a progresa."</string>
+  <string name="gamegenie_companion_game_choice_title">Jocurile instalate</string>
+  <string name="gamegenie_companion_master_fav_games">Stăpânește-ți jocul preferat</string>
+  <string name="gamegenie_companion_tap_fav_game">Sau atingeți jocul preferat - îl veți stăpâni.</string>
+  <string name="genai_input_message_field">Întrebați orice...</string>
+  <string name="genai_input_message_field_with_screenshot">Întrebați despre acest ecran...</string>
 </resources>

@@ -476,4 +476,11 @@
   <string name="search_sponsored_install">تثبيت</string>
   <string name="search_sponsored_suggested">مقترحات لك 🔥</string>
   <string name="search_sponsored_label">برعاية</string>
+  <string name="game_genie_chat_name">GameGenie ✨</string>
+  <string name="game_genie_more_installed">"المزيد من الألعاب المثبتة يعني المزيد من الطرق للتقدم."</string>
+  <string name="gamegenie_companion_game_choice_title">الألعاب المثبتة لديك</string>
+  <string name="gamegenie_companion_master_fav_games">أتقن لعبتك المفضلة</string>
+  <string name="gamegenie_companion_tap_fav_game">أو اضغط على لعبتك المفضلة - ستتقنها.</string>
+  <string name="genai_input_message_field">اسأل عن أي شيء...</string>
+  <string name="genai_input_message_field_with_screenshot">اسأل عن هذه الشاشة...</string>
 </resources>

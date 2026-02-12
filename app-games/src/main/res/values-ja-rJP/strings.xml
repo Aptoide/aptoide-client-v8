@@ -422,4 +422,11 @@
   <string name="search_sponsored_install">インストール</string>
   <string name="search_sponsored_suggested">おすすめ 🔥</string>
   <string name="search_sponsored_label">スポンサー提供</string>
+  <string name="game_genie_chat_name">ゲームジーニー ✨</string>
+  <string name="game_genie_more_installed">"インストールされたゲームが増えれば増えるほど、進める方法も増える。"</string>
+  <string name="gamegenie_companion_game_choice_title">インストール済みのゲーム</string>
+  <string name="gamegenie_companion_master_fav_games">お気に入りのゲームをマスターしよう</string>
+  <string name="gamegenie_companion_tap_fav_game">お気に入りのゲームをタップしよう——きっとマスターできる。</string>
+  <string name="genai_input_message_field">何でも聞いてください…</string>
+  <string name="genai_input_message_field_with_screenshot">この画面について質問する...</string>
 </resources>

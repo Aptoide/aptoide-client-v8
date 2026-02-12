@@ -432,4 +432,11 @@
   <string name="search_sponsored_install">Εγκατάσταση</string>
   <string name="search_sponsored_suggested">Προτεινόμενα για εσάς 🔥</string>
   <string name="search_sponsored_label">Χορηγία</string>
+  <string name="game_genie_chat_name">GameGenie ✨</string>
+  <string name="game_genie_more_installed">"Περισσότερα εγκατεστημένα παιχνίδια σημαίνουν περισσότερες δυνατότητες προόδου."</string>
+  <string name="gamegenie_companion_game_choice_title">Τα εγκατεστημένα παιχνίδια σας</string>
+  <string name="gamegenie_companion_master_fav_games">Κάντε το αγαπημένο σας παιχνίδι δικό σας</string>
+  <string name="gamegenie_companion_tap_fav_game">Ή πατήστε το αγαπημένο σας παιχνίδι - θα το κατακτήσετε.</string>
+  <string name="genai_input_message_field">Ρωτήστε οτιδήποτε...</string>
+  <string name="genai_input_message_field_with_screenshot">Ρωτήστε για αυτήν την οθόνη...</string>
 </resources>

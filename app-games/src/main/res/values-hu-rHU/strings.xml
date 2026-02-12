@@ -432,4 +432,11 @@
   <string name="search_sponsored_install">Telepítés</string>
   <string name="search_sponsored_suggested">Neked ajánlott 🔥</string>
   <string name="search_sponsored_label">Szponzorált</string>
+  <string name="game_genie_chat_name">GameGenie ✨</string>
+  <string name="game_genie_more_installed">"Több telepített játék több lehetőséget jelent a fejlődésre."</string>
+  <string name="gamegenie_companion_game_choice_title">A telepített játékok</string>
+  <string name="gamegenie_companion_master_fav_games">Legyen profi a kedvenc játékában!</string>
+  <string name="gamegenie_companion_tap_fav_game">Vagy érintse meg kedvenc játékát – és elsajátíthatja azt.</string>
+  <string name="genai_input_message_field">Kérdezzen bármit...</string>
+  <string name="genai_input_message_field_with_screenshot">Kérdezzen erről a képernyőről...</string>
 </resources>
