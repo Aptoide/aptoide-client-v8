@@ -454,4 +454,11 @@
   <string name="search_sponsored_install">Установить</string>
   <string name="search_sponsored_suggested">Рекомендуется для вас 🔥</string>
   <string name="search_sponsored_label">Спонсируемое</string>
+  <string name="game_genie_chat_name">GameGenie ✨</string>
+  <string name="game_genie_more_installed">"Больше установленных игр означает больше способов прогрессировать."</string>
+  <string name="gamegenie_companion_game_choice_title">Ваши установленные игры</string>
+  <string name="gamegenie_companion_master_fav_games">Освойте свою любимую игру</string>
+  <string name="gamegenie_companion_tap_fav_game">Или нажмите на свою любимую игру — вы освоите ее.</string>
+  <string name="genai_input_message_field">Спросите что угодно...</string>
+  <string name="genai_input_message_field_with_screenshot">Спросите об этом экране...</string>
 </resources>

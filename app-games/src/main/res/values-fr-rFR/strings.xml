@@ -432,4 +432,11 @@
   <string name="search_sponsored_install">Installer</string>
   <string name="search_sponsored_suggested">Suggestions pour vous 🔥</string>
   <string name="search_sponsored_label">Sponsorisé</string>
+  <string name="game_genie_chat_name">GameGenie ✨</string>
+  <string name="game_genie_more_installed">"Plus de jeux installés signifie plus de façons de progresser."</string>
+  <string name="gamegenie_companion_game_choice_title">Vos jeux installés</string>
+  <string name="gamegenie_companion_master_fav_games">Maîtrisez votre jeu préféré</string>
+  <string name="gamegenie_companion_tap_fav_game">Ou appuyez sur votre jeu préféré : vous le maîtriserez.</string>
+  <string name="genai_input_message_field">Demandez n\'importe quoi...</string>
+  <string name="genai_input_message_field_with_screenshot">Demandez des informations sur cet écran...</string>
 </resources>

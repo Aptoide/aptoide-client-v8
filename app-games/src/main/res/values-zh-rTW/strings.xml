@@ -421,4 +421,11 @@
   <string name="search_sponsored_install">安裝</string>
   <string name="search_sponsored_suggested">為您推薦 🔥</string>
   <string name="search_sponsored_label">贊助</string>
+  <string name="game_genie_chat_name">遊戲精靈 ✨</string>
+  <string name="game_genie_more_installed">"安裝的遊戲越多，意味著進度的發展途徑就越多。"</string>
+  <string name="gamegenie_companion_game_choice_title">您已安裝的遊戲</string>
+  <string name="gamegenie_companion_master_fav_games">精通你最愛的遊戲</string>
+  <string name="gamegenie_companion_tap_fav_game">或點擊你最愛的遊戲——你將精通它。</string>
+  <string name="genai_input_message_field">儘管問吧...</string>
+  <string name="genai_input_message_field_with_screenshot">詢問關於此畫面...</string>
 </resources>
