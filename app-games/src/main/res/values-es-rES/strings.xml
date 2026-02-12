@@ -433,10 +433,10 @@
   <string name="search_sponsored_suggested">Recomendado para ti 🔥</string>
   <string name="search_sponsored_label">Patrocinado</string>
   <string name="game_genie_chat_name">GameGenie ✨</string>
-  <string name="game_genie_more_installed">"More installed games mean more ways to progress."</string>
-  <string name="gamegenie_companion_game_choice_title">Your installed games</string>
-  <string name="gamegenie_companion_master_fav_games">Master your fav game</string>
-  <string name="gamegenie_companion_tap_fav_game">Or tap your fav game - you\'ll master it.</string>
-  <string name="genai_input_message_field">Ask anything...</string>
-  <string name="genai_input_message_field_with_screenshot">Ask about this screen...</string>
+  <string name="game_genie_more_installed">"Más juegos instalados significan más formas de progresar."</string>
+  <string name="gamegenie_companion_game_choice_title">Tus juegos instalados</string>
+  <string name="gamegenie_companion_master_fav_games">Domina tu juego favorito</string>
+  <string name="gamegenie_companion_tap_fav_game">O toca tu juego favorito: lo dominarás.</string>
+  <string name="genai_input_message_field">Pregunta lo que quieras...</string>
+  <string name="genai_input_message_field_with_screenshot">Pregunte sobre esta pantalla...</string>
 </resources>
