@@ -421,11 +421,11 @@
   <string name="search_sponsored_install">ติดตั้ง</string>
   <string name="search_sponsored_suggested">แนะนำสำหรับคุณ 🔥</string>
   <string name="search_sponsored_label">ได้รับการสนับสนุน</string>
-  <string name="game_genie_chat_name">GameGenie ✨</string>
-  <string name="game_genie_more_installed">"More installed games mean more ways to progress."</string>
-  <string name="gamegenie_companion_game_choice_title">Your installed games</string>
-  <string name="gamegenie_companion_master_fav_games">Master your fav game</string>
-  <string name="gamegenie_companion_tap_fav_game">Or tap your fav game - you\'ll master it.</string>
-  <string name="genai_input_message_field">Ask anything...</string>
-  <string name="genai_input_message_field_with_screenshot">Ask about this screen...</string>
+  <string name="game_genie_chat_name">เกมเจนี ✨</string>
+  <string name="game_genie_more_installed">"เกมติดตั้งมากขึ้นหมายถึงวิธีมากขึ้นในการก้าวหน้า"</string>
+  <string name="gamegenie_companion_game_choice_title">เกมที่คุณติดตั้งไว้</string>
+  <string name="gamegenie_companion_master_fav_games">เชี่ยวชาญเกมโปรดของคุณ</string>
+  <string name="gamegenie_companion_tap_fav_game">หรือแตะเกมที่คุณชื่นชอบ - คุณจะเชี่ยวชาญมัน</string>
+  <string name="genai_input_message_field">ถามอะไรก็ได้...</string>
+  <string name="genai_input_message_field_with_screenshot">สอบถามเกี่ยวกับหน้าจอตัวนี้...</string>
 </resources>
