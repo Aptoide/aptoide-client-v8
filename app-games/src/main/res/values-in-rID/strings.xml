@@ -101,6 +101,7 @@
   <string name="not_now_button">Jangan sekarang</string>
   <string name="later_button">Nanti</string>
   <string name="trusted_game_badge">Game Terpercaya</string>
+  <string name="trusted_badge">Terpercaya</string>
   <string name="official_game_badge">Game Resmi</string>
   <string name="editorial_card_views_short">Dilihat %s kali</string>
   <!-- Out of Space -->
@@ -136,6 +137,8 @@
   <string name="appview_info_website_title" comment="website">Situs Web</string>
   <string name="appview_info_email_title" comment="email">Email</string>
   <string name="appview_info_permissions_title" comment="permissions">Izin</string>
+  <string name="post_install_suggested_title">Disarankan untuk Anda 🔥</string>
+  <string name="post_install_sponsored_label">Didukung oleh</string>
   <string name="bonus_banner_body">Anda akan mendapatkan bonus di semua game yang teridentifikasi dengan %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Bonus Hingga %s%%</string>
   <string name="settings_auto_update_button">Game yang diperbarui otomatis</string>
@@ -328,10 +331,13 @@
   <string name="update_app_updated_notification_body">Temukan hal-hal baru</string>
   <!-- AB Test for Experiment 8 : Roblox Companion Apps -->
   <string name="apkfy_multi_install_install_button">Pasang [%d]</string>
+  <string name="apkfy_multi_install_install_title">Pasang %s</string>
   <string name="apkfy_multi_install_intro_1">Apakah Anda ingin menginstal game ini?</string>
   <string name="apkfy_multi_install_intro_2">Populer di kalangan pemain Roblox</string>
   <string name="apkfy_multi_install_intro_3">Orang yang bermain Roblox juga menginstal ini.</string>
   <string name="apkfy_multi_install_highlighted_game">Permainan Terpopuler di Aptoide</string>
+  <string name="apkfy_multi_install_highlighted_game_short">Permainan Terpopuler</string>
+  <string name="apkfy_multi_install_auto_open">Akan terbuka secara otomatis setelah instalasi selesai.</string>
   <!-- AB Test for Experiment 9 : GamesFeed -->
   <string name="gamesfeed_bundle_header_1">Untuk Anda</string>
   <string name="gamesfeed_detail_header">Sorotan mingguan berdasarkan Roblox</string>
@@ -411,4 +417,8 @@
   <!-- GameGenie Overlay Notification -->
   <string name="gamegenie_overlay_notification_title">Overlay Obrolan GameGenie</string>
   <string name="gamegenie_overlay_notification_text">GameGenie siap membantu Anda!</string>
+  <!-- Search Sponsored Banner -->
+  <string name="search_sponsored_install">Pasang</string>
+  <string name="search_sponsored_suggested">Disarankan untuk Anda 🔥</string>
+  <string name="search_sponsored_label">Didukung oleh</string>
 </resources>

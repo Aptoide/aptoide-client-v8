@@ -101,6 +101,7 @@
   <string name="not_now_button">Nicht jetzt</string>
   <string name="later_button">Später</string>
   <string name="trusted_game_badge">Vertrauenswürdiges Spiel</string>
+  <string name="trusted_badge">Vertrauenswürdig</string>
   <string name="official_game_badge">Offizielles Spiel</string>
   <string name="editorial_card_views_short">%s Aufrufe</string>
   <!-- Out of Space -->
@@ -136,6 +137,8 @@
   <string name="appview_info_website_title" comment="website">Webseite</string>
   <string name="appview_info_email_title" comment="email">E-Mail</string>
   <string name="appview_info_permissions_title" comment="permissions">Genehmigungen</string>
+  <string name="post_install_suggested_title">Empfehlungen für Sie 🔥</string>
+  <string name="post_install_sponsored_label">Gesponsert</string>
   <string name="bonus_banner_body">Du bekommst einen Bonus in allen Spielen, die mit %s gekennzeichnet sind.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Bis zu %s%% Bonus</string>
   <string name="settings_auto_update_button">Spiele automatisch aktualisieren</string>
@@ -339,10 +342,13 @@
   <string name="update_app_updated_notification_body">Entdecken Sie die Neuheiten</string>
   <!-- AB Test for Experiment 8 : Roblox Companion Apps -->
   <string name="apkfy_multi_install_install_button">Installieren Sie [%d]</string>
+  <string name="apkfy_multi_install_install_title">Installieren %s</string>
   <string name="apkfy_multi_install_intro_1">Möchten Sie dieses Spiel installieren?</string>
   <string name="apkfy_multi_install_intro_2">Beliebt bei Roblox-Spielern</string>
   <string name="apkfy_multi_install_intro_3">Leute, die Roblox spielen, installieren auch diese</string>
   <string name="apkfy_multi_install_highlighted_game">Meistgespielte Spiele auf Aptoide Games</string>
+  <string name="apkfy_multi_install_highlighted_game_short">Meistgespielt</string>
+  <string name="apkfy_multi_install_auto_open">Öffnet sich automatisch, wenn die Installation abgeschlossen ist.</string>
   <!-- AB Test for Experiment 9 : GamesFeed -->
   <string name="gamesfeed_bundle_header_1">Für dich</string>
   <string name="gamesfeed_detail_header">Wöchentliche Highlights basierend auf Roblox</string>
@@ -422,4 +428,8 @@
   <!-- GameGenie Overlay Notification -->
   <string name="gamegenie_overlay_notification_title">GameGenie-Chat-Overlay</string>
   <string name="gamegenie_overlay_notification_text">GameGenie steht bereit, um Ihnen zu helfen!</string>
+  <!-- Search Sponsored Banner -->
+  <string name="search_sponsored_install">Installieren</string>
+  <string name="search_sponsored_suggested">Empfehlungen für Sie 🔥</string>
+  <string name="search_sponsored_label">Gesponsert</string>
 </resources>
