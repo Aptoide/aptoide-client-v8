@@ -101,6 +101,7 @@
   <string name="not_now_button">Nem most</string>
   <string name="later_button">Később</string>
   <string name="trusted_game_badge">Megbízható játék</string>
+  <string name="trusted_badge">Megbízható</string>
   <string name="official_game_badge">Hivatalos játék</string>
   <string name="editorial_card_views_short">%s megtekintés</string>
   <!-- Out of Space -->
@@ -136,6 +137,8 @@
   <string name="appview_info_website_title" comment="website">Weboldal</string>
   <string name="appview_info_email_title" comment="email">E-mail</string>
   <string name="appview_info_permissions_title" comment="permissions">Engedélyek</string>
+  <string name="post_install_suggested_title">Neked ajánlott 🔥</string>
+  <string name="post_install_sponsored_label">Szponzorált</string>
   <string name="bonus_banner_body">Az összes %s jelölt játékban bónuszt kapsz.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Akár %s%% bónusz</string>
   <string name="settings_auto_update_button">Játékok autom. frissítése</string>
@@ -339,10 +342,13 @@
   <string name="update_app_updated_notification_body">Fedezze fel az újdonságokat</string>
   <!-- AB Test for Experiment 8 : Roblox Companion Apps -->
   <string name="apkfy_multi_install_install_button">Telepítse a [%d] programot.</string>
+  <string name="apkfy_multi_install_install_title">Telepítés %s</string>
   <string name="apkfy_multi_install_intro_1">Szeretné telepíteni ezt a játékot?</string>
   <string name="apkfy_multi_install_intro_2">Népszerű a Roblox játékosok körében</string>
   <string name="apkfy_multi_install_intro_3">A Robloxot játszó emberek ezeket is telepítik</string>
   <string name="apkfy_multi_install_highlighted_game">Legnépszerűbb játékok az Aptoide Games-en</string>
+  <string name="apkfy_multi_install_highlighted_game_short">Legnépszerűbb játékok</string>
+  <string name="apkfy_multi_install_auto_open">A telepítés befejezése után automatikusan megnyílik.</string>
   <!-- AB Test for Experiment 9 : GamesFeed -->
   <string name="gamesfeed_bundle_header_1">Neked</string>
   <string name="gamesfeed_detail_header">A Roblox alapján összeállított heti kiemelt események</string>
@@ -422,4 +428,8 @@
   <!-- GameGenie Overlay Notification -->
   <string name="gamegenie_overlay_notification_title">GameGenie csevegő felület</string>
   <string name="gamegenie_overlay_notification_text">A GameGenie készen áll, hogy segítsen Önnek!</string>
+  <!-- Search Sponsored Banner -->
+  <string name="search_sponsored_install">Telepítés</string>
+  <string name="search_sponsored_suggested">Neked ajánlott 🔥</string>
+  <string name="search_sponsored_label">Szponzorált</string>
 </resources>

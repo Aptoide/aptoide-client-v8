@@ -101,6 +101,7 @@
   <string name="not_now_button">Şimdi değil</string>
   <string name="later_button">Daha Sonra</string>
   <string name="trusted_game_badge">Güvenli Oyun</string>
+  <string name="trusted_badge">Güvenilir</string>
   <string name="official_game_badge">Resmi Oyun</string>
   <string name="editorial_card_views_short">%s görüntülenme</string>
   <!-- Out of Space -->
@@ -136,6 +137,8 @@
   <string name="appview_info_website_title" comment="website">İnternet sitesi</string>
   <string name="appview_info_email_title" comment="email">E-posta</string>
   <string name="appview_info_permissions_title" comment="permissions">İzinler</string>
+  <string name="post_install_suggested_title">Sizin için öneriler 🔥</string>
+  <string name="post_install_sponsored_label">Sponsorlu</string>
   <string name="bonus_banner_body">%s olan tüm oyunlarda bonus kazanacaksın.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">%s%%\'e varan Bonus</string>
   <string name="settings_auto_update_button">Oyunları otomatik güncelle</string>
@@ -339,10 +342,13 @@
   <string name="update_app_updated_notification_body">Yenilikleri keşfedin</string>
   <!-- AB Test for Experiment 8 : Roblox Companion Apps -->
   <string name="apkfy_multi_install_install_button">[%d]\'yi yükleyin.</string>
+  <string name="apkfy_multi_install_install_title">Yükle %s</string>
   <string name="apkfy_multi_install_intro_1">Bu oyunu yüklemek ister misiniz?</string>
   <string name="apkfy_multi_install_intro_2">Roblox oyuncuları arasında popüler</string>
   <string name="apkfy_multi_install_intro_3">Roblox oynayan kişiler de bunları yüklüyor</string>
   <string name="apkfy_multi_install_highlighted_game">Aptoide\'de En Çok Oynanan Oyunlar</string>
+  <string name="apkfy_multi_install_highlighted_game_short">En Çok Oynananlar</string>
+  <string name="apkfy_multi_install_auto_open">Kurulum tamamlandığında otomatik olarak açılır.</string>
   <!-- AB Test for Experiment 9 : GamesFeed -->
   <string name="gamesfeed_bundle_header_1">Sizin için</string>
   <string name="gamesfeed_detail_header">Roblox\'a dayalı haftalık öne çıkanlar</string>
@@ -422,4 +428,8 @@
   <!-- GameGenie Overlay Notification -->
   <string name="gamegenie_overlay_notification_title">GameGenie Sohbet Arayüzü</string>
   <string name="gamegenie_overlay_notification_text">GameGenie size yardımcı olmaya hazır!</string>
+  <!-- Search Sponsored Banner -->
+  <string name="search_sponsored_install">Yükle</string>
+  <string name="search_sponsored_suggested">Sizin için öneriler 🔥</string>
+  <string name="search_sponsored_label">Sponsorlu</string>
 </resources>

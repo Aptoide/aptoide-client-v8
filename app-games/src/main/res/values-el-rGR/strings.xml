@@ -101,6 +101,7 @@
   <string name="not_now_button">Όχι τώρα</string>
   <string name="later_button">Αργότερα</string>
   <string name="trusted_game_badge">Έμπιστο Παιχνίδι</string>
+  <string name="trusted_badge">Αξιόπιστος</string>
   <string name="official_game_badge">Επίσημο Παιχνίδι</string>
   <string name="editorial_card_views_short">%s προβολές</string>
   <!-- Out of Space -->
@@ -136,6 +137,8 @@
   <string name="appview_info_website_title" comment="website">Ιστοσελίδα</string>
   <string name="appview_info_email_title" comment="email">E-Mail</string>
   <string name="appview_info_permissions_title" comment="permissions">Δικαιώματα</string>
+  <string name="post_install_suggested_title">Προτεινόμενα για εσάς 🔥</string>
+  <string name="post_install_sponsored_label">Χορηγία</string>
   <string name="bonus_banner_body">Θα λάβετε ένα bonus σε όλα τα παιχνίδια με την επισήμανση %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Έως %s%% bonuns</string>
   <string name="settings_auto_update_button">Αυτόματη ενημέρωση παιχνιδιών</string>
@@ -339,10 +342,13 @@
   <string name="update_app_updated_notification_body">Ανακαλύψτε τα νέα</string>
   <!-- AB Test for Experiment 8 : Roblox Companion Apps -->
   <string name="apkfy_multi_install_install_button">Εγκατάσταση [%d]</string>
+  <string name="apkfy_multi_install_install_title">Εγκατάσταση %s</string>
   <string name="apkfy_multi_install_intro_1">Θέλετε να εγκαταστήσετε αυτό το παιχνίδι;</string>
   <string name="apkfy_multi_install_intro_2">Δημοφιλές στους παίκτες του Roblox</string>
   <string name="apkfy_multi_install_intro_3">Οι άνθρωποι που παίζουν Roblox εγκαθιστούν επίσης τα εξής</string>
   <string name="apkfy_multi_install_highlighted_game">Τα πιο δημοφιλή παιχνίδια στο Aptoide Games</string>
+  <string name="apkfy_multi_install_highlighted_game_short">Πιο δημοφιλή</string>
+  <string name="apkfy_multi_install_auto_open">Ανοίγει αυτόματα όταν ολοκληρωθεί η εγκατάσταση.</string>
   <!-- AB Test for Experiment 9 : GamesFeed -->
   <string name="gamesfeed_bundle_header_1">Για εσάς</string>
   <string name="gamesfeed_detail_header">Εβδομαδιαία highlights με βάση το Roblox</string>
@@ -422,4 +428,8 @@
   <!-- GameGenie Overlay Notification -->
   <string name="gamegenie_overlay_notification_title">Επικάλυψη συνομιλίας GameGenie</string>
   <string name="gamegenie_overlay_notification_text">Το GameGenie είναι έτοιμο να σας βοηθήσει!</string>
+  <!-- Search Sponsored Banner -->
+  <string name="search_sponsored_install">Εγκατάσταση</string>
+  <string name="search_sponsored_suggested">Προτεινόμενα για εσάς 🔥</string>
+  <string name="search_sponsored_label">Χορηγία</string>
 </resources>

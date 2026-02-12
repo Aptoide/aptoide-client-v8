@@ -101,6 +101,7 @@
   <string name="not_now_button">Nu acum</string>
   <string name="later_button">Mai târziu</string>
   <string name="trusted_game_badge">Joc De Încredere</string>
+  <string name="trusted_badge">De încredere</string>
   <string name="official_game_badge">Joc Oficial</string>
   <string name="editorial_card_views_short">%s vizualizări</string>
   <!-- Out of Space -->
@@ -136,6 +137,8 @@
   <string name="appview_info_website_title" comment="website">Website</string>
   <string name="appview_info_email_title" comment="email">E-mail</string>
   <string name="appview_info_permissions_title" comment="permissions">Permisiuni</string>
+  <string name="post_install_suggested_title">Sugestii pentru tine 🔥</string>
+  <string name="post_install_sponsored_label">Sponsorizat</string>
   <string name="bonus_banner_body">Vei primi un bonus în toate jocurile marcate cu %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Bonus de până la %s%%</string>
   <string name="settings_auto_update_button">Actualizare automată jocuri</string>
@@ -350,10 +353,13 @@
   <string name="update_app_updated_notification_body">Descoperă noutățile</string>
   <!-- AB Test for Experiment 8 : Roblox Companion Apps -->
   <string name="apkfy_multi_install_install_button">Instalați [%d]</string>
+  <string name="apkfy_multi_install_install_title">Instalați %s</string>
   <string name="apkfy_multi_install_intro_1">Doriți să instalați acest joc?</string>
   <string name="apkfy_multi_install_intro_2">Popular printre jucătorii Roblox</string>
   <string name="apkfy_multi_install_intro_3">Persoanele care joacă Roblox instalează și acestea</string>
   <string name="apkfy_multi_install_highlighted_game">Cele mai jucate jocuri pe Aptoide Games</string>
+  <string name="apkfy_multi_install_highlighted_game_short">Cele mai jucate</string>
+  <string name="apkfy_multi_install_auto_open">Se deschide automat când instalarea e gata.</string>
   <!-- AB Test for Experiment 9 : GamesFeed -->
   <string name="gamesfeed_bundle_header_1">Pentru tine</string>
   <string name="gamesfeed_detail_header">Evenimente săptămânale importante bazate pe Roblox</string>
@@ -433,4 +439,8 @@
   <!-- GameGenie Overlay Notification -->
   <string name="gamegenie_overlay_notification_title">Suprapunere chat GameGenie</string>
   <string name="gamegenie_overlay_notification_text">GameGenie este gata să vă ajute!</string>
+  <!-- Search Sponsored Banner -->
+  <string name="search_sponsored_install">Instalați</string>
+  <string name="search_sponsored_suggested">Sugestii pentru tine 🔥</string>
+  <string name="search_sponsored_label">Sponsorizat</string>
 </resources>
