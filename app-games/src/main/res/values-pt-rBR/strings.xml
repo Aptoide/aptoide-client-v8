@@ -101,6 +101,7 @@
   <string name="not_now_button">Agora não</string>
   <string name="later_button">Depois</string>
   <string name="trusted_game_badge">Jogo Verificado</string>
+  <string name="trusted_badge">Confiável</string>
   <string name="official_game_badge">Jogo Oficial</string>
   <string name="editorial_card_views_short">%s visualizações</string>
   <!-- Out of Space -->
@@ -136,6 +137,8 @@
   <string name="appview_info_website_title" comment="website">Site</string>
   <string name="appview_info_email_title" comment="email">E-mail</string>
   <string name="appview_info_permissions_title" comment="permissions">Permissões</string>
+  <string name="post_install_suggested_title">Sugestões para você 🔥</string>
+  <string name="post_install_sponsored_label">Patrocinado</string>
   <string name="bonus_banner_body">Você receberá um bônus em todos os jogos identificados com %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Até %s%% de bônus</string>
   <string name="settings_auto_update_button">Atualizar jogos automaticamente</string>
@@ -339,10 +342,13 @@
   <string name="update_app_updated_notification_body">Descubra as novidades</string>
   <!-- AB Test for Experiment 8 : Roblox Companion Apps -->
   <string name="apkfy_multi_install_install_button">Instale [%d]</string>
+  <string name="apkfy_multi_install_install_title">Instalar %s</string>
   <string name="apkfy_multi_install_intro_1">Deseja instalar este jogo?</string>
   <string name="apkfy_multi_install_intro_2">Popular entre os jogadores do Roblox</string>
   <string name="apkfy_multi_install_intro_3">As pessoas que jogam Roblox também estão instalando estes</string>
   <string name="apkfy_multi_install_highlighted_game">Mais jogados no Aptoide Games</string>
+  <string name="apkfy_multi_install_highlighted_game_short">Mais jogados</string>
+  <string name="apkfy_multi_install_auto_open">Abre automaticamente quando a instalação estiver concluída.</string>
   <!-- AB Test for Experiment 9 : GamesFeed -->
   <string name="gamesfeed_bundle_header_1">Para você</string>
   <string name="gamesfeed_detail_header">Destaques semanais baseados no Roblox</string>
@@ -422,4 +428,8 @@
   <!-- GameGenie Overlay Notification -->
   <string name="gamegenie_overlay_notification_title">Sobreposição de bate-papo do GameGenie</string>
   <string name="gamegenie_overlay_notification_text">A GameGenie está pronta para ajudá-lo!</string>
+  <!-- Search Sponsored Banner -->
+  <string name="search_sponsored_install">Instalar</string>
+  <string name="search_sponsored_suggested">Sugestões para você 🔥</string>
+  <string name="search_sponsored_label">Patrocinado</string>
 </resources>

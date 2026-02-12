@@ -101,6 +101,7 @@
   <string name="not_now_button">ไม่ใช่ตอนนี้</string>
   <string name="later_button">ภายหลัง</string>
   <string name="trusted_game_badge">เกมส์ที่น่าเชื่อถือ</string>
+  <string name="trusted_badge">เชื่อถือได้</string>
   <string name="official_game_badge">เกมส์อย่างเป็นทางการ</string>
   <string name="editorial_card_views_short">ดู %s</string>
   <!-- Out of Space -->
@@ -136,6 +137,8 @@
   <string name="appview_info_website_title" comment="website">เว็ปไซต์</string>
   <string name="appview_info_email_title" comment="email">อีเมล</string>
   <string name="appview_info_permissions_title" comment="permissions">สิทธิ์</string>
+  <string name="post_install_suggested_title">แนะนำสำหรับคุณ 🔥</string>
+  <string name="post_install_sponsored_label">ได้รับการสนับสนุน</string>
   <string name="bonus_banner_body">คุณจะได้รับโบนัสในเกมส์ที่กำหนดทั้งหมดด้วย%s</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">สูงสุด %s%% โบนัส</string>
   <string name="settings_auto_update_button">อัปเดตเกมอัตโนมัติ</string>
@@ -328,10 +331,13 @@
   <string name="update_app_updated_notification_body">ค้นพบสิ่งใหม่</string>
   <!-- AB Test for Experiment 8 : Roblox Companion Apps -->
   <string name="apkfy_multi_install_install_button">ติดตั้ง [%d]</string>
+  <string name="apkfy_multi_install_install_title">ติดตั้ง %s</string>
   <string name="apkfy_multi_install_intro_1">คุณต้องการติดตั้งเกมนี้หรือไม่</string>
   <string name="apkfy_multi_install_intro_2">ได้รับความนิยมในหมู่ผู้เล่น Roblox</string>
   <string name="apkfy_multi_install_intro_3">ผู้ที่เล่น Roblox ก็กำลังติดตั้งสิ่งเหล่านี้เช่นกัน</string>
   <string name="apkfy_multi_install_highlighted_game">เกมยอดนิยมบน Aptoide</string>
+  <string name="apkfy_multi_install_highlighted_game_short">เล่นมากที่สุด</string>
+  <string name="apkfy_multi_install_auto_open">เปิดโดยอัตโนมัติเมื่อการติดตั้งเสร็จสมบูรณ์</string>
   <!-- AB Test for Experiment 9 : GamesFeed -->
   <string name="gamesfeed_bundle_header_1">สำหรับคุณ</string>
   <string name="gamesfeed_detail_header">ไฮไลท์ประจำสัปดาห์จาก Roblox</string>
@@ -411,4 +417,8 @@
   <!-- GameGenie Overlay Notification -->
   <string name="gamegenie_overlay_notification_title">เกมเจนี แชท โอเวอร์เลย์</string>
   <string name="gamegenie_overlay_notification_text">GameGenie พร้อมให้ความช่วยเหลือคุณ!</string>
+  <!-- Search Sponsored Banner -->
+  <string name="search_sponsored_install">ติดตั้ง</string>
+  <string name="search_sponsored_suggested">แนะนำสำหรับคุณ 🔥</string>
+  <string name="search_sponsored_label">ได้รับการสนับสนุน</string>
 </resources>

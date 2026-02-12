@@ -101,6 +101,7 @@
   <string name="not_now_button">Không phải lúc này</string>
   <string name="later_button">Để sau</string>
   <string name="trusted_game_badge">Trò chơi tin cậy</string>
+  <string name="trusted_badge">Đáng tin cậy</string>
   <string name="official_game_badge">Trò chơi chính thức</string>
   <string name="editorial_card_views_short">%s lượt xem</string>
   <!-- Out of Space -->
@@ -136,6 +137,8 @@
   <string name="appview_info_website_title" comment="website">Trang web</string>
   <string name="appview_info_email_title" comment="email">Email</string>
   <string name="appview_info_permissions_title" comment="permissions">Cho phép</string>
+  <string name="post_install_suggested_title">Đề xuất cho bạn 🔥</string>
+  <string name="post_install_sponsored_label">Được tài trợ</string>
   <string name="bonus_banner_body">Bạn sẽ nhận được tiền thưởng trong tất cả các trò chơi được xác định bằng %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Lên tới %s%% tiền thưởng</string>
   <string name="settings_auto_update_button">Trò chơi tự động cập nhật</string>
@@ -328,10 +331,13 @@
   <string name="update_app_updated_notification_body">Khám phá những điều mới mẻ</string>
   <!-- AB Test for Experiment 8 : Roblox Companion Apps -->
   <string name="apkfy_multi_install_install_button">Cài đặt [%d]</string>
+  <string name="apkfy_multi_install_install_title">Cài đặt %s</string>
   <string name="apkfy_multi_install_intro_1">Bạn có muốn cài đặt trò chơi này không?</string>
   <string name="apkfy_multi_install_intro_2">Được ưa chuộng bởi người chơi Roblox</string>
   <string name="apkfy_multi_install_intro_3">Những người chơi Roblox cũng đang cài đặt những ứng dụng này.</string>
   <string name="apkfy_multi_install_highlighted_game">Trò chơi được chơi nhiều nhất trên Aptoide</string>
+  <string name="apkfy_multi_install_highlighted_game_short">Trò chơi được chơi nhiều nhất</string>
+  <string name="apkfy_multi_install_auto_open">Tự động mở khi quá trình cài đặt hoàn tất.</string>
   <!-- AB Test for Experiment 9 : GamesFeed -->
   <string name="gamesfeed_bundle_header_1">Dành cho bạn</string>
   <string name="gamesfeed_detail_header">Các điểm nhấn hàng tuần dựa trên Roblox</string>
@@ -411,4 +417,8 @@
   <!-- GameGenie Overlay Notification -->
   <string name="gamegenie_overlay_notification_title">Giao diện trò chuyện GameGenie</string>
   <string name="gamegenie_overlay_notification_text">GameGenie sẵn sàng hỗ trợ bạn!</string>
+  <!-- Search Sponsored Banner -->
+  <string name="search_sponsored_install">Cài đặt</string>
+  <string name="search_sponsored_suggested">Đề xuất cho bạn 🔥</string>
+  <string name="search_sponsored_label">Được tài trợ</string>
 </resources>
