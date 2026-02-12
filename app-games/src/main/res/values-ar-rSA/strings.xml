@@ -101,7 +101,7 @@
   <string name="not_now_button">ليس الآن</string>
   <string name="later_button">لاحقًا</string>
   <string name="trusted_game_badge">الألعاب الموثوقة</string>
-  <string name="trusted_badge">Trusted</string>
+  <string name="trusted_badge">موثوق</string>
   <string name="official_game_badge">الألعاب الرسمية</string>
   <string name="editorial_card_views_short">%s مشاهدة</string>
   <!-- Out of Space -->
@@ -137,8 +137,8 @@
   <string name="appview_info_website_title" comment="website">الموقع الإلكتروني</string>
   <string name="appview_info_email_title" comment="email">البريد الإلكتروني</string>
   <string name="appview_info_permissions_title" comment="permissions">الأذونات</string>
-  <string name="post_install_suggested_title">Suggested for You 🔥</string>
-  <string name="post_install_sponsored_label">Sponsored</string>
+  <string name="post_install_suggested_title">مقترح لك 🔥</string>
+  <string name="post_install_sponsored_label">برعاية</string>
   <string name="bonus_banner_body">ستحصل على مكافأة في كل الألعاب المعرّفة لدى %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">مكافأة حتى %s%%</string>
   <string name="settings_auto_update_button">تحديث ألعاب تلقائي</string>
@@ -386,13 +386,13 @@
   <string name="update_app_updated_notification_body">اكتشف ما الجديد</string>
   <!-- AB Test for Experiment 8 : Roblox Companion Apps -->
   <string name="apkfy_multi_install_install_button">تثبيت [%d]</string>
-  <string name="apkfy_multi_install_install_title">Install %s</string>
+  <string name="apkfy_multi_install_install_title">تثبيت %s</string>
   <string name="apkfy_multi_install_intro_1">هل تريد تثبيت هذه اللعبة؟</string>
   <string name="apkfy_multi_install_intro_2">شائع بين لاعبي Roblox</string>
   <string name="apkfy_multi_install_intro_3">الأشخاص الذين يلعبون Roblox يقومون أيضًا بتثبيت هذه الألعاب</string>
   <string name="apkfy_multi_install_highlighted_game">الأكثر لعبًا على Aptoide Games</string>
-  <string name="apkfy_multi_install_highlighted_game_short">Top Played</string>
-  <string name="apkfy_multi_install_auto_open">Opens automatically when installation is complete.</string>
+  <string name="apkfy_multi_install_highlighted_game_short">الأكثر لعبًا</string>
+  <string name="apkfy_multi_install_auto_open">يفتح تلقائيًا عند اكتمال التثبيت.</string>
   <!-- AB Test for Experiment 9 : GamesFeed -->
   <string name="gamesfeed_bundle_header_1">من أجلك</string>
   <string name="gamesfeed_detail_header">أهم الأحداث الأسبوعية استنادًا إلى Roblox</string>
@@ -473,7 +473,7 @@
   <string name="gamegenie_overlay_notification_title">تراكب دردشة GameGenie</string>
   <string name="gamegenie_overlay_notification_text">GameGenie جاهز لمساعدتك!</string>
   <!-- Search Sponsored Banner -->
-  <string name="search_sponsored_install">Install</string>
-  <string name="search_sponsored_suggested">Suggested for You 🔥</string>
-  <string name="search_sponsored_label">Sponsored</string>
+  <string name="search_sponsored_install">تثبيت</string>
+  <string name="search_sponsored_suggested">مقترحات لك 🔥</string>
+  <string name="search_sponsored_label">برعاية</string>
 </resources>
