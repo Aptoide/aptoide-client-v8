@@ -101,6 +101,7 @@
   <string name="not_now_button">Не зараз</string>
   <string name="later_button">Пізніше</string>
   <string name="trusted_game_badge">Перевірена гра</string>
+  <string name="trusted_badge">Trusted</string>
   <string name="official_game_badge">Офіційна гра</string>
   <string name="editorial_card_views_short">%s переглядів</string>
   <!-- Out of Space -->
@@ -136,6 +137,8 @@
   <string name="appview_info_website_title" comment="website">Сайт</string>
   <string name="appview_info_email_title" comment="email">Електронна пошта</string>
   <string name="appview_info_permissions_title" comment="permissions">Дозволи</string>
+  <string name="post_install_suggested_title">Suggested for You 🔥</string>
+  <string name="post_install_sponsored_label">Sponsored</string>
   <string name="bonus_banner_body">Ви отримуватимете бонус у всіх іграх, позначених %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Бонус до %s%%</string>
   <string name="settings_auto_update_button">Автоматичне оновлення ігор</string>
@@ -361,10 +364,13 @@
   <string name="update_app_updated_notification_body">Дізнайтеся, що нового</string>
   <!-- AB Test for Experiment 8 : Roblox Companion Apps -->
   <string name="apkfy_multi_install_install_button">Встановити [%d]</string>
+  <string name="apkfy_multi_install_install_title">Install %s</string>
   <string name="apkfy_multi_install_intro_1">Ви хочете встановити цю гру?</string>
   <string name="apkfy_multi_install_intro_2">Популярний серед гравців Roblox</string>
   <string name="apkfy_multi_install_intro_3">Люди, які грають в Roblox, також встановлюють ці програми</string>
   <string name="apkfy_multi_install_highlighted_game">Найпопулярніші ігри на Aptoide Games</string>
+  <string name="apkfy_multi_install_highlighted_game_short">Top Played</string>
+  <string name="apkfy_multi_install_auto_open">Opens automatically when installation is complete.</string>
   <!-- AB Test for Experiment 9 : GamesFeed -->
   <string name="gamesfeed_bundle_header_1">Для вас</string>
   <string name="gamesfeed_detail_header">Тижневі найважливіші події за даними Roblox</string>
@@ -444,4 +450,8 @@
   <!-- GameGenie Overlay Notification -->
   <string name="gamegenie_overlay_notification_title">Накладення чату GameGenie</string>
   <string name="gamegenie_overlay_notification_text">GameGenie готовий допомогти вам!</string>
+  <!-- Search Sponsored Banner -->
+  <string name="search_sponsored_install">Install</string>
+  <string name="search_sponsored_suggested">Suggested for You 🔥</string>
+  <string name="search_sponsored_label">Sponsored</string>
 </resources>
