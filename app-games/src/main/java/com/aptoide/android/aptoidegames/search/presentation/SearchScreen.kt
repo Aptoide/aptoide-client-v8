@@ -61,6 +61,7 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import cm.aptoide.pt.feature_home.domain.BundleSource
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType
 import cm.aptoide.pt.feature_search.presentation.SearchUiState
@@ -91,8 +92,12 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.AppsGridBundle
 import com.aptoide.android.aptoidegames.feature_apps.presentation.LargeAppItem
 import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberBundleAnalytics
 import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberTrendingBundle
+import com.aptoide.android.aptoidegames.feature_rtb.data.RTBApp
+import com.aptoide.android.aptoidegames.feature_rtb.presentation.rememberRTBAdClickHandler
+import com.aptoide.android.aptoidegames.feature_rtb.presentation.rememberSearchSponsoredApp
 import com.aptoide.android.aptoidegames.home.rememberBottomBarMenuScrollState
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
+import com.aptoide.android.aptoidegames.mmp.UTMContext
 import com.aptoide.android.aptoidegames.mmp.WithUTM
 import com.aptoide.android.aptoidegames.search.SearchType
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -140,6 +145,8 @@ fun searchScreen() = ScreenData.withAnalytics(
   val focusManager = LocalFocusManager.current
   val keyboardController = LocalSoftwareKeyboardController.current
 
+  val sponsoredApp = rememberSearchSponsoredApp()
+
   LaunchedEffect(Unit) {
     searchValue = queryValue ?: ""
 
@@ -170,9 +177,11 @@ fun searchScreen() = ScreenData.withAnalytics(
       navigate = navigate
     ) {
       OverrideAnalyticsSearchMeta(searchMeta = searchMeta, navigate = it) { navigateTo ->
+
         SearchView(
           uiState = uiState,
           searchValue = searchValue,
+          sponsoredApp = sponsoredApp,
           onSelectSearchSuggestion = { suggestion, searchType, index ->
             focusManager.clearFocus()
             keyboardController?.hide()
@@ -253,6 +262,7 @@ fun searchScreen() = ScreenData.withAnalytics(
 fun SearchView(
   uiState: SearchUiState,
   searchValue: String,
+  sponsoredApp: RTBApp? = null,
   onSelectSearchSuggestion: (String, SearchType, Int) -> Unit,
   onRemoveSuggestion: (String) -> Unit,
   onSearchValueChanged: (String) -> Unit,
@@ -301,7 +311,9 @@ fun SearchView(
             searchResults = uiState.searchResults,
             searchValue = searchValue,
             onItemClick = onItemClick,
-            onItemInstallStarted = onItemInstallStarted
+            onItemInstallStarted = onItemInstallStarted,
+            sponsoredApp = sponsoredApp,
+            navigate = navigate,
           )
         }
       }
@@ -689,12 +701,55 @@ fun EmptySearchView(
   searchValue: String,
   onItemClick: (Int, App) -> Unit,
   onItemInstallStarted: (App) -> Unit,
+  sponsoredApp: RTBApp? = null,
+  navigate: (String) -> Unit,
 ) {
   LazyColumn(
     state = rememberBottomBarMenuScrollState(state = rememberLazyListState(), route = searchRoute),
     modifier = Modifier.padding(start = 16.dp, end = 16.dp),
     contentPadding = PaddingValues(bottom = 72.dp),
   ) {
+    if (sponsoredApp != null) {
+      item(key = "sponsored") {
+        OverrideAnalyticsBundleMeta(
+          bundleMeta = BundleMeta(
+            tag = "rtb-search-banner",
+            bundleSource = BundleSource.MANUAL.name
+          ),
+          navigate = navigate,
+        ) { rtbNavigate ->
+          WithUTM(
+            source = "rtb",
+            medium = "search",
+            content = "search-banner",
+            navigate = rtbNavigate,
+          ) { utmNavigate ->
+            val clickHandler = rememberRTBAdClickHandler(
+              rtbAppsList = listOf(sponsoredApp),
+              navigate = utmNavigate,
+            )
+
+            val utmInfo = UTMContext.current
+            var hasSentImpression by rememberSaveable(sponsoredApp.app.packageName) {
+              mutableStateOf(false)
+            }
+            LaunchedEffect(sponsoredApp.app.packageName) {
+              if (!hasSentImpression) {
+                sponsoredApp.app.campaigns?.toAptoideMMPCampaign()
+                  ?.sendImpressionEvent(utmInfo, sponsoredApp.app.packageName)
+                hasSentImpression = true
+              }
+            }
+
+            SearchSponsoredBannerView(
+              rtbApp = sponsoredApp,
+              onClick = { clickHandler(sponsoredApp.app.packageName, 0) },
+            )
+          }
+        }
+      }
+    }
+
     itemsIndexed(
       items = searchResults,
     ) { index, app ->
