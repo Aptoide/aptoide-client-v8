@@ -422,10 +422,10 @@
   <string name="search_sponsored_suggested">Đề xuất cho bạn 🔥</string>
   <string name="search_sponsored_label">Được tài trợ</string>
   <string name="game_genie_chat_name">GameGenie ✨</string>
-  <string name="game_genie_more_installed">"More installed games mean more ways to progress."</string>
-  <string name="gamegenie_companion_game_choice_title">Your installed games</string>
-  <string name="gamegenie_companion_master_fav_games">Master your fav game</string>
-  <string name="gamegenie_companion_tap_fav_game">Or tap your fav game - you\'ll master it.</string>
-  <string name="genai_input_message_field">Ask anything...</string>
-  <string name="genai_input_message_field_with_screenshot">Ask about this screen...</string>
+  <string name="game_genie_more_installed">"Càng nhiều trò chơi được cài đặt, càng có nhiều cách để tiến bộ."</string>
+  <string name="gamegenie_companion_game_choice_title">Các trò chơi đã cài đặt của bạn</string>
+  <string name="gamegenie_companion_master_fav_games">Nắm vững trò chơi yêu thích của bạn</string>
+  <string name="gamegenie_companion_tap_fav_game">Hoặc chạm vào trò chơi yêu thích của bạn - bạn sẽ thành thạo nó.</string>
+  <string name="genai_input_message_field">Hỏi bất cứ điều gì...</string>
+  <string name="genai_input_message_field_with_screenshot">Hỏi về màn hình này...</string>
 </resources>
