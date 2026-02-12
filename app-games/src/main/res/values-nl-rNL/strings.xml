@@ -101,6 +101,7 @@
   <string name="not_now_button">Niet nu</string>
   <string name="later_button">Later</string>
   <string name="trusted_game_badge">Vertrouwde game</string>
+  <string name="trusted_badge">Trusted</string>
   <string name="official_game_badge">Officiële game</string>
   <string name="editorial_card_views_short">%s weergaven</string>
   <!-- Out of Space -->
@@ -136,6 +137,8 @@
   <string name="appview_info_website_title" comment="website">Website</string>
   <string name="appview_info_email_title" comment="email">E-mail</string>
   <string name="appview_info_permissions_title" comment="permissions">Toestemmingen</string>
+  <string name="post_install_suggested_title">Suggested for You 🔥</string>
+  <string name="post_install_sponsored_label">Sponsored</string>
   <string name="bonus_banner_body">Je krijgt een bonus in alle games met %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Tot %s%% bonus</string>
   <string name="settings_auto_update_button">Games automatisch bijwerken</string>
@@ -339,10 +342,13 @@
   <string name="update_app_updated_notification_body">Ontdek wat er nieuw is</string>
   <!-- AB Test for Experiment 8 : Roblox Companion Apps -->
   <string name="apkfy_multi_install_install_button">Installeer [%d]</string>
+  <string name="apkfy_multi_install_install_title">Install %s</string>
   <string name="apkfy_multi_install_intro_1">Wilt u dit spel installeren?</string>
   <string name="apkfy_multi_install_intro_2">Populair bij Roblox-spelers</string>
   <string name="apkfy_multi_install_intro_3">Mensen die Roblox spelen, installeren ook deze</string>
   <string name="apkfy_multi_install_highlighted_game">Meest gespeeld op Aptoide Games</string>
+  <string name="apkfy_multi_install_highlighted_game_short">Top Played</string>
+  <string name="apkfy_multi_install_auto_open">Opens automatically when installation is complete.</string>
   <!-- AB Test for Experiment 9 : GamesFeed -->
   <string name="gamesfeed_bundle_header_1">Voor jou</string>
   <string name="gamesfeed_detail_header">Wekelijkse hoogtepunten op basis van Roblox</string>
@@ -422,4 +428,8 @@
   <!-- GameGenie Overlay Notification -->
   <string name="gamegenie_overlay_notification_title">GameGenie Chat-overlay</string>
   <string name="gamegenie_overlay_notification_text">GameGenie staat klaar om je te helpen!</string>
+  <!-- Search Sponsored Banner -->
+  <string name="search_sponsored_install">Install</string>
+  <string name="search_sponsored_suggested">Suggested for You 🔥</string>
+  <string name="search_sponsored_label">Sponsored</string>
 </resources>
