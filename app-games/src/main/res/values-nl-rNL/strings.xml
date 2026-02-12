@@ -432,4 +432,11 @@
   <string name="search_sponsored_install">Installeren</string>
   <string name="search_sponsored_suggested">Aanbevolen voor jou 🔥</string>
   <string name="search_sponsored_label">Gesponsord</string>
+  <string name="game_genie_chat_name">GameGenie ✨</string>
+  <string name="game_genie_more_installed">"Meer geïnstalleerde games betekent meer manieren om vooruitgang te boeken."</string>
+  <string name="gamegenie_companion_game_choice_title">Je geïnstalleerde games</string>
+  <string name="gamegenie_companion_master_fav_games">Word een meester in je favoriete game</string>
+  <string name="gamegenie_companion_tap_fav_game">Of tik op je favoriete game - je zult het onder de knie krijgen.</string>
+  <string name="genai_input_message_field">Vraag wat je wilt...</string>
+  <string name="genai_input_message_field_with_screenshot">Vraag naar dit scherm...</string>
 </resources>

@@ -421,4 +421,11 @@
   <string name="search_sponsored_install">Pasang</string>
   <string name="search_sponsored_suggested">Disarankan untuk Anda 🔥</string>
   <string name="search_sponsored_label">Didukung oleh</string>
+  <string name="game_genie_chat_name">GameGenie ✨</string>
+  <string name="game_genie_more_installed">"Semakin banyak game yang diinstal, semakin banyak cara untuk maju."</string>
+  <string name="gamegenie_companion_game_choice_title">Permainan yang telah Anda instal</string>
+  <string name="gamegenie_companion_master_fav_games">Kuasai game favoritmu</string>
+  <string name="gamegenie_companion_tap_fav_game">Atau ketuk game favoritmu - kamu akan menguasainya.</string>
+  <string name="genai_input_message_field">Tanyakan apa saja...</string>
+  <string name="genai_input_message_field_with_screenshot">Tanyakan tentang layar ini...</string>
 </resources>

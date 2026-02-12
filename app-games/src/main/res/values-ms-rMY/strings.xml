@@ -422,4 +422,11 @@ Promosi khas dan ganjaran dalam permainan kegemaran anda.</string>
   <string name="search_sponsored_install">Install</string>
   <string name="search_sponsored_suggested">Suggested for You 🔥</string>
   <string name="search_sponsored_label">Sponsored</string>
+  <string name="game_genie_chat_name">GameGenie ✨</string>
+  <string name="game_genie_more_installed">"More installed games mean more ways to progress."</string>
+  <string name="gamegenie_companion_game_choice_title">Your installed games</string>
+  <string name="gamegenie_companion_master_fav_games">Master your fav game</string>
+  <string name="gamegenie_companion_tap_fav_game">Or tap your fav game - you\'ll master it.</string>
+  <string name="genai_input_message_field">Ask anything...</string>
+  <string name="genai_input_message_field_with_screenshot">Ask about this screen...</string>
 </resources>

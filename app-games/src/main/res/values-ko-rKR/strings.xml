@@ -421,4 +421,11 @@
   <string name="search_sponsored_install">설치</string>
   <string name="search_sponsored_suggested">추천 콘텐츠 🔥</string>
   <string name="search_sponsored_label">스폰서 제공</string>
+  <string name="game_genie_chat_name">게임지니 ✨</string>
+  <string name="game_genie_more_installed">"설치된 게임이 많을수록 진행할 수 있는 방법이 더 많아집니다."</string>
+  <string name="gamegenie_companion_game_choice_title">설치된 게임들</string>
+  <string name="gamegenie_companion_master_fav_games">좋아하는 게임을 마스터하세요</string>
+  <string name="gamegenie_companion_tap_fav_game">좋아하는 게임을 탭해봐 - 금방 마스터할 수 있을 거야.</string>
+  <string name="genai_input_message_field">뭐든지 물어보세요...</string>
+  <string name="genai_input_message_field_with_screenshot">이 화면에 대해 문의하세요...</string>
 </resources>
