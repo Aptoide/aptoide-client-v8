@@ -433,10 +433,10 @@
   <string name="search_sponsored_suggested">Sizin için öneriler 🔥</string>
   <string name="search_sponsored_label">Sponsorlu</string>
   <string name="game_genie_chat_name">GameGenie ✨</string>
-  <string name="game_genie_more_installed">"More installed games mean more ways to progress."</string>
-  <string name="gamegenie_companion_game_choice_title">Your installed games</string>
-  <string name="gamegenie_companion_master_fav_games">Master your fav game</string>
-  <string name="gamegenie_companion_tap_fav_game">Or tap your fav game - you\'ll master it.</string>
-  <string name="genai_input_message_field">Ask anything...</string>
-  <string name="genai_input_message_field_with_screenshot">Ask about this screen...</string>
+  <string name="game_genie_more_installed">"Daha fazla yüklü oyun, daha fazla ilerleme yolu anlamına gelir."</string>
+  <string name="gamegenie_companion_game_choice_title">Yüklediğiniz oyunlar</string>
+  <string name="gamegenie_companion_master_fav_games">En sevdiğiniz oyunu ustalaşın</string>
+  <string name="gamegenie_companion_tap_fav_game">Ya da en sevdiğin oyuna dokun - onu ustalıkla oynayacaksın.</string>
+  <string name="genai_input_message_field">Her şeyi sorabilirsiniz...</string>
+  <string name="genai_input_message_field_with_screenshot">Bu ekran hakkında bilgi alın...</string>
 </resources>
