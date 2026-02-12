@@ -101,6 +101,7 @@
   <string name="not_now_button">Nie teraz</string>
   <string name="later_button">Później</string>
   <string name="trusted_game_badge">Zaufana gra</string>
+  <string name="trusted_badge">Trusted</string>
   <string name="official_game_badge">Oficjalna gra</string>
   <string name="editorial_card_views_short">%s wyświetlenia</string>
   <!-- Out of Space -->
@@ -136,6 +137,8 @@
   <string name="appview_info_website_title" comment="website">Strona internetowa</string>
   <string name="appview_info_email_title" comment="email">Email</string>
   <string name="appview_info_permissions_title" comment="permissions">Uprawnienia</string>
+  <string name="post_install_suggested_title">Suggested for You 🔥</string>
+  <string name="post_install_sponsored_label">Sponsored</string>
   <string name="bonus_banner_body">Otrzymasz bonus we wszystkich grach oznaczonych jako %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Do %s%% Bonus</string>
   <string name="settings_auto_update_button">Automatyczna aktualizacja gier</string>
@@ -361,10 +364,13 @@
   <string name="update_app_updated_notification_body">Odkryj nowości</string>
   <!-- AB Test for Experiment 8 : Roblox Companion Apps -->
   <string name="apkfy_multi_install_install_button">Zainstaluj [%d]</string>
+  <string name="apkfy_multi_install_install_title">Install %s</string>
   <string name="apkfy_multi_install_intro_1">Czy chcesz zainstalować tę grę?</string>
   <string name="apkfy_multi_install_intro_2">Popularny wśród graczy Roblox</string>
   <string name="apkfy_multi_install_intro_3">Osoby grające w Roblox instalują również te gry</string>
   <string name="apkfy_multi_install_highlighted_game">Najczęściej grane gry na Aptoide</string>
+  <string name="apkfy_multi_install_highlighted_game_short">Top Played</string>
+  <string name="apkfy_multi_install_auto_open">Opens automatically when installation is complete.</string>
   <!-- AB Test for Experiment 9 : GamesFeed -->
   <string name="gamesfeed_bundle_header_1">Dla Ciebie</string>
   <string name="gamesfeed_detail_header">Najważniejsze wydarzenia tygodnia według Roblox</string>
@@ -444,4 +450,8 @@
   <!-- GameGenie Overlay Notification -->
   <string name="gamegenie_overlay_notification_title">Nakładka czatu GameGenie</string>
   <string name="gamegenie_overlay_notification_text">GameGenie jest gotowy, aby Ci pomóc!</string>
+  <!-- Search Sponsored Banner -->
+  <string name="search_sponsored_install">Install</string>
+  <string name="search_sponsored_suggested">Suggested for You 🔥</string>
+  <string name="search_sponsored_label">Sponsored</string>
 </resources>
