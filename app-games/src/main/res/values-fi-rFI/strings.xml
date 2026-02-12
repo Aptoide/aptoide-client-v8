@@ -101,7 +101,7 @@
   <string name="not_now_button">Ei nyt</string>
   <string name="later_button">Myöhemmin</string>
   <string name="trusted_game_badge">Luotettu peli</string>
-  <string name="trusted_badge">Trusted</string>
+  <string name="trusted_badge">Luotettava</string>
   <string name="official_game_badge">Virallinen peli</string>
   <string name="editorial_card_views_short">%s näyttöä</string>
   <!-- Out of Space -->
@@ -137,8 +137,8 @@
   <string name="appview_info_website_title" comment="website">Kotisivu</string>
   <string name="appview_info_email_title" comment="email">Sähköposti</string>
   <string name="appview_info_permissions_title" comment="permissions">Luvat</string>
-  <string name="post_install_suggested_title">Suggested for You 🔥</string>
-  <string name="post_install_sponsored_label">Sponsored</string>
+  <string name="post_install_suggested_title">Suositellaan sinulle 🔥</string>
+  <string name="post_install_sponsored_label">Sponsoroitu</string>
   <string name="bonus_banner_body">Saat bonuksen kaikissa peleissä, jotka on tunnistettu %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Jopa %s%% bonus</string>
   <string name="settings_auto_update_button">Automaattisesti päivittyvät pelit</string>
@@ -342,13 +342,13 @@
   <string name="update_app_updated_notification_body">Tutustu uutuuksiin</string>
   <!-- AB Test for Experiment 8 : Roblox Companion Apps -->
   <string name="apkfy_multi_install_install_button">Asenna [%d]</string>
-  <string name="apkfy_multi_install_install_title">Install %s</string>
+  <string name="apkfy_multi_install_install_title">Asenna %s</string>
   <string name="apkfy_multi_install_intro_1">Haluatko asentaa tämän pelin?</string>
   <string name="apkfy_multi_install_intro_2">Suosittu Roblox-pelaajien keskuudessa</string>
   <string name="apkfy_multi_install_intro_3">Robloxia pelaavat ihmiset asentavat myös nämä</string>
   <string name="apkfy_multi_install_highlighted_game">Aptoide-pelien suosituimmat pelit</string>
-  <string name="apkfy_multi_install_highlighted_game_short">Top Played</string>
-  <string name="apkfy_multi_install_auto_open">Opens automatically when installation is complete.</string>
+  <string name="apkfy_multi_install_highlighted_game_short">Suosituimmat</string>
+  <string name="apkfy_multi_install_auto_open">Avautuu automaattisesti, kun asennus on valmis.</string>
   <!-- AB Test for Experiment 9 : GamesFeed -->
   <string name="gamesfeed_bundle_header_1">Sinulle</string>
   <string name="gamesfeed_detail_header">Robloxin viikoittaiset kohokohdat</string>
@@ -429,7 +429,7 @@
   <string name="gamegenie_overlay_notification_title">GameGenie-chat-overlay</string>
   <string name="gamegenie_overlay_notification_text">GameGenie on valmis auttamaan sinua!</string>
   <!-- Search Sponsored Banner -->
-  <string name="search_sponsored_install">Install</string>
-  <string name="search_sponsored_suggested">Suggested for You 🔥</string>
-  <string name="search_sponsored_label">Sponsored</string>
+  <string name="search_sponsored_install">Asenna</string>
+  <string name="search_sponsored_suggested">Suositellaan sinulle 🔥</string>
+  <string name="search_sponsored_label">Sponsoroitu</string>
 </resources>
