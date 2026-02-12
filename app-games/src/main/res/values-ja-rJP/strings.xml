@@ -101,7 +101,7 @@
   <string name="not_now_button">今はしない</string>
   <string name="later_button">後で</string>
   <string name="trusted_game_badge">信頼できるゲーム</string>
-  <string name="trusted_badge">Trusted</string>
+  <string name="trusted_badge">信頼できる</string>
   <string name="official_game_badge">公式ゲーム</string>
   <string name="editorial_card_views_short">%s ビュー</string>
   <!-- Out of Space -->
@@ -137,8 +137,8 @@
   <string name="appview_info_website_title" comment="website">ウェブサイト</string>
   <string name="appview_info_email_title" comment="email">Eメール</string>
   <string name="appview_info_permissions_title" comment="permissions">許可</string>
-  <string name="post_install_suggested_title">Suggested for You 🔥</string>
-  <string name="post_install_sponsored_label">Sponsored</string>
+  <string name="post_install_suggested_title">おすすめ 🔥</string>
+  <string name="post_install_sponsored_label">スポンサー提供</string>
   <string name="bonus_banner_body">%sで表示されたすべてのゲームでボーナスを獲得できます。</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">最大%s%%のボーナス</string>
   <string name="settings_auto_update_button">ゲームの自動更新</string>
@@ -332,13 +332,13 @@
   <string name="update_app_updated_notification_body">新着情報をチェック</string>
   <!-- AB Test for Experiment 8 : Roblox Companion Apps -->
   <string name="apkfy_multi_install_install_button">[%d] をインストールしてください</string>
-  <string name="apkfy_multi_install_install_title">Install %s</string>
+  <string name="apkfy_multi_install_install_title">インストール %s</string>
   <string name="apkfy_multi_install_intro_1">このゲームをインストールしますか？</string>
   <string name="apkfy_multi_install_intro_2">Robloxプレイヤーに人気</string>
   <string name="apkfy_multi_install_intro_3">Robloxをプレイしている人たちは、これらもインストールしています</string>
   <string name="apkfy_multi_install_highlighted_game">Aptoideゲームで最もプレイされているゲーム</string>
-  <string name="apkfy_multi_install_highlighted_game_short">Top Played</string>
-  <string name="apkfy_multi_install_auto_open">Opens automatically when installation is complete.</string>
+  <string name="apkfy_multi_install_highlighted_game_short">トッププレイ</string>
+  <string name="apkfy_multi_install_auto_open">インストールが完了すると自動的に開きます。</string>
   <!-- AB Test for Experiment 9 : GamesFeed -->
   <string name="gamesfeed_bundle_header_1">あなたのために</string>
   <string name="gamesfeed_detail_header">Robloxに基づく週間ハイライト</string>
@@ -419,7 +419,7 @@
   <string name="gamegenie_overlay_notification_title">ゲームジーニー チャットオーバーレイ</string>
   <string name="gamegenie_overlay_notification_text">ゲームジーニーがあなたをサポートします！</string>
   <!-- Search Sponsored Banner -->
-  <string name="search_sponsored_install">Install</string>
-  <string name="search_sponsored_suggested">Suggested for You 🔥</string>
-  <string name="search_sponsored_label">Sponsored</string>
+  <string name="search_sponsored_install">インストール</string>
+  <string name="search_sponsored_suggested">おすすめ 🔥</string>
+  <string name="search_sponsored_label">スポンサー提供</string>
 </resources>
