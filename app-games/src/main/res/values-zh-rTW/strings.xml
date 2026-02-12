@@ -101,6 +101,7 @@
   <string name="not_now_button">不是現在</string>
   <string name="later_button">稍後</string>
   <string name="trusted_game_badge">可信遊戲</string>
+  <string name="trusted_badge">Trusted</string>
   <string name="official_game_badge">官方遊戲</string>
   <string name="editorial_card_views_short">%s 意見</string>
   <!-- Out of Space -->
@@ -136,6 +137,8 @@
   <string name="appview_info_website_title" comment="website">網站</string>
   <string name="appview_info_email_title" comment="email">電子郵件</string>
   <string name="appview_info_permissions_title" comment="permissions">權限</string>
+  <string name="post_install_suggested_title">Suggested for You 🔥</string>
+  <string name="post_install_sponsored_label">Sponsored</string>
   <string name="bonus_banner_body">在所有以 %s識別的遊戲中，您都將獲得獎金。</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">高達 %s%% 獎金</string>
   <string name="settings_auto_update_button">自動更新遊戲</string>
@@ -328,10 +331,13 @@
   <string name="update_app_updated_notification_body">探索最新資訊</string>
   <!-- AB Test for Experiment 8 : Roblox Companion Apps -->
   <string name="apkfy_multi_install_install_button">安裝 [%d]</string>
+  <string name="apkfy_multi_install_install_title">Install %s</string>
   <string name="apkfy_multi_install_intro_1">您要安裝這款遊戲嗎？</string>
   <string name="apkfy_multi_install_intro_2">深受Roblox玩家歡迎</string>
   <string name="apkfy_multi_install_intro_3">玩 Roblox 的人也安裝了這些</string>
   <string name="apkfy_multi_install_highlighted_game">Aptoide遊戲平台熱門遊戲排行榜</string>
+  <string name="apkfy_multi_install_highlighted_game_short">Top Played</string>
+  <string name="apkfy_multi_install_auto_open">Opens automatically when installation is complete.</string>
   <!-- AB Test for Experiment 9 : GamesFeed -->
   <string name="gamesfeed_bundle_header_1">為你</string>
   <string name="gamesfeed_detail_header">基於Roblox的每週精選</string>
@@ -411,4 +417,8 @@
   <!-- GameGenie Overlay Notification -->
   <string name="gamegenie_overlay_notification_title">GameGenie 聊天疊加層</string>
   <string name="gamegenie_overlay_notification_text">GameGenie已準備好為您提供協助！</string>
+  <!-- Search Sponsored Banner -->
+  <string name="search_sponsored_install">Install</string>
+  <string name="search_sponsored_suggested">Suggested for You 🔥</string>
+  <string name="search_sponsored_label">Sponsored</string>
 </resources>
