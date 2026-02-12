@@ -101,7 +101,7 @@
   <string name="not_now_button">稍后再说</string>
   <string name="later_button">稍后再说</string>
   <string name="trusted_game_badge">受信任游戏</string>
-  <string name="trusted_badge">Trusted</string>
+  <string name="trusted_badge">可信赖的</string>
   <string name="official_game_badge">官方游戏</string>
   <string name="editorial_card_views_short">%s 次浏览</string>
   <!-- Out of Space -->
@@ -137,8 +137,8 @@
   <string name="appview_info_website_title" comment="website">网站</string>
   <string name="appview_info_email_title" comment="email">电子邮件</string>
   <string name="appview_info_permissions_title" comment="permissions">权限</string>
-  <string name="post_install_suggested_title">Suggested for You 🔥</string>
-  <string name="post_install_sponsored_label">Sponsored</string>
+  <string name="post_install_suggested_title">为您推荐 🔥</string>
+  <string name="post_install_sponsored_label">赞助商</string>
   <string name="bonus_banner_body">您将在所有标有%s的游戏中获得奖金。</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">高达 %s%% 的奖金</string>
   <string name="settings_auto_update_button">自动更新游戏</string>
@@ -331,13 +331,13 @@
   <string name="update_app_updated_notification_body">探索最新动态</string>
   <!-- AB Test for Experiment 8 : Roblox Companion Apps -->
   <string name="apkfy_multi_install_install_button">安装 [%d]</string>
-  <string name="apkfy_multi_install_install_title">Install %s</string>
+  <string name="apkfy_multi_install_install_title">安装 %s</string>
   <string name="apkfy_multi_install_intro_1">您要安装这款游戏吗？</string>
   <string name="apkfy_multi_install_intro_2">深受Roblox玩家欢迎</string>
   <string name="apkfy_multi_install_intro_3">玩Roblox的人也在安装这些</string>
   <string name="apkfy_multi_install_highlighted_game">Aptoide游戏平台热门榜单</string>
-  <string name="apkfy_multi_install_highlighted_game_short">Top Played</string>
-  <string name="apkfy_multi_install_auto_open">Opens automatically when installation is complete.</string>
+  <string name="apkfy_multi_install_highlighted_game_short">热门播放</string>
+  <string name="apkfy_multi_install_auto_open">安装完成后自动打开。</string>
   <!-- AB Test for Experiment 9 : GamesFeed -->
   <string name="gamesfeed_bundle_header_1">为你</string>
   <string name="gamesfeed_detail_header">基于Roblox的每周精选</string>
@@ -418,7 +418,7 @@
   <string name="gamegenie_overlay_notification_title">游戏精灵聊天叠加层</string>
   <string name="gamegenie_overlay_notification_text">GameGenie已准备好为您服务！</string>
   <!-- Search Sponsored Banner -->
-  <string name="search_sponsored_install">Install</string>
-  <string name="search_sponsored_suggested">Suggested for You 🔥</string>
-  <string name="search_sponsored_label">Sponsored</string>
+  <string name="search_sponsored_install">安装</string>
+  <string name="search_sponsored_suggested">为您推荐 🔥</string>
+  <string name="search_sponsored_label">赞助商</string>
 </resources>
