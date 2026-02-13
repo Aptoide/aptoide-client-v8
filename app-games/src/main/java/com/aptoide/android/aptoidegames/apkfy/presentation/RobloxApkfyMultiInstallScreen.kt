@@ -371,13 +371,13 @@ fun TrustedBadge() {
       .padding(horizontal = 4.dp, vertical = 3.dp)
   ) {
     Image(
-      imageVector = getTrustedIcon(Palette.Trusted),
+      imageVector = getTrustedIcon(Palette.Green),
       contentDescription = null,
       modifier = Modifier.size(16.dp)
     )
     Text(
       text = stringResource(R.string.trusted_badge),
-      color = Palette.Trusted,
+      color = Palette.Green,
       style = AGTypography.InputsXS
     )
   }
