@@ -57,7 +57,8 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
   override val savedStateRegistry: SavedStateRegistry
     get() = savedStateRegistryController.savedStateRegistry
 
-  private val pollingInterval = 6_000L
+  private val pollingIntervalMillis = 10_000L
+  private val pollingIntervalSec = pollingIntervalMillis.toInt() / 1_000
   private var pollingJob: Job? = null
   private var completedMissionsJob: Job? = null
   private var isMonitoringStarted = false
@@ -157,7 +158,7 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
       pollingJob = lifecycleScope.launch(Dispatchers.IO) {
         while (isActive) {
           syncService()
-          delay(pollingInterval)
+          delay(pollingIntervalMillis)
         }
       }
     }
@@ -196,7 +197,7 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
           }
         } else {
           // Same package still in foreground - sync active sessions
-          paESessionManager.syncSessions(lastForegroundPackage)
+          paESessionManager.syncSessions(lastForegroundPackage, pollingIntervalSec)
         }
       }
 
