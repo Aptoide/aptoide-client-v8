@@ -43,6 +43,7 @@ fun GameGenieOverlay(
   showMenu: Boolean,
   isAptoideGamesInForeground: Boolean,
   targetAppIcon: ImageBitmap?,
+  isCaptureReady: Boolean,
   onMenuToggle: () -> Unit,
   onDrag: (dx: Int, dy: Int) -> Unit,
   onDragEnd: () -> Unit,
@@ -59,6 +60,7 @@ fun GameGenieOverlay(
       GameGenieIconFab(
         isAptoideGamesInForeground = isAptoideGamesInForeground,
         targetAppIcon = targetAppIcon,
+        isCaptureReady = isCaptureReady,
         modifier = Modifier
           .pointerInput(Unit) {
             var totalDragDistance = 0f
@@ -79,10 +81,16 @@ fun GameGenieOverlay(
             )
           },
         onClick = {
-          analytics.sendGameGenieOverlayClick()
-          onScreenshotRequest()
+          if (isCaptureReady) {
+            analytics.sendGameGenieOverlayClick()
+            onScreenshotRequest()
+          }
         },
-        onLongClick = { onMenuToggle() }
+        onLongClick = { 
+          if (isCaptureReady) {
+            onMenuToggle()
+          }
+        }
       )
     }
 
@@ -181,6 +189,7 @@ fun GameGenieIconFab(
   modifier: Modifier = Modifier,
   isAptoideGamesInForeground: Boolean,
   targetAppIcon: ImageBitmap? = null,
+  isCaptureReady: Boolean = false,
   onClick: () -> Unit = {},
   onLongClick: () -> Unit = {},
 ) {
@@ -189,16 +198,19 @@ fun GameGenieIconFab(
     contentAlignment = Alignment.Center
   ) {
     val iconSize = if (isAptoideGamesInForeground) 48.dp else 40.dp
+    val alpha = if (isCaptureReady) 1f else 0.5f
     val iconModifier = Modifier
       .size(iconSize)
       .graphicsLayer {
         shadowElevation = 4.dp.toPx()
         shape = CircleShape
+        this.alpha = alpha
         val shadowOffset = if (isAptoideGamesInForeground) - 4.dp.toPx() else 0f
         translationY = shadowOffset
         translationX = shadowOffset
       }
       .combinedClickable(
+        enabled = isCaptureReady,
         onClick = onClick,
         onLongClick = onLongClick
       )
@@ -243,7 +255,8 @@ fun GameGenieIconFab(
 private fun GameGenieIconFabForegroundPreview() {
   GameGenieIconFab(
     isAptoideGamesInForeground = true,
-    targetAppIcon = ImageBitmap(20, 20)
+    targetAppIcon = ImageBitmap(20, 20),
+    isCaptureReady = true
   )
 }
 
@@ -251,6 +264,7 @@ private fun GameGenieIconFabForegroundPreview() {
 @Composable
 private fun GameGenieIconFabBackgroundPreview() {
   GameGenieIconFab(
-    isAptoideGamesInForeground = false
+    isAptoideGamesInForeground = false,
+    isCaptureReady = true
   )
 }

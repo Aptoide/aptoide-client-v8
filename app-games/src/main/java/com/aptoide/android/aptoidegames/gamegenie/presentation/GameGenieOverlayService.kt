@@ -4,12 +4,17 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
+import android.content.pm.ServiceInfo
+import android.content.res.Configuration
 import android.graphics.Bitmap
+import android.graphics.PixelFormat
 import android.os.Build
 import android.os.IBinder
+import android.view.Gravity
 import android.view.WindowManager
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -81,6 +86,9 @@ class GameGenieOverlayService : Service(),
     private val _overlayRunningState = MutableStateFlow(false)
     val overlayRunningState: StateFlow<Boolean> = _overlayRunningState.asStateFlow()
     
+    private val _captureReadyState = MutableStateFlow(false)
+    val captureReadyState: StateFlow<Boolean> = _captureReadyState.asStateFlow()
+
     @Volatile
     var hasScreenshotPermission: Boolean = false
       private set
@@ -90,6 +98,10 @@ class GameGenieOverlayService : Service(),
     
     fun clearPermissionRequest() {
       needsMediaProjectionPermission = false
+    }
+
+    fun resetCaptureReadiness() {
+      _captureReadyState.value = false
     }
   }
 
@@ -163,6 +175,7 @@ class GameGenieOverlayService : Service(),
     
     screenshotManager.onMediaProjectionStopped = {
       hasScreenshotPermission = false
+      _captureReadyState.value = false
     }
 
     displayMonitor = OverlayDisplayMonitor(
@@ -170,6 +183,33 @@ class GameGenieOverlayService : Service(),
       scope = scope,
       onDimensionChanged = { handleDimensionChange() }
     )
+  }
+
+  private fun startCaptureReadinessCheck() {
+    scope.launch(Dispatchers.IO) {
+      delay(2000)
+      var attempts = 0
+      val maxAttempts = 30 // 15 seconds total (30 * 500ms)
+
+      while (!_captureReadyState.value && attempts < maxAttempts && isServiceRunning) {
+        val testBitmap = screenshotManager.captureScreenBitmap(
+          windowManager.screenWidth,
+          windowManager.screenHeight,
+          validateContent = true
+        )
+
+        if (testBitmap != null) {
+          testBitmap.recycle()
+          withContext(Dispatchers.Main) {
+            _captureReadyState.value = true
+          }
+          break
+        }
+
+        attempts++
+        delay(500)
+      }
+    }
   }
 
   private fun setupOverlayView() {
@@ -239,12 +279,15 @@ class GameGenieOverlayService : Service(),
         val fabSize = OverlayWindowManager.FAB_SIZE_DP.dp
         val fabSizePx = with(LocalDensity.current) { fabSize.toPx().toInt() }
         val targetAppIcon = rememberTargetAppIcon(targetPackage)
+        
+        val isCaptureReady by captureReadyState.collectAsState()
 
         AptoideTheme {
           GameGenieOverlay(
             showMenu = showMenu,
             isAptoideGamesInForeground = isAptoideGamesInForeground,
             targetAppIcon = targetAppIcon,
+            isCaptureReady = isCaptureReady,
             onMenuToggle = onMenuToggle,
             onDrag = { dx, dy ->
               fabX = (fabX + dx)
@@ -325,7 +368,7 @@ class GameGenieOverlayService : Service(),
     }
   }
 
-  override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
+  override fun onConfigurationChanged(newConfig: Configuration) {
     super.onConfigurationChanged(newConfig)
     handleDimensionChange()
   }
@@ -354,13 +397,27 @@ class GameGenieOverlayService : Service(),
       pendingMediaProjectionResultCode = newResultCode
       pendingMediaProjectionData = newData
       hasScreenshotPermission = true
+      _captureReadyState.value = false
+
+      screenshotManager.setupMediaProjection(pendingMediaProjectionResultCode, pendingMediaProjectionData)
+      screenshotManager.setupVirtualDisplay(
+        windowManager.screenWidth,
+        windowManager.screenHeight,
+        onFirstFrameReady = {
+          startCaptureReadinessCheck()
+        }
+      )
+      pendingMediaProjectionResultCode = 0
+      pendingMediaProjectionData = null
     } else if (screenshotManager.hasPermissionData()) {
       if (screenshotManager.needsRecreation()) {
         if (screenshotManager.hasMediaProjection()) {
+          _captureReadyState.value = false
           screenshotManager.setupVirtualDisplay(
             windowManager.screenWidth,
             windowManager.screenHeight,
             onFirstFrameReady = {
+              startCaptureReadinessCheck()
             }
           )
         }
@@ -433,9 +490,9 @@ class GameGenieOverlayService : Service(),
       WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
         WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
         WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
-      android.graphics.PixelFormat.TRANSLUCENT
+      PixelFormat.TRANSLUCENT
     ).apply {
-      gravity = android.view.Gravity.TOP or android.view.Gravity.START
+      gravity = Gravity.TOP or Gravity.START
       x = menuX
       y = menuY
     }
@@ -643,9 +700,9 @@ class GameGenieOverlayService : Service(),
         WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
           WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
           WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
-        android.graphics.PixelFormat.TRANSLUCENT
+        PixelFormat.TRANSLUCENT
       ).apply {
-        gravity = android.view.Gravity.TOP or android.view.Gravity.START
+        gravity = Gravity.TOP or Gravity.START
         this.x = x
         this.y = y
       }
@@ -729,7 +786,7 @@ class GameGenieOverlayService : Service(),
       startForeground(
         NOTIFICATION_ID,
         notification,
-        android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PROJECTION
+        ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PROJECTION
       )
     } else {
       startForeground(NOTIFICATION_ID, notification)
