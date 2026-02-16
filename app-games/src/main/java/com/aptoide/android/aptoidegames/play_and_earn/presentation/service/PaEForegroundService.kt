@@ -70,6 +70,9 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
   override fun onCreate() {
     super.onCreate()
 
+    // Start foreground immediately to prevent crash if service gets stopped on initialization
+    startForegroundWithNotification()
+
     savedStateRegistryController.performAttach()
     savedStateRegistryController.performRestore(null)
 
@@ -90,8 +93,6 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
 
   override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
     super.onStartCommand(intent, flags, startId)
-
-    startForegroundWithNotification()
 
     if (!applicationContext.hasUsageStatsPermissionStatus() || !applicationContext.hasOverlayPermission()) {
       stopSelf()
