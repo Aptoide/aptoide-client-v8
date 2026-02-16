@@ -33,6 +33,7 @@ private const val BUNDLE_META_PARAM = "bundleMeta"
 private const val SEARCH_META_PARAM = "searchMeta"
 private const val ITEM_POSITION_PARAM = "itemPosition"
 private const val IS_APKFY_PARAM = "isApkfy"
+private const val IS_PLAY_AND_EARN_PARAM = "isPlayAndEarn"
 private const val HOME_TAB_PARAM = "HomeTab"
 private const val UTM_INFO_PARAM = "utmInfo"
 
@@ -51,7 +52,8 @@ fun ScreenData.Companion.withAnalytics(
       .withItemPosition("{$ITEM_POSITION_PARAM}")
       .withApkfy("{$IS_APKFY_PARAM}")
       .withHomeTab("{$HOME_TAB_PARAM}")
-      .withUtmInfo("{$UTM_INFO_PARAM}"),
+      .withUtmInfo("{$UTM_INFO_PARAM}")
+      .withPlayAndEarn("{$IS_PLAY_AND_EARN_PARAM}"),
     arguments = arguments + listOf(
       navArgument(PREV_SCREEN_PARAM) {
         type = NavType.StringType
@@ -76,6 +78,10 @@ fun ScreenData.Companion.withAnalytics(
       navArgument(UTM_INFO_PARAM) {
         type = NavType.StringType
         nullable = true
+      },
+      navArgument(IS_PLAY_AND_EARN_PARAM) {
+        type = NavType.BoolType
+        defaultValue = false
       }
     ),
     deepLinks = deepLinks.map {
@@ -89,6 +95,7 @@ fun ScreenData.Companion.withAnalytics(
       val isApkfy = args?.getBoolean(IS_APKFY_PARAM, false) ?: false
       val homeTab = args?.getString(HOME_TAB_PARAM, null)
       val utmInfo = args?.getString(UTM_INFO_PARAM)?.let(UTMInfo::fromString)
+      val isPlayAndEarn = args?.getBoolean(IS_PLAY_AND_EARN_PARAM, false) ?: false
 
       val utmContext = UTMContext.current
 
@@ -104,6 +111,7 @@ fun ScreenData.Companion.withAnalytics(
           itemPosition = itemPosition,
           isApkfy = isApkfy,
           homeTab = homeTab,
+          isPlayAndEarn = isPlayAndEarn
         ),
         LocalUTMInfo provides (utmInfo ?: utmContext)
       ) {
@@ -117,6 +125,7 @@ fun ScreenData.Companion.withAnalytics(
               .withApkfy(isApkfy)
               .withHomeTab(homeTab)
               .withUtmInfo(utmInfo)
+              .withPlayAndEarn(isPlayAndEarn)
               .also(navigate)
           },
           goBack
@@ -271,6 +280,30 @@ fun OverrideAnalyticsAPKFY(
   }
 }
 
+@Composable
+fun OverrideAnalyticsPlayAndEarn(
+  navigate: (String) -> Unit,
+  content: @Composable ((String) -> Unit) -> Unit,
+) {
+  val current = LocalAnalyticsContext.current
+  CompositionLocalProvider(
+    LocalAnalyticsContext provides AnalyticsUIContext(
+      currentScreen = current.currentScreen,
+      previousScreen = current.previousScreen,
+      bundleMeta = null,
+      searchMeta = null,
+      itemPosition = null,
+      isApkfy = false,
+      homeTab = null,
+      isPlayAndEarn = true
+    )
+  ) {
+    content {
+      navigate(it.withPlayAndEarn(true).withPrevScreen(current.currentScreen))
+    }
+  }
+}
+
 fun String.withBundleMeta(bundleMeta: BundleMeta?) = withBundleMeta(bundleMeta?.toString())
 
 fun String.withSearchMeta(searchMeta: SearchMeta?) = withSearchMeta(searchMeta?.toString())
@@ -278,6 +311,8 @@ fun String.withSearchMeta(searchMeta: SearchMeta?) = withSearchMeta(searchMeta?.
 fun String.withItemPosition(itemPosition: Int?) = withItemPosition(itemPosition?.toString())
 
 fun String.withApkfy(isApkfy: Boolean?) = withApkfy(isApkfy?.toString())
+
+fun String.withPlayAndEarn(isPlayAndEarn: Boolean?) = withPlayAndEarn(isPlayAndEarn?.toString())
 
 fun String.withPrevScreen(previousScreen: String) =
   withParameter(PREV_SCREEN_PARAM, previousScreen)
@@ -293,6 +328,9 @@ fun String.withItemPosition(itemPosition: String?) =
 
 fun String.withApkfy(isApkfy: String?) =
   withParameter(IS_APKFY_PARAM, isApkfy)
+
+fun String.withPlayAndEarn(isPlayAndEarn: String?) =
+  withParameter(IS_PLAY_AND_EARN_PARAM, isPlayAndEarn)
 
 fun String.withHomeTab(homeTab: String?) =
   withParameter(HOME_TAB_PARAM, homeTab)

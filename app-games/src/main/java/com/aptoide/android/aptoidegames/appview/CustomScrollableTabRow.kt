@@ -4,8 +4,8 @@ import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
@@ -21,14 +21,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.debugInspectorInfo
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
-import com.aptoide.android.aptoidegames.R
+import cm.aptoide.pt.extensions.getRandomString
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -44,6 +45,8 @@ fun CustomScrollableTabRow(
   backgroundColor: Color,
   modifier: Modifier = Modifier,
   tabTextStyle: TextStyle = AGTypography.InputsL,
+  tabBadges: List<(@Composable BoxScope.() -> Unit)?> = List(tabs.size) { null },
+  onTabPositioned: (index: Int, x: Float, width: Float) -> Unit = { _, _, _ -> },
 ) {
   val density = LocalDensity.current
   val indicatorWidths = remember(key1 = tabs.size) { MutableList(tabs.size) { 0.dp } }
@@ -52,7 +55,7 @@ fun CustomScrollableTabRow(
     selectedTabIndex = selectedTabIndex,
     contentColor = contentColor,
     backgroundColor = backgroundColor,
-    modifier = modifier.height(40.dp),
+    modifier = modifier,
     edgePadding = 0.dp,
     indicator = { tabPositions ->
       TabRowDefaults.Indicator(
@@ -68,22 +71,36 @@ fun CustomScrollableTabRow(
   ) {
     tabs.forEachIndexed { tabIndex, tab ->
       Tab(
+        modifier = Modifier
+          .onGloballyPositioned { coordinates ->
+            onTabPositioned(
+              tabIndex,
+              coordinates.positionInParent().x,
+              coordinates.size.width.toFloat()
+            )
+          },
         selected = selectedTabIndex == tabIndex,
         onClick = { onTabClick(tabIndex) },
         text = {
-          Text(
-            text = tab,
-            style = tabTextStyle,
-            color = if (selectedTabIndex == tabIndex) {
-              Palette.Primary
-            } else {
-              Palette.White
-            },
-            onTextLayout = { textLayoutResult ->
-              indicatorWidths[tabIndex] =
-                with(density) { textLayoutResult.size.width.toDp() }
+          Box {
+            Text(
+              text = tab,
+              style = tabTextStyle,
+              color = if (selectedTabIndex == tabIndex) {
+                contentColor
+              } else {
+                Palette.White
+              },
+              onTextLayout = { textLayoutResult ->
+                indicatorWidths[tabIndex] =
+                  with(density) { textLayoutResult.size.width.toDp() }
+              }
+            )
+
+            tabBadges.getOrNull(tabIndex)?.let { badge ->
+              badge()
             }
-          )
+          }
         }
       )
     }
@@ -113,25 +130,10 @@ private fun Modifier.customTabIndicatorOffset(
     .width(currentTabWidth)
 }
 
-@Composable
-fun AppViewTab.getTabName(): String = stringResource(
-  when (this) {
-    AppViewTab.DETAILS -> R.string.appview_details_tab_title
-    AppViewTab.RELATED -> R.string.appview_related_tab_title
-    AppViewTab.INFO -> R.string.appview_info_tab_title
-  }
-)
-
-enum class AppViewTab {
-  DETAILS,
-  RELATED,
-  INFO
-}
-
 @PreviewDark
 @Composable
 fun CustomScrollableTabRowPreview() {
-  val tabsList = List(Random.nextInt(1..3)) { AppViewTab.entries[it].getTabName() }
+  val tabsList = List(Random.nextInt(1..3)) { getRandomString(1..1, capitalize = true) }
 
   AptoideTheme {
     CustomScrollableTabRow(

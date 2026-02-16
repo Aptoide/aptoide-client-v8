@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -28,6 +29,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -96,6 +98,7 @@ import com.aptoide.android.aptoidegames.appview.AppViewHeaderConstants.VIDEO_HEI
 import com.aptoide.android.aptoidegames.appview.permissions.buildAppPermissionsRoute
 import com.aptoide.android.aptoidegames.appview.postinstall.PostInstallRecommendsView
 import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
+import com.aptoide.android.aptoidegames.drawables.backgrounds.myiconpack.getAppViewBonusGiftBackground
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusIconLeft
 import com.aptoide.android.aptoidegames.drawables.icons.getBookmarkStar
 import com.aptoide.android.aptoidegames.drawables.icons.getForward
@@ -112,6 +115,11 @@ import com.aptoide.android.aptoidegames.feature_rtb.presentation.isRTB
 import com.aptoide.android.aptoidegames.feature_rtb.presentation.rememberRTBCampaigns
 import com.aptoide.android.aptoidegames.installer.presentation.InstallView
 import com.aptoide.android.aptoidegames.mmp.WithUTM
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.app_view.AppRewardsView
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaEInstallView
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.animations.PaEAnimatedGift
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.rememberIsPackageInPaE
+import com.aptoide.android.aptoidegames.play_and_earn.rememberShouldShowPlayAndEarn
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -119,8 +127,9 @@ import com.aptoide.android.aptoidegames.videos.presentation.AppViewYoutubePlayer
 
 private val tabsList = listOf(
   AppViewTab.DETAILS,
+  AppViewTab.REWARDS,
   AppViewTab.RELATED,
-  AppViewTab.INFO
+  AppViewTab.INFO,
 )
 private const val PACKAGE_UNAME = "package_uname"
 
@@ -132,6 +141,7 @@ private const val UTM_CAMPAIGN = "utm_campaign"
 private const val UTM_MEDIUM = "utm_medium"
 private const val UTM_SOURCE = "utm_source"
 private const val UTM_CONTENT = "utm_content"
+private const val IS_GAMIFIED = "is_gamified"
 
 private val allAppViewArguments = listOf(
   navArgument(UTM_CAMPAIGN) {
@@ -150,13 +160,17 @@ private val allAppViewArguments = listOf(
     type = NavType.StringType
     nullable = true
   },
+  navArgument(IS_GAMIFIED) {
+    type = NavType.BoolType
+    defaultValue = false
+  },
 )
 
 const val appViewRoute =
   "${APP_PATH}/{$SOURCE}?"
 
 fun appViewScreen() = ScreenData.withAnalytics(
-  route = "$appViewRoute$UTM_MEDIUM={$UTM_MEDIUM}&$UTM_CONTENT={$UTM_CONTENT}&$UTM_SOURCE={$UTM_SOURCE}&$UTM_CAMPAIGN={$UTM_CAMPAIGN}",
+  route = "$appViewRoute$UTM_MEDIUM={$UTM_MEDIUM}&$UTM_CONTENT={$UTM_CONTENT}&$UTM_SOURCE={$UTM_SOURCE}&$UTM_CAMPAIGN={$UTM_CAMPAIGN}&$IS_GAMIFIED={$IS_GAMIFIED}",
   screenAnalyticsName = "AppView",
   arguments = allAppViewArguments,
   deepLinks = listOf(
@@ -180,6 +194,8 @@ fun appViewScreen() = ScreenData.withAnalytics(
     UTM_SOURCE to arguments.getString(UTM_SOURCE),
   )
 
+  val isGamified = arguments.getBoolean(IS_GAMIFIED, false)
+
   WithUTM(
     source = arguments.getString(UTM_SOURCE),
     campaign = arguments.getString(UTM_CAMPAIGN),
@@ -193,6 +209,7 @@ fun appViewScreen() = ScreenData.withAnalytics(
       navigateBack = navigateBack,
       utmsMap = utmsMap,
       isRtb = isRtb,
+      isGamified = isGamified
     )
   }
 }
@@ -202,13 +219,15 @@ fun buildAppViewRoute(
   utmCampaign: String? = "",
   utmMedium: String? = "",
   utmContent: String? = "",
-  utmSource: String? = ""
+  utmSource: String? = "",
+  isGamified: Boolean = false
 ): String =
   appViewRoute.replace("{$SOURCE}", appSource.asSource())
     .withParameter(UTM_CAMPAIGN, utmCampaign)
     .withParameter(UTM_MEDIUM, utmMedium)
     .withParameter(UTM_CONTENT, utmContent)
     .withParameter(UTM_SOURCE, utmSource)
+    .withParameter(IS_GAMIFIED, isGamified.toString())
 
 fun buildAppViewDeepLinkUri(appSource: AppSource) =
   BuildConfig.DEEP_LINK_SCHEMA + buildAppViewRoute(appSource)
@@ -220,6 +239,7 @@ fun AppViewScreen(
   navigateBack: () -> Unit,
   utmsMap: Map<String, String>,
   isRtb: Boolean = false,
+  isGamified: Boolean
 ) {
   val (baseUiState, reload) = rememberApp(source = source)
   val analyticsContext = AnalyticsContext.current
@@ -247,13 +267,28 @@ fun AppViewScreen(
     rememberRelatedEditorials(packageName = it)
   }
 
-  val tabsList by remember(relatedEditorialsUiState) {
+  val showPaE = rememberShouldShowPlayAndEarn()
+  val isPackageInPaE = (uiState as? AppUiState.Idle)?.app?.packageName?.let {
+    rememberIsPackageInPaE(packageName = it)
+  } ?: false
+
+  val tabsList by remember(relatedEditorialsUiState, isPackageInPaE) {
     derivedStateOf {
-      if (relatedEditorialsUiState.isNullOrEmpty()) {
-        tabsList.filter { it != AppViewTab.RELATED }
-      } else {
-        tabsList
-      }
+      tabsList
+        .let {
+          if (relatedEditorialsUiState.isNullOrEmpty()) {
+            it.filter { it != AppViewTab.RELATED }
+          } else {
+            it
+          }
+        }
+        .let {
+          if (showPaE && isPackageInPaE) {
+            it
+          } else {
+            it.filter { it != AppViewTab.REWARDS }
+          }
+        }
     }
   }
 
@@ -267,7 +302,8 @@ fun AppViewScreen(
       navigateBack()
     },
     tabsList = tabsList,
-    utmsMap = utmsMap
+    utmsMap = utmsMap,
+    isGamified = isGamified
   )
 }
 
@@ -280,6 +316,7 @@ fun MainAppViewView(
   navigateBack: () -> Unit,
   tabsList: List<AppViewTab>,
   utmsMap: Map<String, String>,
+  isGamified: Boolean,
 ) {
   when (uiState) {
     is AppUiState.Idle ->
@@ -288,7 +325,8 @@ fun MainAppViewView(
         tabsList = tabsList,
         navigate = navigate,
         navigateBack = navigateBack,
-        utmsMap = utmsMap
+        utmsMap = utmsMap,
+        isGamified = isGamified
       )
 
     is AppUiState.NoConnection -> NoConnectionView(onRetryClick = noNetworkReload)
@@ -317,11 +355,13 @@ fun AppViewContent(
   navigate: (String) -> Unit,
   navigateBack: () -> Unit,
   utmsMap: Map<String, String>,
+  isGamified: Boolean
 ) {
   val bonusBundle = rememberBonusBundle()
 
   var selectedTab by rememberSaveable(key = tabsList.size.toString()) { mutableIntStateOf(0) }
   var showRecommends by rememberSaveable { mutableStateOf(false) }
+  var hasAutoSelectedRewards by rememberSaveable { mutableStateOf(false) }
   val appImageString = stringResource(id = R.string.app_view_image_description_body, app.name)
 
   val scrollState = rememberScrollState()
@@ -329,6 +369,13 @@ fun AppViewContent(
 
   val showYoutubeVideo = app.videos.isNotEmpty()
     && app.videos[0].let { it.isNotEmpty() && it.isYoutubeURL() }
+
+  LaunchedEffect(tabsList) {
+    if (isGamified && !hasAutoSelectedRewards && tabsList.contains(AppViewTab.REWARDS)) {
+      selectedTab = tabsList.indexOf(AppViewTab.REWARDS)
+      hasAutoSelectedRewards = true
+    }
+  }
 
   Box(
     modifier = Modifier.verticalScroll(scrollState)
@@ -390,11 +437,19 @@ fun AppViewContent(
 
       AppPresentationView(app)
 
-      InstallView(
-        modifier = Modifier.padding(top = 24.dp, start = 16.dp, end = 16.dp),
-        app = app,
-        onInstallStarted = { showRecommends = true }
-      )
+      if (isGamified) {
+        PaEInstallView(
+          modifier = Modifier.padding(top = 24.dp, start = 16.dp, end = 16.dp),
+          app = app,
+          navigate = navigate
+        )
+      } else {
+        InstallView(
+          modifier = Modifier.padding(top = 24.dp, start = 16.dp, end = 16.dp),
+          app = app,
+          onInstallStarted = { showRecommends = true }
+        )
+      }
 
       AnimatedVisibility(
         visible = showRecommends,
@@ -431,19 +486,40 @@ fun AppViewContent(
             navigate(route)
           }
       ) {
-        Image(
-          imageVector = getBonusIconLeft(
-            iconColor = Palette.Primary,
-            outlineColor = Palette.Black,
-            backgroundColor = Palette.Secondary
-          ),
-          contentDescription = null,
-          modifier = Modifier
-            .size(40.dp)
-            .graphicsLayer {
-              this.translationY = 6.dp.toPx()
-            }
-        )
+        if (isGamified) {
+          Box(
+            modifier = Modifier
+              .size(40.dp)
+              .graphicsLayer {
+                this.translationY = 6.dp.toPx()
+              },
+            contentAlignment = Alignment.Center
+          ) {
+            Image(
+              imageVector = getAppViewBonusGiftBackground(),
+              contentDescription = null,
+            )
+            PaEAnimatedGift(
+              modifier = Modifier
+                .size(44.dp)
+                .offset(x = (-2).dp)
+            )
+          }
+        } else {
+          Image(
+            imageVector = getBonusIconLeft(
+              iconColor = Palette.Primary,
+              outlineColor = Palette.Black,
+              backgroundColor = Palette.Secondary
+            ),
+            contentDescription = null,
+            modifier = Modifier
+              .size(40.dp)
+              .graphicsLayer {
+                this.translationY = 6.dp.toPx()
+              }
+          )
+        }
         AptoideOutlinedText(
           text = stringResource(
             id = R.string.bonus_banner_title,
@@ -452,11 +528,11 @@ fun AppViewContent(
           style = AGTypography.InputsM,
           outlineWidth = 10f,
           outlineColor = Palette.Black,
-          textColor = Palette.Primary,
+          textColor = Palette.White,
           modifier = Modifier
             .align(Alignment.Bottom)
             .background(color = Palette.Secondary)
-            .padding(start = 16.dp, end = 92.dp)
+            .padding(horizontal = 8.dp, vertical = 4.dp)
         )
       }
     }
@@ -469,13 +545,13 @@ fun AppInfoViewPager(
   tabsList: List<AppViewTab>,
   onSelectTab: (Int) -> Unit,
 ) {
-  CustomScrollableTabRow(
-    modifier = Modifier.padding(top = 24.dp, bottom = 4.dp),
-    tabs = tabsList.map { it.getTabName() },
+  AppViewTabRow(
+    modifier = Modifier
+      .padding(top = 24.dp, bottom = 4.dp)
+      .height(40.dp),
+    tabsList = tabsList,
     selectedTabIndex = selectedTab,
-    onTabClick = onSelectTab,
-    contentColor = Palette.Primary,
-    backgroundColor = Color.Transparent
+    onSelectTab = onSelectTab
   )
 }
 
@@ -487,6 +563,8 @@ fun ViewPagerContent(
 ) {
   when (selectedTab) {
     AppViewTab.DETAILS -> DetailsView(app = app)
+
+    AppViewTab.REWARDS -> AppRewardsView(packageName = app.packageName)
 
     AppViewTab.RELATED -> RelatedContentView(
       packageName = app.packageName,
@@ -990,7 +1068,8 @@ fun AppViewScreenPreview() {
       ),
       navigateBack = {},
       navigate = {},
-      utmsMap = emptyMap()
+      utmsMap = emptyMap(),
+      isGamified = false
     )
   }
 }

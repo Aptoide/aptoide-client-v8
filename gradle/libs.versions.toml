@@ -17,8 +17,7 @@ retrofit = "2.11.0"
 retrofitGsonConverter = "2.11.0"
 okHttp = "4.12.0"
 timber = "5.0.1"
-lottie = "6.0.0"
-lottie-compose = "6.6.7"
+lottie = "6.6.7"
 lifecycle = "2.9.0"
 coil = "2.7.0"
 room = "2.7.1"
@@ -46,6 +45,11 @@ indicative = "1.1.0"
 mintegral = "16.9.51"
 zoomable = "2.0.0"
 palette = "1.0.0"
+credentials = "1.3.0"
+googleId = "1.1.1"
+playServicesAuth = "21.4.0"
+constraintLayoutCompose = "1.0.1"
+lifecycleService = "2.9.3"
 
 #test libraries
 junit = "4.13.2"
@@ -61,7 +65,6 @@ googleServicesPlugin = "4.4.2"
 firebaseCrashlyticsGradle = "3.0.3"
 androidJunit5Plugin = "1.9.3.0"
 kspPlugin = "2.1.0-1.0.29"
-lifecycleService = "2.9.3"
 
 [libraries]
 core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
@@ -83,7 +86,7 @@ navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-kt
 navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigation" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 lottie = { module = "com.airbnb.android:lottie", version.ref = "lottie" }
-lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie-compose" }
+lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie" }
 room = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
@@ -118,7 +121,12 @@ indicative-sdk = { module = "com.indicative.client.android:Indicative-Android", 
 zoomable = { module = "net.engawapg.lib:zoomable", version.ref = "zoomable" }
 mintegral = { module = "com.mbridge.msdk.oversea:mbridge_android_sdk", version.ref = "mintegral" }
 palette = { module = "androidx.palette:palette", version.ref = "palette" }
-
+credentials = { module = "androidx.credentials:credentials", version.ref = "credentials" }
+credentials-playServices = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "credentials" }
+googleId = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "googleId" }
+play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
+constraintLayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintLayoutCompose" }
+lifecycle-service = { module = "androidx.lifecycle:lifecycle-service", version.ref = "lifecycleService" }
 
 #Test library dependencies
 junit = { module = "junit:junit", version.ref = "junit" }
@@ -138,7 +146,6 @@ google-services-plugin = { module = "com.google.gms:google-services", version.re
 firebase-crashlytics-gradle = { module = "com.google.firebase:firebase-crashlytics-gradle", version.ref = "firebaseCrashlyticsGradle" }
 ksp-plugin = { module = "com.google.devtools.ksp:symbol-processing-gradle-plugin", version.ref = "kspPlugin" }
 compose-gradle-plugin = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin" }
-lifecycle-service = { group = "androidx.lifecycle", name = "lifecycle-service", version.ref = "lifecycleService" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "applicationGradlePlugin" }

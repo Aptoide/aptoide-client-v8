@@ -60,6 +60,7 @@ fun PrimaryTextButton(
   modifier: Modifier = Modifier,
   onClick: () -> Unit,
   enabled: Boolean = true,
+  color: Color = Palette.Primary,
   text: String,
 ) = AGTextButton(
   modifier = modifier
@@ -68,7 +69,7 @@ fun PrimaryTextButton(
   onClick = onClick,
   enabled = enabled,
   text = text,
-  color = Palette.Primary,
+  color = color,
   textStyle = AGTypography.InputsM,
 )
 

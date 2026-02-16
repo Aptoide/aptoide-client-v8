@@ -9,6 +9,14 @@
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
 
+  <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"
+      tools:ignore="ProtectedPermissions" />
+
+  <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"/>
+
   <application
       android:name=".AptoideApplication"
       android:allowBackup="false"
@@ -131,5 +139,20 @@
           android:name="android.support.FILE_PROVIDER_PATHS"
           android:resource="@xml/paths" />
     </provider>
+
+    <activity
+        android:name=".play_and_earn.presentation.permissions.OverlayPermissionActivity"
+        android:exported="false"
+        android:noHistory="false"/>
+
+    <activity
+        android:name=".play_and_earn.presentation.permissions.UsageStatsPermissionActivity"
+        android:exported="false"
+        android:noHistory="false"/>
+
+    <service
+        android:name=".play_and_earn.presentation.service.PaEForegroundService"
+        android:exported="false"
+        android:foregroundServiceType="specialUse" />
   </application>
 </manifest>

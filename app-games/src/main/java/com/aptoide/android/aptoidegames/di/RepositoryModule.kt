@@ -9,13 +9,16 @@ import cm.aptoide.pt.aptoide_network.data.network.GetAcceptLanguage
 import cm.aptoide.pt.aptoide_network.data.network.GetUserAgent
 import cm.aptoide.pt.aptoide_network.data.network.QLogicInterceptor
 import cm.aptoide.pt.aptoide_network.data.network.QueryLangInterceptor
+import cm.aptoide.pt.aptoide_network.di.ApiChainCatappultDomain
 import cm.aptoide.pt.aptoide_network.di.BaseOkHttp
 import cm.aptoide.pt.aptoide_network.di.RawOkHttp
 import cm.aptoide.pt.aptoide_network.di.RetrofitBuzz
+import cm.aptoide.pt.aptoide_network.di.RewardsDomain
 import cm.aptoide.pt.aptoide_network.di.StoreDomain
 import cm.aptoide.pt.aptoide_network.di.StoreEnvironmentDomain
 import cm.aptoide.pt.aptoide_network.di.StoreName
 import cm.aptoide.pt.aptoide_network.di.VersionCode
+import cm.aptoide.pt.aptoide_network.di.WebServicesDomain
 import cm.aptoide.pt.environment_info.DeviceInfo
 import cm.aptoide.pt.feature_apkfy.di.MMPDomain
 import cm.aptoide.pt.feature_apps.data.walletApp
@@ -118,6 +121,21 @@ class RepositoryModule {
   @Provides
   @MMPDomain
   fun provideMMPDomain(): String = BuildConfig.APTOIDE_WEB_SERVICES_MMP_HOST
+
+  @Singleton
+  @Provides
+  @ApiChainCatappultDomain
+  fun provideApiChainCatappultDomain(): String = BuildConfig.API_CHAIN_CATAPPULT_HOST
+
+  @Singleton
+  @Provides
+  @RewardsDomain
+  fun provideRewardsDomain(): String = BuildConfig.REWARDS_HOST
+
+  @Singleton
+  @Provides
+  @WebServicesDomain
+  fun provideWebServicesDomain(): String = BuildConfig.APTOIDE_WEB_SERVICES_HOST
 
   @Provides
   @Singleton

@@ -55,12 +55,20 @@ import com.aptoide.android.aptoidegames.installer.UserActionDialog
 import com.aptoide.android.aptoidegames.mmp.WithUTM
 import com.aptoide.android.aptoidegames.notifications.NotificationsPermissionRequester
 import com.aptoide.android.aptoidegames.permissions.notifications.NotificationsPermissionViewModel
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.home.PaEHomeLayout
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.level_up.levelUpScreen
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.playAndEarnPermissionsScreen
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.playAndEarnRewardsScreen
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnSignInRoute
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnSignInScreen
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchange.exchangeUnitsScreen
 import com.aptoide.android.aptoidegames.promo_codes.PromoCodeBottomSheet
 import com.aptoide.android.aptoidegames.promo_codes.rememberPromoCodeApp
 import com.aptoide.android.aptoidegames.promotions.presentation.PromotionDialog
 import com.aptoide.android.aptoidegames.search.presentation.searchScreen
 import com.aptoide.android.aptoidegames.settings.settingsScreen
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
+import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesToolBar
 import com.aptoide.android.aptoidegames.updates.presentation.updatesScreen
 import kotlinx.coroutines.launch
@@ -108,69 +116,73 @@ fun MainView(navController: NavHostController) {
       AptoideGamesBottomSheet(
         navigate = navigate
       ) { showBottomSheet ->
-        Scaffold(
-          snackbarHost = {
-            SnackbarHost(hostState = snackBarHostState) {
-              Popup {
-                Snackbar(
-                  snackbarData = it,
-                  modifier = Modifier
-                    .focusable(false)
-                    .clearAndSetSemantics {},
+        PaEHomeLayout(navController = navController) {
+          Scaffold(
+            snackbarHost = {
+              SnackbarHost(hostState = snackBarHostState) {
+                Popup {
+                  Snackbar(
+                    snackbarData = it,
+                    modifier = Modifier
+                      .focusable(false)
+                      .clearAndSetSemantics {},
+                    backgroundColor = Palette.GreyDark,
+                    contentColor = Palette.White
+                  )
+                }
+              }
+            },
+            bottomBar = {
+              AppGamesBottomBar(navController = navController)
+            },
+            topBar = {
+              if (showTopBar) {
+                AppGamesToolBar(
+                  navigate = {
+                    if (currentRoute.value?.destination?.route?.substringBefore("?") != it) {
+                      navController.navigateTo(it)
+                    }
+                  },
+                  goBackHome
                 )
               }
             }
-          },
-          bottomBar = {
-            AppGamesBottomBar(navController = navController)
-          },
-          topBar = {
-            if (showTopBar) {
-              AppGamesToolBar(
-                navigate = {
-                  if (currentRoute.value?.destination?.route != it) {
-                    navController.navigateTo(it)
+          ) { padding ->
+            NotificationsPermissionRequester(
+              showDialog = showNotificationsRationaleDialog,
+              onDismiss = { notificationsPermissionViewModel.dismissDialog() },
+              onPermissionResult = {}
+            )
+
+            PromotionDialog(navigate = navController::navigateTo)
+
+            Box(modifier = Modifier.padding(padding)) {
+              NavigationGraph(
+                navController,
+                showSnack = {
+                  coroutineScope.launch {
+                    snackBarHostState.showSnackbar(message = it)
                   }
                 },
-                goBackHome
+                showBottomSheet = showBottomSheet
               )
             }
-          }
-        ) { padding ->
-          NotificationsPermissionRequester(
-            showDialog = showNotificationsRationaleDialog,
-            onDismiss = { notificationsPermissionViewModel.dismissDialog() },
-            onPermissionResult = {}
-          )
+            ApkfyHandler(navigate = navController::navigateTo)
 
-          PromotionDialog(navigate = navController::navigateTo)
-
-          Box(modifier = Modifier.padding(padding)) {
-            NavigationGraph(
-              navController,
-              showSnack = {
-                coroutineScope.launch {
-                  snackBarHostState.showSnackbar(message = it)
-                }
-              },
-              showBottomSheet = showBottomSheet
-            )
-          }
-          ApkfyHandler(navigate = navController::navigateTo)
-
-          LaunchedEffect(promoCodeApp) {
-            if (promoCodeApp != null) {
-              showBottomSheet(
-                PromoCodeBottomSheet(
-                  promoCode = promoCodeApp,
-                  showSnack = {
-                    coroutineScope.launch {
-                      snackBarHostState.showSnackbar(message = it)
+            LaunchedEffect(promoCodeApp) {
+              if (promoCodeApp != null) {
+                showBottomSheet(
+                  PromoCodeBottomSheet(
+                    promoCode = promoCodeApp,
+                    showSnack = {
+                      coroutineScope.launch {
+                        snackBarHostState.showSnackbar(message = it)
+                      }
                     }
-                  }
+                  )
                 )
-              )
-              clearPromoCode()
+                clearPromoCode()
+              }
             }
           }
         }
@@ -331,6 +343,40 @@ private fun NavigationGraph(
       navigate = navController::navigateTo,
       goBack = navController::navigateUp,
       screenData = gamesFeedScreen()
+    )
+
+    animatedComposable(
+      navigate = navController::navigateTo,
+      goBack = navController::navigateUp,
+      screenData = playAndEarnRewardsScreen()
+    )
+
+    animatedComposable(
+      navigate = {
+        navController.navigate(it) {
+          popUpTo(playAndEarnSignInRoute) { inclusive = true }
+        }
+      },
+      goBack = navController::navigateUp,
+      screenData = playAndEarnSignInScreen()
+    )
+
+    animatedComposable(
+      navigate = navController::navigateTo,
+      goBack = navController::navigateUp,
+      screenData = playAndEarnPermissionsScreen(showSnack = showSnack)
+    )
+
+    animatedComposable(
+      navigate = navController::navigateTo,
+      goBack = navController::navigateUp,
+      screenData = levelUpScreen()
+    )
+
+    animatedComposable(
+      navigate = navController::navigateTo,
+      goBack = navController::navigateUp,
+      screenData = exchangeUnitsScreen()
     )
   }
 }

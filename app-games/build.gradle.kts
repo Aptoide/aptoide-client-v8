@@ -168,6 +168,29 @@ android {
         name = "NATIVE_UNIT_ID",
         value = "\"${project.property("NATIVE_UNIT_ID_DEV")}\""
       )
+
+      buildConfigField(
+        type = "String",
+        name = "API_CHAIN_CATAPPULT_HOST",
+        value = "\"${project.property("API_CHAIN_CATAPPULT_HOST_DEV")}\""
+      )
+
+      buildConfigField(
+        type = "String",
+        name = "REWARDS_HOST",
+        value = "\"${project.property("REWARDS_HOST_DEV")}\""
+      )
+
+      buildConfigField(
+        type = "String",
+        name = "APTOIDE_WEB_SERVICES_HOST",
+        value = "\"${project.property("APTOIDE_WEB_SERVICES_HOST_DEV")}\""
+      )
+      buildConfigField(
+        type = "String",
+        name = "GOOGLE_AUTH_CLIENT_ID",
+        value = "\"${project.property("GOOGLE_AUTH_CLIENT_ID_DEV")}\""
+      )
     }
 
     create("prod") {
@@ -223,6 +246,26 @@ android {
         name = "NATIVE_UNIT_ID",
         value = "\"${project.property("NATIVE_UNIT_ID_PROD")}\""
       )
+      buildConfigField(
+        type = "String",
+        name = "API_CHAIN_CATAPPULT_HOST",
+        value = "\"${project.property("API_CHAIN_CATAPPULT_HOST")}\""
+      )
+      buildConfigField(
+        type = "String",
+        name = "REWARDS_HOST",
+        value = "\"${project.property("REWARDS_HOST")}\""
+      )
+      buildConfigField(
+        type = "String",
+        name = "APTOIDE_WEB_SERVICES_HOST",
+        value = "\"${project.property("APTOIDE_WEB_SERVICES_HOST_PROD")}\""
+      )
+      buildConfigField(
+        type = "String",
+        name = "GOOGLE_AUTH_CLIENT_ID",
+        value = "\"${project.property("GOOGLE_AUTH_CLIENT_ID_PROD")}\""
+      )
     }
   }
 
@@ -264,6 +307,7 @@ dependencies {
   implementation(projects.aptoideNetwork)
   implementation(projects.featureCampaigns)
   implementation(projects.environmentInfo)
+  implementation(projects.exceptionHandler)
   implementation(projects.extension)
   implementation(projects.installManager)
   implementation(projects.aptoideTaskInfo)
@@ -275,6 +319,14 @@ dependencies {
   implementation(projects.featureApkfy)
   implementation(projects.featureBonus)
   implementation(projects.feautureAppComingSoon)
+  implementation(projects.playAndEarn.campaigns)
+  implementation(projects.playAndEarn.sessions)
+  implementation(projects.playAndEarn.exchange)
+  implementation(projects.featureWallet.authorization)
+  implementation(projects.featureWallet.walletInfo)
+  implementation(projects.featureWallet.gamification)
+  implementation(projects.featureWallet.datastore)
+  implementation(projects.featureUsageStats)
 
   //payments
   implementation(projects.payments.sdk)
@@ -324,6 +376,16 @@ dependencies {
 
   //Palette (dominant color extraction)
   implementation(libs.palette)
+
+  //Authentication and authorization
+  implementation(libs.credentials)
+  implementation(libs.credentials.playServices)
+  implementation(libs.googleId)
+  implementation(libs.play.services.auth)
+
+  implementation(libs.constraintLayout.compose)
+
+  implementation(libs.lifecycle.service)
 }
 
 fun BaseFlavor.buildConfigFieldFromGradleProperty(gradlePropertyName: String) {

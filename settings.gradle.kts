@@ -64,6 +64,7 @@ include(
   ":feature-profile",
   ":feature-settings",
   ":environment-info",
+  ":exception-handler",
   ":extension",
   ":feature-oos",
   ":install-info-mapper",
@@ -71,5 +72,13 @@ include(
   ":feature-appcoins",
   ":feature-apkfy",
   ":feature-bonus",
-  ":feauture_app_coming_soon"
+  ":feauture_app_coming_soon",
+  ":feature-wallet:datastore",
+  ":play-and-earn:campaigns",
+  ":play-and-earn:exchange",
+  ":feature-wallet:authorization",
+  ":feature-wallet:wallet-info",
+  ":feature-wallet:gamification",
+  ":feature-usage-stats",
+  ":play-and-earn:sessions"
 )

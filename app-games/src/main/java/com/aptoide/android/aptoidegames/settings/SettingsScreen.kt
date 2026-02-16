@@ -6,9 +6,12 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
@@ -17,13 +20,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.toggleable
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -31,6 +38,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.ClipEntry
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
@@ -45,6 +54,7 @@ import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.extensions.multiTap
 import cm.aptoide.pt.feature_updates.di.rememberAutoUpdate
+import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.SupportActivity
@@ -54,8 +64,15 @@ import com.aptoide.android.aptoidegames.design_system.PrimarySmallOutlinedButton
 import com.aptoide.android.aptoidegames.developer.rememberAGDeveloperOptions
 import com.aptoide.android.aptoidegames.drawables.icons.getAptoideLogo
 import com.aptoide.android.aptoidegames.drawables.icons.getForward
+import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getStartEarningIcon
 import com.aptoide.android.aptoidegames.firebase.rememberFirebaseToken
 import com.aptoide.android.aptoidegames.network.presentation.NetworkPreferencesViewModel
+import com.aptoide.android.aptoidegames.play_and_earn.di.rememberWalletAddress
+import com.aptoide.android.aptoidegames.play_and_earn.domain.UserInfo
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaESmallTextButton
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.GoogleSignInViewModel
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnSignInRoute
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.rememberUserInfo
 import com.aptoide.android.aptoidegames.terms_and_conditions.ppUrl
 import com.aptoide.android.aptoidegames.terms_and_conditions.tcUrl
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -68,7 +85,7 @@ const val settingsRoute = "settings"
 
 fun settingsScreen(showSnack: (String) -> Unit) = ScreenData(
   route = settingsRoute,
-) { _, _, navigateBack ->
+) { _, navigate, navigateBack ->
   val context = LocalContext.current
   val settingsAnalytics = rememberSettingsAnalytics()
   val networkPreferencesViewModel = hiltViewModel<NetworkPreferencesViewModel>()
@@ -78,6 +95,7 @@ fun settingsScreen(showSnack: (String) -> Unit) = ScreenData(
   val clipboard = LocalClipboard.current
   val coroutineScope = rememberCoroutineScope()
   val copiedMessage = stringResource(R.string.settings_copied_to_clipboard_message)
+  val signInViewModel = hiltViewModel<GoogleSignInViewModel>()
 
   SettingsViewContent(
     title = stringResource(R.string.settings_title),
@@ -108,6 +126,8 @@ fun settingsScreen(showSnack: (String) -> Unit) = ScreenData(
       }
       showSnack(copiedMessage)
     },
+    onLetsGoClick = { navigate(playAndEarnSignInRoute) },
+    onSignOutClick = signInViewModel::signOut,
     navigateBack = navigateBack,
   )
 }
@@ -125,11 +145,15 @@ fun SettingsViewContent(
   copyInfo: () -> Unit = {},
   onPrivacyPolicyClick: () -> Unit = {},
   onTermsConditionsClick: () -> Unit = {},
+  onLetsGoClick: () -> Unit = {},
+  onSignOutClick: () -> Unit = {},
   navigateBack: () -> Unit = {},
 ) {
   val context = LocalContext.current
   val (areAGDeveloperOptionsEnabled, toggleAGDeveloperOptions) = rememberAGDeveloperOptions()
   val settingsAnalytics = rememberSettingsAnalytics()
+
+  val userInfo = rememberUserInfo()
 
   Column(
     modifier = Modifier
@@ -142,6 +166,13 @@ fun SettingsViewContent(
         .verticalScroll(rememberScrollState())
         .padding(bottom = 40.dp)
     ) {
+      CurrentUserHeader(
+        userInfo = userInfo,
+        modifier = Modifier
+          .padding(top = 16.dp)
+          .align(Alignment.CenterHorizontally),
+        onLetsGoClick = onLetsGoClick
+      )
       SettingsSection(
         title = stringResource(R.string.settings_general_title)
       ) {
@@ -232,6 +263,9 @@ fun SettingsViewContent(
           )
         }
       }
+      if (userInfo != null) {
+        LogoutItem(onClick = onSignOutClick)
+      }
       AnimatedVisibility(
         visible = areAGDeveloperOptionsEnabled,
         enter = fadeIn(),
@@ -264,8 +298,67 @@ fun SettingsViewContent(
 }
 
 @Composable
+private fun CurrentUserHeader(
+  userInfo: UserInfo?,
+  modifier: Modifier = Modifier,
+  onLetsGoClick: () -> Unit,
+) {
+  userInfo?.let {
+    Column(
+      modifier = modifier.fillMaxWidth(),
+    ) {
+      CurrentUserInfoSection(
+        userInfo = it,
+        modifier = Modifier.padding(horizontal = 16.dp)
+      )
+      SettingsSectionDivider()
+    }
+  } ?: PaESettingsLetsGoCard(
+    modifier = modifier.padding(horizontal = 16.dp),
+    onLetsGoClick = onLetsGoClick
+  )
+}
+
+@Composable
+private fun CurrentUserInfoSection(
+  userInfo: UserInfo,
+  modifier: Modifier = Modifier,
+) {
+  Row(
+    modifier = modifier,
+    horizontalArrangement = Arrangement.spacedBy(16.dp),
+    verticalAlignment = Alignment.CenterVertically
+  ) {
+    AptoideAsyncImage(
+      data = userInfo.profilePicture,
+      contentDescription = null,
+      modifier = Modifier
+        .size(48.dp)
+        .clip(CircleShape)
+    )
+    Column {
+      userInfo.name?.let {
+        Text(
+          text = it,
+          style = AGTypography.InputsL,
+          color = Palette.GreyLight
+        )
+      }
+      userInfo.email?.let {
+        Text(
+          text = it,
+          style = AGTypography.InputsXSRegular,
+          color = Palette.GreyLight
+        )
+      }
+    }
+  }
+}
+
+@Composable
 fun AGDeveloperOptionsSection() {
   val firebaseToken = rememberFirebaseToken()
+  val walletAddress = rememberWalletAddress()
   val clipboard = LocalClipboard.current
   val coroutineScope = rememberCoroutineScope()
   val (areAGDeveloperOptionsEnabled, toggleAGDeveloperOptions) = rememberAGDeveloperOptions()
@@ -308,6 +401,39 @@ fun AGDeveloperOptionsSection() {
                 .clickable {
                   coroutineScope.launch {
                     clipboard.setClipEntry(ClipEntry(ClipData.newPlainText("FCM token", it)))
+                  }
+                },
+              text = it,
+              style = AGTypography.InputsM,
+              color = Palette.GreyLight
+            )
+          }
+        }
+
+        Row(
+          verticalAlignment = Alignment.CenterVertically,
+          horizontalArrangement = Arrangement.SpaceBetween,
+          modifier = Modifier
+            .defaultMinSize(minHeight = 48.dp)
+            .padding(top = 8.dp)
+        ) {
+          Text(
+            modifier = Modifier
+              .padding(end = 16.dp)
+              .wrapContentHeight(),
+            text = "Wallet address",
+            style = AGTypography.InputsM,
+            color = Palette.GreyLight
+          )
+
+          walletAddress?.let {
+            Text(
+              modifier = Modifier
+                .defaultMinSize(minHeight = 48.dp)
+                .wrapContentHeight()
+                .clickable {
+                  coroutineScope.launch {
+                    clipboard.setClipEntry(ClipEntry(ClipData.newPlainText("Wallet address", it)))
                   }
                 },
               text = it,
@@ -439,6 +565,87 @@ fun SettingsCaretItem(
       contentDescription = null,
       modifier = Modifier.size(32.dp)
     )
+  }
+}
+
+@Composable
+fun LogoutItem(
+  onClick: () -> Unit,
+) {
+  Row(
+    verticalAlignment = Alignment.CenterVertically,
+    modifier = Modifier
+      .padding(horizontal = 16.dp)
+      .fillMaxWidth()
+      .defaultMinSize(minHeight = 48.dp)
+      .clickable(onClick = onClick)
+  ) {
+    Text(
+      text = stringResource(R.string.logout_button),
+      modifier = Modifier.weight(weight = 1f),
+      style = AGTypography.InputsM,
+      color = Palette.Error
+    )
+
+    Image(
+      imageVector = Icons.AutoMirrored.Filled.Logout,
+      contentDescription = null,
+      modifier = Modifier.size(22.dp),
+      colorFilter = ColorFilter.tint(Palette.Error)
+    )
+  }
+}
+
+@Composable
+fun PaESettingsLetsGoCard(
+  modifier: Modifier = Modifier,
+  onLetsGoClick: () -> Unit,
+) {
+  Box(
+    modifier = modifier
+      .width(328.dp)
+      .background(Palette.GreyDark)
+      .border(width = 2.dp, color = Palette.Blue200),
+  ) {
+    Column(
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(all = 16.dp),
+      verticalArrangement = Arrangement.spacedBy(16.dp),
+      horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+      Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically
+      ) {
+        Image(
+          modifier = Modifier.size(72.dp, 52.dp),
+          imageVector = getStartEarningIcon(),
+          contentDescription = null
+        )
+        Column(
+          verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+          Text(
+            text = stringResource(R.string.play_and_earn_get_started_now_title),
+            style = AGTypography.InputsM,
+            color = Palette.Yellow100
+          )
+          Text(
+            text = stringResource(R.string.play_and_earn_grant_permissions_body),
+            style = AGTypography.Body,
+            color = Palette.White
+          )
+        }
+      }
+
+      PaESmallTextButton(
+        title = stringResource(R.string.play_and_earn_lets_go_button),
+        onClick = onLetsGoClick,
+        modifier = Modifier.fillMaxWidth()
+      )
+    }
   }
 }
 

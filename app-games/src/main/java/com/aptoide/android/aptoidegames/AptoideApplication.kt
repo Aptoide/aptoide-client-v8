@@ -35,6 +35,8 @@ import com.appcoins.payments.di.restClientInjectParams
 import com.appcoins.payments.uri_handler.PaymentScreenContentProvider
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
+import com.aptoide.android.aptoidegames.device_info.DeviceSecurityChecker
+import com.aptoide.android.aptoidegames.device_info.analytics.DeviceInfoAnalytics
 import com.aptoide.android.aptoidegames.feature_ad.Mintegral
 import com.aptoide.android.aptoidegames.feature_companion_apps_notification.CompanionAppsManager
 import com.aptoide.android.aptoidegames.feature_editors_choice_recommendation.EditorsChoiceRecommendationManager
@@ -135,6 +137,12 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
   @Inject
   lateinit var editorsChoiceRecommendationManager: EditorsChoiceRecommendationManager
 
+  @Inject
+  lateinit var deviceSecurityChecker: DeviceSecurityChecker
+
+  @Inject
+  lateinit var deviceInfoAnalytics: DeviceInfoAnalytics
+
   override fun onCreate() {
     FirebaseApp.initializeApp(this)
     super.onCreate()
@@ -156,6 +164,16 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
     initAds()
     initCompanionAppsManager()
     initTrendingAppsRecommendationManager()
+    sendDeviceSecurityAnalytics()
+  }
+
+  private fun sendDeviceSecurityAnalytics() {
+    if (deviceSecurityChecker.isEmulator()) {
+      deviceInfoAnalytics.sendDeviceEmulator()
+    }
+    if (deviceSecurityChecker.isRooted()) {
+      deviceInfoAnalytics.sendDeviceRooted()
+    }
   }
 
   private fun initTrendingAppsRecommendationManager() {
