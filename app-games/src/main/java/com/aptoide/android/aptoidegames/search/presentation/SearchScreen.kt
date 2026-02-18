@@ -723,6 +723,7 @@ fun EmptySearchView(
             medium = "search",
             content = "search-banner",
             navigate = rtbNavigate,
+            shouldSendClickEvents = true
           ) { utmNavigate ->
             val clickHandler = rememberRTBAdClickHandler(
               rtbAppsList = listOf(sponsoredApp),
@@ -743,7 +744,10 @@ fun EmptySearchView(
 
             SearchSponsoredBannerView(
               rtbApp = sponsoredApp,
-              onClick = { clickHandler(sponsoredApp.app.packageName, 0) },
+              onClick = {
+                sponsoredApp.app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(utmInfo)
+                clickHandler(sponsoredApp.app.packageName, 0)
+              },
             )
           }
         }
