@@ -32,6 +32,7 @@ import com.aptoide.android.aptoidegames.apkfy.isRoblox
 import com.aptoide.android.aptoidegames.appview.AppRatingAndDownloads
 import com.aptoide.android.aptoidegames.drawables.backgrounds.myiconpack.getApkfyAppIconBackground
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
+import com.aptoide.android.aptoidegames.installer.analytics.rememberInstallAnalytics
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
 import com.aptoide.android.aptoidegames.mmp.WithUTM
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -85,6 +86,7 @@ fun ApkfyScreen(
   navigate: (String) -> Unit,
 ) {
   val apkfyAnalytics = rememberApkfyAnalytics()
+  val installAnalytics = rememberInstallAnalytics()
   val apkfyData = apkfyState.data
 
   LaunchedEffect(Unit) {
@@ -129,7 +131,17 @@ fun ApkfyScreen(
             .padding(horizontal = 16.dp)
             .padding(bottom = 32.dp),
           app = apkfyData.app,
-          onInstallStarted = {}
+          onInstallStarted = {
+            if (apkfyData.app.isRoblox()) {
+              installAnalytics.sendApkfyRobloxExp82InstallClickEvent(
+                numberOfCheckPresses = null,
+                autoOpenDefault = null,
+                autoOpenFinal = null,
+                switchCheckDiff = null,
+                apkfyVariant = "base"
+              )
+            }
+          }
         )
       }
     }
