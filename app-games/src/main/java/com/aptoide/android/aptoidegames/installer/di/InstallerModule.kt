@@ -14,11 +14,13 @@ import cm.aptoide.pt.installer.AptoideDownloader
 import cm.aptoide.pt.installer.AptoideInstallPackageInfoMapper
 import cm.aptoide.pt.installer.AptoideInstaller
 import cm.aptoide.pt.installer.LegacyInstaller
+import cm.aptoide.pt.installer.PreApprovalIconProvider
 import cm.aptoide.pt.installer.obb.OBBInstallManager
 import cm.aptoide.pt.task_info.AptoideTaskInfoRepository
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 import com.aptoide.android.aptoidegames.apkfy.DownloadPermissionStateProbe
+import com.aptoide.android.aptoidegames.installer.CoilPreApprovalIconProvider
 import com.aptoide.android.aptoidegames.installer.DownloaderSelector
 import com.aptoide.android.aptoidegames.installer.InstallerSelector
 import com.aptoide.android.aptoidegames.installer.analytics.AnalyticsInstallPackageInfoMapper
@@ -92,6 +94,11 @@ class InstallerModule {
     featureFlags = featureFlags,
     aptoidePackageDownloader = aptoideDownloader,
   )
+
+  @Singleton
+  @Provides
+  fun provideIconProvider(coilIconProvider: CoilPreApprovalIconProvider): PreApprovalIconProvider =
+    coilIconProvider
 
   @Singleton
   @Provides

@@ -7,6 +7,8 @@ data class InstallPackageInfo(
   val versionCode: Long,
   val installationFiles: Set<InstallationFile> = emptySet(),
   val payload: String? = null,
+  val appLabel: String? = null,
+  val iconUrl: String? = null,
 ) {
   val filesSize = installationFiles.sumOf { it.fileSize }
 }
