@@ -73,6 +73,7 @@ import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.Pa
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.GoogleSignInViewModel
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnSignInRoute
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.rememberUserInfo
+import com.aptoide.android.aptoidegames.play_and_earn.rememberShouldShowPlayAndEarn
 import com.aptoide.android.aptoidegames.terms_and_conditions.ppUrl
 import com.aptoide.android.aptoidegames.terms_and_conditions.tcUrl
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -303,20 +304,24 @@ private fun CurrentUserHeader(
   modifier: Modifier = Modifier,
   onLetsGoClick: () -> Unit,
 ) {
-  userInfo?.let {
+  val shouldShowPlayAndEarn = rememberShouldShowPlayAndEarn()
+
+  if (userInfo != null) {
     Column(
       modifier = modifier.fillMaxWidth(),
     ) {
       CurrentUserInfoSection(
-        userInfo = it,
+        userInfo = userInfo,
         modifier = Modifier.padding(horizontal = 16.dp)
       )
       SettingsSectionDivider()
     }
-  } ?: PaESettingsLetsGoCard(
-    modifier = modifier.padding(horizontal = 16.dp),
-    onLetsGoClick = onLetsGoClick
-  )
+  } else if (shouldShowPlayAndEarn) {
+    PaESettingsLetsGoCard(
+      modifier = modifier.padding(horizontal = 16.dp),
+      onLetsGoClick = onLetsGoClick
+    )
+  }
 }
 
 @Composable
