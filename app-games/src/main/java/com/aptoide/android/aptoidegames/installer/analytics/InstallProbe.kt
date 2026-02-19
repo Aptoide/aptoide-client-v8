@@ -17,6 +17,11 @@ class InstallProbe(
   private val analytics: InstallAnalytics,
 ) : PackageInstaller {
 
+  override fun requestUserPreApproval(
+    packageName: String,
+    installPackageInfo: InstallPackageInfo,
+  ): Flow<Unit> = packageInstaller.requestUserPreApproval(packageName, installPackageInfo)
+
   override fun install(
     packageName: String,
     installPackageInfo: InstallPackageInfo,

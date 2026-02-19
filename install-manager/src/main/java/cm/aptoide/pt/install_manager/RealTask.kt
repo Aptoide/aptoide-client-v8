@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flattenConcat
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onCompletion
@@ -72,6 +73,23 @@ internal class RealTask internal constructor(
   internal fun enqueue(alreadySaved: Boolean = false): Task {
     scope.launch {
       if (!alreadySaved) taskInfoRepository.saveJob(taskInfo)
+      // Run pre-approval immediately (outside the queue) so the user can approve
+      // the install even while the app waits in queue
+      if (type == Task.Type.INSTALL) {
+        try {
+          packageInstaller.requestUserPreApproval(packageName, installPackageInfo).first()
+        } catch (e: Throwable) {
+          val state = when (e) {
+            is AbortException -> Task.State.Aborted
+            is CancellationException -> Task.State.Canceled
+            else -> Task.State.Failed
+          }
+          _stateAndProgress.emit(state)
+          taskInfoRepository.remove(taskInfo)
+          appsCache.setBusy(packageName, false)
+          return@launch
+        }
+      }
       jobDispatcher.enqueue(this@RealTask)
     }
     return this

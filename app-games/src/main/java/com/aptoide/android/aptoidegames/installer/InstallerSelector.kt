@@ -21,6 +21,12 @@ class InstallerSelector @Inject constructor(
   val installAnalytics: InstallAnalytics
 ) : PackageInstaller {
 
+  override fun requestUserPreApproval(
+    packageName: String,
+    installPackageInfo: InstallPackageInfo,
+  ): Flow<Unit> = flow { emit(getPackageInstaller(installPackageInfo)) }
+    .flatMapLatest { it.requestUserPreApproval(packageName, installPackageInfo) }
+
   override fun install(
     packageName: String,
     installPackageInfo: InstallPackageInfo

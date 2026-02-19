@@ -5,11 +5,25 @@ import cm.aptoide.pt.install_manager.OutOfSpaceException
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 
 /**
  * This interface represents install logic for the package files.
  */
 interface PackageInstaller {
+
+  /**
+   * Request user preapproval before downloading or installing.
+   * Default implementation is a no-op.
+   *
+   * @param packageName - a package name
+   * @param installPackageInfo - a package info
+   * @returns Flow that completes when preapproval finishes (if supported).
+   */
+  fun requestUserPreApproval(
+    packageName: String,
+    installPackageInfo: InstallPackageInfo,
+  ): Flow<Unit> = flowOf(Unit)
 
   /**
    * Install package files.

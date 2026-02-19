@@ -57,7 +57,9 @@ class AptoideInstallPackageInfoMapper @Inject constructor(
         isAab = appMeta.isAab(),
         hasObb = appMeta.hasObb(),
         trustedBadge = appMeta.malware
-      ).toString()
+      ).toString(),
+      appLabel = app.name.takeIf { it.isNotBlank() },
+      iconUrl = app.icon.takeIf { it.isNotBlank() }
     ).filter()
   }
 }
