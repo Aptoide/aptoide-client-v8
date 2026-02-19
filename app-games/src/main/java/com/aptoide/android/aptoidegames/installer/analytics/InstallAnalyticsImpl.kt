@@ -483,18 +483,20 @@ class InstallAnalyticsImpl(
   )
 
   override fun sendApkfyRobloxExp82InstallClickEvent(
-    numberOfCheckPresses: Int,
-    autoOpenDefault: Boolean,
-    autoOpenFinal: Boolean,
-    switchCheckDiff: Int
+    numberOfCheckPresses: Int?,
+    autoOpenDefault: Boolean?,
+    autoOpenFinal: Boolean?,
+    switchCheckDiff: Int?,
+    apkfyVariant: String
   ) {
     genericAnalytics.logEvent(
       name = "exp82_apkfy_install_click",
-      params = mapOf(
+      params = mapOfNonNull(
         "check_diff" to numberOfCheckPresses,
         "auto_open_default" to autoOpenDefault,
         "auto_open_final" to autoOpenFinal,
-        "switch_check_diff" to switchCheckDiff
+        "switch_check_diff" to switchCheckDiff,
+        "apkfy_variant" to apkfyVariant
       )
     )
   }

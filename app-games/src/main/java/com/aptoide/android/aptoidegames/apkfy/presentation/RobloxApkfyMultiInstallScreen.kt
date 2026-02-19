@@ -251,7 +251,8 @@ private fun MultiInstallButton(
         numberOfCheckPresses = checkDiffCounter,
         autoOpenDefault = autoOpenDefault,
         autoOpenFinal = autoOpenFinal,
-        switchCheckDiff = switchCounter
+        switchCheckDiff = switchCounter,
+        apkfyVariant = if (autoOpenDefault) "multiinstall_auto_on" else "multiinstall_auto_off"
       )
       installAnalytics.sendClickEvent(apkfyApp, analyticsUIContext, networkType)
       install(utmContext, autoOpenFinal)
