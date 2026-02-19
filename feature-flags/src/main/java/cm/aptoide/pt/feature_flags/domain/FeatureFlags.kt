@@ -5,6 +5,7 @@ import cm.aptoide.pt.feature_flags.data.FeatureFlagsRepository
 import com.google.gson.Gson
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import org.json.JSONArray
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -24,6 +25,8 @@ interface FeatureFlags {
   suspend fun getFlagsAsString(vararg keys: String): Map<String, String?> = emptyMap()
 
   suspend fun getStrings(key: String): List<String> = emptyList()
+
+  suspend fun getStringList(key: String): List<String> = emptyList()
 
   suspend fun <T> getObject(key: String, klass: Class<T>): T? = null
 
@@ -82,6 +85,24 @@ class FeatureFlagsImpl @Inject constructor(
       }
       result.filterNot { it.isBlank() }
     } ?: emptyList()
+  }
+
+  /**
+   * Alternative to [getStrings] that works when flag values are stored as plain strings.
+   * Unlike [getStrings], which uses `optJSONArray` and expects a native JSONArray type,
+   * this parses the string value as a JSON array, handling the string-encoded format.
+   */
+  override suspend fun getStringList(key: String): List<String> = mutex.withLock {
+    runCatching {
+      JSONArray(featureFlags.getString(key)).run {
+        val result = mutableListOf<String>()
+        val size = length()
+        for (i in 0 until size) {
+          result += optString(i)
+        }
+        result.filterNot { it.isBlank() }
+      }
+    }.getOrNull() ?: emptyList()
   }
 
   override suspend fun <T> getObject(key: String, klass: Class<T>) = mutex.withLock {

@@ -20,6 +20,7 @@ import com.aptoide.android.aptoidegames.analytics.toBiParameters
 import com.aptoide.android.aptoidegames.analytics.toGenericParameters
 import com.aptoide.android.aptoidegames.installer.analytics.InstallAnalyticsImpl.Companion.P_APP_SIZE_MB
 import com.aptoide.android.aptoidegames.installer.analytics.InstallAnalyticsImpl.Companion.P_UPDATE_TYPE
+import com.aptoide.android.aptoidegames.installer.ff.PreApprovalExperiment
 import com.aptoide.android.aptoidegames.installer.ff.getDownloaderVariant
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -34,6 +35,7 @@ class InstallAnalyticsImpl(
   private val biAnalytics: BIAnalytics,
   private val storeName: String,
   private val silentInstallChecker: SilentInstallChecker,
+  private val preApprovalExperiment: PreApprovalExperiment,
 ) : InstallAnalytics {
 
   init {
@@ -363,6 +365,8 @@ class InstallAnalyticsImpl(
         )
       }
     }
+
+    preApprovalExperiment.sendInstallSuccessEvent(packageName, installPackageInfo)
   }
 
   override fun sendInstallErrorEvent(

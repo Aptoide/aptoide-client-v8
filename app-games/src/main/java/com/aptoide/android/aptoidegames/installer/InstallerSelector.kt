@@ -8,6 +8,7 @@ import cm.aptoide.pt.install_manager.dto.hasSplitApks
 import cm.aptoide.pt.install_manager.workers.PackageInstaller
 import com.aptoide.android.aptoidegames.Platform
 import com.aptoide.android.aptoidegames.installer.analytics.InstallAnalytics
+import com.aptoide.android.aptoidegames.installer.ff.PreApprovalExperiment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -17,33 +18,49 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 class InstallerSelector @Inject constructor(
   val aptoideInstaller: PackageInstaller,
+  val preApprovalInstaller: PackageInstaller,
   val legacyInstaller: PackageInstaller,
-  val installAnalytics: InstallAnalytics
+  val installAnalytics: InstallAnalytics,
+  val preApprovalExperiment: PreApprovalExperiment,
 ) : PackageInstaller {
 
   override fun requestUserPreApproval(
     packageName: String,
     installPackageInfo: InstallPackageInfo,
-  ): Flow<Unit> = flow { emit(getPackageInstaller(installPackageInfo)) }
+  ): Flow<Unit> = flow { emit(getPackageInstaller(packageName, installPackageInfo)) }
     .flatMapLatest { it.requestUserPreApproval(packageName, installPackageInfo) }
 
   override fun install(
     packageName: String,
     installPackageInfo: InstallPackageInfo
-  ): Flow<Int> = flow { emit(getPackageInstaller(installPackageInfo)) }
+  ): Flow<Int> = flow { emit(getPackageInstaller(packageName, installPackageInfo)) }
     .flatMapLatest { it.install(packageName, installPackageInfo) }
 
   override fun uninstall(packageName: String): Flow<Int> = flow { emit(getPackageUninstaller()) }
     .flatMapLatest { it.uninstall(packageName) }
 
-  fun getPackageInstaller(installPackageInfo: InstallPackageInfo): PackageInstaller =
+  suspend fun getPackageInstaller(
+    packageName: String,
+    installPackageInfo: InstallPackageInfo,
+  ): PackageInstaller =
     if (Platform.shouldUseLegacyInstaller && !installPackageInfo.hasSplitApks()) {
       installAnalytics.setUsedInstallerProperty("legacy_installer")
       legacyInstaller
+    } else if (shouldUsePreApprovalInstaller(packageName, installPackageInfo)) {
+      installAnalytics.setUsedInstallerProperty("pre_approval_installer")
+      preApprovalInstaller
     } else {
       installAnalytics.setUsedInstallerProperty("package_installer")
       aptoideInstaller
     }
+
+  private suspend fun shouldUsePreApprovalInstaller(
+    packageName: String,
+    installPackageInfo: InstallPackageInfo,
+  ): Boolean {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) return false
+    return preApprovalExperiment.shouldUsePreApprovalInstaller(packageName, installPackageInfo)
+  }
 
   fun getPackageUninstaller(): PackageInstaller =
     if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R && isMIUI()

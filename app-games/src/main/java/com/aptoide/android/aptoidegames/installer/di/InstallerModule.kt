@@ -15,6 +15,7 @@ import cm.aptoide.pt.installer.AptoideInstallPackageInfoMapper
 import cm.aptoide.pt.installer.AptoideInstaller
 import cm.aptoide.pt.installer.LegacyInstaller
 import cm.aptoide.pt.installer.PreApprovalIconProvider
+import cm.aptoide.pt.installer.PreApprovalInstaller
 import cm.aptoide.pt.installer.obb.OBBInstallManager
 import cm.aptoide.pt.task_info.AptoideTaskInfoRepository
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
@@ -33,6 +34,7 @@ import com.aptoide.android.aptoidegames.installer.analytics.SilentInstallChecker
 import com.aptoide.android.aptoidegames.installer.database.AppDetailsDao
 import com.aptoide.android.aptoidegames.installer.database.InstallerDatabase
 import com.aptoide.android.aptoidegames.installer.database.InstallerDatabase.FirstMigration
+import com.aptoide.android.aptoidegames.installer.ff.PreApprovalExperiment
 import com.aptoide.android.aptoidegames.installer.notifications.InstallerNotificationsManager
 import com.aptoide.android.aptoidegames.installer.notifications.RealInstallerNotificationsManager
 import com.aptoide.android.aptoidegames.installer.task_info.AptoideTaskInfoProbe
@@ -104,12 +106,16 @@ class InstallerModule {
   @Provides
   fun provideInstallerSelector(
     aptoideInstaller: AptoideInstaller,
+    preApprovalInstaller: PreApprovalInstaller,
     legacyInstaller: LegacyInstaller,
-    installAnalytics: InstallAnalytics
+    installAnalytics: InstallAnalytics,
+    preApprovalExperiment: PreApprovalExperiment,
   ): InstallerSelector = InstallerSelector(
     aptoideInstaller = aptoideInstaller,
+    preApprovalInstaller = preApprovalInstaller,
     legacyInstaller = legacyInstaller,
-    installAnalytics = installAnalytics
+    installAnalytics = installAnalytics,
+    preApprovalExperiment = preApprovalExperiment,
   )
 
   @Singleton
@@ -168,12 +174,14 @@ class InstallerModule {
     biAnalytics: BIAnalytics,
     @StoreName storeName: String,
     silentInstallChecker: SilentInstallChecker,
+    preApprovalExperiment: PreApprovalExperiment,
   ): InstallAnalytics = InstallAnalyticsImpl(
     context = context,
     featureFlags = featureFlags,
     genericAnalytics = genericAnalytics,
     biAnalytics = biAnalytics,
     storeName = storeName,
-    silentInstallChecker = silentInstallChecker
+    silentInstallChecker = silentInstallChecker,
+    preApprovalExperiment = preApprovalExperiment,
   )
 }
