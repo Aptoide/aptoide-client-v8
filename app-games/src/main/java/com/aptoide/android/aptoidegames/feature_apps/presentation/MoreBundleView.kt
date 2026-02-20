@@ -139,13 +139,16 @@ fun AppsList(
   appList: List<App>,
   navigate: (String) -> Unit,
   handleRTBAdClick: (String, Int) -> Unit = { _, _ -> },
+  onItemVisible: (Int) -> Unit = {},
 ) {
   val analyticsContext = AnalyticsContext.current
   val utmContext = UTMContext.current
   val bundleAnalytics = rememberBundleAnalytics()
+  val lazyListState = rememberImpressionTrackingListState(onItemVisible)
 
   Spacer(modifier = Modifier.fillMaxWidth())
   LazyColumn(
+    state = lazyListState,
     modifier = Modifier
       .semantics { collectionInfo = CollectionInfo(appList.size, 1) }
       .padding(start = 16.dp, end = 16.dp)

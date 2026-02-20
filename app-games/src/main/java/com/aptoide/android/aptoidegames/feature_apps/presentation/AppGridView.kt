@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -107,12 +106,13 @@ private fun RealAppsGridBundle(
 internal fun AppsRowView(
   appsList: List<App>,
   navigate: (String) -> Unit,
-  onRTBAdClick: (String, Int) -> Unit = { _, _ -> }
+  onRTBAdClick: (String, Int) -> Unit = { _, _ -> },
+  onItemVisible: (Int) -> Unit = {},
 ) {
   val analyticsContext = AnalyticsContext.current
   val utmContext = UTMContext.current
   val bundleAnalytics = rememberBundleAnalytics()
-  val lazyListState = rememberLazyListState()
+  val lazyListState = rememberImpressionTrackingListState(onItemVisible)
 
   SwipeListener(interactionSource = lazyListState.interactionSource)
   LazyRow(
