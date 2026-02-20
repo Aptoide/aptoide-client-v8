@@ -12,6 +12,8 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,13 +25,12 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
+import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.dto.BundleMeta
 import com.aptoide.android.aptoidegames.analytics.presentation.OverrideAnalyticsBundleMeta
 import com.aptoide.android.aptoidegames.feature_rtb.data.RTBAppsListUiState
-import com.aptoide.android.aptoidegames.feature_rtb.presentation.RTBAptoideMMPController
 import com.aptoide.android.aptoidegames.feature_rtb.presentation.rememberRTBAdClickHandler
 import com.aptoide.android.aptoidegames.feature_rtb.presentation.rememberRTBApps
-import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.mmp.UTMContext
 import com.aptoide.android.aptoidegames.mmp.WithUTM
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -54,7 +55,8 @@ fun PostInstallRecommendsView(
       medium = "rtb",
       campaign = "regular",
       content = POST_INSTALL_TAG,
-      navigate = navigate
+      navigate = navigate,
+      shouldSendClickEvents = true
     ) { navigate ->
       PostInstallRecommendsContent(
         navigate = navigate,
@@ -71,20 +73,28 @@ private fun PostInstallRecommendsContent(
 ) {
   val timestamp = remember { System.currentTimeMillis().toString() }
   val (uiState, _) = rememberRTBApps(POST_INSTALL_TAG, timestamp)
+  val hasSentImpression = remember { mutableStateOf(false) }
 
   when (uiState) {
     is RTBAppsListUiState.Idle -> {
       val apps = uiState.apps.take(9)
       if (apps.isNotEmpty()) {
-        RTBAptoideMMPController(apps)
+        val utmContext = UTMContext.current
+
+        LaunchedEffect(Unit) {
+          if (!hasSentImpression.value) {
+            hasSentImpression.value = true
+            apps.forEach { rtbApp ->
+              rtbApp.app.campaigns?.toAptoideMMPCampaign()
+                ?.sendImpressionEvent(utmContext, rtbApp.app.packageName)
+            }
+          }
+        }
 
         val handleRTBAdClick = rememberRTBAdClickHandler(
           rtbAppsList = apps,
           navigate = navigate,
         )
-
-        val utmContext = UTMContext.current
-
         Column(
           modifier = modifier
             .fillMaxWidth()
@@ -94,50 +104,50 @@ private fun PostInstallRecommendsContent(
               shape = RectangleShape
             )
         ) {
-            // Header
-            Row(
-              modifier = Modifier
-                .background(Palette.GreyDark)
-                .padding(horizontal = 8.dp, vertical = 4.dp),
-              horizontalArrangement = Arrangement.spacedBy(4.dp),
-              verticalAlignment = Alignment.CenterVertically
-            ) {
-              Text(
-                text = stringResource(R.string.post_install_suggested_title),
-                style = AGTypography.BodyBold,
-                color = Palette.GreyLight
-              )
-              Text(
-                text = stringResource(R.string.post_install_sponsored_label),
-                style = AGTypography.InputsXXS,
-                color = Palette.GreyLight
-              )
-            }
-            // App cards row
-            LazyRow(
-              modifier = Modifier
-                .semantics {
-                  collectionInfo = CollectionInfo(1, apps.size)
-                }
-                .fillMaxWidth()
-                .padding(top = 20.dp, bottom = 16.dp),
-              contentPadding = PaddingValues(horizontal = 16.dp),
-              horizontalArrangement = Arrangement.spacedBy(16.dp),
-            ) {
-              itemsIndexed(apps) { index, rtbApp ->
-                val app = rtbApp.app
-                PostInstallAppCard(
-                  app = app,
-                  onClick = {
-                    app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(utmContext)
-                    handleRTBAdClick(app.packageName, index)
-                  },
-                )
+          // Header
+          Row(
+            modifier = Modifier
+              .background(Palette.GreyDark)
+              .padding(horizontal = 8.dp, vertical = 4.dp),
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            verticalAlignment = Alignment.CenterVertically
+          ) {
+            Text(
+              text = stringResource(R.string.post_install_suggested_title),
+              style = AGTypography.BodyBold,
+              color = Palette.GreyLight
+            )
+            Text(
+              text = stringResource(R.string.post_install_sponsored_label),
+              style = AGTypography.InputsXXS,
+              color = Palette.GreyLight
+            )
+          }
+          // App cards row
+          LazyRow(
+            modifier = Modifier
+              .semantics {
+                collectionInfo = CollectionInfo(1, apps.size)
               }
+              .fillMaxWidth()
+              .padding(top = 20.dp, bottom = 16.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+          ) {
+            itemsIndexed(apps) { index, rtbApp ->
+              val app = rtbApp.app
+              PostInstallAppCard(
+                app = app,
+                onClick = {
+                  app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(utmContext)
+                  handleRTBAdClick(app.packageName, index)
+                },
+              )
             }
           }
         }
       }
+    }
 
     RTBAppsListUiState.Loading,
     RTBAppsListUiState.Empty,
