@@ -10,11 +10,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.listSaver
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
@@ -79,22 +83,35 @@ private fun PostInstallRecommendsContent(
     is RTBAppsListUiState.Idle -> {
       val apps = uiState.apps.take(9)
       if (apps.isNotEmpty()) {
-        val utmContext = UTMContext.current
-
-        LaunchedEffect(Unit) {
-          if (!hasSentImpression.value) {
-            hasSentImpression.value = true
-            apps.forEach { rtbApp ->
-              rtbApp.app.campaigns?.toAptoideMMPCampaign()
-                ?.sendImpressionEvent(utmContext, rtbApp.app.packageName)
-            }
-          }
-        }
-
         val handleRTBAdClick = rememberRTBAdClickHandler(
           rtbAppsList = apps,
           navigate = navigate,
         )
+
+        val utmContext = UTMContext.current
+        val lazyListState = rememberLazyListState()
+
+        val impressionsSent = rememberSaveable(
+          saver = listSaver(
+            save = { it.toList() },
+            restore = { it.toMutableSet() }
+          )
+        ) { mutableSetOf<Int>() }
+        LaunchedEffect(lazyListState) {
+          snapshotFlow { lazyListState.layoutInfo.visibleItemsInfo.map { it.index } }
+            .collect { visibleIndices ->
+              visibleIndices.forEach { index ->
+                if (index !in impressionsSent) {
+                  impressionsSent.add(index)
+                  apps.getOrNull(index)?.app?.let { app ->
+                    app.campaigns?.toAptoideMMPCampaign()
+                      ?.sendImpressionEvent(utmContext, app.packageName)
+                  }
+                }
+              }
+            }
+        }
+
         Column(
           modifier = modifier
             .fillMaxWidth()
@@ -131,23 +148,24 @@ private fun PostInstallRecommendsContent(
               }
               .fillMaxWidth()
               .padding(top = 20.dp, bottom = 16.dp),
-            contentPadding = PaddingValues(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-          ) {
-            itemsIndexed(apps) { index, rtbApp ->
-              val app = rtbApp.app
-              PostInstallAppCard(
-                app = app,
-                onClick = {
-                  app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(utmContext)
-                  handleRTBAdClick(app.packageName, index)
-                },
-              )
+            state = lazyListState,
+              contentPadding = PaddingValues(horizontal = 16.dp),
+              horizontalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+              itemsIndexed(apps) { index, rtbApp ->
+                val app = rtbApp.app
+                PostInstallAppCard(
+                  app = app,
+                  onClick = {
+                    app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(utmContext)
+                    handleRTBAdClick(app.packageName, index)
+                  },
+                )
+              }
             }
           }
         }
       }
-    }
 
     RTBAppsListUiState.Loading,
     RTBAppsListUiState.Empty,

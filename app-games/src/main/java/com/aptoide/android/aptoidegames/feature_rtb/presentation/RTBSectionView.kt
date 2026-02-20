@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
-import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.randomBundle
 import com.aptoide.android.aptoidegames.analytics.dto.AnalyticsUIContext
@@ -15,27 +14,8 @@ import com.aptoide.android.aptoidegames.feature_rtb.data.RTBApp
 import com.aptoide.android.aptoidegames.feature_rtb.data.RTBAppsListUiState
 import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
-import com.aptoide.android.aptoidegames.mmp.UTMContext
 import com.aptoide.android.aptoidegames.mmp.WithUTM
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-
-private var hasSentImpression = false
-
-@Composable
-fun RTBAptoideMMPController(
-  apps: List<RTBApp>,
-) {
-  apps.forEachIndexed { index, rtbApp ->
-    val app = rtbApp.app
-    if (!hasSentImpression) {
-      app.campaigns?.toAptoideMMPCampaign()
-        ?.sendImpressionEvent(UTMContext.current, app.packageName)
-      if (index == apps.size - 1) {
-        hasSentImpression = true
-      }
-    }
-  }
-}
 
 @Composable
 fun RTBSectionView(
@@ -110,7 +90,6 @@ fun RTBBundleView(
   onShowLoading: (Boolean) -> Unit = {}
 ) {
   val homeApps = apps.take(9)
-  RTBAptoideMMPController(homeApps)
   RTBAppsRowView(
     rtbAppsList = homeApps,
     navigate = navigate,
