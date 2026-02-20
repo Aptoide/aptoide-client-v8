@@ -122,7 +122,8 @@ fun UserActionDialog() {
                   .getStringExtra("${BuildConfig.APPLICATION_ID}.ap").toAnalyticsPayload()
                 installAnalytics.sendInstallDialogImpressionEvent(packageName, analyticsPayload)
               }
-              val sessionId = it.intent.extras?.getInt("android.content.pm.extra.SESSION_ID")
+              val sessionId =
+                it.intent.extras?.getInt("android.content.pm.extra.SESSION_ID")?.takeIf { it != 0 }
               val sessionInfo = sessionId?.let {
                 context.packageManager.packageInstaller.getSessionInfo(it)
               }
@@ -130,6 +131,7 @@ fun UserActionDialog() {
               if (sessionId == null || sessionInfo != null) {
                 intentLauncher.launch(it.intent)
               } else {
+                //Record exception in cases where the session id is available but the session is not available anymore
                 Firebase.crashlytics.recordException(IllegalStateException("Error getting session info. Install dialog not launched"))
               }
 
