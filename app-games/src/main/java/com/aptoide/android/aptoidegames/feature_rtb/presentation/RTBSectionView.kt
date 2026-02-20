@@ -67,7 +67,7 @@ private fun RTBSectionViewContent(
   spaceBy: Int = 0,
   onShowLoading: (Boolean) -> Unit = {}
 ) {
-  val (uiState, _) = rememberRTBApps(bundle.tag, bundle.timestamp)
+  val (uiState, _) = rememberRTBApps("home-bundle", bundle.timestamp)
 
   when (uiState) {
     is RTBAppsListUiState.Idle -> {

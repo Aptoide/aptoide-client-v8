@@ -51,7 +51,6 @@ fun rtbSeeMoreScreen() = ScreenData.withAnalytics(
     shouldSendClickEvents = true
   ) { navigate ->
     RTBMoreBundleScreen(
-      bundleTag = bundleTag,
       navigateBack = navigateBack,
       navigate = navigate,
     )
@@ -85,11 +84,10 @@ private fun RTBMoreAptoideMMPController(
 
 @Composable
 fun RTBMoreBundleScreen(
-  bundleTag: String,
   navigateBack: () -> Unit,
   navigate: (String) -> Unit,
 ) {
-  val (uiState, reload) = rememberRTBApps(bundleTag)
+  val (uiState, reload) = rememberRTBApps("home-bundle")
   val analyticsContext = AnalyticsContext.current
   val generalAnalytics = rememberGeneralAnalytics()
   var isLoading by remember { mutableStateOf(false) }
