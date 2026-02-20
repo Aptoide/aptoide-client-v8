@@ -16,13 +16,8 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.saveable.listSaver
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.CollectionInfo
@@ -117,25 +112,7 @@ internal fun AppsRowView(
   val analyticsContext = AnalyticsContext.current
   val utmContext = UTMContext.current
   val bundleAnalytics = rememberBundleAnalytics()
-  val lazyListState = rememberLazyListState()
-
-  val impressionsSent = rememberSaveable(
-    saver = listSaver(
-      save = { it.toList() },
-      restore = { it.toMutableSet() }
-    )
-  ) { mutableSetOf<Int>() }
-  LaunchedEffect(lazyListState) {
-    snapshotFlow { lazyListState.layoutInfo.visibleItemsInfo.map { it.index } }
-      .collect { visibleIndices ->
-        visibleIndices.forEach { index ->
-          if (index !in impressionsSent) {
-            impressionsSent.add(index)
-            onItemVisible(index)
-          }
-        }
-      }
-  }
+  val lazyListState = rememberImpressionTrackingListState(onItemVisible)
 
   SwipeListener(interactionSource = lazyListState.interactionSource)
   LazyRow(

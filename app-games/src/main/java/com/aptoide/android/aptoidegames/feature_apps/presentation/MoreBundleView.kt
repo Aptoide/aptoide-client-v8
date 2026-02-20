@@ -8,12 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.saveable.listSaver
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.CollectionInfo
@@ -149,25 +144,7 @@ fun AppsList(
   val analyticsContext = AnalyticsContext.current
   val utmContext = UTMContext.current
   val bundleAnalytics = rememberBundleAnalytics()
-  val lazyListState = rememberLazyListState()
-
-  val impressionsSent = rememberSaveable(
-    saver = listSaver(
-      save = { it.toList() },
-      restore = { it.toMutableSet() }
-    )
-  ) { mutableSetOf<Int>() }
-  LaunchedEffect(lazyListState) {
-    snapshotFlow { lazyListState.layoutInfo.visibleItemsInfo.map { it.index } }
-      .collect { visibleIndices ->
-        visibleIndices.forEach { index ->
-          if (index !in impressionsSent) {
-            impressionsSent.add(index)
-            onItemVisible(index)
-          }
-        }
-      }
-  }
+  val lazyListState = rememberImpressionTrackingListState(onItemVisible)
 
   Spacer(modifier = Modifier.fillMaxWidth())
   LazyColumn(

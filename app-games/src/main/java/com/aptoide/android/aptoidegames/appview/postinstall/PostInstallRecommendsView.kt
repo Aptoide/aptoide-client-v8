@@ -10,14 +10,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.listSaver
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
@@ -31,6 +26,7 @@ import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.dto.BundleMeta
 import com.aptoide.android.aptoidegames.analytics.presentation.OverrideAnalyticsBundleMeta
+import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberImpressionTrackingListState
 import com.aptoide.android.aptoidegames.feature_rtb.data.RTBAppsListUiState
 import com.aptoide.android.aptoidegames.feature_rtb.presentation.rememberRTBAdClickHandler
 import com.aptoide.android.aptoidegames.feature_rtb.presentation.rememberRTBApps
@@ -86,27 +82,11 @@ private fun PostInstallRecommendsContent(
         )
 
         val utmContext = UTMContext.current
-        val lazyListState = rememberLazyListState()
-
-        val impressionsSent = rememberSaveable(
-          saver = listSaver(
-            save = { it.toList() },
-            restore = { it.toMutableSet() }
-          )
-        ) { mutableSetOf<Int>() }
-        LaunchedEffect(lazyListState) {
-          snapshotFlow { lazyListState.layoutInfo.visibleItemsInfo.map { it.index } }
-            .collect { visibleIndices ->
-              visibleIndices.forEach { index ->
-                if (index !in impressionsSent) {
-                  impressionsSent.add(index)
-                  apps.getOrNull(index)?.app?.let { app ->
-                    app.campaigns?.toAptoideMMPCampaign()
-                      ?.sendImpressionEvent(utmContext, app.packageName)
-                  }
-                }
-              }
-            }
+        val lazyListState = rememberImpressionTrackingListState { index ->
+          apps.getOrNull(index)?.app?.let { app ->
+            app.campaigns?.toAptoideMMPCampaign()
+              ?.sendImpressionEvent(utmContext, app.packageName)
+          }
         }
 
         Column(
