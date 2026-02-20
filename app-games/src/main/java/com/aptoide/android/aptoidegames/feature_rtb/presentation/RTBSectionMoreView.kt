@@ -34,7 +34,6 @@ import com.aptoide.android.aptoidegames.mmp.WithUTM
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 
 const val rtbSeeMoreRoute = "rtbSeeMore/{tag}"
-private var hasSentImpression = false
 
 fun rtbSeeMoreScreen() = ScreenData.withAnalytics(
   route = rtbSeeMoreRoute,
@@ -62,27 +61,6 @@ fun buildRtbSeeMoreRoute(
 ) = "rtbSeeMore/$bundleTag"
 
 @Composable
-private fun RTBMoreAptoideMMPController(
-  uiState: RTBAppsListUiState,
-) {
-  when (uiState) {
-    is RTBAppsListUiState.Idle ->
-      uiState.apps.forEachIndexed { index, rtbApp ->
-        val app = rtbApp.app
-        if (!hasSentImpression) {
-          app.campaigns?.toAptoideMMPCampaign()
-            ?.sendImpressionEvent(UTMContext.current, app.packageName)
-          if (index == uiState.apps.size - 1) {
-            hasSentImpression = true
-          }
-        }
-      }
-
-    else -> {}
-  }
-}
-
-@Composable
 fun RTBMoreBundleScreen(
   navigateBack: () -> Unit,
   navigate: (String) -> Unit,
@@ -91,8 +69,6 @@ fun RTBMoreBundleScreen(
   val analyticsContext = AnalyticsContext.current
   val generalAnalytics = rememberGeneralAnalytics()
   var isLoading by remember { mutableStateOf(false) }
-
-  RTBMoreAptoideMMPController(uiState)
 
   Column(
     modifier = Modifier
@@ -138,8 +114,19 @@ private fun RTBMoreAppsList(
     onLoadingChange = onLoadingChange
   )
 
+  val utmContext = UTMContext.current
   val appsList = rtbAppsList.map { it.app }
-  AppsList(appList = appsList, navigate = navigate, handleRTBAdClick)
+  AppsList(
+    appList = appsList,
+    navigate = navigate,
+    handleRTBAdClick = handleRTBAdClick,
+    onItemVisible = { index ->
+      rtbAppsList.getOrNull(index)?.app?.let { app ->
+        app.campaigns?.toAptoideMMPCampaign()
+          ?.sendImpressionEvent(utmContext, app.packageName)
+      }
+    },
+  )
 }
 
 @Composable
