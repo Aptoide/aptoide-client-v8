@@ -12,7 +12,10 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.IOException
 
-class RTBAppListViewModel(private val repository: RTBRepository) : ViewModel() {
+class RTBAppListViewModel(
+  private val repository: RTBRepository,
+  private val tag: String,
+) : ViewModel() {
 
   private val viewModelState = MutableStateFlow<RTBAppsListUiState>(RTBAppsListUiState.Loading)
 
@@ -31,7 +34,7 @@ class RTBAppListViewModel(private val repository: RTBRepository) : ViewModel() {
     viewModelScope.launch {
       viewModelState.update { RTBAppsListUiState.Loading }
       try {
-        val result = repository.getRTBApps("home-bundle")
+        val result = repository.getRTBApps(tag)
         viewModelState.update {
           if (result.isEmpty()) {
             RTBAppsListUiState.Empty

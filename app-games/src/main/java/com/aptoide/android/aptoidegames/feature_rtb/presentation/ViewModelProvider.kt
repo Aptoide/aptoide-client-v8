@@ -8,10 +8,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.feature_campaigns.CampaignImpl
 import com.aptoide.android.aptoidegames.feature_rtb.data.RTBApp
@@ -20,6 +16,10 @@ import com.aptoide.android.aptoidegames.feature_rtb.data.randomRTBApp
 import com.aptoide.android.aptoidegames.feature_rtb.domain.GetSearchSponsoredAppUseCase
 import com.aptoide.android.aptoidegames.feature_rtb.repository.RTBRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,6 +43,7 @@ fun rememberRTBApps(
           @Suppress("UNCHECKED_CAST")
           return RTBAppListViewModel(
             repository = injectionsProvider.repository,
+            tag = tag,
           ) as T
         }
       }
