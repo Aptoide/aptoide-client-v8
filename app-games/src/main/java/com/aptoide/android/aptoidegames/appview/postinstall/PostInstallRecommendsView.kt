@@ -1,6 +1,7 @@
 package com.aptoide.android.aptoidegames.appview.postinstall
 
 import androidx.compose.foundation.background
+import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberImpressionTrackingListState
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,15 +11,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.listSaver
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
@@ -77,7 +72,6 @@ private fun PostInstallRecommendsContent(
 ) {
   val timestamp = remember { System.currentTimeMillis().toString() }
   val (uiState, _) = rememberRTBApps(POST_INSTALL_TAG, timestamp)
-  val hasSentImpression = remember { mutableStateOf(false) }
 
   when (uiState) {
     is RTBAppsListUiState.Idle -> {
@@ -89,27 +83,11 @@ private fun PostInstallRecommendsContent(
         )
 
         val utmContext = UTMContext.current
-        val lazyListState = rememberLazyListState()
-
-        val impressionsSent = rememberSaveable(
-          saver = listSaver(
-            save = { it.toList() },
-            restore = { it.toMutableSet() }
-          )
-        ) { mutableSetOf<Int>() }
-        LaunchedEffect(lazyListState) {
-          snapshotFlow { lazyListState.layoutInfo.visibleItemsInfo.map { it.index } }
-            .collect { visibleIndices ->
-              visibleIndices.forEach { index ->
-                if (index !in impressionsSent) {
-                  impressionsSent.add(index)
-                  apps.getOrNull(index)?.app?.let { app ->
-                    app.campaigns?.toAptoideMMPCampaign()
-                      ?.sendImpressionEvent(utmContext, app.packageName)
-                  }
-                }
-              }
-            }
+        val lazyListState = rememberImpressionTrackingListState { index ->
+          apps.getOrNull(index)?.app?.let { app ->
+            app.campaigns?.toAptoideMMPCampaign()
+              ?.sendImpressionEvent(utmContext, app.packageName)
+          }
         }
 
         Column(
@@ -149,23 +127,23 @@ private fun PostInstallRecommendsContent(
               .fillMaxWidth()
               .padding(top = 20.dp, bottom = 16.dp),
             state = lazyListState,
-              contentPadding = PaddingValues(horizontal = 16.dp),
-              horizontalArrangement = Arrangement.spacedBy(16.dp),
-            ) {
-              itemsIndexed(apps) { index, rtbApp ->
-                val app = rtbApp.app
-                PostInstallAppCard(
-                  app = app,
-                  onClick = {
-                    app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(utmContext)
-                    handleRTBAdClick(app.packageName, index)
-                  },
-                )
-              }
+            contentPadding = PaddingValues(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+          ) {
+            itemsIndexed(apps) { index, rtbApp ->
+              val app = rtbApp.app
+              PostInstallAppCard(
+                app = app,
+                onClick = {
+                  app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(utmContext)
+                  handleRTBAdClick(app.packageName, index)
+                },
+              )
             }
           }
         }
       }
+    }
 
     RTBAppsListUiState.Loading,
     RTBAppsListUiState.Empty,
