@@ -719,9 +719,9 @@ fun EmptySearchView(
           navigate = navigate,
         ) { rtbNavigate ->
           WithUTM(
-            source = "rtb",
-            medium = "search",
-            content = "search-banner",
+            medium = "rtb",
+            campaign = "regular",
+            content = "search",
             navigate = rtbNavigate,
             shouldSendClickEvents = true
           ) { utmNavigate ->
