@@ -13,7 +13,7 @@ class PaEAnalytics @Inject constructor(
 
   fun sendPaEHomeAppClick(packageName: String) {
     genericAnalytics.logEvent(
-      name = "playandearn_home_click_app",
+      name = "pae_home_click_app",
       params = mapOfNonNull(
         P_PACKAGE_NAME to packageName,
       )
@@ -22,35 +22,35 @@ class PaEAnalytics @Inject constructor(
 
   fun sendPaEHomeEarnNowClick() {
     genericAnalytics.logEvent(
-      name = "playandearn_home_click_earnnow",
+      name = "pae_home_click_earnnow",
       params = null
     )
   }
 
   fun sendPaEActionBarBadgeClick() {
     genericAnalytics.logEvent(
-      name = "playandearn_actionbar_click_badge",
+      name = "pae_actionbar_click_badge",
       params = null
     )
   }
 
   fun sendPaERewardsHomeTabClick() {
     genericAnalytics.logEvent(
-      name = "playandearn_rewards_click_tab",
+      name = "pae_rewards_click_tab",
       params = null
     )
   }
 
   fun sendPaERewardsHubKnowMoreClick() {
     genericAnalytics.logEvent(
-      name = "playandearn_hub_click_knowmore",
+      name = "pae_hub_click_knowmore",
       params = null
     )
   }
 
   fun sendPaERewardsHubLetsGoClick() {
     genericAnalytics.logEvent(
-      name = "playandearn_hub_click_letsgo",
+      name = "pae_hub_click_letsgo",
       params = null
     )
   }
@@ -60,7 +60,7 @@ class PaEAnalytics @Inject constructor(
     analyticsContext: AnalyticsUIContext,
   ) {
     genericAnalytics.logEvent(
-      name = "playandearn_play",
+      name = "pae_play",
       params = analyticsContext.toGenericParameters(
         P_PACKAGE_NAME to packageName,
       )
@@ -72,7 +72,7 @@ class PaEAnalytics @Inject constructor(
     analyticsContext: AnalyticsUIContext,
   ) {
     genericAnalytics.logEvent(
-      name = "playandearn_home_applaunched",
+      name = "pae_home_applaunched",
       params = analyticsContext.toGenericParameters(
         P_PACKAGE_NAME to packageName,
       )
@@ -81,28 +81,28 @@ class PaEAnalytics @Inject constructor(
 
   fun sendPaEGoogleLoginClick() {
     genericAnalytics.logEvent(
-      name = "playandearn_steps_glogin",
+      name = "pae_steps_glogin",
       params = null
     )
   }
 
   fun sendPaEPermissionRestrictedSettingsClick() {
     genericAnalytics.logEvent(
-      name = "playandearn_perms_restricted_click",
+      name = "pae_perms_restricted_click",
       params = null
     )
   }
 
   fun sendPaEFinalPermissionsClick() {
     genericAnalytics.logEvent(
-      name = "playandearn_perms_final_click",
+      name = "pae_perms_final_click",
       params = null
     )
   }
 
   fun sendPaEExchangeNowClick() {
     genericAnalytics.logEvent(
-      name = "playandearn_exchangenow_click",
+      name = "pae_exchangenow_click",
       params = null
     )
   }
