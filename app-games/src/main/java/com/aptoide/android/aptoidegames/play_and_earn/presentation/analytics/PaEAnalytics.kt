@@ -88,14 +88,14 @@ class PaEAnalytics @Inject constructor(
 
   fun sendPaEPermissionRestrictedSettingsClick() {
     genericAnalytics.logEvent(
-      name = "playandearn_steps_permission_restricted_settings_click",
+      name = "playandearn_perms_restricted_click",
       params = null
     )
   }
 
   fun sendPaEFinalPermissionsClick() {
     genericAnalytics.logEvent(
-      name = "playandearn_steps_final_permissions_click",
+      name = "playandearn_perms_final_click",
       params = null
     )
   }
