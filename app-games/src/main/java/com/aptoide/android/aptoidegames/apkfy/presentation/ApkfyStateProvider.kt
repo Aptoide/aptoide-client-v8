@@ -65,6 +65,7 @@ fun rememberApkfyState(): ApkfyUiState? = runPreviewable(
     val apkfyData = rememberApkfyData()
     var apkfyFeatureFlags: ApkfyFeatureFlags? by remember { mutableStateOf(null) }
     val vm = hiltViewModel<InjectionsProvider>()
+    val apkfyAnalytics = rememberApkfyAnalytics()
 
     val apkfyUiState by remember(apkfyData, apkfyFeatureFlags) {
       derivedStateOf {
@@ -102,6 +103,9 @@ fun rememberApkfyState(): ApkfyUiState? = runPreviewable(
             apkfyVariant = flag
           )
         } ?: ApkfyFeatureFlags()
+        apkfyFeatureFlags?.apkfyVariant?.let { variant ->
+          apkfyAnalytics.setExp82GroupUserProperty(variant)
+        }
       }
     }
 
