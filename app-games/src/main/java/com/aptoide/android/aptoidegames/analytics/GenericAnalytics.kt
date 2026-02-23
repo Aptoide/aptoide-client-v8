@@ -2,6 +2,7 @@ package com.aptoide.android.aptoidegames.analytics
 
 import android.content.Context
 import android.content.res.Configuration
+import androidx.annotation.Size
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.walletApp
 import cm.aptoide.pt.install_manager.InstallManager
@@ -45,7 +46,7 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
       resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
 
   fun logEvent(
-    name: String,
+    @Size(min = 1L, max = 40L) name: String,
     params: Map<String, Any>?,
   ) = analyticsSender.logEvent(name, params)
 
