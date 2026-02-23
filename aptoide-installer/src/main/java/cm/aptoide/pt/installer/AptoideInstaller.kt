@@ -1,5 +1,6 @@
 package cm.aptoide.pt.installer
 
+import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -49,17 +50,22 @@ class AptoideInstaller @Inject constructor(
   private val initialPermissionsAllowed = context.getPermissionsState()
 
   init {
-    // Clean up all old sessions on app start
+    // Clean up old non-preapproved sessions on app start
     context.packageManager.packageInstaller.mySessions.forEach {
-      try {
-        // Some times it leads to crashes that are hard to reproduce.
-        context.packageManager.packageInstaller.abandonSession(it.sessionId)
-      } catch (t: Throwable) {
-        Timber.e(t)
+      val isPreApproved = Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE
+        && it.isPreApprovalRequested
+      if (!isPreApproved) {
+        try {
+          // Some times it leads to crashes that are hard to reproduce.
+          context.packageManager.packageInstaller.abandonSession(it.sessionId)
+        } catch (t: Throwable) {
+          Timber.e(t)
+        }
       }
     }
   }
 
+  @SuppressLint("RequestInstallPackagesPolicy")
   override fun install(
     packageName: String,
     installPackageInfo: InstallPackageInfo,
