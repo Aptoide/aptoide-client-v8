@@ -10,8 +10,11 @@ import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieApiService
 import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieAppRepository
 import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieAppRepositoryImpl
+import com.aptoide.android.aptoidegames.gamegenie.data.GameCompanionsRepository
+import com.aptoide.android.aptoidegames.gamegenie.data.GameCompanionsRepositoryImpl
 import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieLocalRepository
 import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieSharedPreferencesRepository
+import com.aptoide.android.aptoidegames.gamegenie.data.database.CachedCompanionGameDao
 import com.aptoide.android.aptoidegames.gamegenie.data.database.GameGenieDatabase
 import com.aptoide.android.aptoidegames.gamegenie.data.database.GameGenieHistoryDao
 import com.aptoide.android.aptoidegames.gamegenie.presentation.GameGenieManager
@@ -37,6 +40,12 @@ internal abstract class GameGenieBindsModule {
   abstract fun bindGameGenieLocalRepository(
     impl: GameGenieSharedPreferencesRepository
   ): GameGenieLocalRepository
+
+  @Binds
+  @Singleton
+  abstract fun bindGameCompanionsRepository(
+    impl: GameCompanionsRepositoryImpl
+  ): GameCompanionsRepository
 }
 
 @Module
@@ -77,12 +86,18 @@ internal object GameGenieModule {
     "ag_game_genie.db"
   )
     .fallbackToDestructiveMigration(true)
+    .addMigrations(GameGenieDatabase.SixthMigration())
     .build()
 
   @Singleton
   @Provides
   fun provideGameGenieDao(database: GameGenieDatabase): GameGenieHistoryDao =
     database.getGameGenieHistoryDao()
+
+  @Singleton
+  @Provides
+  fun provideCachedCompanionGameDao(database: GameGenieDatabase): CachedCompanionGameDao =
+    database.getCachedCompanionGameDao()
 
   @Provides
   @Singleton

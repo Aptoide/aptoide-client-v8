@@ -39,6 +39,7 @@ import com.aptoide.android.aptoidegames.device_info.DeviceSecurityChecker
 import com.aptoide.android.aptoidegames.device_info.analytics.DeviceInfoAnalytics
 import com.aptoide.android.aptoidegames.feature_ad.Mintegral
 import com.aptoide.android.aptoidegames.feature_companion_apps_notification.CompanionAppsManager
+import com.aptoide.android.aptoidegames.gamegenie.presentation.CompanionGamesCachePreloader
 import com.aptoide.android.aptoidegames.feature_editors_choice_recommendation.EditorsChoiceRecommendationManager
 import com.aptoide.android.aptoidegames.feature_payments.analytics.AGLogger
 import com.aptoide.android.aptoidegames.home.repository.ThemePreferencesManager
@@ -135,6 +136,9 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
   lateinit var companionAppsManager: CompanionAppsManager
 
   @Inject
+  lateinit var companionGamesCachePreloader: CompanionGamesCachePreloader
+
+  @Inject
   lateinit var editorsChoiceRecommendationManager: EditorsChoiceRecommendationManager
 
   @Inject
@@ -163,6 +167,7 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
     MMPLinkerCampaign.init(BuildConfig.OEMID)
     initAds()
     initCompanionAppsManager()
+    initCompanionGamesCachePreloader()
     initTrendingAppsRecommendationManager()
     sendDeviceSecurityAnalytics()
   }
@@ -185,6 +190,12 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
   private fun initCompanionAppsManager() {
     CoroutineScope(Dispatchers.IO).launch {
       companionAppsManager.initialize()
+    }
+  }
+
+  private fun initCompanionGamesCachePreloader() {
+    CoroutineScope(Dispatchers.IO).launch {
+      companionGamesCachePreloader.initialize()
     }
   }
 
