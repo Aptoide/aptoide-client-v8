@@ -1,22 +1,14 @@
 package com.aptoide.android.aptoidegames.gamegenie.presentation
 
-import android.content.pm.ApplicationInfo
-import android.content.pm.PackageInfo
-import android.content.pm.PackageManager
 import android.util.Base64.NO_WRAP
 import android.util.Base64.encodeToString
 import cm.aptoide.pt.feature_apps.data.AppMapper
-import cm.aptoide.pt.feature_categories.data.CategoriesRepository
-import cm.aptoide.pt.install_manager.App
-import cm.aptoide.pt.install_manager.InstallManager
 import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieAppRepository
-import com.aptoide.android.aptoidegames.gamegenie.data.database.model.GameCompanionEntity
 import com.aptoide.android.aptoidegames.gamegenie.data.database.model.GameGenieHistoryEntity
 import com.aptoide.android.aptoidegames.gamegenie.domain.ChatInteraction
 import com.aptoide.android.aptoidegames.gamegenie.domain.ChatInteractionHistory
 import com.aptoide.android.aptoidegames.gamegenie.domain.CompanionSuggestions
 import com.aptoide.android.aptoidegames.gamegenie.domain.ConversationInfo
-import com.aptoide.android.aptoidegames.gamegenie.domain.GameCompanion
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameContext
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameGenieChat
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameGenieChatHistory
@@ -28,12 +20,10 @@ import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieRequest
 import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
-import java.io.IOException
+import java.io.File
 import javax.inject.Inject
 
 private const val MAX_CHATS = 15
@@ -53,7 +43,7 @@ private fun isBase64String(str: String): Boolean {
 private fun encodeImageFileToBase64(filePath: String?): String? {
   return filePath?.let { path ->
     try {
-      val file = java.io.File(path)
+      val file = File(path)
       if (file.exists()) {
         val bytes = file.readBytes()
         encodeToString(bytes, NO_WRAP)
@@ -70,88 +60,12 @@ class GameGenieUseCase @Inject constructor(
   private val gameGenieManager: GameGenieManager,
   private val mapper: AppMapper,
   private val appRepository: GameGenieAppRepository,
-  private val packageManager: PackageManager,
-  private val installManager: InstallManager,
-  private val repository: CategoriesRepository,
 ) {
   suspend fun getToken(): Token {
     return gameGenieManager.getToken()
   }
 
   fun getInstalledApps(): Flow<List<GameContext>> = appRepository.getInstalledApps()
-
-  suspend fun getGameCompanionsList(): Flow<List<GameCompanion>> {
-    val apps = installManager.installedApps.toMutableSet()
-
-    val installedAppsFlow: Flow<List<PackageInfo>> = installManager.appsChanges
-      .map { apps.apply { add(it) } }
-      .onStart { emit(apps) }
-      .map { set -> filterGames(set.mapNotNull(App::packageInfo)) }
-
-    return combine(
-      gameGenieManager.getAllGameCompanions(),
-      installedAppsFlow
-    ) { companionsFromDb: List<GameCompanionEntity>, installedPackages: List<PackageInfo> ->
-
-      val installedMap = installedPackages.associateBy { it.packageName }
-
-      val orderedFromDb = companionsFromDb
-        .filter { installedMap.containsKey(it.gamePackageName) }
-        .map { entity ->
-          val pkg = installedMap[entity.gamePackageName]!!
-          GameCompanion(
-            name = pkg.applicationInfo?.loadLabel(packageManager).toString(),
-            packageName = pkg.packageName,
-            versionName = pkg.versionName,
-            image = pkg.applicationInfo?.loadIcon(packageManager)
-          )
-        }
-
-      val missingFromDb = installedPackages
-        .filterNot { pkg -> companionsFromDb.any { it.gamePackageName == pkg.packageName } }
-        .sortedByDescending { it.firstInstallTime }
-        .map { pkg ->
-          GameCompanion(
-            name = pkg.applicationInfo?.loadLabel(packageManager).toString(),
-            packageName = pkg.packageName,
-            versionName = pkg.versionName,
-            image = pkg.applicationInfo?.loadIcon(packageManager)
-          )
-        }
-
-      orderedFromDb + missingFromDb
-    }
-  }
-
-  private suspend fun filterGames(appsList: List<PackageInfo>): List<PackageInfo> {
-    val gamesPackageInfoList = ArrayList<PackageInfo>()
-    val undefinedPackageInfoMap = HashMap<String, PackageInfo>()
-    appsList.forEach { packageInfo ->
-      when (packageInfo.applicationInfo?.category) {
-        ApplicationInfo.CATEGORY_GAME -> gamesPackageInfoList.add(packageInfo)
-        else -> undefinedPackageInfoMap[packageInfo.packageName] = packageInfo
-      }
-    }
-    try {
-      repository.getAppsCategories(undefinedPackageInfoMap.keys.toList())
-        .map { appCategory ->
-          when (appCategory.type) {
-            "GAME" -> undefinedPackageInfoMap[appCategory.name]?.let {
-              gamesPackageInfoList.add(
-                it
-              )
-            }
-
-            else -> {}
-          }
-        }
-    } catch (e: IOException) {
-      e.printStackTrace()
-    } catch (t: Throwable) {
-      t.printStackTrace()
-    }
-    return gamesPackageInfoList
-  }
 
   suspend fun reloadConversation(
     chat: GameGenieChat,

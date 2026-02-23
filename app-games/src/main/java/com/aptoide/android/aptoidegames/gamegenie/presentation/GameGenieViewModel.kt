@@ -29,6 +29,7 @@ import javax.inject.Inject
 @HiltViewModel
 class GameGenieViewModel @Inject constructor(
   private val gameGenieUseCase: GameGenieUseCase,
+  private val getGameCompanionsUseCase: GetGameCompanionsUseCase,
   private val gameGenieLocalRepository: GameGenieLocalRepository,
   @ApplicationContext private val context: Context,
 ) : ViewModel() {
@@ -97,7 +98,7 @@ class GameGenieViewModel @Inject constructor(
 
   private fun loadInstalledGames() {
     viewModelScope.launch {
-      gameGenieUseCase.getGameCompanionsList().collect { games ->
+      getGameCompanionsUseCase.getCompanionGames().collect { games ->
         _installedGames.value = games
       }
     }
