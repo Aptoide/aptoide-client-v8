@@ -354,6 +354,14 @@ class InstallAnalyticsImpl(
           packageName = packageName,
         )
       )
+      if (packageName == ROBLOX_PACKAGE_NAME) {
+        genericAnalytics.logEvent(
+          name = "exp82_install_success_roblox",
+          params = installPackageInfo.toAppGenericParameters(
+            packageName = packageName,
+          )
+        )
+      }
     }
   }
 
@@ -571,6 +579,7 @@ class InstallAnalyticsImpl(
     .toTapsValue()
 
   companion object {
+    private const val ROBLOX_PACKAGE_NAME = "com.roblox.client"
     private const val P_STORE = "store"
     private const val P_STATUS = "status"
     private const val P_TRUSTED_BADGE = "trusted_badge"
