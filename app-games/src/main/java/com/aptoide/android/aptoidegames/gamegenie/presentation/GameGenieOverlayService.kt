@@ -4,9 +4,13 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
+import android.content.pm.ServiceInfo
+import android.content.res.Configuration
 import android.graphics.Bitmap
+import android.graphics.PixelFormat
 import android.os.Build
 import android.os.IBinder
+import android.view.Gravity
 import android.view.WindowManager
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -80,6 +84,10 @@ class GameGenieOverlayService : Service(),
 
     private val _overlayRunningState = MutableStateFlow(false)
     val overlayRunningState: StateFlow<Boolean> = _overlayRunningState.asStateFlow()
+    
+    @Volatile
+    var currentTargetPackage: String? = null
+      private set
     
     @Volatile
     var hasScreenshotPermission: Boolean = false
@@ -325,7 +333,7 @@ class GameGenieOverlayService : Service(),
     }
   }
 
-  override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
+  override fun onConfigurationChanged(newConfig: Configuration) {
     super.onConfigurationChanged(newConfig)
     handleDimensionChange()
   }
@@ -339,6 +347,7 @@ class GameGenieOverlayService : Service(),
 
     intent?.getStringExtra(EXTRA_TARGET_PACKAGE)?.let { packageName ->
       targetPackage = packageName
+      currentTargetPackage = packageName
     }
 
     val newResultCode = intent?.getIntExtra(EXTRA_MEDIA_PROJECTION_RESULT_CODE, 0) ?: 0
@@ -438,9 +447,9 @@ class GameGenieOverlayService : Service(),
       WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
         WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
         WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
-      android.graphics.PixelFormat.TRANSLUCENT
+      PixelFormat.TRANSLUCENT
     ).apply {
-      gravity = android.view.Gravity.TOP or android.view.Gravity.START
+      gravity = Gravity.TOP or Gravity.START
       x = menuX
       y = menuY
     }
@@ -648,9 +657,9 @@ class GameGenieOverlayService : Service(),
         WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
           WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
           WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
-        android.graphics.PixelFormat.TRANSLUCENT
+        PixelFormat.TRANSLUCENT
       ).apply {
-        gravity = android.view.Gravity.TOP or android.view.Gravity.START
+        gravity = Gravity.TOP or Gravity.START
         this.x = x
         this.y = y
       }
@@ -697,6 +706,7 @@ class GameGenieOverlayService : Service(),
     super.onDestroy()
     isServiceRunning = false
     hasScreenshotPermission = false
+    currentTargetPackage = null
     _overlayRunningState.value = false
 
     processLifecycleObserver?.let { ProcessLifecycleOwner.get().lifecycle.removeObserver(it) }
@@ -734,7 +744,7 @@ class GameGenieOverlayService : Service(),
       startForeground(
         NOTIFICATION_ID,
         notification,
-        android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PROJECTION
+        ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PROJECTION
       )
     } else {
       startForeground(NOTIFICATION_ID, notification)

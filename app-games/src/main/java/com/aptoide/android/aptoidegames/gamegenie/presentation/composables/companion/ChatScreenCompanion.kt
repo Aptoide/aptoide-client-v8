@@ -140,6 +140,17 @@ fun ChatScreenCompanion(
   val isOverlayRunning by GameGenieOverlayService.overlayRunningState.collectAsState(
     initial = GameGenieOverlayService.isServiceRunning
   )
+  
+  LaunchedEffect(selectedGame.packageName, isOverlayRunning) {
+    val overlayTarget = GameGenieOverlayService.currentTargetPackage
+    if (
+      isOverlayRunning &&
+      !overlayTarget.isNullOrBlank() &&
+      overlayTarget != selectedGame.packageName
+    ) {
+      context.stopService(Intent(context, GameGenieOverlayService::class.java))
+    }
+  }
 
   val showTooltip = !hasClickedOverlayButton
 
