@@ -62,6 +62,29 @@ class PreApprovalInstaller @Inject constructor(
   private val initialPermissionsAllowed = context.getPermissionsState()
   private val preApprovedSessions: MutableMap<String, Int> = ConcurrentHashMap()
 
+  init {
+    // Restore pre-approved sessions and clean up everything else on app start
+    context.packageManager.packageInstaller.mySessions.forEach { sessionInfo ->
+      val sessionId = sessionInfo.sessionId
+      val sessionPackageName = sessionInfo.appPackageName
+      val isPreApproved = Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE
+        && sessionInfo.isPreApprovalRequested
+
+      if (isPreApproved && sessionPackageName != null) {
+        // Restore pre-approved session to in-memory map
+        preApprovedSessions[sessionPackageName] = sessionId
+        Timber.d("Restored pre-approved session $sessionId for ${sessionPackageName}")
+      } else {
+        // Abandon non-preapproved sessions
+        try {
+          context.packageManager.packageInstaller.abandonSession(sessionId)
+        } catch (t: Throwable) {
+          Timber.e(t)
+        }
+      }
+    }
+  }
+
   override fun requestUserPreApproval(
     packageName: String,
     installPackageInfo: InstallPackageInfo,
