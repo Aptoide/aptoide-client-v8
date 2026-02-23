@@ -58,6 +58,9 @@ class ApkfyAnalytics @Inject constructor(
 
   fun sendRobloxExp82ApkfyShown() = genericAnalytics.logEvent("exp82_roblox_apkfy_shown", params = emptyMap())
 
+  fun setExp82GroupUserProperty(variant: String) =
+    biAnalytics.setUserProperties(UserProperty("exp82_group", variant))
+
   fun sendApkfyTimeout() = genericAnalytics.logEvent("apkfy_timeout", params = emptyMap())
 
   fun sendApkfyScreenBackClicked() =
