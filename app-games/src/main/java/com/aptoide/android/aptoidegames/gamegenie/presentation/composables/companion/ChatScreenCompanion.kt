@@ -223,10 +223,6 @@ fun ChatScreenCompanion(
               analytics
             )
           }
-        } else {
-          coroutineScope.launch {
-            launchOverlayAndGame(selectedGame, context, targetAppLauncher, analytics = analytics)
-          }
         }
       }
 
