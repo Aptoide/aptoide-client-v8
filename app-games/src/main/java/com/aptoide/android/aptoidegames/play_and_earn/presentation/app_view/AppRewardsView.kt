@@ -102,29 +102,19 @@ private fun RewardsSection(
   items: List<PaEMission>,
   itemContent: @Composable (PaEMission) -> Unit
 ) {
-  // Sort items: ONGOING first, then PENDING, then COMPLETED
-  val sortedItems = items.sortedBy { mission ->
-    when (mission.progress?.status) {
-      PaEMissionStatus.IN_PROGRESS -> 0
-      PaEMissionStatus.PENDING -> 1
-      PaEMissionStatus.COMPLETED -> 2
-      null -> 1
-    }
-  }
-
   Column(
     modifier = Modifier.padding(16.dp),
     verticalArrangement = Arrangement.spacedBy(16.dp)
   ) {
     RewardsSectionHeader(title)
     Column {
-      sortedItems.forEachIndexed { index, item ->
+      items.forEachIndexed { index, item ->
         itemContent(item)
 
-        if (index < sortedItems.size - 1) {
+        if (index < items.size - 1) {
           val isCurrentCompleted = item.progress?.status == PaEMissionStatus.COMPLETED
           val isNextCompleted =
-            sortedItems[index + 1].progress?.status == PaEMissionStatus.COMPLETED
+            items[index + 1].progress?.status == PaEMissionStatus.COMPLETED
 
           if (isCurrentCompleted && isNextCompleted) {
             Divider(
