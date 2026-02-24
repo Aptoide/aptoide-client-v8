@@ -47,30 +47,34 @@ internal class DefaultPaEMissionsRepository @Inject constructor(
     }
 
   override fun observeCampaignMissions(packageName: String): Flow<Result<PaEMissions>> = flow {
-    getCachedMissions(packageName)?.let { emit(Result.success(it)) }
-
     try {
       val missions = fetchMissions(packageName)
       emit(Result.success(missions))
     } catch (e: Throwable) {
       e.printStackTrace()
-      if (getCachedMissions(packageName) == null) {
+      // Fall back to cache only when the network request fails
+      val cached = getCachedMissions(packageName)
+      if (cached != null) {
+        emit(Result.success(cached))
+      } else {
         emit(Result.failure(e))
       }
     }
   }.flowOn(dispatcher)
 
-  override suspend fun getCachedMissions(packageName: String): PaEMissions? {
+  override suspend fun getCachedMissions(packageName: String): PaEMissions? = try {
     val cachedMissions = paeMissionDao.getAppMissions(packageName)
     if (cachedMissions.isEmpty()) {
-      return null
+      null
+    } else {
+      val missions = cachedMissions.map { it.toDomain() }
+      val checkpoints = missions.filter { it.type == PaEMissionType.CHECKPOINT }
+      val regularMissions = missions.filter { it.type != PaEMissionType.CHECKPOINT }
+      PaEMissions(checkpoints = checkpoints, missions = regularMissions)
     }
-
-    val missions = cachedMissions.map { it.toDomain() }
-    val checkpoints = missions.filter { it.type == PaEMissionType.CHECKPOINT }
-    val regularMissions = missions.filter { it.type != PaEMissionType.CHECKPOINT }
-
-    return PaEMissions(checkpoints = checkpoints, missions = regularMissions)
+  } catch (e: Throwable) {
+    e.printStackTrace()
+    null
   }
 
   override suspend fun markMissionAsCompleted(packageName: String, missionTitle: String) {
