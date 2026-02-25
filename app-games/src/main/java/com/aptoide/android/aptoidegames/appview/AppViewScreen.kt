@@ -204,7 +204,7 @@ fun appViewScreen() = ScreenData.withAnalytics(
     navigate = navigate,
   ) { navigate ->
     AppViewScreen(
-      source = if (isRtb) source else source.appendIfRequired(BuildConfig.MARKET_NAME),
+      source = if (isRtb || isGamified) source else source.appendIfRequired(BuildConfig.MARKET_NAME),
       navigate = navigate,
       navigateBack = navigateBack,
       utmsMap = utmsMap,
