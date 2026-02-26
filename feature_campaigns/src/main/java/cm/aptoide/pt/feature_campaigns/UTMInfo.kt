@@ -8,7 +8,7 @@ import java.nio.charset.StandardCharsets
  * All fields are nullable to allow partial definitions that can be merged or overridden.
  */
 data class UTMInfo(
-  val utmSource: String? = "aptoide",
+  val utmSource: String? = null,
   val utmMedium: String? = null,
   val utmCampaign: String? = null,
   val utmContent: String? = null,
