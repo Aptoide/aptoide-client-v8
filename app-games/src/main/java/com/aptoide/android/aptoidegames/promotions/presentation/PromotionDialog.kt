@@ -55,9 +55,9 @@ fun PromotionDialog(navigate: (String) -> Unit) {
 
   promotionData?.let { (promotion, app) ->
     WithUTM(
-      medium = "promo-card",
+      medium = "ahab",
       campaign = promotion.uid,
-      content = "home-promo-card",
+      content = "ahab-dialog",
       navigate = navigate
     ) {
       val utmContext = UTMContext.current
