@@ -50,3 +50,19 @@ fun WithUTM(
     }
   }
 }
+
+@Composable
+fun WithUTM(
+  utmInfo: UTMInfo,
+  navigate: (String) -> Unit,
+  block: @Composable ((String) -> Unit) -> Unit,
+) = WithUTM(
+  source = utmInfo.utmSource,
+  medium = utmInfo.utmMedium,
+  campaign = utmInfo.utmCampaign,
+  content = utmInfo.utmContent,
+  term = utmInfo.utmTerm,
+  shouldSendClickEvents = utmInfo.shouldSendClickEvents,
+  navigate = navigate,
+  block = block,
+)

@@ -96,7 +96,7 @@ import com.aptoide.android.aptoidegames.gamesfeed.presentation.GamesFeedBundle
 import com.aptoide.android.aptoidegames.gamesfeed.presentation.rememberGamesFeedVisibility
 import com.aptoide.android.aptoidegames.home.analytics.meta
 import com.aptoide.android.aptoidegames.mmp.WithUTM
-import com.aptoide.android.aptoidegames.mmp.getUTMConfig
+import com.aptoide.android.aptoidegames.mmp.getBundleHomeUTMInfo
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaEBundleView
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.home.rememberPaEHeaderState
 import com.aptoide.android.aptoidegames.play_and_earn.rememberShouldShowPlayAndEarn
@@ -212,7 +212,7 @@ fun BundlesView(
     ) {
       items(viewState.bundles) { bundle ->
         WithUTM(
-          content = getUTMConfig(bundle.tag)?.homeContent,
+          utmInfo = getBundleHomeUTMInfo(bundle.tag),
           navigate = navigate
         ) { navigate ->
           OverrideAnalyticsBundleMeta(bundle.meta, navigate) { navigateTo ->
