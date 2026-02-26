@@ -38,7 +38,7 @@ import com.aptoide.android.aptoidegames.home.LoadingView
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.mmp.UTMContext
 import com.aptoide.android.aptoidegames.mmp.WithUTM
-import com.aptoide.android.aptoidegames.mmp.getUTMConfig
+import com.aptoide.android.aptoidegames.mmp.getBundleSeeAllUTMInfo
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 
@@ -53,7 +53,7 @@ fun seeMoreScreen() = ScreenData.withAnalytics(
   val bundleTag = arguments.getString("tag")!!
 
   WithUTM(
-    content = getUTMConfig(bundleTag)?.seeAllContent,
+    utmInfo = getBundleSeeAllUTMInfo(bundleTag),
     navigate = navigate
   ) { navigate ->
     MoreBundleView(
