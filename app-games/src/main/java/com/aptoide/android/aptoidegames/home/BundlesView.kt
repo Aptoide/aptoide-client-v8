@@ -212,7 +212,7 @@ fun BundlesView(
     ) {
       items(viewState.bundles) { bundle ->
         WithUTM(
-          utmInfo = getBundleHomeUTMInfo(bundle.tag),
+          utmInfo = getBundleHomeUTMInfo(bundle.tag, bundle.type),
           navigate = navigate
         ) { navigate ->
           OverrideAnalyticsBundleMeta(bundle.meta, navigate) { navigateTo ->
