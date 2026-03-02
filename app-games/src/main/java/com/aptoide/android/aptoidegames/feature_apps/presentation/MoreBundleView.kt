@@ -1,5 +1,7 @@
 package com.aptoide.android.aptoidegames.feature_apps.presentation
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -11,6 +13,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.CollectionInfo
 import androidx.compose.ui.semantics.collectionInfo
 import androidx.compose.ui.semantics.semantics
@@ -26,11 +29,13 @@ import cm.aptoide.pt.feature_apps.presentation.AppsListUiStateProvider
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
 import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import com.aptoide.android.aptoidegames.BuildConfig
+import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGeneralAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
+import com.aptoide.android.aptoidegames.design_system.PrimarySmallButton
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.error_views.NoConnectionView
 import com.aptoide.android.aptoidegames.feature_rtb.presentation.isRTB
@@ -155,28 +160,45 @@ fun AppsList(
       .wrapContentSize(Alignment.TopCenter)
   ) {
     itemsIndexed(appList) { index, app ->
-      AppItem(
-        app = app,
-        onClick = {
-          app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(utmContext)
-          bundleAnalytics.sendAppPromoClick(
-            app = app,
-            analyticsContext = analyticsContext.copy(itemPosition = index)
+      val isRTB = analyticsContext.isRTB()
+      val onClick = {
+        app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(utmContext)
+        bundleAnalytics.sendAppPromoClick(
+          app = app,
+          analyticsContext = analyticsContext.copy(itemPosition = index)
+        )
+        if (isRTB) {
+          handleRTBAdClick(app.packageName, index)
+        } else {
+          navigate(
+            buildAppViewRoute(
+              appSource = app,
+              utmCampaign = app.campaigns?.campaignId,
+            )
+              .withItemPosition(index)
           )
-          if (analyticsContext.isRTB()) {
-            handleRTBAdClick(app.packageName, index)
-          } else {
-            navigate(
-              buildAppViewRoute(
-                appSource = app,
-                utmCampaign = app.campaigns?.campaignId,
-              )
-                .withItemPosition(index)
+        }
+      }
+      if (isRTB) {
+        Box {
+          AppItem(
+            app = app,
+            onClick = onClick,
+          ) {
+            PrimarySmallButton(
+              onClick = {},
+              title = stringResource(R.string.search_sponsored_install),
             )
           }
-        },
-      ) {
-        InstallViewShort(app)
+          Box(modifier = Modifier.matchParentSize().clickable(onClick = onClick))
+        }
+      } else {
+        AppItem(
+          app = app,
+          onClick = onClick,
+        ) {
+          InstallViewShort(app)
+        }
       }
     }
   }
