@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -55,6 +56,11 @@ fun PaEHomeLayout(
 
   val shouldShowPlayAndEarn = rememberShouldShowPlayAndEarn()
   val (hasShownHeader, markHeaderAsShown) = rememberPaEHeaderState()
+
+  // Use movableContentOf to preserve the content's composition state (ViewModels, remember,
+  // LaunchedEffects, etc.) when it moves between the if/else branches. Without this, switching
+  // branches destroys and recreates the entire content subtree, causing a full reload.
+  val movableContent = remember { movableContentOf { content() } }
 
   if (bundle != null && shouldShowPlayAndEarn && hasShownHeader == false) {
     val coroutineScope = rememberCoroutineScope()
@@ -160,7 +166,7 @@ fun PaEHomeLayout(
         }
 
         Box(modifier = Modifier.height(maxHeight)) {
-          content()
+          movableContent()
         }
       }
 
@@ -175,6 +181,6 @@ fun PaEHomeLayout(
       }
     }
   } else {
-    content()
+    movableContent()
   }
 }
