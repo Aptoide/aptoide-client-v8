@@ -117,7 +117,7 @@ fun MainView(navController: NavHostController) {
         navigate = navigate
       ) { showBottomSheet ->
         PaEHomeLayout(navController = navController) {
-          Scaffold(
+        Scaffold(
             snackbarHost = {
               SnackbarHost(hostState = snackBarHostState) {
                 Popup {
