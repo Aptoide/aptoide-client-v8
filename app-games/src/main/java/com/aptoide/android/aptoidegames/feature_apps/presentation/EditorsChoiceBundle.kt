@@ -24,10 +24,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.BlurEffect
@@ -44,7 +42,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_apps.domain.AppSource
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_apps.presentation.previewAppsListIdleState
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
@@ -55,10 +52,6 @@ import com.aptoide.android.aptoidegames.analytics.presentation.SwipeListener
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusIconRight
-import com.aptoide.android.aptoidegames.feature_ad.MintegralAd
-import com.aptoide.android.aptoidegames.feature_ad.MintegralAdEvent
-import com.aptoide.android.aptoidegames.feature_ad.presentation.MintegralAdWrapper
-import com.aptoide.android.aptoidegames.feature_ad.rememberMintegralAd
 import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
 import com.aptoide.android.aptoidegames.home.calculateLoopedBundleInitialItem
@@ -71,7 +64,6 @@ import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 import kotlinx.coroutines.launch
-import okhttp3.internal.toImmutableList
 import kotlin.math.absoluteValue
 import kotlin.math.sign
 
@@ -119,42 +111,8 @@ private fun EditorsChoiceListView(
   appsList: List<App>,
   navigate: (String) -> Unit,
 ) {
-  var app: App? by remember { mutableStateOf(null) }
-  val (ad, adEvents) = rememberMintegralAd()
-
-  LaunchedEffect(ad) {
-    ad?.let {
-      app = it.app
-    }
-  }
-
-  LaunchedEffect(adEvents) {
-    adEvents.collect { event ->
-      if (event is MintegralAdEvent.AdClick && app?.packageName == event.packageName) {
-        navigate(
-          buildAppViewRoute(
-            if (app?.appId != null) {
-              AppSource.of(app?.appId, null)
-            } else {
-              AppSource.of(null, event.packageName)
-            }
-          ).withItemPosition(0)
-        )
-      }
-    }
-  }
-
-  val updatedList: List<App> = remember(ad) {
-    ad?.let {
-      appsList.toMutableList().apply {
-        add(1, it.app)
-      }.toImmutableList()
-    } ?: appsList
-  }
-
   EditorsChoiceCarouselList(
-    appsList = updatedList,
-    ad = ad,
+    appsList = appsList,
     navigate = navigate
   )
 }
@@ -163,7 +121,6 @@ private fun EditorsChoiceListView(
 @Composable
 fun EditorsChoiceCarouselList(
   appsList: List<App>,
-  ad: MintegralAd? = null,
   navigate: (String) -> Unit,
 ) {
   val analyticsContext = AnalyticsContext.current
@@ -191,54 +148,44 @@ fun EditorsChoiceCarouselList(
     val page = (index - 1).floorMod(appsList.size)
     val app = appsList[page]
 
-    val appItemContent = @Composable {
-      EditorsChoiceAppView(
-        modifier = Modifier
-          .graphicsLayer {
-            val pageOffset =
-              (pagerState.currentPage - index) + pagerState.currentPageOffsetFraction
+    EditorsChoiceAppView(
+      modifier = Modifier
+        .graphicsLayer {
+          val pageOffset =
+            (pagerState.currentPage - index) + pagerState.currentPageOffsetFraction
 
-            lerp(
-              start = 0.70f,
-              stop = 1f,
-              fraction = 1f - pageOffset.absoluteValue.coerceIn(0f, 1f)
-            ).let { scale ->
-              scaleY = scale
-              scaleX = scale
+          lerp(
+            start = 0.70f,
+            stop = 1f,
+            fraction = 1f - pageOffset.absoluteValue.coerceIn(0f, 1f)
+          ).let { scale ->
+            scaleY = scale
+            scaleX = scale
 
-              //Used to counteract spacing between items due to the scale effect.
-              translationX = ((size.width - (size.width * scale)) / 2) * pageOffset.sign
-            }
+            //Used to counteract spacing between items due to the scale effect.
+            translationX = ((size.width - (size.width * scale)) / 2) * pageOffset.sign
+          }
 
-            lerp(
-              start = 5f,
-              stop = 0f,
-              fraction = 1f - pageOffset.absoluteValue.coerceIn(0f, 1f)
-            ).let { blur ->
-              renderEffect = BlurEffect(blur, blur, TileMode.Decal)
-            }
-          },
-        app = app,
-        onClick = {
-          bundleAnalytics.sendAppPromoClick(
-            app = app,
-            analyticsContext = analyticsContext.copy(itemPosition = page)
-          )
-          navigate(buildAppViewRoute(app).withItemPosition(page))
+          lerp(
+            start = 5f,
+            stop = 0f,
+            fraction = 1f - pageOffset.absoluteValue.coerceIn(0f, 1f)
+          ).let { blur ->
+            renderEffect = BlurEffect(blur, blur, TileMode.Decal)
+          }
         },
-        offset = {
-          (pagerState.currentPage - index) + pagerState.currentPageOffsetFraction
-        }
-      )
-    }
-
-    if (ad != null && page == 1) {
-      MintegralAdWrapper(ad = ad) {
-        appItemContent()
+      app = app,
+      onClick = {
+        bundleAnalytics.sendAppPromoClick(
+          app = app,
+          analyticsContext = analyticsContext.copy(itemPosition = page)
+        )
+        navigate(buildAppViewRoute(app).withItemPosition(page))
+      },
+      offset = {
+        (pagerState.currentPage - index) + pagerState.currentPageOffsetFraction
       }
-    } else {
-      appItemContent()
-    }
+    )
   }
 }
 

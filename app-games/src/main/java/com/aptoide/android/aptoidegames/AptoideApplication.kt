@@ -37,7 +37,6 @@ import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 import com.aptoide.android.aptoidegames.device_info.DeviceSecurityChecker
 import com.aptoide.android.aptoidegames.device_info.analytics.DeviceInfoAnalytics
-import com.aptoide.android.aptoidegames.feature_ad.Mintegral
 import com.aptoide.android.aptoidegames.feature_companion_apps_notification.CompanionAppsManager
 import com.aptoide.android.aptoidegames.feature_editors_choice_recommendation.EditorsChoiceRecommendationManager
 import com.aptoide.android.aptoidegames.feature_payments.analytics.AGLogger
@@ -129,9 +128,6 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
   lateinit var updates: Updates
 
   @Inject
-  lateinit var mintegral: Mintegral
-
-  @Inject
   lateinit var companionAppsManager: CompanionAppsManager
 
   @Inject
@@ -161,7 +157,6 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
     }
     AptoideMMPCampaign.init(BuildConfig.OEMID)
     MMPLinkerCampaign.init(BuildConfig.OEMID)
-    initAds()
     initCompanionAppsManager()
     initTrendingAppsRecommendationManager()
     sendDeviceSecurityAnalytics()
@@ -224,15 +219,6 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
       channel = "APTOIDEGAMES"
       paymentScreenContentProvider = psContentProvider
       adyenKey = BuildConfig.ADYEN_KEY
-    }
-  }
-
-  private fun initAds() {
-    if (applicationContext.getProcessName(
-        Process.myPid()
-      ) != "${applicationContext.packageName}:obbMoverProcess"
-    ) {
-      mintegral.initializeSdk()
     }
   }
 
