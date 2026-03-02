@@ -16,11 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,7 +29,6 @@ import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.extractVideoId
 import cm.aptoide.pt.extensions.isYoutubeURL
 import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_apps.domain.AppSource
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_apps.presentation.previewAppsListIdleState
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
@@ -44,9 +39,6 @@ import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusIconRight
-import com.aptoide.android.aptoidegames.feature_ad.MintegralAdEvent
-import com.aptoide.android.aptoidegames.feature_ad.presentation.MintegralAdWrapper
-import com.aptoide.android.aptoidegames.feature_ad.rememberMintegralAd
 import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.home.HorizontalPagerView
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
@@ -59,7 +51,6 @@ import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.videos.presentation.CarouselAppYoutubePlayer
-import okhttp3.internal.toImmutableList
 
 @Composable
 fun CarouselBundle(
@@ -123,45 +114,17 @@ private fun CarouselListView(
 ) {
   val analyticsContext = AnalyticsContext.current
   val bundleAnalytics = rememberBundleAnalytics()
-  var app: App? by remember { mutableStateOf(null) }
-  val (ad, adEvents) = rememberMintegralAd()
-
-  LaunchedEffect(ad) {
-    ad?.let {
-      app = it.app
-    }
-  }
-
-  LaunchedEffect(adEvents) {
-    adEvents.collect { event ->
-      if (event is MintegralAdEvent.AdClick && app?.packageName == event.packageName) {
-        navigate(
-          buildAppViewRoute(
-            if (app?.appId != null) {
-              AppSource.of(app?.appId, null)
-            } else {
-              AppSource.of(null, event.packageName)
-            }
-          ).withItemPosition(0)
-        )
-      }
-    }
-  }
-
-  val updatedList: List<App> = remember(ad) {
-    ad?.let {
-      appsList.toMutableList().apply {
-        add(1, it.app)
-      }.toImmutableList()
-    } ?: appsList
-  }
 
   val showVideos = rememberShouldShowVideos(bundleTag)
   HorizontalPagerView(
-    appsList = updatedList,
+    appsList = appsList,
     scrollSpeedInSeconds = if (showVideos) 9L else DEFAULT_AUTO_SCROLL_SPEED
   ) { modifier, page, item, isCurrentPage ->
-    val appContent = @Composable {
+    Box(
+      modifier
+        .width(280.dp)
+        .background(color = Color.Transparent)
+    ) {
       CarouselAppView(
         app = item,
         showVideo = showVideos && isCurrentPage,
@@ -176,20 +139,6 @@ private fun CarouselListView(
           )
         }
       )
-    }
-
-    Box(
-      modifier
-        .width(280.dp)
-        .background(color = Color.Transparent)
-    ) {
-      if (ad != null && page == 1) {
-        MintegralAdWrapper(ad = ad) {
-          appContent()
-        }
-      } else {
-        appContent()
-      }
     }
   }
 }

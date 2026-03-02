@@ -83,12 +83,6 @@ android {
       value = "\"${project.properties[System.getenv("OEMID") ?: KeyHelper.OEMID]}\""
     )
 
-    buildConfigField(
-      type = "String",
-      name = "MINTEGRAL_APP_KEY",
-      value = "\"${project.property("MINTEGRAL_APP_KEY")}\""
-    )
-
     buildConfigFieldFromGradleProperty("ROOM_SCHEMA_VERSION")
     buildConfigFieldFromGradleProperty("ROOM_DATABASE_NAME")
   }
@@ -155,22 +149,6 @@ android {
       )
       buildConfigField(
         type = "String",
-        name = "MINTEGRAL_APP_ID",
-        value = "\"${project.property("MINTEGRAL_APP_ID_DEV")}\""
-      )
-      buildConfigField(
-        type = "String",
-        name = "NATIVE_PLACEMENT_ID",
-        value = "\"${project.property("NATIVE_PLACEMENT_ID_DEV")}\""
-      )
-      buildConfigField(
-        type = "String",
-        name = "NATIVE_UNIT_ID",
-        value = "\"${project.property("NATIVE_UNIT_ID_DEV")}\""
-      )
-
-      buildConfigField(
-        type = "String",
         name = "API_CHAIN_CATAPPULT_HOST",
         value = "\"${project.property("API_CHAIN_CATAPPULT_HOST_DEV")}\""
       )
@@ -230,21 +208,6 @@ android {
         type = "String",
         name = "AHAB_DOMAIN",
         value = "\"https://api.aptoide.com/ahab/8.20240801/\""
-      )
-      buildConfigField(
-        type = "String",
-        name = "MINTEGRAL_APP_ID",
-        value = "\"${project.property("MINTEGRAL_APP_ID_PROD")}\""
-      )
-      buildConfigField(
-        type = "String",
-        name = "NATIVE_PLACEMENT_ID",
-        value = "\"${project.property("NATIVE_PLACEMENT_ID_PROD")}\""
-      )
-      buildConfigField(
-        type = "String",
-        name = "NATIVE_UNIT_ID",
-        value = "\"${project.property("NATIVE_UNIT_ID_PROD")}\""
       )
       buildConfigField(
         type = "String",
@@ -368,10 +331,7 @@ dependencies {
   //Pinch to zoom
   implementation(libs.zoomable)
 
-  //Ads
-  implementation(libs.mintegral)
-
-  //animations
+//animations
   implementation(libs.lottie.compose)
 
   //Palette (dominant color extraction)
