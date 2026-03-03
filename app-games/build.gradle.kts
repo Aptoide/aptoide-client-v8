@@ -50,12 +50,6 @@ android {
 
     buildConfigField(
       type = "String",
-      name = "GAME_GENIE_API",
-      value = "\"https://genie-chatbot.aptoide.com/\""
-    )
-
-    buildConfigField(
-      type = "String",
       name = "RTB_HOST",
       value = "\"https://aptoide-rtb.aptoide.com\""
     )
@@ -139,6 +133,11 @@ android {
       )
       buildConfigField(
         type = "String",
+        name = "GAME_GENIE_API",
+        value = "\"https://genie-chatbot.dev.aptoide.com/\""
+      )
+      buildConfigField(
+        type = "String",
         name = "AHAB_DOMAIN",
         value = "\"https://api.dev.aptoide.com/ahab/8.20240801/\""
       )
@@ -203,6 +202,11 @@ android {
         "String",
         "STORE_ENV_DOMAIN",
         "\"https://ws75.aptoide.com/api/7.20240701/\""
+      )
+      buildConfigField(
+        type = "String",
+        name = "GAME_GENIE_API",
+        value = "\"https://genie-chatbot-leaseweb.aptoide.com/\""
       )
       buildConfigField(
         type = "String",
