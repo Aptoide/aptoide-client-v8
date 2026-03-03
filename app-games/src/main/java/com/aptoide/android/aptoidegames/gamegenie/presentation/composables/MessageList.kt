@@ -11,10 +11,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -22,10 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.gamegenie.domain.ChatInteraction
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameCompanion
-import com.aptoide.android.aptoidegames.gamegenie.domain.UserMessage
 import com.aptoide.android.aptoidegames.gamegenie.domain.Suggestion
-import com.aptoide.android.aptoidegames.theme.AGTypography
-import com.aptoide.android.aptoidegames.theme.Palette
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 
 @Composable
@@ -45,39 +44,39 @@ fun MessageList(
   val listState = rememberLazyListState()
   val playerCache = remember { mutableMapOf<String, YouTubePlayerView>() }
 
-  val lastUserIndex = remember(messages) { messages.indexOfLast { it.user != null } }
-  val lastUserHeightPx = remember { mutableIntStateOf(0) }
-  val lastHandledSize = remember { mutableIntStateOf(0) }
+  val prevSize = remember { mutableIntStateOf(-1) }
+  val prevLastUserText = remember { mutableStateOf<String?>(null) }
 
-  LaunchedEffect(lastUserIndex, messages.size, firstLoad) {
+  val lastUserText = messages.lastOrNull()?.user?.text
+
+  LaunchedEffect(firstLoad, messages.size, lastUserText) {
     if (messages.isEmpty()) {
       setFirstLoadDone()
-      lastHandledSize.intValue = 0
+      prevSize.intValue = 0
+      prevLastUserText.value = null
       return@LaunchedEffect
     }
 
-    if (firstLoad) {
-      listState.scrollToItem(
-        index = messages.lastIndex,
-        scrollOffset = Int.MAX_VALUE
-      )
-      lastHandledSize.intValue = messages.size
-      setFirstLoadDone()
-      return@LaunchedEffect
+    val currentSize = messages.size
+    val currentLastUserText = lastUserText
+
+    when {
+      firstLoad -> {
+        scrollToBottom(listState, messages.lastIndex)
+        setFirstLoadDone()
+      }
+
+      currentSize > prevSize.intValue && prevSize.intValue >= 0 -> {
+        scrollLastGptToTopWithMargin(listState, messages.lastIndex)
+      }
+
+      currentLastUserText != prevLastUserText.value -> {
+        scrollToBottom(listState, messages.lastIndex)
+      }
     }
 
-    if (messages.size == lastHandledSize.intValue) {
-      return@LaunchedEffect
-    }
-
-    lastHandledSize.intValue = messages.size
-
-    val targetIndex = messages.lastIndex
-
-    listState.animateScrollToItem(
-      index = targetIndex,
-      scrollOffset = 0
-    )
+    prevSize.intValue = currentSize
+    prevLastUserText.value = currentLastUserText
   }
 
   LazyColumn(
@@ -151,13 +150,22 @@ fun MessageList(
           apps = emptyList(),
           navigateTo = navigateTo,
           playerCache = playerCache,
-          onHeightMeasured = { h ->
-            if (idx == lastUserIndex) {
-              lastUserHeightPx.intValue = h
-            }
-          }
         )
       }
     }
   }
+}
+
+private suspend fun scrollToBottom(
+  listState: LazyListState,
+  lastIndex: Int,
+) {
+  listState.animateScrollToItem(lastIndex, Int.MAX_VALUE)
+}
+
+private suspend fun scrollLastGptToTopWithMargin(
+  listState: LazyListState,
+  lastIndex: Int,
+) {
+  listState.animateScrollToItem(lastIndex, 0)
 }
