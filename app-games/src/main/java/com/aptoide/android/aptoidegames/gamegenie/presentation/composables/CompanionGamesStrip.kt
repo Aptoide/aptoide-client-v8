@@ -133,7 +133,10 @@ fun CompanionGamesStrip(
                 horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.End),
                 verticalAlignment = Alignment.CenterVertically
               ) {
-                items(games) { game ->
+                items(
+                  items = games,
+                  key = { it.packageName }
+                ) { game ->
                   GameCompanionIcon(
                     game = game,
                     onClick = onGameClick,

@@ -79,7 +79,7 @@ fun GameCompanionIcon(
         contentAlignment = Alignment.Center
       ) {
         if (game.image != null) {
-          val painter = remember {
+          val painter = remember(game.packageName, game.image, imagePxSize) {
             BitmapPainter(game.image.toBitmap(imagePxSize, imagePxSize).asImageBitmap())
           }
 
