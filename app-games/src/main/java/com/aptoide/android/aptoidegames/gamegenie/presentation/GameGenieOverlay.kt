@@ -1,6 +1,7 @@
 package com.aptoide.android.aptoidegames.gamegenie.presentation
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.detectDragGestures
@@ -42,6 +43,7 @@ import kotlin.math.abs
 fun GameGenieOverlay(
   showMenu: Boolean,
   isAptoideGamesInForeground: Boolean,
+  isScreenshotReady: Boolean,
   targetAppIcon: ImageBitmap?,
   onMenuToggle: () -> Unit,
   onDrag: (dx: Int, dy: Int) -> Unit,
@@ -58,6 +60,7 @@ fun GameGenieOverlay(
     ) {
       GameGenieIconFab(
         isAptoideGamesInForeground = isAptoideGamesInForeground,
+        isScreenshotReady = isScreenshotReady,
         targetAppIcon = targetAppIcon,
         modifier = Modifier
           .pointerInput(Unit) {
@@ -78,11 +81,11 @@ fun GameGenieOverlay(
               }
             )
           },
-        onClick = {
+        onTakeScreenshot = {
           analytics.sendGameGenieOverlayClick()
           onScreenshotRequest()
         },
-        onLongClick = { onMenuToggle() }
+        onOpenMenu = { onMenuToggle() }
       )
     }
 
@@ -196,15 +199,17 @@ private fun GameGenieMenuItem(
 fun GameGenieIconFab(
   modifier: Modifier = Modifier,
   isAptoideGamesInForeground: Boolean,
+  isScreenshotReady: Boolean = true,
   targetAppIcon: ImageBitmap? = null,
-  onClick: () -> Unit = {},
-  onLongClick: () -> Unit = {},
+  onTakeScreenshot: () -> Unit = {},
+  onOpenMenu: () -> Unit = {},
 ) {
   Box(
     modifier = modifier.size(56.dp),
     contentAlignment = Alignment.Center
   ) {
     val iconSize = if (isAptoideGamesInForeground) 48.dp else 40.dp
+    val interactionSource = remember { MutableInteractionSource() }
     val iconModifier = Modifier
       .size(iconSize)
       .graphicsLayer {
@@ -213,10 +218,14 @@ fun GameGenieIconFab(
         val shadowOffset = if (isAptoideGamesInForeground) - 4.dp.toPx() else 0f
         translationY = shadowOffset
         translationX = shadowOffset
+        alpha = if (isScreenshotReady) 1f else 0.4f
       }
       .combinedClickable(
-        onClick = onClick,
-        onLongClick = onLongClick
+        interactionSource = interactionSource,
+        indication = if (isScreenshotReady) LocalIndication.current else null,
+        enabled = true,
+        onClick = { if (isScreenshotReady) onTakeScreenshot() else onOpenMenu() },
+        onLongClick = onOpenMenu
       )
 
 

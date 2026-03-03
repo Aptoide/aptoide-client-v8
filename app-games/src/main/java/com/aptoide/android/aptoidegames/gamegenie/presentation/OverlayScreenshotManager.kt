@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.graphics.PixelFormat
 import android.hardware.display.DisplayManager
 import android.hardware.display.VirtualDisplay
+import android.media.Image
 import android.media.ImageReader
 import android.media.projection.MediaProjection
 import android.media.projection.MediaProjectionManager
@@ -117,11 +118,23 @@ class OverlayScreenshotManager(private val context: Context) {
         ImageReader.newInstance(width, height, PixelFormat.RGBA_8888, IMAGE_READER_MAX_IMAGES)
       imageReader = reader
 
-      reader.setOnImageAvailableListener({
+      reader.setOnImageAvailableListener({ ir ->
         if (!isVirtualDisplayReady) {
-          isVirtualDisplayReady = true
-          firstFrameReceivedCallback?.invoke()
-          firstFrameReceivedCallback = null
+          val image = ir.acquireLatestImage()
+          if (image != null) {
+            val isBlack = try {
+              isImagePredominantlyBlack(image)
+            } catch (_: Exception) {
+              true
+            } finally {
+              image.close()
+            }
+            if (!isBlack) {
+              isVirtualDisplayReady = true
+              firstFrameReceivedCallback?.invoke()
+              firstFrameReceivedCallback = null
+            }
+          }
         }
       }, Handler(Looper.getMainLooper()))
 
@@ -228,6 +241,36 @@ class OverlayScreenshotManager(private val context: Context) {
       e.printStackTrace()
       return null
     }
+  }
+
+  private fun isImagePredominantlyBlack(image: Image): Boolean {
+    val planes = image.planes
+    if (planes.isEmpty()) return true
+
+    val buffer = planes[0].buffer
+    val pixelStride = planes[0].pixelStride
+    val rowStride = planes[0].rowStride
+    val width = image.width
+    val height = image.height
+
+    val sampleStep = 50
+    var blackCount = 0
+    var total = 0
+
+    for (y in 0 until height step sampleStep) {
+      for (x in 0 until width step sampleStep) {
+        val offset = y * rowStride + x * pixelStride
+        if (offset + 2 < buffer.limit()) {
+          val r = buffer.get(offset).toInt() and 0xFF
+          val g = buffer.get(offset + 1).toInt() and 0xFF
+          val b = buffer.get(offset + 2).toInt() and 0xFF
+          if (r < 20 && g < 20 && b < 20) blackCount++
+          total++
+        }
+      }
+    }
+
+    return total == 0 || (blackCount.toFloat() / total) > 0.95f
   }
 
   private fun isBitmapPredominantlyBlack(bitmap: Bitmap): Boolean {
