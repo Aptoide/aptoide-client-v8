@@ -387,6 +387,11 @@ class GameGenieOverlayService : Service(),
       setContent {
         AptoideTheme {
           GameGenieMenu(
+            onAskAnything = {
+              analytics.sendGameGenieOverlayAskAnything()
+              hideMenuWindow()
+              returnToAptoideGames()
+            },
             onScreenshot = {
               analytics.sendGameGenieOverlayScreenshot()
               hideMenuWindow()
