@@ -102,6 +102,7 @@ fun GameGenieOverlay(
 
 @Composable
 fun GameGenieMenu(
+  onAskAnything: () -> Unit,
   onScreenshot: () -> Unit,
   onCloseOverlay: () -> Unit,
   showOnlyRemove: Boolean,
@@ -110,6 +111,21 @@ fun GameGenieMenu(
     horizontalAlignment = Alignment.End
   ) {
     if (!showOnlyRemove) {
+      Surface(
+        shape = RectangleShape,
+        color = Palette.Black,
+        modifier = Modifier
+      ) {
+        GameGenieMenuItem(
+          iconId = R.drawable.ask_anything,
+          text = stringResource(R.string.gamegenie_overlay_ask_anything),
+          textColor = Palette.Primary,
+          onClick = onAskAnything,
+          modifier = Modifier
+            .width(152.dp)
+            .heightIn(48.dp)
+        )
+      }
       Surface(
         shape = RectangleShape,
         color = Palette.Black,

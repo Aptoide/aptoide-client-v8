@@ -16,7 +16,7 @@ class OverlayWindowManager(private val context: Context) {
     const val FAB_SIZE_DP = 56
     const val EDGE_PADDING_DP = 8
     const val MENU_WIDTH_DP = 260
-    const val MENU_HEIGHT_DP = 80
+    const val MENU_HEIGHT_DP = 128
     const val MENU_REMOVE_HEIGHT_DP = 32
     const val MENU_SPACING_DP = 24
     const val MENU_LEFT_EXTENSION_DP =
