@@ -4,6 +4,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
+import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PROJECTION
 import android.content.pm.ServiceInfo
 import android.content.res.Configuration
 import android.graphics.Bitmap
@@ -78,6 +79,8 @@ class GameGenieOverlayService : Service(),
 
     private const val SCREENSHOT_DELAY_MS = 100L
 
+    private const val OVERLAY_READY_TIMEOUT_MS = 5_000L
+
     @Volatile
     var isServiceRunning: Boolean = false
       private set
@@ -88,7 +91,7 @@ class GameGenieOverlayService : Service(),
     @Volatile
     var currentTargetPackage: String? = null
       private set
-    
+
     @Volatile
     var hasScreenshotPermission: Boolean = false
       private set
@@ -121,6 +124,9 @@ class GameGenieOverlayService : Service(),
 
   private val scope = CoroutineScope(Dispatchers.Main + Job())
 
+  private var isScreenshotReady by mutableStateOf(false)
+  private var overlayTimeoutJob: Job? = null
+
   private var onOrientationChanged: ((Int, Int) -> Unit)? = null
 
   private var pendingMediaProjectionResultCode: Int = 0
@@ -141,6 +147,7 @@ class GameGenieOverlayService : Service(),
       initializeManagers()
       setupOverlayView()
       startMonitoring()
+      startOverlayReadinessTimeout()
     } catch (e: Exception) {
       e.printStackTrace()
       stopSelf()
@@ -171,6 +178,7 @@ class GameGenieOverlayService : Service(),
     
     screenshotManager.onMediaProjectionStopped = {
       hasScreenshotPermission = false
+      isScreenshotReady = false
     }
 
     displayMonitor = OverlayDisplayMonitor(
@@ -235,7 +243,7 @@ class GameGenieOverlayService : Service(),
             actualY,
             actualX < windowManager.screenWidth / 2,
             analytics,
-            showOnlyRemove = isAptoideGamesInForeground
+            showOnlyRemove = isAptoideGamesInForeground || !isScreenshotReady
           )
         } else {
           showMenu = false
@@ -252,6 +260,7 @@ class GameGenieOverlayService : Service(),
           GameGenieOverlay(
             showMenu = showMenu,
             isAptoideGamesInForeground = isAptoideGamesInForeground,
+            isScreenshotReady = isScreenshotReady,
             targetAppIcon = targetAppIcon,
             onMenuToggle = onMenuToggle,
             onDrag = { dx, dy ->
@@ -316,6 +325,16 @@ class GameGenieOverlayService : Service(),
     displayMonitor.performForcedChecks()
   }
 
+  private fun startOverlayReadinessTimeout() {
+    overlayTimeoutJob?.cancel()
+    overlayTimeoutJob = scope.launch {
+      delay(OVERLAY_READY_TIMEOUT_MS)
+      if (!isScreenshotReady) {
+        stopSelf()
+      }
+    }
+  }
+
   private fun handleDimensionChange() {
     windowManager.updateScreenDimensions()
 
@@ -363,13 +382,34 @@ class GameGenieOverlayService : Service(),
       pendingMediaProjectionResultCode = newResultCode
       pendingMediaProjectionData = newData
       hasScreenshotPermission = true
+      isScreenshotReady = false
+      upgradeForegroundServiceToMediaProjection()
+      screenshotManager.setupMediaProjection(newResultCode, newData)
+      if (screenshotManager.hasMediaProjection()) {
+        screenshotManager.setupVirtualDisplay(
+          windowManager.screenWidth,
+          windowManager.screenHeight,
+          onFirstFrameReady = {
+            isScreenshotReady = true
+            overlayTimeoutJob?.cancel()
+          }
+        )
+        pendingMediaProjectionResultCode = 0
+        pendingMediaProjectionData = null
+      } else {
+        hasScreenshotPermission = false
+      }
+      startOverlayReadinessTimeout()
     } else if (screenshotManager.hasPermissionData()) {
       if (screenshotManager.needsRecreation()) {
         if (screenshotManager.hasMediaProjection()) {
+          isScreenshotReady = false
           screenshotManager.setupVirtualDisplay(
             windowManager.screenWidth,
             windowManager.screenHeight,
             onFirstFrameReady = {
+              isScreenshotReady = true
+              overlayTimeoutJob?.cancel()
             }
           )
         }
@@ -706,8 +746,11 @@ class GameGenieOverlayService : Service(),
     super.onDestroy()
     isServiceRunning = false
     hasScreenshotPermission = false
+    isScreenshotReady = false
     currentTargetPackage = null
     _overlayRunningState.value = false
+    overlayTimeoutJob?.cancel()
+    overlayTimeoutJob = null
 
     processLifecycleObserver?.let { ProcessLifecycleOwner.get().lifecycle.removeObserver(it) }
     processLifecycleObserver = null
@@ -718,11 +761,19 @@ class GameGenieOverlayService : Service(),
       lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
       myViewModelStore.clear()
       scope.cancel()
+      hideMenuWindow()
       windowManager.removeView(overlayView)
     } catch (e: Exception) {
       e.printStackTrace()
     }
   }
+
+  private fun buildNotification() = NotificationCompat.Builder(this, CHANNEL_ID)
+    .setContentTitle(getString(R.string.gamegenie_overlay_notification_title))
+    .setContentText(getString(R.string.gamegenie_overlay_notification_text))
+    .setSmallIcon(R.drawable.app_icon)
+    .setOngoing(true)
+    .build()
 
   private fun startAsForegroundService() {
     val channel = NotificationChannel(
@@ -733,21 +784,16 @@ class GameGenieOverlayService : Service(),
     val notificationManager = getSystemService(NotificationManager::class.java)
     notificationManager.createNotificationChannel(channel)
 
-    val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-      .setContentTitle(getString(R.string.gamegenie_overlay_notification_title))
-      .setContentText(getString(R.string.gamegenie_overlay_notification_text))
-      .setSmallIcon(R.drawable.app_icon)
-      .setOngoing(true)
-      .build()
+    startForeground(NOTIFICATION_ID, buildNotification())
+  }
 
+  private fun upgradeForegroundServiceToMediaProjection() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
       startForeground(
         NOTIFICATION_ID,
-        notification,
-        ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PROJECTION
+        buildNotification(),
+        FOREGROUND_SERVICE_TYPE_MEDIA_PROJECTION
       )
-    } else {
-      startForeground(NOTIFICATION_ID, notification)
     }
   }
 }
