@@ -116,6 +116,44 @@ class PreApprovalExperiment @Inject constructor(
     )
   }
 
+  /**
+   * Sends an event when the user clicks "Install" on the native install dialog,
+   * only for installs that belong to the experiment.
+   */
+  fun sendInstallDialogAcceptedEvent(
+    packageName: String,
+    analyticsContext: String?
+  ) {
+    if (!isEligibleInstall(packageName, analyticsContext)) return
+
+    genericAnalytics.logEvent(
+      name = INSTALL_DIALOG_ACCEPTED_EVENT,
+      params = mapOf(
+        "variant" to cachedResult!!.variant,
+        "package_name" to packageName
+      )
+    )
+  }
+
+  /**
+   * Sends an event when the user clicks "Cancel" on the native install dialog,
+   * only for installs that belong to the experiment.
+   */
+  fun sendInstallDialogCanceledEvent(
+    packageName: String,
+    analyticsContext: String?
+  ) {
+    if (!isEligibleInstall(packageName, analyticsContext)) return
+
+    genericAnalytics.logEvent(
+      name = INSTALL_DIALOG_CANCELED_EVENT,
+      params = mapOf(
+        "variant" to cachedResult!!.variant,
+        "package_name" to packageName
+      )
+    )
+  }
+
   private fun sendActivationEvent(result: ExperimentResult) {
     if (activationEventSent) return
     activationEventSent = true
@@ -172,6 +210,8 @@ class PreApprovalExperiment @Inject constructor(
 
     private const val ACTIVATION_EVENT = "exp_pre_approval_installer_activated"
     private const val INSTALL_SUCCESS_EVENT = "exp_pre_approval_install_success"
+    private const val INSTALL_DIALOG_ACCEPTED_EVENT = "exp_pre_approval_install_dialog_accepted"
+    private const val INSTALL_DIALOG_CANCELED_EVENT = "exp_pre_approval_install_dialog_canceled"
 
     private const val FETCH_TIMEOUT_MS = 3_000L
   }
