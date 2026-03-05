@@ -52,6 +52,7 @@ import com.aptoide.android.aptoidegames.design_system.PrimaryButton
 import com.aptoide.android.aptoidegames.design_system.PrimaryTextButton
 import com.aptoide.android.aptoidegames.drawables.icons.getAptoideGamesToolbarLogo
 import com.aptoide.android.aptoidegames.installer.analytics.rememberInstallAnalytics
+import com.aptoide.android.aptoidegames.installer.analytics.rememberPreApprovalExperiment
 import com.aptoide.android.aptoidegames.installer.analytics.toAnalyticsPayload
 import com.aptoide.android.aptoidegames.permissions.AppPermissionsViewModel
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -91,9 +92,26 @@ fun UserActionDialog() {
     }
   }
 
+  val installAnalytics = rememberInstallAnalytics()
+  val preApprovalExperiment = rememberPreApprovalExperiment()
+
   val intentLauncher = rememberLauncherForActivityResult(
     contract = ActivityResultContracts.StartActivityForResult(),
     onResult = {
+      (state as? InstallationAction)?.let { action ->
+        if (action.intent.isInstallationIntent() || action.intent.isPreApprovalIntent()) {
+          val packageName = action.intent
+            .getStringExtra("${BuildConfig.APPLICATION_ID}.pn") ?: "NaN"
+          val analyticsContext = action.intent
+            .getStringExtra("${BuildConfig.APPLICATION_ID}.ap").toAnalyticsPayload()?.context
+          
+          if (it.resultCode == Activity.RESULT_OK) {
+            preApprovalExperiment?.sendInstallDialogAcceptedEvent(packageName, analyticsContext)
+          } else {
+            preApprovalExperiment?.sendInstallDialogCanceledEvent(packageName, analyticsContext)
+          }
+        }
+      }
       viewModel.onResult(it.resultCode == Activity.RESULT_OK)
     }
   )
@@ -104,8 +122,6 @@ fun UserActionDialog() {
       viewModel.onResult(result)
     }
   )
-
-  val installAnalytics = rememberInstallAnalytics()
   LaunchedEffect(
     key1 = state,
     key2 = isOnForeground,
@@ -277,3 +293,5 @@ fun PermissionsDialogPreview() {
 //System action, we cannot access it any other way
 fun Intent.isInstallationIntent() =
   action == "android.content.pm.action.CONFIRM_INSTALL" || action == "android.intent.action.INSTALL_PACKAGE"
+
+fun Intent.isPreApprovalIntent() = action == "android.content.pm.action.CONFIRM_PRE_APPROVAL"

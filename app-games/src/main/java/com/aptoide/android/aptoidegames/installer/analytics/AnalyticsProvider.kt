@@ -4,12 +4,14 @@ import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import cm.aptoide.pt.extensions.runPreviewable
+import com.aptoide.android.aptoidegames.installer.ff.PreApprovalExperiment
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class AnalyticsInjectionsProvider @Inject constructor(
   val installAnalytics: InstallAnalytics,
+  val preApprovalExperiment: PreApprovalExperiment,
 ) : ViewModel()
 
 @Composable
@@ -18,5 +20,14 @@ fun rememberInstallAnalytics(): InstallAnalytics = runPreviewable(
   real = {
     val vm = hiltViewModel<AnalyticsInjectionsProvider>()
     vm.installAnalytics
+  }
+)
+
+@Composable
+fun rememberPreApprovalExperiment(): PreApprovalExperiment? = runPreviewable(
+  preview = { null },
+  real = {
+    val vm = hiltViewModel<AnalyticsInjectionsProvider>()
+    vm.preApprovalExperiment
   }
 )
