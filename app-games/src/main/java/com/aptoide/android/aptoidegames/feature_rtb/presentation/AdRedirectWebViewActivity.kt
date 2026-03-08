@@ -36,6 +36,9 @@ class AdRedirectWebViewActivity : ComponentActivity() {
   private var lastErrorCode: Int? = null
   private var lastErrorDescription: String? = "n/a"
   private var campaignId: String? = null
+  private val httpsUpgradeAttempted = mutableSetOf<String>()
+  private var connectionRetryCount = 0
+  private val maxConnectionRetries = 3
 
   companion object {
     const val EXTRA_TRACKING_URL = "extra_tracking_url"
@@ -109,8 +112,9 @@ class AdRedirectWebViewActivity : ComponentActivity() {
     val timeoutSeconds = intent.getIntExtra(EXTRA_TIMEOUT_SECONDS, DEFAULT_TIMEOUT_SECONDS)
     val timeoutMillis = timeoutSeconds * 1000L
 
-    Timber.d("WebView: Starting redirect resolution for URL: $trackingUrl with timeout: ${timeoutSeconds}s")
-    wv.loadUrl(trackingUrl)
+    val urlToLoad = upgradeToHttpsIfNeeded(trackingUrl) ?: trackingUrl
+    Timber.d("WebView: Starting redirect resolution for URL: $urlToLoad with timeout: ${timeoutSeconds}s")
+    wv.loadUrl(urlToLoad)
 
     wv.postDelayed({
       if (!hasFoundFinalUrl) {
@@ -165,6 +169,13 @@ class AdRedirectWebViewActivity : ComponentActivity() {
           return true
         }
 
+        // Proactively upgrade HTTP to HTTPS to avoid cleartext traffic errors
+        upgradeToHttpsIfNeeded(url)?.let { httpsUrl ->
+          Timber.d("WebView: Upgrading redirect to HTTPS: $httpsUrl")
+          view.loadUrl(httpsUrl)
+          return true
+        }
+
         Timber.d("WebView: Following redirect #$redirectCount to: $url")
         return false
       }
@@ -185,6 +196,13 @@ class AdRedirectWebViewActivity : ComponentActivity() {
         if (isFinalDestinationUrl(url)) {
           Timber.d("WebView: Found final destination URL in shouldOverrideUrlLoading (legacy): $url")
           finishWithSuccess(url)
+          return true
+        }
+
+        // Proactively upgrade HTTP to HTTPS to avoid cleartext traffic errors
+        upgradeToHttpsIfNeeded(url)?.let { httpsUrl ->
+          Timber.d("WebView: Upgrading redirect to HTTPS (legacy): $httpsUrl")
+          view.loadUrl(httpsUrl)
           return true
         }
 
@@ -226,6 +244,16 @@ class AdRedirectWebViewActivity : ComponentActivity() {
 
         Timber.d("WebView: onReceivedError: $errorCode - $description for $url (isMainFrame: $isMainFrame)")
 
+        // Retry on connection/DNS errors (unstable network) before logging or giving up
+        if ((errorCode == WebViewClient.ERROR_CONNECT || errorCode == WebViewClient.ERROR_HOST_LOOKUP)
+          && isMainFrame && url != null && connectionRetryCount < maxConnectionRetries
+        ) {
+          connectionRetryCount++
+          Timber.d("WebView: ${getErrorType(errorCode)}, retrying ($connectionRetryCount/$maxConnectionRetries): $url")
+          view?.loadUrl(url)
+          return
+        }
+
         // Log every error to remote endpoint for monitoring
         val campaignId = this@AdRedirectWebViewActivity.campaignId
         if (campaignId != null) {
@@ -236,6 +264,16 @@ class AdRedirectWebViewActivity : ComponentActivity() {
             description = description,
             url = url
           )
+        }
+
+        // Fallback: if a main frame HTTP URL failed (e.g. JS redirect that bypassed
+        // shouldOverrideUrlLoading), retry with HTTPS before giving up
+        if (isMainFrame && url != null) {
+          upgradeToHttpsIfNeeded(url)?.let { httpsUrl ->
+            Timber.d("WebView: Retrying failed HTTP URL with HTTPS: $httpsUrl")
+            view?.loadUrl(httpsUrl)
+            return
+          }
         }
 
         // Check if this is a terminal error that cannot be recovered by JavaScript
@@ -260,6 +298,16 @@ class AdRedirectWebViewActivity : ComponentActivity() {
     }
   }
 
+  /**
+   * If the URL uses HTTP and hasn't been upgraded yet, returns the HTTPS version.
+   * Returns null if the URL is already HTTPS or has already been attempted.
+   */
+  private fun upgradeToHttpsIfNeeded(url: String): String? {
+    if (!url.startsWith("http://")) return null
+    if (!httpsUpgradeAttempted.add(url)) return null // already attempted
+    return url.replaceFirst("http://", "https://")
+  }
+
   private fun isFinalDestinationUrl(url: String): Boolean {
     return url.startsWith("market://") ||
       url.startsWith("intent://") ||
@@ -277,6 +325,7 @@ class AdRedirectWebViewActivity : ComponentActivity() {
     Timber.d("WebView: Finishing with success, final URL: $finalUrl")
 
     val processedUrl = processIntentUrl(finalUrl)
+      .let { if (it.startsWith("http://")) it.replaceFirst("http://", "https://") else it }
     Timber.d("WebView: Processed URL: $processedUrl")
 
     runOnUiThread {
