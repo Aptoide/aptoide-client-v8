@@ -218,6 +218,11 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
   private fun buildNotification(): Notification {
     setupNotificationChannel(applicationContext)
 
+    val settingsIntent = Intent(this, MainActivity::class.java).apply {
+      putExtra(NAVIGATE_TO_SETTINGS, true)
+      flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+    }
+
     val notification =
       NotificationCompat.Builder(applicationContext, PAE_USAGE_NOTIFICATION_CHANNEL_ID)
         .setContentTitle(getString(R.string.play_and_earn_notification_recording_title))
@@ -227,8 +232,8 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
           PendingIntent.getActivity(
             this,
             0,
-            Intent(this, MainActivity::class.java),
-            PendingIntent.FLAG_IMMUTABLE
+            settingsIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
           )
         )
         .build()
@@ -269,11 +274,21 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
     const val FOREGROUND_SERVICE_ID = 1001
     const val PAE_USAGE_NOTIFICATION_CHANNEL_ID = "pae_usage_notification_channel"
     const val PAE_USAGE_NOTIFICATION_CHANNEL_NAME = "Play & Earn Usage Notification Channel"
+    const val NAVIGATE_TO_SETTINGS = "navigate_to_settings"
 
     fun start(context: Context) {
       try {
         val serviceIntent = Intent(context, PaEForegroundService::class.java)
         ContextCompat.startForegroundService(context, serviceIntent)
+      } catch (e: Throwable) {
+        e.printStackTrace()
+      }
+    }
+
+    fun stop(context: Context) {
+      try {
+        val serviceIntent = Intent(context, PaEForegroundService::class.java)
+        context.stopService(serviceIntent)
       } catch (e: Throwable) {
         e.printStackTrace()
       }

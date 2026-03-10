@@ -15,6 +15,7 @@ import cm.aptoide.pt.feature_flags.domain.FeatureFlags
 import cm.aptoide.pt.wallet.datastore.WalletCoreDataSource
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.device_info.DeviceSecurityChecker
+import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPreferencesRepository
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.hasOverlayPermission
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.hasUsageStatsPermissionStatus
 import com.google.firebase.ktx.Firebase
@@ -29,6 +30,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -40,7 +42,8 @@ class PlayAndEarnManager @Inject constructor(
   @ApplicationContext private val context: Context,
   private val featureFlags: FeatureFlags,
   private val walletCoreDataSource: WalletCoreDataSource,
-  private val deviceSecurityChecker: DeviceSecurityChecker
+  private val deviceSecurityChecker: DeviceSecurityChecker,
+  private val paEPreferencesRepository: PaEPreferencesRepository
 ) {
 
   companion object {
@@ -90,6 +93,11 @@ class PlayAndEarnManager @Inject constructor(
       return false
     }
     return featureFlags.getFlag(PAE_VISIBILITY_FLAG_KEY, false)
+  }
+  
+  suspend fun shouldStartPaEService(): Boolean {
+    val isServiceEnabled = paEPreferencesRepository.isPaEServiceEnabled().first()
+    return isServiceEnabled && shouldShowPlayAndEarn()
   }
 
   fun observePlayAndEarnVisibility(): StateFlow<Boolean> = _playAndEarnVisibilityFlow.asStateFlow()
