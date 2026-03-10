@@ -48,6 +48,8 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.onClick
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cm.aptoide.pt.extensions.PreviewDark
@@ -70,6 +72,7 @@ import com.aptoide.android.aptoidegames.network.presentation.NetworkPreferencesV
 import com.aptoide.android.aptoidegames.play_and_earn.di.rememberWalletAddress
 import com.aptoide.android.aptoidegames.play_and_earn.domain.UserInfo
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaESmallTextButton
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.service.PaEServicePreferencesViewModel
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.GoogleSignInViewModel
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnSignInRoute
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.rememberUserInfo
@@ -97,11 +100,16 @@ fun settingsScreen(showSnack: (String) -> Unit) = ScreenData(
   val coroutineScope = rememberCoroutineScope()
   val copiedMessage = stringResource(R.string.settings_copied_to_clipboard_message)
   val signInViewModel = hiltViewModel<GoogleSignInViewModel>()
+  val paEServicePreferencesViewModel = hiltViewModel<PaEServicePreferencesViewModel>()
+  val isPaEServiceEnabled by paEServicePreferencesViewModel.isPaEServiceEnabled.collectAsState()
+  val shouldShowPlayAndEarn = rememberShouldShowPlayAndEarn()
 
   SettingsViewContent(
     title = stringResource(R.string.settings_title),
     downloadOnlyOverWifi = downloadOnlyOverWifi,
     autoUpdateGames = autoUpdateGames,
+    isPaEServiceEnabled = isPaEServiceEnabled,
+    showPaEServiceToggle = shouldShowPlayAndEarn,
     verName = BuildConfig.VERSION_NAME,
     verCode = BuildConfig.VERSION_CODE,
     toggleDownloadOnlyOverWifi = { isChecked ->
@@ -114,6 +122,9 @@ fun settingsScreen(showSnack: (String) -> Unit) = ScreenData(
     },
     toggleAutoUpdateGames = { isChecked ->
       toggleAutoUpdateGames(isChecked)
+    },
+    togglePaEService = { isChecked ->
+      paEServicePreferencesViewModel.setPaEServiceEnabled(isChecked)
     },
     onPrivacyPolicyClick = { UrlActivity.open(context, ppUrl) },
     onTermsConditionsClick = { UrlActivity.open(context, tcUrl) },
@@ -138,10 +149,13 @@ fun SettingsViewContent(
   title: String = "Settings",
   downloadOnlyOverWifi: Boolean = true,
   autoUpdateGames: Boolean? = true,
+  isPaEServiceEnabled: Boolean = true,
+  showPaEServiceToggle: Boolean = false,
   verName: String = "1.2.3",
   verCode: Int = 123,
   toggleDownloadOnlyOverWifi: (Boolean) -> Unit = {},
   toggleAutoUpdateGames: (Boolean) -> Unit = {},
+  togglePaEService: (Boolean) -> Unit = {},
   sendFeedback: () -> Unit = {},
   copyInfo: () -> Unit = {},
   onPrivacyPolicyClick: () -> Unit = {},
@@ -243,6 +257,23 @@ fun SettingsViewContent(
             PrimarySmallOutlinedButton(
               onClick = copyInfo,
               title = copyText
+            )
+          }
+        }
+      }
+      if (showPaEServiceToggle) {
+        SettingsSectionDivider()
+        SettingsSection(
+          title = stringResource(R.string.play_and_earn_title)
+        ) {
+          Column(
+            modifier = Modifier.padding(horizontal = 16.dp),
+          ) {
+            SettingsSwitchItem(
+              title = stringResource(R.string.settings_play_and_earn_tracking),
+              description = stringResource(R.string.settings_play_and_earn_tracking_description),
+              enabled = isPaEServiceEnabled,
+              onToggle = togglePaEService
             )
           }
         }
@@ -494,11 +525,11 @@ fun SettingsSectionDivider() {
 @Composable
 fun SettingsSwitchItem(
   title: String,
+  description: String? = null,
   enabled: Boolean,
   onToggle: (Boolean) -> Unit,
 ) {
-  Row(
-    verticalAlignment = Alignment.CenterVertically,
+  Column(
     modifier = Modifier
       .toggleable(
         value = enabled,
@@ -512,16 +543,29 @@ fun SettingsSwitchItem(
         contentDescription = title
       }
   ) {
-    Text(
-      text = title,
-      modifier = Modifier.weight(weight = 1f),
-      style = AGTypography.InputsM,
-      color = Palette.GreyLight
-    )
-    AptoideGamesSwitch(
-      checked = enabled,
-      onCheckedChanged = onToggle
-    )
+    Row(
+      verticalAlignment = Alignment.CenterVertically,
+      modifier = Modifier.fillMaxWidth()
+    ) {
+      Text(
+        text = title,
+        modifier = Modifier.weight(weight = 1f),
+        style = AGTypography.InputsM,
+        color = Palette.GreyLight
+      )
+      AptoideGamesSwitch(
+        checked = enabled,
+        onCheckedChanged = onToggle
+      )
+    }
+    description?.let {
+      Text(
+        text = it,
+        style = AGTypography.InputsS.copy(fontWeight = FontWeight.Normal),
+        color = Palette.GreyLight,
+        textAlign = TextAlign.Justify,
+      )
+    }
   }
 }
 

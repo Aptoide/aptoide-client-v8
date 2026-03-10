@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import com.aptoide.android.aptoidegames.play_and_earn.di.PaEPreferencesDataStore
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -19,6 +20,7 @@ class PaEPreferencesRepository @Inject constructor(
   companion object {
     private val HAS_SHOWN_HEADER_BUNDLE = booleanPreferencesKey("has_shown_header_bundle")
     private val HEARTBEAT_INTERVAL_SECONDS = intPreferencesKey("heartbeat_interval_seconds")
+    private val PAE_SERVICE_ENABLED = booleanPreferencesKey("pae_service_enabled")
     const val MIN_HEARTBEAT_INTERVAL_SECONDS = 15
   }
 
@@ -45,6 +47,17 @@ class PaEPreferencesRepository @Inject constructor(
     dataStore.edit { preferences ->
       preferences[HEARTBEAT_INTERVAL_SECONDS] =
         intervalSeconds.coerceAtLeast(MIN_HEARTBEAT_INTERVAL_SECONDS)
+    }
+  }
+
+  fun isPaEServiceEnabled(): Flow<Boolean> =
+    dataStore.data.map { preferences ->
+      preferences[PAE_SERVICE_ENABLED] ?: true
+    }
+
+  suspend fun setPaEServiceEnabled(enabled: Boolean) {
+    dataStore.edit { preferences ->
+      preferences[PAE_SERVICE_ENABLED] = enabled
     }
   }
 }

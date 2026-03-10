@@ -35,6 +35,7 @@ import com.aptoide.android.aptoidegames.play_and_earn.PlayAndEarnManager
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.service.PaEForegroundService
 import com.aptoide.android.aptoidegames.promo_codes.PromoCode
 import com.aptoide.android.aptoidegames.promo_codes.PromoCodeRepository
+import com.aptoide.android.aptoidegames.settings.settingsRoute
 import com.aptoide.android.aptoidegames.updates.domain.UpdatesNotificationAnalyticsManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -82,7 +83,7 @@ class MainActivity : AppCompatActivity() {
 
   @Inject
   lateinit var playAndEarnManager: PlayAndEarnManager
-  
+
   private var navController: NavHostController? = null
 
   private val coroutinesScope: CoroutineScope = CoroutineScope(Job() + Dispatchers.IO)
@@ -123,7 +124,7 @@ class MainActivity : AppCompatActivity() {
 
   private fun startPaEServiceIfEnabled() {
     coroutinesScope.launch {
-      if (playAndEarnManager.shouldShowPlayAndEarn()) {
+      if (playAndEarnManager.shouldStartPaEService()) {
         PaEForegroundService.start(this@MainActivity)
       }
     }
@@ -206,6 +207,10 @@ class MainActivity : AppCompatActivity() {
     }
     intent.agDeepLink?.takeIf { it.scheme == "ag" }?.let {
       navController?.navigate(it)
+    }
+
+    if (intent?.getBooleanExtra(PaEForegroundService.NAVIGATE_TO_SETTINGS, false) == true) {
+      navController?.navigate(settingsRoute)
     }
 
     intent.takeIf { it.isAGNotification }?.let {
