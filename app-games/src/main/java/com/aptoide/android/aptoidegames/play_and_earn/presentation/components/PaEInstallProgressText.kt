@@ -7,7 +7,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import cm.aptoide.pt.campaigns.domain.PaEApp
 import cm.aptoide.pt.campaigns.domain.asNormalApp
-import cm.aptoide.pt.campaigns.domain.randomPaEApp
 import cm.aptoide.pt.download_view.presentation.DownloadUiState
 import cm.aptoide.pt.download_view.presentation.DownloadUiState.Downloading
 import cm.aptoide.pt.download_view.presentation.DownloadUiState.Error
@@ -41,7 +40,6 @@ fun PaEInstallProgressText(
 
   PaEInstallProgressTextContent(
     modifier = modifier,
-    app = app,
     state = state,
   )
 }
@@ -49,7 +47,6 @@ fun PaEInstallProgressText(
 @Composable
 private fun PaEInstallProgressTextContent(
   modifier: Modifier = Modifier,
-  app: PaEApp,
   state: DownloadUiState?,
 ) {
   val text = when (state) {
@@ -75,7 +72,7 @@ private fun PaEInstallProgressTextContent(
     is Installed,
     is Migrate,
     is MigrateAlias,
-      -> PaEAppXPText(app.progress?.current ?: 0, app.progress?.target ?: 0)
+      -> Unit
 
     is Waiting,
     is Downloading,
@@ -101,7 +98,6 @@ private fun PaEInstallProgressTextContent(
 fun ProgressTextContentInstalledPreview() {
   AptoideTheme {
     PaEInstallProgressTextContent(
-      app = randomPaEApp,
       state = Installed({}, {}),
     )
   }
@@ -112,7 +108,6 @@ fun ProgressTextContentInstalledPreview() {
 fun ProgressTextContentInstallingPreview() {
   AptoideTheme {
     PaEInstallProgressTextContent(
-      app = randomPaEApp,
       state = Downloading(randomInstallPackageInfo, Random.nextInt(0, 100), {}),
     )
   }
@@ -123,7 +118,6 @@ fun ProgressTextContentInstallingPreview() {
 fun ProgressTextContentErrorPreview() {
   AptoideTheme {
     PaEInstallProgressTextContent(
-      app = randomPaEApp,
       state = Error(retryWith = {}),
     )
   }

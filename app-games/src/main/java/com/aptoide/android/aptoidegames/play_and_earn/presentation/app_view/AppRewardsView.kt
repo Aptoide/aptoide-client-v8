@@ -40,7 +40,6 @@ import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getMissionHexagonCompletedIcon
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getSmallCoinIcon
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaEProgressIndicator
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.getAppXPAnnotatedString
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 
@@ -164,16 +163,10 @@ private fun CheckpointItem(checkpoint: PaEMission) {
       if (isCompleted) {
         Column(
           modifier = Modifier.weight(1f),
-          verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
           Text(
             text = checkpoint.title,
             style = AGTypography.InputsM,
-            color = Palette.Grey
-          )
-          Text(
-            text = "${checkpoint.progress?.target ?: 0} XP",
-            style = AGTypography.InputsXS,
             color = Palette.Grey
           )
         }
@@ -215,16 +208,8 @@ private fun CheckpointItem(checkpoint: PaEMission) {
           Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.End
           ) {
-            Text(
-              text = getAppXPAnnotatedString(
-                checkpoint.progress?.current ?: 0,
-                checkpoint.progress?.target ?: 0
-              ),
-              style = AGTypography.InputsXS,
-              color = Palette.White
-            )
             Text(
               text = "+ ${checkpoint.units} UNITS",
               style = AGTypography.InputsS,

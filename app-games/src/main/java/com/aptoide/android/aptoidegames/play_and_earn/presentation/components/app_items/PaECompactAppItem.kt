@@ -73,7 +73,8 @@ fun PaECompactAppItem(
           .fillMaxWidth()
           .padding(all = 16.dp)
           .align(Alignment.BottomStart),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically
       ) {
         AppIconImage(
           modifier = Modifier.size(40.dp),
@@ -82,7 +83,7 @@ fun PaECompactAppItem(
         )
 
         Column(
-          verticalArrangement = Arrangement.spacedBy(4.dp)
+          verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
           Text(
             text = app.name,
