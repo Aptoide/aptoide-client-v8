@@ -89,11 +89,13 @@ private fun MissionsSection(missions: List<PaEMission>) {
 
 @Composable
 private fun CheckpointsSection(checkpoints: List<PaEMission>) {
-  RewardsSection(
-    title = stringResource(R.string.play_and_earn_checkpoints_title),
-    items = checkpoints,
-    itemContent = { checkpoint -> CheckpointItem(checkpoint) },
-  )
+  if (checkpoints.isNotEmpty()) {
+    RewardsSection(
+      title = stringResource(R.string.play_and_earn_checkpoints_title),
+      items = checkpoints,
+      itemContent = { checkpoint -> CheckpointItem(checkpoint) },
+    )
+  }
 }
 
 @Composable
