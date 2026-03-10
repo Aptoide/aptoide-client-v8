@@ -49,10 +49,6 @@ fun PaEHowItWorksSection() {
         iconRes = R.drawable.sword
       )
       PaEHowItWorksCard(
-        text = stringResource(R.string.play_and_earn_xp_contributes_checkpoints_body),
-        iconRes = R.drawable.map
-      )
-      PaEHowItWorksCard(
         text = stringResource(R.string.play_and_earn_unlock_rewards_convert_balance_body),
         iconRes = R.drawable.chest
       )
