@@ -61,6 +61,8 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
   private val pollingIntervalSec = pollingIntervalMillis.toInt() / 1_000
   private var pollingJob: Job? = null
   private var completedMissionsJob: Job? = null
+  private var idleTimeoutJob: Job? = null
+  private val idleTimeoutMillis = 30 * 60 * 1000L // 30 minutes
   private var isMonitoringStarted = false
 
   private var lastForegroundPackage: String? = null
@@ -175,6 +177,14 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
     when (packageState) {
       is PackageUsageState.ForegroundPackage -> {
         val foregroundPackage = packageState.packageName
+        val isPaEGame = availablePaEPackages?.contains(foregroundPackage) == true
+
+        // Manage idle timeout based on whether user is playing a PaE game
+        if (isPaEGame) {
+          cancelIdleTimeout()
+        } else {
+          startIdleTimeoutIfNotRunning()
+        }
 
         // New foreground package detected
         if (foregroundPackage != lastForegroundPackage) {
@@ -182,7 +192,7 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
           lastForegroundPackage = foregroundPackage
 
           // Game available in PaE. Start session
-          if (availablePaEPackages?.contains(foregroundPackage) == true) {
+          if (isPaEGame) {
             // Check if a session already exists and is not finished
             val sessionCreated = paESessionManager.createSession(foregroundPackage)
 
@@ -206,11 +216,13 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
         // No package in foreground (e.g., screen locked, all apps paused)
         // Don't sync sessions as no time should be tracked while paused
         // Sessions will handle their own expiration via TTL
+        startIdleTimeoutIfNotRunning()
       }
 
       is PackageUsageState.Error -> {
         // Error means we couldn't determine state (no events in window or OEM failure)
         // Don't sync to avoid incorrectly counting time.
+        startIdleTimeoutIfNotRunning()
       }
     }
   }
@@ -241,6 +253,23 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
     return notification
   }
 
+  private fun cancelIdleTimeout() {
+    idleTimeoutJob?.cancel()
+    idleTimeoutJob = null
+  }
+
+  private fun startIdleTimeoutIfNotRunning() {
+    if (idleTimeoutJob?.isActive == true) {
+      return // Already running
+    }
+    idleTimeoutJob = lifecycleScope.launch {
+      Timber.d("PaEForegroundService: Starting idle timeout ($idleTimeoutMillis ms)")
+      delay(idleTimeoutMillis)
+      Timber.d("PaEForegroundService: Idle timeout elapsed, stopping service")
+      stopSelf()
+    }
+  }
+
   private fun setupNotificationChannel(context: Context) {
     val notificationManager =
       context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
@@ -248,7 +277,7 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
     if (notificationManager.getNotificationChannel(PAE_USAGE_NOTIFICATION_CHANNEL_ID) == null) {
       val name = PAE_USAGE_NOTIFICATION_CHANNEL_NAME
       val descriptionText = "Play & Earn usage notification channel"
-      val importance = NotificationManager.IMPORTANCE_DEFAULT
+      val importance = NotificationManager.IMPORTANCE_LOW
       val channel = NotificationChannel(
         PAE_USAGE_NOTIFICATION_CHANNEL_ID,
         name,
@@ -266,6 +295,7 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
     super.onDestroy()
     pollingJob?.cancel()
     completedMissionsJob?.cancel()
+    idleTimeoutJob?.cancel()
     paESessionManager.clearAllSessions()
     isMonitoringStarted = false
   }
