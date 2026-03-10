@@ -34,6 +34,7 @@ import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalContext
 import cm.aptoide.pt.download_view.presentation.DownloadUiState
 import cm.aptoide.pt.download_view.presentation.ExecutionBlocker.UNMETERED
 import cm.aptoide.pt.download_view.presentation.downloadUiStates
@@ -50,6 +51,7 @@ import com.aptoide.android.aptoidegames.installer.presentation.getProgressString
 import com.aptoide.android.aptoidegames.installer.presentation.installViewStates
 import com.aptoide.android.aptoidegames.installer.presentation.toInstallViewState
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rememberPlayAndEarnSetupRoute
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.service.PaEForegroundService
 import com.aptoide.android.aptoidegames.play_and_earn.rememberPlayAndEarnReady
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
@@ -247,11 +249,16 @@ private fun PaEPlayButton(
 ) {
   val isPaEReady = rememberPlayAndEarnReady()
   val paeSetupRoute = rememberPlayAndEarnSetupRoute()
+  val context = LocalContext.current
 
   PaELargeCoinButton(
     title = stringResource(string.play_and_earn_play_button),
     onClick = {
       if (isPaEReady || navigate == null) {
+        if (isPaEReady) {
+          // Start the foreground service to track playtime
+          PaEForegroundService.start(context)
+        }
         onClick()
       } else {
         navigate(paeSetupRoute)

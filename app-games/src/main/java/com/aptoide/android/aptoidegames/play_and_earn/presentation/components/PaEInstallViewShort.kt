@@ -7,6 +7,7 @@ import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.campaigns.domain.PaEApp
@@ -22,6 +23,7 @@ import com.aptoide.android.aptoidegames.installer.presentation.InstallViewState
 import com.aptoide.android.aptoidegames.installer.presentation.installViewStates
 import com.aptoide.android.aptoidegames.installer.presentation.toInstallViewState
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rememberPlayAndEarnSetupRoute
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.service.PaEForegroundService
 import com.aptoide.android.aptoidegames.play_and_earn.rememberPlayAndEarnReady
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 
@@ -144,10 +146,15 @@ private fun PaESmallPlayButton(
 ) {
   val isPaEReady = rememberPlayAndEarnReady()
   val paeSetupRoute = rememberPlayAndEarnSetupRoute()
+  val context = LocalContext.current
 
   PaESmallCoinButton(
     onClick = {
       if (isPaEReady || navigate == null) {
+        if (isPaEReady) {
+          // Start the foreground service to track playtime
+          PaEForegroundService.start(context)
+        }
         onClick()
       } else {
         navigate(paeSetupRoute)

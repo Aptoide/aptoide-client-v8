@@ -19,6 +19,7 @@ import cm.aptoide.pt.usage_stats.PackageUsageState
 import com.aptoide.android.aptoidegames.MainActivity
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.play_and_earn.PlayAndEarnManager
+import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPreferencesRepository
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.overlays.PaEOverlayViewManager
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.hasOverlayPermission
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.hasUsageStatsPermissionStatus
@@ -51,6 +52,9 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
 
   @Inject
   lateinit var playAndEarnManager: PlayAndEarnManager
+
+  @Inject
+  lateinit var paEPreferencesRepository: PaEPreferencesRepository
 
   private val savedStateRegistryController = SavedStateRegistryController.Companion.create(this)
 
@@ -99,6 +103,11 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
     if (!applicationContext.hasUsageStatsPermissionStatus() || !applicationContext.hasOverlayPermission()) {
       stopSelf()
       return START_NOT_STICKY
+    }
+
+    // Ensure preference reflects the service is running (e.g. when started from Play button)
+    lifecycleScope.launch(Dispatchers.IO) {
+      paEPreferencesRepository.setPaEServiceEnabled(true)
     }
 
     init()
