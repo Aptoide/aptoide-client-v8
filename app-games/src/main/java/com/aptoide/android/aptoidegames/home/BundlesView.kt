@@ -598,8 +598,7 @@ fun List<Bundle>.injectGamesFeed(): List<Bundle> {
   )
 
   return toMutableList().apply {
-    val insertPosition = if (size >= 1) 1 else 0
-    add(insertPosition, gamesFeedBundle)
+    add(0, gamesFeedBundle)
   }
 }
 
