@@ -411,8 +411,6 @@
   <string name="play_and_earn_install_button">Instalați</string>
   <string name="play_and_earn_notification_recording_title">Urmărirea timpului de joc pentru recompense</string>
   <string name="play_and_earn_notification_recording_body">Timpul petrecut în joc este luat în calcul pentru misiunile tale.</string>
-  <string name="settings_play_and_earn_tracking">Joacă &amp; Câștigă urmărire</string>
-  <string name="settings_play_and_earn_tracking_description">Aptoide utilizează această setare pentru a măsura activitatea dvs. în aplicație și pentru a vă credita pentru timpul petrecut jucând și pentru obiectivele atinse. Dacă această opțiune este dezactivată, recompensele nu vor fi înregistrate până când nu relansați jocul prin Aptoide.</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Succes! Călătoria ta către recompense începe acum 🎉</string>
   <string name="play_and_earn_permissions_google_drama_title">Google adoră puțin dramatismul 🙄</string>
