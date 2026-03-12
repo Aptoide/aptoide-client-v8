@@ -400,6 +400,8 @@
   <string name="play_and_earn_install_button">Installer</string>
   <string name="play_and_earn_notification_recording_title">Suivi du temps de jeu pour obtenir des récompenses</string>
   <string name="play_and_earn_notification_recording_body">Votre temps de jeu est pris en compte dans vos missions.</string>
+  <string name="settings_play_and_earn_tracking">Jouer à &amp; Gagner en suivant</string>
+  <string name="settings_play_and_earn_tracking_description">Aptoide utilise ce paramètre pour mesurer votre activité dans l\'application et vous créditer pour le temps joué et les étapes franchies. S\'il est désactivé, les récompenses ne seront pas suivies tant que vous n\'aurez pas relancé un jeu via Aptoide.</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Bravo ! Votre parcours vers les récompenses commence maintenant 🎉</string>
   <string name="play_and_earn_permissions_google_drama_title">Google adore les petites histoires dramatiques 🙄</string>
