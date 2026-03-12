@@ -390,8 +390,8 @@
   <string name="play_and_earn_install_button">インストール</string>
   <string name="play_and_earn_notification_recording_title">報酬のためのプレイ時間の追跡</string>
   <string name="play_and_earn_notification_recording_body">あなたのプレイ時間はミッションの進行にカウントされています。</string>
-  <string name="settings_play_and_earn_tracking">Play &amp; Earn Tracking</string>
-  <string name="settings_play_and_earn_tracking_description">Aptoide uses this setting to measure your in-app activity and credit you for time played and milestones reached. If disabled, rewards will not be tracked until you re-launch a game through Aptoide.</string>
+  <string name="settings_play_and_earn_tracking">&amp; をプレイ獲得トラッキング</string>
+  <string name="settings_play_and_earn_tracking_description">Aptoideはこの設定を使用して、アプリ内での活動を測定し、プレイ時間や達成したマイルストーンに応じてクレジットを付与します。無効にした場合、Aptoide経由でゲームを再起動するまで報酬は追跡されません。</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">成功！あなたの報酬の旅が今始まります 🎉</string>
   <string name="play_and_earn_permissions_google_drama_title">Googleはちょっとしたドラマが大好きだ🙄</string>
