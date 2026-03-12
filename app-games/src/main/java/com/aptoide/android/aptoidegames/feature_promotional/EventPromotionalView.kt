@@ -1,10 +1,8 @@
 package com.aptoide.android.aptoidegames.feature_promotional
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -108,34 +106,19 @@ private fun EventBundleContent(
   Text(
     modifier = modifier,
     text = articleMeta.title,
-    maxLines = 1,
+    maxLines = 2,
     overflow = TextOverflow.Ellipsis,
     style = AGTypography.InputsL,
     color = Palette.White
   )
-  Row(
-    modifier = modifier.fillMaxWidth(),
-    horizontalArrangement = Arrangement.SpaceBetween
-  ) {
-    Text(
-      modifier = modifier,
-      text = stringResource(
-        id = R.string.editorial_card_views_short, articleMeta.views
-      ),
-      maxLines = 1,
-      overflow = TextOverflow.Ellipsis,
-      style = AGTypography.InputsXS,
-      color = Palette.GreyLight
-    )
-    Text(
-      modifier = modifier,
-      text = stringResource(id = R.string.promotional_on_going_event),
-      maxLines = 1,
-      overflow = TextOverflow.Ellipsis,
-      style = AGTypography.InputsXS,
-      color = Palette.Primary
-    )
-  }
+  Text(
+    modifier = modifier,
+    text = stringResource(id = R.string.promotional_on_going_event),
+    maxLines = 1,
+    overflow = TextOverflow.Ellipsis,
+    style = AGTypography.InputsXS,
+    color = Palette.Primary
+  )
 }
 
 @PreviewDark
