@@ -400,8 +400,8 @@
   <string name="play_and_earn_install_button">Εγκατάσταση</string>
   <string name="play_and_earn_notification_recording_title">Παρακολούθηση χρόνου παιχνιδιού για ανταμοιβές</string>
   <string name="play_and_earn_notification_recording_body">Ο χρόνος παιχνιδιού σας υπολογίζεται στις αποστολές σας.</string>
-  <string name="settings_play_and_earn_tracking">Play &amp; Earn Tracking</string>
-  <string name="settings_play_and_earn_tracking_description">Aptoide uses this setting to measure your in-app activity and credit you for time played and milestones reached. If disabled, rewards will not be tracked until you re-launch a game through Aptoide.</string>
+  <string name="settings_play_and_earn_tracking">Παίξτε &amp; Κερδίστε παρακολούθηση</string>
+  <string name="settings_play_and_earn_tracking_description">Το Aptoide χρησιμοποιεί αυτή τη ρύθμιση για να μετρήσει τη δραστηριότητά σας στην εφαρμογή και να σας πιστώσει για τον χρόνο που παίζετε και τα ορόσημα που έχετε επιτύχει. Εάν απενεργοποιηθεί, οι ανταμοιβές δεν θα παρακολουθούνται έως ότου ξεκινήσετε ξανά ένα παιχνίδι μέσω του Aptoide.</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Επιτυχία! Το ταξίδι σας προς τις ανταμοιβές ξεκινά τώρα 🎉</string>
   <string name="play_and_earn_permissions_google_drama_title">Η Google λατρεύει το δράμα 🙄</string>
