@@ -389,8 +389,8 @@
   <string name="play_and_earn_install_button">ติดตั้ง</string>
   <string name="play_and_earn_notification_recording_title">ติดตามเวลาการเล่นเพื่อรับรางวัล</string>
   <string name="play_and_earn_notification_recording_body">เวลาที่คุณเล่นเกมกำลังถูกนับรวมในภารกิจของคุณ</string>
-  <string name="settings_play_and_earn_tracking">Play &amp; Earn Tracking</string>
-  <string name="settings_play_and_earn_tracking_description">Aptoide uses this setting to measure your in-app activity and credit you for time played and milestones reached. If disabled, rewards will not be tracked until you re-launch a game through Aptoide.</string>
+  <string name="settings_play_and_earn_tracking">เล่น &amp; รับรางวัลติดตาม</string>
+  <string name="settings_play_and_earn_tracking_description">Aptoide ใช้การตั้งค่านี้เพื่อวัดกิจกรรมในแอปของคุณและให้เครดิตคุณสำหรับเวลาที่เล่นและเป้าหมายที่บรรลุ หากปิดใช้งาน รางวัลจะไม่ถูกติดตามจนกว่าคุณจะเปิดเกมอีกครั้งผ่าน Aptoide</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">สำเร็จ! การเดินทางสู่รางวัลของคุณเริ่มต้นขึ้นแล้ว 🎉</string>
   <string name="play_and_earn_permissions_google_drama_title">Google ชอบเรื่องดราม่าเล็กๆ น้อยๆ 🙄</string>
