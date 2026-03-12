@@ -389,8 +389,8 @@
   <string name="play_and_earn_install_button">설치</string>
   <string name="play_and_earn_notification_recording_title">보상을 위한 플레이 시간 추적</string>
   <string name="play_and_earn_notification_recording_body">당신의 게임 플레이 시간이 미션 진행 시간으로 계산되고 있습니다.</string>
-  <string name="settings_play_and_earn_tracking">Play &amp; Earn Tracking</string>
-  <string name="settings_play_and_earn_tracking_description">Aptoide uses this setting to measure your in-app activity and credit you for time played and milestones reached. If disabled, rewards will not be tracked until you re-launch a game through Aptoide.</string>
+  <string name="settings_play_and_earn_tracking">&amp; 플레이하기 수익 추적</string>
+  <string name="settings_play_and_earn_tracking_description">Aptoide는 이 설정을 통해 앱 내 활동을 측정하고 플레이 시간 및 달성한 목표에 대한 보상을 제공합니다. 비활성화 시, Aptoide를 통해 게임을 다시 실행할 때까지 보상이 추적되지 않습니다.</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">성공! 이제 보상의 여정이 시작됩니다 🎉</string>
   <string name="play_and_earn_permissions_google_drama_title">구글은 약간의 드라마를 좋아하네 🙄</string>
