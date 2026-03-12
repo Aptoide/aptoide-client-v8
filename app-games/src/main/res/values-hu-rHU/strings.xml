@@ -400,8 +400,6 @@
   <string name="play_and_earn_install_button">Telepítés</string>
   <string name="play_and_earn_notification_recording_title">A játékidő nyomon követése a jutalmakért</string>
   <string name="play_and_earn_notification_recording_body">A játékidődet beszámítjuk a küldetéseidbe.</string>
-  <string name="settings_play_and_earn_tracking">&amp; játék  Keress pénzt nyomon követéssel</string>
-  <string name="settings_play_and_earn_tracking_description">Az Aptoide ezt a beállítást használja az alkalmazáson belüli tevékenységed mérésére, valamint a játékidő és az elért mérföldkövek alapján járó kreditek jóváírására. Ha ezt a funkciót letiltod, a jutalmakat nem fogjuk nyomon követni, amíg újra nem indítod el a játékot az Aptoide-on keresztül.</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Siker! A jutalom utazásod most kezdődik 🎉</string>
   <string name="play_and_earn_permissions_google_drama_title">A Google szereti a kis drámát 🙄</string>
