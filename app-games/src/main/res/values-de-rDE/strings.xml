@@ -400,8 +400,8 @@
   <string name="play_and_earn_install_button">Installieren</string>
   <string name="play_and_earn_notification_recording_title">Spielzeit für Belohnungen verfolgen</string>
   <string name="play_and_earn_notification_recording_body">Ihre Spielzeit wird für Ihre Missionen angerechnet.</string>
-  <string name="settings_play_and_earn_tracking">Play &amp; Earn Tracking</string>
-  <string name="settings_play_and_earn_tracking_description">Aptoide uses this setting to measure your in-app activity and credit you for time played and milestones reached. If disabled, rewards will not be tracked until you re-launch a game through Aptoide.</string>
+  <string name="settings_play_and_earn_tracking">&amp; spielen  Verdienstverfolgung</string>
+  <string name="settings_play_and_earn_tracking_description">Aptoide verwendet diese Einstellung, um Ihre Aktivitäten in der App zu messen und Ihnen Spielzeit und erreichte Meilensteine gutzuschreiben. Wenn diese Funktion deaktiviert ist, werden Belohnungen erst wieder erfasst, wenn Sie ein Spiel über Aptoide neu starten.</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Erfolg! Ihre Belohnungsreise beginnt jetzt 🎉</string>
   <string name="play_and_earn_permissions_google_drama_title">Google liebt ein bisschen Drama 🙄</string>
