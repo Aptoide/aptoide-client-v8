@@ -306,10 +306,15 @@
   <string name="genai_history_body">História do GameGenie</string>
   <string name="genai_new_chat_button">Novo chat</string>
   <string name="gamegenie_companion_play">Jogar</string>
-  <string name="gamegenie_companion_play_smarter">Ou jogue de forma mais inteligente usando a sobreposição no jogo do GameGenie.</string>
+  <string name="gamegenie_companion_play_smarter"><![CDATA[Or play smarter using GameGenie\'s <1>in-game overlay<1>.]]></string>
   <string name="gamegenie_overlay_permission_message"><![CDATA[Ative <1>a permissão de sobreposição</1> e deixe o GameGenie guiá-lo até a vitória!]]></string>
   <string name="gamegenie_overlay_permission_accept">Vamos lá!</string>
   <string name="gamegenie_overlay_tooltip">Reproduzir sobreposição no jogo</string>
+  <string name="game_genie_chat_name">GameGenie ✨</string>
+  <string name="game_genie_more_installed">"Mais jogos instalados significam mais maneiras de progredir."</string>
+  <string name="gamegenie_companion_game_choice_title">Os seus jogos instalados</string>
+  <string name="gamegenie_companion_master_fav_games">Domine o seu jogo favorito</string>
+  <string name="gamegenie_companion_tap_fav_game">Or tap your fav game - you’ll master it.</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Agora compatível com a Aptoide Wallet</string>
   <string name="promotional_new_version">Nova Versão</string>
@@ -434,9 +439,4 @@
   <string name="search_sponsored_install">Instalar</string>
   <string name="search_sponsored_suggested">Sugestões para si 🔥</string>
   <string name="search_sponsored_label">Patrocinado</string>
-  <string name="game_genie_chat_name">GameGenie ✨</string>
-  <string name="game_genie_more_installed">"Mais jogos instalados significam mais maneiras de progredir."</string>
-  <string name="gamegenie_companion_game_choice_title">Os seus jogos instalados</string>
-  <string name="gamegenie_companion_master_fav_games">Domine o seu jogo favorito</string>
-  <string name="gamegenie_companion_tap_fav_game">Ou toque no seu jogo favorito - você vai dominá-lo.</string>
 </resources>
