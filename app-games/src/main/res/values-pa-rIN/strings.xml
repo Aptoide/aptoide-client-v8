@@ -308,10 +308,15 @@
   <string name="genai_history_body">GameGenie History</string>
   <string name="genai_new_chat_button">New chat</string>
   <string name="gamegenie_companion_play">Play</string>
-  <string name="gamegenie_companion_play_smarter">Or play smarter using GameGenie\'s in-game overlay.</string>
+  <string name="gamegenie_companion_play_smarter"><![CDATA[Or play smarter using GameGenie\'s <1>in-game overlay<1>.]]></string>
   <string name="gamegenie_overlay_permission_message"><![CDATA[Turn on <1>overlay permission</1> and let GameGenie guide you to victory!]]></string>
   <string name="gamegenie_overlay_permission_accept">Let\'s do it!</string>
   <string name="gamegenie_overlay_tooltip">Play in-game overlay</string>
+  <string name="game_genie_chat_name">GameGenie ✨</string>
+  <string name="game_genie_more_installed">"More installed games mean more ways to progress."</string>
+  <string name="gamegenie_companion_game_choice_title">Your installed games</string>
+  <string name="gamegenie_companion_master_fav_games">Master your fav game</string>
+  <string name="gamegenie_companion_tap_fav_game">Or tap your fav game - you’ll master it.</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Now compatible with the Aptoide Wallet</string>
   <string name="promotional_new_version">ਨਵਾਂ ਵਰਜਨ</string>
@@ -436,9 +441,4 @@
   <string name="search_sponsored_install">Install</string>
   <string name="search_sponsored_suggested">Suggested for You 🔥</string>
   <string name="search_sponsored_label">Sponsored</string>
-  <string name="game_genie_chat_name">GameGenie ✨</string>
-  <string name="game_genie_more_installed">"More installed games mean more ways to progress."</string>
-  <string name="gamegenie_companion_game_choice_title">Your installed games</string>
-  <string name="gamegenie_companion_master_fav_games">Master your fav game</string>
-  <string name="gamegenie_companion_tap_fav_game">Or tap your fav game - you\'ll master it.</string>
 </resources>
