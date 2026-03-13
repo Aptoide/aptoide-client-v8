@@ -400,6 +400,8 @@
   <string name="play_and_earn_install_button">Installeren</string>
   <string name="play_and_earn_notification_recording_title">Speeltijd bijhouden voor beloningen</string>
   <string name="play_and_earn_notification_recording_body">Je speeltijd wordt meegeteld voor je missies.</string>
+  <string name="settings_play_and_earn_tracking">Play &amp; Earn-tracking</string>
+  <string name="settings_play_and_earn_tracking_description">Aptoide gebruikt deze instelling om je in-app-activiteit te meten en je te belonen voor speeltijd en behaalde mijlpalen. Als je dit uitschakelt, worden beloningen niet bijgehouden totdat je een spel opnieuw via Aptoide start.</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Geslaagd! Je beloningsreis begint nu 🎉</string>
   <string name="play_and_earn_permissions_google_drama_title">Google houdt wel van een beetje drama 🙄</string>

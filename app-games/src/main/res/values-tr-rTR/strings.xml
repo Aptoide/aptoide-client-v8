@@ -400,6 +400,8 @@
   <string name="play_and_earn_install_button">Yükle</string>
   <string name="play_and_earn_notification_recording_title">Ödüller için oyun süresini takip etme</string>
   <string name="play_and_earn_notification_recording_body">Oyun oynama süreniz görevlerinize sayılıyor.</string>
+  <string name="settings_play_and_earn_tracking">Play &amp; Earn Takibi</string>
+  <string name="settings_play_and_earn_tracking_description">Aptoide, bu ayarı uygulama içi etkinliğinizi ölçmek ve oynadığınız süre ile ulaştığınız kilometre taşları için sizi ödüllendirmek amacıyla kullanır. Devre dışı bırakılırsa, ödüller Aptoide üzerinden bir oyunu tekrar başlatana kadar takip edilmez.</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Başarılı! Ödül yolculuğunuz şimdi başlıyor 🎉</string>
   <string name="play_and_earn_permissions_google_drama_title">Google biraz dramayı sever 🙄</string>
