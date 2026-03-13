@@ -328,10 +328,15 @@
   <string name="genai_history_body">Історія GameGenie</string>
   <string name="genai_new_chat_button">Новий чат</string>
   <string name="gamegenie_companion_play">Грати</string>
-  <string name="gamegenie_companion_play_smarter">Або грайте розумніше, використовуючи ігровий оверлей GameGenie.</string>
+  <string name="gamegenie_companion_play_smarter"><![CDATA[Or play smarter using GameGenie\'s <1>in-game overlay<1>.]]></string>
   <string name="gamegenie_overlay_permission_message"><![CDATA[Увімкніть <1>дозвіл на накладення</1> і дозвольте GameGenie привести вас до перемоги!]]></string>
   <string name="gamegenie_overlay_permission_accept">Давайте зробимо це!</string>
   <string name="gamegenie_overlay_tooltip">Відтворити ігровий оверлей</string>
+  <string name="game_genie_chat_name">GameGenie ✨</string>
+  <string name="game_genie_more_installed">"Більше встановлених ігор означає більше можливостей для прогресу."</string>
+  <string name="gamegenie_companion_game_choice_title">Ваші встановлені ігри</string>
+  <string name="gamegenie_companion_master_fav_games">Опануйте свою улюблену гру</string>
+  <string name="gamegenie_companion_tap_fav_game">Or tap your fav game - you’ll master it.</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Тепер сумісно з Aptoide Wallet</string>
   <string name="promotional_new_version">Нова версія</string>
@@ -456,9 +461,4 @@
   <string name="search_sponsored_install">Встановити</string>
   <string name="search_sponsored_suggested">Рекомендовано для вас 🔥</string>
   <string name="search_sponsored_label">Спонсорований</string>
-  <string name="game_genie_chat_name">GameGenie ✨</string>
-  <string name="game_genie_more_installed">"Більше встановлених ігор означає більше можливостей для прогресу."</string>
-  <string name="gamegenie_companion_game_choice_title">Ваші встановлені ігри</string>
-  <string name="gamegenie_companion_master_fav_games">Опануйте свою улюблену гру</string>
-  <string name="gamegenie_companion_tap_fav_game">Або натисніть на свою улюблену гру — ви її освоїте.</string>
 </resources>
