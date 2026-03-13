@@ -295,10 +295,15 @@
   <string name="genai_history_body">Lịch sử GameGenie</string>
   <string name="genai_new_chat_button">Trò chuyện mới</string>
   <string name="gamegenie_companion_play">Chơi</string>
-  <string name="gamegenie_companion_play_smarter">Hoặc chơi thông minh hơn bằng cách sử dụng giao diện trong trò chơi của GameGenie.</string>
+  <string name="gamegenie_companion_play_smarter"><![CDATA[Or play smarter using GameGenie\'s <1>in-game overlay<1>.]]></string>
   <string name="gamegenie_overlay_permission_message"><![CDATA[Bật <1>quyền truy cập lớp phủ</1> và để GameGenie dẫn dắt bạn đến chiến thắng!]]></string>
   <string name="gamegenie_overlay_permission_accept">Hãy làm đi!</string>
   <string name="gamegenie_overlay_tooltip">Chơi chế độ hiển thị trong trò chơi</string>
+  <string name="game_genie_chat_name">GameGenie ✨</string>
+  <string name="game_genie_more_installed">"Càng nhiều trò chơi được cài đặt, càng có nhiều cách để tiến bộ."</string>
+  <string name="gamegenie_companion_game_choice_title">Các trò chơi đã cài đặt của bạn</string>
+  <string name="gamegenie_companion_master_fav_games">Nắm vững trò chơi yêu thích của bạn</string>
+  <string name="gamegenie_companion_tap_fav_game">Or tap your fav game - you’ll master it.</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Hiện tương thích với Aptoide Wallet</string>
   <string name="promotional_new_version">Phiên bản mới</string>
@@ -423,9 +428,4 @@
   <string name="search_sponsored_install">Cài đặt</string>
   <string name="search_sponsored_suggested">Đề xuất cho bạn 🔥</string>
   <string name="search_sponsored_label">Được tài trợ</string>
-  <string name="game_genie_chat_name">GameGenie ✨</string>
-  <string name="game_genie_more_installed">"Càng nhiều trò chơi được cài đặt, càng có nhiều cách để tiến bộ."</string>
-  <string name="gamegenie_companion_game_choice_title">Các trò chơi đã cài đặt của bạn</string>
-  <string name="gamegenie_companion_master_fav_games">Nắm vững trò chơi yêu thích của bạn</string>
-  <string name="gamegenie_companion_tap_fav_game">Hoặc chạm vào trò chơi yêu thích của bạn - bạn sẽ thành thạo nó.</string>
 </resources>
