@@ -350,10 +350,15 @@
   <string name="genai_history_body">سِجِل GameGenie</string>
   <string name="genai_new_chat_button">محادثة جديدة</string>
   <string name="gamegenie_companion_play">العب</string>
-  <string name="gamegenie_companion_play_smarter">أو العب بذكاء أكبر باستخدام تراكب GameGenie داخل اللعبة.</string>
+  <string name="gamegenie_companion_play_smarter"><![CDATA[Or play smarter using GameGenie\'s <1>in-game overlay<1>.]]></string>
   <string name="gamegenie_overlay_permission_message"><![CDATA[قم بتشغيل <1>إذن التراكب</1> ودع GameGenie يرشدك إلى النصر!]]></string>
   <string name="gamegenie_overlay_permission_accept">لنفعلها!</string>
   <string name="gamegenie_overlay_tooltip">اللعب في طبقة تراكب داخل اللعبة</string>
+  <string name="game_genie_chat_name">GameGenie ✨</string>
+  <string name="game_genie_more_installed">"المزيد من الألعاب المثبتة يعني المزيد من الطرق للتقدم."</string>
+  <string name="gamegenie_companion_game_choice_title">الألعاب المثبتة لديك</string>
+  <string name="gamegenie_companion_master_fav_games">أتقن لعبتك المفضلة</string>
+  <string name="gamegenie_companion_tap_fav_game">Or tap your fav game - you’ll master it.</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">الآن صار متوافقًا مع محفظة Aptoide</string>
   <string name="promotional_new_version">إصدار جديد</string>
@@ -478,9 +483,4 @@
   <string name="search_sponsored_install">تثبيت</string>
   <string name="search_sponsored_suggested">مقترحات لك 🔥</string>
   <string name="search_sponsored_label">برعاية</string>
-  <string name="game_genie_chat_name">GameGenie ✨</string>
-  <string name="game_genie_more_installed">"المزيد من الألعاب المثبتة يعني المزيد من الطرق للتقدم."</string>
-  <string name="gamegenie_companion_game_choice_title">الألعاب المثبتة لديك</string>
-  <string name="gamegenie_companion_master_fav_games">أتقن لعبتك المفضلة</string>
-  <string name="gamegenie_companion_tap_fav_game">أو اضغط على لعبتك المفضلة - ستتقنها.</string>
 </resources>
