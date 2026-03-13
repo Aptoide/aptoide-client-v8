@@ -328,10 +328,15 @@
   <string name="genai_history_body">Historia GameGenie</string>
   <string name="genai_new_chat_button">Nowy czat</string>
   <string name="gamegenie_companion_play">Zagraj</string>
-  <string name="gamegenie_companion_play_smarter">Albo graj mądrzej, korzystając z nakładki GameGenie w grze.</string>
+  <string name="gamegenie_companion_play_smarter"><![CDATA[Or play smarter using GameGenie\'s <1>in-game overlay<1>.]]></string>
   <string name="gamegenie_overlay_permission_message"><![CDATA[Włącz <1>uprawnienia nakładki</1> i pozwól GameGenie poprowadzić Cię do zwycięstwa!]]></string>
   <string name="gamegenie_overlay_permission_accept">Zróbmy to!</string>
   <string name="gamegenie_overlay_tooltip">Odtwarzaj nakładkę w grze</string>
+  <string name="game_genie_chat_name">GameGenie ✨</string>
+  <string name="game_genie_more_installed">"Więcej zainstalowanych gier oznacza więcej możliwości rozwoju."</string>
+  <string name="gamegenie_companion_game_choice_title">Twoje zainstalowane gry</string>
+  <string name="gamegenie_companion_master_fav_games">Opanuj swoją ulubioną grę</string>
+  <string name="gamegenie_companion_tap_fav_game">Or tap your fav game - you’ll master it.</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Teraz kompatybilny z portfelem Aptoide</string>
   <string name="promotional_new_version">Nowa wersja</string>
@@ -456,9 +461,4 @@
   <string name="search_sponsored_install">Zainstaluj</string>
   <string name="search_sponsored_suggested">Sugerowane dla Ciebie 🔥</string>
   <string name="search_sponsored_label">Sponsorowane</string>
-  <string name="game_genie_chat_name">GameGenie ✨</string>
-  <string name="game_genie_more_installed">"Więcej zainstalowanych gier oznacza więcej możliwości rozwoju."</string>
-  <string name="gamegenie_companion_game_choice_title">Twoje zainstalowane gry</string>
-  <string name="gamegenie_companion_master_fav_games">Opanuj swoją ulubioną grę</string>
-  <string name="gamegenie_companion_tap_fav_game">Albo wybierz swoją ulubioną grę – opanujesz ją do perfekcji.</string>
 </resources>
