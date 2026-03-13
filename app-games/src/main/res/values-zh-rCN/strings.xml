@@ -295,10 +295,15 @@
   <string name="genai_history_body">GameGenie 历史记录</string>
   <string name="genai_new_chat_button">新聊天</string>
   <string name="gamegenie_companion_play">玩</string>
-  <string name="gamegenie_companion_play_smarter">或者通过GameGenie的游戏内叠加层更聪明地玩游戏。</string>
+  <string name="gamegenie_companion_play_smarter"><![CDATA[Or play smarter using GameGenie\'s <1>in-game overlay<1>.]]></string>
   <string name="gamegenie_overlay_permission_message"><![CDATA[<1>开启叠加权限</1>，让GameGenie引领你走向胜利！]]></string>
   <string name="gamegenie_overlay_permission_accept">干吧！</string>
   <string name="gamegenie_overlay_tooltip">在游戏中播放叠加层</string>
+  <string name="game_genie_chat_name">游戏精灵 ✨</string>
+  <string name="game_genie_more_installed">"安装的游戏越多，意味着越多的进阶途径。"</string>
+  <string name="gamegenie_companion_game_choice_title">您已安装的游戏</string>
+  <string name="gamegenie_companion_master_fav_games">精通你最爱的游戏</string>
+  <string name="gamegenie_companion_tap_fav_game">Or tap your fav game - you’ll master it.</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">现已兼容 Aptoide Wallet</string>
   <string name="promotional_new_version">新版本</string>
@@ -423,9 +428,4 @@
   <string name="search_sponsored_install">安装</string>
   <string name="search_sponsored_suggested">为您推荐 🔥</string>
   <string name="search_sponsored_label">赞助商</string>
-  <string name="game_genie_chat_name">游戏精灵 ✨</string>
-  <string name="game_genie_more_installed">"安装的游戏越多，意味着越多的进阶途径。"</string>
-  <string name="gamegenie_companion_game_choice_title">您已安装的游戏</string>
-  <string name="gamegenie_companion_master_fav_games">精通你最爱的游戏</string>
-  <string name="gamegenie_companion_tap_fav_game">或轻点你最爱的游戏——你定能驾驭它。</string>
 </resources>
