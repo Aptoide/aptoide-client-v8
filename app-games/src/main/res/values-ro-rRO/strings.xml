@@ -317,10 +317,15 @@
   <string name="genai_history_body">Istoric GameGenie</string>
   <string name="genai_new_chat_button">Chat nou</string>
   <string name="gamegenie_companion_play">Joacă</string>
-  <string name="gamegenie_companion_play_smarter">Sau joacă mai inteligent folosind suprapunerea în joc a GameGenie.</string>
+  <string name="gamegenie_companion_play_smarter"><![CDATA[Or play smarter using GameGenie\'s <1>in-game overlay<1>.]]></string>
   <string name="gamegenie_overlay_permission_message"><![CDATA[Activează <1>permisiunea de suprapunere</1> și lasă GameGenie să te ghideze spre victorie!]]></string>
   <string name="gamegenie_overlay_permission_accept">Să o facem!</string>
   <string name="gamegenie_overlay_tooltip">Redare în suprapunere în joc</string>
+  <string name="game_genie_chat_name">GameGenie ✨</string>
+  <string name="game_genie_more_installed">"Mai multe jocuri instalate înseamnă mai multe modalități de a progresa."</string>
+  <string name="gamegenie_companion_game_choice_title">Jocurile instalate</string>
+  <string name="gamegenie_companion_master_fav_games">Stăpânește-ți jocul preferat</string>
+  <string name="gamegenie_companion_tap_fav_game">Or tap your fav game - you’ll master it.</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Acum compatibil cu Aptoide Wallet</string>
   <string name="promotional_new_version">Versiune nouă</string>
@@ -445,9 +450,4 @@
   <string name="search_sponsored_install">Instalați</string>
   <string name="search_sponsored_suggested">Sugestii pentru tine 🔥</string>
   <string name="search_sponsored_label">Sponsorizat</string>
-  <string name="game_genie_chat_name">GameGenie ✨</string>
-  <string name="game_genie_more_installed">"Mai multe jocuri instalate înseamnă mai multe modalități de a progresa."</string>
-  <string name="gamegenie_companion_game_choice_title">Jocurile instalate</string>
-  <string name="gamegenie_companion_master_fav_games">Stăpânește-ți jocul preferat</string>
-  <string name="gamegenie_companion_tap_fav_game">Sau atingeți jocul preferat - îl veți stăpâni.</string>
 </resources>

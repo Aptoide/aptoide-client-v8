@@ -306,10 +306,15 @@
   <string name="genai_history_body">GameGenie Geçmişi</string>
   <string name="genai_new_chat_button">Yeni sohbet</string>
   <string name="gamegenie_companion_play">Oynat</string>
-  <string name="gamegenie_companion_play_smarter">Ya da GameGenie\'nin oyun içi arayüzünü kullanarak daha akıllı oynayın.</string>
+  <string name="gamegenie_companion_play_smarter"><![CDATA[Or play smarter using GameGenie\'s <1>in-game overlay<1>.]]></string>
   <string name="gamegenie_overlay_permission_message"><![CDATA[<1>Overlay iznini</1> açın ve GameGenie\'nin sizi zafere götürmesine izin verin!]]></string>
   <string name="gamegenie_overlay_permission_accept">Hadi yapalım!</string>
   <string name="gamegenie_overlay_tooltip">Oyun içi üst katman oynat</string>
+  <string name="game_genie_chat_name">GameGenie ✨</string>
+  <string name="game_genie_more_installed">"Daha fazla yüklü oyun, daha fazla ilerleme yolu anlamına gelir."</string>
+  <string name="gamegenie_companion_game_choice_title">Yüklediğiniz oyunlar</string>
+  <string name="gamegenie_companion_master_fav_games">En sevdiğiniz oyunu ustalaşın</string>
+  <string name="gamegenie_companion_tap_fav_game">Or tap your fav game - you’ll master it.</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Artık Aptoide Wallet ile uyumlu</string>
   <string name="promotional_new_version">Yeni Sürüm</string>
@@ -434,9 +439,4 @@
   <string name="search_sponsored_install">Yükle</string>
   <string name="search_sponsored_suggested">Sizin için öneriler 🔥</string>
   <string name="search_sponsored_label">Sponsorlu</string>
-  <string name="game_genie_chat_name">GameGenie ✨</string>
-  <string name="game_genie_more_installed">"Daha fazla yüklü oyun, daha fazla ilerleme yolu anlamına gelir."</string>
-  <string name="gamegenie_companion_game_choice_title">Yüklediğiniz oyunlar</string>
-  <string name="gamegenie_companion_master_fav_games">En sevdiğiniz oyunu ustalaşın</string>
-  <string name="gamegenie_companion_tap_fav_game">Ya da en sevdiğin oyuna dokun - onu ustalıkla oynayacaksın.</string>
 </resources>

@@ -306,10 +306,15 @@
   <string name="genai_history_body">Ιστορικό GameGenie</string>
   <string name="genai_new_chat_button">Νέα συνομιλία</string>
   <string name="gamegenie_companion_play">Παιχνίδι</string>
-  <string name="gamegenie_companion_play_smarter">Ή παίξτε πιο έξυπνα χρησιμοποιώντας το overlay του GameGenie μέσα στο παιχνίδι.</string>
+  <string name="gamegenie_companion_play_smarter"><![CDATA[Or play smarter using GameGenie\'s <1>in-game overlay<1>.]]></string>
   <string name="gamegenie_overlay_permission_message"><![CDATA[Ενεργοποιήστε <1>την άδεια επικάλυψης</1> και αφήστε το GameGenie να σας οδηγήσει στη νίκη!]]></string>
   <string name="gamegenie_overlay_permission_accept">Ας το κάνουμε!</string>
   <string name="gamegenie_overlay_tooltip">Παίξτε με επικάλυψη εντός παιχνιδιού</string>
+  <string name="game_genie_chat_name">GameGenie ✨</string>
+  <string name="game_genie_more_installed">"Περισσότερα εγκατεστημένα παιχνίδια σημαίνουν περισσότερες δυνατότητες προόδου."</string>
+  <string name="gamegenie_companion_game_choice_title">Τα εγκατεστημένα παιχνίδια σας</string>
+  <string name="gamegenie_companion_master_fav_games">Κάντε το αγαπημένο σας παιχνίδι δικό σας</string>
+  <string name="gamegenie_companion_tap_fav_game">Or tap your fav game - you’ll master it.</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Τώρα συμβατό με το Aptoide Wallet</string>
   <string name="promotional_new_version">Νέα Έκδοση</string>
@@ -434,9 +439,4 @@
   <string name="search_sponsored_install">Εγκατάσταση</string>
   <string name="search_sponsored_suggested">Προτεινόμενα για εσάς 🔥</string>
   <string name="search_sponsored_label">Χορηγία</string>
-  <string name="game_genie_chat_name">GameGenie ✨</string>
-  <string name="game_genie_more_installed">"Περισσότερα εγκατεστημένα παιχνίδια σημαίνουν περισσότερες δυνατότητες προόδου."</string>
-  <string name="gamegenie_companion_game_choice_title">Τα εγκατεστημένα παιχνίδια σας</string>
-  <string name="gamegenie_companion_master_fav_games">Κάντε το αγαπημένο σας παιχνίδι δικό σας</string>
-  <string name="gamegenie_companion_tap_fav_game">Ή πατήστε το αγαπημένο σας παιχνίδι - θα το κατακτήσετε.</string>
 </resources>

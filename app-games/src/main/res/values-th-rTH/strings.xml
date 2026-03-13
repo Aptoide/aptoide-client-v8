@@ -295,10 +295,15 @@
   <string name="genai_history_body">ประวัติ GameGenie</string>
   <string name="genai_new_chat_button">แชทใหม่</string>
   <string name="gamegenie_companion_play">เล่น</string>
-  <string name="gamegenie_companion_play_smarter">หรือเล่นอย่างชาญฉลาดด้วยการใช้หน้าจอซ้อนในเกมของ GameGenie</string>
+  <string name="gamegenie_companion_play_smarter"><![CDATA[Or play smarter using GameGenie\'s <1>in-game overlay<1>.]]></string>
   <string name="gamegenie_overlay_permission_message"><![CDATA[เปิด<1>ใช้งานสิทธิ์ซ้อนทับ</1>และให้ GameGenie นำทางคุณสู่ชัยชนะ!]]></string>
   <string name="gamegenie_overlay_permission_accept">มาทำกันเถอะ!</string>
   <string name="gamegenie_overlay_tooltip">เล่นในหน้าต่างซ้อนในเกม</string>
+  <string name="game_genie_chat_name">เกมเจนี ✨</string>
+  <string name="game_genie_more_installed">"เกมติดตั้งมากขึ้นหมายถึงวิธีมากขึ้นในการก้าวหน้า"</string>
+  <string name="gamegenie_companion_game_choice_title">เกมที่คุณติดตั้งไว้</string>
+  <string name="gamegenie_companion_master_fav_games">เชี่ยวชาญเกมโปรดของคุณ</string>
+  <string name="gamegenie_companion_tap_fav_game">Or tap your fav game - you’ll master it.</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">ใช้งานได้กับ Aptoide Wallet</string>
   <string name="promotional_new_version">เวอร์ชั่นใหม่</string>
@@ -389,8 +394,8 @@
   <string name="play_and_earn_install_button">ติดตั้ง</string>
   <string name="play_and_earn_notification_recording_title">ติดตามเวลาการเล่นเพื่อรับรางวัล</string>
   <string name="play_and_earn_notification_recording_body">เวลาที่คุณเล่นเกมกำลังถูกนับรวมในภารกิจของคุณ</string>
-  <string name="settings_play_and_earn_tracking">Play &amp; Earn Tracking</string>
-  <string name="settings_play_and_earn_tracking_description">Aptoide uses this setting to measure your in-app activity and credit you for time played and milestones reached. If disabled, rewards will not be tracked until you re-launch a game through Aptoide.</string>
+  <string name="settings_play_and_earn_tracking">การติดตาม Play &amp; Earn </string>
+  <string name="settings_play_and_earn_tracking_description">Aptoide ใช้การตั้งค่านี้เพื่อตรวจวัดกิจกรรมในแอปของคุณและให้รางวัลสำหรับเวลาที่เล่นและเป้าหมายที่สำเร็จ หากปิดไว้ จะไม่มีการติดตามรางวัลจนกว่าคุณจะเปิดเกมผ่าน Aptoide อีกครั้ง</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">สำเร็จ! การเดินทางสู่รางวัลของคุณเริ่มต้นขึ้นแล้ว 🎉</string>
   <string name="play_and_earn_permissions_google_drama_title">Google ชอบเรื่องดราม่าเล็กๆ น้อยๆ 🙄</string>
@@ -423,9 +428,4 @@
   <string name="search_sponsored_install">ติดตั้ง</string>
   <string name="search_sponsored_suggested">แนะนำสำหรับคุณ 🔥</string>
   <string name="search_sponsored_label">ได้รับการสนับสนุน</string>
-  <string name="game_genie_chat_name">เกมเจนี ✨</string>
-  <string name="game_genie_more_installed">"เกมติดตั้งมากขึ้นหมายถึงวิธีมากขึ้นในการก้าวหน้า"</string>
-  <string name="gamegenie_companion_game_choice_title">เกมที่คุณติดตั้งไว้</string>
-  <string name="gamegenie_companion_master_fav_games">เชี่ยวชาญเกมโปรดของคุณ</string>
-  <string name="gamegenie_companion_tap_fav_game">หรือแตะเกมที่คุณชื่นชอบ - คุณจะเชี่ยวชาญมัน</string>
 </resources>

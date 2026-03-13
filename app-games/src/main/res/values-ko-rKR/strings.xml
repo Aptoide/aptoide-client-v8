@@ -295,10 +295,15 @@
   <string name="genai_history_body">GameGenie 이력</string>
   <string name="genai_new_chat_button">새 채팅</string>
   <string name="gamegenie_companion_play">플레이</string>
-  <string name="gamegenie_companion_play_smarter">또는 GameGenie의 게임 내 오버레이를 활용해 더 스마트하게 플레이하세요.</string>
+  <string name="gamegenie_companion_play_smarter"><![CDATA[Or play smarter using GameGenie\'s <1>in-game overlay<1>.]]></string>
   <string name="gamegenie_overlay_permission_message"><![CDATA[<1>오버레이 권한을</1> 켜고 GameGenie가 승리로 이끄는 길을 안내받으세요!]]></string>
   <string name="gamegenie_overlay_permission_accept">하자!</string>
   <string name="gamegenie_overlay_tooltip">게임 내 오버레이 재생</string>
+  <string name="game_genie_chat_name">게임지니 ✨</string>
+  <string name="game_genie_more_installed">"설치된 게임이 많을수록 진행할 수 있는 방법이 더 많아집니다."</string>
+  <string name="gamegenie_companion_game_choice_title">설치된 게임들</string>
+  <string name="gamegenie_companion_master_fav_games">좋아하는 게임을 마스터하세요</string>
+  <string name="gamegenie_companion_tap_fav_game">Or tap your fav game - you’ll master it.</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">이제 Aptoide 지갑과 호환 가능</string>
   <string name="promotional_new_version">새로운 버전</string>
@@ -423,9 +428,4 @@
   <string name="search_sponsored_install">설치</string>
   <string name="search_sponsored_suggested">추천 콘텐츠 🔥</string>
   <string name="search_sponsored_label">스폰서 제공</string>
-  <string name="game_genie_chat_name">게임지니 ✨</string>
-  <string name="game_genie_more_installed">"설치된 게임이 많을수록 진행할 수 있는 방법이 더 많아집니다."</string>
-  <string name="gamegenie_companion_game_choice_title">설치된 게임들</string>
-  <string name="gamegenie_companion_master_fav_games">좋아하는 게임을 마스터하세요</string>
-  <string name="gamegenie_companion_tap_fav_game">좋아하는 게임을 탭해봐 - 금방 마스터할 수 있을 거야.</string>
 </resources>

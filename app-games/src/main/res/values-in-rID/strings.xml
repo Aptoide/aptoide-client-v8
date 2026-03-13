@@ -295,10 +295,15 @@
   <string name="genai_history_body">Riwayat GameGenie</string>
   <string name="genai_new_chat_button">Obrolan baru</string>
   <string name="gamegenie_companion_play">Mainkan</string>
-  <string name="gamegenie_companion_play_smarter">Atau mainkan dengan lebih cerdas menggunakan overlay dalam game GameGenie.</string>
+  <string name="gamegenie_companion_play_smarter"><![CDATA[Or play smarter using GameGenie\'s <1>in-game overlay<1>.]]></string>
   <string name="gamegenie_overlay_permission_message"><![CDATA[Aktifkan <1>izin overlay</1> dan biarkan GameGenie membimbing Anda menuju kemenangan!]]></string>
   <string name="gamegenie_overlay_permission_accept">Ayo kita lakukan!</string>
   <string name="gamegenie_overlay_tooltip">Mainkan overlay dalam game</string>
+  <string name="game_genie_chat_name">GameGenie ✨</string>
+  <string name="game_genie_more_installed">"Semakin banyak game yang diinstal, semakin banyak cara untuk maju."</string>
+  <string name="gamegenie_companion_game_choice_title">Permainan yang telah Anda instal</string>
+  <string name="gamegenie_companion_master_fav_games">Kuasai game favoritmu</string>
+  <string name="gamegenie_companion_tap_fav_game">Or tap your fav game - you’ll master it.</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Sekarang kompatibel dengan Aptoide Wallet</string>
   <string name="promotional_new_version">Versi Baru</string>
@@ -423,9 +428,4 @@
   <string name="search_sponsored_install">Pasang</string>
   <string name="search_sponsored_suggested">Disarankan untuk Anda 🔥</string>
   <string name="search_sponsored_label">Didukung oleh</string>
-  <string name="game_genie_chat_name">GameGenie ✨</string>
-  <string name="game_genie_more_installed">"Semakin banyak game yang diinstal, semakin banyak cara untuk maju."</string>
-  <string name="gamegenie_companion_game_choice_title">Permainan yang telah Anda instal</string>
-  <string name="gamegenie_companion_master_fav_games">Kuasai game favoritmu</string>
-  <string name="gamegenie_companion_tap_fav_game">Atau ketuk game favoritmu - kamu akan menguasainya.</string>
 </resources>

@@ -306,10 +306,15 @@
   <string name="genai_history_body">GameGenien historia</string>
   <string name="genai_new_chat_button">Uusi keskustelu</string>
   <string name="gamegenie_companion_play">Pelaa</string>
-  <string name="gamegenie_companion_play_smarter">Tai pelaa fiksummin GameGenien pelin sisäisen overlay-toiminnon avulla.</string>
+  <string name="gamegenie_companion_play_smarter"><![CDATA[Or play smarter using GameGenie\'s <1>in-game overlay<1>.]]></string>
   <string name="gamegenie_overlay_permission_message"><![CDATA[Ota päälle <1>overlay-oikeudet</1> ja anna GameGenien johdattaa sinut voittoon!]]></string>
   <string name="gamegenie_overlay_permission_accept">Tehdään se!</string>
   <string name="gamegenie_overlay_tooltip">Pelaa pelin sisäisessä overlay-ikkunassa</string>
+  <string name="game_genie_chat_name">GameGenie ✨</string>
+  <string name="game_genie_more_installed">"Enemmän asennettuja pelejä tarkoittaa enemmän etenemismahdollisuuksia."</string>
+  <string name="gamegenie_companion_game_choice_title">Asennetut pelisi</string>
+  <string name="gamegenie_companion_master_fav_games">Hallitse suosikkipelisi</string>
+  <string name="gamegenie_companion_tap_fav_game">Or tap your fav game - you’ll master it.</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Nyt yhteensopiva Aptoide-lompakon kanssa</string>
   <string name="promotional_new_version">Uusi versio</string>
@@ -434,9 +439,4 @@
   <string name="search_sponsored_install">Asenna</string>
   <string name="search_sponsored_suggested">Suositellaan sinulle 🔥</string>
   <string name="search_sponsored_label">Sponsoroitu</string>
-  <string name="game_genie_chat_name">GameGenie ✨</string>
-  <string name="game_genie_more_installed">"Enemmän asennettuja pelejä tarkoittaa enemmän etenemismahdollisuuksia."</string>
-  <string name="gamegenie_companion_game_choice_title">Asennetut pelisi</string>
-  <string name="gamegenie_companion_master_fav_games">Hallitse suosikkipelisi</string>
-  <string name="gamegenie_companion_tap_fav_game">Tai napauta suosikkipeliäsi – hallitset sen pian.</string>
 </resources>

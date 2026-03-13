@@ -306,10 +306,15 @@
   <string name="genai_history_body">Storico GameGenie</string>
   <string name="genai_new_chat_button">Nuova chat</string>
   <string name="gamegenie_companion_play">Gioca</string>
-  <string name="gamegenie_companion_play_smarter">Oppure gioca in modo più intelligente utilizzando l\'overlay in-game di GameGenie.</string>
+  <string name="gamegenie_companion_play_smarter"><![CDATA[Or play smarter using GameGenie\'s <1>in-game overlay<1>.]]></string>
   <string name="gamegenie_overlay_permission_message"><![CDATA[Attiva <1>l\'autorizzazione alla sovrapposizione</1> e lascia che GameGenie ti guidi alla vittoria!]]></string>
   <string name="gamegenie_overlay_permission_accept">Facciamolo!</string>
   <string name="gamegenie_overlay_tooltip">Gioca con overlay nel gioco</string>
+  <string name="game_genie_chat_name">GameGenie ✨</string>
+  <string name="game_genie_more_installed">"Più giochi installati significano più modi per progredire."</string>
+  <string name="gamegenie_companion_game_choice_title">I tuoi giochi installati</string>
+  <string name="gamegenie_companion_master_fav_games">Diventa un maestro nel tuo gioco preferito</string>
+  <string name="gamegenie_companion_tap_fav_game">Or tap your fav game - you’ll master it.</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Ora compatibile con Aptoide Wallet</string>
   <string name="promotional_new_version">Nuova versione</string>
@@ -434,9 +439,4 @@
   <string name="search_sponsored_install">Installare</string>
   <string name="search_sponsored_suggested">Suggerimenti per te 🔥</string>
   <string name="search_sponsored_label">Sponsorizzato</string>
-  <string name="game_genie_chat_name">GameGenie ✨</string>
-  <string name="game_genie_more_installed">"Più giochi installati significano più modi per progredire."</string>
-  <string name="gamegenie_companion_game_choice_title">I tuoi giochi installati</string>
-  <string name="gamegenie_companion_master_fav_games">Diventa un maestro nel tuo gioco preferito</string>
-  <string name="gamegenie_companion_tap_fav_game">Oppure tocca il tuo gioco preferito: lo padroneggerai.</string>
 </resources>

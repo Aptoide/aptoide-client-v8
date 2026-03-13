@@ -306,10 +306,15 @@
   <string name="genai_history_body">GameGenie előzmények</string>
   <string name="genai_new_chat_button">Új chat</string>
   <string name="gamegenie_companion_play">Játék</string>
-  <string name="gamegenie_companion_play_smarter">Vagy játssz okosabban a GameGenie játékon belüli overlay segítségével.</string>
+  <string name="gamegenie_companion_play_smarter"><![CDATA[Or play smarter using GameGenie\'s <1>in-game overlay<1>.]]></string>
   <string name="gamegenie_overlay_permission_message"><![CDATA[Kapcsold be <1>az overlay engedélyt</1>, és hagyd, hogy a GameGenie elvezessen a győzelemhez!]]></string>
   <string name="gamegenie_overlay_permission_accept">Csináljuk!</string>
   <string name="gamegenie_overlay_tooltip">Játék közbeni overlay</string>
+  <string name="game_genie_chat_name">GameGenie ✨</string>
+  <string name="game_genie_more_installed">"Több telepített játék több lehetőséget jelent a fejlődésre."</string>
+  <string name="gamegenie_companion_game_choice_title">A telepített játékok</string>
+  <string name="gamegenie_companion_master_fav_games">Legyen profi a kedvenc játékában!</string>
+  <string name="gamegenie_companion_tap_fav_game">Or tap your fav game - you’ll master it.</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Mostantól kompatibilis az Aptoide Wallettel</string>
   <string name="promotional_new_version">Új verzió</string>
@@ -434,9 +439,4 @@
   <string name="search_sponsored_install">Telepítés</string>
   <string name="search_sponsored_suggested">Neked ajánlott 🔥</string>
   <string name="search_sponsored_label">Szponzorált</string>
-  <string name="game_genie_chat_name">GameGenie ✨</string>
-  <string name="game_genie_more_installed">"Több telepített játék több lehetőséget jelent a fejlődésre."</string>
-  <string name="gamegenie_companion_game_choice_title">A telepített játékok</string>
-  <string name="gamegenie_companion_master_fav_games">Legyen profi a kedvenc játékában!</string>
-  <string name="gamegenie_companion_tap_fav_game">Vagy érintse meg kedvenc játékát – és elsajátíthatja azt.</string>
 </resources>

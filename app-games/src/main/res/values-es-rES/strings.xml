@@ -306,10 +306,15 @@
   <string name="genai_history_body">Historial de GameGenie</string>
   <string name="genai_new_chat_button">Nuevo chat</string>
   <string name="gamegenie_companion_play">Jugar</string>
-  <string name="gamegenie_companion_play_smarter">O juega de forma más inteligente utilizando la superposición en el juego de GameGenie.</string>
+  <string name="gamegenie_companion_play_smarter"><![CDATA[Or play smarter using GameGenie\'s <1>in-game overlay<1>.]]></string>
   <string name="gamegenie_overlay_permission_message"><![CDATA[¡Activa <1>el permiso de superposición</1> y deja que GameGenie te guíe hacia la victoria!]]></string>
   <string name="gamegenie_overlay_permission_accept">¡Hagámoslo!</string>
   <string name="gamegenie_overlay_tooltip">Reproducir superposición en el juego</string>
+  <string name="game_genie_chat_name">GameGenie ✨</string>
+  <string name="game_genie_more_installed">"Más juegos instalados significan más formas de progresar."</string>
+  <string name="gamegenie_companion_game_choice_title">Tus juegos instalados</string>
+  <string name="gamegenie_companion_master_fav_games">Domina tu juego favorito</string>
+  <string name="gamegenie_companion_tap_fav_game">Or tap your fav game - you’ll master it.</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Ahora compatible con la Aptoide Wallet</string>
   <string name="promotional_new_version">Nueva versión</string>
@@ -434,9 +439,4 @@
   <string name="search_sponsored_install">Instalar</string>
   <string name="search_sponsored_suggested">Recomendado para ti 🔥</string>
   <string name="search_sponsored_label">Patrocinado</string>
-  <string name="game_genie_chat_name">GameGenie ✨</string>
-  <string name="game_genie_more_installed">"Más juegos instalados significan más formas de progresar."</string>
-  <string name="gamegenie_companion_game_choice_title">Tus juegos instalados</string>
-  <string name="gamegenie_companion_master_fav_games">Domina tu juego favorito</string>
-  <string name="gamegenie_companion_tap_fav_game">O toca tu juego favorito: lo dominarás.</string>
 </resources>
