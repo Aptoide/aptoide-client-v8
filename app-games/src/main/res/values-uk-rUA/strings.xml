@@ -422,6 +422,8 @@
   <string name="play_and_earn_install_button">Встановити</string>
   <string name="play_and_earn_notification_recording_title">Відстеження часу гри для отримання винагород</string>
   <string name="play_and_earn_notification_recording_body">Ваш ігровий час зараховується до ваших місій.</string>
+  <string name="settings_play_and_earn_tracking">Відстеження Play &amp; Earn </string>
+  <string name="settings_play_and_earn_tracking_description">Aptoide використовує це налаштування, щоб вимірювати вашу активність у додатку та нараховувати винагороду за проведений у грі час і досягнуті етапи. Якщо вимкнути цю функцію, винагороди не відстежуватимуться, поки ви знову не запустите гру через Aptoide.</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Успіх! Ваша подорож до винагород починається зараз 🎉</string>
   <string name="play_and_earn_permissions_google_drama_title">Google любить трохи драматизму 🙄</string>

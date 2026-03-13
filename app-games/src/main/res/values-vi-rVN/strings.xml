@@ -389,6 +389,8 @@
   <string name="play_and_earn_install_button">Cài đặt</string>
   <string name="play_and_earn_notification_recording_title">Theo dõi thời gian chơi để nhận phần thưởng</string>
   <string name="play_and_earn_notification_recording_body">Thời gian chơi game của bạn đang được tính vào các nhiệm vụ của bạn.</string>
+  <string name="settings_play_and_earn_tracking">Theo dõi Play &amp; Earn</string>
+  <string name="settings_play_and_earn_tracking_description">Aptoide sử dụng cài đặt này để đo lường hoạt động trong ứng dụng của bạn và ghi nhận thời gian chơi cũng như các mốc bạn đạt được. Nếu tắt, phần thưởng sẽ không được ghi nhận cho đến khi bạn khởi động lại trò chơi qua Aptoide.</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Thành công! Hành trình nhận thưởng của bạn bắt đầu ngay bây giờ 🎉</string>
   <string name="play_and_earn_permissions_google_drama_title">Google thích một chút kịch tính 🙄</string>
