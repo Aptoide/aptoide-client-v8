@@ -45,6 +45,8 @@ class ComposablePlugin : Plugin<Project> {
         add("implementation", libs.findLibrary("activity-ktx").get())
         add("implementation", libs.findLibrary("material").get())
 
+        add("implementation", platform(libs.findLibrary("androidx-compose-bom").get()))
+
         // navigation
         if (isApp) {
           add("implementation", libs.findLibrary("navigation-fragment-ktx").get())
