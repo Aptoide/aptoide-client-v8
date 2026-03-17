@@ -22,7 +22,7 @@ lifecycle = "2.9.0"
 coil = "2.7.0"
 room = "2.8.4"
 activityCompose = "1.10.1"
-compose = "1.8.1"
+compose = "2026.03.00"
 composeLifecycle = "2.9.0"
 viewmodelCompose = "2.9.0"
 navigationCompose = "2.9.0"
@@ -89,12 +89,13 @@ room = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
-material-compose = { module = "androidx.compose.material:material", version.ref = "compose" }
-animation-compose = { module = "androidx.compose.animation:animation", version.ref = "compose" }
-ui-tooling-compose = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
-ui-compose = { module = "androidx.compose.ui:ui", version.ref = "compose" }
+androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose" }
+material-compose = { module = "androidx.compose.material:material" }
+animation-compose = { module = "androidx.compose.animation:animation" }
+ui-tooling-compose = { module = "androidx.compose.ui:ui-tooling" }
+ui-compose = { module = "androidx.compose.ui:ui"  }
 compose-lifecycle = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "composeLifecycle" }
-ui-util = { module = "androidx.compose.ui:ui-util", version.ref = "compose" }
+ui-util = { module = "androidx.compose.ui:ui-util" }
 viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "viewmodelCompose" }
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
