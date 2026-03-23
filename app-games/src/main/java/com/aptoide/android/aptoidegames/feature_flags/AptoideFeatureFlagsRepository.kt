@@ -4,8 +4,8 @@ import cm.aptoide.pt.extensions.SuspendValue
 import cm.aptoide.pt.feature_flags.data.FeatureFlagsRepository
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.feature_flags.analytics.FeatureFlagsAnalytics
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.remoteconfig.ktx.remoteConfig
+import com.google.firebase.Firebase
+import com.google.firebase.remoteconfig.remoteConfig
 import org.json.JSONObject
 
 class AptoideFeatureFlagsRepository(
