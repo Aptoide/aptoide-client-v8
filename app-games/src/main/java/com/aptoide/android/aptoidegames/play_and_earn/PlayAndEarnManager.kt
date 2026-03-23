@@ -18,11 +18,11 @@ import com.aptoide.android.aptoidegames.device_info.DeviceSecurityChecker
 import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPreferencesRepository
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.hasOverlayPermission
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.hasUsageStatsPermissionStatus
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.Firebase
 import com.google.firebase.remoteconfig.ConfigUpdate
 import com.google.firebase.remoteconfig.ConfigUpdateListener
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigException
-import com.google.firebase.remoteconfig.ktx.remoteConfig
+import com.google.firebase.remoteconfig.remoteConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
@@ -94,7 +94,7 @@ class PlayAndEarnManager @Inject constructor(
     }
     return featureFlags.getFlag(PAE_VISIBILITY_FLAG_KEY, false)
   }
-  
+
   suspend fun shouldStartPaEService(): Boolean {
     val isServiceEnabled = paEPreferencesRepository.isPaEServiceEnabled().first()
     return isServiceEnabled && shouldShowPlayAndEarn()

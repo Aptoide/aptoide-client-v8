@@ -1,8 +1,8 @@
 package com.aptoide.android.aptoidegames.firebase
 
 import cm.aptoide.pt.exception_handler.ExceptionHandler
-import com.google.firebase.crashlytics.ktx.crashlytics
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.Firebase
+import com.google.firebase.crashlytics.crashlytics
 import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
 

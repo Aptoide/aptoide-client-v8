@@ -36,9 +36,9 @@ import com.aptoide.android.aptoidegames.installer.analytics.ScheduledDownloadsLi
 import com.aptoide.android.aptoidegames.installer.notifications.InstallerNotificationsManager
 import com.aptoide.android.aptoidegames.launch.AppLaunchPreferencesManager
 import com.aptoide.android.aptoidegames.network.AptoideGetHeaders
+import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
-import com.google.firebase.crashlytics.ktx.crashlytics
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.crashlytics.crashlytics
 import dagger.hilt.EntryPoint
 import dagger.hilt.EntryPoints
 import dagger.hilt.InstallIn

@@ -58,8 +58,8 @@ import com.aptoide.android.aptoidegames.permissions.AppPermissionsViewModel
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
-import com.google.firebase.crashlytics.ktx.crashlytics
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.Firebase
+import com.google.firebase.crashlytics.crashlytics
 
 @Composable
 fun UserActionDialog() {
@@ -104,7 +104,7 @@ fun UserActionDialog() {
             .getStringExtra("${BuildConfig.APPLICATION_ID}.pn") ?: "NaN"
           val analyticsContext = action.intent
             .getStringExtra("${BuildConfig.APPLICATION_ID}.ap").toAnalyticsPayload()?.context
-          
+
           if (it.resultCode == Activity.RESULT_OK) {
             preApprovalExperiment?.sendInstallDialogAcceptedEvent(packageName, analyticsContext)
           } else {
