@@ -24,23 +24,12 @@ import coil.decode.SvgDecoder
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
 import coil.util.DebugLogger
-import com.appcoins.payments.di.Payments
-import com.appcoins.payments.di.adyenKey
-import com.appcoins.payments.di.adyenPaymentMethodFactory
-import com.appcoins.payments.di.channel
-import com.appcoins.payments.di.guestWalletUidPrefix
-import com.appcoins.payments.di.paymentMethodFactories
-import com.appcoins.payments.di.paymentScreenContentProvider
-import com.appcoins.payments.di.paypalPaymentMethodFactory
-import com.appcoins.payments.di.restClientInjectParams
-import com.appcoins.payments.uri_handler.PaymentScreenContentProvider
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 import com.aptoide.android.aptoidegames.device_info.DeviceSecurityChecker
 import com.aptoide.android.aptoidegames.device_info.analytics.DeviceInfoAnalytics
 import com.aptoide.android.aptoidegames.feature_companion_apps_notification.CompanionAppsManager
 import com.aptoide.android.aptoidegames.feature_editors_choice_recommendation.EditorsChoiceRecommendationManager
-import com.aptoide.android.aptoidegames.feature_payments.analytics.AGLogger
 import com.aptoide.android.aptoidegames.gamegenie.presentation.CompanionGamesCachePreloader
 import com.aptoide.android.aptoidegames.home.repository.ThemePreferencesManager
 import com.aptoide.android.aptoidegames.installer.analytics.ScheduledDownloadsListenerImpl
@@ -74,9 +63,6 @@ val Context.networkPreferencesDataStore: DataStore<Preferences> by preferencesDa
   name = "networkPreferences"
 )
 val Context.appLaunchDataStore: DataStore<Preferences> by preferencesDataStore(name = "appLaunch")
-val Context.paymentsPreferencesDataStore: DataStore<Preferences> by preferencesDataStore(
-  name = "paymentsPreferences"
-)
 val Context.idsDataStore: DataStore<Preferences> by preferencesDataStore(name = "ids")
 val Context.subscribedAppsDataStore: DataStore<Preferences> by preferencesDataStore(name = "subscribedApps")
 val Context.gamesFeedVisibilityDataStore: DataStore<Preferences> by preferencesDataStore(name = "gamesFeedVisibility")
@@ -112,12 +98,6 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
   lateinit var agGetUserAgent: AptoideGetHeaders
 
   @Inject
-  lateinit var agLogger: AGLogger
-
-  @Inject
-  lateinit var psContentProvider: PaymentScreenContentProvider
-
-  @Inject
   lateinit var analyticsInfoProvider: AptoideAnalyticsInfoProvider
 
   @Inject
@@ -150,7 +130,6 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
     initTimber()
     initFeatureFlags()
     startInstallManager()
-    initPayments()
     initIndicative()
     setUserProperties()
     AndroidViewModel(this).viewModelScope.launch {
@@ -213,24 +192,6 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
         appLaunchPreferencesManager = appLaunchPreferencesManager,
         featureFlags = featureFlags,
       )
-    }
-  }
-
-  private fun initPayments() {
-    Payments.init(
-      application = this,
-      environment = BuildConfig.PAYMENTS_ENVIRONMENT,
-      logger = agLogger,
-    ).apply {
-      restClientInjectParams = agGetUserAgent
-      guestWalletUidPrefix = "ag_"
-      paymentMethodFactories = listOf(
-        adyenPaymentMethodFactory,
-        paypalPaymentMethodFactory
-      )
-      channel = "APTOIDEGAMES"
-      paymentScreenContentProvider = psContentProvider
-      adyenKey = BuildConfig.ADYEN_KEY
     }
   }
 
