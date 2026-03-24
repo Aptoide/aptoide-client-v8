@@ -108,24 +108,9 @@ android {
 
   productFlavors {
     create("dev") {
-      val adyenKey = project.property("ADYEN_PUBLIC_KEY_DEV").toString()
       dimension = "mode"
       applicationIdSuffix = ".dev"
-
-      manifestPlaceholders["payment_intent_filter_priority"] = "8"
-      manifestPlaceholders["payment_intent_filter_host"] =
-        project.property("PAYMENT_DEEPLINK_HOST_DEV").toString()
-
-      buildConfigField(
-        type = "com.appcoins.payments.arch.Environment",
-        name = "PAYMENTS_ENVIRONMENT",
-        value = "com.appcoins.payments.arch.Environment.DEV"
-      )
-      buildConfigField(
-        type = "String",
-        name = "ADYEN_KEY",
-        value = adyenKey
-      )
+      
       buildConfigField(
         type = "String",
         name = "INDICATIVE_KEY",
@@ -171,23 +156,8 @@ android {
     }
 
     create("prod") {
-      val adyenKey = project.property("ADYEN_PUBLIC_KEY").toString()
       dimension = "mode"
 
-      manifestPlaceholders["payment_intent_filter_priority"] = "7"
-      manifestPlaceholders["payment_intent_filter_host"] =
-        project.property("PAYMENT_DEEPLINK_HOST").toString()
-
-      buildConfigField(
-        type = "com.appcoins.payments.arch.Environment",
-        name = "PAYMENTS_ENVIRONMENT",
-        value = "com.appcoins.payments.arch.Environment.PROD"
-      )
-      buildConfigField(
-        type = "String",
-        name = "ADYEN_KEY",
-        value = adyenKey
-      )
       buildConfigField(
         type = "String",
         name = "INDICATIVE_KEY",
@@ -294,14 +264,6 @@ dependencies {
   implementation(projects.featureWallet.gamification)
   implementation(projects.featureWallet.datastore)
   implementation(projects.featureUsageStats)
-
-  //payments
-  implementation(projects.payments.sdk)
-  implementation(projects.payments.guestWallet)
-  implementation(projects.payments.uriHandler)
-  implementation(projects.payments.managerCompose)
-  implementation(projects.payments.methods.adyenCompose)
-  implementation(projects.payments.methods.paypalCompose)
 
   //room
   implementation(libs.room)

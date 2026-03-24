@@ -7,7 +7,6 @@ import cm.aptoide.pt.aptoide_network.data.network.GetUserAgent
 import cm.aptoide.pt.environment_info.DeviceInfo
 import cm.aptoide.pt.extensions.calculateMD5
 import cm.aptoide.pt.extensions.getPackageInfo
-import com.appcoins.payments.network.RestClientInjectParams
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.network.repository.IdsRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -21,7 +20,7 @@ class AptoideGetHeaders @Inject constructor(
   private val packageManager: PackageManager,
   private val idsRepository: IdsRepository,
   private val deviceInfo: DeviceInfo,
-) : GetUserAgent, GetAcceptLanguage, RestClientInjectParams {
+) : GetUserAgent, GetAcceptLanguage {
 
   private val versionName = BuildConfig.VERSION_NAME
   private val aptoidePackage = BuildConfig.APPLICATION_ID
