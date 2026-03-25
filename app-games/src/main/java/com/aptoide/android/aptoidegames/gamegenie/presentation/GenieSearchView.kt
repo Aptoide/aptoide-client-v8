@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import cm.aptoide.pt.extensions.ScreenData
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
+import com.aptoide.android.aptoidegames.gamegenie.analytics.GameGenieAnalytics
 import com.aptoide.android.aptoidegames.gamegenie.analytics.rememberGameGenieAnalytics
 import com.aptoide.android.aptoidegames.mmp.WithUTM
 
@@ -37,7 +38,9 @@ fun gameGenieSearchScreen() = ScreenData.withAnalytics(
           onError = viewModel::reload,
           onMessageSend = { message, _ ->
             viewModel.sendMessage(message)
-            analytics.sendGameGenieMessageSent()
+            analytics.sendGameGenieMessageSent(
+              source = GameGenieAnalytics.SOURCE_SEARCH
+            )
           },
           setFirstLoadDone = viewModel::setFirstLoadDone,
           onSuggestionSend = { message, index ->

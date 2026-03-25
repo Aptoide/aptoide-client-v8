@@ -95,6 +95,8 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberTrendi
 import com.aptoide.android.aptoidegames.feature_rtb.data.RTBApp
 import com.aptoide.android.aptoidegames.feature_rtb.presentation.rememberRTBAdClickHandler
 import com.aptoide.android.aptoidegames.feature_rtb.presentation.rememberSearchSponsoredApp
+import com.aptoide.android.aptoidegames.gamegenie.presentation.buildGameGenieRoute
+import com.aptoide.android.aptoidegames.gamegenie.presentation.rememberGameGenieVisibility
 import com.aptoide.android.aptoidegames.home.rememberBottomBarMenuScrollState
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.mmp.UTMContext
@@ -133,6 +135,7 @@ fun searchScreen() = ScreenData.withAnalytics(
   val analyticsContext = AnalyticsContext.current
 
   var searchValue by rememberSaveable { mutableStateOf("") }
+  val shouldRedirectSearchToGameGenie = rememberGameGenieVisibility()
   var searchMeta by rememberSaveable(
     saver = Saver(
       save = { it.value?.toString() ?: "null" },
@@ -197,7 +200,12 @@ fun searchScreen() = ScreenData.withAnalytics(
                 )
               }
             searchValue = suggestion
-            navigateTo(buildSearchRoute(suggestion).withSearchMeta(searchMeta))
+            navigateTo(
+              buildSearchTargetRoute(
+                query = suggestion,
+                shouldRedirectToGameGenie = shouldRedirectSearchToGameGenie,
+              ).withSearchMeta(searchMeta)
+            )
           },
           onRemoveSuggestion = { searchViewModel.onRemoveSearchSuggestion(it) },
           onSearchValueChanged = {
@@ -216,7 +224,12 @@ fun searchScreen() = ScreenData.withAnalytics(
                 .also(searchAnalytics::sendSearchEvent)
               focusManager.clearFocus()
               keyboardController?.hide()
-              navigateTo(buildSearchRoute(searchValue).withSearchMeta(searchMeta))
+              navigateTo(
+                buildSearchTargetRoute(
+                  query = searchValue,
+                  shouldRedirectToGameGenie = shouldRedirectSearchToGameGenie,
+                ).withSearchMeta(searchMeta)
+              )
             }
           },
           onItemClick = { index, app ->
@@ -256,6 +269,15 @@ fun searchScreen() = ScreenData.withAnalytics(
       }
     }
   }
+}
+
+private fun buildSearchTargetRoute(
+  query: String,
+  shouldRedirectToGameGenie: Boolean,
+): String = if (shouldRedirectToGameGenie) {
+  buildGameGenieRoute(query = query)
+} else {
+  buildSearchRoute(query = query)
 }
 
 @Composable

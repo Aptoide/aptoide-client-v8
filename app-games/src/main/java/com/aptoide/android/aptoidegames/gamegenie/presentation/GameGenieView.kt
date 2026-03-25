@@ -1,7 +1,7 @@
 package com.aptoide.android.aptoidegames.gamegenie.presentation
 
 import ConversationsDrawer
-import android.app.Activity
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,13 +15,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -32,6 +31,7 @@ import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.error_views.NoConnectionView
 import com.aptoide.android.aptoidegames.gamegenie.analytics.rememberGameGenieAnalytics
+import com.aptoide.android.aptoidegames.gamegenie.analytics.GameGenieAnalytics
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameCompanion
 import com.aptoide.android.aptoidegames.gamegenie.domain.Suggestion
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.ChatBackButton
@@ -42,16 +42,30 @@ import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.TextI
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.companion.ChatbotViewCompanion
 import com.aptoide.android.aptoidegames.home.LoadingView
 import com.aptoide.android.aptoidegames.mmp.WithUTM
-import android.net.Uri
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 
 const val genieRoute = "chatbot"
 private const val genieCompanionPackageArg = "companionPackage"
-private const val genieRouteWithCompanion = "$genieRoute?$genieCompanionPackageArg={$genieCompanionPackageArg}"
+private const val genieQueryArg = "query"
+private const val genieRouteWithArgs =
+  "$genieRoute?$genieCompanionPackageArg={$genieCompanionPackageArg}&$genieQueryArg={$genieQueryArg}"
 
-fun buildGameGenieRoute(companionPackage: String? = null): String =
-  companionPackage?.let { "$genieRoute?$genieCompanionPackageArg=${Uri.encode(it)}" } ?: genieRoute
+fun buildGameGenieRoute(
+  companionPackage: String? = null,
+  query: String? = null,
+): String {
+  val params = listOfNotNull(
+    companionPackage?.let { "$genieCompanionPackageArg=${Uri.encode(it)}" },
+    query?.takeIf(String::isNotBlank)?.let { "$genieQueryArg=${Uri.encode(it)}" }
+  )
+
+  return if (params.isEmpty()) {
+    genieRoute
+  } else {
+    "$genieRoute?${params.joinToString("&")}"
+  }
+}
 
 private enum class ChatMode {
   General,
@@ -61,10 +75,15 @@ private enum class ChatMode {
 fun gameGenieScreen(
   showBottomSheet: ((BottomSheetContent?) -> Unit)? = null,
 ) = ScreenData.withAnalytics(
-  route = genieRouteWithCompanion,
+  route = genieRouteWithArgs,
   screenAnalyticsName = "gamegenie",
   arguments = listOf(
     navArgument(genieCompanionPackageArg) {
+      type = NavType.StringType
+      nullable = true
+      defaultValue = null
+    },
+    navArgument(genieQueryArg) {
       type = NavType.StringType
       nullable = true
       defaultValue = null
@@ -79,6 +98,7 @@ fun gameGenieScreen(
   val analytics = rememberGameGenieAnalytics()
   val firstLoad by viewModel.firstLoad.collectAsState(true)
   val companionPackage = remember(arguments) { arguments?.getString(genieCompanionPackageArg) }
+  val initialQuery = remember(arguments) { arguments?.getString(genieQueryArg)?.trim() }
 
   var chatMode by remember(companionPackage) {
     mutableStateOf(
@@ -86,6 +106,7 @@ fun gameGenieScreen(
     )
   }
   var deepLinkHandled by remember(companionPackage) { mutableStateOf(false) }
+  var hasSentInitialQuery by rememberSaveable(initialQuery, companionPackage) { mutableStateOf(false) }
 
   WithUTM(
     medium = "gamegenie",
@@ -95,6 +116,18 @@ fun gameGenieScreen(
   ) { navigate ->
     ConversationsDrawer(
       mainScreen = {
+        LaunchedEffect(initialQuery, companionPackage, hasSentInitialQuery) {
+          val query = initialQuery.orEmpty()
+          if (
+            companionPackage.isNullOrBlank() &&
+            !hasSentInitialQuery &&
+            query.isNotBlank()
+          ) {
+            hasSentInitialQuery = true
+            viewModel.sendMessage(query)
+            analytics.sendGameGenieMessageSent(GameGenieAnalytics.SOURCE_SEARCH)
+          }
+        }
         LaunchedEffect(companionPackage, installedGames, selectedGame) {
           val packageName = companionPackage
           if (!deepLinkHandled && !packageName.isNullOrBlank()) {
@@ -128,7 +161,7 @@ fun gameGenieScreen(
               onError = viewModel::reload,
               onMessageSend = { message, image ->
                 viewModel.sendMessage(message, image)
-                analytics.sendGameGenieMessageSent()
+                analytics.sendGameGenieMessageSent(GameGenieAnalytics.SOURCE_CHAT)
               },
               setFirstLoadDone = viewModel::setFirstLoadDone,
               onSuggestionSend = { message, index ->
@@ -165,7 +198,7 @@ fun gameGenieScreen(
                 setFirstLoadDone = viewModel::setFirstLoadDone,
                 onMessageSend = { message, image ->
                   viewModel.sendMessage(message, image)
-                  analytics.sendGameGenieMessageSent()
+                  analytics.sendGameGenieMessageSent(GameGenieAnalytics.SOURCE_CHAT)
                 },
                 showBottomSheet = showBottomSheet,
                 suggestions = companionSuggestions,
