@@ -6,14 +6,19 @@ class GameGenieAnalytics(
   private val genericAnalytics: GenericAnalytics,
 ) {
 
+  companion object {
+    const val SOURCE_SEARCH = "search"
+    const val SOURCE_CHAT = "chat"
+  }
+
   fun sendGameGenieSuggestionClick(index: Int) = genericAnalytics.logEvent(
     name = "gamegenie_suggests_click",
     params = mapOf("position" to index)
   )
 
-  fun sendGameGenieMessageSent() = genericAnalytics.logEvent(
+  fun sendGameGenieMessageSent(source: String) = genericAnalytics.logEvent(
     name = "gamegenie_send_message",
-    params = emptyMap()
+    params = mapOf("source" to source)
   )
 
   fun sendGameGenieAppClick(
