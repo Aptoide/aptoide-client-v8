@@ -11,6 +11,11 @@ class FakeGamesFeedRepository @Inject constructor() : GamesFeedRepository {
 
   private val gson = Gson()
 
+  private val listOfAppsForGamesfeed = listOf(
+    TrackedGame(name = "Roblox", packageName = "com.roblox.client"),
+    TrackedGame(name = "Aptoide Games", packageName = "com.aptoide.android.aptoidegames")
+  )
+
   override suspend fun getGamesFeed(): GamesFeedData {
     val response = gson.fromJson(MockGamesFeedData.MOCK_JSON, GamesFeedResponse::class.java)
     return GamesFeedData(
@@ -18,5 +23,9 @@ class FakeGamesFeedRepository @Inject constructor() : GamesFeedRepository {
       bundleGraphic = response.bundleGraphic,
       bundleIcon = response.bundleIcon
     )
+  }
+
+  override suspend fun getTrackedGames(): List<TrackedGame> {
+    return listOfAppsForGamesfeed
   }
 }

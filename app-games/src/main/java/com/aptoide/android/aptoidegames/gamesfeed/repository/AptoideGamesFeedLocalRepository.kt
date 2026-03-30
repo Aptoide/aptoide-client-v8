@@ -4,6 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.longPreferencesKey
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -14,6 +15,8 @@ class AptoideGamesFeedLocalRepository @Inject constructor(private val dataStore:
   GamesFeedLocalRepository {
   companion object PreferencesKeys {
     private val GAMES_FEED_VISIBILITY = booleanPreferencesKey("games_feed_visibility")
+    private val GAMES_FEED_LAST_NOTIFICATION_TIMESTAMP =
+      longPreferencesKey("games_feed_last_notification_timestamp")
   }
 
   override suspend fun saveGamesFeedVisibility(visibility: Boolean) {
@@ -24,6 +27,17 @@ class AptoideGamesFeedLocalRepository @Inject constructor(private val dataStore:
     return dataStore.data
       .map { preferences ->
         preferences[GAMES_FEED_VISIBILITY]
+      }.first()
+  }
+
+  override suspend fun saveLastGamesFeedNotificationTimestamp(timestamp: Long) {
+    dataStore.edit { it[GAMES_FEED_LAST_NOTIFICATION_TIMESTAMP] = timestamp }
+  }
+
+  override suspend fun getLastGamesFeedNotificationTimestamp(): Long? {
+    return dataStore.data
+      .map { preferences ->
+        preferences[GAMES_FEED_LAST_NOTIFICATION_TIMESTAMP]
       }.first()
   }
 }

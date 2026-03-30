@@ -8,7 +8,7 @@ class GamesFeedAnalytics @Inject constructor(
 ) {
   fun sendGamesFeedItemClick(title: String, url: String, context: String) =
     genericAnalytics.logEvent(
-      name = "exp9_gamesfeed_click_feed_item",
+      name = "foryou_click_feed_item",
       params = mapOf(
         "title" to title,
         "url" to url,
@@ -17,12 +17,12 @@ class GamesFeedAnalytics @Inject constructor(
     )
 
   fun sendGamesFeedSeeAllClick() = genericAnalytics.logEvent(
-    name = "exp9_gamesfeed_home_see_all",
+    name = "foryou_home_see_all",
     params = emptyMap()
   )
 
-  fun sendGamesFeedRobloxInstalled() = genericAnalytics.logEvent(
-    name = "exp9_roblox_installed",
-    params = emptyMap()
+  fun sendGamesFeedImpression(installedPackages: List<String>) = genericAnalytics.logEvent(
+    name = "foryou_game_impression",
+    params = mapOf("installed_packages" to installedPackages.joinToString(","))
   )
 }

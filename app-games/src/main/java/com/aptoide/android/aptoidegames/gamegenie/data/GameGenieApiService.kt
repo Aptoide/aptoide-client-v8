@@ -5,6 +5,8 @@ import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieCompanionRe
 import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieRequest
 import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieResponse
 import com.aptoide.android.aptoidegames.gamegenie.io_models.TokenResponse
+import com.aptoide.android.aptoidegames.gamesfeed.repository.GamesFeedResponse
+import com.aptoide.android.aptoidegames.gamesfeed.repository.TrackedGame
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -33,4 +35,12 @@ interface GameGenieApiService {
 
   @POST("token")
   suspend fun getToken(): TokenResponse
+
+  @GET("api/foryou/feed")
+  suspend fun getForYouFeed(
+    @Query("installed_packages") installedPackages: String? = null,
+  ): GamesFeedResponse
+
+  @GET("api/foryou/games")
+  suspend fun getForYouGames(): List<TrackedGame>
 }

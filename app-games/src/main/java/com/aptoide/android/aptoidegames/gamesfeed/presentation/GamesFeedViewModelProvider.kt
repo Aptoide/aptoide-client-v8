@@ -14,8 +14,8 @@ fun rememberGamesFeedViewModel(): Pair<GamesFeedUiState, KFunction0<Unit>> {
 }
 
 @Composable
-fun rememberGamesFeedVisibility(): Boolean? {
+fun rememberGamesFeedVisibility(): GamesFeedVisibilityState? {
   val vm = hiltViewModel<GamesFeedVisibilityViewModel>()
-  val uiState by vm.shouldShowGamesFeed.collectAsState()
+  val uiState by vm.uiState.collectAsState()
   return uiState
 }

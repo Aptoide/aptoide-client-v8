@@ -1,5 +1,6 @@
 package com.aptoide.android.aptoidegames.gamesfeed.presentation
 
+import android.graphics.drawable.Drawable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,23 +14,26 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import cm.aptoide.pt.extensions.getAppName
 import cm.aptoide.pt.feature_home.domain.Bundle
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.drawables.icons.playCircleIcon
+import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberAppIconDrawable
 import com.aptoide.android.aptoidegames.gamesfeed.analytics.rememberGamesFeedAnalytics
 import com.aptoide.android.aptoidegames.gamesfeed.repository.GamesFeedItem
 import com.aptoide.android.aptoidegames.gamesfeed.repository.GamesFeedItemType
@@ -42,6 +46,7 @@ import com.aptoide.android.aptoidegames.theme.Palette
 fun GamesFeedBundle(
   bundle: Bundle,
   navigate: (String) -> Unit,
+  installedTrackedPackages: List<String> = emptyList(),
   spaceBy: Int = 0,
 ) {
   val (uiState, _) = rememberGamesFeedViewModel()
@@ -50,11 +55,14 @@ fun GamesFeedBundle(
     is GamesFeedUiState.Idle -> {
       val items = uiState.items.take(3)
       if (items.isNotEmpty()) {
+        val gamesFeedAnalytics = rememberGamesFeedAnalytics()
+        LaunchedEffect(Unit) {
+          gamesFeedAnalytics.sendGamesFeedImpression(installedTrackedPackages)
+        }
         GamesFeedBundleContent(
           bundle = bundle,
           items = items,
           navigate = navigate,
-          bundleGraphic = uiState.bundleGraphic,
           bundleIcon = uiState.bundleIcon,
           spaceBy = spaceBy
         )
@@ -73,34 +81,28 @@ private fun GamesFeedBundleContent(
   bundle: Bundle,
   items: List<GamesFeedItem>,
   navigate: (String) -> Unit,
-  bundleGraphic: String? = null,
   bundleIcon: String? = null,
   spaceBy: Int
 ) {
   val context = LocalContext.current
   val gamesFeedAnalytics = rememberGamesFeedAnalytics()
 
+  val firstPackageName = items.firstOrNull()?.packageName
+  val appIcon: Drawable? = firstPackageName?.let { rememberAppIconDrawable(it, context) }
+  val appName: String? =
+    firstPackageName?.let { context.getAppName(it) }?.takeIf { it.isNotEmpty() }
+
   Column {
     Box(
       modifier = Modifier.fillMaxWidth()
     ) {
-      AptoideAsyncImage(
-        data = bundleGraphic ?: R.drawable.roblox_background,
-        contentDescription = null,
-        modifier = Modifier
-          .fillMaxWidth()
-          .height(330.dp)
-          .alpha(0.2f)
-      )
-
       Column(
         modifier = Modifier
           .fillMaxWidth()
-          .padding(vertical = 24.dp)
       ) {
         GamesFeedHeader(
-          title = bundle.title,
-          bundleIcon = bundleIcon,
+          title = appName ?: bundle.title,
+          headerIcon = appIcon ?: bundleIcon,
           onSeeMoreClick = {
             gamesFeedAnalytics.sendGamesFeedSeeAllClick()
             navigate(buildGamesFeedRoute())
@@ -134,7 +136,7 @@ private fun GamesFeedBundleContent(
 @Composable
 private fun GamesFeedHeader(
   title: String,
-  bundleIcon: String?,
+  headerIcon: Any?,
   onSeeMoreClick: () -> Unit
 ) {
   Row(
@@ -150,7 +152,7 @@ private fun GamesFeedHeader(
       modifier = Modifier.weight(1f, fill = false)
     ) {
       AptoideAsyncImage(
-        data = bundleIcon ?: R.drawable.roblox,
+        data = headerIcon,
         contentDescription = null,
         modifier = Modifier
           .size(48.dp)
@@ -196,7 +198,7 @@ private fun GamesFeedPost(
   Column(
     modifier = Modifier
       .width(280.dp)
-      .height(218.dp)
+      .wrapContentHeight()
       .clickable(onClick = onClick)
   ) {
     if (item.type == GamesFeedItemType.VIDEO) {

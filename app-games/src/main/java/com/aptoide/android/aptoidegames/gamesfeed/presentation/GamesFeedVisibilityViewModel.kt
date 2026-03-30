@@ -9,15 +9,16 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class GamesFeedVisibilityViewModel @Inject constructor(private val gamesFeedManager: GamesFeedManager) :
   ViewModel() {
 
-  private val viewModelState = MutableStateFlow<Boolean?>(null)
+  private val viewModelState = MutableStateFlow<GamesFeedVisibilityState?>(null)
 
-  val shouldShowGamesFeed = viewModelState
+  val uiState = viewModelState
     .stateIn(
       viewModelScope,
       SharingStarted.Eagerly,
@@ -27,9 +28,12 @@ class GamesFeedVisibilityViewModel @Inject constructor(private val gamesFeedMana
   init {
     viewModelScope.launch {
       gamesFeedManager.shouldShowGamesFeed()
-        .catch { throwable -> throwable.printStackTrace() }
-        .collect { shouldShowGamesFeed ->
-          viewModelState.update { shouldShowGamesFeed }
+        .catch { throwable ->
+          Timber.e(throwable, "Error while loading gamesfeed visibility.")
+          viewModelState.update { GamesFeedVisibilityState(shouldShow = false) }
+        }
+        .collect { state ->
+          viewModelState.update { state }
         }
     }
   }
