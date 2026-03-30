@@ -1,31 +1,38 @@
 package com.aptoide.android.aptoidegames.gamesfeed.repository
 
-import cm.aptoide.pt.feature_flags.domain.FeatureFlags
-import com.google.gson.Gson
+import cm.aptoide.pt.install_manager.InstallManager
+import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieApiService
 import javax.inject.Inject
 
 /**
- * Firebase Remote Config implementation of GamesFeedRepository
+ * Retrofit implementation of GamesFeedRepository, fetching from the ForYou feed API.
  */
-class AptoideGamesFeedRepository @Inject constructor(private val featureFlags: FeatureFlags) :
-  GamesFeedRepository {
+class AptoideGamesFeedRepository @Inject constructor(
+  private val gameGenieApiService: GameGenieApiService,
+  private val installManager: InstallManager,
+) : GamesFeedRepository {
 
-  companion object {
-    private const val GAMES_FEED_KEY = "gamesfeed_content"
-  }
+  private var cachedTrackedGames: List<TrackedGame>? = null
 
   override suspend fun getGamesFeed(): GamesFeedData {
-    val gson = Gson()
-    val gamesFeed = featureFlags.getFlagAsString(GAMES_FEED_KEY)
-    return if (gamesFeed.isNullOrBlank()) {
-      GamesFeedData(items = emptyList(), bundleGraphic = null, bundleIcon = null)
-    } else {
-      val gamesFeedResponse = gson.fromJson(gamesFeed, GamesFeedResponse::class.java)
-      GamesFeedData(
-        items = gamesFeedResponse.items,
-        bundleGraphic = gamesFeedResponse.bundleGraphic,
-        bundleIcon = gamesFeedResponse.bundleIcon
-      )
+    val trackedPackageNames = getTrackedGames().map { it.packageName }.toSet()
+    val installedPackages = installManager.installedApps
+      .map { it.packageName }
+      .filter { it in trackedPackageNames }
+      .joinToString(",")
+      .ifBlank { null }
+
+    val response = gameGenieApiService.getForYouFeed(installedPackages)
+    return GamesFeedData(
+      items = response.items,
+      bundleGraphic = response.bundleGraphic,
+      bundleIcon = response.bundleIcon
+    )
+  }
+
+  override suspend fun getTrackedGames(): List<TrackedGame> {
+    return cachedTrackedGames ?: gameGenieApiService.getForYouGames().also {
+      cachedTrackedGames = it
     }
   }
 }

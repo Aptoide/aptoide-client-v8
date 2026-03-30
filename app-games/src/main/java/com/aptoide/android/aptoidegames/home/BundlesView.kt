@@ -122,7 +122,7 @@ fun BundlesScreen(
   navigate: (String) -> Unit,
 ) {
   val (viewState, loadFreshHomeBundles) = bundlesList()
-  val shouldShowGamesFeed = rememberGamesFeedVisibility()
+  val gamesFeedVisibility = rememberGamesFeedVisibility()
   var shouldShowLoadingView by remember { mutableStateOf(false) }
 
   val isRefreshing = (viewState.type == BundlesViewUiStateType.RELOADING)
@@ -155,8 +155,9 @@ fun BundlesScreen(
         )
 
         viewState.type == BundlesViewUiStateType.IDLE -> {
-          val filteredBundles = remember(viewState.bundles, shouldShowGamesFeed) {
-            val bundles = if (shouldShowGamesFeed == true) {
+          val shouldInject = gamesFeedVisibility?.shouldShow == true
+          val filteredBundles = remember(viewState.bundles, shouldInject) {
+            val bundles = if (shouldInject) {
               viewState.bundles.injectGamesFeed()
             } else {
               viewState.bundles
@@ -168,6 +169,7 @@ fun BundlesScreen(
           BundlesView(
             viewState = viewState.copy(bundles = filteredBundles).injectPaEBundle(),
             navigate = navigate,
+            installedTrackedPackages = gamesFeedVisibility?.installedTrackedPackages.orEmpty(),
             onShowLoading = { showLoading ->
               shouldShowLoadingView = showLoading
             }
@@ -195,6 +197,7 @@ fun BundlesScreen(
 fun BundlesView(
   viewState: BundlesViewUiState,
   navigate: (String) -> Unit,
+  installedTrackedPackages: List<String> = emptyList(),
   onShowLoading: (Boolean) -> Unit
 ) {
   Column(
@@ -273,6 +276,7 @@ fun BundlesView(
               Type.GAMES_FEED -> GamesFeedBundle(
                 bundle = bundle,
                 navigate = navigateTo,
+                installedTrackedPackages = installedTrackedPackages,
                 spaceBy = 32
               )
 

@@ -335,6 +335,9 @@ dependencies {
   //Pinch to zoom
   implementation(libs.zoomable)
 
+//SVG support for Coil
+  implementation(libs.coil.svg)
+
 //animations
   implementation(libs.lottie.compose)
 

@@ -19,21 +19,21 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import cm.aptoide.pt.extensions.ScreenData
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.DateUtils
-import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.drawables.icons.playCircleIcon
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
@@ -45,22 +45,34 @@ import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 
 private const val gamesFeedScreenRoute = "gamesFeed"
+private const val PACKAGE_NAME_ARG = "package_name"
+
+private val gamesFeedArguments = listOf(
+  navArgument(PACKAGE_NAME_ARG) {
+    type = NavType.StringType
+    nullable = true
+    defaultValue = null
+  },
+)
 
 fun gamesFeedScreen() = ScreenData.withAnalytics(
-  route = gamesFeedScreenRoute,
+  route = "$gamesFeedScreenRoute?$PACKAGE_NAME_ARG={$PACKAGE_NAME_ARG}",
   screenAnalyticsName = "GamesFeed",
-  arguments = listOf(),
+  arguments = gamesFeedArguments,
   deepLinks = listOf(navDeepLink {
-    uriPattern = BuildConfig.DEEP_LINK_SCHEMA + gamesFeedScreenRoute
+    uriPattern =
+      BuildConfig.DEEP_LINK_SCHEMA + "$gamesFeedScreenRoute?$PACKAGE_NAME_ARG={$PACKAGE_NAME_ARG}"
   }),
-) { _, _, navigateBack ->
-  GamesFeedView()
+) { arguments, _, _ ->
+  val packageName = arguments?.getString(PACKAGE_NAME_ARG)
+  GamesFeedView(prioritizedPackageName = packageName)
 }
 
 fun buildGamesFeedRoute() = gamesFeedScreenRoute
 
 @Composable
 fun GamesFeedView(
+  prioritizedPackageName: String? = null,
 ) {
   val (uiState, loadGamesFeed) = rememberGamesFeedViewModel()
 
@@ -72,17 +84,30 @@ fun GamesFeedView(
       onRetryClick = { loadGamesFeed() }
     )
 
-    is GamesFeedUiState.Idle -> GamesFeedContent(
-      items = uiState.items,
-      bundleIcon = uiState.bundleIcon
-    )
+    is GamesFeedUiState.Idle -> {
+      val reorderedItems = remember(uiState.items, prioritizedPackageName) {
+        reorderItemsByPackageName(uiState.items, prioritizedPackageName)
+      }
+      GamesFeedContent(items = reorderedItems)
+    }
+  }
+}
+
+private fun reorderItemsByPackageName(
+  items: List<GamesFeedItem>,
+  packageName: String?,
+): List<GamesFeedItem> {
+  if (packageName == null) return items
+  val index = items.indexOfFirst { it.packageName == packageName }
+  if (index <= 0) return items // already first or not found
+  return items.toMutableList().apply {
+    add(0, removeAt(index))
   }
 }
 
 @Composable
 private fun GamesFeedContent(
   items: List<GamesFeedItem>,
-  bundleIcon: String?
 ) {
   val context = LocalContext.current
   val gamesFeedAnalytics = rememberGamesFeedAnalytics()
@@ -93,22 +118,6 @@ private fun GamesFeedContent(
       .padding(horizontal = 16.dp),
     contentPadding = PaddingValues(bottom = 24.dp)
   ) {
-    item {
-      Text(
-        text = stringResource(R.string.gamesfeed_detail_header),
-        style = AGTypography.SubHeadingM,
-        color = Palette.White,
-        textAlign = TextAlign.Center,
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(vertical = 8.dp)
-      )
-    }
-
-    item {
-      RobloxIconDecoration(bundleIcon = bundleIcon)
-    }
-
     items(items) { item ->
       GamesFeedPost(
         item = item,
@@ -222,27 +231,6 @@ private fun VideoFeatureGraphic(item: GamesFeedItem) {
       modifier = Modifier
         .size(48.dp)
         .align(Alignment.Center),
-    )
-  }
-}
-
-@Composable
-private fun RobloxIconDecoration(bundleIcon: String?) {
-  Box(
-    modifier = Modifier
-      .fillMaxWidth()
-      .padding(bottom = 24.dp),
-    contentAlignment = Alignment.Center
-  ) {
-    AptoideAsyncImage(
-      data = bundleIcon ?: R.drawable.roblox,
-      contentDescription = null,
-      modifier = Modifier.size(72.dp)
-    )
-    AptoideAsyncImage(
-      data = R.drawable.gamesfeed_app_border,
-      contentDescription = null,
-      modifier = Modifier.size(width = 152.dp, height = 80.dp)
     )
   }
 }

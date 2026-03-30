@@ -20,6 +20,7 @@ import cm.aptoide.pt.feature_updates.domain.Updates
 import cm.aptoide.pt.install_manager.InstallManager
 import coil.ImageLoader
 import coil.ImageLoaderFactory
+import coil.decode.SvgDecoder
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
 import coil.util.DebugLogger
@@ -38,9 +39,9 @@ import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 import com.aptoide.android.aptoidegames.device_info.DeviceSecurityChecker
 import com.aptoide.android.aptoidegames.device_info.analytics.DeviceInfoAnalytics
 import com.aptoide.android.aptoidegames.feature_companion_apps_notification.CompanionAppsManager
-import com.aptoide.android.aptoidegames.gamegenie.presentation.CompanionGamesCachePreloader
 import com.aptoide.android.aptoidegames.feature_editors_choice_recommendation.EditorsChoiceRecommendationManager
 import com.aptoide.android.aptoidegames.feature_payments.analytics.AGLogger
+import com.aptoide.android.aptoidegames.gamegenie.presentation.CompanionGamesCachePreloader
 import com.aptoide.android.aptoidegames.home.repository.ThemePreferencesManager
 import com.aptoide.android.aptoidegames.installer.analytics.ScheduledDownloadsListenerImpl
 import com.aptoide.android.aptoidegames.installer.notifications.InstallerNotificationsManager
@@ -279,6 +280,9 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
         OkHttpClient.Builder()
           .dispatcher(dispatcher)
           .build()
+      }
+      .components {
+        add(SvgDecoder.Factory())
       }
       // Enable logging to the standard Android log if this is a debug build.
       .apply { if (BuildConfig.DEBUG) logger(DebugLogger()) }

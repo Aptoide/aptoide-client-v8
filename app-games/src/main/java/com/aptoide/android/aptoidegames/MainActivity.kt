@@ -20,6 +20,7 @@ import com.aptoide.android.aptoidegames.feature_editors_choice_recommendation.Ed
 import com.aptoide.android.aptoidegames.firebase.FirebaseConstants
 import com.aptoide.android.aptoidegames.gamegenie.presentation.GameGenieOverlayService
 import com.aptoide.android.aptoidegames.gamegenie.presentation.buildGameGenieRoute
+import com.aptoide.android.aptoidegames.gamesfeed.presentation.GamesFeedManager
 import com.aptoide.android.aptoidegames.home.MainView
 import com.aptoide.android.aptoidegames.home.navigateTo
 import com.aptoide.android.aptoidegames.installer.analytics.InstallAnalytics
@@ -207,6 +208,27 @@ class MainActivity : AppCompatActivity() {
     }
     intent.agDeepLink?.takeIf { it.scheme == "ag" }?.let {
       navController?.navigate(it)
+    }
+
+    intent?.getStringExtra(
+      com.aptoide.android.aptoidegames.gamesfeed.GamesFeedNotificationBuilder.GAMESFEED_ROUTE_KEY
+    )?.let { route ->
+      navController?.navigateTo(route)
+    }
+
+    // Handle gamesfeed notifications auto-displayed by Firebase when app is in background.
+    // When the app is backgrounded, onMessageReceived is NOT called for notification messages,
+    // so our custom PendingIntent is never built. Firebase puts FCM data fields as intent extras.
+    if (intent?.getStringExtra("from")
+        ?.startsWith("/topics/${GamesFeedManager.TOPIC_PREFIX}") == true
+    ) {
+      val packageName = intent.getStringExtra("package_name")
+      val route = if (packageName != null) {
+        "gamesFeed?package_name=$packageName"
+      } else {
+        "gamesFeed"
+      }
+      navController?.navigateTo(route)
     }
 
     if (intent?.getBooleanExtra(PaEForegroundService.NAVIGATE_TO_SETTINGS, false) == true) {

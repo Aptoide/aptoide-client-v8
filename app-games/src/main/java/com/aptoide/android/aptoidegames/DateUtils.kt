@@ -114,7 +114,7 @@ class DateUtils private constructor() : DateUtils() {
     }
 
     fun getTimeDiffWithoutDate(context: Context, timeDate: String): String {
-      val timeDateAsMilliseconds = TextFormatter.Companion.parseDateToLong(timeDate)
+      val timeDateAsMilliseconds = java.time.Instant.parse(timeDate).toEpochMilli()
       val now = System.currentTimeMillis()
       val diff = (now - timeDateAsMilliseconds).coerceAtLeast(0L)
 

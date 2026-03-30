@@ -1,6 +1,7 @@
 package com.aptoide.android.aptoidegames.gamesfeed.repository
 
 import androidx.annotation.Keep
+import com.google.gson.annotations.SerializedName
 
 /**
  * Represents a single item in the games feed (video or article)
@@ -15,5 +16,6 @@ data class GamesFeedItem(
   val authorName: String? = null,
   val authorLogo: String? = null,
   val publishedAt: String? = null,
-  val url: String? = null
+  val url: String? = null,
+  @SerializedName("package_name") val packageName: String? = null
 )
