@@ -2,7 +2,6 @@ package plugin
 
 import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.api.dsl.LibraryExtension
-import com.android.build.gradle.BaseExtension
 import extensions.libs
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
@@ -10,9 +9,8 @@ import org.gradle.api.Project
 
 class ComposablePlugin : Plugin<Project> {
   override fun apply(project: Project) {
-    val extension = (project.extensions.getByName("android") as? BaseExtension)
-      .let { it as? ApplicationExtension ?: it as? LibraryExtension }
-      ?: throw GradleException("Unsupported BaseExtension type!")
+    val extension = project.extensions.getByName("android")
+      ?: throw GradleException("Unsupported Extension type!")
 
     with(project) {
       plugins.apply(libs.findPlugin("kotlin-compose-compiler").get().get().pluginId)
@@ -20,12 +18,24 @@ class ComposablePlugin : Plugin<Project> {
 
     val isApp = extension is ApplicationExtension
 
-    extension.apply {
-      buildFeatures {
-        // Enables Jetpack Compose for this module
-        compose = true
-        buildConfig = true
+    when(extension) {
+      is ApplicationExtension -> extension.apply {
+        buildFeatures {
+          // Enables Jetpack Compose for this module
+          compose = true
+          buildConfig = true
+        }
       }
+
+      is LibraryExtension -> extension.apply {
+        buildFeatures {
+          // Enables Jetpack Compose for this module
+          compose = true
+          buildConfig = true
+        }
+      }
+
+      else -> throw GradleException("Unsupported Extension type!")
     }
 
     with(project) {

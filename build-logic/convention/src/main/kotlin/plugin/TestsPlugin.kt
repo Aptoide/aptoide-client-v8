@@ -10,9 +10,9 @@ import org.gradle.api.Project
 
 class TestsPlugin : Plugin<Project> {
   override fun apply(project: Project) {
-    (project.extensions.getByName("android") as? BaseExtension)
+    project.extensions.getByName("android")
       .let { it as? ApplicationExtension ?: it as? LibraryExtension }
-      ?: throw GradleException("Unsupported BaseExtension type!")
+      ?: throw GradleException("Unsupported Extension type!")
     with(project) {
       plugins.apply(libs.findPlugin("junit5").get().get().pluginId)
       dependencies.apply {

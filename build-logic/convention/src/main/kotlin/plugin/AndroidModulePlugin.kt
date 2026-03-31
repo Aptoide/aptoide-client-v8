@@ -2,7 +2,6 @@ package plugin
 
 import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.api.dsl.LibraryExtension
-import com.android.build.gradle.BaseExtension
 import extensions.libs
 import org.gradle.api.GradleException
 import org.gradle.api.JavaVersion
@@ -16,7 +15,7 @@ class AndroidModulePlugin : Plugin<Project> {
   }
 
   override fun apply(project: Project) {
-    val extension = project.extensions.getByName("android") as? BaseExtension
+    val extension = project.extensions.getByName("android")
     when (extension) {
       is ApplicationExtension -> extension.apply {
         compileSdk = project.libs.findVersion("compileSdk").get().toString().toInt()
@@ -93,7 +92,7 @@ class AndroidModulePlugin : Plugin<Project> {
         }
       }
 
-      else -> throw GradleException("Unsupported BaseExtension type!")
+      else -> throw GradleException("Unsupported Extension type!")
     }
 
     with(project) {
