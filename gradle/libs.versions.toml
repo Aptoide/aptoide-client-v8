@@ -20,15 +20,15 @@ timber = "5.0.1"
 lottie = "6.6.7"
 lifecycle = "2.9.0"
 coil = "2.7.0"
-room = "2.7.1"
+room = "2.8.4"
 activityCompose = "1.10.1"
 compose = "1.8.1"
 composeLifecycle = "2.9.0"
 viewmodelCompose = "2.9.0"
 navigationCompose = "2.9.0"
 materialIconsExtended = "1.7.8"
-hilt = "2.55"
-hiltCompiler = "1.2.0"
+hilt = "2.59.2"
+hiltCompiler = "1.3.0"
 hiltNavCompose = "1.2.0"
 customChromeTab = "1.8.0"
 firebase = "33.13.0"
@@ -56,10 +56,8 @@ junit5 = "5.11.3"
 turbine = "1.2.0"
 
 #plugins
-applicationGradlePlugin = "8.10.1"
+androidGradlePlugin = "9.0.1"
 kotlinAndroidGradlePlugin = "2.0.21"
-androidGradlePlugin = "8.5.2"
-hiltAndroidGradlePlugin = "2.52"
 googleServicesPlugin = "4.4.2"
 firebaseCrashlyticsGradle = "3.0.3"
 androidJunit5Plugin = "1.9.3.0"
@@ -139,7 +137,7 @@ turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 #root / build-logic
 android-gradle-plugin = { module = "com.android.tools.build:gradle", version.ref = "androidGradlePlugin" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
-hilt-android-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hiltAndroidGradlePlugin" }
+hilt-android-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hilt" }
 android-junit5-plugin = { module = "de.mannodermaus.gradle.plugins:android-junit5", version.ref = "androidJunit5Plugin" }
 google-services-plugin = { module = "com.google.gms:google-services", version.ref = "googleServicesPlugin" }
 firebase-crashlytics-gradle = { module = "com.google.firebase:firebase-crashlytics-gradle", version.ref = "firebaseCrashlyticsGradle" }
@@ -147,8 +145,8 @@ ksp-plugin = { module = "com.google.devtools.ksp:symbol-processing-gradle-plugin
 compose-gradle-plugin = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin" }
 
 [plugins]
-android-application = { id = "com.android.application", version.ref = "applicationGradlePlugin" }
-android-library = { id = "com.android.library", version.ref = "applicationGradlePlugin" }
+android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
+android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "kspPlugin" }
 gms = { id = "com.google.gms.google-services", version.ref = "googleServicesPlugin" }
 crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlyticsGradle" }
@@ -156,7 +154,7 @@ junit5 = { id = "de.mannodermaus.android-junit5", version.ref = "androidJunit5Pl
 
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlinAndroidGradlePlugin" }
 kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-hilt-android-plugin = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroidGradlePlugin" }
+hilt-android-plugin = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 
 android-module = { id = "android-module" }
 composable = { id = "composable" }
