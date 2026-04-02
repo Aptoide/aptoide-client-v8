@@ -2,7 +2,7 @@ package com.aptoide.android.aptoidegames
 
 import kotlinx.coroutines.flow.Flow
 
-interface IdsRepository {
+interface LocalIdsRepository {
 
   suspend fun getId(key: String): String
 

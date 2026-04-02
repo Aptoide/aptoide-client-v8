@@ -68,6 +68,7 @@ private fun EventBundleContent(
 
     is ArticleListUiState.Idle -> {
       val editorialMeta = uiState.articles[0]
+
       EventCard(
         bundle = bundle,
         modifier = modifier,

@@ -12,11 +12,13 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class IdsRepository @Inject constructor(
+class AdvertisingIdsRepository @Inject constructor(
   @ApplicationContext private val context: Context,
 ) {
 
   val aptoideClientUuid by lazy { getUniqueIdentifier() }
+
+  val advertisingId: String? by lazy { getGoogleAdvertisingId() }
 
   private fun getUniqueIdentifier(): String =
     getGoogleAdvertisingId()?.takeIf { it.isNotEmpty() } ?: UUID.randomUUID().toString()

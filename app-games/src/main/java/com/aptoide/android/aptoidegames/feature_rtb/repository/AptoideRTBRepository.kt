@@ -8,9 +8,10 @@ import cm.aptoide.pt.feature_campaigns.CampaignImpl
 import cm.aptoide.pt.feature_campaigns.CampaignRepository
 import cm.aptoide.pt.feature_campaigns.CampaignTuple
 import com.aptoide.android.aptoidegames.BuildConfig
-import com.aptoide.android.aptoidegames.IdsRepository
+import com.aptoide.android.aptoidegames.LocalIdsRepository
 import com.aptoide.android.aptoidegames.apkfy.analytics.ApkfyManagerProbe
 import com.aptoide.android.aptoidegames.feature_rtb.data.RTBApp
+import com.aptoide.android.aptoidegames.network.repository.AdvertisingIdsRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
@@ -20,7 +21,8 @@ class AptoideRTBRepository @Inject constructor(
   private val rtbApi: RTBApi,
   private val scope: CoroutineScope,
   private val deviceInfo: DeviceInfo,
-  private val idsRepository: IdsRepository,
+  private val aptoideIdsRepository: LocalIdsRepository,
+  private val idsRepository: AdvertisingIdsRepository,
   private val campaignRepository: CampaignRepository,
 ) : RTBRepository {
 
@@ -32,7 +34,7 @@ class AptoideRTBRepository @Inject constructor(
         return@withContext it
       }
 
-      val guestUid = idsRepository.observeId(ApkfyManagerProbe.GUEST_UID_KEY)
+      val guestUid = aptoideIdsRepository.observeId(ApkfyManagerProbe.GUEST_UID_KEY)
         .first { it.isNotEmpty() }
 
       val result = rtbApi.getApps(
@@ -53,6 +55,7 @@ class AptoideRTBRepository @Inject constructor(
             deviceInfo.getScreenHeight(),
             deviceInfo.getScreenDensity()
           ),
+          gaid = idsRepository.advertisingId,
         )
       )
       val apps = if (result.isEmpty()) {

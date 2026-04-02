@@ -34,7 +34,7 @@ import cm.aptoide.pt.feature_search.domain.repository.SearchStoreManager
 import cm.aptoide.pt.feature_updates.di.PrioritizedPackagesFilter
 import com.aptoide.android.aptoidegames.AptoideIdsRepository
 import com.aptoide.android.aptoidegames.BuildConfig
-import com.aptoide.android.aptoidegames.IdsRepository
+import com.aptoide.android.aptoidegames.LocalIdsRepository
 import com.aptoide.android.aptoidegames.ahab.di.AhabDomain
 import com.aptoide.android.aptoidegames.appLaunchDataStore
 import com.aptoide.android.aptoidegames.dataStore
@@ -54,6 +54,7 @@ import com.aptoide.android.aptoidegames.network.AptoideAABInterceptor
 import com.aptoide.android.aptoidegames.network.AptoideGetHeaders
 import com.aptoide.android.aptoidegames.network.AptoideQLogicInterceptor
 import com.aptoide.android.aptoidegames.network.AptoideQueryLangInterceptor
+import com.aptoide.android.aptoidegames.network.repository.AdvertisingIdsRepository
 import com.aptoide.android.aptoidegames.networkPreferencesDataStore
 import com.aptoide.android.aptoidegames.permissions.AppPermissionsManager
 import com.aptoide.android.aptoidegames.search.repository.AppGamesAutoCompleteSuggestionsRepository
@@ -295,7 +296,7 @@ class RepositoryModule {
 
   @Singleton
   @Provides
-  fun provideIdsManager(@IdsDataStore dataStore: DataStore<Preferences>): IdsRepository =
+  fun provideIdsManager(@IdsDataStore dataStore: DataStore<Preferences>): LocalIdsRepository =
     AptoideIdsRepository(dataStore)
 
   @Singleton
@@ -327,13 +328,15 @@ class RepositoryModule {
   fun provideRTBRepository(
     @RetrofitRTB retrofit: Retrofit,
     deviceInfo: DeviceInfo,
-    idsRepository: IdsRepository,
+    aptoideIdsRepository: LocalIdsRepository,
+    idsRepository: AdvertisingIdsRepository,
     campaignRepository: CampaignRepository,
   ): RTBRepository {
     return AptoideRTBRepository(
       rtbApi = retrofit.create(RTBApi::class.java),
       scope = CoroutineScope(Dispatchers.IO),
       deviceInfo = deviceInfo,
+      aptoideIdsRepository = aptoideIdsRepository,
       idsRepository = idsRepository,
       campaignRepository = campaignRepository,
     )

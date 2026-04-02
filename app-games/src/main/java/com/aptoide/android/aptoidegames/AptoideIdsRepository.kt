@@ -12,7 +12,7 @@ import javax.inject.Singleton
 
 @Singleton
 class AptoideIdsRepository @Inject constructor(private val dataStore: DataStore<Preferences>) :
-  IdsRepository {
+  LocalIdsRepository {
 
   override suspend fun getId(key: String): String {
     return dataStore.data
