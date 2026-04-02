@@ -9,7 +9,7 @@ import cm.aptoide.pt.extensions.calculateMD5
 import cm.aptoide.pt.extensions.getPackageInfo
 import com.appcoins.payments.network.RestClientInjectParams
 import com.aptoide.android.aptoidegames.BuildConfig
-import com.aptoide.android.aptoidegames.network.repository.IdsRepository
+import com.aptoide.android.aptoidegames.network.repository.AdvertisingIdsRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import javax.inject.Inject
@@ -19,7 +19,7 @@ import javax.inject.Singleton
 class AptoideGetHeaders @Inject constructor(
   @ApplicationContext private val context: Context,
   private val packageManager: PackageManager,
-  private val idsRepository: IdsRepository,
+  private val idsRepository: AdvertisingIdsRepository,
   private val deviceInfo: DeviceInfo,
 ) : GetUserAgent, GetAcceptLanguage, RestClientInjectParams {
 

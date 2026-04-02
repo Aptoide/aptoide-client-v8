@@ -3,7 +3,7 @@ package com.aptoide.android.aptoidegames.apkfy.di
 import cm.aptoide.pt.feature_apkfy.domain.ApkfyFilter
 import cm.aptoide.pt.feature_apkfy.domain.ApkfyManager
 import cm.aptoide.pt.feature_apkfy.domain.ApkfyManagerImpl
-import com.aptoide.android.aptoidegames.IdsRepository
+import com.aptoide.android.aptoidegames.LocalIdsRepository
 import com.aptoide.android.aptoidegames.apkfy.AGApkfyFilter
 import com.aptoide.android.aptoidegames.apkfy.DownloadPermissionStateProbe
 import com.aptoide.android.aptoidegames.apkfy.analytics.ApkfyAnalytics
@@ -24,7 +24,7 @@ internal object RepositoryModule {
   fun provideApkfyManager(
     apkfyManager: ApkfyManagerImpl,
     apkfyAnalytics: ApkfyAnalytics,
-    idsRepository: IdsRepository
+    idsRepository: LocalIdsRepository
   ): ApkfyManager =
     ApkfyManagerProbe(
       apkfyManager = apkfyManager,

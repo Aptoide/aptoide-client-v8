@@ -3,7 +3,7 @@ package com.aptoide.android.aptoidegames.apkfy.analytics
 import cm.aptoide.pt.feature_apkfy.domain.ApkfyManager
 import cm.aptoide.pt.feature_apkfy.domain.ApkfyModel
 import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
-import com.aptoide.android.aptoidegames.IdsRepository
+import com.aptoide.android.aptoidegames.LocalIdsRepository
 import com.google.gson.Gson
 import kotlinx.coroutines.delay
 import retrofit2.HttpException
@@ -11,7 +11,7 @@ import retrofit2.HttpException
 class ApkfyManagerProbe(
   private val apkfyManager: ApkfyManager,
   private val apkfyAnalytics: ApkfyAnalytics,
-  private val idsRepository: IdsRepository,
+  private val idsRepository: LocalIdsRepository,
 ) : ApkfyManager {
 
   companion object {

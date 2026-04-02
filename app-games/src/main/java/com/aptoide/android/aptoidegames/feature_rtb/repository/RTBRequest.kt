@@ -9,7 +9,8 @@ data class RTBRequest(
   val app_package: String,
   val language: String,
   val device: Device,
-  val screen: Screen
+  val screen: Screen,
+  val gaid: String? = null
 )
 
 @Keep
