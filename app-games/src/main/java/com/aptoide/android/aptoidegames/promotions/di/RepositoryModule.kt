@@ -2,10 +2,8 @@ package com.aptoide.android.aptoidegames.promotions.di
 
 import android.content.Context
 import androidx.room.Room
-import cm.aptoide.pt.aptoide_network.di.StoreName
-import com.aptoide.android.aptoidegames.ahab.di.RetrofitAhab
+import cm.aptoide.pt.feature_flags.domain.FeatureFlags
 import com.aptoide.android.aptoidegames.promotions.data.AGPromotionsRepository
-import com.aptoide.android.aptoidegames.promotions.data.AGPromotionsRepository.PromotionsApi
 import com.aptoide.android.aptoidegames.promotions.data.PromotionsRepository
 import com.aptoide.android.aptoidegames.promotions.data.database.PromotionsDatabase
 import com.aptoide.android.aptoidegames.promotions.data.database.SkippedPromotionsRepository
@@ -14,7 +12,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import retrofit2.Retrofit
 import javax.inject.Singleton
 
 @Module
@@ -24,11 +21,9 @@ class RepositoryModule {
   @Provides
   @Singleton
   fun providesPromotionsRepository(
-    @RetrofitAhab retrofitAhab: Retrofit,
-    @StoreName storeName: String,
+    featureFlags: FeatureFlags,
   ): PromotionsRepository = AGPromotionsRepository(
-    promotionsApi = retrofitAhab.create(PromotionsApi::class.java),
-    storeName = storeName,
+    featureFlags = featureFlags,
   )
 
   @Singleton
