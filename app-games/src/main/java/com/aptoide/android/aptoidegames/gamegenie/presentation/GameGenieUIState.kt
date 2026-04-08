@@ -1,6 +1,8 @@
 package com.aptoide.android.aptoidegames.gamegenie.presentation
 
+import com.aptoide.android.aptoidegames.gamegenie.domain.GameCompanion
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameGenieChat
+import com.aptoide.android.aptoidegames.gamegenie.domain.Suggestion
 import com.aptoide.android.aptoidegames.gamegenie.domain.Token
 
 data class GameGenieUIState(
@@ -8,6 +10,8 @@ data class GameGenieUIState(
   val chat: GameGenieChat,
   val apps: List<String> = emptyList(),
   val token: Token?,
+  val selectedGame: GameCompanion? = null,
+  val suggestions: List<Suggestion> = emptyList(),
 )
 
 enum class GameGenieUIStateType {

@@ -183,13 +183,11 @@ fun gameGenieScreen(
             if (currentSelectedGame == null) {
               LoadingView()
             } else {
-              val companionSuggestions by viewModel.companionSuggestions.collectAsState()
               ChatbotViewCompanion(
                 selectedGame = currentSelectedGame,
                 firstLoad = firstLoad,
                 navigateBack = {
                   viewModel.resetSelectedGame()
-                  viewModel.emptyChat()
                   chatMode = ChatMode.General
                 },
                 uiState = uiState,
@@ -201,7 +199,7 @@ fun gameGenieScreen(
                   analytics.sendGameGenieMessageSent(GameGenieAnalytics.SOURCE_CHAT)
                 },
                 showBottomSheet = showBottomSheet,
-                suggestions = companionSuggestions,
+                suggestions = uiState.suggestions,
                 onSuggestionClick = { message, index ->
                   viewModel.sendMessage(message)
                   analytics.sendGameGenieSuggestionClick(index)
