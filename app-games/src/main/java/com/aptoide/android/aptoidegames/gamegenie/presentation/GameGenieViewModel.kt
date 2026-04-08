@@ -13,6 +13,7 @@ import com.aptoide.android.aptoidegames.gamegenie.domain.Token
 import com.aptoide.android.aptoidegames.gamegenie.presentation.GameGenieUIStateType.NO_CONNECTION
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -42,6 +43,8 @@ class GameGenieViewModel @Inject constructor(
 
   private val _firstLoad = MutableStateFlow(true)
   val firstLoad: Flow<Boolean> = _firstLoad
+
+  private var sendMessageJob: Job? = null
 
   private val _installedGames = MutableStateFlow<List<GameCompanion>>(emptyList())
   val installedGames = _installedGames.asStateFlow()
@@ -73,6 +76,8 @@ class GameGenieViewModel @Inject constructor(
 
   fun resetSelectedGame() {
     viewModelState.update { it.copy(selectedGame = null, suggestions = emptyList()) }
+    sendMessageJob?.cancel()
+    sendMessageJob = null
     emptyChat()
   }
 
@@ -131,7 +136,8 @@ class GameGenieViewModel @Inject constructor(
     userMessage: String,
     imagePathOrBase64: String? = null,
   ) {
-    viewModelScope.launch {
+    sendMessageJob?.cancel()
+    sendMessageJob = viewModelScope.launch {
       try {
         val selectedGame = viewModelState.value.selectedGame
         updateConversation(userMessage, imagePathOrBase64)
