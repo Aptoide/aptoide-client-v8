@@ -272,7 +272,9 @@ class MainActivity : AppCompatActivity() {
     val companionPackage = intent?.getStringExtra(GameGenieOverlayService.EXTRA_COMPANION_PACKAGE)
     if (!companionPackage.isNullOrBlank()) {
       intent.removeExtra(GameGenieOverlayService.EXTRA_COMPANION_PACKAGE)
-      navController?.navigateTo(buildGameGenieRoute(companionPackage))
+      navController?.navigate(buildGameGenieRoute(companionPackage)) {
+        launchSingleTop = true
+      }
     }
   }
 
