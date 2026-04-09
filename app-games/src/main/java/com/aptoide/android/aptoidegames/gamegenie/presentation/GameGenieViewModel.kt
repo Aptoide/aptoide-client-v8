@@ -45,6 +45,8 @@ class GameGenieViewModel @Inject constructor(
   val firstLoad: Flow<Boolean> = _firstLoad
 
   private var sendMessageJob: Job? = null
+  private var loadCompanionChatJob: Job? = null
+  private var loadCompanionSuggestionsJob: Job? = null
 
   private val _installedGames = MutableStateFlow<List<GameCompanion>>(emptyList())
   val installedGames = _installedGames.asStateFlow()
@@ -78,6 +80,10 @@ class GameGenieViewModel @Inject constructor(
     viewModelState.update { it.copy(selectedGame = null, suggestions = emptyList()) }
     sendMessageJob?.cancel()
     sendMessageJob = null
+    loadCompanionChatJob?.cancel()
+    loadCompanionChatJob = null
+    loadCompanionSuggestionsJob?.cancel()
+    loadCompanionSuggestionsJob = null
     emptyChat()
   }
 
@@ -218,7 +224,9 @@ class GameGenieViewModel @Inject constructor(
   }
 
   fun loadCompanionChat(packageName: String) {
-    viewModelScope.launch {
+    loadCompanionChatJob?.cancel()
+    loadCompanionSuggestionsJob?.cancel()
+    loadCompanionChatJob = viewModelScope.launch {
       _firstLoad.value = true
       var gameName: String? = null
       viewModelState.update {
@@ -230,6 +238,7 @@ class GameGenieViewModel @Inject constructor(
 
       gameGenieUseCase.loadCompanionChat(packageName)
         .collectLatest { newChat ->
+          if (viewModelState.value.selectedGame?.packageName != packageName) return@collectLatest
           newChat?.let { chat ->
             _conversation.value = chat.conversation
             viewModelState.update { state ->
@@ -258,7 +267,8 @@ class GameGenieViewModel @Inject constructor(
   }
 
   private fun loadCompanionSuggestions(gameName: String) {
-    viewModelScope.launch {
+    loadCompanionSuggestionsJob?.cancel()
+    loadCompanionSuggestionsJob = viewModelScope.launch {
       runCatching {
         val locale = context.resources.configuration.locales[0]
         val lang = locale.language
@@ -266,10 +276,13 @@ class GameGenieViewModel @Inject constructor(
           selectedGame = gameName,
           lang = lang
         )
+        if (viewModelState.value.selectedGame?.name != gameName) return@launch
         viewModelState.update { it.copy(suggestions = suggestions.suggestions) }
       }.onFailure { e ->
         Timber.w(e, "Failed to load companion suggestions")
-        viewModelState.update { it.copy(suggestions = emptyList()) }
+        if (viewModelState.value.selectedGame?.name == gameName) {
+          viewModelState.update { it.copy(suggestions = emptyList()) }
+        }
       }
     }
   }
