@@ -2,16 +2,18 @@ package com.aptoide.android.aptoidegames.gamegenie.presentation
 
 import ConversationsDrawer
 import android.net.Uri
+import android.view.WindowManager
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -107,6 +109,18 @@ fun gameGenieScreen(
   }
   var deepLinkHandled by remember(companionPackage) { mutableStateOf(false) }
   var hasSentInitialQuery by rememberSaveable(initialQuery, companionPackage) { mutableStateOf(false) }
+
+  val activity = LocalActivity.current
+  DisposableEffect(activity) {
+    val window = activity?.window
+    val previous = window?.attributes?.softInputMode
+    val newMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE or
+      ((previous ?: 0) and WindowManager.LayoutParams.SOFT_INPUT_MASK_STATE)
+    window?.setSoftInputMode(newMode)
+    onDispose {
+      if (window != null && previous != null) window.setSoftInputMode(previous)
+    }
+  }
 
   WithUTM(
     medium = "gamegenie",
@@ -242,8 +256,7 @@ fun ChatbotView(
   Column(
     modifier = Modifier
       .fillMaxSize()
-      .wrapContentSize(Alignment.TopCenter)
-      .imePadding(),
+      .wrapContentSize(Alignment.TopCenter),
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
     val isLoading = uiState.type == GameGenieUIStateType.LOADING

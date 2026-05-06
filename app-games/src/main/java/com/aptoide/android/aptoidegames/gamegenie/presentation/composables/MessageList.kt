@@ -18,6 +18,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -26,6 +27,8 @@ import com.aptoide.android.aptoidegames.gamegenie.domain.ChatInteraction
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameCompanion
 import com.aptoide.android.aptoidegames.gamegenie.domain.Suggestion
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
 
 @Composable
 fun MessageList(
@@ -46,8 +49,21 @@ fun MessageList(
 
   val prevSize = remember { mutableIntStateOf(-1) }
   val prevLastUserText = remember { mutableStateOf<String?>(null) }
+  val prevViewportHeight = remember { mutableIntStateOf(0) }
 
   val lastUserText = messages.lastOrNull()?.user?.text
+
+  LaunchedEffect(listState) {
+    snapshotFlow { listState.layoutInfo.viewportSize.height }
+      .distinctUntilChanged()
+      .collectLatest { viewportHeight ->
+        val prev = prevViewportHeight.intValue
+        if (viewportHeight in 1 until prev && messages.isNotEmpty()) {
+          scrollToBottom(listState, messages.lastIndex)
+        }
+        prevViewportHeight.intValue = viewportHeight
+      }
+  }
 
   LaunchedEffect(firstLoad, messages.size, lastUserText) {
     if (messages.isEmpty()) {
