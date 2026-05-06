@@ -2,7 +2,6 @@ package com.aptoide.android.aptoidegames.gamegenie.presentation.composables.comp
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -38,8 +37,7 @@ fun ChatbotViewCompanion(
   Column(
     modifier = modifier
       .fillMaxSize()
-      .wrapContentSize(Alignment.TopCenter)
-      .imePadding(),
+      .wrapContentSize(Alignment.TopCenter),
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
     val isLoading = uiState.type == GameGenieUIStateType.LOADING
