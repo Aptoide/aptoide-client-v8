@@ -480,8 +480,7 @@ fun AppViewContent(
           .align(Alignment.TopStart)
           .clickable {
             val bonusTitle = bonusBundle.first
-            val bonusTag = bonusBundle.second
-            val route = buildSeeMoreBonusRoute(encode(bonusTitle), "${bonusTag}-more")
+            val route = buildSeeMoreBonusRoute(title = encode(bonusTitle))
 
             navigate(route)
           }

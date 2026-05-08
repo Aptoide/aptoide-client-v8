@@ -21,11 +21,7 @@ class BundlesUseCase @Inject constructor(
           bundle.type == WidgetType.APPC_BANNER
         }?.let { bonusBundle ->
           BonusData.setBonusData(bonusBundle.title, bonusBundle.tag)
-        } ?: urlsCache.putAll(
-          mapOf(
-            "bonus-banner-more" to "listApps/store_id=3613731/group_id=15614123/order=rand"
-          )
-        )
+        }
       }
       .also {
         urlsCache.putAll(mapOf("ab-test-companion-app-bundle" to "listApps/store_name=aptoide-games/group_name=enjoying-roblox/nocache=1/aab=1"))
