@@ -221,7 +221,10 @@ fun gameGenieScreen(
         viewModel.loadConversation(id)
       },
       currentChatId = uiState.chat.id,
-      newChatFn = viewModel::emptyChat,
+      newChatFn = {
+        chatMode = ChatMode.General
+        viewModel.emptyChat()
+      },
     )
   }
 }
