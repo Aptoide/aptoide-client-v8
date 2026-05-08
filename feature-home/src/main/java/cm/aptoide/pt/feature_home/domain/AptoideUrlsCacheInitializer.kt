@@ -13,6 +13,9 @@ class AptoideUrlsCacheInitializer(
 
   override suspend fun initialise(): Map<String, String> = widgetsRepository.getStoreWidgets()
     .let { list ->
+      list.find { it.type == WidgetType.APPC_BANNER }
+        ?.let { BonusData.setBonusData(it.title, it.tag) }
+
       list.tagsUrls +
         (BundlesUseCase.WIDGETS_TAG to "") +
         (list.find { it.type == WidgetType.ACTION_ITEM }
@@ -22,14 +25,6 @@ class AptoideUrlsCacheInitializer(
               .getArticlesMeta(editorialWidgetUrl = url, subtype = null)
               .tagsUrls(url)
           } ?: emptyMap()) +
-        (list.find { bundle ->
-          bundle.type == WidgetType.APPC_BANNER
-        }?.let { bonusBundle ->
-          BonusData.setBonusData(bonusBundle.title, bonusBundle.tag)
-          emptyMap()
-        } ?: mapOf(
-          "bonus-banner-more" to "listApps/store_id=3613731/group_id=15614123/order=rand"
-        )) +
         mapOf("ab-test-companion-app-bundle" to "listApps/store_name=aptoide-games/group_name=enjoying-roblox/nocache=1/aab=1")
     }
 }

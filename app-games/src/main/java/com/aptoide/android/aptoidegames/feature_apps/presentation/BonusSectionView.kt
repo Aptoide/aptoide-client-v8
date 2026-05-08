@@ -206,7 +206,10 @@ fun getBonusRouteNavigation(
     ?.takeUnless(String::isBlank)
     ?.let { UrlActivity.open(context = context, url = it) }
     ?: navigate(
-      buildSeeMoreBonusRoute(encode(bundle.title), "${bundle.tag}-more")
+      buildSeeMoreBonusRoute(
+        title = encode(bundle.title),
+        bundleTag = "${bundle.tag}-more",
+      )
         .withBundleMeta(bundle.meta.copy(tag = "${bundle.tag}-more"))
     )
 }

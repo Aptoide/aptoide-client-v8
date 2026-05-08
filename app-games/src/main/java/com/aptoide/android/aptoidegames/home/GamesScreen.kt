@@ -7,15 +7,15 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import cm.aptoide.pt.extensions.ScreenData
-import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
+import cm.aptoide.pt.feature_apps.presentation.appsBySortType
 import cm.aptoide.pt.feature_categories.presentation.rememberAllCategories
 import cm.aptoide.pt.feature_editorial.presentation.rememberEditorialListState
 import com.aptoide.android.aptoidegames.analytics.presentation.InitialAnalyticsMeta
 import com.aptoide.android.aptoidegames.analytics.presentation.OverrideAnalyticsHomeTab
 import com.aptoide.android.aptoidegames.categories.presentation.AllCategoriesView
 import com.aptoide.android.aptoidegames.editorial.SeeMoreEditorialsContent
+import com.aptoide.android.aptoidegames.feature_apps.presentation.BONUS_SORT
 import com.aptoide.android.aptoidegames.feature_apps.presentation.MoreBonusBundleView
-import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberBonusBundle
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.rememberPaEAnalytics
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PlayAndEarnRewardsScreen
 
@@ -93,8 +93,7 @@ private fun GamesScreenTabView(
 
 @Composable
 private fun AppCoinsTabView(navigate: (String) -> Unit) {
-  val (_, bonusBundleTag) = rememberBonusBundle()
-  val (uiState, reload) = rememberAppsByTag("$bonusBundleTag-more")
+  val (uiState, reload) = appsBySortType(sort = BONUS_SORT)
 
   MoreBonusBundleView(
     uiState = uiState,

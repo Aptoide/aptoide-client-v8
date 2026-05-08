@@ -33,6 +33,8 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.ScreenData
@@ -42,6 +44,7 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiStateProvider
+import cm.aptoide.pt.feature_apps.presentation.appsBySortType
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
 import cm.aptoide.pt.feature_apps.presentation.rememberWalletApp
 import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
@@ -67,15 +70,24 @@ import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 
-const val seeMoreBonusRoute = "seeMoreBonus/{title}/{tag}"
+const val seeMoreBonusRoute = "seeMoreBonus/{title}"
+private const val TAG_PARAM = "tag"
+const val BONUS_SORT = "appc_billing_pdownloads"
 
 fun seeMoreBonusScreen() = ScreenData.withAnalytics(
-  route = seeMoreBonusRoute,
+  route = "$seeMoreBonusRoute?$TAG_PARAM={$TAG_PARAM}",
   screenAnalyticsName = "SeeAll",
+  arguments = listOf(
+    navArgument(TAG_PARAM) {
+      type = NavType.StringType
+      nullable = true
+      defaultValue = null
+    }
+  ),
   deepLinks = listOf(navDeepLink { uriPattern = BuildConfig.DEEP_LINK_SCHEMA + seeMoreBonusRoute })
 ) { arguments, navigate, navigateBack ->
   val bundleTitle = arguments?.getString("title")!!
-  val bundleTag = arguments.getString("tag")!!
+  val bundleTag = arguments.getString(TAG_PARAM)?.takeUnless(String::isBlank)
 
   MoreBonusBundleScreen(
     title = bundleTitle,
@@ -87,17 +99,23 @@ fun seeMoreBonusScreen() = ScreenData.withAnalytics(
 
 fun buildSeeMoreBonusRoute(
   title: String,
-  bundleTag: String,
-) = "seeMoreBonus/$title/$bundleTag"
+  bundleTag: String? = null,
+) = "seeMoreBonus/$title".let {
+  if (bundleTag.isNullOrBlank()) it else "$it?$TAG_PARAM=$bundleTag"
+}
 
 @Composable
 private fun MoreBonusBundleScreen(
   title: String,
-  bundleTag: String,
+  bundleTag: String?,
   navigateBack: () -> Unit,
   navigate: (String) -> Unit,
 ) {
-  val (uiState, reload) = rememberAppsByTag(bundleTag)
+  val (uiState, reload) = if (bundleTag != null) {
+    rememberAppsByTag(bundleTag)
+  } else {
+    appsBySortType(sort = BONUS_SORT)
+  }
   val analyticsContext = AnalyticsContext.current
   val generalAnalytics = rememberGeneralAnalytics()
 
