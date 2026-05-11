@@ -7,6 +7,7 @@ import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import cm.aptoide.pt.extensions.runPreviewable
+import cm.aptoide.pt.feature_gamegenie.analytics.GameGenieAnalytics
 import com.aptoide.android.aptoidegames.analytics.AnalyticsSender
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,14 +21,14 @@ class AnalyticsInjectionsProvider @Inject constructor(
 @Composable
 fun rememberGameGenieAnalytics(): GameGenieAnalytics = runPreviewable(
   preview = {
-    GameGenieAnalytics(GenericAnalytics(object : AnalyticsSender {}))
+    AptoideGameGenieAnalytics(GenericAnalytics(object : AnalyticsSender {}))
   },
   real = {
     val analyticsProvider = hiltViewModel<AnalyticsInjectionsProvider>()
 
     val gameGenieAnalytics by remember(key1 = analyticsProvider.genericAnalytics) {
       derivedStateOf {
-        GameGenieAnalytics(
+        AptoideGameGenieAnalytics(
           genericAnalytics = analyticsProvider.genericAnalytics,
         )
       }

@@ -29,6 +29,7 @@ include(
   ":install-manager",
   ":feature_search",
   ":feature_apps",
+  ":feature_gamegenie",
   ":feature-home",
   ":feature_updates",
   ":aptoide-network",

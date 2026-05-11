@@ -26,7 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import com.aptoide.android.aptoidegames.gamegenie.domain.GameCompanion
+import cm.aptoide.pt.feature_gamegenie.domain.GameCompanion
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 

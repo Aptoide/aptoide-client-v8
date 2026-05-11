@@ -10,10 +10,10 @@ import androidx.compose.ui.Modifier
 import com.aptoide.android.aptoidegames.BottomSheetContent
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.error_views.NoConnectionView
-import com.aptoide.android.aptoidegames.gamegenie.domain.Suggestion
-import com.aptoide.android.aptoidegames.gamegenie.domain.GameCompanion
-import com.aptoide.android.aptoidegames.gamegenie.presentation.GameGenieUIState
-import com.aptoide.android.aptoidegames.gamegenie.presentation.GameGenieUIStateType
+import cm.aptoide.pt.feature_gamegenie.domain.Suggestion
+import cm.aptoide.pt.feature_gamegenie.domain.GameCompanion
+import cm.aptoide.pt.feature_gamegenie.presentation.GameGenieUIState
+import cm.aptoide.pt.feature_gamegenie.presentation.GameGenieUIStateType
 import com.aptoide.android.aptoidegames.home.LoadingView
 
 @Composable

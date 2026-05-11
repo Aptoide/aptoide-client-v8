@@ -1,3 +1,5 @@
+package com.aptoide.android.aptoidegames.gamegenie.presentation.composables
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,7 +19,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.aptoide.android.aptoidegames.drawables.icons.getClose
 import com.aptoide.android.aptoidegames.drawables.icons.getGames
-import com.aptoide.android.aptoidegames.gamegenie.domain.ConversationInfo
+import cm.aptoide.pt.feature_gamegenie.domain.ConversationInfo
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 
@@ -55,7 +57,7 @@ fun ConversationHistoryBox(
         contentDescription = null
       )
       Text(
-        text = if (conversationInfo.title.isNullOrEmpty()) conversationInfo.firstMessage else conversationInfo.title,
+        text = if (conversationInfo.title.isNullOrEmpty()) conversationInfo.firstMessage else conversationInfo.title.orEmpty(),
         style = AGTypography.DescriptionGames,
         color = Palette.GreyLight,
         overflow = TextOverflow.Ellipsis,

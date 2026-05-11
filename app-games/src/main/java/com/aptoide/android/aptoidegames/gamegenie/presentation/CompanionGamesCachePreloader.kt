@@ -1,6 +1,7 @@
 package com.aptoide.android.aptoidegames.gamegenie.presentation
 
 import cm.aptoide.pt.feature_flags.domain.FeatureFlags
+import cm.aptoide.pt.feature_gamegenie.presentation.GetGameCompanionsUseCase
 import kotlinx.coroutines.CancellationException
 import timber.log.Timber
 import javax.inject.Inject

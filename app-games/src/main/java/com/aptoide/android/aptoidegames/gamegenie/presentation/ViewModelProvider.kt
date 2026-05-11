@@ -8,7 +8,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cm.aptoide.pt.extensions.runPreviewable
-import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieLocalRepository
+import cm.aptoide.pt.feature_gamegenie.data.GameGenieLocalRepository
+import cm.aptoide.pt.feature_gamegenie.presentation.ConversationHistoryUIState
+import cm.aptoide.pt.feature_gamegenie.presentation.ConversationHistoryViewModel
+import cm.aptoide.pt.feature_gamegenie.presentation.GameGenieUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

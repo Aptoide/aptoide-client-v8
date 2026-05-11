@@ -22,9 +22,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aptoide.android.aptoidegames.R
-import com.aptoide.android.aptoidegames.gamegenie.domain.ChatInteraction
-import com.aptoide.android.aptoidegames.gamegenie.domain.GameCompanion
-import com.aptoide.android.aptoidegames.gamegenie.domain.Suggestion
+import cm.aptoide.pt.feature_gamegenie.domain.ChatInteraction
+import cm.aptoide.pt.feature_gamegenie.domain.GameCompanion
+import cm.aptoide.pt.feature_gamegenie.domain.Suggestion
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 
 @Composable

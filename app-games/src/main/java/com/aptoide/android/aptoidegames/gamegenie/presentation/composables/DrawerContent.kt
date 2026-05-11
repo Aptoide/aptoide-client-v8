@@ -1,6 +1,6 @@
 package com.aptoide.android.aptoidegames.gamegenie.presentation.composables
 
-import ConversationHistoryBox
+import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.ConversationHistoryBox
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,9 +26,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
-import com.aptoide.android.aptoidegames.gamegenie.domain.ConversationInfo
-import com.aptoide.android.aptoidegames.gamegenie.presentation.ConversationHistoryUIState.Idle
-import com.aptoide.android.aptoidegames.gamegenie.presentation.ConversationHistoryUIState.Loading
+import cm.aptoide.pt.feature_gamegenie.domain.ConversationInfo
+import cm.aptoide.pt.feature_gamegenie.presentation.ConversationHistoryUIState.Idle
+import cm.aptoide.pt.feature_gamegenie.presentation.ConversationHistoryUIState.Loading
 import com.aptoide.android.aptoidegames.gamegenie.presentation.rememberGameGenieHistoryUiState
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette

@@ -2,6 +2,7 @@ package com.aptoide.android.aptoidegames.gamegenie.data
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
+import cm.aptoide.pt.feature_gamegenie.data.GameGenieLocalRepository
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel

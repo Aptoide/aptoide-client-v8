@@ -1,6 +1,6 @@
 package com.aptoide.android.aptoidegames.gamegenie.presentation
 
-import ConversationsDrawer
+import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.ConversationsDrawer
 import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,10 +30,13 @@ import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.error_views.NoConnectionView
+import cm.aptoide.pt.feature_gamegenie.analytics.GameGenieAnalytics
 import com.aptoide.android.aptoidegames.gamegenie.analytics.rememberGameGenieAnalytics
-import com.aptoide.android.aptoidegames.gamegenie.analytics.GameGenieAnalytics
-import com.aptoide.android.aptoidegames.gamegenie.domain.GameCompanion
-import com.aptoide.android.aptoidegames.gamegenie.domain.Suggestion
+import cm.aptoide.pt.feature_gamegenie.domain.GameCompanion
+import cm.aptoide.pt.feature_gamegenie.domain.Suggestion
+import cm.aptoide.pt.feature_gamegenie.presentation.GameGenieUIState
+import cm.aptoide.pt.feature_gamegenie.presentation.GameGenieUIStateType
+import cm.aptoide.pt.feature_gamegenie.presentation.GameGenieViewModel
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.ChatBackButton
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.ChatParticipantName
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.CompanionGamesStrip

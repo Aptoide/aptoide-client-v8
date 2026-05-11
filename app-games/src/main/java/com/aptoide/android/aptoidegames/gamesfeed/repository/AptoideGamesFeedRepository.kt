@@ -1,14 +1,14 @@
 package com.aptoide.android.aptoidegames.gamesfeed.repository
 
 import cm.aptoide.pt.install_manager.InstallManager
-import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieApiService
+import com.aptoide.android.aptoidegames.gamegenie.data.GamesFeedApiService
 import javax.inject.Inject
 
 /**
  * Retrofit implementation of GamesFeedRepository, fetching from the ForYou feed API.
  */
 class AptoideGamesFeedRepository @Inject constructor(
-  private val gameGenieApiService: GameGenieApiService,
+  private val gameGenieApiService: GamesFeedApiService,
   private val installManager: InstallManager,
 ) : GamesFeedRepository {
 
