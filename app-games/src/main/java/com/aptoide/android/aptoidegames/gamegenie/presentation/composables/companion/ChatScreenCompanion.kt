@@ -44,10 +44,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.aptoide.android.aptoidegames.R
-import com.aptoide.android.aptoidegames.gamegenie.domain.Suggestion
-import com.aptoide.android.aptoidegames.gamegenie.domain.GameCompanion
+import cm.aptoide.pt.feature_gamegenie.domain.Suggestion
+import cm.aptoide.pt.feature_gamegenie.domain.GameCompanion
 import com.aptoide.android.aptoidegames.gamegenie.presentation.GameGenieOverlayService
-import com.aptoide.android.aptoidegames.gamegenie.presentation.GameGenieUIState
+import cm.aptoide.pt.feature_gamegenie.presentation.GameGenieUIState
 import com.aptoide.android.aptoidegames.gamegenie.presentation.ScreenshotBroadcastReceiver
 import com.aptoide.android.aptoidegames.gamegenie.presentation.TypingAnimation
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.ChatParticipantName
@@ -57,10 +57,10 @@ import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.Selec
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.CompanionGameSwitcherExpandableContent
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.TextInputBar
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.GameGenieOverlayPermissionSheet
+import cm.aptoide.pt.feature_gamegenie.analytics.GameGenieAnalytics
+import cm.aptoide.pt.feature_gamegenie.data.GameGenieLocalRepository
 import com.aptoide.android.aptoidegames.BottomSheetContent
-import com.aptoide.android.aptoidegames.gamegenie.analytics.GameGenieAnalytics
 import com.aptoide.android.aptoidegames.gamegenie.analytics.rememberGameGenieAnalytics
-import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieLocalRepository
 import com.aptoide.android.aptoidegames.gamegenie.data.rememberGameGeniePreferences
 import java.io.File
 import kotlin.math.roundToInt

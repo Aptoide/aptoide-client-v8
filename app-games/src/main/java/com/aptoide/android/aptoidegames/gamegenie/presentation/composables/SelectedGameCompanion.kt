@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.drawables.icons.getLeftArrow
-import com.aptoide.android.aptoidegames.gamegenie.domain.GameCompanion
+import cm.aptoide.pt.feature_gamegenie.domain.GameCompanion
 import com.aptoide.android.aptoidegames.theme.Palette
 import kotlin.math.roundToInt
 

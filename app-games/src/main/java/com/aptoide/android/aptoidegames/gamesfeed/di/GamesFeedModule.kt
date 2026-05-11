@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import cm.aptoide.pt.install_manager.InstallManager
-import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieApiService
+import com.aptoide.android.aptoidegames.gamegenie.data.GamesFeedApiService
 import com.aptoide.android.aptoidegames.gamesFeedVisibilityDataStore
 import com.aptoide.android.aptoidegames.gamesfeed.repository.AptoideGamesFeedLocalRepository
 import com.aptoide.android.aptoidegames.gamesfeed.repository.AptoideGamesFeedRepository
@@ -25,7 +25,7 @@ object GamesFeedModule {
   @Singleton
   @Provides
   fun provideGamesFeedRepository(
-    gameGenieApiService: GameGenieApiService,
+    gameGenieApiService: GamesFeedApiService,
     installManager: InstallManager,
   ): GamesFeedRepository {
     return AptoideGamesFeedRepository(gameGenieApiService, installManager)

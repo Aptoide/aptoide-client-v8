@@ -1,6 +1,7 @@
 package com.aptoide.android.aptoidegames.gamegenie.presentation
 
-import com.aptoide.android.aptoidegames.gamegenie.analytics.GameGenieAnalytics
+import cm.aptoide.pt.feature_gamegenie.analytics.GameGenieAnalytics
+import cm.aptoide.pt.feature_gamegenie.presentation.GameGenieUseCase
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent

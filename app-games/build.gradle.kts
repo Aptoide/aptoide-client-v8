@@ -236,6 +236,7 @@ dependencies {
   implementation(projects.featureFlags)
   implementation(projects.featureAppview)
   implementation(projects.featureCategories)
+  implementation(projects.featureGamegenie)
   implementation(projects.featureEditorial)
   implementation(projects.aptoideUi)
   implementation(projects.featureOos)

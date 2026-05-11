@@ -1,12 +1,13 @@
 package com.aptoide.android.aptoidegames.gamegenie.presentation
 
-import ConversationsDrawer
+import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.ConversationsDrawer
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import cm.aptoide.pt.extensions.ScreenData
+import cm.aptoide.pt.feature_gamegenie.analytics.GameGenieAnalytics
+import cm.aptoide.pt.feature_gamegenie.presentation.GameGenieViewModel
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
-import com.aptoide.android.aptoidegames.gamegenie.analytics.GameGenieAnalytics
 import com.aptoide.android.aptoidegames.gamegenie.analytics.rememberGameGenieAnalytics
 import com.aptoide.android.aptoidegames.mmp.WithUTM
 

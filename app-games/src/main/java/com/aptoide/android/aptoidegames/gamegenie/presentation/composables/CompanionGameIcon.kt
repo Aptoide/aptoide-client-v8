@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.graphics.createBitmap
 import androidx.core.graphics.scale
 import com.aptoide.android.aptoidegames.R
-import com.aptoide.android.aptoidegames.gamegenie.domain.GameCompanion
+import cm.aptoide.pt.feature_gamegenie.domain.GameCompanion
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 
@@ -78,9 +78,10 @@ fun GameCompanionIcon(
           ),
         contentAlignment = Alignment.Center
       ) {
-        if (game.image != null) {
-          val painter = remember(game.packageName, game.image, imagePxSize) {
-            BitmapPainter(game.image.toBitmap(imagePxSize, imagePxSize).asImageBitmap())
+        val image = game.image
+        if (image != null) {
+          val painter = remember(game.packageName, image, imagePxSize) {
+            BitmapPainter(image.toBitmap(imagePxSize, imagePxSize).asImageBitmap())
           }
 
           Image(

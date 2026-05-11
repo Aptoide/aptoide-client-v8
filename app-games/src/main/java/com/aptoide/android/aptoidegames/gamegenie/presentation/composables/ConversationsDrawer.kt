@@ -1,3 +1,5 @@
+package com.aptoide.android.aptoidegames.gamegenie.presentation.composables
+
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
