@@ -26,6 +26,7 @@ import coil.memory.MemoryCache
 import coil.util.DebugLogger
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
+import com.aptoide.android.aptoidegames.app_open_ads.AppOpenAdInitializer
 import com.aptoide.android.aptoidegames.device_info.DeviceSecurityChecker
 import com.aptoide.android.aptoidegames.device_info.analytics.DeviceInfoAnalytics
 import com.aptoide.android.aptoidegames.feature_companion_apps_notification.CompanionAppsManager
@@ -78,6 +79,9 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
 
   @Inject
   lateinit var featureFlags: FeatureFlags
+
+  @Inject
+  lateinit var appOpenAdInitializer: AppOpenAdInitializer
 
   @Inject
   lateinit var installManager: InstallManager
@@ -176,7 +180,12 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
 
   private fun initFeatureFlags() {
     CoroutineScope(Dispatchers.IO).launch {
-      featureFlags.initialize()
+      runCatching {
+        featureFlags.initialize()
+        appOpenAdInitializer.initialize()
+      }.onFailure { throwable ->
+        Timber.e(throwable, "Failed to initialize feature flags.")
+      }
     }
   }
 

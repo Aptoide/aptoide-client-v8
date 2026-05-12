@@ -40,6 +40,7 @@ googleId = "1.2.0"
 playServicesAuth = "21.5.1"
 constraintLayoutCompose = "1.1.1"
 lifecycleService = "2.10.0"
+applovin = "13.6.2"
 
 #test libraries
 junit = "4.13.2"
@@ -116,6 +117,7 @@ googleId = { module = "com.google.android.libraries.identity.googleid:googleid",
 play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
 constraintLayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintLayoutCompose" }
 lifecycle-service = { module = "androidx.lifecycle:lifecycle-service", version.ref = "lifecycleService" }
+applovin-sdk = { module = "com.applovin:applovin-sdk", version.ref = "applovin" }
 
 #Test library dependencies
 junit = { module = "junit:junit", version.ref = "junit" }

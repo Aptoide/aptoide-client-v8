@@ -76,6 +76,19 @@ android {
       name = "OEMID",
       value = "\"${project.properties[System.getenv("OEMID") ?: KeyHelper.OEMID]}\""
     )
+    buildConfigField(
+      type = "String",
+      name = "APPLOVIN_SDK_KEY",
+      value = (project.findProperty("APPLOVIN_SDK_KEY") as? String
+        ?: System.getenv("APPLOVIN_SDK_KEY")
+        ?: "").toBuildConfigString()
+    )
+    buildConfigField(
+      type = "String",
+      name = "APP_OPEN_AD_UNIT_ID",
+      value = "\"${project.findProperty("APP_OPEN_AD_UNIT_ID") ?: ""}\""
+    )
+
 
     buildConfigFieldFromGradleProperty("ROOM_SCHEMA_VERSION")
     buildConfigFieldFromGradleProperty("ROOM_DATABASE_NAME")
@@ -110,7 +123,7 @@ android {
     create("dev") {
       dimension = "mode"
       applicationIdSuffix = ".dev"
-      
+
       buildConfigField(
         type = "String",
         name = "INDICATIVE_KEY",
@@ -283,6 +296,7 @@ dependencies {
 
   implementation(libs.play.services.basement)
   implementation(libs.gms.play.services.ads)
+  implementation(libs.applovin.sdk)
 
   //Accompanist
   implementation(libs.accompanist.webview)
@@ -326,4 +340,8 @@ fun BaseFlavor.buildConfigFieldFromGradleProperty(gradlePropertyName: String) {
 fun getDate(): String {
   val sdf = SimpleDateFormat("yyyyMMdd")
   return sdf.format(Date())
+}
+
+fun String.toBuildConfigString(): String {
+  return "\"${replace("\\", "\\\\").replace("\"", "\\\"")}\""
 }

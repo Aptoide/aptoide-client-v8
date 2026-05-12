@@ -6,11 +6,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.aptoide.android.aptoidegames.apkfy.ApkfySessionPreferences
 import com.aptoide.android.aptoidegames.permissions.InstallPermissionsViewModel
 
 @Composable
 fun ApkfyHandler(navigate: (String) -> Unit) {
+  val context = LocalContext.current
   val apkfyState = rememberApkfyState()
   var apkfyShown by rememberSaveable { mutableStateOf(false) }
   val installPermissionsViewModel = hiltViewModel<InstallPermissionsViewModel>()
@@ -30,6 +33,7 @@ fun ApkfyHandler(navigate: (String) -> Unit) {
         }
       }
 
+      ApkfySessionPreferences(context).markApkfySessionResolved()
       apkfyShown = true
     }
   }
