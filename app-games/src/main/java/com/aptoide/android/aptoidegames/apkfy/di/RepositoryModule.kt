@@ -5,6 +5,7 @@ import cm.aptoide.pt.feature_apkfy.domain.ApkfyManager
 import cm.aptoide.pt.feature_apkfy.domain.ApkfyManagerImpl
 import com.aptoide.android.aptoidegames.LocalIdsRepository
 import com.aptoide.android.aptoidegames.apkfy.AGApkfyFilter
+import com.aptoide.android.aptoidegames.apkfy.ApkfySessionPreferences
 import com.aptoide.android.aptoidegames.apkfy.DownloadPermissionStateProbe
 import com.aptoide.android.aptoidegames.apkfy.analytics.ApkfyAnalytics
 import com.aptoide.android.aptoidegames.apkfy.analytics.ApkfyManagerProbe
@@ -24,12 +25,14 @@ internal object RepositoryModule {
   fun provideApkfyManager(
     apkfyManager: ApkfyManagerImpl,
     apkfyAnalytics: ApkfyAnalytics,
-    idsRepository: LocalIdsRepository
+    idsRepository: LocalIdsRepository,
+    apkfySessionPreferences: ApkfySessionPreferences,
   ): ApkfyManager =
     ApkfyManagerProbe(
       apkfyManager = apkfyManager,
       apkfyAnalytics = apkfyAnalytics,
-      idsRepository = idsRepository
+      idsRepository = idsRepository,
+      apkfySessionPreferences = apkfySessionPreferences,
     )
 
   @Singleton

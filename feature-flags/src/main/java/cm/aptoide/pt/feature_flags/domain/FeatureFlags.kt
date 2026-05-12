@@ -28,6 +28,14 @@ interface FeatureFlags {
 
   suspend fun getStringList(key: String): List<String> = emptyList()
 
+  /**
+   * Like [getStringList] but returns null when the key is missing or the value
+   * cannot be parsed, so callers can distinguish "key absent" from "empty list".
+   */
+  suspend fun getStringListOrNull(key: String): List<String>? = null
+
+  suspend fun getInt(key: String, default: Int): Int = default
+
   suspend fun <T> getObject(key: String, klass: Class<T>): T? = null
 
   /**
@@ -103,6 +111,21 @@ class FeatureFlagsImpl @Inject constructor(
         result.filterNot { it.isBlank() }
       }
     }.getOrNull() ?: emptyList()
+  }
+
+  override suspend fun getStringListOrNull(key: String): List<String>? = mutex.withLock {
+    runCatching {
+      val raw = featureFlags.getString(key)
+      JSONArray(raw).let { array ->
+        (0 until array.length()).mapNotNull { i ->
+          array.optString(i).takeIf { it.isNotBlank() }
+        }
+      }
+    }.getOrNull()
+  }
+
+  override suspend fun getInt(key: String, default: Int): Int = mutex.withLock {
+    featureFlags.optString(key, default.toString()).toIntOrNull() ?: default
   }
 
   override suspend fun <T> getObject(key: String, klass: Class<T>) = mutex.withLock {

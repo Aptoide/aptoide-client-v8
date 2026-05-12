@@ -4,4 +4,24 @@
     <key>show_play_and_earn</key>
     <value>false</value>
   </entry>
+  <entry>
+    <key>appopen_enabled</key>
+    <value>false</value>
+  </entry>
+  <entry>
+    <key>appopen_excluded_geos</key>
+    <value>["US","CA","GB","AT","BE","BG","HR","CY","CZ","DK","EE","FI","FR","DE","GR","HU","IE","IT","LV","LT","LU","MT","NL","PL","PT","RO","SK","SI","ES","SE"]</value>
+  </entry>
+  <entry>
+    <key>appopen_cap_window_minutes</key>
+    <value>30</value>
+  </entry>
+  <entry>
+    <key>appopen_cap_max_per_window</key>
+    <value>1</value>
+  </entry>
+  <entry>
+    <key>appopen_load_timeout_ms</key>
+    <value>3000</value>
+  </entry>
 </defaultsMap>

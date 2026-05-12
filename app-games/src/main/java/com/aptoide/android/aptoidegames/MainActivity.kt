@@ -9,6 +9,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.LaunchedEffect
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import cm.aptoide.pt.install_manager.InstallManager
@@ -132,7 +133,7 @@ class MainActivity : AppCompatActivity() {
   }
 
   private fun handleStartup() {
-    CoroutineScope(Dispatchers.Main).launch {
+    lifecycleScope.launch {
       val isFirstLaunch = appLaunchPreferencesManager.isFirstLaunch()
       sendAGStartAnalytics(isFirstLaunch)
 
