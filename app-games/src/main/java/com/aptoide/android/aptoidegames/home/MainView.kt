@@ -29,7 +29,6 @@ import cm.aptoide.pt.extensions.staticComposable
 import com.aptoide.android.aptoidegames.AptoideGamesBottomSheet
 import com.aptoide.android.aptoidegames.BottomSheetContent
 import com.aptoide.android.aptoidegames.apkfy.presentation.ApkfyHandler
-import com.aptoide.android.aptoidegames.apkfy.presentation.RobloxApkfyMultiInstallScreen
 import com.aptoide.android.aptoidegames.apkfy.presentation.RobloxApkfyRecommendationScreen
 import com.aptoide.android.aptoidegames.apkfy.presentation.apkfyScreen
 import com.aptoide.android.aptoidegames.apkfy.presentation.detailedApkfyRoute
@@ -120,7 +119,7 @@ fun MainView(navController: NavHostController) {
         navigate = navigate
       ) { showBottomSheet ->
         PaEHomeLayout(navController = navController) {
-        Scaffold(
+          Scaffold(
             snackbarHost = {
               SnackbarHost(hostState = snackBarHostState) {
                 Popup {
@@ -334,12 +333,6 @@ private fun NavigationGraph(
       navigate = navController::navigateTo,
       goBack = navController::navigateUp,
       screenData = robloxApkfyScreen()
-    )
-
-    animatedComposable(
-      navigate = navController::navigateTo,
-      goBack = navController::navigateUp,
-      screenData = RobloxApkfyMultiInstallScreen()
     )
 
     animatedComposable(

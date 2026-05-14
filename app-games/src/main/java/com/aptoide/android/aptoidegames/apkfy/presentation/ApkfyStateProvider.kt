@@ -12,7 +12,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -27,7 +26,6 @@ import cm.aptoide.pt.install_manager.InstallManager
 import com.aptoide.android.aptoidegames.apkfy.DownloadPermissionState
 import com.aptoide.android.aptoidegames.apkfy.DownloadPermissionStateProbe
 import com.aptoide.android.aptoidegames.apkfy.isRoblox
-
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
@@ -141,38 +139,3 @@ fun rememberDownloadPermissionState(app: App): DownloadPermissionState? = runPre
     state
   }
 )
-
-@SuppressLint("ContextCastToActivity")
-@Composable
-fun rememberCompanionAppsSelection(
-  apkfyApp: App,
-  appList: List<App>,
-): CompanionAppsState =
-  runPreviewable(
-    preview = { CompanionAppsState(setOf("cm.aptoide.pt"), {}, { _, _ -> }) },
-    real = {
-      val injectionsProvider = hiltViewModel<InjectionsProvider>()
-      val companionAppsSelectionViewModel: CompanionAppsSelectionViewModel = viewModel(
-        key = "companionApps.${appList.hashCode()}",
-        viewModelStoreOwner = LocalContext.current as AppCompatActivity,
-        factory = object : ViewModelProvider.Factory {
-          override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            @Suppress("UNCHECKED_CAST")
-            return CompanionAppsSelectionViewModel(
-              apkfyApp = apkfyApp,
-              companionAppsList = appList,
-              installManager = injectionsProvider.installManager,
-              installPackageInfoMapper = injectionsProvider.installPackageInfoMapper,
-              installedAppOpener = injectionsProvider.installedAppOpener
-            ) as T
-          }
-        }
-      )
-      val state by companionAppsSelectionViewModel.selectedIds.collectAsState()
-      CompanionAppsState(
-        selectedPackages = state,
-        toggleSelection = companionAppsSelectionViewModel::toggleSelection,
-        install = companionAppsSelectionViewModel::install
-      )
-    }
-  )

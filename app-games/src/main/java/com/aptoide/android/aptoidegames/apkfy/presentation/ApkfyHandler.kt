@@ -28,10 +28,6 @@ fun ApkfyHandler(navigate: (String) -> Unit) {
         is ApkfyUiState.BaselineWithRecommendation -> {
           navigate(apkfyScreenRoute)
         }
-
-        is ApkfyUiState.RobloxCompanionAppsVariant -> {
-          navigate(robloxMultiInstallApkfyRoute)
-        }
       }
 
       ApkfySessionPreferences(context).markApkfySessionResolved()

@@ -409,6 +409,15 @@ class InstallAnalyticsImpl(
           )
         )
       }
+
+      if (packageName == RECOMMENDATION_PACKAGE_NAME) {
+        genericAnalytics.logEvent(
+          name = "exp83_recommendation_install_failed",
+          params = installPackageInfo.toAppGenericParameters(
+            packageName = packageName,
+          )
+        )
+      }
     }
   }
 

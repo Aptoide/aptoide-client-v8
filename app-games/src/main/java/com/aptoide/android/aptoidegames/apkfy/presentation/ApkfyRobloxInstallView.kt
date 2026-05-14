@@ -1,12 +1,20 @@
 package com.aptoide.android.aptoidegames.apkfy.presentation
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Divider
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.download_view.presentation.DownloadUiState
 import cm.aptoide.pt.download_view.presentation.ExecutionBlocker.UNMETERED
@@ -14,13 +22,17 @@ import cm.aptoide.pt.download_view.presentation.downloadUiStates
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
+import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.design_system.PrimarySmallButton
 import com.aptoide.android.aptoidegames.design_system.PrimarySmallOutlinedButton
 import com.aptoide.android.aptoidegames.design_system.SecondarySmallOutlinedButton
+import com.aptoide.android.aptoidegames.drawables.icons.getTrustedIcon
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewState
 import com.aptoide.android.aptoidegames.installer.presentation.installViewStates
 import com.aptoide.android.aptoidegames.installer.presentation.toInstallViewState
+import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
+import com.aptoide.android.aptoidegames.theme.Palette
 
 @PreviewDark
 @Composable
@@ -46,6 +58,27 @@ fun ApkfyRobloxInstallViewPreview(
       }
       divider()
     }
+  }
+}
+
+@Composable
+fun TrustedBadge() {
+  Row(
+    verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.spacedBy(2.dp),
+    modifier = Modifier
+      .padding(horizontal = 4.dp, vertical = 3.dp)
+  ) {
+    Image(
+      imageVector = getTrustedIcon(Palette.Green),
+      contentDescription = null,
+      modifier = Modifier.size(16.dp)
+    )
+    Text(
+      text = stringResource(R.string.trusted_badge),
+      color = Palette.Green,
+      style = AGTypography.InputsXS
+    )
   }
 }
 
