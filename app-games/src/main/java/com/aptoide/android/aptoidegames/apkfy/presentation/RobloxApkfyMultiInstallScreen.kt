@@ -146,7 +146,7 @@ fun RobloxApkfyMultiInstallView(
   val apkfyAnalytics = rememberApkfyAnalytics()
   val installAnalytics = rememberInstallAnalytics()
   LaunchedEffect(Unit) {
-    apkfyAnalytics.sendRobloxExp82ApkfyShown()
+    apkfyAnalytics.sendRobloxExp83ApkfyShown()
     apkfyAnalytics.sendApkfyShown()
   }
   var hasSelectedApps by rememberSaveable { mutableStateOf(false) }
@@ -213,10 +213,7 @@ fun RobloxApkfyMultiInstallView(
           install = install,
           installAnalytics = installAnalytics,
           onInstallClick = onSelectApps,
-          autoOpenDefault = autoOpenDefault,
           autoOpenFinal = autoOpenEnabled,
-          checkDiffCounter = checkDiffCounter,
-          switchCounter = switchCounter,
           modifier = Modifier
         )
       }
@@ -231,10 +228,7 @@ private fun MultiInstallButton(
   install: (UTMInfo, Boolean) -> Unit,
   installAnalytics: InstallAnalytics,
   onInstallClick: () -> Unit,
-  autoOpenDefault: Boolean,
   autoOpenFinal: Boolean,
-  checkDiffCounter: Int,
-  switchCounter: Int,
   modifier: Modifier = Modifier
 ) {
   val context = LocalContext.current
@@ -247,12 +241,8 @@ private fun MultiInstallButton(
     onClick = {
       AnalyticsInstallPackageInfoMapper.currentAnalyticsUIContext =
         analyticsUIContext.copy(installAction = InstallAction.INSTALL)
-      installAnalytics.sendApkfyRobloxExp82InstallClickEvent(
-        numberOfCheckPresses = checkDiffCounter,
-        autoOpenDefault = autoOpenDefault,
-        autoOpenFinal = autoOpenFinal,
-        switchCheckDiff = switchCounter,
-        apkfyVariant = if (autoOpenDefault) "multiinstall_auto_on" else "multiinstall_auto_off"
+      installAnalytics.sendExp83RobloxDownloadStarted(
+        variant = "roblox_companion_apps"
       )
       installAnalytics.sendClickEvent(apkfyApp, analyticsUIContext, networkType)
       install(utmContext, autoOpenFinal)
@@ -342,7 +332,7 @@ fun CompanionAppsSection(
 }
 
 @Composable
-fun TopPlayedCompanionBanner() {
+private fun TopPlayedCompanionBanner() {
   Row(
     verticalAlignment = Alignment.CenterVertically,
     horizontalArrangement = Arrangement.spacedBy(4.dp),

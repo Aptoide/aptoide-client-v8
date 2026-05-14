@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.download_view.presentation.DownloadUiState
@@ -47,6 +48,7 @@ fun InstallViewShort(
   app: App,
   onInstallStarted: () -> Unit = {},
   onCancel: () -> Unit = {},
+  onOpen: () -> Unit = {},
   cancelable: Boolean = true,
 ) {
   val installViewState = installViewStates(
@@ -57,6 +59,7 @@ fun InstallViewShort(
 
   InstallViewShortContent(
     installViewState = installViewState,
+    onOpen = onOpen,
     cancelable = cancelable,
   )
 }
@@ -64,26 +67,32 @@ fun InstallViewShort(
 @Composable
 private fun InstallViewShortContent(
   installViewState: InstallViewState,
+  modifier: Modifier = Modifier,
+  onOpen: () -> Unit = {},
   cancelable: Boolean = true,
 ) {
   when (val state = installViewState.uiState) {
     is DownloadUiState.Install -> PrimarySmallButton(
       onClick = state.install,
+      modifier = modifier,
       title = installViewState.actionLabel,
     )
 
     is DownloadUiState.Migrate -> AccentSmallButton(
       onClick = state.migrate,
+      modifier = modifier,
       title = installViewState.actionLabel,
     )
 
     is DownloadUiState.MigrateAlias -> AccentSmallButton(
       onClick = state.migrateAlias,
+      modifier = modifier,
       title = installViewState.actionLabel,
     )
 
     is DownloadUiState.Outdated -> PrimarySmallButton(
       onClick = state.update,
+      modifier = modifier,
       title = installViewState.actionLabel,
     )
 
@@ -92,6 +101,7 @@ private fun InstallViewShortContent(
         if (state.blocker != UNMETERED && cancelable) {
           SecondarySmallOutlinedButton(
             onClick = it,
+            modifier = modifier,
             title = installViewState.actionLabel,
           )
         }
@@ -101,6 +111,7 @@ private fun InstallViewShortContent(
     is DownloadUiState.Downloading -> if (cancelable) {
       SecondarySmallOutlinedButton(
         onClick = state.cancel,
+        modifier = modifier,
         title = installViewState.actionLabel,
       )
     }
@@ -108,17 +119,23 @@ private fun InstallViewShortContent(
     is DownloadUiState.ReadyToInstall -> if (cancelable) {
       SecondarySmallOutlinedButton(
         onClick = state.cancel,
+        modifier = modifier,
         title = installViewState.actionLabel,
       )
     }
 
     is DownloadUiState.Installed -> PrimarySmallOutlinedButton(
-      onClick = state.open,
+      onClick = {
+        onOpen()
+        state.open()
+      },
+      modifier = modifier,
       title = installViewState.actionLabel,
     )
 
     is DownloadUiState.Error -> PrimarySmallButton(
       onClick = state.retry,
+      modifier = modifier,
       title = installViewState.actionLabel,
     )
 

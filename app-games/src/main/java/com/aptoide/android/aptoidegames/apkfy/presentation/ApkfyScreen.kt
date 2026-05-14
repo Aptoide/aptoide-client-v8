@@ -95,7 +95,7 @@ fun ApkfyScreen(
     } else {
       apkfyAnalytics.sendApkfyShown()
       if (apkfyData.app.isRoblox()) {
-        apkfyAnalytics.sendRobloxExp82ApkfyShown()
+        apkfyAnalytics.sendRobloxExp83ApkfyShown()
       }
     }
   }
@@ -132,14 +132,13 @@ fun ApkfyScreen(
             .padding(bottom = 32.dp),
           app = apkfyData.app,
           onInstallStarted = {
-            if (apkfyData.app.isRoblox()) {
-              installAnalytics.sendApkfyRobloxExp82InstallClickEvent(
-                numberOfCheckPresses = null,
-                autoOpenDefault = null,
-                autoOpenFinal = null,
-                switchCheckDiff = null,
-                apkfyVariant = "base"
-              )
+            if (apkfyData.app.isRoblox() && apkfyState !is ApkfyUiState.Default) {
+              val variant = if (apkfyState is ApkfyUiState.BaselineWithRecommendation)
+                "with_recommendation" else "baseline"
+              installAnalytics.sendExp83RobloxDownloadStarted(variant = variant)
+              if (apkfyState is ApkfyUiState.BaselineWithRecommendation) {
+                navigate(robloxApkfyRecommendationRoute)
+              }
             }
           }
         )
