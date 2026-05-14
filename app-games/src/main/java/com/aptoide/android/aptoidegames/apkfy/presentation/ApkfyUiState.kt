@@ -5,5 +5,8 @@ import cm.aptoide.pt.feature_apkfy.presentation.ApkfyData
 sealed class ApkfyUiState(val data: ApkfyData) {
   class Default(data: ApkfyData) : ApkfyUiState(data)
   class Baseline(data: ApkfyData) : ApkfyUiState(data)
-  class RobloxCompanionAppsVariant(data: ApkfyData, val autoOpenDefault: Boolean) : ApkfyUiState(data)
+  class BaselineWithRecommendation(
+    data: ApkfyData,
+    val recommendationVideoUrl: String,
+  ) : ApkfyUiState(data)
 }

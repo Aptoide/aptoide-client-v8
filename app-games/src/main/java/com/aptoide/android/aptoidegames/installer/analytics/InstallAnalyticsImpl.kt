@@ -358,7 +358,15 @@ class InstallAnalyticsImpl(
       )
       if (packageName == ROBLOX_PACKAGE_NAME) {
         genericAnalytics.logEvent(
-          name = "exp82_install_success_roblox",
+          name = "exp83_roblox_install_success",
+          params = installPackageInfo.toAppGenericParameters(
+            packageName = packageName,
+          )
+        )
+      }
+      if (packageName == RECOMMENDATION_PACKAGE_NAME) {
+        genericAnalytics.logEvent(
+          name = "exp83_recommendation_install_success",
           params = installPackageInfo.toAppGenericParameters(
             packageName = packageName,
           )
@@ -391,6 +399,17 @@ class InstallAnalyticsImpl(
       P_ERROR_MESSAGE to errorMessage,
       P_ERROR_TYPE to errorType,
     )
+
+    if (installPackageInfo.payload.toAnalyticsPayload()?.isApkfy == true) {
+      if (packageName == ROBLOX_PACKAGE_NAME) {
+        genericAnalytics.logEvent(
+          name = "exp83_roblox_install_failed",
+          params = installPackageInfo.toAppGenericParameters(
+            packageName = packageName,
+          )
+        )
+      }
+    }
   }
 
   override fun sendInstallAbortEvent(
@@ -494,21 +513,13 @@ class InstallAnalyticsImpl(
     )
   )
 
-  override fun sendApkfyRobloxExp82InstallClickEvent(
-    numberOfCheckPresses: Int?,
-    autoOpenDefault: Boolean?,
-    autoOpenFinal: Boolean?,
-    switchCheckDiff: Int?,
-    apkfyVariant: String
+  override fun sendExp83RobloxDownloadStarted(
+    variant: String,
   ) {
     genericAnalytics.logEvent(
-      name = "exp82_apkfy_install_click",
+      name = "exp83_roblox_download_started",
       params = mapOfNonNull(
-        "check_diff" to numberOfCheckPresses,
-        "auto_open_default" to autoOpenDefault,
-        "auto_open_final" to autoOpenFinal,
-        "switch_check_diff" to switchCheckDiff,
-        "apkfy_variant" to apkfyVariant
+        "variant" to variant
       )
     )
   }
@@ -584,6 +595,7 @@ class InstallAnalyticsImpl(
 
   companion object {
     private const val ROBLOX_PACKAGE_NAME = "com.roblox.client"
+    private const val RECOMMENDATION_PACKAGE_NAME = "com.moonton.mobilehero"
     private const val P_STORE = "store"
     private const val P_STATUS = "status"
     private const val P_TRUSTED_BADGE = "trusted_badge"

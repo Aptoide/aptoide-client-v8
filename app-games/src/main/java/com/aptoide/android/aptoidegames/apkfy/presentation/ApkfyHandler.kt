@@ -24,7 +24,8 @@ fun ApkfyHandler(navigate: (String) -> Unit) {
       installPermissionsViewModel.requestInstallPermissions()
       when (apkfyState) {
         is ApkfyUiState.Default,
-        is ApkfyUiState.Baseline -> {
+        is ApkfyUiState.Baseline,
+        is ApkfyUiState.BaselineWithRecommendation -> {
           navigate(apkfyScreenRoute)
         }
 

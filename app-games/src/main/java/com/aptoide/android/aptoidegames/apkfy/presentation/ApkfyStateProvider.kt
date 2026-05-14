@@ -17,14 +17,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
-import cm.aptoide.pt.download_view.presentation.InstalledAppOpener
 import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.feature_apkfy.presentation.ApkfyData
 import cm.aptoide.pt.feature_apkfy.presentation.rememberApkfyData
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_flags.domain.FeatureFlags
-import cm.aptoide.pt.install_info_mapper.domain.InstallPackageInfoMapper
 import cm.aptoide.pt.install_manager.InstallManager
 import com.aptoide.android.aptoidegames.apkfy.DownloadPermissionState
 import com.aptoide.android.aptoidegames.apkfy.DownloadPermissionStateProbe
@@ -39,13 +37,12 @@ import javax.inject.Inject
 class InjectionsProvider @Inject constructor(
   val featureFlags: FeatureFlags,
   val downloadPermissionStateProbe: DownloadPermissionStateProbe,
-  val installManager: InstallManager,
-  val installPackageInfoMapper: InstallPackageInfoMapper,
-  val installedAppOpener: InstalledAppOpener
+  val installManager: InstallManager
 ) : ViewModel()
 
 data class ApkfyFeatureFlags(
   val apkfyVariant: String? = null,
+  val recommendationVideoUrl: String? = null,
 )
 
 val previewApkfyData = ApkfyData(
@@ -74,15 +71,18 @@ fun rememberApkfyState(): ApkfyUiState? = runPreviewable(
             if (data.app.isRoblox()) {
               when (flags.apkfyVariant) {
                 "baseline" -> ApkfyUiState.Baseline(data)
-                "roblox_multi_install_open_off" -> ApkfyUiState.RobloxCompanionAppsVariant(
-                  data,
-                  false
-                )
 
-                "roblox_multi_install_open_on" -> ApkfyUiState.RobloxCompanionAppsVariant(
-                  data,
-                  true
-                )
+                "roblox_with_recommendation" -> {
+                  val videoUrl = flags.recommendationVideoUrl
+                  if (!videoUrl.isNullOrEmpty()) {
+                    ApkfyUiState.BaselineWithRecommendation(
+                      data = data,
+                      recommendationVideoUrl = videoUrl,
+                    )
+                  } else {
+                    ApkfyUiState.Default(data)
+                  }
+                }
 
                 else -> ApkfyUiState.Default(data)
               }
@@ -98,13 +98,16 @@ fun rememberApkfyState(): ApkfyUiState? = runPreviewable(
       coroutineScope.launch {
         apkfyFeatureFlags = withTimeoutOrNull(5000) {
           val flag =
-            vm.featureFlags.getFlagAsString("exp82_apkfy_variant")
+            vm.featureFlags.getFlagAsString("exp83_apkfy_variant")
+          val videoUrl =
+            vm.featureFlags.getFlagAsString("exp83_recommendation_video_url")
           ApkfyFeatureFlags(
-            apkfyVariant = flag
+            apkfyVariant = flag,
+            recommendationVideoUrl = videoUrl,
           )
         } ?: ApkfyFeatureFlags()
         apkfyFeatureFlags?.apkfyVariant?.let { variant ->
-          apkfyAnalytics.setExp82GroupUserProperty(variant)
+          apkfyAnalytics.setExp83GroupUserProperty(variant)
         }
       }
     }

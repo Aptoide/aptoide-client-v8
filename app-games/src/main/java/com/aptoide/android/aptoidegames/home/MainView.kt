@@ -30,9 +30,11 @@ import com.aptoide.android.aptoidegames.AptoideGamesBottomSheet
 import com.aptoide.android.aptoidegames.BottomSheetContent
 import com.aptoide.android.aptoidegames.apkfy.presentation.ApkfyHandler
 import com.aptoide.android.aptoidegames.apkfy.presentation.RobloxApkfyMultiInstallScreen
+import com.aptoide.android.aptoidegames.apkfy.presentation.RobloxApkfyRecommendationScreen
 import com.aptoide.android.aptoidegames.apkfy.presentation.apkfyScreen
 import com.aptoide.android.aptoidegames.apkfy.presentation.detailedApkfyRoute
 import com.aptoide.android.aptoidegames.apkfy.presentation.detailedApkfyScreen
+import com.aptoide.android.aptoidegames.apkfy.presentation.robloxApkfyRecommendationRoute
 import com.aptoide.android.aptoidegames.apkfy.presentation.robloxApkfyRoute
 import com.aptoide.android.aptoidegames.apkfy.presentation.robloxApkfyScreen
 import com.aptoide.android.aptoidegames.appview.appViewScreen
@@ -99,7 +101,8 @@ fun MainView(navController: NavHostController) {
         !currentRoute.contains(
           genieSearchRoute
         ) &&
-        !currentRoute.contains(robloxApkfyRoute)
+        !currentRoute.contains(robloxApkfyRoute) &&
+        !currentRoute.contains(robloxApkfyRecommendationRoute)
     } else {
       true
     }
@@ -337,6 +340,12 @@ private fun NavigationGraph(
       navigate = navController::navigateTo,
       goBack = navController::navigateUp,
       screenData = RobloxApkfyMultiInstallScreen()
+    )
+
+    animatedComposable(
+      navigate = navController::navigateTo,
+      goBack = navController::navigateUp,
+      screenData = RobloxApkfyRecommendationScreen()
     )
 
     animatedComposable(

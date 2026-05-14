@@ -329,6 +329,10 @@ dependencies {
   implementation(libs.constraintLayout.compose)
 
   implementation(libs.lifecycle.service)
+
+  //Media3 ExoPlayer
+  implementation(libs.media3.exoplayer)
+  implementation(libs.media3.ui)
 }
 
 fun BaseFlavor.buildConfigFieldFromGradleProperty(gradlePropertyName: String) {

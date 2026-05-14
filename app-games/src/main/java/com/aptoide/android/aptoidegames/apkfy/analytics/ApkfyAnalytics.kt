@@ -56,15 +56,22 @@ class ApkfyAnalytics @Inject constructor(
 
   fun sendRobloxApkfyShown() = genericAnalytics.logEvent("roblox_apkfy_shown", params = emptyMap())
 
-  fun sendRobloxExp82ApkfyShown() = genericAnalytics.logEvent("exp82_roblox_apkfy_shown", params = emptyMap())
+  fun sendRobloxExp83ApkfyShown() =
+    genericAnalytics.logEvent("exp83_roblox_apkfy_shown", params = emptyMap())
 
-  fun setExp82GroupUserProperty(variant: String) =
-    biAnalytics.setUserProperties(UserProperty("exp82_group", variant))
+  fun setExp83GroupUserProperty(variant: String) =
+    biAnalytics.setUserProperties(UserProperty("exp83_group", variant))
 
   fun sendApkfyTimeout() = genericAnalytics.logEvent("apkfy_timeout", params = emptyMap())
 
   fun sendApkfyScreenBackClicked() =
     genericAnalytics.logEvent("apkfy_screen_back_clicked", params = emptyMap())
+
+  fun sendExp83RecommendationInstallClick() =
+    genericAnalytics.logEvent("exp83_recommendation_install_click", params = emptyMap())
+
+  fun sendExp83OpenRobloxClick() =
+    genericAnalytics.logEvent("exp83_open_roblox_click", params = emptyMap())
 
   fun setApkfyUTMProperties(apkfyModel: ApkfyModel) {
     apkfyModel.run {

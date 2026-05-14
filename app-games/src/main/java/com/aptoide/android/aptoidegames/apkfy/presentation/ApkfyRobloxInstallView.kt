@@ -54,6 +54,7 @@ fun ApkfyRobloxInstallView(
   app: App,
   onInstallStarted: () -> Unit = {},
   onCancel: () -> Unit = {},
+  onOpenClick: () -> Unit = {},
   cancelable: Boolean = false,
   shouldShowTrusted: Boolean = false,
 ) {
@@ -66,7 +67,8 @@ fun ApkfyRobloxInstallView(
   ApkfyMultiInstallViewContent(
     installViewState = installViewState,
     cancelable = cancelable,
-    shouldShowTrusted = shouldShowTrusted
+    shouldShowTrusted = shouldShowTrusted,
+    onOpenClick = onOpenClick,
   )
 }
 
@@ -74,7 +76,8 @@ fun ApkfyRobloxInstallView(
 private fun ApkfyMultiInstallViewContent(
   installViewState: InstallViewState,
   cancelable: Boolean = false,
-  shouldShowTrusted: Boolean = false
+  shouldShowTrusted: Boolean = false,
+  onOpenClick: () -> Unit = {},
 ) {
   when (val state = installViewState.uiState) {
     is DownloadUiState.Install,
@@ -112,7 +115,10 @@ private fun ApkfyMultiInstallViewContent(
     }
 
     is DownloadUiState.Installed -> PrimarySmallOutlinedButton(
-      onClick = state.open,
+      onClick = {
+        onOpenClick()
+        state.open()
+      },
       title = installViewState.actionLabel,
     )
 
