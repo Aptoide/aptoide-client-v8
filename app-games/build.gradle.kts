@@ -21,18 +21,7 @@ android {
   }
 
   defaultConfig {
-    applicationId = "com.aptoide.android.aptoidegames"
-    versionCode = Integer.parseInt(project.property("VERSION_CODE_APTOIDEGAMES").toString())
     versionName = (System.getenv("VERSION_NAME") ?: "").ifBlank { "internal.${getDate()}" }
-
-    System.getenv("STORE_NAME")
-      .also {
-        buildConfigField(
-          type = "String",
-          name = "MARKET_NAME",
-          value = "\"${it ?: "aptoide-games"}\""
-        )
-      }
 
     buildConfigField("String", "STORE_DOMAIN", "\"https://ws75-cache.aptoide.com/api/7.20240701/\"")
     buildConfigField("String", "SEARCH_BUZZ_DOMAIN", "\"https://buzz.aptoide.com:10002\"")
@@ -52,12 +41,6 @@ android {
       type = "String",
       name = "RTB_HOST",
       value = "\"https://aptoide-rtb.aptoide.com\""
-    )
-
-    buildConfigField(
-      type = "String",
-      name = "DEEP_LINK_SCHEMA",
-      value = "\"ag://\""
     )
 
     buildConfigField(
@@ -117,9 +100,44 @@ android {
     }
   }
 
-  flavorDimensions.add(0, "mode")
+  flavorDimensions.add(0, "brand")
+  flavorDimensions.add(1, "mode")
 
   productFlavors {
+    create("aptoideGames") {
+      dimension = "brand"
+      applicationId = "com.aptoide.android.aptoidegames"
+      versionCode = project.property("VERSION_CODE_APTOIDEGAMES").toString().toInt()
+      buildConfigField(
+        type = "String",
+        name = "MARKET_NAME",
+        value = "\"${System.getenv("STORE_NAME") ?: "aptoide-games"}\""
+      )
+      buildConfigField(
+        type = "String",
+        name = "DEEP_LINK_SCHEMA",
+        value = "\"ag://\""
+      )
+      manifestPlaceholders["deepLinkScheme"] = "ag"
+    }
+
+    create("vanilla") {
+      dimension = "brand"
+      applicationId = "cm.aptoide.pt"
+      versionCode = project.property("VERSION_CODE_VANILLA").toString().toInt()
+      buildConfigField(
+        type = "String",
+        name = "MARKET_NAME",
+        value = "\"${System.getenv("STORE_NAME") ?: "apps"}\""
+      )
+      buildConfigField(
+        type = "String",
+        name = "DEEP_LINK_SCHEMA",
+        value = "\"aptoidev10://\""
+      )
+      manifestPlaceholders["deepLinkScheme"] = "aptoidev10"
+    }
+
     create("dev") {
       dimension = "mode"
       applicationIdSuffix = ".dev"
@@ -229,10 +247,13 @@ android {
         } else {
           "_unsigned"
         }
+        val isVanilla = variant.productFlavors.any { it.name == "vanilla" }
+        val brandPrefix = if (isVanilla) "Aptoide" else "AptoideGames"
+        val defaultStoreName = if (isVanilla) "apps" else "aptoide-games"
         val storeName =
-          System.getenv("STORE_NAME")?.takeIf { it != "aptoide-games" }?.let { "_$it" } ?: ""
+          System.getenv("STORE_NAME")?.takeIf { it != defaultStoreName }?.let { "_$it" } ?: ""
         val outputFileName =
-          "AptoideGames_${variant.baseName}_${variant.versionName}_${variant.versionCode}$storeName$isSigned.apk"
+          "${brandPrefix}_${variant.baseName}_${variant.versionName}_${variant.versionCode}$storeName$isSigned.apk"
         println("OutputFileName: $outputFileName")
         output.outputFileName = outputFileName
       }

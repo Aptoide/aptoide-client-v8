@@ -27,6 +27,7 @@ fun TestForward() {
   )
 }
 
+@Composable
 fun getForward(
   color1: Color = Palette.Primary,
   color2: Color = Palette.Black

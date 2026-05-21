@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">Aptoide</string>
+  <string name="settings_send_feedback_body">Faites-nous savoir ce que vous pensez d\'Aptoide !\n\u2022 Vous aimeriez voir une nouvelle fonctionnalité ?\n\u2022 Comment pensez-vous que nous puissions nous améliorer ?</string>
+  <string name="settings_clear_cache_title">Effacer le stockage d\'Aptoide</string>
+  <string name="error_install_permissions_body"><![CDATA[Allez dans Paramètres et accordez à <1>Aptoide</1> la permission d\'installer des applications !]]></string>
+  <string name="apkfy_install_body">Obtenez votre jeu préféré et bien plus encore avec Aptoide !</string>
+  <string name="apkfy_aptoide_games_intro">Vous utilisez Aptoide pour installer %1$s</string>
+  <string name="apkfy_aptoide_games_advantages_title">Pourquoi conserver Aptoide ?</string>
+  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">Conservez Aptoide : recevez les mises à jour en avant-première et jouez en avant-première.</string>
+  <string name="bonus_page_body_2"><![CDATA[Vous pouvez obtenir un bonus supplémentaire de <1>%s%%</1> en utilisant un code promo exclusif d\'Aptoide dans des jeux spécifiques. Restez à l\'écoute et vous serez informés !]]></string>
+  <string name="update_aptoide_games_update_close_body">Aptoide va se fermer pour une mise à jour. Il vous suffit de l\'ouvrir à nouveau !</string>
+  <string name="update_aptoide_games_update_notification">Une nouvelle version d\'Aptoide est disponible.</string>
+  <string name="play_and_earn_permissions_settings_path">Paramètres → Applications → Aptoide → ⋮ → Autoriser les paramètres restreints</string>
+</resources>

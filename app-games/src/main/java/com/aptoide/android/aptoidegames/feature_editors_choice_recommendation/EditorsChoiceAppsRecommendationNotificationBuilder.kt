@@ -128,7 +128,7 @@ class EditorsChoiceAppsRecommendationNotificationBuilder @Inject constructor(
     val uiMode = resources.configuration.uiMode
     val isNightMode =
       (uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-    val colorToUse = if (isNightMode) Palette.Primary.toArgb() else Palette.Black.toArgb()
+    val colorToUse = if (isNightMode) 0xFFC8ED4F.toInt() else 0xFF1E1E26.toInt()
 
     NotificationCompat.Builder(context, channel)
       .setShowWhen(true)

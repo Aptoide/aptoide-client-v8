@@ -26,6 +26,7 @@ private fun TestThumbUpIcon() {
   )
 }
 
+@Composable
 fun getThumbUpIcon(color: Color = Palette.White): ImageVector = ImageVector.Builder(
   name = "ThumbUp",
   defaultWidth = 24.0.dp,

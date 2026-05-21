@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">Aptoide</string>
+  <string name="settings_send_feedback_body">أخبرنا عن رأيك بتطبيق Aptoide!\n\u2022 هل هناك أي مزايا تحب أن تراها فيه؟\n\u2022 كيف يمكننا تطويره برأيك؟</string>
+  <string name="settings_clear_cache_title">حذف تخزين Aptoide</string>
+  <string name="error_install_permissions_body"><![CDATA[يرجى التوجه إلى الإعدادات ومنح <1>Aptoide</1> الإذن لتثبيت التطبيقات!]]></string>
+  <string name="apkfy_whats_aptoide_games_title">ما هو Aptoide؟</string>
+  <string name="apkfy_install_body">استمتع بألعابك المفضلة والمزيد في Aptoide!</string>
+  <string name="apkfy_aptoide_games_intro">أنت تستخدم Aptoide لتثبيت %1$s</string>
+  <string name="bonus_page_body_2"><![CDATA[يمكنك الحصول على <1>%s%% مكافأة</1> إضافية باستخدام الرمز الترويجي الحصري لـ Aptoide في ألعاب محددة. تابع لتعرف وسنرسل لك إشعارًا!]]></string>
+  <string name="update_aptoide_games_body">حدّث Aptoide إلى أحدث إصدار لتستمتع بأفضل تجربة في اكتشاف الألعاب.</string>
+  <string name="update_aptoide_games_update_close_body">سيقفل Aptoide للتحديث. ما عليك سوى فتحه مجددًا!</string>
+  <string name="update_aptoide_games_update_notification">تتوفر نسخة جديدة من Aptoide</string>
+  <string name="apkfy_multi_install_highlighted_game">الأكثر لعبًا على Aptoide</string>
+  <string name="play_and_earn_permissions_settings_path">الإعدادات → التطبيقات → Aptoide → ⋮ → السماح بالإعدادات المقيدة</string>
+</resources>

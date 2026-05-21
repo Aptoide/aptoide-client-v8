@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">Aptoide</string>
+  <string name="settings_send_feedback_body">Recite nam šta mislite o Aptoide!\n\u2022 Da li postoje neke nove funkcije koje biste želeli da vidite?\n\u2022 Šta možemo unaprediti po vašem mišljenju?</string>
+  <string name="settings_clear_cache_title">Obriši Aptoide skladište</string>
+  <string name="error_install_permissions_body"><![CDATA[Idite u Podešavanja i dodelite dozvole za instaliranje aplikacija za <1>Aptoide</1>!]]></string>
+  <string name="apkfy_whats_aptoide_games_title">Šta je to Aptoide?</string>
+  <string name="apkfy_install_body">Preuzmite svoje omiljene igre i još mnogo toga u Aptoide!</string>
+  <string name="apkfy_aptoide_games_intro">You\’re using Aptoide to install %1$s</string>
+  <string name="apkfy_aptoide_games_advantages_title">Why keep Aptoide?</string>
+  <string name="apkfy_aptoide_games_advantage_updates_roblox"><![CDATA[No Aptoide? <1>No Roblox updates.</1>]]></string>
+  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">Keep Aptoide - get updates first, play first.</string>
+  <string name="bonus_page_body_2"><![CDATA[Možete osvojiti dodatnih <1>%s%% bonusa</1> ako iskoristite Aptoide ekskluzivni promo kod u određenim igrama. Ostanite u toku i dobićete obaveštenje!]]></string>
+  <string name="update_aptoide_games_body">Ažurirajte Aptoide na najnoviju verziju kako biste nastavili da uživate u najboljem iskustvu igranja.</string>
+  <string name="update_aptoide_games_update_close_body">Aptoide će se zatvoriti zbog ažuriranja. Samo je otvorite ponovo!</string>
+  <string name="update_aptoide_games_update_notification">Postoji nova verzija aplikacije Aptoide</string>
+  <string name="promotional_now_available_body">Sada dostupno na Aptoide!</string>
+  <string name="apkfy_multi_install_highlighted_game">Top Played on Aptoide</string>
+  <string name="play_and_earn_permissions_settings_path">Settings → Apps → Aptoide → ⋮ → Allow restricted settings</string>
+</resources>

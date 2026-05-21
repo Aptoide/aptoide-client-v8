@@ -49,7 +49,8 @@ fun SearchSponsoredBannerView(
   val app = rtbApp.app
 
   val painter = rememberAsyncImagePainter(model = app.icon)
-  var dominantColor by remember { mutableStateOf(Palette.GreyDark) }
+  val initialDominantColor = Palette.GreyDark
+  var dominantColor by remember { mutableStateOf(initialDominantColor) }
   var overlayAlpha by remember { mutableStateOf(0.3f) }
 
   LaunchedEffect(painter.state) {

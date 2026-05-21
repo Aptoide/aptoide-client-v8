@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">Aptoide</string>
+  <string name="settings_send_feedback_body">Daj nam znać, co myślisz o Aptoide!\n\u2022 Jakieś nowe funkcje, które chciałbyś zobaczyć?\n\u2022 Jak myślisz, co możemy poprawić?</string>
+  <string name="settings_clear_cache_title">Wyczyść pamięć Aptoide</string>
+  <string name="error_install_permissions_body"><![CDATA[Przejdź do Ustawień i przyznaj <1>Aptoide</1> uprawnienia do instalowania aplikacji!]]></string>
+  <string name="apkfy_whats_aptoide_games_title">Czym jest Aptoide?</string>
+  <string name="apkfy_install_body">Pobierz swoją ulubioną grę i wiele więcej w Aptoide!</string>
+  <string name="apkfy_aptoide_games_intro">Używasz Aptoide do zainstalowania %1$s</string>
+  <string name="bonus_page_body_2"><![CDATA[Możesz uzyskać dodatkowy <1> bonus%s%%</1>, używając ekskluzywnego kodu promocyjnego Aptoide w określonych grach. Bądź na bieżąco, a otrzymasz powiadomienie!]]></string>
+  <string name="update_aptoide_games_body">Zaktualizuj Aptoide do najnowszej wersji, aby nadal cieszyć się najlepszymi wrażeniami z odkrywania gier.</string>
+  <string name="update_aptoide_games_update_close_body">Aplikacja Aptoide zostanie zamknięta w celu aktualizacji. Wystarczy otworzyć ją ponownie!</string>
+  <string name="update_aptoide_games_update_notification">Pojawiła się nowa wersja Aptoide</string>
+  <string name="promotional_now_available_body">Teraz dostępne w Aptoide!</string>
+  <string name="play_and_earn_permissions_settings_path">Ustawienia → Aplikacje → Aptoide → ⋮ → Zezwól na ustawienia z ograniczeniami</string>
+</resources>

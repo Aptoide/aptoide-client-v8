@@ -5,6 +5,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Typography
 import androidx.compose.material.darkColors
+import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -30,21 +31,42 @@ fun AptoideTheme(
   darkTheme: Boolean = isSystemInDarkTheme(),
   content: @Composable () -> Unit,
 ) {
-  SetupStatusBarColor(Palette.Black, darkTheme)
+  val palette: PaletteTokens = if (darkTheme) DarkPalette else LightPalette
+  SetupStatusBarColor(palette.Black, darkTheme)
 
-  CompositionLocalProvider(LocalDarkTheme provides darkTheme) {
+  val colors = if (darkTheme) {
+    darkColors(
+      background = palette.Black,
+      onBackground = palette.White,
+      primary = palette.Primary,
+      secondary = palette.Secondary,
+      onPrimary = palette.White,
+      onSecondary = palette.White,
+      surface = palette.Black,
+      onSurface = palette.White,
+      error = palette.Error,
+    )
+  } else {
+    lightColors(
+      background = palette.Black,
+      onBackground = palette.White,
+      primary = palette.Primary,
+      primaryVariant = palette.Secondary,
+      secondary = palette.Secondary,
+      onPrimary = Color(0xFFFFFFFF),
+      onSecondary = Color(0xFFFFFFFF),
+      surface = palette.Black,
+      onSurface = palette.White,
+      error = palette.Error,
+    )
+  }
+
+  CompositionLocalProvider(
+    LocalDarkTheme provides darkTheme,
+    LocalPalette provides palette,
+  ) {
     MaterialTheme(
-      colors = darkColors(
-        background = Palette.Black,
-        onBackground = Palette.White,
-        primary = Palette.Primary,
-        secondary = Palette.Secondary,
-        onPrimary = Palette.Black,
-        onSecondary = Palette.White,
-        surface = Palette.Black,
-        onSurface = Palette.White,
-        error = Palette.Error,
-      ),
+      colors = colors,
       typography = Typography(
         h1 = AGTypography.Title,
         h2 = AGTypography.InputsL,

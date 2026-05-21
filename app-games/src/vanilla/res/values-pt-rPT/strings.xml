@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">Aptoide</string>
+  <string name="settings_send_feedback_body">Diz-nos o que pensas sobre a Aptoide!\n\u2022 Alguma nova funcionalidade que gostarias de ver?\n\u2022 Como achas que podemos melhorar?</string>
+  <string name="settings_clear_cache_title">Limpar armazenamento da Aptoide</string>
+  <string name="error_install_permissions_body"><![CDATA[Vai a Definições e concede <1>Aptoide</1> permissões para instalar apps!]]></string>
+  <string name="apkfy_install_body">Recebe o teu jogo favorito e muito mais em Aptoide!</string>
+  <string name="apkfy_aptoide_games_intro">Está a utilizar o Aptoide para instalar %1$s</string>
+  <string name="apkfy_aptoide_games_advantages_title">Porquê manter o Aptoide?</string>
+  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">Mantenha o Aptoide - receba atualizações em primeira mão e jogue antes de todos.</string>
+  <string name="apkfy_multi_install_highlighted_game">Mais jogados na Aptoide</string>
+  <string name="play_and_earn_permissions_settings_path">Definições → Aplicações → Aptoide → ⋮ → Permitir definições restritas</string>
+</resources>

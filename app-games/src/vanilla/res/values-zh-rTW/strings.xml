@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">Aptoide</string>
+  <string name="settings_send_feedback_body">讓我們知道您對 Aptoide 的看法！\n\u2022 有任何您想看到的新功能嗎？\n\u2022 您認為我們可以如何改進？</string>
+  <string name="error_install_permissions_body"><![CDATA[請前往「設定」，並授予<1>Aptoide</1>安裝應用程式的權限！]]></string>
+  <string name="apkfy_whats_aptoide_games_title">什麼是 Aptoide？</string>
+  <string name="apkfy_install_body">在 Aptoide 獲得您喜愛的遊戲和更多！</string>
+  <string name="apkfy_aptoide_games_intro">您正在使用 Aptoide 安装 %1$s</string>
+  <string name="apkfy_aptoide_games_advantages_title">為什麼要保留 Aptoide？</string>
+  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">保留 Aptoide——抢先获取更新，抢先体验游戏。</string>
+  <string name="bonus_page_body_2"><![CDATA[在特定遊戲中使用 Aptoide 獨家促銷代碼，您可以獲得額外的<1>%s%% 獎金</1>。敬請留意，您將會收到通知！]]></string>
+  <string name="update_aptoide_games_body">更新 Aptoide 至最新版本，繼續享受最佳的遊戲探索體驗。</string>
+  <string name="update_aptoide_games_update_close_body">Aptoide 將會關閉以進行更新。再次打開即可！</string>
+  <string name="play_and_earn_permissions_settings_path">設定 → 應用程式 → Aptoide → ⋮ → 允許受限設定</string>
+</resources>

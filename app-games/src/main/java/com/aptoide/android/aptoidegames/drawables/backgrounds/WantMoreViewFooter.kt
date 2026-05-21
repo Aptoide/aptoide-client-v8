@@ -32,6 +32,7 @@ private fun WantMoreViewFooterPreview() {
   )
 }
 
+@Composable
 fun getWantMoreViewFooter(
   color1: Color = Palette.Secondary,
   color2: Color = Palette.Black,

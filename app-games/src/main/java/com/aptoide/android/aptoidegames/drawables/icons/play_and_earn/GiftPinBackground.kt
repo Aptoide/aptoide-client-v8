@@ -25,6 +25,7 @@ private fun TestGiftPinBackground() {
   )
 }
 
+@Composable
 fun getGiftPinBackground(color: Color = Palette.Secondary): ImageVector = ImageVector.Builder(
   name = "GiftPinBackground",
   defaultWidth = 32.0.dp,

@@ -190,10 +190,10 @@ fun getLevelUpBackground(level: Int = 0): ImageVector = ImageVector.Builder(
 }.build()
 
 private fun getLevelColor(level: Int) = when (level) {
-  1, 2 -> Palette.Orange150
-  3, 4 -> Palette.Blue100
-  5, 6 -> Palette.Yellow100
-  7, 8 -> Palette.Blue100
-  9, 10 -> Palette.Yellow100
-  else -> Palette.Orange150
+  1, 2 -> Color(0xFFF58932)
+  3, 4 -> Color(0xFFBDC3EB)
+  5, 6 -> Color(0xFFFFC93E)
+  7, 8 -> Color(0xFFBDC3EB)
+  9, 10 -> Color(0xFFFFC93E)
+  else -> Color(0xFFF58932)
 }

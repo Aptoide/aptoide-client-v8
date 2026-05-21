@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">Aptoide</string>
+  <string name="settings_send_feedback_body">Kerro meille, mitä mieltä olet Aptoideista!\n\u2022 Haluaisitko nähdä jonkin uuden ominaisuuden?\n\u2022 Miten voisimme mielestäsi parantaa?</string>
+  <string name="settings_clear_cache_title">Tyhjennä Aptoidein tallennus</string>
+  <string name="error_install_permissions_body"><![CDATA[Mene Asetuksiin ja anna <1>Aptoideille</1> oikeudet asentaa sovelluksia!]]></string>
+  <string name="apkfy_whats_aptoide_games_title">Mikä on Aptoide?</string>
+  <string name="apkfy_install_body">Hanki suosikkipelisi ja paljon muuta Aptoideissa!</string>
+  <string name="apkfy_aptoide_games_intro">Käytät Aptoide -sovellusta asentaaksesi %1$s</string>
+  <string name="apkfy_aptoide_games_advantages_title">Miksi säilyttää Aptoide?</string>
+  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">Säilytä Aptoide - saat päivitykset ensimmäisenä, pelaa ensimmäisenä.</string>
+  <string name="bonus_page_body_2"><![CDATA[Voit saada ylimääräisen <1>%s%% bonuksen</1> käyttämällä Aptoidein eksklusiivista tarjouskoodia tietyissä peleissä. Pysy kuulolla ja saat ilmoituksen!]]></string>
+  <string name="update_aptoide_games_body">Päivitä Aptoide uusimpaan versioon, jotta voit nauttia parhaasta pelikokemuksesta.</string>
+  <string name="update_aptoide_games_update_close_body">Aptoide sulkee päivityksen. Avaa se uudelleen!</string>
+  <string name="update_aptoide_games_update_notification">On uusi versio Aptoideista</string>
+  <string name="promotional_now_available_body">Nyt saatavilla Aptoideissa!</string>
+  <string name="play_and_earn_permissions_settings_path">Asetukset → Sovellukset → Aptoide → ⋮ → Salli rajoitetut asetukset</string>
+</resources>

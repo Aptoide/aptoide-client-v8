@@ -84,7 +84,7 @@ class RepositoryModule {
   @Singleton
   @Provides
   @WidgetsUrl
-  fun provideWidgetsUrl(): String = "ag/getWidgets?limit=25"
+  fun provideWidgetsUrl(): String = WIDGETS_URL_PATH
 
   @Singleton
   @Provides

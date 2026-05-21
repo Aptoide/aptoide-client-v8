@@ -22,6 +22,7 @@ private fun TestAppViewBonusGiftBackground() {
   )
 }
 
+@Composable
 fun getAppViewBonusGiftBackground(color: Color = Palette.Secondary): ImageVector =
   ImageVector.Builder(
     name = "AppViewBonusGiftBackground",

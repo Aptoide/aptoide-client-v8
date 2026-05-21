@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">Aptoide</string>
+  <string name="settings_send_feedback_body">Aptoide hakkında ne düşündüğünüzü bize bildirin!\n\u2022 Görmek istediğiniz yeni bir özellik var mı?\n\u2022 Nasıl geliştirebiliriz?</string>
+  <string name="settings_clear_cache_title">Aptoide depolama alanını temizle</string>
+  <string name="error_install_permissions_body"><![CDATA[Lütfen Ayarlar\'a git ve <1>Aptoide</1>\'e uygulama yükleme izni ver!]]></string>
+  <string name="apkfy_whats_aptoide_games_title">Aptoide nedir?</string>
+  <string name="apkfy_install_body">Aptoide\'te en sevdiğin oyuna ve çok daha fazlasına eriş!</string>
+  <string name="apkfy_aptoide_games_intro">%1$s\'i yüklemek için Aptoide kullanıyorsunuz.</string>
+  <string name="apkfy_aptoide_games_advantages_title">Aptoide\'i neden saklamalıyım?</string>
+  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">Aptoide\'i saklayın - güncellemeleri ilk siz alın, ilk siz oynayın.</string>
+  <string name="bonus_page_body_2"><![CDATA[Belirli oyunlarda Aptoide\'e özel bir promosyon kodu kullanarak <1>%s%% bonus</1> kazanabilirsin. Bizi takip etmeye devam et, seni bilgilendireceğiz!]]></string>
+  <string name="update_aptoide_games_body">En iyi oyun keşfetme deneyiminin tadını çıkarmaya devam etmek için Aptoide\'i son sürüme güncelle.</string>
+  <string name="update_aptoide_games_update_close_body">Aptoide güncellenmek üzere kapanacak. Tek yapman gereken yeniden açmak!</string>
+  <string name="update_aptoide_games_update_notification">Aptoide\'in yeni bir sürümü mevcut</string>
+  <string name="promotional_now_available_body">Artık Aptoide\'te mevcut!</string>
+</resources>

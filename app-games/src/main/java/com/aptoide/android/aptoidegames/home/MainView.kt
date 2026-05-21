@@ -107,8 +107,7 @@ fun MainView(navController: NavHostController) {
     }
   }
 
-  //Forced theme do be dark to always apply dark background, for now.
-  AptoideTheme(darkTheme = true) {
+  AptoideTheme {
     WithUTM(
       source = "aptoide",
       medium = "store-placement",

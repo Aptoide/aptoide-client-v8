@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">Aptoide</string>
+  <string name="settings_send_feedback_body">Aptoideについてのご意見をお聞かせください！\n\u2022 追加してほしい新機能はありますか？\n\u2022どのように改善できると思いますか？</string>
+  <string name="error_install_permissions_body"><![CDATA[設定から<1>Aptoide</1>にアプリのインストール許可を与えてください。]]></string>
+  <string name="apkfy_whats_aptoide_games_title">Aptoideとは？</string>
+  <string name="apkfy_install_body">Aptoideでお気に入りのゲームやその他のものを手に入れよう！</string>
+  <string name="apkfy_aptoide_games_intro">あなたはAptoideを使用して、 %1$sをインストールしています。</string>
+  <string name="bonus_page_body_2"><![CDATA[特定のゲームでAptoide限定プロモコードを使用すると、さらに<1>%s%%ボーナス</1>を獲得できます。ご期待ください！]]></string>
+  <string name="update_aptoide_games_update_close_body">Aptoideはアップデートのために終了します。再度開いてください！</string>
+  <string name="update_aptoide_games_update_notification">Aptoide の新しいバージョンがあります。</string>
+  <string name="promotional_now_available_body">Aptoideで利用可能に!</string>
+  <string name="play_and_earn_permissions_settings_path">設定 → アプリ → Aptoide → ⋮ → 制限付き設定を許可</string>
+</resources>

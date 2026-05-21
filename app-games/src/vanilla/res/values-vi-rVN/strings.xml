@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">Aptoide</string>
+  <string name="settings_send_feedback_body">Hãy cho chúng tôi biết suy nghĩ của bạn về Aptoide!\n\u2022 Bạn có muốn xem tính năng mới nào không?\n\u2022 Bạn nghĩ chúng tôi có thể cải thiện thêm gì nữa không?</string>
+  <string name="error_install_permissions_body"><![CDATA[Vui lòng vào Cài đặt và cấp quyền cho <1>Aptoide</1> để cài đặt ứng dụng!]]></string>
+  <string name="apkfy_aptoide_games_intro">Bạn đang sử dụng Aptoide để cài đặt %1$s</string>
+  <string name="apkfy_aptoide_games_advantages_title">Tại sao nên giữ Aptoide?</string>
+  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">Giữ Aptoide - nhận cập nhật trước, chơi trước.</string>
+  <string name="bonus_page_body_2"><![CDATA[Bạn có thể nhận thêm <1>%s%% tiền thưởng</1> bằng cách sử dụng mã khuyến mãi độc quyền của Aptoide trong các trò chơi cụ thể. Hãy theo dõi và bạn sẽ nhận được thông báo!]]></string>
+  <string name="promotional_now_available_body">Hiện đã có trong Aptoide!</string>
+  <string name="play_and_earn_permissions_settings_path">Cài đặt → Ứng dụng → Aptoide → ⋮ → Cho phép cài đặt bị hạn chế</string>
+</resources>

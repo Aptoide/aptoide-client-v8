@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">Aptoide</string>
+  <string name="settings_send_feedback_body">Πείτε μας τη γνώμη σας για το Aptoide!\n\u2022 Θέλετε να δείτε κάποια νέα λειτουργία;\n\u2022 Πώς νομίζετε ότι μπορούμε να βελτιωθούμε;</string>
+  <string name="settings_clear_cache_title">Εκκαθάριση αποθηκευτικού χώρου Aptoide</string>
+  <string name="error_install_permissions_body"><![CDATA[Πηγαίνετε στις Ρυθμίσεις και παραχωρήστε στο <1>Aptoide</1> την άδεια να εγκαθιστά εφαρμογές!]]></string>
+  <string name="apkfy_whats_aptoide_games_title">Τι είναι το Aptoide;</string>
+  <string name="apkfy_install_body">Κατεβάστε το αγαπημένο σας παιχνίδι και πολλά περισσότερα από το Aptoide!</string>
+  <string name="apkfy_aptoide_games_intro">Χρησιμοποιείτε το Aptoide για να εγκαταστήσετε το %1$s</string>
+  <string name="apkfy_aptoide_games_advantages_title">Γιατί να κρατήσετε το Aptoide;</string>
+  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">Κρατήστε το Aptoide - λάβετε πρώτοι τις ενημερώσεις, παίξτε πρώτοι.</string>
+  <string name="bonus_page_body_2"><![CDATA[Μπορείτε να αποκτήσετε ένα επιπλέον <1>%sbonus </1> χρησιμοποιώντας έναν αποκλειστικό κωδικό προσφοράς του Aptoide σε συγκεκριμένα παιχνίδια. Μείνετε συντονισμένοι και θα ειδοποιηθείτε!]]></string>
+  <string name="update_aptoide_games_body">Ενημερώστε το Aptoide στην τελευταία έκδοση για να συνεχίσετε να απολαμβάνετε την καλύτερη εμπειρία ανακάλυψης παιχνιδιών.</string>
+  <string name="update_aptoide_games_update_close_body">Το Aptoide θα κλείσει για ενημέρωση. Απλώς ανοίξτε το ξανά!</string>
+  <string name="update_aptoide_games_update_notification">Υπάρχει μια νέα έκδοση του Aptoide</string>
+  <string name="promotional_now_available_body">Τώρα διαθέσιμο στο Aptoide!</string>
+  <string name="apkfy_multi_install_highlighted_game">Τα πιο δημοφιλή παιχνίδια στο Aptoide</string>
+  <string name="play_and_earn_permissions_settings_path">Ρυθμίσεις → Εφαρμογές → Aptoide → ⋮ → Να επιτρέπονται οι περιορισμένες ρυθμίσεις</string>
+</resources>

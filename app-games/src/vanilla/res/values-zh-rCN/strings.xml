@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">Aptoide</string>
+  <string name="settings_send_feedback_body">请让我们知道您对 Aptoide 的看法！\n\u2022您想看到什么新功能吗？\n\u2022您认为我们可以如何改进？</string>
+  <string name="error_install_permissions_body"><![CDATA[请前往“设置”并授予<1>Aptoide</1>安装应用 (App) 的权限！]]></string>
+  <string name="apkfy_whats_aptoide_games_title">什么是 Aptoide？</string>
+  <string name="apkfy_install_body">在 Aptoide 获取您最喜爱的游戏和更多精彩内容！</string>
+  <string name="apkfy_aptoide_games_intro">您正在使用Aptoide安装 %1$s</string>
+  <string name="apkfy_aptoide_games_advantages_title">为什么保留Aptoide？</string>
+  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">保留Aptoide - 优先获取更新，抢先体验。</string>
+  <string name="bonus_page_body_2"><![CDATA[您可以通过在特定游戏中使用 Aptoide 的专属促销代码获得额外 <1>%s%% 的奖金</1>。请持续关注，您将很快收到最新资讯！]]></string>
+  <string name="update_aptoide_games_body">更新 Aptoide 至最新版本，以继续享受最佳的游戏探索体验。</string>
+  <string name="update_aptoide_games_update_close_body">Aptoide 将关闭以进行更新。更新完成后重新打开即可！</string>
+  <string name="update_aptoide_games_update_notification">Aptoide 已发布新版本。</string>
+  <string name="promotional_now_available_body">现已在 Aptoide 上线！</string>
+</resources>

@@ -4,12 +4,20 @@ This file provides guidance to Claude Code when working with code in this reposi
 
 ## Build Commands
 
-```bash
-# Build debug (development)
-./gradlew app:assembleDevDebug
+`:app-games` uses two flavor dimensions — `brand` (`aptoideGames` / `vanilla`) × `mode` (`dev` / `prod`). Variant names combine them, e.g. `aptoideGamesDevDebug`, `vanillaProdRelease`.
 
-# Build release (production)
+```bash
+# Legacy Vanilla (:app)
+./gradlew app:assembleDevDebug
 ./gradlew app:assembleProdRelease
+
+# Aptoide Games (modern, :app-games — brand=aptoideGames)
+./gradlew :app-games:assembleAptoideGamesDevDebug
+./gradlew :app-games:assembleAptoideGamesProdRelease
+
+# Aptoide V10 / Vanilla (modern, :app-games — brand=vanilla)
+./gradlew :app-games:assembleVanillaDevDebug
+./gradlew :app-games:assembleVanillaProdRelease
 
 # Run all unit tests
 ./gradlew test
@@ -113,11 +121,12 @@ plugins {
 
 ## App Variants
 
-| Module | App ID | Description |
-|--------|--------|-------------|
-| `:app` | `cm.aptoide.pt.v10` | Aptoide Vanilla |
-| `:app-games` | `com.aptoide.android.aptoidegames` | Aptoide Games |
-| `:app-dt` | `com.dti.hub` | Digital Turbine GamesHub (variant of Aptoide Games) |
+| Module | Brand flavor | App ID | Description |
+|--------|--------------|--------|-------------|
+| `:app` | — | `cm.aptoide.pt.v10` | Aptoide Vanilla (legacy, frozen) |
+| `:app-games` | `aptoideGames` | `com.aptoide.android.aptoidegames` | Aptoide Games |
+| `:app-games` | `vanilla` | `cm.aptoide.pt` | Aptoide V10 (Vanilla, modern) |
+| `:app-dt` | — | `com.dti.hub` | Digital Turbine GamesHub (planned, separate module) |
 
 ## Common Patterns & Conventions
 

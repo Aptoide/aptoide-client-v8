@@ -85,10 +85,10 @@ fun getTierCoinIcon(level: Int): ImageVector = ImageVector.Builder(
 }.build()
 
 private fun Int.getCoinColors(): List<Color> = when (this) {
-  0, 1 -> listOf(Palette.Orange200, Palette.Yellow100, Palette.Orange150)
-  2, 3 -> listOf(Palette.Blue100, Palette.White, Palette.Blue200)
-  4, 5 -> listOf(Palette.Yellow200, Palette.Yellow50, Palette.Yellow100)
-  6, 7 -> listOf(Palette.Blue150, Palette.Blue50, Palette.Blue250)
-  8, 9 -> listOf(Palette.Yellow150, Palette.Yellow100, Palette.Yellow200)
+  0, 1 -> listOf(Color(0xFFC04D07), Color(0xFFFFC93E), Color(0xFFF58932))
+  2, 3 -> listOf(Color(0xFFBDC3EB), Color(0xFFFFFFFF), Color(0xFF676D89))
+  4, 5 -> listOf(Color(0xFF876311), Color(0xFFFFEA04), Color(0xFFFFC93E))
+  6, 7 -> listOf(Color(0xFFB3CFFF), Color(0xFFE0ECFF), Color(0xFF495A6D))
+  8, 9 -> listOf(Color(0xFFD6A422), Color(0xFFFFC93E), Color(0xFF876311))
   else -> listOf(Color.Transparent, Color.Transparent, Color.Transparent)
 }

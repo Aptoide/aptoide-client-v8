@@ -48,7 +48,7 @@
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
 
-        <data android:scheme="ag" />
+        <data android:scheme="${deepLinkScheme}" />
       </intent-filter>
 
       <intent-filter android:autoVerify="true">

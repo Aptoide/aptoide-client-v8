@@ -34,6 +34,7 @@ fun PaEAppXPText(currentXp: Int, totalXp: Int) {
   }
 }
 
+@Composable
 fun getAppXPAnnotatedString(currentXp: Int, totalXp: Int): AnnotatedString {
   return buildAnnotatedString {
     withStyle(style = SpanStyle(color = Palette.Yellow100)) {

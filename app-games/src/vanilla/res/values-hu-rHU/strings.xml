@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">Aptoide</string>
+  <string name="settings_send_feedback_body">Mondd el nekünk, mi a véleményed az Aptoide-ről!\n\u2022 Van olyan funkció, aminek örülnél?\n\u2022 Hogyan tehetnénk jobbá?</string>
+  <string name="settings_clear_cache_title">Aptoide tárhely törlése</string>
+  <string name="error_install_permissions_body"><![CDATA[Nyisd meg a Beállításokat és engedélyezd, hogy az <1>Aptoide</1> appokat telepíthessen.]]></string>
+  <string name="apkfy_whats_aptoide_games_title">Mi az Aptoide?</string>
+  <string name="apkfy_install_body">Szerezd meg a kedvenc játékod és még sok mást az Aptoideen!</string>
+  <string name="apkfy_aptoide_games_intro">Az Aptoide alkalmazást használja az %1$s</string>
+  <string name="apkfy_aptoide_games_advantages_title">Miért érdemes megtartani az Aptoide alkalmazást?</string>
+  <string name="apkfy_aptoide_games_advantage_updates_roblox"><![CDATA[Nincs Aptoide? <1>Nincs Roblox frissítés.</1>]]></string>
+  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">Tartsa meg az Aptoide alkalmazást – elsőként kapja meg a frissítéseket, elsőként játszhat.</string>
+  <string name="update_aptoide_games_body">Töltsd le az *Aptoide* legújabb verzióját, hogy továbbra is a legjobb gaming felfedező élményben lehessen részed</string>
+  <string name="update_aptoide_games_update_close_body">Az Aptoide bezár a frissítés miatt. Nyisd meg újra!</string>
+  <string name="update_aptoide_games_update_notification">Elérhető az Aptoide új verziója</string>
+  <string name="promotional_now_available_body">Már elérhető az Aptoideen!</string>
+  <string name="apkfy_multi_install_highlighted_game">Legnépszerűbb játékok az Aptoide-en</string>
+  <string name="play_and_earn_permissions_settings_path">Beállítások → Alkalmazások → Aptoide → ⋮ → Korlátozott beállítások engedélyezése</string>
+</resources>
