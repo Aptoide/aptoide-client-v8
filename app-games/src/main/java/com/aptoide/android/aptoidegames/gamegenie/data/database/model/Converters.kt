@@ -43,6 +43,19 @@ class Converters {
       val videoId = jsonObject.get("videoId")?.takeIf { !it.isJsonNull }?.asString
       val apps = jsonObject.get("apps")?.asString ?: "[]"
 
+      val followUpsElement = jsonObject.get("followUps")
+      val followUps: List<String> = when {
+        followUpsElement == null || followUpsElement.isJsonNull -> emptyList()
+        followUpsElement.isJsonArray -> followUpsElement.asJsonArray.mapNotNull { el ->
+          when {
+            el.isJsonNull -> null
+            el.isJsonPrimitive -> el.asString
+            else -> null
+          }
+        }
+        else -> emptyList()
+      }
+
       val userElement = jsonObject.get("user")
       val user = when {
         userElement == null || userElement.isJsonNull -> null
@@ -59,7 +72,8 @@ class Converters {
         gpt = gpt,
         user = user,
         videoId = videoId,
-        apps = apps
+        apps = apps,
+        followUps = followUps
       )
     }
   }

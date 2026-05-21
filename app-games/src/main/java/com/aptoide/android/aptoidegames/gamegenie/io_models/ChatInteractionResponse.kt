@@ -4,6 +4,7 @@ import androidx.annotation.Keep
 import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7Response
 import cm.aptoide.pt.feature_apps.data.model.AppJSON
 import com.aptoide.android.aptoidegames.gamegenie.domain.UserMessage
+import com.google.gson.annotations.SerializedName
 
 @Keep
 data class ChatInteractionResponse(
@@ -11,6 +12,7 @@ data class ChatInteractionResponse(
   val user: UserMessage?,
   val video: String?,
   val apps: List<AppJSON>?,
+  @SerializedName("follow_ups") val followUps: List<String>? = null,
 )
 
 @Keep

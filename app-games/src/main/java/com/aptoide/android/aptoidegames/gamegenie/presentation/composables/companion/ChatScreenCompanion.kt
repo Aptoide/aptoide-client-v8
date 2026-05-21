@@ -121,6 +121,7 @@ fun ChatScreenCompanion(
   isLoading: Boolean = false,
   suggestions: List<Suggestion> = emptyList(),
   onSuggestionClick: (String, Int) -> Unit = { _, _ -> },
+  onFollowUpClick: (String) -> Unit = {},
   onOverlayInteraction: () -> Unit = {},
   onClearScreenshot: () -> Unit = {},
   showBottomSheet: ((BottomSheetContent?) -> Unit)? = null,
@@ -355,6 +356,10 @@ fun ChatScreenCompanion(
           onSuggestionClick = { suggestion, index ->
             markOverlayClicked()
             onSuggestionClick(suggestion, index)
+          },
+          onFollowUpClick = { text ->
+            markOverlayClicked()
+            onFollowUpClick(text)
           }
         )
 

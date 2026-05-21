@@ -39,6 +39,7 @@ fun MessageList(
   suggestions: List<Suggestion> = emptyList(),
   setFirstLoadDone: () -> Unit,
   onSuggestionClick: (String, Int) -> Unit = { _, _ -> },
+  onFollowUpClick: (String) -> Unit = {},
   isCompanion: Boolean = false,
   gameName: String = "",
   installedGames: List<GameCompanion> = emptyList(),
@@ -155,6 +156,24 @@ fun MessageList(
           playerCache = playerCache,
           gameName = gameName,
         )
+      }
+
+      if (
+        idx == messages.lastIndex &&
+        message.user == null &&
+        message.followUps.isNotEmpty()
+      ) {
+        LazyRow(
+          contentPadding = PaddingValues(top = 16.dp, bottom = 4.dp),
+          horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+          itemsIndexed(message.followUps) { _, followUp ->
+            FollowUpBox(
+              suggestion = followUp,
+              onClick = onFollowUpClick
+            )
+          }
+        }
       }
 
       message.user?.let { userMessage ->
