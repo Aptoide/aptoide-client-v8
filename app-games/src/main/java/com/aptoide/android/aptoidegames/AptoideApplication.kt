@@ -31,6 +31,7 @@ import com.aptoide.android.aptoidegames.device_info.DeviceSecurityChecker
 import com.aptoide.android.aptoidegames.device_info.analytics.DeviceInfoAnalytics
 import com.aptoide.android.aptoidegames.feature_companion_apps_notification.CompanionAppsManager
 import com.aptoide.android.aptoidegames.feature_editors_choice_recommendation.EditorsChoiceRecommendationManager
+import com.aptoide.android.aptoidegames.feature_rtb.InstalledPackagesSyncManager
 import com.aptoide.android.aptoidegames.gamegenie.presentation.CompanionGamesCachePreloader
 import com.aptoide.android.aptoidegames.home.repository.ThemePreferencesManager
 import com.aptoide.android.aptoidegames.installer.analytics.ScheduledDownloadsListenerImpl
@@ -123,6 +124,9 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
   lateinit var editorsChoiceRecommendationManager: EditorsChoiceRecommendationManager
 
   @Inject
+  lateinit var installedPackagesSyncManager: InstalledPackagesSyncManager
+
+  @Inject
   lateinit var deviceSecurityChecker: DeviceSecurityChecker
 
   @Inject
@@ -148,7 +152,14 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
     initCompanionAppsManager()
     initCompanionGamesCachePreloader()
     initTrendingAppsRecommendationManager()
+    initInstalledPackagesSyncManager()
     sendDeviceSecurityAnalytics()
+  }
+
+  private fun initInstalledPackagesSyncManager() {
+    CoroutineScope(Dispatchers.IO).launch {
+      installedPackagesSyncManager.initialize()
+    }
   }
 
   private fun sendDeviceSecurityAnalytics() {
