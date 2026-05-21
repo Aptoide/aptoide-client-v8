@@ -1,14 +1,13 @@
 {
-  "_TODO": "Replace this placeholder before shipping Vanilla. PR4 wires the real Firebase project for Aptoide V10 (applicationIds cm.aptoide.pt and cm.aptoide.pt.dev). Until then this file only satisfies the google-services plugin's package_name check so the build pipeline works end-to-end.",
   "project_info": {
-    "project_number": "000000000000",
-    "project_id": "aptoide-vanilla-placeholder",
-    "storage_bucket": "aptoide-vanilla-placeholder.appspot.com"
+    "project_number": "163274999232",
+    "project_id": "aptoide-vanilla",
+    "storage_bucket": "aptoide-vanilla.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:000000000000:android:0000000000000000000000",
+        "mobilesdk_app_id": "1:163274999232:android:d2f50a914eb80031be7425",
         "android_client_info": {
           "package_name": "cm.aptoide.pt"
         }
@@ -16,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSy_PLACEHOLDER_REPLACE_BEFORE_SHIPPING_0000"
+          "current_key": "AIzaSyCc60S0ms7zR1xi4cp1JANTkBXF5NhcnTM"
         }
       ],
       "services": {
@@ -27,7 +26,7 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:000000000000:android:0000000000000000000001",
+        "mobilesdk_app_id": "1:163274999232:android:6ec32aa64941ffe8be7425",
         "android_client_info": {
           "package_name": "cm.aptoide.pt.dev"
         }
@@ -35,7 +34,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSy_PLACEHOLDER_REPLACE_BEFORE_SHIPPING_0001"
+          "current_key": "AIzaSyCc60S0ms7zR1xi4cp1JANTkBXF5NhcnTM"
         }
       ],
       "services": {
