@@ -189,7 +189,7 @@ android {
       buildConfigField(
         type = "String",
         name = "GAME_GENIE_API",
-        value = "\"https://genie-chatbot-leaseweb.aptoide.com/\""
+        value = "\"https://genie-chatbot.aptoide.com/\""
       )
       buildConfigField(
         type = "String",
