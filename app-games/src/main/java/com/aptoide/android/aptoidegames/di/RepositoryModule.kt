@@ -32,6 +32,7 @@ import cm.aptoide.pt.feature_oos.di.UninstallPackagesFilter
 import cm.aptoide.pt.feature_search.data.AutoCompleteSuggestionsRepository
 import cm.aptoide.pt.feature_search.domain.repository.SearchStoreManager
 import cm.aptoide.pt.feature_updates.di.PrioritizedPackagesFilter
+import cm.aptoide.pt.install_manager.InstallManager
 import com.aptoide.android.aptoidegames.AptoideIdsRepository
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.LocalIdsRepository
@@ -44,8 +45,12 @@ import com.aptoide.android.aptoidegames.feature_promotional.domain.AppComingSoon
 import com.aptoide.android.aptoidegames.feature_promotional.repository.SubscribedAppsManager
 import com.aptoide.android.aptoidegames.feature_rtb.analytics.RTBErrorLogger
 import com.aptoide.android.aptoidegames.feature_rtb.di.RetrofitRTB
+import com.aptoide.android.aptoidegames.feature_rtb.di.RetrofitRTBCollector
+import com.aptoide.android.aptoidegames.feature_rtb.repository.AptoideInstalledPackagesRTBRepository
 import com.aptoide.android.aptoidegames.feature_rtb.repository.AptoideRTBRepository
+import com.aptoide.android.aptoidegames.feature_rtb.repository.InstalledPackagesRTBRepository
 import com.aptoide.android.aptoidegames.feature_rtb.repository.RTBApi
+import com.aptoide.android.aptoidegames.feature_rtb.repository.RTBCollectorApi
 import com.aptoide.android.aptoidegames.feature_rtb.repository.RTBRepository
 import com.aptoide.android.aptoidegames.home.repository.ThemePreferencesManager
 import com.aptoide.android.aptoidegames.idsDataStore
@@ -351,6 +356,20 @@ class RepositoryModule {
     featureFlags = featureFlags,
     okHttpClient = okHttpClient,
     scope = CoroutineScope(Dispatchers.IO)
+  )
+
+  @Singleton
+  @Provides
+  fun provideInstalledPackagesRTBRepository(
+    @RetrofitRTBCollector retrofit: Retrofit,
+    installManager: InstallManager,
+    aptoideIdsRepository: LocalIdsRepository,
+    featureFlags: FeatureFlags,
+  ): InstalledPackagesRTBRepository = AptoideInstalledPackagesRTBRepository(
+    rtbCollectorApi = retrofit.create(RTBCollectorApi::class.java),
+    installManager = installManager,
+    aptoideIdsRepository = aptoideIdsRepository,
+    featureFlags = featureFlags,
   )
 }
 

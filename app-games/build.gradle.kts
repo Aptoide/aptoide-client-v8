@@ -56,6 +56,12 @@ android {
 
     buildConfigField(
       type = "String",
+      name = "RTB_COLLECTOR_HOST",
+      value = "\"https://aptoide-rtb-client-collector.aptoide.com\""
+    )
+
+    buildConfigField(
+      type = "String",
       name = "DEEP_LINK_SCHEMA",
       value = "\"ag://\""
     )

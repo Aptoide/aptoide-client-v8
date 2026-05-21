@@ -26,8 +26,23 @@ object NetworkModule {
       .addConverterFactory(GsonConverterFactory.create())
       .build()
   }
+
+  @RetrofitRTBCollector
+  @Provides
+  @Singleton
+  fun provideRetrofitRTBCollector(@RawOkHttp okHttpClient: OkHttpClient): Retrofit {
+    return Retrofit.Builder()
+      .client(okHttpClient)
+      .baseUrl(BuildConfig.RTB_COLLECTOR_HOST)
+      .addConverterFactory(GsonConverterFactory.create())
+      .build()
+  }
 }
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class RetrofitRTB
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class RetrofitRTBCollector
