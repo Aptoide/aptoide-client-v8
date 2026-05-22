@@ -28,6 +28,7 @@ import cm.aptoide.pt.feature_apps.data.App
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.OverrideAnalyticsAPKFY
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
+import com.aptoide.android.aptoidegames.apkfy.isFreeFire
 import com.aptoide.android.aptoidegames.apkfy.isRoblox
 import com.aptoide.android.aptoidegames.appview.AppRatingAndDownloads
 import com.aptoide.android.aptoidegames.drawables.backgrounds.myiconpack.getApkfyAppIconBackground
@@ -35,6 +36,7 @@ import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.installer.analytics.rememberInstallAnalytics
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
 import com.aptoide.android.aptoidegames.mmp.WithUTM
+import com.aptoide.android.aptoidegames.play_and_earn.rememberShouldShowPlayAndEarn
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -87,6 +89,7 @@ fun ApkfyScreen(
 ) {
   val apkfyAnalytics = rememberApkfyAnalytics()
   val installAnalytics = rememberInstallAnalytics()
+  val shouldShowPlayAndEarn = rememberShouldShowPlayAndEarn()
   val apkfyData = apkfyState.data
 
   LaunchedEffect(Unit) {
@@ -138,6 +141,14 @@ fun ApkfyScreen(
               installAnalytics.sendExp83RobloxDownloadStarted(variant = variant)
               if (apkfyState is ApkfyUiState.BaselineWithRecommendation) {
                 navigate(robloxApkfyRecommendationRoute)
+              }
+            }
+
+            // Default APKFY: route Roblox / Free Fire installs into the Play & Earn reward flow.
+            if (apkfyState is ApkfyUiState.Default && shouldShowPlayAndEarn) {
+              when {
+                apkfyData.app.isRoblox() -> navigate(robloxApkfyRewardRoute)
+                apkfyData.app.isFreeFire() -> navigate(freeFireApkfyRewardRoute)
               }
             }
           }

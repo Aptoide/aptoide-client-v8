@@ -390,6 +390,15 @@
   <string name="apkfy_multi_install_auto_open">Opens automatically when installation is complete.</string>
   <string name="appview_auto_open_when_ready">Auto-open when ready</string>
 
+  <string name="play_and_earn_exclusive_offer">Exclusive offer</string>
+  <string name="play_and_earn_reward_earned_message"><![CDATA[You earned <1>%1$s</1> in %2$s!]]></string>
+  <string name="play_and_earn_collect_button">Tap to Collect</string>
+  <string name="play_and_earn_dismiss_button">Maybe later</string>
+  <string name="play_and_earn_currency_robux">Robux</string>
+  <string name="play_and_earn_currency_diamonds">Diamonds</string>
+  <string name="play_and_earn_reward_claim_message"><![CDATA[<1>%1$s</1> in %2$s is yours!]]></string>
+  <string name="play_and_earn_earn_more_button">Earn More</string>
+
   <!-- AB Test for Experiment 9 : GamesFeed -->
   <string name="gamesfeed_bundle_header_1">For you</string>
   <string name="gamesfeed_detail_header">Weekly highlights based on Roblox</string>
