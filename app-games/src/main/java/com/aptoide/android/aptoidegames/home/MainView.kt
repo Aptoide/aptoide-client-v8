@@ -33,7 +33,11 @@ import com.aptoide.android.aptoidegames.apkfy.presentation.RobloxApkfyRecommenda
 import com.aptoide.android.aptoidegames.apkfy.presentation.apkfyScreen
 import com.aptoide.android.aptoidegames.apkfy.presentation.detailedApkfyRoute
 import com.aptoide.android.aptoidegames.apkfy.presentation.detailedApkfyScreen
+import com.aptoide.android.aptoidegames.apkfy.presentation.freeFireApkfyRewardRoute
+import com.aptoide.android.aptoidegames.apkfy.presentation.freeFireApkfyRewardScreen
 import com.aptoide.android.aptoidegames.apkfy.presentation.robloxApkfyRecommendationRoute
+import com.aptoide.android.aptoidegames.apkfy.presentation.robloxApkfyRewardRoute
+import com.aptoide.android.aptoidegames.apkfy.presentation.robloxApkfyRewardScreen
 import com.aptoide.android.aptoidegames.apkfy.presentation.robloxApkfyRoute
 import com.aptoide.android.aptoidegames.apkfy.presentation.robloxApkfyScreen
 import com.aptoide.android.aptoidegames.appview.appViewScreen
@@ -59,7 +63,9 @@ import com.aptoide.android.aptoidegames.permissions.notifications.NotificationsP
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.home.PaEHomeLayout
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.level_up.levelUpScreen
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.playAndEarnPermissionsScreen
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.ClaimedRewardDialog
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.playAndEarnRewardsScreen
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnSignInOnlyRoute
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnSignInOnlyScreen
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnSignInRoute
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnSignInScreen
@@ -74,6 +80,16 @@ import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesToolBar
 import com.aptoide.android.aptoidegames.updates.presentation.updatesScreen
 import kotlinx.coroutines.launch
+
+private val routesWithoutTopBar = listOf(
+  genieRoute,
+  detailedApkfyRoute,
+  genieSearchRoute,
+  robloxApkfyRoute,
+  robloxApkfyRecommendationRoute,
+  robloxApkfyRewardRoute,
+  freeFireApkfyRewardRoute,
+)
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -94,18 +110,8 @@ fun MainView(navController: NavHostController) {
     navController.currentBackStackEntryFlow.collectAsState(initial = navController.currentBackStackEntry)
 
   LaunchedEffect(currentRoute.value?.destination?.route) {
-    val currentRoute = currentRoute.value?.destination?.route
-    showTopBar = if (currentRoute != null) {
-      !currentRoute.contains(genieRoute) &&
-        !currentRoute.contains(detailedApkfyRoute) &&
-        !currentRoute.contains(
-          genieSearchRoute
-        ) &&
-        !currentRoute.contains(robloxApkfyRoute) &&
-        !currentRoute.contains(robloxApkfyRecommendationRoute)
-    } else {
-      true
-    }
+    val route = currentRoute.value?.destination?.route
+    showTopBar = route == null || routesWithoutTopBar.none(route::contains)
   }
 
   AptoideTheme {
@@ -157,6 +163,8 @@ fun MainView(navController: NavHostController) {
             )
 
             PromotionDialog(navigate = navController::navigateTo)
+
+            ClaimedRewardDialog(navigate = navController::navigateTo)
 
             Box(modifier = Modifier.padding(padding)) {
               NavigationGraph(
@@ -339,6 +347,32 @@ private fun NavigationGraph(
       navigate = navController::navigateTo,
       goBack = navController::navigateUp,
       screenData = RobloxApkfyRecommendationScreen()
+    )
+
+    animatedComposable(
+      navigate = navController::navigateTo,
+      goBack = navController::navigateUp,
+      screenData = robloxApkfyRewardScreen(
+        navigateToSignIn = {
+          navController.navigate(playAndEarnSignInOnlyRoute)
+        },
+        navigateToHome = {
+          navController.popBackStack(navController.graph.startDestinationId, false)
+        }
+      )
+    )
+
+    animatedComposable(
+      navigate = navController::navigateTo,
+      goBack = navController::navigateUp,
+      screenData = freeFireApkfyRewardScreen(
+        navigateToSignIn = {
+          navController.navigate(playAndEarnSignInOnlyRoute)
+        },
+        navigateToHome = {
+          navController.popBackStack(navController.graph.startDestinationId, false)
+        }
+      )
     )
 
     animatedComposable(
