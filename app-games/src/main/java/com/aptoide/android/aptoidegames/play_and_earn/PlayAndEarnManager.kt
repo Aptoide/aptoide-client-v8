@@ -27,10 +27,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -105,6 +107,9 @@ class PlayAndEarnManager @Inject constructor(
   suspend fun isSignedIn(): Boolean {
     return walletCoreDataSource.getCurrentWalletAddress() != null
   }
+
+  fun observeIsSignedIn(): Flow<Boolean> =
+    walletCoreDataSource.observeCurrentWalletAddress().map { it != null }
 
   suspend fun isPlayAndEarnReady(): Boolean {
     return isSignedIn() && hasRequiredPermissions()
