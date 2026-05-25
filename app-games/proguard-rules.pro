@@ -53,3 +53,8 @@
 -keepattributes Signature
 -keep class com.google.gson.reflect.TypeToken { *; }
 -keep class * extends com.google.gson.reflect.TypeToken
+
+# AppLovin SDK - suppress warnings for optional dependencies not included in the build
+-dontwarn com.amazon.** 
+-dontwarn com.applovin.**
+-dontwarn com.iab.omid.library.applovin.**
