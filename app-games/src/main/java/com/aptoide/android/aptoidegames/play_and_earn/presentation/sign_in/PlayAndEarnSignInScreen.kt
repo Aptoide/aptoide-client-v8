@@ -39,20 +39,36 @@ import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 
+/** Sign-in followed by the permissions onboarding step. */
 const val playAndEarnSignInRoute = "playAndEarnSignIn"
+
+/** Sign-in only */
+const val playAndEarnSignInOnlyRoute = "playAndEarnSignInOnly"
 
 fun playAndEarnSignInScreen() = ScreenData.withAnalytics(
   route = playAndEarnSignInRoute,
   screenAnalyticsName = "PlayAndEarnSignIn",
 ) { _, navigate, navigateBack ->
+  PlayAndEarnSignInScreen(
+    navigateBack = navigateBack,
+    onSignInSuccess = { navigate(playAndEarnPermissionsRoute) },
+  )
+}
 
-  PlayAndEarnSignInScreen(navigate, navigateBack)
+fun playAndEarnSignInOnlyScreen() = ScreenData.withAnalytics(
+  route = playAndEarnSignInOnlyRoute,
+  screenAnalyticsName = "PlayAndEarnSignInOnly",
+) { _, _, navigateBack ->
+  PlayAndEarnSignInScreen(
+    navigateBack = navigateBack,
+    onSignInSuccess = navigateBack,
+  )
 }
 
 @Composable
 private fun PlayAndEarnSignInScreen(
-  navigate: (String) -> Unit,
-  navigateBack: () -> Unit
+  navigateBack: () -> Unit,
+  onSignInSuccess: () -> Unit,
 ) {
   val context = LocalContext.current
   val signInVM = hiltViewModel<GoogleSignInViewModel>()
@@ -60,7 +76,7 @@ private fun PlayAndEarnSignInScreen(
 
   val paeAnalytics = rememberPaEAnalytics()
 
-  GoogleSignInEventHandler(onSuccess = { navigate(playAndEarnPermissionsRoute) })
+  GoogleSignInEventHandler(onSuccess = onSignInSuccess)
 
   Column(
     modifier = Modifier.fillMaxSize()
@@ -187,7 +203,7 @@ private fun PaESignInScreenWaiting() {
 @Composable
 private fun PaESignInScreenPreview() {
   PlayAndEarnSignInScreen(
-    navigate = {},
-    navigateBack = {}
+    navigateBack = {},
+    onSignInSuccess = {},
   )
 }
