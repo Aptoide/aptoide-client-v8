@@ -2,7 +2,6 @@ package com.aptoide.android.aptoidegames.search.presentation
 
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -11,6 +10,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -225,42 +225,19 @@ private fun VanillaSponsoredBanner(
 ) {
   val outerShape = RoundedCornerShape(16.dp)
   val innerShape = RoundedCornerShape(12.dp)
+  val labelShape = RoundedCornerShape(topStart = 16.dp, bottomEnd = 16.dp)
 
-  Column(
+  Box(
     modifier = Modifier
       .fillMaxWidth()
       .clip(outerShape)
-      .background(Palette.SecondaryLight.copy(alpha = 0.16f), outerShape)
-      .border(BorderStroke(1.dp, Palette.Primary), outerShape)
+      .background(Palette.Primary)
       .clickable(onClick = onClick)
-      .padding(8.dp),
-    verticalArrangement = Arrangement.spacedBy(8.dp),
   ) {
-    Row(
-      modifier = Modifier.padding(horizontal = 4.dp),
-      verticalAlignment = Alignment.CenterVertically,
-      horizontalArrangement = Arrangement.spacedBy(4.dp),
-    ) {
-      Text(
-        text = stringResource(R.string.search_sponsored_suggested),
-        style = AGTypography.BodyBold,
-        color = Palette.White,
-      )
-      Image(
-        imageVector = getFireIcon(Palette.Primary),
-        contentDescription = null,
-        modifier = Modifier.size(16.dp),
-      )
-      Text(
-        text = stringResource(R.string.search_sponsored_label),
-        style = AGTypography.InputsXXS,
-        color = Palette.Primary,
-      )
-    }
-
     Box(
       modifier = Modifier
         .fillMaxWidth()
+        .padding(start = 6.dp, end = 6.dp, top = 32.dp, bottom = 6.dp)
         .height(96.dp)
         .clip(innerShape)
     ) {
@@ -276,7 +253,7 @@ private fun VanillaSponsoredBanner(
         contentScale = ContentScale.Fit,
         modifier = Modifier
           .align(Alignment.Center)
-          .height(96.dp)
+          .fillMaxHeight()
       )
 
       Box(
@@ -288,7 +265,7 @@ private fun VanillaSponsoredBanner(
       Row(
         modifier = Modifier
           .fillMaxSize()
-          .padding(horizontal = 16.dp),
+          .padding(horizontal = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
       ) {
@@ -336,6 +313,32 @@ private fun VanillaSponsoredBanner(
           )
         }
       }
+    }
+
+    Row(
+      modifier = Modifier
+        .align(Alignment.TopStart)
+        .clip(labelShape)
+        .background(Palette.SecondaryLight)
+        .padding(horizontal = 12.dp, vertical = 4.dp),
+      verticalAlignment = Alignment.CenterVertically,
+      horizontalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+      Text(
+        text = stringResource(R.string.search_sponsored_suggested),
+        style = AGTypography.BodyBold,
+        color = Palette.White,
+      )
+      Image(
+        imageVector = getFireIcon(Palette.Primary),
+        contentDescription = null,
+        modifier = Modifier.size(16.dp),
+      )
+      Text(
+        text = stringResource(R.string.search_sponsored_label),
+        style = AGTypography.InputsXXS,
+        color = Palette.Primary,
+      )
     }
   }
 }
