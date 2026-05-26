@@ -37,7 +37,6 @@ import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
-import com.aptoide.android.aptoidegames.drawables.icons.getFireIcon
 import com.aptoide.android.aptoidegames.drawables.icons.getRatingStar
 import com.aptoide.android.aptoidegames.feature_rtb.data.RTBApp
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -252,7 +251,7 @@ private fun VanillaSponsoredBanner(
         contentDescription = null,
         contentScale = ContentScale.Fit,
         modifier = Modifier
-          .align(Alignment.Center)
+          .align(Alignment.CenterEnd)
           .fillMaxHeight()
       )
 
@@ -329,16 +328,12 @@ private fun VanillaSponsoredBanner(
         style = AGTypography.BodyBold,
         color = Palette.White,
       )
-      Image(
-        imageVector = getFireIcon(Palette.Primary),
-        contentDescription = null,
-        modifier = Modifier.size(16.dp),
-      )
       Text(
         text = stringResource(R.string.search_sponsored_label),
         style = AGTypography.InputsXXS,
-        color = Palette.Primary,
+        color = Palette.Grey,
       )
     }
   }
 }
+
