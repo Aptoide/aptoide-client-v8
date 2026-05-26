@@ -19,11 +19,15 @@ import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.semantics.CollectionInfo
 import androidx.compose.ui.semantics.collectionInfo
 import androidx.compose.ui.semantics.semantics
@@ -39,6 +43,7 @@ import cm.aptoide.pt.feature_categories.presentation.AllCategoriesUiState
 import cm.aptoide.pt.feature_categories.presentation.AllCategoriesUiStateProvider
 import cm.aptoide.pt.feature_categories.presentation.rememberAllCategories
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
+import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGeneralAnalytics
@@ -190,10 +195,14 @@ fun CategoryLargeItem(
   icon: String?,
   onClick: () -> Unit = {},
 ) {
+  val isVanilla = BuildConfig.FLAVOR_brand == "vanilla"
+  val tileShape: Shape = if (isVanilla) RoundedCornerShape(24.dp) else RectangleShape
+  val labelColor = if (isVanilla) Palette.White else Palette.Primary
   Column(
     horizontalAlignment = Alignment.CenterHorizontally,
     modifier = Modifier
       .semantics(mergeDescendants = true) { }
+      .clip(tileShape)
       .clickable(onClick = onClick)
       .aspectRatio(160f / 184f)
       .background(color = Palette.Primary.copy(alpha = 0.1f))
@@ -216,7 +225,7 @@ fun CategoryLargeItem(
       textAlign = TextAlign.Center,
       maxLines = 2,
       overflow = TextOverflow.Ellipsis,
-      color = Palette.Primary,
+      color = labelColor,
       style = AGTypography.InputsL
     )
   }

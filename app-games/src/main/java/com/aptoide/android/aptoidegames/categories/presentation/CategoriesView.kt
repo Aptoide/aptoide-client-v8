@@ -18,11 +18,15 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.semantics.CollectionInfo
 import androidx.compose.ui.semantics.collectionInfo
 import androidx.compose.ui.semantics.semantics
@@ -33,6 +37,7 @@ import cm.aptoide.pt.feature_categories.domain.Category
 import cm.aptoide.pt.feature_categories.presentation.rememberCategoriesState
 import cm.aptoide.pt.feature_home.domain.Bundle
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
+import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.withBundleMeta
@@ -138,6 +143,8 @@ fun CategoryGridView(
   icon: String?,
   onClick: () -> Unit = {},
 ) {
+  val isVanilla = BuildConfig.FLAVOR_brand == "vanilla"
+  val tileShape: Shape = if (isVanilla) RoundedCornerShape(16.dp) else RectangleShape
   Column(
     modifier = Modifier
       .semantics(mergeDescendants = true) { }
@@ -150,6 +157,7 @@ fun CategoryGridView(
       modifier = Modifier
         .padding(bottom = 8.dp)
         .size(88.dp)
+        .clip(tileShape)
         .background(color = Palette.Primary.copy(alpha = 0.1f))
     ) {
       AptoideAsyncImage(
