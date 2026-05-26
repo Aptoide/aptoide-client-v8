@@ -1,7 +1,9 @@
 package com.aptoide.android.aptoidegames.updates.presentation
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +17,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.selection.toggleable
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.material.minimumInteractiveComponentSize
@@ -229,12 +232,20 @@ fun UpdateBox(updates: List<App>) {
         updates.size
       )
     }
-  Box(
-    modifier = Modifier
-      .fillMaxWidth()
-      .padding(16.dp)
-      .background(Palette.GreyDark)
-  ) {
+  val shape = RoundedCornerShape(16.dp)
+  val containerModifier = Modifier
+    .fillMaxWidth()
+    .padding(16.dp)
+    .then(
+      if (BuildConfig.FLAVOR_brand == "vanilla") {
+        Modifier
+          .background(Palette.SecondaryLight.copy(alpha = 0.16f), shape)
+          .border(BorderStroke(1.dp, Palette.Primary), shape)
+      } else {
+        Modifier.background(Palette.GreyDark)
+      }
+    )
+  Box(modifier = containerModifier) {
     Row(
       modifier = Modifier
         .fillMaxWidth()
