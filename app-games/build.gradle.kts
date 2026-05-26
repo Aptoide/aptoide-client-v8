@@ -133,9 +133,9 @@ android {
       buildConfigField(
         type = "String",
         name = "DEEP_LINK_SCHEMA",
-        value = "\"aptoidev10://\""
+        value = "\"aptoide://\""
       )
-      manifestPlaceholders["deepLinkScheme"] = "aptoidev10"
+      manifestPlaceholders["deepLinkScheme"] = "aptoide"
     }
 
     create("dev") {

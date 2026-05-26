@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -33,6 +34,7 @@ import cm.aptoide.pt.feature_editorial.presentation.rememberEditorialListState
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.randomBundle
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
+import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.analytics.presentation.SwipeListener
 import com.aptoide.android.aptoidegames.analytics.presentation.withBundleMeta
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
@@ -128,23 +130,25 @@ private fun RealEditorialBundle(
   subtype: String?
 ) {
   Column(modifier = modifier) {
-    BundleHeader(
-      title = bundle.title,
-      icon = bundle.bundleIcon,
-      hasMoreAction = bundle.hasMoreAction,
-      onClick = {
-        navigate(
-          buildSeeMoreEditorialsRoute(
-            title = bundle.title,
-            bundleTag = bundle.actions.first().tag,
-            subtype = subtype
-          )
-            .withBundleMeta(
-              bundle.meta.copy(tag = bundle.actions.first().tag)
+    if (bundle.title.isNotBlank()) {
+      BundleHeader(
+        title = bundle.title,
+        icon = bundle.bundleIcon,
+        hasMoreAction = bundle.hasMoreAction,
+        onClick = {
+          navigate(
+            buildSeeMoreEditorialsRoute(
+              title = bundle.title,
+              bundleTag = bundle.actions.first().tag,
+              subtype = subtype
             )
-        )
-      },
-    )
+              .withBundleMeta(
+                bundle.meta.copy(tag = bundle.actions.first().tag)
+              )
+          )
+        },
+      )
+    }
     SwipeListener(interactionSource = lazyListState.interactionSource)
     LazyRow(
       modifier = Modifier
@@ -157,8 +161,9 @@ private fun RealEditorialBundle(
       horizontalArrangement = Arrangement.spacedBy(16.dp),
     ) {
       itemsIndexed(items) { index, editorialMeta ->
+        val fillRow = items.size == 1 && BuildConfig.FLAVOR_brand == "vanilla"
         EditorialsViewCard(
-          modifier = Modifier.width(280.dp),
+          modifier = if (fillRow) Modifier.fillParentMaxWidth() else Modifier.width(280.dp),
           articleMeta = editorialMeta,
           onClick = {
             navigate(
@@ -187,8 +192,8 @@ fun EditorialsViewCard(
   ) {
     AptoideFeatureGraphicImage(
       modifier = Modifier
-        .width(280.dp)
-        .height(136.dp),
+        .fillMaxWidth()
+        .aspectRatio(280f / 136f),
       data = articleMeta.image,
       contentDescription = null
     )

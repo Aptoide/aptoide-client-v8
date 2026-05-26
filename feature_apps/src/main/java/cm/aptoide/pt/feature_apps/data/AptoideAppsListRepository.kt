@@ -27,9 +27,13 @@ internal class AptoideAppsListRepository @Inject constructor(
       throw IllegalStateException()
     }
     val query = url.split("listApps/")[1]
+    // Global widget URLs (those without an explicit store_id) must not be re-scoped
+    // with store_name — that would restrict the query to a store that doesn't own the
+    // group/section, returning 404. Matches legacy Aptoide vanilla behavior.
+    val effectiveStoreName = storeName.takeIf { "store_id=" in query }
     appsRemoteDataSource.getAppsList(
       path = query,
-      storeName = storeName,
+      storeName = effectiveStoreName,
       bypassCache = if (bypassCache) CacheConstants.NO_CACHE else null
     )
       .datalist?.list?.let(mapper::map)
@@ -106,7 +110,7 @@ internal class AptoideAppsListRepository @Inject constructor(
     @GET("apps/get/{query}")
     suspend fun getAppsList(
       @Path(value = "query", encoded = true) path: String,
-      @Query("store_name") storeName: String,
+      @Query("store_name") storeName: String?,
       @Header(CacheConstants.CACHE_CONTROL_HEADER) bypassCache: String?,
     ): BaseV7DataListResponse<AppJSON>
 

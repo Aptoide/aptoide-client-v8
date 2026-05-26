@@ -128,6 +128,23 @@ plugins {
 | `:app-games` | `vanilla` | `cm.aptoide.pt` | Aptoide V10 (Vanilla, modern) |
 | `:app-dt` | — | `com.dti.hub` | Digital Turbine GamesHub (planned, separate module) |
 
+### Verifying Brand Flavor Changes
+
+Any change in `:app-games/src/main/` is shared between **both** brand flavors (`aptoideGames` and `vanilla`). Source-set–specific code lives in `src/aptoideGames/` or `src/vanilla/` and only affects that flavor.
+
+**When you change shared code, verify both flavors on-device.** Never claim "done" after testing just one — silently breaking the other flavor is the most common regression in this module.
+
+- Build + install both: `./gradlew :app-games:installVanillaDevDebug :app-games:installAptoideGamesDevDebug` (`-P` env props as needed).
+- Launch each and screenshot the affected surface side-by-side.
+- Vanilla pkg: `cm.aptoide.pt.dev`. AG pkg: `com.aptoide.android.aptoidegames.dev`. Activity: `com.aptoide.android.aptoidegames.MainActivity` for both.
+
+**Always-test-both applies to**:
+- Shared composables / drawables / theme tokens
+- Shared DI providers, repositories, network code, navigation
+- Anything reading `BuildConfig.FLAVOR_brand`, `MARKET_NAME`, `DEEP_LINK_SCHEMA`, or any other brand-dependent BuildConfig field — especially when intentionally branching on flavor, also confirm the non-targeted flavor is *unchanged*.
+
+**Skip the second flavor only when** the change is physically in `src/<flavor>/…` and the diff cannot reach the other source set.
+
 ## Common Patterns & Conventions
 
 ### Commit Messages

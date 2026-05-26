@@ -89,8 +89,17 @@ class RepositoryModule {
   @Singleton
   @Provides
   @DefaultEditorialUrl
-  fun provideDefaultEditorialUrl(): String =
-    "${BuildConfig.STORE_DOMAIN}user/action/item/cards/get/type=CURATION_1/limit=10/store_name=${BuildConfig.MARKET_NAME}"
+  fun provideDefaultEditorialUrl(): String {
+    val base = "${BuildConfig.STORE_DOMAIN}user/action/item/cards/get/type=CURATION_1/limit=10"
+    // Vanilla's "apps" store has only one CURATION_1 card tagged to it, so scoping by
+    // store_name returns a single article. Match legacy Aptoide behavior by omitting the
+    // store filter for vanilla; AG still scopes to aptoide-games where the full set lives.
+    return if (BuildConfig.FLAVOR_brand == "vanilla") {
+      base
+    } else {
+      "$base/store_name=${BuildConfig.MARKET_NAME}"
+    }
+  }
 
   @Singleton
   @Provides
