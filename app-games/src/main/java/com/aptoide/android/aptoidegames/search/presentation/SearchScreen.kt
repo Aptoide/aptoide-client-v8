@@ -699,18 +699,23 @@ fun EmptySearchView(
         .weight(1f),
       verticalArrangement = Arrangement.Center
     ) {
+      val isVanilla = BuildConfig.FLAVOR_brand == "vanilla"
       Image(
         modifier = Modifier
           .fillMaxWidth()
           .padding(all = 16.dp),
-        imageVector = getGenericError(Palette.Primary, Palette.GreyLight, Palette.White),
+        imageVector = getGenericError(
+          Palette.Primary,
+          Palette.GreyLight,
+          if (isVanilla) Palette.Black else Palette.White,
+        ),
         contentDescription = null,
       )
       Text(
         modifier = Modifier.padding(start = 40.dp, end = 40.dp, bottom = 32.dp),
         text = stringResource(R.string.search_empty_body, searchValue),
         style = AGTypography.Title,
-        color = Palette.White,
+        color = if (isVanilla) Palette.Black else Palette.White,
         maxLines = 4,
         overflow = TextOverflow.Ellipsis,
         textAlign = TextAlign.Center,

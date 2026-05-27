@@ -8,11 +8,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -22,6 +26,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter.Companion.formatBytes
 import cm.aptoide.pt.extensions.PreviewDark
+import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.design_system.PrimaryButton
 import com.aptoide.android.aptoidegames.design_system.PrimaryTextButton
@@ -62,53 +67,117 @@ fun WifiPromptDialog(
       usePlatformDefaultWidth = false
     ),
   ) {
-    Box(
+    if (BuildConfig.FLAVOR_brand == "vanilla") {
+      VanillaWifiPromptDialog(
+        messageText = messageText,
+        onWaitForWifi = onWaitForWifi,
+        onDownloadNow = onDownloadNow,
+      )
+    } else {
+      AGWifiPromptDialog(
+        messageText = messageText,
+        onWaitForWifi = onWaitForWifi,
+        onDownloadNow = onDownloadNow,
+      )
+    }
+  }
+}
+
+@Composable
+private fun AGWifiPromptDialog(
+  messageText: AnnotatedString,
+  onWaitForWifi: () -> Unit,
+  onDownloadNow: () -> Unit,
+) {
+  WifiPromptDialogContent(
+    backgroundColor = Palette.GreyDark,
+    backgroundShape = null,
+    iconColors = Triple(Palette.Primary, Palette.GreyLight, Palette.White),
+    textColor = Palette.White,
+    downloadNowColor = Palette.Primary,
+    messageText = messageText,
+    onWaitForWifi = onWaitForWifi,
+    onDownloadNow = onDownloadNow,
+  )
+}
+
+@Composable
+private fun VanillaWifiPromptDialog(
+  messageText: AnnotatedString,
+  onWaitForWifi: () -> Unit,
+  onDownloadNow: () -> Unit,
+) {
+  WifiPromptDialogContent(
+    backgroundColor = Palette.White,
+    backgroundShape = RoundedCornerShape(16.dp),
+    iconColors = Triple(Palette.Primary, Palette.GreyLight, Palette.Black),
+    textColor = Palette.Black,
+    downloadNowColor = Palette.Black,
+    messageText = messageText,
+    onWaitForWifi = onWaitForWifi,
+    onDownloadNow = onDownloadNow,
+  )
+}
+
+@Composable
+private fun WifiPromptDialogContent(
+  backgroundColor: Color,
+  backgroundShape: RoundedCornerShape?,
+  iconColors: Triple<Color, Color, Color>,
+  textColor: Color,
+  downloadNowColor: Color,
+  messageText: AnnotatedString,
+  onWaitForWifi: () -> Unit,
+  onDownloadNow: () -> Unit,
+) {
+  val backgroundModifier = Modifier
+    .padding(horizontal = 16.dp)
+    .width(328.dp)
+    .wrapContentHeight()
+    .let { if (backgroundShape != null) it.clip(backgroundShape) else it }
+    .background(backgroundColor)
+
+  Box(modifier = backgroundModifier) {
+    Column(
       modifier = Modifier
-        .padding(horizontal = 16.dp)
-        .width(328.dp)
-        .wrapContentHeight()
-        .background(Palette.GreyDark),
+        .padding(horizontal = 24.dp)
+        .fillMaxWidth()
+        .wrapContentHeight(),
+      horizontalAlignment = Alignment.CenterHorizontally
     ) {
-      Column(
+      Image(
+        imageVector = getWifiDialogIcon(iconColors.first, iconColors.second, iconColors.third),
         modifier = Modifier
-          .padding(horizontal = 24.dp)
-          .fillMaxWidth()
-          .wrapContentHeight(),
-        horizontalAlignment = Alignment.CenterHorizontally
-      ) {
-        Image(
-          imageVector = getWifiDialogIcon(Palette.Primary, Palette.GreyLight, Palette.White),
-          modifier = Modifier
-            .padding(top = 39.dp, bottom = 41.dp),
-          contentDescription = null,
-        )
-        Text(
-          text = stringResource(R.string.wifi_disclaimer_title),
-          style = AGTypography.Title,
-          color = Palette.White,
-          textAlign = TextAlign.Center,
-          modifier = Modifier.padding(bottom = 8.dp)
-        )
-        Text(
-          text = messageText,
-          style = AGTypography.SubHeadingS,
-          color = Palette.White,
-          textAlign = TextAlign.Center,
-          modifier = Modifier.padding(bottom = 16.dp)
-        )
-        PrimaryButton(
-          onClick = onWaitForWifi,
-          modifier = Modifier.fillMaxWidth(),
-          enabled = true,
-          title = stringResource(R.string.wait_for_wifi_button),
-        )
-        PrimaryTextButton(
-          modifier = Modifier.padding(bottom = 8.dp),
-          onClick = onDownloadNow,
-          enabled = true,
-          text = stringResource(R.string.download_now_button)
-        )
-      }
+          .padding(top = 39.dp, bottom = 41.dp),
+        contentDescription = null,
+      )
+      Text(
+        text = stringResource(R.string.wifi_disclaimer_title),
+        style = AGTypography.Title,
+        color = textColor,
+        textAlign = TextAlign.Center,
+        modifier = Modifier.padding(bottom = 8.dp)
+      )
+      Text(
+        text = messageText,
+        style = AGTypography.SubHeadingS,
+        color = textColor,
+        textAlign = TextAlign.Center,
+        modifier = Modifier.padding(bottom = 16.dp)
+      )
+      PrimaryButton(
+        onClick = onWaitForWifi,
+        modifier = Modifier.fillMaxWidth(),
+        enabled = true,
+        title = stringResource(R.string.wait_for_wifi_button),
+      )
+      PrimaryTextButton(
+        modifier = Modifier.padding(bottom = 8.dp),
+        onClick = onDownloadNow,
+        enabled = true,
+        color = downloadNowColor,
+        text = stringResource(R.string.download_now_button)
+      )
     }
   }
 }
