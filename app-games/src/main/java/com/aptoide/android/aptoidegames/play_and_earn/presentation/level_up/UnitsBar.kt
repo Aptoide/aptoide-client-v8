@@ -1,7 +1,7 @@
 package com.aptoide.android.aptoidegames.play_and_earn.presentation.level_up
 
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.EaseOut
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -16,13 +16,12 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -35,32 +34,32 @@ import com.aptoide.android.aptoidegames.theme.Palette
 @Composable
 fun UnitsBar(
   availableUnits: Long,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
+  barHeight: Dp = 8.dp,
+  targetUnits: Long = 100L,
 ) {
-  var targetProgress by remember { mutableFloatStateOf(0f) }
+  val targetProgress = progressFromUnits(availableUnits, targetUnits).coerceIn(0f, 1f)
+  val animatable = remember { Animatable(0f) }
+  LaunchedEffect(targetProgress) {
+    animatable.animateTo(
+      targetValue = targetProgress,
+      animationSpec = tween(durationMillis = 2000, easing = EaseOut),
+    )
+  }
+  val animatedProgress by animatable.asState()
 
-  val animatedProgress by animateFloatAsState(
-    targetValue = targetProgress.coerceIn(0f, 1f),
-    animationSpec = tween(durationMillis = 2000, easing = EaseOut),
-    label = "units"
-  )
+  val maxUnitsLabel = targetUnits.toString()
 
-  LaunchedEffect(Unit) {
-    targetProgress = progressFromUnits(availableUnits)
+  val backgroundColor: Color = when {
+    availableUnits <= targetUnits -> Palette.Grey
+    availableUnits <= targetUnits * 2 -> Palette.Yellow100
+    else -> Palette.Orange150
   }
 
-  val backgroundColor: Color = when (availableUnits) {
-    in 0..100 -> Palette.Grey
-    in 101..200 -> Palette.Yellow100
-    in 200..Int.MAX_VALUE -> Palette.Orange150
-    else -> Palette.Grey
-  }
-
-  val progressColor: Color = when (availableUnits) {
-    in 0..100 -> Palette.Yellow100
-    in 101..200 -> Palette.Orange150
-    in 200..Int.MAX_VALUE -> Palette.Orange200
-    else -> Palette.Grey
+  val progressColor: Color = when {
+    availableUnits <= targetUnits -> Palette.Yellow100
+    availableUnits <= targetUnits * 2 -> Palette.Orange150
+    else -> Palette.Orange200
   }
 
   ConstraintLayout(
@@ -97,7 +96,7 @@ fun UnitsBar(
 
     Box(
       modifier = Modifier
-        .height(8.dp)
+        .height(barHeight)
         .background(backgroundColor)
         .constrainAs(greyBar) {
           this.centerVerticallyTo(minUnitsText)
@@ -113,7 +112,7 @@ fun UnitsBar(
 
     Box(
       modifier = Modifier
-        .height(8.dp)
+        .height(barHeight)
         .background(progressColor)
         .constrainAs(progressBar) {
           this.centerVerticallyTo(minUnitsText)
@@ -125,7 +124,7 @@ fun UnitsBar(
     Box(
       modifier = Modifier
         .width(1.dp)
-        .height(10.dp)
+        .height(barHeight.plus(2.dp))
         .background(Palette.White)
         .constrainAs(pointer) {
           top.linkTo(progressBar.top)
@@ -156,19 +155,23 @@ fun UnitsBar(
         end.linkTo(parent.end)
         bottom.linkTo(parent.bottom)
       },
-      text = "100",
+      text = maxUnitsLabel,
       style = AGTypography.InputsS,
       color = Palette.White
     )
   }
 }
 
-private fun progressFromUnits(units: Long): Float = (units % 100L).let {
-  if (it == 0L && units != 0L) 1f else (it / 100f)
+private fun progressFromUnits(units: Long, targetUnits: Long = 100L): Float {
+  if (targetUnits <= 0L) return 0f
+  val remainder = units % targetUnits
+  // Exact multiples (units != 0) snap to a full bar instead of resetting to 0.
+  return if (remainder == 0L && units != 0L) 1f
+  else remainder / targetUnits.toFloat()
 }
 
 @Preview
 @Composable
 fun ConstraintLayoutUnitsBarPreview() {
-  UnitsBar(availableUnits = 90)
+  UnitsBar(availableUnits = 90, targetUnits = 500L)
 }
