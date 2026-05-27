@@ -64,12 +64,20 @@ import com.aptoide.android.aptoidegames.play_and_earn.presentation.home.PaEHomeL
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.level_up.levelUpScreen
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.playAndEarnPermissionsScreen
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.ClaimedRewardDialog
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PaERewardType
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.playAndEarnRewardsScreen
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnSignInOnlyRoute
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnSignInOnlyScreen
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnSignInRoute
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnSignInScreen
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchange.exchangeUnitsScreen
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchange_flow.buildExchangeEmailRoute
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchange_flow.buildExchangeSuccessRoute
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchange_flow.buildPickRewardRoute
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchange_flow.exchangeEmailScreen
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchange_flow.exchangeSuccessScreen
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchange_flow.pickRewardScreen
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.units.redeemRewardScreen
 import com.aptoide.android.aptoidegames.promo_codes.PromoCodeBottomSheet
 import com.aptoide.android.aptoidegames.promo_codes.rememberPromoCodeApp
 import com.aptoide.android.aptoidegames.promotions.presentation.PromotionDialog
@@ -419,6 +427,46 @@ private fun NavigationGraph(
       navigate = navController::navigateTo,
       goBack = navController::navigateUp,
       screenData = exchangeUnitsScreen()
+    )
+
+    animatedComposable(
+      navigate = navController::navigateTo,
+      goBack = navController::navigateUp,
+      screenData = redeemRewardScreen(
+        navigateToPickReward = { formattedAmount ->
+          navController.navigate(buildPickRewardRoute(formattedAmount))
+        }
+      )
+    )
+
+    animatedComposable(
+      navigate = navController::navigateTo,
+      goBack = navController::navigateUp,
+      screenData = pickRewardScreen(
+        navigateToEmail = { rewardType: PaERewardType, formattedAmount: String ->
+          navController.navigate(buildExchangeEmailRoute(rewardType, formattedAmount))
+        }
+      )
+    )
+
+    animatedComposable(
+      navigate = navController::navigateTo,
+      goBack = navController::navigateUp,
+      screenData = exchangeEmailScreen(
+        navigateToSuccess = { rewardType: PaERewardType, formattedAmount: String, email: String ->
+          navController.navigate(buildExchangeSuccessRoute(rewardType, formattedAmount, email))
+        }
+      )
+    )
+
+    animatedComposable(
+      navigate = navController::navigateTo,
+      goBack = navController::navigateUp,
+      screenData = exchangeSuccessScreen(
+        onEarnMore = {
+          navController.popBackStack(navController.graph.startDestinationId, false)
+        }
+      )
     )
   }
 }
