@@ -491,4 +491,22 @@
   <string name="search_sponsored_install">Install</string>
   <string name="search_sponsored_suggested">Suggested for You 🔥</string>
   <string name="search_sponsored_label">Sponsored</string>
+
+  <!-- Play & Earn — Units Exchange Flow -->
+  <string name="play_and_earn_exchange_units_to_go">%1$d units to go</string>
+  <string name="play_and_earn_exchange_units_progress"><![CDATA[<1>%1$d</1>/%2$d units]]></string>
+  <string name="play_and_earn_exchange_units_label">units</string>
+  <string name="play_and_earn_exchange_redeem_button">Redeem %1$s</string>
+  <string name="play_and_earn_exchange_reach_target_robux">Reaching %1$d units = Redeem %2$s in Robux code</string>
+  <string name="play_and_earn_exchange_reach_target_diamonds">Reaching %1$d units = Redeem %2$s in Free Fire Diamonds code</string>
+  <string name="play_and_earn_exchange_pick_reward_title">Pick your reward.</string>
+  <string name="play_and_earn_exchange_available_subtitle">You have %1$s available.</string>
+  <string name="play_and_earn_exchange_almost_there">You\'re almost there!</string>
+  <string name="play_and_earn_exchange_send_code"><![CDATA[Where should we send your <1>%1$s</1> <2>%2$s</2> code?]]></string>
+  <string name="play_and_earn_exchange_email_address_label">Email Address</string>
+  <string name="play_and_earn_exchange_email_safe_note">🔒 Your email is safe with us. We\'ll only use it to send you this reward.</string>
+  <string name="play_and_earn_exchange_get_my_code_button">Get my code</string>
+  <string name="play_and_earn_exchange_email_error">Enter a valid email address</string>
+  <string name="play_and_earn_exchange_success_email_sent">We\'ve sent your code to %1$s. Check your inbox within 24 hours.</string>
+  <string name="play_and_earn_exchange_earn_more_button">Earn More</string>
 </resources>

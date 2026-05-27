@@ -85,7 +85,7 @@ private fun ClaimRewardDialogContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp),
       ) {
-        RewardArt(paERewardType = reward.paERewardType)
+        PaERewardSuccessArt(paERewardType = reward.paERewardType)
         RewardEarnedText(
           rewardAmount = reward.rewardAmount,
           paERewardType = reward.paERewardType,
@@ -101,21 +101,29 @@ private fun ClaimRewardDialogContent(
 }
 
 @Composable
-private fun RewardArt(paERewardType: PaERewardType) {
-  Box(contentAlignment = Alignment.Center) {
-    Image(
-      painter = painterResource(paERewardType.iconRes),
-      contentDescription = null,
-      modifier = Modifier.size(96.dp, 108.dp)
-    )
-    Image(
-      imageVector = getCorrectHexagon(),
-      contentDescription = null,
-      modifier = Modifier
-        .align(Alignment.TopEnd)
-        .size(width = 53.dp, height = 58.dp)
-        .offset(x = 20.dp),
-    )
+fun PaERewardSuccessArt(
+  paERewardType: PaERewardType,
+  modifier: Modifier = Modifier,
+) {
+  Box(
+    modifier = modifier,
+    contentAlignment = Alignment.Center,
+  ) {
+    Box(contentAlignment = Alignment.Center) {
+      Image(
+        painter = painterResource(paERewardType.iconRes),
+        contentDescription = null,
+        modifier = Modifier.size(96.dp, 108.dp)
+      )
+      Image(
+        imageVector = getCorrectHexagon(),
+        contentDescription = null,
+        modifier = Modifier
+          .align(Alignment.TopEnd)
+          .size(width = 53.dp, height = 58.dp)
+          .offset(x = 20.dp),
+      )
+    }
     Box(
       modifier = Modifier
         .size(0.dp)
