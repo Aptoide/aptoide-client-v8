@@ -26,6 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameCompanion
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -68,18 +69,22 @@ fun CompanionGameChoice(
             contentDescription = null,
             modifier = Modifier.size(24.dp)
           )
+          val onSurfaceColor =
+            if (BuildConfig.FLAVOR_brand == "vanilla") Palette.White else Palette.Primary
           Text(
             text = title,
             style = AGTypography.Chat,
-            color = Palette.Primary
+            color = onSurfaceColor
           )
         }
 
+        val onSurfaceColor =
+          if (BuildConfig.FLAVOR_brand == "vanilla") Palette.White else Palette.Primary
         if (games.size == 1) {
           CompanionDropDownSingleGame(
             game = games.first(),
             onGameClick = onGameClick,
-            textStyle = AGTypography.SmallGames.copy(color = Palette.Primary),
+            textStyle = AGTypography.SmallGames.copy(color = onSurfaceColor),
             modifier = Modifier
               .fillMaxWidth()
               .padding(top = 16.dp)
@@ -88,7 +93,7 @@ fun CompanionGameChoice(
           CompanionDropDownMultipleGames(
             games = games,
             onGameClick = onGameClick,
-            textStyle = AGTypography.SmallGames.copy(color = Palette.Primary),
+            textStyle = AGTypography.SmallGames.copy(color = onSurfaceColor),
             modifier = Modifier
               .fillMaxWidth()
               .height(100.dp)

@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 
@@ -67,7 +68,7 @@ fun SuggestionBox(
     Text(
       text = suggestion,
       style = textStyle,
-      color = Palette.Primary,
+      color = if (BuildConfig.FLAVOR_brand == "vanilla") Palette.White else Palette.Primary,
       minLines = 2,
       maxLines = 2
     )
