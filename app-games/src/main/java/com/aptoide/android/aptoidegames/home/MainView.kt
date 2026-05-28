@@ -60,7 +60,6 @@ import com.aptoide.android.aptoidegames.installer.UserActionDialog
 import com.aptoide.android.aptoidegames.mmp.WithUTM
 import com.aptoide.android.aptoidegames.notifications.NotificationsPermissionRequester
 import com.aptoide.android.aptoidegames.permissions.notifications.NotificationsPermissionViewModel
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.home.PaEHomeLayout
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.level_up.levelUpScreen
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.playAndEarnPermissionsScreen
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.ClaimedRewardDialog
@@ -133,75 +132,73 @@ fun MainView(navController: NavHostController) {
       AptoideGamesBottomSheet(
         navigate = navigate
       ) { showBottomSheet ->
-        PaEHomeLayout(navController = navController) {
-          Scaffold(
-            snackbarHost = {
-              SnackbarHost(hostState = snackBarHostState) {
-                Popup {
-                  Snackbar(
-                    snackbarData = it,
-                    modifier = Modifier
-                      .focusable(false)
-                      .clearAndSetSemantics {},
-                    backgroundColor = Palette.GreyDark,
-                    contentColor = Palette.White
-                  )
-                }
-              }
-            },
-            bottomBar = {
-              AppGamesBottomBar(navController = navController)
-            },
-            topBar = {
-              if (showTopBar) {
-                AppGamesToolBar(
-                  navigate = {
-                    if (currentRoute.value?.destination?.route?.substringBefore("?") != it) {
-                      navController.navigateTo(it)
-                    }
-                  },
-                  goBackHome
+        Scaffold(
+          snackbarHost = {
+            SnackbarHost(hostState = snackBarHostState) {
+              Popup {
+                Snackbar(
+                  snackbarData = it,
+                  modifier = Modifier
+                    .focusable(false)
+                    .clearAndSetSemantics {},
+                  backgroundColor = Palette.GreyDark,
+                  contentColor = Palette.White
                 )
               }
             }
-          ) { padding ->
-            NotificationsPermissionRequester(
-              showDialog = showNotificationsRationaleDialog,
-              onDismiss = { notificationsPermissionViewModel.dismissDialog() },
-              onPermissionResult = {}
-            )
-
-            PromotionDialog(navigate = navController::navigateTo)
-
-            ClaimedRewardDialog(navigate = navController::navigateTo)
-
-            Box(modifier = Modifier.padding(padding)) {
-              NavigationGraph(
-                navController,
-                showSnack = {
-                  coroutineScope.launch {
-                    snackBarHostState.showSnackbar(message = it)
+          },
+          bottomBar = {
+            AppGamesBottomBar(navController = navController)
+          },
+          topBar = {
+            if (showTopBar) {
+              AppGamesToolBar(
+                navigate = {
+                  if (currentRoute.value?.destination?.route?.substringBefore("?") != it) {
+                    navController.navigateTo(it)
                   }
                 },
-                showBottomSheet = showBottomSheet
+                goBackHome
               )
             }
-            ApkfyHandler(navigate = navController::navigateTo)
+          }
+        ) { padding ->
+          NotificationsPermissionRequester(
+            showDialog = showNotificationsRationaleDialog,
+            onDismiss = { notificationsPermissionViewModel.dismissDialog() },
+            onPermissionResult = {}
+          )
 
-            LaunchedEffect(promoCodeApp) {
-              if (promoCodeApp != null) {
-                showBottomSheet(
-                  PromoCodeBottomSheet(
-                    promoCode = promoCodeApp,
-                    showSnack = {
-                      coroutineScope.launch {
-                        snackBarHostState.showSnackbar(message = it)
-                      }
+          PromotionDialog(navigate = navController::navigateTo)
+
+          ClaimedRewardDialog(navigate = navController::navigateTo)
+
+          Box(modifier = Modifier.padding(padding)) {
+            NavigationGraph(
+              navController,
+              showSnack = {
+                coroutineScope.launch {
+                  snackBarHostState.showSnackbar(message = it)
+                }
+              },
+              showBottomSheet = showBottomSheet
+            )
+          }
+          ApkfyHandler(navigate = navController::navigateTo)
+
+          LaunchedEffect(promoCodeApp) {
+            if (promoCodeApp != null) {
+              showBottomSheet(
+                PromoCodeBottomSheet(
+                  promoCode = promoCodeApp,
+                  showSnack = {
+                    coroutineScope.launch {
+                      snackBarHostState.showSnackbar(message = it)
                     }
-                  )
+                  }
                 )
-                clearPromoCode()
-              }
+              )
+              clearPromoCode()
             }
           }
         }

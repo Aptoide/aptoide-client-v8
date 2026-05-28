@@ -98,7 +98,6 @@ import com.aptoide.android.aptoidegames.home.analytics.meta
 import com.aptoide.android.aptoidegames.mmp.WithUTM
 import com.aptoide.android.aptoidegames.mmp.getBundleHomeUTMInfo
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaEBundleView
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.home.rememberPaEHeaderState
 import com.aptoide.android.aptoidegames.play_and_earn.rememberShouldShowPlayAndEarn
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -609,9 +608,8 @@ fun List<Bundle>.injectGamesFeed(): List<Bundle> {
 @Composable
 private fun BundlesViewUiState.injectPaEBundle(): BundlesViewUiState {
   val shouldShowPlayAndEarn = rememberShouldShowPlayAndEarn()
-  val (hasShownHeader, _) = rememberPaEHeaderState()
 
-  if (shouldShowPlayAndEarn && hasShownHeader == true) {
+  if (shouldShowPlayAndEarn) {
     val paeBundle = Bundle(
       title = stringResource(R.string.play_and_earn_title),
       actions = emptyList(),
