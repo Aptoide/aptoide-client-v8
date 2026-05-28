@@ -388,6 +388,7 @@
   <string name="apkfy_multi_install_highlighted_game">Top Played on Aptoide Games</string>
   <string name="apkfy_multi_install_highlighted_game_short">Top Played</string>
   <string name="apkfy_multi_install_auto_open">Opens automatically when installation is complete.</string>
+  <string name="appview_auto_open_when_ready">Auto-open when ready</string>
 
   <!-- AB Test for Experiment 9 : GamesFeed -->
   <string name="gamesfeed_bundle_header_1">For you</string>

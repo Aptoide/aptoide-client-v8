@@ -12,6 +12,7 @@ interface InstallAnalytics {
     app: App,
     analyticsContext: AnalyticsUIContext,
     networkType: String,
+    autoOpenAfterInstall: Boolean? = null,
   ) {
   }
 

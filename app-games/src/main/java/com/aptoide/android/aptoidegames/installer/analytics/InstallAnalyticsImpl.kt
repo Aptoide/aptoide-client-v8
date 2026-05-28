@@ -57,6 +57,7 @@ class InstallAnalyticsImpl(
     app: App,
     analyticsContext: AnalyticsUIContext,
     networkType: String,
+    autoOpenAfterInstall: Boolean?,
   ) {
     when (analyticsContext.installAction) {
       InstallAction.INSTALL -> "install_clicked"
@@ -71,7 +72,8 @@ class InstallAnalyticsImpl(
         params = analyticsContext.toGenericParameters(
           *app.toGenericParameters(),
           P_UPDATE_TYPE to getUserClicks(app.packageName),
-          P_SERVICE to networkType
+          P_SERVICE to networkType,
+          P_AUTO_OPEN_AFTER_INSTALL to autoOpenAfterInstall,
         )
       )
     }
@@ -621,6 +623,7 @@ class InstallAnalyticsImpl(
     internal const val P_UPDATE_TYPE = "update_type"
     internal const val P_APP_SIZE_MB = "app_size_mb"
     internal const val P_DOWNLOAD_SPEED_MB = "download_speed_mbps"
+    internal const val P_AUTO_OPEN_AFTER_INSTALL = "auto_open_after_install"
   }
 }
 

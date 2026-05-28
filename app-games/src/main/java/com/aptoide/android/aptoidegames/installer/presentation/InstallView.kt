@@ -82,11 +82,13 @@ fun InstallView(
   modifier: Modifier = Modifier,
   onInstallStarted: () -> Unit = {},
   onCancel: () -> Unit = {},
+  autoOpenAfterInstall: Boolean? = null,
 ) {
   val installViewState = installViewStates(
     app = app,
     onInstallStarted = onInstallStarted,
-    onCancel = onCancel
+    onCancel = onCancel,
+    autoOpenAfterInstall = autoOpenAfterInstall,
   )
 
   InstallViewContent(
