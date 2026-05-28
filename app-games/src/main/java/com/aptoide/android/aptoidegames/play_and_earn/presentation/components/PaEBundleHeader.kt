@@ -6,24 +6,29 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.drawables.icons.getForward
-import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getPaESmallLogo
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PaERewardType
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.iconRes
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
 fun PaEBundleHeader(
-  onClick: () -> Unit
+  rewardType: PaERewardType,
+  onClick: () -> Unit,
 ) {
+  val currencyName = stringResource(rewardType.displayNameRes)
   Column(
     modifier = Modifier
       .fillMaxWidth()
@@ -35,14 +40,18 @@ fun PaEBundleHeader(
       horizontalArrangement = Arrangement.SpaceBetween,
       verticalAlignment = Alignment.CenterVertically
     ) {
-      Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+      Row(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically
+      ) {
         Image(
-          imageVector = getPaESmallLogo(),
+          painter = painterResource(rewardType.iconRes),
           contentDescription = null,
+          modifier = Modifier.height(24.dp),
         )
 
         Text(
-          text = stringResource(R.string.play_and_earn_title),
+          text = stringResource(R.string.play_and_earn_earn_title, currencyName),
           style = AGTypography.Title,
           color = Palette.White
         )
@@ -67,7 +76,7 @@ fun PaEBundleHeader(
     }
 
     Text(
-      text = stringResource(R.string.play_and_earn_earn_rewards_by_playing_body),
+      text = stringResource(R.string.play_and_earn_more_games_more, currencyName),
       style = AGTypography.InputsM,
       color = Palette.White
     )

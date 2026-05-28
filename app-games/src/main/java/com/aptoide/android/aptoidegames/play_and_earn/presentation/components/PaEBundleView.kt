@@ -1,6 +1,7 @@
 package com.aptoide.android.aptoidegames.play_and_earn.presentation.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,6 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,7 +25,10 @@ import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.rememberPaEAnalytics
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.app_items.PaECompactAppItem
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.layout.PaEHorizontalCarousel
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PaERewardType
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.playAndEarnRewardsRoute
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.rememberPreferredPaEReward
+import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
 fun PaEBundleView(
@@ -35,6 +41,7 @@ fun PaEBundleView(
     ?.takeIf { it.apps.isNotEmpty() }
 
   val paeAnalytics = rememberPaEAnalytics()
+  val rewardType = rememberPreferredPaEReward()
 
   if (bundle != null) {
     OverrideAnalyticsPlayAndEarn(
@@ -48,8 +55,11 @@ fun PaEBundleView(
         Image(
           modifier = Modifier
             .matchParentSize()
-            .padding(bottom = 112.dp),
-          painter = painterResource(R.drawable.play_and_earn_bg_2),
+            .padding(bottom = 112.dp)
+            .background(Palette.Secondary),
+          painter = painterResource(rewardType.bundleBackgroundRes),
+          colorFilter = ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(0f) }),
+          alpha = 0.2f,
           contentDescription = null,
           contentScale = ContentScale.Crop,
         )
@@ -59,6 +69,7 @@ fun PaEBundleView(
           verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
           PaEBundleHeader(
+            rewardType = rewardType,
             onClick = {
               paeAnalytics.sendPaEHomeEarnNowClick()
               navigateTo(playAndEarnRewardsRoute)
@@ -86,6 +97,12 @@ fun PaEBundleView(
     }
   }
 }
+
+private val PaERewardType.bundleBackgroundRes: Int
+  get() = when (this) {
+    PaERewardType.ROBUX -> R.drawable.roblox_feature_graphic
+    PaERewardType.DIAMONDS -> R.drawable.free_fire_feature_graphic
+  }
 
 @Preview
 @Composable
