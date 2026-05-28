@@ -40,8 +40,8 @@ import com.aptoide.android.aptoidegames.drawables.icons.getNotificationBell
 import com.aptoide.android.aptoidegames.drawables.icons.getProfileNoAccountIcon
 import com.aptoide.android.aptoidegames.notifications.NotificationsPermissionRequester
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PlayAndEarnTopBarBadge
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.level_up.levelUpRoute
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.rememberUserInfo
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.units.redeemRewardRoute
 import com.aptoide.android.aptoidegames.settings.settingsRoute
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -77,7 +77,7 @@ fun AppGamesToolBar(
     notificationsPermissionState = notificationsPermissionState.status.isGranted,
     onLogoClick = goBackHome,
     onNotificationsClick = onNotificationsClick,
-    onPlayAndEarnClick = { navigate(levelUpRoute) },
+    onPlayAndEarnClick = { navigate(redeemRewardRoute) },
     onProfileClick = onProfileClick,
   )
 
