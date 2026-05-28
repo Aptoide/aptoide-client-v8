@@ -1,16 +1,21 @@
 package com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -25,15 +30,13 @@ import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getPlayPauseIcon
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getThumbUpIcon
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.rememberPaEAnalytics
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaESectionHeader
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.app_items.PaEDefaultAppItem
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.app_items.PaELargeAppItem
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.layout.PaEHorizontalCarousel
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.level_up.levelUpRoute
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.level_up.rememberCurrentPaELevel
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.rememberPlayAndEarnSetupRoute
-import com.aptoide.android.aptoidegames.play_and_earn.rememberPlayAndEarnReady
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchange_flow.exchangeDisplayName
+import com.aptoide.android.aptoidegames.theme.AGTypography
+import com.aptoide.android.aptoidegames.theme.Palette
 
 const val playAndEarnRewardsRoute = "playAndEarnRewards"
 
@@ -49,13 +52,9 @@ fun playAndEarnRewardsScreen() = ScreenData.withAnalytics(
 fun PlayAndEarnRewardsScreen(
   navigate: (String) -> Unit
 ) {
-  val analytics = rememberPaEAnalytics()
-  val isPaEReady = rememberPlayAndEarnReady()
-  val currentLevel = rememberCurrentPaELevel()
-  val paeSetupRoute = rememberPlayAndEarnSetupRoute()
-
   val scrollState = rememberScrollState()
   val uiState = rememberPaEBundles()
+  val rewardType = rememberPreferredPaEReward()
   val trendingBundle = uiState
     .let { it as? PaEBundlesUiState.Idle }
     ?.bundles?.trending
@@ -76,33 +75,48 @@ fun PlayAndEarnRewardsScreen(
       verticalArrangement = Arrangement.spacedBy(8.dp),
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
-      PaEHowItWorksSection()
-      if (isPaEReady) {
-        currentLevel?.let { level ->
-          PaEKnowMoreCard(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-            currentLevel = level + 1,
-            onClick = {
-              navigateTo(levelUpRoute)
-              analytics.sendPaERewardsHubKnowMoreClick()
-            }
-          )
-        }
-      } else {
-        PaELetsGoCard(
-          modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-          onLetsGoClick = {
-            navigateTo(paeSetupRoute)
-            analytics.sendPaERewardsHubLetsGoClick()
-          }
-        )
-      }
+      RewardsHeader(rewardType = rewardType)
+
       keepPlayingBundle?.let {
         PaEHorizontalBundleView(it, navigateTo)
       }
       trendingBundle?.let {
         PaEVerticalBundleView(it, navigateTo)
       }
+    }
+  }
+}
+
+@Composable
+private fun RewardsHeader(rewardType: PaERewardType) {
+  Column(
+    modifier = Modifier
+      .fillMaxWidth()
+      .padding(horizontal = 16.dp, vertical = 16.dp),
+    verticalArrangement = Arrangement.spacedBy(4.dp),
+  ) {
+    Text(
+      text = stringResource(R.string.play_and_earn_rewards_install_play_title),
+      style = AGTypography.Title,
+      color = Palette.White,
+    )
+    Row(
+      verticalAlignment = Alignment.CenterVertically,
+      horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+      Text(
+        text = stringResource(
+          R.string.play_and_earn_earn_title,
+          rewardType.exchangeDisplayName,
+        ),
+        style = AGTypography.Title,
+        color = Palette.Yellow100,
+      )
+      Image(
+        painter = painterResource(rewardType.iconRes),
+        contentDescription = null,
+        modifier = Modifier.height(24.dp),
+      )
     }
   }
 }
