@@ -353,7 +353,6 @@
   <string name="play_and_earn_waiting_title">待機中...</string>
   <string name="play_and_earn_getting_ready_body">ご準備を進めております…</string>
   <string name="play_and_earn_almost_there_title">あと少しです！</string>
-  <string name="play_and_earn_lets_do_it_button">やろうぜ！</string>
   <string name="play_and_earn_everyones_favourites_title">みんなのお気に入り</string>
   <string name="play_and_earn_get_started_now_title">今すぐ始めましょう！</string>
   <string name="play_and_earn_grant_permissions_body">ログインして権限を許可し、プレイしながら素晴らしい賞品へのアクセスをアンロックしましょう！</string>
@@ -394,7 +393,6 @@
   <string name="settings_play_and_earn_tracking_description">Aptoideはこの設定を使用して、アプリ内でのアクティビティを測定し、プレイ時間や達成したマイルストーンに対して報酬を付与します。無効にすると、Aptoide経由でゲームを再起動するまで報酬の追跡が行われません。</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">成功！あなたの報酬の旅が今始まります 🎉</string>
-  <string name="play_and_earn_permissions_google_drama_title">Googleはちょっとしたドラマが大好きだ🙄</string>
   <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Googleストア外での収益化は複雑です。<1>ゲームプレイの確認と</1> <2>ウォレットへの報酬送金を</2>可能にするため、これらの権限を許可してください。]]></string>
   <string name="play_and_earn_permissions_restricted_settings_title">制限付き設定を許可する</string>
   <string name="play_and_earn_permissions_restricted_settings_body">Googleはボタンを非表示にします。次の画面では：</string>
