@@ -89,7 +89,10 @@ fun HomeTabRow(
     contentColor = Palette.Primary,
     backgroundColor = Color.Transparent,
     tabTextStyle = AGTypography.InputsL,
-    tabBadges = tabBadges
+    tabBadges = tabBadges,
+    selectedTabContentColor = { index ->
+      if (tabsList[index] == rewardsTabName) Palette.Yellow100 else Palette.Primary
+    },
   )
 }
 
@@ -99,7 +102,7 @@ fun BoxScope.NewBadge() {
     modifier = Modifier
       .align(Alignment.TopEnd)
       .offset(x = 5.dp, y = (-14).dp)
-      .background(color = Palette.Primary),
+      .background(color = Palette.Yellow100),
     contentAlignment = Alignment.Center
   ) {
     Text(
