@@ -46,6 +46,7 @@ fun CustomScrollableTabRow(
   modifier: Modifier = Modifier,
   tabTextStyle: TextStyle = AGTypography.InputsL,
   tabBadges: List<(@Composable BoxScope.() -> Unit)?> = List(tabs.size) { null },
+  selectedTabContentColor: (Int) -> Color = { contentColor },
   onTabPositioned: (index: Int, x: Float, width: Float) -> Unit = { _, _, _ -> },
 ) {
   val density = LocalDensity.current
@@ -62,7 +63,8 @@ fun CustomScrollableTabRow(
         modifier = Modifier.customTabIndicatorOffset(
           currentTabPosition = tabPositions[selectedTabIndex],
           tabWidth = indicatorWidths[selectedTabIndex]
-        )
+        ),
+        color = selectedTabContentColor(selectedTabIndex),
       )
     },
     divider = {
@@ -87,7 +89,7 @@ fun CustomScrollableTabRow(
               text = tab,
               style = tabTextStyle,
               color = if (selectedTabIndex == tabIndex) {
-                contentColor
+                selectedTabContentColor(tabIndex)
               } else {
                 Palette.White
               },
