@@ -510,4 +510,6 @@
   <string name="play_and_earn_exchange_success_email_sent">We\'ve sent your code to %1$s. Check your inbox within 24 hours.</string>
   <string name="play_and_earn_exchange_earn_more_button">Earn More</string>
   <string name="play_and_earn_tap_to_collect">Tap to Collect</string>
+  <string name="play_and_earn_earn_title">Earn %1$s</string>
+  <string name="play_and_earn_more_games_more">More games. More %1$s.</string>
 </resources>
