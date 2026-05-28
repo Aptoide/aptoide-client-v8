@@ -352,7 +352,6 @@
   <string name="play_and_earn_waiting_title">Menunggu...</string>
   <string name="play_and_earn_getting_ready_body">Kami sedang mempersiapkan semuanya untuk Anda…</string>
   <string name="play_and_earn_almost_there_title">Anda hampir sampai!</string>
-  <string name="play_and_earn_lets_do_it_button">Ayo kita lakukan!</string>
   <string name="play_and_earn_everyones_favourites_title">Favorit semua orang</string>
   <string name="play_and_earn_get_started_now_title">Mulai sekarang!</string>
   <string name="play_and_earn_grant_permissions_body">Masuk dan berikan izin untuk membuka akses ke hadiah-hadiah menakjubkan saat Anda bermain!</string>
@@ -393,7 +392,6 @@
   <string name="settings_play_and_earn_tracking_description">Aptoide menggunakan pengaturan ini untuk mengukur aktivitas Anda di dalam aplikasi dan memberikan kredit atas waktu bermain serta pencapaian yang diraih. Jika dinonaktifkan, hadiah tidak akan dilacak sampai Anda membuka ulang game melalui Aptoide.</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Selamat! Perjalanan Anda untuk mendapatkan hadiah dimulai sekarang 🎉</string>
-  <string name="play_and_earn_permissions_google_drama_title">Google suka sedikit drama 🙄</string>
   <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Mendapatkan penghasilan di luar toko Google cukup rumit. Berikan izin ini agar kami dapat <1>memverifikasi permainan</1> dan <2>mengirimkan hadiah ke dompet Anda</2>.]]></string>
   <string name="play_and_earn_permissions_restricted_settings_title">Izinkan Pengaturan Terbatas</string>
   <string name="play_and_earn_permissions_restricted_settings_body">Google menyembunyikan tombol. Pada layar berikutnya:</string>

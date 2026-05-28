@@ -363,7 +363,6 @@
   <string name="play_and_earn_waiting_title">Esperando...</string>
   <string name="play_and_earn_getting_ready_body">Estamos preparando todo para ti…</string>
   <string name="play_and_earn_almost_there_title">¡Ya casi estás!</string>
-  <string name="play_and_earn_lets_do_it_button">¡Hagámoslo!</string>
   <string name="play_and_earn_everyones_favourites_title">Los favoritos de todos</string>
   <string name="play_and_earn_get_started_now_title">¡Empieza ahora mismo!</string>
   <string name="play_and_earn_grant_permissions_body">¡Inicia sesión y concede permisos para desbloquear el acceso a increíbles premios mientras juegas!</string>
@@ -404,7 +403,6 @@
   <string name="settings_play_and_earn_tracking_description">Aptoide utiliza este ajuste para medir tu actividad en la app y recompensarte por el tiempo jugado y los hitos alcanzados. Si lo desactivas, las recompensas no se registrarán hasta que vuelvas a iniciar un juego desde Aptoide.</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">¡Éxito! Tu viaje hacia las recompensas comienza ahora 🎉</string>
-  <string name="play_and_earn_permissions_google_drama_title">A Google le encanta el drama 🙄</string>
   <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Ganar dinero fuera de la tienda de Google es complicado. Concede estos permisos para que podamos <1>verificar el juego</1> y <2>enviar recompensas a tu monedero</2>.]]></string>
   <string name="play_and_earn_permissions_restricted_settings_title">Permitir configuración restringida</string>
   <string name="play_and_earn_permissions_restricted_settings_body">Google oculta el botón. En la siguiente pantalla:</string>
