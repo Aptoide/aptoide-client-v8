@@ -24,6 +24,7 @@ import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.Pa
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.app_items.PaECompactAppItem
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.layout.PaEHorizontalCarousel
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.playAndEarnRewardsRoute
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.rememberPreferredPaEReward
 
 @Composable
 fun PaEHeaderBundle(
@@ -51,6 +52,7 @@ fun PaEHeaderBundle(
         verticalArrangement = Arrangement.spacedBy(16.dp)
       ) {
         PaEBundleHeader(
+          rewardType = rememberPreferredPaEReward(),
           onClick = {
             paeAnalytics.sendPaEHomeEarnNowClick()
             navigateTo(playAndEarnRewardsRoute)
