@@ -24,6 +24,7 @@ import cm.aptoide.pt.campaigns.domain.PaEApp
 import cm.aptoide.pt.campaigns.domain.asNormalApp
 import cm.aptoide.pt.campaigns.domain.randomPaEApp
 import cm.aptoide.pt.download_view.presentation.rememberDownloadState
+import cm.aptoide.pt.play_and_earn.exchange.presentation.rememberExchangeRate
 import com.aptoide.android.aptoidegames.AppIconImage
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaEInstallProgressText
@@ -40,6 +41,7 @@ fun PaECompactAppItem(
 ) {
   val state = rememberDownloadState(app.asNormalApp())
   val colorFilter = rememberDownloadGraphicFilter(state)
+  val rewardAmount = rememberExchangeRate(app.totalPrizes.toLong())
 
   Column(
     modifier = modifier.clickable(onClick = onClick)
@@ -68,6 +70,14 @@ fun PaECompactAppItem(
             alpha = 0.5f
           )
       )
+      rewardAmount?.let {
+        PaERewardBadge(
+          amount = it,
+          modifier = Modifier
+            .align(Alignment.TopStart)
+            .padding(8.dp),
+        )
+      }
       Row(
         modifier = Modifier
           .fillMaxWidth()
