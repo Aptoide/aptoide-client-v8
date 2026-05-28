@@ -509,4 +509,5 @@
   <string name="play_and_earn_exchange_email_error">Enter a valid email address</string>
   <string name="play_and_earn_exchange_success_email_sent">We\'ve sent your code to %1$s. Check your inbox within 24 hours.</string>
   <string name="play_and_earn_exchange_earn_more_button">Earn More</string>
+  <string name="play_and_earn_tap_to_collect">Tap to Collect</string>
 </resources>

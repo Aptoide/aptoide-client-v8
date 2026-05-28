@@ -9,9 +9,21 @@ import com.aptoide.android.aptoidegames.R
 /** Default reward amount granted by the Play & Earn APKFY / earned-reward flows. */
 const val PAE_DEFAULT_REWARD_AMOUNT = "$0.50"
 
+private const val ROBLOX_PACKAGE = "com.roblox.client"
+private val FREE_FIRE_PACKAGES = setOf("com.dts.freefireth", "com.dts.freefiremax")
+
 enum class PaERewardType(@StringRes val displayNameRes: Int) {
   ROBUX(R.string.play_and_earn_currency_robux),
   DIAMONDS(R.string.play_and_earn_currency_diamonds),
+  ;
+
+  companion object {
+    fun fromPackageName(packageName: String?): PaERewardType? = when (packageName) {
+      ROBLOX_PACKAGE -> ROBUX
+      in FREE_FIRE_PACKAGES -> DIAMONDS
+      else -> null
+    }
+  }
 }
 
 fun PaERewardType.toRedeemType(): RedeemType = when (this) {
