@@ -407,7 +407,6 @@
   <string name="play_and_earn_waiting_title">في انتظار...</string>
   <string name="play_and_earn_getting_ready_body">نحن نجهز كل شيء من أجلك…</string>
   <string name="play_and_earn_almost_there_title">لقد أوشكت على الوصول!</string>
-  <string name="play_and_earn_lets_do_it_button">لنفعلها!</string>
   <string name="play_and_earn_everyones_favourites_title">المفضلة لدى الجميع</string>
   <string name="play_and_earn_get_started_now_title">ابدأ الآن!</string>
   <string name="play_and_earn_grant_permissions_body">سجّل الدخول ومنح الأذونات لفتح الوصول إلى جوائز مذهلة أثناء اللعب!</string>
@@ -448,7 +447,6 @@
   <string name="settings_play_and_earn_tracking_description">تستخدم Aptoide هذا الإعداد لقياس نشاطك داخل التطبيق ومنحك رصيدًا مقابل الوقت الذي تلعب فيه والإنجازات التي تحققها. إذا تم التعطيل، لن يتم تتبع المكافآت حتى تعيد تشغيل اللعبة عبر Aptoide.</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">نجاح! تبدأ رحلة مكافآتك الآن 🎉</string>
-  <string name="play_and_earn_permissions_google_drama_title">جوجل تحب القليل من الدراما 🙄</string>
   <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[يصعب تحقيق أرباح خارج متجر Google. امنحنا هذه الأذونات حتى نتمكن من <1>التحقق من اللعب</1> <2>وإرسال المكافآت إلى محفظتك</2>.]]></string>
   <string name="play_and_earn_permissions_restricted_settings_title">السماح بالإعدادات المقيدة</string>
   <string name="play_and_earn_permissions_restricted_settings_body">يخفي Google الزر. في الشاشة التالية:</string>

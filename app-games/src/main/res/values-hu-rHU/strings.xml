@@ -363,7 +363,6 @@
   <string name="play_and_earn_waiting_title">Várakozás...</string>
   <string name="play_and_earn_getting_ready_body">…</string>
   <string name="play_and_earn_almost_there_title">Már majdnem megvan!</string>
-  <string name="play_and_earn_lets_do_it_button">Csináljuk!</string>
   <string name="play_and_earn_everyones_favourites_title">Mindenki kedvencei</string>
   <string name="play_and_earn_get_started_now_title">Kezdje el most!</string>
   <string name="play_and_earn_grant_permissions_body">Jelentkezz be és adj engedélyeket, hogy játék közben hozzáférhess hihetetlen nyereményekhez!</string>
@@ -404,7 +403,6 @@
   <string name="settings_play_and_earn_tracking_description">Az Aptoide ezt a beállítást használja az alkalmazáson belüli tevékenységeid mérésére, és így jóváírja a játszott időt és az elért mérföldköveket. Ha letiltod, a jutalmak nem kerülnek rögzítésre, amíg újra nem indítod a játékot az Aptoide-on keresztül.</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Siker! A jutalom utazásod most kezdődik 🎉</string>
-  <string name="play_and_earn_permissions_google_drama_title">A Google szereti a kis drámát 🙄</string>
   <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[A Google áruházán kívül pénzt keresni nem egyszerű. Engedélyezze ezeket a jogosultságokat, hogy <1>ellenőrizhessük a játékmenetet</1>, és <2>jutalmakat küldhessünk a pénztárcájába</2>.]]></string>
   <string name="play_and_earn_permissions_restricted_settings_title">Korlátozott beállítások engedélyezése</string>
   <string name="play_and_earn_permissions_restricted_settings_body">A Google elrejti a gombot. A következő képernyőn:</string>

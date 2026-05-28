@@ -352,7 +352,6 @@
   <string name="play_and_earn_waiting_title">Đang chờ...</string>
   <string name="play_and_earn_getting_ready_body">Chúng tôi đang chuẩn bị mọi thứ cho bạn…</string>
   <string name="play_and_earn_almost_there_title">Bạn sắp đến rồi!</string>
-  <string name="play_and_earn_lets_do_it_button">Hãy làm đi!</string>
   <string name="play_and_earn_everyones_favourites_title">Những món yêu thích của mọi người</string>
   <string name="play_and_earn_get_started_now_title">Bắt đầu ngay bây giờ!</string>
   <string name="play_and_earn_grant_permissions_body">Đăng nhập và cấp quyền để mở khóa quyền truy cập vào những phần thưởng tuyệt vời trong khi bạn chơi!</string>
@@ -393,7 +392,6 @@
   <string name="settings_play_and_earn_tracking_description">Aptoide sử dụng cài đặt này để đo lường hoạt động trong ứng dụng của bạn và ghi nhận thời gian chơi cũng như các mốc bạn đạt được. Nếu tắt, phần thưởng sẽ không được ghi nhận cho đến khi bạn khởi động lại trò chơi qua Aptoide.</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Thành công! Hành trình nhận thưởng của bạn bắt đầu ngay bây giờ 🎉</string>
-  <string name="play_and_earn_permissions_google_drama_title">Google thích một chút kịch tính 🙄</string>
   <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Kiếm tiền bên ngoài cửa hàng của Google là điều khá phức tạp. Hãy cấp các quyền này để chúng tôi có thể <1>xác minh hoạt động chơi game</1> và <2>gửi phần thưởng vào ví của bạn</2>.]]></string>
   <string name="play_and_earn_permissions_restricted_settings_title">Cho phép cài đặt bị giới hạn</string>
   <string name="play_and_earn_permissions_restricted_settings_body">Google ẩn nút. Trên màn hình tiếp theo:</string>

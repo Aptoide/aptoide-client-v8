@@ -363,7 +363,6 @@
   <string name="play_and_earn_waiting_title">Odotetaan...</string>
   <string name="play_and_earn_getting_ready_body">Valmistelemme asioita sinulle…</string>
   <string name="play_and_earn_almost_there_title">Olet melkein perillä!</string>
-  <string name="play_and_earn_lets_do_it_button">Tehdään se!</string>
   <string name="play_and_earn_everyones_favourites_title">Kaikkien suosikit</string>
   <string name="play_and_earn_get_started_now_title">Aloita nyt!</string>
   <string name="play_and_earn_grant_permissions_body">Kirjaudu sisään ja myönnä käyttöoikeudet, jotta voit avata pääsyn uskomattomiin palkintoihin pelatessasi!</string>
@@ -404,7 +403,6 @@
   <string name="settings_play_and_earn_tracking_description">Aptoide käyttää tätä asetusta mittaamaan sovelluksen sisäistä toimintaasi ja hyvittääksesi sinulle pelistä kertyneen ajan ja saavutetut virstanpylväät. Jos tämä on pois käytöstä, palkintoja ei seurata ennen kuin käynnistät pelin uudelleen Aptoiden kautta.</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Onnistui! Palkintomatkasi alkaa nyt 🎉</string>
-  <string name="play_and_earn_permissions_google_drama_title">Google rakastaa hieman draamaa 🙄</string>
   <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Googlen kaupan ulkopuolella ansaitseminen on hankalaa. Myönnä nämä käyttöoikeudet, jotta voimme <1>tarkistaa pelin kulun</1> ja <2>lähettää palkkiot lompakkoosi</2>.]]></string>
   <string name="play_and_earn_permissions_restricted_settings_title">Salli rajoitetut asetukset</string>
   <string name="play_and_earn_permissions_restricted_settings_body">Google piilottaa painikkeen. Seuraavalla näytöllä:</string>

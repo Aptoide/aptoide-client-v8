@@ -363,7 +363,6 @@
   <string name="play_and_earn_waiting_title">Wachten...</string>
   <string name="play_and_earn_getting_ready_body">We maken alles klaar voor je…</string>
   <string name="play_and_earn_almost_there_title">Je bent er bijna!</string>
-  <string name="play_and_earn_lets_do_it_button">Laten we het doen!</string>
   <string name="play_and_earn_everyones_favourites_title">Ieders favorieten</string>
   <string name="play_and_earn_get_started_now_title">Ga nu aan de slag!</string>
   <string name="play_and_earn_grant_permissions_body">Log in en geef toestemming om toegang te krijgen tot ongelooflijke prijzen terwijl je speelt!</string>
@@ -404,7 +403,6 @@
   <string name="settings_play_and_earn_tracking_description">Aptoide gebruikt deze instelling om je in-app-activiteit te meten en je te belonen voor speeltijd en behaalde mijlpalen. Als je dit uitschakelt, worden beloningen niet bijgehouden totdat je een spel opnieuw via Aptoide start.</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Geslaagd! Je beloningsreis begint nu 🎉</string>
-  <string name="play_and_earn_permissions_google_drama_title">Google houdt wel van een beetje drama 🙄</string>
   <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Het is lastig om buiten de Google Store om geld te verdienen. Verleen deze toestemmingen zodat we <1>de gameplay kunnen verifiëren</1> en <2>beloningen naar je portemonnee kunnen sturen</2>.]]></string>
   <string name="play_and_earn_permissions_restricted_settings_title">Beperkte instellingen toestaan</string>
   <string name="play_and_earn_permissions_restricted_settings_body">Google verbergt de knop. Op het volgende scherm:</string>

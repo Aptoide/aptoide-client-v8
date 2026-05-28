@@ -363,7 +363,6 @@
   <string name="play_and_earn_waiting_title">Bekleniyor...</string>
   <string name="play_and_earn_getting_ready_body">Sizin için her şeyi hazırlıyoruz…</string>
   <string name="play_and_earn_almost_there_title">Neredeyse vardınız!</string>
-  <string name="play_and_earn_lets_do_it_button">Hadi yapalım!</string>
   <string name="play_and_earn_everyones_favourites_title">Herkesin favorileri</string>
   <string name="play_and_earn_get_started_now_title">Hemen başlayın!</string>
   <string name="play_and_earn_grant_permissions_body">Oynarken inanılmaz ödüllere erişmek için oturum açın ve izinleri verin!</string>
@@ -404,7 +403,6 @@
   <string name="settings_play_and_earn_tracking_description">Aptoide, bu ayarı uygulama içi etkinliğinizi ölçmek ve oynadığınız süre ile ulaştığınız kilometre taşları için sizi ödüllendirmek amacıyla kullanır. Devre dışı bırakılırsa, ödüller Aptoide üzerinden bir oyunu tekrar başlatana kadar takip edilmez.</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Başarılı! Ödül yolculuğunuz şimdi başlıyor 🎉</string>
-  <string name="play_and_earn_permissions_google_drama_title">Google biraz dramayı sever 🙄</string>
   <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Google mağazasının dışında para kazanmak zordur. <1>Oyun oynanışını doğrulayabilmemiz</1> ve <2>ödülleri cüzdanınıza gönderebilmemiz</2> için bu izinleri verin.]]></string>
   <string name="play_and_earn_permissions_restricted_settings_title">Kısıtlı Ayarlara İzin Ver</string>
   <string name="play_and_earn_permissions_restricted_settings_body">Google düğmeyi gizler. Bir sonraki ekranda:</string>

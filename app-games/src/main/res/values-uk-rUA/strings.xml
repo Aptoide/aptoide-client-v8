@@ -385,7 +385,6 @@
   <string name="play_and_earn_waiting_title">Очікування...</string>
   <string name="play_and_earn_getting_ready_body">Ми готуємо все для вас…</string>
   <string name="play_and_earn_almost_there_title">Ви майже досягли мети!</string>
-  <string name="play_and_earn_lets_do_it_button">Давайте зробимо це!</string>
   <string name="play_and_earn_everyones_favourites_title">Улюблені всіма</string>
   <string name="play_and_earn_get_started_now_title">Почніть зараз!</string>
   <string name="play_and_earn_grant_permissions_body">Увійдіть у систему та надайте дозволи, щоб отримати доступ до неймовірних призів під час гри!</string>
@@ -426,7 +425,6 @@
   <string name="settings_play_and_earn_tracking_description">Aptoide використовує це налаштування, щоб вимірювати вашу активність у додатку та нараховувати винагороду за проведений у грі час і досягнуті етапи. Якщо вимкнути цю функцію, винагороди не відстежуватимуться, поки ви знову не запустите гру через Aptoide.</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Успіх! Ваша подорож до винагород починається зараз 🎉</string>
-  <string name="play_and_earn_permissions_google_drama_title">Google любить трохи драматизму 🙄</string>
   <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Заробляти гроші поза межами магазину Google непросто. Надайте ці дозволи, щоб ми могли <1>перевірити ігровий процес</1> і <2>надіслати винагороду на ваш гаманець</2>.]]></string>
   <string name="play_and_earn_permissions_restricted_settings_title">Дозволити обмежені налаштування</string>
   <string name="play_and_earn_permissions_restricted_settings_body">Google приховує кнопку. На наступному екрані:</string>

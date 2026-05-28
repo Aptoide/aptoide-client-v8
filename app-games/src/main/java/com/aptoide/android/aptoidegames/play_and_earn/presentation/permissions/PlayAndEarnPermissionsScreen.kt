@@ -216,7 +216,7 @@ private fun PaERestrictedPermissionsScreenContent(
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
       Text(
-        text = stringResource(R.string.play_and_earn_permissions_google_drama_title),
+        text = stringResource(R.string.play_and_earn_permissions_almost_ready_title),
         style = AGTypography.Title,
         color = Palette.Yellow100,
         textAlign = TextAlign.Center,
@@ -297,7 +297,7 @@ private fun RestrictedSettingsNotAllowedSection(
     )
 
     AccentSmallButton(
-      title = stringResource(R.string.play_and_earn_lets_do_it_button),
+      title = stringResource(R.string.play_and_earn_permissions_open_settings_button),
       onClick = onButtonClick,
       modifier = Modifier.fillMaxWidth()
     )
