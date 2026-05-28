@@ -516,4 +516,5 @@
   <string name="play_and_earn_earn_title">Earn %1$s</string>
   <string name="play_and_earn_more_games_more">More games. More %1$s.</string>
   <string name="play_and_earn_rewards_install_play_title">Install Games. Play your favourite.</string>
+  <string name="play_and_earn_earn_amount_badge">Earn %1$s</string>
 </resources>
