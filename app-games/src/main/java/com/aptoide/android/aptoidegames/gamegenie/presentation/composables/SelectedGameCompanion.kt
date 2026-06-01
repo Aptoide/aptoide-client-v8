@@ -14,6 +14,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
@@ -67,7 +68,7 @@ private fun BackButton(
   onBottomPositioned: ((Int) -> Unit)?
 ) {
   Image(
-    imageVector = getLeftArrow(Palette.Primary, Palette.Black),
+    imageVector = getLeftArrow(Palette.Primary, Color(0xFF1E1E26)),
     contentDescription = stringResource(id = R.string.button_back_title),
     contentScale = ContentScale.Crop,
     modifier = Modifier

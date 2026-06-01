@@ -31,7 +31,7 @@ fun TestForward() {
 @Composable
 fun getForward(
   color1: Color = Palette.Primary,
-  color2: Color = Palette.Black
+  color2: Color = Color(0xFF1E1E26)
 ): ImageVector = ImageVector.Builder(
   name = "Arrowforward",
   defaultWidth = 32.0.dp,

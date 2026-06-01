@@ -187,7 +187,7 @@ fun FullscreenImageViewer(
       }
 
       Image(
-        imageVector = getLeftArrow(Palette.Primary, Palette.Black),
+        imageVector = getLeftArrow(Palette.Primary, Color(0xFF1E1E26)),
         contentDescription = stringResource(id = R.string.button_back_title),
         contentScale = ContentScale.Crop,
         modifier = Modifier
