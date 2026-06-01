@@ -1,8 +1,6 @@
 package cm.aptoide.pt.installer.obb
 
 import android.content.Context
-import android.os.Process
-import cm.aptoide.pt.extensions.getProcessName
 import cm.aptoide.pt.install_manager.App
 import cm.aptoide.pt.install_manager.InstallManager
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
@@ -27,10 +25,7 @@ class OBBInstallManager(
     installManager.getMissingFreeSpaceFor(installPackageInfo)
 
   override suspend fun restore() {
-    if (context.getProcessName(
-        Process.myPid()
-      ) != "${context.packageName}:obbMoverProcess"
-    ) {
+    if (!context.isObbMoverProcess()) {
       installManager.restore()
     }
   }
