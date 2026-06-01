@@ -476,52 +476,44 @@ fun AppViewContent(
       )
     }
     if (app.isAppCoins) {
-      Row(
-        modifier = Modifier
-          .padding(top = 160.dp)
-          .align(Alignment.TopStart)
-          .clickable {
-            val bonusTitle = bonusBundle.first
-            val route = buildSeeMoreBonusRoute(title = encode(bonusTitle))
+      if (BuildConfig.FLAVOR_brand == "vanilla") {
+        Column(
+          modifier = Modifier
+            .padding(top = 160.dp)
+            .align(Alignment.TopStart)
+            .clickable {
+              val bonusTitle = bonusBundle.first
+              val route = buildSeeMoreBonusRoute(title = encode(bonusTitle))
 
-            navigate(route)
-          }
-      ) {
-        if (isGamified) {
-          Box(
-            modifier = Modifier
-              .size(40.dp)
-              .graphicsLayer {
-                this.translationY = 6.dp.toPx()
-              },
-            contentAlignment = Alignment.Center
-          ) {
+              navigate(route)
+            }
+        ) {
+          if (isGamified) {
+            Box(
+              modifier = Modifier.size(40.dp),
+              contentAlignment = Alignment.Center
+            ) {
+              Image(
+                imageVector = getAppViewBonusGiftBackground(),
+                contentDescription = null,
+              )
+              PaEAnimatedGift(
+                modifier = Modifier
+                  .size(44.dp)
+                  .offset(x = (-2).dp)
+              )
+            }
+          } else {
             Image(
-              imageVector = getAppViewBonusGiftBackground(),
+              imageVector = getBonusIconLeft(
+                iconColor = Palette.Primary,
+                outlineColor = Color(0xFF1E1E26),
+                backgroundColor = Palette.Secondary
+              ),
               contentDescription = null,
-            )
-            PaEAnimatedGift(
-              modifier = Modifier
-                .size(44.dp)
-                .offset(x = (-2).dp)
+              modifier = Modifier.size(40.dp)
             )
           }
-        } else {
-          Image(
-            imageVector = getBonusIconLeft(
-              iconColor = Palette.Primary,
-              outlineColor = Color(0xFF1E1E26),
-              backgroundColor = Palette.Secondary
-            ),
-            contentDescription = null,
-            modifier = Modifier
-              .size(40.dp)
-              .graphicsLayer {
-                this.translationY = 6.dp.toPx()
-              }
-          )
-        }
-        if (BuildConfig.FLAVOR_brand == "vanilla") {
           Text(
             text = stringResource(
               id = R.string.bonus_banner_title,
@@ -530,13 +522,58 @@ fun AppViewContent(
             style = AGTypography.InputsM,
             color = Color(0xFF1E1E26),
             modifier = Modifier
-              .align(Alignment.Bottom)
-              .offset(x = (-12).dp)
-              .clip(RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp))
+              .padding(top = 4.dp)
+              .clip(RoundedCornerShape(16.dp))
               .background(Color(0xFFFE6446))
-              .padding(start = 20.dp, end = 12.dp, top = 6.dp, bottom = 6.dp)
+              .padding(horizontal = 12.dp, vertical = 6.dp)
           )
-        } else {
+        }
+      } else {
+        Row(
+          modifier = Modifier
+            .padding(top = 160.dp)
+            .align(Alignment.TopStart)
+            .clickable {
+              val bonusTitle = bonusBundle.first
+              val route = buildSeeMoreBonusRoute(title = encode(bonusTitle))
+
+              navigate(route)
+            }
+        ) {
+          if (isGamified) {
+            Box(
+              modifier = Modifier
+                .size(40.dp)
+                .graphicsLayer {
+                  this.translationY = 6.dp.toPx()
+                },
+              contentAlignment = Alignment.Center
+            ) {
+              Image(
+                imageVector = getAppViewBonusGiftBackground(),
+                contentDescription = null,
+              )
+              PaEAnimatedGift(
+                modifier = Modifier
+                  .size(44.dp)
+                  .offset(x = (-2).dp)
+              )
+            }
+          } else {
+            Image(
+              imageVector = getBonusIconLeft(
+                iconColor = Palette.Primary,
+                outlineColor = Color(0xFF1E1E26),
+                backgroundColor = Palette.Secondary
+              ),
+              contentDescription = null,
+              modifier = Modifier
+                .size(40.dp)
+                .graphicsLayer {
+                  this.translationY = 6.dp.toPx()
+                }
+            )
+          }
           AptoideOutlinedText(
             text = stringResource(
               id = R.string.bonus_banner_title,
