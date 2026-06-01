@@ -3,6 +3,7 @@ package com.aptoide.android.aptoidegames.feature_promotional
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -56,13 +57,41 @@ fun AptoidePromotionalFeatureGraphicImage(
     )
 
     if (hasAppCoins) {
-      Image(
-        imageVector = getBonusPromotional(Palette.Primary, Palette.Secondary, Palette.Black),
-        contentDescription = null,
-        modifier = Modifier
-          .align(Alignment.TopEnd)
-          .size(72.dp, 80.dp)
-      )
+      if (isVanilla) {
+        Column(
+          horizontalAlignment = Alignment.CenterHorizontally,
+          modifier = Modifier
+            .align(Alignment.TopEnd)
+            .padding(top = 8.dp, end = 8.dp)
+            .clip(RoundedCornerShape(16.dp))
+            .background(Color(0xFFFFFFFF))
+            .padding(horizontal = 12.dp, vertical = 6.dp)
+        ) {
+          Text(
+            text = "up to",
+            style = AGTypography.InputsXSRegular,
+            color = Color(0xFF1E1E26),
+          )
+          Text(
+            text = "20%",
+            style = AGTypography.Title,
+            color = Color(0xFF1E1E26),
+          )
+          Text(
+            text = "BONUS",
+            style = AGTypography.InputsXS,
+            color = Color(0xFF1E1E26),
+          )
+        }
+      } else {
+        Image(
+          imageVector = getBonusPromotional(Palette.Primary, Palette.Secondary, Palette.Black),
+          contentDescription = null,
+          modifier = Modifier
+            .align(Alignment.TopEnd)
+            .size(72.dp, 80.dp)
+        )
+      }
     }
   }
 }
