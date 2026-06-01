@@ -7,13 +7,17 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
+import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusPromotional
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -37,15 +41,17 @@ fun AptoidePromotionalFeatureGraphicImage(
       data = featureGraphic,
       contentDescription = null
     )
+    val isVanilla = BuildConfig.FLAVOR_brand == "vanilla"
     Text(
       text = label,
       style = AGTypography.BodyBold,
-      color = Palette.Primary,
+      color = if (isVanilla) Color(0xFFFFFFFF) else Palette.Primary,
       maxLines = 1,
       overflow = TextOverflow.Ellipsis,
       modifier = Modifier
         .padding(start = 8.dp, top = 8.dp)
-        .background(color = Palette.Black)
+        .let { if (isVanilla) it.clip(RoundedCornerShape(16.dp)) else it }
+        .background(color = if (isVanilla) Color(0xFF1E1E26) else Palette.Black)
         .padding(horizontal = 6.dp, vertical = 4.dp)
     )
 
