@@ -3,6 +3,7 @@ package com.aptoide.android.aptoidegames.feature_apps.presentation
 import android.content.Context
 import android.net.Uri.encode
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,12 +16,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -36,6 +39,7 @@ import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.randomBundle
 import com.aptoide.android.aptoidegames.AptoideOutlinedText
+import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.UrlActivity
 import com.aptoide.android.aptoidegames.analytics.presentation.withBundleMeta
@@ -146,39 +150,69 @@ fun BonusSectionHeader(
       ),
     horizontalArrangement = Arrangement.SpaceBetween,
   ) {
+    val isVanilla = BuildConfig.FLAVOR_brand == "vanilla"
     Box(modifier = Modifier.weight(1f, fill = false)) {
-      Image(
-        imageVector = getPromoSection(
-          backgroundColor = Palette.Secondary,
-          themeColor = Palette.Black
-        ),
-        contentDescription = "Bonus Section",
-        modifier = Modifier.fillMaxWidth(),
-        contentScale = ContentScale.FillWidth
-      )
-      Row(
-        modifier = Modifier.fillMaxHeight(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Start
-      ) {
+      if (isVanilla) {
+        Row(
+          modifier = Modifier
+            .fillMaxHeight()
+            .clip(RoundedCornerShape(16.dp))
+            .background(Color(0xFFFE6446))
+            .padding(horizontal = 16.dp),
+          verticalAlignment = Alignment.CenterVertically,
+          horizontalArrangement = Arrangement.Start
+        ) {
+          Image(
+            modifier = Modifier.padding(end = 8.dp),
+            imageVector = getBonusIcon(
+              giftColor = Color(0xFFF7CB5A),
+              outlineColor = Color(0xFF1E1E26),
+            ),
+            contentDescription = null,
+          )
+          Text(
+            text = stringResource(
+              id = R.string.bonus_banner_title,
+              "20" //TODO Hardcoded value (should come from backend in the future)
+            ),
+            style = AGTypography.Title,
+            color = Color(0xFF1E1E26),
+          )
+        }
+      } else {
         Image(
-          modifier = Modifier.padding(horizontal = 16.dp),
-          imageVector = getBonusIcon(
-            giftColor = Palette.Primary,
-            outlineColor = Color(0xFF1E1E26),
+          imageVector = getPromoSection(
+            backgroundColor = Palette.Secondary,
+            themeColor = Palette.Black
           ),
-          contentDescription = null,
+          contentDescription = "Bonus Section",
+          modifier = Modifier.fillMaxWidth(),
+          contentScale = ContentScale.FillWidth
         )
-        AptoideOutlinedText(
-          text = stringResource(
-            id = R.string.bonus_banner_title,
-            "20" //TODO Hardcoded value (should come from backend in the future)
-          ),
-          style = AGTypography.Title,
-          outlineWidth = 10f,
-          outlineColor = Palette.Black,
-          textColor = Palette.Primary
-        )
+        Row(
+          modifier = Modifier.fillMaxHeight(),
+          verticalAlignment = Alignment.CenterVertically,
+          horizontalArrangement = Arrangement.Start
+        ) {
+          Image(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            imageVector = getBonusIcon(
+              giftColor = Palette.Primary,
+              outlineColor = Color(0xFF1E1E26),
+            ),
+            contentDescription = null,
+          )
+          AptoideOutlinedText(
+            text = stringResource(
+              id = R.string.bonus_banner_title,
+              "20" //TODO Hardcoded value (should come from backend in the future)
+            ),
+            style = AGTypography.Title,
+            outlineWidth = 10f,
+            outlineColor = Palette.Black,
+            textColor = Palette.Primary
+          )
+        }
       }
     }
     Spacer(Modifier.width(40.dp))
