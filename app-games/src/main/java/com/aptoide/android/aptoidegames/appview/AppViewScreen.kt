@@ -531,9 +531,10 @@ fun AppViewContent(
             color = Color(0xFF1E1E26),
             modifier = Modifier
               .align(Alignment.Bottom)
-              .clip(RoundedCornerShape(16.dp))
+              .offset(x = (-12).dp)
+              .clip(RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp))
               .background(Color(0xFFFE6446))
-              .padding(horizontal = 12.dp, vertical = 6.dp)
+              .padding(start = 20.dp, end = 12.dp, top = 6.dp, bottom = 6.dp)
           )
         } else {
           AptoideOutlinedText(
