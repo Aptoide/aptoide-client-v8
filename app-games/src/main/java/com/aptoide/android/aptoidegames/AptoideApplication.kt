@@ -192,10 +192,16 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
     CoroutineScope(Dispatchers.IO).launch {
       runCatching {
         featureFlags.initialize()
-        appOpenAdInitializer.initialize()
+        initAppOpenAds()
       }.onFailure { throwable ->
         Timber.e(throwable, "Failed to initialize feature flags.")
       }
+    }
+  }
+
+  private suspend fun initAppOpenAds() {
+    if (!applicationContext.isObbMoverProcess()) {
+      appOpenAdInitializer.initialize()
     }
   }
 
