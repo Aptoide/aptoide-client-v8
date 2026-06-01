@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -264,31 +265,34 @@ fun MoreBonusSectionView(
       )
     )
     if (isVanilla) {
-      Row(
-        modifier = Modifier
-          .padding(horizontal = 16.dp)
-          .height(40.dp)
-          .clip(RoundedCornerShape(16.dp))
-          .background(Color(0xFFFE6446))
-          .padding(horizontal = 16.dp),
-        verticalAlignment = Alignment.CenterVertically,
+      Box(
+        modifier = Modifier.requiredWidth(LocalConfiguration.current.screenWidthDp.dp)
       ) {
-        Image(
-          modifier = Modifier.padding(end = 8.dp),
-          imageVector = getBonusIcon(
-            giftColor = Color(0xFFF7CB5A),
-            outlineColor = Color(0xFF1E1E26),
-          ),
-          contentDescription = null,
-        )
-        Text(
-          text = stringResource(
-            id = R.string.bonus_banner_title,
-            "20" //TODO Hardcoded value (should come from backend in the future)
-          ),
-          style = AGTypography.Title,
-          color = Color(0xFF1E1E26),
-        )
+        Row(
+          modifier = Modifier
+            .height(40.dp)
+            .clip(RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp))
+            .background(Color(0xFFFE6446))
+            .padding(start = 16.dp, end = 16.dp),
+          verticalAlignment = Alignment.CenterVertically,
+        ) {
+          Image(
+            modifier = Modifier.padding(end = 8.dp),
+            imageVector = getBonusIcon(
+              giftColor = Color(0xFFF7CB5A),
+              outlineColor = Color(0xFF1E1E26),
+            ),
+            contentDescription = null,
+          )
+          Text(
+            text = stringResource(
+              id = R.string.bonus_banner_title,
+              "20" //TODO Hardcoded value (should come from backend in the future)
+            ),
+            style = AGTypography.Title,
+            color = Color(0xFF1E1E26),
+          )
+        }
       }
     } else {
       Box {
