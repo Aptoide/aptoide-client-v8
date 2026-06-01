@@ -521,20 +521,36 @@ fun AppViewContent(
               }
           )
         }
-        AptoideOutlinedText(
-          text = stringResource(
-            id = R.string.bonus_banner_title,
-            "20" //TODO Hardcoded value (should come from backend in the future)
-          ),
-          style = AGTypography.InputsM,
-          outlineWidth = 10f,
-          outlineColor = Palette.Black,
-          textColor = Palette.White,
-          modifier = Modifier
-            .align(Alignment.Bottom)
-            .background(color = Palette.Secondary)
-            .padding(horizontal = 8.dp, vertical = 4.dp)
-        )
+        if (BuildConfig.FLAVOR_brand == "vanilla") {
+          Text(
+            text = stringResource(
+              id = R.string.bonus_banner_title,
+              "20" //TODO Hardcoded value (should come from backend in the future)
+            ),
+            style = AGTypography.InputsM,
+            color = Color(0xFF1E1E26),
+            modifier = Modifier
+              .align(Alignment.Bottom)
+              .clip(RoundedCornerShape(16.dp))
+              .background(Color(0xFFFE6446))
+              .padding(horizontal = 12.dp, vertical = 6.dp)
+          )
+        } else {
+          AptoideOutlinedText(
+            text = stringResource(
+              id = R.string.bonus_banner_title,
+              "20" //TODO Hardcoded value (should come from backend in the future)
+            ),
+            style = AGTypography.InputsM,
+            outlineWidth = 10f,
+            outlineColor = Palette.Black,
+            textColor = Palette.White,
+            modifier = Modifier
+              .align(Alignment.Bottom)
+              .background(color = Palette.Secondary)
+              .padding(horizontal = 8.dp, vertical = 4.dp)
+          )
+        }
       }
     }
   }
