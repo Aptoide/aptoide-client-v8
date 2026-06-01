@@ -35,6 +35,7 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.rememberApp
 import cm.aptoide.pt.feature_home.domain.Bundle
+import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusIcon
@@ -145,7 +146,7 @@ private fun AppInfo(app: App) {
     ) {
       Image(
         imageVector = getBonusIcon(
-          giftColor = Palette.Primary,
+          giftColor = if (BuildConfig.FLAVOR_brand == "vanilla") Color(0xFFF7CB5A) else Palette.Primary,
           outlineColor = Color(0xFF1E1E26),
         ),
         contentDescription = null,
