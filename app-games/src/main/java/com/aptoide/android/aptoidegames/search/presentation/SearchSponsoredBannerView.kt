@@ -308,7 +308,7 @@ private fun VanillaSponsoredBanner(
           Text(
             text = stringResource(R.string.search_sponsored_install),
             style = AGTypography.InputsS,
-            color = Palette.Black,
+            color = Color(0xFF1E1E26),
           )
         }
       }

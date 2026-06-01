@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.CollectionInfo
 import androidx.compose.ui.semantics.collectionInfo
 import androidx.compose.ui.semantics.semantics
@@ -197,15 +198,16 @@ fun EditorialsViewCard(
       data = articleMeta.image,
       contentDescription = null
     )
+    val isVanilla = BuildConfig.FLAVOR_brand == "vanilla"
     Text(
       text = articleMeta.caption,
       style = AGTypography.BodyBold,
-      color = Palette.Primary,
+      color = if (isVanilla) Color(0xFF1E1E26) else Palette.Primary,
       maxLines = 1,
       overflow = TextOverflow.Ellipsis,
       modifier = Modifier
         .padding(start = 8.dp, top = 8.dp)
-        .background(color = Palette.Black)
+        .background(color = if (isVanilla) Palette.Primary else Palette.Black)
         .padding(horizontal = 8.dp, vertical = 4.dp)
     )
   }

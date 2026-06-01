@@ -21,6 +21,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -109,7 +110,7 @@ fun BonusSectionGeneralizedView(
         children = {
           Image(
             imageVector = getBonusIcon(
-              outlineColor = Palette.Black,
+              outlineColor = Color(0xFF1E1E26),
               giftColor = Palette.Primary,
             ),
             contentDescription = null,
@@ -164,7 +165,7 @@ fun BonusSectionHeader(
           modifier = Modifier.padding(horizontal = 16.dp),
           imageVector = getBonusIcon(
             giftColor = Palette.Primary,
-            outlineColor = Palette.Black,
+            outlineColor = Color(0xFF1E1E26),
           ),
           contentDescription = null,
         )

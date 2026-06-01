@@ -273,7 +273,7 @@ fun AGSmallButtonPreview() {
   enabled = enabled,
   color = Palette.Primary,
   title = title,
-  textStyle = AGTypography.InputsL.copy(color = Palette.Black)
+  textStyle = AGTypography.InputsL.copy(color = Color(0xFF1E1E26))
 )
 
 @Composable
@@ -349,7 +349,7 @@ fun SecondaryOutlinedButton(
   enabled = enabled,
   color = Palette.Primary,
   title = title,
-  textStyle = AGTypography.InputsS.copy(color = Palette.Black)
+  textStyle = AGTypography.InputsS.copy(color = Color(0xFF1E1E26))
 )
 
 @Composable fun AccentSmallButton(

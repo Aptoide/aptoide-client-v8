@@ -253,7 +253,7 @@ fun PublisherTakeOverListView(
             Image(
               imageVector = getBonusIconRight(
                 iconColor = Palette.Primary,
-                outlineColor = Palette.Black,
+                outlineColor = Color(0xFF1E1E26),
                 backgroundColor = Palette.Secondary
               ),
               contentDescription = null,
