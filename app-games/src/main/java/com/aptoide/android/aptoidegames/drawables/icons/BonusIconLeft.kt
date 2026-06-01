@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.aptoide.android.aptoidegames.BuildConfig
 
 @Preview
 @Composable
@@ -37,18 +38,27 @@ fun getBonusIconLeft(
     pathFillType = PathFillType.EvenOdd,
     fill = SolidColor(backgroundColor),
   ) {
-    moveTo(40f, 34f)
-    verticalLineTo(13f)
-    horizontalLineTo(35f)
-    verticalLineTo(0f)
-    horizontalLineTo(0f)
-    verticalLineTo(34f)
-    horizontalLineTo(6f)
-    verticalLineTo(40f)
-    horizontalLineTo(27f)
-    verticalLineTo(34f)
-    horizontalLineTo(40f)
-    close()
+    if (BuildConfig.FLAVOR_brand == "vanilla") {
+      moveTo(20f, 0f)
+      curveTo(31.046f, 0f, 40f, 8.954f, 40f, 20f)
+      curveTo(40f, 31.046f, 31.046f, 40f, 20f, 40f)
+      curveTo(8.954f, 40f, 0f, 31.046f, 0f, 20f)
+      curveTo(0f, 8.954f, 8.954f, 0f, 20f, 0f)
+      close()
+    } else {
+      moveTo(40f, 34f)
+      verticalLineTo(13f)
+      horizontalLineTo(35f)
+      verticalLineTo(0f)
+      horizontalLineTo(0f)
+      verticalLineTo(34f)
+      horizontalLineTo(6f)
+      verticalLineTo(40f)
+      horizontalLineTo(27f)
+      verticalLineTo(34f)
+      horizontalLineTo(40f)
+      close()
+    }
   }
   path(
     fill = SolidColor(iconColor),
