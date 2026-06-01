@@ -62,9 +62,9 @@ fun AptoidePromotionalFeatureGraphicImage(
           horizontalAlignment = Alignment.CenterHorizontally,
           modifier = Modifier
             .align(Alignment.TopEnd)
-            .padding(top = 8.dp, end = 8.dp)
-            .clip(RoundedCornerShape(16.dp))
-            .background(Color(0xFFFFFFFF))
+            .padding(top = 16.dp)
+            .clip(RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp))
+            .background(Color(0xFFFE6446))
             .padding(horizontal = 12.dp, vertical = 6.dp)
         ) {
           Text(
