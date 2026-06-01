@@ -45,6 +45,12 @@ android {
 
     buildConfigField(
       type = "String",
+      name = "RTB_COLLECTOR_HOST",
+      value = "\"https://aptoide-rtb-client-collector.aptoide.com\""
+    )
+
+    buildConfigField(
+      type = "String",
       name = "TC_URL",
       value = "\"https://aptoide.com/legal\""
     )
@@ -207,7 +213,7 @@ android {
       buildConfigField(
         type = "String",
         name = "GAME_GENIE_API",
-        value = "\"https://genie-chatbot-leaseweb.aptoide.com/\""
+        value = "\"https://genie-chatbot.aptoide.com/\""
       )
       buildConfigField(
         type = "String",
