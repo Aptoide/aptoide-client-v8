@@ -42,6 +42,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.zIndex
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
@@ -476,44 +477,55 @@ fun AppViewContent(
       )
     }
     if (app.isAppCoins) {
-      if (BuildConfig.FLAVOR_brand == "vanilla") {
-        Column(
-          modifier = Modifier
-            .padding(top = 160.dp)
-            .align(Alignment.TopStart)
-            .clickable {
-              val bonusTitle = bonusBundle.first
-              val route = buildSeeMoreBonusRoute(title = encode(bonusTitle))
+      val isVanillaBanner = BuildConfig.FLAVOR_brand == "vanilla"
+      Row(
+        modifier = Modifier
+          .padding(top = 160.dp)
+          .align(Alignment.TopStart)
+          .clickable {
+            val bonusTitle = bonusBundle.first
+            val route = buildSeeMoreBonusRoute(title = encode(bonusTitle))
 
-              navigate(route)
-            }
-        ) {
-          if (isGamified) {
-            Box(
-              modifier = Modifier.size(40.dp),
-              contentAlignment = Alignment.Center
-            ) {
-              Image(
-                imageVector = getAppViewBonusGiftBackground(),
-                contentDescription = null,
-              )
-              PaEAnimatedGift(
-                modifier = Modifier
-                  .size(44.dp)
-                  .offset(x = (-2).dp)
-              )
-            }
-          } else {
+            navigate(route)
+          }
+      ) {
+        if (isGamified) {
+          Box(
+            modifier = Modifier
+              .zIndex(1f)
+              .size(40.dp)
+              .graphicsLayer {
+                this.translationY = 6.dp.toPx()
+              },
+            contentAlignment = Alignment.Center
+          ) {
             Image(
-              imageVector = getBonusIconLeft(
-                iconColor = Palette.Primary,
-                outlineColor = Color(0xFF1E1E26),
-                backgroundColor = Palette.Secondary
-              ),
+              imageVector = getAppViewBonusGiftBackground(),
               contentDescription = null,
-              modifier = Modifier.size(40.dp)
+            )
+            PaEAnimatedGift(
+              modifier = Modifier
+                .size(44.dp)
+                .offset(x = (-2).dp)
             )
           }
+        } else {
+          Image(
+            imageVector = getBonusIconLeft(
+              iconColor = Palette.Primary,
+              outlineColor = Color(0xFF1E1E26),
+              backgroundColor = Palette.Secondary
+            ),
+            contentDescription = null,
+            modifier = Modifier
+              .zIndex(1f)
+              .size(40.dp)
+              .graphicsLayer {
+                this.translationY = 6.dp.toPx()
+              }
+          )
+        }
+        if (isVanillaBanner) {
           Text(
             text = stringResource(
               id = R.string.bonus_banner_title,
@@ -522,58 +534,13 @@ fun AppViewContent(
             style = AGTypography.InputsM,
             color = Color(0xFF1E1E26),
             modifier = Modifier
-              .padding(top = 4.dp)
-              .clip(RoundedCornerShape(16.dp))
+              .align(Alignment.Bottom)
+              .offset(x = (-12).dp)
+              .clip(RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp))
               .background(Color(0xFFFE6446))
-              .padding(horizontal = 12.dp, vertical = 6.dp)
+              .padding(start = 20.dp, end = 12.dp, top = 6.dp, bottom = 6.dp)
           )
-        }
-      } else {
-        Row(
-          modifier = Modifier
-            .padding(top = 160.dp)
-            .align(Alignment.TopStart)
-            .clickable {
-              val bonusTitle = bonusBundle.first
-              val route = buildSeeMoreBonusRoute(title = encode(bonusTitle))
-
-              navigate(route)
-            }
-        ) {
-          if (isGamified) {
-            Box(
-              modifier = Modifier
-                .size(40.dp)
-                .graphicsLayer {
-                  this.translationY = 6.dp.toPx()
-                },
-              contentAlignment = Alignment.Center
-            ) {
-              Image(
-                imageVector = getAppViewBonusGiftBackground(),
-                contentDescription = null,
-              )
-              PaEAnimatedGift(
-                modifier = Modifier
-                  .size(44.dp)
-                  .offset(x = (-2).dp)
-              )
-            }
-          } else {
-            Image(
-              imageVector = getBonusIconLeft(
-                iconColor = Palette.Primary,
-                outlineColor = Color(0xFF1E1E26),
-                backgroundColor = Palette.Secondary
-              ),
-              contentDescription = null,
-              modifier = Modifier
-                .size(40.dp)
-                .graphicsLayer {
-                  this.translationY = 6.dp.toPx()
-                }
-            )
-          }
+        } else {
           AptoideOutlinedText(
             text = stringResource(
               id = R.string.bonus_banner_title,
