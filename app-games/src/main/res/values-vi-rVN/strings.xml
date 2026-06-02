@@ -428,4 +428,5 @@
   <string name="gamegenie_companion_game_choice_title">Các trò chơi đã cài đặt của bạn</string>
   <string name="gamegenie_companion_master_fav_games">Nắm vững trò chơi yêu thích của bạn</string>
   <string name="gamegenie_companion_tap_fav_game">Hoặc chạm vào trò chơi yêu thích của bạn - bạn sẽ thành thạo nó.</string>
+  <string name="appview_auto_open_when_ready">Tự động mở khi sẵn sàng</string>
 </resources>

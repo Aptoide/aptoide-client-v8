@@ -439,4 +439,5 @@
   <string name="gamegenie_companion_game_choice_title">A telepített játékok</string>
   <string name="gamegenie_companion_master_fav_games">Legyen profi a kedvenc játékában!</string>
   <string name="gamegenie_companion_tap_fav_game">Vagy érintse meg kedvenc játékát – és elsajátíthatja azt.</string>
+  <string name="appview_auto_open_when_ready">Automatikus megnyitás, ha kész</string>
 </resources>
