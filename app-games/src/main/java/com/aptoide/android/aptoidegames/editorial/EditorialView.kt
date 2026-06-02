@@ -29,7 +29,6 @@ import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
 import cm.aptoide.pt.feature_editorial.presentation.ArticleListUiState
 import cm.aptoide.pt.feature_editorial.presentation.ArticleListUiStateProvider
-import cm.aptoide.pt.feature_editorial.presentation.rememberEditorialListState
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.randomBundle
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
@@ -54,7 +53,7 @@ fun EditorialBundle(
   navigate: (String) -> Unit,
   spaceBy: Int = 0,
 ) {
-  val (uiState, reload) = rememberEditorialListState(
+  val (uiState, _) = rememberEditorialListState(
     tag = bundle.tag,
     subtype = subtype,
     salt = bundle.timestamp

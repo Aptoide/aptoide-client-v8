@@ -78,8 +78,6 @@ import cm.aptoide.pt.feature_apps.domain.Rating
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.rememberApp
 import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
-import cm.aptoide.pt.feature_editorial.presentation.relatedEditorialsCardViewModel
-import cm.aptoide.pt.feature_editorial.presentation.rememberRelatedEditorials
 import com.aptoide.android.aptoidegames.APP_LINK_HOST
 import com.aptoide.android.aptoidegames.APP_LINK_SCHEMA
 import com.aptoide.android.aptoidegames.AppIconImage
@@ -107,6 +105,8 @@ import com.aptoide.android.aptoidegames.drawables.icons.getLeftArrow
 import com.aptoide.android.aptoidegames.drawables.icons.getRatingStar
 import com.aptoide.android.aptoidegames.editorial.EditorialsViewCardLarge
 import com.aptoide.android.aptoidegames.editorial.buildEditorialRoute
+import com.aptoide.android.aptoidegames.editorial.relatedEditorialsCardViewModel
+import com.aptoide.android.aptoidegames.editorial.rememberRelatedEditorials
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.error_views.NoConnectionView
 import com.aptoide.android.aptoidegames.feature_apps.presentation.SmallEmptyView
