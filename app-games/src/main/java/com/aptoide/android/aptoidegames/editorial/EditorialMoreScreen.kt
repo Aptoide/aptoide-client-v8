@@ -31,7 +31,6 @@ import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
 import cm.aptoide.pt.feature_editorial.presentation.ArticleListUiState
 import cm.aptoide.pt.feature_editorial.presentation.previewArticlesListIdleState
-import cm.aptoide.pt.feature_editorial.presentation.rememberEditorialListState
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.analytics.dto.BundleMeta
