@@ -50,6 +50,8 @@ sealed class HomeTab {
   @Keep
   object Rewards : HomeTab()
 
+  val id: String get() = this::class.simpleName.orEmpty()
+
   @Composable
   fun getTitle() = stringResource(
     when (this) {

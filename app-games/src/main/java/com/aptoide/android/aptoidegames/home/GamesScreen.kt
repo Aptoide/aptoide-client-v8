@@ -2,10 +2,13 @@ package com.aptoide.android.aptoidegames.home
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.feature_apps.presentation.appsBySortType
 import cm.aptoide.pt.feature_categories.presentation.rememberAllCategories
@@ -18,26 +21,63 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.BONUS_SORT
 import com.aptoide.android.aptoidegames.feature_apps.presentation.MoreBonusBundleView
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.rememberPaEAnalytics
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PlayAndEarnRewardsScreen
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.playAndEarnRewardsRoute
 
 const val gamesRoute = "games"
+const val INITIAL_HOME_TAB_PARAM = "initialHomeTab"
+
+fun buildGamesRoute(initialTab: HomeTab? = null): String =
+  if (initialTab == null) gamesRoute
+  else "$gamesRoute?$INITIAL_HOME_TAB_PARAM=${initialTab.id}"
+
+/**
+ * Resolves where a "go to rewards" action should navigate: the Rewards home tab when it is
+ * available, otherwise the standalone rewards screen as a fallback.
+ */
+@Composable
+fun rememberRewardsDestination(): String {
+  val (showHomeTabRow, tabs) = rememberHomeTabRowState()
+  return if (showHomeTabRow && tabs.any { it is HomeTab.Rewards }) {
+    buildGamesRoute(HomeTab.Rewards)
+  } else {
+    playAndEarnRewardsRoute
+  }
+}
 
 fun gamesScreen() = ScreenData(
-  route = gamesRoute,
-) { _, navigate, _ ->
+  route = "$gamesRoute?$INITIAL_HOME_TAB_PARAM={$INITIAL_HOME_TAB_PARAM}",
+  arguments = listOf(
+    navArgument(INITIAL_HOME_TAB_PARAM) {
+      type = NavType.StringType
+      nullable = true
+    }
+  ),
+) { args, navigate, _ ->
   InitialAnalyticsMeta(
     screenAnalyticsName = "Home",
     navigate = navigate
   ) {
-    GamesScreenContent(navigate = navigate)
+    GamesScreenContent(
+      navigate = navigate,
+      initialHomeTabId = args?.getString(INITIAL_HOME_TAB_PARAM)
+    )
   }
 }
 
 @Composable
 private fun GamesScreenContent(
-  navigate: (String) -> Unit
+  navigate: (String) -> Unit,
+  initialHomeTabId: String? = null,
 ) {
   val (showHomeTabRow, tabs) = rememberHomeTabRowState()
   var selectedTab by rememberSaveable(key = tabs.size.toString()) { mutableIntStateOf(0) }
+
+  LaunchedEffect(initialHomeTabId, tabs) {
+    initialHomeTabId
+      ?.let { id -> tabs.indexOfFirst { it.id == id } }
+      ?.takeIf { it >= 0 }
+      ?.let { selectedTab = it }
+  }
 
   val homeAnalytics = rememberHomeAnalytics()
   val paeAnalytics = rememberPaEAnalytics()
