@@ -213,6 +213,15 @@ private fun NavBackStackEntry.lifecycleIsResumed() =
 private fun String.getRouteScreenName() = this.substringBefore("/")
 
 fun NavHostController.navigateTo(route: String) {
+  if (route.substringBefore("?") == graph.startDestinationRoute?.substringBefore("?")) {
+    //Navigating to the start destination (home): if it's already on top (e.g. opening a specific
+    //home tab from within home) reuse it in place; otherwise push it on top, preserving the
+    //back stack below so the user can return to where they came from.
+    navigate(route) {
+      launchSingleTop = true
+    }
+    return
+  }
   currentBackStackEntry?.let {
     if (!it.lifecycleIsResumed()
       && currentDestination?.route?.getRouteScreenName() == route.getRouteScreenName()
@@ -459,11 +468,7 @@ private fun NavigationGraph(
     animatedComposable(
       navigate = navController::navigateTo,
       goBack = navController::navigateUp,
-      screenData = exchangeSuccessScreen(
-        onEarnMore = {
-          navController.popBackStack(navController.graph.startDestinationId, false)
-        }
-      )
+      screenData = exchangeSuccessScreen()
     )
   }
 }

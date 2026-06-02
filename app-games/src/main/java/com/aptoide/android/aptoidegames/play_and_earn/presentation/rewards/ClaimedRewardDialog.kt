@@ -35,6 +35,7 @@ import cm.aptoide.pt.extensions.toAnnotatedString
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.design_system.AccentButton
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getCorrectHexagon
+import com.aptoide.android.aptoidegames.home.rememberRewardsDestination
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.animations.RewardsStarsAnimation
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
@@ -43,6 +44,7 @@ import com.aptoide.android.aptoidegames.theme.Palette
 @Composable
 fun ClaimedRewardDialog(navigate: (String) -> Unit) {
   val viewModel = hiltViewModel<SignInRewardViewModel>()
+  val rewardsDestination = rememberRewardsDestination()
   var activeReward by remember { mutableStateOf<PendingPaEReward?>(null) }
   LaunchedEffect(viewModel) {
     viewModel.claimSuccessEvent.collect { activeReward = it }
@@ -54,7 +56,7 @@ fun ClaimedRewardDialog(navigate: (String) -> Unit) {
       onDismiss = { activeReward = null },
       onEarnMore = {
         activeReward = null
-        navigate(playAndEarnRewardsRoute)
+        navigate(rewardsDestination)
       },
     )
   }
