@@ -19,11 +19,11 @@ import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.OverrideAnalyticsPlayAndEarn
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
+import com.aptoide.android.aptoidegames.home.rememberRewardsDestination
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.rememberPaEAnalytics
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaEBundleHeader
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.app_items.PaECompactAppItem
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.layout.PaEHorizontalCarousel
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.playAndEarnRewardsRoute
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.rememberPreferredPaEReward
 
 @Composable
@@ -33,6 +33,7 @@ fun PaEHeaderBundle(
   navigate: (String) -> Unit
 ) {
   val paeAnalytics = rememberPaEAnalytics()
+  val rewardsDestination = rememberRewardsDestination()
 
   OverrideAnalyticsPlayAndEarn(
     navigate = navigate
@@ -55,7 +56,7 @@ fun PaEHeaderBundle(
           rewardType = rememberPreferredPaEReward(),
           onClick = {
             paeAnalytics.sendPaEHomeEarnNowClick()
-            navigateTo(playAndEarnRewardsRoute)
+            navigateTo(rewardsDestination)
           }
         )
         PaEHorizontalCarousel(

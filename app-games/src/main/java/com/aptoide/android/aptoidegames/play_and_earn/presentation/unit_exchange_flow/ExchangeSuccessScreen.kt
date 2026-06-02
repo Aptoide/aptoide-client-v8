@@ -28,6 +28,7 @@ import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.design_system.AccentButton
 import com.aptoide.android.aptoidegames.drawables.backgrounds.getExchangeSuccessBackground
+import com.aptoide.android.aptoidegames.home.rememberRewardsDestination
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PaERewardSuccessArt
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PaERewardType
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -47,9 +48,7 @@ fun buildExchangeSuccessRoute(
   email: String,
 ) = "$exchangeSuccessBase/${rewardType.name}/${Uri.encode(formattedAmount)}/${Uri.encode(email)}"
 
-fun exchangeSuccessScreen(
-  onEarnMore: () -> Unit,
-) = ScreenData.withAnalytics(
+fun exchangeSuccessScreen() = ScreenData.withAnalytics(
   route = exchangeSuccessRoute,
   screenAnalyticsName = "ExchangeSuccess",
   arguments = listOf(
@@ -57,19 +56,20 @@ fun exchangeSuccessScreen(
     navArgument(amountArg) { type = NavType.StringType },
     navArgument(emailArg) { type = NavType.StringType },
   ),
-) { args, _, navigateBack ->
+) { args, navigate, navigateBack ->
   val rewardType = args?.getString(rewardTypeArg)
     ?.let { runCatching { PaERewardType.valueOf(it) }.getOrNull() }
     ?: PaERewardType.ROBUX
   val formattedAmount = args?.getString(amountArg)?.let { Uri.decode(it) }.orEmpty()
   val email = args?.getString(emailArg)?.let { Uri.decode(it) }.orEmpty()
+  val rewardsDestination = rememberRewardsDestination()
 
   ExchangeSuccessScreen(
     rewardType = rewardType,
     formattedAmount = formattedAmount,
     email = email,
     navigateBack = navigateBack,
-    onEarnMore = onEarnMore,
+    onEarnMore = { navigate(rewardsDestination) },
   )
 }
 
