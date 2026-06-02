@@ -439,4 +439,5 @@
   <string name="gamegenie_companion_game_choice_title">Your installed games</string>
   <string name="gamegenie_companion_master_fav_games">Master your fav game</string>
   <string name="gamegenie_companion_tap_fav_game">Or tap your fav game - you\'ll master it.</string>
+  <string name="appview_auto_open_when_ready">तयार झाल्यावर आपोआप उघडा</string>
 </resources>

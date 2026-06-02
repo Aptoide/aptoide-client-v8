@@ -428,4 +428,5 @@
   <string name="gamegenie_companion_game_choice_title">您已安裝的遊戲</string>
   <string name="gamegenie_companion_master_fav_games">精通你最愛的遊戲</string>
   <string name="gamegenie_companion_tap_fav_game">或點擊你最愛的遊戲——你將精通它。</string>
+  <string name="appview_auto_open_when_ready">就緒後自動開啟</string>
 </resources>

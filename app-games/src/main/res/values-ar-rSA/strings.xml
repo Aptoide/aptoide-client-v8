@@ -483,4 +483,5 @@
   <string name="gamegenie_companion_game_choice_title">الألعاب المثبتة لديك</string>
   <string name="gamegenie_companion_master_fav_games">أتقن لعبتك المفضلة</string>
   <string name="gamegenie_companion_tap_fav_game">أو اضغط على لعبتك المفضلة - ستتقنها.</string>
+  <string name="appview_auto_open_when_ready">فتح تلقائي عند الجاهزية</string>
 </resources>

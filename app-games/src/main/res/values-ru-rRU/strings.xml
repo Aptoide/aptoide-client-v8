@@ -461,4 +461,5 @@
   <string name="gamegenie_companion_game_choice_title">Ваши установленные игры</string>
   <string name="gamegenie_companion_master_fav_games">Освойте свою любимую игру</string>
   <string name="gamegenie_companion_tap_fav_game">Или нажмите на свою любимую игру — вы освоите ее.</string>
+  <string name="appview_auto_open_when_ready">Автозапуск при готовности</string>
 </resources>

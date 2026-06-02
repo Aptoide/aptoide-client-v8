@@ -428,4 +428,5 @@
   <string name="gamegenie_companion_game_choice_title">설치된 게임들</string>
   <string name="gamegenie_companion_master_fav_games">좋아하는 게임을 마스터하세요</string>
   <string name="gamegenie_companion_tap_fav_game">좋아하는 게임을 탭해봐 - 금방 마스터할 수 있을 거야.</string>
+  <string name="appview_auto_open_when_ready">준비되면 자동 실행</string>
 </resources>

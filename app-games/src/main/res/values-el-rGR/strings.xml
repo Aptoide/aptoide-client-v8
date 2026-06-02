@@ -439,4 +439,5 @@
   <string name="gamegenie_companion_game_choice_title">Τα εγκατεστημένα παιχνίδια σας</string>
   <string name="gamegenie_companion_master_fav_games">Κάντε το αγαπημένο σας παιχνίδι δικό σας</string>
   <string name="gamegenie_companion_tap_fav_game">Ή πατήστε το αγαπημένο σας παιχνίδι - θα το κατακτήσετε.</string>
+  <string name="appview_auto_open_when_ready">Αυτόματο άνοιγμα όταν είναι έτοιμο</string>
 </resources>

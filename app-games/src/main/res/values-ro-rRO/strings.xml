@@ -450,4 +450,5 @@
   <string name="gamegenie_companion_game_choice_title">Jocurile instalate</string>
   <string name="gamegenie_companion_master_fav_games">Stăpânește-ți jocul preferat</string>
   <string name="gamegenie_companion_tap_fav_game">Sau atingeți jocul preferat - îl veți stăpâni.</string>
+  <string name="appview_auto_open_when_ready">Deschidere automată când e gata</string>
 </resources>

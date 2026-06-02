@@ -439,4 +439,5 @@
   <string name="gamegenie_companion_game_choice_title">I tuoi giochi installati</string>
   <string name="gamegenie_companion_master_fav_games">Diventa un maestro nel tuo gioco preferito</string>
   <string name="gamegenie_companion_tap_fav_game">Oppure tocca il tuo gioco preferito: lo padroneggerai.</string>
+  <string name="appview_auto_open_when_ready">Apri automaticamente quando pronto</string>
 </resources>
