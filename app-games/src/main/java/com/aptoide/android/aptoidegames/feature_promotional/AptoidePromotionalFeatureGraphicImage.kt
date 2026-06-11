@@ -15,10 +15,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
 import com.aptoide.android.aptoidegames.BuildConfig
+import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusPromotional
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -68,17 +70,17 @@ fun AptoidePromotionalFeatureGraphicImage(
             .padding(horizontal = 12.dp, vertical = 6.dp)
         ) {
           Text(
-            text = "up to",
+            text = stringResource(R.string.promotional_bonus_up_to),
             style = AGTypography.InputsXSRegular,
             color = Color(0xFF1E1E26),
           )
           Text(
-            text = "20%",
+            text = stringResource(R.string.promotional_bonus_amount),
             style = AGTypography.Title,
             color = Color(0xFF1E1E26),
           )
           Text(
-            text = "BONUS",
+            text = stringResource(R.string.promotional_bonus_label),
             style = AGTypography.InputsXS,
             color = Color(0xFF1E1E26),
           )

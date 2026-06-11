@@ -356,6 +356,9 @@
   <string name="promotional_new_active">You\'ll be notified when available.</string>
   <string name="promotional_now_available_body">Now available in Aptoide Games!</string>
   <string name="promotional_now_available_tag">Now Available</string>
+  <string name="promotional_bonus_up_to">up to</string>
+  <string name="promotional_bonus_amount">20%</string>
+  <string name="promotional_bonus_label">BONUS</string>
 
   <!-- Tags -->
   <string name="tag_for_you">For You</string>
