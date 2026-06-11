@@ -26,7 +26,11 @@ internal class AptoideAppsListRepository @Inject constructor(
     if (url.isEmpty()) {
       throw IllegalStateException()
     }
-    val query = url.split("listApps/")[1]
+    // Some bundles' "see all" action points to a non-listApps URL (e.g. getStoreWidgets).
+    // We can't build an apps-list query from those, so fail into the handled Error state
+    // instead of crashing with IndexOutOfBoundsException on split(...)[1].
+    val query = url.split("listApps/").getOrNull(1)
+      ?: throw IllegalStateException("Unsupported apps list url: $url")
     // Global widget URLs (those without an explicit store_id) must not be re-scoped
     // with store_name — that would restrict the query to a store that doesn't own the
     // group/section, returning 404. Matches legacy Aptoide vanilla behavior.
