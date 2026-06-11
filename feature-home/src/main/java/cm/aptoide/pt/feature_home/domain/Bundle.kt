@@ -21,6 +21,17 @@ data class Bundle(
   val hasMoreAction: Boolean
     get() = actions.firstOrNull { it.type == BUTTON && it.tag.endsWith("-more") } != null
 
+  /**
+   * True only when the "see all" action resolves to an apps-list (listApps) URL,
+   * which is the only kind the apps-list See All screen can fetch. Bundles whose
+   * -more action targets something else (e.g. getStoreWidgets) are excluded so we
+   * don't surface a See All that would just lead to an error screen.
+   */
+  val hasAppsListMoreAction: Boolean
+    get() = actions.firstOrNull {
+      it.type == BUTTON && it.tag.endsWith("-more") && "listApps/" in it.url
+    } != null
+
   val bottomTag: String?
     get() = actions.firstOrNull { it.type == BOTTOM }?.tag
 }

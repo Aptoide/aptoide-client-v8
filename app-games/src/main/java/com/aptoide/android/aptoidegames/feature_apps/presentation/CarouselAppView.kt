@@ -79,7 +79,7 @@ private fun RealCarouselBundle(
     BundleHeader(
       title = bundle.title,
       icon = bundle.bundleIcon,
-      hasMoreAction = bundle.hasMoreAction,
+      hasMoreAction = bundle.hasAppsListMoreAction,
       onClick = getSeeMoreRouteNavigation(bundle = bundle, navigate = navigate),
       titleColor = Palette.White,
     )
