@@ -251,14 +251,16 @@ private fun VanillaSponsoredBanner(
         contentDescription = null,
         contentScale = ContentScale.Fit,
         modifier = Modifier
-          .align(Alignment.CenterEnd)
+          .align(Alignment.Center)
           .fillMaxHeight()
       )
 
+      // Darker overlay so the white name/rating stay legible over any
+      // extracted color or centered artwork.
       Box(
         modifier = Modifier
           .fillMaxSize()
-          .background(Color.Black.copy(alpha = overlayAlpha))
+          .background(Color.Black.copy(alpha = (overlayAlpha + 0.35f).coerceIn(0f, 0.7f)))
       )
 
       Row(
@@ -275,7 +277,9 @@ private fun VanillaSponsoredBanner(
           Text(
             text = appName,
             style = AGTypography.DescriptionGames,
-            color = Palette.White,
+            // Literal white: Palette.White resolves to dark 0xFF1E1E26 in
+            // Vanilla's light theme, which would be illegible on the overlay.
+            color = Color.White,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.widthIn(max = 204.dp),
@@ -285,14 +289,14 @@ private fun VanillaSponsoredBanner(
             verticalAlignment = Alignment.CenterVertically,
           ) {
             Image(
-              imageVector = getRatingStar(Palette.White),
+              imageVector = getRatingStar(Color.White),
               contentDescription = null,
               modifier = Modifier.size(16.dp),
             )
             Text(
               text = String.format(Locale.US, "%.1f", rating),
               style = AGTypography.InputsXS,
-              color = Palette.White,
+              color = Color.White,
               modifier = Modifier.padding(start = 2.dp),
             )
           }
