@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.theme.Palette
+import com.aptoide.android.aptoidegames.theme.DarkPalette
 import kotlin.random.Random
 import kotlin.random.nextInt
 
@@ -85,10 +85,10 @@ fun getTierCoinIcon(level: Int): ImageVector = ImageVector.Builder(
 }.build()
 
 private fun Int.getCoinColors(): List<Color> = when (this) {
-  0, 1 -> listOf(Color(0xFFC04D07), Color(0xFFFFC93E), Color(0xFFF58932))
-  2, 3 -> listOf(Color(0xFFBDC3EB), Color(0xFFFFFFFF), Color(0xFF676D89))
-  4, 5 -> listOf(Color(0xFF876311), Color(0xFFFFEA04), Color(0xFFFFC93E))
-  6, 7 -> listOf(Color(0xFFB3CFFF), Color(0xFFE0ECFF), Color(0xFF495A6D))
-  8, 9 -> listOf(Color(0xFFD6A422), Color(0xFFFFC93E), Color(0xFF876311))
+  0, 1 -> listOf(DarkPalette.Orange200, DarkPalette.Yellow100, DarkPalette.Orange150)
+  2, 3 -> listOf(DarkPalette.Blue100, DarkPalette.White, DarkPalette.Blue200)
+  4, 5 -> listOf(DarkPalette.Yellow200, DarkPalette.Yellow50, DarkPalette.Yellow100)
+  6, 7 -> listOf(DarkPalette.Blue150, DarkPalette.Blue50, DarkPalette.Blue250)
+  8, 9 -> listOf(DarkPalette.Yellow150, DarkPalette.Yellow100, DarkPalette.Yellow200)
   else -> listOf(Color.Transparent, Color.Transparent, Color.Transparent)
 }

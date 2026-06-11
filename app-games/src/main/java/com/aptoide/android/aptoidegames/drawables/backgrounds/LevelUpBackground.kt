@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.vector.group
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.theme.Palette
+import com.aptoide.android.aptoidegames.theme.DarkPalette
 
 @Preview
 @Composable
@@ -190,10 +190,10 @@ fun getLevelUpBackground(level: Int = 0): ImageVector = ImageVector.Builder(
 }.build()
 
 private fun getLevelColor(level: Int) = when (level) {
-  1, 2 -> Color(0xFFF58932)
-  3, 4 -> Color(0xFFBDC3EB)
-  5, 6 -> Color(0xFFFFC93E)
-  7, 8 -> Color(0xFFBDC3EB)
-  9, 10 -> Color(0xFFFFC93E)
-  else -> Color(0xFFF58932)
+  1, 2 -> DarkPalette.Orange150
+  3, 4 -> DarkPalette.Blue100
+  5, 6 -> DarkPalette.Yellow100
+  7, 8 -> DarkPalette.Blue100
+  9, 10 -> DarkPalette.Yellow100
+  else -> DarkPalette.Orange150
 }
