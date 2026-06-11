@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.Text
@@ -29,9 +30,11 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import cm.aptoide.pt.extensions.hasNotificationsPermission
+import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.design_system.PrimaryButton
 import com.aptoide.android.aptoidegames.design_system.PrimaryTextButton
+import com.aptoide.android.aptoidegames.drawables.icons.getNotificationBell
 import com.aptoide.android.aptoidegames.drawables.icons.getNotificationsPermissionIcon
 import com.aptoide.android.aptoidegames.notifications.presentation.rememberNotificationsAnalytics
 import com.aptoide.android.aptoidegames.permissions.notifications.NotificationsPermissionViewModel
@@ -154,17 +157,32 @@ fun DialogContent(
         .wrapContentHeight()
         .padding(horizontal = 24.dp)
     ) {
-      Image(
-        imageVector = getNotificationsPermissionIcon(
-          controllerColor = Palette.Primary,
-          bellColor = Palette.White,
-          notificationColor = Palette.Secondary
-        ),
-        contentDescription = null,
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(vertical = 40.dp)
-      )
+      if (BuildConfig.FLAVOR_brand == "vanilla") {
+        // Vanilla is a general app store: drop the games controller and
+        // show a neutral bell-only icon, matching the toolbar bell.
+        Image(
+          imageVector = getNotificationBell(
+            bellColor = Palette.White,
+            notificationColor = Palette.Secondary
+          ),
+          contentDescription = null,
+          modifier = Modifier
+            .padding(vertical = 40.dp)
+            .size(96.dp)
+        )
+      } else {
+        Image(
+          imageVector = getNotificationsPermissionIcon(
+            controllerColor = Palette.Primary,
+            bellColor = Palette.White,
+            notificationColor = Palette.Secondary
+          ),
+          contentDescription = null,
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 40.dp)
+        )
+      }
       Text(
         text = stringResource(R.string.notifications_context_title),
         style = AGTypography.Title,
