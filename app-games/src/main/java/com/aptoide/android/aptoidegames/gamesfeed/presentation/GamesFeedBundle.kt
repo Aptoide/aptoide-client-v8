@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -163,9 +164,10 @@ private fun GamesFeedHeader(
           verticalAlignment = Alignment.CenterVertically,
           horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-          Image(
+          Icon(
             painter = painterResource(id = R.drawable.ic_wand_stars),
             contentDescription = null,
+            tint = Palette.Primary,
             modifier = Modifier.size(16.dp)
           )
           Text(
