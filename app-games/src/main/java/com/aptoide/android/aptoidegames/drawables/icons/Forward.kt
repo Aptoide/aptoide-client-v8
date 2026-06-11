@@ -15,7 +15,6 @@ import androidx.compose.ui.graphics.vector.group
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.theme.Palette
 
 @Preview
@@ -64,21 +63,7 @@ fun getForward(
       strokeLineMiter = 4.0f,
       pathFillType = EvenOdd
     ) {
-      if (BuildConfig.FLAVOR_brand == "vanilla") {
-        moveTo(16f, 0f)
-        curveTo(24.837f, 0f, 32f, 7.163f, 32f, 16f)
-        curveTo(32f, 24.837f, 24.837f, 32f, 16f, 32f)
-        curveTo(7.163f, 32f, 0f, 24.837f, 0f, 16f)
-        curveTo(0f, 7.163f, 7.163f, 0f, 16f, 0f)
-        close()
-      } else {
-        moveTo(32.615f, 32.6153f)
-        lineTo(-0.6157f, 32.6153f)
-        lineTo(-0.6157f, -0.6155f)
-        lineTo(32.615f, -0.6155f)
-        lineTo(32.615f, 32.6153f)
-        close()
-      }
+      forwardOutline()
       moveTo(20.8871f, 15.3489f)
       lineTo(14.1535f, 22.0825f)
       lineTo(14.1535f, 8.6153f)

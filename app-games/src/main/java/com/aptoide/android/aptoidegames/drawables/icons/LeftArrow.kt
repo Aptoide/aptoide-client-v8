@@ -14,7 +14,6 @@ import androidx.compose.ui.graphics.vector.group
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.BuildConfig
 
 @Preview
 @Composable
@@ -63,21 +62,7 @@ fun getLeftArrow(color: Color, bgColor: Color): ImageVector = ImageVector.Builde
       strokeLineMiter = 1.0f,
       pathFillType = PathFillType.EvenOdd
     ) {
-      if (BuildConfig.FLAVOR_brand == "vanilla") {
-        moveTo(16f, 0f)
-        curveTo(24.837f, 0f, 32f, 7.163f, 32f, 16f)
-        curveTo(32f, 24.837f, 24.837f, 32f, 16f, 32f)
-        curveTo(7.163f, 32f, 0f, 24.837f, 0f, 16f)
-        curveTo(0f, 7.163f, 7.163f, 0f, 16f, 0f)
-        close()
-      } else {
-        moveTo(-0.615236f, 32.6154f)
-        lineTo(32.6155f, 32.6154f)
-        lineTo(32.6155f, -0.61537f)
-        lineTo(-0.615231f, -0.615373f)
-        lineTo(-0.615236f, 32.6154f)
-        close()
-      }
+      leftArrowOutline()
       moveTo(11.1127f, 15.349f)
       lineTo(17.8463f, 22.0826f)
       lineTo(17.8463f, 8.6154f)
