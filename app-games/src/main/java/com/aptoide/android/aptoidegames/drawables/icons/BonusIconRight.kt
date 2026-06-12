@@ -11,7 +11,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.BuildConfig
 
 @Preview
 @Composable
@@ -28,9 +27,6 @@ fun getBonusIconRight(
   outlineColor: Color,
   backgroundColor: Color,
 ): ImageVector {
-  val isVanilla = BuildConfig.FLAVOR_brand == "vanilla"
-  val resolvedBackground = if (isVanilla) Color(0xFFFE6446) else backgroundColor
-  val resolvedIcon = if (isVanilla) Color(0xFFF7CB5A) else iconColor
   return ImageVector.Builder(
     name = "BonusIconRight",
     defaultWidth = 32.dp,
@@ -40,32 +36,12 @@ fun getBonusIconRight(
   ).apply {
     path(
       pathFillType = PathFillType.EvenOdd,
-      fill = SolidColor(resolvedBackground),
+      fill = SolidColor(bonusIconBackgroundColor(backgroundColor)),
     ) {
-      if (isVanilla) {
-        moveTo(16f, 0f)
-        curveTo(24.837f, 0f, 32f, 7.163f, 32f, 16f)
-        curveTo(32f, 24.837f, 24.837f, 32f, 16f, 32f)
-        curveTo(7.163f, 32f, 0f, 24.837f, 0f, 16f)
-        curveTo(0f, 7.163f, 7.163f, 0f, 16f, 0f)
-        close()
-      } else {
-        moveTo(0f, 26.6667f)
-        verticalLineTo(10.6667f)
-        horizontalLineTo(4f)
-        verticalLineTo(0f)
-        horizontalLineTo(32f)
-        verticalLineTo(26.6667f)
-        horizontalLineTo(26.6667f)
-        verticalLineTo(32f)
-        horizontalLineTo(10.6667f)
-        verticalLineTo(26.6667f)
-        horizontalLineTo(0f)
-        close()
-      }
+      bonusIconRightOutline()
     }
     path(
-      fill = SolidColor(resolvedIcon),
+      fill = SolidColor(bonusIconForegroundColor(iconColor)),
     ) {
       moveTo(8.88874f, 15.1115f)
       verticalLineTo(24.8893f)
