@@ -31,6 +31,7 @@ import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
+import cm.aptoide.pt.feature_apps.presentation.isEmptyOrError
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
 import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import cm.aptoide.pt.feature_home.domain.Bundle
@@ -116,6 +117,9 @@ fun PublisherTakeOverContent(
   navigate: (String) -> Unit,
   spaceBy: Int = 0
 ) {
+  // Don't show the takeover (background + title) when neither list has content to display.
+  if (uiState.isEmptyOrError && bottomUiState.isEmptyOrError) return
+
   Column {
     Box {
       AptoideAsyncImage(
