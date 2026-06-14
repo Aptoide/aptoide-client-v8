@@ -77,15 +77,15 @@ fun EditorsChoiceBundle(
   val (uiState, _) = rememberAppsByTag(bundle.tag, bundle.timestamp)
 
   Column {
-    BundleHeader(
-      title = bundle.title,
-      icon = bundle.bundleIcon,
-      hasMoreAction = bundle.hasAppsListMoreAction,
-      onClick = getSeeMoreRouteNavigation(bundle = bundle, navigate = navigate),
-      titleColor = Palette.White,
-    )
     when (uiState) {
       is AppsListUiState.Idle -> {
+        BundleHeader(
+          title = bundle.title,
+          icon = bundle.bundleIcon,
+          hasMoreAction = bundle.hasAppsListMoreAction,
+          onClick = getSeeMoreRouteNavigation(bundle = bundle, navigate = navigate),
+          titleColor = Palette.White,
+        )
         EditorsChoiceListView(
           appsList = uiState.apps,
           navigate = navigate

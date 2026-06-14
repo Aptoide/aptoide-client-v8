@@ -77,15 +77,15 @@ private fun RealCarouselBundle(
   spaceBy: Int = 0
 ) {
   Column {
-    BundleHeader(
-      title = bundle.title,
-      icon = bundle.bundleIcon,
-      hasMoreAction = bundle.hasAppsListMoreAction,
-      onClick = getSeeMoreRouteNavigation(bundle = bundle, navigate = navigate),
-      titleColor = Palette.White,
-    )
     when (uiState) {
       is AppsListUiState.Idle -> {
+        BundleHeader(
+          title = bundle.title,
+          icon = bundle.bundleIcon,
+          hasMoreAction = bundle.hasAppsListMoreAction,
+          onClick = getSeeMoreRouteNavigation(bundle = bundle, navigate = navigate),
+          titleColor = Palette.White,
+        )
         CarouselListView(
           appsList = uiState.apps,
           bundleTag = bundle.tag,

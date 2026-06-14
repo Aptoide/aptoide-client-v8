@@ -60,6 +60,9 @@ fun CategoriesBundle(
   val analyticsContext = AnalyticsContext.current
   val bundleAnalytics = rememberBundleAnalytics()
 
+  // Don't show the bundle (including the title) when there are no categories to display.
+  if (!uiState.loading && uiState.categories.isEmpty()) return@let
+
   Column(
     modifier = Modifier
       .fillMaxWidth()

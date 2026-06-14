@@ -14,6 +14,15 @@ sealed class AppsListUiState {
   object Error : AppsListUiState()
 }
 
+/**
+ * Terminal states with no content to show. When a bundle ends up in one of these,
+ * neither its content nor its title/header should be displayed.
+ */
+val AppsListUiState.isEmptyOrError: Boolean
+  get() = this is AppsListUiState.Empty
+    || this is AppsListUiState.Error
+    || this is AppsListUiState.NoConnection
+
 class AppsListUiStateProvider : PreviewParameterProvider<AppsListUiState> {
   override val values: Sequence<AppsListUiState> = sequenceOf(
     AppsListUiState.Idle(List(Random.nextInt(1..12)) { randomApp }),

@@ -75,14 +75,14 @@ private fun RealAppsGridBundle(
   spaceBy: Int = 0,
 ) {
   Column {
-    BundleHeader(
-      title = bundle.title,
-      icon = bundle.bundleIcon,
-      hasMoreAction = bundle.hasAppsListMoreAction,
-      onClick = getSeeMoreRouteNavigation(bundle = bundle, navigate = navigate)
-    )
     when (uiState) {
       is AppsListUiState.Idle -> {
+        BundleHeader(
+          title = bundle.title,
+          icon = bundle.bundleIcon,
+          hasMoreAction = bundle.hasAppsListMoreAction,
+          onClick = getSeeMoreRouteNavigation(bundle = bundle, navigate = navigate)
+        )
         AppsRowView(
           appsList = uiState.apps,
           navigate = navigate,
