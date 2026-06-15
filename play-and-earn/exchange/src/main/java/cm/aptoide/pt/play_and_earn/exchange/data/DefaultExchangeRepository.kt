@@ -1,8 +1,12 @@
 package cm.aptoide.pt.play_and_earn.exchange.data
 
+import cm.aptoide.pt.play_and_earn.exchange.data.model.ExchangeRateJson
 import cm.aptoide.pt.play_and_earn.exchange.data.model.ExchangeUnitsRequestJson
+import cm.aptoide.pt.play_and_earn.exchange.domain.ExchangeRate
 import cm.aptoide.pt.play_and_earn.exchange.domain.RedeemType
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -13,7 +17,11 @@ internal class DefaultExchangeRepository @Inject constructor(
 
   private companion object {
     const val DEFAULT_COUNTRY_CODE = "PT"
+    const val DEFAULT_EXCHANGE_RATE_COUNTRY_CODE = "US"
   }
+
+  private val exchangeRateMutex = Mutex()
+  private val cachedExchangeRates = mutableMapOf<String, ExchangeRate>()
 
   @Deprecated(
     "Use exchangeUnits(email, redeemType) instead.",
@@ -55,6 +63,33 @@ internal class DefaultExchangeRepository @Inject constructor(
         Result.failure(e)
       }
     }
+
+  override suspend fun getExchangeRate(): Result<ExchangeRate> =
+    withContext(dispatcher) {
+      val countryCode = DEFAULT_EXCHANGE_RATE_COUNTRY_CODE
+
+      cachedExchangeRates[countryCode]?.let { return@withContext Result.success(it) }
+
+      exchangeRateMutex.withLock {
+        // Re-check inside the lock in case another caller fetched it while we waited.
+        cachedExchangeRates[countryCode]?.let { return@withLock Result.success(it) }
+
+        try {
+          val rate = exchangeApi.getExchangeRate(countryCode).toDomainModel()
+          cachedExchangeRates[countryCode] = rate
+          Result.success(rate)
+        } catch (e: Throwable) {
+          e.printStackTrace()
+          Result.failure(e)
+        }
+      }
+    }
 }
+
+private fun ExchangeRateJson.toDomainModel() = ExchangeRate(
+  countryCode = countryCode.orEmpty(),
+  rate = rate ?: 0.0,
+  creditsAmount = creditsAmount ?: 0
+)
 
 class ExchangeException(message: String) : Throwable(message)
