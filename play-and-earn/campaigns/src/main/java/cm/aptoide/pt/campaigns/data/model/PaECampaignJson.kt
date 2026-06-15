@@ -12,7 +12,8 @@ internal data class PaECampaignJson(
 @Keep
 internal data class PaEAppJson(
   @SerializedName("app_info") val appInfo: PaEAppInfoJson,
-  val progress: PaEProgressJson?
+  val progress: PaEProgressJson?,
+  @SerializedName("total_prizes") val totalPrizes: Int = 0
 )
 
 @Keep
