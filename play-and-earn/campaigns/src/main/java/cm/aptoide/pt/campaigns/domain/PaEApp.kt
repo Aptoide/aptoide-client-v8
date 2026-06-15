@@ -13,7 +13,8 @@ data class PaEApp(
   val graphic: String,
   val name: String,
   val uname: String,
-  val progress: PaEProgress?
+  val progress: PaEProgress?,
+  val totalPrizes: Int = 0,
 ) : AppSource
 
 data class PaEProgress(
@@ -41,7 +42,8 @@ val randomPaEApp
       graphic = it.featureGraphic,
       name = it.name,
       uname = getRandomString(range = 1..3, separator = "-"),
-      progress = randomPaEProgress
+      progress = randomPaEProgress,
+      totalPrizes = Random.nextInt(0..500),
     )
   }
 

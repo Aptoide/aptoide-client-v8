@@ -73,7 +73,8 @@ private fun PaEAppJson.toDomainModel() = PaEApp(
   graphic = appInfo.graphic,
   name = appInfo.name,
   uname = appInfo.uname,
-  progress = progress?.toDomainModel()
+  progress = progress?.toDomainModel(),
+  totalPrizes = totalPrizes,
 )
 
 private fun PaEProgressJson.toDomainModel() = PaEProgress(
