@@ -10,6 +10,8 @@ import cm.aptoide.pt.campaigns.domain.PaEMissionType
 import cm.aptoide.pt.campaigns.domain.PaEMissions
 import cm.aptoide.pt.campaigns.domain.PaEProgress
 import com.google.gson.JsonObject
+import kotlin.random.Random
+import kotlin.random.nextInt
 
 val paEApp1 = PaEApp(
   packageName = "com.mobile.legends",
@@ -22,7 +24,8 @@ val paEApp1 = PaEApp(
     target = 50,
     type = "Mission",
     status = "Ongoing"
-  )
+  ),
+  totalPrizes = Random.nextInt(0..500),
 )
 
 val paEApp2 = PaEApp(
@@ -36,7 +39,8 @@ val paEApp2 = PaEApp(
     target = 50,
     type = "Mission",
     status = "Ongoing"
-  )
+  ),
+  totalPrizes = Random.nextInt(0..500),
 )
 
 val paEApp3 = PaEApp(
@@ -45,7 +49,8 @@ val paEApp3 = PaEApp(
   graphic = "https://cdn6.aptoide.com/imgs/c/e/f/ceffc555296046d89ca0c3e69b4c9439_fgraphic.jpg",
   name = "Aptoide Diceroll SDK Dev",
   uname = "aptoide-diceroll-sdk-dev",
-  progress = null
+  progress = null,
+  totalPrizes = Random.nextInt(0..500),
 )
 
 val paeCampaigns = PaEBundles(
