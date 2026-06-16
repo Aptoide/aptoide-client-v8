@@ -51,6 +51,7 @@ import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
 import com.aptoide.android.aptoidegames.drawables.backgrounds.getLevelUpBackground
+import com.aptoide.android.aptoidegames.drawables.backgrounds.levelUpBackgroundColor
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getLeaderboardIcon
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.levels.getLevelEightCoinIcon
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.levels.getLevelFiveCoinIcon
@@ -205,7 +206,9 @@ private fun LevelUpHeaderSection(
   ) {
     Image(
       modifier = Modifier.fillMaxWidth(),
-      imageVector = getLevelUpBackground(level = gamificationStats.level + 1),
+      imageVector = getLevelUpBackground(
+        levelColor = levelUpBackgroundColor(gamificationStats.level + 1)
+      ),
       contentDescription = null,
       contentScale = ContentScale.FillWidth
     )

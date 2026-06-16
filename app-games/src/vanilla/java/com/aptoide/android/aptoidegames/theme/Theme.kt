@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.view.WindowCompat
+import com.aptoide.android.aptoidegames.theme.FixedColors
 
 @Suppress("unused")
 object AppTheme {
@@ -53,8 +54,8 @@ fun AptoideTheme(
       primary = palette.Primary,
       primaryVariant = palette.Secondary,
       secondary = palette.Secondary,
-      onPrimary = Color(0xFFFFFFFF),
-      onSecondary = Color(0xFFFFFFFF),
+      onPrimary = FixedColors.White,
+      onSecondary = FixedColors.White,
       surface = palette.Black,
       onSurface = palette.White,
       error = palette.Error,

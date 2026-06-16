@@ -65,6 +65,7 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.AppItem
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
 
 private const val ARTICLE_ID = "id"
@@ -176,7 +177,7 @@ private fun ArticleViewContent(
             elevation = 0.dp
           ) {
             Image(
-              imageVector = getLeftArrow(Palette.Primary, Color(0xFF1E1E26)),
+              imageVector = getLeftArrow(Palette.Primary, FixedColors.Dark),
               contentDescription = stringResource(id = R.string.button_back_title),
               modifier = Modifier
                 .clickable(onClick = navigateBack)

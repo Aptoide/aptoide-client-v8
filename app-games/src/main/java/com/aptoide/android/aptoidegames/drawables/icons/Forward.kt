@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.vector.group
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
 
 @Preview
@@ -30,7 +31,7 @@ fun TestForward() {
 @Composable
 fun getForward(
   color1: Color = Palette.Primary,
-  color2: Color = Color(0xFF1E1E26)
+  color2: Color = FixedColors.Dark
 ): ImageVector = ImageVector.Builder(
   name = "Arrowforward",
   defaultWidth = 32.0.dp,

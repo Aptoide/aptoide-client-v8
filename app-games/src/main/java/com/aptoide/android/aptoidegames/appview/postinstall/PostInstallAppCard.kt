@@ -16,7 +16,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
@@ -30,6 +29,7 @@ import com.aptoide.android.aptoidegames.drawables.icons.getBonusIconRight
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
@@ -55,7 +55,7 @@ fun PostInstallAppCard(
           Image(
             imageVector = getBonusIconRight(
               iconColor = Palette.Primary,
-              outlineColor = Color(0xFF1E1E26),
+              outlineColor = FixedColors.Dark,
               backgroundColor = Palette.Secondary
             ),
             contentDescription = null,

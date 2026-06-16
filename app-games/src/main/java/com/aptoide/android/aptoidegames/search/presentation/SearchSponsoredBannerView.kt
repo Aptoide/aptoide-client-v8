@@ -40,6 +40,7 @@ import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.drawables.icons.getRatingStar
 import com.aptoide.android.aptoidegames.feature_rtb.data.RTBApp
 import com.aptoide.android.aptoidegames.theme.AGTypography
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -137,7 +138,7 @@ private fun AGSponsoredBanner(
     Box(
       modifier = Modifier
         .fillMaxSize()
-        .background(Color.Black.copy(alpha = overlayAlpha))
+        .background(FixedColors.Scrim.copy(alpha = overlayAlpha))
     )
 
     Row(
@@ -260,7 +261,7 @@ private fun VanillaSponsoredBanner(
       Box(
         modifier = Modifier
           .fillMaxSize()
-          .background(Color.Black.copy(alpha = (overlayAlpha + 0.35f).coerceIn(0f, 0.7f)))
+          .background(FixedColors.Scrim.copy(alpha = (overlayAlpha + 0.35f).coerceIn(0f, 0.7f)))
       )
 
       Row(
@@ -277,9 +278,9 @@ private fun VanillaSponsoredBanner(
           Text(
             text = appName,
             style = AGTypography.DescriptionGames,
-            // Literal white: Palette.White resolves to dark 0xFF1E1E26 in
+            // Theme-invariant white: Palette.White resolves to dark in
             // Vanilla's light theme, which would be illegible on the overlay.
-            color = Color.White,
+            color = FixedColors.White,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.widthIn(max = 204.dp),
@@ -289,14 +290,14 @@ private fun VanillaSponsoredBanner(
             verticalAlignment = Alignment.CenterVertically,
           ) {
             Image(
-              imageVector = getRatingStar(Color.White),
+              imageVector = getRatingStar(FixedColors.White),
               contentDescription = null,
               modifier = Modifier.size(16.dp),
             )
             Text(
               text = String.format(Locale.US, "%.1f", rating),
               style = AGTypography.InputsXS,
-              color = Color.White,
+              color = FixedColors.White,
               modifier = Modifier.padding(start = 2.dp),
             )
           }
@@ -312,7 +313,7 @@ private fun VanillaSponsoredBanner(
           Text(
             text = stringResource(R.string.search_sponsored_install),
             style = AGTypography.InputsS,
-            color = Color(0xFF1E1E26),
+            color = FixedColors.Dark,
           )
         }
       }

@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.levels.tier.getPlusTierIcon
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.levels.tier.getTierCoinIcon
+import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.levels.tier.tierCoinColors
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.levels.tier.getVipTierCoinIcon
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.level_up.LevelProperties
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.level_up.isVIP
@@ -37,7 +38,7 @@ fun TierBadge(levelProperties: LevelProperties) {
       imageVector = if (levelProperties.isVIP()) {
         getVipTierCoinIcon()
       } else {
-        getTierCoinIcon(levelProperties.level)
+        getTierCoinIcon(tierCoinColors(levelProperties.level))
       },
       contentDescription = null
     )

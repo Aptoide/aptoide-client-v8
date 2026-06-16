@@ -55,6 +55,7 @@ import com.aptoide.android.aptoidegames.installer.presentation.InstallViewApkfyR
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.mmp.WithUTM
 import com.aptoide.android.aptoidegames.theme.AGTypography
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 
@@ -292,7 +293,7 @@ private fun ApkfyRecommendationInstallItem(app: App) {
         Image(
           imageVector = getBonusIconRight(
             iconColor = Palette.Primary,
-            outlineColor = Color(0xFF1E1E26),
+            outlineColor = FixedColors.Dark,
             backgroundColor = Palette.Secondary
           ),
           contentDescription = null,

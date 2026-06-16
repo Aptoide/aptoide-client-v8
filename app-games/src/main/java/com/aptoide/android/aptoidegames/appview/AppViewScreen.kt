@@ -125,6 +125,7 @@ import com.aptoide.android.aptoidegames.play_and_earn.presentation.rememberIsPac
 import com.aptoide.android.aptoidegames.play_and_earn.rememberShouldShowPlayAndEarn
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.videos.presentation.AppViewYoutubePlayer
 
@@ -423,7 +424,7 @@ fun AppViewContent(
       featureGraphicContent()
     }
     Image(
-      imageVector = getLeftArrow(Palette.Primary, Color(0xFF1E1E26)),
+      imageVector = getLeftArrow(Palette.Primary, FixedColors.Dark),
       contentDescription = stringResource(id = R.string.button_back_title),
       contentScale = ContentScale.Crop,
       modifier = Modifier
@@ -513,7 +514,7 @@ fun AppViewContent(
           Image(
             imageVector = getBonusIconLeft(
               iconColor = Palette.Primary,
-              outlineColor = Color(0xFF1E1E26),
+              outlineColor = FixedColors.Dark,
               backgroundColor = Palette.Secondary
             ),
             contentDescription = null,
@@ -532,12 +533,12 @@ fun AppViewContent(
               "20" //TODO Hardcoded value (should come from backend in the future)
             ),
             style = AGTypography.InputsM,
-            color = Color(0xFF1E1E26),
+            color = FixedColors.Dark,
             modifier = Modifier
               .align(Alignment.Bottom)
               .offset(x = (-12).dp)
               .clip(RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp))
-              .background(Color(0xFFFE6446))
+              .background(FixedColors.VanillaOrange)
               .padding(start = 20.dp, end = 12.dp, top = 6.dp, bottom = 6.dp)
           )
         } else {

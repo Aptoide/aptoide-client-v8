@@ -35,6 +35,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.transform.Transformation
 import com.aptoide.android.aptoidegames.drawables.icons.getLeftArrow
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
 import net.engawapg.lib.zoomable.rememberZoomState
 import net.engawapg.lib.zoomable.zoomable
@@ -199,7 +200,7 @@ fun FullscreenImageViewer(
       }
 
       Image(
-        imageVector = getLeftArrow(Palette.Primary, Color(0xFF1E1E26)),
+        imageVector = getLeftArrow(Palette.Primary, FixedColors.Dark),
         contentDescription = stringResource(id = R.string.button_back_title),
         contentScale = ContentScale.Crop,
         modifier = Modifier

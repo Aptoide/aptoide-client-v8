@@ -14,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -23,6 +22,7 @@ import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusPromotional
 import com.aptoide.android.aptoidegames.theme.AGTypography
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
@@ -48,13 +48,13 @@ fun AptoidePromotionalFeatureGraphicImage(
     Text(
       text = label,
       style = AGTypography.BodyBold,
-      color = if (isVanilla) Color(0xFFFFFFFF) else Palette.Primary,
+      color = if (isVanilla) FixedColors.White else Palette.Primary,
       maxLines = 1,
       overflow = TextOverflow.Ellipsis,
       modifier = Modifier
         .padding(start = 8.dp, top = 8.dp)
         .let { if (isVanilla) it.clip(RoundedCornerShape(16.dp)) else it }
-        .background(color = if (isVanilla) Color(0xFF1E1E26) else Palette.Black)
+        .background(color = if (isVanilla) FixedColors.Dark else Palette.Black)
         .padding(horizontal = 6.dp, vertical = 4.dp)
     )
 
@@ -66,23 +66,23 @@ fun AptoidePromotionalFeatureGraphicImage(
             .align(Alignment.TopEnd)
             .padding(top = 16.dp)
             .clip(RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp))
-            .background(Color(0xFFFE6446))
+            .background(FixedColors.VanillaOrange)
             .padding(horizontal = 12.dp, vertical = 6.dp)
         ) {
           Text(
             text = stringResource(R.string.promotional_bonus_up_to),
             style = AGTypography.InputsXSRegular,
-            color = Color(0xFF1E1E26),
+            color = FixedColors.Dark,
           )
           Text(
             text = stringResource(R.string.promotional_bonus_amount),
             style = AGTypography.Title,
-            color = Color(0xFF1E1E26),
+            color = FixedColors.Dark,
           )
           Text(
             text = stringResource(R.string.promotional_bonus_label),
             style = AGTypography.InputsXS,
-            color = Color(0xFF1E1E26),
+            color = FixedColors.Dark,
           )
         }
       } else {

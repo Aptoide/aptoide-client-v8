@@ -2,6 +2,7 @@ package com.aptoide.android.aptoidegames.drawables.icons
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.PathBuilder
+import com.aptoide.android.aptoidegames.theme.FixedColors
 
 /**
  * Vanilla brand styling for the AppCoins bonus gift icons: a circular
@@ -10,10 +11,10 @@ import androidx.compose.ui.graphics.vector.PathBuilder
  * notched-rectangle background instead.
  */
 @Suppress("UNUSED_PARAMETER")
-fun bonusIconBackgroundColor(fallback: Color): Color = Color(0xFFFE6446)
+fun bonusIconBackgroundColor(fallback: Color): Color = FixedColors.VanillaOrange
 
 @Suppress("UNUSED_PARAMETER")
-fun bonusIconForegroundColor(fallback: Color): Color = Color(0xFFF7CB5A)
+fun bonusIconForegroundColor(fallback: Color): Color = FixedColors.VanillaGiftGold
 
 fun PathBuilder.bonusIconRightOutline() {
   moveTo(16f, 0f)

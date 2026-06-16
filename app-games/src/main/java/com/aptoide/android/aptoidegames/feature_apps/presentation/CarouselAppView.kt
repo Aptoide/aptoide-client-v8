@@ -49,6 +49,7 @@ import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.installer.presentation.ProgressText
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.videos.presentation.CarouselAppYoutubePlayer
 
@@ -204,7 +205,7 @@ private fun CarouselAppView(
         Image(
           imageVector = getBonusIconRight(
             iconColor = Palette.Primary,
-            outlineColor = Color(0xFF1E1E26),
+            outlineColor = FixedColors.Dark,
             backgroundColor = Palette.Secondary
           ),
           contentDescription = null,

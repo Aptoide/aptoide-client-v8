@@ -8,12 +8,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.drawables.icons.getLeftArrow
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
@@ -26,7 +26,7 @@ fun ChatBackButton(
       .fillMaxWidth(),
   ) {
     Image(
-      imageVector = getLeftArrow(Palette.Primary, Color(0xFF1E1E26)),
+      imageVector = getLeftArrow(Palette.Primary, FixedColors.Dark),
       contentDescription = stringResource(id = R.string.button_back_title),
       contentScale = ContentScale.Crop,
       modifier = Modifier

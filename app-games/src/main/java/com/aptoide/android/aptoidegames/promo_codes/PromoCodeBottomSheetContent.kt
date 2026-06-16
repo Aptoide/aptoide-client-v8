@@ -18,7 +18,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -46,6 +45,7 @@ import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.promo_codes.analytics.rememberPromoCodeAnalytics
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
 
 class PromoCodeBottomSheet(
@@ -239,7 +239,7 @@ private fun WalletInstallSection(
     Image(
       imageVector = getBonusIcon(
         giftColor = Palette.Primary,
-        outlineColor = Color(0xFF1E1E26),
+        outlineColor = FixedColors.Dark,
       ),
       contentDescription = null,
     )

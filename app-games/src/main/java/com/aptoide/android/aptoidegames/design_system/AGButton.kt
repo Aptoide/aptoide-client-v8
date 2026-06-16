@@ -36,6 +36,7 @@ import cm.aptoide.pt.extensions.getRandomString
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
 
 private val buttonShape: CornerBasedShape
@@ -273,7 +274,7 @@ fun AGSmallButtonPreview() {
   enabled = enabled,
   color = Palette.Primary,
   title = title,
-  textStyle = AGTypography.InputsL.copy(color = Color(0xFF1E1E26))
+  textStyle = AGTypography.InputsL.copy(color = FixedColors.Dark)
 )
 
 @Composable
@@ -349,7 +350,7 @@ fun SecondaryOutlinedButton(
   enabled = enabled,
   color = Palette.Primary,
   title = title,
-  textStyle = AGTypography.InputsS.copy(color = Color(0xFF1E1E26))
+  textStyle = AGTypography.InputsS.copy(color = FixedColors.Dark)
 )
 
 @Composable fun AccentSmallButton(

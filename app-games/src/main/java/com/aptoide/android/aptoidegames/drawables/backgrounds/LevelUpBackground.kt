@@ -14,18 +14,33 @@ import androidx.compose.ui.graphics.vector.group
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.theme.DarkPalette
+import com.aptoide.android.aptoidegames.theme.Palette
 
 @Preview
 @Composable
 private fun TestLevelUpBackground() {
   Image(
-    imageVector = getLevelUpBackground(),
+    imageVector = getLevelUpBackground(levelUpBackgroundColor(0)),
     contentDescription = null,
   )
 }
 
-fun getLevelUpBackground(level: Int = 0): ImageVector = ImageVector.Builder(
+/**
+ * Resolves the level-tinted background color from [Palette] at the composable
+ * call-site, so the non-composable [getLevelUpBackground] builder can stay free
+ * of palette access.
+ */
+@Composable
+fun levelUpBackgroundColor(level: Int): Color = when (level) {
+  1, 2 -> Palette.Orange150
+  3, 4 -> Palette.Blue100
+  5, 6 -> Palette.Yellow100
+  7, 8 -> Palette.Blue100
+  9, 10 -> Palette.Yellow100
+  else -> Palette.Orange150
+}
+
+fun getLevelUpBackground(levelColor: Color): ImageVector = ImageVector.Builder(
   name = "LevelUpBackground",
   defaultWidth = 360.0.dp,
   defaultHeight = 294.0.dp,
@@ -35,7 +50,7 @@ fun getLevelUpBackground(level: Int = 0): ImageVector = ImageVector.Builder(
   group {
     path(
       fill = radialGradient(
-        0.0f to getLevelColor(level),
+        0.0f to levelColor,
         0.84f to Color(0x00595959),
         center = Offset(179.85f, 128.95f),
         radius = 176.08f
@@ -188,12 +203,3 @@ fun getLevelUpBackground(level: Int = 0): ImageVector = ImageVector.Builder(
     }
   }
 }.build()
-
-private fun getLevelColor(level: Int) = when (level) {
-  1, 2 -> DarkPalette.Orange150
-  3, 4 -> DarkPalette.Blue100
-  5, 6 -> DarkPalette.Yellow100
-  7, 8 -> DarkPalette.Blue100
-  9, 10 -> DarkPalette.Yellow100
-  else -> DarkPalette.Orange150
-}

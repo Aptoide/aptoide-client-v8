@@ -47,6 +47,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import cm.aptoide.pt.extensions.runPreviewable
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.drawables.icons.getLeftArrow
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.videos.presentation.VideoSettingsViewModel
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
@@ -264,7 +265,7 @@ private fun GameGenieYoutubePlayerContent(
           }
         )
         Image(
-          imageVector = getLeftArrow(Palette.Primary, Color(0xFF1E1E26)),
+          imageVector = getLeftArrow(Palette.Primary, FixedColors.Dark),
           contentDescription = stringResource(id = R.string.button_back_title),
           contentScale = ContentScale.Crop,
           modifier = Modifier

@@ -23,7 +23,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
@@ -72,6 +71,7 @@ import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.mmp.UTMContext
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 
@@ -255,8 +255,8 @@ fun MoreBonusSectionView(
         children = {
           Image(
             imageVector = getBonusIcon(
-              outlineColor = Color(0xFF1E1E26),
-              giftColor = if (isVanilla) Color(0xFFF7CB5A) else Palette.Primary,
+              outlineColor = FixedColors.Dark,
+              giftColor = if (isVanilla) FixedColors.VanillaGiftGold else Palette.Primary,
             ),
             contentDescription = null,
             modifier = Modifier.size(16.dp),
@@ -272,15 +272,15 @@ fun MoreBonusSectionView(
           modifier = Modifier
             .height(40.dp)
             .clip(RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp))
-            .background(Color(0xFFFE6446))
+            .background(FixedColors.VanillaOrange)
             .padding(start = 16.dp, end = 16.dp),
           verticalAlignment = Alignment.CenterVertically,
         ) {
           Image(
             modifier = Modifier.padding(end = 8.dp),
             imageVector = getBonusIcon(
-              giftColor = Color(0xFFF7CB5A),
-              outlineColor = Color(0xFF1E1E26),
+              giftColor = FixedColors.VanillaGiftGold,
+              outlineColor = FixedColors.Dark,
             ),
             contentDescription = null,
           )
@@ -290,7 +290,7 @@ fun MoreBonusSectionView(
               "20" //TODO Hardcoded value (should come from backend in the future)
             ),
             style = AGTypography.Title,
-            color = Color(0xFF1E1E26),
+            color = FixedColors.Dark,
           )
         }
       }

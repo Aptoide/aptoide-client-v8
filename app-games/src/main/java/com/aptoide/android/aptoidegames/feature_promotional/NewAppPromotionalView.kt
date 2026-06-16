@@ -14,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.style.TextOverflow
@@ -44,6 +43,7 @@ import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.installer.presentation.ProgressText
 import com.aptoide.android.aptoidegames.theme.AGTypography
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
@@ -146,8 +146,8 @@ private fun AppInfo(app: App) {
     ) {
       Image(
         imageVector = getBonusIcon(
-          giftColor = if (BuildConfig.FLAVOR_brand == "vanilla") Color(0xFFF7CB5A) else Palette.Primary,
-          outlineColor = Color(0xFF1E1E26),
+          giftColor = if (BuildConfig.FLAVOR_brand == "vanilla") FixedColors.VanillaGiftGold else Palette.Primary,
+          outlineColor = FixedColors.Dark,
         ),
         contentDescription = null,
         modifier = Modifier

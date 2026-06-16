@@ -24,7 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -50,6 +49,7 @@ import com.aptoide.android.aptoidegames.home.LoadingBundleView
 import com.aptoide.android.aptoidegames.home.analytics.meta
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
@@ -114,7 +114,7 @@ fun BonusSectionGeneralizedView(
         children = {
           Image(
             imageVector = getBonusIcon(
-              outlineColor = Color(0xFF1E1E26),
+              outlineColor = FixedColors.Dark,
               giftColor = Palette.Primary,
             ),
             contentDescription = null,
@@ -157,7 +157,7 @@ fun BonusSectionHeader(
           modifier = Modifier
             .fillMaxHeight()
             .clip(RoundedCornerShape(16.dp))
-            .background(Color(0xFFFE6446))
+            .background(FixedColors.VanillaOrange)
             .padding(horizontal = 16.dp),
           verticalAlignment = Alignment.CenterVertically,
           horizontalArrangement = Arrangement.Start
@@ -165,8 +165,8 @@ fun BonusSectionHeader(
           Image(
             modifier = Modifier.padding(end = 8.dp),
             imageVector = getBonusIcon(
-              giftColor = Color(0xFFF7CB5A),
-              outlineColor = Color(0xFF1E1E26),
+              giftColor = FixedColors.VanillaGiftGold,
+              outlineColor = FixedColors.Dark,
             ),
             contentDescription = null,
           )
@@ -176,7 +176,7 @@ fun BonusSectionHeader(
               "20" //TODO Hardcoded value (should come from backend in the future)
             ),
             style = AGTypography.Title,
-            color = Color(0xFF1E1E26),
+            color = FixedColors.Dark,
           )
         }
       } else {
@@ -198,7 +198,7 @@ fun BonusSectionHeader(
             modifier = Modifier.padding(horizontal = 16.dp),
             imageVector = getBonusIcon(
               giftColor = Palette.Primary,
-              outlineColor = Color(0xFF1E1E26),
+              outlineColor = FixedColors.Dark,
             ),
             contentDescription = null,
           )

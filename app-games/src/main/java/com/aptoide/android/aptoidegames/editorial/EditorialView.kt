@@ -22,7 +22,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.CollectionInfo
 import androidx.compose.ui.semantics.collectionInfo
 import androidx.compose.ui.semantics.semantics
@@ -47,6 +46,7 @@ import com.aptoide.android.aptoidegames.home.analytics.meta
 import com.aptoide.android.aptoidegames.mmp.WithUTM
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
@@ -204,13 +204,13 @@ fun EditorialsViewCard(
     Text(
       text = articleMeta.caption,
       style = AGTypography.BodyBold,
-      color = if (isVanilla) Color(0xFFFFFFFF) else Palette.Primary,
+      color = if (isVanilla) FixedColors.White else Palette.Primary,
       maxLines = 1,
       overflow = TextOverflow.Ellipsis,
       modifier = Modifier
         .padding(start = 8.dp, top = 8.dp)
         .let { if (isVanilla) it.clip(RoundedCornerShape(16.dp)) else it }
-        .background(color = if (isVanilla) Color(0xFF1E1E26) else Palette.Black)
+        .background(color = if (isVanilla) FixedColors.Dark else Palette.Black)
         .padding(horizontal = 8.dp, vertical = 4.dp)
     )
   }

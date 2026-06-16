@@ -14,7 +14,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
@@ -25,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.drawables.icons.getLeftArrow
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameCompanion
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
 import kotlin.math.roundToInt
 
@@ -68,7 +68,7 @@ private fun BackButton(
   onBottomPositioned: ((Int) -> Unit)?
 ) {
   Image(
-    imageVector = getLeftArrow(Palette.Primary, Color(0xFF1E1E26)),
+    imageVector = getLeftArrow(Palette.Primary, FixedColors.Dark),
     contentDescription = stringResource(id = R.string.button_back_title),
     contentScale = ContentScale.Crop,
     modifier = Modifier
