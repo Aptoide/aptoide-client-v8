@@ -145,6 +145,10 @@ Any change in `:app-games/src/main/` is shared between **both** brand flavors (`
 
 **Skip the second flavor only when** the change is physically in `src/<flavor>/…` and the diff cannot reach the other source set.
 
+For non-visual artifacts (e.g. the per-flavor User-Agent), there's no debug HTTP header-logging interceptor — verify by adding a temporary `Log.d` in the header builder/interceptor, capture via `adb logcat`, then revert.
+
+**Brand divergence via source sets**: prefer per-source-set files over `if (BuildConfig.FLAVOR_brand == "vanilla")` branches, especially for icons/drawables/config. Define the same symbol in both `src/vanilla/` and `src/aptoideGames/`. Examples: `theme/AptoidePalette.kt`, `drawables/icons/BonusIconBrand.kt`, `di/WidgetsConfig.kt` (`WIDGETS_URL_PATH`), `network/UserAgentBrand.kt` (`USER_AGENT_BRAND`).
+
 ## Common Patterns & Conventions
 
 ### Commit Messages
@@ -157,6 +161,20 @@ Format: `[AND-XXX] Short description` (Jira ticket prefix)
 - **Naming**: snake_case with feature prefix: `{feature}_{component}_{property}` (e.g., `appview_info_version_name_title`, `post_install_sponsored_label`)
 - **Server-provided strings**: use `"text".translateOrKeep(LocalContext.current)`
 
+### Theming & Brand Colors
+
+**Never hardcode `Color(0x…)` / `Color.White` / `Color.Black` in UI** — PRs get rejected for it. And don't "fix" a literal by blindly reverting to `Palette.Black`/`Palette.White`: those **invert** in Vanilla's light theme (`Palette.Black`→white, `Palette.White`→dark), which is live via `isSystemInDarkTheme()`. Pick the right tool by intent:
+
+| Need | Use | Behaviour |
+|------|-----|-----------|
+| Brand accent | `Palette.Primary` | lime in `aptoideGames`, orange in `vanilla`; does NOT invert |
+| Adapts to light/dark (icon/text on the screen background) | `Palette.Black` / `Palette.White` | theme-adaptive; **invert** in vanilla light |
+| Fixed color regardless of theme (text/icons on `Palette.Primary`, AppCoins gift outlines, labels/overlays on images) | `FixedColors` (`theme/FixedColors.kt`: `Dark`, `White`, `Scrim`, `VanillaOrange`, `VanillaGiftGold`) | theme-invariant; plain object, also usable from non-composable code |
+
+- **`Palette` is `@Composable`** — it can't be called from `ImageVector`/`PathBuilder`/`Notification` builders. Pattern: the builder takes a `Color` param; the composable call-site resolves `Palette.X`/`FixedColors.X` and passes it down (see `getLeftArrow`, `getBonusIconRight`, `levelUpBackgroundColor`+`getLevelUpBackground`, `tierCoinColors`+`getTierCoinIcon`). Do **not** reference `DarkPalette`/`LightPalette` directly as a workaround.
+- **`Icon(tint = …)` overrides the vector's own fills** — the whole ImageVector renders in the tint color. Use `Image` to keep a vector's internal colors.
+- Recolor AG-lime (`0xFFC8ED4F`) elements for Vanilla by routing them through `Palette.Primary`, not a new literal.
+
 ### AppCoins Billing Indicator
 
 Any app card showing an icon must include the gift overlay for apps with `app.isAppCoins`:
@@ -167,7 +185,7 @@ Box(contentAlignment = Alignment.TopEnd) {
     Image(
       imageVector = getBonusIconRight(
         iconColor = Palette.Primary,
-        outlineColor = Palette.Black,
+        outlineColor = FixedColors.Dark, // theme-invariant; Palette.Black would invert to white in vanilla light
         backgroundColor = Palette.Secondary
       ),
       contentDescription = null,
