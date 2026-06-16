@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.gamegenie.analytics.rememberGameGenieAnalytics
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.DrawerContent
+import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.getGameGenieAiToolbarIcon
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import kotlinx.coroutines.launch
@@ -130,7 +131,7 @@ fun ConversationsDrawer(
             )
             Spacer(modifier = Modifier.width(4.dp))
             Image(
-              painter = painterResource(R.drawable.gamegenie_ai_toolbar_icon),
+              imageVector = getGameGenieAiToolbarIcon(Palette.Primary),
               contentDescription = null,
               )
           }

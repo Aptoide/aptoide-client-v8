@@ -65,7 +65,7 @@ fun CompanionGameChoice(
           verticalAlignment = Alignment.CenterVertically
         ) {
           Image(
-            imageVector = getCompanionChessIcon(),
+            imageVector = getCompanionChessIcon(Palette.Primary),
             contentDescription = null,
             modifier = Modifier.size(24.dp)
           )
