@@ -88,10 +88,12 @@ class UpdatesNotificationBuilder @Inject constructor(
         )
       }
     val notificationId = "Updates".hashCode()
+    val largeIcon = updates.firstOrNull()?.icon?.let { imageDownloader.downloadImageFrom(it) }
     val notification = buildNotification(
       requestCode = notificationId,
       contentText = context.getString(R.string.update_notification_body),
       contentTitle = title,
+      largeIcon = largeIcon,
       notificationTag = UPDATES_NOTIFICATION_TAG
     )
 
