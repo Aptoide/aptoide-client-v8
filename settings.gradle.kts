@@ -58,6 +58,7 @@ include(
   ":feature-wallet:datastore",
   ":play-and-earn:campaigns",
   ":play-and-earn:exchange",
+  ":play-and-earn:events",
   ":feature-wallet:authorization",
   ":feature-wallet:wallet-info",
   ":feature-wallet:gamification",
