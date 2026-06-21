@@ -278,6 +278,7 @@ dependencies {
   implementation(projects.playAndEarn.campaigns)
   implementation(projects.playAndEarn.sessions)
   implementation(projects.playAndEarn.exchange)
+  implementation(projects.playAndEarn.events)
   implementation(projects.featureWallet.authorization)
   implementation(projects.featureWallet.walletInfo)
   implementation(projects.featureWallet.gamification)
