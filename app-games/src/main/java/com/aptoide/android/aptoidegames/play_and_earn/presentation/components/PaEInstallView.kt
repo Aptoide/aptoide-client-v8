@@ -41,6 +41,7 @@ import cm.aptoide.pt.download_view.presentation.downloadUiStates
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
+import java.math.BigDecimal
 import com.aptoide.android.aptoidegames.R.string
 import com.aptoide.android.aptoidegames.design_system.PrimaryButton
 import com.aptoide.android.aptoidegames.design_system.PrimarySmallButton
@@ -86,6 +87,7 @@ private fun PaEInstallViewProcessingPreview() {
 fun PaEInstallView(
   app: App,
   modifier: Modifier = Modifier,
+  rewardAmount: BigDecimal? = null,
   onInstallStarted: () -> Unit = {},
   onCancel: () -> Unit = {},
   navigate: ((String) -> Unit)? = null,
@@ -99,6 +101,7 @@ fun PaEInstallView(
   PaEInstallViewContent(
     installViewState = installViewState,
     navigate = navigate,
+    rewardAmount = rewardAmount,
     modifier = modifier.clearAndSetSemantics {
       installViewState.actionLabel?.let {
         onClick(label = it) {
@@ -126,6 +129,7 @@ private fun PaEInstallViewContent(
   installViewState: InstallViewState,
   modifier: Modifier = Modifier,
   navigate: ((String) -> Unit)? = null,
+  rewardAmount: BigDecimal? = null,
   verticalSpacing: Dp = 8.dp,
   horizontalSpacing: Dp = 24.dp,
 ) = Box(
@@ -217,6 +221,7 @@ private fun PaEInstallViewContent(
     is DownloadUiState.Installed -> PaEPlayButton(
       onClick = state.open,
       navigate = navigate,
+      rewardAmount = rewardAmount,
       modifier = Modifier.fillMaxWidth(),
     )
 
@@ -246,13 +251,20 @@ private fun PaEPlayButton(
   onClick: () -> Unit,
   navigate: ((String) -> Unit)?,
   modifier: Modifier = Modifier,
+  rewardAmount: BigDecimal? = null,
 ) {
   val isPaEReady = rememberPlayAndEarnReady()
   val paeSetupRoute = rememberPlayAndEarnSetupRoute()
   val context = LocalContext.current
 
+  val title = if (rewardAmount != null) {
+    stringResource(string.play_and_earn_play_and_earn_up_to_button, rewardAmount.toDouble())
+  } else {
+    stringResource(string.play_and_earn_play_button)
+  }
+
   PaELargeCoinButton(
-    title = stringResource(string.play_and_earn_play_button),
+    title = title,
     onClick = {
       if (isPaEReady || navigate == null) {
         if (isPaEReady) {

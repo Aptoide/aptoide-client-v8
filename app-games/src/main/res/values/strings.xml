@@ -454,6 +454,7 @@
   <string name="play_and_earn_awesome_button">Awesome</string>
   <string name="play_and_earn_earned_balance_body">You just earned $1 in Aptoide Balance to use on your games</string>
   <string name="play_and_earn_play_button">Play</string>
+  <string name="play_and_earn_play_and_earn_up_to_button">Play &amp; Earn up to $%1$.2f</string>
   <string name="play_and_earn_install_button">Install</string>
   <string name="play_and_earn_notification_recording_title">Tracking playtime for rewards</string>
   <string name="play_and_earn_notification_recording_body">Your gameplay time is being counted towards your missions.</string>
