@@ -78,6 +78,7 @@ import cm.aptoide.pt.feature_apps.domain.Rating
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.rememberApp
 import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
+import cm.aptoide.pt.play_and_earn.exchange.presentation.rememberExchangeRate
 import com.aptoide.android.aptoidegames.APP_LINK_HOST
 import com.aptoide.android.aptoidegames.APP_LINK_SCHEMA
 import com.aptoide.android.aptoidegames.AppIconImage
@@ -125,6 +126,7 @@ import com.aptoide.android.aptoidegames.play_and_earn.presentation.app_view.AppR
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaEInstallView
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.animations.PaEAnimatedGift
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rememberIsPackageInPaE
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.rememberPaEApp
 import com.aptoide.android.aptoidegames.play_and_earn.rememberShouldShowPlayAndEarn
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
@@ -453,9 +455,14 @@ fun AppViewContent(
       AppPresentationView(app)
 
       if (isGamified) {
+        val totalPrizes = rememberPaEApp(app.packageName)?.totalPrizes
+        // Convert the prize units to their monetary value via the exchange rate.
+        val rewardAmount = rememberExchangeRate((totalPrizes ?: 0).toLong())
+          ?.takeIf { it.signum() > 0 }
         PaEInstallView(
           modifier = Modifier.padding(top = 24.dp, start = 16.dp, end = 16.dp),
           app = app,
+          rewardAmount = rewardAmount,
           navigate = navigate
         )
       } else {
