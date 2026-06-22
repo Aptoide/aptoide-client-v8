@@ -72,6 +72,7 @@ internal object RepositoryModule {
   @Provides
   fun providePaECampaignsDatabase(@ApplicationContext appContext: Context): PaECampaignsDatabase {
     return Room.databaseBuilder(appContext, PaECampaignsDatabase::class.java, "pae_campaigns.db")
+      .fallbackToDestructiveMigration(true)
       .build()
   }
 }
