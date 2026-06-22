@@ -2,6 +2,7 @@ package cm.aptoide.pt.campaigns.data.model
 
 import androidx.annotation.Keep
 import com.google.gson.JsonObject
+import com.google.gson.annotations.SerializedName
 
 @Keep
 internal data class PaEMissionsJson(
@@ -24,7 +25,7 @@ internal data class PaEMissionJson(
 internal data class PaEMissionProgressJson(
   val current: Int?,
   val target: Int,
-  val type: String,
+  val type: PaEMissionProgressTypeJson,
   val status: PaEMissionStatusJson?
 )
 
@@ -33,6 +34,12 @@ internal enum class PaEMissionTypeJson {
   PLAY_TIME,
   STREAK,
   CHECKPOINT
+}
+
+@Keep
+internal enum class PaEMissionProgressTypeJson {
+  @SerializedName("gxp") GXP,
+  @SerializedName("seconds") SECONDS
 }
 
 @Keep
