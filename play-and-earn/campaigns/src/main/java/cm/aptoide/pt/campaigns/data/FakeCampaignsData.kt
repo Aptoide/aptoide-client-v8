@@ -5,6 +5,7 @@ import cm.aptoide.pt.campaigns.domain.PaEBundle
 import cm.aptoide.pt.campaigns.domain.PaEBundles
 import cm.aptoide.pt.campaigns.domain.PaEMission
 import cm.aptoide.pt.campaigns.domain.PaEMissionProgress
+import cm.aptoide.pt.campaigns.domain.PaEMissionProgressType
 import cm.aptoide.pt.campaigns.domain.PaEMissionStatus
 import cm.aptoide.pt.campaigns.domain.PaEMissionType
 import cm.aptoide.pt.campaigns.domain.PaEMissions
@@ -74,7 +75,7 @@ val paeCheckpoint1 = PaEMission(
   progress = PaEMissionProgress(
     current = 30,
     target = 50,
-    type = "Checkpoint",
+    type = PaEMissionProgressType.GXP,
     status = PaEMissionStatus.IN_PROGRESS
   )
 )
@@ -99,7 +100,7 @@ val paeMission2 = PaEMission(
   progress = PaEMissionProgress(
     current = 30,
     target = 50,
-    type = "Mission",
+    type = PaEMissionProgressType.SECONDS,
     status = PaEMissionStatus.IN_PROGRESS
   )
 )
@@ -114,7 +115,7 @@ val paeMission3 = PaEMission(
   progress = PaEMissionProgress(
     current = 50,
     target = 50,
-    type = "Mission",
+    type = PaEMissionProgressType.SECONDS,
     status = PaEMissionStatus.COMPLETED
   )
 )

@@ -5,11 +5,13 @@ import cm.aptoide.pt.campaigns.data.database.model.toDomain
 import cm.aptoide.pt.campaigns.data.database.model.toEntity
 import cm.aptoide.pt.campaigns.data.model.PaEMissionJson
 import cm.aptoide.pt.campaigns.data.model.PaEMissionProgressJson
+import cm.aptoide.pt.campaigns.data.model.PaEMissionProgressTypeJson
 import cm.aptoide.pt.campaigns.data.model.PaEMissionStatusJson
 import cm.aptoide.pt.campaigns.data.model.PaEMissionTypeJson
 import cm.aptoide.pt.campaigns.data.model.PaEMissionsJson
 import cm.aptoide.pt.campaigns.domain.PaEMission
 import cm.aptoide.pt.campaigns.domain.PaEMissionProgress
+import cm.aptoide.pt.campaigns.domain.PaEMissionProgressType
 import cm.aptoide.pt.campaigns.domain.PaEMissionStatus
 import cm.aptoide.pt.campaigns.domain.PaEMissionType
 import cm.aptoide.pt.campaigns.domain.PaEMissions
@@ -120,8 +122,8 @@ private fun PaEMissionJson.toDomainModel() = PaEMission(
 private fun PaEMissionProgressJson.toDomainModel() = PaEMissionProgress(
   current = current,
   target = target,
-  type = type,
-  status = this.getType()
+  type = this.getProgressType(),
+  status = this.getStatus()
 )
 
 private fun PaEMissionJson.getType() = when (type) {
@@ -130,7 +132,12 @@ private fun PaEMissionJson.getType() = when (type) {
   PaEMissionTypeJson.CHECKPOINT -> PaEMissionType.CHECKPOINT
 }
 
-private fun PaEMissionProgressJson.getType() = when (status) {
+private fun PaEMissionProgressJson.getProgressType() = when (type) {
+  PaEMissionProgressTypeJson.GXP -> PaEMissionProgressType.GXP
+  PaEMissionProgressTypeJson.SECONDS -> PaEMissionProgressType.SECONDS
+}
+
+private fun PaEMissionProgressJson.getStatus() = when (status) {
   PaEMissionStatusJson.PENDING -> PaEMissionStatus.PENDING
   PaEMissionStatusJson.IN_PROGRESS -> PaEMissionStatus.IN_PROGRESS
   PaEMissionStatusJson.COMPLETED -> PaEMissionStatus.COMPLETED

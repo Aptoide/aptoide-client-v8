@@ -20,7 +20,7 @@ data class PaEMission(
 data class PaEMissionProgress(
   val current: Int?,
   val target: Int,
-  val type: String,
+  val type: PaEMissionProgressType,
   val status: PaEMissionStatus?
 ) {
   fun getNormalizedProgress(): Float = current?.toFloat()?.div(target)?.coerceIn(0f, 1f) ?: 0f
@@ -30,6 +30,11 @@ enum class PaEMissionType {
   PLAY_TIME,
   STREAK,
   CHECKPOINT
+}
+
+enum class PaEMissionProgressType {
+  GXP,
+  SECONDS
 }
 
 enum class PaEMissionStatus {
