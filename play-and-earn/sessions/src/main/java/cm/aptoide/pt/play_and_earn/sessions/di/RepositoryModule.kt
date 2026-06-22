@@ -1,5 +1,6 @@
 package cm.aptoide.pt.play_and_earn.sessions.di
 
+import cm.aptoide.pt.aptoide_network.data.network.PlayAndEarnIdInterceptor
 import cm.aptoide.pt.aptoide_network.di.RawOkHttp
 import cm.aptoide.pt.aptoide_network.di.RewardsDomain
 import cm.aptoide.pt.environment_info.DeviceIdProvider
@@ -27,9 +28,13 @@ internal object RepositoryModule {
   fun providePaESessionsApi(
     @RawOkHttp okHttpClient: OkHttpClient,
     @RewardsDomain apiChainCatappultDomain: String,
-    walletAuthInterceptor: WalletAuthInterceptor
+    walletAuthInterceptor: WalletAuthInterceptor,
+    playAndEarnIdInterceptor: PlayAndEarnIdInterceptor
   ): SessionsApi {
-    val client = okHttpClient.newBuilder().addInterceptor(walletAuthInterceptor).build()
+    val client = okHttpClient.newBuilder()
+      .addInterceptor(walletAuthInterceptor)
+      .addInterceptor(playAndEarnIdInterceptor)
+      .build()
 
     return Retrofit.Builder()
       .client(client)
