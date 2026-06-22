@@ -8,6 +8,7 @@ import cm.aptoide.pt.aptoide_network.data.network.AABInterceptor
 import cm.aptoide.pt.aptoide_network.data.network.GetAcceptLanguage
 import cm.aptoide.pt.aptoide_network.data.network.GetUserAgent
 import cm.aptoide.pt.aptoide_network.data.network.QLogicInterceptor
+import cm.aptoide.pt.aptoide_network.data.network.PlayAndEarnIdInterceptor
 import cm.aptoide.pt.aptoide_network.data.network.QueryLangInterceptor
 import cm.aptoide.pt.aptoide_network.di.ApiChainCatappultDomain
 import cm.aptoide.pt.aptoide_network.di.BaseOkHttp
@@ -59,6 +60,8 @@ import com.aptoide.android.aptoidegames.network.AptoideAABInterceptor
 import com.aptoide.android.aptoidegames.network.AptoideGetHeaders
 import com.aptoide.android.aptoidegames.network.AptoideQLogicInterceptor
 import com.aptoide.android.aptoidegames.network.AptoideQueryLangInterceptor
+import com.aptoide.android.aptoidegames.play_and_earn.AptoidePlayAndEarnIdInterceptor
+import com.aptoide.android.aptoidegames.play_and_earn.PlayAndEarnIdProvider
 import com.aptoide.android.aptoidegames.network.repository.AdvertisingIdsRepository
 import com.aptoide.android.aptoidegames.networkPreferencesDataStore
 import com.aptoide.android.aptoidegames.permissions.AppPermissionsManager
@@ -268,6 +271,16 @@ class RepositoryModule {
   ): QueryLangInterceptor {
     return AptoideQueryLangInterceptor(
       context = appContext
+    )
+  }
+
+  @Provides
+  @Singleton
+  fun providesPlayAndEarnIdInterceptor(
+    playAndEarnIdProvider: PlayAndEarnIdProvider
+  ): PlayAndEarnIdInterceptor {
+    return AptoidePlayAndEarnIdInterceptor(
+      playAndEarnIdProvider = playAndEarnIdProvider
     )
   }
 

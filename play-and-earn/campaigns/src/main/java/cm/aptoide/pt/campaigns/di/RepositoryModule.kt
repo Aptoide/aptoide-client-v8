@@ -2,6 +2,7 @@ package cm.aptoide.pt.campaigns.di
 
 import android.content.Context
 import androidx.room.Room
+import cm.aptoide.pt.aptoide_network.data.network.PlayAndEarnIdInterceptor
 import cm.aptoide.pt.aptoide_network.di.BaseOkHttp
 import cm.aptoide.pt.aptoide_network.di.RewardsDomain
 import cm.aptoide.pt.campaigns.data.DefaultPaECampaignsRepository
@@ -31,11 +32,13 @@ internal object RepositoryModule {
   fun providePaECampaignsApi(
     @BaseOkHttp okHttpClient: OkHttpClient,
     @RewardsDomain rewardsDomain: String,
-    walletAuthInterceptor: WalletAuthInterceptor
+    walletAuthInterceptor: WalletAuthInterceptor,
+    playAndEarnIdInterceptor: PlayAndEarnIdInterceptor
   ): PaECampaignsApi {
     val client = okHttpClient
       .newBuilder()
       .addInterceptor(walletAuthInterceptor)
+      .addInterceptor(playAndEarnIdInterceptor)
       .build()
 
     return Retrofit.Builder()
