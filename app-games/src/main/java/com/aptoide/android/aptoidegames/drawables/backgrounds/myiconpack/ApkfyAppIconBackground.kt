@@ -25,6 +25,7 @@ fun ApkfyAppIconBackgroundPreview() {
   )
 }
 
+@Composable
 fun getApkfyAppIconBackground(
   color1: Color = Palette.White,
   color2: Color = Palette.Primary,

@@ -26,6 +26,7 @@ private fun TestDiamondShine() {
   )
 }
 
+@Composable
 fun getDiamondShine(color: Color = Palette.White): ImageVector = ImageVector.Builder(
   name = "DiamondShine",
   defaultWidth = 24.0.dp,

@@ -28,6 +28,7 @@ private fun MoreBonusViewHeaderPreview() {
   )
 }
 
+@Composable
 fun getMoreBonusViewHeader(
   color1: Color = Palette.Secondary,
   color2: Color = Palette.Primary,

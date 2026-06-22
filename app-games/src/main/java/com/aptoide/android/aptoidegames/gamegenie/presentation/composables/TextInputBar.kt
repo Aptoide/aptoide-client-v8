@@ -132,7 +132,7 @@ fun TextInputBar(
             }
           ) {
             Icon(
-              imageVector = getSendIconEnabled(),
+              imageVector = getSendIconEnabled(Palette.Primary),
               tint = Palette.Primary,
               contentDescription = "Send Message"
             )

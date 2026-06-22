@@ -25,6 +25,7 @@ private fun TestPaESmallLogo() {
   )
 }
 
+@Composable
 fun getPaESmallLogo(
   color1: Color = Palette.White,
   color2: Color = Palette.Secondary

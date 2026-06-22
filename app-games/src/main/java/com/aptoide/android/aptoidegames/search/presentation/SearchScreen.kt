@@ -69,6 +69,7 @@ import cm.aptoide.pt.feature_search.presentation.SingleSearchViewModel
 import cm.aptoide.pt.feature_search.presentation.singleSearchViewModel
 import cm.aptoide.pt.feature_search.utils.fixQuery
 import cm.aptoide.pt.feature_search.utils.isValidSearch
+import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.dto.BundleMeta
 import com.aptoide.android.aptoidegames.analytics.dto.SearchMeta
@@ -135,7 +136,8 @@ fun searchScreen() = ScreenData.withAnalytics(
   val analyticsContext = AnalyticsContext.current
 
   var searchValue by rememberSaveable { mutableStateOf("") }
-  val shouldRedirectSearchToGameGenie = rememberGameGenieVisibility()
+  val shouldRedirectSearchToGameGenie =
+    rememberGameGenieVisibility() && BuildConfig.FLAVOR_brand != "vanilla"
   var searchMeta by rememberSaveable(
     saver = Saver(
       save = { it.value?.toString() ?: "null" },
@@ -697,18 +699,23 @@ fun EmptySearchView(
         .weight(1f),
       verticalArrangement = Arrangement.Center
     ) {
+      val isVanilla = BuildConfig.FLAVOR_brand == "vanilla"
       Image(
         modifier = Modifier
           .fillMaxWidth()
           .padding(all = 16.dp),
-        imageVector = getGenericError(Palette.Primary, Palette.GreyLight, Palette.White),
+        imageVector = getGenericError(
+          Palette.Primary,
+          Palette.GreyLight,
+          if (isVanilla) Palette.Black else Palette.White,
+        ),
         contentDescription = null,
       )
       Text(
         modifier = Modifier.padding(start = 40.dp, end = 40.dp, bottom = 32.dp),
         text = stringResource(R.string.search_empty_body, searchValue),
         style = AGTypography.Title,
-        color = Palette.White,
+        color = if (isVanilla) Palette.Black else Palette.White,
         maxLines = 4,
         overflow = TextOverflow.Ellipsis,
         textAlign = TextAlign.Center,

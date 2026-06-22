@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">Aptoide</string>
+  <string name="settings_send_feedback_body">Kongsikan pandangan anda tentang Aptoide dengan kami\n\u2022 Sebarang ciri baru yang anda mahu lihat?\n\u2022 Apa cadangan anda untuk kami tambah baik?</string>
+  <string name="settings_clear_cache_title">Bersihkan storan Aptoide</string>
+  <string name="apkfy_whats_aptoide_games_title">Apa itu Aptoide?</string>
+  <string name="apkfy_install_body">Dapatkan permainan kegemaran anda dan banyak lagi di Aptoide!</string>
+  <string name="apkfy_aptoide_games_intro">You\’re using Aptoide to install %1$s</string>
+  <string name="apkfy_aptoide_games_advantages_title">Why keep Aptoide?</string>
+  <string name="apkfy_aptoide_games_advantage_updates_roblox"><![CDATA[No Aptoide? <1>No Roblox updates.</1>]]></string>
+  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">Keep Aptoide - get updates first, play first.</string>
+  <string name="update_aptoide_games_update_close_body">Aptoide akan ditutup untuk kemas kini. Buka semula nanti!</string>
+  <string name="update_aptoide_games_update_notification">Ada versi baru Aptoide</string>
+  <string name="apkfy_multi_install_highlighted_game">Top Played on Aptoide</string>
+  <string name="play_and_earn_permissions_settings_path">Settings → Apps → Aptoide → ⋮ → Allow restricted settings</string>
+</resources>

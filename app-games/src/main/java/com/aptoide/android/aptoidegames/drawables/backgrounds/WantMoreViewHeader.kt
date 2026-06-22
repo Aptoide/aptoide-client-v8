@@ -27,6 +27,7 @@ private fun WantMoreViewHeaderPreview() {
   )
 }
 
+@Composable
 fun getWantMoreViewHeader(
   color1: Color = Palette.Secondary,
   color2: Color = Palette.Black,

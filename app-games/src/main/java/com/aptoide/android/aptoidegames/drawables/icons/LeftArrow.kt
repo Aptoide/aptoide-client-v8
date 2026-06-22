@@ -62,12 +62,7 @@ fun getLeftArrow(color: Color, bgColor: Color): ImageVector = ImageVector.Builde
       strokeLineMiter = 1.0f,
       pathFillType = PathFillType.EvenOdd
     ) {
-      moveTo(-0.615236f, 32.6154f)
-      lineTo(32.6155f, 32.6154f)
-      lineTo(32.6155f, -0.61537f)
-      lineTo(-0.615231f, -0.615373f)
-      lineTo(-0.615236f, 32.6154f)
-      close()
+      leftArrowOutline()
       moveTo(11.1127f, 15.349f)
       lineTo(17.8463f, 22.0826f)
       lineTo(17.8463f, 8.6154f)

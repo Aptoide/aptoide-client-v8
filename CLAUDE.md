@@ -4,12 +4,20 @@ This file provides guidance to Claude Code when working with code in this reposi
 
 ## Build Commands
 
-```bash
-# Build debug (development)
-./gradlew app:assembleDevDebug
+`:app-games` uses two flavor dimensions — `brand` (`aptoideGames` / `vanilla`) × `mode` (`dev` / `prod`). Variant names combine them, e.g. `aptoideGamesDevDebug`, `vanillaProdRelease`.
 
-# Build release (production)
+```bash
+# Legacy Vanilla (:app)
+./gradlew app:assembleDevDebug
 ./gradlew app:assembleProdRelease
+
+# Aptoide Games (modern, :app-games — brand=aptoideGames)
+./gradlew :app-games:assembleAptoideGamesDevDebug
+./gradlew :app-games:assembleAptoideGamesProdRelease
+
+# Aptoide V10 / Vanilla (modern, :app-games — brand=vanilla)
+./gradlew :app-games:assembleVanillaDevDebug
+./gradlew :app-games:assembleVanillaProdRelease
 
 # Run all unit tests
 ./gradlew test
@@ -113,11 +121,33 @@ plugins {
 
 ## App Variants
 
-| Module | App ID | Description |
-|--------|--------|-------------|
-| `:app` | `cm.aptoide.pt.v10` | Aptoide Vanilla |
-| `:app-games` | `com.aptoide.android.aptoidegames` | Aptoide Games |
-| `:app-dt` | `com.dti.hub` | Digital Turbine GamesHub (variant of Aptoide Games) |
+| Module | Brand flavor | App ID | Description |
+|--------|--------------|--------|-------------|
+| `:app` | — | `cm.aptoide.pt.v10` | Aptoide Vanilla (legacy, frozen) |
+| `:app-games` | `aptoideGames` | `com.aptoide.android.aptoidegames` | Aptoide Games |
+| `:app-games` | `vanilla` | `cm.aptoide.pt` | Aptoide V10 (Vanilla, modern) |
+| `:app-dt` | — | `com.dti.hub` | Digital Turbine GamesHub (planned, separate module) |
+
+### Verifying Brand Flavor Changes
+
+Any change in `:app-games/src/main/` is shared between **both** brand flavors (`aptoideGames` and `vanilla`). Source-set–specific code lives in `src/aptoideGames/` or `src/vanilla/` and only affects that flavor.
+
+**When you change shared code, verify both flavors on-device.** Never claim "done" after testing just one — silently breaking the other flavor is the most common regression in this module.
+
+- Build + install both: `./gradlew :app-games:installVanillaDevDebug :app-games:installAptoideGamesDevDebug` (`-P` env props as needed).
+- Launch each and screenshot the affected surface side-by-side.
+- Vanilla pkg: `cm.aptoide.pt.dev`. AG pkg: `com.aptoide.android.aptoidegames.dev`. Activity: `com.aptoide.android.aptoidegames.MainActivity` for both.
+
+**Always-test-both applies to**:
+- Shared composables / drawables / theme tokens
+- Shared DI providers, repositories, network code, navigation
+- Anything reading `BuildConfig.FLAVOR_brand`, `MARKET_NAME`, `DEEP_LINK_SCHEMA`, or any other brand-dependent BuildConfig field — especially when intentionally branching on flavor, also confirm the non-targeted flavor is *unchanged*.
+
+**Skip the second flavor only when** the change is physically in `src/<flavor>/…` and the diff cannot reach the other source set.
+
+For non-visual artifacts (e.g. the per-flavor User-Agent), there's no debug HTTP header-logging interceptor — verify by adding a temporary `Log.d` in the header builder/interceptor, capture via `adb logcat`, then revert.
+
+**Brand divergence via source sets**: prefer per-source-set files over `if (BuildConfig.FLAVOR_brand == "vanilla")` branches, especially for icons/drawables/config. Define the same symbol in both `src/vanilla/` and `src/aptoideGames/`. Examples: `theme/AptoidePalette.kt`, `drawables/icons/BonusIconBrand.kt`, `di/WidgetsConfig.kt` (`WIDGETS_URL_PATH`), `network/UserAgentBrand.kt` (`USER_AGENT_BRAND`).
 
 ## Common Patterns & Conventions
 
@@ -131,6 +161,20 @@ Format: `[AND-XXX] Short description` (Jira ticket prefix)
 - **Naming**: snake_case with feature prefix: `{feature}_{component}_{property}` (e.g., `appview_info_version_name_title`, `post_install_sponsored_label`)
 - **Server-provided strings**: use `"text".translateOrKeep(LocalContext.current)`
 
+### Theming & Brand Colors
+
+**Never hardcode `Color(0x…)` / `Color.White` / `Color.Black` in UI** — PRs get rejected for it. And don't "fix" a literal by blindly reverting to `Palette.Black`/`Palette.White`: those **invert** in Vanilla's light theme (`Palette.Black`→white, `Palette.White`→dark), which is live via `isSystemInDarkTheme()`. Pick the right tool by intent:
+
+| Need | Use | Behaviour |
+|------|-----|-----------|
+| Brand accent | `Palette.Primary` | lime in `aptoideGames`, orange in `vanilla`; does NOT invert |
+| Adapts to light/dark (icon/text on the screen background) | `Palette.Black` / `Palette.White` | theme-adaptive; **invert** in vanilla light |
+| Fixed color regardless of theme (text/icons on `Palette.Primary`, AppCoins gift outlines, labels/overlays on images) | `FixedColors` (`theme/FixedColors.kt`: `Dark`, `White`, `Scrim`, `VanillaOrange`, `VanillaGiftGold`) | theme-invariant; plain object, also usable from non-composable code |
+
+- **`Palette` is `@Composable`** — it can't be called from `ImageVector`/`PathBuilder`/`Notification` builders. Pattern: the builder takes a `Color` param; the composable call-site resolves `Palette.X`/`FixedColors.X` and passes it down (see `getLeftArrow`, `getBonusIconRight`, `levelUpBackgroundColor`+`getLevelUpBackground`, `tierCoinColors`+`getTierCoinIcon`). Do **not** reference `DarkPalette`/`LightPalette` directly as a workaround.
+- **`Icon(tint = …)` overrides the vector's own fills** — the whole ImageVector renders in the tint color. Use `Image` to keep a vector's internal colors.
+- Recolor AG-lime (`0xFFC8ED4F`) elements for Vanilla by routing them through `Palette.Primary`, not a new literal.
+
 ### AppCoins Billing Indicator
 
 Any app card showing an icon must include the gift overlay for apps with `app.isAppCoins`:
@@ -141,7 +185,7 @@ Box(contentAlignment = Alignment.TopEnd) {
     Image(
       imageVector = getBonusIconRight(
         iconColor = Palette.Primary,
-        outlineColor = Palette.Black,
+        outlineColor = FixedColors.Dark, // theme-invariant; Palette.Black would invert to white in vanilla light
         backgroundColor = Palette.Secondary
       ),
       contentDescription = null,

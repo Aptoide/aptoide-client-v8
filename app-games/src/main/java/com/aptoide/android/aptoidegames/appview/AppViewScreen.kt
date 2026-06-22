@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -40,6 +41,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.zIndex
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
@@ -128,6 +131,7 @@ import com.aptoide.android.aptoidegames.play_and_earn.presentation.rememberIsPac
 import com.aptoide.android.aptoidegames.play_and_earn.rememberShouldShowPlayAndEarn
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.videos.presentation.AppViewYoutubePlayer
 
@@ -437,7 +441,7 @@ fun AppViewContent(
       featureGraphicContent()
     }
     Image(
-      imageVector = getLeftArrow(Palette.Primary, Palette.Black),
+      imageVector = getLeftArrow(Palette.Primary, FixedColors.Dark),
       contentDescription = stringResource(id = R.string.button_back_title),
       contentScale = ContentScale.Crop,
       modifier = Modifier
@@ -520,6 +524,7 @@ fun AppViewContent(
       )
     }
     if (app.isAppCoins) {
+      val isVanillaBanner = BuildConfig.FLAVOR_brand == "vanilla"
       Row(
         modifier = Modifier
           .padding(top = 160.dp)
@@ -534,6 +539,7 @@ fun AppViewContent(
         if (isGamified) {
           Box(
             modifier = Modifier
+              .zIndex(1f)
               .size(40.dp)
               .graphicsLayer {
                 this.translationY = 6.dp.toPx()
@@ -554,31 +560,49 @@ fun AppViewContent(
           Image(
             imageVector = getBonusIconLeft(
               iconColor = Palette.Primary,
-              outlineColor = Palette.Black,
+              outlineColor = FixedColors.Dark,
               backgroundColor = Palette.Secondary
             ),
             contentDescription = null,
             modifier = Modifier
+              .zIndex(1f)
               .size(40.dp)
               .graphicsLayer {
                 this.translationY = 6.dp.toPx()
               }
           )
         }
-        AptoideOutlinedText(
-          text = stringResource(
-            id = R.string.bonus_banner_title,
-            "20" //TODO Hardcoded value (should come from backend in the future)
-          ),
-          style = AGTypography.InputsM,
-          outlineWidth = 10f,
-          outlineColor = Palette.Black,
-          textColor = Palette.White,
-          modifier = Modifier
-            .align(Alignment.Bottom)
-            .background(color = Palette.Secondary)
-            .padding(horizontal = 8.dp, vertical = 4.dp)
-        )
+        if (isVanillaBanner) {
+          Text(
+            text = stringResource(
+              id = R.string.bonus_banner_title,
+              "20" //TODO Hardcoded value (should come from backend in the future)
+            ),
+            style = AGTypography.InputsM,
+            color = FixedColors.Dark,
+            modifier = Modifier
+              .align(Alignment.Bottom)
+              .offset(x = (-12).dp)
+              .clip(RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp))
+              .background(FixedColors.VanillaOrange)
+              .padding(start = 20.dp, end = 12.dp, top = 6.dp, bottom = 6.dp)
+          )
+        } else {
+          AptoideOutlinedText(
+            text = stringResource(
+              id = R.string.bonus_banner_title,
+              "20" //TODO Hardcoded value (should come from backend in the future)
+            ),
+            style = AGTypography.InputsM,
+            outlineWidth = 10f,
+            outlineColor = Palette.Black,
+            textColor = Palette.White,
+            modifier = Modifier
+              .align(Alignment.Bottom)
+              .background(color = Palette.Secondary)
+              .padding(horizontal = 8.dp, vertical = 4.dp)
+          )
+        }
       }
     }
   }
@@ -755,15 +779,17 @@ fun ScreenshotsList(screenshots: List<Screenshot>) {
     horizontalArrangement = Arrangement.spacedBy(16.dp),
     contentPadding = PaddingValues(horizontal = 16.dp)
   ) {
+    val isVanilla = BuildConfig.FLAVOR_brand == "vanilla"
     itemsIndexed(screenshots) { index, screenshot ->
       val stringResource = stringResource(id = R.string.app_view_screenshot_number, index + 1)
+      val baseModifier = Modifier
+        .clearAndSetSemantics {
+          contentDescription = stringResource
+        }
+        .height(152.dp)
+        .aspectRatio(screenshot.width.toFloat() / screenshot.height.toFloat())
       AptoideAsyncImageWithFullscreen(
-        modifier = Modifier
-          .clearAndSetSemantics {
-            contentDescription = stringResource
-          }
-          .height(152.dp)
-          .aspectRatio(screenshot.width.toFloat() / screenshot.height.toFloat()),
+        modifier = if (isVanilla) baseModifier.clip(RoundedCornerShape(16.dp)) else baseModifier,
         data = screenshot.url.toImageUrlByDensity(
           density = density,
           densityDpi = densityDpi,

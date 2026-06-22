@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">Aptoide</string>
+  <string name="settings_send_feedback_body">Laat ons weten wat je van Aptoide vindt!\n\u2022 Mis je een functie die je graag zou gebruiken?\n\u2022 Wat kunnen we verbeteren?</string>
+  <string name="settings_clear_cache_title">Aptoide-opslag wissen</string>
+  <string name="error_install_permissions_body"><![CDATA[Ga naar Instellingen en geef <1>Aptoide</1> toestemming om apps te installeren!]]></string>
+  <string name="apkfy_whats_aptoide_games_title">Wat is Aptoide?</string>
+  <string name="apkfy_install_body">Vind je favoriete game en nog veel meer in Aptoide!</string>
+  <string name="apkfy_aptoide_games_intro">Je gebruikt Aptoide om %1$ste installeren.</string>
+  <string name="apkfy_aptoide_games_advantages_title">Waarom Aptoide behouden?</string>
+  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">Houd Aptoide - ontvang updates als eerste, speel als eerste.</string>
+  <string name="bonus_page_body_2"><![CDATA[Je kunt <1>%s%% extra bonus</1> krijgen door een exclusieve Aptoide-actiecode in specifieke games te gebruiken. We sturen je een melding om je op de hoogte te houden.]]></string>
+  <string name="update_aptoide_games_body">Werk Aptoide bij naar de nieuwste versie om te blijven genieten van de beste ervaring en de beste games te ontdekken.</string>
+  <string name="update_aptoide_games_update_close_body">Aptoide wordt gesloten om de app bij te werken. Je kunt de app gewoon opnieuw openen!</string>
+  <string name="update_aptoide_games_update_notification">Er is een nieuwe versie van Aptoide beschikbaar</string>
+  <string name="promotional_now_available_body">Nu beschikbaar in Aptoide!</string>
+  <string name="apkfy_multi_install_highlighted_game">Meest gespeeld op Aptoide</string>
+  <string name="play_and_earn_permissions_settings_path">Instellingen → Apps → Aptoide → ⋮ → Beperkte instellingen toestaan</string>
+</resources>

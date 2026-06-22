@@ -10,18 +10,19 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.aptoide.android.aptoidegames.theme.Palette
 
 @Preview
 @Composable
 fun CompanionChessIconPreview() {
   Image(
-    imageVector = getCompanionChessIcon(),
+    imageVector = getCompanionChessIcon(Palette.Primary),
     contentDescription = null,
     modifier = Modifier.size(240.dp)
   )
 }
 
-fun getCompanionChessIcon(): ImageVector = ImageVector.Builder(
+fun getCompanionChessIcon(color: Color): ImageVector = ImageVector.Builder(
   name = "companion_chess_icon",
   defaultWidth = 24.dp,
   defaultHeight = 24.dp,
@@ -34,7 +35,7 @@ fun getCompanionChessIcon(): ImageVector = ImageVector.Builder(
 //</mask>
 //<g mask="url(#mask0_25021_12270)">
   path(
-    fill = SolidColor(Color(0xFFC8ED4F)),
+    fill = SolidColor(color),
   ) {
     moveTo(3f, 22f)
     verticalLineTo(16f)

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">Aptoide</string>
+  <string name="settings_send_feedback_body">Sampaikan pendapat Anda tentang Aptoide!\n\u2022 Adakah fitur baru yang ingin Anda lihat?\n\u2022 Menurut Anda, bagaimana kami bisa meningkatkannya?</string>
+  <string name="error_install_permissions_body"><![CDATA[Silakan buka Pengaturan dan berikan izin ke <1>Aptoide</1> untuk memasang aplikasi!]]></string>
+  <string name="apkfy_aptoide_games_intro">Anda sedang menggunakan Aptoide untuk menginstal %1$s</string>
+  <string name="apkfy_aptoide_games_advantages_title">Mengapa tetap menggunakan Aptoide?</string>
+  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">Tetap gunakan Aptoide - dapatkan pembaruan pertama, mainkan lebih dulu.</string>
+  <string name="bonus_page_body_2"><![CDATA[Anda bisa mendapatkan <1>%s%% bonus</1> tambahan dengan menggunakan kode promo eksklusif Aptoide di game tertentu. Tunggu info selanjutnya, nanti kami kabari Anda!]]></string>
+  <string name="update_aptoide_games_body">Perbarui Aptoide ke versi terbaru untuk terus menikmati pengalaman terbaik dalam menemukan game.</string>
+  <string name="update_aptoide_games_update_close_body">Aptoide akan ditutup untuk diperbarui. Tinggal buka lagi!</string>
+  <string name="update_aptoide_games_update_notification">Tersedia versi baru dari Aptoide</string>
+  <string name="promotional_now_available_body">Sekarang tersedia di Aptoide!</string>
+  <string name="play_and_earn_permissions_settings_path">Pengaturan → Aplikasi → Aptoide → ⋮ → Izinkan pengaturan terbatas</string>
+</resources>

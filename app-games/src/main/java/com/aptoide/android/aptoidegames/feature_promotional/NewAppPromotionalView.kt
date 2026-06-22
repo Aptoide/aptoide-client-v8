@@ -34,6 +34,7 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.rememberApp
 import cm.aptoide.pt.feature_home.domain.Bundle
+import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusIcon
@@ -42,6 +43,7 @@ import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.installer.presentation.ProgressText
 import com.aptoide.android.aptoidegames.theme.AGTypography
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
@@ -144,8 +146,8 @@ private fun AppInfo(app: App) {
     ) {
       Image(
         imageVector = getBonusIcon(
-          giftColor = Palette.Primary,
-          outlineColor = Palette.Black,
+          giftColor = if (BuildConfig.FLAVOR_brand == "vanilla") FixedColors.VanillaGiftGold else Palette.Primary,
+          outlineColor = FixedColors.Dark,
         ),
         contentDescription = null,
         modifier = Modifier

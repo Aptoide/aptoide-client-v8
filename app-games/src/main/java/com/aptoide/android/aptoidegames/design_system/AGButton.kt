@@ -13,7 +13,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.foundation.shape.CutCornerShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
@@ -31,9 +33,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.getRandomString
+import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
+
+private val buttonShape: CornerBasedShape
+  get() =
+    if (BuildConfig.FLAVOR_brand == "vanilla") RoundedCornerShape(50) else CutCornerShape(0)
 
 @Preview(
   showSystemUi = true,
@@ -266,7 +274,7 @@ fun AGSmallButtonPreview() {
   enabled = enabled,
   color = Palette.Primary,
   title = title,
-  textStyle = AGTypography.InputsL.copy(color = Palette.Black)
+  textStyle = AGTypography.InputsL.copy(color = FixedColors.Dark)
 )
 
 @Composable
@@ -342,7 +350,7 @@ fun SecondaryOutlinedButton(
   enabled = enabled,
   color = Palette.Primary,
   title = title,
-  textStyle = AGTypography.InputsS.copy(color = Palette.Black)
+  textStyle = AGTypography.InputsS.copy(color = FixedColors.Dark)
 )
 
 @Composable fun AccentSmallButton(
@@ -424,7 +432,7 @@ fun AGButton(
     modifier = modifier,
     enabled = enabled,
     elevation = ButtonDefaults.elevation(defaultElevation = 0.dp),
-    shape = CutCornerShape(0),
+    shape = buttonShape,
     interactionSource = interactionSource,
     colors = ButtonDefaults.buttonColors(
       backgroundColor = overlayColor.compositeOver(color),
@@ -469,7 +477,7 @@ private fun AGOutlinedButton(
     modifier = modifier,
     enabled = enabled,
     elevation = ButtonDefaults.elevation(defaultElevation = 0.dp),
-    shape = CutCornerShape(0),
+    shape = buttonShape,
     border = BorderStroke(
       width = strokeWidth,
       brush = SolidColor(
@@ -519,7 +527,7 @@ fun AGContentButton(
     modifier = modifier,
     enabled = enabled,
     elevation = ButtonDefaults.elevation(defaultElevation = 0.dp),
-    shape = CutCornerShape(0),
+    shape = buttonShape,
     interactionSource = interactionSource,
     colors = ButtonDefaults.buttonColors(
       backgroundColor = overlayColor.compositeOver(color),

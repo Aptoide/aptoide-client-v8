@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">Aptoide</string>
+  <string name="settings_send_feedback_body">Spune-ne părerea ta despre Aptoide!\n\u2022 Ai vrea să vezi o funcție nouă?\n\u2022 Ce ar trebui să facem ca să devenim mai buni?</string>
+  <string name="settings_clear_cache_title">Eliberează spațiu de stocare Aptoide</string>
+  <string name="error_install_permissions_body"><![CDATA[Accesează Setări și acordă permisiunile pentru <1>Aptoide</1> pentru a instala aplicații!]]></string>
+  <string name="apkfy_whats_aptoide_games_title">Ce este Aptoide?</string>
+  <string name="apkfy_install_body">Descarcă-ți jocul preferat și multe altele în Aptoide!</string>
+  <string name="apkfy_aptoide_games_intro">Utilizați Aptoide pentru a instala %1$s</string>
+  <string name="apkfy_aptoide_games_advantages_title">De ce să păstrați Aptoide?</string>
+  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">Păstrați Aptoide - primiți actualizări în premieră, jucați în premieră.</string>
+  <string name="bonus_page_body_2"><![CDATA[Poți obține un <1>bonus suplimentar de %s%%</1> utilizând un cod promoțional exclusiv Aptoide în anumite jocuri. Fii pe fază și vei fi anunțat!]]></string>
+  <string name="update_aptoide_games_body">Actualizează Aptoide la cea mai recentă versiune pentru a te bucura în continuare de cea mai bună experiență de joc.</string>
+  <string name="update_aptoide_games_update_close_body">Aptoide se va închide pentru actualizare. Trebuie doar să-l deschizi din nou.</string>
+  <string name="update_aptoide_games_update_notification">Avem o versiune nouă pentru Aptoide</string>
+  <string name="promotional_now_available_body">Acum disponibilă în Aptoide!</string>
+  <string name="apkfy_multi_install_highlighted_game">Cele mai jucate jocuri pe Aptoide</string>
+  <string name="play_and_earn_permissions_settings_path">Setări → Aplicații → Aptoide → ⋮ → Permite setări restricționate</string>
+</resources>

@@ -33,69 +33,69 @@ fun LevelProperties.isVIP() = this.level == 8 || this.level == 9
 object LevelBronze : LevelProperties {
   override val level = 0
   override val name = "Bronze"
-  override val mainColor = Palette.Orange150
+  override val mainColor = Color(0xFFF58932)
   override val isPlusVariant = false
 }
 
 object LevelBronzePlus : LevelProperties {
   override val level = 1
   override val name = "Bronze"
-  override val mainColor = Palette.Orange150
+  override val mainColor = Color(0xFFF58932)
   override val isPlusVariant = true
 }
 
 object LevelSilver : LevelProperties {
   override val level = 2
   override val name = "Silver"
-  override val mainColor = Palette.Blue100
+  override val mainColor = Color(0xFFBDC3EB)
   override val isPlusVariant = false
 }
 
 object LevelSilverPlus : LevelProperties {
   override val level = 3
   override val name = "Silver"
-  override val mainColor = Palette.Blue100
+  override val mainColor = Color(0xFFBDC3EB)
   override val isPlusVariant = true
 }
 
 object LevelGold : LevelProperties {
   override val level = 4
   override val name = "Gold"
-  override val mainColor = Palette.Yellow100
+  override val mainColor = Color(0xFFFFC93E)
   override val isPlusVariant = false
 }
 
 object LevelGoldPlus : LevelProperties {
   override val level = 5
   override val name = "Gold"
-  override val mainColor = Palette.Yellow100
+  override val mainColor = Color(0xFFFFC93E)
   override val isPlusVariant = true
 }
 
 object LevelPlatinum : LevelProperties {
   override val level = 6
   override val name = "Platinum"
-  override val mainColor = Palette.Blue150
+  override val mainColor = Color(0xFFB3CFFF)
   override val isPlusVariant = false
 }
 
 object LevelPlatinumPlus : LevelProperties {
   override val level = 7
   override val name = "Platinum"
-  override val mainColor = Palette.Blue150
+  override val mainColor = Color(0xFFB3CFFF)
   override val isPlusVariant = true
 }
 
 object LevelVip : LevelProperties {
   override val level = 8
   override val name = "VIP"
-  override val mainColor = Palette.Yellow100
+  override val mainColor = Color(0xFFFFC93E)
   override val isPlusVariant = false
 }
 
 object LevelVipPlus : LevelProperties {
   override val level = 9
   override val name = "VIP"
-  override val mainColor = Palette.Yellow100
+  override val mainColor = Color(0xFFFFC93E)
   override val isPlusVariant = true
 }

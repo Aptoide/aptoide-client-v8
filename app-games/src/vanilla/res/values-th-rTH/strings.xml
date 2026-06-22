@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">Aptoide</string>
+  <string name="error_install_permissions_body"><![CDATA[โปรดไปที่การตั้งค่าและให้สิทธิ์ <1>Aptoide</1> เพื่อติดตั้งแอป!]]></string>
+  <string name="apkfy_aptoide_games_intro">คุณกำลังใช้ Aptoide เพื่อติดตั้ง %1$s</string>
+  <string name="apkfy_aptoide_games_advantages_title">ทำไมต้องเก็บ Aptoide?</string>
+  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">เก็บ Aptoide - รับอัปเดตก่อน เล่นก่อน</string>
+  <string name="bonus_page_body_2"><![CDATA[คุณสามารถรับโบนัสพิเศษ <1>%s%% </1> ได้โดยใช้รหัสโปรโมชั่นพิเศษเฉพาะในเกมส์นี้ของ Aptoide คอยติดตามและรับการแจ้งเตือน!]]></string>
+  <string name="play_and_earn_permissions_settings_path">การตั้งค่า → แอป → Aptoide → ⋮ → อนุญาตการตั้งค่าที่ถูกจำกัด</string>
+</resources>

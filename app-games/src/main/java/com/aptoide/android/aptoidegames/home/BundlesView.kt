@@ -62,6 +62,7 @@ import cm.aptoide.pt.feature_home.presentation.BundlesViewUiState
 import cm.aptoide.pt.feature_home.presentation.BundlesViewUiStateType
 import cm.aptoide.pt.feature_home.presentation.bundlesList
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
+import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.Platform.isHmd
 import com.aptoide.android.aptoidegames.Platform.isHmdDevice
 import com.aptoide.android.aptoidegames.R
@@ -227,7 +228,7 @@ fun BundlesView(
               )
 
               Type.EDITORIAL -> EditorialBundle(
-                bundle = bundle,
+                bundle = bundle.hideActionItemCurationTitleForVanilla(),
                 navigate = navigateTo,
                 spaceBy = 32
               )
@@ -638,3 +639,10 @@ fun String.translateOrKeep(localContext: Context): String {
     ?.let { localContext.getString(it) }
     ?: this
 }
+
+private fun Bundle.hideActionItemCurationTitleForVanilla(): Bundle =
+  if (BuildConfig.FLAVOR_brand == "vanilla" && tag.startsWith("action-item-curation-")) {
+    copy(title = "")
+  } else {
+    this
+  }

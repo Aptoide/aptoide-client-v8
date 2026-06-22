@@ -49,6 +49,7 @@ import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.installer.presentation.ProgressText
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
@@ -90,7 +91,7 @@ private fun RealCarouselLargeBundle(
       BundleHeader(
         title = bundle.title,
         icon = bundle.bundleIcon,
-        hasMoreAction = bundle.hasMoreAction,
+        hasMoreAction = bundle.hasAppsListMoreAction,
         onClick = getSeeMoreRouteNavigation(bundle = bundle, navigate = navigate),
         titleColor = Palette.White,
       )
@@ -183,7 +184,7 @@ private fun CarouselLargeAppView(
         Image(
           imageVector = getBonusIconRight(
             iconColor = Palette.Primary,
-            outlineColor = Palette.Black,
+            outlineColor = FixedColors.Dark,
             backgroundColor = Palette.Secondary
           ),
           contentDescription = null,

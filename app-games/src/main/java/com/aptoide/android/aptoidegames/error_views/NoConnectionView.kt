@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import cm.aptoide.pt.extensions.PreviewDark
+import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGeneralAnalytics
 import com.aptoide.android.aptoidegames.drawables.icons.getNoNetworkError
@@ -17,7 +18,11 @@ fun NoConnectionView(
 ) {
   val generalAnalytics = rememberGeneralAnalytics()
   ErrorView(
-    imageVector = getNoNetworkError(Palette.Primary, Palette.GreyLight, Palette.White),
+    imageVector = getNoNetworkError(
+      Palette.Primary,
+      Palette.GreyLight,
+      if (BuildConfig.FLAVOR_brand == "vanilla") Palette.Black else Palette.White,
+    ),
     title = stringResource(R.string.error_message_no_internet_title),
     subtitle = stringResource(R.string.error_message_no_internet_body),
     onRetryClick = {

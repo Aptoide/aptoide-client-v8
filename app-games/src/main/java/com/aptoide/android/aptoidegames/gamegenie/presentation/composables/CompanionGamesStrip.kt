@@ -101,7 +101,7 @@ fun CompanionGamesStrip(
           modifier = Modifier.weight(1f)
         ) {
           Image(
-            imageVector = getCompanionChessIcon(),
+            imageVector = getCompanionChessIcon(Palette.Primary),
             contentDescription = null,
             modifier = Modifier.size(24.dp)
           )

@@ -10,18 +10,19 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.aptoide.android.aptoidegames.theme.Palette
 
 @Preview
 @Composable
 fun SendIconEnabledPreview() {
   Image(
-    imageVector = getSendIconEnabled(),
+    imageVector = getSendIconEnabled(Palette.Primary),
     contentDescription = null,
     modifier = Modifier.size(240.dp)
   )
 }
 
-fun getSendIconEnabled(): ImageVector = ImageVector.Builder(
+fun getSendIconEnabled(color: Color): ImageVector = ImageVector.Builder(
   name = "send_icon_enabled",
   defaultWidth = 24.dp,
   defaultHeight = 24.dp,
@@ -29,7 +30,7 @@ fun getSendIconEnabled(): ImageVector = ImageVector.Builder(
   viewportHeight = 24f,
 ).apply {
   path(
-    fill = SolidColor(Color(0xFFC8ED4F)),
+    fill = SolidColor(color),
   ) {
     moveTo(3f, 20f)
     verticalLineTo(14f)

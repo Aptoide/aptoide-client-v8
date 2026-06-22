@@ -16,6 +16,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import cm.aptoide.pt.extensions.PreviewDark
+import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.design_system.PrimaryButton
 import com.aptoide.android.aptoidegames.drawables.banners.getChessPatternBanner
@@ -44,6 +45,8 @@ fun ErrorView(
         )
         Spacer(modifier = Modifier.weight(88f))
       }
+      val textColor =
+        if (BuildConfig.FLAVOR_brand == "vanilla") Palette.Black else Palette.White
       PaddedRow(sideWeight = 32f) {
         Column(
           modifier = Modifier.weight(296f),
@@ -52,14 +55,14 @@ fun ErrorView(
           Text(
             text = title,
             style = AGTypography.Title,
-            color = Palette.White,
+            color = textColor,
             textAlign = TextAlign.Center,
           )
           subtitle?.let {
             Text(
               text = it,
               style = AGTypography.DescriptionGames,
-              color = Palette.White,
+              color = textColor,
               textAlign = TextAlign.Center,
             )
           }
@@ -89,7 +92,11 @@ fun GenericErrorView(
   modifier: Modifier = Modifier,
 ) {
   ErrorView(
-    imageVector = getGenericError(Palette.Primary, Palette.GreyLight, Palette.White),
+    imageVector = getGenericError(
+      Palette.Primary,
+      Palette.GreyLight,
+      if (BuildConfig.FLAVOR_brand == "vanilla") Palette.Black else Palette.White,
+    ),
     title = stringResource(R.string.error_message_generic_title),
     subtitle = stringResource(R.string.error_message_generic_body),
     onRetryClick = onRetryClick,

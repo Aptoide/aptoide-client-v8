@@ -21,21 +21,34 @@ import kotlin.random.nextInt
 @Composable
 private fun TestTierCoinIcon() {
   Image(
-    imageVector = getTierCoinIcon(Random.nextInt(0..9)),
+    imageVector = getTierCoinIcon(tierCoinColors(Random.nextInt(0..9))),
     contentDescription = null,
     modifier = Modifier.size(240.dp)
   )
 }
 
-fun getTierCoinIcon(level: Int): ImageVector = ImageVector.Builder(
+/**
+ * Resolves the tier-coin gradient colors from [Palette] at the composable
+ * call-site, so the non-composable [getTierCoinIcon] builder can stay free of
+ * palette access.
+ */
+@Composable
+fun tierCoinColors(level: Int): List<Color> = when (level) {
+  0, 1 -> listOf(Palette.Orange200, Palette.Yellow100, Palette.Orange150)
+  2, 3 -> listOf(Palette.Blue100, Palette.White, Palette.Blue200)
+  4, 5 -> listOf(Palette.Yellow200, Palette.Yellow50, Palette.Yellow100)
+  6, 7 -> listOf(Palette.Blue150, Palette.Blue50, Palette.Blue250)
+  8, 9 -> listOf(Palette.Yellow150, Palette.Yellow100, Palette.Yellow200)
+  else -> listOf(Color.Transparent, Color.Transparent, Color.Transparent)
+}
+
+fun getTierCoinIcon(colors: List<Color>): ImageVector = ImageVector.Builder(
   name = "TierCoin",
   defaultWidth = 11.0.dp,
   defaultHeight = 12.0.dp,
   viewportWidth = 11.0f,
   viewportHeight = 12.0f
 ).apply {
-  val colors = level.getCoinColors()
-
   path(
     fill = SolidColor(colors[0]), stroke = null, strokeLineWidth = 0.0f,
     strokeLineCap = Butt, strokeLineJoin = Miter, strokeLineMiter = 4.0f,
@@ -83,12 +96,3 @@ fun getTierCoinIcon(level: Int): ImageVector = ImageVector.Builder(
     close()
   }
 }.build()
-
-private fun Int.getCoinColors(): List<Color> = when (this) {
-  0, 1 -> listOf(Palette.Orange200, Palette.Yellow100, Palette.Orange150)
-  2, 3 -> listOf(Palette.Blue100, Palette.White, Palette.Blue200)
-  4, 5 -> listOf(Palette.Yellow200, Palette.Yellow50, Palette.Yellow100)
-  6, 7 -> listOf(Palette.Blue150, Palette.Blue50, Palette.Blue250)
-  8, 9 -> listOf(Palette.Yellow150, Palette.Yellow100, Palette.Yellow200)
-  else -> listOf(Color.Transparent, Color.Transparent, Color.Transparent)
-}

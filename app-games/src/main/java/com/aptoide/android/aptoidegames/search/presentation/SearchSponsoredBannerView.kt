@@ -10,12 +10,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
@@ -32,10 +35,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
+import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.drawables.icons.getRatingStar
 import com.aptoide.android.aptoidegames.feature_rtb.data.RTBApp
 import com.aptoide.android.aptoidegames.theme.AGTypography
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -49,7 +54,8 @@ fun SearchSponsoredBannerView(
   val app = rtbApp.app
 
   val painter = rememberAsyncImagePainter(model = app.icon)
-  var dominantColor by remember { mutableStateOf(Palette.GreyDark) }
+  val initialDominantColor = Palette.GreyDark
+  var dominantColor by remember { mutableStateOf(initialDominantColor) }
   var overlayAlpha by remember { mutableStateOf(0.3f) }
 
   LaunchedEffect(painter.state) {
@@ -77,6 +83,36 @@ fun SearchSponsoredBannerView(
     }
   }
 
+  if (BuildConfig.FLAVOR_brand == "vanilla") {
+    VanillaSponsoredBanner(
+      appName = app.name,
+      rating = app.rating.avgRating,
+      painter = painter,
+      dominantColor = dominantColor,
+      overlayAlpha = overlayAlpha,
+      onClick = onClick,
+    )
+  } else {
+    AGSponsoredBanner(
+      appName = app.name,
+      rating = app.rating.avgRating,
+      painter = painter,
+      dominantColor = dominantColor,
+      overlayAlpha = overlayAlpha,
+      onClick = onClick,
+    )
+  }
+}
+
+@Composable
+private fun AGSponsoredBanner(
+  appName: String,
+  rating: Double,
+  painter: AsyncImagePainter,
+  dominantColor: Color,
+  overlayAlpha: Float,
+  onClick: () -> Unit,
+) {
   Box(
     modifier = Modifier
       .fillMaxWidth()
@@ -84,14 +120,12 @@ fun SearchSponsoredBannerView(
       .border(width = 4.dp, color = Palette.GreyDark)
       .clickable(onClick = onClick)
   ) {
-    // Background with dominant color
     Box(
       modifier = Modifier
         .fillMaxSize()
         .background(dominantColor)
     )
 
-    // Centered app icon as background image
     Image(
       painter = painter,
       contentDescription = null,
@@ -101,14 +135,12 @@ fun SearchSponsoredBannerView(
         .height(104.dp)
     )
 
-    // Semi-transparent black overlay for text readability
     Box(
       modifier = Modifier
         .fillMaxSize()
-        .background(Color.Black.copy(alpha = overlayAlpha))
+        .background(FixedColors.Scrim.copy(alpha = overlayAlpha))
     )
 
-    // Content area
     Row(
       modifier = Modifier
         .fillMaxSize()
@@ -116,14 +148,12 @@ fun SearchSponsoredBannerView(
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-      // Left content: app name + rating
       Column(
         modifier = Modifier.weight(1f),
         verticalArrangement = Arrangement.spacedBy(4.dp),
       ) {
-        // App name
         Text(
-          text = app.name,
+          text = appName,
           style = AGTypography.DescriptionGames,
           color = Palette.White,
           maxLines = 1,
@@ -131,7 +161,6 @@ fun SearchSponsoredBannerView(
           modifier = Modifier.widthIn(max = 204.dp),
         )
 
-        // Rating row
         Row(
           verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -141,7 +170,7 @@ fun SearchSponsoredBannerView(
             modifier = Modifier.size(16.dp),
           )
           Text(
-            text = String.format(Locale.US, "%.1f", app.rating.avgRating),
+            text = String.format(Locale.US, "%.1f", rating),
             style = AGTypography.InputsXS,
             color = Palette.White,
             modifier = Modifier.padding(start = 2.dp),
@@ -149,7 +178,6 @@ fun SearchSponsoredBannerView(
         }
       }
 
-      // Install button (right side)
       Box(
         modifier = Modifier
           .background(Palette.Primary)
@@ -164,7 +192,6 @@ fun SearchSponsoredBannerView(
       }
     }
 
-    // Label bar (top-left corner, overlapping border)
     Row(
       modifier = Modifier
         .align(Alignment.TopStart)
@@ -186,3 +213,132 @@ fun SearchSponsoredBannerView(
     }
   }
 }
+
+@Composable
+private fun VanillaSponsoredBanner(
+  appName: String,
+  rating: Double,
+  painter: AsyncImagePainter,
+  dominantColor: Color,
+  overlayAlpha: Float,
+  onClick: () -> Unit,
+) {
+  val outerShape = RoundedCornerShape(16.dp)
+  val innerShape = RoundedCornerShape(12.dp)
+  val labelShape = RoundedCornerShape(topStart = 16.dp, bottomEnd = 16.dp)
+
+  Box(
+    modifier = Modifier
+      .fillMaxWidth()
+      .clip(outerShape)
+      .background(Palette.Primary)
+      .clickable(onClick = onClick)
+  ) {
+    Box(
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(start = 6.dp, end = 6.dp, top = 32.dp, bottom = 6.dp)
+        .height(96.dp)
+        .clip(innerShape)
+    ) {
+      Box(
+        modifier = Modifier
+          .fillMaxSize()
+          .background(dominantColor)
+      )
+
+      Image(
+        painter = painter,
+        contentDescription = null,
+        contentScale = ContentScale.Fit,
+        modifier = Modifier
+          .align(Alignment.Center)
+          .fillMaxHeight()
+      )
+
+      // Darker overlay so the white name/rating stay legible over any
+      // extracted color or centered artwork.
+      Box(
+        modifier = Modifier
+          .fillMaxSize()
+          .background(FixedColors.Scrim.copy(alpha = (overlayAlpha + 0.35f).coerceIn(0f, 0.7f)))
+      )
+
+      Row(
+        modifier = Modifier
+          .fillMaxSize()
+          .padding(horizontal = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+      ) {
+        Column(
+          modifier = Modifier.weight(1f),
+          verticalArrangement = Arrangement.spacedBy(4.dp),
+        ) {
+          Text(
+            text = appName,
+            style = AGTypography.DescriptionGames,
+            // Theme-invariant white: Palette.White resolves to dark in
+            // Vanilla's light theme, which would be illegible on the overlay.
+            color = FixedColors.White,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.widthIn(max = 204.dp),
+          )
+
+          Row(
+            verticalAlignment = Alignment.CenterVertically,
+          ) {
+            Image(
+              imageVector = getRatingStar(FixedColors.White),
+              contentDescription = null,
+              modifier = Modifier.size(16.dp),
+            )
+            Text(
+              text = String.format(Locale.US, "%.1f", rating),
+              style = AGTypography.InputsXS,
+              color = FixedColors.White,
+              modifier = Modifier.padding(start = 2.dp),
+            )
+          }
+        }
+
+        Box(
+          modifier = Modifier
+            .clip(RoundedCornerShape(50))
+            .background(Palette.Primary)
+            .padding(horizontal = 16.dp, vertical = 9.dp),
+          contentAlignment = Alignment.Center,
+        ) {
+          Text(
+            text = stringResource(R.string.search_sponsored_install),
+            style = AGTypography.InputsS,
+            color = FixedColors.Dark,
+          )
+        }
+      }
+    }
+
+    Row(
+      modifier = Modifier
+        .align(Alignment.TopStart)
+        .clip(labelShape)
+        .background(Palette.SecondaryLight)
+        .padding(horizontal = 12.dp, vertical = 4.dp),
+      verticalAlignment = Alignment.CenterVertically,
+      horizontalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+      Text(
+        text = stringResource(R.string.search_sponsored_suggested),
+        style = AGTypography.BodyBold,
+        color = Palette.White,
+      )
+      Text(
+        text = stringResource(R.string.search_sponsored_label),
+        style = AGTypography.InputsXXS,
+        color = Palette.Grey,
+      )
+    }
+  }
+}
+

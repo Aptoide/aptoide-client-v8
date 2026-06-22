@@ -23,7 +23,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -31,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.gamegenie.analytics.rememberGameGenieAnalytics
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.DrawerContent
+import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.getGameGenieAiToolbarIcon
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import kotlinx.coroutines.launch
@@ -114,7 +114,7 @@ fun ConversationsDrawer(
               Icon(
                 painter = painterResource(R.drawable.more),
                 contentDescription = "Toggle Drawer",
-                tint = Color.White
+                tint = Palette.White
               )
             }
           }
@@ -130,7 +130,7 @@ fun ConversationsDrawer(
             )
             Spacer(modifier = Modifier.width(4.dp))
             Image(
-              painter = painterResource(R.drawable.gamegenie_ai_toolbar_icon),
+              imageVector = getGameGenieAiToolbarIcon(Palette.Primary),
               contentDescription = null,
               )
           }

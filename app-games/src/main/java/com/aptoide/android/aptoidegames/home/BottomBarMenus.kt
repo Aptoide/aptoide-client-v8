@@ -99,11 +99,12 @@ fun BottomBarMenus.Icon(isSelected: Boolean) = when (this) {
   }
 
   BottomBarMenus.GameGenie -> {
+    val primaryShadowArgb = Palette.Primary.copy(alpha = 0.4f).toArgb()
     Box(
       modifier = Modifier
         .size(58.dp)
         .drawBehind {
-          val shadowColor = if (isSelected) Palette.Primary.copy(alpha = 0.4f).toArgb() else Color.Transparent.toArgb()
+          val shadowColor = if (isSelected) primaryShadowArgb else Color.Transparent.toArgb()
           val paint = Paint().apply {
             this.setShadowLayer(
               24.dp.toPx(),

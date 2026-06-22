@@ -14,7 +14,6 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.graphics.drawable.toBitmap
-import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import cm.aptoide.pt.extensions.isAllowed
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.domain.AppSource
@@ -30,7 +29,8 @@ import com.aptoide.android.aptoidegames.putDeeplink
 import com.aptoide.android.aptoidegames.putNotificationPackage
 import com.aptoide.android.aptoidegames.putNotificationSource
 import com.aptoide.android.aptoidegames.putNotificationTag
-import com.aptoide.android.aptoidegames.theme.Palette
+import com.aptoide.android.aptoidegames.theme.BrandPrimary
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -195,15 +195,16 @@ class UpdatesNotificationBuilder @Inject constructor(
     val uiMode = resources.configuration.uiMode
     val isNightMode =
       (uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-    val colorToUse = if (isNightMode) Palette.Primary.toArgb() else Palette.Black.toArgb()
+    val colorToUse = if (isNightMode) BrandPrimary.toArgb() else FixedColors.Dark.toArgb()
 
     NotificationCompat.Builder(context, channel)
       .setShowWhen(true)
       .setColor(colorToUse)
       .setSmallIcon(notificationIcon)
       .setLargeIcon(
-        largeIcon ?: VectorDrawableCompat.create(context.resources, R.drawable.app_icon, null)
-          ?.toBitmap()
+        largeIcon ?: runCatching {
+          context.packageManager.getApplicationIcon(context.packageName).toBitmap()
+        }.getOrNull()
       )
       .setContentTitle(contentTitle)
       .setContentText(contentText)

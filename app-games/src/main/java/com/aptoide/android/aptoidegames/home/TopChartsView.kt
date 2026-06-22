@@ -45,6 +45,7 @@ import com.aptoide.android.aptoidegames.installer.presentation.ProgressTextWithD
 import com.aptoide.android.aptoidegames.mmp.UTMContext
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
 import kotlin.random.Random
 import kotlin.random.nextInt
@@ -149,7 +150,7 @@ fun ChartsAppItem(
         Image(
           imageVector = getBonusIconRight(
             iconColor = Palette.Primary,
-            outlineColor = Palette.Black,
+            outlineColor = FixedColors.Dark,
             backgroundColor = Palette.Secondary
           ),
           contentDescription = null,

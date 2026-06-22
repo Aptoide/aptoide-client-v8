@@ -16,7 +16,8 @@ import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.MainActivity
 import com.aptoide.android.aptoidegames.installer.notifications.ImageDownloader
 import com.aptoide.android.aptoidegames.notifications.getNotificationIcon
-import com.aptoide.android.aptoidegames.theme.Palette
+import com.aptoide.android.aptoidegames.theme.BrandPrimary
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.google.firebase.messaging.RemoteMessage
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
@@ -71,7 +72,7 @@ class FirebaseNotificationBuilder @Inject constructor(
             val uiMode = resources.configuration.uiMode
             val isNightMode =
               (uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-            val colorToUse = if (isNightMode) Palette.Primary.toArgb() else Palette.Black.toArgb()
+            val colorToUse = if (isNightMode) BrandPrimary.toArgb() else FixedColors.Dark.toArgb()
 
             val notificationSmallIcon = BuildConfig.FLAVOR.getNotificationIcon()
 

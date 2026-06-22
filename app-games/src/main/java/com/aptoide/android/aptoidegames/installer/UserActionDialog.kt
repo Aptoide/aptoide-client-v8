@@ -50,7 +50,7 @@ import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.design_system.PrimaryButton
 import com.aptoide.android.aptoidegames.design_system.PrimaryTextButton
-import com.aptoide.android.aptoidegames.drawables.icons.getAptoideGamesToolbarLogo
+import com.aptoide.android.aptoidegames.toolbar.getToolBarLogo
 import com.aptoide.android.aptoidegames.installer.analytics.rememberInstallAnalytics
 import com.aptoide.android.aptoidegames.installer.analytics.rememberPreApprovalExperiment
 import com.aptoide.android.aptoidegames.installer.analytics.toAnalyticsPayload
@@ -254,7 +254,7 @@ fun PermissionsDialog(
         horizontalAlignment = Alignment.CenterHorizontally
       ) {
         Image(
-          imageVector = getAptoideGamesToolbarLogo(Palette.Primary),
+          imageVector = BuildConfig.FLAVOR.getToolBarLogo(Palette.Primary),
           contentDescription = null
         )
         Text(

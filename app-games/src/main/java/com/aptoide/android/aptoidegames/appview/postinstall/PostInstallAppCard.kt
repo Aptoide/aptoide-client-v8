@@ -29,6 +29,7 @@ import com.aptoide.android.aptoidegames.drawables.icons.getBonusIconRight
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
@@ -54,7 +55,7 @@ fun PostInstallAppCard(
           Image(
             imageVector = getBonusIconRight(
               iconColor = Palette.Primary,
-              outlineColor = Palette.Black,
+              outlineColor = FixedColors.Dark,
               backgroundColor = Palette.Secondary
             ),
             contentDescription = null,

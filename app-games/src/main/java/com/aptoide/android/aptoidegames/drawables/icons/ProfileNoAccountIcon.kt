@@ -26,6 +26,7 @@ private fun TestProfileNoAccountIcon() {
   )
 }
 
+@Composable
 fun getProfileNoAccountIcon(color: Color = Palette.White): ImageVector = ImageVector.Builder(
   name = "ProfileNoAccountIcon",
   defaultWidth = 24.0.dp,

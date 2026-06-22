@@ -7,18 +7,22 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
@@ -67,6 +71,7 @@ import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.mmp.UTMContext
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 
@@ -233,6 +238,7 @@ fun MoreBonusSectionView(
   ) {
     val configuration = LocalConfiguration.current
     val startPadding = (configuration.screenWidthDp * 0.15).dp
+    val isVanilla = BuildConfig.FLAVOR_brand == "vanilla"
     val splitText = stringResource(id = R.string.bonus_page_body_1, "%s", 20).split("%s")
     val annotatedString = buildAnnotatedString {
       append(splitText[0])
@@ -249,8 +255,8 @@ fun MoreBonusSectionView(
         children = {
           Image(
             imageVector = getBonusIcon(
-              outlineColor = Palette.Black,
-              giftColor = Palette.Primary,
+              outlineColor = FixedColors.Dark,
+              giftColor = if (isVanilla) FixedColors.VanillaGiftGold else Palette.Primary,
             ),
             contentDescription = null,
             modifier = Modifier.size(16.dp),
@@ -258,33 +264,65 @@ fun MoreBonusSectionView(
         }
       )
     )
-    Box {
-      Image(
-        imageVector = getMoreBonusViewHeader(),
-        contentDescription = null,
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(end = 98.dp)
-          .offset(y = 1.dp),
-        contentScale = ContentScale.FillWidth,
-      )
-
-      Row(
-        modifier = Modifier
-          .matchParentSize()
-          .padding(start = startPadding, top = 14.dp),
-        verticalAlignment = Alignment.CenterVertically
+    if (isVanilla) {
+      Box(
+        modifier = Modifier.requiredWidth(LocalConfiguration.current.screenWidthDp.dp)
       ) {
-        AptoideOutlinedText(
-          text = stringResource(
-            id = R.string.bonus_banner_title,
-            "20" //TODO Hardcoded value (should come from backend in the future)
-          ),
-          style = AGTypography.InputsM,
-          outlineWidth = 10f,
-          outlineColor = Palette.Black,
-          textColor = Palette.Primary,
+        Row(
+          modifier = Modifier
+            .height(40.dp)
+            .clip(RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp))
+            .background(FixedColors.VanillaOrange)
+            .padding(start = 16.dp, end = 16.dp),
+          verticalAlignment = Alignment.CenterVertically,
+        ) {
+          Image(
+            modifier = Modifier.padding(end = 8.dp),
+            imageVector = getBonusIcon(
+              giftColor = FixedColors.VanillaGiftGold,
+              outlineColor = FixedColors.Dark,
+            ),
+            contentDescription = null,
+          )
+          Text(
+            text = stringResource(
+              id = R.string.bonus_banner_title,
+              "20" //TODO Hardcoded value (should come from backend in the future)
+            ),
+            style = AGTypography.Title,
+            color = FixedColors.Dark,
+          )
+        }
+      }
+    } else {
+      Box {
+        Image(
+          imageVector = getMoreBonusViewHeader(),
+          contentDescription = null,
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(end = 98.dp)
+            .offset(y = 1.dp),
+          contentScale = ContentScale.FillWidth,
         )
+
+        Row(
+          modifier = Modifier
+            .matchParentSize()
+            .padding(start = startPadding, top = 14.dp),
+          verticalAlignment = Alignment.CenterVertically
+        ) {
+          AptoideOutlinedText(
+            text = stringResource(
+              id = R.string.bonus_banner_title,
+              "20" //TODO Hardcoded value (should come from backend in the future)
+            ),
+            style = AGTypography.InputsM,
+            outlineWidth = 10f,
+            outlineColor = Palette.Black,
+            textColor = Palette.Primary,
+          )
+        }
       }
     }
 

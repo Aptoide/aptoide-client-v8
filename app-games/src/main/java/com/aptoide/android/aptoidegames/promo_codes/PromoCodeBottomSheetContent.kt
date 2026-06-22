@@ -45,6 +45,7 @@ import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.promo_codes.analytics.rememberPromoCodeAnalytics
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
 
 class PromoCodeBottomSheet(
@@ -238,7 +239,7 @@ private fun WalletInstallSection(
     Image(
       imageVector = getBonusIcon(
         giftColor = Palette.Primary,
-        outlineColor = Palette.Black,
+        outlineColor = FixedColors.Dark,
       ),
       contentDescription = null,
     )

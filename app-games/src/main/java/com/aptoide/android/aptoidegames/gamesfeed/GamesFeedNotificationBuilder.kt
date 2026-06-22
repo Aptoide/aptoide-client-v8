@@ -17,7 +17,8 @@ import com.aptoide.android.aptoidegames.firebase.FirebaseNotificationBuilder
 import com.aptoide.android.aptoidegames.gamesfeed.repository.GamesFeedLocalRepository
 import com.aptoide.android.aptoidegames.notifications.getNotificationIcon
 import com.aptoide.android.aptoidegames.putNotificationSource
-import com.aptoide.android.aptoidegames.theme.Palette
+import com.aptoide.android.aptoidegames.theme.BrandPrimary
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.google.firebase.messaging.RemoteMessage
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
@@ -76,7 +77,7 @@ class GamesFeedNotificationBuilder @Inject constructor(
     val uiMode = resources.configuration.uiMode
     val isNightMode =
       (uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-    val colorToUse = if (isNightMode) Palette.Primary.toArgb() else Palette.Black.toArgb()
+    val colorToUse = if (isNightMode) BrandPrimary.toArgb() else FixedColors.Dark.toArgb()
 
     val smallIcon = BuildConfig.FLAVOR.getNotificationIcon()
 

@@ -26,6 +26,7 @@ fun TestLaunchGameGenieArrow() {
   )
 }
 
+@Composable
 fun getLaunchGameGenieArrow(
   color: Color = Palette.White,
   bgColor: Color = Palette.Secondary,

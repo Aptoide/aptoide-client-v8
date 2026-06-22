@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">Aptoide</string>
+  <string name="games">Home</string>
+  <string name="settings_send_feedback_body">Let us know what you think about Aptoide!\n\u2022 Any new feature you would like to see?\n\u2022 How do you think we can improve?</string>
+  <string name="settings_clear_cache_title">Clear Aptoide storage</string>
+  <string name="error_install_permissions_body"><![CDATA[Please go to Settings and grant <1>Aptoide</1> permissions to install apps!]]></string>
+  <string name="apkfy_whats_aptoide_games_title">What\'s Aptoide?</string>
+  <string name="apkfy_install_body">Get your favorite game and much more in Aptoide!</string>
+  <string name="apkfy_aptoide_games_intro">You\’re using Aptoide to install %1$s</string>
+  <string name="apkfy_aptoide_games_advantages_title">Why keep Aptoide?</string>
+  <string name="apkfy_aptoide_games_advantage_updates_roblox"><![CDATA[No Aptoide? <1>No Roblox updates.</1>]]></string>
+  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">Keep Aptoide - get updates first, play first.</string>
+  <string name="bonus_page_body_2"><![CDATA[You can get an extra <1>%s%% bonus</1> by using an Aptoide exclusive promo code in specific games. Stay tuned and you\'ll be notified!]]></string>
+  <string name="update_aptoide_games_body">Update Aptoide to the latest version to keep enjoying the best gaming discovery experience.</string>
+  <string name="update_aptoide_games_update_close_body">Aptoide will close to update. Just open it again!</string>
+  <string name="update_aptoide_games_update_notification">There\'s a new version of Aptoide</string>
+  <string name="promotional_now_available_body">Now available in Aptoide!</string>
+  <string name="apkfy_multi_install_highlighted_game">Top Played on Aptoide</string>
+  <string name="play_and_earn_permissions_settings_path">Settings → Apps → Aptoide → ⋮ → Allow restricted settings</string>
+  <string name="notifications_context_body">We\'ll let you know about the latest news and updates!</string>
+</resources>

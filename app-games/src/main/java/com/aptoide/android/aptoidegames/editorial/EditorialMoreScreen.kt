@@ -12,12 +12,14 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.semantics.CollectionInfo
 import androidx.compose.ui.semantics.collectionInfo
 import androidx.compose.ui.semantics.semantics
@@ -43,6 +45,7 @@ import com.aptoide.android.aptoidegames.error_views.NoConnectionView
 import com.aptoide.android.aptoidegames.home.LoadingView
 import com.aptoide.android.aptoidegames.mmp.WithUTM
 import com.aptoide.android.aptoidegames.theme.AGTypography
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 
@@ -199,15 +202,17 @@ fun EditorialsViewCardLarge(
       data = articleMeta.image,
       contentDescription = null
     )
+    val isVanilla = BuildConfig.FLAVOR_brand == "vanilla"
     Text(
       text = articleMeta.caption,
       style = AGTypography.BodyBold,
-      color = Palette.Primary,
+      color = if (isVanilla) FixedColors.White else Palette.Primary,
       maxLines = 1,
       overflow = TextOverflow.Ellipsis,
       modifier = Modifier
         .padding(start = 8.dp, top = 8.dp)
-        .background(color = Palette.Black)
+        .let { if (isVanilla) it.clip(RoundedCornerShape(16.dp)) else it }
+        .background(color = if (isVanilla) FixedColors.Dark else Palette.Black)
         .padding(horizontal = 8.dp, vertical = 4.dp)
     )
   }

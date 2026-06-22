@@ -48,6 +48,7 @@ import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
 import com.aptoide.android.aptoidegames.mmp.UTMContext
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
@@ -77,7 +78,7 @@ private fun RealAppsGridBundle(
     BundleHeader(
       title = bundle.title,
       icon = bundle.bundleIcon,
-      hasMoreAction = bundle.hasMoreAction,
+      hasMoreAction = bundle.hasAppsListMoreAction,
       onClick = getSeeMoreRouteNavigation(bundle = bundle, navigate = navigate)
     )
     when (uiState) {
@@ -176,7 +177,7 @@ fun AppGridView(
         Image(
           imageVector = getBonusIconRight(
             iconColor = Palette.Primary,
-            outlineColor = Palette.Black,
+            outlineColor = FixedColors.Dark,
             backgroundColor = Palette.Secondary
           ),
           contentDescription = null,

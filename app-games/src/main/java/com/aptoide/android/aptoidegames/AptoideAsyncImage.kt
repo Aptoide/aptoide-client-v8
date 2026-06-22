@@ -3,6 +3,7 @@ package com.aptoide.android.aptoidegames
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -17,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -33,6 +35,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.transform.Transformation
 import com.aptoide.android.aptoidegames.drawables.icons.getLeftArrow
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
 import net.engawapg.lib.zoomable.rememberZoomState
 import net.engawapg.lib.zoomable.zoomable
@@ -50,8 +53,13 @@ fun AptoideFeatureGraphicImage(
   val finalUrl = data?.let {
     "$data?w=512&h=250"
   }
+  val shapedModifier = if (BuildConfig.FLAVOR_brand == "vanilla") {
+    modifier.clip(RoundedCornerShape(24.dp))
+  } else {
+    modifier
+  }
   AptoideAsyncImage(
-    modifier = modifier,
+    modifier = shapedModifier,
     data = finalUrl,
     contentDescription = contentDescription,
     transformations = transformations,
@@ -70,8 +78,13 @@ fun AppIconImage(
   val finalUrl = data?.let {
     "$data?w=256&h=256"
   }
+  val shapedModifier = if (BuildConfig.FLAVOR_brand == "vanilla") {
+    modifier.clip(RoundedCornerShape(16.dp))
+  } else {
+    modifier
+  }
   AptoideAsyncImage(
-    modifier = modifier,
+    modifier = shapedModifier,
     data = finalUrl,
     contentDescription = contentDescription,
     transformations = transformation,
@@ -187,7 +200,7 @@ fun FullscreenImageViewer(
       }
 
       Image(
-        imageVector = getLeftArrow(Palette.Primary, Palette.Black),
+        imageVector = getLeftArrow(Palette.Primary, FixedColors.Dark),
         contentDescription = stringResource(id = R.string.button_back_title),
         contentScale = ContentScale.Crop,
         modifier = Modifier

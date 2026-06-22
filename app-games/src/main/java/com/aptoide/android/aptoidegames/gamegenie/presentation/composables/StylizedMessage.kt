@@ -15,6 +15,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 
@@ -49,7 +50,11 @@ fun StylizedMessage(
     paragraphs.map { paragraphText -> parseStylizedText(paragraphText) }
   }
 
-  val textColor = if (isUserMessage) Palette.Black else Palette.White
+  val textColor = if (isUserMessage && BuildConfig.FLAVOR_brand != "vanilla") {
+    Palette.Black
+  } else {
+    Palette.White
+  }
 
   Column {
     parsedParagraphs.forEachIndexed { pIndex, segments ->

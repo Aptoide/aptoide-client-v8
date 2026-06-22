@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">Aptoide</string>
+  <string name="settings_send_feedback_body">Дайте нам знать, что вы думаете об Aptoide!\n\u2022 Какие новые функции вы хотели бы увидеть?\n\u2022 Как, по вашему мнению, мы можем улучшить?</string>
+  <string name="settings_clear_cache_title">Очистить хранилище Aptoide</string>
+  <string name="error_install_permissions_body"><![CDATA[Пожалуйста, перейдите в «Настройки» и предоставьте <1>Aptoide</1> разрешения на установку приложений!]]></string>
+  <string name="apkfy_whats_aptoide_games_title">Что такое Aptoide?</string>
+  <string name="apkfy_install_body">Получите свою любимую игру и многое другое в Aptoide!</string>
+  <string name="apkfy_aptoide_games_intro">Вы используете Aptoide для установки %1$s</string>
+  <string name="apkfy_aptoide_games_advantages_title">Зачем сохранять Aptoide?</string>
+  <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">Сохраните Aptoide — получайте обновления первыми, играйте первыми.</string>
+  <string name="bonus_page_body_2"><![CDATA[Вы можете получить дополнительный <1>%s%% бонус</1>, используя эксклюзивный промокод Aptoide в определенных играх. Оставайтесь с нами, и мы вам сообщим!]]></string>
+  <string name="update_aptoide_games_body">Обновите Aptoide до последней версии, чтобы продолжать наслаждаться лучшими игровыми возможностями.</string>
+  <string name="update_aptoide_games_update_close_body">Aptoide закроется для обновления. Просто откройте его снова!</string>
+  <string name="update_aptoide_games_update_notification">Вышла новая версия Aptoide</string>
+  <string name="promotional_now_available_body">Теперь доступно в Aptoide!</string>
+  <string name="apkfy_multi_install_highlighted_game">Самые популярные игры на Aptoide</string>
+  <string name="play_and_earn_permissions_settings_path">Настройки → Приложения → Aptoide → ⋮ → Разрешить ограниченные настройки</string>
+</resources>

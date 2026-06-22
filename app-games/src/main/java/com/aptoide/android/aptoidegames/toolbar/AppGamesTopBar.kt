@@ -29,6 +29,7 @@ import com.aptoide.android.aptoidegames.drawables.icons.getLeftArrow
 import com.aptoide.android.aptoidegames.home.translateOrKeep
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
@@ -59,7 +60,7 @@ private fun TopBar(
     verticalAlignment = Alignment.CenterVertically,
   ) {
     Image(
-      imageVector = getLeftArrow(iconColor, Palette.Black),
+      imageVector = getLeftArrow(iconColor, FixedColors.Dark),
       contentDescription = stringResource(id = R.string.button_back_title),
       contentScale = ContentScale.Crop,
       modifier = Modifier

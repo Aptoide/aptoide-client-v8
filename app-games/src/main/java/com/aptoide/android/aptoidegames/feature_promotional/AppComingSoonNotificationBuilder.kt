@@ -26,7 +26,8 @@ import com.aptoide.android.aptoidegames.putDeeplink
 import com.aptoide.android.aptoidegames.putNotificationPackage
 import com.aptoide.android.aptoidegames.putNotificationSource
 import com.aptoide.android.aptoidegames.putNotificationTag
-import com.aptoide.android.aptoidegames.theme.Palette
+import com.aptoide.android.aptoidegames.theme.BrandPrimary
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -136,7 +137,7 @@ class AppComingSoonNotificationBuilder @Inject constructor(
     val uiMode = resources.configuration.uiMode
     val isNightMode =
       (uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-    val colorToUse = if (isNightMode) Palette.Primary.toArgb() else Palette.Black.toArgb()
+    val colorToUse = if (isNightMode) BrandPrimary.toArgb() else FixedColors.Dark.toArgb()
 
     NotificationCompat.Builder(context, channel)
       .setShowWhen(true)

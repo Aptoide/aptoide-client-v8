@@ -26,6 +26,7 @@ fun TestAGAppIcon() {
   )
 }
 
+@Composable
 fun getAGAppIcon(color: Color = Palette.Primary): ImageVector =
   ImageVector.Builder(
     name = "AGAppIcon",
