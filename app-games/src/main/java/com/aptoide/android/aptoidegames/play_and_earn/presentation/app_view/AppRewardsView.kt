@@ -31,10 +31,13 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import cm.aptoide.pt.campaigns.domain.PaEMission
+import cm.aptoide.pt.campaigns.domain.PaEMissionProgress
+import cm.aptoide.pt.campaigns.domain.PaEMissionProgressType
 import cm.aptoide.pt.campaigns.domain.PaEMissionStatus
 import cm.aptoide.pt.campaigns.presentation.PaEMissionsUiState
 import cm.aptoide.pt.campaigns.presentation.rememberPaEMissions
 import cm.aptoide.pt.feature_apps.data.randomApp
+import cm.aptoide.pt.play_and_earn.exchange.presentation.rememberExchangeRate
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getMissionHexagonCompletedIcon
@@ -42,6 +45,7 @@ import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getSmallCo
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaEProgressIndicator
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
+import java.math.RoundingMode
 
 @Composable
 fun AppRewardsView(
@@ -298,7 +302,9 @@ private fun OngoingMissionItem(mission: PaEMission) {
         contentDescription = null,
       )
       Column(
-        modifier = Modifier.padding(end = 8.dp),
+        modifier = Modifier
+          .weight(1f)
+          .padding(end = 8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
       ) {
         Column {
@@ -320,14 +326,56 @@ private fun OngoingMissionItem(mission: PaEMission) {
           progress = mission.progress?.getNormalizedProgress() ?: 0f,
         )
 
-        Text(
-          modifier = Modifier.align(Alignment.End),
-          text = "+ ${mission.units} UNITS",
-          style = AGTypography.InputsXS,
-          color = Palette.SecondaryLight
-        )
+        Row(
+          modifier = Modifier.fillMaxWidth(),
+          verticalAlignment = Alignment.CenterVertically
+        ) {
+          val timeLeft = missionTimeLeftText(mission.progress)
+          if (timeLeft != null) {
+            Text(
+              modifier = Modifier.weight(1f),
+              text = timeLeft,
+              style = AGTypography.Body,
+              color = Palette.Yellow100
+            )
+          } else {
+            Spacer(modifier = Modifier.weight(1f))
+          }
+
+          MissionReward(units = mission.units)
+        }
       }
     }
+  }
+}
+
+@Composable
+private fun MissionReward(units: Int) {
+  Column(horizontalAlignment = Alignment.End) {
+    Text(
+      text = "+ $units UNITS",
+      style = AGTypography.InputsS,
+      color = Palette.SecondaryLight
+    )
+    rememberExchangeRate(units.toLong())?.let { rewardAmount ->
+      Text(
+        text = "$${rewardAmount.setScale(2, RoundingMode.HALF_UP).toPlainString()}",
+        style = AGTypography.Body,
+        color = Palette.SecondaryLight
+      )
+    }
+  }
+}
+
+// "X seconds left"/"X minutes left" for seconds-based missions; null for other progress types.
+@Composable
+private fun missionTimeLeftText(progress: PaEMissionProgress?): String? {
+  if (progress?.type != PaEMissionProgressType.SECONDS) return null
+  val secondsLeft = (progress.target - (progress.current ?: 0)).coerceAtLeast(0)
+  return if (secondsLeft < 60) {
+    stringResource(R.string.play_and_earn_mission_seconds_left, secondsLeft)
+  } else {
+    stringResource(R.string.play_and_earn_mission_minutes_left, secondsLeft / 60)
   }
 }
 
