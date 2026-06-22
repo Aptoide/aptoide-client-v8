@@ -10,7 +10,7 @@ import com.google.gson.JsonParser
 
 @Database(
   entities = [PaEMissionEntity::class, PaEAppEntity::class],
-  version = 1,
+  version = 2,
   exportSchema = true
 )
 @TypeConverters(PaeCampaignsConverters::class)

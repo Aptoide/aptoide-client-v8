@@ -19,6 +19,9 @@ internal interface PaEAppsDao {
   @Query("SELECT packageName FROM pae_apps")
   suspend fun getAvailablePaEPackageNames(): List<String>
 
+  @Query("SELECT * FROM pae_apps WHERE packageName = :packageName")
+  suspend fun getApp(packageName: String): PaEAppEntity?
+
   @Query("DELETE FROM pae_apps")
   suspend fun clearAll()
 

@@ -24,7 +24,7 @@ internal class DefaultPaECampaignsRepository @Inject constructor(
     try {
       val paeBundles = paeCampaignsApi.getCampaigns().toDomainModel()
 
-      cacheCampaignPackages(paeBundles)
+      cacheCampaignApps(paeBundles)
 
       Result.success(paeBundles)
     } catch (e: Throwable) {
@@ -32,13 +32,12 @@ internal class DefaultPaECampaignsRepository @Inject constructor(
     }
   }
 
-  private suspend fun cacheCampaignPackages(bundles: PaEBundles) {
-    val packageNames = buildSet {
-      bundles.trending?.apps?.forEach { add(it.packageName) }
-      bundles.keepPlaying?.apps?.forEach { add(it.packageName) }
-    }
+  private suspend fun cacheCampaignApps(bundles: PaEBundles) {
+    val entities = (bundles.keepPlaying?.apps.orEmpty() + bundles.trending?.apps.orEmpty())
+      // An app can appear in both bundles; keep the one offering the most prizes.
+      .groupBy { it.packageName }
+      .map { (_, apps) -> apps.maxBy { it.totalPrizes }.toEntity() }
 
-    val entities = packageNames.map { PaEAppEntity(it) }
     paEAppsDao.replaceAll(entities)
   }
 
@@ -50,6 +49,15 @@ internal class DefaultPaECampaignsRepository @Inject constructor(
       Result.failure(e)
     }
   }
+
+  override suspend fun getCachedApp(packageName: String): Result<PaEApp?> =
+    withContext(dispatcher) {
+      try {
+        Result.success(paEAppsDao.getApp(packageName)?.toDomainModel())
+      } catch (e: Throwable) {
+        Result.failure(e)
+      }
+    }
 }
 
 private fun PaECampaignJson.toDomainModel(): PaEBundles = PaEBundles(
@@ -82,4 +90,25 @@ private fun PaEProgressJson.toDomainModel() = PaEProgress(
   target = target,
   type = type,
   status = status
+)
+
+// `progress` is deliberately dropped: it's volatile/per-user and must not be served from cache.
+private fun PaEApp.toEntity() = PaEAppEntity(
+  packageName = packageName,
+  icon = icon,
+  graphic = graphic,
+  name = name,
+  uname = uname,
+  totalPrizes = totalPrizes,
+)
+
+// Reconstructed without `progress` (not cached); callers must fetch live progress separately.
+private fun PaEAppEntity.toDomainModel() = PaEApp(
+  packageName = packageName,
+  icon = icon,
+  graphic = graphic,
+  name = name,
+  uname = uname,
+  progress = null,
+  totalPrizes = totalPrizes,
 )
