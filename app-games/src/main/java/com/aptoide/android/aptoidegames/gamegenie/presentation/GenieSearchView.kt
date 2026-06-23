@@ -46,6 +46,12 @@ fun gameGenieSearchScreen() = ScreenData.withAnalytics(
           onSuggestionSend = { message, index ->
             viewModel.sendMessage(message)
             analytics.sendGameGenieSuggestionClick(index)
+          },
+          onFollowUpSend = { message ->
+            viewModel.sendMessage(message)
+            analytics.sendGameGenieMessageSent(
+              source = GameGenieAnalytics.SOURCE_SEARCH
+            )
           }
         )
       },

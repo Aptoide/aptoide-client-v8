@@ -431,4 +431,5 @@
   <string name="gamegenie_companion_tap_fav_game">お気に入りのゲームをタップしよう——きっとマスターできる。</string>
   <string name="promotional_bonus_up_to">最大</string>
   <string name="promotional_bonus_label">ボーナス</string>
+  <string name="appview_auto_open_when_ready">準備ができたら自動で開く</string>
 </resources>

@@ -463,4 +463,5 @@
   <string name="gamegenie_companion_tap_fav_game">Albo wybierz swoją ulubioną grę – opanujesz ją do perfekcji.</string>
   <string name="promotional_bonus_up_to">Do</string>
   <string name="promotional_bonus_label">Bonus</string>
+  <string name="appview_auto_open_when_ready">Otwórz automatycznie, gdy gotowe</string>
 </resources>

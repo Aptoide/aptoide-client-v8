@@ -463,4 +463,5 @@
   <string name="gamegenie_companion_tap_fav_game">Или нажмите на свою любимую игру — вы освоите ее.</string>
   <string name="promotional_bonus_up_to">До</string>
   <string name="promotional_bonus_label">Бонус</string>
+  <string name="appview_auto_open_when_ready">Автозапуск при готовности</string>
 </resources>

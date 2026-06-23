@@ -17,10 +17,10 @@ import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
 import cm.aptoide.pt.feature_editorial.presentation.ArticleListUiState
 import cm.aptoide.pt.feature_editorial.presentation.ArticleListUiStateProvider
-import cm.aptoide.pt.feature_editorial.presentation.rememberEditorialListState
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.randomBundle
 import com.aptoide.android.aptoidegames.editorial.buildEditorialRoute
+import com.aptoide.android.aptoidegames.editorial.rememberEditorialListState
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
@@ -65,6 +65,7 @@ private fun NewsBundleContent(
     }
 
     is ArticleListUiState.Idle -> {
+      if (uiState.articles.isEmpty()) return
       val editorialMeta = uiState.articles[0]
       NewsCard(
         bundle = bundle,

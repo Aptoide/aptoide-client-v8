@@ -182,6 +182,10 @@ fun gameGenieScreen(
                 viewModel.sendMessage(message, null)
                 analytics.sendGameGenieSuggestionClick(index)
               },
+              onFollowUpSend = { message ->
+                viewModel.sendMessage(message, null)
+                analytics.sendGameGenieMessageSent(GameGenieAnalytics.SOURCE_CHAT)
+              },
               onGameClick = { selectedGame ->
                 analytics.sendGameGenieCompanionClick(selectedGame.packageName)
                 viewModel.updateLoadingState()
@@ -217,6 +221,10 @@ fun gameGenieScreen(
                 onSuggestionClick = { message, index ->
                   viewModel.sendMessage(message)
                   analytics.sendGameGenieSuggestionClick(index)
+                },
+                onFollowUpClick = { message ->
+                  viewModel.sendMessage(message)
+                  analytics.sendGameGenieMessageSent(GameGenieAnalytics.SOURCE_CHAT)
                 },
                 installedGames = installedGames,
                 onGameSwitch = { newGame ->
@@ -254,6 +262,7 @@ fun ChatbotView(
   onMessageSend: (String, String?) -> Unit,
   setFirstLoadDone: () -> Unit,
   onSuggestionSend: (String, Int) -> Unit,
+  onFollowUpSend: (String) -> Unit = {},
   onGameClick: (GameCompanion) -> Unit = {},
 ) {
   Column(
@@ -276,6 +285,7 @@ fun ChatbotView(
         navigateBack = navigateBack,
         onMessageSend = onMessageSend,
         onSuggestionSend = onSuggestionSend,
+        onFollowUpSend = onFollowUpSend,
         setFirstLoadDone = setFirstLoadDone,
         isLoading = isLoading,
         onGameClick = onGameClick,
@@ -293,6 +303,7 @@ fun ChatScreen(
   navigateBack: (() -> Unit)?,
   onMessageSend: (String, String?) -> Unit,
   onSuggestionSend: (String, Int) -> Unit,
+  onFollowUpSend: (String) -> Unit = {},
   setFirstLoadDone: () -> Unit,
   isLoading: Boolean = false,
   selectedGame: GameCompanion? = null,
@@ -336,6 +347,7 @@ fun ChatScreen(
         suggestions = suggestions,
         setFirstLoadDone = setFirstLoadDone,
         onSuggestionClick = onSuggestionSend,
+        onFollowUpClick = onFollowUpSend,
         installedGames = if (hasUserMessages) emptyList() else installedGames,
         onGameClick = onGameClick
       )

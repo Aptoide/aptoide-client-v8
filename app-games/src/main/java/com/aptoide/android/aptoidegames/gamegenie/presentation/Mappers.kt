@@ -33,7 +33,8 @@ fun ChatInteraction.toEntity() = ChatInteractionEntity(
   gpt = this.gpt,
   user = this.user?.toEntity(),
   videoId = this.videoId,
-  apps = Gson().toJson(this.apps.map { it.packageName })
+  apps = Gson().toJson(this.apps.map { it.packageName }),
+  followUps = this.followUps
 )
 
 fun UserMessage.toEntity() = UserMessageEntity(
@@ -57,7 +58,8 @@ fun ChatInteractionEntity.toDomain() = ChatInteractionHistory(
   gpt = this.gpt,
   user = this.user?.toDomain(),
   videoId = this.videoId,
-  apps = Gson().fromJson(this.apps, object : TypeToken<List<String>>() {}.type)
+  apps = Gson().fromJson(this.apps, object : TypeToken<List<String>>() {}.type),
+  followUps = this.followUps
 )
 
 fun UserMessageEntity.toDomain() = UserMessage(
@@ -75,7 +77,8 @@ fun ChatInteractionResponse.toChatInteraction(mapper: AppMapper) = ChatInteracti
     else
       this.apps.map { app ->
         app.let(mapper::map)
-      }
+      },
+  followUps = this.followUps?.take(3).orEmpty()
 )
 
 fun GameGenieResponse.toGameGenieChat(mapper: AppMapper) =
@@ -94,7 +97,8 @@ fun GameGenieChat.toGameGenieChatHistory() =
         gpt = interaction.gpt,
         user = interaction.user,
         videoId = interaction.videoId,
-        apps = interaction.apps.map { app -> app.packageName }
+        apps = interaction.apps.map { app -> app.packageName },
+        followUps = interaction.followUps
       )
     }
   )

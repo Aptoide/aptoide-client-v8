@@ -199,7 +199,8 @@ class GameGenieUseCase @Inject constructor(
             videoId = interaction.videoId,
             apps = interaction.apps.mapNotNull { app ->
               runCatching { appRepository.getApp(app).copy(hasMeta = true) }.getOrNull()
-            }
+            },
+            followUps = interaction.followUps
           )
         }
       )
@@ -221,7 +222,8 @@ class GameGenieUseCase @Inject constructor(
               videoId = interaction.videoId,
               apps = interaction.apps.mapNotNull { appName ->
                 runCatching { appRepository.getApp(appName).copy(hasMeta = true) }.getOrNull()
-              }
+              },
+              followUps = interaction.followUps
             )
           }
         )

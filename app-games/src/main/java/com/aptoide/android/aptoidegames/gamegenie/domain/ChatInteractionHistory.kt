@@ -8,4 +8,5 @@ data class ChatInteractionHistory(
   val user: UserMessage?,
   val videoId: String?,
   val apps: List<String>,
+  val followUps: List<String> = emptyList(),
 )

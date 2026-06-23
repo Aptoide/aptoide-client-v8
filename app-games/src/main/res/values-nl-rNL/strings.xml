@@ -441,4 +441,5 @@
   <string name="gamegenie_companion_tap_fav_game">Of tik op je favoriete game - je zult het onder de knie krijgen.</string>
   <string name="promotional_bonus_up_to">Tot</string>
   <string name="promotional_bonus_label">Bonus</string>
+  <string name="appview_auto_open_when_ready">Automatisch openen indien gereed</string>
 </resources>

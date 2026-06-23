@@ -38,7 +38,6 @@ import cm.aptoide.pt.feature_editorial.data.model.Media
 import cm.aptoide.pt.feature_editorial.domain.Article
 import cm.aptoide.pt.feature_editorial.domain.randomArticle
 import cm.aptoide.pt.feature_editorial.presentation.EditorialUiState
-import cm.aptoide.pt.feature_editorial.presentation.editorialViewModel
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.BundleSource.MANUAL
 import cm.aptoide.pt.feature_home.domain.Type.EDITORIAL

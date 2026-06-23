@@ -9,4 +9,5 @@ data class ChatInteraction(
   val user: UserMessage?,
   val videoId: String?,
   val apps: List<App>,
+  val followUps: List<String> = emptyList(),
 )

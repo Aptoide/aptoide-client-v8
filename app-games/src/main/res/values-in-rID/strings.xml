@@ -430,4 +430,5 @@
   <string name="gamegenie_companion_tap_fav_game">Atau ketuk game favoritmu - kamu akan menguasainya.</string>
   <string name="promotional_bonus_up_to">Hingga</string>
   <string name="promotional_bonus_label">Bonus</string>
+  <string name="appview_auto_open_when_ready">Buka otomatis saat siap</string>
 </resources>

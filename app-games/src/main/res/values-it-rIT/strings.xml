@@ -441,4 +441,5 @@
   <string name="gamegenie_companion_tap_fav_game">Oppure tocca il tuo gioco preferito: lo padroneggerai.</string>
   <string name="promotional_bonus_up_to">Fino a</string>
   <string name="promotional_bonus_label">Bonus</string>
+  <string name="appview_auto_open_when_ready">Apri automaticamente quando pronto</string>
 </resources>

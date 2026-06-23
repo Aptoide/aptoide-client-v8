@@ -62,6 +62,7 @@ fun installViewStates(
   app: App,
   onInstallStarted: () -> Unit = {},
   onCancel: () -> Unit = {},
+  autoOpenAfterInstall: Boolean? = null,
 ): InstallViewState {
   val context = LocalContext.current
   val analyticsContext = AnalyticsContext.current
@@ -94,6 +95,7 @@ fun installViewStates(
               app = app,
               networkType = context.getNetworkType(),
               analyticsContext = analyticsContext.copy(installAction = InstallAction.INSTALL),
+              autoOpenAfterInstall = autoOpenAfterInstall,
             )
 
             if (analyticsContext.currentScreen != "AppView") {

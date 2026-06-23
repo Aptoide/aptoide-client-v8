@@ -81,8 +81,6 @@ import cm.aptoide.pt.feature_apps.domain.Rating
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.rememberApp
 import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
-import cm.aptoide.pt.feature_editorial.presentation.relatedEditorialsCardViewModel
-import cm.aptoide.pt.feature_editorial.presentation.rememberRelatedEditorials
 import com.aptoide.android.aptoidegames.APP_LINK_HOST
 import com.aptoide.android.aptoidegames.APP_LINK_SCHEMA
 import com.aptoide.android.aptoidegames.AppIconImage
@@ -100,6 +98,7 @@ import com.aptoide.android.aptoidegames.appview.AppViewHeaderConstants.FEATURE_G
 import com.aptoide.android.aptoidegames.appview.AppViewHeaderConstants.VIDEO_HEIGHT
 import com.aptoide.android.aptoidegames.appview.permissions.buildAppPermissionsRoute
 import com.aptoide.android.aptoidegames.appview.postinstall.PostInstallRecommendsView
+import com.aptoide.android.aptoidegames.design_system.AptoideGamesSwitch
 import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
 import com.aptoide.android.aptoidegames.drawables.backgrounds.myiconpack.getAppViewBonusGiftBackground
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusIconLeft
@@ -109,6 +108,8 @@ import com.aptoide.android.aptoidegames.drawables.icons.getLeftArrow
 import com.aptoide.android.aptoidegames.drawables.icons.getRatingStar
 import com.aptoide.android.aptoidegames.editorial.EditorialsViewCardLarge
 import com.aptoide.android.aptoidegames.editorial.buildEditorialRoute
+import com.aptoide.android.aptoidegames.editorial.relatedEditorialsCardViewModel
+import com.aptoide.android.aptoidegames.editorial.rememberRelatedEditorials
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.error_views.NoConnectionView
 import com.aptoide.android.aptoidegames.feature_apps.presentation.SmallEmptyView
@@ -116,7 +117,12 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.buildSeeMoreBo
 import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberBonusBundle
 import com.aptoide.android.aptoidegames.feature_rtb.presentation.isRTB
 import com.aptoide.android.aptoidegames.feature_rtb.presentation.rememberRTBCampaigns
+import com.aptoide.android.aptoidegames.installer.autoopen.rememberAutoOpenAfterInstallController
+import com.aptoide.android.aptoidegames.installer.autoopen.rememberAutoOpenAfterInstallDefault
+import com.aptoide.android.aptoidegames.installer.autoopen.rememberAutoOpenAfterInstallExperiment
+import com.aptoide.android.aptoidegames.installer.autoopen.rememberAutoOpenAfterInstallPreferences
 import com.aptoide.android.aptoidegames.installer.presentation.InstallView
+import com.aptoide.android.aptoidegames.mmp.LocalUTMInfo
 import com.aptoide.android.aptoidegames.mmp.WithUTM
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.app_view.AppRewardsView
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaEInstallView
@@ -366,6 +372,17 @@ fun AppViewContent(
   var selectedTab by rememberSaveable(key = tabsList.size.toString()) { mutableIntStateOf(0) }
   var showRecommends by rememberSaveable { mutableStateOf(false) }
   var hasAutoSelectedRewards by rememberSaveable { mutableStateOf(false) }
+  val autoOpenController = rememberAutoOpenAfterInstallController()
+  val autoOpenExperiment = rememberAutoOpenAfterInstallExperiment()
+  val autoOpenPreferences = rememberAutoOpenAfterInstallPreferences()
+  val autoOpenDefault = rememberAutoOpenAfterInstallDefault()
+  val autoOpenSavedChoice = remember(autoOpenPreferences) { autoOpenPreferences?.getUserChoice() }
+  val autoOpenInitial = autoOpenSavedChoice ?: autoOpenDefault
+  var autoOpenAfterInstall by rememberSaveable(autoOpenInitial) {
+    mutableStateOf(autoOpenInitial)
+  }
+
+  val autoOpenBillingEligible = !isGamified && app.isAppCoins
   val appImageString = stringResource(id = R.string.app_view_image_description_body, app.name)
 
   val scrollState = rememberScrollState()
@@ -437,8 +454,6 @@ fun AppViewContent(
         .padding(top = if (showYoutubeVideo) VIDEO_HEIGHT.dp else FEATURE_GRAPHIC_HEIGHT.dp)
         .background(Palette.Black)
     ) {
-      app.campaigns?.deepLinkUtms = utmsMap
-
       AppPresentationView(app)
 
       if (isGamified) {
@@ -448,11 +463,42 @@ fun AppViewContent(
           navigate = navigate
         )
       } else {
-        InstallView(
-          modifier = Modifier.padding(top = 24.dp, start = 16.dp, end = 16.dp),
-          app = app,
-          onInstallStarted = { showRecommends = true }
-        )
+        val autoOpenUTMMedium = if (autoOpenBillingEligible) {
+          val cohort = if (autoOpenDefault) "open-on" else "open-off"
+          val baseMedium = utmsMap[UTM_MEDIUM]?.takeIf { it.isNotEmpty() }
+            ?: LocalUTMInfo.current.utmMedium
+          "$baseMedium-$cohort"
+        } else {
+          null
+        }
+        WithUTM(medium = autoOpenUTMMedium, navigate = navigate) { _ ->
+          InstallView(
+            modifier = Modifier.padding(top = 24.dp, start = 16.dp, end = 16.dp),
+            app = app,
+            autoOpenAfterInstall = autoOpenAfterInstall.takeIf { autoOpenBillingEligible },
+            onInstallStarted = {
+              showRecommends = true
+              if (autoOpenBillingEligible) {
+                autoOpenExperiment?.sendActivationEvent()
+                if (autoOpenAfterInstall) {
+                  autoOpenController?.open(app.packageName)
+                }
+              }
+            },
+          )
+        }
+        if (autoOpenBillingEligible) {
+          AutoOpenAfterInstallToggle(
+            checked = autoOpenAfterInstall,
+            onCheckedChange = { checked ->
+              autoOpenAfterInstall = checked
+              autoOpenPreferences?.setUserChoice(checked)
+              if (checked) autoOpenController?.open(app.packageName)
+              else autoOpenController?.cancel(app.packageName)
+            },
+            modifier = Modifier.padding(top = 8.dp, start = 16.dp, end = 16.dp)
+          )
+        }
       }
 
       AnimatedVisibility(
@@ -1078,6 +1124,29 @@ fun AppRatingAndDownloads(
 private object AppViewHeaderConstants {
   const val VIDEO_HEIGHT = 200
   const val FEATURE_GRAPHIC_HEIGHT = 200
+}
+
+@Composable
+private fun AutoOpenAfterInstallToggle(
+  checked: Boolean,
+  onCheckedChange: (Boolean) -> Unit,
+  modifier: Modifier = Modifier,
+) {
+  Row(
+    modifier = modifier.fillMaxWidth(),
+    verticalAlignment = Alignment.CenterVertically,
+  ) {
+    Text(
+      text = stringResource(R.string.appview_auto_open_when_ready),
+      style = AGTypography.InputsS,
+      color = Palette.White,
+      modifier = Modifier.weight(1f),
+    )
+    AptoideGamesSwitch(
+      checked = checked,
+      onCheckedChanged = onCheckedChange,
+    )
+  }
 }
 
 @PreviewDark

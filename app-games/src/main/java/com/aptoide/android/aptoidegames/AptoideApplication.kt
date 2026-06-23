@@ -2,7 +2,6 @@ package com.aptoide.android.aptoidegames
 
 import android.app.Application
 import android.content.Context
-import android.os.Process
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
@@ -11,13 +10,13 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.Configuration
 import androidx.work.Configuration.Provider
-import cm.aptoide.pt.extensions.getProcessName
 import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
 import cm.aptoide.pt.feature_campaigns.MMPLinkerCampaign
 import cm.aptoide.pt.feature_categories.analytics.AptoideAnalyticsInfoProvider
 import cm.aptoide.pt.feature_flags.domain.FeatureFlags
 import cm.aptoide.pt.feature_updates.domain.Updates
 import cm.aptoide.pt.install_manager.InstallManager
+import cm.aptoide.pt.installer.obb.isObbMoverProcess
 import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.decode.SvgDecoder
@@ -193,18 +192,21 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
     CoroutineScope(Dispatchers.IO).launch {
       runCatching {
         featureFlags.initialize()
-        appOpenAdInitializer.initialize()
+        initAppOpenAds()
       }.onFailure { throwable ->
         Timber.e(throwable, "Failed to initialize feature flags.")
       }
     }
   }
 
+  private suspend fun initAppOpenAds() {
+    if (!applicationContext.isObbMoverProcess()) {
+      appOpenAdInitializer.initialize()
+    }
+  }
+
   private fun initIndicative() {
-    if (applicationContext.getProcessName(
-        Process.myPid()
-      ) != "${applicationContext.packageName}:obbMoverProcess"
-    ) {
+    if (!applicationContext.isObbMoverProcess()) {
       biAnalytics.setup(
         context = applicationContext,
         installManager = installManager,

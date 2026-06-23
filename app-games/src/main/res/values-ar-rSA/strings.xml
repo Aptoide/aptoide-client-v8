@@ -485,4 +485,5 @@
   <string name="gamegenie_companion_tap_fav_game">أو اضغط على لعبتك المفضلة - ستتقنها.</string>
   <string name="promotional_bonus_up_to">حتى</string>
   <string name="promotional_bonus_label">مكافأة</string>
+  <string name="appview_auto_open_when_ready">فتح تلقائي عند الجاهزية</string>
 </resources>

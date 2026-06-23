@@ -430,4 +430,5 @@
   <string name="gamegenie_companion_tap_fav_game">或轻点你最爱的游戏——你定能驾驭它。</string>
   <string name="promotional_bonus_up_to">高达</string>
   <string name="promotional_bonus_label">奖金</string>
+  <string name="appview_auto_open_when_ready">就绪后自动打开</string>
 </resources>
