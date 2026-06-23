@@ -15,4 +15,5 @@
   <string name="update_aptoide_games_update_notification">On uusi versio Aptoideista</string>
   <string name="promotional_now_available_body">Nyt saatavilla Aptoideissa!</string>
   <string name="play_and_earn_permissions_settings_path">Asetukset → Sovellukset → Aptoide → ⋮ → Salli rajoitetut asetukset</string>
+  <string name="notifications_context_body">Kerromme sinulle uusimmat uutiset ja päivitykset!</string>
 </resources>

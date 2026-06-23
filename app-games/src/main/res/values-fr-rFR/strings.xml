@@ -439,4 +439,6 @@
   <string name="gamegenie_companion_game_choice_title">Vos jeux installés</string>
   <string name="gamegenie_companion_master_fav_games">Maîtrisez votre jeu préféré</string>
   <string name="gamegenie_companion_tap_fav_game">Ou appuyez sur votre jeu préféré : vous le maîtriserez.</string>
+  <string name="promotional_bonus_up_to">Jusqu\'à</string>
+  <string name="promotional_bonus_label">Bonus</string>
 </resources>

@@ -428,4 +428,6 @@
   <string name="gamegenie_companion_game_choice_title">Permainan yang telah Anda instal</string>
   <string name="gamegenie_companion_master_fav_games">Kuasai game favoritmu</string>
   <string name="gamegenie_companion_tap_fav_game">Atau ketuk game favoritmu - kamu akan menguasainya.</string>
+  <string name="promotional_bonus_up_to">Hingga</string>
+  <string name="promotional_bonus_label">Bonus</string>
 </resources>

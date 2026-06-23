@@ -162,4 +162,6 @@
   <string name="iap_already_processing_title">Parece que esta compra ya está siendo procesada.</string>
   <!-- Bonus Page -->
   <!-- Promo Code -->
+  <string name="promotional_bonus_up_to">Hasta</string>
+  <string name="promotional_bonus_label">Bonus</string>
 </resources>

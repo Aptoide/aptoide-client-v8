@@ -428,4 +428,6 @@
   <string name="gamegenie_companion_game_choice_title">설치된 게임들</string>
   <string name="gamegenie_companion_master_fav_games">좋아하는 게임을 마스터하세요</string>
   <string name="gamegenie_companion_tap_fav_game">좋아하는 게임을 탭해봐 - 금방 마스터할 수 있을 거야.</string>
+  <string name="promotional_bonus_up_to">최대</string>
+  <string name="promotional_bonus_label">보너스</string>
 </resources>

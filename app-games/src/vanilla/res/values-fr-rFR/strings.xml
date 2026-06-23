@@ -12,4 +12,5 @@
   <string name="update_aptoide_games_update_close_body">Aptoide va se fermer pour une mise à jour. Il vous suffit de l\'ouvrir à nouveau !</string>
   <string name="update_aptoide_games_update_notification">Une nouvelle version d\'Aptoide est disponible.</string>
   <string name="play_and_earn_permissions_settings_path">Paramètres → Applications → Aptoide → ⋮ → Autoriser les paramètres restreints</string>
+  <string name="notifications_context_body">Nous vous tiendrons au courant des dernières actualités et mises à jour !</string>
 </resources>

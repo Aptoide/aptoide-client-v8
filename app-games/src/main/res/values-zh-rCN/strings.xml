@@ -428,4 +428,6 @@
   <string name="gamegenie_companion_game_choice_title">您已安装的游戏</string>
   <string name="gamegenie_companion_master_fav_games">精通你最爱的游戏</string>
   <string name="gamegenie_companion_tap_fav_game">或轻点你最爱的游戏——你定能驾驭它。</string>
+  <string name="promotional_bonus_up_to">高达</string>
+  <string name="promotional_bonus_label">奖金</string>
 </resources>

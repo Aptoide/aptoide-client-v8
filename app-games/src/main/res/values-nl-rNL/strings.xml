@@ -439,4 +439,6 @@
   <string name="gamegenie_companion_game_choice_title">Je geïnstalleerde games</string>
   <string name="gamegenie_companion_master_fav_games">Word een meester in je favoriete game</string>
   <string name="gamegenie_companion_tap_fav_game">Of tik op je favoriete game - je zult het onder de knie krijgen.</string>
+  <string name="promotional_bonus_up_to">Tot</string>
+  <string name="promotional_bonus_label">Bonus</string>
 </resources>

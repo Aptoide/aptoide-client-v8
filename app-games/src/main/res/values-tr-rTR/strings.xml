@@ -439,4 +439,6 @@
   <string name="gamegenie_companion_game_choice_title">Yüklediğiniz oyunlar</string>
   <string name="gamegenie_companion_master_fav_games">En sevdiğiniz oyunu ustalaşın</string>
   <string name="gamegenie_companion_tap_fav_game">Ya da en sevdiğin oyuna dokun - onu ustalıkla oynayacaksın.</string>
+  <string name="promotional_bonus_up_to">Maks.</string>
+  <string name="promotional_bonus_label">Bonus</string>
 </resources>

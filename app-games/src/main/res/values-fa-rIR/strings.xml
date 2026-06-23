@@ -439,4 +439,6 @@
   <string name="gamegenie_companion_game_choice_title">Your installed games</string>
   <string name="gamegenie_companion_master_fav_games">Master your fav game</string>
   <string name="gamegenie_companion_tap_fav_game">Or tap your fav game - you\'ll master it.</string>
+  <string name="promotional_bonus_up_to">تا</string>
+  <string name="promotional_bonus_label">پاداش</string>
 </resources>

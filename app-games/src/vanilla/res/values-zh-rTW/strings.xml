@@ -12,4 +12,5 @@
   <string name="update_aptoide_games_body">更新 Aptoide 至最新版本，繼續享受最佳的遊戲探索體驗。</string>
   <string name="update_aptoide_games_update_close_body">Aptoide 將會關閉以進行更新。再次打開即可！</string>
   <string name="play_and_earn_permissions_settings_path">設定 → 應用程式 → Aptoide → ⋮ → 允許受限設定</string>
+  <string name="notifications_context_body">我們會讓您了解最新的消息與更新！</string>
 </resources>

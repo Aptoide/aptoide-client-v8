@@ -16,4 +16,5 @@
   <string name="promotional_now_available_body">Тепер доступно в Aptoide!</string>
   <string name="apkfy_multi_install_highlighted_game">Найпопулярніші ігри на Aptoide</string>
   <string name="play_and_earn_permissions_settings_path">Налаштування → Додатки → Aptoide → ⋮ → Дозволити обмежені налаштування</string>
+  <string name="notifications_context_body">Ми повідомлятимемо вас про останні новини та оновлення!</string>
 </resources>

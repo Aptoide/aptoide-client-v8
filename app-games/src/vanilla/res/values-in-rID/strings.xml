@@ -12,4 +12,5 @@
   <string name="update_aptoide_games_update_notification">Tersedia versi baru dari Aptoide</string>
   <string name="promotional_now_available_body">Sekarang tersedia di Aptoide!</string>
   <string name="play_and_earn_permissions_settings_path">Pengaturan → Aplikasi → Aptoide → ⋮ → Izinkan pengaturan terbatas</string>
+  <string name="notifications_context_body">Kami akan memberi tahu Anda tentang berita dan pembaruan terbaru!</string>
 </resources>

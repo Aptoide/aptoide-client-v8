@@ -13,4 +13,5 @@
   <string name="update_aptoide_games_update_notification">Ada versi baru Aptoide</string>
   <string name="apkfy_multi_install_highlighted_game">Top Played on Aptoide</string>
   <string name="play_and_earn_permissions_settings_path">Settings → Apps → Aptoide → ⋮ → Allow restricted settings</string>
+  <string name="notifications_context_body">Kami akan maklumkan anda tentang berita dan kemas kini terkini!</string>
 </resources>
