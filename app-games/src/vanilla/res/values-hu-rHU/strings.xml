@@ -16,4 +16,5 @@
   <string name="promotional_now_available_body">Már elérhető az Aptoideen!</string>
   <string name="apkfy_multi_install_highlighted_game">Legnépszerűbb játékok az Aptoide-en</string>
   <string name="play_and_earn_permissions_settings_path">Beállítások → Alkalmazások → Aptoide → ⋮ → Korlátozott beállítások engedélyezése</string>
+  <string name="notifications_context_body">Értesítünk a legfrissebb hírekről és frissítésekről!</string>
 </resources>

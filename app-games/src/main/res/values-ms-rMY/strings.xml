@@ -429,5 +429,7 @@ Promosi khas dan ganjaran dalam permainan kegemaran anda.</string>
   <string name="gamegenie_companion_game_choice_title">Your installed games</string>
   <string name="gamegenie_companion_master_fav_games">Master your fav game</string>
   <string name="gamegenie_companion_tap_fav_game">Or tap your fav game - you\'ll master it.</string>
+  <string name="promotional_bonus_up_to">Sehingga</string>
+  <string name="promotional_bonus_label">Bonus</string>
   <string name="appview_auto_open_when_ready">Buka secara automatik apabila sedia</string>
 </resources>

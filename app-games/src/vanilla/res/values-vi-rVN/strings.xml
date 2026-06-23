@@ -9,4 +9,5 @@
   <string name="bonus_page_body_2"><![CDATA[Bạn có thể nhận thêm <1>%s%% tiền thưởng</1> bằng cách sử dụng mã khuyến mãi độc quyền của Aptoide trong các trò chơi cụ thể. Hãy theo dõi và bạn sẽ nhận được thông báo!]]></string>
   <string name="promotional_now_available_body">Hiện đã có trong Aptoide!</string>
   <string name="play_and_earn_permissions_settings_path">Cài đặt → Ứng dụng → Aptoide → ⋮ → Cho phép cài đặt bị hạn chế</string>
+  <string name="notifications_context_body">Chúng tôi sẽ cho bạn biết về tin tức và cập nhật mới nhất!</string>
 </resources>

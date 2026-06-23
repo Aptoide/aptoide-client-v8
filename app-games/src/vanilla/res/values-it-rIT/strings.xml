@@ -14,4 +14,5 @@
   <string name="update_aptoide_games_update_close_body">Aptoide si chiuderà per completare l\'aggiornamento. Aprilo di nuovo!</string>
   <string name="update_aptoide_games_update_notification">È disponibile una nuova versione di Aptoide</string>
   <string name="play_and_earn_permissions_settings_path">Impostazioni → App → Aptoide → ⋮ → Consenti impostazioni limitate</string>
+  <string name="notifications_context_body">Ti terremo informato sulle ultime novità e sugli aggiornamenti!</string>
 </resources>

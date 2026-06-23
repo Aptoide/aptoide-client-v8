@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="app_name">Aptoide</string>
+  <string name="notifications_context_body">Te informaremos de las últimas novedades y actualizaciones.</string>
 </resources>

@@ -7,4 +7,5 @@
   <string name="apkfy_aptoide_games_advantage_faster_updates_roblox">เก็บ Aptoide - รับอัปเดตก่อน เล่นก่อน</string>
   <string name="bonus_page_body_2"><![CDATA[คุณสามารถรับโบนัสพิเศษ <1>%s%% </1> ได้โดยใช้รหัสโปรโมชั่นพิเศษเฉพาะในเกมส์นี้ของ Aptoide คอยติดตามและรับการแจ้งเตือน!]]></string>
   <string name="play_and_earn_permissions_settings_path">การตั้งค่า → แอป → Aptoide → ⋮ → อนุญาตการตั้งค่าที่ถูกจำกัด</string>
+  <string name="notifications_context_body">เราจะแจ้งให้คุณทราบข่าวสารและอัปเดตล่าสุด!</string>
 </resources>

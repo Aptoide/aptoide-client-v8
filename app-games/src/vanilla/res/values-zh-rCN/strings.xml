@@ -13,4 +13,5 @@
   <string name="update_aptoide_games_update_close_body">Aptoide 将关闭以进行更新。更新完成后重新打开即可！</string>
   <string name="update_aptoide_games_update_notification">Aptoide 已发布新版本。</string>
   <string name="promotional_now_available_body">现已在 Aptoide 上线！</string>
+  <string name="notifications_context_body">我们会向您通报最新的资讯和更新！</string>
 </resources>

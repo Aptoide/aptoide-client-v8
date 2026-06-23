@@ -17,4 +17,5 @@
   <string name="promotional_now_available_body">Now available in Aptoide!</string>
   <string name="apkfy_multi_install_highlighted_game">Top Played on Aptoide</string>
   <string name="play_and_earn_permissions_settings_path">Settings → Apps → Aptoide → ⋮ → Allow restricted settings</string>
+  <string name="notifications_context_body">हम आपको नवीनतम समाचार और अपडेट के बारे में सूचित करते रहेंगे!</string>
 </resources>

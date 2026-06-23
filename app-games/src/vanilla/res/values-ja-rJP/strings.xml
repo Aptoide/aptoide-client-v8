@@ -11,4 +11,5 @@
   <string name="update_aptoide_games_update_notification">Aptoide の新しいバージョンがあります。</string>
   <string name="promotional_now_available_body">Aptoideで利用可能に!</string>
   <string name="play_and_earn_permissions_settings_path">設定 → アプリ → Aptoide → ⋮ → 制限付き設定を許可</string>
+  <string name="notifications_context_body">最新のニュースやアップデートをお知らせします！</string>
 </resources>

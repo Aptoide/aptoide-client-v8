@@ -14,4 +14,5 @@
   <string name="update_aptoide_games_update_close_body">Aptoide güncellenmek üzere kapanacak. Tek yapman gereken yeniden açmak!</string>
   <string name="update_aptoide_games_update_notification">Aptoide\'in yeni bir sürümü mevcut</string>
   <string name="promotional_now_available_body">Artık Aptoide\'te mevcut!</string>
+  <string name="notifications_context_body">En son haberler ve güncellemeler hakkında seni bilgilendireceğiz!</string>
 </resources>

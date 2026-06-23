@@ -461,5 +461,7 @@
   <string name="gamegenie_companion_game_choice_title">Twoje zainstalowane gry</string>
   <string name="gamegenie_companion_master_fav_games">Opanuj swoją ulubioną grę</string>
   <string name="gamegenie_companion_tap_fav_game">Albo wybierz swoją ulubioną grę – opanujesz ją do perfekcji.</string>
+  <string name="promotional_bonus_up_to">Do</string>
+  <string name="promotional_bonus_label">Bonus</string>
   <string name="appview_auto_open_when_ready">Otwórz automatycznie, gdy gotowe</string>
 </resources>

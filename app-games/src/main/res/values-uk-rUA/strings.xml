@@ -461,5 +461,7 @@
   <string name="gamegenie_companion_game_choice_title">Ваші встановлені ігри</string>
   <string name="gamegenie_companion_master_fav_games">Опануйте свою улюблену гру</string>
   <string name="gamegenie_companion_tap_fav_game">Або натисніть на свою улюблену гру — ви її освоїте.</string>
+  <string name="promotional_bonus_up_to">До</string>
+  <string name="promotional_bonus_label">Бонус</string>
   <string name="appview_auto_open_when_ready">Автозапуск, коли готово</string>
 </resources>

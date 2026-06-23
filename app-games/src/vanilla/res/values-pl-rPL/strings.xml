@@ -13,4 +13,5 @@
   <string name="update_aptoide_games_update_notification">Pojawiła się nowa wersja Aptoide</string>
   <string name="promotional_now_available_body">Teraz dostępne w Aptoide!</string>
   <string name="play_and_earn_permissions_settings_path">Ustawienia → Aplikacje → Aptoide → ⋮ → Zezwól na ustawienia z ograniczeniami</string>
+  <string name="notifications_context_body">Poinformujemy Cię o najnowszych wiadomościach i aktualizacjach!</string>
 </resources>
