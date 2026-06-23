@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.toAnnotatedString
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.animations.RewardsStarsAnimation
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchange_flow.exchangeDisplayName
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 
@@ -50,7 +49,7 @@ fun ClaimableRewardCard(
       contentAlignment = Alignment.Center,
     ) {
       Image(
-        painter = painterResource(R.drawable.roblox_feature_graphic),
+        painter = painterResource(rewardType.featureGraphicRes),
         contentDescription = null,
         contentScale = ContentScale.Crop,
         colorFilter = ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(0f) }),

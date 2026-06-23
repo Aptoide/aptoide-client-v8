@@ -38,6 +38,13 @@ val PaERewardType.iconRes: Int
     PaERewardType.DIAMONDS -> R.drawable.ff_diamond
   }
 
+@get:DrawableRes
+val PaERewardType.featureGraphicRes: Int
+  get() = when (this) {
+    PaERewardType.ROBUX -> R.drawable.roblox_feature_graphic
+    PaERewardType.DIAMONDS -> R.drawable.free_fire_feature_graphic
+  }
+
 class PaERewardTypeProvider : PreviewParameterProvider<PaERewardType> {
   override val values: Sequence<PaERewardType> = PaERewardType.entries.asSequence()
 }
