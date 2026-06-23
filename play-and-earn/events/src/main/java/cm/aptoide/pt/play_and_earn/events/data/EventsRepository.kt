@@ -4,5 +4,5 @@ import cm.aptoide.pt.play_and_earn.events.domain.EventType
 
 interface EventsRepository {
 
-  suspend fun submitEvent(guestId: String, eventType: EventType): Result<Unit>
+  suspend fun submitEvent(eventType: EventType): Result<Unit>
 }

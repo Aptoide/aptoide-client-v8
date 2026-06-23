@@ -2,7 +2,6 @@ package com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards
 
 import cm.aptoide.pt.play_and_earn.events.data.EventsRepository
 import cm.aptoide.pt.play_and_earn.events.domain.EventType
-import com.aptoide.android.aptoidegames.play_and_earn.PlayAndEarnIdProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -30,7 +29,6 @@ sealed interface RewardState {
 @Singleton
 class SignInRewardRepository @Inject constructor(
   private val eventsRepository: EventsRepository,
-  private val playAndEarnIdProvider: PlayAndEarnIdProvider,
 ) {
 
   // TODO: swap for a real reward fetched from the backend once available.
@@ -51,7 +49,6 @@ class SignInRewardRepository @Inject constructor(
     scope.launch {
       // Register the sign in reward claim as a Play & Earn event. Optimistic write for now.
       eventsRepository.submitEvent(
-        guestId = playAndEarnIdProvider.getId(),
         eventType = EventType.FIRST_SIGN_IN,
       )
 

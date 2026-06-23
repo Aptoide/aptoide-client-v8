@@ -6,6 +6,5 @@ import com.google.gson.annotations.SerializedName
 
 @Keep
 internal data class SubmitEventRequestJson(
-  @SerializedName("guest_id") val guestId: String,
   @SerializedName("event_type") val eventType: EventType
 )
