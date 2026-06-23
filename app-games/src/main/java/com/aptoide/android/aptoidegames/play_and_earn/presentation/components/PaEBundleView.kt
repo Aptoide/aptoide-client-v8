@@ -18,7 +18,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.campaigns.presentation.PaEBundlesUiState
 import cm.aptoide.pt.campaigns.presentation.rememberPaEBundles
-import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.OverrideAnalyticsPlayAndEarn
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
@@ -26,7 +25,7 @@ import com.aptoide.android.aptoidegames.home.rememberRewardsDestination
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.rememberPaEAnalytics
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.app_items.PaECompactAppItem
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.layout.PaEHorizontalCarousel
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PaERewardType
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.featureGraphicRes
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.rememberPreferredPaEReward
 import com.aptoide.android.aptoidegames.theme.Palette
 
@@ -58,7 +57,7 @@ fun PaEBundleView(
             .matchParentSize()
             .padding(bottom = 112.dp)
             .background(Palette.Secondary),
-          painter = painterResource(rewardType.bundleBackgroundRes),
+          painter = painterResource(rewardType.featureGraphicRes),
           colorFilter = ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(0f) }),
           alpha = 0.2f,
           contentDescription = null,
@@ -98,12 +97,6 @@ fun PaEBundleView(
     }
   }
 }
-
-private val PaERewardType.bundleBackgroundRes: Int
-  get() = when (this) {
-    PaERewardType.ROBUX -> R.drawable.roblox_feature_graphic
-    PaERewardType.DIAMONDS -> R.drawable.free_fire_feature_graphic
-  }
 
 @Preview
 @Composable
