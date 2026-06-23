@@ -16,20 +16,18 @@ import com.aptoide.android.aptoidegames.drawables.backgrounds.getBadgeGiftBackgr
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.UnitsBadge
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.rememberPaEAnalytics
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.animations.PaEAnimatedGift
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.level_up.rememberCurrentPaELevel
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.level_up.rememberWalletUnits
 import com.aptoide.android.aptoidegames.play_and_earn.rememberShouldShowPlayAndEarn
 
 @Composable
 fun PlayAndEarnTopBarBadge(onClick: () -> Unit) {
-  val currentLevel = rememberCurrentPaELevel()
   val shouldShowPlayAndEarn = rememberShouldShowPlayAndEarn()
   val paeAnalytics = rememberPaEAnalytics()
   val walletUnits = rememberWalletUnits()
 
   val hasUnitsToExchange = walletUnits != null && walletUnits >= UNITS_EXCHANGE_THRESHOLD
 
-  if (shouldShowPlayAndEarn && currentLevel != null) {
+  if (shouldShowPlayAndEarn && walletUnits != null) {
     Row(
       modifier = Modifier.clickable(
         onClick = {
