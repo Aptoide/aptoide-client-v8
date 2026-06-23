@@ -16,23 +16,25 @@ val PaERewardType.exchangeDisplayName: String
     PaERewardType.DIAMONDS -> "Free Fire Diamonds"
   }
 
-private val ExchangeBackgroundGradient = Brush.verticalGradient(
-  colors = listOf(
-    Color(0x99913DD8),
-    Palette.Black,
-  )
-)
-
 @Composable
 fun ExchangeFlowBackground(
   modifier: Modifier = Modifier,
   content: @Composable () -> Unit,
 ) {
+  // Palette is @Composable, so build the gradient inside the composable body.
+  val backgroundGradient = Brush.verticalGradient(
+    colors = listOf(
+      Color(0x99913DD8),
+      Palette.Black,
+    )
+  )
+
+  
   Box(
     modifier = modifier
       .fillMaxSize()
       .background(Palette.Black)
-      .background(ExchangeBackgroundGradient),
+      .background(backgroundGradient),
   ) {
     content()
   }
