@@ -14,12 +14,12 @@ import com.aptoide.android.aptoidegames.theme.Palette
 @Composable
 private fun TestLevelUpBackground() {
   Image(
-    imageVector = getExchangeSuccessBackground(),
+    imageVector = getExchangeSuccessBackground(Palette.Yellow50),
     contentDescription = null,
   )
 }
 
-fun getExchangeSuccessBackground(color: Color = Palette.Yellow50): ImageVector =
+fun getExchangeSuccessBackground(color: Color): ImageVector =
   ImageVector.Builder(
     name = "ExchangeSuccessBackground",
     defaultWidth = 878.dp,
