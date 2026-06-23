@@ -18,11 +18,10 @@ internal class DefaultEventsRepository @Inject constructor(
   private val gson = Gson()
 
   override suspend fun submitEvent(
-    guestId: String,
     eventType: EventType
   ): Result<Unit> = withContext(dispatcher) {
     try {
-      eventsApi.submitEvent(SubmitEventRequestJson(guestId = guestId, eventType = eventType))
+      eventsApi.submitEvent(SubmitEventRequestJson(eventType = eventType))
       Result.success(Unit)
     } catch (e: HttpException) {
       val detail = e.parseErrorDetail()
