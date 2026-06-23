@@ -76,7 +76,7 @@ import com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchange
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchange_flow.exchangeEmailScreen
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchange_flow.exchangeSuccessScreen
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchange_flow.pickRewardScreen
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.units.redeemRewardScreen
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchange_flow.redeemRewardScreen
 import com.aptoide.android.aptoidegames.promo_codes.PromoCodeBottomSheet
 import com.aptoide.android.aptoidegames.promo_codes.rememberPromoCodeApp
 import com.aptoide.android.aptoidegames.promotions.presentation.PromotionDialog

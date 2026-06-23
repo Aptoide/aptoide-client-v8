@@ -1,4 +1,4 @@
-package com.aptoide.android.aptoidegames.play_and_earn.presentation.units
+package com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchange_flow
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -28,8 +28,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.ScreenData
-import cm.aptoide.pt.play_and_earn.exchange.domain.UNITS_EXCHANGE_THRESHOLD
 import cm.aptoide.pt.extensions.toAnnotatedString
+import cm.aptoide.pt.play_and_earn.exchange.domain.UNITS_EXCHANGE_THRESHOLD
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.design_system.AccentButton
@@ -40,8 +40,9 @@ import com.aptoide.android.aptoidegames.play_and_earn.presentation.level_up.Unit
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PaERewardType
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.iconRes
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.rememberPreferredPaEReward
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchange_flow.ExchangeFlowBackground
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchange_flow.exchangeDisplayName
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.units.UnitsBalanceUiState
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.units.UnitsBalanceUiStateProvider
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.units.rememberUnitsBalanceUiState
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
