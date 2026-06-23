@@ -72,6 +72,10 @@ fun HomeTabRow(
   onSelectTab: (Int) -> Unit,
 ) {
   val rewardsTabName = stringResource(R.string.tag_rewards)
+  // Palette is @Composable, so resolve the tab colors here and capture them in the
+  // non-composable selectedTabContentColor lambda below.
+  val rewardsTabColor = Palette.Yellow100
+  val defaultTabColor = Palette.Primary
 
   val tabBadges: List<(@Composable BoxScope.() -> Unit)?> = tabsList.map { tabName ->
     if (tabName == rewardsTabName) {
@@ -93,7 +97,7 @@ fun HomeTabRow(
     tabTextStyle = AGTypography.InputsL,
     tabBadges = tabBadges,
     selectedTabContentColor = { index ->
-      if (tabsList[index] == rewardsTabName) Palette.Yellow100 else Palette.Primary
+      if (tabsList[index] == rewardsTabName) rewardsTabColor else defaultTabColor
     },
   )
 }
