@@ -79,6 +79,17 @@ internal class DefaultPaEMissionsRepository @Inject constructor(
     null
   }
 
+  override suspend fun getEventMissions(): Result<List<PaEMission>> =
+    withContext(dispatcher) {
+      try {
+        val events = paeCampaignsApi.getMissions(missionType = "EVENT").event.orEmpty()
+        Result.success(events.map(PaEMissionJson::toDomainModel))
+      } catch (e: Throwable) {
+        e.printStackTrace()
+        Result.failure(e)
+      }
+    }
+
   override suspend fun markMissionAsCompleted(packageName: String, missionTitle: String) {
     withContext(dispatcher) {
       try {
@@ -130,11 +141,13 @@ private fun PaEMissionJson.getType() = when (type) {
   PaEMissionTypeJson.PLAY_TIME -> PaEMissionType.PLAY_TIME
   PaEMissionTypeJson.STREAK -> PaEMissionType.STREAK
   PaEMissionTypeJson.CHECKPOINT -> PaEMissionType.CHECKPOINT
+  PaEMissionTypeJson.EVENT -> PaEMissionType.EVENT
 }
 
 private fun PaEMissionProgressJson.getProgressType() = when (type) {
   PaEMissionProgressTypeJson.GXP -> PaEMissionProgressType.GXP
   PaEMissionProgressTypeJson.SECONDS -> PaEMissionProgressType.SECONDS
+  PaEMissionProgressTypeJson.COUNT -> PaEMissionProgressType.COUNT
 }
 
 private fun PaEMissionProgressJson.getStatus() = when (status) {

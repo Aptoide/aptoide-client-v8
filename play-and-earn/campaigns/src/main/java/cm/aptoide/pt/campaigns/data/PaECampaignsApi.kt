@@ -1,6 +1,7 @@
 package cm.aptoide.pt.campaigns.data
 
 import cm.aptoide.pt.campaigns.data.model.PaECampaignJson
+import cm.aptoide.pt.campaigns.data.model.PaEEventMissionsJson
 import cm.aptoide.pt.campaigns.data.model.PaEMissionsJson
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -16,4 +17,9 @@ internal interface PaECampaignsApi {
   suspend fun getCampaignMissions(
     @Path("package_name") packageName: String
   ): PaEMissionsJson
+
+  @GET("api/missions")
+  suspend fun getMissions(
+    @Query("mission_type") missionType: String
+  ): PaEEventMissionsJson
 }

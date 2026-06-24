@@ -29,12 +29,14 @@ data class PaEMissionProgress(
 enum class PaEMissionType {
   PLAY_TIME,
   STREAK,
-  CHECKPOINT
+  CHECKPOINT,
+  EVENT
 }
 
 enum class PaEMissionProgressType {
   GXP,
-  SECONDS
+  SECONDS,
+  COUNT
 }
 
 enum class PaEMissionStatus {

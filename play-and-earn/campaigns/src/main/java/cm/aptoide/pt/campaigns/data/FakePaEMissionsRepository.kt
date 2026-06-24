@@ -1,5 +1,6 @@
 package cm.aptoide.pt.campaigns.data
 
+import cm.aptoide.pt.campaigns.domain.PaEMission
 import cm.aptoide.pt.campaigns.domain.PaEMissions
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -11,6 +12,9 @@ internal class FakePaEMissionsRepository : PaEMissionsRepository {
     forceRefresh: Boolean
   ): Result<PaEMissions> =
     Result.success(paeMissions)
+
+  override suspend fun getEventMissions(): Result<List<PaEMission>> =
+    Result.success(paeMissions.missions)
 
   override fun observeCampaignMissions(packageName: String): Flow<Result<PaEMissions>> =
     flowOf(Result.success(paeMissions))

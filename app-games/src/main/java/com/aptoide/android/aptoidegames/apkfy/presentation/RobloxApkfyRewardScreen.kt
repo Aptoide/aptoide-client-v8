@@ -18,11 +18,10 @@ import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.mmp.WithUTM
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.SignInRewardViewModel
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PAE_DEFAULT_REWARD_AMOUNT
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PaERewardType
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PendingPaEReward
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.RewardState
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.SignInRewardViewModel
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.rememberUserInfo
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 
@@ -40,20 +39,20 @@ fun robloxApkfyRewardScreen(
   val viewModel = hiltViewModel<SignInRewardViewModel>()
   val userInfo = rememberUserInfo()
   val rewardState by viewModel.rewardState.collectAsState()
+  // The reward amount comes from the backend FIRST_SIGN_IN mission (via SignInRewardRepository);
+  // this screen only supplies the package-specific reward type.
+  val rewardAmount = (rewardState as? RewardState.Unclaimed)?.reward?.rewardAmount
+    ?: PAE_DEFAULT_REWARD_AMOUNT
   var awaitingSignIn by rememberSaveable { mutableStateOf(false) }
 
   // The reward is only claimed once the user returns from the sign-in flow actually signed in.
   // After claiming we go back to home, so the success dialog shows there.
   LaunchedEffect(userInfo) {
-    if (awaitingSignIn && userInfo != null && rewardState is RewardState.Unclaimed) {
+    val unclaimed = rewardState as? RewardState.Unclaimed
+    if (awaitingSignIn && userInfo != null && unclaimed != null) {
       awaitingSignIn = false
       navigateToHome()
-      viewModel.claim(
-        PendingPaEReward(
-          paERewardType = PaERewardType.ROBUX,
-          rewardAmount = PAE_DEFAULT_REWARD_AMOUNT,
-        )
-      )
+      viewModel.claim(unclaimed.reward.copy(paERewardType = PaERewardType.ROBUX))
     }
   }
 
@@ -79,7 +78,7 @@ fun robloxApkfyRewardScreen(
           headerImage = R.drawable.roblox_feature_graphic,
           rewardIcon = R.drawable.pae_roblox_reward_icon,
           paERewardType = PaERewardType.ROBUX,
-          rewardAmount = PAE_DEFAULT_REWARD_AMOUNT,
+          rewardAmount = rewardAmount,
           navigateBack = {
             apkfyAnalytics.sendApkfyScreenBackClicked()
             navigateBack()
