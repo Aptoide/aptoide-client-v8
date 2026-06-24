@@ -10,6 +10,15 @@ internal data class PaEMissionsJson(
   val missions: List<PaEMissionJson>
 )
 
+// Response of GET /api/missions (grouped by mission type). Each section is null when absent.
+@Keep
+internal data class PaEEventMissionsJson(
+  @SerializedName("play_time") val playTime: List<PaEMissionJson>?,
+  val streak: List<PaEMissionJson>?,
+  val checkpoint: List<PaEMissionJson>?,
+  val event: List<PaEMissionJson>?,
+)
+
 @Keep
 internal data class PaEMissionJson(
   val title: String,
@@ -33,13 +42,15 @@ internal data class PaEMissionProgressJson(
 internal enum class PaEMissionTypeJson {
   PLAY_TIME,
   STREAK,
-  CHECKPOINT
+  CHECKPOINT,
+  EVENT
 }
 
 @Keep
 internal enum class PaEMissionProgressTypeJson {
   @SerializedName("gxp") GXP,
-  @SerializedName("seconds") SECONDS
+  @SerializedName("seconds") SECONDS,
+  @SerializedName("count") COUNT
 }
 
 @Keep
