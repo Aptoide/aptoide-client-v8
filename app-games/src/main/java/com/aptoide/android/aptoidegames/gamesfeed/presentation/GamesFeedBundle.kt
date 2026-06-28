@@ -40,8 +40,8 @@ import com.aptoide.android.aptoidegames.gamesfeed.repository.GamesFeedItem
 import com.aptoide.android.aptoidegames.gamesfeed.repository.GamesFeedItemType
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
 import com.aptoide.android.aptoidegames.home.SeeMoreView
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.SignInRewardCard
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PaERewardType
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.SignInRewardCard
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 
@@ -120,7 +120,7 @@ private fun GamesFeedBundleContent(
         ) {
           if (PaERewardType.fromPackageName(firstPackageName) != null) {
             item {
-              SignInRewardCard(packageName = firstPackageName)
+              SignInRewardCard(packageName = firstPackageName, navigate = navigate)
             }
           }
           items(items) { item ->

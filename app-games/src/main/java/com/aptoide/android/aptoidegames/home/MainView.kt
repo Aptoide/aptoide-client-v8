@@ -65,7 +65,8 @@ import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.p
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.ClaimedRewardDialog
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PaERewardType
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.playAndEarnRewardsScreen
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnSignInOnlyRoute
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnRewardSignInRoute
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnRewardSignInScreen
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnSignInOnlyScreen
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnSignInRoute
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnSignInScreen
@@ -368,7 +369,7 @@ private fun NavigationGraph(
       goBack = navController::navigateUp,
       screenData = robloxApkfyRewardScreen(
         navigateToSignIn = {
-          navController.navigate(playAndEarnSignInOnlyRoute)
+          navController.navigate(playAndEarnRewardSignInRoute)
         },
         navigateToHome = {
           navController.popBackStack(navController.graph.startDestinationId, false)
@@ -381,7 +382,7 @@ private fun NavigationGraph(
       goBack = navController::navigateUp,
       screenData = freeFireApkfyRewardScreen(
         navigateToSignIn = {
-          navController.navigate(playAndEarnSignInOnlyRoute)
+          navController.navigate(playAndEarnRewardSignInRoute)
         },
         navigateToHome = {
           navController.popBackStack(navController.graph.startDestinationId, false)
@@ -415,6 +416,12 @@ private fun NavigationGraph(
       navigate = navController::navigateTo,
       goBack = navController::navigateUp,
       screenData = playAndEarnSignInOnlyScreen()
+    )
+
+    animatedComposable(
+      navigate = navController::navigateTo,
+      goBack = navController::navigateUp,
+      screenData = playAndEarnRewardSignInScreen()
     )
 
     animatedComposable(
