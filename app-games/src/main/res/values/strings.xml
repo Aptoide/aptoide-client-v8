@@ -415,6 +415,7 @@
   <!-- Play and Earn -->
   <string name="play_and_earn_title" translatable="false">Play &amp; Earn</string>
   <string name="play_and_earn_start_earning_title">Start Earning</string>
+  <string name="play_and_earn_sign_in_reward_body"><![CDATA[Sign in so we know where to send your <1>%1$s</1>.]]></string>
   <string name="play_and_earn_level_up_rewards_title">Level up your rewards!</string>
   <string name="play_and_earn_login_unlock_access_body">Login to unlock access to incredible prizes while you play!</string>
   <string name="play_and_earn_waiting_title">Waiting...</string>
