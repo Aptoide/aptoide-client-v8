@@ -3,6 +3,7 @@ package com.aptoide.android.aptoidegames.play_and_earn
 import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -129,9 +130,12 @@ fun rememberShouldShowPlayAndEarn(): Boolean = runPreviewable(
   preview = { Random.nextBoolean() },
   real = {
     val vm = hiltViewModel<InjectionsProvider>()
+    // Observe the visibility flow so remote-config updates (false -> true) reach the UI...
+    val visible by vm.playAndEarnManager.observePlayAndEarnVisibility().collectAsState()
     var shouldShowPlayAndEarn by rememberSaveable { mutableStateOf(false) }
 
-    LaunchedEffect(Unit) {
+    // ...and re-run the guarded check (compromised device + flag) whenever it flips.
+    LaunchedEffect(visible) {
       shouldShowPlayAndEarn = vm.playAndEarnManager.shouldShowPlayAndEarn()
     }
 
