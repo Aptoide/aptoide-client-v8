@@ -422,11 +422,7 @@ private fun CompletedMissionItem(mission: PaEMission) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
       ) {
-        Text(
-          text = "+ ${mission.units} UNITS",
-          style = AGTypography.InputsS,
-          color = Palette.SecondaryLight
-        )
+        MissionReward(units = mission.units)
         Image(
           imageVector = getMissionHexagonCompletedIcon(),
           contentDescription = null,
