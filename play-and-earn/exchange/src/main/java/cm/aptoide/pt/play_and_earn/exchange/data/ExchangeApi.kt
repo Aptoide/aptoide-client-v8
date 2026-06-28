@@ -16,7 +16,7 @@ internal interface ExchangeApi {
     @Query("country_code") countryCode: String
   ): ExchangeResponseJson
 
-  @POST("/api/exchange/v2/")
+  @POST("/api/exchange/v2")
   suspend fun exchangeUnitsV2(
     @Body request: ExchangeUnitsRequestJson
   ): ExchangeResponseJson
