@@ -6,7 +6,7 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 internal interface EventsApi {
-  @POST("/api/events/")
+  @POST("/api/events")
   suspend fun submitEvent(
     @Body request: SubmitEventRequestJson
   ): SubmitEventResponseJson
