@@ -16,6 +16,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -90,6 +92,9 @@ fun ApkfyScreen(
   val apkfyAnalytics = rememberApkfyAnalytics()
   val installAnalytics = rememberInstallAnalytics()
   val shouldShowPlayAndEarn = rememberShouldShowPlayAndEarn()
+  // installViewStates captures onInstallStarted once (in a remember(downloadUiState) block), so read
+  // the latest flag value through this stable State rather than the value captured at that time.
+  val showPaE by rememberUpdatedState(shouldShowPlayAndEarn)
   val apkfyData = apkfyState.data
 
   LaunchedEffect(Unit) {
@@ -135,17 +140,20 @@ fun ApkfyScreen(
             .padding(bottom = 32.dp),
           app = apkfyData.app,
           onInstallStarted = {
-            if (apkfyData.app.isRoblox() && apkfyState !is ApkfyUiState.Default) {
+            /*if (apkfyData.app.isRoblox() && apkfyState !is ApkfyUiState.Default) {
+              Log.d("lol", "ApkfyScreen: navigating to recommendation view")
               val variant = if (apkfyState is ApkfyUiState.BaselineWithRecommendation)
                 "with_recommendation" else "baseline"
               installAnalytics.sendExp83RobloxDownloadStarted(variant = variant)
               if (apkfyState is ApkfyUiState.BaselineWithRecommendation) {
                 navigate(robloxApkfyRecommendationRoute)
               }
-            }
+            }*/
 
             // Default APKFY: route Roblox / Free Fire installs into the Play & Earn reward flow.
-            if (apkfyState is ApkfyUiState.Default && shouldShowPlayAndEarn) {
+
+            //if (apkfyState is ApkfyUiState.Default && shouldShowPlayAndEarn) {
+            if (showPaE) {
               when {
                 apkfyData.app.isRoblox() -> navigate(robloxApkfyRewardRoute)
                 apkfyData.app.isFreeFire() -> navigate(freeFireApkfyRewardRoute)
