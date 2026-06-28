@@ -55,7 +55,8 @@ internal enum class PaEMissionProgressTypeJson {
 
 @Keep
 internal enum class PaEMissionStatusJson {
-  PENDING,
-  IN_PROGRESS,
-  COMPLETED,
+  // Server sends lowercase; "completed" is confirmed, "pending"/"in_progress" pending backend confirmation.
+  @SerializedName("pending") PENDING,
+  @SerializedName("in_progress") IN_PROGRESS,
+  @SerializedName("completed") COMPLETED,
 }
