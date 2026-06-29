@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.exception_handler.ExceptionHandler
 import cm.aptoide.pt.play_and_earn.exchange.domain.ExchangeUnitsUseCase
+import com.aptoide.android.aptoidegames.play_and_earn.WalletUnitsRefresher
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PaERewardType
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.toRedeemType
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,6 +26,7 @@ sealed interface ExchangeEmailUiState {
 class ExchangeByEmailViewModel @Inject constructor(
   private val exchangeUnitsUseCase: ExchangeUnitsUseCase,
   private val exceptionHandler: ExceptionHandler,
+  private val walletUnitsRefresher: WalletUnitsRefresher,
 ) : ViewModel() {
 
   private val _uiState = MutableStateFlow<ExchangeEmailUiState>(ExchangeEmailUiState.Idle)
@@ -41,7 +43,10 @@ class ExchangeByEmailViewModel @Inject constructor(
       _uiState.update { ExchangeEmailUiState.Loading }
 
       exchangeUnitsUseCase(email, rewardType.toRedeemType()).fold(
-        onSuccess = { _uiState.update { ExchangeEmailUiState.Success } },
+        onSuccess = {
+          walletUnitsRefresher.invalidate()
+          _uiState.update { ExchangeEmailUiState.Success }
+        },
         onFailure = { error ->
           exceptionHandler.recordException(error)
           _uiState.update { ExchangeEmailUiState.Error }
