@@ -6,6 +6,7 @@ import cm.aptoide.pt.campaigns.domain.PaEMissionStatus
 import cm.aptoide.pt.play_and_earn.events.data.EventsRepository
 import cm.aptoide.pt.play_and_earn.events.domain.EventType
 import cm.aptoide.pt.play_and_earn.exchange.domain.GetExchangeRateUseCase
+import com.aptoide.android.aptoidegames.play_and_earn.WalletUnitsRefresher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -36,6 +37,7 @@ class SignInRewardRepository @Inject constructor(
   private val eventsRepository: EventsRepository,
   private val paeMissionsRepository: PaEMissionsRepository,
   private val getExchangeRateUseCase: GetExchangeRateUseCase,
+  private val walletUnitsRefresher: WalletUnitsRefresher,
 ) {
 
   // Placeholder shown until the backend FIRST_SIGN_IN mission resolves; also the fallback if it fails.
@@ -94,6 +96,8 @@ class SignInRewardRepository @Inject constructor(
       eventsRepository.submitEvent(
         eventType = EventType.FIRST_SIGN_IN,
       )
+      // Claiming grants units on the backend — refresh the toolbar balance.
+      walletUnitsRefresher.invalidate()
 
       _rewardState.value = RewardState.Claimed
       _claimSuccessEvent.emit(reward)
