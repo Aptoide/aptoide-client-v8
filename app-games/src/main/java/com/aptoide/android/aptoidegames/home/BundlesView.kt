@@ -56,8 +56,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_editorial.domain.EDITORIAL_DEFAULT_TAG
+import cm.aptoide.pt.feature_editorial.domain.EDITORIAL_MORE_TAG
 import cm.aptoide.pt.feature_home.domain.Bundle
+import cm.aptoide.pt.feature_home.domain.BundleSource.MANUAL
 import cm.aptoide.pt.feature_home.domain.Type
+import cm.aptoide.pt.feature_home.domain.WidgetAction
+import cm.aptoide.pt.feature_home.domain.WidgetActionType.BUTTON
 import cm.aptoide.pt.feature_home.presentation.BundlesViewUiState
 import cm.aptoide.pt.feature_home.presentation.BundlesViewUiStateType
 import cm.aptoide.pt.feature_home.presentation.bundlesList
@@ -194,6 +199,24 @@ fun BundlesScreen(
   }
 }
 
+// Dev/test only: a guaranteed editorial row at the top of the For You feed, fed by the new
+// Editorial service through the existing EDITORIAL bundle path (inert in prod — flag is false).
+@Composable
+private fun bundlesWithEditorialDemoRow(bundles: List<Bundle>): List<Bundle> {
+  if (!BuildConfig.EDITORIAL_DEMO_ENABLED) return bundles
+  return listOf(
+    Bundle(
+      title = stringResource(R.string.fixed_bundle_editorial_title),
+      actions = listOf(WidgetAction(type = BUTTON, tag = EDITORIAL_MORE_TAG, url = "null")),
+      type = Type.EDITORIAL,
+      tag = EDITORIAL_DEFAULT_TAG,
+      view = "",
+      bundleSource = MANUAL,
+      timestamp = "0",
+    )
+  ) + bundles
+}
+
 @Composable
 fun BundlesView(
   viewState: BundlesViewUiState,
@@ -207,6 +230,7 @@ fun BundlesView(
       .wrapContentSize(Alignment.TopCenter)
       .padding(top = 16.dp)
   ) {
+    val bundles = bundlesWithEditorialDemoRow(viewState.bundles)
     LazyColumn(
       state = rememberBottomBarMenuScrollState(state = rememberLazyListState(), route = gamesRoute),
       modifier = Modifier
@@ -214,7 +238,7 @@ fun BundlesView(
         .wrapContentSize(Alignment.TopCenter),
       contentPadding = PaddingValues(bottom = 72.dp)
     ) {
-      items(viewState.bundles) { bundle ->
+      items(bundles) { bundle ->
         WithUTM(
           utmInfo = getBundleHomeUTMInfo(bundle.tag, bundle.type),
           navigate = navigate
