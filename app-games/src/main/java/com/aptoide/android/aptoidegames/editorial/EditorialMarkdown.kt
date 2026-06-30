@@ -13,8 +13,9 @@ import androidx.compose.ui.text.withStyle
 
 // Editorial paragraphs from the new service may contain INLINE markdown only:
 // **bold**, *italic*, [label](https://url). There is never block-level markdown or raw HTML.
+// Links are restricted to https:// so insecure (cleartext) URLs never become tappable spans.
 private val INLINE_MARKDOWN = Regex(
-  """\[([^\]]+)]\((https?://[^)\s]+)\)""" + // [label](url)
+  """\[([^\]]+)]\((https://[^)\s]+)\)""" + // [label](https url only)
     """|\*\*([^*]+)\*\*""" + //               **bold**
     """|\*([^*]+)\*""" //                      *italic*
 )

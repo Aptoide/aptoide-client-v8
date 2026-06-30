@@ -12,7 +12,6 @@ import cm.aptoide.pt.aptoide_network.domain.UrlsCache
 import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.feature_editorial.data.EditorialRepository
 import cm.aptoide.pt.feature_editorial.di.DefaultEditorialUrl
-import com.aptoide.android.aptoidegames.editorial.di.EditorialApi
 import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
 import cm.aptoide.pt.feature_editorial.domain.randomArticleMeta
 import cm.aptoide.pt.feature_editorial.domain.usecase.ArticleUseCase
@@ -22,6 +21,7 @@ import cm.aptoide.pt.feature_editorial.presentation.ArticleListUiState
 import cm.aptoide.pt.feature_editorial.presentation.EditorialViewModel
 import cm.aptoide.pt.feature_editorial.presentation.EditorialsListViewModel
 import cm.aptoide.pt.feature_editorial.presentation.RelatedEditorialsCardViewModel
+import com.aptoide.android.aptoidegames.editorial.di.EditorialApi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

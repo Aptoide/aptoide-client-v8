@@ -1,10 +1,13 @@
 package com.aptoide.android.aptoidegames.editorial.di
 
 import android.content.Context
+import androidx.annotation.StringRes
 import cm.aptoide.pt.aptoide_network.data.network.UserAgentInterceptor
 import cm.aptoide.pt.feature_apps.data.AppRepository
 import cm.aptoide.pt.feature_editorial.data.EditorialRepository
+import cm.aptoide.pt.feature_editorial.domain.ArticleType
 import com.aptoide.android.aptoidegames.BuildConfig
+import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.editorial.data.BlockDeserializer
 import com.aptoide.android.aptoidegames.editorial.data.EditorialServiceApi
 import com.aptoide.android.aptoidegames.editorial.data.EditorialServiceRepository
@@ -43,12 +46,17 @@ internal object EditorialApiModule {
   @Singleton
   @EditorialApi
   fun provideEditorialApiRepository(
+    @ApplicationContext context: Context,
     default: EditorialRepository,
     editorialServiceApi: Lazy<EditorialServiceApi>,
     appRepository: AppRepository,
   ): EditorialRepository =
     if (BuildConfig.EDITORIAL_DEMO_ENABLED) {
-      EditorialServiceRepository(api = editorialServiceApi.get(), appRepository = appRepository)
+      EditorialServiceRepository(
+        api = editorialServiceApi.get(),
+        appRepository = appRepository,
+        captionLabeler = { type -> context.getString(type.captionLabelRes()) },
+      )
     } else {
       default
     }
@@ -86,3 +94,14 @@ internal object EditorialApiModule {
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 internal annotation class EditorialApi
+
+/** Localized category-chip label for an editorial card; the contract carries no caption field. */
+@StringRes
+private fun ArticleType.captionLabelRes(): Int = when (this) {
+  ArticleType.APP_OF_THE_WEEK -> R.string.editorial_subtype_app_of_the_week
+  ArticleType.GAME_OF_THE_WEEK -> R.string.editorial_subtype_game_of_the_week
+  ArticleType.COLLECTION -> R.string.editorial_subtype_collection
+  ArticleType.NEWS -> R.string.editorial_subtype_news
+  ArticleType.NEW_APP -> R.string.editorial_subtype_new_app
+  ArticleType.OTHER -> R.string.fixed_bundle_editorial_title
+}

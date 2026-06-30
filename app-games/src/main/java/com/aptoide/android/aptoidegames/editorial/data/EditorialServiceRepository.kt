@@ -29,6 +29,9 @@ import kotlinx.coroutines.coroutineScope
 class EditorialServiceRepository(
   private val api: EditorialServiceApi,
   private val appRepository: AppRepository,
+  // Resolves the card's category chip from a localized resource at the composition root, so no
+  // user-facing strings live in this data layer (the contract carries no caption/flair field).
+  private val captionLabeler: (ArticleType) -> String,
 ) : EditorialRepository {
 
   override suspend fun getLatestArticle(): List<ArticleMeta> =
@@ -101,7 +104,7 @@ class EditorialServiceRepository(
       id = slug,
       title = title,
       url = slug,
-      caption = type.toCaptionLabel(),
+      caption = captionLabeler(type),
       summary = summary.orEmpty(),
       image = coverImageUrl.orEmpty(),
       subtype = type,
@@ -123,10 +126,12 @@ private val UI_DATE_FORMATTER: DateTimeFormatter = DateTimeFormatter.ofPattern("
 
 /**
  * The existing editorial UI parses dates as "yyyy-MM-dd HH:mm:ss" (device tz); the new service
- * returns ISO-8601 instants. Always returns a parseable date so the detail screen can't crash.
+ * returns ISO-8601 instants. Always returns a parseable date so the detail screen can't crash;
+ * a missing/malformed date falls back to a deterministic sentinel (EPOCH) rather than "now", so
+ * undated content never looks freshly published or reorders by wall-clock.
  */
 private fun String?.toUiDate(): String {
-  val instant = this?.let { runCatching { Instant.parse(it) }.getOrNull() } ?: Instant.now()
+  val instant = this?.let { runCatching { Instant.parse(it) }.getOrNull() } ?: Instant.EPOCH
   return UI_DATE_FORMATTER.format(instant.atZone(ZoneId.systemDefault()))
 }
 
@@ -146,17 +151,6 @@ private fun String?.toContractSubtype(): String? = this?.lowercase()?.takeIf {
 
 private val CONTRACT_SUBTYPES =
   setOf("app_of_the_week", "game_of_the_week", "collection", "news", "new_app")
-
-// No caption/flair exists in the contract; the existing card chip shows a category label.
-// Build is dev-only and locale=en, so English labels are acceptable here.
-private fun ArticleType.toCaptionLabel(): String = when (this) {
-  ArticleType.APP_OF_THE_WEEK -> "App of the Week"
-  ArticleType.GAME_OF_THE_WEEK -> "Game of the Week"
-  ArticleType.COLLECTION -> "Collection"
-  ArticleType.NEWS -> "News"
-  ArticleType.NEW_APP -> "New App"
-  ArticleType.OTHER -> "Editorial"
-}
 
 /**
  * Recovers the bare slug from whatever [cm.aptoide.pt.feature_editorial.domain.usecase.ArticleUseCase]
