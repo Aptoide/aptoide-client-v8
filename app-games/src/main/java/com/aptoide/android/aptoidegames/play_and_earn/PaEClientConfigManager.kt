@@ -42,6 +42,14 @@ class PaEClientConfigManager @Inject constructor(
         } else {
           Timber.d("PaEClientConfigManager: Ignoring heartbeat interval ${intervalSeconds}s (below minimum of ${MIN_HEARTBEAT_INTERVAL_SECONDS}s)")
         }
+
+        val redeemUnitsAmount = config.redeemUnitsAmount
+        if (redeemUnitsAmount != null && redeemUnitsAmount > 0) {
+          paEPreferencesRepository.setRedeemUnitsAmount(redeemUnitsAmount.toLong())
+          Timber.d("PaEClientConfigManager: Saved redeem units amount: $redeemUnitsAmount")
+        } else {
+          Timber.d("PaEClientConfigManager: Ignoring redeem units amount $redeemUnitsAmount")
+        }
       } catch (e: Exception) {
         Timber.e(e, "PaEClientConfigManager: Failed to fetch client config")
       }
