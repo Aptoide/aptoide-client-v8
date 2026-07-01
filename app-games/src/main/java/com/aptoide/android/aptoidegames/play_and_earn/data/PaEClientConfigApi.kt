@@ -12,5 +12,6 @@ interface PaEClientConfigApi {
 
 @Keep
 data class ClientConfigResponse(
-  @SerializedName("heartbeat_interval_seconds") val heartbeatIntervalSeconds: Int
+  @SerializedName("heartbeat_interval_seconds") val heartbeatIntervalSeconds: Int,
+  @SerializedName("redeem_units_amount") val redeemUnitsAmount: Int? = null,
 )
