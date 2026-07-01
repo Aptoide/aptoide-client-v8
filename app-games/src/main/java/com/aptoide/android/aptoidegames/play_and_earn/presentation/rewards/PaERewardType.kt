@@ -8,6 +8,7 @@ import com.aptoide.android.aptoidegames.R
 
 /** Default reward amount granted by the Play & Earn APKFY / earned-reward flows. */
 const val PAE_DEFAULT_REWARD_AMOUNT = "$0.50"
+const val PAE_DEFAULT_REWARD_UNITS = 50
 
 private const val ROBLOX_PACKAGE = "com.roblox.client"
 private val FREE_FIRE_PACKAGES = setOf("com.dts.freefireth", "com.dts.freefiremax")

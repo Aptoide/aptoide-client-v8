@@ -34,9 +34,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cm.aptoide.pt.extensions.toAnnotatedString
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.design_system.AccentButton
+import com.aptoide.android.aptoidegames.design_system.SecondaryOutlinedButton
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getCorrectHexagon
 import com.aptoide.android.aptoidegames.home.rememberRewardsDestination
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.animations.RewardsStarsAnimation
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchange_flow.redeemRewardRoute
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -58,6 +60,10 @@ fun ClaimedRewardDialog(navigate: (String) -> Unit) {
         activeReward = null
         navigate(rewardsDestination)
       },
+      onMyBalance = {
+        activeReward = null
+        navigate(redeemRewardRoute)
+      },
     )
   }
 }
@@ -67,6 +73,7 @@ private fun ClaimRewardDialogContent(
   reward: PendingPaEReward,
   onDismiss: () -> Unit,
   onEarnMore: () -> Unit,
+  onMyBalance: () -> Unit,
 ) {
   Dialog(
     onDismissRequest = onDismiss,
@@ -90,12 +97,18 @@ private fun ClaimRewardDialogContent(
         PaERewardSuccessArt(paERewardType = reward.paERewardType)
         RewardEarnedText(
           rewardAmount = reward.rewardAmount,
+          units = reward.units,
           paERewardType = reward.paERewardType,
         )
         AccentButton(
           modifier = Modifier.fillMaxWidth(),
           onClick = onEarnMore,
           title = stringResource(R.string.play_and_earn_earn_more_button),
+        )
+        SecondaryOutlinedButton(
+          modifier = Modifier.fillMaxWidth(),
+          onClick = onMyBalance,
+          title = stringResource(R.string.play_and_earn_my_balance_button),
         )
       }
     }
@@ -139,6 +152,7 @@ fun PaERewardSuccessArt(
 @Composable
 private fun RewardEarnedText(
   rewardAmount: String,
+  units: Int,
   paERewardType: PaERewardType,
 ) {
   val template = stringResource(
@@ -147,13 +161,25 @@ private fun RewardEarnedText(
     stringResource(paERewardType.displayNameRes),
   )
   val annotatedString = template.toAnnotatedString(SpanStyle(color = Palette.Yellow))
-  Text(
+  Column(
     modifier = Modifier.fillMaxWidth(),
-    text = annotatedString,
-    color = Palette.White,
-    style = AGTypography.Title,
-    textAlign = TextAlign.Center,
-  )
+    horizontalAlignment = Alignment.CenterHorizontally,
+    verticalArrangement = Arrangement.spacedBy(4.dp),
+  ) {
+    Text(
+      modifier = Modifier.fillMaxWidth(),
+      text = annotatedString,
+      color = Palette.White,
+      style = AGTypography.Title,
+      textAlign = TextAlign.Center,
+    )
+    Text(
+      text = stringResource(R.string.play_and_earn_exchange_units_value, units),
+      color = Palette.Yellow,
+      style = AGTypography.InputsM,
+      textAlign = TextAlign.Center,
+    )
+  }
 }
 
 @Preview
@@ -166,9 +192,11 @@ private fun ClaimRewardDialogPreview(
       reward = PendingPaEReward(
         paERewardType = paERewardType,
         rewardAmount = "$0.50",
+        units = 50,
       ),
       onDismiss = {},
       onEarnMore = {},
+      onMyBalance = {},
     )
   }
 }

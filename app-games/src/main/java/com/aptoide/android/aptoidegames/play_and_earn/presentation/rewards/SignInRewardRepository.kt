@@ -24,6 +24,7 @@ import javax.inject.Singleton
 data class PendingPaEReward(
   val paERewardType: PaERewardType,
   val rewardAmount: String,
+  val units: Int,
 )
 
 /** Backend's view of the user's reward: either unclaimed (with the reward data) or claimed. */
@@ -44,6 +45,7 @@ class SignInRewardRepository @Inject constructor(
   private val defaultReward = PendingPaEReward(
     paERewardType = PaERewardType.ROBUX,
     rewardAmount = PAE_DEFAULT_REWARD_AMOUNT,
+    units = PAE_DEFAULT_REWARD_UNITS,
   )
 
   private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
@@ -73,6 +75,7 @@ class SignInRewardRepository @Inject constructor(
           PendingPaEReward(
             paERewardType = PaERewardType.ROBUX,
             rewardAmount = formatRewardAmount(mission.units),
+            units = mission.units,
           )
         )
       }

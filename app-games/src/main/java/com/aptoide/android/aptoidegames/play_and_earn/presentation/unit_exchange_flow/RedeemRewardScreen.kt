@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,7 +29,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.ScreenData
-import cm.aptoide.pt.extensions.toAnnotatedString
 import cm.aptoide.pt.play_and_earn.exchange.domain.UNITS_EXCHANGE_THRESHOLD
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
@@ -36,14 +36,16 @@ import com.aptoide.android.aptoidegames.design_system.AccentButton
 import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
 import com.aptoide.android.aptoidegames.drawables.backgrounds.getExchangeSuccessBackground
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.level_up.UnitsBar
+import com.aptoide.android.aptoidegames.home.rememberRewardsDestination
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PaERewardType
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.iconRes
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.rememberPreferredPaEReward
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.units.UnitsBalanceUiState
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.units.UnitsBalanceUiStateProvider
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.units.rememberUnitsBalanceUiState
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.units.rememberUnitsExchangeThreshold
 import com.aptoide.android.aptoidegames.theme.AGTypography
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 import java.math.BigDecimal
@@ -58,17 +60,19 @@ fun redeemRewardScreen(
 ) = ScreenData.withAnalytics(
   route = redeemRewardRoute,
   screenAnalyticsName = "RedeemReward",
-) { _, _, navigateBack ->
+) { _, navigate, navigateBack ->
   val rewardType = rememberPreferredPaEReward()
   val uiState = rememberUnitsBalanceUiState()
+  val rewardsDestination = rememberRewardsDestination()
 
   RedeemRewardScreen(
     rewardType = rewardType,
     uiState = uiState,
-    targetUnits = UNITS_EXCHANGE_THRESHOLD,
+    targetUnits = rememberUnitsExchangeThreshold(),
     redeemAmount = REDEEM_AMOUNT,
     navigateBack = navigateBack,
     onRedeem = navigateToPickReward,
+    onEarnMore = { navigate(rewardsDestination) },
   )
 }
 
@@ -80,6 +84,7 @@ fun RedeemRewardScreen(
   redeemAmount: BigDecimal,
   navigateBack: () -> Unit,
   onRedeem: (String) -> Unit,
+  onEarnMore: () -> Unit,
 ) {
   ExchangeFlowBackground {
     Column(modifier = Modifier.fillMaxSize()) {
@@ -100,6 +105,7 @@ fun RedeemRewardScreen(
           targetUnits = targetUnits,
           redeemAmount = redeemAmount,
           onRedeem = onRedeem,
+          onEarnMore = onEarnMore,
         )
       }
     }
@@ -124,8 +130,10 @@ private fun RedeemRewardContent(
   targetUnits: Long,
   redeemAmount: BigDecimal,
   onRedeem: (String) -> Unit,
+  onEarnMore: () -> Unit,
 ) {
-  val isComplete = availableUnits >= targetUnits
+  val hasEnough = availableUnits >= targetUnits
+  val unitsToGo = (targetUnits - availableUnits).coerceAtLeast(0L)
   val formattedRedeem = "$${redeemAmount.setScale(2, RoundingMode.HALF_UP).toPlainString()}"
 
   Column(
@@ -135,72 +143,45 @@ private fun RedeemRewardContent(
   ) {
     Spacer(modifier = Modifier.height(24.dp))
 
-    UnitsHexagonHero(units = availableUnits, isComplete = isComplete)
-
-    Row(
-      modifier = Modifier
-        .fillMaxWidth()
-        .padding(horizontal = 30.dp),
-      horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
-      verticalAlignment = Alignment.CenterVertically,
-    ) {
-      Image(
-        painter = painterResource(rewardType.iconRes),
-        contentDescription = null,
-        modifier = Modifier.size(24.dp),
-      )
-      Text(
-        text = "$formattedRedeem in ${rewardType.exchangeDisplayName}",
-        style = AGTypography.SubHeadingM,
-        color = Palette.White,
-        textAlign = TextAlign.Center,
-      )
-    }
-
-    Spacer(modifier = Modifier.height(24.dp))
-
-    UnitsBar(
-      availableUnits = availableUnits,
-      barHeight = 12.dp,
-      targetUnits = targetUnits,
-      modifier = Modifier
-        .fillMaxWidth()
-        .padding(horizontal = 30.dp),
+    Text(
+      modifier = Modifier.align(Alignment.CenterHorizontally),
+      text = stringResource(R.string.play_and_earn_exchange_your_balance_label),
+      style = AGTypography.InputsL,
+      color = Palette.White,
     )
 
+    Spacer(modifier = Modifier.height(8.dp))
+
+    UnitsHexagonHero(units = availableUnits, isComplete = hasEnough)
+
     Spacer(modifier = Modifier.height(24.dp))
 
-    UnitsProgressLabel(
-      currentUnits = availableUnits,
-      targetUnits = targetUnits,
-      modifier = Modifier.align(Alignment.CenterHorizontally),
+    RedeemOfferCard(
+      rewardType = rewardType,
+      formattedRedeem = formattedRedeem,
+      costUnits = targetUnits,
+      balanceAfter = (availableUnits - targetUnits).coerceAtLeast(0L),
+      unitsToGo = unitsToGo,
+      hasEnough = hasEnough,
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(horizontal = 24.dp),
     )
 
     Spacer(modifier = Modifier.weight(1f))
-
-    if (!isComplete) {
-      RewardInfoBanner(
-        variant = rewardType,
-        targetUnits = targetUnits,
-        formattedTargetAmount = formattedRedeem,
-      )
-    }
 
     AccentButton(
       modifier = Modifier
         .fillMaxWidth()
         .padding(horizontal = 24.dp)
         .padding(bottom = 24.dp),
-      title = if (isComplete) {
+      title = if (hasEnough) {
         stringResource(R.string.play_and_earn_exchange_redeem_button, formattedRedeem)
       } else {
-        stringResource(
-          R.string.play_and_earn_exchange_units_to_go,
-          (targetUnits - availableUnits).coerceAtLeast(0L),
-        )
+        stringResource(R.string.play_and_earn_earn_more_button)
       },
-      enabled = isComplete,
-      onClick = { onRedeem(formattedRedeem) },
+      enabled = true,
+      onClick = { if (hasEnough) onRedeem(formattedRedeem) else onEarnMore() },
     )
   }
 }
@@ -248,61 +229,82 @@ private fun UnitsHexagonHero(units: Long, isComplete: Boolean = false) {
 }
 
 @Composable
-private fun UnitsProgressLabel(
-  currentUnits: Long,
-  targetUnits: Long,
+private fun RedeemOfferCard(
+  rewardType: PaERewardType,
+  formattedRedeem: String,
+  costUnits: Long,
+  balanceAfter: Long,
+  unitsToGo: Long,
+  hasEnough: Boolean,
   modifier: Modifier = Modifier,
 ) {
-  val originalString = stringResource(
-    id = R.string.play_and_earn_exchange_units_progress,
-    currentUnits,
-    targetUnits,
-  )
-  val annotatedString = originalString.toAnnotatedString(
-    AGTypography.Title.toSpanStyle().copy(color = Palette.White)
-  )
-
-  Text(
-    modifier = modifier,
-    text = annotatedString,
-    style = AGTypography.InputsXSRegular,
-    color = Palette.White,
-  )
-}
-
-@Composable
-private fun RewardInfoBanner(
-  variant: PaERewardType,
-  targetUnits: Long,
-  formattedTargetAmount: String,
-) {
-  val text = when (variant) {
-    PaERewardType.ROBUX -> stringResource(
-      R.string.play_and_earn_exchange_reach_target_robux,
-      targetUnits,
-      formattedTargetAmount,
-    )
-
-    PaERewardType.DIAMONDS -> stringResource(
-      R.string.play_and_earn_exchange_reach_target_diamonds,
-      targetUnits,
-      formattedTargetAmount,
-    )
-  }
-  Box(
-    modifier = Modifier
-      .fillMaxWidth()
-      .padding(horizontal = 24.dp)
-      .background(Palette.Secondary.copy(alpha = 0.2f))
+  Column(
+    modifier = modifier
+      .background(FixedColors.PaeExchangePurple)
       .padding(16.dp),
+    verticalArrangement = Arrangement.spacedBy(12.dp),
   ) {
-    Text(
-      text = text,
-      style = AGTypography.Body,
-      color = Palette.White,
-      textAlign = TextAlign.Center,
+    Row(
       modifier = Modifier.fillMaxWidth(),
-    )
+      horizontalArrangement = Arrangement.spacedBy(12.dp),
+      verticalAlignment = Alignment.CenterVertically,
+    ) {
+      Image(
+        painter = painterResource(rewardType.iconRes),
+        contentDescription = null,
+        modifier = Modifier.size(40.dp),
+      )
+      Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+        Text(
+          text = "$formattedRedeem in ${rewardType.exchangeDisplayName}",
+          style = AGTypography.SubHeadingM,
+          color = Palette.White,
+        )
+        Text(
+          text = stringResource(R.string.play_and_earn_exchange_redeem_cost, costUnits),
+          style = AGTypography.InputsM,
+          color = Palette.White,
+        )
+      }
+    }
+
+    Divider(color = Palette.White.copy(alpha = 0.1f), thickness = 1.dp)
+
+    if (hasEnough) {
+      Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+      ) {
+        Text(
+          text = stringResource(R.string.play_and_earn_exchange_balance_after),
+          style = AGTypography.InputsL,
+          color = Palette.White,
+        )
+        Text(
+          text = stringResource(R.string.play_and_earn_exchange_units_value, balanceAfter),
+          style = AGTypography.InputsL,
+          color = Palette.Primary,
+        )
+      }
+    } else {
+      Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+      ) {
+        Text(
+          text = stringResource(R.string.play_and_earn_exchange_not_enough_balance),
+          style = AGTypography.InputsL,
+          color = Palette.White,
+        )
+        Text(
+          text = stringResource(R.string.play_and_earn_exchange_units_to_go, unitsToGo),
+          style = AGTypography.InputsL,
+          color = Palette.Yellow100,
+        )
+      }
+    }
   }
 }
 
@@ -318,5 +320,6 @@ private fun RedeemRewardScreenPreview(
     redeemAmount = REDEEM_AMOUNT,
     navigateBack = {},
     onRedeem = {},
+    onEarnMore = {},
   )
 }

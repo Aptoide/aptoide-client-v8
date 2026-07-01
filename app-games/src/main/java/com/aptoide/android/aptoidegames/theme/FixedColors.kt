@@ -17,4 +17,8 @@ object FixedColors {
   val Scrim = Color(0xFF000000)         // image-overlay scrim
   val VanillaOrange = Color(0xFFFE6446) // vanilla brand accent (vanilla branches only)
   val VanillaGiftGold = Color(0xFFF7CB5A)
+
+  // Muted purple of the P&E exchange-flow header band (the gradient top, solid). Fixed in both
+  // flavors because that gradient is hardcoded purple regardless of brand.
+  val PaeExchangePurple = Color(0xFF633191)
 }
