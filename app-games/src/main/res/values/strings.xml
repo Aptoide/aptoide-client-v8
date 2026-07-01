@@ -504,6 +504,12 @@
   <string name="play_and_earn_exchange_units_progress"><![CDATA[<1>%1$d</1>/%2$d units]]></string>
   <string name="play_and_earn_exchange_units_label">units</string>
   <string name="play_and_earn_exchange_redeem_button">Redeem %1$s</string>
+  <string name="play_and_earn_exchange_your_balance_label">Your Balance</string>
+  <string name="play_and_earn_exchange_redeem_cost">Costs %1$d units</string>
+  <string name="play_and_earn_exchange_balance_after">Balance after redeem</string>
+  <string name="play_and_earn_exchange_units_value">%1$d units</string>
+  <string name="play_and_earn_exchange_not_enough_balance">Not enough balance</string>
+  <string name="play_and_earn_my_balance_button">My Balance</string>
   <string name="play_and_earn_exchange_reach_target_robux">Reaching %1$d units = Redeem %2$s in Robux code</string>
   <string name="play_and_earn_exchange_reach_target_diamonds">Reaching %1$d units = Redeem %2$s in Free Fire Diamonds code</string>
   <string name="play_and_earn_exchange_pick_reward_title">Pick your reward.</string>
