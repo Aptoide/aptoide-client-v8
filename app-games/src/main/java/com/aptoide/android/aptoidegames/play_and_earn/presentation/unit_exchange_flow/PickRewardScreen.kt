@@ -28,6 +28,7 @@ import cm.aptoide.pt.extensions.ScreenData
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.drawables.icons.getForward
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.rememberPaEAnalytics
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PaERewardType
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.iconRes
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -51,11 +52,15 @@ fun pickRewardScreen(
   ),
 ) { args, _, navigateBack ->
   val formattedAmount = args?.getString(amountArg)?.let { Uri.decode(it) }.orEmpty()
+  val paeAnalytics = rememberPaEAnalytics()
 
   PickRewardScreen(
     formattedAmount = formattedAmount,
     navigateBack = navigateBack,
-    onPick = { rewardType -> navigateToEmail(rewardType, formattedAmount) },
+    onPick = { rewardType ->
+      paeAnalytics.sendPaEPickRewardClick(rewardType)
+      navigateToEmail(rewardType, formattedAmount)
+    },
   )
 }
 
