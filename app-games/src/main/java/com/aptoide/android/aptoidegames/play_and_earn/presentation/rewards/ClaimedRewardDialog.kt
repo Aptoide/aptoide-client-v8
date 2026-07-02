@@ -37,6 +37,7 @@ import com.aptoide.android.aptoidegames.design_system.AccentButton
 import com.aptoide.android.aptoidegames.design_system.SecondaryOutlinedButton
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getCorrectHexagon
 import com.aptoide.android.aptoidegames.home.rememberRewardsDestination
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.rememberPaEAnalytics
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.animations.RewardsStarsAnimation
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchange_flow.redeemRewardRoute
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -46,6 +47,7 @@ import com.aptoide.android.aptoidegames.theme.Palette
 @Composable
 fun ClaimedRewardDialog(navigate: (String) -> Unit) {
   val viewModel = hiltViewModel<SignInRewardViewModel>()
+  val paeAnalytics = rememberPaEAnalytics()
   val rewardsDestination = rememberRewardsDestination()
   var activeReward by remember { mutableStateOf<PendingPaEReward?>(null) }
   LaunchedEffect(viewModel) {
@@ -57,10 +59,12 @@ fun ClaimedRewardDialog(navigate: (String) -> Unit) {
       reward = it,
       onDismiss = { activeReward = null },
       onEarnMore = {
+        paeAnalytics.sendPaERewardDialogEarnMoreClick()
         activeReward = null
         navigate(rewardsDestination)
       },
       onMyBalance = {
+        paeAnalytics.sendPaERewardDialogMyBalanceClick()
         activeReward = null
         navigate(redeemRewardRoute)
       },

@@ -18,6 +18,8 @@ import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.mmp.WithUTM
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.PaEAnalytics
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.rememberPaEAnalytics
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PAE_DEFAULT_REWARD_AMOUNT
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PaERewardType
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.RewardState
@@ -36,6 +38,7 @@ fun freeFireApkfyRewardScreen(
 ) { _, navigate, navigateBack ->
   val apkfyState = rememberApkfyState()
   val apkfyAnalytics = rememberApkfyAnalytics()
+  val paeAnalytics = rememberPaEAnalytics()
   val viewModel = hiltViewModel<SignInRewardViewModel>()
   val userInfo = rememberUserInfo()
   val rewardState by viewModel.rewardState.collectAsState()
@@ -52,6 +55,11 @@ fun freeFireApkfyRewardScreen(
     if (awaitingSignIn && userInfo != null && unclaimed != null) {
       awaitingSignIn = false
       viewModel.claim(unclaimed.reward.copy(paERewardType = PaERewardType.DIAMONDS))
+      paeAnalytics.sendPaERewardClaimed(
+        source = PaEAnalytics.SOURCE_APKFY,
+        rewardType = PaERewardType.DIAMONDS,
+        units = unclaimed.reward.units,
+      )
       navigateToHome()
     }
   }
@@ -86,11 +94,21 @@ fun freeFireApkfyRewardScreen(
           onAppClick = { navigateTo(buildAppViewRoute(apkfyData.app)) },
           onCollect = {
             if (rewardState is RewardState.Unclaimed) {
+              paeAnalytics.sendPaERewardCardCollectClick(
+                source = PaEAnalytics.SOURCE_APKFY,
+                rewardType = PaERewardType.DIAMONDS,
+              )
               awaitingSignIn = true
               navigateToSignIn()
             }
           },
-          onDismiss = navigateBack,
+          onDismiss = {
+            paeAnalytics.sendPaERewardCardDismissClick(
+              source = PaEAnalytics.SOURCE_APKFY,
+              rewardType = PaERewardType.DIAMONDS,
+            )
+            navigateBack()
+          },
         )
       }
     }

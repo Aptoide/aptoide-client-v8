@@ -15,7 +15,16 @@ class SignInRewardViewModel @Inject constructor(
 
   val claimSuccessEvent: SharedFlow<PendingPaEReward> = signInRewardRepository.claimSuccessEvent
 
+  // Reward types whose games-feed impression has already been logged, so recomposition / LazyRow
+  // item re-entry doesn't re-fire the `shown` event for the same card.
+  private val shownLogged = mutableSetOf<PaERewardType>()
+
   fun claim(reward: PendingPaEReward) {
     signInRewardRepository.claimReward(reward)
+  }
+
+  /** Runs [log] only the first time the card for [rewardType] is shown this session. */
+  fun onRewardCardShown(rewardType: PaERewardType, log: () -> Unit) {
+    if (shownLogged.add(rewardType)) log()
   }
 }

@@ -37,6 +37,7 @@ import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoadi
 import com.aptoide.android.aptoidegames.drawables.backgrounds.getExchangeSuccessBackground
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.home.rememberRewardsDestination
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.rememberPaEAnalytics
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PaERewardType
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.iconRes
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.rememberPreferredPaEReward
@@ -64,6 +65,7 @@ fun redeemRewardScreen(
   val rewardType = rememberPreferredPaEReward()
   val uiState = rememberUnitsBalanceUiState()
   val rewardsDestination = rememberRewardsDestination()
+  val paeAnalytics = rememberPaEAnalytics()
 
   RedeemRewardScreen(
     rewardType = rewardType,
@@ -71,8 +73,14 @@ fun redeemRewardScreen(
     targetUnits = rememberUnitsExchangeThreshold(),
     redeemAmount = REDEEM_AMOUNT,
     navigateBack = navigateBack,
-    onRedeem = navigateToPickReward,
-    onEarnMore = { navigate(rewardsDestination) },
+    onRedeem = {
+      paeAnalytics.sendPaERedeemClick()
+      navigateToPickReward(it)
+    },
+    onEarnMore = {
+      paeAnalytics.sendPaERedeemEarnMoreClick()
+      navigate(rewardsDestination)
+    },
   )
 }
 

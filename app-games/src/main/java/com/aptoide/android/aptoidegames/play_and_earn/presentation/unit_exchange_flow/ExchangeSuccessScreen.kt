@@ -29,6 +29,7 @@ import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.design_system.AccentButton
 import com.aptoide.android.aptoidegames.drawables.backgrounds.getExchangeSuccessBackground
 import com.aptoide.android.aptoidegames.home.rememberRewardsDestination
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.rememberPaEAnalytics
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PaERewardSuccessArt
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PaERewardType
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -63,13 +64,17 @@ fun exchangeSuccessScreen() = ScreenData.withAnalytics(
   val formattedAmount = args?.getString(amountArg)?.let { Uri.decode(it) }.orEmpty()
   val email = args?.getString(emailArg)?.let { Uri.decode(it) }.orEmpty()
   val rewardsDestination = rememberRewardsDestination()
+  val paeAnalytics = rememberPaEAnalytics()
 
   ExchangeSuccessScreen(
     rewardType = rewardType,
     formattedAmount = formattedAmount,
     email = email,
     navigateBack = navigateBack,
-    onEarnMore = { navigate(rewardsDestination) },
+    onEarnMore = {
+      paeAnalytics.sendPaEExchangeSuccessEarnMoreClick()
+      navigate(rewardsDestination)
+    },
   )
 }
 

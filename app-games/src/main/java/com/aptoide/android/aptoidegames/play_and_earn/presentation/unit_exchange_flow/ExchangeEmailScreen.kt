@@ -41,6 +41,7 @@ import com.aptoide.android.aptoidegames.design_system.AccentButton
 import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
 import com.aptoide.android.aptoidegames.drawables.icons.getError
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.rememberPaEAnalytics
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PaERewardHeroArt
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PaERewardType
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.rememberUserInfo
@@ -75,13 +76,22 @@ fun exchangeEmailScreen(
 
   val viewModel = hiltViewModel<ExchangeByEmailViewModel>()
   val uiState by viewModel.uiState.collectAsState()
+  val paeAnalytics = rememberPaEAnalytics()
 
   var submittedEmail by rememberSaveable { mutableStateOf("") }
 
   LaunchedEffect(uiState) {
-    if (uiState is ExchangeEmailUiState.Success) {
-      navigateToSuccess(rewardType, formattedAmount, submittedEmail)
-      viewModel.resetState()
+    when (uiState) {
+      ExchangeEmailUiState.Success -> {
+        paeAnalytics.sendPaEExchangeResult(success = true, rewardType = rewardType)
+        navigateToSuccess(rewardType, formattedAmount, submittedEmail)
+        viewModel.resetState()
+      }
+
+      ExchangeEmailUiState.Error ->
+        paeAnalytics.sendPaEExchangeResult(success = false, rewardType = rewardType)
+
+      else -> Unit
     }
   }
 
@@ -92,6 +102,7 @@ fun exchangeEmailScreen(
     prefilledEmail = userInfo?.email.orEmpty(),
     navigateBack = navigateBack,
     onSubmit = { email ->
+      paeAnalytics.sendPaEExchangeGetCodeClick(rewardType)
       submittedEmail = email
       viewModel.exchange(email, rewardType)
     },
