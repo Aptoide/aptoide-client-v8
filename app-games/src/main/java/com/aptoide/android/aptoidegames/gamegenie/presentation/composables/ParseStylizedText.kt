@@ -1,5 +1,38 @@
 package com.aptoide.android.aptoidegames.gamegenie.presentation.composables
 
+internal fun stripPartialTrailingMarkdown(input: String): String {
+  var s = input
+
+  run {
+    val lastOpen = s.lastIndexOf('[')
+    val lastClose = s.lastIndexOf(']')
+    if (lastOpen > lastClose) s = s.substring(0, lastOpen)
+  }
+
+  run {
+    val openParenAfterClose = Regex("""]\(""").findAll(s).lastOrNull()?.range?.first
+    if (openParenAfterClose != null) {
+      val tail = s.substring(openParenAfterClose + 2)
+      if (!tail.contains(')')) {
+        val matchingBracket = s.lastIndexOf('[', openParenAfterClose)
+        s = s.substring(0, if (matchingBracket >= 0) matchingBracket else openParenAfterClose)
+      }
+    }
+  }
+
+  if (s.endsWith("*") && !s.endsWith("**")) {
+    s = s.dropLast(1)
+  }
+
+  val boldCount = Regex("\\*\\*").findAll(s).count()
+  if (boldCount % 2 == 1) {
+    val lastOpener = s.lastIndexOf("**")
+    if (lastOpener >= 0) s = s.substring(0, lastOpener)
+  }
+
+  return s
+}
+
 fun parseStylizedText(input: String): List<TextSegment> {
   val segments = mutableListOf<TextSegment>()
   val boldRegex = Regex("\\*\\*(.*?)\\*\\*")

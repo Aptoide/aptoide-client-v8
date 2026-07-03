@@ -1,6 +1,7 @@
 package com.aptoide.android.aptoidegames.gamegenie.presentation
 
 import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieApiService
+import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieSseClient
 import com.aptoide.android.aptoidegames.gamegenie.data.database.GameCompanionDao
 import com.aptoide.android.aptoidegames.gamegenie.data.database.GameGenieHistoryDao
 import com.aptoide.android.aptoidegames.gamegenie.data.database.model.GameCompanionEntity
@@ -12,8 +13,12 @@ import com.aptoide.android.aptoidegames.gamegenie.domain.toToken
 import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieCompanionRequest
 import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieRequest
 import com.aptoide.android.aptoidegames.gamegenie.io_models.GameGenieResponse
+import com.aptoide.android.aptoidegames.gamegenie.io_models.GenieSseEvent
 import com.aptoide.android.aptoidegames.gamegenie.io_models.toDomain
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 import timber.log.Timber
 import java.io.IOException
@@ -21,6 +26,7 @@ import javax.inject.Inject
 
 class GameGenieManager @Inject constructor(
   private val gameGenieApi: GameGenieApiService,
+  private val gameGenieSseClient: GameGenieSseClient,
   private val gameGenieHistoryDao: GameGenieHistoryDao,
   private val gameCompanionDao: GameCompanionDao,
 ) {
@@ -58,22 +64,41 @@ class GameGenieManager @Inject constructor(
     }
   }
 
-  suspend fun postMessageCompanion(
+  fun streamMessage(
+    token: Token,
+    request: GameGenieRequest,
+  ): Flow<GenieSseEvent> = streamWithTokenRefresh(token) { bearer ->
+    gameGenieSseClient.stream(bearer, request)
+  }
+
+  fun streamCompanionMessage(
     token: Token,
     request: GameGenieCompanionRequest,
-  ): GameGenieResponse {
-    return try {
-      gameGenieApi.postMessageCompanion("Bearer ${token.token}", request)
-    } catch (e: HttpException) {
-      if (e.code() == 401) {
-        Timber.i("Token expired, requesting a new token")
-        val newToken = fetchNewToken()
-        gameGenieApi.postMessageCompanion(
-          "Bearer ${newToken.token}", request
-        ) // Retry with new token
-      } else {
-        throw e
-      }
+  ): Flow<GenieSseEvent> = streamWithTokenRefresh(token) { bearer ->
+    gameGenieSseClient.streamCompanion(bearer, request)
+  }
+
+  private fun streamWithTokenRefresh(
+    token: Token,
+    openStream: (bearer: String) -> Flow<GenieSseEvent>,
+  ): Flow<GenieSseEvent> = flow {
+    var currentToken = token
+    var retried = false
+    while (true) {
+      var unauthorized = false
+      openStream("Bearer ${currentToken.token}")
+        .catch { e ->
+          if (!retried && e is HttpException && e.code() == 401) {
+            Timber.i("Genie SSE token expired, requesting a new token")
+            unauthorized = true
+          } else {
+            throw e
+          }
+        }
+        .let { emitAll(it) }
+      if (!unauthorized) return@flow
+      currentToken = fetchNewToken()
+      retried = true
     }
   }
 

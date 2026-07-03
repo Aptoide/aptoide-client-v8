@@ -349,7 +349,8 @@ fun ChatScreen(
         onSuggestionClick = onSuggestionSend,
         onFollowUpClick = onFollowUpSend,
         installedGames = if (hasUserMessages) emptyList() else installedGames,
-        onGameClick = onGameClick
+        onGameClick = onGameClick,
+        isStreaming = uiState.isStreaming,
       )
     }
     if (isLoading) {
