@@ -440,4 +440,45 @@
   <string name="promotional_bonus_up_to">Maks.</string>
   <string name="promotional_bonus_label">Bonus</string>
   <string name="appview_auto_open_when_ready">Hazır olduğunda otomatik aç</string>
+  <string name="play_and_earn_collect_button">Toplamak için dokun</string>
+  <string name="play_and_earn_currency_diamonds">Diamonds</string>
+  <string name="play_and_earn_currency_robux">Robux</string>
+  <string name="play_and_earn_dismiss_button">Belki sonra</string>
+  <string name="play_and_earn_earn_amount_badge">%1$s kazan</string>
+  <string name="play_and_earn_earn_more_button">Daha Fazla Kazan</string>
+  <string name="play_and_earn_earn_title">%1$s kazan</string>
+  <string name="play_and_earn_exchange_almost_there">Neredeyse vardınız!</string>
+  <string name="play_and_earn_exchange_available_subtitle">%1$s mevcut.</string>
+  <string name="play_and_earn_exchange_balance_after">Kullanım sonrası bakiye</string>
+  <string name="play_and_earn_exchange_earn_more_button">Daha Fazla Kazan</string>
+  <string name="play_and_earn_exchange_email_address_label">E-posta Adresi</string>
+  <string name="play_and_earn_exchange_email_error">Geçerli bir e-posta adresi girin</string>
+  <string name="play_and_earn_exchange_email_safe_note">🔒 E-postanız bizimle güvende. Yalnızca bu ödülü göndermek için kullanacağız.</string>
+  <string name="play_and_earn_exchange_get_my_code_button">Kodumu al</string>
+  <string name="play_and_earn_exchange_not_enough_balance">Yetersiz bakiye</string>
+  <string name="play_and_earn_exchange_pick_reward_title">Ödülünüzü seçin.</string>
+  <string name="play_and_earn_exchange_reach_target_robux">%1$d birime ulaşın = %2$s Robux kodu kullanın</string>
+  <string name="play_and_earn_exchange_reach_target_diamonds">%1$d birime ulaşın = %2$s Free Fire Diamonds kodu kullanın</string>
+  <string name="play_and_earn_exchange_redeem_button">%1$s kullan</string>
+  <string name="play_and_earn_exchange_redeem_cost">%1$d birim harcar</string>
+  <string name="play_and_earn_exchange_send_code"><![CDATA[<1>%1$s</1> <2>%2$s</2> kodunuzu nereye gönderelim?]]></string>
+  <string name="play_and_earn_exchange_success_email_sent">Kodunuzu %1$s adresine gönderdik. 24 saat içinde gelen kutunuzu kontrol edin.</string>
+  <string name="play_and_earn_exchange_units_label">birim</string>
+  <string name="play_and_earn_exchange_units_progress"><![CDATA[<1>%1$d</1>/%2$d birim]]></string>
+  <string name="play_and_earn_exchange_units_to_go">%1$d birim kaldı</string>
+  <string name="play_and_earn_exchange_units_value">%1$d birim</string>
+  <string name="play_and_earn_exchange_your_balance_label">Bakiyeniz</string>
+  <string name="play_and_earn_exclusive_offer">Özel teklif</string>
+  <string name="play_and_earn_mission_minutes_left">%1$d dakika kaldı</string>
+  <string name="play_and_earn_mission_seconds_left">%1$d saniye kaldı</string>
+  <string name="play_and_earn_more_games_more">Daha fazla oyun. Daha fazla %1$s.</string>
+  <string name="play_and_earn_my_balance_button">Bakiyem</string>
+  <string name="play_and_earn_permissions_almost_ready_title">Kazanmaya neredeyse hazırsınız!</string>
+  <string name="play_and_earn_permissions_open_settings_button">Android ayarlarını aç</string>
+  <string name="play_and_earn_play_and_earn_up_to_button">$%1$.2f\'ye kadar Play &amp; Earn</string>
+  <string name="play_and_earn_reward_claim_message"><![CDATA[%2$s içindeki <1>%1$s</1> sizin!]]></string>
+  <string name="play_and_earn_reward_earned_message"><![CDATA[%2$s içinde <1>%1$s</1> kazandınız!]]></string>
+  <string name="play_and_earn_rewards_install_play_title">Oyunları yükleyin. Favorinizi oynayın.</string>
+  <string name="play_and_earn_sign_in_reward_body"><![CDATA[<1>%1$s</1> ödülünüzü nereye göndereceğimizi bilmemiz için giriş yapın.]]></string>
+  <string name="play_and_earn_tap_to_collect">Toplamak için dokun</string>
 </resources>

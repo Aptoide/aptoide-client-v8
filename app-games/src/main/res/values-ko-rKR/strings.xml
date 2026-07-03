@@ -429,4 +429,45 @@
   <string name="promotional_bonus_up_to">최대</string>
   <string name="promotional_bonus_label">보너스</string>
   <string name="appview_auto_open_when_ready">준비되면 자동 실행</string>
+  <string name="play_and_earn_exclusive_offer">독점 혜택</string>
+  <string name="play_and_earn_reward_earned_message"><![CDATA[%2$s에서 <1>%1$s</1>을(를) 획득했습니다!]]></string>
+  <string name="play_and_earn_collect_button">탭하여 받기</string>
+  <string name="play_and_earn_dismiss_button">나중에</string>
+  <string name="play_and_earn_currency_robux">Robux</string>
+  <string name="play_and_earn_currency_diamonds">Diamonds</string>
+  <string name="play_and_earn_reward_claim_message"><![CDATA[%2$s의 <1>%1$s</1>이(가) 내 것입니다!]]></string>
+  <string name="play_and_earn_earn_more_button">더 벌기</string>
+  <string name="play_and_earn_sign_in_reward_body"><![CDATA[<1>%1$s</1>을(를) 어디로 보낼지 알 수 있도록 로그인하세요.]]></string>
+  <string name="play_and_earn_permissions_open_settings_button">Android 설정 열기</string>
+  <string name="play_and_earn_mission_seconds_left">%1$d초 남음</string>
+  <string name="play_and_earn_mission_minutes_left">%1$d분 남음</string>
+  <string name="play_and_earn_play_and_earn_up_to_button">Play &amp; Earn 최대 $%1$.2f</string>
+  <string name="play_and_earn_permissions_almost_ready_title">거의 다 됐어요!</string>
+  <string name="play_and_earn_exchange_units_to_go">%1$d 유닛 남음</string>
+  <string name="play_and_earn_exchange_units_progress"><![CDATA[<1>%1$d</1>/%2$d 유닛]]></string>
+  <string name="play_and_earn_exchange_units_label">유닛</string>
+  <string name="play_and_earn_exchange_redeem_button">%1$s 사용</string>
+  <string name="play_and_earn_exchange_your_balance_label">내 잔액</string>
+  <string name="play_and_earn_exchange_redeem_cost">%1$d 유닛 소요</string>
+  <string name="play_and_earn_exchange_balance_after">사용 후 잔액</string>
+  <string name="play_and_earn_exchange_units_value">%1$d 유닛</string>
+  <string name="play_and_earn_exchange_not_enough_balance">잔액 부족</string>
+  <string name="play_and_earn_my_balance_button">내 잔액</string>
+  <string name="play_and_earn_exchange_reach_target_robux">%1$d 유닛 도달 = %2$s Robux 코드 사용</string>
+  <string name="play_and_earn_exchange_reach_target_diamonds">%1$d 유닛 도달 = %2$s Free Fire Diamonds 코드 사용</string>
+  <string name="play_and_earn_exchange_pick_reward_title">보상을 선택하세요.</string>
+  <string name="play_and_earn_exchange_available_subtitle">%1$s 사용 가능합니다.</string>
+  <string name="play_and_earn_exchange_almost_there">거의 다 왔어요!</string>
+  <string name="play_and_earn_exchange_send_code"><![CDATA[<1>%1$s</1> <2>%2$s</2> 코드를 어디로 보낼까요?]]></string>
+  <string name="play_and_earn_exchange_email_address_label">이메일 주소</string>
+  <string name="play_and_earn_exchange_email_safe_note">🔒 이메일은 안전하게 보관됩니다. 이 보상을 보내는 용도로만 사용됩니다.</string>
+  <string name="play_and_earn_exchange_get_my_code_button">코드 받기</string>
+  <string name="play_and_earn_exchange_email_error">유효한 이메일 주소를 입력하세요</string>
+  <string name="play_and_earn_exchange_success_email_sent">%1$s(으)로 코드를 보냈습니다. 24시간 이내에 받은 편지함을 확인하세요.</string>
+  <string name="play_and_earn_exchange_earn_more_button">더 벌기</string>
+  <string name="play_and_earn_tap_to_collect">탭하여 받기</string>
+  <string name="play_and_earn_earn_title">%1$s 벌기</string>
+  <string name="play_and_earn_more_games_more">더 많은 게임. 더 많은 %1$s.</string>
+  <string name="play_and_earn_rewards_install_play_title">게임을 설치하세요. 좋아하는 게임을 플레이하세요.</string>
+  <string name="play_and_earn_earn_amount_badge">%1$s 벌기</string>
 </resources>

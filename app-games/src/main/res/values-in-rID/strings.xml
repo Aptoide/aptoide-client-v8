@@ -429,4 +429,45 @@
   <string name="promotional_bonus_up_to">Hingga</string>
   <string name="promotional_bonus_label">Bonus</string>
   <string name="appview_auto_open_when_ready">Buka otomatis saat siap</string>
+  <string name="play_and_earn_collect_button">Ketuk untuk Mengumpulkan</string>
+  <string name="play_and_earn_currency_diamonds">Diamonds</string>
+  <string name="play_and_earn_currency_robux">Robux</string>
+  <string name="play_and_earn_dismiss_button">Mungkin nanti</string>
+  <string name="play_and_earn_earn_amount_badge">Hasilkan %1$s</string>
+  <string name="play_and_earn_earn_more_button">Hasilkan Lebih Banyak</string>
+  <string name="play_and_earn_earn_title">Hasilkan %1$s</string>
+  <string name="play_and_earn_exchange_almost_there">Anda hampir sampai!</string>
+  <string name="play_and_earn_exchange_available_subtitle">Anda memiliki %1$s tersedia.</string>
+  <string name="play_and_earn_exchange_balance_after">Saldo setelah penukaran</string>
+  <string name="play_and_earn_exchange_earn_more_button">Hasilkan Lebih Banyak</string>
+  <string name="play_and_earn_exchange_email_address_label">Alamat Email</string>
+  <string name="play_and_earn_exchange_email_error">Masukkan alamat email yang valid</string>
+  <string name="play_and_earn_exchange_email_safe_note">🔒 Email Anda aman bersama kami. Kami hanya menggunakannya untuk mengirimkan hadiah ini.</string>
+  <string name="play_and_earn_exchange_get_my_code_button">Dapatkan kode saya</string>
+  <string name="play_and_earn_exchange_not_enough_balance">Saldo tidak cukup</string>
+  <string name="play_and_earn_exchange_pick_reward_title">Pilih hadiah Anda.</string>
+  <string name="play_and_earn_exchange_reach_target_diamonds">Mencapai %1$d unit = Tukar %2$s dalam kode Free Fire Diamonds</string>
+  <string name="play_and_earn_exchange_reach_target_robux">Mencapai %1$d unit = Tukar %2$s dalam kode Robux</string>
+  <string name="play_and_earn_exchange_redeem_button">Tukar %1$s</string>
+  <string name="play_and_earn_exchange_redeem_cost">Membutuhkan %1$d unit</string>
+  <string name="play_and_earn_exchange_send_code"><![CDATA[Ke mana kami harus mengirim kode <1>%1$s</1> <2>%2$s</2> Anda?]]></string>
+  <string name="play_and_earn_exchange_success_email_sent">Kami telah mengirim kode Anda ke %1$s. Periksa kotak masuk Anda dalam 24 jam.</string>
+  <string name="play_and_earn_exchange_units_label">unit</string>
+  <string name="play_and_earn_exchange_units_progress"><![CDATA[<1>%1$d</1>/%2$d unit]]></string>
+  <string name="play_and_earn_exchange_units_to_go">%1$d unit lagi</string>
+  <string name="play_and_earn_exchange_units_value">%1$d unit</string>
+  <string name="play_and_earn_exchange_your_balance_label">Saldo Anda</string>
+  <string name="play_and_earn_exclusive_offer">Penawaran eksklusif</string>
+  <string name="play_and_earn_mission_minutes_left">%1$d menit tersisa</string>
+  <string name="play_and_earn_mission_seconds_left">%1$d detik tersisa</string>
+  <string name="play_and_earn_more_games_more">Lebih banyak game. Lebih banyak %1$s.</string>
+  <string name="play_and_earn_my_balance_button">Saldo Saya</string>
+  <string name="play_and_earn_permissions_almost_ready_title">Hampir siap menghasilkan!</string>
+  <string name="play_and_earn_permissions_open_settings_button">Buka pengaturan Android</string>
+  <string name="play_and_earn_play_and_earn_up_to_button">Play &amp; Earn hingga $%1$.2f</string>
+  <string name="play_and_earn_reward_claim_message"><![CDATA[<1>%1$s</1> di %2$s milik Anda!]]></string>
+  <string name="play_and_earn_reward_earned_message"><![CDATA[Anda mendapatkan <1>%1$s</1> di %2$s!]]></string>
+  <string name="play_and_earn_rewards_install_play_title">Pasang Game. Mainkan favorit Anda.</string>
+  <string name="play_and_earn_sign_in_reward_body"><![CDATA[Masuk agar kami tahu ke mana harus mengirim <1>%1$s</1> Anda.]]></string>
+  <string name="play_and_earn_tap_to_collect">Ketuk untuk Mengumpulkan</string>
 </resources>

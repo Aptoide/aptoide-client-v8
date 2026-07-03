@@ -440,4 +440,45 @@
   <string name="promotional_bonus_up_to">تا</string>
   <string name="promotional_bonus_label">پاداش</string>
   <string name="appview_auto_open_when_ready">باز کردن خودکار هنگام آماده شدن</string>
+  <string name="play_and_earn_collect_button">برای دریافت ضربه بزنید</string>
+  <string name="play_and_earn_currency_diamonds">Diamonds</string>
+  <string name="play_and_earn_currency_robux">Robux</string>
+  <string name="play_and_earn_dismiss_button">شاید بعدا</string>
+  <string name="play_and_earn_earn_amount_badge">کسب %1$s</string>
+  <string name="play_and_earn_earn_more_button">کسب بیشتر</string>
+  <string name="play_and_earn_earn_title">کسب %1$s</string>
+  <string name="play_and_earn_exchange_almost_there">تقریبا رسیدید!</string>
+  <string name="play_and_earn_exchange_available_subtitle">%1$s در دسترس دارید.</string>
+  <string name="play_and_earn_exchange_balance_after">موجودی پس از دریافت</string>
+  <string name="play_and_earn_exchange_earn_more_button">کسب بیشتر</string>
+  <string name="play_and_earn_exchange_email_address_label">آدرس ایمیل</string>
+  <string name="play_and_earn_exchange_email_error">یک آدرس ایمیل معتبر وارد کنید</string>
+  <string name="play_and_earn_exchange_email_safe_note">🔒 ایمیل شما نزد ما امن است. تنها برای ارسال این پاداش از آن استفاده می‌کنیم.</string>
+  <string name="play_and_earn_exchange_get_my_code_button">دریافت کد من</string>
+  <string name="play_and_earn_exchange_not_enough_balance">موجودی کافی نیست</string>
+  <string name="play_and_earn_exchange_pick_reward_title">پاداش خود را انتخاب کنید.</string>
+  <string name="play_and_earn_exchange_reach_target_robux">رسیدن به %1$d واحد = دریافت کد %2$s در Robux</string>
+  <string name="play_and_earn_exchange_reach_target_diamonds">رسیدن به %1$d واحد = دریافت کد %2$s در Free Fire Diamonds</string>
+  <string name="play_and_earn_exchange_redeem_button">دریافت %1$s</string>
+  <string name="play_and_earn_exchange_redeem_cost">%1$d واحد هزینه دارد</string>
+  <string name="play_and_earn_exchange_send_code"><![CDATA[کد <1>%1$s</1> <2>%2$s</2> خود را کجا ارسال کنیم؟]]></string>
+  <string name="play_and_earn_exchange_success_email_sent">کد شما را به %1$s ارسال کردیم. ظرف ۲۴ ساعت صندوق ورودی خود را بررسی کنید.</string>
+  <string name="play_and_earn_exchange_units_label">واحد</string>
+  <string name="play_and_earn_exchange_units_progress"><![CDATA[<1>%1$d</1>/%2$d واحد]]></string>
+  <string name="play_and_earn_exchange_units_to_go">%1$d واحد باقی مانده</string>
+  <string name="play_and_earn_exchange_units_value">%1$d واحد</string>
+  <string name="play_and_earn_exchange_your_balance_label">موجودی شما</string>
+  <string name="play_and_earn_exclusive_offer">پیشنهاد ویژه</string>
+  <string name="play_and_earn_mission_minutes_left">%1$d دقیقه باقی مانده</string>
+  <string name="play_and_earn_mission_seconds_left">%1$d ثانیه باقی مانده</string>
+  <string name="play_and_earn_more_games_more">بازی‌های بیشتر. %1$s بیشتر.</string>
+  <string name="play_and_earn_my_balance_button">موجودی من</string>
+  <string name="play_and_earn_permissions_almost_ready_title">تقریبا آماده کسب!</string>
+  <string name="play_and_earn_permissions_open_settings_button">باز کردن تنظیمات Android</string>
+  <string name="play_and_earn_play_and_earn_up_to_button">Play &amp; Earn تا $%1$.2f</string>
+  <string name="play_and_earn_reward_claim_message"><![CDATA[<1>%1$s</1> در %2$s مال شماست!]]></string>
+  <string name="play_and_earn_reward_earned_message"><![CDATA[شما <1>%1$s</1> در %2$s کسب کردید!]]></string>
+  <string name="play_and_earn_rewards_install_play_title">بازی‌ها را نصب کنید. بازی محبوب خود را انجام دهید.</string>
+  <string name="play_and_earn_sign_in_reward_body"><![CDATA[وارد شوید تا بدانیم <1>%1$s</1> شما را کجا ارسال کنیم.]]></string>
+  <string name="play_and_earn_tap_to_collect">برای دریافت ضربه بزنید</string>
 </resources>

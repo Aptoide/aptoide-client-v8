@@ -429,4 +429,45 @@
   <string name="promotional_bonus_up_to">高達</string>
   <string name="promotional_bonus_label">獎金</string>
   <string name="appview_auto_open_when_ready">就緒後自動開啟</string>
+  <string name="play_and_earn_collect_button">點擊領取</string>
+  <string name="play_and_earn_currency_diamonds">鑽石</string>
+  <string name="play_and_earn_currency_robux">Robux</string>
+  <string name="play_and_earn_dismiss_button">稍後再說</string>
+  <string name="play_and_earn_earn_amount_badge">賺取 %1$s</string>
+  <string name="play_and_earn_earn_more_button">賺取更多</string>
+  <string name="play_and_earn_earn_title">賺取 %1$s</string>
+  <string name="play_and_earn_exchange_almost_there">你快到了！</string>
+  <string name="play_and_earn_exchange_available_subtitle">您有 %1$s 可用。</string>
+  <string name="play_and_earn_exchange_balance_after">兌換後餘額</string>
+  <string name="play_and_earn_exchange_earn_more_button">賺取更多</string>
+  <string name="play_and_earn_exchange_email_address_label">電子郵件地址</string>
+  <string name="play_and_earn_exchange_email_error">請輸入有效的電子郵件地址</string>
+  <string name="play_and_earn_exchange_email_safe_note">🔒 您的電子郵件很安全。我們只會用它來發送此獎勵。</string>
+  <string name="play_and_earn_exchange_get_my_code_button">取得我的代碼</string>
+  <string name="play_and_earn_exchange_not_enough_balance">餘額不足</string>
+  <string name="play_and_earn_exchange_pick_reward_title">挑選您的獎勵。</string>
+  <string name="play_and_earn_exchange_reach_target_diamonds">達到 %1$d 單位 = 兌換 %2$s Free Fire Diamonds 代碼</string>
+  <string name="play_and_earn_exchange_reach_target_robux">達到 %1$d 單位 = 兌換 %2$s Robux 代碼</string>
+  <string name="play_and_earn_exchange_redeem_button">兌換 %1$s</string>
+  <string name="play_and_earn_exchange_redeem_cost">花費 %1$d 單位</string>
+  <string name="play_and_earn_exchange_send_code"><![CDATA[要將您的 <1>%1$s</1> <2>%2$s</2> 代碼發送至何處？]]></string>
+  <string name="play_and_earn_exchange_success_email_sent">我們已將您的代碼發送至 %1$s。請於 24 小時內查看收件匣。</string>
+  <string name="play_and_earn_exchange_units_label">單位</string>
+  <string name="play_and_earn_exchange_units_progress"><![CDATA[<1>%1$d</1>/%2$d 單位]]></string>
+  <string name="play_and_earn_exchange_units_to_go">還差 %1$d 單位</string>
+  <string name="play_and_earn_exchange_units_value">%1$d 單位</string>
+  <string name="play_and_earn_exchange_your_balance_label">您的餘額</string>
+  <string name="play_and_earn_exclusive_offer">獨家優惠</string>
+  <string name="play_and_earn_mission_minutes_left">剩餘 %1$d 分鐘</string>
+  <string name="play_and_earn_mission_seconds_left">剩餘 %1$d 秒</string>
+  <string name="play_and_earn_more_games_more">更多遊戲。更多 %1$s。</string>
+  <string name="play_and_earn_my_balance_button">我的餘額</string>
+  <string name="play_and_earn_permissions_almost_ready_title">即將可以開始賺取！</string>
+  <string name="play_and_earn_permissions_open_settings_button">開啟 Android 設定</string>
+  <string name="play_and_earn_play_and_earn_up_to_button">Play &amp; Earn 最高可賺 $%1$.2f</string>
+  <string name="play_and_earn_reward_claim_message"><![CDATA[%2$s 中的 <1>%1$s</1> 屬於您了！]]></string>
+  <string name="play_and_earn_reward_earned_message"><![CDATA[您在 %2$s 中賺取了 <1>%1$s</1>！]]></string>
+  <string name="play_and_earn_rewards_install_play_title">安裝遊戲。玩您最愛的遊戲。</string>
+  <string name="play_and_earn_sign_in_reward_body"><![CDATA[登入，讓我們知道要將您的 <1>%1$s</1> 發送至何處。]]></string>
+  <string name="play_and_earn_tap_to_collect">點擊領取</string>
 </resources>

@@ -440,4 +440,45 @@
   <string name="promotional_bonus_up_to">Jopa</string>
   <string name="promotional_bonus_label">Bonus</string>
   <string name="appview_auto_open_when_ready">Avaa automaattisesti, kun valmis</string>
+  <string name="play_and_earn_collect_button">Napauta kerätäksesi</string>
+  <string name="play_and_earn_currency_diamonds">Diamonds</string>
+  <string name="play_and_earn_currency_robux">Robux</string>
+  <string name="play_and_earn_dismiss_button">Ehkä myöhemmin</string>
+  <string name="play_and_earn_earn_amount_badge">Ansaitse %1$s</string>
+  <string name="play_and_earn_earn_more_button">Ansaitse lisää</string>
+  <string name="play_and_earn_earn_title">Ansaitse %1$s</string>
+  <string name="play_and_earn_exchange_almost_there">Olet melkein perillä!</string>
+  <string name="play_and_earn_exchange_available_subtitle">Sinulla on %1$s käytettävissä.</string>
+  <string name="play_and_earn_exchange_balance_after">Saldo lunastuksen jälkeen</string>
+  <string name="play_and_earn_exchange_earn_more_button">Ansaitse lisää</string>
+  <string name="play_and_earn_exchange_email_address_label">Sähköpostiosoite</string>
+  <string name="play_and_earn_exchange_email_error">Anna kelvollinen sähköpostiosoite</string>
+  <string name="play_and_earn_exchange_email_safe_note">🔒 Sähköpostisi on turvassa. Käytämme sitä vain tämän palkinnon lähettämiseen.</string>
+  <string name="play_and_earn_exchange_get_my_code_button">Hae koodini</string>
+  <string name="play_and_earn_exchange_not_enough_balance">Ei tarpeeksi saldoa</string>
+  <string name="play_and_earn_exchange_pick_reward_title">Valitse palkintosi.</string>
+  <string name="play_and_earn_exchange_reach_target_robux">%1$d yksikön saavuttaminen = lunasta %2$s Robux-koodina</string>
+  <string name="play_and_earn_exchange_reach_target_diamonds">%1$d yksikön saavuttaminen = lunasta %2$s Free Fire Diamonds -koodina</string>
+  <string name="play_and_earn_exchange_redeem_button">Lunasta %1$s</string>
+  <string name="play_and_earn_exchange_redeem_cost">Maksaa %1$d yksikköä</string>
+  <string name="play_and_earn_exchange_send_code"><![CDATA[Minne lähetämme <1>%1$s</1> <2>%2$s</2> -koodisi?]]></string>
+  <string name="play_and_earn_exchange_success_email_sent">Lähetimme koodisi osoitteeseen %1$s. Tarkista postilaatikkosi 24 tunnin sisällä.</string>
+  <string name="play_and_earn_exchange_units_label">yksikköä</string>
+  <string name="play_and_earn_exchange_units_progress"><![CDATA[<1>%1$d</1>/%2$d yksikköä]]></string>
+  <string name="play_and_earn_exchange_units_to_go">%1$d yksikköä jäljellä</string>
+  <string name="play_and_earn_exchange_units_value">%1$d yksikköä</string>
+  <string name="play_and_earn_exchange_your_balance_label">Saldosi</string>
+  <string name="play_and_earn_exclusive_offer">Eksklusiivinen tarjous</string>
+  <string name="play_and_earn_mission_minutes_left">%1$d minuuttia jäljellä</string>
+  <string name="play_and_earn_mission_seconds_left">%1$d sekuntia jäljellä</string>
+  <string name="play_and_earn_more_games_more">Lisää pelejä. Lisää %1$s.</string>
+  <string name="play_and_earn_my_balance_button">Saldoni</string>
+  <string name="play_and_earn_permissions_almost_ready_title">Melkein valmis ansaitsemaan!</string>
+  <string name="play_and_earn_permissions_open_settings_button">Avaa Androidin asetukset</string>
+  <string name="play_and_earn_play_and_earn_up_to_button">Play &amp; Earn jopa %1$.2f $</string>
+  <string name="play_and_earn_reward_claim_message"><![CDATA[<1>%1$s</1> pelissä %2$s on sinun!]]></string>
+  <string name="play_and_earn_reward_earned_message"><![CDATA[Ansaitsit <1>%1$s</1> pelissä %2$s!]]></string>
+  <string name="play_and_earn_rewards_install_play_title">Asenna pelejä. Pelaa suosikkiasi.</string>
+  <string name="play_and_earn_sign_in_reward_body"><![CDATA[Kirjaudu sisään, jotta tiedämme minne lähettää <1>%1$s</1>.]]></string>
+  <string name="play_and_earn_tap_to_collect">Napauta kerätäksesi</string>
 </resources>

@@ -440,4 +440,45 @@
   <string name="promotional_bonus_up_to">Até</string>
   <string name="promotional_bonus_label">Bônus</string>
   <string name="appview_auto_open_when_ready">Abrir automaticamente quando pronto</string>
+  <string name="play_and_earn_collect_button">Toque para Coletar</string>
+  <string name="play_and_earn_currency_diamonds">Diamonds</string>
+  <string name="play_and_earn_currency_robux">Robux</string>
+  <string name="play_and_earn_dismiss_button">Talvez depois</string>
+  <string name="play_and_earn_earn_amount_badge">Ganhe %1$s</string>
+  <string name="play_and_earn_earn_more_button">Ganhar Mais</string>
+  <string name="play_and_earn_earn_title">Ganhe %1$s</string>
+  <string name="play_and_earn_exchange_almost_there">Você está quase lá!</string>
+  <string name="play_and_earn_exchange_available_subtitle">Você tem %1$s disponível.</string>
+  <string name="play_and_earn_exchange_balance_after">Saldo após o resgate</string>
+  <string name="play_and_earn_exchange_earn_more_button">Ganhar Mais</string>
+  <string name="play_and_earn_exchange_email_address_label">Endereço de e-mail</string>
+  <string name="play_and_earn_exchange_email_error">Insira um endereço de e-mail válido</string>
+  <string name="play_and_earn_exchange_email_safe_note">🔒 Seu e-mail está seguro conosco. Só o usaremos para enviar esta recompensa.</string>
+  <string name="play_and_earn_exchange_get_my_code_button">Obter meu código</string>
+  <string name="play_and_earn_exchange_not_enough_balance">Saldo insuficiente</string>
+  <string name="play_and_earn_exchange_pick_reward_title">Escolha sua recompensa.</string>
+  <string name="play_and_earn_exchange_reach_target_diamonds">Alcançar %1$d unidades = Resgatar %2$s em código de Free Fire Diamonds</string>
+  <string name="play_and_earn_exchange_reach_target_robux">Alcançar %1$d unidades = Resgatar %2$s em código de Robux</string>
+  <string name="play_and_earn_exchange_redeem_button">Resgatar %1$s</string>
+  <string name="play_and_earn_exchange_redeem_cost">Custa %1$d unidades</string>
+  <string name="play_and_earn_exchange_send_code"><![CDATA[Para onde devemos enviar seu código de <1>%1$s</1> <2>%2$s</2>?]]></string>
+  <string name="play_and_earn_exchange_success_email_sent">Enviamos seu código para %1$s. Verifique sua caixa de entrada dentro de 24 horas.</string>
+  <string name="play_and_earn_exchange_units_label">unidades</string>
+  <string name="play_and_earn_exchange_units_progress"><![CDATA[<1>%1$d</1>/%2$d unidades]]></string>
+  <string name="play_and_earn_exchange_units_to_go">Faltam %1$d unidades</string>
+  <string name="play_and_earn_exchange_units_value">%1$d unidades</string>
+  <string name="play_and_earn_exchange_your_balance_label">Seu Saldo</string>
+  <string name="play_and_earn_exclusive_offer">Oferta exclusiva</string>
+  <string name="play_and_earn_mission_minutes_left">%1$d minutos restantes</string>
+  <string name="play_and_earn_mission_seconds_left">%1$d segundos restantes</string>
+  <string name="play_and_earn_more_games_more">Mais jogos. Mais %1$s.</string>
+  <string name="play_and_earn_my_balance_button">Meu Saldo</string>
+  <string name="play_and_earn_permissions_almost_ready_title">Quase pronto para ganhar!</string>
+  <string name="play_and_earn_permissions_open_settings_button">Abrir configurações do Android</string>
+  <string name="play_and_earn_play_and_earn_up_to_button">Play &amp; Earn até $%1$.2f</string>
+  <string name="play_and_earn_reward_claim_message"><![CDATA[<1>%1$s</1> em %2$s é seu!]]></string>
+  <string name="play_and_earn_reward_earned_message"><![CDATA[Você ganhou <1>%1$s</1> em %2$s!]]></string>
+  <string name="play_and_earn_rewards_install_play_title">Instale Jogos. Jogue seu favorito.</string>
+  <string name="play_and_earn_sign_in_reward_body"><![CDATA[Faça login para sabermos onde enviar seus <1>%1$s</1>.]]></string>
+  <string name="play_and_earn_tap_to_collect">Toque para Coletar</string>
 </resources>

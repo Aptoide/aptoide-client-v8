@@ -484,4 +484,45 @@
   <string name="promotional_bonus_up_to">حتى</string>
   <string name="promotional_bonus_label">مكافأة</string>
   <string name="appview_auto_open_when_ready">فتح تلقائي عند الجاهزية</string>
+  <string name="play_and_earn_collect_button">اضغط للتحصيل</string>
+  <string name="play_and_earn_currency_diamonds">Diamonds</string>
+  <string name="play_and_earn_currency_robux">Robux</string>
+  <string name="play_and_earn_dismiss_button">ربما لاحقًا</string>
+  <string name="play_and_earn_earn_amount_badge">اربح %1$s</string>
+  <string name="play_and_earn_earn_more_button">اربح المزيد</string>
+  <string name="play_and_earn_earn_title">اربح %1$s</string>
+  <string name="play_and_earn_exchange_almost_there">لقد أوشكت على الوصول!</string>
+  <string name="play_and_earn_exchange_available_subtitle">لديك %1$s متاح.</string>
+  <string name="play_and_earn_exchange_balance_after">الرصيد بعد الاستبدال</string>
+  <string name="play_and_earn_exchange_earn_more_button">اربح المزيد</string>
+  <string name="play_and_earn_exchange_email_address_label">البريد الإلكتروني</string>
+  <string name="play_and_earn_exchange_email_error">أدخل بريدًا إلكترونيًا صالحًا</string>
+  <string name="play_and_earn_exchange_email_safe_note">🔒 بريدك الإلكتروني آمن معنا. سنستخدمه فقط لإرسال هذه المكافأة إليك.</string>
+  <string name="play_and_earn_exchange_get_my_code_button">احصل على رمزي</string>
+  <string name="play_and_earn_exchange_not_enough_balance">رصيد غير كافٍ</string>
+  <string name="play_and_earn_exchange_pick_reward_title">اختر مكافأتك.</string>
+  <string name="play_and_earn_exchange_reach_target_diamonds">بلوغ %1$d وحدة = استبدال رمز %2$s في Free Fire Diamonds</string>
+  <string name="play_and_earn_exchange_reach_target_robux">بلوغ %1$d وحدة = استبدال رمز %2$s في Robux</string>
+  <string name="play_and_earn_exchange_redeem_button">استبدال %1$s</string>
+  <string name="play_and_earn_exchange_redeem_cost">يكلّف %1$d وحدة</string>
+  <string name="play_and_earn_exchange_send_code"><![CDATA[أين نرسل رمز <1>%1$s</1> <2>%2$s</2> الخاص بك؟]]></string>
+  <string name="play_and_earn_exchange_success_email_sent">أرسلنا رمزك إلى %1$s. تحقق من بريدك الوارد خلال 24 ساعة.</string>
+  <string name="play_and_earn_exchange_units_label">وحدات</string>
+  <string name="play_and_earn_exchange_units_progress"><![CDATA[<1>%1$d</1>/%2$d وحدة]]></string>
+  <string name="play_and_earn_exchange_units_to_go">تبقّى %1$d وحدة</string>
+  <string name="play_and_earn_exchange_units_value">%1$d وحدة</string>
+  <string name="play_and_earn_exchange_your_balance_label">رصيدك</string>
+  <string name="play_and_earn_exclusive_offer">عرض حصري</string>
+  <string name="play_and_earn_mission_minutes_left">تبقّى %1$d دقيقة</string>
+  <string name="play_and_earn_mission_seconds_left">تبقّى %1$d ثانية</string>
+  <string name="play_and_earn_more_games_more">المزيد من الألعاب. المزيد من %1$s.</string>
+  <string name="play_and_earn_my_balance_button">رصيدي</string>
+  <string name="play_and_earn_permissions_almost_ready_title">أوشكت على بدء الكسب!</string>
+  <string name="play_and_earn_permissions_open_settings_button">فتح إعدادات Android</string>
+  <string name="play_and_earn_play_and_earn_up_to_button">‏Play &amp; Earn واربح حتى ‎$%1$.2f</string>
+  <string name="play_and_earn_reward_claim_message"><![CDATA[<1>%1$s</1> في %2$s ملكك!]]></string>
+  <string name="play_and_earn_reward_earned_message"><![CDATA[لقد ربحت <1>%1$s</1> في %2$s!]]></string>
+  <string name="play_and_earn_rewards_install_play_title">ثبّت الألعاب. العب لعبتك المفضلة.</string>
+  <string name="play_and_earn_sign_in_reward_body"><![CDATA[سجّل الدخول لنعرف أين نرسل <1>%1$s</1> الخاص بك.]]></string>
+  <string name="play_and_earn_tap_to_collect">اضغط للتحصيل</string>
 </resources>

@@ -440,4 +440,45 @@
   <string name="promotional_bonus_up_to">Akár</string>
   <string name="promotional_bonus_label">Bónusz</string>
   <string name="appview_auto_open_when_ready">Automatikus megnyitás, ha kész</string>
+  <string name="play_and_earn_collect_button">Koppints a begyűjtéshez</string>
+  <string name="play_and_earn_currency_diamonds">Diamonds</string>
+  <string name="play_and_earn_currency_robux">Robux</string>
+  <string name="play_and_earn_dismiss_button">Talán később</string>
+  <string name="play_and_earn_earn_amount_badge">Szerezz %1$s</string>
+  <string name="play_and_earn_earn_more_button">Szerezz többet</string>
+  <string name="play_and_earn_earn_title">Szerezz %1$s</string>
+  <string name="play_and_earn_exchange_almost_there">Már majdnem megvan!</string>
+  <string name="play_and_earn_exchange_available_subtitle">%1$s áll rendelkezésedre.</string>
+  <string name="play_and_earn_exchange_balance_after">Egyenleg beváltás után</string>
+  <string name="play_and_earn_exchange_earn_more_button">Szerezz többet</string>
+  <string name="play_and_earn_exchange_email_address_label">E-mail-cím</string>
+  <string name="play_and_earn_exchange_email_error">Adj meg egy érvényes e-mail-címet</string>
+  <string name="play_and_earn_exchange_email_safe_note">🔒 Az e-mail-címed biztonságban van nálunk. Csak ennek a jutalomnak a küldésére használjuk.</string>
+  <string name="play_and_earn_exchange_get_my_code_button">Kérem a kódomat</string>
+  <string name="play_and_earn_exchange_not_enough_balance">Nincs elég egyenleg</string>
+  <string name="play_and_earn_exchange_pick_reward_title">Válaszd ki a jutalmadat.</string>
+  <string name="play_and_earn_exchange_reach_target_robux">%1$d egység elérése = %2$s beváltása Robux kódban</string>
+  <string name="play_and_earn_exchange_reach_target_diamonds">%1$d egység elérése = %2$s beváltása Free Fire Diamonds kódban</string>
+  <string name="play_and_earn_exchange_redeem_button">%1$s beváltása</string>
+  <string name="play_and_earn_exchange_redeem_cost">%1$d egységbe kerül</string>
+  <string name="play_and_earn_exchange_send_code"><![CDATA[Hová küldjük a(z) <1>%1$s</1> <2>%2$s</2> kódodat?]]></string>
+  <string name="play_and_earn_exchange_success_email_sent">Elküldtük a kódodat ide: %1$s. Nézd meg a postaládádat 24 órán belül.</string>
+  <string name="play_and_earn_exchange_units_label">egység</string>
+  <string name="play_and_earn_exchange_units_progress"><![CDATA[<1>%1$d</1>/%2$d egység]]></string>
+  <string name="play_and_earn_exchange_units_to_go">%1$d egység van hátra</string>
+  <string name="play_and_earn_exchange_units_value">%1$d egység</string>
+  <string name="play_and_earn_exchange_your_balance_label">Az egyenleged</string>
+  <string name="play_and_earn_exclusive_offer">Exkluzív ajánlat</string>
+  <string name="play_and_earn_mission_minutes_left">%1$d perc van hátra</string>
+  <string name="play_and_earn_mission_seconds_left">%1$d másodperc van hátra</string>
+  <string name="play_and_earn_more_games_more">Több játék. Több %1$s.</string>
+  <string name="play_and_earn_my_balance_button">Az egyenlegem</string>
+  <string name="play_and_earn_permissions_almost_ready_title">Szinte kész a keresésre!</string>
+  <string name="play_and_earn_permissions_open_settings_button">Android beállítások megnyitása</string>
+  <string name="play_and_earn_play_and_earn_up_to_button">Play &amp; Earn akár $%1$.2f</string>
+  <string name="play_and_earn_reward_claim_message"><![CDATA[A(z) <1>%1$s</1> a tiéd itt: %2$s!]]></string>
+  <string name="play_and_earn_reward_earned_message"><![CDATA[Szereztél <1>%1$s</1> ebben: %2$s!]]></string>
+  <string name="play_and_earn_rewards_install_play_title">Telepíts játékokat. Játssz a kedvenceddel.</string>
+  <string name="play_and_earn_sign_in_reward_body"><![CDATA[Jelentkezz be, hogy tudjuk, hová küldjük a(z) <1>%1$s</1> jutalmadat.]]></string>
+  <string name="play_and_earn_tap_to_collect">Koppints a begyűjtéshez</string>
 </resources>

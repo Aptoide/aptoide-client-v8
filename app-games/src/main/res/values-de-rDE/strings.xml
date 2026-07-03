@@ -440,4 +440,45 @@
   <string name="promotional_bonus_up_to">Bis zu</string>
   <string name="promotional_bonus_label">Bonus</string>
   <string name="appview_auto_open_when_ready">Automatisch öffnen, wenn bereit</string>
+  <string name="play_and_earn_exclusive_offer">Exklusives Angebot</string>
+  <string name="play_and_earn_reward_earned_message"><![CDATA[Du hast <1>%1$s</1> in %2$s verdient!]]></string>
+  <string name="play_and_earn_collect_button">Zum Einsammeln tippen</string>
+  <string name="play_and_earn_dismiss_button">Vielleicht später</string>
+  <string name="play_and_earn_currency_robux">Robux</string>
+  <string name="play_and_earn_currency_diamonds">Diamonds</string>
+  <string name="play_and_earn_reward_claim_message"><![CDATA[<1>%1$s</1> in %2$s gehört dir!]]></string>
+  <string name="play_and_earn_earn_more_button">Mehr verdienen</string>
+  <string name="play_and_earn_sign_in_reward_body"><![CDATA[Melde dich an, damit wir wissen, wohin wir deine <1>%1$s</1> senden sollen.]]></string>
+  <string name="play_and_earn_permissions_open_settings_button">Android-Einstellungen öffnen</string>
+  <string name="play_and_earn_play_and_earn_up_to_button">Play &amp; Earn bis zu %1$.2f $</string>
+  <string name="play_and_earn_mission_seconds_left">%1$d Sekunden übrig</string>
+  <string name="play_and_earn_mission_minutes_left">%1$d Minuten übrig</string>
+  <string name="play_and_earn_permissions_almost_ready_title">Fast bereit zum Verdienen!</string>
+  <string name="play_and_earn_exchange_units_to_go">Noch %1$d Einheiten</string>
+  <string name="play_and_earn_exchange_units_progress"><![CDATA[<1>%1$d</1>/%2$d Einheiten]]></string>
+  <string name="play_and_earn_exchange_units_label">Einheiten</string>
+  <string name="play_and_earn_exchange_redeem_button">%1$s einlösen</string>
+  <string name="play_and_earn_exchange_your_balance_label">Dein Guthaben</string>
+  <string name="play_and_earn_exchange_redeem_cost">Kostet %1$d Einheiten</string>
+  <string name="play_and_earn_exchange_balance_after">Guthaben nach Einlösung</string>
+  <string name="play_and_earn_exchange_units_value">%1$d Einheiten</string>
+  <string name="play_and_earn_exchange_not_enough_balance">Nicht genug Guthaben</string>
+  <string name="play_and_earn_my_balance_button">Mein Guthaben</string>
+  <string name="play_and_earn_exchange_reach_target_robux">%1$d Einheiten erreichen = %2$s in Robux-Code einlösen</string>
+  <string name="play_and_earn_exchange_reach_target_diamonds">%1$d Einheiten erreichen = %2$s in Free Fire Diamonds-Code einlösen</string>
+  <string name="play_and_earn_exchange_pick_reward_title">Wähle deine Belohnung.</string>
+  <string name="play_and_earn_exchange_available_subtitle">Du hast %1$s verfügbar.</string>
+  <string name="play_and_earn_exchange_almost_there">Du bist fast am Ziel!</string>
+  <string name="play_and_earn_exchange_send_code"><![CDATA[Wohin sollen wir deinen <1>%1$s</1>-<2>%2$s</2>-Code senden?]]></string>
+  <string name="play_and_earn_exchange_email_address_label">E-Mail-Adresse</string>
+  <string name="play_and_earn_exchange_email_safe_note">🔒 Deine E-Mail-Adresse ist bei uns sicher. Wir verwenden sie nur, um dir diese Belohnung zu senden.</string>
+  <string name="play_and_earn_exchange_get_my_code_button">Code erhalten</string>
+  <string name="play_and_earn_exchange_email_error">Gib eine gültige E-Mail-Adresse ein</string>
+  <string name="play_and_earn_exchange_success_email_sent">Wir haben deinen Code an %1$s gesendet. Prüfe dein Postfach innerhalb von 24 Stunden.</string>
+  <string name="play_and_earn_exchange_earn_more_button">Mehr verdienen</string>
+  <string name="play_and_earn_tap_to_collect">Zum Einsammeln tippen</string>
+  <string name="play_and_earn_earn_title">%1$s verdienen</string>
+  <string name="play_and_earn_more_games_more">Mehr Spiele. Mehr %1$s.</string>
+  <string name="play_and_earn_rewards_install_play_title">Spiele installieren. Deine Favoriten spielen.</string>
+  <string name="play_and_earn_earn_amount_badge">%1$s verdienen</string>
 </resources>

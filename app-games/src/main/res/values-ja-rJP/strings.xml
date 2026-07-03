@@ -430,4 +430,45 @@
   <string name="promotional_bonus_up_to">最大</string>
   <string name="promotional_bonus_label">ボーナス</string>
   <string name="appview_auto_open_when_ready">準備ができたら自動で開く</string>
+  <string name="play_and_earn_collect_button">タップして受け取る</string>
+  <string name="play_and_earn_currency_diamonds">Diamonds</string>
+  <string name="play_and_earn_currency_robux">Robux</string>
+  <string name="play_and_earn_dismiss_button">後で</string>
+  <string name="play_and_earn_earn_amount_badge">%1$s を獲得</string>
+  <string name="play_and_earn_earn_more_button">もっと稼ぐ</string>
+  <string name="play_and_earn_earn_title">%1$s を獲得</string>
+  <string name="play_and_earn_exchange_almost_there">あと少しです！</string>
+  <string name="play_and_earn_exchange_available_subtitle">%1$s 利用可能です。</string>
+  <string name="play_and_earn_exchange_balance_after">交換後の残高</string>
+  <string name="play_and_earn_exchange_earn_more_button">もっと稼ぐ</string>
+  <string name="play_and_earn_exchange_email_address_label">メールアドレス</string>
+  <string name="play_and_earn_exchange_email_error">有効なメールアドレスを入力してください</string>
+  <string name="play_and_earn_exchange_email_safe_note">🔒 メールアドレスは安全に管理されます。この報酬の送信にのみ使用します。</string>
+  <string name="play_and_earn_exchange_get_my_code_button">コードを受け取る</string>
+  <string name="play_and_earn_exchange_not_enough_balance">残高が足りません</string>
+  <string name="play_and_earn_exchange_pick_reward_title">報酬を選ぶ。</string>
+  <string name="play_and_earn_exchange_reach_target_diamonds">%1$d ユニット達成 = Free Fire Diamonds コード %2$s と交換</string>
+  <string name="play_and_earn_exchange_reach_target_robux">%1$d ユニット達成 = Robux コード %2$s と交換</string>
+  <string name="play_and_earn_exchange_redeem_button">%1$s と交換</string>
+  <string name="play_and_earn_exchange_redeem_cost">%1$d ユニット必要</string>
+  <string name="play_and_earn_exchange_send_code"><![CDATA[<1>%1$s</1> <2>%2$s</2> コードの送信先は？]]></string>
+  <string name="play_and_earn_exchange_success_email_sent">%1$s にコードを送信しました。24時間以内に受信トレイをご確認ください。</string>
+  <string name="play_and_earn_exchange_units_label">ユニット</string>
+  <string name="play_and_earn_exchange_units_progress"><![CDATA[<1>%1$d</1>/%2$d ユニット]]></string>
+  <string name="play_and_earn_exchange_units_to_go">残り %1$d ユニット</string>
+  <string name="play_and_earn_exchange_units_value">%1$d ユニット</string>
+  <string name="play_and_earn_exchange_your_balance_label">残高</string>
+  <string name="play_and_earn_exclusive_offer">限定オファー</string>
+  <string name="play_and_earn_mission_minutes_left">残り %1$d 分</string>
+  <string name="play_and_earn_mission_seconds_left">残り %1$d 秒</string>
+  <string name="play_and_earn_more_games_more">ゲームを増やす。%1$s も増やす。</string>
+  <string name="play_and_earn_my_balance_button">残高</string>
+  <string name="play_and_earn_permissions_almost_ready_title">獲得の準備はあと少し！</string>
+  <string name="play_and_earn_permissions_open_settings_button">Android の設定を開く</string>
+  <string name="play_and_earn_play_and_earn_up_to_button">Play &amp; Earn で最大 $%1$.2f</string>
+  <string name="play_and_earn_reward_claim_message"><![CDATA[%2$s の <1>%1$s</1> はあなたのものです！]]></string>
+  <string name="play_and_earn_reward_earned_message"><![CDATA[%2$s で <1>%1$s</1> を獲得しました！]]></string>
+  <string name="play_and_earn_rewards_install_play_title">ゲームをインストール。お気に入りをプレイ。</string>
+  <string name="play_and_earn_sign_in_reward_body"><![CDATA[<1>%1$s</1> の送信先を確認するためサインインしてください。]]></string>
+  <string name="play_and_earn_tap_to_collect">タップして受け取る</string>
 </resources>

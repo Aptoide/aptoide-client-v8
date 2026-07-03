@@ -429,4 +429,45 @@
   <string name="promotional_bonus_up_to">Lên tới</string>
   <string name="promotional_bonus_label">Tiền thưởng</string>
   <string name="appview_auto_open_when_ready">Tự động mở khi sẵn sàng</string>
+  <string name="play_and_earn_collect_button">Nhấn để nhận</string>
+  <string name="play_and_earn_currency_diamonds">Diamonds</string>
+  <string name="play_and_earn_currency_robux">Robux</string>
+  <string name="play_and_earn_dismiss_button">Để sau</string>
+  <string name="play_and_earn_earn_amount_badge">Kiếm %1$s</string>
+  <string name="play_and_earn_earn_more_button">Kiếm thêm</string>
+  <string name="play_and_earn_earn_title">Kiếm %1$s</string>
+  <string name="play_and_earn_exchange_almost_there">Bạn sắp đến rồi!</string>
+  <string name="play_and_earn_exchange_available_subtitle">Bạn có sẵn %1$s.</string>
+  <string name="play_and_earn_exchange_balance_after">Số dư sau khi đổi</string>
+  <string name="play_and_earn_exchange_earn_more_button">Kiếm thêm</string>
+  <string name="play_and_earn_exchange_email_address_label">Địa chỉ email</string>
+  <string name="play_and_earn_exchange_email_error">Nhập địa chỉ email hợp lệ</string>
+  <string name="play_and_earn_exchange_email_safe_note">🔒 Email của bạn được bảo mật. Chúng tôi chỉ dùng để gửi phần thưởng này.</string>
+  <string name="play_and_earn_exchange_get_my_code_button">Nhận mã của tôi</string>
+  <string name="play_and_earn_exchange_not_enough_balance">Không đủ số dư</string>
+  <string name="play_and_earn_exchange_pick_reward_title">Chọn phần thưởng của bạn.</string>
+  <string name="play_and_earn_exchange_reach_target_diamonds">Đạt %1$d đơn vị = Đổi mã %2$s Free Fire Diamonds</string>
+  <string name="play_and_earn_exchange_reach_target_robux">Đạt %1$d đơn vị = Đổi mã %2$s Robux</string>
+  <string name="play_and_earn_exchange_redeem_button">Đổi %1$s</string>
+  <string name="play_and_earn_exchange_redeem_cost">Chi phí %1$d đơn vị</string>
+  <string name="play_and_earn_exchange_send_code"><![CDATA[Gửi mã <1>%1$s</1> <2>%2$s</2> của bạn đến đâu?]]></string>
+  <string name="play_and_earn_exchange_success_email_sent">Đã gửi mã của bạn đến %1$s. Kiểm tra hộp thư đến trong vòng 24 giờ.</string>
+  <string name="play_and_earn_exchange_units_label">đơn vị</string>
+  <string name="play_and_earn_exchange_units_progress"><![CDATA[<1>%1$d</1>/%2$d đơn vị]]></string>
+  <string name="play_and_earn_exchange_units_to_go">còn %1$d đơn vị</string>
+  <string name="play_and_earn_exchange_units_value">%1$d đơn vị</string>
+  <string name="play_and_earn_exchange_your_balance_label">Số dư của bạn</string>
+  <string name="play_and_earn_exclusive_offer">Ưu đãi độc quyền</string>
+  <string name="play_and_earn_mission_minutes_left">còn %1$d phút</string>
+  <string name="play_and_earn_mission_seconds_left">còn %1$d giây</string>
+  <string name="play_and_earn_more_games_more">Càng nhiều trò chơi. Càng nhiều %1$s.</string>
+  <string name="play_and_earn_my_balance_button">Số dư của tôi</string>
+  <string name="play_and_earn_permissions_almost_ready_title">Sắp sẵn sàng để kiếm!</string>
+  <string name="play_and_earn_permissions_open_settings_button">Mở cài đặt Android</string>
+  <string name="play_and_earn_play_and_earn_up_to_button">Play &amp; Earn lên tới $%1$.2f</string>
+  <string name="play_and_earn_reward_claim_message"><![CDATA[<1>%1$s</1> trong %2$s là của bạn!]]></string>
+  <string name="play_and_earn_reward_earned_message"><![CDATA[Bạn đã kiếm được <1>%1$s</1> trong %2$s!]]></string>
+  <string name="play_and_earn_rewards_install_play_title">Cài đặt trò chơi. Chơi trò yêu thích của bạn.</string>
+  <string name="play_and_earn_sign_in_reward_body"><![CDATA[Đăng nhập để chúng tôi biết gửi <1>%1$s</1> của bạn đến đâu.]]></string>
+  <string name="play_and_earn_tap_to_collect">Nhấn để nhận</string>
 </resources>
