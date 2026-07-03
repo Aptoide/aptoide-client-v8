@@ -440,4 +440,45 @@
   <string name="promotional_bonus_up_to">Έως</string>
   <string name="promotional_bonus_label">Bonus</string>
   <string name="appview_auto_open_when_ready">Αυτόματο άνοιγμα όταν είναι έτοιμο</string>
+  <string name="play_and_earn_collect_button">Πατήστε για συλλογή</string>
+  <string name="play_and_earn_currency_diamonds">Diamonds</string>
+  <string name="play_and_earn_currency_robux">Robux</string>
+  <string name="play_and_earn_dismiss_button">Ίσως αργότερα</string>
+  <string name="play_and_earn_earn_amount_badge">Κερδίστε %1$s</string>
+  <string name="play_and_earn_earn_more_button">Κερδίστε περισσότερα</string>
+  <string name="play_and_earn_earn_title">Κερδίστε %1$s</string>
+  <string name="play_and_earn_exchange_almost_there">Σχεδόν έφτασες!</string>
+  <string name="play_and_earn_exchange_available_subtitle">Έχετε %1$s διαθέσιμα.</string>
+  <string name="play_and_earn_exchange_balance_after">Υπόλοιπο μετά την εξαργύρωση</string>
+  <string name="play_and_earn_exchange_earn_more_button">Κερδίστε περισσότερα</string>
+  <string name="play_and_earn_exchange_email_address_label">Διεύθυνση email</string>
+  <string name="play_and_earn_exchange_email_error">Εισαγάγετε έγκυρη διεύθυνση email</string>
+  <string name="play_and_earn_exchange_email_safe_note">🔒 Το email σας είναι ασφαλές. Θα το χρησιμοποιήσουμε μόνο για να σας στείλουμε αυτή την ανταμοιβή.</string>
+  <string name="play_and_earn_exchange_get_my_code_button">Λάβετε τον κωδικό μου</string>
+  <string name="play_and_earn_exchange_not_enough_balance">Ανεπαρκές υπόλοιπο</string>
+  <string name="play_and_earn_exchange_pick_reward_title">Επιλέξτε την ανταμοιβή σας.</string>
+  <string name="play_and_earn_exchange_reach_target_robux">Φτάνοντας τις %1$d μονάδες = Εξαργύρωση %2$s σε κωδικό Robux</string>
+  <string name="play_and_earn_exchange_reach_target_diamonds">Φτάνοντας τις %1$d μονάδες = Εξαργύρωση %2$s σε κωδικό Free Fire Diamonds</string>
+  <string name="play_and_earn_exchange_redeem_button">Εξαργύρωση %1$s</string>
+  <string name="play_and_earn_exchange_redeem_cost">Κοστίζει %1$d μονάδες</string>
+  <string name="play_and_earn_exchange_send_code"><![CDATA[Πού να στείλουμε τον κωδικό σας <1>%1$s</1> <2>%2$s</2>;]]></string>
+  <string name="play_and_earn_exchange_success_email_sent">Στείλαμε τον κωδικό σας στο %1$s. Ελέγξτε τα εισερχόμενά σας εντός 24 ωρών.</string>
+  <string name="play_and_earn_exchange_units_label">μονάδες</string>
+  <string name="play_and_earn_exchange_units_progress"><![CDATA[<1>%1$d</1>/%2$d μονάδες]]></string>
+  <string name="play_and_earn_exchange_units_to_go">Απομένουν %1$d μονάδες</string>
+  <string name="play_and_earn_exchange_units_value">%1$d μονάδες</string>
+  <string name="play_and_earn_exchange_your_balance_label">Το υπόλοιπό σας</string>
+  <string name="play_and_earn_exclusive_offer">Αποκλειστική προσφορά</string>
+  <string name="play_and_earn_mission_minutes_left">Απομένουν %1$d λεπτά</string>
+  <string name="play_and_earn_mission_seconds_left">Απομένουν %1$d δευτερόλεπτα</string>
+  <string name="play_and_earn_more_games_more">Περισσότερα παιχνίδια. Περισσότερα %1$s.</string>
+  <string name="play_and_earn_my_balance_button">Το υπόλοιπό μου</string>
+  <string name="play_and_earn_permissions_almost_ready_title">Σχεδόν έτοιμοι να κερδίσετε!</string>
+  <string name="play_and_earn_permissions_open_settings_button">Άνοιγμα ρυθμίσεων Android</string>
+  <string name="play_and_earn_play_and_earn_up_to_button">Play &amp; Earn έως $%1$.2f</string>
+  <string name="play_and_earn_reward_claim_message"><![CDATA[<1>%1$s</1> σε %2$s είναι δικά σας!]]></string>
+  <string name="play_and_earn_reward_earned_message"><![CDATA[Κερδίσατε <1>%1$s</1> σε %2$s!]]></string>
+  <string name="play_and_earn_rewards_install_play_title">Εγκαταστήστε παιχνίδια. Παίξτε τα αγαπημένα σας.</string>
+  <string name="play_and_earn_sign_in_reward_body"><![CDATA[Συνδεθείτε ώστε να ξέρουμε πού να στείλουμε τα <1>%1$s</1> σας.]]></string>
+  <string name="play_and_earn_tap_to_collect">Πατήστε για συλλογή</string>
 </resources>

@@ -440,4 +440,45 @@
   <string name="promotional_bonus_up_to">Tot</string>
   <string name="promotional_bonus_label">Bonus</string>
   <string name="appview_auto_open_when_ready">Automatisch openen indien gereed</string>
+  <string name="play_and_earn_collect_button">Tik om te verzamelen</string>
+  <string name="play_and_earn_currency_diamonds">Diamonds</string>
+  <string name="play_and_earn_currency_robux">Robux</string>
+  <string name="play_and_earn_dismiss_button">Misschien later</string>
+  <string name="play_and_earn_earn_amount_badge">Verdien %1$s</string>
+  <string name="play_and_earn_earn_more_button">Meer verdienen</string>
+  <string name="play_and_earn_earn_title">Verdien %1$s</string>
+  <string name="play_and_earn_exchange_almost_there">Je bent er bijna!</string>
+  <string name="play_and_earn_exchange_available_subtitle">Je hebt %1$s beschikbaar.</string>
+  <string name="play_and_earn_exchange_balance_after">Saldo na inwisselen</string>
+  <string name="play_and_earn_exchange_earn_more_button">Meer verdienen</string>
+  <string name="play_and_earn_exchange_email_address_label">E-mailadres</string>
+  <string name="play_and_earn_exchange_email_error">Voer een geldig e-mailadres in</string>
+  <string name="play_and_earn_exchange_email_safe_note">🔒 Je e-mailadres is veilig bij ons. We gebruiken het alleen om je deze beloning te sturen.</string>
+  <string name="play_and_earn_exchange_get_my_code_button">Mijn code ophalen</string>
+  <string name="play_and_earn_exchange_not_enough_balance">Niet genoeg saldo</string>
+  <string name="play_and_earn_exchange_pick_reward_title">Kies je beloning.</string>
+  <string name="play_and_earn_exchange_reach_target_diamonds">%1$d eenheden bereiken = %2$s aan Free Fire Diamonds-code inwisselen</string>
+  <string name="play_and_earn_exchange_reach_target_robux">%1$d eenheden bereiken = %2$s aan Robux-code inwisselen</string>
+  <string name="play_and_earn_exchange_redeem_button">%1$s inwisselen</string>
+  <string name="play_and_earn_exchange_redeem_cost">Kost %1$d eenheden</string>
+  <string name="play_and_earn_exchange_send_code"><![CDATA[Waar moeten we je <1>%1$s</1> <2>%2$s</2>-code naartoe sturen?]]></string>
+  <string name="play_and_earn_exchange_success_email_sent">We hebben je code naar %1$s gestuurd. Controleer je inbox binnen 24 uur.</string>
+  <string name="play_and_earn_exchange_units_label">eenheden</string>
+  <string name="play_and_earn_exchange_units_progress"><![CDATA[<1>%1$d</1>/%2$d eenheden]]></string>
+  <string name="play_and_earn_exchange_units_to_go">%1$d eenheden te gaan</string>
+  <string name="play_and_earn_exchange_units_value">%1$d eenheden</string>
+  <string name="play_and_earn_exchange_your_balance_label">Je saldo</string>
+  <string name="play_and_earn_exclusive_offer">Exclusieve aanbieding</string>
+  <string name="play_and_earn_mission_minutes_left">%1$d minuten resterend</string>
+  <string name="play_and_earn_mission_seconds_left">%1$d seconden resterend</string>
+  <string name="play_and_earn_more_games_more">Meer games. Meer %1$s.</string>
+  <string name="play_and_earn_my_balance_button">Mijn saldo</string>
+  <string name="play_and_earn_permissions_almost_ready_title">Bijna klaar om te verdienen!</string>
+  <string name="play_and_earn_permissions_open_settings_button">Android-instellingen openen</string>
+  <string name="play_and_earn_play_and_earn_up_to_button">Play &amp; Earn tot $%1$.2f</string>
+  <string name="play_and_earn_reward_claim_message"><![CDATA[<1>%1$s</1> in %2$s is van jou!]]></string>
+  <string name="play_and_earn_reward_earned_message"><![CDATA[Je hebt <1>%1$s</1> verdiend in %2$s!]]></string>
+  <string name="play_and_earn_rewards_install_play_title">Installeer games. Speel je favoriet.</string>
+  <string name="play_and_earn_sign_in_reward_body"><![CDATA[Log in zodat we weten waar we je <1>%1$s</1> naartoe moeten sturen.]]></string>
+  <string name="play_and_earn_tap_to_collect">Tik om te verzamelen</string>
 </resources>

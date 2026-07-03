@@ -429,4 +429,45 @@
   <string name="promotional_bonus_up_to">အထိ</string>
   <string name="promotional_bonus_label">ေဘာနပ္စ္</string>
   <string name="appview_auto_open_when_ready">အသင့်ဖြစ်သည်နှင့် အလိုအလျောက်ဖွင့်ရန်</string>
+  <string name="play_and_earn_collect_button">စုဆောင်းရန် တို့ပါ</string>
+  <string name="play_and_earn_currency_diamonds">Diamonds</string>
+  <string name="play_and_earn_currency_robux">Robux</string>
+  <string name="play_and_earn_dismiss_button">နောက်မှ</string>
+  <string name="play_and_earn_earn_amount_badge">%1$s ရယူပါ</string>
+  <string name="play_and_earn_earn_more_button">ပိုမိုရယူပါ</string>
+  <string name="play_and_earn_earn_title">%1$s ရယူပါ</string>
+  <string name="play_and_earn_exchange_almost_there">နီးပါးရောက်ပါပြီ။</string>
+  <string name="play_and_earn_exchange_available_subtitle">%1$s ရရှိနိုင်ပါသည်။</string>
+  <string name="play_and_earn_exchange_balance_after">လဲလှယ်ပြီးနောက် လက်ကျန်ငွေ</string>
+  <string name="play_and_earn_exchange_earn_more_button">ပိုမိုရယူပါ</string>
+  <string name="play_and_earn_exchange_email_address_label">အီးမေးလ်လိပ်စာ</string>
+  <string name="play_and_earn_exchange_email_error">မှန်ကန်သော အီးမေးလ်လိပ်စာ ထည့်ပါ</string>
+  <string name="play_and_earn_exchange_email_safe_note">🔒 သင့်အီးမေးလ်ကို ကျွန်ုပ်တို့ လုံခြုံစွာ ထိန်းသိမ်းပါမည်။ ဤဆုကို ပေးပို့ရန်သာ အသုံးပြုပါမည်။</string>
+  <string name="play_and_earn_exchange_get_my_code_button">ကုဒ်ရယူပါ</string>
+  <string name="play_and_earn_exchange_not_enough_balance">လက်ကျန်ငွေ မလုံလောက်ပါ</string>
+  <string name="play_and_earn_exchange_pick_reward_title">သင့်ဆုကို ရွေးပါ။</string>
+  <string name="play_and_earn_exchange_reach_target_diamonds">%1$d ယူနစ် ရောက်ခြင်း = Free Fire Diamonds ကုဒ်ဖြင့် %2$s လဲယူပါ</string>
+  <string name="play_and_earn_exchange_reach_target_robux">%1$d ယူနစ် ရောက်ခြင်း = Robux ကုဒ်ဖြင့် %2$s လဲယူပါ</string>
+  <string name="play_and_earn_exchange_redeem_button">%1$s လဲယူပါ</string>
+  <string name="play_and_earn_exchange_redeem_cost">%1$d ယူနစ် ကုန်ကျပါသည်</string>
+  <string name="play_and_earn_exchange_send_code"><![CDATA[သင့် <1>%1$s</1> <2>%2$s</2> ကုဒ်ကို ဘယ်ကို ပေးပို့ရမလဲ။]]></string>
+  <string name="play_and_earn_exchange_success_email_sent">သင့်ကုဒ်ကို %1$s သို့ ပေးပို့ပြီးပါပြီ။ ၂၄ နာရီအတွင်း သင့် inbox ကို စစ်ဆေးပါ။</string>
+  <string name="play_and_earn_exchange_units_label">ယူနစ်</string>
+  <string name="play_and_earn_exchange_units_progress"><![CDATA[<1>%1$d</1>/%2$d ယူနစ်]]></string>
+  <string name="play_and_earn_exchange_units_to_go">%1$d ယူနစ် လိုပါသေးသည်</string>
+  <string name="play_and_earn_exchange_units_value">%1$d ယူနစ်</string>
+  <string name="play_and_earn_exchange_your_balance_label">သင့်လက်ကျန်ငွေ</string>
+  <string name="play_and_earn_exclusive_offer">သီးသန့် ကမ်းလှမ်းချက်</string>
+  <string name="play_and_earn_mission_minutes_left">%1$d မိနစ် ကျန်ပါသည်</string>
+  <string name="play_and_earn_mission_seconds_left">%1$d စက္ကန့် ကျန်ပါသည်</string>
+  <string name="play_and_earn_more_games_more">ဂိမ်း ပိုများ။ %1$s ပိုများ။</string>
+  <string name="play_and_earn_my_balance_button">ကျွန်ုပ်၏ လက်ကျန်ငွေ</string>
+  <string name="play_and_earn_permissions_almost_ready_title">ရယူရန် နီးပါးအသင့်ဖြစ်ပါပြီ။</string>
+  <string name="play_and_earn_permissions_open_settings_button">Android ချိန်ညှိမှုများ ဖွင့်ပါ</string>
+  <string name="play_and_earn_play_and_earn_up_to_button">Play &amp; Earn ဖြင့် $%1$.2f အထိ ရယူပါ</string>
+  <string name="play_and_earn_reward_claim_message"><![CDATA[%2$s ရှိ <1>%1$s</1> သည် သင့်အတွက်ပါ။]]></string>
+  <string name="play_and_earn_reward_earned_message"><![CDATA[%2$s တွင် <1>%1$s</1> ရရှိခဲ့ပါသည်။]]></string>
+  <string name="play_and_earn_rewards_install_play_title">ဂိမ်းများ ထည့်သွင်းပါ။ သင်နှစ်သက်ရာ ကစားပါ။</string>
+  <string name="play_and_earn_sign_in_reward_body"><![CDATA[သင့် <1>%1$s</1> ကို ဘယ်ကို ပေးပို့ရမည်ကို သိရန် အကောင့်ဝင်ပါ။]]></string>
+  <string name="play_and_earn_tap_to_collect">စုဆောင်းရန် တို့ပါ</string>
 </resources>

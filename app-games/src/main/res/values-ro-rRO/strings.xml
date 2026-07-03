@@ -451,4 +451,45 @@
   <string name="promotional_bonus_up_to">Până la</string>
   <string name="promotional_bonus_label">Bonus</string>
   <string name="appview_auto_open_when_ready">Deschidere automată când e gata</string>
+  <string name="play_and_earn_collect_button">Atinge pentru a colecta</string>
+  <string name="play_and_earn_currency_diamonds">Diamonds</string>
+  <string name="play_and_earn_currency_robux">Robux</string>
+  <string name="play_and_earn_dismiss_button">Poate mai târziu</string>
+  <string name="play_and_earn_earn_amount_badge">Câștigă %1$s</string>
+  <string name="play_and_earn_earn_more_button">Câștigă mai mult</string>
+  <string name="play_and_earn_earn_title">Câștigă %1$s</string>
+  <string name="play_and_earn_exchange_almost_there">Aproape ai ajuns!</string>
+  <string name="play_and_earn_exchange_available_subtitle">Ai %1$s disponibili.</string>
+  <string name="play_and_earn_exchange_balance_after">Sold după răscumpărare</string>
+  <string name="play_and_earn_exchange_earn_more_button">Câștigă mai mult</string>
+  <string name="play_and_earn_exchange_email_address_label">Adresă de e-mail</string>
+  <string name="play_and_earn_exchange_email_error">Introdu o adresă de e-mail validă</string>
+  <string name="play_and_earn_exchange_email_safe_note">🔒 E-mailul tău este în siguranță la noi. Îl vom folosi doar pentru a-ți trimite această recompensă.</string>
+  <string name="play_and_earn_exchange_get_my_code_button">Obține codul meu</string>
+  <string name="play_and_earn_exchange_not_enough_balance">Sold insuficient</string>
+  <string name="play_and_earn_exchange_pick_reward_title">Alege-ți recompensa.</string>
+  <string name="play_and_earn_exchange_reach_target_robux">Atingerea a %1$d unități = Răscumpără %2$s în cod Robux</string>
+  <string name="play_and_earn_exchange_reach_target_diamonds">Atingerea a %1$d unități = Răscumpără %2$s în cod Free Fire Diamonds</string>
+  <string name="play_and_earn_exchange_redeem_button">Răscumpără %1$s</string>
+  <string name="play_and_earn_exchange_redeem_cost">Costă %1$d unități</string>
+  <string name="play_and_earn_exchange_send_code"><![CDATA[Unde să-ți trimitem codul <1>%1$s</1> <2>%2$s</2>?]]></string>
+  <string name="play_and_earn_exchange_success_email_sent">Am trimis codul tău la %1$s. Verifică-ți inbox-ul în 24 de ore.</string>
+  <string name="play_and_earn_exchange_units_label">unități</string>
+  <string name="play_and_earn_exchange_units_progress"><![CDATA[<1>%1$d</1>/%2$d unități]]></string>
+  <string name="play_and_earn_exchange_units_to_go">%1$d unități rămase</string>
+  <string name="play_and_earn_exchange_units_value">%1$d unități</string>
+  <string name="play_and_earn_exchange_your_balance_label">Soldul tău</string>
+  <string name="play_and_earn_exclusive_offer">Ofertă exclusivă</string>
+  <string name="play_and_earn_mission_minutes_left">%1$d minute rămase</string>
+  <string name="play_and_earn_mission_seconds_left">%1$d secunde rămase</string>
+  <string name="play_and_earn_more_games_more">Mai multe jocuri. Mai mult %1$s.</string>
+  <string name="play_and_earn_my_balance_button">Soldul meu</string>
+  <string name="play_and_earn_permissions_almost_ready_title">Aproape gata să câștigi!</string>
+  <string name="play_and_earn_permissions_open_settings_button">Deschide setările Android</string>
+  <string name="play_and_earn_play_and_earn_up_to_button">Play &amp; Earn până la $%1$.2f</string>
+  <string name="play_and_earn_reward_claim_message"><![CDATA[<1>%1$s</1> în %2$s sunt ai tăi!]]></string>
+  <string name="play_and_earn_reward_earned_message"><![CDATA[Ai câștigat <1>%1$s</1> în %2$s!]]></string>
+  <string name="play_and_earn_rewards_install_play_title">Instalează jocuri. Joacă-ți preferatul.</string>
+  <string name="play_and_earn_sign_in_reward_body"><![CDATA[Conectează-te ca să știm unde să-ți trimitem <1>%1$s</1>.]]></string>
+  <string name="play_and_earn_tap_to_collect">Atinge pentru a colecta</string>
 </resources>

@@ -430,4 +430,45 @@ Promosi khas dan ganjaran dalam permainan kegemaran anda.</string>
   <string name="promotional_bonus_up_to">Sehingga</string>
   <string name="promotional_bonus_label">Bonus</string>
   <string name="appview_auto_open_when_ready">Buka secara automatik apabila sedia</string>
+  <string name="play_and_earn_collect_button">Ketik untuk Kutip</string>
+  <string name="play_and_earn_currency_diamonds">Diamonds</string>
+  <string name="play_and_earn_currency_robux">Robux</string>
+  <string name="play_and_earn_dismiss_button">Mungkin nanti</string>
+  <string name="play_and_earn_earn_amount_badge">Kutip %1$s</string>
+  <string name="play_and_earn_earn_more_button">Kutip Lagi</string>
+  <string name="play_and_earn_earn_title">Kutip %1$s</string>
+  <string name="play_and_earn_exchange_almost_there">Hampir sampai!</string>
+  <string name="play_and_earn_exchange_available_subtitle">Anda ada %1$s tersedia.</string>
+  <string name="play_and_earn_exchange_balance_after">Baki selepas tebus</string>
+  <string name="play_and_earn_exchange_earn_more_button">Kutip Lagi</string>
+  <string name="play_and_earn_exchange_email_address_label">Alamat E-mel</string>
+  <string name="play_and_earn_exchange_email_error">Masukkan alamat e-mel yang sah</string>
+  <string name="play_and_earn_exchange_email_safe_note">🔒 E-mel anda selamat dengan kami. Kami hanya guna ia untuk menghantar ganjaran ini.</string>
+  <string name="play_and_earn_exchange_get_my_code_button">Dapatkan kod saya</string>
+  <string name="play_and_earn_exchange_not_enough_balance">Baki tidak mencukupi</string>
+  <string name="play_and_earn_exchange_pick_reward_title">Pilih ganjaran anda.</string>
+  <string name="play_and_earn_exchange_reach_target_robux">Capai %1$d unit = Tebus %2$s dalam kod Robux</string>
+  <string name="play_and_earn_exchange_reach_target_diamonds">Capai %1$d unit = Tebus %2$s dalam kod Free Fire Diamonds</string>
+  <string name="play_and_earn_exchange_redeem_button">Tebus %1$s</string>
+  <string name="play_and_earn_exchange_redeem_cost">Berharga %1$d unit</string>
+  <string name="play_and_earn_exchange_send_code"><![CDATA[Ke mana kami patut hantar kod <1>%1$s</1> <2>%2$s</2> anda?]]></string>
+  <string name="play_and_earn_exchange_success_email_sent">Kami telah hantar kod anda ke %1$s. Semak peti masuk anda dalam masa 24 jam.</string>
+  <string name="play_and_earn_exchange_units_label">unit</string>
+  <string name="play_and_earn_exchange_units_progress"><![CDATA[<1>%1$d</1>/%2$d unit]]></string>
+  <string name="play_and_earn_exchange_units_to_go">%1$d unit lagi</string>
+  <string name="play_and_earn_exchange_units_value">%1$d unit</string>
+  <string name="play_and_earn_exchange_your_balance_label">Baki Anda</string>
+  <string name="play_and_earn_exclusive_offer">Tawaran eksklusif</string>
+  <string name="play_and_earn_mission_minutes_left">%1$d minit lagi</string>
+  <string name="play_and_earn_mission_seconds_left">%1$d saat lagi</string>
+  <string name="play_and_earn_more_games_more">Lebih banyak permainan. Lebih banyak %1$s.</string>
+  <string name="play_and_earn_my_balance_button">Baki Saya</string>
+  <string name="play_and_earn_permissions_almost_ready_title">Hampir sedia untuk kutip!</string>
+  <string name="play_and_earn_permissions_open_settings_button">Buka tetapan Android</string>
+  <string name="play_and_earn_play_and_earn_up_to_button">Play &amp; Earn sehingga $%1$.2f</string>
+  <string name="play_and_earn_reward_claim_message"><![CDATA[<1>%1$s</1> dalam %2$s milik anda!]]></string>
+  <string name="play_and_earn_reward_earned_message"><![CDATA[Anda kutip <1>%1$s</1> dalam %2$s!]]></string>
+  <string name="play_and_earn_rewards_install_play_title">Pasang Permainan. Main kegemaran anda.</string>
+  <string name="play_and_earn_sign_in_reward_body"><![CDATA[Log masuk supaya kami tahu ke mana untuk menghantar <1>%1$s</1> anda.]]></string>
+  <string name="play_and_earn_tap_to_collect">Ketik untuk Kutip</string>
 </resources>

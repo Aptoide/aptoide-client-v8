@@ -462,4 +462,45 @@
   <string name="promotional_bonus_up_to">До</string>
   <string name="promotional_bonus_label">Бонус</string>
   <string name="appview_auto_open_when_ready">Автозапуск, коли готово</string>
+  <string name="play_and_earn_collect_button">Натисніть, щоб зібрати</string>
+  <string name="play_and_earn_currency_diamonds">Diamonds</string>
+  <string name="play_and_earn_currency_robux">Robux</string>
+  <string name="play_and_earn_dismiss_button">Можливо, пізніше</string>
+  <string name="play_and_earn_earn_amount_badge">Заробіть %1$s</string>
+  <string name="play_and_earn_earn_more_button">Заробити більше</string>
+  <string name="play_and_earn_earn_title">Заробіть %1$s</string>
+  <string name="play_and_earn_exchange_almost_there">Ви майже досягли мети!</string>
+  <string name="play_and_earn_exchange_available_subtitle">У вас доступно %1$s.</string>
+  <string name="play_and_earn_exchange_balance_after">Баланс після обміну</string>
+  <string name="play_and_earn_exchange_earn_more_button">Заробити більше</string>
+  <string name="play_and_earn_exchange_email_address_label">Адреса електронної пошти</string>
+  <string name="play_and_earn_exchange_email_error">Введіть дійсну адресу електронної пошти</string>
+  <string name="play_and_earn_exchange_email_safe_note">🔒 Ваша електронна пошта в безпеці. Ми використаємо її лише для надсилання цієї винагороди.</string>
+  <string name="play_and_earn_exchange_get_my_code_button">Отримати код</string>
+  <string name="play_and_earn_exchange_not_enough_balance">Недостатньо балансу</string>
+  <string name="play_and_earn_exchange_pick_reward_title">Виберіть свою винагороду.</string>
+  <string name="play_and_earn_exchange_reach_target_diamonds">Досягнення %1$d одиниць = обмін на код %2$s у Free Fire Diamonds</string>
+  <string name="play_and_earn_exchange_reach_target_robux">Досягнення %1$d одиниць = обмін на код %2$s у Robux</string>
+  <string name="play_and_earn_exchange_redeem_button">Обміняти %1$s</string>
+  <string name="play_and_earn_exchange_redeem_cost">Коштує %1$d одиниць</string>
+  <string name="play_and_earn_exchange_send_code"><![CDATA[Куди надіслати ваш код <1>%1$s</1> <2>%2$s</2>?]]></string>
+  <string name="play_and_earn_exchange_success_email_sent">Ми надіслали ваш код на %1$s. Перевірте вхідні протягом 24 годин.</string>
+  <string name="play_and_earn_exchange_units_label">одиниць</string>
+  <string name="play_and_earn_exchange_units_progress"><![CDATA[<1>%1$d</1>/%2$d одиниць]]></string>
+  <string name="play_and_earn_exchange_units_to_go">залишилось %1$d одиниць</string>
+  <string name="play_and_earn_exchange_units_value">%1$d одиниць</string>
+  <string name="play_and_earn_exchange_your_balance_label">Ваш баланс</string>
+  <string name="play_and_earn_exclusive_offer">Ексклюзивна пропозиція</string>
+  <string name="play_and_earn_mission_minutes_left">залишилось %1$d хвилин</string>
+  <string name="play_and_earn_mission_seconds_left">залишилось %1$d секунд</string>
+  <string name="play_and_earn_more_games_more">Більше ігор. Більше %1$s.</string>
+  <string name="play_and_earn_my_balance_button">Мій баланс</string>
+  <string name="play_and_earn_permissions_almost_ready_title">Майже готово до заробітку!</string>
+  <string name="play_and_earn_permissions_open_settings_button">Відкрити налаштування Android</string>
+  <string name="play_and_earn_play_and_earn_up_to_button">Play &amp; Earn до $%1$.2f</string>
+  <string name="play_and_earn_reward_claim_message"><![CDATA[<1>%1$s</1> у %2$s — ваші!]]></string>
+  <string name="play_and_earn_reward_earned_message"><![CDATA[Ви заробили <1>%1$s</1> у %2$s!]]></string>
+  <string name="play_and_earn_rewards_install_play_title">Встановлюйте ігри. Грайте в улюблену.</string>
+  <string name="play_and_earn_sign_in_reward_body"><![CDATA[Увійдіть, щоб ми знали, куди надіслати ваші <1>%1$s</1>.]]></string>
+  <string name="play_and_earn_tap_to_collect">Натисніть, щоб зібрати</string>
 </resources>

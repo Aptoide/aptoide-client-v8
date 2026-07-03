@@ -451,4 +451,45 @@
   <string name="promotional_bonus_up_to">Do</string>
   <string name="promotional_bonus_label">Bonus</string>
   <string name="appview_auto_open_when_ready">Аутоматско отварање када буде спремно</string>
+  <string name="play_and_earn_collect_button">Dodirnite za preuzimanje</string>
+  <string name="play_and_earn_currency_diamonds">Diamonds</string>
+  <string name="play_and_earn_currency_robux">Robux</string>
+  <string name="play_and_earn_dismiss_button">Možda kasnije</string>
+  <string name="play_and_earn_earn_amount_badge">Zaradite %1$s</string>
+  <string name="play_and_earn_earn_more_button">Zaradite više</string>
+  <string name="play_and_earn_earn_title">Zaradite %1$s</string>
+  <string name="play_and_earn_exchange_almost_there">Skoro ste tamo!</string>
+  <string name="play_and_earn_exchange_available_subtitle">Imate %1$s na raspolaganju.</string>
+  <string name="play_and_earn_exchange_balance_after">Stanje nakon iskorišćavanja</string>
+  <string name="play_and_earn_exchange_earn_more_button">Zaradite više</string>
+  <string name="play_and_earn_exchange_email_address_label">Imejl adresa</string>
+  <string name="play_and_earn_exchange_email_error">Unesite važeću imejl adresu</string>
+  <string name="play_and_earn_exchange_email_safe_note">🔒 Vaš imejl je bezbedan kod nas. Koristićemo ga samo da vam pošaljemo ovu nagradu.</string>
+  <string name="play_and_earn_exchange_get_my_code_button">Preuzmi kod</string>
+  <string name="play_and_earn_exchange_not_enough_balance">Nedovoljno stanje</string>
+  <string name="play_and_earn_exchange_pick_reward_title">Izaberite nagradu.</string>
+  <string name="play_and_earn_exchange_reach_target_diamonds">Dostizanje %1$d jedinica = iskorišćavanje %2$s u Free Fire Diamonds kodu</string>
+  <string name="play_and_earn_exchange_reach_target_robux">Dostizanje %1$d jedinica = iskorišćavanje %2$s u Robux kodu</string>
+  <string name="play_and_earn_exchange_redeem_button">Iskoristi %1$s</string>
+  <string name="play_and_earn_exchange_redeem_cost">Košta %1$d jedinica</string>
+  <string name="play_and_earn_exchange_send_code"><![CDATA[Gde da pošaljemo vaš <1>%1$s</1> <2>%2$s</2> kod?]]></string>
+  <string name="play_and_earn_exchange_success_email_sent">Poslali smo vaš kod na %1$s. Proverite prijemno sanduče u roku od 24 sata.</string>
+  <string name="play_and_earn_exchange_units_label">jedinice</string>
+  <string name="play_and_earn_exchange_units_progress"><![CDATA[<1>%1$d</1>/%2$d jedinica]]></string>
+  <string name="play_and_earn_exchange_units_to_go">Još %1$d jedinica</string>
+  <string name="play_and_earn_exchange_units_value">%1$d jedinica</string>
+  <string name="play_and_earn_exchange_your_balance_label">Vaše stanje</string>
+  <string name="play_and_earn_exclusive_offer">Ekskluzivna ponuda</string>
+  <string name="play_and_earn_mission_minutes_left">Preostalo %1$d minuta</string>
+  <string name="play_and_earn_mission_seconds_left">Preostalo %1$d sekundi</string>
+  <string name="play_and_earn_more_games_more">Više igara. Više %1$s.</string>
+  <string name="play_and_earn_my_balance_button">Moje stanje</string>
+  <string name="play_and_earn_permissions_almost_ready_title">Skoro spremni za zaradu!</string>
+  <string name="play_and_earn_permissions_open_settings_button">Otvori Android podešavanja</string>
+  <string name="play_and_earn_play_and_earn_up_to_button">Play &amp; Earn do $%1$.2f</string>
+  <string name="play_and_earn_reward_claim_message"><![CDATA[<1>%1$s</1> u %2$s je vaše!]]></string>
+  <string name="play_and_earn_reward_earned_message"><![CDATA[Zaradili ste <1>%1$s</1> u %2$s!]]></string>
+  <string name="play_and_earn_rewards_install_play_title">Instalirajte igre. Igrajte omiljenu.</string>
+  <string name="play_and_earn_sign_in_reward_body"><![CDATA[Prijavite se da znamo gde da pošaljemo vaše <1>%1$s</1>.]]></string>
+  <string name="play_and_earn_tap_to_collect">Dodirnite za preuzimanje</string>
 </resources>
