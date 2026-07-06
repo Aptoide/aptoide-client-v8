@@ -19,6 +19,10 @@ enum class PaERewardType(@StringRes val displayNameRes: Int) {
   ;
 
   companion object {
+    // Packages eligible for the sign-in reward, ordered by the priority used when more than one
+    // is installed (Roblox first, then the Free Fire variants).
+    val rewardPackages: List<String> = listOf(ROBLOX_PACKAGE) + FREE_FIRE_PACKAGES
+
     fun fromPackageName(packageName: String?): PaERewardType? = when (packageName) {
       ROBLOX_PACKAGE -> ROBUX
       in FREE_FIRE_PACKAGES -> DIAMONDS
