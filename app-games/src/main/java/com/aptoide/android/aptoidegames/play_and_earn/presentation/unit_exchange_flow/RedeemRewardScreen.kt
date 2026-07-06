@@ -144,11 +144,7 @@ private fun RedeemRewardContent(
   val unitsToGo = (targetUnits - availableUnits).coerceAtLeast(0L)
   val formattedRedeem = "$${redeemAmount.setScale(2, RoundingMode.HALF_UP).toPlainString()}"
 
-  Column(
-    modifier = Modifier
-      .fillMaxSize()
-      .verticalScroll(rememberScrollState())
-  ) {
+  Column(modifier = Modifier.fillMaxSize()) {
     Spacer(modifier = Modifier.height(24.dp))
 
     Text(
@@ -162,35 +158,42 @@ private fun RedeemRewardContent(
 
     UnitsHexagonHero(units = availableUnits, isComplete = hasEnough)
 
-    Spacer(modifier = Modifier.height(24.dp))
-
-    RedeemOfferCard(
-      rewardType = rewardType,
-      formattedRedeem = formattedRedeem,
-      costUnits = targetUnits,
-      balanceAfter = (availableUnits - targetUnits).coerceAtLeast(0L),
-      unitsToGo = unitsToGo,
-      hasEnough = hasEnough,
+    Column(
       modifier = Modifier
         .fillMaxWidth()
-        .padding(horizontal = 24.dp),
-    )
+        .weight(1f)
+        .verticalScroll(rememberScrollState())
+    ) {
+      Spacer(modifier = Modifier.height(24.dp))
 
-    Spacer(modifier = Modifier.weight(1f))
+      RedeemOfferCard(
+        rewardType = rewardType,
+        formattedRedeem = formattedRedeem,
+        costUnits = targetUnits,
+        balanceAfter = (availableUnits - targetUnits).coerceAtLeast(0L),
+        unitsToGo = unitsToGo,
+        hasEnough = hasEnough,
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(horizontal = 24.dp),
+      )
 
-    AccentButton(
-      modifier = Modifier
-        .fillMaxWidth()
-        .padding(horizontal = 24.dp)
-        .padding(bottom = 24.dp),
-      title = if (hasEnough) {
-        stringResource(R.string.play_and_earn_exchange_redeem_button, formattedRedeem)
-      } else {
-        stringResource(R.string.play_and_earn_earn_more_button)
-      },
-      enabled = true,
-      onClick = { if (hasEnough) onRedeem(formattedRedeem) else onEarnMore() },
-    )
+      Spacer(modifier = Modifier.weight(1f))
+
+      AccentButton(
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(horizontal = 24.dp)
+          .padding(bottom = 24.dp),
+        title = if (hasEnough) {
+          stringResource(R.string.play_and_earn_exchange_redeem_button, formattedRedeem)
+        } else {
+          stringResource(R.string.play_and_earn_earn_more_button)
+        },
+        enabled = true,
+        onClick = { if (hasEnough) onRedeem(formattedRedeem) else onEarnMore() },
+      )
+    }
   }
 }
 
@@ -248,7 +251,7 @@ private fun RedeemOfferCard(
 ) {
   Column(
     modifier = modifier
-      .background(FixedColors.PaeExchangePurple)
+      .background(FixedColors.PaeExchangePurple.copy(alpha = 0.5f))
       .padding(16.dp),
     verticalArrangement = Arrangement.spacedBy(12.dp),
   ) {
@@ -292,7 +295,7 @@ private fun RedeemOfferCard(
         Text(
           text = stringResource(R.string.play_and_earn_exchange_units_value, balanceAfter),
           style = AGTypography.InputsL,
-          color = Palette.Primary,
+          color = Palette.Yellow100,
         )
       }
     } else {
@@ -310,6 +313,7 @@ private fun RedeemOfferCard(
           text = stringResource(R.string.play_and_earn_exchange_units_to_go, unitsToGo),
           style = AGTypography.InputsL,
           color = Palette.Yellow100,
+          textAlign = TextAlign.Center
         )
       }
     }
