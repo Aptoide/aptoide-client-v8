@@ -23,11 +23,6 @@ class PaEClientConfigManager @Inject constructor(
   suspend fun fetchAndSaveClientConfig() {
     withContext(Dispatchers.IO) {
       try {
-        if (!playAndEarnManager.isSignedIn()) {
-          Timber.d("PaEClientConfigManager: User not signed in, skipping config fetch")
-          return@withContext
-        }
-
         if (!playAndEarnManager.shouldShowPlayAndEarn()) {
           Timber.d("PaEClientConfigManager: Play & Earn not available, skipping config fetch")
           return@withContext
