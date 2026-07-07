@@ -273,11 +273,9 @@ private fun PendingMissionItem(mission: PaEMission) {
         )
       }
 
-      Text(
+      MissionReward(
         modifier = Modifier.padding(end = 8.dp),
-        text = "+ ${mission.units} UNITS",
-        style = AGTypography.InputsXS,
-        color = Palette.SecondaryLight
+        units = mission.units
       )
     }
   }
@@ -350,8 +348,14 @@ private fun OngoingMissionItem(mission: PaEMission) {
 }
 
 @Composable
-private fun MissionReward(units: Int) {
-  Column(horizontalAlignment = Alignment.End) {
+private fun MissionReward(
+  modifier: Modifier = Modifier,
+  units: Int
+) {
+  Column(
+    modifier = modifier,
+    horizontalAlignment = Alignment.End
+  ) {
     Text(
       text = "+ $units UNITS",
       style = AGTypography.InputsS,
