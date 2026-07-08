@@ -35,7 +35,9 @@ class SearchRetrofitService @Inject constructor(
   }
 
   override suspend fun getTopSearchedApps(): Response<BaseV7DataListResponse<AppJSON>> {
-    return searchAppRetrofitService.getPopularSearch(searchStoreManager.getStore())
+    return searchAppRetrofitService.getPopularSearch(
+      if (searchStoreManager.shouldAddStore()) searchStoreManager.getStore() else null
+    )
   }
 
   interface SearchAppRetrofitService {
