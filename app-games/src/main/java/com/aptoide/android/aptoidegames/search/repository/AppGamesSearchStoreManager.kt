@@ -6,7 +6,7 @@ import cm.aptoide.pt.feature_search.domain.repository.SearchStoreManager
 class AppGamesSearchStoreManager : SearchStoreManager {
 
   override fun shouldAddStore(): Boolean {
-    return true
+    return SEARCH_ADD_STORE
   }
 
   override fun getStore(): String {
