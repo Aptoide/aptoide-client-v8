@@ -3,7 +3,6 @@ package com.aptoide.android.aptoidegames.play_and_earn.presentation.service
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aptoide.android.aptoidegames.play_and_earn.PlayAndEarnManager
 import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -19,7 +18,6 @@ import javax.inject.Inject
 class PaEServicePreferencesViewModel @Inject constructor(
   @ApplicationContext private val context: Context,
   private val paEPreferencesRepository: PaEPreferencesRepository,
-  private val playAndEarnManager: PlayAndEarnManager,
 ) : ViewModel() {
 
   private val viewModelState = MutableStateFlow(true)
@@ -44,11 +42,7 @@ class PaEServicePreferencesViewModel @Inject constructor(
   fun setPaEServiceEnabled(enabled: Boolean) {
     viewModelScope.launch {
       paEPreferencesRepository.setPaEServiceEnabled(enabled)
-      if (enabled) {
-        if (playAndEarnManager.shouldShowPlayAndEarn()) {
-          PaEForegroundService.start(context)
-        }
-      } else {
+      if (!enabled) {
         PaEForegroundService.stop(context)
       }
     }
