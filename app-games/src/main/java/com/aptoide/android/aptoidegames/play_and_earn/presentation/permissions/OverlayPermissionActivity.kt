@@ -8,20 +8,29 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.PaEAnalytics
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class OverlayPermissionActivity : AppCompatActivity() {
+
+  @Inject
+  lateinit var paEAnalytics: PaEAnalytics
 
   private lateinit var appOps: AppOpsManager
 
   private var permissionCheckJob: Job? = null
   private val checkInterval = 600L
+  private var grantedReported = false
 
   val overlayPermissionLauncher =
     registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+      reportGrantedIfNeeded()
       bringAppToForeground()
     }
 
@@ -50,6 +59,7 @@ class OverlayPermissionActivity : AppCompatActivity() {
     permissionCheckJob = lifecycleScope.launch(Dispatchers.Main.immediate) {
       while (true) {
         if (hasOverlayPermission()) {
+          reportGrantedIfNeeded()
           if (hasUsageStatsPermissionStatus(appOps)) {
             bringAppToForeground()
             break
@@ -60,6 +70,13 @@ class OverlayPermissionActivity : AppCompatActivity() {
         }
         delay(checkInterval)
       }
+    }
+  }
+
+  private fun reportGrantedIfNeeded() {
+    if (!grantedReported && hasOverlayPermission()) {
+      grantedReported = true
+      paEAnalytics.sendPaEOverlayPermissionGranted()
     }
   }
 

@@ -7,6 +7,7 @@ import cm.aptoide.pt.play_and_earn.sessions.data.SessionExpiredException
 import cm.aptoide.pt.play_and_earn.sessions.domain.SessionInfo
 import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPreferencesRepository
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaESession
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.PaEAnalytics
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.missions.PaEMissionManager
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -18,7 +19,8 @@ class PaESessionManager @Inject constructor(
   private val paESessionsRepository: PaESessionsRepository,
   private val paeMissionsRepository: PaEMissionsRepository,
   private val paeMissionManager: PaEMissionManager,
-  private val paEPreferencesRepository: PaEPreferencesRepository
+  private val paEPreferencesRepository: PaEPreferencesRepository,
+  private val paEAnalytics: PaEAnalytics
 ) {
 
   val activeSessions = mutableListOf<PaESession>()
@@ -55,6 +57,8 @@ class PaESessionManager @Inject constructor(
         heartbeatIntervalSeconds = heartbeatIntervalSeconds
       )
     )
+
+    paEAnalytics.sendPaESessionStart(packageName)
 
     return true
   }
@@ -172,6 +176,8 @@ class PaESessionManager @Inject constructor(
                 packageName = session.packageName,
                 missionTitle = missionEvent.missionTitle
               )
+
+              paEAnalytics.sendPaEMissionCompleted(session.packageName)
 
               _completedMissions.emit(completedMission)
             }
