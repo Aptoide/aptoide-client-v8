@@ -101,6 +101,20 @@ class PaEAnalytics @Inject constructor(
     )
   }
 
+  fun sendPaEUsageAccessPermissionGranted() {
+    genericAnalytics.logEvent(
+      name = "pae_perms_usageaccess_granted",
+      params = null
+    )
+  }
+
+  fun sendPaEOverlayPermissionGranted() {
+    genericAnalytics.logEvent(
+      name = "pae_perms_overlay_granted",
+      params = null
+    )
+  }
+
   fun sendPaEExchangeNowClick() {
     genericAnalytics.logEvent(
       name = "pae_exchangenow_click",
@@ -197,6 +211,29 @@ class PaEAnalytics @Inject constructor(
 
   fun sendPaEExchangeSuccessEarnMoreClick() {
     genericAnalytics.logEvent(name = "pae_exchangesuccess_click_earnmore", params = null)
+  }
+
+  fun sendPaEBalanceScreenShown() {
+    genericAnalytics.logEvent(
+      name = "pae_balance_screen_shown",
+      params = null
+    )
+  }
+
+  // --- Play session lifecycle ---
+
+  fun sendPaESessionStart(packageName: String) {
+    genericAnalytics.logEvent(
+      name = "pae_session_start",
+      params = mapOfNonNull(P_PACKAGE_NAME to packageName)
+    )
+  }
+
+  fun sendPaEMissionCompleted(packageName: String) {
+    genericAnalytics.logEvent(
+      name = "pae_mission_completed",
+      params = mapOfNonNull(P_PACKAGE_NAME to packageName)
+    )
   }
 
   companion object {

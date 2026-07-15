@@ -18,6 +18,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -66,6 +67,10 @@ fun redeemRewardScreen(
   val uiState = rememberUnitsBalanceUiState()
   val rewardsDestination = rememberRewardsDestination()
   val paeAnalytics = rememberPaEAnalytics()
+
+  LaunchedEffect(Unit) {
+    paeAnalytics.sendPaEBalanceScreenShown()
+  }
 
   RedeemRewardScreen(
     rewardType = rewardType,
