@@ -66,7 +66,7 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
   private var pollingJob: Job? = null
   private var completedMissionsJob: Job? = null
   private var idleTimeoutJob: Job? = null
-  private val idleTimeoutMillis = 30 * 60 * 1000L // 30 minutes
+  private val idleTimeoutMillis = 5 * 60 * 1000L // 30 minutes
   private var isMonitoringStarted = false
 
   private var lastForegroundPackage: String? = null
