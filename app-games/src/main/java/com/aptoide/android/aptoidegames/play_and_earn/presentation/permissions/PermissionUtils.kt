@@ -5,6 +5,7 @@ import android.app.AppOpsManager
 import android.content.Context
 import android.content.Context.APP_OPS_SERVICE
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Process
 import android.provider.Settings
 
@@ -24,3 +25,5 @@ fun Context.hasUsageStatsPermissionStatus(appOpsManager: AppOpsManager? = null):
 }
 
 fun Context.hasOverlayPermission() = Settings.canDrawOverlays(this)
+
+fun requiresRestrictedSettings() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM

@@ -115,6 +115,13 @@ class PaEAnalytics @Inject constructor(
     )
   }
 
+  fun sendPaELockedDialogShowMeHowClick() {
+    genericAnalytics.logEvent(
+      name = "pae_lockeddialog_click_showmehow",
+      params = null
+    )
+  }
+
   fun sendPaEExchangeNowClick() {
     genericAnalytics.logEvent(
       name = "pae_exchangenow_click",

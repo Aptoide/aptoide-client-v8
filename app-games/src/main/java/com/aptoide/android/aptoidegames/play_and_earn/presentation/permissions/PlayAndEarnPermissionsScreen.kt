@@ -1,7 +1,6 @@
 package com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions
 
 import android.content.Intent
-import android.os.Build
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -28,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -92,7 +92,9 @@ private fun PlayAndEarnPermissionsScreen(
   val paEClientConfigManager = rememberPaEClientConfigManager()
 
   var allowedRestrictedSettings by remember { mutableStateOf(false) }
-  var showPermissionDeniedDialog by remember { mutableStateOf(false) }
+  var showPermissionDeniedDialog by rememberSaveable { mutableStateOf(false) }
+  var showPermissionsLockedDialog by rememberSaveable { mutableStateOf(false) }
+  var showRestrictedSettingsSection by rememberSaveable { mutableStateOf(false) }
 
   // Check if permissions are already granted on screen resume
   DisposableEffect(lifecycleOwner) {
@@ -121,8 +123,22 @@ private fun PlayAndEarnPermissionsScreen(
   val permissionActivityLauncher = rememberLauncherForActivityResult(
     contract = ActivityResultContracts.StartActivityForResult()
   ) { result ->
-    if (!context.hasOverlayPermission() || !context.hasUsageStatsPermissionStatus()) {
-      showPermissionDeniedDialog = true
+    val hasOverlay = context.hasOverlayPermission()
+    val hasUsageStats = context.hasUsageStatsPermissionStatus()
+    if (!hasOverlay || !hasUsageStats) {
+      // Both permissions still missing before the restricted settings instructions were shown:
+      // the OS is likely blocking them until the user allows restricted settings.
+      val likelyBlockedByRestrictedSettings =
+        requiresRestrictedSettings() &&
+          !showRestrictedSettingsSection &&
+          !hasOverlay &&
+          !hasUsageStats
+
+      if (likelyBlockedByRestrictedSettings) {
+        showPermissionsLockedDialog = true
+      } else {
+        showPermissionDeniedDialog = true
+      }
     }
   }
 
@@ -156,16 +172,34 @@ private fun PlayAndEarnPermissionsScreen(
     PaERestrictedPermissionsScreenContent(
       onRestrictedSettingsClick = onRestrictedSettingsClick,
       onFinalPermissionsClick = onPermissionClick,
-      allowedRestrictedSettings = allowedRestrictedSettings
+      allowedRestrictedSettings = allowedRestrictedSettings,
+      showRestrictedSettingsSection = showRestrictedSettingsSection
     )
   }
 
   if (showPermissionDeniedDialog) {
-    PermissionDeniedDialog(
+    PaEPermissionsDialog(
+      title = stringResource(R.string.play_and_earn_permissions_denied_dialog_title),
+      body = stringResource(R.string.play_and_earn_permissions_denied_dialog_body),
+      primaryButtonTitle = stringResource(R.string.play_and_earn_permissions_enable_now_button),
       onDismiss = { showPermissionDeniedDialog = false },
-      onRetry = {
+      onPrimaryClick = {
         showPermissionDeniedDialog = false
         onPermissionClick()
+      }
+    )
+  }
+
+  if (showPermissionsLockedDialog) {
+    PaEPermissionsDialog(
+      title = stringResource(R.string.play_and_earn_permissions_locked_dialog_title),
+      body = stringResource(R.string.play_and_earn_permissions_locked_dialog_body),
+      primaryButtonTitle = stringResource(R.string.play_and_earn_permissions_show_me_how_button),
+      onDismiss = { showPermissionsLockedDialog = false },
+      onPrimaryClick = {
+        paeAnalytics.sendPaELockedDialogShowMeHowClick()
+        showPermissionsLockedDialog = false
+        showRestrictedSettingsSection = true
       }
     )
   }
@@ -175,7 +209,8 @@ private fun PlayAndEarnPermissionsScreen(
 private fun PaERestrictedPermissionsScreenContent(
   onRestrictedSettingsClick: () -> Unit,
   onFinalPermissionsClick: () -> Unit,
-  allowedRestrictedSettings: Boolean
+  allowedRestrictedSettings: Boolean,
+  showRestrictedSettingsSection: Boolean,
 ) {
   val composition by rememberLottieComposition(
     LottieCompositionSpec.RawRes(R.raw.play_and_earn_permissions_animation)
@@ -233,7 +268,7 @@ private fun PaERestrictedPermissionsScreenContent(
       )
     }
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+    if (requiresRestrictedSettings() && showRestrictedSettingsSection) {
       if (allowedRestrictedSettings) {
         RestrictedSettingsAllowedSection()
       } else {
@@ -469,9 +504,12 @@ private fun TrustedAppBadge(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun PermissionDeniedDialog(
+private fun PaEPermissionsDialog(
+  title: String,
+  body: String,
+  primaryButtonTitle: String,
   onDismiss: () -> Unit,
-  onRetry: () -> Unit
+  onPrimaryClick: () -> Unit,
 ) {
   Dialog(
     onDismissRequest = onDismiss,
@@ -492,14 +530,14 @@ private fun PermissionDeniedDialog(
         horizontalAlignment = Alignment.CenterHorizontally,
       ) {
         Text(
-          text = stringResource(R.string.play_and_earn_permissions_denied_dialog_title),
+          text = title,
           style = AGTypography.Title,
           color = Palette.Primary,
           textAlign = TextAlign.Center
         )
 
         Text(
-          text = stringResource(R.string.play_and_earn_permissions_denied_dialog_body),
+          text = body,
           color = Palette.White,
           textAlign = TextAlign.Center,
           style = AGTypography.SubHeadingS
@@ -508,8 +546,8 @@ private fun PermissionDeniedDialog(
         Column {
           PrimaryButton(
             modifier = Modifier.fillMaxWidth(),
-            onClick = onRetry,
-            title = stringResource(R.string.play_and_earn_permissions_enable_now_button)
+            onClick = onPrimaryClick,
+            title = primaryButtonTitle
           )
           PrimaryTextButton(
             modifier = Modifier.padding(vertical = 8.dp),
@@ -532,8 +570,23 @@ private fun PlayAndEarnPermissionsScreenPreview() {
 @Preview
 @Composable
 private fun PermissionDeniedDialogPreview() {
-  PermissionDeniedDialog(
+  PaEPermissionsDialog(
+    title = stringResource(R.string.play_and_earn_permissions_denied_dialog_title),
+    body = stringResource(R.string.play_and_earn_permissions_denied_dialog_body),
+    primaryButtonTitle = stringResource(R.string.play_and_earn_permissions_enable_now_button),
     onDismiss = {},
-    onRetry = {}
+    onPrimaryClick = {}
+  )
+}
+
+@Preview
+@Composable
+private fun PermissionsLockedDialogPreview() {
+  PaEPermissionsDialog(
+    title = stringResource(R.string.play_and_earn_permissions_locked_dialog_title),
+    body = stringResource(R.string.play_and_earn_permissions_locked_dialog_body),
+    primaryButtonTitle = stringResource(R.string.play_and_earn_permissions_show_me_how_button),
+    onDismiss = {},
+    onPrimaryClick = {}
   )
 }
