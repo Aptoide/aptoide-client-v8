@@ -15,6 +15,7 @@ import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.feature_flags.domain.FeatureFlags
 import cm.aptoide.pt.wallet.datastore.WalletCoreDataSource
 import com.aptoide.android.aptoidegames.BuildConfig
+import com.aptoide.android.aptoidegames.device_info.DeviceCountryProvider
 import com.aptoide.android.aptoidegames.device_info.DeviceSecurityChecker
 import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPreferencesRepository
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.hasOverlayPermission
@@ -36,6 +37,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.random.Random
@@ -46,12 +48,23 @@ class PlayAndEarnManager @Inject constructor(
   private val featureFlags: FeatureFlags,
   private val walletCoreDataSource: WalletCoreDataSource,
   private val deviceSecurityChecker: DeviceSecurityChecker,
-  private val paEPreferencesRepository: PaEPreferencesRepository
+  private val paEPreferencesRepository: PaEPreferencesRepository,
+  private val deviceCountryProvider: DeviceCountryProvider,
 ) {
 
   companion object {
     private const val TAG = "PlayAndEarnManager"
     private const val PAE_VISIBILITY_FLAG_KEY = "show_play_and_earn"
+
+    // JSON array of ISO 3166-1 alpha-2 codes, e.g. ["US","CA"]. The visibility flag is already
+    // geo-targeted to the same countries, but Firebase's attribution isn't trusted: the locally
+    // detected country must also match (unknown country -> hidden).
+    private const val PAE_COUNTRIES_FLAG_KEY = "pae_countries"
+
+    // Fallback when the pae_countries flag is missing or unparseable.
+    private val PAE_DEFAULT_ALLOWED_COUNTRIES = setOf(
+      "US", "CA", "FI", "FR", "DE", "IT", "NL", "NO", "PT", "ES", "SE", "GB",
+    )
   }
 
   private val _playAndEarnVisibilityFlow = MutableStateFlow(false)
@@ -93,6 +106,12 @@ class PlayAndEarnManager @Inject constructor(
 
   suspend fun shouldShowPlayAndEarn(): Boolean {
     if (!BuildConfig.DEBUG && deviceSecurityChecker.isCompromisedDevice()) {
+      return false
+    }
+    val allowedCountries = featureFlags.getStringListOrNull(PAE_COUNTRIES_FLAG_KEY)
+      ?.map { it.trim().uppercase(Locale.US) }
+      ?: PAE_DEFAULT_ALLOWED_COUNTRIES
+    if (deviceCountryProvider.getCountry() !in allowedCountries) {
       return false
     }
     return featureFlags.getFlag(PAE_VISIBILITY_FLAG_KEY, false)
