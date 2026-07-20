@@ -6,9 +6,8 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import cm.aptoide.pt.play_and_earn.exchange.domain.RedeemType
 import com.aptoide.android.aptoidegames.R
 
-/** Default reward amount granted by the Play & Earn APKFY / earned-reward flows. */
+/** Display fallback for the reward amount while the FIRST_SIGN_IN mission hasn't resolved. */
 const val PAE_DEFAULT_REWARD_AMOUNT = "$0.50"
-const val PAE_DEFAULT_REWARD_UNITS = 50
 
 private const val ROBLOX_PACKAGE = "com.roblox.client"
 private val FREE_FIRE_PACKAGES = setOf("com.dts.freefireth", "com.dts.freefiremax")

@@ -16,6 +16,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
@@ -24,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.feature_apps.data.App
@@ -38,6 +40,8 @@ import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.installer.analytics.rememberInstallAnalytics
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
 import com.aptoide.android.aptoidegames.mmp.WithUTM
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.RewardState
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.SignInRewardViewModel
 import com.aptoide.android.aptoidegames.play_and_earn.rememberShouldShowPlayAndEarn
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
@@ -92,10 +96,19 @@ fun ApkfyScreen(
   val apkfyAnalytics = rememberApkfyAnalytics()
   val installAnalytics = rememberInstallAnalytics()
   val shouldShowPlayAndEarn = rememberShouldShowPlayAndEarn()
+  val signInRewardViewModel = hiltViewModel<SignInRewardViewModel>()
+  val rewardState by signInRewardViewModel.rewardState.collectAsState()
   // installViewStates captures onInstallStarted once (in a remember(downloadUiState) block), so read
-  // the latest flag value through this stable State rather than the value captured at that time.
+  // the latest flag values through these stable States rather than the values captured at that time.
   val showPaE by rememberUpdatedState(shouldShowPlayAndEarn)
+  val hasUnclaimedReward by rememberUpdatedState(rewardState is RewardState.Unclaimed)
   val apkfyData = apkfyState.data
+
+  // Retry a failed startup mission fetch so the Play & Earn reward routing below (and the reward
+  // screens it leads to) see real backend state instead of staying hidden behind Loading.
+  LaunchedEffect(Unit) {
+    signInRewardViewModel.refresh()
+  }
 
   LaunchedEffect(Unit) {
     if (apkfyState is ApkfyUiState.Default) {
@@ -151,9 +164,11 @@ fun ApkfyScreen(
             }*/
 
             // Default APKFY: route Roblox / Free Fire installs into the Play & Earn reward flow.
+            // Skipped for already-claimed users; the reward screens also self-dismiss on Claimed
+            // as the safety net for the mission state resolving after this navigation.
 
             //if (apkfyState is ApkfyUiState.Default && shouldShowPlayAndEarn) {
-            if (showPaE) {
+            if (showPaE && hasUnclaimedReward) {
               when {
                 apkfyData.app.isRoblox() -> navigate(robloxApkfyRewardRoute)
                 apkfyData.app.isFreeFire() -> navigate(freeFireApkfyRewardRoute)

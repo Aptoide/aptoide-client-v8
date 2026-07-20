@@ -3,12 +3,14 @@ package com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards
 import cm.aptoide.pt.campaigns.data.PaEMissionsRepository
 import cm.aptoide.pt.campaigns.domain.PaEMission
 import cm.aptoide.pt.campaigns.domain.PaEMissionStatus
+import cm.aptoide.pt.play_and_earn.events.data.EventAlreadySubmittedException
 import cm.aptoide.pt.play_and_earn.events.data.EventsRepository
 import cm.aptoide.pt.play_and_earn.events.domain.EventType
 import cm.aptoide.pt.play_and_earn.exchange.domain.GetExchangeRateUseCase
 import com.aptoide.android.aptoidegames.play_and_earn.WalletUnitsRefresher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,8 +29,10 @@ data class PendingPaEReward(
   val units: Int,
 )
 
-/** Backend's view of the user's reward: either unclaimed (with the reward data) or claimed. */
+/** Backend's view of the user's reward: unknown until fetched, unclaimed (with data) or claimed. */
 sealed interface RewardState {
+  /** Mission state not resolved yet (fetch in flight or failed) — offer surfaces stay hidden. */
+  data object Loading : RewardState
   data class Unclaimed(val reward: PendingPaEReward) : RewardState
   data object Claimed : RewardState
 }
@@ -41,32 +45,33 @@ class SignInRewardRepository @Inject constructor(
   private val walletUnitsRefresher: WalletUnitsRefresher,
 ) {
 
-  // Placeholder shown until the backend FIRST_SIGN_IN mission resolves; also the fallback if it fails.
-  private val defaultReward = PendingPaEReward(
-    paERewardType = PaERewardType.ROBUX,
-    rewardAmount = PAE_DEFAULT_REWARD_AMOUNT,
-    units = PAE_DEFAULT_REWARD_UNITS,
-  )
-
   private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
-  private val _rewardState = MutableStateFlow<RewardState>(RewardState.Unclaimed(defaultReward))
+  private val _rewardState = MutableStateFlow<RewardState>(RewardState.Loading)
   val rewardState: StateFlow<RewardState> = _rewardState.asStateFlow()
 
   private val _claimSuccessEvent = MutableSharedFlow<PendingPaEReward>()
   val claimSuccessEvent: SharedFlow<PendingPaEReward> = _claimSuccessEvent.asSharedFlow()
 
+  private var refreshJob: Job? = null
+
   init {
-    refreshSignInReward()
+    refresh()
   }
 
-  // Fetches the FIRST_SIGN_IN event mission and refines the reward amount (from its units, via the
-  // exchange rate) and claimed state (from its progress). Keeps the default reward on failure.
-  private fun refreshSignInReward() {
-    scope.launch {
+  /**
+   * Fetches the FIRST_SIGN_IN event mission and resolves the reward amount (from its units, via
+   * the exchange rate) and claimed state (from its progress). Failures keep the state [Loading] —
+   * offer surfaces call this again on entry, so a failed startup fetch gets retried. Once resolved
+   * the state is never re-fetched: the missions endpoint doesn't report claimed progress yet, so a
+   * re-fetch could regress an in-session Claimed back to Unclaimed.
+   */
+  fun refresh() {
+    if (_rewardState.value != RewardState.Loading || refreshJob?.isActive == true) return
+    refreshJob = scope.launch {
       val mission = paeMissionsRepository.getEventMissions().getOrNull()
         ?.firstOrNull { it.eventType() == EventType.FIRST_SIGN_IN }
-        ?: return@launch
+        ?: return@launch // stays Loading; retried on the next offer-surface entry
 
       _rewardState.value = if (mission.progress?.status == PaEMissionStatus.COMPLETED) {
         RewardState.Claimed
@@ -95,15 +100,22 @@ class SignInRewardRepository @Inject constructor(
 
   fun claimReward(reward: PendingPaEReward) {
     scope.launch {
-      // Register the sign in reward claim as a Play & Earn event. Optimistic write for now.
+      // Register the sign in reward claim as a Play & Earn event.
       eventsRepository.submitEvent(
         eventType = EventType.FIRST_SIGN_IN,
-      )
-      // Claiming grants units on the backend — refresh the toolbar balance.
-      walletUnitsRefresher.invalidate()
-
-      _rewardState.value = RewardState.Claimed
-      _claimSuccessEvent.emit(reward)
+      ).onSuccess {
+        // Claiming grants units on the backend — refresh the toolbar balance.
+        walletUnitsRefresher.invalidate()
+        _rewardState.value = RewardState.Claimed
+        _claimSuccessEvent.emit(reward)
+      }.onFailure { error ->
+        // 409: the backend already granted this reward (stale local state) — sync to Claimed so
+        // every offer surface hides, but without the success dialog. Any other failure keeps the
+        // state Unclaimed so the offer remains claimable (retry).
+        if (error is EventAlreadySubmittedException) {
+          _rewardState.value = RewardState.Claimed
+        }
+      }
     }
   }
 }
