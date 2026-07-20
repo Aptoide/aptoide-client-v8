@@ -23,6 +23,11 @@ class SignInRewardViewModel @Inject constructor(
     signInRewardRepository.claimReward(reward)
   }
 
+  /** Retries the mission fetch if the reward state is still unresolved (no-op otherwise). */
+  fun refresh() {
+    signInRewardRepository.refresh()
+  }
+
   /** Runs [log] only the first time the card for [rewardType] is shown this session. */
   fun onRewardCardShown(rewardType: PaERewardType, log: () -> Unit) {
     if (shownLogged.add(rewardType)) log()

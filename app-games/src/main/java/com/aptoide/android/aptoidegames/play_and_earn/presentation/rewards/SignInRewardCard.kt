@@ -27,6 +27,11 @@ fun SignInRewardCard(
   val userInfo = rememberUserInfo()
   var awaitingSignIn by rememberSaveable { mutableStateOf(false) }
 
+  // Retry a failed startup mission fetch, so a Loading state doesn't hide the offer all session.
+  LaunchedEffect(Unit) {
+    viewModel.refresh()
+  }
+
   // After the user returns from the reward sign-in flow signed in, claim automatically so the
   // success dialog shows (mirrors the apkfy reward flow).
   LaunchedEffect(userInfo) {

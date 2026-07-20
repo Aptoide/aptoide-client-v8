@@ -49,7 +49,7 @@ fun freeFireApkfyRewardScreen(
   var awaitingSignIn by rememberSaveable { mutableStateOf(false) }
 
   // The reward is only claimed once the user returns from the sign-in flow actually signed in.
-  // After claiming we go back to home, so the success dialog shows there.
+  // Navigation away is owned by the Claimed effect below, once the backend confirms the claim.
   LaunchedEffect(userInfo) {
     val unclaimed = rewardState as? RewardState.Unclaimed
     if (awaitingSignIn && userInfo != null && unclaimed != null) {
@@ -60,8 +60,14 @@ fun freeFireApkfyRewardScreen(
         rewardType = PaERewardType.DIAMONDS,
         units = unclaimed.reward.units,
       )
-      navigateToHome()
     }
+  }
+
+  // A claimed reward means there is no offer to show: leave to home whether the claim just
+  // happened here (the success dialog shows over home) or the user reached an already-claimed
+  // offer (stale back stack entry, apkfy re-entry, or the mission state resolving late).
+  LaunchedEffect(rewardState) {
+    if (rewardState is RewardState.Claimed) navigateToHome()
   }
 
   BackHandler {
