@@ -409,6 +409,9 @@
   <string name="play_and_earn_permissions_denied_dialog_body">Kami belum dapat menghitung waktu bermain Anda. Aktifkan pengaturan ini untuk mulai mendapatkan poin.</string>
   <string name="play_and_earn_permissions_enable_now_button">Aktifkan Sekarang</string>
   <string name="play_and_earn_permissions_not_now_button">Tidak Sekarang</string>
+  <string name="play_and_earn_permissions_locked_dialog_title">Izin terkunci?</string>
+  <string name="play_and_earn_permissions_locked_dialog_body">Anda mungkin perlu mengizinkan pengaturan terbatas terlebih dahulu. Kami akan menunjukkan caranya.</string>
+  <string name="play_and_earn_permissions_show_me_how_button">Tunjukkan Caranya</string>
   <!-- GameGenie Overlay Menu -->
   <string name="gamegenie_overlay_ask_anything">Tanyakan apa saja</string>
   <string name="gamegenie_overlay_ask_screenshot">Tanyakan tentang apa yang saya lihat sekarang.</string>

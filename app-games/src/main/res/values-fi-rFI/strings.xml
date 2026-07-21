@@ -420,6 +420,9 @@
   <string name="play_and_earn_permissions_denied_dialog_body">Emme voi vielä laskea peliaikaasi. Ota tämä asetus käyttöön, jotta voit alkaa ansaita pisteitä.</string>
   <string name="play_and_earn_permissions_enable_now_button">Ota käyttöön nyt</string>
   <string name="play_and_earn_permissions_not_now_button">Ei nyt</string>
+  <string name="play_and_earn_permissions_locked_dialog_title">Käyttöoikeudet lukittu?</string>
+  <string name="play_and_earn_permissions_locked_dialog_body">Sinun on ehkä ensin sallittava rajoitetut asetukset. Näytämme, miten se tehdään.</string>
+  <string name="play_and_earn_permissions_show_me_how_button">Näytä miten</string>
   <!-- GameGenie Overlay Menu -->
   <string name="gamegenie_overlay_ask_anything">Kysy mitä tahansa</string>
   <string name="gamegenie_overlay_ask_screenshot">Kysy, mitä näen nyt</string>

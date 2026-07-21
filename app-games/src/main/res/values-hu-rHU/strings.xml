@@ -420,6 +420,9 @@
   <string name="play_and_earn_permissions_denied_dialog_body">Még nem tudjuk számolni a játékidőt. Engedélyezze ezt a beállítást, hogy elkezdhesse a pontgyűjtést.</string>
   <string name="play_and_earn_permissions_enable_now_button">Most engedélyezés</string>
   <string name="play_and_earn_permissions_not_now_button">Most nem</string>
+  <string name="play_and_earn_permissions_locked_dialog_title">Zárolt engedélyek?</string>
+  <string name="play_and_earn_permissions_locked_dialog_body">Előfordulhat, hogy először engedélyeznie kell a korlátozott beállításokat. Megmutatjuk, hogyan.</string>
+  <string name="play_and_earn_permissions_show_me_how_button">Mutasd meg, hogyan</string>
   <!-- GameGenie Overlay Menu -->
   <string name="gamegenie_overlay_ask_anything">Kérdezzen bármit</string>
   <string name="gamegenie_overlay_ask_screenshot">Kérdezz arról, amit most látok</string>

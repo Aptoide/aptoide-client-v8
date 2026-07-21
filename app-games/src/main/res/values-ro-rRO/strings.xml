@@ -431,6 +431,9 @@
   <string name="play_and_earn_permissions_denied_dialog_body">Nu putem încă să îți calculăm timpul de joc. Activează această setare pentru a începe să câștigi.</string>
   <string name="play_and_earn_permissions_enable_now_button">Activați acum</string>
   <string name="play_and_earn_permissions_not_now_button">Nu acum</string>
+  <string name="play_and_earn_permissions_locked_dialog_title">Permisiuni blocate?</string>
+  <string name="play_and_earn_permissions_locked_dialog_body">Poate fi necesar să permiți mai întâi setările restricționate. Îți arătăm cum.</string>
+  <string name="play_and_earn_permissions_show_me_how_button">Arată-mi cum</string>
   <!-- GameGenie Overlay Menu -->
   <string name="gamegenie_overlay_ask_anything">Întrebați orice</string>
   <string name="gamegenie_overlay_ask_screenshot">Întreabă-mă ce văd acum</string>

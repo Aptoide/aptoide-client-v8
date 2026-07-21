@@ -410,6 +410,9 @@ Promosi khas dan ganjaran dalam permainan kegemaran anda.</string>
   <string name="play_and_earn_permissions_denied_dialog_body">We can\'t count your playtime yet. Enable this setting to start earning.</string>
   <string name="play_and_earn_permissions_enable_now_button">Enable Now</string>
   <string name="play_and_earn_permissions_not_now_button">Not Now</string>
+  <string name="play_and_earn_permissions_locked_dialog_title">Permissions locked?</string>
+  <string name="play_and_earn_permissions_locked_dialog_body">You may need to allow restricted settings first. We\'ll show you how.</string>
+  <string name="play_and_earn_permissions_show_me_how_button">Show Me How</string>
   <!-- GameGenie Overlay Menu -->
   <string name="gamegenie_overlay_ask_anything">Ask anything</string>
   <string name="gamegenie_overlay_ask_screenshot">Ask about what I\'m seeing now</string>

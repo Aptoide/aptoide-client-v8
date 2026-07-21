@@ -409,6 +409,9 @@
   <string name="play_and_earn_permissions_denied_dialog_body">아직 플레이 시간을 집계할 수 없습니다. 수익을 얻으려면 이 설정을 활성화하세요.</string>
   <string name="play_and_earn_permissions_enable_now_button">지금 활성화</string>
   <string name="play_and_earn_permissions_not_now_button">지금은 안 돼</string>
+  <string name="play_and_earn_permissions_locked_dialog_title">권한이 잠겨 있나요?</string>
+  <string name="play_and_earn_permissions_locked_dialog_body">먼저 제한된 설정을 허용해야 할 수 있습니다. 방법을 알려드릴게요.</string>
+  <string name="play_and_earn_permissions_show_me_how_button">방법 보기</string>
   <!-- GameGenie Overlay Menu -->
   <string name="gamegenie_overlay_ask_anything">뭐든지 물어보세요</string>
   <string name="gamegenie_overlay_ask_screenshot">지금 내가 보고 있는 것에 대해 물어보세요</string>

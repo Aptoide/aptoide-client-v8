@@ -420,6 +420,9 @@
   <string name="play_and_earn_permissions_denied_dialog_body">Ainda não podemos contabilizar o seu tempo de jogo. Ative esta configuração para começar a ganhar.</string>
   <string name="play_and_earn_permissions_enable_now_button">Ativar agora</string>
   <string name="play_and_earn_permissions_not_now_button">Não agora</string>
+  <string name="play_and_earn_permissions_locked_dialog_title">Permissões bloqueadas?</string>
+  <string name="play_and_earn_permissions_locked_dialog_body">Talvez você precise permitir as configurações restritas primeiro. Vamos mostrar como.</string>
+  <string name="play_and_earn_permissions_show_me_how_button">Mostrar como</string>
   <!-- GameGenie Overlay Menu -->
   <string name="gamegenie_overlay_ask_anything">Pergunte qualquer coisa</string>
   <string name="gamegenie_overlay_ask_screenshot">Pergunte sobre o que estou vendo agora</string>

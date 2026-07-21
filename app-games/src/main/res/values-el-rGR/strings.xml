@@ -420,6 +420,9 @@
   <string name="play_and_earn_permissions_denied_dialog_body">Δεν μπορούμε να μετρήσουμε ακόμα τον χρόνο παιχνιδιού σας. Ενεργοποιήστε αυτή τη ρύθμιση για να αρχίσετε να κερδίζετε.</string>
   <string name="play_and_earn_permissions_enable_now_button">Ενεργοποίηση τώρα</string>
   <string name="play_and_earn_permissions_not_now_button">Όχι τώρα</string>
+  <string name="play_and_earn_permissions_locked_dialog_title">Κλειδωμένα δικαιώματα;</string>
+  <string name="play_and_earn_permissions_locked_dialog_body">Ίσως χρειαστεί πρώτα να επιτρέψετε τις περιορισμένες ρυθμίσεις. Θα σας δείξουμε πώς.</string>
+  <string name="play_and_earn_permissions_show_me_how_button">Δείξτε μου πώς</string>
   <!-- GameGenie Overlay Menu -->
   <string name="gamegenie_overlay_ask_anything">Ρωτήστε οτιδήποτε</string>
   <string name="gamegenie_overlay_ask_screenshot">Ρώτα για αυτό που βλέπω τώρα</string>
