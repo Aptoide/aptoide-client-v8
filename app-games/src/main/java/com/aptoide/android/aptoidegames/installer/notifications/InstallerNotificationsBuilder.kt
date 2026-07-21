@@ -142,6 +142,26 @@ class InstallerNotificationsBuilder @Inject constructor(
     }
   }
 
+  fun showExternalInstallingNotification(
+    packageName: String,
+    appDetails: AppDetails?,
+    appIcon: Bitmap?,
+  ) {
+    val notificationId = stringToIntConverter.getStringId(packageName)
+
+    val notification = buildNotification(
+      requestCode = notificationId,
+      packageName = packageName,
+      appDetails = appDetails,
+      progress = -1,
+      contentText = context.getString(R.string.install_installing_message),
+      largeIcon = appIcon,
+      notificationGroup = READY_TO_INSTALL_NOTIFICATIONS_GROUP
+    )
+
+    notification?.let { showNotification(notificationId, it) }
+  }
+
   fun showWaitingForDownloadNotification(
     packageName: String,
     appDetails: AppDetails?,

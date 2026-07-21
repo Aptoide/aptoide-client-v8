@@ -23,6 +23,7 @@ import coil.decode.SvgDecoder
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
 import coil.util.DebugLogger
+import com.aptoide.android.aptoidegames.ads.APP_OPEN_ADS_ENABLED
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 import com.aptoide.android.aptoidegames.app_open_ads.AppOpenAdInitializer
@@ -200,10 +201,9 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
   }
 
   private suspend fun initAppOpenAds() {
-    // Temporarily disabled for the Google Play test upload (release-ag_vplay1.0)
-    // if (!applicationContext.isObbMoverProcess()) {
-    //   appOpenAdInitializer.initialize()
-    // }
+    if (APP_OPEN_ADS_ENABLED && !applicationContext.isObbMoverProcess()) {
+      appOpenAdInitializer.initialize()
+    }
   }
 
   private fun initIndicative() {

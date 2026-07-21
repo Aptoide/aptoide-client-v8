@@ -13,8 +13,13 @@ interface InstallAnalytics {
     analyticsContext: AnalyticsUIContext,
     networkType: String,
     autoOpenAfterInstall: Boolean? = null,
+    installMethod: String = METHOD_APTOIDE,
   ) {
   }
+
+  fun sendInlineInstallCompletedEvent(app: App) {}
+
+  fun sendInlineInstallCanceledEvent(app: App) {}
 
   fun sendOpenClick(
     packageName: String,
@@ -171,4 +176,9 @@ interface InstallAnalytics {
   fun sendExp83RobloxDownloadStarted(
     variant: String
   ) {}
+
+  companion object {
+    const val METHOD_APTOIDE = "aptoide"
+    const val METHOD_PLAY_INLINE = "google_play_inline"
+  }
 }

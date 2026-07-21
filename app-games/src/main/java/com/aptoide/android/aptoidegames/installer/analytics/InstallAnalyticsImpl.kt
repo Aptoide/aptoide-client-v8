@@ -58,6 +58,7 @@ class InstallAnalyticsImpl(
     analyticsContext: AnalyticsUIContext,
     networkType: String,
     autoOpenAfterInstall: Boolean?,
+    installMethod: String,
   ) {
     when (analyticsContext.installAction) {
       InstallAction.INSTALL -> "install_clicked"
@@ -74,6 +75,7 @@ class InstallAnalyticsImpl(
           P_UPDATE_TYPE to getUserClicks(app.packageName),
           P_SERVICE to networkType,
           P_AUTO_OPEN_AFTER_INSTALL to autoOpenAfterInstall,
+          P_INSTALL_METHOD to installMethod,
         )
       )
     }
@@ -328,7 +330,32 @@ class InstallAnalyticsImpl(
       name = "app_installed",
       params = installPackageInfo.toAppGenericParameters(
         packageName = packageName,
-        P_STATUS to "cancel"
+        P_STATUS to "cancel",
+        P_INSTALL_METHOD to InstallAnalytics.METHOD_APTOIDE,
+      )
+    )
+  }
+
+  // The install happens inside the Play half-sheet, so there is no InstallPackageInfo and
+  // no BI install event for the inline flow — only the generic funnel events
+  override fun sendInlineInstallCompletedEvent(app: App) {
+    genericAnalytics.logEvent(
+      name = "app_installed",
+      params = mapOfNonNull(
+        *app.toGenericParameters(),
+        P_STATUS to "success",
+        P_INSTALL_METHOD to InstallAnalytics.METHOD_PLAY_INLINE,
+      )
+    )
+  }
+
+  override fun sendInlineInstallCanceledEvent(app: App) {
+    genericAnalytics.logEvent(
+      name = "app_installed",
+      params = mapOfNonNull(
+        *app.toGenericParameters(),
+        P_STATUS to "cancel",
+        P_INSTALL_METHOD to InstallAnalytics.METHOD_PLAY_INLINE,
       )
     )
   }
@@ -341,7 +368,8 @@ class InstallAnalyticsImpl(
       name = "app_installed",
       params = installPackageInfo.toAppGenericParameters(
         packageName = packageName,
-        P_STATUS to "success"
+        P_STATUS to "success",
+        P_INSTALL_METHOD to InstallAnalytics.METHOD_APTOIDE,
       )
     )
 
@@ -624,6 +652,7 @@ class InstallAnalyticsImpl(
     internal const val P_APP_SIZE_MB = "app_size_mb"
     internal const val P_DOWNLOAD_SPEED_MB = "download_speed_mbps"
     internal const val P_AUTO_OPEN_AFTER_INSTALL = "auto_open_after_install"
+    internal const val P_INSTALL_METHOD = "install_method"
   }
 }
 

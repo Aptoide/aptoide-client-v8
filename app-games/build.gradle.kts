@@ -107,7 +107,8 @@ android {
   }
 
   flavorDimensions.add(0, "brand")
-  flavorDimensions.add(1, "mode")
+  flavorDimensions.add(1, "distribution")
+  flavorDimensions.add(2, "mode")
 
   productFlavors {
     create("aptoideGames") {
@@ -144,6 +145,24 @@ android {
       manifestPlaceholders["deepLinkScheme"] = "aptoide"
     }
 
+    create("direct") {
+      dimension = "distribution"
+      buildConfigField(
+        type = "Boolean",
+        name = "PLAY_DISTRIBUTION",
+        value = "false"
+      )
+    }
+
+    create("gplay") {
+      dimension = "distribution"
+      buildConfigField(
+        type = "Boolean",
+        name = "PLAY_DISTRIBUTION",
+        value = "true"
+      )
+    }
+
     create("dev") {
       dimension = "mode"
       applicationIdSuffix = ".dev"
@@ -162,6 +181,11 @@ android {
         type = "String",
         name = "AHAB_DOMAIN",
         value = "\"https://api.dev.aptoide.com/ahab/8.20240801/\""
+      )
+      buildConfigField(
+        type = "String",
+        name = "APTOIDE_API_DOMAIN",
+        value = "\"https://api.dev.aptoide.com/\""
       )
       buildConfigField(
         "String",
@@ -222,6 +246,11 @@ android {
       )
       buildConfigField(
         type = "String",
+        name = "APTOIDE_API_DOMAIN",
+        value = "\"https://api.aptoide.com/\""
+      )
+      buildConfigField(
+        type = "String",
         name = "API_CHAIN_CATAPPULT_HOST",
         value = "\"${project.property("API_CHAIN_CATAPPULT_HOST")}\""
       )
@@ -267,6 +296,31 @@ android {
 
   hilt {
     enableAggregatingTask = true
+  }
+}
+
+androidComponents {
+  beforeVariants { variantBuilder ->
+    // Only the aptoideGames brand is published on Google Play
+    val isVanilla = variantBuilder.productFlavors.contains("brand" to "vanilla")
+    val isGplay = variantBuilder.productFlavors.contains("distribution" to "gplay")
+    if (isVanilla && isGplay) {
+      variantBuilder.enable = false
+    }
+  }
+  onVariants { variant ->
+    // The brand dimension outranks the distribution dimension in the DSL merge, so the
+    // Play-distribution store override must be applied at the variant level
+    if (variant.productFlavors.contains("distribution" to "gplay")) {
+      variant.buildConfigFields?.put(
+        "MARKET_NAME",
+        com.android.build.api.variant.BuildConfigField(
+          type = "String",
+          value = "\"${System.getenv("STORE_NAME") ?: "aptoidegames-play-us"}\"",
+          comment = "Default store for Play-distributed builds"
+        )
+      )
+    }
   }
 }
 
