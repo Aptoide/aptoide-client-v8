@@ -409,6 +409,9 @@
   <string name="play_and_earn_permissions_denied_dialog_body">Chúng tôi chưa thể tính thời gian chơi của bạn. Bật cài đặt này để bắt đầu kiếm điểm.</string>
   <string name="play_and_earn_permissions_enable_now_button">Bật ngay bây giờ</string>
   <string name="play_and_earn_permissions_not_now_button">Không bây giờ</string>
+  <string name="play_and_earn_permissions_locked_dialog_title">Quyền bị khóa?</string>
+  <string name="play_and_earn_permissions_locked_dialog_body">Bạn có thể cần cho phép cài đặt bị giới hạn trước. Chúng tôi sẽ chỉ cho bạn cách làm.</string>
+  <string name="play_and_earn_permissions_show_me_how_button">Xem cách làm</string>
   <!-- GameGenie Overlay Menu -->
   <string name="gamegenie_overlay_ask_anything">Hỏi bất cứ điều gì</string>
   <string name="gamegenie_overlay_ask_screenshot">Hỏi về những gì tôi đang nhìn thấy bây giờ.</string>

@@ -409,6 +409,9 @@
   <string name="play_and_earn_permissions_denied_dialog_body">เรายังไม่สามารถนับเวลาเล่นของคุณได้ เปิดใช้งานการตั้งค่านี้เพื่อเริ่มรับรางวัล</string>
   <string name="play_and_earn_permissions_enable_now_button">เปิดใช้งานตอนนี้</string>
   <string name="play_and_earn_permissions_not_now_button">ไม่ตอนนี้</string>
+  <string name="play_and_earn_permissions_locked_dialog_title">สิทธิ์ถูกล็อกอยู่ใช่ไหม</string>
+  <string name="play_and_earn_permissions_locked_dialog_body">คุณอาจต้องอนุญาตการตั้งค่าที่ถูกจำกัดก่อน เราจะแสดงวิธีให้คุณดู</string>
+  <string name="play_and_earn_permissions_show_me_how_button">แสดงวิธีการ</string>
   <!-- GameGenie Overlay Menu -->
   <string name="gamegenie_overlay_ask_anything">ถามอะไรก็ได้</string>
   <string name="gamegenie_overlay_ask_screenshot">ถามเกี่ยวกับสิ่งที่ฉันกำลังเห็นตอนนี้</string>

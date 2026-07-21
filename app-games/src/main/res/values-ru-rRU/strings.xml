@@ -442,6 +442,9 @@
   <string name="play_and_earn_permissions_denied_dialog_body">Мы пока не можем подсчитать ваше игровое время. Включите эту настройку, чтобы начать зарабатывать.</string>
   <string name="play_and_earn_permissions_enable_now_button">Включить сейчас</string>
   <string name="play_and_earn_permissions_not_now_button">Не сейчас</string>
+  <string name="play_and_earn_permissions_locked_dialog_title">Разрешения заблокированы?</string>
+  <string name="play_and_earn_permissions_locked_dialog_body">Возможно, сначала нужно разрешить ограниченные настройки. Мы покажем, как это сделать.</string>
+  <string name="play_and_earn_permissions_show_me_how_button">Показать как</string>
   <!-- GameGenie Overlay Menu -->
   <string name="gamegenie_overlay_ask_anything">Спросите что угодно</string>
   <string name="gamegenie_overlay_ask_screenshot">Спросите о том, что я вижу сейчас</string>

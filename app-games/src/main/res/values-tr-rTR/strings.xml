@@ -420,6 +420,9 @@
   <string name="play_and_earn_permissions_denied_dialog_body">Henüz oyun sürenizi hesaplayamıyoruz. Kazanmaya başlamak için bu ayarı etkinleştirin.</string>
   <string name="play_and_earn_permissions_enable_now_button">Şimdi Etkinleştir</string>
   <string name="play_and_earn_permissions_not_now_button">Şimdi değil</string>
+  <string name="play_and_earn_permissions_locked_dialog_title">İzinler kilitli mi?</string>
+  <string name="play_and_earn_permissions_locked_dialog_body">Önce kısıtlı ayarlara izin vermeniz gerekebilir. Size nasıl yapılacağını göstereceğiz.</string>
+  <string name="play_and_earn_permissions_show_me_how_button">Nasıl Yapılacağını Göster</string>
   <!-- GameGenie Overlay Menu -->
   <string name="gamegenie_overlay_ask_anything">Her şeyi sorabilirsiniz</string>
   <string name="gamegenie_overlay_ask_screenshot">Şu anda gördüklerimi sor</string>

@@ -420,6 +420,9 @@
   <string name="play_and_earn_permissions_denied_dialog_body">We kunnen je speeltijd nog niet tellen. Schakel deze instelling in om te beginnen met verdienen.</string>
   <string name="play_and_earn_permissions_enable_now_button">Nu inschakelen</string>
   <string name="play_and_earn_permissions_not_now_button">Nu niet</string>
+  <string name="play_and_earn_permissions_locked_dialog_title">Machtigingen vergrendeld?</string>
+  <string name="play_and_earn_permissions_locked_dialog_body">Mogelijk moet je eerst beperkte instellingen toestaan. We laten je zien hoe.</string>
+  <string name="play_and_earn_permissions_show_me_how_button">Laat me zien hoe</string>
   <!-- GameGenie Overlay Menu -->
   <string name="gamegenie_overlay_ask_anything">Vraag alles</string>
   <string name="gamegenie_overlay_ask_screenshot">Vraag naar wat ik nu zie</string>

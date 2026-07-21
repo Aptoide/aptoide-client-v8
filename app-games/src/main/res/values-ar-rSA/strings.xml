@@ -464,6 +464,9 @@
   <string name="play_and_earn_permissions_denied_dialog_body">لا يمكننا حساب وقت اللعب الخاص بك بعد. قم بتمكين هذا الإعداد لبدء الكسب.</string>
   <string name="play_and_earn_permissions_enable_now_button">تمكين الآن</string>
   <string name="play_and_earn_permissions_not_now_button">ليس الآن</string>
+  <string name="play_and_earn_permissions_locked_dialog_title">الأذونات مقفلة؟</string>
+  <string name="play_and_earn_permissions_locked_dialog_body">قد تحتاج إلى السماح بالإعدادات المقيدة أولاً. سنوضح لك الطريقة.</string>
+  <string name="play_and_earn_permissions_show_me_how_button">أرني الطريقة</string>
   <!-- GameGenie Overlay Menu -->
   <string name="gamegenie_overlay_ask_anything">اسأل عن أي شيء</string>
   <string name="gamegenie_overlay_ask_screenshot">اسأل عن ما أراه الآن</string>

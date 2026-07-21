@@ -410,6 +410,9 @@
   <string name="play_and_earn_permissions_denied_dialog_body">プレイ時間の計測はまだ開始できません。この設定を有効にして、獲得を開始してください。</string>
   <string name="play_and_earn_permissions_enable_now_button">今すぐ有効にする</string>
   <string name="play_and_earn_permissions_not_now_button">今はだめ</string>
+  <string name="play_and_earn_permissions_locked_dialog_title">権限がロックされていますか？</string>
+  <string name="play_and_earn_permissions_locked_dialog_body">先に制限付き設定を許可する必要がある場合があります。手順をご案内します。</string>
+  <string name="play_and_earn_permissions_show_me_how_button">手順を見る</string>
   <!-- GameGenie Overlay Menu -->
   <string name="gamegenie_overlay_ask_anything">何でも聞いてください</string>
   <string name="gamegenie_overlay_ask_screenshot">今、私が見ているものについて尋ねてください</string>

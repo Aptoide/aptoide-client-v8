@@ -409,6 +409,9 @@
   <string name="play_and_earn_permissions_denied_dialog_body">我們目前無法計算您的遊戲時間。請啟用此設定以開始累積時間。</string>
   <string name="play_and_earn_permissions_enable_now_button">立即啟用</string>
   <string name="play_and_earn_permissions_not_now_button">現在不行</string>
+  <string name="play_and_earn_permissions_locked_dialog_title">權限被鎖定？</string>
+  <string name="play_and_earn_permissions_locked_dialog_body">您可能需要先允許受限設定。我們將向您展示操作方式。</string>
+  <string name="play_and_earn_permissions_show_me_how_button">查看操作方式</string>
   <!-- GameGenie Overlay Menu -->
   <string name="gamegenie_overlay_ask_anything">儘管問吧</string>
   <string name="gamegenie_overlay_ask_screenshot">請問我現在看到的是什麼</string>

@@ -420,6 +420,9 @@
   <string name="play_and_earn_permissions_denied_dialog_body">Wir können Ihre Spielzeit noch nicht zählen. Aktivieren Sie diese Einstellung, um mit dem Sammeln von Punkten zu beginnen.</string>
   <string name="play_and_earn_permissions_enable_now_button">Jetzt aktivieren</string>
   <string name="play_and_earn_permissions_not_now_button">Nicht jetzt</string>
+  <string name="play_and_earn_permissions_locked_dialog_title">Berechtigungen gesperrt?</string>
+  <string name="play_and_earn_permissions_locked_dialog_body">Möglicherweise müssen Sie zuerst eingeschränkte Einstellungen zulassen. Wir zeigen Ihnen, wie es geht.</string>
+  <string name="play_and_earn_permissions_show_me_how_button">So geht\'s</string>
   <!-- GameGenie Overlay Menu -->
   <string name="gamegenie_overlay_ask_anything">Fragen Sie alles</string>
   <string name="gamegenie_overlay_ask_screenshot">Fragen Sie mich, was ich gerade sehe.</string>
