@@ -200,9 +200,10 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
   }
 
   private suspend fun initAppOpenAds() {
-    if (!applicationContext.isObbMoverProcess()) {
-      appOpenAdInitializer.initialize()
-    }
+    // Temporarily disabled for the Google Play test upload (release-ag_vplay1.0)
+    // if (!applicationContext.isObbMoverProcess()) {
+    //   appOpenAdInitializer.initialize()
+    // }
   }
 
   private fun initIndicative() {
