@@ -32,6 +32,7 @@ import com.aptoide.android.aptoidegames.analytics.dto.InstallAction
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.feature_oos.OutOfSpaceDialog
 import com.aptoide.android.aptoidegames.installer.analytics.AnalyticsInstallPackageInfoMapper
+import com.aptoide.android.aptoidegames.installer.analytics.InstallAnalytics
 import com.aptoide.android.aptoidegames.installer.analytics.getNetworkType
 import com.aptoide.android.aptoidegames.installer.analytics.rememberInstallAnalytics
 import com.aptoide.android.aptoidegames.installer.analytics.rememberScheduledInstalls
@@ -68,7 +69,23 @@ fun installViewStates(
   val analyticsContext = AnalyticsContext.current
   val utmContext = UTMContext.current
   val installAnalytics = rememberInstallAnalytics()
-  val downloadUiState = rememberDownloadState(app = app)
+  val downloadUiState = rememberDownloadState(
+    app = app,
+    onInlineInstallLaunched = { isUpdate ->
+      installAnalytics.sendClickEvent(
+        app = app,
+        networkType = context.getNetworkType(),
+        analyticsContext = analyticsContext.copy(
+          installAction = if (isUpdate) InstallAction.UPDATE else InstallAction.INSTALL
+        ),
+        autoOpenAfterInstall = autoOpenAfterInstall,
+        installMethod = InstallAnalytics.METHOD_PLAY_INLINE,
+      )
+      if (analyticsContext.currentScreen != "AppView") {
+        app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(utmInfo = utmContext)
+      }
+    }
+  )
   val installerNotifications = rememberInstallerNotifications()
   val (saveAppDetails) = rememberSaveAppDetails()
   val downloadOnlyOverWifi = rememberDownloadOverWifi()

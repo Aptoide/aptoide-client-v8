@@ -10,6 +10,8 @@ android {
 }
 
 dependencies {
+  implementation(libs.activity.compose)
+  implementation(libs.timber)
   implementation(projects.featureFlags)
   implementation(projects.featureApps)
   api(projects.installManager)

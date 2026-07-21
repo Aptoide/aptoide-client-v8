@@ -6,6 +6,7 @@ import androidx.annotation.Size
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.walletApp
 import cm.aptoide.pt.install_manager.InstallManager
+import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics.Companion.P_APPC_BILLING
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics.Companion.P_APP_SIZE
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics.Companion.P_CONTEXT
@@ -28,6 +29,9 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
     themePreferencesManager: ThemePreferencesManager,
     installManager: InstallManager,
   ) {
+    analyticsSender.setUserProperties(
+      UserProperty("distribution", BuildConfig.FLAVOR_distribution)
+    )
     themePreferencesManager
       .isDarkTheme()
       .map { if (it ?: context.isNightMode) "system_dark" else "system_light" }

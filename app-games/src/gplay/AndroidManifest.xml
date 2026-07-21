@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <!-- Package visibility to resolve the Google Play inline install deep link -->
+  <queries>
+    <package android:name="com.android.vending" />
+  </queries>
+
+</manifest>
