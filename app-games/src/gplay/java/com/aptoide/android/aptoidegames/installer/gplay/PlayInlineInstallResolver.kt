@@ -2,14 +2,12 @@ package com.aptoide.android.aptoidegames.installer.gplay
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import androidx.core.net.toUri
 import cm.aptoide.pt.download_view.presentation.InlineInstallResolver
 import cm.aptoide.pt.extensions.compatVersionCode
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.install_manager.InstallManager
 import cm.aptoide.pt.install_manager.Task
-import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.installer.AppDetailsUseCase
 import com.aptoide.android.aptoidegames.installer.analytics.InstallAnalytics
 import com.aptoide.android.aptoidegames.installer.notifications.ImageDownloader
@@ -29,10 +27,11 @@ import javax.inject.Singleton
 /**
  * Diverts installs to the Google Play inline install half-sheet
  * (https://developer.android.com/distribute/marketing-tools/inline-installs-3pas).
+ * Only exists in the gplay flavor — the direct flavor binds no [InlineInstallResolver].
  *
- * Requires this app to be installed from Play, a fresh catalog token for the target app
- * and a Play Store version that resolves the deep link. When any requirement is not met
- * it returns null and the regular download+install path is used.
+ * Requires a fresh catalog token for the target app and a Play Store version that resolves
+ * the deep link. When any requirement is not met it returns null and the regular
+ * download+install path is used.
  *
  * While Play installs there is no task nor progress on our side, so ongoing installs are
  * tracked here to survive view model recreation and to drive an indeterminate progress
@@ -61,16 +60,6 @@ class PlayInlineInstallResolver @Inject constructor(
     if (app.packageName in abortedInlineInstalls) {
       log("${app.packageName}: previous inline attempt aborted -> regular install path")
       return null
-    }
-    if (!isInstalledFromPlay()) {
-      if (IS_DEV_MODE) {
-        // Dev-mode builds are adb/IDE-installed, so the Play install source guard is bypassed
-        // to allow exercising the inline flow locally (incl. devRelease); prod is unaffected
-        log("${app.packageName}: not installed from Play, bypassing guard on dev build")
-      } else {
-        log("${app.packageName}: app store not installed from Play -> regular install path")
-        return null
-      }
     }
     val catalogToken = catalogTokenRepository.getCatalogToken(app.packageName)
     if (catalogToken == null) {
@@ -146,16 +135,6 @@ class PlayInlineInstallResolver @Inject constructor(
     ongoingInstalls.remove(app.packageName)
   }
 
-  private fun isInstalledFromPlay(): Boolean = runCatching {
-    val installerPackageName = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-      context.packageManager.getInstallSourceInfo(context.packageName).installingPackageName
-    } else {
-      @Suppress("DEPRECATION")
-      context.packageManager.getInstallerPackageName(context.packageName)
-    }
-    installerPackageName == PLAY_STORE_PACKAGE
-  }.getOrDefault(false)
-
   private fun log(message: String) = Timber.tag(INLINE_INSTALL_TAG).d(message)
 
   private companion object {
@@ -167,6 +146,5 @@ class PlayInlineInstallResolver @Inject constructor(
     const val PLAY_REFERRER = "aptoidegames-play"
 
     const val INLINE_INSTALL_TAG = "InlineInstall"
-    val IS_DEV_MODE = BuildConfig.FLAVOR_mode == "dev"
   }
 }
