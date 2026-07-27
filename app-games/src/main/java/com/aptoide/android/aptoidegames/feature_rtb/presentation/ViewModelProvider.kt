@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.feature_campaigns.CampaignImpl
+import com.aptoide.android.aptoidegames.feature_rtb.RTB_ENABLED
 import com.aptoide.android.aptoidegames.feature_rtb.data.RTBApp
 import com.aptoide.android.aptoidegames.feature_rtb.data.RTBAppsListUiState
 import com.aptoide.android.aptoidegames.feature_rtb.data.randomRTBApp
@@ -35,21 +36,25 @@ fun rememberRTBApps(
   preview = {
     RTBAppsListUiState.Idle(List((0..50).random()) { randomRTBApp }) to {}
   }, real = {
-    val injectionsProvider = hiltViewModel<InjectionsProvider>()
-    val vm: RTBAppListViewModel = viewModel(
-      key = "rtb/$tag/$salt",
-      factory = object : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-          @Suppress("UNCHECKED_CAST")
-          return RTBAppListViewModel(
-            repository = injectionsProvider.repository,
-            tag = tag,
-          ) as T
+    if (!RTB_ENABLED) {
+      RTBAppsListUiState.Idle(emptyList<RTBApp>()) to {}
+    } else {
+      val injectionsProvider = hiltViewModel<InjectionsProvider>()
+      val vm: RTBAppListViewModel = viewModel(
+        key = "rtb/$tag/$salt",
+        factory = object : ViewModelProvider.Factory {
+          override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            @Suppress("UNCHECKED_CAST")
+            return RTBAppListViewModel(
+              repository = injectionsProvider.repository,
+              tag = tag,
+            ) as T
+          }
         }
-      }
-    )
-    val uiState by vm.uiState.collectAsState()
-    uiState to vm::reload
+      )
+      val uiState by vm.uiState.collectAsState()
+      uiState to vm::reload
+    }
   }
 )
 
@@ -80,19 +85,23 @@ class SearchSponsoredAppViewModel(repository: RTBRepository) : ViewModel() {
 fun rememberSearchSponsoredApp(): RTBApp? = runPreviewable(
   preview = { randomRTBApp },
   real = {
-    val injectionsProvider = hiltViewModel<InjectionsProvider>()
-    val vm: SearchSponsoredAppViewModel = viewModel(
-      key = "rtb/search-sponsored",
-      factory = object : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-          @Suppress("UNCHECKED_CAST")
-          return SearchSponsoredAppViewModel(
-            repository = injectionsProvider.repository,
-          ) as T
+    if (!RTB_ENABLED) {
+      null
+    } else {
+      val injectionsProvider = hiltViewModel<InjectionsProvider>()
+      val vm: SearchSponsoredAppViewModel = viewModel(
+        key = "rtb/search-sponsored",
+        factory = object : ViewModelProvider.Factory {
+          override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            @Suppress("UNCHECKED_CAST")
+            return SearchSponsoredAppViewModel(
+              repository = injectionsProvider.repository,
+            ) as T
+          }
         }
-      }
-    )
-    val uiState by vm.uiState.collectAsState()
-    uiState
+      )
+      val uiState by vm.uiState.collectAsState()
+      uiState
+    }
   }
 )
