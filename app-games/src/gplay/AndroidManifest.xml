@@ -1,9 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools">
 
   <!-- Package visibility to resolve the Google Play inline install deep link -->
   <queries>
     <package android:name="com.android.vending" />
   </queries>
+
+  <!--
+    Google Play rejects uploads declaring these restricted permissions on the grounds
+    that they are reserved for privileged/system installers. See UpdateOwnershipModule.kt
+    (this flavor disables the corresponding SessionParams APIs to match).
+  -->
+  <uses-permission
+    android:name="android.permission.ENFORCE_UPDATE_OWNERSHIP"
+    tools:node="remove" />
+  <uses-permission
+    android:name="android.permission.UPDATE_PACKAGES_WITHOUT_USER_ACTION"
+    tools:node="remove" />
 
 </manifest>
