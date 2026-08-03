@@ -18,6 +18,7 @@ import cm.aptoide.pt.feature_apps.domain.AppsBySortUseCase
 import cm.aptoide.pt.feature_apps.domain.AppsByTagUseCase
 import cm.aptoide.pt.feature_apps.domain.CategoryAppsUseCase
 import cm.aptoide.pt.feature_apps.domain.ESkillsAppsUseCase
+import cm.aptoide.pt.feature_apps.domain.SimilarAppsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlin.reflect.KFunction0
@@ -30,7 +31,30 @@ class InjectionsProvider @Inject constructor(
   val eSkillsAppsUseCase: ESkillsAppsUseCase,
   val categoryAppsUseCase: CategoryAppsUseCase,
   val appsBySortUseCase: AppsBySortUseCase,
+  val similarAppsUseCase: SimilarAppsUseCase,
 ) : ViewModel()
+
+@Composable
+fun similarApps(source: String): Pair<AppsListUiState, () -> Unit> = runPreviewable(
+  preview = { AppsListUiState.Idle(List((3..8).random()) { randomApp }) to {} },
+  real = {
+    val injectionsProvider = hiltViewModel<InjectionsProvider>()
+    val vm: AppsListViewModel = viewModel(
+      key = "similarApps/$source",
+      factory = object : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+          @Suppress("UNCHECKED_CAST")
+          return AppsListViewModel(
+            source = source,
+            appsListUseCase = injectionsProvider.similarAppsUseCase,
+          ) as T
+        }
+      }
+    )
+    val uiState by vm.uiState.collectAsState()
+    uiState to vm::reload
+  }
+)
 
 @Composable
 fun rememberApp(source: String): Pair<AppUiState, () -> Unit> = runPreviewable(

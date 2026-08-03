@@ -33,6 +33,7 @@ import cm.aptoide.pt.feature_apps.presentation.previewAppsListIdleState
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
 import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import cm.aptoide.pt.feature_home.domain.Bundle
+import cm.aptoide.pt.feature_home.domain.Type
 import cm.aptoide.pt.feature_home.domain.randomBundle
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.SwipeListener
@@ -64,6 +65,30 @@ fun AppsGridBundle(
     uiState = uiState,
     navigate = navigate,
     spaceBy = spaceBy,
+  )
+}
+
+/**
+ * A titled apps grid from a caller-supplied [uiState] (not tied to a home bundle
+ * tag). Used for the app-view "Similar games" section. Renders nothing when the
+ * list is empty/errored; no "See all" (no bundle actions).
+ */
+@Composable
+fun SimpleAppsGrid(
+  title: String,
+  tag: String,
+  uiState: AppsListUiState,
+  navigate: (String) -> Unit,
+) {
+  RealAppsGridBundle(
+    bundle = Bundle(
+      title = title,
+      actions = emptyList(),
+      type = Type.APP_GRID,
+      tag = tag,
+    ),
+    uiState = uiState,
+    navigate = navigate,
   )
 }
 

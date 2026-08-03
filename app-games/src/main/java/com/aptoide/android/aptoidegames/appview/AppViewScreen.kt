@@ -80,6 +80,7 @@ import cm.aptoide.pt.feature_apps.domain.AppSource.Companion.appendIfRequired
 import cm.aptoide.pt.feature_apps.domain.Rating
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.rememberApp
+import cm.aptoide.pt.feature_apps.presentation.similarApps
 import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
 import cm.aptoide.pt.play_and_earn.exchange.presentation.rememberExchangeRate
 import com.aptoide.android.aptoidegames.APP_LINK_HOST
@@ -113,6 +114,7 @@ import com.aptoide.android.aptoidegames.editorial.relatedEditorialsCardViewModel
 import com.aptoide.android.aptoidegames.editorial.rememberRelatedEditorials
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.error_views.NoConnectionView
+import com.aptoide.android.aptoidegames.feature_apps.presentation.SimpleAppsGrid
 import com.aptoide.android.aptoidegames.feature_apps.presentation.SmallEmptyView
 import com.aptoide.android.aptoidegames.feature_apps.presentation.buildSeeMoreBonusRoute
 import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberBonusBundle
@@ -139,6 +141,7 @@ import com.aptoide.android.aptoidegames.videos.presentation.AppViewYoutubePlayer
 
 private val tabsList = listOf(
   AppViewTab.DETAILS,
+  AppViewTab.REVIEWS,
   AppViewTab.REWARDS,
   AppViewTab.RELATED,
   AppViewTab.INFO,
@@ -284,7 +287,11 @@ fun AppViewScreen(
     rememberIsPackageInPaE(packageName = it)
   } ?: false
 
-  val tabsList by remember(relatedEditorialsUiState, isPackageInPaE) {
+  val hasReviews = (uiState as? AppUiState.Idle)?.app?.packageName?.let {
+    rememberReviews(packageName = it).isNotEmpty()
+  } ?: false
+
+  val tabsList by remember(relatedEditorialsUiState, isPackageInPaE, hasReviews) {
     derivedStateOf {
       tabsList
         .let {
@@ -300,6 +307,9 @@ fun AppViewScreen(
           } else {
             it.filter { it != AppViewTab.REWARDS }
           }
+        }
+        .let {
+          if (hasReviews) it else it.filter { tab -> tab != AppViewTab.REVIEWS }
         }
     }
   }
@@ -638,7 +648,9 @@ fun ViewPagerContent(
   navigate: (String) -> Unit,
 ) {
   when (selectedTab) {
-    AppViewTab.DETAILS -> DetailsView(app = app)
+    AppViewTab.DETAILS -> DetailsView(app = app, navigate = navigate)
+
+    AppViewTab.REVIEWS -> AppReviewsSection(packageName = app.packageName)
 
     AppViewTab.REWARDS -> AppRewardsView(packageName = app.packageName)
 
@@ -655,9 +667,9 @@ fun ViewPagerContent(
 }
 
 @Composable
-fun DetailsView(app: App) {
+fun DetailsView(app: App, navigate: (String) -> Unit) {
   Column(
-    modifier = Modifier.padding(top = 16.dp)
+    modifier = Modifier.padding(top = 16.dp, bottom = 32.dp)
   ) {
     app.screenshots?.let { ScreenshotsList(it) }
     app.news?.let {
@@ -665,13 +677,18 @@ fun DetailsView(app: App) {
     }
 
     app.description?.let {
-      Text(
-        text = it,
-        modifier = Modifier.padding(top = 16.dp, bottom = 32.dp, start = 16.dp, end = 16.dp),
-        style = AGTypography.ArticleText,
-        color = Palette.White
-      )
+      CollapsibleDescription(description = it)
     }
+
+    TrustPanel(trust = app.trust)
+
+    val (similarState, _) = similarApps(source = app.packageName)
+    SimpleAppsGrid(
+      title = stringResource(R.string.appview_similar_title),
+      tag = "similar-${app.packageName}",
+      uiState = similarState,
+      navigate = navigate,
+    )
   }
 }
 
@@ -1179,7 +1196,7 @@ fun AppViewScreenPreview() {
 @Composable
 fun DetailsViewPreview() {
   AptoideTheme {
-    DetailsView(app = randomApp)
+    DetailsView(app = randomApp, navigate = {})
   }
 }
 

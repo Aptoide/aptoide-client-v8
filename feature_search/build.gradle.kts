@@ -17,6 +17,7 @@ android {
 dependencies {
   implementation(projects.featureAppview)
   implementation(projects.aptoideNetwork)
+  implementation(projects.deviceApi)
   implementation(projects.featureApps)
   implementation(projects.extension)
 

@@ -8,6 +8,7 @@ import cm.aptoide.pt.feature_search.data.AptoideSearchRepository
 import cm.aptoide.pt.feature_search.data.AutoCompleteSuggestionsRepository
 import cm.aptoide.pt.feature_search.data.database.SearchHistoryDatabase
 import cm.aptoide.pt.feature_search.data.database.SearchHistoryRepository
+import cm.aptoide.pt.feature_search.data.deviceapi.DeviceApiSearchRepository
 import cm.aptoide.pt.feature_search.data.network.RemoteSearchRepository
 import cm.aptoide.pt.feature_search.data.network.service.SearchRetrofitService
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository
@@ -18,6 +19,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
+import java.util.Optional
 import javax.inject.Singleton
 
 @Module
@@ -31,8 +33,11 @@ object RepositoryModule {
     searchHistoryRepository: SearchHistoryRepository,
     remoteSearchRepository: RemoteSearchRepository,
     autoCompleteSuggestionsRepository: AutoCompleteSuggestionsRepository,
-  ): SearchRepository {
-    return AptoideSearchRepository(
+    deviceApi: Optional<DeviceApiSearchRepository>,
+  ): SearchRepository = if (deviceApi.isPresent) {
+    deviceApi.get()
+  } else {
+    AptoideSearchRepository(
       mapper = mapper,
       searchHistoryRepository = searchHistoryRepository,
       remoteSearchRepository = remoteSearchRepository,
