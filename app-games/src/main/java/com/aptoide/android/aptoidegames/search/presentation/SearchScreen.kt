@@ -137,7 +137,9 @@ fun searchScreen() = ScreenData.withAnalytics(
 
   var searchValue by rememberSaveable { mutableStateOf("") }
   val shouldRedirectSearchToGameGenie =
-    rememberGameGenieVisibility() && BuildConfig.FLAVOR_brand != "vanilla"
+    rememberGameGenieVisibility() && BuildConfig.FLAVOR_brand != "vanilla" &&
+      // Dev uses normal (device-API) search results, never GameGenie redirect.
+      !BuildConfig.APPLICATION_ID.endsWith(".dev")
   var searchMeta by rememberSaveable(
     saver = Saver(
       save = { it.value?.toString() ?: "null" },

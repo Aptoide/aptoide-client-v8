@@ -7,11 +7,13 @@ import cm.aptoide.pt.feature_categories.analytics.AptoideAnalyticsInfoProvider
 import cm.aptoide.pt.feature_categories.analytics.AptoideFirebaseInfoProvider
 import cm.aptoide.pt.feature_categories.data.AptoideCategoriesRepository
 import cm.aptoide.pt.feature_categories.data.CategoriesRepository
+import cm.aptoide.pt.feature_categories.data.deviceapi.DeviceApiCategoriesRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
+import java.util.Optional
 import javax.inject.Singleton
 
 @Module
@@ -25,9 +27,12 @@ internal object RepositoryModule {
     @RetrofitCategoriesApps retrofitCategoriesApps: Retrofit,
     @StoreName storeName: String,
     analyticsInfoProvider: AptoideAnalyticsInfoProvider,
-    messagingInfoProvider: AptoideFirebaseInfoProvider
-  ): CategoriesRepository {
-    return AptoideCategoriesRepository(
+    messagingInfoProvider: AptoideFirebaseInfoProvider,
+    deviceApi: Optional<DeviceApiCategoriesRepository>,
+  ): CategoriesRepository = if (deviceApi.isPresent) {
+    deviceApi.get()
+  } else {
+    AptoideCategoriesRepository(
       categoriesRemoteDataSourceGet = retrofitV7.create(AptoideCategoriesRepository.RetrofitGet::class.java),
       categoriesRemoteDataSourcePost = retrofitCategoriesApps.create(AptoideCategoriesRepository.RetrofitPost::class.java),
       storeName = storeName,

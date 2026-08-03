@@ -11,5 +11,6 @@ android {
 
 dependencies {
   implementation(projects.aptoideNetwork)
+  implementation(projects.deviceApi)
   implementation(projects.extension)
 }

@@ -5,6 +5,7 @@ import cm.aptoide.pt.extensions.getRandomString
 import cm.aptoide.pt.feature_apps.domain.AppSource
 import cm.aptoide.pt.feature_apps.domain.Rating
 import cm.aptoide.pt.feature_apps.domain.Store
+import cm.aptoide.pt.feature_apps.domain.Trust
 import cm.aptoide.pt.feature_apps.domain.Votes
 import cm.aptoide.pt.feature_campaigns.CampaignImpl
 import java.time.LocalDate
@@ -49,6 +50,7 @@ data class App(
   val campaigns: CampaignImpl? = null,
   val hasMeta: Boolean = false,
   val signature: String?,
+  val trust: Trust? = null,
 ) : AppSource {
   val appSize: Long by lazy {
     file.size + (obb?.size ?: 0) + (aab?.size ?: 0)

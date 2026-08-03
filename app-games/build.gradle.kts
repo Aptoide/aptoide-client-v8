@@ -168,6 +168,14 @@ android {
         "STORE_ENV_DOMAIN",
         "\"https://ws75-devel.aptoide.com/api/7.20240701/\""
       )
+      // New backend (device API) — dev cutover, aptoideGamesDev only. See the
+      // migration plan / contracts (device.openapi.json). Prod stays on v7, so
+      // this field is intentionally dev-only.
+      buildConfigField(
+        type = "String",
+        name = "DEVICE_API_DOMAIN",
+        value = "\"https://api.dev.aptoide.com/\""
+      )
       buildConfigField(
         type = "String",
         name = "API_CHAIN_CATAPPULT_HOST",
@@ -282,6 +290,7 @@ dependencies {
   implementation(projects.downloadView)
   implementation(projects.aptoideInstaller)
   implementation(projects.aptoideNetwork)
+  implementation(projects.deviceApi)
   implementation(projects.featureCampaigns)
   implementation(projects.environmentInfo)
   implementation(projects.exceptionHandler)

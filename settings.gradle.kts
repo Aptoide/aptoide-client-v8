@@ -32,6 +32,7 @@ include(
   ":feature-home",
   ":feature_updates",
   ":aptoide-network",
+  ":device-api",
   ":feature_appview",
   ":feature_report_app",
   ":feature-flags",

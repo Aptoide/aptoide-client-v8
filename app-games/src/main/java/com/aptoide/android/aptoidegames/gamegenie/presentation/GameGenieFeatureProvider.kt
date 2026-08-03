@@ -11,6 +11,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.feature_flags.domain.FeatureFlags
+import com.aptoide.android.aptoidegames.BuildConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -49,6 +50,8 @@ fun rememberSearchGameGenie(): Boolean = runPreviewable(
         state = vm.featureFlags.getFlag("search_game_genie", false)
       }
     }
-    state
+    // Dev builds use normal search (device-API backed), never GameGenie search,
+    // regardless of the remote flag.
+    state && !BuildConfig.APPLICATION_ID.endsWith(".dev")
   }
 )

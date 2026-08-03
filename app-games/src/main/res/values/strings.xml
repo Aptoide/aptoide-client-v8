@@ -527,4 +527,19 @@
   <string name="play_and_earn_more_games_more">More games. More %1$s.</string>
   <string name="play_and_earn_rewards_install_play_title">Install Games. Play your favourite.</string>
   <string name="play_and_earn_earn_amount_badge">Earn %1$s</string>
+  <string name="appview_trust_title">Transparency</string>
+  <string name="appview_trust_scan_trusted">Passed our security scan</string>
+  <string name="appview_trust_scan_warning">Security warning from our scan</string>
+  <string name="appview_trust_scan_critical">Security risk detected</string>
+  <string name="appview_trust_scan_unknown">Not yet scanned</string>
+  <string name="appview_trust_provenance_developer">Uploaded by the developer</string>
+  <string name="appview_trust_provenance_mirrored">Mirrored from another source</string>
+  <string name="appview_trust_signer_consistent">Signed consistently across versions</string>
+  <string name="appview_trust_signer_different">Signing certificate changed</string>
+  <string name="appview_reviews_title">Reviews</string>
+  <string name="appview_reviews_tab_title" comment="reviews">Reviews</string>
+  <string name="appview_reviews_anonymous">Anonymous</string>
+  <string name="appview_similar_title">Similar games</string>
+  <string name="appview_description_read_more">Read more</string>
+  <string name="appview_description_show_less">Show less</string>
 </resources>
