@@ -482,6 +482,7 @@ fun AppViewContent(
           InstallView(
             modifier = Modifier.padding(top = 24.dp, start = 16.dp, end = 16.dp),
             app = app,
+            showUninstall = true,
             autoOpenAfterInstall = autoOpenAfterInstall.takeIf { autoOpenBillingEligible },
             onInstallStarted = {
               showRecommends = true
