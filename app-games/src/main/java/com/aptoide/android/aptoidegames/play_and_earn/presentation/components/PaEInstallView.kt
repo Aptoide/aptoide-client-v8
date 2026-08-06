@@ -25,9 +25,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.stateDescription
@@ -45,6 +47,7 @@ import java.math.BigDecimal
 import com.aptoide.android.aptoidegames.R.string
 import com.aptoide.android.aptoidegames.design_system.PrimaryButton
 import com.aptoide.android.aptoidegames.design_system.PrimarySmallButton
+import com.aptoide.android.aptoidegames.design_system.SecondaryOutlinedButton
 import com.aptoide.android.aptoidegames.design_system.SecondarySmallOutlinedButton
 import com.aptoide.android.aptoidegames.drawables.icons.getError
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewState
@@ -91,17 +94,20 @@ fun PaEInstallView(
   onInstallStarted: () -> Unit = {},
   onCancel: () -> Unit = {},
   navigate: ((String) -> Unit)? = null,
+  showUninstall: Boolean = false,
 ) {
   val installViewState = installViewStates(
     app = app,
     onInstallStarted = onInstallStarted,
     onCancel = onCancel
   )
+  val uninstallLabel = stringResource(string.uninstall_button)
 
   PaEInstallViewContent(
     installViewState = installViewState,
     navigate = navigate,
     rewardAmount = rewardAmount,
+    showUninstall = showUninstall,
     modifier = modifier.clearAndSetSemantics {
       installViewState.actionLabel?.let {
         onClick(label = it) {
@@ -115,6 +121,20 @@ fun PaEInstallView(
             else -> null
           }?.invoke()
           true
+        }
+      }
+      if (showUninstall) {
+        when (val uiState = installViewState.uiState) {
+          is DownloadUiState.Outdated -> uiState.uninstall
+          is DownloadUiState.Installed -> uiState.uninstall
+          else -> null
+        }?.let { uninstall ->
+          customActions = listOf(
+            CustomAccessibilityAction(label = uninstallLabel) {
+              uninstall()
+              true
+            }
+          )
         }
       }
       this.contentDescription = installViewState.contentDescription
@@ -132,6 +152,7 @@ private fun PaEInstallViewContent(
   rewardAmount: BigDecimal? = null,
   verticalSpacing: Dp = 8.dp,
   horizontalSpacing: Dp = 24.dp,
+  showUninstall: Boolean = false,
 ) = Box(
   modifier = modifier
     .fillMaxWidth()
@@ -157,11 +178,29 @@ private fun PaEInstallViewContent(
       modifier = Modifier.fillMaxWidth(),
     )
 
-    is DownloadUiState.Outdated -> PaELargeCoinButton(
-      title = installViewState.actionLabel ?: "",
-      onClick = state.update,
-      modifier = Modifier.fillMaxWidth(),
-    )
+    is DownloadUiState.Outdated -> if (showUninstall) {
+      Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+      ) {
+        SecondaryOutlinedButton(
+          title = stringResource(string.uninstall_button),
+          onClick = state.uninstall,
+          modifier = Modifier.weight(1f),
+        )
+        PaELargeCoinButton(
+          title = installViewState.actionLabel ?: "",
+          onClick = state.update,
+          modifier = Modifier.weight(1f),
+        )
+      }
+    } else {
+      PaELargeCoinButton(
+        title = installViewState.actionLabel ?: "",
+        onClick = state.update,
+        modifier = Modifier.fillMaxWidth(),
+      )
+    }
 
     is DownloadUiState.Waiting -> PaEProgressView(
       title = installViewState.stateDescription,
@@ -218,12 +257,31 @@ private fun PaEInstallViewContent(
       horizontalSpacing = horizontalSpacing,
     )
 
-    is DownloadUiState.Installed -> PaEPlayButton(
-      onClick = state.open,
-      navigate = navigate,
-      rewardAmount = rewardAmount,
-      modifier = Modifier.fillMaxWidth(),
-    )
+    is DownloadUiState.Installed -> if (showUninstall) {
+      Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+      ) {
+        SecondaryOutlinedButton(
+          title = stringResource(string.uninstall_button),
+          onClick = state.uninstall,
+          modifier = Modifier.weight(1f),
+        )
+        PaEPlayButton(
+          onClick = state.open,
+          navigate = navigate,
+          rewardAmount = rewardAmount,
+          modifier = Modifier.weight(1f),
+        )
+      }
+    } else {
+      PaEPlayButton(
+        onClick = state.open,
+        navigate = navigate,
+        rewardAmount = rewardAmount,
+        modifier = Modifier.fillMaxWidth(),
+      )
+    }
 
     is DownloadUiState.Error -> Row(
       modifier = Modifier

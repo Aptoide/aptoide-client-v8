@@ -467,7 +467,8 @@ fun AppViewContent(
           modifier = Modifier.padding(top = 24.dp, start = 16.dp, end = 16.dp),
           app = app,
           rewardAmount = rewardAmount,
-          navigate = navigate
+          navigate = navigate,
+          showUninstall = true,
         )
       } else {
         val autoOpenUTMMedium = if (autoOpenBillingEligible) {
