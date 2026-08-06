@@ -179,19 +179,19 @@ private fun PaEInstallViewContent(
     )
 
     is DownloadUiState.Outdated -> if (showUninstall) {
-      Row(
+      Column(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
       ) {
-        SecondaryOutlinedButton(
-          title = stringResource(string.uninstall_button),
-          onClick = state.uninstall,
-          modifier = Modifier.weight(1f),
-        )
         PaELargeCoinButton(
           title = installViewState.actionLabel ?: "",
           onClick = state.update,
-          modifier = Modifier.weight(1f),
+          modifier = Modifier.fillMaxWidth(),
+        )
+        SecondaryOutlinedButton(
+          title = stringResource(string.uninstall_button),
+          onClick = state.uninstall,
+          modifier = Modifier.fillMaxWidth(),
         )
       }
     } else {
@@ -258,20 +258,20 @@ private fun PaEInstallViewContent(
     )
 
     is DownloadUiState.Installed -> if (showUninstall) {
-      Row(
+      Column(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
       ) {
-        SecondaryOutlinedButton(
-          title = stringResource(string.uninstall_button),
-          onClick = state.uninstall,
-          modifier = Modifier.weight(1f),
-        )
         PaEPlayButton(
           onClick = state.open,
           navigate = navigate,
           rewardAmount = rewardAmount,
-          modifier = Modifier.weight(1f),
+          modifier = Modifier.fillMaxWidth(),
+        )
+        SecondaryOutlinedButton(
+          title = stringResource(string.uninstall_button),
+          onClick = state.uninstall,
+          modifier = Modifier.fillMaxWidth(),
         )
       }
     } else {
