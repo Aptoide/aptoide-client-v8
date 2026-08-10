@@ -14,6 +14,9 @@ import com.aptoide.android.aptoidegames.gamegenie.presentation.GameGenieUIStateT
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -148,25 +151,182 @@ class GameGenieViewModel @Inject constructor(
         val selectedGame = viewModelState.value.selectedGame
         updateConversation(userMessage, imagePathOrBase64)
         updateLoadingState()
-        val chat = selectedGame?.packageName?.let {
-          gameGenieUseCase.sendCompanionMessage(
-            chat = uiState.value.chat.toGameGenieChatHistory(),
-            userMessage = userMessage,
-            selectedGame = it,
-            imageBase64 = imagePathOrBase64
-          )
+        if (selectedGame != null) {
+          streamCompanionMessage(userMessage, imagePathOrBase64, selectedGame.packageName)
+        } else {
+          streamGeneralMessage(userMessage, imagePathOrBase64)
         }
-          ?: gameGenieUseCase.sendMessage(
-            chat = uiState.value.chat.toGameGenieChatHistory(),
-            userMessage = userMessage,
-            installedApps = _installedApps.value,
-            imageBase64 = imagePathOrBase64
-          )
-        updateSuccessState(chat)
       } catch (e: Throwable) {
         handleError(e)
       }
     }
+  }
+
+  private suspend fun streamGeneralMessage(
+    userMessage: String,
+    imagePathOrBase64: String?,
+  ) {
+    collectStream(
+      gameGenieUseCase.streamMessage(
+        chat = uiState.value.chat.toGameGenieChatHistory(),
+        userMessage = userMessage,
+        installedApps = _installedApps.value,
+        imageBase64 = imagePathOrBase64,
+      )
+    )
+  }
+
+  private suspend fun streamCompanionMessage(
+    userMessage: String,
+    imagePathOrBase64: String?,
+    selectedGamePackage: String,
+  ) {
+    collectStream(
+      gameGenieUseCase.streamCompanionMessage(
+        chat = uiState.value.chat.toGameGenieChatHistory(),
+        userMessage = userMessage,
+        selectedGame = selectedGamePackage,
+        imageBase64 = imagePathOrBase64,
+      )
+    )
+  }
+
+  private suspend fun collectStream(
+    stream: kotlinx.coroutines.flow.Flow<GameGenieStreamUpdate>,
+  ) = coroutineScope {
+    var assistantStarted = false
+    val pendingText = StringBuilder()
+
+    fun ensureBubble() {
+      if (!assistantStarted) {
+        assistantStarted = true
+        startStreamingAssistantBubble()
+      }
+    }
+    fun flushPending(maxChars: Int? = null) {
+      if (pendingText.isEmpty()) return
+      val take = (maxChars ?: pendingText.length).coerceAtMost(pendingText.length)
+      val chunk = pendingText.substring(0, take)
+      pendingText.delete(0, take)
+      appendStreamedText(chunk)
+    }
+
+    val flusher = launch {
+      while (isActive) {
+        delay(STREAM_FLUSH_INTERVAL_MS)
+        flushPending(STREAM_FLUSH_CHARS_PER_TICK)
+      }
+    }
+
+    suspend fun drainPending() {
+      while (pendingText.isNotEmpty()) {
+        delay(STREAM_FLUSH_INTERVAL_MS)
+        flushPending(STREAM_FLUSH_CHARS_PER_TICK)
+      }
+    }
+
+    try {
+      stream.collect { update ->
+        when (update) {
+          is GameGenieStreamUpdate.TextChunk -> {
+            ensureBubble()
+            pendingText.append(update.delta)
+          }
+          is GameGenieStreamUpdate.AppsResolved -> {
+            ensureBubble()
+            flushPending()
+            updateStreamingAssistant { it.copy(apps = update.apps) }
+          }
+          is GameGenieStreamUpdate.Video -> {
+            ensureBubble()
+            flushPending()
+            updateStreamingAssistant { it.copy(videoId = update.videoId) }
+          }
+          is GameGenieStreamUpdate.FollowUps -> {
+            ensureBubble()
+            flushPending()
+            updateStreamingAssistant { it.copy(followUps = update.followUps) }
+          }
+          is GameGenieStreamUpdate.Completed -> {
+            drainPending()
+            finalizeStream(update.chat, assistantStarted)
+          }
+          is GameGenieStreamUpdate.Failed -> {
+            flushPending()
+            Timber.w("Genie SSE failed: %s", update.message)
+            viewModelState.update {
+              it.copy(type = GameGenieUIStateType.ERROR, isStreaming = false)
+            }
+          }
+        }
+      }
+    } finally {
+      flusher.cancel()
+      flushPending()
+    }
+  }
+
+  private fun updateStreamingAssistant(transform: (ChatInteraction) -> ChatInteraction) {
+    val current = _conversation.value
+    if (current.isEmpty()) return
+    val updatedLast = transform(current.last())
+    val updated = current.dropLast(1) + updatedLast
+    _conversation.value = updated
+    viewModelState.update {
+      it.copy(
+        chat = it.chat.copy(conversation = updated),
+        apps = updatedLast.apps.map { app -> app.packageName },
+      )
+    }
+  }
+
+  private fun startStreamingAssistantBubble() {
+    val updated = _conversation.value + ChatInteraction(
+      gpt = "",
+      user = null,
+      videoId = null,
+      apps = emptyList(),
+    )
+    _conversation.value = updated
+    viewModelState.update {
+      it.copy(
+        type = GameGenieUIStateType.IDLE,
+        chat = it.chat.copy(conversation = updated),
+        isStreaming = true,
+      )
+    }
+  }
+
+  private fun finalizeStream(response: GameGenieChat, assistantStarted: Boolean) {
+    val finalAssistant = response.conversation.lastOrNull()
+    val current = _conversation.value
+    val finalConversation = when {
+      finalAssistant == null -> current
+      assistantStarted && current.isNotEmpty() -> current.dropLast(1) + finalAssistant
+      else -> current + finalAssistant
+    }
+    _conversation.value = finalConversation
+    viewModelState.update {
+      it.copy(
+        type = GameGenieUIStateType.IDLE,
+        chat = it.chat.copy(
+          id = response.id,
+          title = response.title,
+          conversation = finalConversation,
+        ),
+        apps = finalAssistant?.apps?.map { app -> app.packageName }.orEmpty(),
+        isStreaming = false,
+      )
+    }
+  }
+
+  private fun appendStreamedText(delta: String) {
+    val current = _conversation.value
+    if (current.isEmpty()) return
+    val updatedLast = current.last().copy(gpt = current.last().gpt + delta)
+    val updated = current.dropLast(1) + updatedLast
+    _conversation.value = updated
+    viewModelState.update { it.copy(chat = it.chat.copy(conversation = updated)) }
   }
 
   private fun updateConversation(
@@ -319,7 +479,7 @@ class GameGenieViewModel @Inject constructor(
   private fun handleError(e: Throwable) {
     Timber.w(e)
     viewModelState.update {
-      it.copy(type = mapErrorToState(e))
+      it.copy(type = mapErrorToState(e), isStreaming = false)
     }
   }
 
@@ -330,6 +490,9 @@ class GameGenieViewModel @Inject constructor(
     }
   }
 }
+
+private const val STREAM_FLUSH_INTERVAL_MS = 32L
+private const val STREAM_FLUSH_CHARS_PER_TICK = 2
 
 private data class GameGenieViewModelState(
   val type: GameGenieUIStateType = GameGenieUIStateType.IDLE,
@@ -349,6 +512,7 @@ private data class GameGenieViewModelState(
   val token: Token? = null,
   val selectedGame: GameCompanion? = null,
   val suggestions: List<Suggestion> = emptyList(),
+  val isStreaming: Boolean = false,
 ) {
   fun empty(
     token: Token? = null,
@@ -381,5 +545,6 @@ private data class GameGenieViewModelState(
       token = token,
       selectedGame = selectedGame,
       suggestions = suggestions,
+      isStreaming = isStreaming,
     )
 }
