@@ -26,6 +26,7 @@ import coil.util.DebugLogger
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 import com.aptoide.android.aptoidegames.app_open_ads.AppOpenAdInitializer
+import com.aptoide.android.aptoidegames.attribution.domain.AttributionManager
 import com.aptoide.android.aptoidegames.device_info.DeviceSecurityChecker
 import com.aptoide.android.aptoidegames.device_info.analytics.DeviceInfoAnalytics
 import com.aptoide.android.aptoidegames.feature_companion_apps_notification.CompanionAppsManager
@@ -131,6 +132,9 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
   @Inject
   lateinit var deviceInfoAnalytics: DeviceInfoAnalytics
 
+  @Inject
+  lateinit var attributionManager: AttributionManager
+
   override fun onCreate() {
     FirebaseApp.initializeApp(this)
     super.onCreate()
@@ -148,11 +152,20 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
     }
     AptoideMMPCampaign.init(BuildConfig.OEMID)
     MMPLinkerCampaign.init(BuildConfig.OEMID)
+    initAttribution()
     initCompanionAppsManager()
     initCompanionGamesCachePreloader()
     initTrendingAppsRecommendationManager()
     initInstalledPackagesSyncManager()
     sendDeviceSecurityAnalytics()
+  }
+
+  private fun initAttribution() {
+    if (applicationContext.isObbMoverProcess()) return
+    CoroutineScope(Dispatchers.IO).launch {
+      runCatching { attributionManager.resolve() }
+        .onFailure { Timber.e(it, "Failed to resolve attribution.") }
+    }
   }
 
   private fun initInstalledPackagesSyncManager() {

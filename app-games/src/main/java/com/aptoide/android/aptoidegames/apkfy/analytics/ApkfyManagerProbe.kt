@@ -2,8 +2,6 @@ package com.aptoide.android.aptoidegames.apkfy.analytics
 
 import cm.aptoide.pt.feature_apkfy.domain.ApkfyManager
 import cm.aptoide.pt.feature_apkfy.domain.ApkfyModel
-import cm.aptoide.pt.feature_campaigns.AptoideMMPCampaign
-import com.aptoide.android.aptoidegames.LocalIdsRepository
 import com.aptoide.android.aptoidegames.apkfy.ApkfySessionPreferences
 import com.google.gson.Gson
 import kotlinx.coroutines.delay
@@ -14,12 +12,10 @@ import retrofit2.HttpException
 class ApkfyManagerProbe(
   private val apkfyManager: ApkfyManager,
   private val apkfyAnalytics: ApkfyAnalytics,
-  private val idsRepository: LocalIdsRepository,
   private val apkfySessionPreferences: ApkfySessionPreferences,
 ) : ApkfyManager {
 
   companion object {
-    const val GUEST_UID_KEY = "GUEST_UID"
     private const val MAX_APKFY_ATTEMPTS = 3
     private const val APKFY_RETRY_DELAY_MS = 5000L
   }
@@ -43,13 +39,6 @@ class ApkfyManagerProbe(
         // Apkfy call repeated at most 3 times, to make sure there is no apkfy app associated.
         try {
           apkfyModel = apkfyManager.getApkfy()
-            ?.also(apkfyAnalytics::setApkfyUTMProperties)
-            ?.also { idsRepository.saveId(GUEST_UID_KEY, it.guestUid) }
-            ?.also { apkfyAnalytics.setGuestUIDUserProperty(it.guestUid) }
-            .also {
-              // TODO: improve this logic
-              AptoideMMPCampaign.guestUID = it?.guestUid ?: idsRepository.getId(GUEST_UID_KEY)
-            }
             ?.also {
               apkfyAnalytics.sendApkfySuccessEvent(
                 data = Gson().toJson(it),
@@ -86,10 +75,6 @@ class ApkfyManagerProbe(
 
       return apkfyModel
     } else {
-      idsRepository.getId(GUEST_UID_KEY).let {
-        apkfyAnalytics.setGuestUIDUserProperty(it)
-        AptoideMMPCampaign.guestUID = it
-      }
       return null
     }
   }

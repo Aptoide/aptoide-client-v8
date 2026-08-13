@@ -4,7 +4,7 @@ import cm.aptoide.pt.extensions.ifNormalAppOrGame
 import cm.aptoide.pt.feature_flags.domain.FeatureFlags
 import cm.aptoide.pt.install_manager.InstallManager
 import com.aptoide.android.aptoidegames.LocalIdsRepository
-import com.aptoide.android.aptoidegames.apkfy.analytics.ApkfyManagerProbe
+import com.aptoide.android.aptoidegames.attribution.domain.AttributionManager
 import kotlinx.coroutines.flow.first
 
 class AptoideInstalledPackagesRTBRepository(
@@ -15,7 +15,7 @@ class AptoideInstalledPackagesRTBRepository(
 ) : InstalledPackagesRTBRepository {
 
   override suspend fun syncInstalledPackages() {
-    val guestUid = aptoideIdsRepository.observeId(ApkfyManagerProbe.GUEST_UID_KEY)
+    val guestUid = aptoideIdsRepository.observeId(AttributionManager.GUEST_UID_KEY)
       .first { it.isNotEmpty() }
 
     val limit = featureFlags

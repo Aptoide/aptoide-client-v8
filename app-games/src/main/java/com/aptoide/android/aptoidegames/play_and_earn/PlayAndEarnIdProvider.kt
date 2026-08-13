@@ -1,7 +1,7 @@
 package com.aptoide.android.aptoidegames.play_and_earn
 
 import com.aptoide.android.aptoidegames.LocalIdsRepository
-import com.aptoide.android.aptoidegames.apkfy.analytics.ApkfyManagerProbe
+import com.aptoide.android.aptoidegames.attribution.domain.AttributionManager
 import com.aptoide.android.aptoidegames.firebase.FirebaseInfoProvider
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -17,7 +17,7 @@ class PlayAndEarnIdProvider @Inject constructor(
 ) {
 
   suspend fun getId(): String {
-    val guestId = localIdsRepository.getId(ApkfyManagerProbe.GUEST_UID_KEY)
+    val guestId = localIdsRepository.getId(AttributionManager.GUEST_UID_KEY)
     return guestId.ifBlank { firebaseInfoProvider.getFirebaseToken().orEmpty() }
   }
 }
