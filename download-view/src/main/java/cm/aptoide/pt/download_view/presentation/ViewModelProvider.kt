@@ -73,7 +73,11 @@ fun rememberDownloadState(
             .d("Launching inline install intent: ${launch.intent.data}")
           inlineInstallLauncher.launch(launch.intent)
         }
-          .onSuccess { onInlineInstallLaunched(launch.isUpdate) }
+          .onSuccess {
+            // A fallback stage continues the same user action - the click/campaign
+            // analytics already fired on the primary launch
+            if (!launch.isFallback) onInlineInstallLaunched(launch.isUpdate)
+          }
           .onFailure {
             Timber.tag(DownloadViewModel.INLINE_INSTALL_TAG)
               .w(it, "Inline install intent launch failed")

@@ -17,9 +17,9 @@ interface InstallAnalytics {
   ) {
   }
 
-  fun sendInlineInstallCompletedEvent(app: App) {}
+  fun sendInlineInstallCompletedEvent(app: App, installMethod: String = METHOD_PLAY_INLINE) {}
 
-  fun sendInlineInstallCanceledEvent(app: App) {}
+  fun sendInlineInstallCanceledEvent(app: App, installMethod: String = METHOD_PLAY_INLINE) {}
 
   fun sendOpenClick(
     packageName: String,
@@ -180,5 +180,9 @@ interface InstallAnalytics {
   companion object {
     const val METHOD_APTOIDE = "aptoide"
     const val METHOD_PLAY_INLINE = "google_play_inline"
+
+    // Play's public details overlay used as fallback when the Catalog Access deep link
+    // is rejected - a referral to a regular Play install, not a 3PAS distribution
+    const val METHOD_PLAY_OVERLAY = "google_play_overlay"
   }
 }
