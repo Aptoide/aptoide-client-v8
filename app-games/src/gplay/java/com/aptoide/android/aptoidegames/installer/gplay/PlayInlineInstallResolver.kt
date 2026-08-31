@@ -55,10 +55,6 @@ class PlayInlineInstallResolver @Inject constructor(
   // attempts for them in this session go straight to the regular install path.
   private val abortedInlineInstalls: MutableSet<String> = ConcurrentHashMap.newKeySet()
 
-  // Packages whose install went through the fallback details overlay instead of the
-  // Catalog Access half-sheet - reported apart, the two flows differ commercially
-  private val overlayFallbacks: MutableSet<String> = ConcurrentHashMap.newKeySet()
-
   override suspend fun resolveInlineInstall(app: App): Intent? {
     if (app.packageName in abortedInlineInstalls) {
       log("${app.packageName}: previous inline attempt aborted -> regular install path")
@@ -70,7 +66,6 @@ class PlayInlineInstallResolver @Inject constructor(
       return null
     }
 
-    overlayFallbacks.remove(app.packageName)
     return buildPlayIntent(
       url = "$PLAY_DEEP_LINK_URL?id=${app.packageName}&referrer=$PLAY_REFERRER",
       catalogToken = catalogToken,
@@ -84,36 +79,23 @@ class PlayInlineInstallResolver @Inject constructor(
     }
   }
 
-  /**
-   * Play Store >= 52.6 rejects the documented [PLAY_DEEP_LINK_URL] deep link before even
-   * validating the token ("PITH: called from wrong URI" in Finsky logs), killing the
-   * transparent half-sheet activity instantly. The fallback launches Play's public app
-   * details overlay instead - a referral to a regular Play install, not a Catalog Access
-   * distribution. Deliberately WITHOUT the catalog token: this route hard-aborts on a
-   * token it cannot validate, while its absence is the verified-working form.
-   */
-  override suspend fun resolveFallbackInstall(app: App): Intent? = buildPlayIntent(
-    url = "$PLAY_DETAILS_URL?id=${app.packageName}&referrer=$PLAY_REFERRER",
-    catalogToken = null,
-  ).takeIf {
-    (it.resolveActivity(context.packageManager) != null).also { resolves ->
-      if (resolves) {
-        overlayFallbacks.add(app.packageName)
-        log("${app.packageName}: fallback details-overlay intent ready")
-      } else {
-        log("${app.packageName}: Play Store does not resolve the details overlay")
-      }
-    }
-  }
+  // No resolveFallbackInstall override: catalog apps use Google's documented method or
+  // Aptoide's own install path, never Play's public details overlay - developers who
+  // opted out of Catalog Access must not surface through us via the generic overlay.
+  // The overlay route is reserved for the rewarded-ads flow (its own allowlist, no
+  // fallback), tracked separately.
 
   private fun buildPlayIntent(
     url: String,
-    catalogToken: ByteArray?,
+    catalogToken: String?,
   ): Intent = Intent(Intent.ACTION_VIEW).apply {
     setPackage(PLAY_STORE_PACKAGE)
     data = url.toUri()
     putExtra("overlay", true)
     putExtra("callerId", context.packageName)
+    // A String, NOT byte[]: Finsky reads a String extra; a byte[] reads back as null and
+    // kills the half-sheet instantly (misleading "PITH: called from wrong URI" log).
+    // Google's docs showed byte[] until they corrected them in 2026-08.
     catalogToken?.let { putExtra("catalog_token", it) }
   }
 
@@ -128,7 +110,7 @@ class PlayInlineInstallResolver @Inject constructor(
     // future attempts - only invisible ladder rejections abort it for the session
     log("${app.packageName}: inline install canceled by the user")
     ongoingInstalls.remove(app.packageName)?.cancel()
-    installAnalytics.sendInlineInstallCanceledEvent(app, installMethodFor(app.packageName))
+    installAnalytics.sendInlineInstallCanceledEvent(app)
     notificationsBuilder.showInstallationStateNotification(
       packageName = app.packageName,
       appDetails = null,
@@ -177,7 +159,7 @@ class PlayInlineInstallResolver @Inject constructor(
     }
 
     log("${app.packageName}: package installed by Play, showing installed notification")
-    installAnalytics.sendInlineInstallCompletedEvent(app, installMethodFor(app.packageName))
+    installAnalytics.sendInlineInstallCompletedEvent(app)
     notificationsBuilder.showInstallationStateNotification(
       packageName = app.packageName,
       appDetails = appDetails,
@@ -186,25 +168,13 @@ class PlayInlineInstallResolver @Inject constructor(
       size = 0
     )
     ongoingInstalls.remove(app.packageName)
-    overlayFallbacks.remove(app.packageName)
   }
-
-  private fun installMethodFor(packageName: String): String =
-    if (packageName in overlayFallbacks) {
-      InstallAnalytics.METHOD_PLAY_OVERLAY
-    } else {
-      InstallAnalytics.METHOD_PLAY_INLINE
-    }
 
   private fun log(message: String) = Timber.tag(INLINE_INSTALL_TAG).d(message)
 
   private companion object {
     const val PLAY_STORE_PACKAGE = "com.android.vending"
     const val PLAY_DEEP_LINK_URL = "https://play.google.com/d"
-
-    // Play's public app details overlay - the fallback when the Catalog Access
-    // deep link above is rejected (see resolveFallbackInstall)
-    const val PLAY_DETAILS_URL = "https://play.google.com/store/apps/details"
 
     // Delivered by Play to the installed app via the Install Referrer API,
     // attributing the install to Aptoide

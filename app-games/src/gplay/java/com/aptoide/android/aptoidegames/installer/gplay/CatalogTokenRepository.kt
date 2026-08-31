@@ -10,8 +10,11 @@ import javax.inject.Inject
  */
 interface CatalogTokenRepository {
 
-  /** Returns a fresh catalog token for [packageName], or null if none is available. */
-  suspend fun getCatalogToken(packageName: String): ByteArray?
+  /**
+   * Returns a fresh catalog token for [packageName], or null if none is available.
+   * A String, passed to Play as-is - see [AptoideCatalogTokenRepository].
+   */
+  suspend fun getCatalogToken(packageName: String): String?
 }
 
 /**
@@ -23,8 +26,8 @@ interface CatalogTokenRepository {
  */
 class FakeCatalogTokenRepository @Inject constructor() : CatalogTokenRepository {
 
-  override suspend fun getCatalogToken(packageName: String): ByteArray? {
+  override suspend fun getCatalogToken(packageName: String): String? {
     Timber.tag("InlineInstall").d("$packageName: using FAKE catalog token")
-    return "debug-fake-catalog-token".toByteArray()
+    return "debug-fake-catalog-token"
   }
 }
