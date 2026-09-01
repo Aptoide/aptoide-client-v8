@@ -21,6 +21,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,6 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.getAppName
+import cm.aptoide.pt.extensions.isAppInstalled
 import cm.aptoide.pt.feature_home.domain.Bundle
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
@@ -90,6 +92,13 @@ private fun GamesFeedBundleContent(
   val context = LocalContext.current
   val gamesFeedAnalytics = rememberGamesFeedAnalytics()
 
+  // Show the sign-in reward card whenever the user has a reward-eligible game installed
+  // (Roblox / Free Fire), regardless of its position in the feed. If several are installed, the
+  // first by priority wins. The card itself still hides when the reward is already claimed.
+  val rewardPackageName = remember(context) {
+    PaERewardType.rewardPackages.firstOrNull { context.isAppInstalled(it) }
+  }
+
   val firstPackageName = items.firstOrNull()?.packageName
   val appIcon: Drawable? = firstPackageName?.let { rememberAppIconDrawable(it, context) }
   val appName: String? =
@@ -118,9 +127,9 @@ private fun GamesFeedBundleContent(
           horizontalArrangement = Arrangement.spacedBy(16.dp),
           contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 16.dp)
         ) {
-          if (PaERewardType.fromPackageName(firstPackageName) != null) {
+          if (rewardPackageName != null) {
             item {
-              SignInRewardCard(packageName = firstPackageName, navigate = navigate)
+              SignInRewardCard(packageName = rewardPackageName, navigate = navigate)
             }
           }
           items(items) { item ->
