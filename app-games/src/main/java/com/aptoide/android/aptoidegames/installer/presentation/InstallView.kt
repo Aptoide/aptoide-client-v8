@@ -25,9 +25,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.stateDescription
@@ -45,6 +47,7 @@ import com.aptoide.android.aptoidegames.design_system.AccentButton
 import com.aptoide.android.aptoidegames.design_system.PrimaryButton
 import com.aptoide.android.aptoidegames.design_system.PrimaryOutlinedButton
 import com.aptoide.android.aptoidegames.design_system.PrimarySmallButton
+import com.aptoide.android.aptoidegames.design_system.SecondaryOutlinedButton
 import com.aptoide.android.aptoidegames.design_system.SecondarySmallOutlinedButton
 import com.aptoide.android.aptoidegames.drawables.icons.getError
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -83,6 +86,7 @@ fun InstallView(
   onInstallStarted: () -> Unit = {},
   onCancel: () -> Unit = {},
   autoOpenAfterInstall: Boolean? = null,
+  showUninstall: Boolean = false,
 ) {
   val installViewState = installViewStates(
     app = app,
@@ -90,9 +94,11 @@ fun InstallView(
     onCancel = onCancel,
     autoOpenAfterInstall = autoOpenAfterInstall,
   )
+  val uninstallLabel = stringResource(string.uninstall_button)
 
   InstallViewContent(
     installViewState = installViewState,
+    showUninstall = showUninstall,
     modifier = modifier.clearAndSetSemantics {
       installViewState.actionLabel?.let {
         onClick(label = it) {
@@ -108,6 +114,20 @@ fun InstallView(
           true
         }
       }
+      if (showUninstall) {
+        when (val uiState = installViewState.uiState) {
+          is DownloadUiState.Outdated -> uiState.uninstall
+          is DownloadUiState.Installed -> uiState.uninstall
+          else -> null
+        }?.let { uninstall ->
+          customActions = listOf(
+            CustomAccessibilityAction(label = uninstallLabel) {
+              uninstall()
+              true
+            }
+          )
+        }
+      }
       this.contentDescription = installViewState.contentDescription
       stateDescription = installViewState.stateDescription
       liveRegion = LiveRegionMode.Assertive
@@ -121,6 +141,7 @@ private fun InstallViewContent(
   modifier: Modifier = Modifier,
   verticalSpacing: Dp = 8.dp,
   horizontalSpacing: Dp = 24.dp,
+  showUninstall: Boolean = false,
 ) = Box(
   modifier = modifier
     .fillMaxWidth()
@@ -146,11 +167,29 @@ private fun InstallViewContent(
       modifier = Modifier.fillMaxWidth(),
     )
 
-    is DownloadUiState.Outdated -> PrimaryButton(
-      title = installViewState.actionLabel,
-      onClick = state.update,
-      modifier = Modifier.fillMaxWidth(),
-    )
+    is DownloadUiState.Outdated -> if (showUninstall) {
+      Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+      ) {
+        SecondaryOutlinedButton(
+          title = stringResource(string.uninstall_button),
+          onClick = state.uninstall,
+          modifier = Modifier.weight(1f),
+        )
+        PrimaryButton(
+          title = installViewState.actionLabel,
+          onClick = state.update,
+          modifier = Modifier.weight(1f),
+        )
+      }
+    } else {
+      PrimaryButton(
+        title = installViewState.actionLabel,
+        onClick = state.update,
+        modifier = Modifier.fillMaxWidth(),
+      )
+    }
 
     is DownloadUiState.Waiting -> ProgressView(
       title = installViewState.stateDescription,
@@ -207,11 +246,29 @@ private fun InstallViewContent(
       horizontalSpacing = horizontalSpacing,
     )
 
-    is DownloadUiState.Installed -> PrimaryOutlinedButton(
-      title = installViewState.actionLabel,
-      onClick = state.open,
-      modifier = Modifier.fillMaxWidth(),
-    )
+    is DownloadUiState.Installed -> if (showUninstall) {
+      Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+      ) {
+        SecondaryOutlinedButton(
+          title = stringResource(string.uninstall_button),
+          onClick = state.uninstall,
+          modifier = Modifier.weight(1f),
+        )
+        PrimaryOutlinedButton(
+          title = installViewState.actionLabel,
+          onClick = state.open,
+          modifier = Modifier.weight(1f),
+        )
+      }
+    } else {
+      PrimaryOutlinedButton(
+        title = installViewState.actionLabel,
+        onClick = state.open,
+        modifier = Modifier.fillMaxWidth(),
+      )
+    }
 
     is DownloadUiState.Error -> Row(
       modifier = Modifier

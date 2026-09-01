@@ -163,7 +163,10 @@ fun BundlesScreen(
               viewState.bundles
             }
 
-            viewState.copy(bundles = bundles).filterHMD().bundles
+            viewState.copy(bundles = bundles)
+              .filterHMD()
+              .filterExcludedBundleTypes()
+              .bundles
           }
 
           BundlesView(
@@ -589,6 +592,9 @@ private fun BundlesViewUiState.filterHMD(): BundlesViewUiState {
     this.copy(bundles = bundles.filter { it.tag != "apps-group-hmd-controller" })
   }
 }
+
+private fun BundlesViewUiState.filterExcludedBundleTypes(): BundlesViewUiState =
+  copy(bundles = bundles.filterNot { it.type in EXCLUDED_HOME_BUNDLE_TYPES })
 
 fun List<Bundle>.injectGamesFeed(): List<Bundle> {
   val gamesFeedBundle = Bundle(

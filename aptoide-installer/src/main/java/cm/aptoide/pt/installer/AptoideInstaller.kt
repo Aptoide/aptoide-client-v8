@@ -26,6 +26,7 @@ import cm.aptoide.pt.installer.platform.InstallResult
 import cm.aptoide.pt.installer.platform.UNINSTALL_API_COMPLETE_ACTION
 import cm.aptoide.pt.installer.platform.UninstallEvents
 import cm.aptoide.pt.installer.platform.UninstallResult
+import cm.aptoide.pt.installer.platform.UpdateOwnershipPermissions
 import cm.aptoide.pt.installer.platform.copyWithProgressTo
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
@@ -35,6 +36,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import timber.log.Timber
 import java.io.File
+import java.util.Optional
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.random.Random
@@ -46,8 +48,14 @@ class AptoideInstaller @Inject constructor(
   private val installEvents: InstallEvents,
   private val uninstallEvents: UninstallEvents,
   private val installPermissions: InstallPermissions,
+  private val updateOwnershipPermissions: Optional<UpdateOwnershipPermissions>,
 ) : PackageInstaller {
   private val initialPermissionsAllowed = context.getPermissionsState()
+
+  // Some distribution channels (e.g. Google Play) reject uploads declaring
+  // ENFORCE_UPDATE_OWNERSHIP / UPDATE_PACKAGES_WITHOUT_USER_ACTION, so on those
+  // builds the manifest doesn't declare them and these APIs must not be called
+  private val canRequestUpdateOwnership = updateOwnershipPermissions.map { it.enabled }.orElse(true)
 
   init {
     // Clean up old non-preapproved sessions on app start
@@ -114,11 +122,13 @@ class AptoideInstaller @Inject constructor(
         android.content.pm.PackageInstaller
           .SessionParams(android.content.pm.PackageInstaller.SessionParams.MODE_FULL_INSTALL)
           .apply {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-              setRequestUpdateOwnership(true)
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-              setRequireUserAction(USER_ACTION_NOT_REQUIRED)
+            if (canRequestUpdateOwnership) {
+              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                setRequestUpdateOwnership(true)
+              }
+              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                setRequireUserAction(USER_ACTION_NOT_REQUIRED)
+              }
             }
             setAppPackageName(packageName)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

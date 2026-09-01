@@ -1,6 +1,7 @@
 package com.aptoide.android.aptoidegames.gamegenie.presentation
 
 import cm.aptoide.pt.feature_flags.domain.FeatureFlags
+import com.aptoide.android.aptoidegames.gamegenie.GAME_GENIE_AVAILABLE
 import kotlinx.coroutines.CancellationException
 import timber.log.Timber
 import javax.inject.Inject
@@ -13,6 +14,7 @@ class CompanionGamesCachePreloader @Inject constructor(
 ) {
 
   suspend fun initialize() {
+    if (!GAME_GENIE_AVAILABLE) return
     if (!featureFlags.getFlag("show_game_genie", false)) return
     try {
       getGameCompanionsUseCase.warmUpCache()

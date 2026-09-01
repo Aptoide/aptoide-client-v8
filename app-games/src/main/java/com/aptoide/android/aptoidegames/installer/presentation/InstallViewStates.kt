@@ -84,6 +84,8 @@ fun installViewStates(
       if (analyticsContext.currentScreen != "AppView") {
         app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(utmInfo = utmContext)
       }
+      app.campaigns?.toAptoideMMPCampaign()?.sendDownloadEvent(utmInfo = utmContext)
+      app.campaigns?.toMMPLinkerCampaign()?.sendDownloadEvent()
     }
   )
   val installerNotifications = rememberInstallerNotifications()
