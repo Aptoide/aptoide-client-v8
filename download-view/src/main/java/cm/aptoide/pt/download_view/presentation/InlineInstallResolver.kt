@@ -38,6 +38,13 @@ interface InlineInstallResolver {
   fun onInlineInstallUnavailable(app: App) {}
 
   /**
+   * Whether [app] may fall through to the regular install path when every external
+   * install stage is exhausted. When false the install ends as canceled instead -
+   * for apps that must only ever be installed externally.
+   */
+  fun allowsRegularFallback(app: App): Boolean = true
+
+  /**
    * Returns true while an external install for [packageName] is still ongoing,
    * so the UI state can be restored after the view model is recreated.
    */

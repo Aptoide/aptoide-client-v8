@@ -30,6 +30,8 @@ import cm.aptoide.pt.install_manager.dto.Constraints
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.dto.InstallAction
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
+import com.aptoide.android.aptoidegames.apkfy.isFreeFire
+import com.aptoide.android.aptoidegames.apkfy.isRoblox
 import com.aptoide.android.aptoidegames.feature_oos.OutOfSpaceDialog
 import com.aptoide.android.aptoidegames.installer.analytics.AnalyticsInstallPackageInfoMapper
 import com.aptoide.android.aptoidegames.installer.analytics.InstallAnalytics
@@ -79,7 +81,12 @@ fun installViewStates(
           installAction = if (isUpdate) InstallAction.UPDATE else InstallAction.INSTALL
         ),
         autoOpenAfterInstall = autoOpenAfterInstall,
-        installMethod = InstallAnalytics.METHOD_PLAY_INLINE,
+        installMethod = if (app.isFreeFire() || app.isRoblox()) {
+          // Overlay-only titles: a Play details referral, not a Catalog Access install
+          InstallAnalytics.METHOD_PLAY_OVERLAY
+        } else {
+          InstallAnalytics.METHOD_PLAY_INLINE
+        },
       )
       if (analyticsContext.currentScreen != "AppView") {
         app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(utmInfo = utmContext)

@@ -8,6 +8,8 @@ import cm.aptoide.pt.extensions.compatVersionCode
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.install_manager.InstallManager
 import cm.aptoide.pt.install_manager.Task
+import com.aptoide.android.aptoidegames.apkfy.isFreeFire
+import com.aptoide.android.aptoidegames.apkfy.isRoblox
 import com.aptoide.android.aptoidegames.installer.AppDetailsUseCase
 import com.aptoide.android.aptoidegames.installer.analytics.InstallAnalytics
 import com.aptoide.android.aptoidegames.installer.notifications.ImageDownloader
@@ -56,6 +58,8 @@ class PlayInlineInstallResolver @Inject constructor(
   private val abortedInlineInstalls: MutableSet<String> = ConcurrentHashMap.newKeySet()
 
   override suspend fun resolveInlineInstall(app: App): Intent? {
+    if (app.installsThroughDetailsOverlay()) return resolveDetailsOverlay(app)
+
     if (app.packageName in abortedInlineInstalls) {
       log("${app.packageName}: previous inline attempt aborted -> regular install path")
       return null
@@ -79,11 +83,32 @@ class PlayInlineInstallResolver @Inject constructor(
     }
   }
 
-  // No resolveFallbackInstall override: catalog apps use Google's documented method or
+  /**
+   * Free Fire, Free Fire MAX and Roblox are distributed exclusively through Play's app
+   * details overlay on this build: a token-less referral to a regular Play install,
+   * reached through the apkfy flow and kept out of the searchable catalog. They must
+   * never go through Aptoide's own install path here (see [allowsRegularFallback]) nor
+   * through the Catalog Access route - they are not part of the catalog export.
+   */
+  private fun resolveDetailsOverlay(app: App): Intent? = buildPlayIntent(
+    url = "$PLAY_DETAILS_URL?id=${app.packageName}&referrer=$PLAY_REFERRER",
+    catalogToken = null,
+  ).takeIf {
+    (it.resolveActivity(context.packageManager) != null).also { resolves ->
+      log(
+        if (resolves) "${app.packageName}: details-overlay install intent ready"
+        else "${app.packageName}: Play Store does not resolve the details overlay"
+      )
+    }
+  }
+
+  // Overlay-only titles never fall back to Aptoide's own install path - a failed or
+  // dismissed overlay is a canceled install, and retries go through the overlay again
+  override fun allowsRegularFallback(app: App): Boolean = !app.installsThroughDetailsOverlay()
+
+  // No resolveFallbackInstall override: CATALOG apps use Google's documented method or
   // Aptoide's own install path, never Play's public details overlay - developers who
   // opted out of Catalog Access must not surface through us via the generic overlay.
-  // The overlay route is reserved for the rewarded-ads flow (its own allowlist, no
-  // fallback), tracked separately.
 
   private fun buildPlayIntent(
     url: String,
@@ -110,7 +135,7 @@ class PlayInlineInstallResolver @Inject constructor(
     // future attempts - only invisible ladder rejections abort it for the session
     log("${app.packageName}: inline install canceled by the user")
     ongoingInstalls.remove(app.packageName)?.cancel()
-    installAnalytics.sendInlineInstallCanceledEvent(app)
+    installAnalytics.sendInlineInstallCanceledEvent(app, app.installMethod())
     notificationsBuilder.showInstallationStateNotification(
       packageName = app.packageName,
       appDetails = null,
@@ -159,7 +184,7 @@ class PlayInlineInstallResolver @Inject constructor(
     }
 
     log("${app.packageName}: package installed by Play, showing installed notification")
-    installAnalytics.sendInlineInstallCompletedEvent(app)
+    installAnalytics.sendInlineInstallCompletedEvent(app, app.installMethod())
     notificationsBuilder.showInstallationStateNotification(
       packageName = app.packageName,
       appDetails = appDetails,
@@ -176,10 +201,21 @@ class PlayInlineInstallResolver @Inject constructor(
     const val PLAY_STORE_PACKAGE = "com.android.vending"
     const val PLAY_DEEP_LINK_URL = "https://play.google.com/d"
 
+    // Play's public app details overlay - see resolveDetailsOverlay
+    const val PLAY_DETAILS_URL = "https://play.google.com/store/apps/details"
+
     // Delivered by Play to the installed app via the Install Referrer API,
     // attributing the install to Aptoide
     const val PLAY_REFERRER = "aptoidegames-play"
 
     const val INLINE_INSTALL_TAG = "InlineInstall"
   }
+}
+
+fun App.installsThroughDetailsOverlay(): Boolean = isFreeFire() || isRoblox()
+
+private fun App.installMethod(): String = if (installsThroughDetailsOverlay()) {
+  InstallAnalytics.METHOD_PLAY_OVERLAY
+} else {
+  InstallAnalytics.METHOD_PLAY_INLINE
 }

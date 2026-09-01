@@ -17,8 +17,8 @@ import cm.aptoide.pt.install_manager.dto.Constraints
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.environment.NetworkConnection
 import cm.aptoide.pt.network_listener.NetworkConnectionImpl
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
@@ -31,6 +31,7 @@ import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -59,7 +60,10 @@ class DownloadViewModel(
 
   private val viewModelState = MutableStateFlow<DownloadUiState?>(null)
 
-  private val inlineInstallIntents = MutableSharedFlow<InlineInstallLaunch>(extraBufferCapacity = 1)
+  // A Channel, not a SharedFlow: screens composing several install views for the same app
+  // (e.g. apkfy button + progress text) register one collector each, and the launch must
+  // reach exactly one of them or the install UI is launched multiple times
+  private val inlineInstallIntents = Channel<InlineInstallLaunch>(Channel.BUFFERED)
 
   private val inlineInstallOngoing = MutableStateFlow(
     inlineInstallResolver?.isInlineInstallOngoing(app.packageName) == true
@@ -79,7 +83,7 @@ class DownloadViewModel(
       viewModelState.value
     )
 
-  val inlineInstallEvents: Flow<InlineInstallLaunch> = inlineInstallIntents
+  val inlineInstallEvents: Flow<InlineInstallLaunch> = inlineInstallIntents.receiveAsFlow()
 
   init {
     val packageStates = appInstaller.packageInfoFlow.map { info ->
@@ -278,7 +282,7 @@ class DownloadViewModel(
     inlineConstraintsResolver = constraintsResolver
     inlineInstallOngoing.value = true
     resolver.onInlineInstallStarted(app)
-    inlineInstallIntents.emit(InlineInstallLaunch(intent = intent, isUpdate = inlineIsUpdate))
+    inlineInstallIntents.send(InlineInstallLaunch(intent = intent, isUpdate = inlineIsUpdate))
     return true
   }
 
@@ -324,21 +328,28 @@ class DownloadViewModel(
       .d("${app.packageName}: instant close -> launching fallback install stage")
     inlineStage = InlineStage.FALLBACK
     inlineLaunchTime = SystemClock.elapsedRealtime()
-    inlineInstallIntents.emit(
+    inlineInstallIntents.send(
       InlineInstallLaunch(intent = intent, isUpdate = inlineIsUpdate, isFallback = true)
     )
     return true
   }
 
   /**
-   * All external install stages were rejected without the user ever seeing anything,
-   * so their install intent still stands and the regular install path continues.
+   * All external install stages were rejected without the user ever seeing anything.
+   * The user's install intent still stands, so the regular install path continues -
+   * unless [app] must only ever install externally, in which case it ends as canceled.
    */
   private suspend fun exhaustInlineLadder() {
-    Timber.tag(INLINE_INSTALL_TAG)
-      .d("${app.packageName}: all inline stages rejected -> regular install path")
     inlineStage = null
     inlineInstallOngoing.value = false
+    if (inlineInstallResolver?.allowsRegularFallback(app) == false) {
+      Timber.tag(INLINE_INSTALL_TAG)
+        .d("${app.packageName}: all inline stages rejected, no regular fallback allowed -> canceled")
+      inlineInstallResolver.onInlineInstallCanceled(app)
+      return
+    }
+    Timber.tag(INLINE_INSTALL_TAG)
+      .d("${app.packageName}: all inline stages rejected -> regular install path")
     inlineInstallResolver?.onInlineInstallUnavailable(app)
     inlineConstraintsResolver?.let { startRegularInstall(it) }
   }
