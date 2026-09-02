@@ -1,22 +1,15 @@
 package com.aptoide.android.aptoidegames.apkfy.analytics
 
-import android.content.Context
-import cm.aptoide.pt.feature_apkfy.domain.ApkfyModel
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.UserProperty
 import com.aptoide.android.aptoidegames.analytics.mapOfNonNull
-import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 class ApkfyAnalytics @Inject constructor(
   private val genericAnalytics: GenericAnalytics,
   private val biAnalytics: BIAnalytics,
-  @ApplicationContext private val context: Context,
 ) {
-
-  fun setGuestUIDUserProperty(guestUid: String) =
-    biAnalytics.setUserProperties(UserProperty("aptoide_mmp_guest_id", guestUid))
 
   fun sendApkfySuccessEvent(
     data: String,
@@ -73,60 +66,7 @@ class ApkfyAnalytics @Inject constructor(
   fun sendExp83OpenRobloxClick() =
     genericAnalytics.logEvent("exp83_open_roblox_click", params = emptyMap())
 
-  fun setApkfyUTMProperties(apkfyModel: ApkfyModel) {
-    apkfyModel.run {
-      if (hasUTMs()) {
-        biAnalytics.setUTMProperties(
-          utmSource = utmSource,
-          utmMedium = utmMedium,
-          utmCampaign = utmCampaign,
-          utmTerm = utmTerm,
-          utmContent = utmContent,
-          utmOemId = oemId,
-          utmPackageName = packageName ?: APKFY_BUT_NO_APP
-        )
-      } else if (hasApkfy()) {
-        if (packageName == context.packageName) {
-          biAnalytics.setUTMProperties(
-            utmSource = UTM_PROPERTY_DIRECT_WITHOUT_UTMS,
-            utmMedium = UTM_PROPERTY_DIRECT_WITHOUT_UTMS,
-            utmCampaign = UTM_PROPERTY_DIRECT_WITHOUT_UTMS,
-            utmTerm = UTM_PROPERTY_DIRECT_WITHOUT_UTMS,
-            utmContent = UTM_PROPERTY_DIRECT_WITHOUT_UTMS,
-            utmOemId = oemId ?: UTM_PROPERTY_DIRECT_WITHOUT_UTMS,
-            utmPackageName = packageName
-          )
-        } else {
-          biAnalytics.setUTMProperties(
-            utmSource = UTM_PROPERTY_APKFY_WITHOUT_UTMS,
-            utmMedium = UTM_PROPERTY_APKFY_WITHOUT_UTMS,
-            utmCampaign = UTM_PROPERTY_APKFY_WITHOUT_UTMS,
-            utmTerm = UTM_PROPERTY_APKFY_WITHOUT_UTMS,
-            utmContent = UTM_PROPERTY_APKFY_WITHOUT_UTMS,
-            utmOemId = oemId ?: UTM_PROPERTY_APKFY_WITHOUT_UTMS,
-            utmPackageName = packageName
-          )
-        }
-      } else {
-        biAnalytics.setUTMProperties(
-          utmSource = UTM_PROPERTY_NO_APKFY,
-          utmMedium = UTM_PROPERTY_NO_APKFY,
-          utmCampaign = UTM_PROPERTY_NO_APKFY,
-          utmTerm = UTM_PROPERTY_NO_APKFY,
-          utmContent = UTM_PROPERTY_NO_APKFY,
-          utmOemId = UTM_PROPERTY_NO_APKFY,
-          utmPackageName = UTM_PROPERTY_NO_APKFY
-        )
-      }
-    }
-  }
-
   companion object {
-    private const val UTM_PROPERTY_NO_APKFY = "NO_APKFY"
-    private const val UTM_PROPERTY_APKFY_WITHOUT_UTMS = "APKFY_BUT_NO_UTM"
-    private const val APKFY_BUT_NO_APP = "APKFY_BUT_NO_APP"
-    private const val UTM_PROPERTY_DIRECT_WITHOUT_UTMS = "DIRECT_BUT_NO_UTM"
-
     private const val P_STATUS = "status"
     private const val P_DATA = "data"
     private const val P_ERROR_MESSAGE = "error_message"

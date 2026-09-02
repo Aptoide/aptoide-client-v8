@@ -9,7 +9,7 @@ import cm.aptoide.pt.feature_campaigns.CampaignRepository
 import cm.aptoide.pt.feature_campaigns.CampaignTuple
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.LocalIdsRepository
-import com.aptoide.android.aptoidegames.apkfy.analytics.ApkfyManagerProbe
+import com.aptoide.android.aptoidegames.attribution.domain.AttributionManager
 import com.aptoide.android.aptoidegames.feature_rtb.data.RTBApp
 import com.aptoide.android.aptoidegames.network.repository.AdvertisingIdsRepository
 import kotlinx.coroutines.CoroutineScope
@@ -34,7 +34,7 @@ class AptoideRTBRepository @Inject constructor(
         return@withContext it
       }
 
-      val guestUid = aptoideIdsRepository.observeId(ApkfyManagerProbe.GUEST_UID_KEY)
+      val guestUid = aptoideIdsRepository.observeId(AttributionManager.GUEST_UID_KEY)
         .first { it.isNotEmpty() }
 
       val result = rtbApi.getApps(
