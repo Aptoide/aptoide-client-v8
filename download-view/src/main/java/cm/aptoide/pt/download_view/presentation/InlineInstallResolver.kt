@@ -19,11 +19,30 @@ interface InlineInstallResolver {
    */
   suspend fun resolveInlineInstall(app: App): Intent?
 
+  /**
+   * Returns a ready-to-launch fallback [Intent] for when the [resolveInlineInstall] launch
+   * was rejected without any UI being shown, or null when no fallback stage exists.
+   */
+  suspend fun resolveFallbackInstall(app: App): Intent? = null
+
   /** Called when the external install UI was launched for [app]. */
   fun onInlineInstallStarted(app: App) {}
 
-  /** Called when the external install UI was closed without [app] being installed. */
+  /** Called when the external install UI was visibly dismissed without [app] being installed. */
   fun onInlineInstallCanceled(app: App) {}
+
+  /**
+   * Called when every external install stage for [app] was rejected without showing any UI,
+   * right before the install falls through to the regular install path.
+   */
+  fun onInlineInstallUnavailable(app: App) {}
+
+  /**
+   * Whether [app] may fall through to the regular install path when every external
+   * install stage is exhausted. When false the install ends as canceled instead -
+   * for apps that must only ever be installed externally.
+   */
+  fun allowsRegularFallback(app: App): Boolean = true
 
   /**
    * Returns true while an external install for [packageName] is still ongoing,

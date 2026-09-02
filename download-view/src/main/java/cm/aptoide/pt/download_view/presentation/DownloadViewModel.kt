@@ -1,6 +1,7 @@
 package cm.aptoide.pt.download_view.presentation
 
 import android.content.Intent
+import android.os.SystemClock
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.extensions.compatVersionCode
@@ -16,8 +17,8 @@ import cm.aptoide.pt.install_manager.dto.Constraints
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.environment.NetworkConnection
 import cm.aptoide.pt.network_listener.NetworkConnectionImpl
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
@@ -30,6 +31,7 @@ import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -41,6 +43,7 @@ typealias ConstraintsResolver = (missingSpace: Long, onResolve: (Constraints) ->
 data class InlineInstallLaunch(
   val intent: Intent,
   val isUpdate: Boolean,
+  val isFallback: Boolean = false,
 )
 
 @Suppress("OPT_IN_USAGE")
@@ -57,11 +60,22 @@ class DownloadViewModel(
 
   private val viewModelState = MutableStateFlow<DownloadUiState?>(null)
 
-  private val inlineInstallIntents = MutableSharedFlow<InlineInstallLaunch>(extraBufferCapacity = 1)
+  // A Channel, not a SharedFlow: screens composing several install views for the same app
+  // (e.g. apkfy button + progress text) register one collector each, and the launch must
+  // reach exactly one of them or the install UI is launched multiple times
+  private val inlineInstallIntents = Channel<InlineInstallLaunch>(Channel.BUFFERED)
 
   private val inlineInstallOngoing = MutableStateFlow(
     inlineInstallResolver?.isInlineInstallOngoing(app.packageName) == true
   )
+
+  private enum class InlineStage { PRIMARY, FALLBACK }
+
+  private var inlineStage: InlineStage? = null
+  private var inlineLaunchTime: Long = 0
+  private var inlineIsUpdate: Boolean = false
+  private var inlineConstraintsResolver: ConstraintsResolver? = null
+  private var pendingFallbackContinuation = false
 
   val uiState = viewModelState
     .stateIn(
@@ -70,7 +84,7 @@ class DownloadViewModel(
       viewModelState.value
     )
 
-  val inlineInstallEvents: Flow<InlineInstallLaunch> = inlineInstallIntents
+  val inlineInstallEvents: Flow<InlineInstallLaunch> = inlineInstallIntents.receiveAsFlow()
 
   init {
     val packageStates = appInstaller.packageInfoFlow.map { info ->
@@ -224,28 +238,43 @@ class DownloadViewModel(
 
   private fun install(resolver: ConstraintsResolver) {
     viewModelScope.launch {
-      if (divertToInlineInstall()) return@launch
-      try {
-        installPackageInfoMapper.map(app)
-      } catch (_: Exception) {
-        viewModelState.update {
-          DownloadUiState.Error(retryWith = ::install)
-        }
-        null
-      }?.let {
-        resolver(installManager.getMissingFreeSpaceFor(it)) { constraints ->
-          install(it, constraints)
-        }
+      if (divertToInlineInstall(resolver)) return@launch
+      startRegularInstall(resolver)
+    }
+  }
+
+  private suspend fun startRegularInstall(resolver: ConstraintsResolver) {
+    try {
+      installPackageInfoMapper.map(app)
+    } catch (_: Exception) {
+      // The resolver never runs, so a pending fallback continuation was not consumed and
+      // must not leak into suppressing a later, genuinely new install action
+      pendingFallbackContinuation = false
+      viewModelState.update {
+        DownloadUiState.Error(retryWith = ::install)
+      }
+      null
+    }?.let {
+      resolver(installManager.getMissingFreeSpaceFor(it)) { constraints ->
+        install(it, constraints)
       }
     }
   }
+
+  /**
+   * True exactly once after the inline ladder is exhausted and the same user action
+   * continues through the regular install path - its start was already reported at the
+   * inline launch, so install-start side effects (analytics, callbacks) must not repeat.
+   */
+  fun consumeFallbackContinuation(): Boolean =
+    pendingFallbackContinuation.also { pendingFallbackContinuation = false }
 
   /**
    * Emits the external install intent (e.g. Google Play inline install) instead of
    * running the regular install path. Any resolution failure falls back to the
    * regular install path.
    */
-  private suspend fun divertToInlineInstall(): Boolean {
+  private suspend fun divertToInlineInstall(constraintsResolver: ConstraintsResolver): Boolean {
     val resolver = inlineInstallResolver ?: return false
     Timber.tag(INLINE_INSTALL_TAG).d("Resolving install diversion for ${app.packageName}")
     val intent = runCatching { resolver.resolveInlineInstall(app) }
@@ -259,33 +288,93 @@ class DownloadViewModel(
         return false
       }
     Timber.tag(INLINE_INSTALL_TAG).d("Diverting ${app.packageName} to inline install")
-    val isUpdate = viewModelState.value is DownloadUiState.Outdated
+    inlineStage = InlineStage.PRIMARY
+    inlineLaunchTime = SystemClock.elapsedRealtime()
+    inlineIsUpdate = viewModelState.value is DownloadUiState.Outdated
+    inlineConstraintsResolver = constraintsResolver
     inlineInstallOngoing.value = true
     resolver.onInlineInstallStarted(app)
-    inlineInstallIntents.emit(InlineInstallLaunch(intent = intent, isUpdate = isUpdate))
+    inlineInstallIntents.send(InlineInstallLaunch(intent = intent, isUpdate = inlineIsUpdate))
     return true
   }
 
   /**
-   * The external install UI closing is the only cancellation signal available, so unless
-   * the app got installed meanwhile the ongoing external install is considered canceled.
+   * The external install UI closing is the only signal available - there is no error
+   * nor cancellation reason. Closing time tells the cases apart: an instant close means
+   * the launch was rejected without any UI being shown (e.g. Play Store rejecting the
+   * deep link), so the next install stage runs automatically; a later close means the
+   * user saw the sheet and dismissed it, which counts as a cancellation.
    */
   fun onInlineInstallClosed() {
     viewModelScope.launch {
       if (!inlineInstallOngoing.value) return@launch
       val installed = appInstaller.packageInfoFlow.first()
         ?.let { it.compatVersionCode >= app.versionCode } == true
-      Timber.tag(INLINE_INSTALL_TAG)
-        .d("Inline install UI closed for ${app.packageName}, installed=$installed")
-      if (!installed) {
+      val stage = inlineStage
+      val elapsedMillis = SystemClock.elapsedRealtime() - inlineLaunchTime
+      Timber.tag(INLINE_INSTALL_TAG).d(
+        "Inline install UI closed for ${app.packageName}, " +
+          "installed=$installed, stage=$stage, elapsed=${elapsedMillis}ms"
+      )
+      if (installed) return@launch
+      if (elapsedMillis < INSTANT_CLOSE_THRESHOLD_MILLIS && stage != null) {
+        if (stage == InlineStage.PRIMARY && launchInlineFallback()) return@launch
+        exhaustInlineLadder()
+      } else {
+        inlineStage = null
         inlineInstallOngoing.value = false
         inlineInstallResolver?.onInlineInstallCanceled(app)
       }
     }
   }
 
+  private suspend fun launchInlineFallback(): Boolean {
+    val intent = runCatching { inlineInstallResolver?.resolveFallbackInstall(app) }
+      .onFailure {
+        Timber.tag(INLINE_INSTALL_TAG)
+          .w(it, "Fallback resolution failed for ${app.packageName}")
+      }
+      .getOrNull()
+      ?: return false
+    Timber.tag(INLINE_INSTALL_TAG)
+      .d("${app.packageName}: instant close -> launching fallback install stage")
+    inlineStage = InlineStage.FALLBACK
+    inlineLaunchTime = SystemClock.elapsedRealtime()
+    inlineInstallIntents.send(
+      InlineInstallLaunch(intent = intent, isUpdate = inlineIsUpdate, isFallback = true)
+    )
+    return true
+  }
+
+  /**
+   * All external install stages were rejected without the user ever seeing anything.
+   * The user's install intent still stands, so the regular install path continues -
+   * unless [app] must only ever install externally, in which case it ends as canceled.
+   */
+  private suspend fun exhaustInlineLadder() {
+    inlineStage = null
+    inlineInstallOngoing.value = false
+    if (inlineInstallResolver?.allowsRegularFallback(app) == false) {
+      Timber.tag(INLINE_INSTALL_TAG)
+        .d("${app.packageName}: all inline stages rejected, no regular fallback allowed -> canceled")
+      inlineInstallResolver.onInlineInstallCanceled(app)
+      return
+    }
+    Timber.tag(INLINE_INSTALL_TAG)
+      .d("${app.packageName}: all inline stages rejected -> regular install path")
+    inlineInstallResolver?.onInlineInstallUnavailable(app)
+    inlineConstraintsResolver?.let {
+      pendingFallbackContinuation = true
+      startRegularInstall(it)
+    }
+  }
+
   companion object {
     internal const val INLINE_INSTALL_TAG = "InlineInstall"
+
+    // An invisible rejection (transparent activity finishing on its own) reports back in
+    // well under a second; a sheet a user actually saw and dismissed takes several.
+    private const val INSTANT_CLOSE_THRESHOLD_MILLIS = 2_000L
   }
 
   private fun install(

@@ -13,7 +13,10 @@ class AptoideCatalogTokenRepository @Inject constructor(
   private val playInlineConfigApi: PlayInlineConfigApi,
 ) : CatalogTokenRepository {
 
-  override suspend fun getCatalogToken(packageName: String): ByteArray? = runCatching {
+  // Passed to Play as-is: Google support confirmed catalog_token is a String extra
+  // (their docs wrongly showed byte[] until 2026-08; a byte[] extra makes Finsky read
+  // null and kill the half-sheet with a misleading "PITH: called from wrong URI" log)
+  override suspend fun getCatalogToken(packageName: String): String? = runCatching {
     withTimeout(TOKEN_FETCH_TIMEOUT_MILLIS) {
       playInlineConfigApi.getPlayInlineConfig(packageName)
     }
@@ -24,9 +27,6 @@ class AptoideCatalogTokenRepository @Inject constructor(
     .getOrNull()
     ?.catalogToken
     ?.takeIf { it.isNotBlank() }
-    // TODO(inline-installs): confirm with a real export token whether the backend serves it
-    //  Base64-encoded (protobuf bytes) and needs decoding before being passed to Play
-    ?.toByteArray()
 
   private companion object {
     const val INLINE_INSTALL_TAG = "InlineInstall"

@@ -18,6 +18,7 @@ import cm.aptoide.pt.download_view.presentation.DownloadUiState
 import cm.aptoide.pt.download_view.presentation.ExecutionBlocker.CONNECTION
 import cm.aptoide.pt.download_view.presentation.ExecutionBlocker.QUEUE
 import cm.aptoide.pt.download_view.presentation.ExecutionBlocker.UNMETERED
+import cm.aptoide.pt.download_view.presentation.rememberConsumeInlineFallback
 import cm.aptoide.pt.download_view.presentation.rememberDownloadState
 import cm.aptoide.pt.extensions.hidable
 import cm.aptoide.pt.extensions.isActiveNetworkMetered
@@ -30,6 +31,8 @@ import cm.aptoide.pt.install_manager.dto.Constraints
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.dto.InstallAction
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
+import com.aptoide.android.aptoidegames.apkfy.isFreeFire
+import com.aptoide.android.aptoidegames.apkfy.isRoblox
 import com.aptoide.android.aptoidegames.feature_oos.OutOfSpaceDialog
 import com.aptoide.android.aptoidegames.installer.analytics.AnalyticsInstallPackageInfoMapper
 import com.aptoide.android.aptoidegames.installer.analytics.InstallAnalytics
@@ -79,15 +82,29 @@ fun installViewStates(
           installAction = if (isUpdate) InstallAction.UPDATE else InstallAction.INSTALL
         ),
         autoOpenAfterInstall = autoOpenAfterInstall,
-        installMethod = InstallAnalytics.METHOD_PLAY_INLINE,
+        installMethod = if (app.isFreeFire() || app.isRoblox()) {
+          // Overlay-only titles: a Play details referral, not a Catalog Access install
+          InstallAnalytics.METHOD_PLAY_OVERLAY
+        } else {
+          InstallAnalytics.METHOD_PLAY_INLINE
+        },
       )
       if (analyticsContext.currentScreen != "AppView") {
         app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(utmInfo = utmContext)
       }
       app.campaigns?.toAptoideMMPCampaign()?.sendDownloadEvent(utmInfo = utmContext)
       app.campaigns?.toMMPLinkerCampaign()?.sendDownloadEvent()
+
+      // The regular path reports install start when the constraints resolver resolves,
+      // which diverted installs never reach - without this, screens reacting to install
+      // start (e.g. apkfy's Play & Earn reward routing) miss Play-side installs entirely
+      onInstallStarted()
     }
   )
+  // True exactly once when a rejected inline install continues through the regular path:
+  // that start was already reported at the inline launch above, so the click/campaign
+  // analytics and onInstallStarted must not fire a second time for the same user action
+  val consumeInlineFallback = rememberConsumeInlineFallback(app)
   val installerNotifications = rememberInstallerNotifications()
   val (saveAppDetails) = rememberSaveAppDetails()
   val downloadOnlyOverWifi = rememberDownloadOverWifi()
@@ -110,20 +127,22 @@ fun installViewStates(
         null -> null
         is DownloadUiState.Install -> DownloadUiState.Install(
           resolver = resolver.onResolvedNotNull {
-            installAnalytics.sendClickEvent(
-              app = app,
-              networkType = context.getNetworkType(),
-              analyticsContext = analyticsContext.copy(installAction = InstallAction.INSTALL),
-              autoOpenAfterInstall = autoOpenAfterInstall,
-            )
+            if (!consumeInlineFallback()) {
+              installAnalytics.sendClickEvent(
+                app = app,
+                networkType = context.getNetworkType(),
+                analyticsContext = analyticsContext.copy(installAction = InstallAction.INSTALL),
+                autoOpenAfterInstall = autoOpenAfterInstall,
+              )
 
-            if (analyticsContext.currentScreen != "AppView") {
-              app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(utmInfo = utmContext)
+              if (analyticsContext.currentScreen != "AppView") {
+                app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(utmInfo = utmContext)
+              }
+              app.campaigns?.toAptoideMMPCampaign()?.sendDownloadEvent(utmInfo = utmContext)
+              app.campaigns?.toMMPLinkerCampaign()?.sendDownloadEvent()
+
+              onInstallStarted()
             }
-            app.campaigns?.toAptoideMMPCampaign()?.sendDownloadEvent(utmInfo = utmContext)
-            app.campaigns?.toMMPLinkerCampaign()?.sendDownloadEvent()
-
-            onInstallStarted()
             scheduledInstallListener.listenToWifiStart(app.packageName)
             saveAppDetails(app) {
               installerNotifications.onInstallationQueued(app.packageName)
@@ -139,19 +158,21 @@ fun installViewStates(
         is DownloadUiState.Outdated -> DownloadUiState.Outdated(
           open = downloadUiState.open,
           resolver = resolver.onResolvedNotNull {
-            installAnalytics.sendClickEvent(
-              app = app,
-              networkType = context.getNetworkType(),
-              analyticsContext = analyticsContext.copy(installAction = InstallAction.UPDATE),
-            )
+            if (!consumeInlineFallback()) {
+              installAnalytics.sendClickEvent(
+                app = app,
+                networkType = context.getNetworkType(),
+                analyticsContext = analyticsContext.copy(installAction = InstallAction.UPDATE),
+              )
 
-            if (analyticsContext.currentScreen != "AppView") {
-              app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(utmInfo = utmContext)
+              if (analyticsContext.currentScreen != "AppView") {
+                app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(utmInfo = utmContext)
+              }
+              app.campaigns?.toAptoideMMPCampaign()?.sendDownloadEvent(utmInfo = utmContext)
+              app.campaigns?.toMMPLinkerCampaign()?.sendDownloadEvent()
+
+              onInstallStarted()
             }
-            app.campaigns?.toAptoideMMPCampaign()?.sendDownloadEvent(utmInfo = utmContext)
-            app.campaigns?.toMMPLinkerCampaign()?.sendDownloadEvent()
-
-            onInstallStarted()
             scheduledInstallListener.listenToWifiStart(app.packageName)
             saveAppDetails(app) {
               installerNotifications.onInstallationQueued(app.packageName)

@@ -338,24 +338,24 @@ class InstallAnalyticsImpl(
 
   // The install happens inside the Play half-sheet, so there is no InstallPackageInfo and
   // no BI install event for the inline flow — only the generic funnel events
-  override fun sendInlineInstallCompletedEvent(app: App) {
+  override fun sendInlineInstallCompletedEvent(app: App, installMethod: String) {
     genericAnalytics.logEvent(
       name = "app_installed",
       params = mapOfNonNull(
         *app.toGenericParameters(),
         P_STATUS to "success",
-        P_INSTALL_METHOD to InstallAnalytics.METHOD_PLAY_INLINE,
+        P_INSTALL_METHOD to installMethod,
       )
     )
   }
 
-  override fun sendInlineInstallCanceledEvent(app: App) {
+  override fun sendInlineInstallCanceledEvent(app: App, installMethod: String) {
     genericAnalytics.logEvent(
       name = "app_installed",
       params = mapOfNonNull(
         *app.toGenericParameters(),
         P_STATUS to "cancel",
-        P_INSTALL_METHOD to InstallAnalytics.METHOD_PLAY_INLINE,
+        P_INSTALL_METHOD to installMethod,
       )
     )
   }
