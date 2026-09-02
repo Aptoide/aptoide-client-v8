@@ -18,6 +18,7 @@ import cm.aptoide.pt.download_view.presentation.DownloadUiState
 import cm.aptoide.pt.download_view.presentation.ExecutionBlocker.CONNECTION
 import cm.aptoide.pt.download_view.presentation.ExecutionBlocker.QUEUE
 import cm.aptoide.pt.download_view.presentation.ExecutionBlocker.UNMETERED
+import cm.aptoide.pt.download_view.presentation.rememberConsumeInlineFallback
 import cm.aptoide.pt.download_view.presentation.rememberDownloadState
 import cm.aptoide.pt.extensions.hidable
 import cm.aptoide.pt.extensions.isActiveNetworkMetered
@@ -100,6 +101,10 @@ fun installViewStates(
       onInstallStarted()
     }
   )
+  // True exactly once when a rejected inline install continues through the regular path:
+  // that start was already reported at the inline launch above, so the click/campaign
+  // analytics and onInstallStarted must not fire a second time for the same user action
+  val consumeInlineFallback = rememberConsumeInlineFallback(app)
   val installerNotifications = rememberInstallerNotifications()
   val (saveAppDetails) = rememberSaveAppDetails()
   val downloadOnlyOverWifi = rememberDownloadOverWifi()
@@ -122,20 +127,22 @@ fun installViewStates(
         null -> null
         is DownloadUiState.Install -> DownloadUiState.Install(
           resolver = resolver.onResolvedNotNull {
-            installAnalytics.sendClickEvent(
-              app = app,
-              networkType = context.getNetworkType(),
-              analyticsContext = analyticsContext.copy(installAction = InstallAction.INSTALL),
-              autoOpenAfterInstall = autoOpenAfterInstall,
-            )
+            if (!consumeInlineFallback()) {
+              installAnalytics.sendClickEvent(
+                app = app,
+                networkType = context.getNetworkType(),
+                analyticsContext = analyticsContext.copy(installAction = InstallAction.INSTALL),
+                autoOpenAfterInstall = autoOpenAfterInstall,
+              )
 
-            if (analyticsContext.currentScreen != "AppView") {
-              app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(utmInfo = utmContext)
+              if (analyticsContext.currentScreen != "AppView") {
+                app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(utmInfo = utmContext)
+              }
+              app.campaigns?.toAptoideMMPCampaign()?.sendDownloadEvent(utmInfo = utmContext)
+              app.campaigns?.toMMPLinkerCampaign()?.sendDownloadEvent()
+
+              onInstallStarted()
             }
-            app.campaigns?.toAptoideMMPCampaign()?.sendDownloadEvent(utmInfo = utmContext)
-            app.campaigns?.toMMPLinkerCampaign()?.sendDownloadEvent()
-
-            onInstallStarted()
             scheduledInstallListener.listenToWifiStart(app.packageName)
             saveAppDetails(app) {
               installerNotifications.onInstallationQueued(app.packageName)
@@ -151,19 +158,21 @@ fun installViewStates(
         is DownloadUiState.Outdated -> DownloadUiState.Outdated(
           open = downloadUiState.open,
           resolver = resolver.onResolvedNotNull {
-            installAnalytics.sendClickEvent(
-              app = app,
-              networkType = context.getNetworkType(),
-              analyticsContext = analyticsContext.copy(installAction = InstallAction.UPDATE),
-            )
+            if (!consumeInlineFallback()) {
+              installAnalytics.sendClickEvent(
+                app = app,
+                networkType = context.getNetworkType(),
+                analyticsContext = analyticsContext.copy(installAction = InstallAction.UPDATE),
+              )
 
-            if (analyticsContext.currentScreen != "AppView") {
-              app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(utmInfo = utmContext)
+              if (analyticsContext.currentScreen != "AppView") {
+                app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(utmInfo = utmContext)
+              }
+              app.campaigns?.toAptoideMMPCampaign()?.sendDownloadEvent(utmInfo = utmContext)
+              app.campaigns?.toMMPLinkerCampaign()?.sendDownloadEvent()
+
+              onInstallStarted()
             }
-            app.campaigns?.toAptoideMMPCampaign()?.sendDownloadEvent(utmInfo = utmContext)
-            app.campaigns?.toMMPLinkerCampaign()?.sendDownloadEvent()
-
-            onInstallStarted()
             scheduledInstallListener.listenToWifiStart(app.packageName)
             saveAppDetails(app) {
               installerNotifications.onInstallationQueued(app.packageName)

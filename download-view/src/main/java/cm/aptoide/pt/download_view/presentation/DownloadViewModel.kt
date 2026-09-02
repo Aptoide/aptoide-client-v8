@@ -75,6 +75,7 @@ class DownloadViewModel(
   private var inlineLaunchTime: Long = 0
   private var inlineIsUpdate: Boolean = false
   private var inlineConstraintsResolver: ConstraintsResolver? = null
+  private var pendingFallbackContinuation = false
 
   val uiState = viewModelState
     .stateIn(
@@ -246,6 +247,9 @@ class DownloadViewModel(
     try {
       installPackageInfoMapper.map(app)
     } catch (_: Exception) {
+      // The resolver never runs, so a pending fallback continuation was not consumed and
+      // must not leak into suppressing a later, genuinely new install action
+      pendingFallbackContinuation = false
       viewModelState.update {
         DownloadUiState.Error(retryWith = ::install)
       }
@@ -256,6 +260,14 @@ class DownloadViewModel(
       }
     }
   }
+
+  /**
+   * True exactly once after the inline ladder is exhausted and the same user action
+   * continues through the regular install path - its start was already reported at the
+   * inline launch, so install-start side effects (analytics, callbacks) must not repeat.
+   */
+  fun consumeFallbackContinuation(): Boolean =
+    pendingFallbackContinuation.also { pendingFallbackContinuation = false }
 
   /**
    * Emits the external install intent (e.g. Google Play inline install) instead of
@@ -351,7 +363,10 @@ class DownloadViewModel(
     Timber.tag(INLINE_INSTALL_TAG)
       .d("${app.packageName}: all inline stages rejected -> regular install path")
     inlineInstallResolver?.onInlineInstallUnavailable(app)
-    inlineConstraintsResolver?.let { startRegularInstall(it) }
+    inlineConstraintsResolver?.let {
+      pendingFallbackContinuation = true
+      startRegularInstall(it)
+    }
   }
 
   companion object {
