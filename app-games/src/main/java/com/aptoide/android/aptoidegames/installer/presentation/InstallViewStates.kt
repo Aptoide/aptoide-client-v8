@@ -93,6 +93,11 @@ fun installViewStates(
       }
       app.campaigns?.toAptoideMMPCampaign()?.sendDownloadEvent(utmInfo = utmContext)
       app.campaigns?.toMMPLinkerCampaign()?.sendDownloadEvent()
+
+      // The regular path reports install start when the constraints resolver resolves,
+      // which diverted installs never reach - without this, screens reacting to install
+      // start (e.g. apkfy's Play & Earn reward routing) miss Play-side installs entirely
+      onInstallStarted()
     }
   )
   val installerNotifications = rememberInstallerNotifications()
