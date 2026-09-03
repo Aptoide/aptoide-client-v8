@@ -90,8 +90,10 @@ private fun SetupStatusBarColor(
       ?.window
       ?.run {
         statusBarColor = backgroundColor.toArgb()
-        WindowCompat.getInsetsController(this, decorView)
-          .isAppearanceLightStatusBars = !darkTheme
+        WindowCompat.getInsetsController(this, decorView).run {
+          isAppearanceLightStatusBars = !darkTheme
+          isAppearanceLightNavigationBars = !darkTheme
+        }
       }
   }
 }

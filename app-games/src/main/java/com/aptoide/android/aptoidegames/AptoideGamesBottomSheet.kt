@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
@@ -68,10 +69,12 @@ fun AptoideGamesBottomSheet(
     sheetBackgroundColor = Palette.Black,
     sheetElevation = 0.dp,
     sheetContent = {
-      bottomSheetContent?.Draw(
-        dismiss = onCloseBottomSheetClick,
-        navigate = navigate,
-      )
+      Box(modifier = Modifier.navigationBarsPadding()) {
+        bottomSheetContent?.Draw(
+          dismiss = onCloseBottomSheetClick,
+          navigate = navigate,
+        )
+      }
     },
     content = {
       content {

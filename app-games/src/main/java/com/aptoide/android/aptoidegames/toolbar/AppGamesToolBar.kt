@@ -3,6 +3,7 @@ package com.aptoide.android.aptoidegames.toolbar
 import android.Manifest
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
@@ -99,6 +101,9 @@ private fun AppGamesToolBar(
   val userInfo = rememberUserInfo()
 
   TopAppBar(
+    modifier = Modifier
+      .background(Palette.Black)
+      .statusBarsPadding(),
     backgroundColor = Palette.Black,
     elevation = Dp(0f),
     content = {
@@ -167,6 +172,9 @@ private fun AppGamesToolBar(
 @Composable
 fun SimpleAppGamesToolbar() {
   TopAppBar(
+    modifier = Modifier
+      .background(Palette.Black)
+      .statusBarsPadding(),
     backgroundColor = Palette.Black,
     elevation = Dp(0f),
   ) {

@@ -1,7 +1,7 @@
 [versions]
 compileSdk = "36"
 minSdk = "26"
-targetSdk = "35"
+targetSdk = "36"
 
 #core
 kotlin = "2.3.20"
