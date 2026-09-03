@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.BottomNavigationItem
@@ -76,7 +77,11 @@ fun AppGamesBottomBar(navController: NavController) {
   val selection =
     selectionIndex(items = filteredBottomNavigationItems, navController = navController)
   if (selection >= 0) {
-    Box(modifier = Modifier.fillMaxWidth()) {
+    Box(
+      modifier = Modifier
+        .fillMaxWidth()
+        .navigationBarsPadding()
+    ) {
       AppGamesBottomNavigation(backgroundColor = Color.Transparent) {
         filteredBottomNavigationItems.forEachIndexed { index, item ->
           val isSelected = selection == index
