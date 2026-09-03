@@ -283,6 +283,8 @@ fun DownloadState(
 
     is DownloadUiState.Migrate -> InstallButton(uiState.migrate)
 
+    is DownloadUiState.MigrateAlias -> InstallButton(uiState.migrateAlias)
+
     is DownloadUiState.Waiting -> IndeterminateDownloadView(
       label = "Downloading",
       labelColor = tintColor,
