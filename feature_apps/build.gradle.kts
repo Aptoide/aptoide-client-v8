@@ -12,5 +12,6 @@ android {
 dependencies {
   implementation(projects.aptoideNetwork)
   implementation(projects.extension)
+  implementation(projects.featureFlags)
   api(projects.featureCampaigns)
 }

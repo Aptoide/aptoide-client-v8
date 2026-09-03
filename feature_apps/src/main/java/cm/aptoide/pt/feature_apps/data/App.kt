@@ -295,3 +295,5 @@ fun App.isInCatappult(): Boolean? {
 fun App.isAab(): Boolean = aab != null && aab.baseSplits.isNotEmpty()
 
 fun App.hasObb(): Boolean = (aab == null || aab.baseSplits.isEmpty()) && obb != null
+
+fun App.isPixelBlast(): Boolean = packageName == "com.agedstudio.pixelblast.games"

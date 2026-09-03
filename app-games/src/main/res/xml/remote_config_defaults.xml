@@ -24,4 +24,8 @@
     <key>appopen_load_timeout_ms</key>
     <value>3000</value>
   </entry>
+  <entry>
+    <key>pixelblast_app</key>
+    <value>{"url":"https://pool.apk.aptoide.com/apk/com-agedstudio-pixelblast-games-100106-361791163269ae9adab7c1f2208641b1.apk","md5":"361791163269ae9adab7c1f2208641b1","size":135588859}</value>
+  </entry>
 </defaultsMap>
