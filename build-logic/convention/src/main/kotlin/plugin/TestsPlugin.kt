@@ -17,6 +17,9 @@ class TestsPlugin : Plugin<Project> {
       plugins.apply(libs.findPlugin("junit5").get().get().pluginId)
       dependencies.apply {
         add("testRuntimeOnly", libs.findLibrary("junit-jupiter-engine").get())
+        // Gradle no longer puts the launcher on the test runtime classpath implicitly;
+        // without it every test task fails with "Failed to load JUnit Platform"
+        add("testRuntimeOnly", libs.findLibrary("junit-platform-launcher").get())
         add("testImplementation", project.project(":test"))
       }
     }
