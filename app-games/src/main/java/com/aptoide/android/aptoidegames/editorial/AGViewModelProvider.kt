@@ -7,6 +7,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import cm.aptoide.pt.aptoide_network.di.StoreName
 import cm.aptoide.pt.aptoide_network.domain.UrlsCache
 import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.feature_editorial.data.EditorialRepository
@@ -20,21 +21,23 @@ import cm.aptoide.pt.feature_editorial.presentation.ArticleListUiState
 import cm.aptoide.pt.feature_editorial.presentation.EditorialViewModel
 import cm.aptoide.pt.feature_editorial.presentation.EditorialsListViewModel
 import cm.aptoide.pt.feature_editorial.presentation.RelatedEditorialsCardViewModel
+import com.aptoide.android.aptoidegames.editorial.di.EditorialApi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 internal class AGInjectionsProvider @Inject constructor(
-  editorialRepository: EditorialRepository,
+  @EditorialApi editorialRepository: EditorialRepository,
   urlsCache: UrlsCache,
   @DefaultEditorialUrl defaultEditorialUrl: String,
-  val articleUseCase: ArticleUseCase,
+  @StoreName storeName: String,
 ) : ViewModel() {
 
   private val agRepository = AGEditorialRepository(editorialRepository)
 
   val articlesMetaUseCase = ArticlesMetaUseCase(agRepository, urlsCache, defaultEditorialUrl)
   val relatedArticlesMetaUseCase = RelatedArticlesMetaUseCase(agRepository, urlsCache)
+  val articleUseCase = ArticleUseCase(editorialRepository, urlsCache, storeName)
 }
 
 @Composable

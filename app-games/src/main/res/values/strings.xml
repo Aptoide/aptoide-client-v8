@@ -55,6 +55,12 @@
   <string name="wifi_disclaimer_title">Are you sure?</string>
   <!-- Fixed bundles -->
   <string name="editorial_more_articles_title">More articles</string>
+  <!-- Editorial card category chips (subtype labels) -->
+  <string name="editorial_subtype_app_of_the_week">App of the Week</string>
+  <string name="editorial_subtype_game_of_the_week">Game of the Week</string>
+  <string name="editorial_subtype_collection">Collection</string>
+  <string name="editorial_subtype_news">News</string>
+  <string name="editorial_subtype_new_app">New App</string>
   <string name="fixed_bundle_just_arrived_title">Just Arrived</string>
   <string name="fixed_bundle_my_games_title">My Games</string>
   <string name="fixed_bundle_editors_choice_title">Editor\'s Choice</string>
