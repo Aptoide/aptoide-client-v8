@@ -214,6 +214,16 @@ android {
         name = "GOOGLE_AUTH_CLIENT_ID",
         value = "\"${project.property("GOOGLE_AUTH_CLIENT_ID_DEV")}\""
       )
+      buildConfigField(
+        type = "String",
+        name = "EDITORIAL_API_DOMAIN",
+        value = "\"https://api.dev.aptoide.com/\""
+      )
+      buildConfigField(
+        type = "boolean",
+        name = "EDITORIAL_DEMO_ENABLED",
+        value = "true"
+      )
     }
 
     create("prod") {
@@ -268,6 +278,16 @@ android {
         type = "String",
         name = "GOOGLE_AUTH_CLIENT_ID",
         value = "\"${project.property("GOOGLE_AUTH_CLIENT_ID_PROD")}\""
+      )
+      buildConfigField(
+        type = "String",
+        name = "EDITORIAL_API_DOMAIN",
+        value = "\"https://api.aptoide.com/\""
+      )
+      buildConfigField(
+        type = "boolean",
+        name = "EDITORIAL_DEMO_ENABLED",
+        value = "false"
       )
     }
   }

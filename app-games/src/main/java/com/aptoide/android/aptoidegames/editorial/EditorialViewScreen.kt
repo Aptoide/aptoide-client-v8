@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
@@ -56,7 +57,7 @@ import com.aptoide.android.aptoidegames.analytics.presentation.rememberGeneralAn
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
-import com.aptoide.android.aptoidegames.design_system.SecondaryButton
+import com.aptoide.android.aptoidegames.design_system.PrimaryButton
 import com.aptoide.android.aptoidegames.drawables.icons.getLeftArrow
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.error_views.NoConnectionView
@@ -213,10 +214,20 @@ private fun ArticleViewContent(
               )
             }
           }
-          content.message?.ifBlank { null }?.let {
+          content.message?.ifBlank { null }?.let { message ->
             item {
+              val context = LocalContext.current
               Text(
-                text = it,
+                // Render the new contract's inline markdown (**bold**, *italic*, [label](url))
+                // as spans; on prod (flag off) paragraphs render verbatim as before.
+                text = if (BuildConfig.EDITORIAL_DEMO_ENABLED) {
+                  message.toEditorialAnnotatedString(
+                    linkColor = Palette.Primary,
+                    onLinkClick = { url -> UrlActivity.open(context, url) },
+                  )
+                } else {
+                  AnnotatedString(message)
+                },
                 style = AGTypography.ArticleText,
                 color = Palette.White,
                 modifier = Modifier
@@ -303,7 +314,7 @@ private fun ActionButton(
   url: String,
 ) {
   val context = LocalContext.current
-  SecondaryButton(
+  PrimaryButton(
     onClick = { UrlActivity.open(context, url) },
     modifier = modifier,
     title = title,
