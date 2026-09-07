@@ -18,6 +18,9 @@ android {
     versionCode = 10000
     versionName = "10.0.0.0-alpha01"
 
+    // Frozen legacy module: pinned to 35, not validated for the target 36 edge-to-edge enforcement
+    targetSdk = 35
+
     buildConfigField("String", "MARKET_NAME", "\"apps\"")
     buildConfigField("String", "STORE_DOMAIN", "\"https://ws75.aptoide.com/api/7.20221201/\"")
     buildConfigField("String", "SEARCH_BUZZ_DOMAIN", "\"https://buzz.aptoide.com:10002\"")

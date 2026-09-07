@@ -7,9 +7,14 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.aptoide.android.aptoidegames.home.AppThemeViewModel
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
@@ -31,8 +36,15 @@ class UrlActivity : AppCompatActivity() {
         Scaffold(
           topBar = { SimpleAppGamesToolbar() }
         ) {
-          url?.let {
-            UrlView(url = it)
+          Box(
+            modifier = Modifier
+              .statusBarsPadding()
+              .navigationBarsPadding()
+              .imePadding()
+          ) {
+            url?.let {
+              UrlView(url = it)
+            }
           }
         }
       }

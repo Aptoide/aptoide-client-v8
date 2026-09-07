@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -71,6 +72,8 @@ fun SupportView(
         .fillMaxSize()
         .wrapContentSize(Alignment.TopCenter)
         .background(Palette.Black)
+        .statusBarsPadding()
+        .imePadding()
     ) {
       if (isKeyboardOpen == Keyboard.Closed) {
         AppGamesTopBar(navigateBack = { navigateBack() }, title = title)

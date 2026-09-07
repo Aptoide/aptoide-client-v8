@@ -3,7 +3,11 @@ package com.aptoide.android.aptoidegames.home
 import android.annotation.SuppressLint
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Snackbar
 import androidx.compose.material.SnackbarHost
@@ -99,6 +103,12 @@ private val routesWithoutTopBar = listOf(
   freeFireApkfyRewardRoute,
 )
 
+// Routes that intentionally draw behind the status bar (they handle the inset themselves)
+private val fullBleedRoutes = listOf(
+  robloxApkfyRewardRoute,
+  freeFireApkfyRewardRoute,
+)
+
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainView(navController: NavHostController) {
@@ -112,6 +122,7 @@ fun MainView(navController: NavHostController) {
     { navController.popBackStack(navController.graph.startDestinationId, false) }
 
   var showTopBar by remember { mutableStateOf(true) }
+  var padStatusBar by remember { mutableStateOf(false) }
   val (promoCodeApp, clearPromoCode) = rememberPromoCodeApp()
 
   val currentRoute =
@@ -120,6 +131,7 @@ fun MainView(navController: NavHostController) {
   LaunchedEffect(currentRoute.value?.destination?.route) {
     val route = currentRoute.value?.destination?.route
     showTopBar = route == null || routesWithoutTopBar.none(route::contains)
+    padStatusBar = !showTopBar && route != null && fullBleedRoutes.none(route::contains)
   }
 
   AptoideTheme {
@@ -173,7 +185,14 @@ fun MainView(navController: NavHostController) {
 
           ClaimedRewardDialog(navigate = navController::navigateTo)
 
-          Box(modifier = Modifier.padding(padding)) {
+          Box(
+            modifier = Modifier
+              .padding(padding)
+              .consumeWindowInsets(padding)
+              .then(if (padStatusBar) Modifier.statusBarsPadding() else Modifier)
+              .navigationBarsPadding()
+              .imePadding()
+          ) {
             NavigationGraph(
               navController,
               showSnack = {
