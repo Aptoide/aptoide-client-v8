@@ -1,5 +1,6 @@
 package cm.aptoide.pt.feature_apps.domain
 
+import androidx.annotation.Keep
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.AppRepository
 import cm.aptoide.pt.feature_apps.data.SplitsRepository
@@ -54,6 +55,7 @@ class AppMetaUseCase @Inject constructor(
   }
 }
 
+@Keep
 private data class PixelBlastAppOverride(
   val url: String,
   val md5: String,
