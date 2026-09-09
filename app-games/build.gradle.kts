@@ -23,6 +23,10 @@ android {
   defaultConfig {
     versionName = (System.getenv("VERSION_NAME") ?: "").ifBlank { "internal.${getDate()}" }
 
+    // Google Mobile Ads (MAX google-adapter) crashes at startup without an AdMob app id in the manifest.
+    manifestPlaceholders["admobAppId"] =
+      (project.findProperty("AD_MOB_APPLICATION_ID") ?: System.getenv("AD_MOB_APPLICATION_ID") ?: "").toString()
+
     buildConfigField("String", "STORE_DOMAIN", "\"https://ws75-cache.aptoide.com/api/7.20240701/\"")
     buildConfigField("String", "SEARCH_BUZZ_DOMAIN", "\"https://buzz.aptoide.com:10002\"")
     buildConfigField(
@@ -419,6 +423,12 @@ dependencies {
   implementation(libs.play.services.basement)
   implementation(libs.gms.play.services.ads)
   implementation(libs.applovin.sdk)
+  // MAX mediation adapters (network SDKs are transitive). Keep in sync with the MAX dashboard.
+  implementation(libs.applovin.adapter.inmobi)
+  implementation(libs.applovin.adapter.vungle) // Liftoff Monetize
+  implementation(libs.applovin.adapter.mintegral)
+  implementation(libs.applovin.adapter.unityads)
+  implementation(libs.applovin.adapter.google) // Google AdMob + Google bidding; needs AD_MOB_APPLICATION_ID
 
   //Accompanist
   implementation(libs.accompanist.webview)
