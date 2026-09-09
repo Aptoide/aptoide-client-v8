@@ -32,6 +32,11 @@
       tools:replace="android:allowBackup">
     <uses-library android:name="org.apache.http.legacy" android:required="false" />
 
+    <!-- AdMob app id for the MAX Google adapter; value comes from the AD_MOB_APPLICATION_ID Gradle property -->
+    <meta-data
+        android:name="com.google.android.gms.ads.APPLICATION_ID"
+        android:value="${admobAppId}" />
+
     <activity
         android:name=".MainActivity"
         android:exported="true"
