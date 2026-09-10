@@ -94,6 +94,7 @@ class AppLovinSdkInitializer @Inject constructor(
     /** Native units only: app open ads are switched off (see AdsConfig per distribution). */
     val AD_UNIT_IDS: List<String> = listOf(
       BuildConfig.HOME_NATIVE_AD_UNIT_ID,
+      BuildConfig.SEARCH_NATIVE_AD_UNIT_ID,
     ).filter { it.isNotBlank() }
   }
 }
