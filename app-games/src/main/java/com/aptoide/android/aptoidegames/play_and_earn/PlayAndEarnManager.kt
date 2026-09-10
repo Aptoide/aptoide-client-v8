@@ -67,54 +67,21 @@ class PlayAndEarnManager @Inject constructor(
     )
   }
 
-  private val _playAndEarnVisibilityFlow = MutableStateFlow(false)
+  // TEST BUILD ONLY: P&E forced on, bypassing the show_play_and_earn remote config flag.
+  private val _playAndEarnVisibilityFlow = MutableStateFlow(true)
 
   init {
     initialize()
   }
 
   private fun initialize() {
-    CoroutineScope(Dispatchers.IO).launch {
-      _playAndEarnVisibilityFlow.value = featureFlags.getFlag(PAE_VISIBILITY_FLAG_KEY, false)
-    }
-
-    //Listen to play and earn visibility changes
-    Firebase.remoteConfig.addOnConfigUpdateListener(object : ConfigUpdateListener {
-      override fun onUpdate(configUpdate: ConfigUpdate) {
-        if (PAE_VISIBILITY_FLAG_KEY in configUpdate.updatedKeys) {
-          Firebase.remoteConfig.activate().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-              val isEnabled = Firebase.remoteConfig.getBoolean(PAE_VISIBILITY_FLAG_KEY)
-
-              Timber.tag(TAG).d("Remote config visibility updated: $isEnabled")
-
-              // Update the FeatureFlags cache to maintain single source of truth
-              CoroutineScope(Dispatchers.IO).launch {
-                featureFlags.updateFlag(PAE_VISIBILITY_FLAG_KEY, isEnabled.toString())
-                _playAndEarnVisibilityFlow.value = isEnabled
-              }
-            }
-          }
-        }
-      }
-
-      override fun onError(error: FirebaseRemoteConfigException) {
-        Timber.tag(TAG).e(error, "Remote config listener error")
-      }
-    })
+    // TEST BUILD ONLY: remote config no longer drives visibility — the flow stays true.
+    Timber.tag(TAG).d("P&E visibility forced ON (test build)")
   }
 
   suspend fun shouldShowPlayAndEarn(): Boolean {
-    if (!BuildConfig.DEBUG && deviceSecurityChecker.isCompromisedDevice()) {
-      return false
-    }
-    val allowedCountries = featureFlags.getStringListOrNull(PAE_COUNTRIES_FLAG_KEY)
-      ?.map { it.trim().uppercase(Locale.US) }
-      ?: PAE_DEFAULT_ALLOWED_COUNTRIES
-    if (deviceCountryProvider.getCountry() !in allowedCountries) {
-      return false
-    }
-    return featureFlags.getFlag(PAE_VISIBILITY_FLAG_KEY, false)
+    // TEST BUILD ONLY: bypass remote config flag, country allowlist and security check.
+    return true
   }
 
   suspend fun shouldStartPaEService(): Boolean {
