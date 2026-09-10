@@ -85,6 +85,11 @@ android {
       name = "APP_OPEN_AD_UNIT_ID",
       value = "\"${project.findProperty("APP_OPEN_AD_UNIT_ID") ?: ""}\""
     )
+    buildConfigField(
+      type = "String",
+      name = "HOME_NATIVE_AD_UNIT_ID",
+      value = "\"${project.findProperty("HOME_NATIVE_AD_UNIT_ID") ?: ""}\""
+    )
 
 
     buildConfigFieldFromGradleProperty("ROOM_SCHEMA_VERSION")

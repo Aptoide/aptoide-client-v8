@@ -20,7 +20,7 @@ import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -85,6 +85,10 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.EditorsChoiceB
 import com.aptoide.android.aptoidegames.feature_apps.presentation.MyGamesBundleView
 import com.aptoide.android.aptoidegames.feature_apps.presentation.PublisherTakeOverBundle
 import com.aptoide.android.aptoidegames.feature_apps.presentation.buildSeeMoreRoute
+import com.aptoide.android.aptoidegames.ads.home_native.HomeNativeAdBundle
+import com.aptoide.android.aptoidegames.ads.home_native.HomeNativeAdUiState
+import com.aptoide.android.aptoidegames.ads.home_native.HomeNativeAdViewModel
+import com.aptoide.android.aptoidegames.ads.home_native.rememberHomeNativeAd
 import com.aptoide.android.aptoidegames.feature_apps.presentation.perCarouselViewModel
 import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberBundleAnalytics
 import com.aptoide.android.aptoidegames.feature_promotional.AppComingSoonPromotionalView
@@ -123,6 +127,7 @@ fun BundlesScreen(
 ) {
   val (viewState, loadFreshHomeBundles) = bundlesList()
   val gamesFeedVisibility = rememberGamesFeedVisibility()
+  val homeNativeAd = rememberHomeNativeAd()
   var shouldShowLoadingView by remember { mutableStateOf(false) }
 
   val isRefreshing = (viewState.type == BundlesViewUiStateType.RELOADING)
@@ -173,6 +178,7 @@ fun BundlesScreen(
             viewState = viewState.copy(bundles = filteredBundles).injectPaEBundle(),
             navigate = navigate,
             installedTrackedPackages = gamesFeedVisibility?.installedTrackedPackages.orEmpty(),
+            homeNativeAd = homeNativeAd,
             onShowLoading = { showLoading ->
               shouldShowLoadingView = showLoading
             }
@@ -201,8 +207,12 @@ fun BundlesView(
   viewState: BundlesViewUiState,
   navigate: (String) -> Unit,
   installedTrackedPackages: List<String> = emptyList(),
+  homeNativeAd: HomeNativeAdViewModel? = null,
   onShowLoading: (Boolean) -> Unit
 ) {
+  val nativeAd = homeNativeAd?.uiState?.collectAsState()?.value as? HomeNativeAdUiState.Loaded
+  val nativeAdIndex = nativeAd?.position?.coerceIn(0, (viewState.bundles.size - 1).coerceAtLeast(0))
+
   Column(
     modifier = Modifier
       .fillMaxSize()
@@ -216,7 +226,10 @@ fun BundlesView(
         .wrapContentSize(Alignment.TopCenter),
       contentPadding = PaddingValues(bottom = 72.dp)
     ) {
-      items(viewState.bundles) { bundle ->
+      itemsIndexed(viewState.bundles) { index, bundle ->
+        if (homeNativeAd != null && nativeAd != null && index == nativeAdIndex) {
+          HomeNativeAdBundle(onRender = homeNativeAd::render)
+        }
         WithUTM(
           utmInfo = getBundleHomeUTMInfo(bundle.tag, bundle.type),
           navigate = navigate
