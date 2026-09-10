@@ -1,4 +1,4 @@
-package com.aptoide.android.aptoidegames.ads.home_native
+package com.aptoide.android.aptoidegames.ads.native_ads
 
 import android.content.Context
 import androidx.compose.runtime.Composable
@@ -11,7 +11,6 @@ import com.applovin.mediation.MaxError
 import com.applovin.mediation.nativeAds.MaxNativeAdListener
 import com.applovin.mediation.nativeAds.MaxNativeAdLoader
 import com.applovin.mediation.nativeAds.MaxNativeAdView
-import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.ads.AppLovinSdkInitializer
 import com.aptoide.android.aptoidegames.ads.NATIVE_ADS_ENABLED
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
@@ -27,34 +26,37 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
-sealed interface HomeNativeAdUiState {
-  /** Nothing to show: disabled, ineligible geo, no fill, load error. The feed collapses the slot. */
-  data object Hidden : HomeNativeAdUiState
+sealed interface NativeAdUiState {
+  /** Nothing to show: disabled, ineligible geo, no fill, load error. The screen collapses the slot. */
+  data object Hidden : NativeAdUiState
 
-  /** An ad is loaded and should be rendered before the bundle at [position]. */
-  data class Loaded(val ad: MaxAd, val position: Int) : HomeNativeAdUiState
+  /** An ad is loaded. [position] only matters for list slots (see [NativeAdConfig]). */
+  data class Loaded(val ad: MaxAd, val position: Int) : NativeAdUiState
 }
 
 /**
- * Loads one MAX native ad for the Games home feed per screen instance and exposes it as UI state.
+ * Loads one MAX native ad for a [NativeAdPlacement] per screen instance and exposes it as UI state.
  *
  * The ad is loaded without a view and rendered later into whatever [MaxNativeAdView] the
  * composable creates (see [render]); this is the pattern MAX recommends for lists.
- * Any failure resolves to [HomeNativeAdUiState.Hidden] so the feed never shows an empty slot,
+ * Any failure resolves to [NativeAdUiState.Hidden] so the screen never shows an empty slot,
  * which is what makes disabling the ad unit on the MAX dashboard safe.
+ *
+ * Each placement gets its own Hilt subclass so each screen has an independent ViewModel scope
+ * and its own ad unit, flags and analytics prefix.
  */
-@HiltViewModel
-class HomeNativeAdViewModel @Inject constructor(
-  @ApplicationContext private val context: Context,
+abstract class NativeAdViewModel(
+  private val placement: NativeAdPlacement,
+  private val context: Context,
   private val featureFlags: FeatureFlags,
   private val sdkInitializer: AppLovinSdkInitializer,
   genericAnalytics: GenericAnalytics,
 ) : ViewModel() {
 
-  private val analytics = HomeNativeAdAnalytics(genericAnalytics)
+  private val analytics = NativeAdAnalytics(genericAnalytics, placement)
 
-  private val _uiState = MutableStateFlow<HomeNativeAdUiState>(HomeNativeAdUiState.Hidden)
-  val uiState: StateFlow<HomeNativeAdUiState> = _uiState.asStateFlow()
+  private val _uiState = MutableStateFlow<NativeAdUiState>(NativeAdUiState.Hidden)
+  val uiState: StateFlow<NativeAdUiState> = _uiState.asStateFlow()
 
   private var loader: MaxNativeAdLoader? = null
   private var loadedAd: MaxAd? = null
@@ -65,27 +67,25 @@ class HomeNativeAdViewModel @Inject constructor(
   }
 
   private suspend fun start() {
-    if (!NATIVE_ADS_ENABLED) return skip("disabled for this distribution")
+    if (!NATIVE_ADS_ENABLED) return
 
-    val adUnitId = BuildConfig.HOME_NATIVE_AD_UNIT_ID
-    if (adUnitId.isBlank()) return skip("no ad unit id")
+    val adUnitId = placement.adUnitId
+    if (adUnitId.isBlank()) return
 
-    val config = HomeNativeAdConfig.from(featureFlags)
-    if (!config.enabled) return skip("home_native_enabled is false")
+    val config = NativeAdConfig.from(featureFlags, placement)
+    if (!config.enabled) return
 
     geo = AppOpenGeoProvider(context).getGeo()
-    if (!config.isGeoEligible(geo)) return skip("geo $geo is excluded")
+    if (!config.isGeoEligible(geo)) return
 
-    if (!sdkInitializer.ensureInitialized()) return skip("MAX SDK not initialized")
+    if (!sdkInitializer.ensureInitialized()) return
 
     withContext(Dispatchers.Main) { load(adUnitId, config.position) }
   }
 
-  private fun skip(reason: String) = Timber.d("Home native ad not requested: %s", reason)
-
   private fun load(adUnitId: String, position: Int) {
     val loader = MaxNativeAdLoader(adUnitId).also { loader = it }
-    loader.setPlacement(PLACEMENT)
+    loader.setPlacement(placement.maxPlacementName)
     loader.setRevenueListener { ad ->
       analytics.sendImpression(geo, ad.networkName, ad.revenue * ECPM_MULTIPLIER)
     }
@@ -94,13 +94,16 @@ class HomeNativeAdViewModel @Inject constructor(
         loadedAd?.let(loader::destroy)
         loadedAd = ad
         analytics.sendLoaded(geo, ad.networkName)
-        _uiState.value = HomeNativeAdUiState.Loaded(ad, position)
+        _uiState.value = NativeAdUiState.Loaded(ad, position)
       }
 
       override fun onNativeAdLoadFailed(adUnitId: String, error: MaxError) {
         analytics.sendFailed(geo, error.code.toString())
-        Timber.w("Home native ad load failed for %s: %s (%s)", adUnitId, error.message, error.code)
-        _uiState.value = HomeNativeAdUiState.Hidden
+        Timber.w(
+          "%s native ad load failed for %s: %s (%s)",
+          placement.name, adUnitId, error.message, error.code,
+        )
+        _uiState.value = NativeAdUiState.Hidden
       }
 
       override fun onNativeAdClicked(ad: MaxAd) {
@@ -108,7 +111,7 @@ class HomeNativeAdViewModel @Inject constructor(
       }
 
       override fun onNativeAdExpired(ad: MaxAd) {
-        _uiState.value = HomeNativeAdUiState.Hidden
+        _uiState.value = NativeAdUiState.Hidden
         loader.loadAd()
       }
     })
@@ -130,10 +133,32 @@ class HomeNativeAdViewModel @Inject constructor(
   }
 
   private companion object {
-    const val PLACEMENT = "home_bundle"
     const val ECPM_MULTIPLIER = 1_000
   }
 }
 
+@HiltViewModel
+class HomeNativeAdViewModel @Inject constructor(
+  @ApplicationContext context: Context,
+  featureFlags: FeatureFlags,
+  sdkInitializer: AppLovinSdkInitializer,
+  genericAnalytics: GenericAnalytics,
+) : NativeAdViewModel(
+  NativeAdPlacement.HOME_BUNDLE, context, featureFlags, sdkInitializer, genericAnalytics,
+)
+
+@HiltViewModel
+class SearchNativeAdViewModel @Inject constructor(
+  @ApplicationContext context: Context,
+  featureFlags: FeatureFlags,
+  sdkInitializer: AppLovinSdkInitializer,
+  genericAnalytics: GenericAnalytics,
+) : NativeAdViewModel(
+  NativeAdPlacement.SEARCH_LANDING, context, featureFlags, sdkInitializer, genericAnalytics,
+)
+
 @Composable
 fun rememberHomeNativeAd(): HomeNativeAdViewModel = hiltViewModel()
+
+@Composable
+fun rememberSearchNativeAd(): SearchNativeAdViewModel = hiltViewModel()

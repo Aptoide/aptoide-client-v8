@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <!-- Vanilla brand accent for the home native ad bundle (AG uses lime in src/main). -->
-  <color name="home_native_ad_accent">#FFFE6446</color>
+  <!-- Vanilla brand accent for the native ad card (AG uses lime in src/main). -->
+  <color name="native_ad_accent">#FFFE6446</color>
 </resources>
