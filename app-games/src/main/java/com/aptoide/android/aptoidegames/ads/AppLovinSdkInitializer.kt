@@ -94,6 +94,7 @@ class AppLovinSdkInitializer @Inject constructor(
     val AD_UNIT_IDS: List<String> = listOf(
       BuildConfig.APP_OPEN_AD_UNIT_ID,
       BuildConfig.HOME_NATIVE_AD_UNIT_ID,
+      BuildConfig.SEARCH_NATIVE_AD_UNIT_ID,
     ).filter { it.isNotBlank() }
   }
 }
