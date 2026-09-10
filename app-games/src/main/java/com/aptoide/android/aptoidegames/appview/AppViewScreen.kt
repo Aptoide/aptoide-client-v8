@@ -31,6 +31,8 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import com.aptoide.android.aptoidegames.ads.native_ads.NativeAdSlot
+import com.aptoide.android.aptoidegames.ads.native_ads.rememberAppDetailNativeAd
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -532,6 +534,11 @@ fun AppViewContent(
         app = app,
         selectedTab = tabsList[selectedTab],
         navigate = navigate
+      )
+
+      NativeAdSlot(
+        viewModel = rememberAppDetailNativeAd(),
+        modifier = Modifier.padding(top = 16.dp),
       )
     }
     if (app.isAppCoins) {
