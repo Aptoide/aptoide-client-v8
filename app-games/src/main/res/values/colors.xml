@@ -9,4 +9,12 @@
   <color name="primary">#FFC8ED4F</color>
   <color name="grey">#FF595959</color>
   <color name="black">#FF1E1E26</color>
+  <!-- Home native ad bundle (manual MAX template). Accent is overridden per brand in src/vanilla. -->
+  <color name="home_native_ad_card_background">#FF312D35</color>
+  <color name="home_native_ad_media_background">#FF1E1E26</color>
+  <color name="home_native_ad_badge_background">#FF1E1E26</color>
+  <color name="home_native_ad_text_primary">#FFFFFFFF</color>
+  <color name="home_native_ad_text_secondary">#FFD2D2D2</color>
+  <color name="home_native_ad_accent">#FFC8ED4F</color>
+  <color name="home_native_ad_on_accent">#FF1E1E26</color>
 </resources>
