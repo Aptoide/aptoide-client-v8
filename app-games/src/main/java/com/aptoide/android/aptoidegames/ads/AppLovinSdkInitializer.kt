@@ -95,6 +95,7 @@ class AppLovinSdkInitializer @Inject constructor(
       BuildConfig.APP_OPEN_AD_UNIT_ID,
       BuildConfig.HOME_NATIVE_AD_UNIT_ID,
       BuildConfig.SEARCH_NATIVE_AD_UNIT_ID,
+      BuildConfig.APP_DETAIL_NATIVE_AD_UNIT_ID,
     ).filter { it.isNotBlank() }
   }
 }
