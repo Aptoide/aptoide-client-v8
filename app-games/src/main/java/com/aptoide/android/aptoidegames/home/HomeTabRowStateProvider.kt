@@ -12,10 +12,8 @@ import androidx.lifecycle.ViewModel
 import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.feature_flags.domain.FeatureFlags
 import com.aptoide.android.aptoidegames.play_and_earn.rememberShouldShowPlayAndEarn
-import com.google.gson.Gson
 import com.google.gson.JsonObject
 import dagger.hilt.android.lifecycle.HiltViewModel
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,31 +32,10 @@ fun rememberHomeTabRowState(): Pair<Boolean, List<HomeTab>> = runPreviewable(
     var unfilteredTabs: List<HomeTab>? by remember { mutableStateOf(null) }
 
     LaunchedEffect(Unit) {
-      showHomeTabRow = vm.featureFlags.getFlag("show_home_tabs", false)
-
-      try {
-        val tabsJson = vm.featureFlags.getFlagAsString("home_tabs")
-        unfilteredTabs = Gson().fromJson(tabsJson, FeatureFlagTabRow::class.java).tabs.mapNotNull {
-          when (it.id) {
-            "ForYou" -> HomeTab.ForYou
-
-            "TopCharts" -> runCatching {
-              Gson().fromJson(
-                it.details,
-                HomeTab.TopCharts::class.java
-              )
-            }.getOrDefault(HomeTab.TopCharts())
-
-            "Bonus" -> HomeTab.Bonus
-            "Editorial" -> HomeTab.Editorial
-            "Categories" -> HomeTab.Categories
-            "Rewards" -> HomeTab.Rewards
-            else -> null
-          }
-        }
-      } catch (e: Throwable) {
-        Timber.e(e)
-      }
+      // TEST BUILD ONLY: force the tab row visible with all supported tabs, bypassing the
+      // show_home_tabs flag and the home_tabs remote config list.
+      showHomeTabRow = true
+      unfilteredTabs = defaultHomeTabs
     }
 
     val filteredTabs = unfilteredTabs?.filterNot { it is HomeTab.Rewards && !showPlayAndEarn }
