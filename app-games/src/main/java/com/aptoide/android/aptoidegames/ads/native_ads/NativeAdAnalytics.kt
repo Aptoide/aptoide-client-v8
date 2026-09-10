@@ -1,11 +1,17 @@
-package com.aptoide.android.aptoidegames.ads.home_native
+package com.aptoide.android.aptoidegames.ads.native_ads
 
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 
-class HomeNativeAdAnalytics(private val genericAnalytics: GenericAnalytics) {
+/** Emits `<prefix>_loaded`, `<prefix>_impression`, `<prefix>_clicked`, `<prefix>_failed`. */
+class NativeAdAnalytics(
+  private val genericAnalytics: GenericAnalytics,
+  placement: NativeAdPlacement,
+) {
+
+  private val prefix = placement.flagPrefix
 
   fun sendLoaded(geo: String, network: String) = genericAnalytics.logEvent(
-    name = "home_native_loaded",
+    name = "${prefix}_loaded",
     params = mapOf(
       "geo" to geo,
       "network" to network,
@@ -13,7 +19,7 @@ class HomeNativeAdAnalytics(private val genericAnalytics: GenericAnalytics) {
   )
 
   fun sendImpression(geo: String, network: String, ecpm: Double) = genericAnalytics.logEvent(
-    name = "home_native_impression",
+    name = "${prefix}_impression",
     params = mapOf(
       "geo" to geo,
       "network" to network,
@@ -22,7 +28,7 @@ class HomeNativeAdAnalytics(private val genericAnalytics: GenericAnalytics) {
   )
 
   fun sendClicked(geo: String, network: String) = genericAnalytics.logEvent(
-    name = "home_native_clicked",
+    name = "${prefix}_clicked",
     params = mapOf(
       "geo" to geo,
       "network" to network,
@@ -30,7 +36,7 @@ class HomeNativeAdAnalytics(private val genericAnalytics: GenericAnalytics) {
   )
 
   fun sendFailed(geo: String, errorCode: String) = genericAnalytics.logEvent(
-    name = "home_native_failed",
+    name = "${prefix}_failed",
     params = mapOf(
       "geo" to geo,
       "error_code" to errorCode,

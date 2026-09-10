@@ -28,6 +28,10 @@ import androidx.compose.material.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import com.aptoide.android.aptoidegames.ads.native_ads.NativeAdBundle
+import com.aptoide.android.aptoidegames.ads.native_ads.NativeAdUiState
+import com.aptoide.android.aptoidegames.ads.native_ads.SearchNativeAdViewModel
+import com.aptoide.android.aptoidegames.ads.native_ads.rememberSearchNativeAd
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -321,7 +325,8 @@ fun SearchView(
             searchHistory = uiState.searchSuggestions.suggestionsList,
             popularSearch = uiState.searchSuggestions.popularSearchList,
             onSelectSearchSuggestion = onSelectSearchSuggestion,
-            onRemoveSuggestion = onRemoveSuggestion
+            onRemoveSuggestion = onRemoveSuggestion,
+            searchNativeAd = rememberSearchNativeAd(),
           )
         }
       }
@@ -456,7 +461,9 @@ fun SearchSuggestions(
   popularSearch: List<String>,
   onSelectSearchSuggestion: (String, SearchType, Int) -> Unit,
   onRemoveSuggestion: (String) -> Unit,
+  searchNativeAd: SearchNativeAdViewModel? = null,
 ) {
+  val nativeAd = searchNativeAd?.uiState?.collectAsState()?.value as? NativeAdUiState.Loaded
 
   LazyColumn(
     modifier = Modifier.fillMaxSize(),
@@ -490,6 +497,14 @@ fun SearchSuggestions(
           item = suggestion,
           onSelectSearchSuggestion = onSelectSearchSuggestion,
           index = index
+        )
+      }
+    }
+    if (searchNativeAd != null && nativeAd != null) {
+      item {
+        NativeAdBundle(
+          onRender = searchNativeAd::render,
+          modifier = Modifier.padding(top = 24.dp),
         )
       }
     }
