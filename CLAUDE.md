@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code when working with code in this repository.
 
+## Task Workflow (mandatory)
+
+Execute every task per [docs/WORKFLOW.md](docs/WORKFLOW.md) (plan+grill → Linear → feature branch → TDD → gate → 3 review agents → PR → self-score). Task detection is Claude's job: when a request is ticket-sized, the FIRST action is plan mode — never code first — and the task ends at the self-score, not the PR. Escape hatch: trivial one-liners skip the ceremony (call it out and just do it). Tickets live in **Linear** (Android client tickets; Jira/`[AND-XXX]` temporarily not in use).
+
 ## Build Commands
 
 `:app-games` uses two flavor dimensions — `brand` (`aptoideGames` / `vanilla`) × `mode` (`dev` / `prod`). Variant names combine them, e.g. `aptoideGamesDevDebug`, `vanillaProdRelease`.
