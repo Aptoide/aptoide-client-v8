@@ -2,7 +2,10 @@ package com.aptoide.android.aptoidegames.installer.gplay
 
 import app.cash.turbine.test
 import cm.aptoide.pt.test.gherkin.coScenario
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -19,10 +22,12 @@ internal class CachingCatalogTokenRepositoryTest {
 
   private var nowMillis = 0L
 
+  // A plain foreground scope on the test scheduler: TestScope.backgroundScope work only
+  // runs while the test body is suspended, which advanceUntilIdle does not do
   private fun TestScope.buildRepository(api: FakePlayInlineConfigApi) =
     CachingCatalogTokenRepository(
       origin = AptoideCatalogTokenRepository(api),
-      scope = backgroundScope,
+      scope = CoroutineScope(StandardTestDispatcher(testScheduler) + SupervisorJob()),
       now = { nowMillis },
     )
 
@@ -130,7 +135,10 @@ internal class CachingCatalogTokenRepositoryTest {
     scope.advanceUntilIdle()
 
     m Then "it is labeled as Play catalog with zero api calls"
-    repository.observeIsPlayCatalog("com.roblox.client").test { assertTrue(awaitItem()) }
+    repository.observeIsPlayCatalog("com.roblox.client").test {
+      assertTrue(awaitItem())
+      awaitComplete()
+    }
     assertEquals(0, api.calls)
   }
 }
