@@ -302,7 +302,7 @@ private fun InstallViewContent(
       )
     }
   }
-  if (installViewState.showPlayAttribution && installViewState.uiState.canTriggerInlineInstall()) {
+  if (installViewState.showPlayAttribution) {
     PlayAttributionLabel(modifier = Modifier.padding(top = 4.dp))
   }
 }

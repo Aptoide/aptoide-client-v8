@@ -3,6 +3,7 @@ package com.aptoide.android.aptoidegames.installer.gplay
 import com.aptoide.android.aptoidegames.apkfy.isFreeFirePackage
 import com.aptoide.android.aptoidegames.apkfy.isRobloxPackage
 import com.aptoide.android.aptoidegames.installer.PlayCatalogChecker
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
@@ -43,7 +44,10 @@ class CachingCatalogTokenRepository(
 
   override fun prefetch(packageName: String) {
     if (installsThroughPlayOverlay(packageName)) return
-    if (entries.value.containsKey(packageName)) return
+    // Stale entries (expired token or an old negative result) are refetched, so a
+    // transient failure cannot suppress the mandatory attribution for the process lifetime
+    val cached = entries.value[packageName]
+    if (cached != null && now() - cached.fetchedAt < TOKEN_REUSE_TTL_MILLIS) return
     fetchAsync(packageName)
   }
 
@@ -59,7 +63,15 @@ class CachingCatalogTokenRepository(
     inFlight.computeIfAbsent(packageName) {
       scope.async {
         try {
-          val token = origin.getCatalogToken(packageName)
+          // The origin is expected to map failures to null, but an install click must
+          // never crash on a throwing origin - it falls back to the regular path instead
+          val token = try {
+            origin.getCatalogToken(packageName)
+          } catch (e: CancellationException) {
+            throw e
+          } catch (e: Exception) {
+            null
+          }
           entries.update { it + (packageName to Entry(token, now())) }
           token
         } finally {

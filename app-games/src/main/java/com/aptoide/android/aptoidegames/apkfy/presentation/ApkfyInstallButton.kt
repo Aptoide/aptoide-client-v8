@@ -25,7 +25,6 @@ import com.aptoide.android.aptoidegames.design_system.PrimaryOutlinedButton
 import com.aptoide.android.aptoidegames.design_system.SecondaryOutlinedButton
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewState
 import com.aptoide.android.aptoidegames.installer.presentation.PlayAttributionLabel
-import com.aptoide.android.aptoidegames.installer.presentation.canTriggerInlineInstall
 import com.aptoide.android.aptoidegames.installer.presentation.installViewStates
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -173,7 +172,7 @@ private fun ApkfyInstallButtonContent(
       onClick = state.retry,
     )
   }
-  if (installViewState.showPlayAttribution && installViewState.uiState.canTriggerInlineInstall()) {
+  if (installViewState.showPlayAttribution) {
     PlayAttributionLabel(modifier = Modifier.padding(top = 4.dp))
   }
 }

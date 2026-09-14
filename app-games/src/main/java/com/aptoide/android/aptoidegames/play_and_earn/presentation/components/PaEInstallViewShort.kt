@@ -24,7 +24,6 @@ import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.design_system.SecondarySmallOutlinedButton
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewState
 import com.aptoide.android.aptoidegames.installer.presentation.PlayAttributionLabel
-import com.aptoide.android.aptoidegames.installer.presentation.canTriggerInlineInstall
 import com.aptoide.android.aptoidegames.installer.presentation.installViewStates
 import com.aptoide.android.aptoidegames.installer.presentation.toInstallViewState
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rememberPlayAndEarnSetupRoute
@@ -142,7 +141,7 @@ private fun PaEInstallViewShortContent(
     is DownloadUiState.Uninstalling,
       -> Unit
   }
-  if (installViewState.showPlayAttribution && installViewState.uiState.canTriggerInlineInstall()) {
+  if (installViewState.showPlayAttribution) {
     PlayAttributionLabel(modifier = Modifier.padding(top = 2.dp))
   }
 }
