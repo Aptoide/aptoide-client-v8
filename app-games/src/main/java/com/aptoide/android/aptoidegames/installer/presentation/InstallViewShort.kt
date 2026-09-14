@@ -4,8 +4,10 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Divider
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -70,7 +72,7 @@ private fun InstallViewShortContent(
   modifier: Modifier = Modifier,
   onOpen: () -> Unit = {},
   cancelable: Boolean = true,
-) {
+) = Column(horizontalAlignment = Alignment.CenterHorizontally) {
   when (val state = installViewState.uiState) {
     is DownloadUiState.Install -> PrimarySmallButton(
       onClick = state.install,
@@ -143,5 +145,8 @@ private fun InstallViewShortContent(
     is DownloadUiState.Installing,
     is DownloadUiState.Uninstalling,
       -> Unit
+  }
+  if (installViewState.showPlayAttribution && installViewState.uiState.canTriggerInlineInstall()) {
+    PlayAttributionLabel(modifier = Modifier.padding(top = 2.dp))
   }
 }

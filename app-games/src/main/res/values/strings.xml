@@ -65,6 +65,8 @@
   <string name="install_waiting_installation_message">Waiting for install</string>
   <string name="install_installing_message">Installing</string>
   <string name="install_error_short_message">Oops, an error occurred.</string>
+  <!-- Brand name, mandated verbatim by the Play Inline Install brand guidelines -->
+  <string name="install_google_play_attribution" translatable="false">Google Play</string>
   <string name="error_message_no_internet_title">Oops, something went wrong</string>
   <string name="error_message_no_internet_body">Please check your Internet connection.</string>
   <string name="error_message_generic_title">Something went wrong</string>

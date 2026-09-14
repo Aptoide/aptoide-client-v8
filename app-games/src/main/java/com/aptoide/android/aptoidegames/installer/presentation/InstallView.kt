@@ -79,6 +79,17 @@ private fun InstallViewProcessingPreview() {
   }
 }
 
+@PreviewDark
+@Composable
+private fun InstallViewPlayAttributionPreview() {
+  val state = remember { downloadUiStates.first { it is DownloadUiState.Install } }
+  AptoideTheme(darkTheme = isSystemInDarkTheme()) {
+    InstallViewContent(
+      installViewState = state.toInstallViewState(randomApp).copy(showPlayAttribution = true),
+    )
+  }
+}
+
 @Composable
 fun InstallView(
   app: App,
@@ -93,6 +104,7 @@ fun InstallView(
     onInstallStarted = onInstallStarted,
     onCancel = onCancel,
     autoOpenAfterInstall = autoOpenAfterInstall,
+    prefetchPlayCatalog = true,
   )
   val uninstallLabel = stringResource(string.uninstall_button)
 
@@ -142,10 +154,11 @@ private fun InstallViewContent(
   verticalSpacing: Dp = 8.dp,
   horizontalSpacing: Dp = 24.dp,
   showUninstall: Boolean = false,
-) = Box(
+) = Column(
   modifier = modifier
     .fillMaxWidth()
     .wrapContentHeight(),
+  horizontalAlignment = Alignment.CenterHorizontally,
 ) {
   when (val state = installViewState.uiState) {
     null -> Unit
@@ -288,6 +301,9 @@ private fun InstallViewContent(
         onClick = state.retry,
       )
     }
+  }
+  if (installViewState.showPlayAttribution && installViewState.uiState.canTriggerInlineInstall()) {
+    PlayAttributionLabel(modifier = Modifier.padding(top = 4.dp))
   }
 }
 

@@ -123,6 +123,8 @@ import com.aptoide.android.aptoidegames.installer.autoopen.rememberAutoOpenAfter
 import com.aptoide.android.aptoidegames.installer.autoopen.rememberAutoOpenAfterInstallExperiment
 import com.aptoide.android.aptoidegames.installer.autoopen.rememberAutoOpenAfterInstallPreferences
 import com.aptoide.android.aptoidegames.installer.presentation.InstallView
+import com.aptoide.android.aptoidegames.installer.presentation.PlayAttributionLabel
+import com.aptoide.android.aptoidegames.installer.presentation.rememberIsPlayCatalog
 import com.aptoide.android.aptoidegames.mmp.LocalUTMInfo
 import com.aptoide.android.aptoidegames.mmp.WithUTM
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.app_view.AppRewardsView
@@ -1077,6 +1079,10 @@ fun AppPresentationView(app: App) {
           style = AGTypography.SmallGames,
           overflow = TextOverflow.Ellipsis,
         )
+      }
+      if (rememberIsPlayCatalog(app = app, prefetch = true)) {
+        // Same font and style as the surrounding text, per the Play brand guidelines
+        PlayAttributionLabel(style = AGTypography.SmallGames)
       }
       AppRatingAndDownloads(
         rating = app.pRating,

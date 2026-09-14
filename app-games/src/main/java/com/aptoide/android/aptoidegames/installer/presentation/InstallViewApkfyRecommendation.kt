@@ -1,7 +1,10 @@
 package com.aptoide.android.aptoidegames.installer.presentation
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.download_view.presentation.DownloadUiState
@@ -26,6 +29,7 @@ fun InstallViewApkfyRecommendation(
     app = app,
     onInstallStarted = onInstallStarted,
     onCancel = onCancel,
+    prefetchPlayCatalog = true,
   )
 
   InstallViewApkfyRecommendationContent(
@@ -38,7 +42,7 @@ fun InstallViewApkfyRecommendation(
 private fun InstallViewApkfyRecommendationContent(
   installViewState: InstallViewState,
   cancelable: Boolean = true,
-) {
+) = Column(horizontalAlignment = Alignment.CenterHorizontally) {
   when (val state = installViewState.uiState) {
     is DownloadUiState.Install -> PrimaryButton(
       onClick = state.install,
@@ -108,5 +112,8 @@ private fun InstallViewApkfyRecommendationContent(
     is DownloadUiState.Installing,
     is DownloadUiState.Uninstalling,
       -> Unit
+  }
+  if (installViewState.showPlayAttribution && installViewState.uiState.canTriggerInlineInstall()) {
+    PlayAttributionLabel(modifier = Modifier.padding(top = 2.dp))
   }
 }

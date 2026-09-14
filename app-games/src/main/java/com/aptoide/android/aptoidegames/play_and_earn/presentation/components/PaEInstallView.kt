@@ -51,6 +51,8 @@ import com.aptoide.android.aptoidegames.design_system.SecondaryOutlinedButton
 import com.aptoide.android.aptoidegames.design_system.SecondarySmallOutlinedButton
 import com.aptoide.android.aptoidegames.drawables.icons.getError
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewState
+import com.aptoide.android.aptoidegames.installer.presentation.PlayAttributionLabel
+import com.aptoide.android.aptoidegames.installer.presentation.canTriggerInlineInstall
 import com.aptoide.android.aptoidegames.installer.presentation.getProgressString
 import com.aptoide.android.aptoidegames.installer.presentation.installViewStates
 import com.aptoide.android.aptoidegames.installer.presentation.toInstallViewState
@@ -99,7 +101,8 @@ fun PaEInstallView(
   val installViewState = installViewStates(
     app = app,
     onInstallStarted = onInstallStarted,
-    onCancel = onCancel
+    onCancel = onCancel,
+    prefetchPlayCatalog = true,
   )
   val uninstallLabel = stringResource(string.uninstall_button)
 
@@ -153,10 +156,11 @@ private fun PaEInstallViewContent(
   verticalSpacing: Dp = 8.dp,
   horizontalSpacing: Dp = 24.dp,
   showUninstall: Boolean = false,
-) = Box(
+) = Column(
   modifier = modifier
     .fillMaxWidth()
     .wrapContentHeight(),
+  horizontalAlignment = Alignment.CenterHorizontally,
 ) {
   when (val state = installViewState.uiState) {
     null -> Unit
@@ -301,6 +305,9 @@ private fun PaEInstallViewContent(
         onClick = state.retry,
       )
     }
+  }
+  if (installViewState.showPlayAttribution && installViewState.uiState.canTriggerInlineInstall()) {
+    PlayAttributionLabel(modifier = Modifier.padding(top = 4.dp))
   }
 }
 
