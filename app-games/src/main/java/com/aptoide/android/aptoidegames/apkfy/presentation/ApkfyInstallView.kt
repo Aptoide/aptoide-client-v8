@@ -48,6 +48,8 @@ import com.aptoide.android.aptoidegames.design_system.PrimaryOutlinedButton
 import com.aptoide.android.aptoidegames.design_system.SecondaryOutlinedButton
 import com.aptoide.android.aptoidegames.drawables.icons.getError
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewState
+import com.aptoide.android.aptoidegames.installer.presentation.PlayAttributionLabel
+import com.aptoide.android.aptoidegames.installer.presentation.canTriggerInlineInstall
 import com.aptoide.android.aptoidegames.installer.presentation.getProgressString
 import com.aptoide.android.aptoidegames.installer.presentation.installViewStates
 import com.aptoide.android.aptoidegames.installer.presentation.toInstallViewState
@@ -90,7 +92,8 @@ fun ApkfyInstallView(
   val installViewState = installViewStates(
     app = app,
     onInstallStarted = onInstallStarted,
-    onCancel = onCancel
+    onCancel = onCancel,
+    prefetchPlayCatalog = true,
   )
 
   ApkfyInstallViewContent(
@@ -126,105 +129,112 @@ private fun ApkfyInstallViewContent(
   modifier = modifier.wrapContentWidth(),
   contentAlignment = Alignment.BottomCenter
 ) {
-  when (val state = installViewState.uiState) {
-    null -> Unit
-    is DownloadUiState.Install -> PrimaryButton(
-      modifier = Modifier.fillMaxWidth(),
-      title = installViewState.actionLabel,
-      onClick = state.install,
-    )
+  Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    when (val state = installViewState.uiState) {
+      null -> Unit
+      is DownloadUiState.Install -> PrimaryButton(
+        modifier = Modifier.fillMaxWidth(),
+        title = installViewState.actionLabel,
+        onClick = state.install,
+      )
 
-    is DownloadUiState.Migrate -> AccentButton(
-      modifier = Modifier.fillMaxWidth(),
-      title = installViewState.actionLabel,
-      onClick = state.migrate,
-    )
+      is DownloadUiState.Migrate -> AccentButton(
+        modifier = Modifier.fillMaxWidth(),
+        title = installViewState.actionLabel,
+        onClick = state.migrate,
+      )
 
-    is DownloadUiState.MigrateAlias -> AccentButton(
-      modifier = Modifier.fillMaxWidth(),
-      title = installViewState.actionLabel,
-      onClick = state.migrateAlias,
-    )
+      is DownloadUiState.MigrateAlias -> AccentButton(
+        modifier = Modifier.fillMaxWidth(),
+        title = installViewState.actionLabel,
+        onClick = state.migrateAlias,
+      )
 
-    is DownloadUiState.Outdated -> PrimaryButton(
-      modifier = Modifier.fillMaxWidth(),
-      title = installViewState.actionLabel,
-      onClick = state.update,
-    )
+      is DownloadUiState.Outdated -> PrimaryButton(
+        modifier = Modifier.fillMaxWidth(),
+        title = installViewState.actionLabel,
+        onClick = state.update,
+      )
 
-    is DownloadUiState.Waiting -> ProgressText(
-      title = installViewState.stateDescription,
-      verticalSpacing = verticalSpacing,
-    ) {
-      state.action?.let {
-        if (state.blocker == UNMETERED) {
-          PrimaryButton(
-            modifier = Modifier.fillMaxWidth(),
-            title = installViewState.actionLabel,
-            onClick = it,
-          )
-        } else {
-          SecondaryOutlinedButton(
-            modifier = Modifier.fillMaxWidth(),
-            title = installViewState.actionLabel,
-            onClick = it,
-          )
+      is DownloadUiState.Waiting -> ProgressText(
+        title = installViewState.stateDescription,
+        verticalSpacing = verticalSpacing,
+      ) {
+        state.action?.let {
+          if (state.blocker == UNMETERED) {
+            PrimaryButton(
+              modifier = Modifier.fillMaxWidth(),
+              title = installViewState.actionLabel,
+              onClick = it,
+            )
+          } else {
+            SecondaryOutlinedButton(
+              modifier = Modifier.fillMaxWidth(),
+              title = installViewState.actionLabel,
+              onClick = it,
+            )
+          }
         }
       }
-    }
 
-    is DownloadUiState.Downloading -> ProgressText(
-      title = state.getProgressString(),
-      verticalSpacing = verticalSpacing,
-    ) {
-      SecondaryOutlinedButton(
+      is DownloadUiState.Downloading -> ProgressText(
+        title = state.getProgressString(),
+        verticalSpacing = verticalSpacing,
+      ) {
+        SecondaryOutlinedButton(
+          modifier = Modifier.fillMaxWidth(),
+          title = installViewState.actionLabel,
+          onClick = state.cancel,
+        )
+      }
+
+      is DownloadUiState.ReadyToInstall -> ProgressText(
+        title = installViewState.stateDescription,
+        verticalSpacing = verticalSpacing,
+      ) {
+        SecondaryOutlinedButton(
+          modifier = Modifier.fillMaxWidth(),
+          title = installViewState.actionLabel,
+          onClick = state.cancel,
+        )
+      }
+
+      is DownloadUiState.Installing -> ProgressText(
+        title = installViewState.stateDescription,
+        verticalSpacing = verticalSpacing,
+      )
+
+      is DownloadUiState.Uninstalling -> ProgressText(
+        title = installViewState.stateDescription,
+        verticalSpacing = verticalSpacing,
+      )
+
+      is DownloadUiState.Installed -> PrimaryOutlinedButton(
         modifier = Modifier.fillMaxWidth(),
         title = installViewState.actionLabel,
-        onClick = state.cancel,
+        onClick = state.open,
       )
+
+      is DownloadUiState.Error -> Column(
+        modifier = Modifier
+          .fillMaxWidth()
+          .wrapContentHeight(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(verticalSpacing),
+      ) {
+        ApkfyInstallViewError()
+        Spacer(modifier = Modifier.weight(1f))
+        PrimaryButton(
+          modifier = Modifier.width(136.dp),
+          title = installViewState.actionLabel,
+          onClick = state.retry,
+        )
+      }
     }
-
-    is DownloadUiState.ReadyToInstall -> ProgressText(
-      title = installViewState.stateDescription,
-      verticalSpacing = verticalSpacing,
+    if (
+      installViewState.showPlayAttribution && installViewState.uiState.canTriggerInlineInstall()
     ) {
-      SecondaryOutlinedButton(
-        modifier = Modifier.fillMaxWidth(),
-        title = installViewState.actionLabel,
-        onClick = state.cancel,
-      )
-    }
-
-    is DownloadUiState.Installing -> ProgressText(
-      title = installViewState.stateDescription,
-      verticalSpacing = verticalSpacing,
-    )
-
-    is DownloadUiState.Uninstalling -> ProgressText(
-      title = installViewState.stateDescription,
-      verticalSpacing = verticalSpacing,
-    )
-
-    is DownloadUiState.Installed -> PrimaryOutlinedButton(
-      modifier = Modifier.fillMaxWidth(),
-      title = installViewState.actionLabel,
-      onClick = state.open,
-    )
-
-    is DownloadUiState.Error -> Column(
-      modifier = Modifier
-        .fillMaxWidth()
-        .wrapContentHeight(),
-      horizontalAlignment = Alignment.CenterHorizontally,
-      verticalArrangement = Arrangement.spacedBy(verticalSpacing),
-    ) {
-      ApkfyInstallViewError()
-      Spacer(modifier = Modifier.weight(1f))
-      PrimaryButton(
-        modifier = Modifier.width(136.dp),
-        title = installViewState.actionLabel,
-        onClick = state.retry,
-      )
+      PlayAttributionLabel(modifier = Modifier.padding(top = 4.dp))
     }
   }
 }

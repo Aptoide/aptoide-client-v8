@@ -59,6 +59,7 @@ data class InstallViewState(
   val contentDescription: String,
   val stateDescription: String,
   val actionLabel: String?,
+  val showPlayAttribution: Boolean = false,
 )
 
 @Composable
@@ -67,7 +68,9 @@ fun installViewStates(
   onInstallStarted: () -> Unit = {},
   onCancel: () -> Unit = {},
   autoOpenAfterInstall: Boolean? = null,
+  prefetchPlayCatalog: Boolean = false,
 ): InstallViewState {
+  val isPlayCatalog = rememberIsPlayCatalog(app = app, prefetch = prefetchPlayCatalog)
   val context = LocalContext.current
   val analyticsContext = AnalyticsContext.current
   val utmContext = UTMContext.current
@@ -371,7 +374,7 @@ fun installViewStates(
     }
   }
 
-  return uiState.toInstallViewState(app)
+  return uiState.toInstallViewState(app).copy(showPlayAttribution = isPlayCatalog)
 }
 
 @Composable

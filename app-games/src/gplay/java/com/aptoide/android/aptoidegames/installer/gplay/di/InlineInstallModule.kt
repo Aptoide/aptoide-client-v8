@@ -4,7 +4,9 @@ import cm.aptoide.pt.aptoide_network.data.network.AcceptLanguageInterceptor
 import cm.aptoide.pt.aptoide_network.data.network.UserAgentInterceptor
 import cm.aptoide.pt.download_view.presentation.InlineInstallResolver
 import com.aptoide.android.aptoidegames.BuildConfig
+import com.aptoide.android.aptoidegames.installer.PlayCatalogChecker
 import com.aptoide.android.aptoidegames.installer.gplay.AptoideCatalogTokenRepository
+import com.aptoide.android.aptoidegames.installer.gplay.CachingCatalogTokenRepository
 import com.aptoide.android.aptoidegames.installer.gplay.CatalogTokenRepository
 import com.aptoide.android.aptoidegames.installer.gplay.PlayInlineConfigApi
 import com.aptoide.android.aptoidegames.installer.gplay.PlayInlineInstallResolver
@@ -13,6 +15,9 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -28,13 +33,27 @@ internal interface InlineInstallModule {
   @Singleton
   fun bindInlineInstallResolver(impl: PlayInlineInstallResolver): InlineInstallResolver
 
-  // Swap [AptoideCatalogTokenRepository] for [FakeCatalogTokenRepository] to exercise
-  // the inline flow locally without the backend
   @Binds
   @Singleton
-  fun bindCatalogTokenRepository(impl: AptoideCatalogTokenRepository): CatalogTokenRepository
+  fun bindCatalogTokenRepository(impl: CachingCatalogTokenRepository): CatalogTokenRepository
+
+  @Binds
+  @Singleton
+  fun bindPlayCatalogChecker(impl: CachingCatalogTokenRepository): PlayCatalogChecker
 
   companion object {
+
+    // Swap the origin for [FakeCatalogTokenRepository] to exercise the inline flow and the
+    // "Google Play" labeling locally without the backend (every app becomes Play catalog)
+    @Provides
+    @Singleton
+    fun provideCachingCatalogTokenRepository(
+      origin: AptoideCatalogTokenRepository,
+    ): CachingCatalogTokenRepository = CachingCatalogTokenRepository(
+      origin = origin,
+      scope = CoroutineScope(SupervisorJob() + Dispatchers.IO),
+      now = System::currentTimeMillis,
+    )
 
     @PlayInlineOkHttp
     @Provides

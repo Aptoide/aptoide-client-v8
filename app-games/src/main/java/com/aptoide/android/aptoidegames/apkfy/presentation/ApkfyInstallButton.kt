@@ -1,9 +1,10 @@
 package com.aptoide.android.aptoidegames.apkfy.presentation
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
@@ -23,6 +24,8 @@ import com.aptoide.android.aptoidegames.design_system.PrimaryContentButton
 import com.aptoide.android.aptoidegames.design_system.PrimaryOutlinedButton
 import com.aptoide.android.aptoidegames.design_system.SecondaryOutlinedButton
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewState
+import com.aptoide.android.aptoidegames.installer.presentation.PlayAttributionLabel
+import com.aptoide.android.aptoidegames.installer.presentation.canTriggerInlineInstall
 import com.aptoide.android.aptoidegames.installer.presentation.installViewStates
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -37,7 +40,8 @@ fun ApkfyInstallButton(
   val installViewState = installViewStates(
     app = app,
     onInstallStarted = onInstallStarted,
-    onCancel = onCancel
+    onCancel = onCancel,
+    prefetchPlayCatalog = true,
   )
 
   ApkfyInstallButtonContent(
@@ -52,8 +56,9 @@ private fun ApkfyInstallButtonContent(
   app: App,
   installViewState: InstallViewState,
   modifier: Modifier = Modifier,
-) = Box(
+) = Column(
   modifier = modifier,
+  horizontalAlignment = Alignment.CenterHorizontally,
 ) {
   when (val state = installViewState.uiState) {
     null -> Unit
@@ -167,5 +172,8 @@ private fun ApkfyInstallButtonContent(
       title = installViewState.actionLabel,
       onClick = state.retry,
     )
+  }
+  if (installViewState.showPlayAttribution && installViewState.uiState.canTriggerInlineInstall()) {
+    PlayAttributionLabel(modifier = Modifier.padding(top = 4.dp))
   }
 }
