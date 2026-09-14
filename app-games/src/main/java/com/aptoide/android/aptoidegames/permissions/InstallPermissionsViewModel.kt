@@ -6,6 +6,7 @@ import android.provider.Settings
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cm.aptoide.pt.extensions.hasPackageInstallsPermission
 import cm.aptoide.pt.installer.platform.UserActionLauncher
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -19,6 +20,8 @@ class InstallPermissionsViewModel @Inject constructor(
 ) : ViewModel() {
 
   fun requestInstallPermissions() = viewModelScope.launch {
+    // Already granted: opening Settings would only show the toggle already enabled
+    if (context.hasPackageInstallsPermission()) return@launch
     userActionLauncher.launchIntent(
       Intent(
         Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,
