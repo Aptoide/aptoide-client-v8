@@ -374,7 +374,9 @@ fun installViewStates(
     }
   }
 
-  return uiState.toInstallViewState(app).copy(showPlayAttribution = isPlayCatalog)
+  // Folded here so no render site can show the label outside the pre-tap states
+  return uiState.toInstallViewState(app)
+    .copy(showPlayAttribution = isPlayCatalog && uiState.canTriggerInlineInstall())
 }
 
 @Composable

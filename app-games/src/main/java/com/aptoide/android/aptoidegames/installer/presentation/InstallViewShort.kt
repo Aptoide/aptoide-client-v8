@@ -3,8 +3,8 @@ package com.aptoide.android.aptoidegames.installer.presentation
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material.Divider
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -146,7 +146,7 @@ private fun InstallViewShortContent(
     is DownloadUiState.Uninstalling,
       -> Unit
   }
-  if (installViewState.showPlayAttribution && installViewState.uiState.canTriggerInlineInstall()) {
+  if (installViewState.showPlayAttribution) {
     PlayAttributionLabel(modifier = Modifier.padding(top = 2.dp))
   }
 }

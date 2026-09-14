@@ -113,7 +113,7 @@ private fun InstallViewApkfyRecommendationContent(
     is DownloadUiState.Uninstalling,
       -> Unit
   }
-  if (installViewState.showPlayAttribution && installViewState.uiState.canTriggerInlineInstall()) {
+  if (installViewState.showPlayAttribution) {
     PlayAttributionLabel(modifier = Modifier.padding(top = 2.dp))
   }
 }

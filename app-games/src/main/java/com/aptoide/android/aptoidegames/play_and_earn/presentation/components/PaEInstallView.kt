@@ -52,7 +52,6 @@ import com.aptoide.android.aptoidegames.design_system.SecondarySmallOutlinedButt
 import com.aptoide.android.aptoidegames.drawables.icons.getError
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewState
 import com.aptoide.android.aptoidegames.installer.presentation.PlayAttributionLabel
-import com.aptoide.android.aptoidegames.installer.presentation.canTriggerInlineInstall
 import com.aptoide.android.aptoidegames.installer.presentation.getProgressString
 import com.aptoide.android.aptoidegames.installer.presentation.installViewStates
 import com.aptoide.android.aptoidegames.installer.presentation.toInstallViewState
@@ -306,7 +305,7 @@ private fun PaEInstallViewContent(
       )
     }
   }
-  if (installViewState.showPlayAttribution && installViewState.uiState.canTriggerInlineInstall()) {
+  if (installViewState.showPlayAttribution) {
     PlayAttributionLabel(modifier = Modifier.padding(top = 4.dp))
   }
 }
