@@ -28,6 +28,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -82,18 +83,23 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
     savedStateRegistryController.performAttach()
     savedStateRegistryController.performRestore(null)
 
-    observePlayAndEarnVisibility()
+    observePlayAndEarnFlags()
   }
 
-  private fun observePlayAndEarnVisibility() {
+  /** Stops the service when either PaE visibility or usage tracking is disabled remotely. */
+  private fun observePlayAndEarnFlags() {
     lifecycleScope.launch {
-      playAndEarnManager.observePlayAndEarnVisibility().collect { isEnabled ->
-        if (!isEnabled) {
-          Timber.d("Feature flag disabled remotely, clearing sessions and stopping foreground service")
-          paESessionManager.clearAllSessions()
-          stopSelf()
+      combine(
+        playAndEarnManager.observePlayAndEarnVisibility(),
+        playAndEarnManager.observeUsageTrackingEnabled(),
+      ) { isVisible, isTrackingEnabled -> isVisible && isTrackingEnabled }
+        .collect { isEnabled ->
+          if (!isEnabled) {
+            Timber.d("Feature flag disabled remotely, clearing sessions and stopping foreground service")
+            paESessionManager.clearAllSessions()
+            stopSelf()
+          }
         }
-      }
     }
   }
 
@@ -130,8 +136,8 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
 
   private suspend fun checkFlagAndFetchPackages() {
     try {
-      // Check if feature is enabled remotely
-      if (!playAndEarnManager.shouldShowPlayAndEarn()) {
+      // Check if feature (visibility + usage tracking) is enabled remotely
+      if (!playAndEarnManager.shouldRunUsageTracking()) {
         paESessionManager.clearAllSessions()
         stopSelf()
         return
