@@ -128,6 +128,10 @@ private fun NewAppPromotional(app: App, label: String, navigate: (String) -> Uni
         }
 
       }
+      // No diversion or prefetch: Type.NEW_APP is in EXCLUDED_HOME_BUNDLE_TYPES for the
+      // gplay source set, so this never renders where an inline install can happen. Adding
+      // it back to the feed means wiring onNavigateToAppView here too, or the Play
+      // attribution goes missing.
       InstallViewShort(app = app)
     }
   }

@@ -158,7 +158,9 @@ private fun InstallViewShortContent(
     is DownloadUiState.Uninstalling,
       -> Unit
   }
-  if (installViewState.showPlayAttribution) {
+  // A diverted button cannot start an install, so it needs no attribution - and leaving it out
+  // keeps the card rendering the same whether or not the shared catalog cache is already warm
+  if (installViewState.showPlayAttribution && divert == null) {
     PlayAttributionLabel(modifier = Modifier.padding(top = 2.dp))
   }
 }

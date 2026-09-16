@@ -22,8 +22,8 @@ import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.randomApp
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.design_system.SecondarySmallOutlinedButton
-import com.aptoide.android.aptoidegames.installer.presentation.InstallViewState
 import com.aptoide.android.aptoidegames.installer.FEED_INSTALL_DIVERTS_TO_APPVIEW
+import com.aptoide.android.aptoidegames.installer.presentation.InstallViewState
 import com.aptoide.android.aptoidegames.installer.presentation.PlayAttributionLabel
 import com.aptoide.android.aptoidegames.installer.presentation.appViewDiversion
 import com.aptoide.android.aptoidegames.installer.presentation.installViewStates
@@ -152,7 +152,9 @@ private fun PaEInstallViewShortContent(
     is DownloadUiState.Uninstalling,
       -> Unit
   }
-  if (installViewState.showPlayAttribution) {
+  // A diverted button cannot start an install, so it needs no attribution - and leaving it out
+  // keeps the card rendering the same whether or not the shared catalog cache is already warm
+  if (installViewState.showPlayAttribution && divert == null) {
     PlayAttributionLabel(modifier = Modifier.padding(top = 2.dp))
   }
 }
