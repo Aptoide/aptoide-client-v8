@@ -17,6 +17,7 @@ import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.installer.FEED_INSTALL_DIVERTS_TO_APPVIEW
 import com.aptoide.android.aptoidegames.installer.PlayCatalogChecker
 import com.aptoide.android.aptoidegames.mmp.UTMContext
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -87,9 +88,9 @@ fun DownloadUiState?.canTriggerInlineInstall(): Boolean = when (this) {
 /**
  * The click to run instead of this state's own install action, or null to keep the action as
  * it is. Feed and carousel cards cannot afford a catalog lookup each, so in Play-distributed
- * builds ([com.aptoide.android.aptoidegames.installer.FEED_INSTALL_DIVERTS_TO_APPVIEW]) they
- * send the user to AppView - which prefetches and labels - rather than starting an install
- * that could divert into an unlabeled Play inline install. Deliberately gated on the same
+ * builds ([FEED_INSTALL_DIVERTS_TO_APPVIEW]) they send the user to AppView - which prefetches
+ * and labels - rather than starting an install that could divert into an unlabeled Play inline
+ * install. Deliberately gated on the same
  * states as [canTriggerInlineInstall], so downloads keep their progress and cancel, and
  * installed apps keep their open button.
  */
@@ -109,6 +110,11 @@ fun DownloadUiState?.appViewDiversion(
  */
 @Composable
 fun (() -> Unit)?.reportingCampaignClick(app: App): (() -> Unit)? {
+  // Distributions that never divert keep the navigation untouched, so they take on neither the
+  // wrapper nor a recomposition dependency on the UTM context they would never report with.
+  // A compile-time constant, so the branch is fixed for the whole build.
+  if (!FEED_INSTALL_DIVERTS_TO_APPVIEW) return this
+
   val utmContext = UTMContext.current
   return this?.let { navigate ->
     {
