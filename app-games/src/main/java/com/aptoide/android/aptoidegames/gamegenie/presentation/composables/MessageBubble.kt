@@ -38,6 +38,7 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.AppItem
 import com.aptoide.android.aptoidegames.gamegenie.analytics.rememberGameGenieAnalytics
 import com.aptoide.android.aptoidegames.gamegenie.presentation.GameGenieYoutubePlayer
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
+import com.aptoide.android.aptoidegames.installer.presentation.reportingCampaignClick
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
@@ -177,7 +178,7 @@ fun MessageBubble(
                 app = app,
                 onClick = openAppView,
               ) {
-                InstallViewShort(app, onNavigateToAppView = openAppView)
+                InstallViewShort(app, onNavigateToAppView = openAppView.reportingCampaignClick(app))
               }
             }
           }
@@ -237,7 +238,7 @@ fun MessageBubble(
               app = app,
               onClick = openAppView,
             ) {
-              InstallViewShort(app, onNavigateToAppView = openAppView)
+              InstallViewShort(app, onNavigateToAppView = openAppView.reportingCampaignClick(app))
             }
           }
         }

@@ -68,6 +68,7 @@ import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.error_views.NoConnectionView
 import com.aptoide.android.aptoidegames.home.LoadingView
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
+import com.aptoide.android.aptoidegames.installer.presentation.reportingCampaignClick
 import com.aptoide.android.aptoidegames.mmp.UTMContext
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
@@ -425,7 +426,7 @@ private fun WalletAppItem(
       app = it,
       onClick = openAppView
     ) {
-      InstallViewShort(app = it, onNavigateToAppView = openAppView)
+      InstallViewShort(app = it, onNavigateToAppView = openAppView.reportingCampaignClick(it))
     }
   }
 }

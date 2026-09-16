@@ -15,8 +15,10 @@ import androidx.lifecycle.ViewModel
 import cm.aptoide.pt.download_view.presentation.DownloadUiState
 import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.installer.PlayCatalogChecker
+import com.aptoide.android.aptoidegames.mmp.UTMContext
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -95,6 +97,26 @@ fun DownloadUiState?.appViewDiversion(
   onNavigateToAppView: (() -> Unit)?,
   divertsToAppView: Boolean,
 ): (() -> Unit)? = onNavigateToAppView?.takeIf { divertsToAppView && canTriggerInlineInstall() }
+
+/**
+ * This navigation plus the campaign click the install path reported before the tap was
+ * diverted. AppView will not report it - the install path is guarded on
+ * `currentScreen != "AppView"` - and nothing reports one on AppView entry, so without this the
+ * click is lost outright.
+ *
+ * Only for surfaces whose card tap does not already report a click of its own; applying it
+ * where one is already sent (top charts, more, bonus list, publisher takeover) double counts.
+ */
+@Composable
+fun (() -> Unit)?.reportingCampaignClick(app: App): (() -> Unit)? {
+  val utmContext = UTMContext.current
+  return this?.let { navigate ->
+    {
+      app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(utmInfo = utmContext)
+      navigate()
+    }
+  }
+}
 
 /**
  * Plain-text "Google Play" attribution (Inline Install Brand Guidelines, option 3: the

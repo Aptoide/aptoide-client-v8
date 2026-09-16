@@ -100,6 +100,7 @@ import com.aptoide.android.aptoidegames.gamegenie.presentation.buildGameGenieRou
 import com.aptoide.android.aptoidegames.gamegenie.presentation.rememberGameGenieVisibility
 import com.aptoide.android.aptoidegames.home.rememberBottomBarMenuScrollState
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
+import com.aptoide.android.aptoidegames.installer.presentation.reportingCampaignClick
 import com.aptoide.android.aptoidegames.mmp.UTMContext
 import com.aptoide.android.aptoidegames.mmp.WithUTM
 import com.aptoide.android.aptoidegames.search.SearchType
@@ -791,7 +792,7 @@ fun EmptySearchView(
         InstallViewShort(
           app,
           onInstallStarted = { onItemInstallStarted(app) },
-          onNavigateToAppView = openAppView,
+          onNavigateToAppView = openAppView.reportingCampaignClick(app),
         )
       }
       if (index == 0 && app.name.lowercase() == searchValue.lowercase()) {
