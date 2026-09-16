@@ -210,19 +210,20 @@ fun MoreBonusBundleViewContent(
   ) {
     item { MoreBonusSectionView(onWalletClick = { navigateToApp(it, null) }) }
     itemsIndexed(appList) { index, app ->
+      val openAppView = {
+        app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(utmContext)
+        bundleAnalytics.sendAppPromoClick(
+          app = app,
+          analyticsContext = analyticsContext.copy(itemPosition = index)
+        )
+        navigateToApp(app, index)
+      }
       AppItem(
         modifier = Modifier.padding(horizontal = 16.dp),
         app = app,
-        onClick = {
-          app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(utmContext)
-          bundleAnalytics.sendAppPromoClick(
-            app = app,
-            analyticsContext = analyticsContext.copy(itemPosition = index)
-          )
-          navigateToApp(app, index)
-        },
+        onClick = openAppView,
       ) {
-        InstallViewShort(app)
+        InstallViewShort(app, onNavigateToAppView = openAppView)
       }
     }
     item { WantMoreSectionView(onWalletClick = { navigateToApp(it, null) }) }
@@ -418,14 +419,13 @@ private fun WalletAppItem(
   val (uiState, _) = rememberWalletApp()
   val walletApp = (uiState as? AppUiState.Idle)?.app
   walletApp?.let {
+    val openAppView = { onWalletClick(it) }
     AppItem(
       modifier = modifier,
       app = it,
-      onClick = {
-        onWalletClick(it)
-      }
+      onClick = openAppView
     ) {
-      InstallViewShort(app = it)
+      InstallViewShort(app = it, onNavigateToAppView = openAppView)
     }
   }
 }

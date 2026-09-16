@@ -21,6 +21,7 @@ import com.aptoide.android.aptoidegames.design_system.AccentSmallButton
 import com.aptoide.android.aptoidegames.design_system.PrimarySmallButton
 import com.aptoide.android.aptoidegames.design_system.PrimarySmallOutlinedButton
 import com.aptoide.android.aptoidegames.design_system.SecondarySmallOutlinedButton
+import com.aptoide.android.aptoidegames.installer.FEED_INSTALL_DIVERTS_TO_APPVIEW
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 
 @PreviewDark
@@ -52,17 +53,21 @@ fun InstallViewShort(
   onCancel: () -> Unit = {},
   onOpen: () -> Unit = {},
   cancelable: Boolean = true,
+  prefetchPlayCatalog: Boolean = false,
+  onNavigateToAppView: (() -> Unit)? = null,
 ) {
   val installViewState = installViewStates(
     app = app,
     onInstallStarted = onInstallStarted,
     onCancel = onCancel,
+    prefetchPlayCatalog = prefetchPlayCatalog,
   )
 
   InstallViewShortContent(
     installViewState = installViewState,
     onOpen = onOpen,
     cancelable = cancelable,
+    onNavigateToAppView = onNavigateToAppView,
   )
 }
 
@@ -72,28 +77,35 @@ private fun InstallViewShortContent(
   modifier: Modifier = Modifier,
   onOpen: () -> Unit = {},
   cancelable: Boolean = true,
+  onNavigateToAppView: (() -> Unit)? = null,
 ) = Column(horizontalAlignment = Alignment.CenterHorizontally) {
+  // Non-null only where this card must hand the install over to AppView instead of starting
+  // it here - see [appViewDiversion]
+  val divert = installViewState.uiState.appViewDiversion(
+    onNavigateToAppView = onNavigateToAppView,
+    divertsToAppView = FEED_INSTALL_DIVERTS_TO_APPVIEW,
+  )
   when (val state = installViewState.uiState) {
     is DownloadUiState.Install -> PrimarySmallButton(
-      onClick = state.install,
+      onClick = divert ?: state.install,
       modifier = modifier,
       title = installViewState.actionLabel,
     )
 
     is DownloadUiState.Migrate -> AccentSmallButton(
-      onClick = state.migrate,
+      onClick = divert ?: state.migrate,
       modifier = modifier,
       title = installViewState.actionLabel,
     )
 
     is DownloadUiState.MigrateAlias -> AccentSmallButton(
-      onClick = state.migrateAlias,
+      onClick = divert ?: state.migrateAlias,
       modifier = modifier,
       title = installViewState.actionLabel,
     )
 
     is DownloadUiState.Outdated -> PrimarySmallButton(
-      onClick = state.update,
+      onClick = divert ?: state.update,
       modifier = modifier,
       title = installViewState.actionLabel,
     )
@@ -136,7 +148,7 @@ private fun InstallViewShortContent(
     )
 
     is DownloadUiState.Error -> PrimarySmallButton(
-      onClick = state.retry,
+      onClick = divert ?: state.retry,
       modifier = modifier,
       title = installViewState.actionLabel,
     )

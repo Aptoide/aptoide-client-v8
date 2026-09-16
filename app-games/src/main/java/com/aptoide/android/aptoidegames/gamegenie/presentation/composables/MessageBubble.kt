@@ -167,16 +167,17 @@ fun MessageBubble(
             }
 
             apps?.forEachIndexed { index, app ->
+              val openAppView = {
+                navigateTo(
+                  buildAppViewRoute(app)
+                )
+                analytics.sendGameGenieAppClick(app.packageName, index)
+              }
               AppItem(
                 app = app,
-                onClick = {
-                  navigateTo(
-                    buildAppViewRoute(app)
-                  )
-                  analytics.sendGameGenieAppClick(app.packageName, index)
-                },
+                onClick = openAppView,
               ) {
-                InstallViewShort(app)
+                InstallViewShort(app, onNavigateToAppView = openAppView)
               }
             }
           }
@@ -226,16 +227,17 @@ fun MessageBubble(
         }
 
           apps?.forEachIndexed { index, app ->
+            val openAppView = {
+              navigateTo(
+                buildAppViewRoute(app)
+              )
+              analytics.sendGameGenieAppClick(app.packageName, index)
+            }
             AppItem(
               app = app,
-              onClick = {
-                navigateTo(
-                  buildAppViewRoute(app)
-                )
-                analytics.sendGameGenieAppClick(app.packageName, index)
-              },
+              onClick = openAppView,
             ) {
-              InstallViewShort(app)
+              InstallViewShort(app, onNavigateToAppView = openAppView)
             }
           }
         }

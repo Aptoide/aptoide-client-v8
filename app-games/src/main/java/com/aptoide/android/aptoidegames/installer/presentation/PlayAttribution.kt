@@ -74,6 +74,19 @@ fun DownloadUiState?.canTriggerInlineInstall(): Boolean = when (this) {
 }
 
 /**
+ * The click to run instead of this state's own install action, or null to keep the action as
+ * it is. Feed and carousel cards cannot afford a catalog lookup each, so in Play-distributed
+ * builds ([FEED_INSTALL_DIVERTS_TO_APPVIEW]) they send the user to AppView - which prefetches
+ * and labels - rather than starting an install that could divert into an unlabeled Play
+ * inline install. Deliberately gated on the same states as [canTriggerInlineInstall], so
+ * downloads keep their progress and cancel, and installed apps keep their open button.
+ */
+fun DownloadUiState?.appViewDiversion(
+  onNavigateToAppView: (() -> Unit)?,
+  divertsToAppView: Boolean,
+): (() -> Unit)? = onNavigateToAppView?.takeIf { divertsToAppView && canTriggerInlineInstall() }
+
+/**
  * Plain-text "Google Play" attribution (Inline Install Brand Guidelines, option 3: the
  * words typed out in the same font and style as the surrounding text - no logo assets).
  */

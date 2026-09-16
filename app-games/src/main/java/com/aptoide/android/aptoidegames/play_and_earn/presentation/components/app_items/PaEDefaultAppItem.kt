@@ -98,7 +98,8 @@ fun PaEDefaultAppItem(
 
       PaEInstallViewShort(
         app = app,
-        navigate = navigate
+        navigate = navigate,
+        onNavigateToAppView = onClick,
       )
     }
   }

@@ -111,35 +111,31 @@ fun CategoryDetailView(
         )
         { index, app ->
 
+          val openAppView = {
+            bundleAnalytics.sendAppPromoClick(
+              app = app,
+              analyticsContext = analyticsContext.copy(itemPosition = index)
+            )
+            navigateToApp(app, index)
+          }
           val installViewShort: @Composable () -> Unit = {
             InstallViewShort(
               app = app,
-              onInstallStarted = {}
+              onInstallStarted = {},
+              onNavigateToAppView = openAppView,
             )
           }
           if (index == 0) {
             LargeAppItem(
               app = app,
-              onClick = {
-                bundleAnalytics.sendAppPromoClick(
-                  app = app,
-                  analyticsContext = analyticsContext.copy(itemPosition = index)
-                )
-                navigateToApp(app, index)
-              }
+              onClick = openAppView
             ) {
               installViewShort()
             }
           } else {
             AppItem(
               app = app,
-              onClick = {
-                bundleAnalytics.sendAppPromoClick(
-                  app = app,
-                  analyticsContext = analyticsContext.copy(itemPosition = index)
-                )
-                navigateToApp(app, index)
-              },
+              onClick = openAppView,
             ) {
               installViewShort()
             }

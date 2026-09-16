@@ -244,7 +244,7 @@ private fun CarouselAppView(
           showVersionName = false
         )
       }
-      InstallViewShort(app = app)
+      InstallViewShort(app = app, onNavigateToAppView = onClick)
     }
   }
 }
