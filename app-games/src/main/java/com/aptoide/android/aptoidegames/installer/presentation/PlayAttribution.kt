@@ -70,16 +70,26 @@ fun DownloadUiState?.canTriggerInlineInstall(): Boolean = when (this) {
   is DownloadUiState.Error,
     -> true
 
-  else -> false
+  // Listed rather than folded into an else, so a new DownloadUiState is a compile error here
+  // and has to be classified deliberately instead of silently losing the attribution
+  null,
+  is DownloadUiState.Waiting,
+  is DownloadUiState.Downloading,
+  is DownloadUiState.ReadyToInstall,
+  is DownloadUiState.Installing,
+  is DownloadUiState.Uninstalling,
+  is DownloadUiState.Installed,
+    -> false
 }
 
 /**
  * The click to run instead of this state's own install action, or null to keep the action as
  * it is. Feed and carousel cards cannot afford a catalog lookup each, so in Play-distributed
- * builds ([FEED_INSTALL_DIVERTS_TO_APPVIEW]) they send the user to AppView - which prefetches
- * and labels - rather than starting an install that could divert into an unlabeled Play
- * inline install. Deliberately gated on the same states as [canTriggerInlineInstall], so
- * downloads keep their progress and cancel, and installed apps keep their open button.
+ * builds ([com.aptoide.android.aptoidegames.installer.FEED_INSTALL_DIVERTS_TO_APPVIEW]) they
+ * send the user to AppView - which prefetches and labels - rather than starting an install
+ * that could divert into an unlabeled Play inline install. Deliberately gated on the same
+ * states as [canTriggerInlineInstall], so downloads keep their progress and cancel, and
+ * installed apps keep their open button.
  */
 fun DownloadUiState?.appViewDiversion(
   onNavigateToAppView: (() -> Unit)?,
