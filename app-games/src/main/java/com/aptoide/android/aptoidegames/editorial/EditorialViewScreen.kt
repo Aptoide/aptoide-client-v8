@@ -62,6 +62,7 @@ import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.error_views.NoConnectionView
 import com.aptoide.android.aptoidegames.feature_apps.presentation.AppItem
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
+import com.aptoide.android.aptoidegames.installer.presentation.reportingCampaignClick
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.FixedColors
@@ -246,7 +247,10 @@ private fun ArticleViewContent(
                 onClick = openAppView,
                 modifier = Modifier.padding(horizontal = 16.dp)
               ) {
-                InstallViewShort(app = it, onNavigateToAppView = openAppView)
+                InstallViewShort(
+                  app = it,
+                  onNavigateToAppView = openAppView.reportingCampaignClick(it),
+                )
               }
             }
           }

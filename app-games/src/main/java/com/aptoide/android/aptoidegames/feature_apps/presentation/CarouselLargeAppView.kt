@@ -46,6 +46,7 @@ import com.aptoide.android.aptoidegames.home.LoadingBundleView
 import com.aptoide.android.aptoidegames.home.getSeeMoreRouteNavigation
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
+import com.aptoide.android.aptoidegames.installer.presentation.reportingCampaignClick
 import com.aptoide.android.aptoidegames.installer.presentation.ProgressText
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
@@ -221,7 +222,7 @@ private fun CarouselLargeAppView(
           showVersionName = false
         )
       }
-      InstallViewShort(app = app, onNavigateToAppView = onClick)
+      InstallViewShort(app = app, onNavigateToAppView = onClick.reportingCampaignClick(app))
     }
   }
 }

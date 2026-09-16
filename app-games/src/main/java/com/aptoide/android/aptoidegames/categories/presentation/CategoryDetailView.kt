@@ -39,6 +39,7 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.LargeAppItem
 import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberBundleAnalytics
 import com.aptoide.android.aptoidegames.home.LoadingView
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
+import com.aptoide.android.aptoidegames.installer.presentation.reportingCampaignClick
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 
 const val categoryDetailRoute = "category/{title}/{name}"
@@ -122,7 +123,7 @@ fun CategoryDetailView(
             InstallViewShort(
               app = app,
               onInstallStarted = {},
-              onNavigateToAppView = openAppView,
+              onNavigateToAppView = openAppView.reportingCampaignClick(app),
             )
           }
           if (index == 0) {
