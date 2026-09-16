@@ -240,12 +240,13 @@ private fun ArticleViewContent(
           }
           content.app?.let {
             item {
+              val openAppView = { navigate(buildAppViewRoute(it)) }
               AppItem(
                 app = it,
-                onClick = { navigate(buildAppViewRoute(it)) },
+                onClick = openAppView,
                 modifier = Modifier.padding(horizontal = 16.dp)
               ) {
-                InstallViewShort(app = it)
+                InstallViewShort(app = it, onNavigateToAppView = openAppView)
               }
             }
           }

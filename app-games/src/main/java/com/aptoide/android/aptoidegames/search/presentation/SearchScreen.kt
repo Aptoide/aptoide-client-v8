@@ -786,23 +786,25 @@ fun EmptySearchView(
     itemsIndexed(
       items = searchResults,
     ) { index, app ->
+      val openAppView = { onItemClick(index, app) }
       val installViewShort: @Composable () -> Unit = {
         InstallViewShort(
           app,
-          onInstallStarted = { onItemInstallStarted(app) }
+          onInstallStarted = { onItemInstallStarted(app) },
+          onNavigateToAppView = openAppView,
         )
       }
       if (index == 0 && app.name.lowercase() == searchValue.lowercase()) {
         LargeAppItem(
           app = app,
-          onClick = { onItemClick(index, app) }
+          onClick = openAppView
         ) {
           installViewShort()
         }
       } else {
         AppItem(
           app = app,
-          onClick = { onItemClick(index, app) },
+          onClick = openAppView,
         ) {
           installViewShort()
         }
