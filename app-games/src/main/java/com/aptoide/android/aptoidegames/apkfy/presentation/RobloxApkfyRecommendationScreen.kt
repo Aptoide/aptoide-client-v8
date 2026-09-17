@@ -159,6 +159,7 @@ private fun ApkfyRecommendationApkfyAppItem(
     InstallViewShort(
       app = app,
       onOpen = { apkfyAnalytics.sendExp83OpenRobloxClick() },
+      prefetchPlayCatalog = true,
     )
   }
 }
