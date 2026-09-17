@@ -2,6 +2,8 @@ package com.aptoide.android.aptoidegames.installer
 
 import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.test.gherkin.scenario
+import com.aptoide.android.aptoidegames.apkfy.FREE_FIRE_PACKAGE
+import com.aptoide.android.aptoidegames.apkfy.ROBLOX_PACKAGE
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -57,6 +59,42 @@ internal class PlayCatalogExclusionTest {
     val excluded = app.excludedFromPlayCatalog()
 
     m Then "it keeps the Play path"
+    assertFalse(excluded)
+  }
+
+  @Test
+  fun `A Roblox build flagged STORE_BDS still takes Play's overlay`() = scenario {
+    m Given "Roblox carrying the STORE_BDS flag"
+    val app = randomApp.copy(packageName = ROBLOX_PACKAGE, bdsFlags = listOf("STORE_BDS"))
+
+    m When "the Play catalog exclusion is evaluated"
+    val excluded = app.excludedFromPlayCatalog()
+
+    m Then "the overlay rule wins: it is not excluded, so the attribution and the overlay stay"
+    assertFalse(excluded)
+  }
+
+  @Test
+  fun `A Free Fire build flagged STORE_BDS still takes Play's overlay`() = scenario {
+    m Given "Free Fire carrying the STORE_BDS flag"
+    val app = randomApp.copy(packageName = FREE_FIRE_PACKAGE, bdsFlags = listOf("STORE_BDS"))
+
+    m When "the Play catalog exclusion is evaluated"
+    val excluded = app.excludedFromPlayCatalog()
+
+    m Then "the overlay rule wins: it is not excluded"
+    assertFalse(excluded)
+  }
+
+  @Test
+  fun `The flag match is exact - a lowercase variant does not exclude`() = scenario {
+    m Given "an app whose bdsFlags carry a differently cased variant"
+    val app = randomApp.copy(bdsFlags = listOf("store_bds"))
+
+    m When "the Play catalog exclusion is evaluated"
+    val excluded = app.excludedFromPlayCatalog()
+
+    m Then "it keeps the Play path, matching the backend's uppercase contract exactly"
     assertFalse(excluded)
   }
 

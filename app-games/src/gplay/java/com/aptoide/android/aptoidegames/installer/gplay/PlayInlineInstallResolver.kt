@@ -12,7 +12,6 @@ import com.aptoide.android.aptoidegames.apkfy.isFreeFire
 import com.aptoide.android.aptoidegames.apkfy.isRoblox
 import com.aptoide.android.aptoidegames.installer.AppDetailsUseCase
 import com.aptoide.android.aptoidegames.installer.analytics.InstallAnalytics
-import com.aptoide.android.aptoidegames.installer.excludedFromPlayCatalog
 import com.aptoide.android.aptoidegames.installer.notifications.ImageDownloader
 import com.aptoide.android.aptoidegames.installer.notifications.InstallerNotificationsBuilder
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -59,18 +58,22 @@ class PlayInlineInstallResolver @Inject constructor(
   private val abortedInlineInstalls: MutableSet<String> = ConcurrentHashMap.newKeySet()
 
   override suspend fun resolveInlineInstall(app: App): Intent? {
-    if (app.installsThroughDetailsOverlay()) return resolveDetailsOverlay(app)
+    // Everything but PLAY_CATALOG is settled from the App alone - no token request. The
+    // ordering is a tested contract, see [inlineInstallRoute]
+    when (inlineInstallRoute(app, abortedInlineInstalls)) {
+      InlineInstallRoute.DETAILS_OVERLAY -> return resolveDetailsOverlay(app)
 
-    // BDS builds carry AppCoins billing the Play build would lose - they never consult the
-    // catalog, so no token is fetched for them on the click path either
-    if (app.excludedFromPlayCatalog()) {
-      log("${app.packageName}: BDS app -> regular install path, Play catalog not consulted")
-      return null
-    }
+      InlineInstallRoute.APTOIDE_ONLY -> {
+        log("${app.packageName}: BDS app -> regular install path, Play catalog not consulted")
+        return null
+      }
 
-    if (app.packageName in abortedInlineInstalls) {
-      log("${app.packageName}: previous inline attempt aborted -> regular install path")
-      return null
+      InlineInstallRoute.ABORTED -> {
+        log("${app.packageName}: previous inline attempt aborted -> regular install path")
+        return null
+      }
+
+      InlineInstallRoute.PLAY_CATALOG -> Unit
     }
     val catalogToken = catalogTokenRepository.getCatalogToken(app.packageName)
     if (catalogToken == null) {
