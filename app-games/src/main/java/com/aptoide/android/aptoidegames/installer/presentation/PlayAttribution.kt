@@ -69,6 +69,10 @@ fun rememberIsPlayCatalog(
 /**
  * The pre-tap states whose action can divert into a Google Play inline install - the
  * "Google Play" attribution must be visible alongside their buttons.
+ *
+ * [DownloadUiState.Migrate] is only ever produced for BDS apps, which [excludedFromPlayCatalog]
+ * keeps off the Play path, so in practice it no longer inline installs; it stays listed here for
+ * exhaustiveness and because feed cards still divert it to AppView.
  */
 fun DownloadUiState?.canTriggerInlineInstall(): Boolean = when (this) {
   is DownloadUiState.Install,
