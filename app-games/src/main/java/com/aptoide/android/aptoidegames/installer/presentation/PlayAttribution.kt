@@ -19,6 +19,7 @@ import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.installer.FEED_INSTALL_DIVERTS_TO_APPVIEW
 import com.aptoide.android.aptoidegames.installer.PlayCatalogChecker
+import com.aptoide.android.aptoidegames.installer.excludedFromPlayCatalog
 import com.aptoide.android.aptoidegames.mmp.UTMContext
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -36,7 +37,8 @@ class PlayCatalogInjectionsProvider @Inject constructor(
  * mandatory "Google Play" attribution can be shown (Play Catalog Access Program). Always
  * false where no [PlayCatalogChecker] is bound (non-Play distributions) and in previews.
  * [prefetch] triggers the catalog lookup; leave it false on list cards, which label lazily
- * from the shared cache.
+ * from the shared cache. BDS (Catappult) apps are always false and never trigger the lookup -
+ * see [excludedFromPlayCatalog].
  */
 @Composable
 fun rememberIsPlayCatalog(
@@ -45,6 +47,9 @@ fun rememberIsPlayCatalog(
 ): Boolean = runPreviewable(
   preview = { false },
   real = {
+    // Decided before the checker is even resolved, so a BDS app never reaches prefetch nor the
+    // cache: no request, no tag, whatever token the backend would have returned
+    if (app.excludedFromPlayCatalog()) return@runPreviewable false
     val checker = hiltViewModel<PlayCatalogInjectionsProvider>().playCatalogChecker
       .orElse(null)
     if (checker == null) {
