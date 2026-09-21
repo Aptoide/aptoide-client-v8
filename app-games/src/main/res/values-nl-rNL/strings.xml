@@ -360,6 +360,9 @@
   <string name="play_and_earn_start_earning_title">Begin met verdienen</string>
   <string name="play_and_earn_level_up_rewards_title">Verhoog je beloningen!</string>
   <string name="play_and_earn_login_unlock_access_body">Log in om toegang te krijgen tot ongelooflijke prijzen terwijl je speelt!</string>
+  <string name="play_and_earn_install_sign_in_title">Log in om te beginnen met verdienen</string>
+  <string name="play_and_earn_install_sign_in_body">Log in met je Google-account om beloningen te verdienen met %1$s.</string>
+  <string name="play_and_earn_install_sign_in_body_generic">Log in met je Google-account om beloningen te verdienen met deze game.</string>
   <string name="play_and_earn_waiting_title">Wachten...</string>
   <string name="play_and_earn_getting_ready_body">We maken alles klaar voor je…</string>
   <string name="play_and_earn_almost_there_title">Je bent er bijna!</string>

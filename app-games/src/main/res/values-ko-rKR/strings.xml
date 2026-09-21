@@ -349,6 +349,9 @@
   <string name="play_and_earn_start_earning_title">수익 창출 시작하기</string>
   <string name="play_and_earn_level_up_rewards_title">보상을 업그레이드하세요!</string>
   <string name="play_and_earn_login_unlock_access_body">로그인하여 놀라운 상품을 획득하세요!</string>
+  <string name="play_and_earn_install_sign_in_title">로그인하고 보상을 받으세요</string>
+  <string name="play_and_earn_install_sign_in_body">%1$s에서 보상을 받으려면 Google 계정으로 로그인하세요.</string>
+  <string name="play_and_earn_install_sign_in_body_generic">이 게임에서 보상을 받으려면 Google 계정으로 로그인하세요.</string>
   <string name="play_and_earn_waiting_title">기다림...</string>
   <string name="play_and_earn_getting_ready_body">여러분을 위해 준비 중입니다…</string>
   <string name="play_and_earn_almost_there_title">거의 다 왔어요!</string>

@@ -360,6 +360,9 @@
   <string name="play_and_earn_start_earning_title">Commencez à gagner</string>
   <string name="play_and_earn_level_up_rewards_title">Augmentez vos récompenses !</string>
   <string name="play_and_earn_login_unlock_access_body">Connectez-vous pour débloquer l\'accès à des prix incroyables pendant que vous jouez !</string>
+  <string name="play_and_earn_install_sign_in_title">Connectez-vous pour commencer à gagner</string>
+  <string name="play_and_earn_install_sign_in_body">Pour gagner des récompenses avec %1$s, connectez-vous avec votre compte Google.</string>
+  <string name="play_and_earn_install_sign_in_body_generic">Pour gagner des récompenses avec ce jeu, connectez-vous avec votre compte Google.</string>
   <string name="play_and_earn_waiting_title">En attente...</string>
   <string name="play_and_earn_getting_ready_body">Nous préparons tout pour vous…</string>
   <string name="play_and_earn_almost_there_title">Vous y êtes presque !</string>

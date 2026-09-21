@@ -12,8 +12,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -38,6 +42,7 @@ import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.rememberPaEAnalytics
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaEInstallLoginGateViewModel
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.playAndEarnPermissionsRoute
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PAE_DEFAULT_REWARD_AMOUNT
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.RewardState
@@ -69,6 +74,38 @@ fun playAndEarnSignInOnlyScreen() = ScreenData.withAnalytics(
   PlayAndEarnSignInScreen(
     navigateBack = navigateBack,
     onSignInSuccess = navigateBack,
+  )
+}
+
+/**
+ * Sign-in required before downloading a Play & Earn game (AND-876). Opened by the install views for
+ * a logged-out user; returns to the caller, which then starts the pending install by itself.
+ */
+const val playAndEarnInstallSignInRoute = "playAndEarnInstallSignIn"
+
+fun playAndEarnInstallSignInScreen() = ScreenData.withAnalytics(
+  route = playAndEarnInstallSignInRoute,
+  screenAnalyticsName = "PlayAndEarnInstallSignIn",
+) { _, _, navigateBack ->
+  val gateVM = hiltViewModel<PaEInstallLoginGateViewModel>()
+  val pendingInstall by gateVM.pendingInstall.collectAsState()
+  var signedIn by remember { mutableStateOf(false) }
+
+  // Leaving without signing in (toolbar back or system back) drops the pending install, so it
+  // cannot start later from another sign-in path.
+  DisposableEffect(Unit) {
+    onDispose { if (!signedIn) gateVM.pendingInstallHolder.clear() }
+  }
+
+  PlayAndEarnSignInScreen(
+    navigateBack = navigateBack,
+    onSignInSuccess = {
+      signedIn = true
+      navigateBack()
+    },
+    idleContent = { onSignInClick ->
+      PaEInstallSignInIdle(appName = pendingInstall?.appName, onSignInClick = onSignInClick)
+    },
   )
 }
 
@@ -248,6 +285,67 @@ private fun PaERewardSignInIdle(onSignInClick: () -> Unit) {
         text = stringResource(R.string.play_and_earn_sign_in_reward_body, amount)
           .toAnnotatedString(SpanStyle(color = Palette.Yellow100)),
         style = AGTypography.SubHeadingM,
+        color = Palette.White,
+        textAlign = TextAlign.Center
+      )
+
+      Image(
+        painter = painterResource(R.drawable.google_sign_in_button),
+        contentDescription = null,
+        modifier = Modifier.clickable(enabled = true, onClick = onSignInClick),
+        contentScale = ContentScale.Fit
+      )
+    }
+  }
+}
+
+/** Idle state when sign-in is required before installing a Play & Earn game: names the game. */
+@Composable
+private fun PaEInstallSignInIdle(
+  appName: String?,
+  onSignInClick: () -> Unit,
+) {
+  val composition by rememberLottieComposition(
+    LottieCompositionSpec.RawRes(R.raw.play_and_earn_login_animation)
+  )
+  val progress by animateLottieCompositionAsState(
+    composition = composition,
+    iterations = LottieConstants.IterateForever
+  )
+
+  Column(
+    modifier = Modifier
+      .fillMaxWidth()
+      .padding(vertical = 66.dp, horizontal = 24.dp),
+    horizontalAlignment = Alignment.CenterHorizontally,
+    verticalArrangement = Arrangement.spacedBy(40.dp)
+  ) {
+    Spacer(modifier = Modifier.fillMaxHeight(0.1f))
+
+    LottieAnimation(
+      composition = composition,
+      progress = { progress },
+      contentScale = ContentScale.Crop,
+    )
+
+    Column(
+      horizontalAlignment = Alignment.CenterHorizontally,
+      verticalArrangement = Arrangement.spacedBy(24.dp)
+    ) {
+      Text(
+        text = stringResource(R.string.play_and_earn_install_sign_in_title),
+        style = AGTypography.Title,
+        color = Palette.Yellow100,
+        textAlign = TextAlign.Center
+      )
+
+      Text(
+        text = if (appName.isNullOrBlank()) {
+          stringResource(R.string.play_and_earn_install_sign_in_body_generic)
+        } else {
+          stringResource(R.string.play_and_earn_install_sign_in_body, appName)
+        },
+        style = AGTypography.SubHeadingS,
         color = Palette.White,
         textAlign = TextAlign.Center
       )

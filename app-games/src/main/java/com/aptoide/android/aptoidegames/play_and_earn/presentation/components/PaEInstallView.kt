@@ -105,17 +105,23 @@ fun PaEInstallView(
   )
   val uninstallLabel = stringResource(string.uninstall_button)
 
+  // A Play & Earn game is only downloaded by a signed-in user (AND-876): logged-out taps go to
+  // sign-in first and the install resumes on return.
+  val installLoginGate = rememberPaEInstallLoginGate(app = app, navigate = navigate)
+  ResumePendingPaEInstall(app = app, uiState = installViewState.uiState)
+
   PaEInstallViewContent(
     installViewState = installViewState,
     navigate = navigate,
     rewardAmount = rewardAmount,
     showUninstall = showUninstall,
+    installLoginGate = installLoginGate,
     modifier = modifier.clearAndSetSemantics {
       installViewState.actionLabel?.let {
         onClick(label = it) {
           when (val uiState = installViewState.uiState) {
-            is DownloadUiState.Install -> uiState.install
-            is DownloadUiState.Outdated -> uiState.update
+            is DownloadUiState.Install -> installLoginGate.guard(uiState.install)
+            is DownloadUiState.Outdated -> installLoginGate.guard(uiState.update)
             is DownloadUiState.Waiting -> uiState.action
             is DownloadUiState.Downloading -> uiState.cancel
             is DownloadUiState.Installed -> uiState.open
@@ -155,6 +161,7 @@ private fun PaEInstallViewContent(
   verticalSpacing: Dp = 8.dp,
   horizontalSpacing: Dp = 24.dp,
   showUninstall: Boolean = false,
+  installLoginGate: PaEInstallLoginGate = PaEInstallLoginGate.None,
 ) = Column(
   modifier = modifier
     .fillMaxWidth()
@@ -165,19 +172,19 @@ private fun PaEInstallViewContent(
     null -> Unit
     is DownloadUiState.Install -> PaELargeCoinButton(
       title = installViewState.actionLabel ?: "",
-      onClick = state.install,
+      onClick = installLoginGate.guard(state.install),
       modifier = Modifier.fillMaxWidth(),
     )
 
     is DownloadUiState.Migrate -> PaELargeCoinButton(
       title = installViewState.actionLabel ?: "",
-      onClick = state.migrate,
+      onClick = installLoginGate.guard(state.migrate),
       modifier = Modifier.fillMaxWidth(),
     )
 
     is DownloadUiState.MigrateAlias -> PaELargeCoinButton(
       title = installViewState.actionLabel ?: "",
-      onClick = state.migrateAlias,
+      onClick = installLoginGate.guard(state.migrateAlias),
       modifier = Modifier.fillMaxWidth(),
     )
 
@@ -188,7 +195,7 @@ private fun PaEInstallViewContent(
       ) {
         PaELargeCoinButton(
           title = installViewState.actionLabel ?: "",
-          onClick = state.update,
+          onClick = installLoginGate.guard(state.update),
           modifier = Modifier.fillMaxWidth(),
         )
         SecondaryOutlinedButton(
@@ -200,7 +207,7 @@ private fun PaEInstallViewContent(
     } else {
       PaELargeCoinButton(
         title = installViewState.actionLabel ?: "",
-        onClick = state.update,
+        onClick = installLoginGate.guard(state.update),
         modifier = Modifier.fillMaxWidth(),
       )
     }

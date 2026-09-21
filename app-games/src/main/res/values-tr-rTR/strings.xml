@@ -360,6 +360,9 @@
   <string name="play_and_earn_start_earning_title">Kazanmaya Başlayın</string>
   <string name="play_and_earn_level_up_rewards_title">Ödüllerinizi bir üst seviyeye taşıyın!</string>
   <string name="play_and_earn_login_unlock_access_body">Oynarken inanılmaz ödüllere erişim hakkı kazanmak için giriş yapın!</string>
+  <string name="play_and_earn_install_sign_in_title">Kazanmaya başlamak için giriş yapın</string>
+  <string name="play_and_earn_install_sign_in_body">%1$s ile ödül kazanmak için Google hesabınızla giriş yapın.</string>
+  <string name="play_and_earn_install_sign_in_body_generic">Bu oyunla ödül kazanmak için Google hesabınızla giriş yapın.</string>
   <string name="play_and_earn_waiting_title">Bekleniyor...</string>
   <string name="play_and_earn_getting_ready_body">Sizin için her şeyi hazırlıyoruz…</string>
   <string name="play_and_earn_almost_there_title">Neredeyse vardınız!</string>

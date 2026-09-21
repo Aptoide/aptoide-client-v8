@@ -404,6 +404,9 @@
   <string name="play_and_earn_start_earning_title">ابدأ في الكسب</string>
   <string name="play_and_earn_level_up_rewards_title">ارفع مستوى مكافآتك!</string>
   <string name="play_and_earn_login_unlock_access_body">سجّل الدخول لتفتح الباب أمام جوائز مذهلة أثناء اللعب!</string>
+  <string name="play_and_earn_install_sign_in_title">سجّل الدخول لتبدأ في الربح</string>
+  <string name="play_and_earn_install_sign_in_body">لكسب المكافآت مع %1$s، سجّل الدخول بحساب Google الخاص بك.</string>
+  <string name="play_and_earn_install_sign_in_body_generic">لكسب المكافآت مع هذه اللعبة، سجّل الدخول بحساب Google الخاص بك.</string>
   <string name="play_and_earn_waiting_title">في انتظار...</string>
   <string name="play_and_earn_getting_ready_body">نحن نجهز كل شيء من أجلك…</string>
   <string name="play_and_earn_almost_there_title">لقد أوشكت على الوصول!</string>

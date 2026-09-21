@@ -360,6 +360,9 @@
   <string name="play_and_earn_start_earning_title">Verdienen Sie Geld</string>
   <string name="play_and_earn_level_up_rewards_title">Steigern Sie Ihre Belohnungen!</string>
   <string name="play_and_earn_login_unlock_access_body">Melden Sie sich an, um während des Spiels Zugang zu unglaublichen Preisen zu erhalten!</string>
+  <string name="play_and_earn_install_sign_in_title">Melden Sie sich an, um Belohnungen zu verdienen</string>
+  <string name="play_and_earn_install_sign_in_body">Um mit %1$s Belohnungen zu verdienen, melden Sie sich mit Ihrem Google-Konto an.</string>
+  <string name="play_and_earn_install_sign_in_body_generic">Um mit diesem Spiel Belohnungen zu verdienen, melden Sie sich mit Ihrem Google-Konto an.</string>
   <string name="play_and_earn_waiting_title">Warten...</string>
   <string name="play_and_earn_getting_ready_body">Wir bereiten alles für Sie vor…</string>
   <string name="play_and_earn_almost_there_title">Du bist fast fertig!</string>

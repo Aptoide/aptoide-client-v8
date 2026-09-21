@@ -360,6 +360,9 @@
   <string name="play_and_earn_start_earning_title">Aloita ansaitseminen</string>
   <string name="play_and_earn_level_up_rewards_title">Nosta palkkiosi tasoa!</string>
   <string name="play_and_earn_login_unlock_access_body">Kirjaudu sisään ja avaa pääsy uskomattomiin palkintoihin pelatessasi!</string>
+  <string name="play_and_earn_install_sign_in_title">Kirjaudu sisään ja ala ansaita</string>
+  <string name="play_and_earn_install_sign_in_body">Ansaitaksesi palkkioita pelillä %1$s, kirjaudu sisään Google-tililläsi.</string>
+  <string name="play_and_earn_install_sign_in_body_generic">Ansaitaksesi palkkioita tällä pelillä, kirjaudu sisään Google-tililläsi.</string>
   <string name="play_and_earn_waiting_title">Odotetaan...</string>
   <string name="play_and_earn_getting_ready_body">Valmistelemme asioita sinulle…</string>
   <string name="play_and_earn_almost_there_title">Olet melkein perillä!</string>

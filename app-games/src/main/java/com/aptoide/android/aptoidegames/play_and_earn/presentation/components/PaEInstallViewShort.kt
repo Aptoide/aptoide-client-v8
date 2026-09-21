@@ -61,16 +61,23 @@ fun PaEInstallViewShort(
   cancelable: Boolean = true,
   navigate: ((String) -> Unit)? = null,
 ) {
+  val normalApp = app.asNormalApp()
   val installViewState = installViewStates(
-    app = app.asNormalApp(),
+    app = normalApp,
     onInstallStarted = onInstallStarted,
     onCancel = onCancel,
   )
+
+  // A Play & Earn game is only downloaded by a signed-in user (AND-876): logged-out taps go to
+  // sign-in first and the install resumes on return.
+  val installLoginGate = rememberPaEInstallLoginGate(app = normalApp, navigate = navigate)
+  ResumePendingPaEInstall(app = normalApp, uiState = installViewState.uiState)
 
   PaEInstallViewShortContent(
     installViewState = installViewState,
     cancelable = cancelable,
     navigate = navigate,
+    installLoginGate = installLoginGate,
   )
 }
 
@@ -79,25 +86,26 @@ private fun PaEInstallViewShortContent(
   installViewState: InstallViewState,
   navigate: ((String) -> Unit)? = null,
   cancelable: Boolean = true,
+  installLoginGate: PaEInstallLoginGate = PaEInstallLoginGate.None,
 ) = Column(horizontalAlignment = Alignment.CenterHorizontally) {
   when (val state = installViewState.uiState) {
     is DownloadUiState.Install -> PaESmallCoinButton(
-      onClick = state.install,
+      onClick = installLoginGate.guard(state.install),
       title = installViewState.actionLabel ?: "",
     )
 
     is DownloadUiState.Migrate -> PaESmallCoinButton(
-      onClick = state.migrate,
+      onClick = installLoginGate.guard(state.migrate),
       title = installViewState.actionLabel ?: "",
     )
 
     is DownloadUiState.MigrateAlias -> PaESmallCoinButton(
-      onClick = state.migrateAlias,
+      onClick = installLoginGate.guard(state.migrateAlias),
       title = installViewState.actionLabel ?: "",
     )
 
     is DownloadUiState.Outdated -> PaESmallCoinButton(
-      onClick = state.update,
+      onClick = installLoginGate.guard(state.update),
       title = installViewState.actionLabel ?: "",
     )
 

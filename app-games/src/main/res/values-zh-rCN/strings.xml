@@ -349,6 +349,9 @@
   <string name="play_and_earn_start_earning_title">开始赚钱</string>
   <string name="play_and_earn_level_up_rewards_title">升级您的奖励！</string>
   <string name="play_and_earn_login_unlock_access_body">登录即可解锁游戏中的超值奖励！</string>
+  <string name="play_and_earn_install_sign_in_title">登录即可开始赚取奖励</string>
+  <string name="play_and_earn_install_sign_in_body">若要通过 %1$s 赚取奖励，请使用您的 Google 账号登录。</string>
+  <string name="play_and_earn_install_sign_in_body_generic">若要通过此游戏赚取奖励，请使用您的 Google 账号登录。</string>
   <string name="play_and_earn_waiting_title">等待中...</string>
   <string name="play_and_earn_getting_ready_body">我们正在为您准备一切…</string>
   <string name="play_and_earn_almost_there_title">你快到了！</string>

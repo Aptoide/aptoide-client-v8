@@ -360,6 +360,9 @@
   <string name="play_and_earn_start_earning_title">Kezdjen el keresni</string>
   <string name="play_and_earn_level_up_rewards_title">Növelje jutalmainak szintjét!</string>
   <string name="play_and_earn_login_unlock_access_body">Jelentkezz be, hogy játék közben hozzáférhess hihetetlen nyereményekhez!</string>
+  <string name="play_and_earn_install_sign_in_title">Jelentkezz be, hogy jutalmakat szerezz</string>
+  <string name="play_and_earn_install_sign_in_body">A(z) %1$s játékkal szerezhető jutalmakhoz jelentkezz be a Google-fiókoddal.</string>
+  <string name="play_and_earn_install_sign_in_body_generic">Az ezzel a játékkal szerezhető jutalmakhoz jelentkezz be a Google-fiókoddal.</string>
   <string name="play_and_earn_waiting_title">Várakozás...</string>
   <string name="play_and_earn_getting_ready_body">…</string>
   <string name="play_and_earn_almost_there_title">Már majdnem megvan!</string>
