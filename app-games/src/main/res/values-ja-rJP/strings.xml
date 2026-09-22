@@ -389,6 +389,7 @@
   <string name="play_and_earn_install_button">インストール</string>
   <string name="play_and_earn_notification_recording_title">報酬のためのプレイ時間の追跡</string>
   <string name="play_and_earn_notification_recording_body">あなたのプレイ時間はミッションの進行にカウントされています。</string>
+  <string name="play_and_earn_mission_completed_notification_body">%2$s で %1$d UT を獲得しました</string>
   <string name="settings_play_and_earn_tracking">Play &amp; Earn トラッキング</string>
   <string name="settings_play_and_earn_tracking_description">Aptoideはこの設定を使用して、アプリ内でのアクティビティを測定し、プレイ時間や達成したマイルストーンに対して報酬を付与します。無効にすると、Aptoide経由でゲームを再起動するまで報酬の追跡が行われません。</string>
   <!-- Play and Earn - Permissions-->

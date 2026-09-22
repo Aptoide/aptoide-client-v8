@@ -20,6 +20,7 @@ import com.aptoide.android.aptoidegames.MainActivity
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.play_and_earn.PlayAndEarnManager
 import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPreferencesRepository
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.notifications.PaEMissionCompletedNotificationBuilder
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.overlays.PaEOverlayViewManager
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.hasOverlayPermission
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.hasUsageStatsPermissionStatus
@@ -43,6 +44,9 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
 
   @Inject
   lateinit var paeOverlayViewManager: PaEOverlayViewManager
+
+  @Inject
+  lateinit var paEMissionCompletedNotificationBuilder: PaEMissionCompletedNotificationBuilder
 
   @Inject
   lateinit var paESessionManager: PaESessionManager
@@ -155,14 +159,15 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
     if (applicationContext.hasUsageStatsPermissionStatus() && applicationContext.hasOverlayPermission()) {
       completedMissionsJob?.cancel()
       completedMissionsJob = lifecycleScope.launch(Dispatchers.IO) {
-        paESessionManager.completedMissions.collect {
-          withContext(Dispatchers.Main) {
-            paeOverlayViewManager.showMissionCompletedOverlayView(
-              it,
-              this@PaEForegroundService,
-              this@PaEForegroundService
+        paESessionManager.completedMissions.collect { event ->
+          // One bad icon download or notify() failure must not cancel the collector: the flow has
+          // no replay, and startUsageMonitoring is not re-run, so it would never recover.
+          runCatching {
+            paEMissionCompletedNotificationBuilder.showMissionCompletedNotification(
+              mission = event.mission,
+              packageName = event.packageName
             )
-          }
+          }.onFailure { Timber.e(it, "PaEForegroundService: mission notification failed") }
         }
       }
 

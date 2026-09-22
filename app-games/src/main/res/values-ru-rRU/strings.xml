@@ -421,6 +421,7 @@
   <string name="play_and_earn_install_button">Установить</string>
   <string name="play_and_earn_notification_recording_title">Отслеживание игрового времени для получения вознаграждений</string>
   <string name="play_and_earn_notification_recording_body">Ваше игровое время учитывается в ваших миссиях.</string>
+  <string name="play_and_earn_mission_completed_notification_body">Вы заработали %1$d UT в %2$s</string>
   <string name="settings_play_and_earn_tracking">Отслеживание Play &amp; Earn</string>
   <string name="settings_play_and_earn_tracking_description">Aptoide использует этот параметр для измерения вашей активности в приложении и начисления вам баллов за проведённое время и достигнутые цели. Если параметр отключён, вознаграждения не будут фиксироваться до повторного запуска игры через Aptoide.</string>
   <!-- Play and Earn - Permissions-->

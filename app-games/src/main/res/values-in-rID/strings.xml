@@ -388,6 +388,7 @@
   <string name="play_and_earn_install_button">Pasang</string>
   <string name="play_and_earn_notification_recording_title">Melacak waktu bermain untuk mendapatkan hadiah</string>
   <string name="play_and_earn_notification_recording_body">Waktu bermain Anda dihitung sebagai bagian dari misi Anda.</string>
+  <string name="play_and_earn_mission_completed_notification_body">Anda mendapatkan %1$d UT di %2$s</string>
   <string name="settings_play_and_earn_tracking">Pelacakan Play &amp; Earn</string>
   <string name="settings_play_and_earn_tracking_description">Aptoide menggunakan pengaturan ini untuk mengukur aktivitas Anda di dalam aplikasi dan memberikan kredit atas waktu bermain serta pencapaian yang diraih. Jika dinonaktifkan, hadiah tidak akan dilacak sampai Anda membuka ulang game melalui Aptoide.</string>
   <!-- Play and Earn - Permissions-->
