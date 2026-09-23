@@ -1,6 +1,7 @@
 package com.aptoide.android.aptoidegames.app_open_ads
 
 import cm.aptoide.pt.feature_flags.domain.FeatureFlags
+import com.aptoide.android.aptoidegames.ads.AdsDefaults
 import java.util.Locale
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
@@ -25,11 +26,7 @@ data class AppOpenConfig(
     private const val DEFAULT_CAP_WINDOW_MINUTES = 30
     private const val DEFAULT_LOAD_TIMEOUT_MS = 3_000
 
-    private val DEFAULT_EXCLUDED_GEOS = setOf(
-      "US", "CA", "GB", "AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR",
-      "DE", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT","RO",
-      "SK", "SI", "ES", "SE"
-    )
+    private val DEFAULT_EXCLUDED_GEOS = AdsDefaults.EXCLUDED_GEOS
 
     suspend fun from(featureFlags: FeatureFlags): AppOpenConfig {
       val excludedGeos = (featureFlags.getStringListOrNull(EXCLUDED_GEOS_KEY)
