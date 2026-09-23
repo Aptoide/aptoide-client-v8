@@ -85,10 +85,10 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.EditorsChoiceB
 import com.aptoide.android.aptoidegames.feature_apps.presentation.MyGamesBundleView
 import com.aptoide.android.aptoidegames.feature_apps.presentation.PublisherTakeOverBundle
 import com.aptoide.android.aptoidegames.feature_apps.presentation.buildSeeMoreRoute
-import com.aptoide.android.aptoidegames.ads.home_native.HomeNativeAdBundle
-import com.aptoide.android.aptoidegames.ads.home_native.HomeNativeAdUiState
-import com.aptoide.android.aptoidegames.ads.home_native.HomeNativeAdViewModel
-import com.aptoide.android.aptoidegames.ads.home_native.rememberHomeNativeAd
+import com.aptoide.android.aptoidegames.ads.native_ads.HomeNativeAdViewModel
+import com.aptoide.android.aptoidegames.ads.native_ads.NativeAdBundle
+import com.aptoide.android.aptoidegames.ads.native_ads.NativeAdUiState
+import com.aptoide.android.aptoidegames.ads.native_ads.rememberHomeNativeAd
 import com.aptoide.android.aptoidegames.feature_apps.presentation.perCarouselViewModel
 import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberBundleAnalytics
 import com.aptoide.android.aptoidegames.feature_promotional.AppComingSoonPromotionalView
@@ -210,7 +210,7 @@ fun BundlesView(
   homeNativeAd: HomeNativeAdViewModel? = null,
   onShowLoading: (Boolean) -> Unit
 ) {
-  val nativeAd = homeNativeAd?.uiState?.collectAsState()?.value as? HomeNativeAdUiState.Loaded
+  val nativeAd = homeNativeAd?.uiState?.collectAsState()?.value as? NativeAdUiState.Loaded
   val nativeAdIndex = nativeAd?.position?.coerceIn(0, (viewState.bundles.size - 1).coerceAtLeast(0))
 
   Column(
@@ -228,7 +228,7 @@ fun BundlesView(
     ) {
       itemsIndexed(viewState.bundles) { index, bundle ->
         if (homeNativeAd != null && nativeAd != null && index == nativeAdIndex) {
-          HomeNativeAdBundle(onRender = homeNativeAd::render)
+          NativeAdBundle(onRender = homeNativeAd::render)
         }
         WithUTM(
           utmInfo = getBundleHomeUTMInfo(bundle.tag, bundle.type),
