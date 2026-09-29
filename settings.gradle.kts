@@ -63,5 +63,6 @@ include(
   ":feature-wallet:wallet-info",
   ":feature-wallet:gamification",
   ":feature-usage-stats",
-  ":play-and-earn:sessions"
+  ":play-and-earn:sessions",
+  ":device-api"
 )
