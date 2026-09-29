@@ -19,7 +19,9 @@ The tier is the rule; the version in parentheses is a note — update it when a 
 
 **Escalation:** implementation goes back to Fable when it is stuck on a hard bug (repeated failed attempts at the same problem) or when the plan turns out to be wrong. A wrong plan also triggers the scope-guard (§0): re-align before continuing.
 
-Agents inherit the session model unless one is passed explicitly — always pass it. When the session model doesn't match the phase, switch with `/model` or delegate the phase to an agent on the right model.
+**Implementation stays in the main session — it is never delegated to an agent.** JD must be able to watch it and step in mid-implementation. JD switches the session model manually with `/model`; Claude cannot switch it, so at each phase boundary Claude names the model the next phase calls for and carries on with whatever model the session is on.
+
+Only the review agents (§5) are spawned as agents. They inherit the session model unless one is passed explicitly — always pass it.
 
 ## 0. Recognise the task
 

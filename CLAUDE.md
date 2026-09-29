@@ -4,7 +4,7 @@ This file provides guidance to Claude Code when working with code in this reposi
 
 ## Task Workflow (mandatory)
 
-Execute every task per [docs/WORKFLOW.md](docs/WORKFLOW.md) (plan+grill → Linear → feature branch → TDD → gate → 3 review agents → PR → self-score). Task detection is Claude's job: when a request is ticket-sized, the FIRST action is plan mode — never code first — and the task ends at the self-score, not the PR. Escape hatch: trivial one-liners skip the ceremony (call it out and just do it). Models per phase (always the latest version of the tier): planning/alignment and verification of review findings on **Fable**, implementation on **Opus** (escalate to Fable when stuck or the plan is wrong), review agents on **Sonnet** — pass the model explicitly when spawning agents. Tickets live in **Linear** (Android client tickets; Jira/`[AND-XXX]` temporarily not in use).
+Execute every task per [docs/WORKFLOW.md](docs/WORKFLOW.md) (plan+grill → Linear → feature branch → TDD → gate → 3 review agents → PR → self-score). Task detection is Claude's job: when a request is ticket-sized, the FIRST action is plan mode — never code first — and the task ends at the self-score, not the PR. Escape hatch: trivial one-liners skip the ceremony (call it out and just do it). Models per phase (always the latest version of the tier): planning/alignment and verification of review findings on **Fable**, implementation on **Opus** (escalate to Fable when stuck or the plan is wrong), review agents on **Sonnet** (pass the model explicitly). Implementation stays in the main session, never delegated to an agent; JD switches models manually with `/model`. Tickets live in **Linear** (Android client tickets; Jira/`[AND-XXX]` temporarily not in use).
 
 ## Build Commands
 
