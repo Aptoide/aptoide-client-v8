@@ -157,7 +157,9 @@ For non-visual artifacts (e.g. the per-flavor User-Agent), there's no debug HTTP
 
 ### Commit Messages
 
-Format: `[AND-XXX] Short description` (Jira ticket prefix)
+Every commit message carries the **Linear** ticket ID (see [docs/WORKFLOW.md](docs/WORKFLOW.md) §3). The Jira `[AND-XXX] Short description` prefix is temporarily not in use — historical commits keep it, new work does not add it.
+
+Commits end with the `Co-Authored-By: Claude …` trailer only — no "Claude-Session:" links and no "Generated with Claude Code" footers, on commits or PR bodies.
 
 ### String Resources
 
