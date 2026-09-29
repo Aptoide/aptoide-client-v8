@@ -98,11 +98,21 @@ android {
       keyPassword =
         project.properties[System.getenv("KEY_PASS") ?: KeyHelper.KEY_PASS].toString()
     }
-  }
-
-  buildTypes {
-    release {
-      signingConfig = signingConfigs.getByName("signingConfigRelease")
+    // Direct keeps the original key because the v7 store matches updates by exact signature SHA-1.
+    // Separate property names so a missing Play key fails signing instead of using the direct one
+    create("signingConfigPlay") {
+      storeFile = project.file(
+        project.properties[
+          System.getenv("PLAY_KEY_STORE_FILE") ?: KeyHelper.PLAY_KEY_STORE_FILE
+        ].toString()
+      )
+      storePassword = project.properties[
+        System.getenv("PLAY_KEY_STORE_PASS") ?: KeyHelper.PLAY_KEY_STORE_PASS
+      ].toString()
+      keyAlias =
+        project.properties[System.getenv("PLAY_KEY_ALIAS") ?: KeyHelper.PLAY_KEY_ALIAS].toString()
+      keyPassword =
+        project.properties[System.getenv("PLAY_KEY_PASS") ?: KeyHelper.PLAY_KEY_PASS].toString()
     }
   }
 
@@ -147,6 +157,7 @@ android {
 
     create("direct") {
       dimension = "distribution"
+      signingConfig = signingConfigs.getByName("signingConfigRelease")
       buildConfigField(
         type = "Boolean",
         name = "PLAY_DISTRIBUTION",
@@ -156,6 +167,7 @@ android {
 
     create("gplay") {
       dimension = "distribution"
+      signingConfig = signingConfigs.getByName("signingConfigPlay")
       buildConfigField(
         type = "Boolean",
         name = "PLAY_DISTRIBUTION",
