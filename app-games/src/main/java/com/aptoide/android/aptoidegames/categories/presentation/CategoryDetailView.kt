@@ -39,6 +39,7 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.LargeAppItem
 import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberBundleAnalytics
 import com.aptoide.android.aptoidegames.home.LoadingView
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
+import com.aptoide.android.aptoidegames.installer.presentation.reportingCampaignClick
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 
 const val categoryDetailRoute = "category/{title}/{name}"
@@ -111,35 +112,31 @@ fun CategoryDetailView(
         )
         { index, app ->
 
+          val openAppView = {
+            bundleAnalytics.sendAppPromoClick(
+              app = app,
+              analyticsContext = analyticsContext.copy(itemPosition = index)
+            )
+            navigateToApp(app, index)
+          }
           val installViewShort: @Composable () -> Unit = {
             InstallViewShort(
               app = app,
-              onInstallStarted = {}
+              onInstallStarted = {},
+              onNavigateToAppView = openAppView.reportingCampaignClick(app),
             )
           }
           if (index == 0) {
             LargeAppItem(
               app = app,
-              onClick = {
-                bundleAnalytics.sendAppPromoClick(
-                  app = app,
-                  analyticsContext = analyticsContext.copy(itemPosition = index)
-                )
-                navigateToApp(app, index)
-              }
+              onClick = openAppView
             ) {
               installViewShort()
             }
           } else {
             AppItem(
               app = app,
-              onClick = {
-                bundleAnalytics.sendAppPromoClick(
-                  app = app,
-                  analyticsContext = analyticsContext.copy(itemPosition = index)
-                )
-                navigateToApp(app, index)
-              },
+              onClick = openAppView,
             ) {
               installViewShort()
             }

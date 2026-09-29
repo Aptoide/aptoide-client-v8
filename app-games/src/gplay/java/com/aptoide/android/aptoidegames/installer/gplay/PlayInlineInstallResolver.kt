@@ -58,11 +58,22 @@ class PlayInlineInstallResolver @Inject constructor(
   private val abortedInlineInstalls: MutableSet<String> = ConcurrentHashMap.newKeySet()
 
   override suspend fun resolveInlineInstall(app: App): Intent? {
-    if (app.installsThroughDetailsOverlay()) return resolveDetailsOverlay(app)
+    // Everything but PLAY_CATALOG is settled from the App alone - no token request. The
+    // ordering is a tested contract, see [inlineInstallRoute]
+    when (inlineInstallRoute(app, abortedInlineInstalls)) {
+      InlineInstallRoute.DETAILS_OVERLAY -> return resolveDetailsOverlay(app)
 
-    if (app.packageName in abortedInlineInstalls) {
-      log("${app.packageName}: previous inline attempt aborted -> regular install path")
-      return null
+      InlineInstallRoute.APTOIDE_ONLY -> {
+        log("${app.packageName}: BDS app -> regular install path, Play catalog not consulted")
+        return null
+      }
+
+      InlineInstallRoute.ABORTED -> {
+        log("${app.packageName}: previous inline attempt aborted -> regular install path")
+        return null
+      }
+
+      InlineInstallRoute.PLAY_CATALOG -> Unit
     }
     val catalogToken = catalogTokenRepository.getCatalogToken(app.packageName)
     if (catalogToken == null) {

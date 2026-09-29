@@ -91,7 +91,10 @@ internal fun ApkfyRewardScreenContent(
             app = app,
             onClick = onAppClick,
           ) {
-            InstallViewShort(app = app)
+            // Reached after the install started, so this mostly shows progress - but a failed
+            // install's Retry can inline install, and every apkfy surface prefetches so the
+            // attribution holds by construction rather than by which titles get routed here
+            InstallViewShort(app = app, prefetchPlayCatalog = true)
           }
         }
       }

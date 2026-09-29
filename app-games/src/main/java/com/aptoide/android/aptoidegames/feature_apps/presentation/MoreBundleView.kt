@@ -197,7 +197,7 @@ fun AppsList(
           app = app,
           onClick = onClick,
         ) {
-          InstallViewShort(app)
+          InstallViewShort(app, onNavigateToAppView = onClick)
         }
       }
     }
