@@ -6,13 +6,18 @@ How every task is executed on this repo — by the humans **and** by Claude Code
 
 ## Models
 
-Each phase runs on a fixed Claude model:
+Each phase runs on a fixed Claude model tier — always the latest version of that tier:
 
 | Phase | Steps | Model |
 | --- | --- | --- |
-| Planning, discussion, brainstorming, alignment | §0–§2, §7 | **Fable**, latest version (currently Fable 5.1) |
-| Implementation | §3–§4, fixes from §5 | **Opus 5.5** |
-| Review agents | §5 | **Sonnet 5** |
+| Planning, discussion, brainstorming, alignment, self-score | §0–§2, §7 | latest **Fable** (currently Fable 5.1) |
+| Implementation | §3–§4, fixes from §5 | latest **Opus** (currently Opus 5.5) |
+| Review agents | §5 | latest **Sonnet** (currently Sonnet 5) |
+| Adversarial verification of review findings | §5 | latest **Fable** |
+
+The tier is the rule; the version in parentheses is a note — update it when a new version ships.
+
+**Escalation:** implementation goes back to Fable when it is stuck on a hard bug (repeated failed attempts at the same problem) or when the plan turns out to be wrong. A wrong plan also triggers the scope-guard (§0): re-align before continuing.
 
 Agents inherit the session model unless one is passed explicitly — always pass it. When the session model doesn't match the phase, switch with `/model` or delegate the phase to an agent on the right model.
 
@@ -79,7 +84,7 @@ The same gate runs in AptoideCI on every PR — run it locally first; CI is the 
 | **Architecture** | module-boundary/dependency violations, source-set discipline, coupling, misplaced logic, hardcoded colors/strings |
 | **QA / testing** | coverage gaps, missing edge cases, weak assertions, untested failure modes |
 
-Model: **Sonnet 5** for all three review agents (see [Models](#models)). Each reports findings with file:line and severity. **Adversarially verify** each finding to filter false positives before acting (a finding survives only if it holds up under a skeptical second look); fix the real ones; re-run the gate.
+The three review agents run on the latest **Sonnet**; the verification below runs on the latest **Fable** (see [Models](#models)). Each agent reports findings with file:line and severity. **Adversarially verify** each finding to filter false positives before acting (a finding survives only if it holds up under a skeptical second look); fix the real ones; re-run the gate.
 
 ## 6. Open the PR against `dev-v10`
 
