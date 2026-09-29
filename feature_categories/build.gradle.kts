@@ -3,6 +3,7 @@ plugins {
   alias(libs.plugins.android.module)
   alias(libs.plugins.composable)
   alias(libs.plugins.hilt)
+  alias(libs.plugins.tests)
 }
 
 android {
@@ -11,5 +12,6 @@ android {
 
 dependencies {
   implementation(projects.aptoideNetwork)
+  implementation(projects.deviceApi)
   implementation(projects.extension)
 }
