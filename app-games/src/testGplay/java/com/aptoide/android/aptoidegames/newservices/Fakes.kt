@@ -64,7 +64,9 @@ internal class FakeDeviceApi(
     service = this,
     variant = "google-certified",
     storeName = "a-store",
-    deviceProfile = { DeviceProfile(sdk = 34, abis = listOf("arm64-v8a"), tv = false, density = 480) },
+    deviceProfile = {
+      DeviceProfile(sdk = 34, abis = listOf("arm64-v8a"), tv = false, density = 480)
+    },
     dispatcher = StandardTestDispatcher(scope.testScheduler),
   )
 

@@ -21,7 +21,7 @@ internal class PlayAppsListRepositoryTest {
     val url = "newservices/listApps/category=game_action/sort=downloads/limit=9"
 
     m When "its apps are read"
-    val apps = repository.getAppsList(url)
+    val apps = repository.getAppsList(url = url)
 
     m Then "the new services are asked for that listing and v7 is not"
     assertEquals(
@@ -38,7 +38,7 @@ internal class PlayAppsListRepositoryTest {
     val (repository, deviceApi, _) = repository(scope)
 
     m When "its apps are read bypassing the cache"
-    repository.getAppsList("newservices/listApps/category=games", bypassCache = true)
+    repository.getAppsList(url = "newservices/listApps/category=games", bypassCache = true)
 
     m Then "a fresh listing is asked for"
     assertEquals(1, deviceApi.listings.single().refresh)
@@ -51,7 +51,7 @@ internal class PlayAppsListRepositoryTest {
     val url = "https://ws75.aptoide.com/api/7/listApps/store_name=aptoidegames-play-us/limit=24"
 
     m When "its apps are read"
-    val apps = repository.getAppsList(url)
+    val apps = repository.getAppsList(url = url)
 
     m Then "v7 is asked and the new services are not"
     assertEquals(listOf("url:$url:false"), v7.calls)
