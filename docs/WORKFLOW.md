@@ -67,7 +67,7 @@ The same gate runs in AptoideCI on every PR — run it locally first; CI is the 
 | **Architecture** | module-boundary/dependency violations, source-set discipline, coupling, misplaced logic, hardcoded colors/strings |
 | **QA / testing** | coverage gaps, missing edge cases, weak assertions, untested failure modes |
 
-Each reports findings with file:line and severity. **Adversarially verify** each finding to filter false positives before acting (a finding survives only if it holds up under a skeptical second look); fix the real ones; re-run the gate.
+Model: **Sonnet 5** for all three review agents (pass it explicitly — otherwise they inherit the session model). Each reports findings with file:line and severity. **Adversarially verify** each finding to filter false positives before acting (a finding survives only if it holds up under a skeptical second look); fix the real ones; re-run the gate.
 
 ## 6. Open the PR against `dev-v10`
 
