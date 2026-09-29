@@ -8,7 +8,7 @@ import kotlinx.coroutines.test.TestScope
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertSame
+import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.Test
 import retrofit2.HttpException
 import retrofit2.Response
@@ -94,8 +94,10 @@ internal class DeviceApiSuggestDataSourceTest {
     m When "suggestions are read"
     val thrown = runCatching { dataSource.suggest(query = "subw") }.exceptionOrNull()
 
-    m Then "the cancellation reaches the caller"
-    assertSame(cause, thrown)
+    // Not necessarily the same instance: crossing a dispatcher may hand over a copy
+    m Then "a cancellation reaches the caller, not an empty list"
+    val cancellation = assertInstanceOf(CancellationException::class.java, thrown)
+    assertEquals("typed another letter", cancellation.message)
   }
 
   private fun dataSource(service: DeviceApiSuggestService, scope: TestScope) =
