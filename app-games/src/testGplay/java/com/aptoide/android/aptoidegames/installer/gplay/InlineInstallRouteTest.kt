@@ -1,6 +1,7 @@
 package com.aptoide.android.aptoidegames.installer.gplay
 
 import cm.aptoide.pt.feature_apps.data.randomApp
+import cm.aptoide.pt.feature_apps.domain.AppOrigin
 import cm.aptoide.pt.test.gherkin.scenario
 import com.aptoide.android.aptoidegames.apkfy.FREE_FIRE_PACKAGE
 import com.aptoide.android.aptoidegames.apkfy.ROBLOX_PACKAGE
@@ -87,4 +88,55 @@ internal class InlineInstallRouteTest {
       m Then "it is aborted for the session"
       assertEquals(InlineInstallRoute.ABORTED, route)
     }
+
+  // Apps read from the new services carry no download of their own on this build: Play is
+  // the only way to install them, so the route never gives up on the catalog.
+
+  @Test
+  fun `A device API app may only install through the Play catalog`() = scenario {
+    m Given "an app read from the device API, not flagged for Aptoide billing"
+    val app = randomApp.copy(origin = AppOrigin.DEVICE_API, isAppCoins = false, bdsFlags = null)
+
+    m When "the route is decided"
+    val route = inlineInstallRoute(app, aborted = emptySet())
+
+    m Then "it is the catalog, with no way back to Aptoide"
+    assertEquals(InlineInstallRoute.PLAY_CATALOG_ONLY, route)
+  }
+
+  @Test
+  fun `A device API app is not aborted by an earlier rejection`() = scenario {
+    m Given "an app read from the device API whose earlier inline attempt was rejected"
+    val app = randomApp.copy(origin = AppOrigin.DEVICE_API, isAppCoins = false, bdsFlags = null)
+
+    m When "the route is decided"
+    val route = inlineInstallRoute(app, aborted = setOf(app.packageName))
+
+    m Then "it still goes to the catalog, as there is nowhere else to go"
+    assertEquals(InlineInstallRoute.PLAY_CATALOG_ONLY, route)
+  }
+
+  @Test
+  fun `A device API app flagged for Aptoide billing stays on Aptoide`() = scenario {
+    m Given "an app read from the device API with the billing flag"
+    val app = randomApp.copy(origin = AppOrigin.DEVICE_API, isAppCoins = true, bdsFlags = null)
+
+    m When "the route is decided"
+    val route = inlineInstallRoute(app, aborted = emptySet())
+
+    m Then "it installs through Aptoide only"
+    assertEquals(InlineInstallRoute.APTOIDE_ONLY, route)
+  }
+
+  @Test
+  fun `A device API Roblox takes the details overlay`() = scenario {
+    m Given "Roblox read from the device API"
+    val app = randomApp.copy(packageName = ROBLOX_PACKAGE, origin = AppOrigin.DEVICE_API)
+
+    m When "the route is decided"
+    val route = inlineInstallRoute(app, aborted = emptySet())
+
+    m Then "the overlay rule wins"
+    assertEquals(InlineInstallRoute.DETAILS_OVERLAY, route)
+  }
 }
