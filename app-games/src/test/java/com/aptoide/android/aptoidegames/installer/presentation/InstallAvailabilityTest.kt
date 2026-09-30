@@ -13,7 +13,9 @@ import org.junit.jupiter.api.Test
 // above all when the lookup merely failed - a flaky connection must never hide an install.
 internal class InstallAvailabilityTest {
 
-  private val playApp = randomApp.copy(origin = AppOrigin.DEVICE_API, bdsFlags = null)
+  // randomApp may come flagged for billing, which would make it install through Aptoide
+  private val playApp =
+    randomApp.copy(origin = AppOrigin.DEVICE_API, isAppCoins = false, bdsFlags = null)
 
   @Test
   fun `An app not in the Play catalog is not offered`() = scenario {

@@ -2,6 +2,7 @@ package com.aptoide.android.aptoidegames.installer.gplay
 
 import com.aptoide.android.aptoidegames.apkfy.isFreeFirePackage
 import com.aptoide.android.aptoidegames.apkfy.isRobloxPackage
+import com.aptoide.android.aptoidegames.installer.CatalogStatus
 import com.aptoide.android.aptoidegames.installer.PlayCatalogChecker
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
@@ -30,16 +31,18 @@ class CachingCatalogTokenRepository(
   private val now: () -> Long,
 ) : CatalogTokenRepository, PlayCatalogChecker {
 
-  private data class Entry(val token: String?, val fetchedAt: Long)
+  private data class Entry(val lookup: CatalogLookup, val fetchedAt: Long) {
+    val token: String? get() = (lookup as? CatalogLookup.Token)?.value
+  }
 
   private val entries = MutableStateFlow<Map<String, Entry>>(emptyMap())
-  private val inFlight = ConcurrentHashMap<String, Deferred<String?>>()
+  private val inFlight = ConcurrentHashMap<String, Deferred<CatalogLookup>>()
 
-  override fun observeIsPlayCatalog(packageName: String): Flow<Boolean> =
+  override fun observeCatalogStatus(packageName: String): Flow<CatalogStatus> =
     if (installsThroughPlayOverlay(packageName)) {
-      flowOf(true)
+      flowOf(CatalogStatus.IN_CATALOG)
     } else {
-      entries.map { it[packageName]?.token != null }.distinctUntilChanged()
+      entries.map { it[packageName]?.lookup.toStatus() }.distinctUntilChanged()
     }
 
   override fun prefetch(packageName: String) {
@@ -51,34 +54,41 @@ class CachingCatalogTokenRepository(
     fetchAsync(packageName)
   }
 
-  override suspend fun getCatalogToken(packageName: String): String? {
+  override suspend fun lookup(packageName: String): CatalogLookup {
     val cached = entries.value[packageName]
     if (cached?.token != null && now() - cached.fetchedAt < TOKEN_REUSE_TTL_MILLIS) {
-      return cached.token
+      return cached.lookup
     }
     return fetchAsync(packageName).await()
   }
 
-  private fun fetchAsync(packageName: String): Deferred<String?> =
+  private fun fetchAsync(packageName: String): Deferred<CatalogLookup> =
     inFlight.computeIfAbsent(packageName) {
       scope.async {
         try {
-          // The origin is expected to map failures to null, but an install click must
+          // The origin is expected to answer every failure, but an install click must
           // never crash on a throwing origin - it falls back to the regular path instead
-          val token = try {
-            origin.getCatalogToken(packageName)
+          val lookup = try {
+            origin.lookup(packageName)
           } catch (e: CancellationException) {
             throw e
           } catch (e: Exception) {
-            null
+            CatalogLookup.Failed
           }
-          entries.update { it + (packageName to Entry(token, now())) }
-          token
+          entries.update { it + (packageName to Entry(lookup, now())) }
+          lookup
         } finally {
           inFlight.remove(packageName)
         }
       }
     }
+
+  private fun CatalogLookup?.toStatus(): CatalogStatus = when (this) {
+    null -> CatalogStatus.UNKNOWN
+    is CatalogLookup.Token -> CatalogStatus.IN_CATALOG
+    CatalogLookup.NotInCatalog -> CatalogStatus.NOT_IN_CATALOG
+    CatalogLookup.Failed -> CatalogStatus.FAILED
+  }
 
   // Overlay-only titles install through the Play details overlay - via Google Play by
   // definition, no catalog token involved

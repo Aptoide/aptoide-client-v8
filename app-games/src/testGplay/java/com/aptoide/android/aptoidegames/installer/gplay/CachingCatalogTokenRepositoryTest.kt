@@ -2,6 +2,8 @@ package com.aptoide.android.aptoidegames.installer.gplay
 
 import app.cash.turbine.test
 import cm.aptoide.pt.test.gherkin.coScenario
+import com.aptoide.android.aptoidegames.apkfy.ROBLOX_PACKAGE
+import com.aptoide.android.aptoidegames.installer.CatalogStatus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.SupervisorJob
@@ -327,9 +329,10 @@ internal class CachingCatalogTokenRepositoryTest {
     val repository = scope.buildRepository(api)
 
     m When "the status of Roblox is observed"
-    repository.observeCatalogStatus(com.aptoide.android.aptoidegames.apkfy.ROBLOX_PACKAGE).test {
+    repository.observeCatalogStatus(ROBLOX_PACKAGE).test {
       m Then "it is in the catalog and the api was never called"
       assertEquals(CatalogStatus.IN_CATALOG, awaitItem())
+      awaitComplete()
       assertEquals(0, api.calls)
     }
   }
