@@ -13,7 +13,11 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.jupiter.api.Test
+import retrofit2.HttpException
+import retrofit2.Response
 import java.io.IOException
 
 @ExperimentalCoroutinesApi
@@ -208,7 +212,7 @@ internal class CachingCatalogTokenRepositoryTest {
   fun `A throwing origin is treated as a negative result`() = coScenario { scope ->
     m Given "an origin that throws instead of returning null"
     val origin = object : CatalogTokenRepository {
-      override suspend fun getCatalogToken(packageName: String): String? =
+      override suspend fun lookup(packageName: String): CatalogLookup =
         error("misbehaving origin")
     }
     val repository = scope.buildRepository(origin)
@@ -263,7 +267,74 @@ internal class CachingCatalogTokenRepositoryTest {
     m And "the timeout is cached as a negative for labeling"
     repository.observeIsPlayCatalog(packageName).test { assertFalse(awaitItem()) }
   }
+
+  // The status tells the app view whether to offer the install at all, so a lookup that could
+  // not tell must never read as "not in the catalog"
+
+  @Test
+  fun `The status starts unknown and settles once the lookup answers`() = coScenario { scope ->
+    m Given "an app with a catalog token behind the api"
+    val api = FakePlayInlineConfigApi { PlayInlineConfigResponse("token-1", null) }
+    val repository = scope.buildRepository(api)
+
+    m When "the status is observed while it is prefetched"
+    repository.observeCatalogStatus(packageName).test {
+      assertEquals(CatalogStatus.UNKNOWN, awaitItem())
+      repository.prefetch(packageName)
+      scope.advanceUntilIdle()
+
+      m Then "it settles on being in the catalog"
+      assertEquals(CatalogStatus.IN_CATALOG, awaitItem())
+    }
+  }
+
+  @Test
+  fun `An unknown app reads as not in the catalog`() = coScenario { scope ->
+    m Given "an api answering that the app is unknown"
+    val api = FakePlayInlineConfigApi { throw httpError(404) }
+    val repository = scope.buildRepository(api)
+
+    m When "the status is prefetched"
+    repository.prefetch(packageName)
+    scope.advanceUntilIdle()
+
+    m Then "the app is not in the catalog"
+    repository.observeCatalogStatus(packageName).test {
+      assertEquals(CatalogStatus.NOT_IN_CATALOG, awaitItem())
+    }
+  }
+
+  @Test
+  fun `A failed lookup is never reported as not in the catalog`() = coScenario { scope ->
+    m Given "an api that cannot be reached"
+    val api = FakePlayInlineConfigApi { throw IOException("network down") }
+    val repository = scope.buildRepository(api)
+
+    m When "the status is prefetched"
+    repository.prefetch(packageName)
+    scope.advanceUntilIdle()
+
+    m Then "the status says the lookup failed"
+    repository.observeCatalogStatus(packageName).test {
+      assertEquals(CatalogStatus.FAILED, awaitItem())
+    }
+  }
+
+  @Test
+  fun `Overlay titles are in the catalog without any lookup`() = coScenario { scope ->
+    m Given "a repository with an api that must not be called"
+    val api = FakePlayInlineConfigApi { error("must not be called") }
+    val repository = scope.buildRepository(api)
+
+    m When "the status of Roblox is observed"
+    repository.observeCatalogStatus(com.aptoide.android.aptoidegames.apkfy.ROBLOX_PACKAGE).test {
+      m Then "it is in the catalog and the api was never called"
+      assertEquals(CatalogStatus.IN_CATALOG, awaitItem())
+      assertEquals(0, api.calls)
+    }
+  }
 }
+
 
 private class FakePlayInlineConfigApi(
   var response: suspend (String) -> PlayInlineConfigResponse,
@@ -277,3 +348,7 @@ private class FakePlayInlineConfigApi(
     return response(packageName)
   }
 }
+
+private fun httpError(code: Int) = HttpException(
+  Response.error<Any>(code, "{}".toResponseBody("application/problem+json".toMediaType()))
+)
