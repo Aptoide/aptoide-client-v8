@@ -1,6 +1,7 @@
 package com.aptoide.android.aptoidegames.newservices
 
 import cm.aptoide.pt.aptoide_network.di.V7Backend
+import cm.aptoide.pt.device_api.catalog.CatalogParent
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.AppsListRepository
 import cm.aptoide.pt.feature_apps.data.deviceapi.DeviceApiAppsDataSource
@@ -8,7 +9,6 @@ import cm.aptoide.pt.feature_apps.data.deviceapi.DeviceApiAppsDataSource.Compani
 import cm.aptoide.pt.feature_apps.data.deviceapi.DeviceApiAppsDataSource.Companion.SORT_DOWNLOADS
 import cm.aptoide.pt.feature_apps.data.deviceapi.DeviceApiAppsDataSource.Companion.SORT_LATEST
 import cm.aptoide.pt.feature_apps.data.deviceapi.DeviceApiAppsDataSource.Companion.SORT_TRENDING
-import cm.aptoide.pt.feature_categories.data.deviceapi.DeviceApiCategoriesDataSource.Companion.PARENT_GAMES
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -62,7 +62,7 @@ internal class PlayAppsListRepository @Inject constructor(
       v7.getSortedAppsList(sort, limit)
     } else {
       newServices.browse(
-        category = PARENT_GAMES,
+        category = CatalogParent.GAMES,
         sort = sort.toNewServicesSort(),
         limit = limit,
       )
@@ -70,9 +70,11 @@ internal class PlayAppsListRepository @Inject constructor(
 
   // The package of a path that names nothing but one. Anything more, such as the AppCoins
   // section, is a v7 notion.
-  private fun String.packageNameOnly(): String? =
-    removePrefix(PACKAGE_NAME)
-      .takeIf { startsWith(PACKAGE_NAME) && it.isNotBlank() && "/" !in it }
+  private fun String.packageNameOnly(): String? {
+    if (!startsWith(PACKAGE_NAME)) return null
+    val packageName = removePrefix(PACKAGE_NAME)
+    return packageName.takeIf { it.isNotBlank() && "/" !in it }
+  }
 
   private companion object {
     const val PACKAGE_NAME = "package_name="

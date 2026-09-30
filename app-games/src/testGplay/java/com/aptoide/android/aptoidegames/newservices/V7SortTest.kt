@@ -19,6 +19,8 @@ internal class V7SortTest {
     "latest, latest",
     "alpha, alpha",
     "something_else, downloads",
+    "trending_downloads, trending",
+    "new, downloads",
   )
   fun `A v7 sort maps to the closest sort of the new services`(
     v7Sort: String,

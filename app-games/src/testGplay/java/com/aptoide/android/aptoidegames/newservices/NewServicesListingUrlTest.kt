@@ -121,4 +121,16 @@ internal class NewServicesListingUrlTest {
     m Then "the listing has no limit"
     assertEquals(NewServicesListing("games", "downloads", limit = null), listing)
   }
+
+  @Test
+  fun `A segment that cannot be decoded is ignored`() = scenario {
+    m Given "an url with a segment holding a broken percent escape"
+    val url = "newservices/listApps/category=game_action/limit=%"
+
+    m When "it is read"
+    val listing = NewServicesListingUrl.parse(url)
+
+    m Then "the rest of the listing is still read, instead of the read failing"
+    assertEquals(NewServicesListing("game_action", "downloads", limit = null), listing)
+  }
 }

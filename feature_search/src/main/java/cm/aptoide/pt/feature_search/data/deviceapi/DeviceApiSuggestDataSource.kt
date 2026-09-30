@@ -1,10 +1,9 @@
 package cm.aptoide.pt.feature_search.data.deviceapi
 
-import cm.aptoide.pt.device_api.error.DeviceApiException
 import cm.aptoide.pt.device_api.error.deviceApiCall
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import java.io.IOException
 
 /** Reads search suggestions from the device API, within the catalog [variant]. */
 class DeviceApiSuggestDataSource(
@@ -22,9 +21,9 @@ class DeviceApiSuggestDataSource(
       deviceApiCall { service.suggest(q = query, limit = null, variant = variant) }
         .suggestions.orEmpty()
         .mapNotNull { suggestion -> suggestion.term?.takeIf { it.isNotBlank() } }
-    } catch (_: DeviceApiException) {
-      emptyList()
-    } catch (_: IOException) {
+    } catch (e: CancellationException) {
+      throw e
+    } catch (_: Exception) {
       emptyList()
     }
   }

@@ -86,6 +86,19 @@ internal class DeviceApiSuggestDataSourceTest {
   }
 
   @Test
+  fun `Any other failure reads as no suggestions`() = coScenario { scope ->
+    m Given "a service whose answer cannot be handled"
+    val failure = IllegalStateException("unexpected shape")
+    val dataSource = dataSource(FakeSuggestService(failure = failure), scope)
+
+    m When "suggestions are read"
+    val terms = dataSource.suggest(query = "subw")
+
+    m Then "there are none, as nothing may get in the way of the search"
+    assertEquals(emptyList<String>(), terms)
+  }
+
+  @Test
   fun `A cancellation is not swallowed`() = coScenario { scope ->
     m Given "a read that gets cancelled"
     val cause = CancellationException("typed another letter")

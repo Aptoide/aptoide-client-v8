@@ -34,7 +34,7 @@ internal class PlayCategoriesRepositoryTest {
   }
 
   @Test
-  fun `A v7 url asks for the same categories`() = coScenario { scope ->
+  fun `A v7 url is not followed and the same categories come back`() = coScenario { scope ->
     m Given "the v7 url shared code knows the categories by"
     val (repository, v7) = repository(scope)
     val url = "https://ws75.aptoide.com/api/7/store/groups/get/store_id=1/group_name=games"

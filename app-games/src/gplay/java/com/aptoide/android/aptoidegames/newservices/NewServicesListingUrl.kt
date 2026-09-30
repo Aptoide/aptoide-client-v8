@@ -39,8 +39,11 @@ internal object NewServicesListingUrl {
     if (!url.startsWith(PREFIX)) return null
     val values = url.removePrefix(PREFIX)
       .split("/")
-      // Shared code may append a segment encoded, turning its = into %3D
-      .map { URLDecoder.decode(it, Charsets.UTF_8.name()) }
+      // Shared code may append a segment encoded, turning its = into %3D. One that cannot be
+      // decoded is dropped rather than failing the whole read
+      .mapNotNull { segment ->
+        runCatching { URLDecoder.decode(segment, Charsets.UTF_8.name()) }.getOrNull()
+      }
       .filter { "=" in it }
       .associate { it.substringBefore("=") to it.substringAfter("=") }
     val category = values[CATEGORY]?.takeIf { it.isNotBlank() } ?: return null

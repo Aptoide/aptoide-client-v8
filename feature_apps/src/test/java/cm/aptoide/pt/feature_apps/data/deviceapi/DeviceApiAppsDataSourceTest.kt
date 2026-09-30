@@ -137,9 +137,46 @@ internal class DeviceApiAppsDataSourceTest {
     m When "the apps related to a package are read"
     val apps = dataSource.related(packageName = "com.kiloo.subwaysurf")
 
-    m Then "the package and the catalog are sent, and the app comes back"
-    assertEquals(RelatedCall("com.kiloo.subwaysurf", "google-certified"), service.relatedCalls.single())
+    m Then "the package, the catalog and the device profile are sent, and the app comes back"
+    assertEquals(
+      RelatedCall(
+        packageName = "com.kiloo.subwaysurf",
+        limit = null,
+        variant = "google-certified",
+        sdk = 34,
+        abi = "arm64-v8a,armeabi-v7a",
+        tv = false,
+        density = 480,
+      ),
+      service.relatedCalls.single()
+    )
     assertEquals(listOf("c.related"), apps.map { it.packageName })
+  }
+
+  @Test
+  fun `More related apps than the service gives are capped`() = coScenario { scope ->
+    m Given "a data source"
+    val service = FakeAppsService()
+    val dataSource = dataSource(service, scope)
+
+    m When "more related apps are asked for than the service returns at most"
+    dataSource.related(packageName = "com.kiloo.subwaysurf", limit = 100)
+
+    m Then "the most it gives is asked for"
+    assertEquals(25, service.relatedCalls.single().limit)
+  }
+
+  @Test
+  fun `A page size the service would reject is raised to one`() = coScenario { scope ->
+    m Given "a data source"
+    val service = FakeAppsService()
+    val dataSource = dataSource(service, scope)
+
+    m When "no apps at all are asked for"
+    dataSource.browse(category = "games", limit = 0)
+
+    m Then "one is asked for instead of a request the service rejects"
+    assertEquals(1, service.listingCalls.single().limit)
   }
 
   @Test
@@ -180,7 +217,15 @@ internal data class ListingCall(
   val refresh: Int?,
 )
 
-internal data class RelatedCall(val packageName: String, val variant: String)
+internal data class RelatedCall(
+  val packageName: String,
+  val limit: Int?,
+  val variant: String,
+  val sdk: Int?,
+  val abi: String?,
+  val tv: Boolean?,
+  val density: Int?,
+)
 
 internal class FakeAppsService(
   private val listing: List<AppSummaryResponse> = emptyList(),
@@ -217,7 +262,7 @@ internal class FakeAppsService(
     tv: Boolean?,
     density: Int?,
   ): RelatedAppsResponse {
-    relatedCalls += RelatedCall(packageName, variant)
+    relatedCalls += RelatedCall(packageName, limit, variant, sdk, abi, tv, density)
     failure?.let { throw it }
     return RelatedAppsResponse(items = related)
   }

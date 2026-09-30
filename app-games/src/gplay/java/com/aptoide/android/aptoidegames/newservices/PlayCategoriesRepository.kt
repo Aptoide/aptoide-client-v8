@@ -1,9 +1,9 @@
 package com.aptoide.android.aptoidegames.newservices
 
 import cm.aptoide.pt.aptoide_network.di.V7Backend
+import cm.aptoide.pt.device_api.catalog.CatalogParent
 import cm.aptoide.pt.feature_categories.data.CategoriesRepository
 import cm.aptoide.pt.feature_categories.data.deviceapi.DeviceApiCategoriesDataSource
-import cm.aptoide.pt.feature_categories.data.deviceapi.DeviceApiCategoriesDataSource.Companion.PARENT_GAMES
 import cm.aptoide.pt.feature_categories.domain.AppCategory
 import cm.aptoide.pt.feature_categories.domain.Category
 import javax.inject.Inject
@@ -21,7 +21,7 @@ internal class PlayCategoriesRepository @Inject constructor(
 
   // The url is how v7 addresses the categories of a store. There is one set of them here.
   override suspend fun getCategoriesList(url: String): List<Category> =
-    newServices.categories(parent = PARENT_GAMES)
+    newServices.categories(parent = CatalogParent.GAMES)
 
   override suspend fun getGlobalCategoriesList(url: String): List<Category> =
     v7.getGlobalCategoriesList(url)

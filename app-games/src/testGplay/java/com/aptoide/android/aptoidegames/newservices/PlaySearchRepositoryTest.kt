@@ -11,8 +11,10 @@ import cm.aptoide.pt.feature_search.domain.repository.SearchRepository.AutoCompl
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository.PopularAppSearchResult
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository.SearchAppResult
 import cm.aptoide.pt.test.gherkin.coScenario
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
@@ -78,6 +80,22 @@ internal class PlaySearchRepositoryTest {
     m Then "the result is the connectivity error, so that it can be told apart"
     val error = assertInstanceOf(SearchAppResult.Error::class.java, result)
     assertInstanceOf(IOException::class.java, error.error)
+  }
+
+  @Test
+  fun `A cancelled search is not turned into an error`() = coScenario { scope ->
+    m Given "new services whose read gets cancelled"
+    val cause = CancellationException("left the screen")
+    val (repository, _) = repository(scope, FakeDeviceApi(failure = cause))
+
+    m When "apps are searched"
+    val thrown = runCatching {
+      repository.searchApp("subway").first()
+      scope.testScheduler.advanceUntilIdle()
+    }.exceptionOrNull()
+
+    m Then "the cancellation reaches the caller instead of an error result"
+    assertInstanceOf(CancellationException::class.java, thrown)
   }
 
   @Test

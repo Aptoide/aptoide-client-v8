@@ -102,6 +102,19 @@ internal class PlayAppsListRepositoryTest {
   }
 
   @Test
+  fun `A path naming no package goes to v7`() = coScenario { scope ->
+    m Given "a path that names the package parameter and nothing after it"
+    val (repository, deviceApi, v7) = repository(scope)
+
+    m When "the apps similar to it are read"
+    repository.getRecommended("package_name=")
+
+    m Then "v7 is asked, as there is nothing to ask the new services for"
+    assertEquals(listOf("recommended:package_name="), v7.calls)
+    assertTrue(deviceApi.related.isEmpty())
+  }
+
+  @Test
   fun `The AppCoins apps similar to one are read from v7`() = coScenario { scope ->
     m Given "the AppCoins section of the apps similar to one"
     val (repository, deviceApi, v7) = repository(scope)

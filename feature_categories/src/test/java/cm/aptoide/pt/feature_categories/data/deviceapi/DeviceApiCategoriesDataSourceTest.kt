@@ -96,6 +96,33 @@ internal class DeviceApiCategoriesDataSourceTest {
   }
 
   @Test
+  fun `A category without a title is titled by its slug`() = coScenario { scope ->
+    m Given "a catalog where one game category has a blank title"
+    val service = FakeCategoriesService(
+      listOf(CategoryResponse(slug = "game_word", title = " ", parent = "games", appCount = 4))
+    )
+    val dataSource = dataSource(service, scope)
+
+    m When "the game categories are read"
+    val category = dataSource.categories(parent = "games").single()
+
+    m Then "the slug stands in for the title"
+    assertEquals("game_word", category.title)
+  }
+
+  @Test
+  fun `An answer without categories reads as none`() = coScenario { scope ->
+    m Given "a service answering with no list at all"
+    val dataSource = dataSource(FakeCategoriesService(categories = null), scope)
+
+    m When "the game categories are read"
+    val categories = dataSource.categories(parent = "games")
+
+    m Then "there are none"
+    assertEquals(emptyList<String>(), categories.map { it.name })
+  }
+
+  @Test
   fun `The categories are read within the catalog`() = coScenario { scope ->
     m Given "a data source for the google-certified catalog"
     val service = FakeCategoriesService(all)
@@ -132,7 +159,7 @@ internal class DeviceApiCategoriesDataSourceTest {
 }
 
 private class FakeCategoriesService(
-  private val categories: List<CategoryResponse>,
+  private val categories: List<CategoryResponse>?,
   private val failure: Throwable? = null,
 ) : DeviceApiCategoriesService {
 

@@ -17,8 +17,9 @@ class DeviceApiCategoriesDataSource(
 ) {
 
   /**
-   * The categories under [parent], in the order the service sent them. Each is named by its
-   * slug, which is what its apps are browsed by. Those known to have no apps are left out.
+   * The categories under [parent], one of [cm.aptoide.pt.device_api.catalog.CatalogParent], in
+   * the order the service sent them. Each is named by its slug, which is what its apps are
+   * browsed by. Those known to have no apps are left out.
    */
   suspend fun categories(parent: String): List<Category> = withContext(dispatcher) {
     deviceApiCall { service.getCategories(variant) }
@@ -35,10 +36,5 @@ class DeviceApiCategoriesDataSource(
       name = slug,
       title = title?.takeIf { it.isNotBlank() } ?: slug,
     )
-  }
-
-  companion object {
-    const val PARENT_GAMES = "games"
-    const val PARENT_APPS = "apps"
   }
 }
