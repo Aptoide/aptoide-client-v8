@@ -1,5 +1,6 @@
 package com.aptoide.android.aptoidegames.installer.presentation
 
+import cm.aptoide.pt.download_view.presentation.DownloadUiState
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.domain.AppOrigin
 import com.aptoide.android.aptoidegames.apkfy.isFreeFire
@@ -17,6 +18,15 @@ enum class InstallAvailability {
   /** Play cannot install the app and nothing else may, so no install is offered. */
   NOT_OFFERED,
 }
+
+/**
+ * Whether this state loses its action when the app is [availability]. Installing and updating
+ * both go through Play, so both are withheld; an installed app keeps its Open button, and
+ * anything in progress keeps its progress.
+ */
+fun DownloadUiState?.isWithheldBy(availability: InstallAvailability): Boolean =
+  availability != InstallAvailability.AVAILABLE &&
+    (this is DownloadUiState.Install || this is DownloadUiState.Outdated)
 
 /**
  * An app of the new services that Play's catalog does not hold is not offered: it installs

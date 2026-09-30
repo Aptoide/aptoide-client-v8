@@ -82,7 +82,7 @@ class DeviceApiAppsDataSource(
           tv = profile.tv,
           density = profile.density,
         )
-      }.items.toApps()
+      }.items.toApps().distinctBy { it.packageName }
     }
 
   private suspend fun getApps(

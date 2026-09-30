@@ -90,6 +90,19 @@ internal class PlayAppRepositoryTest {
   }
 
   @Test
+  fun `A flagged app named in another store is read from v7 in this store`() = coScenario {
+      scope ->
+    m Given "new services that flag the app, and a source naming another store"
+    val (repository, _, v7) = repository(scope, FakeDeviceApi(billing = true))
+
+    m When "its details are read"
+    repository.getAppMeta("package_name=com.my.defense/store_name=someone-elses-store")
+
+    m Then "v7 is asked for the app in the store this build reads, not the one named"
+    assertEquals(listOf("meta:package_name=com.my.defense/store_name=a-store"), v7.calls)
+  }
+
+  @Test
   fun `A flagged app named without a store is read from v7 in this store`() = coScenario { scope ->
     m Given "new services that flag the app, and a source naming no store"
     val (repository, _, v7) = repository(scope, FakeDeviceApi(billing = true))
@@ -144,6 +157,21 @@ internal class PlayAppRepositoryTest {
 
     m Then "the app is reported as not in the catalog"
     assertInstanceOf(DeviceApiException.NotInVariant::class.java, failure)
+  }
+
+  @Test
+  fun `An app removed from the catalog is not fetched from v7 instead`() = coScenario { scope ->
+    m Given "new services that answer the app was removed"
+    val (repository, _, v7) = repository(scope, FakeDeviceApi(failure = httpError(410)))
+
+    m When "its details are read"
+    val failure = runCatching {
+      repository.getAppMeta("package_name=com.example.pulled/store_name=a-store")
+    }.exceptionOrNull()
+
+    m Then "the removal reaches the caller and v7 is not asked, as the app was pulled on purpose"
+    assertInstanceOf(DeviceApiException.Removed::class.java, failure)
+    assertTrue(v7.calls.isEmpty())
   }
 
   @Test

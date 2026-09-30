@@ -387,16 +387,14 @@ fun installViewStates(
     .withheldWhen(availability, app)
 }
 
-// An install that is not offered has no action to take, and one still being checked none
-// yet; only a pending install is ever withheld - an installed app keeps its Open button
+// An install or update that is not offered has no action to take, and one still being checked
+// none yet - see isWithheldBy for which states this reaches
 @Composable
 private fun InstallViewState.withheldWhen(
   availability: InstallAvailability,
   app: App,
 ): InstallViewState {
-  if (uiState !is DownloadUiState.Install || availability == InstallAvailability.AVAILABLE) {
-    return this
-  }
+  if (!uiState.isWithheldBy(availability)) return this
   val stateDescription = when (availability) {
     InstallAvailability.NOT_OFFERED -> stringResource(R.string.install_not_available_message)
     else -> stateDescription

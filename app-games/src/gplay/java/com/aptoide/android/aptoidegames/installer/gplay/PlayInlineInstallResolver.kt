@@ -164,12 +164,16 @@ class PlayInlineInstallResolver @Inject constructor(
   }
 
   override fun onInlineInstallUnavailable(app: App) {
-    log(
-      "${app.packageName}: inline install unavailable, " +
-        "this session's next attempts use the regular install path"
-    )
     // An app that may only install through Play is retried through Play, not aborted
-    if (!requiresInlineInstall(app)) abortedInlineInstalls.add(app.packageName)
+    if (requiresInlineInstall(app)) {
+      log("${app.packageName}: inline install unavailable, the next attempt retries Play")
+    } else {
+      log(
+        "${app.packageName}: inline install unavailable, " +
+          "this session's next attempts use the regular install path"
+      )
+      abortedInlineInstalls.add(app.packageName)
+    }
     ongoingInstalls.remove(app.packageName)?.cancel()
     // Clears the indeterminate installing notification; the regular install path taking
     // over reuses the same per-package notification right away

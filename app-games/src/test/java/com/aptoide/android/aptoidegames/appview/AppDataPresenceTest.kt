@@ -84,6 +84,17 @@ internal class AppDataPresenceTest {
   }
 
   @Test
+  fun `An average without a vote count is still a rating`() = scenario {
+    m Given "an app read from the device API with an average and no count"
+    val rated = bare.copy(pRating = Rating(4.0, 0, null))
+
+    m When "what to show is decided"
+
+    m Then "the rating is shown"
+    assertTrue(rated.showsRating)
+  }
+
+  @Test
   fun `A rating with votes but no average is still a rating`() = scenario {
     m Given "an app read from the device API rated by people, averaging zero"
     val rated = bare.copy(pRating = Rating(0.0, 3, null))

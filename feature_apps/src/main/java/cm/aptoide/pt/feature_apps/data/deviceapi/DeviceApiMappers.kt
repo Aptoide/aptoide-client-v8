@@ -88,6 +88,8 @@ fun AppSummaryResponse.toApp(storeName: String): App? {
  */
 fun AppResponse.toApp(storeName: String): App? {
   val packageName = packageName?.takeIf { it.isNotBlank() } ?: return null
+  // The detail dates its latest release and nothing else, so it stands for every date the app
+  // shows, release and update alike
   val releaseDate = release?.releasedAt?.toV7Date()
   val downloads = downloads.toDownloads()
   val rating = rating.toRating()

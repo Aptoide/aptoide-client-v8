@@ -205,18 +205,10 @@ private fun InstallViewContent(
           onClick = state.uninstall,
           modifier = Modifier.weight(1f),
         )
-        PrimaryButton(
-          title = installViewState.actionLabel,
-          onClick = state.update,
-          modifier = Modifier.weight(1f),
-        )
+        UpdateAction(installViewState, state, modifier = Modifier.weight(1f))
       }
     } else {
-      PrimaryButton(
-        title = installViewState.actionLabel,
-        onClick = state.update,
-        modifier = Modifier.fillMaxWidth(),
-      )
+      UpdateAction(installViewState, state, modifier = Modifier.fillMaxWidth())
     }
 
     is DownloadUiState.Waiting -> ProgressView(
@@ -320,6 +312,29 @@ private fun InstallViewContent(
   if (installViewState.showPlayAttribution) {
     PlayAttributionLabel(modifier = Modifier.padding(top = 4.dp))
   }
+}
+
+// The update button, unless the update is withheld - see isWithheldBy
+@Composable
+private fun UpdateAction(
+  installViewState: InstallViewState,
+  state: DownloadUiState.Outdated,
+  modifier: Modifier = Modifier,
+) = when (installViewState.availability) {
+  InstallAvailability.AVAILABLE -> PrimaryButton(
+    title = installViewState.actionLabel,
+    onClick = state.update,
+    modifier = modifier,
+  )
+
+  InstallAvailability.CHECKING -> PrimaryButton(
+    title = stringResource(string.button_update_title),
+    onClick = {},
+    enabled = false,
+    modifier = modifier,
+  )
+
+  InstallAvailability.NOT_OFFERED -> InstallViewNotAvailable(modifier = modifier)
 }
 
 // Play cannot install the app and nothing else may on this build

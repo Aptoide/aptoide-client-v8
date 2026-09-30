@@ -181,6 +181,19 @@ internal class DeviceApiAppsDataSourceTest {
   }
 
   @Test
+  fun `An app related twice comes back once`() = coScenario { scope ->
+    m Given "a service listing the same related app twice"
+    val service = FakeAppsService(related = listOf(summary("c.related"), summary("c.related")))
+    val dataSource = dataSource(service, scope)
+
+    m When "the related apps are read"
+    val apps = dataSource.related(packageName = "com.kiloo.subwaysurf")
+
+    m Then "it comes back once, as a row keys its cards by package"
+    assertEquals(listOf("c.related"), apps.map { it.packageName })
+  }
+
+  @Test
   fun `The detail of an app is read within the catalog`() = coScenario { scope ->
     m Given "a service with the detail of one app"
     val service = FakeAppsService(detail = AppResponse(packageName = "d.detail", name = "Detail"))

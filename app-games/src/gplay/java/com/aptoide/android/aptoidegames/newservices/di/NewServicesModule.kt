@@ -61,14 +61,6 @@ internal object NewServicesModule {
 
   @Provides
   @Singleton
-  fun providePlayAppRepository(
-    @V7Backend v7: AppRepository,
-    newServices: DeviceApiAppsDataSource,
-    @StoreName storeName: String,
-  ): PlayAppRepository = PlayAppRepository(v7, newServices, storeName)
-
-  @Provides
-  @Singleton
   @BackendOverride
   fun provideCategoriesRepository(
     @V7Backend v7: CategoriesRepository,

@@ -751,7 +751,7 @@ fun WhatsNew(app: App) {
           )
         }
         Spacer(modifier = Modifier.weight(1f))
-        app.updateDate?.let {
+        app.updateDate?.takeIf { app.showsUpdateDate }?.let {
           Text(
             modifier = Modifier
               .align(Alignment.CenterVertically),

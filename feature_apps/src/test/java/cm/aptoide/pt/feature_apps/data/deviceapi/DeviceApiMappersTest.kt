@@ -311,6 +311,37 @@ internal class DeviceApiMappersTest {
   }
 
   @Test
+  fun `Split and expansion artifacts map to the app bundle and its expansion files`() =
+    scenario {
+      m Given "a detail whose release ships a base apk, two splits and both expansion files"
+      val artifact = ArtifactResponse(kind = "apk", url = "https://dl/base.apk", sizeBytes = 100)
+      val bundled = detail.copy(
+        release = detail.release?.copy(
+          artifacts = listOf(
+            artifact,
+            artifact.copy(kind = "split", url = "https://dl/config.arm64.apk", filename = "arm64"),
+            artifact.copy(
+              kind = "split",
+              url = "https://dl/config.xxhdpi.apk",
+              filename = "xxhdpi",
+            ),
+            artifact.copy(kind = "obb_main", url = "https://dl/main.obb", sizeBytes = 1_000),
+            artifact.copy(kind = "obb_patch", url = "https://dl/patch.obb", sizeBytes = 10),
+          )
+        )
+      )
+
+      m When "it is mapped"
+      val app = bundled.toApp(storeName = "a-store")!!
+
+      m Then "the splits, the expansion files and the size follow"
+      assertEquals(listOf("arm64", "xxhdpi"), app.aab?.baseSplits?.map { it.type })
+      assertEquals("https://dl/main.obb", app.obb?.main?.path)
+      assertEquals("https://dl/patch.obb", app.obb?.patch?.path)
+      assertEquals(100L + 100 + 100 + 1_000 + 10, app.appSize)
+    }
+
+  @Test
   fun `A detail without artifacts has nothing to install with`() = scenario {
     m Given "a detail as the Play catalog sends it, with no version and no artifacts"
     val playCatalog = detail.copy(

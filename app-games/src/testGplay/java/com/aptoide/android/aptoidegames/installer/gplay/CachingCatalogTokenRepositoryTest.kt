@@ -11,12 +11,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.jupiter.api.Test
 import retrofit2.HttpException
 import retrofit2.Response
@@ -337,7 +337,6 @@ internal class CachingCatalogTokenRepositoryTest {
     }
   }
 }
-
 
 private class FakePlayInlineConfigApi(
   var response: suspend (String) -> PlayInlineConfigResponse,

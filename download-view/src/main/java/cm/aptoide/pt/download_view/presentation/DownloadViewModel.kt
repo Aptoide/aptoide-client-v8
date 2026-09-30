@@ -241,9 +241,11 @@ class DownloadViewModel(
       if (divertToInlineInstall(resolver)) return@launch
       when (inlineInstallOutcome(inlineInstallResolver, app, ladderExhausted = false)) {
         InlineInstallOutcome.REGULAR_INSTALL -> startRegularInstall(resolver)
-        InlineInstallOutcome.ERROR -> failInlineOnlyInstall()
-        // Never decided before a stage ran
-        InlineInstallOutcome.CANCELED -> startRegularInstall(resolver)
+        // CANCELED is only ever decided once a stage ran; should the rule change, erring
+        // towards not installing through Aptoide is the safe side
+        InlineInstallOutcome.ERROR,
+        InlineInstallOutcome.CANCELED,
+          -> failInlineOnlyInstall()
       }
     }
   }

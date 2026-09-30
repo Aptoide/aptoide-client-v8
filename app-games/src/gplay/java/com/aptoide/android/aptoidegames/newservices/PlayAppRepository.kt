@@ -1,5 +1,6 @@
 package com.aptoide.android.aptoidegames.newservices
 
+import cm.aptoide.pt.aptoide_network.di.StoreName
 import cm.aptoide.pt.aptoide_network.di.V7Backend
 import cm.aptoide.pt.device_api.error.DeviceApiException
 import cm.aptoide.pt.feature_apps.data.App
@@ -10,6 +11,8 @@ import cm.aptoide.pt.feature_apps.domain.AppSource.Companion.appendIfRequired
 import com.aptoide.android.aptoidegames.apkfy.isFreeFirePackage
 import com.aptoide.android.aptoidegames.apkfy.isRobloxPackage
 import kotlinx.coroutines.CancellationException
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * An app's details on the Play build. They come from the new services, except where only v7
@@ -24,10 +27,11 @@ import kotlinx.coroutines.CancellationException
  * An app outside the catalog that v7 cannot install stays unknown, so that it is not offered
  * from v7 on this build.
  */
-internal class PlayAppRepository(
+@Singleton
+internal class PlayAppRepository @Inject constructor(
   @V7Backend private val v7: AppRepository,
   private val newServices: DeviceApiAppsDataSource,
-  private val storeName: String,
+  @StoreName private val storeName: String,
 ) : AppRepository {
 
   override suspend fun getApp(packageName: String): App =
@@ -70,9 +74,12 @@ internal class PlayAppRepository(
     return app.takeIf { it.isInCatappult() == true } ?: throw notInVariant
   }
 
-  // v7 needs the store to find the download; a source that names one keeps it
-  private fun String.inThisStore(): String =
-    if (STORE_NAME in this) this else appendIfRequired(storeName)
+  // v7 needs the store to find the download, and only this build's store may serve one: a
+  // store the source names, as a deep link could, is dropped
+  private fun String.inThisStore(): String = split("/")
+    .filterNot { it.startsWith(STORE_NAME) }
+    .joinToString("/")
+    .appendIfRequired(storeName)
 
   private fun String.staysOnV7(): Boolean =
     isRobloxPackage(this) || isFreeFirePackage(this) || this == WALLET_PACKAGE
