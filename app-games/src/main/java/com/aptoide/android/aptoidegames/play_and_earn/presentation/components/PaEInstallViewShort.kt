@@ -62,11 +62,13 @@ fun PaEInstallViewShort(
   navigate: ((String) -> Unit)? = null,
 ) {
   val normalApp = app.asNormalApp()
+  val mmpInstallClick = rememberPaEMmpInstallClick(packageName = normalApp.packageName)
   val installViewState = installViewStates(
     app = normalApp,
-    onInstallStarted = onInstallStarted,
+    onInstallStarted = mmpInstallClick.onInstallStarted(onInstallStarted),
     onCancel = onCancel,
   )
+  TrackPaEMmpInstallState(mmpInstallClick = mmpInstallClick, uiState = installViewState.uiState)
 
   // A Play & Earn game is only downloaded by a signed-in user (AND-876): logged-out taps go to
   // sign-in first and the install resumes on return.
