@@ -6,6 +6,7 @@ import cm.aptoide.pt.aptoide_network.di.V7Backend
 import cm.aptoide.pt.device_api.di.DeviceApiRetrofit
 import cm.aptoide.pt.device_api.di.DeviceApiVariant
 import cm.aptoide.pt.device_api.network.DeviceProfileProvider
+import cm.aptoide.pt.feature_apps.data.AppRepository
 import cm.aptoide.pt.feature_apps.data.AppsListRepository
 import cm.aptoide.pt.feature_apps.data.deviceapi.DeviceApiAppsDataSource
 import cm.aptoide.pt.feature_apps.data.deviceapi.DeviceApiAppsService
@@ -16,6 +17,7 @@ import cm.aptoide.pt.feature_search.data.deviceapi.DeviceApiSuggestDataSource
 import cm.aptoide.pt.feature_search.data.deviceapi.DeviceApiSuggestService
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository
 import com.aptoide.android.aptoidegames.BuildConfig
+import com.aptoide.android.aptoidegames.newservices.PlayAppRepository
 import com.aptoide.android.aptoidegames.newservices.PlayAppsListRepository
 import com.aptoide.android.aptoidegames.newservices.PlayCategoriesRepository
 import com.aptoide.android.aptoidegames.newservices.PlaySearchRepository
@@ -46,6 +48,24 @@ internal object NewServicesModule {
   ): AppsListRepository = selectBackend(BuildConfig.NEW_SERVICES_ENABLED, v7) {
     newServices.get()
   }
+
+  @Provides
+  @Singleton
+  @BackendOverride
+  fun provideAppRepository(
+    @V7Backend v7: AppRepository,
+    newServices: Provider<PlayAppRepository>,
+  ): AppRepository = selectBackend(BuildConfig.NEW_SERVICES_ENABLED, v7) {
+    newServices.get()
+  }
+
+  @Provides
+  @Singleton
+  fun providePlayAppRepository(
+    @V7Backend v7: AppRepository,
+    newServices: DeviceApiAppsDataSource,
+    @StoreName storeName: String,
+  ): PlayAppRepository = PlayAppRepository(v7, newServices, storeName)
 
   @Provides
   @Singleton

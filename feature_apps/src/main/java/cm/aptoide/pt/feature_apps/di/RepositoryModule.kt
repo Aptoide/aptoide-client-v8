@@ -14,6 +14,8 @@ import cm.aptoide.pt.feature_apps.data.AptoideAppsListMapper
 import cm.aptoide.pt.feature_apps.data.AptoideAppsListRepository
 import cm.aptoide.pt.feature_apps.data.SplitsRepository
 import cm.aptoide.pt.feature_apps.data.SplitsRepositoryImpl
+import cm.aptoide.pt.feature_apps.domain.AppMetaUseCase
+import cm.aptoide.pt.feature_flags.domain.FeatureFlags
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -40,6 +42,28 @@ internal object RepositoryModule {
   @Provides
   @Singleton
   fun providesAppRepository(
+    @BackendOverride override: Optional<AppRepository>,
+    @V7Backend v7: Provider<AppRepository>,
+  ): AppRepository = override.orElseGet { v7.get() }
+
+  // For the flows that keep their v7 app whatever a build replaces, such as apkfy
+  @Provides
+  @Singleton
+  @V7Backend
+  fun providesV7AppMetaUseCase(
+    @V7Backend appRepository: AppRepository,
+    splitsRepository: SplitsRepository,
+    featureFlags: FeatureFlags,
+  ): AppMetaUseCase = AppMetaUseCase(
+    appRepository = appRepository,
+    splitsRepository = splitsRepository,
+    featureFlags = featureFlags,
+  )
+
+  @Provides
+  @Singleton
+  @V7Backend
+  fun providesV7AppRepository(
     @RetrofitV7 retrofitV7: Retrofit,
     @StoreName storeName: String,
     appMapper: AppMapper,
