@@ -2,6 +2,7 @@ package cm.aptoide.pt.feature_apps.data.deviceapi
 
 import cm.aptoide.pt.device_api.error.DeviceApiException
 import cm.aptoide.pt.device_api.network.DeviceProfile
+import cm.aptoide.pt.feature_apps.data.deviceapi.model.AppResponse
 import cm.aptoide.pt.feature_apps.data.deviceapi.model.AppSummaryResponse
 import cm.aptoide.pt.feature_apps.data.deviceapi.model.AppsPageResponse
 import cm.aptoide.pt.feature_apps.data.deviceapi.model.RelatedAppsResponse
@@ -180,6 +181,43 @@ internal class DeviceApiAppsDataSourceTest {
   }
 
   @Test
+  fun `The detail of an app is read within the catalog`() = coScenario { scope ->
+    m Given "a service with the detail of one app"
+    val service = FakeAppsService(detail = AppResponse(packageName = "d.detail", name = "Detail"))
+    val dataSource = dataSource(service, scope)
+
+    m When "the detail is read"
+    val app = dataSource.detail(packageName = "d.detail")
+
+    m Then "the package, the catalog and the device profile are sent, and the app comes back"
+    assertEquals(
+      DetailCall(
+        packageName = "d.detail",
+        variant = "google-certified",
+        sdk = 34,
+        abi = "arm64-v8a,armeabi-v7a",
+        tv = false,
+        density = 480,
+      ),
+      service.detailCalls.single()
+    )
+    assertEquals("d.detail", app.packageName)
+  }
+
+  @Test
+  fun `A detail without a package is a failure`() = coScenario { scope ->
+    m Given "a service answering a detail with no package"
+    val service = FakeAppsService(detail = AppResponse(packageName = null, name = "Nameless"))
+    val dataSource = dataSource(service, scope)
+
+    m When "the detail is read"
+    val failure = runCatching { dataSource.detail(packageName = "d.detail") }.exceptionOrNull()
+
+    m Then "it is a generic failure, as nothing could be done with such an app"
+    assertInstanceOf(DeviceApiException.Generic::class.java, failure)
+  }
+
+  @Test
   fun `A service failure reaches the caller typed`() = coScenario { scope ->
     m Given "a service answering that the category is unknown"
     val service = FakeAppsService(failure = httpError(404))
@@ -217,6 +255,15 @@ internal data class ListingCall(
   val refresh: Int?,
 )
 
+internal data class DetailCall(
+  val packageName: String,
+  val variant: String,
+  val sdk: Int?,
+  val abi: String?,
+  val tv: Boolean?,
+  val density: Int?,
+)
+
 internal data class RelatedCall(
   val packageName: String,
   val limit: Int?,
@@ -230,11 +277,26 @@ internal data class RelatedCall(
 internal class FakeAppsService(
   private val listing: List<AppSummaryResponse> = emptyList(),
   private val related: List<AppSummaryResponse> = emptyList(),
+  private val detail: AppResponse = AppResponse(packageName = "d.detail", name = "Detail"),
   private val failure: Throwable? = null,
 ) : DeviceApiAppsService {
 
   val listingCalls = mutableListOf<ListingCall>()
   val relatedCalls = mutableListOf<RelatedCall>()
+  val detailCalls = mutableListOf<DetailCall>()
+
+  override suspend fun getApp(
+    packageName: String,
+    variant: String,
+    sdk: Int?,
+    abi: String?,
+    tv: Boolean?,
+    density: Int?,
+  ): AppResponse {
+    detailCalls += DetailCall(packageName, variant, sdk, abi, tv, density)
+    failure?.let { throw it }
+    return detail
+  }
 
   override suspend fun getApps(
     q: String?,

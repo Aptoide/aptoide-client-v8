@@ -5,6 +5,7 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.AppsListRepository
 import cm.aptoide.pt.feature_apps.data.deviceapi.DeviceApiAppsDataSource
 import cm.aptoide.pt.feature_apps.data.deviceapi.DeviceApiAppsService
+import cm.aptoide.pt.feature_apps.data.deviceapi.model.AppResponse
 import cm.aptoide.pt.feature_apps.data.deviceapi.model.AppSummaryResponse
 import cm.aptoide.pt.feature_apps.data.deviceapi.model.AppsPageResponse
 import cm.aptoide.pt.feature_apps.data.deviceapi.model.RelatedAppsResponse
@@ -24,10 +25,25 @@ internal data class ListingRequest(
 internal class FakeDeviceApi(
   private val listing: List<String> = listOf("device.api.app"),
   private val failure: Throwable? = null,
+  private val billing: Boolean = false,
 ) : DeviceApiAppsService {
 
   val listings = mutableListOf<ListingRequest>()
   val related = mutableListOf<String>()
+  val details = mutableListOf<String>()
+
+  override suspend fun getApp(
+    packageName: String,
+    variant: String,
+    sdk: Int?,
+    abi: String?,
+    tv: Boolean?,
+    density: Int?,
+  ): AppResponse {
+    details += packageName
+    failure?.let { throw it }
+    return AppResponse(packageName = packageName, name = packageName, aptoideBilling = billing)
+  }
 
   override suspend fun getApps(
     q: String?,
