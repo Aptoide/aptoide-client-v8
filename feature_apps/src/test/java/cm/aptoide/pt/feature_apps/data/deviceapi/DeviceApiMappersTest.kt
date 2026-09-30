@@ -265,6 +265,21 @@ internal class DeviceApiMappersTest {
   }
 
   @Test
+  fun `A screenshot without dimensions gets a landscape shape`() = scenario {
+    m Given "a detail whose screenshots come without width and height, as the Play catalog sends"
+    val undimensioned = detail.copy(
+      screenshots = listOf(ScreenshotResponse(url = "https://img/s1", width = null, height = null))
+    )
+
+    m When "it is mapped"
+    val screenshot = undimensioned.toApp(storeName = "a-store")!!.screenshots!!.single()
+
+    m Then "it has a landscape shape to be laid out with, as a zero one cannot be"
+    assertEquals(16, screenshot.width / (screenshot.height / 9))
+    assertTrue(screenshot.width > 0 && screenshot.height > 0)
+  }
+
+  @Test
   fun `A detail carries its version and its release date`() = scenario {
     m Given "a detail with a release"
 

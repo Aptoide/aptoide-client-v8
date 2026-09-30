@@ -144,9 +144,21 @@ private const val ARTIFACT_SPLIT = "split"
 private const val ARTIFACT_OBB_MAIN = "obb_main"
 private const val ARTIFACT_OBB_PATCH = "obb_patch"
 
-private fun ScreenshotResponse.toScreenshot(): Screenshot? = url
-  ?.takeIf { it.isNotBlank() }
-  ?.let { Screenshot(url = it, height = height ?: 0, width = width ?: 0) }
+// The app view lays a screenshot out by its shape, which a missing or zero dimension cannot
+// give; the Play catalog sends none, so those get a landscape shape
+private const val DEFAULT_SCREENSHOT_WIDTH = 1920
+private const val DEFAULT_SCREENSHOT_HEIGHT = 1080
+
+private fun ScreenshotResponse.toScreenshot(): Screenshot? {
+  val url = url?.takeIf { it.isNotBlank() } ?: return null
+  val width = width ?: 0
+  val height = height ?: 0
+  return if (width > 0 && height > 0) {
+    Screenshot(url = url, height = height, width = width)
+  } else {
+    Screenshot(url = url, height = DEFAULT_SCREENSHOT_HEIGHT, width = DEFAULT_SCREENSHOT_WIDTH)
+  }
+}
 
 private fun ArtifactResponse?.toFile(): File = File(
   md5 = this?.md5.orEmpty(),
