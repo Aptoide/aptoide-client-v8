@@ -11,6 +11,7 @@ import cm.aptoide.pt.feature_home.domain.WidgetAction
 import cm.aptoide.pt.feature_home.domain.WidgetActionType
 import cm.aptoide.pt.feature_home.domain.WidgetLayout
 import cm.aptoide.pt.feature_home.domain.WidgetType
+import com.aptoide.android.aptoidegames.feature_apps.presentation.BONUS_SORT
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,8 +22,9 @@ import javax.inject.Singleton
  *
  * Each row is a [Widget] that shared code turns into a bundle and fills lazily by the url it
  * carries, so the rows cost one request each as they scroll into view. The AppCoins games
- * come from the v7 store, whose apps carry the flags and the files Aptoide's installer needs;
- * everything else is a listing of the new services.
+ * are the v7 store's billing apps, listed as the Bonus tab lists them: the store holds a few
+ * apps without billing, and these apps carry the flags and the files Aptoide's installer
+ * needs. Everything else is a listing of the new services.
  */
 @Singleton
 internal class PlayHomeWidgetsRepository @Inject constructor(
@@ -39,9 +41,9 @@ internal class PlayHomeWidgetsRepository @Inject constructor(
 
   private fun appCoinsGames() = appsRow(
     tag = "apps-group-appcoins",
-    title = APPCOINS_GAMES_TITLE,
+    title = MUST_PLAY_GAMES_TITLE,
     layout = WidgetLayout.CAROUSEL,
-    url = "listApps/store_name=$storeName/limit=$CAROUSEL_SIZE",
+    url = "listApps/store_name=$storeName/sort=$BONUS_SORT/limit=$CAROUSEL_SIZE",
   )
 
   private fun topGames() = appsRow(
@@ -110,7 +112,7 @@ internal class PlayHomeWidgetsRepository @Inject constructor(
 
   companion object {
     // Fixed titles are keys into the translated bundle titles, like the v7 home's
-    const val APPCOINS_GAMES_TITLE = "AppCoins Games"
+    const val MUST_PLAY_GAMES_TITLE = "Must-Play Games"
     const val TOP_GAMES_TITLE = "Top Games"
     const val CATEGORIES_TITLE = "Categories"
     const val MY_GAMES_TITLE = "My Games"
