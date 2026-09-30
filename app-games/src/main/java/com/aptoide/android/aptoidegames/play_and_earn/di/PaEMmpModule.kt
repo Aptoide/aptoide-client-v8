@@ -19,6 +19,8 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 interface PaEMmpModule {
 
+  // Hardcoded Dice Roll link for now. To use each campaign's link from /missions, bind
+  // MissionsPaEMmpClickUrlSource here instead.
   @Binds
   fun bindPaEMmpClickUrlSource(source: HardcodedPaEMmpClickUrlSource): PaEMmpClickUrlSource
 

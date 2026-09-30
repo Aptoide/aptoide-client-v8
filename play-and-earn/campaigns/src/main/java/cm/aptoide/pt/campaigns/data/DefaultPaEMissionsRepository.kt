@@ -117,7 +117,9 @@ internal class DefaultPaEMissionsRepository @Inject constructor(
 
 private fun PaEMissionsJson.toDomainModel() = PaEMissions(
   checkpoints = checkpoints.map(PaEMissionJson::toDomainModel),
-  missions = missions.map(PaEMissionJson::toDomainModel)
+  missions = missions.map(PaEMissionJson::toDomainModel),
+  campaignId = campaignId?.toString(),
+  mmpClickUrl = mmpClickUrl?.takeIf { it.isNotBlank() },
 )
 
 private fun PaEMissionJson.toDomainModel() = PaEMission(
