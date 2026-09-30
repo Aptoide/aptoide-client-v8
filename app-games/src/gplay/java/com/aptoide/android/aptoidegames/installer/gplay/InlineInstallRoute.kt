@@ -1,6 +1,7 @@
 package com.aptoide.android.aptoidegames.installer.gplay
 
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.domain.AppOrigin
 import com.aptoide.android.aptoidegames.installer.excludedFromPlayCatalog
 
 /**
@@ -14,6 +15,12 @@ internal enum class InlineInstallRoute {
 
   /** BDS (Catappult) build: Aptoide's own installer, Play catalog not consulted. */
   APTOIDE_ONLY,
+
+  /**
+   * An app read from the new services: fetch the token and divert to Play, which is the only
+   * way to install it on this build. Never aborted, as there is nowhere else to go.
+   */
+  PLAY_CATALOG_ONLY,
 
   /** An earlier inline attempt this session was rejected without UI: regular install path. */
   ABORTED,
@@ -30,6 +37,7 @@ internal enum class InlineInstallRoute {
 internal fun inlineInstallRoute(app: App, aborted: Set<String>): InlineInstallRoute = when {
   app.installsThroughDetailsOverlay() -> InlineInstallRoute.DETAILS_OVERLAY
   app.excludedFromPlayCatalog() -> InlineInstallRoute.APTOIDE_ONLY
+  app.origin == AppOrigin.DEVICE_API -> InlineInstallRoute.PLAY_CATALOG_ONLY
   app.packageName in aborted -> InlineInstallRoute.ABORTED
   else -> InlineInstallRoute.PLAY_CATALOG
 }

@@ -239,8 +239,21 @@ class DownloadViewModel(
   private fun install(resolver: ConstraintsResolver) {
     viewModelScope.launch {
       if (divertToInlineInstall(resolver)) return@launch
-      startRegularInstall(resolver)
+      when (inlineInstallOutcome(inlineInstallResolver, app, ladderExhausted = false)) {
+        InlineInstallOutcome.REGULAR_INSTALL -> startRegularInstall(resolver)
+        InlineInstallOutcome.ERROR -> failInlineOnlyInstall()
+        // Never decided before a stage ran
+        InlineInstallOutcome.CANCELED -> startRegularInstall(resolver)
+      }
     }
+  }
+
+  // The app may only install externally and that could not even start: an error the user
+  // can retry, which looks the catalog up again
+  private fun failInlineOnlyInstall() {
+    Timber.tag(INLINE_INSTALL_TAG)
+      .d("${app.packageName}: no external install could start and none other is allowed -> error")
+    viewModelState.update { DownloadUiState.Error(retryWith = ::install) }
   }
 
   private suspend fun startRegularInstall(resolver: ConstraintsResolver) {
@@ -354,18 +367,28 @@ class DownloadViewModel(
   private suspend fun exhaustInlineLadder() {
     inlineStage = null
     inlineInstallOngoing.value = false
-    if (inlineInstallResolver?.allowsRegularFallback(app) == false) {
-      Timber.tag(INLINE_INSTALL_TAG)
-        .d("${app.packageName}: all inline stages rejected, no regular fallback allowed -> canceled")
-      inlineInstallResolver.onInlineInstallCanceled(app)
-      return
-    }
-    Timber.tag(INLINE_INSTALL_TAG)
-      .d("${app.packageName}: all inline stages rejected -> regular install path")
-    inlineInstallResolver?.onInlineInstallUnavailable(app)
-    inlineConstraintsResolver?.let {
-      pendingFallbackContinuation = true
-      startRegularInstall(it)
+    when (inlineInstallOutcome(inlineInstallResolver, app, ladderExhausted = true)) {
+      InlineInstallOutcome.CANCELED -> {
+        Timber.tag(INLINE_INSTALL_TAG).d(
+          "${app.packageName}: all inline stages rejected, no regular fallback allowed -> canceled"
+        )
+        inlineInstallResolver?.onInlineInstallCanceled(app)
+      }
+
+      InlineInstallOutcome.ERROR -> {
+        inlineInstallResolver?.onInlineInstallUnavailable(app)
+        failInlineOnlyInstall()
+      }
+
+      InlineInstallOutcome.REGULAR_INSTALL -> {
+        Timber.tag(INLINE_INSTALL_TAG)
+          .d("${app.packageName}: all inline stages rejected -> regular install path")
+        inlineInstallResolver?.onInlineInstallUnavailable(app)
+        inlineConstraintsResolver?.let {
+          pendingFallbackContinuation = true
+          startRegularInstall(it)
+        }
+      }
     }
   }
 
