@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Test
 
-// Until the migration is complete the Play build has to behave exactly as before, so with the
-// switch off the new services must not even be built.
+// The rollback build (-PnewServices=false) has to behave exactly as v7 did, so with the switch
+// off the new services must not even be built.
 internal class BackendSwitchTest {
 
   @Test
