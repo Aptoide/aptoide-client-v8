@@ -13,6 +13,7 @@ import cm.aptoide.pt.feature_apps.data.deviceapi.DeviceApiAppsService
 import cm.aptoide.pt.feature_categories.data.CategoriesRepository
 import cm.aptoide.pt.feature_categories.data.deviceapi.DeviceApiCategoriesDataSource
 import cm.aptoide.pt.feature_categories.data.deviceapi.DeviceApiCategoriesService
+import cm.aptoide.pt.feature_home.data.WidgetsRepository
 import cm.aptoide.pt.feature_search.data.deviceapi.DeviceApiSuggestDataSource
 import cm.aptoide.pt.feature_search.data.deviceapi.DeviceApiSuggestService
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository
@@ -20,6 +21,7 @@ import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.newservices.PlayAppRepository
 import com.aptoide.android.aptoidegames.newservices.PlayAppsListRepository
 import com.aptoide.android.aptoidegames.newservices.PlayCategoriesRepository
+import com.aptoide.android.aptoidegames.newservices.PlayHomeWidgetsRepository
 import com.aptoide.android.aptoidegames.newservices.PlaySearchRepository
 import com.aptoide.android.aptoidegames.newservices.selectBackend
 import dagger.Module
@@ -56,6 +58,16 @@ internal object NewServicesModule {
     @V7Backend v7: AppRepository,
     newServices: Provider<PlayAppRepository>,
   ): AppRepository = selectBackend(BuildConfig.NEW_SERVICES_ENABLED, v7) {
+    newServices.get()
+  }
+
+  @Provides
+  @Singleton
+  @BackendOverride
+  fun provideWidgetsRepository(
+    @V7Backend v7: WidgetsRepository,
+    newServices: Provider<PlayHomeWidgetsRepository>,
+  ): WidgetsRepository = selectBackend(BuildConfig.NEW_SERVICES_ENABLED, v7) {
     newServices.get()
   }
 
