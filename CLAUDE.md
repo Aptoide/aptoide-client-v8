@@ -45,7 +45,7 @@ Execute every task per [docs/WORKFLOW.md](docs/WORKFLOW.md) (plan+grill → Line
 
 Google Play build properties (`distribution=gplay` only):
 
-- `-PnewServices=true` — read the catalog from the device API instead of v7 (`BuildConfig.NEW_SERVICES_ENABLED`, off by default).
+- `-PnewServices=false` — read the catalog from v7 instead of the device API (`BuildConfig.NEW_SERVICES_ENABLED`, on by default); this is the rollback build.
 - `-PnewServicesEnv=prod` — point a dev build at the production device API (`BuildConfig.DEVICE_API_DOMAIN`). The dev services hold no Google Play catalog tokens, so inline installs can only be exercised against production.
 
 ## Architecture Overview

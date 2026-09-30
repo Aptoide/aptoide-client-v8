@@ -161,8 +161,8 @@ android {
         name = "PLAY_DISTRIBUTION",
         value = "true"
       )
-      // Reads the catalog from the device API instead of v7. Off until the migration is
-      // complete; -PnewServices=true builds with it on
+      // Reads the catalog from the device API instead of v7. On by default;
+      // -PnewServices=false builds the rollback artifact that reads v7
       buildConfigField(
         type = "Boolean",
         name = "NEW_SERVICES_ENABLED",
@@ -296,11 +296,11 @@ android {
   }
 }
 
-// Strict on purpose: a mistyped value must not quietly build with the switch off
+// Strict on purpose: a mistyped value must not quietly build with the switch on or off
 fun newServicesEnabled(): Boolean =
   when (val enabled = project.findProperty("newServices")?.toString()) {
-    null, "", "false" -> false
-    "true" -> true
+    null, "", "true" -> true
+    "false" -> false
     else -> throw GradleException("Unknown newServices '$enabled', expected 'true' or 'false'")
   }
 
