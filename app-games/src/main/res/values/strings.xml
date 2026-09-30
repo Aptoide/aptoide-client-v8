@@ -68,6 +68,7 @@
   <!-- Brand name, mandated verbatim by the Play Inline Install brand guidelines -->
   <string name="install_google_play_attribution" translatable="false">Google Play</string>
   <string name="install_not_available_message">Not available on Google Play</string>
+  <string name="appview_related_apps_title">Similar games</string>
   <string name="error_message_no_internet_title">Oops, something went wrong</string>
   <string name="error_message_no_internet_body">Please check your Internet connection.</string>
   <string name="error_message_generic_title">Something went wrong</string>
