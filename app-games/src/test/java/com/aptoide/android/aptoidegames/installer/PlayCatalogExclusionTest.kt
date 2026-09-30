@@ -1,6 +1,7 @@
 package com.aptoide.android.aptoidegames.installer
 
 import cm.aptoide.pt.feature_apps.data.randomApp
+import cm.aptoide.pt.feature_apps.domain.AppOrigin
 import cm.aptoide.pt.test.gherkin.scenario
 import com.aptoide.android.aptoidegames.apkfy.FREE_FIRE_PACKAGE
 import com.aptoide.android.aptoidegames.apkfy.ROBLOX_PACKAGE
@@ -107,6 +108,61 @@ internal class PlayCatalogExclusionTest {
     val excluded = app.excludedFromPlayCatalog()
 
     m Then "it keeps the Play path"
+    assertFalse(excluded)
+  }
+
+  // Apps read from the device API carry no store flags; what tells them apart is the billing
+  // flag, mapped onto isAppCoins. A v7 app's isAppCoins says nothing about where it installs.
+
+  @Test
+  fun `A device API app flagged for Aptoide billing is excluded`() = scenario {
+    m Given "an app read from the device API with the billing flag"
+    val app = randomApp.copy(origin = AppOrigin.DEVICE_API, isAppCoins = true, bdsFlags = null)
+
+    m When "the Play catalog exclusion is evaluated"
+    val excluded = app.excludedFromPlayCatalog()
+
+    m Then "it is excluded, so it installs through Aptoide"
+    assertTrue(excluded)
+  }
+
+  @Test
+  fun `A device API app without the billing flag is not excluded`() = scenario {
+    m Given "an app read from the device API without the billing flag"
+    val app = randomApp.copy(origin = AppOrigin.DEVICE_API, isAppCoins = false, bdsFlags = null)
+
+    m When "the Play catalog exclusion is evaluated"
+    val excluded = app.excludedFromPlayCatalog()
+
+    m Then "it is not excluded"
+    assertFalse(excluded)
+  }
+
+  @Test
+  fun `A v7 app with AppCoins billing but no store flag is not excluded`() = scenario {
+    m Given "a v7 app whose billing flag is on but carries no STORE_BDS"
+    val app = randomApp.copy(origin = AppOrigin.V7, isAppCoins = true, bdsFlags = null)
+
+    m When "the Play catalog exclusion is evaluated"
+    val excluded = app.excludedFromPlayCatalog()
+
+    m Then "it is not excluded, as v7 apps are told by their store flag alone"
+    assertFalse(excluded)
+  }
+
+  @Test
+  fun `A device API Roblox flagged for billing still takes Play's overlay`() = scenario {
+    m Given "Roblox read from the device API with the billing flag"
+    val app = randomApp.copy(
+      packageName = ROBLOX_PACKAGE,
+      origin = AppOrigin.DEVICE_API,
+      isAppCoins = true,
+    )
+
+    m When "the Play catalog exclusion is evaluated"
+    val excluded = app.excludedFromPlayCatalog()
+
+    m Then "the overlay rule still wins"
     assertFalse(excluded)
   }
 }
