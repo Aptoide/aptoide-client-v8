@@ -41,7 +41,7 @@ internal class FakeUpdatesApi(
   ): BaseV7ListResponse<AppJSON> {
     requests += request
     val answer = answers.getOrElse(requests.size - 1) { Result.success(emptyList()) }
-    return BaseV7ListResponse(list = answer.getOrThrow(), info = null, error = null)
+    return BaseV7ListResponse<AppJSON>().apply { list = answer.getOrThrow() }
   }
 }
 

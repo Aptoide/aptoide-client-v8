@@ -96,7 +96,9 @@ internal class AptoideUpdatesRepositoryTest {
     AptoideUpdatesRepository(
       appUpdateDao = dao,
       updatesApi = api,
-      storeNameProvider = { "a-store" },
+      storeNameProvider = object : StoreNameProvider {
+        override suspend fun getStoreName() = "a-store"
+      },
       mapper = FakeAppsListMapper(),
       dispatcher = StandardTestDispatcher(scope.testScheduler),
     )
