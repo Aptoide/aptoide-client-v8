@@ -160,7 +160,8 @@ class Updates @Inject constructor(
             filteredUpdates
               .firstOrNull { it.packageName == appInstaller.packageName }
               ?.also {
-                if (appInstaller.updatesOwnerPackageName == myPackageName && allowsSilently(it)) {
+                val ownUpdate = appInstaller.updatesOwnerPackageName == myPackageName
+                if (ownUpdate && allowsSilently(it)) {
                   appInstaller.install(
                     installPackageInfo = installPackageInfoMapper.map(it),
                     constraints = Constraints(

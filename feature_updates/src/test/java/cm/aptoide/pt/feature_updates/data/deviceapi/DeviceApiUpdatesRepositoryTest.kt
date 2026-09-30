@@ -4,6 +4,8 @@ import cm.aptoide.pt.device_api.network.DeviceProfile
 import cm.aptoide.pt.feature_apps.data.deviceapi.model.AppResponse
 import cm.aptoide.pt.feature_apps.data.deviceapi.model.ReleaseResponse
 import cm.aptoide.pt.feature_apps.domain.AppOrigin
+import cm.aptoide.pt.feature_updates.data.deviceapi.database.DeviceAppUpdate
+import cm.aptoide.pt.feature_updates.data.deviceapi.database.DeviceAppUpdateDao
 import cm.aptoide.pt.feature_updates.domain.ApkData
 import cm.aptoide.pt.test.gherkin.coScenario
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -103,6 +105,27 @@ internal class DeviceApiUpdatesRepositoryTest {
   }
 
   @Test
+  fun `An update that names no package is neither returned nor kept`() = coScenario { scope ->
+    m Given "an available Aptoide-billed update whose payload has no package name"
+    val service = FakeUpdatesService(
+      answers = listOf(
+        verdict("com.my.defense", "update_available", billing = true, versionCode = 2)
+          .let { it.copy(update = it.update?.copy(packageName = null)) },
+        verdict("c.d", "update_available", billing = true, versionCode = 3),
+      )
+    )
+    val dao = FakeDeviceAppUpdateDao()
+    val repository = repository(service, scope, dao)
+
+    m When "the updates are loaded"
+    val loaded = repository.loadUpdates(listOf(installed))
+
+    m Then "only the one that can be mapped is returned, and no other row is kept"
+    assertEquals(listOf("c.d"), loaded.map { it.packageName })
+    assertEquals(listOf("c.d"), dao.getAll().first().map { it.packageName })
+  }
+
+  @Test
   fun `A failing chunk costs only its own updates`() = coScenario { scope ->
     m Given "a service that fails on the first chunk and answers the second"
     val service = FakeUpdatesService(
@@ -115,8 +138,23 @@ internal class DeviceApiUpdatesRepositoryTest {
     m When "the updates are loaded"
     val loaded = repository.loadUpdates(many)
 
-    m Then "the second chunk's update is still there"
+    m Then "the second chunk's update is still there, returned and kept"
     assertEquals(listOf("app.150"), loaded.map { it.packageName })
+    assertEquals(listOf("app.150"), repository.getUpdates().first().map { it.packageName })
+  }
+
+  @Test
+  fun `An answer with no results keeps nothing`() = coScenario { scope ->
+    m Given "a service answering without a results list"
+    val service = FakeUpdatesService(answers = null)
+    val repository = repository(service, scope)
+
+    m When "the updates are loaded"
+    val loaded = repository.loadUpdates(listOf(installed))
+
+    m Then "there are none"
+    assertTrue(loaded.isEmpty())
+    assertTrue(repository.getUpdates().first().isEmpty())
   }
 
   @Test
@@ -152,9 +190,13 @@ internal class DeviceApiUpdatesRepositoryTest {
       },
     )
 
-  private fun repository(service: FakeUpdatesService, scope: TestScope) =
+  private fun repository(
+    service: FakeUpdatesService,
+    scope: TestScope,
+    dao: FakeDeviceAppUpdateDao = FakeDeviceAppUpdateDao(),
+  ) =
     DeviceApiUpdatesRepository(
-      dao = FakeDeviceAppUpdateDao(),
+      dao = dao,
       service = service,
       storeName = "a-store",
       deviceProfile = {
@@ -167,7 +209,7 @@ internal class DeviceApiUpdatesRepositoryTest {
 private data class Request(val variant: String?, val body: UpdatesRequestBody)
 
 private class FakeUpdatesService(
-  private val answers: List<UpdateVerdictResponse> = emptyList(),
+  private val answers: List<UpdateVerdictResponse>? = emptyList(),
   private val failOnRequest: Int? = null,
 ) : DeviceApiUpdatesService {
 

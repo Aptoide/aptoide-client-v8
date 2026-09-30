@@ -10,7 +10,8 @@ import cm.aptoide.pt.device_api.network.DeviceProfileProvider
 import cm.aptoide.pt.feature_updates.data.UpdatesRepository
 import cm.aptoide.pt.feature_updates.data.deviceapi.DeviceApiUpdatesRepository
 import cm.aptoide.pt.feature_updates.data.deviceapi.DeviceApiUpdatesService
-import cm.aptoide.pt.feature_updates.data.deviceapi.DeviceUpdatesDatabase
+import cm.aptoide.pt.feature_updates.data.deviceapi.database.DeviceAppUpdateDao
+import cm.aptoide.pt.feature_updates.data.deviceapi.database.DeviceUpdatesDatabase
 import cm.aptoide.pt.feature_updates.domain.SilentUpdatePolicy
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.newservices.AnySilentUpdatePolicy
@@ -38,15 +39,16 @@ internal object NewServicesUpdatesModule {
   private const val V7_UPDATES_DATABASE = "aptoide_updates.db"
   private const val DEVICE_UPDATES_DATABASE = "aptoide_device_updates.db"
 
+  // Both lazy: the v7 repository owns the database deleted below, so it must not be built
+  // with the switch on
   @Provides
   @Singleton
   @BackendOverride
   fun provideUpdatesRepository(
-    @V7Backend v7: UpdatesRepository,
+    @V7Backend v7: Provider<UpdatesRepository>,
     newServices: Provider<DeviceApiUpdatesRepository>,
-  ): UpdatesRepository = selectBackend(BuildConfig.NEW_SERVICES_ENABLED, v7) {
-    newServices.get()
-  }
+  ): UpdatesRepository =
+    if (BuildConfig.NEW_SERVICES_ENABLED) newServices.get() else v7.get()
 
   @Provides
   @Singleton
@@ -58,22 +60,30 @@ internal object NewServicesUpdatesModule {
   @Provides
   @Singleton
   fun provideDeviceApiUpdatesRepository(
-    @ApplicationContext context: Context,
     @DeviceApiRetrofit retrofit: Retrofit,
     @StoreName storeName: String,
+    dao: DeviceAppUpdateDao,
     deviceProfileProvider: DeviceProfileProvider,
-  ): DeviceApiUpdatesRepository {
+  ): DeviceApiUpdatesRepository = DeviceApiUpdatesRepository(
+    dao = dao,
+    service = retrofit.create(DeviceApiUpdatesService::class.java),
+    storeName = storeName,
+    deviceProfile = deviceProfileProvider::get,
+    dispatcher = Dispatchers.IO,
+  )
+
+  @Provides
+  @Singleton
+  fun provideDeviceAppUpdateDao(database: DeviceUpdatesDatabase): DeviceAppUpdateDao =
+    database.deviceAppUpdateDao()
+
+  @Provides
+  @Singleton
+  fun provideDeviceUpdatesDatabase(@ApplicationContext context: Context): DeviceUpdatesDatabase {
     // Only ever built with the switch on, which is when the v7 updates stop being read
     context.deleteDatabase(V7_UPDATES_DATABASE)
-    val database = Room
+    return Room
       .databaseBuilder(context, DeviceUpdatesDatabase::class.java, DEVICE_UPDATES_DATABASE)
       .build()
-    return DeviceApiUpdatesRepository(
-      dao = database.deviceAppUpdateDao(),
-      service = retrofit.create(DeviceApiUpdatesService::class.java),
-      storeName = storeName,
-      deviceProfile = deviceProfileProvider::get,
-      dispatcher = Dispatchers.IO,
-    )
   }
 }

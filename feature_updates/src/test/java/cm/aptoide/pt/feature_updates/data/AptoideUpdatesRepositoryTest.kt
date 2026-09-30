@@ -72,8 +72,9 @@ internal class AptoideUpdatesRepositoryTest {
     m When "the updates are loaded"
     val loaded = repository.loadUpdates(many)
 
-    m Then "the second chunk's update is still there"
+    m Then "the second chunk's update is still there, returned and kept"
     assertEquals(listOf("app.150"), loaded.map { it.packageName })
+    assertEquals(listOf("app.150"), repository.getUpdates().first().map { it.packageName })
   }
 
   @Test

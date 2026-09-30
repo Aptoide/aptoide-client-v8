@@ -6,6 +6,8 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.deviceapi.model.AppResponse
 import cm.aptoide.pt.feature_apps.data.deviceapi.toApp
 import cm.aptoide.pt.feature_updates.data.UpdatesRepository
+import cm.aptoide.pt.feature_updates.data.deviceapi.database.DeviceAppUpdate
+import cm.aptoide.pt.feature_updates.data.deviceapi.database.DeviceAppUpdateDao
 import cm.aptoide.pt.feature_updates.domain.ApkData
 import com.google.gson.Gson
 import kotlinx.coroutines.CancellationException
@@ -56,12 +58,14 @@ class DeviceApiUpdatesRepository(
           .map { it.await() }
           .flatten()
       }
+      // Kept and returned are the same set: an answer that does not map to an app is dropped
       val available = updates
         .filter { it.status == UPDATE_AVAILABLE }
         .mapNotNull { it.update }
         .filter { it.aptoideBilling == true }
-      dao.save(available.map { it.toRow() })
-      available.mapNotNull { it.toApp(storeName) }
+        .mapNotNull { response -> response.toApp(storeName)?.let { app -> response to app } }
+      dao.save(available.map { (response, app) -> response.toRow(app) })
+      available.map { (_, app) -> app }
     }
 
   override fun getUpdates(): Flow<List<App>> = dao.getAll()
@@ -92,9 +96,9 @@ class DeviceApiUpdatesRepository(
     density = density,
   )
 
-  private fun AppResponse.toRow() = DeviceAppUpdate(
-    packageName = packageName.orEmpty(),
-    versionCode = release?.versionCode ?: 0,
+  private fun AppResponse.toRow(app: App) = DeviceAppUpdate(
+    packageName = app.packageName,
+    versionCode = app.versionCode,
     data = gson.toJson(this),
   )
 
