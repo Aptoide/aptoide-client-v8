@@ -26,15 +26,21 @@ class DeviceApiCategoriesDataSource(
       .categories.orEmpty()
       .filter { it.parent == parent && it.appCount != 0 }
       .mapNotNull { it.toCategory() }
+      .distinctBy { it.name }
   }
 
+  // A slug becomes part of urls and tags, so only a plain identifier is accepted as one
   private fun CategoryResponse.toCategory(): Category? {
-    val slug = slug?.takeIf { it.isNotBlank() } ?: return null
+    val slug = slug?.takeIf { SLUG.matches(it) } ?: return null
     return Category(
       // The device API has no numeric ids and lists only need them to be distinct
       id = slug.hashCode().toLong(),
       name = slug,
       title = title?.takeIf { it.isNotBlank() } ?: slug,
     )
+  }
+
+  private companion object {
+    val SLUG = Regex("[a-z0-9_-]+")
   }
 }

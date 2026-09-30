@@ -8,6 +8,7 @@ import cm.aptoide.pt.feature_home.domain.WidgetActionType
 import cm.aptoide.pt.feature_home.domain.WidgetLayout
 import cm.aptoide.pt.feature_home.domain.WidgetType
 import cm.aptoide.pt.test.gherkin.coScenario
+import com.aptoide.android.aptoidegames.home.translatedTitles
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
@@ -185,6 +186,22 @@ internal class PlayHomeWidgetsRepositoryTest {
       listOf("apps-group-appcoins", "apps-group-top-games", "categories", "my-games"),
       tags
     )
+  }
+
+  @Test
+  fun `The fixed rows are titled by keys the home translates`() = coScenario { scope ->
+    m Given "a catalog"
+    val repository = repository(scope, categories)
+
+    m When "the home widgets are read"
+    val fixedTitles = repository.getStoreWidgets()
+      .filterNot { it.tag.startsWith("apps-group-genre-") }
+      .map { it.title }
+
+    m Then "every fixed title is a key of the translated bundle titles, so none shows raw"
+    fixedTitles.forEach { title ->
+      assertTrue(title in translatedTitles.keys, "'$title' has no translation key")
+    }
   }
 
   @Test

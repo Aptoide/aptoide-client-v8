@@ -30,7 +30,8 @@ internal class PlayHomeWidgetsRepository @Inject constructor(
   private val categories: DeviceApiCategoriesDataSource,
 ) : WidgetsRepository {
 
-  // The context selects a v7 home, of which there is one; the cache is bypassed by the rows
+  // The context selects one of v7's homes, of which this build has one. The cache is that of
+  // each row's listing, invalidated by tag when the rows are filled, so there is none here.
   override suspend fun getStoreWidgets(context: String?, bypassCache: Boolean): List<Widget> =
     listOf(appCoinsGames(), topGames()) +
       gameGenres().map { it.toRow() } +

@@ -96,6 +96,42 @@ internal class DeviceApiCategoriesDataSourceTest {
   }
 
   @Test
+  fun `A slug that is not a plain identifier is left out`() = coScenario { scope ->
+    m Given "a catalog where one game category's slug could not be used as an identifier"
+    val service = FakeCategoriesService(
+      listOf(
+        CategoryResponse(slug = "game/action=1", title = "Odd", parent = "games", appCount = 4),
+        CategoryResponse(slug = "game_word", title = "Word", parent = "games", appCount = 4),
+      )
+    )
+    val dataSource = dataSource(service, scope)
+
+    m When "the game categories are read"
+    val categories = dataSource.categories(parent = "games")
+
+    m Then "only the plain one comes back, as slugs become urls and tags"
+    assertEquals(listOf("game_word"), categories.map { it.name })
+  }
+
+  @Test
+  fun `A slug listed twice comes back once`() = coScenario { scope ->
+    m Given "a catalog listing the same game category twice"
+    val service = FakeCategoriesService(
+      listOf(
+        CategoryResponse(slug = "game_word", title = "Word", parent = "games", appCount = 4),
+        CategoryResponse(slug = "game_word", title = "Word", parent = "games", appCount = 4),
+      )
+    )
+    val dataSource = dataSource(service, scope)
+
+    m When "the game categories are read"
+    val categories = dataSource.categories(parent = "games")
+
+    m Then "it comes back once, as rows key on it"
+    assertEquals(listOf("game_word"), categories.map { it.name })
+  }
+
+  @Test
   fun `A category without a title is titled by its slug`() = coScenario { scope ->
     m Given "a catalog where one game category has a blank title"
     val service = FakeCategoriesService(
