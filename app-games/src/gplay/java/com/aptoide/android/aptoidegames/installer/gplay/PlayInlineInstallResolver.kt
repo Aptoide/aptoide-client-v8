@@ -73,7 +73,9 @@ class PlayInlineInstallResolver @Inject constructor(
         return null
       }
 
-      InlineInstallRoute.PLAY_CATALOG -> Unit
+      InlineInstallRoute.PLAY_CATALOG,
+      InlineInstallRoute.PLAY_CATALOG_ONLY,
+        -> Unit
     }
     val catalogToken = catalogTokenRepository.getCatalogToken(app.packageName)
     if (catalogToken == null) {
@@ -117,6 +119,11 @@ class PlayInlineInstallResolver @Inject constructor(
   // dismissed overlay is a canceled install, and retries go through the overlay again
   override fun allowsRegularFallback(app: App): Boolean = !app.installsThroughDetailsOverlay()
 
+  // Apps read from the new services have no download of their own on this build: when Play
+  // cannot install one, the install ends as an error to retry, never through Aptoide
+  override fun requiresInlineInstall(app: App): Boolean =
+    inlineInstallRoute(app, aborted = emptySet()) == InlineInstallRoute.PLAY_CATALOG_ONLY
+
   // No resolveFallbackInstall override: CATALOG apps use Google's documented method or
   // Aptoide's own install path, never Play's public details overlay - developers who
   // opted out of Catalog Access must not surface through us via the generic overlay.
@@ -157,11 +164,16 @@ class PlayInlineInstallResolver @Inject constructor(
   }
 
   override fun onInlineInstallUnavailable(app: App) {
-    log(
-      "${app.packageName}: inline install unavailable, " +
-        "this session's next attempts use the regular install path"
-    )
-    abortedInlineInstalls.add(app.packageName)
+    // An app that may only install through Play is retried through Play, not aborted
+    if (requiresInlineInstall(app)) {
+      log("${app.packageName}: inline install unavailable, the next attempt retries Play")
+    } else {
+      log(
+        "${app.packageName}: inline install unavailable, " +
+          "this session's next attempts use the regular install path"
+      )
+      abortedInlineInstalls.add(app.packageName)
+    }
     ongoingInstalls.remove(app.packageName)?.cancel()
     // Clears the indeterminate installing notification; the regular install path taking
     // over reuses the same per-package notification right away

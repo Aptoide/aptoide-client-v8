@@ -1,6 +1,7 @@
 package cm.aptoide.pt.feature_apps.di
 
 import cm.aptoide.pt.aptoide_network.di.BackendOverride
+import cm.aptoide.pt.feature_apps.data.AppRepository
 import cm.aptoide.pt.feature_apps.data.AppsListRepository
 import dagger.BindsOptionalOf
 import dagger.Module
@@ -18,4 +19,8 @@ internal interface BackendOverrideModule {
   @BindsOptionalOf
   @BackendOverride
   fun appsListRepository(): AppsListRepository
+
+  @BindsOptionalOf
+  @BackendOverride
+  fun appRepository(): AppRepository
 }

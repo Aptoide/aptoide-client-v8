@@ -33,6 +33,7 @@ import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -162,11 +163,25 @@ private fun InstallViewContent(
 ) {
   when (val state = installViewState.uiState) {
     null -> Unit
-    is DownloadUiState.Install -> PrimaryButton(
-      title = installViewState.actionLabel,
-      onClick = state.install,
-      modifier = Modifier.fillMaxWidth(),
-    )
+    is DownloadUiState.Install -> when (installViewState.availability) {
+      InstallAvailability.AVAILABLE -> PrimaryButton(
+        title = installViewState.actionLabel,
+        onClick = state.install,
+        modifier = Modifier.fillMaxWidth(),
+      )
+
+      // Disabled rather than absent, so the button does not flash into the unavailable state
+      InstallAvailability.CHECKING -> PrimaryButton(
+        title = stringResource(string.button_install_title),
+        onClick = {},
+        enabled = false,
+        modifier = Modifier.fillMaxWidth(),
+      )
+
+      InstallAvailability.NOT_OFFERED -> InstallViewNotAvailable(
+        modifier = Modifier.fillMaxWidth()
+      )
+    }
 
     is DownloadUiState.Migrate -> AccentButton(
       title = installViewState.actionLabel,
@@ -190,18 +205,10 @@ private fun InstallViewContent(
           onClick = state.uninstall,
           modifier = Modifier.weight(1f),
         )
-        PrimaryButton(
-          title = installViewState.actionLabel,
-          onClick = state.update,
-          modifier = Modifier.weight(1f),
-        )
+        UpdateAction(installViewState, state, modifier = Modifier.weight(1f))
       }
     } else {
-      PrimaryButton(
-        title = installViewState.actionLabel,
-        onClick = state.update,
-        modifier = Modifier.fillMaxWidth(),
-      )
+      UpdateAction(installViewState, state, modifier = Modifier.fillMaxWidth())
     }
 
     is DownloadUiState.Waiting -> ProgressView(
@@ -305,6 +312,41 @@ private fun InstallViewContent(
   if (installViewState.showPlayAttribution) {
     PlayAttributionLabel(modifier = Modifier.padding(top = 4.dp))
   }
+}
+
+// The update button, unless the update is withheld - see isWithheldBy
+@Composable
+private fun UpdateAction(
+  installViewState: InstallViewState,
+  state: DownloadUiState.Outdated,
+  modifier: Modifier = Modifier,
+) = when (installViewState.availability) {
+  InstallAvailability.AVAILABLE -> PrimaryButton(
+    title = installViewState.actionLabel,
+    onClick = state.update,
+    modifier = modifier,
+  )
+
+  InstallAvailability.CHECKING -> PrimaryButton(
+    title = stringResource(string.button_update_title),
+    onClick = {},
+    enabled = false,
+    modifier = modifier,
+  )
+
+  InstallAvailability.NOT_OFFERED -> InstallViewNotAvailable(modifier = modifier)
+}
+
+// Play cannot install the app and nothing else may on this build
+@Composable
+private fun InstallViewNotAvailable(modifier: Modifier = Modifier) {
+  Text(
+    text = stringResource(string.install_not_available_message),
+    style = AGTypography.InputsM,
+    color = Palette.GreyLight,
+    textAlign = TextAlign.Center,
+    modifier = modifier.padding(vertical = 12.dp),
+  )
 }
 
 @Composable

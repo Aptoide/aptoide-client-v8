@@ -1,5 +1,6 @@
 package cm.aptoide.pt.feature_apps.data.deviceapi
 
+import cm.aptoide.pt.device_api.error.DeviceApiException
 import cm.aptoide.pt.device_api.error.deviceApiCall
 import cm.aptoide.pt.device_api.network.DeviceProfile
 import cm.aptoide.pt.feature_apps.data.App
@@ -45,6 +46,29 @@ class DeviceApiAppsDataSource(
     refresh = false,
   )
 
+  /**
+   * The details of [packageName] within the catalog. A
+   * [cm.aptoide.pt.device_api.error.DeviceApiException.NotInVariant] when the catalog does not
+   * hold it.
+   */
+  suspend fun detail(packageName: String): App = withContext(dispatcher) {
+    val profile = deviceProfile()
+    deviceApiCall {
+      service.getApp(
+        packageName = packageName,
+        variant = variant,
+        sdk = profile.sdk,
+        abi = profile.abi,
+        tv = profile.tv,
+        density = profile.density,
+      )
+    }.toApp(storeName)
+      ?: throw DeviceApiException.Generic(
+        DeviceApiException.NO_STATUS,
+        "The details of $packageName name no package",
+      )
+  }
+
   suspend fun related(packageName: String, limit: Int? = null): List<App> =
     withContext(dispatcher) {
       val profile = deviceProfile()
@@ -58,7 +82,7 @@ class DeviceApiAppsDataSource(
           tv = profile.tv,
           density = profile.density,
         )
-      }.items.toApps()
+      }.items.toApps().distinctBy { it.packageName }
     }
 
   private suspend fun getApps(

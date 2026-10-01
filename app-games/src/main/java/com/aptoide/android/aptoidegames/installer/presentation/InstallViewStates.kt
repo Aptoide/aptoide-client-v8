@@ -34,6 +34,7 @@ import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.apkfy.isFreeFire
 import com.aptoide.android.aptoidegames.apkfy.isRoblox
 import com.aptoide.android.aptoidegames.feature_oos.OutOfSpaceDialog
+import com.aptoide.android.aptoidegames.installer.CatalogStatus
 import com.aptoide.android.aptoidegames.installer.analytics.AnalyticsInstallPackageInfoMapper
 import com.aptoide.android.aptoidegames.installer.analytics.InstallAnalytics
 import com.aptoide.android.aptoidegames.installer.analytics.getNetworkType
@@ -60,6 +61,7 @@ data class InstallViewState(
   val stateDescription: String,
   val actionLabel: String?,
   val showPlayAttribution: Boolean = false,
+  val availability: InstallAvailability = InstallAvailability.AVAILABLE,
 )
 
 @Composable
@@ -70,7 +72,11 @@ fun installViewStates(
   autoOpenAfterInstall: Boolean? = null,
   prefetchPlayCatalog: Boolean = false,
 ): InstallViewState {
-  val isPlayCatalog = rememberIsPlayCatalog(app = app, prefetch = prefetchPlayCatalog)
+  val catalogStatus = rememberCatalogStatus(app = app, prefetch = prefetchPlayCatalog)
+  val isPlayCatalog = catalogStatus == CatalogStatus.IN_CATALOG
+  // Only the app view looks the catalog up, which is also the only place that may withhold
+  // an install
+  val availability = installAvailability(app, catalogStatus, onAppView = prefetchPlayCatalog)
   val context = LocalContext.current
   val analyticsContext = AnalyticsContext.current
   val utmContext = UTMContext.current
@@ -374,9 +380,31 @@ fun installViewStates(
     }
   }
 
-  // Folded here so no render site can show the label outside the pre-tap states
+  // Folded here so no render site can show the label outside the pre-tap states, nor offer
+  // an install that is withheld
   return uiState.toInstallViewState(app)
     .copy(showPlayAttribution = isPlayCatalog && uiState.canTriggerInlineInstall())
+    .withheldWhen(availability, app)
+}
+
+// An install or update that is not offered has no action to take, and one still being checked
+// none yet - see isWithheldBy for which states this reaches
+@Composable
+private fun InstallViewState.withheldWhen(
+  availability: InstallAvailability,
+  app: App,
+): InstallViewState {
+  if (!uiState.isWithheldBy(availability)) return this
+  val stateDescription = when (availability) {
+    InstallAvailability.NOT_OFFERED -> stringResource(R.string.install_not_available_message)
+    else -> stateDescription
+  }
+  return copy(
+    availability = availability,
+    actionLabel = null,
+    stateDescription = stateDescription,
+    contentDescription = stringResource(R.string.appview_installer_talkback, app.name),
+  )
 }
 
 @Composable

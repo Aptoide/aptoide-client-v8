@@ -17,6 +17,7 @@ import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.installer.CatalogStatus
 import com.aptoide.android.aptoidegames.installer.FEED_INSTALL_DIVERTS_TO_APPVIEW
 import com.aptoide.android.aptoidegames.installer.PlayCatalogChecker
 import com.aptoide.android.aptoidegames.installer.excludedFromPlayCatalog
@@ -33,38 +34,47 @@ class PlayCatalogInjectionsProvider @Inject constructor(
 ) : ViewModel()
 
 /**
- * Whether [app] installs via Google Play, resolved before the user taps Install so the
- * mandatory "Google Play" attribution can be shown (Play Catalog Access Program). Always
- * false where no [PlayCatalogChecker] is bound (non-Play distributions) and in previews.
+ * What is known about [app]'s presence in the Play catalog, resolved before the user taps
+ * Install so the mandatory "Google Play" attribution can be shown (Play Catalog Access
+ * Program) and so an app Play cannot install is not offered. Null where no
+ * [PlayCatalogChecker] is bound (non-Play distributions), in previews, and for apps that
+ * install through Aptoide, which never need the catalog - see [excludedFromPlayCatalog].
  * [prefetch] triggers the catalog lookup; leave it false on list cards, which label lazily
- * from the shared cache. BDS (Catappult) apps are always false and never trigger the lookup -
- * see [excludedFromPlayCatalog].
+ * from the shared cache.
  */
 @Composable
-fun rememberIsPlayCatalog(
+fun rememberCatalogStatus(
   app: App,
   prefetch: Boolean = false,
-): Boolean = runPreviewable(
-  preview = { false },
+): CatalogStatus? = runPreviewable(
+  preview = { null },
   real = {
-    // Decided before the checker is even resolved, so a BDS app never reaches prefetch nor the
-    // cache: no request, no tag, whatever token the backend would have returned
-    if (app.excludedFromPlayCatalog()) return@runPreviewable false
+    // Decided before the checker is even resolved, so an app that installs through Aptoide
+    // never reaches prefetch nor the cache: no request, no tag, whatever token the backend
+    // would have returned
+    if (app.excludedFromPlayCatalog()) return@runPreviewable null
     val checker = hiltViewModel<PlayCatalogInjectionsProvider>().playCatalogChecker
       .orElse(null)
     if (checker == null) {
-      false
+      null
     } else {
       if (prefetch) {
         LaunchedEffect(app.packageName) { checker.prefetch(app.packageName) }
       }
-      val isPlayCatalog by remember(app.packageName) {
-        checker.observeIsPlayCatalog(app.packageName)
-      }.collectAsState(initial = false)
-      isPlayCatalog
+      val status by remember(app.packageName) {
+        checker.observeCatalogStatus(app.packageName)
+      }.collectAsState(initial = CatalogStatus.UNKNOWN)
+      status
     }
   }
 )
+
+/** Whether [app] installs via Google Play - see [rememberCatalogStatus]. */
+@Composable
+fun rememberIsPlayCatalog(
+  app: App,
+  prefetch: Boolean = false,
+): Boolean = rememberCatalogStatus(app, prefetch) == CatalogStatus.IN_CATALOG
 
 /**
  * The pre-tap states whose action can divert into a Google Play inline install - the

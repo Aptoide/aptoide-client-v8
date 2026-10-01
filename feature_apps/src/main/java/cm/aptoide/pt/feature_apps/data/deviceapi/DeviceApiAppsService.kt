@@ -1,5 +1,6 @@
 package cm.aptoide.pt.feature_apps.data.deviceapi
 
+import cm.aptoide.pt.feature_apps.data.deviceapi.model.AppResponse
 import cm.aptoide.pt.feature_apps.data.deviceapi.model.AppsPageResponse
 import cm.aptoide.pt.feature_apps.data.deviceapi.model.RelatedAppsResponse
 import retrofit2.http.GET
@@ -11,6 +12,16 @@ import retrofit2.http.Query
  * Retrofit leaves a null one out - the service fails open on anything it is not told.
  */
 interface DeviceApiAppsService {
+
+  @GET("android/v1/apps/{package_name}")
+  suspend fun getApp(
+    @Path("package_name") packageName: String,
+    @Query("variant") variant: String,
+    @Query("sdk") sdk: Int?,
+    @Query("abi") abi: String?,
+    @Query("tv") tv: Boolean?,
+    @Query("density") density: Int?,
+  ): AppResponse
 
   /** A search when [q] is given, a listing when [category] is. The service rejects both. */
   @GET("android/v1/apps")

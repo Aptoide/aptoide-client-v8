@@ -1,8 +1,13 @@
 package cm.aptoide.pt.feature_apps.data.deviceapi
 
+import cm.aptoide.pt.feature_apps.data.deviceapi.model.AppResponse
 import cm.aptoide.pt.feature_apps.data.deviceapi.model.AppSummaryResponse
+import cm.aptoide.pt.feature_apps.data.deviceapi.model.ArtifactResponse
 import cm.aptoide.pt.feature_apps.data.deviceapi.model.RatingBucketResponse
 import cm.aptoide.pt.feature_apps.data.deviceapi.model.RatingResponse
+import cm.aptoide.pt.feature_apps.data.deviceapi.model.ReleaseResponse
+import cm.aptoide.pt.feature_apps.data.deviceapi.model.ScreenshotResponse
+import cm.aptoide.pt.feature_apps.data.deviceapi.model.VideoResponse
 import cm.aptoide.pt.feature_apps.domain.AppOrigin
 import cm.aptoide.pt.feature_apps.domain.Rating
 import cm.aptoide.pt.feature_apps.domain.Votes
@@ -200,5 +205,186 @@ internal class DeviceApiMappersTest {
 
     m Then "there is no app"
     assertNull(app)
+  }
+
+  private val detail = AppResponse(
+    packageName = "com.my.defense",
+    name = "Rush Royale",
+    iconUrl = "https://img/icon",
+    publisherName = "MY.GAMES",
+    summary = "Tower defense",
+    description = "A long description",
+    downloads = 2_000L,
+    aptoideDownloads = 10L,
+    rating = RatingResponse(average = 4.2, count = 300, distribution = null),
+    screenshots = listOf(ScreenshotResponse(url = "https://img/s1", width = 1920, height = 1080)),
+    videos = listOf(VideoResponse(url = "https://video/v1", thumbnailUrl = null, kind = null)),
+    featureGraphicUrl = "https://img/graphic",
+    whatsNew = "Update 37.1",
+    developerWebsite = "https://rr.my.games",
+    developerEmail = "support@my.games",
+    privacyPolicyUrl = "https://my.games/privacy",
+    aptoideBilling = true,
+    release = ReleaseResponse(
+      versionName = "37.1.135194",
+      versionCode = 135194,
+      minSdk = 24,
+      sizeBytes = 902_932_742L,
+      releasedAt = "2026-08-18T13:33:50Z",
+      artifacts = listOf(
+        ArtifactResponse(
+          kind = "apk",
+          url = "https://dl/app.apk",
+          sizeBytes = 902_932_742L,
+          md5 = "96fb146242d4cbffd306e1c8464d133f",
+          filename = null,
+        )
+      ),
+      permissions = listOf("android.permission.INTERNET"),
+    ),
+  )
+
+  @Test
+  fun `A detail keeps what the app view shows`() = scenario {
+    m Given "a complete detail"
+
+    m When "it is mapped"
+    val app = detail.toApp(storeName = "a-store")!!
+
+    m Then "description, news, developer and links are carried over"
+    assertEquals("A long description", app.description)
+    assertEquals("Update 37.1", app.news)
+    assertEquals("MY.GAMES", app.developerName)
+    assertEquals("https://rr.my.games", app.website)
+    assertEquals("support@my.games", app.email)
+    assertEquals("https://my.games/privacy", app.privacyPolicy)
+    assertEquals(listOf("https://img/s1"), app.screenshots?.map { it.url })
+    assertEquals(listOf("https://video/v1"), app.videos)
+    assertEquals(listOf("android.permission.INTERNET"), app.permissions)
+    assertEquals(AppOrigin.DEVICE_API, app.origin)
+  }
+
+  @Test
+  fun `A screenshot without dimensions gets a landscape shape`() = scenario {
+    m Given "a detail whose screenshots come without width and height, as the Play catalog sends"
+    val undimensioned = detail.copy(
+      screenshots = listOf(ScreenshotResponse(url = "https://img/s1", width = null, height = null))
+    )
+
+    m When "it is mapped"
+    val screenshot = undimensioned.toApp(storeName = "a-store")!!.screenshots!!.single()
+
+    m Then "it has a landscape shape to be laid out with, as a zero one cannot be"
+    assertEquals(16, screenshot.width / (screenshot.height / 9))
+    assertTrue(screenshot.width > 0 && screenshot.height > 0)
+  }
+
+  @Test
+  fun `A detail carries its version and its release date`() = scenario {
+    m Given "a detail with a release"
+
+    m When "it is mapped"
+    val app = detail.toApp(storeName = "a-store")!!
+
+    m Then "the version and the dates are those of the release"
+    assertEquals("37.1.135194", app.versionName)
+    assertEquals(135194, app.versionCode)
+    assertEquals("2026-08-18 13:33:50", app.releaseDate)
+    assertEquals("2026-08-18 13:33:50", app.updateDate)
+    assertEquals("2026-08-18 13:33:50", app.modifiedDate)
+  }
+
+  @Test
+  fun `A detail with an apk artifact carries it as its file`() = scenario {
+    m Given "a detail whose release has an apk artifact"
+
+    m When "it is mapped"
+    val app = detail.toApp(storeName = "a-store")!!
+
+    m Then "the file points at it, with its size and checksum"
+    assertEquals("https://dl/app.apk", app.file.path)
+    assertEquals(902_932_742L, app.file.size)
+    assertEquals("96fb146242d4cbffd306e1c8464d133f", app.file.md5)
+    assertEquals("96fb146242d4cbffd306e1c8464d133f", app.md5)
+    assertNull(app.aab)
+    assertNull(app.obb)
+  }
+
+  @Test
+  fun `Split and expansion artifacts map to the app bundle and its expansion files`() =
+    scenario {
+      m Given "a detail whose release ships a base apk, two splits and both expansion files"
+      val artifact = ArtifactResponse(kind = "apk", url = "https://dl/base.apk", sizeBytes = 100)
+      val bundled = detail.copy(
+        release = detail.release?.copy(
+          artifacts = listOf(
+            artifact,
+            artifact.copy(kind = "split", url = "https://dl/config.arm64.apk", filename = "arm64"),
+            artifact.copy(
+              kind = "split",
+              url = "https://dl/config.xxhdpi.apk",
+              filename = "xxhdpi",
+            ),
+            artifact.copy(kind = "obb_main", url = "https://dl/main.obb", sizeBytes = 1_000),
+            artifact.copy(kind = "obb_patch", url = "https://dl/patch.obb", sizeBytes = 10),
+          )
+        )
+      )
+
+      m When "it is mapped"
+      val app = bundled.toApp(storeName = "a-store")!!
+
+      m Then "the splits, the expansion files and the size follow"
+      assertEquals(listOf("arm64", "xxhdpi"), app.aab?.baseSplits?.map { it.type })
+      assertEquals("https://dl/main.obb", app.obb?.main?.path)
+      assertEquals("https://dl/patch.obb", app.obb?.patch?.path)
+      assertEquals(100L + 100 + 100 + 1_000 + 10, app.appSize)
+    }
+
+  @Test
+  fun `A detail without artifacts has nothing to install with`() = scenario {
+    m Given "a detail as the Play catalog sends it, with no version and no artifacts"
+    val playCatalog = detail.copy(
+      release = detail.release?.copy(
+        versionName = "",
+        versionCode = 0,
+        sizeBytes = 0,
+        artifacts = emptyList(),
+      ),
+      rating = null,
+    )
+
+    m When "it is mapped"
+    val app = playCatalog.toApp(storeName = "a-store")!!
+
+    m Then "version, size and file are empty, and it still needs no further details"
+    assertEquals("", app.versionName)
+    assertEquals(0, app.versionCode)
+    assertEquals("", app.file.path)
+    assertEquals(0L, app.appSize)
+    assertEquals(0L, app.rating.totalVotes)
+  }
+
+  @Test
+  fun `Empty permissions read as unknown`() = scenario {
+    m Given "a detail whose release lists no permissions"
+    val bare = detail.copy(release = detail.release?.copy(permissions = emptyList()))
+
+    m When "it is mapped"
+    val app = bare.toApp(storeName = "a-store")!!
+
+    m Then "there is no list, as the app view hides an absent one"
+    assertNull(app.permissions)
+  }
+
+  @Test
+  fun `A detail flagged for Aptoide billing maps to an AppCoins app`() = scenario {
+    m Given "a detail with the billing flag on"
+
+    m When "it is mapped"
+    val app = detail.toApp(storeName = "a-store")!!
+
+    m Then "it is an AppCoins app"
+    assertTrue(app.isAppCoins)
   }
 }
