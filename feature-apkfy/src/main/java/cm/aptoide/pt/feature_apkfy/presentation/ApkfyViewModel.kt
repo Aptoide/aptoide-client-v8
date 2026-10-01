@@ -12,6 +12,7 @@ import cm.aptoide.pt.feature_apkfy.domain.ApkfyFilter
 import cm.aptoide.pt.feature_apkfy.domain.ApkfyManager
 import cm.aptoide.pt.feature_apkfy.domain.ApkfyModel
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.aptoide_network.di.V7Backend
 import cm.aptoide.pt.feature_apps.domain.AppMetaUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -37,7 +38,8 @@ private var cachedApkfyData: ApkfyData? = null
 class ApkfyViewModel @Inject constructor(
   @ApplicationContext private val context: Context,
   private val apkfyManager: ApkfyManager,
-  private val appMetaUseCase: AppMetaUseCase,
+  // The v7 app whatever the build reads its catalog from: apkfy's titles stay on v7
+  @V7Backend private val appMetaUseCase: AppMetaUseCase,
   private val apkfyFilter: ApkfyFilter
 ) : ViewModel() {
 

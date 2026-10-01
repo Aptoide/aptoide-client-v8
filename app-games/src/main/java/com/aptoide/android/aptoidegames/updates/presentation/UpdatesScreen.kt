@@ -213,7 +213,9 @@ private fun AppsList(
             )
           },
         ) {
-          InstallViewShort(app)
+          // The updates list installs in place, so it prefetches the catalog status to
+          // label its own buttons rather than diverting to AppView
+          InstallViewShort(app, prefetchPlayCatalog = true)
         }
       }
     }

@@ -130,7 +130,15 @@ class FeatureFlagsImpl @Inject constructor(
 
   override suspend fun <T> getObject(key: String, klass: Class<T>) = mutex.withLock {
     runCatching {
-      val jsonStr = featureFlags.getJSONObject(key).toString()
+      // Remote config values are always stored here as strings (see
+      // AptoideFeatureFlagsRepository, which reads every flag via ConfigValue.asString()),
+      // even when the flag itself represents a JSON object - so this can't assume the
+      // stored value is already a JSONObject the way featureFlags.getJSONObject(key) does.
+      val jsonStr = when (val raw = featureFlags.opt(key)) {
+        is JSONObject -> raw.toString()
+        is String -> raw
+        else -> return@runCatching null
+      }
       Gson().fromJson(jsonStr, klass)
     }.getOrNull()
   }
