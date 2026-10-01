@@ -371,6 +371,9 @@
   <string name="play_and_earn_start_earning_title">Începeți să câștigați</string>
   <string name="play_and_earn_level_up_rewards_title">Creșteți-vă recompensele!</string>
   <string name="play_and_earn_login_unlock_access_body">Conectează-te pentru a debloca accesul la premii incredibile în timp ce joci!</string>
+  <string name="play_and_earn_install_sign_in_title">Conectează-te pentru a începe să câștigi</string>
+  <string name="play_and_earn_install_sign_in_body">Pentru a câștiga recompense cu %1$s, conectează-te cu contul tău Google.</string>
+  <string name="play_and_earn_install_sign_in_body_generic">Pentru a câștiga recompense cu acest joc, conectează-te cu contul tău Google.</string>
   <string name="play_and_earn_waiting_title">Așteptare...</string>
   <string name="play_and_earn_getting_ready_body">Pregătim totul pentru tine…</string>
   <string name="play_and_earn_almost_there_title">Aproape ai ajuns!</string>

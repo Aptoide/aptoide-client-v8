@@ -349,6 +349,9 @@
   <string name="play_and_earn_start_earning_title">Bắt đầu kiếm tiền</string>
   <string name="play_and_earn_level_up_rewards_title">Nâng cấp phần thưởng của bạn!</string>
   <string name="play_and_earn_login_unlock_access_body">Đăng nhập để mở khóa quyền truy cập vào những phần thưởng tuyệt vời trong khi bạn chơi!</string>
+  <string name="play_and_earn_install_sign_in_title">Đăng nhập để bắt đầu kiếm phần thưởng</string>
+  <string name="play_and_earn_install_sign_in_body">Để kiếm phần thưởng với %1$s, đăng nhập bằng tài khoản Google của bạn.</string>
+  <string name="play_and_earn_install_sign_in_body_generic">Để kiếm phần thưởng với trò chơi này, đăng nhập bằng tài khoản Google của bạn.</string>
   <string name="play_and_earn_waiting_title">Đang chờ...</string>
   <string name="play_and_earn_getting_ready_body">Chúng tôi đang chuẩn bị mọi thứ cho bạn…</string>
   <string name="play_and_earn_almost_there_title">Bạn sắp đến rồi!</string>

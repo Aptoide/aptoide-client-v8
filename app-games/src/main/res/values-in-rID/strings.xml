@@ -349,6 +349,9 @@
   <string name="play_and_earn_start_earning_title">Mulai Menghasilkan</string>
   <string name="play_and_earn_level_up_rewards_title">Tingkatkan hadiah Anda!</string>
   <string name="play_and_earn_login_unlock_access_body">Masuk untuk membuka akses ke hadiah-hadiah menakjubkan saat Anda bermain!</string>
+  <string name="play_and_earn_install_sign_in_title">Masuk untuk mulai mendapatkan hadiah</string>
+  <string name="play_and_earn_install_sign_in_body">Untuk mendapatkan hadiah dengan %1$s, masuk dengan akun Google Anda.</string>
+  <string name="play_and_earn_install_sign_in_body_generic">Untuk mendapatkan hadiah dengan game ini, masuk dengan akun Google Anda.</string>
   <string name="play_and_earn_waiting_title">Menunggu...</string>
   <string name="play_and_earn_getting_ready_body">Kami sedang mempersiapkan semuanya untuk Anda…</string>
   <string name="play_and_earn_almost_there_title">Anda hampir sampai!</string>

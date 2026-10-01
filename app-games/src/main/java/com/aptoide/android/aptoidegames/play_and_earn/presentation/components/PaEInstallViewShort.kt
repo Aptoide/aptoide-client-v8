@@ -65,16 +65,23 @@ fun PaEInstallViewShort(
   navigate: ((String) -> Unit)? = null,
   onNavigateToAppView: (() -> Unit)? = null,
 ) {
+  val normalApp = app.asNormalApp()
   val installViewState = installViewStates(
-    app = app.asNormalApp(),
+    app = normalApp,
     onInstallStarted = onInstallStarted,
     onCancel = onCancel,
   )
+
+  // A Play & Earn game is only downloaded by a signed-in user (AND-876): logged-out taps go to
+  // sign-in first and the install resumes on return.
+  val installLoginGate = rememberPaEInstallLoginGate(app = normalApp, navigate = navigate)
+  ResumePendingPaEInstall(app = normalApp, uiState = installViewState.uiState)
 
   PaEInstallViewShortContent(
     installViewState = installViewState,
     cancelable = cancelable,
     navigate = navigate,
+    installLoginGate = installLoginGate,
     onNavigateToAppView = onNavigateToAppView,
   )
 }
@@ -84,6 +91,7 @@ private fun PaEInstallViewShortContent(
   installViewState: InstallViewState,
   navigate: ((String) -> Unit)? = null,
   cancelable: Boolean = true,
+  installLoginGate: PaEInstallLoginGate = PaEInstallLoginGate.None,
   onNavigateToAppView: (() -> Unit)? = null,
 ) = Column(horizontalAlignment = Alignment.CenterHorizontally) {
   // Non-null only where this card must hand the install over to AppView instead of starting
@@ -94,22 +102,22 @@ private fun PaEInstallViewShortContent(
   )
   when (val state = installViewState.uiState) {
     is DownloadUiState.Install -> PaESmallCoinButton(
-      onClick = divert ?: state.install,
+      onClick = divert ?: installLoginGate.guard(state.install),
       title = installViewState.actionLabel ?: "",
     )
 
     is DownloadUiState.Migrate -> PaESmallCoinButton(
-      onClick = divert ?: state.migrate,
+      onClick = divert ?: installLoginGate.guard(state.migrate),
       title = installViewState.actionLabel ?: "",
     )
 
     is DownloadUiState.MigrateAlias -> PaESmallCoinButton(
-      onClick = divert ?: state.migrateAlias,
+      onClick = divert ?: installLoginGate.guard(state.migrateAlias),
       title = installViewState.actionLabel ?: "",
     )
 
     is DownloadUiState.Outdated -> PaESmallCoinButton(
-      onClick = divert ?: state.update,
+      onClick = divert ?: installLoginGate.guard(state.update),
       title = installViewState.actionLabel ?: "",
     )
 

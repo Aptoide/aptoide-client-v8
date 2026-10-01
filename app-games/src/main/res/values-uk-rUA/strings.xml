@@ -382,6 +382,9 @@
   <string name="play_and_earn_start_earning_title">Почніть заробляти</string>
   <string name="play_and_earn_level_up_rewards_title">Підвищуйте рівень своїх винагород!</string>
   <string name="play_and_earn_login_unlock_access_body">Увійдіть, щоб отримати доступ до неймовірних призів під час гри!</string>
+  <string name="play_and_earn_install_sign_in_title">Увійдіть, щоб почати заробляти</string>
+  <string name="play_and_earn_install_sign_in_body">Щоб отримувати винагороди в %1$s, увійдіть за допомогою облікового запису Google.</string>
+  <string name="play_and_earn_install_sign_in_body_generic">Щоб отримувати винагороди в цій грі, увійдіть за допомогою облікового запису Google.</string>
   <string name="play_and_earn_waiting_title">Очікування...</string>
   <string name="play_and_earn_getting_ready_body">Ми готуємо все для вас…</string>
   <string name="play_and_earn_almost_there_title">Ви майже досягли мети!</string>

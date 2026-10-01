@@ -360,6 +360,9 @@
   <string name="play_and_earn_start_earning_title">Start Earning</string>
   <string name="play_and_earn_level_up_rewards_title">Level up your rewards!</string>
   <string name="play_and_earn_login_unlock_access_body">Login to unlock access to incredible prizes while you play!</string>
+  <string name="play_and_earn_install_sign_in_title">Log in to start earning</string>
+  <string name="play_and_earn_install_sign_in_body">To earn rewards with %1$s, log in with your Google account.</string>
+  <string name="play_and_earn_install_sign_in_body_generic">To earn rewards with this game, log in with your Google account.</string>
   <string name="play_and_earn_waiting_title">Waiting...</string>
   <string name="play_and_earn_getting_ready_body">We\'re getting things ready for you…</string>
   <string name="play_and_earn_almost_there_title">You\'re almost there!</string>
