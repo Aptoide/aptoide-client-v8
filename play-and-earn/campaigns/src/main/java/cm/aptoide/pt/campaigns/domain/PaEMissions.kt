@@ -4,7 +4,11 @@ import com.google.gson.JsonObject
 
 data class PaEMissions(
   val checkpoints: List<PaEMission>,
-  val missions: List<PaEMission>
+  val missions: List<PaEMission>,
+  // The serving campaign's MMP click link, called when the game is installed. Only from the
+  // network: the cached missions don't keep it.
+  val campaignId: String? = null,
+  val mmpClickUrl: String? = null,
 )
 
 data class PaEMission(
