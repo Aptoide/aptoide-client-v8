@@ -363,6 +363,15 @@
   <string name="play_and_earn_install_sign_in_title">Faça login para começar a ganhar</string>
   <string name="play_and_earn_install_sign_in_body">Para ganhar recompensas com %1$s, faça login com sua conta do Google.</string>
   <string name="play_and_earn_install_sign_in_body_generic">Para ganhar recompensas com este jogo, faça login com sua conta do Google.</string>
+  <string name="play_and_earn_rewards_paused_title">Recompensas pausadas</string>
+  <string name="play_and_earn_rewards_paused_body">Estamos aguardando o jogo confirmar sua instalação. Continue jogando: suas recompensas começam assim que isso acontecer.</string>
+  <string name="play_and_earn_not_eligible_title">Seu dispositivo não está qualificado</string>
+  <string name="play_and_earn_not_eligible_body">A ferramenta de rastreamento do jogo não confirmou esta instalação, então as recompensas desta campanha não estão disponíveis neste dispositivo.</string>
+  <string name="play_and_earn_rewards_blocked_learn_more_button">Saiba mais</string>
+  <string name="play_and_earn_rewards_paused_info_title">Por que minhas recompensas estão pausadas?</string>
+  <string name="play_and_earn_rewards_paused_info_body">Cada jogo usa uma ferramenta de rastreamento para confirmar as instalações feitas pelo Aptoide Games. As recompensas desta campanha começam quando ela confirma a sua, geralmente poucos minutos depois de você abrir o jogo pela primeira vez.\n\nMantenha o jogo instalado e jogue normalmente. O que você fizer no jogo enquanto espera ainda conta quando sua instalação for confirmada.</string>
+  <string name="play_and_earn_not_eligible_info_title">Por que meu dispositivo não está qualificado?</string>
+  <string name="play_and_earn_not_eligible_info_body">Cada jogo usa uma ferramenta de rastreamento para confirmar as instalações feitas pelo Aptoide Games e decide quais se qualificam. Instalações sinalizadas pelas verificações de segurança, por exemplo de emuladores ou ferramentas automatizadas, não contam para a campanha.\n\nOutros jogos do Play &amp; Earn ainda podem estar disponíveis para você.</string>
   <string name="play_and_earn_waiting_title">Aguardando...</string>
   <string name="play_and_earn_getting_ready_body">Estamos preparando tudo para você…</string>
   <string name="play_and_earn_almost_there_title">Você está quase lá!</string>

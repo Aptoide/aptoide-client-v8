@@ -374,6 +374,15 @@
   <string name="play_and_earn_install_sign_in_title">Conectează-te pentru a începe să câștigi</string>
   <string name="play_and_earn_install_sign_in_body">Pentru a câștiga recompense cu %1$s, conectează-te cu contul tău Google.</string>
   <string name="play_and_earn_install_sign_in_body_generic">Pentru a câștiga recompense cu acest joc, conectează-te cu contul tău Google.</string>
+  <string name="play_and_earn_rewards_paused_title">Recompense întrerupte</string>
+  <string name="play_and_earn_rewards_paused_body">Așteptăm ca jocul să îți confirme instalarea. Continuă să joci: recompensele tale încep imediat ce se întâmplă asta.</string>
+  <string name="play_and_earn_not_eligible_title">Dispozitivul tău nu este eligibil</string>
+  <string name="play_and_earn_not_eligible_body">Instrumentul de urmărire al jocului nu a confirmat această instalare, așa că recompensele acestei campanii nu sunt disponibile pe acest dispozitiv.</string>
+  <string name="play_and_earn_rewards_blocked_learn_more_button">Aflați mai multe</string>
+  <string name="play_and_earn_rewards_paused_info_title">De ce sunt întrerupte recompensele mele?</string>
+  <string name="play_and_earn_rewards_paused_info_body">Fiecare joc folosește un instrument de urmărire pentru a confirma instalările făcute prin Aptoide Games. Recompensele acestei campanii încep după ce îți confirmă instalarea, de obicei la câteva minute după prima deschidere a jocului.\n\nPăstrează jocul instalat și joacă normal. Ce faci în joc cât aștepți contează după ce instalarea ta este confirmată.</string>
+  <string name="play_and_earn_not_eligible_info_title">De ce dispozitivul meu nu este eligibil?</string>
+  <string name="play_and_earn_not_eligible_info_body">Fiecare joc folosește un instrument de urmărire pentru a confirma instalările făcute prin Aptoide Games și decide care sunt eligibile. Instalările semnalate de verificările sale de securitate, de exemplu de pe emulatoare sau instrumente automatizate, nu contează pentru campanie.\n\nAlte jocuri Play &amp; Earn pot fi în continuare disponibile pentru tine.</string>
   <string name="play_and_earn_waiting_title">Așteptare...</string>
   <string name="play_and_earn_getting_ready_body">Pregătim totul pentru tine…</string>
   <string name="play_and_earn_almost_there_title">Aproape ai ajuns!</string>

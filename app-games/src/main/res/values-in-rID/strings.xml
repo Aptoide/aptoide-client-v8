@@ -352,6 +352,15 @@
   <string name="play_and_earn_install_sign_in_title">Masuk untuk mulai mendapatkan hadiah</string>
   <string name="play_and_earn_install_sign_in_body">Untuk mendapatkan hadiah dengan %1$s, masuk dengan akun Google Anda.</string>
   <string name="play_and_earn_install_sign_in_body_generic">Untuk mendapatkan hadiah dengan game ini, masuk dengan akun Google Anda.</string>
+  <string name="play_and_earn_rewards_paused_title">Hadiah dijeda</string>
+  <string name="play_and_earn_rewards_paused_body">Kami menunggu game mengonfirmasi instalasi Anda. Terus bermain: hadiah Anda dimulai segera setelah itu.</string>
+  <string name="play_and_earn_not_eligible_title">Perangkat Anda tidak memenuhi syarat</string>
+  <string name="play_and_earn_not_eligible_body">Alat pelacak game tidak mengonfirmasi instalasi ini, jadi hadiah kampanye ini tidak tersedia di perangkat ini.</string>
+  <string name="play_and_earn_rewards_blocked_learn_more_button">Pelajari Lebih Lanjut</string>
+  <string name="play_and_earn_rewards_paused_info_title">Mengapa hadiah saya dijeda?</string>
+  <string name="play_and_earn_rewards_paused_info_body">Setiap game menggunakan alat pelacak untuk mengonfirmasi instalasi melalui Aptoide Games. Hadiah kampanye ini dimulai setelah alat tersebut mengonfirmasi instalasi Anda, biasanya beberapa menit setelah Anda membuka game pertama kali.\n\nBiarkan game tetap terinstal dan bermainlah seperti biasa. Apa yang Anda lakukan di game selama menunggu tetap dihitung setelah instalasi Anda dikonfirmasi.</string>
+  <string name="play_and_earn_not_eligible_info_title">Mengapa perangkat saya tidak memenuhi syarat?</string>
+  <string name="play_and_earn_not_eligible_info_body">Setiap game menggunakan alat pelacak untuk mengonfirmasi instalasi melalui Aptoide Games dan menentukan mana yang memenuhi syarat. Instalasi yang ditandai oleh pemeriksaan keamanannya, misalnya dari emulator atau alat otomatis, tidak dihitung untuk kampanye.\n\nGame Play &amp; Earn lainnya mungkin masih tersedia untuk Anda.</string>
   <string name="play_and_earn_waiting_title">Menunggu...</string>
   <string name="play_and_earn_getting_ready_body">Kami sedang mempersiapkan semuanya untuk Anda…</string>
   <string name="play_and_earn_almost_there_title">Anda hampir sampai!</string>

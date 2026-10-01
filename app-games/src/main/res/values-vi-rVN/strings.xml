@@ -352,6 +352,15 @@
   <string name="play_and_earn_install_sign_in_title">Đăng nhập để bắt đầu kiếm phần thưởng</string>
   <string name="play_and_earn_install_sign_in_body">Để kiếm phần thưởng với %1$s, đăng nhập bằng tài khoản Google của bạn.</string>
   <string name="play_and_earn_install_sign_in_body_generic">Để kiếm phần thưởng với trò chơi này, đăng nhập bằng tài khoản Google của bạn.</string>
+  <string name="play_and_earn_rewards_paused_title">Phần thưởng tạm dừng</string>
+  <string name="play_and_earn_rewards_paused_body">Chúng tôi đang chờ trò chơi xác nhận lượt cài đặt của bạn. Hãy tiếp tục chơi: phần thưởng sẽ bắt đầu ngay khi được xác nhận.</string>
+  <string name="play_and_earn_not_eligible_title">Thiết bị của bạn không đủ điều kiện</string>
+  <string name="play_and_earn_not_eligible_body">Công cụ theo dõi của trò chơi không xác nhận lượt cài đặt này, vì vậy phần thưởng của chiến dịch này không khả dụng trên thiết bị này.</string>
+  <string name="play_and_earn_rewards_blocked_learn_more_button">Tìm hiểu thêm</string>
+  <string name="play_and_earn_rewards_paused_info_title">Tại sao phần thưởng của tôi bị tạm dừng?</string>
+  <string name="play_and_earn_rewards_paused_info_body">Mỗi trò chơi dùng một công cụ theo dõi để xác nhận các lượt cài đặt qua Aptoide Games. Phần thưởng của chiến dịch này bắt đầu khi công cụ xác nhận lượt cài đặt của bạn, thường vài phút sau khi bạn mở trò chơi lần đầu.\n\nGiữ trò chơi đã cài đặt và chơi như bình thường. Những gì bạn làm trong trò chơi khi chờ vẫn được tính sau khi lượt cài đặt được xác nhận.</string>
+  <string name="play_and_earn_not_eligible_info_title">Tại sao thiết bị của tôi không đủ điều kiện?</string>
+  <string name="play_and_earn_not_eligible_info_body">Mỗi trò chơi dùng một công cụ theo dõi để xác nhận các lượt cài đặt qua Aptoide Games và quyết định lượt nào đủ điều kiện. Các lượt cài đặt bị kiểm tra bảo mật gắn cờ, ví dụ từ trình giả lập hoặc công cụ tự động, không được tính cho chiến dịch.\n\nCác trò chơi Play &amp; Earn khác có thể vẫn khả dụng cho bạn.</string>
   <string name="play_and_earn_waiting_title">Đang chờ...</string>
   <string name="play_and_earn_getting_ready_body">Chúng tôi đang chuẩn bị mọi thứ cho bạn…</string>
   <string name="play_and_earn_almost_there_title">Bạn sắp đến rồi!</string>

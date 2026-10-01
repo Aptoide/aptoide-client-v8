@@ -385,6 +385,15 @@
   <string name="play_and_earn_install_sign_in_title">Zaloguj się, aby zacząć zarabiać</string>
   <string name="play_and_earn_install_sign_in_body">Aby zdobywać nagrody w %1$s, zaloguj się na swoje konto Google.</string>
   <string name="play_and_earn_install_sign_in_body_generic">Aby zdobywać nagrody w tej grze, zaloguj się na swoje konto Google.</string>
+  <string name="play_and_earn_rewards_paused_title">Nagrody wstrzymane</string>
+  <string name="play_and_earn_rewards_paused_body">Czekamy, aż gra potwierdzi Twoją instalację. Graj dalej: nagrody zaczną się, gdy tylko to nastąpi.</string>
+  <string name="play_and_earn_not_eligible_title">Twoje urządzenie nie kwalifikuje się</string>
+  <string name="play_and_earn_not_eligible_body">Narzędzie śledzące gry nie potwierdziło tej instalacji, więc nagrody z tej kampanii nie są dostępne na tym urządzeniu.</string>
+  <string name="play_and_earn_rewards_blocked_learn_more_button">Dowiedz się więcej</string>
+  <string name="play_and_earn_rewards_paused_info_title">Dlaczego moje nagrody są wstrzymane?</string>
+  <string name="play_and_earn_rewards_paused_info_body">Każda gra używa narzędzia śledzącego do potwierdzania instalacji z Aptoide Games. Nagrody z tej kampanii zaczynają się, gdy potwierdzi ono Twoją instalację, zwykle kilka minut po pierwszym uruchomieniu gry.\n\nNie odinstalowuj gry i graj jak zwykle. To, co robisz w grze podczas oczekiwania, zostanie zaliczone po potwierdzeniu instalacji.</string>
+  <string name="play_and_earn_not_eligible_info_title">Dlaczego moje urządzenie się nie kwalifikuje?</string>
+  <string name="play_and_earn_not_eligible_info_body">Każda gra używa narzędzia śledzącego do potwierdzania instalacji z Aptoide Games i decyduje, które się kwalifikują. Instalacje oznaczone przez jego kontrole bezpieczeństwa, na przykład z emulatorów lub narzędzi automatycznych, nie są zaliczane do kampanii.\n\nInne gry Play &amp; Earn mogą być nadal dla Ciebie dostępne.</string>
   <string name="play_and_earn_waiting_title">Czekam...</string>
   <string name="play_and_earn_getting_ready_body">Przygotowujemy wszystko dla Ciebie…</string>
   <string name="play_and_earn_almost_there_title">Już prawie jesteś na miejscu!</string>
