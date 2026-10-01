@@ -8,7 +8,7 @@ Execute every task per [docs/WORKFLOW.md](docs/WORKFLOW.md) (plan+grill → Line
 
 ## Build Commands
 
-`:app-games` uses two flavor dimensions — `brand` (`aptoideGames` / `vanilla`) × `mode` (`dev` / `prod`). Variant names combine them, e.g. `aptoideGamesDevDebug`, `vanillaProdRelease`.
+`:app-games` uses three flavor dimensions — `brand` (`aptoideGames` / `vanilla`) × `distribution` (`direct` / `gplay`) × `mode` (`dev` / `prod`). Variant names combine them in that order, e.g. `aptoideGamesDirectDevDebug`, `vanillaDirectProdRelease`. `vanilla` × `gplay` is disabled: only Aptoide Games is published on Google Play.
 
 ```bash
 # Legacy Vanilla (:app)
@@ -16,12 +16,16 @@ Execute every task per [docs/WORKFLOW.md](docs/WORKFLOW.md) (plan+grill → Line
 ./gradlew app:assembleProdRelease
 
 # Aptoide Games (modern, :app-games — brand=aptoideGames)
-./gradlew :app-games:assembleAptoideGamesDevDebug
-./gradlew :app-games:assembleAptoideGamesProdRelease
+./gradlew :app-games:assembleAptoideGamesDirectDevDebug
+./gradlew :app-games:assembleAptoideGamesDirectProdRelease
+
+# Aptoide Games for Google Play (distribution=gplay)
+./gradlew :app-games:assembleAptoideGamesGplayDevDebug
+./gradlew :app-games:assembleAptoideGamesGplayProdRelease
 
 # Aptoide V10 / Vanilla (modern, :app-games — brand=vanilla)
-./gradlew :app-games:assembleVanillaDevDebug
-./gradlew :app-games:assembleVanillaProdRelease
+./gradlew :app-games:assembleVanillaDirectDevDebug
+./gradlew :app-games:assembleVanillaDirectProdRelease
 
 # Run all unit tests
 ./gradlew test
@@ -38,6 +42,11 @@ Execute every task per [docs/WORKFLOW.md](docs/WORKFLOW.md) (plan+grill → Line
 # Clean build
 ./gradlew clean
 ```
+
+Google Play build properties (`distribution=gplay` only):
+
+- `-PnewServices=true` — read the catalog from the device API instead of v7 (`BuildConfig.NEW_SERVICES_ENABLED`, off by default).
+- `-PnewServicesEnv=prod` — point a dev build at the production device API (`BuildConfig.DEVICE_API_DOMAIN`). The dev services hold no Google Play catalog tokens, so inline installs can only be exercised against production.
 
 ## Architecture Overview
 
@@ -128,17 +137,17 @@ plugins {
 | Module | Brand flavor | App ID | Description |
 |--------|--------------|--------|-------------|
 | `:app` | — | `cm.aptoide.pt.v10` | Aptoide Vanilla (legacy, frozen) |
-| `:app-games` | `aptoideGames` | `com.aptoide.android.aptoidegames` | Aptoide Games |
+| `:app-games` | `aptoideGames` | `com.aptoide.android.aptoidegames` | Aptoide Games (`direct`, and `gplay` for Google Play) |
 | `:app-games` | `vanilla` | `cm.aptoide.pt` | Aptoide V10 (Vanilla, modern) |
 | `:app-dt` | — | `com.dti.hub` | Digital Turbine GamesHub (planned, separate module) |
 
 ### Verifying Brand Flavor Changes
 
-Any change in `:app-games/src/main/` is shared between **both** brand flavors (`aptoideGames` and `vanilla`). Source-set–specific code lives in `src/aptoideGames/` or `src/vanilla/` and only affects that flavor.
+Any change in `:app-games/src/main/` is shared between **both** brand flavors (`aptoideGames` and `vanilla`) and **both** distributions (`direct` and `gplay`). Source-set–specific code lives in `src/aptoideGames/` or `src/vanilla/` and only affects that flavor.
 
 **When you change shared code, verify both flavors on-device.** Never claim "done" after testing just one — silently breaking the other flavor is the most common regression in this module.
 
-- Build + install both: `./gradlew :app-games:installVanillaDevDebug :app-games:installAptoideGamesDevDebug` (`-P` env props as needed).
+- Build + install both: `./gradlew :app-games:installVanillaDirectDevDebug :app-games:installAptoideGamesDirectDevDebug` (`-P` env props as needed).
 - Launch each and screenshot the affected surface side-by-side.
 - Vanilla pkg: `cm.aptoide.pt.dev`. AG pkg: `com.aptoide.android.aptoidegames.dev`. Activity: `com.aptoide.android.aptoidegames.MainActivity` for both.
 
@@ -148,6 +157,8 @@ Any change in `:app-games/src/main/` is shared between **both** brand flavors (`
 - Anything reading `BuildConfig.FLAVOR_brand`, `MARKET_NAME`, `DEEP_LINK_SCHEMA`, or any other brand-dependent BuildConfig field — especially when intentionally branching on flavor, also confirm the non-targeted flavor is *unchanged*.
 
 **Skip the second flavor only when** the change is physically in `src/<flavor>/…` and the diff cannot reach the other source set.
+
+**Distribution source sets**: `src/direct/` and `src/gplay/` follow the same rule. `src/gplay/` only ever compiles into Aptoide Games for Google Play, so a change there cannot reach vanilla or the direct builds.
 
 For non-visual artifacts (e.g. the per-flavor User-Agent), there's no debug HTTP header-logging interceptor — verify by adding a temporary `Log.d` in the header builder/interceptor, capture via `adb logcat`, then revert.
 

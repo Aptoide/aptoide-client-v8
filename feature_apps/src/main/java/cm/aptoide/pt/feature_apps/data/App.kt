@@ -2,6 +2,7 @@ package cm.aptoide.pt.feature_apps.data
 
 import cm.aptoide.pt.aptoide_network.data.network.model.Screenshot
 import cm.aptoide.pt.extensions.getRandomString
+import cm.aptoide.pt.feature_apps.domain.AppOrigin
 import cm.aptoide.pt.feature_apps.domain.AppSource
 import cm.aptoide.pt.feature_apps.domain.Rating
 import cm.aptoide.pt.feature_apps.domain.Store
@@ -49,6 +50,7 @@ data class App(
   val campaigns: CampaignImpl? = null,
   val hasMeta: Boolean = false,
   val signature: String?,
+  val origin: AppOrigin = AppOrigin.V7,
 ) : AppSource {
   val appSize: Long by lazy {
     file.size + (obb?.size ?: 0) + (aab?.size ?: 0)
