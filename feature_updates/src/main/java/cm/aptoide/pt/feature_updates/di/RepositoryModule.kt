@@ -5,7 +5,11 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
+import cm.aptoide.pt.aptoide_network.di.BackendOverride
 import cm.aptoide.pt.aptoide_network.di.RetrofitV7
+import cm.aptoide.pt.aptoide_network.di.V7Backend
+import cm.aptoide.pt.feature_apps.data.AppsListMapper
+import cm.aptoide.pt.feature_updates.data.AptoideUpdatesRepository
 import cm.aptoide.pt.feature_updates.data.StoreNameProvider
 import cm.aptoide.pt.feature_updates.data.UpdatesRepository
 import cm.aptoide.pt.feature_updates.data.database.AppUpdateDao
@@ -16,9 +20,10 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import retrofit2.Retrofit
+import java.util.Optional
+import javax.inject.Provider
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
@@ -33,14 +38,24 @@ internal object RepositoryModule {
   @Provides
   @Singleton
   fun providesUpdatesRepository(
+    @BackendOverride override: Optional<UpdatesRepository>,
+    @V7Backend v7: Provider<UpdatesRepository>,
+  ): UpdatesRepository = override.orElseGet { v7.get() }
+
+  @Provides
+  @Singleton
+  @V7Backend
+  fun providesV7UpdatesRepository(
     @RetrofitV7 retrofitV7: Retrofit,
     storeNameProvider: StoreNameProvider,
     appUpdateDao: AppUpdateDao,
-  ): UpdatesRepository = UpdatesRepository(
+    mapper: AppsListMapper,
+  ): UpdatesRepository = AptoideUpdatesRepository(
     appUpdateDao = appUpdateDao,
     updatesApi = retrofitV7.create(UpdatesApi::class.java),
     storeNameProvider = storeNameProvider,
-    scope = CoroutineScope(Dispatchers.IO)
+    mapper = mapper,
+    dispatcher = Dispatchers.IO,
   )
 
   @Singleton
