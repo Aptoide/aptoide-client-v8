@@ -15,6 +15,11 @@ dependencyResolutionManagement {
     google()
     mavenCentral()
     maven { url = uri("https://jitpack.io") }
+    // Mintegral SDK (transitive dep of the MAX mintegral-adapter) is not on Maven Central.
+    maven {
+      url = uri("https://dl-maven-android.mintegral.com/repository/mbridge_android_sdk_oversea")
+      content { includeGroup("com.mbridge.msdk.oversea") }
+    }
   }
 }
 
