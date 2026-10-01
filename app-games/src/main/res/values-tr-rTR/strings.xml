@@ -363,6 +363,15 @@
   <string name="play_and_earn_install_sign_in_title">Kazanmaya başlamak için giriş yapın</string>
   <string name="play_and_earn_install_sign_in_body">%1$s ile ödül kazanmak için Google hesabınızla giriş yapın.</string>
   <string name="play_and_earn_install_sign_in_body_generic">Bu oyunla ödül kazanmak için Google hesabınızla giriş yapın.</string>
+  <string name="play_and_earn_rewards_paused_title">Ödüller duraklatıldı</string>
+  <string name="play_and_earn_rewards_paused_body">Oyunun kurulumunuzu onaylamasını bekliyoruz. Oynamaya devam edin: onaylanır onaylanmaz ödülleriniz başlar.</string>
+  <string name="play_and_earn_not_eligible_title">Cihazınız uygun değil</string>
+  <string name="play_and_earn_not_eligible_body">Oyunun takip aracı bu kurulumu onaylamadı, bu nedenle bu kampanyanın ödülleri bu cihazda kullanılamaz.</string>
+  <string name="play_and_earn_rewards_blocked_learn_more_button">Daha Fazla Bilgi Edinin</string>
+  <string name="play_and_earn_rewards_paused_info_title">Ödüllerim neden duraklatıldı?</string>
+  <string name="play_and_earn_rewards_paused_info_body">Her oyun, Aptoide Games üzerinden yapılan kurulumları onaylamak için bir takip aracı kullanır. Bu kampanyanın ödülleri, kurulumunuz onaylandığında başlar; bu genellikle oyunu ilk açtıktan birkaç dakika sonra olur.\n\nOyunu yüklü tutun ve her zamanki gibi oynayın. Beklerken oyunda yaptıklarınız, kurulumunuz onaylandığında sayılır.</string>
+  <string name="play_and_earn_not_eligible_info_title">Cihazım neden uygun değil?</string>
+  <string name="play_and_earn_not_eligible_info_body">Her oyun, Aptoide Games üzerinden yapılan kurulumları onaylamak için bir takip aracı kullanır ve hangilerinin uygun olduğuna karar verir. Güvenlik kontrollerinin işaretlediği kurulumlar, örneğin emülatörlerden veya otomatik araçlardan yapılanlar, kampanya için sayılmaz.\n\nDiğer Play &amp; Earn oyunları sizin için hâlâ kullanılabilir olabilir.</string>
   <string name="play_and_earn_waiting_title">Bekleniyor...</string>
   <string name="play_and_earn_getting_ready_body">Sizin için her şeyi hazırlıyoruz…</string>
   <string name="play_and_earn_almost_there_title">Neredeyse vardınız!</string>

@@ -352,6 +352,15 @@
   <string name="play_and_earn_install_sign_in_title">登入即可開始賺取獎勵</string>
   <string name="play_and_earn_install_sign_in_body">若要透過 %1$s 賺取獎勵，請使用您的 Google 帳戶登入。</string>
   <string name="play_and_earn_install_sign_in_body_generic">若要透過此遊戲賺取獎勵，請使用您的 Google 帳戶登入。</string>
+  <string name="play_and_earn_rewards_paused_title">獎勵已暫停</string>
+  <string name="play_and_earn_rewards_paused_body">我們正在等待遊戲確認您的安裝。請繼續遊玩：確認後獎勵將立即開始。</string>
+  <string name="play_and_earn_not_eligible_title">您的裝置不符合資格</string>
+  <string name="play_and_earn_not_eligible_body">遊戲的追蹤工具未確認此次安裝，因此此裝置無法獲得此活動的獎勵。</string>
+  <string name="play_and_earn_rewards_blocked_learn_more_button">了解更多</string>
+  <string name="play_and_earn_rewards_paused_info_title">為什麼我的獎勵已暫停？</string>
+  <string name="play_and_earn_rewards_paused_info_body">每款遊戲都會使用追蹤工具來確認透過 Aptoide Games 完成的安裝。此活動的獎勵會在確認您的安裝後開始，通常在您首次開啟遊戲後幾分鐘內。\n\n請保持遊戲已安裝並照常遊玩。等待期間您在遊戲中的進度，在安裝確認後仍會計入。</string>
+  <string name="play_and_earn_not_eligible_info_title">為什麼我的裝置不符合資格？</string>
+  <string name="play_and_earn_not_eligible_info_body">每款遊戲都會使用追蹤工具來確認透過 Aptoide Games 完成的安裝，並決定哪些安裝符合資格。被其安全檢查標記的安裝（例如來自模擬器或自動化工具的安裝）不計入此活動。\n\n其他 Play &amp; Earn 遊戲可能仍對您開放。</string>
   <string name="play_and_earn_waiting_title">等待中...</string>
   <string name="play_and_earn_getting_ready_body">我們正在為您準備一切…</string>
   <string name="play_and_earn_almost_there_title">你快到了！</string>

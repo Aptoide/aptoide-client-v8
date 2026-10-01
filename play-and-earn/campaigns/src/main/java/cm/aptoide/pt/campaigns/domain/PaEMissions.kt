@@ -9,6 +9,8 @@ data class PaEMissions(
   // network: the cached missions don't keep it.
   val campaignId: String? = null,
   val mmpClickUrl: String? = null,
+  // Network only too: null from the cache, which keeps the missions showing.
+  val attribution: PaEAttribution? = null,
 )
 
 data class PaEMission(

@@ -363,6 +363,15 @@
   <string name="play_and_earn_install_sign_in_title">Jelentkezz be, hogy jutalmakat szerezz</string>
   <string name="play_and_earn_install_sign_in_body">A(z) %1$s játékkal szerezhető jutalmakhoz jelentkezz be a Google-fiókoddal.</string>
   <string name="play_and_earn_install_sign_in_body_generic">Az ezzel a játékkal szerezhető jutalmakhoz jelentkezz be a Google-fiókoddal.</string>
+  <string name="play_and_earn_rewards_paused_title">Jutalmak szüneteltetve</string>
+  <string name="play_and_earn_rewards_paused_body">Várjuk, hogy a játék megerősítse a telepítésedet. Játssz tovább: a jutalmaid azonnal elindulnak, amint ez megtörténik.</string>
+  <string name="play_and_earn_not_eligible_title">Az eszközöd nem jogosult</string>
+  <string name="play_and_earn_not_eligible_body">A játék követőeszköze nem erősítette meg ezt a telepítést, ezért a kampány jutalmai nem érhetők el ezen az eszközön.</string>
+  <string name="play_and_earn_rewards_blocked_learn_more_button">További információk</string>
+  <string name="play_and_earn_rewards_paused_info_title">Miért szünetelnek a jutalmaim?</string>
+  <string name="play_and_earn_rewards_paused_info_body">Minden játék egy követőeszközzel erősíti meg az Aptoide Gamesen keresztüli telepítéseket. A kampány jutalmai akkor indulnak, amikor megerősíti a tiédet, általában néhány perccel a játék első megnyitása után.\n\nTartsd telepítve a játékot, és játssz a szokásos módon. Amit várakozás közben a játékban teszel, a telepítés megerősítése után beszámít.</string>
+  <string name="play_and_earn_not_eligible_info_title">Miért nem jogosult az eszközöm?</string>
+  <string name="play_and_earn_not_eligible_info_body">Minden játék egy követőeszközzel erősíti meg az Aptoide Gamesen keresztüli telepítéseket, és ez dönti el, melyik jogosult. A biztonsági ellenőrzései által megjelölt telepítések, például emulátorokról vagy automatizált eszközökről, nem számítanak a kampányba.\n\nMás Play &amp; Earn játékok továbbra is elérhetők lehetnek számodra.</string>
   <string name="play_and_earn_waiting_title">Várakozás...</string>
   <string name="play_and_earn_getting_ready_body">…</string>
   <string name="play_and_earn_almost_there_title">Már majdnem megvan!</string>

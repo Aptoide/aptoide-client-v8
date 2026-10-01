@@ -363,6 +363,15 @@
   <string name="play_and_earn_install_sign_in_title">Connectez-vous pour commencer à gagner</string>
   <string name="play_and_earn_install_sign_in_body">Pour gagner des récompenses avec %1$s, connectez-vous avec votre compte Google.</string>
   <string name="play_and_earn_install_sign_in_body_generic">Pour gagner des récompenses avec ce jeu, connectez-vous avec votre compte Google.</string>
+  <string name="play_and_earn_rewards_paused_title">Récompenses en pause</string>
+  <string name="play_and_earn_rewards_paused_body">Nous attendons que le jeu confirme votre installation. Continuez à jouer : vos récompenses commencent dès que c\'est fait.</string>
+  <string name="play_and_earn_not_eligible_title">Votre appareil n\'est pas éligible</string>
+  <string name="play_and_earn_not_eligible_body">L\'outil de suivi du jeu n\'a pas confirmé cette installation. Les récompenses de cette campagne ne sont donc pas disponibles sur cet appareil.</string>
+  <string name="play_and_earn_rewards_blocked_learn_more_button">En savoir plus</string>
+  <string name="play_and_earn_rewards_paused_info_title">Pourquoi mes récompenses sont-elles en pause ?</string>
+  <string name="play_and_earn_rewards_paused_info_body">Chaque jeu utilise un outil de suivi pour confirmer les installations effectuées via Aptoide Games. Les récompenses de cette campagne commencent dès qu\'il confirme la vôtre, généralement quelques minutes après la première ouverture du jeu.\n\nGardez le jeu installé et jouez normalement. Ce que vous faites dans le jeu pendant l\'attente compte une fois votre installation confirmée.</string>
+  <string name="play_and_earn_not_eligible_info_title">Pourquoi mon appareil n\'est-il pas éligible ?</string>
+  <string name="play_and_earn_not_eligible_info_body">Chaque jeu utilise un outil de suivi pour confirmer les installations effectuées via Aptoide Games et décide lesquelles sont éligibles. Les installations signalées par ses contrôles de sécurité, par exemple depuis des émulateurs ou des outils automatisés, ne comptent pas pour la campagne.\n\nD\'autres jeux Play &amp; Earn peuvent toujours être disponibles pour vous.</string>
   <string name="play_and_earn_waiting_title">En attente...</string>
   <string name="play_and_earn_getting_ready_body">Nous préparons tout pour vous…</string>
   <string name="play_and_earn_almost_there_title">Vous y êtes presque !</string>

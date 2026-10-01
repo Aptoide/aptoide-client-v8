@@ -363,6 +363,15 @@
   <string name="play_and_earn_install_sign_in_title">Συνδεθείτε για να αρχίσετε να κερδίζετε</string>
   <string name="play_and_earn_install_sign_in_body">Για να κερδίσετε ανταμοιβές με το %1$s, συνδεθείτε με τον λογαριασμό Google σας.</string>
   <string name="play_and_earn_install_sign_in_body_generic">Για να κερδίσετε ανταμοιβές με αυτό το παιχνίδι, συνδεθείτε με τον λογαριασμό Google σας.</string>
+  <string name="play_and_earn_rewards_paused_title">Οι ανταμοιβές είναι σε παύση</string>
+  <string name="play_and_earn_rewards_paused_body">Περιμένουμε το παιχνίδι να επιβεβαιώσει την εγκατάστασή σας. Συνεχίστε να παίζετε: οι ανταμοιβές σας ξεκινούν μόλις γίνει αυτό.</string>
+  <string name="play_and_earn_not_eligible_title">Η συσκευή σας δεν είναι επιλέξιμη</string>
+  <string name="play_and_earn_not_eligible_body">Το εργαλείο παρακολούθησης του παιχνιδιού δεν επιβεβαίωσε αυτήν την εγκατάσταση, οπότε οι ανταμοιβές αυτής της καμπάνιας δεν είναι διαθέσιμες σε αυτήν τη συσκευή.</string>
+  <string name="play_and_earn_rewards_blocked_learn_more_button">Μάθετε περισσότερα</string>
+  <string name="play_and_earn_rewards_paused_info_title">Γιατί είναι σε παύση οι ανταμοιβές μου;</string>
+  <string name="play_and_earn_rewards_paused_info_body">Κάθε παιχνίδι χρησιμοποιεί ένα εργαλείο παρακολούθησης για να επιβεβαιώνει τις εγκαταστάσεις μέσω του Aptoide Games. Οι ανταμοιβές αυτής της καμπάνιας ξεκινούν μόλις επιβεβαιώσει τη δική σας, συνήθως λίγα λεπτά αφού ανοίξετε το παιχνίδι για πρώτη φορά.\n\nΚρατήστε το παιχνίδι εγκατεστημένο και παίξτε κανονικά. Ό,τι κάνετε στο παιχνίδι όσο περιμένετε μετράει μόλις επιβεβαιωθεί η εγκατάστασή σας.</string>
+  <string name="play_and_earn_not_eligible_info_title">Γιατί η συσκευή μου δεν είναι επιλέξιμη;</string>
+  <string name="play_and_earn_not_eligible_info_body">Κάθε παιχνίδι χρησιμοποιεί ένα εργαλείο παρακολούθησης για να επιβεβαιώνει τις εγκαταστάσεις μέσω του Aptoide Games και αποφασίζει ποιες πληρούν τις προϋποθέσεις. Οι εγκαταστάσεις που επισημαίνουν οι έλεγχοι ασφαλείας του, για παράδειγμα από εξομοιωτές ή αυτοματοποιημένα εργαλεία, δεν μετράνε για την καμπάνια.\n\nΆλλα παιχνίδια Play &amp; Earn μπορεί να είναι ακόμα διαθέσιμα για εσάς.</string>
   <string name="play_and_earn_waiting_title">Αναμονή...</string>
   <string name="play_and_earn_getting_ready_body">Ετοιμάζουμε τα πάντα για εσάς…</string>
   <string name="play_and_earn_almost_there_title">Σχεδόν έφτασες!</string>
