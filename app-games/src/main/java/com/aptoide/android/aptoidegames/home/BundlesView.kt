@@ -113,7 +113,9 @@ val translatedTitles = mapOf(
   "Editorial" to R.string.fixed_bundle_editorial_title,
   "Trending" to R.string.fixed_bundle_trending_title,
   "Categories" to R.string.categories,
-  "Highlighted" to R.string.fixed_bundle_highlighted
+  "Highlighted" to R.string.fixed_bundle_highlighted,
+  "Must-Play Games" to R.string.fixed_bundle_must_play_games_title,
+  "Top Games" to R.string.fixed_bundle_top_games_title,
 )
 
 @OptIn(ExperimentalMaterialApi::class)

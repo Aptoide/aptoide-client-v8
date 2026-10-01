@@ -4,6 +4,25 @@ How every task is executed on this repo — by the humans **and** by Claude Code
 
 > Claude keeps an operating mirror of this in its memory; this file is the canonical, team-visible version. Keep the two in sync. The same SOP runs on aptoide-appstore (`services/docs/WORKFLOW.md`); this file adapts it to the Android client.
 
+## Models
+
+Each phase runs on a fixed Claude model tier — always the latest version of that tier:
+
+| Phase | Steps | Model |
+| --- | --- | --- |
+| Planning, discussion, brainstorming, alignment, self-score | §0–§2, §7 | latest **Fable** (currently Fable 5.1) |
+| Implementation | §3–§4, fixes from §5 | latest **Opus** (currently Opus 5.5) |
+| Review agents | §5 | latest **Sonnet** (currently Sonnet 5) |
+| Adversarial verification of review findings | §5 | latest **Fable** |
+
+The tier is the rule; the version in parentheses is a note — update it when a new version ships.
+
+**Escalation:** implementation goes back to Fable when it is stuck on a hard bug (repeated failed attempts at the same problem) or when the plan turns out to be wrong. A wrong plan also triggers the scope-guard (§0): re-align before continuing.
+
+**Implementation stays in the main session — it is never delegated to an agent.** JD must be able to watch it and step in mid-implementation. JD switches the session model manually with `/model`; Claude cannot switch it, so at each phase boundary Claude names the model the next phase calls for and carries on with whatever model the session is on.
+
+Only the review agents (§5) are spawned as agents. They inherit the session model unless one is passed explicitly — always pass it.
+
 ## 0. Recognise the task
 
 A **task** is a distinct new feature, behaviour, or deliverable — normally one Linear ticket. When one begins, say so explicitly and enter the flow.
@@ -67,7 +86,7 @@ The same gate runs in AptoideCI on every PR — run it locally first; CI is the 
 | **Architecture** | module-boundary/dependency violations, source-set discipline, coupling, misplaced logic, hardcoded colors/strings |
 | **QA / testing** | coverage gaps, missing edge cases, weak assertions, untested failure modes |
 
-Each reports findings with file:line and severity. **Adversarially verify** each finding to filter false positives before acting (a finding survives only if it holds up under a skeptical second look); fix the real ones; re-run the gate.
+The three review agents run on the latest **Sonnet**; the verification below runs on the latest **Fable** (see [Models](#models)). Each agent reports findings with file:line and severity. **Adversarially verify** each finding to filter false positives before acting (a finding survives only if it holds up under a skeptical second look); fix the real ones; re-run the gate.
 
 ## 6. Open the PR against `dev-v10`
 
