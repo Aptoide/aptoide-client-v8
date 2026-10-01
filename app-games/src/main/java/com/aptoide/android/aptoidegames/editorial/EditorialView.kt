@@ -105,18 +105,22 @@ private fun EditorialBundleContent(
     }
 
     is ArticleListUiState.Idle -> {
+      // Filtering out the current article can empty the list (e.g. the only article of its
+      // subtype); when nothing remains, hide the whole bundle so no orphan header shows.
       val items = uiState.articles.filter { it.id != filterId }
-      val lazyListState = rememberLazyListState()
-      RealEditorialBundle(
-        modifier = modifier,
-        bundle = bundle,
-        items = items,
-        listenForPosition = listenForPosition,
-        lazyListState = lazyListState,
-        navigate = navigate,
-        subtype = subtype,
-      )
-      Spacer(Modifier.size(spaceBy.dp))
+      if (items.isNotEmpty()) {
+        val lazyListState = rememberLazyListState()
+        RealEditorialBundle(
+          modifier = modifier,
+          bundle = bundle,
+          items = items,
+          listenForPosition = listenForPosition,
+          lazyListState = lazyListState,
+          navigate = navigate,
+          subtype = subtype,
+        )
+        Spacer(Modifier.size(spaceBy.dp))
+      }
     }
   }
 }

@@ -39,6 +39,16 @@ Execute every task per [docs/WORKFLOW.md](docs/WORKFLOW.md) (plan+grill → Line
 ./gradlew clean
 ```
 
+### Missing Gradle properties (local builds)
+
+A local build may fail at configuration with `Could not get unknown property 'GOOGLE_AUTH_CLIENT_ID_DEV'` (and `…_PROD`) — these keys aren't in the checked-in `gradle.properties` (CI injects them). Both the `dev` and `prod` flavor blocks are evaluated at configuration time regardless of which variant you build, so supply **both** as dummy values via `-P` (they're Google OAuth client IDs, only used at runtime for Google sign-in — irrelevant to most features):
+
+```bash
+./gradlew :app-games:installAptoideGamesDevDebug :app-games:installVanillaDevDebug \
+  -PGOOGLE_AUTH_CLIENT_ID_DEV=dummy.apps.googleusercontent.com \
+  -PGOOGLE_AUTH_CLIENT_ID_PROD=dummy.apps.googleusercontent.com
+```
+
 ## Architecture Overview
 
 This is a **multi-module Android app** using **Clean Architecture with MVVM** and **Jetpack Compose**.
