@@ -13,7 +13,6 @@ android {
 
 dependencies {
   implementation(projects.aptoideNetwork)
-  implementation(projects.deviceApi)
   implementation(projects.featureApps)
   implementation(projects.installManager)
   implementation(projects.extension)
