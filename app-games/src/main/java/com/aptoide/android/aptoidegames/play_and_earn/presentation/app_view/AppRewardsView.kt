@@ -39,6 +39,7 @@ import cm.aptoide.pt.campaigns.domain.PaEMission
 import cm.aptoide.pt.campaigns.domain.PaEMissionProgress
 import cm.aptoide.pt.campaigns.domain.PaEMissionProgressType
 import cm.aptoide.pt.campaigns.domain.PaEMissionStatus
+import cm.aptoide.pt.campaigns.domain.PaEMissionType
 import cm.aptoide.pt.campaigns.domain.PaERewardsState
 import cm.aptoide.pt.campaigns.domain.paeRewardsState
 import cm.aptoide.pt.campaigns.presentation.PaEMissionsUiState
@@ -51,6 +52,7 @@ import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getMissionHexagonCompletedIcon
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getSmallCoinIcon
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaEProgressIndicator
+import com.aptoide.android.aptoidegames.play_and_earn.rememberIsPaEUsageTrackingEnabled
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import java.math.RoundingMode
@@ -61,6 +63,7 @@ fun AppRewardsView(
   navigate: (String) -> Unit = {},
 ) {
   val (missionsState, reload) = rememberPaEMissions(packageName)
+  val isUsageTrackingEnabled = rememberIsPaEUsageTrackingEnabled()
   val lifecycleOwner = LocalLifecycleOwner.current
   val packageManager = LocalContext.current.packageManager
   val readInstalled = { packageManager.getPackageInfo(packageName) != null }
@@ -86,9 +89,18 @@ fun AppRewardsView(
       when (
         val state = paeRewardsState(missionsState.paeMissions.attribution, isInstalled)
       ) {
-        PaERewardsState.MISSIONS -> Column {
-          CheckpointsSection(missionsState.paeMissions.checkpoints)
-          MissionsSection(missionsState.paeMissions.missions)
+        PaERewardsState.MISSIONS -> {
+          // AND-878: time-based missions need the usage-tracking service, so they are hidden
+          // with it.
+          val missions = if (isUsageTrackingEnabled) {
+            missionsState.paeMissions.missions
+          } else {
+            missionsState.paeMissions.missions.filterNot { it.isTimeBased() }
+          }
+          Column {
+            CheckpointsSection(missionsState.paeMissions.checkpoints)
+            MissionsSection(missions)
+          }
         }
 
         PaERewardsState.PAUSED,
@@ -103,13 +115,18 @@ fun AppRewardsView(
   }
 }
 
+private fun PaEMission.isTimeBased(): Boolean =
+  type == PaEMissionType.PLAY_TIME || progress?.type == PaEMissionProgressType.SECONDS
+
 @Composable
 private fun MissionsSection(missions: List<PaEMission>) {
-  RewardsSection(
-    title = stringResource(R.string.play_and_earn_missions_title),
-    items = missions,
-    itemContent = { mission -> MissionItem(mission) }
-  )
+  if (missions.isNotEmpty()) {
+    RewardsSection(
+      title = stringResource(R.string.play_and_earn_missions_title),
+      items = missions,
+      itemContent = { mission -> MissionItem(mission) }
+    )
+  }
 }
 
 @Composable

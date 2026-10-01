@@ -103,21 +103,22 @@ fun TopChartsList(
     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 24.dp)
   ) {
     itemsIndexed(apps) { index, app ->
+      val openAppView = {
+        app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(utmContext)
+        bundleAnalytics.sendAppPromoClick(
+          app = app,
+          analyticsContext = analyticsContext.copy(itemPosition = index)
+        )
+        navigate(
+          buildAppViewRoute(app).withItemPosition(index)
+        )
+      }
       ChartsAppItem(
         app = app,
         rank = index + 1,
-        onClick = {
-          app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(utmContext)
-          bundleAnalytics.sendAppPromoClick(
-            app = app,
-            analyticsContext = analyticsContext.copy(itemPosition = index)
-          )
-          navigate(
-            buildAppViewRoute(app).withItemPosition(index)
-          )
-        },
+        onClick = openAppView,
       ) {
-        InstallViewShort(app)
+        InstallViewShort(app, onNavigateToAppView = openAppView)
       }
     }
   }

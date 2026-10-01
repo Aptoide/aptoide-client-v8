@@ -214,7 +214,8 @@ fun PromoCodeBottomSheetContent(
     ) {
       InstallViewShort(
         app = promoCodeApp,
-        onInstallStarted = {}
+        onInstallStarted = {},
+        prefetchPlayCatalog = true,
       )
     }
   }
@@ -262,7 +263,7 @@ private fun WalletInstallSection(
     onClick = {},
     modifier = Modifier.padding(bottom = 8.dp)
   ) {
-    InstallViewShort(app = walletApp)
+    InstallViewShort(app = walletApp, prefetchPlayCatalog = true)
   }
   Divider(
     modifier = Modifier

@@ -24,6 +24,8 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
 import com.aptoide.android.aptoidegames.R.string
 import com.aptoide.android.aptoidegames.appview.AppRatingAndDownloads
+import com.aptoide.android.aptoidegames.appview.showsDownloads
+import com.aptoide.android.aptoidegames.appview.showsRating
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -104,7 +106,8 @@ private fun ProgressTextContent(
     } else {
       AppRatingAndDownloads(
         rating = app.pRating,
-        downloads = if (showDownloads) app.pDownloads else null
+        downloads = if (showDownloads && app.showsDownloads) app.pDownloads else null,
+        showRating = app.showsRating,
       )
     }
 

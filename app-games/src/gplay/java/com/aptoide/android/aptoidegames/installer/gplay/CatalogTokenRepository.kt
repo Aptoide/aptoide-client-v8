@@ -3,6 +3,18 @@ package com.aptoide.android.aptoidegames.installer.gplay
 import timber.log.Timber
 import javax.inject.Inject
 
+/** The answer of a catalog lookup. */
+sealed interface CatalogLookup {
+  /** A fresh token, a String passed to Play as-is - see [AptoideCatalogTokenRepository]. */
+  data class Token(val value: String) : CatalogLookup
+
+  /** The catalog does not hold the app, so Play cannot install it. */
+  data object NotInCatalog : CatalogLookup
+
+  /** The lookup could not tell: no connection, a timeout, or a failing service. */
+  data object Failed : CatalogLookup
+}
+
 /**
  * Provides the Play Catalog Access delivery token required by Google Play inline installs.
  * Tokens are short-lived and validated by Play for freshness, target package and caller,
@@ -11,11 +23,12 @@ import javax.inject.Inject
  */
 interface CatalogTokenRepository {
 
-  /**
-   * Returns a fresh catalog token for [packageName], or null if none is available.
-   * A String, passed to Play as-is - see [AptoideCatalogTokenRepository].
-   */
-  suspend fun getCatalogToken(packageName: String): String?
+  /** Looks the catalog up for [packageName]. */
+  suspend fun lookup(packageName: String): CatalogLookup
+
+  /** Returns a fresh catalog token for [packageName], or null if none is available. */
+  suspend fun getCatalogToken(packageName: String): String? =
+    (lookup(packageName) as? CatalogLookup.Token)?.value
 }
 
 /**
@@ -29,8 +42,8 @@ interface CatalogTokenRepository {
  */
 class FakeCatalogTokenRepository @Inject constructor() : CatalogTokenRepository {
 
-  override suspend fun getCatalogToken(packageName: String): String? {
+  override suspend fun lookup(packageName: String): CatalogLookup {
     Timber.tag("InlineInstall").d("$packageName: using FAKE catalog token")
-    return "debug-fake-catalog-token"
+    return CatalogLookup.Token("debug-fake-catalog-token")
   }
 }

@@ -225,23 +225,23 @@ fun PublisherTakeOverListView(
         .height(184.dp)
         .background(color = Color.Transparent)
     ) {
+      val openAppView = {
+        app.campaigns
+          ?.toAptoideMMPCampaign()
+          ?.sendClickEvent(utmContext)
+        bundleAnalytics.sendAppPromoClick(
+          app = app,
+          analyticsContext = analyticsContext.copy(itemPosition = page)
+        )
+        navigate(
+          buildAppViewRoute(app)
+            .withItemPosition(page)
+        )
+      }
       Column(
         modifier = Modifier
           .semantics(mergeDescendants = true) { }
-          .clickable(onClick = {
-            app.campaigns
-              ?.toAptoideMMPCampaign()
-              ?.sendClickEvent(utmContext)
-            bundleAnalytics.sendAppPromoClick(
-              app = app,
-              analyticsContext = analyticsContext.copy(itemPosition = page)
-            )
-            navigate(
-              buildAppViewRoute(app)
-                .withItemPosition(page)
-            )
-          }
-          )
+          .clickable(onClick = openAppView)
       ) {
         Box(
           contentAlignment = Alignment.TopEnd
@@ -295,7 +295,7 @@ fun PublisherTakeOverListView(
               showVersionName = false
             )
           }
-          InstallViewShort(app = app)
+          InstallViewShort(app = app, onNavigateToAppView = openAppView)
         }
       }
     }
