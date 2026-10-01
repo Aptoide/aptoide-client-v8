@@ -61,7 +61,7 @@
   <string name="fixed_bundle_editorial_title">Editorial</string>
   <string name="fixed_bundle_trending_title">Trending</string>
   <string name="fixed_bundle_highlighted">Highlighted</string>
-  <string name="fixed_bundle_appcoins_games_title">AppCoins Games</string>
+  <string name="fixed_bundle_must_play_games_title">Must-Play Games</string>
   <string name="fixed_bundle_top_games_title">Top Games</string>
   <string name="retry_button" comment="button_retry_title">Retry</string>
   <string name="install_waiting_installation_message">Waiting for install</string>

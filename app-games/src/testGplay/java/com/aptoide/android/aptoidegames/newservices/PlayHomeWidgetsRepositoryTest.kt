@@ -8,6 +8,7 @@ import cm.aptoide.pt.feature_home.domain.WidgetActionType
 import cm.aptoide.pt.feature_home.domain.WidgetLayout
 import cm.aptoide.pt.feature_home.domain.WidgetType
 import cm.aptoide.pt.test.gherkin.coScenario
+import com.aptoide.android.aptoidegames.feature_apps.presentation.BONUS_SORT
 import com.aptoide.android.aptoidegames.home.translatedTitles
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -59,18 +60,19 @@ internal class PlayHomeWidgetsRepositoryTest {
   }
 
   @Test
-  fun `The AppCoins games are listed from the v7 store`() = coScenario { scope ->
-    m Given "the store this build reads"
-    val repository = repository(scope, categories)
+  fun `The AppCoins games are the v7 store's billing apps, as the Bonus tab lists them`() =
+    coScenario { scope ->
+      m Given "the store this build reads"
+      val repository = repository(scope, categories)
 
-    m When "the home widgets are read"
-    val appcoins = repository.getStoreWidgets().first()
+      m When "the home widgets are read"
+      val appcoins = repository.getStoreWidgets().first()
 
-    m Then "the row is a carousel of the v7 store's apps, which carry their flags and files"
-    assertEquals(WidgetType.APPS_GROUP, appcoins.type)
-    assertEquals(WidgetLayout.CAROUSEL, appcoins.layout)
-    assertEquals("listApps/store_name=a-store/limit=24", appcoins.view)
-  }
+      m Then "the row is a carousel of the store's apps under the billing sort the Bonus tab uses"
+      assertEquals(WidgetType.APPS_GROUP, appcoins.type)
+      assertEquals(WidgetLayout.CAROUSEL, appcoins.layout)
+      assertEquals("listApps/store_name=a-store/sort=$BONUS_SORT/limit=24", appcoins.view)
+    }
 
   @Test
   fun `The top games are listed from the new services`() = coScenario { scope ->
