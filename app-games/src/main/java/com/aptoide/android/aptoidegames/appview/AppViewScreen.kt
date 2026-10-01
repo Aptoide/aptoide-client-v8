@@ -644,7 +644,7 @@ fun ViewPagerContent(
   when (selectedTab) {
     AppViewTab.DETAILS -> DetailsView(app = app)
 
-    AppViewTab.REWARDS -> AppRewardsView(packageName = app.packageName)
+    AppViewTab.REWARDS -> AppRewardsView(packageName = app.packageName, navigate = navigate)
 
     AppViewTab.RELATED -> RelatedContentView(
       packageName = app.packageName,

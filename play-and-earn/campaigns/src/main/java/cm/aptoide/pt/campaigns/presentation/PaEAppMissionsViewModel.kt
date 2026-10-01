@@ -78,7 +78,7 @@ class PaEAppMissionsViewModel(
 }
 
 /** Sorts checkpoints and missions: IN_PROGRESS first, then PENDING, then COMPLETED. */
-private fun PaEMissions.sortedByStatus() = PaEMissions(
+private fun PaEMissions.sortedByStatus() = copy(
   checkpoints = checkpoints.sortedByStatus(),
   missions = missions.sortedByStatus()
 )
