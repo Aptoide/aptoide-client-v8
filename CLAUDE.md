@@ -4,11 +4,11 @@ This file provides guidance to Claude Code when working with code in this reposi
 
 ## Task Workflow (mandatory)
 
-Execute every task per [docs/WORKFLOW.md](docs/WORKFLOW.md) (plan+grill → Linear → feature branch → TDD → gate → 3 review agents → PR → self-score). Task detection is Claude's job: when a request is ticket-sized, the FIRST action is plan mode — never code first — and the task ends at the self-score, not the PR. Escape hatch: trivial one-liners skip the ceremony (call it out and just do it). Tickets live in **Linear** (Android client tickets; Jira/`[AND-XXX]` temporarily not in use).
+Execute every task per [docs/WORKFLOW.md](docs/WORKFLOW.md) (plan+grill → Linear → feature branch → TDD → gate → 3 review agents → PR → self-score). Task detection is Claude's job: when a request is ticket-sized, the FIRST action is plan mode — never code first — and the task ends at the self-score, not the PR. Escape hatch: trivial one-liners skip the ceremony (call it out and just do it). Models per phase (always the latest version of the tier): planning/alignment and verification of review findings on **Fable**, implementation on **Opus** (escalate to Fable when stuck or the plan is wrong), review agents on **Sonnet** (pass the model explicitly). Implementation stays in the main session, never delegated to an agent; JD switches models manually with `/model`. Tickets live in **Linear** (Android client tickets; Jira/`[AND-XXX]` temporarily not in use).
 
 ## Build Commands
 
-`:app-games` uses two flavor dimensions — `brand` (`aptoideGames` / `vanilla`) × `mode` (`dev` / `prod`). Variant names combine them, e.g. `aptoideGamesDevDebug`, `vanillaProdRelease`.
+`:app-games` uses three flavor dimensions — `brand` (`aptoideGames` / `vanilla`) × `distribution` (`direct` / `gplay`) × `mode` (`dev` / `prod`). Variant names combine them in that order, e.g. `aptoideGamesDirectDevDebug`, `vanillaDirectProdRelease`. `vanilla` × `gplay` is disabled: only Aptoide Games is published on Google Play.
 
 ```bash
 # Legacy Vanilla (:app)
@@ -16,12 +16,16 @@ Execute every task per [docs/WORKFLOW.md](docs/WORKFLOW.md) (plan+grill → Line
 ./gradlew app:assembleProdRelease
 
 # Aptoide Games (modern, :app-games — brand=aptoideGames)
-./gradlew :app-games:assembleAptoideGamesDevDebug
-./gradlew :app-games:assembleAptoideGamesProdRelease
+./gradlew :app-games:assembleAptoideGamesDirectDevDebug
+./gradlew :app-games:assembleAptoideGamesDirectProdRelease
+
+# Aptoide Games for Google Play (distribution=gplay)
+./gradlew :app-games:assembleAptoideGamesGplayDevDebug
+./gradlew :app-games:assembleAptoideGamesGplayProdRelease
 
 # Aptoide V10 / Vanilla (modern, :app-games — brand=vanilla)
-./gradlew :app-games:assembleVanillaDevDebug
-./gradlew :app-games:assembleVanillaProdRelease
+./gradlew :app-games:assembleVanillaDirectDevDebug
+./gradlew :app-games:assembleVanillaDirectProdRelease
 
 # Run all unit tests
 ./gradlew test
@@ -38,6 +42,11 @@ Execute every task per [docs/WORKFLOW.md](docs/WORKFLOW.md) (plan+grill → Line
 # Clean build
 ./gradlew clean
 ```
+
+Google Play build properties (`distribution=gplay` only):
+
+- `-PnewServices=false` — read the catalog from v7 instead of the device API (`BuildConfig.NEW_SERVICES_ENABLED`, on by default); this is the rollback build.
+- `-PnewServicesEnv=prod` — point a dev build at the production device API (`BuildConfig.DEVICE_API_DOMAIN`). The dev services hold no Google Play catalog tokens, so inline installs can only be exercised against production.
 
 ## Architecture Overview
 
@@ -128,17 +137,17 @@ plugins {
 | Module | Brand flavor | App ID | Description |
 |--------|--------------|--------|-------------|
 | `:app` | — | `cm.aptoide.pt.v10` | Aptoide Vanilla (legacy, frozen) |
-| `:app-games` | `aptoideGames` | `com.aptoide.android.aptoidegames` | Aptoide Games |
+| `:app-games` | `aptoideGames` | `com.aptoide.android.aptoidegames` | Aptoide Games (`direct`, and `gplay` for Google Play) |
 | `:app-games` | `vanilla` | `cm.aptoide.pt` | Aptoide V10 (Vanilla, modern) |
 | `:app-dt` | — | `com.dti.hub` | Digital Turbine GamesHub (planned, separate module) |
 
 ### Verifying Brand Flavor Changes
 
-Any change in `:app-games/src/main/` is shared between **both** brand flavors (`aptoideGames` and `vanilla`). Source-set–specific code lives in `src/aptoideGames/` or `src/vanilla/` and only affects that flavor.
+Any change in `:app-games/src/main/` is shared between **both** brand flavors (`aptoideGames` and `vanilla`) and **both** distributions (`direct` and `gplay`). Source-set–specific code lives in `src/aptoideGames/` or `src/vanilla/` and only affects that flavor.
 
 **When you change shared code, verify both flavors on-device.** Never claim "done" after testing just one — silently breaking the other flavor is the most common regression in this module.
 
-- Build + install both: `./gradlew :app-games:installVanillaDevDebug :app-games:installAptoideGamesDevDebug` (`-P` env props as needed).
+- Build + install both: `./gradlew :app-games:installVanillaDirectDevDebug :app-games:installAptoideGamesDirectDevDebug` (`-P` env props as needed).
 - Launch each and screenshot the affected surface side-by-side.
 - Vanilla pkg: `cm.aptoide.pt.dev`. AG pkg: `com.aptoide.android.aptoidegames.dev`. Activity: `com.aptoide.android.aptoidegames.MainActivity` for both.
 
@@ -149,6 +158,8 @@ Any change in `:app-games/src/main/` is shared between **both** brand flavors (`
 
 **Skip the second flavor only when** the change is physically in `src/<flavor>/…` and the diff cannot reach the other source set.
 
+**Distribution source sets**: `src/direct/` and `src/gplay/` follow the same rule. `src/gplay/` only ever compiles into Aptoide Games for Google Play, so a change there cannot reach vanilla or the direct builds.
+
 For non-visual artifacts (e.g. the per-flavor User-Agent), there's no debug HTTP header-logging interceptor — verify by adding a temporary `Log.d` in the header builder/interceptor, capture via `adb logcat`, then revert.
 
 **Brand divergence via source sets**: prefer per-source-set files over `if (BuildConfig.FLAVOR_brand == "vanilla")` branches, especially for icons/drawables/config. Define the same symbol in both `src/vanilla/` and `src/aptoideGames/`. Examples: `theme/AptoidePalette.kt`, `drawables/icons/BonusIconBrand.kt`, `di/WidgetsConfig.kt` (`WIDGETS_URL_PATH`), `network/UserAgentBrand.kt` (`USER_AGENT_BRAND`).
@@ -157,7 +168,9 @@ For non-visual artifacts (e.g. the per-flavor User-Agent), there's no debug HTTP
 
 ### Commit Messages
 
-Format: `[AND-XXX] Short description` (Jira ticket prefix)
+Every commit message carries the **Linear** ticket ID (see [docs/WORKFLOW.md](docs/WORKFLOW.md) §3). The Jira `[AND-XXX] Short description` prefix is temporarily not in use — historical commits keep it, new work does not add it.
+
+Commits end with the `Co-Authored-By: Claude …` trailer only — no "Claude-Session:" links and no "Generated with Claude Code" footers, on commits or PR bodies.
 
 ### String Resources
 

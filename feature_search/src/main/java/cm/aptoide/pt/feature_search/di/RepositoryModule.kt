@@ -2,7 +2,9 @@ package cm.aptoide.pt.feature_search.di
 
 import android.content.Context
 import androidx.room.Room
+import cm.aptoide.pt.aptoide_network.di.BackendOverride
 import cm.aptoide.pt.aptoide_network.di.RetrofitV7
+import cm.aptoide.pt.aptoide_network.di.V7Backend
 import cm.aptoide.pt.feature_apps.data.AppMapper
 import cm.aptoide.pt.feature_search.data.AptoideSearchRepository
 import cm.aptoide.pt.feature_search.data.AutoCompleteSuggestionsRepository
@@ -18,6 +20,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
+import java.util.Optional
+import javax.inject.Provider
 import javax.inject.Singleton
 
 @Module
@@ -27,6 +31,14 @@ object RepositoryModule {
   @Singleton
   @Provides
   fun provideSearchRepository(
+    @BackendOverride override: Optional<SearchRepository>,
+    @V7Backend v7: Provider<SearchRepository>,
+  ): SearchRepository = override.orElseGet { v7.get() }
+
+  @Singleton
+  @Provides
+  @V7Backend
+  fun provideV7SearchRepository(
     mapper: AppMapper,
     searchHistoryRepository: SearchHistoryRepository,
     remoteSearchRepository: RemoteSearchRepository,

@@ -47,11 +47,12 @@ import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.p
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PAE_DEFAULT_REWARD_AMOUNT
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.RewardState
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.SignInRewardViewModel
+import com.aptoide.android.aptoidegames.play_and_earn.rememberIsPaEUsageTrackingEnabled
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 
-/** Sign-in followed by the permissions onboarding step. */
+/** Sign-in followed by the permissions onboarding step (skipped while usage tracking is off). */
 const val playAndEarnSignInRoute = "playAndEarnSignIn"
 
 /** Sign-in only */
@@ -61,9 +62,12 @@ fun playAndEarnSignInScreen() = ScreenData.withAnalytics(
   route = playAndEarnSignInRoute,
   screenAnalyticsName = "PlayAndEarnSignIn",
 ) { _, navigate, navigateBack ->
+  val isUsageTrackingEnabled = rememberIsPaEUsageTrackingEnabled()
   PlayAndEarnSignInScreen(
     navigateBack = navigateBack,
-    onSignInSuccess = { navigate(playAndEarnPermissionsRoute) },
+    onSignInSuccess = {
+      if (isUsageTrackingEnabled) navigate(playAndEarnPermissionsRoute) else navigateBack()
+    },
   )
 }
 

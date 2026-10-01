@@ -45,6 +45,13 @@ interface InlineInstallResolver {
   fun allowsRegularFallback(app: App): Boolean = true
 
   /**
+   * Whether [app] may only ever install externally, so that when no external install could
+   * be started the install ends as an error the user can retry instead of continuing through
+   * the regular install path - for apps this build has no download of its own for.
+   */
+  fun requiresInlineInstall(app: App): Boolean = false
+
+  /**
    * Returns true while an external install for [packageName] is still ongoing,
    * so the UI state can be restored after the view model is recreated.
    */

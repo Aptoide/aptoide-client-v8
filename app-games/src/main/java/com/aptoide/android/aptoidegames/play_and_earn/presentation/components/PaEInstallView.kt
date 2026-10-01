@@ -57,6 +57,7 @@ import com.aptoide.android.aptoidegames.installer.presentation.installViewStates
 import com.aptoide.android.aptoidegames.installer.presentation.toInstallViewState
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rememberPlayAndEarnSetupRoute
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.service.PaEForegroundService
+import com.aptoide.android.aptoidegames.play_and_earn.rememberIsPaEUsageTrackingEnabled
 import com.aptoide.android.aptoidegames.play_and_earn.rememberPlayAndEarnReady
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
@@ -325,6 +326,7 @@ private fun PaEPlayButton(
   rewardAmount: BigDecimal? = null,
 ) {
   val isPaEReady = rememberPlayAndEarnReady()
+  val isUsageTrackingEnabled = rememberIsPaEUsageTrackingEnabled()
   val paeSetupRoute = rememberPlayAndEarnSetupRoute()
   val context = LocalContext.current
 
@@ -338,7 +340,7 @@ private fun PaEPlayButton(
     title = title,
     onClick = {
       if (isPaEReady || navigate == null) {
-        if (isPaEReady) {
+        if (isPaEReady && isUsageTrackingEnabled) {
           // Start the foreground service to track playtime
           PaEForegroundService.start(context)
         }

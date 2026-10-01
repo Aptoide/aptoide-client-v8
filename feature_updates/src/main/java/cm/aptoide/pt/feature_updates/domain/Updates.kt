@@ -5,8 +5,6 @@ import android.content.pm.PackageInfo
 import cm.aptoide.pt.extensions.compatVersionCode
 import cm.aptoide.pt.extensions.getSignature
 import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_apps.data.AppsListMapper
-import cm.aptoide.pt.feature_apps.data.model.AppJSON
 import cm.aptoide.pt.feature_campaigns.UTMInfo
 import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import cm.aptoide.pt.feature_campaigns.toMMPLinkerCampaign
@@ -38,6 +36,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.time.LocalDate
+import java.util.Optional
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.coroutineContext
@@ -45,7 +44,7 @@ import kotlin.coroutines.coroutineContext
 @Singleton
 class Updates @Inject constructor(
   private val updatesRepository: UpdatesRepository,
-  private val appsListMapper: AppsListMapper,
+  private val silentUpdatePolicy: Optional<SilentUpdatePolicy>,
   @PrioritizedPackagesFilter private val prioritizedPackages: List<String>,
   private val installManager: InstallManager,
   private val updatesNotificationBuilder: UpdatesNotificationProvider,
@@ -58,7 +57,7 @@ class Updates @Inject constructor(
 
   val mutex: Mutex = Mutex()
 
-  private var currentUpdates = listOf<AppJSON>()
+  private var currentUpdates = listOf<App>()
 
   private lateinit var myPackageName: String
 
@@ -74,10 +73,10 @@ class Updates @Inject constructor(
           } else {
             currentUpdates.find {
               it.packageName == appInstaller.packageName
-                && it.file.vercode <= packageInfo.compatVersionCode
+                && it.versionCode <= packageInfo.compatVersionCode
             }
           }
-            ?.also { updatesRepository.remove(it) }
+            ?.also { updatesRepository.remove(listOf(it.packageName)) }
         }
       }
       .launchIn(CoroutineScope(coroutineContext))
@@ -88,10 +87,10 @@ class Updates @Inject constructor(
         .map { it.packageName to it.compatVersionCode }
       val values = updatesRepository.getUpdates().first()
       val toRemove = values.filterNot { update ->
-        installedApps.any { it.first == update.packageName && it.second < update.file.vercode }
+        installedApps.any { it.first == update.packageName && it.second < update.versionCode }
       }
       currentUpdates = values - toRemove
-      updatesRepository.remove(*toRemove.toTypedArray())
+      updatesRepository.remove(toRemove.map { it.packageName })
     }
 
     UpdatesWorker.enqueue(context)
@@ -102,8 +101,7 @@ class Updates @Inject constructor(
   val appsUpdates: Flow<List<App>> = updatesRepository.getUpdates()
     .map {
       mutex.withLock { currentUpdates = it }
-      it.let(appsListMapper::map)
-        .sortedByDescending {
+      it.sortedByDescending {
           if (it.packageName in prioritizedPackages) {
             LocalDate.now().plusDays(1).toString()
           } else {
@@ -140,13 +138,12 @@ class Updates @Inject constructor(
     val installedAppsToUpdate = installManager.installedApps
       .filter { it.packageName in vipPackages }
       .filterNormalAppsOrGames()
-    val updates =
-      getUpdates(installedAppsToUpdate.mapNotNull { it.packageInfo }).let(appsListMapper::map)
+    val updates = getUpdates(installedAppsToUpdate.mapNotNull { it.packageInfo })
 
     val filteredUpdates = savedUpdates.let { savedList ->
       updates.filter { update ->
         val saved = savedList.find { it.packageName == update.packageName }
-        saved == null || update.versionCode > saved.file.vercode
+        saved == null || update.versionCode > saved.versionCode
       }
     }
 
@@ -163,7 +160,8 @@ class Updates @Inject constructor(
             filteredUpdates
               .firstOrNull { it.packageName == appInstaller.packageName }
               ?.also {
-                if (appInstaller.updatesOwnerPackageName == myPackageName) {
+                val ownUpdate = appInstaller.updatesOwnerPackageName == myPackageName
+                if (ownUpdate && allowsSilently(it)) {
                   appInstaller.install(
                     installPackageInfo = installPackageInfoMapper.map(it),
                     constraints = Constraints(
@@ -213,7 +211,7 @@ class Updates @Inject constructor(
     }
   }
 
-  private suspend fun getUpdates(apps: List<PackageInfo>): List<AppJSON> =
+  private suspend fun getUpdates(apps: List<PackageInfo>): List<App> =
     mutex.withLock {
       val apksData = apps
         .map {
@@ -224,10 +222,12 @@ class Updates @Inject constructor(
           )
         }
         .filter { it.signature.isNotEmpty() }
-      val updates = updatesRepository.loadUpdates(apksData)
-      updatesRepository.saveOrReplace(*updates.toTypedArray())
-      updates
+      updatesRepository.loadUpdates(apksData)
     }
+
+  // An update installed without the user asking must be one this build may install itself
+  private fun allowsSilently(app: App): Boolean =
+    silentUpdatePolicy.map { it.allows(app) }.orElse(true)
 
   suspend fun autoUpdate() {
     val shouldAutoUpdateGames = updatesPreferencesRepository.shouldAutoUpdateGames().first()
@@ -237,7 +237,7 @@ class Updates @Inject constructor(
     val updates = installers
       .mapNotNull { it.packageInfo }
       .let { getUpdates(it) }
-      .let(appsListMapper::map)
+      .filter { allowsSilently(it) }
       .sortedBy {
         if (it.packageName == myPackageName) {
           LocalDate.now().plusDays(1).toString()

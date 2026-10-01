@@ -112,8 +112,7 @@ class RepositoryModule {
   @Singleton
   @Provides
   @DefaultTrendingUrl
-  fun provideDefaultTrendingUrl(): String =
-    "${BuildConfig.STORE_DOMAIN}listApps/sort=trending60d/limit=9"
+  fun provideDefaultTrendingUrl(): String = DEFAULT_TRENDING_URL
 
   @Singleton
   @Provides
