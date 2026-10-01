@@ -1,7 +1,9 @@
 package cm.aptoide.pt.feature_apps.di
 
+import cm.aptoide.pt.aptoide_network.di.BackendOverride
 import cm.aptoide.pt.aptoide_network.di.RetrofitV7
 import cm.aptoide.pt.aptoide_network.di.StoreName
+import cm.aptoide.pt.aptoide_network.di.V7Backend
 import cm.aptoide.pt.feature_apps.data.AppMapper
 import cm.aptoide.pt.feature_apps.data.AppRepository
 import cm.aptoide.pt.feature_apps.data.AppsListMapper
@@ -19,6 +21,8 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import retrofit2.Retrofit
+import java.util.Optional
+import javax.inject.Provider
 import javax.inject.Singleton
 
 @Module
@@ -48,7 +52,15 @@ internal object RepositoryModule {
 
   @Provides
   @Singleton
-  fun providesAppsRepository(
+  fun providesAppsListRepository(
+    @BackendOverride override: Optional<AppsListRepository>,
+    @V7Backend v7: Provider<AppsListRepository>,
+  ): AppsListRepository = override.orElseGet { v7.get() }
+
+  @Provides
+  @Singleton
+  @V7Backend
+  fun providesV7AppsListRepository(
     @RetrofitV7 retrofitV7: Retrofit,
     @StoreName storeName: String,
     appsListMapper: AppsListMapper,
