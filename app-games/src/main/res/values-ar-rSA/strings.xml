@@ -455,6 +455,7 @@
   <string name="play_and_earn_install_button">تثبيت</string>
   <string name="play_and_earn_notification_recording_title">تتبع وقت اللعب للحصول على المكافآت</string>
   <string name="play_and_earn_notification_recording_body">يتم احتساب وقت اللعب في مهامك.</string>
+  <string name="play_and_earn_mission_completed_notification_body">لقد ربحت %1$d UT في %2$s</string>
   <string name="settings_play_and_earn_tracking">تتبع Play &amp; Earn</string>
   <string name="settings_play_and_earn_tracking_description">تستخدم Aptoide هذا الإعداد لقياس نشاطك داخل التطبيق ومنحك رصيدًا مقابل الوقت الذي تلعب فيه والإنجازات التي تحققها. إذا تم التعطيل، لن يتم تتبع المكافآت حتى تعيد تشغيل اللعبة عبر Aptoide.</string>
   <!-- Play and Earn - Permissions-->

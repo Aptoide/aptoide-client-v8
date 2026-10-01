@@ -411,6 +411,7 @@
   <string name="play_and_earn_install_button">Instalar</string>
   <string name="play_and_earn_notification_recording_title">Acompanhamento do tempo de jogo para recompensas</string>
   <string name="play_and_earn_notification_recording_body">O seu tempo de jogo está a ser contabilizado para as suas missões.</string>
+  <string name="play_and_earn_mission_completed_notification_body">Ganhou %1$d UT em %2$s</string>
   <string name="settings_play_and_earn_tracking">Rastreamento Play &amp; Earn</string>
   <string name="settings_play_and_earn_tracking_description">Aptoide utiliza esta definição para medir a sua atividade dentro das apps e creditar você pelo tempo jogado e pelas metas atingidas. Se desativar, as recompensas não serão rastreadas até que volte a abrir um jogo pela Aptoide.</string>
   <!-- Play and Earn - Permissions-->

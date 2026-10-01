@@ -400,6 +400,7 @@
   <string name="play_and_earn_install_button">설치</string>
   <string name="play_and_earn_notification_recording_title">보상을 위한 플레이 시간 추적</string>
   <string name="play_and_earn_notification_recording_body">당신의 게임 플레이 시간이 미션 진행 시간으로 계산되고 있습니다.</string>
+  <string name="play_and_earn_mission_completed_notification_body">%2$s에서 %1$d UT를 획득했습니다</string>
   <string name="settings_play_and_earn_tracking">Play &amp; Earn 추적</string>
   <string name="settings_play_and_earn_tracking_description">Aptoide는 이 설정을 사용하여 앱 내 활동을 측정하고, 플레이 시간과 도달한 마일스톤에 따라 보상을 제공합니다. 비활성화하면, Aptoide를 통해 게임을 다시 실행하기 전까지 보상이 추적되지 않습니다.</string>
   <!-- Play and Earn - Permissions-->

@@ -1,11 +1,11 @@
 package com.aptoide.android.aptoidegames.play_and_earn.presentation.sessions
 
 import cm.aptoide.pt.campaigns.data.PaEMissionsRepository
-import cm.aptoide.pt.campaigns.domain.PaEMission
 import cm.aptoide.pt.play_and_earn.sessions.data.PaESessionsRepository
 import cm.aptoide.pt.play_and_earn.sessions.data.SessionExpiredException
 import cm.aptoide.pt.play_and_earn.sessions.domain.SessionInfo
 import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPreferencesRepository
+import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.CompletedMissionEvent
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaESession
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.PaEAnalytics
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.missions.PaEMissionManager
@@ -25,7 +25,10 @@ class PaESessionManager @Inject constructor(
 
   val activeSessions = mutableListOf<PaESession>()
 
-  private val _completedMissions = MutableSharedFlow<PaEMission>()
+  // Buffered: emitting suspends until the collector is done, and the collector downloads a
+  // notification icon. Without slack, several missions confirmed in one heartbeat would stall the
+  // polling loop behind the network.
+  private val _completedMissions = MutableSharedFlow<CompletedMissionEvent>(extraBufferCapacity = 8)
   val completedMissions = _completedMissions.asSharedFlow()
 
   /**
@@ -179,7 +182,12 @@ class PaESessionManager @Inject constructor(
 
               paEAnalytics.sendPaEMissionCompleted(session.packageName)
 
-              _completedMissions.emit(completedMission)
+              _completedMissions.emit(
+                CompletedMissionEvent(
+                  mission = completedMission,
+                  packageName = session.packageName
+                )
+              )
             }
         }
       }

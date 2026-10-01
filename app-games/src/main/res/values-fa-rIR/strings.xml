@@ -411,6 +411,7 @@
   <string name="play_and_earn_install_button">نصب</string>
   <string name="play_and_earn_notification_recording_title">Tracking playtime for rewards</string>
   <string name="play_and_earn_notification_recording_body">Your gameplay time is being counted towards your missions.</string>
+  <string name="play_and_earn_mission_completed_notification_body">شما %1$d UT در %2$s کسب کردید</string>
   <string name="settings_play_and_earn_tracking">Play &amp; Earn Tracking</string>
   <string name="settings_play_and_earn_tracking_description">Aptoide uses this setting to measure your in-app activity and credit you for time played and milestones reached. If disabled, rewards will not be tracked until you re-launch a game through Aptoide.</string>
   <!-- Play and Earn - Permissions-->
