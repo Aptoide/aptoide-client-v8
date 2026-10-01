@@ -24,16 +24,19 @@ internal class PlayUpdatesRepositoryTest {
     packageName = "com.my.defense",
     origin = AppOrigin.V7,
     bdsFlags = listOf("STORE_BDS"),
+    isAppCoins = true,
   )
   private val playInstalled = randomApp.copy(
     packageName = "com.block.juggle",
     origin = AppOrigin.V7,
     bdsFlags = null,
+    isAppCoins = false,
   )
   private val overlay = randomApp.copy(
     packageName = ROBLOX_PACKAGE,
     origin = AppOrigin.V7,
     bdsFlags = listOf("STORE_BDS"),
+    isAppCoins = true,
   )
 
   @Test
