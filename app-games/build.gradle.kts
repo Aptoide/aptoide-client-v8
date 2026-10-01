@@ -98,11 +98,21 @@ android {
       keyPassword =
         project.properties[System.getenv("KEY_PASS") ?: KeyHelper.KEY_PASS].toString()
     }
-  }
-
-  buildTypes {
-    release {
-      signingConfig = signingConfigs.getByName("signingConfigRelease")
+    // Direct keeps the original key because the v7 store matches updates by exact signature SHA-1.
+    // Separate property names so a missing Play key fails signing instead of using the direct one
+    create("signingConfigPlay") {
+      storeFile = project.file(
+        project.properties[
+          System.getenv("PLAY_KEY_STORE_FILE") ?: KeyHelper.PLAY_KEY_STORE_FILE
+        ].toString()
+      )
+      storePassword = project.properties[
+        System.getenv("PLAY_KEY_STORE_PASS") ?: KeyHelper.PLAY_KEY_STORE_PASS
+      ].toString()
+      keyAlias =
+        project.properties[System.getenv("PLAY_KEY_ALIAS") ?: KeyHelper.PLAY_KEY_ALIAS].toString()
+      keyPassword =
+        project.properties[System.getenv("PLAY_KEY_PASS") ?: KeyHelper.PLAY_KEY_PASS].toString()
     }
   }
 
@@ -147,6 +157,7 @@ android {
 
     create("direct") {
       dimension = "distribution"
+      signingConfig = signingConfigs.getByName("signingConfigRelease")
       buildConfigField(
         type = "Boolean",
         name = "PLAY_DISTRIBUTION",
@@ -156,10 +167,18 @@ android {
 
     create("gplay") {
       dimension = "distribution"
+      signingConfig = signingConfigs.getByName("signingConfigPlay")
       buildConfigField(
         type = "Boolean",
         name = "PLAY_DISTRIBUTION",
         value = "true"
+      )
+      // Reads the catalog from the device API instead of v7. On by default;
+      // -PnewServices=false builds the rollback artifact that reads v7
+      buildConfigField(
+        type = "Boolean",
+        name = "NEW_SERVICES_ENABLED",
+        value = newServicesEnabled().toString()
       )
     }
 
@@ -181,11 +200,6 @@ android {
         type = "String",
         name = "AHAB_DOMAIN",
         value = "\"https://api.dev.aptoide.com/ahab/8.20240801/\""
-      )
-      buildConfigField(
-        type = "String",
-        name = "APTOIDE_API_DOMAIN",
-        value = "\"https://api.dev.aptoide.com/\""
       )
       buildConfigField(
         "String",
@@ -246,11 +260,6 @@ android {
       )
       buildConfigField(
         type = "String",
-        name = "APTOIDE_API_DOMAIN",
-        value = "\"https://api.aptoide.com/\""
-      )
-      buildConfigField(
-        type = "String",
         name = "API_CHAIN_CATAPPULT_HOST",
         value = "\"${project.property("API_CHAIN_CATAPPULT_HOST")}\""
       )
@@ -299,6 +308,27 @@ android {
   }
 }
 
+// Strict on purpose: a mistyped value must not quietly build with the switch on or off
+fun newServicesEnabled(): Boolean =
+  when (val enabled = project.findProperty("newServices")?.toString()) {
+    null, "", "true" -> true
+    "false" -> false
+    else -> throw GradleException("Unknown newServices '$enabled', expected 'true' or 'false'")
+  }
+
+// The device API environment follows the mode flavor. The dev services hold no Google Play
+// catalog tokens, so -PnewServicesEnv=prod points a dev build at production to exercise
+// inline installs. There is no way to point a prod build at the dev services.
+fun deviceApiDomain(isProdMode: Boolean): String {
+  val prod = "https://api.aptoide.com/"
+  val dev = "https://api.dev.aptoide.com/"
+  return when (val env = project.findProperty("newServicesEnv")?.toString()) {
+    null, "" -> if (isProdMode) prod else dev
+    "prod" -> prod
+    else -> throw GradleException("Unknown newServicesEnv '$env', the only override is 'prod'")
+  }
+}
+
 androidComponents {
   beforeVariants { variantBuilder ->
     // Only the aptoideGames brand is published on Google Play
@@ -320,6 +350,15 @@ androidComponents {
           comment = "Default store for Play-distributed builds"
         )
       )
+      val isProdMode = variant.productFlavors.contains("mode" to "prod")
+      variant.buildConfigFields?.put(
+        "DEVICE_API_DOMAIN",
+        com.android.build.api.variant.BuildConfigField(
+          type = "String",
+          value = "\"${deviceApiDomain(isProdMode)}\"",
+          comment = "Host of the device API"
+        )
+      )
     }
   }
 }
@@ -337,6 +376,7 @@ dependencies {
   implementation(projects.aptoideInstaller)
   implementation(projects.aptoideNetwork)
   implementation(projects.featureCampaigns)
+  implementation(projects.deviceApi)
   implementation(projects.environmentInfo)
   implementation(projects.exceptionHandler)
   implementation(projects.extension)

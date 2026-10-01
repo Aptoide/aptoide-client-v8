@@ -16,6 +16,10 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -23,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,8 +39,12 @@ import cm.aptoide.pt.campaigns.domain.PaEMission
 import cm.aptoide.pt.campaigns.domain.PaEMissionProgress
 import cm.aptoide.pt.campaigns.domain.PaEMissionProgressType
 import cm.aptoide.pt.campaigns.domain.PaEMissionStatus
+import cm.aptoide.pt.campaigns.domain.PaEMissionType
+import cm.aptoide.pt.campaigns.domain.PaERewardsState
+import cm.aptoide.pt.campaigns.domain.paeRewardsState
 import cm.aptoide.pt.campaigns.presentation.PaEMissionsUiState
 import cm.aptoide.pt.campaigns.presentation.rememberPaEMissions
+import cm.aptoide.pt.extensions.getPackageInfo
 import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.play_and_earn.exchange.presentation.rememberExchangeRate
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
@@ -43,6 +52,7 @@ import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getMissionHexagonCompletedIcon
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getSmallCoinIcon
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaEProgressIndicator
+import com.aptoide.android.aptoidegames.play_and_earn.rememberIsPaEUsageTrackingEnabled
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import java.math.RoundingMode
@@ -50,13 +60,21 @@ import java.math.RoundingMode
 @Composable
 fun AppRewardsView(
   packageName: String,
+  navigate: (String) -> Unit = {},
 ) {
   val (missionsState, reload) = rememberPaEMissions(packageName)
+  val isUsageTrackingEnabled = rememberIsPaEUsageTrackingEnabled()
   val lifecycleOwner = LocalLifecycleOwner.current
+  val packageManager = LocalContext.current.packageManager
+  val readInstalled = { packageManager.getPackageInfo(packageName) != null }
+  var isInstalled by remember(packageName) { mutableStateOf(readInstalled()) }
 
-  DisposableEffect(lifecycleOwner) {
+  DisposableEffect(lifecycleOwner, packageName) {
     val observer = LifecycleEventObserver { _, event ->
       if (event == Lifecycle.Event.ON_RESUME) {
+        // Back from the game or from installing it: the install and its
+        // confirmation may both have changed.
+        isInstalled = readInstalled()
         reload()
       }
     }
@@ -68,9 +86,25 @@ fun AppRewardsView(
 
   when (missionsState) {
     is PaEMissionsUiState.Idle -> {
-      Column {
-        CheckpointsSection(missionsState.paeMissions.checkpoints)
-        MissionsSection(missionsState.paeMissions.missions)
+      when (
+        val state = paeRewardsState(missionsState.paeMissions.attribution, isInstalled)
+      ) {
+        PaERewardsState.MISSIONS -> {
+          // AND-878: time-based missions need the usage-tracking service, so they are hidden
+          // with it.
+          val missions = if (isUsageTrackingEnabled) {
+            missionsState.paeMissions.missions
+          } else {
+            missionsState.paeMissions.missions.filterNot { it.isTimeBased() }
+          }
+          Column {
+            CheckpointsSection(missionsState.paeMissions.checkpoints)
+            MissionsSection(missions)
+          }
+        }
+
+        PaERewardsState.PAUSED,
+        PaERewardsState.NOT_ELIGIBLE -> PaERewardsBlockedView(state = state, navigate = navigate)
       }
     }
 
@@ -81,13 +115,18 @@ fun AppRewardsView(
   }
 }
 
+private fun PaEMission.isTimeBased(): Boolean =
+  type == PaEMissionType.PLAY_TIME || progress?.type == PaEMissionProgressType.SECONDS
+
 @Composable
 private fun MissionsSection(missions: List<PaEMission>) {
-  RewardsSection(
-    title = stringResource(R.string.play_and_earn_missions_title),
-    items = missions,
-    itemContent = { mission -> MissionItem(mission) }
-  )
+  if (missions.isNotEmpty()) {
+    RewardsSection(
+      title = stringResource(R.string.play_and_earn_missions_title),
+      items = missions,
+      itemContent = { mission -> MissionItem(mission) }
+    )
+  }
 }
 
 @Composable

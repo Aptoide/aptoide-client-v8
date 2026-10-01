@@ -3,12 +3,15 @@ package cm.aptoide.pt.campaigns.data
 import cm.aptoide.pt.campaigns.data.database.PaeMissionDao
 import cm.aptoide.pt.campaigns.data.database.model.toDomain
 import cm.aptoide.pt.campaigns.data.database.model.toEntity
+import cm.aptoide.pt.campaigns.data.model.PaEAttributionJson
 import cm.aptoide.pt.campaigns.data.model.PaEMissionJson
 import cm.aptoide.pt.campaigns.data.model.PaEMissionProgressJson
 import cm.aptoide.pt.campaigns.data.model.PaEMissionProgressTypeJson
 import cm.aptoide.pt.campaigns.data.model.PaEMissionStatusJson
 import cm.aptoide.pt.campaigns.data.model.PaEMissionTypeJson
 import cm.aptoide.pt.campaigns.data.model.PaEMissionsJson
+import cm.aptoide.pt.campaigns.domain.PaEAttribution
+import cm.aptoide.pt.campaigns.domain.PaEAttributionStatus
 import cm.aptoide.pt.campaigns.domain.PaEMission
 import cm.aptoide.pt.campaigns.domain.PaEMissionProgress
 import cm.aptoide.pt.campaigns.domain.PaEMissionProgressType
@@ -20,6 +23,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -117,8 +121,18 @@ internal class DefaultPaEMissionsRepository @Inject constructor(
 
 private fun PaEMissionsJson.toDomainModel() = PaEMissions(
   checkpoints = checkpoints.map(PaEMissionJson::toDomainModel),
-  missions = missions.map(PaEMissionJson::toDomainModel)
+  missions = missions.map(PaEMissionJson::toDomainModel),
+  campaignId = campaignId?.toString(),
+  mmpClickUrl = mmpClickUrl?.takeIf { it.isNotBlank() },
+  attribution = attribution?.toDomainModel(),
 )
+
+// An unknown status (a newer backend) maps to none: the missions keep showing.
+private fun PaEAttributionJson.toDomainModel(): PaEAttribution? {
+  val known = PaEAttributionStatus.fromApi(status)
+  if (known == null && status != null) Timber.w("Unknown P&E attribution status: $status")
+  return known?.let { PaEAttribution(status = it, reason = reason) }
+}
 
 private fun PaEMissionJson.toDomainModel() = PaEMission(
   title = title,

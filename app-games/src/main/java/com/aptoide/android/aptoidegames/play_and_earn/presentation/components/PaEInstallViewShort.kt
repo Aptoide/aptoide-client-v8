@@ -22,12 +22,15 @@ import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.randomApp
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.design_system.SecondarySmallOutlinedButton
+import com.aptoide.android.aptoidegames.installer.FEED_INSTALL_DIVERTS_TO_APPVIEW
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewState
 import com.aptoide.android.aptoidegames.installer.presentation.PlayAttributionLabel
+import com.aptoide.android.aptoidegames.installer.presentation.appViewDiversion
 import com.aptoide.android.aptoidegames.installer.presentation.installViewStates
 import com.aptoide.android.aptoidegames.installer.presentation.toInstallViewState
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rememberPlayAndEarnSetupRoute
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.service.PaEForegroundService
+import com.aptoide.android.aptoidegames.play_and_earn.rememberIsPaEUsageTrackingEnabled
 import com.aptoide.android.aptoidegames.play_and_earn.rememberPlayAndEarnReady
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 
@@ -60,17 +63,28 @@ fun PaEInstallViewShort(
   onCancel: () -> Unit = {},
   cancelable: Boolean = true,
   navigate: ((String) -> Unit)? = null,
+  onNavigateToAppView: (() -> Unit)? = null,
 ) {
+  val normalApp = app.asNormalApp()
+  val mmpInstallClick = rememberPaEMmpInstallClick(packageName = normalApp.packageName)
   val installViewState = installViewStates(
-    app = app.asNormalApp(),
-    onInstallStarted = onInstallStarted,
+    app = normalApp,
+    onInstallStarted = mmpInstallClick.onInstallStarted(onInstallStarted),
     onCancel = onCancel,
   )
+  TrackPaEMmpInstallState(mmpInstallClick = mmpInstallClick, uiState = installViewState.uiState)
+
+  // A Play & Earn game is only downloaded by a signed-in user (AND-876): logged-out taps go to
+  // sign-in first and the install resumes on return.
+  val installLoginGate = rememberPaEInstallLoginGate(app = normalApp, navigate = navigate)
+  ResumePendingPaEInstall(app = normalApp, uiState = installViewState.uiState)
 
   PaEInstallViewShortContent(
     installViewState = installViewState,
     cancelable = cancelable,
     navigate = navigate,
+    installLoginGate = installLoginGate,
+    onNavigateToAppView = onNavigateToAppView,
   )
 }
 
@@ -79,25 +93,33 @@ private fun PaEInstallViewShortContent(
   installViewState: InstallViewState,
   navigate: ((String) -> Unit)? = null,
   cancelable: Boolean = true,
+  installLoginGate: PaEInstallLoginGate = PaEInstallLoginGate.None,
+  onNavigateToAppView: (() -> Unit)? = null,
 ) = Column(horizontalAlignment = Alignment.CenterHorizontally) {
+  // Non-null only where this card must hand the install over to AppView instead of starting
+  // it here - see [appViewDiversion]. Unrelated to [navigate], which routes PaE missions.
+  val divert = installViewState.uiState.appViewDiversion(
+    onNavigateToAppView = onNavigateToAppView,
+    divertsToAppView = FEED_INSTALL_DIVERTS_TO_APPVIEW,
+  )
   when (val state = installViewState.uiState) {
     is DownloadUiState.Install -> PaESmallCoinButton(
-      onClick = state.install,
+      onClick = divert ?: installLoginGate.guard(state.install),
       title = installViewState.actionLabel ?: "",
     )
 
     is DownloadUiState.Migrate -> PaESmallCoinButton(
-      onClick = state.migrate,
+      onClick = divert ?: installLoginGate.guard(state.migrate),
       title = installViewState.actionLabel ?: "",
     )
 
     is DownloadUiState.MigrateAlias -> PaESmallCoinButton(
-      onClick = state.migrateAlias,
+      onClick = divert ?: installLoginGate.guard(state.migrateAlias),
       title = installViewState.actionLabel ?: "",
     )
 
     is DownloadUiState.Outdated -> PaESmallCoinButton(
-      onClick = state.update,
+      onClick = divert ?: installLoginGate.guard(state.update),
       title = installViewState.actionLabel ?: "",
     )
 
@@ -132,7 +154,7 @@ private fun PaEInstallViewShortContent(
     )
 
     is DownloadUiState.Error -> PaESmallTextButton(
-      onClick = state.retry,
+      onClick = divert ?: state.retry,
       title = installViewState.actionLabel ?: "",
     )
 
@@ -141,7 +163,9 @@ private fun PaEInstallViewShortContent(
     is DownloadUiState.Uninstalling,
       -> Unit
   }
-  if (installViewState.showPlayAttribution) {
+  // A diverted button cannot start an install, so it needs no attribution - and leaving it out
+  // keeps the card rendering the same whether or not the shared catalog cache is already warm
+  if (installViewState.showPlayAttribution && divert == null) {
     PlayAttributionLabel(modifier = Modifier.padding(top = 2.dp))
   }
 }
@@ -152,13 +176,14 @@ private fun PaESmallPlayButton(
   navigate: ((String) -> Unit)?,
 ) {
   val isPaEReady = rememberPlayAndEarnReady()
+  val isUsageTrackingEnabled = rememberIsPaEUsageTrackingEnabled()
   val paeSetupRoute = rememberPlayAndEarnSetupRoute()
   val context = LocalContext.current
 
   PaESmallCoinButton(
     onClick = {
       if (isPaEReady || navigate == null) {
-        if (isPaEReady) {
+        if (isPaEReady && isUsageTrackingEnabled) {
           // Start the foreground service to track playtime
           PaEForegroundService.start(context)
         }

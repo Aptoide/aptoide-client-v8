@@ -38,6 +38,7 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.AppItem
 import com.aptoide.android.aptoidegames.gamegenie.analytics.rememberGameGenieAnalytics
 import com.aptoide.android.aptoidegames.gamegenie.presentation.GameGenieYoutubePlayer
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
+import com.aptoide.android.aptoidegames.installer.presentation.reportingCampaignClick
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
@@ -167,16 +168,17 @@ fun MessageBubble(
             }
 
             apps?.forEachIndexed { index, app ->
+              val openAppView = {
+                navigateTo(
+                  buildAppViewRoute(app)
+                )
+                analytics.sendGameGenieAppClick(app.packageName, index)
+              }
               AppItem(
                 app = app,
-                onClick = {
-                  navigateTo(
-                    buildAppViewRoute(app)
-                  )
-                  analytics.sendGameGenieAppClick(app.packageName, index)
-                },
+                onClick = openAppView,
               ) {
-                InstallViewShort(app)
+                InstallViewShort(app, onNavigateToAppView = openAppView.reportingCampaignClick(app))
               }
             }
           }
@@ -226,16 +228,17 @@ fun MessageBubble(
         }
 
           apps?.forEachIndexed { index, app ->
+            val openAppView = {
+              navigateTo(
+                buildAppViewRoute(app)
+              )
+              analytics.sendGameGenieAppClick(app.packageName, index)
+            }
             AppItem(
               app = app,
-              onClick = {
-                navigateTo(
-                  buildAppViewRoute(app)
-                )
-                analytics.sendGameGenieAppClick(app.packageName, index)
-              },
+              onClick = openAppView,
             ) {
-              InstallViewShort(app)
+              InstallViewShort(app, onNavigateToAppView = openAppView.reportingCampaignClick(app))
             }
           }
         }

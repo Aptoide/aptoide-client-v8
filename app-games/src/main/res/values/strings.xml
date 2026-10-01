@@ -61,12 +61,15 @@
   <string name="fixed_bundle_editorial_title">Editorial</string>
   <string name="fixed_bundle_trending_title">Trending</string>
   <string name="fixed_bundle_highlighted">Highlighted</string>
+  <string name="fixed_bundle_must_play_games_title">Must-Play Games</string>
+  <string name="fixed_bundle_top_games_title">Top Games</string>
   <string name="retry_button" comment="button_retry_title">Retry</string>
   <string name="install_waiting_installation_message">Waiting for install</string>
   <string name="install_installing_message">Installing</string>
   <string name="install_error_short_message">Oops, an error occurred.</string>
   <!-- Brand name, mandated verbatim by the Play Inline Install brand guidelines -->
   <string name="install_google_play_attribution" translatable="false">Google Play</string>
+  <string name="install_not_available_message">Not available on Google Play</string>
   <string name="error_message_no_internet_title">Oops, something went wrong</string>
   <string name="error_message_no_internet_body">Please check your Internet connection.</string>
   <string name="error_message_generic_title">Something went wrong</string>
@@ -116,6 +119,7 @@
   <string name="appview_status_installed_talkback">Installed</string>
   <string name="appview_status_failed_talkback">Failed</string>
   <string name="appview_action_cancel_talkback">Cancel</string>
+  <string name="appview_related_apps_title">Similar games</string>
   <string name="appview_installer_talkback">%1$s installer.</string>
   <string name="appview_action_double_tap_talkback">Double tap to %1$s</string>
   <!-- Search -->
@@ -420,6 +424,18 @@
   <string name="play_and_earn_sign_in_reward_body"><![CDATA[Sign in so we know where to send your <1>%1$s</1>.]]></string>
   <string name="play_and_earn_level_up_rewards_title">Level up your rewards!</string>
   <string name="play_and_earn_login_unlock_access_body">Login to unlock access to incredible prizes while you play!</string>
+  <string name="play_and_earn_install_sign_in_title">Log in to start earning</string>
+  <string name="play_and_earn_install_sign_in_body">To earn rewards with %1$s, log in with your Google account.</string>
+  <string name="play_and_earn_install_sign_in_body_generic">To earn rewards with this game, log in with your Google account.</string>
+  <string name="play_and_earn_rewards_paused_title">Rewards paused</string>
+  <string name="play_and_earn_rewards_paused_body">We\'re waiting for the game to confirm your install. Keep playing: your rewards start as soon as it does.</string>
+  <string name="play_and_earn_not_eligible_title">Your device isn\'t eligible</string>
+  <string name="play_and_earn_not_eligible_body">The game\'s tracking tool didn\'t confirm this install, so this campaign\'s rewards aren\'t available on this device.</string>
+  <string name="play_and_earn_rewards_blocked_learn_more_button">Learn more</string>
+  <string name="play_and_earn_rewards_paused_info_title">Why are my rewards paused?</string>
+  <string name="play_and_earn_rewards_paused_info_body">Each game uses a tracking tool to confirm the installs made through Aptoide Games. This campaign\'s rewards start once it confirms yours, usually a few minutes after you first open the game.\n\nKeep the game installed and play as usual. What you do in the game while you wait still counts once your install is confirmed.</string>
+  <string name="play_and_earn_not_eligible_info_title">Why isn\'t my device eligible?</string>
+  <string name="play_and_earn_not_eligible_info_body">Each game uses a tracking tool to confirm the installs made through Aptoide Games, and it decides which ones qualify. Installs its security checks flag, for example from emulators or automated tools, don\'t count for the campaign.\n\nOther Play &amp; Earn games may still be available to you.</string>
   <string name="play_and_earn_waiting_title">Waiting...</string>
   <string name="play_and_earn_getting_ready_body">We\'re getting things ready for you…</string>
   <string name="play_and_earn_almost_there_title">You\'re almost there!</string>

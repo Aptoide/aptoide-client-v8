@@ -642,9 +642,9 @@ fun ViewPagerContent(
   navigate: (String) -> Unit,
 ) {
   when (selectedTab) {
-    AppViewTab.DETAILS -> DetailsView(app = app)
+    AppViewTab.DETAILS -> DetailsView(app = app, navigate = navigate)
 
-    AppViewTab.REWARDS -> AppRewardsView(packageName = app.packageName)
+    AppViewTab.REWARDS -> AppRewardsView(packageName = app.packageName, navigate = navigate)
 
     AppViewTab.RELATED -> RelatedContentView(
       packageName = app.packageName,
@@ -659,7 +659,10 @@ fun ViewPagerContent(
 }
 
 @Composable
-fun DetailsView(app: App) {
+fun DetailsView(
+  app: App,
+  navigate: (String) -> Unit = {},
+) {
   Column(
     modifier = Modifier.padding(top = 16.dp)
   ) {
@@ -675,6 +678,9 @@ fun DetailsView(app: App) {
         style = AGTypography.ArticleText,
         color = Palette.White
       )
+    }
+    if (APPVIEW_SHOWS_RELATED_APPS) {
+      RelatedAppsRow(app = app, navigate = navigate)
     }
   }
 }
@@ -725,23 +731,27 @@ fun WhatsNew(app: App) {
           .fillMaxWidth()
           .padding(start = 16.dp, end = 16.dp, top = 18.dp)
       ) {
-        Text(
-          modifier = Modifier
-            .padding(end = 8.dp)
-            .alignByBaseline(),
-          text = app.versionName,
-          color = Palette.Primary,
-          style = AGTypography.InputsL,
-        )
-        Text(
-          modifier = Modifier
-            .alignByBaseline(),
-          text = TextFormatter.formatBytes(app.appSize),
-          color = Palette.GreyLight,
-          style = AGTypography.InputsM
-        )
+        if (app.showsVersion) {
+          Text(
+            modifier = Modifier
+              .padding(end = 8.dp)
+              .alignByBaseline(),
+            text = app.versionName,
+            color = Palette.Primary,
+            style = AGTypography.InputsL,
+          )
+        }
+        if (app.showsSize) {
+          Text(
+            modifier = Modifier
+              .alignByBaseline(),
+            text = TextFormatter.formatBytes(app.appSize),
+            color = Palette.GreyLight,
+            style = AGTypography.InputsM
+          )
+        }
         Spacer(modifier = Modifier.weight(1f))
-        app.updateDate?.let {
+        app.updateDate?.takeIf { app.showsUpdateDate }?.let {
           Text(
             modifier = Modifier
               .align(Alignment.CenterVertically),
@@ -872,30 +882,38 @@ fun AppInfoSection(
   Column(
     modifier = Modifier.padding(top = 12.dp, bottom = 48.dp, start = 16.dp, end = 16.dp),
   ) {
-    AppInfoRow(
-      infoCategory = stringResource(R.string.appview_info_version_name_title),
-      infoContent = app.versionName
-    )
+    if (app.showsVersion) {
+      AppInfoRow(
+        infoCategory = stringResource(R.string.appview_info_version_name_title),
+        infoContent = app.versionName
+      )
+    }
     AppInfoRow(
       infoCategory = stringResource(R.string.appview_info_package_name_title),
       infoContent = app.packageName
     )
-    AppInfoRow(
-      infoCategory = stringResource(R.string.appview_info_release_title),
-      infoContent = app.releaseDate
-        ?.parseDate()
-        ?.toFormattedString(pattern = "d MMM yyyy") ?: ""
-    )
-    AppInfoRow(
-      infoCategory = stringResource(R.string.appview_info_update_title),
-      infoContent = app.updateDate
-        ?.parseDate(pattern = "yyyy-MM-dd")
-        ?.toFormattedString(pattern = "d MMM yyyy") ?: ""
-    )
-    AppInfoRow(
-      infoCategory = stringResource(R.string.appview_info_download_size_title),
-      infoContent = TextFormatter.formatBytes(app.appSize)
-    )
+    if (app.showsReleaseDate) {
+      AppInfoRow(
+        infoCategory = stringResource(R.string.appview_info_release_title),
+        infoContent = app.releaseDate
+          ?.parseDate()
+          ?.toFormattedString(pattern = "d MMM yyyy") ?: ""
+      )
+    }
+    if (app.showsUpdateDate) {
+      AppInfoRow(
+        infoCategory = stringResource(R.string.appview_info_update_title),
+        infoContent = app.updateDate
+          ?.parseDate(pattern = "yyyy-MM-dd")
+          ?.toFormattedString(pattern = "d MMM yyyy") ?: ""
+      )
+    }
+    if (app.showsSize) {
+      AppInfoRow(
+        infoCategory = stringResource(R.string.appview_info_download_size_title),
+        infoContent = TextFormatter.formatBytes(app.appSize)
+      )
+    }
     app.website?.let {
       AppInfoRowWithAction(
         infoCategory = stringResource(R.string.appview_info_website_title),
@@ -1084,10 +1102,13 @@ fun AppPresentationView(app: App) {
         // Same font and style as the surrounding text, per the Play brand guidelines
         PlayAttributionLabel(style = AGTypography.SmallGames)
       }
-      AppRatingAndDownloads(
-        rating = app.pRating,
-        downloads = app.pDownloads
-      )
+      if (app.showsRating || app.showsDownloads) {
+        AppRatingAndDownloads(
+          rating = app.pRating,
+          downloads = app.pDownloads.takeIf { app.showsDownloads },
+          showRating = app.showsRating,
+        )
+      }
     }
   }
 }
@@ -1096,7 +1117,8 @@ fun AppPresentationView(app: App) {
 fun AppRatingAndDownloads(
   modifier: Modifier = Modifier,
   rating: Rating,
-  downloads: Int? = null
+  downloads: Int? = null,
+  showRating: Boolean = true,
 ) {
   Row(
     modifier = modifier
@@ -1106,25 +1128,27 @@ fun AppRatingAndDownloads(
       ),
     verticalAlignment = Alignment.CenterVertically
   ) {
-    Icon(
-      imageVector = getRatingStar(Palette.Black),
-      contentDescription = null,
-      modifier = Modifier
-        .padding(end = 2.dp)
-        .size(12.dp),
-    )
-    Text(
-      modifier = modifier
-        .padding(end = 8.dp),
-      text = if (rating.avgRating == 0.0) {
-        "--"
-      } else {
-        TextFormatter.formatDecimal(rating.avgRating)
-      },
-      maxLines = 1,
-      style = AGTypography.InputsXS,
-      overflow = TextOverflow.Ellipsis,
-    )
+    if (showRating) {
+      Icon(
+        imageVector = getRatingStar(Palette.Black),
+        contentDescription = null,
+        modifier = Modifier
+          .padding(end = 2.dp)
+          .size(12.dp),
+      )
+      Text(
+        modifier = modifier
+          .padding(end = 8.dp),
+        text = if (rating.avgRating == 0.0) {
+          "--"
+        } else {
+          TextFormatter.formatDecimal(rating.avgRating)
+        },
+        maxLines = 1,
+        style = AGTypography.InputsXS,
+        overflow = TextOverflow.Ellipsis,
+      )
+    }
     downloads?.let {
       Text(
         text = stringResource(R.string.downloads_number_title, it.formatDownloads()),
