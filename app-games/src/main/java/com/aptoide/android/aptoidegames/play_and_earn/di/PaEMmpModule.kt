@@ -3,7 +3,7 @@ package com.aptoide.android.aptoidegames.play_and_earn.di
 import cm.aptoide.pt.aptoide_network.di.SimpleOkHttp
 import cm.aptoide.pt.feature_campaigns.CampaignRepository
 import cm.aptoide.pt.feature_campaigns.data.CampaignApiRepository
-import com.aptoide.android.aptoidegames.play_and_earn.domain.mmp.HardcodedPaEMmpClickUrlSource
+import com.aptoide.android.aptoidegames.play_and_earn.domain.mmp.MissionsPaEMmpClickUrlSource
 import com.aptoide.android.aptoidegames.play_and_earn.domain.mmp.PaEMmpClickUrlSource
 import dagger.Binds
 import dagger.Module
@@ -19,10 +19,9 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 interface PaEMmpModule {
 
-  // Hardcoded Dice Roll link for now. To use each campaign's link from /missions, bind
-  // MissionsPaEMmpClickUrlSource here instead.
+  // Each campaign's own link, as Aptoide Connect set it, from /missions.
   @Binds
-  fun bindPaEMmpClickUrlSource(source: HardcodedPaEMmpClickUrlSource): PaEMmpClickUrlSource
+  fun bindPaEMmpClickUrlSource(source: MissionsPaEMmpClickUrlSource): PaEMmpClickUrlSource
 
   companion object {
 
