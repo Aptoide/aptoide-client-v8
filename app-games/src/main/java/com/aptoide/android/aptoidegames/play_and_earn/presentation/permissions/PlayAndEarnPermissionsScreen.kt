@@ -23,6 +23,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -63,6 +64,7 @@ import com.aptoide.android.aptoidegames.drawables.figures.getPermissionAllowFigu
 import com.aptoide.android.aptoidegames.drawables.icons.getTrustedIcon
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.rememberPaEAnalytics
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.service.PaEForegroundService
+import com.aptoide.android.aptoidegames.play_and_earn.rememberIsPaEUsageTrackingEnabled
 import com.aptoide.android.aptoidegames.play_and_earn.rememberPaEClientConfigManager
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -90,6 +92,12 @@ private fun PlayAndEarnPermissionsScreen(
 
   val paeAnalytics = rememberPaEAnalytics()
   val paEClientConfigManager = rememberPaEClientConfigManager()
+  val isUsageTrackingEnabled = rememberIsPaEUsageTrackingEnabled()
+
+  // AND-878: the permission onboarding is hidden behind pae_usage_tracking_enabled.
+  LaunchedEffect(isUsageTrackingEnabled) {
+    if (!isUsageTrackingEnabled) navigateBack()
+  }
 
   var allowedRestrictedSettings by remember { mutableStateOf(false) }
   var showPermissionDeniedDialog by rememberSaveable { mutableStateOf(false) }
