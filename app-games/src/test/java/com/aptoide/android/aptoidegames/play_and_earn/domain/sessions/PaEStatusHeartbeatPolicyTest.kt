@@ -25,17 +25,25 @@ internal class PaEStatusHeartbeatPolicyTest {
     maxDurationMillis = TimeUnit.HOURS.toMillis(10),
   )
 
-  private fun mission(title: String, status: PaEMissionStatus?) = PaEMission(
+  private fun mission(
+    title: String,
+    status: PaEMissionStatus?,
+    type: PaEMissionType = PaEMissionType.EVENT,
+  ) = PaEMission(
     title = title,
     description = null,
     icon = null,
-    type = PaEMissionType.EVENT,
+    type = type,
     arguments = JsonObject(),
     units = 10,
     progress = PaEMissionProgress(
       current = if (status == PaEMissionStatus.COMPLETED) 1 else 0,
       target = 1,
-      type = PaEMissionProgressType.COUNT,
+      type = if (type == PaEMissionType.PLAY_TIME) {
+        PaEMissionProgressType.SECONDS
+      } else {
+        PaEMissionProgressType.COUNT
+      },
       status = status,
     ),
   )
@@ -172,6 +180,22 @@ internal class PaEStatusHeartbeatPolicyTest {
     val reason = policy.stopReason(state, emptySet(), nowMillis = startedAt + 60_000)
 
     m Then "nothing is left to wait for"
+    assertEquals(PaEStatusHeartbeatPolicy.StopReason.ALL_DONE, reason)
+  }
+
+  @Test
+  fun `Open play-time missions are not waited for`() = scenario {
+    m Given "the only event mission confirmed, two play-time missions still open"
+    val state = missions(
+      mission("Buy", PaEMissionStatus.PENDING),
+      mission("Play 30 seconds", PaEMissionStatus.PENDING, PaEMissionType.PLAY_TIME),
+      mission("Play 20 minutes", null, PaEMissionType.PLAY_TIME),
+    )
+
+    m When "the policy is asked"
+    val reason = policy.stopReason(state, confirmed = setOf("Buy"), nowMillis = startedAt + 60_000)
+
+    m Then "nothing the MMP can confirm is left: it stops"
     assertEquals(PaEStatusHeartbeatPolicy.StopReason.ALL_DONE, reason)
   }
 

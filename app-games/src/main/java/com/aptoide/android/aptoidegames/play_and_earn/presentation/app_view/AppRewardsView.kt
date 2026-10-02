@@ -36,10 +36,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import cm.aptoide.pt.campaigns.domain.PaEMission
+import cm.aptoide.pt.campaigns.domain.isTimeBased
 import cm.aptoide.pt.campaigns.domain.PaEMissionProgress
 import cm.aptoide.pt.campaigns.domain.PaEMissionProgressType
 import cm.aptoide.pt.campaigns.domain.PaEMissionStatus
-import cm.aptoide.pt.campaigns.domain.PaEMissionType
 import cm.aptoide.pt.campaigns.domain.PaERewardsState
 import cm.aptoide.pt.campaigns.domain.paeRewardsState
 import cm.aptoide.pt.campaigns.presentation.PaEMissionsUiState
@@ -114,9 +114,6 @@ fun AppRewardsView(
     PaEMissionsUiState.NoConnection -> Unit
   }
 }
-
-private fun PaEMission.isTimeBased(): Boolean =
-  type == PaEMissionType.PLAY_TIME || progress?.type == PaEMissionProgressType.SECONDS
 
 @Composable
 private fun MissionsSection(missions: List<PaEMission>) {

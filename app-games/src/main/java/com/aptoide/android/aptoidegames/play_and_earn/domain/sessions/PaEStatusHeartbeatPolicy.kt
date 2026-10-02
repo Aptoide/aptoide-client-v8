@@ -3,6 +3,7 @@ package com.aptoide.android.aptoidegames.play_and_earn.domain.sessions
 import cm.aptoide.pt.campaigns.domain.PaEAttributionStatus
 import cm.aptoide.pt.campaigns.domain.PaEMissionStatus
 import cm.aptoide.pt.campaigns.domain.PaEMissions
+import cm.aptoide.pt.campaigns.domain.isTimeBased
 
 /**
  * When the status heartbeat after Play stops (AND-879).
@@ -53,9 +54,12 @@ class PaEStatusHeartbeatPolicy(
     if (missions.attribution?.status == PaEAttributionStatus.NOT_ELIGIBLE) {
       return StopReason.NOT_ELIGIBLE
     }
-    // Checkpoints are time-based and hidden while usage tracking is off: not waited for.
+    // Time-based missions and checkpoints can't progress while usage tracking is off (the
+    // Rewards tab hides them too): only the missions the MMP can confirm are waited for.
     val open = missions.missions.filterNot { mission ->
-      mission.progress?.status == PaEMissionStatus.COMPLETED || mission.title in confirmed
+      mission.isTimeBased() ||
+        mission.progress?.status == PaEMissionStatus.COMPLETED ||
+        mission.title in confirmed
     }
     return if (open.isEmpty()) StopReason.ALL_DONE else null
   }
