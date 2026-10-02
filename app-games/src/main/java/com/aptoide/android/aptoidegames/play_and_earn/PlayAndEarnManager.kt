@@ -66,6 +66,11 @@ class PlayAndEarnManager @Inject constructor(
     // detected country must also match (unknown country -> hidden).
     private const val PAE_COUNTRIES_FLAG_KEY = "pae_countries"
 
+    // AND-879: how long the status heartbeat after Play may run at most, as a backstop. Normal
+    // play never reaches it; it only stops a forgotten service from heartbeating for days.
+    private const val PAE_STATUS_HEARTBEAT_MAX_HOURS_KEY = "pae_status_heartbeat_max_hours"
+    private const val PAE_STATUS_HEARTBEAT_DEFAULT_MAX_HOURS = 10L
+
     // Fallback when the pae_countries flag is missing or unparseable.
     private val PAE_DEFAULT_ALLOWED_COUNTRIES = setOf(
       "US", "CA", "FI", "FR", "DE", "IT", "NL", "NO", "PT", "ES", "SE", "GB",
@@ -141,6 +146,11 @@ class PlayAndEarnManager @Inject constructor(
     featureFlags.getFlag(PAE_USAGE_TRACKING_FLAG_KEY, false)
 
   suspend fun shouldRunUsageTracking(): Boolean = shouldShowPlayAndEarn() && isUsageTrackingEnabled()
+
+  /** Backstop for the status heartbeat (AND-879), in hours; remote-configurable. */
+  suspend fun getStatusHeartbeatMaxHours(): Long =
+    (featureFlags.getFlagAsString(PAE_STATUS_HEARTBEAT_MAX_HOURS_KEY)?.trim()?.toLongOrNull()
+      ?: PAE_STATUS_HEARTBEAT_DEFAULT_MAX_HOURS).coerceIn(1L, 24L)
 
   suspend fun shouldStartPaEService(): Boolean {
     val isServiceEnabled = paEPreferencesRepository.isPaEServiceEnabled().first()

@@ -23,6 +23,14 @@ data class PaEMission(
   val progress: PaEMissionProgress?
 )
 
+/**
+ * Progress comes from the device's own play-time tracking (AND-878): without the usage-access
+ * permission these missions can't move, so the UI hides them and the status heartbeat (AND-879)
+ * doesn't wait for them.
+ */
+fun PaEMission.isTimeBased(): Boolean =
+  type == PaEMissionType.PLAY_TIME || progress?.type == PaEMissionProgressType.SECONDS
+
 data class PaEMissionProgress(
   val current: Int?,
   val target: Int,

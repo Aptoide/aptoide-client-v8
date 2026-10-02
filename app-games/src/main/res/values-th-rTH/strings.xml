@@ -400,6 +400,8 @@
   <string name="play_and_earn_install_button">ติดตั้ง</string>
   <string name="play_and_earn_notification_recording_title">ติดตามเวลาการเล่นเพื่อรับรางวัล</string>
   <string name="play_and_earn_notification_recording_body">เวลาที่คุณเล่นเกมกำลังถูกนับรวมในภารกิจของคุณ</string>
+  <string name="play_and_earn_notification_status_title">Play &amp; Earn เปิดอยู่</string>
+  <string name="play_and_earn_notification_status_body">คุณจะได้รับการแจ้งเตือนเมื่อเกมยืนยันภารกิจ</string>
   <string name="play_and_earn_mission_completed_notification_body">คุณได้รับ %1$d UT ใน %2$s</string>
   <string name="settings_play_and_earn_tracking">Play &amp; Earn Tracking</string>
   <string name="settings_play_and_earn_tracking_description">Aptoide uses this setting to measure your in-app activity and credit you for time played and milestones reached. If disabled, rewards will not be tracked until you re-launch a game through Aptoide.</string>

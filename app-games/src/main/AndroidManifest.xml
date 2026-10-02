@@ -146,6 +146,10 @@
     <service
         android:name=".play_and_earn.presentation.service.PaEForegroundService"
         android:exported="false"
-        android:foregroundServiceType="specialUse" />
+        android:foregroundServiceType="specialUse">
+      <property
+          android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+          android:value="Play &amp; Earn: follows the game being played for mission rewards" />
+    </service>
   </application>
 </manifest>

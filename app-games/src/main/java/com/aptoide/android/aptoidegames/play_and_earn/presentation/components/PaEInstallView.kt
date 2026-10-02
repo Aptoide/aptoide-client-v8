@@ -81,7 +81,10 @@ private fun PaEInstallViewProcessingPreview() {
     ) {
       states.forEach {
         divider()
-        PaEInstallViewContent(installViewState = it.toInstallViewState(randomApp))
+        PaEInstallViewContent(
+          installViewState = it.toInstallViewState(randomApp),
+          packageName = randomApp.packageName,
+        )
       }
       divider()
     }
@@ -115,6 +118,7 @@ fun PaEInstallView(
 
   PaEInstallViewContent(
     installViewState = installViewState,
+    packageName = app.packageName,
     navigate = navigate,
     rewardAmount = rewardAmount,
     showUninstall = showUninstall,
@@ -158,6 +162,7 @@ fun PaEInstallView(
 @Composable
 private fun PaEInstallViewContent(
   installViewState: InstallViewState,
+  packageName: String,
   modifier: Modifier = Modifier,
   navigate: ((String) -> Unit)? = null,
   rewardAmount: BigDecimal? = null,
@@ -277,6 +282,7 @@ private fun PaEInstallViewContent(
       ) {
         PaEPlayButton(
           onClick = state.open,
+          packageName = packageName,
           navigate = navigate,
           rewardAmount = rewardAmount,
           modifier = Modifier.fillMaxWidth(),
@@ -290,6 +296,7 @@ private fun PaEInstallViewContent(
     } else {
       PaEPlayButton(
         onClick = state.open,
+        packageName = packageName,
         navigate = navigate,
         rewardAmount = rewardAmount,
         modifier = Modifier.fillMaxWidth(),
@@ -323,6 +330,7 @@ private fun PaEInstallViewContent(
 @Composable
 private fun PaEPlayButton(
   onClick: () -> Unit,
+  packageName: String,
   navigate: ((String) -> Unit)?,
   modifier: Modifier = Modifier,
   rewardAmount: BigDecimal? = null,
@@ -342,9 +350,14 @@ private fun PaEPlayButton(
     title = title,
     onClick = {
       if (isPaEReady || navigate == null) {
-        if (isPaEReady && isUsageTrackingEnabled) {
-          // Start the foreground service to track playtime
-          PaEForegroundService.start(context)
+        if (isPaEReady) {
+          if (isUsageTrackingEnabled) {
+            // Start the foreground service to track playtime
+            PaEForegroundService.start(context)
+          } else {
+            // No usage tracking: heartbeat for the game's MMP-confirmed missions (AND-879)
+            PaEForegroundService.startStatusHeartbeat(context, packageName)
+          }
         }
         onClick()
       } else {
