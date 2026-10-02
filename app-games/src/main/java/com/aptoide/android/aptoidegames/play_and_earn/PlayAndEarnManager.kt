@@ -56,10 +56,20 @@ class PlayAndEarnManager @Inject constructor(
     private const val TAG = "PlayAndEarnManager"
     private const val PAE_VISIBILITY_FLAG_KEY = "show_play_and_earn"
 
+    // AND-878: gates the usage-access/overlay permission onboarding, the PaEForegroundService
+    // that watches the foreground app, and the time-based (play-time) missions. Off by default;
+    // the code stays in place and is re-enabled by flipping the flag remotely.
+    private const val PAE_USAGE_TRACKING_FLAG_KEY = "pae_usage_tracking_enabled"
+
     // JSON array of ISO 3166-1 alpha-2 codes, e.g. ["US","CA"]. The visibility flag is already
     // geo-targeted to the same countries, but Firebase's attribution isn't trusted: the locally
     // detected country must also match (unknown country -> hidden).
     private const val PAE_COUNTRIES_FLAG_KEY = "pae_countries"
+
+    // AND-879: how long the status heartbeat after Play may run at most, as a backstop. Normal
+    // play never reaches it; it only stops a forgotten service from heartbeating for days.
+    private const val PAE_STATUS_HEARTBEAT_MAX_HOURS_KEY = "pae_status_heartbeat_max_hours"
+    private const val PAE_STATUS_HEARTBEAT_DEFAULT_MAX_HOURS = 10L
 
     // Fallback when the pae_countries flag is missing or unparseable.
     private val PAE_DEFAULT_ALLOWED_COUNTRIES = setOf(
@@ -68,6 +78,7 @@ class PlayAndEarnManager @Inject constructor(
   }
 
   private val _playAndEarnVisibilityFlow = MutableStateFlow(false)
+  private val _usageTrackingEnabledFlow = MutableStateFlow(false)
 
   init {
     initialize()
@@ -76,22 +87,31 @@ class PlayAndEarnManager @Inject constructor(
   private fun initialize() {
     CoroutineScope(Dispatchers.IO).launch {
       _playAndEarnVisibilityFlow.value = featureFlags.getFlag(PAE_VISIBILITY_FLAG_KEY, false)
+      _usageTrackingEnabledFlow.value = featureFlags.getFlag(PAE_USAGE_TRACKING_FLAG_KEY, false)
     }
 
-    //Listen to play and earn visibility changes
+    //Listen to play and earn visibility / usage tracking changes
     Firebase.remoteConfig.addOnConfigUpdateListener(object : ConfigUpdateListener {
       override fun onUpdate(configUpdate: ConfigUpdate) {
-        if (PAE_VISIBILITY_FLAG_KEY in configUpdate.updatedKeys) {
+        val visibilityUpdated = PAE_VISIBILITY_FLAG_KEY in configUpdate.updatedKeys
+        val usageTrackingUpdated = PAE_USAGE_TRACKING_FLAG_KEY in configUpdate.updatedKeys
+        if (visibilityUpdated || usageTrackingUpdated) {
           Firebase.remoteConfig.activate().addOnCompleteListener { task ->
             if (task.isSuccessful) {
-              val isEnabled = Firebase.remoteConfig.getBoolean(PAE_VISIBILITY_FLAG_KEY)
-
-              Timber.tag(TAG).d("Remote config visibility updated: $isEnabled")
-
               // Update the FeatureFlags cache to maintain single source of truth
               CoroutineScope(Dispatchers.IO).launch {
-                featureFlags.updateFlag(PAE_VISIBILITY_FLAG_KEY, isEnabled.toString())
-                _playAndEarnVisibilityFlow.value = isEnabled
+                if (visibilityUpdated) {
+                  val isEnabled = Firebase.remoteConfig.getBoolean(PAE_VISIBILITY_FLAG_KEY)
+                  Timber.tag(TAG).d("Remote config visibility updated: $isEnabled")
+                  featureFlags.updateFlag(PAE_VISIBILITY_FLAG_KEY, isEnabled.toString())
+                  _playAndEarnVisibilityFlow.value = isEnabled
+                }
+                if (usageTrackingUpdated) {
+                  val isEnabled = Firebase.remoteConfig.getBoolean(PAE_USAGE_TRACKING_FLAG_KEY)
+                  Timber.tag(TAG).d("Remote config usage tracking updated: $isEnabled")
+                  featureFlags.updateFlag(PAE_USAGE_TRACKING_FLAG_KEY, isEnabled.toString())
+                  _usageTrackingEnabledFlow.value = isEnabled
+                }
               }
             }
           }
@@ -117,12 +137,29 @@ class PlayAndEarnManager @Inject constructor(
     return featureFlags.getFlag(PAE_VISIBILITY_FLAG_KEY, false)
   }
 
+  /**
+   * Whether the usage-tracking half of PaE (permission onboarding, foreground service,
+   * time-based missions) is enabled. Independent of [shouldShowPlayAndEarn]: PaE can be visible
+   * with tracking off, in which case Play just opens the game.
+   */
+  suspend fun isUsageTrackingEnabled(): Boolean =
+    featureFlags.getFlag(PAE_USAGE_TRACKING_FLAG_KEY, false)
+
+  suspend fun shouldRunUsageTracking(): Boolean = shouldShowPlayAndEarn() && isUsageTrackingEnabled()
+
+  /** Backstop for the status heartbeat (AND-879), in hours; remote-configurable. */
+  suspend fun getStatusHeartbeatMaxHours(): Long =
+    (featureFlags.getFlagAsString(PAE_STATUS_HEARTBEAT_MAX_HOURS_KEY)?.trim()?.toLongOrNull()
+      ?: PAE_STATUS_HEARTBEAT_DEFAULT_MAX_HOURS).coerceIn(1L, 24L)
+
   suspend fun shouldStartPaEService(): Boolean {
     val isServiceEnabled = paEPreferencesRepository.isPaEServiceEnabled().first()
-    return isServiceEnabled && shouldShowPlayAndEarn()
+    return isServiceEnabled && shouldRunUsageTracking()
   }
 
   fun observePlayAndEarnVisibility(): StateFlow<Boolean> = _playAndEarnVisibilityFlow.asStateFlow()
+
+  fun observeUsageTrackingEnabled(): StateFlow<Boolean> = _usageTrackingEnabledFlow.asStateFlow()
 
   suspend fun isSignedIn(): Boolean {
     return walletCoreDataSource.getCurrentWalletAddress() != null
@@ -131,8 +168,9 @@ class PlayAndEarnManager @Inject constructor(
   fun observeIsSignedIn(): Flow<Boolean> =
     walletCoreDataSource.observeCurrentWalletAddress().map { it != null }
 
+  /** Signed in, and (only while usage tracking is enabled) holding the runtime permissions. */
   suspend fun isPlayAndEarnReady(): Boolean {
-    return isSignedIn() && hasRequiredPermissions()
+    return isSignedIn() && (!isUsageTrackingEnabled() || hasRequiredPermissions())
   }
 
   fun hasRequiredPermissions(): Boolean =
@@ -159,6 +197,16 @@ fun rememberShouldShowPlayAndEarn(): Boolean = runPreviewable(
     }
 
     shouldShowPlayAndEarn
+  }
+)
+
+@Composable
+fun rememberIsPaEUsageTrackingEnabled(): Boolean = runPreviewable(
+  preview = { Random.nextBoolean() },
+  real = {
+    val vm = hiltViewModel<InjectionsProvider>()
+    val enabled by vm.playAndEarnManager.observeUsageTrackingEnabled().collectAsState()
+    enabled
   }
 )
 

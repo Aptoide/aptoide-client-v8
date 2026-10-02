@@ -382,6 +382,18 @@
   <string name="play_and_earn_start_earning_title">Начните зарабатывать</string>
   <string name="play_and_earn_level_up_rewards_title">Повышайте уровень своих наград!</string>
   <string name="play_and_earn_login_unlock_access_body">Войдите в систему, чтобы получить доступ к невероятным призам во время игры!</string>
+  <string name="play_and_earn_install_sign_in_title">Войдите, чтобы начать зарабатывать</string>
+  <string name="play_and_earn_install_sign_in_body">Чтобы получать награды в %1$s, войдите с помощью аккаунта Google.</string>
+  <string name="play_and_earn_install_sign_in_body_generic">Чтобы получать награды в этой игре, войдите с помощью аккаунта Google.</string>
+  <string name="play_and_earn_rewards_paused_title">Награды приостановлены</string>
+  <string name="play_and_earn_rewards_paused_body">Мы ждём, пока игра подтвердит вашу установку. Продолжайте играть: награды начнутся сразу после подтверждения.</string>
+  <string name="play_and_earn_not_eligible_title">Ваше устройство не подходит</string>
+  <string name="play_and_earn_not_eligible_body">Инструмент отслеживания игры не подтвердил эту установку, поэтому награды этой кампании недоступны на этом устройстве.</string>
+  <string name="play_and_earn_rewards_blocked_learn_more_button">Узнать больше</string>
+  <string name="play_and_earn_rewards_paused_info_title">Почему мои награды приостановлены?</string>
+  <string name="play_and_earn_rewards_paused_info_body">Каждая игра использует инструмент отслеживания, чтобы подтверждать установки через Aptoide Games. Награды этой кампании начнутся, когда он подтвердит вашу установку, обычно через несколько минут после первого запуска игры.\n\nНе удаляйте игру и играйте как обычно. Всё, что вы делаете в игре во время ожидания, будет засчитано после подтверждения установки.</string>
+  <string name="play_and_earn_not_eligible_info_title">Почему моё устройство не подходит?</string>
+  <string name="play_and_earn_not_eligible_info_body">Каждая игра использует инструмент отслеживания, чтобы подтверждать установки через Aptoide Games, и решает, какие из них подходят. Установки, отмеченные его проверками безопасности, например с эмуляторов или автоматизированных инструментов, не засчитываются в кампании.\n\nДругие игры Play &amp; Earn могут быть по-прежнему доступны вам.</string>
   <string name="play_and_earn_waiting_title">Ожидание...</string>
   <string name="play_and_earn_getting_ready_body">Мы готовим для вас все необходимое…</string>
   <string name="play_and_earn_almost_there_title">Вы почти готовы!</string>
@@ -421,6 +433,9 @@
   <string name="play_and_earn_install_button">Установить</string>
   <string name="play_and_earn_notification_recording_title">Отслеживание игрового времени для получения вознаграждений</string>
   <string name="play_and_earn_notification_recording_body">Ваше игровое время учитывается в ваших миссиях.</string>
+  <string name="play_and_earn_notification_status_title">Play &amp; Earn включён</string>
+  <string name="play_and_earn_notification_status_body">Вы получите уведомление, когда игра подтвердит миссию.</string>
+  <string name="play_and_earn_mission_completed_notification_body">Вы заработали %1$d UT в %2$s</string>
   <string name="settings_play_and_earn_tracking">Отслеживание Play &amp; Earn</string>
   <string name="settings_play_and_earn_tracking_description">Aptoide использует этот параметр для измерения вашей активности в приложении и начисления вам баллов за проведённое время и достигнутые цели. Если параметр отключён, вознаграждения не будут фиксироваться до повторного запуска игры через Aptoide.</string>
   <!-- Play and Earn - Permissions-->

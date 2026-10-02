@@ -1,11 +1,12 @@
 package com.aptoide.android.aptoidegames.play_and_earn.presentation.sessions
 
 import cm.aptoide.pt.campaigns.data.PaEMissionsRepository
-import cm.aptoide.pt.campaigns.domain.PaEMission
 import cm.aptoide.pt.play_and_earn.sessions.data.PaESessionsRepository
 import cm.aptoide.pt.play_and_earn.sessions.data.SessionExpiredException
 import cm.aptoide.pt.play_and_earn.sessions.domain.SessionInfo
 import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPreferencesRepository
+import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.CompletedMissionEvent
+import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaEMissionConfirmations
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaESession
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.PaEAnalytics
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.missions.PaEMissionManager
@@ -25,7 +26,10 @@ class PaESessionManager @Inject constructor(
 
   val activeSessions = mutableListOf<PaESession>()
 
-  private val _completedMissions = MutableSharedFlow<PaEMission>()
+  // Buffered: emitting suspends until the collector is done, and the collector downloads a
+  // notification icon. Without slack, several missions confirmed in one heartbeat would stall the
+  // polling loop behind the network.
+  private val _completedMissions = MutableSharedFlow<CompletedMissionEvent>(extraBufferCapacity = 8)
   val completedMissions = _completedMissions.asSharedFlow()
 
   /**
@@ -69,6 +73,47 @@ class PaESessionManager @Inject constructor(
 
   fun clearAllSessions() {
     activeSessions.clear()
+  }
+
+  /**
+   * Status heartbeat (AND-879): a zero-second heartbeat for [packageName], sent after Play while
+   * usage tracking is off. Counts no play time; its only purpose is to receive the missions the
+   * developer's MMP confirmed, which [completedMissions] then announces.
+   * @return false when the session is gone and the caller should stop.
+   */
+  suspend fun heartbeatStatus(packageName: String): Boolean {
+    val session = activeSessions.firstOrNull { it.packageName == packageName } ?: return false
+    return paESessionsRepository.heartbeatSession(
+      session.sessionId,
+      session.packageName,
+      session.syncSequence,
+      seconds = 0,
+    ).fold(
+      onSuccess = { syncResult ->
+        updateSessionAfterSync(session, syncResult)
+        processCompletedMissions(session, syncResult)
+        true
+      },
+      onFailure = { exception ->
+        updateSessionAfterSync(session)
+        if (exception is SessionExpiredException) activeSessions.remove(session)
+        exception !is SessionExpiredException
+      }
+    )
+  }
+
+  /** Refreshes the missions (and the attribution status) the session was created with. */
+  suspend fun refreshMissions(packageName: String) {
+    val session = activeSessions.firstOrNull { it.packageName == packageName } ?: return
+    paeMissionsRepository.getCampaignMissions(packageName, forceRefresh = true)
+      .onSuccess { session.missions = it }
+  }
+
+  /** Tells the server the session is over and forgets it locally. */
+  suspend fun endSession(packageName: String) {
+    val session = activeSessions.firstOrNull { it.packageName == packageName } ?: return
+    activeSessions.remove(session)
+    paESessionsRepository.endSession(session.sessionId, session.packageName)
   }
 
   suspend fun syncSessions(currentForegroundPackage: String?, syncIntervalSeconds: Int = 6) {
@@ -160,28 +205,29 @@ class PaESessionManager @Inject constructor(
     session: PaESession,
     syncResult: SessionInfo
   ) {
-    syncResult.events
-      .filter { it.packageName == session.packageName }
-      .forEach { missionEvent ->
-        if (missionEvent.missionTitle !in session.completedMissions) {
-          session.missions?.missions
-            ?.find { it.title == missionEvent.missionTitle }
-            ?.let { completedMission ->
-              session.completedMissions.add(missionEvent.missionTitle)
+    PaEMissionConfirmations.from(
+      events = syncResult.events,
+      packageName = session.packageName,
+      missions = session.missions,
+      alreadyConfirmed = session.completedMissions,
+    ).forEach { completedMission ->
+      session.completedMissions.add(completedMission.title)
+      session.pendingServerConfirmationMissions.remove(completedMission.title)
 
-              session.pendingServerConfirmationMissions.remove(missionEvent.missionTitle)
+      // Mark mission as completed in local DB
+      paeMissionsRepository.markMissionAsCompleted(
+        packageName = session.packageName,
+        missionTitle = completedMission.title
+      )
 
-              // Mark mission as completed in local DB
-              paeMissionsRepository.markMissionAsCompleted(
-                packageName = session.packageName,
-                missionTitle = missionEvent.missionTitle
-              )
+      paEAnalytics.sendPaEMissionCompleted(session.packageName)
 
-              paEAnalytics.sendPaEMissionCompleted(session.packageName)
-
-              _completedMissions.emit(completedMission)
-            }
-        }
-      }
+      _completedMissions.emit(
+        CompletedMissionEvent(
+          mission = completedMission,
+          packageName = session.packageName
+        )
+      )
+    }
   }
 }

@@ -404,6 +404,18 @@
   <string name="play_and_earn_start_earning_title">ابدأ في الكسب</string>
   <string name="play_and_earn_level_up_rewards_title">ارفع مستوى مكافآتك!</string>
   <string name="play_and_earn_login_unlock_access_body">سجّل الدخول لتفتح الباب أمام جوائز مذهلة أثناء اللعب!</string>
+  <string name="play_and_earn_install_sign_in_title">سجّل الدخول لتبدأ في الربح</string>
+  <string name="play_and_earn_install_sign_in_body">لكسب المكافآت مع %1$s، سجّل الدخول بحساب Google الخاص بك.</string>
+  <string name="play_and_earn_install_sign_in_body_generic">لكسب المكافآت مع هذه اللعبة، سجّل الدخول بحساب Google الخاص بك.</string>
+  <string name="play_and_earn_rewards_paused_title">المكافآت متوقفة مؤقتًا</string>
+  <string name="play_and_earn_rewards_paused_body">ننتظر أن تؤكد اللعبة تثبيتك. واصل اللعب: تبدأ مكافآتك فور التأكيد.</string>
+  <string name="play_and_earn_not_eligible_title">جهازك غير مؤهل</string>
+  <string name="play_and_earn_not_eligible_body">لم تؤكد أداة التتبع الخاصة باللعبة هذا التثبيت، لذا مكافآت هذه الحملة غير متاحة على هذا الجهاز.</string>
+  <string name="play_and_earn_rewards_blocked_learn_more_button">اعرف المزيد</string>
+  <string name="play_and_earn_rewards_paused_info_title">لماذا توقفت مكافآتي مؤقتًا؟</string>
+  <string name="play_and_earn_rewards_paused_info_body">تستخدم كل لعبة أداة تتبع لتأكيد عمليات التثبيت عبر Aptoide Games. تبدأ مكافآت هذه الحملة بعد أن تؤكد تثبيتك، عادةً بعد بضع دقائق من فتح اللعبة لأول مرة.\n\nأبقِ اللعبة مثبتة والعب كالمعتاد. ما تفعله في اللعبة أثناء الانتظار يُحتسب بعد تأكيد تثبيتك.</string>
+  <string name="play_and_earn_not_eligible_info_title">لماذا جهازي غير مؤهل؟</string>
+  <string name="play_and_earn_not_eligible_info_body">تستخدم كل لعبة أداة تتبع لتأكيد عمليات التثبيت عبر Aptoide Games، وتحدد أيها مؤهل. لا تُحتسب في الحملة عمليات التثبيت التي ترصدها فحوصات الأمان الخاصة بها، مثل التثبيت من المحاكيات أو الأدوات الآلية.\n\nقد تظل ألعاب Play &amp; Earn الأخرى متاحة لك.</string>
   <string name="play_and_earn_waiting_title">في انتظار...</string>
   <string name="play_and_earn_getting_ready_body">نحن نجهز كل شيء من أجلك…</string>
   <string name="play_and_earn_almost_there_title">لقد أوشكت على الوصول!</string>
@@ -443,6 +455,9 @@
   <string name="play_and_earn_install_button">تثبيت</string>
   <string name="play_and_earn_notification_recording_title">تتبع وقت اللعب للحصول على المكافآت</string>
   <string name="play_and_earn_notification_recording_body">يتم احتساب وقت اللعب في مهامك.</string>
+  <string name="play_and_earn_notification_status_title">Play &amp; Earn مفعّل</string>
+  <string name="play_and_earn_notification_status_body">ستصلك إشعارات عندما تؤكد اللعبة إحدى المهام.</string>
+  <string name="play_and_earn_mission_completed_notification_body">لقد ربحت %1$d UT في %2$s</string>
   <string name="settings_play_and_earn_tracking">تتبع Play &amp; Earn</string>
   <string name="settings_play_and_earn_tracking_description">تستخدم Aptoide هذا الإعداد لقياس نشاطك داخل التطبيق ومنحك رصيدًا مقابل الوقت الذي تلعب فيه والإنجازات التي تحققها. إذا تم التعطيل، لن يتم تتبع المكافآت حتى تعيد تشغيل اللعبة عبر Aptoide.</string>
   <!-- Play and Earn - Permissions-->

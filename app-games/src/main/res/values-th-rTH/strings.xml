@@ -349,6 +349,18 @@
   <string name="play_and_earn_start_earning_title">เริ่มสร้างรายได้</string>
   <string name="play_and_earn_level_up_rewards_title">เพิ่มระดับรางวัลของคุณ!</string>
   <string name="play_and_earn_login_unlock_access_body">เข้าสู่ระบบเพื่อปลดล็อกการเข้าถึงรางวัลสุดพิเศษขณะที่คุณเล่น!</string>
+  <string name="play_and_earn_install_sign_in_title">เข้าสู่ระบบเพื่อเริ่มรับรางวัล</string>
+  <string name="play_and_earn_install_sign_in_body">หากต้องการรับรางวัลจาก %1$s ให้เข้าสู่ระบบด้วยบัญชี Google ของคุณ</string>
+  <string name="play_and_earn_install_sign_in_body_generic">หากต้องการรับรางวัลจากเกมนี้ ให้เข้าสู่ระบบด้วยบัญชี Google ของคุณ</string>
+  <string name="play_and_earn_rewards_paused_title">หยุดรางวัลชั่วคราว</string>
+  <string name="play_and_earn_rewards_paused_body">เรากำลังรอให้เกมยืนยันการติดตั้งของคุณ เล่นต่อได้เลย รางวัลจะเริ่มทันทีที่ได้รับการยืนยัน</string>
+  <string name="play_and_earn_not_eligible_title">อุปกรณ์ของคุณไม่มีสิทธิ์</string>
+  <string name="play_and_earn_not_eligible_body">เครื่องมือติดตามของเกมไม่ได้ยืนยันการติดตั้งนี้ รางวัลของแคมเปญนี้จึงไม่พร้อมใช้งานบนอุปกรณ์นี้</string>
+  <string name="play_and_earn_rewards_blocked_learn_more_button">รู้เพิ่มเติม</string>
+  <string name="play_and_earn_rewards_paused_info_title">ทำไมรางวัลของฉันถึงหยุดชั่วคราว</string>
+  <string name="play_and_earn_rewards_paused_info_body">แต่ละเกมใช้เครื่องมือติดตามเพื่อยืนยันการติดตั้งผ่าน Aptoide Games รางวัลของแคมเปญนี้จะเริ่มเมื่อยืนยันการติดตั้งของคุณแล้ว โดยปกติจะใช้เวลาไม่กี่นาทีหลังจากเปิดเกมครั้งแรก\n\nติดตั้งเกมไว้และเล่นตามปกติ สิ่งที่คุณทำในเกมระหว่างรอจะถูกนับเมื่อการติดตั้งของคุณได้รับการยืนยัน</string>
+  <string name="play_and_earn_not_eligible_info_title">ทำไมอุปกรณ์ของฉันถึงไม่มีสิทธิ์</string>
+  <string name="play_and_earn_not_eligible_info_body">แต่ละเกมใช้เครื่องมือติดตามเพื่อยืนยันการติดตั้งผ่าน Aptoide Games และตัดสินว่าการติดตั้งใดมีสิทธิ์ การติดตั้งที่ถูกตรวจพบโดยการตรวจสอบความปลอดภัย เช่น จากโปรแกรมจำลองหรือเครื่องมืออัตโนมัติ จะไม่นับรวมในแคมเปญ\n\nเกม Play &amp; Earn อื่นๆ อาจยังพร้อมให้คุณเล่น</string>
   <string name="play_and_earn_waiting_title">กำลังรอ...</string>
   <string name="play_and_earn_getting_ready_body">เรากำลังเตรียมทุกอย่างให้คุณ…</string>
   <string name="play_and_earn_almost_there_title">คุณใกล้จะถึงแล้ว!</string>
@@ -388,6 +400,9 @@
   <string name="play_and_earn_install_button">ติดตั้ง</string>
   <string name="play_and_earn_notification_recording_title">ติดตามเวลาการเล่นเพื่อรับรางวัล</string>
   <string name="play_and_earn_notification_recording_body">เวลาที่คุณเล่นเกมกำลังถูกนับรวมในภารกิจของคุณ</string>
+  <string name="play_and_earn_notification_status_title">Play &amp; Earn เปิดอยู่</string>
+  <string name="play_and_earn_notification_status_body">คุณจะได้รับการแจ้งเตือนเมื่อเกมยืนยันภารกิจ</string>
+  <string name="play_and_earn_mission_completed_notification_body">คุณได้รับ %1$d UT ใน %2$s</string>
   <string name="settings_play_and_earn_tracking">Play &amp; Earn Tracking</string>
   <string name="settings_play_and_earn_tracking_description">Aptoide uses this setting to measure your in-app activity and credit you for time played and milestones reached. If disabled, rewards will not be tracked until you re-launch a game through Aptoide.</string>
   <!-- Play and Earn - Permissions-->

@@ -15,6 +15,14 @@ const val APP_LINK_HOST = "{LANG}.aptoide.com"
 
 fun Intent.putDeeplink(deepLink: String): Intent = putExtra(DEEPLINK_KEY, deepLink)
 
+// In-app navigation route
+// Notifications that target an in-app screen carry the route directly instead of a deep link URI:
+// MainActivity only follows deep links whose scheme is "ag", so a URI would silently do nothing on
+// the vanilla brand.
+private const val NOTIFICATION_ROUTE = "notificationRoute"
+
+fun Intent.putNotificationRoute(route: String): Intent = putExtra(NOTIFICATION_ROUTE, route)
+
 // Ahab
 private const val AHAB_NOTIFICATION = "AHAB_NOTIFICATION"
 
@@ -59,6 +67,15 @@ val Intent?.notificationTag: String?
 val Intent?.notificationPackage: String?
   get() = this?.extras
     ?.getString(NOTIFICATION_PACKAGE)
+
+/**
+ * Reads the route once and clears it: the intent is sticky, so leaving it in place would
+ * re-navigate on every activity recreation.
+ */
+fun Intent?.consumeNotificationRoute(): String? = this
+  ?.extras
+  ?.getString(NOTIFICATION_ROUTE)
+  ?.also { removeExtra(NOTIFICATION_ROUTE) }
 
 val Intent?.externalUrl
   get() = this?.extras

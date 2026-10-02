@@ -360,6 +360,18 @@
   <string name="play_and_earn_start_earning_title">Inizia a guadagnare</string>
   <string name="play_and_earn_level_up_rewards_title">Aumenta i tuoi premi!</string>
   <string name="play_and_earn_login_unlock_access_body">Accedi per sbloccare l\'accesso a incredibili premi mentre giochi!</string>
+  <string name="play_and_earn_install_sign_in_title">Accedi per iniziare a guadagnare</string>
+  <string name="play_and_earn_install_sign_in_body">Per guadagnare premi con %1$s, accedi con il tuo account Google.</string>
+  <string name="play_and_earn_install_sign_in_body_generic">Per guadagnare premi con questo gioco, accedi con il tuo account Google.</string>
+  <string name="play_and_earn_rewards_paused_title">Premi in pausa</string>
+  <string name="play_and_earn_rewards_paused_body">Stiamo aspettando che il gioco confermi la tua installazione. Continua a giocare: i tuoi premi iniziano appena lo fa.</string>
+  <string name="play_and_earn_not_eligible_title">Il tuo dispositivo non è idoneo</string>
+  <string name="play_and_earn_not_eligible_body">Lo strumento di tracciamento del gioco non ha confermato questa installazione, quindi i premi di questa campagna non sono disponibili su questo dispositivo.</string>
+  <string name="play_and_earn_rewards_blocked_learn_more_button">Per saperne di più</string>
+  <string name="play_and_earn_rewards_paused_info_title">Perché i miei premi sono in pausa?</string>
+  <string name="play_and_earn_rewards_paused_info_body">Ogni gioco usa uno strumento di tracciamento per confermare le installazioni effettuate tramite Aptoide Games. I premi di questa campagna iniziano quando conferma la tua, di solito pochi minuti dopo la prima apertura del gioco.\n\nTieni il gioco installato e gioca come sempre. Ciò che fai nel gioco durante l\'attesa conta una volta confermata l\'installazione.</string>
+  <string name="play_and_earn_not_eligible_info_title">Perché il mio dispositivo non è idoneo?</string>
+  <string name="play_and_earn_not_eligible_info_body">Ogni gioco usa uno strumento di tracciamento per confermare le installazioni effettuate tramite Aptoide Games e decide quali sono idonee. Le installazioni segnalate dai suoi controlli di sicurezza, ad esempio da emulatori o strumenti automatizzati, non contano per la campagna.\n\nAltri giochi Play &amp; Earn potrebbero essere ancora disponibili per te.</string>
   <string name="play_and_earn_waiting_title">In attesa...</string>
   <string name="play_and_earn_getting_ready_body">Stiamo preparando tutto per te…</string>
   <string name="play_and_earn_almost_there_title">Ci sei quasi!</string>
@@ -399,6 +411,9 @@
   <string name="play_and_earn_install_button">Installare</string>
   <string name="play_and_earn_notification_recording_title">Monitoraggio del tempo di gioco per ottenere ricompense</string>
   <string name="play_and_earn_notification_recording_body">Il tempo di gioco viene conteggiato ai fini delle missioni.</string>
+  <string name="play_and_earn_notification_status_title">Play &amp; Earn è attivo</string>
+  <string name="play_and_earn_notification_status_body">Riceverai una notifica quando il gioco conferma una missione.</string>
+  <string name="play_and_earn_mission_completed_notification_body">Hai guadagnato %1$d UT in %2$s</string>
   <string name="settings_play_and_earn_tracking">Monitoraggio Play &amp; Earn</string>
   <string name="settings_play_and_earn_tracking_description">Aptoide usa questa impostazione per misurare la tua attività in-app e accreditarti per il tempo di gioco e per gli obiettivi raggiunti. Se disabilitata, le ricompense non verranno monitorate finché non rilancerai un gioco tramite Aptoide.</string>
   <!-- Play and Earn - Permissions-->

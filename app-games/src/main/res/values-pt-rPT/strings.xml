@@ -360,6 +360,18 @@
   <string name="play_and_earn_start_earning_title">Comece a ganhar</string>
   <string name="play_and_earn_level_up_rewards_title">Aumente as suas recompensas!</string>
   <string name="play_and_earn_login_unlock_access_body">Inicie sessão para desbloquear o acesso a prémios incríveis enquanto joga!</string>
+  <string name="play_and_earn_install_sign_in_title">Inicie sessão para começar a ganhar</string>
+  <string name="play_and_earn_install_sign_in_body">Para ganhar recompensas com %1$s, inicie sessão com a sua conta Google.</string>
+  <string name="play_and_earn_install_sign_in_body_generic">Para ganhar recompensas com este jogo, inicie sessão com a sua conta Google.</string>
+  <string name="play_and_earn_rewards_paused_title">Recompensas em pausa</string>
+  <string name="play_and_earn_rewards_paused_body">Estamos a aguardar que o jogo confirme a sua instalação. Continue a jogar: as suas recompensas começam assim que isso acontecer.</string>
+  <string name="play_and_earn_not_eligible_title">O seu dispositivo não é elegível</string>
+  <string name="play_and_earn_not_eligible_body">A ferramenta de rastreamento do jogo não confirmou esta instalação, pelo que as recompensas desta campanha não estão disponíveis neste dispositivo.</string>
+  <string name="play_and_earn_rewards_blocked_learn_more_button">Saiba mais</string>
+  <string name="play_and_earn_rewards_paused_info_title">Porque é que as minhas recompensas estão em pausa?</string>
+  <string name="play_and_earn_rewards_paused_info_body">Cada jogo utiliza uma ferramenta de rastreamento para confirmar as instalações feitas através do Aptoide Games. As recompensas desta campanha começam quando esta confirmar a sua, normalmente poucos minutos depois de abrir o jogo pela primeira vez.\n\nMantenha o jogo instalado e jogue normalmente. O que fizer no jogo enquanto aguarda conta assim que a sua instalação for confirmada.</string>
+  <string name="play_and_earn_not_eligible_info_title">Porque é que o meu dispositivo não é elegível?</string>
+  <string name="play_and_earn_not_eligible_info_body">Cada jogo utiliza uma ferramenta de rastreamento para confirmar as instalações feitas através do Aptoide Games e decide quais são elegíveis. As instalações assinaladas pelas suas verificações de segurança, por exemplo a partir de emuladores ou ferramentas automatizadas, não contam para a campanha.\n\nOutros jogos Play &amp; Earn podem continuar disponíveis para si.</string>
   <string name="play_and_earn_waiting_title">Aguardando...</string>
   <string name="play_and_earn_getting_ready_body">Estamos a preparar tudo para si…</string>
   <string name="play_and_earn_almost_there_title">Está quase lá!</string>
@@ -399,6 +411,9 @@
   <string name="play_and_earn_install_button">Instalar</string>
   <string name="play_and_earn_notification_recording_title">Acompanhamento do tempo de jogo para recompensas</string>
   <string name="play_and_earn_notification_recording_body">O seu tempo de jogo está a ser contabilizado para as suas missões.</string>
+  <string name="play_and_earn_notification_status_title">Play &amp; Earn está ativo</string>
+  <string name="play_and_earn_notification_status_body">Receberá uma notificação quando o jogo confirmar uma missão.</string>
+  <string name="play_and_earn_mission_completed_notification_body">Ganhou %1$d UT em %2$s</string>
   <string name="settings_play_and_earn_tracking">Rastreamento Play &amp; Earn</string>
   <string name="settings_play_and_earn_tracking_description">Aptoide utiliza esta definição para medir a sua atividade dentro das apps e creditar você pelo tempo jogado e pelas metas atingidas. Se desativar, as recompensas não serão rastreadas até que volte a abrir um jogo pela Aptoide.</string>
   <!-- Play and Earn - Permissions-->
