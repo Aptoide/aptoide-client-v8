@@ -6,9 +6,12 @@ class PaESession(
   val sessionId: String,
   val packageName: String,
   val ttlSeconds: Int,
-  val missions: PaEMissions?,
+  missions: PaEMissions?,
   val heartbeatIntervalSeconds: Int
 ) {
+  // Refreshed by the status heartbeat so new missions and the attribution are seen.
+  var missions: PaEMissions? = missions
+
   // Missions confirmed as completed by the server
   val completedMissions = mutableListOf<String>()
 

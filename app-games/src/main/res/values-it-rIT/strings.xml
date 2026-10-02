@@ -411,6 +411,8 @@
   <string name="play_and_earn_install_button">Installare</string>
   <string name="play_and_earn_notification_recording_title">Monitoraggio del tempo di gioco per ottenere ricompense</string>
   <string name="play_and_earn_notification_recording_body">Il tempo di gioco viene conteggiato ai fini delle missioni.</string>
+  <string name="play_and_earn_notification_status_title">Play &amp; Earn è attivo</string>
+  <string name="play_and_earn_notification_status_body">Riceverai una notifica quando il gioco conferma una missione.</string>
   <string name="play_and_earn_mission_completed_notification_body">Hai guadagnato %1$d UT in %2$s</string>
   <string name="settings_play_and_earn_tracking">Monitoraggio Play &amp; Earn</string>
   <string name="settings_play_and_earn_tracking_description">Aptoide usa questa impostazione per misurare la tua attività in-app e accreditarti per il tempo di gioco e per gli obiettivi raggiunti. Se disabilitata, le ricompense non verranno monitorate finché non rilancerai un gioco tramite Aptoide.</string>

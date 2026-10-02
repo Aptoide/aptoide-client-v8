@@ -49,7 +49,10 @@ private fun PaEInstallViewShortPreview() {
     Column(verticalArrangement = Arrangement.Center) {
       states.forEach {
         divider()
-        PaEInstallViewShortContent(installViewState = it.toInstallViewState(randomApp))
+        PaEInstallViewShortContent(
+          installViewState = it.toInstallViewState(randomApp),
+          packageName = randomApp.packageName,
+        )
       }
       divider()
     }
@@ -81,6 +84,7 @@ fun PaEInstallViewShort(
 
   PaEInstallViewShortContent(
     installViewState = installViewState,
+    packageName = normalApp.packageName,
     cancelable = cancelable,
     navigate = navigate,
     installLoginGate = installLoginGate,
@@ -91,6 +95,7 @@ fun PaEInstallViewShort(
 @Composable
 private fun PaEInstallViewShortContent(
   installViewState: InstallViewState,
+  packageName: String,
   navigate: ((String) -> Unit)? = null,
   cancelable: Boolean = true,
   installLoginGate: PaEInstallLoginGate = PaEInstallLoginGate.None,
@@ -150,6 +155,7 @@ private fun PaEInstallViewShortContent(
 
     is DownloadUiState.Installed -> PaESmallPlayButton(
       onClick = state.open,
+      packageName = packageName,
       navigate = navigate
     )
 
@@ -173,6 +179,7 @@ private fun PaEInstallViewShortContent(
 @Composable
 private fun PaESmallPlayButton(
   onClick: () -> Unit,
+  packageName: String,
   navigate: ((String) -> Unit)?,
 ) {
   val isPaEReady = rememberPlayAndEarnReady()
@@ -183,9 +190,14 @@ private fun PaESmallPlayButton(
   PaESmallCoinButton(
     onClick = {
       if (isPaEReady || navigate == null) {
-        if (isPaEReady && isUsageTrackingEnabled) {
-          // Start the foreground service to track playtime
-          PaEForegroundService.start(context)
+        if (isPaEReady) {
+          if (isUsageTrackingEnabled) {
+            // Start the foreground service to track playtime
+            PaEForegroundService.start(context)
+          } else {
+            // No usage tracking: heartbeat for the game's MMP-confirmed missions (AND-879)
+            PaEForegroundService.startStatusHeartbeat(context, packageName)
+          }
         }
         onClick()
       } else {

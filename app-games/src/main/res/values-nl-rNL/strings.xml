@@ -411,6 +411,8 @@
   <string name="play_and_earn_install_button">Installeren</string>
   <string name="play_and_earn_notification_recording_title">Speeltijd bijhouden voor beloningen</string>
   <string name="play_and_earn_notification_recording_body">Je speeltijd wordt meegeteld voor je missies.</string>
+  <string name="play_and_earn_notification_status_title">Play &amp; Earn is actief</string>
+  <string name="play_and_earn_notification_status_body">Je krijgt een melding zodra de game een missie bevestigt.</string>
   <string name="play_and_earn_mission_completed_notification_body">Je hebt %1$d UT verdiend in %2$s</string>
   <string name="settings_play_and_earn_tracking">Play &amp; Earn-tracking</string>
   <string name="settings_play_and_earn_tracking_description">Aptoide gebruikt deze instelling om je in-app-activiteit te meten en je te belonen voor speeltijd en behaalde mijlpalen. Als je dit uitschakelt, worden beloningen niet bijgehouden totdat je een spel opnieuw via Aptoide start.</string>

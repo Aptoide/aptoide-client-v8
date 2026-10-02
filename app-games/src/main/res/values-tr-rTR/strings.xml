@@ -411,6 +411,8 @@
   <string name="play_and_earn_install_button">Yükle</string>
   <string name="play_and_earn_notification_recording_title">Ödüller için oyun süresini takip etme</string>
   <string name="play_and_earn_notification_recording_body">Oyun oynama süreniz görevlerinize sayılıyor.</string>
+  <string name="play_and_earn_notification_status_title">Play &amp; Earn açık</string>
+  <string name="play_and_earn_notification_status_body">Oyun bir görevi onayladığında bildirim alacaksınız.</string>
   <string name="play_and_earn_mission_completed_notification_body">%2$s içinde %1$d UT kazandınız</string>
   <string name="settings_play_and_earn_tracking">Play &amp; Earn Takibi</string>
   <string name="settings_play_and_earn_tracking_description">Aptoide, bu ayarı uygulama içi etkinliğinizi ölçmek ve oynadığınız süre ile ulaştığınız kilometre taşları için sizi ödüllendirmek amacıyla kullanır. Devre dışı bırakılırsa, ödüller Aptoide üzerinden bir oyunu tekrar başlatana kadar takip edilmez.</string>
