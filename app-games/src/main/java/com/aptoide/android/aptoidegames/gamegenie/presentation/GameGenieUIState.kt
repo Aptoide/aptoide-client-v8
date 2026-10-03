@@ -12,6 +12,7 @@ data class GameGenieUIState(
   val token: Token?,
   val selectedGame: GameCompanion? = null,
   val suggestions: List<Suggestion> = emptyList(),
+  val isStreaming: Boolean = false,
 )
 
 enum class GameGenieUIStateType {

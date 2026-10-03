@@ -20,12 +20,6 @@ interface GameGenieApiService {
     @Body request: GameGenieRequest,
   ): GameGenieResponse
 
-  @POST("v2/chat/companion")
-  suspend fun postMessageCompanion(
-    @Header("Authorization") bearerToken: String,
-    @Body request: GameGenieCompanionRequest,
-  ): GameGenieResponse
-
   @GET("v2/chat/companion/suggestions")
   suspend fun getCompanionSuggestions(
     @Header("Authorization") bearerToken: String,
