@@ -23,9 +23,13 @@ android {
   defaultConfig {
     versionName = (System.getenv("VERSION_NAME") ?: "").ifBlank { "internal.${getDate()}" }
 
-    // Google Mobile Ads (MAX google-adapter) crashes at startup without an AdMob app id in the manifest.
+    // AdMob app id for the MAX Google adapters (direct distribution only, see src/direct/AndroidManifest.xml).
+    // Google Mobile Ads crashes at startup without one, so fall back to Google's published test app id;
+    // CI injects the production id the same way it injects APPLOVIN_SDK_KEY.
     manifestPlaceholders["admobAppId"] =
-      (project.findProperty("AD_MOB_APPLICATION_ID") ?: System.getenv("AD_MOB_APPLICATION_ID") ?: "").toString()
+      (project.findProperty("AD_MOB_APPLICATION_ID") as? String
+        ?: System.getenv("AD_MOB_APPLICATION_ID")
+        ?: "ca-app-pub-3940256099942544~3347511713")
 
     buildConfigField("String", "STORE_DOMAIN", "\"https://ws75-cache.aptoide.com/api/7.20240701/\"")
     buildConfigField("String", "SEARCH_BUZZ_DOMAIN", "\"https://buzz.aptoide.com:10002\"")
@@ -384,11 +388,14 @@ dependencies {
   implementation(libs.gms.play.services.ads)
   implementation(libs.applovin.sdk)
   // MAX mediation adapters (network SDKs are transitive). Keep in sync with the MAX dashboard.
-  implementation(libs.applovin.adapter.inmobi)
-  implementation(libs.applovin.adapter.vungle) // Liftoff Monetize
-  implementation(libs.applovin.adapter.mintegral)
-  implementation(libs.applovin.adapter.unityads)
-  implementation(libs.applovin.adapter.google) // Google AdMob + Google bidding; needs AD_MOB_APPLICATION_ID
+  // Direct distribution only: the Google Play build never requests ads and must not ship the
+  // network SDKs (Google Mobile Ads in particular starts a content provider at process launch).
+  "directImplementation"(libs.applovin.adapter.inmobi)
+  "directImplementation"(libs.applovin.adapter.vungle) // Liftoff Monetize
+  "directImplementation"(libs.applovin.adapter.mintegral)
+  "directImplementation"(libs.applovin.adapter.unityads)
+  "directImplementation"(libs.applovin.adapter.google) // Google AdMob + Google bidding
+  "directImplementation"(libs.applovin.adapter.google.ad.manager) // Google Ad Manager
 
   //Accompanist
   implementation(libs.accompanist.webview)
