@@ -58,12 +58,16 @@ fun NativeAdBundle(
  * A native ad slot for long, non-lazy pages: takes no space until an ad is loaded, and only asks
  * [viewModel] to load once the slot comes within [preloadDistanceDp] of the bottom of the viewport.
  * Pages that are left before the user scrolls that far never request an ad.
+ *
+ * @param contentLength length of the content the slot belongs to (e.g. a description); forwarded to
+ *   [NativeAdViewModel.startLoading] so a placement can skip short content via Remote Config.
  */
 @Composable
 fun NativeAdSlot(
   viewModel: NativeAdViewModel,
   modifier: Modifier = Modifier,
   preloadDistanceDp: Int = 400,
+  contentLength: Int = Int.MAX_VALUE,
 ) {
   val state by viewModel.uiState.collectAsState()
   val density = LocalDensity.current
@@ -72,7 +76,7 @@ fun NativeAdSlot(
   var slotTopPx by remember { mutableFloatStateOf(Float.MAX_VALUE) }
 
   LaunchedEffect(slotTopPx) {
-    if (slotTopPx < screenHeightPx + preloadDistancePx) viewModel.startLoading()
+    if (slotTopPx < screenHeightPx + preloadDistancePx) viewModel.startLoading(contentLength)
   }
 
   Column(

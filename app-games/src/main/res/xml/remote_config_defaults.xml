@@ -32,4 +32,8 @@
     <key>home_native_position</key>
     <value>2</value>
   </entry>
+  <entry>
+    <key>appview_native_bottom_min_content_length</key>
+    <value>1500</value>
+  </entry>
 </defaultsMap>
