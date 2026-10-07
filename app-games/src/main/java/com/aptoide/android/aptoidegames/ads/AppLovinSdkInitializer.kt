@@ -18,7 +18,7 @@ import javax.inject.Singleton
 
 /**
  * Initializes the AppLovin MAX SDK exactly once for the whole app and lets every ad
- * placement (app open, home native, ...) suspend until that initialization is done.
+ * placement (home native, ...) suspend until that initialization is done.
  *
  * All ad unit ids are declared up front so MAX can pre-fetch their settings; placements
  * still decide individually whether they are enabled, geo-eligible, etc.
@@ -91,8 +91,8 @@ class AppLovinSdkInitializer @Inject constructor(
   }
 
   companion object {
+    /** Native units only: app open ads are switched off (see AdsConfig per distribution). */
     val AD_UNIT_IDS: List<String> = listOf(
-      BuildConfig.APP_OPEN_AD_UNIT_ID,
       BuildConfig.HOME_NATIVE_AD_UNIT_ID,
     ).filter { it.isNotBlank() }
   }
