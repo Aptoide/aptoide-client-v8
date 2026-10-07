@@ -65,21 +65,23 @@ class HomeNativeAdViewModel @Inject constructor(
   }
 
   private suspend fun start() {
-    if (!NATIVE_ADS_ENABLED) return
+    if (!NATIVE_ADS_ENABLED) return skip("disabled for this distribution")
 
     val adUnitId = BuildConfig.HOME_NATIVE_AD_UNIT_ID
-    if (adUnitId.isBlank()) return
+    if (adUnitId.isBlank()) return skip("no ad unit id")
 
     val config = HomeNativeAdConfig.from(featureFlags)
-    if (!config.enabled) return
+    if (!config.enabled) return skip("home_native_enabled is false")
 
     geo = AppOpenGeoProvider(context).getGeo()
-    if (!config.isGeoEligible(geo)) return
+    if (!config.isGeoEligible(geo)) return skip("geo $geo is excluded")
 
-    if (!sdkInitializer.ensureInitialized()) return
+    if (!sdkInitializer.ensureInitialized()) return skip("MAX SDK not initialized")
 
     withContext(Dispatchers.Main) { load(adUnitId, config.position) }
   }
+
+  private fun skip(reason: String) = Timber.d("Home native ad not requested: %s", reason)
 
   private fun load(adUnitId: String, position: Int) {
     val loader = MaxNativeAdLoader(adUnitId).also { loader = it }
