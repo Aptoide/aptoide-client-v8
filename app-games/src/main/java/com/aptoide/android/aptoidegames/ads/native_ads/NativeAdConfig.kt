@@ -14,8 +14,10 @@ import java.util.Locale
  *   exists in the Firebase console) while release builds default to disabled.
  * - `<prefix>_position` is the zero-based index the ad is inserted before, where the slot is a
  *   list (default 2 = third slot). Slots that render at a fixed spot ignore it.
- * - `<prefix>_excluded_geos` geo blocklist, shipped per placement in remote_config_defaults.xml and
- *   falling back to [AdsDefaults] if the key is ever removed.
+ * - `<prefix>_excluded_geos` geo blocklist. Like the kill switch it is NOT in
+ *   remote_config_defaults.xml: without the key, release builds use [AdsDefaults.EXCLUDED_GEOS]
+ *   (consent geos) and debug builds exclude nothing, so placements are testable from Europe
+ *   before the key exists in Firebase.
  */
 data class NativeAdConfig(
   val enabled: Boolean,
@@ -28,6 +30,8 @@ data class NativeAdConfig(
   companion object {
     const val DEFAULT_POSITION = 2
     val DEFAULT_ENABLED: Boolean = BuildConfig.DEBUG
+    val DEFAULT_EXCLUDED_GEOS: Set<String> =
+      if (BuildConfig.DEBUG) emptySet() else AdsDefaults.EXCLUDED_GEOS
 
     fun enabledKey(placement: NativeAdPlacement) = "${placement.flagPrefix}_enabled"
     fun positionKey(placement: NativeAdPlacement) = "${placement.flagPrefix}_position"
@@ -35,7 +39,7 @@ data class NativeAdConfig(
 
     suspend fun from(featureFlags: FeatureFlags, placement: NativeAdPlacement): NativeAdConfig {
       val excludedGeos = (featureFlags.getStringListOrNull(excludedGeosKey(placement))
-        ?: AdsDefaults.EXCLUDED_GEOS.toList())
+        ?: DEFAULT_EXCLUDED_GEOS.toList())
         .map { it.uppercase(Locale.US) }
         .toSet()
 

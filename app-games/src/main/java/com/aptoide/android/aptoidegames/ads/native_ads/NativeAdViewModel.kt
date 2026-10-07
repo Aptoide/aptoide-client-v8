@@ -67,21 +67,24 @@ abstract class NativeAdViewModel(
   }
 
   private suspend fun start() {
-    if (!NATIVE_ADS_ENABLED) return
+    if (!NATIVE_ADS_ENABLED) return skip("disabled for this distribution")
 
     val adUnitId = placement.adUnitId
-    if (adUnitId.isBlank()) return
+    if (adUnitId.isBlank()) return skip("no ad unit id")
 
     val config = NativeAdConfig.from(featureFlags, placement)
-    if (!config.enabled) return
+    if (!config.enabled) return skip("${NativeAdConfig.enabledKey(placement)} is false")
 
     geo = AppOpenGeoProvider(context).getGeo()
-    if (!config.isGeoEligible(geo)) return
+    if (!config.isGeoEligible(geo)) return skip("geo $geo is excluded")
 
-    if (!sdkInitializer.ensureInitialized()) return
+    if (!sdkInitializer.ensureInitialized()) return skip("MAX SDK not initialized")
 
     withContext(Dispatchers.Main) { load(adUnitId, config.position) }
   }
+
+  private fun skip(reason: String) =
+    Timber.d("Native ad %s not requested: %s", placement.name, reason)
 
   private fun load(adUnitId: String, position: Int) {
     val loader = MaxNativeAdLoader(adUnitId).also { loader = it }
