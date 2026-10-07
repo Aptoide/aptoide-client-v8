@@ -44,6 +44,10 @@ sealed interface NativeAdUiState {
  *
  * Each placement gets its own Hilt subclass so each screen has an independent ViewModel scope
  * and its own ad unit, flags and analytics prefix.
+ *
+ * @param autoStart load as soon as the ViewModel exists (feed-style slots). Pass false for slots
+ *   far down a page and call [startLoading] when the slot approaches the viewport, so pages that
+ *   are left before scrolling never request an ad (see [NativeAdSlot]).
  */
 abstract class NativeAdViewModel(
   private val placement: NativeAdPlacement,
@@ -51,6 +55,7 @@ abstract class NativeAdViewModel(
   private val featureFlags: FeatureFlags,
   private val sdkInitializer: AppLovinSdkInitializer,
   genericAnalytics: GenericAnalytics,
+  autoStart: Boolean = true,
 ) : ViewModel() {
 
   private val analytics = NativeAdAnalytics(genericAnalytics, placement)
@@ -62,11 +67,25 @@ abstract class NativeAdViewModel(
   private var loadedAd: MaxAd? = null
   private var geo: String = AppOpenGeoProvider.UNKNOWN_GEO
 
+  private var started = false
+
   init {
-    viewModelScope.launch { start() }
+    if (autoStart) startLoading()
   }
 
-  private suspend fun start() {
+  /**
+   * Idempotent: the first call starts the load, later calls are no-ops.
+   *
+   * @param contentLength length of the content the slot is attached to, compared against the
+   *   placement's `<prefix>_min_content_length` flag; slots with no such content pass the default.
+   */
+  fun startLoading(contentLength: Int = Int.MAX_VALUE) {
+    if (started) return
+    started = true
+    viewModelScope.launch { start(contentLength) }
+  }
+
+  private suspend fun start(contentLength: Int) {
     if (!NATIVE_ADS_ENABLED) return skip("disabled for this distribution")
 
     val adUnitId = placement.adUnitId
@@ -74,6 +93,9 @@ abstract class NativeAdViewModel(
 
     val config = NativeAdConfig.from(featureFlags, placement)
     if (!config.enabled) return skip("${NativeAdConfig.enabledKey(placement)} is false")
+    if (!config.isContentLongEnough(contentLength)) {
+      return skip("content length $contentLength < ${config.minContentLength}")
+    }
 
     geo = AppOpenGeoProvider(context).getGeo()
     if (!config.isGeoEligible(geo)) return skip("geo $geo is excluded")
@@ -160,8 +182,36 @@ class SearchNativeAdViewModel @Inject constructor(
   NativeAdPlacement.SEARCH_LANDING, context, featureFlags, sdkInitializer, genericAnalytics,
 )
 
+@HiltViewModel
+class AppDetailNativeAdViewModel @Inject constructor(
+  @ApplicationContext context: Context,
+  featureFlags: FeatureFlags,
+  sdkInitializer: AppLovinSdkInitializer,
+  genericAnalytics: GenericAnalytics,
+) : NativeAdViewModel(
+  NativeAdPlacement.APP_DETAIL, context, featureFlags, sdkInitializer, genericAnalytics,
+  autoStart = false,
+)
+
+@HiltViewModel
+class AppDetailBottomNativeAdViewModel @Inject constructor(
+  @ApplicationContext context: Context,
+  featureFlags: FeatureFlags,
+  sdkInitializer: AppLovinSdkInitializer,
+  genericAnalytics: GenericAnalytics,
+) : NativeAdViewModel(
+  NativeAdPlacement.APP_DETAIL_BOTTOM, context, featureFlags, sdkInitializer, genericAnalytics,
+  autoStart = false,
+)
+
 @Composable
 fun rememberHomeNativeAd(): HomeNativeAdViewModel = hiltViewModel()
+
+@Composable
+fun rememberAppDetailNativeAd(): AppDetailNativeAdViewModel = hiltViewModel()
+
+@Composable
+fun rememberAppDetailBottomNativeAd(): AppDetailBottomNativeAdViewModel = hiltViewModel()
 
 @Composable
 fun rememberSearchNativeAd(): SearchNativeAdViewModel = hiltViewModel()

@@ -6,7 +6,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -41,6 +51,42 @@ fun NativeAdBundle(
       onRelease = { view -> view.recycle() },
     )
     Spacer(modifier = Modifier.height(spaceBy.dp))
+  }
+}
+
+/**
+ * A native ad slot for long, non-lazy pages: takes no space until an ad is loaded, and only asks
+ * [viewModel] to load once the slot comes within [preloadDistanceDp] of the bottom of the viewport.
+ * Pages that are left before the user scrolls that far never request an ad.
+ *
+ * @param contentLength length of the content the slot belongs to (e.g. a description); forwarded to
+ *   [NativeAdViewModel.startLoading] so a placement can skip short content via Remote Config.
+ */
+@Composable
+fun NativeAdSlot(
+  viewModel: NativeAdViewModel,
+  modifier: Modifier = Modifier,
+  preloadDistanceDp: Int = 400,
+  contentLength: Int = Int.MAX_VALUE,
+) {
+  val state by viewModel.uiState.collectAsState()
+  val density = LocalDensity.current
+  val screenHeightPx = with(density) { LocalConfiguration.current.screenHeightDp.dp.toPx() }
+  val preloadDistancePx = with(density) { preloadDistanceDp.dp.toPx() }
+  var slotTopPx by remember { mutableFloatStateOf(Float.MAX_VALUE) }
+
+  LaunchedEffect(slotTopPx) {
+    if (slotTopPx < screenHeightPx + preloadDistancePx) viewModel.startLoading(contentLength)
+  }
+
+  Column(
+    modifier = modifier
+      .fillMaxWidth()
+      .onGloballyPositioned { coordinates -> slotTopPx = coordinates.positionInRoot().y },
+  ) {
+    if (state is NativeAdUiState.Loaded) {
+      NativeAdBundle(onRender = viewModel::render)
+    }
   }
 }
 
