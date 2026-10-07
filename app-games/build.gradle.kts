@@ -102,7 +102,9 @@ android {
     buildConfigField(
       type = "String",
       name = "APP_DETAIL_NATIVE_AD_UNIT_ID",
-      value = "\"${project.findProperty("APP_DETAIL_NATIVE_AD_UNIT_ID") ?: ""}\""
+      value = (project.findProperty("APP_DETAIL_NATIVE_AD_UNIT_ID") as? String
+        ?: System.getenv("APP_DETAIL_NATIVE_AD_UNIT_ID")
+        ?: "").toBuildConfigString() // blank = placement disabled; CI injects the MAX unit id
     )
 
 

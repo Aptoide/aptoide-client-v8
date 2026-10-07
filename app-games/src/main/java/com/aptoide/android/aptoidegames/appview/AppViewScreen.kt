@@ -32,6 +32,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import com.aptoide.android.aptoidegames.ads.native_ads.NativeAdSlot
+import com.aptoide.android.aptoidegames.ads.native_ads.rememberAppDetailBottomNativeAd
 import com.aptoide.android.aptoidegames.ads.native_ads.rememberAppDetailNativeAd
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
@@ -535,11 +536,6 @@ fun AppViewContent(
         selectedTab = tabsList[selectedTab],
         navigate = navigate
       )
-
-      NativeAdSlot(
-        viewModel = rememberAppDetailNativeAd(),
-        modifier = Modifier.padding(top = 16.dp),
-      )
     }
     if (app.isAppCoins) {
       val isVanillaBanner = BuildConfig.FLAVOR_brand == "vanilla"
@@ -667,6 +663,12 @@ fun ViewPagerContent(
 
 @Composable
 fun DetailsView(app: App) {
+  // Native ad slots around the description: one above it (always eligible) and one below it that
+  // only loads for long descriptions (appview_native_bottom_min_content_length), so a short page
+  // never shows two ads back to back. Both take no space until an ad is actually loaded.
+  val topNativeAd = rememberAppDetailNativeAd()
+  val bottomNativeAd = rememberAppDetailBottomNativeAd()
+
   Column(
     modifier = Modifier.padding(top = 16.dp)
   ) {
@@ -675,12 +677,22 @@ fun DetailsView(app: App) {
       WhatsNew(app = app)
     }
 
+    NativeAdSlot(
+      viewModel = topNativeAd,
+      modifier = Modifier.padding(top = 16.dp),
+    )
+
     app.description?.let {
       Text(
         text = it,
         modifier = Modifier.padding(top = 16.dp, bottom = 32.dp, start = 16.dp, end = 16.dp),
         style = AGTypography.ArticleText,
         color = Palette.White
+      )
+
+      NativeAdSlot(
+        viewModel = bottomNativeAd,
+        contentLength = it.length,
       )
     }
   }
