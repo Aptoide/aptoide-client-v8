@@ -32,4 +32,8 @@
     <key>home_native_position</key>
     <value>2</value>
   </entry>
+  <entry>
+    <key>home_native_excluded_geos</key>
+    <value>["US","CA","GB","AT","BE","BG","HR","CY","CZ","DK","EE","FI","FR","DE","GR","HU","IE","IT","LV","LT","LU","MT","NL","PL","PT","RO","SK","SI","ES","SE"]</value>
+  </entry>
 </defaultsMap>
