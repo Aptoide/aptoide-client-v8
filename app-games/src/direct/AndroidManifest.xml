@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <application>
+    <!--
+      AdMob app id required by Google Mobile Ads, which the MAX Google adapters pull in.
+      Only the direct distribution ships those adapters; the value comes from the
+      AD_MOB_APPLICATION_ID Gradle property / environment variable (see app-games/build.gradle.kts).
+    -->
+    <meta-data
+        android:name="com.google.android.gms.ads.APPLICATION_ID"
+        android:value="${admobAppId}" />
+  </application>
+
+</manifest>

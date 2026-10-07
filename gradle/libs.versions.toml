@@ -47,6 +47,7 @@ applovinVungleAdapter = "7.7.8.0"
 applovinMintegralAdapter = "17.1.81.0"
 applovinUnityadsAdapter = "4.20.0.0"
 applovinGoogleAdapter = "25.4.0.0"
+applovinGoogleAdManagerAdapter = "25.4.0.0"
 
 #test libraries
 junit = "4.13.2"
@@ -131,6 +132,7 @@ applovin-adapter-vungle = { module = "com.applovin.mediation:vungle-adapter", ve
 applovin-adapter-mintegral = { module = "com.applovin.mediation:mintegral-adapter", version.ref = "applovinMintegralAdapter" }
 applovin-adapter-unityads = { module = "com.applovin.mediation:unityads-adapter", version.ref = "applovinUnityadsAdapter" }
 applovin-adapter-google = { module = "com.applovin.mediation:google-adapter", version.ref = "applovinGoogleAdapter" }
+applovin-adapter-google-ad-manager = { module = "com.applovin.mediation:google-ad-manager-adapter", version.ref = "applovinGoogleAdManagerAdapter" }
 
 #Test library dependencies
 junit = { module = "junit:junit", version.ref = "junit" }
