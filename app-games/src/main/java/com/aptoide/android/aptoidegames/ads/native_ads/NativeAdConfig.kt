@@ -14,7 +14,8 @@ import java.util.Locale
  *   exists in the Firebase console) while release builds default to disabled.
  * - `<prefix>_position` is the zero-based index the ad is inserted before, where the slot is a
  *   list (default 2 = third slot). Slots that render at a fixed spot ignore it.
- * - `<prefix>_excluded_geos` falls back to `appopen_excluded_geos`, then to [AdsDefaults].
+ * - `<prefix>_excluded_geos` geo blocklist, shipped per placement in remote_config_defaults.xml and
+ *   falling back to [AdsDefaults] if the key is ever removed.
  */
 data class NativeAdConfig(
   val enabled: Boolean,
@@ -25,8 +26,6 @@ data class NativeAdConfig(
   fun isGeoEligible(geo: String): Boolean = geo.uppercase(Locale.US) !in excludedGeos
 
   companion object {
-    private const val APPOPEN_EXCLUDED_GEOS_KEY = "appopen_excluded_geos"
-
     const val DEFAULT_POSITION = 2
     val DEFAULT_ENABLED: Boolean = BuildConfig.DEBUG
 
@@ -36,7 +35,6 @@ data class NativeAdConfig(
 
     suspend fun from(featureFlags: FeatureFlags, placement: NativeAdPlacement): NativeAdConfig {
       val excludedGeos = (featureFlags.getStringListOrNull(excludedGeosKey(placement))
-        ?: featureFlags.getStringListOrNull(APPOPEN_EXCLUDED_GEOS_KEY)
         ?: AdsDefaults.EXCLUDED_GEOS.toList())
         .map { it.uppercase(Locale.US) }
         .toSet()
