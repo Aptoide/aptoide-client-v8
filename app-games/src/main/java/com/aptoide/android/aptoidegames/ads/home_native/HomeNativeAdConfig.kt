@@ -12,8 +12,10 @@ import java.util.Locale
  *                          that debug builds default to enabled (testable before the key exists in
  *                          the Firebase console) while release builds default to disabled.
  * - `home_native_position` zero-based bundle index the ad is inserted before (default 2 = third slot).
- * - `home_native_excluded_geos` geo blocklist, shipped in remote_config_defaults.xml and falling
- *                          back to [AdsDefaults] if the key is ever removed.
+ * - `home_native_excluded_geos` geo blocklist. Like the kill switch it is NOT in
+ *                          remote_config_defaults.xml: without the key, release builds use
+ *                          [AdsDefaults.EXCLUDED_GEOS] (consent geos) and debug builds exclude
+ *                          nothing, so the placement is testable from Europe before the key exists.
  */
 data class HomeNativeAdConfig(
   val enabled: Boolean,
@@ -30,10 +32,12 @@ data class HomeNativeAdConfig(
 
     const val DEFAULT_POSITION = 2
     val DEFAULT_ENABLED: Boolean = BuildConfig.DEBUG
+    val DEFAULT_EXCLUDED_GEOS: Set<String> =
+      if (BuildConfig.DEBUG) emptySet() else AdsDefaults.EXCLUDED_GEOS
 
     suspend fun from(featureFlags: FeatureFlags): HomeNativeAdConfig {
       val excludedGeos = (featureFlags.getStringListOrNull(EXCLUDED_GEOS_KEY)
-        ?: AdsDefaults.EXCLUDED_GEOS.toList())
+        ?: DEFAULT_EXCLUDED_GEOS.toList())
         .map { it.uppercase(Locale.US) }
         .toSet()
 
