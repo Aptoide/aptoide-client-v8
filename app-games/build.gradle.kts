@@ -92,6 +92,13 @@ android {
         ?: System.getenv("HOME_NATIVE_AD_UNIT_ID")
         ?: "").toBuildConfigString() // blank = placement disabled; CI injects the MAX unit id
     )
+    buildConfigField(
+      type = "String",
+      name = "SEARCH_NATIVE_AD_UNIT_ID",
+      value = (project.findProperty("SEARCH_NATIVE_AD_UNIT_ID") as? String
+        ?: System.getenv("SEARCH_NATIVE_AD_UNIT_ID")
+        ?: "").toBuildConfigString() // blank = placement disabled; CI injects the MAX unit id
+    )
 
 
     buildConfigFieldFromGradleProperty("ROOM_SCHEMA_VERSION")
