@@ -17,12 +17,23 @@ enum class NativeAdPlacement(
   HOME_BUNDLE(flagPrefix = "home_native", maxPlacementName = "home_bundle"),
 
   /** Search tab landing screen, rendered below the recent / popular searches. */
-  SEARCH_LANDING(flagPrefix = "search_native", maxPlacementName = "search_landing");
+  SEARCH_LANDING(flagPrefix = "search_native", maxPlacementName = "search_landing"),
+
+  /** App detail page, Details tab: between the screenshots / what's new block and the description. */
+  APP_DETAIL(flagPrefix = "appview_native", maxPlacementName = "app_detail"),
+
+  /**
+   * App detail page, Details tab: after the description, only when the description is at least
+   * `appview_native_bottom_min_content_length` characters so the two slots never sit side by side.
+   * Shares the MAX ad unit with [APP_DETAIL]; the placement name tells them apart in reporting.
+   */
+  APP_DETAIL_BOTTOM(flagPrefix = "appview_native_bottom", maxPlacementName = "app_detail_bottom");
 
   /** MAX ad unit id for this slot; blank disables the slot entirely. */
   val adUnitId: String
     get() = when (this) {
       HOME_BUNDLE -> BuildConfig.HOME_NATIVE_AD_UNIT_ID
       SEARCH_LANDING -> BuildConfig.SEARCH_NATIVE_AD_UNIT_ID
+      APP_DETAIL, APP_DETAIL_BOTTOM -> BuildConfig.APP_DETAIL_NATIVE_AD_UNIT_ID
     }
 }
