@@ -1,5 +1,6 @@
 package com.aptoide.android.aptoidegames.newservices
 
+import cm.aptoide.pt.campaigns.domain.GetAvailablePaEPackagesUseCase
 import cm.aptoide.pt.device_api.error.DeviceApiException
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.AppRepository
@@ -26,7 +27,8 @@ import java.io.IOException
 
 // An app's details come from the new services, except where only v7 can serve them: an app
 // named by its v7 id, the titles that install through Play's overlay, the wallet, and any
-// app that installs through Aptoide's installer, which needs v7's download location.
+// app that installs through Aptoide's installer, which needs v7's download location - among
+// them every Play & Earn app.
 @ExperimentalCoroutinesApi
 internal class PlayAppRepositoryTest {
 
@@ -216,12 +218,112 @@ internal class PlayAppRepositoryTest {
     assertSame(v7.app, app)
   }
 
+  @Test
+  fun `A Play & Earn app is read from v7 for its download`() = coScenario { scope ->
+    m Given "a Play & Earn app that v7 holds as a store app"
+    val v7 = FakeV7AppRepository(app = randomApp.copy(bdsFlags = listOf("STORE_BDS")))
+    val (repository, deviceApi, _) =
+      repository(scope, v7 = v7, playAndEarn = Result.success(setOf(DUCK_SURVIVAL)))
+
+    m When "its details are read, as the app view does"
+    val app = repository.getAppMeta("package_name=$DUCK_SURVIVAL/store_name=someone-elses-store")
+
+    m Then "v7 is asked for the app in this store, and the new services are not"
+    assertEquals(listOf("meta:package_name=$DUCK_SURVIVAL/store_name=a-store"), v7.calls)
+    assertTrue(deviceApi.details.isEmpty())
+    assertSame(v7.app, app)
+  }
+
+  @Test
+  fun `A Play & Earn app read by package is read from v7`() = coScenario { scope ->
+    m Given "a Play & Earn app that v7 holds as a store app"
+    val v7 = FakeV7AppRepository(app = randomApp.copy(bdsFlags = listOf("STORE_BDS")))
+    val (repository, deviceApi, _) =
+      repository(scope, v7 = v7, playAndEarn = Result.success(setOf(DUCK_SURVIVAL)))
+
+    m When "it is read by package"
+    val app = repository.getApp(DUCK_SURVIVAL)
+
+    m Then "v7's app is the answer, and the new services are not asked"
+    assertEquals(listOf("app:$DUCK_SURVIVAL"), v7.calls)
+    assertTrue(deviceApi.details.isEmpty())
+    assertSame(v7.app, app)
+  }
+
+  @Test
+  fun `A Play & Earn app that v7 cannot install stays unknown`() = coScenario { scope ->
+    m Given "a Play & Earn app that v7 knows without store flags"
+    val v7 = FakeV7AppRepository(app = randomApp.copy(bdsFlags = null))
+    val (repository, deviceApi, _) =
+      repository(scope, v7 = v7, playAndEarn = Result.success(setOf(DUCK_SURVIVAL)))
+
+    m When "its details are read"
+    val failure = runCatching {
+      repository.getAppMeta("package_name=$DUCK_SURVIVAL/store_name=a-store")
+    }.exceptionOrNull()
+
+    m Then "the app is not offered, rather than installed through Play"
+    assertInstanceOf(DeviceApiException.NotInVariant::class.java, failure)
+    assertTrue(deviceApi.details.isEmpty())
+  }
+
+  @Test
+  fun `A Play & Earn app that v7 does not know stays unknown`() = coScenario { scope ->
+    m Given "a Play & Earn app that v7 fails on"
+    val v7 = FakeV7AppRepository(failure = IOException("404 from v7"))
+    val (repository, deviceApi, _) =
+      repository(scope, v7 = v7, playAndEarn = Result.success(setOf(DUCK_SURVIVAL)))
+
+    m When "it is read by package"
+    val failure = runCatching { repository.getApp(DUCK_SURVIVAL) }.exceptionOrNull()
+
+    m Then "the app is not offered, rather than installed through Play"
+    assertInstanceOf(DeviceApiException.NotInVariant::class.java, failure)
+    assertTrue(deviceApi.details.isEmpty())
+  }
+
+  @Test
+  fun `An app outside Play & Earn is still read from the new services`() = coScenario { scope ->
+    m Given "Play & Earn campaigns that hold another app"
+    val (repository, deviceApi, v7) =
+      repository(scope, playAndEarn = Result.success(setOf(DUCK_SURVIVAL)))
+
+    m When "a regular app's details are read"
+    val app = repository.getAppMeta("package_name=com.kiloo.subwaysurf/store_name=a-store")
+
+    m Then "the new services answer, as before"
+    assertEquals(listOf("com.kiloo.subwaysurf"), deviceApi.details)
+    assertTrue(v7.calls.isEmpty())
+    assertEquals(AppOrigin.DEVICE_API, app.origin)
+  }
+
+  @Test
+  fun `An unreadable Play & Earn list leaves the app to the new services`() = coScenario { scope ->
+    m Given "Play & Earn campaigns that cannot be read"
+    val (repository, deviceApi, v7) =
+      repository(scope, playAndEarn = Result.failure(IllegalStateException("no database")))
+
+    m When "an app's details are read"
+    val app = repository.getAppMeta("package_name=$DUCK_SURVIVAL/store_name=a-store")
+
+    m Then "the app is read as any other, so its page still opens"
+    assertEquals(listOf(DUCK_SURVIVAL), deviceApi.details)
+    assertTrue(v7.calls.isEmpty())
+    assertEquals(AppOrigin.DEVICE_API, app.origin)
+  }
+
   private fun repository(
     scope: TestScope,
     deviceApi: FakeDeviceApi = FakeDeviceApi(),
     v7: FakeV7AppRepository = FakeV7AppRepository(),
+    playAndEarn: Result<Set<String>> = Result.success(emptySet()),
   ): Triple<PlayAppRepository, FakeDeviceApi, FakeV7AppRepository> = Triple(
-    PlayAppRepository(v7, deviceApi.dataSource(scope), storeName = "a-store"),
+    PlayAppRepository(
+      v7 = v7,
+      newServices = deviceApi.dataSource(scope),
+      playAndEarnPackages = GetAvailablePaEPackagesUseCase(FakePaECampaignsRepository(playAndEarn)),
+      storeName = "a-store",
+    ),
     deviceApi,
     v7,
   )
@@ -229,6 +331,10 @@ internal class PlayAppRepositoryTest {
   private fun httpError(code: Int) = HttpException(
     Response.error<Any>(code, "{}".toResponseBody("application/problem+json".toMediaType()))
   )
+
+  private companion object {
+    const val DUCK_SURVIVAL = "com.mrtgd2us.google"
+  }
 }
 
 internal class FakeV7AppRepository(

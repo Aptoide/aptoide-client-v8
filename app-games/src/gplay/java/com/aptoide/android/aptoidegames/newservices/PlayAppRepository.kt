@@ -1,6 +1,7 @@
 package com.aptoide.android.aptoidegames.newservices
 
 import cm.aptoide.pt.aptoide_network.di.StoreName
+import cm.aptoide.pt.campaigns.domain.GetAvailablePaEPackagesUseCase
 import cm.aptoide.pt.aptoide_network.di.V7Backend
 import cm.aptoide.pt.device_api.error.DeviceApiException
 import cm.aptoide.pt.feature_apps.data.App
@@ -21,32 +22,36 @@ import javax.inject.Singleton
  * - an app named by its v7 id, which the new services do not know;
  * - the titles that install through Play's details overlay, and the wallet, whose flows stay
  *   on v7;
- * - an app that installs through Aptoide's installer - one flagged for Aptoide billing, or one
- *   the catalog does not hold but v7 flags as a store app - for the download only v7 has.
+ * - an app that installs through Aptoide's installer - one flagged for Aptoide billing, a Play
+ *   & Earn app, whose rewards need Aptoide's install, or one the catalog does not hold but v7
+ *   flags as a store app - for the download only v7 has.
  *
  * An app outside the catalog that v7 cannot install stays unknown, so that it is not offered
- * from v7 on this build.
+ * from v7 on this build. So does a Play & Earn app v7 cannot install, so that it is never
+ * offered through Play instead.
  */
 @Singleton
 internal class PlayAppRepository @Inject constructor(
   @V7Backend private val v7: AppRepository,
   private val newServices: DeviceApiAppsDataSource,
+  private val playAndEarnPackages: GetAvailablePaEPackagesUseCase,
   @StoreName private val storeName: String,
 ) : AppRepository {
 
-  override suspend fun getApp(packageName: String): App =
-    if (packageName.staysOnV7()) {
-      v7.getApp(packageName)
-    } else {
-      resolve(packageName) { v7.getApp(packageName) }
-    }
+  override suspend fun getApp(packageName: String): App = when {
+    packageName.staysOnV7() -> v7.getApp(packageName)
+    packageName.isPlayAndEarn() -> fromV7OrUnknown(packageName) { v7.getApp(packageName) }
+    else -> resolve(packageName) { v7.getApp(packageName) }
+  }
 
   override suspend fun getAppMeta(source: String): App {
     val packageName = source.packageName()
-    return if (packageName == null || packageName.staysOnV7()) {
-      v7.getAppMeta(source)
-    } else {
-      resolve(packageName) { v7.getAppMeta(source.inThisStore()) }
+    return when {
+      packageName == null || packageName.staysOnV7() -> v7.getAppMeta(source)
+      packageName.isPlayAndEarn() ->
+        fromV7OrUnknown(packageName) { v7.getAppMeta(source.inThisStore()) }
+
+      else -> resolve(packageName) { v7.getAppMeta(source.inThisStore()) }
     }
   }
 
@@ -59,6 +64,17 @@ internal class PlayAppRepository @Inject constructor(
     // Flagged apps install through Aptoide's installer, which needs v7's download location
     return if (app.isAppCoins) fromV7() else app
   }
+
+  // Play & Earn apps are known by the campaigns last loaded. Campaigns that cannot be read
+  // leave the app to the new services, so that its page still opens.
+  private suspend fun String.isPlayAndEarn(): Boolean =
+    playAndEarnPackages().getOrNull()?.contains(this) == true
+
+  private suspend fun fromV7OrUnknown(packageName: String, fromV7: suspend () -> App): App =
+    fromV7OrUnknown(
+      DeviceApiException.NotInVariant("$packageName: Play & Earn app not installable from v7"),
+      fromV7,
+    )
 
   private suspend fun fromV7OrUnknown(
     notInVariant: DeviceApiException.NotInVariant,
