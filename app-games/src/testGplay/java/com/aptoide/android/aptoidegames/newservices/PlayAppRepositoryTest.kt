@@ -227,10 +227,10 @@ internal class PlayAppRepositoryTest {
       repository(scope, v7 = v7, playAndEarn = Result.success(setOf(DUCK_SURVIVAL)))
 
     m When "its details are read, as the app view does"
-    val app = repository.getAppMeta("package_name=$DUCK_SURVIVAL/store_name=someone-elses-store")
+    val app = repository.getAppMeta("package_name=$DUCK_SURVIVAL/store_name=a-store")
 
-    m Then "v7 is asked for the app in this store, and the new services are not"
-    assertEquals(listOf("meta:package_name=$DUCK_SURVIVAL/store_name=a-store"), v7.calls)
+    m Then "v7 is asked for the app in whichever store holds it, and the new services are not"
+    assertEquals(listOf("meta:package_name=$DUCK_SURVIVAL"), v7.calls)
     assertTrue(deviceApi.details.isEmpty())
     assertSame(v7.app, app)
   }
@@ -245,8 +245,8 @@ internal class PlayAppRepositoryTest {
     m When "it is read by package"
     val app = repository.getApp(DUCK_SURVIVAL)
 
-    m Then "v7's app is the answer, and the new services are not asked"
-    assertEquals(listOf("app:$DUCK_SURVIVAL"), v7.calls)
+    m Then "v7 is asked for the app in whichever store holds it, and the new services are not"
+    assertEquals(listOf("meta:package_name=$DUCK_SURVIVAL"), v7.calls)
     assertTrue(deviceApi.details.isEmpty())
     assertSame(v7.app, app)
   }

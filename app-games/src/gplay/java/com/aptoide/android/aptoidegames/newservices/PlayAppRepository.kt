@@ -24,7 +24,8 @@ import javax.inject.Singleton
  *   on v7;
  * - an app that installs through Aptoide's installer - one flagged for Aptoide billing, a Play
  *   & Earn app, whose rewards need Aptoide's install, or one the catalog does not hold but v7
- *   flags as a store app - for the download only v7 has.
+ *   flags as a store app - for the download only v7 has. A Play & Earn app is read from
+ *   whichever store holds it; the others from this build's store.
  *
  * An app outside the catalog that v7 cannot install stays unknown, so that it is not offered
  * from v7 on this build. So does a Play & Earn app v7 cannot install, so that it is never
@@ -40,8 +41,7 @@ internal class PlayAppRepository @Inject constructor(
 
   override suspend fun getApp(packageName: String): App = when {
     packageName.staysOnV7() -> v7.getApp(packageName)
-    packageName.isPlayAndEarn() ->
-      fromV7OrUnknown(packageName.notInstallableFromV7()) { v7.getApp(packageName) }
+    packageName.isPlayAndEarn() -> playAndEarnApp(packageName)
     else -> resolve(packageName) { v7.getApp(packageName) }
   }
 
@@ -49,12 +49,16 @@ internal class PlayAppRepository @Inject constructor(
     val packageName = source.packageName()
     return when {
       packageName == null || packageName.staysOnV7() -> v7.getAppMeta(source)
-      packageName.isPlayAndEarn() ->
-        fromV7OrUnknown(packageName.notInstallableFromV7()) {
-          v7.getAppMeta(source.inThisStore())
-        }
+      packageName.isPlayAndEarn() -> playAndEarnApp(packageName)
       else -> resolve(packageName) { v7.getAppMeta(source.inThisStore()) }
     }
+  }
+
+  // Play & Earn apps live in stores of their own, so v7 is asked without one
+  private suspend fun playAndEarnApp(packageName: String): App = fromV7OrUnknown(
+    DeviceApiException.NotInVariant("$packageName: Play & Earn app not installable from v7")
+  ) {
+    v7.getAppMeta("$PACKAGE_NAME$packageName")
   }
 
   private suspend fun resolve(packageName: String, fromV7: suspend () -> App): App {
@@ -75,9 +79,6 @@ internal class PlayAppRepository @Inject constructor(
     (packages.exceptionOrNull() as? CancellationException)?.let { throw it }
     return packages.getOrNull()?.contains(this) == true
   }
-
-  private fun String.notInstallableFromV7() =
-    DeviceApiException.NotInVariant("$this: Play & Earn app not installable from v7")
 
   private suspend fun fromV7OrUnknown(
     notInVariant: DeviceApiException.NotInVariant,
