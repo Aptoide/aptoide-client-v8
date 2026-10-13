@@ -93,7 +93,7 @@ internal class FakeDeviceApi(
 }
 
 /** The Play & Earn campaigns, answering only which packages they hold. */
-internal class FakePaECampaignsRepository(
+internal class FakePlayAndEarnCampaigns(
   private val packages: Result<Set<String>> = Result.success(emptySet()),
 ) : PaECampaignsRepository {
 

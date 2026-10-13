@@ -1,8 +1,8 @@
 package com.aptoide.android.aptoidegames.newservices
 
 import cm.aptoide.pt.aptoide_network.di.StoreName
-import cm.aptoide.pt.campaigns.domain.GetAvailablePaEPackagesUseCase
 import cm.aptoide.pt.aptoide_network.di.V7Backend
+import cm.aptoide.pt.campaigns.domain.GetAvailablePaEPackagesUseCase
 import cm.aptoide.pt.device_api.error.DeviceApiException
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.AppRepository
@@ -40,7 +40,8 @@ internal class PlayAppRepository @Inject constructor(
 
   override suspend fun getApp(packageName: String): App = when {
     packageName.staysOnV7() -> v7.getApp(packageName)
-    packageName.isPlayAndEarn() -> fromV7OrUnknown(packageName) { v7.getApp(packageName) }
+    packageName.isPlayAndEarn() ->
+      fromV7OrUnknown(packageName.notInstallableFromV7()) { v7.getApp(packageName) }
     else -> resolve(packageName) { v7.getApp(packageName) }
   }
 
@@ -49,8 +50,9 @@ internal class PlayAppRepository @Inject constructor(
     return when {
       packageName == null || packageName.staysOnV7() -> v7.getAppMeta(source)
       packageName.isPlayAndEarn() ->
-        fromV7OrUnknown(packageName) { v7.getAppMeta(source.inThisStore()) }
-
+        fromV7OrUnknown(packageName.notInstallableFromV7()) {
+          v7.getAppMeta(source.inThisStore())
+        }
       else -> resolve(packageName) { v7.getAppMeta(source.inThisStore()) }
     }
   }
@@ -66,15 +68,16 @@ internal class PlayAppRepository @Inject constructor(
   }
 
   // Play & Earn apps are known by the campaigns last loaded. Campaigns that cannot be read
-  // leave the app to the new services, so that its page still opens.
-  private suspend fun String.isPlayAndEarn(): Boolean =
-    playAndEarnPackages().getOrNull()?.contains(this) == true
+  // leave the app to the new services, so that its page still opens. The lookup reports a
+  // cancellation as a failure, which must still cancel the read.
+  private suspend fun String.isPlayAndEarn(): Boolean {
+    val packages = playAndEarnPackages()
+    (packages.exceptionOrNull() as? CancellationException)?.let { throw it }
+    return packages.getOrNull()?.contains(this) == true
+  }
 
-  private suspend fun fromV7OrUnknown(packageName: String, fromV7: suspend () -> App): App =
-    fromV7OrUnknown(
-      DeviceApiException.NotInVariant("$packageName: Play & Earn app not installable from v7"),
-      fromV7,
-    )
+  private fun String.notInstallableFromV7() =
+    DeviceApiException.NotInVariant("$this: Play & Earn app not installable from v7")
 
   private suspend fun fromV7OrUnknown(
     notInVariant: DeviceApiException.NotInVariant,
