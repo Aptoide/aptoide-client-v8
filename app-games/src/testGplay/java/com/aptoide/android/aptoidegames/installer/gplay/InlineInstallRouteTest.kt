@@ -129,6 +129,31 @@ internal class InlineInstallRouteTest {
   }
 
   @Test
+  fun `An app that installs through Aptoide only stays on Aptoide without store flags`() =
+    scenario {
+      m Given "a Play & Earn app read from v7 without STORE_BDS, marked for Aptoide only"
+      val app = randomApp.copy(bdsFlags = null, installsThroughAptoideOnly = true)
+
+      m When "the route is decided"
+      val route = inlineInstallRoute(app, aborted = emptySet())
+
+      m Then "it installs through Aptoide, and the Play catalog is never asked"
+      assertEquals(InlineInstallRoute.APTOIDE_ONLY, route)
+    }
+
+  @Test
+  fun `Roblox marked for Aptoide only still takes the details overlay`() = scenario {
+    m Given "Roblox marked for Aptoide only, as a Play & Earn title would be"
+    val app = randomApp.copy(packageName = ROBLOX_PACKAGE, installsThroughAptoideOnly = true)
+
+    m When "the route is decided"
+    val route = inlineInstallRoute(app, aborted = emptySet())
+
+    m Then "the overlay rule wins"
+    assertEquals(InlineInstallRoute.DETAILS_OVERLAY, route)
+  }
+
+  @Test
   fun `A device API Roblox takes the details overlay`() = scenario {
     m Given "Roblox read from the device API"
     val app = randomApp.copy(packageName = ROBLOX_PACKAGE, origin = AppOrigin.DEVICE_API)

@@ -150,6 +150,33 @@ internal class PlayCatalogExclusionTest {
     assertFalse(excluded)
   }
 
+  // A backend can mark an app as installing through Aptoide only, whatever its flags: on the
+  // Play build, every Play & Earn app.
+
+  @Test
+  fun `An app marked for Aptoide only is excluded without store flags`() = scenario {
+    m Given "a v7 app with no STORE_BDS, marked for Aptoide only"
+    val app = randomApp.copy(bdsFlags = null, installsThroughAptoideOnly = true)
+
+    m When "the Play catalog exclusion is evaluated"
+    val excluded = app.excludedFromPlayCatalog()
+
+    m Then "it is excluded, so it installs through Aptoide"
+    assertTrue(excluded)
+  }
+
+  @Test
+  fun `Roblox marked for Aptoide only still takes Play's overlay`() = scenario {
+    m Given "Roblox marked for Aptoide only"
+    val app = randomApp.copy(packageName = ROBLOX_PACKAGE, installsThroughAptoideOnly = true)
+
+    m When "the Play catalog exclusion is evaluated"
+    val excluded = app.excludedFromPlayCatalog()
+
+    m Then "the overlay rule still wins"
+    assertFalse(excluded)
+  }
+
   @Test
   fun `A device API Roblox flagged for billing still takes Play's overlay`() = scenario {
     m Given "Roblox read from the device API with the billing flag"

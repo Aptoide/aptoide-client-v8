@@ -25,9 +25,11 @@ import com.aptoide.android.aptoidegames.apkfy.isRoblox
 fun App.excludedFromPlayCatalog(): Boolean =
   installsThroughAptoide() && !isFreeFire() && !isRoblox()
 
-// A v7 app is told by its STORE_BDS flag alone, matched exactly; its billing flag says nothing
+// An app marked by its backend installs through Aptoide whatever else it carries. Otherwise a
+// v7 app is told by its STORE_BDS flag alone, matched exactly; its billing flag says nothing
 // about where it installs. A device API app carries no store flags, only the billing flag.
-private fun App.installsThroughAptoide(): Boolean = when (origin) {
-  AppOrigin.V7 -> isInCatappult() == true
-  AppOrigin.DEVICE_API -> isAppCoins
-}
+private fun App.installsThroughAptoide(): Boolean = installsThroughAptoideOnly ||
+  when (origin) {
+    AppOrigin.V7 -> isInCatappult() == true
+    AppOrigin.DEVICE_API -> isAppCoins
+  }
