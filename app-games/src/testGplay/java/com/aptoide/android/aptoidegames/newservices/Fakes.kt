@@ -1,5 +1,8 @@
 package com.aptoide.android.aptoidegames.newservices
 
+import cm.aptoide.pt.campaigns.data.PaECampaignsRepository
+import cm.aptoide.pt.campaigns.domain.PaEApp
+import cm.aptoide.pt.campaigns.domain.PaEBundles
 import cm.aptoide.pt.device_api.network.DeviceProfile
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.AppsListRepository
@@ -87,6 +90,19 @@ internal class FakeDeviceApi(
   )
 
   private fun String.toSummary() = AppSummaryResponse(packageName = this, name = this)
+}
+
+/** The Play & Earn campaigns, answering only which packages they hold. */
+internal class FakePlayAndEarnCampaigns(
+  private val packages: Result<Set<String>> = Result.success(emptySet()),
+) : PaECampaignsRepository {
+
+  override suspend fun getAvailablePackages(): Result<Set<String>> = packages
+
+  override suspend fun getCampaigns(): Result<PaEBundles> = error("not read by these tests")
+
+  override suspend fun getCachedApp(packageName: String): Result<PaEApp?> =
+    error("not read by these tests")
 }
 
 /** The v7 repository, answering everything with one app and recording what was asked. */
