@@ -349,6 +349,20 @@ internal class PlayAppRepositoryTest {
   }
 
   @Test
+  fun `A cancelled v7 read of a Play & Earn app cancels the read`() = coScenario { scope ->
+    m Given "a Play & Earn app whose v7 read is cancelled"
+    val v7 = FakeV7AppRepository(failure = CancellationException("left the page"))
+    val (repository, _, _) =
+      repository(scope, v7 = v7, playAndEarn = Result.success(setOf(DUCK_SURVIVAL)))
+
+    m When "it is read by package"
+    val failure = runCatching { repository.getApp(DUCK_SURVIVAL) }.exceptionOrNull()
+
+    m Then "the cancellation reaches the caller, not an unknown app"
+    assertInstanceOf(CancellationException::class.java, failure)
+  }
+
+  @Test
   fun `An app outside Play & Earn is still read from the new services`() = coScenario { scope ->
     m Given "Play & Earn campaigns that hold another app"
     val (repository, deviceApi, v7) =

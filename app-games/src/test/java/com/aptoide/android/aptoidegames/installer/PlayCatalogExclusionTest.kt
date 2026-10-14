@@ -178,6 +178,35 @@ internal class PlayCatalogExclusionTest {
   }
 
   @Test
+  fun `Free Fire marked for Aptoide only still takes Play's overlay`() = scenario {
+    m Given "Free Fire marked for Aptoide only"
+    val app = randomApp.copy(packageName = FREE_FIRE_PACKAGE, installsThroughAptoideOnly = true)
+
+    m When "the Play catalog exclusion is evaluated"
+    val excluded = app.excludedFromPlayCatalog()
+
+    m Then "the overlay rule still wins"
+    assertFalse(excluded)
+  }
+
+  @Test
+  fun `A device API app marked for Aptoide only is excluded without the billing flag`() =
+    scenario {
+      m Given "an app read from the device API without the billing flag, marked for Aptoide only"
+      val app = randomApp.copy(
+        origin = AppOrigin.DEVICE_API,
+        isAppCoins = false,
+        installsThroughAptoideOnly = true,
+      )
+
+      m When "the Play catalog exclusion is evaluated"
+      val excluded = app.excludedFromPlayCatalog()
+
+      m Then "it is excluded, so it installs through Aptoide"
+      assertTrue(excluded)
+    }
+
+  @Test
   fun `A device API Roblox flagged for billing still takes Play's overlay`() = scenario {
     m Given "Roblox read from the device API with the billing flag"
     val app = randomApp.copy(

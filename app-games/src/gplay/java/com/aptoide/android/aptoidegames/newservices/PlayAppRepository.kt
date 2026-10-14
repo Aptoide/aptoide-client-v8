@@ -56,16 +56,11 @@ internal class PlayAppRepository @Inject constructor(
 
   // Play & Earn apps live in stores of their own, so v7 is asked without one. Whatever their
   // billing, they install through Aptoide, so they are marked to never go to Play.
-  private suspend fun playAndEarnApp(packageName: String): App {
-    val app = try {
-      v7.getAppMeta("$PACKAGE_NAME$packageName")
-    } catch (e: CancellationException) {
-      throw e
-    } catch (e: Exception) {
-      throw DeviceApiException.NotInVariant("$packageName: Play & Earn app unknown to v7", e)
-    }
-    return app.copy(installsThroughAptoideOnly = true)
-  }
+  private suspend fun playAndEarnApp(packageName: String): App = v7OrUnknown(
+    DeviceApiException.NotInVariant("$packageName: Play & Earn app unknown to v7")
+  ) {
+    v7.getAppMeta("$PACKAGE_NAME$packageName")
+  }.copy(installsThroughAptoideOnly = true)
 
   private suspend fun resolve(packageName: String, fromV7: suspend () -> App): App {
     val app = try {
@@ -86,18 +81,24 @@ internal class PlayAppRepository @Inject constructor(
     return packages.getOrNull()?.contains(this) == true
   }
 
+  // A v7 app that installs through Aptoide's installer, as v7 flags a store app
   private suspend fun fromV7OrUnknown(
     notInVariant: DeviceApiException.NotInVariant,
     fromV7: suspend () -> App,
-  ): App {
-    val app = try {
-      fromV7()
-    } catch (e: CancellationException) {
-      throw e
-    } catch (_: Exception) {
-      throw notInVariant
-    }
-    return app.takeIf { it.isInCatappult() == true } ?: throw notInVariant
+  ): App = v7OrUnknown(notInVariant, fromV7)
+    .takeIf { it.isInCatappult() == true }
+    ?: throw notInVariant
+
+  // v7's app, or the given unknown when v7 cannot answer for it
+  private suspend fun v7OrUnknown(
+    notInVariant: DeviceApiException.NotInVariant,
+    fromV7: suspend () -> App,
+  ): App = try {
+    fromV7()
+  } catch (e: CancellationException) {
+    throw e
+  } catch (_: Exception) {
+    throw notInVariant
   }
 
   // v7 needs the store to find the download, and only this build's store may serve one: a
