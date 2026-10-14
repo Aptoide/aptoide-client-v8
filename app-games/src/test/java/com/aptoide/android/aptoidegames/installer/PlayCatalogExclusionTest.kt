@@ -1,5 +1,7 @@
 package com.aptoide.android.aptoidegames.installer
 
+import cm.aptoide.pt.campaigns.domain.asNormalApp
+import cm.aptoide.pt.campaigns.domain.randomPaEApp
 import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_apps.domain.AppOrigin
 import cm.aptoide.pt.test.gherkin.scenario
@@ -175,6 +177,18 @@ internal class PlayCatalogExclusionTest {
 
     m Then "the overlay rule still wins"
     assertFalse(excluded)
+  }
+
+  @Test
+  fun `A Play & Earn card's app is excluded whatever its flags`() = scenario {
+    m Given "the app a Play & Earn card builds from its campaign entry"
+    val app = randomPaEApp.asNormalApp()
+
+    m When "the Play catalog exclusion is evaluated"
+    val excluded = app.excludedFromPlayCatalog()
+
+    m Then "it is excluded, so the card never labels or routes it as a Play install"
+    assertTrue(excluded)
   }
 
   @Test
