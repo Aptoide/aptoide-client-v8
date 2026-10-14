@@ -26,12 +26,14 @@ data class PaEProgress(
   fun getNormalizedProgress(): Float = current?.toFloat()?.div(target)?.coerceIn(0f, 1f) ?: 0f
 }
 
+// Play & Earn apps install through Aptoide, never Google Play, whatever their billing
 fun PaEApp.asNormalApp() = emptyApp.copy(
   packageName = packageName,
   icon = icon,
   featureGraphic = graphic,
   name = name,
-  isAppCoins = true
+  isAppCoins = true,
+  installsThroughAptoideOnly = true,
 )
 
 val randomPaEApp

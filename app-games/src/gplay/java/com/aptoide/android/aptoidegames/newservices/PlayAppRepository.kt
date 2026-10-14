@@ -23,12 +23,12 @@ import javax.inject.Singleton
  * - the titles that install through Play's details overlay, and the wallet, whose flows stay
  *   on v7;
  * - an app that installs through Aptoide's installer - one flagged for Aptoide billing, a Play
- *   & Earn app, whose rewards need Aptoide's install, or one the catalog does not hold but v7
- *   flags as a store app - for the download only v7 has. A Play & Earn app is read from
- *   whichever store holds it; the others from this build's store.
+ *   & Earn app, whose rewards need Aptoide's install whatever its billing, or one the catalog
+ *   does not hold but v7 flags as a store app - for the download only v7 has. A Play & Earn
+ *   app is read from whichever store holds it; the others from this build's store.
  *
  * An app outside the catalog that v7 cannot install stays unknown, so that it is not offered
- * from v7 on this build. So does a Play & Earn app v7 cannot install, so that it is never
+ * from v7 on this build. So does a Play & Earn app v7 does not know, so that it is never
  * offered through Play instead.
  */
 @Singleton
@@ -54,12 +54,13 @@ internal class PlayAppRepository @Inject constructor(
     }
   }
 
-  // Play & Earn apps live in stores of their own, so v7 is asked without one
-  private suspend fun playAndEarnApp(packageName: String): App = fromV7OrUnknown(
-    DeviceApiException.NotInVariant("$packageName: Play & Earn app not installable from v7")
+  // Play & Earn apps live in stores of their own, so v7 is asked without one. Whatever their
+  // billing, they install through Aptoide, so they are marked to never go to Play.
+  private suspend fun playAndEarnApp(packageName: String): App = v7OrUnknown(
+    DeviceApiException.NotInVariant("$packageName: Play & Earn app unknown to v7")
   ) {
     v7.getAppMeta("$PACKAGE_NAME$packageName")
-  }
+  }.copy(installsThroughAptoideOnly = true)
 
   private suspend fun resolve(packageName: String, fromV7: suspend () -> App): App {
     val app = try {
@@ -80,18 +81,24 @@ internal class PlayAppRepository @Inject constructor(
     return packages.getOrNull()?.contains(this) == true
   }
 
+  // A v7 app that installs through Aptoide's installer, as v7 flags a store app
   private suspend fun fromV7OrUnknown(
     notInVariant: DeviceApiException.NotInVariant,
     fromV7: suspend () -> App,
-  ): App {
-    val app = try {
-      fromV7()
-    } catch (e: CancellationException) {
-      throw e
-    } catch (_: Exception) {
-      throw notInVariant
-    }
-    return app.takeIf { it.isInCatappult() == true } ?: throw notInVariant
+  ): App = v7OrUnknown(notInVariant, fromV7)
+    .takeIf { it.isInCatappult() == true }
+    ?: throw notInVariant
+
+  // v7's app, or the given unknown when v7 cannot answer for it
+  private suspend fun v7OrUnknown(
+    notInVariant: DeviceApiException.NotInVariant,
+    fromV7: suspend () -> App,
+  ): App = try {
+    fromV7()
+  } catch (e: CancellationException) {
+    throw e
+  } catch (_: Exception) {
+    throw notInVariant
   }
 
   // v7 needs the store to find the download, and only this build's store may serve one: a

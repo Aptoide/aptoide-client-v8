@@ -16,6 +16,7 @@ import kotlinx.coroutines.test.TestScope
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -29,7 +30,7 @@ import java.io.IOException
 // An app's details come from the new services, except where only v7 can serve them: an app
 // named by its v7 id, the titles that install through Play's overlay, the wallet, and any
 // app that installs through Aptoide's installer, which needs v7's download location - among
-// them every Play & Earn app.
+// them every Play & Earn app, whatever its billing.
 @ExperimentalCoroutinesApi
 internal class PlayAppRepositoryTest {
 
@@ -232,7 +233,9 @@ internal class PlayAppRepositoryTest {
     m Then "v7 is asked for the app in whichever store holds it, and the new services are not"
     assertEquals(listOf("meta:package_name=$DUCK_SURVIVAL"), v7.calls)
     assertTrue(deviceApi.details.isEmpty())
-    assertSame(v7.app, app)
+
+    m And "v7's app is the answer, marked to install through Aptoide only"
+    assertEquals(v7.app.copy(installsThroughAptoideOnly = true), app)
   }
 
   @Test
@@ -248,41 +251,39 @@ internal class PlayAppRepositoryTest {
     m Then "v7 is asked for the app in whichever store holds it, and the new services are not"
     assertEquals(listOf("meta:package_name=$DUCK_SURVIVAL"), v7.calls)
     assertTrue(deviceApi.details.isEmpty())
-    assertSame(v7.app, app)
+    assertEquals(v7.app.copy(installsThroughAptoideOnly = true), app)
   }
 
   @Test
-  fun `A Play & Earn app that v7 cannot install stays unknown`() = coScenario { scope ->
-    m Given "a Play & Earn app that v7 knows without store flags"
+  fun `A Play & Earn app without AppCoins billing is read from v7 too`() = coScenario { scope ->
+    m Given "a Play & Earn app that v7 holds without store flags, as Pixel Blast"
     val v7 = FakeV7AppRepository(app = randomApp.copy(bdsFlags = null))
     val (repository, deviceApi, _) =
-      repository(scope, v7 = v7, playAndEarn = Result.success(setOf(DUCK_SURVIVAL)))
+      repository(scope, v7 = v7, playAndEarn = Result.success(setOf(PIXEL_BLAST)))
 
     m When "its details are read"
-    val failure = runCatching {
-      repository.getAppMeta("package_name=$DUCK_SURVIVAL/store_name=a-store")
-    }.exceptionOrNull()
+    val app = repository.getAppMeta("package_name=$PIXEL_BLAST/store_name=a-store")
 
-    m Then "the app is not offered, rather than installed through Play"
-    assertInstanceOf(DeviceApiException.NotInVariant::class.java, failure)
+    m Then "v7's app is the answer, marked to install through Aptoide only"
+    assertEquals(listOf("meta:package_name=$PIXEL_BLAST"), v7.calls)
     assertTrue(deviceApi.details.isEmpty())
+    assertEquals(v7.app.copy(installsThroughAptoideOnly = true), app)
   }
 
   @Test
-  fun `A Play & Earn app read by package that v7 cannot install stays unknown`() = coScenario {
-      scope ->
-    m Given "a Play & Earn app that v7 knows without store flags"
-    val v7 = FakeV7AppRepository(app = randomApp.copy(bdsFlags = null))
-    val (repository, deviceApi, _) =
-      repository(scope, v7 = v7, playAndEarn = Result.success(setOf(DUCK_SURVIVAL)))
+  fun `A Play & Earn app without AppCoins billing read by package is read from v7 too`() =
+    coScenario { scope ->
+      m Given "a Play & Earn app that v7 holds without store flags"
+      val v7 = FakeV7AppRepository(app = randomApp.copy(bdsFlags = null))
+      val (repository, _, _) =
+        repository(scope, v7 = v7, playAndEarn = Result.success(setOf(PIXEL_BLAST)))
 
-    m When "it is read by package"
-    val failure = runCatching { repository.getApp(DUCK_SURVIVAL) }.exceptionOrNull()
+      m When "it is read by package"
+      val app = repository.getApp(PIXEL_BLAST)
 
-    m Then "the app is not offered, rather than installed through Play"
-    assertInstanceOf(DeviceApiException.NotInVariant::class.java, failure)
-    assertTrue(deviceApi.details.isEmpty())
-  }
+      m Then "v7's app is the answer, marked to install through Aptoide only"
+      assertEquals(v7.app.copy(installsThroughAptoideOnly = true), app)
+    }
 
   @Test
   fun `A Play & Earn title that stays on v7 keeps its own route`() = coScenario { scope ->
@@ -348,6 +349,20 @@ internal class PlayAppRepositoryTest {
   }
 
   @Test
+  fun `A cancelled v7 read of a Play & Earn app cancels the read`() = coScenario { scope ->
+    m Given "a Play & Earn app whose v7 read is cancelled"
+    val v7 = FakeV7AppRepository(failure = CancellationException("left the page"))
+    val (repository, _, _) =
+      repository(scope, v7 = v7, playAndEarn = Result.success(setOf(DUCK_SURVIVAL)))
+
+    m When "it is read by package"
+    val failure = runCatching { repository.getApp(DUCK_SURVIVAL) }.exceptionOrNull()
+
+    m Then "the cancellation reaches the caller, not an unknown app"
+    assertInstanceOf(CancellationException::class.java, failure)
+  }
+
+  @Test
   fun `An app outside Play & Earn is still read from the new services`() = coScenario { scope ->
     m Given "Play & Earn campaigns that hold another app"
     val (repository, deviceApi, v7) =
@@ -356,10 +371,11 @@ internal class PlayAppRepositoryTest {
     m When "a regular app's details are read"
     val app = repository.getAppMeta("package_name=com.kiloo.subwaysurf/store_name=a-store")
 
-    m Then "the new services answer, as before"
+    m Then "the new services answer, as before, and the app keeps the Play path"
     assertEquals(listOf("com.kiloo.subwaysurf"), deviceApi.details)
     assertTrue(v7.calls.isEmpty())
     assertEquals(AppOrigin.DEVICE_API, app.origin)
+    assertFalse(app.installsThroughAptoideOnly)
   }
 
   @Test
@@ -399,6 +415,7 @@ internal class PlayAppRepositoryTest {
 
   private companion object {
     const val DUCK_SURVIVAL = "com.mrtgd2us.google"
+    const val PIXEL_BLAST = "com.agedstudio.pixelblast.games"
   }
 }
 
