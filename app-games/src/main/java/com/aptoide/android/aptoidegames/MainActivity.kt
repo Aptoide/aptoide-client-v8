@@ -203,6 +203,10 @@ class MainActivity : AppCompatActivity() {
       navController?.navigateTo(route)
     }
 
+    intent.consumeNotificationRoute()?.let { route ->
+      navController?.navigateTo(route)
+    }
+
     // Handle gamesfeed notifications auto-displayed by Firebase when app is in background.
     // When the app is backgrounded, onMessageReceived is NOT called for notification messages,
     // so our custom PendingIntent is never built. Firebase puts FCM data fields as intent extras.

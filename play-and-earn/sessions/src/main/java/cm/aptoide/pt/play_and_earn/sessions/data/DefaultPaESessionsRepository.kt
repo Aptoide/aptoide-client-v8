@@ -106,11 +106,16 @@ internal class DefaultPaESessionsRepository @Inject constructor(
     }
 }
 
-private fun checkSessionStatus(status: SessionStatus) {
+private fun checkSessionStatus(status: SessionStatus?) {
   when (status) {
-    SessionStatus.OK -> Unit
-    SessionStatus.DUPLICATE_OR_OUT_OF_ORDER -> throw DuplicateOrOutOfOrderException("Session status is duplicate or out of order")
-    SessionStatus.SESSION_EXPIRED -> throw SessionExpiredException("Session has already expired")
+    // An unknown status (null) is treated as "ok" with nothing applied.
+    SessionStatus.OK, SessionStatus.IGNORED_ZERO, null -> Unit
+    SessionStatus.DUPLICATE_OR_OUT_OF_ORDER ->
+      throw DuplicateOrOutOfOrderException("Session status is duplicate or out of order")
+    // The session is gone for this device either way: the caller drops it.
+    SessionStatus.SESSION_EXPIRED,
+    SessionStatus.PAUSED_BY_OTHER_DEVICE,
+    SessionStatus.SESSION_NOT_FOUND -> throw SessionExpiredException("Session is no longer active")
   }
 }
 
@@ -129,7 +134,7 @@ private fun SessionStartInfoJson.toDomainModel() = SessionStartInfo(
 private fun SessionInfoJson.toDomainModel() = SessionInfo(
   appliedSeconds = this.appliedSeconds,
   ttl = this.ttl,
-  events = this.events.map(SessionEventJson::toDomainModel)
+  events = this.events.orEmpty().map(SessionEventJson::toDomainModel)
 )
 
 private fun SessionEventJson.toDomainModel() = SessionEvent(

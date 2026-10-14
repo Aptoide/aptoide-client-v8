@@ -7,7 +7,17 @@ import com.google.gson.annotations.SerializedName
 @Keep
 internal data class PaEMissionsJson(
   val checkpoints: List<PaEMissionJson>,
-  val missions: List<PaEMissionJson>
+  val missions: List<PaEMissionJson>,
+  @SerializedName("campaign_id") val campaignId: Long?,
+  @SerializedName("mmp_click_url") val mmpClickUrl: String?,
+  val attribution: PaEAttributionJson?,
+)
+
+// The user's status for the game's campaign; only sent to signed-in users.
+@Keep
+internal data class PaEAttributionJson(
+  val status: String?,
+  val reason: String?,
 )
 
 // Response of GET /api/missions (grouped by mission type). Each section is null when absent.

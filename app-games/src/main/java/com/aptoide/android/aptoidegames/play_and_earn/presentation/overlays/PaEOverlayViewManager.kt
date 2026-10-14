@@ -11,7 +11,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.setViewTreeLifecycleOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
-import cm.aptoide.pt.campaigns.domain.PaEMission
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
 import javax.inject.Inject
@@ -51,37 +50,6 @@ class PaEOverlayViewManager @Inject constructor(
 
     windowManager.removeView(view)
   }
-
-  suspend fun showMissionCompletedOverlayView(
-    mission: PaEMission,
-    lifecycleOwner: LifecycleOwner,
-    savedStateRegistryOwner: SavedStateRegistryOwner
-  ) {
-    val view = getMissionCompletedOverlayView(context, mission)
-
-    view.apply {
-      setViewTreeLifecycleOwner(lifecycleOwner)
-      setViewTreeSavedStateRegistryOwner(savedStateRegistryOwner)
-    }
-
-    val windowManager = context.getSystemService(WINDOW_SERVICE) as WindowManager
-    val layoutParams = WindowManager.LayoutParams(
-      WindowManager.LayoutParams.WRAP_CONTENT,
-      WindowManager.LayoutParams.WRAP_CONTENT,
-      WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-      WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
-      PixelFormat.TRANSLUCENT
-    ).apply {
-      gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
-      y = 100
-    }
-
-    windowManager.addView(view, layoutParams)
-
-    delay(5000L)
-
-    windowManager.removeView(view)
-  }
 }
 
 fun getWelcomeBackView(context: Context): View = ComposeView(context).apply {
@@ -89,10 +57,3 @@ fun getWelcomeBackView(context: Context): View = ComposeView(context).apply {
     WelcomeBackOverlayView()
   }
 }
-
-fun getMissionCompletedOverlayView(context: Context, mission: PaEMission): View =
-  ComposeView(context).apply {
-    setContent {
-      MissionCompletedOverlayView(mission)
-    }
-  }

@@ -76,6 +76,7 @@ import com.aptoide.android.aptoidegames.play_and_earn.presentation.service.PaESe
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.GoogleSignInViewModel
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnSignInRoute
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.rememberUserInfo
+import com.aptoide.android.aptoidegames.play_and_earn.rememberIsPaEUsageTrackingEnabled
 import com.aptoide.android.aptoidegames.play_and_earn.rememberShouldShowPlayAndEarn
 import com.aptoide.android.aptoidegames.terms_and_conditions.ppUrl
 import com.aptoide.android.aptoidegames.terms_and_conditions.tcUrl
@@ -103,13 +104,14 @@ fun settingsScreen(showSnack: (String) -> Unit) = ScreenData(
   val paEServicePreferencesViewModel = hiltViewModel<PaEServicePreferencesViewModel>()
   val isPaEServiceEnabled by paEServicePreferencesViewModel.isPaEServiceEnabled.collectAsState()
   val shouldShowPlayAndEarn = rememberShouldShowPlayAndEarn()
+  val isPaEUsageTrackingEnabled = rememberIsPaEUsageTrackingEnabled()
 
   SettingsViewContent(
     title = stringResource(R.string.settings_title),
     downloadOnlyOverWifi = downloadOnlyOverWifi,
     autoUpdateGames = autoUpdateGames,
     isPaEServiceEnabled = isPaEServiceEnabled,
-    showPaEServiceToggle = shouldShowPlayAndEarn,
+    showPaEServiceToggle = shouldShowPlayAndEarn && isPaEUsageTrackingEnabled,
     verName = BuildConfig.VERSION_NAME,
     verCode = BuildConfig.VERSION_CODE,
     toggleDownloadOnlyOverWifi = { isChecked ->
