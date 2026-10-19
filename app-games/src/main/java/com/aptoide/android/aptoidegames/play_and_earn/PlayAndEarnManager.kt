@@ -56,9 +56,10 @@ class PlayAndEarnManager @Inject constructor(
     private const val TAG = "PlayAndEarnManager"
     private const val PAE_VISIBILITY_FLAG_KEY = "show_play_and_earn"
 
-    // AND-878: gates the usage-access/overlay permission onboarding, the PaEForegroundService
-    // that watches the foreground app, and the time-based (play-time) missions. Off by default;
-    // the code stays in place and is re-enabled by flipping the flag remotely.
+    // AND-878/AND-901: kill switch for the usage path only (usage-access/overlay permission
+    // onboarding, the PaEForegroundService tracking mode, the time-based missions). Off = every
+    // game runs in status mode after Play; on = games whose campaign needs usage access run in
+    // tracking mode when the permissions are granted. Off by default.
     private const val PAE_USAGE_TRACKING_FLAG_KEY = "pae_usage_tracking_enabled"
 
     // JSON array of ISO 3166-1 alpha-2 codes, e.g. ["US","CA"]. The visibility flag is already
@@ -138,9 +139,9 @@ class PlayAndEarnManager @Inject constructor(
   }
 
   /**
-   * Whether the usage-tracking half of PaE (permission onboarding, foreground service,
+   * Whether the usage-tracking half of PaE (permission onboarding, tracking service,
    * time-based missions) is enabled. Independent of [shouldShowPlayAndEarn]: PaE can be visible
-   * with tracking off, in which case Play just opens the game.
+   * with tracking off, in which case Play only heartbeats the game's status (AND-879).
    */
   suspend fun isUsageTrackingEnabled(): Boolean =
     featureFlags.getFlag(PAE_USAGE_TRACKING_FLAG_KEY, false)
@@ -168,11 +169,8 @@ class PlayAndEarnManager @Inject constructor(
   fun observeIsSignedIn(): Flow<Boolean> =
     walletCoreDataSource.observeCurrentWalletAddress().map { it != null }
 
-  /** Signed in, and (only while usage tracking is enabled) holding the runtime permissions. */
-  suspend fun isPlayAndEarnReady(): Boolean {
-    return isSignedIn() && (!isUsageTrackingEnabled() || hasRequiredPermissions())
-  }
-
+  // AND-901: readiness is just being signed in (see [isSignedIn]); the usage-access permissions
+  // are no longer a gate. Play runs in the mode they allow, the locked time missions ask for them.
   fun hasRequiredPermissions(): Boolean =
     context.hasUsageStatsPermissionStatus() && context.hasOverlayPermission()
 }
@@ -207,21 +205,6 @@ fun rememberIsPaEUsageTrackingEnabled(): Boolean = runPreviewable(
     val vm = hiltViewModel<InjectionsProvider>()
     val enabled by vm.playAndEarnManager.observeUsageTrackingEnabled().collectAsState()
     enabled
-  }
-)
-
-@Composable
-fun rememberPlayAndEarnReady(): Boolean = runPreviewable(
-  preview = { Random.nextBoolean() },
-  real = {
-    val vm = hiltViewModel<InjectionsProvider>()
-    var isPlayAndEarnReady by remember { mutableStateOf(false) }
-
-    LaunchedEffect(Unit) {
-      isPlayAndEarnReady = vm.playAndEarnManager.isPlayAndEarnReady()
-    }
-
-    isPlayAndEarnReady
   }
 )
 

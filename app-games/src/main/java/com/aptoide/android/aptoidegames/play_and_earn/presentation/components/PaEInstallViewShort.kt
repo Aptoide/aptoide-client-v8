@@ -28,10 +28,8 @@ import com.aptoide.android.aptoidegames.installer.presentation.PlayAttributionLa
 import com.aptoide.android.aptoidegames.installer.presentation.appViewDiversion
 import com.aptoide.android.aptoidegames.installer.presentation.installViewStates
 import com.aptoide.android.aptoidegames.installer.presentation.toInstallViewState
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.rememberPlayAndEarnSetupRoute
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.service.PaEForegroundService
-import com.aptoide.android.aptoidegames.play_and_earn.rememberIsPaEUsageTrackingEnabled
-import com.aptoide.android.aptoidegames.play_and_earn.rememberPlayAndEarnReady
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnSignInRoute
+import com.aptoide.android.aptoidegames.play_and_earn.rememberIsSignedIn
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 
 @PreviewDark
@@ -182,26 +180,19 @@ private fun PaESmallPlayButton(
   packageName: String,
   navigate: ((String) -> Unit)?,
 ) {
-  val isPaEReady = rememberPlayAndEarnReady()
-  val isUsageTrackingEnabled = rememberIsPaEUsageTrackingEnabled()
-  val paeSetupRoute = rememberPlayAndEarnSetupRoute()
+  val isSignedIn = rememberIsSignedIn()
+  val launcher = rememberPaEPlayLauncher(packageName)
   val context = LocalContext.current
 
   PaESmallCoinButton(
     onClick = {
-      if (isPaEReady || navigate == null) {
-        if (isPaEReady) {
-          if (isUsageTrackingEnabled) {
-            // Start the foreground service to track playtime
-            PaEForegroundService.start(context)
-          } else {
-            // No usage tracking: heartbeat for the game's MMP-confirmed missions (AND-879)
-            PaEForegroundService.startStatusHeartbeat(context, packageName)
-          }
-        }
+      if (isSignedIn || navigate == null) {
+        // AND-901: the mode (usage tracking or status heartbeats) is picked per game; Play
+        // never asks for permissions.
+        if (isSignedIn) launcher.launch(context, packageName)
         onClick()
       } else {
-        navigate(paeSetupRoute)
+        navigate(playAndEarnSignInRoute)
       }
     },
     title = stringResource(R.string.play_and_earn_play_button),

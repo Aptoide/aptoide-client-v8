@@ -12,6 +12,7 @@ import cm.aptoide.pt.campaigns.data.model.PaEMissionTypeJson
 import cm.aptoide.pt.campaigns.data.model.PaEMissionsJson
 import cm.aptoide.pt.campaigns.domain.PaEAttribution
 import cm.aptoide.pt.campaigns.domain.PaEAttributionStatus
+import cm.aptoide.pt.campaigns.domain.PaEEvidenceSource
 import cm.aptoide.pt.campaigns.domain.PaEMission
 import cm.aptoide.pt.campaigns.domain.PaEMissionProgress
 import cm.aptoide.pt.campaigns.domain.PaEMissionProgressType
@@ -125,6 +126,8 @@ private fun PaEMissionsJson.toDomainModel() = PaEMissions(
   campaignId = campaignId?.toString(),
   mmpClickUrl = mmpClickUrl?.takeIf { it.isNotBlank() },
   attribution = attribution?.toDomainModel(),
+  requiresUsageAccess = requiresUsageAccess,
+  requiresMmp = requiresMmp,
 )
 
 // An unknown status (a newer backend) maps to none: the missions keep showing.
@@ -141,7 +144,12 @@ private fun PaEMissionJson.toDomainModel() = PaEMission(
   type = this.getType(),
   arguments = arguments,
   units = units,
-  progress = progress?.toDomainModel()
+  progress = progress?.toDomainModel(),
+  evidenceSource = evidenceSource?.let { source ->
+    // An unknown source (a newer backend) maps to none.
+    PaEEvidenceSource.fromApi(source)
+      .also { if (it == null) Timber.w("Unknown P&E evidence source: $source") }
+  },
 )
 
 private fun PaEMissionProgressJson.toDomainModel() = PaEMissionProgress(
