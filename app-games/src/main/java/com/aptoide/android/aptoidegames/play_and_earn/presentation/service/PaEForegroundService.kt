@@ -148,11 +148,7 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
       return START_NOT_STICKY
     }
 
-    // Ensure preference reflects the service is running (e.g. when started from Play button)
-    lifecycleScope.launch(Dispatchers.IO) {
-      paEPreferencesRepository.setPaEServiceEnabled(true)
-    }
-
+    // AND-902: the Settings switch is the user's opt-out; a tracking start never flips it back.
     init()
 
     return START_STICKY

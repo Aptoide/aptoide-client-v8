@@ -18,6 +18,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -36,14 +37,17 @@ enum class PaEPlayMode {
  * Picks the service mode for a game on the Play tap (AND-901).
  *
  * Tracking mode only when the game's campaign needs usage access, the device currently grants
- * the permissions and the usage path is not switched off remotely; status mode otherwise. Play
- * never asks for permissions: the locked time missions do (AND-902/903).
+ * the permissions, the user has not opted out in Settings and the usage path is not switched off
+ * remotely; status mode otherwise. Play never asks for permissions: the locked time missions do
+ * (AND-902/903).
  */
 class PaEPlayLauncher internal constructor(
   /** Whether the game's missions need usage access; null when they could not be read. */
   private val needsUsageAccess: Boolean?,
   /** The `pae_usage_tracking_enabled` kill switch for the usage path. */
   private val usageTrackingEnabled: Boolean,
+  /** The Settings "Play & Earn tracking" switch (AND-902): off = the user opted out. */
+  private val optedIn: Boolean,
   /** Read when the mode is picked, so a permission granted meanwhile counts. */
   private val hasUsagePermissions: () -> Boolean,
   private val startTracking: () -> Unit,
@@ -51,7 +55,7 @@ class PaEPlayLauncher internal constructor(
 ) {
 
   fun mode(): PaEPlayMode =
-    if (usageTrackingEnabled && needsUsageAccess == true && hasUsagePermissions()) {
+    if (usageTrackingEnabled && optedIn && needsUsageAccess == true && hasUsagePermissions()) {
       PaEPlayMode.TRACKING
     } else {
       PaEPlayMode.STATUS
@@ -114,6 +118,7 @@ class PaEPlayLauncherViewModel @Inject constructor(
       PaEPlayLauncher(
         needsUsageAccess = needsUsageAccess,
         usageTrackingEnabled = playAndEarnManager.isUsageTrackingEnabled(),
+        optedIn = playAndEarnManager.isUsageTrackingOptedIn().first(),
         hasUsagePermissions = playAndEarnManager::hasRequiredPermissions,
         startTracking = { PaEForegroundService.start(context) },
         startStatus = { PaEForegroundService.startStatusHeartbeat(context, it) },

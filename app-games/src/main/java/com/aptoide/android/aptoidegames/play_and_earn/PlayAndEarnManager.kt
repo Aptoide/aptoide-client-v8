@@ -33,7 +33,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -153,10 +152,11 @@ class PlayAndEarnManager @Inject constructor(
     (featureFlags.getFlagAsString(PAE_STATUS_HEARTBEAT_MAX_HOURS_KEY)?.trim()?.toLongOrNull()
       ?: PAE_STATUS_HEARTBEAT_DEFAULT_MAX_HOURS).coerceIn(1L, 24L)
 
-  suspend fun shouldStartPaEService(): Boolean {
-    val isServiceEnabled = paEPreferencesRepository.isPaEServiceEnabled().first()
-    return isServiceEnabled && shouldRunUsageTracking()
-  }
+  /**
+   * The Settings "Play & Earn tracking" switch (AND-902): true unless the user opted out. Only
+   * shown (and only meaningful) while the kill switch is on and the permissions are granted.
+   */
+  fun isUsageTrackingOptedIn(): Flow<Boolean> = paEPreferencesRepository.isPaEServiceEnabled()
 
   fun observePlayAndEarnVisibility(): StateFlow<Boolean> = _playAndEarnVisibilityFlow.asStateFlow()
 

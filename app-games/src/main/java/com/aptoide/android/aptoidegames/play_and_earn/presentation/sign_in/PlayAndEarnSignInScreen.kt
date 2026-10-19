@@ -43,31 +43,29 @@ import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoadi
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.rememberPaEAnalytics
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaEInstallLoginGateViewModel
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.playAndEarnPermissionsRoute
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PAE_DEFAULT_REWARD_AMOUNT
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.RewardState
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.SignInRewardViewModel
-import com.aptoide.android.aptoidegames.play_and_earn.rememberIsPaEUsageTrackingEnabled
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 
-/** Sign-in followed by the permissions onboarding step (skipped while usage tracking is off). */
+/**
+ * Sign-in; returns to the caller on success. It no longer pushes the usage-access permission
+ * screens (AND-902): the lock on a time mission is the only way there.
+ */
 const val playAndEarnSignInRoute = "playAndEarnSignIn"
 
-/** Sign-in only */
+/** Sign-in only. Same behaviour as [playAndEarnSignInRoute] since AND-902; kept for its callers. */
 const val playAndEarnSignInOnlyRoute = "playAndEarnSignInOnly"
 
 fun playAndEarnSignInScreen() = ScreenData.withAnalytics(
   route = playAndEarnSignInRoute,
   screenAnalyticsName = "PlayAndEarnSignIn",
-) { _, navigate, navigateBack ->
-  val isUsageTrackingEnabled = rememberIsPaEUsageTrackingEnabled()
+) { _, _, navigateBack ->
   PlayAndEarnSignInScreen(
     navigateBack = navigateBack,
-    onSignInSuccess = {
-      if (isUsageTrackingEnabled) navigate(playAndEarnPermissionsRoute) else navigateBack()
-    },
+    onSignInSuccess = navigateBack,
   )
 }
 

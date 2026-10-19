@@ -44,6 +44,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.zIndex
 import androidx.core.net.toUri
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -64,6 +65,7 @@ import com.aptoide.android.aptoidegames.drawables.figures.getPermissionAllowFigu
 import com.aptoide.android.aptoidegames.drawables.icons.getTrustedIcon
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.rememberPaEAnalytics
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.service.PaEForegroundService
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.service.PaEServicePreferencesViewModel
 import com.aptoide.android.aptoidegames.play_and_earn.rememberIsPaEUsageTrackingEnabled
 import com.aptoide.android.aptoidegames.play_and_earn.rememberPaEClientConfigManager
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -92,6 +94,7 @@ private fun PlayAndEarnPermissionsScreen(
 
   val paeAnalytics = rememberPaEAnalytics()
   val paEClientConfigManager = rememberPaEClientConfigManager()
+  val servicePreferences = hiltViewModel<PaEServicePreferencesViewModel>()
   val isUsageTrackingEnabled = rememberIsPaEUsageTrackingEnabled()
 
   // AND-878: the permission onboarding is hidden behind pae_usage_tracking_enabled.
@@ -109,6 +112,8 @@ private fun PlayAndEarnPermissionsScreen(
     val observer = LifecycleEventObserver { _, event ->
       if (event == Lifecycle.Event.ON_RESUME) {
         if (context.hasOverlayPermission() && context.hasUsageStatsPermissionStatus()) {
+          // Granting the permissions is an opt-in (AND-902): the Settings switch goes on.
+          servicePreferences.setPaEServiceEnabled(true)
           PaEForegroundService.start(context)
           coroutineScope.launch {
             paEClientConfigManager.fetchAndSaveClientConfig()

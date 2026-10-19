@@ -17,11 +17,13 @@ internal class PaEPlayLauncherTest {
   private fun launcher(
     needsUsageAccess: Boolean?,
     usageTrackingEnabled: Boolean = true,
+    optedIn: Boolean = true,
     hasUsagePermissions: () -> Boolean = { true },
     starts: Starts = Starts(),
   ) = PaEPlayLauncher(
     needsUsageAccess = needsUsageAccess,
     usageTrackingEnabled = usageTrackingEnabled,
+    optedIn = optedIn,
     hasUsagePermissions = hasUsagePermissions,
     startTracking = { starts.tracking++ },
     startStatus = { starts.status = it },
@@ -73,6 +75,24 @@ internal class PaEPlayLauncherTest {
 
     m Then "it is status (Phase 1 behaviour)"
     assertEquals(PaEPlayMode.STATUS, mode)
+  }
+
+  @Test
+  fun `A user who opted out in Settings runs in status mode`() = scenario {
+    m Given "a time game, permissions granted, flag on, usage tracking switched off in Settings"
+    var reads = 0
+    val launcher = launcher(
+      needsUsageAccess = true,
+      optedIn = false,
+      hasUsagePermissions = { reads++; true },
+    )
+
+    m When "the mode is picked"
+    val mode = launcher.mode()
+
+    m Then "it is status and the permissions were not consulted (AND-902 opt-out)"
+    assertEquals(PaEPlayMode.STATUS, mode)
+    assertEquals(0, reads)
   }
 
   @Test
