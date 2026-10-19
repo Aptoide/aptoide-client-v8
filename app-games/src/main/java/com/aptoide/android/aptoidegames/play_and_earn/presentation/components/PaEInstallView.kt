@@ -36,7 +36,6 @@ import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.platform.LocalContext
 import cm.aptoide.pt.download_view.presentation.DownloadUiState
 import cm.aptoide.pt.download_view.presentation.ExecutionBlocker.UNMETERED
 import cm.aptoide.pt.download_view.presentation.downloadUiStates
@@ -55,8 +54,6 @@ import com.aptoide.android.aptoidegames.installer.presentation.PlayAttributionLa
 import com.aptoide.android.aptoidegames.installer.presentation.getProgressString
 import com.aptoide.android.aptoidegames.installer.presentation.installViewStates
 import com.aptoide.android.aptoidegames.installer.presentation.toInstallViewState
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnSignInRoute
-import com.aptoide.android.aptoidegames.play_and_earn.rememberIsSignedIn
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -333,9 +330,9 @@ private fun PaEPlayButton(
   modifier: Modifier = Modifier,
   rewardAmount: BigDecimal? = null,
 ) {
-  val isSignedIn = rememberIsSignedIn()
-  val launcher = rememberPaEPlayLauncher(packageName)
-  val context = LocalContext.current
+  // AND-901: the service mode (usage tracking or status heartbeats) is picked per game at tap
+  // time; Play never asks for permissions, only for sign-in.
+  val playTap = rememberPaEPlayTap(packageName = packageName, navigate = navigate)
 
   val title = if (rewardAmount != null) {
     stringResource(string.play_and_earn_play_and_earn_up_to_button, rewardAmount.toDouble())
@@ -345,16 +342,7 @@ private fun PaEPlayButton(
 
   PaELargeCoinButton(
     title = title,
-    onClick = {
-      if (isSignedIn || navigate == null) {
-        // AND-901: the mode (usage tracking or status heartbeats) is picked per game; Play
-        // never asks for permissions.
-        if (isSignedIn) launcher.launch(context, packageName)
-        onClick()
-      } else {
-        navigate(playAndEarnSignInRoute)
-      }
-    },
+    onClick = playTap.guard(onClick),
     modifier = modifier,
   )
 }

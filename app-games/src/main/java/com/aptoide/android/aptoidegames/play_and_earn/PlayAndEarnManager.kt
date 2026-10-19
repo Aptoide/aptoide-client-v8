@@ -169,8 +169,10 @@ class PlayAndEarnManager @Inject constructor(
   fun observeIsSignedIn(): Flow<Boolean> =
     walletCoreDataSource.observeCurrentWalletAddress().map { it != null }
 
-  // AND-901: readiness is just being signed in (see [isSignedIn]); the usage-access permissions
-  // are no longer a gate. Play runs in the mode they allow, the locked time missions ask for them.
+  /**
+   * The usage-access and overlay permissions. Not a gate for Play any more (AND-901): Play runs
+   * in the mode they allow, and the locked time missions ask for them.
+   */
   fun hasRequiredPermissions(): Boolean =
     context.hasUsageStatsPermissionStatus() && context.hasOverlayPermission()
 }

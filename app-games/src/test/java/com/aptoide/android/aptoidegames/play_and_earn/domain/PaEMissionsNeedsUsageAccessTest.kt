@@ -1,6 +1,5 @@
 package com.aptoide.android.aptoidegames.play_and_earn.domain
 
-import cm.aptoide.pt.campaigns.domain.PaEEvidenceSource
 import cm.aptoide.pt.campaigns.domain.PaEMission
 import cm.aptoide.pt.campaigns.domain.PaEMissionProgress
 import cm.aptoide.pt.campaigns.domain.PaEMissionProgressType
@@ -10,7 +9,6 @@ import cm.aptoide.pt.campaigns.domain.PaEMissions
 import cm.aptoide.pt.campaigns.domain.needsUsageAccess
 import cm.aptoide.pt.test.gherkin.scenario
 import com.google.gson.JsonObject
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -21,20 +19,17 @@ internal class PaEMissionsNeedsUsageAccessTest {
 
   private fun mission(
     type: PaEMissionType,
-    progressType: PaEMissionProgressType = PaEMissionProgressType.COUNT,
+    progressType: PaEMissionProgressType? = PaEMissionProgressType.COUNT,
   ) = PaEMission(
-    title = "m-$type",
+    title = "m-$type-$progressType",
     description = null,
     icon = null,
     type = type,
     arguments = JsonObject(),
     units = 1,
-    progress = PaEMissionProgress(
-      current = 0,
-      target = 10,
-      type = progressType,
-      status = PaEMissionStatus.PENDING,
-    ),
+    progress = progressType?.let {
+      PaEMissionProgress(current = 0, target = 10, type = it, status = PaEMissionStatus.PENDING)
+    },
   )
 
   @Test
@@ -115,17 +110,46 @@ internal class PaEMissionsNeedsUsageAccessTest {
   }
 
   @Test
-  fun `Evidence source maps the backend values and ignores unknown ones`() = scenario {
-    m Given "the backend's values in various cases, plus an unknown and a missing one"
-    val values = listOf("aptoide_usage", "MMP", " sdk ", "blockchain", null)
+  fun `Without the backend answer an event mission measured in seconds needs usage access`() =
+    scenario {
+      m Given "cached missions with an event mission whose progress is in seconds"
+      val missions = PaEMissions(
+        checkpoints = emptyList(),
+        missions = listOf(mission(PaEMissionType.EVENT, PaEMissionProgressType.SECONDS)),
+      )
 
-    m When "they are mapped"
-    val mapped = values.map(PaEEvidenceSource::fromApi)
+      m When "the need for usage access is checked"
+      val needed = missions.needsUsageAccess()
 
-    m Then "the three known ones map and the others map to none"
-    assertEquals(
-      listOf(PaEEvidenceSource.APTOIDE_USAGE, PaEEvidenceSource.MMP, PaEEvidenceSource.SDK, null, null),
-      mapped,
-    )
+      m Then "usage access is needed"
+      assertTrue(needed)
+    }
+
+  @Test
+  fun `Without the backend answer a mission without progress does not need usage access`() =
+    scenario {
+      m Given "cached missions with an event mission that has no progress yet"
+      val missions = PaEMissions(
+        checkpoints = emptyList(),
+        missions = listOf(mission(PaEMissionType.EVENT, progressType = null)),
+      )
+
+      m When "the need for usage access is checked"
+      val needed = missions.needsUsageAccess()
+
+      m Then "usage access is not needed"
+      assertFalse(needed)
+    }
+
+  @Test
+  fun `Without the backend answer and without missions usage access is not needed`() = scenario {
+    m Given "no missions at all and no backend answer"
+    val missions = PaEMissions(checkpoints = emptyList(), missions = emptyList())
+
+    m When "the need for usage access is checked"
+    val needed = missions.needsUsageAccess()
+
+    m Then "usage access is not needed"
+    assertFalse(needed)
   }
 }
