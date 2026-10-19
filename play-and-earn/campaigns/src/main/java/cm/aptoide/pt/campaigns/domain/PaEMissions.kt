@@ -55,11 +55,36 @@ fun PaEMission.needsUsageAccess(): Boolean = when (evidenceSource) {
 }
 
 /**
- * Shown locked in the Rewards tab (AND-903): needs usage access the device doesn't grant, and
- * still has something to measure. Tapping the lock opens the permission flow.
+ * Shown locked in the Rewards tab (AND-903): measured by usage tracking, whose permissions
+ * (usage access and overlay) the device doesn't grant, and still with something to measure.
+ * Tapping the lock opens the permission flow.
  */
-fun PaEMission.isLockedWithoutUsageAccess(hasUsageAccess: Boolean): Boolean =
-  needsUsageAccess() && !hasUsageAccess && progress?.status != PaEMissionStatus.COMPLETED
+fun PaEMission.isLockedWithout(trackingPermissions: Boolean): Boolean =
+  needsUsageAccess() && !trackingPermissions && progress?.status != PaEMissionStatus.COMPLETED
+
+/** A row of the Rewards tab: the mission and whether it shows locked (AND-903). */
+data class PaERewardRow(val mission: PaEMission, val locked: Boolean)
+
+data class PaERewardRows(val checkpoints: List<PaERewardRow>, val missions: List<PaERewardRow>)
+
+/**
+ * What the Rewards tab lists (AND-878/AND-903). With the usage path switched off remotely
+ * ([usageTrackingEnabled] false), the missions this app's usage tracking measures are hidden and
+ * nothing locks; with it on, every mission is listed and the usage-measured ones lock while the
+ * tracking permissions are missing.
+ */
+fun PaEMissions.rewardRows(
+  usageTrackingEnabled: Boolean,
+  trackingPermissions: Boolean,
+): PaERewardRows {
+  fun rows(list: List<PaEMission>) =
+    if (usageTrackingEnabled) {
+      list.map { PaERewardRow(it, locked = it.isLockedWithout(trackingPermissions)) }
+    } else {
+      list.filterNot { it.needsUsageAccess() }.map { PaERewardRow(it, locked = false) }
+    }
+  return PaERewardRows(checkpoints = rows(checkpoints), missions = rows(missions))
+}
 
 data class PaEMissionProgress(
   val current: Int?,

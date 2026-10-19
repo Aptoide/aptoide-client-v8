@@ -6,8 +6,10 @@ import cm.aptoide.pt.campaigns.domain.PaEMissionProgress
 import cm.aptoide.pt.campaigns.domain.PaEMissionProgressType
 import cm.aptoide.pt.campaigns.domain.PaEMissionStatus
 import cm.aptoide.pt.campaigns.domain.PaEMissionType
-import cm.aptoide.pt.campaigns.domain.isLockedWithoutUsageAccess
+import cm.aptoide.pt.campaigns.domain.isLockedWithout
+import cm.aptoide.pt.campaigns.domain.PaEMissions
 import cm.aptoide.pt.campaigns.domain.needsUsageAccess
+import cm.aptoide.pt.campaigns.domain.rewardRows
 import cm.aptoide.pt.test.gherkin.scenario
 import com.google.gson.JsonObject
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -76,7 +78,7 @@ internal class PaEMissionLockTest {
     val mission = mission(evidenceSource = PaEEvidenceSource.APTOIDE_USAGE)
 
     m When "the lock is checked"
-    val locked = mission.isLockedWithoutUsageAccess(hasUsageAccess = false)
+    val locked = mission.isLockedWithout(trackingPermissions = false)
 
     m Then "it is locked"
     assertTrue(locked)
@@ -88,7 +90,7 @@ internal class PaEMissionLockTest {
     val mission = mission(evidenceSource = PaEEvidenceSource.APTOIDE_USAGE)
 
     m When "the lock is checked"
-    val locked = mission.isLockedWithoutUsageAccess(hasUsageAccess = true)
+    val locked = mission.isLockedWithout(trackingPermissions = true)
 
     m Then "it is not locked"
     assertFalse(locked)
@@ -100,7 +102,7 @@ internal class PaEMissionLockTest {
     val mission = mission(evidenceSource = PaEEvidenceSource.MMP)
 
     m When "the lock is checked"
-    val locked = mission.isLockedWithoutUsageAccess(hasUsageAccess = false)
+    val locked = mission.isLockedWithout(trackingPermissions = false)
 
     m Then "it is not locked"
     assertFalse(locked)
@@ -115,7 +117,7 @@ internal class PaEMissionLockTest {
     )
 
     m When "the lock is checked"
-    val locked = mission.isLockedWithoutUsageAccess(hasUsageAccess = false)
+    val locked = mission.isLockedWithout(trackingPermissions = false)
 
     m Then "it is not locked: there is nothing left to measure"
     assertFalse(locked)
@@ -130,9 +132,158 @@ internal class PaEMissionLockTest {
     )
 
     m When "the lock is checked"
-    val locked = mission.isLockedWithoutUsageAccess(hasUsageAccess = false)
+    val locked = mission.isLockedWithout(trackingPermissions = false)
 
     m Then "it is locked"
     assertTrue(locked)
+  }
+}
+
+// AND-903: the whole lock truth table, and what the Rewards tab lists.
+internal class PaERewardRowsTest {
+
+  private fun mission(
+    title: String,
+    type: PaEMissionType = PaEMissionType.EVENT,
+    progressType: PaEMissionProgressType? = PaEMissionProgressType.COUNT,
+    status: PaEMissionStatus? = PaEMissionStatus.PENDING,
+    evidenceSource: PaEEvidenceSource? = null,
+  ) = PaEMission(
+    title = title,
+    description = null,
+    icon = null,
+    type = type,
+    arguments = JsonObject(),
+    units = 1,
+    progress = progressType?.let { PaEMissionProgress(0, 10, it, status) },
+    evidenceSource = evidenceSource,
+  )
+
+  @Test
+  fun `Locked exactly when usage-measured, permissions missing and not completed`() = scenario {
+    m Given "every evidence source, status (including no progress) and permission state"
+    val sources = listOf(null) + PaEEvidenceSource.entries
+    val statuses = listOf<PaEMissionStatus?>(null) + PaEMissionStatus.entries
+    val cases = buildList {
+      for (source in sources) for (status in statuses) for (granted in listOf(true, false)) {
+        // null evidence source: a play-time mission, i.e. time-based by type
+        val type = if (source == null) PaEMissionType.PLAY_TIME else PaEMissionType.EVENT
+        val m = mission("m", type = type, status = status, evidenceSource = source)
+        add(Triple(m, granted, status))
+      }
+    }
+
+    m When "each one is checked"
+    val wrong = cases.filter { (mission, granted, status) ->
+      val usageMeasured = mission.evidenceSource == null ||
+        mission.evidenceSource == PaEEvidenceSource.APTOIDE_USAGE
+      val expected = usageMeasured && !granted && status != PaEMissionStatus.COMPLETED
+      mission.isLockedWithout(trackingPermissions = granted) != expected
+    }
+
+    m Then "all 32 combinations match the rule"
+    assertEquals(32, cases.size)
+    assertEquals(emptyList<Any>(), wrong.map { (m, g, s) -> "${m.evidenceSource}/$s/granted=$g" })
+  }
+
+  @Test
+  fun `With the usage path on and no permissions only the usage-measured rows lock`() = scenario {
+    m Given "a mixed campaign: usage missions pending, ongoing, completed; an MMP one; checkpoints"
+    val missions = PaEMissions(
+      checkpoints = listOf(
+        mission("cp-gxp", type = PaEMissionType.CHECKPOINT),
+        mission(
+          "cp-seconds",
+          type = PaEMissionType.CHECKPOINT,
+          evidenceSource = PaEEvidenceSource.APTOIDE_USAGE,
+        ),
+      ),
+      missions = listOf(
+        mission("time-pending", evidenceSource = PaEEvidenceSource.APTOIDE_USAGE),
+        mission(
+          "time-ongoing",
+          status = PaEMissionStatus.IN_PROGRESS,
+          evidenceSource = PaEEvidenceSource.APTOIDE_USAGE,
+        ),
+        mission(
+          "time-done",
+          status = PaEMissionStatus.COMPLETED,
+          evidenceSource = PaEEvidenceSource.APTOIDE_USAGE,
+        ),
+        mission("purchase", evidenceSource = PaEEvidenceSource.MMP),
+      ),
+    )
+
+    m When "the rows are built without the permissions"
+    val rows = missions.rewardRows(usageTrackingEnabled = true, trackingPermissions = false)
+
+    m Then "every mission is listed and only the unfinished usage-measured ones are locked"
+    assertEquals(
+      listOf("cp-gxp" to false, "cp-seconds" to true),
+      rows.checkpoints.map { it.mission.title to it.locked },
+    )
+    assertEquals(
+      listOf(
+        "time-pending" to true,
+        "time-ongoing" to true,
+        "time-done" to false,
+        "purchase" to false,
+      ),
+      rows.missions.map { it.mission.title to it.locked },
+    )
+  }
+
+  @Test
+  fun `With the permissions nothing locks`() = scenario {
+    m Given "usage-measured and MMP missions, the usage path on"
+    val missions = PaEMissions(
+      checkpoints = listOf(
+        mission(
+          "cp",
+          type = PaEMissionType.CHECKPOINT,
+          evidenceSource = PaEEvidenceSource.APTOIDE_USAGE,
+        ),
+      ),
+      missions = listOf(
+        mission("time", evidenceSource = PaEEvidenceSource.APTOIDE_USAGE),
+        mission("purchase", evidenceSource = PaEEvidenceSource.MMP),
+      ),
+    )
+
+    m When "the rows are built with the permissions granted"
+    val rows = missions.rewardRows(usageTrackingEnabled = true, trackingPermissions = true)
+
+    m Then "every row is listed and none is locked"
+    assertEquals(listOf("cp"), rows.checkpoints.map { it.mission.title })
+    assertEquals(listOf("time", "purchase"), rows.missions.map { it.mission.title })
+    assertTrue(rows.checkpoints.none { it.locked } && rows.missions.none { it.locked })
+  }
+
+  @Test
+  fun `With the usage path off the usage-measured rows are hidden and nothing locks`() = scenario {
+    m Given "usage-measured and MMP missions, the kill switch off, no permissions"
+    val missions = PaEMissions(
+      checkpoints = listOf(
+        mission("cp-gxp", type = PaEMissionType.CHECKPOINT),
+        mission(
+          "cp-seconds",
+          type = PaEMissionType.CHECKPOINT,
+          evidenceSource = PaEEvidenceSource.APTOIDE_USAGE,
+        ),
+      ),
+      missions = listOf(
+        mission("time", evidenceSource = PaEEvidenceSource.APTOIDE_USAGE),
+        mission("cached-time", type = PaEMissionType.PLAY_TIME),
+        mission("purchase", evidenceSource = PaEEvidenceSource.MMP),
+      ),
+    )
+
+    m When "the rows are built"
+    val rows = missions.rewardRows(usageTrackingEnabled = false, trackingPermissions = false)
+
+    m Then "only the rows nothing on this device needs to measure remain, unlocked (Phase 1)"
+    assertEquals(listOf("cp-gxp"), rows.checkpoints.map { it.mission.title })
+    assertEquals(listOf("purchase"), rows.missions.map { it.mission.title })
+    assertTrue(rows.checkpoints.none { it.locked } && rows.missions.none { it.locked })
   }
 }
