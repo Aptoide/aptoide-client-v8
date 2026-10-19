@@ -1,5 +1,6 @@
 package com.aptoide.android.aptoidegames.play_and_earn.domain
 
+import cm.aptoide.pt.campaigns.domain.PaEEvidenceSource
 import cm.aptoide.pt.campaigns.domain.PaEMission
 import cm.aptoide.pt.campaigns.domain.PaEMissionProgress
 import cm.aptoide.pt.campaigns.domain.PaEMissionProgressType
@@ -20,8 +21,9 @@ internal class PaEMissionsNeedsUsageAccessTest {
   private fun mission(
     type: PaEMissionType,
     progressType: PaEMissionProgressType? = PaEMissionProgressType.COUNT,
+    evidenceSource: PaEEvidenceSource? = null,
   ) = PaEMission(
-    title = "m-$type-$progressType",
+    title = "m-$type-$progressType-$evidenceSource",
     description = null,
     icon = null,
     type = type,
@@ -30,6 +32,7 @@ internal class PaEMissionsNeedsUsageAccessTest {
     progress = progressType?.let {
       PaEMissionProgress(current = 0, target = 10, type = it, status = PaEMissionStatus.PENDING)
     },
+    evidenceSource = evidenceSource,
   )
 
   @Test
@@ -152,4 +155,23 @@ internal class PaEMissionsNeedsUsageAccessTest {
     m Then "usage access is not needed"
     assertFalse(needed)
   }
+
+  @Test
+  fun `Without the backend answer the missions' evidence sources decide, not their types`() =
+    scenario {
+      m Given "no campaign answer, a play-time mission the MMP measures, an event one usage measures"
+      val missions = PaEMissions(
+        checkpoints = emptyList(),
+        missions = listOf(
+          mission(PaEMissionType.PLAY_TIME, evidenceSource = PaEEvidenceSource.MMP),
+          mission(PaEMissionType.EVENT, evidenceSource = PaEEvidenceSource.APTOIDE_USAGE),
+        ),
+      )
+
+      m When "the need for usage access is checked"
+      val needed = missions.needsUsageAccess()
+
+      m Then "usage access is needed because of the usage-measured mission (AND-903 rule)"
+      assertTrue(needed)
+    }
 }

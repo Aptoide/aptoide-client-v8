@@ -19,10 +19,10 @@ data class PaEMissions(
 
 /**
  * Whether playing this game's missions needs the usage-access permission (AND-901). The
- * backend's answer wins; without it, any time-based mission means yes.
+ * backend's answer wins; without it, any mission this app's usage tracking measures means yes.
  */
 fun PaEMissions.needsUsageAccess(): Boolean =
-  requiresUsageAccess ?: (checkpoints + missions).any { it.isTimeBased() }
+  requiresUsageAccess ?: (checkpoints + missions).any { it.needsUsageAccess() }
 
 data class PaEMission(
   val title: String,
@@ -43,6 +43,23 @@ data class PaEMission(
  */
 fun PaEMission.isTimeBased(): Boolean =
   type == PaEMissionType.PLAY_TIME || progress?.type == PaEMissionProgressType.SECONDS
+
+/**
+ * Whether this mission is measured by this app's usage tracking (AND-903): the backend's
+ * `evidence_source` (AND-900) decides; without it (cache, older backend), [isTimeBased] does.
+ */
+fun PaEMission.needsUsageAccess(): Boolean = when (evidenceSource) {
+  PaEEvidenceSource.APTOIDE_USAGE -> true
+  PaEEvidenceSource.MMP, PaEEvidenceSource.SDK -> false
+  null -> isTimeBased()
+}
+
+/**
+ * Shown locked in the Rewards tab (AND-903): needs usage access the device doesn't grant, and
+ * still has something to measure. Tapping the lock opens the permission flow.
+ */
+fun PaEMission.isLockedWithoutUsageAccess(hasUsageAccess: Boolean): Boolean =
+  needsUsageAccess() && !hasUsageAccess && progress?.status != PaEMissionStatus.COMPLETED
 
 data class PaEMissionProgress(
   val current: Int?,

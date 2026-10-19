@@ -2,6 +2,7 @@ package com.aptoide.android.aptoidegames.play_and_earn.presentation.app_view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Divider
+import androidx.compose.material.Icon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -36,6 +40,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import cm.aptoide.pt.campaigns.domain.PaEMission
+import cm.aptoide.pt.campaigns.domain.isLockedWithoutUsageAccess
 import cm.aptoide.pt.campaigns.domain.isTimeBased
 import cm.aptoide.pt.campaigns.domain.PaEMissionProgress
 import cm.aptoide.pt.campaigns.domain.PaEMissionProgressType
@@ -52,6 +57,8 @@ import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getMissionHexagonCompletedIcon
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getSmallCoinIcon
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaEProgressIndicator
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.playAndEarnPermissionsRoute
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.rememberHasPaEPermissions
 import com.aptoide.android.aptoidegames.play_and_earn.rememberIsPaEUsageTrackingEnabled
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -64,6 +71,7 @@ fun AppRewardsView(
 ) {
   val (missionsState, reload) = rememberPaEMissions(packageName)
   val isUsageTrackingEnabled = rememberIsPaEUsageTrackingEnabled()
+  val hasUsageAccess = rememberHasPaEPermissions()
   val lifecycleOwner = LocalLifecycleOwner.current
   val packageManager = LocalContext.current.packageManager
   val readInstalled = { packageManager.getPackageInfo(packageName) != null }
@@ -90,16 +98,25 @@ fun AppRewardsView(
         val state = paeRewardsState(missionsState.paeMissions.attribution, isInstalled)
       ) {
         PaERewardsState.MISSIONS -> {
-          // AND-878: time-based missions need the usage-tracking service, so they are hidden
-          // with it.
+          // AND-878: with the usage path switched off remotely, time-based missions are hidden.
+          // AND-903: with it on, they are listed, locked while the usage-access permission is
+          // missing; the lock opens the permission flow.
           val missions = if (isUsageTrackingEnabled) {
             missionsState.paeMissions.missions
           } else {
             missionsState.paeMissions.missions.filterNot { it.isTimeBased() }
           }
+          val isLocked = { mission: PaEMission ->
+            isUsageTrackingEnabled && mission.isLockedWithoutUsageAccess(hasUsageAccess)
+          }
+          val unlock = { navigate(playAndEarnPermissionsRoute) }
           Column {
-            CheckpointsSection(missionsState.paeMissions.checkpoints)
-            MissionsSection(missions)
+            CheckpointsSection(
+              checkpoints = missionsState.paeMissions.checkpoints,
+              isLocked = isLocked,
+              onUnlock = unlock,
+            )
+            MissionsSection(missions = missions, isLocked = isLocked, onUnlock = unlock)
           }
         }
 
@@ -116,23 +133,39 @@ fun AppRewardsView(
 }
 
 @Composable
-private fun MissionsSection(missions: List<PaEMission>) {
+private fun MissionsSection(
+  missions: List<PaEMission>,
+  isLocked: (PaEMission) -> Boolean,
+  onUnlock: () -> Unit,
+) {
   if (missions.isNotEmpty()) {
     RewardsSection(
       title = stringResource(R.string.play_and_earn_missions_title),
       items = missions,
-      itemContent = { mission -> MissionItem(mission) }
+      itemContent = { mission ->
+        if (isLocked(mission)) LockedMissionItem(mission, onUnlock) else MissionItem(mission)
+      }
     )
   }
 }
 
 @Composable
-private fun CheckpointsSection(checkpoints: List<PaEMission>) {
+private fun CheckpointsSection(
+  checkpoints: List<PaEMission>,
+  isLocked: (PaEMission) -> Boolean,
+  onUnlock: () -> Unit,
+) {
   if (checkpoints.isNotEmpty()) {
     RewardsSection(
       title = stringResource(R.string.play_and_earn_checkpoints_title),
       items = checkpoints,
-      itemContent = { checkpoint -> CheckpointItem(checkpoint) },
+      itemContent = { checkpoint ->
+        if (isLocked(checkpoint)) {
+          LockedMissionItem(checkpoint, onUnlock)
+        } else {
+          CheckpointItem(checkpoint)
+        }
+      },
     )
   }
 }
@@ -316,6 +349,79 @@ private fun PendingMissionItem(mission: PaEMission) {
     }
   }
 }
+
+/**
+ * A mission this app's usage tracking measures, while the usage-access permission is missing
+ * (AND-903): the pending row, dimmed, with a hint and a lock; the whole row opens the permission
+ * flow.
+ */
+@Composable
+private fun LockedMissionItem(mission: PaEMission, onClick: () -> Unit) {
+  Box(
+    modifier = Modifier
+      .fillMaxWidth()
+      .background(Palette.GreyDark)
+      .clickable(onClick = onClick),
+    contentAlignment = Alignment.Center
+  ) {
+    Row(
+      modifier = Modifier.padding(all = 8.dp),
+      verticalAlignment = Alignment.CenterVertically,
+      horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+      AptoideAsyncImage(
+        modifier = Modifier
+          .size(64.dp)
+          .graphicsLayer { alpha = LOCKED_ALPHA },
+        data = mission.icon ?: R.drawable.book,
+        contentDescription = null,
+      )
+      Column(
+        modifier = Modifier.weight(1f),
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+      ) {
+        Text(
+          text = mission.title,
+          style = AGTypography.InputsM,
+          color = Palette.White,
+          modifier = Modifier.graphicsLayer { alpha = LOCKED_ALPHA },
+        )
+        Text(
+          text = stringResource(R.string.play_and_earn_mission_locked_hint),
+          style = AGTypography.Body,
+          color = Palette.Primary,
+        )
+        mission.description?.takeIf { it.isNotBlank() }?.let { description ->
+          Text(
+            text = description,
+            style = AGTypography.Body,
+            color = Palette.GreyLight,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.graphicsLayer { alpha = LOCKED_ALPHA },
+          )
+        }
+      }
+
+      Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier.padding(end = 8.dp),
+      ) {
+        MissionReward(units = mission.units)
+        Icon(
+          imageVector = Icons.Filled.Lock,
+          contentDescription =
+            stringResource(R.string.play_and_earn_mission_locked_content_description),
+          tint = Palette.White,
+          modifier = Modifier.size(20.dp),
+        )
+      }
+    }
+  }
+}
+
+private const val LOCKED_ALPHA = 0.6f
 
 @Composable
 private fun OngoingMissionItem(mission: PaEMission) {
