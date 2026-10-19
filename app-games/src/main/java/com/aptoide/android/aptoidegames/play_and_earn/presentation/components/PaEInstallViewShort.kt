@@ -10,7 +10,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.campaigns.domain.PaEApp
@@ -28,8 +27,6 @@ import com.aptoide.android.aptoidegames.installer.presentation.PlayAttributionLa
 import com.aptoide.android.aptoidegames.installer.presentation.appViewDiversion
 import com.aptoide.android.aptoidegames.installer.presentation.installViewStates
 import com.aptoide.android.aptoidegames.installer.presentation.toInstallViewState
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnSignInRoute
-import com.aptoide.android.aptoidegames.play_and_earn.rememberIsSignedIn
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 
 @PreviewDark
@@ -180,21 +177,12 @@ private fun PaESmallPlayButton(
   packageName: String,
   navigate: ((String) -> Unit)?,
 ) {
-  val isSignedIn = rememberIsSignedIn()
-  val launcher = rememberPaEPlayLauncher(packageName)
-  val context = LocalContext.current
+  // AND-901: the service mode (usage tracking or status heartbeats) is picked per game at tap
+  // time; Play never asks for permissions, only for sign-in.
+  val playTap = rememberPaEPlayTap(packageName = packageName, navigate = navigate)
 
   PaESmallCoinButton(
-    onClick = {
-      if (isSignedIn || navigate == null) {
-        // AND-901: the mode (usage tracking or status heartbeats) is picked per game; Play
-        // never asks for permissions.
-        if (isSignedIn) launcher.launch(context, packageName)
-        onClick()
-      } else {
-        navigate(playAndEarnSignInRoute)
-      }
-    },
+    onClick = playTap.guard(onClick),
     title = stringResource(R.string.play_and_earn_play_button),
   )
 }

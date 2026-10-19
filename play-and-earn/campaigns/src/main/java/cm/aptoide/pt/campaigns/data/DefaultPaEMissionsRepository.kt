@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -34,6 +35,11 @@ internal class DefaultPaEMissionsRepository @Inject constructor(
   private val paeMissionDao: PaeMissionDao,
   private val dispatcher: CoroutineDispatcher
 ) : PaEMissionsRepository {
+
+  // AND-901: the Room cache keeps only the missions, so the campaign's requirements (AND-900) of
+  // the last fetch live here and a cached read still carries the backend's answer within the
+  // process. After a process death they are null again and derived from the missions.
+  private val requirements = ConcurrentHashMap<String, PaECampaignRequirements>()
 
   override suspend fun getCampaignMissions(
     packageName: String,
@@ -77,7 +83,13 @@ internal class DefaultPaEMissionsRepository @Inject constructor(
       val missions = cachedMissions.map { it.toDomain() }
       val checkpoints = missions.filter { it.type == PaEMissionType.CHECKPOINT }
       val regularMissions = missions.filter { it.type != PaEMissionType.CHECKPOINT }
-      PaEMissions(checkpoints = checkpoints, missions = regularMissions)
+      val known = requirements[packageName]
+      PaEMissions(
+        checkpoints = checkpoints,
+        missions = regularMissions,
+        requiresUsageAccess = known?.usageAccess,
+        requiresMmp = known?.mmp,
+      )
     }
   } catch (e: Throwable) {
     e.printStackTrace()
@@ -115,9 +127,15 @@ internal class DefaultPaEMissionsRepository @Inject constructor(
     val allMissions = missions.checkpoints + missions.missions
     val entities = allMissions.map { it.toEntity(packageName) }
     paeMissionDao.replaceAppMissions(packageName, entities)
+    requirements[packageName] = PaECampaignRequirements(
+      usageAccess = missions.requiresUsageAccess,
+      mmp = missions.requiresMmp,
+    )
 
     return missions
   }
+
+  private data class PaECampaignRequirements(val usageAccess: Boolean?, val mmp: Boolean?)
 }
 
 private fun PaEMissionsJson.toDomainModel() = PaEMissions(
