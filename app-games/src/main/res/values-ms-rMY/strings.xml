@@ -405,7 +405,7 @@ Promosi khas dan ganjaran dalam permainan kegemaran anda.</string>
   <string name="play_and_earn_notification_status_body">You\'ll get a notification when the game confirms a mission.</string>
   <string name="play_and_earn_mission_completed_notification_body">Anda memperoleh %1$d UT dalam %2$s</string>
   <string name="settings_play_and_earn_tracking">Play &amp; Earn Tracking</string>
-  <string name="settings_play_and_earn_tracking_description">Aptoide uses this setting to measure your in-app activity and credit you for time played and milestones reached. If disabled, rewards will not be tracked until you re-launch a game through Aptoide.</string>
+  <string name="settings_play_and_earn_tracking_description">Aptoide measures your in-app activity to credit you for time played. When off, playing through Aptoide only tracks the missions the game itself confirms.</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Success! Your rewards journey begins now 🎉</string>
   <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Earning outside Google\'s store is tricky. Grant these permissions so we can <1>verify gameplay</1> and <2>send rewards to your wallet</2>.]]></string>
@@ -478,6 +478,8 @@ Promosi khas dan ganjaran dalam permainan kegemaran anda.</string>
   <string name="play_and_earn_exchange_your_balance_label">Baki Anda</string>
   <string name="play_and_earn_exclusive_offer">Tawaran eksklusif</string>
   <string name="play_and_earn_mission_minutes_left">%1$d minit lagi</string>
+  <string name="play_and_earn_mission_locked_hint">Allow usage access to earn this</string>
+  <string name="play_and_earn_mission_locked_content_description">Locked</string>
   <string name="play_and_earn_mission_seconds_left">%1$d saat lagi</string>
   <string name="play_and_earn_more_games_more">Lebih banyak permainan. Lebih banyak %1$s.</string>
   <string name="play_and_earn_my_balance_button">Baki Saya</string>

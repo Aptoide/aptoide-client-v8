@@ -437,7 +437,7 @@
   <string name="play_and_earn_notification_status_body">Вы получите уведомление, когда игра подтвердит миссию.</string>
   <string name="play_and_earn_mission_completed_notification_body">Вы заработали %1$d UT в %2$s</string>
   <string name="settings_play_and_earn_tracking">Отслеживание Play &amp; Earn</string>
-  <string name="settings_play_and_earn_tracking_description">Aptoide использует этот параметр для измерения вашей активности в приложении и начисления вам баллов за проведённое время и достигнутые цели. Если параметр отключён, вознаграждения не будут фиксироваться до повторного запуска игры через Aptoide.</string>
+  <string name="settings_play_and_earn_tracking_description">Aptoide измеряет вашу активность в приложении, чтобы начислять награду за время игры. Если выключено, при игре через Aptoide отслеживаются только задания, подтверждённые самой игрой.</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Успех! Ваше путешествие к наградам начинается сейчас 🎉</string>
   <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Зарабатывать вне магазина Google довольно сложно. Предоставьте эти разрешения, чтобы мы могли <1>проверить игровой процесс</1> и <2>отправить награды в ваш кошелек</2>.]]></string>
@@ -510,6 +510,8 @@
   <string name="play_and_earn_exchange_your_balance_label">Ваш баланс</string>
   <string name="play_and_earn_exclusive_offer">Эксклюзивное предложение</string>
   <string name="play_and_earn_mission_minutes_left">Осталось %1$d минут</string>
+  <string name="play_and_earn_mission_locked_hint">Разрешите доступ к данным об использовании, чтобы получить это</string>
+  <string name="play_and_earn_mission_locked_content_description">Заблокировано</string>
   <string name="play_and_earn_mission_seconds_left">Осталось %1$d секунд</string>
   <string name="play_and_earn_more_games_more">Больше игр. Больше %1$s.</string>
   <string name="play_and_earn_my_balance_button">Мой баланс</string>

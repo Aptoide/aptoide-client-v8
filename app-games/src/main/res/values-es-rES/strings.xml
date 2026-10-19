@@ -415,7 +415,7 @@
   <string name="play_and_earn_notification_status_body">Recibirás una notificación cuando el juego confirme una misión.</string>
   <string name="play_and_earn_mission_completed_notification_body">Has ganado %1$d UT en %2$s</string>
   <string name="settings_play_and_earn_tracking">Seguimiento de Play &amp; Earn</string>
-  <string name="settings_play_and_earn_tracking_description">Aptoide utiliza este ajuste para medir tu actividad en la app y recompensarte por el tiempo jugado y los hitos alcanzados. Si lo desactivas, las recompensas no se registrarán hasta que vuelvas a iniciar un juego desde Aptoide.</string>
+  <string name="settings_play_and_earn_tracking_description">Aptoide mide tu actividad en la aplicación para acreditarte el tiempo jugado. Si está desactivado, al jugar a través de Aptoide solo se registran las misiones que confirma el propio juego.</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">¡Éxito! Tu viaje hacia las recompensas comienza ahora 🎉</string>
   <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Ganar dinero fuera de la tienda de Google es complicado. Concede estos permisos para que podamos <1>verificar el juego</1> y <2>enviar recompensas a tu monedero</2>.]]></string>
@@ -470,6 +470,8 @@
   <string name="play_and_earn_permissions_open_settings_button">Abrir ajustes de Android</string>
   <string name="play_and_earn_mission_seconds_left">%1$d segundos restantes</string>
   <string name="play_and_earn_mission_minutes_left">%1$d minutos restantes</string>
+  <string name="play_and_earn_mission_locked_hint">Permite el acceso a los datos de uso para ganar esto</string>
+  <string name="play_and_earn_mission_locked_content_description">Bloqueado</string>
   <string name="play_and_earn_play_and_earn_up_to_button">Play &amp; Earn hasta $%1$.2f</string>
   <string name="play_and_earn_permissions_almost_ready_title">¡Casi listo para ganar!</string>
   <string name="play_and_earn_exchange_units_to_go">%1$d unidades restantes</string>

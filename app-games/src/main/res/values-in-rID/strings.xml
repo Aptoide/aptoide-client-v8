@@ -404,7 +404,7 @@
   <string name="play_and_earn_notification_status_body">Anda akan menerima notifikasi saat game mengonfirmasi misi.</string>
   <string name="play_and_earn_mission_completed_notification_body">Anda mendapatkan %1$d UT di %2$s</string>
   <string name="settings_play_and_earn_tracking">Pelacakan Play &amp; Earn</string>
-  <string name="settings_play_and_earn_tracking_description">Aptoide menggunakan pengaturan ini untuk mengukur aktivitas Anda di dalam aplikasi dan memberikan kredit atas waktu bermain serta pencapaian yang diraih. Jika dinonaktifkan, hadiah tidak akan dilacak sampai Anda membuka ulang game melalui Aptoide.</string>
+  <string name="settings_play_and_earn_tracking_description">Aptoide mengukur aktivitas Anda di dalam aplikasi untuk menghitung waktu bermain. Jika nonaktif, bermain melalui Aptoide hanya melacak misi yang dikonfirmasi oleh game itu sendiri.</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Selamat! Perjalanan Anda untuk mendapatkan hadiah dimulai sekarang 🎉</string>
   <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Mendapatkan penghasilan di luar toko Google cukup rumit. Berikan izin ini agar kami dapat <1>memverifikasi permainan</1> dan <2>mengirimkan hadiah ke dompet Anda</2>.]]></string>
@@ -477,6 +477,8 @@
   <string name="play_and_earn_exchange_your_balance_label">Saldo Anda</string>
   <string name="play_and_earn_exclusive_offer">Penawaran eksklusif</string>
   <string name="play_and_earn_mission_minutes_left">%1$d menit tersisa</string>
+  <string name="play_and_earn_mission_locked_hint">Izinkan akses data penggunaan untuk mendapatkan ini</string>
+  <string name="play_and_earn_mission_locked_content_description">Terkunci</string>
   <string name="play_and_earn_mission_seconds_left">%1$d detik tersisa</string>
   <string name="play_and_earn_more_games_more">Lebih banyak game. Lebih banyak %1$s.</string>
   <string name="play_and_earn_my_balance_button">Saldo Saya</string>

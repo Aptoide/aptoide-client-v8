@@ -415,7 +415,7 @@
   <string name="play_and_earn_notification_status_body">Értesítést kapsz, amikor a játék megerősít egy küldetést.</string>
   <string name="play_and_earn_mission_completed_notification_body">Szereztél %1$d UT-t ebben: %2$s</string>
   <string name="settings_play_and_earn_tracking">Play &amp; Earn követés</string>
-  <string name="settings_play_and_earn_tracking_description">Az Aptoide ezt a beállítást használja az alkalmazáson belüli tevékenységeid mérésére, és így jóváírja a játszott időt és az elért mérföldköveket. Ha letiltod, a jutalmak nem kerülnek rögzítésre, amíg újra nem indítod a játékot az Aptoide-on keresztül.</string>
+  <string name="settings_play_and_earn_tracking_description">Az Aptoide méri az alkalmazásban végzett tevékenységedet, hogy jóváírja a játékidőt. Kikapcsolva az Aptoide-on keresztüli játék csak a játék által megerősített küldetéseket követi.</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Siker! A jutalom utazásod most kezdődik 🎉</string>
   <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[A Google áruházán kívül pénzt keresni nem egyszerű. Engedélyezze ezeket a jogosultságokat, hogy <1>ellenőrizhessük a játékmenetet</1>, és <2>jutalmakat küldhessünk a pénztárcájába</2>.]]></string>
@@ -488,6 +488,8 @@
   <string name="play_and_earn_exchange_your_balance_label">Az egyenleged</string>
   <string name="play_and_earn_exclusive_offer">Exkluzív ajánlat</string>
   <string name="play_and_earn_mission_minutes_left">%1$d perc van hátra</string>
+  <string name="play_and_earn_mission_locked_hint">Engedélyezd a használati adatokhoz való hozzáférést, hogy megszerezd</string>
+  <string name="play_and_earn_mission_locked_content_description">Zárolva</string>
   <string name="play_and_earn_mission_seconds_left">%1$d másodperc van hátra</string>
   <string name="play_and_earn_more_games_more">Több játék. Több %1$s.</string>
   <string name="play_and_earn_my_balance_button">Az egyenlegem</string>

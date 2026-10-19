@@ -404,7 +404,7 @@
   <string name="play_and_earn_notification_status_body">Bạn sẽ nhận được thông báo khi trò chơi xác nhận một nhiệm vụ.</string>
   <string name="play_and_earn_mission_completed_notification_body">Bạn đã kiếm được %1$d UT trong %2$s</string>
   <string name="settings_play_and_earn_tracking">Theo dõi Play &amp; Earn</string>
-  <string name="settings_play_and_earn_tracking_description">Aptoide sử dụng cài đặt này để đo lường hoạt động trong ứng dụng của bạn và ghi nhận thời gian chơi cũng như các mốc bạn đạt được. Nếu tắt, phần thưởng sẽ không được ghi nhận cho đến khi bạn khởi động lại trò chơi qua Aptoide.</string>
+  <string name="settings_play_and_earn_tracking_description">Aptoide đo hoạt động trong ứng dụng của bạn để ghi nhận thời gian chơi. Khi tắt, chơi qua Aptoide chỉ theo dõi các nhiệm vụ do chính trò chơi xác nhận.</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Thành công! Hành trình nhận thưởng của bạn bắt đầu ngay bây giờ 🎉</string>
   <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Kiếm tiền bên ngoài cửa hàng của Google là điều khá phức tạp. Hãy cấp các quyền này để chúng tôi có thể <1>xác minh hoạt động chơi game</1> và <2>gửi phần thưởng vào ví của bạn</2>.]]></string>
@@ -477,6 +477,8 @@
   <string name="play_and_earn_exchange_your_balance_label">Số dư của bạn</string>
   <string name="play_and_earn_exclusive_offer">Ưu đãi độc quyền</string>
   <string name="play_and_earn_mission_minutes_left">còn %1$d phút</string>
+  <string name="play_and_earn_mission_locked_hint">Cho phép truy cập dữ liệu sử dụng để nhận phần thưởng này</string>
+  <string name="play_and_earn_mission_locked_content_description">Đã khóa</string>
   <string name="play_and_earn_mission_seconds_left">còn %1$d giây</string>
   <string name="play_and_earn_more_games_more">Càng nhiều trò chơi. Càng nhiều %1$s.</string>
   <string name="play_and_earn_my_balance_button">Số dư của tôi</string>

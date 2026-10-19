@@ -415,7 +415,7 @@
   <string name="play_and_earn_notification_status_body">Receberá uma notificação quando o jogo confirmar uma missão.</string>
   <string name="play_and_earn_mission_completed_notification_body">Ganhou %1$d UT em %2$s</string>
   <string name="settings_play_and_earn_tracking">Rastreamento Play &amp; Earn</string>
-  <string name="settings_play_and_earn_tracking_description">Aptoide utiliza esta definição para medir a sua atividade dentro das apps e creditar você pelo tempo jogado e pelas metas atingidas. Se desativar, as recompensas não serão rastreadas até que volte a abrir um jogo pela Aptoide.</string>
+  <string name="settings_play_and_earn_tracking_description">O Aptoide mede a sua atividade na aplicação para creditar o tempo jogado. Se desativado, jogar através do Aptoide rastreia apenas as missões confirmadas pelo próprio jogo.</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Sucesso! A sua jornada de recompensas começa agora 🎉</string>
   <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Ganhar dinheiro fora da loja do Google é complicado. Conceda essas permissões para que possamos <1>verificar o jogo</1> e <2>enviar recompensas para a sua carteira</2>.]]></string>
@@ -488,6 +488,8 @@
   <string name="play_and_earn_exchange_your_balance_label">O seu saldo</string>
   <string name="play_and_earn_exclusive_offer">Oferta exclusiva</string>
   <string name="play_and_earn_mission_minutes_left">Faltam %1$d minutos</string>
+  <string name="play_and_earn_mission_locked_hint">Permita o acesso aos dados de utilização para ganhar isto</string>
+  <string name="play_and_earn_mission_locked_content_description">Bloqueado</string>
   <string name="play_and_earn_mission_seconds_left">Faltam %1$d segundos</string>
   <string name="play_and_earn_more_games_more">Mais jogos. Mais %1$s.</string>
   <string name="play_and_earn_my_balance_button">O meu saldo</string>

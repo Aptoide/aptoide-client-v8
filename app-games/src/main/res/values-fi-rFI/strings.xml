@@ -415,7 +415,7 @@
   <string name="play_and_earn_notification_status_body">Saat ilmoituksen, kun peli vahvistaa tehtävän.</string>
   <string name="play_and_earn_mission_completed_notification_body">Ansaitsit %1$d UT: %2$s</string>
   <string name="settings_play_and_earn_tracking">Play &amp; Earn -seuranta</string>
-  <string name="settings_play_and_earn_tracking_description">Aptoide käyttää tätä asetusta mittaamaan sovelluksen sisäistä toimintaasi ja hyvittääksesi sinulle pelistä kertyneen ajan ja saavutetut virstanpylväät. Jos tämä on pois käytöstä, palkintoja ei seurata ennen kuin käynnistät pelin uudelleen Aptoiden kautta.</string>
+  <string name="settings_play_and_earn_tracking_description">Aptoide mittaa toimintaasi sovelluksessa hyvittääkseen peliajan. Kun tämä on pois päältä, Aptoiden kautta pelattaessa seurataan vain pelin itse vahvistamia tehtäviä.</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Onnistui! Palkintomatkasi alkaa nyt 🎉</string>
   <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Googlen kaupan ulkopuolella ansaitseminen on hankalaa. Myönnä nämä käyttöoikeudet, jotta voimme <1>tarkistaa pelin kulun</1> ja <2>lähettää palkkiot lompakkoosi</2>.]]></string>
@@ -488,6 +488,8 @@
   <string name="play_and_earn_exchange_your_balance_label">Saldosi</string>
   <string name="play_and_earn_exclusive_offer">Eksklusiivinen tarjous</string>
   <string name="play_and_earn_mission_minutes_left">%1$d minuuttia jäljellä</string>
+  <string name="play_and_earn_mission_locked_hint">Salli käyttötietojen käyttö ansaitaksesi tämän</string>
+  <string name="play_and_earn_mission_locked_content_description">Lukittu</string>
   <string name="play_and_earn_mission_seconds_left">%1$d sekuntia jäljellä</string>
   <string name="play_and_earn_more_games_more">Lisää pelejä. Lisää %1$s.</string>
   <string name="play_and_earn_my_balance_button">Saldoni</string>

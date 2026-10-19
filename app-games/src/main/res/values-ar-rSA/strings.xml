@@ -459,7 +459,7 @@
   <string name="play_and_earn_notification_status_body">ستصلك إشعارات عندما تؤكد اللعبة إحدى المهام.</string>
   <string name="play_and_earn_mission_completed_notification_body">لقد ربحت %1$d UT في %2$s</string>
   <string name="settings_play_and_earn_tracking">تتبع Play &amp; Earn</string>
-  <string name="settings_play_and_earn_tracking_description">تستخدم Aptoide هذا الإعداد لقياس نشاطك داخل التطبيق ومنحك رصيدًا مقابل الوقت الذي تلعب فيه والإنجازات التي تحققها. إذا تم التعطيل، لن يتم تتبع المكافآت حتى تعيد تشغيل اللعبة عبر Aptoide.</string>
+  <string name="settings_play_and_earn_tracking_description">يقيس Aptoide نشاطك داخل التطبيق لمنحك مكافآت وقت اللعب. عند الإيقاف، يتتبع اللعب عبر Aptoide فقط المهام التي تؤكدها اللعبة نفسها.</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">نجاح! تبدأ رحلة مكافآتك الآن 🎉</string>
   <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[يصعب تحقيق أرباح خارج متجر Google. امنحنا هذه الأذونات حتى نتمكن من <1>التحقق من اللعب</1> <2>وإرسال المكافآت إلى محفظتك</2>.]]></string>
@@ -532,6 +532,8 @@
   <string name="play_and_earn_exchange_your_balance_label">رصيدك</string>
   <string name="play_and_earn_exclusive_offer">عرض حصري</string>
   <string name="play_and_earn_mission_minutes_left">تبقّى %1$d دقيقة</string>
+  <string name="play_and_earn_mission_locked_hint">السماح بالوصول إلى بيانات الاستخدام لكسب هذه المكافأة</string>
+  <string name="play_and_earn_mission_locked_content_description">مقفل</string>
   <string name="play_and_earn_mission_seconds_left">تبقّى %1$d ثانية</string>
   <string name="play_and_earn_more_games_more">المزيد من الألعاب. المزيد من %1$s.</string>
   <string name="play_and_earn_my_balance_button">رصيدي</string>

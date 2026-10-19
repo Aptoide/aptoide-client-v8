@@ -415,7 +415,7 @@
   <string name="play_and_earn_notification_status_body">Oyun bir görevi onayladığında bildirim alacaksınız.</string>
   <string name="play_and_earn_mission_completed_notification_body">%2$s içinde %1$d UT kazandınız</string>
   <string name="settings_play_and_earn_tracking">Play &amp; Earn Takibi</string>
-  <string name="settings_play_and_earn_tracking_description">Aptoide, bu ayarı uygulama içi etkinliğinizi ölçmek ve oynadığınız süre ile ulaştığınız kilometre taşları için sizi ödüllendirmek amacıyla kullanır. Devre dışı bırakılırsa, ödüller Aptoide üzerinden bir oyunu tekrar başlatana kadar takip edilmez.</string>
+  <string name="settings_play_and_earn_tracking_description">Aptoide, oynanan süreyi hesaba katmak için uygulama içi etkinliğinizi ölçer. Kapalıyken Aptoide üzerinden oynamak yalnızca oyunun kendisinin onayladığı görevleri takip eder.</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Başarılı! Ödül yolculuğunuz şimdi başlıyor 🎉</string>
   <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Google mağazasının dışında para kazanmak zordur. <1>Oyun oynanışını doğrulayabilmemiz</1> ve <2>ödülleri cüzdanınıza gönderebilmemiz</2> için bu izinleri verin.]]></string>
@@ -488,6 +488,8 @@
   <string name="play_and_earn_exchange_your_balance_label">Bakiyeniz</string>
   <string name="play_and_earn_exclusive_offer">Özel teklif</string>
   <string name="play_and_earn_mission_minutes_left">%1$d dakika kaldı</string>
+  <string name="play_and_earn_mission_locked_hint">Bunu kazanmak için kullanım verilerine erişime izin verin</string>
+  <string name="play_and_earn_mission_locked_content_description">Kilitli</string>
   <string name="play_and_earn_mission_seconds_left">%1$d saniye kaldı</string>
   <string name="play_and_earn_more_games_more">Daha fazla oyun. Daha fazla %1$s.</string>
   <string name="play_and_earn_my_balance_button">Bakiyem</string>

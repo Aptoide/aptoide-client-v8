@@ -415,7 +415,7 @@
   <string name="play_and_earn_notification_status_body">Θα λάβετε ειδοποίηση όταν το παιχνίδι επιβεβαιώσει μια αποστολή.</string>
   <string name="play_and_earn_mission_completed_notification_body">Κερδίσατε %1$d UT σε %2$s</string>
   <string name="settings_play_and_earn_tracking">Παρακολούθηση Play &amp; Earn</string>
-  <string name="settings_play_and_earn_tracking_description">Η Aptoide χρησιμοποιεί αυτή τη ρύθμιση για να μετρά τη δραστηριότητά σας στην εφαρμογή και να σας αποδίδει χρόνο παιχνιδιού και επιτεύγματα. Αν απενεργοποιηθεί, οι ανταμοιβές δεν θα παρακολουθούνται μέχρι να ανοίξετε ξανά ένα παιχνίδι μέσω της Aptoide.</string>
+  <string name="settings_play_and_earn_tracking_description">Το Aptoide μετρά τη δραστηριότητά σας στην εφαρμογή για να πιστώσει τον χρόνο παιχνιδιού. Όταν είναι απενεργοποιημένο, το παιχνίδι μέσω Aptoide παρακολουθεί μόνο τις αποστολές που επιβεβαιώνει το ίδιο το παιχνίδι.</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Επιτυχία! Το ταξίδι σας προς τις ανταμοιβές ξεκινά τώρα 🎉</string>
   <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Η απόκτηση εσόδων εκτός του καταστήματος της Google είναι δύσκολη. Χορηγήστε αυτές τις άδειες, ώστε να μπορούμε να <1>επαληθεύσουμε το παιχνίδι</1> και <2>να στείλουμε ανταμοιβές στο πορτοφόλι σας</2>.]]></string>
@@ -488,6 +488,8 @@
   <string name="play_and_earn_exchange_your_balance_label">Το υπόλοιπό σας</string>
   <string name="play_and_earn_exclusive_offer">Αποκλειστική προσφορά</string>
   <string name="play_and_earn_mission_minutes_left">Απομένουν %1$d λεπτά</string>
+  <string name="play_and_earn_mission_locked_hint">Επιτρέψτε την πρόσβαση στα δεδομένα χρήσης για να το κερδίσετε</string>
+  <string name="play_and_earn_mission_locked_content_description">Κλειδωμένο</string>
   <string name="play_and_earn_mission_seconds_left">Απομένουν %1$d δευτερόλεπτα</string>
   <string name="play_and_earn_more_games_more">Περισσότερα παιχνίδια. Περισσότερα %1$s.</string>
   <string name="play_and_earn_my_balance_button">Το υπόλοιπό μου</string>

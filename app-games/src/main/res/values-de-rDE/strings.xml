@@ -415,7 +415,7 @@
   <string name="play_and_earn_notification_status_body">Sie erhalten eine Benachrichtigung, sobald das Spiel eine Mission bestätigt.</string>
   <string name="play_and_earn_mission_completed_notification_body">Du hast %1$d UT in %2$s verdient</string>
   <string name="settings_play_and_earn_tracking">Play &amp; Earn-Verfolgung</string>
-  <string name="settings_play_and_earn_tracking_description">Aptoide verwendet diese Einstellung, um deine Aktivitäten in der App zu messen und dir Zeitgutschriften sowie erreichte Meilensteine zuzuweisen. Wenn sie deaktiviert ist, werden Belohnungen erst wieder nach dem erneuten Start eines Spiels über Aptoide erfasst.</string>
+  <string name="settings_play_and_earn_tracking_description">Aptoide misst Ihre In-App-Aktivität, um Ihnen die Spielzeit gutzuschreiben. Wenn deaktiviert, werden beim Spielen über Aptoide nur die Missionen verfolgt, die das Spiel selbst bestätigt.</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Erfolg! Ihre Belohnungsreise beginnt jetzt 🎉</string>
   <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Außerhalb des Google-Stores Geld zu verdienen ist schwierig. Erteilen Sie diese Berechtigungen, damit wir <1>das Spielgeschehen überprüfen</1> und <2>Belohnungen an Ihre Wallet senden</2> können.]]></string>
@@ -471,6 +471,8 @@
   <string name="play_and_earn_play_and_earn_up_to_button">Play &amp; Earn bis zu %1$.2f $</string>
   <string name="play_and_earn_mission_seconds_left">%1$d Sekunden übrig</string>
   <string name="play_and_earn_mission_minutes_left">%1$d Minuten übrig</string>
+  <string name="play_and_earn_mission_locked_hint">Zugriff auf Nutzungsdaten erlauben, um dies zu verdienen</string>
+  <string name="play_and_earn_mission_locked_content_description">Gesperrt</string>
   <string name="play_and_earn_permissions_almost_ready_title">Fast bereit zum Verdienen!</string>
   <string name="play_and_earn_exchange_units_to_go">Noch %1$d Einheiten</string>
   <string name="play_and_earn_exchange_units_progress"><![CDATA[<1>%1$d</1>/%2$d Einheiten]]></string>

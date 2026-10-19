@@ -405,7 +405,7 @@
   <string name="play_and_earn_notification_status_body">ゲームがミッションを確認すると通知が届きます。</string>
   <string name="play_and_earn_mission_completed_notification_body">%2$s で %1$d UT を獲得しました</string>
   <string name="settings_play_and_earn_tracking">Play &amp; Earn トラッキング</string>
-  <string name="settings_play_and_earn_tracking_description">Aptoideはこの設定を使用して、アプリ内でのアクティビティを測定し、プレイ時間や達成したマイルストーンに対して報酬を付与します。無効にすると、Aptoide経由でゲームを再起動するまで報酬の追跡が行われません。</string>
+  <string name="settings_play_and_earn_tracking_description">Aptoide はアプリ内のアクティビティを計測し、プレイ時間に応じて報酬を付与します。オフの場合、Aptoide 経由のプレイではゲーム自体が確認したミッションのみが記録されます。</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">成功！あなたの報酬の旅が今始まります 🎉</string>
   <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Googleストア外での収益化は複雑です。<1>ゲームプレイの確認と</1> <2>ウォレットへの報酬送金を</2>可能にするため、これらの権限を許可してください。]]></string>
@@ -478,6 +478,8 @@
   <string name="play_and_earn_exchange_your_balance_label">残高</string>
   <string name="play_and_earn_exclusive_offer">限定オファー</string>
   <string name="play_and_earn_mission_minutes_left">残り %1$d 分</string>
+  <string name="play_and_earn_mission_locked_hint">獲得するには使用状況データへのアクセスを許可してください</string>
+  <string name="play_and_earn_mission_locked_content_description">ロック中</string>
   <string name="play_and_earn_mission_seconds_left">残り %1$d 秒</string>
   <string name="play_and_earn_more_games_more">ゲームを増やす。%1$s も増やす。</string>
   <string name="play_and_earn_my_balance_button">残高</string>

@@ -404,7 +404,7 @@
   <string name="play_and_earn_notification_status_body">คุณจะได้รับการแจ้งเตือนเมื่อเกมยืนยันภารกิจ</string>
   <string name="play_and_earn_mission_completed_notification_body">คุณได้รับ %1$d UT ใน %2$s</string>
   <string name="settings_play_and_earn_tracking">Play &amp; Earn Tracking</string>
-  <string name="settings_play_and_earn_tracking_description">Aptoide uses this setting to measure your in-app activity and credit you for time played and milestones reached. If disabled, rewards will not be tracked until you re-launch a game through Aptoide.</string>
+  <string name="settings_play_and_earn_tracking_description">Aptoide วัดกิจกรรมในแอปของคุณเพื่อให้เครดิตตามเวลาที่เล่น เมื่อปิด การเล่นผ่าน Aptoide จะติดตามเฉพาะภารกิจที่เกมยืนยันเองเท่านั้น</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">สำเร็จ! การเดินทางสู่รางวัลของคุณเริ่มต้นขึ้นแล้ว 🎉</string>
   <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[การหารายได้นอกร้านค้าของ Google นั้นค่อนข้างซับซ้อน โปรดอนุญาตสิทธิ์เหล่านี้<1>เพื่อให้เราสามารถตรวจสอบ</1> <2>การเล่นเกมและส่งรางวัลไปยังกระเป๋าเงินของคุณได้</2>]]></string>
@@ -477,6 +477,8 @@
   <string name="play_and_earn_exchange_your_balance_label">ยอดคงเหลือของคุณ</string>
   <string name="play_and_earn_exclusive_offer">ข้อเสนอพิเศษเฉพาะ</string>
   <string name="play_and_earn_mission_minutes_left">เหลืออีก %1$d นาที</string>
+  <string name="play_and_earn_mission_locked_hint">อนุญาตการเข้าถึงข้อมูลการใช้งานเพื่อรับรางวัลนี้</string>
+  <string name="play_and_earn_mission_locked_content_description">ล็อกอยู่</string>
   <string name="play_and_earn_mission_seconds_left">เหลืออีก %1$d วินาที</string>
   <string name="play_and_earn_more_games_more">เกมมากขึ้น %1$s มากขึ้น</string>
   <string name="play_and_earn_my_balance_button">ยอดคงเหลือของฉัน</string>

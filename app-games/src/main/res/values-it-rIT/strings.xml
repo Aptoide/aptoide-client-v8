@@ -415,7 +415,7 @@
   <string name="play_and_earn_notification_status_body">Riceverai una notifica quando il gioco conferma una missione.</string>
   <string name="play_and_earn_mission_completed_notification_body">Hai guadagnato %1$d UT in %2$s</string>
   <string name="settings_play_and_earn_tracking">Monitoraggio Play &amp; Earn</string>
-  <string name="settings_play_and_earn_tracking_description">Aptoide usa questa impostazione per misurare la tua attività in-app e accreditarti per il tempo di gioco e per gli obiettivi raggiunti. Se disabilitata, le ricompense non verranno monitorate finché non rilancerai un gioco tramite Aptoide.</string>
+  <string name="settings_play_and_earn_tracking_description">Aptoide misura la tua attività nell\'app per accreditarti il tempo di gioco. Se disattivato, giocando tramite Aptoide vengono monitorate solo le missioni confermate dal gioco stesso.</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Ce l\'hai fatta! Il tuo viaggio verso i premi inizia ora 🎉</string>
   <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Guadagnare al di fuori dello store di Google è complicato. Concedi queste autorizzazioni in modo che possiamo <1>verificare il gameplay</1> e <2>inviare i premi al tuo portafoglio</2>.]]></string>
@@ -470,6 +470,8 @@
   <string name="play_and_earn_permissions_open_settings_button">Apri le impostazioni Android</string>
   <string name="play_and_earn_mission_seconds_left">%1$d secondi rimasti</string>
   <string name="play_and_earn_mission_minutes_left">%1$d minuti rimasti</string>
+  <string name="play_and_earn_mission_locked_hint">Consenti l\'accesso ai dati di utilizzo per ottenere questo</string>
+  <string name="play_and_earn_mission_locked_content_description">Bloccato</string>
   <string name="play_and_earn_play_and_earn_up_to_button">Gioca &amp; Guadagna fino a $%1$.2f</string>
   <string name="play_and_earn_permissions_almost_ready_title">Quasi pronto a guadagnare!</string>
   <string name="play_and_earn_exchange_units_to_go">%1$d unità mancanti</string>

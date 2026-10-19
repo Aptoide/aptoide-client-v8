@@ -404,7 +404,7 @@
   <string name="play_and_earn_notification_status_body">游戏确认任务后，您将收到通知。</string>
   <string name="play_and_earn_mission_completed_notification_body">您在 %2$s 中赚取了 %1$d UT</string>
   <string name="settings_play_and_earn_tracking">Play &amp; Earn 跟踪</string>
-  <string name="settings_play_and_earn_tracking_description">Aptoide 会使用此设置来衡量您的应用内活动，并根据您的游戏时间和达成的里程碑为您积金。如果关闭该设置，只有通过 Aptoide 重新启动游戏后，奖励才会被跟踪。</string>
+  <string name="settings_play_and_earn_tracking_description">Aptoide 会测量你的应用内活动，以便为游戏时长发放奖励。关闭后，通过 Aptoide 游玩时仅跟踪由游戏本身确认的任务。</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">成功！您的奖励之旅即刻启程 🎉</string>
   <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[在谷歌商店外获取收益存在风险。请授予这些权限，以便我们<1>验证游戏进度</1>并将<2>奖励发送至您的钱包</2>。]]></string>
@@ -477,6 +477,8 @@
   <string name="play_and_earn_exchange_your_balance_label">您的余额</string>
   <string name="play_and_earn_exclusive_offer">专属优惠</string>
   <string name="play_and_earn_mission_minutes_left">剩余 %1$d 分钟</string>
+  <string name="play_and_earn_mission_locked_hint">允许访问使用数据以获得此奖励</string>
+  <string name="play_and_earn_mission_locked_content_description">已锁定</string>
   <string name="play_and_earn_mission_seconds_left">剩余 %1$d 秒</string>
   <string name="play_and_earn_more_games_more">更多游戏。更多 %1$s。</string>
   <string name="play_and_earn_my_balance_button">我的余额</string>

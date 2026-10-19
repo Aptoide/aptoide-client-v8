@@ -415,7 +415,7 @@
   <string name="play_and_earn_notification_status_body">Vous recevrez une notification lorsque le jeu confirmera une mission.</string>
   <string name="play_and_earn_mission_completed_notification_body">Vous avez gagné %1$d UT dans %2$s</string>
   <string name="settings_play_and_earn_tracking">Suivi Play &amp; Earn</string>
-  <string name="settings_play_and_earn_tracking_description">Aptoide utilise ce paramètre pour mesurer votre activité dans l’application et vous créditer selon le temps de jeu et les étapes franchies. Si la fonctionnalité est désactivée, les récompenses ne seront pas comptabilisées tant que vous ne relancez pas un jeu via Aptoide.</string>
+  <string name="settings_play_and_earn_tracking_description">Aptoide mesure votre activité dans l\'application pour créditer le temps de jeu. Si désactivé, jouer via Aptoide ne suit que les missions confirmées par le jeu lui-même.</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Bravo ! Votre parcours vers les récompenses commence maintenant 🎉</string>
   <string name="play_and_earn_permissions_allow_permissions_body"><![CDATA[Il est difficile de gagner de l\'argent en dehors de la boutique Google. Accordez ces autorisations afin que nous puissions <1>vérifier votre progression dans le jeu</1> et <2>envoyer des récompenses sur votre portefeuille</2>.]]></string>
@@ -488,6 +488,8 @@
   <string name="play_and_earn_exchange_your_balance_label">Votre solde</string>
   <string name="play_and_earn_exclusive_offer">Offre exclusive</string>
   <string name="play_and_earn_mission_minutes_left">%1$d minutes restantes</string>
+  <string name="play_and_earn_mission_locked_hint">Autorisez l\'accès aux données d\'utilisation pour gagner ceci</string>
+  <string name="play_and_earn_mission_locked_content_description">Verrouillé</string>
   <string name="play_and_earn_mission_seconds_left">%1$d secondes restantes</string>
   <string name="play_and_earn_more_games_more">Plus de jeux. Plus de %1$s.</string>
   <string name="play_and_earn_my_balance_button">Mon solde</string>
