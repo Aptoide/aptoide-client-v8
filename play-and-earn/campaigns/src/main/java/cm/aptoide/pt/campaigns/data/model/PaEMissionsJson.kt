@@ -11,6 +11,9 @@ internal data class PaEMissionsJson(
   @SerializedName("campaign_id") val campaignId: Long?,
   @SerializedName("mmp_click_url") val mmpClickUrl: String?,
   val attribution: PaEAttributionJson?,
+  // AND-900: what the campaign needs to be earned. Absent on older backends.
+  @SerializedName("requires_usage_access") val requiresUsageAccess: Boolean?,
+  @SerializedName("requires_mmp") val requiresMmp: Boolean?,
 )
 
 // The user's status for the game's campaign; only sent to signed-in users.
@@ -37,7 +40,9 @@ internal data class PaEMissionJson(
   val type: PaEMissionTypeJson,
   val arguments: JsonObject,
   val units: Int,
-  val progress: PaEMissionProgressJson?
+  val progress: PaEMissionProgressJson?,
+  // AND-900: `aptoide_usage` | `mmp` | `sdk`. Absent on older backends.
+  @SerializedName("evidence_source") val evidenceSource: String?,
 )
 
 @Keep

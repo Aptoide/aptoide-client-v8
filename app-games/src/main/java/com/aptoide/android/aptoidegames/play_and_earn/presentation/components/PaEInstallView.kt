@@ -55,10 +55,8 @@ import com.aptoide.android.aptoidegames.installer.presentation.PlayAttributionLa
 import com.aptoide.android.aptoidegames.installer.presentation.getProgressString
 import com.aptoide.android.aptoidegames.installer.presentation.installViewStates
 import com.aptoide.android.aptoidegames.installer.presentation.toInstallViewState
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.rememberPlayAndEarnSetupRoute
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.service.PaEForegroundService
-import com.aptoide.android.aptoidegames.play_and_earn.rememberIsPaEUsageTrackingEnabled
-import com.aptoide.android.aptoidegames.play_and_earn.rememberPlayAndEarnReady
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnSignInRoute
+import com.aptoide.android.aptoidegames.play_and_earn.rememberIsSignedIn
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -335,9 +333,8 @@ private fun PaEPlayButton(
   modifier: Modifier = Modifier,
   rewardAmount: BigDecimal? = null,
 ) {
-  val isPaEReady = rememberPlayAndEarnReady()
-  val isUsageTrackingEnabled = rememberIsPaEUsageTrackingEnabled()
-  val paeSetupRoute = rememberPlayAndEarnSetupRoute()
+  val isSignedIn = rememberIsSignedIn()
+  val launcher = rememberPaEPlayLauncher(packageName)
   val context = LocalContext.current
 
   val title = if (rewardAmount != null) {
@@ -349,19 +346,13 @@ private fun PaEPlayButton(
   PaELargeCoinButton(
     title = title,
     onClick = {
-      if (isPaEReady || navigate == null) {
-        if (isPaEReady) {
-          if (isUsageTrackingEnabled) {
-            // Start the foreground service to track playtime
-            PaEForegroundService.start(context)
-          } else {
-            // No usage tracking: heartbeat for the game's MMP-confirmed missions (AND-879)
-            PaEForegroundService.startStatusHeartbeat(context, packageName)
-          }
-        }
+      if (isSignedIn || navigate == null) {
+        // AND-901: the mode (usage tracking or status heartbeats) is picked per game; Play
+        // never asks for permissions.
+        if (isSignedIn) launcher.launch(context, packageName)
         onClick()
       } else {
-        navigate(paeSetupRoute)
+        navigate(playAndEarnSignInRoute)
       }
     },
     modifier = modifier,
