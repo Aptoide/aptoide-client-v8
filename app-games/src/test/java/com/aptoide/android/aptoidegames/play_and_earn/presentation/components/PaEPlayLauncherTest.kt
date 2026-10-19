@@ -161,4 +161,37 @@ internal class PaEPlayLauncherTest {
     assertEquals("com.game.event", starts.status)
     assertEquals(0, starts.tracking)
   }
+
+  @Test
+  fun `Tracking mode needs every condition at once`() = scenario {
+    m Given "every combination of flag, opt-in, missions (yes / no / unknown) and permissions"
+    val combinations = buildList {
+      for (flag in listOf(true, false)) for (optedIn in listOf(true, false)) {
+        for (needs in listOf(true, false, null)) for (perms in listOf(true, false)) {
+          add(listOf(flag, optedIn, needs, perms))
+        }
+      }
+    }
+
+    m When "the mode is picked for each one"
+    val modes = combinations.associateWith { (flag, optedIn, needs, perms) ->
+      launcher(
+        needsUsageAccess = needs,
+        usageTrackingEnabled = flag!!,
+        optedIn = optedIn!!,
+        hasUsagePermissions = { perms!! },
+      ).mode()
+    }
+
+    m Then "only the all-true row tracks; the other 23 run in status mode"
+    val expected = combinations.associateWith { (flag, optedIn, needs, perms) ->
+      if (flag == true && optedIn == true && needs == true && perms == true) {
+        PaEPlayMode.TRACKING
+      } else {
+        PaEPlayMode.STATUS
+      }
+    }
+    assertEquals(expected, modes)
+    assertEquals(1, modes.values.count { it == PaEPlayMode.TRACKING })
+  }
 }

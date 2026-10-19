@@ -40,9 +40,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -59,6 +56,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.extensions.multiTap
@@ -79,8 +79,7 @@ import com.aptoide.android.aptoidegames.network.presentation.NetworkPreferencesV
 import com.aptoide.android.aptoidegames.play_and_earn.di.rememberWalletAddress
 import com.aptoide.android.aptoidegames.play_and_earn.domain.UserInfo
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaESmallTextButton
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.hasOverlayPermission
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.hasUsageStatsPermissionStatus
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.hasPaEPermissions
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.service.PaEServicePreferencesViewModel
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.GoogleSignInViewModel
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnSignInRoute
@@ -745,7 +744,7 @@ internal fun showPaETrackingToggle(
 private fun rememberHasUsagePermissionsOnResume(): Boolean {
   val context = LocalContext.current
   val lifecycleOwner = LocalLifecycleOwner.current
-  val read = { context.hasUsageStatsPermissionStatus() && context.hasOverlayPermission() }
+  val read = { context.hasPaEPermissions() }
   var granted by remember { mutableStateOf(read()) }
 
   DisposableEffect(lifecycleOwner) {

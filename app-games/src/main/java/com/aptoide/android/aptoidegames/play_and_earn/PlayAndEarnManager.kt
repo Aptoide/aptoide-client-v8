@@ -18,8 +18,7 @@ import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.device_info.DeviceCountryProvider
 import com.aptoide.android.aptoidegames.device_info.DeviceSecurityChecker
 import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPreferencesRepository
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.hasOverlayPermission
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.hasUsageStatsPermissionStatus
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.hasPaEPermissions
 import com.google.firebase.Firebase
 import com.google.firebase.remoteconfig.ConfigUpdate
 import com.google.firebase.remoteconfig.ConfigUpdateListener
@@ -173,8 +172,10 @@ class PlayAndEarnManager @Inject constructor(
    * The usage-access and overlay permissions. Not a gate for Play any more (AND-901): Play runs
    * in the mode they allow, and the locked time missions ask for them.
    */
-  fun hasRequiredPermissions(): Boolean =
-    context.hasUsageStatsPermissionStatus() && context.hasOverlayPermission()
+  fun hasRequiredPermissions(): Boolean = context.hasPaEPermissions()
+
+  /** Granting the permissions from the lock is an opt-in (AND-902): the Settings switch goes on. */
+  suspend fun optInToUsageTracking() = paEPreferencesRepository.setPaEServiceEnabled(true)
 }
 
 @HiltViewModel

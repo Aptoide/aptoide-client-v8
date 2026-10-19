@@ -56,22 +56,9 @@ import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
  */
 const val playAndEarnSignInRoute = "playAndEarnSignIn"
 
-/** Sign-in only. Same behaviour as [playAndEarnSignInRoute] since AND-902; kept for its callers. */
-const val playAndEarnSignInOnlyRoute = "playAndEarnSignInOnly"
-
 fun playAndEarnSignInScreen() = ScreenData.withAnalytics(
   route = playAndEarnSignInRoute,
   screenAnalyticsName = "PlayAndEarnSignIn",
-) { _, _, navigateBack ->
-  PlayAndEarnSignInScreen(
-    navigateBack = navigateBack,
-    onSignInSuccess = navigateBack,
-  )
-}
-
-fun playAndEarnSignInOnlyScreen() = ScreenData.withAnalytics(
-  route = playAndEarnSignInOnlyRoute,
-  screenAnalyticsName = "PlayAndEarnSignInOnly",
 ) { _, _, navigateBack ->
   PlayAndEarnSignInScreen(
     navigateBack = navigateBack,
