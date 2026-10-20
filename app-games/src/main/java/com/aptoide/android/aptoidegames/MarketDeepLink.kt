@@ -12,6 +12,12 @@ private const val SEARCH_HOST = "search"
 private const val PACKAGE_PARAM = "id"
 private const val QUERY_PARAM = "q"
 
+/** Android's own limit on a package name. */
+private const val MAX_PACKAGE_NAME_LENGTH = 255
+
+/** Longer queries are cut here: the value feeds a nav route, a request and analytics. */
+internal const val MAX_SEARCH_QUERY_LENGTH = 256
+
 private val packageNameRegex = Regex("^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z][A-Za-z0-9_]*)+$")
 
 /**
@@ -26,17 +32,18 @@ fun marketUriToDeepLink(
   scheme: String = BuildConfig.DEEP_LINK_SCHEMA,
 ): String? {
   if (!marketUri.startsWith(MARKET_PREFIX, ignoreCase = true)) return null
-  val rest = marketUri.substring(MARKET_PREFIX.length)
+  val rest = marketUri.substring(MARKET_PREFIX.length).substringBefore('#')
   val host = rest.substringBefore('?').substringBefore('/').lowercase()
   val params = parseQuery(rest.substringAfter('?', ""))
 
   return when (host) {
     DETAILS_HOST -> params[PACKAGE_PARAM]
-      ?.takeIf(packageNameRegex::matches)
+      ?.takeIf { it.length <= MAX_PACKAGE_NAME_LENGTH && packageNameRegex.matches(it) }
       ?.let { scheme + buildAppViewRoute(AppSource.of(appId = null, packageName = it)) }
 
     SEARCH_HOST -> params[QUERY_PARAM]
       ?.trim()
+      ?.take(MAX_SEARCH_QUERY_LENGTH)
       ?.takeIf(String::isNotEmpty)
       ?.let { scheme + buildSearchRoute(it.percentEncoded()) }
 
@@ -44,12 +51,14 @@ fun marketUriToDeepLink(
   }
 }
 
-private fun parseQuery(query: String): Map<String, String> = query
-  .split('&')
-  .filter { it.isNotEmpty() }
-  .associate { pair ->
-    pair.substringBefore('=') to pair.substringAfter('=', "").formDecoded()
-  }
+// The first occurrence of a parameter wins, as android.net.Uri.getQueryParameter resolves it.
+private fun parseQuery(query: String): Map<String, String> = buildMap {
+  query.split('&')
+    .filter { it.isNotEmpty() }
+    .forEach { pair ->
+      putIfAbsent(pair.substringBefore('='), pair.substringAfter('=', "").formDecoded())
+    }
+}
 
 private fun String.formDecoded(): String =
   runCatching { URLDecoder.decode(this, Charsets.UTF_8.name()) }.getOrDefault(this)
