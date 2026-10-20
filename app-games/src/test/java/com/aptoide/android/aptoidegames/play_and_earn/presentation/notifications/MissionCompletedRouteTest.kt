@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 // The mission-completed notification is the only Play & Earn entry point the user cannot re-open,
 // so its destination has to be right the first time: the game's appview, already on the Rewards
 // tab, resolved like every other Play & Earn entry point. Asserting the whole route pins the
-// parameter order and the `?&` shape too — both are load-bearing for nav-graph matching, and
+// parameter order and the query shape too — both are load-bearing for nav-graph matching, and
 // `contains` checks would not catch a stray utm parameter or a reordering.
 internal class MissionCompletedRouteTest {
 
@@ -22,7 +22,7 @@ internal class MissionCompletedRouteTest {
     val route = missionCompletedRoute(packageName)
 
     m Then "it is the gamified appview route for that package, with no store (AND-719)"
-    assertEquals("app/package_name=$packageName?&is_gamified=true", route)
+    assertEquals("app/package_name=$packageName?is_gamified=true", route)
   }
 
   @Test
