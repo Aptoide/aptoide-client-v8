@@ -1,6 +1,7 @@
 package com.aptoide.android.aptoidegames.play_and_earn.presentation.notifications
 
 import cm.aptoide.pt.test.gherkin.scenario
+import com.aptoide.android.aptoidegames.appview.appViewRoute
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -25,13 +26,15 @@ internal class MissionCompletedRouteTest {
   }
 
   @Test
-  fun `Route keeps the source in a single path segment`() = scenario {
-    m Given "a mission completed while playing $packageName"
+  fun `Route fits the appview destination's path shape`() = scenario {
+    m Given "the appview destination pattern, $appViewRoute"
+    val patternSegments = appViewRoute.substringBefore("?").split("/")
 
     m When "the notification destination is built"
-    val path = missionCompletedRoute(packageName).substringBefore("?")
+    val pathSegments = missionCompletedRoute(packageName).substringBefore("?").split("/")
 
-    m Then "only the app/ separator splits the path; a second slash can't match app/{source}"
-    assertEquals(1, path.count { it == '/' })
+    m Then "it has the destination's segment count: one more slash and nothing matches (AND-914)"
+    assertEquals(patternSegments.size, pathSegments.size)
+    assertEquals(patternSegments.first(), pathSegments.first())
   }
 }
