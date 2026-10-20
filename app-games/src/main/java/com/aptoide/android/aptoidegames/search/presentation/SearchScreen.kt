@@ -63,6 +63,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
@@ -129,8 +130,8 @@ fun searchScreen() = ScreenData.withAnalytics(
       type = NavType.StringType
       nullable = true
     },
-  )
-  // TODO deepLinks = listOf(navDeepLink { uriPattern = BuildConfig.DEEP_LINK_SCHEMA + searchRoute })
+  ),
+  deepLinks = listOf(navDeepLink { uriPattern = BuildConfig.DEEP_LINK_SCHEMA + searchRoute }),
 ) { args, navigate, navigateBack ->
   val queryValue = args?.getString(QUERY)
 
