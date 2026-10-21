@@ -11,8 +11,9 @@ data class PaEMissions(
   val mmpClickUrl: String? = null,
   // Network only too: null from the cache, which keeps the missions showing.
   val attribution: PaEAttribution? = null,
-  // AND-915: what the campaign is about, as the backend says it. Network only; null from the
-  // cache or an older backend (see [campaignType]).
+  // AND-915: what the campaign is about, as the backend says it. From the network, remembered
+  // for cached reads within the process; null after a process death or from an older backend
+  // (see [campaignType]).
   val type: PaECampaignType? = null,
 )
 

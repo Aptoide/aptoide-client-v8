@@ -199,17 +199,18 @@ internal class PaEPlayLauncherTest {
     }
 
     m Then "play-time+flag+permissions tracks; play-time+flag+no permissions+nav asks; else status"
-    val expected = cases.associateWith { (type, flag, perms, nav) ->
-      when {
-        type != PaECampaignType.PLAY_TIME || flag == false -> PaEPlayMode.STATUS
-        perms == true -> PaEPlayMode.TRACKING
-        nav == true -> PaEPlayMode.REQUEST_PERMISSIONS
-        else -> PaEPlayMode.STATUS
-      }
-    }
     assertEquals(24, cases.size)
-    assertEquals(expected, modes)
-    assertEquals(2, modes.values.count { it == PaEPlayMode.TRACKING })
-    assertEquals(1, modes.values.count { it == PaEPlayMode.REQUEST_PERMISSIONS })
+    assertEquals(
+      setOf(
+        listOf(PaECampaignType.PLAY_TIME, true, true, true),
+        listOf(PaECampaignType.PLAY_TIME, true, true, false),
+      ),
+      modes.filterValues { it == PaEPlayMode.TRACKING }.keys,
+    )
+    assertEquals(
+      setOf(listOf(PaECampaignType.PLAY_TIME, true, false, true)),
+      modes.filterValues { it == PaEPlayMode.REQUEST_PERMISSIONS }.keys,
+    )
+    assertEquals(21, modes.values.count { it == PaEPlayMode.STATUS })
   }
 }

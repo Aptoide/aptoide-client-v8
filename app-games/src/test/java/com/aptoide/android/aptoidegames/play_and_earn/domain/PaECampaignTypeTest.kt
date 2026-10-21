@@ -56,21 +56,34 @@ internal class PaECampaignTypeTest {
 
   @Test
   fun `Without the backend's type a time-based mission makes it play-time`() = scenario {
-    m Given "cached missions: a play-time one among events, and a seconds checkpoint alone"
-    val withPlayTime = PaEMissions(
+    m Given "cached campaigns with one time-based mission each, in every shape it can take"
+    val playTimeAmongEvents = PaEMissions(
       checkpoints = emptyList(),
       missions = listOf(mission(PaEMissionType.EVENT), mission(PaEMissionType.PLAY_TIME)),
     )
-    val secondsCheckpoint = PaEMissions(
+    val playTimeWithoutProgress = PaEMissions(
+      checkpoints = emptyList(),
+      missions = listOf(mission(PaEMissionType.PLAY_TIME, progressType = null)),
+    )
+    val eventInSeconds = PaEMissions(
+      checkpoints = emptyList(),
+      missions = listOf(mission(PaEMissionType.EVENT, PaEMissionProgressType.SECONDS)),
+    )
+    val secondsCheckpointAmongEvents = PaEMissions(
       checkpoints = listOf(mission(PaEMissionType.CHECKPOINT, PaEMissionProgressType.SECONDS)),
-      missions = emptyList(),
+      missions = listOf(mission(PaEMissionType.EVENT)),
     )
 
     m When "the campaign type is read"
-    val types = listOf(withPlayTime.campaignType(), secondsCheckpoint.campaignType())
+    val types = listOf(
+      playTimeAmongEvents,
+      playTimeWithoutProgress,
+      eventInSeconds,
+      secondsCheckpointAmongEvents,
+    ).map { it.campaignType() }
 
-    m Then "both are play-time"
-    assertEquals(listOf(PaECampaignType.PLAY_TIME, PaECampaignType.PLAY_TIME), types)
+    m Then "all are play-time"
+    assertEquals(List(4) { PaECampaignType.PLAY_TIME }, types)
   }
 
   @Test

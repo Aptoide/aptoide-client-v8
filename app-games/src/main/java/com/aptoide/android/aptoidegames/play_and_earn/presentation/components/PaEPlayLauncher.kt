@@ -18,10 +18,12 @@ import com.aptoide.android.aptoidegames.play_and_earn.presentation.service.PaEFo
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnSignInRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -125,14 +127,20 @@ class PaEPlayLauncherViewModel @Inject constructor(
 
   /**
    * Resolved at tap time, so the campaign and the permissions of that moment decide; [open] (or
-   * [requestPermissions]) runs right after the cache read, on the main thread.
+   * [requestPermissions]) runs right after the cache read, on the main thread. The read is
+   * bounded: a cold cache would otherwise fetch, and a slow fetch must not open the game or
+   * navigate after the user has moved on.
    */
   fun play(packageName: String, open: () -> Unit, requestPermissions: (() -> Unit)?) {
-    viewModelScope.launch {
+    // One tap at a time: a second tap during the read must not open the game or push the
+    // permission screens twice.
+    if (inFlight?.isActive == true) return
+    inFlight = viewModelScope.launch {
       // Cache first: the surface showing Play has already fetched the game's missions.
-      val type = missionsRepository.getCampaignMissions(packageName)
-        .getOrNull()?.campaignType()
-      if (type == null) Timber.w("P&E campaign type of $packageName unknown at Play")
+      val type = withTimeoutOrNull(MISSIONS_READ_TIMEOUT_MILLIS) {
+        missionsRepository.getCampaignMissions(packageName).getOrNull()
+      }?.campaignType()
+      if (type == null) Timber.d("P&E campaign type of $packageName unknown at Play")
       PaEPlayLauncher(
         campaignType = type,
         usageTrackingEnabled = playAndEarnManager.isUsageTrackingEnabled(),
@@ -146,6 +154,12 @@ class PaEPlayLauncherViewModel @Inject constructor(
         requestPermissions = { requestPermissions?.invoke() },
       )
     }
+  }
+
+  private var inFlight: Job? = null
+
+  private companion object {
+    const val MISSIONS_READ_TIMEOUT_MILLIS = 2_000L
   }
 }
 

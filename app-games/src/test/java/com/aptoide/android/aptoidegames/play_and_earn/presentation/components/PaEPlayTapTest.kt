@@ -11,20 +11,18 @@ internal class PaEPlayTapTest {
   private class Calls {
     var open = 0
     var signIn = 0
-    var played = 0
+    /** What the launcher was handed; it decides when (and whether) to run it. */
+    var handedOver: (() -> Unit)? = null
   }
 
   private fun tap(isSignedIn: Boolean?, canNavigate: Boolean = true, calls: Calls) = PaEPlayTap(
     isSignedIn = isSignedIn,
     requestSignIn = if (canNavigate) ({ calls.signIn++ }) else null,
-    play = { open ->
-      calls.played++
-      open()
-    },
+    play = { open -> calls.handedOver = open },
   )
 
   @Test
-  fun `Signed-in user plays through the launcher`() = scenario {
+  fun `Signed-in user hands the game's open action to the launcher`() = scenario {
     m Given "a signed-in user"
     val calls = Calls()
     val tap = tap(isSignedIn = true, calls = calls)
@@ -32,11 +30,27 @@ internal class PaEPlayTapTest {
     m When "Play is tapped"
     tap.guard { calls.open++ }()
 
-    m Then "the launcher got the tap, with the game's open action, and no sign-in is requested"
-    assertEquals(1, calls.played)
-    assertEquals(1, calls.open)
+    m Then "the game has not opened by itself: only the launcher can open it, and no sign-in"
+    assertEquals(0, calls.open)
     assertEquals(0, calls.signIn)
+    calls.handedOver!!.invoke()
+    assertEquals(1, calls.open)
   }
+
+  @Test
+  fun `Signed-in user on a surface that cannot navigate still goes through the launcher`() =
+    scenario {
+      m Given "a signed-in user on a surface that cannot navigate"
+      val calls = Calls()
+      val tap = tap(isSignedIn = true, canNavigate = false, calls = calls)
+
+      m When "Play is tapped"
+      tap.guard { calls.open++ }()
+
+      m Then "the launcher got the tap and the game did not open by itself"
+      assertEquals(0, calls.open)
+      assertEquals(true, calls.handedOver != null)
+    }
 
   @Test
   fun `Logged-out user is sent to sign in`() = scenario {
@@ -49,7 +63,7 @@ internal class PaEPlayTapTest {
 
     m Then "sign-in is requested, nothing plays, the game does not open"
     assertEquals(1, calls.signIn)
-    assertEquals(0, calls.played)
+    assertEquals(null, calls.handedOver)
     assertEquals(0, calls.open)
   }
 
@@ -64,7 +78,7 @@ internal class PaEPlayTapTest {
 
     m Then "the game opens directly, nothing else happens"
     assertEquals(1, calls.open)
-    assertEquals(0, calls.played)
+    assertEquals(null, calls.handedOver)
     assertEquals(0, calls.signIn)
   }
 
@@ -80,6 +94,6 @@ internal class PaEPlayTapTest {
     m Then "the game opens, no sign-in is requested, the launcher is not involved"
     assertEquals(1, calls.open)
     assertEquals(0, calls.signIn)
-    assertEquals(0, calls.played)
+    assertEquals(null, calls.handedOver)
   }
 }
