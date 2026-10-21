@@ -12,7 +12,7 @@ import cm.aptoide.pt.campaigns.data.model.PaEMissionTypeJson
 import cm.aptoide.pt.campaigns.data.model.PaEMissionsJson
 import cm.aptoide.pt.campaigns.domain.PaEAttribution
 import cm.aptoide.pt.campaigns.domain.PaEAttributionStatus
-import cm.aptoide.pt.campaigns.domain.PaEEvidenceSource
+import cm.aptoide.pt.campaigns.domain.PaECampaignType
 import cm.aptoide.pt.campaigns.domain.PaEMission
 import cm.aptoide.pt.campaigns.domain.PaEMissionProgress
 import cm.aptoide.pt.campaigns.domain.PaEMissionProgressType
@@ -36,10 +36,10 @@ internal class DefaultPaEMissionsRepository @Inject constructor(
   private val dispatcher: CoroutineDispatcher
 ) : PaEMissionsRepository {
 
-  // AND-901: the Room cache keeps only the missions, so the campaign's requirements (AND-900) of
-  // the last fetch live here and a cached read still carries the backend's answer within the
-  // process. After a process death they are null again and derived from the missions.
-  private val requirements = ConcurrentHashMap<String, PaECampaignRequirements>()
+  // AND-901/AND-915: the Room cache keeps only the missions, so the campaign type of the last
+  // fetch lives here and a cached read still carries the backend's answer within the process.
+  // After a process death it is null again and derived from the missions.
+  private val types = ConcurrentHashMap<String, PaECampaignType>()
 
   override suspend fun getCampaignMissions(
     packageName: String,
@@ -83,12 +83,10 @@ internal class DefaultPaEMissionsRepository @Inject constructor(
       val missions = cachedMissions.map { it.toDomain() }
       val checkpoints = missions.filter { it.type == PaEMissionType.CHECKPOINT }
       val regularMissions = missions.filter { it.type != PaEMissionType.CHECKPOINT }
-      val known = requirements[packageName]
       PaEMissions(
         checkpoints = checkpoints,
         missions = regularMissions,
-        requiresUsageAccess = known?.usageAccess,
-        requiresMmp = known?.mmp,
+        type = types[packageName],
       )
     }
   } catch (e: Throwable) {
@@ -127,15 +125,10 @@ internal class DefaultPaEMissionsRepository @Inject constructor(
     val allMissions = missions.checkpoints + missions.missions
     val entities = allMissions.map { it.toEntity(packageName) }
     paeMissionDao.replaceAppMissions(packageName, entities)
-    requirements[packageName] = PaECampaignRequirements(
-      usageAccess = missions.requiresUsageAccess,
-      mmp = missions.requiresMmp,
-    )
+    missions.type?.let { types[packageName] = it } ?: types.remove(packageName)
 
     return missions
   }
-
-  private data class PaECampaignRequirements(val usageAccess: Boolean?, val mmp: Boolean?)
 }
 
 private fun PaEMissionsJson.toDomainModel() = PaEMissions(
@@ -144,8 +137,11 @@ private fun PaEMissionsJson.toDomainModel() = PaEMissions(
   campaignId = campaignId?.toString(),
   mmpClickUrl = mmpClickUrl?.takeIf { it.isNotBlank() },
   attribution = attribution?.toDomainModel(),
-  requiresUsageAccess = requiresUsageAccess,
-  requiresMmp = requiresMmp,
+  type = type?.let { value ->
+    // An unknown type (a newer backend) maps to none: the mission types decide.
+    PaECampaignType.fromApi(value)
+      .also { if (it == null) Timber.w("Unknown P&E campaign type: $value") }
+  },
 )
 
 // An unknown status (a newer backend) maps to none: the missions keep showing.
@@ -162,12 +158,7 @@ private fun PaEMissionJson.toDomainModel() = PaEMission(
   type = this.getType(),
   arguments = arguments,
   units = units,
-  progress = progress?.toDomainModel(),
-  evidenceSource = evidenceSource?.let { source ->
-    // An unknown source (a newer backend) maps to none.
-    PaEEvidenceSource.fromApi(source)
-      .also { if (it == null) Timber.w("Unknown P&E evidence source: $source") }
-  },
+  progress = progress?.toDomainModel()
 )
 
 private fun PaEMissionProgressJson.toDomainModel() = PaEMissionProgress(
