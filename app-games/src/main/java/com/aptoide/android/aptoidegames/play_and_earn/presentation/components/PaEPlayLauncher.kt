@@ -9,9 +9,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.campaigns.data.PaEMissionsRepository
-import cm.aptoide.pt.campaigns.domain.needsUsageAccess
+import cm.aptoide.pt.campaigns.domain.PaECampaignType
+import cm.aptoide.pt.campaigns.domain.campaignType
 import cm.aptoide.pt.extensions.runPreviewable
 import com.aptoide.android.aptoidegames.play_and_earn.PlayAndEarnManager
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.playAndEarnPermissionsRoute
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.service.PaEForegroundService
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnSignInRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,71 +25,90 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
-/** How the Play & Earn service runs after Play (AND-901). */
+/** What the Play tap of a Play & Earn game does (AND-901). */
 enum class PaEPlayMode {
-  /** Watches the foreground game to measure play time; needs the usage-access permissions. */
+  /** Opens the game and watches it to measure play time; needs the usage-access permissions. */
   TRACKING,
 
-  /** Heartbeats for the game's MMP-confirmed missions (AND-879); no permission involved. */
+  /** Opens the game and heartbeats for the campaign's MMP-confirmed missions (AND-879). */
   STATUS,
+
+  /** Sends the user to the permission screens instead of opening the game. */
+  REQUEST_PERMISSIONS,
 }
 
 /**
- * Picks the service mode for a game on the Play tap (AND-901).
+ * Picks what Play does from the campaign type (AND-915), the usage path's kill switch, and the
+ * device's permissions, read when the mode is picked.
  *
- * Tracking mode only when the game's campaign needs usage access, the device currently grants
- * the permissions and the usage path is not switched off remotely; status mode otherwise. Play
- * never asks for permissions: the locked time missions do (AND-902/903).
+ * A play-time campaign is measured by this app, so it needs the permissions: granted → tracking
+ * mode, missing → the permission screens (the flow before AND-878), or just the game when the
+ * surface cannot navigate. An event campaign is confirmed by the developer's MMP: status mode,
+ * no permission involved. With the kill switch off every campaign behaves like an event one.
  */
 class PaEPlayLauncher internal constructor(
-  /** Whether the game's missions need usage access; null when they could not be read. */
-  private val needsUsageAccess: Boolean?,
+  /** null when the missions could not be read: nothing is asked of the user then. */
+  private val campaignType: PaECampaignType?,
   /** The `pae_usage_tracking_enabled` kill switch for the usage path. */
   private val usageTrackingEnabled: Boolean,
   /** Read when the mode is picked, so a permission granted meanwhile counts. */
   private val hasUsagePermissions: () -> Boolean,
-  private val startTracking: () -> Unit,
-  private val startStatus: (packageName: String) -> Unit,
+  private val canRequestPermissions: Boolean,
 ) {
 
-  fun mode(): PaEPlayMode =
-    if (usageTrackingEnabled && needsUsageAccess == true && hasUsagePermissions()) {
-      PaEPlayMode.TRACKING
-    } else {
-      PaEPlayMode.STATUS
+  fun mode(): PaEPlayMode = when {
+    !usageTrackingEnabled -> PaEPlayMode.STATUS
+    campaignType != PaECampaignType.PLAY_TIME -> PaEPlayMode.STATUS
+    hasUsagePermissions() -> PaEPlayMode.TRACKING
+    canRequestPermissions -> PaEPlayMode.REQUEST_PERMISSIONS
+    else -> PaEPlayMode.STATUS
+  }
+
+  /** Runs the mode picked now: the service start and the game, or the permission screens. */
+  fun launch(
+    packageName: String,
+    open: () -> Unit,
+    startTracking: () -> Unit,
+    startStatus: (packageName: String) -> Unit,
+    requestPermissions: () -> Unit,
+  ) = when (mode()) {
+    PaEPlayMode.TRACKING -> {
+      startTracking()
+      open()
     }
 
-  /** Starts the Play & Earn service for [packageName] in the mode picked now. */
-  fun launch(packageName: String) = when (mode()) {
-    PaEPlayMode.TRACKING -> startTracking()
-    PaEPlayMode.STATUS -> startStatus(packageName)
+    PaEPlayMode.STATUS -> {
+      startStatus(packageName)
+      open()
+    }
+
+    PaEPlayMode.REQUEST_PERMISSIONS -> requestPermissions()
   }
 }
 
 /**
- * What the Play tap of a Play & Earn game does: a signed-in user starts earning and opens the
- * game; a logged-out one is sent to sign in. Unknown sign-in state, or a surface that cannot
- * navigate, just opens the game.
+ * The sign-in gate of the Play tap: a signed-in user plays (the launcher decides whether the
+ * game opens or the permission screens do); a logged-out one is sent to sign in. Unknown sign-in
+ * state, or a surface that cannot navigate, just opens the game.
  */
 class PaEPlayTap internal constructor(
   private val isSignedIn: Boolean?,
   private val requestSignIn: (() -> Unit)?,
-  private val startEarning: () -> Unit,
+  private val play: (open: () -> Unit) -> Unit,
 ) {
 
-  /** Returns [open] guarded by the sign-in requirement and preceded by the service start. */
+  /** Returns [open] guarded by the sign-in requirement and routed through the launcher. */
   fun guard(open: () -> Unit): () -> Unit = {
-    if (isSignedIn == false && requestSignIn != null) {
-      requestSignIn.invoke()
-    } else {
-      if (isSignedIn == true) startEarning()
-      open()
+    when {
+      isSignedIn == false && requestSignIn != null -> requestSignIn.invoke()
+      isSignedIn == true -> play(open)
+      else -> open()
     }
   }
 
   companion object {
     /** A tap that only opens the game (previews). */
-    val OpenOnly = PaEPlayTap(isSignedIn = null, requestSignIn = null, startEarning = {})
+    val OpenOnly = PaEPlayTap(isSignedIn = null, requestSignIn = null, play = { it() })
   }
 }
 
@@ -102,22 +123,28 @@ class PaEPlayLauncherViewModel @Inject constructor(
   val isSignedIn: StateFlow<Boolean?> = playAndEarnManager.observeIsSignedIn()
     .stateIn<Boolean?>(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
-  /** Resolved at tap time, so the missions and permissions of that moment decide the mode. */
-  fun launch(packageName: String) {
+  /**
+   * Resolved at tap time, so the campaign and the permissions of that moment decide; [open] (or
+   * [requestPermissions]) runs right after the cache read, on the main thread.
+   */
+  fun play(packageName: String, open: () -> Unit, requestPermissions: (() -> Unit)?) {
     viewModelScope.launch {
       // Cache first: the surface showing Play has already fetched the game's missions.
-      val needsUsageAccess = missionsRepository.getCampaignMissions(packageName)
-        .getOrNull()?.needsUsageAccess()
-      if (needsUsageAccess == null) {
-        Timber.w("P&E missions of $packageName unknown at Play: status mode")
-      }
+      val type = missionsRepository.getCampaignMissions(packageName)
+        .getOrNull()?.campaignType()
+      if (type == null) Timber.w("P&E campaign type of $packageName unknown at Play")
       PaEPlayLauncher(
-        needsUsageAccess = needsUsageAccess,
+        campaignType = type,
         usageTrackingEnabled = playAndEarnManager.isUsageTrackingEnabled(),
         hasUsagePermissions = playAndEarnManager::hasRequiredPermissions,
+        canRequestPermissions = requestPermissions != null,
+      ).launch(
+        packageName = packageName,
+        open = open,
         startTracking = { PaEForegroundService.start(context) },
         startStatus = { PaEForegroundService.startStatusHeartbeat(context, it) },
-      ).launch(packageName)
+        requestPermissions = { requestPermissions?.invoke() },
+      )
     }
   }
 }
@@ -136,7 +163,13 @@ fun rememberPaEPlayTap(
       PaEPlayTap(
         isSignedIn = isSignedIn,
         requestSignIn = navigate?.let { nav -> { nav(playAndEarnSignInRoute) } },
-        startEarning = { vm.launch(packageName) },
+        play = { open ->
+          vm.play(
+            packageName = packageName,
+            open = open,
+            requestPermissions = navigate?.let { nav -> { nav(playAndEarnPermissionsRoute) } },
+          )
+        },
       )
     }
   },

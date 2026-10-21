@@ -11,18 +11,37 @@ data class PaEMissions(
   val mmpClickUrl: String? = null,
   // Network only too: null from the cache, which keeps the missions showing.
   val attribution: PaEAttribution? = null,
-  // AND-900: what the campaign needs to be earned, as the backend sees it. Network only; null
-  // from the cache or an older backend (see [needsUsageAccess]).
-  val requiresUsageAccess: Boolean? = null,
-  val requiresMmp: Boolean? = null,
+  // AND-915: what the campaign is about, as the backend says it. Network only; null from the
+  // cache or an older backend (see [campaignType]).
+  val type: PaECampaignType? = null,
 )
 
 /**
- * Whether playing this game's missions needs the usage-access permission (AND-901). The
- * backend's answer wins; without it, any time-based mission means yes.
+ * A campaign is either play-time (the app measures it, usage access needed) or event (the
+ * developer's MMP confirms it), never both (AND-915). The backend's answer wins; without it,
+ * the mission types decide, the same way the backend does. Null without missions.
  */
-fun PaEMissions.needsUsageAccess(): Boolean =
-  requiresUsageAccess ?: (checkpoints + missions).any { it.isTimeBased() }
+fun PaEMissions.campaignType(): PaECampaignType? {
+  type?.let { return it }
+  val all = checkpoints + missions
+  return when {
+    all.isEmpty() -> null
+    all.any { it.isTimeBased() } -> PaECampaignType.PLAY_TIME
+    else -> PaECampaignType.EVENT
+  }
+}
+
+/** What a campaign is about: the type of every one of its missions (AND-915). */
+enum class PaECampaignType {
+  PLAY_TIME,
+  EVENT;
+
+  companion object {
+    /** The backend's value (`PLAY_TIME`, `EVENT`); null for one this app doesn't know. */
+    fun fromApi(value: String?): PaECampaignType? =
+      entries.find { it.name.equals(value?.trim(), ignoreCase = true) }
+  }
+}
 
 data class PaEMission(
   val title: String,
@@ -31,9 +50,7 @@ data class PaEMission(
   val type: PaEMissionType,
   val arguments: JsonObject,
   val units: Int,
-  val progress: PaEMissionProgress?,
-  // AND-900: who measures the mission. Network only; null from the cache or an older backend.
-  val evidenceSource: PaEEvidenceSource? = null,
+  val progress: PaEMissionProgress?
 )
 
 /**
@@ -51,19 +68,6 @@ data class PaEMissionProgress(
   val status: PaEMissionStatus?
 ) {
   fun getNormalizedProgress(): Float = current?.toFloat()?.div(target)?.coerceIn(0f, 1f) ?: 0f
-}
-
-/** Who measures a mission's progress: this app's usage tracking, the developer's MMP, or an SDK. */
-enum class PaEEvidenceSource {
-  APTOIDE_USAGE,
-  MMP,
-  SDK;
-
-  companion object {
-    /** The backend's value (`aptoide_usage`, ...); null for one this app doesn't know. */
-    fun fromApi(value: String?): PaEEvidenceSource? =
-      entries.find { it.name.equals(value?.trim(), ignoreCase = true) }
-  }
 }
 
 enum class PaEMissionType {
