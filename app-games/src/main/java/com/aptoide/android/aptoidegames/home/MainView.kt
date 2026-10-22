@@ -74,7 +74,6 @@ import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.playA
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnInstallSignInScreen
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnRewardSignInRoute
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnRewardSignInScreen
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnSignInOnlyScreen
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnSignInRoute
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnSignInScreen
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchange.exchangeUnitsScreen
@@ -425,19 +424,9 @@ private fun NavigationGraph(
     )
 
     animatedComposable(
-      navigate = {
-        navController.navigate(it) {
-          popUpTo(playAndEarnSignInRoute) { inclusive = true }
-        }
-      },
-      goBack = navController::navigateUp,
-      screenData = playAndEarnSignInScreen()
-    )
-
-    animatedComposable(
       navigate = navController::navigateTo,
       goBack = navController::navigateUp,
-      screenData = playAndEarnSignInOnlyScreen()
+      screenData = playAndEarnSignInScreen()
     )
 
     animatedComposable(
