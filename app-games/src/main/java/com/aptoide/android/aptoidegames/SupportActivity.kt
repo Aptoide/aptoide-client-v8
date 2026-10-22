@@ -48,7 +48,7 @@ class SupportActivity : AppCompatActivity() {
             title = stringResource(R.string.settings_feedback_title),
             placeholderText = stringResource(R.string.settings_send_feedback_body),
             deviceInfo = deviceInfo,
-            email = "aptoide.games@aptoide.zendesk.com",
+            email = FEEDBACK_EMAIL,
             context = localContext,
             subject = stringResource(R.string.app_info_send_email_subject),
             navigateBack = ::finish

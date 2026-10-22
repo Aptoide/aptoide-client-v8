@@ -51,6 +51,11 @@ data class App(
   val hasMeta: Boolean = false,
   val signature: String?,
   val origin: AppOrigin = AppOrigin.V7,
+  /**
+   * Set by a backend that knows the app must not install through Google Play, whatever its
+   * flags - on the Play build, every Play & Earn app. False everywhere else.
+   */
+  val installsThroughAptoideOnly: Boolean = false,
 ) : AppSource {
   val appSize: Long by lazy {
     file.size + (obb?.size ?: 0) + (aab?.size ?: 0)

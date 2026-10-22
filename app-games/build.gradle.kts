@@ -23,6 +23,14 @@ android {
   defaultConfig {
     versionName = (System.getenv("VERSION_NAME") ?: "").ifBlank { "internal.${getDate()}" }
 
+    // AdMob app id for the MAX Google adapters (direct distribution only, see src/direct/AndroidManifest.xml).
+    // Google Mobile Ads crashes at startup without one, so fall back to Google's published test app id;
+    // CI injects the production id the same way it injects APPLOVIN_SDK_KEY.
+    manifestPlaceholders["admobAppId"] =
+      (project.findProperty("AD_MOB_APPLICATION_ID") as? String
+        ?: System.getenv("AD_MOB_APPLICATION_ID")
+        ?: "ca-app-pub-3940256099942544~3347511713")
+
     buildConfigField("String", "STORE_DOMAIN", "\"https://ws75-cache.aptoide.com/api/7.20240701/\"")
     buildConfigField("String", "SEARCH_BUZZ_DOMAIN", "\"https://buzz.aptoide.com:10002\"")
     buildConfigField(
@@ -76,6 +84,27 @@ android {
       type = "String",
       name = "APP_OPEN_AD_UNIT_ID",
       value = "\"${project.findProperty("APP_OPEN_AD_UNIT_ID") ?: ""}\""
+    )
+    buildConfigField(
+      type = "String",
+      name = "HOME_NATIVE_AD_UNIT_ID",
+      value = (project.findProperty("HOME_NATIVE_AD_UNIT_ID") as? String
+        ?: System.getenv("HOME_NATIVE_AD_UNIT_ID")
+        ?: "").toBuildConfigString() // blank = placement disabled; CI injects the MAX unit id
+    )
+    buildConfigField(
+      type = "String",
+      name = "SEARCH_NATIVE_AD_UNIT_ID",
+      value = (project.findProperty("SEARCH_NATIVE_AD_UNIT_ID") as? String
+        ?: System.getenv("SEARCH_NATIVE_AD_UNIT_ID")
+        ?: "").toBuildConfigString() // blank = placement disabled; CI injects the MAX unit id
+    )
+    buildConfigField(
+      type = "String",
+      name = "APP_DETAIL_NATIVE_AD_UNIT_ID",
+      value = (project.findProperty("APP_DETAIL_NATIVE_AD_UNIT_ID") as? String
+        ?: System.getenv("APP_DETAIL_NATIVE_AD_UNIT_ID")
+        ?: "").toBuildConfigString() // blank = placement disabled; CI injects the MAX unit id
     )
 
 
@@ -419,6 +448,15 @@ dependencies {
   implementation(libs.play.services.basement)
   implementation(libs.gms.play.services.ads)
   implementation(libs.applovin.sdk)
+  // MAX mediation adapters (network SDKs are transitive). Keep in sync with the MAX dashboard.
+  // Direct distribution only: the Google Play build never requests ads and must not ship the
+  // network SDKs (Google Mobile Ads in particular starts a content provider at process launch).
+  "directImplementation"(libs.applovin.adapter.inmobi)
+  "directImplementation"(libs.applovin.adapter.vungle) // Liftoff Monetize
+  "directImplementation"(libs.applovin.adapter.mintegral)
+  "directImplementation"(libs.applovin.adapter.unityads)
+  "directImplementation"(libs.applovin.adapter.google) // Google AdMob + Google bidding
+  "directImplementation"(libs.applovin.adapter.google.ad.manager) // Google Ad Manager
 
   //Accompanist
   implementation(libs.accompanist.webview)

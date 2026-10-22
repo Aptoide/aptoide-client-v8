@@ -21,7 +21,7 @@ class FeedbackUseCase @Inject constructor(
     }
 
     return Feedback(
-      destinationEmail = "games.hub@aptoide.zendesk.com",
+      destinationEmail = "support@aptoide.com",
       subject = subject,
       body = "\n\n\n\n\n$description\n",
       logs = logsDeviceInfo

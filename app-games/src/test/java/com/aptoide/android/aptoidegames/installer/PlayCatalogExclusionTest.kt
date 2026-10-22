@@ -1,5 +1,7 @@
 package com.aptoide.android.aptoidegames.installer
 
+import cm.aptoide.pt.campaigns.domain.asNormalApp
+import cm.aptoide.pt.campaigns.domain.randomPaEApp
 import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_apps.domain.AppOrigin
 import cm.aptoide.pt.test.gherkin.scenario
@@ -149,6 +151,74 @@ internal class PlayCatalogExclusionTest {
     m Then "it is not excluded, as v7 apps are told by their store flag alone"
     assertFalse(excluded)
   }
+
+  // A backend can mark an app as installing through Aptoide only, whatever its flags: on the
+  // Play build, every Play & Earn app.
+
+  @Test
+  fun `An app marked for Aptoide only is excluded without store flags`() = scenario {
+    m Given "a v7 app with no STORE_BDS, marked for Aptoide only"
+    val app = randomApp.copy(bdsFlags = null, installsThroughAptoideOnly = true)
+
+    m When "the Play catalog exclusion is evaluated"
+    val excluded = app.excludedFromPlayCatalog()
+
+    m Then "it is excluded, so it installs through Aptoide"
+    assertTrue(excluded)
+  }
+
+  @Test
+  fun `Roblox marked for Aptoide only still takes Play's overlay`() = scenario {
+    m Given "Roblox marked for Aptoide only"
+    val app = randomApp.copy(packageName = ROBLOX_PACKAGE, installsThroughAptoideOnly = true)
+
+    m When "the Play catalog exclusion is evaluated"
+    val excluded = app.excludedFromPlayCatalog()
+
+    m Then "the overlay rule still wins"
+    assertFalse(excluded)
+  }
+
+  @Test
+  fun `A Play & Earn card's app is excluded whatever its flags`() = scenario {
+    m Given "the app a Play & Earn card builds from its campaign entry"
+    val app = randomPaEApp.asNormalApp()
+
+    m When "the Play catalog exclusion is evaluated"
+    val excluded = app.excludedFromPlayCatalog()
+
+    m Then "it is excluded, so the card never labels or routes it as a Play install"
+    assertTrue(excluded)
+  }
+
+  @Test
+  fun `Free Fire marked for Aptoide only still takes Play's overlay`() = scenario {
+    m Given "Free Fire marked for Aptoide only"
+    val app = randomApp.copy(packageName = FREE_FIRE_PACKAGE, installsThroughAptoideOnly = true)
+
+    m When "the Play catalog exclusion is evaluated"
+    val excluded = app.excludedFromPlayCatalog()
+
+    m Then "the overlay rule still wins"
+    assertFalse(excluded)
+  }
+
+  @Test
+  fun `A device API app marked for Aptoide only is excluded without the billing flag`() =
+    scenario {
+      m Given "an app read from the device API without the billing flag, marked for Aptoide only"
+      val app = randomApp.copy(
+        origin = AppOrigin.DEVICE_API,
+        isAppCoins = false,
+        installsThroughAptoideOnly = true,
+      )
+
+      m When "the Play catalog exclusion is evaluated"
+      val excluded = app.excludedFromPlayCatalog()
+
+      m Then "it is excluded, so it installs through Aptoide"
+      assertTrue(excluded)
+    }
 
   @Test
   fun `A device API Roblox flagged for billing still takes Play's overlay`() = scenario {

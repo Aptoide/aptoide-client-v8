@@ -2,6 +2,7 @@ package com.aptoide.android.aptoidegames
 
 import android.Manifest
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -287,6 +288,13 @@ class MainActivity : AppCompatActivity() {
       "http",
       "https",
         -> currentData.withPrevScreen("app_link")
+
+      // Play-style store intents other apps fire; direct builds join the store chooser for them.
+      // A market URI the client cannot map stays as it is: no route matches and home opens.
+      "market" -> marketUriToDeepLink(currentData.toString())
+        ?.let(Uri::parse)
+        ?.withPrevScreen("market_link")
+        ?: currentData
 
       else -> currentData
     }
