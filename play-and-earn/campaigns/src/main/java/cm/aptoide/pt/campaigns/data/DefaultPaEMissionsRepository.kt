@@ -144,7 +144,7 @@ private fun PaEMissionsJson.toDomainModel() = PaEMissions(
       .also { if (it == null) Timber.w("Unknown P&E campaign type: $value") }
   },
   mmp = mmp?.let { value ->
-    // An unknown MMP (a newer backend) maps to none: the link is filled the AppsFlyer way.
+    // An unknown MMP (a newer backend) maps to none; the click source then falls back to AppsFlyer.
     PaEMmpPlatform.fromApi(value).also { if (it == null) Timber.w("Unknown P&E MMP: $value") }
   },
 )

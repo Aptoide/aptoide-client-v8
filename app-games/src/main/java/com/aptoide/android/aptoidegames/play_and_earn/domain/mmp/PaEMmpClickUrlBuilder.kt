@@ -19,8 +19,7 @@ data class PaEMmpClickParams(
  * The MMP echoes these values back in the install and in-app event postbacks, which is how the
  * backend links a postback to a user: the wallet travels in the one custom parameter each MMP
  * gives a partner, `af_sub1` on AppsFlyer and `label` on Adjust. The macros are the union of
- * both platforms' names: a macro the link doesn't carry costs nothing, and one this builder
- * doesn't know is dropped, so no placeholder ever reaches the MMP as text.
+ * both platforms' names; an unknown one is dropped, so no placeholder reaches the MMP as text.
  */
 object PaEMmpClickUrlBuilder {
 

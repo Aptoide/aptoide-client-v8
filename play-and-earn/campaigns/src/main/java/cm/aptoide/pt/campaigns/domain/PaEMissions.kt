@@ -35,11 +35,7 @@ fun PaEMissions.campaignType(): PaECampaignType? {
   }
 }
 
-/**
- * The measurement tool behind an event campaign's click link. It decides which link parameter
- * carries the wallet, the one the MMP echoes back in its postbacks: `af_sub1` on AppsFlyer,
- * `label` on Adjust (AND-912).
- */
+/** The measurement tool behind an event campaign's click link (AND-912). */
 enum class PaEMmpPlatform {
   APPSFLYER,
   ADJUST;
