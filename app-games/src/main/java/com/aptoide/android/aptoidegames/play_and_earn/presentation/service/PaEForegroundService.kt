@@ -196,13 +196,16 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
   }
 
   /**
-   * Announces every mission the server confirms, in both modes: the overlay over the game when
-   * the app may draw over other apps, the notification otherwise (PO decision, 2026-10-22).
+   * Announces every mission the server confirms: the overlay over the game when the app may draw
+   * over other apps, the notification otherwise (see [PaEMissionCompletedAnnouncer]). The status
+   * heartbeat (AND-879) confirms missions whenever the MMP does, with the player possibly long
+   * gone from the game, so that mode keeps the notification: the card belongs over the game.
    */
   private val missionCompletedAnnouncer by lazy {
     PaEMissionCompletedAnnouncer(
-      hasOverlayPermission = { hasOverlayPermission() },
+      hasOverlayPermission = { statusPackage == null && hasOverlayPermission() },
       showOverlay = { event ->
+        // ComposeView and WindowManager want the main thread; the collector runs on IO.
         withContext(Dispatchers.Main) {
           paeOverlayViewManager.showMissionCompletedOverlayView(
             event.mission,
@@ -223,7 +226,6 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
   private fun collectCompletedMissions() {
     if (completedMissionsJob?.isActive == true) return
     completedMissionsJob = lifecycleScope.launch(Dispatchers.IO) {
-      // The announcer never throws: the flow has no replay and the collector is not re-run.
       paESessionManager.completedMissions.collect { missionCompletedAnnouncer.announce(it) }
     }
   }

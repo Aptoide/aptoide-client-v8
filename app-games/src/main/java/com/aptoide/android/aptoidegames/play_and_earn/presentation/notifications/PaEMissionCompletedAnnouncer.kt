@@ -8,13 +8,14 @@ import timber.log.Timber
 enum class PaEMissionCompletedSurface { OVERLAY, NOTIFICATION }
 
 /**
- * Announces a completed mission the way the PO decided (2026-10-22): the overlay on top of the
- * game when the app may draw over other apps, the notification (AND-880) otherwise. The
- * permission is read for every mission, since it can be revoked while the service runs.
+ * Announces a completed mission as the PO decided (2026-10-22): the overlay on top of the game
+ * when the app may draw over other apps, the notification (AND-880) otherwise. The permission is
+ * read for every mission, since it can be revoked while the service runs.
  *
- * Never throws: the collector behind it has no replay and is not re-run, so one bad icon
- * download or window failure must not silence every mission after it. A failed overlay is not
- * replaced by a notification either; it is a bug to log, not a reason to announce twice.
+ * Never throws, except to propagate cancellation: the collector behind it has no replay, so one
+ * failed announcement must not silence every mission after it. A failed overlay is not replaced
+ * by a notification either: a bug to log, not a reason to announce twice. Returns the surface it
+ * chose, which is how the tests observe the decision.
  */
 class PaEMissionCompletedAnnouncer(
   private val hasOverlayPermission: () -> Boolean,
