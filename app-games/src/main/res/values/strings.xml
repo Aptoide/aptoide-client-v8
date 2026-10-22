@@ -483,7 +483,7 @@
   <string name="play_and_earn_notification_status_body">You\'ll get a notification when the game confirms a mission.</string>
   <string name="play_and_earn_mission_completed_notification_body">You earned %1$d UT in %2$s</string>
   <string name="settings_play_and_earn_tracking">Play &amp; Earn Tracking</string>
-  <string name="settings_play_and_earn_tracking_description">Aptoide uses this setting to measure your in-app activity and credit you for time played and milestones reached. If disabled, rewards will not be tracked until you re-launch a game through Aptoide.</string>
+  <string name="settings_play_and_earn_tracking_description">Aptoide measures your in-app activity to credit you for time played. When off, playing through Aptoide only tracks the missions the game itself confirms.</string>
   <!-- Play and Earn - Permissions-->
   <string name="play_and_earn_permissions_success_snackbar">Success! Your rewards journey begins now 🎉</string>
   <string name="play_and_earn_permissions_almost_ready_title">Almost ready to earn!</string>

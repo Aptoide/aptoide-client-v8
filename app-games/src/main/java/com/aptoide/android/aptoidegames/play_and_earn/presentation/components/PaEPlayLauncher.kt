@@ -21,6 +21,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
@@ -46,20 +47,23 @@ enum class PaEPlayMode {
  * A play-time campaign is measured by this app, so it needs the permissions: granted → tracking
  * mode, missing → the permission screens (the flow before AND-878), or just the game when the
  * surface cannot navigate. An event campaign is confirmed by the developer's MMP: status mode,
- * no permission involved. With the kill switch off every campaign behaves like an event one.
+ * no permission involved. With the kill switch off, or the user opted out in Settings (AND-902),
+ * every campaign behaves like an event one.
  */
 class PaEPlayLauncher internal constructor(
   /** null when the missions could not be read: nothing is asked of the user then. */
   private val campaignType: PaECampaignType?,
   /** The `pae_usage_tracking_enabled` kill switch for the usage path. */
   private val usageTrackingEnabled: Boolean,
+  /** The Settings "Play & Earn tracking" switch (AND-902): off = the user opted out. */
+  private val optedIn: Boolean,
   /** Read when the mode is picked, so a permission granted meanwhile counts. */
   private val hasUsagePermissions: () -> Boolean,
   private val canRequestPermissions: Boolean,
 ) {
 
   fun mode(): PaEPlayMode = when {
-    !usageTrackingEnabled -> PaEPlayMode.STATUS
+    !usageTrackingEnabled || !optedIn -> PaEPlayMode.STATUS
     campaignType != PaECampaignType.PLAY_TIME -> PaEPlayMode.STATUS
     hasUsagePermissions() -> PaEPlayMode.TRACKING
     canRequestPermissions -> PaEPlayMode.REQUEST_PERMISSIONS
@@ -144,6 +148,7 @@ class PaEPlayLauncherViewModel @Inject constructor(
       PaEPlayLauncher(
         campaignType = type,
         usageTrackingEnabled = playAndEarnManager.isUsageTrackingEnabled(),
+        optedIn = playAndEarnManager.isUsageTrackingOptedIn().first(),
         hasUsagePermissions = playAndEarnManager::hasRequiredPermissions,
         canRequestPermissions = requestPermissions != null,
       ).launch(

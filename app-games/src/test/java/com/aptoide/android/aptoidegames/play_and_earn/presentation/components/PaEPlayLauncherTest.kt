@@ -19,11 +19,13 @@ internal class PaEPlayLauncherTest {
   private fun launcher(
     campaignType: PaECampaignType?,
     usageTrackingEnabled: Boolean = true,
+    optedIn: Boolean = true,
     hasUsagePermissions: () -> Boolean = { true },
     canRequestPermissions: Boolean = true,
   ) = PaEPlayLauncher(
     campaignType = campaignType,
     usageTrackingEnabled = usageTrackingEnabled,
+    optedIn = optedIn,
     hasUsagePermissions = hasUsagePermissions,
     canRequestPermissions = canRequestPermissions,
   )
@@ -109,6 +111,24 @@ internal class PaEPlayLauncherTest {
   }
 
   @Test
+  fun `A user who opted out in Settings runs in status mode and is never asked`() = scenario {
+    m Given "a play-time campaign without the permissions, usage tracking switched off in Settings"
+    var reads = 0
+    val launcher = launcher(
+      PaECampaignType.PLAY_TIME,
+      optedIn = false,
+      hasUsagePermissions = { reads++; false },
+    )
+
+    m When "the mode is picked"
+    val mode = launcher.mode()
+
+    m Then "it is status: no permission screens, no tracking, permissions not consulted (AND-902)"
+    assertEquals(PaEPlayMode.STATUS, mode)
+    assertEquals(0, reads)
+  }
+
+  @Test
   fun `An unknown campaign runs in status mode`() = scenario {
     m Given "missions that could not be read, the permissions missing"
     val launcher = launcher(campaignType = null, hasUsagePermissions = { false })
@@ -179,38 +199,41 @@ internal class PaEPlayLauncherTest {
 
   @Test
   fun `Only one combination tracks and only one asks for the permissions`() = scenario {
-    m Given "every combination of type, kill switch, permissions and navigation"
+    m Given "every combination of type, kill switch, opt-in, permissions and navigation"
     val cases = buildList {
       for (type in listOf(PaECampaignType.PLAY_TIME, PaECampaignType.EVENT, null)) {
-        for (flag in listOf(true, false)) for (perms in listOf(true, false)) {
-          for (nav in listOf(true, false)) add(listOf(type, flag, perms, nav))
+        for (flag in listOf(true, false)) for (optedIn in listOf(true, false)) {
+          for (perms in listOf(true, false)) for (nav in listOf(true, false)) {
+            add(listOf(type, flag, optedIn, perms, nav))
+          }
         }
       }
     }
 
     m When "the mode is picked for each one"
-    val modes = cases.associateWith { (type, flag, perms, nav) ->
+    val modes = cases.associateWith { (type, flag, optedIn, perms, nav) ->
       launcher(
         type as PaECampaignType?,
         usageTrackingEnabled = flag as Boolean,
+        optedIn = optedIn as Boolean,
         hasUsagePermissions = { perms as Boolean },
         canRequestPermissions = nav as Boolean,
       ).mode()
     }
 
-    m Then "play-time+flag+permissions tracks; play-time+flag+no permissions+nav asks; else status"
-    assertEquals(24, cases.size)
+    m Then "only play-time+flag+opted in tracks (with permissions) or asks (without); else status"
+    assertEquals(48, cases.size)
     assertEquals(
       setOf(
-        listOf(PaECampaignType.PLAY_TIME, true, true, true),
-        listOf(PaECampaignType.PLAY_TIME, true, true, false),
+        listOf(PaECampaignType.PLAY_TIME, true, true, true, true),
+        listOf(PaECampaignType.PLAY_TIME, true, true, true, false),
       ),
       modes.filterValues { it == PaEPlayMode.TRACKING }.keys,
     )
     assertEquals(
-      setOf(listOf(PaECampaignType.PLAY_TIME, true, false, true)),
+      setOf(listOf(PaECampaignType.PLAY_TIME, true, true, false, true)),
       modes.filterValues { it == PaEPlayMode.REQUEST_PERMISSIONS }.keys,
     )
-    assertEquals(21, modes.values.count { it == PaEPlayMode.STATUS })
+    assertEquals(45, modes.values.count { it == PaEPlayMode.STATUS })
   }
 }

@@ -36,6 +36,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -148,11 +149,7 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
       return START_NOT_STICKY
     }
 
-    // Ensure preference reflects the service is running (e.g. when started from Play button)
-    lifecycleScope.launch(Dispatchers.IO) {
-      paEPreferencesRepository.setPaEServiceEnabled(true)
-    }
-
+    // AND-902: the Settings switch is the user's opt-out; a tracking start never flips it back.
     init()
 
     return START_STICKY
@@ -173,8 +170,11 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
 
   private suspend fun checkFlagAndFetchPackages() {
     try {
-      // Check if feature (visibility + usage tracking) is enabled remotely
-      if (!playAndEarnManager.shouldRunUsageTracking()) {
+      // Check if feature (visibility + usage tracking) is enabled remotely, and that the user
+      // has not opted out in Settings (AND-902).
+      if (!playAndEarnManager.shouldRunUsageTracking() ||
+        !playAndEarnManager.isUsageTrackingOptedIn().first()
+      ) {
         paESessionManager.clearAllSessions()
         stopSelf()
         return
