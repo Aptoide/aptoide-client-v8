@@ -1,5 +1,6 @@
 package com.aptoide.android.aptoidegames.play_and_earn.domain.mmp
 
+import cm.aptoide.pt.campaigns.domain.PaEMmpPlatform
 import cm.aptoide.pt.feature_campaigns.CampaignRepository
 import cm.aptoide.pt.test.gherkin.coScenario
 import kotlinx.coroutines.isActive
@@ -31,6 +32,7 @@ internal class PaEMmpClickSenderTest {
     url = "https://app.appsflyer.com/x?pid=aptoide_int&clickid={transaction_id}" +
       "&advertising_id={google_aid}&af_c_id={offer_id}",
     campaignId = "campaign-7",
+    mmp = PaEMmpPlatform.APPSFLYER,
   )
 
   private fun sender(
@@ -118,5 +120,25 @@ internal class PaEMmpClickSenderTest {
 
     m Then "nothing is called"
     assertTrue(repository.knocked.isEmpty())
+  }
+
+  @Test
+  fun `An Adjust template gets the wallet in label`() = coScenario {
+    m Given "a signed-in user and an Adjust click template for the game"
+    val repository = FakeCampaignRepository()
+    val adjust = PaEMmpClickTemplate(
+      url = "https://app.adjust.com/abc123?click_id={click_id}&gps_adid={gps_adid}",
+      campaignId = "campaign-7",
+      mmp = PaEMmpPlatform.ADJUST,
+    )
+
+    m When "the click is sent"
+    sender(repository, template = adjust).sendNow("com.game")
+
+    m Then "the URL carries the wallet as label, with no af_sub1"
+    assertEquals(
+      listOf("https://app.adjust.com/abc123?click_id=click-1&gps_adid=gaid-1&label=0xAbC123"),
+      repository.knocked
+    )
   }
 }

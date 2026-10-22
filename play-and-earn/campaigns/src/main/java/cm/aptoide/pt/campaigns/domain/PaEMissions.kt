@@ -9,6 +9,9 @@ data class PaEMissions(
   // network: the cached missions don't keep it.
   val campaignId: String? = null,
   val mmpClickUrl: String? = null,
+  // AND-912: which MMP that link belongs to, as the backend says it (AND-916). Null from the
+  // cache, an older backend, or a platform this app doesn't know: AppsFlyer behaviour then.
+  val mmp: PaEMmpPlatform? = null,
   // Network only too: null from the cache, which keeps the missions showing.
   val attribution: PaEAttribution? = null,
   // AND-915: what the campaign is about, as the backend says it. From the network, remembered
@@ -29,6 +32,22 @@ fun PaEMissions.campaignType(): PaECampaignType? {
     all.isEmpty() -> null
     all.any { it.isTimeBased() } -> PaECampaignType.PLAY_TIME
     else -> PaECampaignType.EVENT
+  }
+}
+
+/**
+ * The measurement tool behind an event campaign's click link. It decides which link parameter
+ * carries the wallet, the one the MMP echoes back in its postbacks: `af_sub1` on AppsFlyer,
+ * `label` on Adjust (AND-912).
+ */
+enum class PaEMmpPlatform {
+  APPSFLYER,
+  ADJUST;
+
+  companion object {
+    /** The backend's value (`APPSFLYER`, `ADJUST`); null for one this app doesn't know. */
+    fun fromApi(value: String?): PaEMmpPlatform? =
+      entries.find { it.name.equals(value?.trim(), ignoreCase = true) }
   }
 }
 

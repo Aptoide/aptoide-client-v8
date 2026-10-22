@@ -1,5 +1,6 @@
 package com.aptoide.android.aptoidegames.play_and_earn.domain.mmp
 
+import cm.aptoide.pt.campaigns.domain.PaEMmpPlatform
 import java.net.URLEncoder
 
 /** The values Aptoide puts in a developer's MMP click link (AND-877). */
@@ -12,28 +13,37 @@ data class PaEMmpClickParams(
 )
 
 /**
- * Fills a developer's AppsFlyer click link, built from our `aptoide_int` partner template.
+ * Fills a developer's MMP click link, built from our partner template on AppsFlyer
+ * (`aptoide_int`) or Adjust (AND-912).
  *
- * AppsFlyer echoes these values back in the install and in-app event postbacks, which is how the
- * backend links a postback to a user: the wallet travels in `af_sub1`.
+ * The MMP echoes these values back in the install and in-app event postbacks, which is how the
+ * backend links a postback to a user: the wallet travels in the one custom parameter each MMP
+ * gives a partner, `af_sub1` on AppsFlyer and `label` on Adjust. The macros are the union of
+ * both platforms' names: a macro the link doesn't carry costs nothing, and one this builder
+ * doesn't know is dropped, so no placeholder ever reaches the MMP as text.
  */
 object PaEMmpClickUrlBuilder {
 
-  private const val WALLET_PARAM = "af_sub1"
   private val placeholder = Regex("\\{[^}]*\\}")
 
   /** Returns the click URL, or null when the template can't be sent safely. */
-  fun build(template: String, params: PaEMmpClickParams): String? {
+  fun build(template: String, params: PaEMmpClickParams, mmp: PaEMmpPlatform): String? {
     // The link carries the wallet and the advertising id: never over plain http.
     if (!template.startsWith("https://")) return null
 
+    val advertisingId = params.advertisingId?.takeUnless { it.isMissingAdvertisingId() }
     val values = mapOf(
+      // AppsFlyer
       "{transaction_id}" to params.clickId,
-      "{google_aid}" to params.advertisingId?.takeUnless { it.isMissingAdvertisingId() },
+      "{google_aid}" to advertisingId,
       "{affiliate_id}" to params.channel,
       "{offer_id}" to params.campaignId,
       "{offer_ref_id}" to params.campaignId,
+      // Adjust
+      "{click_id}" to params.clickId,
+      "{gps_adid}" to advertisingId,
     )
+    val walletParam = mmp.walletParam()
 
     val fragment = template.substringAfter('#', missingDelimiterValue = "")
     val withoutFragment = template.substringBefore('#')
@@ -45,8 +55,8 @@ object PaEMmpClickUrlBuilder {
       .split('&')
       .filter { it.isNotEmpty() }
       .mapNotNull { param -> param.fill(values) }
-      .filterNot { it.substringBefore('=') == WALLET_PARAM } +
-      "$WALLET_PARAM=${params.wallet.encoded()}"
+      .filterNot { it.substringBefore('=') == walletParam } +
+      "$walletParam=${params.wallet.encoded()}"
 
     return "$base?${query.joinToString("&")}" + if (fragment.isEmpty()) "" else "#$fragment"
   }
@@ -61,6 +71,12 @@ object PaEMmpClickUrlBuilder {
     }
     // A literal placeholder must never reach the MMP.
     return filled.takeUnless { placeholder.containsMatchIn(it) }
+  }
+
+  /** The link parameter the MMP echoes back in its postbacks, where the wallet goes. */
+  private fun PaEMmpPlatform.walletParam(): String = when (this) {
+    PaEMmpPlatform.APPSFLYER -> "af_sub1"
+    PaEMmpPlatform.ADJUST -> "label"
   }
 
   private fun String.encoded(): String = URLEncoder.encode(this, "UTF-8")

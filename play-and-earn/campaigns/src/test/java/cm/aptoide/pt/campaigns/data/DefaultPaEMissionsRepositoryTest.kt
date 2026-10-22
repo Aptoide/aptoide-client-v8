@@ -8,6 +8,7 @@ import cm.aptoide.pt.campaigns.data.model.PaEMissionJson
 import cm.aptoide.pt.campaigns.data.model.PaEMissionTypeJson
 import cm.aptoide.pt.campaigns.data.model.PaEMissionsJson
 import cm.aptoide.pt.campaigns.domain.PaECampaignType
+import cm.aptoide.pt.campaigns.domain.PaEMmpPlatform
 import cm.aptoide.pt.campaigns.domain.PaEMissionStatus
 import cm.aptoide.pt.test.gherkin.coScenario
 import com.google.gson.JsonObject
@@ -66,13 +67,14 @@ internal class DefaultPaEMissionsRepositoryTest {
     progress = null,
   )
 
-  private fun responseJson(type: String?) = PaEMissionsJson(
+  private fun responseJson(type: String?, mmp: String? = null) = PaEMissionsJson(
     checkpoints = emptyList(),
     missions = listOf(missionJson("Level 5")),
     campaignId = 17,
     mmpClickUrl = null,
     attribution = null,
     type = type,
+    mmp = mmp,
   )
 
   private fun repository(api: PaECampaignsApi, dao: PaeMissionDao = FakeDao()) =
@@ -162,5 +164,34 @@ internal class DefaultPaEMissionsRepositoryTest {
     m Then "its type is unknown"
     assertFalse(cached == null)
     assertNull(cached?.type)
+  }
+
+  // AND-912: which MMP the click link belongs to, as the backend says it (AND-916).
+  @Test
+  fun `A fetch carries the campaign's MMP, in any case`() = coScenario {
+    m Given "a backend that says the campaign is an Adjust one"
+    val api = FakeApi(responseJson(type = "EVENT", mmp = "adjust"))
+
+    m When "the missions are fetched"
+    val missions = repository(api).getCampaignMissions("com.game", forceRefresh = true).getOrThrow()
+
+    m Then "the MMP is Adjust"
+    assertEquals(PaEMmpPlatform.ADJUST, missions.mmp)
+  }
+
+  @Test
+  fun `An older backend, or an MMP this app doesn't know, leaves the MMP unknown`() = coScenario {
+    m Given "a response without mmp and one with a new MMP"
+    val without = FakeApi(responseJson(type = "EVENT"))
+    val unknown = FakeApi(responseJson(type = "EVENT", mmp = "BRANCH"))
+
+    m When "the missions are fetched"
+    val older = repository(without).getCampaignMissions("com.game", forceRefresh = true).getOrThrow()
+    val newer = repository(unknown).getCampaignMissions("com.game", forceRefresh = true).getOrThrow()
+
+    m Then "neither makes one up, the missions are kept"
+    assertNull(older.mmp)
+    assertNull(newer.mmp)
+    assertTrue(newer.missions.isNotEmpty())
   }
 }

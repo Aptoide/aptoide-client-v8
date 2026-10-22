@@ -19,6 +19,7 @@ import cm.aptoide.pt.campaigns.domain.PaEMissionProgressType
 import cm.aptoide.pt.campaigns.domain.PaEMissionStatus
 import cm.aptoide.pt.campaigns.domain.PaEMissionType
 import cm.aptoide.pt.campaigns.domain.PaEMissions
+import cm.aptoide.pt.campaigns.domain.PaEMmpPlatform
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -141,6 +142,10 @@ private fun PaEMissionsJson.toDomainModel() = PaEMissions(
     // An unknown type (a newer backend) maps to none: the mission types decide.
     PaECampaignType.fromApi(value)
       .also { if (it == null) Timber.w("Unknown P&E campaign type: $value") }
+  },
+  mmp = mmp?.let { value ->
+    // An unknown MMP (a newer backend) maps to none: the link is filled the AppsFlyer way.
+    PaEMmpPlatform.fromApi(value).also { if (it == null) Timber.w("Unknown P&E MMP: $value") }
   },
 )
 

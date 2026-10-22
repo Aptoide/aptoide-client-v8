@@ -1,12 +1,14 @@
 package com.aptoide.android.aptoidegames.play_and_earn.domain.mmp
 
 import cm.aptoide.pt.campaigns.data.PaEMissionsRepository
+import cm.aptoide.pt.campaigns.domain.PaEMmpPlatform
 import javax.inject.Inject
 
-/** A developer's MMP click link and the P&E campaign it belongs to. */
+/** A developer's MMP click link, the P&E campaign it belongs to and the MMP that serves it. */
 data class PaEMmpClickTemplate(
   val url: String,
   val campaignId: String,
+  val mmp: PaEMmpPlatform,
 )
 
 /** Where the MMP click link of a Play & Earn game comes from. */
@@ -28,6 +30,8 @@ class MissionsPaEMmpClickUrlSource @Inject constructor(
     return PaEMmpClickTemplate(
       url = missions.mmpClickUrl ?: return null,
       campaignId = missions.campaignId ?: return null,
+      // Unknown or missing (an older backend): the AppsFlyer behaviour of before AND-916.
+      mmp = missions.mmp ?: PaEMmpPlatform.APPSFLYER,
     )
   }
 }
