@@ -24,6 +24,7 @@ import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.play_and_earn.PlayAndEarnManager
 import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPreferencesRepository
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaEStatusHeartbeatPolicy
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.notifications.PaEMissionCompletedAnnouncer
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.notifications.PaEMissionCompletedNotificationBuilder
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.notifications.missionCompletedRoute
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.overlays.PaEOverlayViewManager
@@ -194,20 +195,36 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
     startForeground(FOREGROUND_SERVICE_ID, notification)
   }
 
-  /** Announces every mission the server confirms, in both modes. */
+  /**
+   * Announces every mission the server confirms, in both modes: the overlay over the game when
+   * the app may draw over other apps, the notification otherwise (PO decision, 2026-10-22).
+   */
+  private val missionCompletedAnnouncer by lazy {
+    PaEMissionCompletedAnnouncer(
+      hasOverlayPermission = { hasOverlayPermission() },
+      showOverlay = { event ->
+        withContext(Dispatchers.Main) {
+          paeOverlayViewManager.showMissionCompletedOverlayView(
+            event.mission,
+            this@PaEForegroundService,
+            this@PaEForegroundService
+          )
+        }
+      },
+      showNotification = { event ->
+        paEMissionCompletedNotificationBuilder.showMissionCompletedNotification(
+          mission = event.mission,
+          packageName = event.packageName
+        )
+      },
+    )
+  }
+
   private fun collectCompletedMissions() {
     if (completedMissionsJob?.isActive == true) return
     completedMissionsJob = lifecycleScope.launch(Dispatchers.IO) {
-      paESessionManager.completedMissions.collect { event ->
-        // One bad icon download or notify() failure must not cancel the collector: the flow has
-        // no replay, and the collector is not re-run, so it would never recover.
-        runCatching {
-          paEMissionCompletedNotificationBuilder.showMissionCompletedNotification(
-            mission = event.mission,
-            packageName = event.packageName
-          )
-        }.onFailure { Timber.e(it, "PaEForegroundService: mission notification failed") }
-      }
+      // The announcer never throws: the flow has no replay and the collector is not re-run.
+      paESessionManager.completedMissions.collect { missionCompletedAnnouncer.announce(it) }
     }
   }
 
