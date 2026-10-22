@@ -152,7 +152,7 @@ internal class PaEMmpClickUrlBuilderTest {
   }
 
   // AND-912: Adjust echoes `label` back in its callbacks the way AppsFlyer echoes `af_sub1`.
-  private val adjustTemplate = "https://app.adjust.com/abc123?campaign=aptoide" +
+  private val adjustTemplate = "https://app.adjust.com/abc123?campaign_id={campaign_id}" +
     "&click_id={click_id}&gps_adid={gps_adid}&label=fixed"
 
   @Test
@@ -163,7 +163,7 @@ internal class PaEMmpClickUrlBuilderTest {
 
     m Then "the macros have their values, label carries the wallet once and there is no af_sub1"
     assertEquals(
-      "https://app.adjust.com/abc123?campaign=aptoide&click_id=click-1" +
+      "https://app.adjust.com/abc123?campaign_id=campaign-7&click_id=click-1" +
         "&gps_adid=38400000-8cf0-11bd-b23e-10b96e40000d&label=0xAbC123",
       url
     )
@@ -181,7 +181,7 @@ internal class PaEMmpClickUrlBuilderTest {
 
     m Then "only gps_adid is left out"
     assertEquals(
-      "https://app.adjust.com/abc123?campaign=aptoide&click_id=click-1&label=0xAbC123",
+      "https://app.adjust.com/abc123?campaign_id=campaign-7&click_id=click-1&label=0xAbC123",
       url
     )
   }

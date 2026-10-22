@@ -38,7 +38,8 @@ object PaEMmpClickUrlBuilder {
       "{affiliate_id}" to params.channel,
       "{offer_id}" to params.campaignId,
       "{offer_ref_id}" to params.campaignId,
-      // Adjust
+      // Adjust (the names our module template declares: campaign_id, click_id, gps_adid)
+      "{campaign_id}" to params.campaignId,
       "{click_id}" to params.clickId,
       "{gps_adid}" to advertisingId,
     )
