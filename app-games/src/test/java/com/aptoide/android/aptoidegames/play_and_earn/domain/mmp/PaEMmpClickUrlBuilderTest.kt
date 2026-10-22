@@ -89,8 +89,11 @@ internal class PaEMmpClickUrlBuilderTest {
   fun `Keeps the fragment at the end`() = scenario {
     m Given "a template with a fragment"
     m When "the click URL is built"
-    val url =
-      PaEMmpClickUrlBuilder.build("https://app.appsflyer.com/x?pid=aptoide_int#top", params, APPSFLYER)
+    val url = PaEMmpClickUrlBuilder.build(
+      "https://app.appsflyer.com/x?pid=aptoide_int#top",
+      params,
+      APPSFLYER,
+    )
 
     m Then "the wallet stays in the query, before the fragment"
     assertEquals("https://app.appsflyer.com/x?pid=aptoide_int&af_sub1=0xAbC123#top", url)
@@ -114,7 +117,11 @@ internal class PaEMmpClickUrlBuilderTest {
   fun `Does not build a link that is not https`() = scenario {
     m Given "a plain http template"
     m When "the click URL is built"
-    val url = PaEMmpClickUrlBuilder.build("http://app.appsflyer.com/x?pid=aptoide_int", params, APPSFLYER)
+    val url = PaEMmpClickUrlBuilder.build(
+      "http://app.appsflyer.com/x?pid=aptoide_int",
+      params,
+      APPSFLYER,
+    )
 
     m Then "there is no URL to send"
     assertNull(url)
@@ -180,8 +187,8 @@ internal class PaEMmpClickUrlBuilderTest {
   }
 
   @Test
-  fun `A macro of the other MMP is dropped, never sent as text`() = scenario {
-    m Given "an Adjust link pasted with an AppsFlyer macro, and the reverse"
+  fun `Fills the macros of both MMPs on either platform`() = scenario {
+    m Given "an Adjust link carrying an AppsFlyer macro, and the reverse"
     m When "the click URLs are built"
     val adjust = PaEMmpClickUrlBuilder.build(
       "https://app.adjust.com/abc123?clickid={transaction_id}&click_id={click_id}",
@@ -194,10 +201,14 @@ internal class PaEMmpClickUrlBuilderTest {
       APPSFLYER,
     )
 
-    m Then "both macros are filled on either platform: the names are the only difference"
-    assertEquals("https://app.adjust.com/abc123?clickid=click-1&click_id=click-1&label=0xAbC123", adjust)
+    m Then "both macros are filled on either platform: the wallet parameter is the difference"
     assertEquals(
-      "https://app.appsflyer.com/x?pid=aptoide_int&click_id=click-1&clickid=click-1&af_sub1=0xAbC123",
+      "https://app.adjust.com/abc123?clickid=click-1&click_id=click-1&label=0xAbC123",
+      adjust
+    )
+    assertEquals(
+      "https://app.appsflyer.com/x?pid=aptoide_int&click_id=click-1&clickid=click-1" +
+        "&af_sub1=0xAbC123",
       appsFlyer
     )
   }
@@ -228,5 +239,41 @@ internal class PaEMmpClickUrlBuilderTest {
 
     m Then "label is untouched and the wallet goes to af_sub1"
     assertEquals("https://app.appsflyer.com/x?pid=aptoide_int&label=theirs&af_sub1=0xAbC123", url)
+  }
+
+  @Test
+  fun `Replaces every label already in an Adjust link`() = scenario {
+    m Given "an Adjust link that already carries fixed label values"
+    m When "the click URL is built for Adjust"
+    val url =
+      PaEMmpClickUrlBuilder.build("https://app.adjust.com/abc123?label=a&label=b", params, ADJUST)
+
+    m Then "label appears once, with the wallet"
+    assertEquals("https://app.adjust.com/abc123?label=0xAbC123", url)
+  }
+
+  @Test
+  fun `An Adjust link keeps an af_sub1 the developer set`() = scenario {
+    m Given "an Adjust link that happens to carry an af_sub1 parameter"
+    m When "the click URL is built for Adjust"
+    val url =
+      PaEMmpClickUrlBuilder.build("https://app.adjust.com/abc123?af_sub1=theirs", params, ADJUST)
+
+    m Then "af_sub1 is untouched and the wallet goes to label"
+    assertEquals("https://app.adjust.com/abc123?af_sub1=theirs&label=0xAbC123", url)
+  }
+
+  @Test
+  fun `Encodes plus, slash and space in the wallet on both platforms`() = scenario {
+    m Given "a wallet with characters an MMP would otherwise decode differently"
+    val odd = params.copy(wallet = "a+b/c d")
+
+    m When "the click URLs are built"
+    val adjust = PaEMmpClickUrlBuilder.build("https://app.adjust.com/abc123", odd, ADJUST)
+    val appsFlyer = PaEMmpClickUrlBuilder.build("https://app.appsflyer.com/x", odd, APPSFLYER)
+
+    m Then "the wallet comes back as sent once the MMP decodes it"
+    assertEquals("https://app.adjust.com/abc123?label=a%2Bb%2Fc+d", adjust)
+    assertEquals("https://app.appsflyer.com/x?af_sub1=a%2Bb%2Fc+d", appsFlyer)
   }
 }

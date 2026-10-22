@@ -80,6 +80,9 @@ internal class DefaultPaEMissionsRepositoryTest {
   private fun repository(api: PaECampaignsApi, dao: PaeMissionDao = FakeDao()) =
     DefaultPaEMissionsRepository(api, dao, Dispatchers.Unconfined)
 
+  private suspend fun fetch(api: PaECampaignsApi) =
+    repository(api).getCampaignMissions("com.game", forceRefresh = true).getOrThrow()
+
   @Test
   fun `A fetch carries the campaign type`() = coScenario {
     m Given "a backend that says the campaign is play-time"
@@ -186,8 +189,8 @@ internal class DefaultPaEMissionsRepositoryTest {
     val unknown = FakeApi(responseJson(type = "EVENT", mmp = "BRANCH"))
 
     m When "the missions are fetched"
-    val older = repository(without).getCampaignMissions("com.game", forceRefresh = true).getOrThrow()
-    val newer = repository(unknown).getCampaignMissions("com.game", forceRefresh = true).getOrThrow()
+    val older = fetch(without)
+    val newer = fetch(unknown)
 
     m Then "neither makes one up, the missions are kept"
     assertNull(older.mmp)
