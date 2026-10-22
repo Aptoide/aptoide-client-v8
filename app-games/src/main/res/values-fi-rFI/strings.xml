@@ -360,6 +360,18 @@
   <string name="play_and_earn_start_earning_title">Aloita ansaitseminen</string>
   <string name="play_and_earn_level_up_rewards_title">Nosta palkkiosi tasoa!</string>
   <string name="play_and_earn_login_unlock_access_body">Kirjaudu sisään ja avaa pääsy uskomattomiin palkintoihin pelatessasi!</string>
+  <string name="play_and_earn_install_sign_in_title">Kirjaudu sisään ja ala ansaita</string>
+  <string name="play_and_earn_install_sign_in_body">Ansaitaksesi palkkioita pelillä %1$s, kirjaudu sisään Google-tililläsi.</string>
+  <string name="play_and_earn_install_sign_in_body_generic">Ansaitaksesi palkkioita tällä pelillä, kirjaudu sisään Google-tililläsi.</string>
+  <string name="play_and_earn_rewards_paused_title">Palkkiot keskeytetty</string>
+  <string name="play_and_earn_rewards_paused_body">Odotamme, että peli vahvistaa asennuksesi. Jatka pelaamista: palkkiosi alkavat heti, kun se tapahtuu.</string>
+  <string name="play_and_earn_not_eligible_title">Laitteesi ei ole kelvollinen</string>
+  <string name="play_and_earn_not_eligible_body">Pelin seurantatyökalu ei vahvistanut tätä asennusta, joten tämän kampanjan palkkiot eivät ole saatavilla tällä laitteella.</string>
+  <string name="play_and_earn_rewards_blocked_learn_more_button">Lisätietoja</string>
+  <string name="play_and_earn_rewards_paused_info_title">Miksi palkkioni on keskeytetty?</string>
+  <string name="play_and_earn_rewards_paused_info_body">Jokainen peli käyttää seurantatyökalua Aptoide Gamesin kautta tehtyjen asennusten vahvistamiseen. Tämän kampanjan palkkiot alkavat, kun se vahvistaa asennuksesi, yleensä muutaman minuutin kuluttua pelin ensimmäisestä avaamisesta.\n\nPidä peli asennettuna ja pelaa tavalliseen tapaan. Se, mitä teet pelissä odottaessasi, lasketaan, kun asennuksesi on vahvistettu.</string>
+  <string name="play_and_earn_not_eligible_info_title">Miksi laitteeni ei ole kelvollinen?</string>
+  <string name="play_and_earn_not_eligible_info_body">Jokainen peli käyttää seurantatyökalua Aptoide Gamesin kautta tehtyjen asennusten vahvistamiseen ja päättää, mitkä niistä hyväksytään. Asennukset, jotka sen turvatarkistukset merkitsevät, esimerkiksi emulaattoreista tai automatisoiduista työkaluista, eivät kelpaa kampanjaan.\n\nMuita Play &amp; Earn -pelejä voi silti olla saatavilla sinulle.</string>
   <string name="play_and_earn_waiting_title">Odotetaan...</string>
   <string name="play_and_earn_getting_ready_body">Valmistelemme asioita sinulle…</string>
   <string name="play_and_earn_almost_there_title">Olet melkein perillä!</string>
@@ -399,6 +411,9 @@
   <string name="play_and_earn_install_button">Asenna</string>
   <string name="play_and_earn_notification_recording_title">Pelitilan seuranta palkintoja varten</string>
   <string name="play_and_earn_notification_recording_body">Pelituntisi lasketaan mukaan tehtäviisi.</string>
+  <string name="play_and_earn_notification_status_title">Play &amp; Earn on päällä</string>
+  <string name="play_and_earn_notification_status_body">Saat ilmoituksen, kun peli vahvistaa tehtävän.</string>
+  <string name="play_and_earn_mission_completed_notification_body">Ansaitsit %1$d UT: %2$s</string>
   <string name="settings_play_and_earn_tracking">Play &amp; Earn -seuranta</string>
   <string name="settings_play_and_earn_tracking_description">Aptoide käyttää tätä asetusta mittaamaan sovelluksen sisäistä toimintaasi ja hyvittääksesi sinulle pelistä kertyneen ajan ja saavutetut virstanpylväät. Jos tämä on pois käytöstä, palkintoja ei seurata ennen kuin käynnistät pelin uudelleen Aptoiden kautta.</string>
   <!-- Play and Earn - Permissions-->

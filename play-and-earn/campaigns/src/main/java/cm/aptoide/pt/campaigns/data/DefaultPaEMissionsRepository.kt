@@ -3,23 +3,30 @@ package cm.aptoide.pt.campaigns.data
 import cm.aptoide.pt.campaigns.data.database.PaeMissionDao
 import cm.aptoide.pt.campaigns.data.database.model.toDomain
 import cm.aptoide.pt.campaigns.data.database.model.toEntity
+import cm.aptoide.pt.campaigns.data.model.PaEAttributionJson
 import cm.aptoide.pt.campaigns.data.model.PaEMissionJson
 import cm.aptoide.pt.campaigns.data.model.PaEMissionProgressJson
 import cm.aptoide.pt.campaigns.data.model.PaEMissionProgressTypeJson
 import cm.aptoide.pt.campaigns.data.model.PaEMissionStatusJson
 import cm.aptoide.pt.campaigns.data.model.PaEMissionTypeJson
 import cm.aptoide.pt.campaigns.data.model.PaEMissionsJson
+import cm.aptoide.pt.campaigns.domain.PaEAttribution
+import cm.aptoide.pt.campaigns.domain.PaEAttributionStatus
+import cm.aptoide.pt.campaigns.domain.PaECampaignType
 import cm.aptoide.pt.campaigns.domain.PaEMission
 import cm.aptoide.pt.campaigns.domain.PaEMissionProgress
 import cm.aptoide.pt.campaigns.domain.PaEMissionProgressType
 import cm.aptoide.pt.campaigns.domain.PaEMissionStatus
 import cm.aptoide.pt.campaigns.domain.PaEMissionType
 import cm.aptoide.pt.campaigns.domain.PaEMissions
+import cm.aptoide.pt.campaigns.domain.PaEMmpPlatform
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
+import timber.log.Timber
+import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -29,6 +36,11 @@ internal class DefaultPaEMissionsRepository @Inject constructor(
   private val paeMissionDao: PaeMissionDao,
   private val dispatcher: CoroutineDispatcher
 ) : PaEMissionsRepository {
+
+  // AND-901/AND-915: the Room cache keeps only the missions, so the campaign type of the last
+  // fetch lives here and a cached read still carries the backend's answer within the process.
+  // After a process death it is null again and derived from the missions.
+  private val types = ConcurrentHashMap<String, PaECampaignType>()
 
   override suspend fun getCampaignMissions(
     packageName: String,
@@ -72,7 +84,11 @@ internal class DefaultPaEMissionsRepository @Inject constructor(
       val missions = cachedMissions.map { it.toDomain() }
       val checkpoints = missions.filter { it.type == PaEMissionType.CHECKPOINT }
       val regularMissions = missions.filter { it.type != PaEMissionType.CHECKPOINT }
-      PaEMissions(checkpoints = checkpoints, missions = regularMissions)
+      PaEMissions(
+        checkpoints = checkpoints,
+        missions = regularMissions,
+        type = types[packageName],
+      )
     }
   } catch (e: Throwable) {
     e.printStackTrace()
@@ -110,6 +126,7 @@ internal class DefaultPaEMissionsRepository @Inject constructor(
     val allMissions = missions.checkpoints + missions.missions
     val entities = allMissions.map { it.toEntity(packageName) }
     paeMissionDao.replaceAppMissions(packageName, entities)
+    missions.type?.let { types[packageName] = it } ?: types.remove(packageName)
 
     return missions
   }
@@ -117,8 +134,27 @@ internal class DefaultPaEMissionsRepository @Inject constructor(
 
 private fun PaEMissionsJson.toDomainModel() = PaEMissions(
   checkpoints = checkpoints.map(PaEMissionJson::toDomainModel),
-  missions = missions.map(PaEMissionJson::toDomainModel)
+  missions = missions.map(PaEMissionJson::toDomainModel),
+  campaignId = campaignId?.toString(),
+  mmpClickUrl = mmpClickUrl?.takeIf { it.isNotBlank() },
+  attribution = attribution?.toDomainModel(),
+  type = type?.let { value ->
+    // An unknown type (a newer backend) maps to none: the mission types decide.
+    PaECampaignType.fromApi(value)
+      .also { if (it == null) Timber.w("Unknown P&E campaign type: $value") }
+  },
+  mmp = mmp?.let { value ->
+    // An unknown MMP (a newer backend) maps to none; the click source then falls back to AppsFlyer.
+    PaEMmpPlatform.fromApi(value).also { if (it == null) Timber.w("Unknown P&E MMP: $value") }
+  },
 )
+
+// An unknown status (a newer backend) maps to none: the missions keep showing.
+private fun PaEAttributionJson.toDomainModel(): PaEAttribution? {
+  val known = PaEAttributionStatus.fromApi(status)
+  if (known == null && status != null) Timber.w("Unknown P&E attribution status: $status")
+  return known?.let { PaEAttribution(status = it, reason = reason) }
+}
 
 private fun PaEMissionJson.toDomainModel() = PaEMission(
   title = title,

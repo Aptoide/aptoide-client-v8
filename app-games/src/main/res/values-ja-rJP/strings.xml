@@ -350,6 +350,18 @@
   <string name="play_and_earn_start_earning_title">今すぐ稼ぎ始めよう</string>
   <string name="play_and_earn_level_up_rewards_title">報酬をレベルアップ！</string>
   <string name="play_and_earn_login_unlock_access_body">プレイしながらログインして、素晴らしい賞品へのアクセスをアンロックしよう！</string>
+  <string name="play_and_earn_install_sign_in_title">ログインして報酬を獲得しよう</string>
+  <string name="play_and_earn_install_sign_in_body">%1$s で報酬を獲得するには、Google アカウントでログインしてください。</string>
+  <string name="play_and_earn_install_sign_in_body_generic">このゲームで報酬を獲得するには、Google アカウントでログインしてください。</string>
+  <string name="play_and_earn_rewards_paused_title">報酬は一時停止中</string>
+  <string name="play_and_earn_rewards_paused_body">ゲームによるインストールの確認を待っています。プレイを続けてください。確認されるとすぐに報酬が始まります。</string>
+  <string name="play_and_earn_not_eligible_title">このデバイスは対象外です</string>
+  <string name="play_and_earn_not_eligible_body">ゲームのトラッキングツールがこのインストールを確認しなかったため、このデバイスではこのキャンペーンの報酬を利用できません。</string>
+  <string name="play_and_earn_rewards_blocked_learn_more_button">もっと知る</string>
+  <string name="play_and_earn_rewards_paused_info_title">報酬が一時停止しているのはなぜですか？</string>
+  <string name="play_and_earn_rewards_paused_info_body">各ゲームは、Aptoide Games 経由のインストールを確認するためにトラッキングツールを使用しています。このキャンペーンの報酬は、インストールが確認されると始まります。通常、ゲームを初めて開いてから数分ほどです。\n\nゲームをインストールしたまま、いつもどおりプレイしてください。待っている間のゲーム内の進行も、インストールが確認されるとカウントされます。</string>
+  <string name="play_and_earn_not_eligible_info_title">このデバイスが対象外なのはなぜですか？</string>
+  <string name="play_and_earn_not_eligible_info_body">各ゲームは、Aptoide Games 経由のインストールを確認するためにトラッキングツールを使用し、対象となるインストールを判断しています。エミュレーターや自動化ツールなど、セキュリティチェックで検出されたインストールはキャンペーンの対象になりません。\n\nほかの Play &amp; Earn ゲームは引き続き利用できる場合があります。</string>
   <string name="play_and_earn_waiting_title">待機中...</string>
   <string name="play_and_earn_getting_ready_body">ご準備を進めております…</string>
   <string name="play_and_earn_almost_there_title">あと少しです！</string>
@@ -389,6 +401,9 @@
   <string name="play_and_earn_install_button">インストール</string>
   <string name="play_and_earn_notification_recording_title">報酬のためのプレイ時間の追跡</string>
   <string name="play_and_earn_notification_recording_body">あなたのプレイ時間はミッションの進行にカウントされています。</string>
+  <string name="play_and_earn_notification_status_title">Play &amp; Earn は有効です</string>
+  <string name="play_and_earn_notification_status_body">ゲームがミッションを確認すると通知が届きます。</string>
+  <string name="play_and_earn_mission_completed_notification_body">%2$s で %1$d UT を獲得しました</string>
   <string name="settings_play_and_earn_tracking">Play &amp; Earn トラッキング</string>
   <string name="settings_play_and_earn_tracking_description">Aptoideはこの設定を使用して、アプリ内でのアクティビティを測定し、プレイ時間や達成したマイルストーンに対して報酬を付与します。無効にすると、Aptoide経由でゲームを再起動するまで報酬の追跡が行われません。</string>
   <!-- Play and Earn - Permissions-->

@@ -36,7 +36,6 @@ import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.platform.LocalContext
 import cm.aptoide.pt.download_view.presentation.DownloadUiState
 import cm.aptoide.pt.download_view.presentation.ExecutionBlocker.UNMETERED
 import cm.aptoide.pt.download_view.presentation.downloadUiStates
@@ -55,9 +54,6 @@ import com.aptoide.android.aptoidegames.installer.presentation.PlayAttributionLa
 import com.aptoide.android.aptoidegames.installer.presentation.getProgressString
 import com.aptoide.android.aptoidegames.installer.presentation.installViewStates
 import com.aptoide.android.aptoidegames.installer.presentation.toInstallViewState
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.rememberPlayAndEarnSetupRoute
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.service.PaEForegroundService
-import com.aptoide.android.aptoidegames.play_and_earn.rememberPlayAndEarnReady
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -80,7 +76,10 @@ private fun PaEInstallViewProcessingPreview() {
     ) {
       states.forEach {
         divider()
-        PaEInstallViewContent(installViewState = it.toInstallViewState(randomApp))
+        PaEInstallViewContent(
+          installViewState = it.toInstallViewState(randomApp),
+          packageName = randomApp.packageName,
+        )
       }
       divider()
     }
@@ -97,25 +96,34 @@ fun PaEInstallView(
   navigate: ((String) -> Unit)? = null,
   showUninstall: Boolean = false,
 ) {
+  val mmpInstallClick = rememberPaEMmpInstallClick(packageName = app.packageName)
   val installViewState = installViewStates(
     app = app,
-    onInstallStarted = onInstallStarted,
+    onInstallStarted = mmpInstallClick.onInstallStarted(onInstallStarted),
     onCancel = onCancel,
     prefetchPlayCatalog = true,
   )
+  TrackPaEMmpInstallState(mmpInstallClick = mmpInstallClick, uiState = installViewState.uiState)
   val uninstallLabel = stringResource(string.uninstall_button)
+
+  // A Play & Earn game is only downloaded by a signed-in user (AND-876): logged-out taps go to
+  // sign-in first and the install resumes on return.
+  val installLoginGate = rememberPaEInstallLoginGate(app = app, navigate = navigate)
+  ResumePendingPaEInstall(app = app, uiState = installViewState.uiState)
 
   PaEInstallViewContent(
     installViewState = installViewState,
+    packageName = app.packageName,
     navigate = navigate,
     rewardAmount = rewardAmount,
     showUninstall = showUninstall,
+    installLoginGate = installLoginGate,
     modifier = modifier.clearAndSetSemantics {
       installViewState.actionLabel?.let {
         onClick(label = it) {
           when (val uiState = installViewState.uiState) {
-            is DownloadUiState.Install -> uiState.install
-            is DownloadUiState.Outdated -> uiState.update
+            is DownloadUiState.Install -> installLoginGate.guard(uiState.install)
+            is DownloadUiState.Outdated -> installLoginGate.guard(uiState.update)
             is DownloadUiState.Waiting -> uiState.action
             is DownloadUiState.Downloading -> uiState.cancel
             is DownloadUiState.Installed -> uiState.open
@@ -149,12 +157,14 @@ fun PaEInstallView(
 @Composable
 private fun PaEInstallViewContent(
   installViewState: InstallViewState,
+  packageName: String,
   modifier: Modifier = Modifier,
   navigate: ((String) -> Unit)? = null,
   rewardAmount: BigDecimal? = null,
   verticalSpacing: Dp = 8.dp,
   horizontalSpacing: Dp = 24.dp,
   showUninstall: Boolean = false,
+  installLoginGate: PaEInstallLoginGate = PaEInstallLoginGate.None,
 ) = Column(
   modifier = modifier
     .fillMaxWidth()
@@ -165,19 +175,19 @@ private fun PaEInstallViewContent(
     null -> Unit
     is DownloadUiState.Install -> PaELargeCoinButton(
       title = installViewState.actionLabel ?: "",
-      onClick = state.install,
+      onClick = installLoginGate.guard(state.install),
       modifier = Modifier.fillMaxWidth(),
     )
 
     is DownloadUiState.Migrate -> PaELargeCoinButton(
       title = installViewState.actionLabel ?: "",
-      onClick = state.migrate,
+      onClick = installLoginGate.guard(state.migrate),
       modifier = Modifier.fillMaxWidth(),
     )
 
     is DownloadUiState.MigrateAlias -> PaELargeCoinButton(
       title = installViewState.actionLabel ?: "",
-      onClick = state.migrateAlias,
+      onClick = installLoginGate.guard(state.migrateAlias),
       modifier = Modifier.fillMaxWidth(),
     )
 
@@ -188,7 +198,7 @@ private fun PaEInstallViewContent(
       ) {
         PaELargeCoinButton(
           title = installViewState.actionLabel ?: "",
-          onClick = state.update,
+          onClick = installLoginGate.guard(state.update),
           modifier = Modifier.fillMaxWidth(),
         )
         SecondaryOutlinedButton(
@@ -200,7 +210,7 @@ private fun PaEInstallViewContent(
     } else {
       PaELargeCoinButton(
         title = installViewState.actionLabel ?: "",
-        onClick = state.update,
+        onClick = installLoginGate.guard(state.update),
         modifier = Modifier.fillMaxWidth(),
       )
     }
@@ -267,6 +277,7 @@ private fun PaEInstallViewContent(
       ) {
         PaEPlayButton(
           onClick = state.open,
+          packageName = packageName,
           navigate = navigate,
           rewardAmount = rewardAmount,
           modifier = Modifier.fillMaxWidth(),
@@ -280,6 +291,7 @@ private fun PaEInstallViewContent(
     } else {
       PaEPlayButton(
         onClick = state.open,
+        packageName = packageName,
         navigate = navigate,
         rewardAmount = rewardAmount,
         modifier = Modifier.fillMaxWidth(),
@@ -313,13 +325,14 @@ private fun PaEInstallViewContent(
 @Composable
 private fun PaEPlayButton(
   onClick: () -> Unit,
+  packageName: String,
   navigate: ((String) -> Unit)?,
   modifier: Modifier = Modifier,
   rewardAmount: BigDecimal? = null,
 ) {
-  val isPaEReady = rememberPlayAndEarnReady()
-  val paeSetupRoute = rememberPlayAndEarnSetupRoute()
-  val context = LocalContext.current
+  // AND-901: the service mode (usage tracking or status heartbeats) is picked per game at tap
+  // time; Play never asks for permissions, only for sign-in.
+  val playTap = rememberPaEPlayTap(packageName = packageName, navigate = navigate)
 
   val title = if (rewardAmount != null) {
     stringResource(string.play_and_earn_play_and_earn_up_to_button, rewardAmount.toDouble())
@@ -329,17 +342,7 @@ private fun PaEPlayButton(
 
   PaELargeCoinButton(
     title = title,
-    onClick = {
-      if (isPaEReady || navigate == null) {
-        if (isPaEReady) {
-          // Start the foreground service to track playtime
-          PaEForegroundService.start(context)
-        }
-        onClick()
-      } else {
-        navigate(paeSetupRoute)
-      }
-    },
+    onClick = playTap.guard(onClick),
     modifier = modifier,
   )
 }

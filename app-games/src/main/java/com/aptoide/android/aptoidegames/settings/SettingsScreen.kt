@@ -33,9 +33,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -52,6 +56,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.extensions.multiTap
@@ -72,10 +79,12 @@ import com.aptoide.android.aptoidegames.network.presentation.NetworkPreferencesV
 import com.aptoide.android.aptoidegames.play_and_earn.di.rememberWalletAddress
 import com.aptoide.android.aptoidegames.play_and_earn.domain.UserInfo
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaESmallTextButton
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.hasPaEPermissions
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.service.PaEServicePreferencesViewModel
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.GoogleSignInViewModel
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnSignInRoute
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.rememberUserInfo
+import com.aptoide.android.aptoidegames.play_and_earn.rememberIsPaEUsageTrackingEnabled
 import com.aptoide.android.aptoidegames.play_and_earn.rememberShouldShowPlayAndEarn
 import com.aptoide.android.aptoidegames.terms_and_conditions.ppUrl
 import com.aptoide.android.aptoidegames.terms_and_conditions.tcUrl
@@ -103,13 +112,19 @@ fun settingsScreen(showSnack: (String) -> Unit) = ScreenData(
   val paEServicePreferencesViewModel = hiltViewModel<PaEServicePreferencesViewModel>()
   val isPaEServiceEnabled by paEServicePreferencesViewModel.isPaEServiceEnabled.collectAsState()
   val shouldShowPlayAndEarn = rememberShouldShowPlayAndEarn()
+  val isPaEUsageTrackingEnabled = rememberIsPaEUsageTrackingEnabled()
+  val hasUsagePermissions = rememberHasUsagePermissionsOnResume()
 
   SettingsViewContent(
     title = stringResource(R.string.settings_title),
     downloadOnlyOverWifi = downloadOnlyOverWifi,
     autoUpdateGames = autoUpdateGames,
     isPaEServiceEnabled = isPaEServiceEnabled,
-    showPaEServiceToggle = shouldShowPlayAndEarn,
+    showPaEServiceToggle = showPaETrackingToggle(
+      playAndEarnVisible = shouldShowPlayAndEarn,
+      usageTrackingEnabled = isPaEUsageTrackingEnabled,
+      hasUsagePermissions = hasUsagePermissions,
+    ),
     verName = BuildConfig.VERSION_NAME,
     verCode = BuildConfig.VERSION_CODE,
     toggleDownloadOnlyOverWifi = { isChecked ->
@@ -711,4 +726,34 @@ fun SettingsScreenPreview() {
       navigateBack = {},
     )
   }
+}
+
+/**
+ * AND-902: the "Play & Earn tracking" switch is the user's opt-out of usage tracking. It is only
+ * shown when tracking can actually run: Play & Earn visible, the kill switch on and both usage
+ * permissions granted. Without the permissions, the lock on a time mission is the way to them.
+ */
+internal fun showPaETrackingToggle(
+  playAndEarnVisible: Boolean,
+  usageTrackingEnabled: Boolean,
+  hasUsagePermissions: Boolean,
+): Boolean = playAndEarnVisible && usageTrackingEnabled && hasUsagePermissions
+
+/** Re-read on every resume: the user may have changed the permissions in Android settings. */
+@Composable
+private fun rememberHasUsagePermissionsOnResume(): Boolean {
+  val context = LocalContext.current
+  val lifecycleOwner = LocalLifecycleOwner.current
+  val read = { context.hasPaEPermissions() }
+  var granted by remember { mutableStateOf(read()) }
+
+  DisposableEffect(lifecycleOwner) {
+    val observer = LifecycleEventObserver { _, event ->
+      if (event == Lifecycle.Event.ON_RESUME) granted = read()
+    }
+    lifecycleOwner.lifecycle.addObserver(observer)
+    onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+  }
+
+  return granted
 }

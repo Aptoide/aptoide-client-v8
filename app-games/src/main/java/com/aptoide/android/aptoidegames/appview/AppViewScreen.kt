@@ -239,7 +239,9 @@ fun buildAppViewRoute(
   utmSource: String? = "",
   isGamified: Boolean = false
 ): String =
-  appViewRoute.replace("{$SOURCE}", appSource.asSource())
+  // Without the pattern's trailing "?": `withParameter` adds its own, and a "?&name=value" query
+  // leaves the first parameter unparsed by Navigation (AND-914: is_gamified read as false).
+  appViewRoute.removeSuffix("?").replace("{$SOURCE}", appSource.asSource())
     .withParameter(UTM_CAMPAIGN, utmCampaign)
     .withParameter(UTM_MEDIUM, utmMedium)
     .withParameter(UTM_CONTENT, utmContent)
@@ -647,7 +649,7 @@ fun ViewPagerContent(
   when (selectedTab) {
     AppViewTab.DETAILS -> DetailsView(app = app, navigate = navigate)
 
-    AppViewTab.REWARDS -> AppRewardsView(packageName = app.packageName)
+    AppViewTab.REWARDS -> AppRewardsView(packageName = app.packageName, navigate = navigate)
 
     AppViewTab.RELATED -> RelatedContentView(
       packageName = app.packageName,

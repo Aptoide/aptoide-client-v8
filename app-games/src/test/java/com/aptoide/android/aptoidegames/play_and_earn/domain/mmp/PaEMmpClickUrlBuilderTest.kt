@@ -1,0 +1,279 @@
+package com.aptoide.android.aptoidegames.play_and_earn.domain.mmp
+
+import cm.aptoide.pt.campaigns.domain.PaEMmpPlatform.ADJUST
+import cm.aptoide.pt.campaigns.domain.PaEMmpPlatform.APPSFLYER
+import cm.aptoide.pt.test.gherkin.scenario
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.NullSource
+import org.junit.jupiter.params.provider.ValueSource
+
+internal class PaEMmpClickUrlBuilderTest {
+
+  private val template = "https://app.appsflyer.com/com.game-Aptoide?pid=aptoide_int" +
+    "&af_siteid={affiliate_id}&c={offer_ref_id}&af_c_id={offer_id}&af_click_lookback=7d" +
+    "&clickid={transaction_id}&advertising_id={google_aid}&idfa={ios_ifa}"
+
+  private val params = PaEMmpClickParams(
+    wallet = "0xAbC123",
+    clickId = "click-1",
+    advertisingId = "38400000-8cf0-11bd-b23e-10b96e40000d",
+    campaignId = "campaign-7",
+    channel = "aptoide_games",
+  )
+
+  @Test
+  fun `Fills every placeholder of our template and adds the wallet in af_sub1`() = scenario {
+    m Given "our AppsFlyer template and the click values"
+    m When "the click URL is built"
+    val url = PaEMmpClickUrlBuilder.build(template, params, APPSFLYER)
+
+    m Then "each placeholder has its value, iOS idfa is gone and the wallet is in af_sub1"
+    assertEquals(
+      "https://app.appsflyer.com/com.game-Aptoide?pid=aptoide_int" +
+        "&af_siteid=aptoide_games&c=campaign-7&af_c_id=campaign-7&af_click_lookback=7d" +
+        "&clickid=click-1&advertising_id=38400000-8cf0-11bd-b23e-10b96e40000d" +
+        "&af_sub1=0xAbC123",
+      url
+    )
+  }
+
+  private val withoutAdvertisingId =
+    "https://app.appsflyer.com/com.game-Aptoide?pid=aptoide_int" +
+    "&af_siteid=aptoide_games&c=campaign-7&af_c_id=campaign-7&af_click_lookback=7d" +
+    "&clickid=click-1&af_sub1=0xAbC123"
+
+  @ParameterizedTest(name = "advertising id \"{0}\"")
+  @NullSource
+  @ValueSource(strings = ["", " ", "00000000-0000-0000-0000-000000000000"])
+  fun `Drops advertising_id when there is no usable advertising id`(gaid: String?) = scenario {
+    m Given "a missing, blank or zeroed advertising id"
+    m When "the click URL is built"
+    val url = PaEMmpClickUrlBuilder.build(template, params.copy(advertisingId = gaid), APPSFLYER)
+
+    m Then "only the advertising_id parameter is left out"
+    assertEquals(withoutAdvertisingId, url)
+  }
+
+  @Test
+  fun `Removes parameters whose placeholder we do not know`() = scenario {
+    m Given "a template with an unknown placeholder, also glued to other text"
+    val withUnknown =
+      "https://app.appsflyer.com/x?pid=aptoide_int&foo={bar}&af_sub5={offer_id}af_ad_id"
+
+    m When "the click URL is built"
+    val url = PaEMmpClickUrlBuilder.build(withUnknown, params, APPSFLYER)
+
+    m Then "only known values are kept, no literal placeholder is sent"
+    assertEquals(
+      "https://app.appsflyer.com/x?pid=aptoide_int&af_sub5=campaign-7af_ad_id&af_sub1=0xAbC123",
+      url
+    )
+  }
+
+  @Test
+  fun `Replaces every af_sub1 already in the template`() = scenario {
+    m Given "a template that already carries fixed af_sub1 values"
+    val withSub1 = "https://app.appsflyer.com/x?pid=aptoide_int&af_sub1=a&af_sub1=b"
+
+    m When "the click URL is built"
+    val url = PaEMmpClickUrlBuilder.build(withSub1, params, APPSFLYER)
+
+    m Then "af_sub1 appears once, with the wallet"
+    assertEquals("https://app.appsflyer.com/x?pid=aptoide_int&af_sub1=0xAbC123", url)
+  }
+
+  @Test
+  fun `Keeps the fragment at the end`() = scenario {
+    m Given "a template with a fragment"
+    m When "the click URL is built"
+    val url = PaEMmpClickUrlBuilder.build(
+      "https://app.appsflyer.com/x?pid=aptoide_int#top",
+      params,
+      APPSFLYER,
+    )
+
+    m Then "the wallet stays in the query, before the fragment"
+    assertEquals("https://app.appsflyer.com/x?pid=aptoide_int&af_sub1=0xAbC123#top", url)
+  }
+
+  @Test
+  fun `Does not build a link with a placeholder outside the query`() = scenario {
+    m Given "a template with a placeholder in its path"
+    m When "the click URL is built"
+    val url = PaEMmpClickUrlBuilder.build(
+      "https://app.appsflyer.com/{offer_id}?pid=aptoide_int",
+      params,
+      APPSFLYER,
+    )
+
+    m Then "there is no URL to send"
+    assertNull(url)
+  }
+
+  @Test
+  fun `Does not build a link that is not https`() = scenario {
+    m Given "a plain http template"
+    m When "the click URL is built"
+    val url = PaEMmpClickUrlBuilder.build(
+      "http://app.appsflyer.com/x?pid=aptoide_int",
+      params,
+      APPSFLYER,
+    )
+
+    m Then "there is no URL to send"
+    assertNull(url)
+  }
+
+  @Test
+  fun `Encodes the values it fills in`() = scenario {
+    m Given "a campaign id and a wallet with characters that are not URL-safe"
+    m When "the click URL is built"
+    val url = PaEMmpClickUrlBuilder.build(
+      "https://app.appsflyer.com/x?c={offer_ref_id}",
+      params.copy(campaignId = "Dice Roll & Co", wallet = "a=b&c"),
+      APPSFLYER,
+    )
+
+    m Then "the values are URL-encoded"
+    assertEquals("https://app.appsflyer.com/x?c=Dice+Roll+%26+Co&af_sub1=a%3Db%26c", url)
+  }
+
+  @Test
+  fun `Adds the query when the template has none`() = scenario {
+    m Given "a template without parameters"
+    m When "the click URL is built"
+    val url = PaEMmpClickUrlBuilder.build("https://app.appsflyer.com/x", params, APPSFLYER)
+
+    m Then "af_sub1 starts the query"
+    assertEquals("https://app.appsflyer.com/x?af_sub1=0xAbC123", url)
+  }
+
+  // AND-912: Adjust echoes `label` back in its callbacks the way AppsFlyer echoes `af_sub1`.
+  private val adjustTemplate = "https://app.adjust.com/abc123?campaign_id={campaign_id}" +
+    "&click_id={click_id}&gps_adid={gps_adid}&label=fixed"
+
+  @Test
+  fun `Fills an Adjust link and puts the wallet in label`() = scenario {
+    m Given "the developer's Adjust link with our macros and a fixed label"
+    m When "the click URL is built for Adjust"
+    val url = PaEMmpClickUrlBuilder.build(adjustTemplate, params, ADJUST)
+
+    m Then "the macros have their values, label carries the wallet once and there is no af_sub1"
+    assertEquals(
+      "https://app.adjust.com/abc123?campaign_id=campaign-7&click_id=click-1" +
+        "&gps_adid=38400000-8cf0-11bd-b23e-10b96e40000d&label=0xAbC123",
+      url
+    )
+  }
+
+  @Test
+  fun `An Adjust link without a usable advertising id drops gps_adid`() = scenario {
+    m Given "a zeroed advertising id"
+    m When "the click URL is built for Adjust"
+    val url = PaEMmpClickUrlBuilder.build(
+      adjustTemplate,
+      params.copy(advertisingId = "00000000-0000-0000-0000-000000000000"),
+      ADJUST,
+    )
+
+    m Then "only gps_adid is left out"
+    assertEquals(
+      "https://app.adjust.com/abc123?campaign_id=campaign-7&click_id=click-1&label=0xAbC123",
+      url
+    )
+  }
+
+  @Test
+  fun `Fills the macros of both MMPs on either platform`() = scenario {
+    m Given "an Adjust link carrying an AppsFlyer macro, and the reverse"
+    m When "the click URLs are built"
+    val adjust = PaEMmpClickUrlBuilder.build(
+      "https://app.adjust.com/abc123?clickid={transaction_id}&click_id={click_id}",
+      params,
+      ADJUST,
+    )
+    val appsFlyer = PaEMmpClickUrlBuilder.build(
+      "https://app.appsflyer.com/x?pid=aptoide_int&click_id={click_id}&clickid={transaction_id}",
+      params,
+      APPSFLYER,
+    )
+
+    m Then "both macros are filled on either platform: the wallet parameter is the difference"
+    assertEquals(
+      "https://app.adjust.com/abc123?clickid=click-1&click_id=click-1&label=0xAbC123",
+      adjust
+    )
+    assertEquals(
+      "https://app.appsflyer.com/x?pid=aptoide_int&click_id=click-1&clickid=click-1" +
+        "&af_sub1=0xAbC123",
+      appsFlyer
+    )
+  }
+
+  @Test
+  fun `Encodes the wallet in label too`() = scenario {
+    m Given "a wallet with characters that are not URL-safe"
+    m When "the click URL is built for Adjust"
+    val url = PaEMmpClickUrlBuilder.build(
+      "https://app.adjust.com/abc123",
+      params.copy(wallet = "a=b&c"),
+      ADJUST,
+    )
+
+    m Then "label is URL-encoded and starts the query"
+    assertEquals("https://app.adjust.com/abc123?label=a%3Db%26c", url)
+  }
+
+  @Test
+  fun `An AppsFlyer link keeps a label the developer set`() = scenario {
+    m Given "an AppsFlyer link that happens to carry a label parameter"
+    m When "the click URL is built for AppsFlyer"
+    val url = PaEMmpClickUrlBuilder.build(
+      "https://app.appsflyer.com/x?pid=aptoide_int&label=theirs",
+      params,
+      APPSFLYER,
+    )
+
+    m Then "label is untouched and the wallet goes to af_sub1"
+    assertEquals("https://app.appsflyer.com/x?pid=aptoide_int&label=theirs&af_sub1=0xAbC123", url)
+  }
+
+  @Test
+  fun `Replaces every label already in an Adjust link`() = scenario {
+    m Given "an Adjust link that already carries fixed label values"
+    m When "the click URL is built for Adjust"
+    val url =
+      PaEMmpClickUrlBuilder.build("https://app.adjust.com/abc123?label=a&label=b", params, ADJUST)
+
+    m Then "label appears once, with the wallet"
+    assertEquals("https://app.adjust.com/abc123?label=0xAbC123", url)
+  }
+
+  @Test
+  fun `An Adjust link keeps an af_sub1 the developer set`() = scenario {
+    m Given "an Adjust link that happens to carry an af_sub1 parameter"
+    m When "the click URL is built for Adjust"
+    val url =
+      PaEMmpClickUrlBuilder.build("https://app.adjust.com/abc123?af_sub1=theirs", params, ADJUST)
+
+    m Then "af_sub1 is untouched and the wallet goes to label"
+    assertEquals("https://app.adjust.com/abc123?af_sub1=theirs&label=0xAbC123", url)
+  }
+
+  @Test
+  fun `Encodes plus, slash and space in the wallet on both platforms`() = scenario {
+    m Given "a wallet with characters an MMP would otherwise decode differently"
+    val odd = params.copy(wallet = "a+b/c d")
+
+    m When "the click URLs are built"
+    val adjust = PaEMmpClickUrlBuilder.build("https://app.adjust.com/abc123", odd, ADJUST)
+    val appsFlyer = PaEMmpClickUrlBuilder.build("https://app.appsflyer.com/x", odd, APPSFLYER)
+
+    m Then "the wallet comes back as sent once the MMP decodes it"
+    assertEquals("https://app.adjust.com/abc123?label=a%2Bb%2Fc+d", adjust)
+    assertEquals("https://app.appsflyer.com/x?af_sub1=a%2Bb%2Fc+d", appsFlyer)
+  }
+}

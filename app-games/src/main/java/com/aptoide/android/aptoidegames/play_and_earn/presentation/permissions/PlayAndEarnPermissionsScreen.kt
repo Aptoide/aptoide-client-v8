@@ -23,6 +23,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,6 +44,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.zIndex
 import androidx.core.net.toUri
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -62,7 +64,9 @@ import com.aptoide.android.aptoidegames.drawables.figures.getCheckCircle
 import com.aptoide.android.aptoidegames.drawables.figures.getPermissionAllowFigure
 import com.aptoide.android.aptoidegames.drawables.icons.getTrustedIcon
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.rememberPaEAnalytics
+import com.aptoide.android.aptoidegames.play_and_earn.InjectionsProvider
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.service.PaEForegroundService
+import com.aptoide.android.aptoidegames.play_and_earn.rememberIsPaEUsageTrackingEnabled
 import com.aptoide.android.aptoidegames.play_and_earn.rememberPaEClientConfigManager
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -90,6 +94,13 @@ private fun PlayAndEarnPermissionsScreen(
 
   val paeAnalytics = rememberPaEAnalytics()
   val paEClientConfigManager = rememberPaEClientConfigManager()
+  val playAndEarnManager = hiltViewModel<InjectionsProvider>().playAndEarnManager
+  val isUsageTrackingEnabled = rememberIsPaEUsageTrackingEnabled()
+
+  // AND-878: the permission onboarding is hidden behind pae_usage_tracking_enabled.
+  LaunchedEffect(isUsageTrackingEnabled) {
+    if (!isUsageTrackingEnabled) navigateBack()
+  }
 
   var allowedRestrictedSettings by remember { mutableStateOf(false) }
   var showPermissionDeniedDialog by rememberSaveable { mutableStateOf(false) }
@@ -97,16 +108,19 @@ private fun PlayAndEarnPermissionsScreen(
   var showRestrictedSettingsSection by rememberSaveable { mutableStateOf(false) }
 
   // Check if permissions are already granted on screen resume
-  DisposableEffect(lifecycleOwner) {
+  DisposableEffect(lifecycleOwner, isUsageTrackingEnabled) {
     val observer = LifecycleEventObserver { _, event ->
       if (event == Lifecycle.Event.ON_RESUME) {
-        if (context.hasOverlayPermission() && context.hasUsageStatsPermissionStatus()) {
-          PaEForegroundService.start(context)
+        if (isUsageTrackingEnabled && context.hasPaEPermissions()) {
           coroutineScope.launch {
-            paEClientConfigManager.fetchAndSaveClientConfig()
+            // Granting the permissions is an opt-in (AND-902): the Settings switch goes on, and
+            // the write completes before the screen is left, or it could be cancelled with it.
+            playAndEarnManager.optInToUsageTracking()
+            PaEForegroundService.start(context)
+            launch { paEClientConfigManager.fetchAndSaveClientConfig() }
+            showSnack(context.getString(R.string.play_and_earn_permissions_success_snackbar))
+            navigateBack()
           }
-          showSnack(context.getString(R.string.play_and_earn_permissions_success_snackbar))
-          navigateBack()
         }
 
         allowedRestrictedSettings =

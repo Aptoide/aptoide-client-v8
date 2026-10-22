@@ -26,4 +26,7 @@ fun Context.hasUsageStatsPermissionStatus(appOpsManager: AppOpsManager? = null):
 
 fun Context.hasOverlayPermission() = Settings.canDrawOverlays(this)
 
+/** Both permissions the usage-tracking mode needs: usage access and drawing over other apps. */
+fun Context.hasPaEPermissions(): Boolean = hasUsageStatsPermissionStatus() && hasOverlayPermission()
+
 fun requiresRestrictedSettings() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM

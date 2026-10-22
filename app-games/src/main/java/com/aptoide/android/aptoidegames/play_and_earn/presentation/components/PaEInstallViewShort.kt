@@ -10,7 +10,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.campaigns.domain.PaEApp
@@ -28,9 +27,6 @@ import com.aptoide.android.aptoidegames.installer.presentation.PlayAttributionLa
 import com.aptoide.android.aptoidegames.installer.presentation.appViewDiversion
 import com.aptoide.android.aptoidegames.installer.presentation.installViewStates
 import com.aptoide.android.aptoidegames.installer.presentation.toInstallViewState
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.rememberPlayAndEarnSetupRoute
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.service.PaEForegroundService
-import com.aptoide.android.aptoidegames.play_and_earn.rememberPlayAndEarnReady
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 
 @PreviewDark
@@ -48,7 +44,10 @@ private fun PaEInstallViewShortPreview() {
     Column(verticalArrangement = Arrangement.Center) {
       states.forEach {
         divider()
-        PaEInstallViewShortContent(installViewState = it.toInstallViewState(randomApp))
+        PaEInstallViewShortContent(
+          installViewState = it.toInstallViewState(randomApp),
+          packageName = randomApp.packageName,
+        )
       }
       divider()
     }
@@ -64,16 +63,26 @@ fun PaEInstallViewShort(
   navigate: ((String) -> Unit)? = null,
   onNavigateToAppView: (() -> Unit)? = null,
 ) {
+  val normalApp = app.asNormalApp()
+  val mmpInstallClick = rememberPaEMmpInstallClick(packageName = normalApp.packageName)
   val installViewState = installViewStates(
-    app = app.asNormalApp(),
-    onInstallStarted = onInstallStarted,
+    app = normalApp,
+    onInstallStarted = mmpInstallClick.onInstallStarted(onInstallStarted),
     onCancel = onCancel,
   )
+  TrackPaEMmpInstallState(mmpInstallClick = mmpInstallClick, uiState = installViewState.uiState)
+
+  // A Play & Earn game is only downloaded by a signed-in user (AND-876): logged-out taps go to
+  // sign-in first and the install resumes on return.
+  val installLoginGate = rememberPaEInstallLoginGate(app = normalApp, navigate = navigate)
+  ResumePendingPaEInstall(app = normalApp, uiState = installViewState.uiState)
 
   PaEInstallViewShortContent(
     installViewState = installViewState,
+    packageName = normalApp.packageName,
     cancelable = cancelable,
     navigate = navigate,
+    installLoginGate = installLoginGate,
     onNavigateToAppView = onNavigateToAppView,
   )
 }
@@ -81,8 +90,10 @@ fun PaEInstallViewShort(
 @Composable
 private fun PaEInstallViewShortContent(
   installViewState: InstallViewState,
+  packageName: String,
   navigate: ((String) -> Unit)? = null,
   cancelable: Boolean = true,
+  installLoginGate: PaEInstallLoginGate = PaEInstallLoginGate.None,
   onNavigateToAppView: (() -> Unit)? = null,
 ) = Column(horizontalAlignment = Alignment.CenterHorizontally) {
   // Non-null only where this card must hand the install over to AppView instead of starting
@@ -93,22 +104,22 @@ private fun PaEInstallViewShortContent(
   )
   when (val state = installViewState.uiState) {
     is DownloadUiState.Install -> PaESmallCoinButton(
-      onClick = divert ?: state.install,
+      onClick = divert ?: installLoginGate.guard(state.install),
       title = installViewState.actionLabel ?: "",
     )
 
     is DownloadUiState.Migrate -> PaESmallCoinButton(
-      onClick = divert ?: state.migrate,
+      onClick = divert ?: installLoginGate.guard(state.migrate),
       title = installViewState.actionLabel ?: "",
     )
 
     is DownloadUiState.MigrateAlias -> PaESmallCoinButton(
-      onClick = divert ?: state.migrateAlias,
+      onClick = divert ?: installLoginGate.guard(state.migrateAlias),
       title = installViewState.actionLabel ?: "",
     )
 
     is DownloadUiState.Outdated -> PaESmallCoinButton(
-      onClick = divert ?: state.update,
+      onClick = divert ?: installLoginGate.guard(state.update),
       title = installViewState.actionLabel ?: "",
     )
 
@@ -139,6 +150,7 @@ private fun PaEInstallViewShortContent(
 
     is DownloadUiState.Installed -> PaESmallPlayButton(
       onClick = state.open,
+      packageName = packageName,
       navigate = navigate
     )
 
@@ -162,24 +174,15 @@ private fun PaEInstallViewShortContent(
 @Composable
 private fun PaESmallPlayButton(
   onClick: () -> Unit,
+  packageName: String,
   navigate: ((String) -> Unit)?,
 ) {
-  val isPaEReady = rememberPlayAndEarnReady()
-  val paeSetupRoute = rememberPlayAndEarnSetupRoute()
-  val context = LocalContext.current
+  // AND-901: the service mode (usage tracking or status heartbeats) is picked per game at tap
+  // time; Play never asks for permissions, only for sign-in.
+  val playTap = rememberPaEPlayTap(packageName = packageName, navigate = navigate)
 
   PaESmallCoinButton(
-    onClick = {
-      if (isPaEReady || navigate == null) {
-        if (isPaEReady) {
-          // Start the foreground service to track playtime
-          PaEForegroundService.start(context)
-        }
-        onClick()
-      } else {
-        navigate(paeSetupRoute)
-      }
-    },
+    onClick = playTap.guard(onClick),
     title = stringResource(R.string.play_and_earn_play_button),
   )
 }

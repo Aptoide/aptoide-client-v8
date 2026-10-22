@@ -7,7 +7,21 @@ import com.google.gson.annotations.SerializedName
 @Keep
 internal data class PaEMissionsJson(
   val checkpoints: List<PaEMissionJson>,
-  val missions: List<PaEMissionJson>
+  val missions: List<PaEMissionJson>,
+  @SerializedName("campaign_id") val campaignId: Long?,
+  @SerializedName("mmp_click_url") val mmpClickUrl: String?,
+  val attribution: PaEAttributionJson?,
+  // AND-915: `PLAY_TIME` or `EVENT`, the type of every mission. Absent on older backends.
+  val type: String?,
+  // AND-916: `APPSFLYER` or `ADJUST`, the MMP behind `mmp_click_url`. Absent without a link.
+  val mmp: String?,
+)
+
+// The user's status for the game's campaign; only sent to signed-in users.
+@Keep
+internal data class PaEAttributionJson(
+  val status: String?,
+  val reason: String?,
 )
 
 // Response of GET /api/missions (grouped by mission type). Each section is null when absent.
@@ -27,7 +41,7 @@ internal data class PaEMissionJson(
   val type: PaEMissionTypeJson,
   val arguments: JsonObject,
   val units: Int,
-  val progress: PaEMissionProgressJson?
+  val progress: PaEMissionProgressJson?,
 )
 
 @Keep
