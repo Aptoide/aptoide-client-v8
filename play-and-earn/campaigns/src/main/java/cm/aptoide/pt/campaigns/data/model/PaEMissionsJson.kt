@@ -13,6 +13,8 @@ internal data class PaEMissionsJson(
   val attribution: PaEAttributionJson?,
   // AND-915: `PLAY_TIME` or `EVENT`, the type of every mission. Absent on older backends.
   val type: String?,
+  // AND-916: `APPSFLYER` or `ADJUST`, the MMP behind `mmp_click_url`. Absent without a link.
+  val mmp: String?,
 )
 
 // The user's status for the game's campaign; only sent to signed-in users.

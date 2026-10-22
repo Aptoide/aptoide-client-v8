@@ -71,8 +71,11 @@ class PaEMmpClickSender internal constructor(
         campaignId = template.campaignId,
         channel = CHANNEL,
       ),
+      mmp = template.mmp,
     ) ?: return
-    if (BuildConfig.DEBUG) Timber.tag("PaEMmp").i("MMP click for $packageName: $url")
+    if (BuildConfig.DEBUG) {
+      Timber.tag("PaEMmp").i("${template.mmp} click for $packageName: $url")
+    }
     campaignRepository.knock(url)
   }
 

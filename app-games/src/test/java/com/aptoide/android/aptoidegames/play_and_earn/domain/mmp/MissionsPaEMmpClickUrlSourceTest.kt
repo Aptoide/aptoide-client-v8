@@ -3,6 +3,7 @@ package com.aptoide.android.aptoidegames.play_and_earn.domain.mmp
 import cm.aptoide.pt.campaigns.data.PaEMissionsRepository
 import cm.aptoide.pt.campaigns.domain.PaEMission
 import cm.aptoide.pt.campaigns.domain.PaEMissions
+import cm.aptoide.pt.campaigns.domain.PaEMmpPlatform
 import cm.aptoide.pt.test.gherkin.coScenario
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -27,11 +28,16 @@ internal class MissionsPaEMmpClickUrlSourceTest {
     override suspend fun markMissionAsCompleted(packageName: String, missionTitle: String) = Unit
   }
 
-  private fun missions(campaignId: String?, url: String?) = PaEMissions(
+  private fun missions(
+    campaignId: String?,
+    url: String?,
+    mmp: PaEMmpPlatform? = PaEMmpPlatform.APPSFLYER,
+  ) = PaEMissions(
     checkpoints = emptyList(),
     missions = emptyList(),
     campaignId = campaignId,
     mmpClickUrl = url,
+    mmp = mmp,
   )
 
   private val url = "https://app.appsflyer.com/com.game?pid=aptoide_int"
@@ -44,8 +50,11 @@ internal class MissionsPaEMmpClickUrlSourceTest {
     m When "the click template is asked"
     val template = MissionsPaEMmpClickUrlSource(repository).clickTemplate("com.game")
 
-    m Then "it is the link and campaign of the missions, fetched fresh from the network"
-    assertEquals(PaEMmpClickTemplate(url = url, campaignId = "7"), template)
+    m Then "it is the link, campaign and MMP of the missions, fetched fresh from the network"
+    assertEquals(
+      PaEMmpClickTemplate(url = url, campaignId = "7", mmp = PaEMmpPlatform.APPSFLYER),
+      template
+    )
     assertEquals(listOf("com.game" to true), repository.requests)
   }
 
@@ -83,5 +92,31 @@ internal class MissionsPaEMmpClickUrlSourceTest {
 
     m Then "there is none"
     assertNull(template)
+  }
+
+  // AND-912: the platform decides which link parameter carries the wallet.
+  @Test
+  fun `The template says which MMP the link belongs to`() = coScenario {
+    m Given "missions of an Adjust campaign"
+    val repository =
+      FakeMissionsRepository(Result.success(missions("7", url, PaEMmpPlatform.ADJUST)))
+
+    m When "the click template is asked"
+    val template = MissionsPaEMmpClickUrlSource(repository).clickTemplate("com.game")
+
+    m Then "it is an Adjust template"
+    assertEquals(PaEMmpPlatform.ADJUST, template?.mmp)
+  }
+
+  @Test
+  fun `Without an MMP the template is AppsFlyer, as before AND-916`() = coScenario {
+    m Given "missions from an older backend, with a link but no mmp"
+    val repository = FakeMissionsRepository(Result.success(missions("7", url, mmp = null)))
+
+    m When "the click template is asked"
+    val template = MissionsPaEMmpClickUrlSource(repository).clickTemplate("com.game")
+
+    m Then "it is an AppsFlyer template"
+    assertEquals(PaEMmpPlatform.APPSFLYER, template?.mmp)
   }
 }
