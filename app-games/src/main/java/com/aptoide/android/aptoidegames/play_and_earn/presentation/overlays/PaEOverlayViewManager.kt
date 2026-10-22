@@ -82,8 +82,9 @@ class PaEOverlayViewManager @Inject constructor(
     try {
       delay(OVERLAY_MILLIS)
     } finally {
-      // A cancelled scope (the service stopping) must not leave the card on screen.
-      windowManager.removeView(view)
+      // A cancelled scope (the service stopping) must not leave the card on screen. The system
+      // may already have torn the window down (permission revoked): not a reason to fail here.
+      runCatching { windowManager.removeView(view) }
     }
   }
 

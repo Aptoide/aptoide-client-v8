@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.drawables.icons.getAGAppIcon
 import com.aptoide.android.aptoidegames.theme.AGTypography
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
 import kotlinx.coroutines.delay
 
@@ -59,7 +60,7 @@ fun WelcomeBackOverlayViewContent() {
   Box(
     modifier = Modifier
       .size(162.dp, 87.dp)
-      .background(Palette.Black)
+      .background(FixedColors.Dark)
       .border(2.dp, Palette.Secondary),
     contentAlignment = Alignment.Center
   ) {
@@ -72,14 +73,14 @@ fun WelcomeBackOverlayViewContent() {
         verticalAlignment = Alignment.CenterVertically
       ) {
         Image(
-          imageVector = getAGAppIcon(Palette.White),
+          imageVector = getAGAppIcon(FixedColors.White),
           contentDescription = null,
           modifier = Modifier.size(18.dp)
         )
         Text(
           text = stringResource(R.string.play_and_earn_title),
           style = AGTypography.InputsL,
-          color = Palette.White
+          color = FixedColors.White
         )
       }
       Text(

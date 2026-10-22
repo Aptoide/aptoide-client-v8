@@ -43,13 +43,15 @@ import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getMission
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaEProgressIndicator
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.animations.SuccessConfettiAnimation
 import com.aptoide.android.aptoidegames.theme.AGTypography
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
 import kotlinx.coroutines.delay
 
 /**
  * The mission-completed card drawn over the game while it is being played, for players who
- * allowed the app to draw over other apps. The ones who did not get the notification instead
- * (see PaEMissionCompletedAnnouncer).
+ * allowed the app to draw over other apps; the others get the notification AND-880 moved this
+ * to (see PaEMissionCompletedAnnouncer). A window over a game looks the same in every theme,
+ * hence the fixed colours.
  */
 @Composable
 fun MissionCompletedOverlayView(
@@ -92,7 +94,7 @@ private fun MissionCompletedOverlayViewContent(
     modifier = Modifier
       .width(228.dp)
       .wrapContentHeight()
-      .background(Palette.Black)
+      .background(FixedColors.Dark)
       .border(width = 2.dp, color = Palette.Secondary),
   ) {
     SuccessConfettiAnimation(
@@ -110,7 +112,7 @@ private fun MissionCompletedOverlayViewContent(
       ) {
         Image(
           modifier = Modifier.size(20.dp),
-          imageVector = getAGAppIcon(color = Palette.White),
+          imageVector = getAGAppIcon(color = FixedColors.White),
           contentDescription = null
         )
         PaEProgressIndicator(
@@ -138,7 +140,7 @@ private fun MissionCompletedOverlayViewContent(
           Text(
             text = "+ ${paEMission.units} UT",
             style = AGTypography.InputsXS,
-            color = Palette.White
+            color = FixedColors.White
           )
         }
 
@@ -146,12 +148,12 @@ private fun MissionCompletedOverlayViewContent(
           Text(
             text = paEMission.title,
             style = AGTypography.InputsL,
-            color = Palette.White
+            color = FixedColors.White
           )
           Text(
             text = stringResource(R.string.play_and_earn_challenge_completed_title),
             style = AGTypography.InputsXSRegular,
-            color = Palette.White
+            color = FixedColors.White
           )
         }
       }
