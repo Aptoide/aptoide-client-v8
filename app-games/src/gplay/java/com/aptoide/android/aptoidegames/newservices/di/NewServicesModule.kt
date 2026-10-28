@@ -1,15 +1,12 @@
 package com.aptoide.android.aptoidegames.newservices.di
 
 import cm.aptoide.pt.aptoide_network.di.BackendOverride
-import cm.aptoide.pt.aptoide_network.di.StoreName
 import cm.aptoide.pt.aptoide_network.di.V7Backend
 import cm.aptoide.pt.device_api.di.DeviceApiRetrofit
 import cm.aptoide.pt.device_api.di.DeviceApiVariant
-import cm.aptoide.pt.device_api.network.DeviceProfileProvider
 import cm.aptoide.pt.feature_apps.data.AppRepository
 import cm.aptoide.pt.feature_apps.data.AppsListRepository
 import cm.aptoide.pt.feature_apps.data.deviceapi.DeviceApiAppsDataSource
-import cm.aptoide.pt.feature_apps.data.deviceapi.DeviceApiAppsService
 import cm.aptoide.pt.feature_categories.data.CategoriesRepository
 import cm.aptoide.pt.feature_categories.data.deviceapi.DeviceApiCategoriesDataSource
 import cm.aptoide.pt.feature_categories.data.deviceapi.DeviceApiCategoriesService
@@ -90,21 +87,6 @@ internal object NewServicesModule {
   ): SearchRepository = selectBackend(BuildConfig.NEW_SERVICES_ENABLED, v7) {
     newServices.get()
   }
-
-  @Provides
-  @Singleton
-  fun provideDeviceApiAppsDataSource(
-    @DeviceApiRetrofit retrofit: Retrofit,
-    @DeviceApiVariant variant: String,
-    @StoreName storeName: String,
-    deviceProfileProvider: DeviceProfileProvider,
-  ): DeviceApiAppsDataSource = DeviceApiAppsDataSource(
-    service = retrofit.create(DeviceApiAppsService::class.java),
-    variant = variant,
-    storeName = storeName,
-    deviceProfile = deviceProfileProvider::get,
-    dispatcher = Dispatchers.IO,
-  )
 
   @Provides
   @Singleton

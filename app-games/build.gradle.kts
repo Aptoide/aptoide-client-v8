@@ -379,15 +379,24 @@ androidComponents {
           comment = "Default store for Play-distributed builds"
         )
       )
-      val isProdMode = variant.productFlavors.contains("mode" to "prod")
-      variant.buildConfigFields?.put(
-        "DEVICE_API_DOMAIN",
-        com.android.build.api.variant.BuildConfigField(
-          type = "String",
-          value = "\"${deviceApiDomain(isProdMode)}\"",
-          comment = "Host of the device API"
-        )
+    }
+    // Every build can reach the device API; which ones read from it is decided by DI
+    val isProdMode = variant.productFlavors.contains("mode" to "prod")
+    variant.buildConfigFields?.put(
+      "DEVICE_API_DOMAIN",
+      com.android.build.api.variant.BuildConfigField(
+        type = "String",
+        value = "\"${deviceApiDomain(isProdMode)}\"",
+        comment = "Host of the device API"
       )
+    )
+    // Code for Aptoide Games off Google Play only, such as the apkfy device API fallback. AGP
+    // creates no source set for a combination of two of the three flavor dimensions
+    if (variant.productFlavors.containsAll(
+        listOf("brand" to "aptoideGames", "distribution" to "direct")
+      )
+    ) {
+      variant.sources.java?.addStaticSourceDirectory("src/aptoideGamesDirect/java")
     }
   }
 }

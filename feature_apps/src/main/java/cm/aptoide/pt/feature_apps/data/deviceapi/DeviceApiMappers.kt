@@ -138,6 +138,7 @@ fun AppResponse.toApp(storeName: String): App? {
     campaigns = null,
     signature = null,
     origin = AppOrigin.DEVICE_API,
+    minSdk = release?.minSdk,
   )
 }
 
