@@ -158,6 +158,8 @@
   <!-- APKFY full screen-->
   <string name="apkfy_install_installing">Installing</string>
   <string name="apkfy_install_button">Install %1$s</string>
+  <string name="apkfy_not_available_yet">This app isn\'t available to install yet. Check back soon!</string>
+  <string name="apkfy_not_available_min_sdk">This app needs a newer version of Android than your device has.</string>
   <string name="apkfy_aptoide_games_intro">You\’re using Aptoide Games to install %1$s</string>
   <string name="apkfy_aptoide_games_intro_2">always the latest version, faster and safer</string>
   <string name="apkfy_aptoide_games_advantages_title">Why keep Aptoide Games?</string>

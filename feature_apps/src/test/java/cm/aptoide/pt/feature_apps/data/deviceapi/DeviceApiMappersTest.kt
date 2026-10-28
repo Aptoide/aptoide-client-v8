@@ -366,6 +366,58 @@ internal class DeviceApiMappersTest {
   }
 
   @Test
+  fun `The release's minimum Android carries over`() = scenario {
+    m Given "a detail whose release runs from Android 7"
+
+    m When "it is mapped"
+    val app = detail.toApp(storeName = "a-store")!!
+
+    m Then "the app knows its minimum, which apkfy checks against the device"
+    assertEquals(24, app.minSdk)
+  }
+
+  @Test
+  fun `A release without a minimum Android leaves it unknown`() = scenario {
+    m Given "a detail whose release does not state its minimum Android"
+    val unstated = detail.copy(release = detail.release?.copy(minSdk = null))
+
+    m When "it is mapped"
+    val app = unstated.toApp(storeName = "a-store")!!
+
+    m Then "the minimum is unknown"
+    assertNull(app.minSdk)
+  }
+
+  @Test
+  fun `Every split keeps its own checksum, which the installer names and checks it by`() =
+    scenario {
+      m Given "a detail whose release ships a base apk and two splits, each with its checksum"
+      val artifact = ArtifactResponse(
+        kind = "apk",
+        url = "https://dl/base.apk",
+        sizeBytes = 100,
+        md5 = "md5-base",
+      )
+      val bundled = detail.copy(
+        release = detail.release?.copy(
+          artifacts = listOf(
+            artifact,
+            artifact.copy(kind = "split", url = "https://dl/arm64.apk", md5 = "md5-arm64"),
+            artifact.copy(kind = "split", url = "https://dl/xxhdpi.apk", md5 = "md5-xxhdpi"),
+          )
+        )
+      )
+
+      m When "it is mapped"
+      val app = bundled.toApp(storeName = "a-store")!!
+
+      m Then "the base and each split have distinct checksums and file names"
+      val files = listOf(app.file) + app.aab!!.baseSplits.map { it.file }
+      assertEquals(listOf("md5-base", "md5-arm64", "md5-xxhdpi"), files.map { it.md5 })
+      assertEquals(3, files.map { it.fileName }.toSet().size)
+    }
+
+  @Test
   fun `Empty permissions read as unknown`() = scenario {
     m Given "a detail whose release lists no permissions"
     val bare = detail.copy(release = detail.release?.copy(permissions = emptyList()))

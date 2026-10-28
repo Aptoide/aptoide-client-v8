@@ -56,6 +56,8 @@ data class App(
    * flags - on the Play build, every Play & Earn app. False everywhere else.
    */
   val installsThroughAptoideOnly: Boolean = false,
+  /** The oldest Android the release runs on, when the backend says. Only the device API does. */
+  val minSdk: Int? = null,
 ) : AppSource {
   val appSize: Long by lazy {
     file.size + (obb?.size ?: 0) + (aab?.size ?: 0)
