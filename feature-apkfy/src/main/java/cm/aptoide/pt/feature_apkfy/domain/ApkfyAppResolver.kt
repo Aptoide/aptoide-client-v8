@@ -2,6 +2,7 @@ package cm.aptoide.pt.feature_apkfy.domain
 
 import cm.aptoide.pt.device_api.error.DeviceApiException
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.data.File
 import cm.aptoide.pt.feature_apps.domain.AppOrigin
 import kotlinx.coroutines.CancellationException
 import retrofit2.HttpException
@@ -41,7 +42,15 @@ class ApkfyAppResolver(
     } catch (e: Throwable) {
       return ApkfyResolution.Failed(AppOrigin.DEVICE_API, e)
     }
-    return ApkfyResolution.Resolved(app, app.unavailableReason(deviceSdk()))
+    if (app.packageName != packageName) {
+      return ApkfyResolution.Failed(
+        AppOrigin.DEVICE_API,
+        IllegalStateException("Asked for $packageName, got ${app.packageName}"),
+      )
+    }
+    // The detail is the whole app, and v7, which the installer would ask, does not know it
+    val complete = app.copy(hasMeta = true)
+    return ApkfyResolution.Resolved(complete, complete.unavailableReason(deviceSdk()))
   }
 
   // Not found only when v7 said so too: after a v7 outage, whether the title exists is unknown
@@ -59,14 +68,16 @@ class ApkfyAppResolver(
 
 /**
  * Why this title cannot be installed on a device running [deviceSdk], or null when it can.
- * The installer names and verifies every file by its checksum, so a file without one is as
- * good as missing.
+ * The installer downloads every file from its url and names and verifies it by its checksum,
+ * so a file the installer cannot trust that way is as good as missing.
  */
 internal fun App.unavailableReason(deviceSdk: Int): UnavailableReason? {
   val hasBase = file.path.isNotBlank()
-  val files = listOfNotNull(file.takeIf { hasBase }) + aab?.baseSplits.orEmpty().map { it.file }
+  val apks = listOfNotNull(file.takeIf { hasBase }) + aab?.baseSplits.orEmpty().map { it.file }
+  val files = apks + listOfNotNull(obb?.main, obb?.patch)
   return when {
-    versionCode == 0 || files.isEmpty() || files.any { it.md5.isBlank() } ->
+    versionCode == 0 || apks.isEmpty() -> UnavailableReason.NOT_INSTALLABLE_YET
+    files.any { !it.isTrusted() } || files.distinctBy { it.md5 }.size < files.size ->
       UnavailableReason.NOT_INSTALLABLE_YET
 
     (minSdk ?: 0) > deviceSdk -> UnavailableReason.MIN_SDK
@@ -74,3 +85,8 @@ internal fun App.unavailableReason(deviceSdk: Int): UnavailableReason? {
     else -> null
   }
 }
+
+private val MD5 = Regex("[0-9a-fA-F]{32}")
+
+// The checksum doubles as the file's name on disk, so it must be one and nothing else
+private fun File.isTrusted() = md5.matches(MD5) && path.startsWith("https://")

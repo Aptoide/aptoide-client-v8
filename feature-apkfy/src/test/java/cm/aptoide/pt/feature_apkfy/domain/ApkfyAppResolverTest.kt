@@ -4,6 +4,7 @@ import cm.aptoide.pt.device_api.error.DeviceApiException
 import cm.aptoide.pt.feature_apps.data.Aab
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.File
+import cm.aptoide.pt.feature_apps.data.Obb
 import cm.aptoide.pt.feature_apps.data.Split
 import cm.aptoide.pt.feature_apps.data.emptyApp
 import cm.aptoide.pt.feature_apps.domain.AppOrigin
@@ -66,7 +67,7 @@ internal class ApkfyAppResolverTest {
     val resolution = resolver.resolve(model)
 
     m Then "it is the device API's title, installable, asked once by package name"
-    assertEquals(ApkfyResolution.Resolved(deviceApiApp), resolution)
+    assertEquals(ApkfyResolution.Resolved(deviceApiApp.complete()), resolution)
     assertEquals(listOf("com.spotify.music"), fallback.packageNames)
   }
 
@@ -79,7 +80,7 @@ internal class ApkfyAppResolverTest {
     val resolution = resolver.resolve(model)
 
     m Then "it is the device API's title"
-    assertEquals(ApkfyResolution.Resolved(deviceApiApp), resolution)
+    assertEquals(ApkfyResolution.Resolved(deviceApiApp.complete()), resolution)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -96,7 +97,7 @@ internal class ApkfyAppResolverTest {
     val resolution = resolver.resolve(model)
 
     m Then "the title resolves, unavailable for that reason"
-    assertEquals(ApkfyResolution.Resolved(app, reason), resolution)
+    assertEquals(ApkfyResolution.Resolved(app.complete(), reason), resolution)
   }
 
   @Test
@@ -109,7 +110,7 @@ internal class ApkfyAppResolverTest {
     val resolution = resolver.resolve(model)
 
     m Then "it is installable"
-    assertEquals(ApkfyResolution.Resolved(app), resolution)
+    assertEquals(ApkfyResolution.Resolved(app.complete()), resolution)
   }
 
   @Test
@@ -254,6 +255,62 @@ internal class ApkfyAppResolverTest {
     assertTrue(resolution.app.origin == AppOrigin.DEVICE_API)
   }
 
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("malformedFiles")
+  fun `A device API title with files the installer cannot trust is not installable`(
+    case: String,
+    malform: (App) -> App,
+  ) = coScenario {
+    m Given "v7 does not know the title and the device API serves it with $case"
+    val app = malform(deviceApiApp)
+    val resolver = resolver(v7 = { throw v7NotFound() }, fallback = FakeFallback { app })
+
+    m When "apkfy resolves it"
+    val resolution = resolver.resolve(model) as ApkfyResolution.Resolved
+
+    m Then "it is shown but not installable yet"
+    assertEquals(UnavailableReason.NOT_INSTALLABLE_YET, resolution.unavailableReason)
+  }
+
+  @Test
+  fun `A device API title with well-formed expansion files is installable`() = coScenario {
+    m Given "v7 does not know the title and the device API serves it with both expansion files"
+    val app = deviceApiApp.copy(obb = Obb(main = file("main"), patch = file("patch")))
+    val resolver = resolver(v7 = { throw v7NotFound() }, fallback = FakeFallback { app })
+
+    m When "apkfy resolves it"
+    val resolution = resolver.resolve(model) as ApkfyResolution.Resolved
+
+    m Then "it is installable"
+    assertEquals(null, resolution.unavailableReason)
+  }
+
+  @Test
+  fun `A device API title needs no further lookup before it installs`() = coScenario {
+    m Given "v7 does not know the title and the device API serves it"
+    val resolver = resolver(v7 = { throw v7NotFound() }, fallback = FakeFallback { deviceApiApp })
+
+    m When "apkfy resolves it"
+    val resolution = resolver.resolve(model) as ApkfyResolution.Resolved
+
+    m Then "it is complete, so the installer does not ask v7 again, which does not know it"
+    assertTrue(resolution.app.hasMeta)
+  }
+
+  @Test
+  fun `A device API answer for another package is a failure`() = coScenario {
+    m Given "v7 does not know the title and the device API answers with a different package"
+    val other = deviceApiApp.copy(packageName = "com.evil.app")
+    val resolver = resolver(v7 = { throw v7NotFound() }, fallback = FakeFallback { other })
+
+    m When "apkfy resolves it"
+    val resolution = resolver.resolve(model)
+
+    m Then "it failed in the device API, and nothing is shown or installed"
+    assertTrue(resolution is ApkfyResolution.Failed)
+    assertEquals(AppOrigin.DEVICE_API, (resolution as ApkfyResolution.Failed).source)
+  }
+
   private fun resolver(
     v7: suspend (String) -> App,
     fallback: ApkfyCatalogFallback?,
@@ -271,6 +328,9 @@ internal class ApkfyAppResolverTest {
 
   companion object {
     private const val DEVICE_SDK = 30
+
+    // What the resolver hands on for a device API title: complete, needing no further lookup
+    private fun App.complete() = copy(hasMeta = true)
 
     private val model = ApkfyModel(
       packageName = "com.spotify.music",
@@ -303,11 +363,14 @@ internal class ApkfyAppResolverTest {
     )
 
     private fun file(name: String) = File(
-      md5 = "md5-$name",
+      md5 = name.md5(),
       size = 10,
       path = "https://dl/$name.apk",
       path_alt = "",
     )
+
+    // A distinct, well-formed checksum per file name
+    private fun String.md5() = "%032x".format(hashCode().toLong() and 0xffffffffL)
 
     private val noFile = File(md5 = "", size = 0, path = "", path_alt = "")
 
@@ -357,6 +420,28 @@ internal class ApkfyAppResolverTest {
         deviceApiApp.copy(versionCode = 0, file = noFile, aab = null, minSdk = DEVICE_SDK + 5),
         UnavailableReason.NOT_INSTALLABLE_YET,
       ),
+    )
+
+    @JvmStatic
+    fun malformedFiles() = listOf(
+      arrayOf("a base apk whose checksum is not an md5", { a: App ->
+        a.copy(file = a.file.copy(md5 = "../../databases/x"))
+      }),
+      arrayOf("a base apk served over http", { a: App ->
+        a.copy(file = a.file.copy(path = "http://dl/base.apk"))
+      }),
+      arrayOf("a split with no url", { a: App ->
+        a.copy(aab = a.aab!!.copy(baseSplits = listOf(Split("arm64", file("arm64").copy(path = "")))))
+      }),
+      arrayOf("two files with the same checksum", { a: App ->
+        a.copy(aab = a.aab!!.copy(baseSplits = listOf(Split("arm64", file("base")))))
+      }),
+      arrayOf("an expansion file without a checksum", { a: App ->
+        a.copy(obb = Obb(main = file("main").copy(md5 = ""), patch = null))
+      }),
+      arrayOf("an expansion patch served over http", { a: App ->
+        a.copy(obb = Obb(main = file("main"), patch = file("patch").copy(path = "http://dl/p")))
+      }),
     )
 
     @JvmStatic

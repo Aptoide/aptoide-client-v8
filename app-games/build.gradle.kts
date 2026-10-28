@@ -14,6 +14,15 @@ plugins {
 }
 
 android {
+  // Code for Aptoide Games off Google Play only, such as the apkfy device API fallback. AGP
+  // creates no source set for two of the three flavor dimensions, so both modes share one
+  // directory. Added through the DSL so annotation processing (Hilt) sees it too
+  sourceSets {
+    listOf("aptoideGamesDirectDev", "aptoideGamesDirectProd").forEach {
+      maybeCreate(it).java.srcDir("src/aptoideGamesDirect/java")
+    }
+  }
+
   namespace = "com.aptoide.android.aptoidegames"
 
   ksp {
@@ -390,14 +399,6 @@ androidComponents {
         comment = "Host of the device API"
       )
     )
-    // Code for Aptoide Games off Google Play only, such as the apkfy device API fallback. AGP
-    // creates no source set for a combination of two of the three flavor dimensions
-    if (variant.productFlavors.containsAll(
-        listOf("brand" to "aptoideGames", "distribution" to "direct")
-      )
-    ) {
-      variant.sources.java?.addStaticSourceDirectory("src/aptoideGamesDirect/java")
-    }
   }
 }
 

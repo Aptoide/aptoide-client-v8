@@ -50,9 +50,9 @@ class ApkfyViewModel @Inject constructor(
   // The v7 app whatever the build reads its catalog from: apkfy's titles stay on v7
   @V7Backend appMetaUseCase: AppMetaUseCase,
   private val apkfyFilter: ApkfyFilter,
-  // Only the builds that read a second catalog bind these
+  // Only the builds that read a second catalog bind one
   catalogFallback: Optional<ApkfyCatalogFallback>,
-  private val resolutionReporter: Optional<ApkfyResolutionReporter>,
+  private val resolutionReporter: ApkfyResolutionReporter,
 ) : ViewModel() {
 
   private val resolver = ApkfyAppResolver(
@@ -80,7 +80,7 @@ class ApkfyViewModel @Inject constructor(
             ?.let(apkfyFilter::filter)
             ?.let { apkfyModel ->
               val resolution = resolver.resolve(apkfyModel)
-              resolutionReporter.ifPresent { it.report(apkfyModel.packageName, resolution) }
+              resolutionReporter.report(apkfyModel.packageName, resolution)
               // A title not found, or whose lookup failed, shows nothing, as it always has
               if (resolution is ApkfyResolution.Resolved) {
                 cachedApkfyData = apkfyModel.toApkfyData(resolution)
