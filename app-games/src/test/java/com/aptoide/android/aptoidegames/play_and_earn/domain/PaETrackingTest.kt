@@ -1,22 +1,23 @@
 package com.aptoide.android.aptoidegames.play_and_earn.domain
 
-import cm.aptoide.pt.campaigns.domain.PaECampaignType
 import cm.aptoide.pt.campaigns.domain.PaEMission
 import cm.aptoide.pt.campaigns.domain.PaEMissionProgress
 import cm.aptoide.pt.campaigns.domain.PaEMissionProgressType
 import cm.aptoide.pt.campaigns.domain.PaEMissionStatus
 import cm.aptoide.pt.campaigns.domain.PaEMissionType
 import cm.aptoide.pt.campaigns.domain.PaEMissions
-import cm.aptoide.pt.campaigns.domain.campaignType
+import cm.aptoide.pt.campaigns.domain.PaETracking
+import cm.aptoide.pt.campaigns.domain.tracking
 import cm.aptoide.pt.test.gherkin.scenario
 import com.google.gson.JsonObject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
 
-// AND-915: a campaign is play-time or event, never both. The backend's `type` wins; without it
-// (cache, older backend) the mission types decide the way the backend does.
-internal class PaECampaignTypeTest {
+// AND-915/AND-920: a campaign is Aptoide-tracked or MMP-tracked, never both. The backend's
+// `tracking` wins; without it (cache, older backend) the mission types decide the way the
+// backend's backfill did.
+internal class PaETrackingTest {
 
   private fun mission(
     type: PaEMissionType,
@@ -34,28 +35,28 @@ internal class PaECampaignTypeTest {
   )
 
   @Test
-  fun `The backend's type wins over the mission types`() = scenario {
-    m Given "event missions in a campaign the backend calls play-time, and the reverse"
+  fun `The backend's tracking wins over the mission types`() = scenario {
+    m Given "event missions in a campaign the backend calls Aptoide-tracked, and the reverse"
     val playTime = PaEMissions(
       checkpoints = emptyList(),
       missions = listOf(mission(PaEMissionType.EVENT)),
-      type = PaECampaignType.PLAY_TIME,
+      tracking = PaETracking.APTOIDE,
     )
     val event = PaEMissions(
       checkpoints = emptyList(),
       missions = listOf(mission(PaEMissionType.PLAY_TIME)),
-      type = PaECampaignType.EVENT,
+      tracking = PaETracking.MMP,
     )
 
-    m When "the campaign type is read"
-    val types = listOf(playTime.campaignType(), event.campaignType())
+    m When "the tracking is read"
+    val trackings = listOf(playTime.tracking(), event.tracking())
 
     m Then "it is the backend's"
-    assertEquals(listOf(PaECampaignType.PLAY_TIME, PaECampaignType.EVENT), types)
+    assertEquals(listOf(PaETracking.APTOIDE, PaETracking.MMP), trackings)
   }
 
   @Test
-  fun `Without the backend's type a time-based mission makes it play-time`() = scenario {
+  fun `Without the backend's tracking a time-based mission makes it Aptoide-tracked`() = scenario {
     m Given "cached campaigns with one time-based mission each, in every shape it can take"
     val playTimeAmongEvents = PaEMissions(
       checkpoints = emptyList(),
@@ -74,20 +75,20 @@ internal class PaECampaignTypeTest {
       missions = listOf(mission(PaEMissionType.EVENT)),
     )
 
-    m When "the campaign type is read"
+    m When "the tracking is read"
     val types = listOf(
       playTimeAmongEvents,
       playTimeWithoutProgress,
       eventInSeconds,
       secondsCheckpointAmongEvents,
-    ).map { it.campaignType() }
+    ).map { it.tracking() }
 
-    m Then "all are play-time"
-    assertEquals(List(4) { PaECampaignType.PLAY_TIME }, types)
+    m Then "all are Aptoide-tracked"
+    assertEquals(List(4) { PaETracking.APTOIDE }, types)
   }
 
   @Test
-  fun `Without the backend's type event and count missions make it an event campaign`() =
+  fun `Without the backend's tracking event and count missions make it MMP-tracked`() =
     scenario {
       m Given "cached missions with only an event mission and a count checkpoint"
       val missions = PaEMissions(
@@ -95,20 +96,20 @@ internal class PaECampaignTypeTest {
         missions = listOf(mission(PaEMissionType.EVENT, progressType = null)),
       )
 
-      m When "the campaign type is read"
-      val type = missions.campaignType()
+      m When "the tracking is read"
+      val type = missions.tracking()
 
-      m Then "it is event"
-      assertEquals(PaECampaignType.EVENT, type)
+      m Then "it is MMP-tracked"
+      assertEquals(PaETracking.MMP, type)
     }
 
   @Test
-  fun `Without missions there is no type`() = scenario {
+  fun `Without missions there is no tracking`() = scenario {
     m Given "no missions and no backend answer"
     val missions = PaEMissions(checkpoints = emptyList(), missions = emptyList())
 
-    m When "the campaign type is read"
-    val type = missions.campaignType()
+    m When "the tracking is read"
+    val type = missions.tracking()
 
     m Then "it is unknown"
     assertNull(type)
@@ -117,17 +118,17 @@ internal class PaECampaignTypeTest {
   @Test
   fun `The backend's values map in any case and unknown ones map to none`() = scenario {
     m Given "the backend's values in various cases, an unknown one, blank ones and a missing one"
-    val values = listOf("PLAY_TIME", "event", " Event ", "HYBRID", "", "  ", null)
+    val values = listOf("APTOIDE", "mmp", " Mmp ", "GOOGLE", "", "  ", null)
 
     m When "they are mapped"
-    val mapped = values.map(PaECampaignType::fromApi)
+    val mapped = values.map(PaETracking::fromApi)
 
     m Then "the two known ones map and the others map to none"
     assertEquals(
       listOf(
-        PaECampaignType.PLAY_TIME,
-        PaECampaignType.EVENT,
-        PaECampaignType.EVENT,
+        PaETracking.APTOIDE,
+        PaETracking.MMP,
+        PaETracking.MMP,
         null,
         null,
         null,

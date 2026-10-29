@@ -1,12 +1,13 @@
 package com.aptoide.android.aptoidegames.play_and_earn.presentation.components
 
-import cm.aptoide.pt.campaigns.domain.PaECampaignType
+import cm.aptoide.pt.campaigns.domain.PaETracking
 import cm.aptoide.pt.test.gherkin.scenario
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-// AND-901: Play follows the campaign type. Play-time needs the usage-access permissions (asked
-// for on the spot), event never does; the kill switch turns everything into event behaviour.
+// AND-901/AND-920: Play follows who tracks the campaign. Aptoide tracking needs the usage-access
+// permissions (asked for on the spot), MMP tracking never does; the kill switch turns everything
+// into MMP behaviour.
 internal class PaEPlayLauncherTest {
 
   private class Calls {
@@ -17,13 +18,13 @@ internal class PaEPlayLauncherTest {
   }
 
   private fun launcher(
-    campaignType: PaECampaignType?,
+    tracking: PaETracking?,
     usageTrackingEnabled: Boolean = true,
     optedIn: Boolean = true,
     hasUsagePermissions: () -> Boolean = { true },
     canRequestPermissions: Boolean = true,
   ) = PaEPlayLauncher(
-    campaignType = campaignType,
+    tracking = tracking,
     usageTrackingEnabled = usageTrackingEnabled,
     optedIn = optedIn,
     hasUsagePermissions = hasUsagePermissions,
@@ -41,7 +42,7 @@ internal class PaEPlayLauncherTest {
   @Test
   fun `A play-time campaign with the permissions runs in tracking mode`() = scenario {
     m Given "a play-time campaign, the permissions granted, the kill switch on"
-    val launcher = launcher(PaECampaignType.PLAY_TIME)
+    val launcher = launcher(PaETracking.APTOIDE)
 
     m When "the mode is picked"
     val mode = launcher.mode()
@@ -53,7 +54,7 @@ internal class PaEPlayLauncherTest {
   @Test
   fun `A play-time campaign without the permissions asks for them`() = scenario {
     m Given "a play-time campaign, the permissions missing, a surface that can navigate"
-    val launcher = launcher(PaECampaignType.PLAY_TIME, hasUsagePermissions = { false })
+    val launcher = launcher(PaETracking.APTOIDE, hasUsagePermissions = { false })
 
     m When "the mode is picked"
     val mode = launcher.mode()
@@ -67,7 +68,7 @@ internal class PaEPlayLauncherTest {
     scenario {
       m Given "a play-time campaign, the permissions missing, no way to show the screens"
       val launcher = launcher(
-        PaECampaignType.PLAY_TIME,
+        PaETracking.APTOIDE,
         hasUsagePermissions = { false },
         canRequestPermissions = false,
       )
@@ -82,8 +83,8 @@ internal class PaEPlayLauncherTest {
   @Test
   fun `An event campaign runs in status mode whatever the permissions`() = scenario {
     m Given "an event campaign, with and without the permissions"
-    val granted = launcher(PaECampaignType.EVENT)
-    val missing = launcher(PaECampaignType.EVENT, hasUsagePermissions = { false })
+    val granted = launcher(PaETracking.MMP)
+    val missing = launcher(PaETracking.MMP, hasUsagePermissions = { false })
 
     m When "the modes are picked"
     val modes = listOf(granted.mode(), missing.mode())
@@ -97,7 +98,7 @@ internal class PaEPlayLauncherTest {
     m Given "a play-time campaign without the permissions, the kill switch off"
     var reads = 0
     val launcher = launcher(
-      PaECampaignType.PLAY_TIME,
+      PaETracking.APTOIDE,
       usageTrackingEnabled = false,
       hasUsagePermissions = { reads++; false },
     )
@@ -115,7 +116,7 @@ internal class PaEPlayLauncherTest {
     m Given "a play-time campaign without the permissions, usage tracking switched off in Settings"
     var reads = 0
     val launcher = launcher(
-      PaECampaignType.PLAY_TIME,
+      PaETracking.APTOIDE,
       optedIn = false,
       hasUsagePermissions = { reads++; false },
     )
@@ -131,7 +132,7 @@ internal class PaEPlayLauncherTest {
   @Test
   fun `An unknown campaign runs in status mode`() = scenario {
     m Given "missions that could not be read, the permissions missing"
-    val launcher = launcher(campaignType = null, hasUsagePermissions = { false })
+    val launcher = launcher(tracking = null, hasUsagePermissions = { false })
 
     m When "the mode is picked"
     val mode = launcher.mode()
@@ -144,7 +145,7 @@ internal class PaEPlayLauncherTest {
   fun `Permissions are read when the mode is picked, not when the launcher is built`() = scenario {
     m Given "permissions that get granted after the launcher was built"
     var granted = false
-    val launcher = launcher(PaECampaignType.PLAY_TIME, hasUsagePermissions = { granted })
+    val launcher = launcher(PaETracking.APTOIDE, hasUsagePermissions = { granted })
     granted = true
 
     m When "the mode is picked"
@@ -160,7 +161,7 @@ internal class PaEPlayLauncherTest {
     val calls = Calls()
 
     m When "Play is launched"
-    launcher(PaECampaignType.PLAY_TIME).launch(calls)
+    launcher(PaETracking.APTOIDE).launch(calls)
 
     m Then "the tracking service starts, the game opens, nothing else"
     assertEquals(
@@ -175,7 +176,7 @@ internal class PaEPlayLauncherTest {
     val calls = Calls()
 
     m When "Play is launched"
-    launcher(PaECampaignType.EVENT).launch(calls)
+    launcher(PaETracking.MMP).launch(calls)
 
     m Then "the status heartbeat starts for that game, the game opens, nothing else"
     assertEquals("com.game", calls.status)
@@ -188,7 +189,7 @@ internal class PaEPlayLauncherTest {
     val calls = Calls()
 
     m When "Play is launched"
-    launcher(PaECampaignType.PLAY_TIME, hasUsagePermissions = { false }).launch(calls)
+    launcher(PaETracking.APTOIDE, hasUsagePermissions = { false }).launch(calls)
 
     m Then "only the permission screens are requested"
     assertEquals(
@@ -201,7 +202,7 @@ internal class PaEPlayLauncherTest {
   fun `Only one combination tracks and only one asks for the permissions`() = scenario {
     m Given "every combination of type, kill switch, opt-in, permissions and navigation"
     val cases = buildList {
-      for (type in listOf(PaECampaignType.PLAY_TIME, PaECampaignType.EVENT, null)) {
+      for (type in listOf(PaETracking.APTOIDE, PaETracking.MMP, null)) {
         for (flag in listOf(true, false)) for (optedIn in listOf(true, false)) {
           for (perms in listOf(true, false)) for (nav in listOf(true, false)) {
             add(listOf(type, flag, optedIn, perms, nav))
@@ -213,7 +214,7 @@ internal class PaEPlayLauncherTest {
     m When "the mode is picked for each one"
     val modes = cases.associateWith { (type, flag, optedIn, perms, nav) ->
       launcher(
-        type as PaECampaignType?,
+        type as PaETracking?,
         usageTrackingEnabled = flag as Boolean,
         optedIn = optedIn as Boolean,
         hasUsagePermissions = { perms as Boolean },
@@ -221,17 +222,17 @@ internal class PaEPlayLauncherTest {
       ).mode()
     }
 
-    m Then "only play-time+flag+opted in tracks (with permissions) or asks (without); else status"
+    m Then "only Aptoide-tracked+flag+opted in tracks (with permissions) or asks (without); else status"
     assertEquals(48, cases.size)
     assertEquals(
       setOf(
-        listOf(PaECampaignType.PLAY_TIME, true, true, true, true),
-        listOf(PaECampaignType.PLAY_TIME, true, true, true, false),
+        listOf(PaETracking.APTOIDE, true, true, true, true),
+        listOf(PaETracking.APTOIDE, true, true, true, false),
       ),
       modes.filterValues { it == PaEPlayMode.TRACKING }.keys,
     )
     assertEquals(
-      setOf(listOf(PaECampaignType.PLAY_TIME, true, true, false, true)),
+      setOf(listOf(PaETracking.APTOIDE, true, true, false, true)),
       modes.filterValues { it == PaEPlayMode.REQUEST_PERMISSIONS }.keys,
     )
     assertEquals(45, modes.values.count { it == PaEPlayMode.STATUS })
