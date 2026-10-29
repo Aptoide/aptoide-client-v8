@@ -11,8 +11,8 @@ internal data class PaEMissionsJson(
   @SerializedName("campaign_id") val campaignId: Long?,
   @SerializedName("mmp_click_url") val mmpClickUrl: String?,
   val attribution: PaEAttributionJson?,
-  // AND-915: `PLAY_TIME` or `EVENT`, the type of every mission. Absent on older backends.
-  val type: String?,
+  // AND-920: `APTOIDE` or `MMP`, who tracks the campaign. Absent on older backends.
+  val tracking: String?,
   // AND-916: `APPSFLYER` or `ADJUST`, the MMP behind `mmp_click_url`. Absent without a link.
   val mmp: String?,
 )

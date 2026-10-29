@@ -12,7 +12,6 @@ import cm.aptoide.pt.campaigns.data.model.PaEMissionTypeJson
 import cm.aptoide.pt.campaigns.data.model.PaEMissionsJson
 import cm.aptoide.pt.campaigns.domain.PaEAttribution
 import cm.aptoide.pt.campaigns.domain.PaEAttributionStatus
-import cm.aptoide.pt.campaigns.domain.PaECampaignType
 import cm.aptoide.pt.campaigns.domain.PaEMission
 import cm.aptoide.pt.campaigns.domain.PaEMissionProgress
 import cm.aptoide.pt.campaigns.domain.PaEMissionProgressType
@@ -20,6 +19,7 @@ import cm.aptoide.pt.campaigns.domain.PaEMissionStatus
 import cm.aptoide.pt.campaigns.domain.PaEMissionType
 import cm.aptoide.pt.campaigns.domain.PaEMissions
 import cm.aptoide.pt.campaigns.domain.PaEMmpPlatform
+import cm.aptoide.pt.campaigns.domain.PaETracking
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -37,10 +37,10 @@ internal class DefaultPaEMissionsRepository @Inject constructor(
   private val dispatcher: CoroutineDispatcher
 ) : PaEMissionsRepository {
 
-  // AND-901/AND-915: the Room cache keeps only the missions, so the campaign type of the last
-  // fetch lives here and a cached read still carries the backend's answer within the process.
-  // After a process death it is null again and derived from the missions.
-  private val types = ConcurrentHashMap<String, PaECampaignType>()
+  // AND-901/AND-920: the Room cache keeps only the missions, so the tracking of the last fetch
+  // lives here and a cached read still carries the backend's answer within the process. After a
+  // process death it is null again and derived from the missions.
+  private val trackings = ConcurrentHashMap<String, PaETracking>()
 
   override suspend fun getCampaignMissions(
     packageName: String,
@@ -87,7 +87,7 @@ internal class DefaultPaEMissionsRepository @Inject constructor(
       PaEMissions(
         checkpoints = checkpoints,
         missions = regularMissions,
-        type = types[packageName],
+        tracking = trackings[packageName],
       )
     }
   } catch (e: Throwable) {
@@ -126,7 +126,7 @@ internal class DefaultPaEMissionsRepository @Inject constructor(
     val allMissions = missions.checkpoints + missions.missions
     val entities = allMissions.map { it.toEntity(packageName) }
     paeMissionDao.replaceAppMissions(packageName, entities)
-    missions.type?.let { types[packageName] = it } ?: types.remove(packageName)
+    missions.tracking?.let { trackings[packageName] = it } ?: trackings.remove(packageName)
 
     return missions
   }
@@ -138,10 +138,10 @@ private fun PaEMissionsJson.toDomainModel() = PaEMissions(
   campaignId = campaignId?.toString(),
   mmpClickUrl = mmpClickUrl?.takeIf { it.isNotBlank() },
   attribution = attribution?.toDomainModel(),
-  type = type?.let { value ->
-    // An unknown type (a newer backend) maps to none: the mission types decide.
-    PaECampaignType.fromApi(value)
-      .also { if (it == null) Timber.w("Unknown P&E campaign type: $value") }
+  tracking = tracking?.let { value ->
+    // An unknown tracking (a newer backend) maps to none: the mission types decide.
+    PaETracking.fromApi(value)
+      .also { if (it == null) Timber.w("Unknown P&E campaign tracking: $value") }
   },
   mmp = mmp?.let { value ->
     // An unknown MMP (a newer backend) maps to none; the click source then falls back to AppsFlyer.

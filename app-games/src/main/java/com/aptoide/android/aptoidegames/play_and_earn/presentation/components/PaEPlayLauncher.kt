@@ -9,8 +9,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.campaigns.data.PaEMissionsRepository
-import cm.aptoide.pt.campaigns.domain.PaECampaignType
-import cm.aptoide.pt.campaigns.domain.campaignType
+import cm.aptoide.pt.campaigns.domain.PaETracking
+import cm.aptoide.pt.campaigns.domain.tracking
 import cm.aptoide.pt.extensions.runPreviewable
 import com.aptoide.android.aptoidegames.play_and_earn.PlayAndEarnManager
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.playAndEarnPermissionsRoute
@@ -41,8 +41,8 @@ enum class PaEPlayMode {
 }
 
 /**
- * Picks what Play does from the campaign type (AND-915), the usage path's kill switch, and the
- * device's permissions, read when the mode is picked.
+ * Picks what Play does from the campaign tracking (AND-915/AND-920), the usage path's kill
+ * switch, and the device's permissions, read when the mode is picked.
  *
  * A play-time campaign is measured by this app, so it needs the permissions: granted → tracking
  * mode, missing → the permission screens (the flow before AND-878), or just the game when the
@@ -52,7 +52,7 @@ enum class PaEPlayMode {
  */
 class PaEPlayLauncher internal constructor(
   /** null when the missions could not be read: nothing is asked of the user then. */
-  private val campaignType: PaECampaignType?,
+  private val tracking: PaETracking?,
   /** The `pae_usage_tracking_enabled` kill switch for the usage path. */
   private val usageTrackingEnabled: Boolean,
   /** The Settings "Play & Earn tracking" switch (AND-902): off = the user opted out. */
@@ -64,7 +64,7 @@ class PaEPlayLauncher internal constructor(
 
   fun mode(): PaEPlayMode = when {
     !usageTrackingEnabled || !optedIn -> PaEPlayMode.STATUS
-    campaignType != PaECampaignType.PLAY_TIME -> PaEPlayMode.STATUS
+    tracking != PaETracking.APTOIDE -> PaEPlayMode.STATUS
     hasUsagePermissions() -> PaEPlayMode.TRACKING
     canRequestPermissions -> PaEPlayMode.REQUEST_PERMISSIONS
     else -> PaEPlayMode.STATUS
@@ -141,12 +141,12 @@ class PaEPlayLauncherViewModel @Inject constructor(
     if (inFlight?.isActive == true) return
     inFlight = viewModelScope.launch {
       // Cache first: the surface showing Play has already fetched the game's missions.
-      val type = withTimeoutOrNull(MISSIONS_READ_TIMEOUT_MILLIS) {
+      val tracking = withTimeoutOrNull(MISSIONS_READ_TIMEOUT_MILLIS) {
         missionsRepository.getCampaignMissions(packageName).getOrNull()
-      }?.campaignType()
-      if (type == null) Timber.d("P&E campaign type of $packageName unknown at Play")
+      }?.tracking()
+      if (tracking == null) Timber.d("P&E tracking of $packageName unknown at Play")
       PaEPlayLauncher(
-        campaignType = type,
+        tracking = tracking,
         usageTrackingEnabled = playAndEarnManager.isUsageTrackingEnabled(),
         optedIn = playAndEarnManager.isUsageTrackingOptedIn().first(),
         hasUsagePermissions = playAndEarnManager::hasRequiredPermissions,
