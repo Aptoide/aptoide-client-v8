@@ -12,7 +12,6 @@ import cm.aptoide.pt.campaigns.data.model.PaEMissionTypeJson
 import cm.aptoide.pt.campaigns.data.model.PaEMissionsJson
 import cm.aptoide.pt.campaigns.domain.PaEAttribution
 import cm.aptoide.pt.campaigns.domain.PaEAttributionStatus
-import cm.aptoide.pt.campaigns.domain.PaETracking
 import cm.aptoide.pt.campaigns.domain.PaEMission
 import cm.aptoide.pt.campaigns.domain.PaEMissionProgress
 import cm.aptoide.pt.campaigns.domain.PaEMissionProgressType
@@ -20,6 +19,7 @@ import cm.aptoide.pt.campaigns.domain.PaEMissionStatus
 import cm.aptoide.pt.campaigns.domain.PaEMissionType
 import cm.aptoide.pt.campaigns.domain.PaEMissions
 import cm.aptoide.pt.campaigns.domain.PaEMmpPlatform
+import cm.aptoide.pt.campaigns.domain.PaETracking
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

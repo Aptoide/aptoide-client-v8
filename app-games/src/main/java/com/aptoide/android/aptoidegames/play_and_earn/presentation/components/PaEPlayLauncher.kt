@@ -41,8 +41,8 @@ enum class PaEPlayMode {
 }
 
 /**
- * Picks what Play does from the campaign type (AND-915), the usage path's kill switch, and the
- * device's permissions, read when the mode is picked.
+ * Picks what Play does from the campaign tracking (AND-915/AND-920), the usage path's kill
+ * switch, and the device's permissions, read when the mode is picked.
  *
  * A play-time campaign is measured by this app, so it needs the permissions: granted → tracking
  * mode, missing → the permission screens (the flow before AND-878), or just the game when the
