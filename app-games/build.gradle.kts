@@ -70,11 +70,6 @@ android {
 
     buildConfigField(
       type = "String",
-      name = "OEMID",
-      value = "\"${project.properties[System.getenv("OEMID") ?: KeyHelper.OEMID]}\""
-    )
-    buildConfigField(
-      type = "String",
       name = "APPLOVIN_SDK_KEY",
       value = (project.findProperty("APPLOVIN_SDK_KEY") as? String
         ?: System.getenv("APPLOVIN_SDK_KEY")
@@ -215,6 +210,13 @@ android {
       dimension = "mode"
       applicationIdSuffix = ".dev"
 
+      // Internal builds must never attribute MMP events to the production
+      // store account ("0" = unattributed, the OEMID_APTOIDEGAMES default).
+      buildConfigField(
+        type = "String",
+        name = "OEMID",
+        value = "\"0\""
+      )
       buildConfigField(
         type = "String",
         name = "INDICATIVE_KEY",
@@ -262,6 +264,11 @@ android {
     create("prod") {
       dimension = "mode"
 
+      buildConfigField(
+        type = "String",
+        name = "OEMID",
+        value = "\"${project.properties[System.getenv("OEMID") ?: KeyHelper.OEMID]}\""
+      )
       buildConfigField(
         type = "String",
         name = "INDICATIVE_KEY",
