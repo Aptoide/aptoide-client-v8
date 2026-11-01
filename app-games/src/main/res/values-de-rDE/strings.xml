@@ -423,7 +423,6 @@
   <string name="play_and_earn_permissions_restricted_settings_body">Google verbirgt die Schaltfläche. Auf dem nächsten Bildschirm:</string>
   <string name="play_and_earn_permissions_settings_path">Einstellungen → Apps → Aptoide Games → ⋮ → Eingeschränkte Einstellungen zulassen</string>
   <string name="play_and_earn_permissions_screenshot_description">Screenshot mit dem Speicherort der eingeschränkten Einstellungen</string>
-  <string name="play_and_earn_permissions_allowed">Zulässig</string>
   <string name="play_and_earn_permissions_final_permissions_title">Endgültige Genehmigungen</string>
   <string name="play_and_earn_permissions_display_over_apps">„Über anderen Apps anzeigen“ zulassen</string>
   <string name="play_and_earn_permissions_display_description">Beobachten Sie, wie Ihre Belohnungen in Echtzeit wachsen, ohne Ihr Spiel zu unterbrechen.</string>

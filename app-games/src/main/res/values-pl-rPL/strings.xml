@@ -445,7 +445,6 @@
   <string name="play_and_earn_permissions_restricted_settings_body">Google ukrywa przycisk. Na następnym ekranie:</string>
   <string name="play_and_earn_permissions_settings_path">Ustawienia → Aplikacje → Aptoide Games → ⋮ → Zezwól na ustawienia z ograniczeniami</string>
   <string name="play_and_earn_permissions_screenshot_description">Zrzut ekranu pokazujący lokalizację ustawień z ograniczeniami</string>
-  <string name="play_and_earn_permissions_allowed">Dozwolone</string>
   <string name="play_and_earn_permissions_final_permissions_title">Ostateczne uprawnienia</string>
   <string name="play_and_earn_permissions_display_over_apps">Zezwól na „Wyświetlanie nad innymi aplikacjami”</string>
   <string name="play_and_earn_permissions_display_description">Obserwuj, jak Twoje nagrody rosną w czasie rzeczywistym, bez konieczności przerywania gry.</string>

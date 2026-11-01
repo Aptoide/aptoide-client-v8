@@ -412,7 +412,6 @@
   <string name="play_and_earn_permissions_restricted_settings_body">谷歌隐藏了按钮。在下一屏幕：</string>
   <string name="play_and_earn_permissions_settings_path">设置 → 应用 → Aptoide 游戏 → ⋮ → 允许受限设置</string>
   <string name="play_and_earn_permissions_screenshot_description">显示受限设置位置的屏幕截图</string>
-  <string name="play_and_earn_permissions_allowed">允许</string>
   <string name="play_and_earn_permissions_final_permissions_title">最终权限</string>
   <string name="play_and_earn_permissions_display_over_apps">允许“显示在其他应用之上”</string>
   <string name="play_and_earn_permissions_display_description">实时查看奖励增长，无需暂停游戏。</string>

@@ -467,7 +467,6 @@
   <string name="play_and_earn_permissions_restricted_settings_body">يخفي Google الزر. في الشاشة التالية:</string>
   <string name="play_and_earn_permissions_settings_path">الإعدادات → التطبيقات → Aptoide Games → ⋮ → السماح بالإعدادات المقيدة</string>
   <string name="play_and_earn_permissions_screenshot_description">لقطة شاشة تظهر موقع الإعدادات المقيدة</string>
-  <string name="play_and_earn_permissions_allowed">مسموح</string>
   <string name="play_and_earn_permissions_final_permissions_title">الأذونات النهائية</string>
   <string name="play_and_earn_permissions_display_over_apps">السماح بـ \"العرض فوق التطبيقات الأخرى\"</string>
   <string name="play_and_earn_permissions_display_description">شاهد مكافآتك تزداد في الوقت الفعلي دون توقف اللعبة.</string>

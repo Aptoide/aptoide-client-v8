@@ -412,7 +412,6 @@
   <string name="play_and_earn_permissions_restricted_settings_body">Google 隱藏了按鈕。在下一畫面：</string>
   <string name="play_and_earn_permissions_settings_path">設定 → 應用程式 → Aptoide Games → ⋮ → 允許受限設定</string>
   <string name="play_and_earn_permissions_screenshot_description">顯示受限設定位置的螢幕截圖</string>
-  <string name="play_and_earn_permissions_allowed">允許</string>
   <string name="play_and_earn_permissions_final_permissions_title">最終許可權</string>
   <string name="play_and_earn_permissions_display_over_apps">允許「顯示於其他應用程式之上」</string>
   <string name="play_and_earn_permissions_display_description">無需暫停遊戲，即可即時見證您的獎勵持續增長。</string>

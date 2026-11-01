@@ -413,7 +413,6 @@
   <string name="play_and_earn_permissions_restricted_settings_body">Googleはボタンを非表示にします。次の画面では：</string>
   <string name="play_and_earn_permissions_settings_path">設定 → アプリ → Aptoide Games → ⋮ → 制限付き設定を許可</string>
   <string name="play_and_earn_permissions_screenshot_description">制限された設定の場所を示すスクリーンショット</string>
-  <string name="play_and_earn_permissions_allowed">許可された</string>
   <string name="play_and_earn_permissions_final_permissions_title">最終許可</string>
   <string name="play_and_earn_permissions_display_over_apps">「他のアプリの上に表示」を許可する</string>
   <string name="play_and_earn_permissions_display_description">ゲームを中断せずに、報酬がリアルタイムで増える様子を確認できます。</string>

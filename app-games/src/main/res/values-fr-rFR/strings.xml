@@ -423,7 +423,6 @@
   <string name="play_and_earn_permissions_restricted_settings_body">Google cache le bouton. Sur l\'écran suivant :</string>
   <string name="play_and_earn_permissions_settings_path">Paramètres → Applications → Aptoide Games → ⋮ → Autoriser les paramètres restreints</string>
   <string name="play_and_earn_permissions_screenshot_description">Capture d\'écran montrant l\'emplacement des paramètres restreints</string>
-  <string name="play_and_earn_permissions_allowed">Autorisé</string>
   <string name="play_and_earn_permissions_final_permissions_title">Autorisations finales</string>
   <string name="play_and_earn_permissions_display_over_apps">Autoriser « Afficher au-dessus des autres applications »</string>
   <string name="play_and_earn_permissions_display_description">Voyez vos récompenses augmenter en temps réel sans interrompre votre partie.</string>

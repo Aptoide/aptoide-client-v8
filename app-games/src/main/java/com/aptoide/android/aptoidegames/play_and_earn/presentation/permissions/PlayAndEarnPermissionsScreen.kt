@@ -6,7 +6,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,7 +25,6 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -60,7 +58,6 @@ import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.design_system.AccentSmallButton
 import com.aptoide.android.aptoidegames.design_system.PrimaryButton
 import com.aptoide.android.aptoidegames.design_system.PrimaryTextButton
-import com.aptoide.android.aptoidegames.drawables.figures.getCheckCircle
 import com.aptoide.android.aptoidegames.drawables.figures.getPermissionAllowFigure
 import com.aptoide.android.aptoidegames.drawables.icons.getTrustedIcon
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.rememberPaEAnalytics
@@ -102,7 +99,6 @@ private fun PlayAndEarnPermissionsScreen(
     if (!isUsageTrackingEnabled) navigateBack()
   }
 
-  var allowedRestrictedSettings by remember { mutableStateOf(false) }
   var showPermissionDeniedDialog by rememberSaveable { mutableStateOf(false) }
   var showPermissionsLockedDialog by rememberSaveable { mutableStateOf(false) }
   var showRestrictedSettingsSection by rememberSaveable { mutableStateOf(false) }
@@ -122,9 +118,6 @@ private fun PlayAndEarnPermissionsScreen(
             navigateBack()
           }
         }
-
-        allowedRestrictedSettings =
-          context.hasOverlayPermission() || context.hasUsageStatsPermissionStatus()
       }
     }
 
@@ -136,23 +129,16 @@ private fun PlayAndEarnPermissionsScreen(
 
   val permissionActivityLauncher = rememberLauncherForActivityResult(
     contract = ActivityResultContracts.StartActivityForResult()
-  ) { result ->
-    val hasOverlay = context.hasOverlayPermission()
-    val hasUsageStats = context.hasUsageStatsPermissionStatus()
-    if (!hasOverlay || !hasUsageStats) {
-      // Both permissions still missing before the restricted settings instructions were shown:
-      // the OS is likely blocking them until the user allows restricted settings.
-      val likelyBlockedByRestrictedSettings =
-        requiresRestrictedSettings() &&
-          !showRestrictedSettingsSection &&
-          !hasOverlay &&
-          !hasUsageStats
-
-      if (likelyBlockedByRestrictedSettings) {
-        showPermissionsLockedDialog = true
-      } else {
-        showPermissionDeniedDialog = true
-      }
+  ) {
+    val dialog = paePermissionsDialogAfterRequest(
+      requiresRestrictedSettings = requiresRestrictedSettings(),
+      hasOverlay = context.hasOverlayPermission(),
+      hasUsageStats = context.hasUsageStatsPermissionStatus(),
+    )
+    when (dialog) {
+      PaEPermissionsDialogKind.None -> Unit
+      PaEPermissionsDialogKind.Locked -> showPermissionsLockedDialog = true
+      PaEPermissionsDialogKind.Denied -> showPermissionDeniedDialog = true
     }
   }
 
@@ -186,7 +172,6 @@ private fun PlayAndEarnPermissionsScreen(
     PaERestrictedPermissionsScreenContent(
       onRestrictedSettingsClick = onRestrictedSettingsClick,
       onFinalPermissionsClick = onPermissionClick,
-      allowedRestrictedSettings = allowedRestrictedSettings,
       showRestrictedSettingsSection = showRestrictedSettingsSection
     )
   }
@@ -223,7 +208,6 @@ private fun PlayAndEarnPermissionsScreen(
 private fun PaERestrictedPermissionsScreenContent(
   onRestrictedSettingsClick: () -> Unit,
   onFinalPermissionsClick: () -> Unit,
-  allowedRestrictedSettings: Boolean,
   showRestrictedSettingsSection: Boolean,
 ) {
   val composition by rememberLottieComposition(
@@ -283,13 +267,11 @@ private fun PaERestrictedPermissionsScreenContent(
     }
 
     if (requiresRestrictedSettings() && showRestrictedSettingsSection) {
-      if (allowedRestrictedSettings) {
-        RestrictedSettingsAllowedSection()
-      } else {
-        RestrictedSettingsNotAllowedSection(
-          onButtonClick = onRestrictedSettingsClick
-        )
-      }
+      // AND-922: the card stays actionable while the screen is up. The app cannot tell whether
+      // restricted settings were allowed, and once both permissions are granted the screen closes.
+      RestrictedSettingsSection(
+        onButtonClick = onRestrictedSettingsClick
+      )
       FinalPermissionsSection(
         headerNumber = 2,
         onButtonClick = onFinalPermissionsClick
@@ -304,7 +286,7 @@ private fun PaERestrictedPermissionsScreenContent(
 }
 
 @Composable
-private fun RestrictedSettingsNotAllowedSection(
+private fun RestrictedSettingsSection(
   onButtonClick: () -> Unit
 ) {
   Column(
@@ -350,42 +332,6 @@ private fun RestrictedSettingsNotAllowedSection(
       onClick = onButtonClick,
       modifier = Modifier.fillMaxWidth()
     )
-  }
-}
-
-@Composable
-private fun RestrictedSettingsAllowedSection() {
-  Column(
-    modifier = Modifier
-      .fillMaxWidth()
-      .padding(horizontal = 16.dp)
-      .border(width = 2.dp, color = Palette.GreyDark)
-      .padding(16.dp),
-    verticalArrangement = Arrangement.spacedBy(12.dp)
-  ) {
-    PermissionSectionHeader(
-      number = 1,
-      title = stringResource(R.string.play_and_earn_permissions_restricted_settings_title)
-    )
-
-    Row(
-      modifier = Modifier
-        .fillMaxWidth()
-        .background(Palette.Secondary.copy(alpha = 0.2f))
-        .padding(9.dp),
-      horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
-      verticalAlignment = Alignment.CenterVertically
-    ) {
-      Image(
-        imageVector = getCheckCircle(Palette.SecondaryLight),
-        contentDescription = null
-      )
-      Text(
-        text = stringResource(R.string.play_and_earn_permissions_allowed),
-        style = AGTypography.InputsS,
-        color = Palette.SecondaryLight
-      )
-    }
   }
 }
 
