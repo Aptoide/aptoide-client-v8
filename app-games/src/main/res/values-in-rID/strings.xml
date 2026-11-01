@@ -412,7 +412,6 @@
   <string name="play_and_earn_permissions_restricted_settings_body">Google menyembunyikan tombol. Pada layar berikutnya:</string>
   <string name="play_and_earn_permissions_settings_path">Pengaturan → Aplikasi → Aptoide Games → ⋮ → Izinkan pengaturan terbatas</string>
   <string name="play_and_earn_permissions_screenshot_description">Screenshot yang menunjukkan lokasi pengaturan yang dibatasi</string>
-  <string name="play_and_earn_permissions_allowed">Diizinkan</string>
   <string name="play_and_earn_permissions_final_permissions_title">Izin Akhir</string>
   <string name="play_and_earn_permissions_display_over_apps">Izinkan \'Tampilkan di atas aplikasi lain\'</string>
   <string name="play_and_earn_permissions_display_description">Lihat hadiah Anda bertambah secara real-time tanpa perlu menghentikan permainan Anda.</string>

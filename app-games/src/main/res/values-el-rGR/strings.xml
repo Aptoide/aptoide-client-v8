@@ -423,7 +423,6 @@
   <string name="play_and_earn_permissions_restricted_settings_body">Η Google κρύβει το κουμπί. Στην επόμενη οθόνη:</string>
   <string name="play_and_earn_permissions_settings_path">Ρυθμίσεις → Εφαρμογές → Aptoide Games → ⋮ → Να επιτρέπονται οι περιορισμένες ρυθμίσεις</string>
   <string name="play_and_earn_permissions_screenshot_description">Στιγμιότυπο οθόνης που δείχνει τη θέση των περιορισμένων ρυθμίσεων</string>
-  <string name="play_and_earn_permissions_allowed">Επιτρεπόμενο</string>
   <string name="play_and_earn_permissions_final_permissions_title">Τελικές άδειες</string>
   <string name="play_and_earn_permissions_display_over_apps">Επιτρέψτε την «Εμφάνιση πάνω από άλλες εφαρμογές»</string>
   <string name="play_and_earn_permissions_display_description">Δείτε τις ανταμοιβές σας να αυξάνονται σε πραγματικό χρόνο χωρίς να διακόψετε το παιχνίδι σας.</string>

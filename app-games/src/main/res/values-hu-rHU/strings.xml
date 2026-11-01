@@ -423,7 +423,6 @@
   <string name="play_and_earn_permissions_restricted_settings_body">A Google elrejti a gombot. A következő képernyőn:</string>
   <string name="play_and_earn_permissions_settings_path">Beállítások → Alkalmazások → Aptoide Games → ⋮ → Korlátozott beállítások engedélyezése</string>
   <string name="play_and_earn_permissions_screenshot_description">A korlátozott beállítások helyét mutató képernyőkép</string>
-  <string name="play_and_earn_permissions_allowed">Megengedett</string>
   <string name="play_and_earn_permissions_final_permissions_title">Végleges engedélyek</string>
   <string name="play_and_earn_permissions_display_over_apps">Engedélyezze a „Más alkalmazások felett való megjelenítés” funkciót</string>
   <string name="play_and_earn_permissions_display_description">Nézd, ahogy a jutalmaid valós időben növekednek, anélkül, hogy szüneteltetnéd a játékot.</string>

@@ -412,7 +412,6 @@
   <string name="play_and_earn_permissions_restricted_settings_body">Google ซ่อนปุ่มไว้ บนหน้าจอถัดไป:</string>
   <string name="play_and_earn_permissions_settings_path">การตั้งค่า → แอป → Aptoide Games → ⋮ → อนุญาตการตั้งค่าที่ถูกจำกัด</string>
   <string name="play_and_earn_permissions_screenshot_description">ภาพหน้าจอแสดงตำแหน่งการตั้งค่าที่ถูกจำกัด</string>
-  <string name="play_and_earn_permissions_allowed">อนุญาต</string>
   <string name="play_and_earn_permissions_final_permissions_title">สิทธิ์การอนุญาตขั้นสุดท้าย</string>
   <string name="play_and_earn_permissions_display_over_apps">อนุญาตให้ \'แสดงทับแอพอื่น\'</string>
   <string name="play_and_earn_permissions_display_description">ดูรางวัลของคุณเพิ่มขึ้นแบบเรียลไทม์โดยไม่ต้องหยุดเกมของคุณ</string>

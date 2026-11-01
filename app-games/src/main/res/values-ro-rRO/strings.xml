@@ -434,7 +434,6 @@
   <string name="play_and_earn_permissions_restricted_settings_body">Google ascunde butonul. Pe ecranul următor:</string>
   <string name="play_and_earn_permissions_settings_path">Setări → Aplicații → Aptoide Games → ⋮ → Permite setări restricționate</string>
   <string name="play_and_earn_permissions_screenshot_description">Captură de ecran care arată locația setărilor restricționate</string>
-  <string name="play_and_earn_permissions_allowed">Permis</string>
   <string name="play_and_earn_permissions_final_permissions_title">Permisiuni finale</string>
   <string name="play_and_earn_permissions_display_over_apps">Permiteți „Afișare peste alte aplicații”</string>
   <string name="play_and_earn_permissions_display_description">Vezi cum recompensele tale cresc în timp real, fără a întrerupe jocul.</string>

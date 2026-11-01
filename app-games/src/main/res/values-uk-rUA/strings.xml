@@ -445,7 +445,6 @@
   <string name="play_and_earn_permissions_restricted_settings_body">Google приховує кнопку. На наступному екрані:</string>
   <string name="play_and_earn_permissions_settings_path">Налаштування → Додатки → Aptoide Games → ⋮ → Дозволити обмежені налаштування</string>
   <string name="play_and_earn_permissions_screenshot_description">Знімок екрана, що показує розташування обмежених налаштувань</string>
-  <string name="play_and_earn_permissions_allowed">Дозволено</string>
   <string name="play_and_earn_permissions_final_permissions_title">Остаточні дозволи</string>
   <string name="play_and_earn_permissions_display_over_apps">Дозволити «Відображати над іншими програмами»</string>
   <string name="play_and_earn_permissions_display_description">Спостерігайте, як ваші винагороди зростають у реальному часі, не зупиняючи гру.</string>

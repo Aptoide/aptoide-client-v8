@@ -412,7 +412,6 @@
   <string name="play_and_earn_permissions_restricted_settings_body">Google은 버튼을 숨깁니다. 다음 화면에서:</string>
   <string name="play_and_earn_permissions_settings_path">설정 → 앱 → Aptoide 게임 → ⋮ → 제한된 설정 허용</string>
   <string name="play_and_earn_permissions_screenshot_description">제한된 설정 위치가 표시된 스크린샷</string>
-  <string name="play_and_earn_permissions_allowed">허용됨</string>
   <string name="play_and_earn_permissions_final_permissions_title">최종 권한</string>
   <string name="play_and_earn_permissions_display_over_apps">\'다른 앱 위에 표시\' 허용</string>
   <string name="play_and_earn_permissions_display_description">게임을 멈추지 않고도 실시간으로 보상이 늘어나는 모습을 확인하세요.</string>

@@ -423,7 +423,6 @@
   <string name="play_and_earn_permissions_restricted_settings_body">Google piilottaa painikkeen. Seuraavalla näytöllä:</string>
   <string name="play_and_earn_permissions_settings_path">Asetukset → Sovellukset → Aptoide Games → ⋮ → Salli rajoitetut asetukset</string>
   <string name="play_and_earn_permissions_screenshot_description">Kuvakaappaus, joka näyttää rajoitettujen asetusten sijainnin</string>
-  <string name="play_and_earn_permissions_allowed">Sallittu</string>
   <string name="play_and_earn_permissions_final_permissions_title">Lopulliset käyttöoikeudet</string>
   <string name="play_and_earn_permissions_display_over_apps">Salli \"Näytä muiden sovellusten päällä\"</string>
   <string name="play_and_earn_permissions_display_description">Katso palkintosi kasvavan reaaliajassa keskeyttämättä peliäsi.</string>
