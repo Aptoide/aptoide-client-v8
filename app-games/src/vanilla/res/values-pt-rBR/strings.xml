@@ -17,4 +17,6 @@
   <string name="apkfy_multi_install_highlighted_game">Mais jogados no Aptoide</string>
   <string name="play_and_earn_permissions_settings_path">Configurações → Aplicativos → Aptoide → ⋮ → Permitir configurações restritas</string>
   <string name="notifications_context_body">Avisaremos você sobre as últimas novidades e atualizações!</string>
+  <string name="play_and_earn_rewards_paused_info_body">Cada jogo usa uma ferramenta de rastreamento para confirmar as instalações feitas pelo Aptoide. As recompensas desta campanha começam quando ela confirma a sua, geralmente poucos minutos depois de você abrir o jogo pela primeira vez.\n\nMantenha o jogo instalado e jogue normalmente. O que você fizer no jogo enquanto espera ainda conta quando sua instalação for confirmada.</string>
+  <string name="play_and_earn_not_eligible_info_body">Cada jogo usa uma ferramenta de rastreamento para confirmar as instalações feitas pelo Aptoide e decide quais se qualificam. Instalações sinalizadas pelas verificações de segurança, por exemplo de emuladores ou ferramentas automatizadas, não contam para a campanha.\n\nOutros jogos do Play &amp; Earn ainda podem estar disponíveis para você.</string>
 </resources>
