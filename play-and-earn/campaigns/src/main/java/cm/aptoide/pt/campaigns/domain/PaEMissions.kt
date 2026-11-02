@@ -14,24 +14,25 @@ data class PaEMissions(
   val mmp: PaEMmpPlatform? = null,
   // Network only too: null from the cache, which keeps the missions showing.
   val attribution: PaEAttribution? = null,
-  // AND-915: what the campaign is about, as the backend says it. From the network, remembered
-  // for cached reads within the process; null after a process death or from an older backend
-  // (see [campaignType]).
-  val type: PaECampaignType? = null,
+  // AND-915/AND-920: who tracks the campaign, as the backend says it. From the network,
+  // remembered for cached reads within the process; null after a process death or from an older
+  // backend (see [tracking]).
+  val tracking: PaETracking? = null,
 )
 
 /**
- * A campaign is either play-time (the app measures it, usage access needed) or event (the
- * developer's MMP confirms it), never both (AND-915). The backend's answer wins; without it,
- * the mission types decide, the same way the backend does. Null without missions.
+ * A campaign is either Aptoide-tracked (the app measures play time, usage access needed) or
+ * MMP-tracked (the developer's MMP confirms events), never both (AND-915/AND-920). The backend's
+ * answer wins; without it, the mission types decide, the same way the backend's backfill did.
+ * Null without missions.
  */
-fun PaEMissions.campaignType(): PaECampaignType? {
-  type?.let { return it }
+fun PaEMissions.tracking(): PaETracking? {
+  tracking?.let { return it }
   val all = checkpoints + missions
   return when {
     all.isEmpty() -> null
-    all.any { it.isTimeBased() } -> PaECampaignType.PLAY_TIME
-    else -> PaECampaignType.EVENT
+    all.any { it.isTimeBased() } -> PaETracking.APTOIDE
+    else -> PaETracking.MMP
   }
 }
 
@@ -47,14 +48,14 @@ enum class PaEMmpPlatform {
   }
 }
 
-/** What a campaign is about: the type of every one of its missions (AND-915). */
-enum class PaECampaignType {
-  PLAY_TIME,
-  EVENT;
+/** Who tracks a campaign: the Aptoide app, or the developer's MMP (AND-920). */
+enum class PaETracking {
+  APTOIDE,
+  MMP;
 
   companion object {
-    /** The backend's value (`PLAY_TIME`, `EVENT`); null for one this app doesn't know. */
-    fun fromApi(value: String?): PaECampaignType? =
+    /** The backend's value (`APTOIDE`, `MMP`); null for one this app doesn't know. */
+    fun fromApi(value: String?): PaETracking? =
       entries.find { it.name.equals(value?.trim(), ignoreCase = true) }
   }
 }

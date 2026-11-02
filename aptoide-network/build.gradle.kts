@@ -6,6 +6,10 @@ plugins {
 
 android {
   namespace = "cm.aptoide.pt.aptoide_network"
+  buildFeatures {
+    // BuildConfig.DEBUG gates the HTTP logging interceptor (AND-923).
+    buildConfig = true
+  }
 }
 
 dependencies {

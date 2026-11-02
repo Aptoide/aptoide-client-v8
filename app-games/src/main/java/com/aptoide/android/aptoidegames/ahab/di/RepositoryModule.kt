@@ -2,6 +2,7 @@ package com.aptoide.android.aptoidegames.ahab.di
 
 import cm.aptoide.pt.aptoide_network.data.network.AcceptLanguageInterceptor
 import cm.aptoide.pt.aptoide_network.data.network.UserAgentInterceptor
+import com.aptoide.android.aptoidegames.BuildConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,8 +28,14 @@ class RepositoryModule {
     OkHttpClient.Builder()
       .addInterceptor(interceptor = userAgentInterceptor)
       .addInterceptor(
-        interceptor = HttpLoggingInterceptor()
-          .apply { level = HttpLoggingInterceptor.Level.BODY }
+        // Bodies in debug builds only; nothing in release (AND-923).
+        interceptor = HttpLoggingInterceptor().apply {
+          level = if (BuildConfig.DEBUG) {
+            HttpLoggingInterceptor.Level.BODY
+          } else {
+            HttpLoggingInterceptor.Level.NONE
+          }
+        }
       )
       .addInterceptor(acceptLanguageInterceptor)
       .build()
