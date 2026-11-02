@@ -8,4 +8,6 @@
   <string name="apkfy_multi_install_highlighted_game">Top Played on Aptoide</string>
   <string name="play_and_earn_permissions_settings_path">Settings → Apps → Aptoide → ⋮ → Allow restricted settings</string>
   <string name="notifications_context_body">आम्ही तुम्हाला नवीनतम बातम्या आणि अपडेट्सबद्दल कळवू!</string>
+  <string name="play_and_earn_rewards_paused_info_body">Each game uses a tracking tool to confirm the installs made through Aptoide. This campaign\'s rewards start once it confirms yours, usually a few minutes after you first open the game.\n\nKeep the game installed and play as usual. What you do in the game while you wait still counts once your install is confirmed.</string>
+  <string name="play_and_earn_not_eligible_info_body">Each game uses a tracking tool to confirm the installs made through Aptoide, and it decides which ones qualify. Installs its security checks flag, for example from emulators or automated tools, don\'t count for the campaign.\n\nOther Play &amp; Earn games may still be available to you.</string>
 </resources>

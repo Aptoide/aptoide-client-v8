@@ -17,4 +17,6 @@
   <string name="apkfy_multi_install_highlighted_game">Legnépszerűbb játékok az Aptoide-en</string>
   <string name="play_and_earn_permissions_settings_path">Beállítások → Alkalmazások → Aptoide → ⋮ → Korlátozott beállítások engedélyezése</string>
   <string name="notifications_context_body">Értesítünk a legfrissebb hírekről és frissítésekről!</string>
+  <string name="play_and_earn_rewards_paused_info_body">Minden játék egy követőeszközzel erősíti meg az Aptoideen keresztüli telepítéseket. A kampány jutalmai akkor indulnak, amikor megerősíti a tiédet, általában néhány perccel a játék első megnyitása után.\n\nTartsd telepítve a játékot, és játssz a szokásos módon. Amit várakozás közben a játékban teszel, a telepítés megerősítése után beszámít.</string>
+  <string name="play_and_earn_not_eligible_info_body">Minden játék egy követőeszközzel erősíti meg az Aptoideen keresztüli telepítéseket, és ez dönti el, melyik jogosult. A biztonsági ellenőrzései által megjelölt telepítések, például emulátorokról vagy automatizált eszközökről, nem számítanak a kampányba.\n\nMás Play &amp; Earn játékok továbbra is elérhetők lehetnek számodra.</string>
 </resources>

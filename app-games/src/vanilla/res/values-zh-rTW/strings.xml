@@ -13,4 +13,6 @@
   <string name="update_aptoide_games_update_close_body">Aptoide 將會關閉以進行更新。再次打開即可！</string>
   <string name="play_and_earn_permissions_settings_path">設定 → 應用程式 → Aptoide → ⋮ → 允許受限設定</string>
   <string name="notifications_context_body">我們會讓您了解最新的消息與更新！</string>
+  <string name="play_and_earn_rewards_paused_info_body">每款遊戲都會使用追蹤工具來確認透過 Aptoide 完成的安裝。此活動的獎勵會在確認您的安裝後開始，通常在您首次開啟遊戲後幾分鐘內。\n\n請保持遊戲已安裝並照常遊玩。等待期間您在遊戲中的進度，在安裝確認後仍會計入。</string>
+  <string name="play_and_earn_not_eligible_info_body">每款遊戲都會使用追蹤工具來確認透過 Aptoide 完成的安裝，並決定哪些安裝符合資格。被其安全檢查標記的安裝（例如來自模擬器或自動化工具的安裝）不計入此活動。\n\n其他 Play &amp; Earn 遊戲可能仍對您開放。</string>
 </resources>
