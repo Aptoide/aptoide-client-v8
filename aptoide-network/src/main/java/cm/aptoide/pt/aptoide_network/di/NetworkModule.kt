@@ -1,6 +1,7 @@
 package cm.aptoide.pt.aptoide_network.di
 
 import android.content.Context
+import cm.aptoide.pt.aptoide_network.BuildConfig
 import cm.aptoide.pt.aptoide_network.data.network.AABInterceptor
 import cm.aptoide.pt.aptoide_network.data.network.AcceptLanguageInterceptor
 import cm.aptoide.pt.aptoide_network.data.network.PostCacheInterceptor
@@ -17,6 +18,7 @@ import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.logging.HttpLoggingInterceptor.Level.BASIC
+import okhttp3.logging.HttpLoggingInterceptor.Level.NONE
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit.SECONDS
@@ -199,10 +201,14 @@ object NetworkModule {
       .build()
   }
 
+  /**
+   * Request/response lines in debug builds only. A release build must not write every URL
+   * (guest id, wallet address, device info) to the system log (AND-923).
+   */
   @Provides
   @Singleton
   fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor =
-    HttpLoggingInterceptor().apply { level = BASIC }
+    HttpLoggingInterceptor().apply { level = if (BuildConfig.DEBUG) BASIC else NONE }
 }
 
 @Qualifier
