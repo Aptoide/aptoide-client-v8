@@ -17,4 +17,6 @@
   <string name="apkfy_multi_install_highlighted_game">Cele mai jucate jocuri pe Aptoide</string>
   <string name="play_and_earn_permissions_settings_path">Setări → Aplicații → Aptoide → ⋮ → Permite setări restricționate</string>
   <string name="notifications_context_body">Te vom ține la curent cu cele mai noi știri și actualizări!</string>
+  <string name="play_and_earn_rewards_paused_info_body">Fiecare joc folosește un instrument de urmărire pentru a confirma instalările făcute prin Aptoide. Recompensele acestei campanii încep după ce îți confirmă instalarea, de obicei la câteva minute după prima deschidere a jocului.\n\nPăstrează jocul instalat și joacă normal. Ce faci în joc cât aștepți contează după ce instalarea ta este confirmată.</string>
+  <string name="play_and_earn_not_eligible_info_body">Fiecare joc folosește un instrument de urmărire pentru a confirma instalările făcute prin Aptoide și decide care sunt eligibile. Instalările semnalate de verificările sale de securitate, de exemplu de pe emulatoare sau instrumente automatizate, nu contează pentru campanie.\n\nAlte jocuri Play &amp; Earn pot fi în continuare disponibile pentru tine.</string>
 </resources>

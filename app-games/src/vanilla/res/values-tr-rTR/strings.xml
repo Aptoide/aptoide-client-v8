@@ -15,4 +15,7 @@
   <string name="update_aptoide_games_update_notification">Aptoide\'in yeni bir sürümü mevcut</string>
   <string name="promotional_now_available_body">Artık Aptoide\'te mevcut!</string>
   <string name="notifications_context_body">En son haberler ve güncellemeler hakkında seni bilgilendireceğiz!</string>
+  <string name="play_and_earn_rewards_paused_info_body">Her oyun, Aptoide üzerinden yapılan kurulumları onaylamak için bir takip aracı kullanır. Bu kampanyanın ödülleri, kurulumunuz onaylandığında başlar; bu genellikle oyunu ilk açtıktan birkaç dakika sonra olur.\n\nOyunu yüklü tutun ve her zamanki gibi oynayın. Beklerken oyunda yaptıklarınız, kurulumunuz onaylandığında sayılır.</string>
+  <string name="play_and_earn_not_eligible_info_body">Her oyun, Aptoide üzerinden yapılan kurulumları onaylamak için bir takip aracı kullanır ve hangilerinin uygun olduğuna karar verir. Güvenlik kontrollerinin işaretlediği kurulumlar, örneğin emülatörlerden veya otomatik araçlardan yapılanlar, kampanya için sayılmaz.\n\nDiğer Play &amp; Earn oyunları sizin için hâlâ kullanılabilir olabilir.</string>
+  <string name="play_and_earn_permissions_settings_path">Ayarlar → Uygulamalar → Aptoide → ⋮ → Kısıtlı ayarlara izin ver</string>
 </resources>

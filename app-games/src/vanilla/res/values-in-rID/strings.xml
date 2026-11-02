@@ -13,4 +13,6 @@
   <string name="promotional_now_available_body">Sekarang tersedia di Aptoide!</string>
   <string name="play_and_earn_permissions_settings_path">Pengaturan → Aplikasi → Aptoide → ⋮ → Izinkan pengaturan terbatas</string>
   <string name="notifications_context_body">Kami akan memberi tahu Anda tentang berita dan pembaruan terbaru!</string>
+  <string name="play_and_earn_rewards_paused_info_body">Setiap game menggunakan alat pelacak untuk mengonfirmasi instalasi melalui Aptoide. Hadiah kampanye ini dimulai setelah alat tersebut mengonfirmasi instalasi Anda, biasanya beberapa menit setelah Anda membuka game pertama kali.\n\nBiarkan game tetap terinstal dan bermainlah seperti biasa. Apa yang Anda lakukan di game selama menunggu tetap dihitung setelah instalasi Anda dikonfirmasi.</string>
+  <string name="play_and_earn_not_eligible_info_body">Setiap game menggunakan alat pelacak untuk mengonfirmasi instalasi melalui Aptoide dan menentukan mana yang memenuhi syarat. Instalasi yang ditandai oleh pemeriksaan keamanannya, misalnya dari emulator atau alat otomatis, tidak dihitung untuk kampanye.\n\nGame Play &amp; Earn lainnya mungkin masih tersedia untuk Anda.</string>
 </resources>

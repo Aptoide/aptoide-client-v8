@@ -14,4 +14,7 @@
   <string name="update_aptoide_games_update_notification">Aptoide 已发布新版本。</string>
   <string name="promotional_now_available_body">现已在 Aptoide 上线！</string>
   <string name="notifications_context_body">我们会向您通报最新的资讯和更新！</string>
+  <string name="play_and_earn_rewards_paused_info_body">每款游戏都会使用追踪工具来确认通过 Aptoide 完成的安装。该活动的奖励会在确认您的安装后开始，通常在您首次打开游戏后几分钟内。\n\n请保持游戏已安装并照常游玩。等待期间您在游戏中的进度，在安装确认后仍会计入。</string>
+  <string name="play_and_earn_not_eligible_info_body">每款游戏都会使用追踪工具来确认通过 Aptoide 完成的安装，并决定哪些安装符合条件。被其安全检查标记的安装（例如来自模拟器或自动化工具的安装）不计入该活动。\n\n其他 Play &amp; Earn 游戏可能仍对您开放。</string>
+  <string name="play_and_earn_permissions_settings_path">设置 → 应用 → Aptoide → ⋮ → 允许受限设置</string>
 </resources>

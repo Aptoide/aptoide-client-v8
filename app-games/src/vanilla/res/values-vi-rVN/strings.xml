@@ -10,4 +10,6 @@
   <string name="promotional_now_available_body">Hiện đã có trong Aptoide!</string>
   <string name="play_and_earn_permissions_settings_path">Cài đặt → Ứng dụng → Aptoide → ⋮ → Cho phép cài đặt bị hạn chế</string>
   <string name="notifications_context_body">Chúng tôi sẽ cho bạn biết về tin tức và cập nhật mới nhất!</string>
+  <string name="play_and_earn_rewards_paused_info_body">Mỗi trò chơi dùng một công cụ theo dõi để xác nhận các lượt cài đặt qua Aptoide. Phần thưởng của chiến dịch này bắt đầu khi công cụ xác nhận lượt cài đặt của bạn, thường vài phút sau khi bạn mở trò chơi lần đầu.\n\nGiữ trò chơi đã cài đặt và chơi như bình thường. Những gì bạn làm trong trò chơi khi chờ vẫn được tính sau khi lượt cài đặt được xác nhận.</string>
+  <string name="play_and_earn_not_eligible_info_body">Mỗi trò chơi dùng một công cụ theo dõi để xác nhận các lượt cài đặt qua Aptoide và quyết định lượt nào đủ điều kiện. Các lượt cài đặt bị kiểm tra bảo mật gắn cờ, ví dụ từ trình giả lập hoặc công cụ tự động, không được tính cho chiến dịch.\n\nCác trò chơi Play &amp; Earn khác có thể vẫn khả dụng cho bạn.</string>
 </resources>
