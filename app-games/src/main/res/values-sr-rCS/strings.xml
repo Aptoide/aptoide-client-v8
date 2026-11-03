@@ -434,7 +434,6 @@
   <string name="play_and_earn_permissions_restricted_settings_body">Google hides the button. On the next screen:</string>
   <string name="play_and_earn_permissions_settings_path">Settings → Apps → Aptoide Games → ⋮ → Allow restricted settings</string>
   <string name="play_and_earn_permissions_screenshot_description">Screenshot showing restricted settings location</string>
-  <string name="play_and_earn_permissions_allowed">Allowed</string>
   <string name="play_and_earn_permissions_final_permissions_title">Final Permissions</string>
   <string name="play_and_earn_permissions_display_over_apps">Allow \'Display over other apps\'</string>
   <string name="play_and_earn_permissions_display_description">See your rewards grow in real-time without pausing your game.</string>

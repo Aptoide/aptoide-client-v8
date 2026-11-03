@@ -423,7 +423,6 @@
   <string name="play_and_earn_permissions_restricted_settings_body">Google verbergt de knop. Op het volgende scherm:</string>
   <string name="play_and_earn_permissions_settings_path">Instellingen → Apps → Aptoide Games → ⋮ → Beperkte instellingen toestaan</string>
   <string name="play_and_earn_permissions_screenshot_description">Screenshot met de locatie van de beperkte instellingen</string>
-  <string name="play_and_earn_permissions_allowed">Toegestaan</string>
   <string name="play_and_earn_permissions_final_permissions_title">Definitieve toestemmingen</string>
   <string name="play_and_earn_permissions_display_over_apps">\'Weergeven boven andere apps\' toestaan</string>
   <string name="play_and_earn_permissions_display_description">Zie je beloningen in realtime groeien zonder je spel te onderbreken.</string>

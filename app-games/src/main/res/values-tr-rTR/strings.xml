@@ -423,7 +423,6 @@
   <string name="play_and_earn_permissions_restricted_settings_body">Google düğmeyi gizler. Bir sonraki ekranda:</string>
   <string name="play_and_earn_permissions_settings_path">Ayarlar → Uygulamalar → Aptoide Oyunları → ⋮ → Kısıtlı ayarlara izin ver</string>
   <string name="play_and_earn_permissions_screenshot_description">Kısıtlı ayarların konumunu gösteren ekran görüntüsü</string>
-  <string name="play_and_earn_permissions_allowed">İzin verilen</string>
   <string name="play_and_earn_permissions_final_permissions_title">Son İzinler</string>
   <string name="play_and_earn_permissions_display_over_apps">\'Diğer uygulamaların üzerinde göster\' seçeneğini etkinleştirin</string>
   <string name="play_and_earn_permissions_display_description">Oyunu duraklatmadan ödüllerinizin gerçek zamanlı olarak artmasını izleyin.</string>

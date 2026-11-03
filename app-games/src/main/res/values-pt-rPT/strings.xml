@@ -423,7 +423,6 @@
   <string name="play_and_earn_permissions_restricted_settings_body">O Google oculta o botão. No ecrã seguinte:</string>
   <string name="play_and_earn_permissions_settings_path">Definições → Aplicações → Aptoide Games → ⋮ → Permitir definições restritas</string>
   <string name="play_and_earn_permissions_screenshot_description">Captura de ecrã mostrando a localização das definições restritas</string>
-  <string name="play_and_earn_permissions_allowed">Permitido</string>
   <string name="play_and_earn_permissions_final_permissions_title">Permissões finais</string>
   <string name="play_and_earn_permissions_display_over_apps">Permitir «Exibir sobre outras aplicações»</string>
   <string name="play_and_earn_permissions_display_description">Veja as suas recompensas crescerem em tempo real sem interromper o jogo.</string>

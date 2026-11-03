@@ -445,7 +445,6 @@
   <string name="play_and_earn_permissions_restricted_settings_body">Google скрывает кнопку. На следующем экране:</string>
   <string name="play_and_earn_permissions_settings_path">Настройки → Приложения → Aptoide Games → ⋮ → Разрешить ограниченные настройки</string>
   <string name="play_and_earn_permissions_screenshot_description">Снимок экрана, показывающий местоположение ограниченных настроек</string>
-  <string name="play_and_earn_permissions_allowed">Разрешено</string>
   <string name="play_and_earn_permissions_final_permissions_title">Окончательные разрешения</string>
   <string name="play_and_earn_permissions_display_over_apps">Разрешить «Отображать поверх других приложений»</string>
   <string name="play_and_earn_permissions_display_description">Смотрите, как ваши награды растут в режиме реального времени, не прерывая игру.</string>

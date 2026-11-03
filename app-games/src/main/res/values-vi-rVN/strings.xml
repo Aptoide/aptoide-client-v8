@@ -412,7 +412,6 @@
   <string name="play_and_earn_permissions_restricted_settings_body">Google ẩn nút. Trên màn hình tiếp theo:</string>
   <string name="play_and_earn_permissions_settings_path">Cài đặt → Ứng dụng → Aptoide Games → ⋮ → Cho phép cài đặt bị hạn chế</string>
   <string name="play_and_earn_permissions_screenshot_description">Ảnh chụp màn hình hiển thị vị trí cài đặt bị giới hạn</string>
-  <string name="play_and_earn_permissions_allowed">Được phép</string>
   <string name="play_and_earn_permissions_final_permissions_title">Quyền truy cập cuối cùng</string>
   <string name="play_and_earn_permissions_display_over_apps">Cho phép \'Hiển thị trên các ứng dụng khác\'</string>
   <string name="play_and_earn_permissions_display_description">Theo dõi phần thưởng của bạn tăng lên theo thời gian thực mà không cần phải tạm dừng trò chơi.</string>
