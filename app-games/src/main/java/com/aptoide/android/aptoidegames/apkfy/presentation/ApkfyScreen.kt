@@ -146,36 +146,46 @@ fun ApkfyScreen(
         Spacer(modifier = Modifier.height(55.dp))
         ApkfyAppInfo(app = apkfyData.app)
         Spacer(modifier = Modifier.height(17.dp))
-        ApkfyInstallView(
-          modifier = Modifier
-            .fillMaxHeight()
-            .padding(horizontal = 16.dp)
-            .padding(bottom = 32.dp),
-          app = apkfyData.app,
-          onInstallStarted = {
-            /*if (apkfyData.app.isRoblox() && apkfyState !is ApkfyUiState.Default) {
-              Log.d("lol", "ApkfyScreen: navigating to recommendation view")
-              val variant = if (apkfyState is ApkfyUiState.BaselineWithRecommendation)
-                "with_recommendation" else "baseline"
-              installAnalytics.sendExp83RobloxDownloadStarted(variant = variant)
-              if (apkfyState is ApkfyUiState.BaselineWithRecommendation) {
-                navigate(robloxApkfyRecommendationRoute)
-              }
-            }*/
+        val unavailableReason = apkfyData.unavailableReason
+        if (unavailableReason != null) {
+          ApkfyUnavailableLabel(
+            modifier = Modifier
+              .padding(horizontal = 16.dp)
+              .padding(bottom = 32.dp),
+            reason = unavailableReason,
+          )
+        } else {
+          ApkfyInstallView(
+            modifier = Modifier
+              .fillMaxHeight()
+              .padding(horizontal = 16.dp)
+              .padding(bottom = 32.dp),
+            app = apkfyData.app,
+            onInstallStarted = {
+              /*if (apkfyData.app.isRoblox() && apkfyState !is ApkfyUiState.Default) {
+                Log.d("lol", "ApkfyScreen: navigating to recommendation view")
+                val variant = if (apkfyState is ApkfyUiState.BaselineWithRecommendation)
+                  "with_recommendation" else "baseline"
+                installAnalytics.sendExp83RobloxDownloadStarted(variant = variant)
+                if (apkfyState is ApkfyUiState.BaselineWithRecommendation) {
+                  navigate(robloxApkfyRecommendationRoute)
+                }
+              }*/
 
-            // Default APKFY: route Roblox / Free Fire installs into the Play & Earn reward flow.
-            // Skipped for already-claimed users; the reward screens also self-dismiss on Claimed
-            // as the safety net for the mission state resolving after this navigation.
+              // Default APKFY: route Roblox / Free Fire installs into the Play & Earn reward flow.
+              // Skipped for already-claimed users; the reward screens also self-dismiss on Claimed
+              // as the safety net for the mission state resolving after this navigation.
 
-            //if (apkfyState is ApkfyUiState.Default && shouldShowPlayAndEarn) {
-            if (showPaE && hasUnclaimedReward) {
-              when {
-                apkfyData.app.isRoblox() -> navigate(robloxApkfyRewardRoute)
-                apkfyData.app.isFreeFire() -> navigate(freeFireApkfyRewardRoute)
+              //if (apkfyState is ApkfyUiState.Default && shouldShowPlayAndEarn) {
+              if (showPaE && hasUnclaimedReward) {
+                when {
+                  apkfyData.app.isRoblox() -> navigate(robloxApkfyRewardRoute)
+                  apkfyData.app.isFreeFire() -> navigate(freeFireApkfyRewardRoute)
+                }
               }
             }
-          }
-        )
+          )
+        }
       }
     }
   }

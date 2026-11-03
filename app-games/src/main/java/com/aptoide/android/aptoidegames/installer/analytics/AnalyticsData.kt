@@ -1,6 +1,7 @@
 package com.aptoide.android.aptoidegames.installer.analytics
 
 import androidx.annotation.Keep
+import cm.aptoide.pt.feature_apps.domain.AppOrigin
 import com.aptoide.android.aptoidegames.analytics.dto.AnalyticsUIContext
 import com.aptoide.android.aptoidegames.analytics.dto.BundleMeta
 import com.aptoide.android.aptoidegames.analytics.dto.InstallAction
@@ -25,6 +26,8 @@ data class AnalyticsPayload(
   val itemPosition: Int?,
   val trustedBadge: String?,
   val userClicks: Int,
+  // Absent from payloads stored before it existed, which read as null
+  val catalogSource: String? = null,
 )
 
 fun AnalyticsPayload.toAnalyticsUiContext(): AnalyticsUIContext = AnalyticsUIContext(
@@ -37,3 +40,10 @@ fun AnalyticsPayload.toAnalyticsUiContext(): AnalyticsUIContext = AnalyticsUICon
   itemPosition = itemPosition,
   installAction = action
 )
+
+/** The catalog an app was read from, as the install analytics report it. */
+val AppOrigin.catalogSource: String
+  get() = when (this) {
+    AppOrigin.V7 -> "v7"
+    AppOrigin.DEVICE_API -> "device_api"
+  }

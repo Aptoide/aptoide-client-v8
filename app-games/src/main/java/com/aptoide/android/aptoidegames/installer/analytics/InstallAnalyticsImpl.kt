@@ -19,6 +19,7 @@ import com.aptoide.android.aptoidegames.analytics.toBIParameters
 import com.aptoide.android.aptoidegames.analytics.toBiParameters
 import com.aptoide.android.aptoidegames.analytics.toGenericParameters
 import com.aptoide.android.aptoidegames.installer.analytics.InstallAnalyticsImpl.Companion.P_APP_SIZE_MB
+import com.aptoide.android.aptoidegames.installer.analytics.InstallAnalyticsImpl.Companion.P_CATALOG_SOURCE
 import com.aptoide.android.aptoidegames.installer.analytics.InstallAnalyticsImpl.Companion.P_UPDATE_TYPE
 import com.aptoide.android.aptoidegames.installer.ff.PreApprovalExperiment
 import com.aptoide.android.aptoidegames.installer.ff.getDownloaderVariant
@@ -653,6 +654,7 @@ class InstallAnalyticsImpl(
     internal const val P_DOWNLOAD_SPEED_MB = "download_speed_mbps"
     internal const val P_AUTO_OPEN_AFTER_INSTALL = "auto_open_after_install"
     internal const val P_INSTALL_METHOD = "install_method"
+    internal const val P_CATALOG_SOURCE = "catalog_source"
   }
 }
 
@@ -672,7 +674,7 @@ private fun InstallPackageInfo.getAppSizeSegment(): Pair<String, Int> = P_APP_SI
     ?: 0
 )
 
-private fun AnalyticsPayload?.toAppGenericParameters(
+internal fun AnalyticsPayload?.toAppGenericParameters(
   packageName: String,
   vararg pairs: Pair<String, Any?>
 ): Map<String, Any> =
@@ -682,7 +684,8 @@ private fun AnalyticsPayload?.toAppGenericParameters(
         *pairs,
         GenericAnalytics.P_PACKAGE_NAME to packageName,
         GenericAnalytics.P_APPC_BILLING to isAppCoins,
-        P_UPDATE_TYPE to userClicks.toTapsValue()
+        P_UPDATE_TYPE to userClicks.toTapsValue(),
+        P_CATALOG_SOURCE to catalogSource,
       )
   } ?: mapOfNonNull(*pairs)
 

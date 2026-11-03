@@ -2,16 +2,21 @@ package com.aptoide.android.aptoidegames.newservices.di
 
 import cm.aptoide.pt.aptoide_network.data.network.AcceptLanguageInterceptor
 import cm.aptoide.pt.aptoide_network.data.network.UserAgentInterceptor
+import cm.aptoide.pt.aptoide_network.di.StoreName
 import cm.aptoide.pt.device_api.di.DeviceApiDomain
 import cm.aptoide.pt.device_api.di.DeviceApiOkHttp
 import cm.aptoide.pt.device_api.di.DeviceApiRetrofit
 import cm.aptoide.pt.device_api.di.DeviceApiVariant
+import cm.aptoide.pt.device_api.network.DeviceProfileProvider
+import cm.aptoide.pt.feature_apps.data.deviceapi.DeviceApiAppsDataSource
+import cm.aptoide.pt.feature_apps.data.deviceapi.DeviceApiAppsService
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.newservices.DEVICE_API_VARIANT
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.Dispatchers
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -64,4 +69,20 @@ internal object DeviceApiNetworkModule {
     .baseUrl(domain)
     .addConverterFactory(GsonConverterFactory.create())
     .build()
+
+  // Shared by the Play build's catalog and the direct build's apkfy fallback
+  @Provides
+  @Singleton
+  fun provideDeviceApiAppsDataSource(
+    @DeviceApiRetrofit retrofit: Retrofit,
+    @DeviceApiVariant variant: String,
+    @StoreName storeName: String,
+    deviceProfileProvider: DeviceProfileProvider,
+  ): DeviceApiAppsDataSource = DeviceApiAppsDataSource(
+    service = retrofit.create(DeviceApiAppsService::class.java),
+    variant = variant,
+    storeName = storeName,
+    deviceProfile = deviceProfileProvider::get,
+    dispatcher = Dispatchers.IO,
+  )
 }
