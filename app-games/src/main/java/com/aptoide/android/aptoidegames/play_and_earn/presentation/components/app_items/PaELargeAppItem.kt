@@ -16,7 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,6 +30,8 @@ import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.Pa
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaEProgressIndicator
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.rememberDownloadGraphicFilter
 import com.aptoide.android.aptoidegames.theme.AGTypography
+import com.aptoide.android.aptoidegames.theme.FeatureGraphicShape
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
@@ -51,7 +52,7 @@ fun PaELargeAppItem(
       modifier = Modifier
         .fillMaxWidth()
         .aspectRatio(328f / 160f)
-        .border(width = 2.dp, color = Palette.Yellow100)
+        .border(width = 2.dp, color = Palette.Yellow100, shape = FeatureGraphicShape)
     ) {
       AptoideFeatureGraphicImage(
         modifier = Modifier.matchParentSize(),
@@ -65,10 +66,11 @@ fun PaELargeAppItem(
           .background(
             brush = Brush.verticalGradient(
               colorStops = arrayOf(
-                0.0f to Color.Black.copy(alpha = 0f),
-                1f to Color.Black.copy()
+                0.0f to FixedColors.Scrim.copy(alpha = 0f),
+                1f to FixedColors.Scrim
               ),
             ),
+            shape = FeatureGraphicShape,
             alpha = 0.5f
           )
       )
@@ -97,7 +99,8 @@ fun PaELargeAppItem(
           Text(
             text = app.name,
             style = AGTypography.DescriptionGames,
-            color = Palette.White,
+            // On the scrim over the graphic: must not invert with the theme.
+            color = FixedColors.White,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
           )

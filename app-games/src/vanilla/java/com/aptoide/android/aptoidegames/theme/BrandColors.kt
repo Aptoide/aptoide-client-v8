@@ -8,3 +8,9 @@ import androidx.compose.ui.graphics.Color
  * this flavor (it does not invert with theme). Vanilla = orange.
  */
 internal val BrandPrimary = Color(0xFFFE6446)
+
+/**
+ * Label colour of the Play & Earn coin buttons drawn on `Palette.Secondary`.
+ * Vanilla = dark on orange, like the install button.
+ */
+internal val PaEButtonLabelColor: Color = FixedColors.Dark

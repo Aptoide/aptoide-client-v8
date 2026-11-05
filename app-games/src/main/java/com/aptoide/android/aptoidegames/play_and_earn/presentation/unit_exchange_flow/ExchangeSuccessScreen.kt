@@ -91,7 +91,8 @@ fun ExchangeSuccessScreen(
       AppGamesTopBar(
         navigateBack = navigateBack,
         title = "",
-        iconColor = Palette.White,
+        iconColor = Palette.Black,
+        arrowColor = Palette.White,
       )
 
       Spacer(modifier = Modifier.weight(1f))

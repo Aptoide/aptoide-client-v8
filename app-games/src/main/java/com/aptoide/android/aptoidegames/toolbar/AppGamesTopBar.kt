@@ -32,14 +32,20 @@ import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
 
+/**
+ * Back button + title. [iconColor] fills the round button, [arrowColor] the arrow on it
+ * (getLeftArrow's first and second path). The defaults never invert with the theme; a screen
+ * that must follow it passes iconColor = Palette.Black with arrowColor = Palette.White.
+ */
 @Composable
 fun AppGamesTopBar(
   navigateBack: () -> Unit,
   title: String?,
-  iconColor: Color = Palette.Primary
+  iconColor: Color = Palette.Primary,
+  arrowColor: Color = FixedColors.Dark,
 ) {
   title?.let {
-    TopBar(navigateBack, it, iconColor)
+    TopBar(navigateBack, it, iconColor, arrowColor)
   }
 }
 
@@ -47,7 +53,8 @@ fun AppGamesTopBar(
 private fun TopBar(
   navigateBack: () -> Unit,
   title: String,
-  iconColor: Color
+  iconColor: Color,
+  arrowColor: Color,
 ) {
   Row(
     Modifier
@@ -60,7 +67,7 @@ private fun TopBar(
     verticalAlignment = Alignment.CenterVertically,
   ) {
     Image(
-      imageVector = getLeftArrow(iconColor, FixedColors.Dark),
+      imageVector = getLeftArrow(iconColor, arrowColor),
       contentDescription = stringResource(id = R.string.button_back_title),
       contentScale = ContentScale.Crop,
       modifier = Modifier

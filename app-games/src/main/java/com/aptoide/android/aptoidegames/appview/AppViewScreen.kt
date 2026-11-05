@@ -600,7 +600,9 @@ fun AppViewContent(
               .align(Alignment.Bottom)
               .offset(x = (-12).dp)
               .clip(RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp))
-              .background(FixedColors.VanillaOrange)
+              // Same orange as the gift next to it: the P&E gift sits on Palette.Secondary,
+              // the plain bonus gift on FixedColors.VanillaOrange (BonusIconBrand).
+              .background(if (isGamified) Palette.Secondary else FixedColors.VanillaOrange)
               .padding(start = 20.dp, end = 12.dp, top = 6.dp, bottom = 6.dp)
           )
         } else {

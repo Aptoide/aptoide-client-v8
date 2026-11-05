@@ -23,6 +23,7 @@ import com.aptoide.android.aptoidegames.design_system.AccentSmallButton
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getSmallCoinIcon
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
+import com.aptoide.android.aptoidegames.theme.PaEButtonLabelColor
 import com.aptoide.android.aptoidegames.theme.Palette
 
 @Preview(
@@ -68,7 +69,7 @@ fun PaELargeCoinButton(
       maxLines = 1,
       textAlign = TextAlign.Center,
       style = AGTypography.InputsL,
-      color = Palette.White
+      color = PaEButtonLabelColor
     )
     Icon(
       imageVector = getSmallCoinIcon(),
@@ -100,7 +101,7 @@ fun PaESmallCoinButton(
       maxLines = 1,
       textAlign = TextAlign.Center,
       style = AGTypography.InputsS,
-      color = Palette.White
+      color = PaEButtonLabelColor
     )
     Icon(
       imageVector = getSmallCoinIcon(),

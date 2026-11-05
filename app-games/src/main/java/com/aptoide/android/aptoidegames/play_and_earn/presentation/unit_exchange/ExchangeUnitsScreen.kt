@@ -70,7 +70,12 @@ fun ExchangeUnitsScreen(
       .fillMaxSize()
       .background(Palette.Black),
   ) {
-    AppGamesTopBar(navigateBack = navigateBack, title = "", iconColor = Palette.White)
+    AppGamesTopBar(
+      navigateBack = navigateBack,
+      title = "",
+      iconColor = Palette.Black,
+      arrowColor = Palette.White,
+    )
 
     when (uiState) {
       is ExchangeUiState.Idle -> ExchangeUnitsScreenContent(
