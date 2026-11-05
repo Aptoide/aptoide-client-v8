@@ -156,7 +156,7 @@ class MainActivity : AppCompatActivity() {
   }
 
   private fun handleNotificationIntent(intent: Intent?) {
-    intent.takeIf { it.isAhab }?.agDeepLink.takeIf { it?.scheme == "promocode" }?.run {
+    intent.takeIf { it.isAhab }?.brandDeepLink.takeIf { it?.scheme == "promocode" }?.run {
       promoCodeRepository.setPromoCode(
         PromoCode(
           packageName = host!!,
@@ -194,7 +194,7 @@ class MainActivity : AppCompatActivity() {
         }
         ?.allowDownloadOnMetered()
     }
-    intent.agDeepLink?.takeIf { it.scheme == "ag" }?.let {
+    intent.brandDeepLink?.takeIf { isBrandDeepLinkScheme(it.scheme) }?.let {
       navController?.navigate(it)
     }
 
@@ -280,18 +280,15 @@ class MainActivity : AppCompatActivity() {
   private fun Intent.addSourceContext() {
     val currentData = data ?: return
 
-    val deeplinkScheme = BuildConfig.DEEP_LINK_SCHEMA.substringBefore("://")
+    val scheme = currentData.scheme
+    data = when {
+      isBrandDeepLinkScheme(scheme) -> currentData.withPrevScreen("deeplink")
 
-    data = when (currentData.scheme) {
-      deeplinkScheme -> currentData.withPrevScreen("deeplink")
-
-      "http",
-      "https",
-        -> currentData.withPrevScreen("app_link")
+      scheme == "http" || scheme == "https" -> currentData.withPrevScreen("app_link")
 
       // Play-style store intents other apps fire; direct builds join the store chooser for them.
       // A market URI the client cannot map stays as it is: no route matches and home opens.
-      "market" -> marketUriToDeepLink(currentData.toString())
+      scheme == "market" -> marketUriToDeepLink(currentData.toString())
         ?.let(Uri::parse)
         ?.withPrevScreen("market_link")
         ?: currentData
