@@ -30,6 +30,8 @@ private object FallbackPalette : PaletteTokens {
   override val Official = Color(0xFF007AFF)
   override val Yellow = Color(0xFFFFC93E)
 
+  override val AccentText = Color(0xFFFFC93E)
+
   override val Yellow50 = Color(0xFFFFEA04)
   override val Yellow100 = Color(0xFFFFC93E)
   override val Yellow150 = Color(0xFFD6A422)

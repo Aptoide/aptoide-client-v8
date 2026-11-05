@@ -125,7 +125,8 @@ fun ExchangeEmailScreen(
       AppGamesTopBar(
         navigateBack = navigateBack,
         title = "",
-        iconColor = Palette.White,
+        iconColor = Palette.Black,
+        arrowColor = Palette.White,
       )
 
       when (uiState) {

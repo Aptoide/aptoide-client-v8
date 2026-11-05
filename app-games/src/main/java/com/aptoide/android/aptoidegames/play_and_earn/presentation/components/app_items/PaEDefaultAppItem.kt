@@ -28,6 +28,7 @@ import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.Pa
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaEProgressIndicator
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.rememberDownloadGraphicFilter
 import com.aptoide.android.aptoidegames.theme.AGTypography
+import com.aptoide.android.aptoidegames.theme.FeatureGraphicShape
 import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
@@ -50,7 +51,7 @@ fun PaEDefaultAppItem(
       modifier = Modifier
         .fillMaxWidth()
         .aspectRatio(280f / 136f)
-        .border(width = 2.dp, color = Palette.Yellow100)
+        .border(width = 2.dp, color = Palette.Yellow100, shape = FeatureGraphicShape)
     ) {
       AptoideFeatureGraphicImage(
         modifier = Modifier.matchParentSize(),
