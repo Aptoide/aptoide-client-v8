@@ -35,6 +35,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.transform.Transformation
 import com.aptoide.android.aptoidegames.drawables.icons.getLeftArrow
+import com.aptoide.android.aptoidegames.theme.FeatureGraphicShape
 import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
 import net.engawapg.lib.zoomable.rememberZoomState
@@ -53,13 +54,8 @@ fun AptoideFeatureGraphicImage(
   val finalUrl = data?.let {
     "$data?w=512&h=250"
   }
-  val shapedModifier = if (BuildConfig.FLAVOR_brand == "vanilla") {
-    modifier.clip(RoundedCornerShape(24.dp))
-  } else {
-    modifier
-  }
   AptoideAsyncImage(
-    modifier = shapedModifier,
+    modifier = modifier.clip(FeatureGraphicShape),
     data = finalUrl,
     contentDescription = contentDescription,
     transformations = transformations,

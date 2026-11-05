@@ -20,6 +20,13 @@ interface PaletteTokens {
   val Official: Color
   val Yellow: Color
 
+  /**
+   * Yellow used as text or a thin stroke (tab label, headline). Same as [Yellow100] on dark
+   * backgrounds; the vanilla light palette darkens it so it stays readable on white.
+   * Yellow fills with dark text on them keep [Yellow100].
+   */
+  val AccentText: Color
+
   val Yellow50: Color
   val Yellow100: Color
   val Yellow150: Color

@@ -235,7 +235,8 @@ private fun LevelUpHeaderSection(
       AppGamesTopBar(
         navigateBack = onBackClick,
         title = stringResource(R.string.play_and_earn_level_up_title),
-        iconColor = Palette.White
+        iconColor = Palette.Black,
+        arrowColor = Palette.White,
       )
     }
   }

@@ -104,7 +104,8 @@ fun RedeemRewardScreen(
       AppGamesTopBar(
         navigateBack = navigateBack,
         title = stringResource(R.string.play_and_earn_title),
-        iconColor = Palette.White,
+        iconColor = Palette.Black,
+        arrowColor = Palette.White,
       )
 
       when (uiState) {
@@ -231,13 +232,13 @@ private fun UnitsHexagonHero(units: Long, isComplete: Boolean = false) {
       Text(
         text = units.toString(),
         style = AGTypography.Title.copy(fontSize = 35.sp),
-        color = Palette.Black,
+        color = FixedColors.Dark, // on the fixed yellow hexagon
         textAlign = TextAlign.Center,
       )
       Text(
         text = stringResource(R.string.play_and_earn_exchange_units_label),
         style = AGTypography.Body.copy(fontSize = 14.sp),
-        color = Palette.Black,
+        color = FixedColors.Dark,
         textAlign = TextAlign.Center,
       )
     }

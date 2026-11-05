@@ -8,3 +8,9 @@ import androidx.compose.ui.graphics.Color
  * this flavor (it does not invert with theme). Aptoide Games = lime.
  */
 internal val BrandPrimary = Color(0xFFC8ED4F)
+
+/**
+ * Label colour of the Play & Earn coin buttons drawn on `Palette.Secondary`.
+ * Aptoide Games = white on purple.
+ */
+internal val PaEButtonLabelColor: Color = FixedColors.White
