@@ -36,4 +36,39 @@
     <key>appview_native_bottom_min_content_length</key>
     <value>1500</value>
   </entry>
+  <!-- Browsing lists: number of organic rows before the native card. -->
+  <entry>
+    <key>browse_native_category_position</key>
+    <value>3</value>
+  </entry>
+  <entry>
+    <key>browse_native_top_charts_position</key>
+    <value>3</value>
+  </entry>
+  <entry>
+    <key>browse_native_collection_position</key>
+    <value>3</value>
+  </entry>
+  <!-- Deeper home slot: bundle index it is inserted before, and bundles kept between the two ads. -->
+  <entry>
+    <key>home_native_deep_position</key>
+    <value>6</value>
+  </entry>
+  <entry>
+    <key>home_native_deep_min_gap</key>
+    <value>3</value>
+  </entry>
+  <!-- Search defaults to MREC for configured units; explicit remote values still win. -->
+  <entry>
+    <key>search_ad_format_experiment_enabled</key>
+    <value>true</value>
+  </entry>
+  <entry>
+    <key>search_mrec_allocation</key>
+    <value>100</value>
+  </entry>
+  <entry>
+    <key>search_mrec_auto_refresh</key>
+    <value>false</value>
+  </entry>
 </defaultsMap>
