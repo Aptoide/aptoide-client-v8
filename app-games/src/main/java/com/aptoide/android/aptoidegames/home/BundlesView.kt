@@ -30,8 +30,10 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -66,6 +68,16 @@ import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.Platform.isHmd
 import com.aptoide.android.aptoidegames.Platform.isHmdDevice
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.ads.native_ads.HomeDeepNativeAdViewModel
+import com.aptoide.android.aptoidegames.ads.native_ads.HomeNativeAdLayout
+import com.aptoide.android.aptoidegames.ads.native_ads.HomeNativeAdViewModel
+import com.aptoide.android.aptoidegames.ads.native_ads.NativeAdBundle
+import com.aptoide.android.aptoidegames.ads.native_ads.NativeAdConfig
+import com.aptoide.android.aptoidegames.ads.native_ads.NativeAdPlacement
+import com.aptoide.android.aptoidegames.ads.native_ads.NativeAdUiState
+import com.aptoide.android.aptoidegames.ads.native_ads.rememberHomeDeepNativeAd
+import com.aptoide.android.aptoidegames.ads.native_ads.rememberHomeNativeAd
+import com.aptoide.android.aptoidegames.ads.native_ads.rememberHostResumed
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.OverrideAnalyticsBundleMeta
 import com.aptoide.android.aptoidegames.analytics.presentation.SwipeListener
@@ -85,10 +97,6 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.EditorsChoiceB
 import com.aptoide.android.aptoidegames.feature_apps.presentation.MyGamesBundleView
 import com.aptoide.android.aptoidegames.feature_apps.presentation.PublisherTakeOverBundle
 import com.aptoide.android.aptoidegames.feature_apps.presentation.buildSeeMoreRoute
-import com.aptoide.android.aptoidegames.ads.native_ads.HomeNativeAdViewModel
-import com.aptoide.android.aptoidegames.ads.native_ads.NativeAdBundle
-import com.aptoide.android.aptoidegames.ads.native_ads.NativeAdUiState
-import com.aptoide.android.aptoidegames.ads.native_ads.rememberHomeNativeAd
 import com.aptoide.android.aptoidegames.feature_apps.presentation.perCarouselViewModel
 import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberBundleAnalytics
 import com.aptoide.android.aptoidegames.feature_promotional.AppComingSoonPromotionalView
@@ -106,9 +114,9 @@ import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.Pa
 import com.aptoide.android.aptoidegames.play_and_earn.rememberShouldShowPlayAndEarn
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
-import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 import kotlin.math.sign
+import kotlinx.coroutines.launch
 
 val translatedTitles = mapOf(
   "Just Arrived" to R.string.fixed_bundle_just_arrived_title,
@@ -130,6 +138,7 @@ fun BundlesScreen(
   val (viewState, loadFreshHomeBundles) = bundlesList()
   val gamesFeedVisibility = rememberGamesFeedVisibility()
   val homeNativeAd = rememberHomeNativeAd()
+  val homeDeepNativeAd = rememberHomeDeepNativeAd()
   var shouldShowLoadingView by remember { mutableStateOf(false) }
 
   val isRefreshing = (viewState.type == BundlesViewUiStateType.RELOADING)
@@ -181,6 +190,7 @@ fun BundlesScreen(
             navigate = navigate,
             installedTrackedPackages = gamesFeedVisibility?.installedTrackedPackages.orEmpty(),
             homeNativeAd = homeNativeAd,
+            homeDeepNativeAd = homeDeepNativeAd,
             onShowLoading = { showLoading ->
               shouldShowLoadingView = showLoading
             }
@@ -210,10 +220,83 @@ fun BundlesView(
   navigate: (String) -> Unit,
   installedTrackedPackages: List<String> = emptyList(),
   homeNativeAd: HomeNativeAdViewModel? = null,
+  homeDeepNativeAd: HomeDeepNativeAdViewModel? = null,
   onShowLoading: (Boolean) -> Unit
 ) {
+  val bundleTypes = remember(viewState.bundles) { viewState.bundles.map { bundle -> bundle.type } }
+
+  // Both home slots are located from the *effective* configured position (the remote value once
+  // read, the default before that), whether or not an ad has loaded, so a late-loading primary ad
+  // never moves the deep one, neither ad sits next to a sponsored bundle, and each is requested
+  // only when a valid spot exists and that spot is near the visible range.
   val nativeAd = homeNativeAd?.uiState?.collectAsState()?.value as? NativeAdUiState.Loaded
-  val nativeAdIndex = nativeAd?.position?.coerceIn(0, (viewState.bundles.size - 1).coerceAtLeast(0))
+  val primaryConfiguredPosition = homeNativeAd?.configuredPosition?.collectAsState()?.value
+  val primaryIndex = remember(bundleTypes, primaryConfiguredPosition, homeNativeAd) {
+    if (homeNativeAd == null) null else {
+      HomeNativeAdLayout.firstIndex(
+        bundleTypes = bundleTypes,
+        position = primaryConfiguredPosition ?: NativeAdPlacement.HOME_BUNDLE.defaultPosition,
+      )
+    }
+  }
+  val nativeAdIndex = primaryIndex.takeIf { nativeAd != null }
+
+  val deepAd = homeDeepNativeAd?.uiState?.collectAsState()?.value as? NativeAdUiState.Loaded
+  val deepConfiguredPosition = homeDeepNativeAd?.configuredPosition?.collectAsState()?.value
+  val deepConfiguredGap = homeDeepNativeAd?.configuredMinGap?.collectAsState()?.value
+  val deepIndex = remember(
+    bundleTypes, primaryIndex, deepConfiguredPosition, deepConfiguredGap, homeDeepNativeAd,
+  ) {
+    if (homeDeepNativeAd == null) null else {
+      HomeNativeAdLayout.deepIndex(
+        bundleTypes = bundleTypes,
+        firstIndex = primaryIndex,
+        requestedIndex = deepConfiguredPosition ?: NativeAdPlacement.HOME_DEEP.defaultPosition,
+        minGap = deepConfiguredGap ?: NativeAdConfig.DEFAULT_MIN_GAP,
+      )
+    }
+  }
+  val deepAdIndex = deepIndex.takeIf { deepAd != null }
+  val lazyListState = rememberLazyListState()
+
+  // Activity of both home slots follows the host lifecycle and the live visible range.
+  val resumed = rememberHostResumed()
+  val visibleRange by remember(lazyListState) {
+    derivedStateOf {
+      val visible = lazyListState.layoutInfo.visibleItemsInfo
+      (visible.firstOrNull()?.index ?: 0) to (visible.lastOrNull()?.index ?: 0)
+    }
+  }
+  if (homeNativeAd != null) {
+    val primaryNear = HomeNativeAdLayout.isNearVisible(
+      primaryIndex, visibleRange.first, visibleRange.second,
+    )
+    LaunchedEffect(homeNativeAd, primaryNear, resumed, bundleTypes) {
+      homeNativeAd.setSlotActive(primaryNear && resumed)
+      if (primaryNear) {
+        homeNativeAd.startLoading(
+          locationCheck = { position, _ -> HomeNativeAdLayout.firstIndex(bundleTypes, position) != null },
+        )
+      }
+    }
+    DisposableEffect(homeNativeAd) { onDispose { homeNativeAd.setSlotActive(false) } }
+  }
+  if (homeDeepNativeAd != null) {
+    val deepNear = HomeNativeAdLayout.isNearVisible(
+      deepIndex, visibleRange.first, visibleRange.second,
+    )
+    LaunchedEffect(homeDeepNativeAd, deepNear, resumed, bundleTypes, primaryIndex) {
+      homeDeepNativeAd.setSlotActive(deepNear && resumed)
+      if (deepNear) {
+        homeDeepNativeAd.startLoading(
+          locationCheck = { position, minGap ->
+            HomeNativeAdLayout.deepIndex(bundleTypes, primaryIndex, position, minGap) != null
+          },
+        )
+      }
+    }
+    DisposableEffect(homeDeepNativeAd) { onDispose { homeDeepNativeAd.setSlotActive(false) } }
+  }
 
   Column(
     modifier = Modifier
@@ -222,7 +305,7 @@ fun BundlesView(
       .padding(top = 16.dp)
   ) {
     LazyColumn(
-      state = rememberBottomBarMenuScrollState(state = rememberLazyListState(), route = gamesRoute),
+      state = rememberBottomBarMenuScrollState(state = lazyListState, route = gamesRoute),
       modifier = Modifier
         .fillMaxSize()
         .wrapContentSize(Alignment.TopCenter),
@@ -230,7 +313,18 @@ fun BundlesView(
     ) {
       itemsIndexed(viewState.bundles) { index, bundle ->
         if (homeNativeAd != null && nativeAd != null && index == nativeAdIndex) {
-          NativeAdBundle(onRender = homeNativeAd::render)
+          NativeAdBundle(
+            ad = nativeAd.ad,
+            template = homeNativeAd.placement.template,
+            onRender = homeNativeAd::render,
+          )
+        }
+        if (homeDeepNativeAd != null && deepAd != null && index == deepAdIndex) {
+          NativeAdBundle(
+            ad = deepAd.ad,
+            template = homeDeepNativeAd.placement.template,
+            onRender = homeDeepNativeAd::render,
+          )
         }
         WithUTM(
           utmInfo = getBundleHomeUTMInfo(bundle.tag, bundle.type),

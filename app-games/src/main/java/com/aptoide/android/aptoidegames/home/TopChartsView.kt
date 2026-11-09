@@ -14,9 +14,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.CollectionInfo
@@ -32,6 +34,14 @@ import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiStateProvider
 import cm.aptoide.pt.feature_apps.presentation.appsBySortType
 import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
+import com.aptoide.android.aptoidegames.ads.native_ads.NativeAdListCard
+import com.aptoide.android.aptoidegames.ads.native_ads.NativeAdListPlan
+import com.aptoide.android.aptoidegames.ads.native_ads.NativeAdListSlotEffect
+import com.aptoide.android.aptoidegames.ads.native_ads.NativeAdPlacement
+import com.aptoide.android.aptoidegames.ads.native_ads.NativeAdUiState
+import com.aptoide.android.aptoidegames.ads.native_ads.TopChartsNativeAdViewModel
+import com.aptoide.android.aptoidegames.ads.native_ads.itemsWithNativeAd
+import com.aptoide.android.aptoidegames.ads.native_ads.rememberTopChartsNativeAd
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
@@ -81,7 +91,8 @@ fun TopChartsViewContent(
 
     is AppsListUiState.Idle -> TopChartsList(
       apps = uiState.apps,
-      navigate = navigate
+      navigate = navigate,
+      nativeAd = rememberTopChartsNativeAd(),
     )
   }
 }
@@ -89,20 +100,46 @@ fun TopChartsViewContent(
 @Composable
 fun TopChartsList(
   apps: List<App>,
-  navigate: (String) -> Unit
+  navigate: (String) -> Unit,
+  nativeAd: TopChartsNativeAdViewModel? = null,
 ) {
   val analyticsContext = AnalyticsContext.current
   val utmContext = UTMContext.current
   val bundleAnalytics = rememberBundleAnalytics()
+  // One unranked sponsored card after the first ranked rows (browse_native_top_charts_position).
+  // Ranks come from the app's own index, so the card never shifts the chart.
+  val nativeAdState = nativeAd?.uiState?.collectAsState()?.value ?: NativeAdUiState.Hidden
+  val listState = rememberLazyListState()
+  if (nativeAd != null) {
+    NativeAdListSlotEffect(viewModel = nativeAd, itemCount = apps.size, listState = listState)
+  }
+  val organicKeys = remember(apps, nativeAd != null) {
+    if (nativeAd != null) NativeAdListPlan.uniqueKeys(apps.map { it.packageName }) else null
+  }
 
   LazyColumn(
+    state = listState,
     modifier = Modifier
       .semantics { collectionInfo = CollectionInfo(apps.size, 1) }
       .wrapContentSize(Alignment.TopCenter),
     verticalArrangement = Arrangement.spacedBy(32.dp),
     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 24.dp)
   ) {
-    itemsIndexed(apps) { index, app ->
+    itemsWithNativeAd(
+      items = apps,
+      nativeAd = nativeAdState,
+      placement = NativeAdPlacement.TOP_CHARTS,
+      key = organicKeys?.let { keys -> { index: Int, _: App -> keys[index] } },
+      adContent = { loaded ->
+        if (nativeAd != null) {
+          NativeAdListCard(
+            ad = loaded.ad,
+            template = nativeAd.placement.template,
+            onRender = nativeAd::render,
+          )
+        }
+      },
+    ) { index, app ->
       val openAppView = {
         app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(utmContext)
         bundleAnalytics.sendAppPromoClick(
