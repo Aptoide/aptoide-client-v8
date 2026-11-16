@@ -31,9 +31,6 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import com.aptoide.android.aptoidegames.ads.native_ads.NativeAdSlot
-import com.aptoide.android.aptoidegames.ads.native_ads.rememberAppDetailBottomNativeAd
-import com.aptoide.android.aptoidegames.ads.native_ads.rememberAppDetailNativeAd
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -45,7 +42,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.zIndex
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
@@ -62,6 +58,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
@@ -93,6 +90,9 @@ import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
 import com.aptoide.android.aptoidegames.AptoideOutlinedText
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.ads.native_ads.NativeAdSlot
+import com.aptoide.android.aptoidegames.ads.native_ads.rememberAppDetailBottomNativeAd
+import com.aptoide.android.aptoidegames.ads.native_ads.rememberAppDetailNativeAd
 import com.aptoide.android.aptoidegames.analytics.mapOfNonNull
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGeneralAnalytics
@@ -668,9 +668,11 @@ fun DetailsView(
   app: App,
   navigate: (String) -> Unit = {},
 ) {
-  // Native ad slots around the description: one above it (always eligible) and one below it that
-  // only loads for long descriptions (appview_native_bottom_min_content_length), so a short page
-  // never shows two ads back to back. Both take no space until an ad is actually loaded.
+  // Native ad slots: the top one right after the screenshots, before the release notes and the
+  // description can push it off screen, and a bottom one that only loads for long descriptions
+  // (appview_native_bottom_min_content_length), so a short page never shows two ads back to
+  // back. Both take no space until an ad is actually loaded. The install action stays above
+  // the tabs, untouched.
   val topNativeAd = rememberAppDetailNativeAd()
   val bottomNativeAd = rememberAppDetailBottomNativeAd()
 
@@ -678,14 +680,15 @@ fun DetailsView(
     modifier = Modifier.padding(top = 16.dp)
   ) {
     app.screenshots?.let { ScreenshotsList(it) }
-    app.news?.let {
-      WhatsNew(app = app)
-    }
 
     NativeAdSlot(
       viewModel = topNativeAd,
       modifier = Modifier.padding(top = 16.dp),
     )
+
+    app.news?.let {
+      WhatsNew(app = app)
+    }
 
     app.description?.let {
       Text(

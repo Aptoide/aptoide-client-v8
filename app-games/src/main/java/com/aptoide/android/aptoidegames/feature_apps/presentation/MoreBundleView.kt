@@ -9,8 +9,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -30,6 +31,15 @@ import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
 import cm.aptoide.pt.feature_campaigns.toAptoideMMPCampaign
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.ads.native_ads.BrowseAdEligibility
+import com.aptoide.android.aptoidegames.ads.native_ads.NativeAdListCard
+import com.aptoide.android.aptoidegames.ads.native_ads.NativeAdListPlan
+import com.aptoide.android.aptoidegames.ads.native_ads.NativeAdListSlotEffect
+import com.aptoide.android.aptoidegames.ads.native_ads.NativeAdPlacement
+import com.aptoide.android.aptoidegames.ads.native_ads.NativeAdUiState
+import com.aptoide.android.aptoidegames.ads.native_ads.NativeAdViewModel
+import com.aptoide.android.aptoidegames.ads.native_ads.itemsWithNativeAd
+import com.aptoide.android.aptoidegames.ads.native_ads.rememberCollectionListNativeAd
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGeneralAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
@@ -134,22 +144,42 @@ fun MoreBundleViewContent(
       is AppsListUiState.Idle -> AppsList(
         appList = uiState.apps,
         navigate = navigate,
+        collectionNativeAd = rememberCollectionListNativeAd(),
       )
     }
   }
 }
 
+/**
+ * @param collectionNativeAd opt-in native slot for ordinary See All lists. Only the plain
+ *   See All screen passes it; RTB lists (which also render through this composable) and every
+ *   other caller leave it null and are never given an ad. An RTB analytics context disables the
+ *   slot even if a caller passes it.
+ */
 @Composable
 fun AppsList(
   appList: List<App>,
   navigate: (String) -> Unit,
   handleRTBAdClick: (String, Int) -> Unit = { _, _ -> },
   onItemVisible: (Int) -> Unit = {},
+  collectionNativeAd: NativeAdViewModel? = null,
 ) {
   val analyticsContext = AnalyticsContext.current
   val utmContext = UTMContext.current
   val bundleAnalytics = rememberBundleAnalytics()
   val lazyListState = rememberImpressionTrackingListState(onItemVisible)
+  val isRTB = analyticsContext.isRTB()
+  val nativeAd = collectionNativeAd?.takeIf { BrowseAdEligibility.allowed(it.placement, isRTB) }
+  val nativeAdState = nativeAd?.uiState?.collectAsState()?.value ?: NativeAdUiState.Hidden
+  if (nativeAd != null) {
+    // The impression-tracking list state is only read here, its tracking is untouched.
+    NativeAdListSlotEffect(viewModel = nativeAd, itemCount = appList.size, listState = lazyListState)
+  }
+  // Stable organic keys only for the opted-in ordinary list; RTB and every other caller keep the
+  // default index keys exactly as before.
+  val organicKeys = remember(appList, nativeAd != null) {
+    if (nativeAd != null) NativeAdListPlan.uniqueKeys(appList.map { it.packageName }) else null
+  }
 
   Spacer(modifier = Modifier.fillMaxWidth())
   LazyColumn(
@@ -159,8 +189,22 @@ fun AppsList(
       .padding(start = 16.dp, end = 16.dp)
       .wrapContentSize(Alignment.TopCenter)
   ) {
-    itemsIndexed(appList) { index, app ->
-      val isRTB = analyticsContext.isRTB()
+    itemsWithNativeAd(
+      items = appList,
+      nativeAd = nativeAdState,
+      placement = NativeAdPlacement.COLLECTION_LIST,
+      key = organicKeys?.let { keys -> { index: Int, _: App -> keys[index] } },
+      adContent = { loaded ->
+        if (nativeAd != null) {
+          NativeAdListCard(
+            ad = loaded.ad,
+            template = nativeAd.placement.template,
+            onRender = nativeAd::render,
+            modifier = Modifier.padding(vertical = 16.dp),
+          )
+        }
+      },
+    ) { index, app ->
       val onClick = {
         app.campaigns?.toAptoideMMPCampaign()?.sendClickEvent(utmContext)
         bundleAnalytics.sendAppPromoClick(

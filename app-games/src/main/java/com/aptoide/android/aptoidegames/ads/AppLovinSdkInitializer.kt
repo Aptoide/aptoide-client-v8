@@ -5,16 +5,20 @@ import com.applovin.sdk.AppLovinMediationProvider
 import com.applovin.sdk.AppLovinSdk
 import com.applovin.sdk.AppLovinSdkInitializationConfiguration
 import com.aptoide.android.aptoidegames.BuildConfig
+import com.aptoide.android.aptoidegames.ads.native_ads.NativeAdPlacement
 import com.aptoide.android.aptoidegames.network.repository.AdvertisingIdsRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import timber.log.Timber
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Initializes the AppLovin MAX SDK exactly once for the whole app and lets every ad
@@ -30,6 +34,7 @@ class AppLovinSdkInitializer @Inject constructor(
 ) {
 
   private val mutex = Mutex()
+  private val initScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
   private var initialization: CompletableDeferred<Boolean>? = null
 
   val hasSdkKey: Boolean
@@ -48,7 +53,9 @@ class AppLovinSdkInitializer @Inject constructor(
     val deferred = mutex.withLock {
       initialization ?: CompletableDeferred<Boolean>().also { result ->
         initialization = result
-        startInitialization(result)
+        // Owned by the initializer, not by the first caller: a placement that leaves the screen
+        // (cancelling its coroutine) must not fail the initialization other placements await.
+        initScope.launch { startInitialization(result) }
       }
     }
     val initialized = deferred.await()
@@ -91,11 +98,10 @@ class AppLovinSdkInitializer @Inject constructor(
   }
 
   companion object {
-    /** Native units only: app open ads are switched off (see AdsConfig per distribution). */
-    val AD_UNIT_IDS: List<String> = listOf(
-      BuildConfig.HOME_NATIVE_AD_UNIT_ID,
-      BuildConfig.SEARCH_NATIVE_AD_UNIT_ID,
-      BuildConfig.APP_DETAIL_NATIVE_AD_UNIT_ID,
-    ).filter { it.isNotBlank() }
+    /**
+     * Every configured unit (native placements plus the Search MREC unit); app open ads are
+     * switched off (see AdsConfig per distribution). Blank ids are not declared.
+     */
+    val AD_UNIT_IDS: List<String> = NativeAdPlacement.declaredAdUnitIds()
   }
 }

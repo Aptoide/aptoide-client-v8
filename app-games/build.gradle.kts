@@ -32,13 +32,7 @@ android {
   defaultConfig {
     versionName = (System.getenv("VERSION_NAME") ?: "").ifBlank { "internal.${getDate()}" }
 
-    // AdMob app id for the MAX Google adapters (direct distribution only, see src/direct/AndroidManifest.xml).
-    // Google Mobile Ads crashes at startup without one, so fall back to Google's published test app id;
-    // CI injects the production id the same way it injects APPLOVIN_SDK_KEY.
-    manifestPlaceholders["admobAppId"] =
-      (project.findProperty("AD_MOB_APPLICATION_ID") as? String
-        ?: System.getenv("AD_MOB_APPLICATION_ID")
-        ?: "ca-app-pub-3940256099942544~3347511713")
+    // MAX ad unit ids and the AdMob app id are per brand: see the aptoideGames / vanilla flavors.
 
     buildConfigField("String", "STORE_DOMAIN", "\"https://ws75-cache.aptoide.com/api/7.20240701/\"")
     buildConfigField("String", "SEARCH_BUZZ_DOMAIN", "\"https://buzz.aptoide.com:10002\"")
@@ -93,27 +87,6 @@ android {
       type = "String",
       name = "APP_OPEN_AD_UNIT_ID",
       value = "\"${project.findProperty("APP_OPEN_AD_UNIT_ID") ?: ""}\""
-    )
-    buildConfigField(
-      type = "String",
-      name = "HOME_NATIVE_AD_UNIT_ID",
-      value = (project.findProperty("HOME_NATIVE_AD_UNIT_ID") as? String
-        ?: System.getenv("HOME_NATIVE_AD_UNIT_ID")
-        ?: "").toBuildConfigString() // blank = placement disabled; CI injects the MAX unit id
-    )
-    buildConfigField(
-      type = "String",
-      name = "SEARCH_NATIVE_AD_UNIT_ID",
-      value = (project.findProperty("SEARCH_NATIVE_AD_UNIT_ID") as? String
-        ?: System.getenv("SEARCH_NATIVE_AD_UNIT_ID")
-        ?: "").toBuildConfigString() // blank = placement disabled; CI injects the MAX unit id
-    )
-    buildConfigField(
-      type = "String",
-      name = "APP_DETAIL_NATIVE_AD_UNIT_ID",
-      value = (project.findProperty("APP_DETAIL_NATIVE_AD_UNIT_ID") as? String
-        ?: System.getenv("APP_DETAIL_NATIVE_AD_UNIT_ID")
-        ?: "").toBuildConfigString() // blank = placement disabled; CI injects the MAX unit id
     )
 
 
@@ -174,6 +147,7 @@ android {
         value = "\"ag://\""
       )
       manifestPlaceholders["deepLinkScheme"] = "ag"
+      configureMaxAdUnits(propertyPrefix = "")
     }
 
     create("vanilla") {
@@ -191,6 +165,7 @@ android {
         value = "\"aptoide://\""
       )
       manifestPlaceholders["deepLinkScheme"] = "aptoide"
+      configureMaxAdUnits(propertyPrefix = "VANILLA_")
     }
 
     create("direct") {
@@ -514,6 +489,38 @@ fun BaseFlavor.buildConfigFieldFromGradleProperty(gradlePropertyName: String) {
 fun getDate(): String {
   val sdf = SimpleDateFormat("yyyyMMdd")
   return sdf.format(Date())
+}
+
+/** Gradle property, then environment variable, then blank. */
+fun Project.adProperty(name: String): String =
+  (findProperty(name) as? String) ?: System.getenv(name) ?: ""
+
+/**
+ * MAX ad unit ids and the AdMob app id for one brand. MAX units are per package, so each brand
+ * reads its own set of properties ([propertyPrefix] "" for Aptoide Games, "VANILLA_" for Aptoide):
+ * HOME_NATIVE_AD_UNIT_ID, SEARCH_NATIVE_AD_UNIT_ID, APP_DETAIL_NATIVE_AD_UNIT_ID,
+ * BROWSE_NATIVE_AD_UNIT_ID (category / Top Charts / collection lists) and SEARCH_MREC_AD_UNIT_ID
+ * (the Search MREC treatment). A blank id disables that placement, which is the default outside CI.
+ * AD_MOB_APPLICATION_ID falls back to Google's published test app id, because Google Mobile Ads
+ * crashes at startup without one; CI injects the production ids like APPLOVIN_SDK_KEY.
+ */
+fun com.android.build.api.dsl.ApplicationProductFlavor.configureMaxAdUnits(propertyPrefix: String) {
+  listOf(
+    "HOME_NATIVE_AD_UNIT_ID",
+    "SEARCH_NATIVE_AD_UNIT_ID",
+    "APP_DETAIL_NATIVE_AD_UNIT_ID",
+    "BROWSE_NATIVE_AD_UNIT_ID",
+    "SEARCH_MREC_AD_UNIT_ID",
+  ).forEach { field ->
+    buildConfigField(
+      type = "String",
+      name = field,
+      value = project.adProperty(propertyPrefix + field).toBuildConfigString(),
+    )
+  }
+  manifestPlaceholders["admobAppId"] =
+    project.adProperty(propertyPrefix + "AD_MOB_APPLICATION_ID")
+      .ifBlank { "ca-app-pub-3940256099942544~3347511713" }
 }
 
 fun String.toBuildConfigString(): String {

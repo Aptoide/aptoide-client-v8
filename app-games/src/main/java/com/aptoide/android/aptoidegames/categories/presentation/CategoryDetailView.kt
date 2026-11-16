@@ -8,8 +8,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -25,6 +28,10 @@ import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiStateProvider
 import cm.aptoide.pt.feature_apps.presentation.categoryApps
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.ads.native_ads.NativeAdListCard
+import com.aptoide.android.aptoidegames.ads.native_ads.NativeAdListSlotEffect
+import com.aptoide.android.aptoidegames.ads.native_ads.itemsWithNativeAd
+import com.aptoide.android.aptoidegames.ads.native_ads.rememberCategoryListNativeAd
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGeneralAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
@@ -98,6 +105,14 @@ fun CategoryDetailView(
       },
       title = title
     )
+    val categoryNativeAd = rememberCategoryListNativeAd()
+    val categoryNativeAdState by categoryNativeAd.uiState.collectAsState()
+    val categoryListState = rememberLazyListState()
+    NativeAdListSlotEffect(
+      viewModel = categoryNativeAd,
+      itemCount = (uiState as? AppsListUiState.Idle)?.apps?.size ?: 0,
+      listState = categoryListState,
+    )
     when (uiState) {
       is AppsListUiState.Loading -> LoadingView()
       is AppsListUiState.Empty -> EmptyView(text = stringResource(R.string.empty_category_body))
@@ -105,12 +120,24 @@ fun CategoryDetailView(
       is AppsListUiState.Error -> GenericErrorView(onError)
       is AppsListUiState.Idle -> CategoryAppsList(
         size = uiState.apps.size,
+        state = categoryListState,
       ) {
-        itemsIndexed(
-          uiState.apps,
-          key = { _, app -> app.packageName }
-        )
-        { index, app ->
+        // One native card after the first organic rows (browse_native_category_position); the
+        // apps keep their original index on both sides of it.
+        itemsWithNativeAd(
+          items = uiState.apps,
+          nativeAd = categoryNativeAdState,
+          placement = categoryNativeAd.placement,
+          key = { _, app -> app.packageName },
+          adContent = { loaded ->
+            NativeAdListCard(
+              ad = loaded.ad,
+              template = categoryNativeAd.placement.template,
+              onRender = categoryNativeAd::render,
+              modifier = Modifier.padding(vertical = 16.dp),
+            )
+          },
+        ) { index, app ->
 
           val openAppView = {
             bundleAnalytics.sendAppPromoClick(
@@ -162,9 +189,11 @@ fun CategoryDetailViewContent(content: @Composable ColumnScope.() -> Unit) {
 @Composable
 fun CategoryAppsList(
   size: Int,
+  state: LazyListState = rememberLazyListState(),
   content: LazyListScope.() -> Unit,
 ) {
   LazyColumn(
+    state = state,
     modifier = Modifier
       .semantics { collectionInfo = CollectionInfo(size, 1) }
       .padding(start = 16.dp, end = 16.dp)

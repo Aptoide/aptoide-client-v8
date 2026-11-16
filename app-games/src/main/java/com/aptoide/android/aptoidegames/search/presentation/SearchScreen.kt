@@ -28,10 +28,6 @@ import androidx.compose.material.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import com.aptoide.android.aptoidegames.ads.native_ads.NativeAdBundle
-import com.aptoide.android.aptoidegames.ads.native_ads.NativeAdUiState
-import com.aptoide.android.aptoidegames.ads.native_ads.SearchNativeAdViewModel
-import com.aptoide.android.aptoidegames.ads.native_ads.rememberSearchNativeAd
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -76,6 +72,9 @@ import cm.aptoide.pt.feature_search.utils.fixQuery
 import cm.aptoide.pt.feature_search.utils.isValidSearch
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.ads.search.SearchAdOpportunity
+import com.aptoide.android.aptoidegames.ads.search.SearchAdSlotViewModel
+import com.aptoide.android.aptoidegames.ads.search.rememberSearchAdSlot
 import com.aptoide.android.aptoidegames.analytics.dto.BundleMeta
 import com.aptoide.android.aptoidegames.analytics.dto.SearchMeta
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
@@ -328,7 +327,7 @@ fun SearchView(
             popularSearch = uiState.searchSuggestions.popularSearchList,
             onSelectSearchSuggestion = onSelectSearchSuggestion,
             onRemoveSuggestion = onRemoveSuggestion,
-            searchNativeAd = rememberSearchNativeAd(),
+            searchAdSlot = rememberSearchAdSlot(),
           )
         }
       }
@@ -463,9 +462,13 @@ fun SearchSuggestions(
   popularSearch: List<String>,
   onSelectSearchSuggestion: (String, SearchType, Int) -> Unit,
   onRemoveSuggestion: (String) -> Unit,
-  searchNativeAd: SearchNativeAdViewModel? = null,
+  searchAdSlot: SearchAdSlotViewModel? = null,
 ) {
-  val nativeAd = searchNativeAd?.uiState?.collectAsState()?.value as? NativeAdUiState.Loaded
+  // One shared ad opportunity item below the shortcuts. The assigned format alone is composed
+  // (native or MREC, never both and never a fallback), nothing is requested until the assignment
+  // is known, and both formats use the same near-viewport + resumed activation. GameGenie
+  // answers are a different screen and get nothing here.
+  val decision = searchAdSlot?.decision?.collectAsState()?.value
 
   LazyColumn(
     modifier = Modifier.fillMaxSize(),
@@ -502,12 +505,9 @@ fun SearchSuggestions(
         )
       }
     }
-    if (searchNativeAd != null && nativeAd != null) {
-      item {
-        NativeAdBundle(
-          onRender = searchNativeAd::render,
-          modifier = Modifier.padding(top = 24.dp),
-        )
+    if (decision != null && searchAdSlot != null) {
+      item(key = "search_ad_opportunity") {
+        SearchAdOpportunity(decision = decision, slot = searchAdSlot)
       }
     }
   }
