@@ -60,13 +60,14 @@ data class NativeAdConfig(
       "${placement.flagPrefix}_min_content_length"
     fun minGapKey(placement: NativeAdPlacement) = "${placement.flagPrefix}_min_gap"
 
+    /**
+     * A missing `<prefix>_enabled` key. Release builds keep every placement off until Remote
+     * Config turns it on, so a new placement never starts serving just because CI has its unit.
+     */
     fun defaultEnabled(
       placement: NativeAdPlacement,
       isDebug: Boolean = DEFAULT_ENABLED,
-    ): Boolean = placement == NativeAdPlacement.SEARCH_MREC ||
-      placement == NativeAdPlacement.HOME_DEEP ||
-      placement.isBrowseList ||
-      (isDebug && placement.debugEnabledByDefault)
+    ): Boolean = isDebug && placement.debugEnabledByDefault
 
     suspend fun from(featureFlags: FeatureFlags, placement: NativeAdPlacement): NativeAdConfig {
       val excludedGeos = (featureFlags.getStringListOrNull(excludedGeosKey(placement))

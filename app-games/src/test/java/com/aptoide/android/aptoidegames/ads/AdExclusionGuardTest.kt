@@ -97,7 +97,7 @@ internal class AdExclusionGuardTest {
     }
 
   @Test
-  fun `Remote Config defaults select Search MREC without overriding placement controls`() = scenario {
+  fun `Remote Config defaults keep Search native without overriding placement controls`() = scenario {
     m Given "the shipped Remote Config defaults"
     val xml = File(System.getProperty("user.dir"), "src/main/res/xml/remote_config_defaults.xml").readText()
     val entries = Regex("<key>([^<]+)</key>\\s*<value>([^<]*)</value>")
@@ -112,10 +112,10 @@ internal class AdExclusionGuardTest {
     val enabledKeys = placementPrefixes.map { "${it}_enabled" }.filter { it in entries }
     val geoKeys = placementPrefixes.map { "${it}_excluded_geos" }.filter { it in entries }
 
-    m Then "placement controls remain unset while Search ships fully allocated to MREC without refresh"
+    m Then "placement controls remain unset and the Search format switch ships off"
     assertTrue(enabledKeys.isEmpty(), "enabled defaults present: $enabledKeys")
     assertTrue(geoKeys.isEmpty(), "geo defaults present: $geoKeys")
-    assertEquals("true", entries["search_ad_format_experiment_enabled"])
+    assertEquals("false", entries["search_ad_format_experiment_enabled"])
     assertEquals("100", entries["search_mrec_allocation"])
     assertEquals("false", entries["search_mrec_auto_refresh"])
   }

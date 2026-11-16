@@ -5,12 +5,12 @@ How the AppLovin MAX placements in `:app-games` are wired, gated, measured and s
 Serving state at a glance:
 
 - **Search defaults to MREC** in Games and Vanilla when that brand's MREC unit is configured.
-  The shipped selector defaults are enabled with a 100% MREC allocation, and the MREC placement
-  defaults enabled in both build types. An explicit Remote Config value still overrides these
-  defaults. Missing MREC ids select the native control before any ad request.
-- **Browse placements default on** in release and debug for both Games and Vanilla: categories,
-  Top Charts and ordinary See All lists. The deeper Home slot also defaults on. Explicit remote
-  values still override these defaults; geo, configured-unit and layout gates still apply. Existing
+  The shipped selector switch is off (native) with a 100% MREC allocation once turned on; the
+  MREC placement, like every placement, needs its remote enabled flag in release. Missing MREC
+  ids select the native control before any ad request.
+- **Browse placements** for both Games and Vanilla: categories, Top Charts and ordinary See All
+  lists, plus a deeper Home slot. Like the existing placements they default off in release and
+  on in debug; Remote Config opens them. Geo, configured-unit and layout gates still apply. Existing
   Home and detail flags, RTB exclusions and Google Play ad exclusion are unchanged.
 - **Auto-refresh remains off** in the app and both MAX MREC units. No public app release, CI
   properties publication or Firebase change has been performed. The two MREC ids are wired in
@@ -86,17 +86,17 @@ wins; the "when absent" columns are fallbacks used only while a key is missing.
 
 | Key | When absent, release | When absent, debug | Notes |
 |---|---|---|---|
-| `<prefix>_enabled` | true for `search_mrec`, `home_native_deep` and the three `browse_native_*` placements; false otherwise | true | Kill switch. Deliberately not in `remote_config_defaults.xml`. |
+| `<prefix>_enabled` | false for every placement | true | Kill switch. Deliberately not in `remote_config_defaults.xml`. |
 | `<prefix>_position` | per table (shipped in the XML) | same | List slots: organic rows before the ad. Home: bundle index. |
 | `<prefix>_excluded_geos` | consent geos (`AdsDefaults.EXCLUDED_GEOS`) | empty | **Unknown country is ineligible whenever a blocklist is active.** |
 | `<prefix>_min_content_length` | 0 in code; the XML ships `appview_native_bottom_min_content_length = 1500` | same | Only `appview_native_bottom` uses it. |
 | `<prefix>_min_gap` | 3 (the XML ships `home_native_deep_min_gap = 3`) | 3 | Used by `home_native_deep`: bundles between the two home ads. |
 
-Search format configuration (MREC is the shipped default; explicit remote values still win):
+Search format configuration (native is the shipped default; Remote Config opts in to MREC):
 
 | Key | Default | Meaning |
 |---|---|---|
-| `search_ad_format_experiment_enabled` | `true` | Master switch. Off means the native control for everyone. |
+| `search_ad_format_experiment_enabled` | `false` | Master switch. Off means the native control for everyone. |
 | `search_mrec_allocation` | `100` | Percent of installations in the MREC arm (0..100, clamped). |
 | `search_mrec_auto_refresh` | `false` | Let MAX refresh a loaded MREC while it is on screen and the host is resumed. |
 
@@ -125,13 +125,11 @@ requests the other format. In particular, `search_mrec_enabled = false` suppress
    test mode in the debugger and relaunch the app as it requests. Games MREC has been verified
    with AppLovin test demand in both brands. Live rendering and bidder participation after
    the new network mappings remain unverified; a saved mapping is not proof of fill.
-4. Browse, Search MREC and deeper Home default on without a remote enabled flag. Check for
-   existing explicit `false` values, which still disable those placements. Other placements need
-   `<prefix>_enabled = true` in Firebase to open in release. Keep each `<prefix>_excluded_geos`
+4. Every placement, new or existing, needs `<prefix>_enabled = true` in Firebase to open in
+   release. A configured unit alone never starts serving. Keep each `<prefix>_excluded_geos`
    list aligned with the intended serving countries and consent configuration.
-5. Search now ships with MREC enabled and a 100% allocation when its unit is configured.
-   Existing explicit Firebase values can override that: check `search_mrec_enabled`,
-   `search_ad_format_experiment_enabled` and `search_mrec_allocation` before release. A partial
+5. Search ships native. To move it to MREC, set `search_ad_format_experiment_enabled = true`
+   and `search_mrec_enabled = true` (allocation defaults to 100%) once its unit is configured. A partial
    native/MREC comparison can still be configured through the allocation. Keep
    `search_mrec_auto_refresh = false` for the current inline-feed setup.
 6. Roll back any placement with its `<prefix>_enabled` flag; roll back the experiment with
@@ -155,8 +153,8 @@ requests the other format. In particular, `search_mrec_enabled = false` suppress
 
 - Publish the intended same-brand Native, Browse and MREC properties through the CI properties
   job, and inspect the actual release artifact. Empty ids suppress requests even when a flag
-  defaults on. The locally installed previews are debug-signed and must not be distributed.
-- Browse, deeper Home and Search MREC default on, but explicit remote `false` still wins. Release
+  is on. The locally installed previews are debug-signed and must not be distributed.
+- Browse, deeper Home and Search MREC need explicit remote `true` in release. Release
   geo restrictions are preserved; debug previews are not evidence of release eligibility in PT.
 - Unity reporting is connected to MAX. Its developer website/app-ads.txt discovery and payout
   profile still need account-owner follow-up. Vanilla's sample AdMob app-id fallback and pending

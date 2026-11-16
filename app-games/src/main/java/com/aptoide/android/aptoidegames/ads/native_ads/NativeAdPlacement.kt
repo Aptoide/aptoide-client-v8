@@ -16,7 +16,7 @@ enum class NativeAdTemplate { STANDARD, COMPACT }
  * @property defaultPosition default for `<prefix>_position`: the number of organic items rendered
  *   before the ad (lists) or the bundle index the ad is inserted before (home).
  * @property debugEnabledByDefault whether a debug build treats a missing `<prefix>_enabled` key as
- *   enabled. Release defaults are defined by NativeAdConfig; Search MREC defaults on.
+ *   enabled. Release builds default every placement off (NativeAdConfig).
  */
 enum class NativeAdPlacement(
   val flagPrefix: String,

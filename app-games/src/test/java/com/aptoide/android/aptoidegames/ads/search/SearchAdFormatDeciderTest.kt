@@ -66,17 +66,19 @@ internal class SearchAdFormatDeciderTest {
   }
 
   @Test
-  fun `The shipped default selects MREC and a missing unit still selects native`() = scenario {
+  fun `The shipped default stays native until Remote Config enables MREC`() = scenario {
     m Given "the default Search configuration"
     val config = SearchAdExperimentConfig.DEFAULT
 
-    m When "the unit is configured or absent"
+    m When "the unit is configured or absent, and when the switch is turned on remotely"
     val configured = SearchAdFormatDecider.decide(config, "mrec-unit", null)
-    val missing = SearchAdFormatDecider.decide(config, "", null)
+    val missing = SearchAdFormatDecider.decide(config.copy(enabled = true), "", null)
     val rollback = SearchAdFormatDecider.decide(SearchAdExperimentConfig.DISABLED, "mrec-unit", null)
+    val switchedOn = SearchAdFormatDecider.decide(config.copy(enabled = true), "mrec-unit", null)
 
-    m Then "MREC is the default and both explicit rollback and missing unit use native"
-    assertEquals(SearchAdFormat.MREC, configured)
+    m Then "native is the default, and an enabled switch with a unit selects MREC"
+    assertEquals(SearchAdFormat.NATIVE, configured)
+    assertEquals(SearchAdFormat.MREC, switchedOn)
     assertEquals(SearchAdFormat.NATIVE, missing)
     assertEquals(SearchAdFormat.NATIVE, rollback)
   }

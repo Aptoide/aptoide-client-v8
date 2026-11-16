@@ -4,7 +4,7 @@ import com.aptoide.android.aptoidegames.ads.native_ads.NativeAdAnalytics
 
 /**
  * The two formats under test on the Search landing. Exactly one is requested per screen
- * instance; [MREC] is the default when configured and [NATIVE] is the explicit control/fallback.
+ * instance; [NATIVE] is the default and control, [MREC] needs the remote switch and its unit.
  */
 enum class SearchAdFormat(val variant: String, val analyticsFormat: String) {
   NATIVE(
@@ -28,9 +28,12 @@ data class SearchAdExperimentConfig(
     const val ALLOCATION_KEY = "search_mrec_allocation"
     const val AUTO_REFRESH_KEY = "search_mrec_auto_refresh"
 
-    /** Default Search format for both brands; a missing MREC unit still selects native. */
+    /**
+     * Default Search format for both brands: native until Remote Config turns the switch on.
+     * Once on, the full allocation sends every installation with a configured unit to MREC.
+     */
     val DEFAULT = SearchAdExperimentConfig(
-      enabled = true,
+      enabled = false,
       mrecAllocationPercent = 100,
       mrecAutoRefresh = false,
     )

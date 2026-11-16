@@ -58,10 +58,10 @@
     <key>home_native_deep_min_gap</key>
     <value>3</value>
   </entry>
-  <!-- Search defaults to MREC for configured units; explicit remote values still win. -->
+  <!-- Search stays native until Remote Config turns the MREC switch on. -->
   <entry>
     <key>search_ad_format_experiment_enabled</key>
-    <value>true</value>
+    <value>false</value>
   </entry>
   <entry>
     <key>search_mrec_allocation</key>

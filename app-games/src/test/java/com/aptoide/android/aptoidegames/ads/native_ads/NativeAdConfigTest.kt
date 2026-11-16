@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test
 internal class NativeAdConfigTest {
 
   @Test
-  fun `Missing flags default Search MREC deep Home and browse lists on`() =
+  fun `Missing flags leave every placement to the build type`() =
     coScenario { _ ->
       m Given "no Remote Config values at all"
       val flags = FakeFeatureFlags()
@@ -21,20 +21,18 @@ internal class NativeAdConfigTest {
       m When "every placement's config is resolved"
       val configs = NativeAdPlacement.entries.associateWith { NativeAdConfig.from(flags, it) }
 
-      m Then "MREC deep Home and browse are on and other placements follow the build type"
+      m Then "each placement follows the build type and its debug default"
       configs.forEach { (placement, config) ->
-        val expected = placement == NativeAdPlacement.SEARCH_MREC ||
-          placement == NativeAdPlacement.HOME_DEEP || placement.isBrowseList || BuildConfig.DEBUG
+        val expected = BuildConfig.DEBUG && placement.debugEnabledByDefault
         assertEquals(expected, config.enabled, "enabled for $placement")
         assertEquals(placement.defaultPosition, config.position, "position for $placement")
         assertEquals(NativeAdConfig.DEFAULT_MIN_GAP, config.minGap)
         assertEquals(0, config.minContentLength)
       }
-      assertTrue(configs.getValue(NativeAdPlacement.HOME_DEEP).enabled)
     }
 
   @Test
-  fun `Release MREC deep Home and browse default on while other placements stay off`() = scenario {
+  fun `Release builds keep every placement off until Remote Config enables it`() = scenario {
     m Given "release defaults without remote flags"
 
     m When "the enabled defaults are resolved"
@@ -42,16 +40,8 @@ internal class NativeAdConfigTest {
       NativeAdConfig.defaultEnabled(it, isDebug = false)
     }
 
-    m Then "Search MREC deep Home and all three browse slots are enabled"
-    assertEquals(
-      listOf(
-        NativeAdPlacement.HOME_DEEP,
-        NativeAdPlacement.CATEGORY_LIST,
-        NativeAdPlacement.TOP_CHARTS,
-        NativeAdPlacement.SEARCH_MREC,
-        NativeAdPlacement.COLLECTION_LIST,
-      ), enabled,
-    )
+    m Then "no placement, new or existing, serves without an explicit remote true"
+    assertEquals(emptyList<NativeAdPlacement>(), enabled)
   }
 
   @Test

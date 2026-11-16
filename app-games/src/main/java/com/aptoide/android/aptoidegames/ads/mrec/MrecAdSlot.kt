@@ -1,5 +1,6 @@
 package com.aptoide.android.aptoidegames.ads.mrec
 
+import android.view.ViewGroup
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -71,6 +72,9 @@ fun MrecAdSlot(
           android.widget.FrameLayout(context)
         }
       },
+      // The ViewModel outlives this host: detach so the old holder (and its Activity) is not
+      // kept reachable through the retained MaxAdView when Search is never shown again.
+      onRelease = { (it.parent as? ViewGroup)?.removeView(it) },
     )
   }
 }
