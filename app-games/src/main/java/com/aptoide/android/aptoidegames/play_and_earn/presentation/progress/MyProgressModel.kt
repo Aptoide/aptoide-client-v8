@@ -1,7 +1,6 @@
 package com.aptoide.android.aptoidegames.play_and_earn.presentation.progress
 
 import cm.aptoide.pt.campaigns.domain.PaEGameStreak
-import cm.aptoide.pt.campaigns.domain.PaELeaderboard
 import cm.aptoide.pt.campaigns.domain.PaEMission
 import cm.aptoide.pt.campaigns.domain.PaEMissionProgressType
 import cm.aptoide.pt.campaigns.domain.PaEMissionStatus
@@ -105,8 +104,6 @@ data class GameProgress(
   val missions: List<MissionCard>,
   // A logo shipped with the app, for the demo game.
   val iconRes: Int? = null,
-  // This week's players of the game by play time; null when there is none to show.
-  val leaderboard: PaELeaderboard? = null,
   // Demo data (Hackathon 2026): the game has no campaign on the server.
   val isDemo: Boolean = false,
 )

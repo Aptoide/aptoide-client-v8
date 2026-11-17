@@ -14,7 +14,6 @@ import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.campaigns.data.PaECampaignsRepository
 import cm.aptoide.pt.campaigns.data.PaEMissionsRepository
 import cm.aptoide.pt.campaigns.data.PaEProgressRepository
-import cm.aptoide.pt.campaigns.domain.PaELeaderboard
 import cm.aptoide.pt.campaigns.domain.PaEUserProgress
 import cm.aptoide.pt.exception_handler.ExceptionHandler
 import cm.aptoide.pt.extensions.runPreviewable
@@ -32,10 +31,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.temporal.IsoFields
 import javax.inject.Inject
-
-private const val LEADERBOARD_SIZE = 10
 
 @HiltViewModel
 class MyProgressViewModel @Inject constructor(
@@ -102,13 +98,9 @@ class MyProgressViewModel @Inject constructor(
   }
 
   // The progress is what the screen cannot do without. Everything else is best effort: a part
-  // that fails to load is left out and the rest shows.
+  // that fails to load is left out and the rest shows. The leaderboard is demo data for now
+  // (see MyProgressDemoData), so there is nothing of it to load.
   private suspend fun load(progress: PaEUserProgress): MyProgressUiState.Idle = coroutineScope {
-    val leaderboard = async {
-      progressRepository.getWeeklyLeaderboard(LEADERBOARD_SIZE)
-        .onFailure(exceptionHandler::recordException)
-        .getOrNull()
-    }
     val balance = async {
       runCatching {
         walletCoreDataSource.getCurrentWalletAddress()
@@ -121,10 +113,8 @@ class MyProgressViewModel @Inject constructor(
     val claimed = claimedMissionsStore.baselineOnce {
       claimsToBaseline(installed.flatMap { it.missions })
     }
-    val weekly = leaderboard.await()
     val games = (installed + listOfNotNull(demoDuckSurvival().takeIf { SHOW_DEMO_DATA }))
       .orderedForDisplay(first = if (SHOW_DEMO_DATA) DEMO_GAME_ORDER else emptyList())
-      .map { game -> game.copy(leaderboard = leaderboardOf(game, weekly)) }
 
     MyProgressUiState.Idle(
       walletBalance = balance.await(),
@@ -133,29 +123,6 @@ class MyProgressViewModel @Inject constructor(
       lifetimeUnits = progress.lifetimeUnits,
       claimed = claimed + demoClaimed,
     )
-  }
-
-  /**
-   * The leaderboard shown with a game. The server only ranks play time across every game, so for
-   * the presentation each game gets demo players of its own; the real player is in it only if
-   * they played that game this week, with their real play time of the week (the demo game has
-   * its own). Without demo data, every game shows the one real leaderboard.
-   */
-  private fun leaderboardOf(game: GameProgress, weekly: PaELeaderboard?): PaELeaderboard? {
-    if (!SHOW_DEMO_DATA) return weekly
-    val mySeconds = when {
-      game.packageName == DEMO_DUCK_PACKAGE -> DEMO_DUCK_MY_SECONDS
-      game.streak.daysPlayed > 0 -> weekly?.me?.playSeconds ?: 0
-      else -> 0
-    }
-    return demoLeaderboard(
-      mySeconds = mySeconds,
-      seed = demoLeaderboardSeed(game.packageName, week = currentWeek()),
-    )
-  }
-
-  private fun currentWeek(): Int = LocalDate.now().let {
-    it.get(IsoFields.WEEK_BASED_YEAR) * 100 + it.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR)
   }
 
   // The Play & Earn games are cached when the store lists them; a player who lands here first

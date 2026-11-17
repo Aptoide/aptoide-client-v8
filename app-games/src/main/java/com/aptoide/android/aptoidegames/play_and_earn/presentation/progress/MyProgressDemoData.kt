@@ -1,9 +1,9 @@
 package com.aptoide.android.aptoidegames.play_and_earn.presentation.progress
 
-import cm.aptoide.pt.campaigns.domain.PaELeaderboard
-import cm.aptoide.pt.campaigns.domain.PaELeaderboardEntry
 import cm.aptoide.pt.campaigns.domain.PaEMissionProgressType
 import com.aptoide.android.aptoidegames.R
+import kotlin.math.pow
+import kotlin.math.roundToLong
 import kotlin.random.Random
 
 // Demo data for the Hackathon 2026 presentation. None of it comes from the server and none of it
@@ -125,65 +125,50 @@ internal fun demoDuckSurvival() = GameProgress(
   ),
 )
 
+// The prototype's players: short gamer names, reused with a number once they run out.
 private val DEMO_PLAYERS = listOf(
-  "NightOwl_PT", "xKiraz", "Tugas4Ever", "MariaG_22", "DiceKing", "Rui.Plays", "LunaStar",
-  "Pedro_GG", "SofiaQuack", "ZeDoPipo", "TheRealNuno", "Bia_Gamer", "FoxHunter7", "Inês.exe",
-  "Lisboa_Legend", "CapitaoTuga", "Marta.Plays", "DarkPhoenix", "JoaoDoPorto", "Kika_Pro",
-  "SnackAttack", "Tiago_TTV", "AnaBanana", "PixelPirate", "Gui_Gamer", "QueenCarol",
-  "MrBacalhau", "RitaRush", "VascoDaGama_", "Leo.exe", "Beatriz_BR", "CyberCamelo",
-  "DuckSlayer", "Nuno_NPC", "SaraSniper", "ElTouro",
+  "Nova", "Kiro", "Mika", "Rex", "Luna", "Zed", "Axel", "Yuki", "Bolt", "Sage", "Pixel", "Ruby",
+  "Finn", "Echo", "Jax", "Mira", "Otto", "Vex", "Lola", "Dash", "Neo", "Pip", "Kai", "Rin", "Tux",
+  "Ash", "Gus", "Ivy", "Max", "Zoe",
 )
 
-/**
- * The seed of one game's leaderboard in one week: each game has its own players and times, the
- * same all week, a new set the next.
- */
-internal fun demoLeaderboardSeed(packageName: String, week: Int): Int =
-  31 * week + packageName.hashCode()
+internal const val DEMO_AVATAR_COLORS = 5
+private const val DEMO_PLAYER_COUNT = 60
 
-// What the player has played of the demo game this week, in line with its play-time missions.
-internal const val DEMO_DUCK_MY_SECONDS = 8400L
-
-private const val DEMO_TOP = 10
-private const val MINUTE = 60L
-private const val HOUR = 60 * MINUTE
-
-/**
- * A game's week that looks lived in: ten players between roughly twenty and three hours, the
- * same for a given [seed] (see [demoLeaderboardSeed]), with the player placed where their play
- * time [mySeconds] puts them (inside the top, or further down with their own row; left out when
- * they have not played the game).
- */
-internal fun demoLeaderboard(mySeconds: Long, seed: Int): PaELeaderboard {
-  val random = Random(seed)
-  var seconds = (17 * HOUR + random.nextLong(4 * HOUR))
-  val others = DEMO_PLAYERS.shuffled(random).take(DEMO_TOP).map { name ->
-    val entry = name to (seconds / MINUTE) * MINUTE
-    seconds = (seconds * (0.78 + random.nextDouble() * 0.14)).toLong()
-    entry
-  }
-  val ahead = others.count { it.second >= mySeconds }
-  val inTop = mySeconds > 0 && ahead < DEMO_TOP
-
-  val listed = buildList {
-    others.forEach { (name, time) -> add(Triple(name, time, false)) }
-    if (inTop) add(ahead, Triple(ME, mySeconds, true))
-  }.take(DEMO_TOP)
-  val entries = listed.mapIndexed { index, (name, time, isMe) ->
-    PaELeaderboardEntry(rank = index + 1, player = name, playSeconds = time, isMe = isMe)
-  }
-  val me = when {
-    mySeconds <= 0 -> null
-    inTop -> entries.first { it.isMe }
-    // Below the top: somewhere in a crowd of players with less time than the tenth.
-    else -> PaELeaderboardEntry(
-      rank = DEMO_TOP + 1 + random.nextInt(8, 60),
-      player = ME,
-      playSeconds = mySeconds,
-      isMe = true,
-    )
-  }
-  return PaELeaderboard(entries = entries, me = me)
+// What the best player of a game has earned from its missions in each period.
+private fun topUnits(period: LeaderboardPeriod): Double = when (period) {
+  LeaderboardPeriod.WEEK -> 3200.0
+  LeaderboardPeriod.MONTH -> 9800.0
+  LeaderboardPeriod.ALL_TIME -> 34000.0
 }
 
-private const val ME = "You"
+/**
+ * What the player is taken to have earned from a game's missions before today, so they start
+ * somewhere down the ranking and climb as they claim.
+ */
+internal fun demoMyBaseUnits(period: LeaderboardPeriod): Long = when (period) {
+  LeaderboardPeriod.WEEK -> 340
+  LeaderboardPeriod.MONTH -> 1150
+  LeaderboardPeriod.ALL_TIME -> 2900
+}
+
+/**
+ * Sixty players of one game in one period, each a little behind the one before, as in the
+ * prototype. The same for a given game and period, different between games and periods.
+ */
+internal fun demoLeaderboardPlayers(
+  packageName: String,
+  period: LeaderboardPeriod,
+): List<LeaderboardPlayer> {
+  val random = Random(31 * packageName.hashCode() + period.ordinal)
+  val names = DEMO_PLAYERS.shuffled(random)
+  return List(DEMO_PLAYER_COUNT) { index ->
+    val repeat = index / names.size
+    LeaderboardPlayer(
+      name = names[index % names.size] + if (repeat > 0) "${index % 9 + 1}" else "",
+      units = (topUnits(period) * 0.93.pow(index) * (0.97 + random.nextDouble() * 0.06))
+        .roundToLong(),
+      color = random.nextInt(DEMO_AVATAR_COLORS),
+    )
+  }.sortedByDescending { it.units }
+}

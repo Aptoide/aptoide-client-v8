@@ -56,8 +56,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import cm.aptoide.pt.campaigns.domain.PaELeaderboard
-import cm.aptoide.pt.campaigns.domain.PaELeaderboardEntry
 import cm.aptoide.pt.campaigns.domain.PaEMissionProgressType
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.ScreenData
@@ -145,6 +143,23 @@ private fun MyProgressContent(
   val game = state.games.find { it.packageName == selected }
     ?: state.games.find { it.packageName == defaultGame(state.games, state.claimed) }
 
+  var view by rememberSaveable { mutableStateOf(ProgressView.MISSIONS) }
+  var period by rememberSaveable { mutableStateOf(LeaderboardPeriod.WEEK) }
+  val me = stringResource(R.string.play_and_earn_progress_leaderboard_you)
+  // The chosen game's ranking, while the Leaderboard view is showing. Demo data for now: the
+  // players are made up, and the player climbs by what they claim from the game's missions.
+  val board = if (SHOW_DEMO_DATA && game != null && view == ProgressView.LEADERBOARD) {
+    remember(game, period, state.claimed, me) {
+      leaderboardView(
+        others = demoLeaderboardPlayers(game.packageName, period),
+        myUnits = leaderboardUnits(game, state.claimed, base = demoMyBaseUnits(period)),
+        myName = me,
+      )
+    }
+  } else {
+    null
+  }
+
   var origin by remember { mutableStateOf(Offset.Zero) }
   var balanceCenter by remember { mutableStateOf<Offset?>(null) }
   var flight by remember { mutableStateOf<ClaimFlight?>(null) }
@@ -177,7 +192,9 @@ private fun MyProgressContent(
         modifier = Modifier
           .fillMaxSize()
           .verticalScroll(rememberScrollState())
-          .padding(bottom = 32.dp),
+          .padding(
+            bottom = if (board?.isMeInTop == false) PinnedLeaderboardRowHeight else 32.dp
+          ),
       ) {
         Text(
           text = stringResource(
@@ -199,24 +216,37 @@ private fun MyProgressContent(
             onSelect = { selected = it },
           )
         }
-        game?.let {
-          key(it.packageName) { PlayGameButton(game = it, navigate = navigate) }
-          StreakCard(streak = it.streak)
-          GameMissions(game = it, claimed = state.claimed, onClaim = claim)
-          it.leaderboard?.let { leaderboard ->
-            SectionHeader(
-              title = stringResource(R.string.play_and_earn_progress_leaderboard_title),
-              subtitle = it.name,
-            )
-            LeaderboardList(leaderboard)
-          }
+        if (game != null && SHOW_DEMO_DATA) {
+          ProgressViewSwitch(
+            selected = view,
+            enabled = flight == null,
+            onSelect = { view = it },
+          )
         }
-        SectionHeader(title = stringResource(R.string.play_and_earn_progress_totals_title))
-        TotalsRow(
-          lifetimePlaySeconds = state.lifetimePlaySeconds,
-          lifetimeUnits = state.lifetimeUnits,
-        )
+        if (board != null && game != null) {
+          LeaderboardContent(
+            gameName = game.name,
+            board = board,
+            period = period,
+            onPeriod = { period = it },
+          )
+        } else {
+          game?.let {
+            key(it.packageName) { PlayGameButton(game = it, navigate = navigate) }
+            StreakCard(streak = it.streak)
+            GameMissions(game = it, claimed = state.claimed, onClaim = claim)
+          }
+          SectionHeader(title = stringResource(R.string.play_and_earn_progress_totals_title))
+          TotalsRow(
+            lifetimePlaySeconds = state.lifetimePlaySeconds,
+            lifetimeUnits = state.lifetimeUnits,
+          )
+        }
       }
+    }
+
+    if (board?.isMeInTop == false) {
+      PinnedLeaderboardRow(board = board, modifier = Modifier.align(Alignment.BottomCenter))
     }
 
     val from = flight?.from
@@ -802,65 +832,6 @@ private fun MissionCardView(
         )
       }
     }
-  }
-}
-
-@Composable
-private fun LeaderboardList(leaderboard: PaELeaderboard) {
-  val rows = leaderboardRows(leaderboard)
-  if (rows.isEmpty()) {
-    Text(
-      text = stringResource(R.string.play_and_earn_progress_leaderboard_empty),
-      style = AGTypography.InputsS,
-      color = Palette.GreyLight,
-      modifier = Modifier.padding(horizontal = 16.dp),
-    )
-    return
-  }
-  Column(
-    modifier = Modifier.padding(horizontal = 16.dp),
-    verticalArrangement = Arrangement.spacedBy(6.dp),
-  ) {
-    rows.forEach { LeaderboardRow(it) }
-  }
-}
-
-@Composable
-private fun LeaderboardRow(entry: PaELeaderboardEntry) {
-  Row(
-    modifier = Modifier
-      .fillMaxWidth()
-      .clip(CardShape)
-      .background(Palette.GreyDark)
-      .border(1.dp, if (entry.isMe) Palette.Primary else Palette.GreyDark, CardShape)
-      .padding(horizontal = 12.dp, vertical = 10.dp),
-    horizontalArrangement = Arrangement.spacedBy(12.dp),
-    verticalAlignment = Alignment.CenterVertically,
-  ) {
-    Text(
-      text = entry.rank.toString(),
-      style = AGTypography.InputsL,
-      color = Palette.Primary,
-      textAlign = TextAlign.Center,
-      modifier = Modifier.width(32.dp),
-    )
-    Text(
-      text = if (entry.isMe) {
-        stringResource(R.string.play_and_earn_progress_leaderboard_you)
-      } else {
-        entry.player
-      },
-      style = AGTypography.InputsL,
-      color = Palette.White,
-      maxLines = 1,
-      overflow = TextOverflow.Ellipsis,
-      modifier = Modifier.weight(1f),
-    )
-    Text(
-      text = playTimeText(entry.playSeconds),
-      style = AGTypography.InputsS,
-      color = Palette.GreyLight,
-    )
   }
 }
 

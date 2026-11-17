@@ -573,8 +573,17 @@
   <string name="play_and_earn_progress_mission_to_go">%1$s to go</string>
   <string name="play_and_earn_progress_duration_hours">%1$s h</string>
   <string name="play_and_earn_progress_totals_title">All time</string>
-  <string name="play_and_earn_progress_leaderboard_title">Weekly leaderboard</string>
-  <string name="play_and_earn_progress_leaderboard_empty">Nobody has played this week yet. Be the first.</string>
+  <string name="play_and_earn_progress_view_missions">Missions</string>
+  <string name="play_and_earn_progress_view_leaderboard">Leaderboard</string>
+  <string name="play_and_earn_progress_leaderboard_title">%1$s leaderboard</string>
+  <string name="play_and_earn_progress_leaderboard_subtitle">Units earned from %1$s missions</string>
+  <string name="play_and_earn_progress_leaderboard_week">This week</string>
+  <string name="play_and_earn_progress_leaderboard_month">This month</string>
+  <string name="play_and_earn_progress_leaderboard_all_time">All time</string>
+  <string name="play_and_earn_progress_leaderboard_tip_first">You\'re #1!</string>
+  <string name="play_and_earn_progress_leaderboard_tip_rank">Earn %1$s more Units to reach #%2$d</string>
+  <string name="play_and_earn_progress_leaderboard_tip_top">Earn %1$s more Units to reach the top 10</string>
+  <string name="play_and_earn_progress_leaderboard_note">Only Units from missions count, not the daily streak.</string>
   <string name="play_and_earn_progress_leaderboard_you">You</string>
   <string name="play_and_earn_exchange_reach_target_robux">Reaching %1$d units = Redeem %2$s in Robux code</string>
   <string name="play_and_earn_exchange_reach_target_diamonds">Reaching %1$d units = Redeem %2$s in Free Fire Diamonds code</string>

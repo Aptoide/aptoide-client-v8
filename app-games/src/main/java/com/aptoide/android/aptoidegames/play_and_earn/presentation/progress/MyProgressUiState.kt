@@ -43,9 +43,8 @@ class MyProgressUiStateProvider : PreviewParameterProvider<MyProgressUiState.Idl
             previewCard("Play 30 minutes", MissionKind.PLAY_TIME, 1800, 1800, 50),
             previewCard("Play 2 hours", MissionKind.PLAY_TIME, 2700, 7200, 150),
           ),
-          leaderboard = demoLeaderboard(mySeconds = 2700, seed = 1),
         ),
-        demoDuckSurvival().copy(leaderboard = demoLeaderboard(DEMO_DUCK_MY_SECONDS, seed = 2)),
+        demoDuckSurvival(),
         GameProgress(
           packageName = "com.cell.survivor",
           name = "Cell Survivor",
