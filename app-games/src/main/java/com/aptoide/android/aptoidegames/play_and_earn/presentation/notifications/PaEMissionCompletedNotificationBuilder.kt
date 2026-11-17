@@ -82,14 +82,16 @@ class PaEMissionCompletedNotificationBuilder @Inject constructor(
 
   suspend fun showMissionCompletedNotification(
     mission: PaEMission,
-    packageName: String
+    packageName: String,
+    nextMission: PaEMission? = null
   ) {
     val notificationId = "PaEMissionCompleted$packageName${mission.title}".hashCode()
 
     val notification = buildNotification(
       requestCode = notificationId,
       mission = mission,
-      packageName = packageName
+      packageName = packageName,
+      nextMission = nextMission
     ) ?: return
 
     showNotification(
@@ -117,7 +119,8 @@ class PaEMissionCompletedNotificationBuilder @Inject constructor(
   private suspend fun buildNotification(
     requestCode: Int,
     mission: PaEMission,
-    packageName: String
+    packageName: String,
+    nextMission: PaEMission?
   ): Notification? = if (context.isAllowed(Manifest.permission.POST_NOTIFICATIONS)) {
 
     val clickIntent = PendingIntent.getActivity(
@@ -139,6 +142,21 @@ class PaEMissionCompletedNotificationBuilder @Inject constructor(
       (uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
     val colorToUse = if (isNightMode) BrandPrimary.toArgb() else FixedColors.Dark.toArgb()
 
+    val body = if (nextMission == null) {
+      context.getString(
+        R.string.play_and_earn_mission_completed_notification_body,
+        mission.units,
+        mission.title
+      )
+    } else {
+      context.getString(
+        R.string.play_and_earn_mission_completed_next_notification_body,
+        mission.units,
+        mission.title,
+        nextMission.title
+      )
+    }
+
     NotificationCompat.Builder(context, MISSION_COMPLETED_NOTIFICATION_CHANNEL_ID)
       .setShowWhen(true)
       .setColor(colorToUse)
@@ -148,13 +166,12 @@ class PaEMissionCompletedNotificationBuilder @Inject constructor(
         imageDownloader.downloadImageFrom(mission.icon)
       })
       .setContentTitle(context.getString(R.string.play_and_earn_challenge_completed_title))
-      .setContentText(
-        context.getString(
-          R.string.play_and_earn_mission_completed_notification_body,
-          mission.units,
-          mission.title
-        )
-      )
+      .setContentText(body)
+      .apply {
+        // Two mission titles rarely fit one line: let the notification expand to show the next
+        // mission. Without one it stays the single line it always was.
+        if (nextMission != null) setStyle(NotificationCompat.BigTextStyle().bigText(body))
+      }
       .setPriority(NotificationCompat.PRIORITY_HIGH)
       .setAutoCancel(true)
       .setContentIntent(clickIntent)

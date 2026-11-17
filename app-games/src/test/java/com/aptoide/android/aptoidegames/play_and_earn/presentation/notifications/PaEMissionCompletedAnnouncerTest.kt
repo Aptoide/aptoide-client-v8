@@ -7,6 +7,7 @@ import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.CompletedM
 import com.google.gson.JsonObject
 import kotlinx.coroutines.CancellationException
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
@@ -14,18 +15,22 @@ import org.junit.jupiter.api.Test
 // game, the notification otherwise. Nothing else decides it.
 internal class PaEMissionCompletedAnnouncerTest {
 
-  private fun event(title: String = "Play 30 seconds") = CompletedMissionEvent(
-    mission = PaEMission(
-      title = title,
-      description = null,
-      icon = null,
-      type = PaEMissionType.PLAY_TIME,
-      arguments = JsonObject(),
-      units = 5,
-      progress = null,
-    ),
-    packageName = "com.game",
+  private fun mission(title: String) = PaEMission(
+    title = title,
+    description = null,
+    icon = null,
+    type = PaEMissionType.PLAY_TIME,
+    arguments = JsonObject(),
+    units = 5,
+    progress = null,
   )
+
+  private fun event(title: String = "Play 30 seconds", next: String? = null) =
+    CompletedMissionEvent(
+      mission = mission(title),
+      packageName = "com.game",
+      nextMission = next?.let(::mission),
+    )
 
   /** Records every call; a failure, when set, is thrown on the first call only. */
   private class Surfaces(
@@ -79,6 +84,42 @@ internal class PaEMissionCompletedAnnouncerTest {
     assertEquals(PaEMissionCompletedSurface.NOTIFICATION, surface)
     assertEquals(listOf(event()), surfaces.notifications)
     assertEquals(emptyList<CompletedMissionEvent>(), surfaces.overlays)
+  }
+
+  @Test
+  fun `The game's next mission reaches the overlay with the completed one`() = coScenario {
+    m Given "an app allowed to draw over other apps"
+    val surfaces = Surfaces()
+
+    m When "a mission completes in a game with another mission left"
+    announcer(surfaces) { true }.announce(event(next = "Play 10 minutes"))
+
+    m Then "the overlay gets the next mission to show"
+    assertEquals("Play 10 minutes", surfaces.overlays.single().nextMission?.title)
+  }
+
+  @Test
+  fun `The game's next mission reaches the notification too`() = coScenario {
+    m Given "an app not allowed to draw over other apps"
+    val surfaces = Surfaces()
+
+    m When "a mission completes in a game with another mission left"
+    announcer(surfaces) { false }.announce(event(next = "Play 10 minutes"))
+
+    m Then "the notification gets the next mission to show"
+    assertEquals("Play 10 minutes", surfaces.notifications.single().nextMission?.title)
+  }
+
+  @Test
+  fun `The last mission of a game is announced without a next one`() = coScenario {
+    m Given "an app allowed to draw over other apps"
+    val surfaces = Surfaces()
+
+    m When "the game's last open mission completes"
+    announcer(surfaces) { true }.announce(event())
+
+    m Then "the overlay has no next mission and looks as it always did"
+    assertNull(surfaces.overlays.single().nextMission)
   }
 
   @Test

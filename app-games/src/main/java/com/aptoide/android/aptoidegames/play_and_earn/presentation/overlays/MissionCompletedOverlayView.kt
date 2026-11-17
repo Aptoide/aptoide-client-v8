@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -33,9 +34,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.campaigns.data.paeMission1
+import cm.aptoide.pt.campaigns.data.paeMission2
 import cm.aptoide.pt.campaigns.domain.PaEMission
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.drawables.icons.getAGAppIcon
@@ -55,7 +58,8 @@ import kotlinx.coroutines.delay
  */
 @Composable
 fun MissionCompletedOverlayView(
-  mission: PaEMission
+  mission: PaEMission,
+  nextMission: PaEMission? = null
 ) {
   var visible by remember { mutableStateOf(false) }
 
@@ -69,13 +73,14 @@ fun MissionCompletedOverlayView(
     enter = fadeIn(tween(400)) + scaleIn(tween(400)),
     exit = fadeOut(tween(400)) + scaleOut(tween(400))
   ) {
-    MissionCompletedOverlayViewContent(mission)
+    MissionCompletedOverlayViewContent(mission, nextMission)
   }
 }
 
 @Composable
 private fun MissionCompletedOverlayViewContent(
-  paEMission: PaEMission
+  paEMission: PaEMission,
+  nextMission: PaEMission?
 ) {
   var targetProgress by remember { mutableFloatStateOf(0f) }
 
@@ -157,6 +162,30 @@ private fun MissionCompletedOverlayViewContent(
           )
         }
       }
+
+      // Hackathon 2026 (T5): what to play for next. Absent on the game's last mission, which
+      // leaves the card as it always was.
+      if (nextMission != null) {
+        Column(
+          modifier = Modifier
+            .fillMaxWidth()
+            .background(Palette.Secondary.copy(alpha = 0.3f))
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+        ) {
+          Text(
+            text = stringResource(R.string.play_and_earn_mission_completed_next_title),
+            style = AGTypography.InputsXSRegular,
+            color = Palette.Primary
+          )
+          Text(
+            text = nextMission.title,
+            style = AGTypography.InputsXS,
+            color = FixedColors.White,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis
+          )
+        }
+      }
     }
   }
 }
@@ -165,4 +194,10 @@ private fun MissionCompletedOverlayViewContent(
 @Composable
 private fun MissionCompletedOverlayViewPreview() {
   MissionCompletedOverlayView(paeMission1)
+}
+
+@Preview
+@Composable
+private fun MissionCompletedOverlayViewNextMissionPreview() {
+  MissionCompletedOverlayView(paeMission1, paeMission2)
 }
