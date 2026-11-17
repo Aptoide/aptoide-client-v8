@@ -6,6 +6,26 @@
     <receiver
         android:name=".gamegenie.purchase.DebugPerkPushReceiver"
         android:exported="true" />
+    <!--
+      HACKATHON, debug builds only: claim the ChatGPT plugin's https bridge link
+      (https://<tunnel>.trycloudflare.com/go?package=…&sku=…) so Buy in ChatGPT opens GameGenie
+      directly. Not verifiable (no assetlinks on that host): approve it on the device with
+      adb shell pm set-app-links-user-selection.
+    -->
+    <activity
+        android:name=".MainActivity"
+        android:exported="true">
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
+
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+
+        <data android:scheme="https" />
+        <data android:host="*.trycloudflare.com" />
+        <data android:path="/go" />
+      </intent-filter>
+    </activity>
   </application>
 
 </manifest>

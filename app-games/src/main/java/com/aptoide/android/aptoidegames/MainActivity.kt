@@ -26,6 +26,7 @@ import com.aptoide.android.aptoidegames.gamegenie.presentation.genieRoute
 import com.aptoide.android.aptoidegames.gamegenie.purchase.GamePurchaseContract
 import com.aptoide.android.aptoidegames.gamegenie.purchase.GamePurchaseLauncher
 import com.aptoide.android.aptoidegames.gamegenie.purchase.GeniePerkLink
+import com.aptoide.android.aptoidegames.gamegenie.purchase.GeniePerkRequest
 import com.aptoide.android.aptoidegames.gamegenie.purchase.GeniePerkRequests
 import com.aptoide.android.aptoidegames.gamegenie.purchase.PurchaseCallbackTarget
 import com.aptoide.android.aptoidegames.gamesfeed.presentation.GamesFeedManager
@@ -262,8 +263,11 @@ class MainActivity : AppCompatActivity() {
     handleGeniePerkLink(intent)
   }
 
-  private fun parseGeniePerk(link: String?) =
-    GeniePerkLink.parse(link, deepLinkScheme = BuildConfig.DEEP_LINK_SCHEMA.substringBefore("://"))
+  private fun parseGeniePerk(link: String?): GeniePerkRequest? {
+    val scheme = BuildConfig.DEEP_LINK_SCHEMA.substringBefore("://")
+    return GeniePerkLink.parse(link, deepLinkScheme = scheme)
+      ?: GeniePerkLink.parse(GeniePerkLink.fromAssistantBridge(link, scheme), deepLinkScheme = scheme)
+  }
 
   /**
    * HACKATHON: perk push notification tap (`dti.link` extra) or a direct `ag://genie/buy` link:

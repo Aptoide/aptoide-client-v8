@@ -65,6 +65,19 @@ object GeniePerkLink {
     )
   }
 
+  /**
+   * HACKATHON: the ChatGPT plugin's https bridge link (`https://<host>.trycloudflare.com/go?…`).
+   * The debug build claims it as an app link, so Buy in ChatGPT opens Genie directly, skipping
+   * the bridge page. Maps it to the `ag://genie/buy` form; package and sku are still checked
+   * against the catalogue by [parse].
+   */
+  fun fromAssistantBridge(link: String?, scheme: String): String? {
+    val uri = link?.let { runCatching { URI(it.trim()) }.getOrNull() } ?: return null
+    if (uri.scheme != "https" || uri.path != "/go") return null
+    if (uri.host?.endsWith(".trycloudflare.com") != true) return null
+    return "$scheme://$HOST$PATH?${uri.rawQuery.orEmpty()}"
+  }
+
   /** The first Genie line of a perk flow. */
   fun introMessage(request: GeniePerkRequest): String = if (request.fromAssistant) {
     // For an assistant hand-off the text is the assistant's reason, not a perk.

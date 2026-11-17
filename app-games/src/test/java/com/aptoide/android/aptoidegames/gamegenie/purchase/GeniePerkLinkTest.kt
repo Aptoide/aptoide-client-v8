@@ -100,4 +100,18 @@ internal class GeniePerkLinkTest {
       request?.let(GeniePerkLink::introMessage),
     )
   }
+
+  @Test
+  fun `the assistant bridge link maps to a genie buy link`() {
+    val link = GeniePerkLink.fromAssistantBridge(
+      "https://todd-los.trycloudflare.com/go?package=com.aptoide.diceroll.sdk.dev&sku=attempts01" +
+        "&perk=best+pick+under+%E2%82%AC5&via=assistant&redirectUrl=https%3A%2F%2Fchatgpt.com",
+      "ag",
+    )
+    val request = GeniePerkLink.parse(link, "ag")
+    assertEquals("attempts01", request?.item?.sku)
+    assertEquals(true, request?.fromAssistant)
+    assertNull(GeniePerkLink.fromAssistantBridge("https://evil.example.com/go?package=x", "ag"))
+    assertNull(GeniePerkLink.fromAssistantBridge("http://a.trycloudflare.com/go?package=x", "ag"))
+  }
 }
