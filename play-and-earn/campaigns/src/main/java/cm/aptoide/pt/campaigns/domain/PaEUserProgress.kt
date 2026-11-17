@@ -9,6 +9,19 @@ data class PaEUserProgress(
   val lifetimeUnits: Long,
   val missions: List<PaEUserMission>,
   val streaks: List<PaEGameStreak>,
+  // Only the games whose missions have paid the player something.
+  val gameUnits: List<PaEGameUnits> = emptyList(),
+)
+
+/**
+ * The Units one game's own missions (not its streak) have paid the player: this week, this month
+ * and ever. What a per-game leaderboard ranks them by.
+ */
+data class PaEGameUnits(
+  val packageName: String,
+  val week: Long,
+  val month: Long,
+  val allTime: Long,
 )
 
 /** A mission that belongs to the player and starts again every week or month. */

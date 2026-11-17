@@ -145,15 +145,16 @@ private fun MyProgressContent(
 
   var view by rememberSaveable { mutableStateOf(ProgressView.MISSIONS) }
   var period by rememberSaveable { mutableStateOf(LeaderboardPeriod.WEEK) }
-  val me = stringResource(R.string.play_and_earn_progress_leaderboard_you)
-  // The chosen game's ranking, while the Leaderboard view is showing. Demo data for now: the
-  // players are made up, and the player climbs by what they claim from the game's missions.
+  val myName = stringResource(R.string.play_and_earn_progress_leaderboard_you)
+  // The chosen game's ranking, while the Leaderboard view is showing. The other players are demo
+  // data for now; the player is ranked by what the game's missions really paid them in the
+  // period, and is not in it when that is nothing.
   val board = if (SHOW_DEMO_DATA && game != null && view == ProgressView.LEADERBOARD) {
-    remember(game, period, state.claimed, me) {
+    remember(game, period, state.claimed, myName) {
       leaderboardView(
         others = demoLeaderboardPlayers(game.packageName, period),
-        myUnits = leaderboardUnits(game, state.claimed, base = demoMyBaseUnits(period)),
-        myName = me,
+        myUnits = leaderboardUnits(game, period, state.claimed),
+        myName = myName,
       )
     }
   } else {
@@ -193,7 +194,7 @@ private fun MyProgressContent(
           .fillMaxSize()
           .verticalScroll(rememberScrollState())
           .padding(
-            bottom = if (board?.isMeInTop == false) PinnedLeaderboardRowHeight else 32.dp
+            bottom = if (board?.isMeBelowTop == true) PinnedLeaderboardRowHeight else 32.dp
           ),
       ) {
         Text(
@@ -245,8 +246,10 @@ private fun MyProgressContent(
       }
     }
 
-    if (board?.isMeInTop == false) {
-      PinnedLeaderboardRow(board = board, modifier = Modifier.align(Alignment.BottomCenter))
+    val me = board?.me
+    val tip = board?.tip
+    if (board?.isMeBelowTop == true && me != null && tip != null) {
+      PinnedLeaderboardRow(me = me, tip = tip, modifier = Modifier.align(Alignment.BottomCenter))
     }
 
     val from = flight?.from

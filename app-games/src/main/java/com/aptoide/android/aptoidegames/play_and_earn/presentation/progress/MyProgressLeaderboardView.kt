@@ -137,7 +137,8 @@ internal fun LeaderboardContent(
   ) {
     board.rows.forEach { LeaderboardRow(it) }
   }
-  if (board.isMeInTop) Note(tipText(board.tip))
+  // In the top ten the player's row is one of those above: the tip goes right under them.
+  board.tip?.takeIf { !board.isMeBelowTop }?.let { Note(tipText(it)) }
   Note(stringResource(R.string.play_and_earn_progress_leaderboard_note))
 }
 
@@ -147,7 +148,8 @@ internal fun LeaderboardContent(
  */
 @Composable
 internal fun PinnedLeaderboardRow(
-  board: LeaderboardView,
+  me: RankedPlayer,
+  tip: LeaderboardTip,
   modifier: Modifier = Modifier,
 ) {
   Column(
@@ -164,9 +166,9 @@ internal fun PinnedLeaderboardRow(
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.spacedBy(8.dp),
   ) {
-    LeaderboardRow(board.me)
+    LeaderboardRow(me)
     Text(
-      text = tipText(board.tip),
+      text = tipText(tip),
       style = AGTypography.InputsS,
       color = Palette.GreyLight,
       textAlign = TextAlign.Center,

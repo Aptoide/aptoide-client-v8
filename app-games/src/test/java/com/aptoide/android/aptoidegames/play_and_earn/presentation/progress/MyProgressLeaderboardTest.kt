@@ -4,6 +4,7 @@ import cm.aptoide.pt.campaigns.domain.PaEMissionProgressType
 import cm.aptoide.pt.test.gherkin.scenario
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
@@ -39,9 +40,9 @@ internal class MyProgressLeaderboardTest {
     val view = board(myUnits = 340)
 
     m Then "they are 18th, outside the top, and told what the tenth has more than them"
-    assertEquals(18, view.me.rank)
-    assertTrue(view.me.player.isMe)
-    assertFalse(view.isMeInTop)
+    assertEquals(18, view.me?.rank)
+    assertTrue(view.me?.player?.isMe == true)
+    assertTrue(view.isMeBelowTop)
     // The tenth has 1100: one more than that puts the player in.
     assertEquals(LeaderboardTip.ReachTop(units = 1100 - 340 + 1), view.tip)
   }
@@ -53,8 +54,8 @@ internal class MyProgressLeaderboardTest {
     val view = board(myUnits = 1450)
 
     m Then "they are 7th, one of the listed rows, and told how far the 6th is"
-    assertEquals(7, view.me.rank)
-    assertTrue(view.isMeInTop)
+    assertEquals(7, view.me?.rank)
+    assertFalse(view.isMeBelowTop)
     assertEquals(view.me, view.rows.single { it.player.isMe })
     assertEquals(7, view.rows.size)
     assertEquals(LeaderboardTip.ReachRank(units = 1500 - 1450 + 1, rank = 6), view.tip)
@@ -67,7 +68,7 @@ internal class MyProgressLeaderboardTest {
     val view = board(myUnits = 1950)
 
     m Then "they are second on the podium and told how far first place is"
-    assertEquals(2, view.me.rank)
+    assertEquals(2, view.me?.rank)
     assertTrue(view.podium[1].player.isMe)
     assertEquals(LeaderboardTip.ReachRank(units = 51, rank = 1), view.tip)
   }
@@ -79,7 +80,7 @@ internal class MyProgressLeaderboardTest {
     val view = board(myUnits = 5000)
 
     m Then "they are first and there is nothing left to reach"
-    assertEquals(1, view.me.rank)
+    assertEquals(1, view.me?.rank)
     assertEquals(LeaderboardTip.First, view.tip)
   }
 
@@ -90,31 +91,87 @@ internal class MyProgressLeaderboardTest {
     val view = board(myUnits = 1600)
 
     m Then "they take fifth place, so earning one more than the next player always passes them"
-    assertEquals(5, view.me.rank)
+    assertEquals(5, view.me?.rank)
     assertEquals("P5", view.rows[2].player.name)
   }
 
   @Test
-  fun `Claiming a game's missions moves the player up that game's leaderboard`() = scenario {
-    m Given "a game with two completed missions of 100 and 150 Units and one in progress"
-    fun card(id: String, units: Int, completed: Boolean) = MissionCard(
-      id = id, kind = MissionKind.PLAY_TIME, title = id, description = null, units = units,
-      current = if (completed) 1 else 0, target = 1, unit = PaEMissionProgressType.COUNT,
-      completed = completed,
-    )
-    val game = GameProgress(
-      packageName = "com.dice",
-      name = "Dice Roll",
-      icon = null,
-      streak = GameWeekStreak(daysPlayed = 0, playedToday = false, rewards = emptyMap()),
-      missions = listOf(card("a", 100, true), card("b", 150, true), card("c", 500, false)),
+  fun `A player the game has paid nothing is not in its leaderboard`() = scenario {
+    m Given "a player with no Units from this game in the period"
+    m When "the leaderboard is laid out"
+    val view = board(myUnits = 0)
+
+    m Then "the top ten are the other players, with no row and no tip for the player"
+    assertNull(view.me)
+    assertNull(view.tip)
+    assertFalse(view.isMeBelowTop)
+    assertEquals(listOf("P1", "P2", "P3"), view.podium.map { it.player.name })
+    assertEquals((4..10).toList(), view.rows.map { it.rank })
+    assertTrue((view.podium + view.rows).none { it.player.isMe })
+  }
+
+  private fun card(id: String, units: Int, completed: Boolean) = MissionCard(
+    id = id, kind = MissionKind.PLAY_TIME, title = id, description = null, units = units,
+    current = if (completed) 1 else 0, target = 1, unit = PaEMissionProgressType.COUNT,
+    completed = completed,
+  )
+
+  private fun game(
+    units: Map<LeaderboardPeriod, Long>,
+    vararg cards: MissionCard,
+    isDemo: Boolean = false,
+  ) = GameProgress(
+    packageName = "com.dice",
+    name = "Dice Roll",
+    icon = null,
+    streak = GameWeekStreak(daysPlayed = 0, playedToday = false, rewards = emptyMap()),
+    missions = cards.toList(),
+    isDemo = isDemo,
+    unitsEarned = units,
+  )
+
+  @Test
+  fun `The player is ranked by what the game paid them in the chosen period`() = scenario {
+    m Given "a game that paid 40 Units this week and 1018 ever, with a claimed mission of 150"
+    val dice = game(
+      mapOf(LeaderboardPeriod.WEEK to 40L, LeaderboardPeriod.ALL_TIME to 1018L),
+      card("a", 150, completed = true),
     )
 
+    m When "the Units are read for each period"
+    m Then "each period has its own amount, none where nothing was paid, claims adding nothing"
+    assertEquals(40L, leaderboardUnits(dice, LeaderboardPeriod.WEEK, setOf("a")))
+    assertEquals(0L, leaderboardUnits(dice, LeaderboardPeriod.MONTH, setOf("a")))
+    assertEquals(1018L, leaderboardUnits(dice, LeaderboardPeriod.ALL_TIME, setOf("a")))
+  }
+
+  @Test
+  fun `Two games rank the player by their own Units`() = scenario {
+    m Given "one game that paid the player this week and one that did not"
+    val paid = game(mapOf(LeaderboardPeriod.WEEK to 1450L))
+    val unpaid = game(emptyMap())
+
+    m When "each leaderboard is laid out for this week"
+    val first = board(leaderboardUnits(paid, LeaderboardPeriod.WEEK, emptySet()))
+    val second = board(leaderboardUnits(unpaid, LeaderboardPeriod.WEEK, emptySet()))
+
+    m Then "the player is 7th in one and absent from the other"
+    assertEquals(7, first.me?.rank)
+    assertNull(second.me)
+  }
+
+  @Test
+  fun `In the demo game, claiming a mission moves the player up`() = scenario {
+    m Given "the demo game with 340 Units this week and two completed demo missions"
+    val a = card("${DEMO_ID_PREFIX}a", 100, completed = true)
+    val b = card("${DEMO_ID_PREFIX}b", 150, completed = true)
+    val demo = game(mapOf(LeaderboardPeriod.WEEK to 340L), a, b, isDemo = true)
+
     m When "nothing is claimed, then one, then both"
-    m Then "only what was claimed is added to what the player had"
-    assertEquals(340L, leaderboardUnits(game, emptySet(), base = 340))
-    assertEquals(440L, leaderboardUnits(game, setOf("a"), base = 340))
-    assertEquals(590L, leaderboardUnits(game, setOf("a", "b", "c"), base = 340))
-    assertTrue(board(590).me.rank < board(340).me.rank)
+    m Then "what is claimed is added, and the rank improves"
+    assertEquals(340L, leaderboardUnits(demo, LeaderboardPeriod.WEEK, emptySet()))
+    assertEquals(440L, leaderboardUnits(demo, LeaderboardPeriod.WEEK, setOf(a.id)))
+    assertEquals(590L, leaderboardUnits(demo, LeaderboardPeriod.WEEK, setOf(a.id, b.id)))
+    assertTrue(board(590).me!!.rank < board(340).me!!.rank)
   }
 }

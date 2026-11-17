@@ -10,6 +10,17 @@ internal data class PaEUserProgressJson(
   @SerializedName("lifetime_units") val lifetimeUnits: Long?,
   val missions: List<PaEUserMissionJson>?,
   val streaks: List<PaEGameStreakJson>?,
+  // Absent on a backend that predates it: no game then has Units to rank the player by.
+  val games: List<PaEGameUnitsJson>? = null,
+)
+
+// The Units a game's own missions have paid the player.
+@Keep
+internal data class PaEGameUnitsJson(
+  @SerializedName("package") val packageName: String?,
+  @SerializedName("units_week") val unitsWeek: Long?,
+  @SerializedName("units_month") val unitsMonth: Long?,
+  @SerializedName("units_all_time") val unitsAllTime: Long?,
 )
 
 @Keep

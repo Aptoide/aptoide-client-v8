@@ -158,6 +158,15 @@ class MyProgressViewModel @Inject constructor(
         todayIndex = LocalDate.now().dayOfWeek.value - 1,
       ),
       missions = missions.mapNotNull { it.toCard(packageName) },
+      unitsEarned = progress.gameUnits.find { it.packageName == packageName }
+        ?.let {
+          mapOf(
+            LeaderboardPeriod.WEEK to it.week,
+            LeaderboardPeriod.MONTH to it.month,
+            LeaderboardPeriod.ALL_TIME to it.allTime,
+          )
+        }
+        .orEmpty(),
     )
   }
 }

@@ -106,6 +106,8 @@ data class GameProgress(
   val iconRes: Int? = null,
   // Demo data (Hackathon 2026): the game has no campaign on the server.
   val isDemo: Boolean = false,
+  // What the game's own missions have paid the player, per leaderboard period.
+  val unitsEarned: Map<LeaderboardPeriod, Long> = emptyMap(),
 )
 
 enum class StreakTileState { PLAYED, TODAY, UPCOMING }

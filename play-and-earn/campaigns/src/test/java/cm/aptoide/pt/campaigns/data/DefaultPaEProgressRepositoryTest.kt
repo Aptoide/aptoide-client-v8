@@ -1,6 +1,7 @@
 package cm.aptoide.pt.campaigns.data
 
 import cm.aptoide.pt.campaigns.data.model.PaEGameStreakJson
+import cm.aptoide.pt.campaigns.data.model.PaEGameUnitsJson
 import cm.aptoide.pt.campaigns.data.model.PaELeaderboardEntryJson
 import cm.aptoide.pt.campaigns.data.model.PaELeaderboardJson
 import cm.aptoide.pt.campaigns.data.model.PaEUserMissionJson
@@ -219,6 +220,28 @@ internal class DefaultPaEProgressRepositoryTest {
   }
 
   @Test
+  fun `the units each game has paid are read per period`() = coScenario {
+    m Given "a game that paid 40 this week, 190 this month and 1018 ever, and one with no package"
+    val api = FakeApi(
+      progress = progressJson().copy(
+        games = listOf(
+          PaEGameUnitsJson("com.dice", unitsWeek = 40, unitsMonth = 190, unitsAllTime = 1018),
+          PaEGameUnitsJson(" ", unitsWeek = 5, unitsMonth = 5, unitsAllTime = 5),
+          PaEGameUnitsJson("com.legends", unitsWeek = null, unitsMonth = null, unitsAllTime = 75),
+        )
+      )
+    )
+
+    m When "the progress is loaded"
+    val units = repository(api).getMyProgress().getOrThrow().gameUnits
+
+    m Then "each known game has its three amounts, a missing one being zero"
+    assertEquals(listOf("com.dice", "com.legends"), units.map { it.packageName })
+    assertEquals(listOf(40L, 190L, 1018L), units[0].let { listOf(it.week, it.month, it.allTime) })
+    assertEquals(listOf(0L, 0L, 75L), units[1].let { listOf(it.week, it.month, it.allTime) })
+  }
+
+  @Test
   fun `an empty or absent answer is an empty progress`() = coScenario {
     m Given "a backend that sends no lists and no totals"
     val api = FakeApi(progress = PaEUserProgressJson(null, null, null, null))
@@ -231,6 +254,7 @@ internal class DefaultPaEProgressRepositoryTest {
     assertEquals(0L, progress.lifetimeUnits)
     assertTrue(progress.missions.isEmpty())
     assertTrue(progress.streaks.isEmpty())
+    assertTrue(progress.gameUnits.isEmpty())
   }
 
   @Test

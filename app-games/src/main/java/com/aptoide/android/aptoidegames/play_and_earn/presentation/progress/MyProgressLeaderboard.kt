@@ -31,22 +31,23 @@ private const val PODIUM = 3
 
 /**
  * A game's leaderboard as the screen lays it out: the top three on a podium, the rest of the top
- * ten in a list, and the player's own place. Inside the top ten their row is one of those; below
- * it, it is shown apart, pinned under the list.
+ * ten in a list, and the player's own place when they have one. Inside the top ten their row is
+ * one of those; below it, it is shown apart, pinned under the list. [me] and [tip] are null for a
+ * player the game's missions have paid nothing in the period: they are not in its ranking.
  */
 data class LeaderboardView(
   val podium: List<RankedPlayer>,
   val rows: List<RankedPlayer>,
-  val me: RankedPlayer,
-  val tip: LeaderboardTip,
+  val me: RankedPlayer?,
+  val tip: LeaderboardTip?,
 ) {
-  val isMeInTop: Boolean get() = me.rank <= LEADERBOARD_TOP
+  val isMeBelowTop: Boolean get() = me != null && me.rank > LEADERBOARD_TOP
 }
 
 /**
- * Ranks the player among [others] by their [myUnits]. A tie goes to the player: they are placed
- * above whoever has the same Units, so earning one more than the next player is always enough
- * to pass them, which is what the tip promises.
+ * Ranks the player among [others] by their [myUnits]; with no Units they are left out. A tie
+ * goes to the player: they are placed above whoever has the same Units, so earning one more
+ * than the next player is always enough to pass them, which is what the tip promises.
  */
 internal fun leaderboardView(
   others: List<LeaderboardPlayer>,
@@ -55,6 +56,15 @@ internal fun leaderboardView(
   myColor: Int = 0,
 ): LeaderboardView {
   val sorted = others.sortedByDescending { it.units }
+  if (myUnits <= 0) {
+    val all = sorted.mapIndexed { index, player -> RankedPlayer(index + 1, player) }
+    return LeaderboardView(
+      podium = all.take(PODIUM),
+      rows = all.drop(PODIUM).take(LEADERBOARD_TOP - PODIUM),
+      me = null,
+      tip = null,
+    )
+  }
   val rank = 1 + sorted.count { it.units > myUnits }
   val all = sorted.toMutableList()
     .apply { add(rank - 1, LeaderboardPlayer(myName, myUnits, myColor, isMe = true)) }
@@ -78,13 +88,18 @@ internal fun leaderboardView(
 }
 
 /**
- * The Units that count for the player in a game's leaderboard: what they claimed from that
- * game's missions, on top of [base] (what they are taken to have earned before).
+ * The Units the player is ranked by in a game's leaderboard for [period]: what that game's own
+ * missions paid them in it, as the server says. The demo game was never paid by the server, so
+ * what is claimed from it on screen is added, which lets the demo show the climb.
  */
 internal fun leaderboardUnits(
   game: GameProgress,
+  period: LeaderboardPeriod,
   claimed: Set<String>,
-  base: Long,
-): Long = base + game.missions
-  .filter { it.state(claimed) == CardState.CLAIMED }
-  .sumOf { it.units.toLong() }
+): Long {
+  val earned = game.unitsEarned[period] ?: 0
+  val demoClaimed = game.missions
+    .filter { it.isDemo && it.state(claimed) == CardState.CLAIMED }
+    .sumOf { it.units.toLong() }
+  return earned + demoClaimed
+}

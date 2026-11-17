@@ -6,6 +6,7 @@ import cm.aptoide.pt.campaigns.data.model.PaELeaderboardJson
 import cm.aptoide.pt.campaigns.data.model.PaEUserMissionJson
 import cm.aptoide.pt.campaigns.data.model.PaEUserProgressJson
 import cm.aptoide.pt.campaigns.domain.PaEGameStreak
+import cm.aptoide.pt.campaigns.domain.PaEGameUnits
 import cm.aptoide.pt.campaigns.domain.PaELeaderboard
 import cm.aptoide.pt.campaigns.domain.PaELeaderboardEntry
 import cm.aptoide.pt.campaigns.domain.PaEMissionPeriod
@@ -51,6 +52,15 @@ private fun PaEUserProgressJson.toDomainModel() = PaEUserProgress(
   lifetimeUnits = lifetimeUnits ?: 0L,
   missions = missions.orEmpty().mapNotNull(PaEUserMissionJson::toDomainModel),
   streaks = streaks.orEmpty().mapNotNull(PaEGameStreakJson::toDomainModel),
+  gameUnits = games.orEmpty().mapNotNull { game ->
+    val packageName = game.packageName?.takeIf { it.isNotBlank() } ?: return@mapNotNull null
+    PaEGameUnits(
+      packageName = packageName,
+      week = game.unitsWeek ?: 0,
+      month = game.unitsMonth ?: 0,
+      allTime = game.unitsAllTime ?: 0,
+    )
+  },
 )
 
 // A mission this app can't present (no title, a type or a goal it doesn't know) is left out, so a

@@ -46,22 +46,26 @@ internal class MyProgressDemoDataTest {
   }
 
   @Test
-  fun `The player starts below the top ten and climbs by claiming`() = scenario {
+  fun `In Duck Survival the player starts below the top ten and climbs by claiming`() = scenario {
     m Given "Duck Survival this week, where the player has earned 340 Units before"
     val duck = demoDuckSurvival()
     val players = demoLeaderboardPlayers(duck.packageName, LeaderboardPeriod.WEEK)
-    val base = demoMyBaseUnits(LeaderboardPeriod.WEEK)
 
     m When "nothing is claimed, and then the two ready missions are"
-    val before = leaderboardView(players, leaderboardUnits(duck, emptySet(), base), "You")
+    val before = leaderboardView(
+      players, leaderboardUnits(duck, LeaderboardPeriod.WEEK, emptySet()), "You",
+    )
     val claimed = duck.missions.filter { it.completed }.map { it.id }.toSet()
-    val after = leaderboardView(players, leaderboardUnits(duck, claimed, base), "You")
+    val after = leaderboardView(
+      players, leaderboardUnits(duck, LeaderboardPeriod.WEEK, claimed), "You",
+    )
 
     m Then "they start outside the top ten with their own row, and end higher up"
-    assertFalse(before.isMeInTop)
-    assertEquals(340L, before.me.player.units)
-    assertEquals(540L, after.me.player.units)
-    assertTrue(after.me.rank < before.me.rank)
+    assertTrue(before.isMeBelowTop)
+    assertEquals(340L, before.me?.player?.units)
+    assertEquals(540L, after.me?.player?.units)
+    assertTrue(after.me!!.rank < before.me!!.rank)
+    assertEquals(LeaderboardPeriod.entries.toSet(), duck.unitsEarned.keys)
   }
 
   @Test

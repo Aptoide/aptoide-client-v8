@@ -30,6 +30,12 @@ internal fun demoDuckSurvival() = GameProgress(
   icon = null,
   iconRes = R.drawable.pae_demo_duck_logo,
   isDemo = true,
+  // What the player has earned from its missions before, so they start below the top ten.
+  unitsEarned = mapOf(
+    LeaderboardPeriod.WEEK to 340L,
+    LeaderboardPeriod.MONTH to 1150L,
+    LeaderboardPeriod.ALL_TIME to 2900L,
+  ),
   // Three days played: today is day 4.
   streak = GameWeekStreak(
     daysPlayed = 3,
@@ -140,16 +146,6 @@ private fun topUnits(period: LeaderboardPeriod): Double = when (period) {
   LeaderboardPeriod.WEEK -> 3200.0
   LeaderboardPeriod.MONTH -> 9800.0
   LeaderboardPeriod.ALL_TIME -> 34000.0
-}
-
-/**
- * What the player is taken to have earned from a game's missions before today, so they start
- * somewhere down the ranking and climb as they claim.
- */
-internal fun demoMyBaseUnits(period: LeaderboardPeriod): Long = when (period) {
-  LeaderboardPeriod.WEEK -> 340
-  LeaderboardPeriod.MONTH -> 1150
-  LeaderboardPeriod.ALL_TIME -> 2900
 }
 
 /**
