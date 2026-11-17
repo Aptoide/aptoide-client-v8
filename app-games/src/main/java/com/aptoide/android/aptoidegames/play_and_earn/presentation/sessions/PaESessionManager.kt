@@ -8,6 +8,7 @@ import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPreferencesReposit
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.CompletedMissionEvent
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaEMissionConfirmations
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaESession
+import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.nextMission
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.PaEAnalytics
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.missions.PaEMissionManager
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -91,7 +92,8 @@ class PaESessionManager @Inject constructor(
     ).fold(
       onSuccess = { syncResult ->
         updateSessionAfterSync(session, syncResult)
-        processCompletedMissions(session, syncResult)
+        // Play time is not tracked in this mode, so a time mission is never the "next" one.
+        processCompletedMissions(session, syncResult, timeMissionsCanProgress = false)
         true
       },
       onFailure = { exception ->
@@ -177,7 +179,7 @@ class PaESessionManager @Inject constructor(
     ).fold(
       onSuccess = { syncResult ->
         updateSessionAfterSync(session, syncResult)
-        processCompletedMissions(session, syncResult)
+        processCompletedMissions(session, syncResult, timeMissionsCanProgress = true)
         false  // Session is healthy, don't remove
       },
       onFailure = { exception ->
@@ -203,15 +205,24 @@ class PaESessionManager @Inject constructor(
 
   private suspend fun processCompletedMissions(
     session: PaESession,
-    syncResult: SessionInfo
+    syncResult: SessionInfo,
+    timeMissionsCanProgress: Boolean
   ) {
-    PaEMissionConfirmations.from(
+    val confirmedMissions = PaEMissionConfirmations.from(
       events = syncResult.events,
       packageName = session.packageName,
       missions = session.missions,
       alreadyConfirmed = session.completedMissions,
-    ).forEach { completedMission ->
-      session.completedMissions.add(completedMission.title)
+    )
+    // All of them at once, before picking the next mission: two missions confirmed by the same
+    // heartbeat must not announce each other as "next".
+    session.completedMissions.addAll(confirmedMissions.map { it.title })
+    val nextMission = session.missions.nextMission(
+      completedTitles = session.completedMissions,
+      includeTimeBased = timeMissionsCanProgress
+    )
+
+    confirmedMissions.forEach { completedMission ->
       session.pendingServerConfirmationMissions.remove(completedMission.title)
 
       // Mark mission as completed in local DB
@@ -225,7 +236,8 @@ class PaESessionManager @Inject constructor(
       _completedMissions.emit(
         CompletedMissionEvent(
           mission = completedMission,
-          packageName = session.packageName
+          packageName = session.packageName,
+          nextMission = nextMission
         )
       )
     }

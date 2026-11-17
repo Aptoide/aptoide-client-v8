@@ -32,10 +32,11 @@ class PaEOverlayViewManager @Inject constructor(
   /** The mission-completed card over the game, for players who allowed drawing over apps. */
   suspend fun showMissionCompletedOverlayView(
     mission: PaEMission,
+    nextMission: PaEMission?,
     lifecycleOwner: LifecycleOwner,
     savedStateRegistryOwner: SavedStateRegistryOwner
   ) = show(
-    getMissionCompletedOverlayView(context, mission),
+    getMissionCompletedOverlayView(context, mission, nextMission),
     lifecycleOwner,
     savedStateRegistryOwner
   )
@@ -99,9 +100,12 @@ fun getWelcomeBackView(context: Context): View = ComposeView(context).apply {
   }
 }
 
-fun getMissionCompletedOverlayView(context: Context, mission: PaEMission): View =
-  ComposeView(context).apply {
-    setContent {
-      MissionCompletedOverlayView(mission)
-    }
+fun getMissionCompletedOverlayView(
+  context: Context,
+  mission: PaEMission,
+  nextMission: PaEMission? = null
+): View = ComposeView(context).apply {
+  setContent {
+    MissionCompletedOverlayView(mission, nextMission)
   }
+}
