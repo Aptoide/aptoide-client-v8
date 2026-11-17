@@ -1,26 +1,48 @@
 package com.aptoide.android.aptoidegames.play_and_earn.presentation.progress
 
+import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.layout.LayoutCoordinates
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInWindow
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -28,22 +50,24 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.campaigns.domain.PaELeaderboard
 import cm.aptoide.pt.campaigns.domain.PaELeaderboardEntry
-import cm.aptoide.pt.campaigns.domain.PaEMissionPeriod
 import cm.aptoide.pt.campaigns.domain.PaEMissionProgressType
-import cm.aptoide.pt.campaigns.domain.PaEUserMission
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.ScreenData
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
+import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getSmallCoinIcon
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.overlays.BALANCE_COUNT_MILLIS
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.overlays.CLAIM_COINS
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.overlays.COINS_FLIGHT_MILLIS
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.overlays.FlyingCoin
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
-import java.time.DayOfWeek
-import java.time.format.TextStyle
+import kotlinx.coroutines.delay
 import java.util.Locale
 
 const val myProgressRoute = "myProgress"
@@ -52,16 +76,22 @@ fun myProgressScreen() = ScreenData.withAnalytics(
   route = myProgressRoute,
   screenAnalyticsName = "MyProgress",
 ) { _, _, navigateBack ->
+  val (uiState, claim) = rememberMyProgress()
   MyProgressScreen(
-    uiState = rememberMyProgressUiState(),
+    uiState = uiState,
     navigateBack = navigateBack,
+    onClaim = claim,
   )
 }
+
+private val CardShape = RoundedCornerShape(14.dp)
+private val TileShape = RoundedCornerShape(12.dp)
 
 @Composable
 fun MyProgressScreen(
   uiState: MyProgressUiState,
   navigateBack: () -> Unit,
+  onClaim: (String) -> Unit = {},
 ) {
   Column(modifier = Modifier.fillMaxSize()) {
     AppGamesTopBar(
@@ -78,264 +108,571 @@ fun MyProgressScreen(
 
       is MyProgressUiState.Error -> GenericErrorView(onRetryClick = uiState.retry)
 
-      is MyProgressUiState.Idle -> MyProgressContent(uiState)
+      is MyProgressUiState.Idle -> MyProgressContent(state = uiState, onClaim = onClaim)
     }
   }
 }
 
+/** A Claim in flight: the coins are on their way from the button to the balance. */
+private data class ClaimFlight(val id: String, val from: Offset)
+
+private fun LayoutCoordinates.centerInWindow(): Offset =
+  positionInWindow() + Offset(size.width / 2f, size.height / 2f)
+
 @Composable
-private fun MyProgressContent(state: MyProgressUiState.Idle) {
-  Column(
+private fun MyProgressContent(
+  state: MyProgressUiState.Idle,
+  onClaim: (String) -> Unit,
+) {
+  var selected by rememberSaveable { mutableStateOf<String?>(null) }
+  val game = state.games.find { it.packageName == selected }
+    ?: state.games.find { it.packageName == defaultGame(state.games, state.claimed) }
+
+  var origin by remember { mutableStateOf(Offset.Zero) }
+  var balanceCenter by remember { mutableStateOf<Offset?>(null) }
+  var flight by remember { mutableStateOf<ClaimFlight?>(null) }
+
+  // The reward only counts as collected once the coins have landed, as in the prototype.
+  LaunchedEffect(flight) {
+    flight?.let {
+      delay(COINS_FLIGHT_MILLIS.toLong())
+      onClaim(it.id)
+      flight = null
+    }
+  }
+  val claim: (String, Offset) -> Unit = { id, from ->
+    if (flight == null) {
+      if (balanceCenter == null) onClaim(id) else flight = ClaimFlight(id, from)
+    }
+  }
+
+  Box(
     modifier = Modifier
       .fillMaxSize()
-      .verticalScroll(rememberScrollState())
-      .padding(horizontal = 16.dp)
-      .padding(bottom = 32.dp),
-    verticalArrangement = Arrangement.spacedBy(24.dp),
+      .onGloballyPositioned { origin = it.positionInWindow() }
   ) {
-    TotalsRow(
-      lifetimePlaySeconds = state.lifetimePlaySeconds,
-      lifetimeUnits = state.lifetimeUnits,
-    )
-
-    Section(title = stringResource(R.string.play_and_earn_progress_missions_title)) {
-      if (state.missions.isEmpty()) {
-        EmptyText(stringResource(R.string.play_and_earn_progress_missions_empty))
-      } else {
-        state.missions.forEach { MissionItem(it) }
+    Column(modifier = Modifier.fillMaxSize()) {
+      TitleRow(
+        balance = shownBalance(state.walletBalance, state.allCards, state.claimed),
+        onCoinPositioned = { balanceCenter = it.centerInWindow() },
+      )
+      Column(
+        modifier = Modifier
+          .fillMaxSize()
+          .verticalScroll(rememberScrollState())
+          .padding(bottom = 32.dp),
+      ) {
+        Text(
+          text = stringResource(
+            if (state.games.isEmpty()) {
+              R.string.play_and_earn_progress_games_empty
+            } else {
+              R.string.play_and_earn_progress_games_hint
+            }
+          ),
+          style = AGTypography.InputsS,
+          color = Palette.GreyLight,
+          modifier = Modifier.padding(horizontal = 16.dp),
+        )
+        if (state.games.isNotEmpty()) {
+          GameSelector(
+            games = state.games,
+            selected = game?.packageName,
+            claimed = state.claimed,
+            onSelect = { selected = it },
+          )
+        }
+        game?.let {
+          StreakCard(streak = it.streak)
+          GameMissions(game = it, claimed = state.claimed, onClaim = claim)
+        }
+        state.leaderboard?.let { leaderboard ->
+          SectionHeader(title = stringResource(R.string.play_and_earn_progress_leaderboard_title))
+          LeaderboardList(leaderboard)
+        }
+        SectionHeader(title = stringResource(R.string.play_and_earn_progress_totals_title))
+        TotalsRow(
+          lifetimePlaySeconds = state.lifetimePlaySeconds,
+          lifetimeUnits = state.lifetimeUnits,
+        )
       }
     }
 
-    Section(title = stringResource(R.string.play_and_earn_progress_streaks_title)) {
-      if (state.streaks.isEmpty()) {
-        EmptyText(stringResource(R.string.play_and_earn_progress_streaks_empty))
-      } else {
-        state.streaks.forEach { StreakItem(it) }
-      }
-    }
-
-    state.leaderboard?.let { leaderboard ->
-      Section(title = stringResource(R.string.play_and_earn_progress_leaderboard_title)) {
-        LeaderboardList(leaderboard)
+    val from = flight?.from
+    val to = balanceCenter
+    if (from != null && to != null) {
+      key(flight?.id) {
+        repeat(CLAIM_COINS) { index ->
+          FlyingCoin(index = index, from = from - origin, to = to - origin)
+        }
       }
     }
   }
 }
 
 @Composable
-private fun Section(
-  title: String,
-  content: @Composable () -> Unit,
-) {
-  Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-    Text(
-      text = title,
-      style = AGTypography.Title,
-      color = Palette.White,
-    )
-    content()
-  }
-}
-
-@Composable
-private fun EmptyText(text: String) {
-  Text(
-    text = text,
-    style = AGTypography.Body,
-    color = Palette.GreyLight,
-  )
-}
-
-@Composable
-private fun TotalsRow(
-  lifetimePlaySeconds: Long,
-  lifetimeUnits: Long,
+private fun TitleRow(
+  balance: Long?,
+  onCoinPositioned: (LayoutCoordinates) -> Unit,
 ) {
   Row(
-    modifier = Modifier.fillMaxWidth(),
-    horizontalArrangement = Arrangement.spacedBy(12.dp),
-  ) {
-    TotalCard(
-      label = stringResource(R.string.play_and_earn_progress_units_earned_label),
-      value = lifetimeUnits.toString(),
-      modifier = Modifier.weight(1f),
-    )
-    TotalCard(
-      label = stringResource(R.string.play_and_earn_progress_play_time_label),
-      value = playTimeText(lifetimePlaySeconds),
-      modifier = Modifier.weight(1f),
-    )
-  }
-}
-
-@Composable
-private fun TotalCard(
-  label: String,
-  value: String,
-  modifier: Modifier = Modifier,
-) {
-  Column(
-    modifier = modifier
-      .background(Palette.GreyDark)
-      .padding(16.dp),
-    verticalArrangement = Arrangement.spacedBy(4.dp),
-  ) {
-    Text(
-      text = value,
-      style = AGTypography.Title,
-      color = Palette.Primary,
-      maxLines = 1,
-    )
-    Text(
-      text = label,
-      style = AGTypography.InputsM,
-      color = Palette.GreyLight,
-    )
-  }
-}
-
-@Composable
-private fun MissionItem(mission: PaEUserMission) {
-  Column(
     modifier = Modifier
       .fillMaxWidth()
-      .background(Palette.GreyDark)
-      .then(
-        if (mission.isNext) Modifier.border(2.dp, Palette.Primary) else Modifier
+      .padding(start = 16.dp, top = 12.dp, end = 16.dp, bottom = 8.dp),
+    verticalAlignment = Alignment.CenterVertically,
+  ) {
+    Text(
+      text = stringResource(R.string.play_and_earn_progress_missions_heading),
+      style = AGTypography.Title,
+      color = Palette.White,
+      modifier = Modifier.weight(1f),
+    )
+    if (balance != null) {
+      val shown by animateIntAsState(
+        targetValue = balance.coerceAtMost(Int.MAX_VALUE.toLong()).toInt(),
+        animationSpec = tween(BALANCE_COUNT_MILLIS),
+        label = "balance",
       )
-      .padding(16.dp),
-    verticalArrangement = Arrangement.spacedBy(8.dp),
+      Row(
+        modifier = Modifier
+          .clip(CircleShape)
+          .background(Palette.GreyDark)
+          .padding(start = 6.dp, top = 4.dp, end = 10.dp, bottom = 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+      ) {
+        Image(
+          imageVector = getSmallCoinIcon(),
+          contentDescription = null,
+          modifier = Modifier
+            .size(18.dp)
+            .onGloballyPositioned(onCoinPositioned),
+        )
+        Text(
+          text = String.format(Locale.getDefault(), "%,d", shown),
+          style = AGTypography.InputsS,
+          color = Palette.White,
+          maxLines = 1,
+        )
+      }
+    }
+  }
+}
+
+@Composable
+private fun GameSelector(
+  games: List<GameProgress>,
+  selected: String?,
+  claimed: Set<String>,
+  onSelect: (String) -> Unit,
+) {
+  Row(
+    modifier = Modifier
+      .fillMaxWidth()
+      .horizontalScroll(rememberScrollState())
+      .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 4.dp),
+    horizontalArrangement = Arrangement.spacedBy(12.dp),
+  ) {
+    games.forEach { game ->
+      val isSelected = game.packageName == selected
+      val ready = game.readyCount(claimed)
+      Column(
+        modifier = Modifier
+          .width(76.dp)
+          .clickable { onSelect(game.packageName) },
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(6.dp),
+      ) {
+        Box(modifier = Modifier.padding(top = 6.dp)) {
+          Box(
+            modifier = Modifier
+              .size(68.dp)
+              .border(
+                width = 2.dp,
+                color = if (isSelected) Palette.Primary else Palette.Black,
+                shape = RoundedCornerShape(16.dp),
+              )
+              .padding(4.dp)
+              .clip(RoundedCornerShape(12.dp))
+              .background(Palette.GreyDark),
+          ) {
+            game.icon?.let {
+              AptoideAsyncImage(
+                data = it,
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+              )
+            }
+          }
+          if (ready > 0) {
+            Text(
+              text = ready.toString(),
+              style = AGTypography.InputsXS,
+              // On the brand accent the label keeps one color in both themes.
+              color = FixedColors.Dark,
+              textAlign = TextAlign.Center,
+              modifier = Modifier
+                .align(Alignment.TopEnd)
+                .offset(x = 6.dp, y = (-6).dp)
+                .defaultMinSize(minWidth = 20.dp)
+                .clip(CircleShape)
+                .background(Palette.Primary)
+                .padding(horizontal = 5.dp, vertical = 2.dp),
+            )
+          }
+        }
+        Text(
+          text = game.name,
+          style = AGTypography.InputsXSRegular,
+          color = if (isSelected) Palette.White else Palette.GreyLight,
+          maxLines = 1,
+          overflow = TextOverflow.Ellipsis,
+        )
+      }
+    }
+  }
+}
+
+@Composable
+private fun StreakCard(streak: GameWeekStreak) {
+  val tiles = streakTiles(streak)
+  Column(
+    modifier = Modifier
+      .padding(start = 16.dp, top = 16.dp, end = 16.dp)
+      .fillMaxWidth()
+      .clip(CardShape)
+      .background(Palette.GreyDark)
+      .padding(12.dp),
   ) {
     Row(
       modifier = Modifier.fillMaxWidth(),
-      horizontalArrangement = Arrangement.spacedBy(8.dp),
       verticalAlignment = Alignment.CenterVertically,
     ) {
-      mission.period?.let { Tag(text = periodText(it), highlighted = false) }
-      if (mission.isNext) {
-        Tag(
-          text = stringResource(R.string.play_and_earn_progress_mission_next),
-          highlighted = true,
-        )
-      }
-      Spacer(modifier = Modifier.weight(1f))
       Text(
-        text = stringResource(R.string.play_and_earn_progress_mission_reward, mission.units),
-        style = AGTypography.InputsL,
-        color = Palette.Primary,
-      )
-    }
-    Text(
-      text = mission.title,
-      style = AGTypography.SubHeadingM,
-      color = Palette.White,
-    )
-    ProgressBar(fraction = mission.progress.getNormalizedProgress())
-    Text(
-      text = if (mission.isCompleted) {
-        stringResource(R.string.play_and_earn_progress_mission_completed)
-      } else {
-        missionProgressText(mission)
-      },
-      style = AGTypography.InputsM,
-      color = if (mission.isCompleted) Palette.Primary else Palette.GreyLight,
-    )
-  }
-}
-
-@Composable
-private fun Tag(
-  text: String,
-  highlighted: Boolean,
-) {
-  Text(
-    text = text,
-    style = AGTypography.InputsXS,
-    // On the brand accent the label keeps one color in both themes.
-    color = if (highlighted) FixedColors.Dark else Palette.White,
-    modifier = Modifier
-      .background(if (highlighted) Palette.Primary else Palette.Grey)
-      .padding(horizontal = 6.dp, vertical = 2.dp),
-  )
-}
-
-@Composable
-private fun ProgressBar(fraction: Float) {
-  Box(
-    modifier = Modifier
-      .fillMaxWidth()
-      .height(8.dp)
-      .background(Palette.Grey),
-  ) {
-    Box(
-      modifier = Modifier
-        .fillMaxWidth(fraction.coerceIn(0f, 1f))
-        .fillMaxHeight()
-        .background(Palette.Primary),
-    )
-  }
-}
-
-@Composable
-private fun StreakItem(streak: GameStreak) {
-  Column(
-    modifier = Modifier
-      .fillMaxWidth()
-      .background(Palette.GreyDark)
-      .padding(16.dp),
-    verticalArrangement = Arrangement.spacedBy(12.dp),
-  ) {
-    Row(
-      horizontalArrangement = Arrangement.spacedBy(12.dp),
-      verticalAlignment = Alignment.CenterVertically,
-    ) {
-      streak.icon?.let {
-        AptoideAsyncImage(
-          data = it,
-          contentDescription = null,
-          modifier = Modifier.size(32.dp),
-        )
-      }
-      Text(
-        text = streak.name,
+        text = stringResource(R.string.play_and_earn_progress_streak_title),
         style = AGTypography.SubHeadingM,
         color = Palette.White,
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis,
         modifier = Modifier.weight(1f),
       )
       Text(
         text = stringResource(
           R.string.play_and_earn_progress_streak_days,
           streak.daysPlayed,
-          streak.days.size,
+          DAYS_IN_STREAK,
         ),
-        style = AGTypography.InputsM,
+        style = AGTypography.InputsS,
         color = Palette.GreyLight,
       )
     }
+    Spacer(modifier = Modifier.height(12.dp))
+    // Four days above, three below with the last one twice as wide.
+    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+      tiles.take(4).forEach { StreakTileView(it, Modifier.weight(1f)) }
+    }
+    Spacer(modifier = Modifier.height(14.dp))
+    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+      tiles.drop(4).forEachIndexed { index, tile ->
+        StreakTileView(tile, Modifier.weight(if (index == 2) 2f else 1f), isLast = index == 2)
+      }
+    }
+    Spacer(modifier = Modifier.height(14.dp))
+    Text(
+      text = streakLine(streak, tiles),
+      style = AGTypography.InputsS,
+      color = Palette.GreyLight,
+    )
+  }
+}
+
+@Composable
+private fun streakLine(
+  streak: GameWeekStreak,
+  tiles: List<StreakTile>,
+): String {
+  val today = tiles.find { it.state == StreakTileState.TODAY }
+  return when {
+    streak.isComplete -> stringResource(R.string.play_and_earn_progress_streak_complete)
+    today == null -> stringResource(R.string.play_and_earn_progress_streak_tomorrow)
+    today.rewardUnits != null -> stringResource(
+      R.string.play_and_earn_progress_streak_today_reward,
+      today.day,
+      today.rewardUnits,
+    )
+
+    else -> stringResource(R.string.play_and_earn_progress_streak_today, today.day)
+  }
+}
+
+@Composable
+private fun StreakTileView(
+  tile: StreakTile,
+  modifier: Modifier = Modifier,
+  isLast: Boolean = false,
+) {
+  val played = tile.state == StreakTileState.PLAYED
+  val isToday = tile.state == StreakTileState.TODAY
+  val border = when {
+    isToday -> Palette.Primary
+    isLast -> Palette.Yellow100
+    else -> Palette.Black
+  }
+  Column(
+    modifier = modifier
+      .height(78.dp)
+      .clip(TileShape)
+      .background(Palette.Black)
+      .border(1.dp, border, TileShape),
+    horizontalAlignment = Alignment.CenterHorizontally,
+    verticalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterVertically),
+  ) {
+    if (played) {
+      Text(
+        text = "✓",
+        style = AGTypography.InputsS,
+        color = FixedColors.Dark,
+        textAlign = TextAlign.Center,
+        modifier = Modifier
+          .size(24.dp)
+          .clip(CircleShape)
+          .background(Palette.Primary)
+          .padding(top = 3.dp),
+      )
+      Text(
+        text = stringResource(R.string.play_and_earn_progress_streak_played),
+        style = AGTypography.InputsXS,
+        color = Palette.Primary,
+      )
+    } else {
+      Text(
+        text = stringResource(R.string.play_and_earn_progress_streak_day, tile.day),
+        style = AGTypography.InputsXS,
+        color = if (isToday) Palette.Primary else Palette.GreyLight,
+        maxLines = 1,
+      )
+      Image(
+        imageVector = getSmallCoinIcon(),
+        contentDescription = null,
+        modifier = Modifier
+          .size(24.dp)
+          .alpha(if (tile.rewardUnits != null) 1f else 0.25f),
+      )
+      Text(
+        text = tile.rewardUnits?.toString().orEmpty(),
+        style = AGTypography.InputsXS,
+        color = Palette.White,
+      )
+    }
+  }
+}
+
+@Composable
+private fun GameMissions(
+  game: GameProgress,
+  claimed: Set<String>,
+  onClaim: (String, Offset) -> Unit,
+) {
+  if (game.missions.isEmpty()) {
+    Text(
+      text = stringResource(R.string.play_and_earn_progress_game_missions_empty),
+      style = AGTypography.InputsS,
+      color = Palette.GreyLight,
+      modifier = Modifier.padding(start = 16.dp, top = 20.dp, end = 16.dp),
+    )
+    return
+  }
+  MissionKind.entries.forEach { kind ->
+    val cards = game.missions.filter { it.kind == kind }.sortedForDisplay(claimed)
+    if (cards.isNotEmpty()) {
+      SectionHeader(
+        title = stringResource(
+          when (kind) {
+            MissionKind.PURCHASE -> R.string.play_and_earn_progress_section_purchases
+            MissionKind.PLAY_TIME -> R.string.play_and_earn_progress_section_play_time
+          }
+        ),
+        subtitle = stringResource(
+          when (kind) {
+            MissionKind.PURCHASE -> R.string.play_and_earn_progress_section_purchases_sub
+            MissionKind.PLAY_TIME -> R.string.play_and_earn_progress_section_play_time_sub
+          }
+        ),
+        iconRes = when (kind) {
+          MissionKind.PURCHASE -> R.drawable.pae_section_purchases
+          MissionKind.PLAY_TIME -> R.drawable.pae_section_play_time
+        },
+      )
+      CardList {
+        cards.forEach { card ->
+          key(card.id) { MissionCardView(card, card.state(claimed), onClaim) }
+        }
+      }
+    }
+  }
+}
+
+@Composable
+private fun SectionHeader(
+  title: String,
+  subtitle: String? = null,
+  iconRes: Int? = null,
+) {
+  Row(
+    modifier = Modifier.padding(start = 16.dp, top = 20.dp, end = 16.dp, bottom = 8.dp),
+    verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.spacedBy(8.dp),
+  ) {
+    iconRes?.let {
+      Image(
+        painter = painterResource(it),
+        contentDescription = null,
+        modifier = Modifier.size(34.dp),
+      )
+    }
+    Text(
+      text = title,
+      style = AGTypography.SubHeadingM,
+      color = Palette.White,
+    )
+    subtitle?.let {
+      Text(
+        text = it,
+        style = AGTypography.InputsS,
+        color = Palette.GreyLight,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+      )
+    }
+  }
+}
+
+@Composable
+private fun CardList(content: @Composable () -> Unit) {
+  Column(
+    modifier = Modifier.padding(horizontal = 16.dp),
+    verticalArrangement = Arrangement.spacedBy(10.dp),
+  ) {
+    content()
+  }
+}
+
+@Composable
+private fun MissionCardView(
+  card: MissionCard,
+  state: CardState,
+  onClaim: (String, Offset) -> Unit,
+) {
+  var buttonCenter by remember { mutableStateOf(Offset.Zero) }
+  Column(
+    modifier = Modifier
+      .fillMaxWidth()
+      .alpha(if (state == CardState.CLAIMED) 0.55f else 1f)
+      .clip(CardShape)
+      .background(Palette.GreyDark)
+      .border(
+        width = 1.dp,
+        color = if (state == CardState.READY) Palette.Primary else Palette.GreyDark,
+        shape = CardShape,
+      )
+      .padding(12.dp),
+  ) {
     Row(
-      modifier = Modifier.fillMaxWidth(),
-      horizontalArrangement = Arrangement.spacedBy(6.dp),
+      verticalAlignment = Alignment.CenterVertically,
+      horizontalArrangement = Arrangement.spacedBy(10.dp),
     ) {
-      streak.days.forEachIndexed { index, played ->
-        Column(
-          modifier = Modifier.weight(1f),
-          horizontalAlignment = Alignment.CenterHorizontally,
-          verticalArrangement = Arrangement.spacedBy(4.dp),
-        ) {
-          Box(
-            modifier = Modifier
-              .fillMaxWidth()
-              .aspectRatio(1f)
-              .background(if (played) Palette.Primary else Palette.Grey),
-          )
+      Column(modifier = Modifier.weight(1f)) {
+        Text(
+          text = card.title,
+          style = AGTypography.InputsL,
+          color = Palette.White,
+        )
+        card.description?.let {
           Text(
-            text = weekdayLetter(index),
-            style = AGTypography.InputsXS,
-            color = if (played) Palette.White else Palette.GreyLight,
+            text = it,
+            style = AGTypography.InputsS,
+            color = Palette.GreyLight,
+            modifier = Modifier.padding(top = 2.dp),
           )
         }
+      }
+      Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+      ) {
+        Image(
+          imageVector = getSmallCoinIcon(),
+          contentDescription = null,
+          modifier = Modifier.size(16.dp),
+        )
+        Text(
+          text = "+${card.units}",
+          style = AGTypography.InputsS,
+          color = Palette.Primary,
+          maxLines = 1,
+        )
+      }
+    }
+    if (state != CardState.CLAIMED) {
+      Box(
+        modifier = Modifier
+          .padding(top = 10.dp)
+          .fillMaxWidth()
+          .height(6.dp)
+          .clip(RoundedCornerShape(3.dp))
+          .background(Palette.Grey),
+      ) {
+        Box(
+          modifier = Modifier
+            .fillMaxWidth(card.fraction)
+            .fillMaxHeight()
+            .clip(RoundedCornerShape(3.dp))
+            .background(Palette.Primary),
+        )
+      }
+    }
+    Row(
+      modifier = Modifier
+        .padding(top = 6.dp)
+        .fillMaxWidth()
+        .defaultMinSize(minHeight = 32.dp),
+      verticalAlignment = Alignment.CenterVertically,
+    ) {
+      Text(
+        text = stringResource(
+          R.string.play_and_earn_progress_mission_amount,
+          amountText(card, card.current),
+          amountText(card, card.target),
+        ),
+        style = AGTypography.InputsS,
+        color = Palette.White,
+        modifier = Modifier.weight(1f),
+      )
+      when (state) {
+        CardState.READY -> Text(
+          text = stringResource(R.string.play_and_earn_progress_mission_claim, card.units),
+          style = AGTypography.InputsS,
+          color = FixedColors.Dark,
+          modifier = Modifier
+            .onGloballyPositioned { buttonCenter = it.centerInWindow() }
+            .clip(RoundedCornerShape(10.dp))
+            .background(Palette.Primary)
+            .clickable { onClaim(card.id, buttonCenter) }
+            .padding(horizontal = 14.dp, vertical = 8.dp),
+        )
+
+        CardState.CLAIMED -> Text(
+          text = stringResource(R.string.play_and_earn_progress_mission_claimed),
+          style = AGTypography.InputsS,
+          color = Palette.GreyLight,
+        )
+
+        CardState.IN_PROGRESS -> Text(
+          text = stringResource(
+            R.string.play_and_earn_progress_mission_to_go,
+            amountText(card, (card.target - card.current).coerceAtLeast(0)),
+          ),
+          style = AGTypography.InputsS,
+          color = Palette.GreyLight,
+        )
       }
     }
   }
@@ -345,10 +682,18 @@ private fun StreakItem(streak: GameStreak) {
 private fun LeaderboardList(leaderboard: PaELeaderboard) {
   val rows = leaderboardRows(leaderboard)
   if (rows.isEmpty()) {
-    EmptyText(stringResource(R.string.play_and_earn_progress_leaderboard_empty))
+    Text(
+      text = stringResource(R.string.play_and_earn_progress_leaderboard_empty),
+      style = AGTypography.InputsS,
+      color = Palette.GreyLight,
+      modifier = Modifier.padding(horizontal = 16.dp),
+    )
     return
   }
-  Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+  Column(
+    modifier = Modifier.padding(horizontal = 16.dp),
+    verticalArrangement = Arrangement.spacedBy(6.dp),
+  ) {
     rows.forEach { LeaderboardRow(it) }
   }
 }
@@ -358,15 +703,16 @@ private fun LeaderboardRow(entry: PaELeaderboardEntry) {
   Row(
     modifier = Modifier
       .fillMaxWidth()
+      .clip(CardShape)
       .background(Palette.GreyDark)
-      .then(if (entry.isMe) Modifier.border(2.dp, Palette.Primary) else Modifier)
-      .padding(horizontal = 16.dp, vertical = 12.dp),
+      .border(1.dp, if (entry.isMe) Palette.Primary else Palette.GreyDark, CardShape)
+      .padding(horizontal = 12.dp, vertical = 10.dp),
     horizontalArrangement = Arrangement.spacedBy(12.dp),
     verticalAlignment = Alignment.CenterVertically,
   ) {
     Text(
       text = entry.rank.toString(),
-      style = AGTypography.SubHeadingM,
+      style = AGTypography.InputsL,
       color = Palette.Primary,
       textAlign = TextAlign.Center,
       modifier = Modifier.width(32.dp),
@@ -385,7 +731,58 @@ private fun LeaderboardRow(entry: PaELeaderboardEntry) {
     )
     Text(
       text = playTimeText(entry.playSeconds),
-      style = AGTypography.InputsM,
+      style = AGTypography.InputsS,
+      color = Palette.GreyLight,
+    )
+  }
+}
+
+@Composable
+private fun TotalsRow(
+  lifetimePlaySeconds: Long,
+  lifetimeUnits: Long,
+) {
+  Row(
+    modifier = Modifier
+      .fillMaxWidth()
+      .padding(horizontal = 16.dp),
+    horizontalArrangement = Arrangement.spacedBy(10.dp),
+  ) {
+    TotalCard(
+      label = stringResource(R.string.play_and_earn_progress_units_earned_label),
+      value = String.format(Locale.getDefault(), "%,d", lifetimeUnits),
+      modifier = Modifier.weight(1f),
+    )
+    TotalCard(
+      label = stringResource(R.string.play_and_earn_progress_play_time_label),
+      value = playTimeText(lifetimePlaySeconds),
+      modifier = Modifier.weight(1f),
+    )
+  }
+}
+
+@Composable
+private fun TotalCard(
+  label: String,
+  value: String,
+  modifier: Modifier = Modifier,
+) {
+  Column(
+    modifier = modifier
+      .clip(CardShape)
+      .background(Palette.GreyDark)
+      .padding(12.dp),
+    verticalArrangement = Arrangement.spacedBy(4.dp),
+  ) {
+    Text(
+      text = value,
+      style = AGTypography.SubHeadingM,
+      color = Palette.Primary,
+      maxLines = 1,
+    )
+    Text(
+      text = label,
+      style = AGTypography.InputsS,
       color = Palette.GreyLight,
     )
   }
@@ -401,40 +798,24 @@ private fun playTimeText(seconds: Long): String {
   }
 }
 
+/** A mission's amount in its own unit: time for play time, a plain number otherwise. */
 @Composable
-private fun periodText(period: PaEMissionPeriod): String = when (period) {
-  PaEMissionPeriod.WEEKLY -> stringResource(R.string.play_and_earn_progress_mission_weekly)
-  PaEMissionPeriod.MONTHLY -> stringResource(R.string.play_and_earn_progress_mission_monthly)
-}
-
-@Composable
-private fun missionProgressText(mission: PaEUserMission): String {
-  val current = mission.progress.current ?: 0
-  val target = mission.progress.target
-  return when (mission.progress.type) {
-    PaEMissionProgressType.SECONDS -> stringResource(
-      R.string.play_and_earn_progress_mission_amount,
-      playTimeText(current.toLong()),
-      playTimeText(target.toLong()),
+private fun amountText(card: MissionCard, amount: Int): String = when (card.unit) {
+  PaEMissionProgressType.SECONDS -> when (val duration = durationOf(amount.toLong())) {
+    is Duration.Minutes -> stringResource(
+      R.string.play_and_earn_progress_play_time_minutes,
+      duration.minutes,
     )
 
-    PaEMissionProgressType.COUNT -> stringResource(
-      R.string.play_and_earn_progress_mission_days,
-      current,
-      target,
-    )
-
-    PaEMissionProgressType.GXP -> stringResource(
-      R.string.play_and_earn_progress_mission_amount,
-      current.toString(),
-      target.toString(),
+    is Duration.Hours -> stringResource(
+      R.string.play_and_earn_progress_duration_hours,
+      duration.text,
     )
   }
-}
 
-// Monday first, in the device's language, so no weekday strings to translate.
-private fun weekdayLetter(index: Int): String =
-  DayOfWeek.of(index % 7 + 1).getDisplayName(TextStyle.NARROW, Locale.getDefault())
+  PaEMissionProgressType.COUNT,
+  PaEMissionProgressType.GXP -> amount.toString()
+}
 
 @PreviewDark
 @Composable

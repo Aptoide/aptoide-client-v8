@@ -49,6 +49,7 @@ internal class DefaultPaEProgressRepositoryTest {
     progressType: String? = "seconds",
     status: String? = "in_progress",
     isNext: Boolean? = false,
+    packageName: String? = null,
   ) = PaEUserMissionJson(
     title = title,
     description = null,
@@ -56,6 +57,8 @@ internal class DefaultPaEProgressRepositoryTest {
     type = type,
     units = 20,
     period = period,
+    periodStart = "2026-11-16",
+    packageName = packageName,
     progress = PaEUserMissionProgressJson(current, target, progressType, status),
     isNext = isNext,
   )
@@ -120,6 +123,34 @@ internal class DefaultPaEProgressRepositoryTest {
     assertEquals(0, monthly.progress.current)
     assertEquals(PaEMissionStatus.PENDING, monthly.progress.status)
     assertFalse(monthly.isCompleted)
+  }
+
+  @Test
+  fun `a game's streak mission says which game it belongs to`() = coScenario {
+    m Given "a weekly streak of one game next to a mission across every game"
+    val api = FakeApi(
+      progress = progressJson(
+        missions = listOf(
+          missionJson(
+            title = "Play Dice Roll 7 days this week",
+            type = "STREAK",
+            current = 2,
+            target = 7,
+            progressType = "count",
+            packageName = "com.dice.roll",
+          ),
+          missionJson(packageName = " "),
+        )
+      )
+    )
+
+    m When "the progress is loaded"
+    val missions = repository(api).getMyProgress().getOrThrow().missions
+
+    m Then "the game's mission carries its package and its period's first day"
+    assertEquals("com.dice.roll", missions[0].packageName)
+    assertEquals("2026-11-16", missions[0].periodStart)
+    assertNull(missions[1].packageName)
   }
 
   @Test

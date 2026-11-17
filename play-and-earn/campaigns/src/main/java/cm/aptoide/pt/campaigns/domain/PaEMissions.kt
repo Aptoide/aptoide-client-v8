@@ -36,6 +36,16 @@ fun PaEMissions.tracking(): PaETracking? {
   }
 }
 
+/**
+ * What pressing Play has to do for the campaign. Hackathon 2026 brings back mixed campaigns: a
+ * game can have play-time missions and missions its developer's MMP confirms (purchases) at
+ * once, and the backend then labels it MMP-tracked. Its play time still has to be measured by
+ * this app, so one time-based mission is enough to play it as an Aptoide-tracked campaign; the
+ * MMP's confirmations arrive on the same heartbeats either way.
+ */
+fun PaEMissions.playTracking(): PaETracking? =
+  if ((checkpoints + missions).any { it.isTimeBased() }) PaETracking.APTOIDE else tracking()
+
 /** The measurement tool behind an event campaign's click link (AND-912). */
 enum class PaEMmpPlatform {
   APPSFLYER,

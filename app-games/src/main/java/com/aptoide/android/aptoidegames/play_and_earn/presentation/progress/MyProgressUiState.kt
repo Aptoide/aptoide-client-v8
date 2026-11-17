@@ -3,66 +3,55 @@ package com.aptoide.android.aptoidegames.play_and_earn.presentation.progress
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import cm.aptoide.pt.campaigns.domain.PaELeaderboard
 import cm.aptoide.pt.campaigns.domain.PaELeaderboardEntry
-import cm.aptoide.pt.campaigns.domain.PaEMissionPeriod
-import cm.aptoide.pt.campaigns.domain.PaEMissionProgress
 import cm.aptoide.pt.campaigns.domain.PaEMissionProgressType
-import cm.aptoide.pt.campaigns.domain.PaEMissionStatus
-import cm.aptoide.pt.campaigns.domain.PaEMissionType
-import cm.aptoide.pt.campaigns.domain.PaEUserMission
 
 sealed interface MyProgressUiState {
 
   data class Idle(
-    val lifetimePlaySeconds: Long,
-    val lifetimeUnits: Long,
-    val missions: List<PaEUserMission>,
-    val streaks: List<GameStreak>,
+    // Null when the wallet could not be read: the balance chip is then left out.
+    val walletBalance: Long?,
+    // The installed games that have missions.
+    val games: List<GameProgress>,
     // Null when it could not be loaded: the rest of the screen still shows.
     val leaderboard: PaELeaderboard?,
-  ) : MyProgressUiState
+    val lifetimePlaySeconds: Long,
+    val lifetimeUnits: Long,
+    val claimed: Set<String>,
+  ) : MyProgressUiState {
+    val allCards: List<MissionCard> get() = games.flatMap { it.missions }
+  }
 
   data object Loading : MyProgressUiState
 
   data class Error(val retry: () -> Unit) : MyProgressUiState
 }
 
-/** One game's week: seven days, Monday first. */
-data class GameStreak(
-  val packageName: String,
-  val name: String,
-  val icon: String?,
-  val days: List<Boolean>,
-  val daysPlayed: Int,
-)
-
 class MyProgressUiStateProvider : PreviewParameterProvider<MyProgressUiState.Idle> {
   override val values: Sequence<MyProgressUiState.Idle> = sequenceOf(
     MyProgressUiState.Idle(
-      lifetimePlaySeconds = 5400,
-      lifetimeUnits = 320,
-      missions = listOf(
-        previewMission("Play 10 minutes this week", 420, 600, isNext = true),
-        previewMission(
-          title = "Play every day this week",
-          current = 2,
-          target = 7,
-          type = PaEMissionType.STREAK,
-        ),
-        previewMission(
-          title = "Play 1 hour this month",
-          current = 0,
-          target = 3600,
-          period = PaEMissionPeriod.MONTHLY,
-        ),
-        previewMission("Play 5 minutes this week", 300, 300),
-      ),
-      streaks = listOf(
-        GameStreak(
-          packageName = "com.example.game",
+      walletBalance = 1340,
+      games = listOf(
+        GameProgress(
+          packageName = "com.dice.roll",
           name = "Dice Roll",
           icon = null,
-          days = listOf(true, true, false, false, false, false, false),
-          daysPlayed = 2,
+          streak = GameWeekStreak(
+            daysPlayed = 3,
+            playedToday = false,
+            rewards = mapOf(3 to 50, 7 to 150),
+          ),
+          missions = listOf(
+            previewCard("Make 1 purchase", MissionKind.PURCHASE, 0, 1, 150),
+            previewCard("Play 30 minutes", MissionKind.PLAY_TIME, 1800, 1800, 50),
+            previewCard("Play 2 hours", MissionKind.PLAY_TIME, 2700, 7200, 150),
+          ),
+        ),
+        GameProgress(
+          packageName = "com.cell.survivor",
+          name = "Cell Survivor",
+          icon = null,
+          streak = GameWeekStreak(daysPlayed = 0, playedToday = false, rewards = emptyMap()),
+          missions = listOf(previewCard("Play 5 hours", MissionKind.PLAY_TIME, 4500, 18000, 250)),
         ),
       ),
       leaderboard = PaELeaderboard(
@@ -73,44 +62,42 @@ class MyProgressUiStateProvider : PreviewParameterProvider<MyProgressUiState.Idl
         ),
         me = PaELeaderboardEntry(2, "0xfc20…015e", 7200, true),
       ),
+      lifetimePlaySeconds = 5400,
+      lifetimeUnits = 320,
+      claimed = emptySet(),
     ),
     MyProgressUiState.Idle(
+      walletBalance = null,
+      games = emptyList(),
+      leaderboard = null,
       lifetimePlaySeconds = 0,
       lifetimeUnits = 0,
-      missions = emptyList(),
-      streaks = emptyList(),
-      leaderboard = null,
+      claimed = emptySet(),
     ),
   )
 }
 
-private fun previewMission(
+private fun previewCard(
   title: String,
+  kind: MissionKind,
   current: Int,
   target: Int,
-  type: PaEMissionType = PaEMissionType.PLAY_TIME,
-  period: PaEMissionPeriod = PaEMissionPeriod.WEEKLY,
-  isNext: Boolean = false,
-) = PaEUserMission(
+  units: Int,
+) = MissionCard(
+  id = title,
+  kind = kind,
   title = title,
-  description = null,
-  icon = null,
-  type = type,
-  units = 20,
-  period = period,
-  progress = PaEMissionProgress(
-    current = current,
-    target = target,
-    type = if (type == PaEMissionType.PLAY_TIME) {
-      PaEMissionProgressType.SECONDS
-    } else {
-      PaEMissionProgressType.COUNT
-    },
-    status = when {
-      current >= target -> PaEMissionStatus.COMPLETED
-      current > 0 -> PaEMissionStatus.IN_PROGRESS
-      else -> PaEMissionStatus.PENDING
-    },
-  ),
-  isNext = isNext,
+  description = when (kind) {
+    MissionKind.PURCHASE -> "Any item in the game"
+    MissionKind.PLAY_TIME -> "Total time played"
+  },
+  units = units,
+  current = current,
+  target = target,
+  unit = if (kind == MissionKind.PURCHASE) {
+    PaEMissionProgressType.COUNT
+  } else {
+    PaEMissionProgressType.SECONDS
+  },
+  completed = current >= target,
 )

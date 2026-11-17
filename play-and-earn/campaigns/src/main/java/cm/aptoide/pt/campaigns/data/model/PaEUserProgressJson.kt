@@ -21,6 +21,9 @@ internal data class PaEUserMissionJson(
   val type: String?,
   val units: Int?,
   val period: String?,
+  @SerializedName("period_start") val periodStart: String?,
+  // The game the mission belongs to (its weekly streak); absent for one across every game.
+  @SerializedName("package") val packageName: String?,
   val progress: PaEUserMissionProgressJson?,
   @SerializedName("is_next") val isNext: Boolean?,
 )

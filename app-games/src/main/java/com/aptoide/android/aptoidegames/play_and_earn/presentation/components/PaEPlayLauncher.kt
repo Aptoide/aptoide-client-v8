@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.campaigns.data.PaEMissionsRepository
 import cm.aptoide.pt.campaigns.domain.PaETracking
-import cm.aptoide.pt.campaigns.domain.tracking
+import cm.aptoide.pt.campaigns.domain.playTracking
 import cm.aptoide.pt.extensions.runPreviewable
 import com.aptoide.android.aptoidegames.play_and_earn.PlayAndEarnManager
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.playAndEarnPermissionsRoute
@@ -143,7 +143,7 @@ class PaEPlayLauncherViewModel @Inject constructor(
       // Cache first: the surface showing Play has already fetched the game's missions.
       val tracking = withTimeoutOrNull(MISSIONS_READ_TIMEOUT_MILLIS) {
         missionsRepository.getCampaignMissions(packageName).getOrNull()
-      }?.tracking()
+      }?.playTracking()
       if (tracking == null) Timber.d("P&E tracking of $packageName unknown at Play")
       PaEPlayLauncher(
         tracking = tracking,

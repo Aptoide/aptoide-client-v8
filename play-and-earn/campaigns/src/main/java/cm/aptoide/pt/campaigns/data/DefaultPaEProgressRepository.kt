@@ -70,6 +70,8 @@ private fun PaEUserMissionJson.toDomainModel(): PaEUserMission? {
     type = type,
     units = units ?: 0,
     period = PaEMissionPeriod.fromApi(period),
+    periodStart = periodStart?.takeIf { it.isNotBlank() },
+    packageName = packageName?.takeIf { it.isNotBlank() },
     progress = PaEMissionProgress(
       current = progress.current ?: 0,
       target = target,
