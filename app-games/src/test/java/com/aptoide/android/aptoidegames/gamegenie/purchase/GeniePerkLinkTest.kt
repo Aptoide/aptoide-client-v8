@@ -69,7 +69,7 @@ internal class GeniePerkLinkTest {
       "ag://genie/buy?sku=attempts",
       "ag://genie/buy?package=com.aptoide.diceroll.sdk.dev",
       "ag://genie/buy?package=com.evil.app&sku=attempts",
-      "ag://genie/buy?package=com.aptoide.diceroll.sdk.dev&sku=legendary_dice",
+      "ag://genie/buy?package=com.aptoide.diceroll.sdk.dev&sku=not_in_catalogue",
     ]
   )
   fun `links that are not a perk link for a catalogue item are rejected`(link: String) {

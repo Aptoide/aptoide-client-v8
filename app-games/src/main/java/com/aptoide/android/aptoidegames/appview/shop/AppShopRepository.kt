@@ -115,10 +115,10 @@ class AppShopRepository @Inject constructor() {
     private const val MAX_PRICE_MICROS = 50_000_000L
 
     fun orderForShop(products: List<ShopProduct>, packageName: String): List<ShopProduct> {
-      val featuredSkus = GeniePurchaseCatalog.items
-        .filter { packageName in it.packageCandidates }
-        .map { it.sku }
-        .toSet()
+      // Only the game's first catalogue item is pinned to the top.
+      val featuredSkus = setOfNotNull(
+        GeniePurchaseCatalog.items.firstOrNull { packageName in it.packageCandidates }?.sku
+      )
       val (featured, others) = products.partition { it.sku in featuredSkus }
       return featured + others
         .filter { (it.priceMicros ?: 0L) <= MAX_PRICE_MICROS }

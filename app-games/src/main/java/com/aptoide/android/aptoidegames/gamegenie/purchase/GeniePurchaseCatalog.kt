@@ -35,5 +35,13 @@ object GeniePurchaseCatalog {
     price = "€1.00",
   )
 
-  val items: List<GeniePurchaseItem> = listOf(diceroll)
+  // Other Diceroll dev packs, reachable from the ag://genie/buy link (outside assistants, perk
+  // pushes). A typed "buy ... in Diceroll" still resolves to the first item.
+  val dicerollLegendaryDice =
+    diceroll.copy(sku = "legendary_dice", title = "Legendary Dice", price = "€0.15")
+  val dicerollAttemptsPack =
+    diceroll.copy(sku = "attempts01", title = "Attempts pack", price = "€4.00")
+
+  val items: List<GeniePurchaseItem> =
+    listOf(diceroll, dicerollLegendaryDice, dicerollAttemptsPack)
 }
