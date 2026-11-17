@@ -83,6 +83,8 @@ import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.h
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.service.PaEServicePreferencesViewModel
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.GoogleSignInViewModel
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnSignInRoute
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.progress.myProgressRoute
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.progress.showPaEMyProgress
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.rememberUserInfo
 import com.aptoide.android.aptoidegames.play_and_earn.rememberIsPaEUsageTrackingEnabled
 import com.aptoide.android.aptoidegames.play_and_earn.rememberShouldShowPlayAndEarn
@@ -155,6 +157,8 @@ fun settingsScreen(showSnack: (String) -> Unit) = ScreenData(
     },
     onLetsGoClick = { navigate(playAndEarnSignInRoute) },
     onSignOutClick = signInViewModel::signOut,
+    isPlayAndEarnVisible = shouldShowPlayAndEarn,
+    onMyProgressClick = { navigate(myProgressRoute) },
     navigateBack = navigateBack,
   )
 }
@@ -177,6 +181,8 @@ fun SettingsViewContent(
   onTermsConditionsClick: () -> Unit = {},
   onLetsGoClick: () -> Unit = {},
   onSignOutClick: () -> Unit = {},
+  isPlayAndEarnVisible: Boolean = false,
+  onMyProgressClick: () -> Unit = {},
   navigateBack: () -> Unit = {},
 ) {
   val context = LocalContext.current
@@ -184,6 +190,10 @@ fun SettingsViewContent(
   val settingsAnalytics = rememberSettingsAnalytics()
 
   val userInfo = rememberUserInfo()
+  val showMyProgress = showPaEMyProgress(
+    playAndEarnVisible = isPlayAndEarnVisible,
+    signedIn = userInfo != null,
+  )
 
   Column(
     modifier = Modifier
@@ -276,7 +286,7 @@ fun SettingsViewContent(
           }
         }
       }
-      if (showPaEServiceToggle) {
+      if (showPaEServiceToggle || showMyProgress) {
         SettingsSectionDivider()
         SettingsSection(
           title = stringResource(R.string.play_and_earn_title)
@@ -284,12 +294,20 @@ fun SettingsViewContent(
           Column(
             modifier = Modifier.padding(horizontal = 16.dp),
           ) {
-            SettingsSwitchItem(
-              title = stringResource(R.string.settings_play_and_earn_tracking),
-              description = stringResource(R.string.settings_play_and_earn_tracking_description),
-              enabled = isPaEServiceEnabled,
-              onToggle = togglePaEService
-            )
+            if (showMyProgress) {
+              SettingsCaretItem(
+                title = stringResource(R.string.play_and_earn_progress_button),
+                onClick = onMyProgressClick,
+              )
+            }
+            if (showPaEServiceToggle) {
+              SettingsSwitchItem(
+                title = stringResource(R.string.settings_play_and_earn_tracking),
+                description = stringResource(R.string.settings_play_and_earn_tracking_description),
+                enabled = isPaEServiceEnabled,
+                onToggle = togglePaEService
+              )
+            }
           }
         }
       }

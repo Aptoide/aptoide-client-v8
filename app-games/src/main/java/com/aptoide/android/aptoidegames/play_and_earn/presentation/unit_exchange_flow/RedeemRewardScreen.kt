@@ -35,10 +35,12 @@ import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.design_system.AccentButton
 import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
+import com.aptoide.android.aptoidegames.design_system.SecondaryOutlinedButton
 import com.aptoide.android.aptoidegames.drawables.backgrounds.getExchangeSuccessBackground
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.home.rememberRewardsDestination
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.rememberPaEAnalytics
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.progress.myProgressRoute
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PaERewardType
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.iconRes
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.rememberPreferredPaEReward
@@ -86,6 +88,7 @@ fun redeemRewardScreen(
       paeAnalytics.sendPaERedeemEarnMoreClick()
       navigate(rewardsDestination)
     },
+    onMyProgress = { navigate(myProgressRoute) },
   )
 }
 
@@ -98,6 +101,7 @@ fun RedeemRewardScreen(
   navigateBack: () -> Unit,
   onRedeem: (String) -> Unit,
   onEarnMore: () -> Unit,
+  onMyProgress: () -> Unit = {},
 ) {
   ExchangeFlowBackground {
     Column(modifier = Modifier.fillMaxSize()) {
@@ -119,6 +123,7 @@ fun RedeemRewardScreen(
           redeemAmount = redeemAmount,
           onRedeem = onRedeem,
           onEarnMore = onEarnMore,
+          onMyProgress = onMyProgress,
         )
       }
     }
@@ -144,6 +149,7 @@ private fun RedeemRewardContent(
   redeemAmount: BigDecimal,
   onRedeem: (String) -> Unit,
   onEarnMore: () -> Unit,
+  onMyProgress: () -> Unit,
 ) {
   val hasEnough = availableUnits >= targetUnits
   val unitsToGo = (targetUnits - availableUnits).coerceAtLeast(0L)
@@ -189,7 +195,7 @@ private fun RedeemRewardContent(
         modifier = Modifier
           .fillMaxWidth()
           .padding(horizontal = 24.dp)
-          .padding(bottom = 24.dp),
+          .padding(bottom = 12.dp),
         title = if (hasEnough) {
           stringResource(R.string.play_and_earn_exchange_redeem_button, formattedRedeem)
         } else {
@@ -197,6 +203,15 @@ private fun RedeemRewardContent(
         },
         enabled = true,
         onClick = { if (hasEnough) onRedeem(formattedRedeem) else onEarnMore() },
+      )
+
+      SecondaryOutlinedButton(
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(horizontal = 24.dp)
+          .padding(bottom = 24.dp),
+        title = stringResource(R.string.play_and_earn_progress_button),
+        onClick = onMyProgress,
       )
     }
   }

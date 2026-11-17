@@ -7,9 +7,12 @@ import cm.aptoide.pt.aptoide_network.di.BaseOkHttp
 import cm.aptoide.pt.aptoide_network.di.RewardsDomain
 import cm.aptoide.pt.campaigns.data.DefaultPaECampaignsRepository
 import cm.aptoide.pt.campaigns.data.DefaultPaEMissionsRepository
+import cm.aptoide.pt.campaigns.data.DefaultPaEProgressRepository
 import cm.aptoide.pt.campaigns.data.PaECampaignsApi
 import cm.aptoide.pt.campaigns.data.PaECampaignsRepository
 import cm.aptoide.pt.campaigns.data.PaEMissionsRepository
+import cm.aptoide.pt.campaigns.data.PaEProgressApi
+import cm.aptoide.pt.campaigns.data.PaEProgressRepository
 import cm.aptoide.pt.campaigns.data.database.PaECampaignsDatabase
 import cm.aptoide.pt.wallet.authorization.data.WalletAuthInterceptor
 import dagger.Module
@@ -34,7 +37,42 @@ internal object RepositoryModule {
     @RewardsDomain rewardsDomain: String,
     walletAuthInterceptor: WalletAuthInterceptor,
     playAndEarnIdInterceptor: PlayAndEarnIdInterceptor
-  ): PaECampaignsApi {
+  ): PaECampaignsApi = rewardsRetrofit(
+    okHttpClient = okHttpClient,
+    rewardsDomain = rewardsDomain,
+    walletAuthInterceptor = walletAuthInterceptor,
+    playAndEarnIdInterceptor = playAndEarnIdInterceptor,
+  ).create(PaECampaignsApi::class.java)
+
+  @Provides
+  @Singleton
+  fun providePaEProgressApi(
+    @BaseOkHttp okHttpClient: OkHttpClient,
+    @RewardsDomain rewardsDomain: String,
+    walletAuthInterceptor: WalletAuthInterceptor,
+    playAndEarnIdInterceptor: PlayAndEarnIdInterceptor
+  ): PaEProgressApi = rewardsRetrofit(
+    okHttpClient = okHttpClient,
+    rewardsDomain = rewardsDomain,
+    walletAuthInterceptor = walletAuthInterceptor,
+    playAndEarnIdInterceptor = playAndEarnIdInterceptor,
+  ).create(PaEProgressApi::class.java)
+
+  @Provides
+  @Singleton
+  fun providePaEProgressRepository(
+    paeProgressApi: PaEProgressApi,
+  ): PaEProgressRepository = DefaultPaEProgressRepository(
+    paeProgressApi = paeProgressApi,
+    dispatcher = Dispatchers.IO
+  )
+
+  private fun rewardsRetrofit(
+    okHttpClient: OkHttpClient,
+    rewardsDomain: String,
+    walletAuthInterceptor: WalletAuthInterceptor,
+    playAndEarnIdInterceptor: PlayAndEarnIdInterceptor,
+  ): Retrofit {
     val client = okHttpClient
       .newBuilder()
       .addInterceptor(walletAuthInterceptor)
@@ -46,7 +84,6 @@ internal object RepositoryModule {
       .baseUrl(rewardsDomain)
       .addConverterFactory(GsonConverterFactory.create())
       .build()
-      .create(PaECampaignsApi::class.java)
   }
 
   @Provides
