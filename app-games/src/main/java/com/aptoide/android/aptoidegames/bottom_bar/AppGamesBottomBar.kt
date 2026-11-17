@@ -232,13 +232,13 @@ private fun selectionIndex(
 )
 
 val bottomNavigationItems = listOf(
-  BottomBarMenus.Wallet,
   BottomBarMenus.Games,
   BottomBarMenus.Search,
   BottomBarMenus.GenieSearch,
   BottomBarMenus.GameGenie,
   BottomBarMenus.Categories,
   BottomBarMenus.Updates,
+  BottomBarMenus.Wallet,
 )
 
 /**
