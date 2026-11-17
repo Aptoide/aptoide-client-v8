@@ -364,8 +364,8 @@ private fun GameSelector(
 /**
  * Opens the chosen game the way the Play button of its page does: signed in, with the play-time
  * tracking (or the MMP status heartbeats) the game's campaign needs, so what is played from here
- * counts towards the missions and the streak below. Not shown for a game that is not installed
- * (the demo game).
+ * counts towards the missions and the streak below. The demo game has no campaign to track for:
+ * it is just opened. Not shown for a game that is not installed.
  */
 @Composable
 private fun PlayGameButton(
@@ -378,8 +378,9 @@ private fun PlayGameButton(
   } ?: return
   val playTap = rememberPaEPlayTap(packageName = game.packageName, navigate = navigate)
 
+  val open = { context.startActivity(launchIntent) }
   PrimaryButton(
-    onClick = playTap.guard { context.startActivity(launchIntent) },
+    onClick = if (game.isDemo) open else playTap.guard(open),
     modifier = Modifier
       .fillMaxWidth()
       .padding(start = 16.dp, top = 16.dp, end = 16.dp),
@@ -482,7 +483,9 @@ private fun StreakTileView(
     contentAlignment = Alignment.Center,
   ) {
     if (played) {
+      // A day whose reward was collected steps back, so today's is what the eye lands on.
       Column(
+        modifier = Modifier.alpha(0.55f),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(4.dp),
       ) {
@@ -498,7 +501,7 @@ private fun StreakTileView(
             .padding(top = 3.dp),
         )
         Text(
-          text = stringResource(R.string.play_and_earn_progress_streak_played),
+          text = stringResource(R.string.play_and_earn_progress_streak_claimed),
           style = AGTypography.InputsXS,
           color = Palette.Primary,
         )

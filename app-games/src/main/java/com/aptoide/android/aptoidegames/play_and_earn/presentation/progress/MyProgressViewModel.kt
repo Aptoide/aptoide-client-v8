@@ -123,8 +123,8 @@ class MyProgressViewModel @Inject constructor(
     }
     val weekly = leaderboard.await()
     val games = (installed + listOfNotNull(demoDuckSurvival().takeIf { SHOW_DEMO_DATA }))
+      .orderedForDisplay(first = if (SHOW_DEMO_DATA) DEMO_GAME_ORDER else emptyList())
       .map { game -> game.copy(leaderboard = leaderboardOf(game, weekly)) }
-      .sortedBy { it.name.lowercase() }
 
     MyProgressUiState.Idle(
       walletBalance = balance.await(),

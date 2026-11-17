@@ -119,6 +119,8 @@ internal class MyProgressDemoDataTest {
     assertTrue((tiles[6].reward as StreakReward.Item).glow)
     assertEquals(MissionKind.entries.toSet(), duck.missions.map { it.kind }.toSet())
     assertTrue(duck.missions.all { it.isDemo })
+    assertTrue(duck.isDemo)
+    assertEquals(DEMO_DUCK_PACKAGE, DEMO_GAME_ORDER.last())
     assertEquals(2, duck.readyCount(emptySet()))
     assertFalse(duck.missions.any { it.completed && it.current < it.target })
   }

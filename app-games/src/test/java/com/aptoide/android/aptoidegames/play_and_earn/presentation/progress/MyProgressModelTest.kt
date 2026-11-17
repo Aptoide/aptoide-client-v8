@@ -188,6 +188,35 @@ internal class MyProgressModelTest {
   }
 
   @Test
+  fun `Games are listed in the presentation's order, then by name`() = scenario {
+    m Given "five games and an order for three of them"
+    val games = listOf("zeta", "duck", "alpha", "dice", "legends").map { game(it) }
+
+    m When "they are ordered"
+    val ordered = games.orderedForDisplay(first = listOf("legends", "dice", "duck"))
+
+    m Then "the three come first as asked, the others after them by name"
+    assertEquals(listOf("legends", "dice", "duck", "alpha", "zeta"), ordered.map { it.name })
+    assertEquals(
+      listOf("alpha", "dice", "duck", "legends", "zeta"),
+      games.orderedForDisplay(first = emptyList()).map { it.name },
+    )
+  }
+
+  @Test
+  fun `A demo game stands in for the real one of the same package`() = scenario {
+    m Given "a real game and a demo game sharing a package"
+    val real = game("duck", card("real", completed = false))
+    val demo = game("duck").copy(isDemo = true)
+
+    m When "they are ordered"
+    val ordered = listOf(real, demo).orderedForDisplay(first = emptyList())
+
+    m Then "only the demo one is listed"
+    assertEquals(listOf(true), ordered.map { it.isDemo })
+  }
+
+  @Test
   fun `The game with most to claim opens first`() = scenario {
     m Given "three games, the second with the most to claim"
     val games = listOf(

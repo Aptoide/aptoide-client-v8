@@ -556,7 +556,7 @@
   <string name="play_and_earn_progress_play_game">Play %1$s</string>
   <string name="play_and_earn_progress_streak_title">Daily streak</string>
   <string name="play_and_earn_progress_streak_day">DAY %1$d</string>
-  <string name="play_and_earn_progress_streak_played">Played</string>
+  <string name="play_and_earn_progress_streak_claimed">Claimed</string>
   <string name="play_and_earn_progress_streak_today">Today, day %1$d: play this game to keep your streak.</string>
   <string name="play_and_earn_progress_streak_today_reward">Today, day %1$d: +%2$d Units</string>
   <string name="play_and_earn_progress_streak_tomorrow">Come back tomorrow to keep your streak.</string>

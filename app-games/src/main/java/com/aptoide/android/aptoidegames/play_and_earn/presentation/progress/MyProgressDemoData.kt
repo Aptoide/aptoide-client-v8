@@ -11,7 +11,15 @@ import kotlin.random.Random
 // three kinds of mission, and with a leaderboard full of players. Remove before a real release.
 internal const val SHOW_DEMO_DATA = true
 
-internal const val DEMO_DUCK_PACKAGE = "demo.duck.survival"
+// The real game's package, so its Play button opens it when it is installed.
+internal const val DEMO_DUCK_PACKAGE = "com.mrtgd2us.google"
+
+// The order the games are shown in for the presentation; any other game comes after, by name.
+internal val DEMO_GAME_ORDER = listOf(
+  "com.mobile.legends",
+  "com.aptoide.diceroll.sdk",
+  DEMO_DUCK_PACKAGE,
+)
 
 private fun demoId(key: String) = "$DEMO_ID_PREFIX$key"
 
@@ -21,6 +29,7 @@ internal fun demoDuckSurvival() = GameProgress(
   name = "Duck Survival",
   icon = null,
   iconRes = R.drawable.pae_demo_duck_logo,
+  isDemo = true,
   // Three days played: today is day 4.
   streak = GameWeekStreak(
     daysPlayed = 3,

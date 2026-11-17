@@ -107,6 +107,8 @@ data class GameProgress(
   val iconRes: Int? = null,
   // This week's players of the game by play time; null when there is none to show.
   val leaderboard: PaELeaderboard? = null,
+  // Demo data (Hackathon 2026): the game has no campaign on the server.
+  val isDemo: Boolean = false,
 )
 
 enum class StreakTileState { PLAYED, TODAY, UPCOMING }
@@ -195,6 +197,19 @@ internal fun streakTiles(streak: GameWeekStreak): List<StreakTile> =
       reward = streak.rewards[day],
     )
   }
+
+/**
+ * The games as the selector lists them: those in [first] in that order, then the rest by name.
+ * A demo game stands in for a real one of the same package.
+ */
+internal fun List<GameProgress>.orderedForDisplay(first: List<String>): List<GameProgress> =
+  sortedByDescending { it.isDemo }
+    .distinctBy { it.packageName }
+    .sortedWith(
+      compareBy<GameProgress> { game ->
+        first.indexOf(game.packageName).takeIf { it >= 0 } ?: first.size
+      }.thenBy { it.name.lowercase() }
+    )
 
 /** The number on a game's logo: how many of its missions wait to be claimed. */
 internal fun GameProgress.readyCount(claimed: Set<String>): Int =
