@@ -560,6 +560,9 @@
   <string name="play_and_earn_progress_streak_today_reward">Today, day %1$d: +%2$d Units</string>
   <string name="play_and_earn_progress_streak_tomorrow">Come back tomorrow to keep your streak.</string>
   <string name="play_and_earn_progress_streak_complete">Streak complete! A new streak starts next week.</string>
+  <string name="play_and_earn_progress_section_in_game">In-game missions</string>
+  <string name="play_and_earn_progress_section_in_game_sub">Progress inside the game</string>
+  <string name="play_and_earn_progress_streak_today_item">Today, day %1$d: %2$s</string>
   <string name="play_and_earn_progress_section_play_time">Play time</string>
   <string name="play_and_earn_progress_section_play_time_sub">Based on your time played</string>
   <string name="play_and_earn_progress_section_purchases">Purchases</string>

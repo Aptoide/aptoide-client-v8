@@ -26,6 +26,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.time.temporal.IsoFields
 import javax.inject.Inject
 
 private const val LEADERBOARD_SIZE = 10
@@ -62,11 +63,19 @@ class MyProgressViewModel @Inject constructor(
     }
   }
 
+  // Demo missions are claimed for as long as the screen lives, so the demo can be shown again.
+  private var demoClaimed = emptySet<String>()
+
   /** The player tapped Claim and the coins have landed. */
   fun claim(id: String) {
-    val claimed = claimedMissionsStore.claim(id)
+    val claimed = if (id.startsWith(DEMO_ID_PREFIX)) {
+      demoClaimed = demoClaimed + id
+      claimedMissionsStore.claimed()
+    } else {
+      claimedMissionsStore.claim(id)
+    }
     _uiState.update { state ->
-      if (state is MyProgressUiState.Idle) state.copy(claimed = claimed) else state
+      if (state is MyProgressUiState.Idle) state.copy(claimed = claimed + demoClaimed) else state
     }
   }
 
@@ -84,19 +93,33 @@ class MyProgressViewModel @Inject constructor(
           ?.let { walletInfoRepository.getWalletInfo(it).unitsBalance }
       }.getOrNull()
     }
-    val games = installedGamesWithMissions()
+    val installed = installedGamesWithMissions()
       .map { packageName -> async { gameProgress(packageName, progress) } }
       .awaitAll()
+    val claimed = claimedMissionsStore.baselineOnce {
+      claimsToBaseline(installed.flatMap { it.missions })
+    }
+    val games = (installed + listOfNotNull(demoDuckSurvival().takeIf { SHOW_DEMO_DATA }))
       .sortedBy { it.name.lowercase() }
+    val weekly = leaderboard.await()
 
     MyProgressUiState.Idle(
       walletBalance = balance.await(),
       games = games,
-      leaderboard = leaderboard.await(),
+      leaderboard = if (SHOW_DEMO_DATA) {
+        demoLeaderboard(mySeconds = weekly?.me?.playSeconds ?: 0, seed = weekSeed())
+      } else {
+        weekly
+      },
       lifetimePlaySeconds = progress.lifetimePlaySeconds,
       lifetimeUnits = progress.lifetimeUnits,
-      claimed = claimedMissionsStore.claimed(),
+      claimed = claimed + demoClaimed,
     )
+  }
+
+  // The same demo leaderboard all week, a new one the next.
+  private fun weekSeed(): Int = LocalDate.now().let {
+    it.get(IsoFields.WEEK_BASED_YEAR) * 100 + it.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR)
   }
 
   // The Play & Earn games are cached when the store lists them; a player who lands here first

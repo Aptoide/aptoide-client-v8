@@ -97,10 +97,10 @@ internal class MyProgressModelTest {
   )
 
   @Test
-  fun `A game's missions are play time or purchases`() = scenario {
-    m Given "a play-time mission, a purchase event, another event, a checkpoint and a streak"
+  fun `A game's missions are play time, purchases or in-game`() = scenario {
+    m Given "a play-time mission, purchase events, other events, a checkpoint and a streak"
     m When "each is classified"
-    m Then "only play time and purchases have a section"
+    m Then "an event is a purchase when it says so, an in-game mission otherwise"
     assertEquals(MissionKind.PLAY_TIME, gameMission("Play 10 min").kind())
     assertEquals(
       MissionKind.PURCHASE,
@@ -114,10 +114,13 @@ internal class MyProgressModelTest {
       MissionKind.PURCHASE,
       gameMission("Buy attempts", PaEMissionType.EVENT, eventName = "af_purchase").kind(),
     )
-    assertNull(gameMission("Reach level 10", PaEMissionType.EVENT).kind())
-    assertNull(gameMission("Reach level 10", PaEMissionType.EVENT, category = "level").kind())
-    assertNull(
-      gameMission("Reach level 10", PaEMissionType.EVENT, eventName = "af_level_achieved").kind()
+    assertEquals(
+      MissionKind.IN_GAME,
+      gameMission("Reach level 10", PaEMissionType.EVENT, eventName = "af_level_achieved").kind(),
+    )
+    assertEquals(
+      MissionKind.IN_GAME,
+      gameMission("Reach level 10", PaEMissionType.EVENT, category = "level").kind(),
     )
     assertNull(gameMission("Checkpoint", PaEMissionType.CHECKPOINT).kind())
     assertNull(gameMission("Streak", PaEMissionType.STREAK).kind())
@@ -125,10 +128,10 @@ internal class MyProgressModelTest {
 
   @Test
   fun `A mission with no section or no goal has no card`() = scenario {
-    m Given "an in-game event and a play-time mission without a goal"
+    m Given "a checkpoint and a play-time mission without a goal"
     m When "the cards are built"
     m Then "neither shows, and a normal one does with its progress"
-    assertNull(gameMission("Reach level 10", PaEMissionType.EVENT).toCard("com.dice"))
+    assertNull(gameMission("Checkpoint", PaEMissionType.CHECKPOINT).toCard("com.dice"))
     assertNull(gameMission("Play", target = 0).toCard("com.dice"))
     val shown = gameMission("Play 10 min", current = 420).toCard("com.dice")
     assertEquals(420, shown?.current)
@@ -225,6 +228,51 @@ internal class MyProgressModelTest {
   }
 
   @Test
+  fun `A streak mission per day puts a reward on every tile`() = scenario {
+    m Given "seven streak missions for a game, one for each day"
+    val daily = listOf(25, 40, 50, 60, 75, 100, 150).mapIndexed { index, units ->
+      userMission("Play ${index + 1} days", target = index + 1, units = units)
+    }
+
+    m When "the streak and its tiles are built"
+    val tiles = streakTiles(gameWeekStreak(week = null, streakMissions = daily, todayIndex = 0))
+
+    m Then "each day shows what it pays"
+    assertEquals(
+      listOf(25, 40, 50, 60, 75, 100, 150),
+      tiles.map { (it.reward as StreakReward.Units).units },
+    )
+  }
+
+  @Test
+  fun `A demo mission adds to the balance only once claimed`() = scenario {
+    m Given "a wallet of 500 and a completed demo mission of 100, which the server never paid"
+    val demo = card("${DEMO_ID_PREFIX}duck", completed = true, units = 100)
+
+    m When "it waits, and then is claimed"
+    m Then "the balance starts level with the wallet and grows by the reward"
+    assertEquals(500L, shownBalance(500, listOf(demo), emptySet()))
+    assertEquals(600L, shownBalance(500, listOf(demo), setOf(demo.id)))
+  }
+
+  @Test
+  fun `What was completed before the screen existed starts as claimed`() = scenario {
+    m Given "an old completed mission, an open one and a completed demo mission"
+    val cards = listOf(
+      card("old", completed = true, units = 828),
+      card("open", completed = false),
+      card("${DEMO_ID_PREFIX}duck", completed = true),
+    )
+
+    m When "the first-run baseline is computed"
+    val baseline = claimsToBaseline(cards)
+
+    m Then "only the old one is in it, and the balance is then level with the wallet"
+    assertEquals(setOf("old"), baseline)
+    assertEquals(526L, shownBalance(526, cards, baseline))
+  }
+
+  @Test
   fun `A game's streak is its days this week and what each target pays`() = scenario {
     m Given "a game played Monday and Wednesday, with rewards on days 3 and 7"
     val week = PaEGameStreak(
@@ -246,7 +294,10 @@ internal class MyProgressModelTest {
     assertEquals(2, wednesday.daysPlayed)
     assertTrue(wednesday.playedToday)
     assertFalse(thursday.playedToday)
-    assertEquals(mapOf(3 to 30, 7 to 100), wednesday.rewards)
+    assertEquals(
+      mapOf(3 to StreakReward.Units(30), 7 to StreakReward.Units(100)),
+      wednesday.rewards,
+    )
   }
 
   @Test
@@ -267,7 +318,7 @@ internal class MyProgressModelTest {
   @Test
   fun `The tiles fill from day one and today's is the next`() = scenario {
     m Given "three days played, with a reward on day 7"
-    val rewards = mapOf(7 to 100)
+    val rewards = mapOf<Int, StreakReward>(7 to StreakReward.Units(100))
 
     m When "today is not played yet, and when it is"
     val waiting = streakTiles(GameWeekStreak(3, playedToday = false, rewards = rewards))
@@ -282,8 +333,8 @@ internal class MyProgressModelTest {
       listOf("PLAYED", "PLAYED", "PLAYED", "UPCOMING", "UPCOMING", "UPCOMING", "UPCOMING"),
       played.map { it.state.name },
     )
-    assertEquals(100, waiting.last().rewardUnits)
-    assertNull(waiting.first().rewardUnits)
+    assertEquals(StreakReward.Units(100), waiting.last().reward)
+    assertNull(waiting.first().reward)
   }
 
   @Test

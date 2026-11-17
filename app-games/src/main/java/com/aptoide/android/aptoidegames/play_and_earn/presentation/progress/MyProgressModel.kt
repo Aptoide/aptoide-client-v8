@@ -8,13 +8,20 @@ import cm.aptoide.pt.campaigns.domain.PaEMissionType
 import cm.aptoide.pt.campaigns.domain.PaEUserMission
 
 /**
- * The sections a game's missions are listed under, in the order they show. A game's own in-game
- * missions (levels, enemies, any other event its developer reports) are a third kind that is
- * not shown yet.
+ * The sections a game's missions are listed under, in the order they show. In-game missions are
+ * the events a game's developer reports through its MMP that are not purchases (levels, enemies
+ * defeated...).
  */
-enum class MissionKind { PURCHASE, PLAY_TIME }
+enum class MissionKind { IN_GAME, PURCHASE, PLAY_TIME }
 
 const val DAYS_IN_STREAK = 7
+
+/** How a mission's amounts read when they are not a plain number or a time ("Level 7"). */
+data class CardAmounts(
+  val current: String,
+  val target: String,
+  val toGo: String,
+)
 
 /** One of a game's missions, as the screen shows it. */
 data class MissionCard(
@@ -28,9 +35,18 @@ data class MissionCard(
   val target: Int,
   val unit: PaEMissionProgressType,
   val completed: Boolean,
+  val amounts: CardAmounts? = null,
 ) {
   val fraction: Float get() = if (target <= 0) 0f else (current.toFloat() / target).coerceIn(0f, 1f)
+
+  /** Demo data (Hackathon 2026): not a mission of the server's, so nothing was paid for it. */
+  val isDemo: Boolean get() = id.startsWith(DEMO_ID_PREFIX)
 }
+
+const val DEMO_ID_PREFIX = "demo|"
+
+/** What a game's mission is remembered as claimed by, here and in the in-game banner. */
+fun gameMissionClaimId(packageName: String, title: String): String = "game|$packageName|$title"
 
 /**
  * The reward is credited by the server the moment a mission completes; Claim only collects it on
@@ -54,12 +70,28 @@ fun List<MissionCard>.sortedForDisplay(claimed: Set<String>): List<MissionCard> 
     }
   }
 
-/** A game's week: the days it was played and what the streak pays on which day. */
+/** What reaching a day of the streak gives. */
+sealed interface StreakReward {
+  data class Units(val units: Int) : StreakReward
+
+  /**
+   * Something inside the game (coins, a weapon). [shortLabel] goes on the tile under the picture,
+   * or nothing when the picture speaks for itself; [glow] is for the one worth showing off.
+   */
+  data class Item(
+    val label: String,
+    val shortLabel: String?,
+    val imageRes: Int,
+    val glow: Boolean = false,
+  ) : StreakReward
+}
+
+/** A game's week: the days it was played and what the streak gives on which day. */
 data class GameWeekStreak(
   val daysPlayed: Int,
   val playedToday: Boolean,
-  // Day of the streak (1 to 7) to the units paid on reaching it.
-  val rewards: Map<Int, Int>,
+  // Day of the streak (1 to 7) to what reaching it gives.
+  val rewards: Map<Int, StreakReward>,
 ) {
   val isComplete: Boolean get() = daysPlayed >= DAYS_IN_STREAK
 }
@@ -70,6 +102,8 @@ data class GameProgress(
   val icon: String?,
   val streak: GameWeekStreak,
   val missions: List<MissionCard>,
+  // A logo shipped with the app, for the demo game.
+  val iconRes: Int? = null,
 )
 
 enum class StreakTileState { PLAYED, TODAY, UPCOMING }
@@ -77,21 +111,25 @@ enum class StreakTileState { PLAYED, TODAY, UPCOMING }
 data class StreakTile(
   val day: Int,
   val state: StreakTileState,
-  val rewardUnits: Int?,
+  val reward: StreakReward?,
 )
 
 /**
- * Play time is its own mission type. A purchase mission is an event mission, confirmed by the
- * developer's MMP: either flagged when it is created (`"category": "purchase"` in its arguments)
- * or recognised by the MMP event it counts (`af_purchase`, `purchase`...). Anything else (the
- * game's other events, checkpoints, its streak) has no section here.
+ * Play time is its own mission type. The rest of a game's missions are events its developer's MMP
+ * confirms: a purchase when flagged as one (`"category": "purchase"` in its arguments) or when
+ * the MMP event it counts says so (`af_purchase`, `purchase`...), an in-game mission otherwise.
+ * Checkpoints and the game's streak have no section here.
  */
 internal fun PaEMission.kind(): MissionKind? = when (type) {
   PaEMissionType.PLAY_TIME -> MissionKind.PLAY_TIME
-  PaEMissionType.EVENT -> MissionKind.PURCHASE.takeIf {
-    argument(CATEGORY_KEY).equals(PURCHASE, ignoreCase = true) ||
+  PaEMissionType.EVENT ->
+    if (argument(CATEGORY_KEY).equals(PURCHASE, ignoreCase = true) ||
       argument(EVENT_NAME_KEY).orEmpty().contains(PURCHASE, ignoreCase = true)
-  }
+    ) {
+      MissionKind.PURCHASE
+    } else {
+      MissionKind.IN_GAME
+    }
 
   else -> null
 }
@@ -108,7 +146,7 @@ internal fun PaEMission.toCard(packageName: String): MissionCard? {
   val kind = kind() ?: return null
   val target = progress?.target?.takeIf { it > 0 } ?: return null
   return MissionCard(
-    id = "game|$packageName|$title",
+    id = gameMissionClaimId(packageName, title),
     kind = kind,
     title = title,
     description = description,
@@ -123,7 +161,8 @@ internal fun PaEMission.toCard(packageName: String): MissionCard? {
 /**
  * A game's streak this week. [week] is what the server recorded for the game (absent when it was
  * not played this week); [streakMissions] are that game's own streak missions, each paying when
- * its target day is reached. [todayIndex] is today's place in the week, Monday being 0.
+ * its target day is reached: one per day makes a reward on every tile. [todayIndex] is today's
+ * place in the week, Monday being 0.
  */
 internal fun gameWeekStreak(
   week: PaEGameStreak?,
@@ -134,7 +173,7 @@ internal fun gameWeekStreak(
   playedToday = week?.days?.getOrNull(todayIndex) == true,
   rewards = streakMissions
     .filter { it.type == PaEMissionType.STREAK && it.progress.target in 1..DAYS_IN_STREAK }
-    .associate { it.progress.target to it.units },
+    .associate { it.progress.target to StreakReward.Units(it.units) },
 )
 
 /**
@@ -150,7 +189,7 @@ internal fun streakTiles(streak: GameWeekStreak): List<StreakTile> =
         day == streak.daysPlayed + 1 && !streak.playedToday -> StreakTileState.TODAY
         else -> StreakTileState.UPCOMING
       },
-      rewardUnits = streak.rewards[day],
+      reward = streak.rewards[day],
     )
   }
 
@@ -159,21 +198,33 @@ internal fun GameProgress.readyCount(claimed: Set<String>): Int =
   missions.count { it.state(claimed) == CardState.READY }
 
 /**
- * The balance the screen shows. The wallet already holds every completed mission's reward, so
- * what is still to be claimed is held back and added as the player claims it: the coins that
- * fly to the balance then make it grow by what they carry.
+ * The balance the screen shows, which ends level with the wallet's once everything is claimed.
+ * The wallet already holds every completed mission's reward, so what is still to be claimed is
+ * held back and added as the player claims it: the coins that fly to the balance make it grow by
+ * exactly what they carry. A demo mission was never paid, so claiming it only adds on screen.
  */
 internal fun shownBalance(
   walletBalance: Long?,
   cards: List<MissionCard>,
   claimed: Set<String>,
 ): Long? = walletBalance?.let { balance ->
-  val waiting = cards
-    .distinctBy { it.id }
+  val (demo, real) = cards.distinctBy { it.id }.partition { it.isDemo }
+  val waiting = real
     .filter { it.state(claimed) == CardState.READY }
     .sumOf { it.units.toLong() }
-  (balance - waiting).coerceAtLeast(0)
+  val demoClaimed = demo
+    .filter { it.state(claimed) == CardState.CLAIMED }
+    .sumOf { it.units.toLong() }
+  (balance - waiting).coerceAtLeast(0) + demoClaimed
 }
+
+/**
+ * The missions to mark as claimed the first time the screen opens. Whatever was completed before
+ * there was anything to claim was paid, and likely spent, long ago: offering it now would hold
+ * back from the balance units the wallet no longer has.
+ */
+internal fun claimsToBaseline(cards: List<MissionCard>): Set<String> =
+  cards.filter { it.completed && !it.isDemo }.map { it.id }.toSet()
 
 /** The game opened first: the one with most to claim, else the first listed. */
 internal fun defaultGame(games: List<GameProgress>, claimed: Set<String>): String? =

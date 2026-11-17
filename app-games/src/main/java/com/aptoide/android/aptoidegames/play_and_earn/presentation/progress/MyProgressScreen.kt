@@ -1,6 +1,10 @@
 package com.aptoide.android.aptoidegames.play_and_earn.presentation.progress
 
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -39,6 +43,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
@@ -296,9 +303,16 @@ private fun GameSelector(
               .clip(RoundedCornerShape(12.dp))
               .background(Palette.GreyDark),
           ) {
-            game.icon?.let {
-              AptoideAsyncImage(
-                data = it,
+            when {
+              game.iconRes != null -> Image(
+                painter = painterResource(game.iconRes),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize(),
+              )
+
+              game.icon != null -> AptoideAsyncImage(
+                data = game.icon,
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize(),
               )
@@ -372,7 +386,7 @@ private fun StreakCard(streak: GameWeekStreak) {
     Spacer(modifier = Modifier.height(14.dp))
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
       tiles.drop(4).forEachIndexed { index, tile ->
-        StreakTileView(tile, Modifier.weight(if (index == 2) 2f else 1f), isLast = index == 2)
+        StreakTileView(tile, Modifier.weight(if (index == 2) 2f else 1f))
       }
     }
     Spacer(modifier = Modifier.height(14.dp))
@@ -393,13 +407,21 @@ private fun streakLine(
   return when {
     streak.isComplete -> stringResource(R.string.play_and_earn_progress_streak_complete)
     today == null -> stringResource(R.string.play_and_earn_progress_streak_tomorrow)
-    today.rewardUnits != null -> stringResource(
-      R.string.play_and_earn_progress_streak_today_reward,
-      today.day,
-      today.rewardUnits,
-    )
+    else -> when (val reward = today.reward) {
+      is StreakReward.Units -> stringResource(
+        R.string.play_and_earn_progress_streak_today_reward,
+        today.day,
+        reward.units,
+      )
 
-    else -> stringResource(R.string.play_and_earn_progress_streak_today, today.day)
+      is StreakReward.Item -> stringResource(
+        R.string.play_and_earn_progress_streak_today_item,
+        today.day,
+        reward.label,
+      )
+
+      null -> stringResource(R.string.play_and_earn_progress_streak_today, today.day)
+    }
   }
 }
 
@@ -407,62 +429,115 @@ private fun streakLine(
 private fun StreakTileView(
   tile: StreakTile,
   modifier: Modifier = Modifier,
-  isLast: Boolean = false,
 ) {
   val played = tile.state == StreakTileState.PLAYED
   val isToday = tile.state == StreakTileState.TODAY
-  val border = when {
-    isToday -> Palette.Primary
-    isLast -> Palette.Yellow100
-    else -> Palette.Black
-  }
-  Column(
+  Box(
     modifier = modifier
       .height(78.dp)
       .clip(TileShape)
       .background(Palette.Black)
-      .border(1.dp, border, TileShape),
-    horizontalAlignment = Alignment.CenterHorizontally,
-    verticalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterVertically),
+      // Only the day the player is on stands out.
+      .border(1.dp, if (isToday) Palette.Primary else Palette.Black, TileShape),
+    contentAlignment = Alignment.Center,
   ) {
     if (played) {
-      Text(
-        text = "✓",
-        style = AGTypography.InputsS,
-        color = FixedColors.Dark,
-        textAlign = TextAlign.Center,
-        modifier = Modifier
-          .size(24.dp)
-          .clip(CircleShape)
-          .background(Palette.Primary)
-          .padding(top = 3.dp),
-      )
-      Text(
-        text = stringResource(R.string.play_and_earn_progress_streak_played),
-        style = AGTypography.InputsXS,
-        color = Palette.Primary,
-      )
+      Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+      ) {
+        Text(
+          text = "✓",
+          style = AGTypography.InputsS,
+          color = FixedColors.Dark,
+          textAlign = TextAlign.Center,
+          modifier = Modifier
+            .size(24.dp)
+            .clip(CircleShape)
+            .background(Palette.Primary)
+            .padding(top = 3.dp),
+        )
+        Text(
+          text = stringResource(R.string.play_and_earn_progress_streak_played),
+          style = AGTypography.InputsXS,
+          color = Palette.Primary,
+        )
+      }
     } else {
-      Text(
-        text = stringResource(R.string.play_and_earn_progress_streak_day, tile.day),
-        style = AGTypography.InputsXS,
-        color = if (isToday) Palette.Primary else Palette.GreyLight,
-        maxLines = 1,
-      )
-      Image(
-        imageVector = getSmallCoinIcon(),
-        contentDescription = null,
-        modifier = Modifier
-          .size(24.dp)
-          .alpha(if (tile.rewardUnits != null) 1f else 0.25f),
-      )
-      Text(
-        text = tile.rewardUnits?.toString().orEmpty(),
-        style = AGTypography.InputsXS,
-        color = Palette.White,
-      )
+      val item = tile.reward as? StreakReward.Item
+      if (item?.glow == true) StreakGlow()
+      Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(2.dp),
+      ) {
+        // The reward worth showing off takes the whole tile, with no text around it.
+        if (item?.glow != true) {
+          Text(
+            text = stringResource(R.string.play_and_earn_progress_streak_day, tile.day),
+            style = AGTypography.InputsXS,
+            color = if (isToday) Palette.Primary else Palette.GreyLight,
+            maxLines = 1,
+          )
+        }
+        when (val reward = tile.reward) {
+          is StreakReward.Item -> Image(
+            painter = painterResource(reward.imageRes),
+            contentDescription = reward.label,
+            modifier = Modifier.height(if (reward.glow) 54.dp else 34.dp),
+          )
+
+          else -> Image(
+            imageVector = getSmallCoinIcon(),
+            contentDescription = null,
+            modifier = Modifier
+              .size(24.dp)
+              .alpha(if (reward != null) 1f else 0.25f),
+          )
+        }
+        val value = when (val reward = tile.reward) {
+          is StreakReward.Units -> reward.units.toString()
+          is StreakReward.Item -> reward.shortLabel
+          null -> null
+        }
+        value?.let {
+          Text(
+            text = it,
+            style = AGTypography.InputsXS,
+            color = Palette.White,
+            maxLines = 1,
+          )
+        }
+      }
     }
   }
+}
+
+/** The golden light pulsing behind the streak's best reward, as in the prototype. */
+@Composable
+private fun StreakGlow() {
+  val pulse by rememberInfiniteTransition(label = "glow").animateFloat(
+    initialValue = 0f,
+    targetValue = 1f,
+    animationSpec = infiniteRepeatable(tween(1100), RepeatMode.Reverse),
+    label = "glow",
+  )
+  val gold = Palette.Yellow100
+  Box(
+    modifier = Modifier
+      .size(120.dp)
+      .graphicsLayer {
+        alpha = 0.7f + 0.3f * pulse
+        scaleX = 0.9f + 0.2f * pulse
+        scaleY = 0.9f + 0.2f * pulse
+      }
+      .background(
+        Brush.radialGradient(
+          0f to gold.copy(alpha = 0.85f),
+          0.4f to gold.copy(alpha = 0.35f),
+          0.7f to gold.copy(alpha = 0f),
+        )
+      ),
+  )
 }
 
 @Composable
@@ -486,17 +561,20 @@ private fun GameMissions(
       SectionHeader(
         title = stringResource(
           when (kind) {
+            MissionKind.IN_GAME -> R.string.play_and_earn_progress_section_in_game
             MissionKind.PURCHASE -> R.string.play_and_earn_progress_section_purchases
             MissionKind.PLAY_TIME -> R.string.play_and_earn_progress_section_play_time
           }
         ),
         subtitle = stringResource(
           when (kind) {
+            MissionKind.IN_GAME -> R.string.play_and_earn_progress_section_in_game_sub
             MissionKind.PURCHASE -> R.string.play_and_earn_progress_section_purchases_sub
             MissionKind.PLAY_TIME -> R.string.play_and_earn_progress_section_play_time_sub
           }
         ),
         iconRes = when (kind) {
+          MissionKind.IN_GAME -> R.drawable.pae_section_ingame_missions
           MissionKind.PURCHASE -> R.drawable.pae_section_purchases
           MissionKind.PLAY_TIME -> R.drawable.pae_section_play_time
         },
@@ -594,24 +672,34 @@ private fun MissionCardView(
           )
         }
       }
-      Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
-      ) {
-        Image(
-          imageVector = getSmallCoinIcon(),
-          contentDescription = null,
-          modifier = Modifier.size(16.dp),
-        )
+      if (state == CardState.CLAIMED) {
         Text(
-          text = "+${card.units}",
+          text = stringResource(R.string.play_and_earn_progress_mission_claimed),
           style = AGTypography.InputsS,
           color = Palette.Primary,
           maxLines = 1,
         )
+      } else {
+        Row(
+          verticalAlignment = Alignment.CenterVertically,
+          horizontalArrangement = Arrangement.spacedBy(4.dp),
+        ) {
+          Image(
+            imageVector = getSmallCoinIcon(),
+            contentDescription = null,
+            modifier = Modifier.size(16.dp),
+          )
+          Text(
+            text = "+${card.units}",
+            style = AGTypography.InputsS,
+            color = Palette.Primary,
+            maxLines = 1,
+          )
+        }
       }
     }
-    if (state != CardState.CLAIMED) {
+    if (state == CardState.CLAIMED) return@Column
+    run {
       Box(
         modifier = Modifier
           .padding(top = 10.dp)
@@ -639,8 +727,8 @@ private fun MissionCardView(
       Text(
         text = stringResource(
           R.string.play_and_earn_progress_mission_amount,
-          amountText(card, card.current),
-          amountText(card, card.target),
+          card.amounts?.current ?: amountText(card, card.current),
+          card.amounts?.target ?: amountText(card, card.target),
         ),
         style = AGTypography.InputsS,
         color = Palette.White,
@@ -659,16 +747,12 @@ private fun MissionCardView(
             .padding(horizontal = 14.dp, vertical = 8.dp),
         )
 
-        CardState.CLAIMED -> Text(
-          text = stringResource(R.string.play_and_earn_progress_mission_claimed),
-          style = AGTypography.InputsS,
-          color = Palette.GreyLight,
-        )
+        CardState.CLAIMED -> Unit
 
         CardState.IN_PROGRESS -> Text(
           text = stringResource(
             R.string.play_and_earn_progress_mission_to_go,
-            amountText(card, (card.target - card.current).coerceAtLeast(0)),
+            card.amounts?.toGo ?: amountText(card, (card.target - card.current).coerceAtLeast(0)),
           ),
           style = AGTypography.InputsS,
           color = Palette.GreyLight,

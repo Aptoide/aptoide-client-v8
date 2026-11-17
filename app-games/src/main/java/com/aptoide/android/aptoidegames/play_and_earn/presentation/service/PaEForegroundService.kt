@@ -31,6 +31,8 @@ import com.aptoide.android.aptoidegames.play_and_earn.presentation.notifications
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.overlays.PaEOverlayViewManager
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.hasOverlayPermission
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.hasUsageStatsPermissionStatus
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.progress.PaEClaimedMissionsStore
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.progress.gameMissionClaimId
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sessions.PaESessionManager
 import com.aptoide.android.aptoidegames.putNotificationRoute
 import dagger.hilt.android.AndroidEntryPoint
@@ -61,6 +63,9 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
 
   @Inject
   lateinit var paESessionManager: PaESessionManager
+
+  @Inject
+  lateinit var paEClaimedMissionsStore: PaEClaimedMissionsStore
 
   @Inject
   lateinit var paECampaignsRepository: PaECampaignsRepository
@@ -213,6 +218,12 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
             event.nextMission,
             this@PaEForegroundService,
             this@PaEForegroundService
+          )
+        }
+        // Claimed on the banner (by a tap, or by itself): not offered again in My progress.
+        if (!event.isUserMission) {
+          paEClaimedMissionsStore.claim(
+            gameMissionClaimId(event.packageName, event.mission.title)
           )
         }
       },
