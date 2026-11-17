@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <application>
+    <!-- Google sign-in result for the wallet web tab (see wallet_web/WalletWebScreen.kt). -->
+    <activity
+        android:name="com.aptoide.android.aptoidegames.wallet_web.WalletLoginCallbackActivity"
+        android:exported="true"
+        android:theme="@android:style/Theme.Translucent.NoTitleBar">
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
+
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+
+        <data
+            android:host="${applicationId}"
+            android:scheme="login-wallet-result" />
+      </intent-filter>
+    </activity>
+  </application>
+</manifest>

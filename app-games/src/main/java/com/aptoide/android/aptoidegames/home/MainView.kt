@@ -93,6 +93,8 @@ import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesToolBar
 import com.aptoide.android.aptoidegames.updates.presentation.updatesScreen
+import com.aptoide.android.aptoidegames.wallet_web.walletWebRoute
+import com.aptoide.android.aptoidegames.wallet_web.walletWebScreen
 import kotlinx.coroutines.launch
 
 private val routesWithoutTopBar = listOf(
@@ -103,6 +105,7 @@ private val routesWithoutTopBar = listOf(
   robloxApkfyRecommendationRoute,
   robloxApkfyRewardRoute,
   freeFireApkfyRewardRoute,
+  walletWebRoute, // the wallet web app brings its own header
 )
 
 // Routes that intentionally draw behind the status bar (they handle the inset themselves)
@@ -269,6 +272,12 @@ private fun NavigationGraph(
       navigate = navController::navigateTo,
       goBack = navController::navigateUp,
       screenData = gamesScreen()
+    )
+
+    staticComposable(
+      navigate = navController::navigateTo,
+      goBack = navController::navigateUp,
+      screenData = walletWebScreen()
     )
 
     animatedComposable(

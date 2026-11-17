@@ -224,6 +224,11 @@ android {
         name = "API_CHAIN_CATAPPULT_HOST",
         value = "\"${project.property("API_CHAIN_CATAPPULT_HOST_DEV")}\""
       )
+      buildConfigField(
+        type = "String",
+        name = "WALLET_WEB_URL",
+        value = "\"${project.findProperty("walletWebUrl") ?: "https://wallet.dev.aptoide.com/sign-in"}\""
+      )
 
       buildConfigField(
         type = "String",
@@ -275,6 +280,11 @@ android {
         type = "String",
         name = "API_CHAIN_CATAPPULT_HOST",
         value = "\"${project.property("API_CHAIN_CATAPPULT_HOST")}\""
+      )
+      buildConfigField(
+        type = "String",
+        name = "WALLET_WEB_URL",
+        value = "\"${project.findProperty("walletWebUrl") ?: "https://wallet.aptoide.com/sign-in"}\""
       )
       buildConfigField(
         type = "String",
@@ -409,6 +419,7 @@ dependencies {
   implementation(projects.playAndEarn.exchange)
   implementation(projects.playAndEarn.events)
   implementation(projects.featureWallet.authorization)
+  implementation(libs.custom.chrome.tab)
   implementation(projects.featureWallet.walletInfo)
   implementation(projects.featureWallet.gamification)
   implementation(projects.featureWallet.datastore)
