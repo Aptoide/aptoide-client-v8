@@ -1,7 +1,12 @@
 package com.aptoide.android.aptoidegames.play_and_earn.presentation.notifications
 
+import cm.aptoide.pt.campaigns.domain.PaEMission
+import cm.aptoide.pt.campaigns.domain.PaEMissionType
 import cm.aptoide.pt.test.gherkin.scenario
 import com.aptoide.android.aptoidegames.appview.appViewRoute
+import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.CompletedMissionEvent
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.progress.myProgressRoute
+import com.google.gson.JsonObject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -36,5 +41,26 @@ internal class MissionCompletedRouteTest {
     m Then "it has the destination's segment count: one more slash and nothing matches (AND-914)"
     assertEquals(patternSegments.size, pathSegments.size)
     assertEquals(patternSegments.first(), pathSegments.first())
+  }
+
+  private fun completed(isUserMission: Boolean) = CompletedMissionEvent(
+    mission = PaEMission(
+      title = "Play 5 minutes", description = null, icon = null, type = PaEMissionType.PLAY_TIME,
+      arguments = JsonObject(), units = 10, progress = null,
+    ),
+    packageName = packageName,
+    isUserMission = isUserMission,
+  )
+
+  @Test
+  fun `A game's mission opens the game, one of the player's own opens My progress`() = scenario {
+    m Given "a game mission and a user mission, both completed while playing $packageName"
+    m When "each notification destination is chosen"
+    val gameRoute = completedMissionRoute(completed(isUserMission = false))
+    val userRoute = completedMissionRoute(completed(isUserMission = true))
+
+    m Then "the game's goes to its Rewards tab and the player's to My progress"
+    assertEquals(missionCompletedRoute(packageName), gameRoute)
+    assertEquals(myProgressRoute, userRoute)
   }
 }

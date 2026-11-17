@@ -134,14 +134,20 @@ private fun SessionStartInfoJson.toDomainModel() = SessionStartInfo(
 private fun SessionInfoJson.toDomainModel() = SessionInfo(
   appliedSeconds = this.appliedSeconds,
   ttl = this.ttl,
-  events = this.events.orEmpty().map(SessionEventJson::toDomainModel)
+  events = this.events.orEmpty().mapNotNull(SessionEventJson::toDomainModel)
 )
 
-private fun SessionEventJson.toDomainModel() = SessionEvent(
-  type = this.type,
-  missionTitle = this.missionTitle,
-  packageName = this.packageName
-)
+// An event missing what identifies it is dropped: one unreadable event must not cost the
+// heartbeat, and with it the play time and every other event it carried.
+private fun SessionEventJson.toDomainModel(): SessionEvent? {
+  return SessionEvent(
+    type = type ?: return null,
+    missionTitle = missionTitle ?: return null,
+    packageName = packageName ?: return null,
+    earnedUnits = earnedUnits ?: 0,
+    scope = scope,
+  )
+}
 
 private fun SessionEndInfoJson.toDomainModel() = SessionEndInfo(
   appliedSeconds = this.appliedSeconds,

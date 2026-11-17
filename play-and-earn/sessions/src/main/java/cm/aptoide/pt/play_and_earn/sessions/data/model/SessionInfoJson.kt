@@ -13,11 +13,15 @@ internal data class SessionInfoJson(
 )
 
 @Keep
+// Every field nullable: Gson leaves null what the backend omits, and an event this app cannot
+// read must be skipped, not fail the heartbeat that carries it.
 internal data class SessionEventJson(
-  val type: String,
-  @SerializedName("mission_title") val missionTitle: String,
-  @SerializedName("earned_units") val earnedUnits: Int,
-  @SerializedName("package") val packageName: String
+  val type: String?,
+  @SerializedName("mission_title") val missionTitle: String?,
+  @SerializedName("earned_units") val earnedUnits: Int?,
+  @SerializedName("package") val packageName: String?,
+  // "user" for a mission that belongs to the player rather than to the game (Hackathon 2026).
+  val scope: String? = null,
 )
 
 @Keep

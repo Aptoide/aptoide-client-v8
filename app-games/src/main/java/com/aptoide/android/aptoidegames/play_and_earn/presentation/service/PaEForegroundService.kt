@@ -25,6 +25,7 @@ import com.aptoide.android.aptoidegames.play_and_earn.PlayAndEarnManager
 import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPreferencesRepository
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaEStatusHeartbeatPolicy
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.notifications.PaEMissionCompletedAnnouncer
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.notifications.completedMissionRoute
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.notifications.PaEMissionCompletedNotificationBuilder
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.notifications.missionCompletedRoute
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.overlays.PaEOverlayViewManager
@@ -219,7 +220,8 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
         paEMissionCompletedNotificationBuilder.showMissionCompletedNotification(
           mission = event.mission,
           packageName = event.packageName,
-          nextMission = event.nextMission
+          nextMission = event.nextMission,
+          route = completedMissionRoute(event),
         )
       },
     )

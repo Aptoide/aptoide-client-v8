@@ -1,6 +1,7 @@
 package com.aptoide.android.aptoidegames.play_and_earn.presentation.sessions
 
 import cm.aptoide.pt.campaigns.data.PaEMissionsRepository
+import cm.aptoide.pt.campaigns.data.PaEProgressRepository
 import cm.aptoide.pt.play_and_earn.sessions.data.PaESessionsRepository
 import cm.aptoide.pt.play_and_earn.sessions.data.SessionExpiredException
 import cm.aptoide.pt.play_and_earn.sessions.domain.SessionInfo
@@ -8,6 +9,8 @@ import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPreferencesReposit
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.CompletedMissionEvent
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaEMissionConfirmations
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaESession
+import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaEUserMissionAnnouncements
+import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.completedUserMission
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.nextMission
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.PaEAnalytics
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.missions.PaEMissionManager
@@ -22,8 +25,12 @@ class PaESessionManager @Inject constructor(
   private val paeMissionsRepository: PaEMissionsRepository,
   private val paeMissionManager: PaEMissionManager,
   private val paEPreferencesRepository: PaEPreferencesRepository,
-  private val paEAnalytics: PaEAnalytics
+  private val paEAnalytics: PaEAnalytics,
+  private val paeProgressRepository: PaEProgressRepository,
 ) {
+
+  // Not per session: the player's own missions are replayed to every session's heartbeats.
+  private val userMissionAnnouncements = PaEUserMissionAnnouncements()
 
   val activeSessions = mutableListOf<PaESession>()
 
@@ -240,6 +247,27 @@ class PaESessionManager @Inject constructor(
           nextMission = nextMission
         )
       )
+    }
+
+    announceUserMissions(syncResult)
+  }
+
+  /**
+   * The player's own missions (weekly, monthly) the heartbeat confirmed: announced over the game
+   * being played, with the user mission to do next. The progress is only fetched when there is
+   * something to announce, and the announcement goes ahead without it.
+   */
+  private suspend fun announceUserMissions(syncResult: SessionInfo) {
+    val completed = userMissionAnnouncements.newOnes(
+      events = syncResult.events,
+      nowMs = System.currentTimeMillis()
+    )
+    if (completed.isEmpty()) return
+
+    val progress = paeProgressRepository.getMyProgress().getOrNull()
+    val completedTitles = completed.map { it.missionTitle }
+    completed.forEach { event ->
+      _completedMissions.emit(completedUserMission(event, progress, completedTitles))
     }
   }
 }
