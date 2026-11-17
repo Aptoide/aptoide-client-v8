@@ -535,6 +535,27 @@
   <string name="play_and_earn_exchange_units_value">%1$d units</string>
   <string name="play_and_earn_exchange_not_enough_balance">Not enough balance</string>
   <string name="play_and_earn_my_balance_button">My Balance</string>
+  <string name="play_and_earn_progress_title">My progress</string>
+  <string name="play_and_earn_progress_button">My progress</string>
+  <string name="play_and_earn_progress_units_earned_label">Units earned</string>
+  <string name="play_and_earn_progress_play_time_label">Time played</string>
+  <string name="play_and_earn_progress_play_time_hours">%1$dh %2$dm</string>
+  <string name="play_and_earn_progress_play_time_minutes">%1$d min</string>
+  <string name="play_and_earn_progress_missions_title">Your missions</string>
+  <string name="play_and_earn_progress_missions_empty">No missions right now. Check back soon.</string>
+  <string name="play_and_earn_progress_mission_weekly">Weekly</string>
+  <string name="play_and_earn_progress_mission_monthly">Monthly</string>
+  <string name="play_and_earn_progress_mission_next">Next</string>
+  <string name="play_and_earn_progress_mission_completed">Completed</string>
+  <string name="play_and_earn_progress_mission_reward">+%1$d units</string>
+  <string name="play_and_earn_progress_mission_amount">%1$s / %2$s</string>
+  <string name="play_and_earn_progress_mission_days">%1$d / %2$d days</string>
+  <string name="play_and_earn_progress_streaks_title">This week\'s streak</string>
+  <string name="play_and_earn_progress_streaks_empty">Play a game today to start your streak.</string>
+  <string name="play_and_earn_progress_streak_days">%1$d / %2$d days</string>
+  <string name="play_and_earn_progress_leaderboard_title">Weekly leaderboard</string>
+  <string name="play_and_earn_progress_leaderboard_empty">Nobody has played this week yet. Be the first.</string>
+  <string name="play_and_earn_progress_leaderboard_you">You</string>
   <string name="play_and_earn_exchange_reach_target_robux">Reaching %1$d units = Redeem %2$s in Robux code</string>
   <string name="play_and_earn_exchange_reach_target_diamonds">Reaching %1$d units = Redeem %2$s in Free Fire Diamonds code</string>
   <string name="play_and_earn_exchange_pick_reward_title">Pick your reward.</string>
