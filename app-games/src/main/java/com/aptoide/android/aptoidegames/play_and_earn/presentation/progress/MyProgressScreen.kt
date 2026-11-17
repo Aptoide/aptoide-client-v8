@@ -192,10 +192,13 @@ private fun MyProgressContent(
         game?.let {
           StreakCard(streak = it.streak)
           GameMissions(game = it, claimed = state.claimed, onClaim = claim)
-        }
-        state.leaderboard?.let { leaderboard ->
-          SectionHeader(title = stringResource(R.string.play_and_earn_progress_leaderboard_title))
-          LeaderboardList(leaderboard)
+          it.leaderboard?.let { leaderboard ->
+            SectionHeader(
+              title = stringResource(R.string.play_and_earn_progress_leaderboard_title),
+              subtitle = it.name,
+            )
+            LeaderboardList(leaderboard)
+          }
         }
         SectionHeader(title = stringResource(R.string.play_and_earn_progress_totals_title))
         TotalsRow(

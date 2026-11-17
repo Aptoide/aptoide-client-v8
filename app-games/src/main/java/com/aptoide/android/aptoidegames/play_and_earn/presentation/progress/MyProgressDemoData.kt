@@ -119,17 +119,31 @@ internal fun demoDuckSurvival() = GameProgress(
 private val DEMO_PLAYERS = listOf(
   "NightOwl_PT", "xKiraz", "Tugas4Ever", "MariaG_22", "DiceKing", "Rui.Plays", "LunaStar",
   "Pedro_GG", "SofiaQuack", "ZeDoPipo", "TheRealNuno", "Bia_Gamer", "FoxHunter7", "Inês.exe",
+  "Lisboa_Legend", "CapitaoTuga", "Marta.Plays", "DarkPhoenix", "JoaoDoPorto", "Kika_Pro",
+  "SnackAttack", "Tiago_TTV", "AnaBanana", "PixelPirate", "Gui_Gamer", "QueenCarol",
+  "MrBacalhau", "RitaRush", "VascoDaGama_", "Leo.exe", "Beatriz_BR", "CyberCamelo",
+  "DuckSlayer", "Nuno_NPC", "SaraSniper", "ElTouro",
 )
+
+/**
+ * The seed of one game's leaderboard in one week: each game has its own players and times, the
+ * same all week, a new set the next.
+ */
+internal fun demoLeaderboardSeed(packageName: String, week: Int): Int =
+  31 * week + packageName.hashCode()
+
+// What the player has played of the demo game this week, in line with its play-time missions.
+internal const val DEMO_DUCK_MY_SECONDS = 8400L
 
 private const val DEMO_TOP = 10
 private const val MINUTE = 60L
 private const val HOUR = 60 * MINUTE
 
 /**
- * A week's leaderboard that looks lived in: ten players between roughly twenty and three hours,
- * the same all week for a given [seed], with the player placed where their real play time
- * [mySeconds] puts them (inside the top, or further down with their own row; left out when they
- * have not played).
+ * A game's week that looks lived in: ten players between roughly twenty and three hours, the
+ * same for a given [seed] (see [demoLeaderboardSeed]), with the player placed where their play
+ * time [mySeconds] puts them (inside the top, or further down with their own row; left out when
+ * they have not played the game).
  */
 internal fun demoLeaderboard(mySeconds: Long, seed: Int): PaELeaderboard {
   val random = Random(seed)

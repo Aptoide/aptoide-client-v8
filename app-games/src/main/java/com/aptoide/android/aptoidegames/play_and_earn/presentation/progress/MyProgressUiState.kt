@@ -1,8 +1,6 @@
 package com.aptoide.android.aptoidegames.play_and_earn.presentation.progress
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import cm.aptoide.pt.campaigns.domain.PaELeaderboard
-import cm.aptoide.pt.campaigns.domain.PaELeaderboardEntry
 import cm.aptoide.pt.campaigns.domain.PaEMissionProgressType
 
 sealed interface MyProgressUiState {
@@ -12,8 +10,6 @@ sealed interface MyProgressUiState {
     val walletBalance: Long?,
     // The installed games that have missions.
     val games: List<GameProgress>,
-    // Null when it could not be loaded: the rest of the screen still shows.
-    val leaderboard: PaELeaderboard?,
     val lifetimePlaySeconds: Long,
     val lifetimeUnits: Long,
     val claimed: Set<String>,
@@ -47,8 +43,9 @@ class MyProgressUiStateProvider : PreviewParameterProvider<MyProgressUiState.Idl
             previewCard("Play 30 minutes", MissionKind.PLAY_TIME, 1800, 1800, 50),
             previewCard("Play 2 hours", MissionKind.PLAY_TIME, 2700, 7200, 150),
           ),
+          leaderboard = demoLeaderboard(mySeconds = 2700, seed = 1),
         ),
-        demoDuckSurvival(),
+        demoDuckSurvival().copy(leaderboard = demoLeaderboard(DEMO_DUCK_MY_SECONDS, seed = 2)),
         GameProgress(
           packageName = "com.cell.survivor",
           name = "Cell Survivor",
@@ -57,14 +54,6 @@ class MyProgressUiStateProvider : PreviewParameterProvider<MyProgressUiState.Idl
           missions = listOf(previewCard("Play 5 hours", MissionKind.PLAY_TIME, 4500, 18000, 250)),
         ),
       ),
-      leaderboard = PaELeaderboard(
-        entries = listOf(
-          PaELeaderboardEntry(1, "0x1a1a…1a1a", 9000, false),
-          PaELeaderboardEntry(2, "0xfc20…015e", 7200, true),
-          PaELeaderboardEntry(3, "0x2b2b…2b2b", 600, false),
-        ),
-        me = PaELeaderboardEntry(2, "0xfc20…015e", 7200, true),
-      ),
       lifetimePlaySeconds = 5400,
       lifetimeUnits = 320,
       claimed = emptySet(),
@@ -72,7 +61,6 @@ class MyProgressUiStateProvider : PreviewParameterProvider<MyProgressUiState.Idl
     MyProgressUiState.Idle(
       walletBalance = null,
       games = emptyList(),
-      leaderboard = null,
       lifetimePlaySeconds = 0,
       lifetimeUnits = 0,
       claimed = emptySet(),

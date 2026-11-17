@@ -41,6 +41,41 @@ internal class MyProgressDemoDataTest {
   }
 
   @Test
+  fun `Each game has its own players and times`() = scenario {
+    m Given "three games in the same week"
+    val week = 202647
+    val boards = listOf("com.aptoide.diceroll.sdk", "com.mobile.legends", DEMO_DUCK_PACKAGE)
+      .map { demoLeaderboard(mySeconds = 0, seed = demoLeaderboardSeed(it, week)) }
+
+    m When "their leaderboards are compared"
+    m Then "no two share their players or their times, and each is the same when built again"
+    assertEquals(3, boards.map { board -> board.entries.map { it.player } }.distinct().size)
+    assertEquals(3, boards.map { board -> board.entries.map { it.playSeconds } }.distinct().size)
+    assertEquals(
+      boards[0],
+      demoLeaderboard(0, demoLeaderboardSeed("com.aptoide.diceroll.sdk", week)),
+    )
+    assertNotEquals(
+      demoLeaderboardSeed("com.mobile.legends", week),
+      demoLeaderboardSeed("com.mobile.legends", week + 1),
+    )
+  }
+
+  @Test
+  fun `The demo game ranks the player by its own play time`() = scenario {
+    m Given "Duck Survival, where the player has 2 h 20 min this week"
+    m When "its leaderboard is built"
+    val board = demoLeaderboard(
+      mySeconds = DEMO_DUCK_MY_SECONDS,
+      seed = demoLeaderboardSeed(DEMO_DUCK_PACKAGE, 202647),
+    )
+
+    m Then "the player has a row with that time"
+    assertEquals(DEMO_DUCK_MY_SECONDS, board.me?.playSeconds)
+    assertTrue(board.me?.isMe == true)
+  }
+
+  @Test
   fun `A player with enough play time is placed inside the top`() = scenario {
     m Given "a player with more time than the fifth of the demo players"
     val others = demoLeaderboard(0, seed = 202647).entries

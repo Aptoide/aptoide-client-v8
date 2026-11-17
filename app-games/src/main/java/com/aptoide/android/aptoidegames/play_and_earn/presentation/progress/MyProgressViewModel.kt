@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.campaigns.data.PaECampaignsRepository
 import cm.aptoide.pt.campaigns.data.PaEMissionsRepository
 import cm.aptoide.pt.campaigns.data.PaEProgressRepository
+import cm.aptoide.pt.campaigns.domain.PaELeaderboard
 import cm.aptoide.pt.campaigns.domain.PaEUserProgress
 import cm.aptoide.pt.exception_handler.ExceptionHandler
 import cm.aptoide.pt.extensions.runPreviewable
@@ -99,26 +100,40 @@ class MyProgressViewModel @Inject constructor(
     val claimed = claimedMissionsStore.baselineOnce {
       claimsToBaseline(installed.flatMap { it.missions })
     }
-    val games = (installed + listOfNotNull(demoDuckSurvival().takeIf { SHOW_DEMO_DATA }))
-      .sortedBy { it.name.lowercase() }
     val weekly = leaderboard.await()
+    val games = (installed + listOfNotNull(demoDuckSurvival().takeIf { SHOW_DEMO_DATA }))
+      .map { game -> game.copy(leaderboard = leaderboardOf(game, weekly)) }
+      .sortedBy { it.name.lowercase() }
 
     MyProgressUiState.Idle(
       walletBalance = balance.await(),
       games = games,
-      leaderboard = if (SHOW_DEMO_DATA) {
-        demoLeaderboard(mySeconds = weekly?.me?.playSeconds ?: 0, seed = weekSeed())
-      } else {
-        weekly
-      },
       lifetimePlaySeconds = progress.lifetimePlaySeconds,
       lifetimeUnits = progress.lifetimeUnits,
       claimed = claimed + demoClaimed,
     )
   }
 
-  // The same demo leaderboard all week, a new one the next.
-  private fun weekSeed(): Int = LocalDate.now().let {
+  /**
+   * The leaderboard shown with a game. The server only ranks play time across every game, so for
+   * the presentation each game gets demo players of its own; the real player is in it only if
+   * they played that game this week, with their real play time of the week (the demo game has
+   * its own). Without demo data, every game shows the one real leaderboard.
+   */
+  private fun leaderboardOf(game: GameProgress, weekly: PaELeaderboard?): PaELeaderboard? {
+    if (!SHOW_DEMO_DATA) return weekly
+    val mySeconds = when {
+      game.packageName == DEMO_DUCK_PACKAGE -> DEMO_DUCK_MY_SECONDS
+      game.streak.daysPlayed > 0 -> weekly?.me?.playSeconds ?: 0
+      else -> 0
+    }
+    return demoLeaderboard(
+      mySeconds = mySeconds,
+      seed = demoLeaderboardSeed(game.packageName, week = currentWeek()),
+    )
+  }
+
+  private fun currentWeek(): Int = LocalDate.now().let {
     it.get(IsoFields.WEEK_BASED_YEAR) * 100 + it.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR)
   }
 
