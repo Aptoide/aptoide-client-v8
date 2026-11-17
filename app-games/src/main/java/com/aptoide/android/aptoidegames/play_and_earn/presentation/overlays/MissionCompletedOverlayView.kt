@@ -331,7 +331,7 @@ private fun UnitsBalanceChip(
 
 /** One coin, from the Claim button at [from] to the balance at [to] (px, inside the layer). */
 @Composable
-private fun FlyingCoin(
+internal fun FlyingCoin(
   index: Int,
   from: Offset,
   to: Offset

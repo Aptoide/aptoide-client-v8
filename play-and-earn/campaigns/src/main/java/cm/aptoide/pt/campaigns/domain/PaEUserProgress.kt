@@ -20,6 +20,10 @@ data class PaEUserMission(
   val units: Int,
   // Null for a period this app doesn't know (a newer backend): the mission still shows.
   val period: PaEMissionPeriod?,
+  // First day of the period (ISO date), which tells one week's mission from the next week's.
+  val periodStart: String? = null,
+  // The game the mission belongs to (its weekly streak); null for one across every game.
+  val packageName: String? = null,
   val progress: PaEMissionProgress,
   // The one to present as "next mission": the first not completed yet.
   val isNext: Boolean,
