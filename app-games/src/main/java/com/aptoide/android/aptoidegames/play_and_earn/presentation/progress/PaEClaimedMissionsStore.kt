@@ -18,8 +18,21 @@ class PaEClaimedMissionsStore @Inject constructor(
 
   fun claimed(): Set<String> = preferences.getStringSet(KEY, emptySet()).orEmpty().toSet()
 
-  fun claim(id: String): Set<String> {
-    val updated = claimed() + id
+  fun claim(id: String): Set<String> = claimAll(setOf(id))
+
+  /**
+   * Run once, the first time the missions are seen: whatever is already completed then was paid
+   * before there was anything to claim, so it starts as claimed (see `claimsToBaseline`).
+   */
+  fun baselineOnce(ids: () -> Set<String>): Set<String> {
+    if (preferences.getBoolean(BASELINED, false)) return claimed()
+    val updated = claimAll(ids())
+    preferences.edit().putBoolean(BASELINED, true).apply()
+    return updated
+  }
+
+  private fun claimAll(ids: Set<String>): Set<String> {
+    val updated = claimed() + ids
     preferences.edit().putStringSet(KEY, updated).apply()
     return updated
   }
@@ -27,5 +40,6 @@ class PaEClaimedMissionsStore @Inject constructor(
   private companion object {
     const val FILE = "pae_claimed_missions"
     const val KEY = "claimed"
+    const val BASELINED = "baselined"
   }
 }

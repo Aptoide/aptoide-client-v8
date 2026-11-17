@@ -38,7 +38,9 @@ class MyProgressUiStateProvider : PreviewParameterProvider<MyProgressUiState.Idl
           streak = GameWeekStreak(
             daysPlayed = 3,
             playedToday = false,
-            rewards = mapOf(3 to 50, 7 to 150),
+            rewards = listOf(25, 40, 50, 60, 75, 100, 150)
+              .mapIndexed { index, units -> index + 1 to StreakReward.Units(units) }
+              .toMap(),
           ),
           missions = listOf(
             previewCard("Make 1 purchase", MissionKind.PURCHASE, 0, 1, 150),
@@ -46,6 +48,7 @@ class MyProgressUiStateProvider : PreviewParameterProvider<MyProgressUiState.Idl
             previewCard("Play 2 hours", MissionKind.PLAY_TIME, 2700, 7200, 150),
           ),
         ),
+        demoDuckSurvival(),
         GameProgress(
           packageName = "com.cell.survivor",
           name = "Cell Survivor",
@@ -90,6 +93,7 @@ private fun previewCard(
   description = when (kind) {
     MissionKind.PURCHASE -> "Any item in the game"
     MissionKind.PLAY_TIME -> "Total time played"
+    MissionKind.IN_GAME -> "Progress inside the game"
   },
   units = units,
   current = current,
