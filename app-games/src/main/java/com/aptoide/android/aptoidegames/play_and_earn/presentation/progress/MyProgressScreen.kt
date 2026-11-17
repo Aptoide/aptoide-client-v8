@@ -49,6 +49,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -64,8 +65,10 @@ import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
+import com.aptoide.android.aptoidegames.design_system.PrimaryButton
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getSmallCoinIcon
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.rememberPaEPlayTap
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.overlays.BALANCE_COUNT_MILLIS
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.overlays.CLAIM_COINS
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.overlays.COINS_FLIGHT_MILLIS
@@ -82,12 +85,13 @@ const val myProgressRoute = "myProgress"
 fun myProgressScreen() = ScreenData.withAnalytics(
   route = myProgressRoute,
   screenAnalyticsName = "MyProgress",
-) { _, _, navigateBack ->
+) { _, navigate, navigateBack ->
   val (uiState, claim) = rememberMyProgress()
   MyProgressScreen(
     uiState = uiState,
     navigateBack = navigateBack,
     onClaim = claim,
+    navigate = navigate,
   )
 }
 
@@ -99,6 +103,7 @@ fun MyProgressScreen(
   uiState: MyProgressUiState,
   navigateBack: () -> Unit,
   onClaim: (String) -> Unit = {},
+  navigate: ((String) -> Unit)? = null,
 ) {
   Column(modifier = Modifier.fillMaxSize()) {
     AppGamesTopBar(
@@ -115,7 +120,11 @@ fun MyProgressScreen(
 
       is MyProgressUiState.Error -> GenericErrorView(onRetryClick = uiState.retry)
 
-      is MyProgressUiState.Idle -> MyProgressContent(state = uiState, onClaim = onClaim)
+      is MyProgressUiState.Idle -> MyProgressContent(
+        state = uiState,
+        onClaim = onClaim,
+        navigate = navigate,
+      )
     }
   }
 }
@@ -130,6 +139,7 @@ private fun LayoutCoordinates.centerInWindow(): Offset =
 private fun MyProgressContent(
   state: MyProgressUiState.Idle,
   onClaim: (String) -> Unit,
+  navigate: ((String) -> Unit)?,
 ) {
   var selected by rememberSaveable { mutableStateOf<String?>(null) }
   val game = state.games.find { it.packageName == selected }
@@ -190,6 +200,7 @@ private fun MyProgressContent(
           )
         }
         game?.let {
+          key(it.packageName) { PlayGameButton(game = it, navigate = navigate) }
           StreakCard(streak = it.streak)
           GameMissions(game = it, claimed = state.claimed, onClaim = claim)
           it.leaderboard?.let { leaderboard ->
@@ -348,6 +359,32 @@ private fun GameSelector(
       }
     }
   }
+}
+
+/**
+ * Opens the chosen game the way the Play button of its page does: signed in, with the play-time
+ * tracking (or the MMP status heartbeats) the game's campaign needs, so what is played from here
+ * counts towards the missions and the streak below. Not shown for a game that is not installed
+ * (the demo game).
+ */
+@Composable
+private fun PlayGameButton(
+  game: GameProgress,
+  navigate: ((String) -> Unit)?,
+) {
+  val context = LocalContext.current
+  val launchIntent = remember(game.packageName) {
+    context.packageManager.getLaunchIntentForPackage(game.packageName)
+  } ?: return
+  val playTap = rememberPaEPlayTap(packageName = game.packageName, navigate = navigate)
+
+  PrimaryButton(
+    onClick = playTap.guard { context.startActivity(launchIntent) },
+    modifier = Modifier
+      .fillMaxWidth()
+      .padding(start = 16.dp, top = 16.dp, end = 16.dp),
+    title = stringResource(R.string.play_and_earn_progress_play_game, game.name),
+  )
 }
 
 @Composable

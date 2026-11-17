@@ -2,10 +2,14 @@ package com.aptoide.android.aptoidegames.play_and_earn.presentation.progress
 
 import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.campaigns.data.PaECampaignsRepository
 import cm.aptoide.pt.campaigns.data.PaEMissionsRepository
@@ -18,6 +22,7 @@ import cm.aptoide.pt.wallet.datastore.WalletCoreDataSource
 import cm.aptoide.pt.wallet.wallet_info.data.WalletInfoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -63,6 +68,22 @@ class MyProgressViewModel @Inject constructor(
       )
     }
   }
+
+  /**
+   * Back from a game: what was played there has moved the missions and the streak. Reloaded
+   * behind what is on screen, which stays as it is if the reload fails.
+   */
+  fun refresh() {
+    if (_uiState.value !is MyProgressUiState.Idle || refreshing?.isActive == true) return
+    refreshing = viewModelScope.launch {
+      progressRepository.getMyProgress().onSuccess { progress ->
+        val reloaded = load(progress)
+        _uiState.update { if (it is MyProgressUiState.Idle) reloaded else it }
+      }
+    }
+  }
+
+  private var refreshing: Job? = null
 
   // Demo missions are claimed for as long as the screen lives, so the demo can be shown again.
   private var demoClaimed = emptySet<String>()
@@ -181,6 +202,14 @@ fun rememberMyProgress(): Pair<MyProgressUiState, (String) -> Unit> = runPreview
   real = {
     val vm = hiltViewModel<MyProgressViewModel>()
     val uiState by vm.uiState.collectAsState()
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+      val observer = LifecycleEventObserver { _, event ->
+        if (event == Lifecycle.Event.ON_RESUME) vm.refresh()
+      }
+      lifecycleOwner.lifecycle.addObserver(observer)
+      onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
     uiState to vm::claim
   }
 )

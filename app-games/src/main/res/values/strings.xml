@@ -553,6 +553,7 @@
   <string name="play_and_earn_progress_games_hint">Your installed games with missions</string>
   <string name="play_and_earn_progress_games_empty">Install a Play &amp; Earn game to see its missions here.</string>
   <string name="play_and_earn_progress_game_missions_empty">No missions for this game right now.</string>
+  <string name="play_and_earn_progress_play_game">Play %1$s</string>
   <string name="play_and_earn_progress_streak_title">Daily streak</string>
   <string name="play_and_earn_progress_streak_day">DAY %1$d</string>
   <string name="play_and_earn_progress_streak_played">Played</string>
