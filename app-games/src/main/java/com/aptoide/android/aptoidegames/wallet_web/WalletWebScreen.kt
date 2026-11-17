@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.view.ContextThemeWrapper
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.webkit.CookieManager
@@ -37,6 +38,9 @@ import org.json.JSONObject
 import javax.inject.Inject
 
 const val walletWebRoute = "wallet_web"
+
+// Background of the wallet web app's dark mode, shown while the page loads.
+private const val WALLET_WEB_DARK_BACKGROUND = 0xFF282934.toInt()
 
 fun walletWebScreen() = ScreenData.withAnalytics(
   route = walletWebRoute,
@@ -100,7 +104,15 @@ fun WalletWebScreen(
   AndroidView(
     modifier = Modifier.fillMaxSize(),
     factory = { context ->
-      WebView(context).apply {
+      // The wallet web app follows prefers-color-scheme, which a WebView derives from the theme of
+      // the context it is created with (isLightTheme). A dark-themed wrapper selects its dark mode.
+      val webViewContext = if (WALLET_WEB_DARK_THEME) {
+        ContextThemeWrapper(context, android.R.style.Theme_Material_NoActionBar)
+      } else {
+        context
+      }
+      WebView(webViewContext).apply {
+        if (WALLET_WEB_DARK_THEME) setBackgroundColor(WALLET_WEB_DARK_BACKGROUND)
         // AndroidView defaults to WRAP_CONTENT, which makes WebView report a 0px viewport height.
         layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT)
         settings.javaScriptEnabled = true
