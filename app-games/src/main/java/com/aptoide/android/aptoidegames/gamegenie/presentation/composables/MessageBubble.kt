@@ -37,6 +37,7 @@ import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.feature_apps.presentation.AppItem
 import com.aptoide.android.aptoidegames.gamegenie.analytics.rememberGameGenieAnalytics
 import com.aptoide.android.aptoidegames.gamegenie.presentation.GameGenieYoutubePlayer
+import com.aptoide.android.aptoidegames.gamegenie.purchase.GenieAction
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.installer.presentation.reportingCampaignClick
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -55,6 +56,7 @@ fun MessageBubble(
   isCompanion: Boolean = false,
   gameName: String = "",
   image: String? = null,
+  action: GenieAction? = null,
 ) {
   val context = LocalContext.current
   val analytics = rememberGameGenieAnalytics()
@@ -240,6 +242,11 @@ fun MessageBubble(
             ) {
               InstallViewShort(app, onNavigateToAppView = openAppView.reportingCampaignClick(app))
             }
+          }
+
+          // HACKATHON: Genie purchase flow card
+          if (!isUserMessage && action != null) {
+            GenieActionCard(action = action)
           }
         }
       }

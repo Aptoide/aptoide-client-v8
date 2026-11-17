@@ -22,6 +22,9 @@ import com.aptoide.android.aptoidegames.feature_editors_choice_recommendation.Ed
 import com.aptoide.android.aptoidegames.firebase.FirebaseConstants
 import com.aptoide.android.aptoidegames.gamegenie.presentation.GameGenieOverlayService
 import com.aptoide.android.aptoidegames.gamegenie.presentation.buildGameGenieRoute
+import com.aptoide.android.aptoidegames.gamegenie.presentation.genieRoute
+import com.aptoide.android.aptoidegames.gamegenie.purchase.GeniePurchaseContract
+import com.aptoide.android.aptoidegames.gamegenie.purchase.GeniePurchaseResultBus
 import com.aptoide.android.aptoidegames.gamesfeed.presentation.GamesFeedManager
 import com.aptoide.android.aptoidegames.home.MainView
 import com.aptoide.android.aptoidegames.home.navigateTo
@@ -83,6 +86,9 @@ class MainActivity : AppCompatActivity() {
   @Inject
   lateinit var paEClientConfigManager: PaEClientConfigManager
 
+  @Inject
+  lateinit var geniePurchaseResultBus: GeniePurchaseResultBus
+
   private var navController: NavHostController? = null
 
   private val coroutinesScope: CoroutineScope = CoroutineScope(Job() + Dispatchers.IO)
@@ -91,6 +97,7 @@ class MainActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    if (forwardGeniePurchaseCallbackToOwnTask()) return
     intent.addSourceContext()
 
     notificationsPermissionLauncher =
@@ -244,6 +251,37 @@ class MainActivity : AppCompatActivity() {
 
     handleFirebaseNotificationAnalytics(intent)
     handleGameGenieOverlayIntent(intent)
+    handleGeniePurchaseCallback(intent)
+  }
+
+  /**
+   * HACKATHON: a game opened `<scheme>genie/purchase-result` without FLAG_ACTIVITY_NEW_TASK, so
+   * this instance was created inside the game's task. Hand the result to the waiting Genie chat
+   * and bring the store's own task (where that chat lives) back instead of a second store.
+   */
+  private fun forwardGeniePurchaseCallbackToOwnTask(): Boolean {
+    if (isTaskRoot) return false
+    val callbackUri = intent?.data ?: return false
+    val callback = GeniePurchaseContract.parseCallback(callbackUri) ?: return false
+    geniePurchaseResultBus.post(callback)
+    startActivity(
+      Intent(Intent.ACTION_VIEW, callbackUri, this, MainActivity::class.java)
+        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    )
+    finish()
+    return true
+  }
+
+  /** HACKATHON: the game's purchase-result callback; stale refs are ignored by the chat. */
+  private fun handleGeniePurchaseCallback(intent: Intent?) {
+    val callback = GeniePurchaseContract.parseCallback(intent?.data) ?: return
+    geniePurchaseResultBus.post(callback)
+    val nav = navController ?: return
+    val isGenieRoute = { route: String? -> route?.substringBefore("?") == genieRoute }
+    if (isGenieRoute(nav.currentDestination?.route)) return
+    val genieDestination = nav.graph.firstOrNull { isGenieRoute(it.route) }
+    if (genieDestination != null && nav.popBackStack(genieDestination.id, false)) return
+    nav.navigate(genieRoute) { launchSingleTop = true }
   }
 
   private fun handleFirebaseNotificationAnalytics(intent: Intent?) {

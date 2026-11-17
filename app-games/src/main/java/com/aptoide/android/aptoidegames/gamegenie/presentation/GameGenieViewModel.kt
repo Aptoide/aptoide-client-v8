@@ -10,6 +10,10 @@ import com.aptoide.android.aptoidegames.gamegenie.domain.GameContext
 import com.aptoide.android.aptoidegames.gamegenie.domain.Suggestion
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameGenieChat
 import com.aptoide.android.aptoidegames.gamegenie.domain.Token
+import com.aptoide.android.aptoidegames.gamegenie.purchase.GenieAction
+import com.aptoide.android.aptoidegames.gamegenie.purchase.GenieChatHost
+import com.aptoide.android.aptoidegames.gamegenie.purchase.GeniePurchaseOrchestrator
+import com.aptoide.android.aptoidegames.gamegenie.purchase.PurchaseIntentResolver
 import com.aptoide.android.aptoidegames.gamegenie.presentation.GameGenieUIStateType.NO_CONNECTION
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -33,7 +37,8 @@ class GameGenieViewModel @Inject constructor(
   private val getGameCompanionsUseCase: GetGameCompanionsUseCase,
   private val gameGenieLocalRepository: GameGenieLocalRepository,
   @ApplicationContext private val context: Context,
-) : ViewModel() {
+  private val purchaseOrchestrator: GeniePurchaseOrchestrator,
+) : ViewModel(), GenieChatHost {
   private val viewModelState = MutableStateFlow(GameGenieViewModelState())
   private val _installedApps = MutableStateFlow<List<GameContext>>(emptyList())
 
@@ -70,6 +75,7 @@ class GameGenieViewModel @Inject constructor(
     loadInstalledGames()
     refreshToken()
     _conversation.value = viewModelState.value.chat.conversation
+    purchaseOrchestrator.attach(viewModelScope, this)
   }
 
   fun setSelectedGame(game: GameCompanion) {
@@ -84,6 +90,7 @@ class GameGenieViewModel @Inject constructor(
     loadCompanionChatJob = null
     loadCompanionSuggestionsJob?.cancel()
     loadCompanionSuggestionsJob = null
+    purchaseOrchestrator.cancel()
     emptyChat()
   }
 
@@ -143,6 +150,15 @@ class GameGenieViewModel @Inject constructor(
     imagePathOrBase64: String? = null,
   ) {
     sendMessageJob?.cancel()
+    // HACKATHON: "buy X in <game>" is handled on the client by the Genie purchase flow.
+    val purchaseItem =
+      if (imagePathOrBase64 == null) PurchaseIntentResolver.resolve(userMessage) else null
+    if (purchaseItem != null) {
+      updateConversation(userMessage, null)
+      syncChatConversation(idle = true)
+      purchaseOrchestrator.start(purchaseItem)
+      return
+    }
     sendMessageJob = viewModelScope.launch {
       try {
         val selectedGame = viewModelState.value.selectedGame
@@ -193,6 +209,7 @@ class GameGenieViewModel @Inject constructor(
   }
 
   fun emptyChat() {
+    purchaseOrchestrator.cancel()
     viewModelScope.launch {
       _firstLoad.value = true
       viewModelState.update { it.empty(it.token) }
@@ -201,6 +218,7 @@ class GameGenieViewModel @Inject constructor(
   }
 
   fun loadConversation(id: String) {
+    purchaseOrchestrator.cancel()
     viewModelScope.launch {
       _firstLoad.value = true
       viewModelState.update {
@@ -226,6 +244,7 @@ class GameGenieViewModel @Inject constructor(
   fun loadCompanionChat(packageName: String) {
     loadCompanionChatJob?.cancel()
     loadCompanionSuggestionsJob?.cancel()
+    purchaseOrchestrator.cancel()
     loadCompanionChatJob = viewModelScope.launch {
       _firstLoad.value = true
       var gameName: String? = null
@@ -315,6 +334,46 @@ class GameGenieViewModel @Inject constructor(
       )
     }
   }
+
+  // region HACKATHON: Genie purchase flow (GenieChatHost)
+
+  fun continuePurchaseAsDemoUser() = purchaseOrchestrator.continueAsDemoUser()
+
+  fun payPurchase(card: GenieAction.PurchaseReady) = purchaseOrchestrator.pay(card)
+
+  override fun appendGenieTurn(text: String, action: GenieAction?): Int {
+    _conversation.value += ChatInteraction(
+      gpt = text,
+      user = null,
+      videoId = null,
+      apps = emptyList(),
+      action = action ?: GenieAction.Note,
+    )
+    syncChatConversation()
+    return _conversation.value.lastIndex
+  }
+
+  override fun updateGenieAction(index: Int, transform: (GenieAction) -> GenieAction?) {
+    val current = _conversation.value
+    val action = current.getOrNull(index)?.action ?: return
+    val updated = transform(action) ?: return
+    _conversation.value = current.toMutableList().apply {
+      this[index] = this[index].copy(action = updated)
+    }
+    syncChatConversation()
+  }
+
+  private fun syncChatConversation(idle: Boolean = false) {
+    val conversation = _conversation.value
+    viewModelState.update {
+      it.copy(
+        type = if (idle) GameGenieUIStateType.IDLE else it.type,
+        chat = it.chat.copy(conversation = conversation),
+      )
+    }
+  }
+
+  // endregion
 
   private fun handleError(e: Throwable) {
     Timber.w(e)

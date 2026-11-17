@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -38,11 +39,14 @@ import com.aptoide.android.aptoidegames.gamegenie.domain.GameCompanion
 import com.aptoide.android.aptoidegames.gamegenie.domain.Suggestion
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.ChatBackButton
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.ChatParticipantName
+import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.GenieActionHandler
+import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.LocalGenieActionHandler
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.CompanionGamesStrip
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.MessageList
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.TextInputBar
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.companion.ChatbotViewCompanion
 import com.aptoide.android.aptoidegames.home.LoadingView
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnSignInRoute
 import com.aptoide.android.aptoidegames.mmp.WithUTM
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
@@ -122,6 +126,16 @@ fun gameGenieScreen(
     }
   }
 
+  // HACKATHON: Genie purchase flow card actions
+  val genieActionHandler = remember(viewModel, navigate) {
+    GenieActionHandler(
+      onSignIn = { navigate(playAndEarnSignInRoute) },
+      onContinueAsDemoUser = viewModel::continuePurchaseAsDemoUser,
+      onPay = viewModel::payPurchase,
+    )
+  }
+
+  CompositionLocalProvider(LocalGenieActionHandler provides genieActionHandler) {
   WithUTM(
     medium = "gamegenie",
     campaign = "gamegenie",
@@ -248,6 +262,7 @@ fun gameGenieScreen(
         viewModel.emptyChat()
       },
     )
+  }
   }
 }
 

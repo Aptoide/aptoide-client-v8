@@ -155,6 +155,7 @@ fun MessageList(
           navigateTo = navigateTo,
           playerCache = playerCache,
           gameName = gameName,
+          action = message.action,
         )
       }
 

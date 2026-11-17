@@ -92,7 +92,7 @@ fun GameGenieChat.toGameGenieChatHistory() =
   GameGenieChatHistory(
     id = id,
     title = title,
-    conversation = conversation.map { interaction ->
+    conversation = conversation.withoutLocalActions().map { interaction ->
       ChatInteractionHistory(
         gpt = interaction.gpt,
         user = interaction.user,
@@ -102,3 +102,18 @@ fun GameGenieChat.toGameGenieChatHistory() =
       )
     }
   )
+
+/**
+ * HACKATHON: drops the client-only Genie purchase turns (those with an action) so the backend and
+ * the saved chat only ever see the regular conversation. A user reply written on a dropped turn
+ * moves onto the previous kept turn, so the next normal message still reaches the backend.
+ */
+internal fun List<ChatInteraction>.withoutLocalActions(): List<ChatInteraction> =
+  fold(mutableListOf()) { kept, interaction ->
+    if (interaction.action == null || kept.isEmpty()) {
+      kept += interaction.copy(action = null)
+    } else if (interaction.user != null) {
+      kept[kept.lastIndex] = kept.last().copy(user = interaction.user)
+    }
+    kept
+  }
