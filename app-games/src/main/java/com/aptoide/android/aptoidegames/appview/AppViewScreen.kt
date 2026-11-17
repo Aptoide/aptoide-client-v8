@@ -103,6 +103,9 @@ import com.aptoide.android.aptoidegames.appview.AppViewHeaderConstants.VIDEO_HEI
 import com.aptoide.android.aptoidegames.appview.permissions.buildAppPermissionsRoute
 import com.aptoide.android.aptoidegames.appview.postinstall.PostInstallRecommendsView
 import com.aptoide.android.aptoidegames.design_system.AptoideGamesSwitch
+import com.aptoide.android.aptoidegames.appview.shop.AppShopTab
+import com.aptoide.android.aptoidegames.appview.shop.demoCatalogueAppOrNull
+import com.aptoide.android.aptoidegames.appview.shop.rememberShowShopTab
 import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
 import com.aptoide.android.aptoidegames.drawables.backgrounds.myiconpack.getAppViewBonusGiftBackground
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusIconLeft
@@ -144,6 +147,7 @@ import com.aptoide.android.aptoidegames.videos.presentation.AppViewYoutubePlayer
 
 private val tabsList = listOf(
   AppViewTab.DETAILS,
+  AppViewTab.SHOP,
   AppViewTab.REWARDS,
   AppViewTab.RELATED,
   AppViewTab.INFO,
@@ -260,7 +264,16 @@ fun AppViewScreen(
   isRtb: Boolean = false,
   isGamified: Boolean
 ) {
-  val (baseUiState, reload) = rememberApp(source = source)
+  val (loadedUiState, reload) = rememberApp(source = source)
+  // HACKATHON MOCK (debug only): an installed Genie catalogue game missing from the store catalogue
+  // gets a demo AppView instead of the error, so its Shop tab can be shown.
+  val context = LocalContext.current
+  val baseUiState = if (loadedUiState is AppUiState.Error) {
+    remember(source) { demoCatalogueAppOrNull(context, source) }
+      ?.let { AppUiState.Idle(it) } ?: loadedUiState
+  } else {
+    loadedUiState
+  }
   val analyticsContext = AnalyticsContext.current
   val generalAnalytics = rememberGeneralAnalytics()
 
@@ -291,9 +304,13 @@ fun AppViewScreen(
     rememberIsPackageInPaE(packageName = it)
   } ?: false
 
-  val tabsList by remember(relatedEditorialsUiState, isPackageInPaE) {
+  // HACKATHON: Shop tab for an installed AppCoins game
+  val showShop = (uiState as? AppUiState.Idle)?.app?.let { rememberShowShopTab(it) } ?: false
+
+  val tabsList by remember(relatedEditorialsUiState, isPackageInPaE, showShop) {
     derivedStateOf {
       tabsList
+        .let { if (showShop) it else it.filter { it != AppViewTab.SHOP } }
         .let {
           if (relatedEditorialsUiState.isNullOrEmpty()) {
             it.filter { it != AppViewTab.RELATED }
@@ -648,6 +665,8 @@ fun ViewPagerContent(
 ) {
   when (selectedTab) {
     AppViewTab.DETAILS -> DetailsView(app = app, navigate = navigate)
+
+    AppViewTab.SHOP -> AppShopTab(app = app, navigate = navigate)
 
     AppViewTab.REWARDS -> AppRewardsView(packageName = app.packageName, navigate = navigate)
 

@@ -23,8 +23,11 @@ import com.aptoide.android.aptoidegames.firebase.FirebaseConstants
 import com.aptoide.android.aptoidegames.gamegenie.presentation.GameGenieOverlayService
 import com.aptoide.android.aptoidegames.gamegenie.presentation.buildGameGenieRoute
 import com.aptoide.android.aptoidegames.gamegenie.presentation.genieRoute
-import com.aptoide.android.aptoidegames.gamegenie.purchase.GeniePurchaseContract
-import com.aptoide.android.aptoidegames.gamegenie.purchase.GeniePurchaseResultBus
+import com.aptoide.android.aptoidegames.gamegenie.purchase.GamePurchaseContract
+import com.aptoide.android.aptoidegames.gamegenie.purchase.GamePurchaseLauncher
+import com.aptoide.android.aptoidegames.gamegenie.purchase.GeniePerkLink
+import com.aptoide.android.aptoidegames.gamegenie.purchase.GeniePerkRequests
+import com.aptoide.android.aptoidegames.gamegenie.purchase.PurchaseCallbackTarget
 import com.aptoide.android.aptoidegames.gamesfeed.presentation.GamesFeedManager
 import com.aptoide.android.aptoidegames.home.MainView
 import com.aptoide.android.aptoidegames.home.navigateTo
@@ -87,7 +90,10 @@ class MainActivity : AppCompatActivity() {
   lateinit var paEClientConfigManager: PaEClientConfigManager
 
   @Inject
-  lateinit var geniePurchaseResultBus: GeniePurchaseResultBus
+  lateinit var gamePurchaseLauncher: GamePurchaseLauncher
+
+  @Inject
+  lateinit var geniePerkRequests: GeniePerkRequests
 
   private var navController: NavHostController? = null
 
@@ -201,7 +207,8 @@ class MainActivity : AppCompatActivity() {
         }
         ?.allowDownloadOnMetered()
     }
-    intent.agDeepLink?.takeIf { it.scheme == "ag" }?.let {
+    // HACKATHON: the perk link (ag://genie/buy) has no nav destination; handleGeniePerkLink owns it.
+    intent.agDeepLink?.takeIf { it.scheme == "ag" && parseGeniePerk(it.toString()) == null }?.let {
       navController?.navigate(it)
     }
 
@@ -252,6 +259,22 @@ class MainActivity : AppCompatActivity() {
     handleFirebaseNotificationAnalytics(intent)
     handleGameGenieOverlayIntent(intent)
     handleGeniePurchaseCallback(intent)
+    handleGeniePerkLink(intent)
+  }
+
+  private fun parseGeniePerk(link: String?) =
+    GeniePerkLink.parse(link, deepLinkScheme = BuildConfig.DEEP_LINK_SCHEMA.substringBefore("://"))
+
+  /**
+   * HACKATHON: perk push notification tap (`dti.link` extra) or a direct `ag://genie/buy` link:
+   * open Genie with the purchase flow for that catalogue item already started.
+   */
+  private fun handleGeniePerkLink(intent: Intent?) {
+    val request = parseGeniePerk(intent?.data?.toString())
+      ?: parseGeniePerk(intent.agDeepLink?.toString())
+      ?: return
+    geniePerkRequests.post(request)
+    showGenieScreen()
   }
 
   /**
@@ -262,8 +285,8 @@ class MainActivity : AppCompatActivity() {
   private fun forwardGeniePurchaseCallbackToOwnTask(): Boolean {
     if (isTaskRoot) return false
     val callbackUri = intent?.data ?: return false
-    val callback = GeniePurchaseContract.parseCallback(callbackUri) ?: return false
-    geniePurchaseResultBus.post(callback)
+    val callback = GamePurchaseContract.parseCallback(callbackUri) ?: return false
+    gamePurchaseLauncher.deliver(callback)
     startActivity(
       Intent(Intent.ACTION_VIEW, callbackUri, this, MainActivity::class.java)
         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -274,8 +297,13 @@ class MainActivity : AppCompatActivity() {
 
   /** HACKATHON: the game's purchase-result callback; stale refs are ignored by the chat. */
   private fun handleGeniePurchaseCallback(intent: Intent?) {
-    val callback = GeniePurchaseContract.parseCallback(intent?.data) ?: return
-    geniePurchaseResultBus.post(callback)
+    val callback = GamePurchaseContract.parseCallback(intent?.data) ?: return
+    gamePurchaseLauncher.deliver(callback)
+    // Shop purchases return to the AppView that started them, still on top of the back stack.
+    if (callback.target == PurchaseCallbackTarget.GENIE) showGenieScreen()
+  }
+
+  private fun showGenieScreen() {
     val nav = navController ?: return
     val isGenieRoute = { route: String? -> route?.substringBefore("?") == genieRoute }
     if (isGenieRoute(nav.currentDestination?.route)) return

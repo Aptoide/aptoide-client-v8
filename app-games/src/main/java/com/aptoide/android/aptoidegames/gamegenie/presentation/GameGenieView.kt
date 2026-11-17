@@ -146,6 +146,9 @@ fun gameGenieScreen(
     )
   }
 
+  // HACKATHON: perk push notification / ag://genie/buy starts the purchase flow here.
+  LaunchedEffect(viewModel) { viewModel.collectPerkRequests() }
+
   CompositionLocalProvider(LocalGenieActionHandler provides genieActionHandler) {
   WithUTM(
     medium = "gamegenie",

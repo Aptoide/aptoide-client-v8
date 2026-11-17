@@ -12,6 +12,9 @@ import com.aptoide.android.aptoidegames.gamegenie.domain.GameGenieChat
 import com.aptoide.android.aptoidegames.gamegenie.domain.Token
 import com.aptoide.android.aptoidegames.gamegenie.purchase.GenieAction
 import com.aptoide.android.aptoidegames.gamegenie.purchase.GenieChatHost
+import com.aptoide.android.aptoidegames.gamegenie.purchase.GeniePerkLink
+import com.aptoide.android.aptoidegames.gamegenie.purchase.GeniePerkRequest
+import com.aptoide.android.aptoidegames.gamegenie.purchase.GeniePerkRequests
 import com.aptoide.android.aptoidegames.gamegenie.purchase.GeniePurchaseOrchestrator
 import com.aptoide.android.aptoidegames.gamegenie.purchase.PurchaseIntentResolver
 import com.aptoide.android.aptoidegames.gamegenie.presentation.GameGenieUIStateType.NO_CONNECTION
@@ -38,6 +41,7 @@ class GameGenieViewModel @Inject constructor(
   private val gameGenieLocalRepository: GameGenieLocalRepository,
   @ApplicationContext private val context: Context,
   private val purchaseOrchestrator: GeniePurchaseOrchestrator,
+  private val perkRequests: GeniePerkRequests,
 ) : ViewModel(), GenieChatHost {
   private val viewModelState = MutableStateFlow(GameGenieViewModelState())
   private val _installedApps = MutableStateFlow<List<GameContext>>(emptyList())
@@ -338,6 +342,22 @@ class GameGenieViewModel @Inject constructor(
   // region HACKATHON: Genie purchase flow (GenieChatHost)
 
   fun continuePurchaseAsDemoUser() = purchaseOrchestrator.continueAsDemoUser()
+
+  /**
+   * Starts the purchase flow for perk requests (push notification tap / `ag://genie/buy` link).
+   * Called by the Genie screen only, so a GameGenieViewModel elsewhere never takes the request.
+   */
+  suspend fun collectPerkRequests() {
+    perkRequests.pending.collect { request ->
+      if (request != null && perkRequests.consume(request)) startPerkPurchase(request)
+    }
+  }
+
+  private fun startPerkPurchase(request: GeniePerkRequest) {
+    sendMessageJob?.cancel()
+    syncChatConversation(idle = true)
+    purchaseOrchestrator.start(request.item, intro = GeniePerkLink.introMessage(request))
+  }
 
   fun payPurchase(card: GenieAction.PurchaseReady) = purchaseOrchestrator.pay(card)
 

@@ -1,8 +1,6 @@
 package com.aptoide.android.aptoidegames.gamegenie.purchase
 
-import android.content.ActivityNotFoundException
 import android.content.Context
-import android.content.Intent
 import cm.aptoide.pt.wallet.datastore.WalletCoreDataSource
 import cm.aptoide.pt.wallet.wallet_info.data.WalletInfoRepository
 import com.aptoide.android.aptoidegames.BuildConfig
@@ -50,8 +48,7 @@ class GeniePurchaseOrchestrator @Inject constructor(
   private val walletCoreDataSource: WalletCoreDataSource,
   private val userAccountPreferencesRepository: UserAccountPreferencesRepository,
   private val walletInfoRepository: WalletInfoRepository,
-  private val resultBus: GeniePurchaseResultBus,
-  private val walletSessionGrants: GenieWalletSessionGrants,
+  private val purchaseLauncher: GamePurchaseLauncher,
 ) {
 
   private enum class Step { IDLE, CHECK_LOGIN, CHECK_GAME, READY, AWAIT_RESULT, DONE }
@@ -74,13 +71,17 @@ class GeniePurchaseOrchestrator @Inject constructor(
   fun attach(scope: CoroutineScope, host: GenieChatHost) {
     this.scope = scope
     this.host = host
-    scope.launch { resultBus.results.collect(::onCallback) }
+    scope.launch {
+      purchaseLauncher.results.collect { if (it.target == PurchaseCallbackTarget.GENIE) onCallback(it) }
+    }
   }
 
-  fun start(item: GeniePurchaseItem) {
+  /** [intro]: an optional first Genie line, e.g. the perk a push notification announced. */
+  fun start(item: GeniePurchaseItem, intro: String? = null) {
     cancel()
     flowJob = scope.launch {
       try {
+        intro?.let { host.appendGenieTurn(it) }
         run(item)
       } catch (e: CancellationException) {
         throw e
@@ -197,28 +198,21 @@ class GeniePurchaseOrchestrator @Inject constructor(
     val index = readyCardIndex ?: return
     val item = readyItem ?: return
     if (step != Step.READY && step != Step.AWAIT_RESULT) return
-    val ref = UUID.randomUUID().toString()
-    if (offersWalletSession) walletSessionGrants.offer(ref = ref, targetPackage = card.packageName)
-    val uri = GeniePurchaseContract.buildPurchaseUri(
+    val launch = purchaseLauncher.launch(
+      packageName = card.packageName,
       sku = card.sku,
       type = card.type,
-      ref = ref,
-      offersSession = offersWalletSession,
+      target = PurchaseCallbackTarget.GENIE,
+      offerWalletSession = offersWalletSession,
     )
-    val intent = Intent(Intent.ACTION_VIEW, uri)
-      .setPackage(card.packageName)
-      .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-
-    pending = Pending(ref = ref, cardIndex = index, item = item)
-    step = Step.AWAIT_RESULT
-    host.updateGenieAction(index) {
-      (it as? GenieAction.PurchaseReady)?.copy(ref = ref, state = PayState.WAITING_FOR_GAME)
-    }
-    Timber.d("Genie purchase link to ${card.packageName}: $uri")
-    try {
-      context.startActivity(intent)
-    } catch (e: ActivityNotFoundException) {
-      Timber.w(e, "No purchase handler in ${card.packageName}")
+    if (launch is GamePurchaseLauncher.Launch.Started) {
+      val ref = launch.ref
+      pending = Pending(ref = ref, cardIndex = index, item = item)
+      step = Step.AWAIT_RESULT
+      host.updateGenieAction(index) {
+        (it as? GenieAction.PurchaseReady)?.copy(ref = ref, state = PayState.WAITING_FOR_GAME)
+      }
+    } else {
       pending = null
       step = Step.READY
       host.updateGenieAction(index) {
@@ -231,7 +225,7 @@ class GeniePurchaseOrchestrator @Inject constructor(
     }
   }
 
-  private fun onCallback(callback: GeniePurchaseCallback) {
+  private fun onCallback(callback: GamePurchaseCallback) {
     val waiting = pending ?: return
     if (callback.ref != waiting.ref) return // unknown or stale ref: ignore silently
     pending = null
@@ -256,21 +250,12 @@ class GeniePurchaseOrchestrator @Inject constructor(
       (it as? GenieAction.PurchaseReady)?.copy(state = PayState.IDLE)
     }
     host.appendGenieTurn(
-      when (callback.status) {
-        PurchaseStatus.CANCELED ->
-          "No problem, the purchase was canceled. You weren't charged."
-
-        PurchaseStatus.LOGIN_REQUIRED ->
-          "${item.gameName} needs you signed in before buying. Sign in there and tap Pay again."
-
-        PurchaseStatus.UNKNOWN_SKU ->
-          "${item.gameName} doesn't sell ${item.title} right now, so nothing was charged."
-
-        PurchaseStatus.FAILED, PurchaseStatus.SUCCESS, null ->
-          // The store only knows the game reported a failure, not whether money moved.
-          "${item.gameName} couldn't complete the purchase. If you were charged, it shows in " +
-            "your wallet's transactions. You can tap Pay to try again."
-      }
+      purchaseNotCompletedMessage(
+        status = callback.status,
+        gameName = item.gameName,
+        itemTitle = item.title,
+        retryAction = "Pay",
+      )
     )
   }
 
