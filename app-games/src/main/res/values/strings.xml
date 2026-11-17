@@ -554,4 +554,5 @@
   <string name="play_and_earn_earn_amount_badge">Earn %1$s</string>
   <string name="native_ad_title">Sponsored</string>
   <string name="native_ad_badge" translatable="false">AD</string>
+  <string name="wallet_web_bottom_navigation_title">Wallet</string>
 </resources>

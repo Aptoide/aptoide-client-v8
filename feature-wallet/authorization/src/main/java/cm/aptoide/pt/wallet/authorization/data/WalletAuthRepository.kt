@@ -8,5 +8,7 @@ interface WalletAuthRepository {
 
   suspend fun refreshUserWallet(refreshToken: String): Result<UserWalletData>
 
+  suspend fun saveSession(address: String, authToken: String, refreshToken: String)
+
   suspend fun clearAuthorizationData()
 }

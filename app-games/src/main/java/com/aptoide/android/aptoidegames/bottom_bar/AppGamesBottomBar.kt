@@ -6,6 +6,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
@@ -50,6 +51,7 @@ import com.aptoide.android.aptoidegames.home.Icon
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
+import com.aptoide.android.aptoidegames.wallet_web.WALLET_WEB_TAB_ENABLED
 import kotlin.random.Random
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -77,7 +79,7 @@ fun AppGamesBottomBar(navController: NavController) {
   val selection =
     selectionIndex(items = filteredBottomNavigationItems, navController = navController)
   if (selection >= 0) {
-    Box(
+    BoxWithConstraints(
       modifier = Modifier
         .fillMaxWidth()
         .navigationBarsPadding()
@@ -101,6 +103,7 @@ fun AppGamesBottomBar(navController: NavController) {
                   BottomBarMenus.Categories -> generalAnalytics.sendBottomBarCategoriesClick()
                   BottomBarMenus.Updates -> generalAnalytics.sendBottomBarUpdatesClick()
                   BottomBarMenus.GameGenie -> generalAnalytics.sendBottomBarGameGenieClick()
+                  BottomBarMenus.Wallet -> Unit
                 }
                 if (!isSelected) {
                   navController.navigate(item.route) {
@@ -123,10 +126,13 @@ fun AppGamesBottomBar(navController: NavController) {
       val genieIndex = filteredBottomNavigationItems.indexOf(BottomBarMenus.GameGenie)
       if (genieIndex >= 0) {
         val isSelected = selection == genieIndex
+        // Center over the Genie's own slot, which is not the bar's center with an even item count.
+        val slotCenterOffset =
+          maxWidth * (genieIndex + 0.5f) / filteredBottomNavigationItems.size - maxWidth / 2
         Box(
           modifier = Modifier
             .align(Alignment.BottomCenter)
-            .offset(y = (-22).dp)
+            .offset(x = slotCenterOffset, y = (-22).dp)
             .zIndex(2f)
             .clickable(
               indication = null,
@@ -163,6 +169,9 @@ fun List<BottomBarMenus>.filter(
       BottomBarMenus.GameGenie -> shouldShowGameGenie
       BottomBarMenus.Search -> shouldSearchGameGenie.not()
       BottomBarMenus.GenieSearch -> shouldSearchGameGenie
+      BottomBarMenus.Wallet -> WALLET_WEB_TAB_ENABLED
+      // With the wallet tab, Updates moves to the toolbar to keep the bar at four tabs.
+      BottomBarMenus.Updates -> !WALLET_WEB_TAB_ENABLED
       else -> true
     }
   }
@@ -223,6 +232,7 @@ private fun selectionIndex(
 )
 
 val bottomNavigationItems = listOf(
+  BottomBarMenus.Wallet,
   BottomBarMenus.Games,
   BottomBarMenus.Search,
   BottomBarMenus.GenieSearch,

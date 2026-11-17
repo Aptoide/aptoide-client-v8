@@ -59,6 +59,13 @@ internal class WalletAuthRepositoryImpl @Inject constructor(
       }
     }
 
+  override suspend fun saveSession(address: String, authToken: String, refreshToken: String) =
+    withContext(dispatcher) {
+      walletCoreDataSource.setCurrentWalletAddress(address)
+      userWalletAuthDataStore.setCurrentWalletData(UserWalletData(address, authToken, null))
+      userWalletAuthDataStore.setCurrentRefreshToken(refreshToken)
+    }
+
   override suspend fun clearAuthorizationData() {
     walletCoreDataSource.clearWalletData()
     userWalletAuthDataStore.clear()

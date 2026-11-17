@@ -40,12 +40,15 @@ import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.rememberGeneralAnalytics
 import com.aptoide.android.aptoidegames.drawables.icons.getNotificationBell
 import com.aptoide.android.aptoidegames.drawables.icons.getProfileNoAccountIcon
+import com.aptoide.android.aptoidegames.home.BottomBarMenus
+import com.aptoide.android.aptoidegames.home.Icon
 import com.aptoide.android.aptoidegames.notifications.NotificationsPermissionRequester
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PlayAndEarnTopBarBadge
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.rememberUserInfo
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchange_flow.redeemRewardRoute
 import com.aptoide.android.aptoidegames.settings.settingsRoute
 import com.aptoide.android.aptoidegames.theme.Palette
+import com.aptoide.android.aptoidegames.wallet_web.WALLET_WEB_TAB_ENABLED
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -81,6 +84,7 @@ fun AppGamesToolBar(
     onNotificationsClick = onNotificationsClick,
     onPlayAndEarnClick = { navigate(redeemRewardRoute) },
     onProfileClick = onProfileClick,
+    onUpdatesClick = { navigate(BottomBarMenus.Updates.route) }.takeIf { WALLET_WEB_TAB_ENABLED },
   )
 
   NotificationsPermissionRequester(
@@ -97,6 +101,7 @@ private fun AppGamesToolBar(
   onNotificationsClick: () -> Unit,
   onPlayAndEarnClick: () -> Unit,
   onProfileClick: () -> Unit,
+  onUpdatesClick: (() -> Unit)? = null,
 ) {
   val userInfo = rememberUserInfo()
 
@@ -148,6 +153,9 @@ private fun AppGamesToolBar(
             }
           }
           PlayAndEarnTopBarBadge(onClick = onPlayAndEarnClick)
+          onUpdatesClick?.let {
+            IconButton(onClick = it) { BottomBarMenus.Updates.Icon(isSelected = false) }
+          }
           IconButton(onClick = onProfileClick) {
             userInfo?.profilePicture?.let {
               AptoideAsyncImage(

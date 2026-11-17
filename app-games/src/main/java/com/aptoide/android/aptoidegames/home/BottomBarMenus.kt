@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.AccountBalanceWallet
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +40,7 @@ import com.aptoide.android.aptoidegames.search.presentation.buildSearchRoute
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.getAiBottomBarIcon
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.updates.presentation.updatesRoute
+import com.aptoide.android.aptoidegames.wallet_web.walletWebRoute
 
 sealed class BottomBarMenus(
   val route: String,
@@ -73,6 +76,11 @@ sealed class BottomBarMenus(
     route = genieRoute.withBundleMeta(BundleMeta("gamegenie", "app")),
     titleId = R.string.genai_bottom_navigation_gamegenie_button
   )
+
+  object Wallet : BottomBarMenus(
+    route = walletWebRoute,
+    titleId = R.string.wallet_web_bottom_navigation_title
+  )
 }
 
 @Composable
@@ -81,6 +89,8 @@ fun BottomBarMenus.Icon(isSelected: Boolean) = when (this) {
   BottomBarMenus.Search -> getSearch(Palette.GreyLight).AsBottomBarIcon()
   BottomBarMenus.GenieSearch -> getSearch(Palette.GreyLight).AsBottomBarIcon()
   BottomBarMenus.Categories -> getCategories(Palette.GreyLight).AsBottomBarIcon()
+  BottomBarMenus.Wallet -> Icons.Outlined.AccountBalanceWallet.AsBottomBarIcon()
+
   BottomBarMenus.Updates -> {
     val updatesUiState = rememberUpdates()
 
