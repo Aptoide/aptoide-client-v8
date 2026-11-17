@@ -209,6 +209,7 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
         withContext(Dispatchers.Main) {
           paeOverlayViewManager.showMissionCompletedOverlayView(
             event.mission,
+            event.nextMission,
             this@PaEForegroundService,
             this@PaEForegroundService
           )
@@ -217,7 +218,8 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
       showNotification = { event ->
         paEMissionCompletedNotificationBuilder.showMissionCompletedNotification(
           mission = event.mission,
-          packageName = event.packageName
+          packageName = event.packageName,
+          nextMission = event.nextMission
         )
       },
     )
