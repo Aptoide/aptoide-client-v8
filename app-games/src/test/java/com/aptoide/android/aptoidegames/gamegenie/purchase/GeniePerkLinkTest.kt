@@ -87,4 +87,17 @@ internal class GeniePerkLinkTest {
       GeniePerkLink.introMessage(GeniePerkRequest(diceroll, null))
     )
   }
+
+  @Test
+  fun `an assistant link gets its own intro line`() {
+    val request = GeniePerkLink.parse(
+      "ag://genie/buy?package=com.aptoide.diceroll.sdk.dev&sku=attempts&perk=best+value+under+%E2%82%AC5&via=assistant",
+      "ag",
+    )
+    assertEquals(true, request?.fromAssistant)
+    assertEquals(
+      "Your assistant picked Extra attempts in Diceroll (best value under €5). Let's get it for you.",
+      request?.let(GeniePerkLink::introMessage),
+    )
+  }
 }

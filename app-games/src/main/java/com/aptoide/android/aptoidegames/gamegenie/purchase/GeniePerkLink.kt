@@ -18,6 +18,8 @@ data class GeniePerkRequest(
   val item: GeniePurchaseItem,
   /** HACKATHON MOCK: display-only perk text; no perk/bonus backend is queried or applied. */
   val perk: String?,
+  /** True when the link says it comes from an outside AI assistant (`via=assistant`). */
+  val fromAssistant: Boolean = false,
 )
 
 object GeniePerkLink {
@@ -56,11 +58,20 @@ object GeniePerkLink {
       ?.trim()
       ?.take(MAX_PERK_LENGTH)
       ?.takeIf { it.isNotEmpty() }
-    return GeniePerkRequest(item = item, perk = perk)
+    return GeniePerkRequest(
+      item = item,
+      perk = perk,
+      fromAssistant = params["via"].equals("assistant", ignoreCase = true),
+    )
   }
 
   /** The first Genie line of a perk flow. */
-  fun introMessage(request: GeniePerkRequest): String = request.perk
+  fun introMessage(request: GeniePerkRequest): String = if (request.fromAssistant) {
+    // For an assistant hand-off the text is the assistant's reason, not a perk.
+    val reason = request.perk?.let { " ($it)" }.orEmpty()
+    "Your assistant picked ${request.item.title} in ${request.item.gameName}$reason. " +
+      "Let's get it for you."
+  } else request.perk
     ?.let { "${request.item.gameName} has a perk for you today: $it. Let's get it for you." }
     ?: "Let's get ${request.item.title} in ${request.item.gameName} for you."
 
