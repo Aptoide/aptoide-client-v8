@@ -12,4 +12,6 @@ data class CompletedMissionEvent(
   val mission: PaEMission,
   val packageName: String,
   val nextMission: PaEMission? = null,
+  // A mission of the player's own (weekly, monthly), completed while playing [packageName].
+  val isUserMission: Boolean = false,
 )

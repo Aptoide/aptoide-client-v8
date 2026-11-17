@@ -28,6 +28,8 @@ object PaEMissionConfirmations {
     return events
       .asSequence()
       .filter { it.type == MISSION_COMPLETED && it.packageName == packageName }
+      // The player's own missions carry the game too; they are announced separately.
+      .filterNot { it.isUserMission() }
       .map { it.missionTitle }
       .distinct()
       .filterNot { it in alreadyConfirmed }

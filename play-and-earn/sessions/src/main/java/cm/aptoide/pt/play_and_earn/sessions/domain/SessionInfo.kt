@@ -9,5 +9,8 @@ data class SessionInfo(
 data class SessionEvent(
   val type: String,
   val missionTitle: String,
-  val packageName: String
+  val packageName: String,
+  val earnedUnits: Int = 0,
+  // "user" for a mission that belongs to the player rather than to the game in [packageName].
+  val scope: String? = null,
 )

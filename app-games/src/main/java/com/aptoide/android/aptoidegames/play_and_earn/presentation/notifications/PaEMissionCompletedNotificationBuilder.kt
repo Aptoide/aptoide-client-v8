@@ -83,7 +83,8 @@ class PaEMissionCompletedNotificationBuilder @Inject constructor(
   suspend fun showMissionCompletedNotification(
     mission: PaEMission,
     packageName: String,
-    nextMission: PaEMission? = null
+    nextMission: PaEMission? = null,
+    route: String = missionCompletedRoute(packageName),
   ) {
     val notificationId = "PaEMissionCompleted$packageName${mission.title}".hashCode()
 
@@ -91,7 +92,8 @@ class PaEMissionCompletedNotificationBuilder @Inject constructor(
       requestCode = notificationId,
       mission = mission,
       packageName = packageName,
-      nextMission = nextMission
+      nextMission = nextMission,
+      route = route,
     ) ?: return
 
     showNotification(
@@ -120,7 +122,8 @@ class PaEMissionCompletedNotificationBuilder @Inject constructor(
     requestCode: Int,
     mission: PaEMission,
     packageName: String,
-    nextMission: PaEMission?
+    nextMission: PaEMission?,
+    route: String,
   ): Notification? = if (context.isAllowed(Manifest.permission.POST_NOTIFICATIONS)) {
 
     val clickIntent = PendingIntent.getActivity(
@@ -128,7 +131,7 @@ class PaEMissionCompletedNotificationBuilder @Inject constructor(
       requestCode,
       Intent(context, MainActivity::class.java)
         .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        .putNotificationRoute(missionCompletedRoute(packageName))
+        .putNotificationRoute(route)
         .putNotificationSource()
         .putNotificationTag(MISSION_COMPLETED_NOTIFICATION_TAG)
         .putNotificationPackage(packageName),
