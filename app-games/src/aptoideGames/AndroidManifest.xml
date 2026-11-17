@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <application>
+    <!-- Google sign-in result for the wallet web tab (see wallet_web/WalletWebScreen.kt). -->
+    <activity
+        android:name="com.aptoide.android.aptoidegames.wallet_web.WalletLoginCallbackActivity"
+        android:exported="true"
+        android:theme="@android:style/Theme.Translucent.NoTitleBar">
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
+
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+
+        <data
+            android:host="${applicationId}"
+            android:scheme="login-wallet-result" />
+      </intent-filter>
+      <!--
+        HACKATHON: until wallet-appcoins-react feat/cct-host-package is deployed (and allows this
+        package), the web redirects the Google callback to the Wallet app's deep link. Claim it here
+        so login works end to end. Only valid on a device without the AppCoins Wallet app installed.
+        Remove before any real release.
+      -->
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
+
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+
+        <data android:scheme="login-wallet-result" />
+        <data android:host="com.appcoins.wallet" />
+        <data android:host="com.appcoins.wallet.dev" />
+      </intent-filter>
+    </activity>
+  </application>
+</manifest>
