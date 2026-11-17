@@ -51,6 +51,7 @@ class GeniePurchaseOrchestrator @Inject constructor(
   private val userAccountPreferencesRepository: UserAccountPreferencesRepository,
   private val walletInfoRepository: WalletInfoRepository,
   private val resultBus: GeniePurchaseResultBus,
+  private val walletSessionGrants: GenieWalletSessionGrants,
 ) {
 
   private enum class Step { IDLE, CHECK_LOGIN, CHECK_GAME, READY, AWAIT_RESULT, DONE }
@@ -63,6 +64,9 @@ class GeniePurchaseOrchestrator @Inject constructor(
   private var step = Step.IDLE
   private var flowJob: Job? = null
   private val demoSignIn = MutableStateFlow(false)
+
+  /** True when the purchase runs on a real store wallet session, which can be offered to the game. */
+  private var offersWalletSession = false
   private var readyCardIndex: Int? = null
   private var readyItem: GeniePurchaseItem? = null
   private var pending: Pending? = null
@@ -168,6 +172,7 @@ class GeniePurchaseOrchestrator @Inject constructor(
 
     // Ready
     delay(TICK_DELAY_MS)
+    offersWalletSession = !demoUser
     val wallet = walletLabels(demoUser)
     readyItem = item
     readyCardIndex = host.appendGenieTurn(
@@ -193,7 +198,13 @@ class GeniePurchaseOrchestrator @Inject constructor(
     val item = readyItem ?: return
     if (step != Step.READY && step != Step.AWAIT_RESULT) return
     val ref = UUID.randomUUID().toString()
-    val uri = GeniePurchaseContract.buildPurchaseUri(sku = card.sku, type = card.type, ref = ref)
+    if (offersWalletSession) walletSessionGrants.offer(ref = ref, targetPackage = card.packageName)
+    val uri = GeniePurchaseContract.buildPurchaseUri(
+      sku = card.sku,
+      type = card.type,
+      ref = ref,
+      offersSession = offersWalletSession,
+    )
     val intent = Intent(Intent.ACTION_VIEW, uri)
       .setPackage(card.packageName)
       .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -256,8 +267,9 @@ class GeniePurchaseOrchestrator @Inject constructor(
           "${item.gameName} doesn't sell ${item.title} right now, so nothing was charged."
 
         PurchaseStatus.FAILED, PurchaseStatus.SUCCESS, null ->
-          "The payment didn't go through in ${item.gameName}. You weren't charged. " +
-            "You can tap Pay to try again."
+          // The store only knows the game reported a failure, not whether money moved.
+          "${item.gameName} couldn't complete the purchase. If you were charged, it shows in " +
+            "your wallet's transactions. You can tap Pay to try again."
       }
     )
   }

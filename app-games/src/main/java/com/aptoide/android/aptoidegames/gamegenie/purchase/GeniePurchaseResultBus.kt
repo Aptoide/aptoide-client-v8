@@ -42,7 +42,8 @@ object GeniePurchaseContract {
   /** e.g. `ag://genie/purchase-result` for Aptoide Games. */
   val callbackBase: String = "${BuildConfig.DEEP_LINK_SCHEMA}$CALLBACK_HOST$CALLBACK_PATH"
 
-  fun buildPurchaseUri(sku: String, type: String, ref: String): Uri =
+  /** [offersSession]: adds `session=1`, telling the SDK it may redeem a wallet session grant. */
+  fun buildPurchaseUri(sku: String, type: String, ref: String, offersSession: Boolean = false): Uri =
     Uri.Builder()
       .scheme("aptoide-iap")
       .authority("purchase")
@@ -52,6 +53,7 @@ object GeniePurchaseContract {
       .appendQueryParameter("ref", ref)
       .appendQueryParameter("source", "gamegenie")
       .appendQueryParameter("callback", callbackBase)
+      .apply { if (offersSession) appendQueryParameter("session", "1") }
       .build()
 
   fun parseCallback(uri: Uri?): GeniePurchaseCallback? {

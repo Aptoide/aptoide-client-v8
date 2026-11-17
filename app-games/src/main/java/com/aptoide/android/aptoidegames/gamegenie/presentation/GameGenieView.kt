@@ -48,6 +48,7 @@ import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.compa
 import com.aptoide.android.aptoidegames.home.LoadingView
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnSignInRoute
 import com.aptoide.android.aptoidegames.wallet_web.WALLET_WEB_TAB_ENABLED
+import com.aptoide.android.aptoidegames.wallet_web.WalletWebReturn
 import com.aptoide.android.aptoidegames.wallet_web.walletWebRoute
 import com.aptoide.android.aptoidegames.mmp.WithUTM
 import androidx.navigation.NavType
@@ -132,7 +133,14 @@ fun gameGenieScreen(
   val genieActionHandler = remember(viewModel, navigate) {
     GenieActionHandler(
       // HACKATHON: with the wallet web tab, sign in happens in the wallet itself.
-      onSignIn = { navigate(if (WALLET_WEB_TAB_ENABLED) walletWebRoute else playAndEarnSignInRoute) },
+      onSignIn = {
+        if (WALLET_WEB_TAB_ENABLED) {
+          WalletWebReturn.returnAfterLogin = true
+          navigate(walletWebRoute)
+        } else {
+          navigate(playAndEarnSignInRoute)
+        }
+      },
       onContinueAsDemoUser = viewModel::continuePurchaseAsDemoUser,
       onPay = viewModel::payPurchase,
     )

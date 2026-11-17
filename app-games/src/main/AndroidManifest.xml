@@ -134,5 +134,11 @@
           android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
           android:value="Play &amp; Earn: follows the game being played for mission rewards" />
     </service>
+    <!-- HACKATHON: one-time wallet session grants for Genie purchases (gamegenie/purchase/GenieWalletSession.kt). -->
+    <provider
+        android:name=".gamegenie.purchase.GenieWalletSessionProvider"
+        android:authorities="${applicationId}.genie.walletsession"
+        android:exported="true" />
+
   </application>
 </manifest>

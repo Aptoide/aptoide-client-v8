@@ -31,7 +31,10 @@ import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -58,6 +61,13 @@ object WalletLoginResults {
   val pending = MutableStateFlow<String?>(null)
 }
 
+/** HACKATHON: set by a screen that opens the wallet tab only to get the user signed in. */
+object WalletWebReturn {
+  @Volatile var returnAfterLogin = false
+
+  fun consume(): Boolean = returnAfterLogin.also { returnAfterLogin = false }
+}
+
 @HiltViewModel
 class WalletWebViewModel @Inject constructor(
   private val walletAuthRepository: WalletAuthRepository,
@@ -71,8 +81,14 @@ class WalletWebViewModel @Inject constructor(
     // NonCancellable: leaving the tab right after login must not drop a half-written session.
     viewModelScope.launch(NonCancellable) {
       walletAuthRepository.saveSession(address, authToken, refreshToken)
+      _sessionSaved.tryEmit(Unit)
     }
   }
+
+  private val _sessionSaved = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+
+  /** Emits once the native session is stored after a web login. */
+  val sessionSaved: SharedFlow<Unit> = _sessionSaved.asSharedFlow()
 
   fun onLogout() {
     viewModelScope.launch { walletAuthRepository.clearAuthorizationData() }
@@ -97,8 +113,20 @@ fun WalletWebScreen(
     }
   }
 
+  // HACKATHON: when another screen (GameGenie) sent the user here to sign in, go back to it as
+  // soon as the session is stored, so its flow resumes where it left off.
+  LaunchedEffect(Unit) {
+    viewModel.sessionSaved.collect {
+      if (WalletWebReturn.consume()) goBack()
+    }
+  }
+
   BackHandler {
-    webView.value?.takeIf { it.canGoBack() }?.goBack() ?: goBack()
+    if (WalletWebReturn.consume()) {
+      goBack()
+    } else {
+      webView.value?.takeIf { it.canGoBack() }?.goBack() ?: goBack()
+    }
   }
 
   AndroidView(

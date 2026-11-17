@@ -10,5 +10,8 @@ interface WalletAuthRepository {
 
   suspend fun saveSession(address: String, authToken: String, refreshToken: String)
 
+  /** The current wallet session's refresh token, or null when signed out. */
+  suspend fun getRefreshToken(): String?
+
   suspend fun clearAuthorizationData()
 }

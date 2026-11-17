@@ -66,6 +66,10 @@ internal class WalletAuthRepositoryImpl @Inject constructor(
       userWalletAuthDataStore.setCurrentRefreshToken(refreshToken)
     }
 
+  override suspend fun getRefreshToken(): String? = withContext(dispatcher) {
+    userWalletAuthDataStore.getCurrentRefreshToken()
+  }
+
   override suspend fun clearAuthorizationData() {
     walletCoreDataSource.clearWalletData()
     userWalletAuthDataStore.clear()
