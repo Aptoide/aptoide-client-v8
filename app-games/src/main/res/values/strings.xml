@@ -485,6 +485,10 @@
   <string name="play_and_earn_notification_status_body">You\'ll get a notification when the game confirms a mission.</string>
   <string name="play_and_earn_mission_completed_notification_body">You earned %1$d UT in %2$s</string>
   <string name="play_and_earn_mission_completed_next_title">Next mission</string>
+  <string name="play_and_earn_mission_completed_next_reward">+%1$d Units</string>
+  <string name="play_and_earn_mission_completed_all_done">All missions complete</string>
+  <string name="play_and_earn_mission_completed_claim_button">Claim +%1$d</string>
+  <string name="play_and_earn_mission_completed_claimed_button">Claimed ✓</string>
   <string name="play_and_earn_mission_completed_next_notification_body">You earned %1$d UT in %2$s. Next mission: %3$s</string>
   <string name="settings_play_and_earn_tracking">Play &amp; Earn Tracking</string>
   <string name="settings_play_and_earn_tracking_description">Aptoide measures your in-app activity to credit you for time played. When off, playing through Aptoide only tracks the missions the game itself confirms.</string>
