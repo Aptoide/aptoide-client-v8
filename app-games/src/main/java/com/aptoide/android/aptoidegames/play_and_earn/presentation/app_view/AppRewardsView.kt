@@ -217,7 +217,7 @@ private fun CheckpointItem(checkpoint: PaEMission) {
           Text(
             text = "+ ${checkpoint.units} UNITS",
             style = AGTypography.InputsS,
-            color = Palette.SecondaryLight
+            color = Palette.SecondaryAccentText
           )
           Image(
             imageVector = getMissionHexagonCompletedIcon(),
@@ -253,7 +253,7 @@ private fun CheckpointItem(checkpoint: PaEMission) {
             Text(
               text = "+ ${checkpoint.units} UNITS",
               style = AGTypography.InputsS,
-              color = Palette.SecondaryLight
+              color = Palette.SecondaryAccentText
             )
           }
         }
@@ -370,7 +370,7 @@ private fun OngoingMissionItem(mission: PaEMission) {
               modifier = Modifier.weight(1f),
               text = timeLeft,
               style = AGTypography.Body,
-              color = Palette.Yellow100
+              color = Palette.AccentText
             )
           } else {
             Spacer(modifier = Modifier.weight(1f))
@@ -395,13 +395,13 @@ private fun MissionReward(
     Text(
       text = "+ $units UNITS",
       style = AGTypography.InputsS,
-      color = Palette.SecondaryLight
+      color = Palette.SecondaryAccentText
     )
     rememberExchangeRate(units.toLong())?.let { rewardAmount ->
       Text(
         text = "$${rewardAmount.setScale(2, RoundingMode.HALF_UP).toPlainString()}",
         style = AGTypography.Body,
-        color = Palette.SecondaryLight
+        color = Palette.SecondaryAccentText
       )
     }
   }
