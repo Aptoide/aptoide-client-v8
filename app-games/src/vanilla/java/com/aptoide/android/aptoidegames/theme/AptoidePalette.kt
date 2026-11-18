@@ -21,6 +21,7 @@ object DarkPalette : PaletteTokens {
   override val Yellow = Color(0xFFFFC93E)
 
   override val AccentText = Color(0xFFFFC93E)
+  override val SecondaryAccentText = Color(0xFFFFB58A)
 
   override val Yellow50 = Color(0xFFFFEA04)
   override val Yellow100 = Color(0xFFFFC93E)
@@ -55,6 +56,9 @@ object LightPalette : PaletteTokens {
 
   // Yellow200: 5.6:1 on the white background; Yellow100 would be 1.6:1.
   override val AccentText = DarkPalette.Yellow200
+
+  // Orange200: 4.4:1 on the light card; SecondaryLight would be 1.6:1.
+  override val SecondaryAccentText = DarkPalette.Orange200
 
   override val Yellow50 = DarkPalette.Yellow50
   override val Yellow100 = DarkPalette.Yellow100

@@ -27,6 +27,13 @@ interface PaletteTokens {
    */
   val AccentText: Color
 
+  /**
+   * The reward orange used as text ("+ 10 UNITS", the dollar amount). Same as [SecondaryLight]
+   * on dark backgrounds; the vanilla light palette darkens it so it stays readable on the light
+   * cards. Fills and strokes keep [SecondaryLight].
+   */
+  val SecondaryAccentText: Color
+
   val Yellow50: Color
   val Yellow100: Color
   val Yellow150: Color
