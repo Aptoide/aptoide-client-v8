@@ -8,6 +8,7 @@ import cm.aptoide.pt.aptoide_network.di.RetrofitV7
 import cm.aptoide.pt.feature_apps.data.AppMapper
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieApiService
+import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieSseClient
 import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieAppRepository
 import com.aptoide.android.aptoidegames.gamegenie.data.GameGenieAppRepositoryImpl
 import com.aptoide.android.aptoidegames.gamegenie.data.GameCompanionsRepository
@@ -67,10 +68,12 @@ internal object GameGenieModule {
   @Provides
   fun provideChatbotManager(
     apiService: GameGenieApiService,
+    sseClient: GameGenieSseClient,
     db: GameGenieDatabase,
   ): GameGenieManager {
     return GameGenieManager(
       apiService,
+      sseClient,
       db.getGameGenieHistoryDao(),
       db.getGameCompanionDao()
     )

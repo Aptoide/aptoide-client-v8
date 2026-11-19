@@ -3,7 +3,11 @@ package com.aptoide.android.aptoidegames.gamegenie.presentation.composables
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,8 +31,10 @@ import com.aptoide.android.aptoidegames.gamegenie.domain.ChatInteraction
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameCompanion
 import com.aptoide.android.aptoidegames.gamegenie.domain.Suggestion
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.drop
 
 @Composable
 fun MessageList(
@@ -43,7 +49,8 @@ fun MessageList(
   isCompanion: Boolean = false,
   gameName: String = "",
   installedGames: List<GameCompanion> = emptyList(),
-  onGameClick: (GameCompanion) -> Unit = {}
+  onGameClick: (GameCompanion) -> Unit = {},
+  isStreaming: Boolean = false,
 ) {
   val listState = rememberLazyListState()
   val playerCache = remember { mutableMapOf<String, YouTubePlayerView>() }
@@ -53,6 +60,9 @@ fun MessageList(
   val prevViewportHeight = remember { mutableIntStateOf(0) }
 
   val lastUserText = messages.lastOrNull()?.user?.text
+
+  val userTookControl = remember { mutableStateOf(false) }
+  LaunchedEffect(lastUserText) { userTookControl.value = false }
 
   LaunchedEffect(listState) {
     snapshotFlow { listState.layoutInfo.viewportSize.height }
@@ -96,10 +106,50 @@ fun MessageList(
     prevLastUserText.value = currentLastUserText
   }
 
+  val streamingGptLength = if (isStreaming) messages.lastOrNull()?.gpt?.length ?: 0 else 0
+  LaunchedEffect(isStreaming, streamingGptLength) {
+    if (isStreaming && messages.isNotEmpty() && !userTookControl.value) {
+      listState.scrollToItem(messages.lastIndex, Int.MAX_VALUE)
+    }
+  }
+
+  val lastAppsCount = messages.lastOrNull()?.apps?.size ?: 0
+  val lastVideoId = messages.lastOrNull()?.videoId
+  val lastFollowUpsCount = messages.lastOrNull()?.followUps?.size ?: 0
+  LaunchedEffect(isStreaming, lastAppsCount, lastVideoId, lastFollowUpsCount, messages.size) {
+    if (isStreaming || messages.isEmpty()) return@LaunchedEffect
+    if (lastAppsCount == 0 && lastVideoId == null && lastFollowUpsCount == 0) return@LaunchedEffect
+    if (userTookControl.value) return@LaunchedEffect
+
+    listState.scrollToItem(messages.lastIndex, Int.MAX_VALUE)
+
+    var settleBudget = 1_000L
+    snapshotFlow {
+      listState.layoutInfo.visibleItemsInfo.sumOf { it.size } to
+        listState.layoutInfo.totalItemsCount
+    }
+      .distinctUntilChanged()
+      .drop(1)
+      .collectLatest {
+        if (settleBudget <= 0L) return@collectLatest
+        if (!userTookControl.value) {
+          listState.scrollToItem(messages.lastIndex, Int.MAX_VALUE)
+        }
+        delay(50)
+        settleBudget -= 50
+      }
+  }
+
   LazyColumn(
     state = listState,
     modifier = modifier
-      .padding(bottom = 8.dp),
+      .padding(bottom = 8.dp)
+      .pointerInput(Unit) {
+        awaitEachGesture {
+          awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
+          userTookControl.value = true
+        }
+      },
     contentPadding = PaddingValues(vertical = 8.dp)
   ) {
     itemsIndexed(
@@ -155,13 +205,15 @@ fun MessageList(
           navigateTo = navigateTo,
           playerCache = playerCache,
           gameName = gameName,
+          isStreaming = isStreaming && idx == messages.lastIndex,
         )
       }
 
       if (
         idx == messages.lastIndex &&
         message.user == null &&
-        message.followUps.isNotEmpty()
+        message.followUps.isNotEmpty() &&
+        !isStreaming
       ) {
         LazyRow(
           contentPadding = PaddingValues(top = 16.dp, bottom = 4.dp),
@@ -204,3 +256,4 @@ private suspend fun scrollLastGptToTopWithMargin(
 ) {
   listState.animateScrollToItem(lastIndex, 0)
 }
+

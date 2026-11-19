@@ -26,7 +26,7 @@ fun FollowUpBox(
   onClick: (String) -> Unit,
 ) {
   val density = LocalDensity.current
-  val textStyle = AGTypography.InputsXSRegular
+  val textStyle = AGTypography.InputsXXS
 
   val horizontalPaddingPx = with(density) { 16.dp.roundToPx() }
 
@@ -40,7 +40,7 @@ fun FollowUpBox(
 
   Row(
     modifier = Modifier
-      .height(48.dp)
+      .height(40.dp)
       .width(boxWidthDp)
       .background(Palette.Primary.copy(alpha = 0.1f))
       .border(0.5.dp, Palette.Primary)

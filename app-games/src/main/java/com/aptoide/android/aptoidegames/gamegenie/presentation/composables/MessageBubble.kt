@@ -55,6 +55,7 @@ fun MessageBubble(
   isCompanion: Boolean = false,
   gameName: String = "",
   image: String? = null,
+  isStreaming: Boolean = false,
 ) {
   val context = LocalContext.current
   val analytics = rememberGameGenieAnalytics()
@@ -150,7 +151,8 @@ fun MessageBubble(
                 onLinkClick = { url ->
                   UrlActivity.open(context, url)
                 },
-                isUserMessage = true
+                isUserMessage = true,
+                isStreaming = isStreaming,
               )
             }
 
@@ -210,7 +212,8 @@ fun MessageBubble(
               onLinkClick = { url ->
                 UrlActivity.open(context, url)
               },
-              isUserMessage = isUserMessage
+              isUserMessage = isUserMessage,
+              isStreaming = isStreaming,
             )
           }
 
