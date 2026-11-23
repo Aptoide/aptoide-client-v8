@@ -44,6 +44,7 @@ import com.aptoide.android.aptoidegames.home.LoadingBundleView
 import com.aptoide.android.aptoidegames.home.SeeMoreView
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PaERewardType
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.SignInRewardCard
+import com.aptoide.android.aptoidegames.play_and_earn.rememberShouldShowPlayAndEarn
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 
@@ -81,6 +82,17 @@ fun GamesFeedBundle(
   }
 }
 
+/**
+ * The package the sign-in reward card is shown for, or null for no card. The card is a Play & Earn
+ * surface, so it needs Play & Earn to be available and a reward-eligible game installed; if
+ * several are installed, the first of [rewardPackages] wins.
+ */
+internal fun signInRewardPackage(
+  playAndEarnVisible: Boolean,
+  rewardPackages: List<String>,
+  isInstalled: (String) -> Boolean,
+): String? = if (playAndEarnVisible) rewardPackages.firstOrNull(isInstalled) else null
+
 @Composable
 private fun GamesFeedBundleContent(
   bundle: Bundle,
@@ -92,11 +104,16 @@ private fun GamesFeedBundleContent(
   val context = LocalContext.current
   val gamesFeedAnalytics = rememberGamesFeedAnalytics()
 
-  // Show the sign-in reward card whenever the user has a reward-eligible game installed
-  // (Roblox / Free Fire), regardless of its position in the feed. If several are installed, the
-  // first by priority wins. The card itself still hides when the reward is already claimed.
-  val rewardPackageName = remember(context) {
-    PaERewardType.rewardPackages.firstOrNull { context.isAppInstalled(it) }
+  // Show the sign-in reward card whenever Play & Earn is available and the user has a
+  // reward-eligible game installed (Roblox / Free Fire), regardless of its position in the feed.
+  // The card itself still hides when the reward is already claimed.
+  val showPlayAndEarn = rememberShouldShowPlayAndEarn()
+  val rewardPackageName = remember(context, showPlayAndEarn) {
+    signInRewardPackage(
+      playAndEarnVisible = showPlayAndEarn,
+      rewardPackages = PaERewardType.rewardPackages,
+      isInstalled = { context.isAppInstalled(it) },
+    )
   }
 
   val firstPackageName = items.firstOrNull()?.packageName
