@@ -36,7 +36,7 @@ enum class NativeAdPlacement(
   /**
    * Optional second, deeper home slot. Shares the home ad unit. Only rendered when at least
    * `home_native_deep_min_gap` bundles separate it from [HOME_BUNDLE] and no sponsored bundle is
-   * adjacent. Enabled by default in both build types; Remote Config can disable it.
+   * adjacent. Like every placement it is off in release until Remote Config enables it.
    */
   HOME_DEEP(
     flagPrefix = "home_native_deep",

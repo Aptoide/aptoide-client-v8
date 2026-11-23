@@ -4,10 +4,10 @@ How the AppLovin MAX placements in `:app-games` are wired, gated, measured and s
 
 Serving state at a glance:
 
-- **Search defaults to MREC** in Games and Vanilla when that brand's MREC unit is configured.
-  The shipped selector switch is off (native) with a 100% MREC allocation once turned on; the
-  MREC placement, like every placement, needs its remote enabled flag in release. Missing MREC
-  ids select the native control before any ad request.
+- **Search ships native** in Games and Vanilla. The selector switch
+  (`search_ad_format_experiment_enabled`) is off, with a 100% MREC allocation once it is turned
+  on; the MREC placement, like every placement, needs its remote enabled flag in release. Missing
+  MREC ids select the native control before any ad request.
 - **Browse placements** for both Games and Vanilla: categories, Top Charts and ordinary See All
   lists, plus a deeper Home slot. Like the existing placements they default off in release and
   on in debug; Remote Config opens them. Geo, configured-unit and layout gates still apply. Existing
@@ -21,7 +21,7 @@ Serving state at a glance:
 | Placement (`NativeAdPlacement`) | Surface | Flag prefix | MAX placement name | Unit id field | Default position |
 |---|---|---|---|---|---|
 | `HOME_BUNDLE` | Home feed, compact card before the 3rd bundle | `home_native` | `home_bundle` | `HOME_NATIVE_AD_UNIT_ID` | 2 |
-| `HOME_DEEP` | Home feed, deeper slot (enabled by default) | `home_native_deep` | `home_bundle_deep` | `HOME_NATIVE_AD_UNIT_ID` | 6, min gap 3 |
+| `HOME_DEEP` | Home feed, deeper slot | `home_native_deep` | `home_bundle_deep` | `HOME_NATIVE_AD_UNIT_ID` | 6, min gap 3 |
 | `SEARCH_LANDING` | Search landing, native arm | `search_native` | `search_landing` | `SEARCH_NATIVE_AD_UNIT_ID` | 0 |
 | `SEARCH_MREC` | Search landing, MREC arm (300x250) | `search_mrec` | `search_landing_mrec` | `SEARCH_MREC_AD_UNIT_ID` | 0 |
 | `APP_DETAIL` | App page, between screenshots and What's New | `appview_native` | `app_detail` | `APP_DETAIL_NATIVE_AD_UNIT_ID` | 0 |
@@ -73,6 +73,9 @@ Both brands share `APPLOVIN_SDK_KEY`. Rules:
   returned no-fill before the network expansion; live fill must be retested.
 - `AD_MOB_APPLICATION_ID` falls back to Google's published test app id when unset, so a build
   without the property still starts; set the real id before any release that serves ads.
+- A direct release build logs `WARNING: <brand> release is being built without <properties>` for
+  every blank property above. Check the CI log for it before publishing: Vanilla 10.0.2 shipped
+  with every Vanilla unit blank, so none of its placements could serve (APT-242).
 - Production values live GPG-encrypted in the CI properties repository
   (`Aptoide/vanilla-gradle-properties`); the new keys above must be added there and the Jenkins
   "Update gradle.properties" job run before CI builds carry them. Only `distribution=direct` builds
@@ -193,9 +196,10 @@ never sent.
 
 ## 7. Local testing without production ids
 
-When the Remote Config keys are missing, Search MREC defaults enabled in both build types.
-Deep Home also defaults enabled in both build types; other placements default enabled in debug.
-Debug uses an empty geo blocklist. Values set in the console still win. The source XML defaults select MREC at 100%.
+When a `<prefix>_enabled` key is missing, every placement is enabled in debug and disabled in
+release. Debug uses an empty geo blocklist. Values set in the console still win. Search stays
+native until `search_ad_format_experiment_enabled` is turned on; the XML default allocation is
+then 100% MREC.
 Pass the ids on the command line only (never commit them), for example:
 
 ```bash

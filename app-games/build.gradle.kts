@@ -512,6 +512,7 @@ fun Project.adProperty(name: String): String =
  * crashes at startup without one; CI injects the production ids like APPLOVIN_SDK_KEY.
  */
 fun com.android.build.api.dsl.ApplicationProductFlavor.configureMaxAdUnits(propertyPrefix: String) {
+  val missingProperties = mutableListOf<String>()
   listOf(
     "HOME_NATIVE_AD_UNIT_ID",
     "SEARCH_NATIVE_AD_UNIT_ID",
@@ -519,15 +520,43 @@ fun com.android.build.api.dsl.ApplicationProductFlavor.configureMaxAdUnits(prope
     "BROWSE_NATIVE_AD_UNIT_ID",
     "SEARCH_MREC_AD_UNIT_ID",
   ).forEach { field ->
+    val unitId = project.adProperty(propertyPrefix + field)
+    if (unitId.isBlank()) missingProperties += propertyPrefix + field
     buildConfigField(
       type = "String",
       name = field,
-      value = project.adProperty(propertyPrefix + field).toBuildConfigString(),
+      value = unitId.toBuildConfigString(),
     )
   }
+  val adMobAppId = project.adProperty(propertyPrefix + "AD_MOB_APPLICATION_ID")
+  if (adMobAppId.isBlank()) missingProperties += propertyPrefix + "AD_MOB_APPLICATION_ID"
   manifestPlaceholders["admobAppId"] =
-    project.adProperty(propertyPrefix + "AD_MOB_APPLICATION_ID")
-      .ifBlank { "ca-app-pub-3940256099942544~3347511713" }
+    adMobAppId.ifBlank { "ca-app-pub-3940256099942544~3347511713" }
+  warnOnMissingAdProperties(brand = name, missingProperties = missingProperties)
+}
+
+/**
+ * A blank unit id switches its placements off for good in that build, and nothing at runtime says
+ * so: Vanilla 10.0.2 shipped with every unit blank (APT-242). So a direct release build of [brand]
+ * names the properties it was built without. A warning, not a failure: builds outside CI have none.
+ */
+fun Project.warnOnMissingAdProperties(brand: String, missingProperties: List<String>) {
+  if (missingProperties.isEmpty()) return
+  val releasePackageTaskPrefix = "package${brand.replaceFirstChar { it.uppercase() }}Direct"
+  gradle.taskGraph.whenReady {
+    val buildsDirectRelease = allTasks.any { task ->
+      task.project == this@warnOnMissingAdProperties &&
+        task.name.startsWith(releasePackageTaskPrefix) &&
+        task.name.contains("Release")
+    }
+    if (buildsDirectRelease) {
+      logger.warn(
+        "WARNING: $brand release is being built without ${missingProperties.joinToString()}. " +
+          "A blank unit id keeps its ad placements off in this build; a blank AdMob " +
+          "application id ships Google's sample one. See docs/MAX_PLACEMENTS.md, section 2."
+      )
+    }
+  }
 }
 
 fun String.toBuildConfigString(): String {
