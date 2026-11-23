@@ -11,8 +11,8 @@ import java.util.Locale
  * [NativeAdPlacement.flagPrefix], e.g. `home_native_enabled`, `browse_native_category_position`.
  *
  * - `<prefix>_enabled` is the kill switch. It is intentionally NOT present in
- *   remote_config_defaults.xml. Search MREC, deep Home and browse lists default to enabled in
- *   both build types. Other placements default to enabled in debug and disabled in release.
+ *   remote_config_defaults.xml. Without the key, every placement is enabled in debug and
+ *   disabled in release.
  * - `<prefix>_position`: for list slots, the number of organic items rendered before the ad;
  *   for the home feed, the zero-based bundle index the ad is inserted before.
  * - `<prefix>_excluded_geos` geo blocklist. Like the kill switch it is NOT in
