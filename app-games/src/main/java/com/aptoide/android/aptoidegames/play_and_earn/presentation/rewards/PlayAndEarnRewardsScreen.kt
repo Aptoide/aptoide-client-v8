@@ -110,7 +110,7 @@ private fun RewardsHeader(rewardType: PaERewardType) {
           rewardType.exchangeDisplayName,
         ),
         style = AGTypography.Title,
-        color = Palette.Yellow100,
+        color = Palette.AccentText,
       )
       Image(
         painter = painterResource(rewardType.iconRes),

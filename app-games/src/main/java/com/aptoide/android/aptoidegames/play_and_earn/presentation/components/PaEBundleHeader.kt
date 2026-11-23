@@ -21,6 +21,7 @@ import com.aptoide.android.aptoidegames.drawables.icons.getForward
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PaERewardType
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.iconRes
 import com.aptoide.android.aptoidegames.theme.AGTypography
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
@@ -53,7 +54,7 @@ fun PaEBundleHeader(
         Text(
           text = stringResource(R.string.play_and_earn_earn_title, currencyName),
           style = AGTypography.Title,
-          color = Palette.White
+          color = FixedColors.White
         )
       }
 
@@ -64,12 +65,12 @@ fun PaEBundleHeader(
         Text(
           text = stringResource(R.string.play_and_earn_earning_now_title),
           style = AGTypography.InputsM,
-          color = Palette.White
+          color = FixedColors.White
         )
 
         Image(
           modifier = Modifier.size(18.dp),
-          imageVector = getForward(Palette.White, Palette.Secondary),
+          imageVector = getForward(FixedColors.White, Palette.Secondary),
           contentDescription = null,
         )
       }
@@ -78,7 +79,7 @@ fun PaEBundleHeader(
     Text(
       text = stringResource(R.string.play_and_earn_more_games_more, currencyName),
       style = AGTypography.InputsM,
-      color = Palette.White
+      color = FixedColors.White
     )
   }
 }

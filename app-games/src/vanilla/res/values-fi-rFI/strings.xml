@@ -16,4 +16,6 @@
   <string name="promotional_now_available_body">Nyt saatavilla Aptoideissa!</string>
   <string name="play_and_earn_permissions_settings_path">Asetukset → Sovellukset → Aptoide → ⋮ → Salli rajoitetut asetukset</string>
   <string name="notifications_context_body">Kerromme sinulle uusimmat uutiset ja päivitykset!</string>
+  <string name="play_and_earn_rewards_paused_info_body">Jokainen peli käyttää seurantatyökalua Aptoidein kautta tehtyjen asennusten vahvistamiseen. Tämän kampanjan palkkiot alkavat, kun se vahvistaa asennuksesi, yleensä muutaman minuutin kuluttua pelin ensimmäisestä avaamisesta.\n\nPidä peli asennettuna ja pelaa tavalliseen tapaan. Se, mitä teet pelissä odottaessasi, lasketaan, kun asennuksesi on vahvistettu.</string>
+  <string name="play_and_earn_not_eligible_info_body">Jokainen peli käyttää seurantatyökalua Aptoidein kautta tehtyjen asennusten vahvistamiseen ja päättää, mitkä niistä hyväksytään. Asennukset, jotka sen turvatarkistukset merkitsevät, esimerkiksi emulaattoreista tai automatisoiduista työkaluista, eivät kelpaa kampanjaan.\n\nMuita Play &amp; Earn -pelejä voi silti olla saatavilla sinulle.</string>
 </resources>

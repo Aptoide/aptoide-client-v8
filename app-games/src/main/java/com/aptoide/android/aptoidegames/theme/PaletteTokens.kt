@@ -20,6 +20,20 @@ interface PaletteTokens {
   val Official: Color
   val Yellow: Color
 
+  /**
+   * Yellow used as text or a thin stroke (tab label, headline). Same as [Yellow100] on dark
+   * backgrounds; the vanilla light palette darkens it so it stays readable on white.
+   * Yellow fills with dark text on them keep [Yellow100].
+   */
+  val AccentText: Color
+
+  /**
+   * The reward orange used as text ("+ 10 UNITS", the dollar amount). Same as [SecondaryLight]
+   * on dark backgrounds; the vanilla light palette darkens it so it stays readable on the light
+   * cards. Fills and strokes keep [SecondaryLight].
+   */
+  val SecondaryAccentText: Color
+
   val Yellow50: Color
   val Yellow100: Color
   val Yellow150: Color

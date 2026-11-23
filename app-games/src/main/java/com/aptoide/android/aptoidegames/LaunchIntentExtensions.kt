@@ -16,9 +16,8 @@ const val APP_LINK_HOST = "{LANG}.aptoide.com"
 fun Intent.putDeeplink(deepLink: String): Intent = putExtra(DEEPLINK_KEY, deepLink)
 
 // In-app navigation route
-// Notifications that target an in-app screen carry the route directly instead of a deep link URI:
-// MainActivity only follows deep links whose scheme is "ag", so a URI would silently do nothing on
-// the vanilla brand.
+// Notifications that target an in-app screen may carry the route directly instead of a deep link
+// URI; the URI form works too since MainActivity follows the brand's scheme (AND-929).
 private const val NOTIFICATION_ROUTE = "notificationRoute"
 
 fun Intent.putNotificationRoute(route: String): Intent = putExtra(NOTIFICATION_ROUTE, route)
@@ -50,7 +49,8 @@ fun Intent.putNotificationTag(tag: String? = null): Intent =
 fun Intent.putNotificationPackage(packageName: String? = null): Intent =
   putExtra(NOTIFICATION_PACKAGE, packageName)
 
-val Intent?.agDeepLink
+/** The deep link a notification put in the launch intent, if any; callers filter by scheme. */
+val Intent?.brandDeepLink
   get() = this?.extras
     ?.getString(DEEPLINK_KEY)
     ?.withPrevScreen("notification")

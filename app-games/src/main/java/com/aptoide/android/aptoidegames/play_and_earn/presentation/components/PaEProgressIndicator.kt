@@ -7,11 +7,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
+import com.aptoide.android.aptoidegames.theme.ProgressBarShape
 import kotlin.random.Random
 
 @Composable
@@ -20,13 +22,14 @@ fun PaEProgressIndicator(modifier: Modifier = Modifier, progress: Float) {
     modifier = modifier
       .fillMaxWidth()
       .height(8.dp)
+      .clip(ProgressBarShape)
       .background(Palette.Grey)
   ) {
     Box(
       modifier = Modifier
         .fillMaxWidth(progress)
         .fillMaxHeight()
-        .background(color = Color.White)
+        .background(color = FixedColors.White)
         .background(
           brush = Brush.horizontalGradient(
             *arrayOf(

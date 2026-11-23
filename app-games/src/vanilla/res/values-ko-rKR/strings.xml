@@ -10,4 +10,7 @@
   <string name="update_aptoide_games_update_notification">Aptoide의 새로운 버전이 있습니다.</string>
   <string name="promotional_now_available_body">이제 Aptoide에서 이용 가능합니다!</string>
   <string name="notifications_context_body">최신 소식과 업데이트를 알려드리겠습니다!</string>
+  <string name="play_and_earn_rewards_paused_info_body">각 게임은 Aptoide를 통한 설치를 확인하기 위해 추적 도구를 사용합니다. 이 캠페인의 보상은 설치가 확인되면 시작되며, 보통 게임을 처음 연 후 몇 분 정도 걸립니다.\n\n게임을 설치된 상태로 유지하고 평소처럼 플레이하세요. 기다리는 동안 게임에서 한 활동도 설치가 확인되면 반영됩니다.</string>
+  <string name="play_and_earn_not_eligible_info_body">각 게임은 Aptoide를 통한 설치를 확인하기 위해 추적 도구를 사용하며, 어떤 설치가 대상인지 결정합니다. 에뮬레이터나 자동화 도구 등 보안 검사에서 감지된 설치는 캠페인에 포함되지 않습니다.\n\n다른 Play &amp; Earn 게임은 계속 이용할 수 있습니다.</string>
+  <string name="play_and_earn_permissions_settings_path">설정 → 앱 → Aptoide → ⋮ → 제한된 설정 허용</string>
 </resources>

@@ -10,7 +10,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.theme.AGTypography
+import com.aptoide.android.aptoidegames.theme.FixedColors
 import com.aptoide.android.aptoidegames.theme.Palette
+import com.aptoide.android.aptoidegames.theme.RewardBadgeShape
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -22,9 +24,10 @@ fun PaERewardBadge(
   Text(
     text = stringResource(R.string.play_and_earn_earn_amount_badge, amount.format()),
     style = AGTypography.BodyBold,
-    color = Palette.Black,
+    // Dark on yellow in both themes: Palette.Black would turn white in vanilla light.
+    color = FixedColors.Dark,
     modifier = modifier
-      .background(Palette.Yellow100)
+      .background(Palette.Yellow100, RewardBadgeShape)
       .padding(horizontal = 8.dp, vertical = 4.dp),
   )
 }

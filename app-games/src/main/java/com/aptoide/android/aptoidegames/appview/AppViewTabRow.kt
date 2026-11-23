@@ -51,7 +51,7 @@ fun AppViewTabRow(
       selectedTabIndex = selectedTabIndex,
       onTabClick = onSelectTab,
       contentColor = if (selectedTab == AppViewTab.REWARDS) {
-        Palette.Yellow100
+        Palette.AccentText
       } else {
         Palette.Primary
       },

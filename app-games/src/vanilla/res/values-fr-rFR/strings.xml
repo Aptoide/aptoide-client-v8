@@ -13,4 +13,6 @@
   <string name="update_aptoide_games_update_notification">Une nouvelle version d\'Aptoide est disponible.</string>
   <string name="play_and_earn_permissions_settings_path">Paramètres → Applications → Aptoide → ⋮ → Autoriser les paramètres restreints</string>
   <string name="notifications_context_body">Nous vous tiendrons au courant des dernières actualités et mises à jour !</string>
+  <string name="play_and_earn_rewards_paused_info_body">Chaque jeu utilise un outil de suivi pour confirmer les installations effectuées via Aptoide. Les récompenses de cette campagne commencent dès qu\'il confirme la vôtre, généralement quelques minutes après la première ouverture du jeu.\n\nGardez le jeu installé et jouez normalement. Ce que vous faites dans le jeu pendant l\'attente compte une fois votre installation confirmée.</string>
+  <string name="play_and_earn_not_eligible_info_body">Chaque jeu utilise un outil de suivi pour confirmer les installations effectuées via Aptoide et décide lesquelles sont éligibles. Les installations signalées par ses contrôles de sécurité, par exemple depuis des émulateurs ou des outils automatisés, ne comptent pas pour la campagne.\n\nD\'autres jeux Play &amp; Earn peuvent toujours être disponibles pour vous.</string>
 </resources>

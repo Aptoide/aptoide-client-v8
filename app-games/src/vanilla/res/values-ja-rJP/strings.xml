@@ -12,4 +12,6 @@
   <string name="promotional_now_available_body">Aptoideで利用可能に!</string>
   <string name="play_and_earn_permissions_settings_path">設定 → アプリ → Aptoide → ⋮ → 制限付き設定を許可</string>
   <string name="notifications_context_body">最新のニュースやアップデートをお知らせします！</string>
+  <string name="play_and_earn_rewards_paused_info_body">各ゲームは、Aptoide 経由のインストールを確認するためにトラッキングツールを使用しています。このキャンペーンの報酬は、インストールが確認されると始まります。通常、ゲームを初めて開いてから数分ほどです。\n\nゲームをインストールしたまま、いつもどおりプレイしてください。待っている間のゲーム内の進行も、インストールが確認されるとカウントされます。</string>
+  <string name="play_and_earn_not_eligible_info_body">各ゲームは、Aptoide 経由のインストールを確認するためにトラッキングツールを使用し、対象となるインストールを判断しています。エミュレーターや自動化ツールなど、セキュリティチェックで検出されたインストールはキャンペーンの対象になりません。\n\nほかの Play &amp; Earn ゲームは引き続き利用できる場合があります。</string>
 </resources>
