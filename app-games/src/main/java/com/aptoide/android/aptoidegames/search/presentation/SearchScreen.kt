@@ -85,6 +85,7 @@ import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.analytics.presentation.withSearchMeta
 import com.aptoide.android.aptoidegames.appview.LoadingView
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
+import com.aptoide.android.aptoidegames.design_system.PrimarySmallOutlinedButton
 import com.aptoide.android.aptoidegames.drawables.icons.getAsterisk
 import com.aptoide.android.aptoidegames.drawables.icons.getClose
 import com.aptoide.android.aptoidegames.drawables.icons.getGames
@@ -100,7 +101,10 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.rememberTrendi
 import com.aptoide.android.aptoidegames.feature_rtb.data.RTBApp
 import com.aptoide.android.aptoidegames.feature_rtb.presentation.rememberRTBAdClickHandler
 import com.aptoide.android.aptoidegames.feature_rtb.presentation.rememberSearchSponsoredApp
-import com.aptoide.android.aptoidegames.gamegenie.presentation.buildGameGenieRoute
+import com.aptoide.android.aptoidegames.gamegenie.analytics.GameGenieEntryPoint
+import com.aptoide.android.aptoidegames.gamegenie.analytics.rememberGameGenieAnalytics
+import com.aptoide.android.aptoidegames.gamegenie.presentation.buildAskGameGenieRoute
+import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.AskGameGenieEntry
 import com.aptoide.android.aptoidegames.gamegenie.presentation.rememberGameGenieVisibility
 import com.aptoide.android.aptoidegames.home.rememberBottomBarMenuScrollState
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
@@ -141,8 +145,8 @@ fun searchScreen() = ScreenData.withAnalytics(
   val analyticsContext = AnalyticsContext.current
 
   var searchValue by rememberSaveable { mutableStateOf("") }
-  val shouldRedirectSearchToGameGenie =
-    rememberGameGenieVisibility() && BuildConfig.FLAVOR_brand != "vanilla"
+  val showGameGenieEntry = rememberGameGenieVisibility()
+  val gameGenieAnalytics = rememberGameGenieAnalytics()
   var searchMeta by rememberSaveable(
     saver = Saver(
       save = { it.value?.toString() ?: "null" },
@@ -208,10 +212,7 @@ fun searchScreen() = ScreenData.withAnalytics(
               }
             searchValue = suggestion
             navigateTo(
-              buildSearchTargetRoute(
-                query = suggestion,
-                shouldRedirectToGameGenie = shouldRedirectSearchToGameGenie,
-              ).withSearchMeta(searchMeta)
+              buildSearchRoute(query = suggestion).withSearchMeta(searchMeta)
             )
           },
           onRemoveSuggestion = { searchViewModel.onRemoveSearchSuggestion(it) },
@@ -232,10 +233,7 @@ fun searchScreen() = ScreenData.withAnalytics(
               focusManager.clearFocus()
               keyboardController?.hide()
               navigateTo(
-                buildSearchTargetRoute(
-                  query = searchValue,
-                  shouldRedirectToGameGenie = shouldRedirectSearchToGameGenie,
-                ).withSearchMeta(searchMeta)
+                buildSearchRoute(query = searchValue).withSearchMeta(searchMeta)
               )
             }
           },
@@ -272,19 +270,18 @@ fun searchScreen() = ScreenData.withAnalytics(
             }
           },
           navigate = navigateTo,
+          onAskGameGenie = if (showGameGenieEntry) {
+            { entryPoint ->
+              gameGenieAnalytics.sendGameGenieEntryClick(entryPoint)
+              navigateTo(buildAskGameGenieRoute(entryPoint, searchValue))
+            }
+          } else {
+            null
+          },
         )
       }
     }
   }
-}
-
-private fun buildSearchTargetRoute(
-  query: String,
-  shouldRedirectToGameGenie: Boolean,
-): String = if (shouldRedirectToGameGenie) {
-  buildGameGenieRoute(query = query)
-} else {
-  buildSearchRoute(query = query)
 }
 
 @Composable
@@ -301,6 +298,7 @@ fun SearchView(
   onEmptyView: () -> Unit,
   onRetry: () -> Unit,
   navigate: (String) -> Unit,
+  onAskGameGenie: ((GameGenieEntryPoint) -> Unit)? = null,
 ) {
   Column {
     SearchAppBar(
@@ -314,6 +312,9 @@ fun SearchView(
       is SearchUiState.Error -> GenericErrorView(onRetryClick = onRetry)
       is SearchUiState.FirstLoading, SearchUiState.ResultsLoading -> LoadingView()
       is SearchUiState.Suggestions -> {
+        onAskGameGenie?.let {
+          AskGameGenieEntry(onClick = { it(GameGenieEntryPoint.SEARCH_SUGGESTIONS) })
+        }
         // TODO buzz implementation after migration
         if (uiState.searchSuggestions.suggestionType == SearchSuggestionType.AUTO_COMPLETE) {
           AutoCompleteSearchSuggestions(
@@ -335,7 +336,11 @@ fun SearchView(
       is SearchUiState.Results -> {
         if (uiState.searchResults.isEmpty()) {
           onEmptyView()
-          EmptySearchView(searchValue, navigate)
+          EmptySearchView(
+            searchValue = searchValue,
+            navigate = navigate,
+            onAskGameGenie = onAskGameGenie?.let { { it(GameGenieEntryPoint.SEARCH_EMPTY) } },
+          )
         } else {
           SearchResultsView(
             searchResults = uiState.searchResults,
@@ -704,6 +709,7 @@ fun AutoCompleteSearchSuggestionItem(
 fun EmptySearchView(
   searchValue: String,
   navigate: (String) -> Unit,
+  onAskGameGenie: (() -> Unit)? = null,
 ) {
   val trendingBundle = rememberTrendingBundle()
   Column(
@@ -737,6 +743,15 @@ fun EmptySearchView(
         overflow = TextOverflow.Ellipsis,
         textAlign = TextAlign.Center,
       )
+      onAskGameGenie?.let {
+        PrimarySmallOutlinedButton(
+          onClick = it,
+          modifier = Modifier
+            .align(Alignment.CenterHorizontally)
+            .padding(bottom = 32.dp),
+          title = stringResource(R.string.gamegenie_search_entry_title),
+        )
+      }
     }
     trendingBundle?.let { AppsGridBundle(trendingBundle, navigate) }
   }

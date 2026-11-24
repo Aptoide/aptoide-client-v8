@@ -2,6 +2,13 @@ package com.aptoide.android.aptoidegames.gamegenie.analytics
 
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 
+/** Where the user opened GameGenie from, now that it is no longer a bottom bar tab (APT-247). */
+enum class GameGenieEntryPoint(val source: String) {
+  SEARCH_SUGGESTIONS("search_suggestions"),
+  SEARCH_EMPTY("search_empty"),
+  SETTINGS("settings"),
+}
+
 class GameGenieAnalytics(
   private val genericAnalytics: GenericAnalytics,
 ) {
@@ -10,6 +17,11 @@ class GameGenieAnalytics(
     const val SOURCE_SEARCH = "search"
     const val SOURCE_CHAT = "chat"
   }
+
+  fun sendGameGenieEntryClick(entryPoint: GameGenieEntryPoint) = genericAnalytics.logEvent(
+    name = "gamegenie_entry_click",
+    params = mapOf("source" to entryPoint.source)
+  )
 
   fun sendGameGenieSuggestionClick(index: Int) = genericAnalytics.logEvent(
     name = "gamegenie_suggests_click",

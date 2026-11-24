@@ -34,7 +34,7 @@ fun rememberGameGenieVisibility(): Boolean = runPreviewable(
       val vm = hiltViewModel<GameGenieInjectionsProvider>()
       LaunchedEffect(key1 = Unit) {
         coroutineScope.launch {
-          state = vm.featureFlags.getFlag("show_game_genie", false)
+          state = vm.featureFlags.getFlag(GAME_GENIE_ENTRY_POINTS_FLAG, false)
         }
       }
       state

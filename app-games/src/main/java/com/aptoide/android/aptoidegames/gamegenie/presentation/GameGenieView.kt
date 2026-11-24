@@ -91,7 +91,7 @@ fun gameGenieScreen(
       defaultValue = null
     }
   )
-) { arguments, navigate, _ ->
+) { arguments, navigate, navigateBack ->
 
   val viewModel = hiltViewModel<GameGenieViewModel>()
   val installedGames by viewModel.installedGames.collectAsState()
@@ -171,7 +171,7 @@ fun gameGenieScreen(
               uiState = uiState,
               installedGames = installedGames,
               navigateTo = navigate,
-              navigateBack = null,
+              navigateBack = navigateBack,
               onError = viewModel::reload,
               onMessageSend = { message, image ->
                 viewModel.sendMessage(message, image)

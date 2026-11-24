@@ -53,11 +53,6 @@ class GeneralAnalytics @Inject constructor(
     params = emptyMap()
   )
 
-  fun sendBottomBarGameGenieClick() = genericAnalytics.logEvent(
-    name = "bn_gamegenie_clicked",
-    params = emptyMap()
-  )
-
   fun sendBottomBarCategoriesClick() = genericAnalytics.logEvent(
     name = "bn_categories_clicked",
     params = emptyMap()
