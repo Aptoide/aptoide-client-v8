@@ -1,6 +1,7 @@
 package cm.aptoide.pt.play_and_earn.events.di
 
 import cm.aptoide.pt.aptoide_network.data.network.PlayAndEarnIdInterceptor
+import cm.aptoide.pt.aptoide_network.data.network.UserAgentInterceptor
 import cm.aptoide.pt.aptoide_network.di.RewardsDomain
 import cm.aptoide.pt.play_and_earn.events.data.DefaultEventsRepository
 import cm.aptoide.pt.play_and_earn.events.data.EventsApi
@@ -26,11 +27,13 @@ internal object RepositoryModule {
   @Singleton
   @EventsOkHttp
   fun provideEventsOkHttpClient(
+    userAgentInterceptor: UserAgentInterceptor,
     walletAuthInterceptor: WalletAuthInterceptor,
     playAndEarnIdInterceptor: PlayAndEarnIdInterceptor,
     httpLoggingInterceptor: HttpLoggingInterceptor
   ): OkHttpClient {
     return OkHttpClient.Builder()
+      .addInterceptor(userAgentInterceptor)
       .addInterceptor(walletAuthInterceptor)
       .addInterceptor(playAndEarnIdInterceptor)
       .addInterceptor(httpLoggingInterceptor)
