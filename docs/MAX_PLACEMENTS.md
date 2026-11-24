@@ -84,8 +84,8 @@ Both brands share `APPLOVIN_SDK_KEY`. Rules:
 
 ## 3. Remote Config keys
 
-Per placement (`<prefix>` from the table above). A value set in the Firebase console always
-wins; the "when absent" columns are fallbacks used only while a key is missing.
+Per placement (`<prefix>` from the table above). A value published in the config backoffice
+(`/admin/config`) always wins; the "when absent" columns are fallbacks used only while a key is missing.
 
 | Key | When absent, release | When absent, debug | Notes |
 |---|---|---|---|
@@ -128,8 +128,8 @@ requests the other format. In particular, `search_mrec_enabled = false` suppress
    test mode in the debugger and relaunch the app as it requests. Games MREC has been verified
    with AppLovin test demand in both brands. Live rendering and bidder participation after
    the new network mappings remain unverified; a saved mapping is not proof of fill.
-4. Every placement, new or existing, needs `<prefix>_enabled = true` in Firebase to open in
-   release. A configured unit alone never starts serving. Keep each `<prefix>_excluded_geos`
+4. Every placement, new or existing, needs `<prefix>_enabled = true` in the config backoffice to
+   open in release. A configured unit alone never starts serving. Keep each `<prefix>_excluded_geos`
    list aligned with the intended serving countries and consent configuration.
 5. Search ships native. To move it to MREC, set `search_ad_format_experiment_enabled = true`
    and `search_mrec_enabled = true` (allocation defaults to 100%) once its unit is configured. A partial

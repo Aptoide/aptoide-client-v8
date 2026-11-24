@@ -38,11 +38,6 @@ interface FeatureFlags {
   suspend fun getInt(key: String, default: Int): Int = default
 
   suspend fun <T> getObject(key: String, klass: Class<T>): T? = null
-
-  /**
-   * Updates a specific flag in the cache. Used for real-time updates from remote config.
-   */
-  suspend fun updateFlag(key: String, value: String) {}
 }
 
 @Singleton
@@ -139,10 +134,9 @@ class FeatureFlagsImpl @Inject constructor(
 
   override suspend fun <T> getObject(key: String, klass: Class<T>) = mutex.withLock {
     runCatching {
-      // Remote config values are always stored here as strings (see
-      // AptoideFeatureFlagsRepository, which reads every flag via ConfigValue.asString()),
-      // even when the flag itself represents a JSON object - so this can't assume the
-      // stored value is already a JSONObject the way featureFlags.getJSONObject(key) does.
+      // Remote values and shipped defaults are stored here as strings, even when the flag
+      // itself represents a JSON object - so this can't assume the stored value is already a
+      // JSONObject the way featureFlags.getJSONObject(key) does.
       val jsonStr = when (val raw = featureFlags.opt(key)) {
         is JSONObject -> raw.toString()
         is String -> raw
@@ -150,12 +144,5 @@ class FeatureFlagsImpl @Inject constructor(
       }
       Gson().fromJson(jsonStr, klass)
     }.getOrNull()
-  }
-
-  override suspend fun updateFlag(key: String, value: String) {
-    mutex.withLock {
-      featureFlags.put(key, value)
-      settingsLocalRepository.saveFeatureFlags(featureFlags)
-    }
   }
 }
