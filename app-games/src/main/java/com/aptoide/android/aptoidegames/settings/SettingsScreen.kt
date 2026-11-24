@@ -71,6 +71,7 @@ import com.aptoide.android.aptoidegames.UrlActivity
 import com.aptoide.android.aptoidegames.design_system.AptoideGamesSwitch
 import com.aptoide.android.aptoidegames.design_system.PrimarySmallOutlinedButton
 import com.aptoide.android.aptoidegames.developer.rememberAGDeveloperOptions
+import com.aptoide.android.aptoidegames.device_info.rememberPaEDeviceIds
 import com.aptoide.android.aptoidegames.drawables.icons.getAptoideLogo
 import com.aptoide.android.aptoidegames.drawables.icons.getForward
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getStartEarningIcon
@@ -424,6 +425,7 @@ private fun CurrentUserInfoSection(
 fun AGDeveloperOptionsSection() {
   val firebaseToken = rememberFirebaseToken()
   val walletAddress = rememberWalletAddress()
+  val paEDeviceIds = rememberPaEDeviceIds()
   val clipboard = LocalClipboard.current
   val coroutineScope = rememberCoroutineScope()
   val (areAGDeveloperOptionsEnabled, toggleAGDeveloperOptions) = rememberAGDeveloperOptions()
@@ -507,7 +509,52 @@ fun AGDeveloperOptionsSection() {
             )
           }
         }
+
+        DeveloperOptionsCopyableRow(label = "PaE device key", value = paEDeviceIds.deviceKey)
+        DeveloperOptionsCopyableRow(label = "PaE install id", value = paEDeviceIds.installId)
       }
+    }
+  }
+}
+
+@Composable
+private fun DeveloperOptionsCopyableRow(
+  label: String,
+  value: String?,
+) {
+  val clipboard = LocalClipboard.current
+  val coroutineScope = rememberCoroutineScope()
+
+  Row(
+    verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.SpaceBetween,
+    modifier = Modifier
+      .defaultMinSize(minHeight = 48.dp)
+      .padding(top = 8.dp)
+  ) {
+    Text(
+      modifier = Modifier
+        .padding(end = 16.dp)
+        .wrapContentHeight(),
+      text = label,
+      style = AGTypography.InputsM,
+      color = Palette.GreyLight
+    )
+
+    value?.let {
+      Text(
+        modifier = Modifier
+          .defaultMinSize(minHeight = 48.dp)
+          .wrapContentHeight()
+          .clickable {
+            coroutineScope.launch {
+              clipboard.setClipEntry(ClipEntry(ClipData.newPlainText(label, it)))
+            }
+          },
+        text = it,
+        style = AGTypography.InputsM,
+        color = Palette.GreyLight
+      )
     }
   }
 }
