@@ -10,7 +10,6 @@ import okhttp3.ResponseBody.Companion.toResponseBody
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -21,12 +20,12 @@ import retrofit2.Response
 import java.net.UnknownHostException
 
 @ExperimentalCoroutinesApi
-class RemoteConfigFeatureFlagsRepositoryTest {
+class DeviceApiFeatureFlagsRepositoryTest {
 
   @Test
   fun `The fetch identifies the brand, the version and the install`() = coScenario {
     m Given "a repository for the Aptoide Games variant"
-    val api = FakeConfigApi { response("""{"template_version":3,"values":{}}""") }
+    val api = FakeConfigApi { response("""{"template_version":3,"values":{"a":"b"}}""") }
     val repository = repository(api = api)
 
     m When "the flags are fetched"
@@ -135,11 +134,11 @@ class RemoteConfigFeatureFlagsRepositoryTest {
 
     m Then "the same error reaches the caller"
     assertSame(error, thrown)
-    m And "the failure event names the exception and has no HTTP status"
+    m And "the failure event names the kind of error and has no HTTP status"
     val (name, params) = analytics.events.single()
     assertEquals("feature_flags_fetch_failure", name)
-    assertEquals("UnknownHostException", params?.get("error_type"))
-    assertNull(params?.get("error_http_code"))
+    assertEquals("unknown_host", params?.get("error_type"))
+    assertFalse(params!!.containsKey("error_http_code"))
   }
 
   @Test
@@ -157,8 +156,24 @@ class RemoteConfigFeatureFlagsRepositoryTest {
     m Then "the fetch fails instead of returning no flags"
     assertTrue(thrown is MissingConfigValuesException)
     m And "the failure is reported under its own kind"
-    assertEquals("MissingConfigValuesException",
-      analytics.events.single().second?.get("error_type"))
+    assertEquals("empty_values", analytics.events.single().second?.get("error_type"))
+  }
+
+  @Test
+  fun `A response with no values at all is a failure too`() = coScenario {
+    m Given "a 200 response whose values object is empty"
+    val analytics = RecordingAnalytics()
+    val repository = repository(
+      api = FakeConfigApi { response("""{"template_version":3,"values":{}}""") },
+      analytics = analytics,
+    )
+
+    m When "the flags are fetched"
+    val thrown = runCatching { repository.getFeatureFlags() }.exceptionOrNull()
+
+    m Then "the snapshot is protected from being replaced by nothing"
+    assertTrue(thrown is MissingConfigValuesException)
+    assertEquals("feature_flags_fetch_failure", analytics.events.single().first)
   }
 
   @Test
@@ -182,7 +197,7 @@ class RemoteConfigFeatureFlagsRepositoryTest {
     api: ConfigApi,
     analytics: RecordingAnalytics = RecordingAnalytics(),
     clock: FakeClock = FakeClock(step = 1),
-  ) = RemoteConfigFeatureFlagsRepository(
+  ) = DeviceApiFeatureFlagsRepository(
     configApi = api,
     variant = "aptoide-games",
     versionCode = 700,

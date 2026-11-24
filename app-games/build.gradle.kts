@@ -429,6 +429,7 @@ dependencies {
 
   testImplementation(libs.json)
   testImplementation(libs.kxml2)
+  testImplementation(libs.okhttp.mockwebserver)
 
   //Firebase
   implementation(platform(libs.firebase.bom))

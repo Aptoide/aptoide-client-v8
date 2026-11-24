@@ -489,11 +489,11 @@ heartbeat response.
 
 ---
 
-## 8. Remote config flags (Firebase on Android)
+## 8. Remote config flags (`GET /android/v1/config` on Android)
 
 | Key | Type | Meaning |
 |---|---|---|
-| `show_play_and_earn` | bool | P&E visible at all (geo-targeted in Firebase too) |
+| `show_play_and_earn` | bool | P&E visible at all (geo-targeted by the config server too) |
 | `pae_countries` | JSON array of ISO-3166 alpha-2 | locally detected country must be in it; default `US CA FI FR DE IT NL NO PT ES SE GB` |
 | `pae_usage_tracking_enabled` | bool | time-based missions + usage permissions. **Off**; irrelevant for iOS |
 | `pae_status_heartbeat_max_hours` | int 1–24 | backstop for the post-Play status heartbeat loop (default 10) |

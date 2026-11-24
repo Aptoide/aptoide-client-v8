@@ -48,7 +48,7 @@ class DeviceInfoViewModel(
   init {
     viewModelScope.launch {
       // Identifies the install in percentage rollouts of the remote config
-      val configBucketId = runCatching { configBucketIdStore.get() }.getOrDefault("")
+      val configBucketId = runCatching { configBucketIdStore.get() }.getOrDefault("unavailable")
       viewModelState.update {
         "${deviceInfo.getDeviceInfoSummary()}\n" +
           "AG: $storeName\n" +

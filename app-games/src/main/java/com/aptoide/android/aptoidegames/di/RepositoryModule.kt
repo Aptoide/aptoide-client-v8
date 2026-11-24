@@ -19,8 +19,8 @@ import cm.aptoide.pt.aptoide_network.di.StoreDomain
 import cm.aptoide.pt.aptoide_network.di.StoreEnvironmentDomain
 import cm.aptoide.pt.aptoide_network.di.StoreName
 import cm.aptoide.pt.aptoide_network.di.VersionCode
-import cm.aptoide.pt.device_api.di.DeviceApiRetrofit
 import cm.aptoide.pt.aptoide_network.di.WebServicesDomain
+import cm.aptoide.pt.device_api.di.DeviceApiRetrofit
 import cm.aptoide.pt.environment_info.DeviceInfo
 import cm.aptoide.pt.feature_apkfy.di.MMPDomain
 import cm.aptoide.pt.feature_apps.data.walletApp
@@ -45,7 +45,7 @@ import com.aptoide.android.aptoidegames.dataStore
 import com.aptoide.android.aptoidegames.feature_flags.CONFIG_VARIANT
 import com.aptoide.android.aptoidegames.feature_flags.ConfigApi
 import com.aptoide.android.aptoidegames.feature_flags.ConfigBucketIdStore
-import com.aptoide.android.aptoidegames.feature_flags.RemoteConfigFeatureFlagsRepository
+import com.aptoide.android.aptoidegames.feature_flags.DeviceApiFeatureFlagsRepository
 import com.aptoide.android.aptoidegames.feature_flags.XmlFeatureFlagsDefaults
 import com.aptoide.android.aptoidegames.feature_flags.analytics.FeatureFlagsAnalytics
 import com.aptoide.android.aptoidegames.feature_promotional.domain.AppComingSoonManager
@@ -306,7 +306,7 @@ class RepositoryModule {
     @VersionCode versionCode: Int,
     configBucketIdStore: ConfigBucketIdStore,
     featureFlagsAnalytics: FeatureFlagsAnalytics,
-  ): FeatureFlagsRepository = RemoteConfigFeatureFlagsRepository(
+  ): FeatureFlagsRepository = DeviceApiFeatureFlagsRepository(
     configApi = retrofit.create(ConfigApi::class.java),
     variant = CONFIG_VARIANT,
     versionCode = versionCode,

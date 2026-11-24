@@ -20,7 +20,10 @@ class XmlFeatureFlagsDefaults(private val context: Context) : FeatureFlagsDefaul
   override fun get(): JSONObject = JSONObject(defaults.toString())
 }
 
-/** Reads `<entry><key>…</key><value>…</value></entry>` pairs; incomplete entries are skipped */
+/**
+ * Reads `<entry><key>…</key><value>…</value></entry>` pairs. An entry with no key or with an empty
+ * value is skipped, so a flag cannot default to the empty string from this file.
+ */
 internal fun parseFeatureFlagsDefaults(parser: XmlPullParser): JSONObject {
   val defaults = JSONObject()
   var tag: String? = null

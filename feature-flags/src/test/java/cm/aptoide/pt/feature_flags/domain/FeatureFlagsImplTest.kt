@@ -3,6 +3,7 @@ package cm.aptoide.pt.feature_flags.domain
 import cm.aptoide.pt.feature_flags.data.FeatureFlagsLocalRepository
 import cm.aptoide.pt.feature_flags.data.FeatureFlagsRepository
 import cm.aptoide.pt.test.gherkin.coScenario
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
@@ -168,6 +169,95 @@ class FeatureFlagsImplTest {
     assertTrue(earlyRead.await())
   }
 
+  @Test
+  fun `A read made before the initialization starts waits for it`() = coScenario { scope ->
+    m Given "flags that have not been initialized yet, with a snapshot on disk"
+    val flags = featureFlags(
+      remote = { json("show_play_and_earn" to "true") },
+      local = FakeLocalRepository(json("show_play_and_earn" to "true")),
+      defaults = json("show_play_and_earn" to "false"),
+    )
+
+    m When "a reader asks first and the initialization starts afterwards"
+    val earlyRead = scope.async { flags.getFlag("show_play_and_earn", false) }
+    scope.runCurrent()
+    val answeredBeforeInitialization = earlyRead.isCompleted
+    flags.initialize()
+
+    m Then "the reader is held until there are values, instead of getting its fallback"
+    assertFalse(answeredBeforeInitialization)
+    assertTrue(earlyRead.await())
+  }
+
+  @Test
+  fun `The snapshot wins over the defaults and the fetch wins over both`() = coScenario {
+    m Given "one key defined by the defaults, the snapshot and the remote"
+    val flags = featureFlags(
+      remote = { json("layered" to "fetched") },
+      local = FakeLocalRepository(json("layered" to "snapshot", "only_snapshot" to "stale")),
+      defaults = json("layered" to "default"),
+    )
+
+    m When "the flags are initialized"
+    flags.initialize()
+
+    m Then "the fetched value is served"
+    assertEquals("fetched", flags.getFlagAsString("layered"))
+    m And "a snapshot key the server no longer carries is gone"
+    assertNull(flags.getFlagAsString("only_snapshot"))
+  }
+
+  @Test
+  fun `Fetched values are served even when saving the snapshot fails`() = coScenario {
+    m Given "a first run where the snapshot cannot be written"
+    val flags = featureFlags(
+      remote = { json("show_home_tabs" to "true") },
+      local = FakeLocalRepository(failOnSave = true),
+      defaults = json("show_home_tabs" to "false"),
+    )
+
+    m When "the flags are initialized"
+    flags.initialize()
+
+    m Then "the fetched value still applies for this session"
+    assertTrue(flags.getFlag("show_home_tabs", false))
+  }
+
+  @Test
+  fun `A cancelled fetch cancels the initialization and leaves the flags readable`() =
+    coScenario { scope ->
+      m Given "a first run whose fetch gets cancelled"
+      val flags = featureFlags(
+        remote = { throw CancellationException("scope gone") },
+        local = FakeLocalRepository(),
+        defaults = json("appopen_cap_window_minutes" to "30"),
+      )
+
+      m When "the flags are initialized"
+      val thrown = runCatching { flags.initialize() }.exceptionOrNull()
+
+      m Then "the cancellation is not swallowed"
+      assertTrue(thrown is CancellationException)
+      m And "readers are released with the defaults rather than held forever"
+      assertEquals(30, flags.getInt("appopen_cap_window_minutes", 0))
+    }
+
+  @Test
+  fun `A defaults source that fails does not stop the fetched values`() = coScenario {
+    m Given "a defaults source that throws and a remote that answers"
+    val flags = FeatureFlagsImpl(
+      settingsRepository = FakeRepository { json("show_home_tabs" to "true") },
+      settingsLocalRepository = FakeLocalRepository(),
+      defaults = Optional.of(FeatureFlagsDefaults { throw IllegalStateException("bad xml") }),
+    )
+
+    m When "the flags are initialized"
+    flags.initialize()
+
+    m Then "the fetched value is served"
+    assertTrue(flags.getFlag("show_home_tabs", false))
+  }
+
   private fun featureFlags(
     remote: suspend () -> JSONObject,
     local: FeatureFlagsLocalRepository,
@@ -189,11 +279,13 @@ class FeatureFlagsImplTest {
 
   private class FakeLocalRepository(
     private val snapshot: JSONObject = JSONObject(),
+    private val failOnSave: Boolean = false,
   ) : FeatureFlagsLocalRepository {
     var saved: JSONObject? = null
 
     override suspend fun getFeatureFlags(): JSONObject = snapshot
     override suspend fun saveFeatureFlags(featureFlags: JSONObject) {
+      if (failOnSave) throw IOException("disk full")
       saved = JSONObject(featureFlags.toString())
     }
   }
