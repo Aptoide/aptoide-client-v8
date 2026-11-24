@@ -313,7 +313,10 @@ fun SearchView(
       is SearchUiState.FirstLoading, SearchUiState.ResultsLoading -> LoadingView()
       is SearchUiState.Suggestions -> {
         onAskGameGenie?.let {
-          AskGameGenieEntry(onClick = { it(GameGenieEntryPoint.SEARCH_SUGGESTIONS) })
+          AskGameGenieEntry(
+            onClick = { it(GameGenieEntryPoint.SEARCH_SUGGESTIONS) },
+            modifier = Modifier.padding(bottom = 8.dp),
+          )
         }
         // TODO buzz implementation after migration
         if (uiState.searchSuggestions.suggestionType == SearchSuggestionType.AUTO_COMPLETE) {
@@ -738,7 +741,8 @@ fun EmptySearchView(
         modifier = Modifier.padding(start = 40.dp, end = 40.dp, bottom = 32.dp),
         text = stringResource(R.string.search_empty_body, searchValue),
         style = AGTypography.Title,
-        color = if (isVanilla) Palette.Black else Palette.White,
+        // Adaptive foreground: light on the dark themes, dark on Vanilla's light theme.
+        color = Palette.White,
         maxLines = 4,
         overflow = TextOverflow.Ellipsis,
         textAlign = TextAlign.Center,
