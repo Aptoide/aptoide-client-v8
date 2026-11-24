@@ -102,10 +102,8 @@ import com.aptoide.android.aptoidegames.feature_rtb.data.RTBApp
 import com.aptoide.android.aptoidegames.feature_rtb.presentation.rememberRTBAdClickHandler
 import com.aptoide.android.aptoidegames.feature_rtb.presentation.rememberSearchSponsoredApp
 import com.aptoide.android.aptoidegames.gamegenie.analytics.GameGenieEntryPoint
-import com.aptoide.android.aptoidegames.gamegenie.analytics.rememberGameGenieAnalytics
-import com.aptoide.android.aptoidegames.gamegenie.presentation.buildAskGameGenieRoute
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.AskGameGenieEntry
-import com.aptoide.android.aptoidegames.gamegenie.presentation.rememberGameGenieVisibility
+import com.aptoide.android.aptoidegames.gamegenie.presentation.rememberAskGameGenie
 import com.aptoide.android.aptoidegames.home.rememberBottomBarMenuScrollState
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.installer.presentation.reportingCampaignClick
@@ -145,8 +143,6 @@ fun searchScreen() = ScreenData.withAnalytics(
   val analyticsContext = AnalyticsContext.current
 
   var searchValue by rememberSaveable { mutableStateOf("") }
-  val showGameGenieEntry = rememberGameGenieVisibility()
-  val gameGenieAnalytics = rememberGameGenieAnalytics()
   var searchMeta by rememberSaveable(
     saver = Saver(
       save = { it.value?.toString() ?: "null" },
@@ -162,7 +158,9 @@ fun searchScreen() = ScreenData.withAnalytics(
   val sponsoredApp = rememberSearchSponsoredApp()
 
   LaunchedEffect(Unit) {
-    searchValue = queryValue ?: ""
+    // Without a query argument, keep what was typed: this also runs when coming back from the
+    // GameGenie chat opened from the suggestions.
+    queryValue?.let { searchValue = it }
 
     if (!queryValue.isNullOrBlank()) {
       searchViewModel.loadResults()
@@ -191,6 +189,7 @@ fun searchScreen() = ScreenData.withAnalytics(
       navigate = navigate
     ) {
       OverrideAnalyticsSearchMeta(searchMeta = searchMeta, navigate = it) { navigateTo ->
+        val askGameGenie = rememberAskGameGenie(navigateTo)
 
         SearchView(
           uiState = uiState,
@@ -270,13 +269,12 @@ fun searchScreen() = ScreenData.withAnalytics(
             }
           },
           navigate = navigateTo,
-          onAskGameGenie = if (showGameGenieEntry) {
+          onAskGameGenie = askGameGenie?.let { ask ->
             { entryPoint ->
-              gameGenieAnalytics.sendGameGenieEntryClick(entryPoint)
-              navigateTo(buildAskGameGenieRoute(entryPoint, searchValue))
+              focusManager.clearFocus()
+              keyboardController?.hide()
+              ask(entryPoint, searchValue)
             }
-          } else {
-            null
           },
         )
       }

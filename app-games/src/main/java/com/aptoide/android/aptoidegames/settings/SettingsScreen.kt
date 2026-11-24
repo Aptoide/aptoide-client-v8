@@ -76,9 +76,7 @@ import com.aptoide.android.aptoidegames.drawables.icons.getForward
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getStartEarningIcon
 import com.aptoide.android.aptoidegames.firebase.rememberFirebaseToken
 import com.aptoide.android.aptoidegames.gamegenie.analytics.GameGenieEntryPoint
-import com.aptoide.android.aptoidegames.gamegenie.analytics.rememberGameGenieAnalytics
-import com.aptoide.android.aptoidegames.gamegenie.presentation.buildAskGameGenieRoute
-import com.aptoide.android.aptoidegames.gamegenie.presentation.rememberGameGenieVisibility
+import com.aptoide.android.aptoidegames.gamegenie.presentation.rememberAskGameGenie
 import com.aptoide.android.aptoidegames.network.presentation.NetworkPreferencesViewModel
 import com.aptoide.android.aptoidegames.play_and_earn.di.rememberWalletAddress
 import com.aptoide.android.aptoidegames.play_and_earn.domain.UserInfo
@@ -119,8 +117,7 @@ fun settingsScreen(showSnack: (String) -> Unit) = ScreenData(
   val isPaEUsageTrackingEnabled = rememberIsPaEUsageTrackingEnabled()
   val hasUsagePermissions = rememberHasUsagePermissionsOnResume()
 
-  val showGameGenie = rememberGameGenieVisibility()
-  val gameGenieAnalytics = rememberGameGenieAnalytics()
+  val askGameGenie = rememberAskGameGenie(navigate)
 
   SettingsViewContent(
     title = stringResource(R.string.settings_title),
@@ -160,11 +157,8 @@ fun settingsScreen(showSnack: (String) -> Unit) = ScreenData(
       }
       showSnack(copiedMessage)
     },
-    showGameGenie = showGameGenie,
-    onGameGenieClick = {
-      gameGenieAnalytics.sendGameGenieEntryClick(GameGenieEntryPoint.SETTINGS)
-      navigate(buildAskGameGenieRoute(GameGenieEntryPoint.SETTINGS))
-    },
+    showGameGenie = askGameGenie != null,
+    onGameGenieClick = { askGameGenie?.invoke(GameGenieEntryPoint.SETTINGS, "") },
     onLetsGoClick = { navigate(playAndEarnSignInRoute) },
     onSignOutClick = signInViewModel::signOut,
     navigateBack = navigateBack,

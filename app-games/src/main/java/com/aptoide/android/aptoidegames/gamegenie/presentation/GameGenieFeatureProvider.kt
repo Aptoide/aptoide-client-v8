@@ -22,8 +22,9 @@ class GameGenieInjectionsProvider @Inject constructor(
   val featureFlags: FeatureFlags,
 ) : ViewModel()
 
+/** Whether the GameGenie entry points in search and Settings are on (never on Google Play). */
 @Composable
-fun rememberGameGenieVisibility(): Boolean = runPreviewable(
+fun rememberGameGenieEntryPointsEnabled(): Boolean = runPreviewable(
   preview = { Random.nextBoolean() },
   real = {
     if (!GAME_GENIE_AVAILABLE) {

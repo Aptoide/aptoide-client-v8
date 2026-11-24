@@ -1,9 +1,11 @@
 package com.aptoide.android.aptoidegames.gamegenie.presentation
 
+import androidx.compose.runtime.Composable
 import cm.aptoide.pt.feature_search.utils.isValidSearch
 import com.aptoide.android.aptoidegames.analytics.dto.BundleMeta
 import com.aptoide.android.aptoidegames.analytics.presentation.withBundleMeta
 import com.aptoide.android.aptoidegames.gamegenie.analytics.GameGenieEntryPoint
+import com.aptoide.android.aptoidegames.gamegenie.analytics.rememberGameGenieAnalytics
 
 /**
  * Remote flag for the GameGenie entry points in search and Settings (APT-247). It is a different
@@ -21,3 +23,23 @@ fun buildAskGameGenieRoute(
   searchValue: String = "",
 ): String = buildGameGenieRoute(query = askGameGenieQuery(searchValue))
   .withBundleMeta(BundleMeta("gamegenie-${entryPoint.source}", "app"))
+
+/**
+ * The action behind every GameGenie entry point: report where it was opened from, then open the
+ * chat carrying the search text, if any. Null when the entry points are off, so callers hide them.
+ */
+@Composable
+fun rememberAskGameGenie(
+  navigate: (String) -> Unit,
+): ((entryPoint: GameGenieEntryPoint, searchValue: String) -> Unit)? {
+  val enabled = rememberGameGenieEntryPointsEnabled()
+  val analytics = rememberGameGenieAnalytics()
+  return if (enabled) {
+    { entryPoint, searchValue ->
+      analytics.sendGameGenieEntryClick(entryPoint)
+      navigate(buildAskGameGenieRoute(entryPoint, searchValue))
+    }
+  } else {
+    null
+  }
+}
