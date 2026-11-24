@@ -6,7 +6,7 @@ data class ActivityEvent(
   val className: String,
   val type: Type,
 ) {
-  enum class Type { RESUMED, PAUSED }
+  enum class Type { RESUMED, PAUSED, STOPPED }
 }
 
 /**
@@ -33,7 +33,12 @@ data class ActivityEvent(
  * - Apps that resumed before the query window and had no events since are not seen at all.
  * - Windows that are not activities (notification shade, overlays, chat heads) are invisible.
  *
- * Residual risk: another package's RESUMED never followed by a PAUSED (its process killed while
+ * An activity leaves the resumed set on PAUSED or on STOPPED. The pause is not always logged:
+ * on a Pixel 7 (Android 17) WhatsApp's conversation went RESUMED -> STOPPED with no PAUSED when
+ * the user left it, and a resolver that waited for the pause saw it as resumed beside the game
+ * for the rest of the session, so the game earned nothing.
+ *
+ * Residual risk: another package's RESUMED followed by neither (its process killed while
  * resumed, if the system logs nothing for it) reads as sharing until that package logs again.
  */
 internal object ForegroundActivityResolver {
@@ -52,7 +57,7 @@ internal object ForegroundActivityResolver {
           lastResumedPackage = pkg
         }
 
-        ActivityEvent.Type.PAUSED -> {
+        ActivityEvent.Type.PAUSED, ActivityEvent.Type.STOPPED -> {
           val classes = resumed[pkg] ?: return@forEach
           classes.remove(event.className)
           if (classes.isEmpty()) resumed.remove(pkg)

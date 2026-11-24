@@ -3,6 +3,7 @@ package cm.aptoide.pt.usage_stats
 import cm.aptoide.pt.test.gherkin.scenario
 import cm.aptoide.pt.usage_stats.ActivityEvent.Type.PAUSED
 import cm.aptoide.pt.usage_stats.ActivityEvent.Type.RESUMED
+import cm.aptoide.pt.usage_stats.ActivityEvent.Type.STOPPED
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -53,6 +54,42 @@ internal class ForegroundActivityResolverTest {
     val state = resolve(*events)
 
     m Then "the game is alone: a stale pause must not stop it earning for the whole session"
+    assertEquals(PackageUsageState.ForegroundPackage(GAME, sharesScreen = false), state)
+  }
+
+  @Test
+  fun `An app stopped with no pause logged is not resumed beside the game`() = scenario {
+    m Given "what a Pixel 7 logged: a chat left for the launcher, stopped but never paused"
+    val events = arrayOf(
+      event(OTHER, RESUMED),
+      event(LAUNCHER, RESUMED),
+      event(OTHER, STOPPED),
+      event(LAUNCHER, PAUSED),
+      event(LAUNCHER, STOPPED),
+      event(GAME, RESUMED),
+    )
+
+    m When "the state is resolved"
+    val state = resolve(*events)
+
+    m Then "the game is alone and earns"
+    assertEquals(PackageUsageState.ForegroundPackage(GAME, sharesScreen = false), state)
+  }
+
+  @Test
+  fun `A stop after a pause changes nothing`() = scenario {
+    m Given "the usual order: paused, then stopped, while the game is resumed"
+    val events = arrayOf(
+      event(LAUNCHER, RESUMED),
+      event(LAUNCHER, PAUSED),
+      event(GAME, RESUMED),
+      event(LAUNCHER, STOPPED),
+    )
+
+    m When "the state is resolved"
+    val state = resolve(*events)
+
+    m Then "the game is still the foreground, alone"
     assertEquals(PackageUsageState.ForegroundPackage(GAME, sharesScreen = false), state)
   }
 

@@ -83,9 +83,11 @@ class DefaultPackageUsageManager(context: Context) : PackageUsageManager {
       getNextEvent(event)
       val type = when (event.eventType) {
         UsageEvents.Event.ACTIVITY_RESUMED -> ActivityEvent.Type.RESUMED
-        // Same value as MOVE_TO_BACKGROUND on Android 8/9. Stops always follow a pause, so they
-        // add nothing here.
+        // Same value as MOVE_TO_BACKGROUND on Android 8/9.
         UsageEvents.Event.ACTIVITY_PAUSED -> ActivityEvent.Type.PAUSED
+        // Android 10+. Needed as well as the pause: an activity can be stopped with no pause
+        // logged (see ForegroundActivityResolver).
+        UsageEvents.Event.ACTIVITY_STOPPED -> ActivityEvent.Type.STOPPED
         else -> null
       } ?: continue
       yield(ActivityEvent(event.packageName, event.className ?: "unknown", type))
