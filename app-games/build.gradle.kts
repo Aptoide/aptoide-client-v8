@@ -427,6 +427,9 @@ dependencies {
   ksp(libs.room.compiler)
   implementation(libs.room.ktx)
 
+  testImplementation(libs.json)
+  testImplementation(libs.kxml2)
+
   //Firebase
   implementation(platform(libs.firebase.bom))
   implementation(libs.bundles.firebase)

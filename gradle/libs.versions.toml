@@ -144,6 +144,8 @@ junit-jupiter-vantage = { module = "org.junit.vintage:junit-vintage-engine", ver
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junit5" }
 # org.json for JVM unit tests: android.jar only ships stubs of it
 json = { module = "org.json:json", version = "20250517" }
+# An XmlPullParser for JVM unit tests: android.jar only ships the interface
+kxml2 = { module = "net.sf.kxml:kxml2", version = "2.3.0" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 
 #root / build-logic
