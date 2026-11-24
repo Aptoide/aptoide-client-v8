@@ -12,6 +12,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -37,9 +41,14 @@ fun GameGenieMyGamesTile(
   modifier: Modifier = Modifier,
 ) {
   val analytics = rememberGameGenieAnalytics()
-  // The row is lazy, so this runs when the tile is scrolled into view.
+  // The row is lazy, so the tile is composed when it comes into view. Saved state keeps this to
+  // one impression per home screen, not one each time the tile is scrolled back or returned to.
+  var impressionSent by rememberSaveable { mutableStateOf(false) }
   LaunchedEffect(Unit) {
-    analytics.sendGameGenieEntryImpression(GameGenieEntryPoint.MY_GAMES)
+    if (!impressionSent) {
+      impressionSent = true
+      analytics.sendGameGenieEntryImpression(GameGenieEntryPoint.MY_GAMES)
+    }
   }
 
   Column(

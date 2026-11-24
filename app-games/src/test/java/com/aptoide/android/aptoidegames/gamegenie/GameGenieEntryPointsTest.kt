@@ -7,6 +7,7 @@ import com.aptoide.android.aptoidegames.gamegenie.analytics.GameGenieEntryPoint
 import com.aptoide.android.aptoidegames.gamegenie.presentation.askGameGenieQuery
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 // APT-247: GameGenie left the bottom bar; it is reached from search and Settings instead.
@@ -124,6 +125,12 @@ internal class GameGenieEntryPointsTest {
     assertEquals(GameGenieEntryPoint.MY_GAMES, GameGenieEntryPoint.fromSource("my_games"))
     assertEquals(GameGenieEntryPoint.SETTINGS, GameGenieEntryPoint.fromSource("settings"))
     assertNull(GameGenieEntryPoint.fromSource("bottom_bar"))
+    assertNull(GameGenieEntryPoint.fromSource(""))
     assertNull(GameGenieEntryPoint.fromSource(null))
+    assertTrue(GameGenieEntryPoint.entries.all { GameGenieEntryPoint.fromSource(it.source) == it })
+    assertEquals(
+      GameGenieEntryPoint.entries.size,
+      GameGenieEntryPoint.entries.map { it.source }.toSet().size,
+    )
   }
 }

@@ -130,7 +130,9 @@ fun MyGamesBundleViewContent(
         titleColor = Palette.White,
         iconColor = Palette.Primary,
       )
-      MyGamesListView(size = uiState.installedAppsList.size) {
+      // The GameGenie tile is one more item for accessibility services to count.
+      val tileCount = if (gameGenieTile != null) 1 else 0
+      MyGamesListView(size = uiState.installedAppsList.size + tileCount) {
         itemsIndexed(
           items = uiState.installedAppsList,
           key = { _, it -> it.packageName }
