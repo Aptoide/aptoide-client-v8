@@ -37,6 +37,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.MyGamesApp
@@ -48,16 +49,13 @@ import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoadi
 import com.aptoide.android.aptoidegames.design_system.PrimarySmallButton
 import com.aptoide.android.aptoidegames.drawables.icons.getSingleGamepad
 import com.aptoide.android.aptoidegames.gamegenie.analytics.GameGenieEntryPoint
-import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.GameGenieMyGamesTile
+import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.GameGenieMyGamesEntry
 import com.aptoide.android.aptoidegames.gamegenie.presentation.rememberAskGameGenie
 import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.installer.analytics.rememberInstallAnalytics
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
-
-// Not a package name, so it cannot clash with a game's key in the row.
-private const val GAME_GENIE_TILE_KEY = "gamegenie-entry"
 
 @Composable
 fun MyGamesBundleView(
@@ -85,8 +83,8 @@ fun MyGamesBundleView(
       openApp(packageName)
     },
     onRetryClick = retry,
-    gameGenieTile = askGameGenie?.let { ask ->
-      { GameGenieMyGamesTile(onClick = { ask(GameGenieEntryPoint.MY_GAMES, "") }) }
+    gameGenieEntry = askGameGenie?.let { ask ->
+      { GameGenieMyGamesEntry(onClick = { ask(GameGenieEntryPoint.MY_GAMES, "") }) }
     },
   )
   Spacer(Modifier.size(spaceBy.dp))
@@ -100,7 +98,7 @@ fun MyGamesBundleViewContent(
   onSeeMoreClick: () -> Unit,
   onAppClick: (String) -> Unit,
   onRetryClick: () -> Unit,
-  gameGenieTile: (@Composable () -> Unit)? = null,
+  gameGenieEntry: (@Composable () -> Unit)? = null,
 ) {
   val localContext = LocalContext.current
   when (uiState) {
@@ -130,9 +128,11 @@ fun MyGamesBundleViewContent(
         titleColor = Palette.White,
         iconColor = Palette.Primary,
       )
-      // The GameGenie tile is one more item for accessibility services to count.
-      val tileCount = if (gameGenieTile != null) 1 else 0
-      MyGamesListView(size = uiState.installedAppsList.size + tileCount) {
+      MyGamesListView(
+        size = uiState.installedAppsList.size,
+        // The GameGenie line, when shown, closes the bundle instead of the row's own spacing.
+        bottomPadding = if (gameGenieEntry != null) 12.dp else 36.dp,
+      ) {
         itemsIndexed(
           items = uiState.installedAppsList,
           key = { _, it -> it.packageName }
@@ -144,9 +144,10 @@ fun MyGamesBundleViewContent(
             onClick = { onAppClick(it.packageName) }
           )
         }
-        gameGenieTile?.let { tile ->
-          item(key = GAME_GENIE_TILE_KEY) { tile() }
-        }
+      }
+      gameGenieEntry?.let { entry ->
+        entry()
+        Spacer(modifier = Modifier.height(12.dp))
       }
     }
   }
@@ -224,6 +225,7 @@ fun MyGameView(
 @Composable
 fun MyGamesListView(
   size: Int,
+  bottomPadding: Dp = 36.dp,
   content: LazyListScope.() -> Unit,
 ) {
   val lazyListState = rememberLazyListState()
@@ -232,7 +234,7 @@ fun MyGamesListView(
   LazyRow(
     modifier = Modifier
       .semantics { collectionInfo = CollectionInfo(1, size) }
-      .padding(bottom = 36.dp)
+      .padding(bottom = bottomPadding)
       .fillMaxWidth()
       .wrapContentHeight(),
     state = lazyListState,

@@ -21,11 +21,12 @@ import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 
-/** The low-key way into GameGenie from search, replacing the bottom bar button (APT-247). */
+/** The low-key way into GameGenie, replacing the bottom bar button (APT-247). */
 @Composable
 fun AskGameGenieEntry(
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
+  text: String = stringResource(R.string.gamegenie_search_entry_title),
 ) {
   Row(
     modifier = modifier
@@ -44,7 +45,7 @@ fun AskGameGenieEntry(
       modifier = Modifier
         .padding(start = 16.dp)
         .weight(1f),
-      text = stringResource(R.string.gamegenie_search_entry_title),
+      text = text,
       maxLines = 1,
       overflow = TextOverflow.Ellipsis,
       style = AGTypography.DescriptionGames,
