@@ -20,7 +20,6 @@ private object FallbackPalette : PaletteTokens {
 
   override val Black = Color(0xFF1E1E26)
   override val GreyDark = Color(0xFF312D35)
-  override val GameGenieGrey = Color(0xFF2D3224)
   override val Grey = Color(0xFF595959)
   override val GreyLight = Color(0xFFD2D2D2)
   override val White = Color(0xFFFFFFFF)

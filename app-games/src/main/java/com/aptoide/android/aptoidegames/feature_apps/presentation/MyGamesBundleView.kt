@@ -37,6 +37,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.MyGamesApp
@@ -47,6 +48,9 @@ import com.aptoide.android.aptoidegames.analytics.presentation.SwipeListener
 import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
 import com.aptoide.android.aptoidegames.design_system.PrimarySmallButton
 import com.aptoide.android.aptoidegames.drawables.icons.getSingleGamepad
+import com.aptoide.android.aptoidegames.gamegenie.analytics.GameGenieEntryPoint
+import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.GameGenieMyGamesEntry
+import com.aptoide.android.aptoidegames.gamegenie.presentation.rememberAskGameGenie
 import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.installer.analytics.rememberInstallAnalytics
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -64,6 +68,7 @@ fun MyGamesBundleView(
   val bundleAnalytics = rememberBundleAnalytics()
   val installAnalytics = rememberInstallAnalytics()
   val (uiState, retry, openApp) = rememberMyGamesBundleUIState()
+  val askGameGenie = rememberAskGameGenie(navigate)
 
   MyGamesBundleViewContent(
     title = title,
@@ -78,6 +83,9 @@ fun MyGamesBundleView(
       openApp(packageName)
     },
     onRetryClick = retry,
+    gameGenieEntry = askGameGenie?.let { ask ->
+      { GameGenieMyGamesEntry(onClick = { ask(GameGenieEntryPoint.MY_GAMES, "") }) }
+    },
   )
   Spacer(Modifier.size(spaceBy.dp))
 }
@@ -90,6 +98,7 @@ fun MyGamesBundleViewContent(
   onSeeMoreClick: () -> Unit,
   onAppClick: (String) -> Unit,
   onRetryClick: () -> Unit,
+  gameGenieEntry: (@Composable () -> Unit)? = null,
 ) {
   val localContext = LocalContext.current
   when (uiState) {
@@ -119,7 +128,11 @@ fun MyGamesBundleViewContent(
         titleColor = Palette.White,
         iconColor = Palette.Primary,
       )
-      MyGamesListView(size = uiState.installedAppsList.size) {
+      MyGamesListView(
+        size = uiState.installedAppsList.size,
+        // The GameGenie line, when shown, closes the bundle instead of the row's own spacing.
+        bottomPadding = if (gameGenieEntry != null) 12.dp else 36.dp,
+      ) {
         itemsIndexed(
           items = uiState.installedAppsList,
           key = { _, it -> it.packageName }
@@ -131,6 +144,10 @@ fun MyGamesBundleViewContent(
             onClick = { onAppClick(it.packageName) }
           )
         }
+      }
+      gameGenieEntry?.let { entry ->
+        entry()
+        Spacer(modifier = Modifier.height(12.dp))
       }
     }
   }
@@ -208,6 +225,7 @@ fun MyGameView(
 @Composable
 fun MyGamesListView(
   size: Int,
+  bottomPadding: Dp = 36.dp,
   content: LazyListScope.() -> Unit,
 ) {
   val lazyListState = rememberLazyListState()
@@ -216,7 +234,7 @@ fun MyGamesListView(
   LazyRow(
     modifier = Modifier
       .semantics { collectionInfo = CollectionInfo(1, size) }
-      .padding(bottom = 36.dp)
+      .padding(bottom = bottomPadding)
       .fillMaxWidth()
       .wrapContentHeight(),
     state = lazyListState,

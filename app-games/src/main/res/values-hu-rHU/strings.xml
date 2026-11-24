@@ -295,6 +295,8 @@
   <string name="update_available_vip_update_notification">%s : Új verzió elérhető</string>
   <!-- GenAi -->
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
+  <string name="gamegenie_search_entry_title">Kérdezze a GameGenie-t</string>
+  <string name="gamegenie_my_games_entry_title">Játéktippek</string>
   <string name="genai_me_title">Én</string>
   <string name="genai_introduction_body">Helló! Én vagyok az AI-asszisztensed, aki az appok és a játékok felfedezéséért felel. Próbálkozz valami ilyesmivel:</string>
   <string name="genai_input_message_field">Kérdezzen bármit...</string>

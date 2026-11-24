@@ -306,6 +306,8 @@
   <string name="update_available_vip_update_notification">%s : Noua versiune disponibilă</string>
   <!-- GenAi -->
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
+  <string name="gamegenie_search_entry_title">Întrebați GameGenie</string>
+  <string name="gamegenie_my_games_entry_title">Sfaturi pentru jocuri</string>
   <string name="genai_me_title">Eu</string>
   <string name="genai_introduction_body">Bună! Sunt Asistentul tău AI specializat în aplicații și descoperirea jocurilor. Poți începe cu ceva de genul:</string>
   <string name="genai_input_message_field">Întrebați orice...</string>

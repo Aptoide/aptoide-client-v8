@@ -295,6 +295,8 @@
   <string name="update_available_vip_update_notification">%s : Nueva versión disponible</string>
   <!-- GenAi -->
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
+  <string name="gamegenie_search_entry_title">Pregunta a GameGenie</string>
+  <string name="gamegenie_my_games_entry_title">Consejos de juego</string>
   <string name="genai_me_title">Yo</string>
   <string name="genai_introduction_body">¡Hola! Soy tu asistente de AI en todo lo relacionado al descubrimiento de apps y juegos. Prueba algo como:</string>
   <string name="genai_input_message_field">Pregunta lo que quieras...</string>

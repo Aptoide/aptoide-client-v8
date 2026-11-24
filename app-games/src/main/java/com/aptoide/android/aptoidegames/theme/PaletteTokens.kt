@@ -10,7 +10,6 @@ interface PaletteTokens {
 
   val Black: Color
   val GreyDark: Color
-  val GameGenieGrey: Color
   val Grey: Color
   val GreyLight: Color
   val White: Color

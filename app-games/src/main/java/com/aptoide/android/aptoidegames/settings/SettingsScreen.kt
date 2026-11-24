@@ -75,6 +75,8 @@ import com.aptoide.android.aptoidegames.drawables.icons.getAptoideLogo
 import com.aptoide.android.aptoidegames.drawables.icons.getForward
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getStartEarningIcon
 import com.aptoide.android.aptoidegames.firebase.rememberFirebaseToken
+import com.aptoide.android.aptoidegames.gamegenie.analytics.GameGenieEntryPoint
+import com.aptoide.android.aptoidegames.gamegenie.presentation.rememberAskGameGenie
 import com.aptoide.android.aptoidegames.network.presentation.NetworkPreferencesViewModel
 import com.aptoide.android.aptoidegames.play_and_earn.di.rememberWalletAddress
 import com.aptoide.android.aptoidegames.play_and_earn.domain.UserInfo
@@ -115,6 +117,8 @@ fun settingsScreen(showSnack: (String) -> Unit) = ScreenData(
   val isPaEUsageTrackingEnabled = rememberIsPaEUsageTrackingEnabled()
   val hasUsagePermissions = rememberHasUsagePermissionsOnResume()
 
+  val askGameGenie = rememberAskGameGenie(navigate)
+
   SettingsViewContent(
     title = stringResource(R.string.settings_title),
     downloadOnlyOverWifi = downloadOnlyOverWifi,
@@ -153,6 +157,8 @@ fun settingsScreen(showSnack: (String) -> Unit) = ScreenData(
       }
       showSnack(copiedMessage)
     },
+    showGameGenie = askGameGenie != null,
+    onGameGenieClick = { askGameGenie?.invoke(GameGenieEntryPoint.SETTINGS, "") },
     onLetsGoClick = { navigate(playAndEarnSignInRoute) },
     onSignOutClick = signInViewModel::signOut,
     navigateBack = navigateBack,
@@ -166,6 +172,7 @@ fun SettingsViewContent(
   autoUpdateGames: Boolean? = true,
   isPaEServiceEnabled: Boolean = true,
   showPaEServiceToggle: Boolean = false,
+  showGameGenie: Boolean = false,
   verName: String = "1.2.3",
   verCode: Int = 123,
   toggleDownloadOnlyOverWifi: (Boolean) -> Unit = {},
@@ -175,6 +182,7 @@ fun SettingsViewContent(
   copyInfo: () -> Unit = {},
   onPrivacyPolicyClick: () -> Unit = {},
   onTermsConditionsClick: () -> Unit = {},
+  onGameGenieClick: () -> Unit = {},
   onLetsGoClick: () -> Unit = {},
   onSignOutClick: () -> Unit = {},
   navigateBack: () -> Unit = {},
@@ -219,6 +227,12 @@ fun SettingsViewContent(
               title = stringResource(R.string.settings_auto_update_button),
               enabled = autoUpdateGames,
               onToggle = toggleAutoUpdateGames
+            )
+          }
+          if (showGameGenie) {
+            SettingsCaretItem(
+              title = stringResource(R.string.genai_bottom_navigation_gamegenie_button),
+              onClick = onGameGenieClick
             )
           }
         }

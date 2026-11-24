@@ -295,6 +295,8 @@
   <string name="update_available_vip_update_notification">%s : Νέα έκδοση διαθέσιμη</string>
   <!-- GenAi -->
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
+  <string name="gamegenie_search_entry_title">Ρωτήστε το GameGenie</string>
+  <string name="gamegenie_my_games_entry_title">Συμβουλές για παιχνίδια</string>
   <string name="genai_me_title">Εγώ</string>
   <string name="genai_introduction_body">Γεια σας! «Είμαι ο βοηθός σας ΤΝ για ανακάλυψη εφαρμογών και παιχνιδιών. Δοκομάστε κάτι όπως:»</string>
   <string name="genai_input_message_field">Ρωτήστε οτιδήποτε...</string>

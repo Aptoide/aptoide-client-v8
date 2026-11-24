@@ -15,7 +15,7 @@ class CompanionGamesCachePreloader @Inject constructor(
 
   suspend fun initialize() {
     if (!GAME_GENIE_AVAILABLE) return
-    if (!featureFlags.getFlag("show_game_genie", false)) return
+    if (!featureFlags.getFlag(GAME_GENIE_ENTRY_POINTS_FLAG, false)) return
     try {
       getGameCompanionsUseCase.warmUpCache()
     } catch (e: CancellationException) {
