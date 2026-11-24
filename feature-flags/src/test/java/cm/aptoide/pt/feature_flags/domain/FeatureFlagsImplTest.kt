@@ -3,7 +3,11 @@ package cm.aptoide.pt.feature_flags.domain
 import cm.aptoide.pt.feature_flags.data.FeatureFlagsLocalRepository
 import cm.aptoide.pt.feature_flags.data.FeatureFlagsRepository
 import cm.aptoide.pt.test.gherkin.coScenario
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.runCurrent
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -110,8 +114,62 @@ class FeatureFlagsImplTest {
     assertTrue(flags.getFlag("show_home_tabs", false))
   }
 
+  @Test
+  fun `With a snapshot the flags are readable while the fetch is still running`() =
+    coScenario { scope ->
+      m Given "a snapshot from an earlier run and a fetch that has not answered yet"
+      val answer = CompletableDeferred<JSONObject>()
+      val local = FakeLocalRepository(json("show_home_tabs" to "true", "home_tabs" to "old"))
+      val flags = featureFlags(
+        remote = { answer.await() },
+        local = local,
+        defaults = json("appopen_cap_window_minutes" to "30"),
+      )
+
+      m When "the flags are initialized and read before the fetch lands"
+      val initialization = scope.launch { flags.initialize() }
+      val earlyRead = scope.async { flags.getFlagAsString("home_tabs") }
+      scope.runCurrent()
+
+      m Then "the read does not wait and gets the snapshot over the defaults"
+      assertTrue(earlyRead.isCompleted)
+      assertEquals("old", earlyRead.await())
+      assertEquals(30, flags.getInt("appopen_cap_window_minutes", 0))
+
+      m And "the fetched values take over once they arrive, and become the snapshot"
+      answer.complete(json("show_home_tabs" to "true", "home_tabs" to "new"))
+      initialization.join()
+      assertEquals("new", flags.getFlagAsString("home_tabs"))
+      assertEquals("new", local.saved?.getString("home_tabs"))
+    }
+
+  @Test
+  fun `Without a snapshot a read waits for the first fetch`() = coScenario { scope ->
+    m Given "a first run and a fetch that has not answered yet"
+    val answer = CompletableDeferred<JSONObject>()
+    val flags = featureFlags(
+      remote = { answer.await() },
+      local = FakeLocalRepository(),
+      defaults = json("show_home_tabs" to "false"),
+    )
+
+    m When "the flags are initialized and read before the fetch lands"
+    val initialization = scope.launch { flags.initialize() }
+    scope.runCurrent()
+    val earlyRead = scope.async { flags.getFlag("show_home_tabs", false) }
+    scope.runCurrent()
+
+    m Then "the read is held instead of answering with the defaults"
+    assertFalse(earlyRead.isCompleted)
+
+    m And "it gets the fetched value once the fetch lands"
+    answer.complete(json("show_home_tabs" to "true"))
+    initialization.join()
+    assertTrue(earlyRead.await())
+  }
+
   private fun featureFlags(
-    remote: () -> JSONObject,
+    remote: suspend () -> JSONObject,
     local: FeatureFlagsLocalRepository,
     defaults: JSONObject,
   ) = FeatureFlagsImpl(
@@ -123,7 +181,9 @@ class FeatureFlagsImplTest {
   private fun json(vararg pairs: Pair<String, String>) =
     JSONObject().apply { pairs.forEach { put(it.first, it.second) } }
 
-  private class FakeRepository(private val answer: () -> JSONObject) : FeatureFlagsRepository {
+  private class FakeRepository(
+    private val answer: suspend () -> JSONObject,
+  ) : FeatureFlagsRepository {
     override suspend fun getFeatureFlags(): JSONObject = answer()
   }
 

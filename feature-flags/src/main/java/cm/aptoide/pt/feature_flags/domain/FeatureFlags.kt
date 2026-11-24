@@ -50,21 +50,41 @@ class FeatureFlagsImpl @Inject constructor(
   private var featureFlags = JSONObject()
   private val mutex = Mutex()
 
-  override suspend fun initialize() = mutex.withLock {
-    val remoteOrSnapshot = try {
-      settingsRepository.getFeatureFlags()
-        .apply { settingsLocalRepository.saveFeatureFlags(this) }
-    } catch (_: Throwable) {
-      settingsLocalRepository.getFeatureFlags()
+  /**
+   * With a snapshot from an earlier run the flags are readable straight away (shipped defaults
+   * under the snapshot) and the fetched values replace them when the fetch lands. Without one,
+   * on a first run, readers wait for the fetch so they do not act on the bare defaults.
+   * A failed fetch leaves the snapshot, or the defaults alone, in place.
+   */
+  override suspend fun initialize() {
+    val shipped = shippedDefaults()
+    val fetchPending = mutex.withLock {
+      val snapshot = settingsLocalRepository.getFeatureFlags()
+      val hasSnapshot = snapshot.length() > 0
+      featureFlags = shipped.overlaidWith(if (hasSnapshot) snapshot else fetchAndSave())
+      hasSnapshot
     }
-    // The snapshot holds remote values only, so the defaults always come from the running build
-    featureFlags = shippedDefaults().apply {
-      remoteOrSnapshot.keys().forEach { put(it, remoteOrSnapshot.get(it)) }
+    if (fetchPending) {
+      fetchAndSave()?.let { fetched ->
+        mutex.withLock { featureFlags = shipped.overlaidWith(fetched) }
+      }
     }
+  }
+
+  // The snapshot holds remote values only, so the defaults always come from the running build
+  private suspend fun fetchAndSave(): JSONObject? = try {
+    settingsRepository.getFeatureFlags()
+      .apply { settingsLocalRepository.saveFeatureFlags(this) }
+  } catch (_: Throwable) {
+    null
   }
 
   private fun shippedDefaults(): JSONObject =
     runCatching { defaults.map { it.get() }.orElse(null) }.getOrNull() ?: JSONObject()
+
+  private fun JSONObject.overlaidWith(values: JSONObject?) = JSONObject(toString()).apply {
+    values?.keys()?.forEach { put(it, values.get(it)) }
+  }
 
   override suspend fun getFlag(key: String): Boolean? = mutex.withLock {
     runCatching { featureFlags.getBoolean(key) }.getOrNull()
