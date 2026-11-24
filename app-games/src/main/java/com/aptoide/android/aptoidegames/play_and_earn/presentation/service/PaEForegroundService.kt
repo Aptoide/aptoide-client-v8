@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.PowerManager
+import android.os.SystemClock
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleService
@@ -23,7 +24,9 @@ import com.aptoide.android.aptoidegames.MainActivity
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.play_and_earn.PlayAndEarnManager
 import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPreferencesRepository
+import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaEPlayTimeMeter
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaEStatusHeartbeatPolicy
+import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.soleVisiblePackage
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.notifications.PaEMissionCompletedAnnouncer
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.notifications.PaEMissionCompletedNotificationBuilder
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.notifications.missionCompletedRoute
@@ -33,6 +36,7 @@ import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.h
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sessions.PaESessionManager
 import com.aptoide.android.aptoidegames.putNotificationRoute
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -76,7 +80,11 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
     get() = savedStateRegistryController.savedStateRegistry
 
   private val pollingIntervalMillis = 10_000L
-  private val pollingIntervalSec = pollingIntervalMillis.toInt() / 1_000
+
+  // AND-955: play time is the real time between polls with the game alone on an unlocked screen.
+  // Only exists while usage monitoring polls; the status mode has nothing to measure.
+  @Volatile
+  private var playTimeMeter: PaEPlayTimeMeter? = null
   private var pollingJob: Job? = null
   private var completedMissionsJob: Job? = null
   private var idleTimeoutJob: Job? = null
@@ -325,7 +333,11 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
     val receiver = object : BroadcastReceiver() {
       override fun onReceive(context: Context, intent: Intent) {
         when (intent.action) {
-          Intent.ACTION_SCREEN_OFF -> statusPolicy?.onScreenOff(System.currentTimeMillis())
+          Intent.ACTION_SCREEN_OFF -> {
+            statusPolicy?.onScreenOff(System.currentTimeMillis())
+            playTimeMeter?.onScreenOff()
+          }
+
           Intent.ACTION_SCREEN_ON -> statusPolicy?.onScreenOn()
         }
       }
@@ -369,23 +381,56 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
   private fun startUsageMonitoring() {
     if (applicationContext.hasUsageStatsPermissionStatus() && applicationContext.hasOverlayPermission()) {
       collectCompletedMissions()
+      // A screen-off between two polls must void that interval.
+      registerScreenReceiver()
 
       pollingJob?.cancel()
+      val meter = playTimeMeter?.also { it.reset() } ?: PaEPlayTimeMeter(
+        clock = { SystemClock.elapsedRealtime() },
+        screen = AndroidPaEScreenState(applicationContext),
+        maxCreditPerPollMillis = pollingIntervalMillis + POLL_MARGIN_MILLIS,
+      ).also { playTimeMeter = it }
       pollingJob = lifecycleScope.launch(Dispatchers.IO) {
         while (isActive) {
-          syncService()
-          delay(pollingIntervalMillis)
+          // Fixed rate, so polls stay about one interval apart.
+          val pollStartedAt = SystemClock.elapsedRealtime()
+          try {
+            syncService(meter)
+          } catch (e: CancellationException) {
+            throw e
+          } catch (e: Exception) {
+            // A failed poll must not end tracking, nor crash the app.
+            Timber.e(e, "PaEForegroundService: poll failed")
+          }
+          // A slow heartbeat widens the next interval's cap by this poll's work time.
+          meter.onPollWorkDone()
+          val spent = SystemClock.elapsedRealtime() - pollStartedAt
+          delay((pollingIntervalMillis - spent).coerceAtLeast(MIN_POLL_GAP_MILLIS))
         }
       }
     }
   }
 
-  private suspend fun syncService() {
+  private suspend fun syncService(playTimeMeter: PaEPlayTimeMeter) {
     val activeSession = paESessionManager.activeSessions
       .firstOrNull { it.packageName == lastForegroundPackage }
 
     val packageState =
       packageUsageManager.getForegroundPackageState(activeSession?.lastAppOpenTime)
+
+    // Measured on every poll, so an interval counts only when both of its ends saw the game
+    // played. A game sharing the screen (split-screen) is not played.
+    val play = playTimeMeter.measure(packageState.soleVisiblePackage())
+    if (packageState is PackageUsageState.ForegroundPackage && packageState.sharesScreen) {
+      Timber.d("PaEForegroundService: ${packageState.packageName} shares the screen, not counted")
+    }
+
+    if (!play.screenInUse) {
+      // Screen off or locked: nobody is playing, whatever the usage events still say. Handled
+      // like no foreground app: no heartbeat, sessions expire on their own TTL.
+      startIdleTimeoutIfNotRunning()
+      return
+    }
 
     when (packageState) {
       is PackageUsageState.ForegroundPackage -> {
@@ -421,7 +466,10 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
           }
         } else {
           // Same package still in foreground - sync active sessions
-          paESessionManager.syncSessions(lastForegroundPackage, pollingIntervalSec)
+          paESessionManager.syncSessions(
+            lastForegroundPackage,
+            play.playedMillisFor(lastForegroundPackage)
+          )
         }
       }
 
@@ -512,6 +560,7 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
     completedMissionsJob?.cancel()
     idleTimeoutJob?.cancel()
     unregisterScreenReceiver()
+    playTimeMeter = null
     paESessionManager.clearAllSessions()
     isMonitoringStarted = false
   }
@@ -525,6 +574,11 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
     private val STATUS_SCREEN_OFF_LIMIT_MILLIS = TimeUnit.MINUTES.toMillis(10)
     private val STATUS_MISSIONS_REFRESH_MILLIS = TimeUnit.MINUTES.toMillis(5)
     private const val STATUS_MAX_SESSION_FAILURES = 3
+
+    // A poll interval is credited at most this much beyond the polling interval (plus the
+    // previous poll's work time): room for scheduling jitter, not for a suspended loop.
+    private const val POLL_MARGIN_MILLIS = 5_000L
+    private const val MIN_POLL_GAP_MILLIS = 1_000L
 
     /** Status mode (AND-879): heartbeats for [packageName] after Play, no usage tracking. */
     fun startStatusHeartbeat(context: Context, packageName: String) {
