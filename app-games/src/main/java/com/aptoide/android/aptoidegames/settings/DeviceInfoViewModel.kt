@@ -14,6 +14,7 @@ import cm.aptoide.pt.aptoide_network.di.StoreName
 import cm.aptoide.pt.environment_info.DeviceInfo
 import cm.aptoide.pt.extensions.runPreviewable
 import com.aptoide.android.aptoidegames.BuildConfig
+import com.aptoide.android.aptoidegames.feature_flags.ConfigBucketIdStore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -26,11 +27,13 @@ import javax.inject.Inject
 class InjectionsProvider @Inject constructor(
   val deviceInfo: DeviceInfo,
   @StoreName val storeName: String,
+  val configBucketIdStore: ConfigBucketIdStore,
 ) : ViewModel()
 
 class DeviceInfoViewModel(
   private val deviceInfo: DeviceInfo,
   private val storeName: String,
+  private val configBucketIdStore: ConfigBucketIdStore,
 ) : ViewModel() {
 
   private val viewModelState = MutableStateFlow("")
@@ -44,10 +47,13 @@ class DeviceInfoViewModel(
 
   init {
     viewModelScope.launch {
+      // Identifies the install in percentage rollouts of the remote config
+      val configBucketId = runCatching { configBucketIdStore.get() }.getOrDefault("")
       viewModelState.update {
         "${deviceInfo.getDeviceInfoSummary()}\n" +
           "AG: $storeName\n" +
-          "AG version: ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})\n"
+          "AG version: ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})\n" +
+          "Config bucket: $configBucketId\n"
       }
     }
   }
@@ -64,7 +70,8 @@ fun rememberDeviceInfo(): String = runPreviewable(
           @Suppress("UNCHECKED_CAST")
           return DeviceInfoViewModel(
             deviceInfo = injectionsProvider.deviceInfo,
-            storeName = injectionsProvider.storeName
+            storeName = injectionsProvider.storeName,
+            configBucketIdStore = injectionsProvider.configBucketIdStore,
           ) as T
         }
       }
