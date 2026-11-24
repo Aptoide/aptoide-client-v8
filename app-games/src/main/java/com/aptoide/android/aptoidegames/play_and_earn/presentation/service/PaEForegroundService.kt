@@ -26,6 +26,7 @@ import com.aptoide.android.aptoidegames.play_and_earn.PlayAndEarnManager
 import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPreferencesRepository
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaEPlayTimeMeter
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaEStatusHeartbeatPolicy
+import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.needsSessionRecreation
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.soleVisiblePackage
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.notifications.PaEMissionCompletedAnnouncer
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.notifications.PaEMissionCompletedNotificationBuilder
@@ -465,6 +466,16 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
             }
           }
         } else {
+          // The server may have dropped the session (or creating it failed) while the game
+          // stayed in front: create it again, without the welcome overlay.
+          if (needsSessionRecreation(
+              foregroundPackage,
+              isPaEGame,
+              paESessionManager.activeSessions.map { it.packageName },
+            )
+          ) {
+            paESessionManager.createSession(foregroundPackage)
+          }
           // Same package still in foreground - sync active sessions
           paESessionManager.syncSessions(
             lastForegroundPackage,
