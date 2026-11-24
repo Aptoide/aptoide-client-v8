@@ -21,6 +21,7 @@ import cm.aptoide.pt.aptoide_network.di.StoreName
 import cm.aptoide.pt.aptoide_network.di.VersionCode
 import cm.aptoide.pt.aptoide_network.di.WebServicesDomain
 import cm.aptoide.pt.environment_info.DeviceInfo
+import cm.aptoide.pt.environment_info.PaEDeviceIdentity
 import cm.aptoide.pt.feature_apkfy.di.MMPDomain
 import cm.aptoide.pt.feature_apps.data.walletApp
 import cm.aptoide.pt.feature_campaigns.CampaignRepository
@@ -40,6 +41,7 @@ import com.aptoide.android.aptoidegames.LocalIdsRepository
 import com.aptoide.android.aptoidegames.ahab.di.AhabDomain
 import com.aptoide.android.aptoidegames.appLaunchDataStore
 import com.aptoide.android.aptoidegames.dataStore
+import com.aptoide.android.aptoidegames.device_info.PaENetworkState
 import com.aptoide.android.aptoidegames.feature_flags.AptoideFeatureFlagsRepository
 import com.aptoide.android.aptoidegames.feature_flags.analytics.FeatureFlagsAnalytics
 import com.aptoide.android.aptoidegames.feature_promotional.domain.AppComingSoonManager
@@ -276,10 +278,15 @@ class RepositoryModule {
   @Provides
   @Singleton
   fun providesPlayAndEarnIdInterceptor(
-    playAndEarnIdProvider: PlayAndEarnIdProvider
+    playAndEarnIdProvider: PlayAndEarnIdProvider,
+    paEDeviceIdentity: PaEDeviceIdentity,
+    paENetworkState: PaENetworkState,
   ): PlayAndEarnIdInterceptor {
     return AptoidePlayAndEarnIdInterceptor(
-      playAndEarnIdProvider = playAndEarnIdProvider
+      guestIdSource = playAndEarnIdProvider,
+      deviceIdentity = paEDeviceIdentity,
+      networkState = paENetworkState,
+      distribution = BuildConfig.FLAVOR_distribution,
     )
   }
 
