@@ -34,6 +34,7 @@ import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.error_views.NoConnectionView
 import com.aptoide.android.aptoidegames.gamegenie.analytics.rememberGameGenieAnalytics
 import com.aptoide.android.aptoidegames.gamegenie.analytics.GameGenieAnalytics
+import com.aptoide.android.aptoidegames.gamegenie.analytics.GameGenieEntryPoint
 import com.aptoide.android.aptoidegames.gamegenie.domain.GameCompanion
 import com.aptoide.android.aptoidegames.gamegenie.domain.Suggestion
 import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.ChatBackButton
@@ -50,16 +51,20 @@ import androidx.navigation.navArgument
 const val genieRoute = "chatbot"
 private const val genieCompanionPackageArg = "companionPackage"
 private const val genieQueryArg = "query"
+private const val genieEntryPointArg = "entryPoint"
 private const val genieRouteWithArgs =
-  "$genieRoute?$genieCompanionPackageArg={$genieCompanionPackageArg}&$genieQueryArg={$genieQueryArg}"
+  "$genieRoute?$genieCompanionPackageArg={$genieCompanionPackageArg}" +
+    "&$genieQueryArg={$genieQueryArg}&$genieEntryPointArg={$genieEntryPointArg}"
 
 fun buildGameGenieRoute(
   companionPackage: String? = null,
   query: String? = null,
+  entryPoint: GameGenieEntryPoint? = null,
 ): String {
   val params = listOfNotNull(
     companionPackage?.let { "$genieCompanionPackageArg=${Uri.encode(it)}" },
-    query?.takeIf(String::isNotBlank)?.let { "$genieQueryArg=${Uri.encode(it)}" }
+    query?.takeIf(String::isNotBlank)?.let { "$genieQueryArg=${Uri.encode(it)}" },
+    entryPoint?.let { "$genieEntryPointArg=${it.source}" },
   )
 
   return if (params.isEmpty()) {
@@ -89,6 +94,11 @@ fun gameGenieScreen(
       type = NavType.StringType
       nullable = true
       defaultValue = null
+    },
+    navArgument(genieEntryPointArg) {
+      type = NavType.StringType
+      nullable = true
+      defaultValue = null
     }
   )
 ) { arguments, navigate, navigateBack ->
@@ -101,6 +111,9 @@ fun gameGenieScreen(
   val firstLoad by viewModel.firstLoad.collectAsState(true)
   val companionPackage = remember(arguments) { arguments?.getString(genieCompanionPackageArg) }
   val initialQuery = remember(arguments) { arguments?.getString(genieQueryArg)?.trim() }
+  val entryPoint = remember(arguments) {
+    GameGenieEntryPoint.fromSource(arguments?.getString(genieEntryPointArg))
+  }
 
   var chatMode by remember(companionPackage) {
     mutableStateOf(
@@ -139,7 +152,7 @@ fun gameGenieScreen(
           ) {
             hasSentInitialQuery = true
             viewModel.sendMessage(query)
-            analytics.sendGameGenieMessageSent(GameGenieAnalytics.SOURCE_SEARCH)
+            analytics.sendGameGenieMessageSent(GameGenieAnalytics.SOURCE_SEARCH, entryPoint)
           }
         }
         LaunchedEffect(companionPackage, installedGames, selectedGame) {
@@ -175,7 +188,7 @@ fun gameGenieScreen(
               onError = viewModel::reload,
               onMessageSend = { message, image ->
                 viewModel.sendMessage(message, image)
-                analytics.sendGameGenieMessageSent(GameGenieAnalytics.SOURCE_CHAT)
+                analytics.sendGameGenieMessageSent(GameGenieAnalytics.SOURCE_CHAT, entryPoint)
               },
               setFirstLoadDone = viewModel::setFirstLoadDone,
               onSuggestionSend = { message, index ->
@@ -184,7 +197,7 @@ fun gameGenieScreen(
               },
               onFollowUpSend = { message ->
                 viewModel.sendMessage(message, null)
-                analytics.sendGameGenieMessageSent(GameGenieAnalytics.SOURCE_CHAT)
+                analytics.sendGameGenieMessageSent(GameGenieAnalytics.SOURCE_CHAT, entryPoint)
               },
               onGameClick = { selectedGame ->
                 analytics.sendGameGenieCompanionClick(selectedGame.packageName)
@@ -214,7 +227,7 @@ fun gameGenieScreen(
                 setFirstLoadDone = viewModel::setFirstLoadDone,
                 onMessageSend = { message, image ->
                   viewModel.sendMessage(message, image)
-                  analytics.sendGameGenieMessageSent(GameGenieAnalytics.SOURCE_CHAT)
+                  analytics.sendGameGenieMessageSent(GameGenieAnalytics.SOURCE_CHAT, entryPoint)
                 },
                 showBottomSheet = showBottomSheet,
                 suggestions = uiState.suggestions,
@@ -224,7 +237,7 @@ fun gameGenieScreen(
                 },
                 onFollowUpClick = { message ->
                   viewModel.sendMessage(message)
-                  analytics.sendGameGenieMessageSent(GameGenieAnalytics.SOURCE_CHAT)
+                  analytics.sendGameGenieMessageSent(GameGenieAnalytics.SOURCE_CHAT, entryPoint)
                 },
                 installedGames = installedGames,
                 onGameSwitch = { newGame ->

@@ -7,6 +7,12 @@ enum class GameGenieEntryPoint(val source: String) {
   SEARCH_SUGGESTIONS("search_suggestions"),
   SEARCH_EMPTY("search_empty"),
   SETTINGS("settings"),
+  MY_GAMES("my_games");
+
+  companion object {
+    fun fromSource(source: String?): GameGenieEntryPoint? =
+      entries.firstOrNull { it.source == source }
+  }
 }
 
 class GameGenieAnalytics(
@@ -23,14 +29,26 @@ class GameGenieAnalytics(
     params = mapOf("source" to entryPoint.source)
   )
 
+  /** Only for entry points that can be off screen, so their click-through rate has a base. */
+  fun sendGameGenieEntryImpression(entryPoint: GameGenieEntryPoint) = genericAnalytics.logEvent(
+    name = "gamegenie_entry_impression",
+    params = mapOf("source" to entryPoint.source)
+  )
+
   fun sendGameGenieSuggestionClick(index: Int) = genericAnalytics.logEvent(
     name = "gamegenie_suggests_click",
     params = mapOf("position" to index)
   )
 
-  fun sendGameGenieMessageSent(source: String) = genericAnalytics.logEvent(
+  fun sendGameGenieMessageSent(
+    source: String,
+    entryPoint: GameGenieEntryPoint? = null,
+  ) = genericAnalytics.logEvent(
     name = "gamegenie_send_message",
-    params = mapOf("source" to source)
+    params = listOfNotNull(
+      "source" to source,
+      entryPoint?.let { "entry_point" to it.source },
+    ).toMap()
   )
 
   fun sendGameGenieAppClick(

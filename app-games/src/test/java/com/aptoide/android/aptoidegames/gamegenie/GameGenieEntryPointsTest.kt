@@ -57,8 +57,73 @@ internal class GameGenieEntryPointsTest {
         "gamegenie_entry_click" to mapOf("source" to "search_suggestions"),
         "gamegenie_entry_click" to mapOf("source" to "search_empty"),
         "gamegenie_entry_click" to mapOf("source" to "settings"),
+        "gamegenie_entry_click" to mapOf("source" to "my_games"),
       ),
       recorder.events.map { it.first to it.second },
     )
+  }
+
+  @Test
+  fun `The My Games tile reports when it is seen`() = scenario {
+    m Given "the GameGenie analytics"
+    val recorder = RecordingAnalytics()
+    val analytics = GameGenieAnalytics(recorder.generic())
+
+    m When "the tile scrolls into view"
+    analytics.sendGameGenieEntryImpression(GameGenieEntryPoint.MY_GAMES)
+
+    m Then "an impression is sent with its source, so a click-through rate can be computed"
+    assertEquals(
+      listOf("gamegenie_entry_impression" to mapOf("source" to "my_games")),
+      recorder.events.map { it.first to it.second },
+    )
+  }
+
+  @Test
+  fun `A message sent in a chat opened from an entry point carries that entry point`() = scenario {
+    m Given "a chat opened from the no-results button"
+    val recorder = RecordingAnalytics()
+    val analytics = GameGenieAnalytics(recorder.generic())
+
+    m When "a message is sent"
+    analytics.sendGameGenieMessageSent(
+      source = GameGenieAnalytics.SOURCE_SEARCH,
+      entryPoint = GameGenieEntryPoint.SEARCH_EMPTY,
+    )
+
+    m Then "the event keeps its source and adds the entry point"
+    assertEquals(
+      listOf(
+        "gamegenie_send_message" to mapOf("source" to "search", "entry_point" to "search_empty")
+      ),
+      recorder.events.map { it.first to it.second },
+    )
+  }
+
+  @Test
+  fun `A message sent in a chat opened any other way has no entry point`() = scenario {
+    m Given "a chat not opened from an entry point, such as from the overlay"
+    val recorder = RecordingAnalytics()
+    val analytics = GameGenieAnalytics(recorder.generic())
+
+    m When "a message is sent"
+    analytics.sendGameGenieMessageSent(source = GameGenieAnalytics.SOURCE_CHAT)
+
+    m Then "the event is unchanged from before"
+    assertEquals(
+      listOf("gamegenie_send_message" to mapOf("source" to "chat")),
+      recorder.events.map { it.first to it.second },
+    )
+  }
+
+  @Test
+  fun `The entry point is recovered from the route argument`() = scenario {
+    m Given "the source strings carried in the chat route"
+    m When "they are mapped back"
+    m Then "known sources resolve and anything else is ignored"
+    assertEquals(GameGenieEntryPoint.MY_GAMES, GameGenieEntryPoint.fromSource("my_games"))
+    assertEquals(GameGenieEntryPoint.SETTINGS, GameGenieEntryPoint.fromSource("settings"))
+    assertNull(GameGenieEntryPoint.fromSource("bottom_bar"))
+    assertNull(GameGenieEntryPoint.fromSource(null))
   }
 }

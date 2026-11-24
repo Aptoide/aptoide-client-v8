@@ -21,7 +21,7 @@ fun askGameGenieQuery(searchValue: String): String? =
 fun buildAskGameGenieRoute(
   entryPoint: GameGenieEntryPoint,
   searchValue: String = "",
-): String = buildGameGenieRoute(query = askGameGenieQuery(searchValue))
+): String = buildGameGenieRoute(query = askGameGenieQuery(searchValue), entryPoint = entryPoint)
   .withBundleMeta(BundleMeta("gamegenie-${entryPoint.source}", "app"))
 
 /**

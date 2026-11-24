@@ -47,11 +47,17 @@ import com.aptoide.android.aptoidegames.analytics.presentation.SwipeListener
 import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
 import com.aptoide.android.aptoidegames.design_system.PrimarySmallButton
 import com.aptoide.android.aptoidegames.drawables.icons.getSingleGamepad
+import com.aptoide.android.aptoidegames.gamegenie.analytics.GameGenieEntryPoint
+import com.aptoide.android.aptoidegames.gamegenie.presentation.composables.GameGenieMyGamesTile
+import com.aptoide.android.aptoidegames.gamegenie.presentation.rememberAskGameGenie
 import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.installer.analytics.rememberInstallAnalytics
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
+
+// Not a package name, so it cannot clash with a game's key in the row.
+private const val GAME_GENIE_TILE_KEY = "gamegenie-entry"
 
 @Composable
 fun MyGamesBundleView(
@@ -64,6 +70,7 @@ fun MyGamesBundleView(
   val bundleAnalytics = rememberBundleAnalytics()
   val installAnalytics = rememberInstallAnalytics()
   val (uiState, retry, openApp) = rememberMyGamesBundleUIState()
+  val askGameGenie = rememberAskGameGenie(navigate)
 
   MyGamesBundleViewContent(
     title = title,
@@ -78,6 +85,9 @@ fun MyGamesBundleView(
       openApp(packageName)
     },
     onRetryClick = retry,
+    gameGenieTile = askGameGenie?.let { ask ->
+      { GameGenieMyGamesTile(onClick = { ask(GameGenieEntryPoint.MY_GAMES, "") }) }
+    },
   )
   Spacer(Modifier.size(spaceBy.dp))
 }
@@ -90,6 +100,7 @@ fun MyGamesBundleViewContent(
   onSeeMoreClick: () -> Unit,
   onAppClick: (String) -> Unit,
   onRetryClick: () -> Unit,
+  gameGenieTile: (@Composable () -> Unit)? = null,
 ) {
   val localContext = LocalContext.current
   when (uiState) {
@@ -130,6 +141,9 @@ fun MyGamesBundleViewContent(
             name = it.name,
             onClick = { onAppClick(it.packageName) }
           )
+        }
+        gameGenieTile?.let { tile ->
+          item(key = GAME_GENIE_TILE_KEY) { tile() }
         }
       }
     }
