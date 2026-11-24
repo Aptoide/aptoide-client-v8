@@ -317,6 +317,8 @@
   <string name="update_available_vip_update_notification">%s : Доступна нова версія</string>
   <!-- GenAi -->
   <string name="genai_bottom_navigation_gamegenie_button">GameGenie</string>
+  <string name="gamegenie_search_entry_title">Запитайте GameGenie</string>
+  <string name="gamegenie_my_games_entry_title">Поради щодо ігор</string>
   <string name="genai_me_title">Я</string>
   <string name="genai_introduction_body">Привіт! Я твій ШІ-помічник для пошуку додатків та ігор. Спробуй щось на кшталт:</string>
   <string name="genai_input_message_field">Запитайте про що завгодно...</string>
