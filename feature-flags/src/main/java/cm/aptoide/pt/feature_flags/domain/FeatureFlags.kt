@@ -7,6 +7,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.json.JSONArray
 import org.json.JSONObject
+import java.util.Optional
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -48,19 +49,27 @@ interface FeatureFlags {
 class FeatureFlagsImpl @Inject constructor(
   private val settingsRepository: FeatureFlagsRepository,
   private val settingsLocalRepository: FeatureFlagsLocalRepository,
+  private val defaults: Optional<FeatureFlagsDefaults>,
 ) : FeatureFlags {
 
   private var featureFlags = JSONObject()
   private val mutex = Mutex()
 
   override suspend fun initialize() = mutex.withLock {
-    featureFlags = try {
+    val remoteOrSnapshot = try {
       settingsRepository.getFeatureFlags()
         .apply { settingsLocalRepository.saveFeatureFlags(this) }
     } catch (_: Throwable) {
       settingsLocalRepository.getFeatureFlags()
     }
+    // The snapshot holds remote values only, so the defaults always come from the running build
+    featureFlags = shippedDefaults().apply {
+      remoteOrSnapshot.keys().forEach { put(it, remoteOrSnapshot.get(it)) }
+    }
   }
+
+  private fun shippedDefaults(): JSONObject =
+    runCatching { defaults.map { it.get() }.orElse(null) }.getOrNull() ?: JSONObject()
 
   override suspend fun getFlag(key: String): Boolean? = mutex.withLock {
     runCatching { featureFlags.getBoolean(key) }.getOrNull()

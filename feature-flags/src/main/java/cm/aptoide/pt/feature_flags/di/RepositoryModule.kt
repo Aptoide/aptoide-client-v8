@@ -5,8 +5,10 @@ import androidx.datastore.preferences.core.Preferences
 import cm.aptoide.pt.feature_flags.data.FeatureFlagsLocalRepository
 import cm.aptoide.pt.feature_flags.data.SettingsLocalRepositoryImpl
 import cm.aptoide.pt.feature_flags.domain.FeatureFlags
+import cm.aptoide.pt.feature_flags.domain.FeatureFlagsDefaults
 import cm.aptoide.pt.feature_flags.domain.FeatureFlagsImpl
 import dagger.Binds
+import dagger.BindsOptionalOf
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,6 +23,9 @@ internal interface RepositoryModule {
   @Singleton
   @Binds
   fun bindsFeatureFlags(featureFlagsImpl: FeatureFlagsImpl): FeatureFlags
+
+  @BindsOptionalOf
+  fun optionalFeatureFlagsDefaults(): FeatureFlagsDefaults
 
   companion object {
 
