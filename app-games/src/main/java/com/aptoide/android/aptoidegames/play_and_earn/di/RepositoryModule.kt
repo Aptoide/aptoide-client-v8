@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import cm.aptoide.pt.aptoide_network.data.network.PlayAndEarnIdInterceptor
 import cm.aptoide.pt.aptoide_network.di.RawOkHttp
 import cm.aptoide.pt.aptoide_network.di.RewardsDomain
 import com.aptoide.android.aptoidegames.play_and_earn.data.DefaultUserInfoRepository
@@ -63,10 +64,16 @@ class RepositoryModule {
   @Singleton
   fun providePaEClientConfigApi(
     @RawOkHttp okHttpClient: OkHttpClient,
-    @RewardsDomain rewardsDomain: String
+    @RewardsDomain rewardsDomain: String,
+    playAndEarnIdInterceptor: PlayAndEarnIdInterceptor,
   ): PaEClientConfigApi {
+    // Like every other Play & Earn client, it carries the guest_id and the device evidence.
+    val client = okHttpClient.newBuilder()
+      .addInterceptor(playAndEarnIdInterceptor)
+      .build()
+
     return Retrofit.Builder()
-      .client(okHttpClient)
+      .client(client)
       .baseUrl(rewardsDomain)
       .addConverterFactory(GsonConverterFactory.create())
       .build()

@@ -1,6 +1,7 @@
 package cm.aptoide.pt.play_and_earn.exchange.di
 
 import cm.aptoide.pt.aptoide_network.data.network.PlayAndEarnIdInterceptor
+import cm.aptoide.pt.aptoide_network.data.network.UserAgentInterceptor
 import cm.aptoide.pt.aptoide_network.di.RewardsDomain
 import cm.aptoide.pt.play_and_earn.exchange.data.DefaultExchangeRepository
 import cm.aptoide.pt.play_and_earn.exchange.data.ExchangeApi
@@ -29,11 +30,13 @@ internal object RepositoryModule {
   @Singleton
   @ExchangeOkHttp
   fun provideExchangeOkHttpClient(
+    userAgentInterceptor: UserAgentInterceptor,
     walletAuthInterceptor: WalletAuthInterceptor,
     playAndEarnIdInterceptor: PlayAndEarnIdInterceptor,
     httpLoggingInterceptor: HttpLoggingInterceptor
   ): OkHttpClient {
     return OkHttpClient.Builder()
+      .addInterceptor(userAgentInterceptor)
       .addInterceptor(walletAuthInterceptor)
       .addInterceptor(playAndEarnIdInterceptor)
       .addInterceptor(httpLoggingInterceptor)
