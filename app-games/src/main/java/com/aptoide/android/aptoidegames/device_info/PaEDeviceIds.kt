@@ -12,6 +12,7 @@ import cm.aptoide.pt.environment_info.PaEDeviceIdentity
 import cm.aptoide.pt.extensions.runPreviewable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlin.coroutines.cancellation.CancellationException
 
 /** The ids Play & Earn sends as evidence, shown to testers so they can find the device. */
 data class PaEDeviceIds(
@@ -31,11 +32,21 @@ fun rememberPaEDeviceIds(): PaEDeviceIds = runPreviewable(
     val vm = hiltViewModel<PaEDeviceIdentityInjectionsProvider>()
     var ids by remember { mutableStateOf(PaEDeviceIds(deviceKey = null, installId = null)) }
     LaunchedEffect(Unit) {
+      // A failed read shows a blank value; it must never take down the Settings screen.
       ids = PaEDeviceIds(
-        deviceKey = vm.paEDeviceIdentity.getDeviceKey(),
-        installId = vm.paEDeviceIdentity.getInstallId(),
+        deviceKey = readOrNull { vm.paEDeviceIdentity.getDeviceKey() },
+        installId = readOrNull { vm.paEDeviceIdentity.getInstallId() },
       )
     }
     ids
   }
 )
+
+private suspend fun readOrNull(read: suspend () -> String?): String? =
+  try {
+    read()
+  } catch (e: CancellationException) {
+    throw e
+  } catch (e: Exception) {
+    null
+  }

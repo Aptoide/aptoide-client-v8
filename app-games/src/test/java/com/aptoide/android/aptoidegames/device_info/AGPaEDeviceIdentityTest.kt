@@ -57,9 +57,17 @@ internal class AGPaEDeviceIdentityTest {
 
   @Test
   fun `device key is the lower-case SHA-256 hex of the Android ID`() = runBlocking {
+    val key = identity(androidId = "0123456789abcdef", dataStore = newDataStore()).getDeviceKey()
+
+    assertEquals("9f9f5111f7b27a781f1f1ddde5ebc2dd2b796bfc7365c9c28b548e564176929f", key)
+  }
+
+  @Test
+  fun `the legacy bogus Android ID is treated as missing`() = runBlocking {
+    // Shared by many old devices (an Android 2.2 bug), so it identifies no phone.
     val key = identity(androidId = "9774d56d682e549c", dataStore = newDataStore()).getDeviceKey()
 
-    assertEquals("4d853cd5e7d688e75b3dca9abc2fa52ac8bafb750b6d4dc01b78e2e7bb335f8f", key)
+    assertNull(key)
   }
 
   @Test

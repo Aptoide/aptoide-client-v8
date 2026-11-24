@@ -60,7 +60,7 @@ class AGPaEDeviceIdentity(
   private val deviceKey: String? by lazy {
     runCatching { androidIdSource.getAndroidId() }
       .getOrNull()
-      ?.takeIf { it.isNotBlank() }
+      ?.takeIf { it.isNotBlank() && it != LEGACY_BOGUS_ANDROID_ID }
       ?.let(::sha256Hex)
   }
 
@@ -71,6 +71,12 @@ class AGPaEDeviceIdentity(
 
   override suspend fun getInstallId(): String =
     installId ?: installIdStore.getOrCreate(newInstallId).also { installId = it }
+
+  private companion object {
+    // Returned by many Android 2.2-era devices (a known platform bug): it identifies no phone,
+    // so it is treated as a missing Android ID.
+    const val LEGACY_BOGUS_ANDROID_ID = "9774d56d682e549c"
+  }
 }
 
 /** Lower-case hex SHA-256 of the UTF-8 bytes of [value]. */
