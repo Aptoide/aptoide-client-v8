@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.EnumSource
 import org.junit.jupiter.params.provider.ValueSource
 import retrofit2.HttpException
@@ -21,7 +22,8 @@ internal class PaERefusalsTest {
   @EnumSource(PaERefusalCode::class)
   fun `Reads every refusal code without a retry time`(code: PaERefusalCode) = scenario {
     m Given "a refusal with code ${code.name} and no retry_at"
-    val error = httpError(403, """{"detail":{"code":"${code.name}","message":"Refused"}}""")
+    val error =
+      httpError(code.httpStatus, """{"detail":{"code":"${code.name}","message":"Refused"}}""")
 
     m When "it is parsed"
     val refusal = PaERefusals.from(error)
@@ -61,6 +63,87 @@ internal class PaERefusalsTest {
 
     m Then "the retry time is the same instant"
     assertEquals(Instant.parse("2026-11-20T14:05:00Z"), refusal?.retryAt)
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @ValueSource(strings = ["2026-11-20T14:05:00", "2026-11-20T14:05:00.000000"])
+  fun `A retry time without a zone is UTC`(retryAt: String) = scenario {
+    m Given "a redeem limit whose retry_at has no zone: $retryAt"
+    val error =
+      httpError(429, """{"detail":{"code":"REDEEM_LIMIT","retry_at":"$retryAt"}}""")
+
+    m When "it is parsed"
+    val refusal = PaERefusals.from(error)
+
+    m Then "the retry time is read as UTC"
+    assertEquals(Instant.parse("2026-11-20T14:05:00Z"), refusal?.retryAt)
+  }
+
+  @ParameterizedTest(name = "{0} on {1}")
+  @CsvSource(
+    "ACCOUNT_RESTRICTED, 500",
+    "REGION_NOT_SUPPORTED, 502",
+    "DEVICE_NOT_SUPPORTED, 429",
+    "UPDATE_REQUIRED, 403",
+    "REDEEM_LIMIT, 403",
+    "TOO_MANY_ATTEMPTS, 503",
+    "REDEEM_IN_PROGRESS, 500",
+    "REDEEM_OUTCOME_UNKNOWN, 502",
+  )
+  fun `A known code on another status is not a refusal`(code: PaERefusalCode, status: Int) =
+    scenario {
+      m Given "the body of a $code refusal on HTTP $status, e.g. relayed by a proxy"
+      val error = httpError(status, """{"detail":{"code":"${code.name}"}}""")
+
+      m When "it is parsed"
+      val refusal = PaERefusals.from(error)
+
+      m Then "it is not a refusal: the generic error, reported as any failure"
+      assertNull(refusal)
+    }
+
+  @Test
+  fun `An oversized error body is not read past the cap`() = scenario {
+    m Given "a refusal body padded past 64 KB, as a large error page would be"
+    val padding = "x".repeat(PaERefusals.MAX_BODY_BYTES.toInt())
+    val error = httpError(
+      403,
+      """{"detail":{"code":"REGION_NOT_SUPPORTED","pad":"$padding"}}"""
+    )
+
+    m When "it is parsed"
+    val refusal = PaERefusals.from(error)
+
+    m Then "only the first 64 KB were read, which is not JSON: no refusal"
+    assertNull(refusal)
+  }
+
+  @Test
+  fun `A refusal is logged, not reported`() = scenario {
+    m Given "a device refusal"
+    val error = httpError(403, """{"detail":{"code":"DEVICE_NOT_SUPPORTED"}}""")
+    val reported = mutableListOf<Throwable>()
+
+    m When "it goes through the crash reporting filter"
+    val refusal = reportUnlessPaERefusal(error) { reported += it }
+
+    m Then "nothing is reported and the refusal is returned"
+    assertEquals(emptyList<Throwable>(), reported)
+    assertEquals(PaERefusalCode.DEVICE_NOT_SUPPORTED, refusal?.code)
+  }
+
+  @Test
+  fun `Any other failure is reported`() = scenario {
+    m Given "a server error with a string detail"
+    val error = httpError(500, """{"detail":"Internal error"}""")
+    val reported = mutableListOf<Throwable>()
+
+    m When "it goes through the crash reporting filter"
+    val refusal = reportUnlessPaERefusal(error) { reported += it }
+
+    m Then "it is reported as before"
+    assertEquals(listOf<Throwable>(error), reported)
+    assertNull(refusal)
   }
 
   @Test
