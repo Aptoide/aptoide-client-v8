@@ -11,7 +11,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 
 /**
- * Logs RTB tracking errors to a remote endpoint configured via Firebase Remote Config.
+ * Logs RTB tracking errors to a remote endpoint configured via the remote feature flags.
  * This is a fire-and-forget logger that sends error information as it happens,
  * providing visibility into WebView redirect issues.
  */

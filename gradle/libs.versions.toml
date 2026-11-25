@@ -107,7 +107,6 @@ firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "fir
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
-firebase-config = { module = "com.google.firebase:firebase-config" }
 datastore = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 gms-play-services-ads = { module = "com.google.android.gms:play-services-ads-identifier", version.ref = "gmsPlayServicesAds" }
 play-services-basement = { module = "com.google.android.gms:play-services-base", version.ref = "playServicesBasement" }
@@ -142,6 +141,11 @@ junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", vers
 junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junit5" }
 junit-jupiter-vantage = { module = "org.junit.vintage:junit-vintage-engine", version.ref = "junit5" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junit5" }
+# org.json for JVM unit tests: android.jar only ships stubs of it
+json = { module = "org.json:json", version = "20250517" }
+okhttp-mockwebserver = { module = "com.squareup.okhttp3:mockwebserver", version.ref = "okHttp" }
+# An XmlPullParser for JVM unit tests: android.jar only ships the interface
+kxml2 = { module = "net.sf.kxml:kxml2", version = "2.3.0" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 
 #root / build-logic
@@ -172,4 +176,4 @@ hilt = { id = "hilt" }
 tests = { id = "tests" }
 
 [bundles]
-firebase = ["firebase-analytics", "firebase-crashlytics", "firebase-messaging", "firebase-config"]
+firebase = ["firebase-analytics", "firebase-crashlytics", "firebase-messaging"]

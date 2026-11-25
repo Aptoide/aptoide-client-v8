@@ -20,6 +20,7 @@ import cm.aptoide.pt.aptoide_network.di.StoreEnvironmentDomain
 import cm.aptoide.pt.aptoide_network.di.StoreName
 import cm.aptoide.pt.aptoide_network.di.VersionCode
 import cm.aptoide.pt.aptoide_network.di.WebServicesDomain
+import cm.aptoide.pt.device_api.di.DeviceApiRetrofit
 import cm.aptoide.pt.environment_info.DeviceInfo
 import cm.aptoide.pt.feature_apkfy.di.MMPDomain
 import cm.aptoide.pt.feature_apps.data.walletApp
@@ -28,6 +29,7 @@ import cm.aptoide.pt.feature_editorial.di.DefaultEditorialUrl
 import cm.aptoide.pt.feature_flags.data.FeatureFlagsRepository
 import cm.aptoide.pt.feature_flags.di.FeatureFlagsDataStore
 import cm.aptoide.pt.feature_flags.domain.FeatureFlags
+import cm.aptoide.pt.feature_flags.domain.FeatureFlagsDefaults
 import cm.aptoide.pt.feature_home.di.WidgetsUrl
 import cm.aptoide.pt.feature_oos.di.UninstallPackagesFilter
 import cm.aptoide.pt.feature_search.data.AutoCompleteSuggestionsRepository
@@ -40,7 +42,11 @@ import com.aptoide.android.aptoidegames.LocalIdsRepository
 import com.aptoide.android.aptoidegames.ahab.di.AhabDomain
 import com.aptoide.android.aptoidegames.appLaunchDataStore
 import com.aptoide.android.aptoidegames.dataStore
-import com.aptoide.android.aptoidegames.feature_flags.AptoideFeatureFlagsRepository
+import com.aptoide.android.aptoidegames.feature_flags.CONFIG_VARIANT
+import com.aptoide.android.aptoidegames.feature_flags.ConfigApi
+import com.aptoide.android.aptoidegames.feature_flags.ConfigBucketIdStore
+import com.aptoide.android.aptoidegames.feature_flags.DeviceApiFeatureFlagsRepository
+import com.aptoide.android.aptoidegames.feature_flags.XmlFeatureFlagsDefaults
 import com.aptoide.android.aptoidegames.feature_flags.analytics.FeatureFlagsAnalytics
 import com.aptoide.android.aptoidegames.feature_promotional.domain.AppComingSoonManager
 import com.aptoide.android.aptoidegames.feature_promotional.repository.SubscribedAppsManager
@@ -295,8 +301,23 @@ class RepositoryModule {
 
   @Provides
   @Singleton
-  fun provideAptoideFeatureFlagsRepository(featureFlagsAnalytics: FeatureFlagsAnalytics): FeatureFlagsRepository =
-    AptoideFeatureFlagsRepository(featureFlagsAnalytics = featureFlagsAnalytics)
+  fun provideFeatureFlagsRepository(
+    @DeviceApiRetrofit retrofit: Retrofit,
+    @VersionCode versionCode: Int,
+    configBucketIdStore: ConfigBucketIdStore,
+    featureFlagsAnalytics: FeatureFlagsAnalytics,
+  ): FeatureFlagsRepository = DeviceApiFeatureFlagsRepository(
+    configApi = retrofit.create(ConfigApi::class.java),
+    variant = CONFIG_VARIANT,
+    versionCode = versionCode,
+    bucketId = configBucketIdStore::get,
+    featureFlagsAnalytics = featureFlagsAnalytics,
+  )
+
+  @Provides
+  @Singleton
+  fun provideFeatureFlagsDefaults(@ApplicationContext appContext: Context): FeatureFlagsDefaults =
+    XmlFeatureFlagsDefaults(context = appContext)
 
   @Singleton
   @Provides

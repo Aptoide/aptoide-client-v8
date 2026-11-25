@@ -19,11 +19,6 @@ import com.aptoide.android.aptoidegames.device_info.DeviceCountryProvider
 import com.aptoide.android.aptoidegames.device_info.DeviceSecurityChecker
 import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPreferencesRepository
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.hasPaEPermissions
-import com.google.firebase.Firebase
-import com.google.firebase.remoteconfig.ConfigUpdate
-import com.google.firebase.remoteconfig.ConfigUpdateListener
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigException
-import com.google.firebase.remoteconfig.remoteConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
@@ -34,7 +29,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -51,7 +45,6 @@ class PlayAndEarnManager @Inject constructor(
 ) {
 
   companion object {
-    private const val TAG = "PlayAndEarnManager"
     private const val PAE_VISIBILITY_FLAG_KEY = "show_play_and_earn"
 
     // AND-878/AND-901: kill switch for the usage path only (usage-access/overlay permission
@@ -83,44 +76,12 @@ class PlayAndEarnManager @Inject constructor(
     initialize()
   }
 
+  // Read once: the flags are fetched at app start, so a remote change applies on the next start
   private fun initialize() {
     CoroutineScope(Dispatchers.IO).launch {
       _playAndEarnVisibilityFlow.value = featureFlags.getFlag(PAE_VISIBILITY_FLAG_KEY, false)
       _usageTrackingEnabledFlow.value = featureFlags.getFlag(PAE_USAGE_TRACKING_FLAG_KEY, false)
     }
-
-    //Listen to play and earn visibility / usage tracking changes
-    Firebase.remoteConfig.addOnConfigUpdateListener(object : ConfigUpdateListener {
-      override fun onUpdate(configUpdate: ConfigUpdate) {
-        val visibilityUpdated = PAE_VISIBILITY_FLAG_KEY in configUpdate.updatedKeys
-        val usageTrackingUpdated = PAE_USAGE_TRACKING_FLAG_KEY in configUpdate.updatedKeys
-        if (visibilityUpdated || usageTrackingUpdated) {
-          Firebase.remoteConfig.activate().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-              // Update the FeatureFlags cache to maintain single source of truth
-              CoroutineScope(Dispatchers.IO).launch {
-                if (visibilityUpdated) {
-                  val isEnabled = Firebase.remoteConfig.getBoolean(PAE_VISIBILITY_FLAG_KEY)
-                  Timber.tag(TAG).d("Remote config visibility updated: $isEnabled")
-                  featureFlags.updateFlag(PAE_VISIBILITY_FLAG_KEY, isEnabled.toString())
-                  _playAndEarnVisibilityFlow.value = isEnabled
-                }
-                if (usageTrackingUpdated) {
-                  val isEnabled = Firebase.remoteConfig.getBoolean(PAE_USAGE_TRACKING_FLAG_KEY)
-                  Timber.tag(TAG).d("Remote config usage tracking updated: $isEnabled")
-                  featureFlags.updateFlag(PAE_USAGE_TRACKING_FLAG_KEY, isEnabled.toString())
-                  _usageTrackingEnabledFlow.value = isEnabled
-                }
-              }
-            }
-          }
-        }
-      }
-
-      override fun onError(error: FirebaseRemoteConfigException) {
-        Timber.tag(TAG).e(error, "Remote config listener error")
-      }
-    })
   }
 
   suspend fun shouldShowPlayAndEarn(): Boolean {

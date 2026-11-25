@@ -18,7 +18,7 @@ import java.util.Locale
  * - `<prefix>_excluded_geos` geo blocklist. Like the kill switch it is NOT in
  *   remote_config_defaults.xml: without the key, release builds use [AdsDefaults.EXCLUDED_GEOS]
  *   (consent geos) and debug builds exclude nothing, so placements are testable from Europe
- *   before the key exists in Firebase.
+ *   before the key exists in the remote config.
  * - `<prefix>_min_content_length` minimum length (characters) of the content the slot is attached
  *   to, below which no ad is requested (default 0 = always). Used by the bottom app detail slot.
  * - `<prefix>_min_gap` minimum number of items between this slot and the previous ad slot on the
