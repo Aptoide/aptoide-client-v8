@@ -3,7 +3,7 @@ package cm.aptoide.pt.play_and_earn.sessions.data
 import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusal
 import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusalCode
 import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusalException
-import cm.aptoide.pt.aptoide_network.play_and_earn.toPaERefusal
+import cm.aptoide.pt.aptoide_network.play_and_earn.reportUnlessPaERefusal
 import cm.aptoide.pt.environment_info.DeviceIdProvider
 import cm.aptoide.pt.exception_handler.ExceptionHandler
 import cm.aptoide.pt.play_and_earn.sessions.data.model.SessionEndInfoJson
@@ -47,7 +47,7 @@ internal class DefaultPaESessionsRepository @Inject constructor(
 
       Result.success(response)
     } catch (e: Throwable) {
-      Result.failure(e.recorded())
+      Result.failure(e.reportedUnlessRefusal())
     }
   }
 
@@ -80,7 +80,7 @@ internal class DefaultPaESessionsRepository @Inject constructor(
 
       Result.success(response.toDomainModel())
     } catch (e: Throwable) {
-      Result.failure(e.recorded())
+      Result.failure(e.reportedUnlessRefusal())
     }
   }
 
@@ -99,20 +99,20 @@ internal class DefaultPaESessionsRepository @Inject constructor(
 
         Result.success(response.toDomainModel())
       } catch (e: Throwable) {
-        Result.failure(e.recorded())
+        Result.failure(e.reportedUnlessRefusal())
       }
     }
 
   /**
-   * Reports an unexpected failure to Crashlytics. A refusal (AND-950) is expected: it is not
-   * reported, and comes back as a [PaERefusalException] so callers can tell why.
+   * Reports an unexpected failure to Crashlytics and returns it. A refusal (AND-950) is expected:
+   * it is only logged, and comes back as a [PaERefusalException] so callers can tell why.
    */
-  private fun Throwable.recorded(): Throwable {
-    val refusal = toPaERefusal()
-    if (refusal != null) return this as? PaERefusalException ?: PaERefusalException(refusal, this)
-    printStackTrace()
-    exceptionHandler.recordException(this)
-    return this
+  private fun Throwable.reportedUnlessRefusal(): Throwable {
+    val refusal = reportUnlessPaERefusal(this) { error ->
+      error.printStackTrace()
+      exceptionHandler.recordException(error)
+    } ?: return this
+    return this as? PaERefusalException ?: PaERefusalException(refusal, this)
   }
 }
 

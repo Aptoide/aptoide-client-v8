@@ -34,6 +34,7 @@ internal class DefaultPaESessionsRepositoryTest {
   private class FakeSessionsApi : SessionsApi {
     var startError: Throwable? = null
     var heartbeatStatus: SessionStatus? = SessionStatus.OK
+    var endError: Throwable? = null
 
     override suspend fun startSession(sessionStartData: SessionStartRequestData) =
       startError?.let { throw it } ?: SessionStartInfoJson("session", stolen = null, ttl = 180)
@@ -42,7 +43,7 @@ internal class DefaultPaESessionsRepositoryTest {
       SessionInfoJson(heartbeatStatus, appliedSeconds = 10, ttl = 180, events = null)
 
     override suspend fun endSession(sessionEndRequestData: SessionEndRequestData) =
-      throw UnsupportedOperationException()
+      throw endError ?: UnsupportedOperationException()
   }
 
   private class RecordingExceptionHandler : ExceptionHandler {
@@ -141,6 +142,58 @@ internal class DefaultPaESessionsRepositoryTest {
       )
       assertEquals(emptyList<Throwable>(), exceptionHandler.recorded)
     }
+
+  @Test
+  fun `A refused session end fails with its code and is not reported`() = coScenario { scope ->
+    m Given "the backend refuses the session end, the account restricted meanwhile"
+    api.endError = httpError(403, "ACCOUNT_RESTRICTED")
+
+    m When "the session is ended"
+    val result = repository(StandardTestDispatcher(scope.testScheduler))
+      .endSession("session", "game")
+
+    m Then "it fails with that refusal, and nothing goes to Crashlytics"
+    assertEquals(
+      PaERefusalCode.ACCOUNT_RESTRICTED,
+      (result.exceptionOrNull() as? PaERefusalException)?.refusal?.code
+    )
+    assertEquals(emptyList<Throwable>(), exceptionHandler.recorded)
+  }
+
+  @Test
+  fun `A failed session end is reported as before`() = coScenario { scope ->
+    m Given "the session end fails on the network"
+    val error = IOException("offline")
+    api.endError = error
+
+    m When "the session is ended"
+    val result = repository(StandardTestDispatcher(scope.testScheduler))
+      .endSession("session", "game")
+
+    m Then "it fails with that error, which goes to Crashlytics as today"
+    assertSame(error, result.exceptionOrNull())
+    assertEquals(listOf<Throwable>(error), exceptionHandler.recorded)
+  }
+
+  @Test
+  fun `A refusal code on a server error is reported as before`() = coScenario { scope ->
+    m Given "a 502 whose body carries a region refusal"
+    val error = HttpException(
+      Response.error<Any>(
+        502,
+        """{"detail":{"code":"REGION_NOT_SUPPORTED"}}"""
+          .toResponseBody("application/json".toMediaType())
+      )
+    )
+    api.startError = error
+
+    m When "a session is started"
+    val result = repository(StandardTestDispatcher(scope.testScheduler)).startSession("game")
+
+    m Then "it is the HTTP error, reported to Crashlytics"
+    assertSame(error, result.exceptionOrNull())
+    assertEquals(listOf<Throwable>(error), exceptionHandler.recorded)
+  }
 
   @Test
   fun `An ok heartbeat still succeeds`() = coScenario { scope ->
