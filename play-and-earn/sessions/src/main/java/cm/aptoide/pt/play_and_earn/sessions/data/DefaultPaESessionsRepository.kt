@@ -1,5 +1,9 @@
 package cm.aptoide.pt.play_and_earn.sessions.data
 
+import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusal
+import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusalCode
+import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusalException
+import cm.aptoide.pt.aptoide_network.play_and_earn.toPaERefusal
 import cm.aptoide.pt.environment_info.DeviceIdProvider
 import cm.aptoide.pt.exception_handler.ExceptionHandler
 import cm.aptoide.pt.play_and_earn.sessions.data.model.SessionEndInfoJson
@@ -43,9 +47,7 @@ internal class DefaultPaESessionsRepository @Inject constructor(
 
       Result.success(response)
     } catch (e: Throwable) {
-      e.printStackTrace()
-      exceptionHandler.recordException(e)
-      Result.failure(e)
+      Result.failure(e.recorded())
     }
   }
 
@@ -78,9 +80,7 @@ internal class DefaultPaESessionsRepository @Inject constructor(
 
       Result.success(response.toDomainModel())
     } catch (e: Throwable) {
-      e.printStackTrace()
-      exceptionHandler.recordException(e)
-      Result.failure(e)
+      Result.failure(e.recorded())
     }
   }
 
@@ -99,11 +99,21 @@ internal class DefaultPaESessionsRepository @Inject constructor(
 
         Result.success(response.toDomainModel())
       } catch (e: Throwable) {
-        e.printStackTrace()
-        exceptionHandler.recordException(e)
-        Result.failure(e)
+        Result.failure(e.recorded())
       }
     }
+
+  /**
+   * Reports an unexpected failure to Crashlytics. A refusal (AND-950) is expected: it is not
+   * reported, and comes back as a [PaERefusalException] so callers can tell why.
+   */
+  private fun Throwable.recorded(): Throwable {
+    val refusal = toPaERefusal()
+    if (refusal != null) return this as? PaERefusalException ?: PaERefusalException(refusal, this)
+    printStackTrace()
+    exceptionHandler.recordException(this)
+    return this
+  }
 }
 
 private fun checkSessionStatus(status: SessionStatus?) {
@@ -116,6 +126,9 @@ private fun checkSessionStatus(status: SessionStatus?) {
     SessionStatus.SESSION_EXPIRED,
     SessionStatus.PAUSED_BY_OTHER_DEVICE,
     SessionStatus.SESSION_NOT_FOUND -> throw SessionExpiredException("Session is no longer active")
+
+    SessionStatus.ACCOUNT_RESTRICTED ->
+      throw PaERefusalException(PaERefusal(PaERefusalCode.ACCOUNT_RESTRICTED))
   }
 }
 
