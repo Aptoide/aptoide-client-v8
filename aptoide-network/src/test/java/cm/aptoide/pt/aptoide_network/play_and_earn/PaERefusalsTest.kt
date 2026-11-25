@@ -37,7 +37,8 @@ internal class PaERefusalsTest {
     m Given "a redeem limit with a retry_at"
     val error = httpError(
       429,
-      """{"detail":{"code":"REDEEM_LIMIT","message":"Tomorrow","retry_at":"2026-11-20T14:05:00Z"}}"""
+      """{"detail":{"code":"REDEEM_LIMIT","message":"Tomorrow",""" +
+        """"retry_at":"2026-11-20T14:05:00Z"}}"""
     )
 
     m When "it is parsed"

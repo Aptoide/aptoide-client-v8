@@ -2,7 +2,7 @@ package com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchang
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cm.aptoide.pt.aptoide_network.play_and_earn.toPaERefusal
+import cm.aptoide.pt.aptoide_network.play_and_earn.reportUnlessPaERefusal
 import cm.aptoide.pt.exception_handler.ExceptionHandler
 import cm.aptoide.pt.play_and_earn.exchange.domain.ExchangeUnitsUseCase
 import com.aptoide.android.aptoidegames.play_and_earn.WalletUnitsRefresher
@@ -49,8 +49,8 @@ class ExchangeByEmailViewModel @Inject constructor(
           _uiState.update { ExchangeEmailUiState.Success }
         },
         onFailure = { error ->
-          // AND-950: a refusal is expected, not a crash to report.
-          if (error.toPaERefusal() == null) exceptionHandler.recordException(error)
+          // AND-950: a refusal is expected: logged, not reported as a crash.
+          reportUnlessPaERefusal(error, exceptionHandler::recordException)
           _uiState.update { ExchangeEmailUiState.Error }
         }
       )
