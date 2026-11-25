@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cm.aptoide.pt.aptoide_network.play_and_earn.toPaERefusal
 import cm.aptoide.pt.exception_handler.ExceptionHandler
 import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.wallet.datastore.WalletCoreDataSource
@@ -48,7 +49,8 @@ class UnitsBalanceViewModel @Inject constructor(
           }
         },
         onFailure = { error ->
-          exceptionHandler.recordException(error)
+          // AND-950: a refusal is expected, not a crash to report.
+          if (error.toPaERefusal() == null) exceptionHandler.recordException(error)
           _uiState.update {
             UnitsBalanceUiState.Error(
               message = error.message.orEmpty(),
