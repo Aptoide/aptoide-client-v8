@@ -85,24 +85,50 @@ internal class PaESessionRefusalViewModelTest {
     )
   }
 
+  @Test
+  fun `A restricted account keeps the generic error, on every game`() = coScenario {
+    m Given "another game's session refused for a restricted account"
+    refusals.record(OTHER_GAME, PaERefusal(PaERefusalCode.ACCOUNT_RESTRICTED))
+
+    m When "this game's Rewards tab reads its message"
+    val message = PaESessionRefusalViewModel(GAME, refusals).uiState.value
+
+    m Then "it is the generic error (the restricted screen is AND-951)"
+    assertEquals(
+      PaERefusalMessage(R.string.error_message_generic_title, R.string.error_message_generic_body),
+      message
+    )
+  }
+
+  @Test
+  fun `A device refusal shows on every game`() = coScenario {
+    m Given "another game's session refused for the device"
+    refusals.record(OTHER_GAME, PaERefusal(PaERefusalCode.DEVICE_NOT_SUPPORTED))
+
+    m When "this game's Rewards tab reads its message"
+    val message = PaESessionRefusalViewModel(GAME, refusals).uiState.value
+
+    m Then "it is the device message"
+    assertEquals(R.string.play_and_earn_refused_device_body, message?.body)
+  }
+
   @ParameterizedTest(name = "{0}")
   @EnumSource(
     PaERefusalCode::class,
     mode = EnumSource.Mode.EXCLUDE,
-    names = ["REGION_NOT_SUPPORTED", "DEVICE_NOT_SUPPORTED", "UPDATE_REQUIRED"]
+    names = [
+      "ACCOUNT_RESTRICTED", "REGION_NOT_SUPPORTED", "DEVICE_NOT_SUPPORTED", "UPDATE_REQUIRED",
+    ]
   )
-  fun `Any other refusal keeps the generic error`(code: PaERefusalCode) = coScenario {
-    m Given "the game's session refused with $code"
+  fun `A refusal that does not block play shows nothing`(code: PaERefusalCode) = coScenario {
+    m Given "the game's session answered with $code"
     refusals.record(GAME, PaERefusal(code))
 
     m When "the Rewards tab reads its message"
     val message = PaESessionRefusalViewModel(GAME, refusals).uiState.value
 
-    m Then "it is the generic error"
-    assertEquals(
-      PaERefusalMessage(R.string.error_message_generic_title, R.string.error_message_generic_body),
-      message
-    )
+    m Then "there is none: the missions show as before"
+    assertNull(message)
   }
 
   @Test
@@ -127,7 +153,7 @@ internal class PaESessionRefusalViewModelTest {
       assertNull(awaitItem())
       refusals.record(GAME, PaERefusal(PaERefusalCode.DEVICE_NOT_SUPPORTED))
       val refused = awaitItem()
-      refusals.clear(GAME)
+      refusals.onSessionStarted(GAME)
       val accepted = awaitItem()
 
       m Then "the device message shows, then goes"

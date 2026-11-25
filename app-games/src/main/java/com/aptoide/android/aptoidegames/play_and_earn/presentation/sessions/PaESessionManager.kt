@@ -1,7 +1,6 @@
 package com.aptoide.android.aptoidegames.play_and_earn.presentation.sessions
 
 import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusal
-import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusalCode
 import cm.aptoide.pt.aptoide_network.play_and_earn.toPaERefusal
 import cm.aptoide.pt.campaigns.data.PaEMissionsRepository
 import cm.aptoide.pt.play_and_earn.sessions.data.PaESessionsRepository
@@ -17,7 +16,6 @@ import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.PaE
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.missions.PaEMissionManager
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -39,21 +37,21 @@ class PaESessionManager @Inject constructor(
   private val _completedMissions = MutableSharedFlow<CompletedMissionEvent>(extraBufferCapacity = 8)
   val completedMissions = _completedMissions.asSharedFlow()
 
-  // AND-950: games the backend refused since the sessions were last cleared. Not asked again
-  // until then: the answer would be the same, and the tracking loop polls every 10 seconds.
-  private val refusedPackages = ConcurrentHashMap<String, PaERefusal>()
+  /**
+   * The refusal that still keeps [packageName] from starting a session (AND-950), from
+   * [PaESessionRefusals]: its own region refusal or one for every game.
+   */
+  fun refusalOf(packageName: String): PaERefusal? =
+    paESessionRefusals.blockingRefusalOf(packageName)
 
   /**
-   * The backend restricted the account (a refused start or an `account_restricted` heartbeat):
-   * every session is dropped locally and the caller stops tracking. Reset by [clearAllSessions].
+   * After a tracking poll: true when an account, device or update refusal holds for every game,
+   * so tracking can only wait for nothing while the "recording" notification stays up.
    */
-  @Volatile
-  var isAccountRestricted = false
-    private set
+  fun shouldStopService(): Boolean = paESessionRefusals.everyGameRefusal() != null
 
-  /** Why the backend refused [packageName] since the sessions were last cleared, if it did. */
-  fun refusalOf(packageName: String): PaERefusal? =
-    if (isAccountRestricted) ACCOUNT_RESTRICTED else refusedPackages[packageName]
+  /** After a status heartbeat for [packageName]: true when it can no longer get a session. */
+  fun shouldStopStatusMode(packageName: String): Boolean = refusalOf(packageName) != null
 
   /** Creates a new session for the given package. */
   suspend fun createSession(packageName: String): PaESessionStartResult {
@@ -63,13 +61,15 @@ class PaESessionManager @Inject constructor(
     refusalOf(packageName)?.let { return PaESessionStartResult.Refused(it) }
 
     val session = paESessionsRepository.startSession(packageName).getOrElse { error ->
-      val refusal = error.toPaERefusal() ?: return PaESessionStartResult.Failed
+      // Only a play-blocking refusal ends anything; a limit is a failure like any other.
+      val refusal = error.toPaERefusal()?.takeIf { it.code.blocksPlay }
+        ?: return PaESessionStartResult.Failed
       onRefused(packageName, refusal)
-      if (isAccountRestricted) activeSessions.clear()
+      if (shouldStopService()) activeSessions.clear()
       return PaESessionStartResult.Refused(refusal)
     }
     // Accepted now: whatever refused it before no longer applies.
-    paESessionRefusals.clear(packageName)
+    paESessionRefusals.onSessionStarted(packageName)
 
     if (session.sessionId.isBlank()) {
       return PaESessionStartResult.Failed
@@ -95,20 +95,29 @@ class PaESessionManager @Inject constructor(
     return PaESessionStartResult.Started
   }
 
-  private fun onRefused(packageName: String, refusal: PaERefusal) {
-    refusedPackages[packageName] = refusal
+  private fun onRefused(packageName: String, refusal: PaERefusal) =
     paESessionRefusals.record(packageName, refusal)
-    if (refusal.code == PaERefusalCode.ACCOUNT_RESTRICTED) isAccountRestricted = true
-  }
+
+  /** The play-blocking refusal [error] is, if it is one (AND-950). */
+  private fun blockingRefusal(error: Throwable): PaERefusal? =
+    error.toPaERefusal()?.takeIf { it.code.blocksPlay }
 
   private fun hasActiveSession(packageName: String): Boolean {
     return activeSessions.any { it.packageName == packageName }
   }
 
+  /** Forgets every session and every refusal: the service stopped, nothing holds any more. */
   fun clearAllSessions() {
     activeSessions.clear()
-    refusedPackages.clear()
-    isAccountRestricted = false
+    paESessionRefusals.clear()
+  }
+
+  /**
+   * Forgets every session but keeps the refusals: the service stops because of one, and the
+   * Rewards tab must still say why (AND-950).
+   */
+  fun dropSessionsKeepingRefusals() {
+    activeSessions.clear()
   }
 
   /**
@@ -133,11 +142,11 @@ class PaESessionManager @Inject constructor(
       },
       onFailure = { exception ->
         updateSessionAfterSync(session)
-        val refusal = exception.toPaERefusal()
+        val refusal = blockingRefusal(exception)
         if (refusal != null) {
           onRefused(session.packageName, refusal)
           activeSessions.remove(session)
-          if (isAccountRestricted) activeSessions.clear()
+          if (shouldStopService()) activeSessions.clear()
           return false
         }
         if (exception is SessionExpiredException) activeSessions.remove(session)
@@ -183,8 +192,8 @@ class PaESessionManager @Inject constructor(
     }
 
     activeSessions.removeAll(sessionsToRemove.toSet())
-    // AND-950: a restricted account keeps no session, the one in front or any other.
-    if (isAccountRestricted) activeSessions.clear()
+    // AND-950: a refusal for every game keeps no session, the one in front or any other.
+    if (shouldStopService()) activeSessions.clear()
   }
 
   /**
@@ -235,8 +244,9 @@ class PaESessionManager @Inject constructor(
         // Update session state even on failure to prevent immediate retries
         // and ensure sequence numbers remain unique. The unsent play time stays for the next one.
         updateSessionAfterSync(session)
-        // AND-950: a refused heartbeat (e.g. account_restricted) drops the session, not retried.
-        val refusal = exception.toPaERefusal()
+        // AND-950: a play-blocking refusal (e.g. account_restricted) drops the session, not
+        // retried. Any other refusal (a 429) is a failure like before: kept and retried.
+        val refusal = blockingRefusal(exception)
         if (refusal != null) onRefused(session.packageName, refusal)
         // Session is expired (or refused) and should be removed. Return true
         refusal != null || exception is SessionExpiredException
@@ -286,9 +296,5 @@ class PaESessionManager @Inject constructor(
         )
       )
     }
-  }
-
-  private companion object {
-    val ACCOUNT_RESTRICTED = PaERefusal(PaERefusalCode.ACCOUNT_RESTRICTED)
   }
 }

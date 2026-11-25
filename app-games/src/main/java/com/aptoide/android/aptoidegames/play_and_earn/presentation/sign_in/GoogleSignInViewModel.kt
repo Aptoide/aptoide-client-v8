@@ -14,6 +14,7 @@ import cm.aptoide.pt.wallet.authorization.data.WalletAuthRepository
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.play_and_earn.data.UserAccountPreferencesRepository
 import com.aptoide.android.aptoidegames.play_and_earn.domain.UserInfo
+import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaESessionRefusals
 import com.google.android.gms.auth.api.identity.AuthorizationRequest
 import com.google.android.gms.auth.api.identity.AuthorizationResult
 import com.google.android.gms.common.Scopes
@@ -35,7 +36,8 @@ class GoogleSignInViewModel @Inject constructor(
   private val credentialManager: CredentialManager,
   private val userAuthRepository: WalletAuthRepository,
   private val userAccountPreferencesRepository: UserAccountPreferencesRepository,
-  private val exceptionHandler: ExceptionHandler
+  private val exceptionHandler: ExceptionHandler,
+  private val paESessionRefusals: PaESessionRefusals,
 ) : ViewModel() {
   private var googleIdTokenCredential: GoogleIdTokenCredential? = null
 
@@ -105,6 +107,8 @@ class GoogleSignInViewModel @Inject constructor(
       authResult.serverAuthCode?.let {
         val result = userAuthRepository.authorizeGoogleUser(it)
         if (result.isSuccess) {
+          // AND-950: another account may have signed in; the last one's refusals don't hold.
+          paESessionRefusals.clear()
           googleIdTokenCredential?.let {
             userAccountPreferencesRepository.setUserInfo(
               UserInfo(
@@ -136,6 +140,8 @@ class GoogleSignInViewModel @Inject constructor(
   }
 
   fun signOut() {
+    // AND-950: refusals belong to the account signing out.
+    paESessionRefusals.clear()
     viewModelScope.launch {
       runCatchingAndRecord(exceptionHandler) {
         val clearRequest = ClearCredentialStateRequest()
