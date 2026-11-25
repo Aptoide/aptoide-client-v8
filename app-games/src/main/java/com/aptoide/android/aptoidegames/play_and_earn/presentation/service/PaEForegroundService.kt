@@ -25,6 +25,7 @@ import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.play_and_earn.PlayAndEarnManager
 import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPreferencesRepository
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaEPlayTimeMeter
+import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaESessionStartResult
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaEStatusHeartbeatPolicy
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.needsSessionRecreation
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.soleVisiblePackage
@@ -295,6 +296,11 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
           // a bad connection shouldn't end the run, but a persistent failure should.
           val alive =
             ensureSession(packageName) && paESessionManager.heartbeatStatus(packageName)
+          // AND-950: refused (or the account restricted): asking again would get the same answer.
+          paESessionManager.refusalOf(packageName)?.let { refusal ->
+            stopStatusMode("refused: ${refusal.code}")
+            return@launch
+          }
           sessionFailures = if (alive) 0 else sessionFailures + 1
           if (sessionFailures >= STATUS_MAX_SESSION_FAILURES) {
             stopStatusMode("session lost")
@@ -320,7 +326,7 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
 
   private suspend fun ensureSession(packageName: String): Boolean =
     paESessionManager.activeSessions.any { it.packageName == packageName } ||
-      paESessionManager.createSession(packageName)
+      paESessionManager.createSession(packageName) == PaESessionStartResult.Started
 
   private suspend fun stopStatusMode(reason: String) {
     Timber.d("PaEForegroundService: status heartbeat for $statusPackage stops ($reason)")
@@ -397,6 +403,13 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
           val pollStartedAt = SystemClock.elapsedRealtime()
           try {
             syncService(meter)
+            // AND-950: a restricted account is not tracked: no retry, no new session.
+            if (paESessionManager.isAccountRestricted) {
+              Timber.d("PaEForegroundService: account restricted, stopping tracking")
+              paESessionManager.clearAllSessions()
+              stopSelf()
+              return@launch
+            }
           } catch (e: CancellationException) {
             throw e
           } catch (e: Exception) {
@@ -453,7 +466,8 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
           // Game available in PaE. Start session
           if (isPaEGame) {
             // Check if a session already exists and is not finished
-            val sessionCreated = paESessionManager.createSession(foregroundPackage)
+            val sessionCreated =
+              paESessionManager.createSession(foregroundPackage) == PaESessionStartResult.Started
 
             // Always show welcome back overlay, even if session already exists
             if (sessionCreated || paESessionManager.activeSessions.any { it.packageName == foregroundPackage }) {

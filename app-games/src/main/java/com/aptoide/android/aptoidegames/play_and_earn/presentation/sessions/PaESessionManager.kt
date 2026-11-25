@@ -1,5 +1,8 @@
 package com.aptoide.android.aptoidegames.play_and_earn.presentation.sessions
 
+import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusal
+import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusalCode
+import cm.aptoide.pt.aptoide_network.play_and_earn.toPaERefusal
 import cm.aptoide.pt.campaigns.data.PaEMissionsRepository
 import cm.aptoide.pt.play_and_earn.sessions.data.PaESessionsRepository
 import cm.aptoide.pt.play_and_earn.sessions.data.SessionExpiredException
@@ -8,10 +11,13 @@ import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPreferencesReposit
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.CompletedMissionEvent
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaEMissionConfirmations
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaESession
+import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaESessionRefusals
+import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaESessionStartResult
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.PaEAnalytics
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.missions.PaEMissionManager
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,7 +27,8 @@ class PaESessionManager @Inject constructor(
   private val paeMissionsRepository: PaEMissionsRepository,
   private val paeMissionManager: PaEMissionManager,
   private val paEPreferencesRepository: PaEPreferencesRepository,
-  private val paEAnalytics: PaEAnalytics
+  private val paEAnalytics: PaEAnalytics,
+  private val paESessionRefusals: PaESessionRefusals,
 ) {
 
   val activeSessions = mutableListOf<PaESession>()
@@ -32,23 +39,44 @@ class PaESessionManager @Inject constructor(
   private val _completedMissions = MutableSharedFlow<CompletedMissionEvent>(extraBufferCapacity = 8)
   val completedMissions = _completedMissions.asSharedFlow()
 
-  /**
-   * Creates a new session for the given package
-   * @return true if session was successfully created, false otherwise
-   */
-  suspend fun createSession(packageName: String): Boolean {
-    if (hasActiveSession(packageName)) {
-      return false
-    }
+  // AND-950: games the backend refused since the sessions were last cleared. Not asked again
+  // until then: the answer would be the same, and the tracking loop polls every 10 seconds.
+  private val refusedPackages = ConcurrentHashMap<String, PaERefusal>()
 
-    val session = paESessionsRepository.startSession(packageName).getOrElse { return false }
+  /**
+   * The backend restricted the account (a refused start or an `account_restricted` heartbeat):
+   * every session is dropped locally and the caller stops tracking. Reset by [clearAllSessions].
+   */
+  @Volatile
+  var isAccountRestricted = false
+    private set
+
+  /** Why the backend refused [packageName] since the sessions were last cleared, if it did. */
+  fun refusalOf(packageName: String): PaERefusal? =
+    if (isAccountRestricted) ACCOUNT_RESTRICTED else refusedPackages[packageName]
+
+  /** Creates a new session for the given package. */
+  suspend fun createSession(packageName: String): PaESessionStartResult {
+    if (hasActiveSession(packageName)) {
+      return PaESessionStartResult.AlreadyActive
+    }
+    refusalOf(packageName)?.let { return PaESessionStartResult.Refused(it) }
+
+    val session = paESessionsRepository.startSession(packageName).getOrElse { error ->
+      val refusal = error.toPaERefusal() ?: return PaESessionStartResult.Failed
+      onRefused(packageName, refusal)
+      if (isAccountRestricted) activeSessions.clear()
+      return PaESessionStartResult.Refused(refusal)
+    }
+    // Accepted now: whatever refused it before no longer applies.
+    paESessionRefusals.clear(packageName)
 
     if (session.sessionId.isBlank()) {
-      return false
+      return PaESessionStartResult.Failed
     }
 
     val sessionMissions = paeMissionsRepository.getCampaignMissions(packageName)
-      .getOrElse { return false }
+      .getOrElse { return PaESessionStartResult.Failed }
 
     val heartbeatIntervalSeconds = paEPreferencesRepository.getHeartbeatIntervalSeconds()
 
@@ -64,7 +92,13 @@ class PaESessionManager @Inject constructor(
 
     paEAnalytics.sendPaESessionStart(packageName)
 
-    return true
+    return PaESessionStartResult.Started
+  }
+
+  private fun onRefused(packageName: String, refusal: PaERefusal) {
+    refusedPackages[packageName] = refusal
+    paESessionRefusals.record(packageName, refusal)
+    if (refusal.code == PaERefusalCode.ACCOUNT_RESTRICTED) isAccountRestricted = true
   }
 
   private fun hasActiveSession(packageName: String): Boolean {
@@ -73,13 +107,16 @@ class PaESessionManager @Inject constructor(
 
   fun clearAllSessions() {
     activeSessions.clear()
+    refusedPackages.clear()
+    isAccountRestricted = false
   }
 
   /**
    * Status heartbeat (AND-879): a zero-second heartbeat for [packageName], sent after Play while
    * usage tracking is off. Counts no play time; its only purpose is to receive the missions the
    * developer's MMP confirmed, which [completedMissions] then announces.
-   * @return false when the session is gone and the caller should stop.
+   * @return false when the session is gone and the caller should stop. A refused heartbeat
+   * (AND-950) drops it for good: [refusalOf] says why.
    */
   suspend fun heartbeatStatus(packageName: String): Boolean {
     val session = activeSessions.firstOrNull { it.packageName == packageName } ?: return false
@@ -96,6 +133,13 @@ class PaESessionManager @Inject constructor(
       },
       onFailure = { exception ->
         updateSessionAfterSync(session)
+        val refusal = exception.toPaERefusal()
+        if (refusal != null) {
+          onRefused(session.packageName, refusal)
+          activeSessions.remove(session)
+          if (isAccountRestricted) activeSessions.clear()
+          return false
+        }
         if (exception is SessionExpiredException) activeSessions.remove(session)
         exception !is SessionExpiredException
       }
@@ -139,6 +183,8 @@ class PaESessionManager @Inject constructor(
     }
 
     activeSessions.removeAll(sessionsToRemove.toSet())
+    // AND-950: a restricted account keeps no session, the one in front or any other.
+    if (isAccountRestricted) activeSessions.clear()
   }
 
   /**
@@ -189,7 +235,11 @@ class PaESessionManager @Inject constructor(
         // Update session state even on failure to prevent immediate retries
         // and ensure sequence numbers remain unique. The unsent play time stays for the next one.
         updateSessionAfterSync(session)
-        exception is SessionExpiredException  // Session is expired and should be removed. Return true
+        // AND-950: a refused heartbeat (e.g. account_restricted) drops the session, not retried.
+        val refusal = exception.toPaERefusal()
+        if (refusal != null) onRefused(session.packageName, refusal)
+        // Session is expired (or refused) and should be removed. Return true
+        refusal != null || exception is SessionExpiredException
       }
     )
   }
@@ -236,5 +286,9 @@ class PaESessionManager @Inject constructor(
         )
       )
     }
+  }
+
+  private companion object {
+    val ACCOUNT_RESTRICTED = PaERefusal(PaERefusalCode.ACCOUNT_RESTRICTED)
   }
 }

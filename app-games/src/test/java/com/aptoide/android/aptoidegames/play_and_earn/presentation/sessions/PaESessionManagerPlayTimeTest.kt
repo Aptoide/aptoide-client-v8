@@ -15,6 +15,7 @@ import com.aptoide.android.aptoidegames.analytics.AnalyticsSender
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPreferencesRepository
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaESession
+import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaESessionRefusals
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.PaEAnalytics
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.missions.PaEMissionManager
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.missions.PlayTimeMissionChecker
@@ -83,6 +84,7 @@ internal class PaESessionManagerPlayTimeTest {
     paeMissionManager = PaEMissionManager(PlayTimeMissionChecker(), missions),
     paEPreferencesRepository = PaEPreferencesRepository(emptyDataStore),
     paEAnalytics = PaEAnalytics(GenericAnalytics(object : AnalyticsSender {})),
+    paESessionRefusals = PaESessionRefusals(),
   )
 
   /** A session due for a heartbeat at the next sync. */
