@@ -116,14 +116,18 @@ class PaESessionManager @Inject constructor(
     paESessionsRepository.endSession(session.sessionId, session.packageName)
   }
 
-  suspend fun syncSessions(currentForegroundPackage: String?, syncIntervalSeconds: Int = 6) {
+  /**
+   * @param playedMillis play time measured since the previous poll for [currentForegroundPackage]
+   * (see PaEPlayTimeMeter); 0 when it was not really played.
+   */
+  suspend fun syncSessions(currentForegroundPackage: String?, playedMillis: Long) {
     val currentTimeSeconds = System.currentTimeMillis() / 1000L
     val sessionsToRemove = mutableListOf<PaESession>()
 
     activeSessions.forEach { session ->
       val shouldRemove = if (session.packageName == currentForegroundPackage) {
         // Sync the active session and check if it expired
-        syncActiveSession(session, syncIntervalSeconds)
+        syncActiveSession(session, playedMillis)
       } else {
         // Check if inactive session has expired
         session.isExpired(currentTimeSeconds)
@@ -143,9 +147,9 @@ class PaESessionManager @Inject constructor(
    */
   private suspend fun syncActiveSession(
     session: PaESession,
-    syncIntervalSeconds: Int
+    playedMillis: Long
   ): Boolean {
-    session.usageTimeSinceLastSync += syncIntervalSeconds
+    session.addPlayTime(playedMillis)
 
     val sessionMissions = session.missions?.missions.orEmpty()
     val sessionContext = session.toSessionContext()
@@ -169,20 +173,21 @@ class PaESessionManager @Inject constructor(
       session.pendingServerConfirmationMissions.add(mission.title)
     }
 
+    val claimedSeconds = session.secondsToClaim
     return paESessionsRepository.heartbeatSession(
       session.sessionId,
       session.packageName,
       session.syncSequence,
-      session.usageTimeSinceLastSync
+      claimedSeconds
     ).fold(
       onSuccess = { syncResult ->
-        updateSessionAfterSync(session, syncResult)
+        updateSessionAfterSync(session, syncResult, claimedSeconds)
         processCompletedMissions(session, syncResult)
         false  // Session is healthy, don't remove
       },
       onFailure = { exception ->
         // Update session state even on failure to prevent immediate retries
-        // and ensure sequence numbers remain unique
+        // and ensure sequence numbers remain unique. The unsent play time stays for the next one.
         updateSessionAfterSync(session)
         exception is SessionExpiredException  // Session is expired and should be removed. Return true
       }
@@ -191,12 +196,14 @@ class PaESessionManager @Inject constructor(
 
   private fun updateSessionAfterSync(
     session: PaESession,
-    syncResult: SessionInfo? = null
+    syncResult: SessionInfo? = null,
+    claimedSeconds: Int = 0,
   ) {
     session.lastSyncTime = System.currentTimeMillis()
     session.syncSequence++
     if (syncResult != null) {
-      session.usageTimeSinceLastSync = 0
+      // Only what was claimed: time measured meanwhile and sub-second remainders carry over.
+      session.onPlayTimeSent(claimedSeconds)
       session.totalSessionTime += syncResult.appliedSeconds
     }
   }
