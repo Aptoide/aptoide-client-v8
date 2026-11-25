@@ -413,6 +413,10 @@
   <string name="play_and_earn_rewards_paused_body">ننتظر أن تؤكد اللعبة تثبيتك. واصل اللعب: تبدأ مكافآتك فور التأكيد.</string>
   <string name="play_and_earn_not_eligible_title">جهازك غير مؤهل</string>
   <string name="play_and_earn_not_eligible_body">لم تؤكد أداة التتبع الخاصة باللعبة هذا التثبيت، لذا مكافآت هذه الحملة غير متاحة على هذا الجهاز.</string>
+  <string name="play_and_earn_refused_title">المكافآت غير متاحة</string>
+  <string name="play_and_earn_refused_region_body">Play &amp; Earn غير متاح في منطقتك.</string>
+  <string name="play_and_earn_refused_device_body">Play &amp; Earn غير متاح على هذا الجهاز.</string>
+  <string name="play_and_earn_refused_update_body">حدّث التطبيق لمواصلة ربح المكافآت.</string>
   <string name="play_and_earn_rewards_blocked_learn_more_button">اعرف المزيد</string>
   <string name="play_and_earn_rewards_paused_info_title">لماذا توقفت مكافآتي مؤقتًا؟</string>
   <string name="play_and_earn_rewards_paused_info_body">تستخدم كل لعبة أداة تتبع لتأكيد عمليات التثبيت عبر Aptoide Games. تبدأ مكافآت هذه الحملة بعد أن تؤكد تثبيتك، عادةً بعد بضع دقائق من فتح اللعبة لأول مرة.\n\nأبقِ اللعبة مثبتة والعب كالمعتاد. ما تفعله في اللعبة أثناء الانتظار يُحتسب بعد تأكيد تثبيتك.</string>

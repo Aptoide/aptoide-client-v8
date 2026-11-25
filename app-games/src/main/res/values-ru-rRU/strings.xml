@@ -391,6 +391,10 @@
   <string name="play_and_earn_rewards_paused_body">Мы ждём, пока игра подтвердит вашу установку. Продолжайте играть: награды начнутся сразу после подтверждения.</string>
   <string name="play_and_earn_not_eligible_title">Ваше устройство не подходит</string>
   <string name="play_and_earn_not_eligible_body">Инструмент отслеживания игры не подтвердил эту установку, поэтому награды этой кампании недоступны на этом устройстве.</string>
+  <string name="play_and_earn_refused_title">Награды недоступны</string>
+  <string name="play_and_earn_refused_region_body">Play &amp; Earn недоступен в вашем регионе.</string>
+  <string name="play_and_earn_refused_device_body">Play &amp; Earn недоступен на этом устройстве.</string>
+  <string name="play_and_earn_refused_update_body">Обновите приложение, чтобы продолжать получать награды.</string>
   <string name="play_and_earn_rewards_blocked_learn_more_button">Узнать больше</string>
   <string name="play_and_earn_rewards_paused_info_title">Почему мои награды приостановлены?</string>
   <string name="play_and_earn_rewards_paused_info_body">Каждая игра использует инструмент отслеживания, чтобы подтверждать установки через Aptoide Games. Награды этой кампании начнутся, когда он подтвердит вашу установку, обычно через несколько минут после первого запуска игры.\n\nНе удаляйте игру и играйте как обычно. Всё, что вы делаете в игре во время ожидания, будет засчитано после подтверждения установки.</string>

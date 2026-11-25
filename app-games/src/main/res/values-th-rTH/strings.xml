@@ -358,6 +358,10 @@
   <string name="play_and_earn_rewards_paused_body">เรากำลังรอให้เกมยืนยันการติดตั้งของคุณ เล่นต่อได้เลย รางวัลจะเริ่มทันทีที่ได้รับการยืนยัน</string>
   <string name="play_and_earn_not_eligible_title">อุปกรณ์ของคุณไม่มีสิทธิ์</string>
   <string name="play_and_earn_not_eligible_body">เครื่องมือติดตามของเกมไม่ได้ยืนยันการติดตั้งนี้ รางวัลของแคมเปญนี้จึงไม่พร้อมใช้งานบนอุปกรณ์นี้</string>
+  <string name="play_and_earn_refused_title">ไม่มีรางวัลให้ใช้งาน</string>
+  <string name="play_and_earn_refused_region_body">Play &amp; Earn ไม่พร้อมใช้งานในภูมิภาคของคุณ</string>
+  <string name="play_and_earn_refused_device_body">Play &amp; Earn ไม่พร้อมใช้งานบนอุปกรณ์นี้</string>
+  <string name="play_and_earn_refused_update_body">อัปเดตแอปเพื่อรับรางวัลต่อไป</string>
   <string name="play_and_earn_rewards_blocked_learn_more_button">รู้เพิ่มเติม</string>
   <string name="play_and_earn_rewards_paused_info_title">ทำไมรางวัลของฉันถึงหยุดชั่วคราว</string>
   <string name="play_and_earn_rewards_paused_info_body">แต่ละเกมใช้เครื่องมือติดตามเพื่อยืนยันการติดตั้งผ่าน Aptoide Games รางวัลของแคมเปญนี้จะเริ่มเมื่อยืนยันการติดตั้งของคุณแล้ว โดยปกติจะใช้เวลาไม่กี่นาทีหลังจากเปิดเกมครั้งแรก\n\nติดตั้งเกมไว้และเล่นตามปกติ สิ่งที่คุณทำในเกมระหว่างรอจะถูกนับเมื่อการติดตั้งของคุณได้รับการยืนยัน</string>

@@ -369,6 +369,10 @@
   <string name="play_and_earn_rewards_paused_body">We wachten tot de game je installatie bevestigt. Blijf spelen: je beloningen starten zodra dat gebeurt.</string>
   <string name="play_and_earn_not_eligible_title">Je apparaat komt niet in aanmerking</string>
   <string name="play_and_earn_not_eligible_body">De trackingtool van de game heeft deze installatie niet bevestigd, dus de beloningen van deze campagne zijn niet beschikbaar op dit apparaat.</string>
+  <string name="play_and_earn_refused_title">Beloningen niet beschikbaar</string>
+  <string name="play_and_earn_refused_region_body">Play &amp; Earn is niet beschikbaar in je regio.</string>
+  <string name="play_and_earn_refused_device_body">Play &amp; Earn is niet beschikbaar op dit apparaat.</string>
+  <string name="play_and_earn_refused_update_body">Werk de app bij om beloningen te blijven verdienen.</string>
   <string name="play_and_earn_rewards_blocked_learn_more_button">Meer weten</string>
   <string name="play_and_earn_rewards_paused_info_title">Waarom zijn mijn beloningen gepauzeerd?</string>
   <string name="play_and_earn_rewards_paused_info_body">Elke game gebruikt een trackingtool om installaties via Aptoide Games te bevestigen. De beloningen van deze campagne starten zodra die jouw installatie bevestigt, meestal een paar minuten nadat je de game voor het eerst opent.\n\nHoud de game geïnstalleerd en speel zoals gewoonlijk. Wat je tijdens het wachten in de game doet, telt mee zodra je installatie is bevestigd.</string>

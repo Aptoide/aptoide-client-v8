@@ -369,6 +369,10 @@
   <string name="play_and_earn_rewards_paused_body">Várjuk, hogy a játék megerősítse a telepítésedet. Játssz tovább: a jutalmaid azonnal elindulnak, amint ez megtörténik.</string>
   <string name="play_and_earn_not_eligible_title">Az eszközöd nem jogosult</string>
   <string name="play_and_earn_not_eligible_body">A játék követőeszköze nem erősítette meg ezt a telepítést, ezért a kampány jutalmai nem érhetők el ezen az eszközön.</string>
+  <string name="play_and_earn_refused_title">A jutalmak nem érhetők el</string>
+  <string name="play_and_earn_refused_region_body">A Play &amp; Earn nem érhető el a régiódban.</string>
+  <string name="play_and_earn_refused_device_body">A Play &amp; Earn nem érhető el ezen az eszközön.</string>
+  <string name="play_and_earn_refused_update_body">Frissítsd az alkalmazást, hogy továbbra is jutalmakat szerezz.</string>
   <string name="play_and_earn_rewards_blocked_learn_more_button">További információk</string>
   <string name="play_and_earn_rewards_paused_info_title">Miért szünetelnek a jutalmaim?</string>
   <string name="play_and_earn_rewards_paused_info_body">Minden játék egy követőeszközzel erősíti meg az Aptoide Gamesen keresztüli telepítéseket. A kampány jutalmai akkor indulnak, amikor megerősíti a tiédet, általában néhány perccel a játék első megnyitása után.\n\nTartsd telepítve a játékot, és játssz a szokásos módon. Amit várakozás közben a játékban teszel, a telepítés megerősítése után beszámít.</string>
