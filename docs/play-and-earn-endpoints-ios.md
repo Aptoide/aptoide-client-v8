@@ -338,18 +338,23 @@ Response: `{ "restricted": true }` or `{ "restricted": false }`. `true` means th
 account for fraud; every other P&E call of that account is refused with `ACCOUNT_RESTRICTED` anyway.
 
 It is a convenience, not a control: on any failure (network, `5xx`, `401`, a body without a boolean
-`restricted`) Android treats the account as **not** restricted and reports nothing.
+`restricted`) Android knows nothing more than before: it keeps what it last knew (restricted or not),
+treats a first failure as not restricted, may try again after 10 s, and reports nothing.
 
 **The restricted screen.** Android asks this when a P&E screen opens, at most once a minute (an
 answer of `false` lifts a restriction, so an account support has un-banned gets back in without
-reinstalling). It also counts the account as restricted as soon as any P&E call is refused with
-`ACCOUNT_RESTRICTED` (session start, heartbeat, redeem, sign-in bonus, balance, exchange rate). The
-answer is kept in memory only and forgotten on sign-in and sign-out. While the account is
-restricted, every P&E screen (the Rewards screen and home tab, the info screens, the redeem flow, a
-game's Rewards tab, the apkfy reward screens) shows "Account restricted — Your account has been
-restricted due to anti-fraud mechanisms. Contact support in Settings." with a Contact Support button
-(the support e-mail screen Settings opens), and the home sign-in bonus card is hidden. Until the
-first answer arrives the screens show their normal content.
+reinstalling); while the restricted screen is shown it also asks when the app comes back to the
+front and once a minute. It counts the account as restricted as soon as any P&E call is refused
+with `ACCOUNT_RESTRICTED` (session start, heartbeat, redeem, sign-in bonus, balance, exchange rate),
+and then asks this at once: the answer about the current account wins, and a failure leaves the
+refusal standing. The answer is kept in memory only and forgotten on sign-in and sign-out. While a
+signed-in account is restricted, every P&E screen (the Rewards screen and home tab, the info
+screens, the permissions screen, the redeem flow, a game's Rewards tab, the apkfy reward screens)
+shows "Account restricted — Your account has been restricted due to anti-fraud mechanisms. Contact
+support in Settings." with a Contact Support button (the support e-mail form, with the subject
+"Account restricted" and the wallet address added after the device details), and the home sign-in
+bonus card is hidden. Until the first answer arrives the screens show their normal content, except
+the apkfy reward offers, which wait for it (they claim the bonus on their own after a sign-in).
 
 ### 3.9 Utilities
 
