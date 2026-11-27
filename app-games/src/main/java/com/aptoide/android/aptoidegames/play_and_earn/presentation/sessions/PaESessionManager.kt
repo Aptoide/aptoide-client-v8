@@ -62,10 +62,12 @@ class PaESessionManager @Inject constructor(
 
   /**
    * True while [packageName] is refused for a reason the user lifts in a moment (a VPN,
-   * AND-964): no session, but nothing is lost either, so the status mode keeps waiting.
+   * AND-964): no session, but nothing is lost either, so the status mode keeps waiting and the
+   * notification says what to do. Until the backend answers otherwise: an expired VPN refusal
+   * still counts, so neither flickers back while the backend is asked again.
    */
   fun isWaitingForTheUser(packageName: String): Boolean =
-    refusalOf(packageName)?.code?.waitsForTheUser == true
+    paESessionRefusals.shownRefusalOf(packageName)?.code?.waitsForTheUser == true
 
   /** Creates a new session for the given package. */
   suspend fun createSession(packageName: String): PaESessionStartResult {
@@ -316,4 +318,15 @@ class PaESessionManager @Inject constructor(
       )
     }
   }
+}
+
+/**
+ * The status mode's count of heartbeats in a row without a session (AND-879), after one more:
+ * reset when [alive], unchanged while [waitingForTheUser] (a VPN refusal, AND-964: not a lost
+ * session, the user may turn it off any moment), one more otherwise.
+ */
+fun nextSessionFailures(alive: Boolean, waitingForTheUser: Boolean, failures: Int): Int = when {
+  alive -> 0
+  waitingForTheUser -> failures
+  else -> failures + 1
 }

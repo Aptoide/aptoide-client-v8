@@ -114,6 +114,70 @@ internal class PaESessionRefusalsTest {
   }
 
   @Test
+  fun `An expired VPN refusal lets a game's own region refusal show and block`() = coScenario {
+    m Given "a game refused for its region, then every game refused for a VPN"
+    refusals.record(GAME, PaERefusal(PaERefusalCode.REGION_NOT_SUPPORTED))
+    refusals.record(GAME, PaERefusal(PaERefusalCode.VPN_NOT_ALLOWED))
+
+    m When "a minute passes: the VPN refusal expires, the region one still holds"
+    now += PaESessionRefusals.VPN_ASK_AGAIN_AFTER_MILLIS
+
+    m Then "the game shows and is blocked by its region; another game still shows the VPN"
+    assertEquals(
+      PaERefusal(PaERefusalCode.REGION_NOT_SUPPORTED),
+      refusals.blockingRefusalOf(GAME)
+    )
+    assertEquals(
+      PaERefusal(PaERefusalCode.REGION_NOT_SUPPORTED),
+      refusals.observe(GAME).first()
+    )
+    assertNull(refusals.blockingRefusalOf(OTHER_GAME))
+    assertEquals(PaERefusal(PaERefusalCode.VPN_NOT_ALLOWED), refusals.observe(OTHER_GAME).first())
+  }
+
+  @Test
+  fun `A recent VPN refusal still comes before a game's region refusal`() = coScenario {
+    m Given "a game refused for its region, then every game refused for a VPN"
+    refusals.record(GAME, PaERefusal(PaERefusalCode.REGION_NOT_SUPPORTED))
+    refusals.record(GAME, PaERefusal(PaERefusalCode.VPN_NOT_ALLOWED))
+
+    m When "the game reads its refusal at once"
+    val shown = refusals.observe(GAME).first()
+
+    m Then "it is the VPN: turning it off is what the user can do now"
+    assertEquals(PaERefusal(PaERefusalCode.VPN_NOT_ALLOWED), shown)
+    assertEquals(PaERefusal(PaERefusalCode.VPN_NOT_ALLOWED), refusals.blockingRefusalOf(GAME))
+  }
+
+  @Test
+  fun `A VPN refusal does not shorten a recent restricted account`() = coScenario {
+    m Given "every game refused for a restricted account"
+    refusals.record(GAME, PaERefusal(PaERefusalCode.ACCOUNT_RESTRICTED))
+
+    m When "a VPN refusal comes in, and a minute passes"
+    refusals.record(OTHER_GAME, PaERefusal(PaERefusalCode.VPN_NOT_ALLOWED))
+    now += PaESessionRefusals.VPN_ASK_AGAIN_AFTER_MILLIS
+
+    m Then "the restricted account still holds for its 10 minutes"
+    assertEquals(PaERefusal(PaERefusalCode.ACCOUNT_RESTRICTED), refusals.everyGameRefusal())
+    assertEquals(PaERefusal(PaERefusalCode.ACCOUNT_RESTRICTED), refusals.observe(GAME).first())
+  }
+
+  @Test
+  fun `A VPN refusal replaces an expired restricted account`() = coScenario {
+    m Given "a restricted account refused 10 minutes ago"
+    refusals.record(GAME, PaERefusal(PaERefusalCode.ACCOUNT_RESTRICTED))
+    now += PaESessionRefusals.ASK_AGAIN_AFTER_MILLIS
+
+    m When "the backend, asked again, now refuses for a VPN"
+    refusals.record(GAME, PaERefusal(PaERefusalCode.VPN_NOT_ALLOWED))
+
+    m Then "the VPN is what holds and shows"
+    assertEquals(PaERefusal(PaERefusalCode.VPN_NOT_ALLOWED), refusals.everyGameRefusal())
+    assertEquals(PaERefusal(PaERefusalCode.VPN_NOT_ALLOWED), refusals.observe(GAME).first())
+  }
+
+  @Test
   fun `Only a VPN refusal waits for the user`() = scenario {
     m Given "every refusal code"
     val codes = PaERefusalCode.entries

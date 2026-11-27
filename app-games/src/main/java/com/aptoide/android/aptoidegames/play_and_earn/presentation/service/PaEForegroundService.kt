@@ -36,6 +36,7 @@ import com.aptoide.android.aptoidegames.play_and_earn.presentation.overlays.PaEO
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.hasOverlayPermission
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.hasUsageStatsPermissionStatus
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sessions.PaESessionManager
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.sessions.nextSessionFailures
 import com.aptoide.android.aptoidegames.putNotificationRoute
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CancellationException
@@ -209,6 +210,20 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
     startForeground(FOREGROUND_SERVICE_ID, notification)
   }
 
+  // AND-964: whether the tracking notification shows the VPN text instead of the usual one.
+  @Volatile
+  private var notificationWaitsForTheUser = false
+
+  /** Shows the VPN text while the PaE game in front waits for it to go off, the usual otherwise. */
+  private fun updateTrackingNotification() {
+    val gameInFront = lastForegroundPackage?.takeIf { availablePaEPackages?.contains(it) == true }
+    val waiting = gameInFront?.let { paESessionManager.isWaitingForTheUser(it) } == true
+    if (waiting == notificationWaitsForTheUser) return
+    notificationWaitsForTheUser = waiting
+    (getSystemService(NOTIFICATION_SERVICE) as NotificationManager)
+      .notify(FOREGROUND_SERVICE_ID, buildNotification(trackingNotificationText(waiting)))
+  }
+
   /**
    * Announces every mission the server confirms: the overlay over the game when the app may draw
    * over other apps, the notification otherwise (see [PaEMissionCompletedAnnouncer]). The status
@@ -308,11 +323,11 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
           }
           // AND-964: refused for a VPN, which the user may turn off any moment: no session,
           // but not a lost one either; the backend is asked again once a minute meanwhile.
-          sessionFailures = when {
-            alive -> 0
-            paESessionManager.isWaitingForTheUser(packageName) -> sessionFailures
-            else -> sessionFailures + 1
-          }
+          sessionFailures = nextSessionFailures(
+            alive = alive,
+            waitingForTheUser = paESessionManager.isWaitingForTheUser(packageName),
+            failures = sessionFailures,
+          )
           if (sessionFailures >= STATUS_MAX_SESSION_FAILURES) {
             stopStatusMode("session lost")
             return@launch
@@ -414,6 +429,7 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
           val pollStartedAt = SystemClock.elapsedRealtime()
           try {
             syncService(meter)
+            updateTrackingNotification()
             // AND-950: refused for every game (account, device, update): nothing can be
             // tracked, so no retry, no new session, and no "recording" notification left up.
             // A VPN refusal (AND-964) does not stop it: the polls go on, asking again once a
@@ -528,7 +544,9 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
     }
   }
 
-  private fun buildNotification(): Notification {
+  private fun buildNotification(
+    text: PaETrackingNotificationText = trackingNotificationText(waitingForTheUser = false),
+  ): Notification {
     setupNotificationChannel(applicationContext)
 
     val settingsIntent = Intent(this, MainActivity::class.java).apply {
@@ -538,8 +556,8 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
 
     val notification =
       NotificationCompat.Builder(applicationContext, PAE_USAGE_NOTIFICATION_CHANNEL_ID)
-        .setContentTitle(getString(R.string.play_and_earn_notification_recording_title))
-        .setContentText(getString(R.string.play_and_earn_notification_recording_body))
+        .setContentTitle(getString(text.title))
+        .setContentText(getString(text.body))
         .setSmallIcon(R.drawable.notification_icon)
         .setContentIntent(
           PendingIntent.getActivity(
