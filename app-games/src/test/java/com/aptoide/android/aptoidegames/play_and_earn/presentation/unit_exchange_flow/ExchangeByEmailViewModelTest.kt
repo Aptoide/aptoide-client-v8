@@ -40,9 +40,6 @@ internal class ExchangeByEmailViewModelTest {
     val results = ArrayDeque<Result<Unit>>()
     var pending: CompletableDeferred<Result<Unit>>? = null
 
-    @Deprecated("Use exchangeUnits(email, redeemType, requestId) instead.")
-    override suspend fun exchangeUnits(): Result<Unit> = throw UnsupportedOperationException()
-
     override suspend fun exchangeUnits(
       email: String,
       redeemType: RedeemType,

@@ -410,9 +410,6 @@
   <string name="play_and_earn_level_achieved_body">Livello %1$d raggiunto!</string>
   <string name="play_and_earn_more_you_play_body">Più giochi, più guadagni! Controlla i tuoi premi e guarda crescere il tuo saldo.</string>
   <string name="play_and_earn_keep_playing_title">Continua a giocare</string>
-  <string name="play_and_earn_tap_gem_exchange_body">Tocca la gemma per scambiare le tue unità con il saldo</string>
-  <string name="play_and_earn_awesome_button">Fantastico</string>
-  <string name="play_and_earn_earned_balance_body">Hai appena guadagnato 1 $ nel saldo Aptoide da utilizzare per i tuoi giochi.</string>
   <string name="play_and_earn_play_button">Gioca</string>
   <string name="play_and_earn_install_button">Installare</string>
   <string name="play_and_earn_notification_recording_title">Monitoraggio del tempo di gioco per ottenere ricompense</string>

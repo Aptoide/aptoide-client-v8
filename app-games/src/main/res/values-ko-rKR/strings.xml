@@ -399,9 +399,6 @@
   <string name="play_and_earn_level_achieved_body">레벨 %1$d 달성!</string>
   <string name="play_and_earn_more_you_play_body">더 많이 플레이할수록 더 많이 벌 수 있어요! 보상을 확인하고 잔액이 늘어나는 걸 지켜보세요.</string>
   <string name="play_and_earn_keep_playing_title">계속 플레이하세요</string>
-  <string name="play_and_earn_tap_gem_exchange_body">보석을 탭하여 유닛을 균형으로 교환하세요</string>
-  <string name="play_and_earn_awesome_button">대단해</string>
-  <string name="play_and_earn_earned_balance_body">게임에 사용할 수 있는 Aptoide 잔액으로 1달러를 획득하셨습니다.</string>
   <string name="play_and_earn_play_button">플레이</string>
   <string name="play_and_earn_install_button">설치</string>
   <string name="play_and_earn_notification_recording_title">보상을 위한 플레이 시간 추적</string>

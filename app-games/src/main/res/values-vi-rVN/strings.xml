@@ -399,9 +399,6 @@
   <string name="play_and_earn_level_achieved_body">Cấp độ %1$d đã đạt được!</string>
   <string name="play_and_earn_more_you_play_body">Càng chơi nhiều, bạn càng kiếm được nhiều! Kiểm tra phần thưởng của bạn và xem số dư của bạn tăng lên.</string>
   <string name="play_and_earn_keep_playing_title">Tiếp tục chơi</string>
-  <string name="play_and_earn_tap_gem_exchange_body">Nhấn vào viên ngọc để đổi các đơn vị của bạn lấy số dư.</string>
-  <string name="play_and_earn_awesome_button">Tuyệt vời</string>
-  <string name="play_and_earn_earned_balance_body">Bạn vừa kiếm được $1 trong tài khoản Aptoide Balance để sử dụng cho các trò chơi của mình.</string>
   <string name="play_and_earn_play_button">Chơi</string>
   <string name="play_and_earn_install_button">Cài đặt</string>
   <string name="play_and_earn_notification_recording_title">Theo dõi thời gian chơi để nhận phần thưởng</string>

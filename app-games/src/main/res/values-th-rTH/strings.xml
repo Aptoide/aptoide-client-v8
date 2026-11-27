@@ -399,9 +399,6 @@
   <string name="play_and_earn_level_achieved_body">ระดับ %1$d สำเร็จแล้ว!</string>
   <string name="play_and_earn_more_you_play_body">ยิ่งเล่นมาก ยิ่งได้มาก! ตรวจสอบรางวัลของคุณและดูยอดเงินของคุณเพิ่มขึ้น</string>
   <string name="play_and_earn_keep_playing_title">เล่นต่อไป</string>
-  <string name="play_and_earn_tap_gem_exchange_body">แตะที่อัญมณีเพื่อแลกเปลี่ยนหน่วยของคุณเป็นยอดคงเหลือ</string>
-  <string name="play_and_earn_awesome_button">ยอดเยี่ยม</string>
-  <string name="play_and_earn_earned_balance_body">คุณเพิ่งได้รับเงิน $1 ใน Aptoide Balance เพื่อใช้กับเกมของคุณ</string>
   <string name="play_and_earn_play_button">เล่น</string>
   <string name="play_and_earn_install_button">ติดตั้ง</string>
   <string name="play_and_earn_notification_recording_title">ติดตามเวลาการเล่นเพื่อรับรางวัล</string>

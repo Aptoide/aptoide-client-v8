@@ -410,9 +410,6 @@
   <string name="play_and_earn_level_achieved_body">Level %1$d achieved!</string>
   <string name="play_and_earn_more_you_play_body">The more you play, the more you earn! Check your rewards and see your balance grow.</string>
   <string name="play_and_earn_keep_playing_title">Keep Playing</string>
-  <string name="play_and_earn_tap_gem_exchange_body">Tap the gem to exchange your units for balance</string>
-  <string name="play_and_earn_awesome_button">Awesome</string>
-  <string name="play_and_earn_earned_balance_body">You just earned $1 in Aptoide Balance to use on your games</string>
   <string name="play_and_earn_play_button">Play</string>
   <string name="play_and_earn_install_button">स्थापित करें</string>
   <string name="play_and_earn_notification_recording_title">Tracking playtime for rewards</string>

@@ -76,7 +76,6 @@ import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playA
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnRewardSignInScreen
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnSignInRoute
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnSignInScreen
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchange.exchangeUnitsScreen
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchange_flow.buildExchangeEmailRoute
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchange_flow.buildExchangeSuccessRoute
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchange_flow.buildPickRewardRoute
@@ -463,12 +462,6 @@ private fun NavigationGraph(
       navigate = navController::navigateTo,
       goBack = navController::navigateUp,
       screenData = levelUpScreen()
-    )
-
-    animatedComposable(
-      navigate = navController::navigateTo,
-      goBack = navController::navigateUp,
-      screenData = exchangeUnitsScreen()
     )
 
     animatedComposable(

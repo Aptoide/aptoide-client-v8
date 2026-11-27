@@ -432,9 +432,6 @@
   <string name="play_and_earn_level_achieved_body">Рівень %1$d досягнуто!</string>
   <string name="play_and_earn_more_you_play_body">Чим більше граєте, тим більше заробляєте! Перевіряйте свої винагороди та спостерігайте, як зростає ваш баланс.</string>
   <string name="play_and_earn_keep_playing_title">Продовжуйте грати</string>
-  <string name="play_and_earn_tap_gem_exchange_body">Натисніть на самоцвіт, щоб обміняти свої одиниці на баланс</string>
-  <string name="play_and_earn_awesome_button">Чудово</string>
-  <string name="play_and_earn_earned_balance_body">Ви щойно заробили 1 долар на балансі Aptoide, який можна витратити на ігри.</string>
   <string name="play_and_earn_play_button">Грати</string>
   <string name="play_and_earn_install_button">Встановити</string>
   <string name="play_and_earn_notification_recording_title">Відстеження часу гри для отримання винагород</string>

@@ -454,9 +454,6 @@
   <string name="play_and_earn_level_achieved_body">تم تحقيق مستوى %1$d !</string>
   <string name="play_and_earn_more_you_play_body">كلما لعبت أكثر، كلما ربحت أكثر! تحقق من مكافآتك وشاهد رصيدك ينمو.</string>
   <string name="play_and_earn_keep_playing_title">استمر في اللعب</string>
-  <string name="play_and_earn_tap_gem_exchange_body">اضغط على الجوهرة لتبادل وحداتك مقابل الرصيد</string>
-  <string name="play_and_earn_awesome_button">رائع</string>
-  <string name="play_and_earn_earned_balance_body">لقد حصلت للتو على 1 دولار في رصيد Aptoide لاستخدامه في ألعابك</string>
   <string name="play_and_earn_play_button">العب</string>
   <string name="play_and_earn_install_button">تثبيت</string>
   <string name="play_and_earn_notification_recording_title">تتبع وقت اللعب للحصول على المكافآت</string>

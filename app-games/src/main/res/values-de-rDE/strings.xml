@@ -410,9 +410,6 @@
   <string name="play_and_earn_level_achieved_body">Level „ %1$d “ erreicht!</string>
   <string name="play_and_earn_more_you_play_body">Je mehr Sie spielen, desto mehr verdienen Sie! Überprüfen Sie Ihre Prämien und sehen Sie, wie Ihr Guthaben wächst.</string>
   <string name="play_and_earn_keep_playing_title">Weiter spielen</string>
-  <string name="play_and_earn_tap_gem_exchange_body">Tippen Sie auf den Edelstein, um Ihre Einheiten gegen Guthaben einzutauschen.</string>
-  <string name="play_and_earn_awesome_button">Großartig</string>
-  <string name="play_and_earn_earned_balance_body">Sie haben gerade 1 $ in Ihrem Aptoide-Guthaben verdient, das Sie für Ihre Spiele verwenden können.</string>
   <string name="play_and_earn_play_button">Spielen</string>
   <string name="play_and_earn_install_button">Installieren</string>
   <string name="play_and_earn_notification_recording_title">Spielzeit für Belohnungen verfolgen</string>

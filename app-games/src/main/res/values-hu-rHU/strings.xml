@@ -410,9 +410,6 @@
   <string name="play_and_earn_level_achieved_body">%1$d szint elérve!</string>
   <string name="play_and_earn_more_you_play_body">Minél többet játszol, annál többet keresel! Nézd meg a jutalmaidat, és figyeld, hogyan növekszik az egyenleged.</string>
   <string name="play_and_earn_keep_playing_title">Játssz tovább</string>
-  <string name="play_and_earn_tap_gem_exchange_body">Érintse meg a drágakövet, hogy egységeit egyensúlyra cserélje.</string>
-  <string name="play_and_earn_awesome_button">Fantasztikus</string>
-  <string name="play_and_earn_earned_balance_body">Most 1 dollárt kerestél az Aptoide Balance-en, amit játékokra költhetsz.</string>
   <string name="play_and_earn_play_button">Játék</string>
   <string name="play_and_earn_install_button">Telepítés</string>
   <string name="play_and_earn_notification_recording_title">A játékidő nyomon követése a jutalmakért</string>

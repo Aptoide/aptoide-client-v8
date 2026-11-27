@@ -7,15 +7,8 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
-import retrofit2.http.Query
 
 internal interface ExchangeApi {
-  @Deprecated("Use exchangeUnitsV2 instead.")
-  @POST("/api/exchange/")
-  suspend fun exchangeUnits(
-    @Query("country_code") countryCode: String
-  ): ExchangeResponseJson
-
   @POST("/api/exchange/v2")
   suspend fun exchangeUnitsV2(
     @Body request: ExchangeUnitsRequestJson

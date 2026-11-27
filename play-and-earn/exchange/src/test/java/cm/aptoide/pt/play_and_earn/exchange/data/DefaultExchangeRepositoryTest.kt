@@ -19,10 +19,6 @@ internal class DefaultExchangeRepositoryTest {
     val requests = mutableListOf<ExchangeUnitsRequestJson>()
     var failure: Throwable? = null
 
-    @Deprecated("Use exchangeUnitsV2 instead.")
-    override suspend fun exchangeUnits(countryCode: String): ExchangeResponseJson =
-      throw UnsupportedOperationException()
-
     override suspend fun exchangeUnitsV2(request: ExchangeUnitsRequestJson): ExchangeResponseJson {
       requests += request
       failure?.let { throw it }

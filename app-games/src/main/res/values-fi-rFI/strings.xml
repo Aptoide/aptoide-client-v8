@@ -410,9 +410,6 @@
   <string name="play_and_earn_level_achieved_body">Taso %1$d saavutettu!</string>
   <string name="play_and_earn_more_you_play_body">Mitä enemmän pelaat, sitä enemmän ansaitset! Tarkista palkkiosi ja katso, kuinka saldosi kasvaa.</string>
   <string name="play_and_earn_keep_playing_title">Jatka pelaamista</string>
-  <string name="play_and_earn_tap_gem_exchange_body">Napauta jalokiviä vaihtaaksesi yksikkösi saldoon.</string>
-  <string name="play_and_earn_awesome_button">Mahtavaa</string>
-  <string name="play_and_earn_earned_balance_body">Ansaitsit juuri 1 dollarin Aptoide-saldoa, jota voit käyttää peleissäsi.</string>
   <string name="play_and_earn_play_button">Pelaa</string>
   <string name="play_and_earn_install_button">Asenna</string>
   <string name="play_and_earn_notification_recording_title">Pelitilan seuranta palkintoja varten</string>

@@ -399,9 +399,6 @@
   <string name="play_and_earn_level_achieved_body">Level %1$d tercapai!</string>
   <string name="play_and_earn_more_you_play_body">Semakin sering Anda bermain, semakin banyak yang Anda dapatkan! Periksa hadiah Anda dan lihat saldo Anda bertambah.</string>
   <string name="play_and_earn_keep_playing_title">Terus Bermain</string>
-  <string name="play_and_earn_tap_gem_exchange_body">Ketuk permata untuk menukar unit Anda dengan saldo.</string>
-  <string name="play_and_earn_awesome_button">Hebat</string>
-  <string name="play_and_earn_earned_balance_body">Anda baru saja mendapatkan $1 di Aptoide Balance yang dapat digunakan untuk membeli game Anda.</string>
   <string name="play_and_earn_play_button">Mainkan</string>
   <string name="play_and_earn_install_button">Pasang</string>
   <string name="play_and_earn_notification_recording_title">Melacak waktu bermain untuk mendapatkan hadiah</string>

@@ -432,9 +432,6 @@
   <string name="play_and_earn_level_achieved_body">Poziom %1$d osiągnięty!</string>
   <string name="play_and_earn_more_you_play_body">Im więcej grasz, tym więcej zarabiasz! Sprawdź swoje nagrody i obserwuj, jak rośnie Twoje saldo.</string>
   <string name="play_and_earn_keep_playing_title">Kontynuuj grę</string>
-  <string name="play_and_earn_tap_gem_exchange_body">Dotknij klejnotu, aby wymienić swoje jednostki na równowagę.</string>
-  <string name="play_and_earn_awesome_button">Niesamowite</string>
-  <string name="play_and_earn_earned_balance_body">Właśnie zarobiłeś 1 dolara w Aptoide Balance, który możesz wykorzystać na gry.</string>
   <string name="play_and_earn_play_button">Zagraj</string>
   <string name="play_and_earn_install_button">Zainstaluj</string>
   <string name="play_and_earn_notification_recording_title">Śledzenie czasu gry w celu uzyskania nagród</string>

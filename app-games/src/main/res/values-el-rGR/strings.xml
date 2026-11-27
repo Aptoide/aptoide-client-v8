@@ -410,9 +410,6 @@
   <string name="play_and_earn_level_achieved_body">Επίπεδο %1$d επιτεύχθηκε!</string>
   <string name="play_and_earn_more_you_play_body">Όσο περισσότερο παίζετε, τόσο περισσότερα κερδίζετε! Ελέγξτε τις ανταμοιβές σας και δείτε το υπόλοιπό σας να αυξάνεται.</string>
   <string name="play_and_earn_keep_playing_title">Συνέχισε να παίζεις</string>
-  <string name="play_and_earn_tap_gem_exchange_body">Πατήστε το πετράδι για να ανταλλάξετε τις μονάδες σας με υπόλοιπο</string>
-  <string name="play_and_earn_awesome_button">Φοβερό</string>
-  <string name="play_and_earn_earned_balance_body">Μόλις κερδίσατε 1 $ στο Aptoide Balance για να το χρησιμοποιήσετε στα παιχνίδια σας.</string>
   <string name="play_and_earn_play_button">Παιχνίδι</string>
   <string name="play_and_earn_install_button">Εγκατάσταση</string>
   <string name="play_and_earn_notification_recording_title">Παρακολούθηση χρόνου παιχνιδιού για ανταμοιβές</string>
