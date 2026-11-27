@@ -366,8 +366,9 @@ another account installing the same game on the same phone. Both are new routes:
 registered in Cloudflare API Shield before an app can reach them.
 
 **Phone headers.** The backend reads the phone headers (`X-PaE-Device-Key`…) on these calls like on
-the other P&E calls. Android sends them on none of its P&E calls yet, these two included: until it
-does, the backend counts the limit per account only and can never find a prior install.
+the other P&E calls. On Android they are added to every P&E call by AND-949, which is a separate
+change: these two calls need no code of their own for them. Without the headers the backend counts
+the limit per account only and can never find a prior install, so the two must ship together.
 
 **Rule: the click before the report.** A report whose click is not on record is not stored, only
 flagged. The click is sent when the install starts; when it never reached the backend (offline,
