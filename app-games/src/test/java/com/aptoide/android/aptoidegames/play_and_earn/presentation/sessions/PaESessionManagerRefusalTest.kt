@@ -149,7 +149,10 @@ internal class PaESessionManagerRefusalTest {
   }
 
   @ParameterizedTest(name = "{0}")
-  @EnumSource(PaERefusalCode::class, names = ["TOO_MANY_ATTEMPTS", "INSTALL_LIMIT"])
+  @EnumSource(
+    PaERefusalCode::class,
+    names = ["TOO_MANY_ATTEMPTS", "INSTALL_LIMIT", "SIGN_IN_BONUS_DEVICE_LIMIT"]
+  )
   fun `A limit on a start is a plain failure, asked again on the next poll`(
     code: PaERefusalCode,
   ) = coScenario {
@@ -218,6 +221,62 @@ internal class PaESessionManagerRefusalTest {
     assertTrue(manager.activeSessions.isEmpty())
     assertTrue(manager.shouldStopService())
     assertEquals(PaERefusal(code), refusals.observe(OTHER_GAME).first())
+  }
+
+  // AND-964: a VPN goes away when the user turns it off. Stopping the service would leave
+  // nothing to ask again until the user tapped Play in the app; it keeps tracking instead.
+  @Test
+  fun `A VPN start refusal keeps the service and the status mode going`() = coScenario {
+    m Given "another game's session running and the backend refusing for a VPN"
+    manager.activeSessions += session(OTHER_GAME)
+    refuseStart(PaERefusalCode.VPN_NOT_ALLOWED)
+
+    m When "the game's session is created"
+    val result = manager.createSession(GAME)
+
+    m Then "refused on every game, no session kept, but nothing is told to stop"
+    assertEquals(
+      PaESessionStartResult.Refused(PaERefusal(PaERefusalCode.VPN_NOT_ALLOWED)),
+      result
+    )
+    assertTrue(manager.activeSessions.isEmpty())
+    assertFalse(manager.shouldStopService())
+    assertFalse(manager.shouldStopStatusMode(GAME))
+    assertTrue(manager.isWaitingForTheUser(GAME))
+    assertEquals(
+      PaERefusal(PaERefusalCode.VPN_NOT_ALLOWED),
+      refusals.observe(OTHER_GAME).first()
+    )
+  }
+
+  @Test
+  fun `A VPN refusal asks the backend again once a minute, then starts`() = coScenario {
+    m Given "the game refused for a VPN"
+    refuseStart(PaERefusalCode.VPN_NOT_ALLOWED)
+    manager.createSession(GAME)
+
+    m When "the 10-second polls go on for a minute, the VPN is turned off, a poll comes"
+    repeat(5) {
+      now += 10_000L
+      manager.createSession(GAME)
+    }
+    val startsWithinTheMinute = sessions.starts
+    now += 10_000L
+    val stillVpn = manager.createSession(GAME)
+    sessions.startFailure = null
+    now += PaESessionRefusals.VPN_ASK_AGAIN_AFTER_MILLIS
+    val afterVpnOff = manager.createSession(GAME)
+
+    m Then "asked once in the first minute, once at its end, then started and cleared"
+    assertEquals(1, startsWithinTheMinute)
+    assertEquals(
+      PaESessionStartResult.Refused(PaERefusal(PaERefusalCode.VPN_NOT_ALLOWED)),
+      stillVpn
+    )
+    assertEquals(PaESessionStartResult.Started, afterVpnOff)
+    assertEquals(3, sessions.starts)
+    assertNull(refusals.observe(GAME).first())
+    assertFalse(manager.isWaitingForTheUser(GAME))
   }
 
   @Test

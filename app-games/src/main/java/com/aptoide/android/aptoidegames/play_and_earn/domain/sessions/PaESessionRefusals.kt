@@ -24,6 +24,9 @@ import javax.inject.Singleton
  * It stops blocking new starts after [ASK_AGAIN_AFTER_MILLIS], so a user who fixed the cause
  * (travelled, updated the app) is not locked out for as long as the service runs; the Rewards
  * tab keeps showing it until the backend's next answer.
+ *
+ * A VPN refusal (AND-964) holds for every game too, but the user lifts it by turning the VPN
+ * off ([waitsForTheUser]): it blocks new starts for [VPN_ASK_AGAIN_AFTER_MILLIS] only.
  */
 @Singleton
 class PaESessionRefusals internal constructor(
@@ -74,7 +77,7 @@ class PaESessionRefusals internal constructor(
   /** The tracking service stopped, or the account changed: start over. */
   fun clear() = state.update { State() }
 
-  private fun Entry.isRecent() = nowMillis() - atMillis < ASK_AGAIN_AFTER_MILLIS
+  private fun Entry.isRecent() = nowMillis() - atMillis < refusal.code.askAgainAfterMillis
 
   companion object {
     /**
@@ -84,8 +87,26 @@ class PaESessionRefusals internal constructor(
      */
     val ASK_AGAIN_AFTER_MILLIS = TimeUnit.MINUTES.toMillis(10)
 
+    /**
+     * How long a VPN refusal keeps every game from asking again (AND-964): a VPN is off as soon
+     * as the user turns it off, so a game in front asks at most once a minute, and starts within
+     * about a minute of the VPN going off.
+     */
+    val VPN_ASK_AGAIN_AFTER_MILLIS = TimeUnit.MINUTES.toMillis(1)
+
+    private val PaERefusalCode.askAgainAfterMillis: Long
+      get() = if (waitsForTheUser) VPN_ASK_AGAIN_AFTER_MILLIS else ASK_AGAIN_AFTER_MILLIS
+
     /** Everything but the region is about the account, the device or the app, not the game. */
     private val PaERefusalCode.holdsForEveryGame: Boolean
       get() = this != PaERefusalCode.REGION_NOT_SUPPORTED
   }
 }
+
+/**
+ * A play-blocking refusal the user lifts in a moment, with nothing to wait for on the backend
+ * (AND-964): a VPN, turned off. Tracking goes on through it and asks the backend again soon, so
+ * play is recorded again without the user restarting anything.
+ */
+val PaERefusalCode.waitsForTheUser: Boolean
+  get() = this == PaERefusalCode.VPN_NOT_ALLOWED

@@ -12,6 +12,7 @@ import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaEMission
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaESession
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaESessionRefusals
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaESessionStartResult
+import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.waitsForTheUser
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.PaEAnalytics
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.missions.PaEMissionManager
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -46,12 +47,25 @@ class PaESessionManager @Inject constructor(
 
   /**
    * After a tracking poll: true when an account, device or update refusal holds for every game,
-   * so tracking can only wait for nothing while the "recording" notification stays up.
+   * so tracking can only wait for nothing while the "recording" notification stays up. Not for a
+   * VPN (AND-964): the user turns it off in a moment, and only a running service asks again.
    */
-  fun shouldStopService(): Boolean = paESessionRefusals.everyGameRefusal() != null
+  fun shouldStopService(): Boolean =
+    paESessionRefusals.everyGameRefusal()?.let { !it.code.waitsForTheUser } == true
 
-  /** After a status heartbeat for [packageName]: true when it can no longer get a session. */
-  fun shouldStopStatusMode(packageName: String): Boolean = refusalOf(packageName) != null
+  /**
+   * After a status heartbeat for [packageName]: true when it can no longer get a session. Not
+   * for a VPN (AND-964), for the reason of [shouldStopService].
+   */
+  fun shouldStopStatusMode(packageName: String): Boolean =
+    refusalOf(packageName)?.let { !it.code.waitsForTheUser } == true
+
+  /**
+   * True while [packageName] is refused for a reason the user lifts in a moment (a VPN,
+   * AND-964): no session, but nothing is lost either, so the status mode keeps waiting.
+   */
+  fun isWaitingForTheUser(packageName: String): Boolean =
+    refusalOf(packageName)?.code?.waitsForTheUser == true
 
   /** Creates a new session for the given package. */
   suspend fun createSession(packageName: String): PaESessionStartResult {
@@ -65,7 +79,7 @@ class PaESessionManager @Inject constructor(
       val refusal = error.toPaERefusal()?.takeIf { it.code.blocksPlay }
         ?: return PaESessionStartResult.Failed
       onRefused(packageName, refusal)
-      if (shouldStopService()) activeSessions.clear()
+      dropSessionsIfEveryGameRefused()
       return PaESessionStartResult.Refused(refusal)
     }
     // Accepted now: whatever refused it before no longer applies.
@@ -97,6 +111,11 @@ class PaESessionManager @Inject constructor(
 
   private fun onRefused(packageName: String, refusal: PaERefusal) =
     paESessionRefusals.record(packageName, refusal)
+
+  /** A refusal for every game (a VPN too) keeps no session, the one in front or any other. */
+  private fun dropSessionsIfEveryGameRefused() {
+    if (paESessionRefusals.everyGameRefusal() != null) activeSessions.clear()
+  }
 
   /** The play-blocking refusal [error] is, if it is one (AND-950). */
   private fun blockingRefusal(error: Throwable): PaERefusal? =
@@ -146,7 +165,7 @@ class PaESessionManager @Inject constructor(
         if (refusal != null) {
           onRefused(session.packageName, refusal)
           activeSessions.remove(session)
-          if (shouldStopService()) activeSessions.clear()
+          dropSessionsIfEveryGameRefused()
           return false
         }
         if (exception is SessionExpiredException) activeSessions.remove(session)
@@ -193,7 +212,7 @@ class PaESessionManager @Inject constructor(
 
     activeSessions.removeAll(sessionsToRemove.toSet())
     // AND-950: a refusal for every game keeps no session, the one in front or any other.
-    if (shouldStopService()) activeSessions.clear()
+    dropSessionsIfEveryGameRefused()
   }
 
   /**

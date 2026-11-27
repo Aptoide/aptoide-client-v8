@@ -306,7 +306,13 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
             stopStatusMode("refused: ${paESessionManager.refusalOf(packageName)?.code}")
             return@launch
           }
-          sessionFailures = if (alive) 0 else sessionFailures + 1
+          // AND-964: refused for a VPN, which the user may turn off any moment: no session,
+          // but not a lost one either; the backend is asked again once a minute meanwhile.
+          sessionFailures = when {
+            alive -> 0
+            paESessionManager.isWaitingForTheUser(packageName) -> sessionFailures
+            else -> sessionFailures + 1
+          }
           if (sessionFailures >= STATUS_MAX_SESSION_FAILURES) {
             stopStatusMode("session lost")
             return@launch
@@ -410,6 +416,8 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
             syncService(meter)
             // AND-950: refused for every game (account, device, update): nothing can be
             // tracked, so no retry, no new session, and no "recording" notification left up.
+            // A VPN refusal (AND-964) does not stop it: the polls go on, asking again once a
+            // minute, so play is recorded again soon after the user turns the VPN off.
             if (paESessionManager.shouldStopService()) {
               Timber.d("PaEForegroundService: refused for every game, stopping tracking")
               stoppedByRefusal = true
