@@ -481,8 +481,8 @@
   <string name="play_and_earn_exchange_error_restricted_body">Hesabınız dolandırıcılık önleme mekanizmaları nedeniyle kısıtlandı. Ayarlar &gt; Destek üzerinden bize ulaşın.</string>
   <string name="play_and_earn_exchange_error_limit_body_until">%1$s itibarıyla tekrar kullanabilirsiniz.</string>
   <string name="play_and_earn_exchange_error_too_many_attempts_body_until">Çok fazla deneme. %1$s sonrasında tekrar deneyin.</string>
-  <string name="play_and_earn_install_limit_body">Bugünkü Play &amp; Earn yükleme sınırına ulaştınız. Yüklemeler ancak yarın tekrar sayılacak.</string>
-  <string name="play_and_earn_install_limit_body_until">Bugünkü Play &amp; Earn yükleme sınırına ulaştınız. Yüklemeler %1$s itibarıyla tekrar sayılacak.</string>
+  <string name="play_and_earn_install_limit_body">Bugünkü Play &amp; Earn yükleme sınırına ulaştınız. Oyununuz yine de indirilecek.</string>
+  <string name="play_and_earn_install_limit_body_until">Bugünkü Play &amp; Earn yükleme sınırına ulaştınız. Oyununuz yine de indirilecek. Sınır %1$s itibarıyla sıfırlanır.</string>
   <string name="play_and_earn_exchange_email_safe_note">🔒 E-postanız bizimle güvende. Yalnızca bu ödülü göndermek için kullanacağız.</string>
   <string name="play_and_earn_exchange_get_my_code_button">Kodumu al</string>
   <string name="play_and_earn_exchange_not_enough_balance">Yetersiz bakiye</string>

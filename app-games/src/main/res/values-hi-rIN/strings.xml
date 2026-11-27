@@ -481,8 +481,8 @@
   <string name="play_and_earn_exchange_error_restricted_body">धोखाधड़ी-रोधी तंत्र के कारण आपका अकाउंट प्रतिबंधित कर दिया गया है। सेटिंग्स में सपोर्ट से संपर्क करें।</string>
   <string name="play_and_earn_exchange_error_limit_body_until">आप %1$s से फिर से रिडीम कर सकते हैं।</string>
   <string name="play_and_earn_exchange_error_too_many_attempts_body_until">बहुत ज़्यादा कोशिशें। %1$s के बाद फिर से कोशिश करें।</string>
-  <string name="play_and_earn_install_limit_body">आप आज की Play &amp; Earn इंस्टॉल लिमिट तक पहुँच गए हैं। इंस्टॉल कल से फिर गिने जाएंगे।</string>
-  <string name="play_and_earn_install_limit_body_until">आप आज की Play &amp; Earn इंस्टॉल लिमिट तक पहुँच गए हैं। इंस्टॉल %1$s से फिर गिने जाएंगे।</string>
+  <string name="play_and_earn_install_limit_body">आप आज की Play &amp; Earn इंस्टॉल लिमिट तक पहुँच गए हैं। आपका गेम फिर भी डाउनलोड होगा।</string>
+  <string name="play_and_earn_install_limit_body_until">आप आज की Play &amp; Earn इंस्टॉल लिमिट तक पहुँच गए हैं। आपका गेम फिर भी डाउनलोड होगा। लिमिट %1$s को रीसेट होगी।</string>
   <string name="play_and_earn_exchange_email_safe_note">🔒 आपका ईमेल हमारे पास सुरक्षित है. हम इसका उपयोग केवल आपको यह रिवॉर्ड भेजने के लिए करेंगे.</string>
   <string name="play_and_earn_exchange_get_my_code_button">मेरा कोड पाएं</string>
   <string name="play_and_earn_exchange_not_enough_balance">पर्याप्त बैलेंस नहीं</string>

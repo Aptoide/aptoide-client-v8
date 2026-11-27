@@ -503,8 +503,8 @@
   <string name="play_and_earn_exchange_error_restricted_body">Ваш аккаунт ограничен системой защиты от мошенничества. Напишите нам: Настройки &gt; Поддержка.</string>
   <string name="play_and_earn_exchange_error_limit_body_until">Следующий обмен будет доступен %1$s.</string>
   <string name="play_and_earn_exchange_error_too_many_attempts_body_until">Слишком много попыток. Повторите попытку после %1$s.</string>
-  <string name="play_and_earn_install_limit_body">Достигнут дневной лимит установок Play &amp; Earn. Установки снова будут учитываться только завтра.</string>
-  <string name="play_and_earn_install_limit_body_until">Достигнут дневной лимит установок Play &amp; Earn. Установки снова будут учитываться %1$s.</string>
+  <string name="play_and_earn_install_limit_body">Достигнут дневной лимит установок Play &amp; Earn. Игра всё равно будет загружена.</string>
+  <string name="play_and_earn_install_limit_body_until">Достигнут дневной лимит установок Play &amp; Earn. Игра всё равно будет загружена. Лимит обновится %1$s.</string>
   <string name="play_and_earn_exchange_email_safe_note">🔒 Ваша эл. почта в безопасности. Мы используем её только для отправки этой награды.</string>
   <string name="play_and_earn_exchange_get_my_code_button">Получить код</string>
   <string name="play_and_earn_exchange_not_enough_balance">Недостаточно баланса</string>

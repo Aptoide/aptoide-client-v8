@@ -492,8 +492,8 @@
   <string name="play_and_earn_exchange_error_restricted_body">Vaš nalog je ograničen zbog mehanizama za sprečavanje prevara. Obratite nam se: Podešavanja &gt; Podrška.</string>
   <string name="play_and_earn_exchange_error_limit_body_until">Sledeće iskorišćavanje moguće je: %1$s.</string>
   <string name="play_and_earn_exchange_error_too_many_attempts_body_until">Previše pokušaja. Pokušajte ponovo posle %1$s.</string>
-  <string name="play_and_earn_install_limit_body">Dostignuto je današnje ograničenje instalacija za Play &amp; Earn. Instalacije se ponovo računaju tek sutra.</string>
-  <string name="play_and_earn_install_limit_body_until">Dostignuto je današnje ograničenje instalacija za Play &amp; Earn. Instalacije se ponovo računaju od: %1$s.</string>
+  <string name="play_and_earn_install_limit_body">Dostignuto je današnje ograničenje instalacija za Play &amp; Earn. Igra će se ipak preuzeti.</string>
+  <string name="play_and_earn_install_limit_body_until">Dostignuto je današnje ograničenje instalacija za Play &amp; Earn. Igra će se ipak preuzeti. Ograničenje se resetuje: %1$s.</string>
   <string name="play_and_earn_exchange_email_safe_note">🔒 Vaš imejl je bezbedan kod nas. Koristićemo ga samo da vam pošaljemo ovu nagradu.</string>
   <string name="play_and_earn_exchange_get_my_code_button">Preuzmi kod</string>
   <string name="play_and_earn_exchange_not_enough_balance">Nedovoljno stanje</string>

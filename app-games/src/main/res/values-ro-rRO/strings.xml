@@ -492,8 +492,8 @@
   <string name="play_and_earn_exchange_error_restricted_body">Contul tău a fost restricționat din cauza mecanismelor antifraudă. Contactează Suportul din Setări.</string>
   <string name="play_and_earn_exchange_error_limit_body_until">Poți răscumpăra din nou pe %1$s.</string>
   <string name="play_and_earn_exchange_error_too_many_attempts_body_until">Prea multe încercări. Încearcă din nou după %1$s.</string>
-  <string name="play_and_earn_install_limit_body">Ai atins limita de instalări Play &amp; Earn pentru azi. Instalările vor conta din nou doar mâine.</string>
-  <string name="play_and_earn_install_limit_body_until">Ai atins limita de instalări Play &amp; Earn pentru azi. Instalările vor conta din nou pe %1$s.</string>
+  <string name="play_and_earn_install_limit_body">Ai atins limita de instalări Play &amp; Earn pentru azi. Jocul tău se va descărca oricum.</string>
+  <string name="play_and_earn_install_limit_body_until">Ai atins limita de instalări Play &amp; Earn pentru azi. Jocul tău se va descărca oricum. Limita se resetează pe %1$s.</string>
   <string name="play_and_earn_exchange_email_safe_note">🔒 E-mailul tău este în siguranță la noi. Îl vom folosi doar pentru a-ți trimite această recompensă.</string>
   <string name="play_and_earn_exchange_get_my_code_button">Obține codul meu</string>
   <string name="play_and_earn_exchange_not_enough_balance">Sold insuficient</string>

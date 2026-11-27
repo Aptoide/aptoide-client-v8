@@ -525,8 +525,8 @@
   <string name="play_and_earn_exchange_error_restricted_body">تم تقييد حسابك بسبب آليات مكافحة الاحتيال. تواصل مع الدعم في الإعدادات.</string>
   <string name="play_and_earn_exchange_error_limit_body_until">يمكنك الاستبدال مجددًا في %1$s.</string>
   <string name="play_and_earn_exchange_error_too_many_attempts_body_until">محاولات كثيرة جدًا. حاول مرة أخرى بعد %1$s.</string>
-  <string name="play_and_earn_install_limit_body">لقد بلغت حد تثبيتات Play &amp; Earn لهذا اليوم. ستُحتسب التثبيتات مجددًا غدًا.</string>
-  <string name="play_and_earn_install_limit_body_until">لقد بلغت حد تثبيتات Play &amp; Earn لهذا اليوم. ستُحتسب التثبيتات مجددًا في %1$s.</string>
+  <string name="play_and_earn_install_limit_body">لقد بلغت حد تثبيتات Play &amp; Earn لهذا اليوم. سيستمر تنزيل لعبتك.</string>
+  <string name="play_and_earn_install_limit_body_until">لقد بلغت حد تثبيتات Play &amp; Earn لهذا اليوم. سيستمر تنزيل لعبتك. يُعاد ضبط الحد في %1$s.</string>
   <string name="play_and_earn_exchange_email_safe_note">🔒 بريدك الإلكتروني آمن معنا. سنستخدمه فقط لإرسال هذه المكافأة إليك.</string>
   <string name="play_and_earn_exchange_get_my_code_button">احصل على رمزي</string>
   <string name="play_and_earn_exchange_not_enough_balance">رصيد غير كافٍ</string>

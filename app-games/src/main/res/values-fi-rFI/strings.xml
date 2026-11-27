@@ -481,8 +481,8 @@
   <string name="play_and_earn_exchange_error_restricted_body">Tiliäsi on rajoitettu väärinkäytösten estomekanismien vuoksi. Ota yhteyttä: Asetukset &gt; Tuki.</string>
   <string name="play_and_earn_exchange_error_limit_body_until">Voit lunastaa uudelleen %1$s alkaen.</string>
   <string name="play_and_earn_exchange_error_too_many_attempts_body_until">Liian monta yritystä. Yritä uudelleen %1$s jälkeen.</string>
-  <string name="play_and_earn_install_limit_body">Olet saavuttanut tämän päivän Play &amp; Earn -asennusrajan. Asennukset lasketaan taas huomenna.</string>
-  <string name="play_and_earn_install_limit_body_until">Olet saavuttanut tämän päivän Play &amp; Earn -asennusrajan. Asennukset lasketaan taas %1$s alkaen.</string>
+  <string name="play_and_earn_install_limit_body">Olet saavuttanut tämän päivän Play &amp; Earn -asennusrajan. Peli ladataan silti.</string>
+  <string name="play_and_earn_install_limit_body_until">Olet saavuttanut tämän päivän Play &amp; Earn -asennusrajan. Peli ladataan silti. Raja nollautuu %1$s.</string>
   <string name="play_and_earn_exchange_email_safe_note">🔒 Sähköpostisi on turvassa. Käytämme sitä vain tämän palkinnon lähettämiseen.</string>
   <string name="play_and_earn_exchange_get_my_code_button">Hae koodini</string>
   <string name="play_and_earn_exchange_not_enough_balance">Ei tarpeeksi saldoa</string>
