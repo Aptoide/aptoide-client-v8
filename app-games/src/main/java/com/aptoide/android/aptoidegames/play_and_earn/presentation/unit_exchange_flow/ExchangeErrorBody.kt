@@ -51,8 +51,41 @@ fun exchangeLimitBody(
 
     ExchangeErrorKind.Generic,
     ExchangeErrorKind.BeingChecked,
-    ExchangeErrorKind.Restricted -> null
+    ExchangeErrorKind.Restricted,
+    ExchangeErrorKind.Vpn -> null
   }
+}
+
+/** The title and body of a redeem error whose text never changes. */
+data class ExchangeErrorText(
+  @StringRes val title: Int,
+  @StringRes val body: Int,
+)
+
+/**
+ * The fixed text of [kind]; null for the generic error, which keeps the error view's own text,
+ * and for the limits, whose body is [exchangeLimitBody].
+ */
+fun exchangeFixedErrorText(kind: ExchangeErrorKind): ExchangeErrorText? = when (kind) {
+  ExchangeErrorKind.BeingChecked -> ExchangeErrorText(
+    title = R.string.play_and_earn_exchange_error_being_checked_title,
+    body = R.string.play_and_earn_exchange_error_being_checked_body,
+  )
+
+  ExchangeErrorKind.Restricted -> ExchangeErrorText(
+    title = R.string.play_and_earn_exchange_error_restricted_title,
+    body = R.string.play_and_earn_exchange_error_restricted_body,
+  )
+
+  // AND-964: the Rewards tab's words for the same refusal.
+  ExchangeErrorKind.Vpn -> ExchangeErrorText(
+    title = R.string.play_and_earn_refused_title,
+    body = R.string.play_and_earn_refused_vpn_body,
+  )
+
+  ExchangeErrorKind.Generic,
+  ExchangeErrorKind.Limit,
+  ExchangeErrorKind.TooManyAttempts -> null
 }
 
 /**

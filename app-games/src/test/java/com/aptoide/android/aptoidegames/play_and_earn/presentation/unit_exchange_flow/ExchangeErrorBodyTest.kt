@@ -147,6 +147,43 @@ internal class ExchangeErrorBodyTest {
     bodies.forEach { assertNull(it) }
   }
 
+  @Test
+  fun `A VPN error asks to turn the VPN off`() = scenario {
+    m Given "a redeem refused because the phone reports a VPN"
+    val kind = ExchangeErrorKind.Vpn
+
+    m When "its fixed text is asked for"
+    val text = exchangeFixedErrorText(kind)
+
+    m Then "it is the Play & Earn refusal title over the VPN message"
+    assertEquals(
+      ExchangeErrorText(
+        title = R.string.play_and_earn_refused_title,
+        body = R.string.play_and_earn_refused_vpn_body,
+      ),
+      text
+    )
+  }
+
+  @Test
+  fun `Only the generic error and the limits have no fixed text`() = scenario {
+    m Given "every kind of redeem error"
+    val kinds = ExchangeErrorKind.entries
+
+    m When "each one's fixed text is asked for"
+    val withoutText = kinds.filter { exchangeFixedErrorText(it) == null }
+
+    m Then "the generic one keeps its default text and the limits say when they end"
+    assertEquals(
+      listOf(
+        ExchangeErrorKind.Generic,
+        ExchangeErrorKind.Limit,
+        ExchangeErrorKind.TooManyAttempts,
+      ),
+      withoutText
+    )
+  }
+
   private fun body(kind: ExchangeErrorKind, retryAt: Instant?) =
     exchangeLimitBody(kind, retryAt, now, lisbon, Locale.UK)
 }

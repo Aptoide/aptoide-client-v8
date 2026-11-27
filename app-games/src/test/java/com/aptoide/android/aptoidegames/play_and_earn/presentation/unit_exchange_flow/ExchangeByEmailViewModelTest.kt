@@ -189,6 +189,32 @@ internal class ExchangeByEmailViewModelTest {
     assertEquals(listOf("id-1", "id-2", "id-3"), repository.calls.map { it.requestId })
   }
 
+  // AND-964: refused before anything was deducted; the backend marks that redeem FAILED. Its id
+  // is done with, like a limit's, so the retry after the VPN is off is a new redeem.
+  @Test
+  fun `A VPN refusal shows its error, and the retry gets a new request id and goes through`() =
+    coScenario {
+      m Given "the backend refusing the redeem because the phone reports a VPN"
+      val viewModel = viewModel()
+      repository.results += Result.failure(httpError(403, "VPN_NOT_ALLOWED"))
+      viewModel.exchange(EMAIL, PaERewardType.ROBUX)
+      val refused = viewModel.uiState.value
+
+      m When "the user turns the VPN off and taps Retry"
+      viewModel.retry()
+
+      m Then "the VPN error showed, then the same redeem went through with a new id"
+      assertEquals(ExchangeEmailUiState.Error(ExchangeErrorKind.Vpn), refused)
+      assertEquals(
+        listOf(
+          Call(EMAIL, RedeemType.ROBLOX_ROBUX, "id-1"),
+          Call(EMAIL, RedeemType.ROBLOX_ROBUX, "id-2"),
+        ),
+        repository.calls
+      )
+      assertEquals(ExchangeEmailUiState.Success, viewModel.uiState.value)
+    }
+
   @Test
   fun `An unknown outcome, a redeem in progress or under review keep the request id`() =
     coScenario {
@@ -310,6 +336,7 @@ internal class ExchangeByEmailViewModelTest {
       httpError(504, "REDEEM_OUTCOME_UNKNOWN") to ExchangeErrorKind.BeingChecked,
       httpError(409, "REDEEM_UNDER_REVIEW") to ExchangeErrorKind.BeingChecked,
       httpError(403, "ACCOUNT_RESTRICTED") to ExchangeErrorKind.Restricted,
+      httpError(403, "VPN_NOT_ALLOWED") to ExchangeErrorKind.Vpn,
       httpError(409, "REDEEM_IN_PROGRESS") to ExchangeErrorKind.Generic,
       httpError(409, "REDEEM_REQUEST_MISMATCH") to ExchangeErrorKind.Generic,
       httpError(403, "REGION_NOT_SUPPORTED") to ExchangeErrorKind.Generic,
@@ -360,27 +387,28 @@ internal class ExchangeByEmailViewModelTest {
   }
 
   @Test
-  fun `Only the generic error can be retried`() = coScenario {
+  fun `Only the generic and the VPN errors can be retried`() = coScenario {
     m Given "every kind of redeem error"
     val kinds = ExchangeErrorKind.entries
 
     m When "the screen asks which of them offer Retry"
     val retryable = kinds.filter { it.canRetry }
 
-    m Then "only the generic one does: retrying the others cannot help"
-    assertEquals(listOf(ExchangeErrorKind.Generic), retryable)
+    m Then "only those do: the VPN goes once turned off, retrying the others cannot help"
+    assertEquals(listOf(ExchangeErrorKind.Generic, ExchangeErrorKind.Vpn), retryable)
   }
 
   @Test
   fun `Refusals are not reported and real failures are`() = coScenario {
-    m Given "the backend refusing a redeem, then the network failing"
+    m Given "the backend refusing a redeem, then for a VPN, then the network failing"
     val viewModel = viewModel()
     val failure = IOException("offline")
     repository.results += Result.failure(httpError(504, "REDEEM_OUTCOME_UNKNOWN"))
+    repository.results += Result.failure(httpError(403, "VPN_NOT_ALLOWED"))
     repository.results += Result.failure(failure)
 
-    m When "the user redeems twice"
-    repeat(2) { viewModel.exchange(EMAIL, PaERewardType.ROBUX) }
+    m When "the user redeems three times"
+    repeat(3) { viewModel.exchange(EMAIL, PaERewardType.ROBUX) }
 
     m Then "only the network failure goes to Crashlytics"
     assertEquals(listOf<Throwable>(failure), exceptionHandler.recorded)

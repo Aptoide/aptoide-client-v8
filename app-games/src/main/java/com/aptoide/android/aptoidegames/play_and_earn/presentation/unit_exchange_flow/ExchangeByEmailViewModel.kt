@@ -46,6 +46,9 @@ enum class ExchangeErrorKind(val canRetry: Boolean, val hasEnd: Boolean = false)
   TooManyAttempts(canRetry = false, hasEnd = true),
   BeingChecked(canRetry = false),
   Restricted(canRetry = false),
+
+  /** The phone reports a VPN (AND-964): turned off, the same redeem goes through. */
+  Vpn(canRetry = true),
 }
 
 /**
@@ -148,11 +151,16 @@ class ExchangeByEmailViewModel internal constructor(
  * Whether the redeem's id is done with: the backend refused it for good without taking it, or
  * said the id belongs to other data. Any other failure may have redeemed (or still be
  * redeeming), so the id is kept and a retry replays it.
+ *
+ * A VPN refusal (AND-964) comes before anything is deducted, and the backend marks that redeem
+ * failed: its id is done with too, so the retry once the VPN is off is a new redeem rather than
+ * the replay of a failed one.
  */
 private fun PaERefusal?.endsRequest(): Boolean = when (this?.code) {
   PaERefusalCode.REDEEM_LIMIT,
   PaERefusalCode.TOO_MANY_ATTEMPTS,
   PaERefusalCode.ACCOUNT_RESTRICTED,
+  PaERefusalCode.VPN_NOT_ALLOWED,
   PaERefusalCode.REDEEM_REQUEST_MISMATCH -> true
 
   else -> false
@@ -169,5 +177,6 @@ private fun PaERefusal?.toErrorKind(): ExchangeErrorKind = when (this?.code) {
   PaERefusalCode.REDEEM_UNDER_REVIEW -> ExchangeErrorKind.BeingChecked
 
   PaERefusalCode.ACCOUNT_RESTRICTED -> ExchangeErrorKind.Restricted
+  PaERefusalCode.VPN_NOT_ALLOWED -> ExchangeErrorKind.Vpn
   else -> ExchangeErrorKind.Generic
 }

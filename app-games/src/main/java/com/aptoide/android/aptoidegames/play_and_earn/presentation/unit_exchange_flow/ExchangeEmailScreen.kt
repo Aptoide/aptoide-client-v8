@@ -164,8 +164,8 @@ fun ExchangeEmailScreen(
 }
 
 /**
- * A redeem error (AND-952). Only the generic one offers Retry; the others are final answers, and
- * the top bar's back arrow leaves the screen.
+ * A redeem error (AND-952). Only the generic and the VPN ones offer Retry; the others are final
+ * answers, and the top bar's back arrow leaves the screen.
  */
 @Composable
 private fun ExchangeErrorView(
@@ -210,20 +210,20 @@ private fun ExchangeErrorView(
       subtitle = limitText,
     )
 
-    ExchangeErrorKind.BeingChecked -> GenericErrorView(
+    ExchangeErrorKind.BeingChecked,
+    ExchangeErrorKind.Restricted,
+    ExchangeErrorKind.Vpn -> exchangeFixedErrorText(kind)?.let { text ->
+      GenericErrorView(
+        onRetryClick = onRetryClick,
+        modifier = modifier,
+        contentColor = contentColor,
+        title = stringResource(text.title),
+        subtitle = stringResource(text.body),
+      )
+    } ?: GenericErrorView(
       onRetryClick = onRetryClick,
       modifier = modifier,
       contentColor = contentColor,
-      title = stringResource(R.string.play_and_earn_exchange_error_being_checked_title),
-      subtitle = stringResource(R.string.play_and_earn_exchange_error_being_checked_body),
-    )
-
-    ExchangeErrorKind.Restricted -> GenericErrorView(
-      onRetryClick = onRetryClick,
-      modifier = modifier,
-      contentColor = contentColor,
-      title = stringResource(R.string.play_and_earn_exchange_error_restricted_title),
-      subtitle = stringResource(R.string.play_and_earn_exchange_error_restricted_body),
     )
   }
 }
