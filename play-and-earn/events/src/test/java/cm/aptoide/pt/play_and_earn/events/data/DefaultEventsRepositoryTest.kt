@@ -54,6 +54,7 @@ internal class DefaultEventsRepositoryTest {
     PaERefusalCode::class,
     names = [
       "ACCOUNT_RESTRICTED", "REGION_NOT_SUPPORTED", "DEVICE_NOT_SUPPORTED", "UPDATE_REQUIRED",
+      "VPN_NOT_ALLOWED", "SIGN_IN_BONUS_DEVICE_LIMIT",
     ]
   )
   fun `A refused event fails with its code and is not reported`(code: PaERefusalCode) =

@@ -78,4 +78,30 @@ internal class RewardToAutoClaimTest {
     assertNull(refused)
     assertNull(claimed)
   }
+
+  // AND-964: after a VPN refusal the apkfy offer stays; a signed-in user's next tap claims again.
+  @Test
+  fun `A signed-in user's tap claims the offered bonus at once`() = scenario {
+    m Given "a signed-in user on an offer whose bonus is offered"
+    m When "the reward to claim on the tap is chosen"
+    val toClaim = rewardToClaimOnTap(signedIn = true, rewardState = RewardState.Unclaimed(reward))
+
+    m Then "it is the offered reward: no new sign-in"
+    assertEquals(reward, toClaim)
+  }
+
+  @Test
+  fun `A signed-out user's tap, or a bonus not offered, claims nothing at once`() = scenario {
+    m Given "a signed-out user, and a signed-in one whose bonus is loading, claimed or refused"
+    m When "the reward to claim on the tap is chosen for each"
+    val toClaim = listOf(
+      rewardToClaimOnTap(signedIn = false, rewardState = RewardState.Unclaimed(reward)),
+      rewardToClaimOnTap(signedIn = true, rewardState = RewardState.Loading),
+      rewardToClaimOnTap(signedIn = true, rewardState = RewardState.Claimed),
+      rewardToClaimOnTap(signedIn = true, rewardState = RewardState.Refused),
+    )
+
+    m Then "there is none: the signed-out user signs in first"
+    assertEquals(listOf(null, null, null, null), toClaim)
+  }
 }

@@ -14,6 +14,7 @@ import cm.aptoide.pt.play_and_earn.sessions.domain.SessionEndInfo
 import cm.aptoide.pt.play_and_earn.sessions.domain.SessionInfo
 import cm.aptoide.pt.play_and_earn.sessions.domain.SessionStartInfo
 import cm.aptoide.pt.test.gherkin.coScenario
+import cm.aptoide.pt.test.gherkin.scenario
 import com.aptoide.android.aptoidegames.analytics.AnalyticsSender
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPreferencesRepository
@@ -149,11 +150,14 @@ internal class PaESessionManagerRefusalTest {
   }
 
   @ParameterizedTest(name = "{0}")
-  @EnumSource(PaERefusalCode::class, names = ["TOO_MANY_ATTEMPTS", "INSTALL_LIMIT"])
-  fun `A limit on a start is a plain failure, asked again on the next poll`(
+  @EnumSource(
+    PaERefusalCode::class,
+    names = ["TOO_MANY_ATTEMPTS", "INSTALL_LIMIT", "SIGN_IN_BONUS_DEVICE_LIMIT"]
+  )
+  fun `A limit or a bonus-only refusal on a start is a plain failure, asked again`(
     code: PaERefusalCode,
   ) = coScenario {
-    m Given "the backend answers the session start with a 429 $code"
+    m Given "the backend answers the session start with $code (${code.httpStatus})"
     refuseStart(code)
 
     m When "the session is created, then again on the next poll"
@@ -220,6 +224,62 @@ internal class PaESessionManagerRefusalTest {
     assertEquals(PaERefusal(code), refusals.observe(OTHER_GAME).first())
   }
 
+  // AND-964: a VPN goes away when the user turns it off. Stopping the service would leave
+  // nothing to ask again until the user tapped Play in the app; it keeps tracking instead.
+  @Test
+  fun `A VPN start refusal keeps the service and the status mode going`() = coScenario {
+    m Given "another game's session running and the backend refusing for a VPN"
+    manager.activeSessions += session(OTHER_GAME)
+    refuseStart(PaERefusalCode.VPN_NOT_ALLOWED)
+
+    m When "the game's session is created"
+    val result = manager.createSession(GAME)
+
+    m Then "refused on every game, no session kept, but nothing is told to stop"
+    assertEquals(
+      PaESessionStartResult.Refused(PaERefusal(PaERefusalCode.VPN_NOT_ALLOWED)),
+      result
+    )
+    assertTrue(manager.activeSessions.isEmpty())
+    assertFalse(manager.shouldStopService())
+    assertFalse(manager.shouldStopStatusMode(GAME))
+    assertTrue(manager.isWaitingForTheUser(GAME))
+    assertEquals(
+      PaERefusal(PaERefusalCode.VPN_NOT_ALLOWED),
+      refusals.observe(OTHER_GAME).first()
+    )
+  }
+
+  @Test
+  fun `A VPN refusal asks the backend again once a minute, then starts`() = coScenario {
+    m Given "the game refused for a VPN"
+    refuseStart(PaERefusalCode.VPN_NOT_ALLOWED)
+    manager.createSession(GAME)
+
+    m When "the 10-second polls go on for a minute, the VPN is turned off, a poll comes"
+    repeat(5) {
+      now += 10_000L
+      manager.createSession(GAME)
+    }
+    val startsWithinTheMinute = sessions.starts
+    now += 10_000L
+    val stillVpn = manager.createSession(GAME)
+    sessions.startFailure = null
+    now += PaESessionRefusals.VPN_ASK_AGAIN_AFTER_MILLIS
+    val afterVpnOff = manager.createSession(GAME)
+
+    m Then "asked once in the first minute, once at its end, then started and cleared"
+    assertEquals(1, startsWithinTheMinute)
+    assertEquals(
+      PaESessionStartResult.Refused(PaERefusal(PaERefusalCode.VPN_NOT_ALLOWED)),
+      stillVpn
+    )
+    assertEquals(PaESessionStartResult.Started, afterVpnOff)
+    assertEquals(3, sessions.starts)
+    assertNull(refusals.observe(GAME).first())
+    assertFalse(manager.isWaitingForTheUser(GAME))
+  }
+
   @Test
   fun `A region start refusal does not stop the service`() = coScenario {
     m Given "another game's session running and the game refused for the region"
@@ -266,6 +326,23 @@ internal class PaESessionManagerRefusalTest {
         refusals.observe(OTHER_GAME).first()
       )
     }
+
+  @Test
+  fun `A VPN heartbeat refusal drops every session but keeps the service`() = coScenario {
+    m Given "the game in front and another game with sessions, the phone now on a VPN"
+    manager.activeSessions += session(GAME)
+    manager.activeSessions += session(OTHER_GAME)
+    sessions.heartbeatFailure = PaERefusalException(PaERefusal(PaERefusalCode.VPN_NOT_ALLOWED))
+
+    m When "the sessions sync"
+    manager.syncSessions(GAME, playedMillis = 20_000)
+
+    m Then "no session is left, tracking goes on, and the game waits for the user"
+    assertTrue(manager.activeSessions.isEmpty())
+    assertFalse(manager.shouldStopService())
+    assertFalse(manager.shouldStopStatusMode(GAME))
+    assertTrue(manager.isWaitingForTheUser(OTHER_GAME))
+  }
 
   @Test
   fun `A region heartbeat refusal drops that game's session only`() = coScenario {
@@ -390,6 +467,22 @@ internal class PaESessionManagerRefusalTest {
       refusals.observe(OTHER_GAME).first()
     )
     assertTrue(manager.shouldStopService())
+  }
+
+  @Test
+  fun `A status heartbeat waiting on a VPN does not count as a lost session`() = scenario {
+    m Given "two failed status heartbeats so far"
+    val failures = 2
+
+    m When "the next one is alive, refused for a VPN, or failed otherwise"
+    val counts = listOf(
+      nextSessionFailures(alive = true, waitingForTheUser = false, failures = failures),
+      nextSessionFailures(alive = false, waitingForTheUser = true, failures = failures),
+      nextSessionFailures(alive = false, waitingForTheUser = false, failures = failures),
+    )
+
+    m Then "alive resets, the VPN keeps the count, any other failure adds one"
+    assertEquals(listOf(0, 2, 3), counts)
   }
 
   private fun refuseStart(code: PaERefusalCode) {

@@ -9,6 +9,7 @@ import cm.aptoide.pt.test.gherkin.coScenario
 import com.aptoide.android.aptoidegames.play_and_earn.data.PaESignInBonusRefusal
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -24,6 +25,8 @@ import java.util.concurrent.TimeUnit
 
 // AND-953: a sign-in bonus the backend refuses for good ends on every offer surface, says why
 // once, and is not asked for again for a day; any other failure keeps it claimable, as before.
+// AND-964: a VPN says why and keeps it claimable; a device limit ends it until the account
+// changes.
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class SignInRewardRepositoryRefusalTest {
 
@@ -49,6 +52,7 @@ internal class SignInRewardRepositoryRefusalTest {
     PaERefusalCode::class,
     names = [
       "ACCOUNT_RESTRICTED", "REGION_NOT_SUPPORTED", "DEVICE_NOT_SUPPORTED", "UPDATE_REQUIRED",
+      "SIGN_IN_BONUS_DEVICE_LIMIT",
     ]
   )
   fun `A refused bonus ends, says why once and is not asked for again`(code: PaERefusalCode) =
@@ -121,6 +125,64 @@ internal class SignInRewardRepositoryRefusalTest {
     assertEquals(RewardState.Claimed, repository.rewardState.value)
   }
 
+  // ------------------------------------------------------------------------------ AND-964
+
+  @Test
+  fun `A VPN refusal says why and keeps the bonus claimable, with nothing stored`() =
+    coScenario { scope ->
+      m Given "an offered bonus the backend refuses because the phone reports a VPN"
+      val repository = scope.repository()
+      events.results += refusedFor(PaERefusalCode.VPN_NOT_ALLOWED)
+
+      m When "the user claims it, turns the VPN off and claims it again"
+      repository.claimReward(repository.unclaimed.reward)
+      val afterVpn = repository.rewardState.value
+      val storedAfterVpn = dataStore.data.first().asMap()
+      repository.claimReward(repository.unclaimed.reward)
+
+      m Then "the VPN was told, the offer stayed, nothing was stored, the retry was granted"
+      assertTrue(afterVpn is RewardState.Unclaimed, afterVpn.toString())
+      assertEquals(listOf(PaERefusalCode.VPN_NOT_ALLOWED), refusedEvents)
+      assertTrue(storedAfterVpn.isEmpty(), storedAfterVpn.toString())
+      assertEquals(2, events.sent)
+      assertEquals(RewardState.Claimed, repository.rewardState.value)
+    }
+
+  @Test
+  fun `A device limit is not offered again past 24 hours, nor after a restart`() =
+    coScenario { scope ->
+      m Given "a bonus refused because another account on this phone already got it"
+      val repository = scope.repository()
+      events.results += refusedFor(PaERefusalCode.SIGN_IN_BONUS_DEVICE_LIMIT)
+      repository.claimReward(repository.unclaimed.reward)
+
+      m When "two days later the user reaches an offer surface, and the app starts again"
+      now += TimeUnit.DAYS.toMillis(2)
+      repository.refresh()
+      val sameRun = repository.rewardState.value
+      val restarted = scope.repository().also { it.refresh() }.rewardState.value
+
+      m Then "it is not offered either time, and only the first claim was sent"
+      assertEquals(RewardState.Refused, sameRun)
+      assertEquals(RewardState.Refused, restarted)
+      assertEquals(1, events.sent)
+    }
+
+  @Test
+  fun `A device limit is forgotten when the account changes`() = coScenario { scope ->
+    m Given "a bonus refused because another account on this phone already got it"
+    val repository = scope.repository()
+    events.results += refusedFor(PaERefusalCode.SIGN_IN_BONUS_DEVICE_LIMIT)
+    repository.claimReward(repository.unclaimed.reward)
+
+    m When "the user signs in with another account"
+    repository.forgetRefusal()
+
+    m Then "the bonus is offered to that account, and nothing is stored"
+    assertTrue(repository.rewardState.value is RewardState.Unclaimed)
+    assertFalse(bonusRefusal.isRefused())
+  }
+
   // ------------------------------------------------------------------------ the account changes
 
   @Test
@@ -154,14 +216,20 @@ internal class SignInRewardRepositoryRefusalTest {
       assertTrue(repository.rewardState.value is RewardState.Unclaimed)
     }
 
-  @Test
-  fun `A refusal answered after the account changed does not end the bonus`() =
+  @ParameterizedTest(name = "{0}")
+  @EnumSource(
+    PaERefusalCode::class,
+    names = ["ACCOUNT_RESTRICTED", "VPN_NOT_ALLOWED", "SIGN_IN_BONUS_DEVICE_LIMIT"]
+  )
+  fun `A refusal answered after the account changed does not end the bonus`(
+    code: PaERefusalCode,
+  ) =
     coScenario { scope ->
-      m Given "a claim in flight that the backend will refuse"
+      m Given "a claim in flight that the backend will refuse with ${code.name}"
       val repository = scope.repository()
       val gate = CompletableDeferred<Unit>()
       events.gate = gate
-      events.results += refusedFor(PaERefusalCode.ACCOUNT_RESTRICTED)
+      events.results += refusedFor(code)
       repository.claimReward(repository.unclaimed.reward)
 
       m When "the user signs out before the answer arrives"
@@ -174,7 +242,78 @@ internal class SignInRewardRepositoryRefusalTest {
       assertEquals(emptyList<PaERefusalCode>(), refusedEvents)
     }
 
+  @Test
+  fun `A device limit stored while the account changes is not left for the next account`() =
+    coScenario { scope ->
+      m Given "a claim refused with the device limit, its write held mid-way"
+      val repository = scope.repository()
+      val write = CompletableDeferred<Unit>()
+      dataStore.nextWriteGate = write
+      events.results += refusedFor(PaERefusalCode.SIGN_IN_BONUS_DEVICE_LIMIT)
+      repository.claimReward(repository.unclaimed.reward)
+
+      m When "the user signs in with another account, then the held write lands"
+      repository.forgetRefusal()
+      write.complete(Unit)
+
+      m Then "the next account is offered the bonus, with nothing stored or told"
+      assertTrue(repository.rewardState.value is RewardState.Unclaimed)
+      assertFalse(bonusRefusal.isRefused())
+      assertEquals(emptyList<PaERefusalCode>(), refusedEvents)
+    }
+
+  // ---------------------------------------------------------------------------- one at a time
+
+  @Test
+  fun `A claim asked for while one is running sends nothing`() = coScenario { scope ->
+    m Given "an offered bonus whose claim is waiting for the backend"
+    val repository = scope.repository()
+    val gate = CompletableDeferred<Unit>()
+    events.gate = gate
+    events.results += refusedFor(PaERefusalCode.VPN_NOT_ALLOWED)
+    repository.claimReward(repository.unclaimed.reward)
+
+    m When "the user taps again before the answer, then the answer arrives"
+    repository.claimReward(repository.unclaimed.reward)
+    gate.complete(Unit)
+
+    m Then "one claim was sent and the reason was told once"
+    assertEquals(1, events.sent)
+    assertEquals(listOf(PaERefusalCode.VPN_NOT_ALLOWED), refusedEvents)
+  }
+
+  @Test
+  fun `A claim after the last one answered is sent`() = coScenario { scope ->
+    m Given "a claim refused for a VPN, already answered"
+    val repository = scope.repository()
+    events.results += refusedFor(PaERefusalCode.VPN_NOT_ALLOWED)
+    repository.claimReward(repository.unclaimed.reward)
+
+    m When "the user taps again"
+    repository.claimReward(repository.unclaimed.reward)
+
+    m Then "the second claim is sent and granted"
+    assertEquals(2, events.sent)
+    assertEquals(RewardState.Claimed, repository.rewardState.value)
+  }
+
   // ------------------------------------------------------------------------- a broken store
+
+  @Test
+  fun `A device limit that cannot be stored still ends the bonus this session`() =
+    coScenario { scope ->
+      m Given "an offered bonus, a store that cannot be written, and the device limit"
+      val repository = scope.repository()
+      dataStore.failWrites = true
+      events.results += refusedFor(PaERefusalCode.SIGN_IN_BONUS_DEVICE_LIMIT)
+
+      m When "the user claims it"
+      repository.claimReward(repository.unclaimed.reward)
+
+      m Then "nothing crashed, the offer ended, and the reason was told"
+      assertEquals(RewardState.Refused, repository.rewardState.value)
+      assertEquals(listOf(PaERefusalCode.SIGN_IN_BONUS_DEVICE_LIMIT), refusedEvents)
+    }
 
   @Test
   fun `A refusal that cannot be remembered still ends the bonus this session`() =

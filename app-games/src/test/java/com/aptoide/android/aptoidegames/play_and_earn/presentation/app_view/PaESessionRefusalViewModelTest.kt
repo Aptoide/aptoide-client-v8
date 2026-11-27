@@ -86,6 +86,24 @@ internal class PaESessionRefusalViewModelTest {
   }
 
   @Test
+  fun `A VPN refusal asks to turn the VPN off, on every game`() = coScenario {
+    m Given "another game's session refused because the phone reports a VPN"
+    refusals.record(OTHER_GAME, PaERefusal(PaERefusalCode.VPN_NOT_ALLOWED))
+
+    m When "this game's Rewards tab reads its message"
+    val message = PaESessionRefusalViewModel(GAME, refusals).uiState.value
+
+    m Then "it is the VPN message"
+    assertEquals(
+      PaERefusalMessage(
+        R.string.play_and_earn_refused_title,
+        R.string.play_and_earn_refused_vpn_body
+      ),
+      message
+    )
+  }
+
+  @Test
   fun `A restricted account keeps the generic error, on every game`() = coScenario {
     m Given "another game's session refused for a restricted account"
     refusals.record(OTHER_GAME, PaERefusal(PaERefusalCode.ACCOUNT_RESTRICTED))
@@ -118,6 +136,7 @@ internal class PaESessionRefusalViewModelTest {
     mode = EnumSource.Mode.EXCLUDE,
     names = [
       "ACCOUNT_RESTRICTED", "REGION_NOT_SUPPORTED", "DEVICE_NOT_SUPPORTED", "UPDATE_REQUIRED",
+      "VPN_NOT_ALLOWED",
     ]
   )
   fun `A refusal that does not block play shows nothing`(code: PaERefusalCode) = coScenario {

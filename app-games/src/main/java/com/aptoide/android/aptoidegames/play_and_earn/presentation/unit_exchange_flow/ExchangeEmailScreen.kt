@@ -26,6 +26,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
@@ -164,8 +165,8 @@ fun ExchangeEmailScreen(
 }
 
 /**
- * A redeem error (AND-952). Only the generic one offers Retry; the others are final answers, and
- * the top bar's back arrow leaves the screen.
+ * A redeem error (AND-952). Only the generic and the VPN ones offer Retry; the others are final
+ * answers, and the top bar's back arrow leaves the screen.
  */
 @Composable
 private fun ExchangeErrorView(
@@ -210,23 +211,42 @@ private fun ExchangeErrorView(
       subtitle = limitText,
     )
 
-    ExchangeErrorKind.BeingChecked -> GenericErrorView(
+    ExchangeErrorKind.BeingChecked -> FixedTextErrorView(
+      text = ExchangeErrorText.BeingChecked,
       onRetryClick = onRetryClick,
-      modifier = modifier,
       contentColor = contentColor,
-      title = stringResource(R.string.play_and_earn_exchange_error_being_checked_title),
-      subtitle = stringResource(R.string.play_and_earn_exchange_error_being_checked_body),
+      modifier = modifier,
     )
 
-    ExchangeErrorKind.Restricted -> GenericErrorView(
+    ExchangeErrorKind.Restricted -> FixedTextErrorView(
+      text = ExchangeErrorText.Restricted,
       onRetryClick = onRetryClick,
-      modifier = modifier,
       contentColor = contentColor,
-      title = stringResource(R.string.play_and_earn_exchange_error_restricted_title),
-      subtitle = stringResource(R.string.play_and_earn_exchange_error_restricted_body),
+      modifier = modifier,
+    )
+
+    ExchangeErrorKind.Vpn -> FixedTextErrorView(
+      text = ExchangeErrorText.Vpn,
+      onRetryClick = onRetryClick,
+      contentColor = contentColor,
+      modifier = modifier,
     )
   }
 }
+
+@Composable
+private fun FixedTextErrorView(
+  text: ExchangeErrorText,
+  onRetryClick: (() -> Unit)?,
+  contentColor: Color,
+  modifier: Modifier = Modifier,
+) = GenericErrorView(
+  onRetryClick = onRetryClick,
+  modifier = modifier,
+  contentColor = contentColor,
+  title = stringResource(text.title),
+  subtitle = stringResource(text.body),
+)
 
 @Composable
 private fun ExchangeEmailForm(

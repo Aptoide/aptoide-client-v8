@@ -362,6 +362,8 @@
   <string name="play_and_earn_refused_region_body">Play &amp; Earn không khả dụng ở khu vực của bạn.</string>
   <string name="play_and_earn_refused_device_body">Play &amp; Earn không khả dụng trên thiết bị này.</string>
   <string name="play_and_earn_refused_update_body">Cập nhật ứng dụng để tiếp tục nhận phần thưởng.</string>
+  <string name="play_and_earn_refused_vpn_body">Tắt VPN để sử dụng Play &amp; Earn.</string>
+  <string name="play_and_earn_refused_bonus_device_limit_body">Điện thoại này đã nhận phần thưởng chào mừng.</string>
   <string name="play_and_earn_rewards_blocked_learn_more_button">Tìm hiểu thêm</string>
   <string name="play_and_earn_rewards_paused_info_title">Tại sao phần thưởng của tôi bị tạm dừng?</string>
   <string name="play_and_earn_rewards_paused_info_body">Mỗi trò chơi dùng một công cụ theo dõi để xác nhận các lượt cài đặt qua Aptoide Games. Phần thưởng của chiến dịch này bắt đầu khi công cụ xác nhận lượt cài đặt của bạn, thường vài phút sau khi bạn mở trò chơi lần đầu.\n\nGiữ trò chơi đã cài đặt và chơi như bình thường. Những gì bạn làm trong trò chơi khi chờ vẫn được tính sau khi lượt cài đặt được xác nhận.</string>

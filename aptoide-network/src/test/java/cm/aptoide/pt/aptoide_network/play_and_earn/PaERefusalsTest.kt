@@ -90,6 +90,10 @@ internal class PaERefusalsTest {
     "TOO_MANY_ATTEMPTS, 503",
     "REDEEM_IN_PROGRESS, 500",
     "REDEEM_OUTCOME_UNKNOWN, 502",
+    "VPN_NOT_ALLOWED, 401",
+    "VPN_NOT_ALLOWED, 500",
+    "SIGN_IN_BONUS_DEVICE_LIMIT, 409",
+    "SIGN_IN_BONUS_DEVICE_LIMIT, 502",
   )
   fun `A known code on another status is not a refusal`(code: PaERefusalCode, status: Int) =
     scenario {
@@ -131,6 +135,35 @@ internal class PaERefusalsTest {
     m Then "nothing is reported and the refusal is returned"
     assertEquals(emptyList<Throwable>(), reported)
     assertEquals(PaERefusalCode.DEVICE_NOT_SUPPORTED, refusal?.code)
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @ValueSource(strings = ["VPN_NOT_ALLOWED", "SIGN_IN_BONUS_DEVICE_LIMIT"])
+  fun `A VPN or bonus device limit refusal is read on 403 and not reported`(code: String) =
+    scenario {
+      m Given "a $code refusal on HTTP 403"
+      val error = httpError(403, """{"detail":{"code":"$code","message":"Refused"}}""")
+      val reported = mutableListOf<Throwable>()
+
+      m When "it goes through the crash reporting filter"
+      val refusal = reportUnlessPaERefusal(error) { reported += it }
+
+      m Then "it is that refusal and nothing is reported"
+      assertEquals(PaERefusalCode.valueOf(code), refusal?.code)
+      assertEquals(emptyList<Throwable>(), reported)
+    }
+
+  @Test
+  fun `A VPN refusal blocks play and a bonus device limit does not`() = scenario {
+    m Given "the two refusals the backend added for AND-964"
+    val vpn = PaERefusalCode.VPN_NOT_ALLOWED
+    val deviceLimit = PaERefusalCode.SIGN_IN_BONUS_DEVICE_LIMIT
+
+    m When "their play-blocking flag is read"
+    val blocks = listOf(vpn.blocksPlay, deviceLimit.blocksPlay)
+
+    m Then "only the VPN is about playing at all"
+    assertEquals(listOf(true, false), blocks)
   }
 
   @Test

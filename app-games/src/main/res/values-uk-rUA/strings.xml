@@ -395,6 +395,8 @@
   <string name="play_and_earn_refused_region_body">Play &amp; Earn недоступний у вашому регіоні.</string>
   <string name="play_and_earn_refused_device_body">Play &amp; Earn недоступний на цьому пристрої.</string>
   <string name="play_and_earn_refused_update_body">Оновіть застосунок, щоб і далі отримувати винагороди.</string>
+  <string name="play_and_earn_refused_vpn_body">Вимкніть VPN, щоб користуватися Play &amp; Earn.</string>
+  <string name="play_and_earn_refused_bonus_device_limit_body">Цей телефон уже отримав вітальний бонус.</string>
   <string name="play_and_earn_rewards_blocked_learn_more_button">Дізнатися більше</string>
   <string name="play_and_earn_rewards_paused_info_title">Чому мої винагороди призупинено?</string>
   <string name="play_and_earn_rewards_paused_info_body">Кожна гра використовує інструмент відстеження, щоб підтверджувати інсталяції через Aptoide Games. Винагороди цієї кампанії почнуться, коли він підтвердить вашу інсталяцію, зазвичай за кілька хвилин після першого запуску гри.\n\nНе видаляйте гру та грайте як завжди. Усе, що ви робите в грі під час очікування, буде зараховано після підтвердження інсталяції.</string>

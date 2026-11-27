@@ -12,3 +12,14 @@ internal fun rewardToAutoClaim(
   rewardState: RewardState,
 ): PendingPaEReward? =
   if (awaitingSignIn && signedIn) (rewardState as? RewardState.Unclaimed)?.reward else null
+
+/**
+ * The reward a tap on an offer claims at once: only for a signed-in user, when the bonus is
+ * offered. Null for a signed-out user, who signs in first ([rewardToAutoClaim] claims on the way
+ * back), and when there is nothing to claim. A signed-in user meets an offer again after a VPN
+ * refusal (AND-964), which keeps the bonus claimable.
+ */
+internal fun rewardToClaimOnTap(
+  signedIn: Boolean,
+  rewardState: RewardState,
+): PendingPaEReward? = if (signedIn) (rewardState as? RewardState.Unclaimed)?.reward else null

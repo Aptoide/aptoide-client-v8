@@ -24,6 +24,9 @@ import javax.inject.Singleton
  * It stops blocking new starts after [ASK_AGAIN_AFTER_MILLIS], so a user who fixed the cause
  * (travelled, updated the app) is not locked out for as long as the service runs; the Rewards
  * tab keeps showing it until the backend's next answer.
+ *
+ * A VPN refusal (AND-964) holds for every game too, but the user lifts it by turning the VPN
+ * off ([waitsForTheUser]): it blocks new starts for [VPN_ASK_AGAIN_AFTER_MILLIS] only.
  */
 @Singleton
 class PaESessionRefusals internal constructor(
@@ -38,19 +41,27 @@ class PaESessionRefusals internal constructor(
   private data class State(
     val everyGame: Entry? = null,
     val perGame: Map<String, Entry> = emptyMap(),
-  ) {
-    fun of(packageName: String): Entry? = everyGame ?: perGame[packageName]
-  }
+  )
 
   private val state = MutableStateFlow(State())
 
-  /** The refusal [packageName]'s Rewards tab shows; null when there is none. */
+  /**
+   * The refusal [packageName]'s Rewards tab shows; null when there is none. Read when the
+   * refusals change: an entry expiring later does not by itself change what an open tab shows.
+   */
   fun observe(packageName: String): Flow<PaERefusal?> =
-    state.map { it.of(packageName)?.refusal }.distinctUntilChanged()
+    state.map { it.shown(packageName)?.refusal }.distinctUntilChanged()
 
   /** The refusal that still keeps [packageName] from starting a session, if any. */
   fun blockingRefusalOf(packageName: String): PaERefusal? =
-    state.value.of(packageName)?.takeIf { it.isRecent() }?.refusal
+    state.value.blocking(packageName)?.refusal
+
+  /**
+   * The refusal [packageName]'s Rewards tab shows right now, expired or not: the backend has not
+   * answered otherwise since.
+   */
+  fun shownRefusalOf(packageName: String): PaERefusal? =
+    state.value.shown(packageName)?.refusal
 
   /** The account, device or update refusal that still keeps every game from playing, if any. */
   fun everyGameRefusal(): PaERefusal? = state.value.everyGame?.takeIf { it.isRecent() }?.refusal
@@ -60,7 +71,10 @@ class PaESessionRefusals internal constructor(
     val entry = Entry(refusal, nowMillis())
     state.update {
       if (refusal.code.holdsForEveryGame) {
-        it.copy(everyGame = entry)
+        // AND-964: a VPN (one minute) never shortens a recent stricter one (ten minutes).
+        val stricter = it.everyGame
+          ?.takeIf { current -> current.isRecent() && !current.refusal.code.waitsForTheUser }
+        if (stricter != null && refusal.code.waitsForTheUser) it else it.copy(everyGame = entry)
       } else {
         it.copy(perGame = it.perGame + (packageName to entry))
       }
@@ -74,7 +88,18 @@ class PaESessionRefusals internal constructor(
   /** The tracking service stopped, or the account changed: start over. */
   fun clear() = state.update { State() }
 
-  private fun Entry.isRecent() = nowMillis() - atMillis < ASK_AGAIN_AFTER_MILLIS
+  private fun Entry.isRecent() = nowMillis() - atMillis < refusal.code.askAgainAfterMillis
+
+  /** A recent every-game refusal, else the game's own recent one (AND-964: they may differ). */
+  private fun State.blocking(packageName: String): Entry? =
+    everyGame?.takeIf { it.isRecent() } ?: perGame[packageName]?.takeIf { it.isRecent() }
+
+  /**
+   * What still blocks [packageName], else the last answer it got: an expired VPN refusal must
+   * not hide the game's own region refusal that still stands.
+   */
+  private fun State.shown(packageName: String): Entry? =
+    blocking(packageName) ?: everyGame ?: perGame[packageName]
 
   companion object {
     /**
@@ -84,8 +109,26 @@ class PaESessionRefusals internal constructor(
      */
     val ASK_AGAIN_AFTER_MILLIS = TimeUnit.MINUTES.toMillis(10)
 
+    /**
+     * How long a VPN refusal keeps every game from asking again (AND-964): a VPN is off as soon
+     * as the user turns it off, so a game in front asks at most once a minute, and starts within
+     * about a minute of the VPN going off.
+     */
+    val VPN_ASK_AGAIN_AFTER_MILLIS = TimeUnit.MINUTES.toMillis(1)
+
+    private val PaERefusalCode.askAgainAfterMillis: Long
+      get() = if (waitsForTheUser) VPN_ASK_AGAIN_AFTER_MILLIS else ASK_AGAIN_AFTER_MILLIS
+
     /** Everything but the region is about the account, the device or the app, not the game. */
     private val PaERefusalCode.holdsForEveryGame: Boolean
       get() = this != PaERefusalCode.REGION_NOT_SUPPORTED
   }
 }
+
+/**
+ * A play-blocking refusal the user lifts in a moment, with nothing to wait for on the backend
+ * (AND-964): a VPN, turned off. Tracking goes on through it and asks the backend again soon, so
+ * play is recorded again without the user restarting anything.
+ */
+val PaERefusalCode.waitsForTheUser: Boolean
+  get() = this == PaERefusalCode.VPN_NOT_ALLOWED

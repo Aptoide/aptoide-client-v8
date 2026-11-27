@@ -375,6 +375,8 @@
   <string name="play_and_earn_refused_region_body">Play &amp; Earn ਤੁਹਾਡੇ ਖੇਤਰ ਵਿੱਚ ਉਪਲਬਧ ਨਹੀਂ ਹੈ।</string>
   <string name="play_and_earn_refused_device_body">Play &amp; Earn ਇਸ ਡਿਵਾਈਸ ਤੇ ਉਪਲਬਧ ਨਹੀਂ ਹੈ।</string>
   <string name="play_and_earn_refused_update_body">ਇਨਾਮ ਕਮਾਉਂਦੇ ਰਹਿਣ ਲਈ ਐਪ ਅੱਪਡੇਟ ਕਰੋ।</string>
+  <string name="play_and_earn_refused_vpn_body">Play &amp; Earn ਵਰਤਣ ਲਈ ਆਪਣਾ VPN ਬੰਦ ਕਰੋ।</string>
+  <string name="play_and_earn_refused_bonus_device_limit_body">ਇਸ ਫ਼ੋਨ ਨੂੰ ਵੈਲਕਮ ਬੋਨਸ ਪਹਿਲਾਂ ਹੀ ਮਿਲ ਚੁੱਕਾ ਹੈ।</string>
   <string name="play_and_earn_rewards_blocked_learn_more_button">Learn more</string>
   <string name="play_and_earn_rewards_paused_info_title">Why are my rewards paused?</string>
   <string name="play_and_earn_rewards_paused_info_body">Each game uses a tracking tool to confirm the installs made through Aptoide Games. This campaign\'s rewards start once it confirms yours, usually a few minutes after you first open the game.\n\nKeep the game installed and play as usual. What you do in the game while you wait still counts once your install is confirmed.</string>

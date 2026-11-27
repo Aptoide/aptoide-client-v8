@@ -373,6 +373,8 @@
   <string name="play_and_earn_refused_region_body">Το Play &amp; Earn δεν είναι διαθέσιμο στην περιοχή σας.</string>
   <string name="play_and_earn_refused_device_body">Το Play &amp; Earn δεν είναι διαθέσιμο σε αυτήν τη συσκευή.</string>
   <string name="play_and_earn_refused_update_body">Ενημερώστε την εφαρμογή για να συνεχίσετε να κερδίζετε ανταμοιβές.</string>
+  <string name="play_and_earn_refused_vpn_body">Απενεργοποιήστε το VPN σας για να χρησιμοποιήσετε το Play &amp; Earn.</string>
+  <string name="play_and_earn_refused_bonus_device_limit_body">Αυτό το τηλέφωνο έχει ήδη λάβει το μπόνους καλωσορίσματος.</string>
   <string name="play_and_earn_rewards_blocked_learn_more_button">Μάθετε περισσότερα</string>
   <string name="play_and_earn_rewards_paused_info_title">Γιατί είναι σε παύση οι ανταμοιβές μου;</string>
   <string name="play_and_earn_rewards_paused_info_body">Κάθε παιχνίδι χρησιμοποιεί ένα εργαλείο παρακολούθησης για να επιβεβαιώνει τις εγκαταστάσεις μέσω του Aptoide Games. Οι ανταμοιβές αυτής της καμπάνιας ξεκινούν μόλις επιβεβαιώσει τη δική σας, συνήθως λίγα λεπτά αφού ανοίξετε το παιχνίδι για πρώτη φορά.\n\nΚρατήστε το παιχνίδι εγκατεστημένο και παίξτε κανονικά. Ό,τι κάνετε στο παιχνίδι όσο περιμένετε μετράει μόλις επιβεβαιωθεί η εγκατάστασή σας.</string>

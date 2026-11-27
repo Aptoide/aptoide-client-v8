@@ -373,6 +373,8 @@
   <string name="play_and_earn_refused_region_body">Play &amp; Earn bölgenizde kullanılamıyor.</string>
   <string name="play_and_earn_refused_device_body">Play &amp; Earn bu cihazda kullanılamıyor.</string>
   <string name="play_and_earn_refused_update_body">Ödül kazanmaya devam etmek için uygulamayı güncelleyin.</string>
+  <string name="play_and_earn_refused_vpn_body">Play &amp; Earn\'i kullanmak için VPN\'inizi kapatın.</string>
+  <string name="play_and_earn_refused_bonus_device_limit_body">Bu telefon hoş geldin bonusunu zaten aldı.</string>
   <string name="play_and_earn_rewards_blocked_learn_more_button">Daha Fazla Bilgi Edinin</string>
   <string name="play_and_earn_rewards_paused_info_title">Ödüllerim neden duraklatıldı?</string>
   <string name="play_and_earn_rewards_paused_info_body">Her oyun, Aptoide Games üzerinden yapılan kurulumları onaylamak için bir takip aracı kullanır. Bu kampanyanın ödülleri, kurulumunuz onaylandığında başlar; bu genellikle oyunu ilk açtıktan birkaç dakika sonra olur.\n\nOyunu yüklü tutun ve her zamanki gibi oynayın. Beklerken oyunda yaptıklarınız, kurulumunuz onaylandığında sayılır.</string>

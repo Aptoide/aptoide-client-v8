@@ -18,6 +18,10 @@ import java.time.ZoneOffset
  * other status (e.g. a proxy's 502 page) is not a refusal.
  * @param blocksPlay the code is about playing at all, so it may end a Play & Earn session. The
  * others (limits, redeem states) leave a session as any other failure would.
+ *
+ * [VPN_NOT_ALLOWED] (AND-964) blocks play while the phone reports a VPN; nobody is banned, it
+ * goes away as soon as the VPN is off. [SIGN_IN_BONUS_DEVICE_LIMIT] (AND-964) only answers the
+ * sign-in bonus claim: another account on this phone already got it.
  */
 enum class PaERefusalCode(val httpStatus: Int, val blocksPlay: Boolean) {
   ACCOUNT_RESTRICTED(403, blocksPlay = true),
@@ -31,6 +35,8 @@ enum class PaERefusalCode(val httpStatus: Int, val blocksPlay: Boolean) {
   REDEEM_UNDER_REVIEW(409, blocksPlay = false),
   REDEEM_REQUEST_MISMATCH(409, blocksPlay = false),
   REDEEM_OUTCOME_UNKNOWN(504, blocksPlay = false),
+  VPN_NOT_ALLOWED(403, blocksPlay = true),
+  SIGN_IN_BONUS_DEVICE_LIMIT(403, blocksPlay = false),
 }
 
 /** @param retryAt when the request may be tried again, for the limits that say so. */
