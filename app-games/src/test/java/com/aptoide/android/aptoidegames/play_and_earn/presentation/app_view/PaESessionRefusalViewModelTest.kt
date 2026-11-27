@@ -104,16 +104,19 @@ internal class PaESessionRefusalViewModelTest {
   }
 
   @Test
-  fun `A restricted account keeps the generic error, on every game`() = coScenario {
+  fun `A restricted account says the account is restricted, on every game`() = coScenario {
     m Given "another game's session refused for a restricted account"
     refusals.record(OTHER_GAME, PaERefusal(PaERefusalCode.ACCOUNT_RESTRICTED))
 
     m When "this game's Rewards tab reads its message"
     val message = PaESessionRefusalViewModel(GAME, refusals).uiState.value
 
-    m Then "it is the generic error (the restricted screen is AND-951)"
+    m Then "it says the account is restricted, as the restricted screen does (AND-951)"
     assertEquals(
-      PaERefusalMessage(R.string.error_message_generic_title, R.string.error_message_generic_body),
+      PaERefusalMessage(
+        R.string.play_and_earn_exchange_error_restricted_title,
+        R.string.play_and_earn_exchange_error_restricted_body
+      ),
       message
     )
   }
