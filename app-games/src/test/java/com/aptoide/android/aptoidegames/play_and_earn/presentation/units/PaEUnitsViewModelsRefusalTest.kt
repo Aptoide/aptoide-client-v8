@@ -4,6 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.preferencesOf
 import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.lifecycle.SavedStateHandle
 import cm.aptoide.pt.appcoins.domain.WalletInfo
 import cm.aptoide.pt.exception_handler.ExceptionHandler
 import cm.aptoide.pt.play_and_earn.exchange.data.ExchangeRepository
@@ -140,6 +141,7 @@ internal class PaEUnitsViewModelsRefusalTest {
       exchangeUnitsUseCase = ExchangeUnitsUseCase(FailingExchangeRepository(failure)),
       exceptionHandler = exceptionHandler,
       walletUnitsRefresher = WalletUnitsRefresher(),
+      savedStateHandle = SavedStateHandle(),
     )
     viewModel.exchange("user@example.com", PaERewardType.ROBUX)
     return viewModel.uiState.value

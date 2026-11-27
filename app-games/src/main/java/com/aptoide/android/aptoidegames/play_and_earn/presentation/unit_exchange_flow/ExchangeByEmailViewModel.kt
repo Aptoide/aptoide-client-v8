@@ -1,7 +1,10 @@
 package com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchange_flow
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusal
+import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusalCode
 import cm.aptoide.pt.aptoide_network.play_and_earn.reportUnlessPaERefusal
 import cm.aptoide.pt.exception_handler.ExceptionHandler
 import cm.aptoide.pt.play_and_earn.exchange.domain.ExchangeUnitsUseCase
@@ -24,34 +27,55 @@ sealed interface ExchangeEmailUiState {
   data object Error : ExchangeEmailUiState
 }
 
+/**
+ * Redeems units for a code sent by email. Each redeem carries a request id (AND-952): the
+ * backend answers a repeated id once, so a retry after a lost answer never redeems twice. The
+ * id is kept, with the email and reward it belongs to, in [SavedStateHandle] until the answer
+ * is final, so it also survives process death.
+ */
 @HiltViewModel
-class ExchangeByEmailViewModel @Inject constructor(
+class ExchangeByEmailViewModel internal constructor(
   private val exchangeUnitsUseCase: ExchangeUnitsUseCase,
   private val exceptionHandler: ExceptionHandler,
   private val walletUnitsRefresher: WalletUnitsRefresher,
+  private val savedStateHandle: SavedStateHandle,
+  private val newRequestId: () -> String,
 ) : ViewModel() {
+
+  @Inject
+  constructor(
+    exchangeUnitsUseCase: ExchangeUnitsUseCase,
+    exceptionHandler: ExceptionHandler,
+    walletUnitsRefresher: WalletUnitsRefresher,
+    savedStateHandle: SavedStateHandle,
+  ) : this(
+    exchangeUnitsUseCase = exchangeUnitsUseCase,
+    exceptionHandler = exceptionHandler,
+    walletUnitsRefresher = walletUnitsRefresher,
+    savedStateHandle = savedStateHandle,
+    newRequestId = { UUID.randomUUID().toString() },
+  )
 
   private val _uiState = MutableStateFlow<ExchangeEmailUiState>(ExchangeEmailUiState.Idle)
   val uiState: StateFlow<ExchangeEmailUiState> = _uiState.asStateFlow()
 
-  private var lastEmail: String? = null
-  private var lastRewardType: PaERewardType? = null
-
   fun exchange(email: String, rewardType: PaERewardType) {
-    lastEmail = email
-    lastRewardType = rewardType
+    // One request at a time: a second tap must not send the redeem twice.
+    if (_uiState.value == ExchangeEmailUiState.Loading) return
+    _uiState.update { ExchangeEmailUiState.Loading }
 
+    val requestId = requestIdFor(email, rewardType)
     viewModelScope.launch {
-      _uiState.update { ExchangeEmailUiState.Loading }
-
-      exchangeUnitsUseCase(email, rewardType.toRedeemType(), UUID.randomUUID().toString()).fold(
+      exchangeUnitsUseCase(email, rewardType.toRedeemType(), requestId).fold(
         onSuccess = {
+          clearRequestId(requestId)
           walletUnitsRefresher.invalidate()
           _uiState.update { ExchangeEmailUiState.Success }
         },
         onFailure = { error ->
           // AND-950: a refusal is expected: logged, not reported as a crash.
-          reportUnlessPaERefusal(error, exceptionHandler::recordException)
+          val refusal = reportUnlessPaERefusal(error, exceptionHandler::recordException)
+          if (refusal.endsRequest()) clearRequestId(requestId)
           _uiState.update { ExchangeEmailUiState.Error }
         }
       )
@@ -59,8 +83,9 @@ class ExchangeByEmailViewModel @Inject constructor(
   }
 
   fun retry() {
-    val email = lastEmail
-    val rewardType = lastRewardType
+    val email = savedStateHandle.get<String>(KEY_EMAIL)
+    val rewardType = savedStateHandle.get<String>(KEY_REWARD_TYPE)
+      ?.let { runCatching { PaERewardType.valueOf(it) }.getOrNull() }
     if (email != null && rewardType != null) {
       exchange(email, rewardType)
     } else {
@@ -73,4 +98,44 @@ class ExchangeByEmailViewModel @Inject constructor(
   fun resetState() {
     _uiState.update { ExchangeEmailUiState.Idle }
   }
+
+  /** The pending id when it belongs to the same redeem, otherwise a new one. */
+  private fun requestIdFor(email: String, rewardType: PaERewardType): String {
+    val pendingId = savedStateHandle.get<String>(KEY_REQUEST_ID)
+    val sameRedeem = savedStateHandle.get<String>(KEY_EMAIL) == email &&
+      savedStateHandle.get<String>(KEY_REWARD_TYPE) == rewardType.name
+    if (pendingId != null && sameRedeem) return pendingId
+
+    return newRequestId().also {
+      savedStateHandle[KEY_EMAIL] = email
+      savedStateHandle[KEY_REWARD_TYPE] = rewardType.name
+      savedStateHandle[KEY_REQUEST_ID] = it
+    }
+  }
+
+  private fun clearRequestId(requestId: String) {
+    if (savedStateHandle.get<String>(KEY_REQUEST_ID) == requestId) {
+      savedStateHandle.remove<String>(KEY_REQUEST_ID)
+    }
+  }
+
+  private companion object {
+    const val KEY_EMAIL = "exchange_email"
+    const val KEY_REWARD_TYPE = "exchange_reward_type"
+    const val KEY_REQUEST_ID = "exchange_request_id"
+  }
+}
+
+/**
+ * Whether the redeem's id is done with: the backend refused it for good without taking it, or
+ * said the id belongs to other data. Any other failure may have redeemed (or still be
+ * redeeming), so the id is kept and a retry replays it.
+ */
+private fun PaERefusal?.endsRequest(): Boolean = when (this?.code) {
+  PaERefusalCode.REDEEM_LIMIT,
+  PaERefusalCode.TOO_MANY_ATTEMPTS,
+  PaERefusalCode.ACCOUNT_RESTRICTED,
+  PaERefusalCode.REDEEM_REQUEST_MISMATCH -> true
+
+  else -> false
 }
