@@ -388,9 +388,6 @@
   <string name="play_and_earn_your_units_title">あなたのユニット</string>
   <string name="play_and_earn_units_limit_body"><![CDATA[<1>%1$d</1>/100]]></string>
   <string name="play_and_earn_aptoide_balance_title">アプトイド・バランス</string>
-  <string name="play_and_earn_exchange_now_button">今すぐ交換</string>
-  <string name="play_and_earn_collect_more_units_body">%1$d をさらに集めて、Aptoide 残高で %2$s を獲得しましょう。</string>
-  <string name="play_and_earn_exchange_units_body">%1$d ユニットを、Aptoide 残高内の %2$s と交換してください。</string>
   <string name="play_and_earn_earn_rewards_by_playing_body">新しいゲームをプレイして報酬を獲得しよう！</string>
   <string name="play_and_earn_earning_now_title">今すぐ稼ぐ</string>
   <string name="play_and_earn_missions_title">ミッション</string>
@@ -400,9 +397,6 @@
   <string name="play_and_earn_level_achieved_body">レベル %1$d を達成しました！</string>
   <string name="play_and_earn_more_you_play_body">プレイすればするほど、より多く稼げます！報酬を確認して、残高が増えるのを見てみましょう。</string>
   <string name="play_and_earn_keep_playing_title">プレイを続けよう</string>
-  <string name="play_and_earn_tap_gem_exchange_body">宝石をタップしてユニットをバランスと交換する</string>
-  <string name="play_and_earn_awesome_button">すごい</string>
-  <string name="play_and_earn_earned_balance_body">ゲームで使えるアプトイド残高が1ドル獲得されました</string>
   <string name="play_and_earn_play_button">プレイ</string>
   <string name="play_and_earn_install_button">インストール</string>
   <string name="play_and_earn_notification_recording_title">報酬のためのプレイ時間の追跡</string>

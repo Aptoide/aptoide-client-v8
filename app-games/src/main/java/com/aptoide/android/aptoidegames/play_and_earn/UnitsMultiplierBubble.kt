@@ -56,38 +56,6 @@ fun SmallUnitsMultiplierBubble(
   }
 }
 
-@Composable
-fun LargeUnitsMultiplierBubble(
-  availableUnits: Long,
-  modifier: Modifier = Modifier
-) {
-  Box(
-    modifier = modifier,
-    contentAlignment = Alignment.Center
-  ) {
-    Image(
-      imageVector = unitsMultiplierBackground(),
-      contentDescription = null,
-      modifier = Modifier.size(97.dp, 54.dp)
-    )
-    Row(
-      verticalAlignment = Alignment.CenterVertically,
-      horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-      Image(
-        imageVector = getGiftIcon(),
-        contentDescription = null,
-        modifier = Modifier.size(34.dp, 38.dp)
-      )
-      Text(
-        text = "x${availableUnits / 100}",
-        style = AGTypography.Title,
-        color = Palette.White
-      )
-    }
-  }
-}
-
 @Preview
 @Composable
 private fun UnitsMultiplierBubblePreviews() {
@@ -98,7 +66,6 @@ private fun UnitsMultiplierBubblePreviews() {
     verticalArrangement = Arrangement.spacedBy(16.dp)
   ) {
     SmallUnitsMultiplierBubble(availableUnits = availableUnits)
-    LargeUnitsMultiplierBubble(availableUnits = availableUnits)
   }
 }
 

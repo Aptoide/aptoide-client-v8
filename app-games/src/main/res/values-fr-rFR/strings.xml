@@ -398,9 +398,6 @@
   <string name="play_and_earn_your_units_title">Vos unités</string>
   <string name="play_and_earn_units_limit_body"><![CDATA[<1>%1$d</1>/100]]></string>
   <string name="play_and_earn_aptoide_balance_title">Solde Aptoide</string>
-  <string name="play_and_earn_exchange_now_button">Échanger maintenant</string>
-  <string name="play_and_earn_collect_more_units_body">Collectez %1$d plus d\'unités pour gagner %2$s dans Aptoide Balance.</string>
-  <string name="play_and_earn_exchange_units_body">Échangez des unités %1$d contre des %2$s dans votre solde Aptoide.</string>
   <string name="play_and_earn_earn_rewards_by_playing_body">Gagnez des récompenses en jouant à de nouveaux jeux !</string>
   <string name="play_and_earn_earning_now_title">Gagnez dès maintenant</string>
   <string name="play_and_earn_missions_title">Missions</string>
@@ -410,9 +407,6 @@
   <string name="play_and_earn_level_achieved_body">Niveau %1$d atteint !</string>
   <string name="play_and_earn_more_you_play_body">Plus vous jouez, plus vous gagnez ! Vérifiez vos récompenses et voyez votre solde augmenter.</string>
   <string name="play_and_earn_keep_playing_title">Continuer à jouer</string>
-  <string name="play_and_earn_tap_gem_exchange_body">Appuyez sur la gemme pour échanger vos unités contre un solde.</string>
-  <string name="play_and_earn_awesome_button">Génial</string>
-  <string name="play_and_earn_earned_balance_body">Vous venez de gagner 1 $ dans votre solde Aptoide à utiliser pour vos jeux.</string>
   <string name="play_and_earn_play_button">Jouer</string>
   <string name="play_and_earn_install_button">Installer</string>
   <string name="play_and_earn_notification_recording_title">Suivi du temps de jeu pour obtenir des récompenses</string>

@@ -5,12 +5,6 @@ import cm.aptoide.pt.play_and_earn.exchange.domain.RedeemType
 
 interface ExchangeRepository {
 
-  @Deprecated(
-    "Use exchangeUnits(email, redeemType, requestId) instead.",
-    ReplaceWith("exchangeUnits(email, redeemType, requestId)")
-  )
-  suspend fun exchangeUnits(): Result<Unit>
-
   /**
    * @param requestId the redeem's own id: sending it again with the same email and type replays
    * the first answer instead of redeeming twice.

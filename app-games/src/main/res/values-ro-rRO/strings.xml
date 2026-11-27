@@ -409,9 +409,6 @@
   <string name="play_and_earn_your_units_title">Unitățile tale</string>
   <string name="play_and_earn_units_limit_body"><![CDATA[<1>%1$d</1>/100]]></string>
   <string name="play_and_earn_aptoide_balance_title">Echilibru Aptoide</string>
-  <string name="play_and_earn_exchange_now_button">Schimbă acum</string>
-  <string name="play_and_earn_collect_more_units_body">Colectează %1$d mai multe unități pentru a câștiga %2$s în Aptoide Balance.</string>
-  <string name="play_and_earn_exchange_units_body">Schimbă unitățile %1$d pentru %2$s din soldul tău Aptoide.</string>
   <string name="play_and_earn_earn_rewards_by_playing_body">Câștigați recompense jucând jocuri noi!</string>
   <string name="play_and_earn_earning_now_title">Câștigați acum</string>
   <string name="play_and_earn_missions_title">Misiuni</string>
@@ -421,9 +418,6 @@
   <string name="play_and_earn_level_achieved_body">Nivelul %1$d atins!</string>
   <string name="play_and_earn_more_you_play_body">Cu cât joci mai mult, cu atât câștigi mai mult! Verifică recompensele și vezi cum crește soldul tău.</string>
   <string name="play_and_earn_keep_playing_title">Continuă să joci</string>
-  <string name="play_and_earn_tap_gem_exchange_body">Atingeți bijuteria pentru a schimba unitățile pentru echilibru</string>
-  <string name="play_and_earn_awesome_button">Minunat</string>
-  <string name="play_and_earn_earned_balance_body">Tocmai ai câștigat 1 $ în Aptoide Balance, pe care îl poți folosi pentru jocurile tale.</string>
   <string name="play_and_earn_play_button">Joacă</string>
   <string name="play_and_earn_install_button">Instalați</string>
   <string name="play_and_earn_notification_recording_title">Urmărirea timpului de joc pentru recompense</string>

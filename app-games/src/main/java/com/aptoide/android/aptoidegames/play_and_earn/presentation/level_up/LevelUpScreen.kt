@@ -69,7 +69,7 @@ import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.Pa
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaESectionHeader
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.animations.CurrentLevelAnimation
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.playAndEarnRewardsRoute
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchange.exchangeUnitsRoute
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchange_flow.redeemRewardRoute
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
@@ -118,7 +118,8 @@ fun LevelUpScreen(
       onPlayAndEarnCardClick = { navigate(playAndEarnRewardsRoute) },
       onExchangeClick = {
         paeAnalytics.sendPaEExchangeNowClick()
-        navigate(exchangeUnitsRoute)
+        // The live redeem flow (AND-963), like the toolbar and the claimed-reward dialog.
+        navigate(redeemRewardRoute)
       }
     )
 

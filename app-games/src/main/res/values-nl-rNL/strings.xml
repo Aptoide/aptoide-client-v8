@@ -398,9 +398,6 @@
   <string name="play_and_earn_your_units_title">Uw eenheden</string>
   <string name="play_and_earn_units_limit_body"><![CDATA[<1>%1$d</1>/100]]></string>
   <string name="play_and_earn_aptoide_balance_title">Aptoide-saldo</string>
-  <string name="play_and_earn_exchange_now_button">Nu wisselen</string>
-  <string name="play_and_earn_collect_more_units_body">Verzamel %1$d meer eenheden om %2$s te verdienen in Aptoide Balance.</string>
-  <string name="play_and_earn_exchange_units_body">Wissel %1$d eenheden in voor %2$s in uw Aptoide-saldo.</string>
   <string name="play_and_earn_earn_rewards_by_playing_body">Verdien beloningen door nieuwe spellen te spelen!</string>
   <string name="play_and_earn_earning_now_title">Verdien nu</string>
   <string name="play_and_earn_missions_title">Missies</string>
@@ -410,9 +407,6 @@
   <string name="play_and_earn_level_achieved_body">Level %1$d behaald!</string>
   <string name="play_and_earn_more_you_play_body">Hoe meer je speelt, hoe meer je verdient! Bekijk je beloningen en zie hoe je saldo groeit.</string>
   <string name="play_and_earn_keep_playing_title">Blijf spelen</string>
-  <string name="play_and_earn_tap_gem_exchange_body">Tik op de edelsteen om je eenheden in te wisselen voor saldo</string>
-  <string name="play_and_earn_awesome_button">Geweldig</string>
-  <string name="play_and_earn_earned_balance_body">Je hebt zojuist $1 aan Aptoide-tegoed verdiend om te gebruiken voor je games.</string>
   <string name="play_and_earn_play_button">Spelen</string>
   <string name="play_and_earn_install_button">Installeren</string>
   <string name="play_and_earn_notification_recording_title">Speeltijd bijhouden voor beloningen</string>

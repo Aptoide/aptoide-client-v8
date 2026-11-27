@@ -387,9 +387,6 @@
   <string name="play_and_earn_your_units_title">您的单位</string>
   <string name="play_and_earn_units_limit_body"><![CDATA[<1>%1$d</1>/100]]></string>
   <string name="play_and_earn_aptoide_balance_title">Aptoide 平衡</string>
-  <string name="play_and_earn_exchange_now_button">立即兑换</string>
-  <string name="play_and_earn_collect_more_units_body">收集 %1$d 更多积分，即可在Aptoide账户中获得 %2$s 。</string>
-  <string name="play_and_earn_exchange_units_body">在您的Aptoide账户余额中，将 %1$d 单位兑换为 %2$s。</string>
   <string name="play_and_earn_earn_rewards_by_playing_body">玩新游戏，赢奖励！</string>
   <string name="play_and_earn_earning_now_title">立即赚取</string>
   <string name="play_and_earn_missions_title">任务</string>
@@ -399,9 +396,6 @@
   <string name="play_and_earn_level_achieved_body">%1$d 等级达成！</string>
   <string name="play_and_earn_more_you_play_body">玩得越多，赚得越多！查看您的奖励，见证余额增长。</string>
   <string name="play_and_earn_keep_playing_title">继续玩</string>
-  <string name="play_and_earn_tap_gem_exchange_body">点击宝石，用你的单位兑换平衡</string>
-  <string name="play_and_earn_awesome_button">太棒了</string>
-  <string name="play_and_earn_earned_balance_body">您刚刚获得1美元的Aptoide余额，可用于购买游戏。</string>
   <string name="play_and_earn_play_button">玩</string>
   <string name="play_and_earn_install_button">安装</string>
   <string name="play_and_earn_notification_recording_title">追踪游戏时间以获取奖励</string>

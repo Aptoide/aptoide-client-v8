@@ -17,34 +17,11 @@ internal class DefaultExchangeRepository @Inject constructor(
 ) : ExchangeRepository {
 
   private companion object {
-    const val DEFAULT_COUNTRY_CODE = "PT"
     const val DEFAULT_EXCHANGE_RATE_COUNTRY_CODE = "US"
   }
 
   private val exchangeRateMutex = Mutex()
   private val cachedExchangeRates = mutableMapOf<String, ExchangeRate>()
-
-  @Deprecated(
-    "Use exchangeUnits(email, redeemType, requestId) instead.",
-    ReplaceWith("exchangeUnits(email, redeemType, requestId)")
-  )
-  override suspend fun exchangeUnits(): Result<Unit> =
-    withContext(dispatcher) {
-      try {
-        @Suppress("DEPRECATION")
-        val response = exchangeApi.exchangeUnits(DEFAULT_COUNTRY_CODE)
-
-        if (response.isSuccess()) {
-          Result.success(Unit)
-        } else {
-          val errorMessage = response.detail?.message ?: ""
-          Result.failure(ExchangeException(errorMessage))
-        }
-      } catch (e: Throwable) {
-        e.printStackTrace()
-        Result.failure(e)
-      }
-    }
 
   override suspend fun exchangeUnits(
     email: String,

@@ -398,9 +398,6 @@
   <string name="play_and_earn_your_units_title">Az Ön egységei</string>
   <string name="play_and_earn_units_limit_body"><![CDATA[<1>%1$d</1>/100]]></string>
   <string name="play_and_earn_aptoide_balance_title">Aptoide egyenleg</string>
-  <string name="play_and_earn_exchange_now_button">Cseréljen most</string>
-  <string name="play_and_earn_collect_more_units_body">Gyűjtsön %1$d több egységet, hogy %2$s pontokat szerezzen az Aptoide Balance-ben.</string>
-  <string name="play_and_earn_exchange_units_body">Cserélje %1$d egységeket %2$s egységekre az Aptoide egyenlegén.</string>
   <string name="play_and_earn_earn_rewards_by_playing_body">Nyerj jutalmakat új játékok játszásával!</string>
   <string name="play_and_earn_earning_now_title">Keress most</string>
   <string name="play_and_earn_missions_title">Küldetések</string>
@@ -410,9 +407,6 @@
   <string name="play_and_earn_level_achieved_body">%1$d szint elérve!</string>
   <string name="play_and_earn_more_you_play_body">Minél többet játszol, annál többet keresel! Nézd meg a jutalmaidat, és figyeld, hogyan növekszik az egyenleged.</string>
   <string name="play_and_earn_keep_playing_title">Játssz tovább</string>
-  <string name="play_and_earn_tap_gem_exchange_body">Érintse meg a drágakövet, hogy egységeit egyensúlyra cserélje.</string>
-  <string name="play_and_earn_awesome_button">Fantasztikus</string>
-  <string name="play_and_earn_earned_balance_body">Most 1 dollárt kerestél az Aptoide Balance-en, amit játékokra költhetsz.</string>
   <string name="play_and_earn_play_button">Játék</string>
   <string name="play_and_earn_install_button">Telepítés</string>
   <string name="play_and_earn_notification_recording_title">A játékidő nyomon követése a jutalmakért</string>

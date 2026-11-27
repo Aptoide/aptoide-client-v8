@@ -398,9 +398,6 @@
   <string name="play_and_earn_your_units_title">Birimleriniz</string>
   <string name="play_and_earn_units_limit_body"><![CDATA[<1>%1$d</1>/100]]></string>
   <string name="play_and_earn_aptoide_balance_title">Aptoide Dengesi</string>
-  <string name="play_and_earn_exchange_now_button">Şimdi Değiştir</string>
-  <string name="play_and_earn_collect_more_units_body">%1$d \'i toplayarak Aptoide Balance\'da %2$s kazanabilirsiniz.</string>
-  <string name="play_and_earn_exchange_units_body">%1$d birimlerini Aptoide Bakiyenizdeki %2$s ile değiştirin.</string>
   <string name="play_and_earn_earn_rewards_by_playing_body">Yeni oyunlar oynayarak ödüller kazanın!</string>
   <string name="play_and_earn_earning_now_title">Şimdi Kazanın</string>
   <string name="play_and_earn_missions_title">Görevler</string>
@@ -410,9 +407,6 @@
   <string name="play_and_earn_level_achieved_body">%1$d seviyesi  ulaşıldı!</string>
   <string name="play_and_earn_more_you_play_body">Ne kadar çok oynarsanız, o kadar çok kazanırsınız! Ödüllerinizi kontrol edin ve bakiyenizin arttığını görün.</string>
   <string name="play_and_earn_keep_playing_title">Oynamaya Devam Et</string>
-  <string name="play_and_earn_tap_gem_exchange_body">Birimlerinizi bakiyeyle değiştirmek için mücevheri dokunun.</string>
-  <string name="play_and_earn_awesome_button">Harika</string>
-  <string name="play_and_earn_earned_balance_body">Oyunlarınızda kullanmak üzere Aptoide Bakiyenize 1 $ kazandınız.</string>
   <string name="play_and_earn_play_button">Oynat</string>
   <string name="play_and_earn_install_button">Yükle</string>
   <string name="play_and_earn_notification_recording_title">Ödüller için oyun süresini takip etme</string>

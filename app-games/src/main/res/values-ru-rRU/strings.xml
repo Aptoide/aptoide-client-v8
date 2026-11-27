@@ -420,9 +420,6 @@
   <string name="play_and_earn_your_units_title">Ваши подразделения</string>
   <string name="play_and_earn_units_limit_body"><![CDATA[<1>%1$d</1>/100]]></string>
   <string name="play_and_earn_aptoide_balance_title">Баланс Aptoide</string>
-  <string name="play_and_earn_exchange_now_button">Обменять сейчас</string>
-  <string name="play_and_earn_collect_more_units_body">Соберите %1$d больше единиц, чтобы заработать %2$s в Aptoide Balance.</string>
-  <string name="play_and_earn_exchange_units_body">Обменяйте %1$d единиц на %2$s в вашем балансе Aptoide.</string>
   <string name="play_and_earn_earn_rewards_by_playing_body">Зарабатывайте награды, играя в новые игры!</string>
   <string name="play_and_earn_earning_now_title">Заработайте сейчас</string>
   <string name="play_and_earn_missions_title">Миссии</string>
@@ -432,9 +429,6 @@
   <string name="play_and_earn_level_achieved_body">Уровень %1$d достигнут!</string>
   <string name="play_and_earn_more_you_play_body">Чем больше вы играете, тем больше зарабатываете! Проверяйте свои награды и наблюдайте, как растет ваш баланс.</string>
   <string name="play_and_earn_keep_playing_title">Продолжай играть</string>
-  <string name="play_and_earn_tap_gem_exchange_body">Нажмите на драгоценный камень, чтобы обменять свои единицы на баланс.</string>
-  <string name="play_and_earn_awesome_button">Потрясающе</string>
-  <string name="play_and_earn_earned_balance_body">Вы только что заработали 1 доллар на балансе Aptoide, который можно использовать в играх.</string>
   <string name="play_and_earn_play_button">Играть</string>
   <string name="play_and_earn_install_button">Установить</string>
   <string name="play_and_earn_notification_recording_title">Отслеживание игрового времени для получения вознаграждений</string>
