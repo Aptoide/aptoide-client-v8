@@ -1,5 +1,14 @@
 package cm.aptoide.pt.play_and_earn.sessions.data
 
+/** The backend's answer about the signed-in account's standing (AND-951). */
+enum class PaEAccountStatus {
+  RESTRICTED,
+  NOT_RESTRICTED,
+
+  /** The call failed or its answer could not be read: nothing is known either way. */
+  UNKNOWN,
+}
+
 /**
  * Whether the backend has restricted the signed-in account for fraud (AND-951). A convenience
  * for showing the restricted screen up front, not a control: the backend still refuses every
@@ -7,6 +16,6 @@ package cm.aptoide.pt.play_and_earn.sessions.data
  */
 interface PaEAccountStatusRepository {
 
-  /** True only when the backend clearly says so; any failure is false, and is not reported. */
-  suspend fun isRestricted(): Boolean
+  /** The backend's clear answer, or [PaEAccountStatus.UNKNOWN]; failures are not reported. */
+  suspend fun getStatus(): PaEAccountStatus
 }

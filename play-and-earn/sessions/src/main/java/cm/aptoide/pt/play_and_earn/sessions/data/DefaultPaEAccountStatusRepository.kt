@@ -10,16 +10,20 @@ internal class DefaultPaEAccountStatusRepository(
   private val dispatcher: CoroutineDispatcher,
 ) : PaEAccountStatusRepository {
 
-  override suspend fun isRestricted(): Boolean = withContext(dispatcher) {
+  override suspend fun getStatus(): PaEAccountStatus = withContext(dispatcher) {
     try {
-      api.getAccountStatus().restricted == true
+      when (api.getAccountStatus().restricted) {
+        true -> PaEAccountStatus.RESTRICTED
+        false -> PaEAccountStatus.NOT_RESTRICTED
+        null -> PaEAccountStatus.UNKNOWN
+      }
     } catch (e: CancellationException) {
       throw e
     } catch (e: Throwable) {
-      // Network, 5xx, an expired sign-in or a body that is not the expected one: the account is
-      // treated as not restricted and the screens behave as without this call. Not a crash.
+      // Network, 5xx, an expired sign-in or a body that is not the expected one: nothing is
+      // known, and the screens keep whatever they knew. Not a crash.
       Timber.w(e, "Couldn't read the Play & Earn account status")
-      false
+      PaEAccountStatus.UNKNOWN
     }
   }
 }

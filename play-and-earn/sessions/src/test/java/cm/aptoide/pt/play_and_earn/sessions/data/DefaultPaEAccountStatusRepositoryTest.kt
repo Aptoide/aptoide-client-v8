@@ -8,8 +8,7 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.ResponseBody.Companion.toResponseBody
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
@@ -17,8 +16,8 @@ import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
 
-// AND-951: the account status is a convenience, not a control: anything but a clear
-// "restricted" answer is "not restricted", and its failures are nobody's crash.
+// AND-951: the account status is a convenience, not a control: a clear answer is that answer,
+// anything else is "could not tell", and its failures are nobody's crash.
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class DefaultPaEAccountStatusRepositoryTest {
 
@@ -38,10 +37,10 @@ internal class DefaultPaEAccountStatusRepositoryTest {
     api.answer = AccountStatusJson(restricted = true)
 
     m When "the status is asked"
-    val restricted = repository(scope).isRestricted()
+    val status = repository(scope).getStatus()
 
     m Then "it is restricted"
-    assertTrue(restricted)
+    assertEquals(PaEAccountStatus.RESTRICTED, status)
   }
 
   @Test
@@ -50,35 +49,35 @@ internal class DefaultPaEAccountStatusRepositoryTest {
     api.answer = AccountStatusJson(restricted = false)
 
     m When "the status is asked"
-    val restricted = repository(scope).isRestricted()
+    val status = repository(scope).getStatus()
 
     m Then "it is not restricted"
-    assertFalse(restricted)
+    assertEquals(PaEAccountStatus.NOT_RESTRICTED, status)
   }
 
   @Test
-  fun `An answer without the field is not restricted`() = coScenario { scope ->
+  fun `An answer without the field cannot tell`() = coScenario { scope ->
     m Given "the backend answers without a restricted field"
     api.answer = AccountStatusJson(restricted = null)
 
     m When "the status is asked"
-    val restricted = repository(scope).isRestricted()
+    val status = repository(scope).getStatus()
 
-    m Then "it is not restricted"
-    assertFalse(restricted)
+    m Then "it cannot tell"
+    assertEquals(PaEAccountStatus.UNKNOWN, status)
   }
 
   @ParameterizedTest(name = "{0}")
   @MethodSource("failures")
-  fun `Any failure is not restricted`(name: String, error: Throwable) = coScenario { scope ->
+  fun `Any failure cannot tell`(name: String, error: Throwable) = coScenario { scope ->
     m Given "the status call fails with $name"
     api.error = error
 
     m When "the status is asked"
-    val restricted = repository(scope).isRestricted()
+    val status = repository(scope).getStatus()
 
-    m Then "it is not restricted, and the failure does not escape"
-    assertFalse(restricted)
+    m Then "it cannot tell, and the failure does not escape"
+    assertEquals(PaEAccountStatus.UNKNOWN, status)
   }
 
   // Nothing to report through: the repository takes no exception handler at all.

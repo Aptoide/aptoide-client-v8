@@ -14,6 +14,7 @@ import cm.aptoide.pt.play_and_earn.exchange.domain.ExchangeUnitsUseCase
 import cm.aptoide.pt.play_and_earn.exchange.domain.GetExchangeRateUseCase
 import cm.aptoide.pt.play_and_earn.exchange.domain.RedeemType
 import cm.aptoide.pt.play_and_earn.exchange.presentation.ExchangeRateViewModel
+import cm.aptoide.pt.play_and_earn.sessions.data.PaEAccountStatus
 import cm.aptoide.pt.play_and_earn.sessions.data.PaEAccountStatusRepository
 import cm.aptoide.pt.test.gherkin.coScenario
 import cm.aptoide.pt.wallet.datastore.WalletCoreDataSource
@@ -129,7 +130,8 @@ internal class PaEAccountRestrictionPathsTest {
 
   private fun TestScope.restriction() = PaEAccountRestriction(
     accountStatus = object : PaEAccountStatusRepository {
-      override suspend fun isRestricted() = false
+      // Cannot tell: a refusal's word stands.
+      override suspend fun getStatus() = PaEAccountStatus.UNKNOWN
     },
     isSignedIn = { true },
     refusals = PaERefusalEvents.refusals,
