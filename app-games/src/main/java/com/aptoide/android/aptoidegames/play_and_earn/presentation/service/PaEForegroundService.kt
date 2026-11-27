@@ -27,7 +27,9 @@ import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPreferencesReposit
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaEPlayTimeMeter
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaESessionStartResult
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaEStatusHeartbeatPolicy
+import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.foregroundQueryStart
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.needsSessionRecreation
+import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.nextInFrontSince
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.soleVisiblePackage
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.notifications.PaEMissionCompletedAnnouncer
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.notifications.PaEMissionCompletedNotificationBuilder
@@ -96,6 +98,11 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
   private var flagsJob: Job? = null
 
   private var lastForegroundPackage: String? = null
+
+  // AND-964: when lastForegroundPackage came to the front (wall clock, as the usage query), so
+  // the query keeps seeing a game held in front without a session; null once the foreground is
+  // lost.
+  private var inFrontSinceMillis: Long? = null
 
   var availablePaEPackages: Set<String>? = null
 
@@ -460,8 +467,9 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
     val activeSession = paESessionManager.activeSessions
       .firstOrNull { it.packageName == lastForegroundPackage }
 
-    val packageState =
-      packageUsageManager.getForegroundPackageState(activeSession?.lastAppOpenTime)
+    val packageState = packageUsageManager.getForegroundPackageState(
+      foregroundQueryStart(activeSession?.lastAppOpenTime, inFrontSinceMillis)
+    )
 
     // Measured on every poll, so an interval counts only when both of its ends saw the game
     // played. A game sharing the screen (split-screen) is not played.
@@ -488,6 +496,13 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
         } else {
           startIdleTimeoutIfNotRunning()
         }
+
+        inFrontSinceMillis = nextInFrontSince(
+          previousPackage = lastForegroundPackage,
+          foregroundPackage = foregroundPackage,
+          previousSinceMillis = inFrontSinceMillis,
+          nowMillis = System.currentTimeMillis(),
+        )
 
         // New foreground package detected
         if (foregroundPackage != lastForegroundPackage) {
@@ -533,12 +548,16 @@ class PaEForegroundService : LifecycleService(), SavedStateRegistryOwner {
         // No package in foreground (e.g., screen locked, all apps paused)
         // Don't sync sessions as no time should be tracked while paused
         // Sessions will handle their own expiration via TTL
+        // The game left (its pause or stop was read since it came to the front): the query
+        // falls back to its default window, and the service goes idle as before.
+        inFrontSinceMillis = null
         startIdleTimeoutIfNotRunning()
       }
 
       is PackageUsageState.Error -> {
         // Error means we couldn't determine state (no events in window or OEM failure)
-        // Don't sync to avoid incorrectly counting time.
+        // Don't sync to avoid incorrectly counting time. The time in front is kept, as a
+        // session's open time is: no event says the game left.
         startIdleTimeoutIfNotRunning()
       }
     }
