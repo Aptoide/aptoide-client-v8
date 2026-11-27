@@ -13,8 +13,8 @@ enum class DeviceCheckGroup(val hidesPlayAndEarn: Boolean) {
 /** One device check. Implementations hold no state and are fed by small, fakeable sources. */
 interface DeviceCheck {
   /**
-   * Stable snake_case name. It is reported to analytics and, later, to the backend, so it must
-   * never be renamed.
+   * Stable snake_case name. It is the key in the `pae_device_checks` remote config list and is
+   * reported to analytics and, later, to the backend, so it must never be renamed.
    */
   val name: String
 

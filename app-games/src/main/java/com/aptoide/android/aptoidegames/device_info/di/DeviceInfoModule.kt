@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import cm.aptoide.pt.environment_info.DeviceIdProvider
+import cm.aptoide.pt.feature_flags.domain.FeatureFlags
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.device_info.AGDeviceIdProvider
 import com.aptoide.android.aptoidegames.device_info.DeviceSecurityChecker
@@ -61,9 +62,11 @@ class DeviceInfoModule {
   fun provideDeviceSecurityChecker(
     @ApplicationContext context: Context,
     packageManager: PackageManager,
+    featureFlags: FeatureFlags,
   ): DeviceSecurityChecker =
     DeviceSecurityChecker(
       checks = deviceChecks(context, packageManager),
+      featureFlags = featureFlags,
       dispatcher = Dispatchers.IO,
     )
 

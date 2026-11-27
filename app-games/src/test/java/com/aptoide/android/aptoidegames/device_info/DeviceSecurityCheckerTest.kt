@@ -1,8 +1,10 @@
 package com.aptoide.android.aptoidegames.device_info
 
+import cm.aptoide.pt.feature_flags.domain.FeatureFlags
 import cm.aptoide.pt.test.gherkin.coScenario
 import com.aptoide.android.aptoidegames.device_info.checks.CallStack
 import com.aptoide.android.aptoidegames.device_info.checks.ClassProbe
+import com.aptoide.android.aptoidegames.device_info.checks.DeviceCheck
 import com.aptoide.android.aptoidegames.device_info.checks.DeviceCheckGroup
 import com.aptoide.android.aptoidegames.device_info.checks.DeviceCheckOutcome
 import com.aptoide.android.aptoidegames.device_info.checks.DeviceCheckResult
@@ -13,13 +15,13 @@ import com.aptoide.android.aptoidegames.device_info.checks.ProcessMaps
 import com.aptoide.android.aptoidegames.device_info.checks.XposedCheck
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import java.io.IOException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
+import java.io.IOException
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class DeviceSecurityCheckerTest {
@@ -37,10 +39,22 @@ internal class DeviceSecurityCheckerTest {
     FakeCheck("test_keys", DeviceCheckGroup.ROOT),
   )
 
-  private fun checker(checks: List<FakeCheck>) = DeviceSecurityChecker(
-    checks = checks,
-    dispatcher = Dispatchers.Unconfined,
-  )
+  private class FakeFlags(private val deviceChecks: List<String>? = null) : FeatureFlags {
+    var reads = 0
+
+    override suspend fun getStringListOrNull(key: String): List<String>? {
+      if (key != "pae_device_checks") return null
+      reads++
+      return deviceChecks
+    }
+  }
+
+  private fun checker(checks: List<DeviceCheck>, flags: FeatureFlags = FakeFlags()) =
+    DeviceSecurityChecker(
+      checks = checks,
+      featureFlags = flags,
+      dispatcher = Dispatchers.Unconfined,
+    )
 
   private fun existingChecksWhereOnlyFires(name: String) = existingChecks.map {
     if (it.name == name) FakeCheck(it.name, it.group) { true } else it
@@ -105,7 +119,7 @@ internal class DeviceSecurityCheckerTest {
         },
         packages = FakeInstalledPackages(setOf("org.lsposed.manager")),
       )
-      val checker = DeviceSecurityChecker(existingChecks + xposed, Dispatchers.Unconfined)
+      val checker = checker(existingChecks + xposed)
 
       m When "the checks run"
       val report = checker.runChecks()
@@ -121,7 +135,7 @@ internal class DeviceSecurityCheckerTest {
     val hooks = HookLibrariesCheck(object : ProcessMaps {
       override fun mappedPaths(): Set<String> = throw IOException("no access")
     })
-    val checker = DeviceSecurityChecker(listOf(hooks), Dispatchers.Unconfined)
+    val checker = checker(listOf(hooks))
 
     m When "the checks run"
     val report = checker.runChecks()
@@ -212,5 +226,94 @@ internal class DeviceSecurityCheckerTest {
     m Then "only the emulator group fired"
     assertTrue(report.firedIn(DeviceCheckGroup.EMULATOR))
     assertFalse(report.firedIn(DeviceCheckGroup.ROOT))
+  }
+
+  @Test
+  fun `Without the remote config flag every check runs`() = coScenario {
+    m Given "no pae_device_checks flag"
+    val runtime = FakeCheck("debugger", DeviceCheckGroup.RUNTIME)
+    val checks = existingChecks + runtime
+    val checker = checker(checks, FakeFlags(deviceChecks = null))
+
+    m When "the checks run"
+    val report = checker.runChecks()
+
+    m Then "all of them ran"
+    assertEquals(checks.map { it.name }, report.results.map { it.name })
+    assertTrue(checks.all { it.runs == 1 })
+  }
+
+  @Test
+  fun `A check left out of the remote config list never runs`() = coScenario {
+    m Given "a rooted device where only root_apps fires, and root_apps switched off"
+    val rootApps = FakeCheck("root_apps", DeviceCheckGroup.ROOT) { true }
+    val testKeys = FakeCheck("test_keys", DeviceCheckGroup.ROOT)
+    val checker = checker(listOf(rootApps, testKeys), FakeFlags(listOf("test_keys")))
+
+    m When "the device is checked"
+    val report = checker.runChecks()
+
+    m Then "root_apps was never asked, is absent from the report and hides nothing"
+    assertEquals(0, rootApps.runs)
+    assertEquals(listOf("test_keys"), report.results.map { it.name })
+    assertFalse(checker.isCompromisedDevice())
+  }
+
+  @Test
+  fun `Names the app does not know are ignored`() = coScenario {
+    m Given "a list with an unknown name next to a known one"
+    val suBinary = FakeCheck("su_binary", DeviceCheckGroup.ROOT) { true }
+    val checker = checker(
+      listOf(suBinary, FakeCheck("test_keys", DeviceCheckGroup.ROOT)),
+      FakeFlags(listOf("not_a_check", "su_binary")),
+    )
+
+    m When "the checks run"
+    val report = checker.runChecks()
+
+    m Then "only the known one ran"
+    assertEquals(listOf("su_binary"), report.results.map { it.name })
+  }
+
+  @Test
+  fun `Names in the list are trimmed and case-insensitive`() = coScenario {
+    m Given "a list with a padded, upper-case name"
+    val checker = checker(
+      listOf(FakeCheck("su_binary", DeviceCheckGroup.ROOT) { true }),
+      FakeFlags(listOf(" SU_Binary ")),
+    )
+
+    m When "the checks run"
+    val report = checker.runChecks()
+
+    m Then "the check ran"
+    assertEquals(listOf("su_binary"), report.firedNames)
+  }
+
+  @Test
+  fun `An empty list switches every check off`() = coScenario {
+    m Given "an empty pae_device_checks list"
+    val checks = existingChecks.map { FakeCheck(it.name, it.group) { true } }
+    val checker = checker(checks, FakeFlags(emptyList()))
+
+    m When "the device is checked"
+    val compromised = checker.isCompromisedDevice()
+
+    m Then "nothing ran and nothing hides Play and Earn"
+    assertFalse(compromised)
+    assertTrue(checks.all { it.runs == 0 })
+  }
+
+  @Test
+  fun `The remote config list is read on every run`() = coScenario {
+    m Given "a checker"
+    val flags = FakeFlags(listOf("su_binary"))
+    val checker = checker(listOf(FakeCheck("su_binary", DeviceCheckGroup.ROOT)), flags)
+
+    m When "the checks run twice"
+    repeat(2) { checker.runChecks() }
+
+    m Then "the list was read each time, so a config update applies to the next run"
+    assertEquals(2, flags.reads)
   }
 }
