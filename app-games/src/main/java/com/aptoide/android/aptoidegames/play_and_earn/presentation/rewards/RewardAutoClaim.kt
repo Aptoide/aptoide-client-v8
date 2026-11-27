@@ -1,6 +1,6 @@
 package com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards
 
-import com.aptoide.android.aptoidegames.play_and_earn.domain.PaEAccountRestrictionState
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.restricted.PaERestrictedGateState
 
 /**
  * The reward to claim on its own once the user is back from the reward sign-in flow: only when
@@ -33,9 +33,9 @@ internal fun rewardToClaimOnTap(
  */
 internal fun signInBonusOffer(
   rewardState: RewardState,
-  restriction: PaEAccountRestrictionState,
+  restriction: PaERestrictedGateState,
 ): RewardState.Unclaimed? =
-  if (restriction == PaEAccountRestrictionState.RESTRICTED) {
+  if (restriction == PaERestrictedGateState.RESTRICTED) {
     null
   } else {
     rewardState as? RewardState.Unclaimed
