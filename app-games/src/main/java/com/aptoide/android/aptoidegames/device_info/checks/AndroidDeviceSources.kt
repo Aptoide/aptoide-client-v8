@@ -8,6 +8,7 @@ import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
 import java.io.Reader
+import java.util.concurrent.TimeUnit
 
 class AndroidDeviceFiles : DeviceFiles {
   override fun exists(path: String): Boolean = runCatching { File(path).exists() }
@@ -17,17 +18,38 @@ class AndroidDeviceFiles : DeviceFiles {
     .getOrDefault(false)
 }
 
-/** Reads properties through the `getprop` command, as the checks did before AND-956. */
-class GetpropSystemProperties : SystemProperties {
-  override fun get(name: String): String? = runCatching {
-    val process = Runtime.getRuntime().exec(arrayOf("getprop", name))
-    try {
-      BufferedReader(InputStreamReader(process.inputStream)).use { it.readLine() }
-        .also { process.waitFor() }
+/**
+ * Reads properties through the `getprop` command. A getprop that has not finished within
+ * [timeoutMillis] is killed and read as unset, so one stuck process cannot hold up the checks.
+ */
+class GetpropSystemProperties(
+  private val timeoutMillis: Long = GETPROP_TIMEOUT_MILLIS,
+  private val start: (String) -> Process = { Runtime.getRuntime().exec(arrayOf("getprop", it)) },
+) : SystemProperties {
+
+  override fun get(name: String): String? {
+    val process = try {
+      start(name)
+    } catch (_: Exception) {
+      return null
+    }
+    return try {
+      // getprop prints one short line, far below the pipe buffer: waiting before reading is safe.
+      if (process.waitFor(timeoutMillis, TimeUnit.MILLISECONDS)) {
+        BufferedReader(InputStreamReader(process.inputStream)).use { it.readLine() }
+      } else {
+        null
+      }
+    } catch (_: Exception) {
+      null
     } finally {
       process.destroy()
     }
-  }.getOrNull()
+  }
+
+  private companion object {
+    const val GETPROP_TIMEOUT_MILLIS = 2_000L
+  }
 }
 
 class PackageManagerInstalledPackages(

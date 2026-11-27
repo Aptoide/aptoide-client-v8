@@ -35,9 +35,9 @@ class XposedCheck(
   override val group = DeviceCheckGroup.RUNTIME
 
   override fun fired(): Boolean =
-    XPOSED_CLASSES.any(classes::isLoadable) ||
+    XPOSED_CLASSES.anySafely(classes::isLoadable) ||
       stack.classNames().any { frame -> XPOSED_FRAME_PREFIXES.any(frame::startsWith) } ||
-      XPOSED_MANAGERS.any(packages::isInstalled)
+      XPOSED_MANAGERS.anySafely(packages::isInstalled)
 
   private companion object {
     // The Xposed API entry point. EdXposed and LSPosed keep the same class for module

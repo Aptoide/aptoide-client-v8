@@ -37,7 +37,7 @@ class EmulatorPropsCheck(private val properties: SystemProperties) : DeviceCheck
   override val name = "emulator_props"
   override val group = DeviceCheckGroup.EMULATOR
 
-  override fun fired(): Boolean = QEMU_PROPS.any { prop ->
+  override fun fired(): Boolean = QEMU_PROPS.anySafely { prop ->
     val value = properties.get(prop)
     !value.isNullOrEmpty() && value != "0"
   }
@@ -57,7 +57,7 @@ class EmulatorFilesCheck(private val files: DeviceFiles) : DeviceCheck {
   override val name = "emulator_files"
   override val group = DeviceCheckGroup.EMULATOR
 
-  override fun fired(): Boolean = EMULATOR_FILES.any(files::exists)
+  override fun fired(): Boolean = EMULATOR_FILES.anySafely(files::exists)
 
   private companion object {
     val EMULATOR_FILES = listOf(

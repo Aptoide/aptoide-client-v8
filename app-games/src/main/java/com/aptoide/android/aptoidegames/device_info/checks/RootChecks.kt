@@ -5,7 +5,7 @@ class RootFilesCheck(private val files: DeviceFiles) : DeviceCheck {
   override val name = "root_files"
   override val group = DeviceCheckGroup.ROOT
 
-  override fun fired(): Boolean = ROOT_FILES.any(files::exists)
+  override fun fired(): Boolean = ROOT_FILES.anySafely(files::exists)
 
   private companion object {
     val ROOT_FILES = listOf(
@@ -41,7 +41,7 @@ class SuBinaryCheck(
   override val name = "su_binary"
   override val group = DeviceCheckGroup.ROOT
 
-  override fun fired(): Boolean = pathDirectories().any { files.exists("$it/su") }
+  override fun fired(): Boolean = pathDirectories().anySafely { files.exists("$it/su") }
 }
 
 /** A root manager or root-hiding app is installed. */
@@ -49,7 +49,7 @@ class RootAppsCheck(private val packages: InstalledPackages) : DeviceCheck {
   override val name = "root_apps"
   override val group = DeviceCheckGroup.ROOT
 
-  override fun fired(): Boolean = ROOT_APPS.any(packages::isInstalled)
+  override fun fired(): Boolean = ROOT_APPS.anySafely(packages::isInstalled)
 
   private companion object {
     val ROOT_APPS = listOf(
@@ -84,7 +84,7 @@ class DangerousPropsCheck(private val properties: SystemProperties) : DeviceChec
   override val group = DeviceCheckGroup.ROOT
 
   override fun fired(): Boolean =
-    DANGEROUS_PROPS.any { (prop, dangerousValue) -> properties.get(prop) == dangerousValue }
+    DANGEROUS_PROPS.entries.anySafely { (prop, dangerous) -> properties.get(prop) == dangerous }
 
   private companion object {
     val DANGEROUS_PROPS = mapOf(
@@ -101,7 +101,7 @@ class RwSystemPathsCheck(private val files: DeviceFiles) : DeviceCheck {
   override val group = DeviceCheckGroup.ROOT
 
   override fun fired(): Boolean =
-    SYSTEM_PATHS.any { files.exists(it) && files.isWritable(it) }
+    SYSTEM_PATHS.anySafely { files.exists(it) && files.isWritable(it) }
 
   private companion object {
     val SYSTEM_PATHS = listOf(

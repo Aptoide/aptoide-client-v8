@@ -268,4 +268,23 @@ internal class RuntimeChecksTest {
     m Then "it does not fire"
     assertFalse(fired)
   }
+
+  @Test
+  fun `One package that cannot be looked up does not stop the Xposed check`() = scenario {
+    m Given "a lookup that fails on the Xposed Installer and finds the LSPosed manager"
+    val packages = object : InstalledPackages {
+      override fun isInstalled(packageName: String): Boolean = when (packageName) {
+        "de.robv.android.xposed.installer" -> throw IllegalStateException("DeadObjectException")
+        "org.lsposed.manager" -> true
+        else -> false
+      }
+    }
+    val check = xposedCheck(packages = packages)
+
+    m When "the check runs"
+    val fired = check.fired()
+
+    m Then "it fires on the LSPosed manager"
+    assertTrue(fired)
+  }
 }

@@ -194,4 +194,63 @@ internal class RootChecksTest {
     m Then "neither fires"
     assertEquals(listOf(false, false), fired)
   }
+
+  @Test
+  fun `One package that cannot be looked up does not stop the root apps check`() = scenario {
+    m Given "a package lookup that fails on the first root app and finds the second"
+    val packages = object : InstalledPackages {
+      override fun isInstalled(packageName: String): Boolean = when (packageName) {
+        "com.topjohnwu.magisk" -> throw IllegalStateException("DeadObjectException")
+        "com.koushikdutta.superuser" -> true
+        else -> false
+      }
+    }
+    val check = RootAppsCheck(packages)
+
+    m When "the check runs"
+    val fired = check.fired()
+
+    m Then "it fires on the second one"
+    assertTrue(fired)
+  }
+
+  @Test
+  fun `One file that cannot be inspected does not stop the root files check`() = scenario {
+    m Given "a file probe that fails on the first path and finds a later one"
+    val files = object : DeviceFiles {
+      override fun exists(path: String): Boolean = when (path) {
+        "/system/app/Superuser.apk" -> throw SecurityException("denied")
+        "/data/adb/magisk" -> true
+        else -> false
+      }
+
+      override fun isWritable(path: String): Boolean = false
+    }
+    val check = RootFilesCheck(files)
+
+    m When "the check runs"
+    val fired = check.fired()
+
+    m Then "it fires on the later one"
+    assertTrue(fired)
+  }
+
+  @Test
+  fun `One property that cannot be read does not stop the dangerous props check`() = scenario {
+    m Given "a property reader that fails on ro.debuggable and finds ro.secure=0"
+    val properties = object : SystemProperties {
+      override fun get(name: String): String? = when (name) {
+        "ro.debuggable" -> throw IllegalStateException("broken")
+        "ro.secure" -> "0"
+        else -> null
+      }
+    }
+    val check = DangerousPropsCheck(properties)
+
+    m When "the check runs"
+    val fired = check.fired()
+
+    m Then "it fires on ro.secure"
+    assertTrue(fired)
+  }
 }

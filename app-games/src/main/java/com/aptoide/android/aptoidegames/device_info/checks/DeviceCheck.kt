@@ -53,3 +53,15 @@ data class DeviceCheckReport(val results: List<DeviceCheckResult>) {
 
   fun firedIn(group: DeviceCheckGroup): Boolean = results.any { it.fired && it.group == group }
 }
+
+/**
+ * Like [any], but an item whose probe throws counts as not matching: one package, file or
+ * property that cannot be inspected must not fail the whole check.
+ */
+internal inline fun <T> Iterable<T>.anySafely(probe: (T) -> Boolean): Boolean = any {
+  try {
+    probe(it)
+  } catch (_: Exception) {
+    false
+  }
+}
