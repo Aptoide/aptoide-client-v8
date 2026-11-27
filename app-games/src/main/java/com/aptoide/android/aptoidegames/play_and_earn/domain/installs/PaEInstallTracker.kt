@@ -136,6 +136,9 @@ class PaEInstallTracker internal constructor(
       }
   }
 
+  /** The installs whose report failed since the app started. Only touched under [reportMutex]. */
+  private val failedReports = mutableSetOf<String>()
+
   internal suspend fun start(packageName: String, fromPaEView: Boolean) {
     val owner = walletAddress()?.takeUnless { it.isBlank() } ?: return
     if (!isPaEAvailable()) return
@@ -176,7 +179,9 @@ class PaEInstallTracker internal constructor(
       .filter { packageName == null || it.packageName == packageName }
       .forEach { install ->
         if (install.owner == owner) {
-          report(install)
+          // One that failed waits for the next start: a single install is several package
+          // events, and each would send it again.
+          if (packageName == null || install.clickId !in failedReports) report(install)
         } else {
           pendingInstalls.remove(install.clickId)
         }
@@ -196,7 +201,7 @@ class PaEInstallTracker internal constructor(
           // Not on record: never reported, and its install is over.
           Click.REFUSED -> return pendingInstalls.remove(install.clickId)
           // Still unreachable: tried again at the next start.
-          Click.NOT_SENT -> return
+          Click.NOT_SENT -> return Unit.also { failedReports += install.clickId }
         }
       }
 
@@ -210,7 +215,11 @@ class PaEInstallTracker internal constructor(
     )
     val error = result.exceptionOrNull()
     // A refused or rejected report would be refused again.
-    if (error == null || error.isFinal()) pendingInstalls.remove(install.clickId)
+    if (error == null || error.isFinal()) {
+      pendingInstalls.remove(install.clickId)
+    } else {
+      failedReports += install.clickId
+    }
   }
 
   /** @return what became of the click, as it is now saved. */

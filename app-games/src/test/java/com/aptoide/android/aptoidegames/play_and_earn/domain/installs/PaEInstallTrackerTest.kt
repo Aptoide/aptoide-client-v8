@@ -287,6 +287,42 @@ internal class PaEInstallTrackerTest {
   }
 
   @Test
+  fun `A report that failed waits for the next start, whatever the phone installs`() = coScenario {
+    m Given "a recorded click for an installed game, and a backend that fails the report"
+    val tracker = tracker()
+    tracker.start("com.game", fromPaEView = true)
+    installedGames.installed["com.game"] = evidence
+    repository.reportResult = Result.failure(IOException("offline"))
+    tracker.reportPending("com.game")
+
+    m When "the phone tells of the same game again and again"
+    tracker.reportPending("com.game")
+    tracker.reportPending("com.game")
+
+    m Then "it was tried once, and is still kept for the next start"
+    assertEquals(1, repository.reports.size)
+    assertEquals(listOf("click-1"), pendingInstalls.all().map { it.clickId })
+  }
+
+  @Test
+  fun `A click that could not be sent again waits for the next start too`() = coScenario {
+    m Given "an installed game whose click never reached the backend"
+    repository.clickResult = Result.failure(IOException("offline"))
+    val tracker = tracker()
+    tracker.start("com.game", fromPaEView = true)
+    installedGames.installed["com.game"] = evidence
+    tracker.reportPending("com.game")
+    val clicksAfterFirstTry = repository.calls.count { it.startsWith("click") }
+
+    m When "the phone tells of the same game again"
+    tracker.reportPending("com.game")
+
+    m Then "the click was not sent a third time"
+    assertEquals(clicksAfterFirstTry, repository.calls.count { it.startsWith("click") })
+    assertEquals(emptyList<List<String?>>(), repository.reports)
+  }
+
+  @Test
   fun `A report that fails is kept and sent at the next start`() = coScenario {
     m Given "a recorded click for an installed game, and a backend that fails the report once"
     val tracker = tracker()
