@@ -12,10 +12,6 @@ internal class RuntimeChecksTest {
     override fun isLoadable(className: String): Boolean = className in loadable
   }
 
-  private class FakeCallStack(private val frames: List<String> = emptyList()) : CallStack {
-    override fun classNames(): List<String> = frames
-  }
-
   private class FakeProcessMaps(private val paths: Set<String> = emptySet()) : ProcessMaps {
     override fun mappedPaths(): Set<String> = paths
   }
@@ -44,9 +40,8 @@ internal class RuntimeChecksTest {
 
   private fun xposedCheck(
     classes: ClassProbe = FakeClassProbe(),
-    stack: CallStack = FakeCallStack(listOf("java.lang.Thread", "com.aptoide.Foo")),
     packages: InstalledPackages = FakeInstalledPackages(),
-  ) = XposedCheck(classes, stack, packages)
+  ) = XposedCheck(classes, packages)
 
   @Test
   fun `The runtime checks keep their names and never hide Play and Earn`() = scenario {
@@ -73,7 +68,7 @@ internal class RuntimeChecksTest {
 
   @Test
   fun `The Xposed check does not fire on a clean process`() = scenario {
-    m Given "no Xposed class, frame or manager"
+    m Given "no Xposed class or manager"
     val check = xposedCheck()
 
     m When "the check runs"
@@ -95,23 +90,6 @@ internal class RuntimeChecksTest {
 
     m Then "it fires"
     assertTrue(fired)
-  }
-
-  @Test
-  fun `The Xposed check fires on an Xposed or LSPosed frame in the call stack`() = scenario {
-    m Given "one stack with an Xposed frame and one with an LSPosed frame"
-    val xposed = xposedCheck(
-      stack = FakeCallStack(listOf("de.robv.android.xposed.XposedBridge", "com.aptoide.Foo"))
-    )
-    val lsposed = xposedCheck(
-      stack = FakeCallStack(listOf("org.lsposed.lspd.core.Main", "com.aptoide.Foo"))
-    )
-
-    m When "the checks run"
-    val fired = listOf(xposed.fired(), lsposed.fired())
-
-    m Then "both fire"
-    assertEquals(listOf(true, true), fired)
   }
 
   @Test

@@ -5,11 +5,6 @@ interface ClassProbe {
   fun isLoadable(className: String): Boolean
 }
 
-/** The class names of the frames of the current call stack. */
-interface CallStack {
-  fun classNames(): List<String>
-}
-
 /** The files mapped into this process's memory (the path column of `/proc/self/maps`). */
 interface ProcessMaps {
   fun mappedPaths(): Set<String>
@@ -25,10 +20,12 @@ interface TestHarnessState {
   fun isUserAMonkey(): Boolean
 }
 
-/** The Xposed framework or one of its successors (EdXposed, LSPosed) is active or installed. */
+/**
+ * The Xposed framework or a successor (EdXposed, LSPosed): its bridge class can be loaded from
+ * the app, or one of the frameworks' manager apps is installed.
+ */
 class XposedCheck(
   private val classes: ClassProbe,
-  private val stack: CallStack,
   private val packages: InstalledPackages,
 ) : DeviceCheck {
   override val name = "xposed"
@@ -36,19 +33,12 @@ class XposedCheck(
 
   override fun fired(): Boolean =
     XPOSED_CLASSES.anySafely(classes::isLoadable) ||
-      stack.classNames().any { frame -> XPOSED_FRAME_PREFIXES.any(frame::startsWith) } ||
       XPOSED_MANAGERS.anySafely(packages::isInstalled)
 
   private companion object {
     // The Xposed API entry point. EdXposed and LSPosed keep the same class for module
     // compatibility, and inject it where the app's process can load it.
     val XPOSED_CLASSES = listOf("de.robv.android.xposed.XposedBridge")
-
-    // Frames left in the call stack by hooked calls.
-    val XPOSED_FRAME_PREFIXES = listOf(
-      "de.robv.android.xposed.", // Xposed API, used by all three frameworks
-      "org.lsposed.lspd.", // LSPosed core
-    )
 
     // The frameworks' manager apps.
     val XPOSED_MANAGERS = listOf(

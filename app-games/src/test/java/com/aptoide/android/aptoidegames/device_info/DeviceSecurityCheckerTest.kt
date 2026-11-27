@@ -2,7 +2,6 @@ package com.aptoide.android.aptoidegames.device_info
 
 import cm.aptoide.pt.feature_flags.domain.FeatureFlags
 import cm.aptoide.pt.test.gherkin.coScenario
-import com.aptoide.android.aptoidegames.device_info.checks.CallStack
 import com.aptoide.android.aptoidegames.device_info.checks.ClassProbe
 import com.aptoide.android.aptoidegames.device_info.checks.DeviceCheck
 import com.aptoide.android.aptoidegames.device_info.checks.DeviceCheckGroup
@@ -116,9 +115,6 @@ internal class DeviceSecurityCheckerTest {
       val xposed = XposedCheck(
         classes = object : ClassProbe {
           override fun isLoadable(className: String) = false
-        },
-        stack = object : CallStack {
-          override fun classNames() = emptyList<String>()
         },
         packages = FakeInstalledPackages(setOf("org.lsposed.manager")),
       )

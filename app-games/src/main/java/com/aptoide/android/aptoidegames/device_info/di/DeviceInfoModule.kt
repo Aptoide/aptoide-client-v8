@@ -29,7 +29,6 @@ import com.aptoide.android.aptoidegames.device_info.checks.RwSystemPathsCheck
 import com.aptoide.android.aptoidegames.device_info.checks.SuBinaryCheck
 import com.aptoide.android.aptoidegames.device_info.checks.TestHarnessCheck
 import com.aptoide.android.aptoidegames.device_info.checks.TestKeysCheck
-import com.aptoide.android.aptoidegames.device_info.checks.ThreadCallStack
 import com.aptoide.android.aptoidegames.device_info.checks.UnknownBoardCheck
 import com.aptoide.android.aptoidegames.device_info.checks.XposedCheck
 import com.aptoide.android.aptoidegames.device_info.checks.currentBuildInfo
@@ -86,7 +85,7 @@ class DeviceInfoModule {
       DangerousPropsCheck(properties),
       RwSystemPathsCheck(files),
       TestKeysCheck(build),
-      XposedCheck(ClassLoaderProbe(), ThreadCallStack(), packages),
+      XposedCheck(ClassLoaderProbe(), packages),
       HookLibrariesCheck(ProcSelfMaps()),
       DebuggerCheck(AndroidDebuggerState()),
       TestHarnessCheck(AndroidTestHarnessState()),

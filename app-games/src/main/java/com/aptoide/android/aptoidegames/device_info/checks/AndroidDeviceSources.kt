@@ -86,10 +86,6 @@ class ClassLoaderProbe : ClassProbe {
     }
 }
 
-class ThreadCallStack : CallStack {
-  override fun classNames(): List<String> = Throwable().stackTrace.map { it.className }
-}
-
 /** Reads `/proc/self/maps`, at most [maxChars] of it, so a huge file cannot stall the check. */
 class ProcSelfMaps(private val maxChars: Int = MAX_MAPS_CHARS) : ProcessMaps {
   override fun mappedPaths(): Set<String> =
