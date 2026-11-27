@@ -1,9 +1,13 @@
 package cm.aptoide.pt.play_and_earn.events.data
 
+import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusalException
+import cm.aptoide.pt.aptoide_network.play_and_earn.reportUnlessPaERefusal
+import cm.aptoide.pt.exception_handler.ExceptionHandler
 import cm.aptoide.pt.play_and_earn.events.data.model.EventErrorJson
 import cm.aptoide.pt.play_and_earn.events.data.model.SubmitEventRequestJson
 import cm.aptoide.pt.play_and_earn.events.domain.EventType
 import com.google.gson.Gson
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
@@ -12,7 +16,8 @@ import javax.inject.Inject
 
 internal class DefaultEventsRepository @Inject constructor(
   private val eventsApi: EventsApi,
-  private val dispatcher: CoroutineDispatcher
+  private val dispatcher: CoroutineDispatcher,
+  private val exceptionHandler: ExceptionHandler,
 ) : EventsRepository {
 
   private val gson = Gson()
@@ -24,17 +29,30 @@ internal class DefaultEventsRepository @Inject constructor(
       eventsApi.submitEvent(SubmitEventRequestJson(eventType = eventType))
       Result.success(Unit)
     } catch (e: HttpException) {
-      val detail = e.parseErrorDetail()
-      val error = if (e.code() == HttpURLConnection.HTTP_CONFLICT) {
-        EventAlreadySubmittedException(detail ?: e.message())
+      if (e.code() == HttpURLConnection.HTTP_CONFLICT) {
+        // Expected: the event was granted before. Not a failure worth reporting.
+        Result.failure(EventAlreadySubmittedException(e.parseErrorDetail() ?: e.message()))
       } else {
-        EventException(detail ?: e.message())
+        Result.failure(
+          e.reportedUnlessRefusal { EventException(e.parseErrorDetail() ?: e.message()) }
+        )
       }
-      Result.failure(error)
+    } catch (e: CancellationException) {
+      Result.failure(e)
     } catch (e: Throwable) {
       e.printStackTrace()
-      Result.failure(e)
+      Result.failure(e.reportedUnlessRefusal { e })
     }
+  }
+
+  /**
+   * A refusal (AND-953) is expected: it is only logged and comes back as a
+   * [PaERefusalException]. Any other failure is reported to Crashlytics and comes back as
+   * [failure] makes it, read only then: the refusal check must peek the body before it is read.
+   */
+  private fun Throwable.reportedUnlessRefusal(failure: () -> Throwable): Throwable {
+    val refusal = reportUnlessPaERefusal(this, exceptionHandler::recordException)
+    return refusal?.let { PaERefusalException(it, this) } ?: failure()
   }
 
   // The error response body has the shape { "detail": "..." }. A 422 (unknown event type) has

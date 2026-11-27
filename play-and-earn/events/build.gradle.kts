@@ -3,6 +3,7 @@ plugins {
   alias(libs.plugins.android.module)
   alias(libs.plugins.composable)
   alias(libs.plugins.hilt)
+  alias(libs.plugins.tests)
 }
 
 android {
