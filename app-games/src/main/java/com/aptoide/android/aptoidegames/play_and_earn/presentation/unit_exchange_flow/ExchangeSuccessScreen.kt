@@ -59,8 +59,9 @@ fun exchangeSuccessScreen() = ScreenData.withAnalytics(
     navArgument(emailArg) { type = NavType.StringType },
   ),
 ) { args, navigate, navigateBack ->
-  // AND-951: a restricted account sees the restricted screen instead.
-  PaERestrictedGate {
+  // AND-951: a restricted account sees the restricted screen instead, with the back arrow this
+  // screen draws for itself.
+  PaERestrictedGate(navigateBack = navigateBack) {
     val rewardType = args?.getString(rewardTypeArg)
       ?.let { runCatching { PaERewardType.valueOf(it) }.getOrNull() }
       ?: PaERewardType.ROBUX

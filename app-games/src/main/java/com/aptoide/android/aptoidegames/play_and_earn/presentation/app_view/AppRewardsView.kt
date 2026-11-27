@@ -65,7 +65,8 @@ fun AppRewardsView(
   navigate: (String) -> Unit = {},
 ) {
   // AND-951: a restricted account sees the restricted screen instead, whatever the session says.
-  PaERestrictedGate {
+  // The game page around it already scrolls.
+  PaERestrictedGate(scrollable = false) {
     AppRewardsContent(packageName = packageName, navigate = navigate)
   }
 }

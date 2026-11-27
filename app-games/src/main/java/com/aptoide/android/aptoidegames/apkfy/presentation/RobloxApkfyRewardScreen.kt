@@ -39,11 +39,22 @@ fun robloxApkfyRewardScreen(
   route = robloxApkfyRewardRoute,
   screenAnalyticsName = "RobloxApkfyReward",
 ) { _, navigate, navigateBack ->
-  // AND-951: a restricted account sees the restricted screen instead.
-  // Nothing below runs meanwhile: the bonus is not claimed on the way back from sign-in.
-  PaERestrictedGate(fullBleed = true) {
+  val apkfyAnalytics = rememberApkfyAnalytics()
+  val goBack = {
+    apkfyAnalytics.sendApkfyScreenBackClicked()
+    navigateBack()
+  }
+
+  BackHandler(onBack = goBack)
+
+  TransparentStatusBarEffect()
+
+  // AND-951: a restricted account sees the restricted screen instead. A signed-in user's offer
+  // waits for the account's answer (asked on entry, and again after a sign-in from here), so the
+  // content below, with its auto-claim, does not run for an account the backend says is
+  // restricted. When the backend cannot tell, the offer shows; a claim is then refused as before.
+  PaERestrictedGate(holdWhileLoading = true, fullBleed = true, navigateBack = goBack) {
     val apkfyState = rememberApkfyState()
-    val apkfyAnalytics = rememberApkfyAnalytics()
     val paeAnalytics = rememberPaEAnalytics()
     val viewModel = hiltViewModel<SignInRewardViewModel>()
     val userInfo = rememberUserInfo()
@@ -81,13 +92,6 @@ fun robloxApkfyRewardScreen(
     LaunchedEffect(rewardState) {
       if (rewardState is RewardState.Claimed || rewardState is RewardState.Refused) navigateToHome()
     }
-
-    BackHandler {
-      apkfyAnalytics.sendApkfyScreenBackClicked()
-      navigateBack()
-    }
-
-    TransparentStatusBarEffect()
 
     apkfyState?.data?.let { apkfyData ->
       WithUTM(

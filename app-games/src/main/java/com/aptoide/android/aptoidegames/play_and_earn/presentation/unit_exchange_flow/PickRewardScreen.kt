@@ -52,8 +52,9 @@ fun pickRewardScreen(
     navArgument(amountArg) { type = NavType.StringType },
   ),
 ) { args, _, navigateBack ->
-  // AND-951: a restricted account sees the restricted screen instead.
-  PaERestrictedGate {
+  // AND-951: a restricted account sees the restricted screen instead, with the back arrow this
+  // screen draws for itself.
+  PaERestrictedGate(navigateBack = navigateBack) {
     val formattedAmount = args?.getString(amountArg)?.let { Uri.decode(it) }.orEmpty()
     val paeAnalytics = rememberPaEAnalytics()
 
