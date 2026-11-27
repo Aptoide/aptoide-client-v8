@@ -25,12 +25,13 @@ import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 
+/** @param onRetryClick null for an error that retrying cannot fix: no Retry button is drawn. */
 @Composable
 fun ErrorView(
   imageVector: ImageVector,
   title: String,
   subtitle: String?,
-  onRetryClick: () -> Unit,
+  onRetryClick: (() -> Unit)? = null,
   modifier: Modifier = Modifier,
 ) {
   Box(modifier = modifier) {
@@ -69,11 +70,13 @@ fun ErrorView(
         }
       }
       Spacer(modifier = Modifier.weight(24f))
-      PaddedRow(sideWeight = 16f) {
-        RetryButton(
-          onClick = onRetryClick,
-          modifier = Modifier.weight(328f)
-        )
+      onRetryClick?.let {
+        PaddedRow(sideWeight = 16f) {
+          RetryButton(
+            onClick = it,
+            modifier = Modifier.weight(328f)
+          )
+        }
       }
       Spacer(modifier = Modifier.weight(154f))
       Image(
