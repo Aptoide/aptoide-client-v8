@@ -1,270 +1,93 @@
 package com.aptoide.android.aptoidegames.device_info
 
-import android.content.pm.PackageManager
-import android.os.Build
-import java.io.BufferedReader
-import java.io.File
-import java.io.InputStreamReader
-import javax.inject.Inject
-import javax.inject.Singleton
+import cm.aptoide.pt.feature_flags.domain.FeatureFlags
+import com.aptoide.android.aptoidegames.device_info.checks.DeviceCheck
+import com.aptoide.android.aptoidegames.device_info.checks.DeviceCheckOutcome
+import com.aptoide.android.aptoidegames.device_info.checks.DeviceCheckReport
+import com.aptoide.android.aptoidegames.device_info.checks.DeviceCheckResult
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
+import timber.log.Timber
+import java.util.Locale
 
 /**
- * Utility class to detect if the device is an emulator or rooted.
- * Uses multiple detection techniques for improved accuracy.
+ * Runs the named device checks (emulator, root and runtime tampering) and reports each one by
+ * name. A check runs at most once per process: its outcome is kept and reused.
+ *
+ * Which checks run comes from the [DEVICE_CHECKS_FLAG_KEY] remote config flag, a JSON array of
+ * check names. A check left out of the list does not run at all, and names the app does not
+ * know are ignored. The flag can silence single checks but never all of them: when it is absent,
+ * cannot be parsed or names no known check (an empty list included), every check runs.
+ *
+ * A check that threw is tried again on the next run; fired and clear outcomes are kept.
  */
-@Singleton
-class DeviceSecurityChecker @Inject constructor(
-  private val packageManager: PackageManager,
+class DeviceSecurityChecker(
+  private val checks: List<DeviceCheck>,
+  private val featureFlags: FeatureFlags,
+  private val dispatcher: CoroutineDispatcher,
 ) {
 
-  private val isDeviceCompromised: Boolean by lazy {
-    isEmulator() || isRooted()
+  companion object {
+    const val DEVICE_CHECKS_FLAG_KEY = "pae_device_checks"
+    private const val TAG = "DeviceSecurityChecker"
+  }
+
+  private val mutex = Mutex()
+  private val outcomes = mutableMapOf<String, DeviceCheckOutcome>()
+
+  @Volatile
+  private var loggedUnknownNames: Set<String>? = null
+
+  /** Runs the checks off the main thread and reports every one that ran. Never throws. */
+  suspend fun runChecks(): DeviceCheckReport = withContext(dispatcher) {
+    val enabled = enabledChecks()
+    mutex.withLock {
+      DeviceCheckReport(
+        enabled.map { check ->
+          DeviceCheckResult(
+            name = check.name,
+            group = check.group,
+            outcome = outcomes[check.name] ?: check.outcome().also { outcome ->
+              if (outcome != DeviceCheckOutcome.FAILED) outcomes[check.name] = outcome
+            },
+          )
+        }
+      )
+    }
   }
 
   /**
-   * Checks if the device is likely an emulator.
-   * Uses multiple heuristics to detect various emulator types (Android Studio, Genymotion, BlueStacks, etc.)
-   *
-   * @return true if the device appears to be an emulator, false otherwise
+   * Whether Play & Earn must stay hidden: an emulator or a root check fired. The runtime checks
+   * (hooking, debugger, test harness) never count here; they are only reported.
    */
-  fun isEmulator(): Boolean {
-    return checkBuildProperties() ||
-      checkHardwareProperties() ||
-      checkEmulatorFiles() ||
-      checkUnknownBoard()
+  suspend fun isCompromisedDevice(): Boolean = runChecks().hidesPlayAndEarn
+
+  private suspend fun enabledChecks(): List<DeviceCheck> {
+    val names = featureFlags.getStringListOrNull(DEVICE_CHECKS_FLAG_KEY)
+      ?.map { it.trim().lowercase(Locale.US) }
+      ?.toSet()
+      ?: return checks
+    logUnknownNames(names - checks.map { it.name }.toSet())
+    val enabled = checks.filter { it.name in names }
+    return enabled.ifEmpty { checks }
   }
 
-  /**
-   * Checks if the device is likely rooted.
-   * Uses multiple detection methods for comprehensive root detection.
-   *
-   * @return true if the device appears to be rooted, false otherwise
-   */
-  fun isRooted(): Boolean {
-    return checkRootBinaries() ||
-      checkSuBinary() ||
-      checkRootManagementApps() ||
-      checkDangerousProps() ||
-      checkRWPaths() ||
-      checkBuildTags()
+  private fun logUnknownNames(unknown: Set<String>) {
+    if (unknown.isEmpty() || unknown == loggedUnknownNames) return
+    loggedUnknownNames = unknown
+    Timber.tag(TAG).w("$DEVICE_CHECKS_FLAG_KEY names unknown checks: $unknown")
   }
 
-  // ==================== Emulator Detection ====================
-
-  @Suppress("DEPRECATION")
-  private fun checkBuildProperties(): Boolean {
-    return (Build.FINGERPRINT.startsWith("generic", ignoreCase = true) ||
-      Build.FINGERPRINT.startsWith("unknown", ignoreCase = true) ||
-      Build.FINGERPRINT.contains("emulator", ignoreCase = true) ||
-      Build.FINGERPRINT.contains("sdk_gphone", ignoreCase = true) ||
-      Build.MODEL.contains("google_sdk", ignoreCase = true) ||
-      Build.MODEL.contains("emulator", ignoreCase = true) ||
-      Build.MODEL.contains("droid4x", ignoreCase = true) ||
-      Build.MODEL.equals("sdk", ignoreCase = true) ||
-      Build.MODEL.contains("Android SDK built for", ignoreCase = true) ||
-      Build.MANUFACTURER.contains("genymotion", ignoreCase = true) ||
-      Build.BRAND.startsWith("generic", ignoreCase = true) ||
-      Build.DEVICE.startsWith("generic", ignoreCase = true) ||
-      Build.PRODUCT.equals("sdk", ignoreCase = true) ||
-      Build.PRODUCT.contains("sdk_gphone", ignoreCase = true) ||
-      Build.PRODUCT.contains("vbox", ignoreCase = true) ||
-      Build.PRODUCT.contains("emulator", ignoreCase = true) ||
-      Build.PRODUCT.contains("simulator", ignoreCase = true) ||
-      Build.HARDWARE.contains("goldfish", ignoreCase = true) ||
-      Build.HARDWARE.contains("ranchu", ignoreCase = true) ||
-      Build.HARDWARE.contains("nox", ignoreCase = true) ||
-      Build.HARDWARE.contains("vbox", ignoreCase = true) ||
-      Build.BOARD.contains("nox", ignoreCase = true) ||
-      Build.BOOTLOADER.contains("nox", ignoreCase = true))
+  private fun DeviceCheck.outcome(): DeviceCheckOutcome = try {
+    if (fired()) DeviceCheckOutcome.FIRED else DeviceCheckOutcome.CLEAR
+  } catch (e: CancellationException) {
+    throw e
+  } catch (_: Exception) {
+    DeviceCheckOutcome.FAILED
+  } catch (_: LinkageError) {
+    DeviceCheckOutcome.FAILED
   }
-
-  private fun checkHardwareProperties(): Boolean {
-    val qemuProps = listOf(
-      "ro.kernel.qemu",
-      "ro.kernel.android.qemud",
-      "qemu.hw.mainkeys",
-      "ro.kernel.qemu.gles"
-    )
-
-    return qemuProps.any { prop ->
-      try {
-        val process = Runtime.getRuntime().exec(arrayOf("getprop", prop))
-        val result = BufferedReader(InputStreamReader(process.inputStream)).use { reader ->
-          val value = reader.readLine()
-          !value.isNullOrEmpty() && value != "0"
-        }
-        process.waitFor()
-        process.destroy()
-        result
-      } catch (_: Exception) {
-        false
-      }
-    }
-  }
-
-  private fun checkEmulatorFiles(): Boolean {
-    val emulatorFiles = listOf(
-      "/dev/socket/genyd",
-      "/dev/socket/baseband_genyd",
-      "/dev/socket/qemud",
-      "/dev/qemu_pipe",
-      "/system/lib/libc_malloc_debug_qemu.so",
-      "/sys/qemu_trace",
-      "/system/bin/qemu-props",
-      "/dev/goldfish_pipe",
-      "/system/lib/libdvm_em.so",
-      "/system/bin/microvirtd",
-      "/system/bin/ldinit",
-      "/system/bin/ldmountsf",
-      "/system/lib/ldutils.so",
-      "/system/bin/nox-prop",
-      "/system/bin/nox-vbox-sf",
-      "/system/lib/libnoxd.so",
-      "/system/lib/libnoxspeedup.so"
-    )
-
-    return emulatorFiles.any { path ->
-      try {
-        File(path).exists()
-      } catch (_: Exception) {
-        false
-      }
-    }
-  }
-
-  private fun checkUnknownBoard(): Boolean {
-    return Build.BOARD.isEmpty() || Build.BOARD.equals("unknown", ignoreCase = true)
-  }
-
-  // ==================== Root Detection ====================
-
-  private fun checkRootBinaries(): Boolean {
-    val rootBinaries = listOf(
-      "/system/app/Superuser.apk",
-      "/sbin/su",
-      "/system/bin/su",
-      "/system/xbin/su",
-      "/data/local/xbin/su",
-      "/data/local/bin/su",
-      "/system/sd/xbin/su",
-      "/system/bin/failsafe/su",
-      "/data/local/su",
-      "/su/bin/su",
-      "/system/xbin/busybox",
-      "/sbin/.magisk",
-      "/sbin/.core",
-      "/data/adb/magisk",
-      "/system/etc/init.d",
-      "/system/bin/.ext",
-      "/system/xbin/daemonsu",
-      "/system/etc/.has_su_daemon",
-      "/system/etc/.installed_su_daemon",
-      "/dev/.superuser.mounted"
-    )
-
-    return rootBinaries.any { path ->
-      try {
-        File(path).exists()
-      } catch (_: Exception) {
-        false
-      }
-    }
-  }
-
-  private fun checkSuBinary(): Boolean {
-    val paths = System.getenv("PATH")?.split(":") ?: emptyList()
-    return paths.any { path ->
-      try {
-        File("$path/su").exists()
-      } catch (_: Exception) {
-        false
-      }
-    }
-  }
-
-  private fun checkRootManagementApps(): Boolean {
-    val rootApps = listOf(
-      "com.topjohnwu.magisk",
-      "com.koushikdutta.superuser",
-      "com.thirdparty.superuser",
-      "eu.chainfire.supersu",
-      "com.noshufou.android.su",
-      "com.noshufou.android.su.elite",
-      "com.yellowes.su",
-      "com.kingroot.kinguser",
-      "com.kingo.root",
-      "com.smedialink.oneclickroot",
-      "com.zhiqupk.root.global",
-      "com.alephzain.framaroot",
-      "com.zachspong.temprootremovejb",
-      "com.ramdroid.appquarantine",
-      "com.amphoras.hidemyroot",
-      "com.amphoras.hidemyrootadfree",
-      "com.formyhm.hiderootPremium",
-      "com.formyhm.hideroot",
-      "me.phh.superuser",
-      "eu.chainfire.supersu.pro",
-      "com.kingouser.com"
-    )
-
-    return rootApps.any { packageName ->
-      try {
-        packageManager.getPackageInfo(packageName, 0)
-        true
-      } catch (_: PackageManager.NameNotFoundException) {
-        false
-      }
-    }
-  }
-
-  private fun checkDangerousProps(): Boolean {
-    val dangerousProps = mapOf(
-      "ro.debuggable" to "1",
-      "ro.secure" to "0",
-      "service.adb.root" to "1"
-    )
-
-    return dangerousProps.any { (prop, dangerousValue) ->
-      try {
-        val process = Runtime.getRuntime().exec(arrayOf("getprop", prop))
-        val result = BufferedReader(InputStreamReader(process.inputStream)).use { reader ->
-          val value = reader.readLine()
-          value == dangerousValue
-        }
-        process.waitFor()
-        process.destroy()
-        result
-      } catch (_: Exception) {
-        false
-      }
-    }
-  }
-
-  private fun checkRWPaths(): Boolean {
-    val pathsToCheck = listOf(
-      "/system",
-      "/system/bin",
-      "/system/sbin",
-      "/system/xbin",
-      "/vendor/bin",
-      "/sbin",
-      "/etc"
-    )
-
-    return pathsToCheck.any { path ->
-      try {
-        val file = File(path)
-        file.exists() && file.canWrite()
-      } catch (_: Exception) {
-        false
-      }
-    }
-  }
-
-  private fun checkBuildTags(): Boolean {
-    val buildTags = Build.TAGS
-    return buildTags != null && buildTags.contains("test-keys")
-  }
-
-  fun isCompromisedDevice(): Boolean = isDeviceCompromised
 }

@@ -497,8 +497,9 @@ heartbeat response.
 | `pae_countries` | JSON array of ISO-3166 alpha-2 | locally detected country must be in it; default `US CA FI FR DE IT NL NO PT ES SE GB` |
 | `pae_usage_tracking_enabled` | bool | time-based missions + usage permissions. **Off**; irrelevant for iOS |
 | `pae_status_heartbeat_max_hours` | int 1–24 | backstop for the post-Play status heartbeat loop (default 10) |
+| `pae_device_checks` | JSON array of device check names, e.g. `["su_binary","root_apps"]` | which device checks run; a check left out does not run. Default (flag absent or unparseable): all checks. Unknown names are ignored, and a list with **no** known name (including `[]`) is treated as invalid: all checks run, so the flag can silence single checks but never all of them |
 
-P&E is also hidden on rooted/compromised devices.
+P&E is also hidden on compromised devices: when one of the emulator checks (`emulator_build`, `emulator_props`, `emulator_files`, `unknown_board`) or root checks (`root_files`, `su_binary`, `root_apps`, `dangerous_props`, `rw_system_paths`, `test_keys`) fires, on release builds. The runtime checks (`xposed`, `hook_libraries`, `debugger`, `test_harness`, `app_debuggable`) never hide P&E; they are only reported. The names of the checks that fired go to Firebase once per process as `pae_device_risk` (`checks`: sorted, comma-separated names, continued in `checks_2`, … past 100 characters; `count`: how many fired).
 
 ---
 

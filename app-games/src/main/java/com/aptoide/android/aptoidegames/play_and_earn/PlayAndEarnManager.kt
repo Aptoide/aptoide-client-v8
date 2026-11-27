@@ -14,10 +14,9 @@ import androidx.lifecycle.ViewModel
 import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.feature_flags.domain.FeatureFlags
 import cm.aptoide.pt.wallet.datastore.WalletCoreDataSource
-import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.device_info.DeviceCountryProvider
-import com.aptoide.android.aptoidegames.device_info.DeviceSecurityChecker
 import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPreferencesRepository
+import com.aptoide.android.aptoidegames.play_and_earn.domain.PaEDeviceGate
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.hasPaEPermissions
 import com.google.firebase.Firebase
 import com.google.firebase.remoteconfig.ConfigUpdate
@@ -45,7 +44,7 @@ class PlayAndEarnManager @Inject constructor(
   @ApplicationContext private val context: Context,
   private val featureFlags: FeatureFlags,
   private val walletCoreDataSource: WalletCoreDataSource,
-  private val deviceSecurityChecker: DeviceSecurityChecker,
+  private val paEDeviceGate: PaEDeviceGate,
   private val paEPreferencesRepository: PaEPreferencesRepository,
   private val deviceCountryProvider: DeviceCountryProvider,
 ) {
@@ -124,7 +123,7 @@ class PlayAndEarnManager @Inject constructor(
   }
 
   suspend fun shouldShowPlayAndEarn(): Boolean {
-    if (!BuildConfig.DEBUG && deviceSecurityChecker.isCompromisedDevice()) {
+    if (paEDeviceGate.hidesPlayAndEarn()) {
       return false
     }
     val allowedCountries = featureFlags.getStringListOrNull(PAE_COUNTRIES_FLAG_KEY)

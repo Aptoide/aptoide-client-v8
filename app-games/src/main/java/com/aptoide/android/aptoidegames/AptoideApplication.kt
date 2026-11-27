@@ -30,6 +30,7 @@ import com.aptoide.android.aptoidegames.app_open_ads.AppOpenAdInitializer
 import com.aptoide.android.aptoidegames.attribution.domain.AttributionManager
 import com.aptoide.android.aptoidegames.device_info.DeviceSecurityChecker
 import com.aptoide.android.aptoidegames.device_info.analytics.DeviceInfoAnalytics
+import com.aptoide.android.aptoidegames.device_info.checks.DeviceCheckGroup
 import com.aptoide.android.aptoidegames.feature_companion_apps_notification.CompanionAppsManager
 import com.aptoide.android.aptoidegames.feature_editors_choice_recommendation.EditorsChoiceRecommendationManager
 import com.aptoide.android.aptoidegames.feature_rtb.InstalledPackagesSyncManager
@@ -158,7 +159,6 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
     initCompanionGamesCachePreloader()
     initTrendingAppsRecommendationManager()
     initInstalledPackagesSyncManager()
-    sendDeviceSecurityAnalytics()
   }
 
   private fun initAttribution() {
@@ -175,11 +175,12 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
     }
   }
 
-  private fun sendDeviceSecurityAnalytics() {
-    if (deviceSecurityChecker.isEmulator()) {
+  private suspend fun sendDeviceSecurityAnalytics() {
+    val report = deviceSecurityChecker.runChecks()
+    if (report.firedIn(DeviceCheckGroup.EMULATOR)) {
       deviceInfoAnalytics.sendDeviceEmulator()
     }
-    if (deviceSecurityChecker.isRooted()) {
+    if (report.firedIn(DeviceCheckGroup.ROOT)) {
       deviceInfoAnalytics.sendDeviceRooted()
     }
   }
@@ -210,6 +211,10 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
       }.onFailure { throwable ->
         Timber.e(throwable, "Failed to initialize feature flags.")
       }
+      // Here rather than in onCreate so the device checks read the loaded flags when they could
+      // be fetched; otherwise they fall back to the cached or default list of checks.
+      runCatching { sendDeviceSecurityAnalytics() }
+        .onFailure { throwable -> Timber.e(throwable, "Failed to send device security events.") }
     }
   }
 
