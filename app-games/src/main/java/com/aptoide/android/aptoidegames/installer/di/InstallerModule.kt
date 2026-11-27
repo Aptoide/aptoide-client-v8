@@ -38,6 +38,8 @@ import com.aptoide.android.aptoidegames.installer.ff.PreApprovalExperiment
 import com.aptoide.android.aptoidegames.installer.notifications.InstallerNotificationsManager
 import com.aptoide.android.aptoidegames.installer.notifications.RealInstallerNotificationsManager
 import com.aptoide.android.aptoidegames.installer.task_info.AptoideTaskInfoProbe
+import com.aptoide.android.aptoidegames.play_and_earn.domain.installs.PaEInstallTracker
+import dagger.Lazy
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -64,13 +66,16 @@ class InstallerModule {
     installAnalytics: InstallAnalytics,
     networkConnection: NetworkConnection,
     silentInstallChecker: SilentInstallChecker,
+    paeInstallTracker: Lazy<PaEInstallTracker>,
   ): InstallManager = OBBInstallManager(
     context = appContext,
     installManager = InstallManager.with(
       context = appContext,
       taskInfoRepository = AptoideTaskInfoProbe(
         taskInfoRepository = taskInfoRepository,
-        installAnalytics = installAnalytics
+        installAnalytics = installAnalytics,
+        // AND-954: a Play & Earn game's install, from any screen, sends its install click.
+        onInstallQueued = { paeInstallTracker.get().onInstallStarted(it) },
       ),
       packageDownloader = DownloadProbe(
         packageDownloader = downloadPermissionStateProbe,

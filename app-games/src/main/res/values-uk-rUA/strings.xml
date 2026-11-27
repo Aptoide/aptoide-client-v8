@@ -503,6 +503,8 @@
   <string name="play_and_earn_exchange_error_restricted_body">Ваш обліковий запис обмежено механізмами захисту від шахрайства. Напишіть нам: Налаштування &gt; Підтримка.</string>
   <string name="play_and_earn_exchange_error_limit_body_until">Наступний обмін буде доступний %1$s.</string>
   <string name="play_and_earn_exchange_error_too_many_attempts_body_until">Забагато спроб. Повторіть спробу після %1$s.</string>
+  <string name="play_and_earn_install_limit_body">Досягнуто денного ліміту встановлень Play &amp; Earn. Гру все одно буде завантажено.</string>
+  <string name="play_and_earn_install_limit_body_until">Досягнуто денного ліміту встановлень Play &amp; Earn. Гру все одно буде завантажено. Ліміт оновиться %1$s.</string>
   <string name="play_and_earn_exchange_email_safe_note">🔒 Ваша електронна пошта в безпеці. Ми використаємо її лише для надсилання цієї винагороди.</string>
   <string name="play_and_earn_exchange_get_my_code_button">Отримати код</string>
   <string name="play_and_earn_exchange_not_enough_balance">Недостатньо балансу</string>

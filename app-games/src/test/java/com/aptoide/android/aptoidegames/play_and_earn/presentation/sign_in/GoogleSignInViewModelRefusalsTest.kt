@@ -14,6 +14,8 @@ import cm.aptoide.pt.test.gherkin.coScenario
 import cm.aptoide.pt.wallet.authorization.data.WalletAuthRepository
 import cm.aptoide.pt.wallet.authorization.domain.UserWalletData
 import com.aptoide.android.aptoidegames.play_and_earn.data.InMemoryPreferencesDataStore
+import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPendingInstall
+import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPendingInstalls
 import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPendingRedeems
 import com.aptoide.android.aptoidegames.play_and_earn.data.PaESignInBonusRefusal
 import com.aptoide.android.aptoidegames.play_and_earn.data.UserAccountPreferencesRepository
@@ -83,6 +85,11 @@ internal class GoogleSignInViewModelRefusalsTest {
     newRequestId = { "id-${++idCount}" },
   )
   private var idCount = 0
+  private val pendingInstalls = PaEPendingInstalls(
+    dataStore = InMemoryPreferencesDataStore(),
+    nowMillis = { 0L },
+    newClickId = { "click-1" },
+  )
   private val signInBonusRefusal = PaESignInBonusRefusal(
     dataStore = InMemoryPreferencesDataStore(),
     nowMillis = { 0L },
@@ -123,6 +130,35 @@ internal class GoogleSignInViewModelRefusalsTest {
 
     m Then "the same redeem by the next account is a new one (AND-952)"
     assertEquals("id-2", pendingRedeems.idFor(EMAIL, PaERewardType.ROBUX))
+  }
+
+  @Test
+  fun `Signing out forgets the pending installs`() = coScenario { scope ->
+    m Given "an install whose report is still due"
+    pendingInstalls.startOrReuse(GAME, owner = "0xWallet")
+    val viewModel = scope.viewModel()
+
+    m When "the user signs out"
+    viewModel.signOut()
+
+    m Then "its click is not reported for the next account (AND-954)"
+    assertEquals(emptyList<PaEPendingInstall>(), pendingInstalls.all())
+  }
+
+  @Test
+  fun `Signing in forgets the pending installs`() = coScenario { scope ->
+    m Given "an install whose report is still due, and another account about to sign in"
+    pendingInstalls.startOrReuse(GAME, owner = "0xWallet")
+    authorization = Result.success(UserWalletData("0xother", "token", EMAIL))
+    val viewModel = scope.viewModel()
+
+    m When "the other account signs in"
+    viewModel.handleAuthorizationResult(
+      AuthorizationResult("code", null, null, emptyList(), null, null)
+    )
+
+    m Then "the last account's click is not reported for the new one (AND-954)"
+    assertEquals(emptyList<PaEPendingInstall>(), pendingInstalls.all())
   }
 
   @Test
@@ -217,6 +253,7 @@ internal class GoogleSignInViewModelRefusalsTest {
     },
     paESessionRefusals = refusals,
     pendingRedeems = pendingRedeems,
+    pendingInstalls = pendingInstalls,
     signInRewardRepository = rewards,
     accountRestriction = restriction,
   )

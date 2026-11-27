@@ -50,6 +50,7 @@ import com.aptoide.android.aptoidegames.network.presentation.WifiPromptDialog
 import com.aptoide.android.aptoidegames.network.presentation.WifiPromptType
 import com.aptoide.android.aptoidegames.network.rememberDownloadOverWifi
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.rememberPaEAnalytics
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.installs.rememberPaEPlayInstallStarted
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.hasOverlayPermission
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.hasUsageStatsPermissionStatus
 
@@ -81,6 +82,7 @@ fun installViewStates(
   val analyticsContext = AnalyticsContext.current
   val utmContext = UTMContext.current
   val installAnalytics = rememberInstallAnalytics()
+  val paePlayInstallStarted = rememberPaEPlayInstallStarted()
   val downloadUiState = rememberDownloadState(
     app = app,
     onInlineInstallLaunched = { isUpdate ->
@@ -103,6 +105,9 @@ fun installViewStates(
       }
       app.campaigns?.toAptoideMMPCampaign()?.sendDownloadEvent(utmInfo = utmContext)
       app.campaigns?.toMMPLinkerCampaign()?.sendDownloadEvent()
+      // AND-954: a Play & Earn game installed by Google Play sends its install click here; the
+      // install manager tells the others.
+      if (!isUpdate) paePlayInstallStarted(app.packageName)
 
       // The regular path reports install start when the constraints resolver resolves,
       // which diverted installs never reach - without this, screens reacting to install

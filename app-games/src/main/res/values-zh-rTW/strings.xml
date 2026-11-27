@@ -470,6 +470,8 @@
   <string name="play_and_earn_exchange_error_restricted_body">由於防詐騙機制，您的帳戶已受限。請在設定中聯絡支援。</string>
   <string name="play_and_earn_exchange_error_limit_body_until">您可於 %1$s 再次兌換。</string>
   <string name="play_and_earn_exchange_error_too_many_attempts_body_until">嘗試次數過多，請在 %1$s 後再試。</string>
+  <string name="play_and_earn_install_limit_body">您已達到今日 Play &amp; Earn 安裝上限。您的遊戲仍會繼續下載。</string>
+  <string name="play_and_earn_install_limit_body_until">您已達到今日 Play &amp; Earn 安裝上限。您的遊戲仍會繼續下載。上限將於 %1$s 重設。</string>
   <string name="play_and_earn_exchange_email_safe_note">🔒 您的電子郵件很安全。我們只會用它來發送此獎勵。</string>
   <string name="play_and_earn_exchange_get_my_code_button">取得我的代碼</string>
   <string name="play_and_earn_exchange_not_enough_balance">餘額不足</string>

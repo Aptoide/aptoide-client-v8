@@ -40,9 +40,11 @@ import com.aptoide.android.aptoidegames.installer.analytics.ScheduledDownloadsLi
 import com.aptoide.android.aptoidegames.installer.notifications.InstallerNotificationsManager
 import com.aptoide.android.aptoidegames.launch.AppLaunchPreferencesManager
 import com.aptoide.android.aptoidegames.network.AptoideGetHeaders
+import com.aptoide.android.aptoidegames.play_and_earn.domain.installs.PaEInstallTracker
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.crashlytics
+import dagger.Lazy
 import dagger.hilt.EntryPoint
 import dagger.hilt.EntryPoints
 import dagger.hilt.InstallIn
@@ -50,6 +52,8 @@ import dagger.hilt.android.HiltAndroidApp
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import okhttp3.Dispatcher
 import okhttp3.OkHttpClient
@@ -137,6 +141,10 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
   @Inject
   lateinit var attributionManager: AttributionManager
 
+  // Lazy: built on the IO thread below, not on the main thread in onCreate.
+  @Inject
+  lateinit var paeInstallTracker: Lazy<PaEInstallTracker>
+
   override fun onCreate() {
     FirebaseApp.initializeApp(this)
     super.onCreate()
@@ -159,6 +167,20 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
     initCompanionGamesCachePreloader()
     initTrendingAppsRecommendationManager()
     initInstalledPackagesSyncManager()
+    initPaEInstallReports()
+  }
+
+  // AND-954: reports the Play & Earn installs that finished while the app was not running, then
+  // each one as it finishes, whatever screen is open.
+  private fun initPaEInstallReports() {
+    if (applicationContext.isObbMoverProcess()) return
+    CoroutineScope(Dispatchers.IO).launch {
+      paeInstallTracker.get().initialize(
+        packagesInstalled = installManager.appsChanges
+          .filter { it.packageInfo != null }
+          .map { it.packageName }
+      )
+    }
   }
 
   private fun initAttribution() {

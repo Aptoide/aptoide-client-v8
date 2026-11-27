@@ -481,6 +481,8 @@
   <string name="play_and_earn_exchange_error_restricted_body">Je account is beperkt vanwege antifraudemaatregelen. Neem contact op met Ondersteuning via Instellingen.</string>
   <string name="play_and_earn_exchange_error_limit_body_until">Je kunt weer inwisselen op %1$s.</string>
   <string name="play_and_earn_exchange_error_too_many_attempts_body_until">Te veel pogingen. Probeer het na %1$s opnieuw.</string>
+  <string name="play_and_earn_install_limit_body">Je hebt de Play &amp; Earn-installatielimiet van vandaag bereikt. Je game wordt gewoon gedownload.</string>
+  <string name="play_and_earn_install_limit_body_until">Je hebt de Play &amp; Earn-installatielimiet van vandaag bereikt. Je game wordt gewoon gedownload. De limiet wordt gereset op %1$s.</string>
   <string name="play_and_earn_exchange_email_safe_note">🔒 Je e-mailadres is veilig bij ons. We gebruiken het alleen om je deze beloning te sturen.</string>
   <string name="play_and_earn_exchange_get_my_code_button">Mijn code ophalen</string>
   <string name="play_and_earn_exchange_not_enough_balance">Niet genoeg saldo</string>

@@ -64,6 +64,7 @@ import com.aptoide.android.aptoidegames.installer.UserActionDialog
 import com.aptoide.android.aptoidegames.mmp.WithUTM
 import com.aptoide.android.aptoidegames.notifications.NotificationsPermissionRequester
 import com.aptoide.android.aptoidegames.permissions.notifications.NotificationsPermissionViewModel
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.installs.PaEInstallLimitSnack
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.level_up.levelUpScreen
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.playAndEarnPermissionsScreen
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.ClaimedRewardDialog
@@ -191,6 +192,14 @@ fun MainView(navController: NavHostController) {
             showSnack = {
               coroutineScope.launch {
                 snackBarHostState.showSnackbar(message = it)
+              }
+            }
+          )
+
+          PaEInstallLimitSnack(
+            showSnack = { message, duration ->
+              coroutineScope.launch {
+                snackBarHostState.showSnackbar(message = message, duration = duration)
               }
             }
           )

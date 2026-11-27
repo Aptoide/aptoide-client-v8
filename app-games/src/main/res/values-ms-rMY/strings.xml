@@ -471,6 +471,8 @@ Promosi khas dan ganjaran dalam permainan kegemaran anda.</string>
   <string name="play_and_earn_exchange_error_restricted_body">Akaun anda telah disekat kerana mekanisme anti-penipuan. Hubungi Sokongan dalam Tetapan.</string>
   <string name="play_and_earn_exchange_error_limit_body_until">Anda boleh menebus semula pada %1$s.</string>
   <string name="play_and_earn_exchange_error_too_many_attempts_body_until">Terlalu banyak percubaan. Cuba lagi selepas %1$s.</string>
+  <string name="play_and_earn_install_limit_body">Anda telah mencapai had pemasangan Play &amp; Earn hari ini. Permainan anda tetap akan dimuat turun.</string>
+  <string name="play_and_earn_install_limit_body_until">Anda telah mencapai had pemasangan Play &amp; Earn hari ini. Permainan anda tetap akan dimuat turun. Had ditetapkan semula pada %1$s.</string>
   <string name="play_and_earn_exchange_email_safe_note">🔒 E-mel anda selamat dengan kami. Kami hanya guna ia untuk menghantar ganjaran ini.</string>
   <string name="play_and_earn_exchange_get_my_code_button">Dapatkan kod saya</string>
   <string name="play_and_earn_exchange_not_enough_balance">Baki tidak mencukupi</string>

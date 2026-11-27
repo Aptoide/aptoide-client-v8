@@ -481,6 +481,8 @@
   <string name="play_and_earn_exchange_error_restricted_body">Ο λογαριασμός σας περιορίστηκε λόγω μηχανισμών κατά της απάτης. Επικοινωνήστε με την Υποστήριξη στις Ρυθμίσεις.</string>
   <string name="play_and_earn_exchange_error_limit_body_until">Μπορείτε να εξαργυρώσετε ξανά από %1$s.</string>
   <string name="play_and_earn_exchange_error_too_many_attempts_body_until">Πάρα πολλές προσπάθειες. Δοκιμάστε ξανά μετά από %1$s.</string>
+  <string name="play_and_earn_install_limit_body">Συμπληρώσατε το σημερινό όριο εγκαταστάσεων του Play &amp; Earn. Η λήψη του παιχνιδιού σας θα συνεχιστεί κανονικά.</string>
+  <string name="play_and_earn_install_limit_body_until">Συμπληρώσατε το σημερινό όριο εγκαταστάσεων του Play &amp; Earn. Η λήψη του παιχνιδιού σας θα συνεχιστεί κανονικά. Το όριο επαναφέρεται στις %1$s.</string>
   <string name="play_and_earn_exchange_email_safe_note">🔒 Το email σας είναι ασφαλές. Θα το χρησιμοποιήσουμε μόνο για να σας στείλουμε αυτή την ανταμοιβή.</string>
   <string name="play_and_earn_exchange_get_my_code_button">Λάβετε τον κωδικό μου</string>
   <string name="play_and_earn_exchange_not_enough_balance">Ανεπαρκές υπόλοιπο</string>

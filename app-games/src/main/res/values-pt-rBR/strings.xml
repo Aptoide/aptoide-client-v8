@@ -481,6 +481,8 @@
   <string name="play_and_earn_exchange_error_restricted_body">Sua conta foi restrita por mecanismos antifraude. Entre em contato com o Suporte em Configurações.</string>
   <string name="play_and_earn_exchange_error_limit_body_until">Você poderá resgatar de novo em %1$s.</string>
   <string name="play_and_earn_exchange_error_too_many_attempts_body_until">Muitas tentativas. Tente novamente após %1$s.</string>
+  <string name="play_and_earn_install_limit_body">Você atingiu o limite de instalações do Play &amp; Earn de hoje. Seu jogo será baixado normalmente.</string>
+  <string name="play_and_earn_install_limit_body_until">Você atingiu o limite de instalações do Play &amp; Earn de hoje. Seu jogo será baixado normalmente. O limite será redefinido em %1$s.</string>
   <string name="play_and_earn_exchange_email_safe_note">🔒 Seu e-mail está seguro conosco. Só o usaremos para enviar esta recompensa.</string>
   <string name="play_and_earn_exchange_get_my_code_button">Obter meu código</string>
   <string name="play_and_earn_exchange_not_enough_balance">Saldo insuficiente</string>

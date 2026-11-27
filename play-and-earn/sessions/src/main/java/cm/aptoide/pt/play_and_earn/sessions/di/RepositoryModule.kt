@@ -7,8 +7,11 @@ import cm.aptoide.pt.environment_info.DeviceIdProvider
 import cm.aptoide.pt.exception_handler.ExceptionHandler
 import cm.aptoide.pt.play_and_earn.sessions.data.AccountStatusApi
 import cm.aptoide.pt.play_and_earn.sessions.data.DefaultPaEAccountStatusRepository
+import cm.aptoide.pt.play_and_earn.sessions.data.DefaultPaEInstallsRepository
 import cm.aptoide.pt.play_and_earn.sessions.data.DefaultPaESessionsRepository
+import cm.aptoide.pt.play_and_earn.sessions.data.InstallsApi
 import cm.aptoide.pt.play_and_earn.sessions.data.PaEAccountStatusRepository
+import cm.aptoide.pt.play_and_earn.sessions.data.PaEInstallsRepository
 import cm.aptoide.pt.play_and_earn.sessions.data.PaESessionsRepository
 import cm.aptoide.pt.play_and_earn.sessions.data.SessionsApi
 import cm.aptoide.pt.wallet.authorization.data.WalletAuthInterceptor
@@ -31,8 +34,8 @@ internal annotation class PaESessionsRetrofit
 @InstallIn(SingletonComponent::class)
 internal object RepositoryModule {
 
-  // The sessions and the account status (AND-951) share one authenticated client: the same
-  // rewards host, the same wallet JWT and Play & Earn id.
+  // The sessions, the account status (AND-951) and the installs (AND-954) share one
+  // authenticated client: the same rewards host, the same wallet JWT and Play & Earn id.
   @Provides
   @Singleton
   @PaESessionsRetrofit
@@ -63,6 +66,22 @@ internal object RepositoryModule {
   @Singleton
   fun provideAccountStatusApi(@PaESessionsRetrofit retrofit: Retrofit): AccountStatusApi =
     retrofit.create(AccountStatusApi::class.java)
+
+  @Provides
+  @Singleton
+  fun provideInstallsApi(@PaESessionsRetrofit retrofit: Retrofit): InstallsApi =
+    retrofit.create(InstallsApi::class.java)
+
+  @Provides
+  @Singleton
+  fun providePaEInstallsRepository(
+    installsApi: InstallsApi,
+    exceptionHandler: ExceptionHandler,
+  ): PaEInstallsRepository = DefaultPaEInstallsRepository(
+    api = installsApi,
+    dispatcher = Dispatchers.IO,
+    exceptionHandler = exceptionHandler,
+  )
 
   @Provides
   @Singleton
