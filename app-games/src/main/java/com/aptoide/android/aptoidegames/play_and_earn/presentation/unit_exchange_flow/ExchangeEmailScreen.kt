@@ -169,15 +169,21 @@ private fun ExchangeErrorView(
   modifier: Modifier = Modifier,
 ) {
   val onRetryClick = onRetry.takeIf { kind.canRetry }
+  // The flow's own background is Palette.Black under a gradient, in both brands and themes, so
+  // the text on it is Palette.White like the rest of this screen (the error view's default
+  // colour is for the app's usual background and is unreadable here in Vanilla).
+  val contentColor = Palette.White
   when (kind) {
     ExchangeErrorKind.Generic -> GenericErrorView(
       onRetryClick = onRetryClick,
       modifier = modifier,
+      contentColor = contentColor,
     )
 
     ExchangeErrorKind.Limit -> GenericErrorView(
       onRetryClick = onRetryClick,
       modifier = modifier,
+      contentColor = contentColor,
       title = stringResource(R.string.play_and_earn_exchange_error_limit_title),
       subtitle = stringResource(R.string.play_and_earn_exchange_error_limit_body),
     )
@@ -185,12 +191,14 @@ private fun ExchangeErrorView(
     ExchangeErrorKind.TooManyAttempts -> GenericErrorView(
       onRetryClick = onRetryClick,
       modifier = modifier,
+      contentColor = contentColor,
       subtitle = stringResource(R.string.play_and_earn_exchange_error_too_many_attempts_body),
     )
 
     ExchangeErrorKind.BeingChecked -> GenericErrorView(
       onRetryClick = onRetryClick,
       modifier = modifier,
+      contentColor = contentColor,
       title = stringResource(R.string.play_and_earn_exchange_error_being_checked_title),
       subtitle = stringResource(R.string.play_and_earn_exchange_error_being_checked_body),
     )
@@ -198,6 +206,7 @@ private fun ExchangeErrorView(
     ExchangeErrorKind.Restricted -> GenericErrorView(
       onRetryClick = onRetryClick,
       modifier = modifier,
+      contentColor = contentColor,
       title = stringResource(R.string.play_and_earn_exchange_error_restricted_title),
       subtitle = stringResource(R.string.play_and_earn_exchange_error_restricted_body),
     )
