@@ -12,6 +12,7 @@ import cm.aptoide.pt.wallet.authorization.data.WalletAuthRepository
 import cm.aptoide.pt.wallet.authorization.domain.UserWalletData
 import com.aptoide.android.aptoidegames.play_and_earn.data.InMemoryPreferencesDataStore
 import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPendingRedeems
+import com.aptoide.android.aptoidegames.play_and_earn.data.PaESignInBonusRefusal
 import com.aptoide.android.aptoidegames.play_and_earn.data.UserAccountPreferencesRepository
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaESessionRefusals
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PaERewardType
@@ -25,13 +26,14 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.lang.reflect.Proxy
 
 // AND-950: refusals belong to the account; signing out forgets them. So does the pending
-// redeem (AND-952).
+// redeem (AND-952) and a refused sign-in bonus (AND-953).
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class GoogleSignInViewModelRefusalsTest {
 
@@ -65,6 +67,10 @@ internal class GoogleSignInViewModelRefusalsTest {
     newRequestId = { "id-${++idCount}" },
   )
   private var idCount = 0
+  private val signInBonusRefusal = PaESignInBonusRefusal(
+    dataStore = InMemoryPreferencesDataStore(),
+    nowMillis = { 0L },
+  )
 
   @BeforeEach
   fun setUp() = Dispatchers.setMain(UnconfinedTestDispatcher())
@@ -101,6 +107,19 @@ internal class GoogleSignInViewModelRefusalsTest {
     assertEquals("id-2", pendingRedeems.idFor(EMAIL, PaERewardType.ROBUX))
   }
 
+  @Test
+  fun `Signing out forgets the refused sign-in bonus`() = coScenario {
+    m Given "a sign-in bonus the backend refused for this account"
+    signInBonusRefusal.record()
+    val viewModel = viewModel()
+
+    m When "the user signs out"
+    viewModel.signOut()
+
+    m Then "the bonus may be offered to the next account (AND-953)"
+    assertFalse(signInBonusRefusal.isRefused())
+  }
+
   private fun viewModel() = GoogleSignInViewModel(
     credentialManager = credentialManager,
     userAuthRepository = walletAuthRepository,
@@ -110,6 +129,7 @@ internal class GoogleSignInViewModelRefusalsTest {
     },
     paESessionRefusals = refusals,
     pendingRedeems = pendingRedeems,
+    signInBonusRefusal = signInBonusRefusal,
   )
 
   private companion object {
