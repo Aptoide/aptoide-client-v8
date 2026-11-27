@@ -65,9 +65,10 @@ fun freeFireApkfyRewardScreen(
 
   // A claimed reward means there is no offer to show: leave to home whether the claim just
   // happened here (the success dialog shows over home) or the user reached an already-claimed
-  // offer (stale back stack entry, apkfy re-entry, or the mission state resolving late).
+  // offer (stale back stack entry, apkfy re-entry, or the mission state resolving late). A refused
+  // one (AND-953) ends the offer the same way, without a dialog.
   LaunchedEffect(rewardState) {
-    if (rewardState is RewardState.Claimed) navigateToHome()
+    if (rewardState is RewardState.Claimed || rewardState is RewardState.Refused) navigateToHome()
   }
 
   BackHandler {
