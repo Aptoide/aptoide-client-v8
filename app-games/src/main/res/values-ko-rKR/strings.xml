@@ -387,9 +387,6 @@
   <string name="play_and_earn_your_units_title">당신의 유닛들</string>
   <string name="play_and_earn_units_limit_body"><![CDATA[<1>%1$d</1>/100]]></string>
   <string name="play_and_earn_aptoide_balance_title">아프토이드 밸런스</string>
-  <string name="play_and_earn_exchange_now_button">지금 교환하세요</string>
-  <string name="play_and_earn_collect_more_units_body">%1$d 더 많은 유닛을 수집하여 Aptoide 잔액에 %2$s 를 획득하세요.</string>
-  <string name="play_and_earn_exchange_units_body">Aptoide 잔액에서 %1$d 단위를 %2$s 로 교환하세요.</string>
   <string name="play_and_earn_earn_rewards_by_playing_body">새로운 게임을 플레이하며 보상을 획득하세요!</string>
   <string name="play_and_earn_earning_now_title">지금 수익 창출</string>
   <string name="play_and_earn_missions_title">미션</string>

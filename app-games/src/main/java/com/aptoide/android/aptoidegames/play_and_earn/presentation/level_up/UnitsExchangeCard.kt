@@ -19,19 +19,28 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.design_system.AccentSmallButton
-import com.aptoide.android.aptoidegames.play_and_earn.SmallUnitsMultiplierBubble
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchange_flow.REDEEM_AMOUNT
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchange_flow.formattedRedeemAmount
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchange_flow.unitsToRedeem
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.units.rememberUnitsExchangeThreshold
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 
+/**
+ * Level Up's way into the redeem flow. Below the redeem target it says how many units are
+ * missing; from the target on it offers the redeem, with the amount the redeem screen shows.
+ */
 @Composable
 fun UnitsExchangeCard(
   availableUnits: Long,
-  onExchangeClick: () -> Unit
+  onExchangeClick: () -> Unit,
+  targetUnits: Long = rememberUnitsExchangeThreshold(),
 ) {
-  if (availableUnits < 100L) {
-    InsufficientUnitsCard(availableUnits)
+  val unitsToGo = unitsToRedeem(availableUnits, targetUnits)
+  if (unitsToGo > 0L) {
+    InsufficientUnitsCard(unitsToGo)
   } else {
-    ExchangeableUnitsCard(
+    RedeemableUnitsCard(
       availableUnits = availableUnits,
       onExchangeClick = onExchangeClick
     )
@@ -39,7 +48,7 @@ fun UnitsExchangeCard(
 }
 
 @Composable
-private fun InsufficientUnitsCard(availableUnits: Long) {
+private fun InsufficientUnitsCard(unitsToGo: Long) {
   Box(
     modifier = Modifier
       .fillMaxWidth()
@@ -57,11 +66,7 @@ private fun InsufficientUnitsCard(availableUnits: Long) {
         contentDescription = null
       )
       Text(
-        text = stringResource(
-          R.string.play_and_earn_collect_more_units_body,
-          100 - availableUnits,
-          "$1.00"
-        ),
+        text = stringResource(R.string.play_and_earn_exchange_units_to_go, unitsToGo),
         style = AGTypography.InputsS,
         color = Palette.White
       )
@@ -70,7 +75,7 @@ private fun InsufficientUnitsCard(availableUnits: Long) {
 }
 
 @Composable
-private fun ExchangeableUnitsCard(
+private fun RedeemableUnitsCard(
   availableUnits: Long,
   onExchangeClick: () -> Unit
 ) {
@@ -90,29 +95,22 @@ private fun ExchangeableUnitsCard(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp)
       ) {
-        Box {
-          Image(
-            painter = painterResource(R.drawable.coins_stack),
-            contentDescription = null
-          )
-          SmallUnitsMultiplierBubble(
-            availableUnits = availableUnits,
-            Modifier.padding(start = 38.dp)
-          )
-        }
+        Image(
+          painter = painterResource(R.drawable.coins_stack),
+          contentDescription = null
+        )
         Text(
-          text = stringResource(
-            R.string.play_and_earn_exchange_units_body,
-            100,
-            "$1.00"
-          ),
+          text = stringResource(R.string.play_and_earn_exchange_units_value, availableUnits),
           style = AGTypography.InputsS,
           color = Palette.White,
           textAlign = TextAlign.Center
         )
       }
       AccentSmallButton(
-        title = stringResource(R.string.play_and_earn_exchange_now_button),
+        title = stringResource(
+          R.string.play_and_earn_exchange_redeem_button,
+          formattedRedeemAmount(REDEEM_AMOUNT)
+        ),
         onClick = onExchangeClick,
         modifier = Modifier.fillMaxWidth(),
       )

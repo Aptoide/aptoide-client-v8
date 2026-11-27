@@ -55,7 +55,19 @@ import java.math.RoundingMode
 
 const val redeemRewardRoute = "redeemReward"
 
-private val REDEEM_AMOUNT: BigDecimal = BigDecimal("5.00")
+/** What one redeem is worth. Level Up's card shows the same amount (AND-963). */
+internal val REDEEM_AMOUNT: BigDecimal = BigDecimal("5.00")
+
+/** The amount as the redeem flow writes it, e.g. "$5.00". */
+internal fun formattedRedeemAmount(amount: BigDecimal): String =
+  "$${amount.setScale(2, RoundingMode.HALF_UP).toPlainString()}"
+
+/**
+ * How many units are still missing to redeem; zero when there are enough. This screen and Level
+ * Up's card, which opens it, must agree, so both count with this.
+ */
+internal fun unitsToRedeem(availableUnits: Long, targetUnits: Long): Long =
+  (targetUnits - availableUnits).coerceAtLeast(0L)
 
 fun redeemRewardScreen(
   navigateToPickReward: (String) -> Unit,
@@ -152,8 +164,8 @@ private fun RedeemRewardContent(
   onEarnMore: () -> Unit,
 ) {
   val hasEnough = availableUnits >= targetUnits
-  val unitsToGo = (targetUnits - availableUnits).coerceAtLeast(0L)
-  val formattedRedeem = "$${redeemAmount.setScale(2, RoundingMode.HALF_UP).toPlainString()}"
+  val unitsToGo = unitsToRedeem(availableUnits, targetUnits)
+  val formattedRedeem = formattedRedeemAmount(redeemAmount)
 
   Column(modifier = Modifier.fillMaxSize()) {
     Spacer(modifier = Modifier.height(24.dp))
