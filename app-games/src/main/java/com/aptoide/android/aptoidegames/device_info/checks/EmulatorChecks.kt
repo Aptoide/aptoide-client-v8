@@ -5,32 +5,60 @@ class EmulatorBuildCheck(private val build: BuildInfo) : DeviceCheck {
   override val name = "emulator_build"
   override val group = DeviceCheckGroup.EMULATOR
 
-  override fun fired(): Boolean = with(build) {
-    fingerprint.startsWith("generic", ignoreCase = true) ||
-      fingerprint.startsWith("unknown", ignoreCase = true) ||
-      fingerprint.contains("emulator", ignoreCase = true) ||
-      fingerprint.contains("sdk_gphone", ignoreCase = true) ||
-      model.contains("google_sdk", ignoreCase = true) ||
-      model.contains("emulator", ignoreCase = true) ||
-      model.contains("droid4x", ignoreCase = true) ||
-      model.equals("sdk", ignoreCase = true) ||
-      model.contains("Android SDK built for", ignoreCase = true) ||
-      manufacturer.contains("genymotion", ignoreCase = true) ||
-      brand.startsWith("generic", ignoreCase = true) ||
-      device.startsWith("generic", ignoreCase = true) ||
-      product.equals("sdk", ignoreCase = true) ||
-      product.contains("sdk_gphone", ignoreCase = true) ||
-      product.contains("vbox", ignoreCase = true) ||
-      product.contains("emulator", ignoreCase = true) ||
-      product.contains("simulator", ignoreCase = true) ||
-      hardware.contains("goldfish", ignoreCase = true) ||
-      hardware.contains("ranchu", ignoreCase = true) ||
-      hardware.contains("nox", ignoreCase = true) ||
-      hardware.contains("vbox", ignoreCase = true) ||
-      board.contains("nox", ignoreCase = true) ||
-      bootloader.contains("nox", ignoreCase = true)
+  override fun fired(): Boolean = EMULATOR_BUILD_RULES.any { it.matches(build) }
+}
+
+internal enum class BuildField(val read: (BuildInfo) -> String) {
+  FINGERPRINT({ it.fingerprint }),
+  MODEL({ it.model }),
+  MANUFACTURER({ it.manufacturer }),
+  BRAND({ it.brand }),
+  DEVICE({ it.device }),
+  PRODUCT({ it.product }),
+  HARDWARE({ it.hardware }),
+  BOARD({ it.board }),
+  BOOTLOADER({ it.bootloader }),
+}
+
+internal enum class BuildMatch { STARTS_WITH, CONTAINS, EQUALS }
+
+/** One emulator pattern on one Build field. Every comparison ignores case. */
+internal data class BuildRule(val field: BuildField, val match: BuildMatch, val value: String) {
+  fun matches(build: BuildInfo): Boolean {
+    val actual = field.read(build)
+    return when (match) {
+      BuildMatch.STARTS_WITH -> actual.startsWith(value, ignoreCase = true)
+      BuildMatch.CONTAINS -> actual.contains(value, ignoreCase = true)
+      BuildMatch.EQUALS -> actual.equals(value, ignoreCase = true)
+    }
   }
 }
+
+internal val EMULATOR_BUILD_RULES = listOf(
+  BuildRule(BuildField.FINGERPRINT, BuildMatch.STARTS_WITH, "generic"),
+  BuildRule(BuildField.FINGERPRINT, BuildMatch.STARTS_WITH, "unknown"),
+  BuildRule(BuildField.FINGERPRINT, BuildMatch.CONTAINS, "emulator"),
+  BuildRule(BuildField.FINGERPRINT, BuildMatch.CONTAINS, "sdk_gphone"),
+  BuildRule(BuildField.MODEL, BuildMatch.CONTAINS, "google_sdk"),
+  BuildRule(BuildField.MODEL, BuildMatch.CONTAINS, "emulator"),
+  BuildRule(BuildField.MODEL, BuildMatch.CONTAINS, "droid4x"),
+  BuildRule(BuildField.MODEL, BuildMatch.EQUALS, "sdk"),
+  BuildRule(BuildField.MODEL, BuildMatch.CONTAINS, "Android SDK built for"),
+  BuildRule(BuildField.MANUFACTURER, BuildMatch.CONTAINS, "genymotion"),
+  BuildRule(BuildField.BRAND, BuildMatch.STARTS_WITH, "generic"),
+  BuildRule(BuildField.DEVICE, BuildMatch.STARTS_WITH, "generic"),
+  BuildRule(BuildField.PRODUCT, BuildMatch.EQUALS, "sdk"),
+  BuildRule(BuildField.PRODUCT, BuildMatch.CONTAINS, "sdk_gphone"),
+  BuildRule(BuildField.PRODUCT, BuildMatch.CONTAINS, "vbox"),
+  BuildRule(BuildField.PRODUCT, BuildMatch.CONTAINS, "emulator"),
+  BuildRule(BuildField.PRODUCT, BuildMatch.CONTAINS, "simulator"),
+  BuildRule(BuildField.HARDWARE, BuildMatch.CONTAINS, "goldfish"),
+  BuildRule(BuildField.HARDWARE, BuildMatch.CONTAINS, "ranchu"),
+  BuildRule(BuildField.HARDWARE, BuildMatch.CONTAINS, "nox"),
+  BuildRule(BuildField.HARDWARE, BuildMatch.CONTAINS, "vbox"),
+  BuildRule(BuildField.BOARD, BuildMatch.CONTAINS, "nox"),
+  BuildRule(BuildField.BOOTLOADER, BuildMatch.CONTAINS, "nox"),
+)
 
 /** A QEMU system property is set (anything but empty or "0"). */
 class EmulatorPropsCheck(private val properties: SystemProperties) : DeviceCheck {
@@ -41,15 +69,6 @@ class EmulatorPropsCheck(private val properties: SystemProperties) : DeviceCheck
     val value = properties.get(prop)
     !value.isNullOrEmpty() && value != "0"
   }
-
-  private companion object {
-    val QEMU_PROPS = listOf(
-      "ro.kernel.qemu",
-      "ro.kernel.android.qemud",
-      "qemu.hw.mainkeys",
-      "ro.kernel.qemu.gles"
-    )
-  }
 }
 
 /** Sockets, pipes and libraries that only emulators ship. */
@@ -58,28 +77,6 @@ class EmulatorFilesCheck(private val files: DeviceFiles) : DeviceCheck {
   override val group = DeviceCheckGroup.EMULATOR
 
   override fun fired(): Boolean = EMULATOR_FILES.anySafely(files::exists)
-
-  private companion object {
-    val EMULATOR_FILES = listOf(
-      "/dev/socket/genyd",
-      "/dev/socket/baseband_genyd",
-      "/dev/socket/qemud",
-      "/dev/qemu_pipe",
-      "/system/lib/libc_malloc_debug_qemu.so",
-      "/sys/qemu_trace",
-      "/system/bin/qemu-props",
-      "/dev/goldfish_pipe",
-      "/system/lib/libdvm_em.so",
-      "/system/bin/microvirtd",
-      "/system/bin/ldinit",
-      "/system/bin/ldmountsf",
-      "/system/lib/ldutils.so",
-      "/system/bin/nox-prop",
-      "/system/bin/nox-vbox-sf",
-      "/system/lib/libnoxd.so",
-      "/system/lib/libnoxspeedup.so"
-    )
-  }
 }
 
 /** `Build.BOARD` is empty or "unknown". */
@@ -90,3 +87,30 @@ class UnknownBoardCheck(private val build: BuildInfo) : DeviceCheck {
   override fun fired(): Boolean =
     build.board.isEmpty() || build.board.equals("unknown", ignoreCase = true)
 }
+
+internal val QEMU_PROPS = listOf(
+  "ro.kernel.qemu",
+  "ro.kernel.android.qemud",
+  "qemu.hw.mainkeys",
+  "ro.kernel.qemu.gles"
+)
+
+internal val EMULATOR_FILES = listOf(
+  "/dev/socket/genyd",
+  "/dev/socket/baseband_genyd",
+  "/dev/socket/qemud",
+  "/dev/qemu_pipe",
+  "/system/lib/libc_malloc_debug_qemu.so",
+  "/sys/qemu_trace",
+  "/system/bin/qemu-props",
+  "/dev/goldfish_pipe",
+  "/system/lib/libdvm_em.so",
+  "/system/bin/microvirtd",
+  "/system/bin/ldinit",
+  "/system/bin/ldmountsf",
+  "/system/lib/ldutils.so",
+  "/system/bin/nox-prop",
+  "/system/bin/nox-vbox-sf",
+  "/system/lib/libnoxd.so",
+  "/system/lib/libnoxspeedup.so"
+)
