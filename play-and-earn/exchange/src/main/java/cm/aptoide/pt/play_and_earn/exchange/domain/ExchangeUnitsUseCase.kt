@@ -8,15 +8,19 @@ class ExchangeUnitsUseCase @Inject constructor(
 ) {
 
   @Deprecated(
-    "Use invoke(email, redeemType) instead.",
-    ReplaceWith("invoke(email, redeemType)")
+    "Use invoke(email, redeemType, requestId) instead.",
+    ReplaceWith("invoke(email, redeemType, requestId)")
   )
   suspend operator fun invoke(): Result<Unit> {
     @Suppress("DEPRECATION")
     return exchangeRepository.exchangeUnits()
   }
 
-  suspend operator fun invoke(email: String, redeemType: RedeemType): Result<Unit> {
-    return exchangeRepository.exchangeUnits(email, redeemType)
+  suspend operator fun invoke(
+    email: String,
+    redeemType: RedeemType,
+    requestId: String,
+  ): Result<Unit> {
+    return exchangeRepository.exchangeUnits(email, redeemType, requestId)
   }
 }

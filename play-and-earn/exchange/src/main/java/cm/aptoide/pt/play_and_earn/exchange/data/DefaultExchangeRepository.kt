@@ -24,8 +24,8 @@ internal class DefaultExchangeRepository @Inject constructor(
   private val cachedExchangeRates = mutableMapOf<String, ExchangeRate>()
 
   @Deprecated(
-    "Use exchangeUnits(email, redeemType) instead.",
-    ReplaceWith("exchangeUnits(email, redeemType)")
+    "Use exchangeUnits(email, redeemType, requestId) instead.",
+    ReplaceWith("exchangeUnits(email, redeemType, requestId)")
   )
   override suspend fun exchangeUnits(): Result<Unit> =
     withContext(dispatcher) {
@@ -45,11 +45,15 @@ internal class DefaultExchangeRepository @Inject constructor(
       }
     }
 
-  override suspend fun exchangeUnits(email: String, redeemType: RedeemType): Result<Unit> =
+  override suspend fun exchangeUnits(
+    email: String,
+    redeemType: RedeemType,
+    requestId: String,
+  ): Result<Unit> =
     withContext(dispatcher) {
       try {
         val response = exchangeApi.exchangeUnitsV2(
-          ExchangeUnitsRequestJson(email = email, redeemType = redeemType)
+          ExchangeUnitsRequestJson(email = email, redeemType = redeemType, requestId = requestId)
         )
 
         if (response.isSuccess()) {

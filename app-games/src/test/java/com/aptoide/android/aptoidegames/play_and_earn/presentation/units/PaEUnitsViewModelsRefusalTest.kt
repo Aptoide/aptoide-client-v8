@@ -47,10 +47,10 @@ internal class PaEUnitsViewModelsRefusalTest {
   }
 
   private class FailingExchangeRepository(var failure: Throwable) : ExchangeRepository {
-    @Deprecated("Use exchangeUnits(email, redeemType) instead.")
+    @Deprecated("Use exchangeUnits(email, redeemType, requestId) instead.")
     override suspend fun exchangeUnits(): Result<Unit> = Result.failure(failure)
 
-    override suspend fun exchangeUnits(email: String, redeemType: RedeemType) =
+    override suspend fun exchangeUnits(email: String, redeemType: RedeemType, requestId: String) =
       Result.failure<Unit>(failure)
 
     override suspend fun getExchangeRate() = Result.failure<ExchangeRate>(failure)

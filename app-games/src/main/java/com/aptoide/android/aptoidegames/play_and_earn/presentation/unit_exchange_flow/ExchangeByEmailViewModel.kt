@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 sealed interface ExchangeEmailUiState {
@@ -43,7 +44,7 @@ class ExchangeByEmailViewModel @Inject constructor(
     viewModelScope.launch {
       _uiState.update { ExchangeEmailUiState.Loading }
 
-      exchangeUnitsUseCase(email, rewardType.toRedeemType()).fold(
+      exchangeUnitsUseCase(email, rewardType.toRedeemType(), UUID.randomUUID().toString()).fold(
         onSuccess = {
           walletUnitsRefresher.invalidate()
           _uiState.update { ExchangeEmailUiState.Success }
