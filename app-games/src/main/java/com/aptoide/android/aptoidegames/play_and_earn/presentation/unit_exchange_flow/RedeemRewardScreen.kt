@@ -39,6 +39,7 @@ import com.aptoide.android.aptoidegames.drawables.backgrounds.getExchangeSuccess
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.home.rememberRewardsDestination
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.rememberPaEAnalytics
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.restricted.PaERestrictedGate
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PaERewardType
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.iconRes
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.rememberPreferredPaEReward
@@ -75,30 +76,33 @@ fun redeemRewardScreen(
   route = redeemRewardRoute,
   screenAnalyticsName = "RedeemReward",
 ) { _, navigate, navigateBack ->
-  val rewardType = rememberPreferredPaEReward()
-  val uiState = rememberUnitsBalanceUiState()
-  val rewardsDestination = rememberRewardsDestination()
-  val paeAnalytics = rememberPaEAnalytics()
+  // AND-951: a restricted account sees the restricted screen instead.
+  PaERestrictedGate {
+    val rewardType = rememberPreferredPaEReward()
+    val uiState = rememberUnitsBalanceUiState()
+    val rewardsDestination = rememberRewardsDestination()
+    val paeAnalytics = rememberPaEAnalytics()
 
-  LaunchedEffect(Unit) {
-    paeAnalytics.sendPaEBalanceScreenShown()
+    LaunchedEffect(Unit) {
+      paeAnalytics.sendPaEBalanceScreenShown()
+    }
+
+    RedeemRewardScreen(
+      rewardType = rewardType,
+      uiState = uiState,
+      targetUnits = rememberUnitsExchangeThreshold(),
+      redeemAmount = REDEEM_AMOUNT,
+      navigateBack = navigateBack,
+      onRedeem = {
+        paeAnalytics.sendPaERedeemClick()
+        navigateToPickReward(it)
+      },
+      onEarnMore = {
+        paeAnalytics.sendPaERedeemEarnMoreClick()
+        navigate(rewardsDestination)
+      },
+    )
   }
-
-  RedeemRewardScreen(
-    rewardType = rewardType,
-    uiState = uiState,
-    targetUnits = rememberUnitsExchangeThreshold(),
-    redeemAmount = REDEEM_AMOUNT,
-    navigateBack = navigateBack,
-    onRedeem = {
-      paeAnalytics.sendPaERedeemClick()
-      navigateToPickReward(it)
-    },
-    onEarnMore = {
-      paeAnalytics.sendPaERedeemEarnMoreClick()
-      navigate(rewardsDestination)
-    },
-  )
 }
 
 @Composable

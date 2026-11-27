@@ -45,6 +45,7 @@ import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoadi
 import com.aptoide.android.aptoidegames.drawables.icons.getError
 import com.aptoide.android.aptoidegames.error_views.GenericErrorView
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.rememberPaEAnalytics
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.restricted.PaERestrictedGate
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PaERewardHeroArt
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PaERewardType
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.rememberUserInfo
@@ -72,47 +73,50 @@ fun exchangeEmailScreen(
     navArgument(amountArg) { type = NavType.StringType },
   ),
 ) { args, _, navigateBack ->
-  val rewardType = args?.getString(rewardTypeArg)
-    ?.let { runCatching { PaERewardType.valueOf(it) }.getOrNull() }
-    ?: PaERewardType.ROBUX
-  val formattedAmount = args?.getString(amountArg)?.let { android.net.Uri.decode(it) }.orEmpty()
+  // AND-951: a restricted account sees the restricted screen instead.
+  PaERestrictedGate {
+    val rewardType = args?.getString(rewardTypeArg)
+      ?.let { runCatching { PaERewardType.valueOf(it) }.getOrNull() }
+      ?: PaERewardType.ROBUX
+    val formattedAmount = args?.getString(amountArg)?.let { android.net.Uri.decode(it) }.orEmpty()
 
-  val userInfo = rememberUserInfo()
+    val userInfo = rememberUserInfo()
 
-  val viewModel = hiltViewModel<ExchangeByEmailViewModel>()
-  val uiState by viewModel.uiState.collectAsState()
-  val paeAnalytics = rememberPaEAnalytics()
+    val viewModel = hiltViewModel<ExchangeByEmailViewModel>()
+    val uiState by viewModel.uiState.collectAsState()
+    val paeAnalytics = rememberPaEAnalytics()
 
-  var submittedEmail by rememberSaveable { mutableStateOf("") }
+    var submittedEmail by rememberSaveable { mutableStateOf("") }
 
-  LaunchedEffect(uiState) {
-    when (uiState) {
-      ExchangeEmailUiState.Success -> {
-        paeAnalytics.sendPaEExchangeResult(success = true, rewardType = rewardType)
-        navigateToSuccess(rewardType, formattedAmount, submittedEmail)
-        viewModel.resetState()
+    LaunchedEffect(uiState) {
+      when (uiState) {
+        ExchangeEmailUiState.Success -> {
+          paeAnalytics.sendPaEExchangeResult(success = true, rewardType = rewardType)
+          navigateToSuccess(rewardType, formattedAmount, submittedEmail)
+          viewModel.resetState()
+        }
+
+        is ExchangeEmailUiState.Error ->
+          paeAnalytics.sendPaEExchangeResult(success = false, rewardType = rewardType)
+
+        else -> Unit
       }
-
-      is ExchangeEmailUiState.Error ->
-        paeAnalytics.sendPaEExchangeResult(success = false, rewardType = rewardType)
-
-      else -> Unit
     }
-  }
 
-  ExchangeEmailScreen(
-    uiState = uiState,
-    rewardType = rewardType,
-    formattedAmount = formattedAmount,
-    prefilledEmail = userInfo?.email.orEmpty(),
-    navigateBack = navigateBack,
-    onSubmit = { email ->
-      paeAnalytics.sendPaEExchangeGetCodeClick(rewardType)
-      submittedEmail = email
-      viewModel.exchange(email, rewardType)
-    },
-    onRetry = viewModel::retry,
-  )
+    ExchangeEmailScreen(
+      uiState = uiState,
+      rewardType = rewardType,
+      formattedAmount = formattedAmount,
+      prefilledEmail = userInfo?.email.orEmpty(),
+      navigateBack = navigateBack,
+      onSubmit = { email ->
+        paeAnalytics.sendPaEExchangeGetCodeClick(rewardType)
+        submittedEmail = email
+        viewModel.exchange(email, rewardType)
+      },
+      onRetry = viewModel::retry,
+    )
+  }
 }
 
 @Composable

@@ -34,6 +34,7 @@ import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.Pa
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.app_items.PaEDefaultAppItem
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.app_items.PaELargeAppItem
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.layout.PaEHorizontalCarousel
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.restricted.PaERestrictedGate
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchange_flow.exchangeDisplayName
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -48,8 +49,19 @@ fun playAndEarnRewardsScreen() = ScreenData.withAnalytics(
   PlayAndEarnRewardsScreen(navigate)
 }
 
+/** The Rewards screen, as a route and as the home Rewards tab. */
 @Composable
 fun PlayAndEarnRewardsScreen(
+  navigate: (String) -> Unit
+) {
+  // AND-951: a restricted account sees the restricted screen instead.
+  PaERestrictedGate {
+    PlayAndEarnRewardsContent(navigate)
+  }
+}
+
+@Composable
+private fun PlayAndEarnRewardsContent(
   navigate: (String) -> Unit
 ) {
   val scrollState = rememberScrollState()

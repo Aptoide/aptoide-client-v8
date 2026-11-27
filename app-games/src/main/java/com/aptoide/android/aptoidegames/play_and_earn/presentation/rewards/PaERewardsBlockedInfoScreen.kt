@@ -15,6 +15,7 @@ import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.ScreenData
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.restricted.PaERestrictedGate
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -50,6 +51,17 @@ private fun PaERewardsBlockedInfo(
   title: String,
   body: String,
 ) {
+  // AND-951: a restricted account sees the restricted screen instead.
+  PaERestrictedGate {
+    PaERewardsBlockedInfoContent(title = title, body = body)
+  }
+}
+
+@Composable
+private fun PaERewardsBlockedInfoContent(
+  title: String,
+  body: String,
+) {
   // No screen bar of its own (the app's top bar stays): the title below is
   // the heading, so it isn't repeated; back closes it.
   Column(
@@ -68,7 +80,7 @@ private fun PaERewardsBlockedInfo(
 @Composable
 private fun PaERewardsBlockedInfoPreview() {
   AptoideTheme {
-    PaERewardsBlockedInfo(
+    PaERewardsBlockedInfoContent(
       title = stringResource(R.string.play_and_earn_rewards_paused_info_title),
       body = stringResource(R.string.play_and_earn_rewards_paused_info_body),
     )
