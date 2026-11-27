@@ -421,3 +421,17 @@ private fun ExchangeEmailLimitPreview() {
     onRetry = {},
   )
 }
+
+@PreviewDark
+@Composable
+private fun ExchangeEmailBeingCheckedPreview() {
+  ExchangeEmailScreen(
+    uiState = ExchangeEmailUiState.Error(ExchangeErrorKind.BeingChecked),
+    rewardType = PaERewardType.DIAMONDS,
+    formattedAmount = "$5.00",
+    prefilledEmail = "",
+    navigateBack = {},
+    onSubmit = {},
+    onRetry = {},
+  )
+}
