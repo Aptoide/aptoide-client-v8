@@ -105,8 +105,9 @@ class PaEInstallTracker internal constructor(
    * Reports what is due, then each game as its install finishes. Never returns.
    * @param packagesInstalled the packages being installed on the phone, as they are.
    */
-  suspend fun initialize(packagesInstalled: Flow<String>) {
-    contained("pending reports") { reportPending() }
+  suspend fun initialize(packagesInstalled: Flow<String>) = coroutineScope {
+    // Alongside, not before: a game installed meanwhile is not missed.
+    launch { contained("pending reports") { reportPending() } }
     packagesInstalled.collect { packageName ->
       contained("report") { reportPending(packageName) }
     }
