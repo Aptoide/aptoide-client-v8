@@ -10,8 +10,11 @@ import cm.aptoide.pt.exception_handler.ExceptionHandler
 import cm.aptoide.pt.test.gherkin.coScenario
 import cm.aptoide.pt.wallet.authorization.data.WalletAuthRepository
 import cm.aptoide.pt.wallet.authorization.domain.UserWalletData
+import com.aptoide.android.aptoidegames.play_and_earn.data.InMemoryPreferencesDataStore
+import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPendingRedeems
 import com.aptoide.android.aptoidegames.play_and_earn.data.UserAccountPreferencesRepository
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaESessionRefusals
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PaERewardType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -21,12 +24,14 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.lang.reflect.Proxy
 
-// AND-950: refusals belong to the account; signing out forgets them.
+// AND-950: refusals belong to the account; signing out forgets them. So does the pending
+// redeem (AND-952).
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class GoogleSignInViewModelRefusalsTest {
 
@@ -54,6 +59,12 @@ internal class GoogleSignInViewModelRefusalsTest {
   }
 
   private val refusals = PaESessionRefusals()
+  private val pendingRedeems = PaEPendingRedeems(
+    dataStore = InMemoryPreferencesDataStore(),
+    nowMillis = { 0L },
+    newRequestId = { "id-${++idCount}" },
+  )
+  private var idCount = 0
 
   @BeforeEach
   fun setUp() = Dispatchers.setMain(UnconfinedTestDispatcher())
@@ -66,15 +77,7 @@ internal class GoogleSignInViewModelRefusalsTest {
     m Given "a restricted account and a game refused for the region"
     refusals.record(GAME, PaERefusal(PaERefusalCode.REGION_NOT_SUPPORTED))
     refusals.record(OTHER_GAME, PaERefusal(PaERefusalCode.ACCOUNT_RESTRICTED))
-    val viewModel = GoogleSignInViewModel(
-      credentialManager = credentialManager,
-      userAuthRepository = walletAuthRepository,
-      userAccountPreferencesRepository = UserAccountPreferencesRepository(emptyDataStore),
-      exceptionHandler = object : ExceptionHandler {
-        override fun recordException(exception: Throwable) = Unit
-      },
-      paESessionRefusals = refusals,
-    )
+    val viewModel = viewModel()
 
     m When "the user signs out"
     viewModel.signOut()
@@ -85,8 +88,33 @@ internal class GoogleSignInViewModelRefusalsTest {
     assertNull(refusals.blockingRefusalOf(GAME))
   }
 
+  @Test
+  fun `Signing out forgets the pending redeem`() = coScenario {
+    m Given "a redeem whose answer is not final yet"
+    pendingRedeems.idFor(EMAIL, PaERewardType.ROBUX)
+    val viewModel = viewModel()
+
+    m When "the user signs out"
+    viewModel.signOut()
+
+    m Then "the same redeem by the next account is a new one (AND-952)"
+    assertEquals("id-2", pendingRedeems.idFor(EMAIL, PaERewardType.ROBUX))
+  }
+
+  private fun viewModel() = GoogleSignInViewModel(
+    credentialManager = credentialManager,
+    userAuthRepository = walletAuthRepository,
+    userAccountPreferencesRepository = UserAccountPreferencesRepository(emptyDataStore),
+    exceptionHandler = object : ExceptionHandler {
+      override fun recordException(exception: Throwable) = Unit
+    },
+    paESessionRefusals = refusals,
+    pendingRedeems = pendingRedeems,
+  )
+
   private companion object {
     const val GAME = "com.game"
     const val OTHER_GAME = "com.other.game"
+    const val EMAIL = "user@example.com"
   }
 }

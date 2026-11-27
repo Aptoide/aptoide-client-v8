@@ -11,6 +11,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
@@ -25,13 +26,26 @@ import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 
+/**
+ * The text colour of an error drawn on the app's usual screen background. A screen with a
+ * background of its own (the redeem flow's gradient) passes the colour that reads on it.
+ */
+@Composable
+fun errorContentColor(): Color =
+  if (BuildConfig.FLAVOR_brand == "vanilla") Palette.Black else Palette.White
+
+/**
+ * @param onRetryClick null for an error that retrying cannot fix: no Retry button is drawn.
+ * @param contentColor the title and subtitle colour; it must read on the caller's background.
+ */
 @Composable
 fun ErrorView(
   imageVector: ImageVector,
   title: String,
   subtitle: String?,
-  onRetryClick: () -> Unit,
+  onRetryClick: (() -> Unit)? = null,
   modifier: Modifier = Modifier,
+  contentColor: Color = errorContentColor(),
 ) {
   Box(modifier = modifier) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -45,8 +59,7 @@ fun ErrorView(
         )
         Spacer(modifier = Modifier.weight(88f))
       }
-      val textColor =
-        if (BuildConfig.FLAVOR_brand == "vanilla") Palette.Black else Palette.White
+      val textColor = contentColor
       PaddedRow(sideWeight = 32f) {
         Column(
           modifier = Modifier.weight(296f),
@@ -69,11 +82,13 @@ fun ErrorView(
         }
       }
       Spacer(modifier = Modifier.weight(24f))
-      PaddedRow(sideWeight = 16f) {
-        RetryButton(
-          onClick = onRetryClick,
-          modifier = Modifier.weight(328f)
-        )
+      onRetryClick?.let {
+        PaddedRow(sideWeight = 16f) {
+          RetryButton(
+            onClick = it,
+            modifier = Modifier.weight(328f)
+          )
+        }
       }
       Spacer(modifier = Modifier.weight(154f))
       Image(
@@ -86,21 +101,26 @@ fun ErrorView(
   }
 }
 
+/**
+ * @param onRetryClick null hides the Retry button.
+ * @param title and [subtitle] replace the generic text, for an error with its own message.
+ * @param contentColor the text and illustration outline colour; see [ErrorView].
+ */
 @Composable
 fun GenericErrorView(
-  onRetryClick: () -> Unit,
+  onRetryClick: (() -> Unit)?,
   modifier: Modifier = Modifier,
+  title: String = stringResource(R.string.error_message_generic_title),
+  subtitle: String? = stringResource(R.string.error_message_generic_body),
+  contentColor: Color = errorContentColor(),
 ) {
   ErrorView(
-    imageVector = getGenericError(
-      Palette.Primary,
-      Palette.GreyLight,
-      if (BuildConfig.FLAVOR_brand == "vanilla") Palette.Black else Palette.White,
-    ),
-    title = stringResource(R.string.error_message_generic_title),
-    subtitle = stringResource(R.string.error_message_generic_body),
+    imageVector = getGenericError(Palette.Primary, Palette.GreyLight, contentColor),
+    title = title,
+    subtitle = subtitle,
     onRetryClick = onRetryClick,
     modifier = modifier,
+    contentColor = contentColor,
   )
 }
 

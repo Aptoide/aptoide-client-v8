@@ -551,6 +551,15 @@
   <string name="play_and_earn_exchange_email_safe_note">🔒 Your email is safe with us. We\'ll only use it to send you this reward.</string>
   <string name="play_and_earn_exchange_get_my_code_button">Get my code</string>
   <string name="play_and_earn_exchange_email_error">Enter a valid email address</string>
+  <string name="play_and_earn_exchange_error_limit_title">Redeem limit reached</string>
+  <string name="play_and_earn_exchange_error_limit_body">You can only redeem tomorrow.</string>
+  <string name="play_and_earn_exchange_error_too_many_attempts_body">Too many attempts. Try again later.</string>
+  <string name="play_and_earn_exchange_error_being_checked_title">We\'re checking your redeem</string>
+  <string name="play_and_earn_exchange_error_being_checked_body">Don\'t try again. If your reward doesn\'t arrive, contact support in Settings.</string>
+  <string name="play_and_earn_exchange_error_restricted_title">Account restricted</string>
+  <string name="play_and_earn_exchange_error_restricted_body">Your account has been restricted due to anti-fraud mechanisms. Contact support in Settings.</string>
+  <string name="play_and_earn_exchange_error_limit_body_until">You can redeem again on %1$s.</string>
+  <string name="play_and_earn_exchange_error_too_many_attempts_body_until">Too many attempts. Try again after %1$s.</string>
   <string name="play_and_earn_exchange_success_email_sent">We\'ve sent your code to %1$s. Check your inbox within 24 hours.</string>
   <string name="play_and_earn_exchange_earn_more_button">Earn More</string>
   <string name="play_and_earn_tap_to_collect">Tap to Collect</string>

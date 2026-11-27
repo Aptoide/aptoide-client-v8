@@ -21,11 +21,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -48,6 +50,8 @@ import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.remem
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
+import java.time.Instant
+import java.time.ZoneId
 
 private const val exchangeEmailBase = "exchangeEmail"
 private const val rewardTypeArg = "rewardType"
@@ -88,7 +92,7 @@ fun exchangeEmailScreen(
         viewModel.resetState()
       }
 
-      ExchangeEmailUiState.Error ->
+      is ExchangeEmailUiState.Error ->
         paeAnalytics.sendPaEExchangeResult(success = false, rewardType = rewardType)
 
       else -> Unit
@@ -130,8 +134,10 @@ fun ExchangeEmailScreen(
       )
 
       when (uiState) {
-        ExchangeEmailUiState.Error -> GenericErrorView(
-          onRetryClick = onRetry,
+        is ExchangeEmailUiState.Error -> ExchangeErrorView(
+          kind = uiState.kind,
+          retryAt = uiState.retryAt,
+          onRetry = onRetry,
           modifier = Modifier.weight(1f),
         )
 
@@ -154,6 +160,71 @@ fun ExchangeEmailScreen(
         )
       }
     }
+  }
+}
+
+/**
+ * A redeem error (AND-952). Only the generic one offers Retry; the others are final answers, and
+ * the top bar's back arrow leaves the screen.
+ */
+@Composable
+private fun ExchangeErrorView(
+  kind: ExchangeErrorKind,
+  retryAt: Instant?,
+  onRetry: () -> Unit,
+  modifier: Modifier = Modifier,
+) {
+  val onRetryClick = onRetry.takeIf { kind.canRetry }
+  val locale = LocalConfiguration.current.locales[0]
+  val limitBody = remember(kind, retryAt, locale) {
+    exchangeLimitBody(kind, retryAt, Instant.now(), ZoneId.systemDefault(), locale)
+  }
+  val limitText = limitBody?.let { body ->
+    body.retryAt?.let { stringResource(body.text, it) } ?: stringResource(body.text)
+  }
+  // The flow's own background is Palette.Black under a gradient, in both brands and themes, so
+  // the text on it is Palette.White like the rest of this screen (the error view's default
+  // colour is for the app's usual background and is unreadable here in Vanilla).
+  val contentColor = Palette.White
+  when (kind) {
+    ExchangeErrorKind.Generic -> GenericErrorView(
+      onRetryClick = onRetryClick,
+      modifier = modifier,
+      contentColor = contentColor,
+    )
+
+    ExchangeErrorKind.Limit -> GenericErrorView(
+      onRetryClick = onRetryClick,
+      modifier = modifier,
+      contentColor = contentColor,
+      title = stringResource(R.string.play_and_earn_exchange_error_limit_title),
+      subtitle = limitText,
+    )
+
+    // Shares the limit's title: "Something went wrong" over "Too many attempts" read wrong.
+    ExchangeErrorKind.TooManyAttempts -> GenericErrorView(
+      onRetryClick = onRetryClick,
+      modifier = modifier,
+      contentColor = contentColor,
+      title = stringResource(R.string.play_and_earn_exchange_error_limit_title),
+      subtitle = limitText,
+    )
+
+    ExchangeErrorKind.BeingChecked -> GenericErrorView(
+      onRetryClick = onRetryClick,
+      modifier = modifier,
+      contentColor = contentColor,
+      title = stringResource(R.string.play_and_earn_exchange_error_being_checked_title),
+      subtitle = stringResource(R.string.play_and_earn_exchange_error_being_checked_body),
+    )
+
+    ExchangeErrorKind.Restricted -> GenericErrorView(
+      onRetryClick = onRetryClick,
+      modifier = modifier,
+      contentColor = contentColor,
+      title = stringResource(R.string.play_and_earn_exchange_error_restricted_title),
+      subtitle = stringResource(R.string.play_and_earn_exchange_error_restricted_body),
+    )
   }
 }
 
@@ -274,9 +345,11 @@ private fun ExchangeEmailForm(
       title = stringResource(R.string.play_and_earn_exchange_get_my_code_button),
       enabled = email.isNotBlank(),
       onClick = {
-        if (email.isValidEmail()) {
+        // A space typed or pasted around the address is not part of it.
+        val trimmedEmail = email.trim()
+        if (trimmedEmail.isValidEmail()) {
           showError = false
-          onSubmit(email)
+          onSubmit(trimmedEmail)
         } else {
           showError = true
         }
@@ -353,6 +426,37 @@ private fun ExchangeEmailDiamondsPreview() {
     rewardType = PaERewardType.DIAMONDS,
     formattedAmount = "$5.00",
     prefilledEmail = "user@example.com",
+    navigateBack = {},
+    onSubmit = {},
+    onRetry = {},
+  )
+}
+
+@PreviewDark
+@Composable
+private fun ExchangeEmailLimitPreview() {
+  ExchangeEmailScreen(
+    uiState = ExchangeEmailUiState.Error(
+      kind = ExchangeErrorKind.Limit,
+      retryAt = Instant.now().plusSeconds(20 * 60 * 60),
+    ),
+    rewardType = PaERewardType.ROBUX,
+    formattedAmount = "$5.00",
+    prefilledEmail = "",
+    navigateBack = {},
+    onSubmit = {},
+    onRetry = {},
+  )
+}
+
+@PreviewDark
+@Composable
+private fun ExchangeEmailBeingCheckedPreview() {
+  ExchangeEmailScreen(
+    uiState = ExchangeEmailUiState.Error(ExchangeErrorKind.BeingChecked),
+    rewardType = PaERewardType.DIAMONDS,
+    formattedAmount = "$5.00",
+    prefilledEmail = "",
     navigateBack = {},
     onSubmit = {},
     onRetry = {},

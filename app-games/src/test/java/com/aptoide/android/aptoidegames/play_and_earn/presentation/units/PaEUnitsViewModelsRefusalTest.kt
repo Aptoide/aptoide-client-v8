@@ -4,6 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.preferencesOf
 import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.lifecycle.SavedStateHandle
 import cm.aptoide.pt.appcoins.domain.WalletInfo
 import cm.aptoide.pt.exception_handler.ExceptionHandler
 import cm.aptoide.pt.play_and_earn.exchange.data.ExchangeRepository
@@ -14,9 +15,12 @@ import cm.aptoide.pt.test.gherkin.coScenario
 import cm.aptoide.pt.wallet.datastore.WalletCoreDataSource
 import cm.aptoide.pt.wallet.wallet_info.data.WalletInfoRepository
 import com.aptoide.android.aptoidegames.play_and_earn.WalletUnitsRefresher
+import com.aptoide.android.aptoidegames.play_and_earn.data.InMemoryPreferencesDataStore
+import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPendingRedeems
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PaERewardType
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchange_flow.ExchangeByEmailViewModel
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchange_flow.ExchangeEmailUiState
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchange_flow.ExchangeErrorKind
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -35,7 +39,7 @@ import retrofit2.Response
 import java.io.IOException
 
 // AND-950: a refusal on the units balance or a redeem by email is logged, not reported; the
-// screen shows the same error as before either way (its own messages are AND-952).
+// balance shows the same error as before; a redeem refusal shows its own message (AND-952).
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class PaEUnitsViewModelsRefusalTest {
 
@@ -47,10 +51,10 @@ internal class PaEUnitsViewModelsRefusalTest {
   }
 
   private class FailingExchangeRepository(var failure: Throwable) : ExchangeRepository {
-    @Deprecated("Use exchangeUnits(email, redeemType) instead.")
+    @Deprecated("Use exchangeUnits(email, redeemType, requestId) instead.")
     override suspend fun exchangeUnits(): Result<Unit> = Result.failure(failure)
 
-    override suspend fun exchangeUnits(email: String, redeemType: RedeemType) =
+    override suspend fun exchangeUnits(email: String, redeemType: RedeemType, requestId: String) =
       Result.failure<Unit>(failure)
 
     override suspend fun getExchangeRate() = Result.failure<ExchangeRate>(failure)
@@ -111,9 +115,9 @@ internal class PaEUnitsViewModelsRefusalTest {
     m When "the user redeems by email"
     val state = redeemByEmail(refusal)
 
-    m Then "nothing goes to Crashlytics and the error is the one shown before"
+    m Then "nothing goes to Crashlytics and the error says so (AND-952)"
     assertEquals(emptyList<Throwable>(), exceptionHandler.recorded)
-    assertEquals(ExchangeEmailUiState.Error, state)
+    assertEquals(ExchangeEmailUiState.Error(ExchangeErrorKind.TooManyAttempts), state)
   }
 
   @Test
@@ -124,9 +128,9 @@ internal class PaEUnitsViewModelsRefusalTest {
     m When "the user redeems by email"
     val state = redeemByEmail(failure)
 
-    m Then "it goes to Crashlytics as before, with the same error"
+    m Then "it goes to Crashlytics as before, with the generic error"
     assertEquals(listOf<Throwable>(failure), exceptionHandler.recorded)
-    assertEquals(ExchangeEmailUiState.Error, state)
+    assertEquals(ExchangeEmailUiState.Error(ExchangeErrorKind.Generic), state)
   }
 
   private fun balance(failure: Throwable): UnitsBalanceUiState = UnitsBalanceViewModel(
@@ -140,6 +144,8 @@ internal class PaEUnitsViewModelsRefusalTest {
       exchangeUnitsUseCase = ExchangeUnitsUseCase(FailingExchangeRepository(failure)),
       exceptionHandler = exceptionHandler,
       walletUnitsRefresher = WalletUnitsRefresher(),
+      pendingRedeems = PaEPendingRedeems(InMemoryPreferencesDataStore()),
+      savedStateHandle = SavedStateHandle(),
     )
     viewModel.exchange("user@example.com", PaERewardType.ROBUX)
     return viewModel.uiState.value

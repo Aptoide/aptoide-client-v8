@@ -497,6 +497,15 @@
   <string name="play_and_earn_exchange_email_safe_note">🔒 La tua email è al sicuro con noi. La useremo solo per inviarti questo premio.</string>
   <string name="play_and_earn_exchange_get_my_code_button">Ottieni il mio codice</string>
   <string name="play_and_earn_exchange_email_error">Inserisci un indirizzo email valido</string>
+  <string name="play_and_earn_exchange_error_limit_title">Limite di riscatto raggiunto</string>
+  <string name="play_and_earn_exchange_error_limit_body">Potrai riscattare di nuovo solo domani.</string>
+  <string name="play_and_earn_exchange_error_too_many_attempts_body">Troppi tentativi. Riprova più tardi.</string>
+  <string name="play_and_earn_exchange_error_being_checked_title">Stiamo verificando il tuo riscatto</string>
+  <string name="play_and_earn_exchange_error_being_checked_body">Non riprovare. Se il premio non arriva, contatta Supporto in Impostazioni.</string>
+  <string name="play_and_earn_exchange_error_restricted_title">Account limitato</string>
+  <string name="play_and_earn_exchange_error_restricted_body">Il tuo account è stato limitato dai meccanismi antifrode. Contatta Supporto in Impostazioni.</string>
+  <string name="play_and_earn_exchange_error_limit_body_until">Potrai riscattare di nuovo dal %1$s.</string>
+  <string name="play_and_earn_exchange_error_too_many_attempts_body_until">Troppi tentativi. Riprova dopo %1$s.</string>
   <string name="play_and_earn_exchange_success_email_sent">Abbiamo inviato il tuo codice a %1$s. Controlla la posta in arrivo entro 24 ore.</string>
   <string name="play_and_earn_exchange_earn_more_button">Guadagna di più</string>
   <string name="play_and_earn_tap_to_collect">Tocca per raccogliere</string>

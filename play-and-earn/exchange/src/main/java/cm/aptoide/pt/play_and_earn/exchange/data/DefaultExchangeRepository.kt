@@ -4,6 +4,7 @@ import cm.aptoide.pt.play_and_earn.exchange.data.model.ExchangeRateJson
 import cm.aptoide.pt.play_and_earn.exchange.data.model.ExchangeUnitsRequestJson
 import cm.aptoide.pt.play_and_earn.exchange.domain.ExchangeRate
 import cm.aptoide.pt.play_and_earn.exchange.domain.RedeemType
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -24,8 +25,8 @@ internal class DefaultExchangeRepository @Inject constructor(
   private val cachedExchangeRates = mutableMapOf<String, ExchangeRate>()
 
   @Deprecated(
-    "Use exchangeUnits(email, redeemType) instead.",
-    ReplaceWith("exchangeUnits(email, redeemType)")
+    "Use exchangeUnits(email, redeemType, requestId) instead.",
+    ReplaceWith("exchangeUnits(email, redeemType, requestId)")
   )
   override suspend fun exchangeUnits(): Result<Unit> =
     withContext(dispatcher) {
@@ -45,11 +46,15 @@ internal class DefaultExchangeRepository @Inject constructor(
       }
     }
 
-  override suspend fun exchangeUnits(email: String, redeemType: RedeemType): Result<Unit> =
+  override suspend fun exchangeUnits(
+    email: String,
+    redeemType: RedeemType,
+    requestId: String,
+  ): Result<Unit> =
     withContext(dispatcher) {
       try {
         val response = exchangeApi.exchangeUnitsV2(
-          ExchangeUnitsRequestJson(email = email, redeemType = redeemType)
+          ExchangeUnitsRequestJson(email = email, redeemType = redeemType, requestId = requestId)
         )
 
         if (response.isSuccess()) {
@@ -58,6 +63,9 @@ internal class DefaultExchangeRepository @Inject constructor(
           val errorMessage = response.detail?.message ?: ""
           Result.failure(ExchangeException(errorMessage))
         }
+      } catch (e: CancellationException) {
+        // AND-952: a cancelled redeem is not a failed one; its caller decides what follows.
+        throw e
       } catch (e: Throwable) {
         e.printStackTrace()
         Result.failure(e)

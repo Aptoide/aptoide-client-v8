@@ -465,6 +465,15 @@
   <string name="play_and_earn_exchange_earn_more_button">รับเพิ่ม</string>
   <string name="play_and_earn_exchange_email_address_label">ที่อยู่อีเมล</string>
   <string name="play_and_earn_exchange_email_error">ป้อนที่อยู่อีเมลที่ถูกต้อง</string>
+  <string name="play_and_earn_exchange_error_limit_title">ถึงขีดจำกัดการแลกแล้ว</string>
+  <string name="play_and_earn_exchange_error_limit_body">คุณจะแลกได้อีกครั้งในวันพรุ่งนี้</string>
+  <string name="play_and_earn_exchange_error_too_many_attempts_body">ลองหลายครั้งเกินไป ลองอีกครั้งภายหลัง</string>
+  <string name="play_and_earn_exchange_error_being_checked_title">เรากำลังตรวจสอบการแลกของคุณ</string>
+  <string name="play_and_earn_exchange_error_being_checked_body">ไม่ต้องลองอีกครั้ง หากไม่ได้รับรางวัล ให้ติดต่อเราที่ การตั้งค่า &gt; สนับสนุน</string>
+  <string name="play_and_earn_exchange_error_restricted_title">บัญชีถูกจำกัด</string>
+  <string name="play_and_earn_exchange_error_restricted_body">บัญชีของคุณถูกจำกัดเนื่องจากระบบป้องกันการฉ้อโกง ติดต่อเราที่ การตั้งค่า &gt; สนับสนุน</string>
+  <string name="play_and_earn_exchange_error_limit_body_until">คุณจะแลกได้อีกครั้งในวันที่ %1$s</string>
+  <string name="play_and_earn_exchange_error_too_many_attempts_body_until">ลองหลายครั้งเกินไป ลองอีกครั้งหลัง %1$s</string>
   <string name="play_and_earn_exchange_email_safe_note">🔒 อีเมลของคุณปลอดภัยกับเรา เราจะใช้เพียงเพื่อส่งรางวัลนี้ให้คุณเท่านั้น</string>
   <string name="play_and_earn_exchange_get_my_code_button">รับโค้ดของฉัน</string>
   <string name="play_and_earn_exchange_not_enough_balance">ยอดคงเหลือไม่เพียงพอ</string>

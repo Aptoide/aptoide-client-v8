@@ -476,6 +476,15 @@
   <string name="play_and_earn_exchange_earn_more_button">Κερδίστε περισσότερα</string>
   <string name="play_and_earn_exchange_email_address_label">Διεύθυνση email</string>
   <string name="play_and_earn_exchange_email_error">Εισαγάγετε έγκυρη διεύθυνση email</string>
+  <string name="play_and_earn_exchange_error_limit_title">Συμπληρώθηκε το όριο εξαργύρωσης</string>
+  <string name="play_and_earn_exchange_error_limit_body">Μπορείτε να εξαργυρώσετε ξανά μόνο αύριο.</string>
+  <string name="play_and_earn_exchange_error_too_many_attempts_body">Πάρα πολλές προσπάθειες. Δοκιμάστε ξανά αργότερα.</string>
+  <string name="play_and_earn_exchange_error_being_checked_title">Ελέγχουμε την εξαργύρωσή σας</string>
+  <string name="play_and_earn_exchange_error_being_checked_body">Μην δοκιμάσετε ξανά. Αν η ανταμοιβή σας δεν φτάσει, επικοινωνήστε με την Υποστήριξη στις Ρυθμίσεις.</string>
+  <string name="play_and_earn_exchange_error_restricted_title">Ο λογαριασμός περιορίστηκε</string>
+  <string name="play_and_earn_exchange_error_restricted_body">Ο λογαριασμός σας περιορίστηκε λόγω μηχανισμών κατά της απάτης. Επικοινωνήστε με την Υποστήριξη στις Ρυθμίσεις.</string>
+  <string name="play_and_earn_exchange_error_limit_body_until">Μπορείτε να εξαργυρώσετε ξανά από %1$s.</string>
+  <string name="play_and_earn_exchange_error_too_many_attempts_body_until">Πάρα πολλές προσπάθειες. Δοκιμάστε ξανά μετά από %1$s.</string>
   <string name="play_and_earn_exchange_email_safe_note">🔒 Το email σας είναι ασφαλές. Θα το χρησιμοποιήσουμε μόνο για να σας στείλουμε αυτή την ανταμοιβή.</string>
   <string name="play_and_earn_exchange_get_my_code_button">Λάβετε τον κωδικό μου</string>
   <string name="play_and_earn_exchange_not_enough_balance">Ανεπαρκές υπόλοιπο</string>

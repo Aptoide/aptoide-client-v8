@@ -466,6 +466,15 @@
   <string name="play_and_earn_exchange_earn_more_button">もっと稼ぐ</string>
   <string name="play_and_earn_exchange_email_address_label">メールアドレス</string>
   <string name="play_and_earn_exchange_email_error">有効なメールアドレスを入力してください</string>
+  <string name="play_and_earn_exchange_error_limit_title">交換の上限に達しました</string>
+  <string name="play_and_earn_exchange_error_limit_body">次の交換は明日から可能です。</string>
+  <string name="play_and_earn_exchange_error_too_many_attempts_body">試行回数が多すぎます。しばらくしてからもう一度お試しください。</string>
+  <string name="play_and_earn_exchange_error_being_checked_title">交換内容を確認しています</string>
+  <string name="play_and_earn_exchange_error_being_checked_body">再試行しないでください。報酬が届かない場合は、設定からサポートにお問い合わせください。</string>
+  <string name="play_and_earn_exchange_error_restricted_title">アカウントが制限されています</string>
+  <string name="play_and_earn_exchange_error_restricted_body">不正防止の仕組みにより、アカウントが制限されました。設定からサポートにお問い合わせください。</string>
+  <string name="play_and_earn_exchange_error_limit_body_until">次の交換は%1$sから可能です。</string>
+  <string name="play_and_earn_exchange_error_too_many_attempts_body_until">試行回数が多すぎます。%1$s以降にもう一度お試しください。</string>
   <string name="play_and_earn_exchange_email_safe_note">🔒 メールアドレスは安全に管理されます。この報酬の送信にのみ使用します。</string>
   <string name="play_and_earn_exchange_get_my_code_button">コードを受け取る</string>
   <string name="play_and_earn_exchange_not_enough_balance">残高が足りません</string>

@@ -487,6 +487,15 @@
   <string name="play_and_earn_exchange_earn_more_button">Zaradite više</string>
   <string name="play_and_earn_exchange_email_address_label">Imejl adresa</string>
   <string name="play_and_earn_exchange_email_error">Unesite važeću imejl adresu</string>
+  <string name="play_and_earn_exchange_error_limit_title">Dostignuto ograničenje iskorišćavanja</string>
+  <string name="play_and_earn_exchange_error_limit_body">Sledeće iskorišćavanje moguće je tek sutra.</string>
+  <string name="play_and_earn_exchange_error_too_many_attempts_body">Previše pokušaja. Pokušajte ponovo kasnije.</string>
+  <string name="play_and_earn_exchange_error_being_checked_title">Proveravamo vaše iskorišćavanje</string>
+  <string name="play_and_earn_exchange_error_being_checked_body">Ne pokušavajte ponovo. Ako nagrada ne stigne, obratite nam se: Podešavanja &gt; Podrška.</string>
+  <string name="play_and_earn_exchange_error_restricted_title">Nalog je ograničen</string>
+  <string name="play_and_earn_exchange_error_restricted_body">Vaš nalog je ograničen zbog mehanizama za sprečavanje prevara. Obratite nam se: Podešavanja &gt; Podrška.</string>
+  <string name="play_and_earn_exchange_error_limit_body_until">Sledeće iskorišćavanje moguće je: %1$s.</string>
+  <string name="play_and_earn_exchange_error_too_many_attempts_body_until">Previše pokušaja. Pokušajte ponovo posle %1$s.</string>
   <string name="play_and_earn_exchange_email_safe_note">🔒 Vaš imejl je bezbedan kod nas. Koristićemo ga samo da vam pošaljemo ovu nagradu.</string>
   <string name="play_and_earn_exchange_get_my_code_button">Preuzmi kod</string>
   <string name="play_and_earn_exchange_not_enough_balance">Nedovoljno stanje</string>

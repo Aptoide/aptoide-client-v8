@@ -497,6 +497,15 @@
   <string name="play_and_earn_exchange_email_safe_note">🔒 Deine E-Mail-Adresse ist bei uns sicher. Wir verwenden sie nur, um dir diese Belohnung zu senden.</string>
   <string name="play_and_earn_exchange_get_my_code_button">Code erhalten</string>
   <string name="play_and_earn_exchange_email_error">Gib eine gültige E-Mail-Adresse ein</string>
+  <string name="play_and_earn_exchange_error_limit_title">Einlöselimit erreicht</string>
+  <string name="play_and_earn_exchange_error_limit_body">Du kannst erst morgen wieder einlösen.</string>
+  <string name="play_and_earn_exchange_error_too_many_attempts_body">Zu viele Versuche. Versuch es später erneut.</string>
+  <string name="play_and_earn_exchange_error_being_checked_title">Wir prüfen deine Einlösung</string>
+  <string name="play_and_earn_exchange_error_being_checked_body">Versuch es nicht erneut. Falls deine Belohnung nicht ankommt, wende dich in den Einstellungen an Hilfe &amp; Unterstützung.</string>
+  <string name="play_and_earn_exchange_error_restricted_title">Konto eingeschränkt</string>
+  <string name="play_and_earn_exchange_error_restricted_body">Dein Konto wurde aufgrund von Betrugsschutzmaßnahmen eingeschränkt. Wende dich in den Einstellungen an Hilfe &amp; Unterstützung.</string>
+  <string name="play_and_earn_exchange_error_limit_body_until">Du kannst ab %1$s wieder einlösen.</string>
+  <string name="play_and_earn_exchange_error_too_many_attempts_body_until">Zu viele Versuche. Versuch es ab %1$s erneut.</string>
   <string name="play_and_earn_exchange_success_email_sent">Wir haben deinen Code an %1$s gesendet. Prüfe dein Postfach innerhalb von 24 Stunden.</string>
   <string name="play_and_earn_exchange_earn_more_button">Mehr verdienen</string>
   <string name="play_and_earn_tap_to_collect">Zum Einsammeln tippen</string>
