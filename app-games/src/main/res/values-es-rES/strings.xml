@@ -502,6 +502,8 @@
   <string name="play_and_earn_exchange_error_restricted_body">Tu cuenta se ha restringido por los mecanismos antifraude. Contacta con Ayuda en Configuración.</string>
   <string name="play_and_earn_exchange_error_limit_body_until">Podrás volver a canjear el %1$s.</string>
   <string name="play_and_earn_exchange_error_too_many_attempts_body_until">Demasiados intentos. Inténtalo de nuevo a partir de %1$s.</string>
+  <string name="play_and_earn_install_limit_body">Has alcanzado el límite de instalaciones de Play &amp; Earn de hoy. Las instalaciones volverán a contar mañana.</string>
+  <string name="play_and_earn_install_limit_body_until">Has alcanzado el límite de instalaciones de Play &amp; Earn de hoy. Las instalaciones volverán a contar el %1$s.</string>
   <string name="play_and_earn_exchange_success_email_sent">Hemos enviado tu código a %1$s. Revisa tu bandeja de entrada en las próximas 24 horas.</string>
   <string name="play_and_earn_exchange_earn_more_button">Ganar más</string>
   <string name="play_and_earn_tap_to_collect">Toca para recoger</string>

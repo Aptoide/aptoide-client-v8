@@ -481,6 +481,8 @@
   <string name="play_and_earn_exchange_error_restricted_body">फसवणूकविरोधी यंत्रणेमुळे तुमचे खाते प्रतिबंधित केले आहे. सेटिंग &gt; मदत येथे संपर्क साधा.</string>
   <string name="play_and_earn_exchange_error_limit_body_until">तुम्ही %1$s पासून पुन्हा रिडीम करू शकता.</string>
   <string name="play_and_earn_exchange_error_too_many_attempts_body_until">खूप जास्त प्रयत्न. %1$s नंतर पुन्हा प्रयत्न करा.</string>
+  <string name="play_and_earn_install_limit_body">तुम्ही आजची Play &amp; Earn इंस्टॉल मर्यादा गाठली आहे. इंस्टॉल उद्यापासून पुन्हा मोजले जातील.</string>
+  <string name="play_and_earn_install_limit_body_until">तुम्ही आजची Play &amp; Earn इंस्टॉल मर्यादा गाठली आहे. इंस्टॉल %1$s पासून पुन्हा मोजले जातील.</string>
   <string name="play_and_earn_exchange_email_safe_note">🔒 आपला ईमेल आमच्याकडे सुरक्षित आहे. फक्त हे बक्षिस पाठविण्यासाठीच आम्ही तो वापरु.</string>
   <string name="play_and_earn_exchange_get_my_code_button">माझा कोड मिळवा</string>
   <string name="play_and_earn_exchange_not_enough_balance">पुरेशी शिल्लक नाही</string>

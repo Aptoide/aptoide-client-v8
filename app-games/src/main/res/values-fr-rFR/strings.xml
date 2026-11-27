@@ -481,6 +481,8 @@
   <string name="play_and_earn_exchange_error_restricted_body">Votre compte a été restreint par nos mécanismes antifraude. Contactez Assistance dans Paramètres.</string>
   <string name="play_and_earn_exchange_error_limit_body_until">Vous pourrez échanger à nouveau le %1$s.</string>
   <string name="play_and_earn_exchange_error_too_many_attempts_body_until">Trop de tentatives. Réessayez après %1$s.</string>
+  <string name="play_and_earn_install_limit_body">Vous avez atteint la limite d\'installations Play &amp; Earn du jour. Les installations compteront à nouveau demain.</string>
+  <string name="play_and_earn_install_limit_body_until">Vous avez atteint la limite d\'installations Play &amp; Earn du jour. Les installations compteront à nouveau le %1$s.</string>
   <string name="play_and_earn_exchange_email_safe_note">🔒 Votre e-mail est en sécurité. Nous l\'utiliserons uniquement pour vous envoyer cette récompense.</string>
   <string name="play_and_earn_exchange_get_my_code_button">Obtenir mon code</string>
   <string name="play_and_earn_exchange_not_enough_balance">Solde insuffisant</string>

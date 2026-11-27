@@ -556,6 +556,8 @@
   <string name="play_and_earn_exchange_error_restricted_body">Your account has been restricted due to anti-fraud mechanisms. Contact support in Settings.</string>
   <string name="play_and_earn_exchange_error_limit_body_until">You can redeem again on %1$s.</string>
   <string name="play_and_earn_exchange_error_too_many_attempts_body_until">Too many attempts. Try again after %1$s.</string>
+  <string name="play_and_earn_install_limit_body">You\'ve reached today\'s Play &amp; Earn install limit. Installs count again tomorrow.</string>
+  <string name="play_and_earn_install_limit_body_until">You\'ve reached today\'s Play &amp; Earn install limit. Installs count again on %1$s.</string>
   <string name="play_and_earn_exchange_success_email_sent">We\'ve sent your code to %1$s. Check your inbox within 24 hours.</string>
   <string name="play_and_earn_exchange_earn_more_button">Earn More</string>
   <string name="play_and_earn_tap_to_collect">Tap to Collect</string>

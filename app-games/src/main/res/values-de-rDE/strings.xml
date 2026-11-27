@@ -502,6 +502,8 @@
   <string name="play_and_earn_exchange_error_restricted_body">Dein Konto wurde aufgrund von Betrugsschutzmaßnahmen eingeschränkt. Wende dich in den Einstellungen an Hilfe &amp; Unterstützung.</string>
   <string name="play_and_earn_exchange_error_limit_body_until">Du kannst ab %1$s wieder einlösen.</string>
   <string name="play_and_earn_exchange_error_too_many_attempts_body_until">Zu viele Versuche. Versuch es ab %1$s erneut.</string>
+  <string name="play_and_earn_install_limit_body">Du hast das heutige Play &amp; Earn-Installationslimit erreicht. Installationen zählen erst morgen wieder.</string>
+  <string name="play_and_earn_install_limit_body_until">Du hast das heutige Play &amp; Earn-Installationslimit erreicht. Installationen zählen ab %1$s wieder.</string>
   <string name="play_and_earn_exchange_success_email_sent">Wir haben deinen Code an %1$s gesendet. Prüfe dein Postfach innerhalb von 24 Stunden.</string>
   <string name="play_and_earn_exchange_earn_more_button">Mehr verdienen</string>
   <string name="play_and_earn_tap_to_collect">Zum Einsammeln tippen</string>

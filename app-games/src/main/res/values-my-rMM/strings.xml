@@ -470,6 +470,8 @@
   <string name="play_and_earn_exchange_error_restricted_body">လိမ်လည်မှုဆန့်ကျင်ရေး စနစ်များကြောင့် သင့်အကောင့်ကို ကန့်သတ်ထားပါသည်။ ချိန်ညှိမှုများရှိ အကူအညီသို့ ဆက်သွယ်ပါ။</string>
   <string name="play_and_earn_exchange_error_limit_body_until">%1$s တွင် ထပ်မံလဲယူနိုင်ပါမည်။</string>
   <string name="play_and_earn_exchange_error_too_many_attempts_body_until">ကြိုးစားမှု များလွန်းပါသည်။ %1$s နောက်မှ ထပ်ကြိုးစားပါ။</string>
+  <string name="play_and_earn_install_limit_body">ယနေ့အတွက် Play &amp; Earn ထည့်သွင်းမှု ကန့်သတ်ချက် ပြည့်သွားပါပြီ။ မနက်ဖြန်မှ ထည့်သွင်းမှုများကို ထပ်မံရေတွက်ပါမည်။</string>
+  <string name="play_and_earn_install_limit_body_until">ယနေ့အတွက် Play &amp; Earn ထည့်သွင်းမှု ကန့်သတ်ချက် ပြည့်သွားပါပြီ။ %1$s တွင် ထည့်သွင်းမှုများကို ထပ်မံရေတွက်ပါမည်။</string>
   <string name="play_and_earn_exchange_email_safe_note">🔒 သင့်အီးမေးလ်ကို ကျွန်ုပ်တို့ လုံခြုံစွာ ထိန်းသိမ်းပါမည်။ ဤဆုကို ပေးပို့ရန်သာ အသုံးပြုပါမည်။</string>
   <string name="play_and_earn_exchange_get_my_code_button">ကုဒ်ရယူပါ</string>
   <string name="play_and_earn_exchange_not_enough_balance">လက်ကျန်ငွေ မလုံလောက်ပါ</string>

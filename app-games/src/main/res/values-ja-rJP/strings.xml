@@ -471,6 +471,8 @@
   <string name="play_and_earn_exchange_error_restricted_body">不正防止の仕組みにより、アカウントが制限されました。設定からサポートにお問い合わせください。</string>
   <string name="play_and_earn_exchange_error_limit_body_until">次の交換は%1$sから可能です。</string>
   <string name="play_and_earn_exchange_error_too_many_attempts_body_until">試行回数が多すぎます。%1$s以降にもう一度お試しください。</string>
+  <string name="play_and_earn_install_limit_body">本日のPlay &amp; Earnのインストール上限に達しました。インストールは明日から再びカウントされます。</string>
+  <string name="play_and_earn_install_limit_body_until">本日のPlay &amp; Earnのインストール上限に達しました。インストールは%1$sから再びカウントされます。</string>
   <string name="play_and_earn_exchange_email_safe_note">🔒 メールアドレスは安全に管理されます。この報酬の送信にのみ使用します。</string>
   <string name="play_and_earn_exchange_get_my_code_button">コードを受け取る</string>
   <string name="play_and_earn_exchange_not_enough_balance">残高が足りません</string>

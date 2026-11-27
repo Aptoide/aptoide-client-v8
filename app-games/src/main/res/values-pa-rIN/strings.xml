@@ -483,6 +483,8 @@
   <string name="play_and_earn_exchange_error_restricted_body">ਧੋਖਾਧੜੀ-ਵਿਰੋਧੀ ਪ੍ਰਣਾਲੀਆਂ ਕਾਰਨ ਤੁਹਾਡਾ ਖਾਤਾ ਪ੍ਰਤਿਬੰਧਿਤ ਕੀਤਾ ਗਿਆ ਹੈ। ਸੈਟਿੰਗ ਵਿੱਚ ਸਹਿਯੋਗ ਨਾਲ ਸੰਪਰਕ ਕਰੋ।</string>
   <string name="play_and_earn_exchange_error_limit_body_until">ਤੁਸੀਂ %1$s ਤੋਂ ਦੁਬਾਰਾ ਰੀਡੀਮ ਕਰ ਸਕਦੇ ਹੋ।</string>
   <string name="play_and_earn_exchange_error_too_many_attempts_body_until">ਬਹੁਤ ਜ਼ਿਆਦਾ ਕੋਸ਼ਿਸ਼ਾਂ। %1$s ਤੋਂ ਬਾਅਦ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।</string>
+  <string name="play_and_earn_install_limit_body">ਤੁਸੀਂ ਅੱਜ ਦੀ Play &amp; Earn ਇੰਸਟਾਲ ਸੀਮਾ ਪੂਰੀ ਕਰ ਲਈ ਹੈ। ਇੰਸਟਾਲ ਕੱਲ੍ਹ ਤੋਂ ਦੁਬਾਰਾ ਗਿਣੇ ਜਾਣਗੇ।</string>
+  <string name="play_and_earn_install_limit_body_until">ਤੁਸੀਂ ਅੱਜ ਦੀ Play &amp; Earn ਇੰਸਟਾਲ ਸੀਮਾ ਪੂਰੀ ਕਰ ਲਈ ਹੈ। ਇੰਸਟਾਲ %1$s ਤੋਂ ਦੁਬਾਰਾ ਗਿਣੇ ਜਾਣਗੇ।</string>
   <string name="play_and_earn_exchange_email_safe_note">🔒 ਤੁਹਾਡੀ ਈਮੇਲ ਸਾਡੇ ਕੋਲ ਸੁਰੱਖਿਅਤ ਹੈ। ਅਸੀਂ ਇਸਨੂੰ ਸਿਰਫ਼ ਤੁਹਾਨੂੰ ਇਹ ਇਨਾਮ ਭੇਜਣ ਲਈ ਵਰਤਾਂਗੇ।</string>
   <string name="play_and_earn_exchange_get_my_code_button">ਮੇਰਾ ਕੋਡ ਲਵੋ</string>
   <string name="play_and_earn_exchange_not_enough_balance">ਲੋੜੀਂਦਾ ਬੈਲੇਂਸ ਨਹੀਂ ਹੈ</string>

@@ -481,6 +481,8 @@
   <string name="play_and_earn_exchange_error_restricted_body">حساب شما به دلیل سازوکارهای ضدتقلب محدود شده است. از بخش تنظیمات با پشتیبانی تماس بگیرید.</string>
   <string name="play_and_earn_exchange_error_limit_body_until">از %1$s می‌توانید دوباره دریافت کنید.</string>
   <string name="play_and_earn_exchange_error_too_many_attempts_body_until">تلاش‌های بیش از حد. پس از %1$s دوباره امتحان کنید.</string>
+  <string name="play_and_earn_install_limit_body">به سقف نصب امروز Play &amp; Earn رسیده‌اید. نصب‌ها از فردا دوباره شمرده می‌شوند.</string>
+  <string name="play_and_earn_install_limit_body_until">به سقف نصب امروز Play &amp; Earn رسیده‌اید. نصب‌ها از %1$s دوباره شمرده می‌شوند.</string>
   <string name="play_and_earn_exchange_email_safe_note">🔒 ایمیل شما نزد ما امن است. تنها برای ارسال این پاداش از آن استفاده می‌کنیم.</string>
   <string name="play_and_earn_exchange_get_my_code_button">دریافت کد من</string>
   <string name="play_and_earn_exchange_not_enough_balance">موجودی کافی نیست</string>
