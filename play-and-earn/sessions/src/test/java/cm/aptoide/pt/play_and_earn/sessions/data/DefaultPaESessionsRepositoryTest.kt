@@ -2,6 +2,7 @@ package cm.aptoide.pt.play_and_earn.sessions.data
 
 import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusal
 import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusalCode
+import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusalEvents
 import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusalException
 import cm.aptoide.pt.environment_info.DeviceIdProvider
 import cm.aptoide.pt.exception_handler.ExceptionHandler
@@ -15,7 +16,9 @@ import cm.aptoide.pt.play_and_earn.sessions.data.model.SessionStatus
 import cm.aptoide.pt.test.gherkin.coScenario
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -208,6 +211,26 @@ internal class DefaultPaESessionsRepositoryTest {
     m Then "it succeeds with the applied seconds"
     assertEquals(10, result.getOrNull()?.appliedSeconds)
   }
+
+  @Test
+  fun `A restricted session start or heartbeat is told to the listeners`() =
+    coScenario { scope ->
+      m Given "someone listening to the refusals, and a restricted account"
+      val heard = mutableListOf<PaERefusal>()
+      scope.backgroundScope.launch(UnconfinedTestDispatcher(scope.testScheduler)) {
+        PaERefusalEvents.refusals.collect { heard += it }
+      }
+      api.startError = httpError(403, "ACCOUNT_RESTRICTED")
+      api.heartbeatStatus = SessionStatus.ACCOUNT_RESTRICTED
+
+      m When "a session is started and a heartbeat is sent"
+      val repository = repository(StandardTestDispatcher(scope.testScheduler))
+      repository.startSession("game")
+      repository.heartbeatSession("session", "game", sequence = 0, seconds = 10)
+
+      m Then "both account refusals are told (AND-951)"
+      assertEquals(List(2) { PaERefusal(PaERefusalCode.ACCOUNT_RESTRICTED) }, heard)
+    }
 
   private fun httpError(status: Int, code: String) = HttpException(
     Response.error<Any>(
