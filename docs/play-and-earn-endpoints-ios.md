@@ -329,7 +329,29 @@ custom deserializer for both shapes. Treat any non-2xx or missing `transaction_i
 
 Returns `410`. Do not implement.
 
-### 3.8 Utilities
+### 3.8 `GET /api/v1/account/status` — is the account restricted? (AND-951)
+
+Auth **required** (Bearer wallet JWT, like the other P&E calls). Signed-in users only: never called
+for a guest.
+
+Response: `{ "restricted": true }` or `{ "restricted": false }`. `true` means the backend banned the
+account for fraud; every other P&E call of that account is refused with `ACCOUNT_RESTRICTED` anyway.
+
+It is a convenience, not a control: on any failure (network, `5xx`, `401`, a body without a boolean
+`restricted`) Android treats the account as **not** restricted and reports nothing.
+
+**The restricted screen.** Android asks this when a P&E screen opens, at most once a minute (an
+answer of `false` lifts a restriction, so an account support has un-banned gets back in without
+reinstalling). It also counts the account as restricted as soon as any P&E call is refused with
+`ACCOUNT_RESTRICTED` (session start, heartbeat, redeem, sign-in bonus, balance, exchange rate). The
+answer is kept in memory only and forgotten on sign-in and sign-out. While the account is
+restricted, every P&E screen (the Rewards screen and home tab, the info screens, the redeem flow, a
+game's Rewards tab, the apkfy reward screens) shows "Account restricted — Your account has been
+restricted due to anti-fraud mechanisms. Contact support in Settings." with a Contact Support button
+(the support e-mail screen Settings opens), and the home sign-in bonus card is hidden. Until the
+first answer arrives the screens show their normal content.
+
+### 3.9 Utilities
 
 - `GET /api/utils/countrycode` — GeoIP lookup of the caller's IP (city/country object). Not used by
   Android today.
@@ -486,6 +508,8 @@ heartbeat response.
      for PLAY_TIME missions.
 7. **Balance & redeem**: `GET /wallet/{address}/info` → `units_balance`; `GET /api/exchange/rate/US`
    for display; `POST /api/exchange/v2` when `units_balance >= redeem_units_amount`.
+8. **Any P&E screen, signed in**: `GET /api/v1/account/status` (at most once a minute, 3.8) → the
+   restricted screen instead of the screen while `restricted` is `true`.
 
 ---
 
