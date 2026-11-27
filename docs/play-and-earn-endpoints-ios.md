@@ -356,7 +356,64 @@ support in Settings." with a Contact Support button (the support e-mail form, wi
 bonus card is hidden. Until the first answer arrives the screens show their normal content, except
 the apkfy reward offers, which wait for it (they claim the bonus on their own after a sign-in).
 
-### 3.9 Utilities
+### 3.9 Installs — `POST /api/v1/installs/*` (AND-954)
+
+Auth **required** (Bearer wallet JWT, like the other P&E calls). Signed-in users only. The backend
+counts the day's installs with them (20 a day per account or phone) and tells a first install from
+another account installing the same game on the same phone. Both are new routes: they must be
+registered in Cloudflare API Shield before an app can reach them.
+
+**Rule: the click before the report.** A report whose click is not on record is not stored, only
+flagged. The click is sent when the install starts; when it never reached the backend (offline,
+`5xx`), the app sends the same click again before the report (a repeated `click_id` changes
+nothing).
+
+#### `POST /api/v1/installs/click`
+
+The install of a P&E game started. Body: `{ "package": "com.x.y", "click_id": "<uuid>" }`.
+
+- `click_id`: the app's own id for this install (letters, digits and `. _ : -`, at most 128): the
+  **same value** the MMP click link carries (section 6). Sent for every P&E install, whether the
+  campaign has an MMP link or not, never for an update of a game already on the phone.
+- It never blocks or delays the download, whatever the answer.
+
+| Answer | What Android does |
+|---|---|
+| `200 {"eligible": true}` | Nothing |
+| `200 {"eligible": false}` | Nothing: the game's missions already come back `not_eligible` (3.3) |
+| `429` `INSTALL_LIMIT` with `retry_at` | One snackbar: "You've reached today's Play & Earn install limit. Installs count again on {retry_at as a local date and time}." (without a time when `retry_at` is missing or past). The install goes on; it is never reported |
+| `403` `ACCOUNT_RESTRICTED` | The restricted screen (3.8); never reported |
+| `422` | A bug: never sent again, never reported |
+| `503` / network | Sent again before the report |
+
+#### `POST /api/v1/installs/report`
+
+The install finished. Body:
+
+```json
+{
+  "package": "com.x.y",
+  "click_id": "<the click's id>",
+  "installer": "com.aptoide.android.aptoidegames",
+  "signature": "<64 hex characters>"
+}
+```
+
+- `installer` (optional): the package the phone names as the game's installer.
+- `signature` (optional): SHA-256 of the game's current signing certificate, 64 lower-case hex
+  characters. Either is left out when it cannot be read.
+- Answers: `200`, `403` (restricted), `422`, `503`. A `403` or `422` is not sent again; anything
+  else is tried again at the next app start.
+
+**How Android sends them.** The click goes out when an install of a P&E game starts, from any
+screen: the install manager queuing it or Google Play taking it (inline installs). From the P&E
+install views the MMP click goes out at the same time with the same id. The install's package,
+click id and start time are kept on disk; the report goes out as soon as the game is installed
+(whatever screen is open), or at the next app start for an install that finished while the app was
+not running. A pending install is dropped after 7 days and on sign-in or sign-out (a click belongs
+to the account that sent it), and is never reported while the game is not on the phone.
+
+### 3.10 Utilities
 
 - `GET /api/utils/countrycode` — GeoIP lookup of the caller's IP (city/country object). Not used by
   Android today.
@@ -473,7 +530,7 @@ Android (`PaEMmpClickUrlBuilder`, AND-877) fills the template like this:
 
 | Placeholder in template | Value |
 |---|---|
-| `{transaction_id}` | a fresh UUID (our click id) |
+| `{transaction_id}` | the install's click id, a UUID: the same one `POST /api/v1/installs/click` carries (3.9) |
 | `{google_aid}` | Google Advertising ID; the whole query param is dropped when missing/zeros |
 | `{affiliate_id}` | channel, `aptoide_games` |
 | `{offer_id}`, `{offer_ref_id}` | `campaign_id` |
@@ -498,7 +555,8 @@ heartbeat response.
    sign-in reward: `GET /api/missions?mission_type=EVENT` → show the FIRST_SIGN_IN offer → on claim
    `POST /api/events {"event_type":"FIRST_SIGN_IN"}` → refresh balance (5.4).
 4. **Game page / Rewards tab**: `GET /api/campaigns/{package}/missions`.
-5. **Install**: fire the MMP click (section 6).
+5. **Install**: `POST /api/v1/installs/click` (3.9) and, with the same click id, the MMP click
+   (section 6). When the game is installed: `POST /api/v1/installs/report`, its click first.
 6. **Play** (tap Play, game goes to foreground):
    - `POST /api/v1/sessions/start` → `session_id`, `ttl`.
    - `GET /api/campaigns/{package}/missions` (fresh) → missions for this session.
