@@ -11,6 +11,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
+import java.io.IOException
 import java.net.HttpURLConnection
 import javax.inject.Inject
 
@@ -33,26 +34,35 @@ internal class DefaultEventsRepository @Inject constructor(
         // Expected: the event was granted before. Not a failure worth reporting.
         Result.failure(EventAlreadySubmittedException(e.parseErrorDetail() ?: e.message()))
       } else {
-        Result.failure(
-          e.reportedUnlessRefusal { EventException(e.parseErrorDetail() ?: e.message()) }
-        )
+        Result.failure(e.toFailure())
       }
     } catch (e: CancellationException) {
+      throw e
+    } catch (e: IOException) {
+      // Offline or timed out: expected, and the user may retry. Not reported.
+      e.printStackTrace()
       Result.failure(e)
     } catch (e: Throwable) {
       e.printStackTrace()
-      Result.failure(e.reportedUnlessRefusal { e })
+      exceptionHandler.recordException(e)
+      Result.failure(e)
     }
   }
 
   /**
    * A refusal (AND-953) is expected: it is only logged and comes back as a
-   * [PaERefusalException]. Any other failure is reported to Crashlytics and comes back as
-   * [failure] makes it, read only then: the refusal check must peek the body before it is read.
+   * [PaERefusalException]. So is a 403 with a plain string detail (a per-network limit, retried
+   * as any failure). Any other HTTP failure is reported to Crashlytics. The refusal check peeks
+   * the body, so it runs before the detail is read.
    */
-  private fun Throwable.reportedUnlessRefusal(failure: () -> Throwable): Throwable {
-    val refusal = reportUnlessPaERefusal(this, exceptionHandler::recordException)
-    return refusal?.let { PaERefusalException(it, this) } ?: failure()
+  private fun HttpException.toFailure(): Throwable {
+    var detail: String? = null
+    val refusal = reportUnlessPaERefusal(this) { error ->
+      detail = parseErrorDetail()
+      val expected = code() == HttpURLConnection.HTTP_FORBIDDEN && detail != null
+      if (!expected) exceptionHandler.recordException(error)
+    }
+    return refusal?.let { PaERefusalException(it, this) } ?: EventException(detail ?: message())
   }
 
   // The error response body has the shape { "detail": "..." }. A 422 (unknown event type) has
