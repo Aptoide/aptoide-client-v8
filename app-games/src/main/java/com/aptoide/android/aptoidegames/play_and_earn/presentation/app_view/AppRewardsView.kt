@@ -36,11 +36,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import cm.aptoide.pt.campaigns.domain.PaEMission
-import cm.aptoide.pt.campaigns.domain.isTimeBased
 import cm.aptoide.pt.campaigns.domain.PaEMissionProgress
 import cm.aptoide.pt.campaigns.domain.PaEMissionProgressType
 import cm.aptoide.pt.campaigns.domain.PaEMissionStatus
 import cm.aptoide.pt.campaigns.domain.PaERewardsState
+import cm.aptoide.pt.campaigns.domain.isTimeBased
 import cm.aptoide.pt.campaigns.domain.paeRewardsState
 import cm.aptoide.pt.campaigns.presentation.PaEMissionsUiState
 import cm.aptoide.pt.campaigns.presentation.rememberPaEMissions
@@ -52,15 +52,29 @@ import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getMissionHexagonCompletedIcon
 import com.aptoide.android.aptoidegames.drawables.icons.play_and_earn.getSmallCoinIcon
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.PaEProgressIndicator
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.restricted.PaERestrictedGate
 import com.aptoide.android.aptoidegames.play_and_earn.rememberIsPaEUsageTrackingEnabled
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import java.math.RoundingMode
 
+/** The game page's Rewards tab. */
 @Composable
 fun AppRewardsView(
   packageName: String,
   navigate: (String) -> Unit = {},
+) {
+  // AND-951: a restricted account sees the restricted screen instead, whatever the session says.
+  // The game page around it already scrolls.
+  PaERestrictedGate(scrollable = false) {
+    AppRewardsContent(packageName = packageName, navigate = navigate)
+  }
+}
+
+@Composable
+private fun AppRewardsContent(
+  packageName: String,
+  navigate: (String) -> Unit,
 ) {
   val (missionsState, reload) = rememberPaEMissions(packageName)
   val refusal = rememberPaESessionRefusal(packageName)

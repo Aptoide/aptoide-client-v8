@@ -2,6 +2,7 @@ package cm.aptoide.pt.play_and_earn.events.data
 
 import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusal
 import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusalCode
+import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusalEvents
 import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusalException
 import cm.aptoide.pt.exception_handler.ExceptionHandler
 import cm.aptoide.pt.play_and_earn.events.data.model.SubmitEventRequestJson
@@ -10,8 +11,10 @@ import cm.aptoide.pt.play_and_earn.events.domain.EventType
 import cm.aptoide.pt.test.gherkin.coScenario
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -221,6 +224,22 @@ internal class DefaultEventsRepositoryTest {
     m Then "it succeeds and nothing is reported"
     assertTrue(result.isSuccess)
     assertEquals(emptyList<Throwable>(), exceptionHandler.recorded)
+  }
+
+  @Test
+  fun `A restricted sign-in bonus is told to the listeners`() = coScenario { scope ->
+    m Given "someone listening to the refusals, and a restricted account"
+    val heard = mutableListOf<PaERefusal>()
+    scope.backgroundScope.launch(UnconfinedTestDispatcher(scope.testScheduler)) {
+      PaERefusalEvents.refusals.collect { heard += it }
+    }
+    api.error = httpError(403, """{"detail":{"code":"ACCOUNT_RESTRICTED"}}""")
+
+    m When "the sign-in bonus event is submitted"
+    repository(scope).submitEvent(EventType.FIRST_SIGN_IN)
+
+    m Then "the account refusal is told (AND-951)"
+    assertEquals(listOf(PaERefusal(PaERefusalCode.ACCOUNT_RESTRICTED)), heard)
   }
 
   private fun repository(scope: TestScope) = DefaultEventsRepository(

@@ -58,11 +58,11 @@ fun SupportView(
   subject: String,
   context: Context,
   navigateBack: () -> Unit,
+  accountInfo: String? = null,
 ) {
   val supportAnalytics = rememberSupportAnalytics()
   var text by remember { mutableStateOf("") }
   val characterThreshold = 50L
-  val bodyCore = "\n\n\nMy Hardware specs are\n" + deviceInfo + "\n\nPowered by Aptoide"
   val isKeyboardOpen by keyboardAsState()
   Scaffold(
     topBar = { if (isKeyboardOpen == Keyboard.Closed) SimpleAppGamesToolbar() }
@@ -131,7 +131,7 @@ fun SupportView(
           context.sendMail(
             subject = subject,
             destinationEmail = email,
-            body = text + bodyCore
+            body = supportMailBody(text, deviceInfo, accountInfo)
           )
           navigateBack()
         },
@@ -149,6 +149,15 @@ fun SupportView(
       }
     }
   }
+}
+
+/**
+ * The e-mail the support form sends: what the user wrote, then the device's details and, when
+ * given, the account support must find (AND-951: a restricted account's wallet address).
+ */
+internal fun supportMailBody(text: String, deviceInfo: String, accountInfo: String?): String {
+  val account = accountInfo?.let { "\n\nMy account is\n$it" }.orEmpty()
+  return text + "\n\n\nMy Hardware specs are\n" + deviceInfo + account + "\n\nPowered by Aptoide"
 }
 
 enum class Keyboard {

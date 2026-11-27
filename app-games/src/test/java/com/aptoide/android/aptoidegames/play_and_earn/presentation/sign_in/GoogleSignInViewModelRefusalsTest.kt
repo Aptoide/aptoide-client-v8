@@ -8,6 +8,8 @@ import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusal
 import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusalCode
 import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusalException
 import cm.aptoide.pt.exception_handler.ExceptionHandler
+import cm.aptoide.pt.play_and_earn.sessions.data.PaEAccountStatus
+import cm.aptoide.pt.play_and_earn.sessions.data.PaEAccountStatusRepository
 import cm.aptoide.pt.test.gherkin.coScenario
 import cm.aptoide.pt.wallet.authorization.data.WalletAuthRepository
 import cm.aptoide.pt.wallet.authorization.domain.UserWalletData
@@ -15,15 +17,20 @@ import com.aptoide.android.aptoidegames.play_and_earn.data.InMemoryPreferencesDa
 import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPendingRedeems
 import com.aptoide.android.aptoidegames.play_and_earn.data.PaESignInBonusRefusal
 import com.aptoide.android.aptoidegames.play_and_earn.data.UserAccountPreferencesRepository
+import com.aptoide.android.aptoidegames.play_and_earn.domain.PaEAccountRestriction
+import com.aptoide.android.aptoidegames.play_and_earn.domain.PaEAccountRestrictionState
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaESessionRefusals
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.FakeEventsRepository
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PaERewardType
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.RewardState
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.SignInRewardRepository
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.signInRewardRepository
+import com.google.android.gms.auth.api.identity.AuthorizationResult
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.TestScope
@@ -57,14 +64,16 @@ internal class GoogleSignInViewModelRefusalsTest {
     arrayOf(CredentialManager::class.java)
   ) { _, _, _ -> Unit } as CredentialManager
 
+  private var authorization = Result.failure<UserWalletData>(UnsupportedOperationException())
+  private var onClearWallet: () -> Unit = {}
+
   private val walletAuthRepository = object : WalletAuthRepository {
-    override suspend fun authorizeGoogleUser(token: String) =
-      Result.failure<UserWalletData>(UnsupportedOperationException())
+    override suspend fun authorizeGoogleUser(token: String) = authorization
 
     override suspend fun refreshUserWallet(refreshToken: String) =
       Result.failure<UserWalletData>(UnsupportedOperationException())
 
-    override suspend fun clearAuthorizationData() = Unit
+    override suspend fun clearAuthorizationData() = onClearWallet()
   }
 
   private val refusals = PaESessionRefusals()
@@ -79,6 +88,7 @@ internal class GoogleSignInViewModelRefusalsTest {
     nowMillis = { 0L },
   )
   private val bonusEvents = FakeEventsRepository()
+  private val restrictedRefusals = MutableSharedFlow<PaERefusal>(extraBufferCapacity = 1)
 
   @BeforeEach
   fun setUp() = Dispatchers.setMain(UnconfinedTestDispatcher())
@@ -133,8 +143,71 @@ internal class GoogleSignInViewModelRefusalsTest {
     assertTrue(rewards.rewardState.value is RewardState.Unclaimed)
   }
 
+  @Test
+  fun `Signing out forgets the account restriction`() = coScenario { scope ->
+    m Given "an account restricted for fraud"
+    val restriction = scope.accountRestriction()
+    restrictedRefusals.emit(PaERefusal(PaERefusalCode.ACCOUNT_RESTRICTED))
+    val viewModel = scope.viewModel(restriction = restriction)
+
+    m When "the user signs out"
+    viewModel.signOut()
+
+    m Then "nothing is known about the next account (AND-951)"
+    assertEquals(PaEAccountRestrictionState.UNKNOWN, restriction.state.value)
+  }
+
+  @Test
+  fun `Signing out forgets the restriction only once the wallet is cleared`() =
+    coScenario { scope ->
+      m Given "an account restricted for fraud"
+      val restriction = scope.accountRestriction()
+      restrictedRefusals.emit(PaERefusal(PaERefusalCode.ACCOUNT_RESTRICTED))
+      var stateWhileClearing: PaEAccountRestrictionState? = null
+      onClearWallet = { stateWhileClearing = restriction.state.value }
+      val viewModel = scope.viewModel(restriction = restriction)
+
+      m When "the user signs out"
+      viewModel.signOut()
+
+      m Then "the restriction still held while the wallet was cleared, and is gone after"
+      assertEquals(PaEAccountRestrictionState.RESTRICTED, stateWhileClearing)
+      assertEquals(PaEAccountRestrictionState.UNKNOWN, restriction.state.value)
+    }
+
+  @Test
+  fun `Signing in forgets the account restriction`() = coScenario { scope ->
+    m Given "an account restricted for fraud, and another account about to sign in"
+    val restriction = scope.accountRestriction()
+    restrictedRefusals.emit(PaERefusal(PaERefusalCode.ACCOUNT_RESTRICTED))
+    authorization = Result.success(UserWalletData("0xother", "token", EMAIL))
+    val viewModel = scope.viewModel(restriction = restriction)
+
+    m When "the other account signs in"
+    viewModel.handleAuthorizationResult(
+      AuthorizationResult("code", null, null, emptyList(), null, null)
+    )
+
+    m Then "nothing is known about the new account (AND-951)"
+    assertEquals(PaEAccountRestrictionState.UNKNOWN, restriction.state.value)
+  }
+
+  private fun TestScope.accountRestriction() = PaEAccountRestriction(
+    accountStatus = object : PaEAccountStatusRepository {
+      // Cannot tell: a refusal's word stands.
+      override suspend fun getStatus() = PaEAccountStatus.UNKNOWN
+    },
+    isSignedIn = { true },
+    refusals = restrictedRefusals,
+    nowMillis = { 0L },
+    scope = CoroutineScope(
+      backgroundScope.coroutineContext + UnconfinedTestDispatcher(testScheduler)
+    ),
+  )
+
   private fun TestScope.viewModel(
     rewards: SignInRewardRepository = signInRewardRepository(bonusEvents, signInBonusRefusal),
+    restriction: PaEAccountRestriction = accountRestriction(),
   ) = GoogleSignInViewModel(
     credentialManager = credentialManager,
     userAuthRepository = walletAuthRepository,
@@ -145,6 +218,7 @@ internal class GoogleSignInViewModelRefusalsTest {
     paESessionRefusals = refusals,
     pendingRedeems = pendingRedeems,
     signInRewardRepository = rewards,
+    accountRestriction = restriction,
   )
 
   private companion object {

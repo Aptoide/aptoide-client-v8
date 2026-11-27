@@ -30,10 +30,19 @@ data class PaERefusalMessage(
 )
 
 /**
- * Each refusal a session start can get has its own text; the others (e.g. ACCOUNT_RESTRICTED,
- * whose own screen is AND-951) keep the generic error.
+ * Each refusal a session start can get has its own text; the others keep the generic error.
+ *
+ * ACCOUNT_RESTRICTED (AND-951): the tab shows the restricted screen instead, since that refusal
+ * restricts the account (PaEAccountRestriction). This text is only left for when the backend's
+ * status has since said otherwise while the session refusal still holds: the same words as that
+ * screen, not a generic error.
  */
 fun PaERefusal.toMessage(): PaERefusalMessage = when (code) {
+  PaERefusalCode.ACCOUNT_RESTRICTED -> PaERefusalMessage(
+    title = R.string.play_and_earn_exchange_error_restricted_title,
+    body = R.string.play_and_earn_exchange_error_restricted_body,
+  )
+
   PaERefusalCode.REGION_NOT_SUPPORTED -> PaERefusalMessage(
     title = R.string.play_and_earn_refused_title,
     body = R.string.play_and_earn_refused_region_body,
@@ -54,7 +63,6 @@ fun PaERefusal.toMessage(): PaERefusalMessage = when (code) {
     body = R.string.play_and_earn_refused_vpn_body,
   )
 
-  PaERefusalCode.ACCOUNT_RESTRICTED,
   PaERefusalCode.SIGN_IN_BONUS_DEVICE_LIMIT,
   PaERefusalCode.REDEEM_LIMIT,
   PaERefusalCode.INSTALL_LIMIT,

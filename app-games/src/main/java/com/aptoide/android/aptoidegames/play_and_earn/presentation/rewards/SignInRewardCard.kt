@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.PaEAnalytics
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.rememberPaEAnalytics
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.restricted.rememberPaERestrictedGateState
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.playAndEarnRewardSignInRoute
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.rememberUserInfo
 
@@ -49,7 +50,9 @@ fun SignInRewardCard(
     }
   }
 
-  val unclaimed = rewardState as? RewardState.Unclaimed ?: return
+  // AND-951: a restricted account is not offered the bonus.
+  val restriction = rememberPaERestrictedGateState()
+  val unclaimed = signInBonusOffer(rewardState, restriction) ?: return
 
   LaunchedEffect(rewardType) {
     viewModel.onRewardCardShown(rewardType) {

@@ -3,6 +3,10 @@ package cm.aptoide.pt.aptoide_network.play_and_earn
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import retrofit2.HttpException
 import timber.log.Timber
 import java.time.Instant
@@ -101,8 +105,27 @@ object PaERefusals {
 }
 
 /**
+ * Every refusal [reportUnlessPaERefusal] reads, as it reads it (AND-951). Every Play & Earn call
+ * that can be refused goes through that filter (sessions, heartbeats, events, redeem, balance,
+ * exchange rate), so whoever must know about a refusal whatever call it came from (the
+ * restricted account) listens here instead of in each caller. Nothing is replayed: a listener
+ * hears what is read after it started. Never blocks: when no one keeps up, the oldest is dropped.
+ */
+object PaERefusalEvents {
+  private val _refusals = MutableSharedFlow<PaERefusal>(
+    extraBufferCapacity = 16,
+    onBufferOverflow = BufferOverflow.DROP_OLDEST,
+  )
+  val refusals: SharedFlow<PaERefusal> = _refusals.asSharedFlow()
+
+  internal fun tell(refusal: PaERefusal) {
+    _refusals.tryEmit(refusal)
+  }
+}
+
+/**
  * Reports [error] through [report] (Crashlytics) unless it is a refusal: that is expected, so it
- * only leaves a debug log line.
+ * only leaves a debug log line and is told to [PaERefusalEvents].
  * @return the refusal, when it was one.
  */
 fun reportUnlessPaERefusal(error: Throwable, report: (Throwable) -> Unit): PaERefusal? {
@@ -111,6 +134,7 @@ fun reportUnlessPaERefusal(error: Throwable, report: (Throwable) -> Unit): PaERe
     report(error)
   } else {
     Timber.d("Play & Earn refusal ${refusal.code}, retry at ${refusal.retryAt}")
+    PaERefusalEvents.tell(refusal)
   }
   return refusal
 }

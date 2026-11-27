@@ -60,8 +60,9 @@ import com.aptoide.android.aptoidegames.design_system.PrimaryButton
 import com.aptoide.android.aptoidegames.design_system.PrimaryTextButton
 import com.aptoide.android.aptoidegames.drawables.figures.getPermissionAllowFigure
 import com.aptoide.android.aptoidegames.drawables.icons.getTrustedIcon
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.rememberPaEAnalytics
 import com.aptoide.android.aptoidegames.play_and_earn.InjectionsProvider
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.rememberPaEAnalytics
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.restricted.PaERestrictedGate
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.service.PaEForegroundService
 import com.aptoide.android.aptoidegames.play_and_earn.rememberIsPaEUsageTrackingEnabled
 import com.aptoide.android.aptoidegames.play_and_earn.rememberPaEClientConfigManager
@@ -76,8 +77,10 @@ fun playAndEarnPermissionsScreen(showSnack: (String) -> Unit) = ScreenData.withA
   route = playAndEarnPermissionsRoute,
   screenAnalyticsName = "PlayAndEarnPermissions",
 ) { _, navigate, navigateBack ->
-
-  PlayAndEarnPermissionsScreen(navigateBack = navigateBack, showSnack = showSnack)
+  // AND-951: a restricted account sees the restricted screen instead.
+  PaERestrictedGate(navigateBack = navigateBack) {
+    PlayAndEarnPermissionsScreen(navigateBack = navigateBack, showSnack = showSnack)
+  }
 }
 
 @Composable
