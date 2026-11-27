@@ -211,8 +211,10 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
       }.onFailure { throwable ->
         Timber.e(throwable, "Failed to initialize feature flags.")
       }
-      // After the flags: they say which device checks may run (AND-956).
-      sendDeviceSecurityAnalytics()
+      // Here rather than in onCreate so the device checks read the loaded flags when they could
+      // be fetched; otherwise they fall back to the cached or default list of checks.
+      runCatching { sendDeviceSecurityAnalytics() }
+        .onFailure { throwable -> Timber.e(throwable, "Failed to send device security events.") }
     }
   }
 
