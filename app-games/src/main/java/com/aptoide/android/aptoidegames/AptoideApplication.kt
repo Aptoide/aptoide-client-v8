@@ -44,6 +44,7 @@ import com.aptoide.android.aptoidegames.play_and_earn.domain.installs.PaEInstall
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.crashlytics
+import dagger.Lazy
 import dagger.hilt.EntryPoint
 import dagger.hilt.EntryPoints
 import dagger.hilt.InstallIn
@@ -140,8 +141,9 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
   @Inject
   lateinit var attributionManager: AttributionManager
 
+  // Lazy: built on the IO thread below, not on the main thread in onCreate.
   @Inject
-  lateinit var paeInstallTracker: PaEInstallTracker
+  lateinit var paeInstallTracker: Lazy<PaEInstallTracker>
 
   override fun onCreate() {
     FirebaseApp.initializeApp(this)
@@ -173,7 +175,7 @@ class AptoideApplication : Application(), ImageLoaderFactory, Provider {
   private fun initPaEInstallReports() {
     if (applicationContext.isObbMoverProcess()) return
     CoroutineScope(Dispatchers.IO).launch {
-      paeInstallTracker.initialize(
+      paeInstallTracker.get().initialize(
         packagesInstalled = installManager.appsChanges
           .filter { it.packageInfo != null }
           .map { it.packageName }

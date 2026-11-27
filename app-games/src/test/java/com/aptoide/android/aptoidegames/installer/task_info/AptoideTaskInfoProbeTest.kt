@@ -60,6 +60,23 @@ internal class AptoideTaskInfoProbeTest {
     assertEquals(emptyList<String>(), queued)
   }
 
+  @Test
+  fun `A listener that throws does not stop the task`() = coScenario {
+    m Given "a listener that throws, as a dependency failing to build would"
+    val throwingProbe = AptoideTaskInfoProbe(
+      taskInfoRepository = repository,
+      installAnalytics = object : InstallAnalytics {},
+      onInstallQueued = { throw IllegalStateException("no tracker") },
+    )
+    val task = taskInfo("com.game", Task.Type.INSTALL)
+
+    m When "the install manager queues an install"
+    throwingProbe.saveJob(task)
+
+    m Then "the task is saved and nothing was thrown"
+    assertEquals(listOf(task), repository.saved)
+  }
+
   private fun taskInfo(packageName: String, type: Task.Type) = TaskInfo(
     packageName = packageName,
     installPackageInfo = InstallPackageInfo(versionCode = 1),
