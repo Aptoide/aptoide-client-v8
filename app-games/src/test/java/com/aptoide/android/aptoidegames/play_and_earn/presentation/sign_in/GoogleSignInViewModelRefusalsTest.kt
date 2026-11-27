@@ -135,7 +135,7 @@ internal class GoogleSignInViewModelRefusalsTest {
   @Test
   fun `Signing out forgets the pending installs`() = coScenario { scope ->
     m Given "an install whose report is still due"
-    pendingInstalls.startOrReuse(GAME)
+    pendingInstalls.startOrReuse(GAME, owner = "0xWallet")
     val viewModel = scope.viewModel()
 
     m When "the user signs out"
@@ -148,7 +148,7 @@ internal class GoogleSignInViewModelRefusalsTest {
   @Test
   fun `Signing in forgets the pending installs`() = coScenario { scope ->
     m Given "an install whose report is still due, and another account about to sign in"
-    pendingInstalls.startOrReuse(GAME)
+    pendingInstalls.startOrReuse(GAME, owner = "0xWallet")
     authorization = Result.success(UserWalletData("0xother", "token", EMAIL))
     val viewModel = scope.viewModel()
 

@@ -3,6 +3,7 @@ package com.aptoide.android.aptoidegames.play_and_earn.domain.installs
 import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusal
 import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusalCode
 import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusalException
+import cm.aptoide.pt.feature_campaigns.CampaignRepository
 import cm.aptoide.pt.play_and_earn.sessions.data.PaEInstallAnswer
 import cm.aptoide.pt.play_and_earn.sessions.data.PaEInstallsRepository
 import cm.aptoide.pt.test.gherkin.coScenario
@@ -10,9 +11,13 @@ import com.aptoide.android.aptoidegames.play_and_earn.data.InMemoryPreferencesDa
 import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPendingInstall
 import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPendingInstall.Click
 import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPendingInstalls
+import com.aptoide.android.aptoidegames.play_and_earn.domain.mmp.PaEMmpClickSender
+import com.aptoide.android.aptoidegames.play_and_earn.domain.mmp.PaEMmpClickTemplate
+import com.aptoide.android.aptoidegames.play_and_earn.domain.mmp.PaEMmpClickUrlSource
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -76,20 +81,29 @@ internal class PaEInstallTrackerTest {
   )
   private val mmpClicks = mutableListOf<String>()
   private var mmpFailure: Exception? = null
-  private var wallet: String? = "0xWallet"
+  private var wallet: String? = OWNER
+  private var paeAvailable = true
   private val paeGames = mutableSetOf("com.game")
+  private var paeGameFailure: Exception? = null
   private val evidence = PaEInstallEvidence(installer = "com.aptoide.store", signature = "ab12")
 
-  private fun tracker(scope: TestScope = TestScope()) = PaEInstallTracker(
-    repository = repository,
-    pendingInstalls = pendingInstalls,
-    walletAddress = { wallet },
-    isPaEGame = { it in paeGames },
-    installedGames = installedGames,
-    mmpClick = { packageName, clickId ->
+  private fun tracker(
+    scope: TestScope = TestScope(),
+    mmpClick: suspend (String, String) -> Unit = { packageName, clickId ->
       mmpFailure?.let { throw it }
       mmpClicks += "$packageName $clickId"
     },
+  ) = PaEInstallTracker(
+    repository = repository,
+    pendingInstalls = pendingInstalls,
+    walletAddress = { wallet },
+    isPaEAvailable = { paeAvailable },
+    isPaEGame = { packageName ->
+      paeGameFailure?.let { throw it }
+      packageName in paeGames
+    },
+    installedGames = installedGames,
+    mmpClick = mmpClick,
     scope = scope,
   )
 
@@ -122,14 +136,27 @@ internal class PaEInstallTrackerTest {
 
   @Test
   fun `A game with no tracking link still sends the backend click`() = coScenario {
-    m Given "a game whose campaign has no MMP link: the MMP sender sends nothing"
-    val tracker = tracker()
-    mmpFailure = null
+    m Given "a game whose campaign has no MMP link, with the real MMP click sender"
+    val knocked = mutableListOf<String>()
+    val sender = PaEMmpClickSender(
+      urlSource = object : PaEMmpClickUrlSource {
+        override suspend fun clickTemplate(packageName: String): PaEMmpClickTemplate? = null
+      },
+      campaignRepository = object : CampaignRepository {
+        override suspend fun knock(url: String) {
+          knocked += url
+        }
+      },
+      walletAddress = { wallet },
+      advertisingId = { "gaid-1" },
+    )
+    val tracker = tracker(mmpClick = sender::sendNow)
 
     m When "the install starts from a Play & Earn install view"
     tracker.start("com.other", fromPaEView = true)
 
-    m Then "the backend click is sent all the same"
+    m Then "no MMP link is called, and the backend click is sent all the same"
+    assertEquals(emptyList<String>(), knocked)
     assertEquals(listOf("click com.other click-1"), repository.calls)
   }
 
@@ -159,7 +186,7 @@ internal class PaEInstallTrackerTest {
     m Then "the MMP click is sent, and the install stays pending with its click not sent"
     assertEquals(listOf("com.game click-1"), mmpClicks)
     assertEquals(
-      listOf(PaEPendingInstall("com.game", "click-1", 1_000_000L, Click.NOT_SENT)),
+      listOf(PaEPendingInstall("com.game", "click-1", 1_000_000L, Click.NOT_SENT, OWNER)),
       pendingInstalls.all()
     )
   }
@@ -418,11 +445,13 @@ internal class PaEInstallTrackerTest {
     m Given "a tracker working on its own scope"
     val tracker = tracker(scope)
 
-    m When "an install start is told and the background work runs"
+    m When "an install start is told, then the background work runs"
     tracker.onInstallStarted("com.game")
+    val sentBeforeRunning = repository.calls.toList()
     scope.advanceUntilIdle()
 
-    m Then "the click was sent"
+    m Then "nothing was sent while the caller went on; the click went out afterwards"
+    assertEquals(emptyList<String>(), sentBeforeRunning)
     assertEquals(listOf("click com.game click-1"), repository.calls)
   }
 
@@ -439,12 +468,250 @@ internal class PaEInstallTrackerTest {
     m When "the game is installed"
     installedGames.installed["com.game"] = evidence
     installed.emit("com.game")
+    scope.advanceUntilIdle()
 
     m Then "its report is sent"
     assertEquals(listOf("click-1"), repository.reports.map { it[1] })
   }
 
+  @Test
+  fun `Nothing is sent while Play & Earn is not available`() = coScenario {
+    m Given "a signed-in user for whom Play & Earn is hidden (region, device or remote flag)"
+    paeAvailable = false
+    val tracker = tracker()
+
+    m When "a Play & Earn game's install starts from the install manager and from a PaE view"
+    tracker.start("com.game", fromPaEView = false)
+    tracker.start("com.game", fromPaEView = true)
+
+    m Then "no click of either kind is sent and nothing is pending"
+    assertEquals(emptyList<String>(), repository.calls + mmpClicks)
+    assertEquals(emptyList<PaEPendingInstall>(), pendingInstalls.all())
+  }
+
+  @Test
+  fun `A report waits while Play & Earn is hidden and goes when it is back`() = coScenario {
+    m Given "a recorded click for an installed game, and Play & Earn then hidden"
+    val tracker = tracker()
+    tracker.start("com.game", fromPaEView = true)
+    installedGames.installed["com.game"] = evidence
+    paeAvailable = false
+    tracker.reportPending()
+    val reportsWhileHidden = repository.reports.size
+    val keptWhileHidden = pendingInstalls.all().map { it.clickId }
+
+    m When "Play & Earn is available again at the next start"
+    paeAvailable = true
+    tracker.reportPending()
+
+    m Then "nothing was reported while hidden, the install was kept, and it is reported now"
+    assertEquals(0, reportsWhileHidden)
+    assertEquals(listOf("click-1"), keptWhileHidden)
+    assertEquals(listOf("click-1"), repository.reports.map { it[1] })
+  }
+
+  @Test
+  fun `Another account's install is dropped, not reported`() = coScenario {
+    m Given "a recorded click of one account for an installed game, kept on disk"
+    tracker().start("com.game", fromPaEView = true)
+    installedGames.installed["com.game"] = evidence
+
+    m When "another wallet is the current one when the reports go"
+    wallet = "0xOther"
+    tracker().reportPending()
+
+    m Then "nothing is reported or clicked again, and the install is gone"
+    assertEquals(listOf("click com.game click-1"), repository.calls)
+    assertEquals(emptyList<PaEPendingInstall>(), pendingInstalls.all())
+  }
+
+  @Test
+  fun `Another account's failed click is not sent again`() = coScenario {
+    m Given "a click of one account that never reached the backend, for an installed game"
+    repository.clickResult = Result.failure(IOException("offline"))
+    tracker().start("com.game", fromPaEView = true)
+    installedGames.installed["com.game"] = evidence
+    repository.clickResult = Result.success(PaEInstallAnswer(eligible = true))
+
+    m When "another wallet is the current one when the reports go"
+    wallet = "0xOther"
+    tracker().reportPending()
+
+    m Then "the click is not sent again for the other account, and the install is gone"
+    assertEquals(listOf("click com.game click-1"), repository.calls)
+    assertEquals(emptyList<PaEPendingInstall>(), pendingInstalls.all())
+  }
+
+  @Test
+  fun `Starting up reports an install that finished while the app was closed`() = coScenario {
+    m Given "a recorded click on disk for a game installed while the app was not running"
+    tracker().start("com.game", fromPaEView = true)
+    installedGames.installed["com.game"] = evidence
+
+    m When "the app starts with no install happening"
+    tracker().initialize(emptyFlow())
+
+    m Then "the install is reported and done"
+    assertEquals(listOf("click-1"), repository.reports.map { it[1] })
+    assertEquals(emptyList<PaEPendingInstall>(), pendingInstalls.all())
+  }
+
+  @Test
+  fun `A failing check in a start told in the background is contained`() = coScenario { scope ->
+    m Given "a Play & Earn game list that cannot be read"
+    paeGameFailure = IllegalStateException("database closed")
+    val tracker = tracker(scope)
+
+    m When "an install start is told by the install manager and the background work runs"
+    tracker.onInstallStarted("com.game")
+    scope.advanceUntilIdle()
+
+    m Then "nothing is sent, nothing is pending and nothing was thrown"
+    assertEquals(emptyList<String>(), repository.calls)
+    assertEquals(emptyList<PaEPendingInstall>(), pendingInstalls.all())
+  }
+
+  @Test
+  fun `A failing installed-games check in a start told in the background is contained`() =
+    coScenario { scope ->
+      m Given "a phone whose installed games cannot be read"
+      val tracker = PaEInstallTracker(
+        repository = repository,
+        pendingInstalls = pendingInstalls,
+        walletAddress = { wallet },
+        isPaEAvailable = { true },
+        isPaEGame = { true },
+        installedGames = object : PaEInstalledGames {
+          override fun isInstalled(packageName: String): Boolean = error("package manager died")
+          override fun evidence(packageName: String) = null
+        },
+        mmpClick = { _, _ -> mmpClicks += "sent" },
+        scope = scope,
+      )
+
+      m When "an install start is told by a Play & Earn view and the background work runs"
+      tracker.onPaEViewInstallStarted("com.game")
+      scope.advanceUntilIdle()
+
+      m Then "nothing is sent and nothing was thrown"
+      assertEquals(emptyList<String>(), repository.calls + mmpClicks)
+    }
+
+  @Test
+  fun `The two entry points differ for a game outside Play & Earn`() = coScenario { scope ->
+    m Given "a package the campaigns do not list"
+    val tracker = tracker(scope)
+
+    m When "the install manager tells its start, then a Play & Earn view tells it"
+    tracker.onInstallStarted("com.unlisted")
+    scope.advanceUntilIdle()
+    val afterInstallManager = repository.calls + mmpClicks
+    tracker.onPaEViewInstallStarted("com.unlisted")
+    scope.advanceUntilIdle()
+
+    m Then "the install manager's start sends nothing; the view's sends both clicks, one id"
+    assertEquals(emptyList<String>(), afterInstallManager)
+    assertEquals(listOf("click com.unlisted click-1"), repository.calls)
+    assertEquals(listOf("com.unlisted click-1"), mmpClicks)
+  }
+
+  @Test
+  fun `The install is on disk before its click is answered`() = coScenario { scope ->
+    m Given "a backend click that has not been answered yet"
+    repository.clickGate = CompletableDeferred()
+    val tracker = tracker()
+
+    m When "the install starts"
+    scope.launch { tracker.start("com.game", fromPaEView = false) }
+    scope.runCurrent()
+
+    m Then "the install is already on disk, its click not sent yet"
+    assertEquals(listOf(Click.NOT_SENT), pendingInstalls.all().map { it.click })
+    repository.clickGate?.complete(Unit)
+  }
+
+  @Test
+  fun `An install finishing while its click is on its way is reported once, after it`() =
+    coScenario { scope ->
+      m Given "a backend click on its way, and the game already installed"
+      repository.clickGate = CompletableDeferred()
+      val tracker = tracker()
+      scope.launch { tracker.start("com.game", fromPaEView = false) }
+      scope.runCurrent()
+      installedGames.installed["com.game"] = evidence
+
+      m When "the install's finish is told, then the click's answer arrives"
+      tracker.reportPending("com.game")
+      val callsBeforeAnswer = repository.calls.toList()
+      repository.clickGate?.complete(Unit)
+      scope.advanceUntilIdle()
+
+      m Then "no second click and no report before the answer; exactly one report after"
+      assertEquals(listOf("click com.game click-1"), callsBeforeAnswer)
+      assertEquals(
+        listOf("click com.game click-1", "report com.game click-1"),
+        repository.calls
+      )
+    }
+
+  @Test
+  fun `The limit met when a click is sent again tells nothing and drops the install`() =
+    coScenario { scope ->
+      m Given "a click that never reached the backend, for a game now installed"
+      repository.clickResult = Result.failure(IOException("offline"))
+      tracker().start("com.game", fromPaEView = true)
+      installedGames.installed["com.game"] = evidence
+      val tracker = tracker()
+      val told = mutableListOf<PaEInstallLimit>()
+      scope.backgroundScope.launch(UnconfinedTestDispatcher(scope.testScheduler)) {
+        tracker.installLimitReached.collect { told += it }
+      }
+
+      m When "the app starts and the click sent again meets the day's limit"
+      repository.clickResult = Result.failure(
+        PaERefusalException(PaERefusal(PaERefusalCode.INSTALL_LIMIT, Instant.EPOCH))
+      )
+      tracker.reportPending()
+
+      m Then "no limit is told, nothing is reported, and the install is gone"
+      assertEquals(emptyList<PaEInstallLimit>(), told)
+      assertEquals(emptyList<List<String?>>(), repository.reports)
+      assertEquals(emptyList<PaEPendingInstall>(), pendingInstalls.all())
+    }
+
+  @Test
+  fun `A second start after a recorded click sends no second click`() = coScenario {
+    m Given "an install whose click is on record"
+    val tracker = tracker()
+    tracker.start("com.game", fromPaEView = false)
+
+    m When "the same game's install starts again"
+    tracker.start("com.game", fromPaEView = false)
+
+    m Then "one click was sent"
+    assertEquals(listOf("click com.game click-1"), repository.calls)
+  }
+
+  @Test
+  fun `Nothing is reported for a signed-out user`() = coScenario {
+    m Given "a recorded click for an installed game, and the user signed out since"
+    tracker().start("com.game", fromPaEView = true)
+    installedGames.installed["com.game"] = evidence
+    wallet = null
+
+    m When "the reports go"
+    tracker().reportPending()
+
+    m Then "nothing is sent and the install is kept"
+    assertEquals(emptyList<List<String?>>(), repository.reports)
+    assertEquals(listOf("click-1"), pendingInstalls.all().map { it.clickId })
+  }
+
   private fun httpError(code: Int) = HttpException(
     Response.error<Any>(code, "{}".toResponseBody("application/json".toMediaType()))
   )
+
+  private companion object {
+    const val OWNER = "0xWallet"
+  }
 }

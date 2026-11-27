@@ -5,20 +5,26 @@ import cm.aptoide.pt.aptoide_network.play_and_earn.toPaERefusal
 import cm.aptoide.pt.campaigns.domain.GetAvailablePaEPackagesUseCase
 import cm.aptoide.pt.play_and_earn.sessions.data.PaEInstallsRepository
 import cm.aptoide.pt.wallet.datastore.WalletCoreDataSource
+import com.aptoide.android.aptoidegames.play_and_earn.PlayAndEarnManager
 import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPendingInstall
 import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPendingInstall.Click
 import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPendingInstalls
 import com.aptoide.android.aptoidegames.play_and_earn.domain.mmp.PaEMmpClickSender
+import dagger.Lazy
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.buffer
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -40,9 +46,11 @@ data class PaEInstallLimit(val retryAt: Instant?)
  * the backend click carries it, and so does the developer's MMP click when the install starts
  * from a Play & Earn install view. Neither waits for the other, and neither holds the install.
  *
- * A start is told for a signed-in user, a game that is not on the phone (not an update, a
- * migration or a retry of an installed game), and a Play & Earn game. The report goes out when
- * the game is on the phone: as its install finishes, or at the next app start. Its click goes
+ * Nothing is sent while Play & Earn is not available to the user (region, device, remote flag);
+ * the installs on record wait, and expire on their own. A start is told for a signed-in user, a
+ * game that is not on the phone (not an update, a migration or a retry of an installed game),
+ * and a Play & Earn game. The report goes out when the game is on the phone: as its install
+ * finishes, or at the next app start, and only for the account that started it. Its click goes
  * again first when it never reached the backend, as the backend stores no report without one.
  */
 @Singleton
@@ -50,6 +58,7 @@ class PaEInstallTracker internal constructor(
   private val repository: PaEInstallsRepository,
   private val pendingInstalls: PaEPendingInstalls,
   private val walletAddress: suspend () -> String?,
+  private val isPaEAvailable: suspend () -> Boolean,
   private val isPaEGame: suspend (packageName: String) -> Boolean,
   private val installedGames: PaEInstalledGames,
   private val mmpClick: suspend (packageName: String, clickId: String) -> Unit,
@@ -61,6 +70,7 @@ class PaEInstallTracker internal constructor(
     repository: PaEInstallsRepository,
     pendingInstalls: PaEPendingInstalls,
     walletCoreDataSource: WalletCoreDataSource,
+    playAndEarnManager: Lazy<PlayAndEarnManager>,
     getAvailablePaEPackages: GetAvailablePaEPackagesUseCase,
     installedGames: AndroidPaEInstalledGames,
     mmpClickSender: PaEMmpClickSender,
@@ -68,12 +78,18 @@ class PaEInstallTracker internal constructor(
     repository = repository,
     pendingInstalls = pendingInstalls,
     walletAddress = walletCoreDataSource::getCurrentWalletAddress,
+    isPaEAvailable = { playAndEarnManager.get().shouldShowPlayAndEarn() },
     // The games of the last campaigns read; none read yet, none known.
     isPaEGame = { getAvailablePaEPackages().getOrNull()?.contains(it) == true },
     installedGames = installedGames,
     mmpClick = mmpClickSender::sendNow,
-    // Outlives the screen: the user may leave right after tapping Install.
-    scope = CoroutineScope(SupervisorJob() + Dispatchers.IO),
+    // Outlives the screen: the user may leave right after tapping Install. Whatever fails here
+    // fails alone, and never takes the app down.
+    scope = CoroutineScope(
+      SupervisorJob() + Dispatchers.IO + CoroutineExceptionHandler { _, e ->
+        Timber.w(e, "Play & Earn install clicks failed")
+      }
+    ),
   )
 
   private val _installLimitReached = MutableSharedFlow<PaEInstallLimit>(
@@ -102,26 +118,34 @@ class PaEInstallTracker internal constructor(
   }
 
   /**
-   * Reports what is due, then each game as its install finishes. Never returns.
-   * @param packagesInstalled the packages being installed on the phone, as they are.
+   * Reports what is due, and alongside it each game as its install finishes. Never returns.
+   * @param packagesInstalled the packages being installed on the phone, as they are. Read into
+   * a buffer of its own, so a slow backend never holds whoever else listens to it.
    */
   suspend fun initialize(packagesInstalled: Flow<String>) = coroutineScope {
     // Alongside, not before: a game installed meanwhile is not missed.
     launch { contained("pending reports") { reportPending() } }
-    packagesInstalled.collect { packageName ->
-      contained("report") { reportPending(packageName) }
-    }
+    packagesInstalled
+      .buffer(Channel.UNLIMITED)
+      .catch { Timber.w(it, "Play & Earn install reports stopped listening") }
+      .collect { packageName ->
+        contained("report") {
+          // Most packages are not Play & Earn installs: a read, and nothing else.
+          if (pendingInstalls.isPending(packageName)) reportPending(packageName)
+        }
+      }
   }
 
   internal suspend fun start(packageName: String, fromPaEView: Boolean) {
-    if (!signedIn()) return
+    val owner = walletAddress()?.takeUnless { it.isBlank() } ?: return
+    if (!isPaEAvailable()) return
     // An update, a migration or a retry of an installed game: not a new install.
     if (installedGames.isInstalled(packageName)) return
     // The install views only show Play & Earn games.
     if (!fromPaEView && !isPaEGame(packageName)) return
 
     val (install, sendClick) = startMutex.withLock {
-      val install = pendingInstalls.startOrReuse(packageName)
+      val install = pendingInstalls.startOrReuse(packageName, owner)
       install to (install.click == Click.NOT_SENT && clicksInFlight.add(install.clickId))
     }
     coroutineScope {
@@ -142,13 +166,21 @@ class PaEInstallTracker internal constructor(
 
   /**
    * Reports the finished installs: every one, or [packageName]'s only. One that is not on the
-   * phone is left for later; one that fails is tried again at the next app start.
+   * phone is left for later; one that fails is tried again at the next app start; one another
+   * account started is dropped.
    */
   internal suspend fun reportPending(packageName: String? = null) = reportMutex.withLock {
-    if (!signedIn()) return@withLock
+    val owner = walletAddress()?.takeUnless { it.isBlank() } ?: return@withLock
+    if (!isPaEAvailable()) return@withLock
     pendingInstalls.all()
       .filter { packageName == null || it.packageName == packageName }
-      .forEach { install -> report(install) }
+      .forEach { install ->
+        if (install.owner == owner) {
+          report(install)
+        } else {
+          pendingInstalls.remove(install.clickId)
+        }
+      }
   }
 
   private suspend fun report(install: PaEPendingInstall) {
@@ -207,8 +239,6 @@ class PaEInstallTracker internal constructor(
   } finally {
     startMutex.withLock { clicksInFlight.remove(install.clickId) }
   }
-
-  private suspend fun signedIn(): Boolean = !walletAddress().isNullOrBlank()
 
   private suspend fun contained(what: String, block: suspend () -> Unit) {
     // The install goes on whatever happens here.

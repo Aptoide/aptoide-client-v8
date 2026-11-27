@@ -10,6 +10,7 @@ import com.aptoide.android.aptoidegames.play_and_earn.di.PaEPreferencesDataStore
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.flow.first
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -19,6 +20,8 @@ import javax.inject.Singleton
  * A Play & Earn install whose click was sent (or tried) and whose report is still due (AND-954).
  * @param clickId the app's own id for this install: the backend click's and the MMP link's.
  * @param createdAt when the install started, in the phone's milliseconds.
+ * @param owner the wallet address of the account that started it: its click belongs to that
+ * account, and is never reported for another.
  */
 @Keep
 data class PaEPendingInstall(
@@ -26,6 +29,7 @@ data class PaEPendingInstall(
   @SerializedName("click_id") val clickId: String,
   @SerializedName("created_at") val createdAt: Long,
   @SerializedName("click") val click: Click,
+  @SerializedName("owner") val owner: String,
 ) {
   /** What became of the click. */
   @Keep
@@ -44,12 +48,13 @@ data class PaEPendingInstall(
 /**
  * The installs whose report is still due (AND-954), kept in the Play & Earn preferences so the
  * report survives the screen being closed and the app being killed. One per game: the same game
- * started again (a cancel and a retry, or two screens telling the same start) keeps its click
- * id, so the backend counts it once.
+ * started again by the same account (a cancel and a retry, or two screens telling the same
+ * start) keeps its click id, so the backend counts it once.
  *
  * An install is dropped after [MAX_AGE_MILLIS]; a refused one after [REFUSAL_HOLD_MILLIS]. At
  * most [MAX_INSTALLS] are kept, the oldest going first. All are cleared when the account
- * changes: a click belongs to the account that sent it.
+ * changes, and each carries its owner: a click belongs to the account that sent it. What cannot
+ * be read back (a value from before the owner was kept, or not the expected shape) is dropped.
  */
 @Singleton
 class PaEPendingInstalls internal constructor(
@@ -69,29 +74,44 @@ class PaEPendingInstalls internal constructor(
 
   private val gson = Gson()
 
-  /** The pending install of [packageName], or a new one, which becomes pending. */
-  suspend fun startOrReuse(packageName: String): PaEPendingInstall {
+  /**
+   * [owner]'s pending install of [packageName], or a new one, which becomes pending in place of
+   * any other account's install of that game.
+   */
+  suspend fun startOrReuse(packageName: String, owner: String): PaEPendingInstall {
     var install: PaEPendingInstall? = null
     dataStore.edit { preferences ->
       val installs = preferences.read()
-      install = installs.firstOrNull { it.packageName == packageName }
+      install = installs.firstOrNull { it.packageName == packageName && it.owner == owner }
         ?: PaEPendingInstall(
           packageName = packageName,
           clickId = newClickId(),
           createdAt = nowMillis(),
           click = PaEPendingInstall.Click.NOT_SENT,
-        ).also { preferences.write((installs + it).takeLast(MAX_INSTALLS)) }
+          owner = owner,
+        ).also { new ->
+          val others = installs.filterNot { it.packageName == packageName }
+          preferences.write((others + new).takeLast(MAX_INSTALLS))
+        }
     }
     return install!!
   }
 
-  /** The installs still pending, oldest first. */
+  /** The installs still pending, oldest first; the ones too old to keep are dropped for good. */
   suspend fun all(): List<PaEPendingInstall> {
     var installs = emptyList<PaEPendingInstall>()
     dataStore.edit { preferences -> installs = preferences.read() }
     return installs
   }
 
+  /**
+   * Whether [packageName] has an install on record, read without writing anything: a cheap
+   * check for every package the phone installs. An install too old to keep may still count.
+   */
+  suspend fun isPending(packageName: String): Boolean =
+    dataStore.data.first().parse().any { it.packageName == packageName }
+
+  /** Saves what became of the click of [clickId]; nothing when that install is gone. */
   suspend fun setClick(clickId: String, click: PaEPendingInstall.Click) {
     dataStore.edit { preferences ->
       preferences.write(
@@ -114,11 +134,7 @@ class PaEPendingInstalls internal constructor(
 
   /** The installs on record, without the ones too old to keep; those are dropped for good. */
   private fun MutablePreferences.read(): List<PaEPendingInstall> {
-    val stored = this[INSTALLS]
-      ?.let { runCatching { gson.fromJson<List<PaEPendingInstall>>(it, listType) }.getOrNull() }
-      .orEmpty()
-      // Gson leaves a field missing from what was stored null, whatever its Kotlin type says.
-      .filter { listOf<Any?>(it.packageName, it.clickId, it.click).none { field -> field == null } }
+    val stored = parse()
     val now = nowMillis()
     val kept = stored.filter { install ->
       val age = now - install.createdAt
@@ -126,11 +142,23 @@ class PaEPendingInstalls internal constructor(
         PaEPendingInstall.Click.REFUSED -> REFUSAL_HOLD_MILLIS
         else -> MAX_AGE_MILLIS
       }
-      age in 0 until maxAge
+      // A clock set back gives a negative age: kept, it is not old.
+      age < maxAge
     }
-    if (kept.size != stored.size) write(kept)
+    if (kept.size != stored.size || stored.isEmpty() && contains(INSTALLS)) write(kept)
     return kept
   }
+
+  private fun Preferences.parse(): List<PaEPendingInstall> = this[INSTALLS]
+    ?.let { runCatching { gson.fromJson<List<PaEPendingInstall?>>(it, listType) }.getOrNull() }
+    .orEmpty()
+    // Gson leaves a field missing from what was stored, or an unknown click state, null,
+    // whatever its Kotlin type says.
+    .filterNotNull()
+    .filter { install ->
+      listOf<Any?>(install.packageName, install.clickId, install.click, install.owner)
+        .none { it == null }
+    }
 
   private fun MutablePreferences.write(installs: List<PaEPendingInstall>) {
     if (installs.isEmpty()) remove(INSTALLS) else this[INSTALLS] = gson.toJson(installs)
@@ -155,6 +183,6 @@ class PaEPendingInstalls internal constructor(
 
     private val INSTALLS = stringPreferencesKey("pending_installs")
 
-    private val listType = object : TypeToken<List<PaEPendingInstall>>() {}.type
+    private val listType = object : TypeToken<List<PaEPendingInstall?>>() {}.type
   }
 }
