@@ -243,6 +243,12 @@ class PaEAnalytics @Inject constructor(
     )
   }
 
+  // --- Device checks (AND-956) ---
+
+  fun sendPaEDeviceRisk(firedChecks: List<String>) {
+    genericAnalytics.logEvent(name = "pae_device_risk", params = deviceRiskParams(firedChecks))
+  }
+
   companion object {
     const val SOURCE_APKFY = "apkfy"
     const val SOURCE_GAMES_FEED = "games_feed"
@@ -260,3 +266,30 @@ class PaEAnalytics @Inject constructor(
 /** Stable lowercase token for the reward currency, used as the `reward_type` event parameter. */
 private val PaERewardType.analyticsName: String
   get() = name.lowercase()
+
+private const val P_CHECKS = "checks"
+private const val P_COUNT = "count"
+
+// Firebase Analytics drops the characters of a string parameter value past the 100th.
+private const val MAX_PARAM_VALUE_LENGTH = 100
+
+/**
+ * The `pae_device_risk` parameters: `checks` holds the fired check names, sorted and
+ * comma-separated; a list longer than one value allows continues in `checks_2`, `checks_3`, ...,
+ * always split between names. `count` is how many checks fired.
+ */
+internal fun deviceRiskParams(firedChecks: List<String>): Map<String, Any> {
+  val chunks = mutableListOf<String>()
+  var current = ""
+  firedChecks.sorted().map { it.take(MAX_PARAM_VALUE_LENGTH) }.forEach { name ->
+    current = when {
+      current.isEmpty() -> name
+      current.length + 1 + name.length <= MAX_PARAM_VALUE_LENGTH -> "$current,$name"
+      else -> name.also { chunks += current }
+    }
+  }
+  if (current.isNotEmpty()) chunks += current
+  return chunks.mapIndexed { index, chunk ->
+    (if (index == 0) P_CHECKS else "${P_CHECKS}_${index + 1}") to chunk
+  }.toMap<String, Any>() + (P_COUNT to firedChecks.size)
+}
