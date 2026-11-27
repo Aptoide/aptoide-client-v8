@@ -24,7 +24,20 @@ sealed interface ExchangeEmailUiState {
   data object Idle : ExchangeEmailUiState
   data object Loading : ExchangeEmailUiState
   data object Success : ExchangeEmailUiState
-  data object Error : ExchangeEmailUiState
+  data class Error(val kind: ExchangeErrorKind) : ExchangeEmailUiState
+}
+
+/**
+ * What the user is told when a redeem fails (AND-952).
+ * @param canRetry retrying can help: the others are final answers, and retrying a redeem whose
+ * outcome is being checked would only put it under review.
+ */
+enum class ExchangeErrorKind(val canRetry: Boolean) {
+  Generic(canRetry = true),
+  Limit(canRetry = false),
+  TooManyAttempts(canRetry = false),
+  BeingChecked(canRetry = false),
+  Restricted(canRetry = false),
 }
 
 /**
@@ -76,7 +89,7 @@ class ExchangeByEmailViewModel internal constructor(
           // AND-950: a refusal is expected: logged, not reported as a crash.
           val refusal = reportUnlessPaERefusal(error, exceptionHandler::recordException)
           if (refusal.endsRequest()) clearRequestId(requestId)
-          _uiState.update { ExchangeEmailUiState.Error }
+          _uiState.update { ExchangeEmailUiState.Error(refusal.toErrorKind()) }
         }
       )
     }
@@ -138,4 +151,18 @@ private fun PaERefusal?.endsRequest(): Boolean = when (this?.code) {
   PaERefusalCode.REDEEM_REQUEST_MISMATCH -> true
 
   else -> false
+}
+
+/**
+ * In progress and mismatch read as a generic error: Retry is the fix, with the same id while in
+ * progress and a new one after a mismatch.
+ */
+private fun PaERefusal?.toErrorKind(): ExchangeErrorKind = when (this?.code) {
+  PaERefusalCode.REDEEM_LIMIT -> ExchangeErrorKind.Limit
+  PaERefusalCode.TOO_MANY_ATTEMPTS -> ExchangeErrorKind.TooManyAttempts
+  PaERefusalCode.REDEEM_OUTCOME_UNKNOWN,
+  PaERefusalCode.REDEEM_UNDER_REVIEW -> ExchangeErrorKind.BeingChecked
+
+  PaERefusalCode.ACCOUNT_RESTRICTED -> ExchangeErrorKind.Restricted
+  else -> ExchangeErrorKind.Generic
 }

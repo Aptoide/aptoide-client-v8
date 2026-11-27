@@ -89,10 +89,16 @@ fun ErrorView(
   }
 }
 
+/**
+ * @param onRetryClick null hides the Retry button.
+ * @param title and [subtitle] replace the generic text, for an error with its own message.
+ */
 @Composable
 fun GenericErrorView(
-  onRetryClick: () -> Unit,
+  onRetryClick: (() -> Unit)?,
   modifier: Modifier = Modifier,
+  title: String = stringResource(R.string.error_message_generic_title),
+  subtitle: String? = stringResource(R.string.error_message_generic_body),
 ) {
   ErrorView(
     imageVector = getGenericError(
@@ -100,8 +106,8 @@ fun GenericErrorView(
       Palette.GreyLight,
       if (BuildConfig.FLAVOR_brand == "vanilla") Palette.Black else Palette.White,
     ),
-    title = stringResource(R.string.error_message_generic_title),
-    subtitle = stringResource(R.string.error_message_generic_body),
+    title = title,
+    subtitle = subtitle,
     onRetryClick = onRetryClick,
     modifier = modifier,
   )

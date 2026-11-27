@@ -255,6 +255,59 @@ internal class ExchangeByEmailViewModelTest {
     ids.forEach { assertEquals(true, it.matches(Regex("^[A-Za-z0-9_-]{1,64}$")), it) }
   }
 
+  @Test
+  fun `Each refusal shows its own error`() = coScenario {
+    m Given "the backend refusing a redeem with each of its codes"
+    val expected = mapOf(
+      httpError(429, "REDEEM_LIMIT") to ExchangeErrorKind.Limit,
+      httpError(429, "TOO_MANY_ATTEMPTS") to ExchangeErrorKind.TooManyAttempts,
+      httpError(504, "REDEEM_OUTCOME_UNKNOWN") to ExchangeErrorKind.BeingChecked,
+      httpError(409, "REDEEM_UNDER_REVIEW") to ExchangeErrorKind.BeingChecked,
+      httpError(403, "ACCOUNT_RESTRICTED") to ExchangeErrorKind.Restricted,
+      httpError(409, "REDEEM_IN_PROGRESS") to ExchangeErrorKind.Generic,
+      httpError(409, "REDEEM_REQUEST_MISMATCH") to ExchangeErrorKind.Generic,
+      httpError(403, "REGION_NOT_SUPPORTED") to ExchangeErrorKind.Generic,
+      httpError(500, "REDEEM_LIMIT") to ExchangeErrorKind.Generic,
+      IOException("offline") to ExchangeErrorKind.Generic,
+    )
+
+    m When "the user redeems once for each"
+    val shown = expected.keys.map { failure ->
+      repository.results += Result.failure(failure)
+      viewModel().apply { exchange(EMAIL, PaERewardType.ROBUX) }.uiState.value
+    }
+
+    m Then "each one shows the error of its kind"
+    assertEquals(expected.values.map { ExchangeEmailUiState.Error(it) }, shown)
+  }
+
+  @Test
+  fun `Only the generic error can be retried`() = coScenario {
+    m Given "every kind of redeem error"
+    val kinds = ExchangeErrorKind.entries
+
+    m When "the screen asks which of them offer Retry"
+    val retryable = kinds.filter { it.canRetry }
+
+    m Then "only the generic one does: retrying the others cannot help"
+    assertEquals(listOf(ExchangeErrorKind.Generic), retryable)
+  }
+
+  @Test
+  fun `Refusals are not reported and real failures are`() = coScenario {
+    m Given "the backend refusing a redeem, then the network failing"
+    val viewModel = viewModel()
+    val failure = IOException("offline")
+    repository.results += Result.failure(httpError(504, "REDEEM_OUTCOME_UNKNOWN"))
+    repository.results += Result.failure(failure)
+
+    m When "the user redeems twice"
+    repeat(2) { viewModel.exchange(EMAIL, PaERewardType.ROBUX) }
+
+    m Then "only the network failure goes to Crashlytics"
+    assertEquals(listOf<Throwable>(failure), exceptionHandler.recorded)
+  }
+
   private fun viewModel() = ExchangeByEmailViewModel(
     exchangeUnitsUseCase = ExchangeUnitsUseCase(repository),
     exceptionHandler = exceptionHandler,

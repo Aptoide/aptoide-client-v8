@@ -88,7 +88,7 @@ fun exchangeEmailScreen(
         viewModel.resetState()
       }
 
-      ExchangeEmailUiState.Error ->
+      is ExchangeEmailUiState.Error ->
         paeAnalytics.sendPaEExchangeResult(success = false, rewardType = rewardType)
 
       else -> Unit
@@ -130,8 +130,9 @@ fun ExchangeEmailScreen(
       )
 
       when (uiState) {
-        ExchangeEmailUiState.Error -> GenericErrorView(
-          onRetryClick = onRetry,
+        is ExchangeEmailUiState.Error -> ExchangeErrorView(
+          kind = uiState.kind,
+          onRetry = onRetry,
           modifier = Modifier.weight(1f),
         )
 
@@ -154,6 +155,52 @@ fun ExchangeEmailScreen(
         )
       }
     }
+  }
+}
+
+/**
+ * A redeem error (AND-952). Only the generic one offers Retry; the others are final answers, and
+ * the top bar's back arrow leaves the screen.
+ */
+@Composable
+private fun ExchangeErrorView(
+  kind: ExchangeErrorKind,
+  onRetry: () -> Unit,
+  modifier: Modifier = Modifier,
+) {
+  val onRetryClick = onRetry.takeIf { kind.canRetry }
+  when (kind) {
+    ExchangeErrorKind.Generic -> GenericErrorView(
+      onRetryClick = onRetryClick,
+      modifier = modifier,
+    )
+
+    ExchangeErrorKind.Limit -> GenericErrorView(
+      onRetryClick = onRetryClick,
+      modifier = modifier,
+      title = stringResource(R.string.play_and_earn_exchange_error_limit_title),
+      subtitle = stringResource(R.string.play_and_earn_exchange_error_limit_body),
+    )
+
+    ExchangeErrorKind.TooManyAttempts -> GenericErrorView(
+      onRetryClick = onRetryClick,
+      modifier = modifier,
+      subtitle = stringResource(R.string.play_and_earn_exchange_error_too_many_attempts_body),
+    )
+
+    ExchangeErrorKind.BeingChecked -> GenericErrorView(
+      onRetryClick = onRetryClick,
+      modifier = modifier,
+      title = stringResource(R.string.play_and_earn_exchange_error_being_checked_title),
+      subtitle = stringResource(R.string.play_and_earn_exchange_error_being_checked_body),
+    )
+
+    ExchangeErrorKind.Restricted -> GenericErrorView(
+      onRetryClick = onRetryClick,
+      modifier = modifier,
+      title = stringResource(R.string.play_and_earn_exchange_error_restricted_title),
+      subtitle = stringResource(R.string.play_and_earn_exchange_error_restricted_body),
+    )
   }
 }
 
@@ -353,6 +400,20 @@ private fun ExchangeEmailDiamondsPreview() {
     rewardType = PaERewardType.DIAMONDS,
     formattedAmount = "$5.00",
     prefilledEmail = "user@example.com",
+    navigateBack = {},
+    onSubmit = {},
+    onRetry = {},
+  )
+}
+
+@PreviewDark
+@Composable
+private fun ExchangeEmailLimitPreview() {
+  ExchangeEmailScreen(
+    uiState = ExchangeEmailUiState.Error(ExchangeErrorKind.Limit),
+    rewardType = PaERewardType.ROBUX,
+    formattedAmount = "$5.00",
+    prefilledEmail = "",
     navigateBack = {},
     onSubmit = {},
     onRetry = {},
