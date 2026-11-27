@@ -1,12 +1,19 @@
 package com.aptoide.android.aptoidegames.device_info
 
 import cm.aptoide.pt.test.gherkin.coScenario
+import com.aptoide.android.aptoidegames.device_info.checks.CallStack
+import com.aptoide.android.aptoidegames.device_info.checks.ClassProbe
 import com.aptoide.android.aptoidegames.device_info.checks.DeviceCheckGroup
 import com.aptoide.android.aptoidegames.device_info.checks.DeviceCheckOutcome
 import com.aptoide.android.aptoidegames.device_info.checks.DeviceCheckResult
 import com.aptoide.android.aptoidegames.device_info.checks.FakeCheck
+import com.aptoide.android.aptoidegames.device_info.checks.FakeInstalledPackages
+import com.aptoide.android.aptoidegames.device_info.checks.HookLibrariesCheck
+import com.aptoide.android.aptoidegames.device_info.checks.ProcessMaps
+import com.aptoide.android.aptoidegames.device_info.checks.XposedCheck
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import java.io.IOException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -84,6 +91,45 @@ internal class DeviceSecurityCheckerTest {
       m Then "it is not compromised: runtime checks are only reported"
       assertFalse(compromised)
     }
+
+  @Test
+  fun `Xposed installed on an otherwise clean device does not hide Play and Earn`() =
+    coScenario {
+      m Given "the existing checks clean and the LSPosed manager installed"
+      val xposed = XposedCheck(
+        classes = object : ClassProbe {
+          override fun isLoadable(className: String) = false
+        },
+        stack = object : CallStack {
+          override fun classNames() = emptyList<String>()
+        },
+        packages = FakeInstalledPackages(setOf("org.lsposed.manager")),
+      )
+      val checker = DeviceSecurityChecker(existingChecks + xposed, Dispatchers.Unconfined)
+
+      m When "the checks run"
+      val report = checker.runChecks()
+
+      m Then "xposed is reported but the device is not compromised"
+      assertEquals(listOf("xposed"), report.firedNames)
+      assertFalse(checker.isCompromisedDevice())
+    }
+
+  @Test
+  fun `Unreadable process maps leave the hook libraries check not run`() = coScenario {
+    m Given "process maps that cannot be read"
+    val hooks = HookLibrariesCheck(object : ProcessMaps {
+      override fun mappedPaths(): Set<String> = throw IOException("no access")
+    })
+    val checker = DeviceSecurityChecker(listOf(hooks), Dispatchers.Unconfined)
+
+    m When "the checks run"
+    val report = checker.runChecks()
+
+    m Then "the check did not fire and is reported as not run"
+    assertEquals(emptyList<String>(), report.firedNames)
+    assertEquals(listOf("hook_libraries"), report.couldNotRun)
+  }
 
   @Test
   fun `The report names every check that ran and what it found`() = coScenario {
