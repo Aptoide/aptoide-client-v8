@@ -49,6 +49,19 @@ fun rememberPaEMmpInstallClick(packageName: String): PaEMmpInstallClick = runPre
   },
 )
 
+/**
+ * Tells the Play & Earn install clicks that Google Play took the install of a package (AND-954):
+ * those installs never reach the install manager, which tells the others.
+ */
+@Composable
+fun rememberPaEPlayInstallStarted(): (packageName: String) -> Unit = runPreviewable(
+  preview = { {} },
+  real = {
+    val vm = hiltViewModel<PaEMmpClickViewModel>()
+    remember(vm) { vm.installTracker::onInstallStarted }
+  },
+)
+
 @Composable
 fun TrackPaEMmpInstallState(
   mmpInstallClick: PaEMmpInstallClick,

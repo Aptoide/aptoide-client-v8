@@ -414,21 +414,6 @@ internal class PaEInstallTrackerTest {
   }
 
   @Test
-  fun `An account change forgets every pending install`() = coScenario {
-    m Given "two pending installs"
-    val tracker = tracker()
-    paeGames += "com.other"
-    tracker.start("com.game", fromPaEView = true)
-    tracker.start("com.other", fromPaEView = false)
-
-    m When "the account changes"
-    tracker.forgetAccount()
-
-    m Then "nothing is pending"
-    assertEquals(emptyList<PaEPendingInstall>(), pendingInstalls.all())
-  }
-
-  @Test
   fun `A start told in the background runs off the caller`() = coScenario { scope ->
     m Given "a tracker working on its own scope"
     val tracker = tracker(scope)

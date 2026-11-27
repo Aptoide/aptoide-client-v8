@@ -112,11 +112,6 @@ class PaEInstallTracker internal constructor(
     }
   }
 
-  /** The account changed: the clicks of the last one are not reported for the next. */
-  suspend fun forgetAccount() {
-    reportMutex.withLock { pendingInstalls.clearAll() }
-  }
-
   internal suspend fun start(packageName: String, fromPaEView: Boolean) {
     if (!signedIn()) return
     // An update, a migration or a retry of an installed game: not a new install.

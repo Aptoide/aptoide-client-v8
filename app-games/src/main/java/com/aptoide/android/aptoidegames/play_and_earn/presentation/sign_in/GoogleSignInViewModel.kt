@@ -12,6 +12,7 @@ import cm.aptoide.pt.exception_handler.ExceptionHandler
 import cm.aptoide.pt.exception_handler.runCatchingAndRecord
 import cm.aptoide.pt.wallet.authorization.data.WalletAuthRepository
 import com.aptoide.android.aptoidegames.BuildConfig
+import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPendingInstalls
 import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPendingRedeems
 import com.aptoide.android.aptoidegames.play_and_earn.data.UserAccountPreferencesRepository
 import com.aptoide.android.aptoidegames.play_and_earn.domain.PaEAccountRestriction
@@ -42,6 +43,7 @@ class GoogleSignInViewModel @Inject constructor(
   private val exceptionHandler: ExceptionHandler,
   private val paESessionRefusals: PaESessionRefusals,
   private val pendingRedeems: PaEPendingRedeems,
+  private val pendingInstalls: PaEPendingInstalls,
   private val signInRewardRepository: SignInRewardRepository,
   private val accountRestriction: PaEAccountRestriction,
 ) : ViewModel() {
@@ -117,6 +119,8 @@ class GoogleSignInViewModel @Inject constructor(
           paESessionRefusals.clear()
           // AND-952: a pending redeem belongs to the last account's wallet.
           forgetPendingRedeem()
+          // AND-954: so do the clicks of its pending installs.
+          forgetPendingInstalls()
           // AND-953: so does a refused sign-in bonus; the new account is offered it again.
           signInRewardRepository.forgetRefusal()
           googleIdTokenCredential?.let {
@@ -158,6 +162,8 @@ class GoogleSignInViewModel @Inject constructor(
     viewModelScope.launch {
       // AND-952: so does its pending redeem.
       forgetPendingRedeem()
+      // AND-954: and the clicks of its pending installs.
+      forgetPendingInstalls()
       // AND-953: and its refused sign-in bonus.
       signInRewardRepository.forgetRefusal()
       runCatchingAndRecord(exceptionHandler) {
@@ -176,6 +182,10 @@ class GoogleSignInViewModel @Inject constructor(
 
   private suspend fun forgetPendingRedeem() {
     runCatchingAndRecord(exceptionHandler) { pendingRedeems.clearAll() }
+  }
+
+  private suspend fun forgetPendingInstalls() {
+    runCatchingAndRecord(exceptionHandler) { pendingInstalls.clearAll() }
   }
 
   private fun generateSecureRandomNonce(byteLength: Int = 32): String {
