@@ -86,30 +86,46 @@ class ClassLoaderProbe : ClassProbe {
     }
 }
 
-/** Reads `/proc/self/maps`, at most [maxChars] of it, so a huge file cannot stall the check. */
-class ProcSelfMaps(private val maxChars: Int = MAX_MAPS_CHARS) : ProcessMaps {
-  override fun mappedPaths(): Set<String> =
-    File("/proc/self/maps").bufferedReader().use { readMappedPaths(it, maxChars) }
-
-  private companion object {
-    // An app's maps file is usually well under 1 MB.
-    const val MAX_MAPS_CHARS = 2_000_000
-  }
+/** Streams `/proc/self/maps` line by line; nothing of it is kept in memory. */
+class ProcSelfMaps : ProcessMaps {
+  override fun anyMappedPath(predicate: (String) -> Boolean): Boolean =
+    File("/proc/self/maps").bufferedReader().use { anyMappedPath(it, predicate = predicate) }
 }
 
-/** The path column of each whole line read within [maxChars]; anonymous regions are skipped. */
-internal fun readMappedPaths(reader: Reader, maxChars: Int): Set<String> {
-  val lines = reader as? BufferedReader ?: BufferedReader(reader)
-  val paths = mutableSetOf<String>()
-  var read = 0
-  while (true) {
-    val line = lines.readLine() ?: break
-    read += line.length + 1
-    if (read > maxChars) break
-    val pathStart = line.indexOf('/')
-    if (pathStart >= 0) paths += line.substring(pathStart)
+// An app maps a few thousand regions; the bound only stops a runaway read. Injected libraries
+// tend to be mapped last, so it is far above any real file to let the scan reach its end.
+private const val MAX_MAPS_LINES = 200_000
+
+// A maps line is a fixed prefix plus a path of at most PATH_MAX (4096) characters.
+private const val MAX_MAPS_LINE_LENGTH = 8_192
+
+/**
+ * Whether the path column of a maps line matches [predicate], reading line by line and stopping
+ * at the first match. At most [maxLines] lines are read; a line longer than [maxLineLength] is
+ * cut there. Anonymous regions (no path) are skipped.
+ */
+internal fun anyMappedPath(
+  reader: Reader,
+  maxLines: Int = MAX_MAPS_LINES,
+  maxLineLength: Int = MAX_MAPS_LINE_LENGTH,
+  predicate: (String) -> Boolean,
+): Boolean {
+  val input = reader as? BufferedReader ?: BufferedReader(reader)
+  val line = StringBuilder()
+  var lines = 0
+  while (lines < maxLines) {
+    line.setLength(0)
+    var char = input.read()
+    if (char == -1) return false
+    while (char != -1 && char != '\n'.code) {
+      if (line.length < maxLineLength) line.append(char.toChar())
+      char = input.read()
+    }
+    lines++
+    val pathStart = line.indexOf("/")
+    if (pathStart >= 0 && predicate(line.substring(pathStart))) return true
   }
-  return paths
+  return false
 }
 
 class AndroidDebuggerState : DebuggerState {

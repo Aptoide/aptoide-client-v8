@@ -7,7 +7,8 @@ interface ClassProbe {
 
 /** The files mapped into this process's memory (the path column of `/proc/self/maps`). */
 interface ProcessMaps {
-  fun mappedPaths(): Set<String>
+  /** Whether any mapped path matches; stops at the first match. */
+  fun anyMappedPath(predicate: (String) -> Boolean): Boolean
 }
 
 interface DebuggerState {
@@ -54,7 +55,7 @@ class HookLibrariesCheck(private val maps: ProcessMaps) : DeviceCheck {
   override val name = "hook_libraries"
   override val group = DeviceCheckGroup.RUNTIME
 
-  override fun fired(): Boolean = maps.mappedPaths().any { path ->
+  override fun fired(): Boolean = maps.anyMappedPath { path ->
     val fileName = path.substringAfterLast('/').lowercase()
     HOOK_LIBRARIES.any(fileName::contains)
   }

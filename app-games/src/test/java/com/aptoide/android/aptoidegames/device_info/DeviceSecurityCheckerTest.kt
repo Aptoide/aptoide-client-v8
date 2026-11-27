@@ -132,7 +132,8 @@ internal class DeviceSecurityCheckerTest {
   fun `Unreadable process maps leave the hook libraries check not run`() = coScenario {
     m Given "process maps that cannot be read"
     val hooks = HookLibrariesCheck(object : ProcessMaps {
-      override fun mappedPaths(): Set<String> = throw IOException("no access")
+      override fun anyMappedPath(predicate: (String) -> Boolean): Boolean =
+        throw IOException("no access")
     })
     val checker = checker(listOf(hooks))
 

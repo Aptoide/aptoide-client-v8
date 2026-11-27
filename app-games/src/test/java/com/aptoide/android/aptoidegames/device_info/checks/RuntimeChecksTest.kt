@@ -13,7 +13,7 @@ internal class RuntimeChecksTest {
   }
 
   private class FakeProcessMaps(private val paths: Set<String> = emptySet()) : ProcessMaps {
-    override fun mappedPaths(): Set<String> = paths
+    override fun anyMappedPath(predicate: (String) -> Boolean): Boolean = paths.any(predicate)
   }
 
   private class FakeDebuggerState(
