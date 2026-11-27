@@ -21,11 +21,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -48,6 +50,8 @@ import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.remem
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
+import java.time.Instant
+import java.time.ZoneId
 
 private const val exchangeEmailBase = "exchangeEmail"
 private const val rewardTypeArg = "rewardType"
@@ -132,6 +136,7 @@ fun ExchangeEmailScreen(
       when (uiState) {
         is ExchangeEmailUiState.Error -> ExchangeErrorView(
           kind = uiState.kind,
+          retryAt = uiState.retryAt,
           onRetry = onRetry,
           modifier = Modifier.weight(1f),
         )
@@ -165,10 +170,18 @@ fun ExchangeEmailScreen(
 @Composable
 private fun ExchangeErrorView(
   kind: ExchangeErrorKind,
+  retryAt: Instant?,
   onRetry: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   val onRetryClick = onRetry.takeIf { kind.canRetry }
+  val locale = LocalConfiguration.current.locales[0]
+  val limitBody = remember(kind, retryAt, locale) {
+    exchangeLimitBody(kind, retryAt, Instant.now(), ZoneId.systemDefault(), locale)
+  }
+  val limitText = limitBody?.let { body ->
+    body.retryAt?.let { stringResource(body.text, it) } ?: stringResource(body.text)
+  }
   // The flow's own background is Palette.Black under a gradient, in both brands and themes, so
   // the text on it is Palette.White like the rest of this screen (the error view's default
   // colour is for the app's usual background and is unreadable here in Vanilla).
@@ -185,14 +198,14 @@ private fun ExchangeErrorView(
       modifier = modifier,
       contentColor = contentColor,
       title = stringResource(R.string.play_and_earn_exchange_error_limit_title),
-      subtitle = stringResource(R.string.play_and_earn_exchange_error_limit_body),
+      subtitle = limitText,
     )
 
     ExchangeErrorKind.TooManyAttempts -> GenericErrorView(
       onRetryClick = onRetryClick,
       modifier = modifier,
       contentColor = contentColor,
-      subtitle = stringResource(R.string.play_and_earn_exchange_error_too_many_attempts_body),
+      subtitle = limitText,
     )
 
     ExchangeErrorKind.BeingChecked -> GenericErrorView(
@@ -421,7 +434,10 @@ private fun ExchangeEmailDiamondsPreview() {
 @Composable
 private fun ExchangeEmailLimitPreview() {
   ExchangeEmailScreen(
-    uiState = ExchangeEmailUiState.Error(ExchangeErrorKind.Limit),
+    uiState = ExchangeEmailUiState.Error(
+      kind = ExchangeErrorKind.Limit,
+      retryAt = Instant.now().plusSeconds(20 * 60 * 60),
+    ),
     rewardType = PaERewardType.ROBUX,
     formattedAmount = "$5.00",
     prefilledEmail = "",
