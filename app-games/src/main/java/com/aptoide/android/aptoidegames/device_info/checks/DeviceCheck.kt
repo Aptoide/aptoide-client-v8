@@ -47,10 +47,6 @@ data class DeviceCheckReport(val results: List<DeviceCheckResult>) {
   val firedNames: List<String>
     get() = results.filter { it.fired }.map { it.name }.sorted()
 
-  /** The names of the checks that threw, sorted. */
-  val couldNotRun: List<String>
-    get() = results.filter { it.outcome == DeviceCheckOutcome.FAILED }.map { it.name }.sorted()
-
   /** True when a check of a group that hides Play & Earn fired. */
   val hidesPlayAndEarn: Boolean
     get() = results.any { it.fired && it.group.hidesPlayAndEarn }

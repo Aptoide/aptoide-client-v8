@@ -15,6 +15,9 @@ import com.aptoide.android.aptoidegames.device_info.checks.ProcessMaps
 import com.aptoide.android.aptoidegames.device_info.checks.XposedCheck
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -142,7 +145,7 @@ internal class DeviceSecurityCheckerTest {
 
     m Then "the check did not fire and is reported as not run"
     assertEquals(emptyList<String>(), report.firedNames)
-    assertEquals(listOf("hook_libraries"), report.couldNotRun)
+    assertEquals(DeviceCheckOutcome.FAILED, report.results.single().outcome)
   }
 
   @Test
@@ -184,7 +187,10 @@ internal class DeviceSecurityCheckerTest {
 
     m Then "the throwing check failed, the other still fired"
     assertEquals(listOf("test_keys"), report.firedNames)
-    assertEquals(listOf("root_apps"), report.couldNotRun)
+    assertEquals(
+      DeviceCheckOutcome.FAILED,
+      report.results.single { it.name == "root_apps" }.outcome
+    )
   }
 
   @Test
@@ -291,17 +297,80 @@ internal class DeviceSecurityCheckerTest {
   }
 
   @Test
-  fun `An empty list switches every check off`() = coScenario {
-    m Given "an empty pae_device_checks list"
+  fun `An empty list is invalid and every check runs`() = coScenario {
+    m Given "an empty pae_device_checks list on a rooted device"
     val checks = existingChecks.map { FakeCheck(it.name, it.group) { true } }
     val checker = checker(checks, FakeFlags(emptyList()))
 
     m When "the device is checked"
     val compromised = checker.isCompromisedDevice()
 
-    m Then "nothing ran and nothing hides Play and Earn"
-    assertFalse(compromised)
-    assertTrue(checks.all { it.runs == 0 })
+    m Then "every check ran and Play and Earn stays hidden"
+    assertTrue(compromised)
+    assertTrue(checks.all { it.runs == 1 })
+  }
+
+  @Test
+  fun `A list with no known name is invalid and every check runs`() = coScenario {
+    m Given "a pae_device_checks list made only of typos"
+    val checks = existingChecks.map { FakeCheck(it.name, it.group) { true } }
+    val checker = checker(checks, FakeFlags(listOf("nope", "su_binnary")))
+
+    m When "the device is checked"
+    val compromised = checker.isCompromisedDevice()
+
+    m Then "every check ran and Play and Earn stays hidden"
+    assertTrue(compromised)
+    assertTrue(checks.all { it.runs == 1 })
+  }
+
+  @Test
+  fun `A check that threw is tried again on the next run`() = coScenario {
+    m Given "a check that throws the first time and fires the second"
+    var calls = 0
+    val check = FakeCheck("root_apps", DeviceCheckGroup.ROOT) {
+      calls++
+      if (calls == 1) throw IllegalStateException("binder died") else true
+    }
+    val checker = checker(listOf(check))
+    checker.runChecks()
+
+    m When "the checks run again"
+    val report = checker.runChecks()
+
+    m Then "it ran again and its new result counts"
+    assertEquals(2, check.runs)
+    assertEquals(listOf("root_apps"), report.firedNames)
+  }
+
+  @Test
+  fun `An out of memory error is not swallowed`() = coScenario {
+    m Given "a check that runs out of memory"
+    val checker = checker(
+      listOf(FakeCheck("root_apps", DeviceCheckGroup.ROOT) { throw OutOfMemoryError() })
+    )
+
+    m When "the checks run"
+    val thrown = runCatching { checker.runChecks() }.exceptionOrNull()
+
+    m Then "the error reaches the caller"
+    assertTrue(thrown is OutOfMemoryError)
+  }
+
+  @Test
+  fun `Two callers at once run each check only once`() = coScenario {
+    m Given "a checker on a multi-threaded dispatcher"
+    val check = FakeCheck("su_binary", DeviceCheckGroup.ROOT) { Thread.sleep(20); true }
+    val checker = DeviceSecurityChecker(listOf(check), FakeFlags(), Dispatchers.Default)
+
+    m When "two callers run the checks at the same time"
+    val reports = coroutineScope {
+      listOf(async { checker.runChecks() }, async { checker.runChecks() }).awaitAll()
+    }
+
+    m Then "the check ran once and both got its result"
+    assertEquals(1, check.runs)
+    assertTrue(reports.all { it.firedNames == listOf("su_binary") })
   }
 
   @Test
