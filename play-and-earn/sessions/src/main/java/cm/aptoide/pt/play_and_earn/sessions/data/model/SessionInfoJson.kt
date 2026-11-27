@@ -40,5 +40,9 @@ internal enum class SessionStatus {
 
   // Older backends: a zero-second heartbeat was dropped. Current ones answer "ok".
   @SerializedName("ignored_zero")
-  IGNORED_ZERO
+  IGNORED_ZERO,
+
+  // AND-950: the account is banned. Tracking stops; nothing is retried.
+  @SerializedName("account_restricted")
+  ACCOUNT_RESTRICTED
 }

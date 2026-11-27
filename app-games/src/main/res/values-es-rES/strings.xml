@@ -369,6 +369,10 @@
   <string name="play_and_earn_rewards_paused_body">Estamos esperando a que el juego confirme tu instalación. Sigue jugando: tus recompensas empiezan en cuanto lo haga.</string>
   <string name="play_and_earn_not_eligible_title">Tu dispositivo no cumple los requisitos</string>
   <string name="play_and_earn_not_eligible_body">La herramienta de seguimiento del juego no confirmó esta instalación, así que las recompensas de esta campaña no están disponibles en este dispositivo.</string>
+  <string name="play_and_earn_refused_title">Recompensas no disponibles</string>
+  <string name="play_and_earn_refused_region_body">Play &amp; Earn no está disponible en tu región.</string>
+  <string name="play_and_earn_refused_device_body">Play &amp; Earn no está disponible en este dispositivo.</string>
+  <string name="play_and_earn_refused_update_body">Actualiza la app para seguir ganando recompensas.</string>
   <string name="play_and_earn_rewards_blocked_learn_more_button">Más información</string>
   <string name="play_and_earn_rewards_paused_info_title">¿Por qué mis recompensas están en pausa?</string>
   <string name="play_and_earn_rewards_paused_info_body">Cada juego usa una herramienta de seguimiento para confirmar las instalaciones hechas desde Aptoide Games. Las recompensas de esta campaña empiezan cuando confirma la tuya, normalmente unos minutos después de abrir el juego por primera vez.\n\nMantén el juego instalado y juega como siempre. Lo que hagas en el juego mientras esperas cuenta cuando se confirme tu instalación.</string>

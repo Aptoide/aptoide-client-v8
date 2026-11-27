@@ -369,6 +369,10 @@
   <string name="play_and_earn_rewards_paused_body">We\'re waiting for the game to confirm your install. Keep playing: your rewards start as soon as it does.</string>
   <string name="play_and_earn_not_eligible_title">Your device isn\'t eligible</string>
   <string name="play_and_earn_not_eligible_body">The game\'s tracking tool didn\'t confirm this install, so this campaign\'s rewards aren\'t available on this device.</string>
+  <string name="play_and_earn_refused_title">रिवॉर्ड उपलब्ध नहीं हैं</string>
+  <string name="play_and_earn_refused_region_body">Play &amp; Earn आपके क्षेत्र में उपलब्ध नहीं है।</string>
+  <string name="play_and_earn_refused_device_body">Play &amp; Earn इस डिवाइस पर उपलब्ध नहीं है।</string>
+  <string name="play_and_earn_refused_update_body">रिवॉर्ड कमाते रहने के लिए ऐप अपडेट करें।</string>
   <string name="play_and_earn_rewards_blocked_learn_more_button">Learn more</string>
   <string name="play_and_earn_rewards_paused_info_title">Why are my rewards paused?</string>
   <string name="play_and_earn_rewards_paused_info_body">Each game uses a tracking tool to confirm the installs made through Aptoide Games. This campaign\'s rewards start once it confirms yours, usually a few minutes after you first open the game.\n\nKeep the game installed and play as usual. What you do in the game while you wait still counts once your install is confirmed.</string>

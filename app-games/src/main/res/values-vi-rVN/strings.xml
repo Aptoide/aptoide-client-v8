@@ -358,6 +358,10 @@
   <string name="play_and_earn_rewards_paused_body">Chúng tôi đang chờ trò chơi xác nhận lượt cài đặt của bạn. Hãy tiếp tục chơi: phần thưởng sẽ bắt đầu ngay khi được xác nhận.</string>
   <string name="play_and_earn_not_eligible_title">Thiết bị của bạn không đủ điều kiện</string>
   <string name="play_and_earn_not_eligible_body">Công cụ theo dõi của trò chơi không xác nhận lượt cài đặt này, vì vậy phần thưởng của chiến dịch này không khả dụng trên thiết bị này.</string>
+  <string name="play_and_earn_refused_title">Phần thưởng không khả dụng</string>
+  <string name="play_and_earn_refused_region_body">Play &amp; Earn không khả dụng ở khu vực của bạn.</string>
+  <string name="play_and_earn_refused_device_body">Play &amp; Earn không khả dụng trên thiết bị này.</string>
+  <string name="play_and_earn_refused_update_body">Cập nhật ứng dụng để tiếp tục nhận phần thưởng.</string>
   <string name="play_and_earn_rewards_blocked_learn_more_button">Tìm hiểu thêm</string>
   <string name="play_and_earn_rewards_paused_info_title">Tại sao phần thưởng của tôi bị tạm dừng?</string>
   <string name="play_and_earn_rewards_paused_info_body">Mỗi trò chơi dùng một công cụ theo dõi để xác nhận các lượt cài đặt qua Aptoide Games. Phần thưởng của chiến dịch này bắt đầu khi công cụ xác nhận lượt cài đặt của bạn, thường vài phút sau khi bạn mở trò chơi lần đầu.\n\nGiữ trò chơi đã cài đặt và chơi như bình thường. Những gì bạn làm trong trò chơi khi chờ vẫn được tính sau khi lượt cài đặt được xác nhận.</string>

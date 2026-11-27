@@ -369,6 +369,10 @@
   <string name="play_and_earn_rewards_paused_body">Odotamme, että peli vahvistaa asennuksesi. Jatka pelaamista: palkkiosi alkavat heti, kun se tapahtuu.</string>
   <string name="play_and_earn_not_eligible_title">Laitteesi ei ole kelvollinen</string>
   <string name="play_and_earn_not_eligible_body">Pelin seurantatyökalu ei vahvistanut tätä asennusta, joten tämän kampanjan palkkiot eivät ole saatavilla tällä laitteella.</string>
+  <string name="play_and_earn_refused_title">Palkkiot eivät ole saatavilla</string>
+  <string name="play_and_earn_refused_region_body">Play &amp; Earn ei ole saatavilla alueellasi.</string>
+  <string name="play_and_earn_refused_device_body">Play &amp; Earn ei ole saatavilla tällä laitteella.</string>
+  <string name="play_and_earn_refused_update_body">Päivitä sovellus ansaitaksesi palkkioita edelleen.</string>
   <string name="play_and_earn_rewards_blocked_learn_more_button">Lisätietoja</string>
   <string name="play_and_earn_rewards_paused_info_title">Miksi palkkioni on keskeytetty?</string>
   <string name="play_and_earn_rewards_paused_info_body">Jokainen peli käyttää seurantatyökalua Aptoide Gamesin kautta tehtyjen asennusten vahvistamiseen. Tämän kampanjan palkkiot alkavat, kun se vahvistaa asennuksesi, yleensä muutaman minuutin kuluttua pelin ensimmäisestä avaamisesta.\n\nPidä peli asennettuna ja pelaa tavalliseen tapaan. Se, mitä teet pelissä odottaessasi, lasketaan, kun asennuksesi on vahvistettu.</string>

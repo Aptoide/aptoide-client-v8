@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cm.aptoide.pt.aptoide_network.play_and_earn.reportUnlessPaERefusal
 import cm.aptoide.pt.exception_handler.ExceptionHandler
 import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.play_and_earn.exchange.domain.ExchangeRate
@@ -36,7 +37,10 @@ class ExchangeRateViewModel @Inject constructor(
     viewModelScope.launch {
       getExchangeRateUseCase().fold(
         onSuccess = { rate -> _exchangeRate.update { rate } },
-        onFailure = { error -> exceptionHandler.recordException(error) }
+        onFailure = { error ->
+          // AND-950: a refusal is expected: logged, not reported as a crash.
+          reportUnlessPaERefusal(error, exceptionHandler::recordException)
+        }
       )
     }
   }

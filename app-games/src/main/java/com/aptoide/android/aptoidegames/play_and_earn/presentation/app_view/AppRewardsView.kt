@@ -63,6 +63,7 @@ fun AppRewardsView(
   navigate: (String) -> Unit = {},
 ) {
   val (missionsState, reload) = rememberPaEMissions(packageName)
+  val refusal = rememberPaESessionRefusal(packageName)
   val isUsageTrackingEnabled = rememberIsPaEUsageTrackingEnabled()
   val lifecycleOwner = LocalLifecycleOwner.current
   val packageManager = LocalContext.current.packageManager
@@ -82,6 +83,12 @@ fun AppRewardsView(
     onDispose {
       lifecycleOwner.lifecycle.removeObserver(observer)
     }
+  }
+
+  // AND-950: the backend refused the game's session, so its missions would not count.
+  if (refusal != null) {
+    PaERefusedView(message = refusal)
+    return
   }
 
   when (missionsState) {
