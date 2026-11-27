@@ -321,9 +321,11 @@ private fun ExchangeEmailForm(
       title = stringResource(R.string.play_and_earn_exchange_get_my_code_button),
       enabled = email.isNotBlank(),
       onClick = {
-        if (email.isValidEmail()) {
+        // A space typed or pasted around the address is not part of it.
+        val trimmedEmail = email.trim()
+        if (trimmedEmail.isValidEmail()) {
           showError = false
-          onSubmit(email)
+          onSubmit(trimmedEmail)
         } else {
           showError = true
         }
