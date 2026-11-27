@@ -26,6 +26,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
@@ -210,23 +211,42 @@ private fun ExchangeErrorView(
       subtitle = limitText,
     )
 
-    ExchangeErrorKind.BeingChecked,
-    ExchangeErrorKind.Restricted,
-    ExchangeErrorKind.Vpn -> exchangeFixedErrorText(kind)?.let { text ->
-      GenericErrorView(
-        onRetryClick = onRetryClick,
-        modifier = modifier,
-        contentColor = contentColor,
-        title = stringResource(text.title),
-        subtitle = stringResource(text.body),
-      )
-    } ?: GenericErrorView(
+    ExchangeErrorKind.BeingChecked -> FixedTextErrorView(
+      text = ExchangeErrorText.BeingChecked,
       onRetryClick = onRetryClick,
-      modifier = modifier,
       contentColor = contentColor,
+      modifier = modifier,
+    )
+
+    ExchangeErrorKind.Restricted -> FixedTextErrorView(
+      text = ExchangeErrorText.Restricted,
+      onRetryClick = onRetryClick,
+      contentColor = contentColor,
+      modifier = modifier,
+    )
+
+    ExchangeErrorKind.Vpn -> FixedTextErrorView(
+      text = ExchangeErrorText.Vpn,
+      onRetryClick = onRetryClick,
+      contentColor = contentColor,
+      modifier = modifier,
     )
   }
 }
+
+@Composable
+private fun FixedTextErrorView(
+  text: ExchangeErrorText,
+  onRetryClick: (() -> Unit)?,
+  contentColor: Color,
+  modifier: Modifier = Modifier,
+) = GenericErrorView(
+  onRetryClick = onRetryClick,
+  modifier = modifier,
+  contentColor = contentColor,
+  title = stringResource(text.title),
+  subtitle = stringResource(text.body),
+)
 
 @Composable
 private fun ExchangeEmailForm(

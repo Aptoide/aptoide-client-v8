@@ -337,6 +337,7 @@ internal class ExchangeByEmailViewModelTest {
       httpError(409, "REDEEM_UNDER_REVIEW") to ExchangeErrorKind.BeingChecked,
       httpError(403, "ACCOUNT_RESTRICTED") to ExchangeErrorKind.Restricted,
       httpError(403, "VPN_NOT_ALLOWED") to ExchangeErrorKind.Vpn,
+      httpError(403, "SIGN_IN_BONUS_DEVICE_LIMIT") to ExchangeErrorKind.Generic,
       httpError(409, "REDEEM_IN_PROGRESS") to ExchangeErrorKind.Generic,
       httpError(409, "REDEEM_REQUEST_MISMATCH") to ExchangeErrorKind.Generic,
       httpError(403, "REGION_NOT_SUPPORTED") to ExchangeErrorKind.Generic,

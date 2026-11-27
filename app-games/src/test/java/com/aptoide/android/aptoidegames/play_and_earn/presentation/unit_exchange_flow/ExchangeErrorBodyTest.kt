@@ -148,6 +148,30 @@ internal class ExchangeErrorBodyTest {
   }
 
   @Test
+  fun `Being checked and a restricted account keep their own texts`() = scenario {
+    m Given "a redeem being checked, and one refused for a restricted account"
+    val kinds = listOf(ExchangeErrorKind.BeingChecked, ExchangeErrorKind.Restricted)
+
+    m When "their fixed texts are asked for"
+    val texts = kinds.map { exchangeFixedErrorText(it) }
+
+    m Then "each is its own title over its own body"
+    assertEquals(
+      listOf(
+        ExchangeErrorText(
+          title = R.string.play_and_earn_exchange_error_being_checked_title,
+          body = R.string.play_and_earn_exchange_error_being_checked_body,
+        ),
+        ExchangeErrorText(
+          title = R.string.play_and_earn_exchange_error_restricted_title,
+          body = R.string.play_and_earn_exchange_error_restricted_body,
+        ),
+      ),
+      texts
+    )
+  }
+
+  @Test
   fun `A VPN error asks to turn the VPN off`() = scenario {
     m Given "a redeem refused because the phone reports a VPN"
     val kind = ExchangeErrorKind.Vpn
