@@ -439,6 +439,8 @@
   <string name="play_and_earn_refused_region_body">Play &amp; Earn isn\'t available in your region.</string>
   <string name="play_and_earn_refused_device_body">Play &amp; Earn isn\'t available on this device.</string>
   <string name="play_and_earn_refused_update_body">Update the app to keep earning rewards.</string>
+  <string name="play_and_earn_refused_vpn_body">Turn off your VPN to use Play &amp; Earn.</string>
+  <string name="play_and_earn_refused_bonus_device_limit_body">This phone has already received the welcome bonus.</string>
   <string name="play_and_earn_rewards_blocked_learn_more_button">Learn more</string>
   <string name="play_and_earn_rewards_paused_info_title">Why are my rewards paused?</string>
   <string name="play_and_earn_rewards_paused_info_body">Each game uses a tracking tool to confirm the installs made through Aptoide Games. This campaign\'s rewards start once it confirms yours, usually a few minutes after you first open the game.\n\nKeep the game installed and play as usual. What you do in the game while you wait still counts once your install is confirmed.</string>

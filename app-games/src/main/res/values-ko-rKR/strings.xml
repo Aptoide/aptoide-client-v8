@@ -362,6 +362,8 @@
   <string name="play_and_earn_refused_region_body">Play &amp; Earn은 사용자의 지역에서 이용할 수 없습니다.</string>
   <string name="play_and_earn_refused_device_body">Play &amp; Earn은 이 기기에서 이용할 수 없습니다.</string>
   <string name="play_and_earn_refused_update_body">계속 보상을 받으려면 앱을 업데이트하세요.</string>
+  <string name="play_and_earn_refused_vpn_body">Play &amp; Earn을 이용하려면 VPN을 끄세요.</string>
+  <string name="play_and_earn_refused_bonus_device_limit_body">이 휴대폰은 이미 웰컴 보너스를 받았습니다.</string>
   <string name="play_and_earn_rewards_blocked_learn_more_button">더 알아보기</string>
   <string name="play_and_earn_rewards_paused_info_title">보상이 일시 중지된 이유는 무엇인가요?</string>
   <string name="play_and_earn_rewards_paused_info_body">각 게임은 Aptoide Games를 통한 설치를 확인하기 위해 추적 도구를 사용합니다. 이 캠페인의 보상은 설치가 확인되면 시작되며, 보통 게임을 처음 연 후 몇 분 정도 걸립니다.\n\n게임을 설치된 상태로 유지하고 평소처럼 플레이하세요. 기다리는 동안 게임에서 한 활동도 설치가 확인되면 반영됩니다.</string>

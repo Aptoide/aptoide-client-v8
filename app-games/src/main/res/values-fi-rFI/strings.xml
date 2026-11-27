@@ -373,6 +373,8 @@
   <string name="play_and_earn_refused_region_body">Play &amp; Earn ei ole saatavilla alueellasi.</string>
   <string name="play_and_earn_refused_device_body">Play &amp; Earn ei ole saatavilla tällä laitteella.</string>
   <string name="play_and_earn_refused_update_body">Päivitä sovellus ansaitaksesi palkkioita edelleen.</string>
+  <string name="play_and_earn_refused_vpn_body">Poista VPN käytöstä, jotta voit käyttää Play &amp; Earnia.</string>
+  <string name="play_and_earn_refused_bonus_device_limit_body">Tämä puhelin on jo saanut tervetuliaisbonuksen.</string>
   <string name="play_and_earn_rewards_blocked_learn_more_button">Lisätietoja</string>
   <string name="play_and_earn_rewards_paused_info_title">Miksi palkkioni on keskeytetty?</string>
   <string name="play_and_earn_rewards_paused_info_body">Jokainen peli käyttää seurantatyökalua Aptoide Gamesin kautta tehtyjen asennusten vahvistamiseen. Tämän kampanjan palkkiot alkavat, kun se vahvistaa asennuksesi, yleensä muutaman minuutin kuluttua pelin ensimmäisestä avaamisesta.\n\nPidä peli asennettuna ja pelaa tavalliseen tapaan. Se, mitä teet pelissä odottaessasi, lasketaan, kun asennuksesi on vahvistettu.</string>

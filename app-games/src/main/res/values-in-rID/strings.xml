@@ -362,6 +362,8 @@
   <string name="play_and_earn_refused_region_body">Play &amp; Earn tidak tersedia di wilayah Anda.</string>
   <string name="play_and_earn_refused_device_body">Play &amp; Earn tidak tersedia di perangkat ini.</string>
   <string name="play_and_earn_refused_update_body">Perbarui aplikasi untuk terus mendapatkan hadiah.</string>
+  <string name="play_and_earn_refused_vpn_body">Matikan VPN untuk menggunakan Play &amp; Earn.</string>
+  <string name="play_and_earn_refused_bonus_device_limit_body">Ponsel ini sudah menerima bonus sambutan.</string>
   <string name="play_and_earn_rewards_blocked_learn_more_button">Pelajari Lebih Lanjut</string>
   <string name="play_and_earn_rewards_paused_info_title">Mengapa hadiah saya dijeda?</string>
   <string name="play_and_earn_rewards_paused_info_body">Setiap game menggunakan alat pelacak untuk mengonfirmasi instalasi melalui Aptoide Games. Hadiah kampanye ini dimulai setelah alat tersebut mengonfirmasi instalasi Anda, biasanya beberapa menit setelah Anda membuka game pertama kali.\n\nBiarkan game tetap terinstal dan bermainlah seperti biasa. Apa yang Anda lakukan di game selama menunggu tetap dihitung setelah instalasi Anda dikonfirmasi.</string>

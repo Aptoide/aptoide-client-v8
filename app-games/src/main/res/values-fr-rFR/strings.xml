@@ -373,6 +373,8 @@
   <string name="play_and_earn_refused_region_body">Play &amp; Earn n\'est pas disponible dans votre région.</string>
   <string name="play_and_earn_refused_device_body">Play &amp; Earn n\'est pas disponible sur cet appareil.</string>
   <string name="play_and_earn_refused_update_body">Mettez à jour l\'application pour continuer à gagner des récompenses.</string>
+  <string name="play_and_earn_refused_vpn_body">Désactivez votre VPN pour utiliser Play &amp; Earn.</string>
+  <string name="play_and_earn_refused_bonus_device_limit_body">Ce téléphone a déjà reçu le bonus de bienvenue.</string>
   <string name="play_and_earn_rewards_blocked_learn_more_button">En savoir plus</string>
   <string name="play_and_earn_rewards_paused_info_title">Pourquoi mes récompenses sont-elles en pause ?</string>
   <string name="play_and_earn_rewards_paused_info_body">Chaque jeu utilise un outil de suivi pour confirmer les installations effectuées via Aptoide Games. Les récompenses de cette campagne commencent dès qu\'il confirme la vôtre, généralement quelques minutes après la première ouverture du jeu.\n\nGardez le jeu installé et jouez normalement. Ce que vous faites dans le jeu pendant l\'attente compte une fois votre installation confirmée.</string>
