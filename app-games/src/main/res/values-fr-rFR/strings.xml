@@ -476,6 +476,13 @@
   <string name="play_and_earn_exchange_earn_more_button">Gagnez plus</string>
   <string name="play_and_earn_exchange_email_address_label">Adresse e-mail</string>
   <string name="play_and_earn_exchange_email_error">Saisissez une adresse e-mail valide</string>
+  <string name="play_and_earn_exchange_error_limit_title">Limite d\'échange atteinte</string>
+  <string name="play_and_earn_exchange_error_limit_body">Vous pourrez échanger à nouveau demain.</string>
+  <string name="play_and_earn_exchange_error_too_many_attempts_body">Trop de tentatives. Réessayez plus tard.</string>
+  <string name="play_and_earn_exchange_error_being_checked_title">Nous vérifions votre échange</string>
+  <string name="play_and_earn_exchange_error_being_checked_body">Ne réessayez pas. Si votre récompense n\'arrive pas, contactez l\'assistance dans Paramètres.</string>
+  <string name="play_and_earn_exchange_error_restricted_title">Compte restreint</string>
+  <string name="play_and_earn_exchange_error_restricted_body">Votre compte a été restreint par nos mécanismes antifraude. Contactez l\'assistance dans Paramètres.</string>
   <string name="play_and_earn_exchange_email_safe_note">🔒 Votre e-mail est en sécurité. Nous l\'utiliserons uniquement pour vous envoyer cette récompense.</string>
   <string name="play_and_earn_exchange_get_my_code_button">Obtenir mon code</string>
   <string name="play_and_earn_exchange_not_enough_balance">Solde insuffisant</string>

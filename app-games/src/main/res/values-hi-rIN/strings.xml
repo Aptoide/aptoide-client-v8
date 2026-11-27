@@ -476,6 +476,13 @@
   <string name="play_and_earn_exchange_earn_more_button">और कमाएं</string>
   <string name="play_and_earn_exchange_email_address_label">ईमेल पता</string>
   <string name="play_and_earn_exchange_email_error">मान्य ईमेल पता दर्ज करें</string>
+  <string name="play_and_earn_exchange_error_limit_title">रिडीम लिमिट पूरी हो गई</string>
+  <string name="play_and_earn_exchange_error_limit_body">आप अगली बार कल ही रिडीम कर सकते हैं।</string>
+  <string name="play_and_earn_exchange_error_too_many_attempts_body">बहुत ज़्यादा कोशिशें। बाद में फिर से कोशिश करें।</string>
+  <string name="play_and_earn_exchange_error_being_checked_title">हम आपके रिडीम की जाँच कर रहे हैं</string>
+  <string name="play_and_earn_exchange_error_being_checked_body">फिर से कोशिश न करें। अगर आपका रिवॉर्ड नहीं आता, तो सेटिंग्स में सपोर्ट से संपर्क करें।</string>
+  <string name="play_and_earn_exchange_error_restricted_title">अकाउंट प्रतिबंधित</string>
+  <string name="play_and_earn_exchange_error_restricted_body">धोखाधड़ी-रोधी तंत्र के कारण आपका अकाउंट प्रतिबंधित कर दिया गया है। सेटिंग्स में सपोर्ट से संपर्क करें।</string>
   <string name="play_and_earn_exchange_email_safe_note">🔒 आपका ईमेल हमारे पास सुरक्षित है. हम इसका उपयोग केवल आपको यह रिवॉर्ड भेजने के लिए करेंगे.</string>
   <string name="play_and_earn_exchange_get_my_code_button">मेरा कोड पाएं</string>
   <string name="play_and_earn_exchange_not_enough_balance">पर्याप्त बैलेंस नहीं</string>

@@ -465,6 +465,13 @@
   <string name="play_and_earn_exchange_earn_more_button">赚取更多</string>
   <string name="play_and_earn_exchange_email_address_label">电子邮件地址</string>
   <string name="play_and_earn_exchange_email_error">请输入有效的电子邮件地址</string>
+  <string name="play_and_earn_exchange_error_limit_title">已达兑换上限</string>
+  <string name="play_and_earn_exchange_error_limit_body">您明天才能再次兑换。</string>
+  <string name="play_and_earn_exchange_error_too_many_attempts_body">尝试次数过多，请稍后重试。</string>
+  <string name="play_and_earn_exchange_error_being_checked_title">我们正在核实您的兑换</string>
+  <string name="play_and_earn_exchange_error_being_checked_body">请勿重试。如未收到奖励，请在设置中联系支持。</string>
+  <string name="play_and_earn_exchange_error_restricted_title">账户已受限</string>
+  <string name="play_and_earn_exchange_error_restricted_body">由于反欺诈机制，您的账户已受限。请在设置中联系支持。</string>
   <string name="play_and_earn_exchange_email_safe_note">🔒 您的电子邮件很安全。我们仅用它向您发送此奖励。</string>
   <string name="play_and_earn_exchange_get_my_code_button">获取我的代码</string>
   <string name="play_and_earn_exchange_not_enough_balance">余额不足</string>

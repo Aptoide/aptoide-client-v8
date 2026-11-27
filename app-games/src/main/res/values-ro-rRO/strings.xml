@@ -487,6 +487,13 @@
   <string name="play_and_earn_exchange_earn_more_button">Câștigă mai mult</string>
   <string name="play_and_earn_exchange_email_address_label">Adresă de e-mail</string>
   <string name="play_and_earn_exchange_email_error">Introdu o adresă de e-mail validă</string>
+  <string name="play_and_earn_exchange_error_limit_title">Limita de răscumpărare a fost atinsă</string>
+  <string name="play_and_earn_exchange_error_limit_body">Poți răscumpăra din nou doar mâine.</string>
+  <string name="play_and_earn_exchange_error_too_many_attempts_body">Prea multe încercări. Încearcă din nou mai târziu.</string>
+  <string name="play_and_earn_exchange_error_being_checked_title">Verificăm răscumpărarea ta</string>
+  <string name="play_and_earn_exchange_error_being_checked_body">Nu încerca din nou. Dacă recompensa nu ajunge, contactează Suportul din Setări.</string>
+  <string name="play_and_earn_exchange_error_restricted_title">Cont restricționat</string>
+  <string name="play_and_earn_exchange_error_restricted_body">Contul tău a fost restricționat din cauza mecanismelor antifraudă. Contactează Suportul din Setări.</string>
   <string name="play_and_earn_exchange_email_safe_note">🔒 E-mailul tău este în siguranță la noi. Îl vom folosi doar pentru a-ți trimite această recompensă.</string>
   <string name="play_and_earn_exchange_get_my_code_button">Obține codul meu</string>
   <string name="play_and_earn_exchange_not_enough_balance">Sold insuficient</string>

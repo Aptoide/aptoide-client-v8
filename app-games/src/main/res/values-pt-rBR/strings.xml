@@ -476,6 +476,13 @@
   <string name="play_and_earn_exchange_earn_more_button">Ganhar Mais</string>
   <string name="play_and_earn_exchange_email_address_label">Endereço de e-mail</string>
   <string name="play_and_earn_exchange_email_error">Insira um endereço de e-mail válido</string>
+  <string name="play_and_earn_exchange_error_limit_title">Limite de resgate atingido</string>
+  <string name="play_and_earn_exchange_error_limit_body">Você só poderá resgatar de novo amanhã.</string>
+  <string name="play_and_earn_exchange_error_too_many_attempts_body">Muitas tentativas. Tente novamente mais tarde.</string>
+  <string name="play_and_earn_exchange_error_being_checked_title">Estamos verificando seu resgate</string>
+  <string name="play_and_earn_exchange_error_being_checked_body">Não tente novamente. Se sua recompensa não chegar, entre em contato com o Suporte em Configurações.</string>
+  <string name="play_and_earn_exchange_error_restricted_title">Conta restrita</string>
+  <string name="play_and_earn_exchange_error_restricted_body">Sua conta foi restrita por mecanismos antifraude. Entre em contato com o Suporte em Configurações.</string>
   <string name="play_and_earn_exchange_email_safe_note">🔒 Seu e-mail está seguro conosco. Só o usaremos para enviar esta recompensa.</string>
   <string name="play_and_earn_exchange_get_my_code_button">Obter meu código</string>
   <string name="play_and_earn_exchange_not_enough_balance">Saldo insuficiente</string>

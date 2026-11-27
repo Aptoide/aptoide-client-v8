@@ -498,6 +498,13 @@
   <string name="play_and_earn_exchange_earn_more_button">Заработать больше</string>
   <string name="play_and_earn_exchange_email_address_label">Адрес эл. почты</string>
   <string name="play_and_earn_exchange_email_error">Введите корректный адрес эл. почты</string>
+  <string name="play_and_earn_exchange_error_limit_title">Достигнут лимит обмена</string>
+  <string name="play_and_earn_exchange_error_limit_body">Следующий обмен будет доступен только завтра.</string>
+  <string name="play_and_earn_exchange_error_too_many_attempts_body">Слишком много попыток. Повторите попытку позже.</string>
+  <string name="play_and_earn_exchange_error_being_checked_title">Мы проверяем ваш обмен</string>
+  <string name="play_and_earn_exchange_error_being_checked_body">Не повторяйте попытку. Если награда не придёт, обратитесь в поддержку в настройках.</string>
+  <string name="play_and_earn_exchange_error_restricted_title">Аккаунт ограничен</string>
+  <string name="play_and_earn_exchange_error_restricted_body">Ваш аккаунт ограничен системой защиты от мошенничества. Обратитесь в поддержку в настройках.</string>
   <string name="play_and_earn_exchange_email_safe_note">🔒 Ваша эл. почта в безопасности. Мы используем её только для отправки этой награды.</string>
   <string name="play_and_earn_exchange_get_my_code_button">Получить код</string>
   <string name="play_and_earn_exchange_not_enough_balance">Недостаточно баланса</string>

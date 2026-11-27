@@ -466,6 +466,13 @@ Promosi khas dan ganjaran dalam permainan kegemaran anda.</string>
   <string name="play_and_earn_exchange_earn_more_button">Kutip Lagi</string>
   <string name="play_and_earn_exchange_email_address_label">Alamat E-mel</string>
   <string name="play_and_earn_exchange_email_error">Masukkan alamat e-mel yang sah</string>
+  <string name="play_and_earn_exchange_error_limit_title">Had tebusan dicapai</string>
+  <string name="play_and_earn_exchange_error_limit_body">Anda hanya boleh menebus semula esok.</string>
+  <string name="play_and_earn_exchange_error_too_many_attempts_body">Terlalu banyak percubaan. Cuba lagi nanti.</string>
+  <string name="play_and_earn_exchange_error_being_checked_title">Kami sedang menyemak tebusan anda</string>
+  <string name="play_and_earn_exchange_error_being_checked_body">Jangan cuba lagi. Jika ganjaran anda tidak tiba, hubungi sokongan dalam Tetapan.</string>
+  <string name="play_and_earn_exchange_error_restricted_title">Akaun disekat</string>
+  <string name="play_and_earn_exchange_error_restricted_body">Akaun anda telah disekat kerana mekanisme anti-penipuan. Hubungi sokongan dalam Tetapan.</string>
   <string name="play_and_earn_exchange_email_safe_note">🔒 E-mel anda selamat dengan kami. Kami hanya guna ia untuk menghantar ganjaran ini.</string>
   <string name="play_and_earn_exchange_get_my_code_button">Dapatkan kod saya</string>
   <string name="play_and_earn_exchange_not_enough_balance">Baki tidak mencukupi</string>

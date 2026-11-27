@@ -465,6 +465,13 @@
   <string name="play_and_earn_exchange_earn_more_button">ပိုမိုရယူပါ</string>
   <string name="play_and_earn_exchange_email_address_label">အီးမေးလ်လိပ်စာ</string>
   <string name="play_and_earn_exchange_email_error">မှန်ကန်သော အီးမေးလ်လိပ်စာ ထည့်ပါ</string>
+  <string name="play_and_earn_exchange_error_limit_title">လဲလှယ်မှု ကန့်သတ်ချက် ပြည့်သွားပါပြီ</string>
+  <string name="play_and_earn_exchange_error_limit_body">မနက်ဖြန်မှသာ ထပ်မံလဲယူနိုင်ပါမည်။</string>
+  <string name="play_and_earn_exchange_error_too_many_attempts_body">ကြိုးစားမှု များလွန်းပါသည်။ နောက်မှ ထပ်ကြိုးစားပါ။</string>
+  <string name="play_and_earn_exchange_error_being_checked_title">သင့်လဲလှယ်မှုကို စစ်ဆေးနေပါသည်</string>
+  <string name="play_and_earn_exchange_error_being_checked_body">ထပ်မကြိုးစားပါနှင့်။ သင့်ဆုလာဘ် မရောက်လာပါက ချိန်ညှိမှုများရှိ အကူအညီသို့ ဆက်သွယ်ပါ။</string>
+  <string name="play_and_earn_exchange_error_restricted_title">အကောင့် ကန့်သတ်ထားသည်</string>
+  <string name="play_and_earn_exchange_error_restricted_body">လိမ်လည်မှုဆန့်ကျင်ရေး စနစ်များကြောင့် သင့်အကောင့်ကို ကန့်သတ်ထားပါသည်။ ချိန်ညှိမှုများရှိ အကူအညီသို့ ဆက်သွယ်ပါ။</string>
   <string name="play_and_earn_exchange_email_safe_note">🔒 သင့်အီးမေးလ်ကို ကျွန်ုပ်တို့ လုံခြုံစွာ ထိန်းသိမ်းပါမည်။ ဤဆုကို ပေးပို့ရန်သာ အသုံးပြုပါမည်။</string>
   <string name="play_and_earn_exchange_get_my_code_button">ကုဒ်ရယူပါ</string>
   <string name="play_and_earn_exchange_not_enough_balance">လက်ကျန်ငွေ မလုံလောက်ပါ</string>

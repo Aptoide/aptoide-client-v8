@@ -476,6 +476,13 @@
   <string name="play_and_earn_exchange_earn_more_button">Daha Fazla Kazan</string>
   <string name="play_and_earn_exchange_email_address_label">E-posta Adresi</string>
   <string name="play_and_earn_exchange_email_error">Geçerli bir e-posta adresi girin</string>
+  <string name="play_and_earn_exchange_error_limit_title">Kullanım sınırına ulaşıldı</string>
+  <string name="play_and_earn_exchange_error_limit_body">Yalnızca yarın tekrar kullanabilirsiniz.</string>
+  <string name="play_and_earn_exchange_error_too_many_attempts_body">Çok fazla deneme. Daha sonra tekrar deneyin.</string>
+  <string name="play_and_earn_exchange_error_being_checked_title">Kullanımınızı kontrol ediyoruz</string>
+  <string name="play_and_earn_exchange_error_being_checked_body">Tekrar denemeyin. Ödülünüz ulaşmazsa Ayarlar\'dan destekle iletişime geçin.</string>
+  <string name="play_and_earn_exchange_error_restricted_title">Hesap kısıtlandı</string>
+  <string name="play_and_earn_exchange_error_restricted_body">Hesabınız dolandırıcılık önleme mekanizmaları nedeniyle kısıtlandı. Ayarlar\'dan destekle iletişime geçin.</string>
   <string name="play_and_earn_exchange_email_safe_note">🔒 E-postanız bizimle güvende. Yalnızca bu ödülü göndermek için kullanacağız.</string>
   <string name="play_and_earn_exchange_get_my_code_button">Kodumu al</string>
   <string name="play_and_earn_exchange_not_enough_balance">Yetersiz bakiye</string>

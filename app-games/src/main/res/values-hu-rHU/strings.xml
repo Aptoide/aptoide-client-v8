@@ -476,6 +476,13 @@
   <string name="play_and_earn_exchange_earn_more_button">Szerezz többet</string>
   <string name="play_and_earn_exchange_email_address_label">E-mail-cím</string>
   <string name="play_and_earn_exchange_email_error">Adj meg egy érvényes e-mail-címet</string>
+  <string name="play_and_earn_exchange_error_limit_title">Beváltási korlát elérve</string>
+  <string name="play_and_earn_exchange_error_limit_body">Csak holnap válthatsz be újra.</string>
+  <string name="play_and_earn_exchange_error_too_many_attempts_body">Túl sok próbálkozás. Próbáld újra később.</string>
+  <string name="play_and_earn_exchange_error_being_checked_title">Ellenőrizzük a beváltásodat</string>
+  <string name="play_and_earn_exchange_error_being_checked_body">Ne próbáld újra. Ha a jutalmad nem érkezik meg, fordulj a támogatáshoz a Beállításokban.</string>
+  <string name="play_and_earn_exchange_error_restricted_title">Fiók korlátozva</string>
+  <string name="play_and_earn_exchange_error_restricted_body">A fiókodat csalásellenes mechanizmusok miatt korlátoztuk. Fordulj a támogatáshoz a Beállításokban.</string>
   <string name="play_and_earn_exchange_email_safe_note">🔒 Az e-mail-címed biztonságban van nálunk. Csak ennek a jutalomnak a küldésére használjuk.</string>
   <string name="play_and_earn_exchange_get_my_code_button">Kérem a kódomat</string>
   <string name="play_and_earn_exchange_not_enough_balance">Nincs elég egyenleg</string>

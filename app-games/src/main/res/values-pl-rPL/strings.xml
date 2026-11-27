@@ -519,6 +519,13 @@
   <string name="play_and_earn_exchange_email_safe_note">🔒 Twój e-mail jest u nas bezpieczny. Użyjemy go tylko do wysłania tej nagrody.</string>
   <string name="play_and_earn_exchange_get_my_code_button">Odbierz kod</string>
   <string name="play_and_earn_exchange_email_error">Wprowadź prawidłowy adres e-mail</string>
+  <string name="play_and_earn_exchange_error_limit_title">Osiągnięto limit realizacji</string>
+  <string name="play_and_earn_exchange_error_limit_body">Kolejna realizacja będzie możliwa dopiero jutro.</string>
+  <string name="play_and_earn_exchange_error_too_many_attempts_body">Zbyt wiele prób. Spróbuj ponownie później.</string>
+  <string name="play_and_earn_exchange_error_being_checked_title">Sprawdzamy Twoją realizację</string>
+  <string name="play_and_earn_exchange_error_being_checked_body">Nie próbuj ponownie. Jeśli nagroda nie dotrze, skontaktuj się ze wsparciem w Ustawieniach.</string>
+  <string name="play_and_earn_exchange_error_restricted_title">Konto ograniczone</string>
+  <string name="play_and_earn_exchange_error_restricted_body">Twoje konto zostało ograniczone przez mechanizmy ochrony przed oszustwami. Skontaktuj się ze wsparciem w Ustawieniach.</string>
   <string name="play_and_earn_exchange_success_email_sent">Wysłaliśmy Twój kod na %1$s. Sprawdź skrzynkę odbiorczą w ciągu 24 godzin.</string>
   <string name="play_and_earn_exchange_earn_more_button">Zarabiaj więcej</string>
   <string name="play_and_earn_tap_to_collect">Dotknij, aby odebrać</string>

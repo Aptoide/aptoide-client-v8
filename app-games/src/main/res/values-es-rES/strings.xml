@@ -497,6 +497,13 @@
   <string name="play_and_earn_exchange_email_safe_note">🔒 Tu correo está a salvo con nosotros. Solo lo usaremos para enviarte esta recompensa.</string>
   <string name="play_and_earn_exchange_get_my_code_button">Obtener mi código</string>
   <string name="play_and_earn_exchange_email_error">Introduce una dirección de correo válida</string>
+  <string name="play_and_earn_exchange_error_limit_title">Límite de canjes alcanzado</string>
+  <string name="play_and_earn_exchange_error_limit_body">Solo podrás volver a canjear mañana.</string>
+  <string name="play_and_earn_exchange_error_too_many_attempts_body">Demasiados intentos. Inténtalo más tarde.</string>
+  <string name="play_and_earn_exchange_error_being_checked_title">Estamos revisando tu canje</string>
+  <string name="play_and_earn_exchange_error_being_checked_body">No lo intentes de nuevo. Si tu recompensa no llega, contacta con Ayuda en Configuración.</string>
+  <string name="play_and_earn_exchange_error_restricted_title">Cuenta restringida</string>
+  <string name="play_and_earn_exchange_error_restricted_body">Tu cuenta se ha restringido por los mecanismos antifraude. Contacta con Ayuda en Configuración.</string>
   <string name="play_and_earn_exchange_success_email_sent">Hemos enviado tu código a %1$s. Revisa tu bandeja de entrada en las próximas 24 horas.</string>
   <string name="play_and_earn_exchange_earn_more_button">Ganar más</string>
   <string name="play_and_earn_tap_to_collect">Toca para recoger</string>
