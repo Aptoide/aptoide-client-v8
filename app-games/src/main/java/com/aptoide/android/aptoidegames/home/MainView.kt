@@ -68,6 +68,7 @@ import com.aptoide.android.aptoidegames.play_and_earn.presentation.level_up.leve
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.playAndEarnPermissionsScreen
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.ClaimedRewardDialog
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PaERewardType
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.SignInBonusRefusedSnack
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.playAndEarnNotEligibleInfoScreen
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.playAndEarnRewardsPausedInfoScreen
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.playAndEarnRewardsScreen
@@ -185,6 +186,14 @@ fun MainView(navController: NavHostController) {
           PromotionDialog(navigate = navController::navigateTo)
 
           ClaimedRewardDialog(navigate = navController::navigateTo)
+
+          SignInBonusRefusedSnack(
+            showSnack = {
+              coroutineScope.launch {
+                snackBarHostState.showSnackbar(message = it)
+              }
+            }
+          )
 
           Box(
             modifier = Modifier

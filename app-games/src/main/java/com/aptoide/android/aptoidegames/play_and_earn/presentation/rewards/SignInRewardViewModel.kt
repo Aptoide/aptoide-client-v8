@@ -1,6 +1,7 @@
 package com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards
 
 import androidx.lifecycle.ViewModel
+import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusalCode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,6 +15,8 @@ class SignInRewardViewModel @Inject constructor(
   val rewardState: StateFlow<RewardState> = signInRewardRepository.rewardState
 
   val claimSuccessEvent: SharedFlow<PendingPaEReward> = signInRewardRepository.claimSuccessEvent
+
+  val refusedEvent: SharedFlow<PaERefusalCode> = signInRewardRepository.refusedEvent
 
   // Reward types whose games-feed impression has already been logged, so recomposition / LazyRow
   // item re-entry doesn't re-fire the `shown` event for the same card.

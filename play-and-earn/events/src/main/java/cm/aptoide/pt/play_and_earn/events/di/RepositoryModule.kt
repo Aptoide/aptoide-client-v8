@@ -2,6 +2,7 @@ package cm.aptoide.pt.play_and_earn.events.di
 
 import cm.aptoide.pt.aptoide_network.data.network.PlayAndEarnIdInterceptor
 import cm.aptoide.pt.aptoide_network.di.RewardsDomain
+import cm.aptoide.pt.exception_handler.ExceptionHandler
 import cm.aptoide.pt.play_and_earn.events.data.DefaultEventsRepository
 import cm.aptoide.pt.play_and_earn.events.data.EventsApi
 import cm.aptoide.pt.play_and_earn.events.data.EventsRepository
@@ -54,10 +55,12 @@ internal object RepositoryModule {
   @Provides
   @Singleton
   fun provideEventsRepository(
-    eventsApi: EventsApi
+    eventsApi: EventsApi,
+    exceptionHandler: ExceptionHandler,
   ): EventsRepository = DefaultEventsRepository(
     eventsApi = eventsApi,
-    dispatcher = Dispatchers.IO
+    dispatcher = Dispatchers.IO,
+    exceptionHandler = exceptionHandler,
   )
 }
 
