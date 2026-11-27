@@ -14,6 +14,7 @@ import cm.aptoide.pt.wallet.authorization.data.WalletAuthRepository
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPendingRedeems
 import com.aptoide.android.aptoidegames.play_and_earn.data.UserAccountPreferencesRepository
+import com.aptoide.android.aptoidegames.play_and_earn.domain.PaEAccountRestriction
 import com.aptoide.android.aptoidegames.play_and_earn.domain.UserInfo
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaESessionRefusals
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.SignInRewardRepository
@@ -42,6 +43,7 @@ class GoogleSignInViewModel @Inject constructor(
   private val paESessionRefusals: PaESessionRefusals,
   private val pendingRedeems: PaEPendingRedeems,
   private val signInRewardRepository: SignInRewardRepository,
+  private val accountRestriction: PaEAccountRestriction,
 ) : ViewModel() {
   private var googleIdTokenCredential: GoogleIdTokenCredential? = null
 
@@ -117,6 +119,8 @@ class GoogleSignInViewModel @Inject constructor(
           forgetPendingRedeem()
           // AND-953: so does a refused sign-in bonus; the new account is offered it again.
           signInRewardRepository.forgetRefusal()
+          // AND-951: and the restriction; the new account is asked about on the next screen.
+          accountRestriction.forget()
           googleIdTokenCredential?.let {
             userAccountPreferencesRepository.setUserInfo(
               UserInfo(
@@ -150,6 +154,8 @@ class GoogleSignInViewModel @Inject constructor(
   fun signOut() {
     // AND-950: refusals belong to the account signing out.
     paESessionRefusals.clear()
+    // AND-951: so does its restriction.
+    accountRestriction.forget()
     viewModelScope.launch {
       // AND-952: so does its pending redeem.
       forgetPendingRedeem()
