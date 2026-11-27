@@ -23,13 +23,20 @@ fun SignInBonusRefusedSnack(showSnack: (String) -> Unit) {
   }
 }
 
-/** The text for a refused sign-in bonus, or null for a code that does not end it. */
+/**
+ * The text for a refused sign-in bonus, or null for a code that does not end it. A VPN (AND-964)
+ * does not end it either, but the user must know to turn it off before tapping again.
+ */
 @StringRes
 internal fun signInBonusRefusedMessage(code: PaERefusalCode): Int? = when (code) {
   PaERefusalCode.ACCOUNT_RESTRICTED -> R.string.play_and_earn_exchange_error_restricted_body
   PaERefusalCode.REGION_NOT_SUPPORTED -> R.string.play_and_earn_refused_region_body
   PaERefusalCode.DEVICE_NOT_SUPPORTED -> R.string.play_and_earn_refused_device_body
   PaERefusalCode.UPDATE_REQUIRED -> R.string.play_and_earn_refused_update_body
+  PaERefusalCode.VPN_NOT_ALLOWED -> R.string.play_and_earn_refused_vpn_body
+  PaERefusalCode.SIGN_IN_BONUS_DEVICE_LIMIT ->
+    R.string.play_and_earn_refused_bonus_device_limit_body
+
   PaERefusalCode.REDEEM_LIMIT,
   PaERefusalCode.INSTALL_LIMIT,
   PaERefusalCode.TOO_MANY_ATTEMPTS,

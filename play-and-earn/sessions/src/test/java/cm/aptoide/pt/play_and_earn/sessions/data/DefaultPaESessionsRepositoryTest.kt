@@ -70,6 +70,7 @@ internal class DefaultPaESessionsRepositoryTest {
   @ValueSource(
     strings = [
       "ACCOUNT_RESTRICTED", "REGION_NOT_SUPPORTED", "DEVICE_NOT_SUPPORTED", "UPDATE_REQUIRED",
+      "VPN_NOT_ALLOWED",
     ]
   )
   fun `A refused session start fails with its code and is not reported`(code: String) =

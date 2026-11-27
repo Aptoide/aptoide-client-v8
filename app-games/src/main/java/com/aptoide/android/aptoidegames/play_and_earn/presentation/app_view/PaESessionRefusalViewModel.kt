@@ -49,7 +49,13 @@ fun PaERefusal.toMessage(): PaERefusalMessage = when (code) {
     body = R.string.play_and_earn_refused_update_body,
   )
 
+  PaERefusalCode.VPN_NOT_ALLOWED -> PaERefusalMessage(
+    title = R.string.play_and_earn_refused_title,
+    body = R.string.play_and_earn_refused_vpn_body,
+  )
+
   PaERefusalCode.ACCOUNT_RESTRICTED,
+  PaERefusalCode.SIGN_IN_BONUS_DEVICE_LIMIT,
   PaERefusalCode.REDEEM_LIMIT,
   PaERefusalCode.INSTALL_LIMIT,
   PaERefusalCode.TOO_MANY_ATTEMPTS,
