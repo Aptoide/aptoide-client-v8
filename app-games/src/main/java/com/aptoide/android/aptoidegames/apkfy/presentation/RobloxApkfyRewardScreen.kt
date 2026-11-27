@@ -24,6 +24,7 @@ import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PAE_D
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PaERewardType
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.RewardState
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.SignInRewardViewModel
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.rewardToAutoClaim
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.rememberUserInfo
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 
@@ -50,15 +51,17 @@ fun robloxApkfyRewardScreen(
 
   // The reward is only claimed once the user returns from the sign-in flow actually signed in.
   // Navigation away is owned by the Claimed effect below, once the backend confirms the claim.
-  LaunchedEffect(userInfo) {
-    val unclaimed = rewardState as? RewardState.Unclaimed
-    if (awaitingSignIn && userInfo != null && unclaimed != null) {
+  // Keyed on the reward state too: a sign-in re-offers a refused bonus (AND-953), so it may
+  // still be loading when the user is back. awaitingSignIn is reset first: one claim only.
+  LaunchedEffect(userInfo, rewardState) {
+    val reward = rewardToAutoClaim(awaitingSignIn, signedIn = userInfo != null, rewardState)
+    if (reward != null) {
       awaitingSignIn = false
-      viewModel.claim(unclaimed.reward.copy(paERewardType = PaERewardType.ROBUX))
+      viewModel.claim(reward.copy(paERewardType = PaERewardType.ROBUX))
       paeAnalytics.sendPaERewardClaimed(
         source = PaEAnalytics.SOURCE_APKFY,
         rewardType = PaERewardType.ROBUX,
-        units = unclaimed.reward.units,
+        units = reward.units,
       )
     }
   }

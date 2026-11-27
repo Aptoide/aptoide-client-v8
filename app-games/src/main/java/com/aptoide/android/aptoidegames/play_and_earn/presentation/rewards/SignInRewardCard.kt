@@ -34,15 +34,17 @@ fun SignInRewardCard(
 
   // After the user returns from the reward sign-in flow signed in, claim automatically so the
   // success dialog shows (mirrors the apkfy reward flow).
-  LaunchedEffect(userInfo) {
-    val unclaimed = rewardState as? RewardState.Unclaimed
-    if (awaitingSignIn && userInfo != null && unclaimed != null) {
+  // Keyed on the reward state too: a sign-in re-offers a refused bonus (AND-953), so it may
+  // still be loading when the user is back. awaitingSignIn is reset first: one claim only.
+  LaunchedEffect(userInfo, rewardState) {
+    val reward = rewardToAutoClaim(awaitingSignIn, signedIn = userInfo != null, rewardState)
+    if (reward != null) {
       awaitingSignIn = false
-      viewModel.claim(unclaimed.reward.copy(paERewardType = rewardType))
+      viewModel.claim(reward.copy(paERewardType = rewardType))
       paeAnalytics.sendPaERewardClaimed(
         source = PaEAnalytics.SOURCE_GAMES_FEED,
         rewardType = rewardType,
-        units = unclaimed.reward.units,
+        units = reward.units,
       )
     }
   }
