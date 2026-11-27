@@ -40,12 +40,13 @@ internal class PaERefusalEventsTest {
       PaERefusalEvents.refusals.collect { heard += it }
     }
 
-    m When "a network failure and a server error go through the filter"
+    m When "a network failure, a server error and then a region refusal go through the filter"
     reportUnlessPaERefusal(IOException("offline")) {}
     reportUnlessPaERefusal(httpError(500, """{"detail":"Internal error"}""")) {}
+    reportUnlessPaERefusal(httpError(403, """{"detail":{"code":"REGION_NOT_SUPPORTED"}}""")) {}
 
-    m Then "the listener hears nothing"
-    assertEquals(emptyList<PaERefusal>(), heard)
+    m Then "the listener hears the refusal only"
+    assertEquals(listOf(PaERefusal(PaERefusalCode.REGION_NOT_SUPPORTED)), heard)
   }
 
   private fun httpError(code: Int, body: String) = HttpException(
