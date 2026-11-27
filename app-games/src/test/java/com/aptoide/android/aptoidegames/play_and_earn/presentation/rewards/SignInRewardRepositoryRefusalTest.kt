@@ -216,14 +216,20 @@ internal class SignInRewardRepositoryRefusalTest {
       assertTrue(repository.rewardState.value is RewardState.Unclaimed)
     }
 
-  @Test
-  fun `A refusal answered after the account changed does not end the bonus`() =
+  @ParameterizedTest(name = "{0}")
+  @EnumSource(
+    PaERefusalCode::class,
+    names = ["ACCOUNT_RESTRICTED", "VPN_NOT_ALLOWED", "SIGN_IN_BONUS_DEVICE_LIMIT"]
+  )
+  fun `A refusal answered after the account changed does not end the bonus`(
+    code: PaERefusalCode,
+  ) =
     coScenario { scope ->
-      m Given "a claim in flight that the backend will refuse"
+      m Given "a claim in flight that the backend will refuse with ${code.name}"
       val repository = scope.repository()
       val gate = CompletableDeferred<Unit>()
       events.gate = gate
-      events.results += refusedFor(PaERefusalCode.ACCOUNT_RESTRICTED)
+      events.results += refusedFor(code)
       repository.claimReward(repository.unclaimed.reward)
 
       m When "the user signs out before the answer arrives"
@@ -236,7 +242,78 @@ internal class SignInRewardRepositoryRefusalTest {
       assertEquals(emptyList<PaERefusalCode>(), refusedEvents)
     }
 
+  @Test
+  fun `A device limit stored while the account changes is not left for the next account`() =
+    coScenario { scope ->
+      m Given "a claim refused with the device limit, its write held mid-way"
+      val repository = scope.repository()
+      val write = CompletableDeferred<Unit>()
+      dataStore.nextWriteGate = write
+      events.results += refusedFor(PaERefusalCode.SIGN_IN_BONUS_DEVICE_LIMIT)
+      repository.claimReward(repository.unclaimed.reward)
+
+      m When "the user signs in with another account, then the held write lands"
+      repository.forgetRefusal()
+      write.complete(Unit)
+
+      m Then "the next account is offered the bonus, with nothing stored or told"
+      assertTrue(repository.rewardState.value is RewardState.Unclaimed)
+      assertFalse(bonusRefusal.isRefused())
+      assertEquals(emptyList<PaERefusalCode>(), refusedEvents)
+    }
+
+  // ---------------------------------------------------------------------------- one at a time
+
+  @Test
+  fun `A claim asked for while one is running sends nothing`() = coScenario { scope ->
+    m Given "an offered bonus whose claim is waiting for the backend"
+    val repository = scope.repository()
+    val gate = CompletableDeferred<Unit>()
+    events.gate = gate
+    events.results += refusedFor(PaERefusalCode.VPN_NOT_ALLOWED)
+    repository.claimReward(repository.unclaimed.reward)
+
+    m When "the user taps again before the answer, then the answer arrives"
+    repository.claimReward(repository.unclaimed.reward)
+    gate.complete(Unit)
+
+    m Then "one claim was sent and the reason was told once"
+    assertEquals(1, events.sent)
+    assertEquals(listOf(PaERefusalCode.VPN_NOT_ALLOWED), refusedEvents)
+  }
+
+  @Test
+  fun `A claim after the last one answered is sent`() = coScenario { scope ->
+    m Given "a claim refused for a VPN, already answered"
+    val repository = scope.repository()
+    events.results += refusedFor(PaERefusalCode.VPN_NOT_ALLOWED)
+    repository.claimReward(repository.unclaimed.reward)
+
+    m When "the user taps again"
+    repository.claimReward(repository.unclaimed.reward)
+
+    m Then "the second claim is sent and granted"
+    assertEquals(2, events.sent)
+    assertEquals(RewardState.Claimed, repository.rewardState.value)
+  }
+
   // ------------------------------------------------------------------------- a broken store
+
+  @Test
+  fun `A device limit that cannot be stored still ends the bonus this session`() =
+    coScenario { scope ->
+      m Given "an offered bonus, a store that cannot be written, and the device limit"
+      val repository = scope.repository()
+      dataStore.failWrites = true
+      events.results += refusedFor(PaERefusalCode.SIGN_IN_BONUS_DEVICE_LIMIT)
+
+      m When "the user claims it"
+      repository.claimReward(repository.unclaimed.reward)
+
+      m Then "nothing crashed, the offer ended, and the reason was told"
+      assertEquals(RewardState.Refused, repository.rewardState.value)
+      assertEquals(listOf(PaERefusalCode.SIGN_IN_BONUS_DEVICE_LIMIT), refusedEvents)
+    }
 
   @Test
   fun `A refusal that cannot be remembered still ends the bonus this session`() =

@@ -25,8 +25,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.math.RoundingMode
-import javax.inject.Inject
+import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
+import javax.inject.Inject
 import javax.inject.Singleton
 
 data class PendingPaEReward(
@@ -99,6 +100,8 @@ class SignInRewardRepository internal constructor(
 
   // Bumped when the account changes: a claim answered after that belongs to the last account.
   private val accountGeneration = AtomicInteger()
+
+  private val claiming = AtomicBoolean(false)
 
   init {
     refresh()
@@ -173,60 +176,71 @@ class SignInRewardRepository internal constructor(
   }
 
   fun claimReward(reward: PendingPaEReward) {
+    // One claim at a time (AND-964): a second tap while the first is answered sends nothing.
+    if (!claiming.compareAndSet(false, true)) return
     val generation = accountGeneration.get()
-    scope.launch {
-      // A refused bonus is not asked for again while the refusal holds.
-      if (isRefused()) {
-        _rewardState.value = RewardState.Refused
-        return@launch
-      }
-      // Register the sign in reward claim as a Play & Earn event.
-      eventsRepository.submitEvent(
-        eventType = EventType.FIRST_SIGN_IN,
-      ).onSuccess {
-        // Claiming grants units on the backend — refresh the toolbar balance.
-        walletUnitsRefresher.invalidate()
+    // Released on completion, even for a claim cancelled before it started.
+    scope.launch { claim(reward, generation) }
+      .invokeOnCompletion { claiming.set(false) }
+  }
+
+  private suspend fun claim(reward: PendingPaEReward, generation: Int) {
+    // A refused bonus is not asked for again while the refusal holds.
+    if (isRefused()) {
+      _rewardState.value = RewardState.Refused
+      return
+    }
+    // Register the sign in reward claim as a Play & Earn event.
+    eventsRepository.submitEvent(
+      eventType = EventType.FIRST_SIGN_IN,
+    ).onSuccess {
+      // Claiming grants units on the backend — refresh the toolbar balance.
+      walletUnitsRefresher.invalidate()
+      _rewardState.value = RewardState.Claimed
+      _claimSuccessEvent.emit(reward)
+    }.onFailure { error ->
+      // 409: the backend already granted this reward (stale local state) — sync to Claimed so
+      // every offer surface hides, but without the success dialog. Any other failure keeps the
+      // state Unclaimed so the offer remains claimable (retry), except a refusal that blocks
+      // Play & Earn (AND-953) or the device limit (AND-964): retrying cannot help, so the offer
+      // ends. A VPN (AND-964) is told but keeps the offer: off, the next tap goes through.
+      if (error is EventAlreadySubmittedException) {
         _rewardState.value = RewardState.Claimed
-        _claimSuccessEvent.emit(reward)
-      }.onFailure { error ->
-        // 409: the backend already granted this reward (stale local state) — sync to Claimed so
-        // every offer surface hides, but without the success dialog. Any other failure keeps the
-        // state Unclaimed so the offer remains claimable (retry), except a refusal that blocks
-        // Play & Earn (AND-953) or the device limit (AND-964): retrying cannot help, so the offer
-        // ends. A VPN (AND-964) is told but keeps the offer: off, the next tap goes through.
-        if (error is EventAlreadySubmittedException) {
-          _rewardState.value = RewardState.Claimed
-        } else {
-          val code = error.toPaERefusal()?.code
-          // A refusal for the account that has since signed out or in is not this one's.
-          if (code != null && generation == accountGeneration.get()) onRefused(code)
-        }
+      } else {
+        val code = error.toPaERefusal()?.code
+        // A refusal for the account that has since signed out or in is not this one's.
+        if (code != null && generation == accountGeneration.get()) onRefused(code, generation)
       }
     }
   }
 
-  private suspend fun onRefused(code: PaERefusalCode) {
-    when {
-      code == PaERefusalCode.VPN_NOT_ALLOWED -> Unit
+  private suspend fun onRefused(code: PaERefusalCode, generation: Int) {
+    val told = when {
+      // Told, but the offer stays: with the VPN off, the next tap goes through.
+      code == PaERefusalCode.VPN_NOT_ALLOWED -> true
+      code == PaERefusalCode.SIGN_IN_BONUS_DEVICE_LIMIT ->
+        endBonus(generation) { bonusRefusal.recordDeviceLimit() }
 
-      code == PaERefusalCode.SIGN_IN_BONUS_DEVICE_LIMIT -> {
-        _rewardState.value = RewardState.Refused
-        // Not remembered: the offer still ends for this session.
-        softly("remember the sign-in bonus device limit", Unit) {
-          bonusRefusal.recordDeviceLimit()
-        }
-      }
-
-      code.blocksPlay -> {
-        _rewardState.value = RewardState.Refused
-        // Not remembered: the offer still ends for this session.
-        softly("remember the sign-in bonus refusal", Unit) { bonusRefusal.record() }
-      }
-
+      code.blocksPlay -> endBonus(generation) { bonusRefusal.record() }
       // A limit (e.g. too many attempts) is a failure like any other: claimable, untold.
-      else -> return
+      else -> false
     }
-    _refusedEvent.emit(code)
+    if (told) _refusedEvent.emit(code)
+  }
+
+  /**
+   * Ends the bonus and remembers why with [remember].
+   * @return false when the account changed while it was written: the refusal was the last
+   * account's, and that change may have cleared the store before this write landed, so it is
+   * cleared again and nothing is told.
+   */
+  private suspend fun endBonus(generation: Int, remember: suspend () -> Unit): Boolean {
+    _rewardState.value = RewardState.Refused
+    // Not remembered: the offer still ends for this session.
+    softly("remember the sign-in bonus refusal", Unit) { remember() }
+    if (generation == accountGeneration.get()) return true
+    softly("forget the sign-in bonus refusal", Unit) { bonusRefusal.clear() }
+    return false
   }
 
   // A store that cannot be read refuses nothing: the bonus is offered and asked for as before.

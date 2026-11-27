@@ -34,7 +34,8 @@ internal class SignInBonusRefusedMessageTest {
       PaERefusalCode.SIGN_IN_BONUS_DEVICE_LIMIT ->
         R.string.play_and_earn_refused_bonus_device_limit_body
 
-      else -> R.string.play_and_earn_refused_update_body
+      PaERefusalCode.UPDATE_REQUIRED -> R.string.play_and_earn_refused_update_body
+      else -> error("not a refusal of the bonus: $code")
     }
     assertEquals(expected, message)
   }

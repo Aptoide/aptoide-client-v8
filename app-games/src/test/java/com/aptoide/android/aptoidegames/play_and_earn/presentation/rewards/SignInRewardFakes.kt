@@ -76,11 +76,15 @@ internal class NoRateExchangeRepository : ExchangeRepository {
     Result.failure<ExchangeRate>(UnsupportedOperationException())
 }
 
-/** Preferences kept in memory whose reads or writes can be made to fail as a broken disk would. */
+/**
+ * Preferences kept in memory whose reads or writes can be made to fail as a broken disk would,
+ * or whose next write can be held until [nextWriteGate] completes (later writes are not held).
+ */
 internal class FlakyPreferencesDataStore : DataStore<Preferences> {
   private val delegate = InMemoryPreferencesDataStore()
   var failReads = false
   var failWrites = false
+  var nextWriteGate: CompletableDeferred<Unit>? = null
 
   override val data: Flow<Preferences> = flow {
     if (failReads) throw IOException("read failed")
@@ -91,6 +95,10 @@ internal class FlakyPreferencesDataStore : DataStore<Preferences> {
     transform: suspend (t: Preferences) -> Preferences
   ): Preferences {
     if (failWrites) throw IOException("write failed")
+    nextWriteGate?.let { gate ->
+      nextWriteGate = null
+      gate.await()
+    }
     return delegate.updateData(transform)
   }
 }
