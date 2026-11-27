@@ -4,6 +4,7 @@ import cm.aptoide.pt.play_and_earn.exchange.data.model.ExchangeRateJson
 import cm.aptoide.pt.play_and_earn.exchange.data.model.ExchangeUnitsRequestJson
 import cm.aptoide.pt.play_and_earn.exchange.domain.ExchangeRate
 import cm.aptoide.pt.play_and_earn.exchange.domain.RedeemType
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -62,6 +63,9 @@ internal class DefaultExchangeRepository @Inject constructor(
           val errorMessage = response.detail?.message ?: ""
           Result.failure(ExchangeException(errorMessage))
         }
+      } catch (e: CancellationException) {
+        // AND-952: a cancelled redeem is not a failed one; its caller decides what follows.
+        throw e
       } catch (e: Throwable) {
         e.printStackTrace()
         Result.failure(e)
