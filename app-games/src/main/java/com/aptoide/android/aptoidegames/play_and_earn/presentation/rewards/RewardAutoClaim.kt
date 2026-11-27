@@ -1,5 +1,7 @@
 package com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards
 
+import com.aptoide.android.aptoidegames.play_and_earn.domain.PaEAccountRestrictionState
+
 /**
  * The reward to claim on its own once the user is back from the reward sign-in flow: only when
  * they went there from this offer, are signed in, and the bonus is offered. Right after a sign-in
@@ -23,3 +25,18 @@ internal fun rewardToClaimOnTap(
   signedIn: Boolean,
   rewardState: RewardState,
 ): PendingPaEReward? = if (signedIn) (rewardState as? RewardState.Unclaimed)?.reward else null
+
+/**
+ * The bonus the home card offers, or null for no card: none while the account is restricted
+ * (AND-951), whose claim the backend would refuse. While that is not known yet, the card shows as
+ * before; it goes away if the answer is "restricted".
+ */
+internal fun signInBonusOffer(
+  rewardState: RewardState,
+  restriction: PaEAccountRestrictionState,
+): RewardState.Unclaimed? =
+  if (restriction == PaEAccountRestrictionState.RESTRICTED) {
+    null
+  } else {
+    rewardState as? RewardState.Unclaimed
+  }
