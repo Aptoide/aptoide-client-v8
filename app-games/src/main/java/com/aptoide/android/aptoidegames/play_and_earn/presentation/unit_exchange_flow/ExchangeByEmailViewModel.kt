@@ -20,24 +20,30 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.IOException
+import java.time.Instant
 import javax.inject.Inject
 
 sealed interface ExchangeEmailUiState {
   data object Idle : ExchangeEmailUiState
   data object Loading : ExchangeEmailUiState
   data object Success : ExchangeEmailUiState
-  data class Error(val kind: ExchangeErrorKind) : ExchangeEmailUiState
+  /** @param retryAt when a limit ends ([ExchangeErrorKind.hasEnd]); null when unknown. */
+  data class Error(
+    val kind: ExchangeErrorKind,
+    val retryAt: Instant? = null,
+  ) : ExchangeEmailUiState
 }
 
 /**
  * What the user is told when a redeem fails (AND-952).
  * @param canRetry retrying can help: the others are final answers, and retrying a redeem whose
  * outcome is being checked would only put it under review.
+ * @param hasEnd a limit that ends: the backend says when, and the message shows it.
  */
-enum class ExchangeErrorKind(val canRetry: Boolean) {
+enum class ExchangeErrorKind(val canRetry: Boolean, val hasEnd: Boolean = false) {
   Generic(canRetry = true),
-  Limit(canRetry = false),
-  TooManyAttempts(canRetry = false),
+  Limit(canRetry = false, hasEnd = true),
+  TooManyAttempts(canRetry = false, hasEnd = true),
   BeingChecked(canRetry = false),
   Restricted(canRetry = false),
 }
@@ -125,7 +131,9 @@ class ExchangeByEmailViewModel internal constructor(
         if (refusal.endsRequest()) {
           runCatchingAndRecord(exceptionHandler) { pendingRedeems.clear(requestId) }
         }
-        _uiState.update { ExchangeEmailUiState.Error(refusal.toErrorKind()) }
+        val kind = refusal.toErrorKind()
+        val retryAt = refusal?.retryAt?.takeIf { kind.hasEnd }
+        _uiState.update { ExchangeEmailUiState.Error(kind, retryAt) }
       }
     )
   }

@@ -26,6 +26,7 @@ import org.junit.jupiter.api.Test
 import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
+import java.time.Instant
 
 // AND-952: one request id per redeem, kept (by PaEPendingRedeems) until the backend's answer is
 // final, so a retry after a lost answer never redeems twice.
@@ -330,6 +331,38 @@ internal class ExchangeByEmailViewModelTest {
   }
 
   @Test
+  fun `The limits carry when they end and the other errors do not`() = coScenario {
+    m Given "refusals that all say when to try again"
+    val retryAt = "2026-12-01T14:30:00Z"
+    val failures = listOf(
+      httpError(429, "REDEEM_LIMIT", retryAt),
+      httpError(429, "TOO_MANY_ATTEMPTS", retryAt),
+      httpError(409, "REDEEM_UNDER_REVIEW", retryAt),
+      httpError(403, "ACCOUNT_RESTRICTED", retryAt),
+      httpError(409, "REDEEM_IN_PROGRESS", retryAt),
+    )
+
+    m When "the user redeems once for each"
+    val shown = failures.map { failure ->
+      repository.results += Result.failure(failure)
+      viewModel().apply { exchange(EMAIL, PaERewardType.ROBUX) }.uiState.value
+    }
+
+    m Then "only the redeem limit and too many attempts keep the time"
+    val end = Instant.parse(retryAt)
+    assertEquals(
+      listOf(
+        ExchangeEmailUiState.Error(ExchangeErrorKind.Limit, end),
+        ExchangeEmailUiState.Error(ExchangeErrorKind.TooManyAttempts, end),
+        ExchangeEmailUiState.Error(ExchangeErrorKind.BeingChecked, null),
+        ExchangeEmailUiState.Error(ExchangeErrorKind.Restricted, null),
+        ExchangeEmailUiState.Error(ExchangeErrorKind.Generic, null),
+      ),
+      shown
+    )
+  }
+
+  @Test
   fun `Only the generic error can be retried`() = coScenario {
     m Given "every kind of redeem error"
     val kinds = ExchangeErrorKind.entries
@@ -365,10 +398,12 @@ internal class ExchangeByEmailViewModelTest {
       savedStateHandle = savedStateHandle,
     )
 
-  private fun httpError(status: Int, code: String) = HttpException(
+  private fun httpError(status: Int, code: String, retryAt: String? = null) = HttpException(
     Response.error<Any>(
       status,
-      """{"detail":{"code":"$code"}}""".toResponseBody("application/json".toMediaType())
+      (retryAt?.let { """{"detail":{"code":"$code","retry_at":"$it"}}""" }
+        ?: """{"detail":{"code":"$code"}}""")
+        .toResponseBody("application/json".toMediaType())
     )
   )
 
