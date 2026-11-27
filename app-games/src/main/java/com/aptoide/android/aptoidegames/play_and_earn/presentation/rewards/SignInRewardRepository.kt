@@ -47,8 +47,9 @@ sealed interface RewardState {
 
   /**
    * The backend refused the bonus for a reason retrying cannot fix (AND-953): a restricted
-   * account, an unsupported region or device, or an outdated app. Offer surfaces hide it, as if
-   * there were none, until the refusal expires ([PaESignInBonusRefusal]) or the account changes.
+   * account, an unsupported region or device, or an outdated app; or this phone already received
+   * it on another account (AND-964). Offer surfaces hide it, as if there were none, until the
+   * refusal expires ([PaESignInBonusRefusal]) or the account changes.
    */
   data object Refused : RewardState
 }
@@ -90,6 +91,7 @@ class SignInRewardRepository internal constructor(
   /**
    * Why a claim the user just made was refused for good (AND-953), once per refusal, so the
    * surface can say so. A bonus found refused later (app restart, another surface) says nothing.
+   * Also a VPN (AND-964), which keeps the bonus claimable: the user must know to turn it off.
    */
   val refusedEvent: SharedFlow<PaERefusalCode> = _refusedEvent.asSharedFlow()
 
@@ -190,21 +192,41 @@ class SignInRewardRepository internal constructor(
         // 409: the backend already granted this reward (stale local state) — sync to Claimed so
         // every offer surface hides, but without the success dialog. Any other failure keeps the
         // state Unclaimed so the offer remains claimable (retry), except a refusal that blocks
-        // Play & Earn (AND-953): retrying cannot help, so the offer ends for a while.
+        // Play & Earn (AND-953) or the device limit (AND-964): retrying cannot help, so the offer
+        // ends. A VPN (AND-964) is told but keeps the offer: off, the next tap goes through.
         if (error is EventAlreadySubmittedException) {
           _rewardState.value = RewardState.Claimed
         } else {
           val code = error.toPaERefusal()?.code
           // A refusal for the account that has since signed out or in is not this one's.
-          if (code?.blocksPlay == true && generation == accountGeneration.get()) {
-            _rewardState.value = RewardState.Refused
-            // Not remembered: the offer still ends for this session.
-            softly("remember the sign-in bonus refusal", Unit) { bonusRefusal.record() }
-            _refusedEvent.emit(code)
-          }
+          if (code != null && generation == accountGeneration.get()) onRefused(code)
         }
       }
     }
+  }
+
+  private suspend fun onRefused(code: PaERefusalCode) {
+    when {
+      code == PaERefusalCode.VPN_NOT_ALLOWED -> Unit
+
+      code == PaERefusalCode.SIGN_IN_BONUS_DEVICE_LIMIT -> {
+        _rewardState.value = RewardState.Refused
+        // Not remembered: the offer still ends for this session.
+        softly("remember the sign-in bonus device limit", Unit) {
+          bonusRefusal.recordDeviceLimit()
+        }
+      }
+
+      code.blocksPlay -> {
+        _rewardState.value = RewardState.Refused
+        // Not remembered: the offer still ends for this session.
+        softly("remember the sign-in bonus refusal", Unit) { bonusRefusal.record() }
+      }
+
+      // A limit (e.g. too many attempts) is a failure like any other: claimable, untold.
+      else -> return
+    }
+    _refusedEvent.emit(code)
   }
 
   // A store that cannot be read refuses nothing: the bonus is offered and asked for as before.

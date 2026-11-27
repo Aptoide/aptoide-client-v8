@@ -25,6 +25,7 @@ import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PaERe
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.RewardState
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.SignInRewardViewModel
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.rewardToAutoClaim
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.rewardToClaimOnTap
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.sign_in.rememberUserInfo
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 
@@ -69,7 +70,9 @@ fun freeFireApkfyRewardScreen(
   // A claimed reward means there is no offer to show: leave to home whether the claim just
   // happened here (the success dialog shows over home) or the user reached an already-claimed
   // offer (stale back stack entry, apkfy re-entry, or the mission state resolving late). A refused
-  // one (AND-953) ends the offer the same way, without a dialog.
+  // one (AND-953) ends the offer the same way, without a dialog; the snackbar says why over home.
+  // A VPN refusal (AND-964) keeps the bonus Unclaimed, so the user stays here, sees the same
+  // snackbar over this screen, and taps Collect again once the VPN is off.
   LaunchedEffect(rewardState) {
     if (rewardState is RewardState.Claimed || rewardState is RewardState.Refused) navigateToHome()
   }
@@ -108,8 +111,20 @@ fun freeFireApkfyRewardScreen(
                 source = PaEAnalytics.SOURCE_APKFY,
                 rewardType = PaERewardType.DIAMONDS,
               )
-              awaitingSignIn = true
-              navigateToSignIn()
+              // Signed in (back on the offer after a VPN refusal, AND-964): claim again here,
+              // as the feed card does. Signed out: sign in first, auto-claimed on return.
+              val reward = rewardToClaimOnTap(signedIn = userInfo != null, rewardState)
+              if (reward != null) {
+                viewModel.claim(reward.copy(paERewardType = PaERewardType.DIAMONDS))
+                paeAnalytics.sendPaERewardClaimed(
+                  source = PaEAnalytics.SOURCE_APKFY,
+                  rewardType = PaERewardType.DIAMONDS,
+                  units = reward.units,
+                )
+              } else {
+                awaitingSignIn = true
+                navigateToSignIn()
+              }
             }
           },
           onDismiss = {
