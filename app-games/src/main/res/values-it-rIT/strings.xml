@@ -504,6 +504,8 @@
   <string name="play_and_earn_exchange_error_being_checked_body">Non riprovare. Se il premio non arriva, contatta Supporto in Impostazioni.</string>
   <string name="play_and_earn_exchange_error_restricted_title">Account limitato</string>
   <string name="play_and_earn_exchange_error_restricted_body">Il tuo account è stato limitato dai meccanismi antifrode. Contatta Supporto in Impostazioni.</string>
+  <string name="play_and_earn_exchange_error_limit_body_until">Potrai riscattare di nuovo dal %1$s.</string>
+  <string name="play_and_earn_exchange_error_too_many_attempts_body_until">Troppi tentativi. Riprova dopo %1$s.</string>
   <string name="play_and_earn_exchange_success_email_sent">Abbiamo inviato il tuo codice a %1$s. Controlla la posta in arrivo entro 24 ore.</string>
   <string name="play_and_earn_exchange_earn_more_button">Guadagna di più</string>
   <string name="play_and_earn_tap_to_collect">Tocca per raccogliere</string>

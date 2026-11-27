@@ -472,6 +472,8 @@
   <string name="play_and_earn_exchange_error_being_checked_body">Đừng thử lại. Nếu không nhận được phần thưởng, hãy liên hệ Hỗ trợ trong Cài đặt.</string>
   <string name="play_and_earn_exchange_error_restricted_title">Tài khoản bị hạn chế</string>
   <string name="play_and_earn_exchange_error_restricted_body">Tài khoản của bạn đã bị hạn chế do cơ chế chống gian lận. Hãy liên hệ Hỗ trợ trong Cài đặt.</string>
+  <string name="play_and_earn_exchange_error_limit_body_until">Bạn có thể đổi lại vào %1$s.</string>
+  <string name="play_and_earn_exchange_error_too_many_attempts_body_until">Quá nhiều lần thử. Hãy thử lại sau %1$s.</string>
   <string name="play_and_earn_exchange_email_safe_note">🔒 Email của bạn được bảo mật. Chúng tôi chỉ dùng để gửi phần thưởng này.</string>
   <string name="play_and_earn_exchange_get_my_code_button">Nhận mã của tôi</string>
   <string name="play_and_earn_exchange_not_enough_balance">Không đủ số dư</string>

@@ -526,6 +526,8 @@
   <string name="play_and_earn_exchange_error_being_checked_body">Nie próbuj ponownie. Jeśli nagroda nie dotrze, skontaktuj się z nami: Ustawienia &gt; Wsparcie.</string>
   <string name="play_and_earn_exchange_error_restricted_title">Konto ograniczone</string>
   <string name="play_and_earn_exchange_error_restricted_body">Twoje konto zostało ograniczone przez mechanizmy ochrony przed oszustwami. Skontaktuj się z nami: Ustawienia &gt; Wsparcie.</string>
+  <string name="play_and_earn_exchange_error_limit_body_until">Kolejna realizacja będzie możliwa: %1$s.</string>
+  <string name="play_and_earn_exchange_error_too_many_attempts_body_until">Zbyt wiele prób. Spróbuj ponownie po %1$s.</string>
   <string name="play_and_earn_exchange_success_email_sent">Wysłaliśmy Twój kod na %1$s. Sprawdź skrzynkę odbiorczą w ciągu 24 godzin.</string>
   <string name="play_and_earn_exchange_earn_more_button">Zarabiaj więcej</string>
   <string name="play_and_earn_tap_to_collect">Dotknij, aby odebrać</string>
