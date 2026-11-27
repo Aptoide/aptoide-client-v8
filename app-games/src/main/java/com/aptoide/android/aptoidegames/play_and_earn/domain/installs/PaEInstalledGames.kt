@@ -19,12 +19,20 @@ data class PaEInstallEvidence(
 
 /** The games on the phone, as an install report needs them. */
 interface PaEInstalledGames {
+  /**
+   * Whether [packageName] is on the phone now, in any version: an install of it is then an
+   * update, a migration or a retry, not a new install.
+   */
   fun isInstalled(packageName: String): Boolean
 
   /** What the phone says of [packageName]; null when it is not installed. */
   fun evidence(packageName: String): PaEInstallEvidence?
 }
 
+/**
+ * [PaEInstalledGames] as the [PackageManager] sees them. Never throws: a package it cannot read
+ * is not installed, and a field it cannot read is left out of the evidence.
+ */
 class AndroidPaEInstalledGames @Inject constructor(
   private val packageManager: PackageManager,
 ) : PaEInstalledGames {

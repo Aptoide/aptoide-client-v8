@@ -46,9 +46,9 @@ fun PackageInfo.getSignature(): String? = runCatching {
 
 /**
  * The SHA-256 of the app's current signing certificate, as 64 lower-case hex characters with no
- * separators (AND-954), or null when it cannot be read. The certificate is the one
- * [getSignature] hashes: after a key rotation the newest one of the history, and for an app
- * signed by several signers (which has no history) the first of them.
+ * separators (AND-954), or null when it cannot be read. The certificate is picked the way
+ * [getSignature] means to: after a key rotation the newest one of the history; for an app signed
+ * by several signers, which has no history, the first signer.
  */
 fun PackageInfo.getSignatureSha256(): String? = runCatching {
   val signature = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {

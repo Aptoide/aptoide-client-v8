@@ -1,6 +1,7 @@
 package com.aptoide.android.aptoidegames.play_and_earn.presentation.installs
 
 import androidx.annotation.StringRes
+import androidx.compose.material.SnackbarDuration
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
@@ -29,7 +30,7 @@ class PaEInstallLimitViewModel @Inject constructor(
  * the install the backend refused to count. The install goes on.
  */
 @Composable
-fun PaEInstallLimitSnack(showSnack: (String) -> Unit) {
+fun PaEInstallLimitSnack(showSnack: (message: String, duration: SnackbarDuration) -> Unit) {
   val viewModel = hiltViewModel<PaEInstallLimitViewModel>()
   val context = LocalContext.current
   LaunchedEffect(viewModel) {
@@ -42,7 +43,9 @@ fun PaEInstallLimitSnack(showSnack: (String) -> Unit) {
       )
       showSnack(
         message.retryAt?.let { context.getString(message.text, it) }
-          ?: context.getString(message.text)
+          ?: context.getString(message.text),
+        // Long enough to read that the game still downloads.
+        SnackbarDuration.Long,
       )
     }
   }

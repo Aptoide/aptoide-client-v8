@@ -52,7 +52,8 @@ class PaEMmpClickSender internal constructor(
       mmp = template.mmp,
     ) ?: return
     if (BuildConfig.DEBUG) {
-      Timber.tag("PaEMmp").i("${template.mmp} click for $packageName: $url")
+      // Not the URL: it carries the wallet address and the install's click id.
+      Timber.tag("PaEMmp").i("${template.mmp} click for $packageName")
     }
     campaignRepository.knock(url)
   }

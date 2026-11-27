@@ -21,14 +21,14 @@ internal class CertificateSha256Test {
 
   @Test
   fun `Bytes below 0x10 keep their leading zero`() = scenario {
-    m Given "the bytes of \"abc\", whose SHA-256 holds the bytes 0x01, 0x03 and 0x00"
-    val certificate = "abc".toByteArray()
+    m Given "the 448-bit FIPS 180-2 message, whose SHA-256 holds the bytes 0x06 and 0x0c"
+    val certificate =
+      "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq".toByteArray()
 
     m When "its SHA-256 is written"
     val hash = certificateSha256(certificate)
 
-    m Then "every byte is two characters: 64 in all"
-    assertEquals(64, hash.length)
-    assertEquals("8f01", hash.substring(8, 12))
+    m Then "it is the known digest, every byte two characters"
+    assertEquals("248d6a61d20638b8e5c026930c3e6039a33ce45964ff2167f6ecedd419db06c1", hash)
   }
 }

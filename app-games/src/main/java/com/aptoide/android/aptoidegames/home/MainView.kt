@@ -197,9 +197,9 @@ fun MainView(navController: NavHostController) {
           )
 
           PaEInstallLimitSnack(
-            showSnack = {
+            showSnack = { message, duration ->
               coroutineScope.launch {
-                snackBarHostState.showSnackbar(message = it)
+                snackBarHostState.showSnackbar(message = message, duration = duration)
               }
             }
           )

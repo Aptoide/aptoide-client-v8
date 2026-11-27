@@ -50,7 +50,7 @@ import com.aptoide.android.aptoidegames.network.presentation.WifiPromptDialog
 import com.aptoide.android.aptoidegames.network.presentation.WifiPromptType
 import com.aptoide.android.aptoidegames.network.rememberDownloadOverWifi
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.analytics.rememberPaEAnalytics
-import com.aptoide.android.aptoidegames.play_and_earn.presentation.components.rememberPaEPlayInstallStarted
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.installs.rememberPaEPlayInstallStarted
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.hasOverlayPermission
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.permissions.hasUsageStatsPermissionStatus
 

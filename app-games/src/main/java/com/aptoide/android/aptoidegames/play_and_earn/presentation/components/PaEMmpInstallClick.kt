@@ -4,17 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.ViewModel
 import cm.aptoide.pt.download_view.presentation.DownloadUiState
 import cm.aptoide.pt.extensions.runPreviewable
-import com.aptoide.android.aptoidegames.play_and_earn.domain.installs.PaEInstallTracker
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
-
-@HiltViewModel
-class PaEMmpClickViewModel @Inject constructor(
-  val installTracker: PaEInstallTracker,
-) : ViewModel()
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.installs.PaEInstallStartedViewModel
 
 /**
  * Sends the developer's MMP click when a fresh install of a Play & Earn game starts (AND-877),
@@ -42,23 +34,10 @@ class PaEMmpInstallClick internal constructor(
 fun rememberPaEMmpInstallClick(packageName: String): PaEMmpInstallClick = runPreviewable(
   preview = { remember(packageName) { PaEMmpInstallClick(packageName) {} } },
   real = {
-    val vm = hiltViewModel<PaEMmpClickViewModel>()
+    val vm = hiltViewModel<PaEInstallStartedViewModel>()
     remember(packageName) {
       PaEMmpInstallClick(packageName, vm.installTracker::onPaEViewInstallStarted)
     }
-  },
-)
-
-/**
- * Tells the Play & Earn install clicks that Google Play took the install of a package (AND-954):
- * those installs never reach the install manager, which tells the others.
- */
-@Composable
-fun rememberPaEPlayInstallStarted(): (packageName: String) -> Unit = runPreviewable(
-  preview = { {} },
-  real = {
-    val vm = hiltViewModel<PaEMmpClickViewModel>()
-    remember(vm) { vm.installTracker::onInstallStarted }
   },
 )
 
