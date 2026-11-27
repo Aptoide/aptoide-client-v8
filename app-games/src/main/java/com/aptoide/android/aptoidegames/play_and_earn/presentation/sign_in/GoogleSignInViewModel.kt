@@ -12,6 +12,7 @@ import cm.aptoide.pt.exception_handler.ExceptionHandler
 import cm.aptoide.pt.exception_handler.runCatchingAndRecord
 import cm.aptoide.pt.wallet.authorization.data.WalletAuthRepository
 import com.aptoide.android.aptoidegames.BuildConfig
+import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPendingRedeems
 import com.aptoide.android.aptoidegames.play_and_earn.data.UserAccountPreferencesRepository
 import com.aptoide.android.aptoidegames.play_and_earn.domain.UserInfo
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaESessionRefusals
@@ -38,6 +39,7 @@ class GoogleSignInViewModel @Inject constructor(
   private val userAccountPreferencesRepository: UserAccountPreferencesRepository,
   private val exceptionHandler: ExceptionHandler,
   private val paESessionRefusals: PaESessionRefusals,
+  private val pendingRedeems: PaEPendingRedeems,
 ) : ViewModel() {
   private var googleIdTokenCredential: GoogleIdTokenCredential? = null
 
@@ -109,6 +111,8 @@ class GoogleSignInViewModel @Inject constructor(
         if (result.isSuccess) {
           // AND-950: another account may have signed in; the last one's refusals don't hold.
           paESessionRefusals.clear()
+          // AND-952: a pending redeem belongs to the last account's wallet.
+          forgetPendingRedeem()
           googleIdTokenCredential?.let {
             userAccountPreferencesRepository.setUserInfo(
               UserInfo(
@@ -143,6 +147,8 @@ class GoogleSignInViewModel @Inject constructor(
     // AND-950: refusals belong to the account signing out.
     paESessionRefusals.clear()
     viewModelScope.launch {
+      // AND-952: so does its pending redeem.
+      forgetPendingRedeem()
       runCatchingAndRecord(exceptionHandler) {
         val clearRequest = ClearCredentialStateRequest()
         credentialManager.clearCredentialState(clearRequest)
@@ -152,6 +158,10 @@ class GoogleSignInViewModel @Inject constructor(
         Timber.e("Couldn't clear user credentials: ${e.localizedMessage}")
       }
     }
+  }
+
+  private suspend fun forgetPendingRedeem() {
+    runCatchingAndRecord(exceptionHandler) { pendingRedeems.clearAll() }
   }
 
   private fun generateSecureRandomNonce(byteLength: Int = 32): String {
