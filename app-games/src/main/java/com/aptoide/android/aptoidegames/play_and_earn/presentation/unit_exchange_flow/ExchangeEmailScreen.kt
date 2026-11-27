@@ -201,10 +201,12 @@ private fun ExchangeErrorView(
       subtitle = limitText,
     )
 
+    // Shares the limit's title: "Something went wrong" over "Too many attempts" read wrong.
     ExchangeErrorKind.TooManyAttempts -> GenericErrorView(
       onRetryClick = onRetryClick,
       modifier = modifier,
       contentColor = contentColor,
+      title = stringResource(R.string.play_and_earn_exchange_error_limit_title),
       subtitle = limitText,
     )
 

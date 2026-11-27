@@ -111,7 +111,12 @@ fun RedeemRewardScreen(
       when (uiState) {
         UnitsBalanceUiState.Loading -> LoadingContent()
 
-        is UnitsBalanceUiState.Error -> GenericErrorView(onRetryClick = uiState.retry)
+        // Palette.White reads on this flow's own background; the error view's default does
+        // not in Vanilla (same as the email screen).
+        is UnitsBalanceUiState.Error -> GenericErrorView(
+          onRetryClick = uiState.retry,
+          contentColor = Palette.White,
+        )
 
         is UnitsBalanceUiState.Idle -> RedeemRewardContent(
           rewardType = rewardType,

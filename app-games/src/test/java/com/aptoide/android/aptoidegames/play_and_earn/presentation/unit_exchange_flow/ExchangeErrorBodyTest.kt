@@ -3,10 +3,14 @@ package com.aptoide.android.aptoidegames.play_and_earn.presentation.unit_exchang
 import cm.aptoide.pt.test.gherkin.scenario
 import com.aptoide.android.aptoidegames.R
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.time.Instant
 import java.time.ZoneId
+import java.time.format.DecimalStyle
 import java.util.Locale
 
 // AND-952: a limit's message says when it ends, as the phone writes a date and time.
@@ -28,6 +32,27 @@ internal class ExchangeErrorBodyTest {
     m Then "each locale writes its own date and time"
     assertEquals("1 Dec 2026, 14:30", uk)
     assertEquals("01/12/2026, 14:30", pt)
+  }
+
+  @Test
+  fun `The end is written in the language's own digits`() = scenario {
+    m Given "a language that does not write with 0 to 9"
+    val locale = Locale.forLanguageTag("fa-IR")
+    val zero = DecimalStyle.of(locale).zeroDigit
+    assertNotEquals('0', zero)
+
+    m When "the end is written for it"
+    val text = formatLimitEnd(
+      end = Instant.parse("2026-12-01T14:30:00Z"),
+      now = Instant.parse("2026-11-30T10:00:00Z"),
+      zone = ZoneId.of("UTC"),
+      locale = locale,
+      timeOnlyToday = false,
+    )
+
+    m Then "it has that language's digits and none of 0 to 9"
+    assertTrue(text.any { it in zero..(zero + 9) }, text)
+    assertFalse(text.any { it in '0'..'9' }, text)
   }
 
   @Test

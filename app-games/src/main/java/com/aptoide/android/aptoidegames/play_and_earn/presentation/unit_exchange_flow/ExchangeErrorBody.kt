@@ -5,6 +5,7 @@ import com.aptoide.android.aptoidegames.R
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.time.format.DecimalStyle
 import java.time.format.FormatStyle
 import java.util.Locale
 
@@ -72,5 +73,9 @@ fun formatLimitEnd(
   } else {
     DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT)
   }
-  return localEnd.format(formatter.withLocale(locale))
+  // The locale's own digits (Arabic, Persian, Burmese...), as the phone writes dates elsewhere:
+  // java.time keeps 0-9 unless told otherwise.
+  return localEnd.format(
+    formatter.withLocale(locale).withDecimalStyle(DecimalStyle.of(locale))
+  )
 }
