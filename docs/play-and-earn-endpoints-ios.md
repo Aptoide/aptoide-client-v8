@@ -358,10 +358,16 @@ the apkfy reward offers, which wait for it (they claim the bonus on their own af
 
 ### 3.9 Installs — `POST /api/v1/installs/*` (AND-954)
 
-Auth **required** (Bearer wallet JWT, like the other P&E calls). Signed-in users only. The backend
-counts the day's installs with them (20 a day per account or phone) and tells a first install from
+Auth **required** (Bearer wallet JWT, like the other P&E calls). Signed-in users only, and only
+while P&E is available to the user (the same check that shows P&E at all: region, device, remote
+flag, section 8); while it is not, nothing is sent and pending installs wait. The backend counts
+the day's installs with them (20 a day per account or phone) and tells a first install from
 another account installing the same game on the same phone. Both are new routes: they must be
 registered in Cloudflare API Shield before an app can reach them.
+
+**Phone headers.** The backend reads the phone headers (`X-PaE-Device-Key`…) on these calls like on
+the other P&E calls. Android sends them on none of its P&E calls yet, these two included: until it
+does, the backend counts the limit per account only and can never find a prior install.
 
 **Rule: the click before the report.** A report whose click is not on record is not stored, only
 flagged. The click is sent when the install starts; when it never reached the backend (offline,
@@ -381,7 +387,7 @@ The install of a P&E game started. Body: `{ "package": "com.x.y", "click_id": "<
 |---|---|
 | `200 {"eligible": true}` | Nothing |
 | `200 {"eligible": false}` | Nothing: the game's missions already come back `not_eligible` (3.3) |
-| `429` `INSTALL_LIMIT` with `retry_at` | One snackbar: "You've reached today's Play & Earn install limit. Installs count again on {retry_at as a local date and time}." (without a time when `retry_at` is missing or past). The install goes on; it is never reported |
+| `429` `INSTALL_LIMIT` with `retry_at` | One long snackbar: "You've reached today's Play & Earn install limit. Your game will still download. The limit resets on {retry_at as a local date and time}." (without the last sentence when `retry_at` is missing or past). The install goes on; it is never reported, and the same game started again within 10 minutes is not clicked again |
 | `403` `ACCOUNT_RESTRICTED` | The restricted screen (3.8); never reported |
 | `422` | A bug: never sent again, never reported |
 | `503` / network | Sent again before the report |
@@ -408,10 +414,13 @@ The install finished. Body:
 **How Android sends them.** The click goes out when an install of a P&E game starts, from any
 screen: the install manager queuing it or Google Play taking it (inline installs). From the P&E
 install views the MMP click goes out at the same time with the same id. The install's package,
-click id and start time are kept on disk; the report goes out as soon as the game is installed
-(whatever screen is open), or at the next app start for an install that finished while the app was
-not running. A pending install is dropped after 7 days and on sign-in or sign-out (a click belongs
-to the account that sent it), and is never reported while the game is not on the phone.
+click id, start time and owner (the wallet that started it) are kept on disk, one per game: the
+same game started again by the same account keeps its click id. The report goes out as soon as the
+game is installed (whatever screen is open), or at the next app start for an install that finished
+while the app was not running, and only for the account that started it: another account's
+pending install is dropped, never reported or clicked again. A pending install is dropped after 7
+days, a refused one after 10 minutes, all of them on sign-in or sign-out, and the oldest beyond
+200; it is never reported while the game is not on the phone.
 
 ### 3.10 Utilities
 
