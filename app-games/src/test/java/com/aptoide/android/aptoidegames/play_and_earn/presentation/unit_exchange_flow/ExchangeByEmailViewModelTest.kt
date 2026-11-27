@@ -8,6 +8,8 @@ import cm.aptoide.pt.play_and_earn.exchange.domain.ExchangeUnitsUseCase
 import cm.aptoide.pt.play_and_earn.exchange.domain.RedeemType
 import cm.aptoide.pt.test.gherkin.coScenario
 import com.aptoide.android.aptoidegames.play_and_earn.WalletUnitsRefresher
+import com.aptoide.android.aptoidegames.play_and_earn.data.InMemoryPreferencesDataStore
+import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPendingRedeems
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PaERewardType
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
@@ -19,15 +21,14 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
 
-// AND-952: one request id per redeem, kept until the backend's answer is final, so a retry
-// after a lost answer never redeems twice.
+// AND-952: one request id per redeem, kept (by PaEPendingRedeems) until the backend's answer is
+// final, so a retry after a lost answer never redeems twice.
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class ExchangeByEmailViewModelTest {
 
@@ -63,8 +64,12 @@ internal class ExchangeByEmailViewModelTest {
 
   private val repository = FakeExchangeRepository()
   private val exceptionHandler = RecordingExceptionHandler()
-  private val savedStateHandle = SavedStateHandle()
   private var idCount = 0
+  private val pendingRedeems = PaEPendingRedeems(
+    dataStore = InMemoryPreferencesDataStore(),
+    nowMillis = { 0L },
+    newRequestId = { "id-${++idCount}" },
+  )
 
   @BeforeEach
   fun setUp() = Dispatchers.setMain(UnconfinedTestDispatcher())
@@ -203,17 +208,59 @@ internal class ExchangeByEmailViewModelTest {
     }
 
   @Test
-  fun `The request id survives a recreated view model`() = coScenario {
-    m Given "a redeem that failed on the network"
-    repository.results += Result.failure(IOException("offline"))
-    viewModel().exchange(EMAIL, PaERewardType.ROBUX)
+  fun `A redeem whose answer was lost keeps its id after leaving the screen`() = coScenario {
+    m Given "a redeem the server took but whose answer was lost"
+    repository.results += Result.failure(IOException("timeout"))
+    viewModel(SavedStateHandle()).exchange(EMAIL, PaERewardType.ROBUX)
 
-    m When "the process dies and the screen comes back with its saved state"
-    val recreated = viewModel()
-    recreated.exchange(EMAIL, PaERewardType.ROBUX)
+    m When "the user goes back, opens Redeem again and submits the same email"
+    viewModel(SavedStateHandle()).exchange(EMAIL, PaERewardType.ROBUX)
 
-    m Then "the redeem is sent again with the saved id"
+    m Then "the redeem is replayed with its first id, not redeemed twice"
     assertEquals(listOf("id-1", "id-1"), repository.calls.map { it.requestId })
+  }
+
+  @Test
+  fun `The redeem to retry survives a recreated view model`() = coScenario {
+    m Given "a redeem that failed on the network"
+    val savedStateHandle = SavedStateHandle()
+    repository.results += Result.failure(IOException("offline"))
+    viewModel(savedStateHandle).exchange(EMAIL, PaERewardType.ROBUX)
+
+    m When "the process dies and the screen comes back with its saved state to retry"
+    viewModel(savedStateHandle).retry()
+
+    m Then "the same redeem is sent again with the same id"
+    assertEquals(List(2) { Call(EMAIL, RedeemType.ROBLOX_ROBUX, "id-1") }, repository.calls)
+  }
+
+  @Test
+  fun `Retry with nothing to retry goes back to the form`() = coScenario {
+    m Given "a screen that never sent a redeem"
+    val viewModel = viewModel()
+
+    m When "retry is called"
+    viewModel.retry()
+
+    m Then "nothing is sent and the form shows"
+    assertEquals(emptyList<Call>(), repository.calls)
+    assertEquals(ExchangeEmailUiState.Idle, viewModel.uiState.value)
+  }
+
+  @Test
+  fun `Retry with an unknown saved reward goes back to the form`() = coScenario {
+    m Given "saved state naming a reward this version does not know"
+    val savedStateHandle = SavedStateHandle(
+      mapOf("exchange_email" to EMAIL, "exchange_reward_type" to "GOLD")
+    )
+    val viewModel = viewModel(savedStateHandle)
+
+    m When "retry is called"
+    viewModel.retry()
+
+    m Then "nothing is sent and the form shows"
+    assertEquals(emptyList<Call>(), repository.calls)
+    assertEquals(ExchangeEmailUiState.Idle, viewModel.uiState.value)
   }
 
   @Test
@@ -232,27 +279,6 @@ internal class ExchangeByEmailViewModelTest {
     m Then "only one request went out and the redeem succeeded"
     assertEquals(1, repository.calls.size)
     assertEquals(ExchangeEmailUiState.Success, viewModel.uiState.value)
-  }
-
-  @Test
-  fun `Different ids are generated by default`() = coScenario {
-    m Given "the view model with its real id factory"
-    val viewModel = ExchangeByEmailViewModel(
-      exchangeUnitsUseCase = ExchangeUnitsUseCase(repository),
-      exceptionHandler = exceptionHandler,
-      walletUnitsRefresher = WalletUnitsRefresher(),
-      savedStateHandle = savedStateHandle,
-    )
-
-    m When "two redeems succeed"
-    viewModel.exchange(EMAIL, PaERewardType.ROBUX)
-    viewModel.resetState()
-    viewModel.exchange(EMAIL, PaERewardType.ROBUX)
-
-    m Then "each id is a different UUID the backend accepts"
-    val ids = repository.calls.map { it.requestId }
-    assertNotEquals(ids[0], ids[1])
-    ids.forEach { assertEquals(true, it.matches(Regex("^[A-Za-z0-9_-]{1,64}$")), it) }
   }
 
   @Test
@@ -308,13 +334,14 @@ internal class ExchangeByEmailViewModelTest {
     assertEquals(listOf<Throwable>(failure), exceptionHandler.recorded)
   }
 
-  private fun viewModel() = ExchangeByEmailViewModel(
-    exchangeUnitsUseCase = ExchangeUnitsUseCase(repository),
-    exceptionHandler = exceptionHandler,
-    walletUnitsRefresher = WalletUnitsRefresher(),
-    savedStateHandle = savedStateHandle,
-    newRequestId = { "id-${++idCount}" },
-  )
+  private fun viewModel(savedStateHandle: SavedStateHandle = SavedStateHandle()) =
+    ExchangeByEmailViewModel(
+      exchangeUnitsUseCase = ExchangeUnitsUseCase(repository),
+      exceptionHandler = exceptionHandler,
+      walletUnitsRefresher = WalletUnitsRefresher(),
+      pendingRedeems = pendingRedeems,
+      savedStateHandle = savedStateHandle,
+    )
 
   private fun httpError(status: Int, code: String) = HttpException(
     Response.error<Any>(

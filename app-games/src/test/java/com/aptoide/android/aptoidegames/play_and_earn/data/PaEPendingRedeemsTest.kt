@@ -5,6 +5,8 @@ import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PaERe
 import kotlinx.coroutines.flow.first
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.util.concurrent.TimeUnit
 
@@ -143,6 +145,20 @@ internal class PaEPendingRedeemsTest {
 
     m Then "the pending id is replayed"
     assertEquals("id-1", id)
+  }
+
+  @Test
+  fun `Real ids are different UUIDs the backend accepts`() = coScenario {
+    m Given "the store with its real id factory"
+    val store = PaEPendingRedeems(InMemoryPreferencesDataStore())
+
+    m When "two different redeems ask for an id"
+    val first = store.idFor(EMAIL, PaERewardType.ROBUX)
+    val second = store.idFor(EMAIL, PaERewardType.DIAMONDS)
+
+    m Then "the ids differ and fit the backend's request_id pattern"
+    assertNotEquals(first, second)
+    listOf(first, second).forEach { assertTrue(it.matches(Regex("^[A-Za-z0-9_-]{1,64}$")), it) }
   }
 
   private companion object {
