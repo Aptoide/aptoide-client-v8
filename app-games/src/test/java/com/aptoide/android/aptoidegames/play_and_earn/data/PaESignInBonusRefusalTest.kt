@@ -103,20 +103,4 @@ internal class PaESignInBonusRefusalTest {
     m Then "one value is stored: when it was refused"
     assertEquals(listOf<Any>(now), stored.values.toList())
   }
-
-  @Test
-  fun `The refusal time is observable`() = coScenario {
-    m Given "a bonus refused now"
-    val store = store()
-    store.record()
-
-    m When "the refusal is observed, then cleared"
-    val recorded = store.refusedAt.first()
-    store.clear()
-    val cleared = store.refusedAt.first()
-
-    m Then "it shows the time, then nothing"
-    assertEquals(now, recorded)
-    assertEquals(null, cleared)
-  }
 }

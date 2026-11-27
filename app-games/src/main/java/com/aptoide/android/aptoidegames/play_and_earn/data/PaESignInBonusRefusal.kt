@@ -5,10 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
 import com.aptoide.android.aptoidegames.play_and_earn.di.PaEPreferencesDataStore
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -33,12 +30,9 @@ class PaESignInBonusRefusal internal constructor(
     @PaEPreferencesDataStore dataStore: DataStore<Preferences>,
   ) : this(dataStore = dataStore, nowMillis = { System.currentTimeMillis() })
 
-  /** When the bonus was last refused, or null when it was not or the record was cleared. */
-  val refusedAt: Flow<Long?> = dataStore.data.map { it[REFUSED_AT] }.distinctUntilChanged()
-
   /** Whether a refusal younger than [MAX_AGE_MILLIS] holds. */
   suspend fun isRefused(): Boolean {
-    val age = refusedAt.first()?.let { nowMillis() - it } ?: return false
+    val age = dataStore.data.first()[REFUSED_AT]?.let { nowMillis() - it } ?: return false
     return age in 0 until MAX_AGE_MILLIS
   }
 

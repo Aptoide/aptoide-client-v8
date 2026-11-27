@@ -1,5 +1,6 @@
 package com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards
 
+import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusalCode
 import cm.aptoide.pt.aptoide_network.play_and_earn.toPaERefusal
 import cm.aptoide.pt.campaigns.data.PaEMissionsRepository
 import cm.aptoide.pt.campaigns.domain.PaEMission
@@ -10,6 +11,7 @@ import cm.aptoide.pt.play_and_earn.events.domain.EventType
 import cm.aptoide.pt.play_and_earn.exchange.domain.GetExchangeRateUseCase
 import com.aptoide.android.aptoidegames.play_and_earn.WalletUnitsRefresher
 import com.aptoide.android.aptoidegames.play_and_earn.data.PaESignInBonusRefusal
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -20,11 +22,11 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.math.RoundingMode
 import javax.inject.Inject
+import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Singleton
 
 data class PendingPaEReward(
@@ -83,16 +85,21 @@ class SignInRewardRepository internal constructor(
   private val _claimSuccessEvent = MutableSharedFlow<PendingPaEReward>()
   val claimSuccessEvent: SharedFlow<PendingPaEReward> = _claimSuccessEvent.asSharedFlow()
 
+  private val _refusedEvent = MutableSharedFlow<PaERefusalCode>()
+
+  /**
+   * Why a claim the user just made was refused for good (AND-953), once per refusal, so the
+   * surface can say so. A bonus found refused later (app restart, another surface) says nothing.
+   */
+  val refusedEvent: SharedFlow<PaERefusalCode> = _refusedEvent.asSharedFlow()
+
   private var refreshJob: Job? = null
+
+  // Bumped when the account changes: a claim answered after that belongs to the last account.
+  private val accountGeneration = AtomicInteger()
 
   init {
     refresh()
-    // The account changed (sign-in or sign-out cleared the refusal): offer the bonus again.
-    scope.launch {
-      bonusRefusal.refusedAt.filter { it == null }.collect {
-        if (_rewardState.value == RewardState.Refused) refresh()
-      }
-    }
   }
 
   /**
@@ -109,8 +116,27 @@ class SignInRewardRepository internal constructor(
     val state = _rewardState.value
     if (state != RewardState.Loading && state != RewardState.Refused) return
     if (refreshJob?.isActive == true) return
+    load(checkRefusal = true)
+  }
+
+  /**
+   * The account changed (sign-in or sign-out): the last account's refusal does not hold for the
+   * next, so it is forgotten and a refused bonus is offered again. A claim still in flight for
+   * the last account can no longer end the bonus.
+   */
+  suspend fun forgetRefusal() {
+    accountGeneration.incrementAndGet()
+    softly("forget the sign-in bonus refusal", Unit) { bonusRefusal.clear() }
+    if (_rewardState.value == RewardState.Refused) {
+      refreshJob?.cancel()
+      // The store is not asked again: a clear that failed must not hide the offer.
+      load(checkRefusal = false)
+    }
+  }
+
+  private fun load(checkRefusal: Boolean) {
     refreshJob = scope.launch {
-      if (isRefused()) {
+      if (checkRefusal && isRefused()) {
         _rewardState.value = RewardState.Refused
         return@launch
       }
@@ -145,6 +171,7 @@ class SignInRewardRepository internal constructor(
   }
 
   fun claimReward(reward: PendingPaEReward) {
+    val generation = accountGeneration.get()
     scope.launch {
       // A refused bonus is not asked for again while the refusal holds.
       if (isRefused()) {
@@ -166,19 +193,33 @@ class SignInRewardRepository internal constructor(
         // Play & Earn (AND-953): retrying cannot help, so the offer ends for a while.
         if (error is EventAlreadySubmittedException) {
           _rewardState.value = RewardState.Claimed
-        } else if (error.toPaERefusal()?.code?.blocksPlay == true) {
-          _rewardState.value = RewardState.Refused
-          runCatching { bonusRefusal.record() }
-            .onFailure { Timber.w(it, "Couldn't remember the sign-in bonus refusal") }
+        } else {
+          val code = error.toPaERefusal()?.code
+          // A refusal for the account that has since signed out or in is not this one's.
+          if (code?.blocksPlay == true && generation == accountGeneration.get()) {
+            _rewardState.value = RewardState.Refused
+            // Not remembered: the offer still ends for this session.
+            softly("remember the sign-in bonus refusal", Unit) { bonusRefusal.record() }
+            _refusedEvent.emit(code)
+          }
         }
       }
     }
   }
 
   // A store that cannot be read refuses nothing: the bonus is offered and asked for as before.
-  private suspend fun isRefused(): Boolean = runCatching { bonusRefusal.isRefused() }
-    .onFailure { Timber.w(it, "Couldn't read the sign-in bonus refusal") }
-    .getOrDefault(false)
+  private suspend fun isRefused(): Boolean =
+    softly("read the sign-in bonus refusal", false) { bonusRefusal.isRefused() }
+
+  // The refusal store is a convenience: when it fails, the claim flow goes on as without it.
+  private suspend fun <T> softly(what: String, fallback: T, block: suspend () -> T): T = try {
+    block()
+  } catch (e: CancellationException) {
+    throw e
+  } catch (e: Exception) {
+    Timber.w(e, "Couldn't $what")
+    fallback
+  }
 }
 
 // Reads the `event_type` argument of an event mission, mapping it to a known EventType (or null).

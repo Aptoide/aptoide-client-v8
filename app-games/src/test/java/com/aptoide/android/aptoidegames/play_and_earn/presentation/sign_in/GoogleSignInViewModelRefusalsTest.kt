@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.emptyPreferences
 import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusal
 import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusalCode
+import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusalException
 import cm.aptoide.pt.exception_handler.ExceptionHandler
 import cm.aptoide.pt.test.gherkin.coScenario
 import cm.aptoide.pt.wallet.authorization.data.WalletAuthRepository
@@ -15,12 +16,17 @@ import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPendingRedeems
 import com.aptoide.android.aptoidegames.play_and_earn.data.PaESignInBonusRefusal
 import com.aptoide.android.aptoidegames.play_and_earn.data.UserAccountPreferencesRepository
 import com.aptoide.android.aptoidegames.play_and_earn.domain.sessions.PaESessionRefusals
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.FakeEventsRepository
 import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.PaERewardType
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.RewardState
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.SignInRewardRepository
+import com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards.signInRewardRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
@@ -28,6 +34,7 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.lang.reflect.Proxy
@@ -71,6 +78,7 @@ internal class GoogleSignInViewModelRefusalsTest {
     dataStore = InMemoryPreferencesDataStore(),
     nowMillis = { 0L },
   )
+  private val bonusEvents = FakeEventsRepository()
 
   @BeforeEach
   fun setUp() = Dispatchers.setMain(UnconfinedTestDispatcher())
@@ -79,11 +87,11 @@ internal class GoogleSignInViewModelRefusalsTest {
   fun tearDown() = Dispatchers.resetMain()
 
   @Test
-  fun `Signing out forgets the refusals`() = coScenario {
+  fun `Signing out forgets the refusals`() = coScenario { scope ->
     m Given "a restricted account and a game refused for the region"
     refusals.record(GAME, PaERefusal(PaERefusalCode.REGION_NOT_SUPPORTED))
     refusals.record(OTHER_GAME, PaERefusal(PaERefusalCode.ACCOUNT_RESTRICTED))
-    val viewModel = viewModel()
+    val viewModel = scope.viewModel()
 
     m When "the user signs out"
     viewModel.signOut()
@@ -95,10 +103,10 @@ internal class GoogleSignInViewModelRefusalsTest {
   }
 
   @Test
-  fun `Signing out forgets the pending redeem`() = coScenario {
+  fun `Signing out forgets the pending redeem`() = coScenario { scope ->
     m Given "a redeem whose answer is not final yet"
     pendingRedeems.idFor(EMAIL, PaERewardType.ROBUX)
-    val viewModel = viewModel()
+    val viewModel = scope.viewModel()
 
     m When "the user signs out"
     viewModel.signOut()
@@ -108,19 +116,26 @@ internal class GoogleSignInViewModelRefusalsTest {
   }
 
   @Test
-  fun `Signing out forgets the refused sign-in bonus`() = coScenario {
+  fun `Signing out forgets the refused sign-in bonus`() = coScenario { scope ->
     m Given "a sign-in bonus the backend refused for this account"
-    signInBonusRefusal.record()
-    val viewModel = viewModel()
+    val rewards = scope.signInRewardRepository(bonusEvents, signInBonusRefusal)
+    bonusEvents.results += Result.failure(
+      PaERefusalException(PaERefusal(PaERefusalCode.ACCOUNT_RESTRICTED))
+    )
+    rewards.claimReward((rewards.rewardState.value as RewardState.Unclaimed).reward)
+    val viewModel = scope.viewModel(rewards)
 
     m When "the user signs out"
     viewModel.signOut()
 
-    m Then "the bonus may be offered to the next account (AND-953)"
+    m Then "the bonus is offered to the next account (AND-953)"
     assertFalse(signInBonusRefusal.isRefused())
+    assertTrue(rewards.rewardState.value is RewardState.Unclaimed)
   }
 
-  private fun viewModel() = GoogleSignInViewModel(
+  private fun TestScope.viewModel(
+    rewards: SignInRewardRepository = signInRewardRepository(bonusEvents, signInBonusRefusal),
+  ) = GoogleSignInViewModel(
     credentialManager = credentialManager,
     userAuthRepository = walletAuthRepository,
     userAccountPreferencesRepository = UserAccountPreferencesRepository(emptyDataStore),
@@ -129,7 +144,7 @@ internal class GoogleSignInViewModelRefusalsTest {
     },
     paESessionRefusals = refusals,
     pendingRedeems = pendingRedeems,
-    signInBonusRefusal = signInBonusRefusal,
+    signInRewardRepository = rewards,
   )
 
   private companion object {

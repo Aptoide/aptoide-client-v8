@@ -3,27 +3,13 @@ package com.aptoide.android.aptoidegames.play_and_earn.presentation.rewards
 import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusal
 import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusalCode
 import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusalException
-import cm.aptoide.pt.campaigns.data.PaEMissionsRepository
-import cm.aptoide.pt.campaigns.domain.PaEMission
-import cm.aptoide.pt.campaigns.domain.PaEMissionType
-import cm.aptoide.pt.campaigns.domain.PaEMissions
 import cm.aptoide.pt.play_and_earn.events.data.EventAlreadySubmittedException
 import cm.aptoide.pt.play_and_earn.events.data.EventException
-import cm.aptoide.pt.play_and_earn.events.data.EventsRepository
-import cm.aptoide.pt.play_and_earn.events.domain.EventType
-import cm.aptoide.pt.play_and_earn.exchange.data.ExchangeRepository
-import cm.aptoide.pt.play_and_earn.exchange.domain.ExchangeRate
-import cm.aptoide.pt.play_and_earn.exchange.domain.GetExchangeRateUseCase
-import cm.aptoide.pt.play_and_earn.exchange.domain.RedeemType
 import cm.aptoide.pt.test.gherkin.coScenario
-import com.aptoide.android.aptoidegames.play_and_earn.WalletUnitsRefresher
-import com.aptoide.android.aptoidegames.play_and_earn.data.InMemoryPreferencesDataStore
 import com.aptoide.android.aptoidegames.play_and_earn.data.PaESignInBonusRefusal
-import com.google.gson.JsonObject
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -36,71 +22,22 @@ import org.junit.jupiter.params.provider.MethodSource
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
-// AND-953: a sign-in bonus the backend refuses for good ends on every offer surface, and is not
-// asked for again for a day; any other failure keeps it claimable, as before.
+// AND-953: a sign-in bonus the backend refuses for good ends on every offer surface, says why
+// once, and is not asked for again for a day; any other failure keeps it claimable, as before.
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class SignInRewardRepositoryRefusalTest {
 
-  private class FakeEventsRepository : EventsRepository {
-    val results = ArrayDeque<Result<Unit>>()
-    var sent = 0
-
-    override suspend fun submitEvent(eventType: EventType): Result<Unit> {
-      sent++
-      return results.removeFirstOrNull() ?: Result.success(Unit)
-    }
-  }
-
-  private class FakeMissionsRepository : PaEMissionsRepository {
-    override suspend fun getCampaignMissions(packageName: String, forceRefresh: Boolean) =
-      Result.success(PaEMissions(checkpoints = emptyList(), missions = emptyList()))
-
-    override suspend fun getEventMissions() = Result.success(
-      listOf(
-        PaEMission(
-          title = "Sign in",
-          description = null,
-          icon = null,
-          type = PaEMissionType.EVENT,
-          arguments = JsonObject().apply { addProperty("event_type", "FIRST_SIGN_IN") },
-          units = 100,
-          progress = null,
-        )
-      )
-    )
-
-    override fun observeCampaignMissions(packageName: String): Flow<Result<PaEMissions>> =
-      emptyFlow()
-
-    override suspend fun getCachedMissions(packageName: String): PaEMissions? = null
-
-    override suspend fun markMissionAsCompleted(packageName: String, missionTitle: String) = Unit
-  }
-
-  // No rate: the reward shows the default amount.
-  private class NoRateExchangeRepository : ExchangeRepository {
-    override suspend fun exchangeUnits(email: String, redeemType: RedeemType, requestId: String) =
-      Result.failure<Unit>(UnsupportedOperationException())
-
-    override suspend fun getExchangeRate() =
-      Result.failure<ExchangeRate>(UnsupportedOperationException())
-  }
-
   private val events = FakeEventsRepository()
-  private val dataStore = InMemoryPreferencesDataStore()
+  private val dataStore = FlakyPreferencesDataStore()
   private var now = 1_000_000L
   private val bonusRefusal = PaESignInBonusRefusal(dataStore = dataStore, nowMillis = { now })
+  private val refusedEvents = mutableListOf<PaERefusalCode>()
 
-  private fun TestScope.repository() = SignInRewardRepository(
-    eventsRepository = events,
-    paeMissionsRepository = FakeMissionsRepository(),
-    getExchangeRateUseCase = GetExchangeRateUseCase(NoRateExchangeRepository()),
-    walletUnitsRefresher = WalletUnitsRefresher(),
-    bonusRefusal = bonusRefusal,
-    scope = CoroutineScope(
-      backgroundScope.coroutineContext + UnconfinedTestDispatcher(testScheduler)
-    ),
-  )
+  private fun TestScope.repository() = signInRewardRepository(events, bonusRefusal).also {
+    backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+      it.refusedEvent.collect { code -> refusedEvents += code }
+    }
+  }
 
   private val SignInRewardRepository.unclaimed
     get() = rewardState.value as RewardState.Unclaimed
@@ -114,25 +51,26 @@ internal class SignInRewardRepositoryRefusalTest {
       "ACCOUNT_RESTRICTED", "REGION_NOT_SUPPORTED", "DEVICE_NOT_SUPPORTED", "UPDATE_REQUIRED",
     ]
   )
-  fun `A refused bonus ends and is not asked for again`(code: PaERefusalCode) =
+  fun `A refused bonus ends, says why once and is not asked for again`(code: PaERefusalCode) =
     coScenario { scope ->
       m Given "an offered bonus the backend refuses with ${code.name}"
       val repository = scope.repository()
       val reward = repository.unclaimed.reward
-      events.results += Result.failure(PaERefusalException(PaERefusal(code)))
+      events.results += refusedFor(code)
 
       m When "the user claims it, then claims it again"
       repository.claimReward(reward)
       repository.claimReward(reward)
 
-      m Then "the offer ends after one request, and the refusal is remembered"
+      m Then "the offer ends after one request, the reason is told once, and it is remembered"
       assertEquals(RewardState.Refused, repository.rewardState.value)
       assertEquals(1, events.sent)
+      assertEquals(listOf(code), refusedEvents)
       assertTrue(bonusRefusal.isRefused())
     }
 
   @Test
-  fun `A remembered refusal is not offered after a restart`() = coScenario { scope ->
+  fun `A remembered refusal is not offered after a restart, silently`() = coScenario { scope ->
     m Given "a bonus refused an hour ago"
     bonusRefusal.record()
     now += TimeUnit.HOURS.toMillis(1)
@@ -141,8 +79,9 @@ internal class SignInRewardRepositoryRefusalTest {
     val repository = scope.repository()
     repository.refresh()
 
-    m Then "the bonus is not offered"
+    m Then "the bonus is not offered, and nothing is told"
     assertEquals(RewardState.Refused, repository.rewardState.value)
+    assertEquals(emptyList<PaERefusalCode>(), refusedEvents)
   }
 
   @Test
@@ -157,9 +96,10 @@ internal class SignInRewardRepositoryRefusalTest {
     repository.refresh()
     repository.claimReward(PendingPaEReward(PaERewardType.ROBUX, "$1.00", 100))
 
-    m Then "it is still not offered, and nothing is sent"
+    m Then "it is still not offered, nothing is sent, and the reason was told only once"
     assertEquals(RewardState.Refused, repository.rewardState.value)
     assertEquals(1, events.sent)
+    assertEquals(listOf(PaERefusalCode.ACCOUNT_RESTRICTED), refusedEvents)
   }
 
   @Test
@@ -181,18 +121,89 @@ internal class SignInRewardRepositoryRefusalTest {
     assertEquals(RewardState.Claimed, repository.rewardState.value)
   }
 
+  // ------------------------------------------------------------------------ the account changes
+
   @Test
-  fun `Clearing the refusal offers the bonus again`() = coScenario { scope ->
+  fun `Forgetting the refusal offers the bonus again`() = coScenario { scope ->
     m Given "a bonus refused by the backend"
     val repository = scope.repository()
     events.results += refusedFor(PaERefusalCode.ACCOUNT_RESTRICTED)
     repository.claimReward(repository.unclaimed.reward)
 
-    m When "the account changes and the refusal is cleared"
-    bonusRefusal.clear()
+    m When "the user signs in or out"
+    repository.forgetRefusal()
 
-    m Then "the bonus is offered again at once"
+    m Then "the bonus is offered again at once, and the stored refusal is gone"
     assertTrue(repository.rewardState.value is RewardState.Unclaimed)
+    assertFalse(bonusRefusal.isRefused())
+  }
+
+  @Test
+  fun `Forgetting the refusal offers the bonus again even when the store cannot be cleared`() =
+    coScenario { scope ->
+      m Given "a bonus refused by the backend, and a store that cannot be written"
+      val repository = scope.repository()
+      events.results += refusedFor(PaERefusalCode.ACCOUNT_RESTRICTED)
+      repository.claimReward(repository.unclaimed.reward)
+      dataStore.failWrites = true
+
+      m When "the user signs in or out"
+      repository.forgetRefusal()
+
+      m Then "the bonus is offered again, and nothing crashed"
+      assertTrue(repository.rewardState.value is RewardState.Unclaimed)
+    }
+
+  @Test
+  fun `A refusal answered after the account changed does not end the bonus`() =
+    coScenario { scope ->
+      m Given "a claim in flight that the backend will refuse"
+      val repository = scope.repository()
+      val gate = CompletableDeferred<Unit>()
+      events.gate = gate
+      events.results += refusedFor(PaERefusalCode.ACCOUNT_RESTRICTED)
+      repository.claimReward(repository.unclaimed.reward)
+
+      m When "the user signs out before the answer arrives"
+      repository.forgetRefusal()
+      gate.complete(Unit)
+
+      m Then "the bonus stays offered for the next account, unremembered and untold"
+      assertTrue(repository.rewardState.value is RewardState.Unclaimed)
+      assertFalse(bonusRefusal.isRefused())
+      assertEquals(emptyList<PaERefusalCode>(), refusedEvents)
+    }
+
+  // ------------------------------------------------------------------------- a broken store
+
+  @Test
+  fun `A refusal that cannot be remembered still ends the bonus this session`() =
+    coScenario { scope ->
+      m Given "an offered bonus, a store that cannot be written, and a refusing backend"
+      val repository = scope.repository()
+      dataStore.failWrites = true
+      events.results += refusedFor(PaERefusalCode.REGION_NOT_SUPPORTED)
+
+      m When "the user claims it"
+      repository.claimReward(repository.unclaimed.reward)
+
+      m Then "nothing crashed, the offer ended, and the reason was told"
+      assertEquals(RewardState.Refused, repository.rewardState.value)
+      assertEquals(listOf(PaERefusalCode.REGION_NOT_SUPPORTED), refusedEvents)
+    }
+
+  @Test
+  fun `A store that cannot be read refuses nothing`() = coScenario { scope ->
+    m Given "a store that cannot be read"
+    dataStore.failReads = true
+
+    m When "the app starts and the user claims the bonus"
+    val repository = scope.repository()
+    repository.claimReward(repository.unclaimed.reward)
+
+    m Then "the bonus was offered, and the claim is sent and granted"
+    assertEquals(1, events.sent)
+    assertEquals(RewardState.Claimed, repository.rewardState.value)
   }
 
   // ------------------------------------------------------------------- everything else as before
@@ -206,9 +217,10 @@ internal class SignInRewardRepositoryRefusalTest {
     m When "the user claims it"
     repository.claimReward(repository.unclaimed.reward)
 
-    m Then "it is claimed, and no refusal is remembered"
+    m Then "it is claimed, no refusal is remembered, and nothing is told"
     assertEquals(RewardState.Claimed, repository.rewardState.value)
     assertFalse(bonusRefusal.isRefused())
+    assertEquals(emptyList<PaERefusalCode>(), refusedEvents)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -226,10 +238,11 @@ internal class SignInRewardRepositoryRefusalTest {
     val afterFailure = repository.rewardState.value
     repository.claimReward(repository.unclaimed.reward)
 
-    m Then "it stayed offered, the retry was sent, and no refusal is remembered"
+    m Then "it stayed offered, the retry was sent, and nothing was remembered or told"
     assertTrue(afterFailure is RewardState.Unclaimed, afterFailure.toString())
     assertEquals(2, events.sent)
     assertFalse(bonusRefusal.isRefused())
+    assertEquals(emptyList<PaERefusalCode>(), refusedEvents)
   }
 
   private fun refusedFor(code: PaERefusalCode) =
