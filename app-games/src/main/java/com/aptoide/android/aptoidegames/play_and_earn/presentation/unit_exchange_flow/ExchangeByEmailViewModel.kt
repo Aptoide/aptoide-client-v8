@@ -7,6 +7,7 @@ import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusal
 import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusalCode
 import cm.aptoide.pt.aptoide_network.play_and_earn.reportUnlessPaERefusal
 import cm.aptoide.pt.exception_handler.ExceptionHandler
+import cm.aptoide.pt.exception_handler.runCatchingAndRecord
 import cm.aptoide.pt.play_and_earn.exchange.domain.ExchangeUnitsUseCase
 import com.aptoide.android.aptoidegames.play_and_earn.WalletUnitsRefresher
 import com.aptoide.android.aptoidegames.play_and_earn.data.PaEPendingRedeems
@@ -48,13 +49,28 @@ enum class ExchangeErrorKind(val canRetry: Boolean) {
  * email and reward of the last redeem stay in [SavedStateHandle] for [retry].
  */
 @HiltViewModel
-class ExchangeByEmailViewModel @Inject constructor(
+class ExchangeByEmailViewModel internal constructor(
   private val exchangeUnitsUseCase: ExchangeUnitsUseCase,
   private val exceptionHandler: ExceptionHandler,
-  private val walletUnitsRefresher: WalletUnitsRefresher,
+  private val refreshWalletUnits: () -> Unit,
   private val pendingRedeems: PaEPendingRedeems,
   private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
+
+  @Inject
+  constructor(
+    exchangeUnitsUseCase: ExchangeUnitsUseCase,
+    exceptionHandler: ExceptionHandler,
+    walletUnitsRefresher: WalletUnitsRefresher,
+    pendingRedeems: PaEPendingRedeems,
+    savedStateHandle: SavedStateHandle,
+  ) : this(
+    exchangeUnitsUseCase = exchangeUnitsUseCase,
+    exceptionHandler = exceptionHandler,
+    refreshWalletUnits = walletUnitsRefresher::invalidate,
+    pendingRedeems = pendingRedeems,
+    savedStateHandle = savedStateHandle,
+  )
 
   private val _uiState = MutableStateFlow<ExchangeEmailUiState>(ExchangeEmailUiState.Idle)
   val uiState: StateFlow<ExchangeEmailUiState> = _uiState.asStateFlow()
@@ -98,14 +114,17 @@ class ExchangeByEmailViewModel @Inject constructor(
 
     exchangeUnitsUseCase(email, rewardType.toRedeemType(), requestId).fold(
       onSuccess = {
-        pendingRedeems.clear(requestId)
-        walletUnitsRefresher.invalidate()
+        // The redeem went through: nothing after it may keep the screen from saying so.
+        runCatchingAndRecord(exceptionHandler) { pendingRedeems.clear(requestId) }
+        runCatchingAndRecord(exceptionHandler) { refreshWalletUnits() }
         _uiState.update { ExchangeEmailUiState.Success }
       },
       onFailure = { error ->
         // AND-950: a refusal is expected: logged, not reported as a crash.
         val refusal = reportUnlessPaERefusal(error, exceptionHandler::recordException)
-        if (refusal.endsRequest()) pendingRedeems.clear(requestId)
+        if (refusal.endsRequest()) {
+          runCatchingAndRecord(exceptionHandler) { pendingRedeems.clear(requestId) }
+        }
         _uiState.update { ExchangeEmailUiState.Error(refusal.toErrorKind()) }
       }
     )

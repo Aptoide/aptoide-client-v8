@@ -282,6 +282,28 @@ internal class ExchangeByEmailViewModelTest {
   }
 
   @Test
+  fun `A redeem that went through shows success even if the balance refresh fails`() =
+    coScenario {
+      m Given "the units balance refresh failing"
+      val failure = IllegalStateException("refresh failed")
+      val viewModel = ExchangeByEmailViewModel(
+        exchangeUnitsUseCase = ExchangeUnitsUseCase(repository),
+        exceptionHandler = exceptionHandler,
+        refreshWalletUnits = { throw failure },
+        pendingRedeems = pendingRedeems,
+        savedStateHandle = SavedStateHandle(),
+      )
+
+      m When "the redeem succeeds"
+      viewModel.exchange(EMAIL, PaERewardType.ROBUX)
+
+      m Then "the screen says so, the failure is reported and the id is done with"
+      assertEquals(ExchangeEmailUiState.Success, viewModel.uiState.value)
+      assertEquals(listOf<Throwable>(failure), exceptionHandler.recorded)
+      assertEquals("id-2", pendingRedeems.idFor(EMAIL, PaERewardType.ROBUX))
+    }
+
+  @Test
   fun `Each refusal shows its own error`() = coScenario {
     m Given "the backend refusing a redeem with each of its codes"
     val expected = mapOf(
