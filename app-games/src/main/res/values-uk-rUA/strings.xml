@@ -502,9 +502,9 @@
   <string name="play_and_earn_exchange_error_limit_body">Наступний обмін буде доступний лише завтра.</string>
   <string name="play_and_earn_exchange_error_too_many_attempts_body">Забагато спроб. Повторіть спробу пізніше.</string>
   <string name="play_and_earn_exchange_error_being_checked_title">Ми перевіряємо ваш обмін</string>
-  <string name="play_and_earn_exchange_error_being_checked_body">Не повторюйте спробу. Якщо винагорода не надійде, зверніться до підтримки в налаштуваннях.</string>
+  <string name="play_and_earn_exchange_error_being_checked_body">Не повторюйте спробу. Якщо винагорода не надійде, напишіть нам: Налаштування &gt; Підтримка.</string>
   <string name="play_and_earn_exchange_error_restricted_title">Обліковий запис обмежено</string>
-  <string name="play_and_earn_exchange_error_restricted_body">Ваш обліковий запис обмежено механізмами захисту від шахрайства. Зверніться до підтримки в налаштуваннях.</string>
+  <string name="play_and_earn_exchange_error_restricted_body">Ваш обліковий запис обмежено механізмами захисту від шахрайства. Напишіть нам: Налаштування &gt; Підтримка.</string>
   <string name="play_and_earn_exchange_email_safe_note">🔒 Ваша електронна пошта в безпеці. Ми використаємо її лише для надсилання цієї винагороди.</string>
   <string name="play_and_earn_exchange_get_my_code_button">Отримати код</string>
   <string name="play_and_earn_exchange_not_enough_balance">Недостатньо балансу</string>

@@ -480,9 +480,9 @@
   <string name="play_and_earn_exchange_error_limit_body">Voit lunastaa uudelleen vasta huomenna.</string>
   <string name="play_and_earn_exchange_error_too_many_attempts_body">Liian monta yritystä. Yritä myöhemmin uudelleen.</string>
   <string name="play_and_earn_exchange_error_being_checked_title">Tarkistamme lunastustasi</string>
-  <string name="play_and_earn_exchange_error_being_checked_body">Älä yritä uudelleen. Jos palkkiosi ei saavu, ota yhteyttä tukeen Asetuksissa.</string>
+  <string name="play_and_earn_exchange_error_being_checked_body">Älä yritä uudelleen. Jos palkkiosi ei saavu, ota yhteyttä: Asetukset &gt; Tuki.</string>
   <string name="play_and_earn_exchange_error_restricted_title">Tili rajoitettu</string>
-  <string name="play_and_earn_exchange_error_restricted_body">Tiliäsi on rajoitettu väärinkäytösten estomekanismien vuoksi. Ota yhteyttä tukeen Asetuksissa.</string>
+  <string name="play_and_earn_exchange_error_restricted_body">Tiliäsi on rajoitettu väärinkäytösten estomekanismien vuoksi. Ota yhteyttä: Asetukset &gt; Tuki.</string>
   <string name="play_and_earn_exchange_email_safe_note">🔒 Sähköpostisi on turvassa. Käytämme sitä vain tämän palkinnon lähettämiseen.</string>
   <string name="play_and_earn_exchange_get_my_code_button">Hae koodini</string>
   <string name="play_and_earn_exchange_not_enough_balance">Ei tarpeeksi saldoa</string>

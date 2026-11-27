@@ -480,9 +480,9 @@
   <string name="play_and_earn_exchange_error_limit_body">तुम्ही पुढचे रिडीम उद्याच करू शकता.</string>
   <string name="play_and_earn_exchange_error_too_many_attempts_body">खूप जास्त प्रयत्न. नंतर पुन्हा प्रयत्न करा.</string>
   <string name="play_and_earn_exchange_error_being_checked_title">आम्ही तुमचे रिडीम तपासत आहोत</string>
-  <string name="play_and_earn_exchange_error_being_checked_body">पुन्हा प्रयत्न करू नका. तुमचे रिवॉर्ड न मिळाल्यास, सेटिंगमध्ये मदतीशी संपर्क साधा.</string>
+  <string name="play_and_earn_exchange_error_being_checked_body">पुन्हा प्रयत्न करू नका. तुमचे रिवॉर्ड न मिळाल्यास, सेटिंग &gt; मदत येथे संपर्क साधा.</string>
   <string name="play_and_earn_exchange_error_restricted_title">खाते प्रतिबंधित</string>
-  <string name="play_and_earn_exchange_error_restricted_body">फसवणूकविरोधी यंत्रणेमुळे तुमचे खाते प्रतिबंधित केले आहे. सेटिंगमध्ये मदतीशी संपर्क साधा.</string>
+  <string name="play_and_earn_exchange_error_restricted_body">फसवणूकविरोधी यंत्रणेमुळे तुमचे खाते प्रतिबंधित केले आहे. सेटिंग &gt; मदत येथे संपर्क साधा.</string>
   <string name="play_and_earn_exchange_email_safe_note">🔒 आपला ईमेल आमच्याकडे सुरक्षित आहे. फक्त हे बक्षिस पाठविण्यासाठीच आम्ही तो वापरु.</string>
   <string name="play_and_earn_exchange_get_my_code_button">माझा कोड मिळवा</string>
   <string name="play_and_earn_exchange_not_enough_balance">पुरेशी शिल्लक नाही</string>

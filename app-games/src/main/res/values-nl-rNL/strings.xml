@@ -480,9 +480,9 @@
   <string name="play_and_earn_exchange_error_limit_body">Je kunt pas morgen weer inwisselen.</string>
   <string name="play_and_earn_exchange_error_too_many_attempts_body">Te veel pogingen. Probeer het later opnieuw.</string>
   <string name="play_and_earn_exchange_error_being_checked_title">We controleren je inwisseling</string>
-  <string name="play_and_earn_exchange_error_being_checked_body">Probeer het niet opnieuw. Komt je beloning niet aan, neem dan contact op met ondersteuning via Instellingen.</string>
+  <string name="play_and_earn_exchange_error_being_checked_body">Probeer het niet opnieuw. Komt je beloning niet aan, neem dan contact op met Ondersteuning via Instellingen.</string>
   <string name="play_and_earn_exchange_error_restricted_title">Account beperkt</string>
-  <string name="play_and_earn_exchange_error_restricted_body">Je account is beperkt vanwege antifraudemaatregelen. Neem contact op met ondersteuning via Instellingen.</string>
+  <string name="play_and_earn_exchange_error_restricted_body">Je account is beperkt vanwege antifraudemaatregelen. Neem contact op met Ondersteuning via Instellingen.</string>
   <string name="play_and_earn_exchange_email_safe_note">🔒 Je e-mailadres is veilig bij ons. We gebruiken het alleen om je deze beloning te sturen.</string>
   <string name="play_and_earn_exchange_get_my_code_button">Mijn code ophalen</string>
   <string name="play_and_earn_exchange_not_enough_balance">Niet genoeg saldo</string>
