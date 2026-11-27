@@ -119,8 +119,6 @@ class GoogleSignInViewModel @Inject constructor(
           forgetPendingRedeem()
           // AND-953: so does a refused sign-in bonus; the new account is offered it again.
           signInRewardRepository.forgetRefusal()
-          // AND-951: and the restriction; the new account is asked about on the next screen.
-          accountRestriction.forget()
           googleIdTokenCredential?.let {
             userAccountPreferencesRepository.setUserInfo(
               UserInfo(
@@ -130,6 +128,9 @@ class GoogleSignInViewModel @Inject constructor(
               )
             )
           }
+          // AND-951: and the restriction, once the new wallet is in place: the next screen asks
+          // about the new account, not the last one.
+          accountRestriction.forget()
 
           viewModelState.emit(GoogleSignInUiState.Success)
         } else {
@@ -154,8 +155,6 @@ class GoogleSignInViewModel @Inject constructor(
   fun signOut() {
     // AND-950: refusals belong to the account signing out.
     paESessionRefusals.clear()
-    // AND-951: so does its restriction.
-    accountRestriction.forget()
     viewModelScope.launch {
       // AND-952: so does its pending redeem.
       forgetPendingRedeem()
@@ -169,6 +168,9 @@ class GoogleSignInViewModel @Inject constructor(
       }.onFailure { e ->
         Timber.e("Couldn't clear user credentials: ${e.localizedMessage}")
       }
+      // AND-951: so does its restriction; forgotten only once the wallet is cleared, so a screen
+      // asking meanwhile cannot get the last account's answer counted for nobody.
+      accountRestriction.forget()
     }
   }
 

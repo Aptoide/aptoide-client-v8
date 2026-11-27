@@ -8,6 +8,7 @@ import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusal
 import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusalCode
 import cm.aptoide.pt.aptoide_network.play_and_earn.PaERefusalException
 import cm.aptoide.pt.exception_handler.ExceptionHandler
+import cm.aptoide.pt.play_and_earn.sessions.data.PaEAccountStatus
 import cm.aptoide.pt.play_and_earn.sessions.data.PaEAccountStatusRepository
 import cm.aptoide.pt.test.gherkin.coScenario
 import cm.aptoide.pt.wallet.authorization.data.WalletAuthRepository
@@ -64,6 +65,7 @@ internal class GoogleSignInViewModelRefusalsTest {
   ) { _, _, _ -> Unit } as CredentialManager
 
   private var authorization = Result.failure<UserWalletData>(UnsupportedOperationException())
+  private var onClearWallet: () -> Unit = {}
 
   private val walletAuthRepository = object : WalletAuthRepository {
     override suspend fun authorizeGoogleUser(token: String) = authorization
@@ -71,7 +73,7 @@ internal class GoogleSignInViewModelRefusalsTest {
     override suspend fun refreshUserWallet(refreshToken: String) =
       Result.failure<UserWalletData>(UnsupportedOperationException())
 
-    override suspend fun clearAuthorizationData() = Unit
+    override suspend fun clearAuthorizationData() = onClearWallet()
   }
 
   private val refusals = PaESessionRefusals()
@@ -156,6 +158,24 @@ internal class GoogleSignInViewModelRefusalsTest {
   }
 
   @Test
+  fun `Signing out forgets the restriction only once the wallet is cleared`() =
+    coScenario { scope ->
+      m Given "an account restricted for fraud"
+      val restriction = scope.accountRestriction()
+      restrictedRefusals.emit(PaERefusal(PaERefusalCode.ACCOUNT_RESTRICTED))
+      var stateWhileClearing: PaEAccountRestrictionState? = null
+      onClearWallet = { stateWhileClearing = restriction.state.value }
+      val viewModel = scope.viewModel(restriction = restriction)
+
+      m When "the user signs out"
+      viewModel.signOut()
+
+      m Then "the restriction still held while the wallet was cleared, and is gone after"
+      assertEquals(PaEAccountRestrictionState.RESTRICTED, stateWhileClearing)
+      assertEquals(PaEAccountRestrictionState.UNKNOWN, restriction.state.value)
+    }
+
+  @Test
   fun `Signing in forgets the account restriction`() = coScenario { scope ->
     m Given "an account restricted for fraud, and another account about to sign in"
     val restriction = scope.accountRestriction()
@@ -174,7 +194,8 @@ internal class GoogleSignInViewModelRefusalsTest {
 
   private fun TestScope.accountRestriction() = PaEAccountRestriction(
     accountStatus = object : PaEAccountStatusRepository {
-      override suspend fun isRestricted() = false
+      // Cannot tell: a refusal's word stands.
+      override suspend fun getStatus() = PaEAccountStatus.UNKNOWN
     },
     isSignedIn = { true },
     refusals = restrictedRefusals,
